@@ -8,12 +8,17 @@
 //
 package io.reflection.app.api.admin;
 
+import io.reflection.app.api.admin.shared.call.AddEventRequest;
+import io.reflection.app.api.admin.shared.call.AddEventSubscriptionRequest;
 import io.reflection.app.api.admin.shared.call.AssignPermissionRequest;
 import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
+import io.reflection.app.api.admin.shared.call.DeleteEventSubscriptionsRequest;
+import io.reflection.app.api.admin.shared.call.DeleteUserRequest;
 import io.reflection.app.api.admin.shared.call.DeleteUsersRequest;
 import io.reflection.app.api.admin.shared.call.GetDataAccountFetchesRequest;
 import io.reflection.app.api.admin.shared.call.GetDataAccountsRequest;
-import io.reflection.app.api.admin.shared.call.GetEmailTemplatesRequest;
+import io.reflection.app.api.admin.shared.call.GetEventSubscriptionsRequest;
+import io.reflection.app.api.admin.shared.call.GetEventsRequest;
 import io.reflection.app.api.admin.shared.call.GetFeedFetchesRequest;
 import io.reflection.app.api.admin.shared.call.GetItemsRequest;
 import io.reflection.app.api.admin.shared.call.GetModelOutcomeRequest;
@@ -26,7 +31,7 @@ import io.reflection.app.api.admin.shared.call.GetUsersRequest;
 import io.reflection.app.api.admin.shared.call.JoinDataAccountRequest;
 import io.reflection.app.api.admin.shared.call.RevokePermissionRequest;
 import io.reflection.app.api.admin.shared.call.RevokeRoleRequest;
-import io.reflection.app.api.admin.shared.call.SendEmailRequest;
+import io.reflection.app.api.admin.shared.call.SendNotificationRequest;
 import io.reflection.app.api.admin.shared.call.SetPasswordRequest;
 import io.reflection.app.api.admin.shared.call.TriggerDataAccountFetchIngestRequest;
 import io.reflection.app.api.admin.shared.call.TriggerDataAccountGatherRequest;
@@ -34,8 +39,7 @@ import io.reflection.app.api.admin.shared.call.TriggerGatherRequest;
 import io.reflection.app.api.admin.shared.call.TriggerIngestRequest;
 import io.reflection.app.api.admin.shared.call.TriggerModelRequest;
 import io.reflection.app.api.admin.shared.call.TriggerPredictRequest;
-import io.reflection.app.api.admin.shared.call.UpdateEmailTemplateRequest;
-import io.reflection.app.api.blog.shared.call.DeleteUserRequest;
+import io.reflection.app.api.admin.shared.call.UpdateEventRequest;
 
 import com.google.gson.JsonObject;
 import com.willshex.gson.json.service.server.JsonServlet;
@@ -106,14 +110,14 @@ public final class AdminJsonServlet extends JsonServlet {
 			GetPermissionsRequest input = new GetPermissionsRequest();
 			input.fromJson(request);
 			output = service.getPermissions(input).toString();
-		} else if ("GetEmailTemplates".equals(action)) {
-			GetEmailTemplatesRequest input = new GetEmailTemplatesRequest();
+		} else if ("GetEvents".equals(action)) {
+			GetEventsRequest input = new GetEventsRequest();
 			input.fromJson(request);
-			output = service.getEmailTemplates(input).toString();
-		} else if ("SendEmail".equals(action)) {
-			SendEmailRequest input = new SendEmailRequest();
+			output = service.getEvents(input).toString();
+		} else if ("SendNotification".equals(action)) {
+			SendNotificationRequest input = new SendNotificationRequest();
 			input.fromJson(request);
-			output = service.sendEmail(input).toString();
+			output = service.sendNotification(input).toString();
 		} else if ("GetItems".equals(action)) {
 			GetItemsRequest input = new GetItemsRequest();
 			input.fromJson(request);
@@ -130,10 +134,14 @@ public final class AdminJsonServlet extends JsonServlet {
 			GetRolesAndPermissionsRequest input = new GetRolesAndPermissionsRequest();
 			input.fromJson(request);
 			output = service.getRolesAndPermissions(input).toString();
-		} else if ("UpdateEmailTemplate".equals(action)) {
-			UpdateEmailTemplateRequest input = new UpdateEmailTemplateRequest();
+		} else if ("UpdateEvent".equals(action)) {
+			UpdateEventRequest input = new UpdateEventRequest();
 			input.fromJson(request);
-			output = service.updateEmailTemplate(input).toString();
+			output = service.updateEvent(input).toString();
+		} else if ("AddEvent".equals(action)) {
+			AddEventRequest input = new AddEventRequest();
+			input.fromJson(request);
+			output = service.addEvent(input).toString();
 		} else if ("GetDataAccounts".equals(action)) {
 			GetDataAccountsRequest input = new GetDataAccountsRequest();
 			input.fromJson(request);
@@ -158,6 +166,18 @@ public final class AdminJsonServlet extends JsonServlet {
 			GetSimpleModelRunsRequest input = new GetSimpleModelRunsRequest();
 			input.fromJson(request);
 			output = service.getSimpleModelRuns(input).toString();
+		} else if ("GetEventSubscriptions".equals(action)) {
+			GetEventSubscriptionsRequest input = new GetEventSubscriptionsRequest();
+			input.fromJson(request);
+			output = service.getEventSubscriptions(input).toString();
+		} else if ("AddEventSubscription".equals(action)) {
+			AddEventSubscriptionRequest input = new AddEventSubscriptionRequest();
+			input.fromJson(request);
+			output = service.addEventSubscription(input).toString();
+		} else if ("DeleteEventSubscriptions".equals(action)) {
+			DeleteEventSubscriptionsRequest input = new DeleteEventSubscriptionsRequest();
+			input.fromJson(request);
+			output = service.deleteEventSubscriptions(input).toString();
 		}
 
 		return output;

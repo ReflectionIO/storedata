@@ -12,6 +12,7 @@ import io.reflection.app.api.core.shared.call.GetStoresRequest;
 import io.reflection.app.api.core.shared.call.GetStoresResponse;
 import io.reflection.app.api.core.shared.call.event.GetStoresEventHandler.GetStoresFailure;
 import io.reflection.app.api.core.shared.call.event.GetStoresEventHandler.GetStoresSuccess;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.shared.util.DataTypeHelper;
@@ -105,12 +106,12 @@ public class StoreController implements ServiceConstants {
 					}
 				}
 
-				EventController.get().fireEventFromSource(new GetStoresSuccess(input, output), StoreController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetStoresSuccess(input, output), StoreController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new GetStoresFailure(input, caught), StoreController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetStoresFailure(input, caught), StoreController.this);
 			}
 		});
 	}

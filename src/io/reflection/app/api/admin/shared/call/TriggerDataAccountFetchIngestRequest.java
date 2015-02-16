@@ -37,4 +37,9 @@ public class TriggerDataAccountFetchIngestRequest extends Request {
 			}
 		}
 	}
+
+	public TriggerDataAccountFetchIngestRequest fetch(DataAccountFetch fetch) {
+		this.fetch = fetch;
+		return this;
+	}
 }

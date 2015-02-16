@@ -10,18 +10,28 @@ package io.reflection.app.api.admin;
 
 import static io.reflection.app.shared.util.PagerHelper.updatePager;
 import io.reflection.app.api.ValidationHelper;
+import io.reflection.app.api.admin.shared.call.AddEventRequest;
+import io.reflection.app.api.admin.shared.call.AddEventResponse;
+import io.reflection.app.api.admin.shared.call.AddEventSubscriptionRequest;
+import io.reflection.app.api.admin.shared.call.AddEventSubscriptionResponse;
 import io.reflection.app.api.admin.shared.call.AssignPermissionRequest;
 import io.reflection.app.api.admin.shared.call.AssignPermissionResponse;
 import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
 import io.reflection.app.api.admin.shared.call.AssignRoleResponse;
+import io.reflection.app.api.admin.shared.call.DeleteEventSubscriptionsRequest;
+import io.reflection.app.api.admin.shared.call.DeleteEventSubscriptionsResponse;
+import io.reflection.app.api.admin.shared.call.DeleteUserRequest;
+import io.reflection.app.api.admin.shared.call.DeleteUserResponse;
 import io.reflection.app.api.admin.shared.call.DeleteUsersRequest;
 import io.reflection.app.api.admin.shared.call.DeleteUsersResponse;
 import io.reflection.app.api.admin.shared.call.GetDataAccountFetchesRequest;
 import io.reflection.app.api.admin.shared.call.GetDataAccountFetchesResponse;
 import io.reflection.app.api.admin.shared.call.GetDataAccountsRequest;
 import io.reflection.app.api.admin.shared.call.GetDataAccountsResponse;
-import io.reflection.app.api.admin.shared.call.GetEmailTemplatesRequest;
-import io.reflection.app.api.admin.shared.call.GetEmailTemplatesResponse;
+import io.reflection.app.api.admin.shared.call.GetEventSubscriptionsRequest;
+import io.reflection.app.api.admin.shared.call.GetEventSubscriptionsResponse;
+import io.reflection.app.api.admin.shared.call.GetEventsRequest;
+import io.reflection.app.api.admin.shared.call.GetEventsResponse;
 import io.reflection.app.api.admin.shared.call.GetFeedFetchesRequest;
 import io.reflection.app.api.admin.shared.call.GetFeedFetchesResponse;
 import io.reflection.app.api.admin.shared.call.GetItemsRequest;
@@ -46,8 +56,8 @@ import io.reflection.app.api.admin.shared.call.RevokePermissionRequest;
 import io.reflection.app.api.admin.shared.call.RevokePermissionResponse;
 import io.reflection.app.api.admin.shared.call.RevokeRoleRequest;
 import io.reflection.app.api.admin.shared.call.RevokeRoleResponse;
-import io.reflection.app.api.admin.shared.call.SendEmailRequest;
-import io.reflection.app.api.admin.shared.call.SendEmailResponse;
+import io.reflection.app.api.admin.shared.call.SendNotificationRequest;
+import io.reflection.app.api.admin.shared.call.SendNotificationResponse;
 import io.reflection.app.api.admin.shared.call.SetPasswordRequest;
 import io.reflection.app.api.admin.shared.call.SetPasswordResponse;
 import io.reflection.app.api.admin.shared.call.TriggerDataAccountFetchIngestRequest;
@@ -62,23 +72,22 @@ import io.reflection.app.api.admin.shared.call.TriggerModelRequest;
 import io.reflection.app.api.admin.shared.call.TriggerModelResponse;
 import io.reflection.app.api.admin.shared.call.TriggerPredictRequest;
 import io.reflection.app.api.admin.shared.call.TriggerPredictResponse;
-import io.reflection.app.api.admin.shared.call.UpdateEmailTemplateRequest;
-import io.reflection.app.api.admin.shared.call.UpdateEmailTemplateResponse;
-import io.reflection.app.api.blog.shared.call.DeleteUserRequest;
-import io.reflection.app.api.blog.shared.call.DeleteUserResponse;
+import io.reflection.app.api.admin.shared.call.UpdateEventRequest;
+import io.reflection.app.api.admin.shared.call.UpdateEventResponse;
 import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
-import io.reflection.app.datatypes.shared.EmailFormatType;
+import io.reflection.app.datatypes.shared.EventPriorityType;
 import io.reflection.app.datatypes.shared.FeedFetch;
+import io.reflection.app.datatypes.shared.Notification;
+import io.reflection.app.datatypes.shared.NotificationTypeType;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.SimpleModelRun;
 import io.reflection.app.datatypes.shared.User;
-import io.reflection.app.helpers.ApiHelper;
-import io.reflection.app.helpers.EmailHelper;
+import io.reflection.app.helpers.NotificationHelper;
 import io.reflection.app.ingestors.Ingestor;
 import io.reflection.app.ingestors.IngestorFactory;
 import io.reflection.app.modellers.Modeller;
@@ -89,24 +98,26 @@ import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
 import io.reflection.app.service.datasource.DataSourceServiceProvider;
-import io.reflection.app.service.emailtemplate.EmailTemplateServiceProvider;
+import io.reflection.app.service.event.EventServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
+import io.reflection.app.service.notification.NotificationServiceProvider;
 import io.reflection.app.service.permission.PermissionServiceProvider;
 import io.reflection.app.service.role.RoleServiceProvider;
 import io.reflection.app.service.simplemodelrun.SimpleModelRunServiceProvider;
 import io.reflection.app.service.user.IUserService;
 import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
-import io.reflection.app.shared.util.FormattingHelper;
 import io.reflection.app.shared.util.PagerHelper;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 import com.willshex.gson.json.service.server.ActionHandler;
 import com.willshex.gson.json.service.server.InputValidationException;
@@ -668,12 +679,12 @@ public final class Admin extends ActionHandler {
 		return output;
 	}
 
-	public GetEmailTemplatesResponse getEmailTemplates(GetEmailTemplatesRequest input) {
-		LOG.finer("Entering getEmailTemplates");
-		GetEmailTemplatesResponse output = new GetEmailTemplatesResponse();
+	public GetEventsResponse getEvents(GetEventsRequest input) {
+		LOG.finer("Entering getEvents");
+		GetEventsResponse output = new GetEventsResponse();
 		try {
 			if (input == null)
-				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("GetEmailTemplatesRequest: input"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("GetEventsRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
@@ -683,9 +694,18 @@ public final class Admin extends ActionHandler {
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
-			output.templates = EmailTemplateServiceProvider.provide().getEmailTemplates(input.pager);
+			boolean isQuery = false;
+			try {
+				input.query = ValidationHelper.validateQuery(input.query, "input");
+				isQuery = true;
+			} catch (InputValidationException ex) {}
+
+			output.events = isQuery ? EventServiceProvider.provide().searchEvents(input.query, input.pager) : EventServiceProvider.provide().getEvents(
+					input.pager);
+
 			output.pager = input.pager;
-			updatePager(output.pager, output.templates, input.pager.totalCount == null ? EmailTemplateServiceProvider.provide().getEmailTemplatesCount() : null);
+
+			updatePager(output.pager, output.events, null);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -693,16 +713,16 @@ public final class Admin extends ActionHandler {
 			output.error = convertToErrorAndLog(LOG, e);
 		}
 
-		LOG.finer("Exiting getEmailTemplates");
+		LOG.finer("Exiting getEvents");
 		return output;
 	}
 
-	public SendEmailResponse sendEmail(SendEmailRequest input) {
-		LOG.finer("Entering sendEmail");
-		SendEmailResponse output = new SendEmailResponse();
+	public SendNotificationResponse sendNotification(SendNotificationRequest input) {
+		LOG.finer("Entering sendNotification");
+		SendNotificationResponse output = new SendNotificationResponse();
 		try {
 			if (input == null)
-				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("SendEmailRequest: input"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("SendNotificationRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
@@ -710,20 +730,16 @@ public final class Admin extends ActionHandler {
 
 			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
-			input.toAddress = ValidationHelper.validateEmail(input.toAddress, true, "input.toAddress");
+			ValidationHelper.validateNewNotification(input.notification, "input.notification");
 
-			if (input.toAddress == null) {
-				input.toUser = ValidationHelper.validateExistingUser(input.toUser, "input.toUser");
-			}
-
-			input.template = ValidationHelper.validateExistingEmailTemplate(input.template, "input.template");
+			NotificationServiceProvider.provide().addNotification(input.notification);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
 			output.error = convertToErrorAndLog(LOG, e);
 		}
-		LOG.finer("Exiting sendEmail");
+		LOG.finer("Exiting sendNotification");
 		return output;
 	}
 
@@ -911,33 +927,45 @@ public final class Admin extends ActionHandler {
 		return output;
 	}
 
-	public UpdateEmailTemplateResponse updateEmailTemplate(UpdateEmailTemplateRequest input) {
-		LOG.finer("Entering updateEmailTemplate");
-		UpdateEmailTemplateResponse output = new UpdateEmailTemplateResponse();
+	public UpdateEventResponse updateEvent(UpdateEventRequest input) {
+		LOG.finer("Entering updateEvent");
+		UpdateEventResponse output = new UpdateEventResponse();
 		try {
 			if (input == null)
-				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
-						ApiError.InvalidValueNull.getMessage("UpdateEmailTemplateRequest: input"));
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("UpdateEventRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			if (input.emailTemplate == null)
-				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("input.emailTemplate"));
+			if (input.event == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("input.event"));
 
-			ValidationHelper.validateExistingEmailTemplate(input.emailTemplate, "input.emailTemplate");
+			ValidationHelper.validateExistingEvent(input.event, "input.event");
 
 			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
-			EmailTemplateServiceProvider.provide().updateEmailTemplate(input.emailTemplate);
+			EventServiceProvider.provide().updateEvent(input.event);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
 			output.error = convertToErrorAndLog(LOG, e);
 		}
-		LOG.finer("Exiting updateEmailTemplate");
+		LOG.finer("Exiting updateEvent");
+		return output;
+	}
+
+	public AddEventResponse addEvent(AddEventRequest input) {
+		LOG.finer("Entering addEvent");
+		AddEventResponse output = new AddEventResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting addEvent");
 		return output;
 	}
 
@@ -1023,24 +1051,15 @@ public final class Admin extends ActionHandler {
 
 			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
-			Calendar cal = Calendar.getInstance();
-
 			if (input.end == null) {
-				input.end = cal.getTime();
+				input.end = DateTime.now(DateTimeZone.UTC).toDate();
 			}
 
 			if (input.start == null) {
-				cal.setTime(input.end);
-				cal.add(Calendar.DAY_OF_YEAR, -30);
-				input.start = cal.getTime();
+				DateTime start = new DateTime(input.end.getTime(), DateTimeZone.UTC);
+				start.minusDays(30);
+				input.start = start.toDate();
 			}
-
-			long diff = input.end.getTime() - input.start.getTime();
-			long diffDays = diff / ApiHelper.MILLIS_PER_DAY;
-
-			if (diffDays > 30 || diffDays < 0)
-				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
-						ApiError.DateRangeOutOfBounds.getMessage("0-30 days: input.end - input.start"));
 
 			if (input.dataAccount != null && input.dataAccount.id != null) {
 				output.dataAccountFetches = DataAccountFetchServiceProvider.provide().getDataAccountFetches(input.dataAccount, input.start, input.end,
@@ -1155,17 +1174,28 @@ public final class Admin extends ActionHandler {
 
 			DataSource dataSource = DataSourceServiceProvider.provide().getDataSource(input.dataAccount.source.id);
 
-			EmailHelper
-					.sendEmail(
-							"hello@reflection.io",
-							"chi@reflection.io",
-							"Chi Dire",
-							"An admin has linked to a user's account",
-							String.format(
-									"Hi Chi,\n\nThis is to let you know that the admin user [%d - %s] has added the data account [%d] for the data source [%s] and the username [%s]. This data account belongs to the user [%d - %s].\n\nReflection",
-									adminUser.id.longValue(), FormattingHelper.getUserLongName(adminUser), input.dataAccount.id.longValue(), dataSource.name,
-									input.dataAccount.username, ownerUser.id.longValue(), FormattingHelper.getUserLongName(ownerUser)),
-							EmailFormatType.EmailFormatTypePlainText);
+			User listeningUser = UserServiceProvider.provide().getUsernameUser("chi@reflection.io");
+
+			Map<String, Object> parameters = new HashMap<String, Object>();
+			parameters.put("listener", listeningUser);
+			parameters.put("admin", adminUser);
+			parameters.put("owner", ownerUser);
+			parameters.put("data", input.dataAccount);
+			parameters.put("source", dataSource);
+
+			String body = NotificationHelper
+					.inflate(
+							parameters,
+							"Hi ${listener.forename},\n\nThis is to let you know that the admin user [${admin.id} - ${admin.forename} ${admin.surname}] has added the data account [${data.id}] for the data source [${source.name}] and the username [${data.username}]. This data account belongs to the user [${owner.id} - ${owner.forename} ${owner.surname}].\n\nReflection");
+
+			Notification notification = (new Notification()).from("hello@reflection.io").user(listeningUser).body(body)
+					.priority(EventPriorityType.EventPriorityTypeCritical).subject("An admin has linked to a user's account");
+			Notification added = NotificationServiceProvider.provide().addNotification(notification);
+
+			if (added.type != NotificationTypeType.NotificationTypeTypeInternal) {
+				notification.type = NotificationTypeType.NotificationTypeTypeInternal;
+				NotificationServiceProvider.provide().addNotification(notification);
+			}
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -1189,24 +1219,15 @@ public final class Admin extends ActionHandler {
 
 			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
-			Calendar cal = Calendar.getInstance();
-
 			if (input.end == null) {
-				input.end = cal.getTime();
+				input.end = DateTime.now(DateTimeZone.UTC).toDate();
 			}
 
 			if (input.start == null) {
-				cal.setTime(input.end);
-				cal.add(Calendar.DAY_OF_YEAR, -30);
-				input.start = cal.getTime();
+				DateTime start = new DateTime(input.end.getTime(), DateTimeZone.UTC);
+				start.minusDays(30);
+				input.start = start.toDate();
 			}
-
-			long diff = input.end.getTime() - input.start.getTime();
-			long diffDays = diff / ApiHelper.MILLIS_PER_DAY;
-
-			if (diffDays > 60 || diffDays < 0)
-				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
-						ApiError.DateRangeOutOfBounds.getMessage("0-60 days: input.end - input.start"));
 
 			input.country = ValidationHelper.validateCountry(input.country, "input");
 
@@ -1223,7 +1244,7 @@ public final class Admin extends ActionHandler {
 			}
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
-			
+
 			if (input.pager.sortBy == null) {
 				input.pager.sortBy = "feedfetchid";
 			}
@@ -1231,7 +1252,7 @@ public final class Admin extends ActionHandler {
 			if (input.pager.sortDirection == null) {
 				input.pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
 			}
-			
+
 			output.pager = input.pager;
 
 			List<FeedFetch> feedFetchList = FeedFetchServiceProvider.provide().getDatesFeedFetches(input.country, input.store, input.category, listTypes,
@@ -1270,6 +1291,45 @@ public final class Admin extends ActionHandler {
 			output.error = convertToErrorAndLog(LOG, e);
 		}
 		LOG.finer("Exiting getSimpleModelRuns");
+		return output;
+	}
+
+	public GetEventSubscriptionsResponse getEventSubscriptions(GetEventSubscriptionsRequest input) {
+		LOG.finer("Entering getEventSubscriptions");
+		GetEventSubscriptionsResponse output = new GetEventSubscriptionsResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting getEventSubscriptions");
+		return output;
+	}
+
+	public AddEventSubscriptionResponse addEventSubscription(AddEventSubscriptionRequest input) {
+		LOG.finer("Entering addEventSubscription");
+		AddEventSubscriptionResponse output = new AddEventSubscriptionResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting addEventSubscription");
+		return output;
+	}
+
+	public DeleteEventSubscriptionsResponse deleteEventSubscriptions(DeleteEventSubscriptionsRequest input) {
+		LOG.finer("Entering deleteEventSubscriptions");
+		DeleteEventSubscriptionsResponse output = new DeleteEventSubscriptionsResponse();
+		try {
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting deleteEventSubscriptions");
 		return output;
 	}
 }

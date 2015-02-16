@@ -8,13 +8,13 @@
 //
 package io.reflection.app.api.admin.shared.call;
 
+import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.api.shared.datatypes.Request;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-
-import io.reflection.app.api.shared.datatypes.Pager;
-import io.reflection.app.api.shared.datatypes.Request;
 
 public class GetDataAccountsRequest extends Request {
 	public Pager pager;
@@ -46,5 +46,15 @@ public class GetDataAccountsRequest extends Request {
 				query = jsonQuery.getAsString();
 			}
 		}
+	}
+
+	public GetDataAccountsRequest pager(Pager pager) {
+		this.pager = pager;
+		return this;
+	}
+
+	public GetDataAccountsRequest query(String query) {
+		this.query = query;
+		return this;
 	}
 }

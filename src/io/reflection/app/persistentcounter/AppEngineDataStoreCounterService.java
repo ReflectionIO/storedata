@@ -115,11 +115,10 @@ public class AppEngineDataStoreCounterService implements ICounterService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.persistentcounter.ICounterService#increment(java.lang.String, int)
+	 * @see io.reflection.app.persistentcounter.ICounterService#increment(java.lang.String, java.lang.Integer)
 	 */
 	@Override
 	public void increment(String counterName, Integer incrementValue) {
-
 		if (incrementValue == null) {
 			incrementValue = Integer.valueOf(1);
 		}

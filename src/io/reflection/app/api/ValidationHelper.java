@@ -19,10 +19,12 @@ import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.DataSource;
-import io.reflection.app.datatypes.shared.EmailTemplate;
+import io.reflection.app.datatypes.shared.Event;
+import io.reflection.app.datatypes.shared.EventSubscription;
 import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.Forum;
 import io.reflection.app.datatypes.shared.Item;
+import io.reflection.app.datatypes.shared.Notification;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Post;
 import io.reflection.app.datatypes.shared.Reply;
@@ -36,9 +38,11 @@ import io.reflection.app.service.country.CountryServiceProvider;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
 import io.reflection.app.service.datasource.DataSourceServiceProvider;
-import io.reflection.app.service.emailtemplate.EmailTemplateServiceProvider;
+import io.reflection.app.service.event.EventServiceProvider;
+import io.reflection.app.service.eventsubscription.EventSubscriptionServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
+import io.reflection.app.service.notification.NotificationServiceProvider;
 import io.reflection.app.service.permission.PermissionServiceProvider;
 import io.reflection.app.service.role.RoleServiceProvider;
 import io.reflection.app.service.sale.SaleServiceProvider;
@@ -152,7 +156,6 @@ public class ValidationHelper {
 	 * @throws InputValidationException
 	 */
 	public static Pager validatePager(Pager pager, String parent) throws InputValidationException {
-
 		if (pager == null) {
 			pager = new Pager();
 
@@ -192,7 +195,6 @@ public class ValidationHelper {
 	 * @throws InputValidationException
 	 */
 	public static Country validateCountry(Country country, String parent) throws ServiceException {
-
 		if (country == null) throw new InputValidationException(ApiError.CountryNull.getCode(), ApiError.CountryNull.getMessage(parent));
 
 		boolean isIdLookup = false, isA2CodeLookup = false, isNameLookup = false;
@@ -681,34 +683,48 @@ public class ValidationHelper {
 	}
 
 	/**
-	 * @param emailTemplate
+	 * @param event
 	 * @param string
 	 * @return
 	 */
-	public static EmailTemplate validateExistingEmailTemplate(EmailTemplate emailTemplate, String parent) throws ServiceException {
-		if (emailTemplate == null) throw new InputValidationException(ApiError.EmailTemplateNull.getCode(), ApiError.EmailTemplateNull.getMessage(parent));
+	public static Event validateExistingEvent(Event event, String parent) throws ServiceException {
+		if (event == null) throw new InputValidationException(ApiError.EventNull.getCode(), ApiError.EventNull.getMessage(parent));
 
-		if (emailTemplate.id == null)
-			throw new InputValidationException(ApiError.EmailTemplateNoLookup.getCode(), ApiError.EmailTemplateNoLookup.getMessage(parent));
+		boolean isIdLookup = false, isCodeLookup = false;
 
-		EmailTemplate lookupEmailTemplate = EmailTemplateServiceProvider.provide().getEmailTemplate(emailTemplate.id);
+		if (event.id != null) {
+			isIdLookup = true;
+		} else if (event.code != null) {
+			isCodeLookup = true;
+		}
 
-		if (lookupEmailTemplate == null)
-			throw new InputValidationException(ApiError.EmailTemplateNotFound.getCode(), ApiError.EmailTemplateNotFound.getMessage(parent));
+		if (!(isIdLookup || isCodeLookup)) throw new InputValidationException(ApiError.EventNoLookup.getCode(), ApiError.EventNoLookup.getMessage(parent));
 
-		validateEmailTemplate(emailTemplate, parent);
+		Event lookupEvent = null;
+		if (isIdLookup) {
+			lookupEvent = EventServiceProvider.provide().getEvent(event.id);
+		} else if (isCodeLookup) {
+			lookupEvent = EventServiceProvider.provide().getCodeEvent(event.code);
+		}
 
-		return lookupEmailTemplate;
+		if (lookupEvent == null) throw new InputValidationException(ApiError.EventNotFound.getCode(), ApiError.EventNotFound.getMessage(parent));
+
+		// validateEvent(event, parent);
+
+		return lookupEvent;
 	}
 
-	public static EmailTemplate validateEmailTemplate(EmailTemplate emailTemplate, String parent) throws ServiceException {
-		emailTemplate.from = ValidationHelper.validateEmail(emailTemplate.from, false, parent + ".from");
+	public static Event validateEvent(Event event, String parent) throws ServiceException {
+		event.subject = ValidationHelper.validateStringLength(event.subject, parent + ".subject", 1, 2000);
 
-		emailTemplate.subject = ValidationHelper.validateStringLength(emailTemplate.subject, parent + ".subject", 1, 2000);
+		event.shortBody = ValidationHelper.validateStringLength(event.shortBody, parent + ".shortBody", 1, 50000);
+		event.longBody = ValidationHelper.validateStringLength(event.longBody, parent + ".longBody", 1, 50000);
 
-		emailTemplate.body = ValidationHelper.validateStringLength(emailTemplate.body, parent + ".body", 1, 50000);
+		event.name = ValidationHelper.validateStringLength(event.name, parent + ".name", 1, 50000);
+		event.description = ValidationHelper.validateStringLength(event.description, parent + ".description", 1, 50000);
+		event.code = ValidationHelper.validateStringLength(event.code, parent + ".code", 3, 3);
 
-		return emailTemplate;
+		return event;
 	}
 
 	public static Post validateExistingPost(Post post, String parent) throws ServiceException {
@@ -763,7 +779,7 @@ public class ValidationHelper {
 			isFeedFetchIdLookup = true;
 		}
 
-		// TODO: if no lookup method is found put a better error to point api user in the correct direction 
+		// TODO: if no lookup method is found put a better error to point api user in the correct direction
 
 		SimpleModelRun lookupSimpleModelRun = null;
 		if (isIdLookup) {
@@ -799,5 +815,112 @@ public class ValidationHelper {
 			throw new InputValidationException(ApiError.DataAccountFetchNotFound.getCode(), ApiError.DataAccountFetchNotFound.getMessage(parent));
 
 		return lookupDataAccountFetch;
+	}
+
+	/**
+	 * @param notification
+	 * @param string
+	 * @return
+	 * @throws ServiceException
+	 */
+	public static Notification validateNewNotification(Notification notification, String parent) throws ServiceException {
+
+		if (notification == null) throw new InputValidationException(ApiError.NotificationNull.getCode(), ApiError.NotificationNull.getMessage(parent));
+
+		if (notification.cause == null) {
+			notification.user = ValidationHelper.validateExistingUser(notification.user, parent + ".user");
+		}
+
+		if (notification.cause == null && notification.event != null) {
+			notification.event = ValidationHelper.validateExistingEvent(notification.event, parent + ".event");
+		}
+
+		if (notification.cause != null) {
+			notification.cause = validateExistingEventSubscription(notification.cause, parent + ".cause");
+
+			if (notification.user != null) {
+				if (notification.cause.user.id.longValue() != notification.user.id.longValue())
+					throw new ServiceException(0, "TODO: these should match in this very unlikely scenario");
+			}
+
+			if (notification.event != null) {
+				if (notification.cause.event.id.longValue() != notification.event.id.longValue())
+					throw new ServiceException(0, "TODO: these should match in this very unlikely scenario");
+			}
+		}
+
+		notification.from = validateEmail(notification.from, false, parent + ".from");
+
+		if (notification.subject == null)
+			throw new InputValidationException(ApiError.StringNull.getCode(), ApiError.StringNull.getMessage(parent + ".subject"));
+		notification.subject = ValidationHelper.validateStringLength(notification.subject, parent + ".subject", 1, 2000);
+
+		if (notification.body == null) throw new InputValidationException(ApiError.StringNull.getCode(), ApiError.StringNull.getMessage(parent + ".body"));
+		notification.body = ValidationHelper.validateStringLength(notification.body, parent + ".body", 1, 50000);
+
+		return notification;
+	}
+
+	/**
+	 * @param eventSubscription
+	 * @param parent
+	 * @return
+	 * 
+	 * @throws ServiceException
+	 */
+	private static EventSubscription validateExistingEventSubscription(EventSubscription eventSubscription, String parent) throws ServiceException {
+		if (eventSubscription == null)
+			throw new InputValidationException(ApiError.EventSubscriptionNull.getCode(), ApiError.EventSubscriptionNull.getMessage(parent));
+
+		boolean isIdLookup = false, isUserAndEventLookup = false;
+
+		if (eventSubscription.id != null) {
+			isIdLookup = true;
+		} else {
+			boolean hasUser = false, hasEvent = false;
+
+			try {
+				eventSubscription.user = validateExistingUser(eventSubscription.user, parent + ".user");
+				hasUser = true;
+			} catch (ServiceException s) {}
+
+			try {
+				eventSubscription.event = validateEvent(eventSubscription.event, parent + ".event");
+				hasEvent = true;
+			} catch (ServiceException s) {}
+
+			if (hasUser && hasEvent) {
+				isUserAndEventLookup = true;
+			}
+		}
+
+		if (!(isIdLookup || isUserAndEventLookup))
+			throw new InputValidationException(ApiError.EventSubscriptionNoLookup.getCode(), ApiError.EventSubscriptionNoLookup.getMessage(parent));
+
+		EventSubscription lookupEventSubscription = null;
+		if (isIdLookup) {
+			lookupEventSubscription = EventSubscriptionServiceProvider.provide().getEventSubscription(eventSubscription.id);
+		} else if (isUserAndEventLookup) {
+			lookupEventSubscription = EventSubscriptionServiceProvider.provide().getUserEventEventSubscription(eventSubscription.event, eventSubscription.user);
+		}
+
+		if (lookupEventSubscription == null)
+			throw new InputValidationException(ApiError.EventSubscriptionNotFound.getCode(), ApiError.EventSubscriptionNotFound.getMessage(parent));
+
+		return lookupEventSubscription;
+	}
+
+	public static Notification validateExistingNotification(Notification notification, String parent) throws ServiceException {
+		if (notification == null) throw new InputValidationException(ApiError.NotificationNull.getCode(), ApiError.NotificationNull.getMessage(parent));
+
+		if (notification.id == null)
+			throw new InputValidationException(ApiError.NotificationNoLookup.getCode(), ApiError.NotificationNoLookup.getMessage(parent));
+
+		Notification lookupNotification = NotificationServiceProvider.provide().getNotification(notification.id);
+
+		if (lookupNotification == null)
+			throw new InputValidationException(ApiError.NotificationNotFound.getCode(), ApiError.NotificationNotFound.getMessage(parent));
+
+		return lookupNotification;
 	}
 }

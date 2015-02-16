@@ -65,4 +65,14 @@ public class GetStoresResponse extends Response {
 			}
 		}
 	}
+
+	public GetStoresResponse stores(List<Store> stores) {
+		this.stores = stores;
+		return this;
+	}
+
+	public GetStoresResponse pager(Pager pager) {
+		this.pager = pager;
+		return this;
+	}
 }

@@ -19,6 +19,7 @@ import io.reflection.app.api.admin.shared.call.event.TriggerDataAccountFetchInge
 import io.reflection.app.api.admin.shared.call.event.TriggerDataAccountGatherEventHandler;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataAccountFetch;
 
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.google.gwt.http.client.Request;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
@@ -41,6 +43,7 @@ public class DataAccountFetchController extends AsyncDataProvider<DataAccountFet
 	private List<DataAccountFetch> dataAccountFetchList = new ArrayList<DataAccountFetch>();
 	private long count = -1;
 	private Pager pager;
+	private Request current;
 
 	private Long dataAccountId;
 
@@ -55,6 +58,11 @@ public class DataAccountFetchController extends AsyncDataProvider<DataAccountFet
 	}
 
 	public void fetchDataAccountFetches() {
+		if (current != null) {
+			current.cancel();
+			current = null;
+		}
+
 		AdminService service = ServiceCreator.createAdminService();
 
 		final GetDataAccountFetchesRequest input = new GetDataAccountFetchesRequest();
@@ -78,10 +86,11 @@ public class DataAccountFetchController extends AsyncDataProvider<DataAccountFet
 		input.start = FilterController.get().getStartDate();
 		input.end = FilterController.get().getEndDate();
 
-		service.getDataAccountFetches(input, new AsyncCallback<GetDataAccountFetchesResponse>() {
+		current = service.getDataAccountFetches(input, new AsyncCallback<GetDataAccountFetchesResponse>() {
 
 			@Override
 			public void onSuccess(GetDataAccountFetchesResponse output) {
+				current = null;
 				if (output.status == StatusType.StatusTypeSuccess) {
 					if (output.dataAccountFetches != null) {
 						dataAccountFetchList.addAll(output.dataAccountFetches);
@@ -102,13 +111,14 @@ public class DataAccountFetchController extends AsyncDataProvider<DataAccountFet
 									Math.min(input.pager.start.intValue() + input.pager.count.intValue(), pager.totalCount.intValue())));
 				}
 
-				EventController.get().fireEventFromSource(new GetDataAccountFetchesEventHandler.GetDataAccountFetchesSuccess(input, output),
+				DefaultEventBus.get().fireEventFromSource(new GetDataAccountFetchesEventHandler.GetDataAccountFetchesSuccess(input, output),
 						DataAccountFetchController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new GetDataAccountFetchesEventHandler.GetDataAccountFetchesFailure(input, caught),
+				current = null;
+				DefaultEventBus.get().fireEventFromSource(new GetDataAccountFetchesEventHandler.GetDataAccountFetchesFailure(input, caught),
 						DataAccountFetchController.this);
 			}
 
@@ -137,13 +147,13 @@ public class DataAccountFetchController extends AsyncDataProvider<DataAccountFet
 
 			@Override
 			public void onSuccess(TriggerDataAccountGatherResponse output) {
-				EventController.get().fireEventFromSource(new TriggerDataAccountGatherEventHandler.TriggerDataAccountGatherSuccess(input, output),
+				DefaultEventBus.get().fireEventFromSource(new TriggerDataAccountGatherEventHandler.TriggerDataAccountGatherSuccess(input, output),
 						DataAccountFetchController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new TriggerDataAccountGatherEventHandler.TriggerDataAccountGatherFailure(input, caught),
+				DefaultEventBus.get().fireEventFromSource(new TriggerDataAccountGatherEventHandler.TriggerDataAccountGatherFailure(input, caught),
 						DataAccountFetchController.this);
 			}
 
@@ -173,13 +183,13 @@ public class DataAccountFetchController extends AsyncDataProvider<DataAccountFet
 				if (output.status == StatusType.StatusTypeSuccess) {
 
 				}
-				EventController.get().fireEventFromSource(new TriggerDataAccountFetchIngestEventHandler.TriggerDataAccountFetchIngestSuccess(input, output),
+				DefaultEventBus.get().fireEventFromSource(new TriggerDataAccountFetchIngestEventHandler.TriggerDataAccountFetchIngestSuccess(input, output),
 						DataAccountFetchController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new TriggerDataAccountFetchIngestEventHandler.TriggerDataAccountFetchIngestFailure(input, caught),
+				DefaultEventBus.get().fireEventFromSource(new TriggerDataAccountFetchIngestEventHandler.TriggerDataAccountFetchIngestFailure(input, caught),
 						DataAccountFetchController.this);
 			}
 

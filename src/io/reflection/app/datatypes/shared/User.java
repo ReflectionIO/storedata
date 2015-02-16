@@ -192,4 +192,69 @@ public class User extends DataType {
 			}
 		}
 	}
+
+	public User permissions(List<Permission> permissions) {
+		this.permissions = permissions;
+		return this;
+	}
+
+	public User roles(List<Role> roles) {
+		this.roles = roles;
+		return this;
+	}
+
+	public User linkedAccounts(List<DataAccount> linkedAccounts) {
+		this.linkedAccounts = linkedAccounts;
+		return this;
+	}
+
+	public User forename(String forename) {
+		this.forename = forename;
+		return this;
+	}
+
+	public User surname(String surname) {
+		this.surname = surname;
+		return this;
+	}
+
+	public User username(String username) {
+		this.username = username;
+		return this;
+	}
+
+	public User avatar(String avatar) {
+		this.avatar = avatar;
+		return this;
+	}
+
+	public User company(String company) {
+		this.company = company;
+		return this;
+	}
+
+	public User password(String password) {
+		this.password = password;
+		return this;
+	}
+
+	public User lastLoggedIn(Date lastLoggedIn) {
+		this.lastLoggedIn = lastLoggedIn;
+		return this;
+	}
+
+	public User verified(String verified) {
+		this.verified = verified;
+		return this;
+	}
+
+	public User expires(Date expires) {
+		this.expires = expires;
+		return this;
+	}
+
+	public User code(String code) {
+		this.code = code;
+		return this;
+	}
 }

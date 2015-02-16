@@ -2,7 +2,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
 	xmlns:pp="urn:import:io.reflection.app.client.page.part" xmlns:l="urn:import:io.reflection.app.client.part.linkaccount" xmlns:c="urn:import:com.google.gwt.user.cellview.client"
 	xmlns:d="urn:import:com.google.gwt.dom.client">
-	<ui:style>
+	<ui:style gss="true">
 	.toolbar_spacing {
 	    padding-top: 10px;
 	    padding-bottom: 10px;

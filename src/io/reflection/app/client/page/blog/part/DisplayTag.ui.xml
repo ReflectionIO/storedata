@@ -3,7 +3,7 @@
     
     <ui:import field="io.reflection.app.client.page.PageType.RegisterPageType" />
 
-    <ui:style>
+    <ui:style gss="true">
     .link {
     	margin-right: 10px;
     }

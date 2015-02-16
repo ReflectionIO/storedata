@@ -10,7 +10,7 @@ package io.reflection.app.client.page.forum;
 import io.reflection.app.api.forum.shared.call.GetForumsRequest;
 import io.reflection.app.api.forum.shared.call.GetForumsResponse;
 import io.reflection.app.api.forum.shared.call.event.GetForumsEventHandler;
-import io.reflection.app.client.controller.EventController;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.controller.ForumController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
@@ -142,7 +142,7 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 				// put it all together
 				return TopicTemplate.INSTANCE
 						.topicLayout(SafeHtmlUtils.fromSafeConstant(properties),
-								PageType.ForumThreadPageType.asHref(TopicPage.VIEW_ACTION_PARAMETER_VALUE, object.id.toString()).asString(),
+								PageType.ForumThreadPageType.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE, object.id.toString()).asString(),
 								SafeStylesUtils.fromTrustedString(""), SafeHtmlUtils.fromString(object.title), SafeHtmlUtils.fromString(numPages + " pages"),
 								pageLinks);
 			}
@@ -207,8 +207,8 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 	protected void onAttach() {
 		super.onAttach();
 
-		register(EventController.get().addHandlerToSource(GetForumsEventHandler.TYPE, ForumController.get(), this));
-		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(GetForumsEventHandler.TYPE, ForumController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 	}
 
 	@Override
@@ -239,7 +239,7 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 
 		forumSummarySidePanel.reset();
 		titleText.setInnerHTML("");
-		
+
 		newTopicButton.setEnabled(false);
 	}
 
@@ -297,12 +297,12 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 	public void navigationChanged(Stack previous, Stack current) {
 		if (current != null && PageType.ForumPageType.equals(current.getPage())) {
 
-			//No caching, just to get it working.
-			//There is still caching for using the pager on a ForumPage, just not navigating away from and to the same ForumPage.
-			//We don't cache for now because we may be returning to this page from the beginning, but the pager thinks it is on page 2.
-			//Adding the datadisplay back again (which is needed because of the need to disconnect it in other situations)
-			//will cause an async data provider to fire getting perhaps unecessary data or worse an edge case. On return it will force the display of
-			//that data even though we're starting from the beginning.
+			// No caching, just to get it working.
+			// There is still caching for using the pager on a ForumPage, just not navigating away from and to the same ForumPage.
+			// We don't cache for now because we may be returning to this page from the beginning, but the pager thinks it is on page 2.
+			// Adding the datadisplay back again (which is needed because of the need to disconnect it in other situations)
+			// will cause an async data provider to fire getting perhaps unecessary data or worse an edge case. On return it will force the display of
+			// that data even though we're starting from the beginning.
 			TopicController.get().reset();
 			if (!TopicController.get().getDataDisplays().contains(topics)) {
 				// this triggers a range change update!
@@ -334,14 +334,13 @@ public class ForumPage extends Page implements NavigationEventHandler, GetForums
 			newTopicButton.setEnabled(true);
 		}
 	}
-	
+
 	@UiHandler("newTopicButton")
-    void newTopicClick(ClickEvent event) {
-	    if (selectedForumId != null) {
-	        PageType.ForumTopicPageType.show("new", selectedForumId.toString()) ;
-	    }
+	void newTopicClick(ClickEvent event) {
+		if (selectedForumId != null) {
+			PageType.ForumTopicPageType.show("new", selectedForumId.toString());
+		}
 	}
-	
 
 	/*
 	 * (non-Javadoc)

@@ -16,11 +16,13 @@ import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
-import io.reflection.app.datatypes.shared.EmailTemplate;
+import io.reflection.app.datatypes.shared.Event;
+import io.reflection.app.datatypes.shared.Notification;
+import io.reflection.app.datatypes.shared.NotificationTypeType;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
-import io.reflection.app.helpers.EmailHelper;
+import io.reflection.app.helpers.NotificationHelper;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
@@ -28,10 +30,10 @@ import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
-import io.reflection.app.service.emailtemplate.EmailTemplateServiceProvider;
+import io.reflection.app.service.event.EventServiceProvider;
+import io.reflection.app.service.notification.NotificationServiceProvider;
 import io.reflection.app.service.role.RoleServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
-import io.reflection.app.shared.util.FormattingHelper;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -46,8 +48,6 @@ import com.spacehopperstudios.utility.StringUtils;
 final class UserService implements IUserService {
 
 	private static final String SALT = "salt.username.magic";
-	private static final long PASSWORD_EMAIL_TEMPLATE_ID = 4;
-	private static final long WELCOME_EMAIL_TEMPLATE_ID = 1;
 
 	private static final Logger LOG = Logger.getLogger(UserService.class.getName());
 
@@ -146,7 +146,7 @@ final class UserService implements IUserService {
 			userConnection.executeQuery(addUserQuery);
 
 			if (userConnection.getAffectedRowCount() > 0) {
-				user.id = userConnection.getInsertedId();
+				user.id = Long.valueOf(userConnection.getInsertedId());
 				user.password = null;
 
 				addedUser = this.getUser(user.id);
@@ -160,11 +160,15 @@ final class UserService implements IUserService {
 				Map<String, Object> values = new HashMap<String, Object>();
 				values.put("user", addedUser);
 
-				EmailTemplate template = EmailTemplateServiceProvider.provide().getEmailTemplate(Long.valueOf(WELCOME_EMAIL_TEMPLATE_ID));
-				String body = EmailHelper.inflate(values, template.body);
+				Event event = EventServiceProvider.provide().getCodeEvent(DataTypeHelper.THANK_YOU_EVENT_CODE);
+				String body = NotificationHelper.inflate(values, event.longBody);
 
-				if (!EmailHelper.sendEmail(template.from, user.username, FormattingHelper.getUserName(user), template.subject, body, template.format)) {
-					LOG.severe(String.format("Failed to welcome user [%d]", user.id.longValue()));
+				Notification notification = (new Notification()).from("hello@reflection.io").user(user).event(event).body(body).subject(event.subject);
+				Notification added = NotificationServiceProvider.provide().addNotification(notification);
+
+				if (added.type != NotificationTypeType.NotificationTypeTypeInternal) {
+					notification.type = NotificationTypeType.NotificationTypeTypeInternal;
+					NotificationServiceProvider.provide().addNotification(notification);
 				}
 			}
 		} finally {
@@ -620,8 +624,8 @@ final class UserService implements IUserService {
 					LOG.info(String.format("Role with roleid [%d] was added to user with userid [%d]", role.id.longValue(), user.id.longValue()));
 				}
 
-				if (role.id == Long.valueOf(5) || "BT1".equals(role.code)) {
-					markForEmailAction(user, "register/complete", 2);
+				if ("BT1".equals(role.code)) {
+					markForEmailAction(user, "register/complete", DataTypeHelper.SELECTED_USER_EVENT_CODE);
 				}
 			} else {
 				if (LOG.isLoggable(Level.WARNING)) {
@@ -847,7 +851,7 @@ final class UserService implements IUserService {
 
 		String getDataAccountIdsQuery = String.format(
 				"SELECT `dataaccountid` FROM `userdataaccount` WHERE `deleted`='n' AND `userid`=%d ORDER BY `%s` %s LIMIT %d, %d", user.id.longValue(),
-				pager.sortBy == null ? "id" : pager.sortBy, pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
+				pager.sortBy == null ? "id" : stripslashes(pager.sortBy), pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
 				pager.start == null ? 0 : pager.start.longValue(), pager.count == null ? 25 : pager.count.longValue());
 
 		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
@@ -897,7 +901,7 @@ final class UserService implements IUserService {
 
 			String getDataAccountIdsQuery = String.format(
 					"SELECT `dataaccountid` FROM `userdataaccount` WHERE `deleted`='n' AND `userid` IN ('%s') ORDER BY `%s` %s LIMIT %d, %d",
-					commaDelimitedUserIds, pager.sortBy == null ? "id" : pager.sortBy,
+					commaDelimitedUserIds, pager.sortBy == null ? "id" : stripslashes(pager.sortBy),
 					pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start == null ? Pager.DEFAULT_START.longValue()
 							: pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue() : pager.count.longValue());
 
@@ -1102,10 +1106,10 @@ final class UserService implements IUserService {
 	 */
 	@Override
 	public void markForReset(User user) throws DataAccessException {
-		markForEmailAction(user, "resetpassword", 3);
+		markForEmailAction(user, "resetpassword", DataTypeHelper.RESET_PASSWORD_EVENT_CODE);
 	}
 
-	private void markForEmailAction(User user, String pageAction, long templateId) throws DataAccessException {
+	private void markForEmailAction(User user, String pageAction, String eventCode) throws DataAccessException {
 		String markForEmailActionQuery = String.format("UPDATE `user` SET `code`=CAST(UUID() AS BINARY) WHERE `deleted`='n' AND `id`=%d", user.id.longValue());
 
 		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
@@ -1124,18 +1128,25 @@ final class UserService implements IUserService {
 				}
 
 				values.put("user", user);
-				values.put("link", String.format("http://testenv1.reflection.io/#!%s/%d/%s", pageAction, user.id.longValue(), code));
+				values.put("link", String.format("#!%s/%d/%s", pageAction, user.id.longValue(), code));
 
 				if (LOG.isLoggable(GaeLevel.DEBUG)) {
 					LOG.fine(String.format("Sending action code url [%s] to [%s]", values.get("link"), user.username));
 				}
 
-				EmailTemplate template = EmailTemplateServiceProvider.provide().getEmailTemplate(Long.valueOf(templateId));
+				Event event = EventServiceProvider.provide().getCodeEvent(eventCode);
 
-				String body = EmailHelper.inflate(values, template.body);
-				String subject = EmailHelper.inflate(values, template.subject);
+				String subject = NotificationHelper.inflate(values, event.subject);
 
-				EmailHelper.sendEmail(template.from, user.username, FormattingHelper.getUserName(user), subject, body, template.format);
+				String body = NotificationHelper.inflate(values, event.longBody);
+
+				Notification notification = (new Notification()).from("hello@reflection.io").user(user).event(event).body(body).subject(subject);
+				Notification added = NotificationServiceProvider.provide().addNotification(notification);
+
+				if (added.type != NotificationTypeType.NotificationTypeTypeInternal) {
+					notification.type = NotificationTypeType.NotificationTypeTypeInternal;
+					NotificationServiceProvider.provide().addNotification(notification);
+				}
 			}
 
 		} finally {
@@ -1165,11 +1176,15 @@ final class UserService implements IUserService {
 				Map<String, Object> values = new HashMap<String, Object>();
 				values.put("user", user);
 
-				EmailTemplate template = EmailTemplateServiceProvider.provide().getEmailTemplate(Long.valueOf(PASSWORD_EMAIL_TEMPLATE_ID));
-				String body = EmailHelper.inflate(values, template.body);
+				Event event = EventServiceProvider.provide().getCodeEvent(DataTypeHelper.CHANGE_PASSWORD_EVENT_CODE);
+				String body = NotificationHelper.inflate(values, event.longBody);
 
-				if (!EmailHelper.sendEmail(template.from, user.username, FormattingHelper.getUserName(user), template.subject, body, template.format)) {
-					LOG.severe(String.format("Failed to notify user [%d] of password change", user.id.longValue()));
+				Notification notification = (new Notification()).from("hello@reflection.io").user(user).event(event).body(body).subject(event.subject);
+				Notification added = NotificationServiceProvider.provide().addNotification(notification);
+
+				if (added.type != NotificationTypeType.NotificationTypeTypeInternal) {
+					notification.type = NotificationTypeType.NotificationTypeTypeInternal;
+					NotificationServiceProvider.provide().addNotification(notification);
 				}
 			}
 		} finally {

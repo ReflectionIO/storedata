@@ -8,18 +8,28 @@
 //
 package io.reflection.app.api.admin.client;
 
+import io.reflection.app.api.admin.shared.call.AddEventRequest;
+import io.reflection.app.api.admin.shared.call.AddEventResponse;
+import io.reflection.app.api.admin.shared.call.AddEventSubscriptionRequest;
+import io.reflection.app.api.admin.shared.call.AddEventSubscriptionResponse;
 import io.reflection.app.api.admin.shared.call.AssignPermissionRequest;
 import io.reflection.app.api.admin.shared.call.AssignPermissionResponse;
 import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
 import io.reflection.app.api.admin.shared.call.AssignRoleResponse;
+import io.reflection.app.api.admin.shared.call.DeleteEventSubscriptionsRequest;
+import io.reflection.app.api.admin.shared.call.DeleteEventSubscriptionsResponse;
+import io.reflection.app.api.admin.shared.call.DeleteUserRequest;
+import io.reflection.app.api.admin.shared.call.DeleteUserResponse;
 import io.reflection.app.api.admin.shared.call.DeleteUsersRequest;
 import io.reflection.app.api.admin.shared.call.DeleteUsersResponse;
 import io.reflection.app.api.admin.shared.call.GetDataAccountFetchesRequest;
 import io.reflection.app.api.admin.shared.call.GetDataAccountFetchesResponse;
 import io.reflection.app.api.admin.shared.call.GetDataAccountsRequest;
 import io.reflection.app.api.admin.shared.call.GetDataAccountsResponse;
-import io.reflection.app.api.admin.shared.call.GetEmailTemplatesRequest;
-import io.reflection.app.api.admin.shared.call.GetEmailTemplatesResponse;
+import io.reflection.app.api.admin.shared.call.GetEventSubscriptionsRequest;
+import io.reflection.app.api.admin.shared.call.GetEventSubscriptionsResponse;
+import io.reflection.app.api.admin.shared.call.GetEventsRequest;
+import io.reflection.app.api.admin.shared.call.GetEventsResponse;
 import io.reflection.app.api.admin.shared.call.GetFeedFetchesRequest;
 import io.reflection.app.api.admin.shared.call.GetFeedFetchesResponse;
 import io.reflection.app.api.admin.shared.call.GetItemsRequest;
@@ -44,8 +54,8 @@ import io.reflection.app.api.admin.shared.call.RevokePermissionRequest;
 import io.reflection.app.api.admin.shared.call.RevokePermissionResponse;
 import io.reflection.app.api.admin.shared.call.RevokeRoleRequest;
 import io.reflection.app.api.admin.shared.call.RevokeRoleResponse;
-import io.reflection.app.api.admin.shared.call.SendEmailRequest;
-import io.reflection.app.api.admin.shared.call.SendEmailResponse;
+import io.reflection.app.api.admin.shared.call.SendNotificationRequest;
+import io.reflection.app.api.admin.shared.call.SendNotificationResponse;
 import io.reflection.app.api.admin.shared.call.SetPasswordRequest;
 import io.reflection.app.api.admin.shared.call.SetPasswordResponse;
 import io.reflection.app.api.admin.shared.call.TriggerDataAccountFetchIngestRequest;
@@ -60,10 +70,8 @@ import io.reflection.app.api.admin.shared.call.TriggerModelRequest;
 import io.reflection.app.api.admin.shared.call.TriggerModelResponse;
 import io.reflection.app.api.admin.shared.call.TriggerPredictRequest;
 import io.reflection.app.api.admin.shared.call.TriggerPredictResponse;
-import io.reflection.app.api.admin.shared.call.UpdateEmailTemplateRequest;
-import io.reflection.app.api.admin.shared.call.UpdateEmailTemplateResponse;
-import io.reflection.app.api.blog.shared.call.DeleteUserRequest;
-import io.reflection.app.api.blog.shared.call.DeleteUserResponse;
+import io.reflection.app.api.admin.shared.call.UpdateEventRequest;
+import io.reflection.app.api.admin.shared.call.UpdateEventResponse;
 
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
@@ -75,6 +83,7 @@ import com.willshex.gson.json.service.client.HttpException;
 import com.willshex.gson.json.service.client.JsonService;
 
 public final class AdminService extends JsonService {
+
 	public static final String AdminMethodGetUsers = "GetUsers";
 
 	public Request getUsers(final GetUsersRequest input, final AsyncCallback<GetUsersResponse> output) {
@@ -570,68 +579,68 @@ public final class AdminService extends JsonService {
 		return handle;
 	}
 
-	public static final String AdminMethodGetEmailTemplates = "GetEmailTemplates";
+	public static final String AdminMethodGetEvents = "GetEvents";
 
-	public Request getEmailTemplates(final GetEmailTemplatesRequest input, final AsyncCallback<GetEmailTemplatesResponse> output) {
+	public Request getEvents(final GetEventsRequest input, final AsyncCallback<GetEventsResponse> output) {
 		Request handle = null;
 		try {
-			handle = sendRequest(AdminMethodGetEmailTemplates, input, new RequestCallback() {
+			handle = sendRequest(AdminMethodGetEvents, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					try {
-						GetEmailTemplatesResponse outputParameter = new GetEmailTemplatesResponse();
+						GetEventsResponse outputParameter = new GetEventsResponse();
 						parseResponse(response, outputParameter);
 						output.onSuccess(outputParameter);
-						onCallSuccess(AdminService.this, AdminMethodGetEmailTemplates, input, outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodGetEvents, input, outputParameter);
 					} catch (JSONException | HttpException exception) {
 						output.onFailure(exception);
-						onCallFailure(AdminService.this, AdminMethodGetEmailTemplates, input, exception);
+						onCallFailure(AdminService.this, AdminMethodGetEvents, input, exception);
 					}
 				}
 
 				@Override
 				public void onError(Request request, Throwable exception) {
 					output.onFailure(exception);
-					onCallFailure(AdminService.this, AdminMethodGetEmailTemplates, input, exception);
+					onCallFailure(AdminService.this, AdminMethodGetEvents, input, exception);
 				}
 			});
-			onCallStart(AdminService.this, AdminMethodGetEmailTemplates, input, handle);
+			onCallStart(AdminService.this, AdminMethodGetEvents, input, handle);
 		} catch (RequestException exception) {
 			output.onFailure(exception);
-			onCallFailure(AdminService.this, AdminMethodGetEmailTemplates, input, exception);
+			onCallFailure(AdminService.this, AdminMethodGetEvents, input, exception);
 		}
 		return handle;
 	}
 
-	public static final String AdminMethodSendEmail = "SendEmail";
+	public static final String AdminMethodSendNotification = "SendNotification";
 
-	public Request sendEmail(final SendEmailRequest input, final AsyncCallback<SendEmailResponse> output) {
+	public Request sendNotification(final SendNotificationRequest input, final AsyncCallback<SendNotificationResponse> output) {
 		Request handle = null;
 		try {
-			handle = sendRequest(AdminMethodSendEmail, input, new RequestCallback() {
+			handle = sendRequest(AdminMethodSendNotification, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					try {
-						SendEmailResponse outputParameter = new SendEmailResponse();
+						SendNotificationResponse outputParameter = new SendNotificationResponse();
 						parseResponse(response, outputParameter);
 						output.onSuccess(outputParameter);
-						onCallSuccess(AdminService.this, AdminMethodSendEmail, input, outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodSendNotification, input, outputParameter);
 					} catch (JSONException | HttpException exception) {
 						output.onFailure(exception);
-						onCallFailure(AdminService.this, AdminMethodSendEmail, input, exception);
+						onCallFailure(AdminService.this, AdminMethodSendNotification, input, exception);
 					}
 				}
 
 				@Override
 				public void onError(Request request, Throwable exception) {
 					output.onFailure(exception);
-					onCallFailure(AdminService.this, AdminMethodSendEmail, input, exception);
+					onCallFailure(AdminService.this, AdminMethodSendNotification, input, exception);
 				}
 			});
-			onCallStart(AdminService.this, AdminMethodSendEmail, input, handle);
+			onCallStart(AdminService.this, AdminMethodSendNotification, input, handle);
 		} catch (RequestException exception) {
 			output.onFailure(exception);
-			onCallFailure(AdminService.this, AdminMethodSendEmail, input, exception);
+			onCallFailure(AdminService.this, AdminMethodSendNotification, input, exception);
 		}
 		return handle;
 	}
@@ -768,35 +777,68 @@ public final class AdminService extends JsonService {
 		return handle;
 	}
 
-	public static final String AdminMethodUpdateEmailTemplate = "UpdateEmailTemplate";
+	public static final String AdminMethodUpdateEvent = "UpdateEvent";
 
-	public Request updateEmailTemplate(final UpdateEmailTemplateRequest input, final AsyncCallback<UpdateEmailTemplateResponse> output) {
+	public Request updateEvent(final UpdateEventRequest input, final AsyncCallback<UpdateEventResponse> output) {
 		Request handle = null;
 		try {
-			handle = sendRequest(AdminMethodUpdateEmailTemplate, input, new RequestCallback() {
+			handle = sendRequest(AdminMethodUpdateEvent, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
 					try {
-						UpdateEmailTemplateResponse outputParameter = new UpdateEmailTemplateResponse();
+						UpdateEventResponse outputParameter = new UpdateEventResponse();
 						parseResponse(response, outputParameter);
 						output.onSuccess(outputParameter);
-						onCallSuccess(AdminService.this, AdminMethodUpdateEmailTemplate, input, outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodUpdateEvent, input, outputParameter);
 					} catch (JSONException | HttpException exception) {
 						output.onFailure(exception);
-						onCallFailure(AdminService.this, AdminMethodUpdateEmailTemplate, input, exception);
+						onCallFailure(AdminService.this, AdminMethodUpdateEvent, input, exception);
 					}
 				}
 
 				@Override
 				public void onError(Request request, Throwable exception) {
 					output.onFailure(exception);
-					onCallFailure(AdminService.this, AdminMethodUpdateEmailTemplate, input, exception);
+					onCallFailure(AdminService.this, AdminMethodUpdateEvent, input, exception);
 				}
 			});
-			onCallStart(AdminService.this, AdminMethodUpdateEmailTemplate, input, handle);
+			onCallStart(AdminService.this, AdminMethodUpdateEvent, input, handle);
 		} catch (RequestException exception) {
 			output.onFailure(exception);
-			onCallFailure(AdminService.this, AdminMethodUpdateEmailTemplate, input, exception);
+			onCallFailure(AdminService.this, AdminMethodUpdateEvent, input, exception);
+		}
+		return handle;
+	}
+
+	public static final String AdminMethodAddEvent = "AddEvent";
+
+	public Request addEvent(final AddEventRequest input, final AsyncCallback<AddEventResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(AdminMethodAddEvent, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						AddEventResponse outputParameter = new AddEventResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodAddEvent, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodAddEvent, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(AdminService.this, AdminMethodAddEvent, input, exception);
+				}
+			});
+			onCallStart(AdminService.this, AdminMethodAddEvent, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodAddEvent, input, exception);
 		}
 		return handle;
 	}
@@ -996,6 +1038,105 @@ public final class AdminService extends JsonService {
 		} catch (RequestException exception) {
 			output.onFailure(exception);
 			onCallFailure(AdminService.this, AdminMethodGetSimpleModelRuns, input, exception);
+		}
+		return handle;
+	}
+
+	public static final String AdminMethodGetEventSubscriptions = "GetEventSubscriptions";
+
+	public Request getEventSubscriptions(final GetEventSubscriptionsRequest input, final AsyncCallback<GetEventSubscriptionsResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(AdminMethodGetEventSubscriptions, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						GetEventSubscriptionsResponse outputParameter = new GetEventSubscriptionsResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodGetEventSubscriptions, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodGetEventSubscriptions, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(AdminService.this, AdminMethodGetEventSubscriptions, input, exception);
+				}
+			});
+			onCallStart(AdminService.this, AdminMethodGetEventSubscriptions, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodGetEventSubscriptions, input, exception);
+		}
+		return handle;
+	}
+
+	public static final String AdminMethodAddEventSubscription = "AddEventSubscription";
+
+	public Request addEventSubscription(final AddEventSubscriptionRequest input, final AsyncCallback<AddEventSubscriptionResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(AdminMethodAddEventSubscription, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						AddEventSubscriptionResponse outputParameter = new AddEventSubscriptionResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodAddEventSubscription, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodAddEventSubscription, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(AdminService.this, AdminMethodAddEventSubscription, input, exception);
+				}
+			});
+			onCallStart(AdminService.this, AdminMethodAddEventSubscription, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodAddEventSubscription, input, exception);
+		}
+		return handle;
+	}
+
+	public static final String AdminMethodDeleteEventSubscriptions = "DeleteEventSubscriptions";
+
+	public Request deleteEventSubscriptions(final DeleteEventSubscriptionsRequest input, final AsyncCallback<DeleteEventSubscriptionsResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(AdminMethodDeleteEventSubscriptions, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						DeleteEventSubscriptionsResponse outputParameter = new DeleteEventSubscriptionsResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(AdminService.this, AdminMethodDeleteEventSubscriptions, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(AdminService.this, AdminMethodDeleteEventSubscriptions, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(AdminService.this, AdminMethodDeleteEventSubscriptions, input, exception);
+				}
+			});
+			onCallStart(AdminService.this, AdminMethodDeleteEventSubscriptions, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(AdminService.this, AdminMethodDeleteEventSubscriptions, input, exception);
 		}
 		return handle;
 	}

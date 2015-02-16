@@ -1,0 +1,50 @@
+@external gwt-TabLayoutPanelTab, gwt-TabBarItem, gwt-TabBarItem-selected;
+
+/* gwt TabPanel */
+.gwt-TabLayoutPanelTab,.gwt-TabBarItem {
+    height: 3em;
+    width: 100px;
+    text-align: center;
+    color: #434346;
+    padding-left: 12px;
+    padding-top: 5px;
+    margin-right: 0px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border: 1px solid #d5d6da;
+    outline: 0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    cursor: pointer;
+    margin:0px;
+    padding:0px;
+}
+
+@if (is("safari")) {
+	.gwt-TabLayoutPanelTab,.gwt-TabBarItem {
+		background: -webkit-linear-gradient(#f6f7f9, #eeeff1);
+	}
+} @elseif (is("opera")) {
+	.gwt-TabLayoutPanelTab,.gwt-TabBarItem {
+		background: -o-linear-gradient(#f6f7f9, #eeeff1);
+	}
+} @elseif (is("gecko1_8")) {
+	.gwt-TabLayoutPanelTab,.gwt-TabBarItem {
+		background: -moz-linear-gradient(#f6f7f9, #eeeff1);
+	}
+} @else {
+	.gwt-TabLayoutPanelTab,.gwt-TabBarItem {
+		background: linear-gradient(#f6f7f9, #eeeff1); /* Standard syntax */
+	}
+}
+
+.gwt-TabBarItem-selected
+{
+	background: #ffffff;
+}
+
+.gwt-TabBarItem div
+{
+    margin-top:10px;
+}

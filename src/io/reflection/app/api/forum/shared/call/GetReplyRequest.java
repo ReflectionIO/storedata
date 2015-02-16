@@ -45,4 +45,14 @@ public class GetReplyRequest extends Request {
 			}
 		}
 	}
+
+	public GetReplyRequest id(Long id) {
+		this.id = id;
+		return this;
+	}
+
+	public GetReplyRequest title(String title) {
+		this.title = title;
+		return this;
+	}
 }

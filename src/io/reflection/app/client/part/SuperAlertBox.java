@@ -7,7 +7,7 @@
 //
 package io.reflection.app.client.part;
 
-import io.reflection.app.client.controller.EventController;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.helper.AlertBoxHelper;
 import io.reflection.app.client.part.AlertBox.AlertBoxType;
 
@@ -52,7 +52,7 @@ public class SuperAlertBox implements JsonServiceCallEventHandler, CloseHandler<
 	private SuperAlertBox() {
 		addContainer();
 
-		EventController.get().addHandler(JsonServiceCallEventHandler.TYPE, this);
+		DefaultEventBus.get().addHandler(JsonServiceCallEventHandler.TYPE, this);
 	}
 
 	private void addContainer() {

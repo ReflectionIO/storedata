@@ -27,6 +27,7 @@ import io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler.Link
 import io.reflection.app.api.core.shared.call.event.UpdateLinkedAccountEventHandler;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
 import io.reflection.app.datatypes.shared.Item;
@@ -39,6 +40,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gwt.http.client.Request;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
@@ -59,6 +61,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 
 	private List<DataAccount> rows = new ArrayList<DataAccount>();
 	private Pager pager = null;
+	private Request currentLinkedAccountItem;
 
 	private static LinkedAccountController mOne = null;
 
@@ -118,13 +121,13 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 
 				}
 
-				EventController.get().fireEventFromSource(new GetLinkedAccountsEventHandler.GetLinkedAccountsSuccess(input, output),
+				DefaultEventBus.get().fireEventFromSource(new GetLinkedAccountsEventHandler.GetLinkedAccountsSuccess(input, output),
 						LinkedAccountController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new GetLinkedAccountsEventHandler.GetLinkedAccountsFailure(input, caught),
+				DefaultEventBus.get().fireEventFromSource(new GetLinkedAccountsEventHandler.GetLinkedAccountsFailure(input, caught),
 						LinkedAccountController.this);
 			}
 		});
@@ -182,12 +185,12 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 					updateRowCount((int) mCount, true);
 					updateRowData(0, rows.subList(0, Math.min(pager.count.intValue(), pager.totalCount.intValue())));
 				}
-				EventController.get().fireEventFromSource(new LinkAccountSuccess(input, output), LinkedAccountController.this);
+				DefaultEventBus.get().fireEventFromSource(new LinkAccountSuccess(input, output), LinkedAccountController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new LinkAccountFailure(input, caught), LinkedAccountController.this);
+				DefaultEventBus.get().fireEventFromSource(new LinkAccountFailure(input, caught), LinkedAccountController.this);
 			}
 		});
 
@@ -227,13 +230,13 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 					updateLinkedAccountLookup(input.linkedAccount.id, input.linkedAccount.password, input.linkedAccount.properties);
 				}
 
-				EventController.get().fireEventFromSource(new UpdateLinkedAccountEventHandler.UpdateLinkedAccountSuccess(input, output),
+				DefaultEventBus.get().fireEventFromSource(new UpdateLinkedAccountEventHandler.UpdateLinkedAccountSuccess(input, output),
 						LinkedAccountController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new UpdateLinkedAccountEventHandler.UpdateLinkedAccountFailure(input, caught),
+				DefaultEventBus.get().fireEventFromSource(new UpdateLinkedAccountEventHandler.UpdateLinkedAccountFailure(input, caught),
 						LinkedAccountController.this);
 			}
 		});
@@ -273,12 +276,12 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 					updateRowCount((int) mCount, true);
 					updateRowData(0, rows.subList(0, Math.min(pager.count.intValue(), pager.totalCount.intValue())));
 				}
-				EventController.get().fireEventFromSource(new DeleteLinkedAccountSuccess(input, output), LinkedAccountController.this);
+				DefaultEventBus.get().fireEventFromSource(new DeleteLinkedAccountSuccess(input, output), LinkedAccountController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new DeleteLinkedAccountFailure(input, caught), LinkedAccountController.this);
+				DefaultEventBus.get().fireEventFromSource(new DeleteLinkedAccountFailure(input, caught), LinkedAccountController.this);
 			}
 		});
 
@@ -442,9 +445,11 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 		Item lookupItem = null;
 
 		if (item != null && item.internalId != null) {
-			lookupItem = MyAppsController.get().getUserItem(item.internalId);
+			if (ItemController.get().getUserItem(item.internalId) != null) {
+				lookupItem = ItemController.get().getUserItem(item.internalId);
+			}
 
-			if (lookupItem == null) {
+			if (lookupItem == null) {				
 				fetchLinkedAccountItem(item.internalId);
 			}
 		}
@@ -453,6 +458,11 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 	}
 
 	public void fetchLinkedAccountItem(String itemInternalId) {
+		if (currentLinkedAccountItem != null) {
+			currentLinkedAccountItem.cancel();
+			currentLinkedAccountItem = null;
+		}
+
 		CoreService service = ServiceCreator.createCoreService();
 
 		final GetLinkedAccountItemRequest input = new GetLinkedAccountItemRequest();
@@ -463,21 +473,23 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 		input.item.internalId = itemInternalId;
 		input.item.source = FilterController.get().getStore().a3Code;
 
-		service.getLinkedAccountItem(input, new AsyncCallback<GetLinkedAccountItemResponse>() {
+		currentLinkedAccountItem = service.getLinkedAccountItem(input, new AsyncCallback<GetLinkedAccountItemResponse>() {
 
 			@Override
 			public void onSuccess(GetLinkedAccountItemResponse output) {
-				if (output.status == StatusType.StatusTypeSuccess) {
-					MyAppsController.get().setUserItem(output.item);
+				currentLinkedAccountItem = null;
+				if (output.status == StatusType.StatusTypeSuccess && output.item != null) {
+					ItemController.get().setUserItem(output.item);
 				}
 
-				EventController.get().fireEventFromSource(new GetLinkedAccountItemEventHandler.GetLinkedAccountItemSuccess(input, output),
+				DefaultEventBus.get().fireEventFromSource(new GetLinkedAccountItemEventHandler.GetLinkedAccountItemSuccess(input, output),
 						LinkedAccountController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new GetLinkedAccountItemEventHandler.GetLinkedAccountItemFailure(input, caught),
+				currentLinkedAccountItem = null;
+				DefaultEventBus.get().fireEventFromSource(new GetLinkedAccountItemEventHandler.GetLinkedAccountItemFailure(input, caught),
 						LinkedAccountController.this);
 			}
 		});

@@ -10,6 +10,7 @@ package io.reflection.app.service.dataaccount;
 
 import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
+import io.reflection.app.accountdatacollectors.ITunesConnectDownloadHelper;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
@@ -24,12 +25,14 @@ import io.reflection.app.service.ServiceType;
 import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
@@ -257,10 +260,7 @@ final class DataAccountService implements IDataAccountService {
 	}
 
 	private void enqueue(DataAccount dataAccount, int days, boolean requiresNotification) {
-		Calendar c = Calendar.getInstance();
-		c.add(Calendar.DAY_OF_MONTH, -1);
-
-		enqueue(dataAccount, c.getTime(), days, requiresNotification);
+		enqueue(dataAccount, DateTime.now().minusDays(1).toDate(), days, requiresNotification);
 	}
 
 	/**
@@ -268,13 +268,8 @@ final class DataAccountService implements IDataAccountService {
 	 * @param days
 	 */
 	private void enqueue(DataAccount dataAccount, Date date, int days, boolean requiresNotification) {
-		Calendar c = Calendar.getInstance();
-
 		for (int i = 0; i < days; i++) {
-			c.setTime(date);
-			c.add(Calendar.DAY_OF_MONTH, -i);
-
-			enqueue(dataAccount, c.getTime(), requiresNotification && (days - i == 1));
+			enqueue(dataAccount, (new DateTime(date.getTime(), DateTimeZone.UTC)).minusDays(i).toDate(), requiresNotification && (days - i == 1));
 		}
 	}
 
@@ -375,7 +370,7 @@ final class DataAccountService implements IDataAccountService {
 
 		String getDataAccountsQuery = String
 				.format("SELECT *, convert(aes_decrypt(`password`,UNHEX('%s')), CHAR(1000)) AS `clearpassword` FROM `dataaccount` WHERE `deleted`='n' ORDER BY `%s` %s LIMIT %d,%d",
-						key(), pager.sortBy == null ? "id" : pager.sortBy,
+						key(), pager.sortBy == null ? "id" : stripslashes(pager.sortBy),
 						pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start, pager.count);
 
 		Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
@@ -469,7 +464,7 @@ final class DataAccountService implements IDataAccountService {
 
 		String getIdsDataAccountsQuery = String
 				.format("SELECT *, convert(aes_decrypt(`password`,UNHEX('%s')), CHAR(1000)) AS `clearpassword` FROM `dataaccount` WHERE `id` in (%s) AND `deleted`='n' ORDER BY `%s` %s",
-						key(), joinedIds, pager.sortBy == null ? "id" : pager.sortBy,
+						key(), joinedIds, pager.sortBy == null ? "id" : stripslashes(pager.sortBy),
 						pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC");
 
 		Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
@@ -528,4 +523,23 @@ final class DataAccountService implements IDataAccountService {
 		enqueue(dataAccount, date, days.intValue(), false);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.dataaccount.IDataAccountService#verifyDataAccount(io.reflection.app.datatypes.shared.DataAccount, java.util.Date)
+	 */
+	@Override
+	public void verifyDataAccount(DataAccount dataAccount, Date date) throws DataAccessException {
+		switch (dataAccount.source.a3Code) {
+		case "itc":
+			try {
+				ITunesConnectDownloadHelper.getITunesSalesFile(dataAccount.username, dataAccount.password,
+						ITunesConnectDownloadHelper.getVendorId(dataAccount.properties), ITunesConnectDownloadHelper.DATE_FORMATTER.format(date), null, null);
+			} catch (Exception e) {
+				throw new DataAccessException(e);
+			}
+
+			break;
+		}
+	}
 }

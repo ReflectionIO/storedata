@@ -1,0 +1,88 @@
+@def SELECTION_BORDER_WIDTH 0px;
+
+.dataGridWidget {
+  
+}
+
+.dataGridFirstColumn {
+  
+}
+
+.dataGridLastColumn {
+  
+}
+
+.dataGridFooter {
+}
+
+.dataGridHeader {
+}
+
+.dataGridCell {
+}
+
+.dataGridFirstColumnFooter {
+  
+}
+
+.dataGridFirstColumnHeader {
+  
+}
+
+.dataGridLastColumnFooter {
+  
+}
+
+.dataGridLastColumnHeader {
+  
+}
+
+.dataGridSortableHeader {
+}
+
+.dataGridSortableHeader:hover {
+}
+
+.dataGridSortedHeaderAscending {
+  
+}
+
+.dataGridSortedHeaderDescending {
+  
+}
+
+.dataGridEvenRow {
+}
+
+.dataGridEvenRowCell {
+}
+
+.dataGridOddRow {
+}
+
+.dataGridOddRowCell {
+}
+
+.dataGridHoveredRow {
+}
+
+.dataGridHoveredRowCell {
+}
+
+.dataGridKeyboardSelectedRow {
+}
+
+.dataGridKeyboardSelectedRowCell {
+}
+
+.dataGridSelectedRow {
+}
+
+.dataGridSelectedRowCell {
+}
+
+/**
+ * The keyboard selected cell is visible over selection.
+ */
+.dataGridKeyboardSelectedCell {
+}

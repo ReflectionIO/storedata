@@ -7,11 +7,13 @@
 //
 package io.reflection.app.predictors;
 
+import static io.reflection.app.helpers.ItemPropertyWrapper.PROPERTY_IAP;
 import io.reflection.app.CallServiceMethodServlet;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
-import io.reflection.app.apple.ItemPropertyLookupServlet;
+import io.reflection.app.archivers.ArchiverFactory;
+import io.reflection.app.archivers.ItemRankArchiver;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.datatypes.shared.Category;
@@ -27,8 +29,6 @@ import io.reflection.app.datatypes.shared.SimpleModelRun;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.helpers.ItemPropertyWrapper;
 import io.reflection.app.helpers.QueueHelper;
-import io.reflection.app.itemrankarchivers.ItemRankArchiver;
-import io.reflection.app.itemrankarchivers.ItemRankArchiverFactory;
 import io.reflection.app.modellers.Modeller;
 import io.reflection.app.modellers.ModellerFactory;
 import io.reflection.app.service.category.CategoryServiceProvider;
@@ -140,10 +140,10 @@ public class PredictorIOS implements Predictor {
 			ItemPropertyWrapper properties = new ItemPropertyWrapper(item.properties);
 
 			if (archiver == null) {
-				archiver = ItemRankArchiverFactory.get();
+				archiver = ArchiverFactory.getItemRankArchiver();
 			}
 
-			boolean usesIap = properties.getBoolean(ItemPropertyLookupServlet.PROPERTY_IAP);
+			boolean usesIap = properties.getBoolean(PROPERTY_IAP);
 
 			if (item != null) {
 				setDownloadsAndRevenue(rank, modelRun, usesIap, rank.price.floatValue());
@@ -370,7 +370,7 @@ public class PredictorIOS implements Predictor {
 
 		Map<String, Item> lookup = lookupItemsForRanks(foundRanks);
 
-		ItemRankArchiver archiver = ItemRankArchiverFactory.get();
+		ItemRankArchiver archiver = ArchiverFactory.getItemRankArchiver();
 
 		Item item = null;
 		Boolean usesIap = null;
@@ -382,7 +382,7 @@ public class PredictorIOS implements Predictor {
 				usesIap = null;
 			} else {
 				ItemPropertyWrapper properties = new ItemPropertyWrapper(item.properties);
-				usesIap = properties.getBoolean(ItemPropertyLookupServlet.PROPERTY_IAP, null);
+				usesIap = properties.getBoolean(PROPERTY_IAP, null);
 			}
 
 			setSimpleDownloadsAndRevenue(rank, simpleModelRun, usesIap);

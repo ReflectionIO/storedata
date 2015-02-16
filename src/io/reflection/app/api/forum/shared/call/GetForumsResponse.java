@@ -66,4 +66,14 @@ public class GetForumsResponse extends Response {
 			}
 		}
 	}
+
+	public GetForumsResponse forums(List<Forum> forums) {
+		this.forums = forums;
+		return this;
+	}
+
+	public GetForumsResponse pager(Pager pager) {
+		this.pager = pager;
+		return this;
+	}
 }

@@ -36,4 +36,9 @@ public class CheckUsernameRequest extends Request {
 			}
 		}
 	}
+
+	public CheckUsernameRequest username(String username) {
+		this.username = username;
+		return this;
+	}
 }

@@ -140,4 +140,59 @@ public class FeedFetch extends DataType {
 			}
 		}
 	}
+
+	public FeedFetch category(Category category) {
+		this.category = category;
+		return this;
+	}
+
+	public FeedFetch country(String country) {
+		this.country = country;
+		return this;
+	}
+
+	public FeedFetch data(String data) {
+		this.data = data;
+		return this;
+	}
+
+	public FeedFetch date(Date date) {
+		this.date = date;
+		return this;
+	}
+
+	public FeedFetch ingested(Boolean ingested) {
+		this.ingested = ingested;
+		return this;
+	}
+
+	public FeedFetch store(String store) {
+		this.store = store;
+		return this;
+	}
+
+	public FeedFetch part(Integer part) {
+		this.part = part;
+		return this;
+	}
+
+	public FeedFetch totalParts(Integer totalParts) {
+		this.totalParts = totalParts;
+		return this;
+	}
+
+	public FeedFetch type(String type) {
+		this.type = type;
+		return this;
+	}
+
+	public FeedFetch code(Long code) {
+		this.code = code;
+		return this;
+	}
+
+	public FeedFetch status(FeedFetchStatusType status) {
+		this.status = status;
+		return this;
+	}
 }

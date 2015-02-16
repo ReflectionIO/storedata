@@ -37,4 +37,9 @@ public class GetLinkedAccountItemRequest extends Request {
 			}
 		}
 	}
+
+	public GetLinkedAccountItemRequest item(Item item) {
+		this.item = item;
+		return this;
+	}
 }

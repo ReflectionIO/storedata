@@ -171,4 +171,84 @@ public class Application extends DataType {
 			}
 		}
 	}
+
+	public Application title(String title) {
+		this.title = title;
+		return this;
+	}
+
+	public Application recommendedAge(String recommendedAge) {
+		this.recommendedAge = recommendedAge;
+		return this;
+	}
+
+	public Application artistName(String artistName) {
+		this.artistName = artistName;
+		return this;
+	}
+
+	public Application sellerName(String sellerName) {
+		this.sellerName = sellerName;
+		return this;
+	}
+
+	public Application companyUrl(String companyUrl) {
+		this.companyUrl = companyUrl;
+		return this;
+	}
+
+	public Application supportUrl(String supportUrl) {
+		this.supportUrl = supportUrl;
+		return this;
+	}
+
+	public Application viewUrl(String viewUrl) {
+		this.viewUrl = viewUrl;
+		return this;
+	}
+
+	public Application artworkUrlLarge(String artworkUrlLarge) {
+		this.artworkUrlLarge = artworkUrlLarge;
+		return this;
+	}
+
+	public Application artworkUrlSmall(String artworkUrlSmall) {
+		this.artworkUrlSmall = artworkUrlSmall;
+		return this;
+	}
+
+	public Application itunesReleaseDate(Date itunesReleaseDate) {
+		this.itunesReleaseDate = itunesReleaseDate;
+		return this;
+	}
+
+	public Application copyright(String copyright) {
+		this.copyright = copyright;
+		return this;
+	}
+
+	public Application description(String description) {
+		this.description = description;
+		return this;
+	}
+
+	public Application version(String version) {
+		this.version = version;
+		return this;
+	}
+
+	public Application itunesVersion(String itunesVersion) {
+		this.itunesVersion = itunesVersion;
+		return this;
+	}
+
+	public Application downloadSize(Long downloadSize) {
+		this.downloadSize = downloadSize;
+		return this;
+	}
+
+	public Application usesIap(Boolean usesIap) {
+		this.usesIap = usesIap;
+		return this;
+	}
 }

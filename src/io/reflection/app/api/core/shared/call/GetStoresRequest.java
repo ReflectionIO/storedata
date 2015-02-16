@@ -57,4 +57,19 @@ public class GetStoresRequest extends Request {
 			}
 		}
 	}
+
+	public GetStoresRequest country(Country country) {
+		this.country = country;
+		return this;
+	}
+
+	public GetStoresRequest pager(Pager pager) {
+		this.pager = pager;
+		return this;
+	}
+
+	public GetStoresRequest query(String query) {
+		this.query = query;
+		return this;
+	}
 }

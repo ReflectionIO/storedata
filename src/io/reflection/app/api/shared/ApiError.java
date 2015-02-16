@@ -30,7 +30,7 @@ public enum ApiError {
 	PagerStartLargerThanTotal(100007, "Invalid value for start, should be less than totalCount for Pager: {0}.pager"),
 
 	NegativeValueNotAllowed(100008, "Invalid negative value for {0}: {1}"),
-	NumericValueTooSmall(100009,  "Invalid value too small ({0}-{1}): {2}"),
+	NumericValueTooSmall(100009, "Invalid value too small ({0}-{1}): {2}"),
 	NumericValueTooLarge(100010, "Invalid value too large ({0}-{1}): {2}"),
 
 	CountryNull(100011, "Invalid value null for Country: {0}.country"),
@@ -79,6 +79,8 @@ public enum ApiError {
 	DataAccountNull(100042, "Invalid value null for DataAccount: {0}"),
 	DataAccountNotFound(100043, "Data account not found DataAccount: {0}"),
 	DataAccountNoLookup(100044, "Invalid data account lookup, no id provided for DataAccount: {0}"),
+	InvalidDataAccountCredentials(100052, "Invalid data account credentials for DataAccount: {0}"),
+	InvalidDataAccountVendor(100053, "Invalid data account vendor for DataAccount: {0}"),
 
 	CategoryNull(100045, "Invalid value null for Category: {0}"),
 	CategoryNotFound(100046, "Category not found Category: {0}"),
@@ -86,9 +88,9 @@ public enum ApiError {
 
 	CategoryStoreMismatch(100048, "The category store does not a store in another parameter for Category: {0}"),
 
-	EmailTemplateNull(100049, "Invalid value null for EmailTemplate: {0}"),
-	EmailTemplateNoLookup(100050, "Invalid email template lookup, an id should be provided for EmailTemplate: {0}"),
-	EmailTemplateNotFound(100051, "Email template not found EmailTemplate: {0}"),
+	EventNull(100049, "Invalid value null for Event: {0}"),
+	EventNoLookup(100050, "Invalid event lookup, an id or a code should be provided for Event: {0}"),
+	EventNotFound(100051, "Event not found Event: {0}"),
 
 	InvalidActionCode(100055, "Invalid action code String: {0}"),
 
@@ -97,11 +99,10 @@ public enum ApiError {
 
 	SimpleModelRunNull(100062, "Invalid value null for SimpleModelRun: {0}.simpleModelRun"),
 	SimpleModelRunNotFound(100063, "SimpleModelRun not found SimpleModelRun: {0}.value"),
-	
+
 	DataAccountFetchNull(100064, "Invalid value null for DataAccount: {0}"),
 	DataAccountFetchNotFound(100065, "Data account not found DataAccount: {0}"),
 	DataAccountFetchNoLookup(100066, "Invalid data account lookup, no id provided for DataAccount: {0}"),
-
 
 	GetCountriesNeedsStoreOrQuery(100101, "GetCountries call should either have a store or a query. To get all countries use * for the query: {0}"),
 
@@ -117,9 +118,15 @@ public enum ApiError {
 	MissingRoles(100501, "User does not have required role"),
 	MissingRolesAndOrPermissions(100502, "User does not have required roles and/or permissions"),
 
-	DataAccountUserMissmatch(100601, "User does not own data account"),	
+	DataAccountUserMissmatch(100601, "User does not own data account"),
 
-	;
+	NotificationNull(100067, "Invalid value null for Notification: {0}"),
+	NotificationNotFound(100068, "Notification not found Notification: {0}"),
+	NotificationNoLookup(100069, "Invalid user notification lookup, need id or user and event Notification: {0}"),
+
+	EventSubscriptionNull(100070, "Invalid value null for EventSubscription: {0}"),
+	EventSubscriptionNotFound(100071, "Event subscription not found EventSubscription: {0}"),
+	EventSubscriptionNoLookup(100072, "Invalid user event subscription lookup, need id or user and event EventSubscription: {0}"), ;
 
 	private static final RegExp PARAM_0 = RegExp.compile("\\{0\\}");
 	private static final RegExp PARAM_1 = RegExp.compile("\\{1\\}");

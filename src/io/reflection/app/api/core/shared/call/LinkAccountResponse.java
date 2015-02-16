@@ -37,4 +37,9 @@ public class LinkAccountResponse extends Response {
 			}
 		}
 	}
+
+	public LinkAccountResponse account(DataAccount account) {
+		this.account = account;
+		return this;
+	}
 }

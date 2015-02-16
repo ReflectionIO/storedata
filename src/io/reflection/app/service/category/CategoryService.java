@@ -8,6 +8,7 @@
 //
 package io.reflection.app.service.category;
 
+import static com.spacehopperstudios.utility.StringUtils.stripslashes;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
@@ -129,9 +130,9 @@ final class CategoryService implements ICategoryService {
 		List<Category> categories = new ArrayList<Category>();
 
 		String getStoreCategoriesQuery = String.format("SELECT * FROM `category` WHERE `store`='%s' AND `deleted`='n' ORDER BY `%s` %s LIMIT %d, %d",
-				store.a3Code, pager.sortBy == null ? "id" : pager.sortBy, pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
-				pager.start == null ? Pager.DEFAULT_START.longValue() : pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue()
-						: pager.count.longValue());
+				store.a3Code, pager.sortBy == null ? "id" : stripslashes(pager.sortBy),
+				pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start == null ? Pager.DEFAULT_START.longValue()
+						: pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue() : pager.count.longValue());
 
 		Connection categoryConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeCategory.toString());
 
@@ -166,9 +167,9 @@ final class CategoryService implements ICategoryService {
 		List<Category> categories = new ArrayList<Category>();
 
 		String getStoreParentCategoriesQuery = String.format("SELECT * FROM `category` WHERE `parentid`=%d AND `deleted`='n' ORDER BY `%s` %s LIMIT %d, %d",
-				parent.id.longValue(), pager.sortBy == null ? "id" : pager.sortBy, pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC"
-						: "DESC", pager.start == null ? Pager.DEFAULT_START.longValue() : pager.start.longValue(),
-				pager.count == null ? Pager.DEFAULT_COUNT.longValue() : pager.count.longValue());
+				parent.id.longValue(), pager.sortBy == null ? "id" : stripslashes(pager.sortBy),
+				pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start == null ? Pager.DEFAULT_START.longValue()
+						: pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue() : pager.count.longValue());
 
 		Connection categoryConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeCategory.toString());
 

@@ -13,12 +13,14 @@ import io.reflection.app.api.admin.shared.call.GetSimpleModelRunsResponse;
 import io.reflection.app.api.admin.shared.call.event.GetSimpleModelRunsEventHandler;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.helper.ApiCallHelper;
 import io.reflection.app.datatypes.shared.SimpleModelRun;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gwt.http.client.Request;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
@@ -34,6 +36,7 @@ public class SimpleModelRunController extends AsyncDataProvider<SimpleModelRun> 
 	private List<SimpleModelRun> simpleModelRunList = new ArrayList<SimpleModelRun>();
 	private long count = -1;
 	private Pager pager;
+	private Request current;
 
 	private static SimpleModelRunController one = null;
 
@@ -49,6 +52,11 @@ public class SimpleModelRunController extends AsyncDataProvider<SimpleModelRun> 
 	 * 
 	 */
 	public void fetchSimpleModelRuns() {
+		if (current != null) {
+			current.cancel();
+			current = null;
+		}
+
 		AdminService service = ServiceCreator.createAdminService();
 
 		final GetSimpleModelRunsRequest input = new GetSimpleModelRunsRequest();
@@ -71,10 +79,11 @@ public class SimpleModelRunController extends AsyncDataProvider<SimpleModelRun> 
 		input.store = ApiCallHelper.createStoreForApiCall(FilterController.get().getStore());
 		input.category = FilterController.get().getCategory();
 
-		service.getSimpleModelRuns(input, new AsyncCallback<GetSimpleModelRunsResponse>() {
+		current = service.getSimpleModelRuns(input, new AsyncCallback<GetSimpleModelRunsResponse>() {
 
 			@Override
 			public void onSuccess(GetSimpleModelRunsResponse output) {
+				current = null;
 				if (output.status == StatusType.StatusTypeSuccess) {
 					if (output.simpleModelRuns != null) {
 						simpleModelRunList.addAll(output.simpleModelRuns);
@@ -95,13 +104,14 @@ public class SimpleModelRunController extends AsyncDataProvider<SimpleModelRun> 
 									Math.min(input.pager.start.intValue() + input.pager.count.intValue(), pager.totalCount.intValue())));
 				}
 
-				EventController.get().fireEventFromSource(new GetSimpleModelRunsEventHandler.GetSimpleModelRunsSuccess(input, output),
+				DefaultEventBus.get().fireEventFromSource(new GetSimpleModelRunsEventHandler.GetSimpleModelRunsSuccess(input, output),
 						SimpleModelRunController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new GetSimpleModelRunsEventHandler.GetSimpleModelRunsFailure(input, caught),
+				current = null;
+				DefaultEventBus.get().fireEventFromSource(new GetSimpleModelRunsEventHandler.GetSimpleModelRunsFailure(input, caught),
 						SimpleModelRunController.this);
 			}
 		});

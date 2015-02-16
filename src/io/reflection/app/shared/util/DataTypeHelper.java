@@ -9,6 +9,8 @@ package io.reflection.app.shared.util;
 
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
+import io.reflection.app.datatypes.shared.DataAccount;
+import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Permission;
@@ -35,6 +37,8 @@ public class DataTypeHelper {
 
 	public static final String IOS_STORE_A3 = "ios";
 
+	public static final String ITC_SOURCE_A3 = "itc";
+
 	private static final Store IOS_STORE = new Store();
 
 	public static final String ACTIVE_VALUE = "y";
@@ -45,7 +49,7 @@ public class DataTypeHelper {
 	public static final String PERMISSION_MANAGE_USERS_CODE = "MUS";
 	public static final String PERMISSION_MANAGE_ROLES_CODE = "MRL";
 	public static final String PERMISSION_MANAGE_PERMISSIONS_CODE = "MPR";
-	public static final String PERMISSION_MANAGE_EMAIL_TEMPLATES_CODE = "MET";
+	public static final String PERMISSION_MANAGE_EVENTS_CODE = "MET";
 	public static final String PERMISSION_MANAGE_ITEMS_CODE = "MIT";
 	public static final String PERMISSION_MANAGE_BLOG_POSTS_CODE = "MBL";
 	public static final String PERMISSION_BLOG_POST_CODE = "BPT";
@@ -63,6 +67,14 @@ public class DataTypeHelper {
 	public static final String PERMISSION_MANAGE_CATEGORIES_CODE = "MCA";
 	public static final String PERMISSION_MANAGE_DATA_ACCOUNTS_CODE = "MDA";
 	public static final String PERMISSION_MANAGE_SIMPLE_MODEL_RUN_CODE = "MSM";
+	public static final String PERMISSION_MANAGE_EVENT_SUBSCRIPTIONS_CODE = "MES";
+	public static final String PERMISSION_SEND_NOTIFICATIONS_CODE = "SNO";
+
+	public static final String CHANGE_PASSWORD_EVENT_CODE = "PAS";
+	public static final String RESET_PASSWORD_EVENT_CODE = "RPS";
+	public static final String NEW_USER_EVENT_CODE = "WEL";
+	public static final String SELECTED_USER_EVENT_CODE = "SEL";
+	public static final String THANK_YOU_EVENT_CODE = "TRQ";
 
 	public static final String ROLE_ADMIN_CODE = "ADM";
 	public static final Long ROLE_ADMIN_ID = Long.valueOf(1);
@@ -209,7 +221,7 @@ public class DataTypeHelper {
 	 */
 	public static Store createStore(String a3Code) {
 		Store s = new Store();
-		s.a3Code = a3Code;
+		s.a3Code = a3Code.toLowerCase();
 		return s;
 	}
 
@@ -221,7 +233,7 @@ public class DataTypeHelper {
 	 */
 	public static Country createCountry(String a2Code) {
 		Country c = new Country();
-		c.a2Code = a2Code;
+		c.a2Code = a2Code.toLowerCase();
 
 		return c;
 	}
@@ -244,6 +256,22 @@ public class DataTypeHelper {
 		FeedFetch f = new FeedFetch();
 		f.id = id;
 		return f;
+	}
+
+	public static DataAccount createDataAccount(Long id) {
+		DataAccount da = new DataAccount();
+		da.id = id;
+		return da;
+	}
+
+	/**
+	 * @param id
+	 * @return
+	 */
+	public static DataAccountFetch createDataAccountFetch(Long id) {
+		DataAccountFetch daf = new DataAccountFetch();
+		daf.id = id;
+		return daf;
 	}
 
 }

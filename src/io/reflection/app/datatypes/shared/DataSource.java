@@ -81,4 +81,24 @@ public class DataSource extends DataType {
 			}
 		}
 	}
+
+	public DataSource stores(List<String> stores) {
+		this.stores = stores;
+		return this;
+	}
+
+	public DataSource a3Code(String a3Code) {
+		this.a3Code = a3Code;
+		return this;
+	}
+
+	public DataSource name(String name) {
+		this.name = name;
+		return this;
+	}
+
+	public DataSource url(String url) {
+		this.url = url;
+		return this;
+	}
 }

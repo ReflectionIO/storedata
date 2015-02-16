@@ -1,39 +1,38 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
-    <ui:with field="global" type="io.reflection.app.client.res.Styles" />
-    <ui:import field="io.reflection.app.client.page.PageType.BlogPostPageType" />
+	<ui:with field="global" type="io.reflection.app.client.res.Styles" />
 
-    <ui:style>
-    .marginTop5 {
-    	margin-top: 5px;
-    }
-    
-    .inlineAnchor {
-    	margin-left: 15px;
-    	font-size: 11px;
-    }
-    </ui:style>
-    <g:HTMLPanel>
+	<ui:style gss="true">
+	.marginTop5 {
+		margin-top: 5px;
+	}
+	
+	.inlineAnchor {
+		margin-left: 15px;
+		font-size: 11px;
+	}
+	</ui:style>
+	<g:HTMLPanel>
 
-        <g:HTMLPanel ui:field="mAccountUsernameGroup" styleName="form-group">
-            <label>Account name</label>
-            <g:TextBox styleName="form-control  {style.marginTop5}" ui:field="mAccountUsername" />
-            <g:HTMLPanel ui:field="mAccountUsernameNote" visible="false" styleName="{global.reflection.noteDetail}" />
-        </g:HTMLPanel>
+		<g:HTMLPanel ui:field="accountUsernameGroup" styleName="form-group">
+			<label>Account name</label>
+			<g:TextBox styleName="form-control  {style.marginTop5}" ui:field="accountUsername" />
+			<g:HTMLPanel ui:field="accountUsernameNote" visible="false" styleName="{global.reflection.noteDetail}" />
+		</g:HTMLPanel>
 
-        <g:HTMLPanel ui:field="mPasswordGroup" styleName="form-group">
-            <label>Password</label>
-            <g:PasswordTextBox styleName="form-control  {style.marginTop5}" ui:field="mPassword" />
-            <g:HTMLPanel ui:field="mPasswordNote" visible="false" styleName="{global.reflection.noteDetail}" />
-        </g:HTMLPanel>
+		<g:HTMLPanel ui:field="passwordGroup" styleName="form-group">
+			<label>Password</label>
+			<g:PasswordTextBox styleName="form-control  {style.marginTop5}" ui:field="password" />
+			<g:HTMLPanel ui:field="passwordNote" visible="false" styleName="{global.reflection.noteDetail}" />
+		</g:HTMLPanel>
 
-        <g:HTMLPanel ui:field="mVendorIdGroup" styleName="form-group">
-            <label>Vendor ID</label>
-            <a class="{style.inlineAnchor}" target="_blank" href="{BlogPostPageType.asHref.asString}/view/7">What's this?</a>
-            <g:TextBox styleName="form-control {style.marginTop5}" ui:field="mVendorId" />
-            <g:HTMLPanel ui:field="mVendorIdNote" visible="false" styleName="{global.reflection.noteDetail}" />
-        </g:HTMLPanel>
+		<g:HTMLPanel ui:field="vendorIdGroup" styleName="form-group">
+			<label>Vendor ID</label>
+			<a ui:field="vendorLink" class="{style.inlineAnchor}" target="_blank">What's this?</a>
+			<g:TextBox styleName="form-control {style.marginTop5}" ui:field="vendorId" />
+			<g:HTMLPanel ui:field="vendorIdNote" visible="false" styleName="{global.reflection.noteDetail}" />
+		</g:HTMLPanel>
 
-    </g:HTMLPanel>
+	</g:HTMLPanel>
 </ui:UiBinder> 

@@ -142,4 +142,12 @@ public interface IDataAccountService extends IService {
 	 */
 	public void triggerMultipleDateDataAccountFetch(DataAccount dataAccount, Date date, Integer days) throws DataAccessException;
 
+	/**
+	 * 
+	 * @param dataAccount
+	 * @param date
+	 * @throws DataAccessException
+	 */
+	public void verifyDataAccount(DataAccount dataAccount, Date date) throws DataAccessException;
+
 }

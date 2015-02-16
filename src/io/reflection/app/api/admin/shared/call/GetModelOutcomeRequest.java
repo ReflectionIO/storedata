@@ -88,4 +88,34 @@ public class GetModelOutcomeRequest extends Request {
 			}
 		}
 	}
+
+	public GetModelOutcomeRequest country(Country country) {
+		this.country = country;
+		return this;
+	}
+
+	public GetModelOutcomeRequest store(Store store) {
+		this.store = store;
+		return this;
+	}
+
+	public GetModelOutcomeRequest category(Category category) {
+		this.category = category;
+		return this;
+	}
+
+	public GetModelOutcomeRequest code(Long code) {
+		this.code = code;
+		return this;
+	}
+
+	public GetModelOutcomeRequest listType(String listType) {
+		this.listType = listType;
+		return this;
+	}
+
+	public GetModelOutcomeRequest modelType(ModelTypeType modelType) {
+		this.modelType = modelType;
+		return this;
+	}
 }

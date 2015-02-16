@@ -47,4 +47,14 @@ public class GetItemsRequest extends Request {
 			}
 		}
 	}
+
+	public GetItemsRequest pager(Pager pager) {
+		this.pager = pager;
+		return this;
+	}
+
+	public GetItemsRequest query(String query) {
+		this.query = query;
+		return this;
+	}
 }

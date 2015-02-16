@@ -8,21 +8,20 @@
 package io.reflection.app.client.page.admin;
 
 import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMAT_DD_MMM_YYYY_HH_MM;
+import io.reflection.app.api.admin.shared.call.DeleteUserRequest;
+import io.reflection.app.api.admin.shared.call.DeleteUserResponse;
 import io.reflection.app.api.admin.shared.call.DeleteUsersRequest;
 import io.reflection.app.api.admin.shared.call.DeleteUsersResponse;
+import io.reflection.app.api.admin.shared.call.event.DeleteUserEventHandler;
 import io.reflection.app.api.admin.shared.call.event.DeleteUsersEventHandler;
-import io.reflection.app.api.blog.shared.call.DeleteUserRequest;
-import io.reflection.app.api.blog.shared.call.DeleteUserResponse;
-import io.reflection.app.api.blog.shared.call.event.DeleteUserEventHandler;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.StyledButtonCell;
-import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.controller.UserController;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.ConfirmationDialog;
-import io.reflection.app.client.part.Preloader;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.User;
@@ -63,7 +62,7 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 	@UiField(provided = true) SimplePager simplePager = new SimplePager(false, false);
 
 	private ConfirmationDialog confirmationDialog;
-	@UiField Preloader preloader;
+
 	@UiField Button deleteTestUsers;
 	@UiField TextBox queryTextBox;
 	private String query = "";
@@ -75,11 +74,9 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 
 		usersTable.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 		usersTable.setEmptyTableWidget(new HTMLPanel("No Users found!"));
-		UserController.get().addDataDisplay(usersTable);
 		simplePager.setDisplay(usersTable);
 
 		queryTextBox.getElement().setAttribute("placeholder", "Find a user");
-
 	}
 
 	/*
@@ -90,9 +87,21 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 	@Override
 	protected void onAttach() {
 		super.onAttach();
-
-		register(EventController.get().addHandlerToSource(DeleteUserEventHandler.TYPE, UserController.get(), this));
-		register(EventController.get().addHandlerToSource(DeleteUsersEventHandler.TYPE, UserController.get(), this));
+		
+		queryTextBox.setText(UserController.get().getQuery());
+		UserController.get().addDataDisplay(usersTable);
+		
+		register(DefaultEventBus.get().addHandlerToSource(DeleteUserEventHandler.TYPE, UserController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(DeleteUsersEventHandler.TYPE, UserController.get(), this));
+	}
+	
+	/* (non-Javadoc)
+	 * @see io.reflection.app.client.page.Page#onDetach()
+	 */
+	@Override
+	protected void onDetach() {
+		UserController.get().removeDataDisplay(usersTable);
+		super.onDetach();
 	}
 
 	private void createColumns() {
@@ -154,7 +163,7 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 
 			@Override
 			public SafeHtml getValue(User object) {
-				return SafeHtmlUtils.fromTrustedString("<a href=\"" + PageType.UsersPageType.asHref("changedetails", object.id.toString()).asString()
+				return SafeHtmlUtils.fromTrustedString("<a class=\"btn btn-xs btn-default\" href=\"" + PageType.UsersPageType.asHref("changedetails", object.id.toString()).asString()
 						+ "\">Edit</a>");
 			}
 		};
@@ -188,7 +197,6 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 
 						@Override
 						public void onClick(ClickEvent event) {
-							preloader.show();
 							UserController.get().deleteUser(object.id);
 							confirmationDialog.reset();
 						}
@@ -252,7 +260,6 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 
 			@Override
 			public void onClick(ClickEvent event) {
-				preloader.show();
 				UserController.get().deleteTestUsers();
 				confirmationDialog.reset();
 			}
@@ -279,14 +286,8 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 	public void deleteUserSuccess(DeleteUserRequest input, DeleteUserResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
 			queryTextBox.setText("");
-			UserController.get().reset();
-			if (simplePager.getPageStart() >= simplePager.getPageSize()) {
-				simplePager.setPageStart(0);
-			} else {
-				UserController.get().fetchUsers();
-			}
+			simplePager.setPageStart(0);
 		}
-		preloader.hide();
 	}
 
 	/*
@@ -296,9 +297,7 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 	 * java.lang.Throwable)
 	 */
 	@Override
-	public void deleteUserFailure(DeleteUserRequest input, Throwable caught) {
-		preloader.hide();
-	}
+	public void deleteUserFailure(DeleteUserRequest input, Throwable caught) {}
 
 	/*
 	 * (non-Javadoc)
@@ -310,14 +309,8 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 	public void deleteUsersSuccess(DeleteUsersRequest input, DeleteUsersResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
 			queryTextBox.setText("");
-			UserController.get().reset();
-			if (simplePager.getPageStart() >= simplePager.getPageSize()) {
-				simplePager.setPageStart(0);
-			} else {
-				UserController.get().fetchUsers();
-			}
+			simplePager.setPageStart(0);
 		}
-		preloader.hide();
 	}
 
 	/*
@@ -327,8 +320,6 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 	 * java.lang.Throwable)
 	 */
 	@Override
-	public void deleteUsersFailure(DeleteUsersRequest input, Throwable caught) {
-		preloader.hide();
-	}
+	public void deleteUsersFailure(DeleteUsersRequest input, Throwable caught) {}
 
 }

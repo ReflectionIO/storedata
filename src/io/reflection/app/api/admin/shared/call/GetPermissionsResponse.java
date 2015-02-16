@@ -9,6 +9,7 @@
 package io.reflection.app.api.admin.shared.call;
 
 import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.api.shared.datatypes.Response;
 import io.reflection.app.datatypes.shared.Permission;
 
 import java.util.ArrayList;
@@ -18,7 +19,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
-import io.reflection.app.api.shared.datatypes.Response;
 
 public class GetPermissionsResponse extends Response {
 	public List<Permission> permissions;
@@ -65,5 +65,15 @@ public class GetPermissionsResponse extends Response {
 				pager.fromJson(jsonPager.getAsJsonObject());
 			}
 		}
+	}
+
+	public GetPermissionsResponse permissions(List<Permission> permissions) {
+		this.permissions = permissions;
+		return this;
+	}
+
+	public GetPermissionsResponse pager(Pager pager) {
+		this.pager = pager;
+		return this;
 	}
 }

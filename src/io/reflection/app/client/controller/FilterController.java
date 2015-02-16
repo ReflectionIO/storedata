@@ -7,6 +7,7 @@
 //
 package io.reflection.app.client.controller;
 
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.helper.FilterHelper;
@@ -268,10 +269,10 @@ public class FilterController {
 		setLinkedAccount(Long.valueOf(0));
 		setStore(DataTypeHelper.STORE_IPHONE_A3_CODE);
 		setListType(OVERALL_LIST_TYPE);
-		setCountry("us");
+		setCountry("gb");
 		setEndDate(FilterHelper.getToday());
 		setStartDate(FilterHelper.getWeeksAgo(4));
-		setCategory(Long.valueOf(24));
+		setCategory(Long.valueOf(15));
 		setDailyData(REVENUE_DAILY_DATA_TYPE);
 		setChartType(RANKING_CHART_TYPE);
 		setSummaryType(TODAY_SUMMARY_TYPE);
@@ -328,7 +329,7 @@ public class FilterController {
 			}
 			if (allParts[0].equals("!item") && pageTypeFilter != PageType.ItemPageType) { // Dump object reference and make item filter independent again
 				pageTypeFilter = PageType.ItemPageType;
-				mCurrentFilter = Filter.parse(allParts[4]);
+				mCurrentFilter = Filter.parse(allParts[5]);
 			}
 			filters.put(PageType.ItemPageType, mCurrentFilter);
 		}
@@ -342,7 +343,7 @@ public class FilterController {
 			mCurrentFilter.setLinkedAccountId(linkedAccountId);
 
 			if (mInTransaction == 0) {
-				EventController.get().fireEventFromSource(
+				DefaultEventBus.get().fireEventFromSource(
 						new FilterEventHandler.ChangedFilterParameter<Long>(LINKED_ACCOUNT_KEY, mCurrentFilter.getLinkedAccountId(), previousLinkedAccount),
 						this);
 			} else {
@@ -366,7 +367,7 @@ public class FilterController {
 
 			if (mInTransaction == 0) {
 
-				EventController.get().fireEventFromSource(
+				DefaultEventBus.get().fireEventFromSource(
 						new FilterEventHandler.ChangedFilterParameter<String>(DAILY_DATA_KEY, mCurrentFilter.getDailyData(), previousDailyData), this);
 			} else {
 				if (mPreviousValues == null) {
@@ -385,7 +386,7 @@ public class FilterController {
 			mCurrentFilter.setStoreA3Code(store);
 
 			if (mInTransaction == 0) {
-				EventController.get().fireEventFromSource(
+				DefaultEventBus.get().fireEventFromSource(
 						new FilterEventHandler.ChangedFilterParameter<String>(STORE_KEY, mCurrentFilter.getStoreA3Code(), previousStore), this);
 			} else {
 				if (mPreviousValues == null) {
@@ -403,7 +404,7 @@ public class FilterController {
 			mCurrentFilter.setCountryA2Code(country);
 
 			if (mInTransaction == 0) {
-				EventController.get().fireEventFromSource(
+				DefaultEventBus.get().fireEventFromSource(
 						new FilterEventHandler.ChangedFilterParameter<String>(COUNTRY_KEY, mCurrentFilter.getCountryA2Code(), previousCountry), this);
 			} else {
 				if (mPreviousValues == null) {
@@ -421,7 +422,7 @@ public class FilterController {
 			mCurrentFilter.setListType(listType);
 
 			if (mInTransaction == 0) {
-				EventController.get().fireEventFromSource(
+				DefaultEventBus.get().fireEventFromSource(
 						new FilterEventHandler.ChangedFilterParameter<String>(LIST_TYPE_KEY, mCurrentFilter.getListType(), previousListType), this);
 			} else {
 				if (mPreviousValues == null) {
@@ -505,7 +506,7 @@ public class FilterController {
 			mCurrentFilter.setStartTime(Long.valueOf(value.getTime()));
 
 			if (mInTransaction == 0) {
-				EventController.get().fireEventFromSource(new FilterEventHandler.ChangedFilterParameter<Date>(START_DATE_KEY, value, previousStartDate), this);
+				DefaultEventBus.get().fireEventFromSource(new FilterEventHandler.ChangedFilterParameter<Date>(START_DATE_KEY, value, previousStartDate), this);
 			} else {
 				if (mPreviousValues == null) {
 					mPreviousValues = new HashMap<String, Object>();
@@ -525,7 +526,7 @@ public class FilterController {
 			mCurrentFilter.setEndTime(Long.valueOf(value.getTime()));
 
 			if (mInTransaction == 0) {
-				EventController.get().fireEventFromSource(new FilterEventHandler.ChangedFilterParameter<Date>(END_DATE_KEY, value, previousEndDate), this);
+				DefaultEventBus.get().fireEventFromSource(new FilterEventHandler.ChangedFilterParameter<Date>(END_DATE_KEY, value, previousEndDate), this);
 			} else {
 				if (mPreviousValues == null) {
 					mPreviousValues = new HashMap<String, Object>();
@@ -572,7 +573,7 @@ public class FilterController {
 		if (mInTransaction == 0) {
 			if (mPreviousValues != null) {
 				if (fireEvents) {
-					EventController.get().fireEventFromSource(new FilterEventHandler.ChangedFilterParameters(mCurrentFilter, mPreviousValues), this);
+					DefaultEventBus.get().fireEventFromSource(new FilterEventHandler.ChangedFilterParameters(mCurrentFilter, mPreviousValues), this);
 				}
 
 				mPreviousValues = null;
@@ -599,7 +600,7 @@ public class FilterController {
 			if (mInTransaction == 0) {
 				Category currentCategory = getCategory();
 
-				EventController.get().fireEventFromSource(
+				DefaultEventBus.get().fireEventFromSource(
 						new FilterEventHandler.ChangedFilterParameter<Category>(CATEGORY_KEY, currentCategory, previousCategory), this);
 			} else {
 				if (mPreviousValues == null) {
@@ -630,7 +631,7 @@ public class FilterController {
 			mCurrentFilter.setChartType(value);
 
 			if (mInTransaction == 0) {
-				EventController.get().fireEventFromSource(
+				DefaultEventBus.get().fireEventFromSource(
 						new FilterEventHandler.ChangedFilterParameter<String>(CHART_TYPE_KEY, mCurrentFilter.getChartType(), previousListType), this);
 			} else {
 				if (mPreviousValues == null) {
@@ -648,7 +649,7 @@ public class FilterController {
 			mCurrentFilter.setSummaryType(value);
 
 			if (mInTransaction == 0) {
-				EventController.get().fireEventFromSource(
+				DefaultEventBus.get().fireEventFromSource(
 						new FilterEventHandler.ChangedFilterParameter<String>(SUMMARY_TYPE_KEY, mCurrentFilter.getSummaryType(), previousListType), this);
 			} else {
 				if (mPreviousValues == null) {

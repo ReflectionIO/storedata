@@ -114,8 +114,8 @@ public class FilterHelper {
 				}
 			}
 		} else {
-			Country usCountry = CountryController.get().getCountry("us");
-			list.addItem(usCountry.name, usCountry.a2Code);
+			Country defaultCountry = CountryController.get().getCountry("gb");
+			list.addItem(defaultCountry.name, defaultCountry.a2Code);
 			list.setEnabled(false);
 		}
 	}
@@ -159,7 +159,7 @@ public class FilterHelper {
 			list.addItem("Utilities", "3");
 			list.addItem("Weather", "2");
 		} else {
-			list.addItem("All", "24");
+			list.addItem("Games", "15");
 			list.setEnabled(false);
 		}
 	}
@@ -430,5 +430,7 @@ public class FilterHelper {
 		return (lhs == rhs)
 				|| (rhs != null && lhs != null && (rhs.getDate() == lhs.getDate()) && (rhs.getMonth() == lhs.getMonth()) && (rhs.getYear() == lhs.getYear()));
 	}
+
+	// TODO before / after method at day level
 
 }

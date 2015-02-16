@@ -26,7 +26,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 public class TriggerPredictRequest extends Request {
-
 	public Country country;
 	public Store store;
 	public Category category;
@@ -129,5 +128,45 @@ public class TriggerPredictRequest extends Request {
 				modelType = ModelTypeType.fromString(jsonModelType.getAsString());
 			}
 		}
+	}
+
+	public TriggerPredictRequest country(Country country) {
+		this.country = country;
+		return this;
+	}
+
+	public TriggerPredictRequest store(Store store) {
+		this.store = store;
+		return this;
+	}
+
+	public TriggerPredictRequest category(Category category) {
+		this.category = category;
+		return this;
+	}
+
+	public TriggerPredictRequest listTypes(List<String> listTypes) {
+		this.listTypes = listTypes;
+		return this;
+	}
+
+	public TriggerPredictRequest simpleModelRun(SimpleModelRun simpleModelRun) {
+		this.simpleModelRun = simpleModelRun;
+		return this;
+	}
+
+	public TriggerPredictRequest modelRun(ModelRun modelRun) {
+		this.modelRun = modelRun;
+		return this;
+	}
+
+	public TriggerPredictRequest code(Long code) {
+		this.code = code;
+		return this;
+	}
+
+	public TriggerPredictRequest modelType(ModelTypeType modelType) {
+		this.modelType = modelType;
+		return this;
 	}
 }

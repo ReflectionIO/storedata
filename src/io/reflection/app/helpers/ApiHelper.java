@@ -17,9 +17,10 @@ import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import org.joda.time.LocalDate;
 
 /**
  * @author billy1380
@@ -44,15 +45,7 @@ public class ApiHelper {
 	}
 
 	public static Date removeTime(Date date) {
-		Calendar cal = Calendar.getInstance();
-
-		cal.setTime(date);
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MILLISECOND, 0);
-
-		return cal.getTime();
+		return LocalDate.fromDateFields(date).toDate();
 	}
 
 	/**

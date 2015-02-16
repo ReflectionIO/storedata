@@ -26,6 +26,8 @@ import io.reflection.app.api.core.shared.call.CheckUsernameRequest;
 import io.reflection.app.api.core.shared.call.CheckUsernameResponse;
 import io.reflection.app.api.core.shared.call.DeleteLinkedAccountRequest;
 import io.reflection.app.api.core.shared.call.DeleteLinkedAccountResponse;
+import io.reflection.app.api.core.shared.call.DeleteNotificationsRequest;
+import io.reflection.app.api.core.shared.call.DeleteNotificationsResponse;
 import io.reflection.app.api.core.shared.call.ForgotPasswordRequest;
 import io.reflection.app.api.core.shared.call.ForgotPasswordResponse;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
@@ -46,6 +48,8 @@ import io.reflection.app.api.core.shared.call.GetLinkedAccountItemsRequest;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountItemsResponse;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountsRequest;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountsResponse;
+import io.reflection.app.api.core.shared.call.GetNotificationsRequest;
+import io.reflection.app.api.core.shared.call.GetNotificationsResponse;
 import io.reflection.app.api.core.shared.call.GetRolesAndPermissionsRequest;
 import io.reflection.app.api.core.shared.call.GetRolesAndPermissionsResponse;
 import io.reflection.app.api.core.shared.call.GetSalesRanksRequest;
@@ -72,20 +76,26 @@ import io.reflection.app.api.core.shared.call.SearchForItemRequest;
 import io.reflection.app.api.core.shared.call.SearchForItemResponse;
 import io.reflection.app.api.core.shared.call.UpdateLinkedAccountRequest;
 import io.reflection.app.api.core.shared.call.UpdateLinkedAccountResponse;
+import io.reflection.app.api.core.shared.call.UpdateNotificationsRequest;
+import io.reflection.app.api.core.shared.call.UpdateNotificationsResponse;
 import io.reflection.app.api.exception.AuthenticationException;
-import io.reflection.app.api.exception.AuthorisationException;
+import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.archivers.ArchiverFactory;
+import io.reflection.app.archivers.ItemRankArchiver;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
+import io.reflection.app.collectors.CollectorIOS;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
-import io.reflection.app.datatypes.shared.EmailFormatType;
+import io.reflection.app.datatypes.shared.EventPriorityType;
 import io.reflection.app.datatypes.shared.FormType;
-import io.reflection.app.datatypes.shared.ModelRun;
+import io.reflection.app.datatypes.shared.Notification;
+import io.reflection.app.datatypes.shared.NotificationTypeType;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Role;
@@ -93,10 +103,8 @@ import io.reflection.app.datatypes.shared.Sale;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.helpers.ApiHelper;
-import io.reflection.app.helpers.EmailHelper;
+import io.reflection.app.helpers.NotificationHelper;
 import io.reflection.app.helpers.SliceHelper;
-import io.reflection.app.itemrankarchivers.ItemRankArchiver;
-import io.reflection.app.itemrankarchivers.ItemRankArchiverFactory;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.modellers.Modeller;
 import io.reflection.app.modellers.ModellerFactory;
@@ -106,7 +114,7 @@ import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.datasource.DataSourceServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
-import io.reflection.app.service.modelrun.ModelRunServiceProvider;
+import io.reflection.app.service.notification.NotificationServiceProvider;
 import io.reflection.app.service.permission.PermissionServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
 import io.reflection.app.service.role.RoleServiceProvider;
@@ -117,12 +125,10 @@ import io.reflection.app.service.store.StoreServiceProvider;
 import io.reflection.app.service.user.IUserService;
 import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
-import io.reflection.app.shared.util.FormattingHelper;
 import io.reflection.app.shared.util.PagerHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -132,6 +138,9 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+
 import com.willshex.gson.json.service.server.ActionHandler;
 import com.willshex.gson.json.service.server.InputValidationException;
 import com.willshex.gson.json.service.server.ServiceException;
@@ -139,6 +148,9 @@ import com.willshex.gson.json.service.shared.StatusType;
 
 public final class Core extends ActionHandler {
 	private static final Logger LOG = Logger.getLogger(Core.class.getName());
+
+	private final static int SESSIONLESS_MAX_ITEMS = 10;
+	private final static int PERMISSIONLESS_MAX_ITEMS = 25;
 
 	public GetCountriesResponse getCountries(GetCountriesRequest input) {
 		LOG.finer("Entering getCountries");
@@ -298,12 +310,22 @@ public final class Core extends ActionHandler {
 
 			input.listType = ValidationHelper.validateListType(input.listType, input.store);
 
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(input.on);
-			cal.add(Calendar.HOUR_OF_DAY, -12);
-			Date end = cal.getTime();
-			cal.add(Calendar.DAY_OF_YEAR, -1);
-			Date start = cal.getTime();
+			DateTime date = new DateTime(input.on.getTime(), DateTimeZone.UTC);
+			int secondOfMinute = date.getSecondOfMinute();
+			int millisOfSeconds = date.getMillisOfSecond();
+
+			Date end;
+			Date start;
+
+			boolean isPastDate = (secondOfMinute == 0) && (millisOfSeconds == 0);
+
+			if (isPastDate) { // a date in the past
+				end = date.plusHours(24).toDate();
+				start = date.toDate();
+			} else { // today
+				end = date.minusHours(12).toDate();
+				start = date.minusHours(24).toDate();
+			}
 
 			List<Rank> ranks = RankServiceProvider.provide().getRanks(input.country, input.store, input.category, input.listType, start, end, input.pager);
 
@@ -338,10 +360,6 @@ public final class Core extends ActionHandler {
 		return output;
 	}
 
-	private final static String FULL_RANK_VIEW_CODE = "FRV";
-	private final static int SESSIONLESS_MAX_ITEMS = 10;
-	private final static int PERMISSIONLESS_MAX_ITEMS = 25;
-
 	public GetAllTopItemsResponse getAllTopItems(GetAllTopItemsRequest input) {
 		LOG.finer("Entering getAllTopItems");
 		GetAllTopItemsResponse output = new GetAllTopItemsResponse();
@@ -369,7 +387,7 @@ public final class Core extends ActionHandler {
 						permissions = RoleServiceProvider.provide().getPermissions(role);
 
 						for (Permission permission : permissions) {
-							if (FULL_RANK_VIEW_CODE.equals(permission.code)) {
+							if (DataTypeHelper.PERMISSION_FULL_RANK_VIEW_CODE.equals(permission.code)) {
 								canSeeFullList = true;
 								break;
 							}
@@ -400,6 +418,16 @@ public final class Core extends ActionHandler {
 			}
 
 			if (!skip) {
+				boolean isAdmin = UserServiceProvider.provide().hasRole(input.session.user, DataTypeHelper.adminRole());
+
+				if (!isAdmin) {
+					input.country = new Country();
+					input.country.a2Code = "gb";
+					input.store = new Store();
+					input.store.a3Code = DataTypeHelper.IOS_STORE_A3;
+					input.category = new Category();
+					input.category.id = 15L;
+				}
 				input.country = ValidationHelper.validateCountry(input.country, "input");
 
 				if (input.listType == null)
@@ -423,12 +451,22 @@ public final class Core extends ActionHandler {
 								ApiError.CategoryStoreMismatch.getMessage("input.category"));
 				}
 
-				Calendar cal = Calendar.getInstance();
-				cal.setTime(input.on);
-				cal.add(Calendar.HOUR_OF_DAY, -12);
-				Date end = cal.getTime();
-				cal.add(Calendar.DAY_OF_YEAR, -1);
-				Date start = cal.getTime();
+				DateTime date = new DateTime(input.on.getTime(), DateTimeZone.UTC);
+				int secondOfMinute = date.getSecondOfMinute();
+				int millisOfSeconds = date.getMillisOfSecond();
+
+				Date end;
+				Date start;
+
+				boolean isPastDate = (secondOfMinute == 0) && (millisOfSeconds == 0);
+
+				if (isPastDate) { // a date in the past
+					end = date.plusHours(24).toDate();
+					start = date.toDate();
+				} else { // today
+					end = date.minusHours(12).toDate();
+					start = date.minusHours(24).toDate();
+				}
 
 				Set<String> itemIds = new HashSet<String>();
 				// final Map<String, Rank> lookup = new HashMap<String, Rank>();
@@ -447,6 +485,13 @@ public final class Core extends ActionHandler {
 
 					for (Rank rank : ranks) {
 						itemIds.add(rank.itemId);
+					}
+
+					if (!isAdmin && !CollectorIOS.TOP_FREE_APPS.equals(listType)) {
+						for (Rank rank : ranks) {
+							rank.downloads = null;
+							rank.revenue = null;
+						}
 					}
 
 					if (collector.isFree(listType)) {
@@ -510,23 +555,6 @@ public final class Core extends ActionHandler {
 		return output;
 	}
 
-	// private String latestCode(List<Rank> ranks) {
-	// String code = null;
-	//
-	// if (ranks != null) {
-	// Date latest = null;
-	//
-	// for (Rank rank : ranks) {
-	// if (latest == null || (rank.date.getTime() > latest.getTime())) {
-	// latest = rank.date;
-	// code = rank.code;
-	// }
-	// }
-	// }
-	//
-	// return code;
-	// }
-
 	public GetItemRanksResponse getItemRanks(GetItemRanksRequest input) {
 		LOG.finer("Entering getItemRanks");
 		GetItemRanksResponse output = new GetItemRanksResponse();
@@ -565,30 +593,19 @@ public final class Core extends ActionHandler {
 					throw new InputValidationException(ApiError.CategoryStoreMismatch.getCode(), ApiError.CategoryStoreMismatch.getMessage("input.category"));
 			}
 
-			Calendar cal = Calendar.getInstance();
-
 			if (input.end == null) {
-				input.end = cal.getTime();
+				input.end = DateTime.now(DateTimeZone.UTC).toDate();
 			}
 
 			if (input.start == null) {
-				cal.setTime(input.end);
-				cal.add(Calendar.DAY_OF_YEAR, -30);
-				input.start = cal.getTime();
+				input.start = (new DateTime(input.end.getTime(), DateTimeZone.UTC)).minusDays(30).toDate();
 			}
 
 			input.listType = ValidationHelper.validateListType(input.listType, store);
 
 			FormType form = ModellerFactory.getModellerForStore(store.a3Code).getForm(input.listType);
 
-			long diff = input.end.getTime() - input.start.getTime();
-			long diffDays = diff / ApiHelper.MILLIS_PER_DAY;
-
-			if (diffDays > 60 || diffDays < 0)
-				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
-						ApiError.DateRangeOutOfBounds.getMessage("0-60 days: input.end - input.start"));
-
-			ItemRankArchiver archiver = ItemRankArchiverFactory.get();
+			ItemRankArchiver archiver = ArchiverFactory.getItemRankArchiver();
 			long[] slices = SliceHelper.offsets(input.start, input.end);
 
 			String key;
@@ -596,7 +613,7 @@ public final class Core extends ActionHandler {
 			for (long slice : slices) {
 				key = archiver.createKey(slice, input.item, form, store, input.country, input.category);
 
-				ranks = archiver.getItemRanks(key);
+				ranks = archiver.getRanks(key);
 
 				if (ranks != null) {
 					if (output.ranks == null) {
@@ -948,7 +965,6 @@ public final class Core extends ActionHandler {
 		LOG.finer("Entering checkUsername");
 		CheckUsernameResponse output = new CheckUsernameResponse();
 		try {
-
 			if (input == null)
 				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("CheckUsernameRequest: input"));
 
@@ -1123,7 +1139,15 @@ public final class Core extends ActionHandler {
 			Modeller modeller = ModellerFactory.getModellerForStore(input.store.a3Code);
 			FormType form = modeller.getForm(input.listType);
 
+			output.pager = input.pager;
+
+			// ItemSaleArchiver archiver = ArchiverFactory.getItemSaleArchiver();
+			// String key = archiver.createItemsKey(input.linkedAccount, form);
+			// List<Item> items = ItemServiceProvider.provide().getInternalIdItemBatch(archiver.getItemsIds(key));
+			//
+			// if (items == null || items.size() == 0) {
 			List<String> freeOrPaidApps = new ArrayList<String>();
+
 			freeOrPaidApps.add(FREE_OR_PAID_APP_UNIVERSAL_IOS);
 			if (form == FormType.FormTypeOther) {
 				freeOrPaidApps.add(FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS);
@@ -1133,9 +1157,17 @@ public final class Core extends ActionHandler {
 
 			output.items = SaleServiceProvider.provide().getDataAccountItems(input.linkedAccount, freeOrPaidApps, input.pager);
 
-			output.pager = input.pager;
 			updatePager(output.pager, output.items,
 					input.pager.totalCount == null ? SaleServiceProvider.provide().getDataAccountItemsCount(input.linkedAccount, freeOrPaidApps) : null);
+			// } else {
+			// if (items.size() > (input.pager.start.longValue() + input.pager.count.longValue())) {
+			// output.items = items.subList(input.pager.start.intValue(), input.pager.count.intValue());
+			// } else {
+			// output.items = items;
+			// }
+			//
+			// output.pager.totalCount = Long.valueOf(items.size());
+			// }
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -1171,6 +1203,33 @@ public final class Core extends ActionHandler {
 
 			DataAccountCollectorFactory.getCollectorForSource(input.source.a3Code).validateProperties(input.properties);
 
+			// If not a test user, check if is a valid Apple linked account
+			Role testRole = RoleServiceProvider.provide().getCodeRole(DataTypeHelper.ROLE_TEST_CODE);
+			if (!UserServiceProvider.provide().hasRole(input.session.user, testRole)) {
+				DataAccount dataAccountToTest = new DataAccount();
+
+				dataAccountToTest.username = input.username;
+				dataAccountToTest.password = input.password;
+				dataAccountToTest.properties = input.properties;
+				dataAccountToTest.source = input.source;
+
+				try {
+					DataAccountServiceProvider.provide().verifyDataAccount(dataAccountToTest, DateTime.now(DateTimeZone.UTC).minusDays(45).toDate());
+				} catch (DataAccessException daEx) {
+					String error = daEx.getCause() == null ? null : daEx.getCause().getMessage();
+
+					if (error != null) {
+						if (error.equals("Please enter a valid vendor number."))
+							throw new InputValidationException(ApiError.InvalidDataAccountVendor.getCode(),
+									ApiError.InvalidDataAccountVendor.getMessage(dataAccountToTest.properties));
+
+						if (!error.equals("Daily reports are available only for past 30 days, please enter a date within past 30 days."))
+							throw new InputValidationException(ApiError.InvalidDataAccountCredentials.getCode(),
+									ApiError.InvalidDataAccountCredentials.getMessage(dataAccountToTest.username));
+					}
+				}
+			}
+
 			output.account = UserServiceProvider.provide().addDataAccount(input.session.user, input.source, input.username, input.password, input.properties);
 
 			output.account.source = input.source;
@@ -1189,16 +1248,27 @@ public final class Core extends ActionHandler {
 					input.session.user = UserServiceProvider.provide().getUser(input.session.user.id);
 				}
 
-				EmailHelper
-						.sendEmail(
-								"hello@reflection.io",
-								"chi@reflection.io",
-								"Chi Dire",
-								"A user's has linked thier account account",
-								String.format(
-										"Hi Chi,\n\nThis is to let you know that the user [%d - %s] has added the data account [%d] for the data source [%s] and the username.\n\nReflection",
-										input.session.user.id.longValue(), FormattingHelper.getUserLongName(input.session.user), output.account.id.longValue(),
-										input.source.name, output.account.username), EmailFormatType.EmailFormatTypePlainText);
+				User listeningUser = UserServiceProvider.provide().getUsernameUser("chi@reflection.io");
+
+				Map<String, Object> parameters = new HashMap<String, Object>();
+				parameters.put("listener", listeningUser);
+				parameters.put("user", input.session.user);
+				parameters.put("account", output.account);
+				parameters.put("source", input.source);
+
+				String body = NotificationHelper
+						.inflate(
+								parameters,
+								"Hi ${listener.forename},\n\nThis is to let you know that the user [${user.id} - ${user.forename} ${user.surname}] has added the data account [${account.id}] for the data source [${source.name}] and the username ${account.username}.\n\nReflection");
+
+				Notification notification = (new Notification()).from("hello@reflection.io").user(listeningUser).body(body)
+						.priority(EventPriorityType.EventPriorityTypeHigh).subject("A user's has linked thier account account");
+				Notification added = NotificationServiceProvider.provide().addNotification(notification);
+
+				if (added.type != NotificationTypeType.NotificationTypeTypeInternal) {
+					notification.type = NotificationTypeType.NotificationTypeTypeInternal;
+					NotificationServiceProvider.provide().addNotification(notification);
+				}
 			}
 
 			output.status = StatusType.StatusTypeSuccess;
@@ -1206,6 +1276,7 @@ public final class Core extends ActionHandler {
 			output.status = StatusType.StatusTypeFailure;
 			output.error = convertToErrorAndLog(LOG, e);
 		}
+
 		LOG.finer("Exiting linkAccount");
 		return output;
 	}
@@ -1284,35 +1355,6 @@ public final class Core extends ActionHandler {
 		LOG.finer("Exiting isAuthorised");
 		return output;
 	}
-
-	// private String getFreeListName(Store store, String type) {
-	// String listName = null;
-	//
-	// if (DataTypeHelper.IOS_STORE_A3.equalsIgnoreCase(store.a3Code)) {
-	// if ("ipad".equalsIgnoreCase(type)) {
-	// listName = CollectorIOS.TOP_FREE_IPAD_APPS;
-	// } else {
-	// listName = CollectorIOS.TOP_FREE_APPS;
-	// }
-	// }
-	//
-	// return listName;
-	// }
-	//
-	// private String getPaidListName(Store store, String type) {
-	// String listName = null;
-	//
-	// if (DataTypeHelper.IOS_STORE_A3.equalsIgnoreCase(store.a3Code)) {
-	// if ("ipad".equalsIgnoreCase(type)) {
-	// listName = CollectorIOS.TOP_PAID_IPAD_APPS;
-	// } else {
-	// listName = CollectorIOS.TOP_PAID_APPS;
-	// }
-	// }
-	//
-	// return listName;
-	//
-	// }
 
 	public SearchForItemResponse searchForItem(SearchForItemRequest input) {
 		LOG.finer("Entering searchForItem");
@@ -1419,13 +1461,6 @@ public final class Core extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			final Permission permissionMCA = PermissionServiceProvider.provide().getCodePermission(DataTypeHelper.PERMISSION_MANAGE_CATEGORIES_CODE);
-			try {
-				ValidationHelper.validateAuthorised(input.session.user, permissionMCA);
-			} catch (AuthorisationException aEx) {
-
-			}
-
 			input.store = ValidationHelper.validateStore(input.store, "input");
 
 			if (input.store == null)
@@ -1480,8 +1515,7 @@ public final class Core extends ActionHandler {
 
 			// right now category
 			if (input.category == null) {
-				// TODO:
-				// input.category = CategoryServiceProvider.provide().getAllCategory(stores);
+				// TODO: input.category = CategoryServiceProvider.provide().getAllCategory(stores);
 			} else {
 				input.category = ValidationHelper.validateCategory(input.category, "input.category");
 
@@ -1498,24 +1532,13 @@ public final class Core extends ActionHandler {
 					throw new InputValidationException(ApiError.CategoryStoreMismatch.getCode(), ApiError.CategoryStoreMismatch.getMessage("input.category"));
 			}
 
-			Calendar cal = Calendar.getInstance();
-
 			if (input.end == null) {
-				input.end = cal.getTime();
+				input.end = DateTime.now(DateTimeZone.UTC).toDate();
 			}
 
 			if (input.start == null) {
-				cal.setTime(input.end);
-				cal.add(Calendar.DAY_OF_YEAR, -30);
-				input.start = cal.getTime();
+				input.start = (new DateTime(input.end.getTime(), DateTimeZone.UTC)).minusDays(30).toDate();
 			}
-
-			long diff = input.end.getTime() - input.start.getTime();
-			long diffDays = diff / ApiHelper.MILLIS_PER_DAY;
-
-			if (diffDays > 60 || diffDays < 0)
-				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
-						ApiError.DateRangeOutOfBounds.getMessage("0-60 days: input.end - input.start"));
 
 			output.sales = SaleServiceProvider.provide().getSales(input.country, input.category, input.linkedAccount, input.start, input.end, input.pager);
 
@@ -1611,127 +1634,98 @@ public final class Core extends ActionHandler {
 			if (input.listType == null)
 				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("String: input.listType"));
 
-			// right now category
-			if (input.category == null) {
-				// TODO:
-				// input.category = CategoryServiceProvider.provide().getAllCategory(stores);
-			} else {
-				input.category = ValidationHelper.validateCategory(input.category, "input.category");
-
-				boolean foundStore = false;
-
-				for (Store store : stores) {
-					if (store.a3Code.equals(input.category.store)) {
-						foundStore = true;
-						break;
-					}
-				}
-
-				if (!foundStore)
-					throw new InputValidationException(ApiError.CategoryStoreMismatch.getCode(), ApiError.CategoryStoreMismatch.getMessage("input.category"));
-			}
-
-			Calendar cal = Calendar.getInstance();
-
 			if (input.end == null) {
-				input.end = cal.getTime();
+				input.end = DateTime.now(DateTimeZone.UTC).toDate();
 			}
 
 			if (input.start == null) {
-				cal.setTime(input.end);
-				cal.add(Calendar.DAY_OF_YEAR, -30);
-				input.start = cal.getTime();
+				input.start = (new DateTime(input.end.getTime(), DateTimeZone.UTC)).minusDays(30).toDate();
 			}
 
-			long diff = input.end.getTime() - input.start.getTime();
-			long diffDays = diff / ApiHelper.MILLIS_PER_DAY;
+			FormType form = null;
+			Store formStore = null;
+			for (Store store : stores) {
+				Modeller modeller = ModellerFactory.getModellerForStore(store.a3Code);
+				form = modeller.getForm(input.listType);
 
-			if (diffDays > 60 || diffDays < 0)
-				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
-						ApiError.DateRangeOutOfBounds.getMessage("0-60 days: input.end - input.start"));
+				if (form != null) {
+					formStore = store;
+					break;
+				}
+			}
 
-			// Get Items sales based on the filters
-			List<Sale> sales = SaleServiceProvider.provide().getSales(input.country, input.category, input.linkedAccount, input.start, input.end,
-					PagerHelper.createInfinitePager());
+			// ItemSaleArchiver archiver = ArchiverFactory.getItemSaleArchiver();
+			// long[] slices = SliceHelper.offsets(input.start, input.end);
+			//
+			// String key;
+			// List<Rank> ranks = null;
+			// for (long slice : slices) {
+			// key = archiver.createRanksKey(slice, input.linkedAccount, input.country, form);
+			//
+			// ranks = archiver.getRanks(key);
+			//
+			// if (ranks != null) {
+			// if (output.ranks == null) {
+			// output.ranks = new ArrayList<Rank>();
+			// }
+			//
+			// output.ranks.addAll(ranks);
+			// }
+			// }
 
-			if (sales.size() > 0) {
-				// group sales by date
-				Map<Date, List<Sale>> salesGroupByDate = new HashMap<Date, List<Sale>>();
-				Date key;
-				SimpleDateFormat keyFormat = new SimpleDateFormat("yyyy-MM-dd");
+			if (output.ranks == null || output.ranks.size() == 0) {
+				// Get Items sales based on the filters
+				List<Sale> sales = SaleServiceProvider.provide().getSales(input.country, null, input.linkedAccount, input.start, input.end,
+						PagerHelper.createInfinitePager());
 
-				Store defaultStore = stores.get(0);
-				Modeller modeller = ModellerFactory.getModellerForStore(defaultStore.a3Code);
-				FormType form = modeller.getForm(input.listType);
+				if (sales.size() > 0) {
+					// group sales by date
+					Map<Date, List<Sale>> salesGroupByDate = new HashMap<Date, List<Sale>>();
+					Date dateKey;
+					SimpleDateFormat keyFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-				Map<String, String> parentIdItemIdLookup = new HashMap<String, String>();
-				for (Sale sale : sales) {
-					// only add Sales that are consistent with the device type
-					if (FREE_OR_PAID_APP_UNIVERSAL_IOS.equals(sale.typeIdentifier) // 1F
-							|| UPDATE_UNIVERSAL_IOS.equals(sale.typeIdentifier) // 7F
-							|| (form == FormType.FormTypeOther && (FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS.equals(sale.typeIdentifier))) // 1
-							|| (form == FormType.FormTypeOther && (UPDATE_IPHONE_AND_IPOD_TOUCH_IOS.equals(sale.typeIdentifier))) // 7
-							|| (form == FormType.FormTypeTablet && (FREE_OR_PAID_APP_IPAD_IOS.equals(sale.typeIdentifier))) // 1T
-							|| (form == FormType.FormTypeTablet && (UPDATE_IPAD_IOS.equals(sale.typeIdentifier))) // 7T
-							|| INAPP_PURCHASE_PURCHASE_IOS.equals(sale.typeIdentifier) // IA1
-							|| INAPP_PURCHASE_SUBSCRIPTION_IOS.equals(sale.typeIdentifier) // IA9
-					) {
+					Map<String, String> parentIdItemIdLookup = new HashMap<String, String>();
+					for (Sale sale : sales) {
+						// only add Sales that are consistent with the device type
+						if (FREE_OR_PAID_APP_UNIVERSAL_IOS.equals(sale.typeIdentifier) // 1F
+								|| UPDATE_UNIVERSAL_IOS.equals(sale.typeIdentifier) // 7F
+								|| (form == FormType.FormTypeOther && (FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS.equals(sale.typeIdentifier))) // 1
+								|| (form == FormType.FormTypeOther && (UPDATE_IPHONE_AND_IPOD_TOUCH_IOS.equals(sale.typeIdentifier))) // 7
+								|| (form == FormType.FormTypeTablet && (FREE_OR_PAID_APP_IPAD_IOS.equals(sale.typeIdentifier))) // 1T
+								|| (form == FormType.FormTypeTablet && (UPDATE_IPAD_IOS.equals(sale.typeIdentifier))) // 7T
+								|| INAPP_PURCHASE_PURCHASE_IOS.equals(sale.typeIdentifier) // IA1
+								|| INAPP_PURCHASE_SUBSCRIPTION_IOS.equals(sale.typeIdentifier) // IA9
+						) {
+							// If type identifier != IA1 or IA9, add parent identifiers into the Map
+							if (!sale.typeIdentifier.equals(INAPP_PURCHASE_PURCHASE_IOS) && !sale.typeIdentifier.equals(INAPP_PURCHASE_SUBSCRIPTION_IOS)) {
+								parentIdItemIdLookup.put(sale.sku, sale.item.internalId);
+							}
 
-						// If type identifier != IA1 or IA9, add parent identifiers into the Map
-						if (!sale.typeIdentifier.equals(INAPP_PURCHASE_PURCHASE_IOS) && !sale.typeIdentifier.equals(INAPP_PURCHASE_SUBSCRIPTION_IOS)) {
-							parentIdItemIdLookup.put(sale.sku, sale.item.internalId);
+							dateKey = keyFormat.parse(keyFormat.format(sale.begin));
+
+							// Link list of item IDs with every day of the range
+							if (salesGroupByDate.get(dateKey) == null) {
+								salesGroupByDate.put(dateKey, new ArrayList<Sale>());
+							}
+
+							salesGroupByDate.get(dateKey).add(sale);
 						}
-
-						key = keyFormat.parse(keyFormat.format(sale.begin));
-
-						// Link list of item IDs with every day of the range
-						if (salesGroupByDate.get(key) == null) {
-							salesGroupByDate.put(key, new ArrayList<Sale>());
-						}
-
-						salesGroupByDate.get(key).add(sale);
-
 					}
-				}
 
-				// get the model runs constants
-				List<ModelRun> modelRuns = ModelRunServiceProvider.provide().getDateModelRunBatch(input.country, defaultStore, form, salesGroupByDate.keySet());
-
-				Map<Date, ModelRun> modelRunLookup = new HashMap<Date, ModelRun>();
-
-				for (ModelRun modelRun : modelRuns) {
-					key = keyFormat.parse(keyFormat.format(modelRun.created));
-
-					if (modelRunLookup.get(key) == null) {
-						modelRunLookup.put(key, modelRun);
+					// add the numbers up to create ranks and then predict the position and the grossing position
+					Rank rank;
+					if (output.ranks == null) {
+						// Create a dummy rank for every Item, every day of the date range
+						output.ranks = new ArrayList<Rank>();
 					}
-				}
 
-				// add the numbers up to create ranks and then predict the position and the grossing position
-				Rank rank;
-				ModelRun modelRun;
+					// Keep track of the rank for a specific Item this day
+					Map<String, Rank> itemIDsRankLookup;
 
-				// Create a dummy rank for every Item, every day of the date range
-				output.ranks = new ArrayList<Rank>();
+					// Get range of dates
+					Set<Date> dates = salesGroupByDate.keySet();
 
-				// Keep track of the rank for a specific Item this day
-				Map<String, Rank> itemIDsRankLookup;
-
-				// Get range of dates
-				Set<Date> dates = salesGroupByDate.keySet();
-
-				// setup id only category to avoid bloating data with category
-				Category category = null;
-				if (input.category != null && input.category.id != null) {
-					category = new Category();
-					category.id = input.category.id;
-				}
-
-				for (Date salesGroupDate : dates) {
-
-					modelRun = modelRunLookup.get(salesGroupDate);
-
-					if (sales.size() > 0) {
+					for (Date salesGroupDate : dates) {
 						itemIDsRankLookup = new HashMap<String, Rank>();
 
 						List<Sale> salesGroup = salesGroupByDate.get(salesGroupDate);
@@ -1751,17 +1745,13 @@ public final class Core extends ActionHandler {
 								rank.revenue = (float) 0;
 
 								// Add common values
-								if (modelRun != null) {
-									rank.code = modelRun.code;
-								}
 
-								rank.category = category;
-
+								// rank.category = category;
 								rank.country = input.country.a2Code;
 								rank.currency = sale.customerCurrency;
 								rank.date = salesGroupDate;
 								rank.created = salesGroupDate;
-								rank.source = defaultStore.a3Code;
+								rank.source = formStore.a3Code;
 								rank.type = input.listType;
 
 								output.ranks.add(rank);
@@ -1780,22 +1770,13 @@ public final class Core extends ActionHandler {
 									|| sale.typeIdentifier.equals(FREE_OR_PAID_APP_UNIVERSAL_IOS) || sale.typeIdentifier.equals(FREE_OR_PAID_APP_IPAD_IOS)) {
 								rank.downloads += sale.units.intValue();
 								// Ignore price if the Sale is a refund or a promotion
-								if (rank.price == null && !DataTypeHelper.isZero(sale.customerPrice.floatValue()) && sale.promoCode.equals(" ")) {
+								if (rank.price == null && sale.units.intValue() > 0 && sale.promoCode.equals(" ")) {
 									rank.price = sale.customerPrice;
 								}
 							}
-
-							if (modelRun != null) {
-								// TODO: use the mode to predict what rank that would be
-								// rank.grossingPosition;
-								// rank.position;
-							}
-
 						} // end 1 day sales loop
-
-					}
-
-				} // end date range loop
+					} // end date range loop
+				} // if sale.size > 0
 			}
 
 			DataTypeHelper.sortRanksByDate(output.ranks);
@@ -1846,182 +1827,135 @@ public final class Core extends ActionHandler {
 			if (input.listType == null)
 				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("String: input.listType"));
 
-			// right now category
-			if (input.category == null) {
-				// TODO:
-				// input.category = CategoryServiceProvider.provide().getAllCategory(stores);
-			} else {
-				input.category = ValidationHelper.validateCategory(input.category, "input.category");
-
-				boolean foundStore = false;
-
-				for (Store store : stores) {
-					if (store.a3Code.equals(input.category.store)) {
-						foundStore = true;
-						break;
-					}
-				}
-
-				if (!foundStore)
-					throw new InputValidationException(ApiError.CategoryStoreMismatch.getCode(), ApiError.CategoryStoreMismatch.getMessage("input.category"));
-			}
-
-			Calendar cal = Calendar.getInstance();
-
 			if (input.end == null) {
-				input.end = cal.getTime();
+				input.end = DateTime.now(DateTimeZone.UTC).toDate();
 			}
 
 			if (input.start == null) {
-				cal.setTime(input.end);
-				cal.add(Calendar.DAY_OF_YEAR, -30);
-				input.start = cal.getTime();
+				input.start = (new DateTime(input.end.getTime(), DateTimeZone.UTC)).minusDays(30).toDate();
 			}
 
-			long diff = input.end.getTime() - input.start.getTime();
-			long diffDays = diff / ApiHelper.MILLIS_PER_DAY;
+			FormType form = null;
+			Store formStore = null;
+			for (Store store : stores) {
+				Modeller modeller = ModellerFactory.getModellerForStore(store.a3Code);
+				form = modeller.getForm(input.listType);
 
-			if (diffDays > 60 || diffDays < 0)
-				throw new InputValidationException(ApiError.DateRangeOutOfBounds.getCode(),
-						ApiError.DateRangeOutOfBounds.getMessage("0-60 days: input.end - input.start"));
+				if (form != null) {
+					formStore = store;
+					break;
+				}
+			}
 
-			List<Sale> sales = SaleServiceProvider.provide().getSales(input.country, input.category, linkedAccount, input.start, input.end,
-					PagerHelper.createInfinitePager());
+			// ItemSaleArchiver archiver = ArchiverFactory.getItemSaleArchiver();
+			// long[] slices = SliceHelper.offsets(input.start, input.end);
+			//
+			// String key;
+			// List<Rank> ranks = null;
+			// for (long slice : slices) {
+			// key = archiver.createItemRanksKey(slice, input.item, input.country, form);
+			//
+			// ranks = archiver.getRanks(key);
+			//
+			// if (ranks != null) {
+			// if (output.ranks == null) {
+			// output.ranks = new ArrayList<Rank>();
+			// }
+			//
+			// output.ranks.addAll(ranks);
+			// }
+			// }
 
-			if (sales.size() > 0) {
-				// group sales by date
-				Map<Date, List<Sale>> salesGroupByDate = new HashMap<Date, List<Sale>>();
-				List<Sale> dateSalesList = null;
-				Date key;
-				SimpleDateFormat keyFormat = new SimpleDateFormat("yyyy-MM-dd");
+			if (output.ranks == null || output.ranks.size() == 0) {
+				// Get Items sales based on the filters
+				List<Sale> sales = SaleServiceProvider.provide().getItemSales(input.item, input.country, null, linkedAccount, input.start, input.end,
+						PagerHelper.createInfinitePager());
+				if (sales.size() > 0) {
+					// group sales by date
+					Map<Date, List<Sale>> salesGroupByDate = new HashMap<Date, List<Sale>>();
+					Date dateKey;
+					SimpleDateFormat keyFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-				Store defaultStore = stores.get(0);
-				input.item.source = defaultStore.a3Code;
-				Modeller modeller = ModellerFactory.getModellerForStore(defaultStore.a3Code);
-				FormType form = modeller.getForm(input.listType);
-				Boolean isFree = null;
+					for (Sale sale : sales) {
+						// only add Sales that are consistent with the device type
+						if (FREE_OR_PAID_APP_UNIVERSAL_IOS.equals(sale.typeIdentifier) // 1F
+								|| UPDATE_UNIVERSAL_IOS.equals(sale.typeIdentifier) // 7F
+								|| (form == FormType.FormTypeOther && (FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS.equals(sale.typeIdentifier))) // 1
+								|| (form == FormType.FormTypeOther && (UPDATE_IPHONE_AND_IPOD_TOUCH_IOS.equals(sale.typeIdentifier))) // 7
+								|| (form == FormType.FormTypeTablet && (FREE_OR_PAID_APP_IPAD_IOS.equals(sale.typeIdentifier))) // 1T
+								|| (form == FormType.FormTypeTablet && (UPDATE_IPAD_IOS.equals(sale.typeIdentifier))) // 7T
+								|| INAPP_PURCHASE_PURCHASE_IOS.equals(sale.typeIdentifier) // IA1
+								|| INAPP_PURCHASE_SUBSCRIPTION_IOS.equals(sale.typeIdentifier) // IA9
+						) {
+							dateKey = keyFormat.parse(keyFormat.format(sale.begin));
 
-				for (Sale sale : sales) {
-					// only add items that are consistent with the product type
-					if (FREE_OR_PAID_APP_UNIVERSAL_IOS.equals(sale.typeIdentifier)
-					// || UPDATE_UNIVERSAL_IOS.equals(sale.typeIdentifier)
-							|| (form == FormType.FormTypeOther && (FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS.equals(sale.typeIdentifier)
-							// || UPDATE_IPHONE_AND_IPOD_TOUCH_IOS.equals(sale.typeIdentifier)
-							)) || (form == FormType.FormTypeTablet && (FREE_OR_PAID_APP_IPAD_IOS.equals(sale.typeIdentifier)
-							// || UPDATE_IPAD_IOS.equals(sale.typeIdentifier)
-							))) {
-						key = keyFormat.parse(keyFormat.format(sale.begin));
-						dateSalesList = salesGroupByDate.get(key);
+							// Link list of item IDs with every day of the range
+							if (salesGroupByDate.get(dateKey) == null) {
+								salesGroupByDate.put(dateKey, new ArrayList<Sale>());
+							}
 
-						if (dateSalesList == null) {
-							dateSalesList = new ArrayList<Sale>();
-							salesGroupByDate.put(key, dateSalesList);
+							salesGroupByDate.get(dateKey).add(sale);
 						}
-
-						if (sale.proceeds != null) {
-							isFree = Boolean.valueOf(DataTypeHelper.isZero(sale.proceeds));
-						}
-
-						dateSalesList.add(sale);
-					}
-				}
-
-				// get the model runs constants
-				List<ModelRun> modelRuns = ModelRunServiceProvider.provide().getDateModelRunBatch(input.country, defaultStore, form, salesGroupByDate.keySet());
-
-				Map<Date, ModelRun> modelRunLookup = new HashMap<Date, ModelRun>();
-
-				for (ModelRun modelRun : modelRuns) {
-					key = keyFormat.parse(keyFormat.format(modelRun.created));
-
-					if (modelRunLookup.get(key) == null) {
-						modelRunLookup.put(key, modelRun);
-					}
-				}
-
-				// add the numbers up to create ranks and then predict the position and the grossing position
-
-				Rank rank;
-				ModelRun modelRun;
-				Set<Date> dates = salesGroupByDate.keySet();
-				List<Sale> salesGroup;
-
-				output.ranks = RankServiceProvider.provide().getItemRanks(input.country, defaultStore, modeller.getType(form, isFree), input.item, input.start,
-						input.end, input.pager);
-				Map<Date, Rank> indexedRank = new HashMap<Date, Rank>();
-				for (Rank current : output.ranks) {
-					indexedRank.put(current.date, current);
-				}
-
-				for (Date salesGroupDate : dates) {
-					boolean populatedCommon = false;
-
-					rank = indexedRank.get(salesGroupDate);
-
-					if (rank == null) {
-						rank = new Rank();
-					} else {
-						populatedCommon = true;
 					}
 
-					output.ranks.add(rank);
+					// add the numbers up to create ranks and then predict the position and the grossing position
+					Rank rank = null;
 
-					modelRun = modelRunLookup.get(salesGroupDate);
-					salesGroup = salesGroupByDate.get(salesGroupDate);
+					// Create a dummy rank for the Item, every day of the date range
+					output.ranks = new ArrayList<Rank>();
 
-					if (sales.size() > 0) {
-						int downloads = 0;
-						float revenue = 0;
+					// Get range of dates
+					Set<Date> dates = salesGroupByDate.keySet();
+
+					boolean created;
+					for (Date salesGroupDate : dates) {
+						created = false;
+
+						List<Sale> salesGroup = salesGroupByDate.get(salesGroupDate);
 
 						for (Sale sale : salesGroup) {
-							if (!populatedCommon) {
-								rank.category = input.category;
+							if (!created) {
+								rank = new Rank();
+								rank.downloads = 0;
+								rank.revenue = (float) 0;
 
-								if (modelRun != null) {
-									rank.code = modelRun.code;
-								}
+								// Add common values
 
+								// rank.category = category;
 								rank.country = input.country.a2Code;
 								rank.currency = sale.customerCurrency;
 								rank.date = salesGroupDate;
 								rank.created = salesGroupDate;
-								rank.itemId = sale.item.internalId;
-								rank.source = defaultStore.a3Code;
+								rank.source = formStore.a3Code;
 								rank.type = input.listType;
+								rank.itemId = input.item.internalId;
 
-								populatedCommon = true;
+								output.ranks.add(rank);
+
+								created = true;
 							}
 
 							// If units and customer prices are negatives (refunds), subtract the value setting units positive
-							revenue += Math.abs(sale.units.floatValue()) * sale.customerPrice.floatValue();
+							rank.revenue += Math.abs(sale.units.floatValue()) * sale.customerPrice.floatValue();
 
 							// Take into account price and downloads only from main Apps
 							if (sale.typeIdentifier.equals(FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS)
 									|| sale.typeIdentifier.equals(FREE_OR_PAID_APP_UNIVERSAL_IOS) || sale.typeIdentifier.equals(FREE_OR_PAID_APP_IPAD_IOS)) {
-								downloads += sale.units.intValue();
-
+								rank.downloads += sale.units.intValue();
 								// Ignore price if the Sale is a refund or a promotion
-								if (rank.price == null && sale.customerPrice.floatValue() >= 0.001f && sale.promoCode.equals(" ")) {
+								if (rank.price == null && sale.units.intValue() > 0 && sale.promoCode.equals(" ")) {
 									rank.price = sale.customerPrice;
 								}
 							}
-						}
-
-						rank.revenue = Float.valueOf(revenue);
-						rank.downloads = Integer.valueOf(downloads);
-
-						if (modelRun != null) {
-							// TODO: use the mode to predict what rank that would be
-							// rank.grossingPosition;
-							// rank.position;
-						}
-					}
-				}
+						} // end 1 day sales loop
+					} // end date range loop
+				} // if sale.size > 0
 			}
 
 			DataTypeHelper.sortRanksByDate(output.ranks);
 
 			output.item = input.item;
+			output.linkedAccount = linkedAccount;
 
 			output.pager = input.pager;
 			updatePager(output.pager, output.ranks);
@@ -2045,7 +1979,7 @@ public final class Core extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
-			input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			input.item = ValidationHelper.validateItem(input.item, "input.item");
 
@@ -2070,6 +2004,126 @@ public final class Core extends ActionHandler {
 			output.error = convertToErrorAndLog(LOG, e);
 		}
 		LOG.finer("Exiting getLinkedAccountItem");
+		return output;
+	}
+
+	public GetNotificationsResponse getNotifications(GetNotificationsRequest input) {
+		LOG.finer("Entering getNotifications");
+		GetNotificationsResponse output = new GetNotificationsResponse();
+		try {
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			if (input.pager.sortBy == null) {
+				input.pager.sortBy = "created";
+			}
+
+			if (input.pager.sortDirection == null) {
+				input.pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
+			}
+
+			input.pager = ValidationHelper.validatePager(input.pager, "input.pager");
+
+			output.notifications = NotificationServiceProvider.provide().getUserNotifications(input.session.user,
+					NotificationTypeType.NotificationTypeTypeInternal, input.pager);
+
+			if (output.notifications != null) {
+				for (Notification notification : output.notifications) {
+					if ("beta@reflection.io".equals(notification.from)) {
+						notification.from = "Beta (" + notification.from + ")";
+					} else if ("hello@reflection.io".equals(notification.from)) {
+						notification.from = "Hello (" + notification.from + ")";
+					} else {
+						notification.from = "Admin";
+					}
+				}
+			}
+
+			PagerHelper.updatePager(output.pager = input.pager, output.notifications, input.pager.totalCount == null ? NotificationServiceProvider.provide()
+					.getUserNotificationsCount(input.session.user, NotificationTypeType.NotificationTypeTypeInternal, null, Boolean.FALSE)
+					: input.pager.totalCount);
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting getNotifications");
+		return output;
+	}
+
+	public DeleteNotificationsResponse deleteNotifications(DeleteNotificationsRequest input) {
+		LOG.finer("Entering deleteNotifications");
+		DeleteNotificationsResponse output = new DeleteNotificationsResponse();
+		try {
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			if (input.notifications == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("input.notifications"));
+
+			// all or nothing validation
+			int i = 0;
+			for (Notification notification : input.notifications) {
+				ValidationHelper.validateExistingNotification(notification, "input.notifications[" + Integer.toString(i++) + "]");
+			}
+
+			// once validation/lookup is done... delete the items
+			for (Notification notification : input.notifications) {
+				NotificationServiceProvider.provide().deleteNotification(notification);
+			}
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting deleteNotifications");
+		return output;
+	}
+
+	public UpdateNotificationsResponse updateNotifications(UpdateNotificationsRequest input) {
+		LOG.finer("Entering updateNotifications");
+		UpdateNotificationsResponse output = new UpdateNotificationsResponse();
+		try {
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			if (input.notifications == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("input.notifications"));
+
+			// all or nothing validation
+			int i = 0;
+			String path;
+			Map<String, Notification> existing = new HashMap<String, Notification>();
+			Notification lookup;
+			for (Notification notification : input.notifications) {
+				path = "input.notifications[" + Integer.toString(i++) + "]";
+
+				lookup = ValidationHelper.validateExistingNotification(notification, path);
+				existing.put(notification.id.toString(), lookup);
+
+				// from is when sent to a client and we NEVER want to update it
+				notification.from = lookup.from;
+
+				// if the item exists, verify that the new parameters are valid update values
+				ValidationHelper.validateNewNotification(notification, path);
+			}
+
+			// once validation/lookup is done... delete the items
+			for (Notification notification : input.notifications) {
+				NotificationServiceProvider.provide().updateNotification(existing.get(notification.id.toString()), notification);
+			}
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting updateNotifications");
 		return output;
 	}
 }

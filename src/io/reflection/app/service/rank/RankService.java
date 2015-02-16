@@ -29,12 +29,14 @@ import io.reflection.app.service.ServiceType;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 import co.spchopr.persistentmap.PersistentMap;
 import co.spchopr.persistentmap.PersistentMapFactory;
@@ -48,7 +50,6 @@ import com.spacehopperstudios.utility.StringUtils;
 final class RankService implements IRankService {
 
 	private PersistentMap cache = PersistentMapFactory.createObjectify();
-	private Calendar cal = Calendar.getInstance();
 
 	public String getName() {
 		return ServiceType.ServiceTypeRank.toString();
@@ -114,15 +115,26 @@ final class RankService implements IRankService {
 		rank.grossingPosition = connection.getCurrentRowInteger("grossingposition");
 		rank.itemId = stripslashes(connection.getCurrentRowString("itemid"));
 		rank.position = connection.getCurrentRowInteger("position");
-		rank.price = Float.valueOf(connection.getCurrentRowInteger("price").floatValue() / 100.0f);
+
+		Integer price = connection.getCurrentRowInteger("price");
+		if (price != null) {
+			rank.price = Float.valueOf(price.floatValue() / 100.0f);
+		}
+
 		rank.source = stripslashes(connection.getCurrentRowString("source"));
 		rank.type = stripslashes(connection.getCurrentRowString("type"));
 
-		rank.revenue = Float.valueOf(connection.getCurrentRowLong("revenue").floatValue() / 100.0f);
+		Long revenue = connection.getCurrentRowLong("revenue");
+		if (revenue != null) {
+			rank.revenue = Float.valueOf(revenue.floatValue() / 100.0f);
+		}
+
 		rank.downloads = connection.getCurrentRowInteger("downloads");
 
-		rank.category = new Category();
-		rank.category.id = connection.getCurrentRowLong("categoryid");
+		Long categoryId = connection.getCurrentRowLong("categoryid");
+		if (categoryId != null) {
+			(rank.category = new Category()).id(categoryId);
+		}
 
 		return rank;
 	}
@@ -330,15 +342,10 @@ final class RankService implements IRankService {
 
 				Map<Date, Rank> ranksLookup = new HashMap<Date, Rank>();
 				Date date;
-				Calendar cal = Calendar.getInstance();
 
 				while (rankConnection.fetchNextRow()) {
 					// strip out duplicates for date
-
-					date = rankConnection.getCurrentRowDateTime("date");
-
-					cal.setTime(date);
-					date = ApiHelper.removeTime(cal.getTime());
+					date = ApiHelper.removeTime(rankConnection.getCurrentRowDateTime("date"));
 
 					if (ranksLookup.get(date) == null) {
 						Rank rank = toRank(rankConnection);
@@ -356,10 +363,7 @@ final class RankService implements IRankService {
 					for (Rank rank : ranks) {
 						jsonArray.add(rank.toJson());
 					}
-
-					cal.setTime(new Date());
-					cal.add(Calendar.DAY_OF_MONTH, 20);
-					cache.put(memcacheKey, JsonUtils.cleanJson(jsonArray.toString()), cal.getTime());
+					cache.put(memcacheKey, JsonUtils.cleanJson(jsonArray.toString()), DateTime.now(DateTimeZone.UTC).plusDays(20).toDate());
 				}
 			} finally {
 				if (rankConnection != null) {
@@ -519,9 +523,7 @@ final class RankService implements IRankService {
 
 				if (rankConnection.fetchNextRow()) {
 					ranksCount = rankConnection.getCurrentRowLong("count");
-					cal.setTime(new Date());
-					cal.add(Calendar.DAY_OF_MONTH, 20);
-					cache.put(memcacheKey, ranksCount, cal.getTime());
+					cache.put(memcacheKey, ranksCount, DateTime.now(DateTimeZone.UTC).plusDays(20).toDate());
 				}
 
 			} finally {
@@ -677,9 +679,7 @@ final class RankService implements IRankService {
 							jsonArray.add(rank.toJson());
 						}
 
-						cal.setTime(new Date());
-						cal.add(Calendar.DAY_OF_MONTH, 20);
-						cache.put(memcacheKey, JsonUtils.cleanJson(jsonArray.toString()), cal.getTime());
+						cache.put(memcacheKey, JsonUtils.cleanJson(jsonArray.toString()), DateTime.now(DateTimeZone.UTC).plusDays(20).toDate());
 					}
 				} finally {
 					if (rankConnection != null) {

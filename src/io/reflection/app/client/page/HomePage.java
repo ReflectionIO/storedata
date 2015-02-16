@@ -7,187 +7,213 @@
 //
 package io.reflection.app.client.page;
 
+import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
+import io.reflection.app.api.shared.datatypes.Session;
+import io.reflection.app.client.DefaultEventBus;
+import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.NavigationController;
-import io.reflection.app.client.helper.AlertBoxHelper;
-import io.reflection.app.client.helper.FormHelper;
-import io.reflection.app.client.part.AlertBox;
-import io.reflection.app.client.part.AlertBox.AlertBoxType;
+import io.reflection.app.client.controller.NavigationController.Stack;
+import io.reflection.app.client.controller.SessionController;
+import io.reflection.app.client.handler.NavigationEventHandler;
+import io.reflection.app.client.handler.user.SessionEventHandler;
+import io.reflection.app.client.helper.DOMHelper;
 import io.reflection.app.client.part.Footer;
-
-import java.util.Date;
+import io.reflection.app.client.part.Header;
+import io.reflection.app.client.res.Images;
+import io.reflection.app.datatypes.shared.User;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.HeadingElement;
-import com.google.gwt.dom.client.OListElement;
+import com.google.gwt.dom.client.LinkElement;
 import com.google.gwt.dom.client.ParagraphElement;
-import com.google.gwt.dom.client.SpanElement;
-import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.logical.shared.ResizeEvent;
-import com.google.gwt.event.logical.shared.ResizeHandler;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.dom.client.ScriptElement;
+import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.dom.client.VideoElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.Window.ScrollEvent;
-import com.google.gwt.user.client.Window.ScrollHandler;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
-import com.google.gwt.user.client.ui.TextArea;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.gson.json.service.shared.Error;
 
 /**
  * @author billy1380
  * 
  */
-public class HomePage extends Page {
-
-	private final int DELTA = (int) (1000.0 / 30.0);
+public class HomePage extends Page implements NavigationEventHandler, SessionEventHandler {
 
 	private static HomePageUiBinder uiBinder = GWT.create(HomePageUiBinder.class);
 
 	interface HomePageUiBinder extends UiBinder<Widget, HomePage> {}
 
-	interface HomePageStyle extends CssResource {
-		String hide();
-		
-		String moveDownALittle();
-		
-		String moveDown();
-	}
+	@UiField DivElement headerLinks;
+	@UiField InlineHyperlink applyNowBtn;
+	@UiField InlineHyperlink applyBtn;
+	@UiField InlineHyperlink loginBtn;
+	@UiField InlineHyperlink logoutBtn;
+	@UiField InlineHyperlink leaderboardBtn;
 
-	@UiField HomePageStyle style;
+	@UiField InlineHyperlink homeBtn;
+	@UiField HTMLPanel leaderBoardScreenshot;
+	@UiField HTMLPanel analysisScreenshot;
 
-	@UiField SpanElement year;
+	// elements for IE consitionals
+	Element picture1, source1, source2;
+	Element picture2, source3, source4;
+	Element picture3, source5, source6;
 
-	@UiField DivElement firstPage;
-	@UiField DivElement features;
+	private static final LinkElement cssCustom = DOMHelper.getCssLinkFromUrl("css/landing.d1a7b18967f731808165747093c15e35.css");
 
-	@UiField Anchor revenueFeature;
-	@UiField Anchor leaderboardFeature;
-	@UiField Anchor modelFeature;
-	@UiField Anchor storesFeature;
-	@UiField Anchor searchFeature;
-	@UiField Anchor functionalFeature;
+	private static final LinkElement cssCustomIE8 = DOMHelper.getCssLinkFromUrl("css/landing-ie8.659484547a4409f243a1bb7d085c2c52.css");
+	private static final LinkElement cssCustomIE9 = DOMHelper.getCssLinkFromUrl("css/landing-ie9.42a5a45361f9f95fe006be82a699c864.css");
 
-	@UiField DivElement contact;
-	@UiField TextBox name;
-	@UiField HTMLPanel nameGroup;
-	@UiField HTMLPanel nameNote;
-	private String nameError;
+	private static final ScriptElement scriptCustom = DOMHelper.getJSScriptFromUrl("js/scripts.180cd4275030bac3e6c6f190e5c98813.js");
+	private static final ScriptElement scriptRespond = DOMHelper.getJSScriptFromUrl("js/respond.min.js");
 
-	@UiField TextBox email;
-	@UiField HTMLPanel emailGroup;
-	@UiField HTMLPanel emailNote;
-	private String emailError;
+	private static final ScriptElement scriptPictureFill = DOMHelper.getJSScriptFromUrl("js/picturefill.2.2.0.min.js", "async");
 
-	@UiField TextArea message;
-	@UiField HTMLPanel messageGroup;
-	@UiField HTMLPanel messageNote;
-	private String messageError;
+	private int toTop = 0;
+	private static boolean tweeked = false;
 
-	@UiField Button submit;
-
-	@UiField AlertBox contactAlert;
-
-	@UiField HeadingElement homeHeading;
-	@UiField ParagraphElement homeDescription;
-	@UiField InlineHyperlink requestInvite;
-	
-	@UiField DivElement gotoFeaturesContainer;
-	@UiField Anchor gotoFeatures;
-
-	@UiField OListElement carouselIndicators;
-	@UiField DivElement carouselContainer;
-	@UiField Anchor carouselRight;
-	@UiField Anchor carouselLeft;
-	private Timer scrollTimer;
-
-	@UiField Anchor workWithUs;
-	@UiField Anchor getInTouch;
-	@UiField Anchor gotoTop;
-
-	private int destinationTop;
-	private int selectedCarouselImage = 0;
-	private Timer carouselSpinTimer;
-	private boolean carouselSpinning = false;
-
-	@SuppressWarnings("deprecation")
 	public HomePage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		name.getElement().setAttribute("placeholder", "Name");
-		email.getElement().setAttribute("placeholder", "Email Address");
-		message.getElement().setAttribute("placeholder", "Message");
+		addHomeBtnPicture();
+		addLeaderboardScreenshotPicture();
+		addAnalysisScreenshotPicture();
 
-		requestInvite.setTargetHistoryToken(PageType.RegisterPageType.asTargetHistoryToken("requestinvite"));
+		// StyleInjector.injectAtStart(Styles.INSTANCE.homePageStyle().getText());
 
-		setupIntroSequence();
+		headerLinks.removeAllChildren();
 
-		year.setInnerHTML(Integer.toString(1900 + (new Date()).getYear()));
+		applyBtn.setTargetHistoryToken(PageType.RegisterPageType.asTargetHistoryToken("requestinvite"));
+		applyNowBtn.setTargetHistoryToken(PageType.RegisterPageType.asTargetHistoryToken("requestinvite"));
+		loginBtn.setTargetHistoryToken(PageType.LoginPageType.asTargetHistoryToken("requestinvite"));
 
-		// rotate the carousel every 5 of seconds
-		(carouselSpinTimer = new Timer() {
-
-			@Override
-			public void run() {
-				spinCarousel(carouselRight);
-			}
-
-		}).scheduleRepeating(10000);
+		appendConditionalTags();
 	}
 
-	private void setupIntroSequence() {
-		homeHeading.getStyle().clearDisplay();
-		(new Timer() {
-			@Override
-			public void run() {
-				homeHeading.removeClassName(style.hide());
-				homeHeading.removeClassName(style.moveDownALittle());
-				
-				homeDescription.getStyle().clearDisplay();
-				(new Timer() {
-					@Override
-					public void run() {
-						homeDescription.removeClassName(style.hide());
-						homeDescription.removeClassName(style.moveDown());
-						homeDescription.addClassName(style.moveDownALittle());
-						requestInvite.setVisible(true);
+	public static void applyHomePageTweeks() {
+		if (!tweeked) {
+			// Compatibility code
+			Document.get().getElementsByTagName("html").getItem(0).setAttribute("style", "height: auto");
+			NavigationController.get().getPageHolderPanel().getElement().setAttribute("style", "padding: 0px 0px 0px 0px;");
+			Document.get().getBody().setAttribute("style", "height: auto");
 
-						(new Timer() {
-							@Override
-							public void run() {
-								requestInvite.removeStyleName(style.hide());
-								gotoFeaturesContainer.getStyle().clearDisplay();
-
-								(new Timer() {
-									@Override
-									public void run() {
-										gotoFeaturesContainer.removeClassName(style.hide());
-										gotoFeaturesContainer.removeClassName(style.moveDownALittle());
-										gotoFeaturesContainer.addClassName(style.moveDown());
-									}
-								}).schedule(500);
-							}
-						}).schedule(600);
-					}
-				}).schedule(600);
+			// Append to Head
+			Document.get().getHead().appendChild(HomePage.cssCustom);
+			String userAgent = Window.Navigator.getUserAgent();
+			if (userAgent.contains("MSIE")) { // Internet Explorer
+				if (userAgent.contains("MSIE 2") || userAgent.contains("MSIE 3") || userAgent.contains("MSIE 4") || userAgent.contains("MSIE 5")
+						|| userAgent.contains("MSIE 6") || userAgent.contains("MSIE 7") || userAgent.contains("MSIE 8")) {
+					Document.get().getHead().appendChild(HomePage.cssCustomIE8);
+					Document.get().getHead().appendChild(HomePage.scriptRespond);
+				} else {
+					Document.get().getHead().appendChild(HomePage.scriptPictureFill);
+				}
+				if (userAgent.contains("MSIE 9")) {
+					Document.get().getHead().appendChild(HomePage.cssCustomIE9);
+				}
+			} else { // Not Internet Explorer
+				Document.get().getHead().appendChild(HomePage.scriptPictureFill);
 			}
-		}).schedule(200);
 
+			tweeked = true;
+		}
+	}
+
+	public static void removeHomePageTweeks() {
+		if (tweeked) {
+			// Compatibility code
+			Document.get().getElementsByTagName("html").getItem(0).removeAttribute("style");
+			NavigationController.get().getPageHolderPanel().getElement().setAttribute("style", "padding: 60px 0px 39px 0px;");
+			Document.get().getBody().removeAttribute("style");
+
+			// Remove from Head
+			Document.get().getHead().removeChild(HomePage.cssCustom);
+			String userAgent = Window.Navigator.getUserAgent();
+			if (userAgent.contains("MSIE")) { // Internet Explorer
+				if (userAgent.contains("MSIE 2") || userAgent.contains("MSIE 3") || userAgent.contains("MSIE 4") || userAgent.contains("MSIE 5")
+						|| userAgent.contains("MSIE 6") || userAgent.contains("MSIE 7") || userAgent.contains("MSIE 8")) {
+					Document.get().getHead().removeChild(HomePage.cssCustomIE8);
+					Document.get().getHead().removeChild(HomePage.scriptRespond);
+				} else {
+					Document.get().getHead().removeChild(HomePage.scriptPictureFill);
+				}
+				if (userAgent.contains("MSIE 9")) {
+					Document.get().getHead().removeChild(HomePage.cssCustomIE9);
+				}
+			} else { // Not Internet Explorer
+				Document.get().getHead().removeChild(HomePage.scriptPictureFill);
+			}
+
+			tweeked = false;
+		}
+	}
+
+	private void addHomeBtnPicture() {
+		picture1 = DOM.createElement("picture");
+
+		source1 = DOM.createElement("source");
+		source1.setAttribute("srcset", Images.INSTANCE.reflectionLogoBeta().getSafeUri().asString());
+		source1.setAttribute("media", "(min-width: 480px)");
+
+		source2 = DOM.createElement("source");
+		source2.setAttribute("srcset", Images.INSTANCE.mobileReflectionLogoBeta().getSafeUri().asString());
+
+		Image img = new Image(Images.INSTANCE.reflectionLogoBeta());
+		img.setAltText("Reflection logo");
+
+		picture1.appendChild(source1);
+		picture1.appendChild(source2);
+		picture1.appendChild(img.getElement());
+
+		homeBtn.getElement().appendChild(picture1);
+	}
+
+	private void addLeaderboardScreenshotPicture() {
+		picture2 = DOM.createElement("picture");
+
+		source3 = DOM.createElement("source");
+		source3.setAttribute("srcset", "images/screenshots/Leaderboard_Revenue.png");
+		source3.setAttribute("media", "(min-width: 720px)");
+
+		source4 = DOM.createElement("source");
+		source4.setAttribute("srcset", "images/screenshots/Leaderboard_Revenue_Mobile.png");
+
+		Image img = new Image("images/screenshots/Leaderboard_Revenue.png");
+		img.setAltText("Leaderboard screenshot");
+
+		picture2.appendChild(source3);
+		picture2.appendChild(source4);
+		picture2.appendChild(img.getElement());
+
+		leaderBoardScreenshot.getElement().appendChild(picture2);
+	}
+
+	private void addAnalysisScreenshotPicture() {
+		picture3 = DOM.createElement("picture");
+
+		source5 = DOM.createElement("source");
+		source5.setAttribute("srcset", "images/screenshots/App_Page-v2.png");
+		source5.setAttribute("media", "(min-width: 720px)");
+
+		source6 = DOM.createElement("source");
+		source6.setAttribute("srcset", "images/screenshots/App_Page_Mobile.png");
+
+		Image img = new Image("images/screenshots/App_Page-v2.png");
+		img.setAltText("Analysis screenshot");
+
+		picture3.appendChild(source5);
+		picture3.appendChild(source6);
+		picture3.appendChild(img.getElement());
+
+		analysisScreenshot.getElement().appendChild(picture3);
 	}
 
 	/*
@@ -199,43 +225,17 @@ public class HomePage extends Page {
 	protected void onAttach() {
 		super.onAttach();
 
-		NavigationController.get().getHeader().getElement().getStyle().setBorderColor("#272733");
-		((Footer)NavigationController.get().getFooter()).setVisible(false);;
-		NavigationController.get().getPageHolderPanel().getElement().getStyle().setPaddingTop(0, Unit.PX);
+		Window.scrollTo(0, toTop);
 
-		firstPage.getStyle().setHeight(Window.getClientHeight(), Unit.PX);
+		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this));
 
-		register(Window.addWindowScrollHandler(new ScrollHandler() {
-
-			@Override
-			public void onWindowScroll(ScrollEvent event) {
-				if (event.getScrollTop() > Window.getClientHeight()) {
-					NavigationController.get().getHeader().getElement().getStyle().clearBorderColor();
-				} else {
-					NavigationController.get().getHeader().getElement().getStyle().setBorderColor("#272733");
-				}
-
-				if (event.getScrollTop() < 0) {
-					PageType.HomePageType.show();
-				}
-			}
-		}));
-
-		register(Window.addResizeHandler(new ResizeHandler() {
-
-			Timer resizeTimer = new Timer() {
-				@Override
-				public void run() {
-					firstPage.getStyle().setHeight(Window.getClientHeight(), Unit.PX);
-				}
-			};
-
-			@Override
-			public void onResize(ResizeEvent event) {
-				resizeTimer.cancel();
-				resizeTimer.schedule(250);
-			}
-		}));
+		((Footer) NavigationController.get().getFooter()).setVisible(false);
+		((Header) NavigationController.get().getHeader()).setVisible(false);
+		headerLinks.getStyle().setDisplay(Display.INLINE_BLOCK);
+		
+		// Append to Body
+		Document.get().getBody().appendChild(scriptCustom);
 	}
 
 	/*
@@ -245,349 +245,105 @@ public class HomePage extends Page {
 	 */
 	@Override
 	protected void onDetach() {
-		if (scrollTimer != null) {
-			scrollTimer.cancel();
-		}
-
 		super.onDetach();
 
-		NavigationController.get().getHeader().getElement().getStyle().clearBorderColor();
-		NavigationController.get().getPageHolderPanel().getElement().getStyle().setPaddingTop(60, Unit.PX);
-		((Footer)NavigationController.get().getFooter()).setVisible(true);;
+		((Footer) NavigationController.get().getFooter()).setVisible(true);
+		((Header) NavigationController.get().getHeader()).setVisible(true);
+
+		toTop = Window.getScrollTop();
 		
-		resetContactForm();
+		// Romove from Body
+		Document.get().getBody().removeChild(scriptCustom);
 	}
 
-	@UiHandler({ "gotoFeatures", "workWithUs", "getInTouch", "gotoTop"
-	// , "revenueFeature", "leaderboardFeature", "modelFeature", "storesFeature", "searchFeature", "functionalFeature"
-	})
-	void onClickHandler(ClickEvent e) {
-		Object source = e.getSource();
-		if (source == gotoFeatures || source == revenueFeature || source == leaderboardFeature || source == modelFeature || source == storesFeature
-				|| source == searchFeature || source == functionalFeature) {
-			if (scrollTimer == null) {
-				createNewScrollTimer();
-			} else {
-				scrollTimer.cancel();
-			}
-
-			destinationTop = features.getAbsoluteTop() - 60;
-			scrollTimer.scheduleRepeating(DELTA);
-		} else if (source == getInTouch || source == workWithUs) {
-			if (scrollTimer == null) {
-				createNewScrollTimer();
-			} else {
-				scrollTimer.cancel();
-			}
-
-			destinationTop = contact.getAbsoluteTop();
-			scrollTimer.scheduleRepeating(DELTA);
-		} else if (source == gotoTop) {
-			if (scrollTimer == null) {
-				createNewScrollTimer();
-			} else {
-				scrollTimer.cancel();
-			}
-
-			destinationTop = getAbsoluteTop();
-			scrollTimer.scheduleRepeating(DELTA);
-		}
-	}
-
-	@UiHandler({ "carouselLeft", "carouselRight" })
-	void onCarouselArrowClickHandler(ClickEvent e) {
-		carouselSpinTimer.cancel();
-		spinCarousel(e.getSource());
-		carouselSpinTimer.scheduleRepeating(10000);
-	}
-
-	private void spinCarousel(final Object source) {
-		if (!carouselSpinning && (source == carouselLeft || source == carouselRight)) {
-			carouselSpinning = true;
-
-			final Element sourceHighlight = DOM.getChild(carouselIndicators, selectedCarouselImage);
-			final Element sourceImage = DOM.getChild(carouselContainer, selectedCarouselImage);
-
-			final Element destinationHighlight, destinationImage;
-
-			Element nextHighlight = null;
-			Element nextImage = null;
-
-			if (source == carouselRight) {
-				nextHighlight = DOM.getChild(carouselIndicators, selectedCarouselImage + 1);
-				nextImage = DOM.getChild(carouselContainer, selectedCarouselImage + 1);
-
-				if (nextHighlight == null) {
-					selectedCarouselImage = 0;
-				} else {
-					selectedCarouselImage++;
-				}
-			} else if (source == carouselLeft) {
-				nextHighlight = DOM.getChild(carouselIndicators, selectedCarouselImage - 1);
-				nextImage = DOM.getChild(carouselContainer, selectedCarouselImage - 1);
-
-				if (nextHighlight == null) {
-					selectedCarouselImage = DOM.getChildCount(carouselIndicators) - 1;
-				} else {
-					selectedCarouselImage--;
-				}
-			}
-
-			destinationHighlight = (nextHighlight == null ? DOM.getChild(carouselIndicators, selectedCarouselImage) : nextHighlight);
-			destinationImage = (nextImage == null ? DOM.getChild(carouselContainer, selectedCarouselImage) : nextImage);
-
-			if (source == carouselRight) {
-				destinationImage.addClassName("next");
-
-				sourceImage.addClassName("left");
-			} else if (source == carouselLeft) {
-				destinationImage.addClassName("prev");
-
-				sourceImage.addClassName("right");
-
-			}
-
-			// this is done in a timer because applying both styles in one go gives a resulting effect with the animation skipped
-			(new Timer() {
-				@Override
-				public void run() {
-					if (source == carouselRight) {
-						destinationImage.addClassName("left");
-					} else if (source == carouselLeft) {
-						destinationImage.addClassName("right");
-					}
-				}
-			}).schedule(100);
-
-			// wait for the duration of the animation then sort out the state
-			(new Timer() {
-				@Override
-				public void run() {
-
-					if (source == carouselRight) {
-						destinationImage.removeClassName("left");
-						destinationImage.removeClassName("next");
-					} else if (source == carouselLeft) {
-						destinationImage.removeClassName("right");
-						destinationImage.removeClassName("prev");
-					}
-
-					destinationImage.addClassName("active");
-
-					destinationHighlight.addClassName("active");
-
-					sourceImage.removeClassName("active");
-
-					if (source == carouselRight) {
-						sourceImage.removeClassName("left");
-					} else if (source == carouselLeft) {
-						sourceImage.removeClassName("right");
-					}
-
-					sourceHighlight.removeClassName("active");
-
-					carouselSpinning = false;
-				}
-			}).schedule(600);
-		}
-	}
-
-	private void createNewScrollTimer() {
-		scrollTimer = new Timer() {
-
-			@Override
-			public void run() {
-				int top = Window.getScrollTop();
-
-				if (top != destinationTop) {
-					int distance = (int) (((double) destinationTop - (double) top) / 3.0);
-
-					if (Math.abs(distance) < 4) {
-						Window.scrollTo(0, destinationTop);
-					} else {
-						Window.scrollTo(0, top + distance);
-					}
-
-					// top has not changed due scroll - if so we have probably hit the end of the page
-					int newTop = Window.getScrollTop();
-					if (newTop == top) {
-						destinationTop = top;
-					}
-				} else {
-					Window.scrollTo(0, destinationTop);
-					this.cancel();
-				}
-			}
-		};
-	}
-
-	@UiHandler("submit")
-	void onSubmitClicked(ClickEvent e) {
-		contactAlert.setVisible(false);
-
-		if (validateContactForm()) {
-			clearContactFormErrors();
-
-			setContactFormFieldsEnabled(false);
-
-			RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, "/sendmail");
-			builder.setHeader("Content-type", "application/x-www-form-urlencoded");
-
-			StringBuilder sb = new StringBuilder();
-			sb.append("action=contact");
-
-			sb.append("&name=");
-			sb.append(name.getValue());
-
-			sb.append("&email=");
-			sb.append(email.getValue());
-
-			sb.append("&message=");
-			sb.append(message.getValue());
-
-			try {
-				AlertBoxHelper.configureAlert(contactAlert, AlertBoxType.InfoAlertBoxType, true, "Sending: ", "Sending message to Reflection.io...", false)
-						.setVisible(true);
-
-				/* Request response = */builder.sendRequest(sb.toString(), new RequestCallback() {
-
-					public void onError(Request request, Throwable exception) {
-						AlertBoxHelper.configureAlert(contactAlert, AlertBoxType.DangerAlertBoxType, false, "Error: ",
-								"An error occured while sending the message!", true).setVisible(true);
-
-						setContactFormFieldsEnabled(true);
-					}
-
-					public void onResponseReceived(Request request, Response response) {
-						if (response.getText() != null && response.getText().getBytes().length > 0 && response.getText().getBytes()[0] == 1) {
-							AlertBoxHelper.configureAlert(contactAlert, AlertBoxType.SuccessAlertBoxType, false, "Thanks: ", "We will get back to you soon.",
-									true).setVisible(true);
-
-							(new Timer() {
-								@Override
-								public void run() {
-									contactAlert.setVisible(false);
-								}
-							}).schedule(2000);
-
-							clearContactFormFields();
-						} else {
-							AlertBoxHelper.configureAlert(contactAlert, AlertBoxType.DangerAlertBoxType, false, "Error: ",
-									"An error occured while sending the message!", true).setVisible(true);
-						}
-
-						setContactFormFieldsEnabled(true);
-					}
-				});
-			} catch (RequestException re) {
-				AlertBoxHelper.configureAlert(contactAlert, AlertBoxType.DangerAlertBoxType, false, "Error: ", "An error occured while sending the message!",
-						true).setVisible(true);
-
-				setContactFormFieldsEnabled(true);
-			}
-
+	private void setLoggedInHeader(boolean loggedIn) {
+		headerLinks.removeAllChildren();
+		if (loggedIn) {
+			headerLinks.appendChild(leaderboardBtn.getElement());
+			headerLinks.appendChild(logoutBtn.getElement());
 		} else {
-			if (nameError != null) {
-				FormHelper.showNote(true, nameGroup, nameNote, nameError);
-			} else {
-				FormHelper.hideNote(nameGroup, nameNote);
-			}
-
-			if (emailError != null) {
-				FormHelper.showNote(true, emailGroup, emailNote, emailError);
-			} else {
-				FormHelper.hideNote(emailGroup, emailNote);
-			}
-
-			if (messageError != null) {
-				FormHelper.showNote(true, messageGroup, messageNote, messageError);
-			} else {
-				FormHelper.hideNote(messageGroup, messageNote);
-			}
+			headerLinks.appendChild(applyBtn.getElement());
+			headerLinks.appendChild(loginBtn.getElement());
 		}
-
 	}
 
-	private boolean validateContactForm() {
-		boolean validated = true;
-		// Retrieve fields to validate
-		String nameValue = name.getText();
-		String emailValue = email.getText();
-		String messageValue = message.getText();
-
-		// Check fields constraints
-		if (nameValue == null || nameValue.length() == 0) {
-			nameError = "Cannot be empty";
-			validated = false;
-		} else if (nameValue.length() < 2) {
-			nameError = "Too short (minimum 2 characters)";
-			validated = false;
-		} else if (nameValue.length() > 1000) {
-			nameError = "Too long (maximum 1000 characters)";
-			validated = false;
-		} else {
-			nameError = null;
-			validated = validated && true;
+	private void appendConditionalTags() {
+		String userAgent = Window.Navigator.getUserAgent();
+		if (userAgent.contains("MSIE 2") || userAgent.contains("MSIE 3") || userAgent.contains("MSIE 4") || userAgent.contains("MSIE 5")
+				|| userAgent.contains("MSIE 6") || userAgent.contains("MSIE 7")) {
+			ParagraphElement outdatedBrowser = Document.get().createPElement(); // TODO the element z-index need to be set up higher
+			outdatedBrowser.addClassName("browserupgrade");
+			outdatedBrowser
+					.setInnerHTML("You are using an <strong>outdated</strong> browser. Please <a href=\"http://browsehappy.com/\">upgrade your browser</a> to improve your experience.");
+			this.getElement().insertFirst(outdatedBrowser);
 		}
-
-		if (emailValue == null || emailValue.length() == 0) {
-			emailError = "Cannot be empty";
-			validated = false;
-		} else if (emailValue.length() < 6) {
-			emailError = "Too short (minimum 6 characters)";
-			validated = false;
-		} else if (emailValue.length() > 255) {
-			emailError = "Too long (maximum 255 characters)";
-			validated = false;
-		} else if (!FormHelper.isValidEmail(emailValue)) {
-			emailError = "Invalid email address";
-			validated = false;
-		} else {
-			emailError = null;
-			validated = validated && true;
+		if (userAgent.contains("MSIE 9")) {
+			picture1.removeChild(source1);
+			picture1.removeChild(source2);
+			picture2.removeChild(source3);
+			picture2.removeChild(source4);
+			picture3.removeChild(source5);
+			picture3.removeChild(source6);
+			VideoElement video1 = Document.get().createVideoElement();
+			video1.setAttribute("style", "display: none;");
+			VideoElement video2 = Document.get().createVideoElement();
+			video2.setAttribute("style", "display: none;");
+			VideoElement video3 = Document.get().createVideoElement();
+			video3.setAttribute("style", "display: none;");
+			picture1.insertFirst(video1);
+			picture2.insertFirst(video2);
+			picture3.insertFirst(video3);
+			video1.appendChild(source1);
+			video1.appendChild(source2);
+			video2.appendChild(source3);
+			video2.appendChild(source4);
+			video3.appendChild(source5);
+			video3.appendChild(source6);
 		}
-
-		if (messageValue == null || messageValue.length() == 0) {
-			messageError = "Cannot be empty";
-			validated = false;
-		} else if (messageValue.length() < 2) {
-			messageError = "(minimum 2 characters)";
-			validated = false;
-		} else if (messageValue.length() > 10000) {
-			messageError = "Too long (maximum 10000 characters)";
-			validated = false;
-		} else {
-			messageError = null;
-			validated = validated && true;
-		}
-
-		return validated;
 	}
 
-	public void setContactFormFieldsEnabled(boolean value) {
-		name.setEnabled(value);
-		email.setEnabled(value);
-		message.setEnabled(value);
-
-		submit.setEnabled(value);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
+	 * io.reflection.app.client.controller.NavigationController.Stack)
+	 */
+	@Override
+	public void navigationChanged(Stack previous, Stack current) {
+		setLoggedInHeader(SessionController.get().isValidSession());
+		leaderboardBtn.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, OVERALL_LIST_TYPE,
+				FilterController.get().asRankFilterString()));
 	}
 
-	private void clearContactFormErrors() {
-		FormHelper.hideNote(nameGroup, nameNote);
-		FormHelper.hideNote(emailGroup, emailNote);
-		FormHelper.hideNote(messageGroup, messageNote);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoggedIn(io.reflection.app.datatypes.shared.User,
+	 * io.reflection.app.api.shared.datatypes.Session)
+	 */
+	@Override
+	public void userLoggedIn(User user, Session session) {
+		setLoggedInHeader(true);
 	}
-	
-	private void clearContactFormFields() {
-		name.setValue("");
-		email.setValue("");
-		message.setValue("");
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoggedOut()
+	 */
+	@Override
+	public void userLoggedOut() {
+		setLoggedInHeader(false);
 	}
-	
-	private void resetContactForm() {
-		clearContactFormFields();
-		setContactFormFieldsEnabled(true);
-		clearContactFormErrors();
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoginFailed(com.willshex.gson.json.service.shared.Error)
+	 */
+	@Override
+	public void userLoginFailed(Error error) {
+		userLoggedOut();
 	}
 
 }

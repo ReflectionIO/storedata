@@ -58,7 +58,7 @@ final class CountryService implements ICountryService {
 	 * 
 	 * @param connection
 	 * @return
-	 * @throws DataAccessException 
+	 * @throws DataAccessException
 	 */
 	private Country toCountry(Connection connection) throws DataAccessException {
 		Country country = new Country();
@@ -72,7 +72,11 @@ final class CountryService implements ICountryService {
 		country.continent = connection.getCurrentRowString("continent");
 		country.name = connection.getCurrentRowString("name");
 		country.nCode = connection.getCurrentRowInteger("ncode");
-		country.stores = Arrays.asList(connection.getCurrentRowString("stores").split(","));
+		String storeCodes = connection.getCurrentRowString("stores");
+
+		if (storeCodes != null) {
+			country.stores = Arrays.asList(storeCodes.split(","));
+		}
 
 		return country;
 	}
@@ -233,7 +237,8 @@ final class CountryService implements ICountryService {
 	public List<Country> getCountries(Pager pager) throws DataAccessException {
 		List<Country> countries = new ArrayList<Country>();
 
-		final String getCountriesQuery = String.format("SELECT * FROM `country` WHERE `deleted`='n' ORDER BY `relevance` ASC,`%s` %s,`a2code` ASC LIMIT %d, %d", pager.sortBy,
+		final String getCountriesQuery = String.format(
+				"SELECT * FROM `country` WHERE `deleted`='n' ORDER BY `relevance` ASC,`%s` %s,`a2code` ASC LIMIT %d, %d", pager.sortBy,
 				pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start.longValue(), pager.count.longValue());
 		Connection countryConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeCountry.toString());
 

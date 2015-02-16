@@ -18,7 +18,7 @@ import io.reflection.app.api.core.shared.call.event.ChangeUserDetailsEventHandle
 import io.reflection.app.api.core.shared.call.event.DeleteLinkedAccountEventHandler;
 import io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler;
 import io.reflection.app.api.shared.datatypes.Session;
-import io.reflection.app.client.controller.EventController;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.NavigationController;
@@ -80,12 +80,15 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	@UiField LIElement ranksItem;
 
 	@UiField UListElement myAccountList;
+	@UiField UListElement myAppsDropdown;
 	@UiField InlineHyperlink myAppsLink;
 	@UiField LIElement myAppsItem;
 	@UiField InlineHyperlink linkedAccountsLink;
 	@UiField LIElement linkedAccountsItem;
 	@UiField InlineHyperlink accountSettingsLink;
 	@UiField LIElement accountSettingsItem;
+	@UiField InlineHyperlink notificationsLink;
+	@UiField LIElement notificationsItem;
 
 	@UiField LIElement blogItem;
 
@@ -121,7 +124,9 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	@UiField LIElement dataAccountFetchesItem;
 	@UiField InlineHyperlink dataAccountFetchesLink;
 
-	@UiField LIElement emailTemplatesItem;
+	@UiField LIElement eventsItem;
+	@UiField LIElement eventSubscriptionsItem;
+	@UiField LIElement sendNotificationItem;
 
 	@UiField LIElement itemsItem;
 
@@ -187,13 +192,13 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	protected void onAttach() {
 		super.onAttach();
 
-		EventController.get().addHandlerToSource(UsersEventHandler.TYPE, UserController.get(), this);
-		EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this);
-		EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this);
-		EventController.get().addHandlerToSource(UserPowersEventHandler.TYPE, SessionController.get(), this);
-		EventController.get().addHandlerToSource(ChangeUserDetailsEventHandler.TYPE, SessionController.get(), this);
-		EventController.get().addHandlerToSource(LinkAccountEventHandler.TYPE, LinkedAccountController.get(), this);
-		EventController.get().addHandlerToSource(DeleteLinkedAccountEventHandler.TYPE, LinkedAccountController.get(), this);
+		DefaultEventBus.get().addHandlerToSource(UsersEventHandler.TYPE, UserController.get(), this);
+		DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this);
+		DefaultEventBus.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this);
+		DefaultEventBus.get().addHandlerToSource(UserPowersEventHandler.TYPE, SessionController.get(), this);
+		DefaultEventBus.get().addHandlerToSource(ChangeUserDetailsEventHandler.TYPE, SessionController.get(), this);
+		DefaultEventBus.get().addHandlerToSource(LinkAccountEventHandler.TYPE, LinkedAccountController.get(), this);
+		DefaultEventBus.get().addHandlerToSource(DeleteLinkedAccountEventHandler.TYPE, LinkedAccountController.get(), this);
 	}
 
 	/*
@@ -244,12 +249,15 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 			items.add(permissionsItem);
 			items.add(dataAccountsItem);
 			items.add(dataAccountFetchesItem);
-			items.add(emailTemplatesItem);
+			items.add(eventsItem);
 			items.add(itemsItem);
 			items.add(categoriesItem);
 			// items.add(upgradeAccountItem);
 			items.add(loginItem);
 			// items.add(mRegisterItem);
+			items.add(notificationsItem);
+			items.add(eventSubscriptionsItem);
+			items.add(sendNotificationItem);
 		}
 	}
 
@@ -298,6 +306,8 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 				highlight(myAccountDropdown, linkedAccountsItem);
 			} else if (PageType.ChangeDetailsPageType.equals(current.getAction())) {
 				highlight(myAccountDropdown, accountSettingsItem);
+			} else if (PageType.NotificationsPageType.equals(current.getAction())) {
+				highlight(myAccountDropdown, notificationsItem);
 			}
 		} else if (PageType.LoginPageType.equals(current.getPage())) {
 			highlight(loginItem);
@@ -317,8 +327,12 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 			highlight(adminDropdown, dataAccountFetchesItem);
 			// } else if (PageType.UpgradePageType.equals(current.getPage())) {
 			// highlight(upgradeAccountItem);
-		} else if (PageType.EmailTemplatesPageType.equals(current.getPage())) {
-			highlight(adminDropdown, emailTemplatesItem);
+		} else if (PageType.EventsPageType.equals(current.getPage())) {
+			highlight(adminDropdown, eventsItem);
+		} else if (PageType.EventSubscriptionsPageType.equals(current.getPage())) {
+			highlight(adminDropdown, eventSubscriptionsItem);
+		} else if (PageType.SendNotificationPageType.equals(current.getPage())) {
+			highlight(adminDropdown, sendNotificationItem);
 		} else if (PageType.ItemsPageType.equals(current.getPage())) {
 			highlight(adminDropdown, itemsItem);
 		} else if (PageType.CategoriesPageType.equals(current.getPage())) {
@@ -336,13 +350,15 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 
 		setNavBarVisible(false);
 
-		ranksLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString()));
+		ranksLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, OVERALL_LIST_TYPE,
+				FilterController.get().asRankFilterString()));
 		User user = SessionController.get().getLoggedInUser();
 		if (user != null) {
 			myAppsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(),
 					FilterController.get().asMyAppsFilterString()));
 		}
-		feedBrowserLink.setTargetHistoryToken(PageType.FeedBrowserPageType.asTargetHistoryToken("view", FilterController.get().asFeedFilterString()));
+		feedBrowserLink.setTargetHistoryToken(PageType.FeedBrowserPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
+				FilterController.get().asFeedFilterString()));
 		simpleModelRunLink.setTargetHistoryToken(PageType.SimpleModelRunPageType.asTargetHistoryToken(FilterController.get().asFeedFilterString()));
 		dataAccountFetchesLink.setTargetHistoryToken(PageType.DataAccountFetchesPageType.asTargetHistoryToken(FilterController.get()
 				.asDataAccountFetchFilterString()));
@@ -503,11 +519,21 @@ public class Header extends Composite implements UsersEventHandler, NavigationEv
 	}
 
 	private void addMyAccount(User user) {
-
 		myAppsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(), FilterController
 				.get().asMyAppsFilterString()));
 		linkedAccountsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.LinkedAccountsPageType.toString(), user.id.toString()));
 		accountSettingsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.ChangeDetailsPageType.toString(), user.id.toString()));
+
+		if (SessionController.get().isLoggedInUserAdmin()) {
+			if (!myAppsDropdown.isOrHasChild(notificationsItem)) {
+				myAppsDropdown.appendChild(notificationsItem);
+			}
+			notificationsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.NotificationsPageType.toString(), user.id.toString()));
+		} else {
+			if (myAppsDropdown.isOrHasChild(notificationsItem)) {
+				myAppsDropdown.removeChild(notificationsItem);
+			}
+		}
 
 		navList.appendChild(myAccountList);
 	}

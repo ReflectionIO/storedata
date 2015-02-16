@@ -6,34 +6,33 @@ package io.reflection.app;
 import static io.reflection.app.objectify.PersistenceService.ofy;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.archivers.ArchiverFactory;
+import io.reflection.app.archivers.ItemRankArchiver;
+import io.reflection.app.archivers.ItemSaleArchiver;
 import io.reflection.app.collectors.CollectorIOS;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
+import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.ItemRankSummary;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.ingestors.Ingestor;
 import io.reflection.app.ingestors.IngestorFactory;
-import io.reflection.app.itemrankarchivers.ItemRankArchiver;
-import io.reflection.app.itemrankarchivers.ItemRankArchiverFactory;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.application.ApplicationServiceProvider;
 import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
+import io.reflection.app.service.sale.SaleServiceProvider;
 import io.reflection.app.service.store.StoreServiceProvider;
 import io.reflection.app.setup.CountriesInstaller;
 import io.reflection.app.setup.StoresInstaller;
 import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -45,6 +44,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -215,18 +218,9 @@ public class DevHelperServlet extends HttpServlet {
 				success = true;
 			} else if ("addcode".equalsIgnoreCase(action)) {
 
-				DateFormat format = new SimpleDateFormat("yyyy-MM-dd-HH");
 				Date startDate = null, endDate = null;
-				try {
-					startDate = format.parse(date);
-					Calendar cal = Calendar.getInstance();
-					cal.setTime(startDate);
-					cal.add(Calendar.HOUR, 2);
-					endDate = cal.getTime();
-
-				} catch (ParseException e) {
-					LOG.log(Level.SEVERE, "Error parsing date", e);
-				}
+				startDate = DateTime.parse(date, DateTimeFormat.forPattern("yyyy-MM-dd-HH").withZoneUTC()).toDate();
+				endDate = (new DateTime(startDate.getTime(), DateTimeZone.UTC)).plusHours(2).toDate();
 
 				if (startDate != null) {
 					int i = 0;
@@ -480,16 +474,14 @@ public class DevHelperServlet extends HttpServlet {
 				buffer.append("#item id,date,paid position,grossing position,price");
 				buffer.append("\n");
 
-				Calendar cal = Calendar.getInstance();
-				cal.add(Calendar.DAY_OF_YEAR, -30);
-
 				Map<Long, Rank> paid = new HashMap<Long, Rank>();
 				Map<Long, Rank> grossing = new HashMap<Long, Rank>();
 
 				List<Long> codes = new ArrayList<Long>();
 
 				Query<Rank> query = ofy().load().type(Rank.class).filter("source =", DataTypeHelper.IOS_STORE_A3).filter("type =", CollectorIOS.TOP_PAID_APPS)
-						.filter("date >", cal.getTime()).filter("itemId = ", itemId).offset(Integer.parseInt(start)).limit(Integer.parseInt(count));
+						.filter("date >", new DateTime().minusDays(30).toDate()).filter("itemId = ", itemId).offset(Integer.parseInt(start))
+						.limit(Integer.parseInt(count));
 
 				for (Rank rank : query.iterable()) {
 					paid.put(rank.code, rank);
@@ -500,7 +492,7 @@ public class DevHelperServlet extends HttpServlet {
 				}
 
 				query = ofy().load().type(Rank.class).filter("source =", DataTypeHelper.IOS_STORE_A3).filter("type =", CollectorIOS.TOP_GROSSING_APPS)
-						.filter("date >", cal.getTime()).filter("itemId = ", itemId).offset(Integer.parseInt(start)).limit(Integer.parseInt(count));
+						.filter("date >", DateTime.now().toDate()).filter("itemId = ", itemId).offset(Integer.parseInt(start)).limit(Integer.parseInt(count));
 
 				for (Rank rank : query.iterable()) {
 					grossing.put(rank.code, rank);
@@ -613,14 +605,14 @@ public class DevHelperServlet extends HttpServlet {
 					if (start == null && count == null) {
 						try {
 							Store store = new Store();
-							store.a3Code = "ios";
+							store.a3Code = DataTypeHelper.IOS_STORE_A3;
 
 							Country country = new Country();
 							country.a2Code = "us";
 
 							Category allCategory = CategoryServiceProvider.provide().getAllCategory(store);
 
-							ItemRankArchiver ar = ItemRankArchiverFactory.get();
+							ItemRankArchiver ar = ArchiverFactory.getItemRankArchiver();
 
 							List<Long> foundRankIds = RankServiceProvider.provide().getRankIds(country, store, allCategory, new Date(0L), new Date());
 
@@ -631,18 +623,43 @@ public class DevHelperServlet extends HttpServlet {
 							throw new RuntimeException(e);
 						}
 					} else {
-						ItemRankArchiver ar = ItemRankArchiverFactory.get();
+						ItemRankArchiver ar = ArchiverFactory.getItemRankArchiver();
 						Pager p = new Pager();
 						p.start = start == null ? Pager.DEFAULT_START : Long.valueOf(start);
 						p.count = count == null ? Pager.DEFAULT_COUNT : Long.valueOf(count);
 						ar.enqueuePagerRanks(p, all == null ? Boolean.FALSE : Boolean.valueOf(all));
+					}
+				} else if ("sale".equalsIgnoreCase(object)) {
+					if (start == null && count == null) {
+						try {
+							DataAccount linkedAccount = DataTypeHelper.createDataAccount(1L);
+
+							Country country = new Country();
+							country.a2Code = "us";
+
+							ItemSaleArchiver ar = ArchiverFactory.getItemSaleArchiver();
+
+							List<Long> foundSaleIds = SaleServiceProvider.provide().getSaleIds(country, linkedAccount, new Date(0L), DateTime.now().toDate());
+
+							for (Long saleId : foundSaleIds) {
+								ar.enqueueIdSale(saleId);
+							}
+						} catch (DataAccessException e) {
+							throw new RuntimeException(e);
+						}
+					} else {
+						ItemSaleArchiver ar = ArchiverFactory.getItemSaleArchiver();
+						Pager p = new Pager();
+						p.start = start == null ? Pager.DEFAULT_START : Long.valueOf(start);
+						p.count = count == null ? Pager.DEFAULT_COUNT : Long.valueOf(count);
+						ar.enqueuePagerSales(p, all == null ? Boolean.FALSE : Boolean.valueOf(all));
 					}
 				}
 
 				success = true;
 			} else if ("archivemulti".equalsIgnoreCase(action)) {
 				if ("rank".equalsIgnoreCase(object)) {
-					ItemRankArchiver ar = ItemRankArchiverFactory.get();
+					ItemRankArchiver ar = ArchiverFactory.getItemRankArchiver();
 
 					String[] rankIdsArray = ids.split(",");
 
@@ -651,7 +668,22 @@ public class DevHelperServlet extends HttpServlet {
 						ar.enqueueIdRank(Long.valueOf(rankId));
 					}
 				} else if ("feedfetchrank".equalsIgnoreCase(object)) {
-					ItemRankArchiverFactory.get().enqueueIdFeedFetch(Long.valueOf(ids));
+					ArchiverFactory.getItemRankArchiver().enqueueIdFeedFetch(Long.valueOf(ids));
+				} else if ("sale".equalsIgnoreCase(object)) {
+					ItemSaleArchiver ar = ArchiverFactory.getItemSaleArchiver();
+
+					String[] saleIdsArray = ids.split(",");
+
+					for (String saleId : saleIdsArray) {
+						LOG.finer("Enqueueing sale [" + saleId + "]");
+						ar.enqueueIdSale(Long.valueOf(saleId));
+					}
+				} else if ("dataaccountfetchsale".equalsIgnoreCase(object)) {
+					String[] dataAccountFetchIdsArray = ids.split(",");
+
+					for (String id : dataAccountFetchIdsArray) {
+						ArchiverFactory.getItemSaleArchiver().enqueueIdDataAccountFetch(Long.valueOf(id));
+					}
 				}
 
 				success = true;
@@ -660,8 +692,10 @@ public class DevHelperServlet extends HttpServlet {
 				predictQueue.add(TaskOptions.Builder.withUrl("/predict?" + req.getQueryString()).method(Method.GET));
 
 				success = true;
+			} else if ("enqueuegetallranks".equalsIgnoreCase(action)) {
+				CallServiceMethodServlet.enqueueGetAllRanks("us", "ios", Long.valueOf(24), "topfreeapplications", Long.valueOf(33));
+				success = true;
 			} else {
-
 				if (LOG.isLoggable(Level.INFO)) {
 					LOG.info(String.format("Action [%s] not supported", action));
 				}
@@ -698,13 +732,9 @@ public class DevHelperServlet extends HttpServlet {
 	 */
 	private void cacheRanks() {
 
-		Date date = new Date();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
-		cal.add(Calendar.HOUR_OF_DAY, -12);
-		Date end = cal.getTime();
-		cal.add(Calendar.DAY_OF_YEAR, -1);
-		Date start = cal.getTime();
+		DateTime dt = DateTime.now(DateTimeZone.UTC).minusHours(12);
+		Date end = dt.toDate();
+		Date start = dt.minusDays(1).toDate();
 
 		Store s = new Store();
 		s.a3Code = DataTypeHelper.IOS_STORE_A3;

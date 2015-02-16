@@ -180,4 +180,69 @@ public class Topic extends DataType {
 			}
 		}
 	}
+
+	public Topic author(User author) {
+		this.author = author;
+		return this;
+	}
+
+	public Topic tags(List<String> tags) {
+		this.tags = tags;
+		return this;
+	}
+
+	public Topic replies(List<Reply> replies) {
+		this.replies = replies;
+		return this;
+	}
+
+	public Topic forum(Forum forum) {
+		this.forum = forum;
+		return this;
+	}
+
+	public Topic lastReplier(User lastReplier) {
+		this.lastReplier = lastReplier;
+		return this;
+	}
+
+	public Topic title(String title) {
+		this.title = title;
+		return this;
+	}
+
+	public Topic content(String content) {
+		this.content = content;
+		return this;
+	}
+
+	public Topic heat(Integer heat) {
+		this.heat = heat;
+		return this;
+	}
+
+	public Topic sticky(Boolean sticky) {
+		this.sticky = sticky;
+		return this;
+	}
+
+	public Topic flagged(Integer flagged) {
+		this.flagged = flagged;
+		return this;
+	}
+
+	public Topic locked(Boolean locked) {
+		this.locked = locked;
+		return this;
+	}
+
+	public Topic lastReplied(Date lastReplied) {
+		this.lastReplied = lastReplied;
+		return this;
+	}
+
+	public Topic numberOfReplies(Integer numberOfReplies) {
+		this.numberOfReplies = numberOfReplies;
+		return this;
+	}
 }

@@ -100,4 +100,39 @@ public class GetItemSalesRanksRequest extends Request {
 			}
 		}
 	}
+
+	public GetItemSalesRanksRequest item(Item item) {
+		this.item = item;
+		return this;
+	}
+
+	public GetItemSalesRanksRequest country(Country country) {
+		this.country = country;
+		return this;
+	}
+
+	public GetItemSalesRanksRequest category(Category category) {
+		this.category = category;
+		return this;
+	}
+
+	public GetItemSalesRanksRequest pager(Pager pager) {
+		this.pager = pager;
+		return this;
+	}
+
+	public GetItemSalesRanksRequest listType(String listType) {
+		this.listType = listType;
+		return this;
+	}
+
+	public GetItemSalesRanksRequest start(Date start) {
+		this.start = start;
+		return this;
+	}
+
+	public GetItemSalesRanksRequest end(Date end) {
+		this.end = end;
+		return this;
+	}
 }

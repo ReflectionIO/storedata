@@ -97,4 +97,29 @@ public class TriggerGatherRequest extends Request {
 			}
 		}
 	}
+
+	public TriggerGatherRequest country(Country country) {
+		this.country = country;
+		return this;
+	}
+
+	public TriggerGatherRequest store(Store store) {
+		this.store = store;
+		return this;
+	}
+
+	public TriggerGatherRequest category(Category category) {
+		this.category = category;
+		return this;
+	}
+
+	public TriggerGatherRequest listTypes(List<String> listTypes) {
+		this.listTypes = listTypes;
+		return this;
+	}
+
+	public TriggerGatherRequest code(Long code) {
+		this.code = code;
+		return this;
+	}
 }

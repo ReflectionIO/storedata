@@ -29,14 +29,12 @@ public class Country extends DataType {
 	/**
 	 * Country name
 	 */
-	@Index
-	public String name;
+	@Index public String name;
 
 	/**
 	 * Country 2 character alpha code
 	 */
-	@Index
-	public String a2Code;
+	@Index public String a2Code;
 
 	/**
 	 * Country 3 alpha character code
@@ -49,7 +47,7 @@ public class Country extends DataType {
 	 * Country numeric code
 	 */
 	public Integer nCode = Integer.valueOf(0);
-	
+
 	public List<String> stores;
 
 	@Override
@@ -122,6 +120,36 @@ public class Country extends DataType {
 				continent = jsonContinent.getAsString();
 			}
 		}
+	}
+
+	public Country stores(List<String> stores) {
+		this.stores = stores;
+		return this;
+	}
+
+	public Country name(String name) {
+		this.name = name;
+		return this;
+	}
+
+	public Country a2Code(String a2Code) {
+		this.a2Code = a2Code;
+		return this;
+	}
+
+	public Country a3Code(String a3Code) {
+		this.a3Code = a3Code;
+		return this;
+	}
+
+	public Country nCode(Integer nCode) {
+		this.nCode = nCode;
+		return this;
+	}
+
+	public Country continent(String continent) {
+		this.continent = continent;
+		return this;
 	}
 
 }

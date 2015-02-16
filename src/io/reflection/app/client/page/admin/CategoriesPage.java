@@ -10,8 +10,8 @@ package io.reflection.app.client.page.admin;
 import io.reflection.app.api.core.shared.call.GetCategoriesRequest;
 import io.reflection.app.api.core.shared.call.GetCategoriesResponse;
 import io.reflection.app.api.core.shared.call.event.GetCategoriesEventHandler;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.controller.CategoryController;
-import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
@@ -61,7 +61,7 @@ public class CategoriesPage extends Page implements GetCategoriesEventHandler {
 	protected void onAttach() {
 		super.onAttach();
 
-		register(EventController.get().addHandlerToSource(GetCategoriesEventHandler.TYPE, CategoryController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(GetCategoriesEventHandler.TYPE, CategoryController.get(), this));
 	}
 
 	private void addCategoryColumns() {

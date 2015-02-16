@@ -7,8 +7,6 @@
 //
 package io.reflection.app.client.page;
 
-import java.util.List;
-
 import io.reflection.app.api.admin.shared.call.AssignPermissionRequest;
 import io.reflection.app.api.admin.shared.call.AssignPermissionResponse;
 import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
@@ -30,9 +28,8 @@ import io.reflection.app.api.core.shared.call.GetUserDetailsRequest;
 import io.reflection.app.api.core.shared.call.GetUserDetailsResponse;
 import io.reflection.app.api.core.shared.call.event.ChangeUserDetailsEventHandler;
 import io.reflection.app.api.core.shared.call.event.GetUserDetailsEventHandler;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.StyledButtonCell;
-import io.reflection.app.client.controller.EventController;
-import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.SessionController;
@@ -53,6 +50,8 @@ import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.shared.util.DataTypeHelper;
+
+import java.util.List;
 
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.core.client.GWT;
@@ -271,16 +270,16 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	protected void onAttach() {
 		super.onAttach();
 
-		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
-		register(EventController.get().addHandlerToSource(ChangeUserDetailsEventHandler.TYPE, SessionController.get(), this));
-		register(EventController.get().addHandlerToSource(UserPasswordChangedEventHandler.TYPE, UserController.get(), this));
-		register(EventController.get().addHandlerToSource(UserPasswordChangedEventHandler.TYPE, SessionController.get(), this));
-		register(EventController.get().addHandlerToSource(GetRolesAndPermissionsEventHandler.TYPE, UserController.get(), this));
-		register(EventController.get().addHandlerToSource(AssignRoleEventHandler.TYPE, UserController.get(), this));
-		register(EventController.get().addHandlerToSource(AssignPermissionEventHandler.TYPE, UserController.get(), this));
-		register(EventController.get().addHandlerToSource(RevokeRoleEventHandler.TYPE, UserController.get(), this));
-		register(EventController.get().addHandlerToSource(RevokePermissionEventHandler.TYPE, UserController.get(), this));
-		register(EventController.get().addHandlerToSource(GetUserDetailsEventHandler.TYPE, UserController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(ChangeUserDetailsEventHandler.TYPE, SessionController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(UserPasswordChangedEventHandler.TYPE, UserController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(UserPasswordChangedEventHandler.TYPE, SessionController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(GetRolesAndPermissionsEventHandler.TYPE, UserController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(AssignRoleEventHandler.TYPE, UserController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(AssignPermissionEventHandler.TYPE, UserController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(RevokeRoleEventHandler.TYPE, UserController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(RevokePermissionEventHandler.TYPE, UserController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(GetUserDetailsEventHandler.TYPE, UserController.get(), this));
 
 	}
 
@@ -722,38 +721,20 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		currentUser = SessionController.get().getLoggedInUser(); // Update user using the system
 		mChangeDetails.setEnabled(false);
 		mChangePassword.setEnabled(false);
-		myAccountSidePanel.setPersonalDetailsLinkActive();
+		myAccountSidePanel.setActive(getPageType());
 
 		if (currentUser != null) {
-			myAccountSidePanel.getLinkedAccountsLink().setTargetHistoryToken(
-					PageType.UsersPageType.asTargetHistoryToken(PageType.LinkedAccountsPageType.toString(), currentUser.id.toString()));
-
-			myAccountSidePanel.getCreatorNameLink().setInnerText(currentUser.company);
-
-			myAccountSidePanel.getPersonalDetailsLink().setTargetHistoryToken(
-					PageType.UsersPageType.asTargetHistoryToken(PageType.ChangeDetailsPageType.toString(), currentUser.id.toString()));
-
+			myAccountSidePanel.setUser(currentUser);
 		}
-
-		String currentFilter = FilterController.get().asMyAppsFilterString();
-		if (currentFilter != null && currentFilter.length() > 0) {
-			if (currentUser != null) {
-				myAccountSidePanel.getMyAppsLink().setTargetHistoryToken(
-						PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), currentUser.id.toString(), FilterController.get()
-								.asMyAppsFilterString()));
-			}
-		}
-
-		resetForm();
-		resetPasswordForm();
-		resetRoleForm();
-		resetPermissionForm();
 
 		if (isValidStack(current)) {
-
 			boolean editingUserChanged = editingUserId != Long.valueOf(current.getParameter(0));
 			if (editingUserChanged) {
-
+				resetForm();
+				resetPasswordForm();
+				resetRoleForm();
+				resetPermissionForm();
+				
 				// Create and fetch Roles and Permissions providers
 				editingUserId = Long.valueOf(current.getParameter(0)); // Update user to edit
 				User dummyEditingUser = DataTypeHelper.createUser(editingUserId);
@@ -797,16 +778,14 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 					userRolesProvider.updateRowCount(0, true);
 					userPermissionsProvider.updateRowCount(0, true);
 				}
+				
 				mForename.setFocus(true);
 				mForename.setCursorPos(mForename.getText().length());
-
 			}
 
 		} else {
-
 			userRolesProvider.updateRowCount(0, true);
 			userPermissionsProvider.updateRowCount(0, true);
-
 		}
 	}
 
@@ -829,7 +808,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 					.setVisible(true);
 			currentUser = SessionController.get().getLoggedInUser();
 
-			myAccountSidePanel.getCreatorNameLink().setInnerText(currentUser.company);
+			myAccountSidePanel.setUser(currentUser);
 
 			mChangeDetails.setEnabled(false);
 			mForename.setFocus(true);
@@ -1096,6 +1075,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		if (output.status == StatusType.StatusTypeSuccess && output.user != null) {
 			fillDetailsForm(output.user);
 		}
+		
 		preloaderDetails.hide();
 	}
 

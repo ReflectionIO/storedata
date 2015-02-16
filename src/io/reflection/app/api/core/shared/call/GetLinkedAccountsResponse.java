@@ -91,4 +91,19 @@ public class GetLinkedAccountsResponse extends Response {
 			}
 		}
 	}
+
+	public GetLinkedAccountsResponse linkedAccounts(List<DataAccount> linkedAccounts) {
+		this.linkedAccounts = linkedAccounts;
+		return this;
+	}
+
+	public GetLinkedAccountsResponse dataSources(List<DataSource> dataSources) {
+		this.dataSources = dataSources;
+		return this;
+	}
+
+	public GetLinkedAccountsResponse pager(Pager pager) {
+		this.pager = pager;
+		return this;
+	}
 }

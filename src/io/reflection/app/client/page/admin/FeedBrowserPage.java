@@ -11,8 +11,8 @@ import static io.reflection.app.client.controller.FilterController.CATEGORY_KEY;
 import static io.reflection.app.client.controller.FilterController.COUNTRY_KEY;
 import static io.reflection.app.client.controller.FilterController.LIST_TYPE_KEY;
 import static io.reflection.app.client.controller.FilterController.STORE_KEY;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.StyledButtonCell;
-import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.FeedFetchController;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.FilterController.Filter;
@@ -115,8 +115,8 @@ public class FeedBrowserPage extends Page implements FilterEventHandler, Navigat
 	protected void onAttach() {
 		super.onAttach();
 
-		register(EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
-		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 	}
 
 	/**
@@ -265,7 +265,7 @@ public class FeedBrowserPage extends Page implements FilterEventHandler, Navigat
 
 				mPager.setPage(0);
 
-				PageType.FeedBrowserPageType.show("view", FilterController.get().asFeedFilterString());
+				PageType.FeedBrowserPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, FilterController.get().asFeedFilterString());
 			}
 		}
 	}
@@ -287,7 +287,7 @@ public class FeedBrowserPage extends Page implements FilterEventHandler, Navigat
 
 				mPager.setPage(0);
 
-				PageType.FeedBrowserPageType.show("view", FilterController.get().asFeedFilterString());
+				PageType.FeedBrowserPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, FilterController.get().asFeedFilterString());
 			}
 		}
 	}
@@ -305,8 +305,8 @@ public class FeedBrowserPage extends Page implements FilterEventHandler, Navigat
 				mPager.setVisible(true);
 			}
 
-			if (current.getAction() == null || !"view".equals(current.getAction())) {
-				PageType.FeedBrowserPageType.show("view", FilterController.get().asFeedFilterString());
+			if (current.getAction() == null || !NavigationController.VIEW_ACTION_PARAMETER_VALUE.equals(current.getAction())) {
+				PageType.FeedBrowserPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, FilterController.get().asFeedFilterString());
 			} else {
 				refreshBreadcrumbs();
 

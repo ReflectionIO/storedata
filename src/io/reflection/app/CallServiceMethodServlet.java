@@ -7,27 +7,37 @@
 //
 package io.reflection.app;
 
+import static io.reflection.app.helpers.ItemPropertyWrapper.IAP_DAY_OFFSET;
+import static io.reflection.app.helpers.ItemPropertyWrapper.PROPERTY_IAP;
+import static io.reflection.app.helpers.ItemPropertyWrapper.PROPERTY_IAP_ON;
 import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.collectors.Collector;
+import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
+import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.helpers.ApiHelper;
+import io.reflection.app.helpers.ItemPropertyWrapper;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.ServiceType;
 import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.country.CountryServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
+import io.reflection.app.service.item.IItemService;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
 import io.reflection.app.service.store.StoreServiceProvider;
+import io.reflection.app.shared.util.DataTypeHelper;
 import io.reflection.app.shared.util.PagerHelper;
 
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,6 +46,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
@@ -99,13 +112,9 @@ public class CallServiceMethodServlet extends HttpServlet {
 					Category category = CategoryServiceProvider.provide().getCategory(Long.valueOf(categoryParameter));
 
 					if (code == null) {
-						Date date = new Date(Long.valueOf(dateParameter).longValue());
-						Calendar cal = Calendar.getInstance();
-						cal.setTime(date);
-						cal.add(Calendar.HOUR_OF_DAY, -12);
-						Date end = cal.getTime();
-						cal.add(Calendar.DAY_OF_YEAR, -1);
-						Date start = cal.getTime();
+						DateTime dt = (new DateTime(Long.valueOf(dateParameter).longValue(), DateTimeZone.UTC)).minusHours(12);
+						Date end = dt.toDate();
+						Date start = dt.minusDays(1).toDate();
 
 						// RankServiceProvider.provide().getAllRanks(country, store, category, getGrossingListName(store, listTypeParameter), start, end);
 
@@ -115,18 +124,60 @@ public class CallServiceMethodServlet extends HttpServlet {
 					List<String> listTypes = ApiHelper.getAllListTypes(store, listTypeParameter);
 					Set<String> itemIds = new HashSet<String>();
 					List<Rank> ranks;
+					List<Rank> grossingRanks = null;
+					Collector collector = CollectorFactory.getCollectorForStore(a3StoreCodeParameter);
+
 					for (String listType : listTypes) {
 						// get all the ranks for the list type (we are using an infinite pager with no sorting to allow us to generate a deletion key during
 						// prediction)
 						ranks = RankServiceProvider.provide().getGatherCodeRanks(country, store, category, listType, code, PagerHelper.createInfinitePager(),
 								Boolean.TRUE);
 
+						// if the ranks are for a grossing list check that none are free and don't have iaps
+						if (collector != null && collector.isGrossing(listType)) {
+							grossingRanks = ranks;
+						}
+
 						for (Rank rank : ranks) {
 							itemIds.add(rank.itemId);
 						}
 					}
 
-					ItemServiceProvider.provide().getInternalIdItemBatch(itemIds);
+					IItemService itemService = ItemServiceProvider.provide();
+
+					List<Item> items = itemService.getInternalIdItemBatch(itemIds);
+
+					if (grossingRanks != null) {
+						Map<String, Item> itemLookup = new HashMap<>();
+						Item item;
+						ItemPropertyWrapper wrapper;
+						Boolean usesIap;
+
+						for (Item current : items) {
+							itemLookup.put(current.internalId, current);
+						}
+
+						for (Rank rank : grossingRanks) {
+							if (DataTypeHelper.isZero(rank.price.floatValue())) {
+								// app must use iaps... check it
+
+								item = itemLookup.get(rank.itemId);
+
+								if (item != null) {
+									wrapper = new ItemPropertyWrapper(item.properties);
+
+									if ((usesIap = wrapper.getBoolean(PROPERTY_IAP, null)) == null || usesIap == Boolean.FALSE) {
+										wrapper.setBoolean(PROPERTY_IAP, Boolean.TRUE);
+										wrapper.setDate(PROPERTY_IAP_ON, DateTime.now(DateTimeZone.UTC).plusDays(IAP_DAY_OFFSET).toDate());
+
+										item.properties = wrapper.toString();
+
+										itemService.updateItem(item);
+									}
+								}
+							}
+						}
+					}
 				} catch (DataAccessException | NullPointerException ex) {
 					LOG.log(GaeLevel.SEVERE, "Error while trying to call service method " + GETALLRANKS_SUPPORTED_METHOD, ex);
 				}

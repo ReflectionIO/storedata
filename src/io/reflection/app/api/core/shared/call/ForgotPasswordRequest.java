@@ -36,4 +36,9 @@ public class ForgotPasswordRequest extends Request {
 			}
 		}
 	}
+
+	public ForgotPasswordRequest username(String username) {
+		this.username = username;
+		return this;
+	}
 }

@@ -13,7 +13,7 @@ import io.reflection.app.api.forum.shared.call.GetForumsRequest;
 import io.reflection.app.api.forum.shared.call.GetForumsResponse;
 import io.reflection.app.api.forum.shared.call.event.CreateTopicEventHandler;
 import io.reflection.app.api.forum.shared.call.event.GetForumsEventHandler;
-import io.reflection.app.client.controller.EventController;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.controller.ForumController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
@@ -90,9 +90,9 @@ public class AddTopicPage extends Page implements CreateTopicEventHandler, GetFo
 	protected void onAttach() {
 		super.onAttach();
 
-		register(EventController.get().addHandlerToSource(CreateTopicEventHandler.TYPE, TopicController.get(), this));
-		register(EventController.get().addHandlerToSource(GetForumsEventHandler.TYPE, ForumController.get(), this));
-		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(CreateTopicEventHandler.TYPE, TopicController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(GetForumsEventHandler.TYPE, ForumController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 
 		resetForm();
 	}
@@ -183,7 +183,7 @@ public class AddTopicPage extends Page implements CreateTopicEventHandler, GetFo
 
 				@Override
 				public void onClick(ClickEvent event) {
-					PageType.ForumThreadPageType.show("view", output.topic.id.toString());
+					PageType.ForumThreadPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, output.topic.id.toString());
 				}
 			});
 

@@ -12,6 +12,8 @@ import io.reflection.app.api.admin.shared.call.AssignPermissionRequest;
 import io.reflection.app.api.admin.shared.call.AssignPermissionResponse;
 import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
 import io.reflection.app.api.admin.shared.call.AssignRoleResponse;
+import io.reflection.app.api.admin.shared.call.DeleteUserRequest;
+import io.reflection.app.api.admin.shared.call.DeleteUserResponse;
 import io.reflection.app.api.admin.shared.call.DeleteUsersRequest;
 import io.reflection.app.api.admin.shared.call.DeleteUsersResponse;
 import io.reflection.app.api.admin.shared.call.GetRolesAndPermissionsRequest;
@@ -28,15 +30,13 @@ import io.reflection.app.api.admin.shared.call.SetPasswordRequest;
 import io.reflection.app.api.admin.shared.call.SetPasswordResponse;
 import io.reflection.app.api.admin.shared.call.event.AssignPermissionEventHandler;
 import io.reflection.app.api.admin.shared.call.event.AssignRoleEventHandler;
+import io.reflection.app.api.admin.shared.call.event.DeleteUserEventHandler;
 import io.reflection.app.api.admin.shared.call.event.DeleteUsersEventHandler;
 import io.reflection.app.api.admin.shared.call.event.GetRolesAndPermissionsEventHandler;
 import io.reflection.app.api.admin.shared.call.event.GetUsersEventHandler.GetUsersFailure;
 import io.reflection.app.api.admin.shared.call.event.GetUsersEventHandler.GetUsersSuccess;
 import io.reflection.app.api.admin.shared.call.event.RevokePermissionEventHandler;
 import io.reflection.app.api.admin.shared.call.event.RevokeRoleEventHandler;
-import io.reflection.app.api.blog.shared.call.DeleteUserRequest;
-import io.reflection.app.api.blog.shared.call.DeleteUserResponse;
-import io.reflection.app.api.blog.shared.call.event.DeleteUserEventHandler;
 import io.reflection.app.api.core.client.CoreService;
 import io.reflection.app.api.core.shared.call.GetUserDetailsRequest;
 import io.reflection.app.api.core.shared.call.GetUserDetailsResponse;
@@ -46,22 +46,34 @@ import io.reflection.app.api.core.shared.call.event.GetUserDetailsEventHandler;
 import io.reflection.app.api.core.shared.call.event.RegisterUserEventHandler;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.handler.user.UserPasswordChangedEventHandler.UserPasswordChangeFailed;
 import io.reflection.app.client.handler.user.UserPasswordChangedEventHandler.UserPasswordChanged;
 import io.reflection.app.client.handler.user.UserRegisteredEventHandler.UserRegistered;
 import io.reflection.app.client.handler.user.UserRegisteredEventHandler.UserRegistrationFailed;
 import io.reflection.app.client.handler.user.UsersEventHandler.ReceivedCount;
+import io.reflection.app.client.helper.MixPanelApiHelper;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
+import io.reflection.app.shared.util.DataTypeHelper;
 import io.reflection.app.shared.util.PagerHelper;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
+import com.google.gwt.safehtml.client.SafeHtmlTemplates;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
+import com.google.gwt.user.client.ui.MultiWordSuggestOracle.MultiWordSuggestion;
+import com.google.gwt.user.client.ui.SuggestOracle;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
 import com.google.gwt.view.client.Range;
@@ -74,6 +86,28 @@ import com.willshex.gson.json.service.shared.StatusType;
  */
 public class UserController extends AsyncDataProvider<User> implements ServiceConstants {
 
+	interface OracleTemplates extends SafeHtmlTemplates {
+		OracleTemplates INSTANCE = GWT.create(OracleTemplates.class);
+
+		@Template("{0}: {1}")
+		SafeHtml suggestionDescription(Long userid, String username);
+	}
+
+	private SuggestOracle.Request request;
+	private SuggestOracle.Callback callback;
+	private Oracle oracle;
+
+	class Oracle extends MultiWordSuggestOracle {
+
+		@Override
+		public void requestSuggestions(SuggestOracle.Request request, final SuggestOracle.Callback callback) {
+			UserController.this.reset();
+			UserController.this.request = request;
+			UserController.this.callback = callback;
+			UserController.this.fetchUsers(request.getQuery());
+		}
+	}
+
 	// private List<User> userList = new ArrayList<User>();
 	// private long count = -1;
 	// private long totalCount = -1;
@@ -83,14 +117,14 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 
 	// private Map<Long, User> userLookup = new HashMap<Long, User>();
 
-	private static UserController mOne = null;
+	private static UserController one = null;
 
 	public static UserController get() {
-		if (mOne == null) {
-			mOne = new UserController();
+		if (one == null) {
+			one = new UserController();
 		}
 
-		return mOne;
+		return one;
 	}
 
 	// public void fetchUsers() {
@@ -183,9 +217,6 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 			public void onSuccess(GetUsersResponse output) {
 				current = null;
 				if (output.status == StatusType.StatusTypeSuccess) {
-
-					// if (output.users != null) {}
-
 					if (output.pager != null) {
 						pager = output.pager;
 
@@ -194,17 +225,31 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 						// }
 					}
 
-					updateRowCount(Integer.MAX_VALUE, false);
+					// send the oracle response if we have any
+					if (output.users != null && oracle != null && UserController.this.request != null && UserController.this.callback != null) {
+						SuggestOracle.Response response = new SuggestOracle.Response();
+						List<MultiWordSuggestion> users = new ArrayList<MultiWordSuggestOracle.MultiWordSuggestion>();
+
+						for (User user : output.users) {
+							String description = UserController.this.getOracleUserDescription(user);
+							users.add(new MultiWordSuggestion(description, description));
+						}
+
+						response.setSuggestions(users);
+						UserController.this.callback.onSuggestionsReady(UserController.this.request, response);
+					}
+
+					updateRowCount(output.users == null ? 0 : input.pager.start.intValue() + output.users.size(), output.users == null);
 					updateRowData(input.pager.start.intValue(), output.users == null ? Collections.<User> emptyList() : output.users);
 				}
 
-				EventController.get().fireEventFromSource(new GetUsersSuccess(input, output), UserController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetUsersSuccess(input, output), UserController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
 				current = null;
-				EventController.get().fireEventFromSource(new GetUsersFailure(input, caught), UserController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetUsersFailure(input, caught), UserController.this);
 			}
 		});
 
@@ -214,6 +259,8 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 		pager = null;
 		// count = -1;
 		searchQuery = null;
+		request = null;
+		callback = null;
 
 		updateRowCount(0, false);
 	}
@@ -290,7 +337,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 				if (result.status == StatusType.StatusTypeSuccess) {
 					// count = result.count;
 
-					EventController.get().fireEventFromSource(new ReceivedCount(result.count), UserController.this);
+					DefaultEventBus.get().fireEventFromSource(new ReceivedCount(result.count), UserController.this);
 				}
 			}
 
@@ -321,12 +368,12 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 				if (output.status == StatusType.StatusTypeSuccess) {
 					// not sure what to do
 				}
-				EventController.get().fireEventFromSource(new AssignRoleEventHandler.AssignRoleSuccess(input, output), UserController.this);
+				DefaultEventBus.get().fireEventFromSource(new AssignRoleEventHandler.AssignRoleSuccess(input, output), UserController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new AssignRoleEventHandler.AssignRoleFailure(input, caught), UserController.this);
+				DefaultEventBus.get().fireEventFromSource(new AssignRoleEventHandler.AssignRoleFailure(input, caught), UserController.this);
 			}
 		});
 	}
@@ -357,12 +404,12 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 				if (output.status == StatusType.StatusTypeSuccess) {
 					// not sure what to do
 				}
-				EventController.get().fireEventFromSource(new AssignPermissionEventHandler.AssignPermissionSuccess(input, output), UserController.this);
+				DefaultEventBus.get().fireEventFromSource(new AssignPermissionEventHandler.AssignPermissionSuccess(input, output), UserController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new AssignPermissionEventHandler.AssignPermissionFailure(input, caught), UserController.this);
+				DefaultEventBus.get().fireEventFromSource(new AssignPermissionEventHandler.AssignPermissionFailure(input, caught), UserController.this);
 			}
 		});
 	}
@@ -393,12 +440,12 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 				if (output.status == StatusType.StatusTypeSuccess) {
 					// not sure what to do
 				}
-				EventController.get().fireEventFromSource(new RevokeRoleEventHandler.RevokeRoleSuccess(input, output), UserController.this);
+				DefaultEventBus.get().fireEventFromSource(new RevokeRoleEventHandler.RevokeRoleSuccess(input, output), UserController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new RevokeRoleEventHandler.RevokeRoleFailure(input, caught), UserController.this);
+				DefaultEventBus.get().fireEventFromSource(new RevokeRoleEventHandler.RevokeRoleFailure(input, caught), UserController.this);
 			}
 
 		});
@@ -431,12 +478,12 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 				if (output.status == StatusType.StatusTypeSuccess) {
 					// not sure what to do
 				}
-				EventController.get().fireEventFromSource(new RevokePermissionEventHandler.RevokePermissionSuccess(input, output), UserController.this);
+				DefaultEventBus.get().fireEventFromSource(new RevokePermissionEventHandler.RevokePermissionSuccess(input, output), UserController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new RevokePermissionEventHandler.RevokePermissionFailure(input, caught), UserController.this);
+				DefaultEventBus.get().fireEventFromSource(new RevokePermissionEventHandler.RevokePermissionFailure(input, caught), UserController.this);
 			}
 		});
 	}
@@ -467,13 +514,19 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 
 			@Override
 			public void onSuccess(DeleteUserResponse output) {
-				PagerHelper.moveBackward(pager);
-				EventController.get().fireEventFromSource(new DeleteUserEventHandler.DeleteUserSuccess(input, output), UserController.this);
+				// only refresh the user list if the current user is an admin or has manage user permission
+				if (SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_MANAGE_USERS_CODE)) {
+					PagerHelper.moveBackward(pager);
+					reset();
+					fetchUsers();
+				}
+
+				DefaultEventBus.get().fireEventFromSource(new DeleteUserEventHandler.DeleteUserSuccess(input, output), UserController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new DeleteUserEventHandler.DeleteUserFailure(input, caught), UserController.this);
+				DefaultEventBus.get().fireEventFromSource(new DeleteUserEventHandler.DeleteUserFailure(input, caught), UserController.this);
 			}
 
 		});
@@ -507,15 +560,15 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 				e.code = Integer.valueOf(-1);
 				e.message = caught.getMessage();
 
-				EventController.get().fireEventFromSource(new UserPasswordChangeFailed(e), UserController.this);
+				DefaultEventBus.get().fireEventFromSource(new UserPasswordChangeFailed(e), UserController.this);
 			}
 
 			@Override
 			public void onSuccess(SetPasswordResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {
-					EventController.get().fireEventFromSource(new UserPasswordChanged(input.user.id), UserController.this);
+					DefaultEventBus.get().fireEventFromSource(new UserPasswordChanged(input.user.id), UserController.this);
 				} else {
-					EventController.get().fireEventFromSource(new UserPasswordChangeFailed(output.error), UserController.this);
+					DefaultEventBus.get().fireEventFromSource(new UserPasswordChangeFailed(output.error), UserController.this);
 				}
 			}
 		});
@@ -544,19 +597,39 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 
 		final String email = username;
 
+		final Map<String, Object> params = new HashMap<String, Object>();
+		params.put("username", username);
+		params.put("company", company);
+
+		if (password == null || password.length() == 0) {
+			params.put("requestInvite", Boolean.TRUE);
+		}
+
 		service.registerUser(input, new AsyncCallback<RegisterUserResponse>() {
 
 			@Override
 			public void onSuccess(RegisterUserResponse output) {
+
 				if (output.status == StatusType.StatusTypeSuccess) {
-					// userList.clear();
-					PagerHelper.moveBackward(pager);
+					// only refresh the user list if the current user is an admin or has manage user permission
+					if (SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_MANAGE_USERS_CODE)) {
+						PagerHelper.moveBackward(pager);
 
-					fetchUsers();
+						fetchUsers();
+					}
 
-					EventController.get().fireEventFromSource(new UserRegistered(email), UserController.this);
+					params.put("status", "success");
+					MixPanelApiHelper.track("registerUser", params);
+
+					DefaultEventBus.get().fireEventFromSource(new UserRegistered(email), UserController.this);
 				} else {
-					EventController.get().fireEventFromSource(new UserRegistrationFailed(output.error), UserController.this);
+					params.put("status", "failure");
+					if (output.error != null && output.error.message != null) {
+						params.put("error", output.error.message);
+					}
+					MixPanelApiHelper.track("registerUser", params);
+
+					DefaultEventBus.get().fireEventFromSource(new UserRegistrationFailed(output.error), UserController.this);
 				}
 
 			}
@@ -568,7 +641,11 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 				e.code = Integer.valueOf(-1);
 				e.message = caught.getMessage();
 
-				EventController.get().fireEventFromSource(new UserRegistrationFailed(e), UserController.this);
+				params.put("status", "failure");
+				params.put("error", caught.getMessage());
+				MixPanelApiHelper.track("registerUser", params);
+
+				DefaultEventBus.get().fireEventFromSource(new UserRegistrationFailed(e), UserController.this);
 			}
 		});
 	}
@@ -584,6 +661,9 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 	public void registerUser(String actionCode, String password) {
 		CoreService service = ServiceCreator.createCoreService();
 
+		final Map<String, Object> params = new HashMap<String, Object>();
+		params.put("actionCode", actionCode);
+
 		final RegisterUserRequest input = new RegisterUserRequest();
 		input.accessCode = ACCESS_CODE;
 
@@ -597,18 +677,34 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 			@Override
 			public void onSuccess(RegisterUserResponse output) {
 				if (output != null && output.status == StatusType.StatusTypeSuccess) {
-					// userList.clear();
-					PagerHelper.moveBackward(pager);
+					// only refresh the user list if the current user is an admin or has manage user permission
+					if (SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_MANAGE_USERS_CODE)) {
+						PagerHelper.moveBackward(pager);
 
-					fetchUsers();
+						fetchUsers();
+					}
+
+					params.put("status", "success");
+					MixPanelApiHelper.track("registerUser", params);
+				} else {
+					params.put("status", "failure");
+					if (output.error != null && output.error.message != null) {
+						params.put("error", output.error.message);
+					}
+
+					MixPanelApiHelper.track("registerUser", params);
 				}
 
-				EventController.get().fireEventFromSource(new RegisterUserEventHandler.RegisterUserSuccess(input, output), UserController.this);
+				DefaultEventBus.get().fireEventFromSource(new RegisterUserEventHandler.RegisterUserSuccess(input, output), UserController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEvent(new RegisterUserEventHandler.RegisterUserFailure(input, caught));
+				params.put("status", "failure");
+				params.put("error", caught.getMessage());
+				MixPanelApiHelper.track("registerUser", params);
+
+				DefaultEventBus.get().fireEvent(new RegisterUserEventHandler.RegisterUserFailure(input, caught));
 			}
 		});
 	}
@@ -648,12 +744,12 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 					// userLookup.put(output.user.id, output.user);
 				}
 
-				EventController.get().fireEventFromSource(new GetUserDetailsEventHandler.GetUserDetailsSuccess(input, output), UserController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetUserDetailsEventHandler.GetUserDetailsSuccess(input, output), UserController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new GetUserDetailsEventHandler.GetUserDetailsFailure(input, caught), UserController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetUserDetailsEventHandler.GetUserDetailsFailure(input, caught), UserController.this);
 			}
 		});
 	}
@@ -681,12 +777,12 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 					// userLook|up.put(output.user.id, output.user);
 				}
 
-				EventController.get().fireEventFromSource(new GetUserDetailsEventHandler.GetUserDetailsSuccess(input, output), UserController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetUserDetailsEventHandler.GetUserDetailsSuccess(input, output), UserController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new GetUserDetailsEventHandler.GetUserDetailsFailure(input, caught), UserController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetUserDetailsEventHandler.GetUserDetailsFailure(input, caught), UserController.this);
 			}
 		});
 	}
@@ -713,13 +809,13 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 
 			@Override
 			public void onSuccess(GetRolesAndPermissionsResponse output) {
-				EventController.get().fireEventFromSource(new GetRolesAndPermissionsEventHandler.GetRolesAndPermissionsSuccess(input, output),
+				DefaultEventBus.get().fireEventFromSource(new GetRolesAndPermissionsEventHandler.GetRolesAndPermissionsSuccess(input, output),
 						UserController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new GetRolesAndPermissionsEventHandler.GetRolesAndPermissionsFailure(input, caught),
+				DefaultEventBus.get().fireEventFromSource(new GetRolesAndPermissionsEventHandler.GetRolesAndPermissionsFailure(input, caught),
 						UserController.this);
 			}
 
@@ -741,13 +837,19 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 
 			@Override
 			public void onSuccess(DeleteUsersResponse output) {
-				PagerHelper.moveBackward(pager);				
-				EventController.get().fireEventFromSource(new DeleteUsersEventHandler.DeleteUsersSuccess(input, output), UserController.this);
+				// only refresh the user list if the current user is an admin or has manage user permission
+				if (SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_MANAGE_USERS_CODE)) {
+					PagerHelper.moveBackward(pager);
+					reset();
+					fetchUsers();
+				}
+
+				DefaultEventBus.get().fireEventFromSource(new DeleteUsersEventHandler.DeleteUsersSuccess(input, output), UserController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new DeleteUsersEventHandler.DeleteUsersFailure(input, caught), UserController.this);
+				DefaultEventBus.get().fireEventFromSource(new DeleteUsersEventHandler.DeleteUsersFailure(input, caught), UserController.this);
 			}
 
 		});
@@ -761,4 +863,25 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 		deleteUsers(users, false);
 	}
 
+	/**
+	 * @return
+	 */
+	public Oracle oracle() {
+		if (oracle == null) {
+			oracle = new Oracle();
+		}
+
+		return oracle;
+	}
+
+	/**
+	 * @return
+	 */
+	public String getQuery() {
+		return searchQuery;
+	}
+
+	public String getOracleUserDescription(User user) {
+		return OracleTemplates.INSTANCE.suggestionDescription(user.id, user.username).asString();
+	}
 }

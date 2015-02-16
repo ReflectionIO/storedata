@@ -11,6 +11,7 @@ import io.reflection.app.api.core.shared.call.ChangePasswordRequest;
 import io.reflection.app.api.core.shared.call.ChangeUserDetailsRequest;
 import io.reflection.app.api.core.shared.call.CheckUsernameRequest;
 import io.reflection.app.api.core.shared.call.DeleteLinkedAccountRequest;
+import io.reflection.app.api.core.shared.call.DeleteNotificationsRequest;
 import io.reflection.app.api.core.shared.call.ForgotPasswordRequest;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetCategoriesRequest;
@@ -21,6 +22,7 @@ import io.reflection.app.api.core.shared.call.GetItemSalesRequest;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountItemRequest;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountItemsRequest;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountsRequest;
+import io.reflection.app.api.core.shared.call.GetNotificationsRequest;
 import io.reflection.app.api.core.shared.call.GetRolesAndPermissionsRequest;
 import io.reflection.app.api.core.shared.call.GetSalesRanksRequest;
 import io.reflection.app.api.core.shared.call.GetSalesRequest;
@@ -34,6 +36,7 @@ import io.reflection.app.api.core.shared.call.LogoutRequest;
 import io.reflection.app.api.core.shared.call.RegisterUserRequest;
 import io.reflection.app.api.core.shared.call.SearchForItemRequest;
 import io.reflection.app.api.core.shared.call.UpdateLinkedAccountRequest;
+import io.reflection.app.api.core.shared.call.UpdateNotificationsRequest;
 
 import com.google.gson.JsonObject;
 import com.willshex.gson.json.service.server.JsonServlet;
@@ -153,6 +156,18 @@ public final class CoreJsonServlet extends JsonServlet {
 			GetLinkedAccountItemRequest input = new GetLinkedAccountItemRequest();
 			input.fromJson(request);
 			output = service.getLinkedAccountItem(input).toString();
+		} else if ("GetNotifications".equals(action)) {
+			GetNotificationsRequest input = new GetNotificationsRequest();
+			input.fromJson(request);
+			output = service.getNotifications(input).toString();
+		} else if ("DeleteNotifications".equals(action)) {
+			DeleteNotificationsRequest input = new DeleteNotificationsRequest();
+			input.fromJson(request);
+			output = service.deleteNotifications(input).toString();
+		} else if ("UpdateNotifications".equals(action)) {
+			UpdateNotificationsRequest input = new UpdateNotificationsRequest();
+			input.fromJson(request);
+			output = service.updateNotifications(input).toString();
 		}
 		return output;
 	}

@@ -10,6 +10,7 @@ package io.reflection.app.ingestors;
 
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.archivers.ArchiverFactory;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.collectors.StoreCollector;
@@ -19,7 +20,6 @@ import io.reflection.app.datatypes.shared.FeedFetchStatusType;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
-import io.reflection.app.itemrankarchivers.ItemRankArchiverFactory;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.modellers.Modeller;
 import io.reflection.app.modellers.ModellerFactory;
@@ -32,7 +32,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.channels.Channels;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -40,6 +39,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 import com.google.appengine.api.files.AppEngineFile;
 import com.google.appengine.api.files.FileReadChannel;
@@ -221,12 +223,10 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 			List<Item> newItems = new ArrayList<Item>();
 			List<Item> updateItems = new ArrayList<Item>();
 
-			Calendar cal = Calendar.getInstance();
 			boolean found = false;
 			boolean update = false;
 
-			cal.setTime(new Date());
-			cal.add(Calendar.DAY_OF_YEAR, -30);
+			Date date30DaysAgo = DateTime.now(DateTimeZone.UTC).minusDays(30).toDate();
 
 			for (Item addItem : addItems) {
 				found = false;
@@ -234,7 +234,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 
 				for (Item foundItem : foundItems) {
 					if (foundItem.internalId.equals(addItem.internalId)) {
-						if (foundItem.added.before(cal.getTime())) {
+						if (foundItem.added.before(date30DaysAgo)) {
 							// if we find the item, give it the id and properties of the existing item to avoid data loss
 							addItem.id = foundItem.id;
 							addItem.properties = foundItem.properties;
@@ -294,15 +294,17 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 
 			Modeller modeller = ModellerFactory.getModellerForStore(DataTypeHelper.IOS_STORE_A3);
 
+			FeedFetch fetch;
 			for (int i = 0; i < group.size(); i++) {
-				FeedFetch current = group.get(Integer.valueOf(i));
-				current.status = FeedFetchStatusType.FeedFetchStatusTypeIngested;
-				FeedFetchServiceProvider.provide().updateFeedFetch(current);
+				fetch = group.get(Integer.valueOf(i));
+				fetch.status = FeedFetchStatusType.FeedFetchStatusTypeIngested;
+				
+				fetch = FeedFetchServiceProvider.provide().updateFeedFetch(fetch);
 
-				ItemRankArchiverFactory.get().enqueueIdFeedFetch(current.id);
+				ArchiverFactory.getItemRankArchiver().enqueueIdFeedFetch(fetch.id);
 
 				// once the feed fetch status is updated model the list
-				modeller.enqueue(current);
+				modeller.enqueue(fetch);
 			}
 
 			// Store s = DataTypeHelper.getIosStore();

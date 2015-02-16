@@ -16,17 +16,17 @@ import com.google.gwt.resources.client.CssResource;
  * 
  */
 public interface BootstrapGwtNumberedPager extends ClientBundle {
-    public interface BootstrapGwtNumberedPagerStyles extends CssResource {
+	public interface BootstrapGwtNumberedPagerStyles extends CssResource {
 
-        @ClassName("selected")
-        String selected();
+		@ClassName("selected")
+		String selected();
 
-        @ClassName("spaceApart")
-        String spaceApart();
-    }
+		@ClassName("spaceApart")
+		String spaceApart();
+	}
 
-    public static final BootstrapGwtNumberedPager INSTANCE = GWT.create(BootstrapGwtNumberedPager.class);
+	public static final BootstrapGwtNumberedPager INSTANCE = GWT.create(BootstrapGwtNumberedPager.class);
 
-    @Source("res/bootstrapgwtnumberedpager.css")
-    BootstrapGwtNumberedPagerStyles styles();
+	@Source("res/bootstrapgwtnumberedpager.gss")
+	BootstrapGwtNumberedPagerStyles styles();
 }

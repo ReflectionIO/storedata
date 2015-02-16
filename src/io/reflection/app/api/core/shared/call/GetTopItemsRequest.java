@@ -99,4 +99,34 @@ public class GetTopItemsRequest extends Request {
 			}
 		}
 	}
+
+	public GetTopItemsRequest country(Country country) {
+		this.country = country;
+		return this;
+	}
+
+	public GetTopItemsRequest store(Store store) {
+		this.store = store;
+		return this;
+	}
+
+	public GetTopItemsRequest category(Category category) {
+		this.category = category;
+		return this;
+	}
+
+	public GetTopItemsRequest pager(Pager pager) {
+		this.pager = pager;
+		return this;
+	}
+
+	public GetTopItemsRequest listType(String listType) {
+		this.listType = listType;
+		return this;
+	}
+
+	public GetTopItemsRequest on(Date on) {
+		this.on = on;
+		return this;
+	}
 }

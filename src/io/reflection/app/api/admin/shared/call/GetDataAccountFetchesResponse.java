@@ -66,4 +66,14 @@ public class GetDataAccountFetchesResponse extends Response {
 			}
 		}
 	}
+
+	public GetDataAccountFetchesResponse dataAccountFetches(List<DataAccountFetch> dataAccountFetches) {
+		this.dataAccountFetches = dataAccountFetches;
+		return this;
+	}
+
+	public GetDataAccountFetchesResponse pager(Pager pager) {
+		this.pager = pager;
+		return this;
+	}
 }

@@ -1,0 +1,52 @@
+.cn, .de, .fr, .gb, .jp, .it, .us {
+	display: inline-block;
+}
+
+.cn {
+	gwt-sprite: "spriteSheet";
+	width: 26px;
+	height: 26px;
+	background-position: -2px -86px;
+}
+
+.de {
+	gwt-sprite: "spriteSheet";
+	width: 26px;
+	height: 26px;
+	background-position: -30px -58px;
+}
+
+.fr {
+	gwt-sprite: "spriteSheet";
+	width: 26px;
+	height: 26px;
+	background-position: -2px -58px;
+}
+
+.gb {
+	gwt-sprite: "spriteSheet";
+	width: 26px;
+	height: 26px;
+	background-position: -30px -30px;
+}
+
+.it {
+	gwt-sprite: "spriteSheet";
+	width: 26px;
+	height: 26px;
+	background-position: -2px -30px;
+}
+
+.jp {
+	gwt-sprite: "spriteSheet";
+	width: 26px;
+	height: 26px;
+	background-position: -30px -2px;
+}
+
+.us {
+	gwt-sprite: "spriteSheet";
+	width: 26px;
+	height: 26px;
+	background-position: -2px -2px;
+}

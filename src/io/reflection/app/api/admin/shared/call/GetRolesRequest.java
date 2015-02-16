@@ -37,4 +37,9 @@ public class GetRolesRequest extends Request {
 			}
 		}
 	}
+
+	public GetRolesRequest pager(Pager pager) {
+		this.pager = pager;
+		return this;
+	}
 }

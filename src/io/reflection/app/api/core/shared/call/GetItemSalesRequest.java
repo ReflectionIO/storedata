@@ -92,4 +92,34 @@ public class GetItemSalesRequest extends Request {
 			}
 		}
 	}
+
+	public GetItemSalesRequest item(Item item) {
+		this.item = item;
+		return this;
+	}
+
+	public GetItemSalesRequest country(Country country) {
+		this.country = country;
+		return this;
+	}
+
+	public GetItemSalesRequest category(Category category) {
+		this.category = category;
+		return this;
+	}
+
+	public GetItemSalesRequest pager(Pager pager) {
+		this.pager = pager;
+		return this;
+	}
+
+	public GetItemSalesRequest start(Date start) {
+		this.start = start;
+		return this;
+	}
+
+	public GetItemSalesRequest end(Date end) {
+		this.end = end;
+		return this;
+	}
 }

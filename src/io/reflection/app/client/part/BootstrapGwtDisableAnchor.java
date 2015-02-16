@@ -18,11 +18,12 @@ import com.google.gwt.resources.client.CssResource;
 public interface BootstrapGwtDisableAnchor extends ClientBundle {
 	public interface BootstrapGwtDisableAnchorStyles extends CssResource {
 
-        @ClassName("disabled")
-        String disabled();}
+		@ClassName("disabled")
+		String disabled();
+	}
 
 	public static final BootstrapGwtDisableAnchor INSTANCE = GWT.create(BootstrapGwtDisableAnchor.class);
 
-	@Source("res/bootstrapgwtdisableanchor.css")
+	@Source("res/bootstrapgwtdisableanchor.gss")
 	BootstrapGwtDisableAnchorStyles styles();
 }

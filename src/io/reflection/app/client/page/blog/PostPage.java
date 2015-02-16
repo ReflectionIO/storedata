@@ -11,7 +11,7 @@ import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMAT_EEE_D
 import io.reflection.app.api.blog.shared.call.GetPostRequest;
 import io.reflection.app.api.blog.shared.call.GetPostResponse;
 import io.reflection.app.api.blog.shared.call.event.GetPostEventHandler;
-import io.reflection.app.client.controller.EventController;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.PostController;
@@ -56,7 +56,6 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 	}
 
 	private static final int POST_ID_PARAMETER_INDEX = 0;
-	private static final String MORE_ACTION_NAME = "view";
 
 	@UiField HeadingElement title;
 	@UiField SpanElement date;
@@ -86,8 +85,8 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 	protected void onAttach() {
 		super.onAttach();
 
-		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
-		register(EventController.get().addHandlerToSource(GetPostEventHandler.TYPE, PostController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(GetPostEventHandler.TYPE, PostController.get(), this));
 
 		// this is not a uifield because it requires html id
 		comments = DivElement.as(Document.get().getElementById("disqus_thread"));
@@ -114,7 +113,7 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
 		if (current.getAction() != null) {
-			if (MORE_ACTION_NAME.equals(current.getAction())) {
+			if (NavigationController.VIEW_ACTION_PARAMETER_VALUE.equals(current.getAction())) {
 				String postIdValue = current.getParameter(POST_ID_PARAMETER_INDEX);
 
 				if (postIdValue != null) {
@@ -178,7 +177,8 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 
 			if (post.commentsEnabled == Boolean.TRUE) {
 				final String identifier = "post" + post.id.toString();
-				final String url = GWT.getHostPageBaseURL() + PageType.BlogPostPageType.asHref("view", post.id.toString()).asString();
+				final String url = GWT.getHostPageBaseURL()
+						+ PageType.BlogPostPageType.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE, post.id.toString()).asString();
 				final String title = post.title;
 				final String tag = post.tags == null || post.tags.size() == 0 ? "reflection.io" : post.tags.get(0);
 

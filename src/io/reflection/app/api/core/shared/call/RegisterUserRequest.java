@@ -47,4 +47,14 @@ public class RegisterUserRequest extends Request {
 			}
 		}
 	}
+
+	public RegisterUserRequest user(User user) {
+		this.user = user;
+		return this;
+	}
+
+	public RegisterUserRequest actionCode(String actionCode) {
+		this.actionCode = actionCode;
+		return this;
+	}
 }

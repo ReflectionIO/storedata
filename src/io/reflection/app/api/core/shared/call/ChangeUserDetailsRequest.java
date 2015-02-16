@@ -37,4 +37,9 @@ public class ChangeUserDetailsRequest extends Request {
 			}
 		}
 	}
+
+	public ChangeUserDetailsRequest user(User user) {
+		this.user = user;
+		return this;
+	}
 }

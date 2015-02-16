@@ -7,6 +7,11 @@
 //
 package io.reflection.app.client.page.part;
 
+import io.reflection.app.client.controller.FilterController;
+import io.reflection.app.client.controller.SessionController;
+import io.reflection.app.client.page.PageType;
+import io.reflection.app.datatypes.shared.User;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.LIElement;
@@ -37,48 +42,74 @@ public class MyAccountSidePanel extends Composite {
 	@UiField InlineHyperlink accountSettingsLink;
 	@UiField LIElement accountSettingsListItem;
 
+	@UiField InlineHyperlink notificationsLink;
+	@UiField LIElement notificationsListItem;
+	@UiField LIElement notificationDivider;
+
 	public MyAccountSidePanel() {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		if (!SessionController.get().isLoggedInUserAdmin()) {
+			notificationsListItem.removeFromParent();
+			notificationDivider.removeFromParent();
+		}
 	}
 
-	public HeadingElement getCreatorNameLink() {
-		return creatorName;
-	}
-
-	public InlineHyperlink getMyAppsLink() {
-		return myAppsLink;
-	}
-
-	public void setMyAppsLinkActive() {
+	private void setMyAppsLinkActive() {
 		deactivate(linkedAccountsListItem);
 		deactivate(accountSettingsListItem);
 		activate(myAppsListItem);
+		deactivate(notificationsListItem);
 	}
 
-	public InlineHyperlink getLinkedAccountsLink() {
-		return linkedAccountsLink;
-	}
-
-	public void setLinkedAccountsLinkActive() {
+	private void setLinkedAccountsLinkActive() {
 		deactivate(myAppsListItem);
 		deactivate(accountSettingsListItem);
 		activate(linkedAccountsListItem);
+		deactivate(notificationsListItem);
 	}
 
-	public InlineHyperlink getPersonalDetailsLink() {
-		return accountSettingsLink;
-	}
-
-	public void setPersonalDetailsLinkActive() {
+	private void setPersonalDetailsLinkActive() {
 		deactivate(myAppsListItem);
 		deactivate(linkedAccountsListItem);
 		activate(accountSettingsListItem);
+		deactivate(notificationsListItem);
 	}
 
-	public void setChangePasswordLinkActive() {
+	private void setChangePasswordLinkActive() {
 		deactivate(myAppsListItem);
 		deactivate(linkedAccountsListItem);
 		deactivate(accountSettingsListItem);
+		deactivate(notificationsListItem);
+	}
+
+	private void setNotificationsLinkActive() {
+		deactivate(myAppsListItem);
+		deactivate(linkedAccountsListItem);
+		deactivate(accountSettingsListItem);
+		activate(notificationsListItem);
+	}
+
+	public void setActive(PageType page) {
+		switch (page) {
+		case MyAppsPageType:
+			setMyAppsLinkActive();
+			break;
+		case LinkedAccountsPageType:
+			setLinkedAccountsLinkActive();
+			break;
+		case ChangeDetailsPageType:
+			setPersonalDetailsLinkActive();
+			break;
+		case NotificationsPageType:
+			setNotificationsLinkActive();
+			break;
+		case ChangePasswordPageType:
+			setChangePasswordLinkActive();
+			break;
+		default:
+			break;
+		}
 	}
 
 	private void activate(LIElement item) {
@@ -91,6 +122,25 @@ public class MyAccountSidePanel extends Composite {
 		if (item != null) {
 			item.removeClassName(ACTIVE_STYLE_NAME);
 		}
+	}
+
+	/**
+	 * @param user
+	 */
+	public void setUser(User user) {
+		creatorName.setInnerText(user.company == null ? "-" : user.company);
+
+		String currentFilter = FilterController.get().asMyAppsFilterString();
+		if (currentFilter != null && currentFilter.length() > 0) {
+			myAppsLink
+					.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(), currentFilter));
+		} else {
+			myAppsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString()));
+		}
+
+		linkedAccountsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.LinkedAccountsPageType.toString(), user.id.toString()));
+		accountSettingsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.ChangeDetailsPageType.toString(), user.id.toString()));
+		notificationsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.NotificationsPageType.toString(), user.id.toString()));
 	}
 
 }

@@ -37,4 +37,9 @@ public class AddReplyRequest extends Request {
 			}
 		}
 	}
+
+	public AddReplyRequest reply(Reply reply) {
+		this.reply = reply;
+		return this;
+	}
 }

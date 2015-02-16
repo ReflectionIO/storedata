@@ -6,10 +6,10 @@
 	<ui:with field="description" type="java.lang.String" />
 	<ui:with field="topics" type="java.lang.Integer" />
 
-	<ui:style>
-	@external .list-group-item;
-	@external .list-group-item-heading;
-	@external .activeForum;
+	<ui:style gss="true">
+	@external list-group-item;
+	@external list-group-item-heading;
+	@external activeForum;
 	
 	.smaller {
 		font-size: smaller;

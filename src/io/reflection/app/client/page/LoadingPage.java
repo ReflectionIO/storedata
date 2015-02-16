@@ -19,8 +19,8 @@ import io.reflection.app.api.core.shared.call.event.GetCountriesEventHandler;
 import io.reflection.app.api.core.shared.call.event.GetRolesAndPermissionsEventHandler;
 import io.reflection.app.api.core.shared.call.event.GetStoresEventHandler;
 import io.reflection.app.api.core.shared.call.event.LoginEventHandler;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.controller.CountryController;
-import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.SessionController;
@@ -154,11 +154,11 @@ public class LoadingPage extends Page implements NavigationEventHandler, LoginEv
 
         resetProgressBar();
 
-        register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
-        register(EventController.get().addHandlerToSource(LoginEventHandler.TYPE, SessionController.get(), this));
-        register(EventController.get().addHandlerToSource(GetRolesAndPermissionsEventHandler.TYPE, SessionController.get(), this));
-        register(EventController.get().addHandlerToSource(GetCountriesEventHandler.TYPE, CountryController.get(), this));
-        register(EventController.get().addHandlerToSource(GetStoresEventHandler.TYPE, StoreController.get(), this));
+        register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+        register(DefaultEventBus.get().addHandlerToSource(LoginEventHandler.TYPE, SessionController.get(), this));
+        register(DefaultEventBus.get().addHandlerToSource(GetRolesAndPermissionsEventHandler.TYPE, SessionController.get(), this));
+        register(DefaultEventBus.get().addHandlerToSource(GetCountriesEventHandler.TYPE, CountryController.get(), this));
+        register(DefaultEventBus.get().addHandlerToSource(GetStoresEventHandler.TYPE, StoreController.get(), this));
 
         currentTaskIndex = 0;
 

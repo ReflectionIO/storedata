@@ -160,4 +160,79 @@ public class ModelRun extends DataType {
 			}
 		}
 	}
+
+	public ModelRun country(String country) {
+		this.country = country;
+		return this;
+	}
+
+	public ModelRun store(String store) {
+		this.store = store;
+		return this;
+	}
+
+	public ModelRun code(Long code) {
+		this.code = code;
+		return this;
+	}
+
+	public ModelRun form(FormType form) {
+		this.form = form;
+		return this;
+	}
+
+	public ModelRun grossingA(Double grossingA) {
+		this.grossingA = grossingA;
+		return this;
+	}
+
+	public ModelRun paidA(Double paidA) {
+		this.paidA = paidA;
+		return this;
+	}
+
+	public ModelRun bRatio(Double bRatio) {
+		this.bRatio = bRatio;
+		return this;
+	}
+
+	public ModelRun totalDownloads(Double totalDownloads) {
+		this.totalDownloads = totalDownloads;
+		return this;
+	}
+
+	public ModelRun paidB(Double paidB) {
+		this.paidB = paidB;
+		return this;
+	}
+
+	public ModelRun grossingB(Double grossingB) {
+		this.grossingB = grossingB;
+		return this;
+	}
+
+	public ModelRun paidAIap(Double paidAIap) {
+		this.paidAIap = paidAIap;
+		return this;
+	}
+
+	public ModelRun grossingAIap(Double grossingAIap) {
+		this.grossingAIap = grossingAIap;
+		return this;
+	}
+
+	public ModelRun freeA(Double freeA) {
+		this.freeA = freeA;
+		return this;
+	}
+
+	public ModelRun theta(Double theta) {
+		this.theta = theta;
+		return this;
+	}
+
+	public ModelRun freeB(Double freeB) {
+		this.freeB = freeB;
+		return this;
+	}
 }

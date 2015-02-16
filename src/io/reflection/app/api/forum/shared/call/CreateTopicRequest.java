@@ -37,4 +37,9 @@ public class CreateTopicRequest extends Request {
 			}
 		}
 	}
+
+	public CreateTopicRequest topic(Topic topic) {
+		this.topic = topic;
+		return this;
+	}
 }

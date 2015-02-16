@@ -10,8 +10,8 @@ package io.reflection.app.client.page.blog;
 import io.reflection.app.api.blog.shared.call.GetPostsRequest;
 import io.reflection.app.api.blog.shared.call.GetPostsResponse;
 import io.reflection.app.api.blog.shared.call.event.GetPostsEventHandler;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.StyledButtonCell;
-import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.PostController;
@@ -78,8 +78,8 @@ public class PostAdminPage extends Page implements GetPostsEventHandler, Navigat
 	protected void onAttach() {
 		super.onAttach();
 
-		register(EventController.get().addHandlerToSource(GetPostsEventHandler.TYPE, PostController.get(), this));
-		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(GetPostsEventHandler.TYPE, PostController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 	}
 
 	private void createColumns() {
@@ -154,7 +154,8 @@ public class PostAdminPage extends Page implements GetPostsEventHandler, Navigat
 			public SafeHtml getValue(Post object) {
 				String s = object.id.toString();
 
-				return SafeHtmlUtils.fromTrustedString("<a href=\"" + PageType.BlogPostPageType.asHref("view", s).asString()
+				return SafeHtmlUtils.fromTrustedString("<a href=\""
+						+ PageType.BlogPostPageType.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE, s).asString()
 						+ "\" class=\"btn btn-xs btn-default\">View</a>");
 			}
 		};

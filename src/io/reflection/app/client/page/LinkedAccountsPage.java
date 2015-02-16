@@ -20,8 +20,8 @@ import io.reflection.app.api.core.shared.call.event.DeleteLinkedAccountEventHand
 import io.reflection.app.api.core.shared.call.event.GetLinkedAccountsEventHandler;
 import io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler;
 import io.reflection.app.api.core.shared.call.event.UpdateLinkedAccountEventHandler;
-import io.reflection.app.client.controller.EventController;
-import io.reflection.app.client.controller.FilterController;
+import io.reflection.app.api.shared.ApiError;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
@@ -146,11 +146,11 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	protected void onAttach() {
 		super.onAttach();
 
-		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
-		register(EventController.get().addHandlerToSource(LinkAccountEventHandler.TYPE, LinkedAccountController.get(), this));
-		register(EventController.get().addHandlerToSource(GetLinkedAccountsEventHandler.TYPE, LinkedAccountController.get(), this));
-		register(EventController.get().addHandlerToSource(DeleteLinkedAccountEventHandler.TYPE, LinkedAccountController.get(), this));
-		register(EventController.get().addHandlerToSource(UpdateLinkedAccountEventHandler.TYPE, LinkedAccountController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(LinkAccountEventHandler.TYPE, LinkedAccountController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(GetLinkedAccountsEventHandler.TYPE, LinkedAccountController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(DeleteLinkedAccountEventHandler.TYPE, LinkedAccountController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(UpdateLinkedAccountEventHandler.TYPE, LinkedAccountController.get(), this));
 	}
 
 	/**
@@ -291,29 +291,14 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 			addLinkedAccount.setVisible(false);
 		}
 
-		myAccountSidePanel.setLinkedAccountsLinkActive();
+		myAccountSidePanel.setActive(getPageType());
 
 		user = SessionController.get().getLoggedInUser();
 
 		if (user != null) {
-			myAccountSidePanel.getLinkedAccountsLink().setTargetHistoryToken(
-					PageType.UsersPageType.asTargetHistoryToken(PageType.LinkedAccountsPageType.toString(), user.id.toString()));
-
-			myAccountSidePanel.getCreatorNameLink().setInnerText(user.company);
-
-			myAccountSidePanel.getPersonalDetailsLink().setTargetHistoryToken(
-					PageType.UsersPageType.asTargetHistoryToken(PageType.ChangeDetailsPageType.toString(), user.id.toString()));
+			myAccountSidePanel.setUser(user);
 
 			backLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.LinkedAccountsPageType.toString(), user.id.toString()));
-		}
-
-		String currentFilter = FilterController.get().asMyAppsFilterString();
-		if (currentFilter != null && currentFilter.length() > 0) {
-			if (user != null) {
-				myAccountSidePanel.getMyAppsLink().setTargetHistoryToken(
-						PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(), FilterController.get()
-								.asMyAppsFilterString()));
-			}
 		}
 
 		mLinkableAccount = null;
@@ -450,15 +435,20 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	@Override
 	public void linkAccountSuccess(LinkAccountRequest input, LinkAccountResponse output) {
 		preloaderForm.hide();
-		mLinkableAccount.resetForm();
 		// mLinkableAccount.setEnabled(true);
-		// mLinkAccount.setEnabled(true);
 
 		if (output.status == StatusType.StatusTypeSuccess) {
-
+			mLinkableAccount.resetForm();
 			PageType.UsersPageType.show(PageType.LinkedAccountsPageType.toString(user.id.toString()));
-		} else {
-			showError(output.error);
+		} else if (output.error != null) {
+			if (output.error.code == ApiError.InvalidDataAccountCredentials.getCode()) {
+				mLinkableAccount.setUsernameError("iTunes Connect username or password entered incorrectly");
+				mLinkableAccount.setPasswordError("iTunes Connect username or password entered incorrectly");
+				mLinkableAccount.setFormErrors();
+			} else if (output.error.code == ApiError.InvalidDataAccountVendor.getCode()) {
+				mIosMacForm.setVendorError("iTunes Connect vendor number entered incorrectly");
+				mLinkableAccount.setFormErrors();
+			}
 		}
 
 	}

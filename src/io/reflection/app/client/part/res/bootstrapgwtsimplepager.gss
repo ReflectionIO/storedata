@@ -1,0 +1,10 @@
+.button {
+	cursor: pointer;
+}
+
+.pageDetails {
+}
+
+.disabledButton {
+	cursor: not-allowed;
+}

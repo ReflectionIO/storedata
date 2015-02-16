@@ -48,4 +48,14 @@ public class RevokePermissionRequest extends Request {
 			}
 		}
 	}
+
+	public RevokePermissionRequest user(User user) {
+		this.user = user;
+		return this;
+	}
+
+	public RevokePermissionRequest permission(Permission permission) {
+		this.permission = permission;
+		return this;
+	}
 }

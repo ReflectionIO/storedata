@@ -118,4 +118,39 @@ public class GetFeedFetchesRequest extends Request {
 			}
 		}
 	}
+
+	public GetFeedFetchesRequest country(Country country) {
+		this.country = country;
+		return this;
+	}
+
+	public GetFeedFetchesRequest store(Store store) {
+		this.store = store;
+		return this;
+	}
+
+	public GetFeedFetchesRequest pager(Pager pager) {
+		this.pager = pager;
+		return this;
+	}
+
+	public GetFeedFetchesRequest listTypes(List<String> listTypes) {
+		this.listTypes = listTypes;
+		return this;
+	}
+
+	public GetFeedFetchesRequest category(Category category) {
+		this.category = category;
+		return this;
+	}
+
+	public GetFeedFetchesRequest start(Date start) {
+		this.start = start;
+		return this;
+	}
+
+	public GetFeedFetchesRequest end(Date end) {
+		this.end = end;
+		return this;
+	}
 }

@@ -25,6 +25,7 @@ import io.reflection.app.api.forum.shared.call.event.GetTopicsEventHandler.GetTo
 import io.reflection.app.api.forum.shared.call.event.UpdateTopicEventHandler;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.datatypes.shared.Forum;
 import io.reflection.app.datatypes.shared.Topic;
 import io.reflection.app.shared.util.SparseArray;
@@ -113,13 +114,13 @@ public class TopicController extends AsyncDataProvider<Topic> implements Service
                                         Math.min(input.pager.start.intValue() + input.pager.count.intValue(), pager.totalCount.intValue())));
                     }
 
-                    EventController.get().fireEventFromSource(new GetTopicsSuccess(input, output), TopicController.this);
+                    DefaultEventBus.get().fireEventFromSource(new GetTopicsSuccess(input, output), TopicController.this);
                     fetchTopicsRequest = null;
                 }
 
                 @Override
                 public void onFailure(Throwable caught) {
-                    EventController.get().fireEventFromSource(new GetTopicsFailure(input, caught), TopicController.this);
+                    DefaultEventBus.get().fireEventFromSource(new GetTopicsFailure(input, caught), TopicController.this);
                     fetchTopicsRequest = null;
                 }
             });
@@ -174,12 +175,12 @@ public class TopicController extends AsyncDataProvider<Topic> implements Service
                     }
                 }
 
-                EventController.get().fireEventFromSource(new GetTopicSuccess(input, output), TopicController.this);
+                DefaultEventBus.get().fireEventFromSource(new GetTopicSuccess(input, output), TopicController.this);
             }
 
             @Override
             public void onFailure(Throwable caught) {
-                EventController.get().fireEventFromSource(new GetTopicFailure(input, caught), TopicController.this);
+                DefaultEventBus.get().fireEventFromSource(new GetTopicFailure(input, caught), TopicController.this);
             }
         });
     }
@@ -264,12 +265,12 @@ public class TopicController extends AsyncDataProvider<Topic> implements Service
 
                 }
 
-                EventController.get().fireEventFromSource(new CreateTopicSuccess(input, output), TopicController.this);
+                DefaultEventBus.get().fireEventFromSource(new CreateTopicSuccess(input, output), TopicController.this);
             }
 
             @Override
             public void onFailure(Throwable caught) {
-                EventController.get().fireEventFromSource(new CreateTopicFailure(input, caught), TopicController.this);
+                DefaultEventBus.get().fireEventFromSource(new CreateTopicFailure(input, caught), TopicController.this);
             }
         });
     }
@@ -362,12 +363,12 @@ public class TopicController extends AsyncDataProvider<Topic> implements Service
             public void onSuccess(UpdateTopicResponse output) {
                 if (output.status == StatusType.StatusTypeSuccess) {}
 
-                EventController.get().fireEventFromSource(new UpdateTopicEventHandler.UpdateTopicSuccess(input, output), TopicController.this);
+                DefaultEventBus.get().fireEventFromSource(new UpdateTopicEventHandler.UpdateTopicSuccess(input, output), TopicController.this);
             }
 
             @Override
             public void onFailure(Throwable caught) {
-                EventController.get().fireEventFromSource(new UpdateTopicEventHandler.UpdateTopicFailure(input, caught), TopicController.this);
+                DefaultEventBus.get().fireEventFromSource(new UpdateTopicEventHandler.UpdateTopicFailure(input, caught), TopicController.this);
             }
         });
 

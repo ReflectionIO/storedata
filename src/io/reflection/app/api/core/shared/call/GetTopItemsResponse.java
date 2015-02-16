@@ -90,4 +90,19 @@ public class GetTopItemsResponse extends Response {
 			}
 		}
 	}
+
+	public GetTopItemsResponse ranks(List<Rank> ranks) {
+		this.ranks = ranks;
+		return this;
+	}
+
+	public GetTopItemsResponse items(List<Item> items) {
+		this.items = items;
+		return this;
+	}
+
+	public GetTopItemsResponse pager(Pager pager) {
+		this.pager = pager;
+		return this;
+	}
 }

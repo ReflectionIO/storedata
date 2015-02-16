@@ -48,4 +48,14 @@ public class GetCategoriesRequest extends Request {
 			}
 		}
 	}
+
+	public GetCategoriesRequest store(Store store) {
+		this.store = store;
+		return this;
+	}
+
+	public GetCategoriesRequest pager(Pager pager) {
+		this.pager = pager;
+		return this;
+	}
 }

@@ -54,4 +54,19 @@ public class LoginRequest extends Request {
 			}
 		}
 	}
+
+	public LoginRequest username(String username) {
+		this.username = username;
+		return this;
+	}
+
+	public LoginRequest password(String password) {
+		this.password = password;
+		return this;
+	}
+
+	public LoginRequest longTerm(Boolean longTerm) {
+		this.longTerm = longTerm;
+		return this;
+	}
 }

@@ -36,7 +36,7 @@ public class KeyValueArchiveManager {
 	@SuppressWarnings("rawtypes") private ValueAppender defaultAppender = new ValueAppender() {
 
 		@Override
-		public String getNewValue(String currentValue, Object value) {
+		public String getNewValue(String key, String currentValue, Object value, Map other) {
 			return currentValue + value.toString();
 		}
 	};
@@ -69,6 +69,10 @@ public class KeyValueArchiveManager {
 	}
 
 	public <T> void appendToValue(final String key, final T value) {
+		appendToValue(key, value, null);
+	}
+	
+	public <T> void appendToValue(final String key, final T value, final Map<String, Object> other) {
 		@SuppressWarnings("unchecked")
 		final ValueAppender<T> appender = (ValueAppender<T>) appenders.get(value.getClass().getName());
 
@@ -82,7 +86,7 @@ public class KeyValueArchiveManager {
 					akv.key = key;
 				}
 
-				akv.value = (appender == null ? defaultAppender : appender).getNewValue(akv.value, value);
+				akv.value = (appender == null ? defaultAppender : appender).getNewValue(key, akv.value, value, other);
 				ofy().save().entity(akv);
 			}
 		});

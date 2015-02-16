@@ -19,7 +19,7 @@ import io.reflection.app.api.forum.shared.call.event.AddReplyEventHandler;
 import io.reflection.app.api.forum.shared.call.event.GetRepliesEventHandler;
 import io.reflection.app.api.forum.shared.call.event.UpdateReplyEventHandler;
 import io.reflection.app.api.forum.shared.call.event.UpdateTopicEventHandler;
-import io.reflection.app.client.controller.EventController;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.controller.ReplyController;
 import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.controller.ReplyController.ReplyThread;
@@ -122,10 +122,10 @@ public class ForumMessageProvider extends AsyncDataProvider<ForumMessage> implem
     }
 
     public void registerListeners() {
-        registrations.add(EventController.get().addHandlerToSource(GetRepliesEventHandler.TYPE, ReplyController.get(), this));
-        registrations.add(EventController.get().addHandlerToSource(AddReplyEventHandler.TYPE, ReplyController.get(), this));
-        registrations.add(EventController.get().addHandlerToSource(UpdateTopicEventHandler.TYPE, TopicController.get(), this));
-        registrations.add(EventController.get().addHandlerToSource(UpdateReplyEventHandler.TYPE, ReplyController.get(), this));
+        registrations.add(DefaultEventBus.get().addHandlerToSource(GetRepliesEventHandler.TYPE, ReplyController.get(), this));
+        registrations.add(DefaultEventBus.get().addHandlerToSource(AddReplyEventHandler.TYPE, ReplyController.get(), this));
+        registrations.add(DefaultEventBus.get().addHandlerToSource(UpdateTopicEventHandler.TYPE, TopicController.get(), this));
+        registrations.add(DefaultEventBus.get().addHandlerToSource(UpdateReplyEventHandler.TYPE, ReplyController.get(), this));
     }
 
     public void unregisterListeners() {

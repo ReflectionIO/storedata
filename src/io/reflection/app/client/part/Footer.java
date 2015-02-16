@@ -9,8 +9,9 @@ package io.reflection.app.client.part;
 
 import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
 import io.reflection.app.api.shared.datatypes.Session;
-import io.reflection.app.client.controller.EventController;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.controller.FilterController;
+import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.FilterController.Filter;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.FilterEventHandler;
@@ -100,7 +101,8 @@ public class Footer extends Composite implements FilterEventHandler, SessionEven
 		year.setInnerHTML(Integer.toString(1900 + (new Date()).getYear()));
 		yearXs.setInnerHTML(Integer.toString(1900 + (new Date()).getYear()));
 
-		ranks.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString()));
+		ranks.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, OVERALL_LIST_TYPE,
+				FilterController.get().asRankFilterString()));
 
 		removeLeaderboard();
 		removeTerms();
@@ -133,8 +135,8 @@ public class Footer extends Composite implements FilterEventHandler, SessionEven
 	protected void onAttach() {
 		super.onAttach();
 
-		filterChangedRegistration = EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this);
-		sessionRegistration = EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this);
+		filterChangedRegistration = DefaultEventBus.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this);
+		sessionRegistration = DefaultEventBus.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this);
 	}
 
 	/*
@@ -175,7 +177,8 @@ public class Footer extends Composite implements FilterEventHandler, SessionEven
 	 */
 	@Override
 	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
-		ranks.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString()));
+		ranks.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, OVERALL_LIST_TYPE,
+				FilterController.get().asRankFilterString()));
 	}
 
 	/*
@@ -185,7 +188,8 @@ public class Footer extends Composite implements FilterEventHandler, SessionEven
 	 */
 	@Override
 	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {
-		ranks.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken("view", OVERALL_LIST_TYPE, FilterController.get().asRankFilterString()));
+		ranks.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, OVERALL_LIST_TYPE,
+				FilterController.get().asRankFilterString()));
 	}
 
 	/*

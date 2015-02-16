@@ -45,4 +45,14 @@ public class GetPostRequest extends Request {
 			}
 		}
 	}
+
+	public GetPostRequest id(long id) {
+		this.id = id;
+		return this;
+	}
+
+	public GetPostRequest title(String title) {
+		this.title = title;
+		return this;
+	}
 }

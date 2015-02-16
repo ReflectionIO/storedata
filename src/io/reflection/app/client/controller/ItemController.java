@@ -15,10 +15,18 @@ import io.reflection.app.api.admin.shared.call.event.GetItemsEventHandler.GetIte
 import io.reflection.app.api.admin.shared.call.event.SearchForItemEventHandler.SearchForItemFailure;
 import io.reflection.app.api.admin.shared.call.event.SearchForItemEventHandler.SearchForItemSuccess;
 import io.reflection.app.api.core.client.CoreService;
+import io.reflection.app.api.core.shared.call.GetLinkedAccountItemsRequest;
+import io.reflection.app.api.core.shared.call.GetLinkedAccountItemsResponse;
 import io.reflection.app.api.core.shared.call.SearchForItemRequest;
 import io.reflection.app.api.core.shared.call.SearchForItemResponse;
+import io.reflection.app.api.core.shared.call.event.GetLinkedAccountItemsEventHandler.GetLinkedAccountItemsFailure;
+import io.reflection.app.api.core.shared.call.event.GetLinkedAccountItemsEventHandler.GetLinkedAccountItemsSuccess;
 import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.client.DefaultEventBus;
+import io.reflection.app.client.helper.ApiCallHelper;
 import io.reflection.app.datatypes.shared.Item;
+import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.shared.util.PagerHelper;
 
 import java.util.ArrayList;
@@ -42,15 +50,21 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 
 	private static ItemController mOne = null;
 
-	private Map<String, Item> mItemCache = new HashMap<String, Item>(); // Cache items meanwhile user is logged in
+	private Map<String, Item> itemLookup = new HashMap<String, Item>(); // Cache items meanwhile user is logged in
 
-	private Map<String, List<Item>> mItemsSearchCache = new HashMap<String, List<Item>>(); // Cache of user searches
+	private Map<String, List<Item>> itemSearchLookup = new HashMap<String, List<Item>>(); // Cache of user searches
+
+	private List<Item> userItemList = new ArrayList<Item>();
+	private Map<String, Item> userItemsLookup = new HashMap<String, Item>();
+	private long userItemCount = -1;
 
 	// private List<Item> rows;
 	// private long count = 0;
 	private Pager pager = null;
+	private Pager pagerUserItem = null;
 	private String searchQuery = null;
 	private Request current;
+	private Request currentLinkedAccountItems;
 
 	// private Pager mLookupPager; // Lookup server calls pager
 	private Pager mSearchPager; // User search calls pager
@@ -71,7 +85,7 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 	 * @return searchResults Items retrieved after user search
 	 */
 	public List<Item> searchForItems(String query) {
-		List<Item> searchResults = mItemsSearchCache.get(query); // Get, if exists, a cached search
+		List<Item> searchResults = itemSearchLookup.get(query); // Get, if exists, a cached search
 
 		if (searchResults == null) {
 			fetchItemsQuery(query); // If not cached, search in the DB
@@ -111,15 +125,15 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 					addItemsToCache(output.items);
 
 					// Add retrieved items into search items cache ( Map<"query", List<Item>> )
-					mItemsSearchCache.put(input.query, output.items == null ? new ArrayList<Item>() : output.items);
+					itemSearchLookup.put(input.query, output.items == null ? new ArrayList<Item>() : output.items);
 				}
 
-				EventController.get().fireEventFromSource(new SearchForItemSuccess(input, output), ItemController.this);
+				DefaultEventBus.get().fireEventFromSource(new SearchForItemSuccess(input, output), ItemController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new SearchForItemFailure(input, caught), ItemController.this);
+				DefaultEventBus.get().fireEventFromSource(new SearchForItemFailure(input, caught), ItemController.this);
 			}
 		});
 	}
@@ -183,13 +197,77 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 					updateRowData(input.pager.start.intValue(), output.items == null ? Collections.<Item> emptyList() : output.items);
 				}
 
-				EventController.get().fireEventFromSource(new GetItemsSuccess(input, output), ItemController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetItemsSuccess(input, output), ItemController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
 				current = null;
-				EventController.get().fireEventFromSource(new GetItemsFailure(input, caught), ItemController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetItemsFailure(input, caught), ItemController.this);
+			}
+		});
+	}
+
+	/**
+	 * Fetch the list of Item related to the linked account currently selected in the filter
+	 */
+	public void fetchLinkedAccountItems() {
+		if (currentLinkedAccountItems != null) {
+			currentLinkedAccountItems.cancel();
+			currentLinkedAccountItems = null;
+		}
+
+		CoreService service = ServiceCreator.createCoreService();
+
+		final GetLinkedAccountItemsRequest input = new GetLinkedAccountItemsRequest();
+		input.accessCode = ACCESS_CODE;
+		input.session = SessionController.get().getSessionForApiCall();
+		if (pagerUserItem == null) {
+			pagerUserItem = new Pager();
+			pagerUserItem.count = STEP;
+			pagerUserItem.start = Long.valueOf(0);
+			pagerUserItem.sortDirection = SortDirectionType.SortDirectionTypeDescending;
+		}
+		input.pager = pagerUserItem;
+
+		input.linkedAccount = FilterController.get().getLinkedAccount();
+
+		Store store = new Store();
+		store.a3Code = FilterController.get().getFilter().getStoreA3Code();
+		input.store = ApiCallHelper.createStoreForApiCall(FilterController.get().getStore());
+
+		input.listType = FilterController.get().getListTypes().get(0);
+
+		currentLinkedAccountItems = service.getLinkedAccountItems(input, new AsyncCallback<GetLinkedAccountItemsResponse>() {
+
+			@Override
+			public void onSuccess(GetLinkedAccountItemsResponse output) {
+				currentLinkedAccountItems = null;
+
+				if (output.pager != null) {
+					pagerUserItem = output.pager;
+
+					if (pagerUserItem.totalCount != null) {
+						userItemCount = pagerUserItem.totalCount.longValue();
+						if (output.items != null) {
+							for (Item item : output.items) {
+								setUserItem(item);
+							}
+						}
+					}
+				}
+
+				if (output.items != null) { // There are items associated with this linked account
+					addItemsToCache(output.items);
+				}
+
+				DefaultEventBus.get().fireEventFromSource(new GetLinkedAccountItemsSuccess(input, output), ItemController.this);
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				currentLinkedAccountItems = null;
+				DefaultEventBus.get().fireEventFromSource(new GetLinkedAccountItemsFailure(input, caught), ItemController.this);
 			}
 		});
 	}
@@ -252,7 +330,7 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 	 * Clear Items cache when user logs out
 	 */
 	public void clearItemCache() {
-		mItemCache.clear();
+		itemLookup.clear();
 	}
 
 	/**
@@ -265,7 +343,7 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 	public void addItemsToCache(List<Item> items) {
 		if (items != null) {
 			for (Item item : items) {
-				mItemCache.put(item.internalId, item);
+				itemLookup.put(item.internalId, item);
 			}
 		}
 	}
@@ -278,7 +356,7 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 	 * @return the item
 	 */
 	public Item lookupItem(String internalId) {
-		Item item = mItemCache.get(internalId);
+		Item item = itemLookup.get(internalId);
 
 		// if (item == null) {
 		// fetchItem(internalId);
@@ -292,8 +370,37 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 	 */
 	public void addItemToCache(Item item) {
 		if (item != null) {
-			mItemCache.put(item.internalId, item);
+			itemLookup.put(item.internalId, item);
 		}
+	}
+
+	public Item getUserItem(String itemId) {
+		return userItemsLookup.get(itemId);
+	}
+
+	/**
+	 * @param item
+	 */
+	public void setUserItem(Item item) {
+		if (item != null && item.internalId != null) {
+			userItemList.add(item);
+			userItemsLookup.put(item.internalId, item);
+		}
+	}
+
+	public List<Item> getUserItems() {
+		return userItemList;
+	}
+
+	public long getUserItemsCount() {
+		return userItemCount;
+	}
+
+	public void resetUserItem() {
+		userItemList.clear();
+		userItemsLookup.clear();
+		userItemCount = -1;
+		pagerUserItem = null;
 	}
 
 	/*

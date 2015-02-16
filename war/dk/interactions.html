@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="utf-8" />
+	<title>Reflection Design Kit - Interactions</title>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link rel="stylesheet" media="screen, projection" type="text/css" href="css/designkit.13a7083861fbf013bb1d.css" />
+	<!--[if (lt IE 9)]>
+		<script src="js/vendor/html5shiv.min.js"></script>
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="css/reflection-main-ie8.4d83d814d6b1bc40495d.css" />
+	<![endif]-->
+ 	<!--[if !lt IE 9]><!-->
+		<script src="js/vendor/picturefill.2.2.0.min.js" async></script>
+	<!-- <![endif]-->
+	<!--[if (gte IE 9)|(IEMobile)|(!IE)]><!-->
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="css/reflection-main.f079736b125e101d11b8.css" />
+	<!--<![endif]-->
+	<link rel="stylesheet" href="js/vendor/jquery.mCustomScrollbar.css" />
+</head>
+<body class="panel-left-open interactions-page">
+	<!--[if lt IE 8]>
+      <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+  <![endif]-->
+
+  <header id="js-component-import--global-header" class="global-header"></header>
+  
+	<div id="js-component-import--panel-left" class="panel-left js-custom-scrollbar" data-mcs-theme="minimal-dark"></div>
+
+	<div class="l-page-container">
+
+		<div id="main" class="l-main" role="main">
+			
+			<div id="js-component-import--design-kit-banner" class="banner banner--interactions"></div>
+
+			<div class="grid-container dk-components-container">
+				<div class="grid__row dk-component-row dk-component-row--with-divider">
+					<div class="grid__column grid__column--full-width">
+						<h2>Hidden Depth</h2>
+						<p>'Hidden Depth' is the name of our guiding design philosophy, developed during the creation of our interface transitions and interactions. The name comes from the combination of semi-flat visual design with a hidden and delightful sense of three-dimensional depth that is revealed upon interaction with the various components. This imbues our fresh and uncomplicated user interface with the visual cues and feedback required to make it intuitive to use.</p>
+					</div>
+				</div>
+				<div class="grid__row dk-component-row dk-component-row--with-divider">
+					<div class="grid__column grid__column--full-width">
+						<h3>Easing</h3>
+						<p>All components have the same base easing rules to create realistic motion which are:</p>
+						<ul class="content-list">
+							<li>Start at full speed, move quickly and ease out sharply but smoothly upon opening, expanding or revealing (see example easing graph below).</li>
+							<li>Ease in slowly but sharply increase speed upon closing, hiding or collapsing. This happens very slightly faster than opening to move on to next task quickly (see example easing graph below).</li>
+						</ul>
+						<p>All elements should follow these base rules but have timings tweaked based on their individual size and formation. Motion blur effect is also applied to elements within panels or containers when in motion to make the feeling of movement more realistic to the human eye.</p>
+					</div>
+					<div class="grid__row-container grid__column--one-half easing-section">
+						<div class="easing-figure-container">
+							<h4 class="heading-style--heading-five">Ease Out</h4>
+							<img src="images/figure-ease-out.c4961e56c6cc9ea5dc36.png" alt="Ease out represented on a graph of position over time" />
+							<div class="easing-represenation-container">
+								<div class="easing-representation">
+									<div class="easing-representation__slider"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="grid__row-container grid__column--one-half easing-section">
+						<div class="easing-figure-container">
+							<h4 class="heading-style--heading-five">Ease In</h4>
+							<img src="images/figure-ease-in.32aa237a729053cdce93.png" alt="Ease in represented on a graph of position over time" />
+							<div class="easing-represenation-container">
+								<div class="easing-representation ">
+									<div class="easing-representation__slider easing-representation__slider--ease-in"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="grid__row dk-component-row">
+					<div class="grid__column grid__column--two-thirds">
+						<h3>Opening</h3>
+						<p>Opening up components that contain sub-content (e.g. drop down menu or navigation panel) should feel like a hidden drawer being slid smoothly open to reveal the contents. This motion intuitively indicates the content hierarchy. Drawer contents slides in time with the drawer itself to illicit a realistic feeling of depth  and layering.<br />
+						In most applications any proceeding components will be pushed down, out of the way in the same direction and speed as the drawer. In instances where this isn't possible the drawer opens over the top of proceeding elements.</p>
+					</div>
+					<div class="grid__column grid__column--one-third">
+						<h4 class="heading-style--heading-five">Examples</h4>
+						<nav class="main-navigation js-main-nav" role="navigation">
+							<ul>
+								<li><a href="#" class="ref-icon-before ref-icon-before--blog">Brand</a></li>
+								<li class="has-child js-is-collapsible"><a href="#" class="ref-icon-before ref-icon-before--forum">Design Assets</a>
+									<ul>
+										<li><a href="colours.html">Colours</a></li>
+										<li><a href="typography.html">Typography</a></li>
+										<li class="has-child js-is-collapsible">
+											<a href="#">Menu demo</a>
+											<ul>
+												<li><a href="#">Dolor Amet Lorem</a></li>
+											</ul>
+										</li>
+									</ul>
+								</li>
+							</ul>
+						</nav>
+						<div class="form-field form-field--select">						
+							<select class="js-field--select">
+							    <option value="" disabled selected>Choose your option</option>
+							    <option value="a1">Option 1</option>
+							    <option value="a2">Option 2</option>
+							    <option value="a3">Option 3</option>
+							</select>
+						</div>
+					</div>
+					<div class="grid__column grid__column--two-thirds">
+						<h3>Sliding</h3>
+						<p>Components that slide into and out of view react with the existing page elements in two main ways:</p>
+						<ol class="content-list">
+							<li>The panel slides into view and pushes content items over in the same direction if the page is below tablet width or compresses items responsively if over tablet width (see demo 1 on the right)</li>
+							<li>The panel slides over the existing page elements whilst at the same time a dark overlay fades in and blurs the page elements below to place focus on the slide-in panel (see demo 2 right)</li>
+						</ol>
+					</div>
+					<div class="grid__column grid__column--one-third">
+						<h4 class="heading-style--heading-five">Examples</h4>
+						<button class="ref-button--function-large js-hamburger-button">View Demo 1</button>
+						<button class="ref-button--function-large js-link-log-in">View Demo 2</button>
+					</div>
+					<div class="grid__column grid__column--two-thirds">
+						<h3>Pushing</h3>
+						<p>Components that appear visually flat depress like an actual button when pushed giving a sense of realistic depth to the interface and providing the user with satisfying, familiar feedback that they have performed an action or turned something on.<br />
+						When turning something on (e.g. a check box) the item being pressed changes to it’s on state when released. When turning off the reverese happens and the off state is shown on released.<br />
+						In a link button the link text and/or icon are pushed away slightly when pressed and bounce back when released to again give a feeling of being physically engaged.</p>
+					</div>
+					<div class="grid__column grid__column--one-third">
+						<h4 class="heading-style--heading-five">Examples</h4>
+						<button class="ref-button--cta-large--wide">Lorem</button>
+						<ul class="tabs-container">
+							<li class="grid__column grid__column--one-half tabs__tab is-active js-tab-select">
+								<div class="tab-animate-active"></div>
+								<a href="#tab-content-one" class="tabs__link">
+									<span><span>Revenue</span></span>
+								</a>
+							</li>
+							<li class="grid__column grid__column--one-half tabs__tab js-tab-select">
+								<div class="tab-animate-active"></div>
+								<a href="#tab-content-two" class="tabs__link">
+									<span><span>Downloads</span></span>
+								</a>
+							</li>
+						</ul>
+						<div class="form-field--checkbox-list">
+							<ul>
+								<li>
+									<input type="checkbox" name="checkboxOne" id="checkboxOne" />
+									<label for="checkboxOne" class="checkboxLabel">Lorem ipsum dolor amet elict</label>
+									<label for="checkboxOne" class="checkboxLabelVisible">Lorem ipsum dolor amet elict</label>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="grid__column grid__column--two-thirds">
+						<h3>Hovering</h3>
+						<p>Every interactive component has a hover state to indicate that they are active and will respond to user input. The basic hover state is a darkening of the component or the component's background. For prominent calls to action (e.g. apply buttons) the hover state is Reflection Red <strong>#ff496a</strong> to indicate their significance.<br />
+						All hovers fade smoothly in and out, the fade out being slightly quicker than the fade in. 
+						The selected colour of elements that have performed a function, been selected or turned on is Reflection Green <strong>#1bc79f</strong>, a colour asscoiated with success or correct behaviour.</p>
+					</div>
+					<div class="grid__column grid__column--one-third">
+						<h4 class="heading-style--heading-five">Examples</h4>
+						<button class="ref-button--link-large">Lorem ipsum dolor</button><br />
+						<button class="ref-button--cta-large--wide">Lorem</button>
+						<div class="form-field--radio-list form-field--radio-list--inline">
+							<ul>
+								<li>
+									<input type="radio" name="radioButtons" id="radioButtonOne" />
+									<label for="radioButtonOne" class="radioButtonLabel">Yes</label>
+									<label for="radioButtonOne" class="radioButtonLabelVisible">Yes</label>
+								</li>
+								<li>
+									<input type="radio" name="radioButtons" id="radioButtonYes" />
+									<label for="radioButtonYes" class="radioButtonLabel">No</label>
+									<label for="radioButtonYes" class="radioButtonLabelVisible">No</label>
+								</li>
+							</ul>
+						</div>
+						<div class="form-field--checkbox-list">
+							<ul>
+								<li>
+									<input type="checkbox" name="checkboxOne" id="checkboxTwo" />
+									<label for="checkboxTwo" class="checkboxLabel">Lorem ipsum dolor amet elict</label>
+									<label for="checkboxTwo" class="checkboxLabelVisible">Lorem ipsum dolor amet elict</label>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="js-component-import--panel-right" class="panel-right-container"></div>
+
+	<div id="js-component-import--search"></div>
+
+ 	<script src="js/vendor/jquery-1.11.1.min.js"></script>
+ 	<script src="js/vendor/jquery-ui.custom.min.js"></script>
+ 	<script src="js/vendor/handlebars-v2.0.0.js"></script>
+ 	<script src="js/templates/templates.js"></script>
+	<script src="js/vendor/modernizr.2.8.3.custom.min.js"></script>
+	<!--[if IE 9]>
+		<script src="js/vendor/jquery.mCustomScrollbar.concat.min.js"></script>
+	<![endif]-->
+
+	<div id="js-appendScriptsContainer"></div>
+
+	<script src="js/designkit-global-templates-2.js"></script>
+  <script src="js/application-2.js"></script>
+  <script src="js/designkit-app-2.js"></script>
+  <script>
+  	function initScripts() {
+  		new InteractionsPage();
+  	}
+
+  	window.onready = initScripts();
+  </script>
+</body>

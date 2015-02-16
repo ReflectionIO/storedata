@@ -8,7 +8,7 @@
 package io.reflection.app.client.page.admin;
 
 import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMAT_DD_MMM_YYYY;
-import io.reflection.app.client.controller.EventController;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.FilterController.Filter;
 import io.reflection.app.client.controller.NavigationController;
@@ -22,7 +22,6 @@ import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.BootstrapGwtDatePicker;
 import io.reflection.app.client.part.DateSelector;
-import io.reflection.app.client.part.Preloader;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.client.res.Images;
@@ -58,12 +57,10 @@ public class SimpleModelRunsPage extends Page implements FilterEventHandler {
 	@UiField(provided = true) SimplePager simplePager = new SimplePager(false, false);
 
 	@UiField ListBox listType;
-	@UiField DateSelector dateSelector = new DateSelector();
+	@UiField DateSelector dateSelector;
 	@UiField ListBox country;
 	@UiField ListBox appStore;
 	@UiField ListBox category;
-
-	@UiField Preloader preloader;
 
 	public SimpleModelRunsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -203,7 +200,7 @@ public class SimpleModelRunsPage extends Page implements FilterEventHandler {
 	@Override
 	protected void onAttach() {
 		super.onAttach();
-		register(EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
 	}
 
 	/*

@@ -16,6 +16,7 @@ import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
+import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Sale;
 import io.reflection.app.helpers.SqlQueryHelper;
@@ -25,6 +26,7 @@ import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
+import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 
 import java.util.ArrayList;
@@ -90,12 +92,22 @@ final class SaleService implements ISaleService {
 		sale.version = stripslashes(connection.getCurrentRowString("version"));
 		sale.typeIdentifier = stripslashes(connection.getCurrentRowString("typeidentifier"));
 		sale.units = connection.getCurrentRowInteger("units");
-		sale.proceeds = Float.valueOf(connection.getCurrentRowInteger("proceeds").floatValue() / 100.0f);
+		
+		Integer proceeds = connection.getCurrentRowInteger("proceeds");
+		if (proceeds != null) {
+			sale.proceeds = Float.valueOf(proceeds.floatValue() / 100.0f);
+		}
+		
 		sale.currency = stripslashes(connection.getCurrentRowString("currency"));
 		sale.begin = connection.getCurrentRowDateTime("begin");
 		sale.end = connection.getCurrentRowDateTime("end");
 		sale.customerCurrency = stripslashes(connection.getCurrentRowString("customercurrency"));
-		sale.customerPrice = Float.valueOf(connection.getCurrentRowInteger("customerprice").floatValue() / 100.0f);
+
+		Integer customerPrice = connection.getCurrentRowInteger("customerprice");
+		if (customerPrice != null) {
+			sale.customerPrice = Float.valueOf(customerPrice.floatValue() / 100.0f);
+		}
+
 		sale.promoCode = stripslashes(connection.getCurrentRowString("promocode"));
 		sale.parentIdentifier = stripslashes(connection.getCurrentRowString("parentidentifier"));
 		sale.subscription = stripslashes(connection.getCurrentRowString("subscription"));
@@ -170,7 +182,7 @@ final class SaleService implements ISaleService {
 		}
 
 		String getSaleQuery = String.format("SELECT DISTINCT `itemid` FROM `sale` WHERE `dataaccountid`=%d %s AND `deleted`='n' ORDER BY `%s` %s LIMIT %d, %d",
-				dataAccount.id.longValue(), typeId, pager.sortBy == null ? "id" : pager.sortBy,
+				dataAccount.id.longValue(), typeId, pager.sortBy == null ? "id" : stripslashes(pager.sortBy),
 				pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start == null ? Pager.DEFAULT_START.longValue()
 						: pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue() : pager.count.longValue());
 
@@ -255,15 +267,13 @@ final class SaleService implements ISaleService {
 			}
 
 			items.addAll(skuItemLookup.values());
-
 		} finally {
 			if (saleConnection != null) {
-				saleConnection.disconnect();
+				saleConnection.disconnect(); 
 			}
 		}
 
 		return items;
-
 	}
 
 	/*
@@ -360,7 +370,8 @@ final class SaleService implements ISaleService {
 		// we are using end for date but we could equally use begin
 		String getSalesQuery = String.format(
 				"SELECT * FROM `sale` WHERE `country`='%s' AND (%d=%d OR `category`='%s') AND `dataaccountid`=%d AND %s AND `deleted`='n'", country.a2Code, 24,
-				category.id.longValue(), category.name, linkedAccount.id.longValue(), SqlQueryHelper.beforeAfterQuery(end, start, "end"));
+				category == null ? 24 : category.id.longValue(), category == null ? "" : category.name, linkedAccount.id.longValue(),
+				SqlQueryHelper.beforeAfterQuery(end, start, "end"));
 
 		if (pager != null) {
 			String sortByQuery = "id";
@@ -424,8 +435,8 @@ final class SaleService implements ISaleService {
 
 		String getSalesQuery = String
 				.format("SELECT count(1) AS `salescount` FROM `sale` WHERE `country`='%s' AND (%d=%d OR `category`='%s') AND `dataaccountid`=%d AND %s AND `deleted`='n'",
-						country.a2Code, 24, category.id.longValue(), category.name, linkedAccount.id.longValue(),
-						SqlQueryHelper.beforeAfterQuery(end, start, "end"));
+						country.a2Code, 24, category == null ? 24 : category.id.longValue(), category == null ? "" : category.name,
+						linkedAccount.id.longValue(), SqlQueryHelper.beforeAfterQuery(end, start, "end"));
 
 		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
 
@@ -461,10 +472,10 @@ final class SaleService implements ISaleService {
 		// to detect it based on the linked account
 		// (category relates to store by a3code)
 		// we are using end for date but we could equally use begin
-		String getSalesQuery = String.format(
-				"SELECT * FROM `sale` WHERE `country`='%s' AND (%d=%d OR `category`='%s') AND `dataaccountid`=%d AND %s AND `itemid`='%s' AND `deleted`='n'",
-				country.a2Code, 24, category.id.longValue(), category.name, linkedAccount.id.longValue(), SqlQueryHelper.beforeAfterQuery(end, start, "end"),
-				item.internalId);
+		String getSalesQuery = String
+				.format("SELECT * FROM `sale` WHERE `country`='%s' AND (%d=%d OR `category`='%s') AND `dataaccountid`=%d AND %s AND (`itemid`='%7$s' OR parentidentifier = (SELECT `sku` FROM `sale` WHERE `itemid`='%7$s' LIMIT 1)) AND `deleted`='n'",
+						country.a2Code, 24, category == null ? 24 : category.id.longValue(), category == null ? "" : category.name,
+						linkedAccount.id.longValue(), SqlQueryHelper.beforeAfterQuery(end, start, "end"), item.internalId);
 
 		if (pager != null) {
 			String sortByQuery = "id";
@@ -528,8 +539,8 @@ final class SaleService implements ISaleService {
 
 		String getSalesQuery = String
 				.format("SELECT count(1) AS `salescount` FROM `sale` WHERE `country`='%s' AND (%d=%d OR `category`='%s') AND `dataaccountid`=%d AND %s AND `itemid`='%s' AND `deleted`='n'",
-						country.a2Code, 24, category.id.longValue(), category.name, linkedAccount.id.longValue(),
-						SqlQueryHelper.beforeAfterQuery(end, start, "end"), item.internalId);
+						country.a2Code, 24, category == null ? 24 : category.id.longValue(), category == null ? "" : category.name,
+						linkedAccount.id.longValue(), SqlQueryHelper.beforeAfterQuery(end, start, "end"), item.internalId);
 
 		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
 
@@ -614,6 +625,197 @@ final class SaleService implements ISaleService {
 		}
 
 		return dataAccount;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.sale.ISaleService#getSaleIds(io.reflection.app.datatypes.shared.Country, io.reflection.app.datatypes.shared.DataAccount,
+	 * java.util.Date, java.util.Date)
+	 */
+	@Override
+	public List<Long> getSaleIds(Country country, DataAccount linkedAccount, Date start, Date end) throws DataAccessException {
+		List<Long> saleIds = new ArrayList<Long>();
+
+		// FIXME: for now we use the all category for the iOS store... we should get the category passed in, or attempt to detect it based on the linked account
+		// (category relates to store by a3code)
+		// we are using end for date but we could equally use begin
+		String getSaleIdsQuery = String.format("SELECT `id` FROM `sale` WHERE `country`='%s' AND `dataaccountid`=%d AND %s AND `deleted`='n'", country.a2Code,
+				linkedAccount.id.longValue(), SqlQueryHelper.beforeAfterQuery(end, start, "end"));
+
+		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
+
+		try {
+			saleConnection.connect();
+			saleConnection.executeQuery(getSaleIdsQuery);
+
+			Long id;
+			while (saleConnection.fetchNextRow()) {
+				id = saleConnection.getCurrentRowLong("id");
+
+				if (id != null) {
+					saleIds.add(id);
+				}
+			}
+		} finally {
+			if (saleConnection != null) {
+				saleConnection.disconnect();
+			}
+		}
+
+		return saleIds;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.sale.ISaleService#getAllSaleIds(io.reflection.app.api.shared.datatypes.Pager)
+	 */
+	@Override
+	public List<Long> getAllSaleIds(Pager pager) throws DataAccessException {
+		List<Long> saleIds = new ArrayList<Long>();
+
+		String getAllSalesIdsQuery = String.format("SELECT `id` FROM `sale` WHERE `deleted`='n' ORDER BY `%s` %s LIMIT %d, %d", pager.sortBy == null ? "id"
+				: stripslashes(pager.sortBy), pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
+				pager.start == null ? Pager.DEFAULT_START.longValue() : pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue()
+						: pager.count.longValue());
+
+		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
+
+		try {
+			saleConnection.connect();
+			saleConnection.executeQuery(getAllSalesIdsQuery);
+
+			Long saleId;
+			while (saleConnection.fetchNextRow()) {
+				saleId = saleConnection.getCurrentRowLong("id");
+
+				if (saleId != null) {
+					saleIds.add(saleId);
+				}
+			}
+		} finally {
+			if (saleConnection != null) {
+				saleConnection.disconnect();
+			}
+		}
+
+		return saleIds;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.sale.ISaleService#getDataAccountFetchSales(io.reflection.app.datatypes.shared.DataAccountFetch,
+	 * io.reflection.app.api.shared.datatypes.Pager)
+	 */
+	@Override
+	public List<Sale> getDataAccountFetchSales(DataAccountFetch dataAccountFetch, Pager pager) throws DataAccessException {
+		List<Sale> sales = new ArrayList<Sale>();
+
+		if (dataAccountFetch.date == null || dataAccountFetch.linkedAccount == null) {
+			dataAccountFetch = DataAccountFetchServiceProvider.provide().getDataAccountFetch(dataAccountFetch.id);
+		}
+
+		String getDataAccountFetchSalesQuery = String.format(
+				"SELECT * FROM `sale` WHERE `end`=FROM_UNIXTIME(%d) AND `dataaccountid`=%d AND `deleted`='n' ORDER BY `%s` %s LIMIT %d, %d",
+				dataAccountFetch.date.getTime() / 1000, dataAccountFetch.linkedAccount.id.longValue(),
+				pager.sortBy == null ? "id" : stripslashes(pager.sortBy), pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
+				pager.start == null ? Pager.DEFAULT_START.longValue() : pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue()
+						: pager.count.longValue());
+		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
+
+		try {
+			saleConnection.connect();
+			saleConnection.executeQuery(getDataAccountFetchSalesQuery);
+
+			Sale sale;
+			while (saleConnection.fetchNextRow()) {
+				sale = toSale(saleConnection);
+
+				if (sale != null) {
+					sales.add(sale);
+				}
+			}
+		} finally {
+			if (saleConnection != null) {
+				saleConnection.disconnect();
+			}
+		}
+
+		return sales;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.sale.ISaleService#getDataAccountFetchSaleIds(io.reflection.app.datatypes.shared.DataAccountFetch,
+	 * io.reflection.app.api.shared.datatypes.Pager)
+	 */
+	@Override
+	public List<Long> getDataAccountFetchSaleIds(DataAccountFetch dataAccountFetch, Pager pager) throws DataAccessException {
+		List<Long> saleIds = new ArrayList<Long>();
+
+		if (dataAccountFetch.date == null || dataAccountFetch.linkedAccount == null) {
+			dataAccountFetch = DataAccountFetchServiceProvider.provide().getDataAccountFetch(dataAccountFetch.id);
+		}
+
+		String getDataAccountFetchSaleIdsQuery = String.format(
+				"SELECT `id` FROM `sale` WHERE `end`=FROM_UNIXTIME(%d) AND `dataaccountid`=%d AND `deleted`='n' ORDER BY `%s` %s LIMIT %d, %d",
+				dataAccountFetch.date.getTime() / 1000, dataAccountFetch.linkedAccount.id.longValue(),
+				pager.sortBy == null ? "id" : stripslashes(pager.sortBy), pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
+				pager.start == null ? Pager.DEFAULT_START.longValue() : pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue()
+						: pager.count.longValue());
+		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
+
+		try {
+			saleConnection.connect();
+			saleConnection.executeQuery(getDataAccountFetchSaleIdsQuery);
+
+			Long saleId;
+			while (saleConnection.fetchNextRow()) {
+				saleId = saleConnection.getCurrentRowLong("id");
+
+				if (saleId != null) {
+					saleIds.add(saleId);
+				}
+			}
+		} finally {
+			if (saleConnection != null) {
+				saleConnection.disconnect();
+			}
+		}
+
+		return saleIds;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.sale.ISaleService#getSkuItemId(java.lang.String)
+	 */
+	@Override
+	public String getSkuItemId(String sku) throws DataAccessException {
+		String itemId = null;
+
+		String getSkuItemIdQuery = String.format("SELECT `itemid` FROM `sale` WHERE `sku`='%s' LIMIT 1", addslashes(sku));
+
+		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
+
+		try {
+			saleConnection.connect();
+			saleConnection.executeQuery(getSkuItemIdQuery);
+
+			if (saleConnection.fetchNextRow()) {
+				itemId = saleConnection.getCurrentRowString("itemid");
+			}
+		} finally {
+			if (saleConnection != null) {
+				saleConnection.disconnect();
+			}
+		}
+
+		return itemId;
 	}
 
 }

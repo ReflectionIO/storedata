@@ -53,4 +53,19 @@ public class SimpleModelRun extends DataType {
 			}
 		}
 	}
+
+	public SimpleModelRun feedFetch(FeedFetch feedFetch) {
+		this.feedFetch = feedFetch;
+		return this;
+	}
+
+	public SimpleModelRun a(Double a) {
+		this.a = a;
+		return this;
+	}
+
+	public SimpleModelRun b(Double b) {
+		this.b = b;
+		return this;
+	}
 }

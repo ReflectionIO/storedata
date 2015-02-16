@@ -28,7 +28,7 @@ public interface DataAccountCollector {
 	 * @param date
 	 * @return
 	 */
-	boolean collect(DataAccount dataAccount, Date date) throws DataAccessException;
+	boolean collect(DataAccount dataAccount, Date date) throws DataAccessException, ServiceException;
 
 	/**
 	 * 

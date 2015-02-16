@@ -20,9 +20,9 @@ import io.reflection.app.api.core.shared.call.GetLinkedAccountItemResponse;
 import io.reflection.app.api.core.shared.call.event.GetItemRanksEventHandler;
 import io.reflection.app.api.core.shared.call.event.GetItemSalesRanksEventHandler;
 import io.reflection.app.api.core.shared.call.event.GetLinkedAccountItemEventHandler;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.ImageAndTextCell;
 import io.reflection.app.client.cell.content.ConcreteImageAndText;
-import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.FilterController.Filter;
 import io.reflection.app.client.controller.ItemController;
@@ -30,6 +30,8 @@ import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.RankController;
+import io.reflection.app.client.controller.SessionController;
+import io.reflection.app.client.controller.StoreController;
 import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.FormattingHelper;
@@ -55,6 +57,7 @@ import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
@@ -62,7 +65,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
-import com.google.gwt.user.cellview.client.TextHeader;
+import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -76,36 +79,35 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 	public static final int SELECTED_TAB_PARAMETER_INDEX = 1;
 
-	@UiField ItemSidePanel mSidePanel;
-	@UiField ItemTopPanel mTopPanel;
+	@UiField ItemSidePanel sidePanel;
+	@UiField ItemTopPanel topPanel;
 
-	@UiField InlineHyperlink mRevenue;
-	@UiField InlineHyperlink mDownloads;
-	@UiField InlineHyperlink mRanking;
-
-	@UiField LIElement mRevenueItem;
-	@UiField LIElement mDownloadsItem;
-	@UiField LIElement mRankingItem;
+	@UiField InlineHyperlink revenueLink;
+	@UiField InlineHyperlink downloadsLink;
+	@UiField InlineHyperlink rankingLink;
+	private InlineHTML comingSoon = new InlineHTML("&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;Coming soon");
+	@UiField LIElement revenueItem;
+	@UiField LIElement downloadsItem;
+	@UiField LIElement rankingItem;
 
 	@UiField ItemChart historyChart;
 
 	@UiField Preloader preloader;
 
-	@UiField(provided = true) CellTable<ItemRevenue> revenue = new CellTable<ItemRevenue>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
+	@UiField(provided = true) CellTable<ItemRevenue> revenueTable = new CellTable<ItemRevenue>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
 
 	private String internalId;
+	private String comingPage;
 
 	private RankingType rankingType;
 	private YAxisDataType dataType;
 	private Item item;
 
-	private Map<String, LIElement> mTabs = new HashMap<String, LIElement>();
+	private Map<String, LIElement> tabs = new HashMap<String, LIElement>();
 
 	private String selectedTab;
 
 	private String filterContents;
-
-	private static String VIEW_ACTION_NAME = "view";
 
 	private ItemRevenue itemRevenuePlaceholder = new ItemRevenue();
 	private List<ItemRevenue> tablePlaceholder = new ArrayList<ItemRevenue>();
@@ -115,13 +117,18 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 		Styles.INSTANCE.flags().ensureInjected();
 
-		createColumns();
+		tabs.put(REVENUE_CHART_TYPE, revenueItem);
+		tabs.put(DOWNLOADS_CHART_TYPE, downloadsItem);
+		tabs.put(RANKING_CHART_TYPE, rankingItem);
+		comingSoon.getElement().getStyle().setFontSize(14.0, Unit.PX);
+		setRevenueDownloadTabsEnabled(false);
 
-		mTabs.put(REVENUE_CHART_TYPE, mRevenueItem);
-		mTabs.put(DOWNLOADS_CHART_TYPE, mDownloadsItem);
-		mTabs.put(RANKING_CHART_TYPE, mRankingItem);
-
-		RankController.get().getItemRevenueDataProvider().addDataDisplay(revenue);
+		if (SessionController.get().isLoggedInUserAdmin()) {
+			createColumns();
+			RankController.get().getItemRevenueDataProvider().addDataDisplay(revenueTable);
+		} else {
+			revenueTable.removeFromParent();
+		}
 
 		tablePlaceholder.add(itemRevenuePlaceholder);
 
@@ -133,11 +140,12 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	 * @param enabled
 	 */
 	private void setLoadingSpinnerEnabled(boolean enabled) {
-		if (enabled) {
-			revenue.setRowCount(1, true);
-			revenue.setRowData(0, tablePlaceholder);
-		} else {
-			revenue.setRowCount(0, true);
+		if (SessionController.get().isLoggedInUserAdmin()) {
+			if (enabled) {
+				revenueTable.setRowData(0, tablePlaceholder);
+			} else {
+				revenueTable.setRowCount(0, true);
+			}
 		}
 	}
 
@@ -198,30 +206,20 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			}
 		};
 
-		TextHeader countryHeader = new TextHeader("Country");
-		revenue.addColumn(countryColumn, countryHeader);
-
+		revenueTable.addColumn(countryColumn, "Country");
 		// TextHeader percentageHeader = new TextHeader("% total revenue");
 		// revenue.addColumn(percentageColumn, percentageHeader);
+		revenueTable.addColumn(paidColumn, "Paid");
+		revenueTable.addColumn(subscriptionColumn, "Subscription");
+		revenueTable.addColumn(iapColumn, "IAP");
+		revenueTable.addColumn(totalColumn, "Total");
+		revenueTable.setWidth("100%", true);
+		revenueTable.setColumnWidth(countryColumn, 136.0, Unit.PX);
+		revenueTable.setColumnWidth(paidColumn, 51.0, Unit.PX);
+		revenueTable.setColumnWidth(subscriptionColumn, 51.0, Unit.PX);
+		revenueTable.setColumnWidth(iapColumn, 51.0, Unit.PX);
+		revenueTable.setColumnWidth(totalColumn, 51.0, Unit.PX);
 
-		TextHeader paidHeader = new TextHeader("Paid");
-		revenue.addColumn(paidColumn, paidHeader);
-
-		TextHeader subscriptionHeader = new TextHeader("Subscription");
-		revenue.addColumn(subscriptionColumn, subscriptionHeader);
-
-		TextHeader iapHeader = new TextHeader("IAP");
-		revenue.addColumn(iapColumn, iapHeader);
-
-		TextHeader totalHeader = new TextHeader("Total");
-		revenue.addColumn(totalColumn, totalHeader);
-
-		revenue.setWidth("100%", true);
-		revenue.setColumnWidth(countryColumn, 136.0, Unit.PX);
-		revenue.setColumnWidth(paidColumn, 51.0, Unit.PX);
-		revenue.setColumnWidth(subscriptionColumn, 51.0, Unit.PX);
-		revenue.setColumnWidth(iapColumn, 51.0, Unit.PX);
-		revenue.setColumnWidth(totalColumn, 51.0, Unit.PX);
 	}
 
 	/*
@@ -233,12 +231,12 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	protected void onAttach() {
 		super.onAttach();
 
-		register(EventController.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		// register(EventController.get().addHandlerToSource(SearchForItemEventHandler.TYPE, ItemController.get(), this));
-		register(EventController.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
-		register(EventController.get().addHandlerToSource(GetItemRanksEventHandler.TYPE, RankController.get(), this));
-		register(EventController.get().addHandlerToSource(GetItemSalesRanksEventHandler.TYPE, RankController.get(), this));
-		register(EventController.get().addHandlerToSource(GetLinkedAccountItemEventHandler.TYPE, LinkedAccountController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(GetItemRanksEventHandler.TYPE, RankController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(GetItemSalesRanksEventHandler.TYPE, RankController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(GetLinkedAccountItemEventHandler.TYPE, LinkedAccountController.get(), this));
 
 	}
 
@@ -250,53 +248,76 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	 */
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
-		if (current != null && PageType.ItemPageType.equals(current.getPage())) {
-			if (VIEW_ACTION_NAME.equals(current.getAction())) {
+		if (isValidStack(current)) {
 
-				String newInternalId = current.getParameter(0);
-				boolean isNewDataRequired = false;
+			comingPage = current.getParameter(2);
 
-				if (internalId == null || !internalId.equals(newInternalId)) {
-					isNewDataRequired = true;
+			String newInternalId = current.getParameter(0);
+			boolean isNewDataRequired = false;
 
-					internalId = newInternalId;
+			// Item changed
+			if (internalId == null || !internalId.equals(newInternalId)) {
+				isNewDataRequired = true;
 
-					if ((item = ItemController.get().lookupItem(internalId)) != null) {
-						displayItemDetails(null);
-					} else {
-						item = new Item();
-						item.internalId = internalId;
-						item.source = FilterController.get().getFilter().getStoreA3Code();
+				internalId = newInternalId;
 
-						// AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Getting details",
-						// " - This will only take a few seconds...",
-						// false).setVisible(true);
+				if ((item = ItemController.get().lookupItem(internalId)) != null) {
+					item.source = StoreController.get().getStore(FilterController.get().getFilter().getStoreA3Code()).a3Code;
+					displayItemDetails(null);
+				} else {
+					// Coming from a refresh page
+					item = new Item();
+					item.internalId = internalId;
+					item.source = StoreController.get().getStore(FilterController.get().getFilter().getStoreA3Code()).a3Code;
+				}
+			}
 
-						// TODO: reset all fields
-					}
+			Filter newFilter = FilterController.get().getFilter();
+			String newFilterContents = newFilter.asItemFilterString();
+
+			if (filterContents == null || !filterContents.equals(newFilterContents)) {
+				filterContents = newFilterContents;
+
+				RankingType newRankingType = RankingType.fromString(newFilter.getListType());
+				if (rankingType == null || rankingType != newRankingType) {
+					rankingType = newRankingType;
 				}
 
-				Filter newFilter = FilterController.get().getFilter();
-				String newFilterContents = newFilter.asItemFilterString();
+				isNewDataRequired = true;
+			}
 
-				if (filterContents == null || !filterContents.equals(newFilterContents)) {
-					filterContents = newFilterContents;
+			switch (newFilter.getListType()) {
+			case (FilterController.FREE_LIST_TYPE):
+				rankingLink.setText("Free rank");
+				break;
+			case (FilterController.PAID_LIST_TYPE):
+				rankingLink.setText("Paid rank");
+				break;
+			case (FilterController.GROSSING_LIST_TYPE):
+				rankingLink.setText("Grossing rank");
+				break;
+			default:
+				rankingLink.setText("Rank");
+				break;
+			}
 
-					RankingType newRankingType = RankingType.fromString(newFilter.getListType());
-					if (rankingType == null || rankingType != newRankingType) {
-						rankingType = newRankingType;
-					}
+			// revenueLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
+			// REVENUE_CHART_TYPE, comingPage, filterContents));
+			// downloadsLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
+			// DOWNLOADS_CHART_TYPE, comingPage, filterContents));
+			rankingLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
+					RANKING_CHART_TYPE, comingPage, filterContents));
 
-					isNewDataRequired = true;
-				}
+			boolean showAllData = true;
+			if (!SessionController.get().isLoggedInUserAdmin() && !MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage)) {
+				setRevenueDownloadTabsEnabled(false);
+				showAllData = false;
+			} else {
+				setRevenueDownloadTabsEnabled(true);
+			}
 
-				mRevenue.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(VIEW_ACTION_NAME, internalId, REVENUE_CHART_TYPE, filterContents));
-				mDownloads
-						.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(VIEW_ACTION_NAME, internalId, DOWNLOADS_CHART_TYPE, filterContents));
-				mRanking.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(VIEW_ACTION_NAME, internalId, RANKING_CHART_TYPE, filterContents));
-
-				mTopPanel.updateFromFilter();
-
+			if (showAllData || (!showAllData && current.getParameter(1).equals(RANKING_CHART_TYPE))) {
+				topPanel.updateFromFilter();
 				String newSelectedTab = current.getParameter(SELECTED_TAB_PARAMETER_INDEX);
 				boolean isNewSelectedTab = false;
 				if (selectedTab == null || !selectedTab.equals(newSelectedTab)) {
@@ -304,49 +325,55 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 					refreshTabs();
 					isNewSelectedTab = true;
 				}
-
 				dataType = YAxisDataType.fromString(selectedTab);
 				historyChart.setDataType(dataType);
-
 				if (isNewSelectedTab && !isNewDataRequired) {
 					historyChart.drawData();
 				}
-
 				if (isNewDataRequired) {
 					setLoadingSpinnerEnabled(true);
-					mSidePanel.setPriceInnerHTML("-");
-					mSidePanel.setLoaderVisible(true);
+					sidePanel.setPriceInnerHTML(null);
 					getHistoryChartData();
 				}
-
 				Element chartBackgroundElem = historyChart.getElement().getFirstChildElement().getFirstChildElement().getFirstChildElement()
 						.getFirstChildElement().getNextSiblingElement().getFirstChildElement().getFirstChildElement();
 				if (chartBackgroundElem != null) {
 					chartBackgroundElem.getStyle().setProperty("background",
 							"repeating-linear-gradient(180deg, #FAFAFA, #FAFAFA 50px, #FFFFFF 50px,#FFFFFF 100px)");
 				}
-
-				// AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.SuccessAlertBoxType, false, "Item",
-				// " - Normally we would display items details for (" + view + ").", false).setVisible(true);
-
-			} else {
-				// AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.DangerAlertBoxType, false, "Item", " - We did not find the requrested item!", false)
-				// .setVisible(true);
-
-				PageType.RanksPageType.show(VIEW_ACTION_NAME, OVERALL_LIST_TYPE, FilterController.get().asRankFilterString());
 			}
-		}
 
+			// AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.SuccessAlertBoxType, false, "Item",
+			// " - Normally we would display items details for (" + view + ").", false).setVisible(true);
+
+		} else {
+			// AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.DangerAlertBoxType, false, "Item", " - We did not find the requrested item!", false)
+			// .setVisible(true);
+
+			PageType.RanksPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, OVERALL_LIST_TYPE, FilterController.get().asRankFilterString());
+		}
+	}
+
+	private boolean isValidStack(Stack current) {
+		return (current != null
+				&& current.getParameterCount() >= 4
+				&& PageType.ItemPageType.equals(current.getPage())
+				&& NavigationController.VIEW_ACTION_PARAMETER_VALUE.equals(current.getAction())
+				&& current.getParameter(0).matches("[0-9]+")
+				&& (current.getParameter(1).equals(REVENUE_CHART_TYPE) || current.getParameter(1).equals(DOWNLOADS_CHART_TYPE) || current.getParameter(1)
+						.equals(RANKING_CHART_TYPE))
+				&& (current.getParameter(2).equals(RanksPage.COMING_FROM_PARAMETER) || current.getParameter(2).equals(MyAppsPage.COMING_FROM_PARAMETER)) && current
+				.getParameter(3).startsWith(FilterController.ITEM_FILTER_KEY));
 	}
 
 	private void displayItemDetails(Rank rank) {
 
-		mSidePanel.setItem(item);
+		sidePanel.setItem(item);
 
 		if (rank != null) {
-			mSidePanel.setPrice(rank.currency, rank.price);
+			sidePanel.setPrice(rank.currency, rank.price);
 		} else {
-			mSidePanel.setPriceInnerHTML("-");
+			sidePanel.setPriceInnerHTML(null);
 		}
 	}
 
@@ -404,11 +431,11 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	// }
 
 	private void refreshTabs() {
-		for (String key : mTabs.keySet()) {
-			mTabs.get(key).removeClassName("active");
+		for (String key : tabs.keySet()) {
+			tabs.get(key).removeClassName("active");
 		}
 
-		mTabs.get(selectedTab).addClassName("active");
+		tabs.get(selectedTab).addClassName("active");
 	}
 
 	/*
@@ -421,8 +448,9 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public void getItemRanksSuccess(GetItemRanksRequest input, GetItemRanksResponse output) {
 		if (output != null && output.status == StatusType.StatusTypeSuccess) {
-			if (output.ranks != null && output.ranks.size() > 0) {
-				item = output.item;
+			if (output.ranks != null && output.ranks.size() > 0 && output.item != null) {
+
+				setItemInfo(output.item);
 
 				displayItemDetails(output.ranks.get(0));
 
@@ -434,13 +462,11 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 				// mAlertBox.dismiss();
 			} else {
-				mSidePanel.setLoaderVisible(false);
-				mSidePanel.setPriceInnerHTML("-");
+				sidePanel.setPriceInnerHTML("-");
 				setLoadingSpinnerEnabled(false);
 			}
 		} else {
-			mSidePanel.setLoaderVisible(false);
-			mSidePanel.setPriceInnerHTML("-");
+			sidePanel.setPriceInnerHTML("-");
 			setLoadingSpinnerEnabled(false);
 		}
 		preloader.hide();
@@ -456,8 +482,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	 */
 	@Override
 	public void getItemRanksFailure(GetItemRanksRequest input, Throwable caught) {
-		mSidePanel.setLoaderVisible(false);
-		mSidePanel.setPriceInnerHTML("-");
+		preloader.hide();
+		sidePanel.setPriceInnerHTML("-");
 		setLoadingSpinnerEnabled(false);
 
 	}
@@ -466,9 +492,17 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		if (item != null) {
 			historyChart.setLoading(true);
 			preloader.show(true);
+			RankController.get().cancelRequestItemRanks();
+			RankController.get().cancelRequestItemSalesRanks();
 			if (LinkedAccountController.get().getLinkedAccountItem(item) != null) {
-				RankController.get().fetchItemSalesRanks(item);
+				if (MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage)) {
+					RankController.get().fetchItemSalesRanks(item);
+				} else {
+					RankController.get().fetchItemRanks(item);
+				}
 			}
+		} else {
+			// item == null
 		}
 	}
 
@@ -480,7 +514,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
 		if (NavigationController.get().getCurrentPage() == PageType.ItemPageType) {
-			PageType.ItemPageType.show(VIEW_ACTION_NAME, internalId, selectedTab, FilterController.get().asItemFilterString());
+			PageType.ItemPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId, selectedTab, comingPage, FilterController.get()
+					.asItemFilterString());
 		}
 	}
 
@@ -492,7 +527,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {
 		if (NavigationController.get().getCurrentPage() == PageType.ItemPageType) {
-			PageType.ItemPageType.show(VIEW_ACTION_NAME, internalId, selectedTab, FilterController.get().asItemFilterString());
+			PageType.ItemPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId, selectedTab, comingPage, FilterController.get()
+					.asItemFilterString());
 		}
 	}
 
@@ -505,8 +541,9 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public void getItemSalesRanksSuccess(GetItemSalesRanksRequest input, GetItemSalesRanksResponse output) {
 		if (output != null && output.status == StatusType.StatusTypeSuccess) {
-			if (output.ranks != null && output.ranks.size() > 0) {
-				item = output.item;
+			if (output.ranks != null && output.ranks.size() > 0 && output.item != null) {
+
+				setItemInfo(output.item);
 
 				displayItemDetails(output.ranks.get(0));
 
@@ -517,13 +554,11 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				historyChart.setData(output.item, output.ranks);
 
 			} else {
-				mSidePanel.setLoaderVisible(false);
-				mSidePanel.setPriceInnerHTML("-");
+				sidePanel.setPriceInnerHTML("-");
 				setLoadingSpinnerEnabled(false);
 			}
 		} else {
-			mSidePanel.setLoaderVisible(false);
-			mSidePanel.setPriceInnerHTML("-");
+			sidePanel.setPriceInnerHTML("-");
 			setLoadingSpinnerEnabled(false);
 		}
 		preloader.hide();
@@ -538,8 +573,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public void getItemSalesRanksFailure(GetItemSalesRanksRequest input, Throwable caught) {
 		preloader.hide();
-		mSidePanel.setLoaderVisible(false);
-		mSidePanel.setPriceInnerHTML("-");
+		sidePanel.setPriceInnerHTML("-");
 		setLoadingSpinnerEnabled(false);
 	}
 
@@ -551,15 +585,20 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	 */
 	@Override
 	public void getLinkedAccountItemSuccess(GetLinkedAccountItemRequest input, GetLinkedAccountItemResponse output) {
-		if (item != null && input.item.internalId.equals(item.internalId) && output.status == StatusType.StatusTypeSuccess) {
-			if (output.item == null) {
+		if (output.status == StatusType.StatusTypeSuccess) {
+			if (output.item == null) { // Not my app
 				RankController.get().fetchItemRanks(item);
 			} else {
-				RankController.get().fetchItemSalesRanks(item);
+				setItemInfo(output.item);
+				sidePanel.setItem(item);
+				if (MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage)) {
+					RankController.get().fetchItemSalesRanks(item);
+				} else {
+					RankController.get().fetchItemRanks(item);
+				}
 			}
 		} else {
-			mSidePanel.setLoaderVisible(false);
-			mSidePanel.setPriceInnerHTML("-");
+			sidePanel.setPriceInnerHTML("-");
 			preloader.hide();
 			setLoadingSpinnerEnabled(false);
 		}
@@ -574,9 +613,57 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public void getLinkedAccountItemFailure(GetLinkedAccountItemRequest input, Throwable caught) {
 		preloader.hide();
-		mSidePanel.setLoaderVisible(false);
-		mSidePanel.setPriceInnerHTML("-");
+		sidePanel.setPriceInnerHTML("-");
 		setLoadingSpinnerEnabled(false);
+	}
+
+	private void setItemInfo(Item i) {
+		if (i.name != null) {
+			item.name = i.name;
+		}
+		if (i.creatorName != null) {
+			item.creatorName = i.creatorName;
+		}
+		if (i.largeImage != null) {
+			item.largeImage = i.largeImage;
+		}
+	}
+
+	private void setRevenueDownloadTabsEnabled(boolean enable) {
+		if (enable) {
+			revenueLink.setHTML("Revenue");
+			revenueLink.getElement().getStyle().setColor("#0e0e1f");
+			revenueLink.getElement().getStyle().setCursor(Cursor.POINTER);
+			revenueItem.getStyle().setCursor(Cursor.DEFAULT);
+			downloadsLink.setHTML("Downloads");
+			downloadsLink.getElement().getStyle().setColor("#0e0e1f");
+			downloadsLink.getElement().getStyle().setCursor(Cursor.POINTER);
+			downloadsItem.getStyle().setCursor(Cursor.DEFAULT);
+			revenueLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
+					REVENUE_CHART_TYPE, comingPage, filterContents));
+			downloadsLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
+					DOWNLOADS_CHART_TYPE, comingPage, filterContents));
+			tabs.put(REVENUE_CHART_TYPE, revenueItem);
+			tabs.put(DOWNLOADS_CHART_TYPE, downloadsItem);
+		} else {
+			revenueLink.setHTML("Revenue" + comingSoon);
+			revenueLink.getElement().getStyle().setColor("lightgrey");
+			revenueLink.getElement().getStyle().setCursor(Cursor.DEFAULT);
+			revenueItem.getStyle().setCursor(Cursor.DEFAULT);
+			downloadsLink.setHTML("Downloads" + comingSoon);
+			downloadsLink.getElement().getStyle().setColor("lightgrey");
+			downloadsLink.getElement().getStyle().setCursor(Cursor.DEFAULT);
+			downloadsItem.getStyle().setCursor(Cursor.DEFAULT);
+			revenueLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
+			downloadsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
+			for (String key : tabs.keySet()) {
+				tabs.get(key).removeClassName("active");
+			}
+			tabs.get(RANKING_CHART_TYPE).addClassName("active");
+			tabs.remove(REVENUE_CHART_TYPE);
+			tabs.remove(DOWNLOADS_CHART_TYPE);
+
+		}
 	}
 
 }

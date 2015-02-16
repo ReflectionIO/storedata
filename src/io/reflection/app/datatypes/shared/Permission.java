@@ -61,4 +61,24 @@ public class Permission extends DataType {
 			}
 		}
 	}
+
+	public Permission type(PermissionTypeType type) {
+		this.type = type;
+		return this;
+	}
+
+	public Permission name(String name) {
+		this.name = name;
+		return this;
+	}
+
+	public Permission description(String description) {
+		this.description = description;
+		return this;
+	}
+
+	public Permission code(String code) {
+		this.code = code;
+		return this;
+	}
 }

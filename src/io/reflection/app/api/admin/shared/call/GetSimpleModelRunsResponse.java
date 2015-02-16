@@ -66,4 +66,14 @@ public class GetSimpleModelRunsResponse extends Response {
 			}
 		}
 	}
+
+	public GetSimpleModelRunsResponse simpleModelRuns(List<SimpleModelRun> simpleModelRuns) {
+		this.simpleModelRuns = simpleModelRuns;
+		return this;
+	}
+
+	public GetSimpleModelRunsResponse pager(Pager pager) {
+		this.pager = pager;
+		return this;
+	}
 }

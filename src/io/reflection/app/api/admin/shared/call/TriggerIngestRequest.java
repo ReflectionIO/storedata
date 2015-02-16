@@ -97,4 +97,29 @@ public class TriggerIngestRequest extends Request {
 			}
 		}
 	}
+
+	public TriggerIngestRequest country(Country country) {
+		this.country = country;
+		return this;
+	}
+
+	public TriggerIngestRequest store(Store store) {
+		this.store = store;
+		return this;
+	}
+
+	public TriggerIngestRequest category(Category category) {
+		this.category = category;
+		return this;
+	}
+
+	public TriggerIngestRequest listTypes(List<String> listTypes) {
+		this.listTypes = listTypes;
+		return this;
+	}
+
+	public TriggerIngestRequest code(Long code) {
+		this.code = code;
+		return this;
+	}
 }

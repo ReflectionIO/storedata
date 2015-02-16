@@ -10,11 +10,13 @@ package io.reflection.app.client.page;
 import io.reflection.app.client.page.admin.CategoriesPage;
 import io.reflection.app.client.page.admin.DataAccountFetchesPage;
 import io.reflection.app.client.page.admin.DataAccountsPage;
-import io.reflection.app.client.page.admin.EmailTemplatePage;
+import io.reflection.app.client.page.admin.EventPage;
+import io.reflection.app.client.page.admin.EventSubscriptionsPage;
 import io.reflection.app.client.page.admin.FeedBrowserPage;
 import io.reflection.app.client.page.admin.ItemsPage;
 import io.reflection.app.client.page.admin.PermissionsPage;
 import io.reflection.app.client.page.admin.RolesPage;
+import io.reflection.app.client.page.admin.SendNotificationPage;
 import io.reflection.app.client.page.admin.SimpleModelRunsPage;
 import io.reflection.app.client.page.admin.UsersPage;
 import io.reflection.app.client.page.blog.EditPostPage;
@@ -27,6 +29,7 @@ import io.reflection.app.client.page.forum.ForumPage;
 import io.reflection.app.client.page.forum.TopicPage;
 import io.reflection.app.client.page.test.WidgetTestPage;
 import io.reflection.app.datatypes.shared.Permission;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -56,7 +59,7 @@ public enum PageType {
 	ChangePasswordPageType("changepassword", true),
 	DataAccountFetchesPageType("dataaccountfetches", "MDF"),
 	DataAccountsPageType("dataaccounts", "MDA"),
-	EmailTemplatesPageType("emailtemplates", "MET"),
+	EventsPageType("events", DataTypeHelper.PERMISSION_MANAGE_EVENTS_CODE),
 	FeedBrowserPageType("feedbrowser", "MFF"),
 	ForgotPasswordPageType("forgotpassword", false),
 	ForumEditTopicPageType("forumtopicedit", false),
@@ -81,8 +84,12 @@ public enum PageType {
 	SimpleModelRunPageType("simplemodelrun", "MSM"),
 	TermsPageType("terms", false),
 	UpgradePageType("upgrade", true),
-	UsersPageType("users", "MUS"),
+	UsersPageType("users", DataTypeHelper.PERMISSION_MANAGE_USERS_CODE),
 	WidgetTestPage("test", false),
+	NotificationsPageType("notifications", true),
+	SendNotificationPageType("sendnotification", DataTypeHelper.PERMISSION_SEND_NOTIFICATIONS_CODE),
+	EventSubscriptionsPageType("eventsubscriptions", DataTypeHelper.PERMISSION_MANAGE_EVENT_SUBSCRIPTIONS_CODE),
+	EditEventSubscriptionPageType("editeventsubscription", DataTypeHelper.PERMISSION_MANAGE_EVENT_SUBSCRIPTIONS_CODE),
 
 	// Non navigable
 	LoadingPageType("loading"), ;
@@ -259,8 +266,8 @@ public enum PageType {
 		case MyAppsPageType:
 			page = new MyAppsPage();
 			break;
-		case EmailTemplatesPageType:
-			page = new EmailTemplatePage();
+		case EventsPageType:
+			page = new EventPage();
 			break;
 		case ForgotPasswordPageType:
 			page = new ForgotPasswordPage();
@@ -307,13 +314,27 @@ public enum PageType {
 		case ForumEditTopicPageType:
 			page = new EditTopicPage();
 			break;
+		case NotificationsPageType:
+			page = new NotificationsPage();
+			break;
+		case EventSubscriptionsPageType:
+			page = new EventSubscriptionsPage();
+			break;
+		case SendNotificationPageType:
+			page = new SendNotificationPage();
+			break;
 		case HomePageType:
 		default:
 			if (defaultPage == null) {
 				defaultPage = new HomePage();
+				defaultPage.setPageType(this);
 			}
 			page = defaultPage;
 			break;
+		}
+
+		if (page != defaultPage) {
+			page.setPageType(this);
 		}
 
 		return page;

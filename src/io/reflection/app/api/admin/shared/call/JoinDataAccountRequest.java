@@ -37,4 +37,9 @@ public class JoinDataAccountRequest extends Request {
 			}
 		}
 	}
+
+	public JoinDataAccountRequest dataAccount(DataAccount dataAccount) {
+		this.dataAccount = dataAccount;
+		return this;
+	}
 }

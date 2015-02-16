@@ -162,4 +162,69 @@ public class Rank extends DataType {
 			}
 		}
 	}
+
+	public Rank category(Category category) {
+		this.category = category;
+		return this;
+	}
+
+	public Rank position(Integer position) {
+		this.position = position;
+		return this;
+	}
+
+	public Rank grossingPosition(Integer grossingPosition) {
+		this.grossingPosition = grossingPosition;
+		return this;
+	}
+
+	public Rank itemId(String itemId) {
+		this.itemId = itemId;
+		return this;
+	}
+
+	public Rank type(String type) {
+		this.type = type;
+		return this;
+	}
+
+	public Rank country(String country) {
+		this.country = country;
+		return this;
+	}
+
+	public Rank date(Date date) {
+		this.date = date;
+		return this;
+	}
+
+	public Rank source(String source) {
+		this.source = source;
+		return this;
+	}
+
+	public Rank price(Float price) {
+		this.price = price;
+		return this;
+	}
+
+	public Rank currency(String currency) {
+		this.currency = currency;
+		return this;
+	}
+
+	public Rank code(Long code) {
+		this.code = code;
+		return this;
+	}
+
+	public Rank revenue(Float revenue) {
+		this.revenue = revenue;
+		return this;
+	}
+
+	public Rank downloads(Integer downloads) {
+		this.downloads = downloads;
+		return this;
+	}
 }

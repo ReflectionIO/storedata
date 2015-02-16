@@ -14,7 +14,9 @@ import io.reflection.app.api.core.shared.call.event.GetCategoriesEventHandler.Ge
 import io.reflection.app.api.core.shared.call.event.GetCategoriesEventHandler.GetCategoriesSuccess;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.datatypes.shared.Category;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,7 +84,7 @@ public class CategoryController extends AsyncDataProvider<Category> implements S
 		}
 		input.pager = pager;
 
-		input.store = StoreController.get().getStore("ios");
+		input.store = StoreController.get().getStore(DataTypeHelper.IOS_STORE_A3);
 
 		service.getCategories(input, new AsyncCallback<GetCategoriesResponse>() {
 
@@ -109,12 +111,12 @@ public class CategoryController extends AsyncDataProvider<Category> implements S
 									Math.min(input.pager.start.intValue() + input.pager.count.intValue(), pager.totalCount.intValue())));
 				}
 
-				EventController.get().fireEventFromSource(new GetCategoriesSuccess(input, output), CategoryController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetCategoriesSuccess(input, output), CategoryController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				EventController.get().fireEventFromSource(new GetCategoriesFailure(input, caught), CategoryController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetCategoriesFailure(input, caught), CategoryController.this);
 			}
 
 		});
