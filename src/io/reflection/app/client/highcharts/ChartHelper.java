@@ -132,23 +132,22 @@ public class ChartHelper {
 		chart.getLegendOption().setEnabled(false); // Disable legend
 		chart.getTitleOption().setText(null); // Disable title
 		chart.getTooltipOption()
-				.setUseHTML(false)
+				.setUseHTML(true)
 				.setShadow(false)
 				.setBackgroundColor("#ffffff")
 				.setBorderColor("#ffffff")
 				.setBorderWidth(0)
 				.setValueDecimals(0)
 				.setCrosshairs(true)
-				.setStyle(getDefaultTooltipStyle())
 				.setDateTimeLabelFormats(getDefaultTooltipDateTimeLabelFormat())
 				.setHeaderFormat(
-						"<span style=\"font-size: 10px; font-weight: bold; color: #81879d; font-family: \"Lato\", sans-serif;\">{point.key}</span><br/><br/>")
+						"<span style=\"font-size: 10px; line-height: 30px; font-weight: bold; color: #81879d; font-family: \"Lato\", sans-serif;\">{point.key}</span><br/>")
 				.setPointFormat("<span style=\"font-size: 18px; font-weight: regular; color: #363a47; font-family: \"Lato\", sans-serif;\">{point.y}</span>");
 		chart.getXAxis().setType(Axis.TYPE_DATETIME).setDateTimeLabelFormats(getDefaultAxisDateTimeLabelFormat()).setTickWidth(0).setTickInterval(86400000)
 				.setShowFirstLabel(false).setShowLastLabel(false).setLabelsStyle(getDefaultAxisStyle()).setLabelsY(30).setStartOnTick(false)
-				.setEndOnTick(false).setMinPadding(0).setMaxPadding(0).setMinorGridLineWidth(0).setLineColor("#e5e5e5").setLabelsMaxStaggerLines(2);
+				.setEndOnTick(false).setMinPadding(0).setMaxPadding(0).setMinorGridLineWidth(0).setLineColor("#e5e5e5").setLabelsMaxStaggerLines(1);
 		chart.getYAxis().setAllowDecimals(false).setTitleText(null).setOffset(-30).setLabelsY(-7).setLabelsStyle(getDefaultAxisStyle()).setShowLastLabel(false)
-				.setLabelsAlign("left");
+				.setLabelsAlign("left").setGridLineColor("#e1e5e8");;
 	}
 
 	public static JsArrayNumber createMarginsArray(int marginTop, int marginRight, int marginBottom, int marginLeft) {
@@ -213,6 +212,27 @@ public class ChartHelper {
 		}
 	}-*/;
 
+	public static native JavaScriptObject getNativeTooltipFormatter() /*-{
+		return function() {
+			return '<div class=\"pippo\"><span style=\"font-size: 10px; font-weight: bold; color: #81879d; font-family: \"Lato\", sans-serif;\">'
+					+ $wnd.Highcharts.dateFormat('%e %b %Y', this.x, true)
+					+ '</span><br/><span style=\"font-size: 18px; font-weight: regular; color: #363a47; font-family: \"Lato\", sans-serif;\">'
+					+ this.y + '</span></div>';
+		}
+	}-*/;
+
+	public static native JavaScriptObject getNativeTooltipFormatter(String currency) /*-{
+		return function() {
+			return '<div class=\"pippo\"><span style=\"font-size: 10px; font-weight: bold; color: #81879d; font-family: \"Lato\", sans-serif;\">'
+					+ $wnd.Highcharts.dateFormat('%e %b %Y', this.x, true)
+					+ '</span><br/><span style=\"font-size: 18px; font-weight: regular; color: #363a47; font-family: \"Lato\", sans-serif;\">'
+					+ currency
+					+ ' '
+					+ $wnd.Highcharts.numberFormat(this.y, 0, '.', ',')
+					+ '</span></div>';
+		}
+	}-*/;
+
 	public static JavaScriptObject getDefaultAxisStyle() {
 		HashMap<String, Object> styleValues = new HashMap<String, Object>();
 		styleValues.put("fontSize", "12px");
@@ -222,13 +242,11 @@ public class ChartHelper {
 		return getJSObjectFromMap(styleValues);
 	}
 
-	public static JavaScriptObject getDefaultTooltipStyle() {
-		HashMap<String, Object> styleValues = new HashMap<String, Object>();
-		styleValues.put("padding", 14);
-		styleValues.put("width", 300);
-		styleValues.put("boxShadow", "0px 0px 20px #888888");
-		return getJSObjectFromMap(styleValues);
-	}
+	// public static JavaScriptObject getDefaultTooltipStyle() {
+	// HashMap<String, Object> styleValues = new HashMap<String, Object>();
+	// styleValues.put("padding", 14);
+	// return getJSObjectFromMap(styleValues);
+	// }
 
 	public static JavaScriptObject getDefaultLoadingStyle() {
 		HashMap<String, Object> styleValues = new HashMap<String, Object>();

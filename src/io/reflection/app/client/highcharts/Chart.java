@@ -306,7 +306,7 @@ public class Chart extends Composite {
 		int yMin = Integer.MAX_VALUE;
 		int yMax = 0;
 		getTooltipOption().setValuePrefix(currency + " ");
-		getYAxis().setReversed(false).setLabelsFormatter(ChartHelper.getNativeLabelFormatter(currency + " ", ""));
+		getYAxis().setReversed(false).setLabelsFormatter(ChartHelper.getNativeLabelFormatter(currency, ""));
 		if (NativeChart.nativeGet(chart, "downloads") != null) {
 			NativeSeries.nativeHide(NativeChart.nativeGet(chart, "downloads"));
 		}
