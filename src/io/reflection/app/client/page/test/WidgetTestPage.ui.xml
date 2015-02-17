@@ -1,37 +1,41 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part">
-    <ui:style gss="true">
-    .moveDown {
-    	margin-top: 10px;
-    }
-    
-    .padBottom {
-    	padding-bottom: 1000px;
-    }
-    </ui:style>
-    <g:HTMLPanel>
-        <div class="container {style.padBottom}">
-            <h2>Widget Testing</h2>
-            <p>This is our widget testing page... Developers will drop widgets here to test their layout before using it on the site pages.</p>
-            <p>Reflection.io dev team :)</p>
-            
-            <p:DateSelector ui:field="dateSelector"/>
 
-            <p:DateRangePicker ui:field="picker1" />
+	<ui:style gss="true">
+	.moveDown {
+		margin-top: 10px;
+	}
+	
+	.padBottom {
+		padding-bottom: 1000px;
+	}
+	</ui:style>
+	<g:HTMLPanel>
+		<div class="container {style.padBottom}">
+			<h2>Widget Testing</h2>
+			<p>This is our widget testing page... Developers will drop widgets here to test their layout before using it on the site pages.</p>
+			<p>Reflection.io dev team :)</p>
 
-            <g:FormPanel styleName="form {style.moveDown}">
-                <g:HTMLPanel>
-                    <div class="form-group col-sm-3">
-                        <div class="input-group ">
-                            <p:DateRangeBox styleName="form-control" ui:field="dateRange" />
+			<p:DateSelector ui:field="dateSelector" />
 
-                            <span class="input-group-addon">
-                                <i class="icon-calendar"></i>
-                            </span>
-                        </div>
-                    </div>
-                </g:HTMLPanel>
-            </g:FormPanel>
-        </div>
-    </g:HTMLPanel>
+			<p:DateRangePicker ui:field="picker1" />
+
+			<g:FormPanel styleName="form {style.moveDown}">
+				<g:HTMLPanel>
+					<div class="form-group col-sm-3">
+						<div class="input-group ">
+							<p:DateRangeBox styleName="form-control" ui:field="dateRange" />
+
+							<span class="input-group-addon">
+								<i class="icon-calendar"></i>
+							</span>
+						</div>
+					</div>
+				</g:HTMLPanel>
+			</g:FormPanel>
+
+			<div ui:field="a"></div>
+
+		</div>
+	</g:HTMLPanel>
 </ui:UiBinder>

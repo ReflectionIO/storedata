@@ -67,7 +67,7 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 	Element picture2, source3, source4;
 	Element picture3, source5, source6;
 
-	private static final LinkElement cssCustom = DOMHelper.getCssLinkFromUrl("css/landing.442f4ad718c6f2a15a2bb8413e83b3b8.css");
+	private static final LinkElement cssCustom = DOMHelper.getCssLinkFromUrl("css/landing.4558cf20de42726e67d1198a55000c47.css");
 
 	private static final LinkElement cssCustomIE8 = DOMHelper.getCssLinkFromUrl("css/landing-ie8.659484547a4409f243a1bb7d085c2c52.css");
 	private static final LinkElement cssCustomIE9 = DOMHelper.getCssLinkFromUrl("css/landing-ie9.42a5a45361f9f95fe006be82a699c864.css");
@@ -200,13 +200,13 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 		picture3 = DOM.createElement("picture");
 
 		source5 = DOM.createElement("source");
-		source5.setAttribute("srcset", "images/screenshots/App_Page.png");
+		source5.setAttribute("srcset", "images/screenshots/App_Page-v2.png");
 		source5.setAttribute("media", "(min-width: 720px)");
 
 		source6 = DOM.createElement("source");
 		source6.setAttribute("srcset", "images/screenshots/App_Page_Mobile.png");
 
-		Image img = new Image("images/screenshots/App_Page.png");
+		Image img = new Image("images/screenshots/App_Page-v2.png");
 		img.setAltText("Analysis screenshot");
 
 		picture3.appendChild(source5);
