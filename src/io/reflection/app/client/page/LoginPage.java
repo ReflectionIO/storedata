@@ -104,6 +104,10 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
 
+		if (SessionController.get().getLastUserEmail() != null) {
+			mLoginForm.setUsername(SessionController.get().getLastUserEmail());
+		}
+
 		if (current != null && current.hasAction()) {
 			if (WELCOME_ACTION_NAME.equals(current.getAction())) { // If action == 'welcome', show the Welcome panel
 				mWelcomePanel.setVisible(true);
