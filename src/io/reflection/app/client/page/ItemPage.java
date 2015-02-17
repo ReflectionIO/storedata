@@ -35,6 +35,10 @@ import io.reflection.app.client.controller.StoreController;
 import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.FormattingHelper;
+import io.reflection.app.client.highcharts.Chart;
+import io.reflection.app.client.highcharts.ChartHelper;
+import io.reflection.app.client.highcharts.ChartHelper.RankType;
+import io.reflection.app.client.highcharts.ChartHelper.YDataType;
 import io.reflection.app.client.page.part.ItemChart;
 import io.reflection.app.client.page.part.ItemChart.RankingType;
 import io.reflection.app.client.page.part.ItemChart.YAxisDataType;
@@ -65,6 +69,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
@@ -100,7 +105,9 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	private String comingPage;
 
 	private RankingType rankingType;
-	private YAxisDataType dataType;
+	private RankType rankType;
+	private YAxisDataType dataType; // TODO OLD CHART DATA TYPE TO DELETE
+	private YDataType yDataType;
 	private Item item;
 
 	private Map<String, LIElement> tabs = new HashMap<String, LIElement>();
@@ -111,6 +118,10 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 	private ItemRevenue itemRevenuePlaceholder = new ItemRevenue();
 	private List<ItemRevenue> tablePlaceholder = new ArrayList<ItemRevenue>();
+
+	@UiField HTMLPanel chartContainer;
+
+	private Chart chart;
 
 	public ItemPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -238,6 +249,10 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		register(DefaultEventBus.get().addHandlerToSource(GetItemSalesRanksEventHandler.TYPE, RankController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(GetLinkedAccountItemEventHandler.TYPE, LinkedAccountController.get(), this));
 
+		if (chart == null) {
+			chart = ChartHelper.createAndInjectChart(chartContainer);
+		}
+
 	}
 
 	/*
@@ -282,7 +297,10 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				if (rankingType == null || rankingType != newRankingType) {
 					rankingType = newRankingType;
 				}
-
+				RankType newRankType = RankType.fromString(newFilter.getListType());
+				if (rankType == null || rankType != newRankType) {
+					rankType = newRankType;
+				}
 				isNewDataRequired = true;
 			}
 
@@ -326,9 +344,12 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 					isNewSelectedTab = true;
 				}
 				dataType = YAxisDataType.fromString(selectedTab);
+				yDataType = YDataType.fromString(selectedTab);
 				historyChart.setDataType(dataType);
+				chart.setDataType(yDataType);
 				if (isNewSelectedTab && !isNewDataRequired) {
 					historyChart.drawData();
+					chart.drawData();
 				}
 				if (isNewDataRequired) {
 					setLoadingSpinnerEnabled(true);
@@ -454,6 +475,10 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 				displayItemDetails(output.ranks.get(0));
 
+				chart.setRankingType(rankType);
+				chart.setDataType(yDataType);
+				chart.setData(output.ranks);
+
 				historyChart.setMode(rankingType);
 				historyChart.setDataType(dataType);
 
@@ -491,6 +516,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	private void getHistoryChartData() {
 		if (item != null) {
 			historyChart.setLoading(true);
+			chart.setLoading(true);
 			preloader.show(true);
 			RankController.get().cancelRequestItemRanks();
 			RankController.get().cancelRequestItemSalesRanks();
@@ -548,6 +574,11 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				displayItemDetails(output.ranks.get(0));
 
 				historyChart.setMode(RankingType.PositionRankingType);
+
+				chart.setRankingType(RankType.PositionRankingType);
+				chart.setDataType(yDataType);
+				chart.setData(output.ranks);
+
 				historyChart.setDataType(dataType);
 
 				// redraw the graph with the new data
