@@ -104,8 +104,8 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
 
-		if (SessionController.get().getLastUserEmail() != null) {
-			mLoginForm.setUsername(SessionController.get().getLastUserEmail());
+		if (SessionController.get().getLastUsername() != null) {
+			mLoginForm.setUsername(SessionController.get().getLastUsername());
 		}
 
 		if (current != null && current.hasAction()) {

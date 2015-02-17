@@ -59,7 +59,6 @@ import java.util.Map;
 import com.google.gwt.i18n.client.TimeZone;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.datepicker.client.CalendarUtil;
 import com.willshex.gson.json.service.client.JsonService;
 import com.willshex.gson.json.service.client.JsonServiceCallEventHandler;
 import com.willshex.gson.json.service.shared.Error;
@@ -168,10 +167,8 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 
 		if (mSession != null) {
 			Cookies.setCookie(COOKIE_KEY_TOKEN, mSession.token, mSession.expires);
-			Date nextYear = new Date();
-			CalendarUtil.addMonthsToDate(nextYear, 12);
 			if (mSession.user != null && mSession.user.username != null) {
-				Cookies.setCookie(COOKIE_KEY_LAST_USER, mSession.user.username, nextYear);
+				Cookies.setCookie(COOKIE_KEY_LAST_USER, mSession.user.username);
 			}
 		} else {
 			Cookies.removeCookie(COOKIE_KEY_TOKEN);
@@ -814,7 +811,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 		return authorised;
 	}
 
-	public String getLastUserEmail() {
+	public String getLastUsername() {
 		return Cookies.getCookie(COOKIE_KEY_LAST_USER);
 	}
 
