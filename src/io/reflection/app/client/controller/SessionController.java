@@ -78,6 +78,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	private Map<String, Permission> mPermissionCache; // Permission.code : Permission
 
 	private static final String COOKIE_KEY_TOKEN = SessionController.class.getName() + ".token";
+	private static final String COOKIE_KEY_LAST_USER = SessionController.class.getName() + ".lastUser";
 
 	private User mLoggedInUser = null;
 	private Session mSession = null;
@@ -166,6 +167,9 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 
 		if (mSession != null) {
 			Cookies.setCookie(COOKIE_KEY_TOKEN, mSession.token, mSession.expires);
+			if (mSession.user != null && mSession.user.username != null) {
+				Cookies.setCookie(COOKIE_KEY_LAST_USER, mSession.user.username);
+			}
 		} else {
 			Cookies.removeCookie(COOKIE_KEY_TOKEN);
 		}
@@ -805,6 +809,10 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 		}
 
 		return authorised;
+	}
+
+	public String getLastUsername() {
+		return Cookies.getCookie(COOKIE_KEY_LAST_USER);
 	}
 
 }
