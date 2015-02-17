@@ -164,15 +164,15 @@
 				<footer class="landing-footer">
 					<ul class="landing-footer__social-links">
 						<li>
-							<a href="https://www.facebook.com/reflection.io" class="icon-facebook-squared link-facebook"></a>
+							<a href="https://www.facebook.com/reflection.io" target="_blank" class="icon-facebook-squared link-facebook"></a>
 						</li>
 						<li>
-							<a href="http://www.linkedin.com/company/reflection-io-ltd" class="icon-linkedin-rect link-linkedin">
+							<a href="http://www.linkedin.com/company/reflection-io-ltd" target="_blank" class="icon-linkedin-rect link-linkedin">
 								<span>LinkedIn</span>
 							</a>
 						</li>
 						<li>
-							<a href="https://twitter.com/reflectionio" class="icon-twitter link-twitter">
+							<a href="https://twitter.com/reflectionio" target="_blank" class="icon-twitter link-twitter">
 								<span>Twitter</span>
 							</a>
 						</li>
