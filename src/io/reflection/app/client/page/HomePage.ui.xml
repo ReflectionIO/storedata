@@ -49,6 +49,7 @@
 								<li><img src="images/logos/BBC_Worldwide@2x.png" alt="BBC Worldwide logo" /></li>
 								<li><img src="images/logos/Partner_TocaBoca@2x-v2.png" alt="Toca Boca logo" /></li>
 								<li><img src="images/logos/Partner_Miniclip@2x.png" alt="Miniclip logo" /></li>
+								<li><img src="images/logos/Endemol_Logo@2x.png" alt="Endemol logo" /></li>
 							</ul>
 							<h2>Who's using Reflection</h2>
 						</div>
@@ -84,6 +85,12 @@
 				<section class="landing-section-story">
 					<div class="landing-column-thin">
 						<div class="landing-column-thin__content">
+							<blockquote>
+								<p>Reflection's approach to let developers have an input on feature development is unique and refreshing. A great addition to the app intelligence space</p>
+								<footer>
+									<cite><span>Saad Choudri</span>Chief Commercial Officer, Miniclip</cite>
+								</footer>
+							</blockquote>
 						</div>
 					</div>
 					<div class="landing-column-wide">
