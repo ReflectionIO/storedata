@@ -7,14 +7,14 @@
 //
 package io.reflection.app.api.core;
 
-import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPAD_IOS;
-import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS;
-import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_UNIVERSAL_IOS;
-import static io.reflection.app.service.sale.ISaleService.INAPP_PURCHASE_PURCHASE_IOS;
-import static io.reflection.app.service.sale.ISaleService.INAPP_PURCHASE_SUBSCRIPTION_IOS;
-import static io.reflection.app.service.sale.ISaleService.UPDATE_IPAD_IOS;
-import static io.reflection.app.service.sale.ISaleService.UPDATE_IPHONE_AND_IPOD_TOUCH_IOS;
-import static io.reflection.app.service.sale.ISaleService.UPDATE_UNIVERSAL_IOS;
+import static io.reflection.app.apple.SaleTransactionTypes.FREE_OR_PAID_APP_IPAD_IOS;
+import static io.reflection.app.apple.SaleTransactionTypes.FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS;
+import static io.reflection.app.apple.SaleTransactionTypes.FREE_OR_PAID_APP_UNIVERSAL_IOS;
+import static io.reflection.app.apple.SaleTransactionTypes.INAPP_PURCHASE_PURCHASE_IOS;
+import static io.reflection.app.apple.SaleTransactionTypes.INAPP_PURCHASE_SUBSCRIPTION_IOS;
+import static io.reflection.app.apple.SaleTransactionTypes.UPDATE_IPAD_IOS;
+import static io.reflection.app.apple.SaleTransactionTypes.UPDATE_IPHONE_AND_IPOD_TOUCH_IOS;
+import static io.reflection.app.apple.SaleTransactionTypes.UPDATE_UNIVERSAL_IOS;
 import static io.reflection.app.shared.util.PagerHelper.updatePager;
 import io.reflection.app.accountdatacollectors.DataAccountCollectorFactory;
 import io.reflection.app.api.ValidationHelper;
@@ -1155,10 +1155,10 @@ public final class Core extends ActionHandler {
 				freeOrPaidApps.add(FREE_OR_PAID_APP_IPAD_IOS);
 			}
 
-			output.items = SaleServiceProvider.provide().getDataAccountItems(input.linkedAccount, freeOrPaidApps, input.pager);
+			output.items = SaleServiceProvider.provideBigQuery().getDataAccountItems(input.linkedAccount, freeOrPaidApps, input.pager);
 
 			updatePager(output.pager, output.items,
-					input.pager.totalCount == null ? SaleServiceProvider.provide().getDataAccountItemsCount(input.linkedAccount, freeOrPaidApps) : null);
+					input.pager.totalCount == null ? SaleServiceProvider.provideBigQuery().getDataAccountItemsCount(input.linkedAccount, freeOrPaidApps) : null);
 			// } else {
 			// if (items.size() > (input.pager.start.longValue() + input.pager.count.longValue())) {
 			// output.items = items.subList(input.pager.start.intValue(), input.pager.count.intValue());
@@ -1540,7 +1540,7 @@ public final class Core extends ActionHandler {
 				input.start = (new DateTime(input.end.getTime(), DateTimeZone.UTC)).minusDays(30).toDate();
 			}
 
-			output.sales = SaleServiceProvider.provide().getSales(input.country, input.category, input.linkedAccount, input.start, input.end, input.pager);
+			output.sales = SaleServiceProvider.provideBigQuery().getSales(input.country, input.category, input.linkedAccount, input.start, input.end, input.pager);
 
 			if (input.pager.start.intValue() == 0) {
 				Map<String, Sale> internalIds = null;
@@ -1675,7 +1675,7 @@ public final class Core extends ActionHandler {
 
 			if (output.ranks == null || output.ranks.size() == 0) {
 				// Get Items sales based on the filters
-				List<Sale> sales = SaleServiceProvider.provide().getSales(input.country, null, input.linkedAccount, input.start, input.end,
+				List<Sale> sales = SaleServiceProvider.provideBigQuery().getSales(input.country, null, input.linkedAccount, input.start, input.end,
 						PagerHelper.createInfinitePager());
 
 				if (sales.size() > 0) {
@@ -1815,7 +1815,7 @@ public final class Core extends ActionHandler {
 
 			input.item = ValidationHelper.validateItem(input.item, "input.item");
 
-			DataAccount linkedAccount = SaleServiceProvider.provide().getDataAccount(input.item.internalId);
+			DataAccount linkedAccount = SaleServiceProvider.provideBigQuery().getItemIdDataAccount(input.item.internalId);
 
 			// if we only have a partial data source get look it up - because it is required for getting the stores
 			if (linkedAccount.source.stores == null) {
@@ -1868,7 +1868,7 @@ public final class Core extends ActionHandler {
 
 			if (output.ranks == null || output.ranks.size() == 0) {
 				// Get Items sales based on the filters
-				List<Sale> sales = SaleServiceProvider.provide().getItemSales(input.item, input.country, null, linkedAccount, input.start, input.end,
+				List<Sale> sales = SaleServiceProvider.provideBigQuery().getItemSales(input.item, input.country, null, linkedAccount, input.start, input.end,
 						PagerHelper.createInfinitePager());
 				if (sales.size() > 0) {
 					// group sales by date
@@ -1983,7 +1983,7 @@ public final class Core extends ActionHandler {
 
 			input.item = ValidationHelper.validateItem(input.item, "input.item");
 
-			DataAccount linkedAccount = SaleServiceProvider.provide().getDataAccount(input.item.internalId);
+			DataAccount linkedAccount = SaleServiceProvider.provideBigQuery().getItemIdDataAccount(input.item.internalId);
 
 			if (linkedAccount != null) {
 				boolean hasLinkedAccount = UserServiceProvider.provide().hasDataAccount(input.session.user, linkedAccount);

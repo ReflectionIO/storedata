@@ -24,7 +24,6 @@ import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
-import io.reflection.app.service.ServiceType;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
@@ -39,8 +38,9 @@ import java.util.Map;
 import com.spacehopperstudios.utility.StringUtils;
 
 final class SaleService implements ISaleService {
+	
 	public String getName() {
-		return ServiceType.ServiceTypeSale.toString();
+		return DEFAULT_NAME;
 	}
 
 	@Override
@@ -259,10 +259,11 @@ final class SaleService implements ISaleService {
 			if (skuItemLookup.size() > 0) {
 				parentIdentifiers = "AND `parentidentifier` IN ('" + StringUtils.join(skuItemLookup.keySet(), "','") + "')";
 			}
-			String getIAPQuery = String.format("SELECT DISTINCT parentidentifier FROM `sale` WHERE `typeidentifier` IN ('IA1','IA9') %s", parentIdentifiers);
+			String getIAPQuery = String.format("SELECT DISTINCT `parentidentifier` FROM `sale` WHERE `typeidentifier` IN ('IA1','IA9') %s", parentIdentifiers);
 
 			saleConnection.executeQuery(getIAPQuery);
 			while (saleConnection.fetchNextRow()) {
+				// TODO: use properties helper for this
 				skuItemLookup.get(saleConnection.getCurrentRowString("parentidentifier")).properties = "{\"usesIap\":true}";
 			}
 
@@ -473,7 +474,7 @@ final class SaleService implements ISaleService {
 		// (category relates to store by a3code)
 		// we are using end for date but we could equally use begin
 		String getSalesQuery = String
-				.format("SELECT * FROM `sale` WHERE `country`='%s' AND (%d=%d OR `category`='%s') AND `dataaccountid`=%d AND %s AND (`itemid`='%7$s' OR parentidentifier = (SELECT `sku` FROM `sale` WHERE `itemid`='%7$s' LIMIT 1)) AND `deleted`='n'",
+				.format("SELECT * FROM `sale` WHERE `country`='%s' AND (%d=%d OR `category`='%s') AND `dataaccountid`=%d AND %s AND (`itemid`='%7$s' OR `parentidentifier` = (SELECT `sku` FROM `sale` WHERE `itemid`='%7$s' LIMIT 1)) AND `deleted`='n'",
 						country.a2Code, 24, category == null ? 24 : category.id.longValue(), category == null ? "" : category.name,
 						linkedAccount.id.longValue(), SqlQueryHelper.beforeAfterQuery(end, start, "end"), item.internalId);
 
@@ -604,7 +605,7 @@ final class SaleService implements ISaleService {
 	 * @see io.reflection.app.service.sale.ISaleService#getDataAccount(java.lang.String)
 	 */
 	@Override
-	public DataAccount getDataAccount(String itemId) throws DataAccessException {
+	public DataAccount getItemIdDataAccount(String itemId) throws DataAccessException {
 		DataAccount dataAccount = null;
 
 		String getDataAccountIdQuery = String.format("SELECT `dataaccountid` FROM `sale` WHERE `itemid`='%s' AND `deleted`='n' LIMIT 1", itemId);

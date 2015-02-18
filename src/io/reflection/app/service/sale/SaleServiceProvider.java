@@ -8,8 +8,6 @@
 //
 package io.reflection.app.service.sale;
 
-import io.reflection.app.service.ServiceType;
-
 import com.spacehopperstudios.service.ServiceDiscovery;
 
 final public class SaleServiceProvider {
@@ -20,9 +18,19 @@ final public class SaleServiceProvider {
 	public static ISaleService provide() {
 		ISaleService saleService = null;
 
-		if ((saleService = (ISaleService) ServiceDiscovery.getService(ServiceType.ServiceTypeSale.toString())) == null) {
-			saleService = SaleServiceFactory.createNewSaleService();
+		if ((saleService = (ISaleService) ServiceDiscovery.getService(ISaleService.DEFAULT_NAME)) == null) {
+			saleService = SaleServiceFactory.createNewService();
 			ServiceDiscovery.registerService(saleService);
+		}
+
+		return saleService;
+	}
+
+	public static ISaleService provideBigQuery() {
+		ISaleService saleService = null;
+
+		if ((saleService = (ISaleService) ServiceDiscovery.getService(SaleBigQueryService.NAME)) == null) {
+			ServiceDiscovery.registerService(saleService = SaleServiceFactory.createNewBigQueryService());
 		}
 
 		return saleService;
