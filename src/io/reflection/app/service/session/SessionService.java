@@ -17,7 +17,28 @@ import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
 
+import java.util.logging.Level;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+
+import com.google.appengine.api.memcache.AsyncMemcacheService;
+import com.google.appengine.api.memcache.ErrorHandlers;
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
+
 final class SessionService implements ISessionService {
+
+	private MemcacheService syncCache;
+	private AsyncMemcacheService asyncCache;
+
+	public SessionService() {
+		syncCache = MemcacheServiceFactory.getMemcacheService();
+		syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.WARNING));
+
+		asyncCache = MemcacheServiceFactory.getAsyncMemcacheService();
+		asyncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.WARNING));
+	}
 
 	public String getName() {
 		return ServiceType.ServiceTypeSession.toString();
@@ -27,24 +48,49 @@ final class SessionService implements ISessionService {
 	public Session getSession(Long id) throws DataAccessException {
 		Session session = null;
 
-		IDatabaseService databaseService = DatabaseServiceProvider.provide();
-		Connection sessionConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeSession.toString());
+		String memcacheKey = getName() + ".id." + id;
+		String jsonString = (String) syncCache.get(memcacheKey);
 
-		String getSessionQuery = String
-				.format("SELECT *, CAST(`token` AS CHAR) AS `chartoken` FROM `session` WHERE `id`='%d' AND `expires` > NOW() AND `deleted`='n' ORDER BY `expires` DESC LIMIT 1",
-						id.longValue());
-		try {
-			sessionConnection.connect();
-			sessionConnection.executeQuery(getSessionQuery);
+		if (jsonString == null) {
+			IDatabaseService databaseService = DatabaseServiceProvider.provide();
+			Connection sessionConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeSession.toString());
 
-			if (sessionConnection.fetchNextRow()) {
-				session = toSession(sessionConnection);
+			String getSessionQuery = String
+					.format("SELECT *, CAST(`token` AS CHAR) AS `chartoken` FROM `session` WHERE `id`='%d' AND `expires` > NOW() AND `deleted`='n' ORDER BY `expires` DESC LIMIT 1",
+							id.longValue());
+			try {
+				sessionConnection.connect();
+				sessionConnection.executeQuery(getSessionQuery);
+
+				if (sessionConnection.fetchNextRow()) {
+					session = toSession(sessionConnection);
+				}
+			} finally {
+				if (sessionConnection != null) {
+					sessionConnection.disconnect();
+				}
 			}
-		} finally {
-			if (sessionConnection != null) {
-				sessionConnection.disconnect();
+
+			if (session != null) {
+				String json = session.toString();
+				asyncCache.put(memcacheKey, json);
+
+				memcacheKey = getName() + ".userid." + session.user.id;
+				asyncCache.put(memcacheKey, json);
+
+				memcacheKey = getName() + ".token." + session.token;
+				asyncCache.put(memcacheKey, json);
+			}
+		} else {
+			session = new Session();
+			session.fromJson(jsonString);
+			
+			if (session.expires != null && new DateTime(session.expires, DateTimeZone.UTC).isBeforeNow()) {
+				asyncCache.delete(memcacheKey);
+				session = null;
 			}
 		}
+
 		return session;
 	}
 
@@ -88,6 +134,9 @@ final class SessionService implements ISessionService {
 		try {
 			sessionConnection.connect();
 			sessionConnection.executeQuery(deleteSessionQuery);
+
+			String memcacheKey = getName() + ".id." + session.id;
+			asyncCache.delete(memcacheKey);
 		} finally {
 			if (sessionConnection != null) {
 				sessionConnection.disconnect();
@@ -113,6 +162,9 @@ final class SessionService implements ISessionService {
 			if (sessionConnection.getAffectedRowCount() > 0) {
 				long sessionId = sessionConnection.getInsertedId();
 
+				String memcacheKey = getName() + ".id." + sessionId;
+				syncCache.delete(memcacheKey);
+
 				session = getSession(sessionId);
 			}
 		} finally {
@@ -133,23 +185,47 @@ final class SessionService implements ISessionService {
 	public Session getUserSession(User user) throws DataAccessException {
 		Session session = null;
 
-		IDatabaseService databaseService = DatabaseServiceProvider.provide();
-		Connection sessionConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeSession.toString());
+		String memcacheKey = getName() + ".userid." + user.id;
+		String jsonString = (String) syncCache.get(memcacheKey);
 
-		String getUserSessionQuery = String
-				.format("SELECT *, CAST(`token` AS CHAR) AS `chartoken` FROM `session` WHERE `userid`=%d AND `expires` > NOW() AND `deleted`='n' ORDER BY `expires` DESC LIMIT 1",
-						user.id.longValue());
+		if (jsonString == null) {
+			IDatabaseService databaseService = DatabaseServiceProvider.provide();
+			Connection sessionConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeSession.toString());
 
-		try {
-			sessionConnection.connect();
-			sessionConnection.executeQuery(getUserSessionQuery);
+			String getUserSessionQuery = String
+					.format("SELECT *, CAST(`token` AS CHAR) AS `chartoken` FROM `session` WHERE `userid`=%d AND `expires` > NOW() AND `deleted`='n' ORDER BY `expires` DESC LIMIT 1",
+							user.id.longValue());
 
-			if (sessionConnection.fetchNextRow()) {
-				session = toSession(sessionConnection);
+			try {
+				sessionConnection.connect();
+				sessionConnection.executeQuery(getUserSessionQuery);
+
+				if (sessionConnection.fetchNextRow()) {
+					session = toSession(sessionConnection);
+				}
+
+				if (session != null) {
+					String json = session.toString();
+					asyncCache.put(memcacheKey, json);
+
+					memcacheKey = getName() + ".id." + session.id;
+					asyncCache.put(memcacheKey, json);
+
+					memcacheKey = getName() + ".token." + session.token;
+					asyncCache.put(memcacheKey, json);
+				}
+			} finally {
+				if (sessionConnection != null) {
+					sessionConnection.disconnect();
+				}
 			}
-		} finally {
-			if (sessionConnection != null) {
-				sessionConnection.disconnect();
+		} else {
+			session = new Session();
+			session.fromJson(jsonString);
+
+			if (session.expires != null && new DateTime(session.expires, DateTimeZone.UTC).isBeforeNow()) {
+				asyncCache.delete(memcacheKey);
+				session = null;
 			}
 		}
 
@@ -164,24 +240,47 @@ final class SessionService implements ISessionService {
 	@Override
 	public Session getTokenSession(String token) throws DataAccessException {
 		Session session = null;
+		String memcacheKey = getName() + ".token." + token;
+		String jsonString = (String) syncCache.get(memcacheKey);
 
-		IDatabaseService databaseService = DatabaseServiceProvider.provide();
-		Connection sessionConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeSession.toString());
+		if (jsonString == null) {
+			IDatabaseService databaseService = DatabaseServiceProvider.provide();
+			Connection sessionConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeSession.toString());
 
-		String getUserSessionQuery = String
-				.format("SELECT *, CAST(`token` AS CHAR) AS `chartoken` FROM `session` WHERE `token`=CAST('%s' AS BINARY) AND `expires` > NOW() AND `deleted`='n' ORDER BY `expires` DESC LIMIT 1",
-						token);
+			String getUserSessionQuery = String
+					.format("SELECT *, CAST(`token` AS CHAR) AS `chartoken` FROM `session` WHERE `token`=CAST('%s' AS BINARY) AND `expires` > NOW() AND `deleted`='n' ORDER BY `expires` DESC LIMIT 1",
+							token);
 
-		try {
-			sessionConnection.connect();
-			sessionConnection.executeQuery(getUserSessionQuery);
+			try {
+				sessionConnection.connect();
+				sessionConnection.executeQuery(getUserSessionQuery);
 
-			if (sessionConnection.fetchNextRow()) {
-				session = toSession(sessionConnection);
+				if (sessionConnection.fetchNextRow()) {
+					session = toSession(sessionConnection);
+				}
+			} finally {
+				if (sessionConnection != null) {
+					sessionConnection.disconnect();
+				}
 			}
-		} finally {
-			if (sessionConnection != null) {
-				sessionConnection.disconnect();
+
+			if (session != null) {
+				String json = session.toString();
+				asyncCache.put(memcacheKey, json);
+
+				memcacheKey = getName() + ".userid." + session.user.id;
+				asyncCache.put(memcacheKey, json);
+
+				memcacheKey = getName() + ".id." + session.id;
+				asyncCache.put(memcacheKey, json);
+			}
+		} else {
+			session = new Session();
+			session.fromJson(jsonString);
+			
+			if (session.expires != null && new DateTime(session.expires, DateTimeZone.UTC).isBeforeNow()) {
+				asyncCache.delete(memcacheKey);
+				session = null;
 			}
 		}
 
@@ -208,6 +307,9 @@ final class SessionService implements ISessionService {
 			sessionConnection.executeQuery(extendSessionQuery);
 
 			if (sessionConnection.getAffectedRowCount() > 0) {
+				String memcacheKey = getName() + ".id." + session.id;
+				syncCache.delete(memcacheKey);
+
 				extendedSession = getSession(session.id);
 			} else {
 				extendedSession = session;
