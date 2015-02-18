@@ -68,7 +68,7 @@ public class Chart extends Composite {
 	public static final String OPTION_X_AXIS = "xAxis";
 	public static final String OPTION_Y_AXIS = "yAxis";
 
-	private final HTMLPanel chartDiv;
+	private final HTMLPanel chartWrapper;
 	private final String id = HTMLPanel.createUniqueId();
 	private JavaScriptObject options = JavaScriptObject.createObject();
 	private JavaScriptObject chart;
@@ -80,12 +80,12 @@ public class Chart extends Composite {
 	private String currency;
 
 	public Chart() {
-		chartDiv = new HTMLPanel("");
-		chartDiv.getElement().setId(id);
+		chartWrapper = new HTMLPanel("");
+		chartWrapper.getElement().setId(id);
 		getChartOption().setRenderTo(id);
 		showModelPredictions = SessionController.get().isLoggedInUserAdmin();
 
-		initWidget(chartDiv);
+		initWidget(chartWrapper);
 	}
 
 	public Chart inject() {
@@ -437,7 +437,7 @@ public class Chart extends Composite {
 			NativeAxis.nativeSetExtremes(NativeAxis.nativeGetXAxis(chart, 0),
 					new Date(startDate.getYear(), startDate.getMonth(), startDate.getDate()).getTime(),
 					new Date(endDate.getYear(), endDate.getMonth(), endDate.getDate()).getTime(), true, null);
-
+			reflow();
 		}
 
 	}

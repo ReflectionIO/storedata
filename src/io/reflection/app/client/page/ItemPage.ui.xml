@@ -73,7 +73,7 @@
 
 
 				<!-- <p:CircleProgressBar visible="false" ui:field="loader" styleName="{style.loading}" /> -->
-				<pp:ItemChart ui:field="historyChart" styleName="col-sm-12 {style.chart}" />
+				<!-- <pp:ItemChart ui:field="historyChart" styleName="col-sm-12 {style.chart}" /> -->
 
 
 				<c:CellTable ui:field="revenueTable" styleName="table table-hover table-striped table-item {style.cellTable}"></c:CellTable>
