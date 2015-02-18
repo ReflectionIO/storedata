@@ -31,7 +31,7 @@
 							<div class="landing-section-main__column-one">
 								<div>
 									<h1>Powerful Intelligence for the Global App Industry</h1>
-									<p>View revenue and download intelligence for apps. Apply for free access to our data.</p>
+									<p>View revenue and download intelligence for apps.<br />Apply for free access to our data.</p>
 									<div class="actions-container">
 										<a href="#anchor-how-intelligence-helps" class="icon-angle-right js-scroll-to-anchor">How Intelligence Helps</a>
 										<g:InlineHyperlink ui:field="applyNowBtn" styleName="ref-button-cta-large">Apply Now</g:InlineHyperlink>
@@ -48,6 +48,7 @@
 								<li><img src="images/logos/Partner_Wooga@2x.png" alt="Wooga logo" /></li>
 								<li><img src="images/logos/BBC_Worldwide@2x.png" alt="BBC Worldwide logo" /></li>
 								<li><img src="images/logos/Partner_TocaBoca@2x-v2.png" alt="Toca Boca logo" /></li>
+								<li><img src="images/logos/SwiftKey_Logo@2x.png" alt="SwiftKey logo" /></li>
 								<li><img src="images/logos/Partner_Miniclip@2x.png" alt="Miniclip logo" /></li>
 								<li><img src="images/logos/Endemol_Logo@2x.png" alt="Endemol logo" /></li>
 							</ul>
@@ -75,8 +76,8 @@
 					<div class="landing-column-thin">
 						<div class="landing-column-thin__content">
 							<h2>Analyse App Performance</h2>
-							<p>Benchmark your app's revenue, rank and download performance against other apps over time.</p>
-							<p>Discover and identify competitive app's pricing models, popular themes and designs to plan for your app's effective monetisation strategy.</p>
+							<p>Benchmark your apps’ revenue, rank and download performance against other apps over time.</p>
+							<p>Discover and identify competitive app pricing models, popular themes and designs to plan for your apps’ effective monetisation strategies.</p>
 							<p class="small-text">(Revenue values shown are not actual data)</p>
 						</div>
 					</div>
