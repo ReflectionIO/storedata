@@ -39,9 +39,7 @@ import io.reflection.app.client.highcharts.Chart;
 import io.reflection.app.client.highcharts.ChartHelper;
 import io.reflection.app.client.highcharts.ChartHelper.RankType;
 import io.reflection.app.client.highcharts.ChartHelper.YDataType;
-import io.reflection.app.client.page.part.ItemChart;
 import io.reflection.app.client.page.part.ItemChart.RankingType;
-import io.reflection.app.client.page.part.ItemChart.YAxisDataType;
 import io.reflection.app.client.page.part.ItemSidePanel;
 import io.reflection.app.client.page.part.ItemTopPanel;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
@@ -59,7 +57,6 @@ import java.util.Map;
 
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.Style.Unit;
@@ -95,7 +92,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField LIElement downloadsItem;
 	@UiField LIElement rankingItem;
 
-	@UiField ItemChart historyChart;
+	// @UiField ItemChart historyChart;
 
 	@UiField Preloader preloader;
 
@@ -106,7 +103,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 	private RankingType rankingType;
 	private RankType rankType;
-	private YAxisDataType dataType; // TODO OLD CHART DATA TYPE TO DELETE
+	// private YAxisDataType dataType;
 	private YDataType yDataType;
 	private Item item;
 
@@ -120,7 +117,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	private List<ItemRevenue> tablePlaceholder = new ArrayList<ItemRevenue>();
 
 	@UiField HTMLPanel chartContainer;
-
 	private Chart chart;
 
 	public ItemPage() {
@@ -343,12 +339,12 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 					refreshTabs();
 					isNewSelectedTab = true;
 				}
-				dataType = YAxisDataType.fromString(selectedTab);
+				// dataType = YAxisDataType.fromString(selectedTab);
 				yDataType = YDataType.fromString(selectedTab);
-				historyChart.setDataType(dataType);
+				// historyChart.setDataType(dataType);
 				chart.setDataType(yDataType);
 				if (isNewSelectedTab && !isNewDataRequired) {
-					historyChart.drawData();
+					// historyChart.drawData();
 					chart.drawData();
 				}
 				if (isNewDataRequired) {
@@ -356,12 +352,12 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 					sidePanel.setPriceInnerHTML(null);
 					getHistoryChartData();
 				}
-				Element chartBackgroundElem = historyChart.getElement().getFirstChildElement().getFirstChildElement().getFirstChildElement()
-						.getFirstChildElement().getNextSiblingElement().getFirstChildElement().getFirstChildElement();
-				if (chartBackgroundElem != null) {
-					chartBackgroundElem.getStyle().setProperty("background",
-							"repeating-linear-gradient(180deg, #FAFAFA, #FAFAFA 50px, #FFFFFF 50px,#FFFFFF 100px)");
-				}
+				// Element chartBackgroundElem = historyChart.getElement().getFirstChildElement().getFirstChildElement().getFirstChildElement()
+				// .getFirstChildElement().getNextSiblingElement().getFirstChildElement().getFirstChildElement();
+				// if (chartBackgroundElem != null) {
+				// chartBackgroundElem.getStyle().setProperty("background",
+				// "repeating-linear-gradient(180deg, #FAFAFA, #FAFAFA 50px, #FFFFFF 50px,#FFFFFF 100px)");
+				// }
 			}
 
 			// AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.SuccessAlertBoxType, false, "Item",
@@ -479,11 +475,10 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				chart.setDataType(yDataType);
 				chart.setData(output.ranks);
 
-				historyChart.setMode(rankingType);
-				historyChart.setDataType(dataType);
-
-				// redraw the graph with the new data
-				historyChart.setData(output.item, output.ranks);
+				// historyChart.setMode(rankingType);
+				// historyChart.setDataType(dataType);
+				// // redraw the graph with the new data
+				// historyChart.setData(output.item, output.ranks);
 
 				// mAlertBox.dismiss();
 			} else {
@@ -515,7 +510,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 	private void getHistoryChartData() {
 		if (item != null) {
-			historyChart.setLoading(true);
+			// historyChart.setLoading(true);
 			chart.setLoading(true);
 			preloader.show(true);
 			RankController.get().cancelRequestItemRanks();
@@ -573,16 +568,16 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 				displayItemDetails(output.ranks.get(0));
 
-				historyChart.setMode(RankingType.PositionRankingType);
+				// historyChart.setMode(RankingType.PositionRankingType);
 
 				chart.setRankingType(RankType.PositionRankingType);
 				chart.setDataType(yDataType);
 				chart.setData(output.ranks);
 
-				historyChart.setDataType(dataType);
+				// historyChart.setDataType(dataType);
 
 				// redraw the graph with the new data
-				historyChart.setData(output.item, output.ranks);
+				// historyChart.setData(output.item, output.ranks);
 
 			} else {
 				sidePanel.setPriceInnerHTML("-");

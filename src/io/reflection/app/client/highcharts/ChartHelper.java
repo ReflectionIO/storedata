@@ -124,9 +124,10 @@ public class ChartHelper {
 	}
 
 	private static void setDefaultOptions(Chart chart) {
-		chart.getChartOption().setPlotBackgroundColor("#fafafa").setPlotBorderColor("#e5e5e5").setPlotBorderWidth(1).setMargin(createMarginsArray(1, 1, 60, 1));
-		chart.getPlotOption().setCursor("default").setFillOpacity(0.2).setLineWidth(2).setMarkerEnabled(false).setMarkerRadius(3).setHoverHaloOpacity(0)
-				.setHoverLineWidthPlus(0).setMarkerSymbol("circle").setMarkerHoverLineWidthPlus(0).setPointInterval(24 * 3600 * 1000);
+		chart.getChartOption().setPlotBackgroundColor("#fafafa").setPlotBorderColor("#e7e7e7").setPlotBorderWidth(1).setMargin(createMarginsArray(1, 1, 60, 1));
+		chart.getPlotOption().setCursor("default").setFillOpacity(0.6).setFillColor("rgba(232,231,241,0.6)").setLineWidth(2).setMarkerEnabled(false)
+				.setMarkerRadius(3).setHoverHaloOpacity(0).setHoverLineWidthPlus(0).setMarkerSymbol("circle").setMarkerHoverLineWidthPlus(0)
+				.setPointInterval(24 * 3600 * 1000);
 		chart.setColors(getDefaultColors());
 		chart.getCreditsOption().setEnabled(false); // Disable highcharts credits text
 		chart.getLegendOption().setEnabled(false); // Disable legend
@@ -135,8 +136,9 @@ public class ChartHelper {
 				.setUseHTML(true)
 				.setShadow(false)
 				.setBackgroundColor("#ffffff")
-				.setBorderColor("#ffffff")
-				.setBorderWidth(0)
+				.setBorderColor("#dedede")
+				.setBorderWidth(1)
+				.setBorderRadius(5)
 				.setValueDecimals(0)
 				.setCrosshairs(true)
 				.setDateTimeLabelFormats(getDefaultTooltipDateTimeLabelFormat())
