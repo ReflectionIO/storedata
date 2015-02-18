@@ -16,7 +16,6 @@ import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Sale;
-import io.reflection.app.helpers.SqlQueryHelper;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.ServiceType;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
@@ -518,7 +517,7 @@ final class SaleBigQueryService implements ISaleService {
 		String getSalesQuery = String
 				.format("SELECT * FROM [sale] WHERE [country]='%s' AND (%d=%d OR [category]='%s') AND [dataaccountid]=%d AND %s AND ([itemid]='%7$s' OR [parentidentifier] = (SELECT [sku] FROM [sale] WHERE [itemid]='%7$s' LIMIT 1))",
 						country.a2Code, 24, category == null ? 24 : category.id.longValue(), category == null ? "" : category.name,
-						linkedAccount.id.longValue(), SqlQueryHelper.beforeAfterQuery(end, start, "end"), item.internalId);
+						linkedAccount.id.longValue(), BigQueryHelper.beforeAfterQuery(end, start, "end"), item.internalId);
 
 		if (pager != null) {
 			// String sortByQuery = "id";
@@ -545,6 +544,10 @@ final class SaleBigQueryService implements ISaleService {
 				paged = true;
 			} else if (pager.count != null) {
 				getSalesQuery += String.format(" LIMIT %d", pager.count.longValue());
+			}
+			
+			if (pager.count.longValue() == Long.MAX_VALUE) {
+				paged = false;
 			}
 		}
 		try {
@@ -650,7 +653,7 @@ final class SaleBigQueryService implements ISaleService {
 			if (response != null && (rows = response.getRows()) != null) {
 				BigQueryHelper.tablise(response);
 				if (rows.size() > 0) {
-					dataAccount = DataAccountServiceProvider.provide().getDataAccount((Long) rows.get(0).get("dataaccountid"));
+					dataAccount = DataAccountServiceProvider.provide().getDataAccount(Long.valueOf((String) rows.get(0).get("dataaccountid")));
 				}
 			}
 		} catch (IOException ex) {
