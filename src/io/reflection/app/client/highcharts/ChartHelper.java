@@ -144,8 +144,8 @@ public class ChartHelper {
 				.setCrosshairs(true)
 				.setDateTimeLabelFormats(getDefaultTooltipDateTimeLabelFormat())
 				.setHeaderFormat(
-						"<span style=\"font-size: 10px; line-height: 30px; font-weight: bold; color: #81879d; font-family: \"Lato\", sans-serif;\">{point.key}</span><br/>")
-				.setPointFormat("<span style=\"font-size: 18px; font-weight: regular; color: #363a47; font-family: \"Lato\", sans-serif;\">{point.y}</span>");
+						"<span style=\"font-size: 10px; line-height: 30px; font-weight: bold; color: #81879d; font-family: 'Lato', sans-serif;\">{point.key}</span><br/>")
+				.setPointFormat("<span style=\"font-size: 18px; font-weight: regular; color: #363a47; font-family: 'Lato', sans-serif;\">{point.y}</span>");
 		chart.getXAxis().setType(Axis.TYPE_DATETIME).setDateTimeLabelFormats(getDefaultAxisDateTimeLabelFormat()).setTickWidth(0).setTickInterval(86400000)
 				.setShowFirstLabel(false).setShowLastLabel(false).setLabelsStyle(getDefaultAxisStyle()).setLabelsY(30).setStartOnTick(false)
 				.setEndOnTick(false).setMinPadding(0).setMaxPadding(0).setMinorGridLineWidth(0).setLineColor("#e5e5e5").setLabelsMaxStaggerLines(1)
@@ -218,22 +218,22 @@ public class ChartHelper {
 
 	public static native JavaScriptObject getNativeTooltipFormatter() /*-{
 		return function() {
-			return '<div class=\"pippo\"><span style=\"font-size: 10px; font-weight: bold; color: #81879d; font-family: \"Lato\", sans-serif;\">'
+			return "<div><span style=\"font-size: 10px; font-weight: bold; color: #81879d; font-family: 'Lato', sans-serif;\">"
 					+ $wnd.Highcharts.dateFormat('%e %b %Y', this.x, true)
-					+ '</span><br/><span style=\"font-size: 18px; font-weight: regular; color: #363a47; font-family: \"Lato\", sans-serif;\">'
+					+ "</span><br/><span style=\"font-size: 18px; font-weight: regular; color: #363a47; font-family: 'Lato', sans-serif;\">"
 					+ this.y + '</span></div>';
 		}
 	}-*/;
 
 	public static native JavaScriptObject getNativeTooltipFormatter(String currency) /*-{
 		return function() {
-			return '<div class=\"pippo\"><span style=\"font-size: 10px; font-weight: bold; color: #81879d; font-family: \"Lato\", sans-serif;\">'
+			return "<div class=\"pippo\"><span style=\"font-size: 10px; font-weight: bold; color: #81879d; font-family: 'Lato', sans-serif;\">"
 					+ $wnd.Highcharts.dateFormat('%e %b %Y', this.x, true)
-					+ '</span><br/><span style=\"font-size: 18px; font-weight: regular; color: #363a47; font-family: \"Lato\", sans-serif;\">'
+					+ "</span><br/><span style=\"font-size: 18px; font-weight: regular; color: #363a47; font-family: 'Lato', sans-serif;\">"
 					+ currency
-					+ ' '
+					+ " "
 					+ $wnd.Highcharts.numberFormat(this.y, 0, '.', ',')
-					+ '</span></div>';
+					+ "</span></div>";
 		}
 	}-*/;
 
@@ -242,7 +242,7 @@ public class ChartHelper {
 		styleValues.put("fontSize", "12px");
 		styleValues.put("fontWeight", "bold");
 		styleValues.put("color", "#63656a");
-		styleValues.put("fontFamily", "\"Lato\", sans-serif");
+		styleValues.put("fontFamily", "'Lato', sans-serif");
 		return getJSObjectFromMap(styleValues);
 	}
 
@@ -254,7 +254,7 @@ public class ChartHelper {
 
 	public static JavaScriptObject getDefaultLoadingStyle() {
 		HashMap<String, Object> styleValues = new HashMap<String, Object>();
-		styleValues.put("backgroundImage", "url(\"http://jsfiddle.net/img/logo.png\")");
+		styleValues.put("backgroundImage", "url('http://jsfiddle.net/img/logo.png')");
 		styleValues.put("display", "block");
 		return getJSObjectFromMap(styleValues);
 	}

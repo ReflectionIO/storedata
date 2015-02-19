@@ -31,7 +31,7 @@
 							<div class="landing-section-main__column-one">
 								<div>
 									<h1>Powerful Intelligence for the Global App Industry</h1>
-									<p>View revenue and download intelligence for apps. Apply for free access to our data.</p>
+									<p>View revenue and download intelligence for apps.<br />Apply for free access to our data.</p>
 									<div class="actions-container">
 										<a href="#anchor-how-intelligence-helps" class="icon-angle-right js-scroll-to-anchor">How Intelligence Helps</a>
 										<g:InlineHyperlink ui:field="applyNowBtn" styleName="ref-button-cta-large">Apply Now</g:InlineHyperlink>
@@ -48,10 +48,12 @@
 								<li><img src="images/logos/Partner_Wooga@2x.png" alt="Wooga logo" /></li>
 								<li><img src="images/logos/BBC_Worldwide@2x.png" alt="BBC Worldwide logo" /></li>
 								<li><img src="images/logos/Partner_TocaBoca@2x-v2.png" alt="Toca Boca logo" /></li>
+								<li><img src="images/logos/SwiftKey_Logo@2x.png" alt="SwiftKey logo" /></li>
 								<li><img src="images/logos/Partner_Miniclip@2x.png" alt="Miniclip logo" /></li>
+								<li><img src="images/logos/Nordeus_Logo@2x.png" alt="Nordeus logo" /></li>
 								<li><img src="images/logos/Endemol_Logo@2x.png" alt="Endemol logo" /></li>
 							</ul>
-							<h2>Who's using Reflection</h2>
+							<h2>A few of our current partners</h2>
 						</div>
 					</section>
 				</div>
@@ -75,8 +77,8 @@
 					<div class="landing-column-thin">
 						<div class="landing-column-thin__content">
 							<h2>Analyse App Performance</h2>
-							<p>Benchmark your apps' revenue, rank and download performance against other apps over time.</p>
-							<p>Discover and identify competitive apps' pricing models, popular themes and designs to plan for your apps' effective monetisation strategy.</p>
+							<p>Benchmark your apps’ revenue, rank and download performance against other apps over time.</p>
+							<p>Discover and identify competitive app pricing models, popular themes and designs to plan for your apps’ effective monetisation strategies.</p>
 							<p class="small-text">(Revenue values shown are not actual data)</p>
 						</div>
 					</div>
@@ -86,9 +88,9 @@
 					<div class="landing-column-thin">
 						<div class="landing-column-thin__content">
 							<blockquote>
-								<p>Reflection's approach to let developers have an input on feature development is unique and refreshing. A great addition to the app intelligence space</p>
+								<p>Reflection's approach to let developers have input on feature development is unique and refreshing. A great addition to the app intelligence space</p>
 								<footer>
-									<cite><span>Saad Choudri</span>Chief Commercial Officer, Miniclip</cite>
+								<cite><span>Saad Choudri</span>Chief Commercial Officer, Miniclip</cite>
 								</footer>
 							</blockquote>
 						</div>
@@ -98,7 +100,7 @@
 							<h2>Building for the Future</h2>
 							<p>Reflection helps you reach where you want to be in the app market.</p>
 							<p>We understand that app intelligence is currently inaccessible and unaffordable, and it can be cumbersome to gain useful intelligence about apps and app markets. We are here to deliver what is missing.</p>
-							<p>Be a Reflection beta partner and help us define features that will impact the growing needs of developers, publishers, and other stakeholders in the growing app space.</p>
+							<p>Be a Reflection beta partner and help us define features that will impact the growing needs of developers, publishers, and other stakeholders in the flourishing app space.</p>
 							<div class="logo-ref-imp-container">
 								<h4>Official Statistics Partner</h4>
 								<img src="images/logos/Imperial_College_London_Logo.png" alt="Imperial College London logo" class="logo-ref-imp" />
