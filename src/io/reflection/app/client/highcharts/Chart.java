@@ -80,7 +80,7 @@ public class Chart extends Composite {
 	private String currency;
 	private final int yMinCeilingDownloads = 5000;
 	private final int yMinCeilingRevenue = 20000;
-	private final int yMinCeilingRanking = 200;
+	private final int yMinCeilingRanking = 100;
 
 	public Chart() {
 		chartWrapper = new HTMLPanel("");

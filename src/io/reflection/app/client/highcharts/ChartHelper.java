@@ -151,7 +151,7 @@ public class ChartHelper {
 				.setEndOnTick(false).setMinPadding(0).setMaxPadding(0).setMinorGridLineWidth(0).setLineColor("#e5e5e5").setLabelsMaxStaggerLines(1)
 				.setMinRange(86400000);
 		chart.getYAxis().setAllowDecimals(false).setTitleText(null).setOffset(-30).setLabelsY(-7).setLabelsStyle(getDefaultAxisStyle()).setLabelsAlign("left")
-				.setGridLineColor("#e1e5e8").setShowLastLabel(false);
+				.setGridLineColor("#e1e5e8");
 	}
 
 	public static JsArrayNumber createMarginsArray(int marginTop, int marginRight, int marginBottom, int marginLeft) {

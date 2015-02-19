@@ -45,6 +45,10 @@ public abstract class Axis<T extends Option> extends Option<T> {
 		return setOption("ceiling", ceiling);
 	}
 
+	public T setCeiling(JavaScriptObject nullValue) {
+		return setOption("ceiling", nullValue);
+	}
+
 	public T setDateTimeLabelFormats(JavaScriptObject dateTimeLabelFormats) {
 		return setOption("dateTimeLabelFormats", dateTimeLabelFormats);
 	}
@@ -75,6 +79,10 @@ public abstract class Axis<T extends Option> extends Option<T> {
 
 	public T setFloor(int floor) {
 		return setOption("floor", floor);
+	}
+
+	public T setFloor(JavaScriptObject nullValue) {
+		return setOption("floor", nullValue);
 	}
 
 	public T setGridLineColor(String color) {
