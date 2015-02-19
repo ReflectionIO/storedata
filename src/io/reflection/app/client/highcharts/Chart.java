@@ -31,6 +31,7 @@ import io.reflection.app.client.highcharts.options.YAxis;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.shared.util.FormattingHelper;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -217,11 +218,13 @@ public class Chart extends Composite {
 	}
 
 	public void setData(List<Rank> ranks) {
-		for (int i = 0; i < ranks.size(); i++) {
-			if (!withinChartRange(ranks.get(i))) {
-				ranks.remove(i);
+		List<Rank> outOfRangeRanks = new ArrayList<Rank>();
+		for (Rank rank : ranks) {
+			if (!withinChartRange(rank)) {
+				outOfRangeRanks.add(rank);
 			}
 		}
+		ranks.removeAll(outOfRangeRanks);
 		this.ranks = ranks;
 		if (this.ranks != null && this.ranks.size() > 0) {
 			currency = FormattingHelper.getCurrencySymbol(this.ranks.get(0).currency);
@@ -411,27 +414,29 @@ public class Chart extends Composite {
 		boolean isolated = false;
 		switch (yDataType) {
 		case DownloadsYAxisDataType:
-			isolated = (ranks.indexOf(rank) == 0 && ranks.get(ranks.indexOf(rank) + 1) != null && ranks.get(ranks.indexOf(rank) + 1).downloads == null)
-					|| (ranks.indexOf(rank) > 0 && ranks.indexOf(rank) < (ranks.size() - 1) && ranks.get(ranks.indexOf(rank) - 1) != null
-							&& ranks.get(ranks.indexOf(rank) - 1).downloads == null && ranks.get(ranks.indexOf(rank) + 1) != null && ranks.get(ranks
-							.indexOf(rank) + 1).downloads == null)
-					|| (ranks.indexOf(rank) == (ranks.size() - 1) && ranks.get(ranks.indexOf(rank) - 1) != null && ranks.get(ranks.indexOf(rank) - 1).downloads == null);
+			isolated = ranks.size() == 1
+					|| ((ranks.indexOf(rank) == 0 && ranks.get(ranks.indexOf(rank) + 1) != null && ranks.get(ranks.indexOf(rank) + 1).downloads == null)
+							|| (ranks.indexOf(rank) > 0 && ranks.indexOf(rank) < (ranks.size() - 1) && ranks.get(ranks.indexOf(rank) - 1) != null
+									&& ranks.get(ranks.indexOf(rank) - 1).downloads == null && ranks.get(ranks.indexOf(rank) + 1) != null && ranks.get(ranks
+									.indexOf(rank) + 1).downloads == null) || (ranks.indexOf(rank) == (ranks.size() - 1)
+							&& ranks.get(ranks.indexOf(rank) - 1) != null && ranks.get(ranks.indexOf(rank) - 1).downloads == null));
 			break;
 		case RevenueYAxisDataType:
-			isolated = (ranks.indexOf(rank) == 0 && ranks.get(ranks.indexOf(rank) + 1) != null && ranks.get(ranks.indexOf(rank) + 1).revenue == null)
-					|| (ranks.indexOf(rank) > 0 && ranks.indexOf(rank) < (ranks.size() - 1) && ranks.get(ranks.indexOf(rank) - 1) != null
-							&& ranks.get(ranks.indexOf(rank) - 1).revenue == null && ranks.get(ranks.indexOf(rank) + 1) != null && ranks.get(ranks
-							.indexOf(rank) + 1).revenue == null)
-					|| (ranks.indexOf(rank) == (ranks.size() - 1) && ranks.get(ranks.indexOf(rank) - 1) != null && ranks.get(ranks.indexOf(rank) - 1).revenue == null);
+			isolated = ranks.size() == 1
+					|| ((ranks.indexOf(rank) == 0 && ranks.get(ranks.indexOf(rank) + 1) != null && ranks.get(ranks.indexOf(rank) + 1).revenue == null)
+							|| (ranks.indexOf(rank) > 0 && ranks.indexOf(rank) < (ranks.size() - 1) && ranks.get(ranks.indexOf(rank) - 1) != null
+									&& ranks.get(ranks.indexOf(rank) - 1).revenue == null && ranks.get(ranks.indexOf(rank) + 1) != null && ranks.get(ranks
+									.indexOf(rank) + 1).revenue == null) || (ranks.indexOf(rank) == (ranks.size() - 1)
+							&& ranks.get(ranks.indexOf(rank) - 1) != null && ranks.get(ranks.indexOf(rank) - 1).revenue == null));
 			break;
 		case RankingYAxisDataType:
 		default:
-			isolated = (ranks.indexOf(rank) == 0 && ranks.get(ranks.indexOf(rank) + 1) != null && getRankPosition(ranks.get(ranks.indexOf(rank) + 1)) == 0)
-					|| (ranks.indexOf(rank) > 0 && ranks.indexOf(rank) < (ranks.size() - 1) && ranks.get(ranks.indexOf(rank) - 1) != null
-							&& getRankPosition(ranks.get(ranks.indexOf(rank) - 1)) == 0 && ranks.get(ranks.indexOf(rank) + 1) != null && getRankPosition(ranks
-							.get(ranks.indexOf(rank) + 1)) == 0)
-					|| (ranks.indexOf(rank) == (ranks.size() - 1) && ranks.get(ranks.indexOf(rank) - 1) != null && getRankPosition(ranks.get(ranks
-							.indexOf(rank) - 1)) == 0);
+			isolated = ranks.size() == 1
+					|| ((ranks.indexOf(rank) == 0 && ranks.get(ranks.indexOf(rank) + 1) != null && getRankPosition(ranks.get(ranks.indexOf(rank) + 1)) == 0)
+							|| (ranks.indexOf(rank) > 0 && ranks.indexOf(rank) < (ranks.size() - 1) && ranks.get(ranks.indexOf(rank) - 1) != null
+									&& getRankPosition(ranks.get(ranks.indexOf(rank) - 1)) == 0 && ranks.get(ranks.indexOf(rank) + 1) != null && getRankPosition(ranks
+									.get(ranks.indexOf(rank) + 1)) == 0) || (ranks.indexOf(rank) == (ranks.size() - 1)
+							&& ranks.get(ranks.indexOf(rank) - 1) != null && getRankPosition(ranks.get(ranks.indexOf(rank) - 1)) == 0));
 			break;
 		}
 		return isolated;
