@@ -15,7 +15,8 @@
 	}
 	
 	.presets {
-		margin-left: 32px;
+		padding-top: 6px;
+		margin-left: 22px;
 		font-size: 12px;
 	}
 	
