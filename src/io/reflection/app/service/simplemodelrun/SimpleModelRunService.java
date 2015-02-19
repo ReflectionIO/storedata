@@ -69,6 +69,7 @@ final class SimpleModelRunService implements ISimpleModelRunService {
 
 		simpleModelRun.a = connection.getCurrentRowDouble("a");
 		simpleModelRun.b = connection.getCurrentRowDouble("b");
+		simpleModelRun.summaryDate = connection.getCurrentRowDateTime("summarydate");
 
 		return simpleModelRun;
 	}
@@ -77,8 +78,9 @@ final class SimpleModelRunService implements ISimpleModelRunService {
 	public SimpleModelRun addSimpleModelRun(SimpleModelRun simpleModelRun) throws DataAccessException {
 		SimpleModelRun addedSimpleModelRun = null;
 
-		final String addSimpleModelRunQuery = String.format("INSERT INTO `simplemodelrun` (`feedfetchid`,`a`,`b`) VALUES (%d,%f,%f);",
-				simpleModelRun.feedFetch.id.longValue(), simpleModelRun.a.doubleValue(), simpleModelRun.b.doubleValue());
+		final String addSimpleModelRunQuery = String.format("INSERT INTO `simplemodelrun` (`feedfetchid`,`a`,`b`,`summarydate`) VALUES (%d,%f,%f,%s);",
+				simpleModelRun.feedFetch.id.longValue(), simpleModelRun.a.doubleValue(), simpleModelRun.b.doubleValue(),
+				simpleModelRun.summaryDate == null ? "NULL" : Long.toString(simpleModelRun.summaryDate.getTime() / 1000L));
 
 		Connection simpleModelRunConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSimpleModelRun.toString());
 
@@ -107,8 +109,10 @@ final class SimpleModelRunService implements ISimpleModelRunService {
 	public SimpleModelRun updateSimpleModelRun(SimpleModelRun simpleModelRun) throws DataAccessException {
 		SimpleModelRun updatedSimpleModelRun = null;
 
-		final String updateSimpleModelRunQuery = String.format("UPDATE `simplemodelrun` SET `feedfetchid`=%d,`a`=%f,`b`=%f WHERE `id`=%d AND `deleted`='n';",
-				simpleModelRun.feedFetch.id, simpleModelRun.a.doubleValue(), simpleModelRun.b.doubleValue(), simpleModelRun.id.longValue());
+		final String updateSimpleModelRunQuery = String.format(
+				"UPDATE `simplemodelrun` SET `feedfetchid`=%d,`a`=%f,`b`=%f,`summarydate`=%s WHERE `id`=%d AND `deleted`='n';", simpleModelRun.feedFetch.id,
+				simpleModelRun.a.doubleValue(), simpleModelRun.b.doubleValue(),
+				simpleModelRun.summaryDate == null ? "NULL" : Long.toString(simpleModelRun.summaryDate.getTime() / 1000L), simpleModelRun.id.longValue());
 
 		Connection simpleSimpleModelRunConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSimpleModelRun.toString());
 
