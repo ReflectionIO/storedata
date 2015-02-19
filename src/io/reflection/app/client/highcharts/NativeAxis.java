@@ -28,6 +28,22 @@ class NativeAxis {
 		return axis.getExtremes();
 	}-*/;
 
+	static native double nativeGetMin(JavaScriptObject axis)/*-{
+		return axis.getExtremes().min;
+	}-*/;
+
+	static native double nativeGetMax(JavaScriptObject axis)/*-{
+		return axis.getExtremes().max;
+	}-*/;
+
+	static native double nativeGetDataMin(JavaScriptObject axis)/*-{
+		return axis.getExtremes().dataMin;
+	}-*/;
+
+	static native double nativeGetDataMax(JavaScriptObject axis)/*-{
+		return axis.getExtremes().dataMax;
+	}-*/;
+
 	static native JavaScriptObject nativeGetXAxis(JavaScriptObject chart, int index)/*-{
 		return chart.xAxis[index];
 	}-*/;
