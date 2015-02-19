@@ -21,6 +21,7 @@ import java.util.Map;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayBoolean;
+import com.google.gwt.core.client.JsArrayMixed;
 import com.google.gwt.core.client.JsArrayNumber;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.DivElement;
@@ -127,7 +128,7 @@ public class ChartHelper {
 		chart.getChartOption().setPlotBackgroundColor("#fafafa").setPlotBorderColor("#e7e7e7").setPlotBorderWidth(1).setMargin(createMarginsArray(1, 1, 60, 1));
 		chart.getPlotOption().setCursor("default").setFillOpacity(0.6).setFillColor("rgba(232,231,241,0.6)").setLineWidth(2).setMarkerEnabled(false)
 				.setMarkerRadius(3).setHoverHaloOpacity(0).setHoverLineWidthPlus(0).setMarkerSymbol("circle").setMarkerHoverLineWidthPlus(0)
-				.setPointInterval(24 * 3600 * 1000);
+				.setPointInterval(86400000);
 		chart.setColors(getDefaultColors());
 		chart.getCreditsOption().setEnabled(false); // Disable highcharts credits text
 		chart.getLegendOption().setEnabled(false); // Disable legend
@@ -147,9 +148,10 @@ public class ChartHelper {
 				.setPointFormat("<span style=\"font-size: 18px; font-weight: regular; color: #363a47; font-family: \"Lato\", sans-serif;\">{point.y}</span>");
 		chart.getXAxis().setType(Axis.TYPE_DATETIME).setDateTimeLabelFormats(getDefaultAxisDateTimeLabelFormat()).setTickWidth(0).setTickInterval(86400000)
 				.setShowFirstLabel(false).setShowLastLabel(false).setLabelsStyle(getDefaultAxisStyle()).setLabelsY(30).setStartOnTick(false)
-				.setEndOnTick(false).setMinPadding(0).setMaxPadding(0).setMinorGridLineWidth(0).setLineColor("#e5e5e5").setLabelsMaxStaggerLines(1);
-		chart.getYAxis().setAllowDecimals(false).setTitleText(null).setOffset(-30).setLabelsY(-7).setLabelsStyle(getDefaultAxisStyle()).setShowLastLabel(false)
-				.setLabelsAlign("left").setGridLineColor("#e1e5e8");;
+				.setEndOnTick(false).setMinPadding(0).setMaxPadding(0).setMinorGridLineWidth(0).setLineColor("#e5e5e5").setLabelsMaxStaggerLines(1)
+				.setMinRange(86400000);
+		chart.getYAxis().setAllowDecimals(false).setTitleText(null).setOffset(-30).setLabelsY(-7).setLabelsStyle(getDefaultAxisStyle()).setLabelsAlign("left")
+				.setGridLineColor("#e1e5e8").setShowLastLabel(false);
 	}
 
 	public static JsArrayNumber createMarginsArray(int marginTop, int marginRight, int marginBottom, int marginLeft) {
@@ -255,6 +257,31 @@ public class ChartHelper {
 		styleValues.put("backgroundImage", "url(\"http://jsfiddle.net/img/logo.png\")");
 		styleValues.put("display", "block");
 		return getJSObjectFromMap(styleValues);
+	}
+
+	public static JsArrayMixed createPoint(double x, double y) {
+		JsArrayMixed point = JavaScriptObject.createArray().cast();
+		point.push(x);
+		point.push(y);
+		return point;
+	}
+
+	public static JsArrayMixed createPoint(double x, JavaScriptObject y) {
+		JsArrayMixed point = JavaScriptObject.createArray().cast();
+		point.push(x);
+		point.push(y);
+		return point;
+	}
+
+	public static JavaScriptObject createMarkerPoint(double x, double y) {
+		JavaScriptObject point = JavaScriptObject.createObject();
+		JavaScriptObjectHelper.setDoubleProperty(point, "x", x);
+		JavaScriptObjectHelper.setDoubleProperty(point, "y", y);
+		JavaScriptObject marker = JavaScriptObject.createObject();
+		JavaScriptObjectHelper.setBooleanProperty(marker, "enabled", true);
+		JavaScriptObjectHelper.setIntegerProperty(marker, "radius", 4);
+		JavaScriptObjectHelper.setObjectProperty(point, "marker", marker);
+		return point;
 	}
 
 }
