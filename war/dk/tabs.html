@@ -5,16 +5,16 @@
 	<title>Reflection Design Kit - Tabs</title>
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<link rel="stylesheet" media="screen, projection" type="text/css" href="css/designkit.13a7083861fbf013bb1d.css" />
+	<link rel="stylesheet" media="screen, projection" type="text/css" href="css/designkit.66cb517a248be716446b.css" />
 	<!--[if (lt IE 9)]>
 		<script src="js/vendor/html5shiv.min.js"></script>
-		<link rel="stylesheet" media="screen, projection" type="text/css" href="css/reflection-main-ie8.4d83d814d6b1bc40495d.css" />
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="css/reflection-main-ie8.bcca63322fcfac7d3ecf.css" />
 	<![endif]-->
  	<!--[if !lt IE 9]><!-->
 		<script src="js/vendor/picturefill.2.2.0.min.js" async></script>
 	<!-- <![endif]-->
 	<!--[if (gte IE 9)|(IEMobile)|(!IE)]><!-->
-		<link rel="stylesheet" media="screen, projection" type="text/css" href="css/reflection-main.f079736b125e101d11b8.css" />
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="css/reflection-main.4b01c7685c136d06203e.css" />
 	<!--<![endif]-->
 	<link rel="stylesheet" href="js/vendor/jquery.mCustomScrollbar.css" />
 </head>
@@ -40,7 +40,7 @@
 						<p>These tabs split an item on a page into sections. The title should be very short (1-3 words) and have an accompanying icon if relevant and space allows. The font is <strong>Lato Bold, 1.4rem</strong> and always uppercase. See below for the interactive states. The containing box resizes to accommodate the contents.
 						</p>
 					</div>
-					<ul class="tabs-container">
+					<ul class="tabs-container default-tabs-transition">
 						<li class="grid__column grid__column--one-quarter tabs__tab is-active js-tab-select">
 							<div class="tab-animate-active"></div>
 							<a href="#tab-content-one" class="tabs__link">
@@ -66,9 +66,9 @@
 							</a>
 						</li>
 					</ul>
-					<ul class="tabs__content-container">
+					<ul class="tabs__content-container default-tabs-transition">
 						<li id="tab-content-one" class="tabs__content tabs__content--is-showing">
-							<article >
+							<article class="tabs__content-area">
 								<div class="grid__column grid__column--full-width">
 									<h2 class="collapsible-trigger ref-icon-before ref-icon-before--cog"><span>Revenue</span></h2>
 									<div class="collapsible-content">
@@ -78,7 +78,7 @@
 							</article>
 						</li>
 						<li id="tab-content-two" class="tabs__content">
-							<article>
+							<article class="tabs__content-area">
 								<div class="grid__column grid__column--full-width">
 									<h2 class="collapsible-trigger ref-icon-before ref-icon-before--leaderboard"><span>Downloads</span></h2>
 									<div class="collapsible-content">
@@ -88,7 +88,7 @@
 							</article>
 						</li>
 						<li id="tab-content-three" class="tabs__content">
-							<article>
+							<article class="tabs__content-area">
 								<div class="grid__column grid__column--full-width">
 									<h2 class="collapsible-trigger ref-icon-before ref-icon-before--my-data"><span>Rank</span></h2>
 									<div class="collapsible-content">
@@ -98,7 +98,7 @@
 							</article>
 						</li>
 						<li id="tab-content-four" class="tabs__content">
-							<article>
+							<article class="tabs__content-area">
 								<div class="grid__column grid__column--full-width">
 									<h2 class="collapsible-trigger ref-icon-before ref-icon-before--info"><span>App Details</span></h2>
 									<div class="collapsible-content">
@@ -151,7 +151,7 @@
 						<h2>Page Divider Tabs</h2>
 						<p>These tabs split the entire page into sections. The font is Lato Bold, 16px and always uppercase. See below for the interactive states.</p>
 					</div>
-					<ul class="tabs-container tabs-container--large-tabs">
+					<ul class="tabs-container tabs-container--large-tabs default-tabs-transition">
 						<li class="grid__column grid__column--one-half tabs__tab is-active js-tab-select">
 							<div class="tab-border"><span></span></div>
 							<a href="#tab-content-page-one" class="tabs__link">
@@ -169,7 +169,7 @@
 							</a>
 						</li>
 					</ul>
-					<ul class="tabs__content-container tabs__content-container--large-tabs">
+					<ul class="tabs__content-container tabs__content-container--large-tabs default-tabs-transition">
 						<li id="tab-content-page-one" class="tabs__content tabs__content--is-showing">
 							<article>
 								<div class="grid__column grid__column--full-width">
@@ -231,9 +231,8 @@
 		</div>
 	</div>
 
-	<div id="js-component-import--panel-right" class="panel-right-container"></div>
-
-	<div id="js-component-import--search"></div>
+	<div id="js-component-import--account-container" class="panel-right-container js-account-container"></div>
+	<div id="js-component-import--search-container" class="panel-right-container js-search-container"></div>
 
  	<script src="js/vendor/jquery-1.11.1.min.js"></script>
  	<script src="js/vendor/jquery-ui.custom.min.js"></script>
@@ -246,9 +245,9 @@
 
 	<div id="js-appendScriptsContainer"></div>
 
-	<script src="js/designkit-global-templates-2.js"></script>
-  <script src="js/application-2.js"></script>
-  <script src="js/designkit-app-2.js"></script>
+	<script src="js/designkit-global-templates.js"></script>
+  <script src="js/application.js"></script>
+  <script src="js/designkit-app.js"></script>
   <script>
   	function initScripts() {
   		new TabsPage();

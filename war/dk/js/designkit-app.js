@@ -1,7 +1,7 @@
 // APPLICATION JAVASCRIPT
 // Use prototypal inheritance to set functions relevant to the page to encapsulate functions (page objects below)
-// Use functions as variables to modularise and encapsulate component functionality in application-2.js - which contains reusable components JS for the application
-// Keep design kit only JS in this file, and resusable application JS in application-2.js
+// Use functions as variables to modularise and encapsulate component functionality in application.js - which contains reusable components JS for the application
+// Keep design kit only JS in this file, and resusable application JS in application.js
 
 
 /* PAGE OBJECTS FOR TEMPLATES */
@@ -146,7 +146,7 @@
 			sectionTitle: "Design Assets", 
 			componentTitle: "Typography", 
 			intro: "Below are the styling rules for sitewide typography. Our brand typefaces are clean, uncomplicated and easy to read at any size. Specific spacing rules to ensure legibility and UX integrity are detailed below alongside examples.",
-			pageUrl: "grids.html"
+			pageUrl: "typography.html"
 		}
 		new DesignKitPage(dkPageProperties);
 	};
@@ -219,18 +219,9 @@
 	};
 
 	FormsPage.prototype.templateFunctions = function() {
-		$('.js-inline-form-field-error-demo input').on("focus", function(e){
-			$(this).parents('.js-inline-form-field-error-demo').addClass('form-field--error');
-			$(this).siblings('label').html('Hint Label Text:<br />Error message lorem ipsum dolor amet');
-		});
-
-		$('.js-inline-form-field-error-demo input').on("blur", function(e){
-			$(this).parents('.js-inline-form-field-error-demo').removeClass('form-field--error');
-			$(this).siblings('label').html('Hint Label Text:');
-		});
-
 		$('.form-field--date-select input').on("click", function(){
 			$this = $(this);
+			$this.select();
 			$popup = $this.parents('.date-select-container').siblings('.dateBoxPopup');
 			if($popup.hasClass('is-showing')) {
 				$popup.removeClass('is-showing');
