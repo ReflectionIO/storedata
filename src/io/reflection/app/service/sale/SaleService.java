@@ -38,7 +38,7 @@ import java.util.Map;
 import com.spacehopperstudios.utility.StringUtils;
 
 final class SaleService implements ISaleService {
-	
+
 	public String getName() {
 		return DEFAULT_NAME;
 	}
@@ -92,12 +92,12 @@ final class SaleService implements ISaleService {
 		sale.version = stripslashes(connection.getCurrentRowString("version"));
 		sale.typeIdentifier = stripslashes(connection.getCurrentRowString("typeidentifier"));
 		sale.units = connection.getCurrentRowInteger("units");
-		
+
 		Integer proceeds = connection.getCurrentRowInteger("proceeds");
 		if (proceeds != null) {
 			sale.proceeds = Float.valueOf(proceeds.floatValue() / 100.0f);
 		}
-		
+
 		sale.currency = stripslashes(connection.getCurrentRowString("currency"));
 		sale.begin = connection.getCurrentRowDateTime("begin");
 		sale.end = connection.getCurrentRowDateTime("end");
@@ -114,6 +114,11 @@ final class SaleService implements ISaleService {
 		sale.period = stripslashes(connection.getCurrentRowString("period"));
 		sale.category = stripslashes(connection.getCurrentRowString("category"));
 
+		if (connection.getCurrentRowLong("dataaccountfetchid") != null) {
+			sale.fetch = new DataAccountFetch();
+			sale.fetch.id = connection.getCurrentRowLong("dataaccountfetchid");
+		}
+
 		return sale;
 	}
 
@@ -124,12 +129,13 @@ final class SaleService implements ISaleService {
 		// TODO: sort out nullable values
 
 		final String addSaleQuery = String
-				.format("INSERT INTO `sale` (`dataaccountid`,`itemid`,`country`,`sku`,`developer`,`title`,`version`,`typeidentifier`,`units`,`proceeds`,`currency`,`begin`,`end`,`customercurrency`,`customerprice`,`promocode`,`parentidentifier`,`subscription`,`period`,`category`) VALUES (%d,%d,'%s','%s','%s','%s','%s','%s',%d,%d,'%s',FROM_UNIXTIME(%d),FROM_UNIXTIME(%d),'%s',%d,'%s','%s','%s','%s','%s')",
-						sale.account.id.longValue(), sale.item.id.longValue(), addslashes(sale.country), addslashes(sale.sku), addslashes(sale.developer),
-						addslashes(sale.title), addslashes(sale.version), addslashes(sale.typeIdentifier), sale.units.intValue(),
-						(int) (sale.proceeds.floatValue() * 100.0f), addslashes(sale.currency), sale.begin.getTime() / 1000, sale.end.getTime() / 1000,
-						addslashes(sale.customerCurrency), (int) (sale.customerPrice.floatValue() * 100.0f), addslashes(sale.promoCode),
-						addslashes(sale.parentIdentifier), addslashes(sale.subscription), addslashes(sale.period), addslashes(sale.category));
+				.format("INSERT INTO `sale` (`dataaccountfetchid`,`dataaccountid`,`itemid`,`country`,`sku`,`developer`,`title`,`version`,`typeidentifier`,`units`,`proceeds`,`currency`,`begin`,`end`,`customercurrency`,`customerprice`,`promocode`,`parentidentifier`,`subscription`,`period`,`category`) VALUES (%s,%d,%d,'%s','%s','%s','%s','%s','%s',%d,%d,'%s',FROM_UNIXTIME(%d),FROM_UNIXTIME(%d),'%s',%d,'%s','%s','%s','%s','%s')",
+						sale.fetch != null && sale.fetch.id != null ? "NULL" : sale.fetch.id.toString(), sale.account.id.longValue(), sale.item.id.longValue(),
+						addslashes(sale.country), addslashes(sale.sku), addslashes(sale.developer), addslashes(sale.title), addslashes(sale.version),
+						addslashes(sale.typeIdentifier), sale.units.intValue(), (int) (sale.proceeds.floatValue() * 100.0f), addslashes(sale.currency),
+						sale.begin.getTime() / 1000, sale.end.getTime() / 1000, addslashes(sale.customerCurrency),
+						(int) (sale.customerPrice.floatValue() * 100.0f), addslashes(sale.promoCode), addslashes(sale.parentIdentifier),
+						addslashes(sale.subscription), addslashes(sale.period), addslashes(sale.category));
 
 		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
 
@@ -270,7 +276,7 @@ final class SaleService implements ISaleService {
 			items.addAll(skuItemLookup.values());
 		} finally {
 			if (saleConnection != null) {
-				saleConnection.disconnect(); 
+				saleConnection.disconnect();
 			}
 		}
 
@@ -324,7 +330,7 @@ final class SaleService implements ISaleService {
 		StringBuffer addSalesBatchQuery = new StringBuffer();
 
 		addSalesBatchQuery
-				.append("INSERT INTO `sale` (`dataaccountid`,`itemid`,`country`,`sku`,`developer`,`title`,`version`,`typeidentifier`,`units`,`proceeds`,`currency`,`begin`,`end`,`customercurrency`,`customerprice`,`promocode`,`parentidentifier`,`subscription`,`period`,`category`) VALUES");
+				.append("INSERT INTO `sale` (`dataaccountfetchid`,`dataaccountid`,`itemid`,`country`,`sku`,`developer`,`title`,`version`,`typeidentifier`,`units`,`proceeds`,`currency`,`begin`,`end`,`customercurrency`,`customerprice`,`promocode`,`parentidentifier`,`subscription`,`period`,`category`) VALUES");
 
 		for (Sale sale : sales) {
 			if (addSalesBatchQuery.charAt(addSalesBatchQuery.length() - 1) != 'S') {
@@ -332,11 +338,12 @@ final class SaleService implements ISaleService {
 			}
 
 			addSalesBatchQuery.append(String.format(
-					"(%d,%s,'%s','%s','%s','%s','%s','%s',%d,%d,'%s',FROM_UNIXTIME(%d),FROM_UNIXTIME(%d),'%s',%d,'%s','%s','%s','%s','%s')",
-					sale.account.id.longValue(), sale.item.internalId == null ? "NULL" : "'" + sale.item.internalId + "'", addslashes(sale.country),
-					addslashes(sale.sku), addslashes(sale.developer), addslashes(sale.title), addslashes(sale.version), addslashes(sale.typeIdentifier),
-					sale.units.intValue(), (int) (sale.proceeds.floatValue() * 100.0f), addslashes(sale.currency), sale.begin.getTime() / 1000,
-					sale.end.getTime() / 1000, addslashes(sale.customerCurrency), (int) (sale.customerPrice.floatValue() * 100.0f), addslashes(sale.promoCode),
+					"(%s,%d,%s,'%s','%s','%s','%s','%s','%s',%d,%d,'%s',FROM_UNIXTIME(%d),FROM_UNIXTIME(%d),'%s',%d,'%s','%s','%s','%s','%s')",
+					sale.fetch == null || sale.fetch.id == null ? "NULL" : sale.fetch.id.toString(), sale.account.id.longValue(),
+					sale.item.internalId == null ? "NULL" : "'" + sale.item.internalId + "'", addslashes(sale.country), addslashes(sale.sku),
+					addslashes(sale.developer), addslashes(sale.title), addslashes(sale.version), addslashes(sale.typeIdentifier), sale.units.intValue(),
+					(int) (sale.proceeds.floatValue() * 100.0f), addslashes(sale.currency), sale.begin.getTime() / 1000, sale.end.getTime() / 1000,
+					addslashes(sale.customerCurrency), (int) (sale.customerPrice.floatValue() * 100.0f), addslashes(sale.promoCode),
 					addslashes(sale.parentIdentifier), addslashes(sale.subscription), addslashes(sale.period), addslashes(sale.category)));
 		}
 
@@ -757,6 +764,8 @@ final class SaleService implements ISaleService {
 	public List<Long> getDataAccountFetchSaleIds(DataAccountFetch dataAccountFetch, Pager pager) throws DataAccessException {
 		List<Long> saleIds = new ArrayList<Long>();
 
+		// TODO: we should now have the dataaccountfetchid on the table so we should not require the date and dataaccount
+		
 		if (dataAccountFetch.date == null || dataAccountFetch.linkedAccount == null) {
 			dataAccountFetch = DataAccountFetchServiceProvider.provide().getDataAccountFetch(dataAccountFetch.id);
 		}
