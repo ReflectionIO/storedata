@@ -10,10 +10,10 @@ var templatePanelLeft = Handlebars.templates['panelLeft'];
 var htmlPanelLeft = templatePanelLeft({});
 $("#js-component-import--panel-left").html(htmlPanelLeft);
 
-var templatePanelRight = Handlebars.templates['panelRight'];
-var htmlPanelRight = templatePanelRight({});
-$("#js-component-import--panel-right").html(htmlPanelRight);
+var templateAccountContainer = Handlebars.templates['accountContainer'];
+var htmlPanelRight = templateAccountContainer({});
+$("#js-component-import--account-container").html(htmlPanelRight);
 
-var templateSearchOverlay = Handlebars.templates['searchOverlay'];
-var htmlSearchOverlay = templateSearchOverlay({});
-$("#js-component-import--search").html(htmlSearchOverlay);
+var templateSearchContainer = Handlebars.templates['searchContainer'];
+var htmlPanelRight = templateSearchContainer({});
+$("#js-component-import--search-container").html(htmlPanelRight);

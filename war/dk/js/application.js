@@ -8,58 +8,15 @@
 // Page object
 	var Page = function() {
 		instance = this;
-		this.setIEClass();
-		this.setChromeClass();
-		this.setOperaClass();
+		new BrowserDetection();
 		this.setMainContentWidthForIE();
 		this.initBrowserPulling();
 		new LeftPanelAndHamburger();
 		new FormInteractions();
-		new RightPanel();
+		new PanelRightOverlay();
+		new AccountContainer();
+		new SearchContainer();
 		this.customScrollbars();
-		new SearchOverlay();
-		this.searchOverlaySetMainContentWidthForIE();
-	};
-
-	Page.prototype.setIEClass = function() {
-		this.ieVersion = this.detectIE();
-		if(this.ieVersion) {
-			$('body').addClass('is-ie ie' + this.ieVersion);
-		}
-	};
-
-	Page.prototype.setChromeClass = function() {
-		var isChrome = !!window.chrome && !!window.chrome.webstore;
-		if(isChrome) {
-			$('html').addClass('is-chrome');
-		}
-	};
-
-	Page.prototype.setOperaClass = function() {
-		var isOpera = !!window.opera || /opera|opr/i.test(navigator.userAgent);
-		if(isOpera) {
-			$('html').addClass('is-opera');
-		}
-	};
-
-	Page.prototype.detectIE = function() {
-	  var ua = window.navigator.userAgent;
-	  var msie = ua.indexOf('MSIE ');
-	  var trident = ua.indexOf('Trident/');
-
-	  if (msie > 0) {
-	      // IE 10 or older => return version number
-	      return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
-	  }
-
-	  if (trident > 0) {
-	      // IE 11 (or newer) => return version number
-	      var rv = ua.indexOf('rv:');
-	      return parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10);
-	  }
-
-	  // other browser
-	  return false;
 	};
 
 	Page.prototype.customScrollbars = function() {
@@ -103,16 +60,55 @@
 	  });
 	};
 
-	Page.prototype.searchOverlaySetMainContentWidthForIE = function() {
-		if(instance.searchOpenLink.length) {
-			instance.searchOpenLink.click(function(e){
-				instance.setMainContentWidthForIE();
-			});
-			instance.searchCancelLink.click(function(e){
-				instance.setMainContentWidthForIE();
-			});
+
+// object for browser detection related functionality
+	var BrowserDetection = function() {
+		this.setIEClass();
+		this.setChromeClass();
+		this.setOperaClass();
+	}
+
+	BrowserDetection.prototype.setIEClass = function() {
+		this.ieVersion = this.detectIE();
+		if(this.ieVersion) {
+			$('body').addClass('is-ie ie' + this.ieVersion);
 		}
 	};
+
+	BrowserDetection.prototype.setChromeClass = function() {
+		var isChrome = !!window.chrome && !!window.chrome.webstore;
+		if(isChrome) {
+			$('html').addClass('is-chrome');
+		}
+	};
+
+	BrowserDetection.prototype.setOperaClass = function() {
+		var isOpera = !!window.opera || /opera|opr/i.test(navigator.userAgent);
+		if(isOpera) {
+			$('html').addClass('is-opera');
+		}
+	};
+
+	BrowserDetection.prototype.detectIE = function() {
+	  var ua = window.navigator.userAgent;
+	  var msie = ua.indexOf('MSIE ');
+	  var trident = ua.indexOf('Trident/');
+
+	  if (msie > 0) {
+	      // IE 10 or older => return version number
+	      return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
+	  }
+
+	  if (trident > 0) {
+	      // IE 11 (or newer) => return version number
+	      var rv = ua.indexOf('rv:');
+	      return parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10);
+	  }
+
+	  // other browser
+	  return false;
+	};
+
 
 /* COMPONENT OBJECTS */
 	var LeftPanelAndHamburger = function() {
@@ -223,94 +219,157 @@
 
 
 	var FormInteractions = function() {
-		$('.form-field input[type=email], .form-field input[type=password], .form-field input[type=text]').each(function(){
-			var $this = $(this);
-			var $thisParent = $this.parent('.form-field');
-			if(!$(this).val().length) {
-				$thisParent.addClass('is-closed');
-			}
-			$this.on("focus", function(){
-				$thisParent.removeClass('is-closed');
-			});
-			$this.on("blur", function(){
-				if(!$this.val().length) {
-					$thisParent.addClass('is-closed');
+		setTimeout(function(){
+			$('.form-field input[type=email], .form-field input[type=password], .form-field input[type=text]').each(function(){
+				var $this = $(this);
+				var $thisParent = $this.parent('.form-field');
+				if(!$thisParent.hasClass('form-field--error')) {
+					if(!$(this).val().length || $(this).val().length == 0) {
+						$thisParent.addClass('is-closed');
+					}
+					$this.on("focus", function(){
+						$thisParent.removeClass('is-closed');
+					});
+					$this.on("blur", function(){
+						if(!$this.val().length) {
+							$thisParent.addClass('is-closed');
+						}
+					});
 				}
 			});
+		}, 100); // fixes bug in IE11 for prepopulated data
+
+		$('.js-mock-password-entry').on("keyup", function(){
+			var $this = $(this),
+				$passwordIndicatorContainer = $this.siblings('label').find('.password-strength-indicator-container'),
+				$passwordIndicatorDescription = $passwordIndicatorContainer.find('.password-strength-description'),
+				$passwordIndicator = $passwordIndicatorContainer.find('.password-strength-indicator span'),
+				currentValueLength = $this.val().length;
+			if(currentValueLength > 0 && currentValueLength <= 3) {
+				$passwordIndicatorDescription.text('Pathetic');
+				$passwordIndicator.removeAttr("class").addClass('is-pathetic');
+			} else if(currentValueLength > 3 && currentValueLength <= 7) {
+				$passwordIndicatorDescription.text('Ok');
+				$passwordIndicator.removeAttr("class").addClass('is-ok');
+			} else if(currentValueLength > 7 && currentValueLength <= 11) {
+				$passwordIndicatorDescription.text('Strongish');
+				$passwordIndicator.removeAttr("class").addClass('is-strong');
+			} else if(currentValueLength > 11) {
+				$passwordIndicatorDescription.text('Impressive');
+				$passwordIndicator.removeAttr("class").addClass('is-impressive');
+			}
 		});
 	};
 
+	var PanelRightOverlay = function() {
+		$('.panel-right__overlay').on("click", function() {
+			if($('.js-account-container').hasClass('is-showing')) {
+				if(!$('.actions-group__content').is(':visible')) {
+					$('.actions-group').trigger("click");
+				}
+				else {
+					$('.js-link-log-in-container .js-link-log-in').trigger("click");
+				}
+			}
+			else if($('.js-search-container').hasClass('is-showing')) {
+				$('.js-open-search').click();
+			}
+			$('html, body').removeClass('no-scroll');
+		});
+	};
 
-	var RightPanel = function() {
+	var AccountContainer = function() {
 		$('.actions-group').on("click", function() {
 			if(!$('.actions-group__content').is(':visible')) {
-				$('.panel-right-container').toggleClass('is-showing');
+				if($('.js-search-container').hasClass('is-showing')) {
+					$('.js-open-search').click();
+				}
+				$('.js-account-container').toggleClass('is-showing');
 				$('.actions-group').toggleClass('is-on');
-				$('body').toggleClass('no-scroll');
+				$('html, body').toggleClass('no-scroll');
 			}
 		});
 		$('.js-link-log-in').on("click", function(e) {
 			e.preventDefault();
-			if($('.panel-right-container').hasClass('is-showing')) {
-				$('.panel-right-container').removeClass('is-showing');
+			var $this = $(this);
+			if($this.hasClass('is-selected')) {
+				$this.removeClass('is-selected');
+			} else {
+				$this.addClass('is-selected');
+			}
+			if($('.js-account-container').hasClass('is-showing')) {
+				$('.js-account-container').removeClass('is-showing');
+				$('html, body').removeClass('no-scroll');
 				if($('.no-touch').length) {
-					$('.panel-right-container').addClass('is-animating-out');
+					$('.js-account-container').addClass('is-animating-out');
 					window.setTimeout(function(){
-						$('.panel-right-container').removeClass('is-animating-out');
+						$('.js-account-container').removeClass('is-animating-out');
 					}, 180);
 				}
 			}
 			else {
-				$('.panel-right-container').addClass('is-showing');
+				if($('.js-search-container').hasClass('is-showing')) {
+					$('.js-open-search').click();
+				}
+				$('.js-account-container').addClass('is-showing');
+				$('html, body').addClass('no-scroll');
 				if($('.no-touch').length) {
-					$('.panel-right-container').addClass('is-animating-in');
+					$('.js-account-container').addClass('is-animating-in');
 					window.setTimeout(function(){
-						$('.panel-right-container').removeClass('is-animating-in');
+						$('.js-account-container').removeClass('is-animating-in');
 					}, 240);
 				}
-			}
-			$('body').toggleClass('no-scroll');
-		});
-		$('.panel-right__overlay').on("click", function() {
-			if(!$('.actions-group__content').is(':visible')) {
-				$('.actions-group').trigger("click");
-			}
-			else {
-				$('.js-link-log-in-container .js-link-log-in').trigger("click");
 			}
 		});
 	};
 
-
-	var SearchOverlay = function() {
+	var SearchContainer = function() {
 		var pInstance = this;
 		instance.searchOpenLink = $('.js-open-search');
-		instance.searchCancelLink = $('.js-close-search');
 		if(instance.searchOpenLink.length) {
 			instance.searchOpenLink.click(function(e){
 				e.preventDefault();
+				$(this).toggleClass('is-selected');
 				pInstance.toggleSearchView();
-			});
-			instance.searchCancelLink.click(function(e){
-				e.preventDefault();
-				pInstance.toggleSearchView();
-				$('.js-get-items').blur();
 			});
 		}
 
 		this.initSearch();
 	};
 
-	SearchOverlay.prototype.toggleSearchView = function() {
-		$('.search-overlay').toggleClass('is-showing');
-		$('.search-container').toggleClass('is-showing');
-		$('.l-page-container').toggleClass('is-blurred-heavy');
-		$('.panel-left').toggleClass('is-blurred-heavy');
-		$('html').toggleClass('no-scroll');
-		$('.search__input-search').select();
+	SearchContainer.prototype.toggleSearchView = function() {
+		if($('.js-search-container').hasClass('is-showing')) {
+			$('.js-search-container').removeClass('is-showing');
+			$('html, body').removeClass('no-scroll');
+			if($('.no-touch').length) {
+				$('.js-search-container').addClass('is-animating-out');
+				window.setTimeout(function(){
+					$('.js-search-container').removeClass('is-animating-out');
+				}, 180);
+			}
+		}
+		else {
+			if($('.js-account-container').hasClass('is-showing')) {
+				if(!$('.actions-group__content').is(':visible')) {
+					$('.actions-group').trigger("click");
+				}
+				else {
+					$('.js-link-log-in-container .js-link-log-in').trigger("click");
+				}
+			}
+			$('.js-search-container').addClass('is-showing');
+			$('html, body').addClass('no-scroll');
+			$('.search__form .js-get-items').select();
+			if($('.no-touch').length) {
+				$('.js-search-container').addClass('is-animating-in');
+				window.setTimeout(function(){
+					$('.js-search-container').removeClass('is-animating-in');
+				}, 240);
+			}
+		}
 	};
 
-	SearchOverlay.prototype.initSearch = function() {
+	SearchContainer.prototype.initSearch = function() {
 		// get mock data from file - this will contain results when implemented so shouldn't need JS regex below
 		var data;
 		$.ajax({
@@ -323,14 +382,24 @@
     });
 		
 		var inputValue,
-				$appsList = $('.js-item-results--apps ul'),
-				$devList = $('.js-item-results--developers ul');
+				$appsContainer = $('.js-item-results--apps'),
+				$devListContainer = $('.js-item-results--developers'),
+				$noResultsContainer = $('.js-no-results'),
+				$appsList = $appsContainer.find('ul'),
+				$devList = $devListContainer.find('ul');
 
 		// on key up loop through object and search - for implentation, amend to call service to return results in json and display
 		$('.js-get-items').keyup(function(){
 			searchResultsApps = [];
 			searchResultsDevs = [];
 			inputValueCaseInsensitiveRegEx = new RegExp($(this).val(), "i");
+
+			var $searchButtonMobile = $('.panel-right .form-field .search-button-mobile');
+			if($(this).val().length > 0) {
+				$searchButtonMobile.addClass('is-highlighted');
+			} else {
+				$searchButtonMobile.removeClass('is-highlighted');
+			}
 
 			// if found add to result array
 			for(var i = 0; i < data.items.length; i++) {
@@ -340,6 +409,25 @@
 				if(data.items[i].creatorName.search(inputValueCaseInsensitiveRegEx) > -1) {
 					searchResultsDevs.push(data.items[i]);
 				}
+			}
+
+			// show and hide containers for nil results
+			if (searchResultsApps.length == 0) {			
+				$appsContainer.hide();
+			} else {
+				$appsContainer.show();
+				$noResultsContainer.hide();
+			}
+
+			if(searchResultsDevs.length == 0) { 
+				$devListContainer.hide();
+			} else {
+				$devListContainer.show();
+				$noResultsContainer.hide();
+			}
+
+			if(searchResultsApps.length == 0 && searchResultsDevs.length == 0) {
+				$noResultsContainer.show();
 			}
 			
 			// output results to screen
@@ -381,18 +469,19 @@
 	var Tabs = function() {
 		var isIE8 = $('.ie8').length;
 		if(!isIE8) {
-			$('.tabs__content--is-showing *').css("opacity", 1);
+			$('.default-tabs-transition .tabs__content-area').css("opacity", 1);
 		}
 
 		$('.js-tab-select').on("click", function(e){
   		e.preventDefault();
-  		var thisParent = $(this).parents(".tabs-container");
+  		var $this = $(this);
+  		var thisParent = $this.parents(".tabs-container");
   		thisParent.find('.is-active').removeClass('is-active');
-  		$(this).addClass('is-active');
-  		var contentId = $(this).find('.tabs__link').attr("href");
+  		$this.addClass('is-active');
+  		var contentId = $this.find('.tabs__link').attr("href");
   		$(contentId).parents('.tabs__content-container').find('.tabs__content--is-showing').removeClass('tabs__content--is-showing');
   		$(contentId).addClass('tabs__content--is-showing');
-  		if(!isIE8) {
+  		if(!isIE8 && $(contentId).parents('.tabs__content-container').hasClass('default-tabs-transition')) {
 	  		$(contentId + ' *').css("opacity", 0);
 	  		$(contentId + ' *').animate({opacity: 1}, 200);
 	  	}
@@ -466,78 +555,82 @@
 			});
 		});
 
-		$('.js-field--select').each(function() {
+		if(!$('.ie8').length) {
+			$('.js-field--select').each(function() {
 			var selectInput = $(this),
 					selectOptions = selectInput.find('option'),
 					optionsList = $('<ul>'),
 					refSelectContainer = $('<div>').addClass('reflection-select'),
 					refSelectDefault = $('<span>').addClass('ref-icon-after ref-icon-after--angle-down').text('Choose your option');
 			
-			selectOptions.each(function(){
-				$this = $(this);
-				if($this.attr('value')) {
-					var preSelectedClass = '';
-					if($this.data("previous")) {
-						preSelectedClass = 'pre-selected';
-					}
-					optionsList.append($('<li>').addClass(preSelectedClass).attr('data-value', $this.attr('value')).text($this.text()));
-				}
-				else {
-					refSelectDefault.text($this.text());
-				}
-			});
-
-			refSelectContainer.append(refSelectDefault).append(optionsList);
-			selectInput.parents('.form-field--select').append(refSelectContainer);
-
-			var listHeight = optionsList.innerHeight();
-			optionsList.css('margin-top', -listHeight);
-
-			function toggleDropDown() {
-				if(refSelectContainer.hasClass('is-open')) {
-					refSelectContainer.removeClass('is-open');
-					optionsList.css('margin-top', -listHeight);
-				}
-				else {
-					refSelectContainer.addClass('is-open');
-					optionsList.css('margin-top', "9px");
-				}
-			};
-
-			if(selectInput.parent('.form-field--select-disabled').length == 0) {
-				optionsList.find('li').on('click', function() {
-					if(!$(this).hasClass('pre-selected')) {
-						toggleDropDown();
-					}
-				});
-				refSelectDefault.on('click', function() {
-					toggleDropDown();
-				});
-			}
-
-			$(window).on("resize", function(){
-				listHeight = optionsList.innerHeight();
-				optionsList.css('margin-top', -listHeight);	
-			});
-
-			optionsList.find('li').on('click', function(){
-				if(!$(this).hasClass('pre-selected')) {
-					listItem = $(this);
-					optionsList.find('li').removeClass('is-selected');
-					listItem.addClass('is-selected');
-					refSelectDefault.text(listItem.text()).addClass('is-activated');
-
-					selectOptions.each(function() {
-						if($(this).val() == listItem.data("value")) {
-							$(this).attr("selected", "selected");
+				selectOptions.each(function(){
+					$this = $(this);
+					if($this.attr('value')) {
+						var preSelectedClass = '',
+								selectedText = '';
+						if($this.data("previous")) {
+							preSelectedClass = 'pre-selected';
+							selectedText = $this.data("selectedtext");
 						}
-						else {
-							$(this).removeAttr("selected");	
+						optionsList.append($('<li>').addClass(preSelectedClass).attr('data-value', $this.attr('value')).attr('data-selectedtext', selectedText).text($this.text()));
+					}
+					else {
+						refSelectDefault.text($this.text());
+					}
+				});
+
+				refSelectContainer.append(refSelectDefault).append(optionsList);
+				selectInput.parents('.form-field--select').append(refSelectContainer);
+
+				var listHeight = optionsList.innerHeight();
+				optionsList.css('margin-top', -listHeight);
+
+				function toggleDropDown() {
+					if(refSelectContainer.hasClass('is-open')) {
+						refSelectContainer.removeClass('is-open');
+						optionsList.css('margin-top', -listHeight);
+					}
+					else {
+						refSelectContainer.addClass('is-open');
+						optionsList.css('margin-top', "9px");
+					}
+				};
+
+				if(selectInput.parent('.form-field--select-disabled').length == 0) {
+					optionsList.find('li').on('click', function() {
+						if(!$(this).hasClass('pre-selected')) {
+							toggleDropDown();
 						}
 					});
+					refSelectDefault.on('click', function() {
+						toggleDropDown();
+					});
 				}
+
+				$(window).on("resize", function(){
+					listHeight = optionsList.innerHeight();
+					optionsList.css('margin-top', -listHeight);	
+				});
+
+				optionsList.find('li').on('click', function(){
+					if(!$(this).hasClass('pre-selected')) {
+						listItem = $(this);
+						optionsList.find('li').removeClass('is-selected');
+						listItem.addClass('is-selected');
+						refSelectDefault.text(listItem.text()).addClass('is-activated');
+
+						selectOptions.each(function() {
+							if($(this).val() == listItem.data("value")) {
+								$(this).attr("selected", "selected");
+							}
+							else {
+								$(this).removeAttr("selected");	
+							}
+						});
+					}
+				});
 			});
-		});
+		}
 	};
 
 	FormFieldSelect.prototype.populateSelectedValues = function(listItems, selectedOptionsContainer) {

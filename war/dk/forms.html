@@ -5,16 +5,16 @@
 	<title>Reflection Design Kit - Form Elements</title>
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<link rel="stylesheet" media="screen, projection" type="text/css" href="css/designkit.13a7083861fbf013bb1d.css" />
+	<link rel="stylesheet" media="screen, projection" type="text/css" href="css/designkit.66cb517a248be716446b.css" />
 	<!--[if (lt IE 9)]>
 		<script src="js/vendor/html5shiv.min.js"></script>
-		<link rel="stylesheet" media="screen, projection" type="text/css" href="css/reflection-main-ie8.4d83d814d6b1bc40495d.css" />
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="css/reflection-main-ie8.bcca63322fcfac7d3ecf.css" />
 	<![endif]-->
  	<!--[if !lt IE 9]><!-->
 		<script src="js/vendor/picturefill.2.2.0.min.js" async></script>
 	<!-- <![endif]-->
 	<!--[if (gte IE 9)|(IEMobile)|(!IE)]><!-->
-		<link rel="stylesheet" media="screen, projection" type="text/css" href="css/reflection-main.f079736b125e101d11b8.css" />
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="css/reflection-main.4b01c7685c136d06203e.css" />
 	<!--<![endif]-->
 	<link rel="stylesheet" href="js/vendor/jquery.mCustomScrollbar.css" />
 </head>
@@ -49,10 +49,21 @@
 							<input type="email" name="email" id="emailtest" autocomplete="off" />
 							<label for="emailtest">Hint Label Text</label>
 						</div>
-						<h3 class="heading-style--heading-six">Inline Error (focus to demo)</h3>
-						<div class="form-field js-inline-form-field-error-demo">
+						<h3 class="heading-style--heading-six">Inline Error</h3>
+						<div class="form-field form-field--error js-inline-form-field-error-demo">
 							<input type="email" name="emailtest2" id="emailtest2" autocomplete="off" />
-							<label for="emailtest2">Hint Label Text:</label>
+							<label for="emailtest2">Hint Label Text <span>Error message example</span></label>
+						</div>
+						<h3 class="heading-style--heading-six">Hint inputs (focus to view)</h3>
+						<div class="form-field">
+							<input type="email" name="emailtest3" id="emailtest3" autocomplete="off" />
+							<label for="emailtest3">Hint Label Text <span class="input-hint">Caps Lock is on, just so you know</span></label>
+						</div>
+						<h3 class="heading-style--heading-six">Input information</h3>
+						<div class="form-field">
+							<input type="email" name="emailtest4" id="emailtest4" autocomplete="off" />
+							<label for="emailtest4">Hint Label Text</label>
+							<a href="#" target="_blank" class="form-field-help ref-icon-after ref-icon-after--question"><span>What's this?</span></a>
 						</div>
 					</div>
 					<div class="grid__column grid__column--two-thirds">
@@ -72,6 +83,17 @@
 								&lt;div class="form-field form-field--error"&gt;
 									&lt;input type="email" name="email2" id="email2" autocomplete="off" /&gt;
 									&lt;label for="email2">Hint Label Text:&lt;/label&gt;
+								&lt;/div&gt;<br /><br />
+								// Hint inputs<br />
+								&lt;div class="form-field"&gt;<br />
+									&lt;input type="email" name="emailtest3" id="emailtest3" autocomplete="off" /&gt;<br />
+									&lt;label for="emailtest3">Hint Label Text &lt;span class="input-hint"&gt;Caps Lock is on, just so you know&lt;/span&gt;&lt;/label&gt;<br />
+								&lt;/div&gt;<br /><br />
+								// Input information<br />
+								&lt;div class="form-field"&gt;<br />
+									&lt;input type="email" name="emailtest4" id="emailtest4" autocomplete="off" /&gt;<br />
+									&lt;label for="emailtest4">Hint Label Text &lt;span class="input-hint"&gt;Caps Lock is on, just so you know&lt;/span&gt;&lt;/label&gt;<br />
+									&lt;a href="#" target="_blank" class="form-field-help ref-icon-after ref-icon-after--question"&gt;&lt;span&gt;What's this?&lt;/span&gt;&lt;/a&gt;<br />
 								&lt;/div&gt;
 							</code>
 						</div>
@@ -144,18 +166,18 @@
 									<ul>
 										<li>
 											<input type="checkbox" name="checkboxMultipleOneDisabled" id="checkboxMultipleOneDisabled" disabled />
-											<label for="checkboxMultipleOneDisabled" class="checkboxLabel">Lorem</label>
-											<label for="checkboxMultipleOneDisabled" class="checkboxLabelVisible">Lorem</label>
+											<label for="checkboxMultipleOneDisabled" class="checkboxLabel">Option 1</label>
+											<label for="checkboxMultipleOneDisabled" class="checkboxLabelVisible">Option 1</label>
 										</li>
 										<li>
 											<input type="checkbox" name="checkboxMultipleTwoDisabled" id="checkboxMultipleTwoDisabled" disabled />
-											<label for="checkboxMultipleTwoDisabled" class="checkboxLabel">Ipsum</label>
-											<label for="checkboxMultipleTwoDisabled" class="checkboxLabelVisible">Ipsum</label>
+											<label for="checkboxMultipleTwoDisabled" class="checkboxLabel">Option 2</label>
+											<label for="checkboxMultipleTwoDisabled" class="checkboxLabelVisible">Option 2</label>
 										</li>
 										<li>
 											<input type="checkbox" name="checkboxMultipleThreeDisabled" id="checkboxMultipleThreeDisabled" disabled />
-											<label for="checkboxMultipleThreeDisabled" class="checkboxLabel">Dolor</label>
-											<label for="checkboxMultipleThreeDisabled" class="checkboxLabelVisible">Dolor</label>
+											<label for="checkboxMultipleThreeDisabled" class="checkboxLabel">Option 3</label>
+											<label for="checkboxMultipleThreeDisabled" class="checkboxLabelVisible">Option 3</label>
 										</li>
 									</ul>
 								</div>
@@ -169,18 +191,18 @@
 									<ul>
 										<li>
 											<input type="checkbox" name="checkboxMultipleOne" id="checkboxMultipleOne" />
-											<label for="checkboxMultipleOne" class="checkboxLabel">Lorem</label>
-											<label for="checkboxMultipleOne" class="checkboxLabelVisible">Lorem</label>
+											<label for="checkboxMultipleOne" class="checkboxLabel">Option 1</label>
+											<label for="checkboxMultipleOne" class="checkboxLabelVisible">Option 1</label>
 										</li>
 										<li>
 											<input type="checkbox" name="checkboxMultipleTwo" id="checkboxMultipleTwo" />
-											<label for="checkboxMultipleTwo" class="checkboxLabel">Ipsum</label>
-											<label for="checkboxMultipleTwo" class="checkboxLabelVisible">Ipsum</label>
+											<label for="checkboxMultipleTwo" class="checkboxLabel">Option 2</label>
+											<label for="checkboxMultipleTwo" class="checkboxLabelVisible">Option 2</label>
 										</li>
 										<li>
 											<input type="checkbox" name="checkboxMultipleThree" id="checkboxMultipleThree" />
-											<label for="checkboxMultipleThree" class="checkboxLabel">Dolor</label>
-											<label for="checkboxMultipleThree" class="checkboxLabelVisible">Dolor</label>
+											<label for="checkboxMultipleThree" class="checkboxLabel">Option 3</label>
+											<label for="checkboxMultipleThree" class="checkboxLabelVisible">Option 3</label>
 										</li>
 									</ul>
 								</div>
@@ -230,10 +252,10 @@
 						<h3 class="heading-style--heading-six">Active</h3>
 						<div class="form-field form-field--select">						
 							<select class="js-field--select">
-							    <option value="" disabled selected>Choose your option</option>
-							    <option value="a1p" data-previous="true">Previously Selected Option</option>
-							    <option value="a2p">Available for selection</option>
-							    <option value="a3p">Option 3</option>
+							    <option value="" disabled selected>Select an account</option>
+							    <option value="a1p" data-previous="true" data-selectedtext="Linked">Account 1</option>
+							    <option value="a2p">Account 2</option>
+							    <option value="a3p">Account 3</option>
 							</select>
 						</div>
 					</div>
@@ -273,8 +295,8 @@
 							<ul>
 								<li>
 									<input type="checkbox" name="checkboxOneDisabled" id="checkboxOneDisabled" disabled />
-									<label for="checkboxOneDisabled" class="checkboxLabelDisabled">Lorem ipsum dolor amet elict</label>
-									<label for="checkboxOneDisabled" class="checkboxLabelVisible checkboxLabelVisibleDisabled">Lorem ipsum dolor amet elict</label>
+									<label for="checkboxOneDisabled" class="checkboxLabelDisabled">Check box option disabled</label>
+									<label for="checkboxOneDisabled" class="checkboxLabelVisible checkboxLabelVisibleDisabled">Check box option disabled</label>
 								</li>
 							</ul>
 						</div>
@@ -283,18 +305,18 @@
 							<ul>
 								<li>
 									<input type="checkbox" name="checkboxOne" id="checkboxOne" />
-									<label for="checkboxOne" class="checkboxLabel">Lorem ipsum dolor amet elict</label>
-									<label for="checkboxOne" class="checkboxLabelVisible">Lorem ipsum dolor amet elict</label>
+									<label for="checkboxOne" class="checkboxLabel">Option 1</label>
+									<label for="checkboxOne" class="checkboxLabelVisible">Option 1</label>
 								</li>
 								<li>
 									<input type="checkbox" name="checkboxTwo" id="checkboxTwo" />
-									<label for="checkboxTwo" class="checkboxLabel">Lorem ipsum dolor amet elict</label>
-									<label for="checkboxTwo" class="checkboxLabelVisible">Lorem ipsum dolor amet elict</label>
+									<label for="checkboxTwo" class="checkboxLabel">Option 2</label>
+									<label for="checkboxTwo" class="checkboxLabelVisible">Option 2</label>
 								</li>
 								<li>
 									<input type="checkbox" name="checkboxThree" id="checkboxThree" />
-									<label for="checkboxThree" class="checkboxLabel">Lorem ipsum dolor amet elict</label>
-									<label for="checkboxThree" class="checkboxLabelVisible">Lorem ipsum dolor amet elict</label>
+									<label for="checkboxThree" class="checkboxLabel">Option 3</label>
+									<label for="checkboxThree" class="checkboxLabelVisible">Option 3</label>
 								</li>
 							</ul>
 						</div>
@@ -307,15 +329,15 @@
 									&nbsp;&lt;ul&gt;<br />
 										&nbsp;&nbsp;&lt;li&gt;<br />
 											&nbsp;&nbsp;&nbsp;&lt;input type="checkbox" name="checkboxOneDisabled" id="checkboxOneDisabled" disabled /&gt;<br />
-											&nbsp;&nbsp;&nbsp;&lt;label for="checkboxOneDisabled" class="checkboxLabelDisabled">Lorem ipsum dolor amet elict&lt;/label&gt;<br />
-											&nbsp;&nbsp;&nbsp;&lt;label for="checkboxOneDisabled" class="checkboxLabelVisible checkboxLabelVisibleDisabled">Lorem ipsum dolor amet elict&lt;/label&gt;<br />
+											&nbsp;&nbsp;&nbsp;&lt;label for="checkboxOneDisabled" class="checkboxLabelDisabled">Option 1&lt;/label&gt;<br />
+											&nbsp;&nbsp;&nbsp;&lt;label for="checkboxOneDisabled" class="checkboxLabelVisible checkboxLabelVisibleDisabled">Option 1&lt;/label&gt;<br />
 										&nbsp;&nbsp;&lt;/li&gt;<br />
 									&nbsp;&lt;/ul&gt;<br />
 								&lt;/div&gt;<br /><br />
 								// Active - within the structure above<br />
 								&lt;input type="checkbox" name="checkboxOne" id="checkboxOne" /&gt;<br />
-								&lt;label for="checkboxOne" class="checkboxLabel">Lorem ipsum dolor amet elict&lt;/label&gt;<br />
-								&lt;label for="checkboxOne" class="checkboxLabelVisible">Lorem ipsum dolor amet elict&lt;/label&gt;<br />
+								&lt;label for="checkboxOne" class="checkboxLabel">Option 1&lt;/label&gt;<br />
+								&lt;label for="checkboxOne" class="checkboxLabelVisible">Option 1&lt;/label&gt;<br />
 							</code>
 						</div>
 					</div>
@@ -347,18 +369,18 @@
 							<ul>
 								<li>
 									<input type="radio" name="radioButtons" id="radioButtonOne" />
-									<label for="radioButtonOne" class="radioButtonLabel">Lorem ipsum dolor amet elict</label>
-									<label for="radioButtonOne" class="radioButtonLabelVisible">Lorem ipsum dolor amet elict</label>
+									<label for="radioButtonOne" class="radioButtonLabel">Option 1</label>
+									<label for="radioButtonOne" class="radioButtonLabelVisible">Option 1</label>
 								</li>
 								<li>
 									<input type="radio" name="radioButtons" id="radioButtonTwo" />
-									<label for="radioButtonTwo" class="radioButtonLabel">Lorem ipsum dolor amet elict</label>
-									<label for="radioButtonTwo" class="radioButtonLabelVisible">Lorem ipsum dolor amet elict</label>
+									<label for="radioButtonTwo" class="radioButtonLabel">Option 2</label>
+									<label for="radioButtonTwo" class="radioButtonLabelVisible">Option 2</label>
 								</li>
 								<li>
 									<input type="radio" name="radioButtons" id="radioButtonThree" />
-									<label for="radioButtonThree" class="radioButtonLabel">Lorem ipsum dolor amet elict</label>
-									<label for="radioButtonThree" class="radioButtonLabelVisible">Lorem ipsum dolor amet elict</label>
+									<label for="radioButtonThree" class="radioButtonLabel">Option 3</label>
+									<label for="radioButtonThree" class="radioButtonLabelVisible">Option 3</label>
 								</li>
 							</ul>
 						</div>
@@ -456,7 +478,7 @@
 				<div class="grid__column grid__column--full-width">
 					<h2 class="heading-style--heading-three">Example form colours</h2>
 				</div>
-				<div class="grid__column form-demo grid__column--push-one overflow-visible">
+				<div class="grid__column form-demo overflow-visible">
 					<form class="overflow-visible">
 						<h3 class="heading-style--heading-six">Light background</h3>
 						<div class="form-field form-field--disabled">						
@@ -465,16 +487,26 @@
 						</div>
 						<div class="form-field">						
 							<input type="text" name="firstname" id="firstname" autocomplete="off" />
-							<label for="firstname">First Name</label>
+							<label for="firstname">
+								First Name
+								<span class="input-hint">Caps Lock is on, just so you know</span>
+							</label>
+							<a href="#" target="_blank" class="form-field-help ref-icon-after ref-icon-after--question"><span>What's this?</span></a>
 						</div>
 						<div class="form-field">						
-							<input type="password" name="password" id="password" autocomplete="off" />
-							<label for="password">Password</label>
+							<input type="password" name="password" id="password" autocomplete="off" class="js-mock-password-entry" />
+							<label for="password">
+								Password
+								<div class="password-strength-indicator-container">
+									<span class="password-strength-description">Strength</span>
+									<div class="password-strength-indicator"><span></span></div>
+								</div>
+							</label>
 						</div>
 						<div class="form-field form-field--select">						
 							<select class="js-field--select">
 							    <option value="" disabled selected>App Store Account</option>
-							    <option value="itunesconnect" data-previous="true">iTunes Connect</option>
+							    <option value="itunesconnect" data-previous="true" data-selectedtext="Linked">iTunes Connect</option>
 							    <option value="googleplay">Google Play</option>
 							</select>
 						</div>
@@ -522,7 +554,8 @@
 						<input type="submit" class="ref-button--full-width" value="Apply Now" />
 					</form>
 				</div>
-				<div class="grid__column form-demo forms--mid-theme overflow-visible">
+
+				<div class="grid__column form-demo grid__column--push-one forms--mid-theme overflow-visible">
 					<form class="overflow-visible">
 						<h3 class="heading-style--heading-six">Mid background</h3>
 						<div class="form-field form-field--disabled">						
@@ -531,16 +564,23 @@
 						</div>
 						<div class="form-field">						
 							<input type="text" name="firstname" id="firstnamemid" autocomplete="off" />
-							<label for="firstnamemid">First Name</label>
+							<label for="firstnamemid">First Name<span class="input-hint">Caps Lock is on, just so you know</span></label>
+							<a href="#" target="_blank" class="form-field-help ref-icon-after ref-icon-after--question"><span>What's this?</span></a>
 						</div>
 						<div class="form-field">						
-							<input type="password" name="passwordmid" id="passwordmid" autocomplete="off" />
-							<label for="passwordmid">Password</label>
+							<input type="password" name="passwordmid" id="passwordmid" autocomplete="off" class="js-mock-password-entry" />
+							<label for="passwordmid">
+								Password
+								<div class="password-strength-indicator-container">
+									<span class="password-strength-description">Strength</span>
+									<div class="password-strength-indicator"><span></span></div>
+								</div>
+							</label>							
 						</div>
 						<div class="form-field form-field--select">						
 							<select class="js-field--select">
 							    <option value="" disabled selected>App Store Account</option>
-							    <option value="itunesconnectmid" data-previous="true">iTunes Connect</option>
+							    <option value="itunesconnectmid" data-previous="true" data-selectedtext="Linked">iTunes Connect</option>
 							    <option value="googleplaymid">Google Play</option>
 							</select>
 						</div>
@@ -588,7 +628,8 @@
 						<input type="submit" class="ref-button--full-width" value="Apply Now" />
 					</form>
 				</div>
-				<div class="grid__column form-demo forms--dark-theme grid__column--push-one overflow-visible">
+
+				<div class="grid__column form-demo forms--dark-theme overflow-visible clear-both">
 					<form class="overflow-visible">
 						<h3 class="heading-style--heading-six">Dark background</h3>
 						<div class="form-field form-field--disabled">						
@@ -597,16 +638,23 @@
 						</div>
 						<div class="form-field">						
 							<input type="text" name="firstname" id="firstnamedark" autocomplete="off" />
-							<label for="firstnamedark">First Name</label>
+							<label for="firstnamedark">First Name<span class="input-hint">Caps Lock is on, just so you know</span></label>
+							<a href="#" target="_blank" class="form-field-help ref-icon-after ref-icon-after--question"><span>What's this?</span></a>
 						</div>
 						<div class="form-field">						
-							<input type="password" name="passwordmid" id="passworddark" autocomplete="off" />
-							<label for="passworddark">Password</label>
+							<input type="password" name="passwordmid" id="passworddark" autocomplete="off" class="js-mock-password-entry" />
+							<label for="passworddark">
+								Password
+								<div class="password-strength-indicator-container">
+									<span class="password-strength-description">Strength</span>
+									<div class="password-strength-indicator"><span></span></div>
+								</div>
+							</label>
 						</div>
 						<div class="form-field form-field--select">						
 							<select class="js-field--select">
 							    <option value="" disabled selected>App Store Account</option>
-							    <option value="itunesconnectdark" data-previous="true">iTunes Connect</option>
+							    <option value="itunesconnectdark" data-previous="true" data-selectedtext="Linked">iTunes Connect</option>
 							    <option value="googleplaydark">Google Play</option>
 							</select>
 						</div>
@@ -654,13 +702,48 @@
 						<input type="submit" class="ref-button--full-width" value="Apply Now" />
 					</form>
 				</div>
+				<div class="grid__column grid__column--push-one form-demo forms--dark-theme">
+					<form>
+						<h3 class="heading-style--heading-six">Field specific error</h3>
+						<div class="form-field form-field--disabled">						
+							<input type="text" name="text" id="textdark" autocomplete="off" disabled/>
+							<label for="textdark">Deactivated</label>
+						</div>
+						<div class="form-field form-field--error">						
+							<input type="text" name="firstname" id="firstnamedark" autocomplete="off" />
+							<label for="firstnamedark">First Name <span>Error message lorem ipsum dolor</span></label>
+						</div>
+						<h3 class="heading-style--heading-six">General form error</h3>
+						<input type="submit" class="ref-button--full-width ref-button--error" value="Oops, there's an error..." />
+						<div class="general-error-message">
+							<p>Error message lorem ipsum dolor amet elict</p>
+						</div>
+					</form>
+				</div>
+				<div class="grid__column grid__column--push-one form-demo forms--mid-theme">
+					<form>
+						<h3 class="heading-style--heading-six">Field specific error</h3>
+						<div class="form-field form-field--disabled">						
+							<input type="text" name="text" id="textdark" autocomplete="off" disabled/>
+							<label for="textdark">Deactivated</label>
+						</div>
+						<div class="form-field form-field--error">						
+							<input type="text" name="firstname" id="firstnamedark" autocomplete="off" />
+							<label for="firstnamedark">First Name <span>Error message lorem ipsum dolor</span></label>
+						</div>
+						<h3 class="heading-style--heading-six">General form error</h3>
+						<input type="submit" class="ref-button--full-width ref-button--error" value="Oops, there's an error..." />
+						<div class="general-error-message">
+							<p>Error message lorem ipsum dolor amet elict</p>
+						</div>
+					</form>
+				</div>
 			</div>
 		</div>
 	</div>
 
-	<div id="js-component-import--panel-right" class="panel-right-container"></div>
-
-	<div id="js-component-import--search"></div>
+	<div id="js-component-import--account-container" class="panel-right-container js-account-container"></div>
+	<div id="js-component-import--search-container" class="panel-right-container js-search-container"></div>
 
  	<script src="js/vendor/jquery-1.11.1.min.js"></script>
  	<script src="js/vendor/jquery-ui.custom.min.js"></script>
@@ -673,9 +756,9 @@
 
 	<div id="js-appendScriptsContainer"></div>
 
-	<script src="js/designkit-global-templates-2.js"></script>
-  <script src="js/application-2.js"></script>
-  <script src="js/designkit-app-2.js"></script>
+	<script src="js/designkit-global-templates.js"></script>
+  <script src="js/application.js"></script>
+  <script src="js/designkit-app.js"></script>
   <script>
   	function initScripts() {
   		new FormsPage();
