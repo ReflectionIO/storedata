@@ -16,6 +16,7 @@ import io.reflection.app.datatypes.shared.Event;
 import io.reflection.app.datatypes.shared.Notification;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.helpers.ApiHelper;
+import io.reflection.app.helpers.NotificationHelper;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
 import io.reflection.app.service.event.EventServiceProvider;
@@ -24,8 +25,11 @@ import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
+import co.spchopr.persistentmap.PersistentMap;
 import co.spchopr.persistentmap.PersistentMapFactory;
 
 import com.google.gson.JsonArray;
@@ -156,36 +160,46 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 				DataAccountFetchServiceProvider.provide().triggerDataAccountFetchIngest(dataAccountFetch);
 			}
 
+			// Manage notifications in case of error
+			PersistentMap persistentMap = PersistentMapFactory.createObjectify();
+			String persistentKey = "sales.gather.error.data.account." + dataAccount.id.toString();
 			if (error != null) {
-				if (PersistentMapFactory.createObjectify().get(dataAccount.id.toString()) == null) {
-					if (error.equals(DataTypeHelper.SALES_GATHER_CREDENTIAL_ERROR_EVENT_CODE)) {
-						PersistentMapFactory.createObjectify().put(dataAccount.id.toString(),
-								DataTypeHelper.SALES_GATHER_CREDENTIAL_ERROR_EVENT_CODE + ":first");
-					} else {
-						PersistentMapFactory.createObjectify().put(dataAccount.id.toString(), error);
-					}
-				} else if (PersistentMapFactory.createObjectify().get(dataAccount.id.toString())
-						.equals(DataTypeHelper.SALES_GATHER_CREDENTIAL_ERROR_EVENT_CODE + ":first")) {
-					// User dataAccountOwner = UserServiceProvider.provide().getDataAccountOwner(dataAccount);
-					// Store in datastore the last fetch result for this data account
-					// if (PersistentMapFactory.createObjectify().get(dataAccount.id.toString() == nu)
-					// .equals("Error :Your AppleConnect account or password was entered incorrectly.")) {}
-					// Error :Your AppleConnect account or password was entered incorrectly.
-				} else {
-
-				}
-				User adminUser = UserServiceProvider.provide().getUsernameUser("chi@reflection.io");
+				// Recognize the event error type
 				Event event = null;
 				if (error.equals("Error :Your AppleConnect account or password was entered incorrectly.")) {
-					// event = EventServiceProvider.provide().getCodeEvent(DataTypeHelper.SALES_GATHER_CREDENTIAL_ERROR_EVENT_CODE);
+					event = EventServiceProvider.provide().getCodeEvent(DataTypeHelper.SALES_GATHER_CREDENTIAL_ERROR_EVENT_CODE);
 				} else {
-					// event = EventServiceProvider.provide().getCodeEvent(DataTypeHelper.SALES_GATHER_GENERIC_ERROR_EVENT_CODE);
+					event = EventServiceProvider.provide().getCodeEvent(DataTypeHelper.SALES_GATHER_GENERIC_ERROR_EVENT_CODE);
 				}
-				// Notify admin about the gather error
-				Notification notificationAdmin = (new Notification()).event(event).user(adminUser);
-				NotificationServiceProvider.provide().addNotification(notificationAdmin);
+
+				if (!persistentMap.contains(persistentKey)) { // Last gather wasn't an error
+					Map<String, Object> parameters = new HashMap<String, Object>();
+					String body;
+					if (event.code.equals(DataTypeHelper.SALES_GATHER_CREDENTIAL_ERROR_EVENT_CODE)) {
+						// Notify the owner of the data account if is a credential error
+						User dataAccountOwner = UserServiceProvider.provide().getDataAccountOwner(dataAccount);
+						User testUser = UserServiceProvider.provide().getUsernameUser("william@reflection.io"); // TODO test user
+						User testUser2 = UserServiceProvider.provide().getUsernameUser("stefano@reflection.io");
+						parameters.put("user", dataAccountOwner);
+						parameters.put("dataaccount", dataAccount);
+						body = NotificationHelper.inflate(parameters, event.longBody);
+						Notification notificationOwner = (new Notification()).event(event).user(testUser).body(body);
+						NotificationServiceProvider.provide().addNotification(notificationOwner);
+						Notification notificationOwner2 = (new Notification()).event(event).user(testUser2).body(body);
+						NotificationServiceProvider.provide().addNotification(notificationOwner2);
+					} else {
+						parameters.put("dataaccount", dataAccount);
+						parameters.put("dataaccountfetch", dataAccountFetch);
+						body = NotificationHelper.inflate(parameters, event.longBody);
+					}
+					// Notify admin about the gather error
+					User adminUser = UserServiceProvider.provide().getUsernameUser("chi@reflection.io");
+					Notification notificationAdmin = (new Notification()).event(event).user(adminUser).body(body);
+					NotificationServiceProvider.provide().addNotification(notificationAdmin);
+				}
+				persistentMap.put(persistentKey, event.code);
 			} else {
-				PersistentMapFactory.createObjectify().put(dataAccount.id.toString(), null);
+				persistentMap.delete(persistentKey);
 			}
 
 		} else {
