@@ -1,0 +1,1 @@
+feedfetchid:integer,categoryid:integer,code:integer,country:string,store:string,listtype:string,date:timestamp,currency:string,itemid:string,position:integer,price:float
