@@ -54,8 +54,6 @@ public interface Styles extends ClientBundle {
 
 	public interface HomePageStyles extends CssResource {
 
-		String temporary();
-
 		@ClassName("actions-container")
 		String actionsContainer();
 
@@ -66,6 +64,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("centre-content-container")
 		String centreContentContainer();
+
+		@ClassName("content-list")
+		String contentList();
 
 		String header();
 
@@ -217,6 +218,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("site-logo")
 		String siteLogo();
+
+		@ClassName("small-text")
+		String smallText();
 
 		String touch();
 
