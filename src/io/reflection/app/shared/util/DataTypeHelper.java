@@ -75,6 +75,8 @@ public class DataTypeHelper {
 	public static final String NEW_USER_EVENT_CODE = "WEL";
 	public static final String SELECTED_USER_EVENT_CODE = "SEL";
 	public static final String THANK_YOU_EVENT_CODE = "TRQ";
+	public static final String SALES_GATHER_CREDENTIAL_ERROR_EVENT_CODE = "SCE";
+	public static final String SALES_GATHER_GENERIC_ERROR_EVENT_CODE = "SGE";
 
 	public static final String ROLE_ADMIN_CODE = "ADM";
 	public static final Long ROLE_ADMIN_ID = Long.valueOf(1);
