@@ -18,6 +18,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.channels.Channels;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +34,7 @@ import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
 import com.google.appengine.api.taskqueue.TransientFailureException;
+import com.spacehopperstudios.utility.StringUtils;
 
 /**
  * @author William Shakour (billy1380)
@@ -69,7 +71,10 @@ public abstract class AbstractIngestorIos implements Ingestor {
 			throws DataAccessException;
 
 	protected void enqueue(Queue queue, List<Long> itemIds) {
+		enqueue(queue, itemIds, (String) null);
+	}
 
+	protected void enqueue(Queue queue, List<Long> itemIds, String... params) {
 		StringBuffer buffer = new StringBuffer();
 		for (Long id : itemIds) {
 			if (buffer.length() != 0) {
@@ -82,7 +87,13 @@ public abstract class AbstractIngestorIos implements Ingestor {
 		String store = DataTypeHelper.IOS_STORE_A3, ids = buffer.toString();
 
 		try {
-			queue.add(TaskOptions.Builder.withUrl(String.format(ENQUEUE_INGEST_FORMAT, store, ids)).method(Method.GET));
+			String url = String.format(ENQUEUE_INGEST_FORMAT, store, ids);
+
+			if (params != null && params.length > 0) {
+				url += "&" + StringUtils.join(Arrays.asList(params), "&");
+			}
+
+			queue.add(TaskOptions.Builder.withUrl(url).method(Method.GET));
 		} catch (TransientFailureException ex) {
 
 			if (LOG.isLoggable(Level.WARNING)) {

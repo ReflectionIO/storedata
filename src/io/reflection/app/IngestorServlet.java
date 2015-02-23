@@ -54,9 +54,9 @@ public class IngestorServlet extends HttpServlet {
 
 		String store = req.getParameter("store");
 		String commaDelimitedItemIds = req.getParameter("iids");
+		String ingestorType = req.getParameter("itype");
 
 		if (store != null) {
-
 			String stringItemIds[] = null;
 			List<Long> itemIds = null;
 			if (commaDelimitedItemIds != null && commaDelimitedItemIds.length() != 0) {
@@ -70,7 +70,11 @@ public class IngestorServlet extends HttpServlet {
 
 			if (itemIds != null && itemIds.size() != 0) {
 				try {
-					IngestorFactory.getIngestorForStore(store.toLowerCase()).ingest(itemIds);
+					if (ingestorType == null || "".equals(ingestorType)) {
+						IngestorFactory.getIngestorForStore(store.toLowerCase()).ingest(itemIds);
+					} else if ("bigquery".equalsIgnoreCase(ingestorType)) {
+						IngestorFactory.getBigQueryIngestorForStore(store.toLowerCase()).ingest(itemIds);
+					}
 				} catch (DataAccessException e) {
 					throw new RuntimeException(e);
 				}
