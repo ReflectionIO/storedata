@@ -24,7 +24,6 @@ import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
-import io.reflection.app.service.ServiceType;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
@@ -57,7 +56,7 @@ final class SaleService implements ISaleService {
 	}
 
 	public String getName() {
-		return ServiceType.ServiceTypeSale.toString();
+		return DEFAULT_NAME;
 	}
 
 	@Override
@@ -131,6 +130,11 @@ final class SaleService implements ISaleService {
 		sale.period = stripslashes(connection.getCurrentRowString("period"));
 		sale.category = stripslashes(connection.getCurrentRowString("category"));
 
+		if (connection.getCurrentRowLong("dataaccountfetchid") != null) {
+			sale.fetch = new DataAccountFetch();
+			sale.fetch.id = connection.getCurrentRowLong("dataaccountfetchid");
+		}
+
 		return sale;
 	}
 
@@ -141,12 +145,13 @@ final class SaleService implements ISaleService {
 		// TODO: sort out nullable values
 
 		final String addSaleQuery = String
-				.format("INSERT INTO `sale` (`dataaccountid`,`itemid`,`country`,`sku`,`developer`,`title`,`version`,`typeidentifier`,`units`,`proceeds`,`currency`,`begin`,`end`,`customercurrency`,`customerprice`,`promocode`,`parentidentifier`,`subscription`,`period`,`category`) VALUES (%d,%d,'%s','%s','%s','%s','%s','%s',%d,%d,'%s',FROM_UNIXTIME(%d),FROM_UNIXTIME(%d),'%s',%d,'%s','%s','%s','%s','%s')",
-						sale.account.id.longValue(), sale.item.id.longValue(), addslashes(sale.country), addslashes(sale.sku), addslashes(sale.developer),
-						addslashes(sale.title), addslashes(sale.version), addslashes(sale.typeIdentifier), sale.units.intValue(),
-						(int) (sale.proceeds.floatValue() * 100.0f), addslashes(sale.currency), sale.begin.getTime() / 1000, sale.end.getTime() / 1000,
-						addslashes(sale.customerCurrency), (int) (sale.customerPrice.floatValue() * 100.0f), addslashes(sale.promoCode),
-						addslashes(sale.parentIdentifier), addslashes(sale.subscription), addslashes(sale.period), addslashes(sale.category));
+				.format("INSERT INTO `sale` (`dataaccountfetchid`,`dataaccountid`,`itemid`,`country`,`sku`,`developer`,`title`,`version`,`typeidentifier`,`units`,`proceeds`,`currency`,`begin`,`end`,`customercurrency`,`customerprice`,`promocode`,`parentidentifier`,`subscription`,`period`,`category`) VALUES (%s,%d,%d,'%s','%s','%s','%s','%s','%s',%d,%d,'%s',FROM_UNIXTIME(%d),FROM_UNIXTIME(%d),'%s',%d,'%s','%s','%s','%s','%s')",
+						sale.fetch != null && sale.fetch.id != null ? "NULL" : sale.fetch.id.toString(), sale.account.id.longValue(), sale.item.id.longValue(),
+						addslashes(sale.country), addslashes(sale.sku), addslashes(sale.developer), addslashes(sale.title), addslashes(sale.version),
+						addslashes(sale.typeIdentifier), sale.units.intValue(), (int) (sale.proceeds.floatValue() * 100.0f), addslashes(sale.currency),
+						sale.begin.getTime() / 1000, sale.end.getTime() / 1000, addslashes(sale.customerCurrency),
+						(int) (sale.customerPrice.floatValue() * 100.0f), addslashes(sale.promoCode), addslashes(sale.parentIdentifier),
+						addslashes(sale.subscription), addslashes(sale.period), addslashes(sale.category));
 
 		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
 
@@ -276,10 +281,11 @@ final class SaleService implements ISaleService {
 			if (skuItemLookup.size() > 0) {
 				parentIdentifiers = "AND `parentidentifier` IN ('" + StringUtils.join(skuItemLookup.keySet(), "','") + "')";
 			}
-			String getIAPQuery = String.format("SELECT DISTINCT parentidentifier FROM `sale` WHERE `typeidentifier` IN ('IA1','IA9') %s", parentIdentifiers);
+			String getIAPQuery = String.format("SELECT DISTINCT `parentidentifier` FROM `sale` WHERE `typeidentifier` IN ('IA1','IA9') %s", parentIdentifiers);
 
 			saleConnection.executeQuery(getIAPQuery);
 			while (saleConnection.fetchNextRow()) {
+				// TODO: use properties helper for this
 				skuItemLookup.get(saleConnection.getCurrentRowString("parentidentifier")).properties = "{\"usesIap\":true}";
 			}
 
@@ -340,7 +346,7 @@ final class SaleService implements ISaleService {
 		StringBuffer addSalesBatchQuery = new StringBuffer();
 
 		addSalesBatchQuery
-				.append("INSERT INTO `sale` (`dataaccountid`,`itemid`,`country`,`sku`,`developer`,`title`,`version`,`typeidentifier`,`units`,`proceeds`,`currency`,`begin`,`end`,`customercurrency`,`customerprice`,`promocode`,`parentidentifier`,`subscription`,`period`,`category`) VALUES");
+				.append("INSERT INTO `sale` (`dataaccountfetchid`,`dataaccountid`,`itemid`,`country`,`sku`,`developer`,`title`,`version`,`typeidentifier`,`units`,`proceeds`,`currency`,`begin`,`end`,`customercurrency`,`customerprice`,`promocode`,`parentidentifier`,`subscription`,`period`,`category`) VALUES");
 
 		for (Sale sale : sales) {
 			if (addSalesBatchQuery.charAt(addSalesBatchQuery.length() - 1) != 'S') {
@@ -348,11 +354,12 @@ final class SaleService implements ISaleService {
 			}
 
 			addSalesBatchQuery.append(String.format(
-					"(%d,%s,'%s','%s','%s','%s','%s','%s',%d,%d,'%s',FROM_UNIXTIME(%d),FROM_UNIXTIME(%d),'%s',%d,'%s','%s','%s','%s','%s')",
-					sale.account.id.longValue(), sale.item.internalId == null ? "NULL" : "'" + sale.item.internalId + "'", addslashes(sale.country),
-					addslashes(sale.sku), addslashes(sale.developer), addslashes(sale.title), addslashes(sale.version), addslashes(sale.typeIdentifier),
-					sale.units.intValue(), (int) (sale.proceeds.floatValue() * 100.0f), addslashes(sale.currency), sale.begin.getTime() / 1000,
-					sale.end.getTime() / 1000, addslashes(sale.customerCurrency), (int) (sale.customerPrice.floatValue() * 100.0f), addslashes(sale.promoCode),
+					"(%s,%d,%s,'%s','%s','%s','%s','%s','%s',%d,%d,'%s',FROM_UNIXTIME(%d),FROM_UNIXTIME(%d),'%s',%d,'%s','%s','%s','%s','%s')",
+					sale.fetch == null || sale.fetch.id == null ? "NULL" : sale.fetch.id.toString(), sale.account.id.longValue(),
+					sale.item.internalId == null ? "NULL" : "'" + sale.item.internalId + "'", addslashes(sale.country), addslashes(sale.sku),
+					addslashes(sale.developer), addslashes(sale.title), addslashes(sale.version), addslashes(sale.typeIdentifier), sale.units.intValue(),
+					(int) (sale.proceeds.floatValue() * 100.0f), addslashes(sale.currency), sale.begin.getTime() / 1000, sale.end.getTime() / 1000,
+					addslashes(sale.customerCurrency), (int) (sale.customerPrice.floatValue() * 100.0f), addslashes(sale.promoCode),
 					addslashes(sale.parentIdentifier), addslashes(sale.subscription), addslashes(sale.period), addslashes(sale.category)));
 		}
 
@@ -490,7 +497,7 @@ final class SaleService implements ISaleService {
 		// (category relates to store by a3code)
 		// we are using end for date but we could equally use begin
 		String getSalesQuery = String
-				.format("SELECT * FROM `sale` WHERE `country`='%s' AND (%d=%d OR `category`='%s') AND `dataaccountid`=%d AND %s AND (`itemid`='%7$s' OR parentidentifier = (SELECT `sku` FROM `sale` WHERE `itemid`='%7$s' LIMIT 1)) AND `deleted`='n'",
+				.format("SELECT * FROM `sale` WHERE `country`='%s' AND (%d=%d OR `category`='%s') AND `dataaccountid`=%d AND %s AND (`itemid`='%7$s' OR `parentidentifier` = (SELECT `sku` FROM `sale` WHERE `itemid`='%7$s' LIMIT 1)) AND `deleted`='n'",
 						country.a2Code, 24, category == null ? 24 : category.id.longValue(), category == null ? "" : category.name,
 						linkedAccount.id.longValue(), SqlQueryHelper.beforeAfterQuery(end, start, "end"), item.internalId);
 
@@ -621,7 +628,7 @@ final class SaleService implements ISaleService {
 	 * @see io.reflection.app.service.sale.ISaleService#getDataAccount(java.lang.String)
 	 */
 	@Override
-	public DataAccount getDataAccount(String itemId) throws DataAccessException {
+	public DataAccount getItemIdDataAccount(String itemId) throws DataAccessException {
 		DataAccount dataAccount = null;
 
 		String getDataAccountIdQuery = String.format("SELECT `dataaccountid` FROM `sale` WHERE `itemid`='%s' AND `deleted`='n' LIMIT 1", itemId);
@@ -773,6 +780,8 @@ final class SaleService implements ISaleService {
 	public List<Long> getDataAccountFetchSaleIds(DataAccountFetch dataAccountFetch, Pager pager) throws DataAccessException {
 		List<Long> saleIds = new ArrayList<Long>();
 
+		// TODO: we should now have the dataaccountfetchid on the table so we should not require the date and dataaccount
+		
 		if (dataAccountFetch.date == null || dataAccountFetch.linkedAccount == null) {
 			dataAccountFetch = DataAccountFetchServiceProvider.provide().getDataAccountFetch(dataAccountFetch.id);
 		}

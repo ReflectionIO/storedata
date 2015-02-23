@@ -319,13 +319,14 @@
 
 				<xsd:attribute name="a" type="xsd:double" />
 				<xsd:attribute name="b" type="xsd:double" />
-				
+
 				<xsd:attribute name="aStandardError" type="xsd:double" />
                 <xsd:attribute name="bStandardError" type="xsd:double" />
                 
                 <xsd:attribute name="adjustedRSquared" type="xsd:double" />
                 <xsd:attribute name="regressionSumSquares" type="xsd:double" />
                 
+				<xsd:attribute name="summaryDate" type="xsd:date" />
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>

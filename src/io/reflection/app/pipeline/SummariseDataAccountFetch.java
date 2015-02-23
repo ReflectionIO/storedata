@@ -7,14 +7,14 @@
 //
 package io.reflection.app.pipeline;
 
-import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPAD_IOS;
-import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS;
-import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_UNIVERSAL_IOS;
-import static io.reflection.app.service.sale.ISaleService.INAPP_PURCHASE_PURCHASE_IOS;
-import static io.reflection.app.service.sale.ISaleService.INAPP_PURCHASE_SUBSCRIPTION_IOS;
-import static io.reflection.app.service.sale.ISaleService.UPDATE_IPAD_IOS;
-import static io.reflection.app.service.sale.ISaleService.UPDATE_IPHONE_AND_IPOD_TOUCH_IOS;
-import static io.reflection.app.service.sale.ISaleService.UPDATE_UNIVERSAL_IOS;
+import static io.reflection.app.apple.SaleTransactionTypes.FREE_OR_PAID_APP_IPAD_IOS;
+import static io.reflection.app.apple.SaleTransactionTypes.FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS;
+import static io.reflection.app.apple.SaleTransactionTypes.FREE_OR_PAID_APP_UNIVERSAL_IOS;
+import static io.reflection.app.apple.SaleTransactionTypes.INAPP_PURCHASE_PURCHASE_IOS;
+import static io.reflection.app.apple.SaleTransactionTypes.INAPP_PURCHASE_SUBSCRIPTION_IOS;
+import static io.reflection.app.apple.SaleTransactionTypes.UPDATE_IPAD_IOS;
+import static io.reflection.app.apple.SaleTransactionTypes.UPDATE_IPHONE_AND_IPOD_TOUCH_IOS;
+import static io.reflection.app.apple.SaleTransactionTypes.UPDATE_UNIVERSAL_IOS;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.datatypes.shared.FormType;
 import io.reflection.app.datatypes.shared.Sale;

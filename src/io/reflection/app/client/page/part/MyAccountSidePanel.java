@@ -8,6 +8,7 @@
 package io.reflection.app.client.page.part;
 
 import io.reflection.app.client.controller.FilterController;
+import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.datatypes.shared.User;
 
@@ -43,9 +44,15 @@ public class MyAccountSidePanel extends Composite {
 
 	@UiField InlineHyperlink notificationsLink;
 	@UiField LIElement notificationsListItem;
+	@UiField LIElement notificationDivider;
 
 	public MyAccountSidePanel() {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		if (!SessionController.get().isLoggedInUserAdmin()) {
+			notificationsListItem.removeFromParent();
+			notificationDivider.removeFromParent();
+		}
 	}
 
 	private void setMyAppsLinkActive() {

@@ -13,8 +13,12 @@ final class SaleServiceFactory {
 	/**
 	 * @return
 	 */
-	public static ISaleService createNewSaleService() {
+	public static ISaleService createNewService() {
 		return new SaleService();
 	}
 
+	public static ISaleService createNewBigQueryService() {
+		return new SaleBigQueryService();
+	}
+	
 }

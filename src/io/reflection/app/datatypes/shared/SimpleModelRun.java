@@ -8,6 +8,8 @@
 //
 package io.reflection.app.datatypes.shared;
 
+import java.util.Date;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
@@ -21,6 +23,7 @@ public class SimpleModelRun extends DataType {
 	public Double bStandardError;
 	public Double adjustedRSquared;
 	public Double regressionSumSquares;
+	public Date summaryDate;
 
 	@Override
 	public JsonObject toJson() {
@@ -39,6 +42,8 @@ public class SimpleModelRun extends DataType {
 		object.add("adjustedRSquared", jsonAdjustedRSquared);
 		JsonElement jsonRegressionSumSquares = regressionSumSquares == null ? JsonNull.INSTANCE : new JsonPrimitive(regressionSumSquares);
 		object.add("regressionSumSquares", jsonRegressionSumSquares);
+		JsonElement jsonSummaryDate = summaryDate == null ? JsonNull.INSTANCE : new JsonPrimitive(summaryDate.getTime());
+		object.add("summaryDate", jsonSummaryDate);
 		return object;
 	}
 
@@ -88,6 +93,12 @@ public class SimpleModelRun extends DataType {
 				regressionSumSquares = Double.valueOf(jsonRegressionSumSquares.getAsDouble());
 			}
 		}
+		if (jsonObject.has("summaryDate")) {
+			JsonElement jsonSummaryDate = jsonObject.get("summaryDate");
+			if (jsonSummaryDate != null) {
+				summaryDate = new Date(jsonSummaryDate.getAsLong());
+			}
+		}
 	}
 
 	public SimpleModelRun feedFetch(FeedFetch feedFetch) {
@@ -122,6 +133,11 @@ public class SimpleModelRun extends DataType {
 
 	public SimpleModelRun regressionSumSquares(Double regressionSumSquares) {
 		this.regressionSumSquares = regressionSumSquares;
+		return this;
+	}
+		
+	public SimpleModelRun summaryDate(Date summaryDate) {
+		this.summaryDate = summaryDate;
 		return this;
 	}
 }

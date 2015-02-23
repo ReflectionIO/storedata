@@ -12,6 +12,7 @@ import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.MixPanelApiHelper;
 import io.reflection.app.client.mixpanel.MixPanelApi;
+import io.reflection.app.client.page.HomePage;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.Footer;
@@ -263,7 +264,7 @@ public class NavigationController implements ValueChangeHandler<String> {
 
 	private void addStack(Stack value) {
 		MixPanelApiHelper.trackNavigation(value);
-		
+
 		String page = value.getPage();
 
 		if ("logout".equals(page)) {
@@ -333,7 +334,11 @@ public class NavigationController implements ValueChangeHandler<String> {
 				final Stack previous = mStack;
 				mStack = value;
 
-				attachPage(stackPage);
+				final PageType currentPage = stackPage;
+
+				if (currentPage == PageType.HomePageType) {
+					HomePage.applyHomePageTweeks();
+				}
 
 				// So in the web.bindery SimpleEventBus, it records the state of
 				// firingDepth i.e. if eventA calls eventB call eventC, we'd be
@@ -351,7 +356,18 @@ public class NavigationController implements ValueChangeHandler<String> {
 				Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 					@Override
 					public void execute() {
-						DefaultEventBus.get().fireEventFromSource(new NavigationEventHandler.ChangedEvent(previous, mStack), NavigationController.this);
+						if (currentPage != PageType.HomePageType) {
+							HomePage.removeHomePageTweeks();
+						}
+
+						attachPage(currentPage);
+
+						Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+							@Override
+							public void execute() {
+								DefaultEventBus.get().fireEventFromSource(new NavigationEventHandler.ChangedEvent(previous, mStack), NavigationController.this);
+							}
+						});
 					}
 				});
 

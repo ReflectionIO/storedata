@@ -5,16 +5,16 @@
 	<title>Reflection Design Kit - Interactions</title>
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<link rel="stylesheet" media="screen, projection" type="text/css" href="css/designkit.13a7083861fbf013bb1d.css" />
+	<link rel="stylesheet" media="screen, projection" type="text/css" href="css/designkit.66cb517a248be716446b.css" />
 	<!--[if (lt IE 9)]>
 		<script src="js/vendor/html5shiv.min.js"></script>
-		<link rel="stylesheet" media="screen, projection" type="text/css" href="css/reflection-main-ie8.4d83d814d6b1bc40495d.css" />
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="css/reflection-main-ie8.bcca63322fcfac7d3ecf.css" />
 	<![endif]-->
  	<!--[if !lt IE 9]><!-->
 		<script src="js/vendor/picturefill.2.2.0.min.js" async></script>
 	<!-- <![endif]-->
 	<!--[if (gte IE 9)|(IEMobile)|(!IE)]><!-->
-		<link rel="stylesheet" media="screen, projection" type="text/css" href="css/reflection-main.f079736b125e101d11b8.css" />
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="css/reflection-main.4b01c7685c136d06203e.css" />
 	<!--<![endif]-->
 	<link rel="stylesheet" href="js/vendor/jquery.mCustomScrollbar.css" />
 </head>
@@ -45,8 +45,8 @@
 						<h3>Easing</h3>
 						<p>All components have the same base easing rules to create realistic motion which are:</p>
 						<ul class="content-list">
-							<li>Start at full speed, move quickly and ease out sharply but smoothly upon opening, expanding or revealing (see example easing graph below).</li>
-							<li>Ease in slowly but sharply increase speed upon closing, hiding or collapsing. This happens very slightly faster than opening to move on to next task quickly (see example easing graph below).</li>
+							<li>Start at full speed, move quickly and ease out sharply but smoothly upon opening, expanding or revealing (see example easing graph).</li>
+							<li>Ease in slowly but sharply increase speed upon closing, hiding or collapsing. This happens very slightly faster than opening to move on to next task quickly (see example easing graph).</li>
 						</ul>
 						<p>All elements should follow these base rules but have timings tweaked based on their individual size and formation. Motion blur effect is also applied to elements within panels or containers when in motion to make the feeling of movement more realistic to the human eye.</p>
 					</div>
@@ -192,9 +192,8 @@
 		</div>
 	</div>
 
-	<div id="js-component-import--panel-right" class="panel-right-container"></div>
-
-	<div id="js-component-import--search"></div>
+	<div id="js-component-import--account-container" class="panel-right-container js-account-container"></div>
+	<div id="js-component-import--search-container" class="panel-right-container js-search-container"></div>
 
  	<script src="js/vendor/jquery-1.11.1.min.js"></script>
  	<script src="js/vendor/jquery-ui.custom.min.js"></script>
@@ -207,9 +206,9 @@
 
 	<div id="js-appendScriptsContainer"></div>
 
-	<script src="js/designkit-global-templates-2.js"></script>
-  <script src="js/application-2.js"></script>
-  <script src="js/designkit-app-2.js"></script>
+	<script src="js/designkit-global-templates.js"></script>
+  <script src="js/application.js"></script>
+  <script src="js/designkit-app.js"></script>
   <script>
   	function initScripts() {
   		new InteractionsPage();

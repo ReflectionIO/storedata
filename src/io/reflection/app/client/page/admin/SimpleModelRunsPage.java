@@ -146,6 +146,16 @@ public class SimpleModelRunsPage extends Page implements FilterEventHandler {
 		};
 		simpleModelRunTable.addColumn(feedDateColumn, "Date");
 
+		TextColumn<SimpleModelRun> saleSummaryDateColumn = new TextColumn<SimpleModelRun>() {
+
+			@Override
+			public String getValue(SimpleModelRun object) {
+				return object.summaryDate == null ? "-" : DATE_FORMAT_DD_MMM_YYYY.format(object.summaryDate);
+			}
+
+		};
+		simpleModelRunTable.addColumn(saleSummaryDateColumn, "Summary Date");
+
 	}
 
 	private void updateFromFilter() {

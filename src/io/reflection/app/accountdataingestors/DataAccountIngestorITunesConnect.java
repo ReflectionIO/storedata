@@ -76,8 +76,10 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 	public void ingest(DataAccountFetch fetch) {
 
 		if (fetch.status == DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered) {
+
+			List<Sale> sales = null;
 			try {
-				List<Sale> sales = convertFetchToSales(fetch);
+				sales = convertFetchToSales(fetch);
 
 				Long count = SaleServiceProvider.provide().addSalesBatch(sales);
 
@@ -85,13 +87,23 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 					fetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeIngested;
 
 					fetch = DataAccountFetchServiceProvider.provide().updateDataAccountFetch(fetch);
-					
-//					ArchiverFactory.getItemSaleArchiver().enqueueIdDataAccountFetch(fetch.id);
+
+					// ArchiverFactory.getItemSaleArchiver().enqueueIdDataAccountFetch(fetch.id);
 				}
 			} catch (DataAccessException e) {
 				LOG.log(GaeLevel.SEVERE, String.format("Exception occured while ingesting file for data account fetch [%d]", fetch.id.longValue()), e);
 			} catch (IOException e) {
 				LOG.log(GaeLevel.SEVERE, String.format("Exception occured while parsing sales for data account fetch [%d]", fetch.id.longValue()), e);
+			}
+
+			// once all is done, push the sales to biq query too
+			if (sales != null && sales.size() > 0) {
+				try {
+					SaleServiceProvider.provideBigQuery().addSalesBatch(sales);
+				} catch (DataAccessException e) {
+					LOG.log(GaeLevel.WARNING,
+							String.format("Exception occured while adding data to big query for data account fetch[%d]", fetch.id.longValue()), e);
+				}
 			}
 		} else {
 			LOG.log(GaeLevel.WARNING,
@@ -148,7 +160,7 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 
 				Set<String> items = new HashSet<String>();
 				boolean inBody = false;
-				
+
 				while ((line = reader.readLine()) != null) {
 					// skip the first line
 					if (inBody) {
@@ -210,6 +222,7 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 			}
 
 			sale.account = fetch.linkedAccount;
+			sale.fetch = fetch;
 
 			// sale.proceeds split[PROVIDER_INDEX];
 			// split[PROVIDER_COUNTRY_INDEX];

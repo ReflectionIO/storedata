@@ -431,6 +431,32 @@ public class FilterHelper {
 				|| (rhs != null && lhs != null && (rhs.getDate() == lhs.getDate()) && (rhs.getMonth() == lhs.getMonth()) && (rhs.getYear() == lhs.getYear()));
 	}
 
-	// TODO before / after method at day level
+	@SuppressWarnings("deprecation")
+	public static boolean beforeDate(Date rhs, Date lhs) {
+		Date d1 = new Date(rhs.getYear(), rhs.getMonth(), rhs.getDate());
+		Date d2 = new Date(lhs.getYear(), lhs.getMonth(), lhs.getDate());
+		return d1.before(d2);
+	}
+
+	@SuppressWarnings("deprecation")
+	public static boolean afterDate(Date rhs, Date lhs) {
+		Date d1 = new Date(rhs.getYear(), rhs.getMonth(), rhs.getDate());
+		Date d2 = new Date(lhs.getYear(), lhs.getMonth(), lhs.getDate());
+		return d1.after(d2);
+	}
+
+	@SuppressWarnings("deprecation")
+	public static boolean beforeOrSameDate(Date rhs, Date lhs) {
+		Date d1 = new Date(rhs.getYear(), rhs.getMonth(), rhs.getDate());
+		Date d2 = new Date(lhs.getYear(), lhs.getMonth(), lhs.getDate());
+		return d1.equals(d2) || d1.before(d2);
+	}
+
+	@SuppressWarnings("deprecation")
+	public static boolean afterOrSameDate(Date rhs, Date lhs) {
+		Date d1 = new Date(rhs.getYear(), rhs.getMonth(), rhs.getDate());
+		Date d2 = new Date(lhs.getYear(), lhs.getMonth(), lhs.getDate());
+		return d1.equals(d2) || d1.after(d2);
+	}
 
 }

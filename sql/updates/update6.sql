@@ -2,9 +2,13 @@ delimiter $$
 
 USE `rio`$$
 
-ALTER TABLE `simplemodelrun` 
-ADD COLUMN `astandarderror` DOUBLE NULL AFTER `b`,
-ADD COLUMN `bstandarderror` DOUBLE NULL AFTER `astandarderror`,
-ADD COLUMN `adjustedrsquared` DOUBLE NULL AFTER `bstandarderror`,
-ADD COLUMN `regressionsumsquares` DOUBLE NULL AFTER `adjustedrsquared`;
+INSERT INTO `rio`.`permission`
+(`name`,`description`,`code`) VALUES
+('Manage event subscriptions','Users with this permission will be able to perform actions on event subscriptions','MES'),
+('Send notifications', 'Users with this permission will be able to send notifications','SNO')$$
+
+
+UPDATE `rio`.`permission`
+SET `name` = 'Manage events',`description` = 'Users with this permission will be able to perform actions on events'
+WHERE `code` = 'MET'$$
 
