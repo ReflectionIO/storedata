@@ -7,6 +7,7 @@
 //
 package io.reflection.app.pipeline;
 
+import io.reflection.app.bigquery.BigQueryHelper;
 import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
