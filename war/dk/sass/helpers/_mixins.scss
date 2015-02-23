@@ -1,0 +1,33 @@
+/* Typography */
+@function calculateRem($size) {
+  $remSize: $size / 10px;
+  @return $remSize * 1em;
+}
+@mixin font-size($size) {
+  font-size: $size;
+  font-size: calculateRem($size);
+}
+@mixin vertical-centre-content() {
+	height: 100%;
+  &:before {
+    content: '';
+    display: inline-block;
+    width: 0;
+    height: 100%;
+    vertical-align: middle;
+    margin-right: -0.35em; /* Adjusts for spacing */
+  }
+  > * {
+    display: inline-block;
+    vertical-align: middle;
+  }
+}
+
+/*  Mixins as placeholders - so that they appear inline with the style selectors
+/   These are used where groups of styles need to be called but shouldn't be output to the main stylesheet
+*/
+@mixin ellipses() {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

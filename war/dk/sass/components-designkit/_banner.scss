@@ -1,0 +1,120 @@
+.banner {
+	width: 100%;	
+	margin-bottom: 50px;
+	padding-bottom: 60px;
+	background: $reflection-purple;
+	@include breakpoint($phablet) {
+		padding-bottom: 80px;
+	}
+	@include breakpoint($tablet, true) {
+		height: 414px;
+		padding-bottom: 0;
+	}
+	@include breakpoint($desktop-wide) {
+		height: 480px;
+	}
+	> div {
+		display: block;
+		text-align: center;
+		@include breakpoint($tablet, true) {
+			@include vertical-centre-content;
+		}
+	}	
+	@include breakpoint($desktop-wide) {
+		height: 560px;
+		font-size: 12px;
+	}
+}
+.banner--component {
+	background-color: $reflection-green;
+	.banner__intro p {
+		color: #fff;
+	}
+}
+.banner--interactions {
+	background-color: $reflection-red;
+	.banner__intro p {
+		color: #ffe3e8;
+	}
+}
+.banner__graphic {
+	width: 100%;
+	margin-top: 30px;
+	margin-bottom: 20px;
+	@include breakpoint($tablet) {
+		width: 150px;
+		margin-top: -24px;
+	}
+	@include breakpoint($laptop) {
+		margin-left: -10px;
+	}
+	@include breakpoint($desktop, true) {
+		width: 200px;
+	}
+	@include breakpoint($desktop-wide) {
+		width: 220px;
+	}
+	img {
+		width: 80px;
+		@include breakpoint($tablet, true) {
+			width: 100%;
+		}
+	}
+}
+.banner__intro {
+	width: 100%;
+	padding: 0 5%;
+	@include breakpoint($tablet, true) {
+		width: 500px;
+		margin-top: -17px;
+		margin-left: 35px;
+		padding: 0;
+		text-align: left;
+	}
+	@include breakpoint($laptop, true) {
+		width: 500px;
+	}
+	@include breakpoint($desktop, true) {
+		width: 600px;
+	}
+	@include breakpoint($desktop-wide) {
+		width: 684px;
+		margin-left: 55px;
+	}
+	h1 {
+		margin-bottom: 6px;
+		padding-left: 2px;
+		font-family: $brand-body-font;
+		@include font-size(13px);
+		font-weight: 700;
+		text-transform: uppercase;
+		color: $reflection-white;
+		letter-spacing: 0.11em;
+	}
+	h2 {
+		margin-bottom: 22px;
+		font-family: $brand-heading-font;
+		@include font-size(44px);
+		font-weight: 600;
+		color: white;
+		letter-spacing: -0.01em;
+		line-height: 1.1em;
+		overflow: visible;
+		@include breakpoint($phablet, true) {
+			@include font-size(51px);
+		}
+	}
+	p {
+		@include font-size(15px);
+		color: $purple-pale;
+		letter-spacing: 0.007em;
+		@include breakpoint($phablet, true) {
+			@include font-size(17px);
+		}
+		@include breakpoint($tablet, true) {
+			padding: 0;	
+			@include font-size(18px);
+			line-height: 1.55555555555556em;
+		}
+	}
+}

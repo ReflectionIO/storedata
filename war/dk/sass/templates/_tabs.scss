@@ -1,0 +1,7 @@
+.tabs-template {
+	@include breakpoint($tablet, true) {
+		.tabs__content {
+			padding: 4% 5% 5%;
+		}
+	}
+}

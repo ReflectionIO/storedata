@@ -1,0 +1,21 @@
+.account-user-details {
+	margin: 42px 28px 14px;
+	.user-name {
+		margin-bottom: 6px;
+		font-size: 14px;
+		font-weight: 600;
+		color: $reflection-white;
+	}
+	.user-company {
+		margin-bottom: 0;
+		font-size: 14px;
+		font-weight: 400;
+		font-family: $brand-body-font;
+		color: $mid-grey-2;
+	}
+}
+.main-navigation.main-navigation--account {
+	padding-top: 0;
+	padding-bottom: 26px;
+	border-bottom: 1px solid #000;
+}
