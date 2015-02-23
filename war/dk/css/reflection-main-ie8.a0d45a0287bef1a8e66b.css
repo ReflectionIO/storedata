@@ -426,14 +426,14 @@ input::-ms-clear {
 /* Font declarations */
 @font-face {
   font-family: "reflection-icons";
-  src: url("../fonts/fontastic/reflection-icons.eot");
-  src: url("../fonts/fontastic/reflection-icons.eot?#iefix") format("embedded-opentype"), url("../fonts/fontastic/reflection-icons.woff") format("woff"), url("../fonts/fontastic/reflection-icons.ttf") format("truetype"), url("../fonts/fontastic/reflection-icons.svg#reflection-icons") format("svg");
+  src: url("../fonts/fontastic-v2/reflection-icons.eot");
+  src: url("../fonts/fontastic-v2/reflection-icons.eot?#iefix") format("embedded-opentype"), url("../fonts/fontastic-v2/reflection-icons.woff") format("woff"), url("../fonts/fontastic-v2/reflection-icons.ttf") format("truetype"), url("../fonts/fontastic-v2reflection-icons.svg#reflection-icons") format("svg");
   font-weight: normal;
   font-style: normal;
 }
 /* Typography placeholders */
 /* line 22, ../sass/ui/_typography.scss */
-.ref-icon-before:before, .ref-icon-after:after, .form-field.form-field--date-select span:after, .main-navigation > ul ul li.has-child:after, .date-select-to-indicator:after, .reflection-select li.pre-selected:before, .datePickerPreviousButton:after,
+.ref-icon-before:before, .ref-icon-after:after, .form-field.form-field--date-select span:after, .main-navigation > ul ul li.has-child:after, .search-field-no-label input[type=submit], .date-select-to-indicator:after, .reflection-select li.pre-selected:before, .datePickerPreviousButton:after,
 .datePickerNextButton:after, .panel-right .form-field .search-button-mobile {
   speak: none;
   font-family: "reflection-icons";
@@ -552,68 +552,73 @@ ol.content-list--minor li:before {
 }
 
 /* line 101, ../sass/ui/_typography.scss */
+.ref-icon-before--cloud:before {
+  content: "J";
+}
+
+/* line 104, ../sass/ui/_typography.scss */
 .ref-icon-after--angle-up:after {
   content: "m";
 }
 
-/* line 104, ../sass/ui/_typography.scss */
+/* line 107, ../sass/ui/_typography.scss */
 .ref-icon-after--angle-right:after {
   content: "l";
 }
 
-/* line 107, ../sass/ui/_typography.scss */
+/* line 110, ../sass/ui/_typography.scss */
 .ref-icon-after--angle-down:after {
   content: "j";
 }
 
-/* line 110, ../sass/ui/_typography.scss */
+/* line 113, ../sass/ui/_typography.scss */
 .ref-icon-after--angle-left:after {
   content: "k";
 }
 
-/* line 113, ../sass/ui/_typography.scss */
+/* line 116, ../sass/ui/_typography.scss */
 .ref-icon-after--triangle-down:after {
   content: "q";
 }
 
-/* line 116, ../sass/ui/_typography.scss */
+/* line 119, ../sass/ui/_typography.scss */
 .ref-icon-after--dot:after, .main-navigation > ul ul li.has-child:after {
   content: "r";
 }
 
-/* line 119, ../sass/ui/_typography.scss */
+/* line 122, ../sass/ui/_typography.scss */
 .ref-icon-after--check:after {
   content: "t";
 }
 
-/* line 122, ../sass/ui/_typography.scss */
+/* line 125, ../sass/ui/_typography.scss */
 .ref-icon-after--calendar:after {
   content: "u";
 }
 
-/* line 125, ../sass/ui/_typography.scss */
+/* line 128, ../sass/ui/_typography.scss */
 .ref-icon-after--question:after {
   content: "F";
 }
 
 /* Base typography */
-/* line 132, ../sass/ui/_typography.scss */
+/* line 135, ../sass/ui/_typography.scss */
 h1:last-child, h2:last-child, h3:last-child, h4:last-child, h5:last-child, h6:last-child, p:last-child, li:last-child, a:last-child, blockquote:last-child, time:last-child, span:last-child, cite:last-child {
   margin-bottom: 0;
 }
 
-/* line 136, ../sass/ui/_typography.scss */
+/* line 139, ../sass/ui/_typography.scss */
 h1, h2, h3, h4, h5, h6, .heading-style, h1, .heading-style--heading-one, h2, .heading-style--heading-two, h3, .heading-style--heading-three, h4, .heading-style--heading-four, h5, .heading-style--heading-five, h6, .heading-style--heading-six {
   overflow: visible;
   line-height: 1;
   color: #29292c;
 }
-/* line 141, ../sass/ui/_typography.scss */
+/* line 144, ../sass/ui/_typography.scss */
 h1:first-child, h2:first-child, h3:first-child, h4:first-child, h5:first-child, h6:first-child, .heading-style:first-child, h1:first-child, .heading-style--heading-one:first-child, h2:first-child, .heading-style--heading-two:first-child, h3:first-child, .heading-style--heading-three:first-child, h4:first-child, .heading-style--heading-four:first-child, h5:first-child, .heading-style--heading-five:first-child, h6:first-child, .heading-style--heading-six:first-child {
   margin-top: 0;
 }
 
-/* line 145, ../sass/ui/_typography.scss */
+/* line 148, ../sass/ui/_typography.scss */
 h1 + h2, h1 + h3, h1 + h4, h1 + h5, h1 + h6,
 h2 + h3, h2 + h4, h2 + h5, h2 + h6,
 h3 + h4, h3 + h5, h3 + h6,
@@ -667,7 +672,7 @@ h5 + .heading-style--heading-six,
   margin-top: 0;
 }
 
-/* line 198, ../sass/ui/_typography.scss */
+/* line 201, ../sass/ui/_typography.scss */
 h1, .heading-style--heading-one {
   margin-top: 1.48em;
   margin-bottom: 0.68em;
@@ -675,12 +680,12 @@ h1, .heading-style--heading-one {
   font-size: 2.9em;
   line-height: 1.4em;
 }
-/* line 204, ../sass/ui/_typography.scss */
+/* line 207, ../sass/ui/_typography.scss */
 h1:first-child:last-child, .heading-style--heading-one:first-child:last-child {
   margin-bottom: 0.68em;
 }
 
-/* line 217, ../sass/ui/_typography.scss */
+/* line 220, ../sass/ui/_typography.scss */
 h2, .heading-style--heading-two {
   margin-top: 1.48em;
   margin-bottom: 0.68em;
@@ -688,12 +693,12 @@ h2, .heading-style--heading-two {
   font-size: 2.7em;
   line-height: 1.4em;
 }
-/* line 223, ../sass/ui/_typography.scss */
+/* line 226, ../sass/ui/_typography.scss */
 h2:first-child:last-child, .heading-style--heading-two:first-child:last-child {
   margin-bottom: 0.68em;
 }
 
-/* line 236, ../sass/ui/_typography.scss */
+/* line 239, ../sass/ui/_typography.scss */
 h3, .heading-style--heading-three {
   margin-top: 1.48em;
   margin-bottom: 0.68em;
@@ -701,12 +706,12 @@ h3, .heading-style--heading-three {
   font-size: 2.5em;
   line-height: 1.4em;
 }
-/* line 242, ../sass/ui/_typography.scss */
+/* line 245, ../sass/ui/_typography.scss */
 h3:first-child:last-child, .heading-style--heading-three:first-child:last-child {
   margin-bottom: 0.68em;
 }
 
-/* line 246, ../sass/ui/_typography.scss */
+/* line 249, ../sass/ui/_typography.scss */
 h4, .heading-style--heading-four {
   margin-top: 1.85em;
   margin-bottom: 0.75em;
@@ -714,12 +719,12 @@ h4, .heading-style--heading-four {
   font-size: 2em;
   line-height: 1.5em;
 }
-/* line 252, ../sass/ui/_typography.scss */
+/* line 255, ../sass/ui/_typography.scss */
 h4:first-child:last-child, .heading-style--heading-four:first-child:last-child {
   margin-bottom: 0.75em;
 }
 
-/* line 256, ../sass/ui/_typography.scss */
+/* line 259, ../sass/ui/_typography.scss */
 h5, .heading-style--heading-five {
   margin-top: 2.3125em;
   margin-bottom: 1em;
@@ -727,12 +732,12 @@ h5, .heading-style--heading-five {
   font-size: 1.6em;
   line-height: 1.5em;
 }
-/* line 262, ../sass/ui/_typography.scss */
+/* line 265, ../sass/ui/_typography.scss */
 h5:first-child:last-child, .heading-style--heading-five:first-child:last-child {
   margin-bottom: 1em;
 }
 
-/* line 266, ../sass/ui/_typography.scss */
+/* line 269, ../sass/ui/_typography.scss */
 h6, .heading-style--heading-six {
   margin-top: 2.64285714285714em;
   margin-bottom: 1em;
@@ -740,12 +745,12 @@ h6, .heading-style--heading-six {
   font-size: 1.4em;
   line-height: 1.57142857142857em;
 }
-/* line 272, ../sass/ui/_typography.scss */
+/* line 275, ../sass/ui/_typography.scss */
 h6:first-child:last-child, .heading-style--heading-six:first-child:last-child {
   margin-bottom: 1em;
 }
 
-/* line 276, ../sass/ui/_typography.scss */
+/* line 279, ../sass/ui/_typography.scss */
 p {
   max-width: 650px;
   margin-bottom: 1.875em;
@@ -754,115 +759,115 @@ p {
   line-height: 1.5625em;
   color: #5b5b68;
 }
-/* line 288, ../sass/ui/_typography.scss */
+/* line 291, ../sass/ui/_typography.scss */
 p a {
   text-decoration: none;
   color: #6d69c5;
 }
-/* line 291, ../sass/ui/_typography.scss */
+/* line 294, ../sass/ui/_typography.scss */
 p a:hover {
   color: #4b46b5;
 }
-/* line 294, ../sass/ui/_typography.scss */
+/* line 297, ../sass/ui/_typography.scss */
 p a:active {
   position: relative;
   top: 2px;
 }
 
-/* line 300, ../sass/ui/_typography.scss */
+/* line 303, ../sass/ui/_typography.scss */
 .p-style--minor {
   margin-bottom: 1.5em;
   font-size: 14px;
   font-size: 1.4em;
   line-height: 1.64285714285714em;
 }
-/* line 304, ../sass/ui/_typography.scss */
+/* line 307, ../sass/ui/_typography.scss */
 .p-style--minor:last-child {
   margin-bottom: 0;
 }
 
-/* line 308, ../sass/ui/_typography.scss */
+/* line 311, ../sass/ui/_typography.scss */
 .p-style--featured {
   margin-bottom: 1.5em;
   font-size: 18px;
   font-size: 1.8em;
   line-height: 1.55555555555556em;
 }
-/* line 312, ../sass/ui/_typography.scss */
+/* line 315, ../sass/ui/_typography.scss */
 .p-style--featured:last-child {
   margin-bottom: 0;
 }
 
-/* line 316, ../sass/ui/_typography.scss */
+/* line 319, ../sass/ui/_typography.scss */
 .content-list-item, .content-list li, .content-list--featured li, .content-list--minor li {
   color: #5b5b68;
 }
 
-/* line 319, ../sass/ui/_typography.scss */
+/* line 322, ../sass/ui/_typography.scss */
 .content-list {
   margin-bottom: 1.875em;
   font-size: 16px;
   font-size: 1.6em;
   line-height: 1.375em;
 }
-/* line 323, ../sass/ui/_typography.scss */
+/* line 326, ../sass/ui/_typography.scss */
 .content-list:last-child {
   margin-bottom: 0;
 }
-/* line 326, ../sass/ui/_typography.scss */
+/* line 329, ../sass/ui/_typography.scss */
 .content-list li {
   max-width: 650px;
   margin-bottom: 0.62em;
   padding-left: 31px;
 }
 
-/* line 333, ../sass/ui/_typography.scss */
+/* line 336, ../sass/ui/_typography.scss */
 .content-list--featured {
   margin-bottom: 1.5em;
   font-size: 20px;
   font-size: 2em;
   line-height: 1.3em;
 }
-/* line 337, ../sass/ui/_typography.scss */
+/* line 340, ../sass/ui/_typography.scss */
 .content-list--featured:last-child {
   margin-bottom: 0;
 }
-/* line 340, ../sass/ui/_typography.scss */
+/* line 343, ../sass/ui/_typography.scss */
 .content-list--featured li {
   margin-bottom: 0.5em;
   padding-left: 31px;
 }
 
-/* line 346, ../sass/ui/_typography.scss */
+/* line 349, ../sass/ui/_typography.scss */
 .content-list--minor {
   margin-bottom: 2.14285714285714em;
   font-size: 14px;
   font-size: 1.4em;
   line-height: 1.42857142857143em;
 }
-/* line 350, ../sass/ui/_typography.scss */
+/* line 353, ../sass/ui/_typography.scss */
 .content-list--minor:last-child {
   margin-bottom: 0;
 }
-/* line 353, ../sass/ui/_typography.scss */
+/* line 356, ../sass/ui/_typography.scss */
 .content-list--minor li {
   margin-bottom: 0.44em;
   padding-left: 26px;
 }
 
-/* line 359, ../sass/ui/_typography.scss */
+/* line 362, ../sass/ui/_typography.scss */
 ol.content-list,
 ol.content-list--minor,
 ol.content-list--featured {
   counter-reset: ordered-counter;
 }
-/* line 363, ../sass/ui/_typography.scss */
+/* line 366, ../sass/ui/_typography.scss */
 ol.content-list li,
 ol.content-list--minor li,
 ol.content-list--featured li {
   position: relative;
 }
-/* line 366, ../sass/ui/_typography.scss */
+/* line 369, ../sass/ui/_typography.scss */
 ol.content-list li:before,
 ol.content-list--minor li:before,
 ol.content-list--featured li:before {
@@ -874,12 +879,12 @@ ol.content-list--featured li:before {
   color: #c4c7d0;
 }
 
-/* line 382, ../sass/ui/_typography.scss */
+/* line 385, ../sass/ui/_typography.scss */
 ol.content-list--featured li:before {
   font-size: 1.9rem;
 }
 
-/* line 390, ../sass/ui/_typography.scss */
+/* line 393, ../sass/ui/_typography.scss */
 ul.content-list li,
 ul.content-list--featured li,
 ul.content-list--minor li {
@@ -887,12 +892,12 @@ ul.content-list--minor li {
   background-size: 10px auto;
 }
 
-/* line 396, ../sass/ui/_typography.scss */
+/* line 399, ../sass/ui/_typography.scss */
 ul.content-list--minor li {
   background-size: 8px auto;
 }
 
-/* line 400, ../sass/ui/_typography.scss */
+/* line 403, ../sass/ui/_typography.scss */
 blockquote {
   position: relative;
   padding-top: 38px;
@@ -901,7 +906,7 @@ blockquote {
   color: #727686;
   margin-bottom: 5em;
 }
-/* line 408, ../sass/ui/_typography.scss */
+/* line 411, ../sass/ui/_typography.scss */
 blockquote:before {
   position: absolute;
   top: 20px;
@@ -913,7 +918,7 @@ blockquote:before {
   font-size: 80px;
   color: #e8e7f1;
 }
-/* line 419, ../sass/ui/_typography.scss */
+/* line 422, ../sass/ui/_typography.scss */
 blockquote p {
   margin-bottom: 1.5em;
   font-family: "Open Sans", sans-serif;
@@ -923,14 +928,14 @@ blockquote p {
   font-size: 1.4em;
   color: #5b5b68;
 }
-/* line 427, ../sass/ui/_typography.scss */
+/* line 430, ../sass/ui/_typography.scss */
 blockquote cite {
   font-family: "Lato", sans-serif;
   font-weight: 400;
   font-size: 1.2rem;
   line-height: 1.5;
 }
-/* line 432, ../sass/ui/_typography.scss */
+/* line 435, ../sass/ui/_typography.scss */
 blockquote cite span {
   margin-bottom: 4px;
   display: block;
@@ -939,52 +944,52 @@ blockquote cite span {
   font-weight: 600;
   color: #29292c;
 }
-/* line 442, ../sass/ui/_typography.scss */
+/* line 445, ../sass/ui/_typography.scss */
 blockquote.blockquote--on-purple:before {
   color: #5f5bb4;
 }
-/* line 445, ../sass/ui/_typography.scss */
+/* line 448, ../sass/ui/_typography.scss */
 blockquote.blockquote--on-purple p {
   color: #fff;
 }
-/* line 448, ../sass/ui/_typography.scss */
+/* line 451, ../sass/ui/_typography.scss */
 blockquote.blockquote--on-purple cite {
   color: #c3c6f6;
 }
-/* line 450, ../sass/ui/_typography.scss */
+/* line 453, ../sass/ui/_typography.scss */
 blockquote.blockquote--on-purple cite span {
   color: #fefefe;
 }
 
-/* line 456, ../sass/ui/_typography.scss */
+/* line 459, ../sass/ui/_typography.scss */
 strong {
   font-weight: 700;
   color: #29292c;
 }
 
-/* line 460, ../sass/ui/_typography.scss */
+/* line 463, ../sass/ui/_typography.scss */
 .blockquote--large {
   padding-top: 0;
   padding-left: 65px;
   font-size: 1.1em;
   margin-bottom: 4.54545454545455em;
 }
-/* line 465, ../sass/ui/_typography.scss */
+/* line 468, ../sass/ui/_typography.scss */
 .blockquote--large p {
   margin-bottom: 1.2em;
   font-size: 1.6em;
 }
-/* line 469, ../sass/ui/_typography.scss */
+/* line 472, ../sass/ui/_typography.scss */
 .blockquote--large:before {
   top: 32px;
   left: 0;
   font-size: 100px;
 }
-/* line 474, ../sass/ui/_typography.scss */
+/* line 477, ../sass/ui/_typography.scss */
 .blockquote--large cite {
   font-size: 1.4rem;
 }
-/* line 476, ../sass/ui/_typography.scss */
+/* line 479, ../sass/ui/_typography.scss */
 .blockquote--large cite span {
   font-size: 1.6rem;
 }
@@ -2774,6 +2779,33 @@ textarea, .global-header .link-open-search, html, body {
 }
 
 /* Components */
+/* line 1, ../sass/components/_account-panel.scss */
+.account-user-details {
+  margin: 42px 28px 14px;
+}
+/* line 3, ../sass/components/_account-panel.scss */
+.account-user-details .user-name {
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fcfdfd;
+}
+/* line 9, ../sass/components/_account-panel.scss */
+.account-user-details .user-company {
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: 400;
+  font-family: "Lato", sans-serif;
+  color: #727686;
+}
+
+/* line 17, ../sass/components/_account-panel.scss */
+.main-navigation.main-navigation--account {
+  padding-top: 0;
+  padding-bottom: 26px;
+  border-bottom: 1px solid #000;
+}
+
 /* line 7, ../sass/components/_button.scss */
 .ref-button--cta-small, .ref-button--cta-small--wide, .ref-button--cta-large, .ref-button--cta-large--wide, .ref-button--full-width {
   padding: 0.75em 1.5em 0.9em 1.45em;
@@ -3091,7 +3123,8 @@ textarea {
 }
 
 /* line 44, ../sass/components/_form.scss */
-.form-field {
+.form-field,
+.search-field-no-label {
   position: relative;
   width: 100%;
   margin-bottom: 12px;
@@ -3100,12 +3133,14 @@ textarea {
   border-radius: 3px;
   background-color: #f2f2f5;
 }
-/* line 52, ../sass/components/_form.scss */
-.forms--mid-theme .form-field {
+/* line 53, ../sass/components/_form.scss */
+.forms--mid-theme .form-field, .forms--mid-theme
+.search-field-no-label {
   background-color: #ffffff;
 }
-/* line 55, ../sass/components/_form.scss */
-.form-field label {
+/* line 56, ../sass/components/_form.scss */
+.form-field label,
+.search-field-no-label label {
   padding-top: 2.5px;
   padding-top: 0.25rem;
   padding-bottom: 27px;
@@ -3116,78 +3151,99 @@ textarea {
   font-weight: 600;
   color: #81879d;
 }
-/* line 65, ../sass/components/_form.scss */
-.no-touch .form-field label {
+/* line 66, ../sass/components/_form.scss */
+.no-touch .form-field label, .no-touch
+.search-field-no-label label {
   -webkit-transition: font-size 0.06s, padding 0.06s;
   transition: font-size 0.06s, padding 0.06s;
 }
-/* line 69, ../sass/components/_form.scss */
-.form-field input:focus + label {
+/* line 70, ../sass/components/_form.scss */
+.form-field input:focus + label,
+.search-field-no-label input:focus + label {
   color: #6d69c5;
 }
-/* line 72, ../sass/components/_form.scss */
-.form-field input, .form-field textarea {
+/* line 73, ../sass/components/_form.scss */
+.form-field input, .form-field textarea,
+.search-field-no-label input,
+.search-field-no-label textarea {
   display: block;
   color: #5b5b68;
 }
-/* line 76, ../sass/components/_form.scss */
-.forms--dark-theme .form-field {
+/* line 77, ../sass/components/_form.scss */
+.forms--dark-theme .form-field, .forms--dark-theme
+.search-field-no-label {
   background-color: #333338;
 }
-/* line 78, ../sass/components/_form.scss */
-.forms--dark-theme .form-field.is-closed label {
+/* line 79, ../sass/components/_form.scss */
+.forms--dark-theme .form-field.is-closed label, .forms--dark-theme
+.search-field-no-label.is-closed label {
   color: #81879d;
 }
-/* line 81, ../sass/components/_form.scss */
-.forms--dark-theme .form-field input:focus + label {
+/* line 82, ../sass/components/_form.scss */
+.forms--dark-theme .form-field input:focus + label, .forms--dark-theme
+.search-field-no-label input:focus + label {
   color: #fcfdfd;
 }
-/* line 84, ../sass/components/_form.scss */
-.forms--dark-theme .form-field input, .forms--dark-theme .form-field textarea {
+/* line 85, ../sass/components/_form.scss */
+.forms--dark-theme .form-field input, .forms--dark-theme .form-field textarea, .forms--dark-theme
+.search-field-no-label input, .forms--dark-theme
+.search-field-no-label textarea {
   color: #e8e7f0;
 }
-/* line 88, ../sass/components/_form.scss */
+/* line 89, ../sass/components/_form.scss */
 .form-field input[type="text"],
 .form-field input[type="email"],
 .form-field input[type="search"],
-.form-field input[type="password"] {
+.form-field input[type="password"],
+.search-field-no-label input[type="text"],
+.search-field-no-label input[type="email"],
+.search-field-no-label input[type="search"],
+.search-field-no-label input[type="password"] {
   position: absolute;
   bottom: 10px;
   font-family: "Open Sans", sans-serif;
   font-size: 14px;
   font-size: 1.4rem;
 }
-/* line 97, ../sass/components/_form.scss */
+/* line 98, ../sass/components/_form.scss */
 .no-touch .form-field input[type="text"], .no-touch
 .form-field input[type="email"], .no-touch
 .form-field input[type="search"], .no-touch
-.form-field input[type="password"] {
+.form-field input[type="password"], .no-touch
+.search-field-no-label input[type="text"], .no-touch
+.search-field-no-label input[type="email"], .no-touch
+.search-field-no-label input[type="search"], .no-touch
+.search-field-no-label input[type="password"] {
   -webkit-transition: bottom 0.06s;
   transition: bottom 0.06s;
 }
-/* line 101, ../sass/components/_form.scss */
-.form-field input:-webkit-autofill {
+/* line 102, ../sass/components/_form.scss */
+.form-field input:-webkit-autofill,
+.search-field-no-label input:-webkit-autofill {
   color: #5b5b68 !important;
   -webkit-box-shadow: 0 0 0px 1000px #f2f2f5 inset;
   -webkit-text-fill-color: #5b5b68 !important;
   background-color: #f2f2f5 !important;
 }
-/* line 106, ../sass/components/_form.scss */
-.forms--mid-theme .form-field input:-webkit-autofill {
+/* line 107, ../sass/components/_form.scss */
+.forms--mid-theme .form-field input:-webkit-autofill, .forms--mid-theme
+.search-field-no-label input:-webkit-autofill {
   color: #81879d !important;
   -webkit-box-shadow: 0 0 0px 1000px #ffffff inset;
   -webkit-text-fill-color: #81879d !important;
   background-color: #ffffff !important;
 }
-/* line 112, ../sass/components/_form.scss */
-.forms--dark-theme .form-field input:-webkit-autofill {
+/* line 113, ../sass/components/_form.scss */
+.forms--dark-theme .form-field input:-webkit-autofill, .forms--dark-theme
+.search-field-no-label input:-webkit-autofill {
   color: #81879d !important;
   -webkit-box-shadow: 0 0 0px 1000px #333338 inset;
   -webkit-text-fill-color: #81879d !important;
   background-color: #333338 !important;
 }
-/* line 120, ../sass/components/_form.scss */
-.form-field.is-closed label {
+/* line 121, ../sass/components/_form.scss */
+.form-field.is-closed label,
+.search-field-no-label.is-closed label {
   padding-top: 2px;
   padding-bottom: 1px;
   font-family: "Open Sans", sans-serif;
@@ -3196,22 +3252,26 @@ textarea {
   color: #5b5b68;
   font-weight: 400;
 }
-/* line 128, ../sass/components/_form.scss */
-.no-touch .form-field.is-closed label {
+/* line 129, ../sass/components/_form.scss */
+.no-touch .form-field.is-closed label, .no-touch
+.search-field-no-label.is-closed label {
   -webkit-transition: font-size 0.06s, padding 0.06s;
   transition: font-size 0.06s, padding 0.06s;
 }
-/* line 132, ../sass/components/_form.scss */
-.form-field.is-closed input {
+/* line 133, ../sass/components/_form.scss */
+.form-field.is-closed input,
+.search-field-no-label.is-closed input {
   bottom: 6px;
 }
-/* line 134, ../sass/components/_form.scss */
-.no-touch .form-field.is-closed input {
+/* line 135, ../sass/components/_form.scss */
+.no-touch .form-field.is-closed input, .no-touch
+.search-field-no-label.is-closed input {
   -webkit-transition: bottom 0.06s;
   transition: bottom 0.06s;
 }
-/* line 139, ../sass/components/_form.scss */
-.form-field .form-field-help {
+/* line 140, ../sass/components/_form.scss */
+.form-field .form-field-help,
+.search-field-no-label .form-field-help {
   position: absolute;
   top: 9px;
   right: 9px;
@@ -3222,32 +3282,56 @@ textarea {
   font-weight: 700;
   color: #6d69c5;
 }
-/* line 149, ../sass/components/_form.scss */
-.form-field .form-field-help:hover {
+/* line 150, ../sass/components/_form.scss */
+.form-field .form-field-help:hover,
+.search-field-no-label .form-field-help:hover {
   color: #4b46b5;
 }
-/* line 151, ../sass/components/_form.scss */
-.forms--dark-theme .form-field .form-field-help:hover {
+/* line 152, ../sass/components/_form.scss */
+.forms--dark-theme .form-field .form-field-help:hover, .forms--dark-theme
+.search-field-no-label .form-field-help:hover {
   color: #918ed3;
 }
-/* line 155, ../sass/components/_form.scss */
-.form-field .form-field-help:after {
+/* line 156, ../sass/components/_form.scss */
+.form-field .form-field-help:after,
+.search-field-no-label .form-field-help:after {
   position: absolute;
   right: 0px;
   font-size: 18px;
 }
-/* line 160, ../sass/components/_form.scss */
-.form-field .form-field-help > span {
+/* line 161, ../sass/components/_form.scss */
+.form-field .form-field-help > span,
+.search-field-no-label .form-field-help > span {
   display: inline-block;
   text-align: left;
   text-indent: -999em;
 }
-/* line 166, ../sass/components/_form.scss */
-.form-field + .form-link {
+/* line 167, ../sass/components/_form.scss */
+.form-field + .form-link,
+.search-field-no-label + .form-link {
   margin-top: 14px;
 }
 
-/* line 170, ../sass/components/_form.scss */
+/* line 171, ../sass/components/_form.scss */
+.search-field-no-label {
+  padding: 8px 14px 10px 13px;
+}
+/* line 173, ../sass/components/_form.scss */
+.search-field-no-label input[type=text] {
+  position: relative;
+  top: 0;
+  left: 0;
+}
+/* line 178, ../sass/components/_form.scss */
+.search-field-no-label input[type=submit] {
+  position: absolute;
+  top: 9px;
+  right: 3px;
+  background-color: transparent;
+  font-size: 22px;
+}
+
+/* line 187, ../sass/components/_form.scss */
 .input-hint {
   padding-top: 2px;
   padding-top: 0.2rem;
@@ -3256,14 +3340,14 @@ textarea {
   font-size: 1.2rem;
   color: #81879d;
 }
-/* line 177, ../sass/components/_form.scss */
+/* line 194, ../sass/components/_form.scss */
 .is-closed .input-hint {
   display: none;
   font-size: 12px;
   font-size: 1.2rem;
 }
 
-/* line 183, ../sass/components/_form.scss */
+/* line 200, ../sass/components/_form.scss */
 .form-link {
   font-size: 14px;
   font-size: 1.4em;
@@ -3271,49 +3355,49 @@ textarea {
   display: block;
   color: #6d69c5;
 }
-/* line 188, ../sass/components/_form.scss */
+/* line 205, ../sass/components/_form.scss */
 .form-link:hover {
   color: #918ed3;
 }
 
-/* line 192, ../sass/components/_form.scss */
+/* line 209, ../sass/components/_form.scss */
 .form-field.form-field--disabled {
   background-color: #f7f7f9;
 }
-/* line 194, ../sass/components/_form.scss */
+/* line 211, ../sass/components/_form.scss */
 .forms--dark-theme .form-field.form-field--disabled {
   background-color: #2d2d31;
 }
-/* line 196, ../sass/components/_form.scss */
+/* line 213, ../sass/components/_form.scss */
 .forms--dark-theme .form-field.form-field--disabled label {
   color: #5b5b68;
 }
-/* line 200, ../sass/components/_form.scss */
+/* line 217, ../sass/components/_form.scss */
 .form-field.form-field--disabled label {
   color: #c4c7d0;
 }
 
-/* line 204, ../sass/components/_form.scss */
+/* line 221, ../sass/components/_form.scss */
 .form-field.form-field--error {
   border: 1px solid #d23753;
 }
-/* line 206, ../sass/components/_form.scss */
+/* line 223, ../sass/components/_form.scss */
 .forms--dark-theme .form-field.form-field--error {
   border-color: #ff496a;
 }
-/* line 209, ../sass/components/_form.scss */
+/* line 226, ../sass/components/_form.scss */
 .form-field.form-field--error label span {
   padding-top: 2px;
   padding-top: 0.2rem;
   display: block;
   color: #d23753;
 }
-/* line 214, ../sass/components/_form.scss */
+/* line 231, ../sass/components/_form.scss */
 .forms--dark-theme .form-field.form-field--error label span {
   color: #ff496a;
 }
 
-/* line 219, ../sass/components/_form.scss */
+/* line 236, ../sass/components/_form.scss */
 .calendar-container {
   position: relative;
   margin-bottom: 12px;
@@ -3322,7 +3406,7 @@ textarea {
   font-size: 0;
 }
 
-/* line 226, ../sass/components/_form.scss */
+/* line 243, ../sass/components/_form.scss */
 .date-select-container {
   position: relative;
   width: 45.3125%;
@@ -3332,7 +3416,7 @@ textarea {
   width: 45.3125%;
 }
 
-/* line 239, ../sass/components/_form.scss */
+/* line 256, ../sass/components/_form.scss */
 .date-select-to-indicator {
   position: relative;
   width: 9.375%;
@@ -3343,7 +3427,7 @@ textarea {
   width: 9.375%;
   height: 26px;
 }
-/* line 247, ../sass/components/_form.scss */
+/* line 264, ../sass/components/_form.scss */
 .date-select-to-indicator:after {
   content: "l";
   font-size: 18px;
@@ -3353,93 +3437,93 @@ textarea {
   margin-left: -9px;
   color: #828a91;
 }
-/* line 266, ../sass/components/_form.scss */
+/* line 283, ../sass/components/_form.scss */
 .date-select-to-indicator:after {
   content: "l";
 }
 
-/* line 271, ../sass/components/_form.scss */
+/* line 288, ../sass/components/_form.scss */
 .form-field.form-field--date-select {
   position: relative;
   width: 100%;
   margin-bottom: 0;
   overflow: visible;
 }
-/* line 276, ../sass/components/_form.scss */
+/* line 293, ../sass/components/_form.scss */
 .form-field.form-field--date-select input[type="text"] {
   position: relative;
   bottom: 0;
   width: 100%;
 }
-/* line 281, ../sass/components/_form.scss */
+/* line 298, ../sass/components/_form.scss */
 .form-field.form-field--date-select span {
   position: absolute;
   top: 10px;
   top: calc(50% - 9px);
   right: 12px;
 }
-/* line 287, ../sass/components/_form.scss */
+/* line 304, ../sass/components/_form.scss */
 .form-field.form-field--date-select span:after {
   content: "u";
   font-size: 17px;
   color: #81879d;
 }
-/* line 293, ../sass/components/_form.scss */
+/* line 310, ../sass/components/_form.scss */
 .form-field.form-field--date-select input[type="text"]:focus + span:after,
 .form-field.form-field--date-select input[type="text"].is-focused + span:after {
   color: #1bc79f;
 }
 
-/* line 298, ../sass/components/_form.scss */
+/* line 315, ../sass/components/_form.scss */
 input:required {
   box-shadow: none;
 }
 
-/* line 301, ../sass/components/_form.scss */
+/* line 318, ../sass/components/_form.scss */
 input:invalid {
   box-shadow: none;
 }
 
-/* line 304, ../sass/components/_form.scss */
+/* line 321, ../sass/components/_form.scss */
 .js-field--select {
   display: none;
 }
-/* line 306, ../sass/components/_form.scss */
+/* line 323, ../sass/components/_form.scss */
 .no-js .js-field--select {
   display: block;
 }
 
-/* line 310, ../sass/components/_form.scss */
+/* line 327, ../sass/components/_form.scss */
 .form-field--select {
   padding: 8px 9px 0 14px;
 }
-/* line 312, ../sass/components/_form.scss */
+/* line 329, ../sass/components/_form.scss */
 .form-field--select.form-field--select-disabled {
   background-color: #f7f7f9;
 }
-/* line 314, ../sass/components/_form.scss */
+/* line 331, ../sass/components/_form.scss */
 .form-field--select.form-field--select-disabled .forms--dark-theme {
   background-color: #2d2d31;
 }
-/* line 316, ../sass/components/_form.scss */
+/* line 333, ../sass/components/_form.scss */
 .form-field--select.form-field--select-disabled .forms--dark-theme label {
   color: #5b5b68;
 }
-/* line 320, ../sass/components/_form.scss */
+/* line 337, ../sass/components/_form.scss */
 .form-field--select.form-field--select-disabled span, .form-field--select.form-field--select-disabled li {
   color: #c4c7d0;
   background-color: #f7f7f9;
 }
-/* line 323, ../sass/components/_form.scss */
+/* line 340, ../sass/components/_form.scss */
 .form-field--select.form-field--select-disabled span:hover, .form-field--select.form-field--select-disabled li:hover {
   color: #c4c7d0;
 }
-/* line 327, ../sass/components/_form.scss */
+/* line 344, ../sass/components/_form.scss */
 .form-field--select.form-field--select-disabled span:after {
   color: #c4c7d0;
 }
 
-/* line 333, ../sass/components/_form.scss */
+/* line 350, ../sass/components/_form.scss */
 .reflection-select span, .reflection-select li {
   display: block;
   font-family: "Open Sans", sans-serif;
@@ -3450,32 +3534,37 @@ input:invalid {
   -webkit-transition: color 0.2s;
   transition: color 0.2s;
 }
-/* line 341, ../sass/components/_form.scss */
+/* line 358, ../sass/components/_form.scss */
 .reflection-select span:hover, .reflection-select li:hover {
   color: #5b5b68;
   -webkit-transition: color 0.3s;
   transition: color 0.3s;
 }
-/* line 346, ../sass/components/_form.scss */
+/* line 363, ../sass/components/_form.scss */
 .reflection-select span {
   position: relative;
   margin-top: 0px;
   margin-bottom: 0px;
   padding-bottom: 12px;
   padding-top: 3px;
+  padding-right: 15px;
+  display: block;
   z-index: 10;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   background: #f2f2f5;
 }
-/* line 354, ../sass/components/_form.scss */
+/* line 374, ../sass/components/_form.scss */
 .forms--mid-theme .reflection-select span {
   background-color: #ffffff;
 }
-/* line 357, ../sass/components/_form.scss */
+/* line 377, ../sass/components/_form.scss */
 .forms--dark-theme .reflection-select span {
   color: #737383;
   background-color: #333338;
 }
-/* line 361, ../sass/components/_form.scss */
+/* line 381, ../sass/components/_form.scss */
 .reflection-select span:after {
   position: absolute;
   top: 2px;
@@ -3486,15 +3575,15 @@ input:invalid {
   -webkit-transition: -webkit-transform 0.2s;
   transition: transform 0.2s;
 }
-/* line 370, ../sass/components/_form.scss */
+/* line 390, ../sass/components/_form.scss */
 .reflection-select span.is-activated {
   color: #5b5b68;
 }
-/* line 372, ../sass/components/_form.scss */
+/* line 392, ../sass/components/_form.scss */
 .forms--dark-theme .reflection-select span.is-activated {
   color: #E8E7F0;
 }
-/* line 377, ../sass/components/_form.scss */
+/* line 397, ../sass/components/_form.scss */
 .reflection-select ul {
   margin-top: 8px;
   padding-bottom: 14px;
@@ -3503,7 +3592,7 @@ input:invalid {
   -webkit-transition: margin-top 0.16s ease-in;
   transition: margin-top 0.16s ease-in;
 }
-/* line 384, ../sass/components/_form.scss */
+/* line 404, ../sass/components/_form.scss */
 .reflection-select li {
   margin-bottom: 18px;
   padding-left: 16px;
@@ -3513,48 +3602,48 @@ input:invalid {
   color: #6d69c5;
   overflow: visible;
 }
-/* line 392, ../sass/components/_form.scss */
+/* line 412, ../sass/components/_form.scss */
 .reflection-select li:hover {
   color: #4b46b5;
 }
-/* line 394, ../sass/components/_form.scss */
+/* line 414, ../sass/components/_form.scss */
 .forms--dark-theme .reflection-select li:hover {
   color: #918ed3;
 }
-/* line 398, ../sass/components/_form.scss */
+/* line 418, ../sass/components/_form.scss */
 .forms--dark-theme .reflection-select li {
   color: #81879d;
 }
-/* line 400, ../sass/components/_form.scss */
+/* line 420, ../sass/components/_form.scss */
 .forms--dark-theme .reflection-select li:hover {
   color: #9ea2b3;
 }
-/* line 404, ../sass/components/_form.scss */
+/* line 424, ../sass/components/_form.scss */
 .no-touch .reflection-select li {
   margin-bottom: 14px;
   margin-bottom: 1.4rem;
 }
-/* line 408, ../sass/components/_form.scss */
+/* line 428, ../sass/components/_form.scss */
 .reflection-select li.is-selected {
   font-weight: 600;
   color: #363a47;
 }
-/* line 411, ../sass/components/_form.scss */
+/* line 431, ../sass/components/_form.scss */
 .forms--dark-theme .reflection-select li.is-selected {
   color: #fcfdfd;
 }
-/* line 415, ../sass/components/_form.scss */
+/* line 435, ../sass/components/_form.scss */
 .reflection-select li.pre-selected {
   position: relative;
   padding-right: 60px;
   padding-right: 6rem;
   color: #c4c7d0;
 }
-/* line 420, ../sass/components/_form.scss */
+/* line 440, ../sass/components/_form.scss */
 .reflection-select li.pre-selected:hover {
   color: #c4c7d0;
 }
-/* line 423, ../sass/components/_form.scss */
+/* line 443, ../sass/components/_form.scss */
 .reflection-select li.pre-selected:after {
   content: attr(data-selectedtext);
   position: absolute;
@@ -3565,7 +3654,7 @@ input:invalid {
   font-size: 1.19rem;
   color: #1bc79f;
 }
-/* line 433, ../sass/components/_form.scss */
+/* line 453, ../sass/components/_form.scss */
 .reflection-select li.pre-selected:before {
   content: "t";
   position: absolute;
@@ -3577,7 +3666,7 @@ input:invalid {
   font-size: 1.2rem;
   color: #1bc79f;
 }
-/* line 448, ../sass/components/_form.scss */
+/* line 468, ../sass/components/_form.scss */
 .reflection-select.is-open span:after {
   -ms-transform: rotate(179.5deg);
   -webkit-transform: rotate(179.5deg);
@@ -3585,13 +3674,13 @@ input:invalid {
   -webkit-transition: -webkit-transform 0.3s;
   transition: transform 0.3s;
 }
-/* line 452, ../sass/components/_form.scss */
+/* line 472, ../sass/components/_form.scss */
 .reflection-select.is-open ul {
   -webkit-transition: margin-top 0.2s ease-out;
   transition: margin-top 0.2s ease-out;
 }
 
-/* line 457, ../sass/components/_form.scss */
+/* line 477, ../sass/components/_form.scss */
 .form-field--checkbox-list,
 .form-field--radio-list {
   position: relative;
@@ -3599,29 +3688,29 @@ input:invalid {
   margin-top: 18px;
   margin-top: 1.8rem;
 }
-/* line 459, ../sass/components/_form.scss */
+/* line 479, ../sass/components/_form.scss */
 .form-field--checkbox-list *,
 .form-field--radio-list * {
   overflow: visible;
 }
-/* line 466, ../sass/components/_form.scss */
+/* line 486, ../sass/components/_form.scss */
 .reflection-select .form-field--checkbox-list, .reflection-select
 .form-field--radio-list {
   margin-top: 0;
   margin-bottom: 0;
 }
-/* line 470, ../sass/components/_form.scss */
+/* line 490, ../sass/components/_form.scss */
 .form-field--checkbox-list ul,
 .form-field--radio-list ul {
   padding-bottom: 9px;
 }
-/* line 472, ../sass/components/_form.scss */
+/* line 492, ../sass/components/_form.scss */
 .reflection-select .form-field--checkbox-list ul, .reflection-select
 .form-field--radio-list ul {
   padding-bottom: 2px;
   padding-bottom: 0.2rem;
 }
-/* line 477, ../sass/components/_form.scss */
+/* line 497, ../sass/components/_form.scss */
 .form-field--checkbox-list li,
 .form-field--radio-list li {
   position: relative;
@@ -3630,24 +3719,24 @@ input:invalid {
   padding: 0;
   font-size: 0;
 }
-/* line 483, ../sass/components/_form.scss */
+/* line 503, ../sass/components/_form.scss */
 .reflection-select .form-field--checkbox-list li, .reflection-select
 .form-field--radio-list li {
   margin-left: 2.4%;
 }
-/* line 485, ../sass/components/_form.scss */
+/* line 505, ../sass/components/_form.scss */
 .touch .reflection-select .form-field--checkbox-list li, .touch .reflection-select
 .form-field--radio-list li {
   margin-bottom: 17px;
   margin-bottom: 1.7rem;
 }
-/* line 490, ../sass/components/_form.scss */
+/* line 510, ../sass/components/_form.scss */
 .touch .form-field--checkbox-list li, .touch
 .form-field--radio-list li {
   margin-bottom: 14px;
   margin-bottom: 1.4rem;
 }
-/* line 495, ../sass/components/_form.scss */
+/* line 515, ../sass/components/_form.scss */
 .form-field--checkbox-list input[type=checkbox],
 .form-field--checkbox-list input[type=radio],
 .form-field--radio-list input[type=checkbox],
@@ -3658,7 +3747,7 @@ input:invalid {
   padding: 0;
   display: inline-block;
 }
-/* line 503, ../sass/components/_form.scss */
+/* line 523, ../sass/components/_form.scss */
 .form-field--checkbox-list label,
 .form-field--radio-list label {
   padding-top: 1px;
@@ -3667,21 +3756,21 @@ input:invalid {
   font-weight: 400;
 }
 
-/* line 510, ../sass/components/_form.scss */
+/* line 530, ../sass/components/_form.scss */
 .form-field--checkbox-list + input[type="submit"],
 .form-field--radio-list + input[type="submit"] {
   margin-top: 9px;
   margin-top: 0.9rem;
 }
 
-/* line 517, ../sass/components/_form.scss */
+/* line 537, ../sass/components/_form.scss */
 .form-field--checkbox-list--inline li,
 .form-field--radio-list--inline li {
   margin-right: 20px;
   display: inline-block;
 }
 
-/* line 522, ../sass/components/_form.scss */
+/* line 542, ../sass/components/_form.scss */
 label.checkboxLabel,
 label.checkboxLabelDisabled,
 label.radioButtonLabel,
@@ -3701,56 +3790,56 @@ label.radioButtonLabelDisabled {
   text-decoration: none;
 }
 
-/* line 540, ../sass/components/_form.scss */
+/* line 560, ../sass/components/_form.scss */
 label.radioButtonLabel,
 label.radioButtonLabelDisabled {
   border-radius: 9px;
 }
 
-/* line 544, ../sass/components/_form.scss */
+/* line 564, ../sass/components/_form.scss */
 label.checkboxLabel,
 label.radioButtonLabel {
   background-color: #f2f2f5;
   overflow: visible;
 }
-/* line 549, ../sass/components/_form.scss */
+/* line 569, ../sass/components/_form.scss */
 .forms--mid-theme label.checkboxLabel, .forms--mid-theme
 label.radioButtonLabel {
   background-color: #ffffff;
 }
-/* line 552, ../sass/components/_form.scss */
+/* line 572, ../sass/components/_form.scss */
 .forms--dark-theme label.checkboxLabel, .forms--dark-theme
 label.radioButtonLabel {
   background-color: #333338;
 }
-/* line 555, ../sass/components/_form.scss */
+/* line 575, ../sass/components/_form.scss */
 label.checkboxLabel:hover,
 label.radioButtonLabel:hover {
   background-color: #e1e5e8;
 }
-/* line 558, ../sass/components/_form.scss */
+/* line 578, ../sass/components/_form.scss */
 .forms--mid-theme label.checkboxLabel:hover, .forms--mid-theme
 label.radioButtonLabel:hover {
   background-color: #e6e6e6;
 }
-/* line 561, ../sass/components/_form.scss */
+/* line 581, ../sass/components/_form.scss */
 .forms--dark-theme label.checkboxLabel:hover, .forms--dark-theme
 label.radioButtonLabel:hover {
   background-color: #4b4b53;
 }
-/* line 565, ../sass/components/_form.scss */
+/* line 585, ../sass/components/_form.scss */
 label.checkboxLabel:active,
 label.radioButtonLabel:active {
   border-top: 2px solid #bfc3c5;
   background-color: #e1e5e8;
 }
-/* line 568, ../sass/components/_form.scss */
+/* line 588, ../sass/components/_form.scss */
 .forms--dark-theme label.checkboxLabel:active, .forms--dark-theme
 label.radioButtonLabel:active {
   border-top: 2px solid #333338;
 }
 
-/* line 574, ../sass/components/_form.scss */
+/* line 594, ../sass/components/_form.scss */
 label.checkboxLabel:after {
   opacity: 0;
   position: absolute;
@@ -3774,32 +3863,32 @@ label.checkboxLabel:after {
   -webkit-transition: color 0.2s;
   transition: color 0.2s;
 }
-/* line 595, ../sass/components/_form.scss */
+/* line 615, ../sass/components/_form.scss */
 .no-opacity label.checkboxLabel:after {
   display: none;
 }
-/* line 599, ../sass/components/_form.scss */
+/* line 619, ../sass/components/_form.scss */
 .reflection-select label.checkboxLabel {
   background-color: #fcfdfd;
 }
-/* line 601, ../sass/components/_form.scss */
+/* line 621, ../sass/components/_form.scss */
 .reflection-select label.checkboxLabel:hover {
   background-color: #e1e5e8;
 }
 
-/* line 606, ../sass/components/_form.scss */
+/* line 626, ../sass/components/_form.scss */
 label.checkboxLabelDisabled,
 label.radioButtonLabelDisabled {
   background-color: #f7f7f9;
   overflow: visible;
 }
 
-/* line 611, ../sass/components/_form.scss */
+/* line 631, ../sass/components/_form.scss */
 input[type="checkbox"]:checked + label.checkboxLabel,
 input[type="radio"]:checked + label.radioButtonLabel {
   background-color: #1bc79f;
 }
-/* line 614, ../sass/components/_form.scss */
+/* line 634, ../sass/components/_form.scss */
 input[type="checkbox"]:checked + label.checkboxLabel:after,
 input[type="radio"]:checked + label.radioButtonLabel:after {
   opacity: 1;
@@ -3807,38 +3896,38 @@ input[type="radio"]:checked + label.radioButtonLabel:after {
   -webkit-transition: opacity 0.3s;
   transition: opacity 0.3s;
 }
-/* line 618, ../sass/components/_form.scss */
+/* line 638, ../sass/components/_form.scss */
 .no-opacity input[type="checkbox"]:checked + label.checkboxLabel:after, .no-opacity
 input[type="radio"]:checked + label.radioButtonLabel:after {
   display: block;
 }
-/* line 622, ../sass/components/_form.scss */
+/* line 642, ../sass/components/_form.scss */
 input[type="checkbox"]:checked + label.checkboxLabel:active,
 input[type="radio"]:checked + label.radioButtonLabel:active {
   border-top: 2px solid #169f7f;
 }
 
-/* line 626, ../sass/components/_form.scss */
+/* line 646, ../sass/components/_form.scss */
 .forms--dark-theme input[type="checkbox"]:checked + label.checkboxLabel {
   background-color: #333338;
 }
-/* line 628, ../sass/components/_form.scss */
+/* line 648, ../sass/components/_form.scss */
 .forms--dark-theme input[type="checkbox"]:checked + label.checkboxLabel:active {
   border-top: 2px solid #29292c;
   background-color: #333338;
 }
-/* line 632, ../sass/components/_form.scss */
+/* line 652, ../sass/components/_form.scss */
 .forms--dark-theme input[type="checkbox"]:checked + label.checkboxLabel:after {
   color: #1BC79F;
 }
 
-/* line 636, ../sass/components/_form.scss */
+/* line 656, ../sass/components/_form.scss */
 input[type="checkbox"]:checked + label.checkboxLabel {
   -webkit-transition: background-color 0.3s;
   transition: background-color 0.3s;
 }
 
-/* line 639, ../sass/components/_form.scss */
+/* line 659, ../sass/components/_form.scss */
 label.checkboxLabelVisible,
 label.checkboxLabelVisibleDisabled,
 label.radioButtonLabelVisible,
@@ -3850,25 +3939,25 @@ label.radioButtonLabelVisibleDisabled {
   text-align: left;
 }
 
-/* line 649, ../sass/components/_form.scss */
+/* line 669, ../sass/components/_form.scss */
 label.checkboxLabelVisible,
 label.radioButtonLabelVisible {
   color: #363a47;
   cursor: pointer;
 }
-/* line 653, ../sass/components/_form.scss */
+/* line 673, ../sass/components/_form.scss */
 .forms--dark-theme label.checkboxLabelVisible, .forms--dark-theme
 label.radioButtonLabelVisible {
   color: #81879d;
 }
-/* line 656, ../sass/components/_form.scss */
+/* line 676, ../sass/components/_form.scss */
 .reflection-select label.checkboxLabelVisible, .reflection-select
 label.radioButtonLabelVisible {
   color: #6d69c5;
   -webkit-transition: color 0.2s;
   transition: color 0.2s;
 }
-/* line 659, ../sass/components/_form.scss */
+/* line 679, ../sass/components/_form.scss */
 .reflection-select label.checkboxLabelVisible:hover, .reflection-select
 label.radioButtonLabelVisible:hover {
   color: #363a47;
@@ -3876,34 +3965,34 @@ label.radioButtonLabelVisible:hover {
   transition: color 0.3s;
 }
 
-/* line 665, ../sass/components/_form.scss */
+/* line 685, ../sass/components/_form.scss */
 .reflection-select input:checked + label + label.checkboxLabelVisible {
   color: #363a47;
 }
 
-/* line 668, ../sass/components/_form.scss */
+/* line 688, ../sass/components/_form.scss */
 label.checkboxLabelVisibleDisabled,
 label.radioButtonLabelVisibleDisabled {
   color: #c4c7d0;
 }
 
-/* line 672, ../sass/components/_form.scss */
+/* line 692, ../sass/components/_form.scss */
 .form-field--radio-list + .form-field--checkbox-list,
 .form-field--checkbox-list + .form-field--radio-list {
   margin-top: 0;
 }
 
-/* line 676, ../sass/components/_form.scss */
+/* line 696, ../sass/components/_form.scss */
 .forms--mid-theme {
   background-color: #f2f2f5;
 }
 
-/* line 679, ../sass/components/_form.scss */
+/* line 699, ../sass/components/_form.scss */
 .forms--dark-theme {
   background-color: #29292c;
 }
 
-/* line 684, ../sass/components/_form.scss */
+/* line 704, ../sass/components/_form.scss */
 .dateBoxPopup {
   position: absolute;
   top: 42px;
@@ -3924,19 +4013,19 @@ label.radioButtonLabelVisibleDisabled {
   top: 42px;
   top: 4.2rem;
 }
-/* line 696, ../sass/components/_form.scss */
+/* line 716, ../sass/components/_form.scss */
 .forms--dark-theme .dateBoxPopup {
   background-color: #333338;
 }
-/* line 699, ../sass/components/_form.scss */
+/* line 719, ../sass/components/_form.scss */
 .forms--mid-theme .dateBoxPopup {
   background-color: #fff;
 }
-/* line 709, ../sass/components/_form.scss */
+/* line 729, ../sass/components/_form.scss */
 .dateBoxPopup tbody, .dateBoxPopup tr {
   width: 100%;
 }
-/* line 712, ../sass/components/_form.scss */
+/* line 732, ../sass/components/_form.scss */
 .dateBoxPopup.is-showing {
   opacity: 1;
   visibility: visible;
@@ -3944,89 +4033,89 @@ label.radioButtonLabelVisibleDisabled {
   transition: opacity 0.1s;
 }
 
-/* line 718, ../sass/components/_form.scss */
+/* line 738, ../sass/components/_form.scss */
 .gwt-DatePicker {
   width: 100%;
 }
-/* line 720, ../sass/components/_form.scss */
+/* line 740, ../sass/components/_form.scss */
 .gwt-DatePicker tr {
   width: 100%;
 }
 
-/* line 724, ../sass/components/_form.scss */
+/* line 744, ../sass/components/_form.scss */
 .single-date-selector-container {
   text-align: center;
 }
 
-/* line 727, ../sass/components/_form.scss */
+/* line 747, ../sass/components/_form.scss */
 .datePickerMonthSelector {
   background-color: #e1e5e8;
 }
-/* line 729, ../sass/components/_form.scss */
+/* line 749, ../sass/components/_form.scss */
 .datePickerMonthSelector .form-field--checkbox-list {
   width: auto;
   margin: 0 auto;
   display: inline-block;
 }
-/* line 733, ../sass/components/_form.scss */
+/* line 753, ../sass/components/_form.scss */
 .datePickerMonthSelector .form-field--checkbox-list li {
   margin: 0;
 }
-/* line 735, ../sass/components/_form.scss */
+/* line 755, ../sass/components/_form.scss */
 .datePickerMonthSelector .form-field--checkbox-list li label.checkboxLabel {
   z-index: 2;
 }
-/* line 737, ../sass/components/_form.scss */
+/* line 757, ../sass/components/_form.scss */
 .datePickerMonthSelector .form-field--checkbox-list li label.checkboxLabel:hover {
   background-color: #c4c7d0;
 }
-/* line 739, ../sass/components/_form.scss */
+/* line 759, ../sass/components/_form.scss */
 .forms--dark-theme .datePickerMonthSelector .form-field--checkbox-list li label.checkboxLabel:hover {
   border-top-color: #333338;
   background-color: #4b4b53;
 }
-/* line 744, ../sass/components/_form.scss */
+/* line 764, ../sass/components/_form.scss */
 .datePickerMonthSelector .form-field--checkbox-list li label.checkboxLabel:active {
   border-top-color: #727686;
 }
-/* line 749, ../sass/components/_form.scss */
+/* line 769, ../sass/components/_form.scss */
 .datePickerMonthSelector .form-field--checkbox-list li input:checked + label.checkboxLabel:hover {
   background-color: #1bc79f;
 }
-/* line 751, ../sass/components/_form.scss */
+/* line 771, ../sass/components/_form.scss */
 .forms--dark-theme .datePickerMonthSelector .form-field--checkbox-list li input:checked + label.checkboxLabel:hover {
   background-color: #333338;
 }
-/* line 755, ../sass/components/_form.scss */
+/* line 775, ../sass/components/_form.scss */
 .datePickerMonthSelector .form-field--checkbox-list li input:checked + label.checkboxLabel:active {
   border-top-color: #169f7f;
 }
-/* line 757, ../sass/components/_form.scss */
+/* line 777, ../sass/components/_form.scss */
 .forms--dark-theme .datePickerMonthSelector .form-field--checkbox-list li input:checked + label.checkboxLabel:active {
   border-top: 2px solid #29292c;
   background-color: #333338;
 }
-/* line 763, ../sass/components/_form.scss */
+/* line 783, ../sass/components/_form.scss */
 .datePickerMonthSelector .form-field--checkbox-list li label.checkboxLabelVisible {
   position: relative;
   padding-left: 30px;
   z-index: 0;
   font-size: 12px;
 }
-/* line 768, ../sass/components/_form.scss */
+/* line 788, ../sass/components/_form.scss */
 .forms--dark-theme .datePickerMonthSelector .form-field--checkbox-list li label.checkboxLabelVisible {
   color: #fcfdfd;
 }
-/* line 774, ../sass/components/_form.scss */
+/* line 794, ../sass/components/_form.scss */
 .forms--mid-theme .datePickerMonthSelector {
   background-color: #e8e7f1;
 }
-/* line 777, ../sass/components/_form.scss */
+/* line 797, ../sass/components/_form.scss */
 .forms--dark-theme .datePickerMonthSelector {
   background-color: #5b5b68;
 }
 
-/* line 781, ../sass/components/_form.scss */
+/* line 801, ../sass/components/_form.scss */
 .datePickerDays {
   width: 90%;
   margin-left: 5%;
@@ -4035,15 +4124,15 @@ label.radioButtonLabelVisibleDisabled {
   text-align: center;
   background-color: #f2f2f5;
 }
-/* line 788, ../sass/components/_form.scss */
+/* line 808, ../sass/components/_form.scss */
 .forms--mid-theme .datePickerDays {
   background-color: #fff;
 }
-/* line 791, ../sass/components/_form.scss */
+/* line 811, ../sass/components/_form.scss */
 .forms--dark-theme .datePickerDays {
   background-color: #333338;
 }
-/* line 794, ../sass/components/_form.scss */
+/* line 814, ../sass/components/_form.scss */
 .datePickerDays td {
   font-family: "Open Sans", sans-serif;
   font-size: 13px;
@@ -4053,16 +4142,16 @@ label.radioButtonLabelVisibleDisabled {
   border-left: 1px solid #e1e5e8;
   border-top: 1px solid #e1e5e8;
 }
-/* line 802, ../sass/components/_form.scss */
+/* line 822, ../sass/components/_form.scss */
 .datePickerDays td:first-child {
   border-left: 0;
 }
-/* line 805, ../sass/components/_form.scss */
+/* line 825, ../sass/components/_form.scss */
 .forms--dark-theme .datePickerDays td {
   color: #fcfdfd;
   border-color: #29292c;
 }
-/* line 809, ../sass/components/_form.scss */
+/* line 829, ../sass/components/_form.scss */
 .datePickerDays td > div {
   padding-top: 12px;
   padding-bottom: 14px;
@@ -4070,129 +4159,129 @@ label.radioButtonLabelVisibleDisabled {
   outline: none;
   cursor: pointer;
 }
-/* line 815, ../sass/components/_form.scss */
+/* line 835, ../sass/components/_form.scss */
 .datePickerDays td > div:active, .datePickerDays td > div:hover {
   color: #fcfdfd;
   background-color: #81879d;
 }
-/* line 818, ../sass/components/_form.scss */
+/* line 838, ../sass/components/_form.scss */
 .forms--dark-theme .datePickerDays td > div:active, .forms--dark-theme .datePickerDays td > div:hover {
   background-color: #5b5b68;
 }
-/* line 822, ../sass/components/_form.scss */
+/* line 842, ../sass/components/_form.scss */
 .datePickerDays td > div:active {
   padding-bottom: 12px;
   color: #fcfdfd;
   border-top: 2px solid #5a5e6e;
 }
-/* line 826, ../sass/components/_form.scss */
+/* line 846, ../sass/components/_form.scss */
 .forms--dark-theme .datePickerDays td > div:active {
   border-top: 2px solid #404049;
 }
-/* line 831, ../sass/components/_form.scss */
+/* line 851, ../sass/components/_form.scss */
 .datePickerDays td > div.datePickerDayIsValue {
   color: #fcfdfd;
   background-color: #1bc79f;
 }
-/* line 834, ../sass/components/_form.scss */
+/* line 854, ../sass/components/_form.scss */
 .datePickerDays td > div.datePickerDayIsValue:hover, .datePickerDays td > div.datePickerDayIsValue:active {
   padding-bottom: 14px;
   border-top: 0;
   background-color: #1bc79f;
 }
-/* line 840, ../sass/components/_form.scss */
+/* line 860, ../sass/components/_form.scss */
 .datePickerDays td > div.datePickerDayIsToday {
   background-color: #fcfdfd;
 }
-/* line 842, ../sass/components/_form.scss */
+/* line 862, ../sass/components/_form.scss */
 .forms--mid-theme .datePickerDays td > div.datePickerDayIsToday {
   background-color: #f2f2f5;
 }
-/* line 845, ../sass/components/_form.scss */
+/* line 865, ../sass/components/_form.scss */
 .forms--dark-theme .datePickerDays td > div.datePickerDayIsToday {
   color: #727686;
   background-color: #29292c;
 }
-/* line 849, ../sass/components/_form.scss */
+/* line 869, ../sass/components/_form.scss */
 .datePickerDays td > div.datePickerDayIsToday:hover, .datePickerDays td > div.datePickerDayIsToday:active {
   padding-bottom: 14px;
   border-top: 0;
   color: #363a47;
   background-color: #fcfdfd;
 }
-/* line 854, ../sass/components/_form.scss */
+/* line 874, ../sass/components/_form.scss */
 .forms--mid-theme .datePickerDays td > div.datePickerDayIsToday:hover, .forms--mid-theme .datePickerDays td > div.datePickerDayIsToday:active {
   background-color: #f2f2f5;
 }
-/* line 857, ../sass/components/_form.scss */
+/* line 877, ../sass/components/_form.scss */
 .forms--dark-theme .datePickerDays td > div.datePickerDayIsToday:hover, .forms--dark-theme .datePickerDays td > div.datePickerDayIsToday:active {
   color: #727686;
   background-color: #29292c;
 }
-/* line 863, ../sass/components/_form.scss */
+/* line 883, ../sass/components/_form.scss */
 .datePickerDays td .datePickerDayIsFiller {
   color: #c4c7d0;
 }
-/* line 865, ../sass/components/_form.scss */
+/* line 885, ../sass/components/_form.scss */
 .forms--dark-theme .datePickerDays td .datePickerDayIsFiller {
   color: #5b5b68;
 }
-/* line 869, ../sass/components/_form.scss */
+/* line 889, ../sass/components/_form.scss */
 .forms--dark-theme .datePickerDays td .datePickerDayIsFiller:hover {
   color: #fcfdfd;
 }
-/* line 874, ../sass/components/_form.scss */
+/* line 894, ../sass/components/_form.scss */
 .datePickerDays td .datePickerDayIsDisabled {
   color: #c4c7d0;
   font-style: italic;
   cursor: not-allowed;
 }
-/* line 878, ../sass/components/_form.scss */
+/* line 898, ../sass/components/_form.scss */
 .forms--mid-theme .datePickerDays td .datePickerDayIsDisabled {
   color: #c4c7d0;
 }
-/* line 881, ../sass/components/_form.scss */
+/* line 901, ../sass/components/_form.scss */
 .forms--dark-theme .datePickerDays td .datePickerDayIsDisabled {
   color: #5b5b68;
 }
-/* line 884, ../sass/components/_form.scss */
+/* line 904, ../sass/components/_form.scss */
 .datePickerDays td .datePickerDayIsDisabled:hover, .datePickerDays td .datePickerDayIsDisabled:active {
   padding-bottom: 14px;
   border-top: 0;
   color: #c4c7d0;
   background-color: #f2f2f5;
 }
-/* line 889, ../sass/components/_form.scss */
+/* line 909, ../sass/components/_form.scss */
 .forms--mid-theme .datePickerDays td .datePickerDayIsDisabled:hover, .forms--mid-theme .datePickerDays td .datePickerDayIsDisabled:active {
   color: #c4c7d0;
   border-top: 0;
   background-color: #fff;
 }
-/* line 894, ../sass/components/_form.scss */
+/* line 914, ../sass/components/_form.scss */
 .forms--dark-theme .datePickerDays td .datePickerDayIsDisabled:hover, .forms--dark-theme .datePickerDays td .datePickerDayIsDisabled:active {
   color: #5b5b68;
   border-top: 0;
   background-color: #333338;
 }
-/* line 902, ../sass/components/_form.scss */
+/* line 922, ../sass/components/_form.scss */
 .datePickerDays tr:first-child td {
   border-top: 0;
 }
 
-/* line 906, ../sass/components/_form.scss */
+/* line 926, ../sass/components/_form.scss */
 .datePickerDays .datePickerWeekdayLabel,
 .datePickerDays .datePickerWeekendLabel {
   padding-top: 10px;
   padding-bottom: 10px;
   color: #81879d;
 }
-/* line 911, ../sass/components/_form.scss */
+/* line 931, ../sass/components/_form.scss */
 .forms--dark-theme .datePickerDays .datePickerWeekdayLabel, .forms--dark-theme
 .datePickerDays .datePickerWeekendLabel {
   color: #81879d;
 }
 
-/* line 915, ../sass/components/_form.scss */
+/* line 935, ../sass/components/_form.scss */
 .datePickerPreviousButton,
 .datePickerNextButton {
   cursor: hand;
@@ -4201,14 +4290,14 @@ label.radioButtonLabelVisibleDisabled {
   padding: 0px 4px;
   outline: none;
 }
-/* line 922, ../sass/components/_form.scss */
+/* line 942, ../sass/components/_form.scss */
 .has-single-option .datePickerPreviousButton, .has-single-option
 .datePickerNextButton {
   position: relative;
   top: 5px;
 }
 
-/* line 927, ../sass/components/_form.scss */
+/* line 947, ../sass/components/_form.scss */
 .datePickerMonth {
   padding-top: 18px;
   padding-bottom: 19px;
@@ -4219,66 +4308,66 @@ label.radioButtonLabelVisibleDisabled {
   text-transform: uppercase;
   color: #363a47;
 }
-/* line 936, ../sass/components/_form.scss */
+/* line 956, ../sass/components/_form.scss */
 .has-single-option .datePickerMonth {
   padding-bottom: 10px;
 }
-/* line 939, ../sass/components/_form.scss */
+/* line 959, ../sass/components/_form.scss */
 .forms--dark-theme .datePickerMonth {
   color: #fcfdfd;
 }
 
-/* line 943, ../sass/components/_form.scss */
+/* line 963, ../sass/components/_form.scss */
 .datePickerPreviousButton,
 .datePickerNextButton {
   margin-top: -2px;
   padding: 0 13px;
 }
-/* line 948, ../sass/components/_form.scss */
+/* line 968, ../sass/components/_form.scss */
 .datePickerPreviousButton:after,
 .datePickerNextButton:after {
   font-size: 18px;
   position: relative;
   color: #828a91;
 }
-/* line 953, ../sass/components/_form.scss */
+/* line 973, ../sass/components/_form.scss */
 .forms--dark-theme .datePickerPreviousButton:after, .forms--dark-theme
 .datePickerNextButton:after {
   color: #c4c7d0;
 }
-/* line 958, ../sass/components/_form.scss */
+/* line 978, ../sass/components/_form.scss */
 .datePickerPreviousButton:hover:after,
 .datePickerNextButton:hover:after {
   color: #697077;
 }
-/* line 960, ../sass/components/_form.scss */
+/* line 980, ../sass/components/_form.scss */
 .forms--dark-theme .datePickerPreviousButton:hover:after, .forms--dark-theme
 .datePickerNextButton:hover:after {
   color: #e0e2e7;
 }
-/* line 965, ../sass/components/_form.scss */
+/* line 985, ../sass/components/_form.scss */
 .datePickerPreviousButton:active,
 .datePickerNextButton:active {
   margin-top: 0;
 }
 
-/* line 969, ../sass/components/_form.scss */
+/* line 989, ../sass/components/_form.scss */
 .datePickerPreviousButton:after {
   content: "k";
 }
 
-/* line 972, ../sass/components/_form.scss */
+/* line 992, ../sass/components/_form.scss */
 .datePickerNextButton:after {
   content: "l";
 }
 
-/* line 975, ../sass/components/_form.scss */
+/* line 995, ../sass/components/_form.scss */
 .datePickerPreviousButton .html-face,
 .datePickerNextButton .html-face {
   display: none;
 }
 
-/* line 979, ../sass/components/_form.scss */
+/* line 999, ../sass/components/_form.scss */
 .password-strength-indicator-container {
   position: relative;
   margin-top: 4px;
@@ -4289,12 +4378,12 @@ label.radioButtonLabelVisibleDisabled {
   font-size: 11.5px;
   font-size: 1.15rem;
 }
-/* line 988, ../sass/components/_form.scss */
+/* line 1008, ../sass/components/_form.scss */
 .is-closed .password-strength-indicator-container {
   display: none;
 }
 
-/* line 992, ../sass/components/_form.scss */
+/* line 1012, ../sass/components/_form.scss */
 .password-strength-indicator,
 .password-strength-description {
   display: inline-block;
@@ -4302,7 +4391,7 @@ label.radioButtonLabelVisibleDisabled {
   vertical-align: top;
 }
 
-/* line 998, ../sass/components/_form.scss */
+/* line 1018, ../sass/components/_form.scss */
 .password-strength-indicator {
   position: relative;
   width: 97px;
@@ -4314,15 +4403,15 @@ label.radioButtonLabelVisibleDisabled {
   border-radius: 3px;
   background-color: #e1e5e8;
 }
-/* line 1008, ../sass/components/_form.scss */
+/* line 1028, ../sass/components/_form.scss */
 .forms--mid-theme .password-strength-indicator {
   background-color: #f2f2f5;
 }
-/* line 1011, ../sass/components/_form.scss */
+/* line 1031, ../sass/components/_form.scss */
 .forms--dark-theme .password-strength-indicator {
   background-color: #29292c;
 }
-/* line 1014, ../sass/components/_form.scss */
+/* line 1034, ../sass/components/_form.scss */
 .password-strength-indicator span {
   position: absolute;
   top: 0;
@@ -4334,42 +4423,42 @@ label.radioButtonLabelVisibleDisabled {
   -webkit-transition: background-color 0.3s ease-out, width 0.3s ease-out;
   transition: background-color 0.3s ease-out, width 0.3s ease-out;
 }
-/* line 1023, ../sass/components/_form.scss */
+/* line 1043, ../sass/components/_form.scss */
 .password-strength-indicator span.is-pathetic {
   width: 25%;
   background-color: #d5855e;
 }
-/* line 1027, ../sass/components/_form.scss */
+/* line 1047, ../sass/components/_form.scss */
 .password-strength-indicator span.is-ok {
   width: 50%;
   background-color: #e7b94b;
 }
-/* line 1031, ../sass/components/_form.scss */
+/* line 1051, ../sass/components/_form.scss */
 .password-strength-indicator span.is-strong {
   width: 75%;
   background-color: #d0eb53;
 }
-/* line 1035, ../sass/components/_form.scss */
+/* line 1055, ../sass/components/_form.scss */
 .password-strength-indicator span.is-impressive {
   width: 100%;
   background-color: #68d656;
 }
 
-/* line 1041, ../sass/components/_form.scss */
+/* line 1061, ../sass/components/_form.scss */
 .password-strength-description {
   font-size: 10.4px;
   font-size: 1.04rem;
   color: #81879d;
 }
 
-/* line 1046, ../sass/components/_form.scss */
+/* line 1066, ../sass/components/_form.scss */
 .general-error-message {
   padding: 10px 0 0;
   padding: 1rem 0 0;
   display: block;
   text-align: center;
 }
-/* line 1051, ../sass/components/_form.scss */
+/* line 1071, ../sass/components/_form.scss */
 .general-error-message p {
   margin: 0;
   font-size: 1.2rem;
@@ -4796,7 +4885,35 @@ label.radioButtonLabelVisibleDisabled {
   -webkit-transition: all 0.2s, text-shadow 0.3s;
   transition: all 0.2s, text-shadow 0.3s;
 }
-/* line 13, ../sass/components/_main-navigation.scss */
+/* line 11, ../sass/components/_main-navigation.scss */
+.main-navigation a svg {
+  width: 19px;
+  height: 19px;
+  vertical-align: middle;
+}
+/* line 15, ../sass/components/_main-navigation.scss */
+.main-navigation a svg path {
+  fill: #5b5b68;
+  -webkit-transition: fill 0.2s;
+  transition: fill 0.2s;
+}
+/* line 20, ../sass/components/_main-navigation.scss */
+.main-navigation a span {
+  display: inline-block;
+  vertical-align: middle;
+  padding-left: 20px;
+}
+/* line 26, ../sass/components/_main-navigation.scss */
+.main-navigation a:hover svg path {
+  fill: #ffffff;
+  -webkit-transition: fill 0.3s;
+  transition: fill 0.3s;
+}
+/* line 32, ../sass/components/_main-navigation.scss */
+.main-navigation li.is-selected a svg path {
+  fill: #ffffff;
+}
+/* line 36, ../sass/components/_main-navigation.scss */
 .main-navigation > ul > li {
   margin-bottom: 4px;
   font-size: 12px;
@@ -4804,43 +4921,43 @@ label.radioButtonLabelVisibleDisabled {
   line-height: 1.5;
   font-weight: 700;
 }
-/* line 18, ../sass/components/_main-navigation.scss */
+/* line 41, ../sass/components/_main-navigation.scss */
 .main-navigation > ul > li > a {
   float: left;
   width: 100%;
-  padding-left: 62px;
+  padding-left: 28px;
   text-transform: uppercase;
   background-color: #29292c;
 }
-/* line 26, ../sass/components/_main-navigation.scss */
+/* line 49, ../sass/components/_main-navigation.scss */
 .main-navigation > ul > li.is-selected > a {
   color: #fcfdfd;
   background-color: #6d69c5;
 }
-/* line 29, ../sass/components/_main-navigation.scss */
+/* line 52, ../sass/components/_main-navigation.scss */
 .is-animating-out .main-navigation > ul > li.is-selected > a {
   text-shadow: 4px 0px 1px rgba(252, 253, 253, 0.5);
 }
-/* line 32, ../sass/components/_main-navigation.scss */
+/* line 55, ../sass/components/_main-navigation.scss */
 .is-animating-in .main-navigation > ul > li.is-selected > a {
   text-shadow: -4px 0px 1px rgba(252, 253, 253, 0.5);
 }
-/* line 35, ../sass/components/_main-navigation.scss */
+/* line 58, ../sass/components/_main-navigation.scss */
 .main-navigation > ul > li.is-selected > a:hover {
   color: #fcfdfd;
 }
-/* line 40, ../sass/components/_main-navigation.scss */
+/* line 63, ../sass/components/_main-navigation.scss */
 .main-navigation > ul > li > ul {
   display: block;
   z-index: 0;
   -webkit-transition: margin-top 0.16s ease-in;
   transition: margin-top 0.16s ease-in;
 }
-/* line 45, ../sass/components/_main-navigation.scss */
+/* line 68, ../sass/components/_main-navigation.scss */
 .main-navigation > ul > li.is-open {
   background-color: #363a47;
 }
-/* line 47, ../sass/components/_main-navigation.scss */
+/* line 70, ../sass/components/_main-navigation.scss */
 .main-navigation > ul > li.is-open > ul {
   position: relative;
   margin-top: 0;
@@ -4848,40 +4965,40 @@ label.radioButtonLabelVisibleDisabled {
   -webkit-transition: margin-top 0.2s ease-out;
   transition: margin-top 0.2s ease-out;
 }
-/* line 56, ../sass/components/_main-navigation.scss */
+/* line 79, ../sass/components/_main-navigation.scss */
 .main-navigation > ul ul {
   width: 100%;
   display: none;
   float: left;
   background-color: #363a47;
 }
-/* line 61, ../sass/components/_main-navigation.scss */
+/* line 84, ../sass/components/_main-navigation.scss */
 .main-navigation > ul ul li {
   position: relative;
   z-index: 1;
   font-size: 13px;
 }
-/* line 66, ../sass/components/_main-navigation.scss */
+/* line 89, ../sass/components/_main-navigation.scss */
 .main-navigation > ul ul li.is-selected > a {
   color: #fcfdfd;
 }
-/* line 68, ../sass/components/_main-navigation.scss */
+/* line 91, ../sass/components/_main-navigation.scss */
 .is-animating-out .main-navigation > ul ul li.is-selected > a {
   text-shadow: 4px 0px 1px rgba(252, 253, 253, 0.5);
 }
-/* line 71, ../sass/components/_main-navigation.scss */
+/* line 94, ../sass/components/_main-navigation.scss */
 .is-animating-in .main-navigation > ul ul li.is-selected > a {
   text-shadow: -4px 0px 1px rgba(252, 253, 253, 0.5);
 }
-/* line 74, ../sass/components/_main-navigation.scss */
+/* line 97, ../sass/components/_main-navigation.scss */
 .main-navigation > ul ul li.is-selected > a:hover {
   color: #fcfdfd;
 }
-/* line 79, ../sass/components/_main-navigation.scss */
+/* line 102, ../sass/components/_main-navigation.scss */
 .main-navigation > ul ul li.has-child {
   line-height: 1.5;
 }
-/* line 83, ../sass/components/_main-navigation.scss */
+/* line 106, ../sass/components/_main-navigation.scss */
 .main-navigation > ul ul li.has-child:after {
   position: absolute;
   right: 9px;
@@ -4892,65 +5009,65 @@ label.radioButtonLabelVisibleDisabled {
   -webkit-transition: color 0.2s;
   transition: color 0.2s;
 }
-/* line 93, ../sass/components/_main-navigation.scss */
+/* line 116, ../sass/components/_main-navigation.scss */
 .main-navigation > ul ul li.has-child.is-open:after {
   color: #7e79e2;
   -webkit-transition: color 0.33s;
   transition: color 0.33s;
 }
-/* line 96, ../sass/components/_main-navigation.scss */
+/* line 119, ../sass/components/_main-navigation.scss */
 .is-animating-out .main-navigation > ul ul li.has-child.is-open:after {
   text-shadow: 4px 0px 1px rgba(109, 105, 197, 0.5);
 }
-/* line 99, ../sass/components/_main-navigation.scss */
+/* line 122, ../sass/components/_main-navigation.scss */
 .is-animating-in .main-navigation > ul ul li.has-child.is-open:after {
   text-shadow: -4px 0px 1px rgba(109, 105, 197, 0.5);
 }
-/* line 105, ../sass/components/_main-navigation.scss */
+/* line 128, ../sass/components/_main-navigation.scss */
 .main-navigation > ul ul li a {
   padding: 0 38px 15px 29px;
   color: #81879d;
 }
-/* line 108, ../sass/components/_main-navigation.scss */
+/* line 131, ../sass/components/_main-navigation.scss */
 .is-animating-out .main-navigation > ul ul li a {
   text-shadow: 4px 0px 1px rgba(129, 135, 157, 0.5);
 }
-/* line 111, ../sass/components/_main-navigation.scss */
+/* line 134, ../sass/components/_main-navigation.scss */
 .is-animating-in .main-navigation > ul ul li a {
   text-shadow: -4px 0px 1px rgba(129, 135, 157, 0.5);
 }
-/* line 114, ../sass/components/_main-navigation.scss */
+/* line 137, ../sass/components/_main-navigation.scss */
 .main-navigation > ul ul li a:hover {
   color: #bec2d2;
 }
-/* line 118, ../sass/components/_main-navigation.scss */
+/* line 141, ../sass/components/_main-navigation.scss */
 .main-navigation > ul ul li ul {
   background-color: #2e313b;
   display: block;
   -webkit-transition: margin-top 0.16s ease-in;
   transition: margin-top 0.16s ease-in;
 }
-/* line 122, ../sass/components/_main-navigation.scss */
+/* line 145, ../sass/components/_main-navigation.scss */
 .main-navigation > ul ul li ul a {
   padding-left: 38px;
 }
-/* line 129, ../sass/components/_main-navigation.scss */
+/* line 152, ../sass/components/_main-navigation.scss */
 .main-navigation > ul > li > ul > li > a {
   background-color: #363a47;
 }
-/* line 132, ../sass/components/_main-navigation.scss */
+/* line 155, ../sass/components/_main-navigation.scss */
 .main-navigation > ul > li > ul > li:first-child {
   margin-top: 22px;
 }
-/* line 135, ../sass/components/_main-navigation.scss */
+/* line 158, ../sass/components/_main-navigation.scss */
 .main-navigation > ul > li > ul > li:last-child a {
   padding-bottom: 20px;
 }
-/* line 139, ../sass/components/_main-navigation.scss */
+/* line 162, ../sass/components/_main-navigation.scss */
 .main-navigation > ul > li > ul li.is-open + li {
   margin-top: 22px;
 }
-/* line 142, ../sass/components/_main-navigation.scss */
+/* line 165, ../sass/components/_main-navigation.scss */
 .main-navigation > ul > li > ul li.is-open ul {
   position: relative;
   margin-top: 0;
@@ -4960,68 +5077,68 @@ label.radioButtonLabelVisibleDisabled {
   -webkit-transition: margin-top 0.2s ease-out;
   transition: margin-top 0.2s ease-out;
 }
-/* line 150, ../sass/components/_main-navigation.scss */
+/* line 173, ../sass/components/_main-navigation.scss */
 .main-navigation > ul > li > ul li.is-open > a {
   color: #e1e5e8;
 }
-/* line 152, ../sass/components/_main-navigation.scss */
+/* line 175, ../sass/components/_main-navigation.scss */
 .is-animating-out .main-navigation > ul > li > ul li.is-open > a {
   text-shadow: 4px 0px 1px rgba(225, 229, 232, 0.5);
 }
-/* line 155, ../sass/components/_main-navigation.scss */
+/* line 178, ../sass/components/_main-navigation.scss */
 .is-animating-in .main-navigation > ul > li > ul li.is-open > a {
   text-shadow: -4px 0px 1px rgba(225, 229, 232, 0.5);
 }
-/* line 158, ../sass/components/_main-navigation.scss */
+/* line 181, ../sass/components/_main-navigation.scss */
 .main-navigation > ul > li > ul li.is-open > a:hover {
   color: #e1e5e8;
 }
-/* line 165, ../sass/components/_main-navigation.scss */
+/* line 188, ../sass/components/_main-navigation.scss */
 .main-navigation ul ul ul li:first-child {
   margin-top: 8px;
 }
-/* line 168, ../sass/components/_main-navigation.scss */
+/* line 191, ../sass/components/_main-navigation.scss */
 .main-navigation ul ul ul li:last-child a {
   padding-bottom: 24px;
 }
-/* line 172, ../sass/components/_main-navigation.scss */
+/* line 195, ../sass/components/_main-navigation.scss */
 .main-navigation ul ul ul li.is-selected > a {
   color: #e1e5e8;
 }
-/* line 174, ../sass/components/_main-navigation.scss */
+/* line 197, ../sass/components/_main-navigation.scss */
 .is-animating-out .main-navigation ul ul ul li.is-selected > a {
   text-shadow: 4px 0px 1px rgba(225, 229, 232, 0.5);
 }
-/* line 177, ../sass/components/_main-navigation.scss */
+/* line 200, ../sass/components/_main-navigation.scss */
 .is-animating-in .main-navigation ul ul ul li.is-selected > a {
   text-shadow: -4px 0px 1px rgba(225, 229, 232, 0.5);
 }
-/* line 180, ../sass/components/_main-navigation.scss */
+/* line 203, ../sass/components/_main-navigation.scss */
 .main-navigation ul ul ul li.is-selected > a:hover {
   color: #e1e5e8;
 }
-/* line 186, ../sass/components/_main-navigation.scss */
+/* line 209, ../sass/components/_main-navigation.scss */
 .main-navigation a {
   position: relative;
-  padding: 18px 0px 18px 29px;
+  padding: 14px 0px 14px 29px;
   display: block;
   z-index: 10;
   color: #767683;
   box-sizing: border-box;
 }
-/* line 193, ../sass/components/_main-navigation.scss */
+/* line 216, ../sass/components/_main-navigation.scss */
 .is-animating-out .main-navigation a {
   text-shadow: 4px 0px 1px rgba(118, 118, 131, 0.5);
 }
-/* line 196, ../sass/components/_main-navigation.scss */
+/* line 219, ../sass/components/_main-navigation.scss */
 .is-animating-in .main-navigation a {
   text-shadow: -4px 0px 1px rgba(118, 118, 131, 0.5);
 }
-/* line 199, ../sass/components/_main-navigation.scss */
+/* line 222, ../sass/components/_main-navigation.scss */
 .main-navigation a:hover {
   color: #c6c6d4;
 }
-/* line 203, ../sass/components/_main-navigation.scss */
+/* line 226, ../sass/components/_main-navigation.scss */
 .main-navigation .ref-icon-before:before {
   position: absolute;
   left: 30px;

@@ -1,0 +1,137 @@
+$local-breakpoint-desktop: 980px;
+$local-breakpoint-wide: 1402px;
+$local-breakpoint-vertical: 680px;
+
+.list-partners {
+	position: relative;
+	width: 100%;
+	margin-top: 41px;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-bottom: 3px;
+	@include breakpoint($phablet) {
+		padding-bottom: 47px;
+	}
+	@include breakpoint($tablet) {
+		bottom: 30px;
+		margin-top: 150px;
+		padding-bottom: 20px;
+	}
+	@media screen and (min-width: $local-breakpoint-desktop) and (min-height: $local-breakpoint-vertical) {
+		.no-touch & {
+			position: absolute;
+			left: 0;
+			bottom: 20px;
+			margin-top: 0;
+			padding-bottom: 0;
+		}
+	}
+	@include breakpoint($desktop) {
+  	padding-left: 30px;
+		padding-right: 30px;
+  }
+  @media screen and (min-width: $local-breakpoint-desktop) and (min-height: 800px) {
+  	.no-touch & {
+  		bottom: 30px;
+  	}
+  } 
+	@media screen and (min-width: $local-breakpoint-wide) and (min-height: 920px) {
+		.no-touch & {
+  		bottom: 50px;
+  	}
+  }
+  @include breakpoint($desktop-wide) {
+  	.no-touch & {
+  		left: 50%;
+			max-width: 1650px;
+			margin-left: -825px;	
+  	}		
+  }
+  h2 {
+  	display: block;
+  	width: 100%;
+  	margin-top: 5px;
+		margin-bottom: 23px;
+  	font-size: 13px;
+  	text-align: center;
+  	color: $purple-pale;
+  	@include breakpoint($phablet) {
+			margin-top: 20px;
+			margin-bottom: 0;
+		}
+		@include breakpoint($tablet) {
+			margin-top: 8px;
+			margin-bottom: 2px;
+		}
+  }
+	ul {
+		width: 100%;
+		@include breakpoint($phablet) {
+			text-align: center;
+		}
+		@include breakpoint($tablet) {
+			display: -webkit-box;
+		  display: -moz-box;
+		  display: -ms-flexbox;
+		  display: -webkit-flex;
+		  display: flex;
+		  flex-direction: row;
+		  justify-content: center;
+		  align-items: center;
+		}
+	}
+	li {
+		width: 50%;
+		display: inline-block;
+		vertical-align: middle;
+		text-align: center;
+		&:last-child {
+			display: none;
+		}
+		@include breakpoint($phablet) {
+			width: 33%;
+		}
+		@include breakpoint($tablet) {
+			width: auto;
+			justify-content: center;
+			-webkit-flex-grow: 1;
+			flex-grow: 1;
+			&:last-child {
+				display: inline-block;
+			}
+		}
+	}
+	img {
+		max-width: 126px;
+		padding: 0px 0px 9px;  	
+  	@include breakpoint($phablet) {
+			max-width: 136px;
+			padding-bottom: 15px;			
+		}
+		@include breakpoint($tablet) {
+			max-width: 96%;
+			padding-bottom: 28px;
+		}
+		@include breakpoint($desktop) {
+			max-width: 140px;
+		}
+		@media screen and (min-width: $local-breakpoint-desktop) and (min-height: $local-breakpoint-vertical) {
+  		max-width: 120px;
+  	}
+  	@media screen and (min-width: $local-breakpoint-desktop) and (min-height: 800px) {
+  		max-width: 140px;
+  	}
+  	@media screen and (min-width: $local-breakpoint-wide) and (min-height: 800px) {
+  		max-width: 160px;
+  	}  	
+	}
+}
+.no-flexbox {
+	.list-partners ul {
+		width: 100%;
+		display: block;
+		li {
+			display: inline-block;
+		}
+	}
+}

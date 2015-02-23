@@ -1,0 +1,8 @@
+/* 	All design kit styles:
+* 	Includes reflection-main.scss styles (base/base) but also additional components just used in the design kit that won't be required on the live app
+*/
+
+@import "base/base";
+
+/* Design kit additional components */
+@import "../components-designkit/*";

@@ -1,0 +1,54 @@
+@import "compass/css3/appearance";
+@import "helpers/mixins";
+@import "ui/colours";
+@import "ui/interaction";
+
+/* Layout */
+%has-layout {
+  width: auto;
+  overflow: hidden;
+}
+%vertical-centre-content {
+  height: 100%;
+  &:before {
+    content: '';
+    display: inline-block;
+    width: 0;
+    height: 100%;
+    vertical-align: middle;
+    margin-right: -0.35em; /* Adjusts for spacing */
+  }
+  > * {
+    display: inline-block;
+    vertical-align: middle;
+  }
+}
+
+/* Typography */
+%font-smoothing {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+%hidden-text {
+  text-align: left;
+  text-indent: -999em;
+}
+
+/* UI */
+%button-base-style {
+  display: inline-block;
+  @include font-size(13px);
+  line-height: 1.1;
+  color: $dark-grey-1;
+  text-shadow: none !important;
+  border: none;
+  border-radius: 0.23076923076923em; // 3px
+  @include appearance(none);
+  outline: none;
+  cursor: pointer;
+  @extend %font-smoothing;
+  @include transition(background-color $base-transition-speed-off, color $base-transition-speed-off, border-color $base-transition-speed-off);
+  &:hover {
+    @include transition(background-color $base-transition-speed-on, color $base-transition-speed-on, border-color $base-transition-speed-on);
+  }
+}

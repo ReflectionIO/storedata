@@ -1,0 +1,323 @@
+$local-breakpoint-phablet: 600px;
+
+.colour-palette-container {
+	margin-bottom: 4rem;
+	@include breakpoint($local-breakpoint-phablet) {
+		.grid__column--one-third {
+			@include column(6);
+			padding-top: 16px !important;
+		}
+	}
+	@include breakpoint($laptop) {
+		.grid__column--one-third {
+			@include column(4);
+			padding-top: 16px;
+			.panel-left-open & {
+				@include column(6);
+				padding-top: 16px;	
+			}
+		}
+	}
+	@include breakpoint($desktop) {
+		.grid__column--one-third {
+			@include column(4);
+			padding-top: 16px;
+			.panel-left-open & {
+				@include column(4);
+				padding-top: 16px;	
+			}
+		}
+	}
+}
+.colour-box {
+	position: relative;
+	height: 255px;
+	padding-top: 16px;
+	@include breakpoint($desktop-wide) {
+		height: 300px;
+	}
+	.dk-component-row & {
+		margin-bottom: 0;
+	}
+	h2 {
+		padding-right: 75px;
+		margin-bottom: 0.4em;
+		@include font-size(16px);
+		color: $reflection-white;
+	}
+	dt, dd {
+		display: block;
+		font-family: $code-font;
+		@include font-size(13.8px);
+		line-height: 1.4em;
+	}
+	.content-list--minor {
+		position: absolute;
+		bottom: 27px;
+		left: 0;
+		width: 100%;
+		padding: 0 2%;
+		@include breakpoint($local-breakpoint-phablet) {
+			padding: 0 5%;
+		}	
+		@include breakpoint($tablet, true) {
+			padding: 0 7%;
+		}		
+		li {
+			padding-left: 0;
+			color: $reflection-white;
+			background-image: none;
+		}
+	}
+}
+.colour-link {
+	position: absolute;
+	top: 11px;
+	right: 2%;
+	padding: 0.6em 0.5em;
+	font-family: $brand-heading-font;
+	font-size: 14px;
+	font-weight: 400;
+	border-radius: 3px;
+	background-color: #504ca1;
+	cursor: pointer;
+	@include breakpoint($desktop-wide) {
+		font-size: 15px;
+	}
+	input {
+		width: 70px;
+		font-size: 13px;
+		text-align: center;
+		color: #c3c6f6;
+		cursor: pointer;
+		&::-moz-selection { background: rgba(0,0,0,.3); }
+		&::selection { background: rgba(0,0,0,.3); }
+		@include breakpoint($desktop) {
+			font-size: 14px;
+		}
+		@include breakpoint($desktop-wide) {
+			font-size: 15px;
+		}
+	}
+	@include breakpoint($local-breakpoint-phablet) {
+		right: 5%;
+	}
+	&:hover {
+		background-color: darken(#504ca1, 5%);
+	}
+}
+.colour-box--reflection-purple {
+	background-color: $reflection-purple;
+	dt, dd {
+		color: #c3c6f6;		
+	}
+}
+.colour-box--reflection-red {
+	background-color: $reflection-red;
+	.colour-link {
+		background-color: #de3755;
+		&:hover {
+			background-color: darken(#de3755, 5%);
+		}
+		input {
+			color: #ffd8de;
+		}
+	}
+	dt, dd {
+		color: #ffd7de;
+	}
+}
+.colour-box--reflection-green {
+	background-color: $reflection-green;
+	.colour-link {
+		background-color: #15a180;
+		&:hover {
+			background-color: darken(#15a180, 5%);
+		}
+		input {
+			color: #bffff0;
+		}
+	}
+	dt, dd {
+		color: #bffff0;
+	}
+}
+.colour-box--dark-grey-one {
+	background-color: $dark-grey-1;
+	.colour-link {
+		background-color: #111112;
+		&:hover {
+			background-color: lighten(#111112, 5%);
+		}
+		input {
+			color: $light-grey-2;
+			&::-moz-selection { background: rgba(255,255,255,.2); }
+			&::selection { background: rgba(255,255,255,.2); }
+		}
+	}
+	dt, dd {
+		color: $light-grey-2;
+	}
+}
+.colour-box--dark-grey-two {
+	background-color: $dark-grey-2;
+	.colour-link {
+		background-color: #21232a;
+		&:hover {
+			background-color: lighten(#21232a, 5%);
+		}
+		input {
+			color: $light-grey-2;
+			&::-moz-selection { background: rgba(255,255,255,.2); }
+			&::selection { background: rgba(255,255,255,.2); }
+		}
+	}
+	dt, dd {
+		color: $light-grey-2;
+	}
+}
+.colour-box--mid-grey-one {
+	background-color: $mid-grey-1;
+	.colour-link {
+		background-color: #444450;
+		&:hover {
+			background-color: lighten(#444450, 5%);
+		}
+		input {
+			color: $light-grey-2;
+		}
+	}
+	dt, dd {
+		color: $light-grey-2;
+	}
+}
+.colour-box--mid-grey-two {
+	background-color: $mid-grey-2;
+	.colour-link {
+		background-color: #565965;
+		&:hover {
+			background-color: lighten(#565965, 5%);
+		}
+		input {
+			color: $light-grey-2;
+		}
+	}
+	dt, dd {
+		color: $light-grey-2;
+	}
+}
+.colour-box--light-grey-one {
+	background-color: $light-grey-1;
+	.colour-link {
+		background-color: #676c7d;
+		&:hover {
+			background-color: lighten(#676c7d, 5%);
+		}
+		input {
+			color: $light-grey-2;
+		}
+	}
+	dt, dd {
+		color: $light-grey-2;
+	}
+}
+.colour-box--light-grey-two {
+	background-color: $light-grey-2;
+	.colour-link {
+		background-color: #a3a5ac;
+		&:hover {
+			background-color: darken(#a3a5ac, 5%);
+		}
+		input {
+			color: $reflection-white;
+		}
+	}
+	dt, dd {
+		color: $reflection-white;
+	}
+}
+.colour-box--reflection-white {
+	border: 1px solid $light-grey-2;
+	background-color: $reflection-white;
+	h2 {
+		color: $dark-grey-1;
+	}
+	.colour-link {
+		background-color: $panel-grey;
+		&:hover {
+			background-color: darken($panel-grey, 5%);
+		}
+		input {
+			color: $mid-grey-2;
+		}
+	}
+	dt, dd {
+		color: $mid-grey-2;
+	}
+	.content-list--minor li {
+		color: $mid-grey-1;
+	}
+}
+.colour-box--panel-grey {
+	background-color: $panel-grey;
+	h2 {
+		color: $dark-grey-1;
+	}
+	.colour-link {
+		background-color: #e6e6e9;
+		&:hover {
+			background-color: darken(#e6e6e9, 5%);
+		}
+		input {
+			color: $mid-grey-2;
+		}
+	}
+	dt, dd {
+		color: $mid-grey-2;
+	}
+	.content-list--minor li {
+		color: $mid-grey-1;
+	}
+}
+.colour-box--graph-fill-grey {
+	background-color: $graph-fill-grey;
+	h2 {
+		color: $dark-grey-1;
+	}
+	.colour-link {
+		background-color: #d8d7e5;
+		&:hover {
+			background-color: darken(#d8d7e5, 5%);
+		}
+		input {
+			color: $mid-grey-1;
+		}
+	}
+	dt, dd {
+		color: $mid-grey-1;
+	}
+	.content-list--minor li {
+		color: $mid-grey-1;
+	}
+}
+.colour-box--divider-grey {
+	background-color: $divider-grey;
+	h2 {
+		color: $dark-grey-1;
+	}
+	.colour-link {
+		background-color: #d2d7db;
+		&:hover {
+			background-color: darken(#d2d7db, 5%);
+		}
+		input {
+			color: $mid-grey-1;
+		}
+	}
+	dt, dd {
+		color: $mid-grey-1;
+	}
+	.content-list--minor li {
+		color: $mid-grey-1;
+	}
+}

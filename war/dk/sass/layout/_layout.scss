@@ -1,0 +1,64 @@
+// Breakpoint variables
+$phablet: 480px;
+$tablet: 720px;
+$laptop: 960px;
+$desktop: 1280px;
+$desktop-wide: 1600px;
+
+$base-margin-bottom: 4rem;
+
+.l-page-container {
+	width: 100%;
+	min-height: 100vh;
+	overflow: visible;
+	@include transition(filter 0.18s);
+	.touch .no-scroll & {
+		overflow: hidden;
+		height: 100vh;
+	}
+	&.is-blurred-heavy {
+		filter: blur(0.8px);
+		@include transition(filter 0.5s);
+		.ie8 &, .ie9 & {
+			filter: none;
+		}
+	}
+}
+.l-main {
+	width: 100%;
+	padding-top: 42px;
+	display: inline-block;
+	float: right;
+	vertical-align: top;
+	@include transition(transform 0.15s ease-in, width 0.15s ease-in);
+	@include breakpoint($phablet, true) {
+		padding-top: 62px;
+	}
+	.panel-left-open & {
+		width: 100%;
+		@include transform(translateX(220px));
+		@include transition(transform 0.15s ease-out, width 0.15s ease-out);
+		overflow: visible;
+		@include breakpoint($laptop, true) {
+			width: calc(100% - 220px);
+			@include transform(translateX(0));
+			@include transition(width 0.15s ease-out);
+		}		
+	}
+}
+.is-chrome,
+.is-opera {
+	.l-main {
+		@include transition(none);
+		.panel-left-open & {
+			@include transition(none);
+		}
+	}
+}
+.l-full-screen-section {
+	height: calc(100vh - 42px);
+	background-color: $reflection-purple;
+	@include breakpoint($phablet, true) {
+		height: calc(100vh - 62px);
+	}
+}

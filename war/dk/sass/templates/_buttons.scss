@@ -1,0 +1,41 @@
+.button-example-container {
+	@include column(8,8);
+	margin-bottom: 1em;
+	margin-bottom: 1rem;
+	overflow: visible;
+	@include breakpoint($phablet, true) {
+		@include column(4,8);
+	}
+	button {
+		margin-right: 20px;
+		margin-bottom: 2em;
+		margin-bottom: 2rem;
+		float: left;
+	}
+}
+.button-example-container--full-width {
+	@include column(8,8);
+	margin-bottom: 3em;
+	h2 {
+		margin-top: 5px;
+	}
+	+ .button-example-code-container {
+		margin-top: 1em;
+	}
+	@include breakpoint($tablet, true) {
+		@include vertical-centre-content;
+		h2 {
+			width: 49%;
+			margin-top: none;
+			margin-bottom: 0;
+			padding-left: 5%;
+			padding-bottom: 0;
+		}
+		> div {
+			width: 50%;
+		}
+	}
+}
+.button-example-code-container {
+	@include column(8,8);
+}
