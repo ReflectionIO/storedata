@@ -1,0 +1,603 @@
+@import "compass/css3/box-shadow";
+
+@keyframes mail-send {
+	0% { transform: translate(0,0); }
+	15% { transform: translate(8px, 3px); }
+	100% { transform: translate(-36px, -13px); }
+}
+@keyframes mail-deliver {
+	0% { transform: translateX(0); }
+	15% { transform: translateX(-4px); }
+	100% { transform: translateX(47px); }
+}
+@keyframes van-shake {
+	0% { transform: translateY(0px); }
+	12.5% { transform: translateY(1px); }
+	25% { transform: translateY(0px); }
+	37.5% { transform: translateY(1px); }
+	50% { transform: translateY(0px); }
+	62.5% { transform: translateY(1px); }
+	75% { transform: translateY(0px); }
+	87.5% { transform: translateY(1px); }
+	100% { transform: translateY(0px); }
+}
+.account-access-page {
+	background-color: $reflection-purple;
+	.vertical-centre-above-phablet {
+		max-width: 1220px;
+		@include breakpoint($desktop-wide) {
+			max-width: 1402px;
+		}
+		@include breakpoint($desktop-wide) {
+			max-width: 1700px;
+		}
+	}
+}
+.account-access-content {
+	padding-top: 4.6rem;
+	padding-bottom: 30px;
+	padding-bottom: 3rem;
+	overflow: visible;
+	z-index: 5;
+	@include breakpoint($tablet, true) {
+		padding-top: 7.5rem;
+	}
+	@media screen and (min-width: $laptop) and (min-height: 780px) {
+		padding-top: 12rem;
+	}
+	@media screen and (min-width: $laptop) and (min-height: 960px) {
+		padding-top: 18rem;
+	}
+}
+.full-screen-intro {
+	width: 100%;
+	max-width: 600px;
+	margin-bottom: 1rem;
+	display: inline-block;
+	vertical-align: top;
+	text-align: center;
+	overflow: visible;
+	@include breakpoint($laptop, true) {
+		position: relative;
+		width: 46%;
+		margin-right: percentage(101/1220);
+		margin-bottom: 0;
+		padding-top: 20px;
+	}
+	@include breakpoint($desktop-wide) {
+		max-width: 800px;
+		margin-right: 6%;
+	}
+	h1 {
+		margin-bottom: 0.55em;
+		color: white;
+		font-size: 2.6em;
+		@include breakpoint($phablet) {
+			font-size: 3.3em;
+		}
+		@include breakpoint($laptop, true) {
+			font-size: 3.9em;
+		}
+	}
+	.p-style--featured {
+		font-size: 1.6rem;
+		@include breakpoint($laptop, true) {
+			font-size: 1.8em;
+		}
+	}
+	p {
+		color: $purple-pale;
+	}
+}
+.account-form-container {
+	position: relative;
+	width: 100%;
+	max-width: 450px;
+	display: inline-block;
+	vertical-align: top;
+	overflow: visible;
+	text-align: left;
+	background-color: #f2f2f5;
+	@include breakpoint($laptop, true) {
+		position: relative;
+		top: 0px;
+		width: percentage(407/1220);
+	}
+	.create-password-form-is-showing &,
+	.connect-account-is-showing & {
+		padding: 30px 19px;
+		@include breakpoint($phablet, true) {
+			padding: 30px 30px;
+		}
+	}
+	.tabs__tab {
+		background-color: #5f5bb4;
+		a {
+			color: $reflection-white;
+		}
+		a:hover {
+			color: darken($reflection-white, 15%);
+		}
+		&.is-active {
+			a {
+				color: #363a47;
+			}
+			a:hover {
+				color: #363a47;
+			}
+		}
+	}
+	.js-rotate-content,
+	.form-submitted-success-complete.connect-account-is-showing & .js-rotate-content:not(.maintain-after-submit),
+	.tabs__content--is-showing.tabs__content--is-submitted .js-rotate-content:not(.maintain-after-submit),
+	.tabs__content--is-showing .form--password-reset .js-rotate-content,
+	.tabs__content--is-showing.show-reset-password-form .form--login .js-rotate-content,
+	.tabs__content--is-showing.tabs__content--is-submitted.show-reset-password-form .js-rotate-content:not(.maintain-after-submit) {
+		transform: rotateX(90deg);
+		@include transition(transform 0.15s);
+		.ie9 & {
+			visibility: hidden;
+		}
+	}
+	.will-show .js-rotate-content,
+	.tabs__content--is-showing.show-reset-password-form.will-show .form--login .js-rotate-content,
+	.connect-account-is-showing & .connect-account-content.will-show .js-rotate-content {
+		transform: rotateX(-90deg);
+		.ie9 & {
+			visibility: hidden;
+		}
+	}
+	.tabs__content--is-showing .js-rotate-content,
+	.tabs__content--is-showing .form--login .js-rotate-content,
+	.tabs__content--is-showing.show-reset-password-form .form--password-reset .js-rotate-content,
+	.create-password-form-is-showing & .create-password-content .js-rotate-content,
+	.create-password-form-is-showing.ie9 & .create-password-content .js-rotate-content,
+	.connect-account-is-showing & .connect-account-content .js-rotate-content {
+		transform: rotateX(0deg);
+		@include transition(transform 0.15s 0.15s, background-color $base-transition-speed-on);
+		visibility: visible;
+	}
+	.tabs__content {
+		position: relative;
+		width: 100%;
+		padding: 30px 19px;
+		display: block;
+		visibility: hidden;
+		@include breakpoint($phablet, true) {
+			padding: 30px 30px;
+		}
+		.form--password-reset {
+			position: absolute;
+			left: 0;
+			visibility: hidden;
+		}
+	}
+	.js-fade-content,
+	.form-submitted-success-complete.connect-account-is-showing & .js-fade-content:not(.maintain-after-submit),
+	.tabs__content--is-showing.tabs__content--is-submitted .js-fade-content:not(.maintain-after-submit),
+	.tabs__content--is-showing .form--password-reset .js-fade-content,
+	.tabs__content--is-showing.show-reset-password-form .form--login .js-fade-content,
+	.tabs__content--is-showing.tabs__content--is-submitted.show-reset-password-form .js-fade-content:not(.maintain-after-submit) {
+		opacity: 0;
+		@include transition(opacity 0.15s);
+		.ie9 & {
+			visibility: hidden;
+		}
+	}
+	.tabs__content--is-showing .js-fade-content,
+	.tabs__content--is-showing .form--login .js-fade-content,
+	.tabs__content--is-showing.show-reset-password-form .form--password-reset .js-fade-content,
+	.create-password-form-is-showing & .create-password-content .js-fade-content,
+	.connect-account-is-showing & .connect-account-content .js-fade-content,
+	.create-password-form-is-showing.ie9 & .create-password-content .js-fade-content {
+		opacity: 1;
+		@include transition(opacity 0.15s 0.15s);
+		visibility: visible;
+	}
+	.tabs__content-container {
+		position: relative;
+		margin-bottom: 1rem;
+	}
+	form {
+		p {
+			font-size: 1.4rem;
+			text-align: center;
+		}
+		&.form--password-reset {
+			p {
+				margin-top: 1.5rem;
+				margin-bottom: 8.5rem;
+			}
+		}
+	}
+	.account-form-heading {
+		text-align: center;
+		margin-bottom: 2.7rem;
+		font-size: 1.4rem;
+		@include breakpoint($tablet, true) {
+			font-size: 1.6rem;
+		}
+	}
+}
+.form-submitted-success-complete.connect-account-is-showing.ie9 .account-form-container .js-fade-content:not(.maintain-after-submit),
+.form-submitted-success-complete.connect-account-is-showing.ie9 .account-form-container .js-rotate-content:not(.maintain-after-submit) {
+	visibility: hidden;
+}
+.form-submitted-success {
+	position: absolute;
+	top: 30px;
+	left: 0px;
+	padding-left: 19px;
+	padding-right: 19px;
+	visibility: hidden;
+	text-align: center;
+	@include opacity(0);
+	@include breakpoint($phablet, true) {
+		padding-left: 30px;
+		padding-right: 30px;
+	}
+	&.is-showing {
+		text-align: center;
+		visibility: visible;
+		@include opacity(1);
+		@include transition(opacity 0.3s 0.3s);
+	}
+	p {
+		margin-bottom: 3.8rem;
+		padding-left: 18px;
+		padding-right: 18px;
+		font-size: 1.4rem;
+		text-align: center;
+		color: #5b5d61;
+	}
+	.illustration-container {
+		margin-top: 0.5rem;
+		margin-bottom: 2.7rem;
+		text-align: center;
+		overflow: visible;
+	}
+	.email-post-animation {
+		position: relative;
+		left: 0;
+		top: 4px;
+		width: 189px;
+		height: 118px;
+		overflow: visible;
+		margin-left: 58px;
+	}
+	.email-success-envelope {
+		.tabs__content--is-submitted & {
+			animation: mail-send 0.6s 0.8s forwards;
+		}
+	}
+	.email-success-handle {
+		transform: rotateZ(-74deg);
+		transform-origin: 22px 25px 0px;
+		.tabs__content--is-submitted & {
+			transform: rotateZ(0deg);
+			@include transition(transform 0.2s 1.3s);
+		}
+	}
+	.email-delivery-animation {
+		position: relative;
+		margin-top: 15px;
+		margin-bottom: 25px;
+		width: 226px;
+		height: 81px;
+		overflow: visible;
+		.tabs__content--is-submitted & {
+			@include transform(translateX(300px));
+			@include transition(transform 0.4s 1.7s ease-in);
+		}
+		.is-ie & {
+			visibility: hidden;
+		}
+	}
+	.email-delivery-animation--email {
+		.tabs__content--is-submitted & {
+			animation: mail-deliver 0.6s 0.8s forwards;
+		}
+	}
+	.email-delivery-animation--van-body {
+		.tabs__content--is-submitted & {
+			animation: van-shake 0.6s 1.3s;
+		}
+	}
+	.success-tick {
+		position: absolute;
+		top: 30px;
+		left: 50%;
+		margin-left: -29px;
+		width: 61px;
+		height: 54px;
+		@include transform(scale(0.7));
+		@include opacity(0);
+		.tabs__content--is-submitted & {
+			@include opacity(1);
+			@include transform(scale(1));
+			@include transition(opacity 0.4s 2.2s, transform 0.4s 2.2s);
+			.is-ie & {
+				@include transition(opacity 0.4s 0.3s, transform 0.4s 0.3s);
+			}
+		}
+		.form-submitted-success-complete & {
+			@include opacity(1);
+			@include transform(scale(1));
+			@include transition(opacity 0.4s 0.4s, transform 0.4s 0.4s);
+		}
+	}
+	.account-setup-content-wrapper & {
+		position: absolute;
+		top: 0;
+		width: 100%;
+		height: 297px;
+		.success-tick {
+			top: 12.6rem;
+		}
+		p {
+			position: absolute;
+			left: 0;
+			bottom: 0;
+			width: 100%;
+			margin-bottom: 1rem;
+			font-size: 1.6rem;
+			font-weight: 700;
+		}
+	}
+}
+.no-touch .account-access-page .list-partners,
+.touch .account-access-page .list-partners {
+	display: none;
+	position: relative;
+	left: 0;
+	bottom: 0;
+	margin-top: 0;
+	padding-top: 0.5rem;
+	width: 120%;
+	margin-left: -10%;
+	overflow: visible;
+	h2 {
+		margin-top: 0.8rem;
+		margin-bottom: 1.7rem;
+	}
+	img {
+		max-width: 130px;
+		padding-bottom: 0;
+	}
+	@include breakpoint($phablet) {
+		display: block;
+		li:last-child {
+			display: none;
+		}
+	}
+	@include breakpoint($tablet, true) {
+		ul {
+			display: block;
+		}
+		padding-top: 3rem;
+	}
+	@include breakpoint($desktop, true) {
+		ul {
+			display: -webkit-box;
+		  display: -moz-box;
+		  display: -ms-flexbox;
+		  display: -webkit-flex;
+		  display: flex;
+		  flex-direction: row;
+		  justify-content: center;
+		  align-items: center;
+		}
+		li {
+			width: auto;
+			justify-content: center;
+			-webkit-flex-grow: 1;
+			flex-grow: 1;
+		}
+		li:last-child {
+			display: inline-block;
+		}
+	}
+}
+.no-touch .account-setup-content-wrapper .list-partners,
+.touch .account-setup-content-wrapper .list-partners {
+	@include breakpoint($phablet) {
+		display: none;
+	}
+	@include breakpoint($laptop, true) {
+		display: block;
+	}
+}
+.apply-content {
+	position: absolute;
+	visibility: hidden;
+	overflow: visible;
+	@include opacity(0);	
+	@include breakpoint($laptop, true) {
+		@include transition(opacity 0.6s);
+	}
+	.apply-form-is-showing & {
+		position: relative;
+		visibility: visible;
+		@include opacity(1);
+		@include transition(opacity 0.6s);
+	}
+}
+.login-content {
+	position: absolute;
+	visibility: hidden;
+	text-align: left;
+	overflow: visible;
+	@include opacity(0);	
+	.login-form-is-showing & {
+		position: relative;
+		visibility: visible;
+		@include opacity(1);
+		@include transition(opacity 0.6s);
+	}
+	.blockquote--reset-password,
+	.blockquote--login {
+		margin-top: 0;
+		margin-bottom: 3em;
+	}
+	.blockquote--large {
+		margin-left: -5px;
+		p {
+			font-size: 2.2rem;
+			font-weight: 700;
+			line-height: 1.45;
+		}
+	}
+	.blockquote--reset-password {
+		position: absolute;
+		visibility: hidden;
+		@include opacity(0);
+		@include breakpoint($tablet, true) {
+			margin-top: 72px;
+		}
+		.reset-password-form-is-showing & {
+			position: relative;
+			visibility: visible;
+			@include opacity(1);
+			@include transition(opacity 0.6s);
+		}
+	}
+	.blockquote--login {
+		position: relative;
+		visibility: visible;
+		@include transition(opacity 0.6s);
+		@include breakpoint($tablet, true) {
+			margin-top: 47px;
+		}
+		.reset-password-form-is-showing & {
+			position: absolute;
+			visibility: hidden;
+			@include opacity(1);
+			@include transition(opacity 0.6s);
+		}
+	}
+}
+.create-password-main-content,
+.connect-account-main-content {
+	position: absolute;
+	visibility: hidden;
+	overflow: visible;
+	@include opacity(0);
+	@include transition(opacity 0.6s);
+}
+.create-password-form-is-showing .create-password-main-content,
+.connect-account-is-showing .connect-account-main-content {
+	position: relative;
+	margin-bottom: 2rem;
+	visibility: visible;
+	@include opacity(1);
+	@include transition(opacity 0.6s);
+}
+@keyframes glowPulse {
+	0% { @include opacity(1); }
+	50% { @include opacity(0); }
+	100% { @include opacity(1); }
+}
+.account-setup-content-wrapper {
+	position: relative;
+	overflow: visible;
+	min-height: 93vh;
+	@include breakpoint($laptop, true) {
+		min-height: 76vh;
+	}
+}
+.account-connect-animation {
+	position: absolute;
+	display: none;
+	left: 0;	
+	width: 100%;
+	height: 93px;
+	margin-top: 3.1rem;
+	margin-bottom: 4rem;
+	z-index: 0;
+	@include opacity(0);
+	@include breakpoint($tablet) {
+		top: 685px;
+		display: block;
+	}
+	@include breakpoint($laptop, true) {
+		top: 35.6rem;
+		display: block;
+	}
+	@media screen and (min-width: $laptop) and (min-height: 780px) {
+		top: 39.6rem;
+	}
+	@media screen and (min-width: $laptop) and (min-height: 960px) {
+		top: 44.6rem;
+	}
+	.connect-account-is-showing & {
+		@include opacity(1);
+		@include transition(opacity 0.6s 0.3s);
+	}
+	.cord {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		div {
+			width: 100%;
+			height: 6px;
+			margin-top: 42px;
+			background-color: #474492;
+		}
+	}
+	.plugs {
+		position: absolute;
+		top: 0;
+		left: calc(50% - 173px);
+		width: 346px;
+		height: 93px;
+		overflow: hidden;
+		background-color: $reflection-purple;
+		@include breakpoint($laptop, true) {
+			left: calc(50% - 439px);
+		}
+	}
+	.plug-left, .plug-right {
+		position: absolute;
+		height: 93px;
+	}
+	.plug-right {
+		width: 189px;
+		top: -1px;
+	}
+	.plug-left {
+		left: -417px;
+		width: 563px;
+		@include transition(left 0.3s ease-out);
+	}
+	&.plugs-connected .plug-left {
+		left: -293px;
+		@include transition(left 0.3s 0.7s ease-out);
+	}
+	.plug-right {
+		right: -68px;
+	}
+	.plug-logo path {
+		fill: #474492;
+	}
+	&.plugs-connected {
+		.plug-logo {
+			path {
+				fill: #fff;
+				@include transition(fill 0.3s 1.1s ease-out);
+			}
+		}
+		.plug-logo-glow,
+		.plug-logo-container .plug-logo-part-glow {
+			opacity: 1;
+			@include transition(opacity 0.5s 1.4s ease-out);
+		}
+		.plug-logo-part-glow {
+			animation: glowPulse 1s 1.9s ease infinite;
+		}
+	}
+	.plug-logo-glow,
+	.plug-logo-container .plug-logo-part-glow {
+		opacity: 0;
+	}
+}
