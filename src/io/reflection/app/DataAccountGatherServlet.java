@@ -105,7 +105,7 @@ public class DataAccountGatherServlet extends ContextAwareServlet {
 							if (status && notifyParameter != null && Boolean.parseBoolean(notifyParameter)) {
 								Event event = EventServiceProvider.provide().getCodeEvent(DataTypeHelper.NEW_USER_EVENT_CODE);
 								User user = UserServiceProvider.provide().getDataAccountOwner(account);
-								
+
 								Map<String, Object> parameters = new HashMap<String, Object>();
 								parameters.put("user", user);
 
@@ -137,8 +137,10 @@ public class DataAccountGatherServlet extends ContextAwareServlet {
 				LOG.log(GaeLevel.SEVERE, String.format("Database error occured while trying to import data with accountid [%s] and date [%s]",
 						accountIdParameter, dateParameter), e);
 			} catch (ServiceException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				if (LOG.isLoggable(GaeLevel.INFO)) {
+					LOG.log(GaeLevel.INFO, String.format("Service error occured while trying to import data with accountid [%s] and date [%s]",
+							accountIdParameter, dateParameter), e);
+				}
 			}
 
 		}

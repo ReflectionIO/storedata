@@ -8,12 +8,16 @@
 //
 package io.reflection.app.accountdatacollectors;
 
+import static io.reflection.app.shared.util.DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE;
+import static io.reflection.app.shared.util.DataTypeHelper.SALES_GATHER_CREDENTIAL_ERROR_EVENT_CODE;
+import static io.reflection.app.shared.util.DataTypeHelper.SALES_GATHER_GENERIC_ERROR_EVENT_CODE;
 import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.DataAccountFetchStatusType;
 import io.reflection.app.datatypes.shared.Event;
 import io.reflection.app.datatypes.shared.Notification;
+import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.helpers.ApiHelper;
 import io.reflection.app.helpers.NotificationHelper;
@@ -21,9 +25,10 @@ import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
 import io.reflection.app.service.event.EventServiceProvider;
 import io.reflection.app.service.notification.NotificationServiceProvider;
+import io.reflection.app.service.permission.PermissionServiceProvider;
 import io.reflection.app.service.user.UserServiceProvider;
-import io.reflection.app.shared.util.DataTypeHelper;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,6 +41,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.spacehopperstudios.utility.StringUtils;
 import com.willshex.gson.json.service.server.InputValidationException;
 import com.willshex.gson.json.service.server.ServiceException;
 import com.willshex.gson.json.shared.Convert;
@@ -47,6 +53,7 @@ import com.willshex.gson.json.shared.Convert;
 public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 
 	private static final Logger LOG = Logger.getLogger(DataAccountCollectorITunesConnect.class.getName());
+	private static final String GATHER_ERROR_KEY_PREFIX = "sales.gather.error";
 
 	/*
 	 * (non-Javadoc)
@@ -162,44 +169,54 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 
 			// Manage notifications in case of error
 			PersistentMap persistentMap = PersistentMapFactory.createObjectify();
-			String persistentKey = "sales.gather.error.data.account." + dataAccount.id.toString();
-			if (error != null) {
-				// Recognize the event error type
+
+			if (!success && error != null) {
+				// Recognise the event error type
 				Event event = null;
-				if (error.equals("Error :Your AppleConnect account or password was entered incorrectly.")) {
-					event = EventServiceProvider.provide().getCodeEvent(DataTypeHelper.SALES_GATHER_CREDENTIAL_ERROR_EVENT_CODE);
+				boolean informOwnerAndRevokePermission = false;
+				if (error.contains("account or password was entered incorrectly")) {
+					event = EventServiceProvider.provide().getCodeEvent(SALES_GATHER_CREDENTIAL_ERROR_EVENT_CODE);
+					informOwnerAndRevokePermission = true;
 				} else {
-					event = EventServiceProvider.provide().getCodeEvent(DataTypeHelper.SALES_GATHER_GENERIC_ERROR_EVENT_CODE);
+					event = EventServiceProvider.provide().getCodeEvent(SALES_GATHER_GENERIC_ERROR_EVENT_CODE);
 				}
+
+				String persistentKey = StringUtils.join(Arrays.asList(GATHER_ERROR_KEY_PREFIX, dataAccount.id.toString(), event.code), ".");
 
 				if (!persistentMap.contains(persistentKey)) { // Last gather wasn't an error
 					Map<String, Object> parameters = new HashMap<String, Object>();
-					String body;
-					if (event.code.equals(DataTypeHelper.SALES_GATHER_CREDENTIAL_ERROR_EVENT_CODE)) {
-						// Notify the owner of the data account if is a credential error
-						User dataAccountOwner = UserServiceProvider.provide().getDataAccountOwner(dataAccount);
-						User testUser = UserServiceProvider.provide().getUsernameUser("william@reflection.io"); // TODO test user
-						User testUser2 = UserServiceProvider.provide().getUsernameUser("stefano@reflection.io");
-						parameters.put("user", dataAccountOwner);
-						parameters.put("dataaccount", dataAccount);
-						body = NotificationHelper.inflate(parameters, event.longBody);
-						Notification notificationOwner = (new Notification()).event(event).user(testUser).body(body);
-						NotificationServiceProvider.provide().addNotification(notificationOwner);
-						Notification notificationOwner2 = (new Notification()).event(event).user(testUser2).body(body);
-						NotificationServiceProvider.provide().addNotification(notificationOwner2);
-					} else {
-						parameters.put("dataaccount", dataAccount);
-						parameters.put("dataaccountfetch", dataAccountFetch);
-						body = NotificationHelper.inflate(parameters, event.longBody);
+
+					User dataAccountOwner = UserServiceProvider.provide().getDataAccountOwner(dataAccount);
+
+					parameters.put("user", dataAccountOwner);
+					parameters.put("dataaccount", dataAccount);
+					parameters.put("dataaccountfetch", dataAccountFetch);
+
+					String body = NotificationHelper.inflate(parameters, event.longBody);
+					String subject = NotificationHelper.inflate(parameters, event.subject);
+
+					if (informOwnerAndRevokePermission) {
+						// Revoke the has linked account permission
+						Permission hla = PermissionServiceProvider.provide().getCodePermission(PERMISSION_HAS_LINKED_ACCOUNT_CODE);
+						UserServiceProvider.provide().revokePermission(dataAccountOwner, hla);
+
+						NotificationServiceProvider.provide().addNotification(
+								(new Notification()).event(event).user(dataAccountOwner).body(body).subject(subject));
 					}
+
 					// Notify admin about the gather error
 					User adminUser = UserServiceProvider.provide().getUsernameUser("chi@reflection.io");
-					Notification notificationAdmin = (new Notification()).event(event).user(adminUser).body(body);
-					NotificationServiceProvider.provide().addNotification(notificationAdmin);
+					NotificationServiceProvider.provide().addNotification((new Notification()).event(event).user(adminUser).body(body).subject(subject));
+
+					persistentMap.put(persistentKey, Integer.valueOf(1));
+				} else {
+					persistentMap.put(persistentKey, Integer.valueOf(((Integer) persistentMap.get(persistentKey)).intValue() + 1));
 				}
-				persistentMap.put(persistentKey, event.code);
 			} else {
-				persistentMap.delete(persistentKey);
+				persistentMap.delete(StringUtils.join(
+						Arrays.asList(GATHER_ERROR_KEY_PREFIX, dataAccount.id.toString(), SALES_GATHER_CREDENTIAL_ERROR_EVENT_CODE), "."));
+				persistentMap.delete(StringUtils.join(Arrays.asList(GATHER_ERROR_KEY_PREFIX, dataAccount.id.toString(), SALES_GATHER_GENERIC_ERROR_EVENT_CODE),
+						"."));
 			}
 
 		} else {
