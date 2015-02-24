@@ -39,7 +39,9 @@ public class IngestorServlet extends HttpServlet {
 		boolean isNotQueue = false;
 
 		// bail out if we have not been called by app engine cron
-		if ((isNotQueue = (appEngineQueue == null || !"ingest".toLowerCase().equals(appEngineQueue.toLowerCase())))) {
+		// default queue is allowed to call this serlet to test higher speed using bigquery ingest
+		if ((isNotQueue = (appEngineQueue == null || !("ingest".toLowerCase().equals(appEngineQueue.toLowerCase()) || "default".toLowerCase().equals(
+				appEngineQueue.toLowerCase()))))) {
 			resp.setStatus(401);
 			resp.getOutputStream().print("failure");
 			LOG.warning("Attempt to run script directly, this is not permitted");
