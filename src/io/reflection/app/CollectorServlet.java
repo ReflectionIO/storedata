@@ -80,10 +80,10 @@ public class CollectorServlet extends HttpServlet {
 		}
 
 		List<String> countries = IngestorFactory.getIngestorCountries(store);
-
+		
 		if (countries.contains(country)) {
 			Ingestor ingestor = IngestorFactory.getIngestorForStore(store);
-
+			
 			if (ingestor != null) {
 				ingestor.enqueue(collected);
 			} else {
@@ -96,6 +96,8 @@ public class CollectorServlet extends HttpServlet {
 				LOG.info("Country [" + country + "] not in list of countries to ingest.");
 			}
 		}
+		
+		IngestorFactory.getBigQueryIngestorForStore(store).enqueue(collected);
 
 		resp.setHeader("Cache-Control", "no-cache");
 	}

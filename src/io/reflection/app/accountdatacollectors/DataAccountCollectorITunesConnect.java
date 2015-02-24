@@ -170,11 +170,11 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 			// Manage notifications in case of error
 			PersistentMap persistentMap = PersistentMapFactory.createObjectify();
 
-			if (!success && error != null) {
+			if (!success) {
 				// Recognise the event error type
 				Event event = null;
 				boolean informOwnerAndRevokePermission = false;
-				if (error.contains("account or password was entered incorrectly")) {
+				if (error != null && error.contains("account or password was entered incorrectly")) {
 					event = EventServiceProvider.provide().getCodeEvent(SALES_GATHER_CREDENTIAL_ERROR_EVENT_CODE);
 					informOwnerAndRevokePermission = true;
 				} else {

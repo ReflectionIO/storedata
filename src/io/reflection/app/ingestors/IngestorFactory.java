@@ -54,4 +54,18 @@ public class IngestorFactory {
 
 		return countries;
 	}
+
+	/**
+	 * @param store
+	 * @return
+	 */
+	public static Ingestor getBigQueryIngestorForStore(String store) {
+		Ingestor ingestor = null;
+
+		if (DataTypeHelper.IOS_STORE_A3.equals(store.toLowerCase())) {
+			ingestor = new BigQueryRankIngestorIos();
+		}
+
+		return ingestor;
+	}
 }

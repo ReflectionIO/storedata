@@ -22,7 +22,7 @@ import com.google.appengine.tools.cloudstorage.GcsOutputChannel;
 import com.google.appengine.tools.cloudstorage.GcsService;
 import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
 
-public abstract class StoreCollector {
+public class StoreCollector {
 
 	// public static final int MAX_DATA_CHUNK_LENGTH = 500000;
 	public static final String GATHER_BUCKET_KEY = "gather.bucket";
@@ -39,12 +39,12 @@ public abstract class StoreCollector {
 	// return ret;
 	// }
 
-	protected List<Long> store(String data, String countryCode, String store, String type, Long categoryInternalId, Date date, Long code)
+	public static List<Long> store(String data, String countryCode, String store, String type, Long categoryInternalId, Date date, Long code)
 			throws DataAccessException {
 		return store(data, countryCode, store, type, categoryInternalId, date, code, false);
 	}
 
-	protected List<Long> store(String data, String countryCode, String store, String type, Long categoryInternalId, Date date, Long code, boolean ingested)
+	public static List<Long> store(String data, String countryCode, String store, String type, Long categoryInternalId, Date date, Long code, boolean ingested)
 			throws DataAccessException {
 
 		List<Long> ids = new ArrayList<Long>(4);
