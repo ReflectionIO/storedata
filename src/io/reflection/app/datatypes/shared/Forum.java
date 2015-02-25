@@ -18,10 +18,12 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 public class Forum extends DataType {
+
 	public List<User> members;
 	public User creator;
 	public List<Topic> topics;
 	public String title;
+	public String code;
 	public String description;
 	public ForumTypeType type;
 	public Integer numberOfTopics;
@@ -51,6 +53,8 @@ public class Forum extends DataType {
 		object.add("topics", jsonTopics);
 		JsonElement jsonTitle = title == null ? JsonNull.INSTANCE : new JsonPrimitive(title);
 		object.add("title", jsonTitle);
+		JsonElement jsonCode = code == null ? JsonNull.INSTANCE : new JsonPrimitive(code);
+		object.add("code", jsonCode);
 		JsonElement jsonDescription = description == null ? JsonNull.INSTANCE : new JsonPrimitive(description);
 		object.add("description", jsonDescription);
 		JsonElement jsonType = type == null ? JsonNull.INSTANCE : new JsonPrimitive(type.toString());
@@ -104,6 +108,12 @@ public class Forum extends DataType {
 				title = jsonTitle.getAsString();
 			}
 		}
+		if (jsonObject.has("code")) {
+			JsonElement jsonCode = jsonObject.get("code");
+			if (jsonCode != null) {
+				code = jsonCode.getAsString();
+			}
+		}
 		if (jsonObject.has("description")) {
 			JsonElement jsonDescription = jsonObject.get("description");
 			if (jsonDescription != null) {
@@ -141,6 +151,11 @@ public class Forum extends DataType {
 
 	public Forum title(String title) {
 		this.title = title;
+		return this;
+	}
+
+	public Forum code(String code) {
+		this.code = code;
 		return this;
 	}
 

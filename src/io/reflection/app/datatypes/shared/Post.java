@@ -23,6 +23,7 @@ public class Post extends DataType {
 	public List<String> tags;
 	public Date published;
 	public String title;
+	public String code;
 	public String description;
 	public String content;
 	public Boolean visible;
@@ -46,6 +47,8 @@ public class Post extends DataType {
 		object.add("published", jsonPublished);
 		JsonElement jsonTitle = title == null ? JsonNull.INSTANCE : new JsonPrimitive(title);
 		object.add("title", jsonTitle);
+		JsonElement jsonCode = code == null ? JsonNull.INSTANCE : new JsonPrimitive(code);
+		object.add("code", jsonCode);
 		JsonElement jsonDescription = description == null ? JsonNull.INSTANCE : new JsonPrimitive(description);
 		object.add("description", jsonDescription);
 		JsonElement jsonContent = content == null ? JsonNull.INSTANCE : new JsonPrimitive(content);
@@ -93,6 +96,12 @@ public class Post extends DataType {
 				title = jsonTitle.getAsString();
 			}
 		}
+		if (jsonObject.has("code")) {
+			JsonElement jsonCode = jsonObject.get("code");
+			if (jsonCode != null) {
+				code = jsonCode.getAsString();
+			}
+		}
 		if (jsonObject.has("description")) {
 			JsonElement jsonDescription = jsonObject.get("description");
 			if (jsonDescription != null) {
@@ -136,6 +145,11 @@ public class Post extends DataType {
 
 	public Post title(String title) {
 		this.title = title;
+		return this;
+	}
+
+	public Post code(String code) {
+		this.code = code;
 		return this;
 	}
 
