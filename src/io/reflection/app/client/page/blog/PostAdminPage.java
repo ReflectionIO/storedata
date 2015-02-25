@@ -27,6 +27,7 @@ import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Post;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.shared.util.FormattingHelper;
+import io.reflection.app.shared.util.LookupHelper;
 
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.SafeHtmlCell;
@@ -141,9 +142,7 @@ public class PostAdminPage extends Page implements GetPostsEventHandler, Navigat
 
 			@Override
 			public SafeHtml getValue(Post object) {
-				String s = object.id.toString();
-
-				return SafeHtmlUtils.fromTrustedString("<a href=\"" + PageType.BlogEditPostPageType.asHref("change", s).asString()
+				return SafeHtmlUtils.fromTrustedString("<a href=\"" + PageType.BlogEditPostPageType.asHref("change", LookupHelper.reference(object)).asString()
 						+ "\" class=\"btn btn-xs btn-default\">Edit</a>");
 			}
 		};
@@ -152,10 +151,8 @@ public class PostAdminPage extends Page implements GetPostsEventHandler, Navigat
 
 			@Override
 			public SafeHtml getValue(Post object) {
-				String s = object.id.toString();
-
 				return SafeHtmlUtils.fromTrustedString("<a href=\""
-						+ PageType.BlogPostPageType.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE, s).asString()
+						+ PageType.BlogPostPageType.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE, LookupHelper.reference(object)).asString()
 						+ "\" class=\"btn btn-xs btn-default\">View</a>");
 			}
 		};
@@ -172,7 +169,7 @@ public class PostAdminPage extends Page implements GetPostsEventHandler, Navigat
 
 			@Override
 			public void update(int index, Post object, String value) {
-				PostController.get().deletePost(object.id);
+				PostController.get().deletePost(LookupHelper.reference(object));
 			}
 		});
 

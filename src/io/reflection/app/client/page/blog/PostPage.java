@@ -24,6 +24,7 @@ import io.reflection.app.client.part.Preloader;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Post;
 import io.reflection.app.shared.util.FormattingHelper;
+import io.reflection.app.shared.util.LookupHelper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
@@ -67,7 +68,7 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 	@UiField ParagraphElement content;
 	@UiField Preloader preloader;
 
-	private Long postId;
+	private Post post;
 	private boolean installed;
 
 	public PostPage() {
@@ -114,30 +115,20 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 	public void navigationChanged(Stack previous, Stack current) {
 		if (current.getAction() != null) {
 			if (NavigationController.VIEW_ACTION_PARAMETER_VALUE.equals(current.getAction())) {
-				String postIdValue = current.getParameter(POST_ID_PARAMETER_INDEX);
+				String postParam = current.getParameter(POST_ID_PARAMETER_INDEX);
 
-				if (postIdValue != null) {
-					postId = null;
+				Post post = PostController.get().getPost(postParam);
 
-					try {
-						postId = Long.parseLong(postIdValue);
-					} catch (NumberFormatException e) {}
+				if (post == null) {
+					post = PostController.get().getPostPart(postParam);
 
-					if (postId != null) {
-						Post post = PostController.get().getPost(postId);
-
-						if (post == null) {
-							post = PostController.get().getPostPart(postId);
-
-							if (post != null) {
-								setLoading(LoadingType.PartialLoadingType);
-							}
-						}
-
-						if (post != null) {
-							show(post);
-						}
+					if (post != null) {
+						setLoading(LoadingType.PartialLoadingType);
 					}
+				}
+
+				if (post != null) {
+					show(post);
 				}
 			}
 		}
@@ -176,9 +167,10 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 			setLoading(LoadingType.NoneLoadingType);
 
 			if (post.commentsEnabled == Boolean.TRUE) {
-				final String identifier = "post" + post.id.toString();
+				final String lookup = LookupHelper.reference(post);
+				final String identifier = "post" + lookup;
 				final String url = GWT.getHostPageBaseURL()
-						+ PageType.BlogPostPageType.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE, post.id.toString()).asString();
+						+ PageType.BlogPostPageType.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE, lookup).asString();
 				final String title = post.title;
 				final String tag = post.tags == null || post.tags.size() == 0 ? "reflection.io" : post.tags.get(0);
 
@@ -241,6 +233,8 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 	public void getPostSuccess(GetPostRequest input, GetPostResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess && output.post != null) {
 			show(output.post);
+		} else {
+			PageType.BlogPostsPageType.show();
 		}
 	}
 

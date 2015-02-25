@@ -26,6 +26,7 @@ import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.text.MarkdownEditor;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Post;
+import io.reflection.app.shared.util.LookupHelper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -63,7 +64,7 @@ public class EditPostPage extends Page implements NavigationEventHandler, Create
 
 	@UiField MarkdownEditor contentText;
 
-	private Long postId;
+	private Post post;
 
 	public EditPostPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -111,21 +112,13 @@ public class EditPostPage extends Page implements NavigationEventHandler, Create
 	public void navigationChanged(Stack previous, Stack current) {
 		if (current.getAction() != null) {
 			if (CHANGE_ACTION_NAME.equals(current.getAction())) {
-				String postIdValue = current.getParameter(POST_ID_PARAMETER_INDEX);
+				String postParam = current.getParameter(POST_ID_PARAMETER_INDEX);
 
-				if (postIdValue != null) {
-					postId = null;
+				if (postParam != null) {
+					post = PostController.get().getPost(postParam);
 
-					try {
-						postId = Long.parseLong(postIdValue);
-					} catch (NumberFormatException e) {}
-
-					if (postId != null) {
-						Post post = PostController.get().getPost(postId);
-
-						if (post != null) {
-							show(post);
-						}
+					if (post != null) {
+						show(post);
 					}
 				}
 			} else if (NEW_ACTION_NAME.equals(current.getAction())) {
@@ -155,8 +148,8 @@ public class EditPostPage extends Page implements NavigationEventHandler, Create
 	@UiHandler("submit")
 	void onSubmit(ClickEvent e) {
 		if (validate()) {
-			if (postId != null) {
-				PostController.get().updatePost(postId, title.getText(), visible.getValue(), commentsEnabled.getValue(), descriptionText.getText(),
+			if (post != null) {
+				PostController.get().updatePost(post.id, title.getText(), visible.getValue(), commentsEnabled.getValue(), descriptionText.getText(),
 						contentText.getText(), publish.getValue(), tags.getText());
 			} else {
 				PostController.get().createPost(title.getText(), visible.getValue(), commentsEnabled.getValue(), descriptionText.getText(),
@@ -170,7 +163,7 @@ public class EditPostPage extends Page implements NavigationEventHandler, Create
 	}
 
 	private void resetForm() {
-		postId = null;
+		post = null;
 
 		title.setText("");
 		visible.setValue(Boolean.FALSE);
@@ -193,7 +186,8 @@ public class EditPostPage extends Page implements NavigationEventHandler, Create
 		if (output.status == StatusType.StatusTypeSuccess) {
 			PostController.get().reset();
 			PostController.get().fetchPosts();
-			PageType.BlogPostPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, postId.toString());
+
+			PageType.BlogPostPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, LookupHelper.reference(post = input.post));
 		}
 	}
 
@@ -215,7 +209,7 @@ public class EditPostPage extends Page implements NavigationEventHandler, Create
 	@Override
 	public void getPostSuccess(GetPostRequest input, GetPostResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess && output.post != null) {
-			show(output.post);
+			show(post = output.post);
 		}
 	}
 
@@ -236,8 +230,8 @@ public class EditPostPage extends Page implements NavigationEventHandler, Create
 	 */
 	@Override
 	public void updatePostSuccess(UpdatePostRequest input, UpdatePostResponse output) {
-		if (output.status == StatusType.StatusTypeSuccess && postId != null) {
-			PageType.BlogPostPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, postId.toString());
+		if (output.status == StatusType.StatusTypeSuccess && post != null) {
+			PageType.BlogPostPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, LookupHelper.reference(post));
 		}
 
 	}

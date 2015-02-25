@@ -141,22 +141,24 @@ public final class Blog extends ActionHandler {
 				}
 			}
 
-			boolean isIdLookup = false, isTitleLookup = false;
+			boolean isIdLookup = false, isCodeLookup = false;
 			if (input.id != null) {
 				isIdLookup = true;
-			} else if (input.title != null) {
-				isTitleLookup = true;
+			} else if (input.code != null) {
+				isCodeLookup = true;
 			}
 
-			if (!(isIdLookup || isTitleLookup)) throw new InputValidationException(0, "");
+			if (!(isIdLookup || isCodeLookup)) throw new InputValidationException(0, "");
 
 			if (isIdLookup) {
 				output.post = PostServiceProvider.provide().getPost(input.id);
 			} else {
-				output.post = PostServiceProvider.provide().getTitlePost(input.title);
+				output.post = PostServiceProvider.provide().getCodePost(input.code);
 			}
 
-			output.post.author = UserServiceProvider.provide().getUser(output.post.author.id);
+			if (output.post != null) {
+				output.post.author = UserServiceProvider.provide().getUser(output.post.author.id);
+			}
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
