@@ -149,8 +149,8 @@ public class EditPostPage extends Page implements NavigationEventHandler, Create
 	void onSubmit(ClickEvent e) {
 		if (validate()) {
 			if (post != null) {
-				PostController.get().updatePost(post.id, title.getText(), visible.getValue(), commentsEnabled.getValue(), descriptionText.getText(),
-						contentText.getText(), publish.getValue(), tags.getText());
+				PostController.get().updatePost(LookupHelper.reference(post), title.getText(), visible.getValue(), commentsEnabled.getValue(),
+						descriptionText.getText(), contentText.getText(), publish.getValue(), tags.getText());
 			} else {
 				PostController.get().createPost(title.getText(), visible.getValue(), commentsEnabled.getValue(), descriptionText.getText(),
 						contentText.getText(), publish.getValue(), tags.getText());
@@ -230,8 +230,8 @@ public class EditPostPage extends Page implements NavigationEventHandler, Create
 	 */
 	@Override
 	public void updatePostSuccess(UpdatePostRequest input, UpdatePostResponse output) {
-		if (output.status == StatusType.StatusTypeSuccess && post != null) {
-			PageType.BlogPostPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, LookupHelper.reference(post));
+		if (output.status == StatusType.StatusTypeSuccess) {
+			PageType.BlogPostPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, LookupHelper.reference(post = input.post));
 		}
 
 	}

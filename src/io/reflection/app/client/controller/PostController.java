@@ -245,47 +245,48 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
 	 * @param publish
 	 * @param tags
 	 */
-	public void updatePost(Long id, String title, Boolean visible, Boolean commentsEnabled, String description, String content, Boolean publish, String tags) {
+	public void updatePost(final String lookup, String title, Boolean visible, Boolean commentsEnabled, String description, String content, Boolean publish,
+			String tags) {
 		BlogService service = ServiceCreator.createBlogService();
 
 		final UpdatePostRequest input = new UpdatePostRequest();
 		input.accessCode = ACCESS_CODE;
 
 		input.session = SessionController.get().getSessionForApiCall();
-		input.post = postLookup.get(id.toString());
+		input.post = postLookup.get(lookup);
 
-		if (input.post == null) {
-			input.post = postLookup.get(LookupHelper.codify(title));
-		}
+		if (input.post != null) {
+			postLookup.remove(lookup);
 
-		input.post.title = title;
-		input.post.description = description;
-		input.post.content = content;
+			input.post.title = title;
+			input.post.description = description;
+			input.post.content = content;
+			input.post.code = LookupHelper.codify(title);
+			input.publish = publish;
 
-		input.publish = publish;
+			input.post.visible = visible;
+			input.post.commentsEnabled = commentsEnabled;
 
-		input.post.visible = visible;
-		input.post.commentsEnabled = commentsEnabled;
+			input.post.tags = TagHelper.convertToTagList(tags);
+			
+			service.updatePost(input, new AsyncCallback<UpdatePostResponse>() {
 
-		input.post.tags = TagHelper.convertToTagList(tags);
+				@Override
+				public void onSuccess(UpdatePostResponse output) {
+					if (output.status == StatusType.StatusTypeSuccess) {
+						reset();
+						fetchPosts();
+					}
 
-		service.updatePost(input, new AsyncCallback<UpdatePostResponse>() {
-
-			@Override
-			public void onSuccess(UpdatePostResponse output) {
-				if (output.status == StatusType.StatusTypeSuccess) {
-					reset();
-					fetchPosts();
+					DefaultEventBus.get().fireEventFromSource(new UpdatePostSuccess(input, output), PostController.this);
 				}
 
-				DefaultEventBus.get().fireEventFromSource(new UpdatePostSuccess(input, output), PostController.this);
-			}
-
-			@Override
-			public void onFailure(Throwable caught) {
-				DefaultEventBus.get().fireEventFromSource(new UpdatePostFailure(input, caught), PostController.this);
-			}
-		});
+				@Override
+				public void onFailure(Throwable caught) {
+					DefaultEventBus.get().fireEventFromSource(new UpdatePostFailure(input, caught), PostController.this);
+				}
+			});
+		}
 	}
 
 	/**
@@ -389,7 +390,7 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
 						if (input.post != null) {
 							posts.remove(input.post);
 							postSummaryLookup.remove(lookup);
-							
+
 							count--;
 
 							pager.totalCount = Long.valueOf(pager.totalCount.longValue() - 1);
