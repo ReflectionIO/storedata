@@ -32,7 +32,7 @@ public class LookupHelper {
 		return lookup;
 	}
 
-	private static final String ALLOWED_CHARS = "abcdefghijklmnopqrstuvwxyz_";
+	private static final String ALLOWED_CHARS = "abcdefghijklmnopqrstuvwxyz_0123456789";
 	private static final char REPLACEMENT_CHAR = '_';
 	private static final int MAX_CODE_LENGTH = 45;
 
