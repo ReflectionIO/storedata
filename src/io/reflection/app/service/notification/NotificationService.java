@@ -13,7 +13,6 @@ import static com.spacehopperstudios.utility.StringUtils.stripslashes;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
-import io.reflection.app.client.helper.MarkdownHelper;
 import io.reflection.app.datatypes.shared.Event;
 import io.reflection.app.datatypes.shared.EventPriorityType;
 import io.reflection.app.datatypes.shared.EventSubscription;
@@ -22,6 +21,7 @@ import io.reflection.app.datatypes.shared.NotificationStatusType;
 import io.reflection.app.datatypes.shared.NotificationTypeType;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.helpers.NotificationHelper;
+import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.persistentcounter.CounterServiceFactory;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
@@ -32,9 +32,12 @@ import io.reflection.app.service.event.EventServiceProvider;
 import io.reflection.app.service.eventsubscription.EventSubscriptionServiceProvider;
 import io.reflection.app.shared.util.FormattingHelper;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+
+import org.markdown4j.server.MarkdownProcessor;
 
 final class NotificationService implements INotificationService {
 
@@ -176,7 +179,15 @@ final class NotificationService implements INotificationService {
 
 					if (addedNotification.type == NotificationTypeType.NotificationTypeTypeEmail) {
 						String markdownBody = addedNotification.body;
-						String body = MarkdownHelper.process(markdownBody);
+						String body = markdownBody;
+
+						try {
+							body = (new MarkdownProcessor()).process(markdownBody);
+						} catch (IOException e) {
+							if (LOG.isLoggable(GaeLevel.WARNING)) {
+								LOG.log(GaeLevel.WARNING, "Failed to process markdown [" + markdownBody + "]", e);
+							}
+						}
 
 						if (NotificationHelper.sendEmail(addedNotification.from, addedNotification.user.username,
 								FormattingHelper.getUserName(addedNotification.user), addedNotification.subject, body, !markdownBody.equals(body))) {
