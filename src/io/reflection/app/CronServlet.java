@@ -132,12 +132,12 @@ public class CronServlet extends HttpServlet {
 					IDataAccountService dataAccountService = DataAccountServiceProvider.provide();
 
 					// get the total number of accounts there are
-					pager.totalCount = dataAccountService.getDataAccountsCount();
+					pager.totalCount = dataAccountService.getActiveDataAccountsCount();
 
 					// get data accounts 100 at a time
 					for (pager.start = Long.valueOf(0); pager.start.longValue() < pager.totalCount.longValue(); pager.start = Long.valueOf(pager.start
 							.longValue() + pager.count.longValue())) {
-						List<DataAccount> dataAccounts = dataAccountService.getDataAccounts(pager);
+						List<DataAccount> dataAccounts = dataAccountService.getActiveDataAccounts(pager);
 
 						for (DataAccount dataAccount : dataAccounts) {
 							// if the account has some errors then don't bother otherwise enqueue a message to do a gather for it
