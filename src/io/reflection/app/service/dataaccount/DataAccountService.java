@@ -365,13 +365,28 @@ final class DataAccountService implements IDataAccountService {
 	 */
 	@Override
 	public List<DataAccount> getDataAccounts(Pager pager) throws DataAccessException {
+		return getDataAccounts(pager, Boolean.TRUE);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getActiveDataAccounts(io.reflection.app.api.shared.datatypes.Pager)
+	 */
+	@Override
+	public List<DataAccount> getActiveDataAccounts(Pager pager) throws DataAccessException {
+		return getDataAccounts(pager, Boolean.FALSE);
+	}
+
+	private List<DataAccount> getDataAccounts(Pager pager, Boolean includeInactive) throws DataAccessException {
 
 		List<DataAccount> dataAccounts = new ArrayList<DataAccount>();
 
 		String getDataAccountsQuery = String
-				.format("SELECT *, convert(aes_decrypt(`password`,UNHEX('%s')), CHAR(1000)) AS `clearpassword` FROM `dataaccount` WHERE `deleted`='n' ORDER BY `%s` %s LIMIT %d,%d",
-						key(), pager.sortBy == null ? "id" : stripslashes(pager.sortBy),
-						pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start, pager.count);
+				.format("SELECT *, convert(aes_decrypt(`password`,UNHEX('%s')), CHAR(1000)) AS `clearpassword` FROM `dataaccount` WHERE %s `deleted`='n' ORDER BY `%s` %s LIMIT %d,%d",
+						key(), includeInactive == null || !includeInactive.booleanValue() ? "`active`='y' AND" : "", pager.sortBy == null ? "id"
+								: stripslashes(pager.sortBy), pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
+						pager.start, pager.count);
 
 		Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
@@ -402,9 +417,22 @@ final class DataAccountService implements IDataAccountService {
 	 */
 	@Override
 	public Long getDataAccountsCount() throws DataAccessException {
+		return getDataAccountsCount(Boolean.TRUE);
+	}
+	
+	/* (non-Javadoc)
+	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getActiveDataAccountsCount()
+	 */
+	@Override
+	public Long getActiveDataAccountsCount() throws DataAccessException {
+		return getDataAccountsCount(Boolean.FALSE);
+	}
+
+	private Long getDataAccountsCount(Boolean includeInactive) throws DataAccessException {
 		Long dataAccountsCount = Long.valueOf(0);
 
-		String getDataAccountsCountQuery = String.format("SELECT count(1) AS `count` FROM `dataaccount` WHERE `deleted`='n' LIMIT 1");
+		String getDataAccountsCountQuery = String.format("SELECT count(1) AS `count` FROM `dataaccount` WHERE %s `deleted`='n' LIMIT 1",
+				includeInactive == null || !includeInactive.booleanValue() ? "`active`='y' AND" : "");
 
 		Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
@@ -422,7 +450,6 @@ final class DataAccountService implements IDataAccountService {
 		}
 
 		return dataAccountsCount;
-
 	}
 
 	/*
@@ -542,4 +569,5 @@ final class DataAccountService implements IDataAccountService {
 			break;
 		}
 	}
+
 }
