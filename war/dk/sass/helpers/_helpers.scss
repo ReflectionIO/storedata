@@ -3,8 +3,9 @@
 	overflow: hidden; 
 }
 .hidden-text {
+	display: inline-block;
 	text-align: left;
-	text-indent: -999em;
+	text-indent: -999em;	
 }
 .centre-content-container {
 	width: 100%;

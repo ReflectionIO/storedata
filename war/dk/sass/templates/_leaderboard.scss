@@ -1,0 +1,93 @@
+.page-leaderboard {
+	padding-top: 34px;
+	padding-bottom: 66px;
+	overflow: visible;
+	.page-functions {
+		width: 50%;
+		margin-bottom: 0.5rem;
+		display: inline-block;
+		button {
+			margin-right: percentage(15/500);
+			float: right;
+		}
+	}
+	.page-function-button {
+		padding: 0.65em 0.89em 0.4em 0.93em;
+		span:before {			
+			position: relative;
+			top: -1px;
+			margin-right: 0.9rem;
+			vertical-align: middle;
+			font-size: 20px;			
+			color: $light-grey-1;
+		}
+		&:active {
+			padding-bottom: 0.25em;
+		}
+	}
+	.inline-search-form {
+		width: percentage(167/500);
+		float: right;
+		display: inline-block;		
+		vertical-align: top;
+	}
+	.search-field-no-label {
+		input[type=text] {
+			max-width: calc(100% - 17px);
+			font-size: 1.3rem;
+			&:active + input[type=submit] {
+				color: $reflection-purple;
+			}
+		}
+		input[type=submit] {
+			font-size: 1.75rem;
+			color: $light-grey-1;
+		}
+	}
+}
+.table-overall {
+	width: 100%;
+	.rank-column {
+		width: percentage(102/1000);
+	}
+	.free-column {
+		width: percentage(304/1000);
+	}
+	.paid-column {
+		width: percentage(303/1000);
+	}
+	.grossing-column {
+		width: percentage(290/1000);
+	}
+	.MHXTE6C-i-a {
+		vertical-align: top;
+	}
+	.MHXTE6C-i-d {
+		vertical-align: middle;
+	}
+}
+.table-app-group {
+	width: 100%;
+	.MHXTE6C-i-a {
+		padding-top: 0.9rem;
+		padding-bottom: 0.6rem;
+	}
+	.rank-column {
+		width: percentage(102/1000);
+	}
+	.free-column {
+		width: percentage(365/1000);
+	}
+	.price-column {
+		width: percentage(136/1000);
+	}
+	.downloads-column {
+		width: percentage(167/1000);
+	}	
+	.revenue-column {
+		width: percentage(167/1000);
+	}
+	.iap-column {
+		width: percentage(63/1000);
+	}
+}

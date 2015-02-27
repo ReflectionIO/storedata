@@ -168,6 +168,12 @@ textarea {
 		margin-top: 14px;
 	}
 }
+.form-field--date-select {
+	padding: 8px 32px 8px 14px;
+}
+.form-field--date-select--no-icon {
+	padding-right: 13px;
+}
 .search-field-no-label {
 	padding: 8px 14px 10px 13px;
 	input[type=text] {
@@ -251,6 +257,9 @@ textarea {
 	}
 	@include breakpoint($desktop, true) {
 		width: percentage(145/320);	
+	}
+	 .single-date-input & {
+		width: 100%;
 	}
 }
 .date-select-to-indicator {
@@ -366,7 +375,7 @@ input:invalid {
 		margin-bottom: 0px;
 		padding-bottom: 12px;
 		padding-top: 3px;
-		padding-right: 15px;
+		padding-right: 19px;
 		display: block;
 		z-index: 10;
 		@include ellipses();
