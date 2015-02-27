@@ -39,3 +39,40 @@
 .button-example-code-container {
 	@include column(8,8);
 }
+// back to top
+.MHXTE6C-ob-a {
+	position: fixed;
+	right: 39px;
+	bottom: 65px;
+	a {
+		width: 38px;
+		height: 38px;
+		display: block;
+		color: $reflection-purple;
+		background-color: #f3f3f6;
+		border: 1px solid #dadee1;
+		border-radius: 20px;
+		opacity: 0;
+		cursor: pointer;
+		@include transition(color $base-transition-speed-off, background-color $base-transition-speed-off, opacity $base-transition-speed-off);
+		.ref-icon-before--angle-up {
+			width: 38px;
+			padding-top: 4px;
+			text-align: center;
+			display: inline-block;
+			&:before {
+				font-size: 26px;
+			}
+		}
+		&.is-showing {
+			visibility: visible;
+			opacity: 1;
+			@include transition(opacity $base-transition-speed-on);
+			&:hover {
+				background-color: darken(#f3f3f6, 10%);
+				color: darken($reflection-purple, 10%);
+				@include transition(color $base-transition-speed-on, background-color $base-transition-speed-on);
+			}
+		}
+	}
+}

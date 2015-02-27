@@ -1,0 +1,98 @@
+.table-data {
+	width: 100%;
+	table-layout: fixed;
+	th {
+		padding-top: 2.1rem;
+		padding-bottom: 1.4rem;
+		font-size: 1.4rem;
+		font-family: $brand-heading-font;
+		font-weight: 600;
+		color: $dark-grey-1;
+		background-color: $reflection-white;
+	}
+	td {
+		vertical-align: middle;
+	}
+	.MHXTE6C-i-f {
+		padding-left: percentage(20/1000);
+	}
+	.MHXTE6C-i-c {
+		background-color: #f2f2f5;
+	}
+	.MHXTE6C-i-s {
+		background-color: $reflection-white;
+	}
+	.MHXTE6C-i-a {
+		padding-top: 5px;
+		padding-bottom: 6px;
+		vertical-align: middle;
+		font-size: 1.5rem;
+		color: #363A47;
+	}
+	.img-rounded {
+		margin-right: 18px;
+		padding-top: 6px;
+		width: 46px;
+		vertical-align: top;
+	}
+	.text-muted {
+		margin-bottom: 0.6rem;
+		display: block;
+		font-size: 1.3rem;
+		color: $light-grey-1;
+	}
+	.icon-dollar,
+	.ref-icon-before--revenue {
+		font-size: 1.2rem;
+		font-weight: 700;
+		color: #363a47;
+	}
+	.MHXTE6C-r-a,
+	.MHXTE6C-I-a {
+		width: calc(100% - 100px);
+		padding-top: 9px;
+		display: inline-block;
+		white-space: nowrap;
+		a {
+			margin-bottom: 0.6rem;
+			display: block;
+			font-size: 1.6rem;
+			font-weight: 700;
+			line-height: 1.2;
+			color: $reflection-purple;
+			text-overflow: ellipsis;
+			overflow: hidden;
+			&:hover {
+				color: darken($reflection-purple, 10%);
+			}
+		}
+	}
+	.MHXTE6C-i-d {
+		padding: 0;
+		padding-left: percentage(20/1000);
+		font-size: 1.6rem;
+		color: #363a47;
+		vertical-align: middle;
+	}
+	.ref-icon-before--check {
+		color: $reflection-green;
+		&:before {
+			font-size: 21px;
+		}
+	}
+	.ref-icon-before--minus {
+		color: #d1d4dd;
+		&:before {
+			font-size: 19px;
+		}
+	}
+	.ref-icon-before--revenue {
+		&:before {
+			position: relative;
+			top: -0.1rem;
+			margin-right: 1.1rem;
+			font-size: 1.9rem;
+			vertical-align: middle;
+		}
+	}
+}
