@@ -23,14 +23,17 @@ import io.reflection.app.helpers.ApiHelper;
 import io.reflection.app.helpers.NotificationHelper;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
+import io.reflection.app.service.dataaccountfetch.IDataAccountFetchService;
 import io.reflection.app.service.event.EventServiceProvider;
 import io.reflection.app.service.notification.NotificationServiceProvider;
 import io.reflection.app.service.permission.PermissionServiceProvider;
 import io.reflection.app.service.user.UserServiceProvider;
+import io.reflection.app.shared.util.PagerHelper;
 
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -54,6 +57,8 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 
 	private static final Logger LOG = Logger.getLogger(DataAccountCollectorITunesConnect.class.getName());
 	private static final String GATHER_ERROR_KEY_PREFIX = "sales.gather.error";
+	
+	private static final long MAX_ALLOWED_ERRORS = 3L;
 
 	/*
 	 * (non-Javadoc)
@@ -135,13 +140,18 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 			dataAccountFetch.linkedAccount = dataAccount;
 		}
 
+		DataAccountFetchStatusType existingFetchWorseStatus = null;
 		if (dataAccountFetch.status != DataAccountFetchStatusType.DataAccountFetchStatusTypeIngested) {
 			if (error != null) {
 				if (error.startsWith("There are no reports") || error.startsWith("There is no report")) {
 					dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeEmpty;
 					success = true;
 				} else {
-					dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeError;
+					if (dataAccountFetch.id != null && dataAccountFetch.status != DataAccountFetchStatusType.DataAccountFetchStatusTypeError) {
+						existingFetchWorseStatus = DataAccountFetchStatusType.DataAccountFetchStatusTypeError;
+					} else {
+						dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeError;
+					}
 				}
 
 				dataAccountFetch.data = error;
@@ -151,72 +161,109 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 				dataAccountFetch.data = cloudFileName;
 				success = true;
 			} else {
-				dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeEmpty;
-				dataAccountFetch.data = "Internal: The report was empty but there was no error from itunes connect";
+				if (dataAccountFetch.id != null && dataAccountFetch.status == DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered) {
+					existingFetchWorseStatus = DataAccountFetchStatusType.DataAccountFetchStatusTypeEmpty;
+				} else {
+					dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeEmpty;
+					dataAccountFetch.data = "Internal: The report was empty but there was no error from itunes connect";
+				}
+
 				success = true;
 			}
 
-			if (dataAccountFetch.id == null) {
-				dataAccountFetch = DataAccountFetchServiceProvider.provide().addDataAccountFetch(dataAccountFetch);
-			} else {
-				dataAccountFetch = DataAccountFetchServiceProvider.provide().updateDataAccountFetch(dataAccountFetch);
-			}
-
-			if (dataAccountFetch != null && dataAccountFetch.status == DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered) {
-				// once the data is collected
-				DataAccountFetchServiceProvider.provide().triggerDataAccountFetchIngest(dataAccountFetch);
-			}
-
-			// Manage notifications in case of error
-			PersistentMap persistentMap = PersistentMapFactory.createObjectify();
-
-			if (!success) {
-				// Recognise the event error type
-				Event event = null;
-				boolean informOwnerAndRevokePermission = false;
-				if (error != null && error.contains("account or password was entered incorrectly")) {
-					event = EventServiceProvider.provide().getCodeEvent(SALES_GATHER_CREDENTIAL_ERROR_EVENT_CODE);
-					informOwnerAndRevokePermission = true;
+			// don't do anything if there is an existing fetch with a worse new status
+			if (existingFetchWorseStatus == null) {
+				if (dataAccountFetch.id == null) {
+					dataAccountFetch = DataAccountFetchServiceProvider.provide().addDataAccountFetch(dataAccountFetch);
 				} else {
-					event = EventServiceProvider.provide().getCodeEvent(SALES_GATHER_GENERIC_ERROR_EVENT_CODE);
+					dataAccountFetch = DataAccountFetchServiceProvider.provide().updateDataAccountFetch(dataAccountFetch);
 				}
 
-				String persistentKey = StringUtils.join(Arrays.asList(GATHER_ERROR_KEY_PREFIX, dataAccount.id.toString(), event.code), ".");
+				if (dataAccountFetch != null && dataAccountFetch.status == DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered) {
+					// once the data is collected
+					DataAccountFetchServiceProvider.provide().triggerDataAccountFetchIngest(dataAccountFetch);
+				}
 
-				if (!persistentMap.contains(persistentKey)) { // Last gather wasn't an error
-					Map<String, Object> parameters = new HashMap<String, Object>();
+				// Manage notifications in case of error
+				PersistentMap persistentMap = PersistentMapFactory.createObjectify();
 
-					User dataAccountOwner = UserServiceProvider.provide().getDataAccountOwner(dataAccount);
-
-					parameters.put("user", dataAccountOwner);
-					parameters.put("dataaccount", dataAccount);
-					parameters.put("dataaccountfetch", dataAccountFetch);
-
-					String body = NotificationHelper.inflate(parameters, event.longBody);
-					String subject = NotificationHelper.inflate(parameters, event.subject);
-
-					if (informOwnerAndRevokePermission) {
-						// Revoke the has linked account permission
-						Permission hla = PermissionServiceProvider.provide().getCodePermission(PERMISSION_HAS_LINKED_ACCOUNT_CODE);
-						UserServiceProvider.provide().revokePermission(dataAccountOwner, hla);
-
-						NotificationServiceProvider.provide().addNotification(
-								(new Notification()).event(event).user(dataAccountOwner).body(body).subject(subject));
+				if (!success) {
+					// Recognise the event error type
+					Event event = null;
+					boolean informOwnerAndRevokePermission = false;
+					if (error != null && error.contains("account or password was entered incorrectly")) {
+						event = EventServiceProvider.provide().getCodeEvent(SALES_GATHER_CREDENTIAL_ERROR_EVENT_CODE);
+						informOwnerAndRevokePermission = true;
+					} else {
+						event = EventServiceProvider.provide().getCodeEvent(SALES_GATHER_GENERIC_ERROR_EVENT_CODE);
 					}
 
-					// Notify admin about the gather error
-					User adminUser = UserServiceProvider.provide().getUsernameUser("chi@reflection.io");
-					NotificationServiceProvider.provide().addNotification((new Notification()).event(event).user(adminUser).body(body).subject(subject));
+					String persistentKey = StringUtils.join(Arrays.asList(GATHER_ERROR_KEY_PREFIX, dataAccount.id.toString(), event.code), ".");
 
-					persistentMap.put(persistentKey, Integer.valueOf(1));
+					if (!persistentMap.contains(persistentKey)) { // Last gather wasn't an error
+						Map<String, Object> parameters = new HashMap<String, Object>();
+
+						User dataAccountOwner = UserServiceProvider.provide().getDataAccountOwner(dataAccount);
+
+						parameters.put("user", dataAccountOwner);
+						parameters.put("dataaccount", dataAccount);
+						parameters.put("dataaccountfetch", dataAccountFetch);
+
+						String body = NotificationHelper.inflate(parameters, event.longBody);
+						String subject = NotificationHelper.inflate(parameters, event.subject);
+
+						if (informOwnerAndRevokePermission) {
+							NotificationServiceProvider.provide().addNotification(
+									(new Notification()).event(event).user(dataAccountOwner).body(body).subject(subject));
+
+							// FIXME: this method (getDataAccountsIds) should have an active account variant
+							List<Long> userDataAccountIds = UserServiceProvider.provide().getDataAccountsIds(dataAccountOwner, PagerHelper.createInfinitePager());
+
+							boolean revoke = false;
+							if (userDataAccountIds.size() <= 1) {
+								revoke = true;
+							} else {
+								long accountsWithLessThanMaxErrors = userDataAccountIds.size();
+
+								IDataAccountFetchService dataAccountFetchService = DataAccountFetchServiceProvider.provide();
+								for (Long id : userDataAccountIds) {
+									if (dataAccountFetchService.getFailedDataAccountFetchesCount((DataAccount) (new DataAccount()).id(id)).longValue() > MAX_ALLOWED_ERRORS) {
+										accountsWithLessThanMaxErrors--;
+									}
+								}
+
+								if (accountsWithLessThanMaxErrors == 0) {
+									revoke = true;
+								}
+							}
+
+							if (revoke) {
+								// Revoke the has linked account permission
+								Permission hla = PermissionServiceProvider.provide().getCodePermission(PERMISSION_HAS_LINKED_ACCOUNT_CODE);
+								UserServiceProvider.provide().revokePermission(dataAccountOwner, hla);
+							}
+						}
+
+						// Notify admin about the gather error
+						User adminUser = UserServiceProvider.provide().getUsernameUser("chi@reflection.io");
+						NotificationServiceProvider.provide().addNotification((new Notification()).event(event).user(adminUser).body(body).subject(subject));
+
+						persistentMap.put(persistentKey, Integer.valueOf(1));
+					} else {
+						persistentMap.put(persistentKey, Integer.valueOf(((Integer) persistentMap.get(persistentKey)).intValue() + 1));
+					}
 				} else {
-					persistentMap.put(persistentKey, Integer.valueOf(((Integer) persistentMap.get(persistentKey)).intValue() + 1));
+					persistentMap.delete(StringUtils.join(
+							Arrays.asList(GATHER_ERROR_KEY_PREFIX, dataAccount.id.toString(), SALES_GATHER_CREDENTIAL_ERROR_EVENT_CODE), "."));
+					persistentMap.delete(StringUtils.join(
+							Arrays.asList(GATHER_ERROR_KEY_PREFIX, dataAccount.id.toString(), SALES_GATHER_GENERIC_ERROR_EVENT_CODE), "."));
 				}
 			} else {
-				persistentMap.delete(StringUtils.join(
-						Arrays.asList(GATHER_ERROR_KEY_PREFIX, dataAccount.id.toString(), SALES_GATHER_CREDENTIAL_ERROR_EVENT_CODE), "."));
-				persistentMap.delete(StringUtils.join(Arrays.asList(GATHER_ERROR_KEY_PREFIX, dataAccount.id.toString(), SALES_GATHER_GENERIC_ERROR_EVENT_CODE),
-						"."));
+				if (LOG.isLoggable(GaeLevel.INFO)) {
+					LOG.info(String.format("Gather for data account [%s] and date [%s] skipped because of status [%s] is worse than [%]",
+							dataAccount.id == null ? dataAccount.username : dataAccount.id.toString(), dateParameter, existingFetchWorseStatus,
+							dataAccountFetch.status));
+				}
 			}
 
 		} else {

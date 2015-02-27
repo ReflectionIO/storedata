@@ -232,6 +232,15 @@ public interface IUserService extends IService {
 	 * @throws DataAccessException
 	 */
 	public List<DataAccount> getDataAccounts(User user, Pager pager) throws DataAccessException;
+	
+	/**
+	 * 
+	 * @param user
+	 * @param pager
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<Long> getDataAccountsIds(User user, Pager pager) throws DataAccessException;
 
 	/**
 	 * 
