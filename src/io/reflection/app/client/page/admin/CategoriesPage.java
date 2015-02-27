@@ -65,7 +65,7 @@ public class CategoriesPage extends Page implements GetCategoriesEventHandler {
 	}
 
 	private void addCategoryColumns() {
-		
+
 		TextColumn<Category> nameColumn = new TextColumn<Category>() {
 
 			@Override
@@ -96,14 +96,17 @@ public class CategoriesPage extends Page implements GetCategoriesEventHandler {
 
 			@Override
 			public String getValue(Category object) {
-				return object.parent.id.toString() == null ? "-" : object.parent.id.toString();
+				Category c = null;
+				return object.parent == null || object.parent.id == null ? "-"
+						: (c = CategoryController.get().getCategory(object.parent.id)) == null ? object.parent.id.toString() : c.name + " ("
+								+ object.parent.id.toString() + ")";
 			}
 
 		};
 
 		TextHeader parentHeader = new TextHeader("Parent");
 		parentHeader.setHeaderStyleNames("col-md-1");
-		tableCategories.addColumn(parentColumn, parentHeader);		
+		tableCategories.addColumn(parentColumn, parentHeader);
 
 	}
 
