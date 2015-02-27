@@ -847,31 +847,7 @@ final class UserService implements IUserService {
 	 */
 	@Override
 	public List<DataAccount> getDataAccounts(User user, Pager pager) throws DataAccessException {
-		List<Long> accountIds = new ArrayList<Long>();
-
-		String getDataAccountIdsQuery = String.format(
-				"SELECT `dataaccountid` FROM `userdataaccount` WHERE `deleted`='n' AND `userid`=%d ORDER BY `%s` %s LIMIT %d, %d", user.id.longValue(),
-				pager.sortBy == null ? "id" : stripslashes(pager.sortBy), pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
-				pager.start == null ? 0 : pager.start.longValue(), pager.count == null ? 25 : pager.count.longValue());
-
-		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
-
-		try {
-			userConnection.connect();
-			userConnection.executeQuery(getDataAccountIdsQuery);
-
-			while (userConnection.fetchNextRow()) {
-				Long accountId = userConnection.getCurrentRowLong("dataaccountid");
-
-				if (accountId != null) {
-					accountIds.add(accountId);
-				}
-			}
-		} finally {
-			if (userConnection != null) {
-				userConnection.disconnect();
-			}
-		}
+		List<Long> accountIds = getDataAccountsIds(user, pager);
 
 		return accountIds.size() == 0 ? new ArrayList<DataAccount>() : DataAccountServiceProvider.provide().getIdsDataAccounts(accountIds, pager);
 	}
@@ -1621,6 +1597,43 @@ final class UserService implements IUserService {
 		} else {
 			restoreUserDataAccount(dataAccount);
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.user.IUserService#getDataAccountsIds(io.reflection.app.datatypes.shared.User,
+	 * io.reflection.app.api.shared.datatypes.Pager)
+	 */
+	@Override
+	public List<Long> getDataAccountsIds(User user, Pager pager) throws DataAccessException {
+		List<Long> accountIds = new ArrayList<Long>();
+
+		String getDataAccountIdsQuery = String.format(
+				"SELECT `dataaccountid` FROM `userdataaccount` WHERE `deleted`='n' AND `userid`=%d ORDER BY `%s` %s LIMIT %d, %d", user.id.longValue(),
+				pager.sortBy == null ? "id" : stripslashes(pager.sortBy), pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
+				pager.start == null ? 0 : pager.start.longValue(), pager.count == null ? 25 : pager.count.longValue());
+
+		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
+
+		try {
+			userConnection.connect();
+			userConnection.executeQuery(getDataAccountIdsQuery);
+
+			while (userConnection.fetchNextRow()) {
+				Long accountId = userConnection.getCurrentRowLong("dataaccountid");
+
+				if (accountId != null) {
+					accountIds.add(accountId);
+				}
+			}
+		} finally {
+			if (userConnection != null) {
+				userConnection.disconnect();
+			}
+		}
+
+		return accountIds;
 	}
 
 }
