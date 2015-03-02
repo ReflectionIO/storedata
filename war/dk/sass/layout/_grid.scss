@@ -1,0 +1,155 @@
+// http://semantic.gs/ - Customised to use padding instead of margin for gutters
+
+/* Grid variables */
+$column-width: 39px; // 
+$gutter-width: 36px; // 36px = 4% of total width, 2% either side
+$columns: 12; // total grid width = 36*12 + 39*12 = 900
+$total-columns: 12; // total grid width = 36*12 + 39*12 = 900
+$total-width: 100%; /* responsive layout */
+
+/* Compass Grid Background variables */
+$grid-background-column-color: green;
+$grid-background-gutter-color: red;
+$grid-background-total-columns: 12;
+$grid-background-column-width: 39px;
+$grid-background-gutter-width: 18px;
+$show-column-grid-backgrounds: true;
+
+// Utility function — you should never need to modify this
+@function gridsystem-width($columns:$columns) {
+	@return ($column-width * $columns) + ($gutter-width * $columns);
+}
+
+@mixin grid-col-clearfix() {
+	*zoom:1;
+	&:before,
+	&:after {
+	    content:"";
+	    display:table;
+	}
+	&:after {
+	    clear:both;
+	}
+}
+
+// Set $total-width for a fixed layout:
+//$total-width: gridsystem-width($columns);
+
+@mixin row() {
+	display: block;
+	width: 100%;
+	margin-left: 0;
+	margin-right: 0;
+	@include grid-col-clearfix();
+}
+@mixin column($x,$columns:$columns) {
+	display: inline;
+	float: left;
+	width: $total-width*(((($gutter-width+$column-width)*$x)) / gridsystem-width($columns));
+	padding: 0 $total-width*(($gutter-width*.5)/gridsystem-width($total-columns));
+	@include breakpoint($tablet) {
+		width: $total-width*(((($gutter-width+$column-width)*$x)) / gridsystem-width($columns));
+		padding: 0 $total-width*(($gutter-width*.5)/gridsystem-width($columns));
+	}
+}
+@mixin push($offset:1) {
+	margin-left: $total-width*((($gutter-width+$column-width)*$offset) / gridsystem-width($columns));
+}
+@mixin pull($offset:1) {
+	margin-right: $total-width*((($gutter-width+$column-width)*$offset) / gridsystem-width($columns));
+}
+
+.grid-container { // contains a grid and provides the right/left grid margin
+	width: 100%;
+	padding-left: 10px;
+	padding-right: 10px;
+	@include box-sizing(border-box);
+	@include breakpoint($phablet) {
+		padding-left: 20px;
+		padding-right: 20px;
+	}
+	@include breakpoint($tablet, true) {
+		padding-left: 30px;
+		padding-right: 30px;
+	}
+}
+
+.grid__column {
+	display: inline-block;
+	@include box-sizing(border-box);
+}
+
+.grid__column--one-twelfth {
+	@include column(1);
+	@include breakpoint($tablet, true) {
+		@include column(1);
+	}	
+}
+
+.grid__column--one-sixth {
+	@include column(12);
+	@include breakpoint($tablet, true) {
+		@include column(2);
+	}	
+}
+
+.grid__column--one-quarter {
+	@include column(12);
+	@include breakpoint($tablet, true) {
+		@include column(3);
+	}
+}
+
+.grid__column--one-third {
+	@include column(12);
+	@include breakpoint($tablet, true) {
+		@include column(4);
+	}
+}
+
+.grid__column--five-columns {
+	@include column(12);
+	@include breakpoint($tablet, true) {
+		@include column(5);
+	}
+}
+
+.grid__column--one-half {
+	@include column(12);
+	@include breakpoint($tablet, true) {
+		@include column(6);
+	}
+}
+
+.grid__column--two-thirds {
+	@include column(12);
+	@include breakpoint($tablet, true) {
+		@include column(8);
+	}
+}
+
+.grid__column--three-quarters {
+	@include column(12);
+	@include breakpoint($tablet, true) {
+		@include column(9);
+	}
+}
+
+.grid__column--full-width {
+	@include column(12);
+}
+
+.grid__row-container {
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+}
+
+.grid__row {
+	@include row;
+}
+
+.grid__column--push-one {
+	@include breakpoint($tablet, true) {
+		@include push(1);
+	}	
+}

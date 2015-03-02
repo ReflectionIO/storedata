@@ -17,6 +17,7 @@ import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.shared.util.DataTypeHelper;
+import io.reflection.app.shared.util.SparseArray;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,7 @@ public class CategoryController extends AsyncDataProvider<Category> implements S
 
 	private static CategoryController one = null;
 	private List<Category> categoryList = new ArrayList<Category>();
+	private SparseArray<Category> lookup = new SparseArray<Category>();
 	private long count = -1;
 	private Pager pager;
 
@@ -94,6 +96,10 @@ public class CategoryController extends AsyncDataProvider<Category> implements S
 				if (output.status == StatusType.StatusTypeSuccess) {
 					if (output.categories != null) {
 						categoryList.addAll(output.categories);
+
+						for (Category category : output.categories) {
+							lookup.put(category.id.intValue(), category);
+						}
 					}
 
 					if (output.pager != null) {
@@ -128,6 +134,10 @@ public class CategoryController extends AsyncDataProvider<Category> implements S
 
 	public long getCategoriesCount() {
 		return count;
+	}
+
+	public Category getCategory(Long id) {
+		return lookup.get(id.intValue());
 	}
 
 	/**

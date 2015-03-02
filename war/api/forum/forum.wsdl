@@ -85,7 +85,7 @@
                 <xsd:complexContent>
                     <xsd:extension base="sd:Request">
                         <xsd:attribute name="id" type="xsd:long" />
-                        <xsd:attribute name="title" type="xsd:string" />
+                        <xsd:attribute name="code" type="xsd:string" />
                     </xsd:extension>
                 </xsd:complexContent>
             </xsd:complexType>
@@ -126,7 +126,7 @@
                 <xsd:complexContent>
                     <xsd:extension base="sd:Request">
                         <xsd:attribute name="id" type="xsd:long" />
-                        <xsd:attribute name="title" type="xsd:string" />
+                        <xsd:attribute name="code" type="xsd:string" />
                     </xsd:extension>
                 </xsd:complexContent>
             </xsd:complexType>

@@ -21,15 +21,33 @@ import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProv
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
+import io.reflection.app.shared.util.LookupHelper;
 import io.reflection.app.shared.util.TagHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.google.appengine.api.memcache.AsyncMemcacheService;
+import com.google.appengine.api.memcache.ErrorHandlers;
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
 
 final class PostService implements IPostService {
 
 	private static final Logger LOG = Logger.getLogger(PostService.class.getName());
+
+	private MemcacheService syncCache;
+	private AsyncMemcacheService asyncCache;
+
+	public PostService() {
+		syncCache = MemcacheServiceFactory.getMemcacheService();
+		syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.WARNING));
+
+		asyncCache = MemcacheServiceFactory.getAsyncMemcacheService();
+		asyncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.WARNING));
+	}
 
 	public String getName() {
 		return ServiceType.ServiceTypePost.toString();
@@ -39,21 +57,39 @@ final class PostService implements IPostService {
 	public Post getPost(Long id) throws DataAccessException {
 		Post post = null;
 
-		IDatabaseService databaseService = DatabaseServiceProvider.provide();
-		Connection postConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypePost.toString());
+		String memcacheKey = getName() + ".id." + id;
+		String jsonString = (String) syncCache.get(memcacheKey);
 
-		String getPostQuery = String.format("SELECT * FROM `post` WHERE `deleted`='n' AND `id`=%d LIMIT 1", id.longValue());
-		try {
-			postConnection.connect();
-			postConnection.executeQuery(getPostQuery);
+		if (jsonString == null) {
+			IDatabaseService databaseService = DatabaseServiceProvider.provide();
+			Connection postConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypePost.toString());
 
-			if (postConnection.fetchNextRow()) {
-				post = toPost(postConnection);
+			String getPostQuery = String.format("SELECT * FROM `post` WHERE `deleted`='n' AND `id`=%d LIMIT 1", id.longValue());
+			try {
+				postConnection.connect();
+				postConnection.executeQuery(getPostQuery);
+
+				if (postConnection.fetchNextRow()) {
+					post = toPost(postConnection);
+				}
+			} finally {
+				if (postConnection != null) {
+					postConnection.disconnect();
+				}
 			}
-		} finally {
-			if (postConnection != null) {
-				postConnection.disconnect();
+
+			if (post != null) {
+				String json = post.toString();
+				asyncCache.put(memcacheKey, json);
+
+				if (post.code != null && post.code.length() > 0) {
+					memcacheKey = getName() + ".code." + post.code;
+					asyncCache.put(memcacheKey, json);
+				}
 			}
+		} else {
+			post = new Post();
+			post.fromJson(jsonString);
 		}
 
 		return post;
@@ -86,6 +122,7 @@ final class PostService implements IPostService {
 		post.description = stripslashes(connection.getCurrentRowString("description"));
 		post.published = connection.getCurrentRowDateTime("published");
 		post.title = stripslashes(connection.getCurrentRowString("title"));
+		post.code = connection.getCurrentRowString("code");
 
 		post.author = new User();
 		post.author.id = connection.getCurrentRowLong("authorid");
@@ -107,10 +144,10 @@ final class PostService implements IPostService {
 		Connection postConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypePost.toString());
 
 		String addPostQuery = String
-				.format("INSERT INTO `post` (`authorid`,`title`,`description`,`content`,`published`,`visible`,`tags`,`commentsenabled`) VALUES (%d,'%s','%s','%s',%s,%d,%s,%d)",
-						post.author.id.longValue(), addslashes(post.title), addslashes(post.description), addslashes(post.content),
-						post.published == null ? "NULL" : String.format("FROM_UNIXTIME(%d)", post.published.getTime() / 1000), post.visible == null ? 0
-								: (post.visible.booleanValue() ? 1 : 0), post.tags == null ? "NULL" : "'" + addslashes(join(post.tags)) + "'",
+				.format("INSERT INTO `post` (`authorid`,`title`,`code`,`description`,`content`,`published`,`visible`,`tags`,`commentsenabled`) VALUES (%d,'%s','%s','%s','%s',%s,%d,%s,%d)",
+						post.author.id.longValue(), addslashes(post.title), LookupHelper.codify(post.title), addslashes(post.description),
+						addslashes(post.content), post.published == null ? "NULL" : String.format("FROM_UNIXTIME(%d)", post.published.getTime() / 1000),
+						post.visible == null ? 0 : (post.visible.booleanValue() ? 1 : 0), post.tags == null ? "NULL" : "'" + addslashes(join(post.tags)) + "'",
 						post.commentsEnabled == null ? 0 : (post.commentsEnabled.booleanValue() ? 1 : 0));
 		try {
 			postConnection.connect();
@@ -118,7 +155,7 @@ final class PostService implements IPostService {
 
 			if (postConnection.getAffectedRowCount() > 0) {
 				post.id = postConnection.getInsertedId();
-				addedPost = post;
+				addedPost = getPost(post.id);
 			}
 		} finally {
 			if (postConnection != null) {
@@ -138,8 +175,8 @@ final class PostService implements IPostService {
 		Connection postConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypePost.toString());
 
 		String updatePostQuery = String
-				.format("UPDATE `post` SET `title`='%s',`description`='%s',`content`='%s',`published`=%s,`visible`=%d,`tags`=%s,`commentsenabled`=%d WHERE `id`=%d AND `deleted`='n'",
-						addslashes(post.title), addslashes(post.description), addslashes(post.content),
+				.format("UPDATE `post` SET `title`='%s',`code`='%s',`description`='%s',`content`='%s',`published`=%s,`visible`=%d,`tags`=%s,`commentsenabled`=%d WHERE `id`=%d AND `deleted`='n'",
+						addslashes(post.title), LookupHelper.codify(post.title), addslashes(post.description), addslashes(post.content),
 						post.published == null ? "NULL" : String.format("FROM_UNIXTIME(%d)", post.published.getTime() / 1000), post.visible == null ? 0
 								: (post.visible.booleanValue() ? 1 : 0), post.tags == null ? "NULL" : "'" + addslashes(join(post.tags)) + "'",
 						post.commentsEnabled == null ? 0 : (post.commentsEnabled.booleanValue() ? 1 : 0), post.id.longValue());
@@ -157,6 +194,9 @@ final class PostService implements IPostService {
 		}
 
 		if (changed) {
+			String memcacheKey = getName() + ".id." + post.id;
+			syncCache.delete(memcacheKey);
+
 			updatedPost = getPost(post.id);
 		} else {
 			updatedPost = post;
@@ -179,6 +219,14 @@ final class PostService implements IPostService {
 				if (LOG.isLoggable(GaeLevel.INFO)) {
 					LOG.info(String.format("Post with id [%d] was deleted", post.id.longValue()));
 				}
+			}
+
+			String memcacheKey = getName() + ".id." + post.id;
+			asyncCache.delete(memcacheKey);
+
+			if (post.code != null && post.code.length() > 0) {
+				memcacheKey = getName() + ".code." + post.code;
+				asyncCache.delete(memcacheKey);
 			}
 		} finally {
 			if (postConnection != null) {
@@ -205,7 +253,7 @@ final class PostService implements IPostService {
 			getPostsQuery = "SELECT *";
 		} else {
 			// no content column
-			getPostsQuery = "SELECT `id`,`created`,`authorid`, `published`,`title`,`description`,`visible`,`tags`,`commentsenabled`,`deleted`";
+			getPostsQuery = "SELECT `id`,`created`,`authorid`, `published`,`title`,`code`,`description`,`visible`,`tags`,`commentsenabled`,`deleted`";
 		}
 
 		if (user != null && user.id != null) {
@@ -280,28 +328,45 @@ final class PostService implements IPostService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.service.post.IPostService#getTitlePost(java.lang.String)
+	 * @see io.reflection.app.service.post.IPostService#getCodePost(java.lang.String)
 	 */
 	@Override
-	public Post getTitlePost(String title) throws DataAccessException {
+	public Post getCodePost(String code) throws DataAccessException {
 		Post post = null;
 
-		IDatabaseService databaseService = DatabaseServiceProvider.provide();
-		Connection postConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypePost.toString());
+		String memcacheKey = getName() + ".code." + code;
+		String jsonString = (String) syncCache.get(memcacheKey);
 
-		String getTitlePostQuery = String.format("SELECT * FROM `post` WHERE `deleted`='n' AND `title`='%s' LIMIT 1", addslashes(title));
+		if (jsonString == null) {
 
-		try {
-			postConnection.connect();
-			postConnection.executeQuery(getTitlePostQuery);
+			IDatabaseService databaseService = DatabaseServiceProvider.provide();
+			Connection postConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypePost.toString());
 
-			if (postConnection.fetchNextRow()) {
-				post = toPost(postConnection);
+			String getTitlePostQuery = String.format("SELECT * FROM `post` WHERE `deleted`='n' AND `code`='%s' LIMIT 1", addslashes(code));
+
+			try {
+				postConnection.connect();
+				postConnection.executeQuery(getTitlePostQuery);
+
+				if (postConnection.fetchNextRow()) {
+					post = toPost(postConnection);
+				}
+			} finally {
+				if (postConnection != null) {
+					postConnection.disconnect();
+				}
 			}
-		} finally {
-			if (postConnection != null) {
-				postConnection.disconnect();
+
+			if (post != null) {
+				String json = post.toString();
+				asyncCache.put(memcacheKey, json);
+
+				memcacheKey = getName() + ".id." + post.id;
+				asyncCache.put(memcacheKey, json);
 			}
+		} else {
+			post = new Post();
+			post.fromJson(jsonString);
 		}
 
 		return post;

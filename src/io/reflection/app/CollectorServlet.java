@@ -95,6 +95,8 @@ public class CollectorServlet extends HttpServlet {
 			}
 		}
 
+		IngestorFactory.getBigQueryIngestorForStore(store).enqueue(collected);
+
 		resp.setHeader("Cache-Control", "no-cache");
 	}
 }

@@ -1,0 +1,32 @@
+/* Classes that could be reused in the HTML rather than included using SASS - these should only be called for elements that appear in the main stylesheet */
+.no-scroll {
+	overflow: hidden; 
+}
+.hidden-text {
+	display: inline-block;
+	text-align: left;
+	text-indent: -999em;	
+}
+.centre-content-container {
+	width: 100%;
+	text-align: center;
+}
+.vertical-centre-content {
+	@extend %vertical-centre-content;
+}
+@include breakpoint($tablet) {
+	.vertical-centre-above-phablet {
+		@include vertical-centre-content;
+	}
+}
+.horizontal-centre-content {
+	margin: 0 auto;
+	text-align: center;
+}
+.overflow-visible {
+	position: relative;
+	overflow: visible;
+}
+.clear-both {
+	clear: both;
+}

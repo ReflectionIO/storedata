@@ -1,0 +1,278 @@
+.tabs-container {
+	@include breakpoint($tablet, true) {
+		width: 100%;
+		max-width: 1400px;
+		display: block;
+		li {
+		height: 7rem;
+			.tabs-container--large-tabs & {
+				height: 13.7rem;
+			}
+		}
+	}
+	.tabs__tab.grid__column--one-half {
+		@include column(6);
+	}
+}
+.default-tabs-transition .tabs-container {
+		display: none;
+		@include breakpoint($tablet, true) {
+			display: block;
+		}
+}
+.tabs__tab {
+	position: relative;
+	height: 7rem;
+	background-color: $reflection-white;
+	text-align: center;
+	cursor: pointer;
+	.tabs-container--large-tabs & {
+		width: 50%;
+		padding: 0;
+		margin: 0;
+	}
+	.tab-animate-active {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		height: 0;
+		z-index: 0;
+		background-color: $panel-grey;
+		@include transition(height $base-transition-speed-on);
+	}
+	&.is-active {
+		.tab-animate-active {
+			height: 100%;
+			@include transition(height $base-transition-speed-on);
+		}
+	}
+	.tabs-container--large-tabs & {
+		height: 13.7rem;
+	}
+}
+.tabs__link {	
+	@extend %vertical-centre-content;
+	position: relative;
+	width: 100%;
+	height: 100%;
+	padding-left: 2%;
+	padding-right: 2%;	
+	display: block;
+	box-sizing: border-box;
+	z-index: 1;
+	font-size: 13.9px;
+	font-size: 1.39rem;
+	font-weight: 700;
+	letter-spacing: 0.6px;
+	color: $reflection-purple;
+	text-transform: uppercase;
+	@include transition(color $base-transition-speed-on);
+	&:hover {
+		color: darken($reflection-purple, 20%);
+		@include transition(color $base-transition-speed-on);
+	}
+	.tabs__tab:active & {
+		> span {
+			margin-top: 6px;
+		}
+	}
+	.is-active & {
+		color: $dark-grey-2;
+		@include transition(color $base-transition-speed-on);
+		&:hover {
+			color: $dark-grey-2;
+		}
+	}
+	> span {
+		width: 100%;
+		line-height: 1.4;
+		@include transition(margin-top 0.1s);
+	}
+	span span, span:before {
+		vertical-align: middle;
+	}
+	span > span {
+		width: 80%;
+		max-width: 80%;
+		display: inline-block;
+		text-align: left;
+		@include breakpoint($tablet, true) {
+				width: auto;
+		}
+		.tabs-container--large-tabs & {
+			width: 80%;
+			font-size: 1.6rem;
+			margin-bottom: 10px;
+			@include breakpoint($tablet, true) {
+				width: auto;
+				max-width: 80%;
+			}
+		}
+	}
+	span b {
+		padding-top: 10px;
+		display: inline-block;
+		line-height: 1.6;		
+		.tabs-container--large-tabs & {
+			font-size: 1.4rem;
+			text-transform: none;
+			font-weight: 400;
+		}
+	}
+	span:before {		
+		margin-right: 0.6em;
+		font-size: 2.2rem;
+		.tabs-container--large-tabs & {
+			font-size: 2.9rem;
+			margin-right: 0.5em;
+			vertical-align: top;
+			@include breakpoint($tablet) {
+				font-size: 3.2rem;
+			}
+			@include breakpoint($laptop, true) {
+				font-size: 3.8rem;
+			}
+		}
+	}
+	span svg {
+		width: 28px;
+		height: 28px;
+		margin-right: 0.9em;
+		vertical-align: middle;
+		path {
+			fill: $reflection-purple;
+			@include transition(fill $base-transition-speed-off);
+			.is-active & {
+				fill: $mid-grey-1;
+				@include transition(fill $base-transition-speed-on);
+			}
+		}
+	}
+	&:hover {
+		path {
+			fill: darken($reflection-purple, 10%);
+			@include transition(fill $base-transition-speed-on);
+		}
+	}
+}
+.is-ie .tabs__link {
+	&:active {
+		position: relative;
+		top: 4px;
+	}
+	span, span:before, &:before {
+		pointer-events: none;
+	}
+}
+.tab-border {
+	width: 100%;
+	height: 3px;
+	span {
+		width: 0%;
+		height: 3px;
+		display: block;
+		background-color: $panel-grey;
+		@include transition(width 0.2s ease-out);
+	}
+	.is-active & {
+		span {
+			width: 100%;
+			@include transition(width 0.2s 0.2s ease-in);
+		}
+	}
+	.tabs__tab:first-child & {
+		span {
+			float: right;
+		}
+	}
+}
+.tabs__content-container {
+	width: 100%;
+	margin-bottom: 4rem;
+}
+.tabs__content {
+	display: block;
+	padding: 0;
+	background-color: $panel-grey;
+	@include breakpoint($tablet) {
+		display: none;
+		.no-js & {
+			@include opacity(1);
+		}
+	}
+}
+.default-tabs-transition .tabs__content {
+	background-color: transparent;
+	@include breakpoint($tablet) {
+		background-color: $panel-grey;
+	}
+}
+@media screen and (max-width: $tablet) {
+	.collapsible-trigger {
+		position: relative;
+		width: 100%;
+		margin: 0;
+		padding: 0 0 1.5rem;
+		z-index: 10;
+		font-size: 1.39rem;
+		font-weight: 700;
+		letter-spacing: 0.6px;
+		color: $reflection-purple;
+		text-transform: uppercase;
+		background-color: $reflection-white;
+		cursor: pointer;
+		@include transition(color $base-transition-speed-on);
+		b {
+			line-height: 1.6;
+			text-transform: none;
+			padding-left: 32px;
+			display: block;
+			font-weight: 400;
+			font-size: 1.3rem;
+			padding-top: 4px;
+		}
+		.tabs__content--is-showing & {
+			color: $dark-grey-1;
+			&:before {
+				color: $dark-grey-1;
+			}
+			&:hover {
+				color: $dark-grey-1;
+			}
+		}
+		&:hover {
+			color: darken($reflection-purple, 10%);
+			@include transition(color $base-transition-speed-on);
+		}
+		&:active {
+			span, &:before {
+				position: relative;
+				top: 4px;
+			}
+		}
+		&:before, span {
+			vertical-align: middle;
+		}
+		span {
+			padding-left: 10px;
+		}
+	}
+	.collapsible-content {
+		margin-top: 0;
+		padding-bottom: 3rem;
+		@include transition(margin-top 0.3s);
+		.tabs__content--is-showing & {
+			margin-top: 0;
+			@include transition(margin-top 0.3s);
+		}
+	}
+}
+@include breakpoint($tablet, true) {
+	.collapsible-trigger {
+		display: none;
+	}
+}
+.tabs__content.tabs__content--is-showing {
+	display: block;
+}

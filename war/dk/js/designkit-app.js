@@ -31,7 +31,7 @@
 	var DKStarterPage = function() {
 		new Page();
 		var dkPageProperties = {
-			bannerImage: "images/banner-icon-typography.3519863199767ca002c5.png",
+			bannerImage: "images/banner-icon-typography.png",
 			bannerImageAlt: "Tt", 
 			sectionTitle: "Design Assets", 
 			componentTitle: "Component Title", 
@@ -45,7 +45,7 @@
 	var HomePage = function() {
 		new Page();
 		var dkPageProperties = {
-			bannerImage: "images/banner-icon-typography.3519863199767ca002c5.png",
+			bannerImage: "images/banner-icon-typography.png",
 			bannerImageAlt: "Tt", 
 			sectionTitle: "Design Assets", 
 			componentTitle: "Component Title", 
@@ -59,7 +59,7 @@
 	var ButtonsPage = function() {
 		new Page();
 		var dkPageProperties = {
-			bannerImage: "images/banner-icon-buttons.b7dda4f4e382a900713b.png",
+			bannerImage: "images/banner-icon-buttons.png",
 			bannerImageAlt: "Button icon", 
 			sectionTitle: "UI Components", 
 			componentTitle: "Buttons", 
@@ -77,7 +77,7 @@
 	var ColoursPage = function() {
 		new Page();
 		var dkPageProperties = {
-			bannerImage: "images/banner-icon-palette.8273622b4831bbf7e0db.png",
+			bannerImage: "images/banner-icon-palette.png",
 			bannerImageAlt: "Art palette icon", 
 			sectionTitle: "Design Assets", 
 			componentTitle: "Colours", 
@@ -101,7 +101,7 @@
 	var GridsPage = function() {
 		new Page();
 		var dkPageProperties = {
-			bannerImage: "images/banner-icon-grids.aa5d09c094aad8d0c8e7.png",
+			bannerImage: "images/banner-icon-grids.png",
 			bannerImageAlt: "Grid icon", 
 			sectionTitle: "Layout",
 			componentTitle: "Grids & Breakpoints", 
@@ -141,7 +141,7 @@
 	var TypographyPage = function() {
 		new Page();
 		var dkPageProperties = {
-			bannerImage: "images/banner-icon-typography.3519863199767ca002c5.png",
+			bannerImage: "images/banner-icon-typography.png",
 			bannerImageAlt: "Tt", 
 			sectionTitle: "Design Assets", 
 			componentTitle: "Typography", 
@@ -156,7 +156,7 @@
 	var TabsPage = function() {
 		new Page();
 		var dkPageProperties = {
-			bannerImage: "images/banner-icon-folder.43c8f32c2db9458dff81.png",
+			bannerImage: "images/banner-icon-folder.png",
 			bannerImageAlt: "Folder",
 			sectionTitle: "UI Components", 
 			componentTitle: "Tabs", 
@@ -174,7 +174,7 @@
 	var InteractionsPage = function() {
 		new Page();
 		var dkPageProperties = {
-			bannerImage: "images/banner-icon-film.dfe0dbab7946d58aadf0.png",
+			bannerImage: "images/banner-icon-film.png",
 			bannerImageAlt: "Film icon",
 			sectionTitle: "UI Interactions",
 			componentTitle: "Interactions Overview",
@@ -202,7 +202,7 @@
 	var FormsPage = function() {
 		new Page();
 		var dkPageProperties = {
-			bannerImage: "images/banner-icon-buttons.b7dda4f4e382a900713b.png",
+			bannerImage: "images/banner-icon-buttons.png",
 			bannerImageAlt: "Button icon",
 			sectionTitle: "UI Components",
 			componentTitle: "Form Fields",

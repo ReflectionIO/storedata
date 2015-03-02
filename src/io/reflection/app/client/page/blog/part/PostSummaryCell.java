@@ -48,7 +48,9 @@ public class PostSummaryCell extends AbstractCell<Post> {
 
 	@Override
 	public void render(Context context, Post value, SafeHtmlBuilder builder) {
-		SafeUri link = PageType.BlogPostPageType.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE, value.id.toString());
+		String s = value.code == null || value.code.length() == 0 ? value.id.toString() : value.code;
+
+		SafeUri link = PageType.BlogPostPageType.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE, s);
 		SafeHtml published = DateTemplate.INSTANCE.notPublished();
 
 		if (value.published != null) {
