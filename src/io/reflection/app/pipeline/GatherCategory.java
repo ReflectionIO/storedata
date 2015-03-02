@@ -26,6 +26,8 @@ import java.util.logging.Logger;
 
 import com.google.appengine.tools.pipeline.FutureValue;
 import com.google.appengine.tools.pipeline.Job3;
+import com.google.appengine.tools.pipeline.JobSetting;
+import com.google.appengine.tools.pipeline.JobSetting.OnQueue;
 import com.google.appengine.tools.pipeline.PromisedValue;
 import com.google.appengine.tools.pipeline.Value;
 
@@ -77,6 +79,8 @@ public class GatherCategory extends Job3<Void, String, Long, Long> {
 		FutureValue<Long> grossingFeedId = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_GROSSING_APPS), immediate(category.internalId),
 				immediate(code));
 
+		JobSetting defaultQueue = new OnQueue(OnQueue.DEFAULT);
+
 		FutureValue<Long> rankCount;
 		final boolean ingestCountryFeeds = IngestorFactory.shouldIngestFeedFetch(DataTypeHelper.IOS_STORE_A3, countryCode);
 		if (ingestCountryFeeds) {
@@ -84,9 +88,9 @@ public class GatherCategory extends Job3<Void, String, Long, Long> {
 			FutureValue<String> slimmedFreeFeed = futureCall(new SlimFeed(), freeFeedId);
 			FutureValue<String> slimmedGrossingFeed = futureCall(new SlimFeed(), grossingFeedId);
 
-			futureCall(new PushRanksToBigQuery(), slimmedPaidFeed, paidFeedId);
-			futureCall(new PushRanksToBigQuery(), slimmedFreeFeed, freeFeedId);
-			futureCall(new PushRanksToBigQuery(), slimmedGrossingFeed, grossingFeedId);
+			futureCall(new PushRanksToBigQuery(), slimmedPaidFeed, paidFeedId, defaultQueue);
+			futureCall(new PushRanksToBigQuery(), slimmedFreeFeed, freeFeedId, defaultQueue);
+			futureCall(new PushRanksToBigQuery(), slimmedGrossingFeed, grossingFeedId, defaultQueue);
 
 			rankCount = futureCall(new IngestRanks(), paidFeedId, slimmedPaidFeed, freeFeedId, slimmedFreeFeed, grossingFeedId, slimmedGrossingFeed);
 
@@ -109,10 +113,10 @@ public class GatherCategory extends Job3<Void, String, Long, Long> {
 			FutureValue<String> slimmedPaidFeed = futureCall(new SlimFeed(), paidFeedId);
 			FutureValue<String> slimmedFreeFeed = futureCall(new SlimFeed(), freeFeedId);
 			FutureValue<String> slimmedGrossingFeed = futureCall(new SlimFeed(), grossingFeedId);
-			
-			futureCall(new PushRanksToBigQuery(), slimmedPaidFeed, paidFeedId);
-			futureCall(new PushRanksToBigQuery(), slimmedFreeFeed, freeFeedId);
-			futureCall(new PushRanksToBigQuery(), slimmedGrossingFeed, grossingFeedId);
+
+			futureCall(new PushRanksToBigQuery(), slimmedPaidFeed, paidFeedId, defaultQueue);
+			futureCall(new PushRanksToBigQuery(), slimmedFreeFeed, freeFeedId, defaultQueue);
+			futureCall(new PushRanksToBigQuery(), slimmedGrossingFeed, grossingFeedId, defaultQueue);
 
 			rankCount = futureCall(new IngestRanks(), paidFeedId, slimmedPaidFeed, freeFeedId, slimmedFreeFeed, grossingFeedId, slimmedGrossingFeed);
 
