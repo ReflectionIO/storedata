@@ -11,19 +11,12 @@ import static io.reflection.app.objectify.PersistenceService.ofy;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.apple.ItemPropertyLookupServlet;
-import io.reflection.app.collectors.CollectorAmazon;
-import io.reflection.app.collectors.CollectorIOS;
-import io.reflection.app.datatypes.shared.DataAccount;
-import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.logging.GaeLevel;
-import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
-import io.reflection.app.service.dataaccount.IDataAccountService;
-import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
-import io.reflection.app.service.dataaccountfetch.IDataAccountFetchService;
+import io.reflection.app.pipeline.GatherAllRanks;
+import io.reflection.app.pipeline.GatherAllSales;
 import io.reflection.app.service.item.ItemServiceProvider;
-import io.reflection.app.shared.util.DataTypeHelper;
 import io.reflection.app.shared.util.PagerHelper;
 
 import java.io.IOException;
@@ -41,6 +34,8 @@ import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
 import com.google.appengine.api.taskqueue.TransientFailureException;
+import com.google.appengine.tools.pipeline.PipelineService;
+import com.google.appengine.tools.pipeline.PipelineServiceFactory;
 import com.googlecode.objectify.cmd.QueryKeys;
 
 /**
@@ -93,18 +88,11 @@ public class CronServlet extends HttpServlet {
 		int count = 0;
 
 		if (store != null) {
-			if (DataTypeHelper.IOS_STORE_A3.equals(store.toLowerCase())) {
-				// ios app store
-				count = (new CollectorIOS()).enqueue();
-			} else if ("amazon".equals(store.toLowerCase())) {
-				// amazon store
-				count = (new CollectorAmazon()).enqueue();
-			} else if ("play".equals(store.toLowerCase())) {
-				// google play store
-			}
+			PipelineService service = PipelineServiceFactory.newPipelineService();
+			String pipelineId = service.startNewPipeline(new GatherAllRanks());
 
 			if (LOG.isLoggable(Level.INFO)) {
-				LOG.info(String.format("%d Tasks added successfully", count));
+				LOG.info(String.format("Rank gather started successfully and can be tracked at /_ah/pipeline/status.html?root=%s", pipelineId));
 			}
 		} else if (deleteSome != null) {
 			if ("Rank".equals(deleteSome)) {
@@ -123,41 +111,12 @@ public class CronServlet extends HttpServlet {
 			}
 		} else if (process != null) {
 			if ("accounts".equals(process)) {
+				PipelineService service = PipelineServiceFactory.newPipelineService();
 
-				Pager pager = new Pager();
-				pager.count = Long.valueOf(100);
+				String pipelineId = service.startNewPipeline(new GatherAllSales());
 
-				try {
-					IDataAccountFetchService dataAccountFetchService = DataAccountFetchServiceProvider.provide();
-					IDataAccountService dataAccountService = DataAccountServiceProvider.provide();
-
-					// get the total number of accounts there are
-					pager.totalCount = dataAccountService.getActiveDataAccountsCount();
-
-					// get data accounts 100 at a time
-					for (pager.start = Long.valueOf(0); pager.start.longValue() < pager.totalCount.longValue(); pager.start = Long.valueOf(pager.start
-							.longValue() + pager.count.longValue())) {
-						List<DataAccount> dataAccounts = dataAccountService.getActiveDataAccounts(pager);
-
-						for (DataAccount dataAccount : dataAccounts) {
-							// if the account has some errors then don't bother otherwise enqueue a message to do a gather for it
-
-							if (DataAccountFetchServiceProvider.provide().isFetchable(dataAccount) == Boolean.TRUE) {
-								dataAccountService.triggerDataAccountFetch(dataAccount);
-
-								// go through all the failed attempts and get them too (failed attempts = less than 30 days old)
-								List<DataAccountFetch> failedDataAccountFetches = dataAccountFetchService.getFailedDataAccountFetches(dataAccount,
-										PagerHelper.createInfinitePager());
-
-								for (DataAccountFetch dataAccountFetch : failedDataAccountFetches) {
-									dataAccountService.triggerSingleDateDataAccountFetch(dataAccount, dataAccountFetch.date);
-								}
-							}
-						}
-
-					}
-				} catch (DataAccessException daEx) {
-					throw new RuntimeException(daEx);
+				if (LOG.isLoggable(Level.INFO)) {
+					LOG.info(String.format("Sales gather started successfully and can be tracked at /_ah/pipeline/status.html?root=%s", pipelineId));
 				}
 			} else if ("itemproperties".equals(process)) {
 				List<Long> propertylessItemIds;

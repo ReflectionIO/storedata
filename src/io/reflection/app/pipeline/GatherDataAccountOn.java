@@ -29,6 +29,7 @@ import io.reflection.app.service.datasource.DataSourceServiceProvider;
 import io.reflection.app.service.event.EventServiceProvider;
 import io.reflection.app.service.notification.NotificationServiceProvider;
 import io.reflection.app.service.user.UserServiceProvider;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -74,7 +75,7 @@ public class GatherDataAccountOn extends Job2<Long, Long, Date> {
 						collectedFetchId = collectAndIngest(account, date);
 
 						if (collectedFetchId != null && sendNotification) {
-							Event event = EventServiceProvider.provide().getEvent(Long.valueOf(5));
+							Event event = EventServiceProvider.provide().getCodeEvent(DataTypeHelper.NEW_USER_EVENT_CODE);
 							User user = UserServiceProvider.provide().getDataAccountOwner(account);
 
 							Map<String, Object> parameters = new HashMap<String, Object>();
@@ -102,7 +103,6 @@ public class GatherDataAccountOn extends Job2<Long, Long, Date> {
 						LOG.log(GaeLevel.WARNING, "Could not find a data source for id [%d]", account.source.id.longValue());
 					}
 				}
-
 			}
 		} catch (DataAccessException e) {
 			LOG.log(GaeLevel.SEVERE,

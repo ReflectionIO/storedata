@@ -9,7 +9,7 @@ package io.reflection.app.pipeline;
 
 import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.Item;
-import io.reflection.app.ingestors.IngestorIOS;
+import io.reflection.app.ingestors.IngestorIosHelper;
 import io.reflection.app.ingestors.ParserIOS;
 import io.reflection.app.logging.GaeLevel;
 
@@ -44,9 +44,9 @@ public class SlimFeed extends Job1<String, Long> {
 		Map<Date, Map<Integer, FeedFetch>> grouped = null;
 		Map<Date, String> combined = null;
 
-		stored = IngestorIOS.get(Arrays.asList(feedId));
-		grouped = IngestorIOS.groupDataByDate(stored);
-		combined = IngestorIOS.combineDataParts(grouped);
+		stored = IngestorIosHelper.get(Arrays.asList(feedId));
+		grouped = IngestorIosHelper.groupDataByDate(stored);
+		combined = IngestorIosHelper.combineDataParts(grouped);
 
 		for (final Date key : combined.keySet()) {
 			if (LOG.isLoggable(GaeLevel.DEBUG)) {

@@ -51,7 +51,6 @@ public class BigQueryRankIngestorIos extends AbstractIngestorIos implements Inge
 		}
 
 		for (final Date key : combined.keySet()) {
-
 			if (LOG.isLoggable(GaeLevel.DEBUG)) {
 				LOG.log(GaeLevel.DEBUG, String.format("Parsing [%s]", key.toString()));
 			}
@@ -62,53 +61,69 @@ public class BigQueryRankIngestorIos extends AbstractIngestorIos implements Inge
 
 			List<Item> items = (new ParserIOS()).parse(firstFeedFetch.country, firstFeedFetch.category.id, combined.get(key));
 
-			final int size = items.size();
-			if (size > 0) {
-				Item item;
-				TableRow row;
-				TableDataInsertAllRequest.Rows rows;
-				List<TableDataInsertAllRequest.Rows> rowList = new ArrayList<>();
-				for (int i = 0; i < size; i++) {
-					item = items.get(i);
+			storeIngested(items, firstFeedFetch);
+		}
+	}
 
-					rows = new TableDataInsertAllRequest.Rows();
+	/**
+	 * @param items
+	 */
+	public static void storeIngested(List<Item> items, FeedFetch ref) throws DataAccessException {
+		final int size = items.size();
 
-					row = new TableRow();
-					row.set("feedfetchid", firstFeedFetch.id);
-					row.set("categoryid", firstFeedFetch.category.id);
-					row.set("code", firstFeedFetch.code);
-					row.set("country", firstFeedFetch.country);
-					row.set("store", firstFeedFetch.store);
-					row.set("listtype", firstFeedFetch.type);
-					row.set("date", Long.valueOf(firstFeedFetch.date.getTime() / 1000));
-					row.set("currency", item.currency);
-					row.set("itemid", item.internalId);
-					row.set("position", Integer.valueOf(i + 1));
-					row.set("price", item.price);
+		if (LOG.isLoggable(GaeLevel.DEBUG)) {
+			LOG.log(GaeLevel.DEBUG, String.format("Starting big query ingest or items from feedfetch [%d]", ref.id.longValue()));
+		}
 
-					rows.setInsertId(firstFeedFetch.id.toString() + "-" + Integer.toString(i + 1));
-					rows.setJson(row);
+		if (size > 0) {
+			if (LOG.isLoggable(GaeLevel.DEBUG)) {
+				LOG.log(GaeLevel.DEBUG, String.format("Found [%d] items in feed", size));
+			}
 
-					rowList.add(rows);
+			Item item;
+			TableRow row;
+			TableDataInsertAllRequest.Rows rows;
+			List<TableDataInsertAllRequest.Rows> rowList = new ArrayList<>();
+			for (int i = 0; i < size; i++) {
+				item = items.get(i);
+
+				rows = new TableDataInsertAllRequest.Rows();
+
+				row = new TableRow();
+				row.set("feedfetchid", ref.id);
+				row.set("categoryid", ref.category.id);
+				row.set("code", ref.code);
+				row.set("country", ref.country);
+				row.set("store", ref.store);
+				row.set("listtype", ref.type);
+				row.set("date", Long.valueOf(ref.date.getTime() / 1000));
+				row.set("currency", item.currency);
+				row.set("itemid", item.internalId);
+				row.set("position", Integer.valueOf(i + 1));
+				row.set("price", item.price);
+
+				rows.setInsertId(ref.id.toString() + "-" + Integer.toString(i + 1));
+				rows.setJson(row);
+
+				rowList.add(rows);
+			}
+
+			try {
+				TableDataInsertAllRequest content = new TableDataInsertAllRequest().setRows(rowList);
+
+				if (LOG.isLoggable(GaeLevel.DEBUG)) {
+					LOG.log(GaeLevel.DEBUG, content.toPrettyString());
 				}
 
-				try {
-					TableDataInsertAllRequest content = new TableDataInsertAllRequest().setRows(rowList);
+				TableDataInsertAllResponse response;
 
-					if (LOG.isLoggable(GaeLevel.DEBUG)) {
-						LOG.log(GaeLevel.DEBUG, content.toPrettyString());
-					}
+				response = BigQueryHelper.insertAll("rank", content);
 
-					TableDataInsertAllResponse response;
-
-					response = BigQueryHelper.insertAll("rank", content);
-
-					if (LOG.isLoggable(GaeLevel.DEBUG)) {
-						LOG.log(GaeLevel.DEBUG, response.toPrettyString());
-					}
-				} catch (IOException e) {
-					throw new DataAccessException(e);
+				if (LOG.isLoggable(GaeLevel.DEBUG)) {
+					LOG.log(GaeLevel.DEBUG, response.toPrettyString());
 				}
+			} catch (IOException e) {
+				throw new DataAccessException(e);
 			}
 		}
 	}
