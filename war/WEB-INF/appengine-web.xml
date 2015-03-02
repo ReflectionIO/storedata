@@ -12,8 +12,7 @@
 		<property name="connection.native" value="true" />
 
 		<property name="java.util.logging.config.file" value="WEB-INF/logging.properties" />
-		<property name="gather.ios.countries" value="us,jp,gb,de,fr,cn,it,ae,ag,ai,al,am,ao,ar,at,au,az,bb,be,bf,bg,bh,bj,bm,bn,bo,br,bs,bt,bw,by,bz,ca,cg,ch,cl,co,cr,cv,cy,cz,dk,dm,do,dz,ec,ee,eg,es,fi,fj,fm,gd,gh,gm,gr,gt,gw,gy,hk,hn,hr,hu,id,ie,il,in,is,jm,jo,ke,kg,kh,kn,kr,kw,ky,kz,la,lb,lc,lk,lr,lt,lu,lv,md,mg,mk,ml,mn,mo,mr,ms,mt,mu,mw,mx,my,mz,na,ne,ng,ni,nl,no,np,nz,om,pa,pe,pg,ph,pk,pl,pt,pw,py,qa,ro,ru,sa,sb,sc,se,sg,si,sk,sl,sn,sr,st,sv,sz,tc,td,th,tj,tm,tn,tr,tt,tw,tz,ua,ug,uy,uz,vc,ve,vg,vn,ye,za,zw" />
-<!-- 		<property name="gather.ios.countries" value="us,jp,gb" /> -->
+ 		<property name="gather.ios.countries" value="us,jp,gb" />
 		<property name="ingest.ios.countries" value="us,jp,gb" />
 
 		<property name="gather.ios.topfreeapplications" value="http://itunes.apple.com/%s/rss/topfreeapplications/limit=200/json" />
@@ -48,8 +47,8 @@
 		<property name="oauth.p12.file" value="reflectiontestenv1-fc95529edea3.p12" />
 		<property name="oauth.account.id" value="486144765626-ggsh9o83jthtcli9jtoel2la92a702ab@developer.gserviceaccount.com" />
 
-		<!-- <property name="bigquery.dataset.name" value="dev" /> -->
-	    <property name="bigquery.dataset.name" value="pipelinetest" />
+		<property name="bigquery.dataset.name" value="dev" />
+	    
         <!-- <property name="bigquery.dataset.name" value="reflection" /> -->
 
 	</system-properties>
