@@ -153,7 +153,7 @@ public class GatherCountry extends Job2<Void, String, Long> {
 
 						for (Category category : categories) {
 							futureCall(new GatherCategory(revenueOtherSummaryHandle, downloadsOtherSummaryHandle, revenueTabletSummaryHandle,
-									downloadsTabletSummaryHandle), immediate(countryCode), immediate(category.id), immediate(code));
+									downloadsTabletSummaryHandle), immediate(countryCode), immediate(category.id), immediate(code), onDefaultQueue);
 						}
 					}
 				}

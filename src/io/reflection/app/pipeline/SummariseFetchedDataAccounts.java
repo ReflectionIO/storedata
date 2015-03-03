@@ -14,6 +14,7 @@ import java.util.Map;
 
 import com.google.appengine.tools.pipeline.FutureValue;
 import com.google.appengine.tools.pipeline.Job1;
+import com.google.appengine.tools.pipeline.JobSetting;
 import com.google.appengine.tools.pipeline.Value;
 
 /**
@@ -33,14 +34,16 @@ public class SummariseFetchedDataAccounts extends Job1<Map<String, Map<String, D
 	public Value<Map<String, Map<String, Double>>> run(List<Long> dataAccountFetchIds) throws Exception {
 		dataAccountFetchIds.removeAll(Collections.singleton(null));
 
+		JobSetting onDefaultQueue = new JobSetting.OnQueue(JobSetting.OnQueue.DEFAULT);
+
 		List<FutureValue<Map<String, Double>>> summaries = new ArrayList<>();
 		FutureValue<Map<String, Double>> summary;
 		for (Long id : dataAccountFetchIds) {
-			summary = futureCall(new SummariseDataAccountFetch(), immediate(id));
+			summary = futureCall(new SummariseDataAccountFetch(), immediate(id), onDefaultQueue);
 			summaries.add(summary);
 		}
 
-		FutureValue<Map<String, Map<String, Double>>> organised = futureCall(new OrganiseSummaries(), futureList(summaries));
+		FutureValue<Map<String, Map<String, Double>>> organised = futureCall(new OrganiseSummaries(), futureList(summaries), onDefaultQueue);
 
 		return organised;
 	}

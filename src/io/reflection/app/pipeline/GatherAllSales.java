@@ -7,6 +7,7 @@
 //
 package io.reflection.app.pipeline;
 
+import io.reflection.app.Queue;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.DataAccount;
@@ -29,6 +30,7 @@ import org.joda.time.DateTime;
 import com.google.appengine.tools.pipeline.FutureValue;
 import com.google.appengine.tools.pipeline.ImmediateValue;
 import com.google.appengine.tools.pipeline.Job0;
+import com.google.appengine.tools.pipeline.JobSetting;
 import com.google.appengine.tools.pipeline.Value;
 
 public class GatherAllSales extends Job0<Integer> {
@@ -52,6 +54,9 @@ public class GatherAllSales extends Job0<Integer> {
 		ImmediateValue<Date> forDate = immediate(DateTime.now().minusDays(Integer.valueOf(System.getProperty("pipeline.model.for.date", "1")).intValue())
 				.toDate());
 
+		JobSetting onDefaultQueue = new JobSetting.OnQueue(JobSetting.OnQueue.DEFAULT);
+		JobSetting onDataAccountGatherQueue = new JobSetting.OnQueue(Queue.DATA_ACCOUNT_GATHER);
+
 		try {
 			IDataAccountFetchService dataAccountFetchService = DataAccountFetchServiceProvider.provide();
 			IDataAccountService dataAccountService = DataAccountServiceProvider.provide();
@@ -65,7 +70,7 @@ public class GatherAllSales extends Job0<Integer> {
 					// if the account has some errors then don't bother otherwise enqueue a message to do a gather for it
 
 					if (DataAccountFetchServiceProvider.provide().isFetchable(dataAccount) == Boolean.TRUE) {
-						ids.add(futureCall(new GatherDataAccountOn(), immediate(dataAccount.id), forDate));
+						ids.add(futureCall(new GatherDataAccountOn(), immediate(dataAccount.id), forDate, onDataAccountGatherQueue));
 
 						// go through all the failed attempts and get them too (failed attempts = less than 30 days old)
 						List<DataAccountFetch> failedDataAccountFetches = dataAccountFetchService.getFailedDataAccountFetches(dataAccount,
@@ -74,7 +79,7 @@ public class GatherAllSales extends Job0<Integer> {
 						for (DataAccountFetch dataAccountFetch : failedDataAccountFetches) {
 							// gather these - but we cannot use them
 							// TODO: figure out what to do instead
-							futureCall(new GatherDataAccountOn(), immediate(dataAccount.id), immediate(dataAccountFetch.date));
+							futureCall(new GatherDataAccountOn(), immediate(dataAccount.id), immediate(dataAccountFetch.date), onDataAccountGatherQueue);
 						}
 
 						count++;
@@ -84,9 +89,9 @@ public class GatherAllSales extends Job0<Integer> {
 				PagerHelper.moveForward(pager);
 			} while (dataAccounts != null && dataAccounts.size() == pager.count.intValue());
 
-			FutureValue<Map<String, Map<String, Double>>> organizedSummaries = futureCall(new SummariseFetchedDataAccounts(), futureList(ids));
+			FutureValue<Map<String, Map<String, Double>>> organizedSummaries = futureCall(new SummariseFetchedDataAccounts(), futureList(ids), onDefaultQueue);
 
-			futureCall(new SubmitPromisses(), organizedSummaries, forDate);
+			futureCall(new SubmitPromisses(), organizedSummaries, forDate, onDefaultQueue);
 
 		} catch (DataAccessException dae) {
 			LOG.log(GaeLevel.SEVERE, "A database error occured attempting to start sales gather process", dae);

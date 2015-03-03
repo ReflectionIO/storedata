@@ -8,6 +8,7 @@
 package io.reflection.app.pipeline;
 
 import static io.reflection.app.accountdatacollectors.DataAccountCollector.ACCOUNT_DATA_BUCKET_KEY;
+import io.reflection.app.Queue;
 import io.reflection.app.accountdatacollectors.DataAccountCollector;
 import io.reflection.app.accountdatacollectors.DataAccountCollectorFactory;
 import io.reflection.app.accountdatacollectors.ITunesConnectDownloadHelper;
@@ -16,28 +17,21 @@ import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.DataAccountFetchStatusType;
 import io.reflection.app.datatypes.shared.DataSource;
-import io.reflection.app.datatypes.shared.Event;
-import io.reflection.app.datatypes.shared.Notification;
-import io.reflection.app.datatypes.shared.NotificationTypeType;
-import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.helpers.ApiHelper;
-import io.reflection.app.helpers.NotificationHelper;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
 import io.reflection.app.service.datasource.DataSourceServiceProvider;
-import io.reflection.app.service.event.EventServiceProvider;
-import io.reflection.app.service.notification.NotificationServiceProvider;
-import io.reflection.app.service.user.UserServiceProvider;
-import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Logger;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 import com.google.appengine.tools.pipeline.FutureValue;
 import com.google.appengine.tools.pipeline.Job2;
+import com.google.appengine.tools.pipeline.JobSetting;
 import com.google.appengine.tools.pipeline.Value;
 
 public class GatherDataAccountOn extends Job2<Long, Long, Date> {
@@ -54,14 +48,16 @@ public class GatherDataAccountOn extends Job2<Long, Long, Date> {
 	@Override
 	public Value<Long> run(Long dataAccountId, Date date) throws Exception {
 		boolean sendNotification = false;
-		Value<Long> collectedFetchId = null;
+		Value<Long> futureCollectedFetchId = null;
+
+		JobSetting onDefaultQueue = new JobSetting.OnQueue(JobSetting.OnQueue.DEFAULT);
 
 		try {
-			DataAccount account = DataAccountServiceProvider.provide().getDataAccount(Long.valueOf(dataAccountId));
+			DataAccount account = DataAccountServiceProvider.provide().getDataAccount(dataAccountId);
 
 			if (account != null) {
 				if (date == null) {
-					date = new Date();
+					date = DateTime.now(DateTimeZone.UTC).toDate();
 				}
 
 				DataSource dataSource = DataSourceServiceProvider.provide().getDataSource(account.source.id);
@@ -72,25 +68,10 @@ public class GatherDataAccountOn extends Job2<Long, Long, Date> {
 					DataAccountCollector collector = DataAccountCollectorFactory.getCollectorForSource(dataSource.a3Code);
 
 					if (collector != null) {
-						collectedFetchId = collectAndIngest(account, date);
+						futureCollectedFetchId = collectAndIngest(account, date);
 
-						if (collectedFetchId != null && sendNotification) {
-							Event event = EventServiceProvider.provide().getCodeEvent(DataTypeHelper.NEW_USER_EVENT_CODE);
-							User user = UserServiceProvider.provide().getDataAccountOwner(account);
-
-							Map<String, Object> parameters = new HashMap<String, Object>();
-							parameters.put("user", user);
-
-							String body = NotificationHelper.inflate(parameters, event.longBody);
-
-							Notification notification = (new Notification()).from("hello@reflection.io").user(user).event(event).body(body)
-									.subject(event.subject);
-							Notification added = NotificationServiceProvider.provide().addNotification(notification);
-
-							if (added.type != NotificationTypeType.NotificationTypeTypeInternal) {
-								notification.type = NotificationTypeType.NotificationTypeTypeInternal;
-								NotificationServiceProvider.provide().addNotification(notification);
-							}
+						if (futureCollectedFetchId != null && sendNotification) {
+							futureCall(new NotifyUser(), futureCollectedFetchId, immediate(dataAccountId), onDefaultQueue);
 						}
 
 					} else {
@@ -111,12 +92,14 @@ public class GatherDataAccountOn extends Job2<Long, Long, Date> {
 			throw e;
 		}
 
-		return collectedFetchId;
+		return futureCollectedFetchId;
 	}
 
 	private FutureValue<Long> collectAndIngest(DataAccount dataAccount, Date date) throws DataAccessException {
 		date = ApiHelper.removeTime(date);
 		FutureValue<Long> ingestedFetchId = null;
+
+		JobSetting onDataAccountIngestQueue = new JobSetting.OnQueue(Queue.DATA_ACCOUNT_INGEST);
 
 		String dateParameter = ITunesConnectDownloadHelper.DATE_FORMATTER.format(date);
 
@@ -169,7 +152,7 @@ public class GatherDataAccountOn extends Job2<Long, Long, Date> {
 			}
 
 			if (dataAccountFetch != null && dataAccountFetch.status == DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered) {
-				ingestedFetchId = futureCall(new IngestDataAccountFetch(), immediate(dataAccountFetch.id));
+				ingestedFetchId = futureCall(new IngestDataAccountFetch(), immediate(dataAccountFetch.id), onDataAccountIngestQueue);
 			}
 		} else {
 			LOG.warning(String.format("Gather for data account [%s] and date [%s] skipped because of status [%s]",
