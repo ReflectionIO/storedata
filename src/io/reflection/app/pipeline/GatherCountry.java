@@ -31,9 +31,9 @@ import java.util.logging.Logger;
 import com.google.appengine.tools.pipeline.FutureValue;
 import com.google.appengine.tools.pipeline.Job2;
 import com.google.appengine.tools.pipeline.JobSetting;
+import com.google.appengine.tools.pipeline.JobSetting.OnQueue;
 import com.google.appengine.tools.pipeline.PromisedValue;
 import com.google.appengine.tools.pipeline.Value;
-import com.google.appengine.tools.pipeline.JobSetting.OnQueue;
 
 public class GatherCountry extends Job2<Void, String, Long> {
 
@@ -68,55 +68,60 @@ public class GatherCountry extends Job2<Void, String, Long> {
 	 */
 	@Override
 	public Value<Void> run(String countryCode, Long code) throws Exception {
-		FutureValue<Long> freeFeedId = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_FREE_APPS), null, immediate(code));
-		FutureValue<Long> paidFeedId = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_PAID_APPS), null, immediate(code));
-		FutureValue<Long> grossingFeedId = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_GROSSING_APPS), null, immediate(code));
+		JobSetting onGatherQueue = new JobSetting.OnQueue("gather");
+		JobSetting onIngestQueue = new JobSetting.OnQueue("ingest");
+		JobSetting onDefaultQueue = new JobSetting.OnQueue(OnQueue.DEFAULT);
+
+		FutureValue<Long> freeFeedId = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_FREE_APPS), null, immediate(code), onGatherQueue);
+		FutureValue<Long> paidFeedId = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_PAID_APPS), null, immediate(code), onGatherQueue);
+		FutureValue<Long> grossingFeedId = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_GROSSING_APPS), null, immediate(code),
+				onGatherQueue);
 
 		final boolean ingestCountryFeeds = IngestorFactory.shouldIngestFeedFetch(DataTypeHelper.IOS_STORE_A3, countryCode);
 
-		JobSetting defaultQueue = new OnQueue(OnQueue.DEFAULT);
-
 		FutureValue<Long> rankCount;
 		if (ingestCountryFeeds) {
-			FutureValue<String> slimmedPaidFeed = futureCall(new SlimFeed(), paidFeedId);
-			FutureValue<String> slimmedFreeFeed = futureCall(new SlimFeed(), freeFeedId);
-			FutureValue<String> slimmedGrossingFeed = futureCall(new SlimFeed(), grossingFeedId);
+			FutureValue<String> slimmedPaidFeed = futureCall(new SlimFeed(), paidFeedId, onDefaultQueue);
+			FutureValue<String> slimmedFreeFeed = futureCall(new SlimFeed(), freeFeedId, onDefaultQueue);
+			FutureValue<String> slimmedGrossingFeed = futureCall(new SlimFeed(), grossingFeedId, onDefaultQueue);
 
-			futureCall(new PushRanksToBigQuery(), slimmedPaidFeed, paidFeedId, defaultQueue);
-			futureCall(new PushRanksToBigQuery(), slimmedFreeFeed, freeFeedId, defaultQueue);
-			futureCall(new PushRanksToBigQuery(), slimmedGrossingFeed, grossingFeedId, defaultQueue);
+			futureCall(new PushRanksToBigQuery(), slimmedPaidFeed, paidFeedId, onDefaultQueue);
+			futureCall(new PushRanksToBigQuery(), slimmedFreeFeed, freeFeedId, onDefaultQueue);
+			futureCall(new PushRanksToBigQuery(), slimmedGrossingFeed, grossingFeedId, onDefaultQueue);
 
-			rankCount = futureCall(new IngestRanks(), paidFeedId, slimmedPaidFeed, freeFeedId, slimmedFreeFeed, grossingFeedId, slimmedGrossingFeed);
+			rankCount = futureCall(new IngestRanks(), paidFeedId, slimmedPaidFeed, freeFeedId, slimmedFreeFeed, grossingFeedId, slimmedGrossingFeed,
+					onIngestQueue);
 
 			PromisedValue<Map<String, Double>> downloadsOtherSummaryValue = promise(downloadsOtherSummaryHandle);
 			PromisedValue<Map<String, Double>> revenueOtherSummaryValue = promise(revenueOtherSummaryHandle);
 
-			futureCall(new ModelData(), rankCount, paidFeedId, DOWNLOADS_LIST_PROPERTY_VALUE, downloadsOtherSummaryValue);
-			futureCall(new ModelData(), rankCount, freeFeedId, DOWNLOADS_LIST_PROPERTY_VALUE, downloadsOtherSummaryValue);
-			futureCall(new ModelData(), rankCount, grossingFeedId, REVENUE_LIST_PROPERTY_VALUE, revenueOtherSummaryValue);
+			futureCall(new ModelData(), rankCount, paidFeedId, DOWNLOADS_LIST_PROPERTY_VALUE, downloadsOtherSummaryValue, onDefaultQueue);
+			futureCall(new ModelData(), rankCount, freeFeedId, DOWNLOADS_LIST_PROPERTY_VALUE, downloadsOtherSummaryValue, onDefaultQueue);
+			futureCall(new ModelData(), rankCount, grossingFeedId, REVENUE_LIST_PROPERTY_VALUE, revenueOtherSummaryValue, onDefaultQueue);
 		}
 
-		freeFeedId = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_FREE_IPAD_APPS), null, immediate(code));
-		paidFeedId = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_PAID_IPAD_APPS), null, immediate(code));
-		grossingFeedId = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_GROSSING_IPAD_APPS), null, immediate(code));
+		freeFeedId = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_FREE_IPAD_APPS), null, immediate(code), onGatherQueue);
+		paidFeedId = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_PAID_IPAD_APPS), null, immediate(code), onGatherQueue);
+		grossingFeedId = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_GROSSING_IPAD_APPS), null, immediate(code), onGatherQueue);
 
 		if (ingestCountryFeeds) {
-			FutureValue<String> slimmedPaidFeed = futureCall(new SlimFeed(), paidFeedId);
-			FutureValue<String> slimmedFreeFeed = futureCall(new SlimFeed(), freeFeedId);
-			FutureValue<String> slimmedGrossingFeed = futureCall(new SlimFeed(), grossingFeedId);
+			FutureValue<String> slimmedPaidFeed = futureCall(new SlimFeed(), paidFeedId, onDefaultQueue);
+			FutureValue<String> slimmedFreeFeed = futureCall(new SlimFeed(), freeFeedId, onDefaultQueue);
+			FutureValue<String> slimmedGrossingFeed = futureCall(new SlimFeed(), grossingFeedId, onDefaultQueue);
 
-			futureCall(new PushRanksToBigQuery(), slimmedPaidFeed, paidFeedId, defaultQueue);
-			futureCall(new PushRanksToBigQuery(), slimmedFreeFeed, freeFeedId, defaultQueue);
-			futureCall(new PushRanksToBigQuery(), slimmedGrossingFeed, grossingFeedId, defaultQueue);
+			futureCall(new PushRanksToBigQuery(), slimmedPaidFeed, paidFeedId, onDefaultQueue);
+			futureCall(new PushRanksToBigQuery(), slimmedFreeFeed, freeFeedId, onDefaultQueue);
+			futureCall(new PushRanksToBigQuery(), slimmedGrossingFeed, grossingFeedId, onDefaultQueue);
 
-			rankCount = futureCall(new IngestRanks(), paidFeedId, slimmedPaidFeed, freeFeedId, slimmedFreeFeed, grossingFeedId, slimmedGrossingFeed);
+			rankCount = futureCall(new IngestRanks(), paidFeedId, slimmedPaidFeed, freeFeedId, slimmedFreeFeed, grossingFeedId, slimmedGrossingFeed,
+					onIngestQueue);
 
 			PromisedValue<Map<String, Double>> downloadsTabletSummaryValue = promise(downloadsTabletSummaryHandle);
 			PromisedValue<Map<String, Double>> revenueTabletSummaryValue = promise(revenueTabletSummaryHandle);
 
-			futureCall(new ModelData(), rankCount, paidFeedId, DOWNLOADS_LIST_PROPERTY_VALUE, downloadsTabletSummaryValue);
-			futureCall(new ModelData(), rankCount, freeFeedId, DOWNLOADS_LIST_PROPERTY_VALUE, downloadsTabletSummaryValue);
-			futureCall(new ModelData(), rankCount, grossingFeedId, REVENUE_LIST_PROPERTY_VALUE, revenueTabletSummaryValue);
+			futureCall(new ModelData(), rankCount, paidFeedId, DOWNLOADS_LIST_PROPERTY_VALUE, downloadsTabletSummaryValue, onDefaultQueue);
+			futureCall(new ModelData(), rankCount, freeFeedId, DOWNLOADS_LIST_PROPERTY_VALUE, downloadsTabletSummaryValue, onDefaultQueue);
+			futureCall(new ModelData(), rankCount, grossingFeedId, REVENUE_LIST_PROPERTY_VALUE, revenueTabletSummaryValue, onDefaultQueue);
 		}
 
 		// when we have gathered all the counties feeds we do the same but for each category

@@ -34,7 +34,7 @@ import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
 import com.google.appengine.api.taskqueue.TransientFailureException;
-import com.google.appengine.tools.pipeline.JobSetting.OnQueue;
+import com.google.appengine.tools.pipeline.JobSetting;
 import com.google.appengine.tools.pipeline.PipelineService;
 import com.google.appengine.tools.pipeline.PipelineServiceFactory;
 import com.googlecode.objectify.cmd.QueryKeys;
@@ -90,7 +90,7 @@ public class CronServlet extends HttpServlet {
 
 		if (store != null) {
 			PipelineService service = PipelineServiceFactory.newPipelineService();
-			String pipelineId = service.startNewPipeline(new GatherAllRanks(), new OnQueue("gather"));
+			String pipelineId = service.startNewPipeline(new GatherAllRanks(), new JobSetting.OnQueue(JobSetting.OnQueue.DEFAULT));
 
 			if (LOG.isLoggable(Level.INFO)) {
 				LOG.info(String.format("Rank gather started successfully and can be tracked at /_ah/pipeline/status.html?root=%s", pipelineId));
@@ -114,7 +114,7 @@ public class CronServlet extends HttpServlet {
 			if ("accounts".equals(process)) {
 				PipelineService service = PipelineServiceFactory.newPipelineService();
 
-				String pipelineId = service.startNewPipeline(new GatherAllSales(), new OnQueue("gather"));
+				String pipelineId = service.startNewPipeline(new GatherAllSales(), new JobSetting.OnQueue(JobSetting.OnQueue.DEFAULT));
 
 				if (LOG.isLoggable(Level.INFO)) {
 					LOG.info(String.format("Sales gather started successfully and can be tracked at /_ah/pipeline/status.html?root=%s", pipelineId));

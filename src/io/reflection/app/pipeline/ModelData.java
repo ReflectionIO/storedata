@@ -12,6 +12,7 @@ import java.util.Map;
 import com.google.appengine.tools.pipeline.FutureValue;
 import com.google.appengine.tools.pipeline.ImmediateValue;
 import com.google.appengine.tools.pipeline.Job4;
+import com.google.appengine.tools.pipeline.JobSetting;
 import com.google.appengine.tools.pipeline.Value;
 
 /**
@@ -31,14 +32,17 @@ public class ModelData extends Job4<Void, Long, Long, String, Map<String, Double
 	public Value<Void> run(Long count, Long feedFetchId, String summaryType, Map<String, Double> summary) throws Exception {
 		ImmediateValue<Long> feedFetchIdValue = immediate(feedFetchId);
 
+		JobSetting onModelQueue = new JobSetting.OnQueue("model");
+		JobSetting onPredictQueue = new JobSetting.OnQueue("predict");
+
 		// FIXME: we could probably just figure out the type from the feed fetch
 		ImmediateValue<String> summaryTypeValue = immediate(summaryType);
 
-		FutureValue<Long> simpleModelRunIdValue = futureCall(new CalibrateSimpleModel(), summaryTypeValue, immediate(summary), feedFetchIdValue);
+		FutureValue<Long> simpleModelRunIdValue = futureCall(new CalibrateSimpleModel(), summaryTypeValue, immediate(summary), feedFetchIdValue, onModelQueue,
+				new JobSetting.MaxAttempts(0), new JobSetting.OnBackend("model"));
 
-		futureCall(new FillRevenue(), summaryTypeValue, feedFetchIdValue, simpleModelRunIdValue);
+		futureCall(new FillRevenue(), summaryTypeValue, feedFetchIdValue, simpleModelRunIdValue, onPredictQueue);
 
 		return null;
 	}
-
 }

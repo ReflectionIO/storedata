@@ -28,6 +28,7 @@ import co.spchopr.persistentmap.PersistentMap;
 import co.spchopr.persistentmap.PersistentMapFactory;
 
 import com.google.appengine.tools.pipeline.Job0;
+import com.google.appengine.tools.pipeline.JobSetting;
 import com.google.appengine.tools.pipeline.Value;
 import com.spacehopperstudios.utility.StringUtils;
 
@@ -49,6 +50,7 @@ public class GatherAllRanks extends Job0<Integer> {
 		}
 
 		int count = 0;
+		JobSetting onDefaultQueue = new JobSetting.OnQueue(JobSetting.OnQueue.DEFAULT);
 
 		try {
 			String countries = System.getProperty(COUNTRIES_KEY);
@@ -115,7 +117,7 @@ public class GatherAllRanks extends Job0<Integer> {
 					}
 
 					futureCall(new GatherCountry(revenueOtherSummaryHandle, downloadsOtherSummaryHandle, revenueTabletSummaryHandle,
-							downloadsTabletSummaryHandle), immediate(countryCode), immediate(code));
+							downloadsTabletSummaryHandle), immediate(countryCode), immediate(code), onDefaultQueue);
 
 					count++;
 				}
