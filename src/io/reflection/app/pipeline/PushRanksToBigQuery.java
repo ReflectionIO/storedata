@@ -1,5 +1,5 @@
 //
-//  RanksToBigQuery.java
+//  PushRanksToBigQuery.java
 //  storedata
 //
 //  Created by William Shakour (billy1380) on 5 Feb 2015.

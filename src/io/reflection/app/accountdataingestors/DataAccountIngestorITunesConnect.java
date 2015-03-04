@@ -74,9 +74,7 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 	 */
 	@Override
 	public void ingest(DataAccountFetch fetch) {
-
 		if (fetch.status == DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered) {
-
 			List<Sale> sales = null;
 			try {
 				sales = convertFetchToSales(fetch);
