@@ -34,10 +34,26 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
+import com.google.appengine.api.memcache.AsyncMemcacheService;
+import com.google.appengine.api.memcache.ErrorHandlers;
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.spacehopperstudios.utility.StringUtils;
 
 final class SaleService implements ISaleService {
+
+	private MemcacheService syncCache;
+	private AsyncMemcacheService asyncCache;
+
+	public SaleService() {
+		syncCache = MemcacheServiceFactory.getMemcacheService();
+		syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.WARNING));
+
+		asyncCache = MemcacheServiceFactory.getAsyncMemcacheService();
+		asyncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.WARNING));
+	}
 
 	public String getName() {
 		return DEFAULT_NAME;
@@ -806,18 +822,68 @@ final class SaleService implements ISaleService {
 	 */
 	@Override
 	public String getSkuItemId(String sku) throws DataAccessException {
-		String itemId = null;
+		String memcacheKey = getName() + ".sku.itemid.lookup." + sku;
+		String itemInternalId = (String) syncCache.get(memcacheKey);
 
-		String getSkuItemIdQuery = String.format("SELECT `itemid` FROM `sale` WHERE `sku`='%s' LIMIT 1", addslashes(sku));
+		if (itemInternalId == null) {
+			String getSkuItemIdQuery = String.format("SELECT `itemid` FROM `sale` WHERE `sku`='%s' LIMIT 1", addslashes(sku));
+
+			Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
+
+			try {
+				saleConnection.connect();
+				saleConnection.executeQuery(getSkuItemIdQuery);
+
+				if (saleConnection.fetchNextRow()) {
+					itemInternalId = saleConnection.getCurrentRowString("itemid");
+				}
+			} finally {
+				if (saleConnection != null) {
+					saleConnection.disconnect();
+				}
+			}
+
+			if (itemInternalId != null) {
+				asyncCache.put(memcacheKey, itemInternalId);
+			}
+		}
+
+		return itemInternalId;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.sale.ISaleService#getSalesBatch(java.util.Collection)
+	 */
+	@Override
+	public List<Sale> getSalesBatch(Collection<Long> saleIds) throws DataAccessException {
+		List<Sale> sales = new ArrayList<Sale>();
+		StringBuffer joinedSaleIds = new StringBuffer();
+
+		for (Long id : saleIds) {
+			if (joinedSaleIds.length() != 0) {
+				joinedSaleIds.append("','");
+			}
+
+			joinedSaleIds.append(id);
+		}
+
+		String getSalesBatchQuery = String.format("SELECT * FROM `sale` WHERE `id` IN ('" + joinedSaleIds + "') AND `deleted`='n'", joinedSaleIds);
 
 		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
 
 		try {
 			saleConnection.connect();
-			saleConnection.executeQuery(getSkuItemIdQuery);
+			saleConnection.executeQuery(getSalesBatchQuery);
 
-			if (saleConnection.fetchNextRow()) {
-				itemId = saleConnection.getCurrentRowString("itemid");
+			Sale sale;
+			while (saleConnection.fetchNextRow()) {
+				sale = toSale(saleConnection);
+
+				if (sale != null) {
+					sales.add(sale);
+				}
 			}
 		} finally {
 			if (saleConnection != null) {
@@ -825,7 +891,7 @@ final class SaleService implements ISaleService {
 			}
 		}
 
-		return itemId;
+		return sales;
 	}
 
 }

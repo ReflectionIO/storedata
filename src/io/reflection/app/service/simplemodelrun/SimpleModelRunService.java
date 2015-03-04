@@ -71,6 +71,12 @@ final class SimpleModelRunService implements ISimpleModelRunService {
 		simpleModelRun.b = connection.getCurrentRowDouble("b");
 		simpleModelRun.summaryDate = connection.getCurrentRowDateTime("summarydate");
 
+		simpleModelRun.aStandardError = connection.getCurrentRowDouble("astandarderror");
+		simpleModelRun.bStandardError = connection.getCurrentRowDouble("bstandarderror");
+
+		simpleModelRun.adjustedRSquared = connection.getCurrentRowDouble("adjustedrsquared");
+		simpleModelRun.regressionSumSquares = connection.getCurrentRowDouble("regressionsumsquares");
+
 		return simpleModelRun;
 	}
 
@@ -78,9 +84,14 @@ final class SimpleModelRunService implements ISimpleModelRunService {
 	public SimpleModelRun addSimpleModelRun(SimpleModelRun simpleModelRun) throws DataAccessException {
 		SimpleModelRun addedSimpleModelRun = null;
 
-		final String addSimpleModelRunQuery = String.format("INSERT INTO `simplemodelrun` (`feedfetchid`,`a`,`b`,`summarydate`) VALUES (%d,%f,%f,%s);",
-				simpleModelRun.feedFetch.id.longValue(), simpleModelRun.a.doubleValue(), simpleModelRun.b.doubleValue(),
-				simpleModelRun.summaryDate == null ? "NULL" : Long.toString(simpleModelRun.summaryDate.getTime() / 1000L));
+		final String addSimpleModelRunQuery = String
+				.format("INSERT INTO `simplemodelrun` (`feedfetchid`,`a`,`b`,`astandarderror`,`bstandarderror`,`adjustedrsquared`,`regressionsumsquares`,`summarydate`) VALUES (%d,%f,%f,%s,%s,%s,%s,%s);",
+						simpleModelRun.feedFetch.id.longValue(), simpleModelRun.a.doubleValue(), simpleModelRun.b.doubleValue(),
+						simpleModelRun.aStandardError == null ? "NULL" : simpleModelRun.aStandardError.toString(),
+						simpleModelRun.bStandardError == null ? "NULL" : simpleModelRun.bStandardError.toString(),
+						simpleModelRun.adjustedRSquared == null ? "NULL" : simpleModelRun.adjustedRSquared.toString(),
+						simpleModelRun.regressionSumSquares == null ? "NULL" : simpleModelRun.regressionSumSquares.toString(),
+						simpleModelRun.summaryDate == null ? "NULL" : Long.toString(simpleModelRun.summaryDate.getTime() / 1000L));
 
 		Connection simpleModelRunConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSimpleModelRun.toString());
 
@@ -109,10 +120,15 @@ final class SimpleModelRunService implements ISimpleModelRunService {
 	public SimpleModelRun updateSimpleModelRun(SimpleModelRun simpleModelRun) throws DataAccessException {
 		SimpleModelRun updatedSimpleModelRun = null;
 
-		final String updateSimpleModelRunQuery = String.format(
-				"UPDATE `simplemodelrun` SET `feedfetchid`=%d,`a`=%f,`b`=%f,`summarydate`=%s WHERE `id`=%d AND `deleted`='n';", simpleModelRun.feedFetch.id,
-				simpleModelRun.a.doubleValue(), simpleModelRun.b.doubleValue(),
-				simpleModelRun.summaryDate == null ? "NULL" : Long.toString(simpleModelRun.summaryDate.getTime() / 1000L), simpleModelRun.id.longValue());
+		final String updateSimpleModelRunQuery = String
+				.format("UPDATE `simplemodelrun` SET `feedfetchid`=%d,`a`=%f,`b`=%f,`astandarderror`=%s,`bstandarderror`=%s,`adjustedrsquared`=%s,`regressionsumsquares`=%s,`summarydate`=%s WHERE `id`=%d AND `deleted`='n';",
+						simpleModelRun.feedFetch.id, simpleModelRun.a.doubleValue(), simpleModelRun.b.doubleValue(),
+						simpleModelRun.aStandardError == null ? "NULL" : simpleModelRun.aStandardError.toString(),
+						simpleModelRun.bStandardError == null ? "NULL" : simpleModelRun.bStandardError.toString(),
+						simpleModelRun.adjustedRSquared == null ? "NULL" : simpleModelRun.adjustedRSquared.toString(),
+						simpleModelRun.regressionSumSquares == null ? "NULL" : simpleModelRun.regressionSumSquares.toString(),
+						simpleModelRun.summaryDate == null ? "NULL" : Long.toString(simpleModelRun.summaryDate.getTime() / 1000L), simpleModelRun.id
+								.longValue());
 
 		Connection simpleSimpleModelRunConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSimpleModelRun.toString());
 

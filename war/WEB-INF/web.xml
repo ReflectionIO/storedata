@@ -209,16 +209,16 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<url-pattern>/remote_api</url-pattern>
 	</servlet-mapping>
 
-	<!-- <servlet>
-    <servlet-name>mapreduce</servlet-name>
-    <servlet-class>
-      com.google.appengine.tools.mapreduce.MapReduceServlet
-    </servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>mapreduce</servlet-name>
-    <url-pattern>/mapreduce/*</url-pattern>
-  </servlet-mapping>
+	<!-- <servlet> -->
+<!--     <servlet-name>mapreduce</servlet-name> -->
+<!--     <servlet-class> -->
+<!--       com.google.appengine.tools.mapreduce.MapReduceServlet -->
+<!--     </servlet-class> -->
+<!--   </servlet> -->
+<!--   <servlet-mapping> -->
+<!--     <servlet-name>mapreduce</servlet-name> -->
+<!--     <url-pattern>/mapreduce/*</url-pattern> -->
+<!--   </servlet-mapping> -->
 
   <servlet>
     <servlet-name>pipeline</servlet-name>
@@ -230,15 +230,15 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
     <servlet-name>pipeline</servlet-name>
     <url-pattern>/_ah/pipeline/*</url-pattern>
   </servlet-mapping>
-	
-<security-constraint>
-  <web-resource-collection>
-    <url-pattern>/mapreduce/*</url-pattern>
-  </web-resource-collection>
-  <auth-constraint>
-    <role-name>admin</role-name>
-  </auth-constraint>
-</security-constraint> -->
+  
+<!-- <security-constraint> -->
+<!--   <web-resource-collection> -->
+<!--     <url-pattern>/mapreduce/*</url-pattern> -->
+<!--   </web-resource-collection> -->
+<!--   <auth-constraint> -->
+<!--     <role-name>admin</role-name> -->
+<!--   </auth-constraint> -->
+<!-- </security-constraint> -->
 
 <security-constraint>
   <web-resource-collection>

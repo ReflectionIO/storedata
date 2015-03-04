@@ -56,6 +56,7 @@ public class IngestorIOS extends AbstractIngestorIos implements Ingestor {
 	 * @param combined
 	 * @throws DataAccessException
 	 */
+	@Override
 	protected void extractItemRanks(List<FeedFetch> stored, final Map<Date, Map<Integer, FeedFetch>> grouped, Map<Date, String> combined)
 			throws DataAccessException {
 
@@ -67,7 +68,6 @@ public class IngestorIOS extends AbstractIngestorIos implements Ingestor {
 
 		boolean isGrossing;
 		for (final Date key : combined.keySet()) {
-
 			if (LOG.isLoggable(GaeLevel.DEBUG)) {
 				LOG.log(GaeLevel.DEBUG, String.format("Parsing [%s]", key.toString()));
 			}
@@ -237,7 +237,7 @@ public class IngestorIOS extends AbstractIngestorIos implements Ingestor {
 			for (int i = 0; i < group.size(); i++) {
 				fetch = group.get(Integer.valueOf(i));
 				fetch.status = FeedFetchStatusType.FeedFetchStatusTypeIngested;
-
+				
 				fetch = FeedFetchServiceProvider.provide().updateFeedFetch(fetch);
 
 				ArchiverFactory.getItemRankArchiver().enqueueIdFeedFetch(fetch.id);

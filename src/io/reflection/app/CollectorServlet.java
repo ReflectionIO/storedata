@@ -57,10 +57,10 @@ public class CollectorServlet extends HttpServlet {
 		String store = req.getParameter("store");
 		String country = req.getParameter("country");
 		String type = req.getParameter("type");
-		
+
 		String codeParam = req.getParameter("code");
 		Long code = codeParam == null ? null : Long.valueOf(codeParam);
-		
+
 		String category = req.getParameter("category");
 
 		List<Long> collected = null;
@@ -79,11 +79,9 @@ public class CollectorServlet extends HttpServlet {
 			}
 		}
 
-		List<String> countries = IngestorFactory.getIngestorCountries(store);
-		
-		if (countries.contains(country)) {
+		if (IngestorFactory.shouldIngestFeedFetch(store, country)) {
 			Ingestor ingestor = IngestorFactory.getIngestorForStore(store);
-			
+
 			if (ingestor != null) {
 				ingestor.enqueue(collected);
 			} else {
@@ -96,7 +94,7 @@ public class CollectorServlet extends HttpServlet {
 				LOG.info("Country [" + country + "] not in list of countries to ingest.");
 			}
 		}
-		
+
 		IngestorFactory.getBigQueryIngestorForStore(store).enqueue(collected);
 
 		resp.setHeader("Cache-Control", "no-cache");

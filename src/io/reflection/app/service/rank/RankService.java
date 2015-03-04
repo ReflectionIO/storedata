@@ -279,7 +279,7 @@ final class RankService implements IRankService {
 			throws DataAccessException {
 		List<Rank> ranks = new ArrayList<Rank>();
 
-		Long code = FeedFetchServiceProvider.provide().getGatherCode(country, store, after, before);
+		Long code = FeedFetchServiceProvider.provide().getGatherCode(store, after, before);
 
 		if (code != null) {
 			ranks.addAll(getGatherCodeRanks(country, store, category, listType, code, pager, Boolean.FALSE));
@@ -392,7 +392,7 @@ final class RankService implements IRankService {
 	public Long getRanksCount(Country country, Store store, Category category, String listType, Date after, Date before) throws DataAccessException {
 		Long ranksCount = Long.valueOf(0);
 
-		Long code = FeedFetchServiceProvider.provide().getGatherCode(country, store, after, before);
+		Long code = FeedFetchServiceProvider.provide().getGatherCode(store, after, before);
 
 		if (code != null) {
 			ranksCount = getGatherCodeRanksCount(country, store, category, listType, code);

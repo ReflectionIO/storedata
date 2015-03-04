@@ -14,10 +14,13 @@ import static io.reflection.app.helpers.SqlQueryHelper.beforeAfterQuery;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.collectors.Collector;
+import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.FeedFetchStatusType;
+import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.helpers.SqlQueryHelper;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
@@ -405,7 +408,7 @@ final class FeedFetchService implements IFeedFetchService {
 	 * io.reflection.app.shared.datatypes.Store,java.util.Collection, java.lang.Long)
 	 */
 	@Override
-	public Boolean isReadyToModel(Country country, Store store, Collection<String> types, Long code) throws DataAccessException {
+	public Boolean isReadyToModel(Country country, Store store, Category category, Collection<String> types, Long code) throws DataAccessException {
 		Boolean isReadyToModel = Boolean.FALSE;
 
 		String typesQueryPart = null;
@@ -452,7 +455,8 @@ final class FeedFetchService implements IFeedFetchService {
 	 * io.reflection.app.shared.datatypes.Store,java.util.Collection, java.lang.Long)
 	 */
 	@Override
-	public List<FeedFetch> getGatherCodeFeedFetches(Country country, Store store, Collection<String> types, Long code) throws DataAccessException {
+	public List<FeedFetch> getGatherCodeFeedFetches(Country country, Store store, Category category, Collection<String> types, Long code)
+			throws DataAccessException {
 		List<FeedFetch> feedFetches = new ArrayList<FeedFetch>();
 
 		String typesQueryPart = null;
@@ -521,11 +525,10 @@ final class FeedFetchService implements IFeedFetchService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.service.feedfetch.IFeedFetchService#getGatherCode(io.reflection.app.datatypes.shared.Country,
-	 * io.reflection.app.datatypes.shared.Store, java.util.Date, java.util.Date)
+	 * @see io.reflection.app.service.feedfetch.IFeedFetchService#getGatherCode( io.reflection.app.datatypes.shared.Store, java.util.Date, java.util.Date)
 	 */
 	@Override
-	public Long getGatherCode(Country country, Store store, Date after, Date before) throws DataAccessException {
+	public Long getGatherCode(Store store, Date after, Date before) throws DataAccessException {
 		Long code = null;
 
 		// String memcacheKey = getName() + ".gathercode." + country.a2Code + "." + store.a3Code + "." + (after == null ? "none" : after.getTime()) + "."
@@ -537,9 +540,9 @@ final class FeedFetchService implements IFeedFetchService {
 
 		try {
 			feedFetchConnection.connect();
-			String getGatherCode = String
-					.format("SELECT `code2` FROM `feedfetch` WHERE CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`store` AS BINARY)=CAST('%s' AS BINARY) AND %s AND `deleted`='n' ORDER BY `date` DESC LIMIT 1",
-							addslashes(country.a2Code), addslashes(store.a3Code), beforeAfterQuery(before, after));
+			String getGatherCode = String.format(
+					"SELECT `code2` FROM `feedfetch` WHERE CAST(`store` AS BINARY)=CAST('%s' AS BINARY) AND %s AND `deleted`='n' ORDER BY `date` DESC LIMIT 1",
+					addslashes(store.a3Code), beforeAfterQuery(before, after));
 
 			feedFetchConnection.executeQuery(getGatherCode);
 
@@ -639,11 +642,15 @@ final class FeedFetchService implements IFeedFetchService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.service.feedfetch.IFeedFetchService#getDateCode(java.util.Date, java.lang.Integer)
+	 * @see io.reflection.app.service.feedfetch.IFeedFetchService#getRankFeedFetch(io.reflection.app.datatypes.shared.Rank)
 	 */
 	@Override
-	public Long getDateCode(Date date, Integer gatherTimes) throws DataAccessException {
-		return null;
+	public List<FeedFetch> getRankFeedFetch(Rank rank) throws DataAccessException {
+		Collector collector = CollectorFactory.getCollectorForStore(rank.source);
+		List<String> listTypes = new ArrayList<String>();
+		listTypes.addAll(collector.getCounterpartTypes(rank.type));
+		listTypes.add(rank.type);
+		return getGatherCodeFeedFetches(new Country().a2Code(rank.country), new Store().a3Code(rank.source), rank.category, listTypes, rank.code);
 	}
 
 }

@@ -19,6 +19,10 @@ public class SimpleModelRun extends DataType {
 	public FeedFetch feedFetch;
 	public Double a;
 	public Double b;
+	public Double aStandardError;
+	public Double bStandardError;
+	public Double adjustedRSquared;
+	public Double regressionSumSquares;
 	public Date summaryDate;
 
 	@Override
@@ -30,6 +34,14 @@ public class SimpleModelRun extends DataType {
 		object.add("a", jsonA);
 		JsonElement jsonB = b == null ? JsonNull.INSTANCE : new JsonPrimitive(b);
 		object.add("b", jsonB);
+		JsonElement jsonAStandardError = aStandardError == null ? JsonNull.INSTANCE : new JsonPrimitive(aStandardError);
+		object.add("aStandardError", jsonAStandardError);
+		JsonElement jsonBStandardError = bStandardError == null ? JsonNull.INSTANCE : new JsonPrimitive(bStandardError);
+		object.add("bStandardError", jsonBStandardError);
+		JsonElement jsonAdjustedRSquared = adjustedRSquared == null ? JsonNull.INSTANCE : new JsonPrimitive(adjustedRSquared);
+		object.add("adjustedRSquared", jsonAdjustedRSquared);
+		JsonElement jsonRegressionSumSquares = regressionSumSquares == null ? JsonNull.INSTANCE : new JsonPrimitive(regressionSumSquares);
+		object.add("regressionSumSquares", jsonRegressionSumSquares);
 		JsonElement jsonSummaryDate = summaryDate == null ? JsonNull.INSTANCE : new JsonPrimitive(summaryDate.getTime());
 		object.add("summaryDate", jsonSummaryDate);
 		return object;
@@ -57,6 +69,30 @@ public class SimpleModelRun extends DataType {
 				b = Double.valueOf(jsonB.getAsDouble());
 			}
 		}
+		if (jsonObject.has("aStandardError")) {
+			JsonElement jsonAStandardError = jsonObject.get("aStandardError");
+			if (jsonAStandardError != null) {
+				aStandardError = Double.valueOf(jsonAStandardError.getAsDouble());
+			}
+		}
+		if (jsonObject.has("bStandardError")) {
+			JsonElement jsonBStandardError = jsonObject.get("bStandardError");
+			if (jsonBStandardError != null) {
+				bStandardError = Double.valueOf(jsonBStandardError.getAsDouble());
+			}
+		}
+		if (jsonObject.has("adjustedRSquared")) {
+			JsonElement jsonAdjustedRSquared = jsonObject.get("adjustedRSquared");
+			if (jsonAdjustedRSquared != null) {
+				adjustedRSquared = Double.valueOf(jsonAdjustedRSquared.getAsDouble());
+			}
+		}
+		if (jsonObject.has("regressionSumSquares")) {
+			JsonElement jsonRegressionSumSquares = jsonObject.get("regressionSumSquares");
+			if (jsonRegressionSumSquares != null) {
+				regressionSumSquares = Double.valueOf(jsonRegressionSumSquares.getAsDouble());
+			}
+		}
 		if (jsonObject.has("summaryDate")) {
 			JsonElement jsonSummaryDate = jsonObject.get("summaryDate");
 			if (jsonSummaryDate != null) {
@@ -80,6 +116,26 @@ public class SimpleModelRun extends DataType {
 		return this;
 	}
 
+	public SimpleModelRun aStandardError(Double aStandardError) {
+		this.aStandardError = aStandardError;
+		return this;
+	}
+
+	public SimpleModelRun bStandardError(Double bStandardError) {
+		this.bStandardError = bStandardError;
+		return this;
+	}
+
+	public SimpleModelRun adjustedRSquared(Double adjustedRSquared) {
+		this.adjustedRSquared = adjustedRSquared;
+		return this;
+	}
+
+	public SimpleModelRun regressionSumSquares(Double regressionSumSquares) {
+		this.regressionSumSquares = regressionSumSquares;
+		return this;
+	}
+		
 	public SimpleModelRun summaryDate(Date summaryDate) {
 		this.summaryDate = summaryDate;
 		return this;

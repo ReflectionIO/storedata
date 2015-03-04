@@ -20,6 +20,8 @@ import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.ingestors.Ingestor;
 import io.reflection.app.ingestors.IngestorFactory;
 import io.reflection.app.logging.GaeLevel;
+import io.reflection.app.pipeline.GatherAllRanks;
+import io.reflection.app.pipeline.GatherAllSales;
 import io.reflection.app.service.application.ApplicationServiceProvider;
 import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
@@ -48,6 +50,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
+import org.markdown4j.server.MarkdownProcessor;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -59,6 +62,8 @@ import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.taskqueue.TaskOptions.Builder;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
+import com.google.appengine.tools.pipeline.PipelineService;
+import com.google.appengine.tools.pipeline.PipelineServiceFactory;
 import com.googlecode.objectify.cmd.Query;
 
 /**
@@ -692,6 +697,20 @@ public class DevHelperServlet extends HttpServlet {
 				predictQueue.add(TaskOptions.Builder.withUrl("/predict?" + req.getQueryString()).method(Method.GET));
 
 				success = true;
+			} else if ("pipelineranks".equals(action)) {
+				PipelineService service = PipelineServiceFactory.newPipelineService();
+
+				String pipelineId = service.startNewPipeline(new GatherAllRanks());
+
+				markup = (new MarkdownProcessor()).process("[View " + pipelineId + "](/_ah/pipeline/status.html?root=" + pipelineId
+						+ " \"View pipeline status\")");
+			} else if ("pipelinesales".equals(action)) {
+				PipelineService service = PipelineServiceFactory.newPipelineService();
+
+				String pipelineId = service.startNewPipeline(new GatherAllSales());
+
+				markup = (new MarkdownProcessor()).process("[View " + pipelineId + "](/_ah/pipeline/status.html?root=" + pipelineId
+						+ " \"View pipeline status\")");
 			} else if ("enqueuegetallranks".equalsIgnoreCase(action)) {
 				CallServiceMethodServlet.enqueueGetAllRanks("us", "ios", Long.valueOf(24), "topfreeapplications", Long.valueOf(33));
 				success = true;
@@ -709,7 +728,12 @@ public class DevHelperServlet extends HttpServlet {
 		resp.setHeader("Cache-Control", "no-cache");
 
 		if (markup != null) {
-			resp.getOutputStream().print(markup);
+			resp.setContentType("text/html");
+			resp.getOutputStream().println("<html>");
+			resp.getOutputStream().println("<body>");
+			resp.getOutputStream().println(markup);
+			resp.getOutputStream().println("</body>");
+			resp.getOutputStream().println("</html>");
 		} else if (csv != null) {
 			resp.getOutputStream().print(csv);
 		} else {
@@ -739,12 +763,9 @@ public class DevHelperServlet extends HttpServlet {
 		Store s = new Store();
 		s.a3Code = DataTypeHelper.IOS_STORE_A3;
 
-		Country c = new Country();
-		c.a2Code = "us";
-
 		Long code = null;
 		try {
-			code = FeedFetchServiceProvider.provide().getGatherCode(c, s, start, end);
+			code = FeedFetchServiceProvider.provide().getGatherCode(s, start, end);
 		} catch (DataAccessException e) {
 			throw new RuntimeException(e);
 		}

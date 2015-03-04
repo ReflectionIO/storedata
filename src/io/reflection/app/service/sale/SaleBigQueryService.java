@@ -545,7 +545,7 @@ final class SaleBigQueryService implements ISaleService {
 			} else if (pager.count != null) {
 				getSalesQuery += String.format(" LIMIT %d", pager.count.longValue());
 			}
-			
+
 			if (pager.count.longValue() == Long.MAX_VALUE) {
 				paged = false;
 			}
@@ -714,6 +714,48 @@ final class SaleBigQueryService implements ISaleService {
 	@Override
 	public String getSkuItemId(String sku) throws DataAccessException {
 		throw new UnsupportedOperationException();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.sale.ISaleService#getSalesBatch(java.util.Collection)
+	 */
+	@Override
+	public List<Sale> getSalesBatch(Collection<Long> saleIds) throws DataAccessException {
+		List<Sale> sales = new ArrayList<Sale>();
+		StringBuffer joinedSaleIds = new StringBuffer();
+
+		for (Long id : saleIds) {
+			if (joinedSaleIds.length() != 0) {
+				joinedSaleIds.append("','");
+			}
+
+			joinedSaleIds.append(id);
+		}
+
+		String getSalesBatchQuery = String.format("SELECT * FROM [sale] WHERE [id] IN ('" + joinedSaleIds + "') AND `deleted`='n'", joinedSaleIds);
+
+		try {
+			QueryResponse response = BigQueryHelper.queryBigqueryQuick(getSalesBatchQuery);
+
+			List<TableRow> rows;
+			if (response != null && (rows = response.getRows()) != null) {
+				BigQueryHelper.tablise(response);
+				Sale sale;
+				for (TableRow row : rows) {
+					sale = toSale(row);
+
+					if (sale != null) {
+						sales.add(sale);
+					}
+				}
+			}
+		} catch (IOException ex) {
+			throw new DataAccessException(ex);
+		}
+
+		return sales;
 	}
 
 }

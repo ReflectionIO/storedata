@@ -72,7 +72,6 @@ public class DataAccountIngestServlet extends ContextAwareServlet {
 				DataAccountFetch fetch = DataAccountFetchServiceProvider.provide().getDataAccountFetch(Long.parseLong(fetchId));
 
 				if (fetch != null) {
-
 					DataAccount linkedAccount = DataAccountServiceProvider.provide().getDataAccount(fetch.linkedAccount.id);
 
 					if (linkedAccount != null) {

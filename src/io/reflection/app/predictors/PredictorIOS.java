@@ -219,7 +219,7 @@ public class PredictorIOS implements Predictor {
 	 * @throws DataAccessException
 	 */
 	private void alterFeedFetchStatus(Store store, Country country, Category category, List<String> listTypes, Long code) throws DataAccessException {
-		List<FeedFetch> feeds = FeedFetchServiceProvider.provide().getGatherCodeFeedFetches(country, store, listTypes, code);
+		List<FeedFetch> feeds = FeedFetchServiceProvider.provide().getGatherCodeFeedFetches(country, store, category, listTypes, code);
 
 		for (FeedFetch feedFetch : feeds) {
 			if (feedFetch.category.id.longValue() == category.id.longValue()) {

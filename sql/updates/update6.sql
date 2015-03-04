@@ -11,3 +11,4 @@ INSERT INTO `rio`.`permission`
 UPDATE `rio`.`permission`
 SET `name` = 'Manage events',`description` = 'Users with this permission will be able to perform actions on events'
 WHERE `code` = 'MET'$$
+
