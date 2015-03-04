@@ -1,5 +1,5 @@
 //
-//  GatherDataAccountForDate.java
+//  GatherDataAccountOn.java
 //  storedata
 //
 //  Created by William Shakour (billy1380) on 19 Jan 2015.
