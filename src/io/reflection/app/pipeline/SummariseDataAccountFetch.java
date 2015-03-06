@@ -140,5 +140,10 @@ public class SummariseDataAccountFetch extends Job1<Map<String, Double>, Long> {
 
 		return itemId;
 	}
+	
+	public SummariseDataAccountFetch name(String value) {
+		setJobDisplayName(value);
+		return this;
+	}
 
 }

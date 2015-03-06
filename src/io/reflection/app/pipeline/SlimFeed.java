@@ -74,4 +74,9 @@ public class SlimFeed extends Job1<String, Long> {
 		return immediate(slimmed);
 	}
 
+	public SlimFeed name(String value) {
+		setJobDisplayName(value);
+		return this;
+	}
+
 }

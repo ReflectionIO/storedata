@@ -88,4 +88,9 @@ public final class SubmitPromisses extends Job2<Void, Map<String, Map<String, Do
 			}
 		}
 	}
+
+	public SubmitPromisses name(String value) {
+		setJobDisplayName(value);
+		return this;
+	}
 }

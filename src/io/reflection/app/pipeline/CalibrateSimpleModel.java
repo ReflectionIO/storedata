@@ -109,4 +109,9 @@ public class CalibrateSimpleModel extends Job3<Long, String, Map<String, Double>
 
 		return position;
 	}
+
+	public CalibrateSimpleModel name(String value) {
+		setJobDisplayName(value);
+		return this;
+	}
 }

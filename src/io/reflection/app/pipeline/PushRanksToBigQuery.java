@@ -57,4 +57,9 @@ public class PushRanksToBigQuery extends Job2<Void, String, Long> {
 
 		return null;
 	}
+	
+	public PushRanksToBigQuery name(String value) {
+		setJobDisplayName(value);
+		return this;
+	}
 }

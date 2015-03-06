@@ -13,21 +13,16 @@ import static io.reflection.app.collectors.CollectorIOS.TOP_GROSSING_APPS;
 import static io.reflection.app.collectors.CollectorIOS.TOP_GROSSING_IPAD_APPS;
 import static io.reflection.app.collectors.CollectorIOS.TOP_PAID_APPS;
 import static io.reflection.app.collectors.CollectorIOS.TOP_PAID_IPAD_APPS;
-import static io.reflection.app.pipeline.SummariseDataAccountFetch.DOWNLOADS_LIST_PROPERTY_VALUE;
-import static io.reflection.app.pipeline.SummariseDataAccountFetch.REVENUE_LIST_PROPERTY_VALUE;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.ingestors.IngestorFactory;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
 
-import java.util.Map;
 import java.util.logging.Logger;
 
-import com.google.appengine.tools.pipeline.FutureValue;
+import com.google.appengine.tools.pipeline.ImmediateValue;
 import com.google.appengine.tools.pipeline.Job3;
-import com.google.appengine.tools.pipeline.JobSetting;
-import com.google.appengine.tools.pipeline.PromisedValue;
 import com.google.appengine.tools.pipeline.Value;
 
 public class GatherCategory extends Job3<Void, String, Long, Long> {
@@ -39,21 +34,6 @@ public class GatherCategory extends Job3<Void, String, Long, Long> {
 	private String downloadsOtherSummaryHandle;
 	private String revenueTabletSummaryHandle;
 	private String downloadsTabletSummaryHandle;
-
-	/**
-	 * @param revenueOtherSummaryValue
-	 * @param downloadsOtherSummaryValue
-	 * 
-	 * @param revenueTabletSummaryValue
-	 * @param downloadsTabletSummaryValue
-	 */
-	public GatherCategory(String revenueOtherSummaryHandle, String downloadsOtherSummaryHandle, String revenueTabletSummaryHandle,
-			String downloadsTabletSummaryHandle) {
-		this.revenueOtherSummaryHandle = revenueOtherSummaryHandle;
-		this.downloadsOtherSummaryHandle = downloadsOtherSummaryHandle;
-		this.revenueTabletSummaryHandle = revenueTabletSummaryHandle;
-		this.downloadsTabletSummaryHandle = downloadsTabletSummaryHandle;
-	}
 
 	/*
 	 * (non-Javadoc)
@@ -69,67 +49,44 @@ public class GatherCategory extends Job3<Void, String, Long, Long> {
 
 		Category category = CategoryServiceProvider.provide().getCategory(categoryId);
 
-		JobSetting onGatherQueue = new JobSetting.OnQueue("gather");
-
-		FutureValue<Long> freeFeedId = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_FREE_APPS), immediate(category.internalId),
-				immediate(code), onGatherQueue);
-		FutureValue<Long> paidFeedId = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_PAID_APPS), immediate(category.internalId),
-				immediate(code), onGatherQueue);
-		FutureValue<Long> grossingFeedId = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_GROSSING_APPS), immediate(category.internalId),
-				immediate(code), onGatherQueue);
-
-		JobSetting onDefaultQueue = new JobSetting.OnQueue(JobSetting.OnQueue.DEFAULT);
-
-		FutureValue<Long> rankCount;
 		final boolean ingestCountryFeeds = IngestorFactory.shouldIngestFeedFetch(DataTypeHelper.IOS_STORE_A3, countryCode);
-		if (ingestCountryFeeds) {
-			FutureValue<String> slimmedPaidFeed = futureCall(new SlimFeed(), paidFeedId, onDefaultQueue);
-			FutureValue<String> slimmedFreeFeed = futureCall(new SlimFeed(), freeFeedId, onDefaultQueue);
-			FutureValue<String> slimmedGrossingFeed = futureCall(new SlimFeed(), grossingFeedId, onDefaultQueue);
 
-			futureCall(new PushRanksToBigQuery(), slimmedPaidFeed, paidFeedId, onDefaultQueue);
-			futureCall(new PushRanksToBigQuery(), slimmedFreeFeed, freeFeedId, onDefaultQueue);
-			futureCall(new PushRanksToBigQuery(), slimmedGrossingFeed, grossingFeedId, onDefaultQueue);
+		ImmediateValue<String> countryCodeValue = immediate(countryCode);
+		ImmediateValue<Long> codeValue = immediate(code);
+		ImmediateValue<Long> categoryInternalIdValue = immediate(category.internalId);
 
-			rankCount = futureCall(new IngestRanks(), paidFeedId, slimmedPaidFeed, freeFeedId, slimmedFreeFeed, grossingFeedId, slimmedGrossingFeed);
+		GatherFeedJobHelper.processFeeds(this, "Phone and Other", countryCodeValue, codeValue, categoryInternalIdValue, TOP_PAID_APPS, TOP_FREE_APPS,
+				TOP_GROSSING_APPS, ingestCountryFeeds, downloadsOtherSummaryHandle, revenueOtherSummaryHandle);
 
-			PromisedValue<Map<String, Double>> downloadsOtherSummaryValue = promise(downloadsOtherSummaryHandle);
-			PromisedValue<Map<String, Double>> revenueOtherSummaryValue = promise(revenueOtherSummaryHandle);
-
-			futureCall(new ModelData(), rankCount, paidFeedId, DOWNLOADS_LIST_PROPERTY_VALUE, downloadsOtherSummaryValue, onDefaultQueue);
-			futureCall(new ModelData(), rankCount, freeFeedId, DOWNLOADS_LIST_PROPERTY_VALUE, downloadsOtherSummaryValue, onDefaultQueue);
-			futureCall(new ModelData(), rankCount, grossingFeedId, REVENUE_LIST_PROPERTY_VALUE, revenueOtherSummaryValue, onDefaultQueue);
-		}
-
-		// tablet
-
-		freeFeedId = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_FREE_IPAD_APPS), immediate(category.internalId), immediate(code),
-				onGatherQueue);
-		paidFeedId = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_PAID_IPAD_APPS), immediate(category.internalId), immediate(code),
-				onGatherQueue);
-		grossingFeedId = futureCall(new GatherFeed(), immediate(countryCode), immediate(TOP_GROSSING_IPAD_APPS), immediate(category.internalId),
-				immediate(code), onGatherQueue);
-
-		if (ingestCountryFeeds) {
-			FutureValue<String> slimmedPaidFeed = futureCall(new SlimFeed(), paidFeedId, onDefaultQueue);
-			FutureValue<String> slimmedFreeFeed = futureCall(new SlimFeed(), freeFeedId, onDefaultQueue);
-			FutureValue<String> slimmedGrossingFeed = futureCall(new SlimFeed(), grossingFeedId, onDefaultQueue);
-
-			futureCall(new PushRanksToBigQuery(), slimmedPaidFeed, paidFeedId, onDefaultQueue);
-			futureCall(new PushRanksToBigQuery(), slimmedFreeFeed, freeFeedId, onDefaultQueue);
-			futureCall(new PushRanksToBigQuery(), slimmedGrossingFeed, grossingFeedId, onDefaultQueue);
-
-			rankCount = futureCall(new IngestRanks(), paidFeedId, slimmedPaidFeed, freeFeedId, slimmedFreeFeed, grossingFeedId, slimmedGrossingFeed);
-
-			PromisedValue<Map<String, Double>> downloadsTabletSummaryValue = promise(downloadsTabletSummaryHandle);
-			PromisedValue<Map<String, Double>> revenueTabletSummaryValue = promise(revenueTabletSummaryHandle);
-
-			futureCall(new ModelData(), rankCount, paidFeedId, DOWNLOADS_LIST_PROPERTY_VALUE, downloadsTabletSummaryValue, onDefaultQueue);
-			futureCall(new ModelData(), rankCount, freeFeedId, DOWNLOADS_LIST_PROPERTY_VALUE, downloadsTabletSummaryValue, onDefaultQueue);
-			futureCall(new ModelData(), rankCount, grossingFeedId, REVENUE_LIST_PROPERTY_VALUE, revenueTabletSummaryValue, onDefaultQueue);
-		}
+		GatherFeedJobHelper.processFeeds(this, "Tablet", countryCodeValue, codeValue, categoryInternalIdValue, TOP_FREE_IPAD_APPS, TOP_PAID_IPAD_APPS,
+				TOP_GROSSING_IPAD_APPS, ingestCountryFeeds, downloadsTabletSummaryHandle, revenueTabletSummaryHandle);
 
 		return null;
+	}
+
+	public GatherCategory revenueOtherSummaryHandle(String value) {
+		revenueOtherSummaryHandle = value;
+		return this;
+	}
+
+	public GatherCategory downloadsOtherSummaryHandle(String value) {
+		downloadsOtherSummaryHandle = value;
+		return this;
+	}
+
+	public GatherCategory revenueTabletSummaryHandle(String value) {
+		revenueTabletSummaryHandle = value;
+		return this;
+	}
+
+	public GatherCategory downloadsTabletSummaryHandle(String value) {
+		downloadsTabletSummaryHandle = value;
+		return this;
+	}
+
+	public GatherCategory name(String value) {
+		setJobDisplayName(value);
+		return this;
 	}
 
 }

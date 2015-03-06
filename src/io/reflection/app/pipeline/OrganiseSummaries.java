@@ -53,19 +53,19 @@ public class OrganiseSummaries extends Job1<Map<String, Map<String, Double>>, Li
 			String storeKey = parts[1];
 			String formKey = parts[2];
 			String typeKey = parts[3];
-			
+
 			String itemsKey = StringUtils.join(Arrays.asList(countryKey, storeKey, formKey, typeKey), ".");
 			String itemKey = parts[4];
 
 			Map<String, Double> items = organised.get(itemsKey);
-			
+
 			if (items == null) {
 				items = new HashMap<>();
 				organised.put(itemsKey, items);
 			}
-			
+
 			Double currentValue = items.get(itemKey);
-			
+
 			if (currentValue == null) {
 				items.put(itemKey, value);
 			} else {
@@ -73,5 +73,10 @@ public class OrganiseSummaries extends Job1<Map<String, Map<String, Double>>, Li
 			}
 
 		}
+	}
+
+	public OrganiseSummaries name(String value) {
+		setJobDisplayName(value);
+		return this;
 	}
 }

@@ -26,7 +26,11 @@ public class GatherFeed extends Job4<Long, String, String, Long, Long> {
 		// we only care about the first id since we no longer attempt to store the feed in the feedfetch table (and even if we did we would only need the
 		// first id)
 
-		return immediate(new CollectorIOS().collect(countryCode, listName, categoryInternalId == null ? null : Long.toString(categoryInternalId), code)
-				.get(0));
+		return immediate(new CollectorIOS().collect(countryCode, listName, categoryInternalId == null ? null : Long.toString(categoryInternalId), code).get(0));
+	}
+
+	public GatherFeed name(String value) {
+		setJobDisplayName(value);
+		return this;
 	}
 }

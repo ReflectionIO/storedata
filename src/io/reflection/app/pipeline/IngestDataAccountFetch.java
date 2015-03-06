@@ -83,4 +83,9 @@ public class IngestDataAccountFetch extends Job1<Long, Long> {
 
 		return (fetch == null || !ingested) ? null : immediate(fetch.id);
 	}
+
+	public IngestDataAccountFetch name(String value) {
+		setJobDisplayName(value);
+		return this;
+	}
 }

@@ -16,10 +16,13 @@ import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.pipeline.GatherAllRanks;
 import io.reflection.app.pipeline.GatherAllSales;
+import io.reflection.app.pipeline.PipelineSettings;
+import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.shared.util.PagerHelper;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,12 +32,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
 import com.google.appengine.api.taskqueue.TransientFailureException;
-import com.google.appengine.tools.pipeline.JobSetting;
 import com.google.appengine.tools.pipeline.PipelineService;
 import com.google.appengine.tools.pipeline.PipelineServiceFactory;
 import com.googlecode.objectify.cmd.QueryKeys;
@@ -90,10 +95,30 @@ public class CronServlet extends HttpServlet {
 
 		if (store != null) {
 			PipelineService service = PipelineServiceFactory.newPipelineService();
-			String pipelineId = service.startNewPipeline(new GatherAllRanks(), new JobSetting.OnQueue(JobSetting.OnQueue.DEFAULT));
 
-			if (LOG.isLoggable(Level.INFO)) {
-				LOG.info(String.format("Rank gather started successfully and can be tracked at /_ah/pipeline/status.html?root=%s", pipelineId));
+			Long code = null;
+
+			try {
+				code = FeedFetchServiceProvider.provide().getCode();
+			} catch (DataAccessException dae) {
+				LOG.log(GaeLevel.SEVERE, "A database error occured attempting to to get an id code for gather enqueueing", dae);
+			}
+
+			if (code == null) {
+				LOG.log(GaeLevel.SEVERE, "Got null code - terminating gather");
+
+				// TODO: notify someone that this has happened
+			} else {
+				if (LOG.isLoggable(GaeLevel.DEBUG)) {
+					LOG.log(GaeLevel.DEBUG, String.format("Got code [%d] from feed fetch service", code.longValue()));
+				}
+
+				String pipelineId = service.startNewPipeline(new GatherAllRanks().name("Gather (" + code.toString() + ") all ranks"), code,
+						PipelineSettings.onDefaultQueue);
+
+				if (LOG.isLoggable(Level.INFO)) {
+					LOG.info(String.format("Rank gather started successfully and can be tracked at /_ah/pipeline/status.html?root=%s", pipelineId));
+				}
 			}
 		} else if (deleteSome != null) {
 			if ("Rank".equals(deleteSome)) {
@@ -114,7 +139,11 @@ public class CronServlet extends HttpServlet {
 			if ("accounts".equals(process)) {
 				PipelineService service = PipelineServiceFactory.newPipelineService();
 
-				String pipelineId = service.startNewPipeline(new GatherAllSales(), new JobSetting.OnQueue(JobSetting.OnQueue.DEFAULT));
+				Date date = DateTime.now().minusDays(Integer.valueOf(System.getProperty("pipeline.model.for.date", "1")).intValue()).toDate();
+
+				String pipelineId = service.startNewPipeline(
+						new GatherAllSales().name("Gather " + DateTimeFormat.shortDate().print(date.getTime()) + " all sales"), date,
+						PipelineSettings.onDefaultQueue);
 
 				if (LOG.isLoggable(Level.INFO)) {
 					LOG.info(String.format("Sales gather started successfully and can be tracked at /_ah/pipeline/status.html?root=%s", pipelineId));

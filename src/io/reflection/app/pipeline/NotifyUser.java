@@ -64,5 +64,10 @@ public class NotifyUser extends Job2<Void, Long, Long> {
 
 		return null;
 	}
+	
+	public NotifyUser name(String value) {
+		setJobDisplayName(value);
+		return this;
+	}
 
 }

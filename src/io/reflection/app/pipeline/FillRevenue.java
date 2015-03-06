@@ -54,4 +54,9 @@ public class FillRevenue extends Job3<Void, String, Long, Long> {
 
 		return null;
 	}
+	
+	public FillRevenue name(String value) {
+		setJobDisplayName(value);
+		return this;
+	}
 }

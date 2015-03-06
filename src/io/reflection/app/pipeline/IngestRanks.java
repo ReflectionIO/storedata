@@ -132,4 +132,9 @@ public class IngestRanks extends Job6<Long, Long, String, Long, String, Long, St
 
 		return items;
 	}
+	
+	public IngestRanks name(String value) {
+		setJobDisplayName(value);
+		return this;
+	}
 }

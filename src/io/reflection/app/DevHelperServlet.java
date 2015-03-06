@@ -700,14 +700,15 @@ public class DevHelperServlet extends HttpServlet {
 			} else if ("pipelineranks".equals(action)) {
 				PipelineService service = PipelineServiceFactory.newPipelineService();
 
-				String pipelineId = service.startNewPipeline(new GatherAllRanks());
+				String pipelineId = service.startNewPipeline(new GatherAllRanks(), Long.valueOf(-1));
 
 				markup = (new MarkdownProcessor()).process("[View " + pipelineId + "](/_ah/pipeline/status.html?root=" + pipelineId
 						+ " \"View pipeline status\")");
 			} else if ("pipelinesales".equals(action)) {
 				PipelineService service = PipelineServiceFactory.newPipelineService();
 
-				String pipelineId = service.startNewPipeline(new GatherAllSales());
+				String pipelineId = service.startNewPipeline(new GatherAllSales(),
+						DateTime.now().minusDays(Integer.valueOf(System.getProperty("pipeline.model.for.date", "1")).intValue()).toDate());
 
 				markup = (new MarkdownProcessor()).process("[View " + pipelineId + "](/_ah/pipeline/status.html?root=" + pipelineId
 						+ " \"View pipeline status\")");
