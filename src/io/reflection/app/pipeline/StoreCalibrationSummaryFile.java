@@ -31,8 +31,6 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.joda.time.format.DateTimeFormat;
-
 import com.google.appengine.tools.cloudstorage.GcsFileOptions;
 import com.google.appengine.tools.cloudstorage.GcsFilename;
 import com.google.appengine.tools.cloudstorage.GcsOutputChannel;
@@ -48,7 +46,7 @@ import com.google.appengine.tools.pipeline.Value;
 public class StoreCalibrationSummaryFile extends Job6<String, Long, String, Date, Collection<Rank>, Collection<Rank>, Long> {
 
 	private static final long serialVersionUID = -5621991524846384264L;
-	
+
 	private transient static final String CALIBRATE_SUMMARY_BUCKET_KEY = "calibrate.bucket";
 	private transient static final Logger LOG = Logger.getLogger(StoreCalibrationSummaryFile.class.getName());
 
@@ -128,7 +126,7 @@ public class StoreCalibrationSummaryFile extends Job6<String, Long, String, Date
 		ListTypeType listType = CollectorFactory.getCollectorForStore(feedFetch.store).getListType(feedFetch.type);
 
 		String path = feedFetch.store + "/" + feedFetch.country + "/" + feedFetch.category.id.toString() + "/" + form + "/" + listType + "/" + "summary_"
-				+ feedFetch.code.toString() + "_" + DateTimeFormat.forPattern("yyyy_MM_dd").print(summariesDate.getTime()) + ".json";
+				+ feedFetch.code.toString() + ".json";
 
 		if (LOG.isLoggable(GaeLevel.DEBUG)) {
 			LOG.log(GaeLevel.DEBUG, String.format("File name [%s]", path));
