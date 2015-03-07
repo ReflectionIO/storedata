@@ -310,6 +310,22 @@
 		</xsd:complexContent>
 	</xsd:complexType>
 
+	<xsd:complexType name="CalibrationSummary">
+		<xsd:complexContent>
+			<xsd:extension base="DataType">
+				<xsd:sequence>
+					<xsd:element type="FeedFetch" name="feedFetch" />
+					<xsd:element type="Rank" name="hits" maxOccurs="unbounded" />
+					<xsd:element type="Rank" name="misses" maxOccurs="unbounded" />
+					<xsd:element type="SimpleModelRun" name="simpleModelRun" />
+					<xsd:element type="Item" name="items" maxOccurs="unbounded" />
+					<xsd:element type="Store" name="store" />
+					<xsd:element type="Country" name="country" />
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
 	<xsd:complexType name="SimpleModelRun">
 		<xsd:complexContent>
 			<xsd:extension base="DataType">
@@ -321,11 +337,11 @@
 				<xsd:attribute name="b" type="xsd:double" />
 
 				<xsd:attribute name="aStandardError" type="xsd:double" />
-                <xsd:attribute name="bStandardError" type="xsd:double" />
-                
-                <xsd:attribute name="adjustedRSquared" type="xsd:double" />
-                <xsd:attribute name="regressionSumSquares" type="xsd:double" />
-                
+				<xsd:attribute name="bStandardError" type="xsd:double" />
+
+				<xsd:attribute name="adjustedRSquared" type="xsd:double" />
+				<xsd:attribute name="regressionSumSquares" type="xsd:double" />
+
 				<xsd:attribute name="summaryDate" type="xsd:date" />
 			</xsd:extension>
 		</xsd:complexContent>
