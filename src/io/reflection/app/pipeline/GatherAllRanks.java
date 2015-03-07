@@ -35,8 +35,8 @@ public class GatherAllRanks extends Job1<Integer, Long> {
 
 	private static final Logger LOG = Logger.getLogger(GatherAllRanks.class.getName());
 
-	private String name = null;
-	
+	private transient String name = null;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -67,6 +67,11 @@ public class GatherAllRanks extends Job1<Integer, Long> {
 
 			String revenueTabletPromiseKey, downloadsTabletPromiseKey, revenueOtherPromiseKey, downloadsOtherPromiseKey;
 			String revenueTabletSummaryHandle, downloadsTabletSummaryHandle, revenueOtherSummaryHandle, downloadsOtherSummaryHandle;
+
+			// add the date of the expected sales summaries
+			String summariesDateKey = StringUtils.join(Arrays.asList(code.toString(), DataTypeHelper.IOS_STORE_A3, "date"), ".");
+			String summariesDateHandle = newPromise().getHandle();
+			persist.put(summariesDateKey, summariesDateHandle);
 
 			Collection<String> countriesToIngest = IngestorFactory.getIngestorCountries(DataTypeHelper.IOS_STORE_A3);
 			for (String countryCode : splitCountries) {
@@ -106,8 +111,8 @@ public class GatherAllRanks extends Job1<Integer, Long> {
 				futureCall(
 						new GatherCountry().revenueOtherSummaryHandle(revenueOtherSummaryHandle).downloadsOtherSummaryHandle(downloadsOtherSummaryHandle)
 								.revenueTabletSummaryHandle(revenueTabletSummaryHandle).downloadsTabletSummaryHandle(downloadsTabletSummaryHandle)
-								.name("Gather " + countryCode.toUpperCase() + " ranks"), immediate(countryCode), immediate(code),
-						PipelineSettings.onDefaultQueue);
+								.summariesDateHandle(summariesDateHandle).name("Gather " + countryCode.toUpperCase() + " ranks"), immediate(countryCode),
+						immediate(code), PipelineSettings.onDefaultQueue);
 
 				count++;
 			}
@@ -124,9 +129,11 @@ public class GatherAllRanks extends Job1<Integer, Long> {
 	public GatherAllRanks name(String value) {
 		name = value;
 		return this;
-	}	
-	
-	/* (non-Javadoc)
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.google.appengine.tools.pipeline.Job#getJobDisplayName()
 	 */
 	@Override

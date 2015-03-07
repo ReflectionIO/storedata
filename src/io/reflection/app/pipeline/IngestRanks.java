@@ -34,7 +34,7 @@ public class IngestRanks extends Job6<Long, Long, String, Long, String, Long, St
 
 	private static final long serialVersionUID = 5579515120223362343L;
 	
-	private String name = null;
+	private transient String name = null;
 
 	/*
 	 * (non-Javadoc)

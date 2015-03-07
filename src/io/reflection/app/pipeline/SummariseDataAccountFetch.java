@@ -48,7 +48,7 @@ public class SummariseDataAccountFetch extends Job1<Map<String, Double>, Long> {
 	public static final transient ImmediateValue<String> DOWNLOADS_LIST_PROPERTY_VALUE = immediate(DOWNLOADS_LIST_PROPERTY);
 	public static final transient ImmediateValue<String> REVENUE_LIST_PROPERTY_VALUE = immediate(REVENUE_LIST_PROPERTY);
 	
-	private String name = null;
+	private transient String name = null;
 
 	/*
 	 * (non-Javadoc)

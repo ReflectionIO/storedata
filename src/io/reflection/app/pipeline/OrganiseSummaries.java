@@ -25,7 +25,7 @@ public class OrganiseSummaries extends Job1<Map<String, Map<String, Double>>, Li
 
 	private static final long serialVersionUID = -5357636373846477424L;
 	
-	private String name = null;
+	private transient String name = null;
 
 	/*
 	 * (non-Javadoc)

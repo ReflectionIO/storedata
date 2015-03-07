@@ -18,6 +18,7 @@ import io.reflection.app.service.simplemodelrun.SimpleModelRunServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
 import io.reflection.app.shared.util.PagerHelper;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,26 +26,26 @@ import java.util.Map;
 import org.apache.commons.math3.stat.regression.RegressionResults;
 import org.apache.commons.math3.stat.regression.SimpleRegression;
 
-import com.google.appengine.tools.pipeline.Job3;
+import com.google.appengine.tools.pipeline.Job4;
 import com.google.appengine.tools.pipeline.Value;
 
 /**
  * @author William Shakour (billy1380)
  *
  */
-public class CalibrateSimpleModel extends Job3<Long, String, Map<String, Double>, Long> {
+public class CalibrateSimpleModel extends Job4<Long, Date, String, Map<String, Double>, Long> {
 
 	private static final long serialVersionUID = -8764419384476424579L;
 
-	private String name = null;
-	
+	private transient String name = null;
+
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.google.appengine.tools.pipeline.Job3#run(java.lang.Object, java.lang.Object, java.lang.Object)
+	 * @see com.google.appengine.tools.pipeline.Job4#run(java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object)
 	 */
 	@Override
-	public Value<Long> run(String type, Map<String, Double> summary, Long feedFetchId) throws Exception {
+	public Value<Long> run(Date summaryDate, String type, Map<String, Double> summary, Long feedFetchId) throws Exception {
 
 		FeedFetch feedFetch = FeedFetchServiceProvider.provide().getFeedFetch(feedFetchId);
 
@@ -76,7 +77,8 @@ public class CalibrateSimpleModel extends Job3<Long, String, Map<String, Double>
 		SimpleModelRun run = null;
 
 		if (regression.getN() > 1) {
-			run = new SimpleModelRun().a(Double.valueOf(-regression.getSlope())).b(Double.valueOf(Math.exp(regression.getIntercept()))).feedFetch(feedFetch);
+			run = new SimpleModelRun().a(Double.valueOf(-regression.getSlope())).b(Double.valueOf(Math.exp(regression.getIntercept()))).feedFetch(feedFetch)
+					.summaryDate(summaryDate);
 
 			if (regression.getN() > 2) {
 				RegressionResults results = regression.regress();
@@ -87,6 +89,8 @@ public class CalibrateSimpleModel extends Job3<Long, String, Map<String, Double>
 
 			run = SimpleModelRunServiceProvider.provide().addSimpleModelRun(run);
 		}
+
+		// futureCall(new StoreCalibrationSummaryFile().name("Store calibration summary in cloud"), immediate(), PipelineSettings.onDefaultQueue);
 
 		return run == null ? null : immediate(run.id);
 	}
@@ -111,13 +115,15 @@ public class CalibrateSimpleModel extends Job3<Long, String, Map<String, Double>
 
 		return position;
 	}
-	
+
 	public CalibrateSimpleModel name(String value) {
 		name = value;
 		return this;
-	}	
-	
-	/* (non-Javadoc)
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.google.appengine.tools.pipeline.Job#getJobDisplayName()
 	 */
 	@Override

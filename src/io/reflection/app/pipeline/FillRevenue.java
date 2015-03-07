@@ -30,7 +30,7 @@ public class FillRevenue extends Job3<Void, String, Long, Long> {
 
 	private static final Logger LOG = Logger.getLogger(FillRevenue.class.getName());
 
-	private String name = null;
+	private transient String name = null;
 	
 	/*
 	 * (non-Javadoc)

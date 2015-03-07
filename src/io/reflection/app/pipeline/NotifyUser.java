@@ -33,7 +33,7 @@ public class NotifyUser extends Job2<Void, Long, Long> {
 
 	private static final long serialVersionUID = 7645918492687402533L;
 
-	private String name = null;
+	private transient String name = null;
 	
 	/*
 	 * (non-Javadoc)

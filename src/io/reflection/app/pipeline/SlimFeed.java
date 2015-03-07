@@ -31,7 +31,7 @@ public class SlimFeed extends Job1<String, Long> {
 
 	private static final Logger LOG = Logger.getLogger(SlimFeed.class.getName());
 	
-	private String name = null;
+	private transient String name = null;
 
 	/*
 	 * (non-Javadoc)

@@ -16,7 +16,7 @@ public class GatherFeed extends Job4<Long, String, String, Long, Long> {
 
 	private static final long serialVersionUID = 959780630540839671L;
 
-	private String name = null;
+	private transient String name = null;
 	
 	/*
 	 * (non-Javadoc)

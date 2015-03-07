@@ -7,11 +7,13 @@
 //
 package io.reflection.app.pipeline;
 
+import java.util.Date;
 import java.util.Map;
 
 import com.google.appengine.tools.pipeline.FutureValue;
 import com.google.appengine.tools.pipeline.ImmediateValue;
 import com.google.appengine.tools.pipeline.Job4;
+import com.google.appengine.tools.pipeline.PromisedValue;
 import com.google.appengine.tools.pipeline.Value;
 
 /**
@@ -21,13 +23,15 @@ import com.google.appengine.tools.pipeline.Value;
 public class ModelData extends Job4<Void, Long, Long, String, Map<String, Double>> {
 
 	private static final long serialVersionUID = -3705962909963696521L;
-	
-	private String name = null;
+
+	private transient String name = null;
+
+	private String summariesDateHandle;
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.google.appengine.tools.pipeline.Job1#run(java.lang.Object)
+	 * @see com.google.appengine.tools.pipeline.Job4#run(java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object)
 	 */
 	@Override
 	public Value<Void> run(Long count, Long feedFetchId, String summaryType, Map<String, Double> summary) throws Exception {
@@ -35,9 +39,10 @@ public class ModelData extends Job4<Void, Long, Long, String, Map<String, Double
 
 		// FIXME: we could probably just figure out the type from the feed fetch
 		ImmediateValue<String> summaryTypeValue = immediate(summaryType);
+		PromisedValue<Date> summaryDateValue = promise(summariesDateHandle);
 
-		FutureValue<Long> simpleModelRunIdValue = futureCall(new CalibrateSimpleModel().name("Calibrate simple model"), summaryTypeValue, immediate(summary),
-				feedFetchIdValue, PipelineSettings.onModelQueue, PipelineSettings.doNotRetry, PipelineSettings.onModelBackend);
+		FutureValue<Long> simpleModelRunIdValue = futureCall(new CalibrateSimpleModel().name("Calibrate simple model"), summaryDateValue, summaryTypeValue,
+				immediate(summary), feedFetchIdValue, PipelineSettings.onModelQueue, PipelineSettings.doNotRetry, PipelineSettings.onModelBackend);
 
 		futureCall(new FillRevenue().name("Save " + summaryType.toLowerCase()), summaryTypeValue, feedFetchIdValue, simpleModelRunIdValue,
 				PipelineSettings.onPredictQueue);
@@ -45,12 +50,19 @@ public class ModelData extends Job4<Void, Long, Long, String, Map<String, Double
 		return null;
 	}
 
+	public ModelData summariesDateHandle(String value) {
+		summariesDateHandle = value;
+		return this;
+	}
+
 	public ModelData name(String value) {
 		name = value;
 		return this;
-	}	
-	
-	/* (non-Javadoc)
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.google.appengine.tools.pipeline.Job#getJobDisplayName()
 	 */
 	@Override

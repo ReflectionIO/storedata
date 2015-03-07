@@ -30,17 +30,20 @@ public class GatherCategory extends Job3<Void, String, Long, Long> {
 
 	private static final Logger LOG = Logger.getLogger(GatherCategory.class.getName());
 
-	private String name = null;
-	
+	private transient String name = null;
+
 	private String revenueOtherSummaryHandle;
 	private String downloadsOtherSummaryHandle;
 	private String revenueTabletSummaryHandle;
 	private String downloadsTabletSummaryHandle;
+	private String summariesDateHandle;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.google.appengine.tools.pipeline.Job2#run(java.lang.Object, java.lang.Object)
+	/**
+	 * @param countryCode
+	 * @param categoryId
+	 * @param code
+	 * @return
+	 * @throws Exception
 	 */
 	@Override
 	public Value<Void> run(String countryCode, Long categoryId, Long code) throws Exception {
@@ -58,10 +61,10 @@ public class GatherCategory extends Job3<Void, String, Long, Long> {
 		ImmediateValue<Long> categoryInternalIdValue = immediate(category.internalId);
 
 		GatherFeedJobHelper.processFeeds(this, "Phone and Other", countryCodeValue, codeValue, categoryInternalIdValue, TOP_PAID_APPS, TOP_FREE_APPS,
-				TOP_GROSSING_APPS, ingestCountryFeeds, downloadsOtherSummaryHandle, revenueOtherSummaryHandle);
+				TOP_GROSSING_APPS, ingestCountryFeeds, downloadsOtherSummaryHandle, revenueOtherSummaryHandle, summariesDateHandle);
 
 		GatherFeedJobHelper.processFeeds(this, "Tablet", countryCodeValue, codeValue, categoryInternalIdValue, TOP_FREE_IPAD_APPS, TOP_PAID_IPAD_APPS,
-				TOP_GROSSING_IPAD_APPS, ingestCountryFeeds, downloadsTabletSummaryHandle, revenueTabletSummaryHandle);
+				TOP_GROSSING_IPAD_APPS, ingestCountryFeeds, downloadsTabletSummaryHandle, revenueTabletSummaryHandle, summariesDateHandle);
 
 		return null;
 	}
@@ -86,12 +89,19 @@ public class GatherCategory extends Job3<Void, String, Long, Long> {
 		return this;
 	}
 
+	public GatherCategory summariesDateHandle(String value) {
+		summariesDateHandle = value;
+		return this;
+	}
+
 	public GatherCategory name(String value) {
 		name = value;
 		return this;
-	}	
-	
-	/* (non-Javadoc)
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.google.appengine.tools.pipeline.Job#getJobDisplayName()
 	 */
 	@Override

@@ -29,7 +29,7 @@ public class PushRanksToBigQuery extends Job2<Void, String, Long> {
 
 	private static final long serialVersionUID = 158264446923346332L;
 	
-	private String name = null;
+	private transient String name = null;
 
 	/*
 	 * (non-Javadoc)

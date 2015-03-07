@@ -29,7 +29,7 @@ public class IngestDataAccountFetch extends Job1<Long, Long> {
 
 	private static final Logger LOG = Logger.getLogger(IngestDataAccountFetch.class.getName());
 
-	private String name = null;
+	private transient String name = null;
 	
 	/*
 	 * (non-Javadoc)

@@ -38,7 +38,7 @@ public class GatherDataAccountOn extends Job2<Long, Long, Date> {
 
 	private static final Logger LOG = Logger.getLogger(GatherDataAccountOn.class.getName());
 
-	private String name = null;
+	private transient String name = null;
 	
 	/*
 	 * (non-Javadoc)

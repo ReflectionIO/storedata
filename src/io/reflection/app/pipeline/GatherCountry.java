@@ -35,31 +35,26 @@ public class GatherCountry extends Job2<Void, String, Long> {
 
 	private static final Logger LOG = Logger.getLogger(GatherCountry.class.getName());
 
-	private String name = null;
-	
+	private transient String name = null;
+
 	private String revenueOtherSummaryHandle;
 	private String downloadsOtherSummaryHandle;
 	private String revenueTabletSummaryHandle;
 	private String downloadsTabletSummaryHandle;
+	private String summariesDateHandle;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.google.appengine.tools.pipeline.Job1#run(java.lang.Object)
-	 */
 	@Override
 	public Value<Void> run(String countryCode, Long code) throws Exception {
-
 		ImmediateValue<String> countryCodeValue = immediate(countryCode);
 		ImmediateValue<Long> codeValue = immediate(code);
 
 		final boolean ingestCountryFeeds = IngestorFactory.shouldIngestFeedFetch(DataTypeHelper.IOS_STORE_A3, countryCode);
 
 		GatherFeedJobHelper.processFeeds(this, "Phone and Other", countryCodeValue, codeValue, null, TOP_PAID_APPS, TOP_FREE_APPS, TOP_GROSSING_APPS,
-				ingestCountryFeeds, downloadsOtherSummaryHandle, revenueOtherSummaryHandle);
+				ingestCountryFeeds, downloadsOtherSummaryHandle, revenueOtherSummaryHandle, summariesDateHandle);
 
 		GatherFeedJobHelper.processFeeds(this, "Tablet", countryCodeValue, codeValue, null, TOP_FREE_IPAD_APPS, TOP_PAID_IPAD_APPS, TOP_GROSSING_IPAD_APPS,
-				ingestCountryFeeds, downloadsTabletSummaryHandle, revenueTabletSummaryHandle);
+				ingestCountryFeeds, downloadsTabletSummaryHandle, revenueTabletSummaryHandle, summariesDateHandle);
 
 		// when we have gathered all the counties feeds we do the same but for each category
 		try {
@@ -92,8 +87,9 @@ public class GatherCountry extends Job2<Void, String, Long> {
 							futureCall(
 									new GatherCategory().revenueOtherSummaryHandle(revenueOtherSummaryHandle)
 											.downloadsOtherSummaryHandle(downloadsOtherSummaryHandle).revenueTabletSummaryHandle(revenueTabletSummaryHandle)
-											.downloadsTabletSummaryHandle(downloadsTabletSummaryHandle).name("Gather " + category.name),
-									immediate(countryCode), immediate(category.id), immediate(code), PipelineSettings.onDefaultQueue);
+											.downloadsTabletSummaryHandle(downloadsTabletSummaryHandle).summariesDateHandle(summariesDateHandle)
+											.name("Gather " + category.name), countryCodeValue, immediate(category.id), codeValue,
+									PipelineSettings.onDefaultQueue);
 						}
 					}
 				}
@@ -126,12 +122,19 @@ public class GatherCountry extends Job2<Void, String, Long> {
 		return this;
 	}
 
+	public GatherCountry summariesDateHandle(String value) {
+		summariesDateHandle = value;
+		return this;
+	}
+
 	public GatherCountry name(String value) {
 		name = value;
 		return this;
-	}	
-	
-	/* (non-Javadoc)
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.google.appengine.tools.pipeline.Job#getJobDisplayName()
 	 */
 	@Override

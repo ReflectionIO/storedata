@@ -37,7 +37,7 @@ public class GatherAllSales extends Job1<Integer, Date> {
 
 	private static final Logger LOG = Logger.getLogger(GatherAllSales.class.getName());
 	
-	private String name = null;
+	private transient String name = null;
 
 	/*
 	 * (non-Javadoc)

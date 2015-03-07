@@ -25,11 +25,12 @@ public class GatherFeedJobHelper {
 
 	public static void processFeeds(Job<?> job, String form, ImmediateValue<String> countryCodeValue, ImmediateValue<Long> codeValue,
 			ImmediateValue<Long> categoryInternalIdValue, String paidListName, String freeListName, String grossingListName, boolean ingestCountryFeeds,
-			String downloadsHandle, String revenueHandle) {
-		FutureValue<Long> paidFeedId = job.futureCall(new GatherFeed().name("Download " + form.toLowerCase() + " paid feed"), countryCodeValue, Job.immediate(paidListName),
-				categoryInternalIdValue, codeValue, PipelineSettings.onGatherQueue);
-		FutureValue<Long> freeFeedId = job.futureCall(new GatherFeed().name("Download " + form.toLowerCase() + " free feed"), countryCodeValue, Job.immediate(freeListName),
-				categoryInternalIdValue, codeValue, PipelineSettings.onGatherQueue);
+			String downloadsHandle, String revenueHandle, String summariesDateHandle) {
+
+		FutureValue<Long> paidFeedId = job.futureCall(new GatherFeed().name("Download " + form.toLowerCase() + " paid feed"), countryCodeValue,
+				Job.immediate(paidListName), categoryInternalIdValue, codeValue, PipelineSettings.onGatherQueue);
+		FutureValue<Long> freeFeedId = job.futureCall(new GatherFeed().name("Download " + form.toLowerCase() + " free feed"), countryCodeValue,
+				Job.immediate(freeListName), categoryInternalIdValue, codeValue, PipelineSettings.onGatherQueue);
 		FutureValue<Long> grossingFeedId = job.futureCall(new GatherFeed().name("Download " + form.toLowerCase() + " grossing feed"), countryCodeValue,
 				Job.immediate(grossingListName), categoryInternalIdValue, codeValue, PipelineSettings.onGatherQueue);
 
@@ -49,18 +50,18 @@ public class GatherFeedJobHelper {
 			job.futureCall(new PushRanksToBigQuery().name("Push " + form.toLowerCase() + " grossing list to BigQuery"), slimmedGrossingFeed, grossingFeedId,
 					PipelineSettings.onDefaultQueue);
 
-			rankCount = job.futureCall(new IngestRanks().name("Adding " + form.toLowerCase() + " merged lists to CloudSQL"), paidFeedId, slimmedPaidFeed, freeFeedId,
-					slimmedFreeFeed, grossingFeedId, slimmedGrossingFeed);
+			rankCount = job.futureCall(new IngestRanks().name("Adding " + form.toLowerCase() + " merged lists to CloudSQL"), paidFeedId, slimmedPaidFeed,
+					freeFeedId, slimmedFreeFeed, grossingFeedId, slimmedGrossingFeed);
 
 			PromisedValue<Map<String, Double>> downloadsSummaryValue = job.promise(downloadsHandle);
 			PromisedValue<Map<String, Double>> revenueSummaryValue = job.promise(revenueHandle);
 
-			job.futureCall(new ModelData().name("Model " + form.toLowerCase() + " paid list"), rankCount, paidFeedId, DOWNLOADS_LIST_PROPERTY_VALUE, downloadsSummaryValue,
-					PipelineSettings.onDefaultQueue);
-			job.futureCall(new ModelData().name("Model " + form.toLowerCase() + " free list"), rankCount, freeFeedId, DOWNLOADS_LIST_PROPERTY_VALUE, downloadsSummaryValue,
-					PipelineSettings.onDefaultQueue);
-			job.futureCall(new ModelData().name("Model " + form.toLowerCase() + " grossing feed"), rankCount, grossingFeedId, REVENUE_LIST_PROPERTY_VALUE,
-					revenueSummaryValue, PipelineSettings.onDefaultQueue);
+			job.futureCall(new ModelData().summariesDateHandle(summariesDateHandle).name("Model " + form.toLowerCase() + " paid list"), rankCount, paidFeedId,
+					DOWNLOADS_LIST_PROPERTY_VALUE, downloadsSummaryValue, PipelineSettings.onDefaultQueue);
+			job.futureCall(new ModelData().summariesDateHandle(summariesDateHandle).name("Model " + form.toLowerCase() + " free list"), rankCount, freeFeedId,
+					DOWNLOADS_LIST_PROPERTY_VALUE, downloadsSummaryValue, PipelineSettings.onDefaultQueue);
+			job.futureCall(new ModelData().summariesDateHandle(summariesDateHandle).name("Model " + form.toLowerCase() + " grossing feed"), rankCount,
+					grossingFeedId, REVENUE_LIST_PROPERTY_VALUE, revenueSummaryValue, PipelineSettings.onDefaultQueue);
 		}
 	}
 }
