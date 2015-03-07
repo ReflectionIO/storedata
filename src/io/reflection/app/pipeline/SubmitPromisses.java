@@ -37,7 +37,7 @@ public final class SubmitPromisses extends Job2<Void, Map<String, Map<String, Do
 
 	private static final Logger LOG = Logger.getLogger(SubmitPromisses.class.getName());
 
-	private String name;
+	private String name = null;
 	
 	/*
 	 * (non-Javadoc)
@@ -101,6 +101,6 @@ public final class SubmitPromisses extends Job2<Void, Map<String, Map<String, Do
 	 */
 	@Override
 	public String getJobDisplayName() {
-		return name;
+		return (name == null ? super.getJobDisplayName() : name);
 	}
 }

@@ -30,7 +30,7 @@ public class FillRevenue extends Job3<Void, String, Long, Long> {
 
 	private static final Logger LOG = Logger.getLogger(FillRevenue.class.getName());
 
-	private String name;
+	private String name = null;
 	
 	/*
 	 * (non-Javadoc)
@@ -67,6 +67,6 @@ public class FillRevenue extends Job3<Void, String, Long, Long> {
 	 */
 	@Override
 	public String getJobDisplayName() {
-		return name;
+		return (name == null ? super.getJobDisplayName() : name);
 	}
 }

@@ -36,7 +36,7 @@ public class CalibrateSimpleModel extends Job3<Long, String, Map<String, Double>
 
 	private static final long serialVersionUID = -8764419384476424579L;
 
-	private String name;
+	private String name = null;
 	
 	/*
 	 * (non-Javadoc)
@@ -122,6 +122,6 @@ public class CalibrateSimpleModel extends Job3<Long, String, Map<String, Double>
 	 */
 	@Override
 	public String getJobDisplayName() {
-		return name;
+		return (name == null ? super.getJobDisplayName() : name);
 	}
 }

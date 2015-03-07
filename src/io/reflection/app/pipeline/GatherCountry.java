@@ -35,7 +35,7 @@ public class GatherCountry extends Job2<Void, String, Long> {
 
 	private static final Logger LOG = Logger.getLogger(GatherCountry.class.getName());
 
-	private String name;
+	private String name = null;
 	
 	private String revenueOtherSummaryHandle;
 	private String downloadsOtherSummaryHandle;
@@ -136,6 +136,6 @@ public class GatherCountry extends Job2<Void, String, Long> {
 	 */
 	@Override
 	public String getJobDisplayName() {
-		return name;
+		return (name == null ? super.getJobDisplayName() : name);
 	}
 }

@@ -22,7 +22,7 @@ public class ModelData extends Job4<Void, Long, Long, String, Map<String, Double
 
 	private static final long serialVersionUID = -3705962909963696521L;
 	
-	private String name;
+	private String name = null;
 
 	/*
 	 * (non-Javadoc)
@@ -55,6 +55,6 @@ public class ModelData extends Job4<Void, Long, Long, String, Map<String, Double
 	 */
 	@Override
 	public String getJobDisplayName() {
-		return name;
+		return (name == null ? super.getJobDisplayName() : name);
 	}
 }

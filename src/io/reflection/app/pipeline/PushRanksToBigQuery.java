@@ -29,7 +29,7 @@ public class PushRanksToBigQuery extends Job2<Void, String, Long> {
 
 	private static final long serialVersionUID = 158264446923346332L;
 	
-	private String name;
+	private String name = null;
 
 	/*
 	 * (non-Javadoc)
@@ -70,6 +70,6 @@ public class PushRanksToBigQuery extends Job2<Void, String, Long> {
 	 */
 	@Override
 	public String getJobDisplayName() {
-		return name;
+		return (name == null ? super.getJobDisplayName() : name);
 	}
 }

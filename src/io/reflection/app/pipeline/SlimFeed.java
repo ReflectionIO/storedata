@@ -31,7 +31,7 @@ public class SlimFeed extends Job1<String, Long> {
 
 	private static final Logger LOG = Logger.getLogger(SlimFeed.class.getName());
 	
-	private String name;
+	private String name = null;
 
 	/*
 	 * (non-Javadoc)
@@ -86,7 +86,7 @@ public class SlimFeed extends Job1<String, Long> {
 	 */
 	@Override
 	public String getJobDisplayName() {
-		return name;
+		return (name == null ? super.getJobDisplayName() : name);
 	}
 
 }

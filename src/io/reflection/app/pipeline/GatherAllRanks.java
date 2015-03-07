@@ -35,7 +35,7 @@ public class GatherAllRanks extends Job1<Integer, Long> {
 
 	private static final Logger LOG = Logger.getLogger(GatherAllRanks.class.getName());
 
-	private String name;
+	private String name = null;
 	
 	/*
 	 * (non-Javadoc)
@@ -131,7 +131,7 @@ public class GatherAllRanks extends Job1<Integer, Long> {
 	 */
 	@Override
 	public String getJobDisplayName() {
-		return name;
+		return (name == null ? super.getJobDisplayName() : name);
 	}
 
 }

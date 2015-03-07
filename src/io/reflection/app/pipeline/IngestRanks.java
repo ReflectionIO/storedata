@@ -34,7 +34,7 @@ public class IngestRanks extends Job6<Long, Long, String, Long, String, Long, St
 
 	private static final long serialVersionUID = 5579515120223362343L;
 	
-	private String name;
+	private String name = null;
 
 	/*
 	 * (non-Javadoc)
@@ -145,6 +145,6 @@ public class IngestRanks extends Job6<Long, Long, String, Long, String, Long, St
 	 */
 	@Override
 	public String getJobDisplayName() {
-		return name;
+		return (name == null ? super.getJobDisplayName() : name);
 	}
 }

@@ -25,7 +25,7 @@ public class OrganiseSummaries extends Job1<Map<String, Map<String, Double>>, Li
 
 	private static final long serialVersionUID = -5357636373846477424L;
 	
-	private String name;
+	private String name = null;
 
 	/*
 	 * (non-Javadoc)
@@ -87,6 +87,6 @@ public class OrganiseSummaries extends Job1<Map<String, Map<String, Double>>, Li
 	 */
 	@Override
 	public String getJobDisplayName() {
-		return name;
+		return (name == null ? super.getJobDisplayName() : name);
 	}
 }

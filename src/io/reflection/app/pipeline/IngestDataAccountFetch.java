@@ -29,7 +29,7 @@ public class IngestDataAccountFetch extends Job1<Long, Long> {
 
 	private static final Logger LOG = Logger.getLogger(IngestDataAccountFetch.class.getName());
 
-	private String name;
+	private String name = null;
 	
 	/*
 	 * (non-Javadoc)
@@ -96,6 +96,6 @@ public class IngestDataAccountFetch extends Job1<Long, Long> {
 	 */
 	@Override
 	public String getJobDisplayName() {
-		return name;
+		return (name == null ? super.getJobDisplayName() : name);
 	}
 }

@@ -37,7 +37,7 @@ public class GatherAllSales extends Job1<Integer, Date> {
 
 	private static final Logger LOG = Logger.getLogger(GatherAllSales.class.getName());
 	
-	private String name;
+	private String name = null;
 
 	/*
 	 * (non-Javadoc)
@@ -111,6 +111,6 @@ public class GatherAllSales extends Job1<Integer, Date> {
 	 */
 	@Override
 	public String getJobDisplayName() {
-		return name;
+		return (name == null ? super.getJobDisplayName() : name);
 	}
 }

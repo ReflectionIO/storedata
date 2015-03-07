@@ -16,7 +16,7 @@ public class GatherFeed extends Job4<Long, String, String, Long, Long> {
 
 	private static final long serialVersionUID = 959780630540839671L;
 
-	private String name;
+	private String name = null;
 	
 	/*
 	 * (non-Javadoc)
@@ -41,6 +41,6 @@ public class GatherFeed extends Job4<Long, String, String, Long, Long> {
 	 */
 	@Override
 	public String getJobDisplayName() {
-		return name;
+		return (name == null ? super.getJobDisplayName() : name);
 	}
 }

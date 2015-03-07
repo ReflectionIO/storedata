@@ -33,7 +33,7 @@ public class NotifyUser extends Job2<Void, Long, Long> {
 
 	private static final long serialVersionUID = 7645918492687402533L;
 
-	private String name;
+	private String name = null;
 	
 	/*
 	 * (non-Javadoc)
@@ -77,7 +77,7 @@ public class NotifyUser extends Job2<Void, Long, Long> {
 	 */
 	@Override
 	public String getJobDisplayName() {
-		return name;
+		return (name == null ? super.getJobDisplayName() : name);
 	}
 
 }

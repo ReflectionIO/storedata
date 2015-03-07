@@ -38,7 +38,7 @@ public class GatherDataAccountOn extends Job2<Long, Long, Date> {
 
 	private static final Logger LOG = Logger.getLogger(GatherDataAccountOn.class.getName());
 
-	private String name;
+	private String name = null;
 	
 	/*
 	 * (non-Javadoc)
@@ -168,7 +168,7 @@ public class GatherDataAccountOn extends Job2<Long, Long, Date> {
 	 */
 	@Override
 	public String getJobDisplayName() {
-		return name;
+		return (name == null ? super.getJobDisplayName() : name);
 	}
 
 }

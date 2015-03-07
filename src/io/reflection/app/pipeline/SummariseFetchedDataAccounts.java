@@ -24,7 +24,7 @@ public class SummariseFetchedDataAccounts extends Job1<Map<String, Map<String, D
 
 	private static final long serialVersionUID = 7344309686985145135L;
 	
-	private String name;
+	private String name = null;
 
 	/*
 	 * (non-Javadoc)
@@ -57,7 +57,7 @@ public class SummariseFetchedDataAccounts extends Job1<Map<String, Map<String, D
 	 */
 	@Override
 	public String getJobDisplayName() {
-		return name;
+		return (name == null ? super.getJobDisplayName() : name);
 	}
 
 }

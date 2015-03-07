@@ -30,7 +30,7 @@ public class GatherCategory extends Job3<Void, String, Long, Long> {
 
 	private static final Logger LOG = Logger.getLogger(GatherCategory.class.getName());
 
-	private String name;
+	private String name = null;
 	
 	private String revenueOtherSummaryHandle;
 	private String downloadsOtherSummaryHandle;
@@ -96,7 +96,7 @@ public class GatherCategory extends Job3<Void, String, Long, Long> {
 	 */
 	@Override
 	public String getJobDisplayName() {
-		return name;
+		return (name == null ? super.getJobDisplayName() : name);
 	}
 
 }
