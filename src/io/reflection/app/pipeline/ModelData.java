@@ -41,8 +41,8 @@ public class ModelData extends Job4<Void, Long, Long, String, Map<String, Double
 		ImmediateValue<String> summaryTypeValue = immediate(summaryType);
 		PromisedValue<Date> summaryDateValue = promise(summariesDateHandle);
 
-		FutureValue<Long> simpleModelRunIdValue = futureCall(new CalibrateSimpleModel().name("Calibrate simple model"), summaryDateValue, summaryTypeValue,
-				immediate(summary), feedFetchIdValue, PipelineSettings.onModelQueue, PipelineSettings.doNotRetry, PipelineSettings.onModelBackend);
+		FutureValue<Long> simpleModelRunIdValue = futureCall(new CalibrateSimpleModel().name("Calibrate simple model"), feedFetchIdValue, summaryTypeValue,
+				immediate(summary), summaryDateValue, PipelineSettings.onModelQueue, PipelineSettings.doNotRetry, PipelineSettings.onModelBackend);
 
 		futureCall(new FillRevenue().name("Save " + summaryType.toLowerCase()), summaryTypeValue, feedFetchIdValue, simpleModelRunIdValue,
 				PipelineSettings.onPredictQueue);

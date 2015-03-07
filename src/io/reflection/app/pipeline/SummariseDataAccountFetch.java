@@ -17,6 +17,7 @@ import static io.reflection.app.apple.SaleTransactionTypes.UPDATE_IPHONE_AND_IPO
 import static io.reflection.app.apple.SaleTransactionTypes.UPDATE_UNIVERSAL_IOS;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.datatypes.shared.FormType;
+import io.reflection.app.datatypes.shared.ListPropertyType;
 import io.reflection.app.datatypes.shared.Sale;
 import io.reflection.app.service.sale.SaleServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
@@ -42,12 +43,9 @@ public class SummariseDataAccountFetch extends Job1<Map<String, Double>, Long> {
 
 	private static final long serialVersionUID = 7363371689981793909L;
 
-	public static final String DOWNLOADS_LIST_PROPERTY = "downloads";
-	public static final String REVENUE_LIST_PROPERTY = "revenue";
+	public transient static final ImmediateValue<String> DOWNLOADS_LIST_PROPERTY_VALUE = immediate(ListPropertyType.ListPropertyTypeDownloads.toString());
+	public transient static final ImmediateValue<String> REVENUE_LIST_PROPERTY_VALUE = immediate(ListPropertyType.ListPropertyTypeRevenue.toString());
 
-	public static final transient ImmediateValue<String> DOWNLOADS_LIST_PROPERTY_VALUE = immediate(DOWNLOADS_LIST_PROPERTY);
-	public static final transient ImmediateValue<String> REVENUE_LIST_PROPERTY_VALUE = immediate(REVENUE_LIST_PROPERTY);
-	
 	private transient String name = null;
 
 	/*
@@ -142,13 +140,15 @@ public class SummariseDataAccountFetch extends Job1<Map<String, Double>, Long> {
 
 		return itemId;
 	}
-	
+
 	public SummariseDataAccountFetch name(String value) {
 		name = value;
 		return this;
-	}	
-	
-	/* (non-Javadoc)
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.google.appengine.tools.pipeline.Job#getJobDisplayName()
 	 */
 	@Override

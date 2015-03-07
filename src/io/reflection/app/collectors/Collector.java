@@ -4,6 +4,7 @@
 package io.reflection.app.collectors;
 
 import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.datatypes.shared.ListTypeType;
 
 import java.util.List;
 
@@ -53,4 +54,10 @@ public interface Collector {
 	 * @return
 	 */
 	List<String> getTypes();
+
+	/**
+	 * @param type
+	 * @return
+	 */
+	ListTypeType getListType(String type);
 }

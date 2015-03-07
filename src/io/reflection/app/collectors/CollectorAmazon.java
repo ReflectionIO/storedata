@@ -3,6 +3,7 @@
  */
 package io.reflection.app.collectors;
 
+import io.reflection.app.datatypes.shared.ListTypeType;
 import io.reflection.app.logging.GaeLevel;
 
 import java.util.List;
@@ -117,6 +118,15 @@ public class CollectorAmazon extends StoreCollector implements Collector {
 	public boolean isFree(String type) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.collectors.Collector#getListType(java.lang.String)
+	 */
+	@Override
+	public ListTypeType getListType(String type) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

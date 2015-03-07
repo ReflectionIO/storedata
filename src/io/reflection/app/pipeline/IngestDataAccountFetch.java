@@ -27,7 +27,7 @@ public class IngestDataAccountFetch extends Job1<Long, Long> {
 
 	private static final long serialVersionUID = 3258834001291433964L;
 
-	private static final Logger LOG = Logger.getLogger(IngestDataAccountFetch.class.getName());
+	private transient static final Logger LOG = Logger.getLogger(IngestDataAccountFetch.class.getName());
 
 	private transient String name = null;
 	

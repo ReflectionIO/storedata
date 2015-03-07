@@ -318,10 +318,8 @@
 					<xsd:element type="Rank" name="hits" maxOccurs="unbounded" />
 					<xsd:element type="Rank" name="misses" maxOccurs="unbounded" />
 					<xsd:element type="SimpleModelRun" name="simpleModelRun" />
-					<xsd:element type="Item" name="items" maxOccurs="unbounded" />
-					<xsd:element type="Store" name="store" />
-					<xsd:element type="Country" name="country" />
 				</xsd:sequence>
+				<xsd:attribute type="xsd:dateTime" name="salesSummaryDate" />
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
@@ -544,6 +542,21 @@
 		<xsd:restriction base="xsd:string">
 			<xsd:enumeration value="tablet" />
 			<xsd:enumeration value="other" />
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="ListTypeType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="free" />
+			<xsd:enumeration value="paid" />
+			<xsd:enumeration value="grossing" />
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:simpleType name="ListPropertyType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="revenue" />
+			<xsd:enumeration value="downloads" />
 		</xsd:restriction>
 	</xsd:simpleType>
 
