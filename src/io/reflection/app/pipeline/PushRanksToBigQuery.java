@@ -28,6 +28,8 @@ import com.google.gson.JsonParser;
 public class PushRanksToBigQuery extends Job2<Void, String, Long> {
 
 	private static final long serialVersionUID = 158264446923346332L;
+	
+	private String name;
 
 	/*
 	 * (non-Javadoc)
@@ -59,7 +61,15 @@ public class PushRanksToBigQuery extends Job2<Void, String, Long> {
 	}
 	
 	public PushRanksToBigQuery name(String value) {
-		setJobDisplayName(value);
+		name = value;
 		return this;
+	}	
+	
+	/* (non-Javadoc)
+	 * @see com.google.appengine.tools.pipeline.Job#getJobDisplayName()
+	 */
+	@Override
+	public String getJobDisplayName() {
+		return name;
 	}
 }

@@ -36,6 +36,8 @@ public class CalibrateSimpleModel extends Job3<Long, String, Map<String, Double>
 
 	private static final long serialVersionUID = -8764419384476424579L;
 
+	private String name;
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -109,9 +111,17 @@ public class CalibrateSimpleModel extends Job3<Long, String, Map<String, Double>
 
 		return position;
 	}
-
+	
 	public CalibrateSimpleModel name(String value) {
-		setJobDisplayName(value);
+		name = value;
 		return this;
+	}	
+	
+	/* (non-Javadoc)
+	 * @see com.google.appengine.tools.pipeline.Job#getJobDisplayName()
+	 */
+	@Override
+	public String getJobDisplayName() {
+		return name;
 	}
 }

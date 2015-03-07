@@ -35,6 +35,8 @@ public class GatherAllRanks extends Job1<Integer, Long> {
 
 	private static final Logger LOG = Logger.getLogger(GatherAllRanks.class.getName());
 
+	private String name;
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -120,8 +122,16 @@ public class GatherAllRanks extends Job1<Integer, Long> {
 	}
 
 	public GatherAllRanks name(String value) {
-		setJobDisplayName(value);
+		name = value;
 		return this;
+	}	
+	
+	/* (non-Javadoc)
+	 * @see com.google.appengine.tools.pipeline.Job#getJobDisplayName()
+	 */
+	@Override
+	public String getJobDisplayName() {
+		return name;
 	}
 
 }

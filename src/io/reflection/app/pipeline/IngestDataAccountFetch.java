@@ -29,6 +29,8 @@ public class IngestDataAccountFetch extends Job1<Long, Long> {
 
 	private static final Logger LOG = Logger.getLogger(IngestDataAccountFetch.class.getName());
 
+	private String name;
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -85,7 +87,15 @@ public class IngestDataAccountFetch extends Job1<Long, Long> {
 	}
 
 	public IngestDataAccountFetch name(String value) {
-		setJobDisplayName(value);
+		name = value;
 		return this;
+	}	
+	
+	/* (non-Javadoc)
+	 * @see com.google.appengine.tools.pipeline.Job#getJobDisplayName()
+	 */
+	@Override
+	public String getJobDisplayName() {
+		return name;
 	}
 }

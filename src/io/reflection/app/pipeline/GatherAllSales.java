@@ -36,6 +36,8 @@ public class GatherAllSales extends Job1<Integer, Date> {
 	private static final long serialVersionUID = 8112347752177694061L;
 
 	private static final Logger LOG = Logger.getLogger(GatherAllSales.class.getName());
+	
+	private String name;
 
 	/*
 	 * (non-Javadoc)
@@ -100,7 +102,15 @@ public class GatherAllSales extends Job1<Integer, Date> {
 	}
 
 	public GatherAllSales name(String value) {
-		setJobDisplayName(value);
+		name = value;
 		return this;
+	}	
+	
+	/* (non-Javadoc)
+	 * @see com.google.appengine.tools.pipeline.Job#getJobDisplayName()
+	 */
+	@Override
+	public String getJobDisplayName() {
+		return name;
 	}
 }

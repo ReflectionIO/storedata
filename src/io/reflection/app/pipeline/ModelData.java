@@ -21,6 +21,8 @@ import com.google.appengine.tools.pipeline.Value;
 public class ModelData extends Job4<Void, Long, Long, String, Map<String, Double>> {
 
 	private static final long serialVersionUID = -3705962909963696521L;
+	
+	private String name;
 
 	/*
 	 * (non-Javadoc)
@@ -44,7 +46,15 @@ public class ModelData extends Job4<Void, Long, Long, String, Map<String, Double
 	}
 
 	public ModelData name(String value) {
-		setJobDisplayName(value);
+		name = value;
 		return this;
+	}	
+	
+	/* (non-Javadoc)
+	 * @see com.google.appengine.tools.pipeline.Job#getJobDisplayName()
+	 */
+	@Override
+	public String getJobDisplayName() {
+		return name;
 	}
 }

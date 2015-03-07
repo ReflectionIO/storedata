@@ -47,6 +47,8 @@ public class SummariseDataAccountFetch extends Job1<Map<String, Double>, Long> {
 
 	public static final transient ImmediateValue<String> DOWNLOADS_LIST_PROPERTY_VALUE = immediate(DOWNLOADS_LIST_PROPERTY);
 	public static final transient ImmediateValue<String> REVENUE_LIST_PROPERTY_VALUE = immediate(REVENUE_LIST_PROPERTY);
+	
+	private String name;
 
 	/*
 	 * (non-Javadoc)
@@ -142,8 +144,16 @@ public class SummariseDataAccountFetch extends Job1<Map<String, Double>, Long> {
 	}
 	
 	public SummariseDataAccountFetch name(String value) {
-		setJobDisplayName(value);
+		name = value;
 		return this;
+	}	
+	
+	/* (non-Javadoc)
+	 * @see com.google.appengine.tools.pipeline.Job#getJobDisplayName()
+	 */
+	@Override
+	public String getJobDisplayName() {
+		return name;
 	}
 
 }

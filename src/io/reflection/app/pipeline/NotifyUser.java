@@ -33,6 +33,8 @@ public class NotifyUser extends Job2<Void, Long, Long> {
 
 	private static final long serialVersionUID = 7645918492687402533L;
 
+	private String name;
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -66,8 +68,16 @@ public class NotifyUser extends Job2<Void, Long, Long> {
 	}
 	
 	public NotifyUser name(String value) {
-		setJobDisplayName(value);
+		name = value;
 		return this;
+	}	
+	
+	/* (non-Javadoc)
+	 * @see com.google.appengine.tools.pipeline.Job#getJobDisplayName()
+	 */
+	@Override
+	public String getJobDisplayName() {
+		return name;
 	}
 
 }

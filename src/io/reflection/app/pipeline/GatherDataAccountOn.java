@@ -38,6 +38,8 @@ public class GatherDataAccountOn extends Job2<Long, Long, Date> {
 
 	private static final Logger LOG = Logger.getLogger(GatherDataAccountOn.class.getName());
 
+	private String name;
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -157,8 +159,16 @@ public class GatherDataAccountOn extends Job2<Long, Long, Date> {
 	}
 
 	public GatherDataAccountOn name(String value) {
-		setJobDisplayName(value);
+		name = value;
 		return this;
+	}	
+	
+	/* (non-Javadoc)
+	 * @see com.google.appengine.tools.pipeline.Job#getJobDisplayName()
+	 */
+	@Override
+	public String getJobDisplayName() {
+		return name;
 	}
 
 }

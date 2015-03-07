@@ -30,6 +30,8 @@ public class FillRevenue extends Job3<Void, String, Long, Long> {
 
 	private static final Logger LOG = Logger.getLogger(FillRevenue.class.getName());
 
+	private String name;
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -56,7 +58,15 @@ public class FillRevenue extends Job3<Void, String, Long, Long> {
 	}
 	
 	public FillRevenue name(String value) {
-		setJobDisplayName(value);
+		name = value;
 		return this;
+	}	
+	
+	/* (non-Javadoc)
+	 * @see com.google.appengine.tools.pipeline.Job#getJobDisplayName()
+	 */
+	@Override
+	public String getJobDisplayName() {
+		return name;
 	}
 }

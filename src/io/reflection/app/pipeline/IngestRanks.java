@@ -33,6 +33,8 @@ import com.google.gson.JsonParser;
 public class IngestRanks extends Job6<Long, Long, String, Long, String, Long, String> {
 
 	private static final long serialVersionUID = 5579515120223362343L;
+	
+	private String name;
 
 	/*
 	 * (non-Javadoc)
@@ -134,7 +136,15 @@ public class IngestRanks extends Job6<Long, Long, String, Long, String, Long, St
 	}
 	
 	public IngestRanks name(String value) {
-		setJobDisplayName(value);
+		name = value;
 		return this;
+	}	
+	
+	/* (non-Javadoc)
+	 * @see com.google.appengine.tools.pipeline.Job#getJobDisplayName()
+	 */
+	@Override
+	public String getJobDisplayName() {
+		return name;
 	}
 }

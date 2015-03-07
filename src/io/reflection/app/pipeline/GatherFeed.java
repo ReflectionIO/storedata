@@ -16,6 +16,8 @@ public class GatherFeed extends Job4<Long, String, String, Long, Long> {
 
 	private static final long serialVersionUID = 959780630540839671L;
 
+	private String name;
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -30,7 +32,15 @@ public class GatherFeed extends Job4<Long, String, String, Long, Long> {
 	}
 
 	public GatherFeed name(String value) {
-		setJobDisplayName(value);
+		name = value;
 		return this;
+	}	
+	
+	/* (non-Javadoc)
+	 * @see com.google.appengine.tools.pipeline.Job#getJobDisplayName()
+	 */
+	@Override
+	public String getJobDisplayName() {
+		return name;
 	}
 }

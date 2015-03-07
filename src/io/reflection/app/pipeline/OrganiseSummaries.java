@@ -24,6 +24,8 @@ import com.spacehopperstudios.utility.StringUtils;
 public class OrganiseSummaries extends Job1<Map<String, Map<String, Double>>, List<Map<String, Double>>> {
 
 	private static final long serialVersionUID = -5357636373846477424L;
+	
+	private String name;
 
 	/*
 	 * (non-Javadoc)
@@ -76,7 +78,15 @@ public class OrganiseSummaries extends Job1<Map<String, Map<String, Double>>, Li
 	}
 
 	public OrganiseSummaries name(String value) {
-		setJobDisplayName(value);
+		name = value;
 		return this;
+	}	
+	
+	/* (non-Javadoc)
+	 * @see com.google.appengine.tools.pipeline.Job#getJobDisplayName()
+	 */
+	@Override
+	public String getJobDisplayName() {
+		return name;
 	}
 }

@@ -23,6 +23,8 @@ import com.google.appengine.tools.pipeline.Value;
 public class SummariseFetchedDataAccounts extends Job1<Map<String, Map<String, Double>>, List<Long>> {
 
 	private static final long serialVersionUID = 7344309686985145135L;
+	
+	private String name;
 
 	/*
 	 * (non-Javadoc)
@@ -46,8 +48,16 @@ public class SummariseFetchedDataAccounts extends Job1<Map<String, Map<String, D
 	}
 
 	public SummariseFetchedDataAccounts name(String value) {
-		setJobDisplayName(value);
+		name = value;
 		return this;
+	}	
+	
+	/* (non-Javadoc)
+	 * @see com.google.appengine.tools.pipeline.Job#getJobDisplayName()
+	 */
+	@Override
+	public String getJobDisplayName() {
+		return name;
 	}
 
 }

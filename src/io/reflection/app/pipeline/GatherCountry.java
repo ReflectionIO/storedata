@@ -35,6 +35,8 @@ public class GatherCountry extends Job2<Void, String, Long> {
 
 	private static final Logger LOG = Logger.getLogger(GatherCountry.class.getName());
 
+	private String name;
+	
 	private String revenueOtherSummaryHandle;
 	private String downloadsOtherSummaryHandle;
 	private String revenueTabletSummaryHandle;
@@ -125,7 +127,15 @@ public class GatherCountry extends Job2<Void, String, Long> {
 	}
 
 	public GatherCountry name(String value) {
-		setJobDisplayName(value);
+		name = value;
 		return this;
+	}	
+	
+	/* (non-Javadoc)
+	 * @see com.google.appengine.tools.pipeline.Job#getJobDisplayName()
+	 */
+	@Override
+	public String getJobDisplayName() {
+		return name;
 	}
 }
