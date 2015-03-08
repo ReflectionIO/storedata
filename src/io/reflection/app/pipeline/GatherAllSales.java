@@ -16,6 +16,7 @@ import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.dataaccount.IDataAccountService;
 import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
 import io.reflection.app.service.dataaccountfetch.IDataAccountFetchService;
+import io.reflection.app.shared.util.FormattingHelper;
 import io.reflection.app.shared.util.PagerHelper;
 
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class GatherAllSales extends Job1<Integer, Date> {
 	private static final long serialVersionUID = 8112347752177694061L;
 
 	private static final Logger LOG = Logger.getLogger(GatherAllSales.class.getName());
-	
+
 	private transient String name = null;
 
 	/*
@@ -66,8 +67,8 @@ public class GatherAllSales extends Job1<Integer, Date> {
 					// if the account has some errors then don't bother otherwise enqueue a message to do a gather for it
 
 					if (DataAccountFetchServiceProvider.provide().isFetchable(dataAccount) == Boolean.TRUE) {
-						ids.add(futureCall(new GatherDataAccountOn().name("Gather " + dataAccount.username + " sales"), immediate(dataAccount.id), forDate,
-								PipelineSettings.onDataAccountGatherQueue));
+						ids.add(futureCall(new GatherDataAccountOn().name("Gather " + FormattingHelper.wordEmail(dataAccount.username) + " sales"),
+								immediate(dataAccount.id), forDate, PipelineSettings.onDataAccountGatherQueue));
 
 						// go through all the failed attempts and get them too (failed attempts = less than 30 days old)
 						List<DataAccountFetch> failedDataAccountFetches = dataAccountFetchService.getFailedDataAccountFetches(dataAccount,
@@ -104,9 +105,11 @@ public class GatherAllSales extends Job1<Integer, Date> {
 	public GatherAllSales name(String value) {
 		name = value;
 		return this;
-	}	
-	
-	/* (non-Javadoc)
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.google.appengine.tools.pipeline.Job#getJobDisplayName()
 	 */
 	@Override
