@@ -21,8 +21,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.math3.stat.regression.RegressionResults;
 import org.apache.commons.math3.stat.regression.SimpleRegression;
@@ -62,7 +64,8 @@ public class CalibrateSimpleModel extends Job4<Long, Long, String, Map<String, D
 			itemRanks.put(rank.itemId, rank);
 		}
 
-		Map<String, Rank> usedSales = new HashMap<String, Rank>();
+		Set<String> usedSalesLookup = new HashSet<String>();
+		Collection<String> usedSales = new ArrayList<String>();
 
 		SimpleRegression regression = new SimpleRegression();
 		Rank rank;
@@ -75,7 +78,8 @@ public class CalibrateSimpleModel extends Job4<Long, Long, String, Map<String, D
 
 				if (position != null) {
 					regression.addData(Math.log(position.doubleValue()), Math.log(summary.get(itemId).doubleValue()));
-					usedSales.put(itemId, createTruncatedRank(listProperty, itemId, position, summary));
+					usedSalesLookup.add(itemId);
+					usedSales.add(createTruncatedRank(listProperty, itemId, position, summary).toString());
 				}
 			}
 		}
@@ -96,18 +100,18 @@ public class CalibrateSimpleModel extends Job4<Long, Long, String, Map<String, D
 			run = SimpleModelRunServiceProvider.provide().addSimpleModelRun(run);
 		}
 
-		Collection<Rank> unusedSales = new ArrayList<Rank>();
+		Collection<String> unusedSales = new ArrayList<String>();
 
 		for (String itemId : summary.keySet()) {
-			if (!usedSales.containsKey(itemId)) {
-				unusedSales.add(createTruncatedRank(listProperty, itemId, null, summary));
+			if (!usedSalesLookup.contains(itemId)) {
+				unusedSales.add(createTruncatedRank(listProperty, itemId, null, summary).toString());
 			}
 		}
 
 		ImmediateValue<Long> runIdValue = (run == null ? null : immediate(run.id));
 
 		futureCall(new StoreCalibrationSummaryFile().name("Store calibration summary file"), immediate(feedFetch.id), immediate(type), immediate(summaryDate),
-				immediate(usedSales.values()), immediate(unusedSales), runIdValue, PipelineSettings.onDefaultQueue);
+				immediate(usedSales), immediate(unusedSales), runIdValue, PipelineSettings.onDefaultQueue);
 
 		return runIdValue;
 	}
@@ -133,19 +137,18 @@ public class CalibrateSimpleModel extends Job4<Long, Long, String, Map<String, D
 
 	private Rank createTruncatedRank(ListPropertyType type, String itemId, Double position, Map<String, Double> summary) {
 		// add to used with clean rank
-		Rank rank = new Rank();
-		rank.itemId = itemId;
+		Rank rank = new Rank().position(null).grossingPosition(null).itemId(itemId);
 
 		if (position != null) {
-			rank.position = Integer.valueOf(position.intValue());
+			rank.position(Integer.valueOf(position.intValue()));
 		}
 
 		switch (type) {
 		case ListPropertyTypeRevenue:
-			rank.revenue = Float.valueOf(summary.get(itemId).floatValue());
+			rank.revenue(Float.valueOf(summary.get(itemId).floatValue()));
 			break;
 		case ListPropertyTypeDownloads:
-			rank.downloads = Integer.valueOf(summary.get(itemId).intValue());
+			rank.downloads(Integer.valueOf(summary.get(itemId).intValue()));
 			break;
 		}
 

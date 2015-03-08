@@ -43,7 +43,7 @@ import com.google.appengine.tools.pipeline.Value;
  * @author William Shakour (billy1380)
  *
  */
-public class StoreCalibrationSummaryFile extends Job6<String, Long, String, Date, Collection<Rank>, Collection<Rank>, Long> {
+public class StoreCalibrationSummaryFile extends Job6<String, Long, String, Date, Collection<String>, Collection<String>, Long> {
 
 	private static final long serialVersionUID = -5621991524846384264L;
 
@@ -53,7 +53,7 @@ public class StoreCalibrationSummaryFile extends Job6<String, Long, String, Date
 	private transient String name = null;
 
 	@Override
-	public Value<String> run(Long feedfetchId, final String type, Date summariesDate, Collection<Rank> used, Collection<Rank> unused, Long simpleModelRunId)
+	public Value<String> run(Long feedfetchId, final String type, Date summariesDate, Collection<String> used, Collection<String> unused, Long simpleModelRunId)
 			throws Exception {
 		FeedFetch feedFetch = FeedFetchServiceProvider.provide().getFeedFetch(feedfetchId);
 		SimpleModelRun simpleModelRun = null;
@@ -70,8 +70,15 @@ public class StoreCalibrationSummaryFile extends Job6<String, Long, String, Date
 			summary.salesSummaryDate = summariesDate;
 		}
 
+		Rank rank;
 		if (used != null) {
-			summary.hits = new ArrayList<Rank>(used);
+			summary.hits = new ArrayList<Rank>();
+			for (String json : used) {
+				rank = new Rank();
+				rank.fromJson(json);
+				summary.hits.add(rank);
+			}
+
 			Collections.sort(summary.hits, new Comparator<Rank>() {
 				@Override
 				public int compare(Rank r1, Rank r2) {
@@ -81,15 +88,22 @@ public class StoreCalibrationSummaryFile extends Job6<String, Long, String, Date
 					} else if (r2.position.intValue() > r1.position.intValue()) {
 						sort = -1;
 					}
+					
 					return sort;
 				}
 			});
 		}
 
 		if (unused != null) {
+			summary.misses = new ArrayList<Rank>();
+			for (String json : unused) {
+				rank = new Rank();
+				rank.fromJson(json);
+				summary.misses.add(rank);
+			}
 
 			final ListPropertyType listProperty = ListPropertyType.fromString(type);
-			summary.misses = new ArrayList<Rank>(unused);
+			
 			Collections.sort(summary.misses, new Comparator<Rank>() {
 
 				@Override
@@ -115,6 +129,7 @@ public class StoreCalibrationSummaryFile extends Job6<String, Long, String, Date
 					} else if (value2 > value1) {
 						sort = -1;
 					}
+					
 					return sort;
 				}
 			});
