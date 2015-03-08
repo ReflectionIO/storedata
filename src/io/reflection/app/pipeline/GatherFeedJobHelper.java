@@ -7,8 +7,7 @@
 //
 package io.reflection.app.pipeline;
 
-import static io.reflection.app.pipeline.SummariseDataAccountFetch.DOWNLOADS_LIST_PROPERTY_VALUE;
-import static io.reflection.app.pipeline.SummariseDataAccountFetch.REVENUE_LIST_PROPERTY_VALUE;
+import io.reflection.app.datatypes.shared.ListPropertyType;
 
 import java.util.Map;
 
@@ -22,6 +21,9 @@ import com.google.appengine.tools.pipeline.PromisedValue;
  *
  */
 public class GatherFeedJobHelper {
+
+	public transient static final ImmediateValue<String> DOWNLOADS_LIST_PROPERTY_VALUE = Job.immediate(ListPropertyType.ListPropertyTypeDownloads.toString());
+	public transient static final ImmediateValue<String> REVENUE_LIST_PROPERTY_VALUE = Job.immediate(ListPropertyType.ListPropertyTypeRevenue.toString());
 
 	public static void processFeeds(Job<?> job, String form, ImmediateValue<String> countryCodeValue, ImmediateValue<Long> codeValue,
 			ImmediateValue<Long> categoryInternalIdValue, String paidListName, String freeListName, String grossingListName, boolean ingestCountryFeeds,

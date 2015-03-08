@@ -8,9 +8,8 @@
 package io.reflection.app.pipeline;
 
 import static io.reflection.app.collectors.CollectorIOS.COUNTRIES_KEY;
-import static io.reflection.app.pipeline.SummariseDataAccountFetch.DOWNLOADS_LIST_PROPERTY_VALUE;
-import static io.reflection.app.pipeline.SummariseDataAccountFetch.REVENUE_LIST_PROPERTY_VALUE;
 import io.reflection.app.datatypes.shared.FormType;
+import io.reflection.app.datatypes.shared.ListPropertyType;
 import io.reflection.app.ingestors.IngestorFactory;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.shared.util.DataTypeHelper;
@@ -87,9 +86,9 @@ public class GatherAllRanks extends Job1<Integer, Long> {
 				if (countriesToIngest.contains(countryCode)) {
 					// Other
 					revenueOtherPromiseKey = StringUtils.join(Arrays.asList(code.toString(), countryCode, DataTypeHelper.IOS_STORE_A3,
-							FormType.FormTypeOther.toString(), REVENUE_LIST_PROPERTY_VALUE.getValue()), ".");
+							FormType.FormTypeOther.toString(), ListPropertyType.ListPropertyTypeRevenue.toString()), ".");
 					downloadsOtherPromiseKey = StringUtils.join(Arrays.asList(code.toString(), countryCode, DataTypeHelper.IOS_STORE_A3,
-							FormType.FormTypeOther.toString(), DOWNLOADS_LIST_PROPERTY_VALUE.getValue()), ".");
+							FormType.FormTypeOther.toString(), ListPropertyType.ListPropertyTypeDownloads.toString()), ".");
 
 					revenueOtherSummaryHandle = newPromise().getHandle();
 					downloadsOtherSummaryHandle = newPromise().getHandle();
@@ -98,9 +97,9 @@ public class GatherAllRanks extends Job1<Integer, Long> {
 
 					// Tablet
 					revenueTabletPromiseKey = StringUtils.join(Arrays.asList(code.toString(), countryCode, DataTypeHelper.IOS_STORE_A3,
-							FormType.FormTypeTablet.toString(), REVENUE_LIST_PROPERTY_VALUE.getValue()), ".");
+							FormType.FormTypeTablet.toString(), ListPropertyType.ListPropertyTypeRevenue.toString()), ".");
 					downloadsTabletPromiseKey = StringUtils.join(Arrays.asList(code.toString(), countryCode, DataTypeHelper.IOS_STORE_A3,
-							FormType.FormTypeTablet.toString(), DOWNLOADS_LIST_PROPERTY_VALUE.getValue()), ".");
+							FormType.FormTypeTablet.toString(), ListPropertyType.ListPropertyTypeDownloads.toString()), ".");
 
 					revenueTabletSummaryHandle = newPromise().getHandle();
 					downloadsTabletSummaryHandle = newPromise().getHandle();

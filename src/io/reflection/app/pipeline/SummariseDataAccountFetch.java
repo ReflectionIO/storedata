@@ -30,7 +30,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.appengine.tools.pipeline.ImmediateValue;
 import com.google.appengine.tools.pipeline.Job1;
 import com.google.appengine.tools.pipeline.Value;
 import com.spacehopperstudios.utility.StringUtils;
@@ -42,9 +41,6 @@ import com.spacehopperstudios.utility.StringUtils;
 public class SummariseDataAccountFetch extends Job1<Map<String, Double>, Long> {
 
 	private static final long serialVersionUID = 7363371689981793909L;
-
-	public transient static final ImmediateValue<String> DOWNLOADS_LIST_PROPERTY_VALUE = immediate(ListPropertyType.ListPropertyTypeDownloads.toString());
-	public transient static final ImmediateValue<String> REVENUE_LIST_PROPERTY_VALUE = immediate(ListPropertyType.ListPropertyTypeRevenue.toString());
 
 	private transient String name = null;
 
@@ -63,7 +59,7 @@ public class SummariseDataAccountFetch extends Job1<Map<String, Double>, Long> {
 		Double value;
 		Collection<String> keys;
 		for (Sale sale : sales) {
-			keys = createKeys(sale, REVENUE_LIST_PROPERTY_VALUE.getValue());
+			keys = createKeys(sale, ListPropertyType.ListPropertyTypeRevenue);
 
 			for (String key : keys) {
 				value = apps.get(key);
@@ -77,7 +73,7 @@ public class SummariseDataAccountFetch extends Job1<Map<String, Double>, Long> {
 				apps.put(key, value);
 			}
 
-			keys = createKeys(sale, DOWNLOADS_LIST_PROPERTY_VALUE.getValue());
+			keys = createKeys(sale, ListPropertyType.ListPropertyTypeDownloads);
 			for (String key : keys) {
 				value = apps.get(key);
 
@@ -110,11 +106,12 @@ public class SummariseDataAccountFetch extends Job1<Map<String, Double>, Long> {
 		return forms;
 	}
 
-	public static Collection<String> createKeys(Sale sale, String type) throws DataAccessException {
+	public static Collection<String> createKeys(Sale sale, ListPropertyType listProperty) throws DataAccessException {
 		List<String> keys = new ArrayList<String>();
 
 		for (FormType formType : forms(sale)) {
-			keys.add(StringUtils.join(Arrays.<String> asList(sale.country, DataTypeHelper.IOS_STORE_A3, formType.toString(), type, getSaleItemId(sale)), "."));
+			keys.add(StringUtils.join(
+					Arrays.<String> asList(sale.country, DataTypeHelper.IOS_STORE_A3, formType.toString(), listProperty.toString(), getSaleItemId(sale)), "."));
 		}
 
 		return keys;
