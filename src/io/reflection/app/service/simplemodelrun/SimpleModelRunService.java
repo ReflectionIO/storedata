@@ -91,7 +91,7 @@ final class SimpleModelRunService implements ISimpleModelRunService {
 						simpleModelRun.bStandardError == null ? "NULL" : simpleModelRun.bStandardError.toString(),
 						simpleModelRun.adjustedRSquared == null ? "NULL" : simpleModelRun.adjustedRSquared.toString(),
 						simpleModelRun.regressionSumSquares == null ? "NULL" : simpleModelRun.regressionSumSquares.toString(),
-						simpleModelRun.summaryDate == null ? "NULL" : Long.toString(simpleModelRun.summaryDate.getTime() / 1000L));
+						simpleModelRun.summaryDate == null ? "NULL" : "FROM_UNIXTIME(" + Long.toString(simpleModelRun.summaryDate.getTime() / 1000L) + ")");
 
 		Connection simpleModelRunConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSimpleModelRun.toString());
 
@@ -127,8 +127,8 @@ final class SimpleModelRunService implements ISimpleModelRunService {
 						simpleModelRun.bStandardError == null ? "NULL" : simpleModelRun.bStandardError.toString(),
 						simpleModelRun.adjustedRSquared == null ? "NULL" : simpleModelRun.adjustedRSquared.toString(),
 						simpleModelRun.regressionSumSquares == null ? "NULL" : simpleModelRun.regressionSumSquares.toString(),
-						simpleModelRun.summaryDate == null ? "NULL" : Long.toString(simpleModelRun.summaryDate.getTime() / 1000L), simpleModelRun.id
-								.longValue());
+						simpleModelRun.summaryDate == null ? "NULL" : "FROM_UNIXTIME(" + Long.toString(simpleModelRun.summaryDate.getTime() / 1000L) + ")",
+						simpleModelRun.id.longValue());
 
 		Connection simpleSimpleModelRunConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSimpleModelRun.toString());
 
