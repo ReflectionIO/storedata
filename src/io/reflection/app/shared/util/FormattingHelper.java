@@ -24,7 +24,7 @@ public class FormattingHelper {
 	public static final String DATE_FORMAT_DD_MM_YYYY = "dd-MM-yyyy";
 	// public static final String DATE_FORMAT_YYYY_MM_DD = "yyyy-MM-dd";
 	public static final String DATE_FORMAT_DD_MMM_YYYY_HH_MM = "dd MMM yyyy - HH:mm";
-	
+
 	public static final String MONEY_FORMAT = ",###.##";
 	public static final String WHOLE_NUMBER_FORMAT = ",###";
 
@@ -129,5 +129,9 @@ public class FormattingHelper {
 		}
 
 		return timeSince;
+	}
+
+	public static String wordEmail(String address) {
+		return address == null ? "empty" : address.replace(".", " dot ").replace("@", " at ");
 	}
 }
