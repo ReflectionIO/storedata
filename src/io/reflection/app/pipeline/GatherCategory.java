@@ -14,6 +14,7 @@ import static io.reflection.app.collectors.CollectorIOS.TOP_GROSSING_IPAD_APPS;
 import static io.reflection.app.collectors.CollectorIOS.TOP_PAID_APPS;
 import static io.reflection.app.collectors.CollectorIOS.TOP_PAID_IPAD_APPS;
 import io.reflection.app.datatypes.shared.Category;
+import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.ingestors.IngestorFactory;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.category.CategoryServiceProvider;
@@ -54,7 +55,10 @@ public class GatherCategory extends Job3<Void, String, Long, Long> {
 
 		Category category = CategoryServiceProvider.provide().getCategory(categoryId);
 
-		final boolean ingestCountryFeeds = IngestorFactory.shouldIngestFeedFetch(DataTypeHelper.IOS_STORE_A3, countryCode);
+		Store store = DataTypeHelper.getIosStore();
+
+		final boolean ingestCountryFeeds = IngestorFactory.shouldIngestFeedFetch(store.a3Code, countryCode)
+				&& IngestorFactory.shouldIngestCategories(store.a3Code);
 
 		ImmediateValue<String> countryCodeValue = immediate(countryCode);
 		ImmediateValue<Long> codeValue = immediate(code);

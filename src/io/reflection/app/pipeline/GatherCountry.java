@@ -15,6 +15,7 @@ import static io.reflection.app.collectors.CollectorIOS.TOP_PAID_APPS;
 import static io.reflection.app.collectors.CollectorIOS.TOP_PAID_IPAD_APPS;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.ingestors.IngestorFactory;
@@ -45,10 +46,12 @@ public class GatherCountry extends Job2<Void, String, Long> {
 
 	@Override
 	public Value<Void> run(String countryCode, Long code) throws Exception {
+		Store store = DataTypeHelper.getIosStore();
+		
 		ImmediateValue<String> countryCodeValue = immediate(countryCode);
 		ImmediateValue<Long> codeValue = immediate(code);
 
-		final boolean ingestCountryFeeds = IngestorFactory.shouldIngestFeedFetch(DataTypeHelper.IOS_STORE_A3, countryCode);
+		final boolean ingestCountryFeeds = IngestorFactory.shouldIngestFeedFetch(store.a3Code, countryCode);
 
 		GatherFeedJobHelper.processFeeds(this, "Phone and Other", countryCodeValue, codeValue, null, TOP_PAID_APPS, TOP_FREE_APPS, TOP_GROSSING_APPS,
 				ingestCountryFeeds, downloadsOtherSummaryHandle, revenueOtherSummaryHandle, summariesDateHandle);
@@ -56,47 +59,47 @@ public class GatherCountry extends Job2<Void, String, Long> {
 		GatherFeedJobHelper.processFeeds(this, "Tablet", countryCodeValue, codeValue, null, TOP_FREE_IPAD_APPS, TOP_PAID_IPAD_APPS, TOP_GROSSING_IPAD_APPS,
 				ingestCountryFeeds, downloadsTabletSummaryHandle, revenueTabletSummaryHandle, summariesDateHandle);
 
-		// when we have gathered all the counties feeds we do the same but for each category
-		try {
-			Store store = DataTypeHelper.getIosStore();
+		if (CollectorFactory.shouldGatherCategories(store.a3Code)) {
+			// when we have gathered all the counties feeds we do the same but for each category
+			try {
+				// get the parent category all which references all lower categories
+				Category all = CategoryServiceProvider.provide().getAllCategory(store);
 
-			// get the parent category all which references all lower categories
-			Category all = CategoryServiceProvider.provide().getAllCategory(store);
+				List<Category> categories = null;
 
-			List<Category> categories = null;
+				if (all != null) {
+					Pager p = new Pager();
+					p.start = Pager.DEFAULT_START;
+					p.sortBy = Pager.DEFAULT_SORT_BY;
+					p.count = CategoryServiceProvider.provide().getParentCategoriesCount(all);
 
-			if (all != null) {
-				Pager p = new Pager();
-				p.start = Pager.DEFAULT_START;
-				p.sortBy = Pager.DEFAULT_SORT_BY;
-				p.count = CategoryServiceProvider.provide().getParentCategoriesCount(all);
+					if (p.count != null && p.count.longValue() > 0) {
+						categories = CategoryServiceProvider.provide().getParentCategories(all, p);
 
-				if (p.count != null && p.count.longValue() > 0) {
-					categories = CategoryServiceProvider.provide().getParentCategories(all, p);
+						if (categories != null && categories.size() > 0) {
+							if (LOG.isLoggable(GaeLevel.DEBUG)) {
+								LOG.log(GaeLevel.DEBUG, String.format("Found [%d] categories", categories.size()));
+							}
 
-					if (categories != null && categories.size() > 0) {
-						if (LOG.isLoggable(GaeLevel.DEBUG)) {
-							LOG.log(GaeLevel.DEBUG, String.format("Found [%d] categories", categories.size()));
-						}
+							if (LOG.isLoggable(GaeLevel.DEBUG)) {
+								LOG.log(GaeLevel.DEBUG, String.format("Enqueueing gather tasks for country [%s]", countryCode));
+							}
 
-						if (LOG.isLoggable(GaeLevel.DEBUG)) {
-							LOG.log(GaeLevel.DEBUG, String.format("Enqueueing gather tasks for country [%s]", countryCode));
-						}
-
-						for (Category category : categories) {
-							futureCall(
-									new GatherCategory().revenueOtherSummaryHandle(revenueOtherSummaryHandle)
-											.downloadsOtherSummaryHandle(downloadsOtherSummaryHandle).revenueTabletSummaryHandle(revenueTabletSummaryHandle)
-											.downloadsTabletSummaryHandle(downloadsTabletSummaryHandle).summariesDateHandle(summariesDateHandle)
-											.name("Gather " + category.name), countryCodeValue, immediate(category.id), codeValue,
-									PipelineSettings.onDefaultQueue);
+							for (Category category : categories) {
+								futureCall(
+										new GatherCategory().revenueOtherSummaryHandle(revenueOtherSummaryHandle)
+												.downloadsOtherSummaryHandle(downloadsOtherSummaryHandle)
+												.revenueTabletSummaryHandle(revenueTabletSummaryHandle)
+												.downloadsTabletSummaryHandle(downloadsTabletSummaryHandle).summariesDateHandle(summariesDateHandle)
+												.name("Gather " + category.name), countryCodeValue, immediate(category.id), codeValue,
+										PipelineSettings.onDefaultQueue);
+							}
 						}
 					}
 				}
+			} catch (DataAccessException dae) {
+				LOG.log(GaeLevel.SEVERE, "A database error occured attempting to enqueue category top feeds for gathering phase", dae);
 			}
-
-		} catch (DataAccessException dae) {
-			LOG.log(GaeLevel.SEVERE, "A database error occured attempting to enqueue category top feeds for gathering phase", dae);
 		}
 
 		return null;
