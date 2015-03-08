@@ -13,7 +13,10 @@
 
 		<property name="java.util.logging.config.file" value="WEB-INF/logging.properties" />
 		<property name="gather.ios.countries" value="us,jp,gb" />
+        <property name="gather.ios.categories" value="true" />
+        
 		<property name="ingest.ios.countries" value="us,jp,gb" />
+        <property name="ingest.ios.categories" value="true" />
 
 		<property name="gather.ios.topfreeapplications" value="http://itunes.apple.com/%s/rss/topfreeapplications/limit=200/json" />
 		<property name="gather.ios.toppaidapplications" value="http://itunes.apple.com/%s/rss/toppaidapplications/limit=200/json" />
