@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 public class IngestorFactory {
 
 	private static final Logger LOG = Logger.getLogger(IngestorFactory.class.getName());
-	
+
 	/**
 	 * @param store
 	 * @return
@@ -39,6 +39,11 @@ public class IngestorFactory {
 		}
 
 		return ingestor;
+	}
+
+	public static boolean shouldIngestCategories(String store) {
+		return (System.getProperty("ingest." + store + ".categories") == null ? Boolean.TRUE.booleanValue() : Boolean.valueOf(System.getProperty("ingest."
+				+ store + ".categories")));
 	}
 
 	public static Collection<String> getIngestorCountries(String store) {
@@ -59,7 +64,7 @@ public class IngestorFactory {
 
 		return countries;
 	}
-	
+
 	public static boolean shouldIngestFeedFetch(String store, String country) {
 		boolean ingest = false;
 
