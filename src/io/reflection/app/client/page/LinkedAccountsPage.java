@@ -7,7 +7,7 @@
 //
 package io.reflection.app.client.page;
 
-import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMAT_DD_MMM_YYYY;
+import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMATTER_DD_MMM_YYYY;
 import io.reflection.app.api.core.shared.call.DeleteLinkedAccountRequest;
 import io.reflection.app.api.core.shared.call.DeleteLinkedAccountResponse;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountsRequest;
@@ -177,7 +177,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		columnDateAdded = new TextColumn<DataAccount>() {
 			@Override
 			public String getValue(DataAccount object) {
-				return (object.source.created != null) ? DATE_FORMAT_DD_MMM_YYYY.format(object.created, null) : "-";
+				return (object.source.created != null) ? DATE_FORMATTER_DD_MMM_YYYY.format(object.created, null) : "-";
 			}
 		};
 		linkedAccountsTable.addColumn(columnDateAdded, "Date Added");

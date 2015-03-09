@@ -67,7 +67,7 @@ public class EventSubscriptionsPage extends Page {
 
 			@Override
 			public String getValue(EventSubscription object) {
-				return FormattingHelper.DATE_FORMAT_DD_MMM_YYYY_HH_MM.format(object.created);
+				return FormattingHelper.DATE_FORMATTER_DD_MMM_YYYY_HH_MM.format(object.created);
 			}
 		};
 		eventSubscriptions.addColumn(createdColumn, "Created");

@@ -7,7 +7,7 @@
 //
 package io.reflection.app.client.page.blog;
 
-import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMAT_EEE_DD_MMM_YYYY;
+import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMATTER_EEE_DD_MMM_YYYY;
 import io.reflection.app.api.blog.shared.call.GetPostRequest;
 import io.reflection.app.api.blog.shared.call.GetPostResponse;
 import io.reflection.app.api.blog.shared.call.event.GetPostEventHandler;
@@ -142,7 +142,7 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 		author.setInnerText(FormattingHelper.getUserName(post.author));
 
 		if (post.published != null) {
-			date.setInnerText(DATE_FORMAT_EEE_DD_MMM_YYYY.format(post.published));
+			date.setInnerText(DATE_FORMATTER_EEE_DD_MMM_YYYY.format(post.published));
 		} else {
 			date.setInnerHTML("<span class=\"label label-info\">NOT PUBLISHED</span>");
 		}

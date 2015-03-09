@@ -107,9 +107,9 @@ public class StoreCalibrationSummaryFile extends Job6<String, Long, String, Date
 						break;
 					}
 
-					if (value1 > value2) {
+					if (value2 > value1) {
 						sort = 1;
-					} else if (value2 > value1) {
+					} else if (value1 > value2) {
 						sort = -1;
 					}
 
@@ -119,7 +119,7 @@ public class StoreCalibrationSummaryFile extends Job6<String, Long, String, Date
 		}
 
 		String path = CalibrationSummaryHelper.write(summary);
-		
+
 		return (path == null ? null : immediate(path));
 	}
 

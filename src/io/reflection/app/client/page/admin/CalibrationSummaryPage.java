@@ -51,6 +51,7 @@ import com.googlecode.gchart.client.GChart;
 import com.googlecode.gchart.client.GChart.AnnotationLocation;
 import com.googlecode.gchart.client.GChart.Curve;
 import com.googlecode.gchart.client.GChart.SymbolType;
+import com.spacehopperstudios.utility.StringUtils;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**
@@ -100,6 +101,9 @@ public class CalibrationSummaryPage extends Page implements NavigationEventHandl
 
 	public CalibrationSummaryPage() {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		hits.setPageSize(Integer.MAX_VALUE);
+		misses.setPageSize(Integer.MAX_VALUE);
 
 		hitsProvider.addDataDisplay(hits);
 		missesProvider.addDataDisplay(misses);
@@ -285,7 +289,7 @@ public class CalibrationSummaryPage extends Page implements NavigationEventHandl
 			}
 
 			breadcrumbs.push(storeName, CountryController.get().getCountry(summary.feedFetch.country).name,
-					CategoryController.get().getCategory(summary.feedFetch.category.id).name);
+					CategoryController.get().getCategory(summary.feedFetch.category.id).name, StringUtils.upperCaseFirstLetter(summaryListType.toString()));
 		}
 	}
 
@@ -354,16 +358,19 @@ public class CalibrationSummaryPage extends Page implements NavigationEventHandl
 			missesProvider.setList(Collections.<Rank> emptyList());
 
 		} else {
-			String status = "<br /><span class=\"label label-info\">PARTIAL</span>";
+			String status = " <span class=\"label label-info\">PARTIAL</span>";
+			boolean partial = true;
 
 			if (summary.simpleModelRun == null) {
-				status = "<br /><span class=\"label label-danger\">FAILED</span>";
+				status = " <span class=\"label label-danger\">FAILED</span>";
+				partial = false;
 			} else if (summary.hits != null && summary.hits.size() > 2) {
-				status = "<br /><span class=\"label label-success\">SUCCEEDED</span>";
+				status = " <span class=\"label label-success\">SUCCEEDED</span>";
+				partial = false;
 			}
 
 			title.setInnerHTML("Feed fetch (" + summary.feedFetch.code.toString() + ") on "
-					+ DateTimeFormat.getFormat("yyyy-MM-dd a").format(summary.feedFetch.date) + status);
+					+ DateTimeFormat.getFormat(FormattingHelper.DATE_FORMAT_DD_MMM_YYYY + " a").format(summary.feedFetch.date) + status);
 
 			currency = io.reflection.app.shared.util.FormattingHelper.getCountryCurrency(summary.feedFetch.country.toUpperCase());
 			prototype.currency(currency);
@@ -371,11 +378,56 @@ public class CalibrationSummaryPage extends Page implements NavigationEventHandl
 			hitsProvider.setList(summary.hits);
 			missesProvider.setList(summary.misses);
 
-			description.setInnerHTML("Calibrated with "
-					+ FormattingHelper.DATE_FORMAT_DD_MMM_YYYY.format(summary.simpleModelRun == null ? summary.salesSummaryDate
-							: summary.simpleModelRun.summaryDate) + " summarised sales data");
+			description.setInnerHTML(StringUtils.upperCaseFirstLetter(summaryListType.toString())
+					+ " list was calibrated with sales summaries from <strong>"
+					+ FormattingHelper.DATE_FORMATTER_DD_MMM_YYYY.format(summary.simpleModelRun == null ? summary.salesSummaryDate
+							: summary.simpleModelRun.summaryDate)
+					+ "</strong>"
+					+ (partial ? ", with partial success" : (summary.simpleModelRun == null ? ", but failed" : ", sucessfully"))
+					+ ". Matched "
+					+ hitCount()
+					+ " ranking applications out of a total of "
+					+ totalCount()
+					+ " ("
+					+ missCount()
+					+ " misses) based on "
+					+ summaryListProperty.toString()
+					+ "."
+					+ (summary.simpleModelRun == null ? ""
+							: ("<br />Simple model run fitted with co-efficients:" + simpleModelRunCoefficients() + (partial ? "" : "Additional information:"
+									+ simpleModelRunAdditionalInfo()))));
 
 			drawChartData(chart);
 		}
+	}
+
+	/**
+	 * @return
+	 */
+	private String simpleModelRunAdditionalInfo() {
+		return "<ul><li>adjusted r<sup>2</sup> = " + summary.simpleModelRun.adjustedRSquared.doubleValue() + "</li><li>standard error = "
+				+ summary.simpleModelRun.aStandardError.doubleValue() + "</li><li>sum of squares = "
+				+ summary.simpleModelRun.regressionSumSquares.doubleValue() + "</li><li>a standard error = "
+				+ summary.simpleModelRun.aStandardError.doubleValue() + "</li><li>b standard error = " + summary.simpleModelRun.bStandardError.doubleValue()
+				+ "</li></ul>";
+	}
+
+	/**
+	 * @return
+	 */
+	private String simpleModelRunCoefficients() {
+		return "<ul><li>a = " + summary.simpleModelRun.a.doubleValue() + "</li><li>b = " + summary.simpleModelRun.b.doubleValue() + "</li></ul>";
+	}
+
+	private String hitCount() {
+		return Integer.toString(summary.hits == null ? 0 : summary.hits.size());
+	}
+
+	private String totalCount() {
+		return Integer.toString((summary.hits == null ? 0 : summary.hits.size()) + (summary.misses == null ? 0 : summary.misses.size()));
+	}
+
+	private String missCount() {
+		return Integer.toString(summary.misses == null ? 0 : summary.misses.size());
 	}
 }

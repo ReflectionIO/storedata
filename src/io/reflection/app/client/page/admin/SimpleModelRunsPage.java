@@ -7,7 +7,7 @@
 //
 package io.reflection.app.client.page.admin;
 
-import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMAT_DD_MMM_YYYY;
+import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMATTER_DD_MMM_YYYY;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.FilterController.Filter;
@@ -100,7 +100,7 @@ public class SimpleModelRunsPage extends Page implements FilterEventHandler {
 
 			@Override
 			public String getValue(SimpleModelRun object) {
-				return DATE_FORMAT_DD_MMM_YYYY.format(object.created);
+				return DATE_FORMATTER_DD_MMM_YYYY.format(object.created);
 			}
 
 		};
@@ -140,7 +140,7 @@ public class SimpleModelRunsPage extends Page implements FilterEventHandler {
 
 			@Override
 			public String getValue(SimpleModelRun object) {
-				return object.feedFetch != null && object.feedFetch.date != null ? DATE_FORMAT_DD_MMM_YYYY.format(object.feedFetch.date) : "-";
+				return object.feedFetch != null && object.feedFetch.date != null ? DATE_FORMATTER_DD_MMM_YYYY.format(object.feedFetch.date) : "-";
 			}
 
 		};
@@ -150,7 +150,7 @@ public class SimpleModelRunsPage extends Page implements FilterEventHandler {
 
 			@Override
 			public String getValue(SimpleModelRun object) {
-				return object.summaryDate == null ? "-" : DATE_FORMAT_DD_MMM_YYYY.format(object.summaryDate);
+				return object.summaryDate == null ? "-" : DATE_FORMATTER_DD_MMM_YYYY.format(object.summaryDate);
 			}
 
 		};

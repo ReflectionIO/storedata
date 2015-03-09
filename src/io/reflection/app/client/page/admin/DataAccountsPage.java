@@ -7,7 +7,7 @@
 //
 package io.reflection.app.client.page.admin;
 
-import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMAT_DD_MMM_YYYY;
+import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMATTER_DD_MMM_YYYY;
 import io.reflection.app.client.cell.StyledButtonCell;
 import io.reflection.app.client.controller.DataAccountController;
 import io.reflection.app.client.controller.FilterController;
@@ -79,7 +79,7 @@ public class DataAccountsPage extends Page {
 
 			@Override
 			public String getValue(DataAccount object) {
-				return DATE_FORMAT_DD_MMM_YYYY.format(object.created);
+				return DATE_FORMATTER_DD_MMM_YYYY.format(object.created);
 			}
 
 		};

@@ -7,7 +7,7 @@
 //
 package io.reflection.app.client.page.admin;
 
-import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMAT_DD_MMM_YYYY_HH_MM;
+import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMATTER_DD_MMM_YYYY_HH_MM;
 import io.reflection.app.api.admin.shared.call.DeleteUserRequest;
 import io.reflection.app.api.admin.shared.call.DeleteUserResponse;
 import io.reflection.app.api.admin.shared.call.DeleteUsersRequest;
@@ -151,7 +151,7 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 
 			@Override
 			public String getValue(User object) {
-				return (object.lastLoggedIn == null) ? "-" : DATE_FORMAT_DD_MMM_YYYY_HH_MM.format(object.lastLoggedIn);
+				return (object.lastLoggedIn == null) ? "-" : DATE_FORMATTER_DD_MMM_YYYY_HH_MM.format(object.lastLoggedIn);
 			}
 
 		};
