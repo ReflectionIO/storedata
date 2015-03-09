@@ -9,7 +9,7 @@ package io.reflection.app.client.page.part;
 
 import static io.reflection.app.client.controller.FilterController.DOWNLOADS_DAILY_DATA_TYPE;
 import static io.reflection.app.client.controller.FilterController.REVENUE_DAILY_DATA_TYPE;
-import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMAT_DD_MMM_YYYY;
+import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMATTER_DD_MMM_YYYY;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.helper.FilterHelper;
@@ -70,7 +70,7 @@ public class RankSidePanel extends Composite {
 		FilterHelper.addCountries(mCountry, SessionController.get().isLoggedInUserAdmin());
 		FilterHelper.addCategories(category, SessionController.get().isLoggedInUserAdmin());
 
-		date.setFormat(new DateBox.DefaultFormat(DATE_FORMAT_DD_MMM_YYYY));
+		date.setFormat(new DateBox.DefaultFormat(DATE_FORMATTER_DD_MMM_YYYY));
 		date.getTextBox().setReadOnly(Boolean.TRUE);
 
 		date.getDatePicker().addShowRangeHandler(new ShowRangeHandler<Date>() {

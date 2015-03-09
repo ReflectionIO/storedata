@@ -7,7 +7,7 @@
 //
 package io.reflection.app.client.page.blog.part;
 
-import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMAT_EEE_DD_MMM_YYYY;
+import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMATTER_EEE_DD_MMM_YYYY;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.helper.MarkdownHelper;
 import io.reflection.app.client.page.PageType;
@@ -54,7 +54,7 @@ public class PostSummaryCell extends AbstractCell<Post> {
 		SafeHtml published = DateTemplate.INSTANCE.notPublished();
 
 		if (value.published != null) {
-			published = DateTemplate.INSTANCE.publishedDate(DATE_FORMAT_EEE_DD_MMM_YYYY.format(value.published));
+			published = DateTemplate.INSTANCE.publishedDate(DATE_FORMATTER_EEE_DD_MMM_YYYY.format(value.published));
 		}
 
 		String processedString = MarkdownHelper.process(value.description);

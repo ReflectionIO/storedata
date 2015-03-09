@@ -16,7 +16,7 @@ import static io.reflection.app.client.controller.FilterController.GROSSING_LIST
 import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
 import static io.reflection.app.client.controller.FilterController.PAID_LIST_TYPE;
 import static io.reflection.app.client.controller.FilterController.STORE_KEY;
-import static io.reflection.app.client.helper.FormattingHelper.WHOLE_NUMBER_FORMAT;
+import static io.reflection.app.client.helper.FormattingHelper.WHOLE_NUMBER_FORMATTER;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
 import io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler;
@@ -237,7 +237,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			@Override
 			public String getValue(RanksGroup object) {
 				Rank rank = rankForListType(object);
-				return (rank.downloads != null) ? WHOLE_NUMBER_FORMAT.format(rank.downloads) : "-";
+				return (rank.downloads != null) ? WHOLE_NUMBER_FORMATTER.format(rank.downloads) : "-";
 			}
 
 		};

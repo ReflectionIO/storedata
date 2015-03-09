@@ -7,7 +7,7 @@
 //
 package io.reflection.app.client.part;
 
-import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMAT_DD_MMM_YYYY;
+import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMATTER_DD_MMM_YYYY;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.client.part.datatypes.DateRangeChangeEvent;
@@ -84,9 +84,9 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 
 		this.disableBefore = disableBefore;
 
-		dateBoxFrom.setFormat(new DateBox.DefaultFormat(DATE_FORMAT_DD_MMM_YYYY));
+		dateBoxFrom.setFormat(new DateBox.DefaultFormat(DATE_FORMATTER_DD_MMM_YYYY));
 		dateBoxFrom.getTextBox().setReadOnly(Boolean.TRUE);
-		dateBoxTo.setFormat(new DateBox.DefaultFormat(DATE_FORMAT_DD_MMM_YYYY));
+		dateBoxTo.setFormat(new DateBox.DefaultFormat(DATE_FORMATTER_DD_MMM_YYYY));
 		dateBoxTo.getTextBox().setReadOnly(Boolean.TRUE);
 
 		setDateRange(FilterHelper.getWeeksAgo(4), FilterHelper.getToday());

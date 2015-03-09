@@ -7,7 +7,7 @@
 //
 package io.reflection.app.client.part.datatypes;
 
-import static io.reflection.app.client.helper.FormattingHelper.WHOLE_NUMBER_FORMAT;
+import static io.reflection.app.client.helper.FormattingHelper.WHOLE_NUMBER_FORMATTER;
 import io.reflection.app.client.helper.FormattingHelper;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
@@ -81,7 +81,7 @@ public class MyApp {
 
 			Rank sample = ranks.get(0);
 
-			overallDownloads = WHOLE_NUMBER_FORMAT.format((double) downloads);
+			overallDownloads = WHOLE_NUMBER_FORMATTER.format((double) downloads);
 
 			overallRevenue = FormattingHelper.asMoneyString(sample.currency, revenue);
 

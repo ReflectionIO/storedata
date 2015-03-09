@@ -8,7 +8,7 @@
 package io.reflection.app.client.cell;
 
 import static io.reflection.app.client.controller.FilterController.REVENUE_DAILY_DATA_TYPE;
-import static io.reflection.app.client.helper.FormattingHelper.WHOLE_NUMBER_FORMAT;
+import static io.reflection.app.client.helper.FormattingHelper.WHOLE_NUMBER_FORMATTER;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.FilterController.Filter;
 import io.reflection.app.client.controller.ItemController;
@@ -91,7 +91,7 @@ public class AppRankCell extends AbstractCell<Rank> {
 			} else {
 				if (value.downloads != null) {
 					dailyData = DailyDataTemplate.INSTANCE.dailyData("icon-download-alt", "padding-right: 6px",
-							WHOLE_NUMBER_FORMAT.format(value.downloads.doubleValue()));
+							WHOLE_NUMBER_FORMATTER.format(value.downloads.doubleValue()));
 				} else {
 					dailyData = SafeHtmlUtils.fromSafeConstant("-");
 				}
@@ -141,7 +141,7 @@ public class AppRankCell extends AbstractCell<Rank> {
 						value.currency == null ? currency : value.currency, showAllPredictions ? value.revenue.floatValue() : 0.0f));
 			} else if (value.downloads != null) {
 				dailyData = DailyDataTemplate.INSTANCE.dailyData("icon-download-alt", "padding-right: 6px",
-						WHOLE_NUMBER_FORMAT.format(value.downloads.doubleValue()));
+						WHOLE_NUMBER_FORMATTER.format(value.downloads.doubleValue()));
 			} else {
 				dailyData = SafeHtmlUtils.fromSafeConstant("-");
 			}

@@ -7,7 +7,7 @@
 //
 package io.reflection.app.client.page.admin;
 
-import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMAT_DD_MMM_YYYY;
+import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMATTER_DD_MMM_YYYY;
 import io.reflection.app.api.admin.shared.call.GetDataAccountFetchesRequest;
 import io.reflection.app.api.admin.shared.call.GetDataAccountFetchesResponse;
 import io.reflection.app.api.admin.shared.call.event.GetDataAccountFetchesEventHandler;
@@ -113,7 +113,7 @@ public class DataAccountFetchesPage extends Page implements NavigationEventHandl
 
 			@Override
 			public String getValue(DataAccountFetch object) {
-				return DATE_FORMAT_DD_MMM_YYYY.format(object.date);
+				return DATE_FORMATTER_DD_MMM_YYYY.format(object.date);
 			}
 
 		};
