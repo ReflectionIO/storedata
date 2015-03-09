@@ -30,6 +30,8 @@ public class SlimFeed extends Job1<String, Long> {
 	private static final long serialVersionUID = -627864366513850701L;
 
 	private static final Logger LOG = Logger.getLogger(SlimFeed.class.getName());
+	
+	private transient String name = null;
 
 	/*
 	 * (non-Javadoc)
@@ -72,6 +74,19 @@ public class SlimFeed extends Job1<String, Long> {
 		}
 
 		return immediate(slimmed);
+	}
+
+	public SlimFeed name(String value) {
+		name = value;
+		return this;
+	}	
+	
+	/* (non-Javadoc)
+	 * @see com.google.appengine.tools.pipeline.Job#getJobDisplayName()
+	 */
+	@Override
+	public String getJobDisplayName() {
+		return (name == null ? super.getJobDisplayName() : name);
 	}
 
 }

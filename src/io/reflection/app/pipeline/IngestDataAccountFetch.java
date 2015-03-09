@@ -27,8 +27,10 @@ public class IngestDataAccountFetch extends Job1<Long, Long> {
 
 	private static final long serialVersionUID = 3258834001291433964L;
 
-	private static final Logger LOG = Logger.getLogger(IngestDataAccountFetch.class.getName());
+	private transient static final Logger LOG = Logger.getLogger(IngestDataAccountFetch.class.getName());
 
+	private transient String name = null;
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -82,5 +84,18 @@ public class IngestDataAccountFetch extends Job1<Long, Long> {
 		}
 
 		return (fetch == null || !ingested) ? null : immediate(fetch.id);
+	}
+
+	public IngestDataAccountFetch name(String value) {
+		name = value;
+		return this;
+	}	
+	
+	/* (non-Javadoc)
+	 * @see com.google.appengine.tools.pipeline.Job#getJobDisplayName()
+	 */
+	@Override
+	public String getJobDisplayName() {
+		return (name == null ? super.getJobDisplayName() : name);
 	}
 }

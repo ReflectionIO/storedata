@@ -17,6 +17,7 @@ import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.Forum;
 import io.reflection.app.datatypes.shared.Store;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -87,7 +88,7 @@ public class FilterHelper {
 				}
 			}
 		} else {
-			list.addItem("iPhone Store", "iph");
+			list.addItem(DataTypeHelper.STORE_IPHONE_NAME, DataTypeHelper.STORE_IPHONE_A3_CODE);
 			list.setEnabled(false);
 		}
 	}

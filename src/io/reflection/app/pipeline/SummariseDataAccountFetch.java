@@ -17,6 +17,7 @@ import static io.reflection.app.apple.SaleTransactionTypes.UPDATE_IPHONE_AND_IPO
 import static io.reflection.app.apple.SaleTransactionTypes.UPDATE_UNIVERSAL_IOS;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.datatypes.shared.FormType;
+import io.reflection.app.datatypes.shared.ListPropertyType;
 import io.reflection.app.datatypes.shared.Sale;
 import io.reflection.app.service.sale.SaleServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
@@ -29,7 +30,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.appengine.tools.pipeline.ImmediateValue;
 import com.google.appengine.tools.pipeline.Job1;
 import com.google.appengine.tools.pipeline.Value;
 import com.spacehopperstudios.utility.StringUtils;
@@ -42,11 +42,7 @@ public class SummariseDataAccountFetch extends Job1<Map<String, Double>, Long> {
 
 	private static final long serialVersionUID = 7363371689981793909L;
 
-	public static final String DOWNLOADS_LIST_PROPERTY = "downloads";
-	public static final String REVENUE_LIST_PROPERTY = "revenue";
-
-	public static final transient ImmediateValue<String> DOWNLOADS_LIST_PROPERTY_VALUE = immediate(DOWNLOADS_LIST_PROPERTY);
-	public static final transient ImmediateValue<String> REVENUE_LIST_PROPERTY_VALUE = immediate(REVENUE_LIST_PROPERTY);
+	private transient String name = null;
 
 	/*
 	 * (non-Javadoc)
@@ -63,7 +59,7 @@ public class SummariseDataAccountFetch extends Job1<Map<String, Double>, Long> {
 		Double value;
 		Collection<String> keys;
 		for (Sale sale : sales) {
-			keys = createKeys(sale, REVENUE_LIST_PROPERTY_VALUE.getValue());
+			keys = createKeys(sale, ListPropertyType.ListPropertyTypeRevenue);
 
 			for (String key : keys) {
 				value = apps.get(key);
@@ -77,7 +73,7 @@ public class SummariseDataAccountFetch extends Job1<Map<String, Double>, Long> {
 				apps.put(key, value);
 			}
 
-			keys = createKeys(sale, DOWNLOADS_LIST_PROPERTY_VALUE.getValue());
+			keys = createKeys(sale, ListPropertyType.ListPropertyTypeDownloads);
 			for (String key : keys) {
 				value = apps.get(key);
 
@@ -110,11 +106,12 @@ public class SummariseDataAccountFetch extends Job1<Map<String, Double>, Long> {
 		return forms;
 	}
 
-	public static Collection<String> createKeys(Sale sale, String type) throws DataAccessException {
+	public static Collection<String> createKeys(Sale sale, ListPropertyType listProperty) throws DataAccessException {
 		List<String> keys = new ArrayList<String>();
 
 		for (FormType formType : forms(sale)) {
-			keys.add(StringUtils.join(Arrays.<String> asList(sale.country, DataTypeHelper.IOS_STORE_A3, formType.toString(), type, getSaleItemId(sale)), "."));
+			keys.add(StringUtils.join(
+					Arrays.<String> asList(sale.country, DataTypeHelper.IOS_STORE_A3, formType.toString(), listProperty.toString(), getSaleItemId(sale)), "."));
 		}
 
 		return keys;
@@ -139,6 +136,21 @@ public class SummariseDataAccountFetch extends Job1<Map<String, Double>, Long> {
 		}
 
 		return itemId;
+	}
+
+	public SummariseDataAccountFetch name(String value) {
+		name = value;
+		return this;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.appengine.tools.pipeline.Job#getJobDisplayName()
+	 */
+	@Override
+	public String getJobDisplayName() {
+		return (name == null ? super.getJobDisplayName() : name);
 	}
 
 }

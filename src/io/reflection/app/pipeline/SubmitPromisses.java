@@ -8,6 +8,7 @@
 package io.reflection.app.pipeline;
 
 import io.reflection.app.datatypes.shared.Store;
+import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
 
@@ -37,6 +38,8 @@ public final class SubmitPromisses extends Job2<Void, Map<String, Map<String, Do
 
 	private static final Logger LOG = Logger.getLogger(SubmitPromisses.class.getName());
 
+	private transient String name = null;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -56,36 +59,70 @@ public final class SubmitPromisses extends Job2<Void, Map<String, Map<String, Do
 			Long code = FeedFetchServiceProvider.provide().getGatherCode(iosStore, start.toDate(), on);
 
 			if (code != null) {
-				fulfill(dataAccountFetchSummary, code, persist, pipelineService);
+				fulfill(dataAccountFetchSummary, on, code, iosStore, persist, pipelineService);
 			}
 
 			DateTime end = new DateTime(on.getTime(), DateTimeZone.UTC).plusHours(12);
 			code = FeedFetchServiceProvider.provide().getGatherCode(iosStore, on, end.toDate());
 
 			if (code != null) {
-				fulfill(dataAccountFetchSummary, code, persist, pipelineService);
+				fulfill(dataAccountFetchSummary, on, code, iosStore, persist, pipelineService);
 			}
 		}
 
 		return null;
 	}
 
-	private void fulfill(Map<String, Map<String, Double>> dataAccountFetchSummary, Long code, PersistentMap persist, PipelineService pipelineService) {
+	private void fulfill(Map<String, Map<String, Double>> dataAccountFetchSummary, Date on, Long code, Store store, PersistentMap persist,
+			PipelineService pipelineService) {
 		String key;
 		String promiseHandle;
+
+		key = StringUtils.join(Arrays.asList(code.toString(), store.a3Code, "date"), ".");
+		promiseHandle = (String) persist.get(key);
+
+		if (LOG.getLevel() == GaeLevel.DEBUG) {
+			LOG.log(GaeLevel.DEBUG, "Attempting to submit value for promise with key [" + key + "]");
+		}
+
+		submitPromisedValue(pipelineService, promiseHandle, on);
+
 		for (String summaryKey : dataAccountFetchSummary.keySet()) {
 			key = StringUtils.join(Arrays.asList(code.toString(), summaryKey), ".");
 			promiseHandle = (String) persist.get(key);
 
-			if (promiseHandle != null) {
-				try {
-					pipelineService.submitPromisedValue(promiseHandle, dataAccountFetchSummary.get(summaryKey));
-				} catch (NoSuchObjectException | OrphanedObjectException e) {
-					if (LOG.getLevel() == Level.WARNING) {
-						LOG.log(Level.WARNING, "Error trying to fulfill promise for [" + summaryKey + "], skipping", e);
-					}
+			if (LOG.getLevel() == GaeLevel.DEBUG) {
+				LOG.log(GaeLevel.DEBUG, "Attempting to submit value for promise with summary key [" + summaryKey + "] and handle [" + promiseHandle + "]");
+			}
+
+			submitPromisedValue(pipelineService, promiseHandle, dataAccountFetchSummary.get(summaryKey));
+		}
+	}
+
+	private void submitPromisedValue(PipelineService pipelineService, String handle, Object value) {
+		if (handle != null) {
+			try {
+				pipelineService.submitPromisedValue(handle, value);
+			} catch (NoSuchObjectException | OrphanedObjectException e) {
+				if (LOG.getLevel() == Level.WARNING) {
+					LOG.log(Level.WARNING, "Error trying to fulfill promise for [" + handle + "], skipping", e);
 				}
 			}
 		}
+	}
+
+	public SubmitPromisses name(String value) {
+		name = value;
+		return this;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.appengine.tools.pipeline.Job#getJobDisplayName()
+	 */
+	@Override
+	public String getJobDisplayName() {
+		return (name == null ? super.getJobDisplayName() : name);
 	}
 }

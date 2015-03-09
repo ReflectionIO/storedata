@@ -101,6 +101,9 @@
 			<xsd:element name="DeleteEventSubscriptionsInput" type="sda:DeleteEventSubscriptionsRequest" />
 			<xsd:element name="DeleteEventSubscriptionsOutput" type="sda:DeleteEventSubscriptionsResponse" />
 
+			<xsd:element name="GetCalibrationSummaryInput" type="sda:GetCalibrationSummaryRequest" />
+			<xsd:element name="GetCalibrationSummaryOutput" type="sda:GetCalibrationSummaryResponse" />
+
 			<xsd:complexType name="GetUsersRequest">
 				<xsd:complexContent>
 					<xsd:extension base="sd:Request">
@@ -756,6 +759,32 @@
 				</xsd:complexContent>
 			</xsd:complexType>
 
+			<xsd:complexType name="GetCalibrationSummaryRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="feedFetch" type="sd:FeedFetch" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+			<xsd:complexType name="GetCalibrationSummaryResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
+							<xsd:element type="sd:CalibrationSummary" name="calibrationSummary" />
+							<xsd:element type="sd:Item" name="items" maxOccurs="unbounded" />
+							<xsd:element type="sd:Store" name="store" />
+							<xsd:element type="sd:Country" name="country" />
+							<xsd:element type="sd:Category" name="category" />
+						</xsd:sequence>
+						<xsd:attribute type="sd:ListTypeType" name="listType" />
+						<xsd:attribute type="sd:ListPropertyType" name="listProperty" />
+						<xsd:attribute type="sd:FormType" name="form" />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
 		</xsd:schema>
 	</wsdl:types>
 
@@ -983,6 +1012,13 @@
 		<wsdl:part name="output" element="sda:DeleteEventSubscriptionsOutput" />
 	</wsdl:message>
 
+	<wsdl:message name="GetCalibrationSummaryRequest">
+		<wsdl:part name="input" element="sda:GetCalibrationSummaryInput" />
+	</wsdl:message>
+	<wsdl:message name="GetCalibrationSummaryResponse">
+		<wsdl:part name="output" element="sda:GetCalibrationSummaryOutput" />
+	</wsdl:message>
+
 	<wsdl:portType name="admin">
 		<wsdl:operation name="GetUsers">
 			<wsdl:input message="sda:GetUsersRequest" />
@@ -1136,6 +1172,11 @@
 		<wsdl:operation name="DeleteEventSubscriptions">
 			<wsdl:input message="sda:DeleteEventSubscriptionsRequest" />
 			<wsdl:output message="sda:DeleteEventSubscriptionsResponse" />
+		</wsdl:operation>
+
+		<wsdl:operation name="GetCalibrationSummary">
+			<wsdl:input message="sda:GetCalibrationSummaryRequest" />
+			<wsdl:output message="sda:GetCalibrationSummaryResponse" />
 		</wsdl:operation>
 	</wsdl:portType>
 
@@ -1446,6 +1487,16 @@
 
 		<wsdl:operation name="DeleteEventSubscriptions">
 			<soap:operation soapAction="http://app.reflection.io/admin/DeleteEventSubscriptions" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="GetCalibrationSummary">
+			<soap:operation soapAction="http://app.reflection.io/admin/GetCalibrationSummary" />
 			<wsdl:input>
 				<soap:body use="literal" />
 			</wsdl:input>

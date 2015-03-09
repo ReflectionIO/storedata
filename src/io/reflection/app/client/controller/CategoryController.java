@@ -20,6 +20,7 @@ import io.reflection.app.shared.util.DataTypeHelper;
 import io.reflection.app.shared.util.SparseArray;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -97,9 +98,7 @@ public class CategoryController extends AsyncDataProvider<Category> implements S
 					if (output.categories != null) {
 						categoryList.addAll(output.categories);
 
-						for (Category category : output.categories) {
-							lookup.put(category.id.intValue(), category);
-						}
+						addCategoriesToCache(output.categories);
 					}
 
 					if (output.pager != null) {
@@ -138,6 +137,16 @@ public class CategoryController extends AsyncDataProvider<Category> implements S
 
 	public Category getCategory(Long id) {
 		return lookup.get(id.intValue());
+	}
+
+	public void addCategoryToCache(Category category) {
+		lookup.put(category.id.intValue(), category);
+	}
+
+	public void addCategoriesToCache(Collection<Category> categories) {
+		for (Category category : categories) {
+			lookup.put(category.id.intValue(), category);
+		}
 	}
 
 	/**

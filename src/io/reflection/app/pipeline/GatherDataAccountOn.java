@@ -8,7 +8,6 @@
 package io.reflection.app.pipeline;
 
 import static io.reflection.app.accountdatacollectors.DataAccountCollector.ACCOUNT_DATA_BUCKET_KEY;
-import io.reflection.app.Queue;
 import io.reflection.app.accountdatacollectors.DataAccountCollector;
 import io.reflection.app.accountdatacollectors.DataAccountCollectorFactory;
 import io.reflection.app.accountdatacollectors.ITunesConnectDownloadHelper;
@@ -31,7 +30,6 @@ import org.joda.time.DateTimeZone;
 
 import com.google.appengine.tools.pipeline.FutureValue;
 import com.google.appengine.tools.pipeline.Job2;
-import com.google.appengine.tools.pipeline.JobSetting;
 import com.google.appengine.tools.pipeline.Value;
 
 public class GatherDataAccountOn extends Job2<Long, Long, Date> {
@@ -40,6 +38,8 @@ public class GatherDataAccountOn extends Job2<Long, Long, Date> {
 
 	private static final Logger LOG = Logger.getLogger(GatherDataAccountOn.class.getName());
 
+	private transient String name = null;
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -49,8 +49,6 @@ public class GatherDataAccountOn extends Job2<Long, Long, Date> {
 	public Value<Long> run(Long dataAccountId, Date date) throws Exception {
 		boolean sendNotification = false;
 		Value<Long> futureCollectedFetchId = null;
-
-		JobSetting onDefaultQueue = new JobSetting.OnQueue(JobSetting.OnQueue.DEFAULT);
 
 		try {
 			DataAccount account = DataAccountServiceProvider.provide().getDataAccount(dataAccountId);
@@ -71,7 +69,7 @@ public class GatherDataAccountOn extends Job2<Long, Long, Date> {
 						futureCollectedFetchId = collectAndIngest(account, date);
 
 						if (futureCollectedFetchId != null && sendNotification) {
-							futureCall(new NotifyUser(), futureCollectedFetchId, immediate(dataAccountId), onDefaultQueue);
+							futureCall(new NotifyUser().name("Notify account owner"), futureCollectedFetchId, immediate(dataAccountId), PipelineSettings.onDefaultQueue);
 						}
 
 					} else {
@@ -98,8 +96,6 @@ public class GatherDataAccountOn extends Job2<Long, Long, Date> {
 	private FutureValue<Long> collectAndIngest(DataAccount dataAccount, Date date) throws DataAccessException {
 		date = ApiHelper.removeTime(date);
 		FutureValue<Long> ingestedFetchId = null;
-
-		JobSetting onDataAccountIngestQueue = new JobSetting.OnQueue(Queue.DATA_ACCOUNT_INGEST);
 
 		String dateParameter = ITunesConnectDownloadHelper.DATE_FORMATTER.format(date);
 
@@ -152,7 +148,7 @@ public class GatherDataAccountOn extends Job2<Long, Long, Date> {
 			}
 
 			if (dataAccountFetch != null && dataAccountFetch.status == DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered) {
-				ingestedFetchId = futureCall(new IngestDataAccountFetch(), immediate(dataAccountFetch.id), onDataAccountIngestQueue);
+				ingestedFetchId = futureCall(new IngestDataAccountFetch().name("Add sales"), immediate(dataAccountFetch.id), PipelineSettings.onDataAccountIngestQueue);
 			}
 		} else {
 			LOG.warning(String.format("Gather for data account [%s] and date [%s] skipped because of status [%s]",
@@ -160,6 +156,19 @@ public class GatherDataAccountOn extends Job2<Long, Long, Date> {
 		}
 
 		return (ingestedFetchId == null || !success) ? null : ingestedFetchId;
+	}
+
+	public GatherDataAccountOn name(String value) {
+		name = value;
+		return this;
+	}	
+	
+	/* (non-Javadoc)
+	 * @see com.google.appengine.tools.pipeline.Job#getJobDisplayName()
+	 */
+	@Override
+	public String getJobDisplayName() {
+		return (name == null ? super.getJobDisplayName() : name);
 	}
 
 }

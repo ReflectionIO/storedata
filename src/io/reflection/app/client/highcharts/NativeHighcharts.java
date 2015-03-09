@@ -21,15 +21,15 @@ public class NativeHighcharts {
 	 * @param options
 	 * @return
 	 */
-	static native JavaScriptObject nativeChart(JavaScriptObject options)/*-{
+	public static native JavaScriptObject nativeChart(JavaScriptObject options)/*-{
 		return new $wnd.Highcharts.Chart(options);
 	}-*/;
 
-	static native String nativeDateFormat(String format, double millisec, boolean capitalize)/*-{
+	public static native String nativeDateFormat(String format, double millisec, boolean capitalize)/*-{
 		return $wnd.Highcharts.dateFormat(format, millisec, capitalize);
 	}-*/;
 
-	static native String nativeNumberFormat(double number, int decimals, String decimalPoint, String thousandsSeparator)/*-{
+	public static native String nativeNumberFormat(double number, int decimals, String decimalPoint, String thousandsSeparator)/*-{
 		return $wnd.Highcharts.numberFormat(number, decimals, decimalPoint,
 				thousandsSeparator);
 	}-*/;
@@ -39,7 +39,7 @@ public class NativeHighcharts {
 	 * 
 	 * @param options
 	 */
-	static native void nativeSetOptions(JavaScriptObject options)/*-{
+	public static native void nativeSetOptions(JavaScriptObject options)/*-{
 		$wnd.Highcharts.setOptions(options);
 	}-*/;
 

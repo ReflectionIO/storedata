@@ -88,6 +88,9 @@ public class DataTypeHelper {
 
 	public static final String STORE_IPHONE_A3_CODE = "iph";
 	public static final String STORE_IPAD_A3_CODE = "ipa";
+	
+	public static final String STORE_IPHONE_NAME = "iPhone Store";
+	public static final String STORE_IPAD_NAME = "iPad Store";
 
 	private static final Role ADMIN_ROLE = new Role();
 

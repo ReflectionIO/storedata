@@ -5,7 +5,7 @@
 //  Created by William Shakour (billy1380) on 8 Jan 2015.
 //  Copyright © 2015 Reflection.io Ltd. All rights reserved.
 //
-package io.reflection.app.pipeline;
+package io.reflection.app.pipeline.testcases;
 
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.FeedFetch;

@@ -16,6 +16,8 @@ public class GatherFeed extends Job4<Long, String, String, Long, Long> {
 
 	private static final long serialVersionUID = 959780630540839671L;
 
+	private transient String name = null;
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -26,7 +28,19 @@ public class GatherFeed extends Job4<Long, String, String, Long, Long> {
 		// we only care about the first id since we no longer attempt to store the feed in the feedfetch table (and even if we did we would only need the
 		// first id)
 
-		return immediate(new CollectorIOS().collect(countryCode, listName, categoryInternalId == null ? null : Long.toString(categoryInternalId), code)
-				.get(0));
+		return immediate(new CollectorIOS().collect(countryCode, listName, categoryInternalId == null ? null : Long.toString(categoryInternalId), code).get(0));
+	}
+
+	public GatherFeed name(String value) {
+		name = value;
+		return this;
+	}	
+	
+	/* (non-Javadoc)
+	 * @see com.google.appengine.tools.pipeline.Job#getJobDisplayName()
+	 */
+	@Override
+	public String getJobDisplayName() {
+		return (name == null ? super.getJobDisplayName() : name);
 	}
 }

@@ -7,9 +7,8 @@
 //
 package io.reflection.app.pipeline;
 
-import static io.reflection.app.pipeline.SummariseDataAccountFetch.DOWNLOADS_LIST_PROPERTY;
-import static io.reflection.app.pipeline.SummariseDataAccountFetch.REVENUE_LIST_PROPERTY;
 import io.reflection.app.datatypes.shared.FeedFetch;
+import io.reflection.app.datatypes.shared.ListPropertyType;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.SimpleModelRun;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
@@ -18,33 +17,42 @@ import io.reflection.app.service.simplemodelrun.SimpleModelRunServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
 import io.reflection.app.shared.util.PagerHelper;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.math3.stat.regression.RegressionResults;
 import org.apache.commons.math3.stat.regression.SimpleRegression;
 
-import com.google.appengine.tools.pipeline.Job3;
+import com.google.appengine.tools.pipeline.ImmediateValue;
+import com.google.appengine.tools.pipeline.Job4;
 import com.google.appengine.tools.pipeline.Value;
 
 /**
  * @author William Shakour (billy1380)
  *
  */
-public class CalibrateSimpleModel extends Job3<Long, String, Map<String, Double>, Long> {
+public class CalibrateSimpleModel extends Job4<Long, Long, String, Map<String, Double>, Date> {
 
 	private static final long serialVersionUID = -8764419384476424579L;
+
+	private transient String name = null;
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.google.appengine.tools.pipeline.Job3#run(java.lang.Object, java.lang.Object, java.lang.Object)
+	 * @see com.google.appengine.tools.pipeline.Job4#run(java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object)
 	 */
 	@Override
-	public Value<Long> run(String type, Map<String, Double> summary, Long feedFetchId) throws Exception {
+	public Value<Long> run(Long feedFetchId, String type, Map<String, Double> summary, Date summaryDate) throws Exception {
 
 		FeedFetch feedFetch = FeedFetchServiceProvider.provide().getFeedFetch(feedFetchId);
+		ListPropertyType listProperty = ListPropertyType.fromString(type);
 
 		List<Rank> ranks = RankServiceProvider.provide().getGatherCodeRanks(DataTypeHelper.createCountry(feedFetch.country),
 				DataTypeHelper.createStore(feedFetch.store), feedFetch.category, feedFetch.type, feedFetch.code, PagerHelper.createInfinitePager(),
@@ -56,6 +64,9 @@ public class CalibrateSimpleModel extends Job3<Long, String, Map<String, Double>
 			itemRanks.put(rank.itemId, rank);
 		}
 
+		Set<String> usedSalesLookup = new HashSet<String>();
+		Collection<String> usedSales = new ArrayList<String>();
+
 		SimpleRegression regression = new SimpleRegression();
 		Rank rank;
 		Double position;
@@ -63,10 +74,12 @@ public class CalibrateSimpleModel extends Job3<Long, String, Map<String, Double>
 			rank = itemRanks.get(itemId);
 
 			if (rank != null) {
-				position = getPosition(type, rank);
+				position = getPosition(listProperty, rank);
 
 				if (position != null) {
 					regression.addData(Math.log(position.doubleValue()), Math.log(summary.get(itemId).doubleValue()));
+					usedSalesLookup.add(itemId);
+					usedSales.add(createTruncatedRank(listProperty, itemId, position, summary).toString());
 				}
 			}
 		}
@@ -74,7 +87,8 @@ public class CalibrateSimpleModel extends Job3<Long, String, Map<String, Double>
 		SimpleModelRun run = null;
 
 		if (regression.getN() > 1) {
-			run = new SimpleModelRun().a(Double.valueOf(-regression.getSlope())).b(Double.valueOf(Math.exp(regression.getIntercept()))).feedFetch(feedFetch);
+			run = new SimpleModelRun().a(Double.valueOf(-regression.getSlope())).b(Double.valueOf(Math.exp(regression.getIntercept()))).feedFetch(feedFetch)
+					.summaryDate(summaryDate);
 
 			if (regression.getN() > 2) {
 				RegressionResults results = regression.regress();
@@ -86,27 +100,73 @@ public class CalibrateSimpleModel extends Job3<Long, String, Map<String, Double>
 			run = SimpleModelRunServiceProvider.provide().addSimpleModelRun(run);
 		}
 
-		return run == null ? null : immediate(run.id);
+		Collection<String> unusedSales = new ArrayList<String>();
+
+		for (String itemId : summary.keySet()) {
+			if (!usedSalesLookup.contains(itemId)) {
+				unusedSales.add(createTruncatedRank(listProperty, itemId, null, summary).toString());
+			}
+		}
+
+		ImmediateValue<Long> runIdValue = (run == null ? null : immediate(run.id));
+
+		futureCall(new StoreCalibrationSummaryFile().name("Store calibration summary file"), immediate(feedFetch.id), immediate(type), immediate(summaryDate),
+				immediate(usedSales), immediate(unusedSales), runIdValue, PipelineSettings.onDefaultQueue);
+
+		return runIdValue;
 	}
 
-	private Double getPosition(String type, Rank rank) {
+	private Double getPosition(ListPropertyType type, Rank rank) {
 		Double position = null;
 
 		switch (type) {
-		case REVENUE_LIST_PROPERTY:
+		case ListPropertyTypeRevenue:
 			if (rank.grossingPosition != null && rank.grossingPosition.intValue() != 0) {
 				position = Double.valueOf(rank.grossingPosition.doubleValue());
 			}
 			break;
-		case DOWNLOADS_LIST_PROPERTY:
+		case ListPropertyTypeDownloads:
 			if (rank.position != null && rank.position.intValue() != 0) {
 				position = Double.valueOf(rank.position.doubleValue());
 			}
 			break;
-		default:
-			break;
 		}
 
 		return position;
+	}
+
+	private Rank createTruncatedRank(ListPropertyType type, String itemId, Double position, Map<String, Double> summary) {
+		// add to used with clean rank
+		Rank rank = new Rank().position(null).grossingPosition(null).itemId(itemId);
+
+		if (position != null) {
+			rank.position(Integer.valueOf(position.intValue()));
+		}
+
+		switch (type) {
+		case ListPropertyTypeRevenue:
+			rank.revenue(Float.valueOf(summary.get(itemId).floatValue()));
+			break;
+		case ListPropertyTypeDownloads:
+			rank.downloads(Integer.valueOf(summary.get(itemId).intValue()));
+			break;
+		}
+
+		return rank;
+	}
+
+	public CalibrateSimpleModel name(String value) {
+		name = value;
+		return this;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.appengine.tools.pipeline.Job#getJobDisplayName()
+	 */
+	@Override
+	public String getJobDisplayName() {
+		return (name == null ? super.getJobDisplayName() : name);
 	}
 }

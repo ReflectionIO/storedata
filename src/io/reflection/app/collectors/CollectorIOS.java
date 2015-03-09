@@ -6,6 +6,7 @@ package io.reflection.app.collectors;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.Category;
+import io.reflection.app.datatypes.shared.ListTypeType;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.category.CategoryServiceProvider;
@@ -33,7 +34,7 @@ import com.willshex.gson.json.shared.Convert;
  * @author billy1380
  * 
  */
-public class CollectorIOS extends StoreCollector implements Collector {
+public class CollectorIOS implements Collector {
 
 	private static final Logger LOG = Logger.getLogger(CollectorIOS.class.getName());
 
@@ -211,7 +212,7 @@ public class CollectorIOS extends StoreCollector implements Collector {
 
 				if (parsed == null) { throw new RuntimeException("The data could not be parsed or parsing it returned a null json object"); }
 
-				ids = store(data, country, DataTypeHelper.IOS_STORE_A3, type, categoryInternalId, new Date(), code);
+				ids = StoreCollector.store(data, country, DataTypeHelper.IOS_STORE_A3, type, categoryInternalId, new Date(), code);
 			} else {
 				if (LOG.isLoggable(GaeLevel.TRACE)) {
 					LOG.log(GaeLevel.TRACE, "Obtained data was empty for country [" + country + "], type [" + type + "] and code [" + code + "]");
@@ -355,6 +356,25 @@ public class CollectorIOS extends StoreCollector implements Collector {
 	@Override
 	public List<String> getTypes() {
 		return Arrays.asList(TOP_FREE_APPS, TOP_PAID_APPS, TOP_GROSSING_APPS, TOP_FREE_IPAD_APPS, TOP_PAID_IPAD_APPS, TOP_GROSSING_IPAD_APPS);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.collectors.Collector#getListType(java.lang.String)
+	 */
+	@Override
+	public ListTypeType getListType(String type) {
+		ListTypeType listType = null;
+		if (type.contains("paid")) {
+			listType = ListTypeType.ListTypeTypePaid;
+		} else if (type.contains("free")) {
+			listType = ListTypeType.ListTypeTypeFree;
+		} else if (type.contains("grossing")) {
+			listType = ListTypeType.ListTypeTypeGrossing;
+		}
+
+		return listType;
 	}
 
 }
