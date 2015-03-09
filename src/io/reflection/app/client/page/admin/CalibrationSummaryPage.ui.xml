@@ -1,5 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
+	xmlns:c="urn:import:com.google.gwt.user.cellview.client" xmlns:gc="urn:import:com.googlecode.gchart.client">
 
 	<ui:style gss="true">
 	
@@ -10,6 +11,25 @@
 				<h2>Calibration Summary</h2>
 
 				<p:Breadcrumbs ui:field="breadcrumbs" path="..." styleName="topPanel" />
+
+				<h3 ui:field="title">${title}</h3>
+				<p ui:field="description">${description}</p>
+
+
+				<h4>Data</h4>
+				<gc:GChart ui:field="chart" />
+
+
+				<div class="row">
+					<div class="col-sm-6">
+						<h4>Hits</h4>
+						<c:CellList ui:field="hits" />
+					</div>
+					<div class="col-sm-6">
+						<h4>Misses</h4>
+						<c:CellList ui:field="misses" />
+					</div>
+				</div>
 
 
 			</g:HTMLPanel>

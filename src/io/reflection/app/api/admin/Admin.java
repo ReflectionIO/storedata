@@ -84,6 +84,7 @@ import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
 import io.reflection.app.datatypes.shared.EventPriorityType;
 import io.reflection.app.datatypes.shared.FeedFetch;
+import io.reflection.app.datatypes.shared.ListPropertyType;
 import io.reflection.app.datatypes.shared.Notification;
 import io.reflection.app.datatypes.shared.NotificationTypeType;
 import io.reflection.app.datatypes.shared.Rank;
@@ -110,7 +111,6 @@ import io.reflection.app.service.notification.NotificationServiceProvider;
 import io.reflection.app.service.permission.PermissionServiceProvider;
 import io.reflection.app.service.role.RoleServiceProvider;
 import io.reflection.app.service.simplemodelrun.SimpleModelRunServiceProvider;
-import io.reflection.app.service.store.StoreServiceProvider;
 import io.reflection.app.service.user.IUserService;
 import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
@@ -1374,14 +1374,27 @@ public final class Admin extends ActionHandler {
 			}
 
 			output.items = ItemServiceProvider.provide().getInternalIdItemBatch(itemIds);
-			output.store = StoreServiceProvider.provide().getA3CodeStore(input.feedFetch.store);
+
+			// we don't send the store because of iphone/ipad stores - we use the list type to decide
+			// output.store = StoreServiceProvider.provide().getA3CodeStore(input.feedFetch.store);
+
 			output.country = CountryServiceProvider.provide().getA2CodeCountry(input.feedFetch.country);
+			output.category = CategoryServiceProvider.provide().getCategory(input.feedFetch.category.id);
+
+			Collector collector = CollectorFactory.getCollectorForStore(input.feedFetch.store);
+
+			output.listType = collector.getListType(input.feedFetch.type);
+			output.listProperty = (collector.isGrossing(input.feedFetch.type) ? ListPropertyType.ListPropertyTypeRevenue
+					: ListPropertyType.ListPropertyTypeDownloads);
+
+			output.form = ModellerFactory.getModellerForStore(input.feedFetch.store).getForm(input.feedFetch.type);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
 			output.error = convertToErrorAndLog(LOG, e);
 		}
+
 		LOG.finer("Exiting getCalibrationSummary");
 		return output;
 	}

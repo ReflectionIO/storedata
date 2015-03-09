@@ -10,8 +10,12 @@ package io.reflection.app.api.admin.shared.call;
 
 import io.reflection.app.api.shared.datatypes.Response;
 import io.reflection.app.datatypes.shared.CalibrationSummary;
+import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
+import io.reflection.app.datatypes.shared.FormType;
 import io.reflection.app.datatypes.shared.Item;
+import io.reflection.app.datatypes.shared.ListPropertyType;
+import io.reflection.app.datatypes.shared.ListTypeType;
 import io.reflection.app.datatypes.shared.Store;
 
 import java.util.ArrayList;
@@ -21,16 +25,23 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 public class GetCalibrationSummaryResponse extends Response {
+	public ListTypeType listType;
 	public Store store;
 	public List<Item> items;
+	public ListPropertyType listProperty;
+	public FormType form;
+	public Category category;
 	public CalibrationSummary calibrationSummary;
 	public Country country;
 
 	@Override
 	public JsonObject toJson() {
 		JsonObject object = super.toJson();
+		JsonElement jsonListType = listType == null ? JsonNull.INSTANCE : new JsonPrimitive(listType.toString());
+		object.add("listType", jsonListType);
 		JsonElement jsonStore = store == null ? JsonNull.INSTANCE : store.toJson();
 		object.add("store", jsonStore);
 		JsonElement jsonItems = JsonNull.INSTANCE;
@@ -42,6 +53,12 @@ public class GetCalibrationSummaryResponse extends Response {
 			}
 		}
 		object.add("items", jsonItems);
+		JsonElement jsonListProperty = listProperty == null ? JsonNull.INSTANCE : new JsonPrimitive(listProperty.toString());
+		object.add("listProperty", jsonListProperty);
+		JsonElement jsonForm = form == null ? JsonNull.INSTANCE : new JsonPrimitive(form.toString());
+		object.add("form", jsonForm);
+		JsonElement jsonCategory = category == null ? JsonNull.INSTANCE : category.toJson();
+		object.add("category", jsonCategory);
 		JsonElement jsonCalibrationSummary = calibrationSummary == null ? JsonNull.INSTANCE : calibrationSummary.toJson();
 		object.add("calibrationSummary", jsonCalibrationSummary);
 		JsonElement jsonCountry = country == null ? JsonNull.INSTANCE : country.toJson();
@@ -52,6 +69,12 @@ public class GetCalibrationSummaryResponse extends Response {
 	@Override
 	public void fromJson(JsonObject jsonObject) {
 		super.fromJson(jsonObject);
+		if (jsonObject.has("listType")) {
+			JsonElement jsonListType = jsonObject.get("listType");
+			if (jsonListType != null) {
+				listType = ListTypeType.fromString(jsonListType.getAsString());
+			}
+		}
 		if (jsonObject.has("store")) {
 			JsonElement jsonStore = jsonObject.get("store");
 			if (jsonStore != null) {
@@ -73,6 +96,25 @@ public class GetCalibrationSummaryResponse extends Response {
 			}
 		}
 
+		if (jsonObject.has("listProperty")) {
+			JsonElement jsonListProperty = jsonObject.get("listProperty");
+			if (jsonListProperty != null) {
+				listProperty = ListPropertyType.fromString(jsonListProperty.getAsString());
+			}
+		}
+		if (jsonObject.has("form")) {
+			JsonElement jsonForm = jsonObject.get("form");
+			if (jsonForm != null) {
+				form = FormType.fromString(jsonForm.getAsString());
+			}
+		}
+		if (jsonObject.has("category")) {
+			JsonElement jsonCategory = jsonObject.get("category");
+			if (jsonCategory != null) {
+				category = new Category();
+				category.fromJson(jsonCategory.getAsJsonObject());
+			}
+		}
 		if (jsonObject.has("calibrationSummary")) {
 			JsonElement jsonCalibrationSummary = jsonObject.get("calibrationSummary");
 			if (jsonCalibrationSummary != null) {
@@ -89,6 +131,11 @@ public class GetCalibrationSummaryResponse extends Response {
 		}
 	}
 
+	public GetCalibrationSummaryResponse listType(ListTypeType listType) {
+		this.listType = listType;
+		return this;
+	}
+
 	public GetCalibrationSummaryResponse store(Store store) {
 		this.store = store;
 		return this;
@@ -96,6 +143,21 @@ public class GetCalibrationSummaryResponse extends Response {
 
 	public GetCalibrationSummaryResponse items(List<Item> items) {
 		this.items = items;
+		return this;
+	}
+
+	public GetCalibrationSummaryResponse listProperty(ListPropertyType listProperty) {
+		this.listProperty = listProperty;
+		return this;
+	}
+
+	public GetCalibrationSummaryResponse form(FormType form) {
+		this.form = form;
+		return this;
+	}
+
+	public GetCalibrationSummaryResponse category(Category category) {
+		this.category = category;
 		return this;
 	}
 

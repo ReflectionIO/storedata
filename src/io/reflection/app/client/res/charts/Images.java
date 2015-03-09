@@ -20,5 +20,8 @@ public interface Images extends ClientBundle {
 
     @Source("purplecircle.png")
     ImageResource purpleCirle();
+    
+    @Source("pinkcircle.png")
+    ImageResource pinkCirle();
 
 }

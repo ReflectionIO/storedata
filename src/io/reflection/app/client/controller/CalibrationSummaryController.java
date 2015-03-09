@@ -53,6 +53,7 @@ public class CalibrationSummaryController implements ServiceConstants {
 					if (output.items != null) {
 						ItemController.get().addItemsToCache(output.items);
 						CountryController.get().addCountryToCache(output.country);
+						CategoryController.get().addCategoryToCache(output.category);
 
 						// cannot do this because of the split in the ios store
 						// StoreController.get().addStoreToCache(output.store);
@@ -76,7 +77,7 @@ public class CalibrationSummaryController implements ServiceConstants {
 
 			fetchCalibrationSummary();
 		}
-		
+
 		return null;
 	}
 }

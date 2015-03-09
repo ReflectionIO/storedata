@@ -14,7 +14,7 @@
         -moz-border-radius: 2px;
     }
     
-    .date {
+    .title {
         color: #a5a6b6;
         font-size: 12px;
         text-align: center;
@@ -31,7 +31,7 @@
     }
     </ui:style>
     <g:HTMLPanel styleName="{style.box}">
-        <g:HTMLPanel ui:field="date" styleName="{style.date}" />
+        <g:HTMLPanel ui:field="title" styleName="{style.title}" />
         <g:HTMLPanel ui:field="detail" styleName="{style.detail}" />
     </g:HTMLPanel>
 </ui:UiBinder> 
