@@ -34,9 +34,12 @@ import io.reflection.app.datatypes.shared.FeedFetch;
 import java.util.Map;
 
 import com.google.gwt.cell.client.FieldUpdater;
+import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.i18n.shared.DateTimeFormat;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -164,11 +167,13 @@ public class FeedBrowserPage extends Page implements FilterEventHandler, Navigat
 			}
 		}, "Type");
 
-		mFeeds.addColumn(new TextColumn<FeedFetch>() {
+		mFeeds.addColumn(new Column<FeedFetch, SafeHtml>(new SafeHtmlCell()) {
 
 			@Override
-			public String getValue(FeedFetch object) {
-				return object.status.toString();
+			public SafeHtml getValue(FeedFetch object) {
+				return SafeHtmlUtils.fromTrustedString("<a href=\""
+						+ PageType.CalibrationSummaryPageType.asHref(CalibrationSummaryPage.VIEW_ACTION_NAME, object.id.toString()).asString() + "\">"
+						+ object.status.toString() + "</a>");
 			}
 		}, "Status");
 

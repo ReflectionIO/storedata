@@ -7,6 +7,7 @@
 //
 package io.reflection.app.client.page;
 
+import io.reflection.app.client.page.admin.CalibrationSummaryPage;
 import io.reflection.app.client.page.admin.CategoriesPage;
 import io.reflection.app.client.page.admin.DataAccountFetchesPage;
 import io.reflection.app.client.page.admin.DataAccountsPage;
@@ -90,6 +91,7 @@ public enum PageType {
 	SendNotificationPageType("sendnotification", DataTypeHelper.PERMISSION_SEND_NOTIFICATIONS_CODE),
 	EventSubscriptionsPageType("eventsubscriptions", DataTypeHelper.PERMISSION_MANAGE_EVENT_SUBSCRIPTIONS_CODE),
 	EditEventSubscriptionPageType("editeventsubscription", DataTypeHelper.PERMISSION_MANAGE_EVENT_SUBSCRIPTIONS_CODE),
+	CalibrationSummaryPageType("calibrationsummary", DataTypeHelper.PERMISSION_MANAGE_FEED_FETCHES_CODE),
 
 	// Non navigable
 	LoadingPageType("loading"), ;
@@ -322,6 +324,9 @@ public enum PageType {
 			break;
 		case SendNotificationPageType:
 			page = new SendNotificationPage();
+			break;
+		case CalibrationSummaryPageType:
+			page = new CalibrationSummaryPage();
 			break;
 		case HomePageType:
 		default:

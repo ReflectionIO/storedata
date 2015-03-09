@@ -1,0 +1,19 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part">
+
+	<ui:style gss="true">
+	
+	</ui:style>
+	<g:HTMLPanel>
+		<div class="row">
+			<g:HTMLPanel styleName="col-sm-10 col-sm-offset-1">
+				<h2>Calibration Summary</h2>
+
+				<p:Breadcrumbs ui:field="breadcrumbs" path="..." styleName="topPanel" />
+
+
+			</g:HTMLPanel>
+		</div>
+		<g:HTMLPanel styleName="filler-bottom col-md-12 hidden-xs hidden-sm" />
+	</g:HTMLPanel>
+</ui:UiBinder> 

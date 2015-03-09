@@ -18,6 +18,7 @@ import io.reflection.app.client.res.flags.Styles;
 import io.reflection.app.datatypes.shared.Country;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,14 +72,7 @@ public class CountryController implements ServiceConstants {
 			public void onSuccess(GetCountriesResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {
 					if (output.countries != null && output.countries.size() > 0) {
-
-						if (mCountryLookup == null) {
-							mCountryLookup = new HashMap<String, Country>();
-						}
-
-						for (Country country : output.countries) {
-							mCountryLookup.put(country.a2Code, country);
-						}
+						addCountriesToCache(output.countries);
 
 						countries = output.countries;
 					}
@@ -106,6 +100,28 @@ public class CountryController implements ServiceConstants {
 		}
 
 		return country;
+	}
+
+	public void addCountryToCache(Country country) {
+		if (country != null) {
+			if (mCountryLookup == null) {
+				mCountryLookup = new HashMap<String, Country>();
+			}
+
+			mCountryLookup.put(country.a2Code, country);
+		}
+	}
+
+	public void addCountriesToCache(Collection<Country> countries) {
+		if (countries != null && countries.size() > 0) {
+			if (mCountryLookup == null) {
+				mCountryLookup = new HashMap<String, Country>();
+			}
+
+			for (Country country : countries) {
+				mCountryLookup.put(country.a2Code, country);
+			}
+		}
 	}
 
 	/**

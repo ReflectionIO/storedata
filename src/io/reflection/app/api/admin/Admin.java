@@ -24,6 +24,8 @@ import io.reflection.app.api.admin.shared.call.DeleteUserRequest;
 import io.reflection.app.api.admin.shared.call.DeleteUserResponse;
 import io.reflection.app.api.admin.shared.call.DeleteUsersRequest;
 import io.reflection.app.api.admin.shared.call.DeleteUsersResponse;
+import io.reflection.app.api.admin.shared.call.GetCalibrationSummaryRequest;
+import io.reflection.app.api.admin.shared.call.GetCalibrationSummaryResponse;
 import io.reflection.app.api.admin.shared.call.GetDataAccountFetchesRequest;
 import io.reflection.app.api.admin.shared.call.GetDataAccountFetchesResponse;
 import io.reflection.app.api.admin.shared.call.GetDataAccountsRequest;
@@ -84,17 +86,20 @@ import io.reflection.app.datatypes.shared.EventPriorityType;
 import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.Notification;
 import io.reflection.app.datatypes.shared.NotificationTypeType;
+import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.SimpleModelRun;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.helpers.NotificationHelper;
 import io.reflection.app.ingestors.Ingestor;
 import io.reflection.app.ingestors.IngestorFactory;
+import io.reflection.app.modellers.CalibrationSummaryHelper;
 import io.reflection.app.modellers.Modeller;
 import io.reflection.app.modellers.ModellerFactory;
 import io.reflection.app.predictors.Predictor;
 import io.reflection.app.predictors.PredictorFactory;
 import io.reflection.app.service.category.CategoryServiceProvider;
+import io.reflection.app.service.country.CountryServiceProvider;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
 import io.reflection.app.service.datasource.DataSourceServiceProvider;
@@ -105,6 +110,7 @@ import io.reflection.app.service.notification.NotificationServiceProvider;
 import io.reflection.app.service.permission.PermissionServiceProvider;
 import io.reflection.app.service.role.RoleServiceProvider;
 import io.reflection.app.service.simplemodelrun.SimpleModelRunServiceProvider;
+import io.reflection.app.service.store.StoreServiceProvider;
 import io.reflection.app.service.user.IUserService;
 import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
@@ -114,11 +120,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
+import com.google.gwt.dev.util.collect.HashSet;
 import com.willshex.gson.json.service.server.ActionHandler;
 import com.willshex.gson.json.service.server.InputValidationException;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -1330,6 +1338,51 @@ public final class Admin extends ActionHandler {
 			output.error = convertToErrorAndLog(LOG, e);
 		}
 		LOG.finer("Exiting deleteEventSubscriptions");
+		return output;
+	}
+
+	public GetCalibrationSummaryResponse getCalibrationSummary(GetCalibrationSummaryRequest input) {
+		LOG.finer("Entering getCalibrationSummary");
+		GetCalibrationSummaryResponse output = new GetCalibrationSummaryResponse();
+		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("JoinDataAccountRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
+
+			input.feedFetch = ValidationHelper.validateFeedFetch(input.feedFetch, "input.feedfetch");
+
+			output.calibrationSummary = CalibrationSummaryHelper.read(input.feedFetch);
+
+			Set<String> itemIds = new HashSet<String>();
+			if (output.calibrationSummary != null) {
+				if (output.calibrationSummary.hits != null) {
+					for (Rank rank : output.calibrationSummary.hits) {
+						itemIds.add(rank.itemId);
+					}
+				}
+
+				if (output.calibrationSummary.misses != null) {
+					for (Rank rank : output.calibrationSummary.misses) {
+						itemIds.add(rank.itemId);
+					}
+				}
+			}
+
+			output.items = ItemServiceProvider.provide().getInternalIdItemBatch(itemIds);
+			output.store = StoreServiceProvider.provide().getA3CodeStore(input.feedFetch.store);
+			output.country = CountryServiceProvider.provide().getA2CodeCountry(input.feedFetch.country);
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting getCalibrationSummary");
 		return output;
 	}
 }

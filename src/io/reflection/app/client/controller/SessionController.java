@@ -362,10 +362,10 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 					}
 				}
 			}
+
 			if (!hasPermission && user.permissions != null) {
 				hasPermission = hasCodePermission(user.permissions, code);
 			}
-
 		}
 
 		return hasPermission;

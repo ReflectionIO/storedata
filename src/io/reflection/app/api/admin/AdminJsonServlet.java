@@ -15,6 +15,7 @@ import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
 import io.reflection.app.api.admin.shared.call.DeleteEventSubscriptionsRequest;
 import io.reflection.app.api.admin.shared.call.DeleteUserRequest;
 import io.reflection.app.api.admin.shared.call.DeleteUsersRequest;
+import io.reflection.app.api.admin.shared.call.GetCalibrationSummaryRequest;
 import io.reflection.app.api.admin.shared.call.GetDataAccountFetchesRequest;
 import io.reflection.app.api.admin.shared.call.GetDataAccountsRequest;
 import io.reflection.app.api.admin.shared.call.GetEventSubscriptionsRequest;
@@ -178,8 +179,11 @@ public final class AdminJsonServlet extends JsonServlet {
 			DeleteEventSubscriptionsRequest input = new DeleteEventSubscriptionsRequest();
 			input.fromJson(request);
 			output = service.deleteEventSubscriptions(input).toString();
+		} else if ("GetCalibrationSummary".equals(action)) {
+			GetCalibrationSummaryRequest input = new GetCalibrationSummaryRequest();
+			input.fromJson(request);
+			output = service.getCalibrationSummary(input).toString();
 		}
-
 		return output;
 	}
 }
