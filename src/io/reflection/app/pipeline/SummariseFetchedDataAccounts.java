@@ -23,7 +23,7 @@ import com.google.appengine.tools.pipeline.Value;
 public class SummariseFetchedDataAccounts extends Job1<Map<String, Map<String, Double>>, List<Long>> {
 
 	private static final long serialVersionUID = 7344309686985145135L;
-	
+
 	private transient String name = null;
 
 	/*
@@ -38,11 +38,13 @@ public class SummariseFetchedDataAccounts extends Job1<Map<String, Map<String, D
 		List<FutureValue<Map<String, Double>>> summaries = new ArrayList<>();
 		FutureValue<Map<String, Double>> summary;
 		for (Long id : dataAccountFetchIds) {
-			summary = futureCall(new SummariseDataAccountFetch(), immediate(id), PipelineSettings.onDefaultQueue);
+			summary = futureCall(new SummariseDataAccountFetch().name("Summarise data account fetch " + id.toString()), immediate(id),
+					PipelineSettings.onDefaultQueue);
 			summaries.add(summary);
 		}
 
-		FutureValue<Map<String, Map<String, Double>>> organised = futureCall(new OrganiseSummaries(), futureList(summaries), PipelineSettings.onDefaultQueue);
+		FutureValue<Map<String, Map<String, Double>>> organised = futureCall(new OrganiseSummaries().name("Organising summarised fetches by country"),
+				futureList(summaries), PipelineSettings.onDefaultQueue);
 
 		return organised;
 	}
@@ -50,9 +52,11 @@ public class SummariseFetchedDataAccounts extends Job1<Map<String, Map<String, D
 	public SummariseFetchedDataAccounts name(String value) {
 		name = value;
 		return this;
-	}	
-	
-	/* (non-Javadoc)
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.google.appengine.tools.pipeline.Job#getJobDisplayName()
 	 */
 	@Override
