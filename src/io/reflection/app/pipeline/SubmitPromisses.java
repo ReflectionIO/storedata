@@ -55,15 +55,17 @@ public final class SubmitPromisses extends Job2<Void, Map<String, Map<String, Do
 			// FIXME: there are better ways to get the store
 			Store iosStore = DataTypeHelper.getIosStore();
 
-			DateTime start = new DateTime(on.getTime(), DateTimeZone.UTC).minusHours(12);
-			Long code = FeedFetchServiceProvider.provide().getGatherCode(iosStore, start.toDate(), on);
+			DateTime start = new DateTime(on.getTime(), DateTimeZone.UTC).plusHours(12);
+			DateTime end = start.plusHours(12);
+			Long code = FeedFetchServiceProvider.provide().getGatherCode(iosStore, start.toDate(), end.toDate());
 
 			if (code != null) {
 				fulfill(dataAccountFetchSummary, on, code, iosStore, persist, pipelineService);
 			}
 
-			DateTime end = new DateTime(on.getTime(), DateTimeZone.UTC).plusHours(12);
-			code = FeedFetchServiceProvider.provide().getGatherCode(iosStore, on, end.toDate());
+			start = end;
+			end = start.plusHours(12);
+			code = FeedFetchServiceProvider.provide().getGatherCode(iosStore, start.toDate(), end.toDate());
 
 			if (code != null) {
 				fulfill(dataAccountFetchSummary, on, code, iosStore, persist, pipelineService);
