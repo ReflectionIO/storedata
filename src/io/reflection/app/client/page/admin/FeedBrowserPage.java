@@ -159,21 +159,21 @@ public class FeedBrowserPage extends Page implements FilterEventHandler, Navigat
 			}
 		}, "Date");
 
-		mFeeds.addColumn(new TextColumn<FeedFetch>() {
-
-			@Override
-			public String getValue(FeedFetch object) {
-				return object.type;
-			}
-		}, "Type");
-
 		mFeeds.addColumn(new Column<FeedFetch, SafeHtml>(new SafeHtmlCell()) {
 
 			@Override
 			public SafeHtml getValue(FeedFetch object) {
 				return SafeHtmlUtils.fromTrustedString("<a href=\""
 						+ PageType.CalibrationSummaryPageType.asHref(CalibrationSummaryPage.VIEW_ACTION_NAME, object.id.toString()).asString() + "\">"
-						+ object.status.toString() + "</a>");
+						+ object.type + "</a>");
+			}
+		}, "Type");
+
+		mFeeds.addColumn(new TextColumn<FeedFetch>() {
+
+			@Override
+			public String getValue(FeedFetch object) {
+				return object.status.toString();
 			}
 		}, "Status");
 
