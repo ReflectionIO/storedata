@@ -239,7 +239,7 @@ public class PredictorIOS implements Predictor {
 
 		if (usesIap) {
 			if (DataTypeHelper.isZero(price)) {
-				if (rank.grossingPosition == null && rank.grossingPosition.intValue() == 0) {
+				if (rank.grossingPosition == null || rank.grossingPosition.intValue() == 0) {
 					downloads = (double) (output.freeB.doubleValue() * Math.pow(rank.position.doubleValue(), -output.freeA.doubleValue()));
 					revenue = output.theta.doubleValue() * downloads;
 				} else {
@@ -247,7 +247,7 @@ public class PredictorIOS implements Predictor {
 					downloads = revenue / output.theta.doubleValue();
 				}
 			} else {
-				if (rank.grossingPosition == null && rank.grossingPosition.intValue() == 0) {
+				if (rank.grossingPosition == null || rank.grossingPosition.intValue() == 0) {
 					downloads = (double) (output.paidB.doubleValue() * Math.pow(rank.position.doubleValue(), -output.paidAIap.doubleValue()));
 					revenue = downloads * (price + output.theta.doubleValue());
 				} else {
@@ -262,7 +262,7 @@ public class PredictorIOS implements Predictor {
 				// download calculated here
 				downloads = (double) (output.freeB.doubleValue() * Math.pow(rank.position.doubleValue(), -output.freeA.doubleValue()));
 			} else {
-				if (rank.grossingPosition == null && rank.grossingPosition.intValue() == 0) {
+				if (rank.grossingPosition == null || rank.grossingPosition.intValue() == 0) {
 					downloads = (double) (output.paidB.doubleValue() * Math.pow(rank.position.doubleValue(), -output.paidA.doubleValue()));
 					revenue = downloads * price;
 				} else {
@@ -457,23 +457,21 @@ public class PredictorIOS implements Predictor {
 			} else {
 				if (isDownload) {
 					downloads = (double) (simpleModelRun.b.doubleValue() * Math.pow(rank.position.doubleValue(), -simpleModelRun.a.doubleValue()));
-
-					if (rank.grossingPosition == null || rank.grossingPosition.intValue() == 0) {
-						revenue = (double) downloads * (double) price;
-					}
+					revenue = (double) downloads * (double) price;
 				} else {
 					revenue = simpleModelRun.b.doubleValue() * Math.pow(rank.grossingPosition.doubleValue(), -simpleModelRun.a.doubleValue());
-
-					if (rank.position == null || rank.position.intValue() == 0) {
-						downloads = (int) (revenue / (double) price);
-					}
+					downloads = (int) (revenue / (double) price);
 				}
 			}
 		}
 
-		// These numbers still overflow using the current model
-		rank.downloads = Integer.valueOf((int) downloads);
-		rank.revenue = Float.valueOf((float) revenue);
+		if (rank.downloads == null || (rank.downloads.intValue() == 0 && (int) downloads != 0)) {
+			rank.downloads = Integer.valueOf((int) downloads);
+		}
+
+		if (rank.revenue == null || (DataTypeHelper.isZero(rank.revenue.floatValue()) && !DataTypeHelper.isZero((float) revenue))) {
+			rank.revenue = Float.valueOf((float) revenue);
+		}
 
 		if (LOG.isLoggable(Level.INFO)) {
 			LOG.info("Downloads :" + downloads);
