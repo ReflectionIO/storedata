@@ -89,7 +89,12 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
         <servlet-class>io.reflection.app.DataAccountIngestServlet</servlet-class>
     </servlet>
     
-        <servlet>
+    <servlet>
+        <servlet-name>Go To</servlet-name>
+        <servlet-class>io.reflection.app.GoToServlet</servlet-class>
+    </servlet>
+    
+    <servlet>
         <servlet-name>Go To</servlet-name>
         <servlet-class>io.reflection.app.GoToServlet</servlet-class>
     </servlet>
@@ -181,11 +186,6 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
     <servlet-mapping>
         <servlet-name>Data Account Ingest</servlet-name>
         <url-pattern>/dataaccountingest</url-pattern>
-    </servlet-mapping>
-    
-    <servlet-mapping>
-        <servlet-name>Go To</servlet-name>
-        <url-pattern>/goto</url-pattern>
     </servlet-mapping>
     
     <servlet-mapping>
@@ -294,8 +294,9 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 	
-	<welcome-file-list>
-		<welcome-file>index.html</welcome-file>
-	</welcome-file-list>
+	<servlet-mapping>
+        <servlet-name>Go To</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
 
 </web-app>

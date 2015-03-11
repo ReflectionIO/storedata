@@ -45,6 +45,7 @@
 		<property name="db.connection.password" value="sooth28@duns" />
 
 		<property name="pipeline.model.for.date" value="1" />
+		<property name="site.title.prefix" value="Testenv1" />
 
 		<!-- <property name="bigquery.oauth.access.token" value="1/Ihkwv_KZKsx3w0IoOcZdBCeyGTe74QQmsSznCNrBa1IMEudVrK5jSpoR30zcRFq6" /> -->
 		<!-- oauth.* properties are not required during deployment only development -->
