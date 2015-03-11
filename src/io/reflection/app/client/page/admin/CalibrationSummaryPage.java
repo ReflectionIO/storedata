@@ -375,8 +375,8 @@ public class CalibrationSummaryPage extends Page implements NavigationEventHandl
 			currency = io.reflection.app.shared.util.FormattingHelper.getCountryCurrency(summary.feedFetch.country.toUpperCase());
 			prototype.currency(currency);
 
-			hitsProvider.setList(summary.hits);
-			missesProvider.setList(summary.misses);
+			hitsProvider.setList(summary.hits == null ? Collections.<Rank> emptyList() : summary.hits);
+			missesProvider.setList(summary.misses == null ? Collections.<Rank> emptyList() : summary.misses);
 
 			description.setInnerHTML(StringUtils.upperCaseFirstLetter(summaryListType.toString())
 					+ " list was calibrated with sales summaries from <strong>"
