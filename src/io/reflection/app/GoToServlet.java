@@ -13,6 +13,9 @@ import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.spacehopperstudios.utility.StringUtils;
 import com.willshex.service.ContextAwareServlet;
 
 /**
@@ -38,49 +41,65 @@ public class GoToServlet extends ContextAwareServlet {
 	@Override
 	protected void doGet() throws ServletException, IOException {
 		String output = "";
+
 		if ("".equals(REQUEST.get().getRequestURI()) || "/".equals(REQUEST.get().getRequestURI()) || REQUEST.get().getRequestURI().startsWith("/index.html")) {
-			StringBuffer indexPage = new StringBuffer();
+			String parameters;
+			if ((parameters = REQUEST.get().getParameter("_escaped_fragment_")) != null) {
+				LOG.info("Requested static site with parameters [" + parameters + "] for / or index.html");
+				// use the headless browser to obtain an HTML snapshot
+				final WebClient webClient = new WebClient();
+				String pageUrl = REQUEST.get().getRequestURL().toString() + "#" + StringUtils.urldecode(parameters);
+				HtmlPage page = webClient.getPage(pageUrl);
 
-			InputStream is = GoToServlet.class.getResourceAsStream("res/index.html");
+				// important! Give the headless browser enough time to execute JavaScript
+				// The exact time to wait may depend on your application.
+				webClient.waitForBackgroundJavaScript(2000);
 
-			byte[] buffer = new byte[1024];
-			int read;
-			while ((read = is.read(buffer)) > 0) {
-				indexPage.append(new String(buffer, 0, read));
-			}
+				output = page.asXml();
+			} else {
+				StringBuffer indexPage = new StringBuffer();
 
-			int titleIndex = indexPage.indexOf(TITLE_PREFIX_PLACEHOLDER);
+				InputStream is = GoToServlet.class.getResourceAsStream("res/index.html");
 
-			String titlePrefix;
-			if ((titlePrefix = System.getProperty("site.title.prefix", "")).length() > 0) {
-				titlePrefix += " - ";
-				indexPage.replace(titleIndex, titleIndex + TITLE_PREFIX_PLACEHOLDER_LAST, titlePrefix);
-			}
+				byte[] buffer = new byte[1024];
+				int read;
+				while ((read = is.read(buffer)) > 0) {
+					indexPage.append(new String(buffer, 0, read));
+				}
 
-			StringBuffer variables = new StringBuffer();
+				int titleIndex = indexPage.indexOf(TITLE_PREFIX_PLACEHOLDER);
 
-			variables.append("<script  type='text/javascript'>\n");
+				String titlePrefix;
+				if ((titlePrefix = System.getProperty("site.title.prefix", "")).length() > 0) {
+					titlePrefix += " - ";
+					indexPage.replace(titleIndex, titleIndex + TITLE_PREFIX_PLACEHOLDER_LAST, titlePrefix);
+				}
 
-			variables.append("var storesJson = '");
-			// add stores here
-			variables.append("';\n");
+				StringBuffer variables = new StringBuffer();
 
-			variables.append("var countriesJson = '");
-			// add countries here
-			variables.append("';\n");
+				variables.append("<script  type='text/javascript'>\n");
 
-			if (isLoggedInUser()) {
-				variables.append("var userJson = '");
-				// add user here -- this should include roles and permissions
+				variables.append("var storesJson = '");
+				// add stores here
 				variables.append("';\n");
+
+				variables.append("var countriesJson = '");
+				// add countries here
+				variables.append("';\n");
+
+				if (isLoggedInUser()) {
+					variables.append("var userJson = '");
+					// add user here -- this should include roles and permissions
+					variables.append("';\n");
+				}
+
+				variables.append("</script>");
+
+				int variablesIndex = indexPage.indexOf(VARIABLES_PLACEHOLDER);
+				indexPage.replace(variablesIndex, variablesIndex + VARIABLES_PLACEHOLDER_LAST, variables.toString());
+
+				output = indexPage.toString();
 			}
-
-			variables.append("</script>");
-
-			int variablesIndex = indexPage.indexOf(VARIABLES_PLACEHOLDER);
-			indexPage.replace(variablesIndex, variablesIndex + VARIABLES_PLACEHOLDER_LAST, variables.toString());
-
-			output = indexPage.toString();
 		} else {
 			LOG.info("Request [" + REQUEST.get().getRequestURI() + "] does not match / or index.html");
 		}
