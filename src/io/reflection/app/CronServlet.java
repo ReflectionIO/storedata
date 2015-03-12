@@ -139,7 +139,7 @@ public class CronServlet extends HttpServlet {
 			if ("accounts".equals(process)) {
 				PipelineService service = PipelineServiceFactory.newPipelineService();
 
-				Date date = DateTime.now().minusDays(Integer.valueOf(System.getProperty("pipeline.model.for.date", "1")).intValue()).toDate();
+				Date date = DateTime.now().minusHours(Integer.valueOf(System.getProperty("gather.dataaccounts.hours.ago", "24")).intValue()).toDate();
 
 				String pipelineId = service.startNewPipeline(
 						new GatherAllSales().name("Gather " + DateTimeFormat.shortDate().print(date.getTime()) + " all sales"), date,
