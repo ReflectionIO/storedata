@@ -7,6 +7,8 @@
 //
 package io.reflection.app.bigquery;
 
+import io.reflection.app.logging.GaeLevel;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -15,6 +17,7 @@ import java.security.GeneralSecurityException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.appengine.http.UrlFetchTransport;
@@ -39,6 +42,8 @@ import com.google.appengine.api.appidentity.AppIdentityServiceFactory;
  */
 public class BigQueryHelper {
 
+	private static final Logger LOG = Logger.getLogger(BigQueryHelper.class.getName());
+
 	private static final String OAUTH_P12_PROPERTY_KEY = "oauth.p12.file";
 	private static final String OAUTH_ACC_ID_PROPERTY_KEY = "oauth.account.id";
 
@@ -60,6 +65,10 @@ public class BigQueryHelper {
 	 * @throws IOException
 	 */
 	public static QueryResponse queryBigqueryQuick(String query) throws IOException {
+		if (LOG.isLoggable(GaeLevel.DEBUG)) {
+			LOG.log(GaeLevel.DEBUG, "Asking BigQuery [" + query + "]");
+		}
+
 		return bigquery
 				.jobs()
 				.query(getProjectId(),
@@ -75,6 +84,10 @@ public class BigQueryHelper {
 	 * @throws IOException
 	 */
 	public static QueryResponse queryBigqueryPaged(String query, Long start, Long count) throws IOException {
+		if (LOG.isLoggable(GaeLevel.DEBUG)) {
+			LOG.log(GaeLevel.DEBUG, "Asking BigQuery [" + query + "] from [" + start + "] count [" + count + "]");
+		}
+
 		QueryRequest request = new QueryRequest().setQuery(query).setMaxResults(count)
 				.setDefaultDataset(new DatasetReference().setDatasetId(System.getProperty(DATASET_NAME_PROPERTY_KEY)));
 
@@ -92,6 +105,11 @@ public class BigQueryHelper {
 	 * @throws IOException
 	 */
 	public static TableDataInsertAllResponse insertAll(String tableName, TableDataInsertAllRequest content) throws IOException {
+		if (LOG.isLoggable(GaeLevel.DEBUG)) {
+			LOG.log(GaeLevel.DEBUG, "Inserting into BigQuery table [" + tableName + "] ["
+					+ (content == null || content.getRows() == null ? 0 : content.getRows().size()) + "] items");
+		}
+
 		return bigquery.tabledata().insertAll(getProjectId(), System.getProperty(DATASET_NAME_PROPERTY_KEY), tableName, content).execute();
 	}
 
@@ -135,11 +153,16 @@ public class BigQueryHelper {
 	public static String beforeAfterQuery(Date before, Date after, String dateName) {
 		StringBuffer buffer = new StringBuffer();
 		if (before != null && after != null) {
-			buffer.append("([" + dateName + "]>");
-			buffer.append(after.getTime() * 1000l);
-			buffer.append(" AND [" + dateName + "]<");
-			buffer.append(before.getTime() * 1000l);
-			buffer.append(")");
+			if (before.getTime() == after.getTime()) {
+				buffer.append("[" + dateName + "]=");
+				buffer.append(after.getTime() * 1000l);
+			} else {
+				buffer.append("([" + dateName + "]>=");
+				buffer.append(after.getTime() * 1000l);
+				buffer.append(" AND [" + dateName + "]<");
+				buffer.append(before.getTime() * 1000l);
+				buffer.append(")");
+			}
 		} else if (after != null && before == null) {
 			buffer.append("[" + dateName + "]>=");
 			buffer.append(after.getTime() * 1000l);

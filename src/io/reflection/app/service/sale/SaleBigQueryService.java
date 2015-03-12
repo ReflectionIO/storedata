@@ -329,9 +329,8 @@ final class SaleBigQueryService implements ISaleService {
 		// FIXME: for now we use the all category for the iOS store... we should get the category passed in, or attempt to detect it based on the linked account
 		// (category relates to store by a3code)
 		// we are using end for date but we could equally use begin
-		String getSalesQuery = String.format("SELECT * FROM [sale] WHERE [country]='%s' AND (%d=%d OR [category]='%s') AND [dataaccountid]=%d AND %s",
-				country.a2Code, 24, category == null ? 24 : category.id.longValue(), category == null ? "" : category.name, linkedAccount.id.longValue(),
-				BigQueryHelper.beforeAfterQuery(end, start, "end"));
+		String getSalesQuery = String.format("SELECT * FROM [sale] WHERE [country]='%s' %s AND [dataaccountid]=%d AND %s", country.a2Code,
+				category == null ? "" : "[category]='" + category.name + '"', linkedAccount.id.longValue(), BigQueryHelper.beforeAfterQuery(end, start, "end"));
 		boolean paged = false;
 
 		if (pager != null) {
