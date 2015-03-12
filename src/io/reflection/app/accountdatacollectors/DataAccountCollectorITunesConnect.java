@@ -57,7 +57,7 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 
 	private static final Logger LOG = Logger.getLogger(DataAccountCollectorITunesConnect.class.getName());
 	private static final String GATHER_ERROR_KEY_PREFIX = "sales.gather.error";
-	
+
 	private static final long MAX_ALLOWED_ERRORS = 3L;
 
 	/*
@@ -111,7 +111,7 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 	 * @see io.reflection.app.accountdatacollectors.DataAccountCollector#collect(io.reflection.app.shared.datatypes.DataAccount, java.util.Date)
 	 */
 	@Override
-	public boolean collect(DataAccount dataAccount, Date date) throws ServiceException {
+	public DataAccountFetch collect(DataAccount dataAccount, Date date) throws ServiceException {
 		date = ApiHelper.removeTime(date);
 
 		String dateParameter = ITunesConnectDownloadHelper.DATE_FORMATTER.format(date);
@@ -179,11 +179,6 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 					dataAccountFetch = DataAccountFetchServiceProvider.provide().updateDataAccountFetch(dataAccountFetch);
 				}
 
-				if (dataAccountFetch != null && dataAccountFetch.status == DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered) {
-					// once the data is collected
-					DataAccountFetchServiceProvider.provide().triggerDataAccountFetchIngest(dataAccountFetch);
-				}
-
 				// Manage notifications in case of error
 				PersistentMap persistentMap = PersistentMapFactory.createObjectify();
 
@@ -217,7 +212,8 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 									(new Notification()).event(event).user(dataAccountOwner).body(body).subject(subject));
 
 							// FIXME: this method (getDataAccountsIds) should have an active account variant
-							List<Long> userDataAccountIds = UserServiceProvider.provide().getDataAccountsIds(dataAccountOwner, PagerHelper.createInfinitePager());
+							List<Long> userDataAccountIds = UserServiceProvider.provide().getDataAccountsIds(dataAccountOwner,
+									PagerHelper.createInfinitePager());
 
 							boolean revoke = false;
 							if (userDataAccountIds.size() <= 1) {
@@ -271,7 +267,7 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 					dataAccount.id == null ? dataAccount.username : dataAccount.id.toString(), dateParameter, dataAccountFetch.status));
 		}
 
-		return success;
+		return dataAccountFetch;
 	}
 	// /**
 	// * THIS CODE HAS TO BE REMOVED AFTER THE CLOSED BETA

@@ -12,6 +12,8 @@ import io.reflection.app.accountdatacollectors.DataAccountCollector;
 import io.reflection.app.accountdatacollectors.DataAccountCollectorFactory;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.datatypes.shared.DataAccount;
+import io.reflection.app.datatypes.shared.DataAccountFetch;
+import io.reflection.app.datatypes.shared.DataAccountFetchStatusType;
 import io.reflection.app.datatypes.shared.DataSource;
 import io.reflection.app.datatypes.shared.Event;
 import io.reflection.app.datatypes.shared.Notification;
@@ -20,6 +22,7 @@ import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.helpers.NotificationHelper;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
+import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
 import io.reflection.app.service.datasource.DataSourceServiceProvider;
 import io.reflection.app.service.event.EventServiceProvider;
 import io.reflection.app.service.notification.NotificationServiceProvider;
@@ -100,24 +103,31 @@ public class DataAccountGatherServlet extends ContextAwareServlet {
 						DataAccountCollector collector = DataAccountCollectorFactory.getCollectorForSource(dataSource.a3Code);
 
 						if (collector != null) {
-							boolean status = collector.collect(account, date);
+							DataAccountFetch dataAccountFetch = collector.collect(account, date);
 
-							if (status && notifyParameter != null && Boolean.parseBoolean(notifyParameter)) {
-								Event event = EventServiceProvider.provide().getCodeEvent(DataTypeHelper.NEW_USER_EVENT_CODE);
-								User user = UserServiceProvider.provide().getDataAccountOwner(account);
+							if (dataAccountFetch != null) {
+								if (dataAccountFetch.status == DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered) {
+									// once the data is collected
+									DataAccountFetchServiceProvider.provide().triggerDataAccountFetchIngest(dataAccountFetch);
+								}
 
-								Map<String, Object> parameters = new HashMap<String, Object>();
-								parameters.put("user", user);
+								if (notifyParameter != null && Boolean.parseBoolean(notifyParameter)) {
+									Event event = EventServiceProvider.provide().getCodeEvent(DataTypeHelper.NEW_USER_EVENT_CODE);
+									User user = UserServiceProvider.provide().getDataAccountOwner(account);
 
-								String body = NotificationHelper.inflate(parameters, event.longBody);
+									Map<String, Object> parameters = new HashMap<String, Object>();
+									parameters.put("user", user);
 
-								Notification notification = (new Notification()).from("hello@reflection.io").user(user).event(event).body(body)
-										.subject(event.subject);
-								Notification added = NotificationServiceProvider.provide().addNotification(notification);
+									String body = NotificationHelper.inflate(parameters, event.longBody);
 
-								if (added.type != NotificationTypeType.NotificationTypeTypeInternal) {
-									notification.type = NotificationTypeType.NotificationTypeTypeInternal;
-									NotificationServiceProvider.provide().addNotification(notification);
+									Notification notification = (new Notification()).from("hello@reflection.io").user(user).event(event).body(body)
+											.subject(event.subject);
+									Notification added = NotificationServiceProvider.provide().addNotification(notification);
+
+									if (added.type != NotificationTypeType.NotificationTypeTypeInternal) {
+										notification.type = NotificationTypeType.NotificationTypeTypeInternal;
+										NotificationServiceProvider.provide().addNotification(notification);
+									}
 								}
 							}
 

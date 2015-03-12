@@ -10,6 +10,7 @@ package io.reflection.app.accountdatacollectors;
 
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.datatypes.shared.DataAccount;
+import io.reflection.app.datatypes.shared.DataAccountFetch;
 
 import java.util.Date;
 
@@ -28,7 +29,7 @@ public interface DataAccountCollector {
 	 * @param date
 	 * @return
 	 */
-	boolean collect(DataAccount dataAccount, Date date) throws DataAccessException, ServiceException;
+	DataAccountFetch collect(DataAccount dataAccount, Date date) throws DataAccessException, ServiceException;
 
 	/**
 	 * 
