@@ -118,13 +118,13 @@ public class SummariseDataAccountFetch extends Job1<Map<String, Double>, Long> {
 	}
 
 	public static Double downloads(Sale sale) {
-		return Double.valueOf(Math.abs(sale.units.floatValue()) * sale.customerPrice.floatValue());
+		return Double.valueOf(sale.typeIdentifier.equals(FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS)
+				|| sale.typeIdentifier.equals(FREE_OR_PAID_APP_UNIVERSAL_IOS) || sale.typeIdentifier.equals(FREE_OR_PAID_APP_IPAD_IOS) ? sale.units
+				.doubleValue() : 0.0);
 	}
 
 	public static Double revenue(Sale sale) {
-		return Double.valueOf(sale.typeIdentifier.equals(FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS)
-				|| sale.typeIdentifier.equals(FREE_OR_PAID_APP_UNIVERSAL_IOS) || sale.typeIdentifier.equals(FREE_OR_PAID_APP_IPAD_IOS) ? sale.units.intValue()
-				: 0);
+		return Double.valueOf(Math.abs(sale.units.doubleValue()) * sale.customerPrice.doubleValue());
 	}
 
 	public static String getSaleItemId(Sale sale) throws DataAccessException {
