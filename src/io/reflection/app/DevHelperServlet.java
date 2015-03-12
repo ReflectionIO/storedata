@@ -708,7 +708,7 @@ public class DevHelperServlet extends HttpServlet {
 				PipelineService service = PipelineServiceFactory.newPipelineService();
 
 				String pipelineId = service.startNewPipeline(new GatherAllSales(),
-						DateTime.now().minusDays(Integer.valueOf(System.getProperty("pipeline.model.for.date", "1")).intValue()).toDate());
+						DateTime.now().minusHours(Integer.valueOf(System.getProperty("gather.dataaccounts.hours.ago", "24")).intValue()).toDate());
 
 				markup = (new MarkdownProcessor()).process("[View " + pipelineId + "](/_ah/pipeline/status.html?root=" + pipelineId
 						+ " \"View pipeline status\")");
