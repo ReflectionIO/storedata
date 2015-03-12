@@ -49,7 +49,6 @@ cp ~/.m2/repository/org/apache/commons/commons-math3/3.4/commons-math3-3.4.jar $
 cp ~/.m2/repository/com/google/apis/google-api-services-bigquery/v2-rev188-1.19.1/google-api-services-bigquery-v2-rev188-1.19.1.jar $1/storedata/war/WEB-INF/lib/.
 cp ~/.m2/repository/com/google/api-client/google-api-client/1.19.1/google-api-client-1.19.1.jar $1/storedata/war/WEB-INF/lib/.
 cp ~/.m2/repository/com/google/oauth-client/google-oauth-client/1.19.0/google-oauth-client-1.19.0.jar $1/storedata/war/WEB-INF/lib/.
-cp ~/.m2/repository/com/google/guava/guava-jdk5/13.0/guava-jdk5-13.0.jar $1/storedata/war/WEB-INF/lib/.
 cp ~/temp/sdk/gwt-2.7.0/gwt-servlet.jar $1/storedata/war/WEB-INF/lib/.
 cp ~/temp/sdk/appengine-java-sdk-1.9.5/lib/shared/jsp-api.jar $1/storedata/war/WEB-INF/lib/.
 cp ~/temp/sdk/appengine-java-sdk-1.9.5/lib/shared/jsp/repackaged-appengine-jasper-el-6.0.29.jar $1/storedata/war/WEB-INF/lib/.
