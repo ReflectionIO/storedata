@@ -8,6 +8,7 @@
 package io.reflection.app.pipeline;
 
 import io.reflection.app.datatypes.shared.Store;
+import io.reflection.app.helpers.ApiHelper;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
@@ -47,8 +48,10 @@ public final class SubmitPromisses extends Job2<Void, Map<String, Map<String, Do
 	 */
 	@Override
 	public Value<Void> run(Map<String, Map<String, Double>> dataAccountFetchSummary, Date on) throws Exception {
-
 		if (!dataAccountFetchSummary.isEmpty()) {
+			// strip the time
+			on = ApiHelper.removeTime(on);
+
 			PersistentMap persist = PersistentMapFactory.createObjectify();
 			PipelineService pipelineService = PipelineServiceFactory.newPipelineService();
 
