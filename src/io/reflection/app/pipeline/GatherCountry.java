@@ -34,7 +34,7 @@ public class GatherCountry extends Job2<Void, String, Long> {
 
 	private static final long serialVersionUID = 3208213738551499825L;
 
-	private static final Logger LOG = Logger.getLogger(GatherCountry.class.getName());
+	private transient static final Logger LOG = Logger.getLogger(GatherCountry.class.getName());
 
 	private transient String name = null;
 

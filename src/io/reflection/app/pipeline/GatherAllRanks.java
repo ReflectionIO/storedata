@@ -32,7 +32,7 @@ public class GatherAllRanks extends Job1<Integer, Long> {
 
 	private static final long serialVersionUID = -6950514903299207863L;
 
-	private static final Logger LOG = Logger.getLogger(GatherAllRanks.class.getName());
+	private transient static final Logger LOG = Logger.getLogger(GatherAllRanks.class.getName());
 
 	private transient String name = null;
 

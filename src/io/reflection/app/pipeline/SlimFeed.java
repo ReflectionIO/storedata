@@ -29,7 +29,7 @@ public class SlimFeed extends Job1<String, Long> {
 
 	private static final long serialVersionUID = -627864366513850701L;
 
-	private static final Logger LOG = Logger.getLogger(SlimFeed.class.getName());
+	private transient static final Logger LOG = Logger.getLogger(SlimFeed.class.getName());
 	
 	private transient String name = null;
 

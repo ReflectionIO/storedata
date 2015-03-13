@@ -36,7 +36,7 @@ public class GatherAllSales extends Job1<Integer, Date> {
 
 	private static final long serialVersionUID = 8112347752177694061L;
 
-	private static final Logger LOG = Logger.getLogger(GatherAllSales.class.getName());
+	private transient static final Logger LOG = Logger.getLogger(GatherAllSales.class.getName());
 
 	private transient String name = null;
 

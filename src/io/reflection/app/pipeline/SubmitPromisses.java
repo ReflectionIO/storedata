@@ -36,7 +36,7 @@ public final class SubmitPromisses extends Job2<Void, Map<String, Map<String, Do
 
 	private static final long serialVersionUID = -2335419676158668911L;
 
-	private static final Logger LOG = Logger.getLogger(SubmitPromisses.class.getName());
+	private transient static final Logger LOG = Logger.getLogger(SubmitPromisses.class.getName());
 
 	private transient String name = null;
 

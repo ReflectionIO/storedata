@@ -28,7 +28,7 @@ public class FillRevenue extends Job3<Void, String, Long, Long> {
 
 	private static final long serialVersionUID = -8880236066719929555L;
 
-	private static final Logger LOG = Logger.getLogger(FillRevenue.class.getName());
+	private transient static final Logger LOG = Logger.getLogger(FillRevenue.class.getName());
 
 	private transient String name = null;
 	
