@@ -48,7 +48,7 @@ public class ITunesConnectDownloadHelper {
 
 	private static final String REPORT_TYPE_KEY = "REPORTTYPE";
 	private static final String REPORT_DATE_KEY = "REPORTDATE";
-	
+
 	public static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("yyyyMMdd");
 
 	public static String getITunesSalesFile(String username, String password, String vendorId, String dateParameter, String bucketName, String bucketPath)
@@ -89,7 +89,7 @@ public class ITunesConnectDownloadHelper {
 					if (LOG.isLoggable(GaeLevel.WARNING)) {
 						if (data != null && password != null) {
 							// remove the password for the purposes of logging
-							data.replace(password, "**********");
+							data = data.replace("&PASSWORD=" + password, "&PASSWORD=**********");
 						}
 
 						LOG.warning(String.format("itunes connect return error message [%s] while trying to obtain data with request [%s] ", error, data));

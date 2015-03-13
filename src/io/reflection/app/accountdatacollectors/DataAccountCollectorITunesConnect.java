@@ -261,7 +261,7 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 				}
 			} else {
 				if (LOG.isLoggable(GaeLevel.INFO)) {
-					LOG.info(String.format("Gather for data account [%s] and date [%s] skipped because of status [%s] is worse than [%]",
+					LOG.info(String.format("Gather for data account [%s] and date [%s] skipped because of status [%s] is worse than [%s]",
 							dataAccount.id == null ? dataAccount.username : dataAccount.id.toString(), dateParameter, existingFetchWorseStatus,
 							dataAccountFetch.status));
 				}
