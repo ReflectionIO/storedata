@@ -200,14 +200,19 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 
 						User dataAccountOwner = UserServiceProvider.provide().getDataAccountOwner(dataAccount);
 
-						parameters.put("user", dataAccountOwner);
+						// in the unlikely event of an account not having a user
+						// don't add it
+						if (dataAccountOwner != null) {
+							parameters.put("user", dataAccountOwner);
+						}
+						
 						parameters.put("dataaccount", dataAccount);
 						parameters.put("dataaccountfetch", dataAccountFetch);
 
 						String body = NotificationHelper.inflate(parameters, event.longBody);
 						String subject = NotificationHelper.inflate(parameters, event.subject);
 
-						if (informOwnerAndRevokePermission) {
+						if (dataAccountOwner != null && informOwnerAndRevokePermission) {
 							NotificationServiceProvider.provide().addNotification(
 									(new Notification()).event(event).user(dataAccountOwner).body(body).subject(subject));
 

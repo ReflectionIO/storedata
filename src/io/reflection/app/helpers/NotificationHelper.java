@@ -154,22 +154,25 @@ public class NotificationHelper {
 
 	private static Object getPropertyValue(Object object, String propertyName) {
 		Object value = null;
-		List<Field>fields = new ArrayList<Field>();
-		Class<? extends Object> type = object.getClass();
-		
-		do {
-			fields.addAll(Arrays.asList(type.getDeclaredFields()));
-		} while ((type = type.getSuperclass()) != null);
 
-		for (Field field : fields) {
-			if (propertyName.equals(field.getName())) {
-				try {
-					value = field.get(object);
-					break;
-				} catch (IllegalArgumentException e) {
-					LOG.log(GaeLevel.SEVERE, String.format("Error accessing field [%s]", field.getName()), e);
-				} catch (IllegalAccessException e) {
-					LOG.log(GaeLevel.SEVERE, String.format("Error accessing field [%s]", field.getName()), e);
+		if (object != null) {
+			List<Field> fields = new ArrayList<Field>();
+			Class<? extends Object> type = object.getClass();
+
+			do {
+				fields.addAll(Arrays.asList(type.getDeclaredFields()));
+			} while ((type = type.getSuperclass()) != null);
+
+			for (Field field : fields) {
+				if (propertyName.equals(field.getName())) {
+					try {
+						value = field.get(object);
+						break;
+					} catch (IllegalArgumentException e) {
+						LOG.log(GaeLevel.SEVERE, String.format("Error accessing field [%s]", field.getName()), e);
+					} catch (IllegalAccessException e) {
+						LOG.log(GaeLevel.SEVERE, String.format("Error accessing field [%s]", field.getName()), e);
+					}
 				}
 			}
 		}
