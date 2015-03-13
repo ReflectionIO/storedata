@@ -111,7 +111,11 @@ public class DataAccountGatherServlet extends ContextAwareServlet {
 									DataAccountFetchServiceProvider.provide().triggerDataAccountFetchIngest(dataAccountFetch);
 								}
 
-								if (notifyParameter != null && Boolean.parseBoolean(notifyParameter)) {
+								// TODO: this relies on the single date to succeed...
+								// this not great and should be applied to all dates with a persistent guard
+								// to stop multiple notifications
+								if (dataAccountFetch.status != DataAccountFetchStatusType.DataAccountFetchStatusTypeError && notifyParameter != null
+										&& Boolean.parseBoolean(notifyParameter)) {
 									Event event = EventServiceProvider.provide().getCodeEvent(DataTypeHelper.NEW_USER_EVENT_CODE);
 									User user = UserServiceProvider.provide().getDataAccountOwner(account);
 
