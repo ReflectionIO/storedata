@@ -36,7 +36,7 @@ public class GatherAllSales extends Job1<Integer, Date> {
 
 	private static final long serialVersionUID = 8112347752177694061L;
 
-	private static final Logger LOG = Logger.getLogger(GatherAllSales.class.getName());
+	private transient static final Logger LOG = Logger.getLogger(GatherAllSales.class.getName());
 
 	private transient String name = null;
 
@@ -47,19 +47,18 @@ public class GatherAllSales extends Job1<Integer, Date> {
 	 */
 	@Override
 	public Value<Integer> run(Date date) throws Exception {
-		Pager pager = PagerHelper.createDefaultPager().count(Long.valueOf(100));
-
 		int count = 0;
-		List<FutureValue<Long>> ids = new ArrayList<>();
 
 		ImmediateValue<Date> forDate = immediate(date);
+		List<FutureValue<Long>> ids = new ArrayList<>();
 
 		try {
 			IDataAccountFetchService dataAccountFetchService = DataAccountFetchServiceProvider.provide();
 			IDataAccountService dataAccountService = DataAccountServiceProvider.provide();
 
-			List<DataAccount> dataAccounts = null;
 			// get data accounts 100 at a time
+			Pager pager = PagerHelper.createDefaultPager().count(Long.valueOf(100));
+			List<DataAccount> dataAccounts = null;
 			do {
 				dataAccounts = dataAccountService.getDataAccounts(pager);
 

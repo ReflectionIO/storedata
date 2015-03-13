@@ -29,7 +29,7 @@ import com.google.appengine.tools.pipeline.Value;
 public class GatherCategory extends Job3<Void, String, Long, Long> {
 	private static final long serialVersionUID = -2027106533638960844L;
 
-	private static final Logger LOG = Logger.getLogger(GatherCategory.class.getName());
+	private transient static final Logger LOG = Logger.getLogger(GatherCategory.class.getName());
 
 	private transient String name = null;
 
