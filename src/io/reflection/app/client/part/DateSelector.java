@@ -8,6 +8,7 @@
 package io.reflection.app.client.part;
 
 import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMATTER_DD_MMM_YYYY;
+import io.reflection.app.client.component.FormFieldSelect;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.client.part.datatypes.DateRangeChangeEvent;
@@ -18,25 +19,22 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.ShowRangeEvent;
 import com.google.gwt.event.logical.shared.ShowRangeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.DateBox;
+import com.google.gwt.user.datepicker.client.DatePicker;
 
 /**
  * @author stefanocapuzzi
@@ -54,26 +52,13 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 		DateRange getDateRange();
 	}
 
-	private List<PresetDateRange> fixedRanges = null;
-	private HashMap<PresetDateRange, Anchor> lookupFixedDateRangeAnchor = new HashMap<PresetDateRange, Anchor>();
-	List<HandlerRegistration> fixedRangeRegistrations = new ArrayList<HandlerRegistration>();
+	private List<PresetDateRange> presetDateRangeList = null;
+	private HashMap<String, PresetDateRange> lookupValuePresetDateRange = new HashMap<String, PresetDateRange>();
 
-	interface DateSelectorStyle extends CssResource {
-		String highlight();
-
-		String preset();
-
-		String disable();
-	}
-
-	@UiField DateSelectorStyle style;
-
-	@UiField DateBox dateBoxFrom;
-	@UiField DateBox dateBoxTo;
-	@UiField HTMLPanel fixedRangesPanel;
+	@UiField(provided = true) DateBox dateBoxFrom = new DateBox(new DatePicker(), null, new DateBox.DefaultFormat(DATE_FORMATTER_DD_MMM_YYYY));
+	@UiField(provided = true) DateBox dateBoxTo = new DateBox(new DatePicker(), null, new DateBox.DefaultFormat(DATE_FORMATTER_DD_MMM_YYYY));
+	@UiField FormFieldSelect selectFixedRange;
 	@UiField Button applyDateRange;
-	@UiField SpanElement icon;
-	@UiField SpanElement separator;
 
 	private Date disableBefore;
 
@@ -83,11 +68,6 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		this.disableBefore = disableBefore;
-
-		dateBoxFrom.setFormat(new DateBox.DefaultFormat(DATE_FORMATTER_DD_MMM_YYYY));
-		dateBoxFrom.getTextBox().setReadOnly(Boolean.TRUE);
-		dateBoxTo.setFormat(new DateBox.DefaultFormat(DATE_FORMATTER_DD_MMM_YYYY));
-		dateBoxTo.getTextBox().setReadOnly(Boolean.TRUE);
 
 		setDateRange(FilterHelper.getWeeksAgo(4), FilterHelper.getToday());
 
@@ -112,11 +92,11 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 
 	public void addFixedRange(PresetDateRange fixedRange) {
 		if (fixedRange != null) {
-			if (fixedRanges == null) {
-				fixedRanges = new ArrayList<PresetDateRange>();
+			if (presetDateRangeList == null) {
+				presetDateRangeList = new ArrayList<PresetDateRange>();
 			}
 
-			fixedRanges.add(fixedRange);
+			presetDateRangeList.add(fixedRange);
 
 			showRanges();
 		}
@@ -124,38 +104,28 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 
 	public void addFixedRanges(List<PresetDateRange> fixedRanges) {
 		if (fixedRanges != null && fixedRanges.size() > 0) {
-			if (this.fixedRanges == null) {
-				this.fixedRanges = new ArrayList<PresetDateRange>();
+			if (this.presetDateRangeList == null) {
+				this.presetDateRangeList = new ArrayList<PresetDateRange>();
 			}
 
-			this.fixedRanges.addAll(fixedRanges);
+			this.presetDateRangeList.addAll(fixedRanges);
 
 			showRanges();
 		}
 	}
 
 	private void showRanges() {
-		for (HandlerRegistration registration : fixedRangeRegistrations) {
-			registration.removeHandler();
+		lookupValuePresetDateRange.clear();
+		selectFixedRange.clear();
+		for (final PresetDateRange fixedRange : presetDateRangeList) {
+			selectFixedRange.addItem(fixedRange.getName(), fixedRange.getName());
+			lookupValuePresetDateRange.put(fixedRange.getName(), fixedRange);
 		}
-		fixedRangeRegistrations.clear();
-		fixedRangesPanel.clear();
-		lookupFixedDateRangeAnchor.clear();
-		for (final PresetDateRange fixedRange : fixedRanges) {
-			final Anchor fixedRangeLink = new Anchor(fixedRange.getName());
-			fixedRangeLink.getElement().addClassName(style.preset());
-			lookupFixedDateRangeAnchor.put(fixedRange, fixedRangeLink);
-			fixedRangeRegistrations.add(fixedRangeLink.addClickHandler(new ClickHandler() {
+	}
 
-				@Override
-				public void onClick(ClickEvent event) {
-					if (fixedRangeLink.isEnabled()) {
-						setValue(fixedRange.getDateRange(), Boolean.TRUE);
-					}
-				}
-			}));
-			fixedRangesPanel.add(fixedRangeLink);
-		}
+	@UiHandler("selectFixedRange")
+	void onCountryValueChanged(ChangeEvent event) {
+		setValue(lookupValuePresetDateRange.get(selectFixedRange.getValue(selectFixedRange.getSelectedIndex())).getDateRange(), true);
 	}
 
 	/**
@@ -178,6 +148,34 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 	private void setDateBoxes(Date from, Date to) {
 		dateBoxFrom.setValue(from);
 		dateBoxTo.setValue(to);
+	}
+
+	public void setEnabled(boolean enabled) {
+		dateBoxFrom.setEnabled(enabled);
+		dateBoxTo.setEnabled(enabled);
+		applyDateRange.setEnabled(enabled);
+		selectFixedRange.setEnabled(enabled);
+	}
+
+	private boolean isPresetRange(DateRange dateRange) {
+		boolean isPresetRange = false;
+		for (PresetDateRange pdr : presetDateRangeList) {
+			if (pdr.getDateRange().equals(dateRange)) {
+				isPresetRange = true;
+				break;
+			}
+		}
+		return isPresetRange;
+	}
+
+	private String getDateRangeValue(DateRange dateRange) {
+		String value = null;
+		for (PresetDateRange pdr : presetDateRangeList) {
+			if (pdr.getDateRange().equals(dateRange)) {
+				value = pdr.getName();
+			}
+		}
+		return value;
 	}
 
 	/**
@@ -217,43 +215,7 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 	 */
 	@UiHandler("applyDateRange")
 	void onApplyDateRangeButtonClicked(ClickEvent event) {
-		setValue(dateBoxFrom.getValue(), dateBoxTo.getValue(), Boolean.TRUE);
-	}
-
-	/**
-	 * Highlight link changing the style
-	 */
-	private void highlightLink() {
-		clearLinkHighlight();
-		Anchor link = lookForDefaultLink();
-		if (link != null) {
-			link.getElement().addClassName(style.highlight());
-		}
-	}
-
-	private Anchor lookForDefaultLink() {
-		Anchor link = null;
-
-		if (fixedRanges != null && FilterHelper.equalDate(dateBoxTo.getValue(), FilterHelper.getToday())) {
-			for (PresetDateRange fixedRange : fixedRanges) {
-				if (FilterHelper.equalDate(dateBoxFrom.getValue(), fixedRange.getDateRange().getFrom())) {
-					link = lookupFixedDateRangeAnchor.get(fixedRange);
-					break;
-				}
-			}
-		}
-		return link;
-	}
-
-	/**
-	 * Clear highlight style for all links
-	 */
-	private void clearLinkHighlight() {
-		if (fixedRanges != null) {
-			for (PresetDateRange fixedRange : fixedRanges) {
-				lookupFixedDateRangeAnchor.get(fixedRange).getElement().removeClassName(style.highlight());
-			}
-		}
+		setValue(dateBoxFrom.getValue(), dateBoxTo.getValue(), true);
 	}
 
 	/*
@@ -276,6 +238,13 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 		return dateRange;
 	}
 
+	private void setValue(Date from, Date to, boolean fireEvents) {
+		DateRange dr = new DateRange();
+		dr.setFrom(from);
+		dr.setTo(to);
+		setValue(dr, fireEvents);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -283,7 +252,7 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 	 */
 	@Override
 	public void setValue(DateRange value) {
-		setValue(value, Boolean.FALSE);
+		setValue(value, false);
 	}
 
 	/*
@@ -297,42 +266,20 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 		if (!FilterHelper.equalDate(value.getFrom(), dateBoxFrom.getValue()) || !FilterHelper.equalDate(value.getTo(), dateBoxTo.getValue())) {
 			setDateBoxes(value.getFrom(), value.getTo());
 		}
-		highlightLink();
+
+		if (isPresetRange(value)) {
+			if (getDateRangeValue(value) != null) {
+				selectFixedRange.setSelectedIndex(selectFixedRange.getValueIndex(getDateRangeValue(value)), false);
+			}
+		} else {
+			selectFixedRange.selectDefault();
+		}
 
 		if (fireEvents) {
 			DateRangeChangeEvent.fireIfNotEqualDateRanges(this, dateRange, value);
 		}
+
 		setDateRange(value.getFrom(), value.getTo()); // Update date range
-	}
-
-	private void setValue(Date from, Date to, boolean fireEvents) {
-		DateRange dr = new DateRange();
-		dr.setFrom(from);
-		dr.setTo(to);
-		setValue(dr, fireEvents);
-	}
-
-	public void setEnabled(boolean enabled) {
-		dateBoxFrom.setEnabled(enabled);
-		dateBoxTo.setEnabled(enabled);
-		applyDateRange.setEnabled(enabled);
-		if (enabled) {
-			icon.removeClassName(style.disable());
-			separator.removeClassName(style.disable());
-		} else {
-			separator.addClassName(style.disable());
-			icon.addClassName(style.disable());
-		}
-		if (fixedRanges != null) {
-			for (PresetDateRange fixedRange : fixedRanges) {
-				if (enabled) {
-					lookupFixedDateRangeAnchor.get(fixedRange).getElement().removeClassName(style.disable());
-				} else {
-					lookupFixedDateRangeAnchor.get(fixedRange).getElement().addClassName(style.disable());
-				}
-				lookupFixedDateRangeAnchor.get(fixedRange).setEnabled(enabled);
-			}
-		}
 	}
 
 }

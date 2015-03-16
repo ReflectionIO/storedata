@@ -1,6 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:with field='images' type='io.reflection.app.client.res.Images' />
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 	<ui:style gss="true">
 	.moreMargin {
 		margin-right: 0.2em;
@@ -16,56 +17,29 @@
 		font-size: 12px;
 	}
 	
-	.store {
-		padding-top: 22px;
-	}
-	
-	.hideOverflow {
-		overflow: hidden;
-	}
-	
 	.imgWrapper {
 		max-width: 75px;
 		max-height: 75px;
 	}
-	
-	.pricePanel {
-		height: 30px;
-		margin-bottom: 18px;
-	}
 	</ui:style>
-	<g:HTMLPanel styleName="sidebar-nav">
+	<g:HTMLPanel>
 
 		<g:Image ui:field="image" styleName="img-rounded {style.imgWrapper}" />
 
-		<h3 ui:field="title" class="{style.hideOverflow}"></h3>
+		<h1 ui:field="title" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">App Leaderboard</h1>
 
-		<h6 ui:field="creatorName" class="{style.creator} {style.hideOverflow} text-muted"></h6>
+		<h6 ui:field="creatorName" class="{style.creator} text-muted"></h6>
 
-		<g:HTMLPanel styleName="{style.pricePanel}">
-			<p ui:field="price" class="{style.price}"></p>
-			<g:Image resource="{images.spinner}" ui:field="spinnerLoader" visible="false" />
-		</g:HTMLPanel>
+		<p ui:field="price" class="{style.price}"></p>
+		<g:Image resource="{images.spinner}" ui:field="spinnerLoader" visible="false" />
 
-		<!-- <hr /> <div class="btn-group btn-group-justified"> <g:InlineHyperlink ui:field="mToday" styleName="btn btn-default active"> <span class="caret"></span> Today 
-			</g:InlineHyperlink> <g:InlineHyperlink ui:field="mThisMonth" styleName="btn btn-default">This Month</g:InlineHyperlink> </div> <br /> <h4> <i class="icon-money"></i> 
-			Global Revenue </h4> <p class="text-right lead">revenue</p> <h4> <i class="icon-download"></i> Global Downloads </h4> <p class="text-right lead">downloads</p> -->
+		<a target="_blank" ui:field="viewInStore">
+			View in the
+			<span ui:field="storeName">
+				Appstore
+			</span>
+		</a>
 
-		<!-- <h4><i class="icon-star-empty"></i>Customer Rating</h4> <p>4/5<span class="pull-right"><i class="icon-star-empty"></i><i class="icon-star"></i><i class="icon-star"></i><i 
-			class="icon-star"></i><i class="icon-star"></i></span></p> -->
-		<span class="divider-horizontal" />
-
-		<!-- <a class="btn btn-primary col-xs-12"> More Info <i class="icon-plus"></i> </a> <br /> -->
-
-		<div class="text-center {style.store}">
-			<a target="_blank" ui:field="viewInStore">
-				View in the
-				<span ui:field="storeName">
-					Appstore
-				</span>
-				<span class="icon-link-ext" />
-			</a>
-		</div>
 
 	</g:HTMLPanel>
 

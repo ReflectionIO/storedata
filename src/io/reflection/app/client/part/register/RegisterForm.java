@@ -7,23 +7,25 @@
 //
 package io.reflection.app.client.part.register;
 
+import io.reflection.app.client.component.FormButton;
+import io.reflection.app.client.component.FormCheckbox;
+import io.reflection.app.client.component.FormField;
+import io.reflection.app.client.component.FormFieldPassword;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.UserController;
 import io.reflection.app.client.helper.FormHelper;
-import io.reflection.app.client.part.Preloader;
+import io.reflection.app.client.page.PageType;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -32,365 +34,360 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class RegisterForm extends Composite {
 
-    private static RegisterFormUiBinder uiBinder = GWT.create(RegisterFormUiBinder.class);
+	private static RegisterFormUiBinder uiBinder = GWT.create(RegisterFormUiBinder.class);
 
-    interface RegisterFormUiBinder extends UiBinder<Widget, RegisterForm> {}
+	interface RegisterFormUiBinder extends UiBinder<Widget, RegisterForm> {}
 
-    @UiField TextBox forename;
-    @UiField HTMLPanel forenameGroup;
-    @UiField HTMLPanel forenameNote;
-    private String forenameError;
+	@UiField FormField forename;
+	private String forenameNote;
 
-    @UiField TextBox surname;
-    @UiField HTMLPanel surnameGroup;
-    @UiField HTMLPanel surnameNote;
-    private String surnameError;
+	@UiField FormField surname;
+	private String surnameNote;
 
-    @UiField TextBox company;
-    @UiField HTMLPanel companyGroup;
-    @UiField HTMLPanel companyNote;
-    private String companyError;
+	@UiField FormField company;
+	private String companyNote;
 
-    @UiField TextBox email;
-    @UiField HTMLPanel emailGroup;
-    @UiField HTMLPanel emailNote;
-    private String emailError;
+	@UiField FormField email;
+	private String emailNote;
 
-    @UiField TextBox password;
-    @UiField TextBox confirmPassword;
-    @UiField HTMLPanel passwordGroup;
-    @UiField HTMLPanel passwordNote;
-    private String passwordError;
+	@UiField HTMLPanel passwordGroup;
+	@UiField FormFieldPassword password;
+	@UiField FormFieldPassword confirmPassword;
+	private String passwordError;
 
-    @UiField CheckBox termAndCond;
-    @UiField HTMLPanel termAndCondGroup;
-    @UiField HTMLPanel termAndCondNote;
-    private String termAndCondError;
+	@UiField HTMLPanel termAndCondGroup;
+	@UiField FormCheckbox termAndCond;
+	private String termAndCondError;
+	@UiField ParagraphElement checkboxError;
 
-    @UiField Button mRegister;
+	@UiField FormButton registerBtn;
 
-    private Preloader preloaderRef;
+	private boolean isRequestInvite;
 
-    private boolean isRequestInvite;
+	private String actionCode;
 
-    private String actionCode;
+	public RegisterForm() {
+		initWidget(uiBinder.createAndBindUi(this));
+		this.getElement().setAttribute("autocomplete", "off");
+		termAndCond.setInnerHtml("I agree with the <a href='" + PageType.TermsPageType.asHref().asString() + "' target='_blank'>terms and conditions</a>");
 
-    public RegisterForm() {
-        initWidget(uiBinder.createAndBindUi(this));
+	}
 
-        forename.getElement().setAttribute("placeholder", "First name");
-        surname.getElement().setAttribute("placeholder", "Last name");
-        company.getElement().setAttribute("placeholder", "Company");
-        email.getElement().setAttribute("placeholder", "Email");
-        password.getElement().setAttribute("placeholder", "Password");
-        confirmPassword.getElement().setAttribute("placeholder", "Confirm password");
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
+	 */
+	@Override
+	protected void onAttach() {
+		super.onAttach();
+		if (SessionController.get().isLoggedInUserAdmin()) {
+			termAndCond.setVisible(Boolean.FALSE);
+		} else {
+			termAndCond.setVisible(Boolean.TRUE);
+		}
 
-    }
+		resetForm();
+		focusFirstActiveField();
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.google.gwt.user.client.ui.Composite#onAttach()
-     */
-    @Override
-    protected void onAttach() {
-        super.onAttach();
-        if (SessionController.get().isLoggedInUserAdmin()) {
-            termAndCond.setVisible(Boolean.FALSE);
-        } else {
-            termAndCond.setVisible(Boolean.TRUE);
-        }
+	@UiHandler({ "forename", "surname", "company", "email", "password", "confirmPassword" })
+	void onEnterKeyPressRegisterFields(KeyPressEvent event) {
+		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
+			registerBtn.click();
+		}
+	}
 
-        resetForm();
-        focusFirstActiveField();
-    }
+	@UiHandler("registerBtn")
+	void onRegisterClicked(ClickEvent event) {
+		if (validate()) {
+			clearErrors();
+			setEnabled(false);
+			registerBtn.setStatusLoading("Sending ..");
+			if (actionCode == null) { // Create new user
+				UserController.get().registerUser(email.getText(), password.getText(), forename.getText(), surname.getText(), company.getText());
+			} else { // Update user
+				UserController.get().registerUser(actionCode, password.getText());
+			}
 
-    /**
-     * Set preloader object from Login Page
-     * 
-     * @param p
-     */
-    public void setPreloader(Preloader p) {
-        preloaderRef = p;
-    }
+		} else {
+			if (forenameNote != null) {
+				forename.showNote(forenameNote, true);
+			} else {
+				forename.hideNote();
+			}
+			if (surnameNote != null) {
+				surname.showNote(surnameNote, true);
+			} else {
+				surname.hideNote();
+			}
+			if (companyNote != null) {
+				company.showNote(companyNote, true);
+			} else {
+				company.hideNote();
+			}
+			if (emailNote != null) {
+				email.showNote(emailNote, true);
+			} else {
+				email.hideNote();
+			}
+			if (passwordError != null) {
+				password.showNote(passwordError, true);
+				confirmPassword.showNote(passwordError, true);
+			} else {
+				password.hideNote();
+				confirmPassword.hideNote();
+			}
 
-    @UiHandler({ "forename", "surname", "company", "email", "password", "confirmPassword", "termAndCond" })
-    void onEnterKeyPressRegisterFields(KeyPressEvent event) {
-        if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
-            mRegister.click();
-        }
-    }
+			if (termAndCondError != null) {
+				checkboxError.setInnerText(termAndCondError);
+			} else {
+				checkboxError.setInnerText("");
+			}
+		}
+	}
 
-    @UiHandler("mRegister")
-    void onRegisterClicked(ClickEvent event) {
-        if (validate()) {
-            clearErrors();
-            preloaderRef.show();
-            if (actionCode == null) { // Create new user
-                UserController.get().registerUser(email.getText(), password.getText(), forename.getText(), surname.getText(), company.getText());
-            } else { // Update user
-                UserController.get().registerUser(actionCode, password.getText());
-            }
+	/**
+	 * Check if every field of the form is valid and return true
+	 * 
+	 * @return Boolean validated
+	 */
+	private boolean validate() {
 
-        } else {
-            if (forenameError != null) {
-                FormHelper.showNote(true, forenameGroup, forenameNote, forenameError);
-            } else {
-                FormHelper.hideNote(forenameGroup, forenameNote);
-            }
-            if (surnameError != null) {
-                FormHelper.showNote(true, surnameGroup, surnameNote, surnameError);
-            } else {
-                FormHelper.hideNote(surnameGroup, surnameNote);
-            }
-            if (companyError != null) {
-                FormHelper.showNote(true, companyGroup, companyNote, companyError);
-            } else {
-                FormHelper.hideNote(companyGroup, companyNote);
-            }
-            if (emailError != null) {
-                FormHelper.showNote(true, emailGroup, emailNote, emailError);
-            } else {
-                FormHelper.hideNote(emailGroup, emailNote);
-            }
+		boolean validated = true;
+		// Retrieve fields to validate
+		String forenameValue = forename.getText();
+		String surnameValue = surname.getText();
+		String companyValue = company.getText();
+		String emailValue = email.getText();
+		String passwordValue = password.getText();
+		String confirmPasswordValue = confirmPassword.getText();
 
-            if (passwordError != null) {
-                FormHelper.showNote(true, passwordGroup, passwordNote, passwordError);
-            } else {
-                FormHelper.hideNote(passwordGroup, passwordNote);
-            }
+		// Check fields constraints
+		if (forenameValue == null || forenameValue.length() == 0) {
+			forenameNote = "Cannot be empty";
+			validated = false;
+		} else if (forenameValue.length() < 2) {
+			forenameNote = "Too short (minimum 2 characters)";
+			validated = false;
+		} else if (forenameValue.length() > 30) {
+			forenameNote = "Too long (maximum 30 characters)";
+			validated = false;
+		} else if (!FormHelper.isTrimmed(forenameValue)) {
+			forenameNote = "Whitespaces not allowed either before or after the string";
+			validated = false;
+		} else {
+			forenameNote = null;
+			validated = validated && true;
+		}
+		if (surnameValue == null || surnameValue.length() == 0) {
+			surnameNote = "Cannot be empty";
+			validated = false;
+		} else if (surnameValue.length() < 2) {
+			surnameNote = "(minimum 2 characters)";
+			validated = false;
+		} else if (surnameValue.length() > 30) {
+			surnameNote = "Too long (maximum 30 characters)";
+			validated = false;
+		} else if (!FormHelper.isTrimmed(surnameValue)) {
+			surnameNote = "Whitespaces not allowed either before or after the string";
+			validated = false;
+		} else {
+			surnameNote = null;
+			validated = validated && true;
+		}
+		if (companyValue == null || companyValue.length() == 0) {
+			companyNote = "Cannot be empty";
+			validated = false;
+		} else if (companyValue.length() < 2) {
+			companyNote = "(minimum 2 characters)";
+			validated = false;
+		} else if (companyValue.length() > 255) {
+			companyNote = "Too long (maximum 255 characters)";
+			validated = false;
+		} else if (!FormHelper.isTrimmed(companyValue)) {
+			companyNote = "Whitespaces not allowed either before or after the string";
+			validated = false;
+		} else {
+			companyNote = null;
+			validated = validated && true;
+		}
+		if (emailValue == null || emailValue.length() == 0) {
+			emailNote = "Cannot be empty";
+			validated = false;
+		} else if (emailValue.length() < 6) {
+			emailNote = "Too short (minimum 6 characters)";
+			validated = false;
+		} else if (emailValue.length() > 255) {
+			emailNote = "Too long (maximum 255 characters)";
+			validated = false;
+		} else if (!FormHelper.isValidEmail(emailValue)) {
+			emailNote = "Invalid email address";
+			validated = false;
+		} else {
+			emailNote = null;
+			validated = validated && true;
+		}
 
-            if (termAndCondError != null) {
-                FormHelper.showNote(true, termAndCondGroup, termAndCondNote, termAndCondError);
-            } else {
-                FormHelper.hideNote(termAndCondGroup, termAndCondNote);
-            }
-        }
-    }
+		if (!isRequestInvite) {
+			if (passwordValue == null || passwordValue.length() == 0) {
+				passwordError = "Cannot be empty";
+				validated = false;
+			} else if (passwordValue.length() < 6) {
+				passwordError = "Too short (minimum 6 characters)";
+				validated = false;
+			} else if (passwordValue.length() > 64) {
+				passwordError = "Too long (maximum 64 characters)";
+				validated = false;
+			} else if (!passwordValue.equals(confirmPasswordValue)) {
+				passwordError = "Password and confirmation should match";
+				validated = false;
+			} else if (!FormHelper.isTrimmed(passwordValue)) {
+				passwordError = "Whitespaces not allowed either before or after the string";
+				validated = false;
+			} else {
+				passwordError = null;
+				validated = validated && true;
+			}
 
-    /**
-     * Check if every field of the form is valid and return true
-     * 
-     * @return Boolean validated
-     */
-    private boolean validate() {
+			if (!SessionController.get().isLoggedInUserAdmin()) {
+				if (termAndCond.getValue() == Boolean.FALSE) {
+					termAndCondError = "Must accept terms and conditions";
+					validated = false;
+				} else {
+					termAndCondError = null;
+					validated = validated && true;
+				}
+			}
+		}
 
-        boolean validated = true;
-        // Retrieve fields to validate
-        String forenameValue = forename.getText();
-        String surnameValue = surname.getText();
-        String companyValue = company.getText();
-        String emailValue = email.getText();
-        String passwordValue = password.getText();
-        String confirmPasswordValue = confirmPassword.getText();
+		return validated;
+	}
 
-        // Check fields constraints
-        if (forenameValue == null || forenameValue.length() == 0) {
-            forenameError = "Cannot be empty";
-            validated = false;
-        } else if (forenameValue.length() < 2) {
-            forenameError = "Too short (minimum 2 characters)";
-            validated = false;
-        } else if (forenameValue.length() > 30) {
-            forenameError = "Too long (maximum 30 characters)";
-            validated = false;
-        } else if (!FormHelper.isTrimmed(forenameValue)) {
-            forenameError = "Whitespaces not allowed either before or after the string";
-            validated = false;
-        } else {
-            forenameError = null;
-            validated = validated && true;
-        }
-        if (surnameValue == null || surnameValue.length() == 0) {
-            surnameError = "Cannot be empty";
-            validated = false;
-        } else if (surnameValue.length() < 2) {
-            surnameError = "(minimum 2 characters)";
-            validated = false;
-        } else if (surnameValue.length() > 30) {
-            surnameError = "Too long (maximum 30 characters)";
-            validated = false;
-        } else if (!FormHelper.isTrimmed(surnameValue)) {
-            surnameError = "Whitespaces not allowed either before or after the string";
-            validated = false;
-        } else {
-            surnameError = null;
-            validated = validated && true;
-        }
-        if (companyValue == null || companyValue.length() == 0) {
-            companyError = "Cannot be empty";
-            validated = false;
-        } else if (companyValue.length() < 2) {
-            companyError = "(minimum 2 characters)";
-            validated = false;
-        } else if (companyValue.length() > 255) {
-            companyError = "Too long (maximum 255 characters)";
-            validated = false;
-        } else if (!FormHelper.isTrimmed(companyValue)) {
-            companyError = "Whitespaces not allowed either before or after the string";
-            validated = false;
-        } else {
-            companyError = null;
-            validated = validated && true;
-        }
-        if (emailValue == null || emailValue.length() == 0) {
-            emailError = "Cannot be empty";
-            validated = false;
-        } else if (emailValue.length() < 6) {
-            emailError = "Too short (minimum 6 characters)";
-            validated = false;
-        } else if (emailValue.length() > 255) {
-            emailError = "Too long (maximum 255 characters)";
-            validated = false;
-        } else if (!FormHelper.isValidEmail(emailValue)) {
-            emailError = "Invalid email address";
-            validated = false;
-        } else {
-            emailError = null;
-            validated = validated && true;
-        }
+	public void setUsername(String value) {
+		email.setText(value);
+		email.setEnabled(false);
+	}
 
-        if (!isRequestInvite) {
-            if (passwordValue == null || passwordValue.length() == 0) {
-                passwordError = "Cannot be empty";
-                validated = false;
-            } else if (passwordValue.length() < 6) {
-                passwordError = "Too short (minimum 6 characters)";
-                validated = false;
-            } else if (passwordValue.length() > 64) {
-                passwordError = "Too long (maximum 64 characters)";
-                validated = false;
-            } else if (!passwordValue.equals(confirmPasswordValue)) {
-                passwordError = "Password and confirmation should match";
-                validated = false;
-            } else if (!FormHelper.isTrimmed(passwordValue)) {
-                passwordError = "Whitespaces not allowed either before or after the string";
-                validated = false;
-            } else {
-                passwordError = null;
-                validated = validated && true;
-            }
+	public void setForename(String value) {
+		forename.setText(value);
+		forename.setEnabled(false);
+	}
 
-            if (!SessionController.get().isLoggedInUserAdmin()) {
-                if (termAndCond.getValue() == Boolean.FALSE) {
-                    termAndCondError = "Must accept terms and conditions";
-                    validated = false;
-                } else {
-                    termAndCondError = null;
-                    validated = validated && true;
-                }
-            }
-        }
+	public void setSurname(String value) {
+		surname.setText(value);
+		surname.setEnabled(false);
+	}
 
-        return validated;
-    }
+	public void setCompany(String value) {
+		company.setText(value);
+		company.setEnabled(false);
+	}
 
-    public void setUsername(String value) {
-        email.setText(value);
-        email.setEnabled(false);
-    }
+	public void setTermAndCond(boolean value) {
+		termAndCond.setValue(value);
+	}
 
-    public void setForename(String value) {
-        forename.setText(value);
-        forename.setEnabled(false);
-    }
+	public void setActionCode(String value) {
+		actionCode = value;
+	}
 
-    public void setSurname(String value) {
-        surname.setText(value);
-        surname.setEnabled(false);
-    }
+	/**
+	 * Clear form fields, focuses and errors, then enable it
+	 */
+	public void resetForm() {
+		forename.setText("");
+		surname.setText("");
+		company.setText("");
+		email.setText("");
+		password.clear();
+		confirmPassword.clear();
+		termAndCond.setValue(Boolean.FALSE);
+		clearErrors();
+		actionCode = null;
+		registerBtn.resetStatus();
+		setEnabled(true);
+		forename.setFocus(false);
+		surname.setFocus(false);
+		company.setFocus(false);
+		email.setFocus(false);
+		password.setFocus(false);
+		confirmPassword.setFocus(false);
+	}
 
-    public void setCompany(String value) {
-        company.setText(value);
-        company.setEnabled(false);
-    }
+	/**
+	 * Enable form
+	 * 
+	 * @param value
+	 */
+	public void setEnabled(boolean value) {
+		forename.setEnabled(value);
+		surname.setEnabled(value);
+		company.setEnabled(value);
+		email.setEnabled(value);
+		password.setEnabled(value);
+		confirmPassword.setEnabled(value);
+		termAndCond.setEnabled(value);
+		registerBtn.setEnabled(value);
+	}
 
-    public void setTermAndCond(boolean value) {
-        termAndCond.setValue(value);
-    }
+	private void clearErrors() {
+		forename.hideNote();
+		surname.hideNote();
+		company.hideNote();
+		email.hideNote();
+		password.hideNote();
+		confirmPassword.hideNote();
+		checkboxError.setInnerText("");
+	}
 
-    public void clearPasswordValue() {
-        password.setValue("");
-        confirmPassword.setValue("");
-    }
+	public void focusFirstActiveField() {
+		if (forename.isEnabled()) {
+			forename.setFocus(true);
+		} else {
+			password.setFocus(true);
+		}
+	}
 
-    public void setActionCode(String value) {
-        actionCode = value;
-    }
+	/**
+	 * Set the form as request invite mode
+	 * 
+	 * @param requestInvite
+	 */
+	public void setRequestInvite(boolean requestInvite) {
+		isRequestInvite = requestInvite;
+		if (requestInvite) {
+			resetForm();
+			focusFirstActiveField();
+			passwordGroup.setVisible(false);
+			termAndCondGroup.setVisible(false);
+			registerBtn.setText("Apply Now");
+		} else {
+			passwordGroup.setVisible(true);
+			termAndCondGroup.setVisible(true);
+			registerBtn.setText("Continue");
+		}
+	}
 
-    /**
-     * Clear form fields, focuses and errors, then enable it
-     */
-    public void resetForm() {
-        forename.setText("");
-        surname.setText("");
-        company.setText("");
-        email.setText("");
-        password.setText("");
-        confirmPassword.setText("");
-        forename.setFocus(false);
-        surname.setFocus(false);
-        company.setFocus(false);
-        email.setFocus(false);
-        password.setFocus(false);
-        confirmPassword.setFocus(false);
-        termAndCond.setValue(Boolean.FALSE);
-        clearErrors();
-        actionCode = null;
-        setEnabled(true);
-    }
+	public void setButtonLoading(String loadingText) {
+		setEnabled(false);
+		registerBtn.setStatusLoading(loadingText);
+	}
 
-    /**
-     * Enable form
-     * 
-     * @param value
-     */
-    public void setEnabled(boolean value) {
-        forename.setEnabled(value);
-        surname.setEnabled(value);
-        company.setEnabled(value);
-        email.setEnabled(value);
-        password.setEnabled(value);
-        confirmPassword.setEnabled(value);
-        termAndCond.setEnabled(value);
-        mRegister.setEnabled(value);
-    }
+	public void setButtonSuccess(String successText, int hideTimeout) {
+		registerBtn.setStatusSuccess(successText, hideTimeout);
+	}
 
-    private void clearErrors() {
-        FormHelper.hideNote(forenameGroup, forenameNote);
-        FormHelper.hideNote(surnameGroup, surnameNote);
-        FormHelper.hideNote(companyGroup, companyNote);
-        FormHelper.hideNote(emailGroup, emailNote);
-        FormHelper.hideNote(passwordGroup, passwordNote);
-        FormHelper.hideNote(termAndCondGroup, termAndCondNote);
-    }
+	public void setButtonError(String errorText) {
+		registerBtn.setStatusError(errorText);
+	}
 
-    public void focusFirstActiveField() {
-        if (forename.isEnabled()) {
-            forename.setFocus(true);
-        } else {
-            password.setFocus(true);
-        }
-    }
+	public void setButtonError() {
+		setButtonError("Error!");
+	}
 
-    /**
-     * Set the form as request invite mode
-     * 
-     * @param requestInvite
-     */
-    public void setRequestInvite(boolean requestInvite) {
-        isRequestInvite = requestInvite;
-        if (requestInvite) {
-            resetForm();
-            focusFirstActiveField();
-            passwordGroup.setVisible(false);
-            termAndCondGroup.setVisible(false);
-            mRegister.setHTML("Submit <span class=\"icon-right-small\"/>");
-        } else {
-            passwordGroup.setVisible(true);
-            termAndCondGroup.setVisible(true);
-            mRegister.setText("Register");
-        }
-    }
+	public void resetButtonStatus() {
+		registerBtn.resetStatus();
+	}
 
 }

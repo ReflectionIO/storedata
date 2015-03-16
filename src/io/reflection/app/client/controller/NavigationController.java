@@ -15,8 +15,11 @@ import io.reflection.app.client.mixpanel.MixPanelApi;
 import io.reflection.app.client.page.HomePage;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
-import io.reflection.app.client.part.Footer;
-import io.reflection.app.client.part.Header;
+import io.reflection.app.client.part.navigation.Header;
+import io.reflection.app.client.part.navigation.PanelLeftMenu;
+import io.reflection.app.client.part.navigation.PanelRightAccount;
+import io.reflection.app.client.part.navigation.PanelRightSearch;
+import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.shared.util.DataTypeHelper;
 
@@ -48,12 +51,13 @@ public class NavigationController implements ValueChangeHandler<String> {
 
 	private static NavigationController one = null;
 
-	private HTMLPanel mPanel = null;
-
 	private Map<String, Page> pages = new HashMap<String, Page>();
 
-	private Header mHeader = null;
-	private Footer mFooter = null;
+	private Header header = null;
+	private PanelLeftMenu panelLeftMenu = null;
+	private PanelRightAccount panelRightAccount = null;
+	private PanelRightSearch panelRightSearch = null;
+	private HTMLPanel lMain = null;
 
 	private Stack mStack;
 
@@ -224,14 +228,14 @@ public class NavigationController implements ValueChangeHandler<String> {
 	/**
 	 * @return
 	 */
-	public Widget getPageHolderPanel() {
-		if (mPanel == null) {
-			mPanel = new HTMLPanel("");
-			mPanel.setStyleName("container-fluid");
-			mPanel.getElement().setAttribute("style", "padding: 60px 0px 39px 0px; min-width: 275px;");
+	public Widget getMainPanel() {
+		if (lMain == null) {
+			lMain = new HTMLPanel("");
+			lMain.setStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().lMain());
+			lMain.getElement().setId("main");
+			lMain.getElement().setAttribute("role", "main");
 		}
-
-		return mPanel;
+		return lMain;
 	}
 
 	private void attachPage(PageType type) {
@@ -242,8 +246,8 @@ public class NavigationController implements ValueChangeHandler<String> {
 		}
 
 		if (!page.isAttached()) {
-			mPanel.clear();
-			mPanel.add(page);
+			lMain.clear();
+			lMain.add(page);
 		}
 	}
 
@@ -375,24 +379,33 @@ public class NavigationController implements ValueChangeHandler<String> {
 		}
 	}
 
-	/**
-	 * @return
-	 */
-	public Widget getHeader() {
-		if (mHeader == null) {
-			mHeader = new Header();
+	public Header getHeader() {
+		if (header == null) {
+			header = new Header();
 		}
-		return mHeader;
+		return header;
 	}
 
-	/**
-	 * @return
-	 */
-	public Widget getFooter() {
-		if (mFooter == null) {
-			mFooter = new Footer();
+	public PanelLeftMenu getPanelLeftMenu() {
+		if (panelLeftMenu == null) {
+			panelLeftMenu = new PanelLeftMenu();
+			panelLeftMenu.getElement().setAttribute("data-mcs-theme", "minimal-dark");
 		}
-		return mFooter;
+		return panelLeftMenu;
+	}
+
+	public PanelRightAccount getPanelRightAccount() {
+		if (panelRightAccount == null) {
+			panelRightAccount = new PanelRightAccount();
+		}
+		return panelRightAccount;
+	}
+
+	public PanelRightSearch getPanelRightSearch() {
+		if (panelRightSearch == null) {
+			panelRightSearch = new PanelRightSearch();
+		}
+		return panelRightSearch;
 	}
 
 	public PageType getCurrentPage() {

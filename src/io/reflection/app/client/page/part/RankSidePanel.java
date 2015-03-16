@@ -10,6 +10,8 @@ package io.reflection.app.client.page.part;
 import static io.reflection.app.client.controller.FilterController.DOWNLOADS_DAILY_DATA_TYPE;
 import static io.reflection.app.client.controller.FilterController.REVENUE_DAILY_DATA_TYPE;
 import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMATTER_DD_MMM_YYYY;
+import io.reflection.app.client.component.FormFieldSelect;
+import io.reflection.app.client.component.FormRadioButton;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.helper.FilterHelper;
@@ -30,11 +32,10 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
 import com.google.gwt.user.datepicker.client.DateBox;
+import com.google.gwt.user.datepicker.client.DatePicker;
 
 /**
  * @author billy1380
@@ -46,14 +47,14 @@ public class RankSidePanel extends Composite {
 
 	interface RankSidePanelUiBinder extends UiBinder<Widget, RankSidePanel> {}
 
-	@UiField DateBox date;
+	@UiField(provided = true) DateBox dateBox = new DateBox(new DatePicker(), null, new DateBox.DefaultFormat(DATE_FORMATTER_DD_MMM_YYYY));
 	Date currentDate = FilterHelper.getToday();
-	@UiField ListBox mAppStore;
+	@UiField FormFieldSelect appStoreListBox;
 	// @UiField ListBox mListType;
-	@UiField ListBox mCountry;
-	@UiField ListBox category;
-	@UiField RadioButton dailyDataRevenue;
-	@UiField RadioButton dailyDataDownloads;
+	@UiField FormFieldSelect countryListBox;
+	@UiField FormFieldSelect categoryListBox;
+	@UiField FormRadioButton dailyDataRevenue;
+	@UiField FormRadioButton dailyDataDownloads;
 
 	@UiField HTMLPanel dailyDataRadio;
 
@@ -66,27 +67,35 @@ public class RankSidePanel extends Composite {
 			dailyDataRadio.removeFromParent();
 		}
 
-		FilterHelper.addStores(mAppStore, SessionController.get().isLoggedInUserAdmin());
-		FilterHelper.addCountries(mCountry, SessionController.get().isLoggedInUserAdmin());
-		FilterHelper.addCategories(category, SessionController.get().isLoggedInUserAdmin());
-
-		date.setFormat(new DateBox.DefaultFormat(DATE_FORMATTER_DD_MMM_YYYY));
-		date.getTextBox().setReadOnly(Boolean.TRUE);
-
-		date.getDatePicker().addShowRangeHandler(new ShowRangeHandler<Date>() {
+		dateBox.getDatePicker().addShowRangeHandler(new ShowRangeHandler<Date>() {
 
 			@Override
 			public void onShowRange(ShowRangeEvent<Date> event) {
-				FilterHelper.disableFutureDates(date.getDatePicker());
+				FilterHelper.disableFutureDates(dateBox.getDatePicker());
 			}
 		});
+
+		FilterHelper.addStores(appStoreListBox, SessionController.get().isLoggedInUserAdmin());
+		FilterHelper.addCountries(countryListBox, SessionController.get().isLoggedInUserAdmin());
+		FilterHelper.addCategories(categoryListBox, SessionController.get().isLoggedInUserAdmin());
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
+	 */
+	@Override
+	protected void onAttach() {
+		super.onAttach();
 
 		updateFromFilter();
 	}
 
-	@UiHandler("mAppStore")
+	@UiHandler("appStoreListBox")
 	void onAppStoreValueChanged(ChangeEvent event) {
-		FilterController.get().setStore(mAppStore.getValue(mAppStore.getSelectedIndex()));
+		FilterController.get().setStore(appStoreListBox.getValue(appStoreListBox.getSelectedIndex()));
 	}
 
 	// @UiHandler("mListType")
@@ -94,17 +103,17 @@ public class RankSidePanel extends Composite {
 	// FilterController.get().setListType(mListType.getValue(mListType.getSelectedIndex()));
 	// }
 
-	@UiHandler("mCountry")
+	@UiHandler("countryListBox")
 	void onCountryValueChanged(ChangeEvent event) {
-		FilterController.get().setCountry(mCountry.getValue(mCountry.getSelectedIndex()));
+		FilterController.get().setCountry(countryListBox.getValue(countryListBox.getSelectedIndex()));
 	}
 
-	@UiHandler("date")
+	@UiHandler("dateBox")
 	void onDateValueChanged(ValueChangeEvent<Date> event) {
 		if (event.getValue().after(FilterHelper.getToday())) { // Restore previously selected date
-			date.setValue(currentDate);
+			dateBox.setValue(currentDate);
 		} else {
-			currentDate.setTime(date.getValue().getTime());
+			currentDate.setTime(dateBox.getValue().getTime());
 			FilterController fc = FilterController.get();
 			fc.start();
 			fc.setEndDate(event.getValue());
@@ -115,8 +124,8 @@ public class RankSidePanel extends Composite {
 		}
 	}
 
-	@UiHandler("category")
-	void onCategoryValueChanged(ChangeEvent event) {
+	@UiHandler("categoryListBox")
+	void onCategoryListBoxValueChanged(ChangeEvent event) {
 		FilterController.get().setCategory(getCatgegory());
 	}
 
@@ -134,14 +143,14 @@ public class RankSidePanel extends Composite {
 	 * @return
 	 */
 	public String getStore() {
-		return mAppStore.getItemText(mAppStore.getSelectedIndex());
+		return appStoreListBox.getItemText(appStoreListBox.getSelectedIndex());
 	}
 
 	/**
 	 * @return
 	 */
 	public String getCountry() {
-		return mCountry.getItemText(mCountry.getSelectedIndex());
+		return countryListBox.getItemText(countryListBox.getSelectedIndex());
 	}
 
 	public String getDisplayDate() {
@@ -154,14 +163,14 @@ public class RankSidePanel extends Composite {
 	}
 
 	public Long getCatgegory() {
-		return Long.valueOf(category.getValue(category.getSelectedIndex()));
+		return Long.valueOf(categoryListBox.getValue(categoryListBox.getSelectedIndex()));
 	}
 
 	/**
 	 * @return
 	 */
 	public Date getDate() {
-		return date.getValue();
+		return dateBox.getValue();
 	}
 
 	public void updateFromFilter() {
@@ -169,16 +178,16 @@ public class RankSidePanel extends Composite {
 
 		long endTime = fc.getFilter().getEndTime().longValue();
 		Date endDate = new Date(endTime);
-		date.setValue(endDate);
+		dateBox.setValue(endDate);
 		currentDate.setTime(endDate.getTime());
 		if (SessionController.get().isLoggedInUserAdmin()) {
-			mAppStore.setSelectedIndex(FormHelper.getItemIndex(mAppStore, fc.getFilter().getStoreA3Code()));
-			mCountry.setSelectedIndex(FormHelper.getItemIndex(mCountry, fc.getFilter().getCountryA2Code()));
-			category.setSelectedIndex(FormHelper.getItemIndex(category, fc.getFilter().getCategoryId().toString()));
+			appStoreListBox.setSelectedIndex(FormHelper.getItemIndex(appStoreListBox, fc.getFilter().getStoreA3Code()));
+			countryListBox.setSelectedIndex(FormHelper.getItemIndex(countryListBox, fc.getFilter().getCountryA2Code()));
+			categoryListBox.setSelectedIndex(FormHelper.getItemIndex(categoryListBox, fc.getFilter().getCategoryId().toString()));
 		} else {
-			mAppStore.setSelectedIndex(0);
-			mCountry.setSelectedIndex(0);
-			category.setSelectedIndex(0);
+			appStoreListBox.setSelectedIndex(0);
+			countryListBox.setSelectedIndex(0);
+			categoryListBox.setSelectedIndex(0);
 		}
 
 		String dailyDataType = fc.getFilter().getDailyData();

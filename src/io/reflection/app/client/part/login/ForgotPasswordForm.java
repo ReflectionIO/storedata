@@ -11,10 +11,11 @@ import io.reflection.app.api.core.shared.call.ForgotPasswordRequest;
 import io.reflection.app.api.core.shared.call.ForgotPasswordResponse;
 import io.reflection.app.api.core.shared.call.event.ForgotPasswordEventHandler;
 import io.reflection.app.api.shared.ApiError;
+import io.reflection.app.client.DefaultEventBus;
+import io.reflection.app.client.component.FormButton;
+import io.reflection.app.client.component.FormField;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.helper.FormHelper;
-import io.reflection.app.client.page.PageType;
-import io.reflection.app.client.part.Preloader;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -23,12 +24,7 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.InlineHyperlink;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
 
@@ -42,31 +38,24 @@ public class ForgotPasswordForm extends Composite implements ForgotPasswordEvent
 
 	interface ForgotPasswordFormUiBinder extends UiBinder<Widget, ForgotPasswordForm> {}
 
-	@UiField FormPanel mForm;
-	@UiField InlineHyperlink tryAgainLink;
-	@UiField TextBox mEmail;
-	@UiField HTMLPanel mEmailGroup;
-	@UiField HTMLPanel mEmailNote;
-	private String mEmailError = null;
-	private Preloader preloaderRef;
-
-	@UiField Button mSubmit;
+	@UiField FormField email;
+	private String emailError = null;
+	@UiField FormButton submit;
 
 	public ForgotPasswordForm() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		tryAgainLink.setTargetHistoryToken(PageType.LoginPageType.asTargetHistoryToken("requestinvite"));
-		mEmail.getElement().setAttribute("placeholder", "Email");
 	}
 
-	@UiHandler("mSubmit")
+	@UiHandler("submit")
 	void onSubmitClick(ClickEvent event) {
 		if (validate()) {
-			FormHelper.hideNote(mEmailGroup, mEmailNote);
-			preloaderRef.show();
-			SessionController.get().forgotPassword(mEmail.getText());
+			email.hideNote();
+			SessionController.get().forgotPassword(email.getText());
+			setEnabled(false);
+			submit.setStatusLoading("Sending ...");
 		} else {
-			FormHelper.showNote(true, mEmailGroup, mEmailNote, mEmailError);
+			email.showNote(emailError, true);
 		}
 	}
 
@@ -79,58 +68,50 @@ public class ForgotPasswordForm extends Composite implements ForgotPasswordEvent
 	protected void onAttach() {
 		super.onAttach();
 
+		DefaultEventBus.get().addHandlerToSource(ForgotPasswordEventHandler.TYPE, SessionController.get(), this);
+
 		resetForm();
-
-		mEmail.setFocus(true);
 	}
 
-	/**
-	 * Set preloader object from Login Page
-	 * 
-	 * @param p
-	 */
-	public void setPreloader(Preloader p) {
-		preloaderRef = p;
-	}
-
-	@UiHandler("mEmail")
+	@UiHandler("email")
 	void onEnterKeyPressForgotPassword(KeyPressEvent event) {
 		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
-			mSubmit.click();
+			submit.click();
 		}
 	}
 
 	private boolean validate() {
 		boolean validated = true;
-		String email = mEmail.getText();
-		if (email == null || email.length() == 0) {
-			mEmailError = "Cannot be empty";
+		String emailText = email.getText();
+		if (emailText == null || emailText.length() == 0) {
+			emailError = "Cannot be empty";
 			validated = false;
-		} else if (email.length() < 6) {
-			mEmailError = "Too short (minimum 6 characters)";
+		} else if (emailText.length() < 6) {
+			emailError = "Too short (minimum 6 characters)";
 			validated = false;
-		} else if (email.length() > 255) {
-			mEmailError = "Too long (maximum 255 characters)";
+		} else if (emailText.length() > 255) {
+			emailError = "Too long (maximum 255 characters)";
 			validated = false;
-		} else if (!FormHelper.isValidEmail(email)) {
-			mEmailError = "Invalid email address";
+		} else if (!FormHelper.isValidEmail(emailText)) {
+			emailError = "Invalid email address";
 			validated = false;
 		} else {
-			mEmailError = null;
+			emailError = null;
 			validated = validated && true;
 		}
 		return validated;
 	}
 
-	private void setUsernameError(String error) {
-		mEmailError = error;
+	public void setEnabled(boolean enabled) {
+		email.setEnabled(enabled);
+		email.setFocus(enabled);
 	}
 
 	private void resetForm() {
-		mEmail.setEnabled(true);
-		mEmail.setText("");
-		mSubmit.setEnabled(true);
-		FormHelper.hideNote(mEmailGroup, mEmailNote);
+		email.setText("");
+		email.hideNote();
+		submit.resetStatus();
+		setEnabled(true);
 	}
 
 	/*
@@ -142,11 +123,15 @@ public class ForgotPasswordForm extends Composite implements ForgotPasswordEvent
 	 */
 	@Override
 	public void forgotPasswordSuccess(ForgotPasswordRequest input, ForgotPasswordResponse output) {
-		if (output.status == StatusType.StatusTypeFailure && output.error != null && output.error.code == ApiError.UserNotFound.getCode()) {
-			setUsernameError("Invalid email address");
-			FormHelper.showNote(true, mEmailGroup, mEmailNote, mEmailError);
+		if (output.status == StatusType.StatusTypeSuccess) {
+			submit.setStatusSuccess("Email is on the way", 0);
+		} else if (output.status == StatusType.StatusTypeFailure && output.error != null && output.error.code == ApiError.UserNotFound.getCode()) {
+			submit.setStatusError("Invalid email address");
+			setEnabled(true);
+		} else {
+			submit.setStatusError();
+			setEnabled(true);
 		}
-		preloaderRef.hide();
 	}
 
 	/*
@@ -158,7 +143,8 @@ public class ForgotPasswordForm extends Composite implements ForgotPasswordEvent
 	 */
 	@Override
 	public void forgotPasswordFailure(ForgotPasswordRequest input, Throwable caught) {
-		preloaderRef.hide();
+		submit.setStatusError();
+		setEnabled(true);
 	}
 
 }

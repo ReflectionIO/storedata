@@ -8,9 +8,6 @@
 package io.reflection.app.client.page.test;
 
 import io.reflection.app.client.helper.FilterHelper;
-import io.reflection.app.client.helper.JavaScriptObjectHelper;
-import io.reflection.app.client.highcharts.Chart;
-import io.reflection.app.client.highcharts.ChartHelper;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.part.DateRangeBox;
 import io.reflection.app.client.part.DateRangePicker;
@@ -23,9 +20,6 @@ import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.JsArrayNumber;
-import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
@@ -43,8 +37,8 @@ public class WidgetTestPage extends Page {
 	@UiField DateSelector dateSelector;
 	@UiField DateRangePicker picker1;
 	@UiField DateRangeBox dateRange;
-	@UiField DivElement a;
-	private Chart chart;
+
+	// private Chart chart;
 
 	public WidgetTestPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -121,34 +115,33 @@ public class WidgetTestPage extends Page {
 	 * 
 	 * @see io.reflection.app.client.page.Page#onAttach()
 	 */
-	@SuppressWarnings("deprecation")
 	@Override
 	protected void onAttach() {
 		super.onAttach();
-
-		if (chart == null) {
-			chart = ChartHelper.createAndInjectChart(a);
-		}
-
-		JavaScriptObject s1 = JavaScriptObject.createObject();
-		JsArrayNumber data = JavaScriptObject.createArray().cast();
-
-		data.push(3);
-		data.push(54);
-		data.push(34);
-		data.push(65);
-		data.push(47);
-		data.push(5);
-		data.push(90);
-		data.push(76);
-		data.push(45);
-		data.push(65);
-		data.push(35);
-		JavaScriptObjectHelper.setObjectProperty(s1, "data", data);
-		JavaScriptObjectHelper.setDoubleProperty(s1, "pointStart", new Date(2010 - 1900, 4, 5).getTime());
-		JavaScriptObjectHelper.setIntegerProperty(s1, "pointInterval", 86400000); // one day
-
-		chart.addSeries(s1);
+		
+		// if (chart == null) {
+		// chart = ChartHelper.createAndInjectChart(a);
+		// }
+		//
+		// JavaScriptObject s1 = JavaScriptObject.createObject();
+		// JsArrayNumber data = JavaScriptObject.createArray().cast();
+		//
+		// data.push(3);
+		// data.push(54);
+		// data.push(34);
+		// data.push(65);
+		// data.push(47);
+		// data.push(5);
+		// data.push(90);
+		// data.push(76);
+		// data.push(45);
+		// data.push(65);
+		// data.push(35);
+		// JavaScriptObjectHelper.setObjectProperty(s1, "data", data);
+		// JavaScriptObjectHelper.setDoubleProperty(s1, "pointStart", new Date(2010 - 1900, 4, 5).getTime());
+		// JavaScriptObjectHelper.setIntegerProperty(s1, "pointInterval", 86400000); // one day
+		//
+		// chart.addSeries(s1);
 
 	}
 }

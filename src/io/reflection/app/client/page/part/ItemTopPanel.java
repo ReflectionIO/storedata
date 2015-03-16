@@ -7,6 +7,7 @@
 //
 package io.reflection.app.client.page.part;
 
+import io.reflection.app.client.component.FormFieldSelect;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.helper.FilterHelper;
@@ -22,7 +23,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -38,7 +38,7 @@ public class ItemTopPanel extends Composite {
 	@UiField DateSelector dateSelector;
 	// @UiField ListBox mAppStore;
 	// @UiField ListBox mListType;
-	@UiField ListBox mCountry;
+	@UiField FormFieldSelect mCountry;
 
 	public ItemTopPanel() {
 		initWidget(uiBinder.createAndBindUi(this));

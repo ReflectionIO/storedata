@@ -4,27 +4,20 @@
 
 	<ui:import field="io.reflection.app.client.page.PageType.BlogEditPostPageType" />
 	<ui:import field="io.reflection.app.client.page.PageType.BlogPostsPageType" />
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 	<ui:style gss="true">
-	.toolbar {
-	    margin-top: 10px;
-	    margin-bottom: 30px;
-	}
+	
 	</ui:style>
-	<g:HTMLPanel>
-		<g:HTMLPanel styleName="row">
-			<g:HTMLPanel styleName="col-sm-10 col-sm-offset-1">
-				<h2>Blog Admin</h2>
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer}">
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth}">
+			<h2>Blog Admin</h2>
 
-				<g:HTMLPanel styleName="btn-group {style.toolbar}">
-					<g:InlineHyperlink styleName="btn btn-default" text="Add Post" targetHistoryToken="{BlogEditPostPageType.asTargetHistoryToken}/new" />
-					<g:InlineHyperlink styleName="btn btn-default " text="Go to Blog" targetHistoryToken="{BlogPostsPageType.asTargetHistoryToken}" />
-				</g:HTMLPanel>
+			<g:InlineHyperlink text="Add Post" targetHistoryToken="{BlogEditPostPageType.asTargetHistoryToken}/new" />
+			<g:InlineHyperlink text="Go to Blog" targetHistoryToken="{BlogPostsPageType.asTargetHistoryToken}" />
 
-				<c:CellTable ui:field="posts" styleName="table table-hover table-striped" />
+			<c:CellTable ui:field="posts" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}" />
 
-				<p:SimplePager styleName="text-center" ui:field="simplePager" rangeLimited="true" visible="false" />
-				<g:HTMLPanel styleName="filler-bottom col-md-12 hidden-xs hidden-sm" />
-			</g:HTMLPanel>
-		</g:HTMLPanel>
+			<p:SimplePager ui:field="simplePager" rangeLimited="true" visible="false" />
+		</div>
 	</g:HTMLPanel>
 </ui:UiBinder> 

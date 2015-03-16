@@ -43,7 +43,6 @@ import io.reflection.app.client.page.part.ItemChart.RankingType;
 import io.reflection.app.client.page.part.ItemSidePanel;
 import io.reflection.app.client.page.part.ItemTopPanel;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
-import io.reflection.app.client.part.Preloader;
 import io.reflection.app.client.part.datatypes.ItemRevenue;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.client.res.flags.Styles;
@@ -94,7 +93,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 	// @UiField ItemChart historyChart;
 
-	@UiField Preloader preloader;
+	// @UiField Preloader preloader;
 
 	@UiField(provided = true) CellTable<ItemRevenue> revenueTable = new CellTable<ItemRevenue>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
 
@@ -449,10 +448,10 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 	private void refreshTabs() {
 		for (String key : tabs.keySet()) {
-			tabs.get(key).removeClassName("active");
+			tabs.get(key).removeClassName("is-active");
 		}
 
-		tabs.get(selectedTab).addClassName("active");
+		tabs.get(selectedTab).addClassName("is-active");
 	}
 
 	/*
@@ -489,7 +488,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			sidePanel.setPriceInnerHTML("-");
 			setLoadingSpinnerEnabled(false);
 		}
-		preloader.hide();
+		// preloader.hide();
 
 	}
 
@@ -502,7 +501,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	 */
 	@Override
 	public void getItemRanksFailure(GetItemRanksRequest input, Throwable caught) {
-		preloader.hide();
+		// preloader.hide();
 		sidePanel.setPriceInnerHTML("-");
 		setLoadingSpinnerEnabled(false);
 
@@ -512,7 +511,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		if (item != null) {
 			// historyChart.setLoading(true);
 			chart.setLoading(true);
-			preloader.show(true);
+			// preloader.show(true);
 			RankController.get().cancelRequestItemRanks();
 			RankController.get().cancelRequestItemSalesRanks();
 			if (LinkedAccountController.get().getLinkedAccountItem(item) != null) {
@@ -587,7 +586,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			sidePanel.setPriceInnerHTML("-");
 			setLoadingSpinnerEnabled(false);
 		}
-		preloader.hide();
+		// preloader.hide();
 	}
 
 	/*
@@ -598,7 +597,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	 */
 	@Override
 	public void getItemSalesRanksFailure(GetItemSalesRanksRequest input, Throwable caught) {
-		preloader.hide();
+		// preloader.hide();
 		sidePanel.setPriceInnerHTML("-");
 		setLoadingSpinnerEnabled(false);
 	}
@@ -625,7 +624,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			}
 		} else {
 			sidePanel.setPriceInnerHTML("-");
-			preloader.hide();
+			// preloader.hide();
 			setLoadingSpinnerEnabled(false);
 		}
 	}
@@ -638,7 +637,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	 */
 	@Override
 	public void getLinkedAccountItemFailure(GetLinkedAccountItemRequest input, Throwable caught) {
-		preloader.hide();
+		// preloader.hide();
 		sidePanel.setPriceInnerHTML("-");
 		setLoadingSpinnerEnabled(false);
 	}
@@ -683,9 +682,9 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			revenueLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 			downloadsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 			for (String key : tabs.keySet()) {
-				tabs.get(key).removeClassName("active");
+				tabs.get(key).removeClassName("is-active");
 			}
-			tabs.get(RANKING_CHART_TYPE).addClassName("active");
+			tabs.get(RANKING_CHART_TYPE).addClassName("is-active");
 			tabs.remove(REVENUE_CHART_TYPE);
 			tabs.remove(DOWNLOADS_CHART_TYPE);
 

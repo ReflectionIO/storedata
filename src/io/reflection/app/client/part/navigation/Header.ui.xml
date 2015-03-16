@@ -1,0 +1,46 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
+
+	<ui:import field="io.reflection.app.client.page.PageType.HomePageType" />
+
+	<ui:style>
+	
+	</ui:style>
+
+	<g:HTMLPanel tag="header" styleName="{STYLES_INSTANCE.reflectionMainStyle.globalHeader}">
+
+		<g:HTMLPanel ui:field="hamburgerPanel" styleName="{STYLES_INSTANCE.reflectionMainStyle.hamburger}">
+			<g:Button ui:field="hamburgerBtn"
+				styleName="{STYLES_INSTANCE.reflectionMainStyle.hamburger__button} {STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeHamburger} {STYLES_INSTANCE.reflectionMainStyle.isSelected}">
+			</g:Button>
+		</g:HTMLPanel>
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.siteLogo}">
+			<a href="{HomePageType.asHref}" ui:field="homeBtn">
+			</a>
+		</div>
+		<div ui:field="actionsPanel" class="{STYLES_INSTANCE.reflectionMainStyle.globalHeader__actions}">
+			<g:InlineHyperlink ui:field="applyBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaSmallWide}">Apply</g:InlineHyperlink>
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.searchLinkContainer}">
+				<g:Anchor ui:field="linkSearch" href="#"
+					styleName="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeSearch} {STYLES_INSTANCE.reflectionMainStyle.linkOpenSearch}">
+					<span>Search for app or developer</span>
+				</g:Anchor>
+			</div>
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.actionsGroupContainer}">
+				<g:HTMLPanel ui:field="actionsGroupPanel"
+					styleName="{STYLES_INSTANCE.reflectionMainStyle.actionsGroup} {STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCog}">
+					<div ui:field="actionsGroupContent" class="{STYLES_INSTANCE.reflectionMainStyle.actionsGroup__content}">
+						<div class="{STYLES_INSTANCE.reflectionMainStyle.linkLogInContainer}">
+							<g:Anchor ui:field="linkLogin" href="#" styleName="{STYLES_INSTANCE.reflectionMainStyle.linkLogIn}">Log In</g:Anchor>
+						</div>
+					</div>
+				</g:HTMLPanel>
+			</div>
+		</div>
+
+	</g:HTMLPanel>
+
+
+</ui:UiBinder> 
+

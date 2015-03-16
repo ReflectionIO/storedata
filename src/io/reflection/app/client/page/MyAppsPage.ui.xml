@@ -1,6 +1,9 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.google.gwt.user.datepicker.client"
 	xmlns:p="urn:import:io.reflection.app.client.part" xmlns:cell="urn:import:com.google.gwt.user.cellview.client" xmlns:pp="urn:import:io.reflection.app.client.page.part">
+
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
+
 	<ui:style gss="true" type="io.reflection.app.client.page.MyAppsPage.MyAppsPageStyle">
 	.red {
 		color: red;
@@ -14,16 +17,36 @@
 		color: silver;
 	}
 	</ui:style>
-	<g:HTMLPanel styleName="row">
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.pageLeaderboard}">
 
-		<pp:MyAccountSidePanel ui:field="myAccountSidePanel" />
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneHalf}">
+			<h1 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">My Apps</h1>
+		</div>
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.pageFunctions}">
+			<form class="{STYLES_INSTANCE.reflectionMainStyle.inlineSearchForm}">
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.searchFieldNoLabel}">
+					<input type="text" autocomplete="off" name="search" placeholder="Find an app" />
+					<input
+						class="{STYLES_INSTANCE.reflectionMainStyle.refButton} {STYLES_INSTANCE.reflectionMainStyle.searchButtonMobile} {STYLES_INSTANCE.reflectionMainStyle.isHighlighted}"
+						type="submit" value="a" />
+				</div>
+			</form>
+			<button class="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall} {STYLES_INSTANCE.reflectionMainStyle.pageFunctionButton}">
+				<span class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCloud}">Download</span>
+			</button>
+		</div>
 
-		<g:HTMLPanel styleName="col-md-10">
-			<pp:MyAppsTopPanel ui:field="myAppsTopPanel" styleName="well well-sm topPanel" />
-			<cell:CellTable ui:field="appsTable" styleName="table table-hover table-striped" />
+		<div
+			class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth} {STYLES_INSTANCE.reflectionMainStyle.filtersContainer} {STYLES_INSTANCE.reflectionMainStyle.filterContainerMyApps}">
+			<pp:MyAppsTopPanel ui:field="myAppsTopPanel" styleName="{STYLES_INSTANCE.reflectionMainStyle.formsMidTheme}" />
+		</div>
+
+		<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.grid__row}">
+			<cell:CellTable ui:field="appsTable" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData} {STYLES_INSTANCE.reflectionMainStyle.tableMyApps}" />
 			<p:SimplePager ui:field="simplePager" styleName="text-center" visible="false" />
-			<g:HTMLPanel styleName="filler-bottom col-md-12 hidden-xs hidden-sm" />
 		</g:HTMLPanel>
+
+		<p:BackToTop />
 
 	</g:HTMLPanel>
 </ui:UiBinder> 

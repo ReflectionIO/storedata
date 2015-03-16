@@ -22,6 +22,7 @@ import io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler;
 import io.reflection.app.api.core.shared.call.event.UpdateLinkedAccountEventHandler;
 import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.client.DefaultEventBus;
+import io.reflection.app.client.component.FormButton;
 import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
@@ -29,7 +30,6 @@ import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.EnterPressedEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.FormHelper;
-import io.reflection.app.client.page.part.MyAccountSidePanel;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.ConfirmationDialog;
 import io.reflection.app.client.part.Preloader;
@@ -90,7 +90,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	private Column<DataAccount, SafeHtml> columnEdit;
 	private Column<DataAccount, SafeHtml> columnDelete;
 	// private Column<DataAccount, SafeHtml> columnExpand;
-
+	private FormButton linkAccountBtn;
 	// Add linked account elements
 	@UiField HTMLPanel linkedAccountForm;
 
@@ -102,18 +102,16 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 	@UiField InlineHyperlink backLink;
 
-	@UiField FormPanel mForm;
+	@UiField FormPanel form;
 
-	@UiField IosMacLinkAccountForm mIosMacForm;
-	@UiField Button mLinkAccount;
+	@UiField IosMacLinkAccountForm iosMacForm;
 	@UiField Button addLinkedAccount;
 
-	@UiField MyAccountSidePanel myAccountSidePanel;
 	@UiField HTMLPanel linkedAccountsPanel;
 
 	private User user = SessionController.get().getLoggedInUser();
 
-	private LinkableAccountFields mLinkableAccount;
+	private LinkableAccountFields linkableAccount;
 
 	private ConfirmationDialog confirmationDialog;
 
@@ -134,6 +132,32 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 		// preloaderForm.show();
 		// preloaderTable.show();
+
+		linkAccountBtn = iosMacForm.getButton();
+		linkAccountBtn.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				if (linkableAccount.validate()) {
+
+					linkableAccount.setFormErrors();
+					// mLinkableAccount.setEnabled(false);
+					// mLinkAccount.setEnabled(false);
+					preloaderForm.show();
+					if (NavigationController.EDIT_ACTION_PARAMETER_VALUE.equals(NavigationController.get().getStack().getParameter(ACTION_PARAMETER))) {
+						preloaderForm.show();
+						LinkedAccountController.get().updateLinkedAccont(
+								Long.valueOf(NavigationController.get().getStack().getParameter(ACTION_PARAMETER_INDEX)), linkableAccount.getPassword(),
+								linkableAccount.getProperties());
+					} else { // Add linked account
+						LinkedAccountController.get().linkAccount(linkableAccount.getAccountSourceId(), linkableAccount.getUsername(),
+								linkableAccount.getPassword(), linkableAccount.getProperties());
+					}
+				} else {
+					linkableAccount.setFormErrors();
+				}
+			}
+		});
 
 	}
 
@@ -291,17 +315,14 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 			addLinkedAccount.setVisible(false);
 		}
 
-		myAccountSidePanel.setActive(getPageType());
-
 		user = SessionController.get().getLoggedInUser();
 
 		if (user != null) {
-			myAccountSidePanel.setUser(user);
 
 			backLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.LinkedAccountsPageType.toString(), user.id.toString()));
 		}
 
-		mLinkableAccount = null;
+		linkableAccount = null;
 
 		String actionParameter = current.getParameter(ACTION_PARAMETER);
 		String typeParameter = current.getParameter(ACTION_PARAMETER_INDEX);
@@ -310,57 +331,56 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 			linkedAccountsPanel.setVisible(false);
 			linkedAccountForm.setVisible(true);
 			// mToolbar.setVisible(true);
-			mLinkAccount.setHTML(buttonAddHtml);
-			mForm.setVisible(false);
-			mIosMacForm.resetForm();
+			linkAccountBtn.setHTML(buttonAddHtml);
+			form.setVisible(false);
+			iosMacForm.resetForm();
 
 			// if (typeParameter == null) {
 			// mIosMacLink.setTargetHistoryToken(current.toString("iosmac"));
 			// }
 
 			// if ("iosmac".equals(typeParameter)) {
-			mForm.setVisible(true);
-			mLinkableAccount = mIosMacForm;
+			form.setVisible(true);
+			linkableAccount = iosMacForm;
 
-			mLinkableAccount.setOnEnterPressed(new EnterPressedEventHandler() {
+			linkableAccount.setOnEnterPressed(new EnterPressedEventHandler() {
 				public void onEnterPressed() {
-					mLinkAccount.click();
+					linkAccountBtn.click();
 				}
 			});
 
-			mIosMacForm.setVisible(true);
-			mLinkableAccount.getFirstToFocus().setFocus(true);
+			iosMacForm.setVisible(true);
+			linkableAccount.getFirstToFocus().setFocus(true);
 			// } else {
 			// mForm.setVisible(false);
 			// }
 
 		} else if (isValidEditStack(actionParameter, typeParameter)) {
-			mIosMacForm.resetForm();
+			iosMacForm.resetForm();
 			linkedAccountsPanel.setVisible(false);
 			linkedAccountForm.setVisible(true);
 
 			// mToolbar.setVisible(false);
-			mLinkAccount.setHTML(buttonEditHtml);
-			mForm.setVisible(true);
-			mIosMacForm.setAccountUsernameEnabled(false);
-			mLinkableAccount = mIosMacForm;
-			mLinkableAccount.setOnEnterPressed(new EnterPressedEventHandler() {
+			linkAccountBtn.setHTML(buttonEditHtml);
+			form.setVisible(true);
+			iosMacForm.setAccountUsernameEnabled(false);
+			linkableAccount = iosMacForm;
+			linkableAccount.setOnEnterPressed(new EnterPressedEventHandler() {
 				public void onEnterPressed() {
-					mLinkAccount.click();
+					linkAccountBtn.click();
 				}
 			});
-			mLinkableAccount.getFirstToFocus().setFocus(true);
+			linkableAccount.getFirstToFocus().setFocus(true);
 
 			DataAccount linkedAccount = LinkedAccountController.get().getLinkedAccount(Long.valueOf(typeParameter));
-			mIosMacForm.setAccountUsername(linkedAccount.username);
+			iosMacForm.setAccountUsername(linkedAccount.username);
 			JsonObject propertiesJson = Convert.toJsonObject(linkedAccount.properties);
-			mIosMacForm.setVendorNumber(propertiesJson.get("vendors").getAsString());
+			iosMacForm.setVendorNumber(propertiesJson.get("vendors").getAsString());
 
 		} else if (isValidDeleteStack(actionParameter, typeParameter)) {
 			confirmationDialog = new ConfirmationDialog("Delete linked account", "Are you sure you want to remove this linked account?");
 			confirmationDialog.center();
 			confirmationDialog.setParameter(Long.valueOf(typeParameter));
-
 			confirmationDialog.getCancelButton().addClickHandler(new ClickHandler() {
 
 				@Override
@@ -405,27 +425,6 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 				.get().getLinkedAccount(Long.valueOf(typeParameter)) != null) ? true : false;
 	}
 
-	@UiHandler("mLinkAccount")
-	void onLinkAccount(ClickEvent event) {
-		if (mLinkableAccount.validate()) {
-
-			mLinkableAccount.setFormErrors();
-			// mLinkableAccount.setEnabled(false);
-			// mLinkAccount.setEnabled(false);
-			preloaderForm.show();
-			if (NavigationController.EDIT_ACTION_PARAMETER_VALUE.equals(NavigationController.get().getStack().getParameter(ACTION_PARAMETER))) {
-				preloaderForm.show();
-				LinkedAccountController.get().updateLinkedAccont(Long.valueOf(NavigationController.get().getStack().getParameter(ACTION_PARAMETER_INDEX)),
-						mLinkableAccount.getPassword(), mLinkableAccount.getProperties());
-			} else { // Add linked account
-				LinkedAccountController.get().linkAccount(mLinkableAccount.getAccountSourceId(), mLinkableAccount.getUsername(),
-						mLinkableAccount.getPassword(), mLinkableAccount.getProperties());
-			}
-		} else {
-			mLinkableAccount.setFormErrors();
-		}
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -438,16 +437,16 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		// mLinkableAccount.setEnabled(true);
 
 		if (output.status == StatusType.StatusTypeSuccess) {
-			mLinkableAccount.resetForm();
+			linkableAccount.resetForm();
 			PageType.UsersPageType.show(PageType.LinkedAccountsPageType.toString(user.id.toString()));
 		} else if (output.error != null) {
 			if (output.error.code == ApiError.InvalidDataAccountCredentials.getCode()) {
-				mLinkableAccount.setUsernameError("iTunes Connect username or password entered incorrectly");
-				mLinkableAccount.setPasswordError("iTunes Connect username or password entered incorrectly");
-				mLinkableAccount.setFormErrors();
+				linkableAccount.setUsernameError("iTunes Connect username or password entered incorrectly");
+				linkableAccount.setPasswordError("iTunes Connect username or password entered incorrectly");
+				linkableAccount.setFormErrors();
 			} else if (output.error.code == ApiError.InvalidDataAccountVendor.getCode()) {
-				mIosMacForm.setVendorError("iTunes Connect vendor number entered incorrectly");
-				mLinkableAccount.setFormErrors();
+				iosMacForm.setVendorError("iTunes Connect vendor number entered incorrectly");
+				linkableAccount.setFormErrors();
 			}
 		}
 
@@ -462,8 +461,8 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	@Override
 	public void linkAccountFailure(LinkAccountRequest input, Throwable caught) {
 		preloaderForm.hide();
-		mForm.setVisible(true);
-		mLinkableAccount.resetForm();
+		form.setVisible(true);
+		linkableAccount.resetForm();
 		// mLinkableAccount.setEnabled(true);
 		// mLinkAccount.setEnabled(true);
 		showError(FormHelper.convertToError(caught));
@@ -471,7 +470,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 	private void showError(Error e) {
 
-		mForm.setVisible(true);
+		form.setVisible(true);
 		// mToolbar.setVisible(true);
 	}
 
@@ -516,7 +515,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		// mLinkAccount.setEnabled(true);
 
 		if (output.status == StatusType.StatusTypeSuccess) {
-			mLinkableAccount.resetForm();
+			linkableAccount.resetForm();
 			PageType.UsersPageType.show(PageType.LinkedAccountsPageType.toString(user.id.toString()));
 		} else {
 			showError(output.error);

@@ -16,6 +16,7 @@ import io.reflection.app.api.admin.shared.call.event.DeleteUserEventHandler;
 import io.reflection.app.api.admin.shared.call.event.DeleteUsersEventHandler;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.StyledButtonCell;
+import io.reflection.app.client.component.FormField;
 import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.controller.UserController;
 import io.reflection.app.client.page.Page;
@@ -44,7 +45,6 @@ import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
 
@@ -64,7 +64,7 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 	private ConfirmationDialog confirmationDialog;
 
 	@UiField Button deleteTestUsers;
-	@UiField TextBox queryTextBox;
+	@UiField FormField queryTextBox;
 	private String query = "";
 
 	public UsersPage() {
@@ -87,15 +87,17 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 	@Override
 	protected void onAttach() {
 		super.onAttach();
-		
+
 		queryTextBox.setText(UserController.get().getQuery());
 		UserController.get().addDataDisplay(usersTable);
-		
+
 		register(DefaultEventBus.get().addHandlerToSource(DeleteUserEventHandler.TYPE, UserController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(DeleteUsersEventHandler.TYPE, UserController.get(), this));
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.client.page.Page#onDetach()
 	 */
 	@Override
@@ -163,8 +165,8 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 
 			@Override
 			public SafeHtml getValue(User object) {
-				return SafeHtmlUtils.fromTrustedString("<a class=\"btn btn-xs btn-default\" href=\"" + PageType.UsersPageType.asHref("changedetails", object.id.toString()).asString()
-						+ "\">Edit</a>");
+				return SafeHtmlUtils.fromTrustedString("<a class=\"btn btn-xs btn-default\" href=\""
+						+ PageType.UsersPageType.asHref("changedetails", object.id.toString()).asString() + "\">Edit</a>");
 			}
 		};
 

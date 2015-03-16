@@ -7,9 +7,11 @@
 //
 package io.reflection.app.client.part;
 
+import io.reflection.app.client.res.Styles;
+
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -29,29 +31,18 @@ public class BackToTop extends Composite {
 
 	interface BackToTopUiBinder extends UiBinder<Widget, BackToTop> {}
 
-	interface BackToTopStyle extends CssResource {
-
-		String show();
-
-		String hide();
-	}
-
-	@UiField BackToTopStyle style;
-
 	@UiField Anchor link;
 
 	public BackToTop() {
-		initWidget(uiBinder.createAndBindUi(this));
+		initWidget(uiBinder.createAndBindUi(this)); // TODO isShowing should be isDisplaying
 
 		Window.addWindowScrollHandler(new Window.ScrollHandler() {
 			@Override
 			public void onWindowScroll(ScrollEvent event) {
-				if (event.getScrollTop() > 500) {
-					link.getElement().removeClassName(style.hide());
-					link.getElement().addClassName(style.show());
+				if (event.getScrollTop() > (Document.get().getBody().getOffsetHeight() / 3)) {
+					link.getElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
 				} else {
-					link.getElement().removeClassName(style.show());
-					link.getElement().addClassName(style.hide());
+					link.getElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
 				}
 			}
 		});
@@ -59,7 +50,13 @@ public class BackToTop extends Composite {
 
 	@UiHandler("link")
 	void onBackToTopClicked(ClickEvent event) {
-		Window.scrollTo(0, 0);
+		nativeScrollTop();
 	}
+
+	static native void nativeScrollTop()/*-{
+		$wnd.$('html, body').animate({
+			scrollTop : 0
+		}, 300, 'swing');
+	}-*/;
 
 }

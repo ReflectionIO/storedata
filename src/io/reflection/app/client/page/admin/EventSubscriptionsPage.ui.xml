@@ -2,14 +2,15 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:com.google.gwt.user.cellview.client"
 	xmlns:p="urn:import:io.reflection.app.client.part">
 	<ui:import field="io.reflection.app.client.page.PageType.EditEventSubscriptionPageType" />
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 	<ui:style gss="true">
 	.toolbar {
 		margin-top: 10px;
 		margin-bottom: 30px;
 	}
 	</ui:style>
-	<g:HTMLPanel styleName="row">
-		<g:HTMLPanel styleName="col-sm-10 col-sm-offset-1">
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer}">
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth}">
 			<h2>Event Subscriptions</h2>
 
 			<g:HTMLPanel styleName="btn-group {style.toolbar}">
@@ -17,11 +18,10 @@
 			</g:HTMLPanel>
 
 			<g:HTMLPanel ui:field="eventSubscriptionTablePanel">
-				<c:CellTable ui:field="eventSubscriptions" styleName="table table-hover table-striped" />
+				<c:CellTable ui:field="eventSubscriptions" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}" />
 				<p:SimplePager styleName="text-center" ui:field="simplePager" rangeLimited="true" />
 			</g:HTMLPanel>
 
-		</g:HTMLPanel>
-		<g:HTMLPanel styleName="filler-bottom col-md-12 hidden-xs hidden-sm" />
+		</div>
 	</g:HTMLPanel>
 </ui:UiBinder>

@@ -7,29 +7,15 @@
 //
 package io.reflection.app.client.page;
 
-import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
-import io.reflection.app.api.shared.datatypes.Session;
-import io.reflection.app.client.DefaultEventBus;
-import io.reflection.app.client.controller.FilterController;
-import io.reflection.app.client.controller.NavigationController;
-import io.reflection.app.client.controller.NavigationController.Stack;
-import io.reflection.app.client.controller.SessionController;
-import io.reflection.app.client.handler.NavigationEventHandler;
-import io.reflection.app.client.handler.user.SessionEventHandler;
 import io.reflection.app.client.helper.DOMHelper;
-import io.reflection.app.client.part.Footer;
-import io.reflection.app.client.part.Header;
-import io.reflection.app.client.res.Images;
-import io.reflection.app.datatypes.shared.User;
+import io.reflection.app.client.helper.UserAgentHelper;
+import io.reflection.app.client.res.Styles;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.LinkElement;
-import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.dom.client.ScriptElement;
-import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.dom.client.StyleInjector;
 import com.google.gwt.dom.client.VideoElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -39,26 +25,20 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
-import com.willshex.gson.json.service.shared.Error;
 
 /**
  * @author billy1380
  * 
  */
-public class HomePage extends Page implements NavigationEventHandler, SessionEventHandler {
+public class HomePage extends Page {
 
 	private static HomePageUiBinder uiBinder = GWT.create(HomePageUiBinder.class);
 
 	interface HomePageUiBinder extends UiBinder<Widget, HomePage> {}
 
-	@UiField DivElement headerLinks;
 	@UiField InlineHyperlink applyNowBtn;
-	@UiField InlineHyperlink applyBtn;
-	@UiField InlineHyperlink loginBtn;
-	@UiField InlineHyperlink logoutBtn;
-	@UiField InlineHyperlink leaderboardBtn;
 
-	@UiField InlineHyperlink homeBtn;
+	// @UiField InlineHyperlink homeBtn;
 	@UiField HTMLPanel leaderBoardScreenshot;
 	@UiField HTMLPanel analysisScreenshot;
 
@@ -66,11 +46,6 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 	Element picture1, source1, source2;
 	Element picture2, source3, source4;
 	Element picture3, source5, source6;
-
-	private static final LinkElement cssCustom = DOMHelper.getCssLinkFromUrl("css/landing.62eddb2b4c6320dc1a0039800cee0bf0.css");
-
-	private static final LinkElement cssCustomIE8 = DOMHelper.getCssLinkFromUrl("css/landing-ie8.659484547a4409f243a1bb7d085c2c52.css");
-	private static final LinkElement cssCustomIE9 = DOMHelper.getCssLinkFromUrl("css/landing-ie9.42a5a45361f9f95fe006be82a699c864.css");
 
 	private static final ScriptElement scriptCustom = DOMHelper.getJSScriptFromUrl("js/scripts.180cd4275030bac3e6c6f190e5c98813.js");
 	private static final ScriptElement scriptRespond = DOMHelper.getJSScriptFromUrl("js/respond.min.js");
@@ -87,37 +62,21 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 		addLeaderboardScreenshotPicture();
 		addAnalysisScreenshotPicture();
 
-		// StyleInjector.injectAtStart(Styles.INSTANCE.homePageStyle().getText());
+		StyleInjector.injectAtStart(Styles.STYLES_INSTANCE.homePageStyle().getText());
 
-		headerLinks.removeAllChildren();
-
-		applyBtn.setTargetHistoryToken(PageType.RegisterPageType.asTargetHistoryToken("requestinvite"));
 		applyNowBtn.setTargetHistoryToken(PageType.RegisterPageType.asTargetHistoryToken("requestinvite"));
-		loginBtn.setTargetHistoryToken(PageType.LoginPageType.asTargetHistoryToken("requestinvite"));
 
 		appendConditionalTags();
 	}
 
 	public static void applyHomePageTweeks() {
 		if (!tweeked) {
-			// Compatibility code
-			Document.get().getElementsByTagName("html").getItem(0).setAttribute("style", "height: auto");
-			NavigationController.get().getPageHolderPanel().getElement().setAttribute("style", "padding: 0px 0px 0px 0px;");
-			Document.get().getBody().setAttribute("style", "height: auto");
-
 			// Append to Head
-			Document.get().getHead().appendChild(HomePage.cssCustom);
-			String userAgent = Window.Navigator.getUserAgent();
-			if (userAgent.contains("MSIE")) { // Internet Explorer
-				if (userAgent.contains("MSIE 2") || userAgent.contains("MSIE 3") || userAgent.contains("MSIE 4") || userAgent.contains("MSIE 5")
-						|| userAgent.contains("MSIE 6") || userAgent.contains("MSIE 7") || userAgent.contains("MSIE 8")) {
-					Document.get().getHead().appendChild(HomePage.cssCustomIE8);
+			if (UserAgentHelper.isIE()) {
+				if (UserAgentHelper.getIEVersion() < 9) {
 					Document.get().getHead().appendChild(HomePage.scriptRespond);
 				} else {
 					Document.get().getHead().appendChild(HomePage.scriptPictureFill);
-				}
-				if (userAgent.contains("MSIE 9")) {
-					Document.get().getHead().appendChild(HomePage.cssCustomIE9);
 				}
 			} else { // Not Internet Explorer
 				Document.get().getHead().appendChild(HomePage.scriptPictureFill);
@@ -129,24 +88,12 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 
 	public static void removeHomePageTweeks() {
 		if (tweeked) {
-			// Compatibility code
-			Document.get().getElementsByTagName("html").getItem(0).removeAttribute("style");
-			NavigationController.get().getPageHolderPanel().getElement().setAttribute("style", "padding: 60px 0px 39px 0px;");
-			Document.get().getBody().removeAttribute("style");
-
 			// Remove from Head
-			Document.get().getHead().removeChild(HomePage.cssCustom);
-			String userAgent = Window.Navigator.getUserAgent();
-			if (userAgent.contains("MSIE")) { // Internet Explorer
-				if (userAgent.contains("MSIE 2") || userAgent.contains("MSIE 3") || userAgent.contains("MSIE 4") || userAgent.contains("MSIE 5")
-						|| userAgent.contains("MSIE 6") || userAgent.contains("MSIE 7") || userAgent.contains("MSIE 8")) {
-					Document.get().getHead().removeChild(HomePage.cssCustomIE8);
+			if (UserAgentHelper.isIE()) {
+				if (UserAgentHelper.getIEVersion() < 9) {
 					Document.get().getHead().removeChild(HomePage.scriptRespond);
 				} else {
 					Document.get().getHead().removeChild(HomePage.scriptPictureFill);
-				}
-				if (userAgent.contains("MSIE 9")) {
-					Document.get().getHead().removeChild(HomePage.cssCustomIE9);
 				}
 			} else { // Not Internet Explorer
 				Document.get().getHead().removeChild(HomePage.scriptPictureFill);
@@ -157,23 +104,23 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 	}
 
 	private void addHomeBtnPicture() {
-		picture1 = DOM.createElement("picture");
+		// picture1 = DOM.createElement("picture");
+		//
+		// source1 = DOM.createElement("source");
+		// source1.setAttribute("srcset", Images.INSTANCE.reflectionLogoBeta().getSafeUri().asString());
+		// source1.setAttribute("media", "(min-width: 480px)");
+		//
+		// source2 = DOM.createElement("source");
+		// source2.setAttribute("srcset", Images.INSTANCE.mobileReflectionLogoBeta().getSafeUri().asString());
+		//
+		// Image img = new Image(Images.INSTANCE.reflectionLogoBeta());
+		// img.setAltText("Reflection logo");
+		//
+		// picture1.appendChild(source1);
+		// picture1.appendChild(source2);
+		// picture1.appendChild(img.getElement());
 
-		source1 = DOM.createElement("source");
-		source1.setAttribute("srcset", Images.INSTANCE.reflectionLogoBeta().getSafeUri().asString());
-		source1.setAttribute("media", "(min-width: 480px)");
-
-		source2 = DOM.createElement("source");
-		source2.setAttribute("srcset", Images.INSTANCE.mobileReflectionLogoBeta().getSafeUri().asString());
-
-		Image img = new Image(Images.INSTANCE.reflectionLogoBeta());
-		img.setAltText("Reflection logo");
-
-		picture1.appendChild(source1);
-		picture1.appendChild(source2);
-		picture1.appendChild(img.getElement());
-
-		homeBtn.getElement().appendChild(picture1);
+		// homeBtn.getElement().appendChild(picture1);
 	}
 
 	private void addLeaderboardScreenshotPicture() {
@@ -227,13 +174,8 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 
 		Window.scrollTo(0, toTop);
 
-		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
-		register(DefaultEventBus.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this));
+		// ((Header) NavigationController.get().getHeader()).setVisible(false);
 
-		((Footer) NavigationController.get().getFooter()).setVisible(false);
-		((Header) NavigationController.get().getHeader()).setVisible(false);
-		headerLinks.getStyle().setDisplay(Display.INLINE_BLOCK);
-		
 		// Append to Body
 		Document.get().getBody().appendChild(scriptCustom);
 	}
@@ -247,37 +189,16 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 	protected void onDetach() {
 		super.onDetach();
 
-		((Footer) NavigationController.get().getFooter()).setVisible(true);
-		((Header) NavigationController.get().getHeader()).setVisible(true);
+		// ((Header) NavigationController.get().getHeader()).setVisible(true);
 
 		toTop = Window.getScrollTop();
-		
+
 		// Romove from Body
 		Document.get().getBody().removeChild(scriptCustom);
 	}
 
-	private void setLoggedInHeader(boolean loggedIn) {
-		headerLinks.removeAllChildren();
-		if (loggedIn) {
-			headerLinks.appendChild(leaderboardBtn.getElement());
-			headerLinks.appendChild(logoutBtn.getElement());
-		} else {
-			headerLinks.appendChild(applyBtn.getElement());
-			headerLinks.appendChild(loginBtn.getElement());
-		}
-	}
-
 	private void appendConditionalTags() {
-		String userAgent = Window.Navigator.getUserAgent();
-		if (userAgent.contains("MSIE 2") || userAgent.contains("MSIE 3") || userAgent.contains("MSIE 4") || userAgent.contains("MSIE 5")
-				|| userAgent.contains("MSIE 6") || userAgent.contains("MSIE 7")) {
-			ParagraphElement outdatedBrowser = Document.get().createPElement(); // TODO the element z-index need to be set up higher
-			outdatedBrowser.addClassName("browserupgrade");
-			outdatedBrowser
-					.setInnerHTML("You are using an <strong>outdated</strong> browser. Please <a href=\"http://browsehappy.com/\">upgrade your browser</a> to improve your experience.");
-			this.getElement().insertFirst(outdatedBrowser);
-		}
-		if (userAgent.contains("MSIE 9")) {
+		if (UserAgentHelper.isIE() && UserAgentHelper.getIEVersion() == 9) {
 			picture1.removeChild(source1);
 			picture1.removeChild(source2);
 			picture2.removeChild(source3);
@@ -300,50 +221,6 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 			video3.appendChild(source5);
 			video3.appendChild(source6);
 		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
-	 * io.reflection.app.client.controller.NavigationController.Stack)
-	 */
-	@Override
-	public void navigationChanged(Stack previous, Stack current) {
-		setLoggedInHeader(SessionController.get().isValidSession());
-		leaderboardBtn.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, OVERALL_LIST_TYPE,
-				FilterController.get().asRankFilterString()));
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoggedIn(io.reflection.app.datatypes.shared.User,
-	 * io.reflection.app.api.shared.datatypes.Session)
-	 */
-	@Override
-	public void userLoggedIn(User user, Session session) {
-		setLoggedInHeader(true);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoggedOut()
-	 */
-	@Override
-	public void userLoggedOut() {
-		setLoggedInHeader(false);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoginFailed(com.willshex.gson.json.service.shared.Error)
-	 */
-	@Override
-	public void userLoginFailed(Error error) {
-		userLoggedOut();
 	}
 
 }

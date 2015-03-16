@@ -7,6 +7,7 @@
     <ui:with field="published" type="com.google.gwt.safehtml.shared.SafeHtml" />
 
     <ui:style gss="true">
+  
     .info {
     	font-size: 13px;
     	margin-bottom: 20px;

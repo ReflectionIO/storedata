@@ -1,59 +1,28 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-    xmlns:g="urn:import:com.google.gwt.user.client.ui">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:io.reflection.app.client.component">
 
-    <ui:import
-        field="io.reflection.app.client.page.PageType.ForgotPasswordPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.ForgotPasswordPageType" />
 
-    <ui:style gss="true">
-    .passwordLink {
-        font-weight: 400;
-        font-size: 14px;
-        font-family: 'Lato', sans-serif;
-        line-height: 22px;
-    }
-    </ui:style>
-    <g:HTMLPanel>
-        <g:FormPanel ui:field="mForm" styleName="form">
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 
-            <g:HTMLPanel>
+	<ui:style gss="true">
+	
+	</ui:style>
+	<g:HTMLPanel tag="form">
 
-                <g:HTMLPanel ui:field="mEmailGroup" styleName="form-group">
-                    <label>Email Address</label>
-                    <g:TextBox styleName="form-control" ui:field="mEmail" />
-                    <g:HTMLPanel styleName="noteDetail" ui:field="mEmailNote"
-                        visible="false" />
-                </g:HTMLPanel>
+		<c:FormField ui:field="emailFormField" labelText="Email" />
+		<c:FormFieldPassword ui:field="passwordFormField" labelText="Password" />
 
-                <g:HTMLPanel ui:field="mPasswordGroup" styleName="form-group">
-                    <label>Password</label>
-                    <g:PasswordTextBox styleName="form-control"
-                        ui:field="mPassword" />
-                    <g:HTMLPanel styleName="noteDetail" ui:field="mPasswordNote"
-                        visible="false" />
-                </g:HTMLPanel>
+		<g:InlineHyperlink targetHistoryToken="{ForgotPasswordPageType.asTargetHistoryToken}" styleName="{STYLES_INSTANCE.reflectionMainStyle.formLink}">I've misplaced my
+			password</g:InlineHyperlink>
 
-                <g:HTMLPanel>
-                    <g:CheckBox ui:field="mRememberMe">
-                        Remember me
-                    </g:CheckBox>
-                </g:HTMLPanel>
-
-                <g:Button ui:field="mLogin" styleName="btn btn-lg btn-primary btn-block">
-                    Log In
-                    <span class="icon-login" />
-                </g:Button>
-
-                <p class="text-center p-small">
-                    I've forgotten my
-                    <g:InlineHyperlink ui:field="mForgotPassword"
-                        targetHistoryToken="{ForgotPasswordPageType.asTargetHistoryToken}">
-                        <span class="p-small">Password</span>
-                    </g:InlineHyperlink>
-                </p>
-
-            </g:HTMLPanel>
-        </g:FormPanel>
-
-    </g:HTMLPanel>
-</ui:UiBinder> 
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.formFieldCheckboxList}">
+			<ul>
+				<li>
+					<c:FormCheckbox ui:field="rememberMe" text="Keep me signed in" />
+				</li>
+			</ul>
+		</div>
+		<c:FormButton ui:field="loginBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth}" text="Log in" />
+	</g:HTMLPanel>
+</ui:UiBinder>

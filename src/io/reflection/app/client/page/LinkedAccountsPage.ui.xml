@@ -2,49 +2,38 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
 	xmlns:pp="urn:import:io.reflection.app.client.page.part" xmlns:l="urn:import:io.reflection.app.client.part.linkaccount" xmlns:c="urn:import:com.google.gwt.user.cellview.client"
 	xmlns:d="urn:import:com.google.gwt.dom.client">
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 	<ui:style gss="true">
 	.toolbar_spacing {
-	    padding-top: 10px;
-	    padding-bottom: 10px;
+		padding-top: 10px;
+		padding-bottom: 10px;
 	}
 	
 	.backLink {
-	    margin-top: 20px;
-	    margin-bottom: 20px;
-	    margin-left: 25px;
-	    display: inline-block;
-	}
-	
-	.linkAccBtn {
-	    height: 35px;
-	    font-size: 14px;
+		margin-top: 20px;
+		margin-bottom: 20px;
+		margin-left: 25px;
+		display: inline-block;
 	}
 	</ui:style>
 
-	<g:HTMLPanel styleName="row">
-
-		<pp:MyAccountSidePanel ui:field="myAccountSidePanel" />
-
-		<g:HTMLPanel styleName="col-md-10">
-			<g:HTMLPanel styleName="well well-sm well-title topPanel">
-				<g:HTMLPanel styleName="pull-left">
-					<h5>Linked Accounts</h5>
-				</g:HTMLPanel>
-			</g:HTMLPanel>
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer}">
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth}">
+			<h2>Linked Accounts</h2>
 
 			<p:Preloader ui:field="preloaderTable">
 				<g:HTMLPanel ui:field="linkedAccountsPanel">
 
-					<c:CellTable ui:field="linkedAccountsTable" styleName="table table-hover table-striped table-linkedaccount" />
+					<c:CellTable ui:field="linkedAccountsTable" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}" />
 					<!--<p:SimplePager ui:field="simplePager" styleName="text-center" visible="false" /> -->
-					<div class="text-left">
-						<g:Button ui:field="addLinkedAccount" styleName="btn btn-default text-center {style.linkAccBtn}" visible="false">Link Another Account</g:Button>
+					<div>
+						<g:Button ui:field="addLinkedAccount" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaSmall}" visible="false">Link Another Account</g:Button>
 					</div>
 				</g:HTMLPanel>
 			</p:Preloader>
 
 
-			<g:HTMLPanel ui:field="linkedAccountForm" visible="false" styleName="col-md-12">
+			<g:HTMLPanel ui:field="linkedAccountForm" visible="false">
 				<!-- <g:HTMLPanel ui:field="mToolbar" styleName="btn-group {style.toolbar_spacing}"> <g:InlineHyperlink styleName="btn btn-default" text="iOS/Mac" ui:field="mIosMacLink" 
 					/> <g:InlineHyperlink styleName="btn btn-default disabled" text="Google Play" ui:field="mPlayLink" /> <g:InlineHyperlink styleName="btn btn-default disabled" text="Amazon" 
 					ui:field="mAmazonLink" /> <g:InlineHyperlink styleName="btn btn-default disabled" text="Windows" ui:field="mWindowsPhoneLink" /> </g:HTMLPanel> -->
@@ -52,16 +41,14 @@
 				<p:Preloader ui:field="preloaderForm">
 					<g:InlineHyperlink ui:field="backLink" styleName="{style.backLink}">&#8592;
 						Back to linked accounts</g:InlineHyperlink>
-					<g:FormPanel ui:field="mForm" styleName="formEdit" visible="false">
+					<g:FormPanel ui:field="form" styleName="formEdit" visible="false">
 						<g:HTMLPanel>
-							<l:IosMacLinkAccountForm ui:field="mIosMacForm" />
-							<g:Button ui:field="mLinkAccount" styleName="btn btn-lg btn-primary btn-block" text="Link Account" />
+							<l:IosMacLinkAccountForm ui:field="iosMacForm" />
 						</g:HTMLPanel>
 					</g:FormPanel>
 				</p:Preloader>
 			</g:HTMLPanel>
-			<g:HTMLPanel styleName="filler-bottom col-md-12 hidden-xs hidden-sm" />
-		</g:HTMLPanel>
+		</div>
 
 	</g:HTMLPanel>
 

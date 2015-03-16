@@ -9,34 +9,21 @@
 	<ui:with field="displayActiveLink" type="java.lang.String" />
 	<ui:with field="displayInactiveLink" type="java.lang.String" />
 
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 	<ui:style gss="true">
-	.image {
-		width: 45px;
-		height: 45px;
-		float: left;
-	}
 	
-	.description {
-		overflow: hidden;
-		padding-left: 20px;
-		white-space: nowrap;
-		text-overflow: ellipsis;
-	}
 	</ui:style>
 
 	<div>
-		<img class="img-rounded {style.image} {styleName}" src="{smallImage}" />
-		<div class="{style.description}">
-			<span>
-				<a href="{link}" style="{displayActiveLink}">
-					<ui:text from="{name}" />
-				</a>
-				<span style="{displayInactiveLink}">
-					<ui:text from="{name}" />
-				</span>
-				<br />
+		<img class="{STYLES_INSTANCE.reflectionMainStyle.imgRounded}" src="{smallImage}" />
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.mhxte6cRA}">
+			<a href="{link}" style="{displayActiveLink}">
+				<ui:text from="{name}" />
+			</a>
+			<span style="{displayInactiveLink}">
+				<ui:text from="{name}" />
 			</span>
-			<span class="text-muted">
+			<span class="{STYLES_INSTANCE.reflectionMainStyle.textMuted}">
 				<ui:text from="{creatorName}" />
 			</span>
 		</div>

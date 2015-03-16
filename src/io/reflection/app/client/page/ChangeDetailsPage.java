@@ -30,6 +30,9 @@ import io.reflection.app.api.core.shared.call.event.ChangeUserDetailsEventHandle
 import io.reflection.app.api.core.shared.call.event.GetUserDetailsEventHandler;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.StyledButtonCell;
+import io.reflection.app.client.component.FormButton;
+import io.reflection.app.client.component.FormField;
+import io.reflection.app.client.component.FormFieldPassword;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.SessionController;
@@ -40,7 +43,6 @@ import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.handler.user.UserPasswordChangedEventHandler;
 import io.reflection.app.client.helper.AlertBoxHelper;
 import io.reflection.app.client.helper.FormHelper;
-import io.reflection.app.client.page.part.MyAccountSidePanel;
 import io.reflection.app.client.part.AlertBox;
 import io.reflection.app.client.part.AlertBox.AlertBoxType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
@@ -66,11 +68,8 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.PasswordTextBox;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.Error;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -92,46 +91,32 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	@UiField(provided = true) CellTable<Role> rolesTable = new CellTable<Role>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) CellTable<Permission> permissionsTable = new CellTable<Permission>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
 
-	@UiField MyAccountSidePanel myAccountSidePanel;
-
 	// Change Details
 	@UiField Preloader preloaderDetails;
 
-	@UiField TextBox mUsername;
-	@UiField HTMLPanel mUsernameGroup;
-	@UiField HTMLPanel mUsernameNote;
+	@UiField FormField mUsername;
 	private String mUsernameError;
 
-	@UiField TextBox mForename;
-	@UiField HTMLPanel mForenameGroup;
-	@UiField HTMLPanel mForenameNote;
+	@UiField FormField mForename;
 	private String mForenameError;
 
-	@UiField TextBox mSurname;
-	@UiField HTMLPanel mSurnameGroup;
-	@UiField HTMLPanel mSurnameNote;
+	@UiField FormField mSurname;
 	private String mSurnameError;
 
-	@UiField TextBox mCompany;
-	@UiField HTMLPanel mCompanyGroup;
-	@UiField HTMLPanel mCompanyNote;
+	@UiField FormField mCompany;
 	private String mCompanyError;
 
 	@UiField AlertBox mAlertBox;
 
-	@UiField Button mChangeDetails;
+	@UiField FormButton mChangeDetails;
 
 	// Change Password
-	@UiField PasswordTextBox mPassword;
-	@UiField HTMLPanel mPasswordGroup;
-	@UiField HTMLPanel mPasswordNote;
+	@UiField FormFieldPassword mPassword;
 
-	@UiField PasswordTextBox mNewPassword;
-	@UiField PasswordTextBox mConfirmPassword;
-	@UiField HTMLPanel mNewPasswordGroup;
-	@UiField HTMLPanel mNewPasswordNote;
+	@UiField FormFieldPassword mNewPassword;
+	@UiField FormFieldPassword mConfirmPassword;
 
-	@UiField Button mChangePassword;
+	@UiField FormButton mChangePassword;
 
 	// Error definition during validation
 	private String mPasswordError = null;
@@ -140,23 +125,19 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	@UiField Preloader preloaderPassword;
 
 	// User Roles
-	@UiField TextBox addRoleTextbox;
-	@UiField HTMLPanel addRoleGroup;
-	@UiField HTMLPanel addRoleNote;
+	@UiField FormField addRoleTextbox;
 	private String addRoleError;
 
 	@UiField HTMLPanel addRolePanel;
-	@UiField Button addRoleButton;
+	@UiField FormButton addRoleButton;
 	@UiField Preloader preloaderAddRole;
 
 	// User Permissions
-	@UiField TextBox addPermissionTextbox;
-	@UiField HTMLPanel addPermissionGroup;
-	@UiField HTMLPanel addPermissionNote;
+	@UiField FormField addPermissionTextbox;
 	private String addPermissionError;
 
 	@UiField HTMLPanel addPermissionPanel;
-	@UiField Button addPermissionButton;
+	@UiField FormButton addPermissionButton;
 	@UiField Preloader preloaderAddPermission;
 
 	private User currentUser; // User using the system
@@ -294,27 +275,27 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 			SessionController.get().changeUserDetails(mUsername.getText(), mForename.getText(), mSurname.getText(), mCompany.getText());
 		} else {
 			if (mUsernameError != null) {
-				FormHelper.showNote(true, mUsernameGroup, mUsernameNote, mUsernameError);
+				mUsername.showNote(mUsernameError, true);
 			} else {
-				FormHelper.hideNote(mUsernameGroup, mUsernameNote);
+				mUsername.hideNote();
 			}
 
 			if (mForenameError != null) {
-				FormHelper.showNote(true, mForenameGroup, mForenameNote, mForenameError);
+				mForename.showNote(mForenameError, true);
 			} else {
-				FormHelper.hideNote(mForenameGroup, mForenameNote);
+				mForename.hideNote();
 			}
 
 			if (mSurnameError != null) {
-				FormHelper.showNote(true, mSurnameGroup, mSurnameNote, mSurnameError);
+				mSurname.showNote(mSurnameError, true);
 			} else {
-				FormHelper.hideNote(mSurnameGroup, mSurnameNote);
+				mSurname.hideNote();
 			}
 
 			if (mCompanyError != null) {
-				FormHelper.showNote(true, mCompanyGroup, mCompanyNote, mCompanyError);
+				mCompany.showNote(mCompanyError, true);
 			} else {
-				FormHelper.hideNote(mCompanyGroup, mCompanyNote);
+				mCompany.hideNote();
 			}
 		}
 	}
@@ -336,14 +317,16 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 			}
 		} else {
 			if (mPasswordError != null) {
-				FormHelper.showNote(true, mPasswordGroup, mPasswordNote, mPasswordError);
+				mPassword.showNote(mPasswordError, true);
 			} else {
-				FormHelper.hideNote(mPasswordGroup, mPasswordNote);
+				mPassword.hideNote();
 			}
 			if (mNewPasswordError != null) {
-				FormHelper.showNote(true, mNewPasswordGroup, mNewPasswordNote, mNewPasswordError);
+				mNewPassword.showNote(mNewPasswordError, true);
+				mConfirmPassword.showNote(mNewPasswordError, true);
 			} else {
-				FormHelper.hideNote(mNewPasswordGroup, mNewPasswordNote);
+				mNewPassword.hideNote();
+				mConfirmPassword.hideNote();
 			}
 		}
 	}
@@ -359,9 +342,9 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 
 		} else {
 			if (addRoleError != null) {
-				FormHelper.showNote(true, addRoleGroup, addRoleNote, addRoleError);
+				addRoleTextbox.showNote(addRoleError, true);
 			} else {
-				FormHelper.hideNote(addRoleGroup, addRoleNote);
+				clearAddRoleErrors();
 			}
 
 		}
@@ -379,9 +362,9 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 
 		} else {
 			if (addPermissionError != null) {
-				FormHelper.showNote(true, addPermissionGroup, addPermissionNote, addPermissionError);
+				addPermissionTextbox.showNote(addPermissionError, true);
 			} else {
-				FormHelper.hideNote(addPermissionGroup, addPermissionNote);
+				clearAddPermissionErrors();
 			}
 
 		}
@@ -389,23 +372,24 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	}
 
 	private void clearDetailsErrors() {
-		FormHelper.hideNote(mUsernameGroup, mUsernameNote);
-		FormHelper.hideNote(mForenameGroup, mForenameNote);
-		FormHelper.hideNote(mSurnameGroup, mSurnameNote);
-		FormHelper.hideNote(mCompanyGroup, mCompanyNote);
+		mUsername.hideNote();
+		mForename.hideNote();
+		mSurname.hideNote();
+		mCompany.hideNote();
 	}
 
 	private void clearPasswordErrors() {
-		FormHelper.hideNote(mPasswordGroup, mPasswordNote);
-		FormHelper.hideNote(mNewPasswordGroup, mNewPasswordNote);
+		mPassword.hideNote();
+		mNewPassword.hideNote();
+		mConfirmPassword.hideNote();
 	}
 
 	private void clearAddRoleErrors() {
-		FormHelper.hideNote(addRoleGroup, addRoleNote);
+		addRoleTextbox.hideNote();
 	}
 
 	private void clearAddPermissionErrors() {
-		FormHelper.hideNote(addPermissionGroup, addPermissionNote);
+		addPermissionTextbox.hideNote();
 	}
 
 	/**
@@ -479,23 +463,16 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		mSurname.setText("");
 		mCompany.setText("");
 
-		FormHelper.hideNote(mUsernameGroup, mUsernameNote);
-		FormHelper.hideNote(mForenameGroup, mForenameNote);
-		FormHelper.hideNote(mSurnameGroup, mSurnameNote);
-		FormHelper.hideNote(mCompanyGroup, mCompanyNote);
+		clearDetailsErrors();
 	}
 
 	private void resetPasswordForm() {
 
-		mPassword.setText("");
+		mPassword.clear();
+		mNewPassword.clear();
+		mConfirmPassword.clear();
 
-		mNewPassword.setText("");
-		mConfirmPassword.setText("");
-
-		mPasswordGroup.setVisible(!SessionController.get().isLoggedInUserAdmin());
-
-		FormHelper.hideNote(mNewPasswordGroup, mNewPasswordNote);
-		FormHelper.hideNote(mPasswordGroup, mPasswordNote);
+		mPassword.setVisible(!SessionController.get().isLoggedInUserAdmin());
 
 		preloaderPassword.hide();
 
@@ -508,12 +485,12 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 
 	private void resetRoleForm() {
 		addRoleTextbox.setText("");
-		FormHelper.hideNote(addRoleGroup, addRoleNote);
+		clearAddRoleErrors();
 	}
 
 	private void resetPermissionForm() {
 		addPermissionTextbox.setText("");
-		FormHelper.hideNote(addPermissionGroup, addPermissionNote);
+		clearAddPermissionErrors();
 	}
 
 	private void fillDetailsForm(User u) {
@@ -721,11 +698,6 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		currentUser = SessionController.get().getLoggedInUser(); // Update user using the system
 		mChangeDetails.setEnabled(false);
 		mChangePassword.setEnabled(false);
-		myAccountSidePanel.setActive(getPageType());
-
-		if (currentUser != null) {
-			myAccountSidePanel.setUser(currentUser);
-		}
 
 		if (isValidStack(current)) {
 			boolean editingUserChanged = editingUserId != Long.valueOf(current.getParameter(0));
@@ -734,7 +706,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 				resetPasswordForm();
 				resetRoleForm();
 				resetPermissionForm();
-				
+
 				// Create and fetch Roles and Permissions providers
 				editingUserId = Long.valueOf(current.getParameter(0)); // Update user to edit
 				User dummyEditingUser = DataTypeHelper.createUser(editingUserId);
@@ -767,20 +739,19 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 				if (currentUser.id.toString().equals(editingUserId.toString())) { // Current user is the same as in the stack parameter
 					fillDetailsForm(currentUser);
 				} else if (SessionController.get().isLoggedInUserAdmin()) {
-//					User editingUser = UserController.get().getUser(editingUserId);
-//					if (editingUser != null) { // User already retrieved
-//						fillDetailsForm(editingUser);
-//					} else { // Coming from a page refreshing
-						preloaderDetails.show();
-						UserController.get().fetchUser(editingUserId);
-//					}
+					// User editingUser = UserController.get().getUser(editingUserId);
+					// if (editingUser != null) { // User already retrieved
+					// fillDetailsForm(editingUser);
+					// } else { // Coming from a page refreshing
+					preloaderDetails.show();
+					UserController.get().fetchUser(editingUserId);
+					// }
 				} else { // No access to this user
 					userRolesProvider.updateRowCount(0, true);
 					userPermissionsProvider.updateRowCount(0, true);
 				}
-				
+
 				mForename.setFocus(true);
-				mForename.setCursorPos(mForename.getText().length());
 			}
 
 		} else {
@@ -808,11 +779,8 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 					.setVisible(true);
 			currentUser = SessionController.get().getLoggedInUser();
 
-			myAccountSidePanel.setUser(currentUser);
-
 			mChangeDetails.setEnabled(false);
 			mForename.setFocus(true);
-			mForename.setCursorPos(mForename.getText().length());
 		} else {
 			AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.DangerAlertBoxType, false, "An error occured:",
 					"(" + output.error.code + ") " + output.error.message, true).setVisible(true);
@@ -884,6 +852,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	public void userPasswordChangeFailed(Error error) {
 		AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.DangerAlertBoxType, false, "An error occured:", "(" + error.code + ") " + error.message, true)
 				.setVisible(true);
+		mChangePassword.setEnabled(false);
 		preloaderPassword.hide();
 		resetPasswordForm();
 
@@ -1075,7 +1044,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		if (output.status == StatusType.StatusTypeSuccess && output.user != null) {
 			fillDetailsForm(output.user);
 		}
-		
+
 		preloaderDetails.hide();
 	}
 

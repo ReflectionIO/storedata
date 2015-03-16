@@ -1,37 +1,31 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
-	xmlns:pp="urn:import:io.reflection.app.client.page.part" xmlns:c="urn:import:com.google.gwt.user.cellview.client">
+	xmlns:pp="urn:import:io.reflection.app.client.page.part" xmlns:cv="urn:import:com.google.gwt.user.cellview.client" xmlns:c="urn:import:io.reflection.app.client.component">
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 	<ui:style gss="true">
 	.spaceUp {
-	    padding-top: 10px;
+		padding-top: 10px;
 	}
 	
 	.spaceLeft {
-	    padding-left: 25px;
+		padding-left: 25px;
 	}
 	
 	.section {
-	    padding-bottom: 40px;
+		padding-bottom: 40px;
 	}
 	
 	.titleSection {
-	    padding-top: 20px;
+		padding-top: 20px;
 	}
 	
 	.subtitleSection {
-	    padding-top: 25px;
+		padding-top: 25px;
 	}
 	</ui:style>
-	<g:HTMLPanel styleName="row">
-
-		<pp:MyAccountSidePanel ui:field="myAccountSidePanel" />
-
-		<div class="col-md-10">
-			<g:HTMLPanel styleName="well well-sm well-title topPanel">
-				<div class="pull-left;">
-					<h5>Account Settings</h5>
-				</div>
-			</g:HTMLPanel>
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer}">
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth}">
+			<h2>Account Settings</h2>
 
 			<p:AlertBox ui:field="mAlertBox" visible="false" />
 
@@ -40,31 +34,15 @@
 				<g:FormPanel styleName="formEdit">
 					<p:Preloader ui:field="preloaderDetails">
 						<g:HTMLPanel>
-							<g:HTMLPanel ui:field="mForenameGroup" styleName="form-group">
-								<label>First name</label>
-								<g:TextBox styleName="form-control" ui:field="mForename" />
-								<g:HTMLPanel ui:field="mForenameNote" visible="false" styleName="noteDetail" />
-							</g:HTMLPanel>
+							<c:FormField ui:field="mForename" labelText="First name" />
 
-							<g:HTMLPanel ui:field="mSurnameGroup" styleName="form-group">
-								<label>Last name</label>
-								<g:TextBox styleName="form-control" ui:field="mSurname" />
-								<g:HTMLPanel ui:field="mSurnameNote" visible="false" styleName="noteDetail" />
-							</g:HTMLPanel>
+							<c:FormField ui:field="mSurname" labelText="Last name" />
 
-							<g:HTMLPanel ui:field="mCompanyGroup" styleName="form-group">
-								<label>Company</label>
-								<g:TextBox styleName="form-control" ui:field="mCompany" />
-								<g:HTMLPanel ui:field="mCompanyNote" visible="false" styleName="noteDetail" />
-							</g:HTMLPanel>
+							<c:FormField ui:field="mCompany" labelText="Company" />
 
-							<g:HTMLPanel ui:field="mUsernameGroup" styleName="form-group">
-								<label>Email</label>
-								<g:TextBox styleName="form-control" ui:field="mUsername" />
-								<g:HTMLPanel ui:field="mUsernameNote" visible="false" styleName="noteDetail" />
-							</g:HTMLPanel>
+							<c:FormField ui:field="mUsername" labelText="Email" />
 
-							<g:Button ui:field="mChangeDetails" styleName="btn btn-lg btn-primary btn-block" text="Update" enabled="false" />
+							<c:FormButton ui:field="mChangeDetails" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth}" text="Update" enabled="false" />
 
 						</g:HTMLPanel>
 					</p:Preloader>
@@ -79,21 +57,12 @@
 					<p:Preloader ui:field="preloaderPassword">
 						<g:HTMLPanel>
 
-							<g:HTMLPanel ui:field="mPasswordGroup" styleName="form-group">
-								<label>Current password</label>
-								<g:PasswordTextBox styleName="form-control" ui:field="mPassword" />
-								<g:HTMLPanel ui:field="mPasswordNote" visible="false" styleName="noteDetail" />
-							</g:HTMLPanel>
+							<c:FormFieldPassword ui:field="mPassword" labelText="Current password" />
 
-							<g:HTMLPanel ui:field="mNewPasswordGroup" styleName="form-group">
-								<label>New password</label>
-								<g:PasswordTextBox styleName="form-control" ui:field="mNewPassword" />
-								<label class="{style.spaceUp}">Confirm new password</label>
-								<g:PasswordTextBox styleName="form-control" ui:field="mConfirmPassword" />
-								<g:HTMLPanel ui:field="mNewPasswordNote" visible="false" styleName="noteDetail" />
-							</g:HTMLPanel>
+							<c:FormFieldPassword ui:field="mNewPassword" labelText="New password" />
+							<c:FormFieldPassword ui:field="mConfirmPassword" labelText="Confirm password" />
 
-							<g:Button ui:field="mChangePassword" styleName="btn btn-lg btn-primary btn-block" text="Update" enabled="false" />
+							<c:FormButton ui:field="mChangePassword" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth}" text="Update" enabled="false" />
 
 						</g:HTMLPanel>
 					</p:Preloader>
@@ -106,17 +75,13 @@
 				<h3 class="{style.titleSection}">User Access</h3>
 				<g:HTMLPanel>
 					<h5 class="{style.subtitleSection}">Roles</h5>
-					<c:CellTable ui:field="rolesTable" styleName="table table-hover table-striped table-access" />
+					<cv:CellTable ui:field="rolesTable" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}" />
 					<g:FormPanel styleName="formEdit">
 						<p:Preloader ui:field="preloaderAddRole">
 							<g:HTMLPanel>
 								<g:HTMLPanel ui:field="addRolePanel">
-									<g:HTMLPanel ui:field="addRoleGroup" styleName="form-group">
-										<label>Add Role</label>
-										<g:TextBox styleName=" form-control " ui:field="addRoleTextbox" />
-										<g:HTMLPanel ui:field="addRoleNote" visible="false" styleName="noteDetail" />
-									</g:HTMLPanel>
-									<g:Button styleName="btn btn-lg btn-primary btn-block" ui:field="addRoleButton">Add Role</g:Button>
+									<c:FormField ui:field="addRoleTextbox" labelText="Add Role" />
+									<c:FormButton ui:field="addRoleButton" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth}" text="Add Role" />
 								</g:HTMLPanel>
 							</g:HTMLPanel>
 						</p:Preloader>
@@ -125,17 +90,13 @@
 
 				<g:HTMLPanel>
 					<h5 class="{style.subtitleSection}">Permissions</h5>
-					<c:CellTable ui:field="permissionsTable" styleName="table table-hover table-striped table-access" />
+					<cv:CellTable ui:field="permissionsTable" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}" />
 					<g:FormPanel styleName="formEdit">
 						<p:Preloader ui:field="preloaderAddPermission">
 							<g:HTMLPanel>
 								<g:HTMLPanel ui:field="addPermissionPanel">
-									<g:HTMLPanel ui:field="addPermissionGroup" styleName="form-group">
-										<label>Add Permission</label>
-										<g:TextBox styleName=" form-control " ui:field="addPermissionTextbox" />
-										<g:HTMLPanel ui:field="addPermissionNote" visible="false" styleName="noteDetail" />
-									</g:HTMLPanel>
-									<g:Button styleName="btn btn-lg btn-primary btn-block" ui:field="addPermissionButton">Add Permission</g:Button>
+									<c:FormField ui:field="addPermissionTextbox" labelText="Add Permission" />
+									<c:FormButton ui:field="addPermissionButton" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth}" text="Add Permission" />
 								</g:HTMLPanel>
 							</g:HTMLPanel>
 						</p:Preloader>
@@ -143,7 +104,6 @@
 				</g:HTMLPanel>
 			</g:HTMLPanel>
 
-			<g:HTMLPanel styleName="filler-bottom col-md-12 hidden-xs hidden-sm" />
 		</div>
 	</g:HTMLPanel>
 </ui:UiBinder> 

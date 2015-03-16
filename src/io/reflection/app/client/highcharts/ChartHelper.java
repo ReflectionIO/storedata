@@ -134,7 +134,7 @@ public class ChartHelper {
 		chart.getLegendOption().setEnabled(false); // Disable legend
 		chart.getTitleOption().setText(null); // Disable title
 		chart.getTooltipOption()
-				.setUseHTML(true)
+				// .setUseHTML(true) if true there are problems with the reflectionCss
 				.setShadow(false)
 				.setBackgroundColor("#ffffff")
 				.setBorderColor("#dedede")

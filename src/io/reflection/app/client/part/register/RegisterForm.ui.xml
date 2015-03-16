@@ -1,74 +1,39 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-    xmlns:g="urn:import:com.google.gwt.user.client.ui">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:io.reflection.app.client.component">
 
-    <ui:import field="io.reflection.app.client.page.PageType.TermsPageType" />
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 
-    <ui:style gss="true">
-    .password {
-        margin-top: 7px;
-    }
-    </ui:style>
-    <g:HTMLPanel>
-        <g:FormPanel styleName="form">
+	<ui:style gss="true">
+	
+	</ui:style>
+	<g:HTMLPanel tag="form">
+		<c:FormField ui:field="forename" labelText="First Name" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
+		<c:FormField ui:field="surname" labelText="Last Name" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
+		<c:FormField ui:field="company" labelText="Your Company" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
+		<c:FormField ui:field="email" labelText="Email" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
 
-            <g:HTMLPanel>
-                <g:HTMLPanel ui:field="forenameGroup" styleName="form-group">
-                    <label>First name</label>
-                    <g:TextBox styleName="form-control" ui:field="forename" />
-                    <g:HTMLPanel ui:field="forenameNote" visible="false"
-                        styleName="noteDetail" />
-                </g:HTMLPanel>
+		<g:HTMLPanel ui:field="passwordGroup">
+			<c:FormFieldPassword ui:field="password" labelText="Password" checkActive="true" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
+			<c:FormFieldPassword ui:field="confirmPassword" labelText="Confirm Password" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
+		</g:HTMLPanel>
 
-                <g:HTMLPanel ui:field="surnameGroup" styleName="form-group">
-                    <label>Last name</label>
-                    <g:TextBox styleName="form-control" ui:field="surname" />
-                    <g:HTMLPanel ui:field="surnameNote" visible="false"
-                        styleName="noteDetail" />
-                </g:HTMLPanel>
 
-                <g:HTMLPanel ui:field="companyGroup" styleName="form-group">
-                    <label>Company</label>
-                    <g:TextBox styleName="form-control" ui:field="company" />
-                    <g:HTMLPanel ui:field="companyNote" visible="false"
-                        styleName="noteDetail" />
-                </g:HTMLPanel>
+		<g:HTMLPanel ui:field="termAndCondGroup" styleName="{STYLES_INSTANCE.reflectionMainStyle.formFieldCheckboxList} {STYLES_INSTANCE.reflectionMainStyle.jsFadeContent}">
+			<ul>
+				<li>
+					<c:FormCheckbox ui:field="termAndCond" />
+					<div class="{STYLES_INSTANCE.reflectionMainStyle.generalErrorMessage}">
+						<p ui:field="checkboxError"></p>
+					</div>
+				</li>
+			</ul>
+		</g:HTMLPanel>
 
-                <g:HTMLPanel ui:field="emailGroup" styleName="form-group">
-                    <label>Email</label>
-                    <g:TextBox styleName="form-control" ui:field="email" />
-                    <g:HTMLPanel ui:field="emailNote" visible="false"
-                        styleName="noteDetail" />
-                </g:HTMLPanel>
+		<c:FormButton ui:field="registerBtn"
+			styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth} {STYLES_INSTANCE.reflectionMainStyle.maintainAfterSubmit} {STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}">
+			Apply Now
+		</c:FormButton>
+	</g:HTMLPanel>
 
-                <g:HTMLPanel ui:field="passwordGroup" styleName="form-group">
-                    <label>Password</label>
-                    <g:PasswordTextBox styleName="form-control"
-                        ui:field="password" />
-                    <label class="{style.password}">Confirm Password</label>
-                    <g:PasswordTextBox styleName="form-control"
-                        ui:field="confirmPassword" />
-                    <g:HTMLPanel ui:field="passwordNote" visible="false"
-                        styleName="noteDetail" />
-                </g:HTMLPanel>
 
-                <g:HTMLPanel ui:field="termAndCondGroup">
-                    <g:CheckBox ui:field="termAndCond">
-                        I agree to the
-                        <a href="{TermsPageType.asHref}">
-                            terms and conditions
-                        </a>
-                    </g:CheckBox>
-                    <g:HTMLPanel ui:field="termAndCondNote" visible="false"
-                        styleName="noteDetail" />
-                </g:HTMLPanel>
-
-                <g:Button ui:field="mRegister" styleName="btn btn-lg btn-primary btn-block">
-                    Submit
-                    <span class="icon-right-small" />
-                </g:Button>
-
-            </g:HTMLPanel>
-        </g:FormPanel>
-    </g:HTMLPanel>
 </ui:UiBinder> 
