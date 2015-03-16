@@ -106,7 +106,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 
 		BootstrapGwtDatePicker.INSTANCE.styles().ensureInjected();
 
-		Styles.INSTANCE.reflection().ensureInjected();
+		Styles.STYLES_INSTANCE.reflection().ensureInjected();
 
 		FilterController.get().setListType(OVERALL_LIST_TYPE);
 

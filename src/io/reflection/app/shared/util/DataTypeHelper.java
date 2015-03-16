@@ -69,6 +69,7 @@ public class DataTypeHelper {
 	public static final String PERMISSION_MANAGE_SIMPLE_MODEL_RUN_CODE = "MSM";
 	public static final String PERMISSION_MANAGE_EVENT_SUBSCRIPTIONS_CODE = "MES";
 	public static final String PERMISSION_SEND_NOTIFICATIONS_CODE = "SNO";
+	public static final String PERMISSION_MANAGE_DATA_ACCOUNT_FETCHES_CODE = "MDF";
 
 	public static final String CHANGE_PASSWORD_EVENT_CODE = "PAS";
 	public static final String RESET_PASSWORD_EVENT_CODE = "RPS";
@@ -88,7 +89,7 @@ public class DataTypeHelper {
 
 	public static final String STORE_IPHONE_A3_CODE = "iph";
 	public static final String STORE_IPAD_A3_CODE = "ipa";
-	
+
 	public static final String STORE_IPHONE_NAME = "iPhone Store";
 	public static final String STORE_IPAD_NAME = "iPad Store";
 

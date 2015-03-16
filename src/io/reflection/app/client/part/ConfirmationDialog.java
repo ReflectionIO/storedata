@@ -28,7 +28,12 @@ public class ConfirmationDialog extends PopupPanel {
 
 	public ConfirmationDialog(String title, String text) {
 		super();
-		Styles.INSTANCE.confirmationDialog().ensureInjected();
+
+		// DOMHelper.setScrollEnabled(false);
+
+		// Window.alert("apro");
+
+		Styles.STYLES_INSTANCE.confirmationDialog().ensureInjected();
 		this.hide(true);
 		this.setGlassEnabled(true);
 		this.setModal(true);

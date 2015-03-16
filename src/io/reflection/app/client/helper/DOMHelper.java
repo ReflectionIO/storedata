@@ -7,7 +7,11 @@
 //
 package io.reflection.app.client.helper;
 
+import io.reflection.app.client.res.Styles;
+import io.reflection.app.client.res.Styles.ReflectionMainStyles;
+
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.LinkElement;
 import com.google.gwt.dom.client.ScriptElement;
 
@@ -16,6 +20,8 @@ import com.google.gwt.dom.client.ScriptElement;
  *
  */
 public class DOMHelper {
+
+	public static ReflectionMainStyles style = Styles.STYLES_INSTANCE.reflectionMainStyle();
 
 	/** Load CSS file from url */
 	public static LinkElement getCssLinkFromUrl(String url) {
@@ -42,6 +48,34 @@ public class DOMHelper {
 		script.setSrc(url);
 		script.setAttribute(attribute, "");
 		return script;
+	}
+
+	public static Element getHtmlElement() {
+		return Document.get().getElementsByTagName("html").getItem(0);
+	}
+
+	public static void toggleClassName(Element element, String className) {
+		if (!element.hasClassName(className)) {
+			element.addClassName(className);
+		} else {
+			element.removeClassName(className);
+		}
+	}
+
+	public static void addClassName(Element element, String className) {
+		if (!element.hasClassName(className)) {
+			element.addClassName(className);
+		}
+	}
+
+	public static void setScrollEnabled(boolean enabled) {
+		if (enabled) {
+			DOMHelper.getHtmlElement().removeClassName(style.noScroll());
+			Document.get().getBody().removeClassName(style.noScroll());
+		} else {
+			addClassName(DOMHelper.getHtmlElement(), style.noScroll());
+			addClassName(Document.get().getBody(), style.noScroll());
+		}
 	}
 
 }

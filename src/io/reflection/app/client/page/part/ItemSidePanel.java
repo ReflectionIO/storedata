@@ -56,10 +56,10 @@ public class ItemSidePanel extends Composite {
 
 		if (item.largeImage != null) {
 			image.setUrl(item.largeImage);
-			image.removeStyleName(Styles.INSTANCE.reflection().unknownAppLarge());
+			image.removeStyleName(Styles.STYLES_INSTANCE.reflection().unknownAppLarge());
 		} else {
 			image.setUrl("");
-			image.addStyleName(Styles.INSTANCE.reflection().unknownAppLarge());
+			image.addStyleName(Styles.STYLES_INSTANCE.reflection().unknownAppLarge());
 		}
 
 		Store s = StoreController.get().getStore(item.source);

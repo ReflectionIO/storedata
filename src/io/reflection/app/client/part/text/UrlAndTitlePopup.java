@@ -46,7 +46,7 @@ public abstract class UrlAndTitlePopup extends PopupPanel {
 
         super();
         setWidget(binder.createAndBindUi(this));
-        Styles.INSTANCE.confirmationDialog().ensureInjected();
+        Styles.STYLES_INSTANCE.confirmationDialog().ensureInjected();
         hide(true);
         setGlassEnabled(true);
         setModal(true);

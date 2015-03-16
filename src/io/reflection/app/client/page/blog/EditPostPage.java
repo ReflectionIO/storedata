@@ -69,7 +69,7 @@ public class EditPostPage extends Page implements NavigationEventHandler, Create
 	public EditPostPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		Styles.INSTANCE.blog().ensureInjected();
+		Styles.STYLES_INSTANCE.blog().ensureInjected();
 
 		title.getElement().setAttribute("placeholder", "Title");
 		tags.getElement().setAttribute("placeholder", "Comma separated tags");
