@@ -7,6 +7,9 @@
 //
 package io.reflection.app.client.part.linkaccount;
 
+import io.reflection.app.client.component.FormButton;
+import io.reflection.app.client.component.FormField;
+import io.reflection.app.client.component.FormFieldPassword;
 import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
@@ -18,7 +21,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -26,9 +28,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Focusable;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.PasswordTextBox;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.shared.Convert;
 
@@ -42,29 +41,23 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 
 	interface IosMacLinkAccountFormUiBinder extends UiBinder<Widget, IosMacLinkAccountForm> {}
 
-	@UiField TextBox accountUsername;
-	@UiField HTMLPanel accountUsernameGroup;
-	@UiField HTMLPanel accountUsernameNote;
+	@UiField FormField accountUsername;
 	private String accountUsernameError;
 
-	@UiField PasswordTextBox password;
-	@UiField HTMLPanel passwordGroup;
-	@UiField HTMLPanel passwordNote;
+	@UiField FormFieldPassword password;
 	private String passwordError;
 
-	@UiField TextBox vendorId;
-	@UiField HTMLPanel vendorIdGroup;
-	@UiField HTMLPanel vendorIdNote;
+	@UiField FormField vendorId;
 	private String vendorIdError;
 
-	@UiField AnchorElement vendorLink;
+	@UiField FormButton linkAccountBtn;
 
 	private EnterPressedEventHandler enterHandler;
 
 	public IosMacLinkAccountForm() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		vendorLink.setHref(PageType.BlogPostPageType.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE, "7"));
+		vendorId.setInfoHref(PageType.BlogPostPageType.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE, "7"));
 
 		accountUsername.getElement().setAttribute("placeholder", "iTunes Connect Username");
 		password.getElement().setAttribute("placeholder", "iTunes Connect Password");
@@ -74,6 +67,10 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 		password.setTabIndex(2);
 		vendorId.setTabIndex(3);
 
+	}
+
+	public FormButton getButton() {
+		return linkAccountBtn;
 	}
 
 	/**
@@ -194,11 +191,11 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	}
 
 	public void setAccountUsername(String username) {
-		accountUsername.setValue(username);
+		accountUsername.setText(username);
 	}
 
 	public void setVendorNumber(String vendorNumber) {
-		vendorId.setValue(vendorNumber);
+		vendorId.setText(vendorNumber);
 	}
 
 	/*
@@ -258,19 +255,19 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	@Override
 	public void setFormErrors() {
 		if (accountUsernameError != null) {
-			FormHelper.showNote(true, accountUsernameGroup, accountUsernameNote, accountUsernameError);
+			accountUsername.showNote(accountUsernameError, true);
 		} else {
-			FormHelper.hideNote(accountUsernameGroup, accountUsernameNote);
+			accountUsername.hideNote();
 		}
 		if (passwordError != null) {
-			FormHelper.showNote(true, passwordGroup, passwordNote, passwordError);
+			password.showNote(passwordError, true);
 		} else {
-			FormHelper.hideNote(passwordGroup, passwordNote);
+			password.hideNote();
 		}
 		if (vendorIdError != null) {
-			FormHelper.showNote(true, vendorIdGroup, vendorIdNote, vendorIdError);
+			vendorId.showNote(vendorIdError, true);
 		} else {
-			FormHelper.hideNote(vendorIdGroup, vendorIdNote);
+			vendorId.hideNote();
 		}
 
 	}
@@ -328,16 +325,14 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	 */
 	@Override
 	public void resetForm() {
-		// setEnabled(true);
-
+		setEnabled(true);
 		accountUsername.setText("");
 		accountUsername.setFocus(true);
-		password.setText("");
+		accountUsername.hideNote();
+		password.hideNote();
+		password.clear();
 		vendorId.setText("");
-
-		FormHelper.hideNote(accountUsernameGroup, accountUsernameNote);
-		FormHelper.hideNote(passwordGroup, passwordNote);
-		FormHelper.hideNote(vendorIdGroup, vendorIdNote);
+		vendorId.hideNote();
 	}
 
 }

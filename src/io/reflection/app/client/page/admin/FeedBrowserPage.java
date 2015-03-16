@@ -13,6 +13,7 @@ import static io.reflection.app.client.controller.FilterController.LIST_TYPE_KEY
 import static io.reflection.app.client.controller.FilterController.STORE_KEY;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.StyledButtonCell;
+import io.reflection.app.client.component.FormFieldSelect;
 import io.reflection.app.client.controller.FeedFetchController;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.FilterController.Filter;
@@ -48,7 +49,6 @@ import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -64,11 +64,10 @@ public class FeedBrowserPage extends Page implements FilterEventHandler, Navigat
 	@UiField(provided = true) CellTable<FeedFetch> mFeeds = new CellTable<FeedFetch>(ServiceConstants.SHORT_STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) SimplePager mPager = new SimplePager(false, false);
 
-	@UiField ListBox mAppStore;
-	@UiField ListBox mCountry;
-	@UiField ListBox category;
-
-	@UiField ListBox mListType;
+	@UiField FormFieldSelect mAppStore;
+	@UiField FormFieldSelect mCountry;
+	@UiField FormFieldSelect category;
+	@UiField FormFieldSelect mListType;
 
 	@UiField Breadcrumbs mBreadcrumbs;
 
@@ -80,6 +79,7 @@ public class FeedBrowserPage extends Page implements FilterEventHandler, Navigat
 		FilterHelper.addStores(mAppStore, true);
 		FilterHelper.addCountries(mCountry, true);
 		FilterHelper.addCategories(category, true);
+		FilterHelper.addListType(mListType, true);
 
 		// final SingleSelectionModel<FeedFetch> s = new SingleSelectionModel<FeedFetch>();
 		// s.addSelectionChangeHandler(new Handler() {

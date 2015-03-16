@@ -3,46 +3,25 @@
 	xmlns:p="urn:import:io.reflection.app.client.part" xmlns:pp="urn:import:io.reflection.app.client.page.forum.part">
 	<ui:import field="io.reflection.app.client.page.PageType.ForumTopicPageType" />
 
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
+
 	<ui:style gss="true">
-	.toolbar_spacing {
-	    padding-top: 10px;
-	    margin-top: 30px;
-	    padding-bottom: 10px;
-	}
-	
-	.margins {
-	    margin-top: 60px;
-	    margin-bottom: 10px;
-	}
-	
-	.header2 {
-	    margin-top: 7px;
-	    margin-bottom: 0px;
-	}
-	
-	.buttonWidth {
-	    width: 150px;
-	}
 	
 	</ui:style>
-	<g:HTMLPanel styleName="row">
-		<pp:ForumSummarySidePanel ui:field="forumSummarySidePanel" styleName="sidepanel col-md-2 well" />
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer}">
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth}">
 
-		<div class="col-sm-10">
-			<g:HTMLPanel styleName="well {style.toolbar_spacing}">
-				<div class="row">
-					<h5 class="col-sm-8 {style.header2}" ui:field="titleText"></h5>
-					<g:Button ui:field="newTopicButton" styleName="btn btn-primary col-sm-2 pull-right {style.buttonWidth}">
-						New Topic
-						<span class="icon-plus"></span>
-					</g:Button>
-				</div>
-			</g:HTMLPanel>
+			<pp:ForumSummarySidePanel ui:field="forumSummarySidePanel" />
+			<h5 ui:field="titleText"></h5>
+			<g:Button ui:field="newTopicButton">
+				New Topic
+				<span class="icon-plus"></span>
+			</g:Button>
 
-			<c:CellTable styleName="table table-hover table-striped" ui:field="topics" />
+			<c:CellTable styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}" ui:field="topics" />
 
-			<p:NumberedPager styleName="{style.margins}" ui:field="pager"></p:NumberedPager>
-			<g:HTMLPanel styleName="filler-bottom col-md-12 hidden-xs hidden-sm" />
+			<p:NumberedPager ui:field="pager"></p:NumberedPager>
+
 		</div>
 
 	</g:HTMLPanel>

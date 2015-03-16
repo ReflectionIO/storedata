@@ -17,6 +17,8 @@ import io.reflection.app.api.admin.shared.call.event.GetEventsEventHandler;
 import io.reflection.app.api.admin.shared.call.event.GetUsersEventHandler;
 import io.reflection.app.api.admin.shared.call.event.SendNotificationEventHandler;
 import io.reflection.app.client.DefaultEventBus;
+import io.reflection.app.client.component.FormField;
+import io.reflection.app.client.component.FormFieldSelect;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.NotificationController;
 import io.reflection.app.client.controller.SessionController;
@@ -46,10 +48,8 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
 
@@ -77,13 +77,11 @@ public class SendNotificationPage extends Page implements GetUsersEventHandler, 
 	String userError;
 
 	@UiField HTMLPanel fromGroup;
-	@UiField ListBox fromListBox;
+	@UiField FormFieldSelect fromListBox;
 	@UiField HTMLPanel fromNote;
 	String fromError;
 
-	@UiField HTMLPanel subjectGroup;
-	@UiField TextBox subjectTextBox;
-	@UiField HTMLPanel subjectNote;
+	@UiField FormField subjectTextBox;
 	String subjectError;
 
 	@UiField HTMLPanel bodyGroup;
@@ -91,7 +89,7 @@ public class SendNotificationPage extends Page implements GetUsersEventHandler, 
 	@UiField HTMLPanel bodyNote;
 	String bodyError;
 
-	@UiField ListBox priorityListBox;
+	@UiField FormFieldSelect priorityListBox;
 	@UiField HTMLPanel priorityGroup;
 	@UiField HTMLPanel priorityNote;
 	private String priorityError = null;
@@ -115,7 +113,7 @@ public class SendNotificationPage extends Page implements GetUsersEventHandler, 
 	/**
 	 * @param listBox
 	 */
-	private void addPriorities(ListBox listBox) {
+	private void addPriorities(FormFieldSelect listBox) {
 		for (EventPriorityType p : EventPriorityType.values()) {
 			listBox.addItem(p.toString(), p.toString());
 		}
@@ -212,9 +210,9 @@ public class SendNotificationPage extends Page implements GetUsersEventHandler, 
 			}
 
 			if (subjectError != null) {
-				FormHelper.showNote(true, subjectGroup, subjectNote, subjectError);
+				subjectTextBox.showNote(subjectError, true);
 			} else {
-				FormHelper.hideNote(subjectGroup, subjectNote);
+				subjectTextBox.hideNote();
 			}
 
 			if (bodyError != null) {
@@ -305,7 +303,7 @@ public class SendNotificationPage extends Page implements GetUsersEventHandler, 
 		FormHelper.hideNote(userGroup, userNote);
 		FormHelper.hideNote(eventGroup, eventNote);
 		FormHelper.hideNote(fromGroup, fromNote);
-		FormHelper.hideNote(subjectGroup, subjectNote);
+		subjectTextBox.hideNote();
 		FormHelper.hideNote(bodyGroup, bodyNote);
 		FormHelper.hideNote(priorityGroup, priorityNote);
 

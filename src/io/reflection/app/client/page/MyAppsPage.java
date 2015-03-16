@@ -29,7 +29,6 @@ import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.dataprovider.UserItemProvider;
 import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
-import io.reflection.app.client.page.part.MyAccountSidePanel;
 import io.reflection.app.client.page.part.MyAppsTopPanel;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.BootstrapGwtDatePicker;
@@ -46,6 +45,7 @@ import java.util.Map;
 
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
@@ -53,6 +53,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -83,7 +84,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	@UiField(provided = true) SimplePager simplePager = new SimplePager(false, false);
 
 	@UiField MyAppsTopPanel myAppsTopPanel;
-	@UiField MyAccountSidePanel myAccountSidePanel;
+	// @UiField MyAccountSidePanel myAccountSidePanel;
 
 	public static final String COMING_FROM_PARAMETER = "myapps";
 
@@ -159,7 +160,10 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 				return (object.overallPosition != null) ? SafeHtmlUtils.fromSafeConstant(object.overallPosition) : spinnerLoaderHTML;
 			}
 		};
-		appsTable.addColumn(columnRank, "Rank");
+		columnRank.setCellStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA() + " " + Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6cID());
+		TextHeader rankHeader = new TextHeader("Rank");
+		rankHeader.setHeaderStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6cIF());
+		appsTable.addColumn(columnRank, rankHeader);
 
 		columnAppDetails = new Column<MyApp, Item>(new MiniAppCell()) {
 			@Override
@@ -167,6 +171,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 				return object.item;
 			}
 		};
+		columnAppDetails.setCellStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA());
 		appsTable.addColumn(columnAppDetails, "App Details");
 
 		columnPrice = new Column<MyApp, SafeHtml>(new SafeHtmlCell()) {
@@ -175,6 +180,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 				return (object.overallPrice != null) ? SafeHtmlUtils.fromSafeConstant(object.overallPrice) : spinnerLoaderHTML;
 			}
 		};
+		columnPrice.setCellStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA());
 		appsTable.addColumn(columnPrice, "Price");
 
 		columnDownloads = new Column<MyApp, SafeHtml>(new SafeHtmlCell()) {
@@ -183,6 +189,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 				return (object.overallDownloads != null) ? SafeHtmlUtils.fromSafeConstant(object.overallDownloads) : spinnerLoaderHTML;
 			}
 		};
+		columnDownloads.setCellStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA());
 		appsTable.addColumn(columnDownloads, "Downloads");
 
 		columnRevenue = new Column<MyApp, SafeHtml>(new SafeHtmlCell()) {
@@ -191,12 +198,15 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 				return (object.overallRevenue != null) ? SafeHtmlUtils.fromSafeConstant(object.overallRevenue) : spinnerLoaderHTML;
 			}
 		};
+		columnRevenue.setCellStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA());
 		appsTable.addColumn(columnRevenue, "Revenue");
 
 		columnIap = new Column<MyApp, SafeHtml>(new SafeHtmlCell()) {
 
-			private final String IAP_DONT_KNOW_HTML = "<span class=\"icon-help " + style.silver() + "\"></span>";
-			private final String IAP_YES_HTML = "<span class=\"icon-ok " + style.green() + "\"></span>";
+			private final String IAP_DONT_KNOW_HTML = "<span class=\"" + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
+					+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeMinus() + "\"></span>";
+			private final String IAP_YES_HTML = "<span class=\"" + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
+					+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCheck() + "\"></span>";
 			private final String IAP_NO_HTML = "<span></span>";
 
 			@Override
@@ -206,7 +216,16 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 			}
 
 		};
+		columnIap.setCellStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA());
 		appsTable.addColumn(columnIap, "IAP");
+
+		appsTable.setWidth("100%", true);
+		appsTable.setColumnWidth(columnRank, 10.2, Unit.PCT);
+		appsTable.setColumnWidth(columnAppDetails, 34.5, Unit.PCT);
+		appsTable.setColumnWidth(columnPrice, 11.7, Unit.PCT);
+		appsTable.setColumnWidth(columnDownloads, 15.1, Unit.PCT);
+		appsTable.setColumnWidth(columnRevenue, 15.1, Unit.PCT);
+		appsTable.setColumnWidth(columnIap, 6.4, Unit.PCT);
 
 	}
 
@@ -224,7 +243,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 			myAppsTopPanel.setFiltersEnabled(false);
 			ItemController.get().fetchLinkedAccountItems();
 		}
-		myAccountSidePanel.setUser(user);
+		// myAccountSidePanel.setUser(user);
 		PageType.UsersPageType.show(PageType.MyAppsPageType.toString(), user.id.toString(), FilterController.get().asMyAppsFilterString());
 	}
 
@@ -242,7 +261,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 			myAppsTopPanel.setFiltersEnabled(false);
 			ItemController.get().fetchLinkedAccountItems();
 		}
-		myAccountSidePanel.setUser(user);
+		// myAccountSidePanel.setUser(user);
 		PageType.UsersPageType.show(PageType.MyAppsPageType.toString(), user.id.toString(), FilterController.get().asMyAppsFilterString());
 	}
 
@@ -255,13 +274,13 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
 
-		myAccountSidePanel.setActive(getPageType());
-
+		// myAccountSidePanel.setActive(getPageType());
+		//
 		user = SessionController.get().getLoggedInUser();
-
-		if (user != null) {
-			myAccountSidePanel.setUser(user);
-		}
+		//
+		// if (user != null) {
+		// myAccountSidePanel.setUser(user);
+		// }
 
 		// Linked accounts retrieved in LinkedAccountPage but not here, or Check if Added or deleted a linked account
 		if ((linkedAccountsCount == -1 && LinkedAccountController.get().linkedAccountsFetched())

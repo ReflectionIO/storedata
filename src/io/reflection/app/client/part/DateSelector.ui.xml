@@ -1,68 +1,32 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:db="urn:import:com.google.gwt.user.datepicker.client">
-	<ui:style gss="true" type="io.reflection.app.client.part.DateSelector.DateSelectorStyle">
-	.icon {
-		display: inline-block;
-		vertical-align: top;
-		color: #6d69c5;
-		font-size: 20px;
-		margin-right: 7px;
-		margin-top: 3px;
-	}
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:db="urn:import:com.google.gwt.user.datepicker.client"
+	xmlns:c="urn:import:io.reflection.app.client.component">
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
+	<ui:style gss="true">
 	
-	.pickers {
-		margin-bottom: 7px;
-	}
-	
-	.presets {
-		padding-top: 6px;
-		margin-left: 22px;
-		font-size: 12px;
-	}
-	
-	.preset {
-		padding-left: 6px;
-		padding-right: 6px;
-		outline: none;
-	}
-	
-	.dateSeparator {
-		margin-left: 5px;
-		margin-right: 5px;
-	}
-	
-	.apply {
-		vertical-align: baseline;
-		height: 34px;
-		background-color: transparent;
-	}
-	
-	.filler {
-		display: inline-block;
-		width: 10px;
-	}
-	
-	.highlight {
-		color: #434346;
-		font-weight: 600;
-		text-decoration: none;
-		outline: none;
-	}
-	
-	.disable, .disable:HOVER, .disable:FOCUS, .disable:ACTIVE {
-		color: #aaa;
-		cursor: default;
-	}
 	</ui:style>
-	<g:HTMLPanel>
-		<g:HTMLPanel styleName="{style.pickers} hidden-xs">
-			<span ui:field="icon" class="icon-calendar {style.icon} hidden-sm" />
-			<db:DateBox ui:field="dateBoxFrom"></db:DateBox>
-			<span ui:field="separator" class="{style.dateSeparator}">to</span>
-			<db:DateBox ui:field="dateBoxTo"></db:DateBox>
-			<span class="{style.filler} hidden-sm" />
-			<g:Button ui:field="applyDateRange" text="Apply" styleName="btn btn-sm btn-default {style.apply}" />
-		</g:HTMLPanel>
-		<g:HTMLPanel ui:field="fixedRangesPanel" styleName="{style.presets} text-left" />
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.filtersGroupTime}">
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.calendarContainer}">
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.dateSelectContainer}">
+				<div
+					class="{STYLES_INSTANCE.reflectionMainStyle.formField} {STYLES_INSTANCE.reflectionMainStyle.formFieldDateSelect} {STYLES_INSTANCE.reflectionMainStyle.formFieldDateSelectNoIcon}">
+					<db:DateBox ui:field="dateBoxFrom" styleName=""></db:DateBox>
+				</div>
+			</div>
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.dateSelectToIndicator}"></div>
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.dateSelectContainer}">
+				<div
+					class="{STYLES_INSTANCE.reflectionMainStyle.formField} {STYLES_INSTANCE.reflectionMainStyle.formFieldDateSelect} {STYLES_INSTANCE.reflectionMainStyle.formFieldDateSelectNoIcon}">
+					<db:DateBox ui:field="dateBoxTo" styleName=""></db:DateBox>
+				</div>
+			</div>
+		</div>
+		<g:Button ui:field="applyDateRange"
+			styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall} {STYLES_INSTANCE.reflectionMainStyle.pageFunctionButton} {STYLES_INSTANCE.reflectionMainStyle.refreshButton}">
+			<span class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeRefresh}">Refresh</span>
+		</g:Button>
+
+		<c:FormFieldSelect ui:field="selectFixedRange" labelText="Over Time"></c:FormFieldSelect>
+
 	</g:HTMLPanel>
 </ui:UiBinder> 

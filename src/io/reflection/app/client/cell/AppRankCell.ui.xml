@@ -1,44 +1,31 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder">
 
-    <ui:with field="name" type="java.lang.String" />
-    <ui:with field="smallImage" type="com.google.gwt.safehtml.shared.SafeUri" />
-    <ui:with field="creatorName" type="java.lang.String" />
-    <ui:with field="link" type="com.google.gwt.safehtml.shared.SafeUri" />
-    <ui:with field="dailyData" type="com.google.gwt.safehtml.shared.SafeHtml" />
-    <ui:with field="displayDailyData" type="java.lang.String" />
+	<ui:with field="name" type="java.lang.String" />
+	<ui:with field="smallImage" type="com.google.gwt.safehtml.shared.SafeUri" />
+	<ui:with field="creatorName" type="java.lang.String" />
+	<ui:with field="link" type="com.google.gwt.safehtml.shared.SafeUri" />
+	<ui:with field="dailyData" type="com.google.gwt.safehtml.shared.SafeHtml" />
+	<ui:with field="displayDailyData" type="java.lang.String" />
 
-    <ui:style gss="true">
-    .image {
-        width: 45px;
-        height: 45px;
-        float: left;
-    }
-    
-    .description {
-        overflow: hidden;
-        padding-left: 20px;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-    }
-    </ui:style>
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 
-    <div>
-        <img class="img-rounded {style.image}" src="{smallImage}" />
-        <div class="{style.description}">
-            <span>
-                <a href="{link}">
-                    <ui:text from="{name}" />
-                </a>
-                <br />
-            </span>
-            <span class="text-muted">
-                <ui:text from="{creatorName}" />
-            </span>
-            <br />
-            <span style="{displayDailyData}">
-                <ui:safehtml from="{dailyData}" />
-            </span>
-        </div>
-    </div>
+	<ui:style gss="true">
+	
+	</ui:style>
+
+	<div>
+		<img class="{STYLES_INSTANCE.reflectionMainStyle.imgRounded}" src="{smallImage}" />
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.mhxte6cRA}">
+			<a href="{link}">
+				<ui:text from="{name}" />
+			</a>
+			<span class="{STYLES_INSTANCE.reflectionMainStyle.textMuted}">
+				<ui:text from="{creatorName}" />
+			</span>
+			<span style="{displayDailyData}">
+				<ui:safehtml from="{dailyData}" />
+			</span>
+		</div>
+	</div>
 </ui:UiBinder>

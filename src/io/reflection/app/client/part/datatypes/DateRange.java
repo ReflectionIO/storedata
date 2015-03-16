@@ -74,7 +74,8 @@ public class DateRange {
 		if (obj != null && obj instanceof DateRange) {
 			DateRange dateRangeObj = (DateRange) obj;
 
-			return this.getFrom().equals(dateRangeObj.getFrom()) && this.getTo().equals(dateRangeObj.getTo());
+			return CalendarUtil.isSameDate(this.getFrom(), dateRangeObj.getFrom()) && CalendarUtil.isSameDate(this.getTo(), dateRangeObj.getTo());
+
 		}
 
 		return super.equals(obj);

@@ -7,8 +7,10 @@
 //
 package io.reflection.app.client.part;
 
+import io.reflection.app.client.helper.DOMHelper;
 import io.reflection.app.client.res.Styles;
 
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -44,8 +46,10 @@ public class ConfirmationDialog extends PopupPanel {
 		buttonsPanel.add(delete);
 		dialogWidget.add(textPanel);
 		dialogWidget.add(buttonsPanel);
-		cancel.getElement().addClassName("btn btn-cancel delete");
-		delete.getElement().addClassName("btn btn-delete delete");
+		cancel.getElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().refButtonFunctionSmall());
+		cancel.getElement().getStyle().setMarginRight(20, Unit.PX);
+		delete.getElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().refButtonCtaSmall());
+		delete.getElement().getStyle().setMarginLeft(20, Unit.PX);
 	}
 
 	public Button getCancelButton() {
@@ -64,8 +68,21 @@ public class ConfirmationDialog extends PopupPanel {
 		return parameter;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.user.client.ui.PopupPanel#center()
+	 */
+	@Override
+	public void center() {
+		super.center();
+
+		DOMHelper.setScrollEnabled(false);
+	}
+
 	public void reset() {
 		parameter = null;
+		DOMHelper.setScrollEnabled(true);
 		this.hide();
 	}
 

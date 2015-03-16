@@ -2,6 +2,8 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:com.google.gwt.user.cellview.client"
 	xmlns:p="urn:import:io.reflection.app.client.part">
 	<ui:import field="io.reflection.app.client.page.PageType.DataAccountsPageType" />
+
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 	<ui:style gss="true">
 	.backLink {
 		margin-top: 20px;
@@ -9,37 +11,25 @@
 		margin-left: 25px;
 		display: inline-block;
 	}
-	
-	.pageTitle {
-		padding-bottom: 30px;
-	}
-	
-	.content {
-		margin-top: 30px;
-	}
 	</ui:style>
-	<g:HTMLPanel styleName="row">
-
-		<g:HTMLPanel styleName="col-md-2 well sidepanel">
-			<h3 class="{style.pageTitle}">Data Account fetches</h3>
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer}">
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth}">
+			<h2>Data Account fetches</h2>
 
 			<div class="form-group">
 				<label>Date</label>
 				<p:DateSelector ui:field="dateSelector" />
 			</div>
 
-		</g:HTMLPanel>
+			<g:InlineHyperlink ui:field="backLink" styleName="{style.backLink}" targetHistoryToken="{DataAccountsPageType.asTargetHistoryToken}"
+				visible="false">&#8592;
+				Back to data accounts</g:InlineHyperlink>
+			<c:CellTable ui:field="dataAccountFetchTable" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}" />
 
-		<g:HTMLPanel styleName="col-md-10 {style.content}">
-				<g:InlineHyperlink ui:field="backLink" styleName="{style.backLink}" targetHistoryToken="{DataAccountsPageType.asTargetHistoryToken}"
-					visible="false">&#8592;
-					Back to data accounts</g:InlineHyperlink>
-				<c:CellTable ui:field="dataAccountFetchTable" styleName="table table-hover table-striped" />
+			<p:SimplePager styleName="text-center" ui:field="simplePager" rangeLimited="true" />
 
-				<p:SimplePager styleName="text-center" ui:field="simplePager" rangeLimited="true" />
-		</g:HTMLPanel>
 
-		<g:HTMLPanel styleName="filler-bottom col-md-12 hidden-xs hidden-sm" />
+		</div>
 
 	</g:HTMLPanel>
 </ui:UiBinder> 

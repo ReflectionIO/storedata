@@ -1,44 +1,44 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part.text"
-	xmlns:pp="urn:import:io.reflection.app.client.page.forum.part" xmlns:a="urn:import:io.reflection.app.client.part">
+	xmlns:pp="urn:import:io.reflection.app.client.page.forum.part" xmlns:a="urn:import:io.reflection.app.client.part" xmlns:c="urn:import:io.reflection.app.client.component">
 	<ui:style gss="true">
 	.textArea {
-	    height: 200px;
+		height: 200px;
 	}
 	
 	.toolbarSpacing {
-	    padding-top: 10px;
-	    margin-top: 30px;
-	    padding-bottom: 10px;
+		padding-top: 10px;
+		margin-top: 30px;
+		padding-bottom: 10px;
 	}
 	
 	.indentHeader {
-	    margin-left: 55px;
+		margin-left: 55px;
 	}
 	
 	.indentHeader2 {
-	    margin-left: 35px;
+		margin-left: 35px;
 	}
 	
 	.successDiv {
-	    margin-left: 50px;
+		margin-left: 50px;
 	}
 	
 	.forumControl {
-	    background: linear-gradient(#f6f7f9, #eeeff1);
+		background: linear-gradient(#f6f7f9, #eeeff1);
 	}
 	
 	.successHeading {
-	    font-size: 34px;
-	    font-family: "Source Sans Pro", sans-serif;
-	    font-weight: 600;
-	    margin-top: 20px;
-	    margin-bottom: 30px;
-	    line-height: 1.1;
+		font-size: 34px;
+		font-family: "Source Sans Pro", sans-serif;
+		font-weight: 600;
+		margin-top: 20px;
+		margin-bottom: 30px;
+		line-height: 1.1;
 	}
 	
 	.maxWidth {
-	    max-width: 75em;
+		max-width: 75em;
 	}
 	</ui:style>
 	<g:HTMLPanel styleName="row">
@@ -61,11 +61,7 @@
 							<g:HTMLPanel styleName="noteDetail" ui:field="titleNote" visible="false" />
 						</g:HTMLPanel>
 
-						<g:HTMLPanel styleName="form-group">
-							<label>Forum</label>
-							<g:ListBox addStyleNames="form-control {style.forumControl}" ui:field="forums">
-							</g:ListBox>
-						</g:HTMLPanel>
+						<c:FormFieldSelect ui:field="forums" labelText="Forum"></c:FormFieldSelect>
 
 						<g:HTMLPanel ui:field="contentGroup" styleName="form-group">
 							<label>Content</label>

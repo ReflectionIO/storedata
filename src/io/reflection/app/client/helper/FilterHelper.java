@@ -7,6 +7,7 @@
 //
 package io.reflection.app.client.helper;
 
+import io.reflection.app.client.component.FormFieldSelect;
 import io.reflection.app.client.controller.CountryController;
 import io.reflection.app.client.controller.ForumController;
 import io.reflection.app.client.controller.LinkedAccountController;
@@ -23,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
 import com.google.gwt.user.datepicker.client.DatePicker;
 
@@ -60,7 +60,7 @@ public class FilterHelper {
 		return getMonthsAgo(value * 12);
 	}
 
-	public static void addLinkedAccounts(ListBox list) {
+	public static void addLinkedAccounts(FormFieldSelect list) {
 		List<DataAccount> linkedAccounts = LinkedAccountController.get().getAllLinkedAccounts();
 
 		if (linkedAccounts != null) {
@@ -71,14 +71,14 @@ public class FilterHelper {
 	}
 
 	/**
-	 * Add list of stores to ListBox
+	 * Add list of stores to FormFieldSelect
 	 * 
 	 * @param list
-	 *            , ListBox
+	 *            , FormFieldSelect
 	 * @param isAdmin
 	 *            , if false add only iPhone store
 	 */
-	public static void addStores(ListBox list, boolean isAdmin) {
+	public static void addStores(FormFieldSelect list, boolean isAdmin) {
 		if (isAdmin) {
 			List<Store> stores = StoreController.get().getStores();
 
@@ -93,19 +93,19 @@ public class FilterHelper {
 		}
 	}
 
-	public static void addStores(ListBox list) {
+	public static void addStores(FormFieldSelect list) {
 		addStores(list, false);
 	}
 
 	/**
-	 * Add list of countries to ListBox
+	 * Add list of countries to FormFieldSelect
 	 * 
 	 * @param list
-	 *            , ListBox
+	 *            , FormFieldSelect
 	 * @param isAdmin
 	 *            , if false add only USA
 	 */
-	public static void addCountries(ListBox list, boolean isAdmin) {
+	public static void addCountries(FormFieldSelect list, boolean isAdmin) {
 		if (isAdmin) {
 			List<Country> countries = CountryController.get().getCountries();
 
@@ -121,19 +121,19 @@ public class FilterHelper {
 		}
 	}
 
-	public static void addCountries(ListBox list) {
+	public static void addCountries(FormFieldSelect list) {
 		addCountries(list, false);
 	}
 
 	/**
-	 * Add list of categories to ListBox
+	 * Add list of categories to FormFieldSelect
 	 * 
 	 * @param list
-	 *            , ListBox
+	 *            , FormFieldSelect
 	 * @param isAdmin
 	 *            , if false add only All categories
 	 */
-	public static void addCategories(ListBox list, boolean isAdmin) {
+	public static void addCategories(FormFieldSelect list, boolean isAdmin) {
 		if (isAdmin) {
 			list.addItem("All", "24");
 			list.addItem("Book", "19");
@@ -165,11 +165,24 @@ public class FilterHelper {
 		}
 	}
 
-	public static void addCategories(ListBox list) {
+	public static void addCategories(FormFieldSelect list) {
 		addCategories(list, false);
 	}
 
-	public static void addForums(ListBox list) {
+	public static void addListType(FormFieldSelect list, boolean isAdmin) {
+		// if (isAdmin) {
+		list.addItem("All", "all");
+		list.addItem("Paid", "paid");
+		list.addItem("Free", "free");
+		list.addItem("Grossing", "grossing");
+		// } else {}
+	}
+
+	public static void addListType(FormFieldSelect list) {
+		addListType(list, false);
+	}
+
+	public static void addForums(FormFieldSelect list) {
 		List<Forum> forums = ForumController.get().getForums();
 
 		if (forums != null) {
@@ -293,7 +306,7 @@ public class FilterHelper {
 
 				@Override
 				public String getName() {
-					return "1 wk";
+					return "1 Week";
 				}
 
 				@Override
@@ -306,7 +319,7 @@ public class FilterHelper {
 
 				@Override
 				public String getName() {
-					return "2 wks";
+					return "2 Weeks";
 				}
 
 				@Override
@@ -319,7 +332,7 @@ public class FilterHelper {
 
 				@Override
 				public String getName() {
-					return "4 wks";
+					return "4 Weeks";
 				}
 
 				@Override
@@ -332,7 +345,7 @@ public class FilterHelper {
 
 				@Override
 				public String getName() {
-					return "6 wks";
+					return "6 Weeks";
 				}
 
 				@Override
@@ -345,7 +358,7 @@ public class FilterHelper {
 
 				@Override
 				public String getName() {
-					return "8 wks";
+					return "8 Weeks";
 				}
 
 				@Override
@@ -367,7 +380,7 @@ public class FilterHelper {
 
 				@Override
 				public String getName() {
-					return "1 day";
+					return "1 Day";
 				}
 
 				@Override
@@ -381,7 +394,7 @@ public class FilterHelper {
 				@Override
 				public String getName() {
 
-					return "1 wk";
+					return "1 Week";
 				}
 
 				@Override
@@ -394,7 +407,7 @@ public class FilterHelper {
 
 				@Override
 				public String getName() {
-					return "2 wks";
+					return "2 Weeks";
 				}
 
 				@Override
@@ -407,7 +420,7 @@ public class FilterHelper {
 
 				@Override
 				public String getName() {
-					return "30 days";
+					return "30 Days";
 				}
 
 				@Override

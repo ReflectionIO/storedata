@@ -1,65 +1,86 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
-	xmlns:pt="urn:import:io.reflection.app.client.part.text">
+	xmlns:pt="urn:import:io.reflection.app.client.part.text" xmlns:c="urn:import:io.reflection.app.client.component">
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 	<ui:style gss="true">
-	.backLink {
-		margin-top: 20px;
-		margin-bottom: 20px;
-		margin-left: 25px;
-		display: inline-block;
+	.formControl {
+		height: 36px;
+		font-size: 16px;
+		color: #434346;
+		font-weight: 400;
+		font-family: 'Lato', sans-serif;
+		line-height: 24px;
+		display: block;
+		width: 100%;
+		padding: 6px 12px;
+		background-color: #fff;
+		background-image: none;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+		-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+		box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+		-webkit-transition: border-color ease-in-out .15s, box-shadow
+			ease-in-out .15s;
+		transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
 	}
 	</ui:style>
-	<g:HTMLPanel styleName="row">
-
-		<g:HTMLPanel styleName="col-sm-10 col-sm-offset-1">
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer}">
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth}">
 			<h2>Send Notification</h2>
 
 			<p:AlertBox ui:field="alert" visible="false" canDismiss="false" loading="false" />
 
 			<p:Preloader ui:field="preloader">
-				<g:HTMLPanel ui:field="eventGroup" styleName="form-group">
-					<label>Event</label>
-					<g:SuggestBox styleName="form-control" ui:field="eventSuggestBox" />
-					<g:HTMLPanel styleName="text-muted small">Enter an event code or id</g:HTMLPanel>
-					<g:HTMLPanel styleName="noteDetail" ui:field="eventNote" visible="false" />
+
+				<g:HTMLPanel ui:field="eventGroup" styleName="">
+					<p>Event</p>
+					<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.formField}">
+						<g:SuggestBox styleName="{style.formControl}" ui:field="eventSuggestBox" />
+						<label></label>
+					</g:HTMLPanel>
+					<g:HTMLPanel styleName="">Enter an event code or id</g:HTMLPanel>
+					<g:HTMLPanel styleName="" ui:field="eventNote" visible="false" />
 				</g:HTMLPanel>
 
-				<g:HTMLPanel ui:field="userGroup" styleName="form-group">
-					<label>User</label>
-					<g:SuggestBox styleName="form-control" ui:field="userSuggestBox" />
-					<g:HTMLPanel styleName="text-muted small">Enter part of the user's name or email address</g:HTMLPanel>
-					<g:HTMLPanel styleName="noteDetail" ui:field="userNote" visible="false" />
+				<g:HTMLPanel ui:field="priorityGroup"
+					styleName="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth} {STYLES_INSTANCE.reflectionMainStyle.filtersContainer}">
+					<form class="{STYLES_INSTANCE.reflectionMainStyle.formsMidTheme}">
+						<c:FormFieldSelect ui:field="priorityListBox" labelText="Priority"></c:FormFieldSelect>
+						<g:HTMLPanel styleName="" ui:field="priorityNote" visible="false" />
+					</form>
 				</g:HTMLPanel>
 
-				<g:HTMLPanel ui:field="fromGroup" styleName="form-group">
-					<label>From</label>
-					<g:ListBox styleName="form-control" ui:field="fromListBox" />
-					<g:HTMLPanel styleName="noteDetail" ui:field="fromNote" visible="false" />
+				<g:HTMLPanel ui:field="userGroup"
+					styleName="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth} {STYLES_INSTANCE.reflectionMainStyle.filtersContainer}">
+					<p>User</p>
+					<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.formField}">
+						<g:SuggestBox styleName="{style.formControl}" ui:field="userSuggestBox" />
+						<label></label>
+					</g:HTMLPanel>
+					<g:HTMLPanel styleName="">Enter part of the user's name or email address</g:HTMLPanel>
+					<g:HTMLPanel styleName="" ui:field="userNote" visible="false" />
 				</g:HTMLPanel>
 
-				<g:HTMLPanel ui:field="subjectGroup" styleName="form-group">
-					<label>Subject</label>
-					<g:TextBox styleName="form-control" ui:field="subjectTextBox" />
-					<g:HTMLPanel styleName="noteDetail" ui:field="subjectNote" visible="false" />
+				<g:HTMLPanel ui:field="fromGroup"
+					styleName="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth} {STYLES_INSTANCE.reflectionMainStyle.filtersContainer}">
+					<form class="{STYLES_INSTANCE.reflectionMainStyle.formsMidTheme}">
+						<c:FormFieldSelect ui:field="fromListBox" labelText="From"></c:FormFieldSelect>
+						<g:HTMLPanel styleName="" ui:field="fromNote" visible="false" />
+					</form>
 				</g:HTMLPanel>
 
-				<g:HTMLPanel ui:field="bodyGroup" styleName="form-group">
-					<label>Body</label>
+				<c:FormField ui:field="subjectTextBox" labelText="Subject"></c:FormField>
+
+				<g:HTMLPanel ui:field="bodyGroup" styleName="">
+					<p>Body</p>
 					<pt:MarkdownEditor ui:field="bodyEditor" />
-					<g:HTMLPanel styleName="noteDetail" ui:field="bodyNote" visible="false" />
+					<g:HTMLPanel styleName="" ui:field="bodyNote" visible="false" />
 				</g:HTMLPanel>
 
-				<g:HTMLPanel ui:field="priorityGroup" styleName="form-group">
-					<label>Priority</label>
-					<g:ListBox styleName="form-control" ui:field="priorityListBox" />
-					<g:HTMLPanel styleName="noteDetail" ui:field="priorityNote" visible="false" />
-				</g:HTMLPanel>
 
-				<g:HTMLPanel styleName="formEdit">
-					<g:Button ui:field="buttonSend" styleName="btn btn-lg btn-primary btn-block" text="Send notification" />
-				</g:HTMLPanel>
+				<g:Button ui:field="buttonSend" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaSmall}" text="Send notification" />
+
 			</p:Preloader>
-		</g:HTMLPanel>
-		<g:HTMLPanel styleName="filler-bottom col-md-12 hidden-xs hidden-sm" />
+		</div>
 	</g:HTMLPanel>
 </ui:UiBinder> 

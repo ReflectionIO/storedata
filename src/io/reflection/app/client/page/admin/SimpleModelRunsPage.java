@@ -9,6 +9,7 @@ package io.reflection.app.client.page.admin;
 
 import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMATTER_DD_MMM_YYYY;
 import io.reflection.app.client.DefaultEventBus;
+import io.reflection.app.client.component.FormFieldSelect;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.FilterController.Filter;
 import io.reflection.app.client.controller.NavigationController;
@@ -39,7 +40,6 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -56,11 +56,11 @@ public class SimpleModelRunsPage extends Page implements FilterEventHandler {
 			BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) SimplePager simplePager = new SimplePager(false, false);
 
-	@UiField ListBox listType;
+	@UiField FormFieldSelect listType;
 	@UiField DateSelector dateSelector;
-	@UiField ListBox country;
-	@UiField ListBox appStore;
-	@UiField ListBox category;
+	@UiField FormFieldSelect country;
+	@UiField FormFieldSelect appStore;
+	@UiField FormFieldSelect category;
 
 	public SimpleModelRunsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -72,6 +72,7 @@ public class SimpleModelRunsPage extends Page implements FilterEventHandler {
 		FilterHelper.addCountries(country, true);
 		FilterHelper.addStores(appStore, true);
 		FilterHelper.addCategories(category, true);
+		FilterHelper.addListType(listType, true);
 
 		simpleModelRunTable.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 		simpleModelRunTable.setEmptyTableWidget(new HTMLPanel("<h6>No Simple Model Runs</h6>"));
