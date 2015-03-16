@@ -33,10 +33,12 @@ import java.util.Map;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.cellview.client.SafeHtmlHeader;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -156,6 +158,27 @@ public class SimpleModelRunsPage extends Page implements FilterEventHandler {
 
 		};
 		simpleModelRunTable.addColumn(saleSummaryDateColumn, "Summary Date");
+
+		TextColumn<SimpleModelRun> adjustedR2Column = new TextColumn<SimpleModelRun>() {
+
+			@Override
+			public String getValue(SimpleModelRun object) {
+				return object.adjustedRSquared != null ? object.adjustedRSquared.toString() : "-";
+			}
+
+		};
+		simpleModelRunTable.addColumn(adjustedR2Column,
+				new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Adjusted r<span style=\"font-size: 12px; vertical-align: top;\">2</span>")));
+
+		TextColumn<SimpleModelRun> regressionSumSquaresColumn = new TextColumn<SimpleModelRun>() {
+
+			@Override
+			public String getValue(SimpleModelRun object) {
+				return object.regressionSumSquares != null ? object.regressionSumSquares.toString() : "-";
+			}
+
+		};
+		simpleModelRunTable.addColumn(regressionSumSquaresColumn, "RSS");
 
 	}
 
