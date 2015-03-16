@@ -12,7 +12,6 @@ import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.part.SuperAlertBox;
 import io.reflection.app.client.res.Styles;
 
-import com.google.gwt.dom.client.StyleInjector;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -26,14 +25,6 @@ import com.googlecode.gchart.client.GChart;
 public class AppEntryPoint extends ErrorHandlingEntryPoint {
 
 	private HTMLPanel mContainer;
-
-	static {
-		Styles.INSTANCE.reflection().ensureInjected();
-		String mediaQueries = " @media (max-width: 1024px) {." + Styles.INSTANCE.reflection().footer()
-				+ " {display:none;} .navbar-fixed-top {position:relative;} .navbar {margin-bottom:0px;} .container-fluid{padding-top:0px !important;}}"
-				+ "@media (min-width: 992px) {html,body,.container-fluid,.container-fluid>.row{height: 100%} .sidepanel{height: 100%;margin-bottom:0px;}}";
-		StyleInjector.injectAtEnd(mediaQueries);
-	}
 
 	/*
 	 * (non-Javadoc)
@@ -69,7 +60,7 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 	}
 
 	private void makeContainer() {
-		Styles.INSTANCE.reflection().ensureInjected();
+		Styles.STYLES_INSTANCE.reflection().ensureInjected();
 
 		mContainer = new HTMLPanel("");
 		mContainer.getElement().getStyle().setHeight(100, Unit.PCT);

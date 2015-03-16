@@ -75,7 +75,7 @@ public class NotificationsPage extends Page implements NavigationEventHandler, D
 	public NotificationsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		Styles.INSTANCE.reflection().ensureInjected();
+		Styles.STYLES_INSTANCE.reflection().ensureInjected();
 
 		createColumns();
 

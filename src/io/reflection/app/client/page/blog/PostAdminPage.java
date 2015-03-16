@@ -61,7 +61,7 @@ public class PostAdminPage extends Page implements GetPostsEventHandler, Navigat
 	public PostAdminPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		Styles.INSTANCE.blog().ensureInjected();
+		Styles.STYLES_INSTANCE.blog().ensureInjected();
 
 		createColumns();
 

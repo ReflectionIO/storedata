@@ -59,7 +59,7 @@ public class PostsPage extends Page implements NavigationEventHandler, GetPostsE
 	public PostsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		Styles.INSTANCE.blog().ensureInjected();
+		Styles.STYLES_INSTANCE.blog().ensureInjected();
 
 		PostController.get().setPreloaderPosts(preloader);
 

@@ -74,7 +74,7 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 	public PostPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		Styles.INSTANCE.blog().ensureInjected();
+		Styles.STYLES_INSTANCE.blog().ensureInjected();
 	}
 
 	/*
