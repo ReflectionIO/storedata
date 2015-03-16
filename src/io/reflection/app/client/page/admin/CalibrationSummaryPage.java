@@ -26,11 +26,13 @@ import io.reflection.app.client.page.part.ItemChart.Colour;
 import io.reflection.app.client.page.part.RankHover;
 import io.reflection.app.client.part.BootstrapGwtCellList;
 import io.reflection.app.client.part.Breadcrumbs;
+import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.CalibrationSummary;
 import io.reflection.app.datatypes.shared.FormType;
 import io.reflection.app.datatypes.shared.ListPropertyType;
 import io.reflection.app.datatypes.shared.ListTypeType;
 import io.reflection.app.datatypes.shared.Rank;
+import io.reflection.app.datatypes.shared.SimpleModelRun;
 import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.Collections;
@@ -39,12 +41,16 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import com.googlecode.gchart.client.GChart;
@@ -67,6 +73,9 @@ public class CalibrationSummaryPage extends Page implements NavigationEventHandl
 	private static final int FEED_FETCH_ID_PARAMETER_INDEX = 0;
 	public static final String VIEW_ACTION_NAME = "view";
 
+	@UiField CheckBox showMisses;
+	@UiField CheckBox showTop;
+	@UiField CheckBox showTail;
 	@UiField Breadcrumbs breadcrumbs;
 
 	private AppRankCell prototype = new AppRankCell(true).useFilter(false);
@@ -99,11 +108,19 @@ public class CalibrationSummaryPage extends Page implements NavigationEventHandl
 		}
 	};
 
+	@UiHandler({ "showMisses", "showTop", "showTail" })
+	void showMissesValueChanged(ValueChangeEvent<Boolean> event) {
+		drawChartData(chart);
+	}
+
 	public CalibrationSummaryPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		hits.setPageSize(Integer.MAX_VALUE);
 		misses.setPageSize(Integer.MAX_VALUE);
+
+		hits.setEmptyListWidget(new HTMLPanel("No items found"));
+		misses.setEmptyListWidget(new HTMLPanel("No items found"));
 
 		hitsProvider.addDataDisplay(hits);
 		missesProvider.addDataDisplay(misses);
@@ -130,7 +147,7 @@ public class CalibrationSummaryPage extends Page implements NavigationEventHandl
 		gc.getYAxis().setTickLength(0);
 
 		gc.getYAxis().setTicksPerGridline(1);
-		gc.setGridColor("#eff2f5");
+		gc.setGridColor("#EFF2F5");
 
 		gc.getYAxis().setAxisVisible(false);
 		gc.getXAxis().setAxisVisible(false);
@@ -142,12 +159,47 @@ public class CalibrationSummaryPage extends Page implements NavigationEventHandl
 		gc.getYAxis().setTickLabelPadding(10);
 
 		gc.addCurve(0);
-		setupChartCurve(gc.getCurve(0), Colour.PurpleColour);
+		setupChartCurve(gc.getCurve(0), Colour.GreenColour);
 
 		gc.addCurve(1);
 		setupChartCurve(gc.getCurve(1), Colour.PinkColour);
 
+		gc.addCurve(2);
+		setupChartCurveLine(gc.getCurve(2), Colour.PurpleColour);
+
 		gc.getYAxis().setOutOfBoundsMultiplier(.1);
+
+	}
+
+	private void setupChartCurveLine(Curve c, Colour col) {
+		c.getSymbol().setHoverSelectionWidth(1);
+		c.getSymbol().setHoverSelectionBackgroundColor("#929292");
+		c.getSymbol().setHoverSelectionBorderWidth(0);
+		c.getSymbol().setHoverSelectionFillThickness(1);
+
+		c.getSymbol().setSymbolType(SymbolType.LINE);
+		c.getSymbol().setHeight(0);
+		c.getSymbol().setWidth(0);
+		c.getSymbol().setFillThickness(1);
+
+		// use a vertical line for the selection cursor
+		c.getSymbol().setHoverSelectionSymbolType(SymbolType.XGRIDLINE);
+		// with annotation on top of this line (above chart)
+		c.getSymbol().setHoverLocation(AnnotationLocation.NORTHEAST);
+
+		c.getSymbol().setHoverYShift(15);
+		c.getSymbol().setHoverXShift(-62);
+
+		RankHover hoverWidget = new RankHover();
+		hoverWidget.setCssColor(col.getColour());
+		hoverWidget.setXAxisDataType(ItemChart.XAxisDataType.RankingXAxisDataType);
+
+		c.getSymbol().setHoverWidget(hoverWidget);
+
+		// tall brush so it touches independent of mouse y position
+		c.getSymbol().setBrushSize(25, 700);
+		// so only point-to-mouse x-distance matters for hit testing
+		c.getSymbol().setDistanceMetric(1, 0);
 
 	}
 
@@ -186,6 +238,7 @@ public class CalibrationSummaryPage extends Page implements NavigationEventHandl
 	private void drawChartData(GChart gc) {
 		Curve hits = gc.getCurve(0);
 		Curve misses = gc.getCurve(1);
+		Curve calibrated = gc.getCurve(2);
 
 		if (hits != null) {
 			hits.clearPoints();
@@ -195,29 +248,55 @@ public class CalibrationSummaryPage extends Page implements NavigationEventHandl
 			misses.clearPoints();
 		}
 
-		boolean isRevenue = false;
-		if (summary.hits != null) {
-			for (Rank rank : summary.hits) {
-				hits.addPoint(rank.position.doubleValue(), (isRevenue = (rank.downloads == null)) ? rank.revenue.doubleValue() : rank.downloads.doubleValue());
-			}
+		if (calibrated != null) {
+			calibrated.clearPoints();
 		}
 
-		if (summary.misses != null) {
-			for (Rank rank : summary.misses) {
-				misses.addPoint(0, (isRevenue = (rank.downloads == null)) ? rank.revenue.doubleValue() : rank.downloads.doubleValue());
+		if (summary != null) {
+			boolean isRevenue = false;
+			if (summary.hits != null) {
+				for (Rank rank : summary.hits) {
+					hits.addPoint(rank.position.doubleValue(),
+							(isRevenue = (rank.downloads == null)) ? rank.revenue.doubleValue() : rank.downloads.doubleValue());
+				}
 			}
+
+			if (showMisses.getValue() == Boolean.TRUE && summary.misses != null) {
+				for (Rank rank : summary.misses) {
+					misses.addPoint(0, (isRevenue = (rank.downloads == null)) ? rank.revenue.doubleValue() : rank.downloads.doubleValue());
+				}
+			}
+
+			((RankHover) hits.getSymbol().getHoverWidget()).setYAxisDataType(isRevenue ? ItemChart.YAxisDataType.RevenueYAxisDataType
+					: ItemChart.YAxisDataType.DownloadsYAxisDataType);
+			((RankHover) hits.getSymbol().getHoverWidget()).setCurrency(io.reflection.app.shared.util.FormattingHelper
+					.getCountryCurrency(summary.feedFetch.country.toUpperCase()));
+
+			((RankHover) misses.getSymbol().getHoverWidget()).setYAxisDataType(isRevenue ? ItemChart.YAxisDataType.RevenueYAxisDataType
+					: ItemChart.YAxisDataType.DownloadsYAxisDataType);
+			((RankHover) misses.getSymbol().getHoverWidget()).setCurrency(currency);
+
+			if (summary.simpleModelRun != null) {
+				int start = (showTop.getValue() == Boolean.TRUE ? 1 : summary.hits.get(0).position.intValue());
+				int end = (showTail.getValue() == Boolean.TRUE ? 200 : summary.hits.get(summary.hits.size() - 1).position.intValue());
+
+				for (int i = start; i <= end; i++) {
+					calibrated.addPoint(i, prediction(summary.simpleModelRun, i));
+				}
+			}
+
 		}
-
-		((RankHover) hits.getSymbol().getHoverWidget()).setYAxisDataType(isRevenue ? ItemChart.YAxisDataType.RevenueYAxisDataType
-				: ItemChart.YAxisDataType.DownloadsYAxisDataType);
-		((RankHover) hits.getSymbol().getHoverWidget()).setCurrency(io.reflection.app.shared.util.FormattingHelper.getCountryCurrency(summary.feedFetch.country
-				.toUpperCase()));
-
-		((RankHover) misses.getSymbol().getHoverWidget()).setYAxisDataType(isRevenue ? ItemChart.YAxisDataType.RevenueYAxisDataType
-				: ItemChart.YAxisDataType.DownloadsYAxisDataType);
-		((RankHover) misses.getSymbol().getHoverWidget()).setCurrency(currency);
 
 		setChartLoading(gc, false);
+	}
+
+	/**
+	 * @param simpleModelRun
+	 * @param possition
+	 * @return
+	 */
+	private double prediction(SimpleModelRun simpleModelRun, int possition) {
+		return (double) (summary.simpleModelRun.b.doubleValue() * Math.pow(possition, -summary.simpleModelRun.a.doubleValue()));
 	}
 
 	private void setChartLoading(GChart gc, boolean loading) {
@@ -324,7 +403,7 @@ public class CalibrationSummaryPage extends Page implements NavigationEventHandl
 	@Override
 	public void getCalibrationSummarySuccess(GetCalibrationSummaryRequest input, GetCalibrationSummaryResponse output) {
 		if (output == null || output.status == StatusType.StatusTypeFailure || output.calibrationSummary == null) {
-			// show a message
+			showFailed();
 		} else {
 			summaryListType = output.listType;
 			summaryListProperty = output.listProperty;
@@ -342,7 +421,25 @@ public class CalibrationSummaryPage extends Page implements NavigationEventHandl
 	 */
 	@Override
 	public void getCalibrationSummaryFailure(GetCalibrationSummaryRequest input, Throwable caught) {
-		// show a message
+		showFailed();
+	}
+
+	private void showFailed() {
+		this.summary = null;
+
+		refreshBreadcrumbs();
+
+		title.setInnerHTML("Not found");
+		description.setInnerHTML("Calibration summary of feed fetch " + feedFetchParam + " was not found.");
+
+		hitsProvider.setList(Collections.<Rank> emptyList());
+		missesProvider.setList(Collections.<Rank> emptyList());
+
+		drawChartData(chart);
+
+		showMisses.setEnabled(true);
+		showTop.setEnabled(true);
+		showTail.setEnabled(true);
 	}
 
 	private void show(CalibrationSummary summary) {
@@ -357,6 +454,9 @@ public class CalibrationSummaryPage extends Page implements NavigationEventHandl
 			hitsProvider.setList(Collections.<Rank> emptyList());
 			missesProvider.setList(Collections.<Rank> emptyList());
 
+			showMisses.setEnabled(false);
+			showTop.setEnabled(false);
+			showTail.setEnabled(false);
 		} else {
 			String status = " <span class=\"label label-info\">PARTIAL</span>";
 			boolean partial = true;
@@ -393,11 +493,16 @@ public class CalibrationSummaryPage extends Page implements NavigationEventHandl
 					+ " misses) based on "
 					+ summaryListProperty.toString()
 					+ "."
-					+ (summary.simpleModelRun == null ? ""
-							: ("<br />Simple model run fitted with co-efficients:" + simpleModelRunCoefficients() + (partial ? "" : "Additional information:"
-									+ simpleModelRunAdditionalInfo()))));
+					+ (summary.simpleModelRun == null ? "" : ("<div class=\"" + Styles.STYLES_INSTANCE.reflectionMainStyle().headingStyleHeadingSix()
+							+ "\">Predictions</div>" + simpleModelRun1And200() + "<div class=\""
+							+ Styles.STYLES_INSTANCE.reflectionMainStyle().headingStyleHeadingSix() + "\">Simple model run fitted with co-efficients</div>"
+							+ simpleModelRunCoefficients() + (partial ? "" : "Additional information:" + simpleModelRunAdditionalInfo()))));
 
 			drawChartData(chart);
+
+			showMisses.setEnabled(true);
+			showTop.setEnabled(true);
+			showTail.setEnabled(true);
 		}
 	}
 
@@ -410,6 +515,24 @@ public class CalibrationSummaryPage extends Page implements NavigationEventHandl
 				+ summary.simpleModelRun.regressionSumSquares.doubleValue() + "</li><li>a standard error = "
 				+ summary.simpleModelRun.aStandardError.doubleValue() + "</li><li>b standard error = " + summary.simpleModelRun.bStandardError.doubleValue()
 				+ "</li></ul>";
+	}
+
+	private String simpleModelRun1And200() {
+		String top = "None";
+		String bottom = "None";
+
+		if (summaryListProperty == ListPropertyType.ListPropertyTypeDownloads) {
+			top = Integer.toString((int) prediction(summary.simpleModelRun, 1));
+			bottom = Integer.toString((int) prediction(summary.simpleModelRun, 200));
+		} else if (summaryListProperty == ListPropertyType.ListPropertyTypeRevenue) {
+			top = FormattingHelper.asWholeMoneyString(currency, (float) prediction(summary.simpleModelRun, 1));
+			bottom = FormattingHelper.asWholeMoneyString(currency, (float) prediction(summary.simpleModelRun, 200));
+		}
+
+		String made = (summaryListProperty == ListPropertyType.ListPropertyTypeRevenue ? "earned" : "had");
+		String units = (summaryListProperty == ListPropertyType.ListPropertyTypeRevenue ? "" : " downloads");
+
+		return "Item at rank number 1 should have " + made + " " + top + units + ", while the one at rank 200 should have " + made + " " + bottom + units + ".";
 	}
 
 	/**
