@@ -145,7 +145,9 @@ public class ItemChart extends GChart {
 
 	public enum Colour {
 		PurpleColour("#6D69C5", Images.INSTANCE.purpleCirle().getSafeUri().asString()),
-		PinkColour("#F16F97", Images.INSTANCE.pinkCirle().getSafeUri().asString()), ;
+		PinkColour("#F16F97", Images.INSTANCE.pinkCirle().getSafeUri().asString()),
+		GreenColour("#46E4BF", Images.INSTANCE.greenCirle().getSafeUri().asString()),
+		OrangeColour("#E2B077", Images.INSTANCE.orangeCirle().getSafeUri().asString()), ;
 
 		private String Colour;
 		private String imageUrl;
