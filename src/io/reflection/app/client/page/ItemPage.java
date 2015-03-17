@@ -34,6 +34,7 @@ import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.StoreController;
 import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
+import io.reflection.app.client.handler.TogglePanelEventHandler;
 import io.reflection.app.client.helper.FormattingHelper;
 import io.reflection.app.client.highcharts.Chart;
 import io.reflection.app.client.highcharts.ChartHelper;
@@ -44,6 +45,7 @@ import io.reflection.app.client.page.part.ItemSidePanel;
 import io.reflection.app.client.page.part.ItemTopPanel;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.datatypes.ItemRevenue;
+import io.reflection.app.client.part.navigation.Header.PanelType;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.client.res.flags.Styles;
 import io.reflection.app.datatypes.shared.Item;
@@ -72,7 +74,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
 
 public class ItemPage extends Page implements NavigationEventHandler, GetItemRanksEventHandler, GetItemSalesRanksEventHandler, FilterEventHandler,
-		GetLinkedAccountItemEventHandler {
+		GetLinkedAccountItemEventHandler, TogglePanelEventHandler {
 
 	private static ItemPageUiBinder uiBinder = GWT.create(ItemPageUiBinder.class);
 
@@ -243,6 +245,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		register(DefaultEventBus.get().addHandlerToSource(GetItemRanksEventHandler.TYPE, RankController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(GetItemSalesRanksEventHandler.TYPE, RankController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(GetLinkedAccountItemEventHandler.TYPE, LinkedAccountController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(TogglePanelEventHandler.TYPE, NavigationController.get().getHeader(), this));
 
 		if (chart == null) {
 			chart = ChartHelper.createAndInjectChart(chartContainer);
@@ -688,6 +691,19 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			tabs.remove(REVENUE_CHART_TYPE);
 			tabs.remove(DOWNLOADS_CHART_TYPE);
 
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.TogglePanelEventHandler#leftPanelToggled(io.reflection.app.client.part.navigation.Header.PanelType, boolean,
+	 * boolean)
+	 */
+	@Override
+	public void panelToggled(PanelType panelType, boolean wasOpen, boolean isOpen) {
+		if (PanelType.PanelLeftMenuType.equals(panelType)) {
+			chart.resize();
 		}
 	}
 

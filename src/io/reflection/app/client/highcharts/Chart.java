@@ -40,6 +40,9 @@ import java.util.Map;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayString;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
@@ -94,6 +97,13 @@ public class Chart extends Composite {
 
 	public Chart inject() {
 		chart = NativeHighcharts.nativeChart(options);
+		resize();
+		Window.addResizeHandler(new ResizeHandler() {
+			@Override
+			public void onResize(ResizeEvent event) {
+				resize();
+			}
+		});
 		return this;
 	}
 
@@ -494,8 +504,27 @@ public class Chart extends Composite {
 		JavaScriptObjectHelper.setObjectProperty(options, OPTION_COLORS, colors);
 	}
 
+	public void resize() {
+		if (chart != null) {
+			if (chartWrapper.getElement().getClientWidth() > 1920) {
+				setSize(chartWrapper.getElement().getClientWidth(), 750);
+			} else if (chartWrapper.getElement().getClientWidth() > 1680) {
+				setSize(chartWrapper.getElement().getClientWidth(), 650);
+			} else if (chartWrapper.getElement().getClientWidth() > 1280) {
+				setSize(chartWrapper.getElement().getClientWidth(), 550);
+			} else if (chartWrapper.getElement().getClientWidth() > 768) {
+				setSize(chartWrapper.getElement().getClientWidth(), 450);
+			} else if (chartWrapper.getElement().getClientWidth() > 480) {
+				setSize(chartWrapper.getElement().getClientWidth(), 350);
+			} else {
+				setSize(chartWrapper.getElement().getClientWidth(), 250);
+			}
+			reflow();
+		}
+	}
+
 	public void setSize(int width, int height) {
-		NativeChart.nativeSetSize(chart, width, height, true);
+		NativeChart.nativeSetSize(chart, width, height, false);
 	}
 
 	public void setTitle(JavaScriptObject title, JavaScriptObject subtitle) {
