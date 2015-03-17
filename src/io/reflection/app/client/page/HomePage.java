@@ -12,15 +12,20 @@ import io.reflection.app.client.helper.UserAgentHelper;
 import io.reflection.app.client.res.Styles;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.ScriptInjector;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.ScriptElement;
 import com.google.gwt.dom.client.StyleInjector;
 import com.google.gwt.dom.client.VideoElement;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Window.ScrollEvent;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
@@ -37,7 +42,11 @@ public class HomePage extends Page {
 	interface HomePageUiBinder extends UiBinder<Widget, HomePage> {}
 
 	@UiField InlineHyperlink applyNowBtn;
-
+	@UiField Anchor linkScrollToAnchor;
+	@UiField Element sectionMain;
+	@UiField Element sectionSizeShadowLayer;
+	@UiField Element sectionHowIntelHelps;
+	@UiField Anchor linkToPageTop;
 	// @UiField InlineHyperlink homeBtn;
 	@UiField HTMLPanel leaderBoardScreenshot;
 	@UiField HTMLPanel analysisScreenshot;
@@ -47,7 +56,8 @@ public class HomePage extends Page {
 	Element picture2, source3, source4;
 	Element picture3, source5, source6;
 
-	private static final ScriptElement scriptCustom = DOMHelper.getJSScriptFromUrl("js/scripts.180cd4275030bac3e6c6f190e5c98813.js");
+	// private static final ScriptElement scriptGoogleMap = DOMHelper
+	// .getJSScriptFromUrl("https://maps.googleapis.com/maps/api/js?key=AIzaSyD7mXBIrN4EgMflWKxUOK6C9rfoDMa5zyo&callback=generateMap");
 	private static final ScriptElement scriptRespond = DOMHelper.getJSScriptFromUrl("js/respond.min.js");
 
 	private static final ScriptElement scriptPictureFill = DOMHelper.getJSScriptFromUrl("js/picturefill.2.2.0.min.js", "async");
@@ -67,6 +77,9 @@ public class HomePage extends Page {
 		applyNowBtn.setTargetHistoryToken(PageType.RegisterPageType.asTargetHistoryToken("requestinvite"));
 
 		appendConditionalTags();
+
+		initScrollEffect();
+
 	}
 
 	public static void applyHomePageTweeks() {
@@ -163,6 +176,67 @@ public class HomePage extends Page {
 		analysisScreenshot.getElement().appendChild(picture3);
 	}
 
+	@UiHandler("linkScrollToAnchor")
+	void onLinkScrollToAnchorClicked(ClickEvent event) {
+		event.preventDefault();
+		// String href = linkScrollToAnchor.getElement().getAttribute("href");
+		int navHeight = 60;
+		int targetTop = sectionHowIntelHelps.getOffsetTop();
+		DOMHelper.nativeScrollTop(targetTop - navHeight, 455, "swing");
+	}
+
+	@UiHandler("linkToPageTop")
+	void onLinkToPageTopClicked(ClickEvent event) {
+		event.preventDefault();
+		DOMHelper.nativeScrollTop(0, "slow", "swing");
+	}
+
+	private void initScrollEffect() {
+		if (DOMHelper.getHtmlElement().hasClassName("csstransforms") && DOMHelper.getHtmlElement().hasClassName("no-touch")) {
+			final int breakpointVertical = 680;
+			final int breakpointHorizontal = 980;
+			Window.addWindowScrollHandler(new Window.ScrollHandler() {
+				@Override
+				public void onWindowScroll(ScrollEvent event) {
+					int windowHeight = Window.getClientHeight();
+					int windowWidth = Window.getClientWidth();
+					int scrollTop = Window.getScrollTop();
+					if (windowHeight >= breakpointVertical && windowWidth >= breakpointHorizontal) {
+						double scrollAsPercentageOfWindowHeight = ((double) scrollTop / windowHeight) * 50.0;
+						double scale = 1 - (scrollAsPercentageOfWindowHeight / 100.0);
+						double opacityScale = 1 - ((scrollAsPercentageOfWindowHeight * 2.5) / 100.0);
+						double opacityScaleShadowLayer = 0 + ((scrollAsPercentageOfWindowHeight * 2.0) / 85.0);
+						sectionMain.setAttribute("style", "-ms-transform: scale(" + scale + "); -webkit-transform : scale(" + scale + "); transform : scale("
+								+ scale + "); top: " + -(double) scrollTop / 4.3 + "px; opacity: " + opacityScale);
+						sectionSizeShadowLayer.getStyle().setOpacity(opacityScaleShadowLayer);
+					} else {
+						sectionMain.setAttribute("style", "-ms-transform: scale(1); -webkit-transform : scale(1); transform : scale(1); top: 0px; opacity: 1");
+						sectionSizeShadowLayer.getStyle().setOpacity(0);
+					}
+				}
+			});
+
+		}
+	}
+
+	private void initGoogleMap() {
+		// nativeCalleGenerateMap();
+		ScriptInjector.fromUrl("js/scripts.180cd4275030bac3e6c6f190e5c98813.js").setWindow(ScriptInjector.TOP_WINDOW).inject();
+		// ScriptInjector.fromUrl("https://maps.googleapis.com/maps/api/js?key=AIzaSyD7mXBIrN4EgMflWKxUOK6C9rfoDMa5zyo&callback=generateMap")
+		// .setWindow(ScriptInjector.TOP_WINDOW).inject();
+		nativeCalleGenerateMap();
+	}
+
+	native void nativeCalleGenerateMap() /*-{
+		$wnd.$
+				.getScript(
+						"https://maps.googleapis.com/maps/api/js?key=AIzaSyD7mXBIrN4EgMflWKxUOK6C9rfoDMa5zyo&callback=generateMap")
+				.done(function(script, textStatus) {
+					$wnd.generateMap();
+				}).fail(function(jqxhr, settings, exception) {
+				});
+	}-*/;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -174,10 +248,7 @@ public class HomePage extends Page {
 
 		Window.scrollTo(0, toTop);
 
-		// ((Header) NavigationController.get().getHeader()).setVisible(false);
-
-		// Append to Body
-		Document.get().getBody().appendChild(scriptCustom);
+		initGoogleMap();
 	}
 
 	/*
@@ -193,8 +264,7 @@ public class HomePage extends Page {
 
 		toTop = Window.getScrollTop();
 
-		// Romove from Body
-		Document.get().getBody().removeChild(scriptCustom);
+		// Document.get().getHead().removeChild(scriptGoogleMap);
 	}
 
 	private void appendConditionalTags() {
