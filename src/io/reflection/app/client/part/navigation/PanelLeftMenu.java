@@ -38,6 +38,7 @@ import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -88,8 +89,8 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 	@UiField InlineHyperlink leaderboardLink;
 	@UiField InlineHyperlink adminFeedBrowserLink;
 	@UiField InlineHyperlink adminSimpleModelRunLink;
-	@UiField InlineHyperlink adminUsersLink;
 	@UiField InlineHyperlink adminDataAccountFetchesLink;
+	@UiField SpanElement usersCount;
 
 	private List<LIElement> items;
 	private List<LIElement> highlightedItems = new ArrayList<LIElement>();
@@ -326,9 +327,7 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 	 */
 	@Override
 	public void receivedUsersCount(Long count) {
-		if (adminUsersLink.isAttached()) {
-			adminUsersLink.setText(adminUsersLink.getText() + " (" + count.toString() + ")");
-		}
+		usersCount.setInnerText("(" + count.toString() + ")");
 	}
 
 	/*
