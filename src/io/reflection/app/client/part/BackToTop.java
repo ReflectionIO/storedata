@@ -7,7 +7,6 @@
 //
 package io.reflection.app.client.part;
 
-import io.reflection.app.client.helper.DOMHelper;
 import io.reflection.app.client.res.Styles;
 
 import com.google.gwt.core.client.GWT;
@@ -51,7 +50,13 @@ public class BackToTop extends Composite {
 
 	@UiHandler("link")
 	void onBackToTopClicked(ClickEvent event) {
-		DOMHelper.nativeScrollTop(0, 300, "swing");
+		nativeScrollTop();
 	}
+
+	static native void nativeScrollTop()/*-{
+		$wnd.$('html, body').animate({
+			scrollTop : 0
+		}, 300, 'swing');
+	}-*/;
 
 }

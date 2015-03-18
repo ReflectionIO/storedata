@@ -78,16 +78,4 @@ public class DOMHelper {
 		}
 	}
 
-	public static native void nativeScrollTop(int position, int duration, String easing)/*-{
-		$wnd.$('html, body').animate({
-			scrollTop : position
-		}, duration, easing);
-	}-*/;
-
-	public static native void nativeScrollTop(int position, String duration, String easing)/*-{
-		$wnd.$('html, body').animate({
-			scrollTop : position
-		}, duration, easing);
-	}-*/;
-
 }

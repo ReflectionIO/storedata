@@ -16,8 +16,8 @@
 		<!-- </div> -->
 
 		<div class="{STYLES_INSTANCE.homePageStyle.windowHeightScrollEffectContainer} {STYLES_INSTANCE.homePageStyle.landingSectionMainScrollEffectContainer}">
-			<div ui:field="sectionSizeShadowLayer" class="{STYLES_INSTANCE.homePageStyle.sectionSizeShadowLayer}"></div>
-			<section ui:field="sectionMain" class="{STYLES_INSTANCE.homePageStyle.landingSectionMain}">
+			<div class="{STYLES_INSTANCE.homePageStyle.sectionSizeShadowLayer}"></div>
+			<section class="{STYLES_INSTANCE.homePageStyle.landingSectionMain}">
 				<div class="{STYLES_INSTANCE.homePageStyle.landingSectionMain__content}">
 					<div class="{STYLES_INSTANCE.homePageStyle.landingSectionMain__columnOne}">
 						<div>
@@ -28,7 +28,7 @@
 								Apply for free access to our data.
 							</p>
 							<div class="{STYLES_INSTANCE.homePageStyle.actionsContainer}">
-								<g:Anchor ui:field="linkScrollToAnchor" href="#" styleName="icon-angle-right">How Intelligence Helps</g:Anchor>
+								<a href="#anchor-how-intelligence-helps" class="icon-angle-right js-scroll-to-anchor">How Intelligence Helps</a>
 								<g:InlineHyperlink ui:field="applyNowBtn" styleName="{STYLES_INSTANCE.homePageStyle.refButtonCtaLarge}">Apply Now</g:InlineHyperlink>
 							</div>
 						</div>
@@ -69,7 +69,7 @@
 			</section>
 		</div>
 
-		<section ui:field="sectionHowIntelHelps" class="{STYLES_INSTANCE.homePageStyle.landingSectionInsights}">
+		<section class="{STYLES_INSTANCE.homePageStyle.landingSectionInsights}" id="anchor-how-intelligence-helps">
 			<g:HTMLPanel styleName="{STYLES_INSTANCE.homePageStyle.landingSectionInsights__column_one}" ui:field="leaderBoardScreenshot" />
 			<div class="{STYLES_INSTANCE.homePageStyle.landingColumnThin}">
 				<div class="{STYLES_INSTANCE.homePageStyle.landingColumnThin__content}">
@@ -222,10 +222,10 @@
 
 			<g:InlineHyperlink targetHistoryToken="{TermsPageType.asTargetHistoryToken}" styleName="{STYLES_INSTANCE.homePageStyle.landingFooter__inlineLink}">Terms &amp; Conditions and Privacy Policy</g:InlineHyperlink>
 			<span class="{STYLES_INSTANCE.homePageStyle.landingFooter__copyright}">&copy;2015 Reflection. All Rights Reserved</span>
-			<g:Anchor ui:field="linkToPageTop" href="#" styleName="{STYLES_INSTANCE.homePageStyle.linkToPageTop}">
+			<a href="#" class="{STYLES_INSTANCE.homePageStyle.linkToPageTop} js-scroll-to-page-top">
 				<span class="{STYLES_INSTANCE.homePageStyle.borderRadiusPoint}"></span>
 				<span class="{STYLES_INSTANCE.homePageStyle.linkToPageTop__text}">Back to Top</span>
-			</g:Anchor>
+			</a>
 		</footer>
 
 
