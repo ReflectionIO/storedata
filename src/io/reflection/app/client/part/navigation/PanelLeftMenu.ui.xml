@@ -99,7 +99,10 @@
 									<g:InlineHyperlink targetHistoryToken="{CategoriesPageType.asTargetHistoryToken}">Categories</g:InlineHyperlink>
 								</li>
 								<li ui:field="adminUsersItem">
-									<g:InlineHyperlink ui:field="adminUsersLink" targetHistoryToken="{UsersPageType.asTargetHistoryToken}">Users</g:InlineHyperlink>
+									<g:InlineHyperlink targetHistoryToken="{UsersPageType.asTargetHistoryToken}">
+										Users
+										<span ui:field="usersCount"></span>
+									</g:InlineHyperlink>
 								</li>
 								<li ui:field="adminRolesItem">
 									<g:InlineHyperlink targetHistoryToken="{RolesPageType.asTargetHistoryToken}">Roles</g:InlineHyperlink>
