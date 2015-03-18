@@ -136,6 +136,9 @@ public interface Styles extends ClientBundle {
 
 		String browserupgrade();
 
+		@ClassName("button-cancel")
+		String buttonCancel();
+
 		@ClassName("button-example-code-container")
 		String buttonExampleCodeContainer();
 
