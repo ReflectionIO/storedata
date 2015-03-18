@@ -13,6 +13,7 @@ import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.NavigationEventHandler;
+import io.reflection.app.client.handler.TogglePanelEventHandler;
 import io.reflection.app.client.handler.user.SessionEventHandler;
 import io.reflection.app.client.handler.user.UserPowersEventHandler;
 import io.reflection.app.client.helper.DOMHelper;
@@ -60,6 +61,12 @@ public class Header extends Composite implements NavigationEventHandler, Session
 	interface HeaderUiBinder extends UiBinder<Widget, Header> {}
 
 	private ReflectionMainStyles style = Styles.STYLES_INSTANCE.reflectionMainStyle();
+
+	public enum PanelType {
+		PanelLeftMenuType,
+		PanelRightAccountType,
+		PanelRightSearchType
+	}
 
 	@UiField HTMLPanel hamburgerPanel;
 	@UiField Button hamburgerBtn;
@@ -214,6 +221,8 @@ public class Header extends Composite implements NavigationEventHandler, Session
 		}
 		DOMHelper.toggleClassName(hamburgerBtn.getElement(), style.isSelected());
 		UserAgentHelper.setMainContentWidthForIE();
+		DefaultEventBus.get().fireEventFromSource(
+				new TogglePanelEventHandler.ChangedEvent(PanelType.PanelLeftMenuType, !panelLeftWasClosed, isPanelLeftMenuOpen()), this);
 	}
 
 	@UiHandler("applyBtn")
@@ -295,6 +304,8 @@ public class Header extends Composite implements NavigationEventHandler, Session
 			Document.get().getBody().removeClassName(style.panelLeftOpen());
 			hamburgerBtn.getElement().removeClassName(style.isSelected());
 		}
+		DefaultEventBus.get().fireEventFromSource(
+				new TogglePanelEventHandler.ChangedEvent(PanelType.PanelLeftMenuType, !panelLeftWasClosed, isPanelLeftMenuOpen()), this);
 
 		closePanelRightAccount();
 
