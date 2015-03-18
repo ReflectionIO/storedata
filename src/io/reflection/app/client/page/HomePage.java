@@ -12,15 +12,20 @@ import io.reflection.app.client.helper.UserAgentHelper;
 import io.reflection.app.client.res.Styles;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.ScriptInjector;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.ScriptElement;
 import com.google.gwt.dom.client.StyleInjector;
 import com.google.gwt.dom.client.VideoElement;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Window.ScrollEvent;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
@@ -37,7 +42,11 @@ public class HomePage extends Page {
 	interface HomePageUiBinder extends UiBinder<Widget, HomePage> {}
 
 	@UiField InlineHyperlink applyNowBtn;
-
+	@UiField Anchor linkScrollToAnchor;
+	@UiField Element sectionMain;
+	@UiField Element sectionSizeShadowLayer;
+	@UiField Element sectionHowIntelHelps;
+	@UiField Anchor linkToPageTop;
 	// @UiField InlineHyperlink homeBtn;
 	@UiField HTMLPanel leaderBoardScreenshot;
 	@UiField HTMLPanel analysisScreenshot;
@@ -47,7 +56,6 @@ public class HomePage extends Page {
 	Element picture2, source3, source4;
 	Element picture3, source5, source6;
 
-	private static final ScriptElement scriptCustom = DOMHelper.getJSScriptFromUrl("js/scripts.180cd4275030bac3e6c6f190e5c98813.js");
 	private static final ScriptElement scriptRespond = DOMHelper.getJSScriptFromUrl("js/respond.min.js");
 
 	private static final ScriptElement scriptPictureFill = DOMHelper.getJSScriptFromUrl("js/picturefill.2.2.0.min.js", "async");
@@ -67,6 +75,11 @@ public class HomePage extends Page {
 		applyNowBtn.setTargetHistoryToken(PageType.RegisterPageType.asTargetHistoryToken("requestinvite"));
 
 		appendConditionalTags();
+
+		initScrollEffect();
+
+		nativeInitMap();
+
 	}
 
 	public static void applyHomePageTweeks() {
@@ -163,6 +176,152 @@ public class HomePage extends Page {
 		analysisScreenshot.getElement().appendChild(picture3);
 	}
 
+	@UiHandler("linkScrollToAnchor")
+	void onLinkScrollToAnchorClicked(ClickEvent event) {
+		event.preventDefault();
+		// String href = linkScrollToAnchor.getElement().getAttribute("href");
+		int navHeight = 60;
+		int targetTop = sectionHowIntelHelps.getOffsetTop();
+		DOMHelper.nativeScrollTop(targetTop - navHeight, 455, "swing");
+	}
+
+	@UiHandler("linkToPageTop")
+	void onLinkToPageTopClicked(ClickEvent event) {
+		event.preventDefault();
+		DOMHelper.nativeScrollTop(0, "slow", "swing");
+	}
+
+	private void initScrollEffect() {
+		if (DOMHelper.getHtmlElement().hasClassName("csstransforms") && DOMHelper.getHtmlElement().hasClassName("no-touch")) {
+			final int breakpointVertical = 680;
+			final int breakpointHorizontal = 980;
+			Window.addWindowScrollHandler(new Window.ScrollHandler() {
+				@Override
+				public void onWindowScroll(ScrollEvent event) {
+					int windowHeight = Window.getClientHeight();
+					int windowWidth = Window.getClientWidth();
+					int scrollTop = Window.getScrollTop();
+					if (windowHeight >= breakpointVertical && windowWidth >= breakpointHorizontal) {
+						double scrollAsPercentageOfWindowHeight = ((double) scrollTop / windowHeight) * 50.0;
+						double scale = 1 - (scrollAsPercentageOfWindowHeight / 100.0);
+						double opacityScale = 1 - ((scrollAsPercentageOfWindowHeight * 2.5) / 100.0);
+						double opacityScaleShadowLayer = 0 + ((scrollAsPercentageOfWindowHeight * 2.0) / 85.0);
+						sectionMain.setAttribute("style", "-ms-transform: scale(" + scale + "); -webkit-transform : scale(" + scale + "); transform : scale("
+								+ scale + "); top: " + -(double) scrollTop / 4.3 + "px; opacity: " + opacityScale);
+						sectionSizeShadowLayer.getStyle().setOpacity(opacityScaleShadowLayer);
+					} else {
+						sectionMain.setAttribute("style", "-ms-transform: scale(1); -webkit-transform : scale(1); transform : scale(1); top: 0px; opacity: 1");
+						sectionSizeShadowLayer.getStyle().setOpacity(0);
+					}
+				}
+			});
+
+		}
+	}
+
+	native void nativeInitMap() /*-{
+
+		$wnd.refMap; // global map object
+		$wnd.generateMap = function() {
+			$wnd.refMap = new $wnd.reflectionMap();
+			mapTop = $wnd.$('.landing-section-map').offset().top;
+			dropped = false;
+
+			if ($wnd.$('.no-touch').length > 0
+					&& $wnd.$($wnd).scrollTop() < (mapTop - ($wnd.$($wnd)
+							.height() / 2))) {
+				$wnd.$($wnd).on(
+						"scroll",
+						function() {
+							if (!dropped) {
+								if ($wnd.$($wnd).scrollTop() > (mapTop - ($wnd
+										.$($wnd).height() / 2))) {
+									$wnd.refMap.addMarker();
+									dropped = true;
+								}
+							}
+						});
+			} else {
+				$wnd.refMap.addMarker();
+				dropped = true;
+			}
+		}
+
+		$wnd.reflectionMap = function() {
+			var isDraggable = $wnd.$('html.touch').length == 0;
+			var mapStyles = [ {
+				featureType : "poi",
+				elementType : "labels",
+				stylers : [ {
+					visibility : "off"
+				} ]
+			} ];
+			this.myLatlng = new $wnd.google.maps.LatLng(51.518680, -0.136578);
+			this.mapOptions = {
+				zoom : 17,
+				center : this.myLatlng,
+				disableDefaultUI : true,
+				scrollwheel : false,
+				streetViewControl : true,
+				draggable : isDraggable,
+				styles : mapStyles
+			}
+			this.markerImage = {
+				url : 'images/contact/Map_Pin@2x.png',
+				size : new $wnd.google.maps.Size(30, 43),
+				scaledSize : new $wnd.google.maps.Size(30, 43),
+				anchor : new $wnd.google.maps.Point(30, 43)
+			};
+			this.map = new $wnd.google.maps.Map($doc
+					.getElementById("js-map-location"), this.mapOptions);
+
+			this.addMarker = function() {
+				var marker = this.marker = new $wnd.google.maps.Marker({
+					position : this.myLatlng,
+					map : this.map,
+					title : "40-44 Newman Street",
+					icon : this.markerImage,
+					animation : $wnd.google.maps.Animation.DROP
+				});
+
+				var contentString = '<div class="map__info-box">'
+						+ '<h1>Reflection</h1>'
+						+ '<div class="map__text-content">'
+						+ '<p>40-44 Newman Street<br />London<br />W1T 1QD</p>'
+						+ '<p onclick="window.refMap.toggleStreetView();" class="map__street-view-link">Streetview</p>'
+						+ '<p><a href="https://www.google.co.uk/maps/place/44+Newman+St,+Marylebone,+London+W1T+1QD/@51.5187779,-0.1364135,17z/data=!4m7!1m4!3m3!1s0x48761b2b95192b1b:0xc2fcb9753b8ff12b!2s44+Newman+St,+Marylebone,+London+W1T+1QD!3b1!3m1!1s0x48761b2b95192b1b:0xc2fcb9753b8ff12b" target="_blank">Open in Google Maps</a></p></div></div><div class="map__info-box__down-arrow"></div>';
+
+				var infowindow = new $wnd.google.maps.InfoWindow({
+					content : contentString
+				});
+
+				$wnd.google.maps.event.addListener(marker, 'click', function() {
+					infowindow.open(this.map, marker);
+				});
+			}
+
+			this.panorama = this.map.getStreetView();
+			this.panorama.setPosition(new $wnd.google.maps.LatLng(51.518660,
+					-0.136540));
+			this.panorama.setPov(({
+				heading : 40,
+				pitch : 0
+			}));
+
+			this.toggleStreetView = function() {
+				var toggle = this.panorama.getVisible();
+				if (toggle == false) {
+					this.panorama.setVisible(true);
+				} else {
+					this.panorama.setVisible(false);
+				}
+			}
+
+			return this;
+		}
+
+	}-*/;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -174,10 +333,9 @@ public class HomePage extends Page {
 
 		Window.scrollTo(0, toTop);
 
-		// ((Header) NavigationController.get().getHeader()).setVisible(false);
+		ScriptInjector.fromUrl("https://maps.googleapis.com/maps/api/js?key=AIzaSyD7mXBIrN4EgMflWKxUOK6C9rfoDMa5zyo&callback=generateMap")
+				.setWindow(ScriptInjector.TOP_WINDOW).inject();
 
-		// Append to Body
-		Document.get().getBody().appendChild(scriptCustom);
 	}
 
 	/*
@@ -189,12 +347,8 @@ public class HomePage extends Page {
 	protected void onDetach() {
 		super.onDetach();
 
-		// ((Header) NavigationController.get().getHeader()).setVisible(true);
-
 		toTop = Window.getScrollTop();
 
-		// Romove from Body
-		Document.get().getBody().removeChild(scriptCustom);
 	}
 
 	private void appendConditionalTags() {
