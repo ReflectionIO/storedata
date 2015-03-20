@@ -703,6 +703,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public void panelToggled(PanelType panelType, boolean wasOpen, boolean isOpen) {
 		if (PanelType.PanelLeftMenuType.equals(panelType)) {
+			chart.rearrangeXAxisLabels();
 			chart.resize();
 		}
 	}

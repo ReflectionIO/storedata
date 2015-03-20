@@ -156,6 +156,12 @@ public abstract class Axis<T extends Option> extends Option<T> {
 	}
 
 	@SuppressWarnings("unchecked")
+	public T setLabelsPadding(int padding) {
+		JavaScriptObjectHelper.setIntegerProperty(getLabels(), "padding", padding);
+		return (T) this;
+	}
+
+	@SuppressWarnings("unchecked")
 	public T setLabelsRotation(int degreeRotation) {
 		JavaScriptObjectHelper.setIntegerProperty(getLabels(), "rotation", degreeRotation);
 		return (T) this;
@@ -223,7 +229,7 @@ public abstract class Axis<T extends Option> extends Option<T> {
 		return setOption("max", nullValue);
 	}
 
-	public T setMaxPadding(int maxPadding) {
+	public T setMaxPadding(double maxPadding) {
 		return setOption("maxPadding", maxPadding);
 	}
 
@@ -235,7 +241,7 @@ public abstract class Axis<T extends Option> extends Option<T> {
 		return setOption("min", nullValue);
 	}
 
-	public T setMinPadding(int minPadding) {
+	public T setMinPadding(double minPadding) {
 		return setOption("minPadding", minPadding);
 	}
 

@@ -297,8 +297,38 @@ public class PlotOption extends Option<PlotOption> {
 		return markerHover;
 	}
 
+	public PlotOption setMarkerHoverEnabled(boolean enabled) {
+		JavaScriptObjectHelper.setBooleanProperty(getMarkerHover(), "enabled", enabled);
+		return this;
+	}
+
+	public PlotOption setMarkerHoverFillColor(String color) {
+		JavaScriptObjectHelper.setStringProperty(getMarkerHover(), "fillColor", color);
+		return this;
+	}
+
+	public PlotOption setMarkerHoverLineColor(String color) {
+		JavaScriptObjectHelper.setStringProperty(getMarkerHover(), "lineColor", color);
+		return this;
+	}
+
+	public PlotOption setMarkerHoverLineWidth(int width) {
+		JavaScriptObjectHelper.setIntegerProperty(getMarkerHover(), "lineWidth", width);
+		return this;
+	}
+
 	public PlotOption setMarkerHoverLineWidthPlus(int width) {
 		JavaScriptObjectHelper.setIntegerProperty(getMarkerHover(), "lineWidthPlus", width);
+		return this;
+	}
+
+	public PlotOption setMarkerHoverRadius(int radius) {
+		JavaScriptObjectHelper.setIntegerProperty(getMarkerHover(), "radius", radius);
+		return this;
+	}
+
+	public PlotOption setMarkerHoverRadiusPlus(int radiusPlus) {
+		JavaScriptObjectHelper.setIntegerProperty(getMarkerHover(), "radiusPlus", radiusPlus);
 		return this;
 	}
 
@@ -398,8 +428,13 @@ public class PlotOption extends Option<PlotOption> {
 		return halo;
 	}
 
-	public PlotOption setHoverHaloOpacity(int opacity) {
-		JavaScriptObjectHelper.setIntegerProperty(getHalo(), "opacity", opacity);
+	public PlotOption setHoverHaloOpacity(double opacity) {
+		JavaScriptObjectHelper.setDoubleProperty(getHalo(), "opacity", opacity);
+		return this;
+	}
+
+	public PlotOption setHoverHaloSize(int size) {
+		JavaScriptObjectHelper.setIntegerProperty(getHalo(), "size", size);
 		return this;
 	}
 

@@ -53,6 +53,16 @@ public class DateRange {
 		return dates;
 	}
 
+	public int getDays() {
+		int days = 0;
+		Date date = CalendarUtil.copyDate(mFromDate);
+		while (date.before(mToDate) || CalendarUtil.isSameDate(date, mToDate)) {
+			days++;
+			CalendarUtil.addDaysToDate(date, 1);
+		}
+		return days;
+	}
+
 	public List<Date> getDates() {
 		List<Date> dates = new ArrayList<Date>();
 		Date date = CalendarUtil.copyDate(mFromDate);

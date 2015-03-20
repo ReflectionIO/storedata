@@ -473,4 +473,9 @@ public class FilterHelper {
 		return d1.equals(d2) || d1.after(d2);
 	}
 
+	@SuppressWarnings("deprecation")
+	public static Date normalizeDate(Date date) {
+		return new Date(date.getYear(), date.getMonth(), date.getDate());
+	}
+
 }
