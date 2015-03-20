@@ -25,6 +25,7 @@ import com.google.gwt.core.client.JsArrayMixed;
 import com.google.gwt.core.client.JsArrayNumber;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 
 /**
@@ -53,6 +54,14 @@ public class ChartHelper {
 	public static final String DASH_STYLE_DASH_DOT = "DashDot";
 	public static final String DASH_STYLE_LONG_DASH_DOT = "LongDashDot";
 	public static final String DASH_STYLE_LONG_DASH_DOT_DOT = "LongDashDotDot";
+
+	public static final String CHART_BACKGROUND_COLOR = "#f2f2f5";
+	public static final String PLOT_BACKGROUND_COLOR_TOP = "rgba(109,105,197,0.14)";
+	public static final String PLOT_BACKGROUND_COLOR_BOTTOM = "rgba(27,199,159,0.14)";
+	public static final String BORDER_COLOR = "#f2f2f5";
+	public static final String GRID_COLOR = "#e1e5e8";
+	public static final int ONE_DAY_INTERVAL = 86400000;
+	public static final int ONE_WEEK_INTERVAL = 604800000;
 
 	public enum YDataType {
 		RevenueYAxisDataType,
@@ -108,14 +117,6 @@ public class ChartHelper {
 		}
 	}
 
-	public static Chart createAndInjectChart(HTMLPanel container) {
-		Chart chart = new Chart();
-		setDefaultOptions(chart);
-		container.getElement().appendChild(chart.getElement());
-		chart.inject();
-		return chart;
-	}
-
 	public static Chart createAndInjectChart(DivElement container) {
 		Chart chart = new Chart();
 		setDefaultOptions(chart);
@@ -124,34 +125,42 @@ public class ChartHelper {
 		return chart;
 	}
 
+	public static Chart createAndInjectChart(HTMLPanel container) {
+		return createAndInjectChart((DivElement) container.getElement().cast());
+	}
+
 	private static void setDefaultOptions(Chart chart) {
-		chart.getChartOption().setPlotBackgroundColor("#fafafa").setPlotBorderColor("#e7e7e7").setPlotBorderWidth(1).setMargin(createMarginsArray(1, 1, 60, 1));
-		chart.getPlotOption().setCursor("default").setFillOpacity(0.6).setFillColor("rgba(232,231,241,0.6)").setLineWidth(2).setMarkerEnabled(false)
-				.setMarkerRadius(3).setHoverHaloOpacity(0).setHoverLineWidthPlus(0).setMarkerSymbol("circle").setMarkerHoverLineWidthPlus(0)
-				.setPointInterval(86400000);
+		chart.getChartOption().setBackgroundColor(getLinearGradientColor(0, 1, 0, 0, "#ffffff", CHART_BACKGROUND_COLOR))
+				.setPlotBackgroundColor(CHART_BACKGROUND_COLOR).setPlotBorderColor(BORDER_COLOR).setPlotBorderWidth(1)
+				.setSpacing(createMarginsArray(40, 1, 1, 1));
+		chart.getPlotOption().setCursor(Cursor.DEFAULT.getCssName())
+				.setFillColor(getLinearGradientColor(0, 1, 0, 0, PLOT_BACKGROUND_COLOR_BOTTOM, PLOT_BACKGROUND_COLOR_TOP)).setLineWidth(3)
+				.setMarkerEnabled(false).setMarkerHoverRadius(4).setMarkerHoverRadiusPlus(0).setMarkerHoverLineWidthPlus(0).setMarkerLineWidth(0)
+				.setHoverHaloOpacity(0.2).setHoverHaloSize(12).setHoverLineWidthPlus(0).setMarkerSymbol("circle").setPointInterval(ONE_DAY_INTERVAL);
 		chart.setColors(getDefaultColors());
-		chart.getCreditsOption().setEnabled(false); // Disable highcharts credits text
+		chart.getCreditsOption().setEnabled(false); // Disable credits text
 		chart.getLegendOption().setEnabled(false); // Disable legend
 		chart.getTitleOption().setText(null); // Disable title
 		chart.getTooltipOption()
-				// .setUseHTML(true) if true there are problems with the reflectionCss
+				.setUseHTML(true)
 				.setShadow(false)
 				.setBackgroundColor("#ffffff")
 				.setBorderColor("#dedede")
 				.setBorderWidth(1)
-				.setBorderRadius(5)
+				.setBorderRadius(0)
 				.setValueDecimals(0)
-				.setCrosshairs(true)
+				.setCrosshairs(getDefaultCrosshairStyle())
 				.setDateTimeLabelFormats(getDefaultTooltipDateTimeLabelFormat())
+				.setStyle(getDefaultTooltipStyle())
 				.setHeaderFormat(
 						"<span style=\"font-size: 10px; line-height: 30px; font-weight: bold; color: #81879d; font-family: 'Lato', sans-serif;\">{point.key}</span><br/>")
 				.setPointFormat("<span style=\"font-size: 18px; font-weight: regular; color: #363a47; font-family: 'Lato', sans-serif;\">{point.y}</span>");
-		chart.getXAxis().setType(Axis.TYPE_DATETIME).setDateTimeLabelFormats(getDefaultAxisDateTimeLabelFormat()).setTickWidth(0).setTickInterval(86400000)
-				.setShowFirstLabel(false).setShowLastLabel(false).setLabelsStyle(getDefaultAxisStyle()).setLabelsY(30).setStartOnTick(false)
-				.setEndOnTick(false).setMinPadding(0).setMaxPadding(0).setMinorGridLineWidth(0).setLineColor("#e5e5e5").setLabelsMaxStaggerLines(1)
-				.setMinRange(86400000);
-		chart.getYAxis().setAllowDecimals(false).setTitleText(null).setOffset(-30).setLabelsY(-7).setLabelsStyle(getDefaultAxisStyle()).setLabelsAlign("left")
-				.setGridLineColor("#e1e5e8");
+		chart.getXAxis().setType(Axis.TYPE_DATETIME).setTickWidth(1).setTickLength(10).setTickColor("#e7e7e7").setMinTickInterval(ONE_DAY_INTERVAL)
+				.setTickInterval(ONE_DAY_INTERVAL).setLabelsStyle(getDefaultXAxisLabelStyle()).setLabelsY(30).setStartOnTick(true).setEndOnTick(true)
+				.setMinPadding(0).setMaxPadding(0).setLineColor("#e5e5e5").setLabelsMaxStaggerLines(1).setMinRange(ONE_DAY_INTERVAL).setLabelsPadding(30)
+				.setLabelsUseHTML(false).setLabelsAlign("center");
+		chart.getYAxis().setAllowDecimals(false).setTitleText(null).setOffset(-30).setLabelsY(5).setLabelsStyle(getDefaultYAxisLabelStyle())
+				.setLabelsAlign("left").setGridLineColor(GRID_COLOR).setLabelsUseHTML(false);
 	}
 
 	public static JsArrayNumber createMarginsArray(int marginTop, int marginRight, int marginBottom, int marginLeft) {
@@ -216,6 +225,27 @@ public class ChartHelper {
 		}
 	}-*/;
 
+	public static native JavaScriptObject getNativeLabelFormatterRank() /*-{
+		return function() {
+			if (this.isFirst)
+				return 1;
+			return this.value;
+		}
+	}-*/;
+
+	public static native JavaScriptObject getNativeDatetimeLabelFormatter(JavaScriptObject chart, int step) /*-{
+		return function() {
+			var from = chart.xAxis[0].getExtremes().min;
+			var diffMs = this.value - from;
+			var diffDays = diffMs / 86400000; // Days between first X-Axis value and current one
+			if (step == 1 || diffDays % step == 0) {
+				return $wnd.Highcharts.dateFormat('%e %b', this.value, true);
+			} else {
+				return null;
+			}
+		}
+	}-*/;
+
 	public static native JavaScriptObject getNativeTooltipFormatter() /*-{
 		return function() {
 			return "<div><span style=\"font-size: 10px; font-weight: bold; color: #81879d; font-family: 'Lato', sans-serif;\">"
@@ -237,20 +267,59 @@ public class ChartHelper {
 		}
 	}-*/;
 
-	public static JavaScriptObject getDefaultAxisStyle() {
+	public static JavaScriptObject getLinearGradientColor(int x1, int y1, int x2, int y2, String color1, String color2) {
+		JavaScriptObject backgroundColor = JavaScriptObject.createObject();
+		JavaScriptObject linearGradient = JavaScriptObject.createObject();
+		JavaScriptObjectHelper.setIntegerProperty(linearGradient, "x1", x1);
+		JavaScriptObjectHelper.setIntegerProperty(linearGradient, "y1", y1);
+		JavaScriptObjectHelper.setIntegerProperty(linearGradient, "x2", x2);
+		JavaScriptObjectHelper.setIntegerProperty(linearGradient, "y2", y2);
+		JavaScriptObjectHelper.setObjectProperty(backgroundColor, "linearGradient", linearGradient);
+		JsArrayMixed stops = JavaScriptObject.createArray().cast();
+		JsArrayMixed stop1 = JavaScriptObject.createArray().cast();
+		JsArrayMixed stop2 = JavaScriptObject.createArray().cast();
+		stop1.push(0);
+		stop2.push(1);
+		stop1.push(color1);
+		stop2.push(color2);
+		stops.push(stop1);
+		stops.push(stop2);
+		JavaScriptObjectHelper.setObjectProperty(backgroundColor, "stops", stops);
+		return backgroundColor;
+	}
+
+	public static JavaScriptObject getDefaultXAxisLabelStyle() {
 		HashMap<String, Object> styleValues = new HashMap<String, Object>();
-		styleValues.put("fontSize", "12px");
-		styleValues.put("fontWeight", "bold");
+		styleValues.put("fontSize", "13px");
+		styleValues.put("fontWeight", "regular");
 		styleValues.put("color", "#63656a");
+		styleValues.put("fontFamily", "'Lato', sans-serif");
+		styleValues.put("padingLeft", "20px");
+		styleValues.put("padingRight", "20px");
+		return getJSObjectFromMap(styleValues);
+	}
+
+	public static JavaScriptObject getDefaultYAxisLabelStyle() {
+		HashMap<String, Object> styleValues = new HashMap<String, Object>();
+		styleValues.put("fontSize", "13px");
+		styleValues.put("fontWeight", "regular");
+		styleValues.put("color", "#81879d");
 		styleValues.put("fontFamily", "'Lato', sans-serif");
 		return getJSObjectFromMap(styleValues);
 	}
 
-	// public static JavaScriptObject getDefaultTooltipStyle() {
-	// HashMap<String, Object> styleValues = new HashMap<String, Object>();
-	// styleValues.put("padding", 14);
-	// return getJSObjectFromMap(styleValues);
-	// }
+	public static JavaScriptObject getDefaultTooltipStyle() {
+		HashMap<String, Object> styleValues = new HashMap<String, Object>();
+		// styleValues.put("overflow", "visible");
+		return getJSObjectFromMap(styleValues);
+	}
+
+	public static JavaScriptObject getDefaultCrosshairStyle() {
+		HashMap<String, Object> styleValues = new HashMap<String, Object>();
+		styleValues.put("width", 1);
+		styleValues.put("color", "#ff466a");
+		return getJSObjectFromMap(styleValues);
+	}
 
 	public static JavaScriptObject getDefaultLoadingStyle() {
 		HashMap<String, Object> styleValues = new HashMap<String, Object>();

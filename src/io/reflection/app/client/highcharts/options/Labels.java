@@ -18,7 +18,7 @@ import com.google.gwt.core.client.JsArray;
  */
 public class Labels extends Option<Labels> {
 
-	private JsArray<JavaScriptObject> labels;
+	private JsArray<JavaScriptObject> items;
 
 	/*
 	 * (non-Javadoc)
@@ -40,13 +40,27 @@ public class Labels extends Option<Labels> {
 		return setOption("style", style);
 	}
 
-	public Labels addLabel(String html, JavaScriptObject style) {
-		if (labels == null) {
-			labels = JavaScriptObject.createArray().cast();
-			setOption("items", labels);
+	public void createItems() {
+		if (items == null) {
+			items = JavaScriptObject.createArray().cast();
+			setOption("items", items);
 		}
-		JavaScriptObjectHelper.setStringProperty(labels, "html", html);
-		JavaScriptObjectHelper.setObjectProperty(labels, "style", style);
+	}
+
+	public Labels addLabel(String html, JavaScriptObject style) {
+		createItems();
+		JavaScriptObject item = JavaScriptObject.createObject();
+		JavaScriptObjectHelper.setStringProperty(item, "html", html);
+		JavaScriptObjectHelper.setObjectProperty(item, "style", style);
+
+		return this;
+	}
+
+	public Labels addLabel(String html) {
+		createItems();
+		JavaScriptObject item = JavaScriptObject.createObject();
+		JavaScriptObjectHelper.setStringProperty(item, "html", html);
+		items.push(item);
 		return this;
 	}
 }
