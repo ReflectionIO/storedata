@@ -6,20 +6,12 @@
 	.pullDown {
 		margin-top: 60px;
 	}
-	
-	.style {
-		padding-top: 5px;
-		padding-bottom: 6px;
-		vertical-align: middle;
-		font-size: 1.5rem;
-		color: #363A47;
-	}
 	</ui:style>
 	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer}">
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth}">
 			<h3 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Calibration Summary</h3>
 
-			<p:Breadcrumbs ui:field="breadcrumbs" path="..." styleName="topPanel" />
+			<p:Breadcrumbs ui:field="breadcrumbs" path="..."  />
 
 			<h3 ui:field="title">${title}</h3>
 			<p ui:field="description">${description}</p>
@@ -35,11 +27,11 @@
 			<div class="{style.pullDown}">
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneHalf}">
 					<h4>Hits</h4>
-					<c:CellList ui:field="hits" />
+					<c:CellList ui:field="hits" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}" />
 				</div>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneHalf}">
 					<h4>Misses</h4>
-					<c:CellList ui:field="misses" />
+					<c:CellList ui:field="misses" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}" />
 				</div>
 			</div>
 		</div>
