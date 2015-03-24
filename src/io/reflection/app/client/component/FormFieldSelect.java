@@ -201,7 +201,7 @@ public class FormFieldSelect extends Composite implements HasChangeHandlers {
 	public int getValueIndex(String value) {
 		int index = -1;
 		for (LIElement le : itemList) {
-			if (value.equals(le.getAttribute("value"))) {
+			if (value.equals(le.getAttribute("data-value"))) {
 				index = itemList.indexOf(le);
 				break;
 			}
