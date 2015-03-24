@@ -197,9 +197,9 @@ public class CalibrateSimpleModel extends Job4<Long, Long, String, Map<String, D
 		name = value;
 		return this;
 	}
-	* (non-Javadoc)
-
+	
 	/*
+	 * (non-Javadoc)
 	 * 
 	 * @see com.google.appengine.tools.pipeline.Job#getJobDisplayName()
 	 */
