@@ -22,6 +22,7 @@ import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.dom.client.HasKeyPressHandlers;
 import com.google.gwt.event.dom.client.HasKeyUpHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -67,6 +68,13 @@ public class FormFieldPassword extends Composite implements HasClickHandlers, Ha
 
 	public String getText() {
 		return passwordTextBox.getText();
+	}
+
+	@UiHandler("passwordTextBox")
+	void onEnterKeyPressForgotPassword(KeyPressEvent event) {
+		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
+			event.preventDefault();
+		}
 	}
 
 	public void clear() {
