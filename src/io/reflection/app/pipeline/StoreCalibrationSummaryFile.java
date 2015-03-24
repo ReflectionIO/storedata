@@ -12,6 +12,7 @@ import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.ListPropertyType;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.SimpleModelRun;
+import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.modellers.CalibrationSummaryHelper;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.simplemodelrun.SimpleModelRunServiceProvider;
@@ -21,6 +22,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.logging.Logger;
 
 import com.google.appengine.tools.pipeline.Job6;
 import com.google.appengine.tools.pipeline.Value;
@@ -33,18 +35,28 @@ public class StoreCalibrationSummaryFile extends Job6<String, Long, String, Date
 
 	private static final long serialVersionUID = -5621991524846384264L;
 
+	private transient static final Logger LOG = Logger.getLogger(StoreCalibrationSummaryFile.class.getName());
+	
 	private transient String name = null;
 
 	@Override
 	public Value<String> run(Long feedfetchId, final String type, Date summariesDate, Collection<String> used, Collection<String> unused, Long simpleModelRunId)
 			throws Exception {
+		if (LOG.getLevel() == GaeLevel.TRACE) {
+			LOG.log(GaeLevel.TRACE, "Entering StoreCalibrationSummaryFile.run");
+		}
+		
 		FeedFetch feedFetch = FeedFetchServiceProvider.provide().getFeedFetch(feedfetchId);
 		SimpleModelRun simpleModelRun = null;
 
 		if (simpleModelRunId != null) {
 			simpleModelRun = SimpleModelRunServiceProvider.provide().getSimpleModelRun(simpleModelRunId);
 		}
-
+		
+		if (LOG.getLevel() == GaeLevel.DEBUG) {
+			LOG.log(GaeLevel.DEBUG, "simpleModelRun==null : %b", simpleModelRun==null);
+		}
+		
 		CalibrationSummary summary = new CalibrationSummary();
 		summary.feedFetch = feedFetch;
 		summary.simpleModelRun = simpleModelRun;
@@ -55,6 +67,10 @@ public class StoreCalibrationSummaryFile extends Job6<String, Long, String, Date
 
 		Rank rank;
 		if (used != null) {
+			if (LOG.getLevel() == GaeLevel.DEBUG) {
+				LOG.log(GaeLevel.DEBUG, "Adding hits to the summary");
+			}
+
 			summary.hits = new ArrayList<Rank>();
 			for (String json : used) {
 				rank = new Rank();
@@ -78,6 +94,10 @@ public class StoreCalibrationSummaryFile extends Job6<String, Long, String, Date
 		}
 
 		if (unused != null) {
+			if (LOG.getLevel() == GaeLevel.DEBUG) {
+				LOG.log(GaeLevel.DEBUG, "Adding misses to the summary");
+			}
+			
 			summary.misses = new ArrayList<Rank>();
 			for (String json : unused) {
 				rank = new Rank();
@@ -118,8 +138,16 @@ public class StoreCalibrationSummaryFile extends Job6<String, Long, String, Date
 			});
 		}
 
+		if (LOG.getLevel() == GaeLevel.DEBUG) {
+			LOG.log(GaeLevel.DEBUG, "CalibrationSummary complete. Calling CalibrationSummaryHelper to write it out");
+		}
+		
 		String path = CalibrationSummaryHelper.write(summary);
-
+		
+		if (LOG.getLevel() == GaeLevel.DEBUG) {
+			LOG.log(GaeLevel.DEBUG, String.format("Calibration summary path: %s", path));
+		}
+		
 		return (path == null ? null : immediate(path));
 	}
 

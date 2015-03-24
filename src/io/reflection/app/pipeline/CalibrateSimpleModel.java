@@ -11,6 +11,7 @@ import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.ListPropertyType;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.SimpleModelRun;
+import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
 import io.reflection.app.service.simplemodelrun.SimpleModelRunServiceProvider;
@@ -25,6 +26,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import org.apache.commons.math3.stat.regression.RegressionResults;
 import org.apache.commons.math3.stat.regression.SimpleRegression;
@@ -41,6 +43,8 @@ public class CalibrateSimpleModel extends Job4<Long, Long, String, Map<String, D
 
 	private static final long serialVersionUID = -8764419384476424579L;
 
+	private transient static final Logger LOG = Logger.getLogger(CalibrateSimpleModel.class.getName());
+	
 	private transient String name = null;
 
 	/*
@@ -50,14 +54,25 @@ public class CalibrateSimpleModel extends Job4<Long, Long, String, Map<String, D
 	 */
 	@Override
 	public Value<Long> run(Long feedFetchId, String type, Map<String, Double> summary, Date summaryDate) throws Exception {
-
+		if (LOG.getLevel() == GaeLevel.TRACE) {
+			LOG.log(GaeLevel.TRACE, String.format("Entering CalibrateSimpleModel.run - type: %s, summaryDate:%s", type, summaryDate));
+		}
+		
 		FeedFetch feedFetch = FeedFetchServiceProvider.provide().getFeedFetch(feedFetchId);
 		ListPropertyType listProperty = ListPropertyType.fromString(type);
 
+		if (LOG.getLevel() == GaeLevel.DEBUG) {
+			LOG.log(GaeLevel.DEBUG, String.format("feedFetch==null : %b, listProperty==null : %b", feedFetch==null, listProperty==null));
+		}
+		
 		List<Rank> ranks = RankServiceProvider.provide().getGatherCodeRanks(DataTypeHelper.createCountry(feedFetch.country),
 				DataTypeHelper.createStore(feedFetch.store), feedFetch.category, feedFetch.type, feedFetch.code, PagerHelper.createInfinitePager(),
 				Boolean.TRUE);
 
+		if (LOG.getLevel() == GaeLevel.DEBUG) {
+			LOG.log(GaeLevel.DEBUG, String.format("ranks size: %d", ranks==null?-1:ranks.size()));
+		}
+		
 		Map<String, Rank> itemRanks = new HashMap<String, Rank>();
 
 		for (Rank rank : ranks) {
@@ -83,6 +98,10 @@ public class CalibrateSimpleModel extends Job4<Long, Long, String, Map<String, D
 				}
 			}
 		}
+		
+		if (LOG.getLevel() == GaeLevel.DEBUG) {
+			LOG.log(GaeLevel.DEBUG, String.format("We have %d hits", usedSalesLookup.size()));
+		}
 
 		SimpleModelRun run = null;
 
@@ -91,13 +110,24 @@ public class CalibrateSimpleModel extends Job4<Long, Long, String, Map<String, D
 					.summaryDate(summaryDate);
 
 			if (regression.getN() > 2) {
+				if (LOG.getLevel() == GaeLevel.DEBUG) {
+					LOG.log(GaeLevel.DEBUG, String.format("We have a sample size of %d", regression.getN()));
+				}
+				
 				RegressionResults results = regression.regress();
 				run.aStandardError(Double.valueOf(regression.getSlopeStdErr())).bStandardError(regression.getInterceptStdErr())
 						.regressionSumSquares(Double.valueOf(results.getRegressionSumSquares()))
 						.adjustedRSquared(Double.valueOf(results.getAdjustedRSquared()));
+				
+				if (LOG.getLevel() == GaeLevel.DEBUG) {
+					LOG.log(GaeLevel.DEBUG, "Ran the regression");
+				}
 			}
-
+			
 			run = SimpleModelRunServiceProvider.provide().addSimpleModelRun(run);
+			if (LOG.getLevel() == GaeLevel.DEBUG) {
+				LOG.log(GaeLevel.DEBUG, String.format("Saved the simple model run results to db: %b", run!=null));
+			}
 		}
 
 		Collection<String> unusedSales = new ArrayList<String>();
@@ -110,8 +140,16 @@ public class CalibrateSimpleModel extends Job4<Long, Long, String, Map<String, D
 
 		ImmediateValue<Long> runIdValue = (run == null ? null : immediate(run.id));
 
+		if (LOG.getLevel() == GaeLevel.DEBUG) {
+			LOG.log(GaeLevel.DEBUG, "Setting up the future call to store calibration summary");
+		}
+
 		futureCall(new StoreCalibrationSummaryFile().name("Store calibration summary file"), immediate(feedFetch.id), immediate(type), immediate(summaryDate),
 				immediate(usedSales), immediate(unusedSales), runIdValue, PipelineSettings.onDefaultQueue);
+
+		if (LOG.getLevel() == GaeLevel.TRACE) {
+			LOG.log(GaeLevel.TRACE, String.format("Exiting CalibrateSimpleModel.run - runIdValue: %s", runIdValue));
+		}
 
 		return runIdValue;
 	}
@@ -159,9 +197,9 @@ public class CalibrateSimpleModel extends Job4<Long, Long, String, Map<String, D
 		name = value;
 		return this;
 	}
+	* (non-Javadoc)
 
 	/*
-	 * (non-Javadoc)
 	 * 
 	 * @see com.google.appengine.tools.pipeline.Job#getJobDisplayName()
 	 */
