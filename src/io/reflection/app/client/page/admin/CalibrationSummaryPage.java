@@ -122,6 +122,9 @@ public class CalibrationSummaryPage extends Page implements NavigationEventHandl
 		hits.setEmptyListWidget(new HTMLPanel("No items found"));
 		misses.setEmptyListWidget(new HTMLPanel("No items found"));
 
+		misses.getRowContainer().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA());
+		hits.getRowContainer().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA());
+
 		hitsProvider.addDataDisplay(hits);
 		missesProvider.addDataDisplay(misses);
 
