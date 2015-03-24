@@ -107,7 +107,7 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 			@Override
 			public void onBrowserEvent(Event event) {
 				if (Event.ONCLICK == event.getTypeInt()) {
-					toggleDropDownAdmin(adminItem);
+					toggleDropDownItem(adminItem);
 				}
 			}
 		});
@@ -227,50 +227,51 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 			closeDropDownItem(adminItem);
 		} else if (PageType.FeedBrowserPageType.equals(current.getPage())) {
 			highlight(adminItem, adminFeedBrowserItem);
-			openDropDownAdmin(adminItem);
+			openDropDownItem(adminItem);
 		} else if (PageType.SimpleModelRunPageType.equals(current.getPage())) {
 			highlight(adminItem, adminSimpleModelRunItem);
-			openDropDownAdmin(adminItem);
+			openDropDownItem(adminItem);
 		} else if (PageType.ItemsPageType.equals(current.getPage())) {
 			highlight(adminItem, adminItemsItem);
-			openDropDownAdmin(adminItem);
+			openDropDownItem(adminItem);
 		} else if (PageType.CategoriesPageType.equals(current.getPage())) {
 			highlight(adminItem, adminCategoriesItem);
-			openDropDownAdmin(adminItem);
+			openDropDownItem(adminItem);
 		} else if (PageType.UsersPageType.equals(current.getPage()) && current.getAction() == null) {
 			highlight(adminItem, adminUsersItem);
-			openDropDownAdmin(adminItem);
+			openDropDownItem(adminItem);
 		} else if (PageType.RolesPageType.equals(current.getPage())) {
 			highlight(adminItem, adminRolesItem);
-			openDropDownAdmin(adminItem);
+			openDropDownItem(adminItem);
 		} else if (PageType.PermissionsPageType.equals(current.getPage())) {
 			highlight(adminItem, adminPermissionsItem);
-			openDropDownAdmin(adminItem);
+			openDropDownItem(adminItem);
 		} else if (PageType.DataAccountsPageType.equals(current.getPage())) {
 			highlight(adminItem, adminDataAccountsItem);
-			openDropDownAdmin(adminItem);
+			openDropDownItem(adminItem);
 		} else if (PageType.DataAccountFetchesPageType.equals(current.getPage())) {
 			highlight(adminItem, adminDataAccountFetchesItem);
-			openDropDownAdmin(adminItem);
+			openDropDownItem(adminItem);
 		} else if (PageType.EventsPageType.equals(current.getPage())) {
 			highlight(adminItem, adminEventsItem);
-			openDropDownAdmin(adminItem);
+			openDropDownItem(adminItem);
 		} else if (PageType.EventSubscriptionsPageType.equals(current.getPage())) {
 			highlight(adminItem, adminEventSubscriptionsItem);
-			openDropDownAdmin(adminItem);
+			openDropDownItem(adminItem);
 		} else if (PageType.SendNotificationPageType.equals(current.getPage())) {
 			highlight(adminItem, adminSendNotificationItem);
-			openDropDownAdmin(adminItem);
+			openDropDownItem(adminItem);
 		} else if (PageType.BlogAdminPageType.equals(current.getPage()) || PageType.BlogEditPostPageType.equals(current.getPage())) {
 			highlight(adminItem, adminBlogItem);
-			openDropDownAdmin(adminItem);
+			openDropDownItem(adminItem);
 		} else {
 			highlight();
+			closeDropDownItem(adminItem);
 		}
 
 	}
 
-	private void toggleDropDownAdmin(LIElement liElem) {
+	private void toggleDropDownItem(LIElement liElem) {
 		UListElement ulElem = liElem.getElementsByTagName("ul").getItem(0).cast();
 		if (liElem.hasClassName(IS_OPEN)) {
 			ulElem.getStyle().setMarginTop(-(ulElem.getClientHeight()), Unit.PX);
@@ -286,7 +287,7 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 		}
 	}
 
-	private void openDropDownAdmin(LIElement liElem) {
+	private void openDropDownItem(LIElement liElem) {
 		if (!liElem.hasClassName(IS_OPEN)) {
 			UListElement ulElem = liElem.getElementsByTagName("ul").getItem(0).cast();
 			ulElem.getStyle().setMarginTop(0, Unit.PX);
