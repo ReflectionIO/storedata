@@ -2010,8 +2010,11 @@ textarea, .global-header .link-open-search, html, body {
   .no-touch .account-access-page .list-partners ul,
   .touch .account-access-page .list-partners ul {
     display: -webkit-box;
+    /* @alternate */
     display: -ms-flexbox;
+    /* @alternate */
     display: -webkit-flex;
+    /* @alternate */
     display: flex;
     -webkit-box-orient: horizontal;
     -webkit-box-direction: normal;
@@ -2027,7 +2030,7 @@ textarea, .global-header .link-open-search, html, body {
         -ms-flex-align: center;
             align-items: center;
   }
-  /* line 397, ../sass/templates/_account-access.scss */
+  /* line 396, ../sass/templates/_account-access.scss */
   .no-touch .account-access-page .list-partners li,
   .touch .account-access-page .list-partners li {
     width: auto;
@@ -2040,7 +2043,7 @@ textarea, .global-header .link-open-search, html, body {
         -ms-flex-positive: 1;
             flex-grow: 1;
   }
-  /* line 403, ../sass/templates/_account-access.scss */
+  /* line 402, ../sass/templates/_account-access.scss */
   .no-touch .account-access-page .list-partners li:last-child,
   .touch .account-access-page .list-partners li:last-child {
     display: inline-block;
@@ -2048,21 +2051,21 @@ textarea, .global-header .link-open-search, html, body {
 }
 
 @media (min-width: 480px) {
-  /* line 408, ../sass/templates/_account-access.scss */
+  /* line 407, ../sass/templates/_account-access.scss */
   .no-touch .account-setup-content-wrapper .list-partners,
   .touch .account-setup-content-wrapper .list-partners {
     display: none;
   }
 }
 @media (min-width: 960px) {
-  /* line 408, ../sass/templates/_account-access.scss */
+  /* line 407, ../sass/templates/_account-access.scss */
   .no-touch .account-setup-content-wrapper .list-partners,
   .touch .account-setup-content-wrapper .list-partners {
     display: block;
   }
 }
 
-/* line 417, ../sass/templates/_account-access.scss */
+/* line 416, ../sass/templates/_account-access.scss */
 .apply-content {
   position: absolute;
   visibility: hidden;
@@ -2071,13 +2074,13 @@ textarea, .global-header .link-open-search, html, body {
   opacity: 0;
 }
 @media (min-width: 960px) {
-  /* line 417, ../sass/templates/_account-access.scss */
+  /* line 416, ../sass/templates/_account-access.scss */
   .apply-content {
     -webkit-transition: opacity 0.6s;
             transition: opacity 0.6s;
   }
 }
-/* line 425, ../sass/templates/_account-access.scss */
+/* line 424, ../sass/templates/_account-access.scss */
 .apply-form-is-showing .apply-content {
   position: relative;
   visibility: visible;
@@ -2087,7 +2090,7 @@ textarea, .global-header .link-open-search, html, body {
           transition: opacity 0.6s;
 }
 
-/* line 432, ../sass/templates/_account-access.scss */
+/* line 431, ../sass/templates/_account-access.scss */
 .login-content {
   position: absolute;
   visibility: hidden;
@@ -2096,7 +2099,7 @@ textarea, .global-header .link-open-search, html, body {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0;
 }
-/* line 438, ../sass/templates/_account-access.scss */
+/* line 437, ../sass/templates/_account-access.scss */
 .login-form-is-showing .login-content {
   position: relative;
   visibility: visible;
@@ -2105,23 +2108,23 @@ textarea, .global-header .link-open-search, html, body {
   -webkit-transition: opacity 0.6s;
           transition: opacity 0.6s;
 }
-/* line 444, ../sass/templates/_account-access.scss */
+/* line 443, ../sass/templates/_account-access.scss */
 .login-content .blockquote--reset-password,
 .login-content .blockquote--login {
   margin-top: 0;
   margin-bottom: 3em;
 }
-/* line 449, ../sass/templates/_account-access.scss */
+/* line 448, ../sass/templates/_account-access.scss */
 .login-content .blockquote--large {
   margin-left: -5px;
 }
-/* line 451, ../sass/templates/_account-access.scss */
+/* line 450, ../sass/templates/_account-access.scss */
 .login-content .blockquote--large p {
   font-size: 2.2rem;
   font-weight: 700;
   line-height: 1.45;
 }
-/* line 457, ../sass/templates/_account-access.scss */
+/* line 456, ../sass/templates/_account-access.scss */
 .login-content .blockquote--reset-password {
   position: absolute;
   visibility: hidden;
@@ -2129,12 +2132,12 @@ textarea, .global-header .link-open-search, html, body {
   opacity: 0;
 }
 @media (min-width: 720px) {
-  /* line 457, ../sass/templates/_account-access.scss */
+  /* line 456, ../sass/templates/_account-access.scss */
   .login-content .blockquote--reset-password {
     margin-top: 72px;
   }
 }
-/* line 464, ../sass/templates/_account-access.scss */
+/* line 463, ../sass/templates/_account-access.scss */
 .reset-password-form-is-showing .login-content .blockquote--reset-password {
   position: relative;
   visibility: visible;
@@ -2143,7 +2146,7 @@ textarea, .global-header .link-open-search, html, body {
   -webkit-transition: opacity 0.6s;
           transition: opacity 0.6s;
 }
-/* line 471, ../sass/templates/_account-access.scss */
+/* line 470, ../sass/templates/_account-access.scss */
 .login-content .blockquote--login {
   position: relative;
   visibility: visible;
@@ -2151,12 +2154,12 @@ textarea, .global-header .link-open-search, html, body {
           transition: opacity 0.6s;
 }
 @media (min-width: 720px) {
-  /* line 471, ../sass/templates/_account-access.scss */
+  /* line 470, ../sass/templates/_account-access.scss */
   .login-content .blockquote--login {
     margin-top: 47px;
   }
 }
-/* line 478, ../sass/templates/_account-access.scss */
+/* line 477, ../sass/templates/_account-access.scss */
 .reset-password-form-is-showing .login-content .blockquote--login {
   position: absolute;
   visibility: hidden;
@@ -2166,7 +2169,7 @@ textarea, .global-header .link-open-search, html, body {
           transition: opacity 0.6s;
 }
 
-/* line 486, ../sass/templates/_account-access.scss */
+/* line 485, ../sass/templates/_account-access.scss */
 .create-password-main-content,
 .connect-account-main-content {
   position: absolute;
@@ -2178,7 +2181,7 @@ textarea, .global-header .link-open-search, html, body {
           transition: opacity 0.6s;
 }
 
-/* line 494, ../sass/templates/_account-access.scss */
+/* line 493, ../sass/templates/_account-access.scss */
 .create-password-form-is-showing .create-password-main-content,
 .connect-account-is-showing .connect-account-main-content {
   position: relative;
@@ -2219,20 +2222,20 @@ textarea, .global-header .link-open-search, html, body {
     opacity: 1;
   }
 }
-/* line 507, ../sass/templates/_account-access.scss */
+/* line 506, ../sass/templates/_account-access.scss */
 .account-setup-content-wrapper {
   position: relative;
   overflow: visible;
   min-height: 93vh;
 }
 @media (min-width: 960px) {
-  /* line 507, ../sass/templates/_account-access.scss */
+  /* line 506, ../sass/templates/_account-access.scss */
   .account-setup-content-wrapper {
     min-height: 76vh;
   }
 }
 
-/* line 515, ../sass/templates/_account-access.scss */
+/* line 514, ../sass/templates/_account-access.scss */
 .account-connect-animation {
   position: absolute;
   display: none;
@@ -2246,53 +2249,53 @@ textarea, .global-header .link-open-search, html, body {
   opacity: 0;
 }
 @media (min-width: 720px) {
-  /* line 515, ../sass/templates/_account-access.scss */
+  /* line 514, ../sass/templates/_account-access.scss */
   .account-connect-animation {
     top: 685px;
     display: block;
   }
 }
 @media (min-width: 960px) {
-  /* line 515, ../sass/templates/_account-access.scss */
+  /* line 514, ../sass/templates/_account-access.scss */
   .account-connect-animation {
     top: 35.6rem;
     display: block;
   }
 }
 @media screen and (min-width: 960px) and (min-height: 780px) {
-  /* line 515, ../sass/templates/_account-access.scss */
+  /* line 514, ../sass/templates/_account-access.scss */
   .account-connect-animation {
     top: 39.6rem;
   }
 }
 @media screen and (min-width: 960px) and (min-height: 960px) {
-  /* line 515, ../sass/templates/_account-access.scss */
+  /* line 514, ../sass/templates/_account-access.scss */
   .account-connect-animation {
     top: 44.6rem;
   }
 }
-/* line 539, ../sass/templates/_account-access.scss */
+/* line 538, ../sass/templates/_account-access.scss */
 .connect-account-is-showing .account-connect-animation {
   filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
   opacity: 1;
   -webkit-transition: opacity 0.6s 0.3s;
           transition: opacity 0.6s 0.3s;
 }
-/* line 543, ../sass/templates/_account-access.scss */
+/* line 542, ../sass/templates/_account-access.scss */
 .account-connect-animation .cord {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
 }
-/* line 548, ../sass/templates/_account-access.scss */
+/* line 547, ../sass/templates/_account-access.scss */
 .account-connect-animation .cord div {
   width: 100%;
   height: 6px;
   margin-top: 42px;
   background-color: #474492;
 }
-/* line 555, ../sass/templates/_account-access.scss */
+/* line 554, ../sass/templates/_account-access.scss */
 .account-connect-animation .plugs {
   position: absolute;
   top: 0;
@@ -2303,61 +2306,61 @@ textarea, .global-header .link-open-search, html, body {
   background-color: #6d69c5;
 }
 @media (min-width: 960px) {
-  /* line 555, ../sass/templates/_account-access.scss */
+  /* line 554, ../sass/templates/_account-access.scss */
   .account-connect-animation .plugs {
     left: calc(50% - 439px);
   }
 }
-/* line 567, ../sass/templates/_account-access.scss */
+/* line 566, ../sass/templates/_account-access.scss */
 .account-connect-animation .plug-left, .account-connect-animation .plug-right {
   position: absolute;
   height: 93px;
 }
-/* line 571, ../sass/templates/_account-access.scss */
+/* line 570, ../sass/templates/_account-access.scss */
 .account-connect-animation .plug-right {
   width: 189px;
   top: -1px;
 }
-/* line 575, ../sass/templates/_account-access.scss */
+/* line 574, ../sass/templates/_account-access.scss */
 .account-connect-animation .plug-left {
   left: -417px;
   width: 563px;
   -webkit-transition: left 0.3s ease-out;
           transition: left 0.3s ease-out;
 }
-/* line 580, ../sass/templates/_account-access.scss */
+/* line 579, ../sass/templates/_account-access.scss */
 .account-connect-animation.plugs-connected .plug-left {
   left: -293px;
   -webkit-transition: left 0.3s 0.7s ease-out;
           transition: left 0.3s 0.7s ease-out;
 }
-/* line 584, ../sass/templates/_account-access.scss */
+/* line 583, ../sass/templates/_account-access.scss */
 .account-connect-animation .plug-right {
   right: -68px;
 }
-/* line 587, ../sass/templates/_account-access.scss */
+/* line 586, ../sass/templates/_account-access.scss */
 .account-connect-animation .plug-logo path {
   fill: #474492;
 }
-/* line 592, ../sass/templates/_account-access.scss */
+/* line 591, ../sass/templates/_account-access.scss */
 .account-connect-animation.plugs-connected .plug-logo path {
   fill: #fff;
   -webkit-transition: fill 0.3s 1.1s ease-out;
           transition: fill 0.3s 1.1s ease-out;
 }
-/* line 597, ../sass/templates/_account-access.scss */
+/* line 596, ../sass/templates/_account-access.scss */
 .account-connect-animation.plugs-connected .plug-logo-glow,
 .account-connect-animation.plugs-connected .plug-logo-container .plug-logo-part-glow {
   opacity: 1;
   -webkit-transition: opacity 0.5s 1.4s ease-out;
           transition: opacity 0.5s 1.4s ease-out;
 }
-/* line 602, ../sass/templates/_account-access.scss */
+/* line 601, ../sass/templates/_account-access.scss */
 .account-connect-animation.plugs-connected .plug-logo-part-glow {
   -webkit-animation: glowPulse 1s 1.9s ease infinite;
           animation: glowPulse 1s 1.9s ease infinite;
 }
-/* line 606, ../sass/templates/_account-access.scss */
+/* line 605, ../sass/templates/_account-access.scss */
 .account-connect-animation .plug-logo-glow,
 .account-connect-animation .plug-logo-container .plug-logo-part-glow {
   opacity: 0;
@@ -3302,7 +3305,6 @@ textarea, .global-header .link-open-search, html, body {
   width: 83.33333%;
   padding: 0 2%;
   position: relative;
-  padding: 0px 60px 0px 4%;
 }
 @media (min-width: 720px) {
   /* line 14, ../sass/templates/_interactions.scss */
@@ -3311,14 +3313,12 @@ textarea, .global-header .link-open-search, html, body {
     padding: 0 4%;
   }
 }
-@media (min-width: 720px) {
-  /* line 14, ../sass/templates/_interactions.scss */
-  .easing-figure-container {
-    padding: 0px 60px 0px 4%;
-  }
+/* line 17, ../sass/templates/_interactions.scss */
+.easing-figure-container img {
+  width: 92%;
 }
 
-/* line 22, ../sass/templates/_interactions.scss */
+/* line 21, ../sass/templates/_interactions.scss */
 .easing-represenation-container {
   position: absolute;
   top: 0;
@@ -3326,12 +3326,12 @@ textarea, .global-header .link-open-search, html, body {
   bottom: 0px;
   height: 100%;
 }
-/* line 28, ../sass/templates/_interactions.scss */
+/* line 27, ../sass/templates/_interactions.scss */
 .ie8 .easing-represenation-container, .ie9 .easing-represenation-container {
   display: none;
 }
 
-/* line 32, ../sass/templates/_interactions.scss */
+/* line 31, ../sass/templates/_interactions.scss */
 .easing-representation {
   position: relative;
   height: 100%;
@@ -3340,7 +3340,7 @@ textarea, .global-header .link-open-search, html, body {
   background-color: #f2f2f5;
 }
 
-/* line 39, ../sass/templates/_interactions.scss */
+/* line 38, ../sass/templates/_interactions.scss */
 .easing-representation__slider {
   position: absolute;
   top: 3px;
@@ -3356,46 +3356,46 @@ textarea, .global-header .link-open-search, html, body {
   -webkit-animation-timing-function: cubic-bezier(0.01, 0.04, 0.29, 0.99);
           animation-timing-function: cubic-bezier(0.01, 0.04, 0.29, 0.99);
 }
-/* line 50, ../sass/templates/_interactions.scss */
+/* line 49, ../sass/templates/_interactions.scss */
 .is-ie .easing-representation__slider {
   -webkit-animation: easeoutdemo-ie 3s infinite;
           animation: easeoutdemo-ie 3s infinite;
 }
 
-/* line 54, ../sass/templates/_interactions.scss */
+/* line 53, ../sass/templates/_interactions.scss */
 .easing-representation__slider--ease-in {
   -webkit-animation-timing-function: cubic-bezier(0.03, 0.08, 0.79, -0.15);
           animation-timing-function: cubic-bezier(0.03, 0.08, 0.79, -0.15);
 }
-/* line 56, ../sass/templates/_interactions.scss */
+/* line 55, ../sass/templates/_interactions.scss */
 .is-ie .easing-representation__slider--ease-in {
   -webkit-animation-timing-function: cubic-bezier(0.03, 0.08, 0.79, -0.15);
           animation-timing-function: cubic-bezier(0.03, 0.08, 0.79, -0.15);
 }
 
-/* line 61, ../sass/templates/_interactions.scss */
+/* line 60, ../sass/templates/_interactions.scss */
 .interactions-page .grid__column--one-third h4 {
   margin-bottom: 1.9em;
 }
-/* line 64, ../sass/templates/_interactions.scss */
+/* line 63, ../sass/templates/_interactions.scss */
 .interactions-page .grid__column--one-third button {
   margin-bottom: 3rem;
   float: left;
   clear: both;
 }
 
-/* line 70, ../sass/templates/_interactions.scss */
+/* line 69, ../sass/templates/_interactions.scss */
 .ie8.interactions-page .grid__column--one-third * {
   display: none;
 }
 
-/* line 73, ../sass/templates/_interactions.scss */
+/* line 72, ../sass/templates/_interactions.scss */
 .interactions-page .grid__column--one-third .main-navigation {
   padding-top: 0;
   padding-bottom: 0;
   margin-bottom: 3rem;
 }
-/* line 77, ../sass/templates/_interactions.scss */
+/* line 76, ../sass/templates/_interactions.scss */
 .interactions-page .grid__column--one-third .main-navigation > ul > li {
   margin-bottom: 0;
 }
@@ -3941,6 +3941,7 @@ table.table-data > tbody > tr:nth-child(even) > td {
 /* line 221, ../sass/components/_button.scss */
 .ref-button--is-loading {
   background-color: #ff4969;
+  /* @alternate */
   background: -webkit-repeating-linear-gradient(135deg, #ff4969, #ff4969 25%, #ef4260 25%, #ef4260 50%, #ff4969 50%) top left;
   background: repeating-linear-gradient(-45deg, #ff4969, #ff4969 25%, #ef4260 25%, #ef4260 50%, #ff4969 50%) top left;
   background-size: 47px 47px;
@@ -6650,63 +6651,62 @@ input[type="radio"]:disabled + label + .radioButtonLabelVisible {
   overflow: auto;
   font-size: 10px;
   background-color: #29292c;
-  overflow: auto;
 }
-/* line 63, ../sass/components/_panel-right.scss */
+/* line 62, ../sass/components/_panel-right.scss */
 .no-touch .panel-right, .no-touch
 .no-js .panel-right {
   -webkit-transition: right 0.18s ease-in;
           transition: right 0.18s ease-in;
 }
-/* line 66, ../sass/components/_panel-right.scss */
+/* line 65, ../sass/components/_panel-right.scss */
 .is-showing .panel-right, .is-showing
 .no-js .panel-right {
   right: 0;
 }
-/* line 68, ../sass/components/_panel-right.scss */
+/* line 67, ../sass/components/_panel-right.scss */
 .no-touch .is-showing .panel-right, .no-touch .is-showing
 .no-js .panel-right {
   -webkit-transition: right 0.12s 0.12s ease-out;
           transition: right 0.12s 0.12s ease-out;
 }
-/* line 72, ../sass/components/_panel-right.scss */
+/* line 71, ../sass/components/_panel-right.scss */
 .panel-right .reflection-form,
 .no-js .panel-right .reflection-form {
   padding: 36px 26px 39px 28px;
   font-family: "Open Sans", sans-serif;
 }
-/* line 77, ../sass/components/_panel-right.scss */
+/* line 76, ../sass/components/_panel-right.scss */
 .panel-right .form-field label,
 .no-js .panel-right .form-field label {
   font-size: 11.9px;
 }
-/* line 79, ../sass/components/_panel-right.scss */
+/* line 78, ../sass/components/_panel-right.scss */
 .is-animating-out .panel-right .form-field label, .is-animating-out
 .no-js .panel-right .form-field label {
   text-shadow: -4px 0px 1px rgba(252, 253, 253, 0.7);
 }
-/* line 82, ../sass/components/_panel-right.scss */
+/* line 81, ../sass/components/_panel-right.scss */
 .is-animating-in .panel-right .form-field label, .is-animating-in
 .no-js .panel-right .form-field label {
   text-shadow: 4px 0px 1px rgba(252, 253, 253, 0.7);
 }
-/* line 86, ../sass/components/_panel-right.scss */
+/* line 85, ../sass/components/_panel-right.scss */
 .panel-right .form-field input,
 .no-js .panel-right .form-field input {
   font-size: 14px;
   color: #81879d;
 }
-/* line 89, ../sass/components/_panel-right.scss */
+/* line 88, ../sass/components/_panel-right.scss */
 .is-animating-out .panel-right .form-field input, .is-animating-out
 .no-js .panel-right .form-field input {
   text-shadow: -4px 0px 1px rgba(129, 135, 157, 0.7);
 }
-/* line 92, ../sass/components/_panel-right.scss */
+/* line 91, ../sass/components/_panel-right.scss */
 .is-animating-in .panel-right .form-field input, .is-animating-in
 .no-js .panel-right .form-field input {
   text-shadow: 4px 0px 1px rgba(129, 135, 157, 0.7);
 }
-/* line 96, ../sass/components/_panel-right.scss */
+/* line 95, ../sass/components/_panel-right.scss */
 .panel-right .form-field input[type="text"],
 .panel-right .form-field input[type="email"],
 .panel-right .form-field input[type="password"],
@@ -6715,49 +6715,49 @@ input[type="radio"]:disabled + label + .radioButtonLabelVisible {
 .no-js .panel-right .form-field input[type="password"] {
   width: calc(100% - 28px);
 }
-/* line 102, ../sass/components/_panel-right.scss */
+/* line 101, ../sass/components/_panel-right.scss */
 .panel-right .form-field.is-closed label,
 .no-js .panel-right .form-field.is-closed label {
   font-size: 14px;
 }
-/* line 104, ../sass/components/_panel-right.scss */
+/* line 103, ../sass/components/_panel-right.scss */
 .is-animating-out .panel-right .form-field.is-closed label, .is-animating-out
 .no-js .panel-right .form-field.is-closed label {
   text-shadow: -4px 0px 1px rgba(129, 135, 157, 0.7);
 }
-/* line 107, ../sass/components/_panel-right.scss */
+/* line 106, ../sass/components/_panel-right.scss */
 .is-animating-in .panel-right .form-field.is-closed label, .is-animating-in
 .no-js .panel-right .form-field.is-closed label {
   text-shadow: 4px 0px 1px rgba(129, 135, 157, 0.7);
 }
-/* line 113, ../sass/components/_panel-right.scss */
+/* line 112, ../sass/components/_panel-right.scss */
 .panel-right .checkboxLabelVisible,
 .no-js .panel-right .checkboxLabelVisible {
   font-size: 13px;
 }
-/* line 117, ../sass/components/_panel-right.scss */
+/* line 116, ../sass/components/_panel-right.scss */
 .is-animating-out .panel-right input:-webkit-autofill, .is-animating-out
 .no-js .panel-right input:-webkit-autofill {
   text-shadow: -4px 0px 1px rgba(129, 135, 157, 0.7);
 }
-/* line 120, ../sass/components/_panel-right.scss */
+/* line 119, ../sass/components/_panel-right.scss */
 .is-animating-in .panel-right input:-webkit-autofill, .is-animating-in
 .no-js .panel-right input:-webkit-autofill {
   text-shadow: 4px 0px 1px rgba(129, 135, 157, 0.7);
 }
-/* line 124, ../sass/components/_panel-right.scss */
+/* line 123, ../sass/components/_panel-right.scss */
 .panel-right .form-link,
 .no-js .panel-right .form-link {
   margin-bottom: 15px;
   font-size: 13px;
   font-weight: 600;
 }
-/* line 128, ../sass/components/_panel-right.scss */
+/* line 127, ../sass/components/_panel-right.scss */
 .is-animating-out .panel-right .form-link, .is-animating-out
 .no-js .panel-right .form-link {
   text-shadow: -4px 0px 1px rgba(109, 105, 197, 0.7);
 }
-/* line 131, ../sass/components/_panel-right.scss */
+/* line 130, ../sass/components/_panel-right.scss */
 .is-animating-in .panel-right .form-link, .is-animating-in
 .no-js .panel-right .form-link {
   text-shadow: 4px 0px 1px rgba(109, 105, 197, 0.7);
@@ -6769,102 +6769,102 @@ input[type="radio"]:disabled + label + .radioButtonLabelVisible {
     padding-top: 62px;
   }
 }
-/* line 139, ../sass/components/_panel-right.scss */
+/* line 138, ../sass/components/_panel-right.scss */
 .panel-right .form-field--checkbox label,
 .no-js .panel-right .form-field--checkbox label {
   font-size: 1.3em;
 }
-/* line 141, ../sass/components/_panel-right.scss */
+/* line 140, ../sass/components/_panel-right.scss */
 .is-animating-out .panel-right .form-field--checkbox label, .is-animating-out
 .no-js .panel-right .form-field--checkbox label {
   text-shadow: -4px 0px 1px rgba(114, 118, 134, 0.7);
 }
-/* line 144, ../sass/components/_panel-right.scss */
+/* line 143, ../sass/components/_panel-right.scss */
 .is-animating-in .panel-right .form-field--checkbox label, .is-animating-in
 .no-js .panel-right .form-field--checkbox label {
   text-shadow: 4px 0px 1px rgba(114, 118, 134, 0.7);
 }
-/* line 149, ../sass/components/_panel-right.scss */
+/* line 148, ../sass/components/_panel-right.scss */
 .panel-right .ref-button--full-width,
 .no-js .panel-right .ref-button--full-width {
   margin-top: 11px;
 }
-/* line 151, ../sass/components/_panel-right.scss */
+/* line 150, ../sass/components/_panel-right.scss */
 .is-animating-out .panel-right .ref-button--full-width, .is-animating-out
 .no-js .panel-right .ref-button--full-width {
   text-shadow: -4px 0px 1px rgba(252, 253, 253, 0.7);
   box-shadow: -4px 0px 1px rgba(109, 105, 197, 0.7);
 }
-/* line 155, ../sass/components/_panel-right.scss */
+/* line 154, ../sass/components/_panel-right.scss */
 .is-animating-in .panel-right .ref-button--full-width, .is-animating-in
 .no-js .panel-right .ref-button--full-width {
   text-shadow: 4px 0px 1px rgba(252, 253, 253, 0.7);
   box-shadow: -4px 0px 1px rgba(109, 105, 197, 0.7);
 }
-/* line 160, ../sass/components/_panel-right.scss */
+/* line 159, ../sass/components/_panel-right.scss */
 .panel-right .blockquote-container,
 .no-js .panel-right .blockquote-container {
   width: 100%;
   padding: 29px 26px 38px 28px;
   border-top: 1px solid #161617;
 }
-/* line 164, ../sass/components/_panel-right.scss */
+/* line 163, ../sass/components/_panel-right.scss */
 .panel-right .blockquote-container blockquote,
 .no-js .panel-right .blockquote-container blockquote {
   margin-bottom: 0;
 }
-/* line 166, ../sass/components/_panel-right.scss */
+/* line 165, ../sass/components/_panel-right.scss */
 .panel-right .blockquote-container blockquote:before,
 .no-js .panel-right .blockquote-container blockquote:before {
   color: #36363a;
 }
-/* line 168, ../sass/components/_panel-right.scss */
+/* line 167, ../sass/components/_panel-right.scss */
 .is-animating-out .panel-right .blockquote-container blockquote:before, .is-animating-out
 .no-js .panel-right .blockquote-container blockquote:before {
   text-shadow: -4px 0px 1px rgba(54, 54, 58, 0.7);
 }
-/* line 171, ../sass/components/_panel-right.scss */
+/* line 170, ../sass/components/_panel-right.scss */
 .is-animating-in .panel-right .blockquote-container blockquote:before, .is-animating-in
 .no-js .panel-right .blockquote-container blockquote:before {
   text-shadow: 4px 0px 1px rgba(54, 54, 58, 0.7);
 }
-/* line 176, ../sass/components/_panel-right.scss */
+/* line 175, ../sass/components/_panel-right.scss */
 .is-animating-out .panel-right .blockquote-container blockquote p, .is-animating-out
 .no-js .panel-right .blockquote-container blockquote p {
   text-shadow: -4px 0px 1px rgba(91, 91, 104, 0.7);
 }
-/* line 179, ../sass/components/_panel-right.scss */
+/* line 178, ../sass/components/_panel-right.scss */
 .is-animating-in .panel-right .blockquote-container blockquote p, .is-animating-in
 .no-js .panel-right .blockquote-container blockquote p {
   text-shadow: 4px 0px 1px rgba(91, 91, 104, 0.7);
 }
-/* line 184, ../sass/components/_panel-right.scss */
+/* line 183, ../sass/components/_panel-right.scss */
 .is-animating-out .panel-right .blockquote-container blockquote cite, .is-animating-out
 .no-js .panel-right .blockquote-container blockquote cite {
   text-shadow: -4px 0px 1px rgba(114, 118, 134, 0.7);
 }
-/* line 187, ../sass/components/_panel-right.scss */
+/* line 186, ../sass/components/_panel-right.scss */
 .is-animating-in .panel-right .blockquote-container blockquote cite, .is-animating-in
 .no-js .panel-right .blockquote-container blockquote cite {
   text-shadow: 4px 0px 1px rgba(114, 118, 134, 0.7);
 }
-/* line 190, ../sass/components/_panel-right.scss */
+/* line 189, ../sass/components/_panel-right.scss */
 .panel-right .blockquote-container blockquote cite span,
 .no-js .panel-right .blockquote-container blockquote cite span {
   color: #fcfdfd;
 }
-/* line 192, ../sass/components/_panel-right.scss */
+/* line 191, ../sass/components/_panel-right.scss */
 .is-animating-out .panel-right .blockquote-container blockquote cite span, .is-animating-out
 .no-js .panel-right .blockquote-container blockquote cite span {
   text-shadow: -4px 0px 1px rgba(252, 253, 253, 0.7);
 }
-/* line 195, ../sass/components/_panel-right.scss */
+/* line 194, ../sass/components/_panel-right.scss */
 .is-animating-in .panel-right .blockquote-container blockquote cite span, .is-animating-in
 .no-js .panel-right .blockquote-container blockquote cite span {
   text-shadow: 4px 0px 1px rgba(252, 253, 253, 0.7);
 }
 
-/* line 203, ../sass/components/_panel-right.scss */
+/* line 202, ../sass/components/_panel-right.scss */
 .no-js .panel-right {
   right: 0;
 }
