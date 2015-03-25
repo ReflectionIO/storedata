@@ -126,7 +126,7 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 			if (SessionController.get().isLoggedInUserAdmin()) {
 				itemList.appendChild(adminItem);
 				UListElement ulAdminElem = adminItem.getElementsByTagName("ul").getItem(0).cast(); // Close admin menu
-				ulAdminElem.getStyle().setMarginTop(-(ulAdminElem.getClientHeight() + 1), Unit.PX);
+				ulAdminElem.getStyle().setMarginTop(-(ulAdminElem.getClientHeight()), Unit.PX);
 				UserController.get().fetchUsersCount();
 			} else {
 				adminItem.removeFromParent();
@@ -330,7 +330,7 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 	 */
 	@Override
 	public void receivedUsersCount(Long count) {
-		usersCount.setInnerText("(" + count.toString() + ")");
+		usersCount.setInnerText(count.toString());
 	}
 
 	/*

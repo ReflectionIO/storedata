@@ -22,6 +22,15 @@
 	.overfVis {
 		overflow: visible;
 	}
+	
+	.usersCount {
+		vertical-align: baseline !important;
+		padding-left: 5px !important;
+		padding-right: 5px;
+		margin-left: 6px;
+		background-color: #474949;
+		color: #fff;
+	}
 	</ui:style>
 	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.panelLeft} js-custom-scrollbar mCustomScrollbar _mCS_1 mCS-autoHide {style.overfVis}">
 		<div id="mCSB_1" class="mCustomScrollBox mCS-minimal-dark mCSB_vertical mCSB_outside" tabindex="0">
@@ -101,7 +110,7 @@
 								<li ui:field="adminUsersItem">
 									<g:InlineHyperlink targetHistoryToken="{UsersPageType.asTargetHistoryToken}">
 										Users
-										<span ui:field="usersCount"></span>
+										<span class="{style.usersCount}" ui:field="usersCount"></span>
 									</g:InlineHyperlink>
 								</li>
 								<li ui:field="adminRolesItem">
