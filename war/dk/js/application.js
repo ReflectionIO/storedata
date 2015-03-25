@@ -717,3 +717,12 @@
 		new FormFieldSelect();
 		new BackToTop();
 	}
+
+// LeaderboardPage object
+	var BlogPage = function() {
+		new Page();
+
+		// Components
+		new FormFieldSelect();
+		new BackToTop();
+	}

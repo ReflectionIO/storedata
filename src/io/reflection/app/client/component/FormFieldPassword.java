@@ -7,6 +7,7 @@
 //
 package io.reflection.app.client.component;
 
+import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.client.res.Styles.ReflectionMainStyles;
 
@@ -159,18 +160,26 @@ public class FormFieldPassword extends Composite implements HasClickHandlers, Ha
 			if (passwordTextBox.getText().length() < 1) {
 				strengthDescription.setInnerText("Strength");
 				strengthIndicator.setClassName("");
-			} else if (passwordTextBox.getText().length() < 6) {
-				strengthDescription.setInnerText("Pathetic");
-				strengthIndicator.setClassName(refStyle.isPathetic());
-			} else if (passwordTextBox.getText().length() < 10) {
-				strengthDescription.setInnerText("Ok");
-				strengthIndicator.setClassName(refStyle.isOk());
-			} else if (passwordTextBox.getText().length() < 14) {
-				strengthDescription.setInnerText("Strongish");
-				strengthIndicator.setClassName(refStyle.isStrong());
-			} else if (passwordTextBox.getText().length() >= 18) {
-				strengthDescription.setInnerText("Impressive");
-				strengthIndicator.setClassName(refStyle.isImpressive());
+			} else {
+				switch (FormHelper.getPasswordStrength(passwordTextBox.getText())) {
+				case 0:
+					strengthDescription.setInnerText("Pathetic");
+					strengthIndicator.setClassName(refStyle.isPathetic());
+					break;
+				case 1:
+					strengthDescription.setInnerText("Ok");
+					strengthIndicator.setClassName(refStyle.isOk());
+					break;
+				case 2:
+					strengthDescription.setInnerText("Strongish");
+					strengthIndicator.setClassName(refStyle.isStrong());
+					break;
+				case 3:
+				case 4:
+					strengthDescription.setInnerText("Impressive");
+					strengthIndicator.setClassName(refStyle.isImpressive());
+					break;
+				}
 			}
 		}
 	}
