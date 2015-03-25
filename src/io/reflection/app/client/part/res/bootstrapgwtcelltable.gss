@@ -1,103 +1,51 @@
-@def SELECTION_BORDER_WIDTH 0px;
-.cellTableWidget {
-	
-}
+@external cellTableWidget, cellTableFirstColumn, cellTableLastColumn, cellTableFooter, cellTableHeader, cellTableCell, cellTableFirstColumnFooter, cellTableFirstColumnHeader, cellTableLastColumnFooter, cellTableLastColumnHeader, cellTableEvenRow, cellTableEvenRowCell, cellTableOddRow, cellTableOddRowCell, cellTableHoveredRow, cellTableHoveredRowCell, cellTableKeyboardSelectedRow, cellTableKeyboardSelectedRowCell, cellTableSelectedRow, cellTableSelectedRowCell, cellTableKeyboardSelectedCell, cellTableSortableHeader, cellTableSortedHeaderAscending, cellTableSortedHeaderDescending, cellTableLoading;
 
-.cellTableFirstColumn {
-	
-}
+.cellTableWidget {}
 
-.cellTableLastColumn {
-	
-}
+.cellTableFirstColumn {}
 
-.cellTableFooter {
-	
-}
+.cellTableLastColumn {}
 
-.cellTableHeader {
-	
-}
+.cellTableFooter {}
 
-.cellTableCell {
-	
-}
+.cellTableHeader {}
 
-.cellTableFirstColumnFooter {
-	
-}
+.cellTableCell {}
 
-.cellTableFirstColumnHeader {
-	
-}
+.cellTableFirstColumnFooter {}
 
-.cellTableLastColumnFooter {
-	
-}
+.cellTableFirstColumnHeader {}
 
-.cellTableLastColumnHeader {
-	
-}
+.cellTableLastColumnFooter {}
 
-.cellTableEvenRow {
-	
-}
+.cellTableLastColumnHeader {}
 
-.cellTableEvenRowCell {
-	
-}
+.cellTableEvenRow {}
 
-.cellTableOddRow {
-	
-}
+.cellTableEvenRowCell {}
 
-.cellTableOddRowCell {
-	
-}
+.cellTableOddRow {}
 
-.cellTableHoveredRow {
-	
-}
+.cellTableOddRowCell {}
 
-.cellTableHoveredRowCell {
-	
-}
+.cellTableHoveredRow {}
 
-.cellTableKeyboardSelectedRow {
-	
-}
+.cellTableHoveredRowCell {}
 
-.cellTableKeyboardSelectedRowCell {
-	
-}
+.cellTableKeyboardSelectedRow {}
 
-.cellTableSelectedRow {
-	
-}
+.cellTableKeyboardSelectedRowCell {}
 
-.cellTableSelectedRowCell {
-	
-}
+.cellTableSelectedRow {}
 
-.cellTableKeyboardSelectedCell {
-	
-}
+.cellTableSelectedRowCell {}
 
-.cellTableSortableHeader {
-	
-}
+.cellTableKeyboardSelectedCell {}
 
-.cellTableSortedHeaderAscending {
-	
-}
+.cellTableSortableHeader {}
 
-.cellTableSortedHeaderDescending {
-	
-}
+.cellTableSortedHeaderAscending {}
 
-.cellTableLoading {
-	gwt-sprite: 'cellTableLoading';
-	padding: 30px;
-	background: none;
-	text-align: center;
-}
+.cellTableSortedHeaderDescending {}
+
+.cellTableLoading {}
