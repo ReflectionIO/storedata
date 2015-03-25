@@ -45,8 +45,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.InlineHyperlink;
@@ -102,16 +100,6 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 		adminItem.removeFromParent();
 		createItemList();
 
-		Event.sinkEvents(adminItem, Event.ONCLICK);
-		Event.setEventListener(adminItem, new EventListener() {
-			@Override
-			public void onBrowserEvent(Event event) {
-				if (Event.ONCLICK == event.getTypeInt()) {
-					toggleDropDownItem(adminItem);
-				}
-			}
-		});
-
 	}
 
 	private void attachUserLinks(User user) {
@@ -126,7 +114,7 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 			if (SessionController.get().isLoggedInUserAdmin()) {
 				itemList.appendChild(adminItem);
 				UListElement ulAdminElem = adminItem.getElementsByTagName("ul").getItem(0).cast(); // Close admin menu
-				ulAdminElem.getStyle().setMarginTop(-(ulAdminElem.getClientHeight() + 1), Unit.PX);
+				ulAdminElem.getStyle().setMarginTop(-(ulAdminElem.getClientHeight()), Unit.PX);
 				UserController.get().fetchUsersCount();
 			} else {
 				adminItem.removeFromParent();
@@ -313,6 +301,7 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 	@UiHandler("adminLink")
 	void onAdminLinkClicked(ClickEvent event) {
 		event.preventDefault();
+		toggleDropDownItem(adminItem);
 	}
 
 	/*
@@ -330,7 +319,7 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 	 */
 	@Override
 	public void receivedUsersCount(Long count) {
-		usersCount.setInnerText("(" + count.toString() + ")");
+		usersCount.setInnerText(count.toString());
 	}
 
 	/*
