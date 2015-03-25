@@ -5,16 +5,16 @@
 	<title>Reflection Design Kit - Form Elements</title>
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<link rel="stylesheet" media="screen, projection" type="text/css" href="css/designkit.12c392a8766d891ee3b2.css" />
+	<link rel="stylesheet" media="screen, projection" type="text/css" href="css/designkit.e5a4c9af2fc55a4f5d91.css" />
 	<!--[if (lt IE 9)]>
 		<script src="js/vendor/html5shiv.min.js"></script>
-		<link rel="stylesheet" media="screen, projection" type="text/css" href="css/reflection-main-ie8.0b2133ad09da6fd0140f.css" />
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="css/reflection-main-ie8.a4a8aa7ae27e2e1ace82.css" />
 	<![endif]-->
  	<!--[if !lt IE 9]><!-->
 		<script src="js/vendor/picturefill.2.2.0.min.js" async></script>
 	<!-- <![endif]-->
 	<!--[if (gte IE 9)|(IEMobile)|(!IE)]><!-->
-		<link rel="stylesheet" media="screen, projection" type="text/css" href="css/reflection-main.441a935f875bf25b69be.css" />
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="css/reflection-main.d2856cd3e586b6a37d2f.css" />
 	<!--<![endif]-->
 	<link rel="stylesheet" href="js/vendor/jquery.mCustomScrollbar.css" />
 </head>
@@ -108,7 +108,7 @@
 				<div class="grid__row dk-component-row">
 					<div class="grid__column grid__column--one-third">
 						<h3 class="heading-style--heading-six">Disabled</h3>
-						<div class="form-field form-field--select form-field--select-disabled">						
+						<div class="form-field form-field--select form-field--select-disabled">
 							<select class="js-field--select" disabled>
 							    <option value="" disabled selected>Choose your option</option>
 							    <option value="s1">Option 1</option>
@@ -295,7 +295,7 @@
 							<ul>
 								<li>
 									<input type="checkbox" name="checkboxOneDisabled" id="checkboxOneDisabled" disabled />
-									<label for="checkboxOneDisabled" class="checkboxLabelDisabled">Check box option disabled</label>
+									<label for="checkboxOneDisabled" class="checkboxLabel checkboxLabelDisabled">Check box option disabled</label>
 									<label for="checkboxOneDisabled" class="checkboxLabelVisible checkboxLabelVisibleDisabled">Check box option disabled</label>
 								</li>
 							</ul>
@@ -329,7 +329,7 @@
 									&nbsp;&lt;ul&gt;<br />
 										&nbsp;&nbsp;&lt;li&gt;<br />
 											&nbsp;&nbsp;&nbsp;&lt;input type="checkbox" name="checkboxOneDisabled" id="checkboxOneDisabled" disabled /&gt;<br />
-											&nbsp;&nbsp;&nbsp;&lt;label for="checkboxOneDisabled" class="checkboxLabelDisabled">Option 1&lt;/label&gt;<br />
+											&nbsp;&nbsp;&nbsp;&lt;label for="checkboxOneDisabled" class="checkboxLabel checkboxLabelDisabled">Option 1&lt;/label&gt;<br />
 											&nbsp;&nbsp;&nbsp;&lt;label for="checkboxOneDisabled" class="checkboxLabelVisible checkboxLabelVisibleDisabled">Option 1&lt;/label&gt;<br />
 										&nbsp;&nbsp;&lt;/li&gt;<br />
 									&nbsp;&lt;/ul&gt;<br />
@@ -354,12 +354,12 @@
 							<ul>
 								<li>
 									<input type="radio" name="radioButtonsDisabled" id="radioButtonOneDisabled" disabled />
-									<label for="radioButtonOneDisabled" class="radioButtonLabelDisabled">Yes</label>
+									<label for="radioButtonOneDisabled" class="radioButtonLabel radioButtonLabelDisabled">Yes</label>
 									<label for="radioButtonOneDisabled" class="radioButtonLabelVisibleDisabled">Yes</label>
 								</li>
 								<li>
 									<input type="radio" name="radioButtonsDisabled" id="radioButtonYesDisabled" disabled />
-									<label for="radioButtonYesDisabled" class="radioButtonLabelDisabled">No</label>
+									<label for="radioButtonYesDisabled" class="radioButtonLabel radioButtonLabelDisabled">No</label>
 									<label for="radioButtonYesDisabled" class="radioButtonLabelVisibleDisabled">No</label>
 								</li>
 							</ul>
@@ -510,6 +510,14 @@
 							    <option value="googleplay">Google Play</option>
 							</select>
 						</div>
+						<div class="form-field form-field--select form-field--select-disabled">						
+							<select class="js-field--select" disabled>
+						    <option value="" disabled selected>Disabled Select</option>
+						    <option value="ds1">Option 1</option>
+						    <option value="ds2">Option 2</option>
+						    <option value="ds3">Option 3</option>
+							</select>
+						</div>
 						<div class="form-field--radio-list form-field--radio-list--inline">
 							<ul>
 								<li>
@@ -521,6 +529,11 @@
 									<input type="radio" name="radioButtonsBool" id="radioButtonNo" />
 									<label for="radioButtonNo" class="radioButtonLabel">No</label>
 									<label for="radioButtonNo" class="radioButtonLabelVisible">No</label>
+								</li>
+								<li>
+									<input type="radio" name="radioButtonDisabledExampleB" id="radioButtonDisabledExampleB" disabled />
+									<label for="radioButtonDisabledExampleB" class="radioButtonLabel radioButtonLabelDisabled">Disabled</label>
+									<label for="radioButtonDisabledExampleB" class="radioButtonLabelVisible radioButtonLabelVisibleDisabled">Disabled</label>
 								</li>
 							</ul>
 						</div>
@@ -548,6 +561,11 @@
 									<input type="checkbox" name="checkboxTerms" id="checkboxTerms" />
 									<label for="checkboxTerms" class="checkboxLabel">Lorem ipsum dolor amet elict</label>
 									<label for="checkboxTerms" class="checkboxLabelVisible">I agree with the <a href="#">terms and conditions</a></label>
+								</li>
+								<li>
+									<input type="checkbox" name="checkboxDefaultDisabled" id="checkboxDefaultDisabled" disabled />
+									<label for="checkboxDefaultDisabled" class="checkboxLabel checkboxLabelDisabled">Check box option disabled</label>
+									<label for="checkboxDefaultDisabled" class="checkboxLabelVisible checkboxLabelVisibleDisabled">Check box option disabled</label>
 								</li>
 							</ul>
 						</div>
@@ -584,6 +602,14 @@
 							    <option value="googleplaymid">Google Play</option>
 							</select>
 						</div>
+						<div class="form-field form-field--select form-field--select-disabled">						
+							<select class="js-field--select" disabled>
+						    <option value="" disabled selected>Disabled Select</option>
+						    <option value="ds11">Option 1</option>
+						    <option value="ds12">Option 2</option>
+						    <option value="ds13">Option 3</option>
+							</select>
+						</div>
 						<div class="form-field--radio-list form-field--radio-list--inline">
 							<ul>
 								<li>
@@ -595,6 +621,11 @@
 									<input type="radio" name="radioButtonsBoolMid" id="radioButtonNoMid" />
 									<label for="radioButtonNoMid" class="radioButtonLabel">No</label>
 									<label for="radioButtonNoMid" class="radioButtonLabelVisible">No</label>
+								</li>
+								<li>
+									<input type="radio" name="radioButtonDisabledExampleBMid" id="radioButtonDisabledExampleBMid" disabled />
+									<label for="radioButtonDisabledExampleBMid" class="radioButtonLabel radioButtonLabelDisabled">Disabled</label>
+									<label for="radioButtonDisabledExampleBMid" class="radioButtonLabelVisible radioButtonLabelVisibleDisabled">Disabled</label>
 								</li>
 							</ul>
 						</div>
@@ -622,6 +653,11 @@
 									<input type="checkbox" name="checkboxTermsMid" id="checkboxTermsMid" />
 									<label for="checkboxTermsMid" class="checkboxLabel">Lorem ipsum dolor amet elict</label>
 									<label for="checkboxTermsMid" class="checkboxLabelVisible">I agree with the <a href="#">terms and conditions</a></label>
+								</li>
+								<li>
+									<input type="checkbox" name="checkboxMidDisabled" id="checkboxMidDisabled" disabled />
+									<label for="checkboxMidDisabled" class="checkboxLabel checkboxLabelDisabled">Check box option disabled</label>
+									<label for="checkboxMidDisabled" class="checkboxLabelVisible checkboxLabelVisibleDisabled">Check box option disabled</label>
 								</li>
 							</ul>
 						</div>
@@ -658,6 +694,14 @@
 							    <option value="googleplaydark">Google Play</option>
 							</select>
 						</div>
+						<div class="form-field form-field--select form-field--select-disabled">						
+							<select class="js-field--select" disabled>
+						    <option value="" disabled selected>Disabled Select</option>
+						    <option value="ds21">Option 1</option>
+						    <option value="ds22">Option 2</option>
+						    <option value="ds23">Option 3</option>
+							</select>
+						</div>					
 						<div class="form-field--radio-list">
 							<ul>
 								<li>
@@ -669,6 +713,11 @@
 									<input type="radio" name="radioButtonsBoolDark" id="radioButtonNoDark" />
 									<label for="radioButtonNoDark" class="radioButtonLabel">No</label>
 									<label for="radioButtonNoDark" class="radioButtonLabelVisible">No</label>
+								</li>
+								<li>
+									<input type="radio" name="radioButtonDisabledExampleBDark" id="radioButtonDisabledExampleBDark" disabled />
+									<label for="radioButtonDisabledExampleBDark" class="radioButtonLabel radioButtonLabelDisabled">Disabled</label>
+									<label for="radioButtonDisabledExampleBDark" class="radioButtonLabelVisible radioButtonLabelVisibleDisabled">Disabled</label>
 								</li>
 							</ul>
 						</div>
@@ -696,6 +745,11 @@
 									<input type="checkbox" name="checkboxTermsDark" id="checkboxTermsDark" />
 									<label for="checkboxTermsDark" class="checkboxLabel">Lorem ipsum dolor amet elict</label>
 									<label for="checkboxTermsDark" class="checkboxLabelVisible">I agree with the <a href="#">terms and conditions</a></label>
+								</li>
+								<li>
+									<input type="checkbox" name="checkboxDarkDisabled" id="checkboxDarkDisabled" disabled />
+									<label for="checkboxDarkDisabled" class="checkboxLabel checkboxLabelDisabled">Check box option disabled</label>
+									<label for="checkboxDarkDisabled" class="checkboxLabelVisible checkboxLabelVisibleDisabled">Check box option disabled</label>
 								</li>
 							</ul>
 						</div>
