@@ -85,7 +85,7 @@
 								C0,25.7,0.7,25,1.5,25h25C27.3,25,28,25.7,28,26.5L28,26.5z"></path></svg>
 								<span>Admin</span>
 							</g:Anchor>
-							<ul style="margin-top: -469px;">
+							<ul>
 								<li ui:field="adminFeedBrowserItem">
 									<g:InlineHyperlink ui:field="adminFeedBrowserLink">Feed Browser</g:InlineHyperlink>
 								</li>

@@ -1,6 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
-	xmlns:c="urn:import:com.google.gwt.user.cellview.client" xmlns:pp="urn:import:io.reflection.app.client.page.part">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:com.google.gwt.user.cellview.client"
+	xmlns:pp="urn:import:io.reflection.app.client.page.part">
 	<ui:import field="io.reflection.app.client.page.PageType.UpgradePageType" />
 
 	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
@@ -143,9 +143,6 @@
 			styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall} {STYLES_INSTANCE.reflectionMainStyle.pageFunctionButton}">
 			<span class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeMyApps}">View all Apps</span>
 		</g:InlineHyperlink>
-
-
-		<p:BackToTop />
 
 	</g:HTMLPanel>
 </ui:UiBinder> 
