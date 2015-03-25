@@ -162,19 +162,20 @@ public class FormFieldPassword extends Composite implements HasClickHandlers, Ha
 				strengthIndicator.setClassName("");
 			} else {
 				switch (FormHelper.getPasswordStrength(passwordTextBox.getText())) {
-				case (0):
+				case 0:
 					strengthDescription.setInnerText("Pathetic");
 					strengthIndicator.setClassName(refStyle.isPathetic());
 					break;
-				case (1):
+				case 1:
 					strengthDescription.setInnerText("Ok");
 					strengthIndicator.setClassName(refStyle.isOk());
 					break;
-				case (2):
+				case 2:
 					strengthDescription.setInnerText("Strongish");
 					strengthIndicator.setClassName(refStyle.isStrong());
 					break;
-				case (3):
+				case 3:
+				case 4:
 					strengthDescription.setInnerText("Impressive");
 					strengthIndicator.setClassName(refStyle.isImpressive());
 					break;

@@ -135,8 +135,9 @@ public class ChartHelper {
 				.setSpacing(createMarginsArray(40, 1, 1, 1));
 		chart.getPlotOption().setCursor(Cursor.DEFAULT.getCssName())
 				.setFillColor(getLinearGradientColor(0, 1, 0, 0, PLOT_BACKGROUND_COLOR_BOTTOM, PLOT_BACKGROUND_COLOR_TOP)).setLineWidth(3)
-				.setMarkerEnabled(false).setMarkerHoverRadius(4).setMarkerHoverRadiusPlus(0).setMarkerHoverLineWidthPlus(0).setMarkerLineWidth(0)
-				.setHoverHaloOpacity(0.2).setHoverHaloSize(12).setHoverLineWidthPlus(0).setMarkerSymbol("circle").setPointInterval(ONE_DAY_INTERVAL);
+				.setMarkerEnabled(false).setMarkerRadius(4).setMarkerHoverRadius(4).setMarkerHoverRadiusPlus(0).setMarkerHoverLineWidthPlus(0)
+				.setMarkerLineWidth(0).setHoverHaloOpacity(0.2).setHoverHaloSize(12).setHoverLineWidthPlus(0).setMarkerSymbol("circle")
+				.setPointInterval(ONE_DAY_INTERVAL);
 		chart.setColors(getDefaultColors());
 		chart.getCreditsOption().setEnabled(false); // Disable credits text
 		chart.getLegendOption().setEnabled(false); // Disable legend

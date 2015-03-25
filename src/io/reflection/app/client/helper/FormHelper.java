@@ -116,7 +116,7 @@ public class FormHelper {
 	}
 
 	/**
-	 * Return password strength indicator from 0 (weak) to 3
+	 * Return password strength indicator from 0 (weak) to 4
 	 * 
 	 * @param toValidate
 	 * @return
@@ -133,7 +133,9 @@ public class FormHelper {
 			if (REG_EXP_HAS_DIGIT_CHECKER.test(toValidate)) {
 				strength++;
 			}
-			// additional rule could be length > 12
+			if (toValidate.length() > 12) {
+				strength++;
+			}
 		}
 		return strength;
 	}
