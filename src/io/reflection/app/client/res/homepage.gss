@@ -2422,6 +2422,7 @@
 		width: 100%;
 		min-width: 150px;
 		height: 50px;
+		margin-bottom: 0;
 		display: block;
 		background: #f0f3f5 url(../images/global/logo-reflection-footer.png)
 			no-repeat 23px 12px !important;
