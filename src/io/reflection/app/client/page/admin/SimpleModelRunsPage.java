@@ -21,7 +21,6 @@ import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
-import io.reflection.app.client.part.BootstrapGwtDatePicker;
 import io.reflection.app.client.part.DateSelector;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.part.datatypes.DateRange;
@@ -66,8 +65,6 @@ public class SimpleModelRunsPage extends Page implements FilterEventHandler {
 
 	public SimpleModelRunsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
-
-		BootstrapGwtDatePicker.INSTANCE.styles().ensureInjected();
 
 		addColumns();
 

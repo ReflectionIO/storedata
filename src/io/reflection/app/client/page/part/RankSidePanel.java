@@ -16,7 +16,6 @@ import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormHelper;
-import io.reflection.app.client.part.BootstrapGwtDatePicker;
 
 import java.util.Date;
 
@@ -60,8 +59,6 @@ public class RankSidePanel extends Composite {
 
 	public RankSidePanel() {
 		initWidget(uiBinder.createAndBindUi(this));
-
-		BootstrapGwtDatePicker.INSTANCE.styles().ensureInjected();
 
 		if (!SessionController.get().isLoggedInUserAdmin()) {
 			dailyDataRadio.removeFromParent();

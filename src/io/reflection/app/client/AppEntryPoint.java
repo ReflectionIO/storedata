@@ -10,6 +10,7 @@ package io.reflection.app.client;
 import io.reflection.app.client.charts.GwtCanvasBasedCanvasFactory;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.helper.UserAgentHelper;
+import io.reflection.app.client.part.BackToTop;
 import io.reflection.app.client.part.SuperAlertBox;
 import io.reflection.app.client.res.Styles;
 
@@ -66,6 +67,7 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 		lPageContainer.add(NavigationController.get().getMainPanel());
 		RootPanel.get().add(NavigationController.get().getPanelRightAccount());
 		RootPanel.get().add(NavigationController.get().getPanelRightSearch());
+		RootPanel.get().add(new BackToTop());
 		if (UserAgentHelper.isIE()) {
 			Window.addResizeHandler(new ResizeHandler() {
 				@Override
