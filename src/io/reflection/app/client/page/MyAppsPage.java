@@ -31,7 +31,6 @@ import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.page.part.MyAppsTopPanel;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
-import io.reflection.app.client.part.BootstrapGwtDatePicker;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.part.datatypes.MyApp;
 import io.reflection.app.client.part.myapps.MyAppsEmptyTable;
@@ -104,8 +103,6 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 
 	public MyAppsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
-
-		BootstrapGwtDatePicker.INSTANCE.styles().ensureInjected();
 
 		Styles.STYLES_INSTANCE.reflection().ensureInjected();
 

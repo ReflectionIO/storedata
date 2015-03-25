@@ -12,7 +12,6 @@ import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormHelper;
-import io.reflection.app.client.part.BootstrapGwtDatePicker;
 import io.reflection.app.client.part.DateSelector;
 import io.reflection.app.client.part.datatypes.DateRange;
 
@@ -42,8 +41,6 @@ public class ItemTopPanel extends Composite {
 
 	public ItemTopPanel() {
 		initWidget(uiBinder.createAndBindUi(this));
-
-		BootstrapGwtDatePicker.INSTANCE.styles().ensureInjected();
 
 		// FilterHelper.addStores(mAppStore);
 		FilterHelper.addCountries(mCountry, SessionController.get().isLoggedInUserAdmin());
