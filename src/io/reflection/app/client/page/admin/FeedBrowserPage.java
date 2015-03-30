@@ -164,7 +164,7 @@ public class FeedBrowserPage extends Page implements FilterEventHandler, Navigat
 			@Override
 			public SafeHtml getValue(FeedFetch object) {
 				return SafeHtmlUtils.fromTrustedString("<a href=\""
-						+ PageType.CalibrationSummaryPageType.asHref(CalibrationSummaryPage.VIEW_ACTION_NAME, object.id.toString()).asString() + "\">"
+						+ PageType.CalibrationSummaryPageType.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE, object.id.toString()).asString() + "\">"
 						+ object.type + "</a>");
 			}
 		}, "Type");

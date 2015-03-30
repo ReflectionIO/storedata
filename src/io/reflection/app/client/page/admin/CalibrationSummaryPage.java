@@ -15,15 +15,15 @@ import io.reflection.app.client.cell.AppRankCell;
 import io.reflection.app.client.controller.CalibrationSummaryController;
 import io.reflection.app.client.controller.CategoryController;
 import io.reflection.app.client.controller.CountryController;
-import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.FormattingHelper;
+import io.reflection.app.client.highcharts.Chart;
+import io.reflection.app.client.highcharts.ChartHelper;
+import io.reflection.app.client.highcharts.ChartHelper.XDataType;
+import io.reflection.app.client.highcharts.ChartHelper.YDataType;
 import io.reflection.app.client.page.Page;
-import io.reflection.app.client.page.part.ItemChart;
-import io.reflection.app.client.page.part.ItemChart.Colour;
-import io.reflection.app.client.page.part.RankHover;
 import io.reflection.app.client.part.BootstrapGwtCellList;
 import io.reflection.app.client.part.Breadcrumbs;
 import io.reflection.app.client.res.Styles;
@@ -35,28 +35,22 @@ import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.SimpleModelRun;
 import io.reflection.app.shared.util.DataTypeHelper;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.event.logical.shared.ResizeEvent;
-import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellList;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
-import com.googlecode.gchart.client.GChart;
-import com.googlecode.gchart.client.GChart.AnnotationLocation;
-import com.googlecode.gchart.client.GChart.Curve;
-import com.googlecode.gchart.client.GChart.SymbolType;
 import com.spacehopperstudios.utility.StringUtils;
 import com.willshex.gson.json.service.shared.StatusType;
 
@@ -71,7 +65,6 @@ public class CalibrationSummaryPage extends Page implements NavigationEventHandl
 	interface CalibrationSummaryPagePageUiBinder extends UiBinder<Widget, CalibrationSummaryPage> {}
 
 	private static final int FEED_FETCH_ID_PARAMETER_INDEX = 0;
-	public static final String VIEW_ACTION_NAME = "view";
 
 	@UiField CheckBox showMisses;
 	@UiField CheckBox showTop;
@@ -79,10 +72,11 @@ public class CalibrationSummaryPage extends Page implements NavigationEventHandl
 	@UiField Breadcrumbs breadcrumbs;
 
 	private AppRankCell prototype = new AppRankCell(true).useFilter(false);
-	@UiField(provided = true) CellList<Rank> hits = new CellList<Rank>(prototype, BootstrapGwtCellList.INSTANCE);
-	@UiField(provided = true) CellList<Rank> misses = new CellList<Rank>(prototype, BootstrapGwtCellList.INSTANCE);
+	@UiField(provided = true) CellList<Rank> hitsCellList = new CellList<Rank>(prototype, BootstrapGwtCellList.INSTANCE);
+	@UiField(provided = true) CellList<Rank> missesCellList = new CellList<Rank>(prototype, BootstrapGwtCellList.INSTANCE);
 
-	@UiField GChart chart;
+	// @UiField GChart chart;
+	@UiField(provided = true) Chart chart = new Chart(XDataType.RankingXAxisDataType, YDataType.DownloadsYAxisDataType);
 
 	@UiField Element title;
 	@UiField Element description;
@@ -96,201 +90,81 @@ public class CalibrationSummaryPage extends Page implements NavigationEventHandl
 	private ListDataProvider<Rank> missesProvider = new ListDataProvider<Rank>();
 	private String currency;
 
-	private Timer resizeTimer;
-	private static final int CHART_HEIGHT = 350;
-
-	private ResizeHandler resizeHandler = new ResizeHandler() {
-
-		@Override
-		public void onResize(ResizeEvent event) {
-			resizeTimer.cancel();
-			resizeTimer.schedule(250);
-		}
-	};
-
 	@UiHandler({ "showMisses", "showTop", "showTail" })
 	void showMissesValueChanged(ValueChangeEvent<Boolean> event) {
-		drawChartData(chart);
+		updateCheckBoxes();
+	}
+
+	private void updateCheckBoxes() {
+		if (showTail.getValue().booleanValue()) {
+			chart.setXAxisMax(200);
+		} else {
+			chart.resetXAxisMax();
+		}
+		if (showTop.getValue().booleanValue()) {
+			chart.setXAxisMin(0);
+		} else {
+			chart.resetXAxisMin();
+		}
+		if (showMisses.getValue().booleanValue()) {
+			chart.showSeries("misses");
+		} else {
+			chart.hideSeries("misses");
+		}
+
 	}
 
 	public CalibrationSummaryPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		hits.setPageSize(Integer.MAX_VALUE);
-		misses.setPageSize(Integer.MAX_VALUE);
+		// setupChart(chart);
+		hitsCellList.setPageSize(Integer.MAX_VALUE);
+		missesCellList.setPageSize(Integer.MAX_VALUE);
 
-		hits.setEmptyListWidget(new HTMLPanel("No items found"));
-		misses.setEmptyListWidget(new HTMLPanel("No items found"));
+		hitsCellList.setEmptyListWidget(new HTMLPanel("No items found"));
+		missesCellList.setEmptyListWidget(new HTMLPanel("No items found"));
 
-		misses.getRowContainer().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA());
-		hits.getRowContainer().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA());
+		missesCellList.getRowContainer().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA());
+		hitsCellList.getRowContainer().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA());
 
-		hitsProvider.addDataDisplay(hits);
-		missesProvider.addDataDisplay(misses);
-
-		resizeTimer = new Timer() {
-			@Override
-			public void run() {
-				resizeChart(chart);
-			}
-		};
-
-		setupChart(chart);
-	}
-
-	private void setupChart(GChart gc) {
-		gc.setBorderStyle("none");
-
-		// setBackgroundColor("repeating-linear-gradient( 180deg, #FAFAFA, #FAFAFA 50px, #FFFFFF 50px, #FFFFFF 100px)");
-
-		// configure x-axis
-		gc.getXAxis().setTickLength(0);
-
-		gc.getYAxis().setHasGridlines(true);
-		gc.getYAxis().setTickLength(0);
-
-		gc.getYAxis().setTicksPerGridline(1);
-		gc.setGridColor("#EFF2F5");
-
-		gc.getYAxis().setAxisVisible(false);
-		gc.getXAxis().setAxisVisible(false);
-
-		gc.getXAxis().setTickLabelFontColor("gray");
-		gc.getYAxis().setTickLabelFontColor("gray");
-
-		gc.getXAxis().setTickLabelPadding(20);
-		gc.getYAxis().setTickLabelPadding(10);
-
-		gc.addCurve(0);
-		setupChartCurve(gc.getCurve(0), Colour.GreenColour);
-
-		gc.addCurve(1);
-		setupChartCurve(gc.getCurve(1), Colour.PinkColour);
-
-		gc.addCurve(2);
-		setupChartCurveLine(gc.getCurve(2), Colour.PurpleColour);
-
-		gc.getYAxis().setOutOfBoundsMultiplier(.1);
+		hitsProvider.addDataDisplay(hitsCellList);
+		missesProvider.addDataDisplay(missesCellList);
 
 	}
 
-	private void setupChartCurveLine(Curve c, Colour col) {
-		c.getSymbol().setHoverSelectionWidth(1);
-		c.getSymbol().setHoverSelectionBackgroundColor("#929292");
-		c.getSymbol().setHoverSelectionBorderWidth(0);
-		c.getSymbol().setHoverSelectionFillThickness(1);
-
-		c.getSymbol().setSymbolType(SymbolType.LINE);
-		c.getSymbol().setHeight(0);
-		c.getSymbol().setWidth(0);
-		c.getSymbol().setFillThickness(1);
-
-		// use a vertical line for the selection cursor
-		c.getSymbol().setHoverSelectionSymbolType(SymbolType.XGRIDLINE);
-		// with annotation on top of this line (above chart)
-		c.getSymbol().setHoverLocation(AnnotationLocation.NORTHEAST);
-
-		c.getSymbol().setHoverYShift(15);
-		c.getSymbol().setHoverXShift(-62);
-
-		RankHover hoverWidget = new RankHover();
-		hoverWidget.setCssColor(col.getColour());
-		hoverWidget.setXAxisDataType(ItemChart.XAxisDataType.RankingXAxisDataType);
-
-		c.getSymbol().setHoverWidget(hoverWidget);
-
-		// tall brush so it touches independent of mouse y position
-		c.getSymbol().setBrushSize(25, 700);
-		// so only point-to-mouse x-distance matters for hit testing
-		c.getSymbol().setDistanceMetric(1, 0);
-
-	}
-
-	private void setupChartCurve(Curve c, Colour col) {
-		c.getSymbol().setBorderWidth(0);
-		c.getSymbol().setWidth(8);
-		c.getSymbol().setHeight(8);
-
-		c.getSymbol().setImageURL(col.getImageUrl());
-
-		c.getSymbol().setHoverSelectionWidth(1);
-		c.getSymbol().setHoverSelectionBackgroundColor("#929292");
-		c.getSymbol().setHoverSelectionBorderWidth(0);
-		c.getSymbol().setHoverSelectionFillThickness(1);
-
-		// use a vertical line for the selection cursor
-		c.getSymbol().setHoverSelectionSymbolType(SymbolType.XGRIDLINE);
-		// with annotation on top of this line (above chart)
-		c.getSymbol().setHoverLocation(AnnotationLocation.NORTHEAST);
-
-		c.getSymbol().setHoverYShift(15);
-		c.getSymbol().setHoverXShift(-62);
-
-		RankHover hoverWidget = new RankHover();
-		hoverWidget.setCssColor(col.getColour());
-		hoverWidget.setXAxisDataType(ItemChart.XAxisDataType.RankingXAxisDataType);
-
-		c.getSymbol().setHoverWidget(hoverWidget);
-
-		// tall brush so it touches independent of mouse y position
-		c.getSymbol().setBrushSize(25, 700);
-		// so only point-to-mouse x-distance matters for hit testing
-		c.getSymbol().setDistanceMetric(1, 0);
-	}
-
-	private void drawChartData(GChart gc) {
-		Curve hits = gc.getCurve(0);
-		Curve misses = gc.getCurve(1);
-		Curve calibrated = gc.getCurve(2);
-
-		if (hits != null) {
-			hits.clearPoints();
-		}
-
-		if (misses != null) {
-			misses.clearPoints();
-		}
-
-		if (calibrated != null) {
-			calibrated.clearPoints();
-		}
+	private void drawChartData() {
 
 		if (summary != null) {
-			boolean isRevenue = false;
-			if (summary.hits != null) {
-				for (Rank rank : summary.hits) {
-					hits.addPoint(rank.position.doubleValue(),
-							(isRevenue = (rank.downloads == null)) ? rank.revenue.doubleValue() : rank.downloads.doubleValue());
-				}
-			}
-
-			if (showMisses.getValue() == Boolean.TRUE && summary.misses != null) {
-				for (Rank rank : summary.misses) {
-					misses.addPoint(0, (isRevenue = (rank.downloads == null)) ? rank.revenue.doubleValue() : rank.downloads.doubleValue());
-				}
-			}
-
-			((RankHover) hits.getSymbol().getHoverWidget()).setYAxisDataType(isRevenue ? ItemChart.YAxisDataType.RevenueYAxisDataType
-					: ItemChart.YAxisDataType.DownloadsYAxisDataType);
-			((RankHover) hits.getSymbol().getHoverWidget()).setCurrency(io.reflection.app.shared.util.FormattingHelper
-					.getCountryCurrency(summary.feedFetch.country.toUpperCase()));
-
-			((RankHover) misses.getSymbol().getHoverWidget()).setYAxisDataType(isRevenue ? ItemChart.YAxisDataType.RevenueYAxisDataType
-					: ItemChart.YAxisDataType.DownloadsYAxisDataType);
-			((RankHover) misses.getSymbol().getHoverWidget()).setCurrency(currency);
 
 			if (summary.simpleModelRun != null) {
 				int start = (showTop.getValue() == Boolean.TRUE ? 1 : summary.hits.get(0).position.intValue());
 				int end = (showTail.getValue() == Boolean.TRUE ? 200 : summary.hits.get(summary.hits.size() - 1).position.intValue());
 
+				List<Rank> predictionsDummyRanks = new ArrayList<Rank>();
+				Rank dummyRank;
 				for (int i = start; i <= end; i++) {
-					calibrated.addPoint(i, prediction(summary.simpleModelRun, i));
+					double prediction = prediction(summary.simpleModelRun, i);
+					// calibrated.addPoint(i, prediction);
+					dummyRank = new Rank();
+					dummyRank.position = i;
+					dummyRank.downloads = (int) prediction;
+					dummyRank.revenue = (float) prediction;
+					predictionsDummyRanks.add(dummyRank);
 				}
+				chart.drawData(predictionsDummyRanks, "prediction", ChartHelper.TYPE_SPLINE, ChartHelper.getDefaultColors().get(0));
+
 			}
 
+			if (summary.misses != null) {
+				chart.drawData(summary.misses, "misses", ChartHelper.TYPE_SCATTER, ChartHelper.getDefaultColors().get(2));
+				chart.hideSeries("misses");
+			}
+
+			if (summary.hits != null) {
+				chart.drawData(summary.hits, "hits", ChartHelper.TYPE_SCATTER, ChartHelper.getDefaultColors().get(1));
+			}
 		}
 
-		setChartLoading(gc, false);
 	}
 
 	/**
@@ -300,32 +174,6 @@ public class CalibrationSummaryPage extends Page implements NavigationEventHandl
 	 */
 	private double prediction(SimpleModelRun simpleModelRun, int possition) {
 		return (double) (summary.simpleModelRun.b.doubleValue() * Math.pow(possition, -summary.simpleModelRun.a.doubleValue()));
-	}
-
-	private void setChartLoading(GChart gc, boolean loading) {
-		Curve curve = gc.getCurve(0);
-
-		if (curve != null) {
-			curve.setVisible(!loading);
-
-			if (loading) {
-				curve.clearPoints();
-
-				gc.getXAxis().setAxisMax(FilterController.get().getEndDate().getTime());
-				gc.getXAxis().setAxisMin(FilterController.get().getStartDate().getTime());
-
-				gc.getYAxis().setAxisMax(1);
-				gc.getYAxis().setAxisMin(8);
-				gc.getYAxis().setTickCount(8);
-			}
-
-			gc.update();
-		}
-	}
-
-	private void resizeChart(GChart gc) {
-		gc.setChartSize((int) (gc.getElement().getParentElement().getClientWidth() - 170), CHART_HEIGHT);
-		gc.update();
 	}
 
 	/*
@@ -340,22 +188,6 @@ public class CalibrationSummaryPage extends Page implements NavigationEventHandl
 		register(DefaultEventBus.get().addHandlerToSource(GetCalibrationSummaryEventHandler.TYPE, CalibrationSummaryController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 
-		resizeTimer.cancel();
-		resizeTimer.schedule(250);
-
-		register(Window.addResizeHandler(resizeHandler));
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.page.Page#onDetach()
-	 */
-	@Override
-	protected void onDetach() {
-		super.onDetach();
-
-		resizeTimer.cancel();
 	}
 
 	private void refreshBreadcrumbs() {
@@ -384,12 +216,16 @@ public class CalibrationSummaryPage extends Page implements NavigationEventHandl
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
 		if (current.getAction() != null) {
-			if (VIEW_ACTION_NAME.equals(current.getAction())) {
+			if (NavigationController.VIEW_ACTION_PARAMETER_VALUE.equals(current.getAction())) {
 				feedFetchParam = current.getParameter(FEED_FETCH_ID_PARAMETER_INDEX);
 
 				if (feedFetchParam != null) {
-					Long feedFetchId = Long.valueOf(feedFetchParam);
 
+					Long feedFetchId = Long.valueOf(feedFetchParam);
+					chart.setLoading(true);
+					showMisses.setValue(Boolean.FALSE);
+					showTop.setValue(Boolean.FALSE);
+					showTail.setValue(Boolean.FALSE);
 					show(CalibrationSummaryController.get().getCalibrationSummary(feedFetchId));
 				}
 			}
@@ -410,6 +246,8 @@ public class CalibrationSummaryPage extends Page implements NavigationEventHandl
 		} else {
 			summaryListType = output.listType;
 			summaryListProperty = output.listProperty;
+			chart.setYDataType((ListPropertyType.ListPropertyTypeDownloads.equals(summaryListProperty)) ? YDataType.DownloadsYAxisDataType
+					: YDataType.RevenueYAxisDataType);
 
 			show(output.calibrationSummary);
 		}
@@ -438,7 +276,7 @@ public class CalibrationSummaryPage extends Page implements NavigationEventHandl
 		hitsProvider.setList(Collections.<Rank> emptyList());
 		missesProvider.setList(Collections.<Rank> emptyList());
 
-		drawChartData(chart);
+		drawChartData();
 
 		showMisses.setEnabled(true);
 		showTop.setEnabled(true);
@@ -477,6 +315,7 @@ public class CalibrationSummaryPage extends Page implements NavigationEventHandl
 
 			currency = io.reflection.app.shared.util.FormattingHelper.getCountryCurrency(summary.feedFetch.country.toUpperCase());
 			prototype.currency(currency);
+			chart.setCurrency(FormattingHelper.getCurrencySymbol(currency));
 
 			hitsProvider.setList(summary.hits == null ? Collections.<Rank> emptyList() : summary.hits);
 			missesProvider.setList(summary.misses == null ? Collections.<Rank> emptyList() : summary.misses);
@@ -501,7 +340,7 @@ public class CalibrationSummaryPage extends Page implements NavigationEventHandl
 							+ Styles.STYLES_INSTANCE.reflectionMainStyle().headingStyleHeadingSix() + "\">Simple model run fitted with co-efficients</div>"
 							+ simpleModelRunCoefficients() + (partial ? "" : "Additional information:" + simpleModelRunAdditionalInfo()))));
 
-			drawChartData(chart);
+			drawChartData();
 
 			showMisses.setEnabled(true);
 			showTop.setEnabled(true);

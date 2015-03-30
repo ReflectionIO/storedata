@@ -79,4 +79,8 @@ class NativeChart {
 		chart.showLoading();
 	}-*/;
 
+	public static native void nativeUpdateTooltipFormatter(JavaScriptObject chart, JavaScriptObject formatterFunction)/*-{
+		chart.tooltip.options.formatter = formatterFunction;
+	}-*/;
+
 }

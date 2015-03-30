@@ -19,7 +19,7 @@
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.formFieldCheckboxList}">
 			<ul>
 				<li>
-					<c:FormCheckbox ui:field="rememberMe" text="Keep me signed in" />
+					<c:FormCheckbox ui:field="rememberMe" label="Keep me signed in" />
 				</li>
 			</ul>
 		</div>

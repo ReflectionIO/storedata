@@ -39,6 +39,7 @@ import io.reflection.app.client.helper.FormattingHelper;
 import io.reflection.app.client.highcharts.Chart;
 import io.reflection.app.client.highcharts.ChartHelper;
 import io.reflection.app.client.highcharts.ChartHelper.RankType;
+import io.reflection.app.client.highcharts.ChartHelper.XDataType;
 import io.reflection.app.client.highcharts.ChartHelper.YDataType;
 import io.reflection.app.client.page.part.ItemChart.RankingType;
 import io.reflection.app.client.page.part.ItemSidePanel;
@@ -67,7 +68,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
-import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
@@ -105,7 +105,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	private RankingType rankingType;
 	private RankType rankType;
 	// private YAxisDataType dataType;
-	private YDataType yDataType;
 	private Item item;
 
 	private Map<String, LIElement> tabs = new HashMap<String, LIElement>();
@@ -117,8 +116,9 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	private ItemRevenue itemRevenuePlaceholder = new ItemRevenue();
 	private List<ItemRevenue> tablePlaceholder = new ArrayList<ItemRevenue>();
 
-	@UiField HTMLPanel chartContainer;
-	private Chart chart;
+	@UiField(provided = true) Chart chartRevenue = new Chart(XDataType.DateXAxisDataType, YDataType.RevenueYAxisDataType);
+	@UiField(provided = true) Chart chartDownloads = new Chart(XDataType.DateXAxisDataType, YDataType.DownloadsYAxisDataType);
+	@UiField(provided = true) Chart chartRank = new Chart(XDataType.DateXAxisDataType, YDataType.RankingYAxisDataType);
 
 	public ItemPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -247,10 +247,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		register(DefaultEventBus.get().addHandlerToSource(GetLinkedAccountItemEventHandler.TYPE, LinkedAccountController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(TogglePanelEventHandler.TYPE, NavigationController.get().getHeader(), this));
 
-		if (chart == null) {
-			chart = ChartHelper.createAndInjectChart(chartContainer);
-		}
-
 	}
 
 	/*
@@ -335,31 +331,43 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			if (showAllData || (!showAllData && current.getParameter(1).equals(RANKING_CHART_TYPE))) {
 				topPanel.updateFromFilter();
 				String newSelectedTab = current.getParameter(SELECTED_TAB_PARAMETER_INDEX);
-				boolean isNewSelectedTab = false;
+				// boolean isNewSelectedTab = false;
 				if (selectedTab == null || !selectedTab.equals(newSelectedTab)) {
 					selectedTab = newSelectedTab;
 					refreshTabs();
-					isNewSelectedTab = true;
+					// isNewSelectedTab = true;
 				}
-				// dataType = YAxisDataType.fromString(selectedTab);
-				yDataType = YDataType.fromString(selectedTab);
-				// historyChart.setDataType(dataType);
-				chart.setDataType(yDataType);
-				if (isNewSelectedTab && !isNewDataRequired) {
-					// historyChart.drawData();
-					chart.drawData();
-				}
+
+				// if (isNewSelectedTab && !isNewDataRequired) {
+				// chartRevenue.drawData();
+				// chartDownloads.drawData();
+				// chartRank.drawData();
+				// }
 				if (isNewDataRequired) {
 					setLoadingSpinnerEnabled(true);
 					sidePanel.setPriceInnerHTML(null);
 					getHistoryChartData();
 				}
-				// Element chartBackgroundElem = historyChart.getElement().getFirstChildElement().getFirstChildElement().getFirstChildElement()
-				// .getFirstChildElement().getNextSiblingElement().getFirstChildElement().getFirstChildElement();
-				// if (chartBackgroundElem != null) {
-				// chartBackgroundElem.getStyle().setProperty("background",
-				// "repeating-linear-gradient(180deg, #FAFAFA, #FAFAFA 50px, #FFFFFF 50px,#FFFFFF 100px)");
-				// }
+
+				// TODO let be handled by tabs
+				switch (YDataType.fromString(selectedTab)) {
+				case RevenueYAxisDataType:
+					chartRevenue.setVisible(true);
+					chartDownloads.setVisible(false);
+					chartRank.setVisible(false);
+					break;
+				case DownloadsYAxisDataType:
+					chartDownloads.setVisible(true);
+					chartRevenue.setVisible(false);
+					chartRank.setVisible(false);
+					break;
+				case RankingYAxisDataType:
+					chartRank.setVisible(true);
+					chartRevenue.setVisible(false);
+					chartDownloads.setVisible(false);
+					break;
+				}
+
 			}
 
 			// AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.SuccessAlertBoxType, false, "Item",
@@ -473,9 +481,10 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 				displayItemDetails(output.ranks.get(0));
 
-				chart.setRankingType(rankType);
-				chart.setDataType(yDataType);
-				chart.setData(output.ranks);
+				chartRank.setRankingType(rankType);
+				chartRevenue.drawData(output.ranks, "revenue", ChartHelper.TYPE_AREA);
+				chartDownloads.drawData(output.ranks, "downloads", ChartHelper.TYPE_AREA);
+				chartRank.drawData(output.ranks, "rank", ChartHelper.TYPE_LINE);
 
 				// historyChart.setMode(rankingType);
 				// historyChart.setDataType(dataType);
@@ -513,7 +522,9 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	private void getHistoryChartData() {
 		if (item != null) {
 			// historyChart.setLoading(true);
-			chart.setLoading(true);
+			chartRevenue.setLoading(true);
+			chartDownloads.setLoading(true);
+			chartRank.setLoading(true);
 			// preloader.show(true);
 			RankController.get().cancelRequestItemRanks();
 			RankController.get().cancelRequestItemSalesRanks();
@@ -572,9 +583,10 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 				// historyChart.setMode(RankingType.PositionRankingType);
 
-				chart.setRankingType(RankType.PositionRankingType);
-				chart.setDataType(yDataType);
-				chart.setData(output.ranks);
+				chartRank.setRankingType(RankType.PositionRankingType);
+				chartRevenue.drawData(output.ranks, "revenue", ChartHelper.TYPE_AREA);
+				chartDownloads.drawData(output.ranks, "downloads", ChartHelper.TYPE_AREA);
+				chartRank.drawData(output.ranks, "rank", ChartHelper.TYPE_LINE);
 
 				// historyChart.setDataType(dataType);
 
@@ -703,8 +715,12 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public void panelToggled(PanelType panelType, boolean wasOpen, boolean isOpen) {
 		if (PanelType.PanelLeftMenuType.equals(panelType)) {
-			chart.rearrangeXAxisLabels();
-			chart.resize();
+			chartRevenue.rearrangeXAxisDatetimeLabels();
+			chartDownloads.rearrangeXAxisDatetimeLabels();
+			chartRank.rearrangeXAxisDatetimeLabels();
+			chartRevenue.resize();
+			chartDownloads.resize();
+			chartRank.resize();
 		}
 	}
 
