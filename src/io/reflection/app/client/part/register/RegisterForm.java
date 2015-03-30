@@ -69,7 +69,7 @@ public class RegisterForm extends Composite {
 	public RegisterForm() {
 		initWidget(uiBinder.createAndBindUi(this));
 		this.getElement().setAttribute("autocomplete", "off");
-		termAndCond.setInnerHtml("I agree with the <a href='" + PageType.TermsPageType.asHref().asString() + "' target='_blank'>terms and conditions</a>");
+		termAndCond.setHTML("I agree with the <a href='" + PageType.TermsPageType.asHref().asString() + "' target='_blank'>terms and conditions</a>");
 
 	}
 
