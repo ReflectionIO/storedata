@@ -18,6 +18,8 @@ import com.google.gwt.core.client.JavaScriptObject;
 public class PlotOption extends Option<PlotOption> {
 
 	private JavaScriptObject series;
+	private JavaScriptObject seriesTypeArea;
+	private JavaScriptObject seriesTypeLine;
 	private JavaScriptObject dataLabels;
 	private JavaScriptObject marker;
 	private JavaScriptObject markerStates;
@@ -43,6 +45,22 @@ public class PlotOption extends Option<PlotOption> {
 			setOption("series", series);
 		}
 		return series;
+	}
+
+	public JavaScriptObject getAreaSeriesType() {
+		if (seriesTypeArea == null) {
+			seriesTypeArea = JavaScriptObject.createObject();
+			setOption("area", seriesTypeArea);
+		}
+		return seriesTypeArea;
+	}
+
+	public JavaScriptObject getLineSeriesType() {
+		if (seriesTypeLine == null) {
+			seriesTypeLine = JavaScriptObject.createObject();
+			setOption("line", seriesTypeLine);
+		}
+		return seriesTypeLine;
 	}
 
 	public PlotOption setAllowPointSelect(boolean allow) {
@@ -218,8 +236,18 @@ public class PlotOption extends Option<PlotOption> {
 		return this;
 	}
 
+	public PlotOption setFillColor(String color, JavaScriptObject seriesType) {
+		JavaScriptObjectHelper.setStringProperty(seriesType, "fillColor", color);
+		return this;
+	}
+
 	public PlotOption setFillColor(JavaScriptObject color) {
 		JavaScriptObjectHelper.setObjectProperty(getSeries(), "fillColor", color);
+		return this;
+	}
+
+	public PlotOption setFillColor(JavaScriptObject color, JavaScriptObject seriesType) {
+		JavaScriptObjectHelper.setObjectProperty(seriesType, "fillColor", color);
 		return this;
 	}
 
@@ -235,6 +263,11 @@ public class PlotOption extends Option<PlotOption> {
 
 	public PlotOption setLineWidth(int width) {
 		JavaScriptObjectHelper.setIntegerProperty(getSeries(), "lineWidth", width);
+		return this;
+	}
+
+	public PlotOption setLineWidth(int width, JavaScriptObject seriesType) {
+		JavaScriptObjectHelper.setIntegerProperty(seriesType, "lineWidth", width);
 		return this;
 	}
 

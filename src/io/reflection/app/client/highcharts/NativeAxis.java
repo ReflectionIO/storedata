@@ -82,6 +82,18 @@ class NativeAxis {
 		axis.setExtremes(min, max, redraw, animation);
 	}-*/;
 
+	static native void nativeSetExtremes(JavaScriptObject axis, JavaScriptObject min, double max, boolean redraw, boolean animate) /*-{
+		axis.setExtremes(min, max, redraw, animate);
+	}-*/;
+
+	static native void nativeSetExtremes(JavaScriptObject axis, double min, JavaScriptObject max, boolean redraw, boolean animate) /*-{
+		axis.setExtremes(min, max, redraw, animate);
+	}-*/;
+
+	static native void nativeSetExtremes(JavaScriptObject axis, JavaScriptObject min, JavaScriptObject max, boolean redraw, boolean animate) /*-{
+		axis.setExtremes(min, max, redraw, animate);
+	}-*/;
+
 	static native void nativeSetTitle(JavaScriptObject axis, JavaScriptObject title, boolean redraw)/*-{
 		axis.setTitle(title, redraw);
 	}-*/;
