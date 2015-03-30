@@ -1,6 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
-	xmlns:cv="urn:import:com.google.gwt.user.cellview.client" xmlns:pp="urn:import:io.reflection.app.client.page.part">
+	xmlns:cv="urn:import:com.google.gwt.user.cellview.client" xmlns:pp="urn:import:io.reflection.app.client.page.part" xmlns:hc="urn:import:io.reflection.app.client.highcharts">
 
 	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 	<ui:style gss="true">
@@ -128,7 +128,9 @@
 			<li id="tab-content" class="{STYLES_INSTANCE.reflectionMainStyle.tabs__content} {STYLES_INSTANCE.reflectionMainStyle.tabs__contentIsShowing}">
 				<article class="tabs__content-area">
 					<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__row}">
-						<g:HTMLPanel ui:field="chartContainer"></g:HTMLPanel>
+						<hc:Chart ui:field="chartRevenue"></hc:Chart>
+						<hc:Chart ui:field="chartDownloads"></hc:Chart>
+						<hc:Chart ui:field="chartRank"></hc:Chart>
 						<cv:CellTable ui:field="revenueTable" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}"></cv:CellTable>
 					</div>
 				</article>

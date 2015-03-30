@@ -64,30 +64,34 @@ public class RankHover extends Composite implements HoverUpdateable {
 	 */
 	@Override
 	public void hoverUpdate(Point hoveredOver) {
-		switch (xDataType) {
-		case DateXAxisDataType:
-			title.getElement().setInnerHTML(DATE_FORMATTER_EEE_DD_MMM_YYYY.format(new Date((long) hoveredOver.getX())));
-			break;
-		case RankingXAxisDataType:
-			if (hoveredOver.getX() == 0) {
-				title.getElement().setInnerHTML("Not ranked");
-			} else {
-				title.getElement().setInnerHTML("Rank " + Double.toString(hoveredOver.getX()));
-			}
+		if (xDataType != null) {
+			switch (xDataType) {
+			case DateXAxisDataType:
+				title.getElement().setInnerHTML(DATE_FORMATTER_EEE_DD_MMM_YYYY.format(new Date((long) hoveredOver.getX())));
+				break;
+			case RankingXAxisDataType:
+				if (hoveredOver.getX() == 0) {
+					title.getElement().setInnerHTML("Not ranked");
+				} else {
+					title.getElement().setInnerHTML("Rank " + Double.toString(hoveredOver.getX()));
+				}
 
-			break;
+				break;
+			}
 		}
 
-		switch (yDataType) {
-		case RevenueYAxisDataType:
-			detail.getElement().setInnerHTML(FormattingHelper.asWholeMoneyString(currency, (float) hoveredOver.getY()));
-			break;
-		case DownloadsYAxisDataType:
-			detail.getElement().setInnerHTML(WHOLE_NUMBER_FORMATTER.format((double) hoveredOver.getY()));
-			break;
-		case RankingYAxisDataType:
-			detail.getElement().setInnerHTML(Integer.toString((int) hoveredOver.getY()));
-			break;
+		if (yDataType != null) {
+			switch (yDataType) {
+			case RevenueYAxisDataType:
+				detail.getElement().setInnerHTML(FormattingHelper.asWholeMoneyString(currency, (float) hoveredOver.getY()));
+				break;
+			case DownloadsYAxisDataType:
+				detail.getElement().setInnerHTML(WHOLE_NUMBER_FORMATTER.format((double) hoveredOver.getY()));
+				break;
+			case RankingYAxisDataType:
+				detail.getElement().setInnerHTML(Integer.toString((int) hoveredOver.getY()));
+				break;
+			}
 		}
 	}
 
