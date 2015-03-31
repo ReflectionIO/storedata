@@ -92,6 +92,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("account-form-heading")
 		String accountFormHeading();
 
+		@ClassName("account-settings-section")
+		String accountSettingsSection();
+
 		@ClassName("account-setup-content-wrapper")
 		String accountSetupContentWrapper();
 
@@ -107,6 +110,11 @@ public interface Styles extends ClientBundle {
 		@ClassName("actions-group__content")
 		String actionsGroup__content();
 
+		String addthis_sharing_toolbox();
+
+		@ClassName("app-details")
+		String appDetails();
+
 		@ClassName("app-details-column")
 		String appDetailsColumn();
 
@@ -118,6 +126,15 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("apply-form-is-showing")
 		String applyFormIsShowing();
+
+		@ClassName("article-list--article")
+		String articleListArticle();
+
+		@ClassName("at-share-btn")
+		String atShareBtn();
+
+		@ClassName("at-share-tbx-element")
+		String atShareTbxElement();
 
 		@ClassName("blockquote--large")
 		String blockquoteLarge();
@@ -134,10 +151,28 @@ public interface Styles extends ClientBundle {
 		@ClassName("blockquote-container")
 		String blockquoteContainer();
 
-		String browserupgrade();
+		@ClassName("blog-article")
+		String blogArticle();
 
-		@ClassName("button-cancel")
-		String buttonCancel();
+		@ClassName("blog-article--info")
+		String blogArticleInfo();
+
+		@ClassName("blog-article-full")
+		String blogArticleFull();
+
+		@ClassName("blog-article__footer")
+		String blogArticle__footer();
+
+		@ClassName("blog-comments")
+		String blogComments();
+
+		@ClassName("blog-content-container")
+		String blogContentContainer();
+
+		@ClassName("blog-tags")
+		String blogTags();
+
+		String browserupgrade();
 
 		@ClassName("button-example-code-container")
 		String buttonExampleCodeContainer();
@@ -153,6 +188,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("centre-content-container")
 		String centreContentContainer();
+
+		@ClassName("centred-element")
+		String centredElement();
 
 		String checkboxLabel();
 
@@ -221,6 +259,12 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("colour-palette-container")
 		String colourPaletteContainer();
+
+		@ClassName("comments-link")
+		String commentsLink();
+
+		@ClassName("components-row-with-border")
+		String componentsRowWithBorder();
 
 		@ClassName("connect-account-content")
 		String connectAccountContent();
@@ -410,9 +454,6 @@ public interface Styles extends ClientBundle {
 		@ClassName("forms--mid-theme")
 		String formsMidTheme();
 
-		@ClassName("free-column")
-		String freeColumn();
-
 		@ClassName("full-screen-intro")
 		String fullScreenIntro();
 
@@ -475,6 +516,12 @@ public interface Styles extends ClientBundle {
 		@ClassName("grid__column--push-one")
 		String grid__columnPushOne();
 
+		@ClassName("grid__column--push-two")
+		String grid__columnPushTwo();
+
+		@ClassName("grid__column--right")
+		String grid__columnRight();
+
 		@ClassName("grid__column--three-quarters")
 		String grid__columnThreeQuarters();
 
@@ -488,9 +535,6 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("grid__row-container")
 		String grid__rowContainer();
-
-		@ClassName("grossing-column")
-		String grossingColumn();
 
 		@ClassName("gwt-DatePicker")
 		String gwtDatepicker();
@@ -531,6 +575,21 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("hidden-text")
 		String hiddenText();
+
+		@ClassName("highcharts-axis-labels")
+		String highchartsAxisLabels();
+
+		@ClassName("highcharts-container")
+		String highchartsContainer();
+
+		@ClassName("highcharts-tooltip")
+		String highchartsTooltip();
+
+		@ClassName("highcharts-xaxis-labels")
+		String highchartsXaxisLabels();
+
+		@ClassName("highcharts-yaxis-labels")
+		String highchartsYaxisLabels();
 
 		@ClassName("horizontal-centre-content")
 		String horizontalCentreContent();
@@ -583,6 +642,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("is-closed")
 		String isClosed();
+
+		@ClassName("is-current")
+		String isCurrent();
 
 		@ClassName("is-focused")
 		String isFocused();
@@ -679,8 +741,14 @@ public interface Styles extends ClientBundle {
 		@ClassName("maintain-after-submit")
 		String maintainAfterSubmit();
 
+		@ClassName("make-comment-button")
+		String makeCommentButton();
+
 		@ClassName("mobile-width")
 		String mobileWidth();
+
+		@ClassName("more-link")
+		String moreLink();
 
 		@ClassName("no-csstransitions")
 		String noCsstransitions();
@@ -718,6 +786,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("p-style--minor")
 		String pStyleMinor();
 
+		@ClassName("page-blog")
+		String pageBlog();
+
 		@ClassName("page-function-button")
 		String pageFunctionButton();
 
@@ -727,8 +798,22 @@ public interface Styles extends ClientBundle {
 		@ClassName("page-leaderboard")
 		String pageLeaderboard();
 
-		@ClassName("paid-column")
-		String paidColumn();
+		@ClassName("page-my-account")
+		String pageMyAccount();
+
+		@ClassName("page-section")
+		String pageSection();
+
+		@ClassName("page-section--with-border")
+		String pageSectionWithBorder();
+
+		@ClassName("page-title")
+		String pageTitle();
+
+		@ClassName("pages-link")
+		String pagesLink();
+
+		String pagination();
 
 		@ClassName("panel-left")
 		String panelLeft();
@@ -1018,8 +1103,17 @@ public interface Styles extends ClientBundle {
 		@ClassName("table-app-group")
 		String tableAppGroup();
 
+		@ClassName("table-cell-even-row")
+		String tableCellEvenRow();
+
+		@ClassName("table-cell-odd-row")
+		String tableCellOddRow();
+
 		@ClassName("table-data")
 		String tableData();
+
+		@ClassName("table-data-first")
+		String tableDataFirst();
 
 		@ClassName("table-my-apps")
 		String tableMyApps();
@@ -1057,6 +1151,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("text-muted")
 		String textMuted();
 
+		@ClassName("th-first")
+		String thFirst();
+
 		String touch();
 
 		@ClassName("user-company")
@@ -1073,6 +1170,7 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("will-show")
 		String willShow();
+
 	}
 
 	public interface HomePageStyles extends CssResource {
@@ -1253,6 +1351,10 @@ public interface Styles extends ClientBundle {
 		String windowHeightScrollEffectContainer();
 	}
 
+	public interface ReflectionMainIE8Styles extends CssResource {
+
+	}
+
 	public interface ConfirmationDialogStyles extends CssResource {}
 
 	public interface BlogStyles extends CssResource {}
@@ -1285,4 +1387,7 @@ public interface Styles extends ClientBundle {
 
 	@Source("reflectionMain.gss")
 	ReflectionMainStyles reflectionMainStyle();
+
+	@Source("reflectionMainIE8.gss")
+	ReflectionMainIE8Styles reflectionMainIE8Style();
 }

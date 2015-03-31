@@ -20,7 +20,6 @@ import io.reflection.app.client.helper.MarkdownHelper;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.page.blog.part.DisplayTag;
-import io.reflection.app.client.part.Preloader;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Post;
 import io.reflection.app.shared.util.FormattingHelper;
@@ -60,13 +59,15 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 
 	@UiField HeadingElement title;
 	@UiField SpanElement date;
+	@UiField SpanElement dateFooter;
 	@UiField SpanElement author;
+	@UiField SpanElement authorFooter;
 
 	@UiField HTMLPanel tags;
 	DivElement comments;
 
 	@UiField ParagraphElement content;
-	@UiField Preloader preloader;
+	// @UiField Preloader preloader;
 
 	private Post post;
 	private boolean installed;
@@ -140,11 +141,14 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 	private void show(Post post) {
 		title.setInnerText(post.title);
 		author.setInnerText(FormattingHelper.getUserName(post.author));
+		authorFooter.setInnerText(FormattingHelper.getUserName(post.author));
 
 		if (post.published != null) {
 			date.setInnerText(DATE_FORMATTER_EEE_DD_MMM_YYYY.format(post.published));
+			dateFooter.setInnerText(DATE_FORMATTER_EEE_DD_MMM_YYYY.format(post.published));
 		} else {
 			date.setInnerHTML("<span class=\"label label-info\">NOT PUBLISHED</span>");
+			dateFooter.setInnerHTML("<span class=\"label label-info\">NOT PUBLISHED</span>");
 		}
 
 		if (tags.getWidgetCount() > 0) {
@@ -200,23 +204,26 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 	private void setLoading(LoadingType value) {
 		switch (value) {
 		case CompleteLoadingType:
-			preloader.show();
+			// preloader.show();
 			title.getStyle().setDisplay(Display.NONE);
 			author.getParentElement().getStyle().setDisplay(Display.NONE);
+			authorFooter.getParentElement().getStyle().setDisplay(Display.NONE);
 			content.getStyle().setDisplay(Display.NONE);
 			comments.getStyle().setDisplay(Display.NONE);
 			break;
 		case PartialLoadingType:
-			preloader.show();
+			// preloader.show();
 			title.getStyle().clearDisplay();
 			author.getParentElement().getStyle().clearDisplay();
+			authorFooter.getParentElement().getStyle().clearDisplay();
 			content.getStyle().setDisplay(Display.NONE);
 			comments.getStyle().setDisplay(Display.NONE);
 			break;
 		case NoneLoadingType:
-			preloader.hide();
+			// preloader.hide();
 			title.getStyle().clearDisplay();
 			author.getParentElement().getStyle().clearDisplay();
+			authorFooter.getParentElement().getStyle().clearDisplay();
 			content.getStyle().clearDisplay();
 			comments.getStyle().clearDisplay();
 			break;

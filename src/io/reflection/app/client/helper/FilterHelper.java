@@ -182,6 +182,31 @@ public class FilterHelper {
 		addListType(list, false);
 	}
 
+	public static void addBlogCategories(FormFieldSelect list, boolean isAdmin) {
+		// if (isAdmin) {
+		list.addItem("All", "all");
+		list.addItem("Statistics", "statistics");
+		list.addItem("App Developers", "developers");
+		list.addItem("Design", "design");
+		// } else {}
+	}
+
+	public static void addBlogCategories(FormFieldSelect list) {
+		addBlogCategories(list, false);
+	}
+
+	public static void addBlogSortBy(FormFieldSelect list, boolean isAdmin) {
+		// if (isAdmin) {
+		list.addItem("Most Recent", "recent");
+		list.addItem("Most Commented", "commented");
+		list.addItem("Most Shared", "shared");
+		// } else {}
+	}
+
+	public static void addBlogSortBy(FormFieldSelect list) {
+		addBlogSortBy(list, false);
+	}
+
 	public static void addForums(FormFieldSelect list) {
 		List<Forum> forums = ForumController.get().getForums();
 

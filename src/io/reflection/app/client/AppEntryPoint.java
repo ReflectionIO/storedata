@@ -49,6 +49,9 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 
 		makeContainer();
 		Styles.STYLES_INSTANCE.reflectionMainStyle().ensureInjected();
+		if (UserAgentHelper.isIE() && UserAgentHelper.getIEVersion() < 9) {
+			Styles.STYLES_INSTANCE.reflectionMainIE8Style().ensureInjected();
+		}
 
 		SuperAlertBox.start();
 

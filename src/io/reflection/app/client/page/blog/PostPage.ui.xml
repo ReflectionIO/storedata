@@ -6,31 +6,57 @@
 	<ui:style gss="true">
 	
 	</ui:style>
-	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer}">
-		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth}">
-			<b:BlogSidePanel />
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.pageBlog}">
+		<!-- filters -->
 
-			<p:Preloader ui:field="preloader">
-				<g:HTMLPanel>
-					<h1 ui:field="title"></h1>
+		<div
+			class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnTwoThirds} {STYLES_INSTANCE.reflectionMainStyle.blogContentContainer}">
+			<article class="{STYLES_INSTANCE.reflectionMainStyle.blogArticleFull}">
 
-					<p>
-						By
-						<span ui:field="author" />
-						<span ui:field="date" />
+
+				<h1 ui:field="title"></h1>
+
+				<p class="{STYLES_INSTANCE.reflectionMainStyle.blogArticleInfo}">
+					<strong>Posted by</strong>
+					<span ui:field="author" />
+					<span ui:field="date" />
+					<!-- <span class="comments-link"> -->
+					<!-- <a href="#comments">12 comments</a> -->
+					<!-- </span> -->
+				</p>
+
+				<p ui:field="content" />
+
+				<footer class="{STYLES_INSTANCE.reflectionMainStyle.blogArticle__footer}">
+					<p class="{STYLES_INSTANCE.reflectionMainStyle.blogTags}">
+						<strong>Tags:</strong>
+						<g:HTMLPanel ui:field="tags" />
 					</p>
+					<p class="{STYLES_INSTANCE.reflectionMainStyle.blogArticleInfo}">
+						<strong>Posted by</strong>
+						<span ui:field="authorFooter" />
+						<span ui:field="dateFooter" />
+					</p>
+				</footer>
+				<div class="addthis_sharing_toolbox"></div>
 
-					<p ui:field="content" />
 
-					<g:HTMLPanel ui:field="tags" />
+			</article>
+			<div id="disqus_thread" class="{STYLES_INSTANCE.reflectionMainStyle.blogComments}">
+				<form>
+					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">15 Comments</h2>
+					<button class="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall} {STYLES_INSTANCE.reflectionMainStyle.makeCommentButton}">Make a Comment</button>
+					<div class="{STYLES_INSTANCE.reflectionMainStyle.formField}">
+						<textarea></textarea>
+					</div>
+				</form>
+			</div>
 
-					<div id="disqus_thread" />
 
-				</g:HTMLPanel>
-			</p:Preloader>
 
-			<p:BackToTop />
 		</div>
+
+
 	</g:HTMLPanel>
 
 </ui:UiBinder> 
