@@ -5,14 +5,14 @@
 	
 	</ui:style>
 	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.pagination}">
-		<g:Anchor ui:field="mFirstPage" href="#" styleName="{STYLES_INSTANCE.reflectionMainStyle.pagesLink}" visible="false">
+		<g:Anchor ui:field="mFirstPage" href="#" styleName="{STYLES_INSTANCE.reflectionMainStyle.pagesLink}">
 			First
 		</g:Anchor>
 		<g:Anchor ui:field="mPrevPage" href="#" styleName="{STYLES_INSTANCE.reflectionMainStyle.pagesLink}">
 			Older
 		</g:Anchor>
 
-		<ul ui:field="mList" class="" style="display: none">
+		<ul ui:field="mList" style="display: none">
 			<li ui:field="mFirstPageItem" class="disabled">
 			</li>
 			<li ui:field="mPrevPageItem" class="disabled">

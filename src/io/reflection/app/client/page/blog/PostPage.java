@@ -147,8 +147,8 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 			date.setInnerText(DATE_FORMATTER_EEE_DD_MMM_YYYY.format(post.published));
 			dateFooter.setInnerText(DATE_FORMATTER_EEE_DD_MMM_YYYY.format(post.published));
 		} else {
-			date.setInnerHTML("<span class=\"label label-info\">NOT PUBLISHED</span>");
-			dateFooter.setInnerHTML("<span class=\"label label-info\">NOT PUBLISHED</span>");
+			date.setInnerHTML("<span>NOT PUBLISHED</span>");
+			dateFooter.setInnerHTML("<span>NOT PUBLISHED</span>");
 		}
 
 		if (tags.getWidgetCount() > 0) {
