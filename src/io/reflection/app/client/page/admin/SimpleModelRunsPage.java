@@ -9,6 +9,7 @@ package io.reflection.app.client.page.admin;
 
 import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMATTER_DD_MMM_YYYY;
 import io.reflection.app.client.DefaultEventBus;
+import io.reflection.app.client.component.DateSelector;
 import io.reflection.app.client.component.FormFieldSelect;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.FilterController.Filter;
@@ -21,7 +22,6 @@ import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
-import io.reflection.app.client.part.DateSelector;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.client.res.Images;

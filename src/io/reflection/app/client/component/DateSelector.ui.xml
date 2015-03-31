@@ -1,6 +1,5 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:db="urn:import:com.google.gwt.user.datepicker.client"
-	xmlns:c="urn:import:io.reflection.app.client.component">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:io.reflection.app.client.component">
 	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 	<ui:style gss="true">
 	
@@ -10,14 +9,14 @@
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.dateSelectContainer}">
 				<div
 					class="{STYLES_INSTANCE.reflectionMainStyle.formField} {STYLES_INSTANCE.reflectionMainStyle.formFieldDateSelect} {STYLES_INSTANCE.reflectionMainStyle.formFieldDateSelectNoIcon}">
-					<db:DateBox ui:field="dateBoxFrom" styleName=""></db:DateBox>
+					<c:FormDateBox ui:field="dateBoxFrom"></c:FormDateBox>
 				</div>
 			</div>
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.dateSelectToIndicator}"></div>
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.dateSelectContainer}">
 				<div
 					class="{STYLES_INSTANCE.reflectionMainStyle.formField} {STYLES_INSTANCE.reflectionMainStyle.formFieldDateSelect} {STYLES_INSTANCE.reflectionMainStyle.formFieldDateSelectNoIcon}">
-					<db:DateBox ui:field="dateBoxTo" styleName=""></db:DateBox>
+					<c:FormDateBox ui:field="dateBoxTo"></c:FormDateBox>
 				</div>
 			</div>
 		</div>

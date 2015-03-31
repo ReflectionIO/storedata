@@ -5,10 +5,8 @@
 //  Created by Stefano Capuzzi (stefanocapuzzi) on 23 Jun 2014.
 //  Copyright © 2014 Reflection.io Ltd. All rights reserved.
 //
-package io.reflection.app.client.part;
+package io.reflection.app.client.component;
 
-import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMATTER_DD_MMM_YYYY;
-import io.reflection.app.client.component.FormFieldSelect;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.client.part.datatypes.DateRangeChangeEvent;
@@ -33,8 +31,6 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.datepicker.client.DateBox;
-import com.google.gwt.user.datepicker.client.DatePicker;
 
 /**
  * @author stefanocapuzzi
@@ -55,8 +51,8 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 	private List<PresetDateRange> presetDateRangeList = null;
 	private HashMap<String, PresetDateRange> lookupValuePresetDateRange = new HashMap<String, PresetDateRange>();
 
-	@UiField(provided = true) DateBox dateBoxFrom = new DateBox(new DatePicker(), null, new DateBox.DefaultFormat(DATE_FORMATTER_DD_MMM_YYYY));
-	@UiField(provided = true) DateBox dateBoxTo = new DateBox(new DatePicker(), null, new DateBox.DefaultFormat(DATE_FORMATTER_DD_MMM_YYYY));
+	@UiField FormDateBox dateBoxFrom;
+	@UiField FormDateBox dateBoxTo;
 	@UiField FormFieldSelect selectFixedRange;
 	@UiField Button applyDateRange;
 

@@ -1,12 +1,11 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
-	xmlns:c="urn:import:io.reflection.app.client.component">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:io.reflection.app.client.component">
 	<ui:style gss="true">
 	
 	</ui:style>
 	<g:HTMLPanel tag="form">
 
-		<p:DateSelector ui:field="dateSelector" />
+		<c:DateSelector ui:field="dateSelector" />
 
 		<!-- <div class="form-group"> <g:ListBox styleName="form-control" ui:field="mAppStore" /> </div> <div class="{style.store}" /> -->
 

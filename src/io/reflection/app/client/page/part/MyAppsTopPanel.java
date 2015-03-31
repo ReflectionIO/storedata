@@ -7,12 +7,12 @@
 //
 package io.reflection.app.client.page.part;
 
+import io.reflection.app.client.component.DateSelector;
 import io.reflection.app.client.component.FormFieldSelect;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormHelper;
-import io.reflection.app.client.part.DateSelector;
 import io.reflection.app.client.part.datatypes.DateRange;
 
 import com.google.gwt.core.client.GWT;

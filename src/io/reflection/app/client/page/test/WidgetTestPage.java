@@ -7,12 +7,12 @@
 //
 package io.reflection.app.client.page.test;
 
+import io.reflection.app.client.component.DateSelector;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.part.DateRangeBox;
 import io.reflection.app.client.part.DateRangePicker;
 import io.reflection.app.client.part.DateRangePicker.FixedDateRange;
-import io.reflection.app.client.part.DateSelector;
 import io.reflection.app.client.part.datatypes.DateRange;
 
 import java.util.ArrayList;
