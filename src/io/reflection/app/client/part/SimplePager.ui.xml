@@ -1,51 +1,40 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 	<ui:style gss="true">
-	.divider {
-	    padding-left: 0px !important;
-	    padding-right: 0px !important;
-	    height: 18px !important;
-	    width: 1px !important;
-	    background-color: #d2d2d2 !important;
-	    border: none !important;
-	    border-radius: 0px !important;
-	    box-shadow: none !important;
-	    margin-top: 8px !important;
-	}
+	
 	</ui:style>
-	<g:HTMLPanel>
-		<ul ui:field="mList" class="pagination">
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.pagination}">
+		<g:Anchor ui:field="mFirstPage" href="#" styleName="{STYLES_INSTANCE.reflectionMainStyle.pagesLink}">
+			First
+		</g:Anchor>
+		<g:Anchor ui:field="mPrevPage" href="#" styleName="{STYLES_INSTANCE.reflectionMainStyle.pagesLink}">
+			Older
+		</g:Anchor>
+
+		<ul ui:field="mList" style="display: none">
 			<li ui:field="mFirstPageItem" class="disabled">
-				<g:Anchor ui:field="mFirstPage">
-					First
-				</g:Anchor>
-				<span class="{style.divider}"></span>
 			</li>
 			<li ui:field="mPrevPageItem" class="disabled">
-				<g:Anchor ui:field="mPrevPage">
-					Prev
-				</g:Anchor>
 			</li>
 			<li>
 				<span ui:field="mLabel" />
 			</li>
 			<li ui:field="mNextPageItem" class="disabled">
-				<g:Anchor ui:field="mNextPage">
-					Next
-				</g:Anchor>
 			</li>
 			<li ui:field="mFastForwardItem" class="disabled">
-				<span class="{style.divider}"></span>
 				<g:Anchor ui:field="mFastForward">
 					FF
 				</g:Anchor>
 			</li>
 			<li ui:field="mLastPageItem" class="disabled">
-				<span class="{style.divider}"></span>
 				<g:Anchor ui:field="mLastPage">
 					Last
 				</g:Anchor>
 			</li>
 		</ul>
+		<g:Anchor ui:field="mNextPage" href="#" styleName="{STYLES_INSTANCE.reflectionMainStyle.pagesLink}">
+			Newer
+		</g:Anchor>
 	</g:HTMLPanel>
-</ui:UiBinder> 
+</ui:UiBinder>

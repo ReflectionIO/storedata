@@ -82,11 +82,10 @@ public class AppRankCell extends AbstractCell<Rank> {
 		if (useFilter) {
 			String dailyDataType = filter.getDailyData(), listType = FilterController.OVERALL_LIST_TYPE;
 
-
 			if (REVENUE_DAILY_DATA_TYPE.equals(dailyDataType) && showAllPredictions) {
 				if (value.downloads != null && value.revenue != null) {
 					dailyData = DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
-						+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue(), "padding-right: 6px",
+							+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue(), "",
 							FormattingHelper.asWholeMoneyString(value.currency, showAllPredictions ? value.revenue.floatValue() : 0.0f));
 				} else {
 					dailyData = SafeHtmlUtils.fromSafeConstant("-");
@@ -94,13 +93,12 @@ public class AppRankCell extends AbstractCell<Rank> {
 			} else {
 				if (value.downloads != null) {
 					dailyData = DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
-						+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeLeaderboard(), "padding-right: 6px",
+							+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
 							WHOLE_NUMBER_FORMATTER.format(value.downloads.doubleValue()));
 				} else {
 					dailyData = SafeHtmlUtils.fromSafeConstant("-");
 				}
 			}
-
 
 			Stack s = NavigationController.get().getStack();
 			if (s != null) {

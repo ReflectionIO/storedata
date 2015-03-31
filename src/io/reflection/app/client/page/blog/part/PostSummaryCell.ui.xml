@@ -1,49 +1,41 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder">
-    <ui:with field="link" type="com.google.gwt.safehtml.shared.SafeUri" />
-    <ui:with field="title" type="java.lang.String" />
-    <ui:with field="description" type="com.google.gwt.safehtml.shared.SafeHtml" />
-    <ui:with field="author" type="java.lang.String" />
-    <ui:with field="published" type="com.google.gwt.safehtml.shared.SafeHtml" />
+	<ui:with field="link" type="com.google.gwt.safehtml.shared.SafeUri" />
+	<ui:with field="title" type="java.lang.String" />
+	<ui:with field="description" type="com.google.gwt.safehtml.shared.SafeHtml" />
+	<ui:with field="author" type="java.lang.String" />
+	<ui:with field="published" type="com.google.gwt.safehtml.shared.SafeHtml" />
 
-    <ui:style gss="true">
-  
-    .info {
-    	font-size: 13px;
-    	margin-bottom: 20px;
-    }
-    
-    .bold {
-    	font-weight: 700;
-    }
-    
-    .readMore {
-    	display: inline-block;
-    	margin-top: 14px;
-    	margin-bottom: 36px;
-    }
-    </ui:style>
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
+	<ui:style gss="true">
+	
+	</ui:style>
 
-    <div>
-        <h3>
-            <a href="{link}">
-                <ui:text from="{title}" />
-            </a>
-        </h3>
-        <p class="{style.info}">
-            <span class="{style.bold}">
-                By
-                <span>
-                    <ui:text from="{author}" />
-                </span>
-            </span>
-            <ui:safehtml from="{published}" />
-        </p>
-        <p>
-            <ui:safehtml from="{description}" />
-        </p>
+	<div tag="article" clas="{STYLES_INSTANCE.reflectionMainStyle.blogArticle}">
+		<h2>
+			<a href="{link}">
+				<ui:text from="{title}" />
+			</a>
+		</h2>
+		<p class="{STYLES_INSTANCE.reflectionMainStyle.blogArticleInfo}">
+			<strong>Posted in</strong>
 
-        <a href="{link}" class="{style.readMore}">Read More</a>
+			<span>
+				By
+				<span>
+					<ui:text from="{author}" />
+				</span>
+			</span>
+			<ui:safehtml from="{published}" />
+		</p>
+		<p>
+			<ui:safehtml from="{description}" />
+		</p>
 
-    </div>
+		<p class="{STYLES_INSTANCE.reflectionMainStyle.moreLink}">
+			<a href="{link}">Read more</a>
+		</p>
+	</div>
+
+
 </ui:UiBinder>

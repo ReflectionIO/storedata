@@ -99,7 +99,7 @@ public class SimplePager extends AbstractPager {
 			mFastForwardItem.removeFromParent();
 			mFastForwardItem = null;
 		}
-		
+
 		if (!showLastPageButton) {
 			mLastPageItem.removeFromParent();
 			mLastPageItem = null;
@@ -111,26 +111,31 @@ public class SimplePager extends AbstractPager {
 
 	@UiHandler("mFirstPage")
 	void onFirstPageClicked(ClickEvent e) {
+		e.preventDefault();
 		firstPage();
 	}
 
 	@UiHandler("mNextPage")
 	void onNextPageClicked(ClickEvent e) {
+		e.preventDefault();
 		nextPage();
 	}
 
 	@UiHandler("mPrevPage")
 	void onPrevPageClicked(ClickEvent e) {
+		e.preventDefault();
 		previousPage();
 	}
-	
+
 	@UiHandler("mLastPage")
 	void onLastPageClicked(ClickEvent e) {
+		e.preventDefault();
 		lastPage();
 	}
-	
+
 	@UiHandler("mFastForward")
 	void onFastForwardClicked(ClickEvent e) {
+		e.preventDefault();
 		setPage(getPage() + getFastForwardPages());
 	}
 
@@ -143,11 +148,11 @@ public class SimplePager extends AbstractPager {
 	public void setDisplay(HasRows display) {
 		// Enable or disable all buttons.
 		boolean disableButtons = (display == null);
-		
+
 		setFastForwardDisabled(disableButtons);
 		setNextPageButtonsDisabled(disableButtons);
 		setPrevPageButtonsDisabled(disableButtons);
-		
+
 		super.setDisplay(display);
 	}
 
