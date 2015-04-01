@@ -1,6 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:com.google.gwt.user.cellview.client"
-	xmlns:p="urn:import:io.reflection.app.client.part">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:cv="urn:import:com.google.gwt.user.cellview.client"
+	xmlns:c="urn:import:io.reflection.app.client.component" xmlns:p="urn:import:io.reflection.app.client.part">
 	<ui:import field="io.reflection.app.client.page.PageType.DataAccountsPageType" />
 
 	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
@@ -18,13 +18,13 @@
 
 			<div class="form-group">
 				<label>Date</label>
-				<p:DateSelector ui:field="dateSelector" />
+				<c:DateSelector ui:field="dateSelector" />
 			</div>
 
 			<g:InlineHyperlink ui:field="backLink" styleName="{style.backLink}" targetHistoryToken="{DataAccountsPageType.asTargetHistoryToken}"
 				visible="false">&#8592;
 				Back to data accounts</g:InlineHyperlink>
-			<c:CellTable ui:field="dataAccountFetchTable" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}" />
+			<cv:CellTable ui:field="dataAccountFetchTable" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}" />
 
 			<p:SimplePager styleName="text-center" ui:field="simplePager" rangeLimited="true" />
 

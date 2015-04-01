@@ -9,7 +9,7 @@ package io.reflection.app.client.page.part;
 
 import static io.reflection.app.client.controller.FilterController.DOWNLOADS_DAILY_DATA_TYPE;
 import static io.reflection.app.client.controller.FilterController.REVENUE_DAILY_DATA_TYPE;
-import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMATTER_DD_MMM_YYYY;
+import io.reflection.app.client.component.FormDateBox;
 import io.reflection.app.client.component.FormFieldSelect;
 import io.reflection.app.client.component.FormRadioButton;
 import io.reflection.app.client.controller.FilterController;
@@ -33,8 +33,6 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
-import com.google.gwt.user.datepicker.client.DateBox;
-import com.google.gwt.user.datepicker.client.DatePicker;
 
 /**
  * @author billy1380
@@ -46,7 +44,7 @@ public class RankSidePanel extends Composite {
 
 	interface RankSidePanelUiBinder extends UiBinder<Widget, RankSidePanel> {}
 
-	@UiField(provided = true) DateBox dateBox = new DateBox(new DatePicker(), null, new DateBox.DefaultFormat(DATE_FORMATTER_DD_MMM_YYYY));
+	@UiField FormDateBox dateBox;
 	Date currentDate = FilterHelper.getToday();
 	@UiField FormFieldSelect appStoreListBox;
 	// @UiField ListBox mListType;

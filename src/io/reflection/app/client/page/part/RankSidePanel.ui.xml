@@ -13,7 +13,7 @@
 
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.dateSelectContainer}">
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.formField} {STYLES_INSTANCE.reflectionMainStyle.formFieldDateSelect}">
-					<d:DateBox ui:field="dateBox" styleName=""></d:DateBox>
+					<c:FormDateBox ui:field="dateBox"></c:FormDateBox>
 					<span></span>
 				</div>
 			</div>

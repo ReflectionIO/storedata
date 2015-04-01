@@ -1,6 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.google.gwt.user.datepicker.client"
-	xmlns:p="urn:import:io.reflection.app.client.part" xmlns:c="urn:import:io.reflection.app.client.component">
+	xmlns:c="urn:import:io.reflection.app.client.component">
 	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 	<ui:style gss="true">
 	.title {
@@ -32,7 +32,7 @@
 	</ui:style>
 	<g:HTMLPanel tag="form">
 
-		<p:DateSelector ui:field="dateSelector" />
+		<c:DateSelector ui:field="dateSelector" />
 
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.filtersGroupOther}">
 

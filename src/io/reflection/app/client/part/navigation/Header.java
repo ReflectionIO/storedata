@@ -131,15 +131,8 @@ public class Header extends Composite implements NavigationEventHandler, Session
 	}
 
 	private void setLoggedIn(boolean loggedIn) {
-		if (loggedIn) {
-			applyBtn.removeFromParent();
-			linkLogin.setText("My Account");
-		} else {
-			if (!actionsPanel.isOrHasChild(applyBtn.getElement())) {
-				actionsPanel.insertFirst(applyBtn.getElement());
-			}
-			linkLogin.setText("Log In");
-		}
+		applyBtn.setVisible(!loggedIn);
+		linkLogin.setText(loggedIn ? "My Account" : "Log In");
 	}
 
 	private void initPanelLeftMenu() {

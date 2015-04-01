@@ -1,6 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.google.gwt.user.datepicker.client"
-	xmlns:p="urn:import:io.reflection.app.client.part">
+	xmlns:c="urn:import:io.reflection.app.client.component" xmlns:p="urn:import:io.reflection.app.client.part">
 
 	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 
@@ -22,7 +22,7 @@
 			<p>This is our widget testing page... Developers will drop widgets here to test their layout before using it on the site pages.</p>
 			<p>Reflection.io dev team :)</p>
 
-			<p:DateSelector ui:field="dateSelector" />
+			<c:DateSelector ui:field="dateSelector" />
 
 			<p:DateRangePicker ui:field="picker1" />
 
