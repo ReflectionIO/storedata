@@ -34,8 +34,11 @@
 					</ul>
 				</div>
 			</div>
-			<div ui:field="createPasswordPanel" class="{STYLES_INSTANCE.reflectionMainStyle.createPasswordMainContent}">
-				<h1>Welcome to Reflection Jan!</h1>
+			<g:HTMLPanel ui:field="createPasswordPanel" styleName="{STYLES_INSTANCE.reflectionMainStyle.createPasswordMainContent}" visible="false">
+				<h1>
+					Welcome to Reflection
+					<span ui:field="welcomeName"></span>
+				</h1>
 				<p class="{STYLES_INSTANCE.reflectionMainStyle.pStyleFeatured}">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eius tempor incididunt ut labore et dolore lorem magna aliqua.
 					Ut enim ad minim
 					veniam, quis nostrud exercitat ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in</p>
@@ -56,7 +59,7 @@
 						</li>
 					</ul>
 				</div>
-			</div>
+			</g:HTMLPanel>
 		</div>
 		<div ui:field="accountFormContainer" class="{STYLES_INSTANCE.reflectionMainStyle.accountFormContainer}">
 			<ul class="{STYLES_INSTANCE.reflectionMainStyle.tabsContainer}">
