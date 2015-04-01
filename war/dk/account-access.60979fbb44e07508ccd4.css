@@ -670,8 +670,8 @@ input::-ms-clear {
 /* Font declarations */
 @font-face {
   font-family: "reflection-icons";
-  src: url("../fonts/fontastic/reflection-icons.eot");
-  src: url("../fonts/fontastic/reflection-icons.eot?#iefix") format("embedded-opentype"), url("../fonts/fontastic/reflection-icons.woff") format("woff"), url("../fonts/fontastic/reflection-icons.ttf") format("truetype"), url("../fonts/fontastic/reflection-icons.svg#reflection-icons") format("svg");
+  src: url("fonts/fontastic/reflection-icons.eot");
+  src: url("fonts/fontastic/reflection-icons.eot?#iefix") format("embedded-opentype"), url("fonts/fontastic/reflection-icons.woff") format("woff"), url("fonts/fontastic/reflection-icons.ttf") format("truetype"), url("fonts/fontastic/reflection-icons.svg#reflection-icons") format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -1197,7 +1197,7 @@ ol.content-list--featured li:before {
 ul.content-list li,
 ul.content-list--featured li,
 ul.content-list--minor li {
-  background: url(../images/bg-bullet.png) no-repeat left 0.6em;
+  background: url(images/bg-bullet.png) no-repeat left 0.6em;
   background-size: 10px auto;
 }
 
