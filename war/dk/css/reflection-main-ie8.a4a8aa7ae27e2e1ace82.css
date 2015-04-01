@@ -269,7 +269,7 @@ input::-ms-clear {
 /* Grid variables */
 /* responsive layout */
 /* Compass Grid Background variables */
-/* line 62, ../sass/layout/_grid.scss */
+/* line 61, ../sass/layout/_grid.scss */
 .grid-container {
   width: 100%;
   padding-left: 10px;
@@ -279,13 +279,13 @@ input::-ms-clear {
   padding-right: 30px;
 }
 
-/* line 77, ../sass/layout/_grid.scss */
+/* line 76, ../sass/layout/_grid.scss */
 .grid__column {
   display: inline-block;
   box-sizing: border-box;
 }
 
-/* line 82, ../sass/layout/_grid.scss */
+/* line 81, ../sass/layout/_grid.scss */
 .grid__column--one-twelfth {
   display: inline;
   float: left;
@@ -297,7 +297,7 @@ input::-ms-clear {
   padding: 0 2%;
 }
 
-/* line 89, ../sass/layout/_grid.scss */
+/* line 88, ../sass/layout/_grid.scss */
 .grid__column--one-sixth {
   display: inline;
   float: left;
@@ -309,7 +309,7 @@ input::-ms-clear {
   padding: 0 2%;
 }
 
-/* line 96, ../sass/layout/_grid.scss */
+/* line 95, ../sass/layout/_grid.scss */
 .grid__column--one-quarter {
   display: inline;
   float: left;
@@ -321,7 +321,7 @@ input::-ms-clear {
   padding: 0 2%;
 }
 
-/* line 103, ../sass/layout/_grid.scss */
+/* line 102, ../sass/layout/_grid.scss */
 .grid__column--one-third {
   display: inline;
   float: left;
@@ -333,7 +333,7 @@ input::-ms-clear {
   padding: 0 2%;
 }
 
-/* line 110, ../sass/layout/_grid.scss */
+/* line 109, ../sass/layout/_grid.scss */
 .grid__column--five-columns {
   display: inline;
   float: left;
@@ -345,7 +345,7 @@ input::-ms-clear {
   padding: 0 2%;
 }
 
-/* line 117, ../sass/layout/_grid.scss */
+/* line 116, ../sass/layout/_grid.scss */
 .grid__column--one-half {
   display: inline;
   float: left;
@@ -357,7 +357,7 @@ input::-ms-clear {
   padding: 0 2%;
 }
 
-/* line 124, ../sass/layout/_grid.scss */
+/* line 123, ../sass/layout/_grid.scss */
 .grid__column--two-thirds {
   display: inline;
   float: left;
@@ -369,7 +369,7 @@ input::-ms-clear {
   padding: 0 2%;
 }
 
-/* line 131, ../sass/layout/_grid.scss */
+/* line 130, ../sass/layout/_grid.scss */
 .grid__column--three-quarters {
   display: inline;
   float: left;
@@ -381,7 +381,7 @@ input::-ms-clear {
   padding: 0 2%;
 }
 
-/* line 138, ../sass/layout/_grid.scss */
+/* line 137, ../sass/layout/_grid.scss */
 .grid__column--full-width {
   display: inline;
   float: left;
@@ -389,41 +389,40 @@ input::-ms-clear {
   padding: 0 2%;
 }
 
-/* line 142, ../sass/layout/_grid.scss */
+/* line 141, ../sass/layout/_grid.scss */
 .grid__row-container {
   padding-left: 0 !important;
   padding-right: 0 !important;
 }
 
-/* line 147, ../sass/layout/_grid.scss */
+/* line 146, ../sass/layout/_grid.scss */
 .grid__row {
   display: block;
   width: 100%;
   margin-left: 0;
   margin-right: 0;
-  *zoom: 1;
 }
-/* line 25, ../sass/layout/_grid.scss */
+/* line 24, ../sass/layout/_grid.scss */
 .grid__row:before, .grid__row:after {
   content: "";
   display: table;
 }
-/* line 30, ../sass/layout/_grid.scss */
+/* line 29, ../sass/layout/_grid.scss */
 .grid__row:after {
   clear: both;
 }
 
-/* line 151, ../sass/layout/_grid.scss */
+/* line 150, ../sass/layout/_grid.scss */
 .grid__column--push-one {
   margin-left: 8.33333%;
 }
 
-/* line 156, ../sass/layout/_grid.scss */
+/* line 155, ../sass/layout/_grid.scss */
 .grid__column--push-two {
   margin-left: 16.66667%;
 }
 
-/* line 161, ../sass/layout/_grid.scss */
+/* line 160, ../sass/layout/_grid.scss */
 .grid__column--right {
   float: right;
 }
@@ -453,6 +452,26 @@ input::-ms-clear {
 /* line 24, ../sass/ui/_icons.scss */
 .ref-icon-hidden-text {
   font-size: 0;
+}
+
+/* line 27, ../sass/ui/_icons.scss */
+.sort-svg {
+  width: 7px;
+  margin-left: 3px;
+}
+/* line 30, ../sass/ui/_icons.scss */
+.sort-svg path {
+  fill: #6d69c5;
+  -webkit-transition: fill 0.1s;
+          transition: fill 0.1s;
+}
+/* line 35, ../sass/ui/_icons.scss */
+.is-descending .sort-svg .ascending {
+  fill: #c4c7d0;
+}
+/* line 40, ../sass/ui/_icons.scss */
+.is-ascending .sort-svg .descending {
+  fill: #c4c7d0;
 }
 
 /* Base */
@@ -2040,6 +2059,279 @@ textarea, .global-header .link-open-search, html, body {
   opacity: 0;
 }
 
+/* line 1, ../sass/templates/_app.scss */
+.page-app__header {
+  width: 75%;
+  margin-bottom: 2.5rem;
+  display: inline-block;
+}
+
+/* line 6, ../sass/templates/_app.scss */
+.page-app {
+  padding-top: 23px;
+  padding-bottom: 66px;
+  overflow: visible;
+}
+/* line 10, ../sass/templates/_app.scss */
+.page-app .tabs__link span svg {
+  width: 26px;
+  height: 26px;
+}
+/* line 14, ../sass/templates/_app.scss */
+.page-app .app-icon {
+  margin-right: 2.6%;
+  display: inline-block;
+  vertical-align: top;
+}
+/* line 19, ../sass/templates/_app.scss */
+.page-app .app-title {
+  margin-top: 16px;
+  margin-right: 15px;
+  margin-bottom: 0;
+  display: inline-block;
+  vertical-align: top;
+  font-size: 2.5rem;
+}
+/* line 27, ../sass/templates/_app.scss */
+.page-app .app-creator {
+  margin-top: 26px;
+  margin-right: 12px;
+  margin-bottom: 0px;
+  display: inline-block;
+  vertical-align: top;
+  font-size: 1.6rem;
+}
+/* line 34, ../sass/templates/_app.scss */
+.page-app .app-creator a {
+  color: #6d69c5;
+}
+/* line 36, ../sass/templates/_app.scss */
+.page-app .app-creator a:hover {
+  color: #4b46b5;
+}
+/* line 41, ../sass/templates/_app.scss */
+.page-app .app-price {
+  margin-top: 30px;
+  display: inline-block;
+  font-family: "Open Sans", sans-serif;
+  font-size: 1.4rem;
+  color: #28292c;
+}
+/* line 48, ../sass/templates/_app.scss */
+.page-app .filter-container--app {
+  padding-bottom: 0;
+}
+/* line 50, ../sass/templates/_app.scss */
+.page-app .filter-container--app .filters-group-other {
+  width: 450px;
+}
+/* line 52, ../sass/templates/_app.scss */
+.page-app .filter-container--app .filters-group-other .form-field {
+  width: 36%;
+  margin-right: 2.5%;
+}
+/* line 56, ../sass/templates/_app.scss */
+.page-app .filter-container--app .filters-group-other .filter-toggle {
+  margin-left: 0.9%;
+}
+
+/* line 62, ../sass/templates/_app.scss */
+.app-user-functions-container {
+  width: 14.5rem;
+  padding-top: 6px;
+  margin-right: 2%;
+  float: right;
+  text-align: right;
+}
+/* line 68, ../sass/templates/_app.scss */
+.app-user-functions-container .can-toggle {
+  float: right;
+}
+/* line 71, ../sass/templates/_app.scss */
+.app-user-functions-container .filter-switch {
+  margin-bottom: 1.5rem;
+}
+/* line 73, ../sass/templates/_app.scss */
+.app-user-functions-container .filter-switch > span {
+  padding-top: 3px;
+  color: #81879d;
+  font-family: "Open Sans", sans-serif;
+  font-size: 1.4rem;
+}
+/* line 78, ../sass/templates/_app.scss */
+.app-user-functions-container .filter-switch > span span {
+  padding-left: 5px;
+  display: inline-block;
+  font-size: 1.2rem;
+}
+/* line 85, ../sass/templates/_app.scss */
+.app-user-functions-container a {
+  font-size: 1.3rem;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 600;
+  color: #6d69c5;
+}
+/* line 90, ../sass/templates/_app.scss */
+.app-user-functions-container a:hover {
+  color: #4b46b5;
+}
+
+/* line 95, ../sass/templates/_app.scss */
+.filters-group-graph-options {
+  width: 100%;
+  padding-top: 1.2rem;
+  padding-left: 1.4%;
+  display: block;
+  text-align: left;
+}
+/* line 101, ../sass/templates/_app.scss */
+.filters-group-graph-options .filter-switch--small {
+  margin-right: 2rem;
+  margin-bottom: 0.9rem;
+  display: inline-block;
+}
+/* line 105, ../sass/templates/_app.scss */
+.filters-group-graph-options .filter-switch--small > span {
+  color: #363a47;
+}
+
+/* line 110, ../sass/templates/_app.scss */
+.graph-container {
+  clear: both;
+}
+
+/* line 113, ../sass/templates/_app.scss */
+.data-display-container {
+  margin-top: 45px;
+}
+
+/* line 116, ../sass/templates/_app.scss */
+.data-display-header {
+  position: relative;
+  overflow: visible;
+  border-bottom: 1px solid #e1e5e8;
+  padding-bottom: 2px;
+}
+/* line 121, ../sass/templates/_app.scss */
+.data-display-header button {
+  position: absolute;
+  right: 0px;
+  top: calc(100% + 11px);
+}
+
+/* line 127, ../sass/templates/_app.scss */
+.data-display-header--component {
+  width: 33.2%;
+  display: inline-block;
+  vertical-align: top;
+  font-size: 0;
+}
+
+/* line 133, ../sass/templates/_app.scss */
+.data-heading {
+  margin: 0;
+  display: inline-block;
+  vertical-align: top;
+  font-size: 2rem;
+}
+
+/* line 139, ../sass/templates/_app.scss */
+.app-icon-small {
+  width: 34px;
+  height: 34px;
+  margin-right: 15px;
+}
+
+/* line 144, ../sass/templates/_app.scss */
+.data-summary-container {
+  padding-top: 7px;
+}
+
+/* line 147, ../sass/templates/_app.scss */
+.revenue-date-range {
+  margin-right: 5%;
+  display: inline-block;
+  font-size: 1.4rem;
+  color: #81879d;
+}
+
+/* line 153, ../sass/templates/_app.scss */
+.revenue-summary-value {
+  display: inline-block;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 600;
+  font-size: 2rem;
+  color: #29292c;
+}
+/* line 159, ../sass/templates/_app.scss */
+.data-summary-container-synced .revenue-summary-value {
+  color: #727686;
+}
+
+/* line 163, ../sass/templates/_app.scss */
+.table-revenue {
+  width: 100%;
+}
+/* line 166, ../sass/templates/_app.scss */
+.table-revenue tbody tr {
+  border-bottom: 1px solid #fcfdfd;
+}
+/* line 168, ../sass/templates/_app.scss */
+.table-revenue tbody tr:nth-child(odd) {
+  background-color: #f2f2f5;
+}
+/* line 173, ../sass/templates/_app.scss */
+.table-revenue th {
+  padding: 28px 0px 14px 2%;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 600;
+  font-size: 1.4rem;
+  color: #28292c;
+}
+/* line 180, ../sass/templates/_app.scss */
+.table-revenue .date-value,
+.table-revenue .revenue-value,
+.table-revenue .revenue-percentage {
+  padding-left: 2%;
+  font-size: 1.5rem;
+  color: #363a47;
+}
+/* line 187, ../sass/templates/_app.scss */
+.table-revenue .revenue-percentage {
+  font-size: 0;
+}
+/* line 189, ../sass/templates/_app.scss */
+.table-revenue .revenue-percentage span {
+  width: 14.0%;
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 1.5rem;
+  color: #363a47;
+}
+/* line 196, ../sass/templates/_app.scss */
+.table-revenue .revenue-percentage .data-bar {
+  height: 44px;
+  width: 86%;
+  display: inline-block;
+  vertical-align: middle;
+}
+/* line 201, ../sass/templates/_app.scss */
+.table-revenue .revenue-percentage .data-bar div {
+  height: 44px;
+  display: inline-block;
+  background-color: #dedeef;
+}
+
+/* line 209, ../sass/templates/_app.scss */
+.can-be-sorted {
+  cursor: pointer;
+}
+/* line 211, ../sass/templates/_app.scss */
+.can-be-sorted:active {
+  position: relative;
+  top: 2px;
+}
+
 /* line 1, ../sass/templates/_blog.scss */
 .page-blog {
   padding-top: 34px;
@@ -3058,94 +3350,46 @@ textarea, .global-header .link-open-search, html, body {
 .page-leaderboard .heading-style--heading-three.page-title {
   margin-bottom: 1.88rem;
 }
-/* line 9, ../sass/templates/_leaderboard.scss */
-.page-leaderboard .page-functions {
-  width: 50%;
-  display: inline-block;
-}
-/* line 12, ../sass/templates/_leaderboard.scss */
-.page-leaderboard .page-functions button {
-  margin-right: 3%;
-  float: right;
-}
-/* line 17, ../sass/templates/_leaderboard.scss */
-.page-leaderboard .page-function-button {
-  padding: 0.65em 0.89em 0.4em 0.93em;
-}
-/* line 19, ../sass/templates/_leaderboard.scss */
-.page-leaderboard .page-function-button span:before {
-  position: relative;
-  top: -1px;
-  margin-right: 0.9rem;
-  vertical-align: middle;
-  font-size: 20px;
-  color: #81879d;
-}
-/* line 27, ../sass/templates/_leaderboard.scss */
-.page-leaderboard .page-function-button:active {
-  padding-bottom: 0.25em;
-}
-/* line 32, ../sass/templates/_leaderboard.scss */
+/* line 10, ../sass/templates/_leaderboard.scss */
 .page-leaderboard .filters-container .form-field:not(.form-field--date-select),
 .page-leaderboard .filters-container .calendar-container {
   width: 16%;
   margin-right: 1%;
   margin-bottom: 0;
 }
-/* line 39, ../sass/templates/_leaderboard.scss */
-.page-leaderboard .inline-search-form {
-  width: 33.4%;
-  float: right;
-  display: inline-block;
-  vertical-align: top;
-}
-/* line 46, ../sass/templates/_leaderboard.scss */
-.page-leaderboard .search-field-no-label input[type=text] {
-  max-width: calc(100% - 17px);
-  font-size: 1.3rem;
-}
-/* line 49, ../sass/templates/_leaderboard.scss */
-.page-leaderboard .search-field-no-label input[type=text]:active + input[type=submit] {
-  color: #6d69c5;
-}
-/* line 53, ../sass/templates/_leaderboard.scss */
-.page-leaderboard .search-field-no-label input[type=submit] {
-  font-size: 1.75rem;
-  color: #81879d;
-}
 
-/* line 59, ../sass/templates/_leaderboard.scss */
+/* line 18, ../sass/templates/_leaderboard.scss */
 .table-overall {
   width: 100%;
 }
-/* line 61, ../sass/templates/_leaderboard.scss */
+/* line 20, ../sass/templates/_leaderboard.scss */
 .table-overall .MHXTE6C-i-a,
 .table-overall .table-data {
   vertical-align: top;
 }
-/* line 65, ../sass/templates/_leaderboard.scss */
+/* line 24, ../sass/templates/_leaderboard.scss */
 .table-overall .MHXTE6C-i-d,
 .table-overall .table-data-first {
   vertical-align: middle;
 }
 
-/* line 70, ../sass/templates/_leaderboard.scss */
+/* line 29, ../sass/templates/_leaderboard.scss */
 .table-app-group {
   width: 100%;
 }
-/* line 72, ../sass/templates/_leaderboard.scss */
+/* line 31, ../sass/templates/_leaderboard.scss */
 .table-app-group .MHXTE6C-i-a,
 .table-app-group .table-data {
   padding-top: 0.9rem;
   padding-bottom: 0.6rem;
 }
 
-/* line 78, ../sass/templates/_leaderboard.scss */
+/* line 37, ../sass/templates/_leaderboard.scss */
 table.table-data > tbody > tr:nth-child(odd) > td {
   background-color: #eff2f5;
 }
 
-/* line 82, ../sass/templates/_leaderboard.scss */
+/* line 41, ../sass/templates/_leaderboard.scss */
 table.table-data > tbody > tr:nth-child(even) > td {
   background-color: #ffffff;
 }
@@ -3205,35 +3449,200 @@ table.table-data > tbody > tr:nth-child(even) > td {
   font-size: 1.3rem;
 }
 
+/* line 3, ../sass/templates/_my-apps-and-app.scss */
+.filter-container--my-apps .filters-group-time,
+.filter-container--app .filters-group-time {
+  width: 46.40999%;
+  display: inline-block;
+  overflow: visible;
+}
+/* line 7, ../sass/templates/_my-apps-and-app.scss */
+.filter-container--my-apps .filters-group-time .calendar-container,
+.filter-container--app .filters-group-time .calendar-container {
+  width: 57%;
+  margin-right: 0;
+}
+/* line 11, ../sass/templates/_my-apps-and-app.scss */
+.filter-container--my-apps .filters-group-time .date-select-container,
+.filter-container--app .filters-group-time .date-select-container {
+  position: relative;
+  width: 43.6%;
+  display: inline-block;
+  overflow: visible;
+  vertical-align: middle;
+}
+/* line 18, ../sass/templates/_my-apps-and-app.scss */
+.filter-container--my-apps .filters-group-time .date-select-to-indicator,
+.filter-container--app .filters-group-time .date-select-to-indicator {
+  position: relative;
+  width: 10.6%;
+  height: 22px;
+  display: inline-block;
+  vertical-align: middle;
+  text-align: center;
+}
+/* line 25, ../sass/templates/_my-apps-and-app.scss */
+.filter-container--my-apps .filters-group-time .date-select-to-indicator:after,
+.filter-container--app .filters-group-time .date-select-to-indicator:after {
+  content: "l";
+}
+/* line 29, ../sass/templates/_my-apps-and-app.scss */
+.filter-container--my-apps .filters-group-time .form-field--select,
+.filter-container--app .filters-group-time .form-field--select {
+  width: 25%;
+}
+/* line 33, ../sass/templates/_my-apps-and-app.scss */
+.filter-container--my-apps .form-field:last-child,
+.filter-container--app .form-field:last-child {
+  margin-right: 0;
+}
+/* line 36, ../sass/templates/_my-apps-and-app.scss */
+.filter-container--my-apps .refresh-button,
+.filter-container--app .refresh-button {
+  padding: 7px 7px;
+  margin: 0 1.2% 0 0;
+  vertical-align: top;
+}
+/* line 40, ../sass/templates/_my-apps-and-app.scss */
+.filter-container--my-apps .refresh-button:disabled:active,
+.filter-container--app .refresh-button:disabled:active {
+  padding-bottom: 7px;
+}
+/* line 43, ../sass/templates/_my-apps-and-app.scss */
+.filter-container--my-apps .refresh-button span,
+.filter-container--app .refresh-button span {
+  font-size: 0;
+}
+/* line 45, ../sass/templates/_my-apps-and-app.scss */
+.filter-container--my-apps .refresh-button span:before,
+.filter-container--app .refresh-button span:before {
+  margin: 0;
+  font-size: 1.85rem;
+  color: #fff;
+}
+/* line 51, ../sass/templates/_my-apps-and-app.scss */
+.filter-container--my-apps .refresh-button:active,
+.filter-container--app .refresh-button:active {
+  padding-bottom: 5px;
+}
+/* line 55, ../sass/templates/_my-apps-and-app.scss */
+.filter-container--my-apps .or-text,
+.filter-container--app .or-text {
+  margin-right: 1.2%;
+  padding-top: 11px;
+  display: inline-block;
+  font-size: 1.2rem;
+  font-family: "Open Sans", sans-serif;
+  color: #727686;
+  vertical-align: top;
+}
+/* line 64, ../sass/templates/_my-apps-and-app.scss */
+.filter-container--my-apps .filters-group-other,
+.filter-container--app .filters-group-other {
+  width: 49.89605%;
+  float: right;
+  overflow: visible;
+  text-align: right;
+}
+/* line 69, ../sass/templates/_my-apps-and-app.scss */
+.filter-container--my-apps .filters-group-other .form-field,
+.filter-container--app .filters-group-other .form-field {
+  width: 30%;
+  margin-right: 2%;
+  text-align: left;
+}
+/* line 73, ../sass/templates/_my-apps-and-app.scss */
+.filter-container--my-apps .filters-group-other .form-field:last-child,
+.filter-container--app .filters-group-other .form-field:last-child {
+  margin-right: 0;
+}
+
+/* line 1, ../sass/templates/_my-apps-and-leaderboard.scss */
+.page-functions {
+  width: 50%;
+  display: inline-block;
+}
+/* line 4, ../sass/templates/_my-apps-and-leaderboard.scss */
+.page-functions button {
+  margin-right: 3%;
+  float: right;
+}
+/* line 8, ../sass/templates/_my-apps-and-leaderboard.scss */
+.page-functions .inline-search-form {
+  width: 33.4%;
+  float: right;
+  display: inline-block;
+  vertical-align: top;
+}
+/* line 15, ../sass/templates/_my-apps-and-leaderboard.scss */
+.page-functions .search-field-no-label input[type=text] {
+  max-width: calc(100% - 17px);
+  font-size: 1.3rem;
+}
+/* line 18, ../sass/templates/_my-apps-and-leaderboard.scss */
+.page-functions .search-field-no-label input[type=text]:active + input[type=submit] {
+  color: #6d69c5;
+}
+/* line 22, ../sass/templates/_my-apps-and-leaderboard.scss */
+.page-functions .search-field-no-label input[type=submit] {
+  font-size: 1.75rem;
+  color: #81879d;
+}
+
+/* line 28, ../sass/templates/_my-apps-and-leaderboard.scss */
+.page-function-button {
+  padding: 0.65em 0.89em 0.4em 0.93em;
+}
+/* line 30, ../sass/templates/_my-apps-and-leaderboard.scss */
+.page-function-button span:before {
+  position: relative;
+  top: -1px;
+  margin-right: 0.9rem;
+  vertical-align: middle;
+  font-size: 20px;
+  color: #81879d;
+}
+/* line 38, ../sass/templates/_my-apps-and-leaderboard.scss */
+.page-function-button:active {
+  padding-bottom: 0.25em;
+}
+
 /* line 1, ../sass/templates/_my-apps.scss */
+.page-my-apps {
+  padding-top: 34px;
+  padding-bottom: 66px;
+  overflow: visible;
+}
+
+/* line 6, ../sass/templates/_my-apps.scss */
 .table-my-apps {
   width: 100%;
 }
-/* line 3, ../sass/templates/_my-apps.scss */
+/* line 8, ../sass/templates/_my-apps.scss */
 .table-my-apps .rank-column {
   width: 10.2%;
 }
-/* line 6, ../sass/templates/_my-apps.scss */
+/* line 11, ../sass/templates/_my-apps.scss */
 .table-my-apps .app-details-column {
   width: 34.5%;
 }
-/* line 9, ../sass/templates/_my-apps.scss */
+/* line 14, ../sass/templates/_my-apps.scss */
 .table-my-apps .price-column {
   width: 11.7%;
 }
-/* line 12, ../sass/templates/_my-apps.scss */
+/* line 17, ../sass/templates/_my-apps.scss */
 .table-my-apps .downloads-column {
   width: 15.1%;
 }
-/* line 15, ../sass/templates/_my-apps.scss */
+/* line 20, ../sass/templates/_my-apps.scss */
 .table-my-apps .revenue-column {
   width: 15.1%;
 }
-/* line 18, ../sass/templates/_my-apps.scss */
+/* line 23, ../sass/templates/_my-apps.scss */
 .table-my-apps .iap-column {
   width: 6.4%;
 }
-/* line 21, ../sass/templates/_my-apps.scss */
+/* line 26, ../sass/templates/_my-apps.scss */
 .table-my-apps .app-name {
   margin-bottom: 0.6rem;
   display: block;
@@ -3243,91 +3652,6 @@ table.table-data > tbody > tr:nth-child(even) > td {
   color: #6d69c5;
   text-overflow: ellipsis;
   overflow: hidden;
-}
-
-/* line 33, ../sass/templates/_my-apps.scss */
-.filter-container--my-apps .filters-group-time {
-  width: 48.15%;
-  margin-right: 1%;
-  display: inline-block;
-  overflow: visible;
-}
-/* line 38, ../sass/templates/_my-apps.scss */
-.filter-container--my-apps .filters-group-time .calendar-container {
-  width: 58%;
-  margin-right: 0;
-}
-/* line 42, ../sass/templates/_my-apps.scss */
-.filter-container--my-apps .filters-group-time .date-select-container {
-  position: relative;
-  width: 45.3125%;
-  display: inline-block;
-  overflow: visible;
-  vertical-align: middle;
-}
-/* line 49, ../sass/templates/_my-apps.scss */
-.filter-container--my-apps .filters-group-time .date-select-to-indicator {
-  position: relative;
-  width: 9.375%;
-  height: 22px;
-  display: inline-block;
-  vertical-align: middle;
-  text-align: center;
-}
-/* line 56, ../sass/templates/_my-apps.scss */
-.filter-container--my-apps .filters-group-time .date-select-to-indicator:after {
-  content: "l";
-}
-/* line 60, ../sass/templates/_my-apps.scss */
-.filter-container--my-apps .filters-group-time .form-field--select {
-  width: 28%;
-}
-/* line 64, ../sass/templates/_my-apps.scss */
-.filter-container--my-apps .form-field:last-child {
-  margin-right: 0;
-}
-/* line 67, ../sass/templates/_my-apps.scss */
-.filter-container--my-apps .refresh-button {
-  padding: 6px 9px 7px;
-  margin: 0 2.2% 0 1.3%;
-  background-color: #dedede;
-  border-color: #dedede;
-  vertical-align: top;
-}
-/* line 73, ../sass/templates/_my-apps.scss */
-.filter-container--my-apps .refresh-button span {
-  font-size: 0;
-}
-/* line 75, ../sass/templates/_my-apps.scss */
-.filter-container--my-apps .refresh-button span:before {
-  margin: 0;
-  font-size: 1.85rem;
-  color: #fff;
-}
-/* line 81, ../sass/templates/_my-apps.scss */
-.filter-container--my-apps .refresh-button:hover {
-  background-color: #6d69c5;
-}
-/* line 84, ../sass/templates/_my-apps.scss */
-.filter-container--my-apps .refresh-button:active {
-  padding-bottom: 5px;
-}
-/* line 88, ../sass/templates/_my-apps.scss */
-.filter-container--my-apps .filters-group-other {
-  width: 49.89605%;
-  float: right;
-  overflow: visible;
-  text-align: right;
-}
-/* line 93, ../sass/templates/_my-apps.scss */
-.filter-container--my-apps .filters-group-other .form-field {
-  width: 30%;
-  margin-right: 2%;
-  text-align: left;
-}
-/* line 97, ../sass/templates/_my-apps.scss */
-.filter-container--my-apps .filters-group-other .form-field:last-child {
-  margin-right: 0;
 }
 
 /* line 3, ../sass/templates/_tabs.scss */
@@ -3469,47 +3793,64 @@ body .at-share-tbx-element .at-share-btn {
   border-top: 1px solid #dadee1;
   padding-bottom: 0.85em;
 }
+/* line 94, ../sass/components/_button.scss */
+.ref-button--function-small.with-icon, .with-icon.ref-button--function-small--wide, .with-icon.ref-button--function-large, .with-icon.ref-button--function-large--wide {
+  padding: 0.65em 0.89em 0.4em 0.93em;
+}
+/* line 96, ../sass/components/_button.scss */
+.ref-button--function-small.with-icon:active, .with-icon.ref-button--function-small--wide:active, .with-icon.ref-button--function-large:active, .with-icon.ref-button--function-large--wide:active {
+  padding-bottom: 0.25em;
+}
+/* line 99, ../sass/components/_button.scss */
+.ref-button--function-small.with-icon span:before, .with-icon.ref-button--function-small--wide span:before, .with-icon.ref-button--function-large span:before, .with-icon.ref-button--function-large--wide span:before {
+  position: relative;
+  top: -1px;
+  margin-right: 0.9rem;
+  vertical-align: middle;
+  font-size: 20px;
+  color: #81879D;
+}
 
-/* line 95, ../sass/components/_button.scss */
+/* line 109, ../sass/components/_button.scss */
 .ref-button--function-small--wide {
   padding: 0.75em 2.3em 0.85em 2.25em;
 }
 
-/* line 114, ../sass/components/_button.scss */
+/* line 128, ../sass/components/_button.scss */
 .ref-button--function-large--wide {
   padding-left: 2.45em;
   padding-right: 2.55em;
 }
 
-/* line 122, ../sass/components/_button.scss */
+/* line 136, ../sass/components/_button.scss */
 .ref-button--full-width {
   width: 100%;
   margin-top: 1.6rem;
   padding: 1.15em 0.5em;
   font-size: 1.6em;
 }
-/* line 128, ../sass/components/_button.scss */
+/* line 142, ../sass/components/_button.scss */
 .ref-button--full-width:active {
   border-top: 3px solid #b2334a;
   padding-bottom: calc(1.15em - 3px);
 }
-/* line 133, ../sass/components/_button.scss */
+/* line 147, ../sass/components/_button.scss */
 .ref-button--full-width:disabled:active {
   border-top: 0;
   padding-bottom: 1.15em;
 }
-/* line 141, ../sass/components/_button.scss */
+/* line 155, ../sass/components/_button.scss */
 .ref-button--full-width.ref-button--success:active, .ref-button--full-width.ref-button--error:active, .ref-button--full-width.ref-button--is-loading:active {
   padding-bottom: 1.15em;
 }
 
-/* line 147, ../sass/components/_button.scss */
+/* line 161, ../sass/components/_button.scss */
 .ref-button--with-icon span {
   position: relative;
   top: -0.1em;
   padding-left: 3.5rem;
 }
-/* line 151, ../sass/components/_button.scss */
+/* line 165, ../sass/components/_button.scss */
 .ref-button--with-icon span.ref-icon-before:before {
   position: absolute;
   top: 1px;
@@ -3517,7 +3858,7 @@ body .at-share-tbx-element .at-share-btn {
   font-size: 2.2rem;
 }
 
-/* line 159, ../sass/components/_button.scss */
+/* line 173, ../sass/components/_button.scss */
 .ref-button--link, .ref-button--link-large {
   padding: 0;
   margin: 0;
@@ -3533,7 +3874,7 @@ body .at-share-tbx-element .at-share-btn {
   -webkit-transition: color 0.2s;
           transition: color 0.2s;
 }
-/* line 173, ../sass/components/_button.scss */
+/* line 187, ../sass/components/_button.scss */
 .ref-button--link span, .ref-button--link-large span {
   position: relative;
   padding-left: 3.5rem;
@@ -3541,44 +3882,44 @@ body .at-share-tbx-element .at-share-btn {
   line-height: 1.3;
   text-align: left;
 }
-/* line 179, ../sass/components/_button.scss */
+/* line 193, ../sass/components/_button.scss */
 .ref-button--link span:before, .ref-button--link-large span:before {
   position: absolute;
   top: 0.1rem;
   left: 0px;
   font-size: 1.9rem;
 }
-/* line 186, ../sass/components/_button.scss */
+/* line 200, ../sass/components/_button.scss */
 .ref-button--link:hover, .ref-button--link-large:hover {
   color: #46438b;
   -webkit-transition: color 0.3s;
           transition: color 0.3s;
 }
-/* line 190, ../sass/components/_button.scss */
+/* line 204, ../sass/components/_button.scss */
 .ref-button--link:active, .ref-button--link-large:active {
   position: relative;
   top: 2px;
   outline: none;
 }
-/* line 195, ../sass/components/_button.scss */
+/* line 209, ../sass/components/_button.scss */
 .ref-button--link:disabled, .ref-button--link-large:disabled {
   color: #c4c7d0;
 }
-/* line 197, ../sass/components/_button.scss */
+/* line 211, ../sass/components/_button.scss */
 .ref-button--link:disabled:hover, .ref-button--link-large:disabled:hover, .ref-button--link:disabled:active, .ref-button--link-large:disabled:active {
   top: 0;
   color: #c4c7d0;
 }
-/* line 201, ../sass/components/_button.scss */
+/* line 215, ../sass/components/_button.scss */
 .ref-button--link:disabled span:before, .ref-button--link-large:disabled span:before {
   color: #c4c7d0;
 }
 
-/* line 206, ../sass/components/_button.scss */
+/* line 220, ../sass/components/_button.scss */
 .ref-button--link-large {
   font-size: 1.6rem;
 }
-/* line 210, ../sass/components/_button.scss */
+/* line 224, ../sass/components/_button.scss */
 .ref-button--link-large span:before {
   position: absolute;
   top: 0.1rem;
@@ -3602,7 +3943,7 @@ body .at-share-tbx-element .at-share-btn {
     background-position: 470px 0;
   }
 }
-/* line 223, ../sass/components/_button.scss */
+/* line 237, ../sass/components/_button.scss */
 .ref-button--is-loading {
   background-color: #ff4969;
   /* @alternate */
@@ -3613,34 +3954,34 @@ body .at-share-tbx-element .at-share-btn {
           animation: backgroundMove 5s linear infinite;
   cursor: default;
 }
-/* line 236, ../sass/components/_button.scss */
+/* line 250, ../sass/components/_button.scss */
 .ref-button--is-loading:active {
   top: 0;
   border: none;
 }
 
-/* line 241, ../sass/components/_button.scss */
+/* line 255, ../sass/components/_button.scss */
 .ref-button--success {
   background-color: #1bc79f;
   cursor: default;
   -webkit-transition: background-color 0s;
           transition: background-color 0s;
 }
-/* line 245, ../sass/components/_button.scss */
+/* line 259, ../sass/components/_button.scss */
 .ref-button--success:active, .ref-button--success:hover {
   top: 0;
   border: none;
   background-color: #1bc79f;
 }
 
-/* line 251, ../sass/components/_button.scss */
+/* line 265, ../sass/components/_button.scss */
 .ref-button--error {
   background-color: #d23753;
   cursor: default;
   -webkit-transition: background-color 0s;
           transition: background-color 0s;
 }
-/* line 255, ../sass/components/_button.scss */
+/* line 269, ../sass/components/_button.scss */
 .ref-button--error:active, .ref-button--error:hover {
   top: 0;
   border: none;
@@ -3746,6 +4087,422 @@ body .at-share-tbx-element .at-share-btn {
   color: #a8acb9;
   -webkit-transition: color 0.3s;
           transition: color 0.3s;
+}
+
+/* Toggle */
+/* line 86, ../sass/components/_filter.scss */
+.filter-toggle {
+  display: inline-block;
+  font-size: 0;
+}
+/* line 89, ../sass/components/_filter.scss */
+.filter-toggle .toggle {
+  display: inline-block;
+  text-align: center;
+}
+/* line 93, ../sass/components/_filter.scss */
+.filter-toggle .toggle:first-child label {
+  border-left: 1px solid #dadee1;
+  border-radius: 4px 0 0 4px;
+}
+/* line 99, ../sass/components/_filter.scss */
+.filter-toggle .toggle:last-child label {
+  border-radius: 0 4px 4px 0;
+}
+/* line 104, ../sass/components/_filter.scss */
+.filter-toggle label {
+  width: 42px;
+  height: 38px;
+  padding-top: 8px;
+  box-sizing: border-box;
+  display: inline-block;
+  z-index: 1;
+  border-top: 1px solid #dadee1;
+  border-right: 1px solid #dadee1;
+  border-bottom: 1px solid #dadee1;
+  background-color: #f7f7fa;
+  cursor: pointer;
+}
+/* line 116, ../sass/components/_filter.scss */
+.filter-toggle label:active {
+  border-top: 2px solid #dadee1;
+}
+/* line 119, ../sass/components/_filter.scss */
+.filter-toggle label svg {
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+}
+/* line 123, ../sass/components/_filter.scss */
+.filter-toggle label svg path {
+  fill: #6d69c5;
+}
+/* line 128, ../sass/components/_filter.scss */
+.filter-toggle label.toggle-calendar svg {
+  width: 18px;
+  height: 19px;
+}
+/* line 134, ../sass/components/_filter.scss */
+.filter-toggle input {
+  position: absolute;
+  z-index: -1;
+}
+/* line 139, ../sass/components/_filter.scss */
+.filter-toggle input:checked ~ label {
+  border-top: 2px solid #dadee1;
+  background-color: #ededf1;
+}
+/* line 142, ../sass/components/_filter.scss */
+.filter-toggle input:checked ~ label svg path {
+  fill: #81879d;
+}
+
+/* Switch */
+/* line 151, ../sass/components/_filter.scss */
+.filter-switch > span {
+  margin-right: 11px;
+  display: inline-block;
+  float: left;
+  color: #81879d;
+  font-family: "Open Sans", sans-serif;
+  font-size: 1.4rem;
+}
+/* line 160, ../sass/components/_filter.scss */
+.filter-switch.filter-switch--small > span {
+  margin-right: 8px;
+  font-size: 1.3rem;
+}
+
+/* line 253, ../sass/components/_filter.scss */
+.can-toggle {
+  position: relative;
+  float: left;
+  display: block;
+}
+/* line 255, ../sass/components/_filter.scss */
+.can-toggle *, .can-toggle *:before, .can-toggle *:after {
+  box-sizing: border-box;
+}
+/* line 259, ../sass/components/_filter.scss */
+.can-toggle input[type="checkbox"] {
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+/* line 263, ../sass/components/_filter.scss */
+.can-toggle input[type="checkbox"][disabled] ~ label {
+  pointer-events: none;
+}
+/* line 265, ../sass/components/_filter.scss */
+.can-toggle input[type="checkbox"][disabled] ~ label .can-toggle__switch {
+  opacity: 0.4;
+}
+/* line 269, ../sass/components/_filter.scss */
+.can-toggle input[type="checkbox"]:checked ~ label .can-toggle__switch {
+  border: 1px solid #1bc79f;
+}
+/* line 271, ../sass/components/_filter.scss */
+.can-toggle input[type="checkbox"]:checked ~ label .can-toggle__switch:before {
+  content: attr(data-unchecked);
+  left: 0;
+  background: url(../images/icon-switch-on-x2.png) no-repeat 6px 6px/12px 10px;
+}
+/* line 276, ../sass/components/_filter.scss */
+.can-toggle input[type="checkbox"]:checked ~ label .can-toggle__switch:after {
+  content: attr(data-checked);
+}
+/* line 287, ../sass/components/_filter.scss */
+.can-toggle.can-toggle--size-small input:checked ~ label .can-toggle__switch:before {
+  background: url(../images/icon-switch-on-x2.png) no-repeat 3px 4px/9px 7px;
+}
+/* line 290, ../sass/components/_filter.scss */
+.can-toggle label {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  overflow: visible;
+}
+/* line 296, ../sass/components/_filter.scss */
+.can-toggle label .can-toggle__label-text {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  padding-left: 32px;
+}
+/* line 300, ../sass/components/_filter.scss */
+.can-toggle label .can-toggle__switch {
+  position: relative;
+  box-sizing: content-box;
+  overflow: visible;
+  border: 1px solid #d6d9e0;
+  cursor: pointer;
+}
+/* line 306, ../sass/components/_filter.scss */
+.can-toggle label .can-toggle__switch:before {
+  content: attr(data-checked);
+  position: absolute;
+  top: 0;
+  text-transform: uppercase;
+  text-align: center;
+}
+/* line 313, ../sass/components/_filter.scss */
+.can-toggle label .can-toggle__switch:after {
+  content: attr(data-unchecked);
+  position: absolute;
+  z-index: 5;
+  text-transform: uppercase;
+  text-align: center;
+  background: white;
+  -webkit-transform: translate3d(0, 0, 0);
+          transform: translate3d(0, 0, 0);
+}
+/* line 173, ../sass/components/_filter.scss */
+.can-toggle input[type="checkbox"][disabled] ~ label {
+  color: rgba(242, 242, 245, 0.5);
+}
+/* line 177, ../sass/components/_filter.scss */
+.can-toggle input[type="checkbox"]:focus ~ label .can-toggle__switch {
+  background-color: #f2f2f5;
+}
+/* line 181, ../sass/components/_filter.scss */
+.can-toggle input[type="checkbox"]:hover ~ label {
+  color: transparent;
+}
+/* line 184, ../sass/components/_filter.scss */
+.can-toggle input[type="checkbox"]:checked ~ label .can-toggle__switch {
+  background-color: #1bc79f;
+}
+/* line 191, ../sass/components/_filter.scss */
+.can-toggle label .can-toggle__label-text {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+}
+/* line 192, ../sass/components/_filter.scss */
+.can-toggle label .can-toggle__switch {
+  background: #f2f2f5;
+}
+/* line 194, ../sass/components/_filter.scss */
+.can-toggle label .can-toggle__switch:before {
+  color: transparent;
+}
+/* line 197, ../sass/components/_filter.scss */
+.can-toggle label .can-toggle__switch:after {
+  -webkit-transition: -webkit-transform 0.3s cubic-bezier(0, 1, 0.5, 1);
+  transition: transform 0.3s cubic-bezier(0, 1, 0.5, 1);
+  color: transparent;
+}
+/* line 221, ../sass/components/_filter.scss */
+.can-toggle input[type="checkbox"]:checked ~ label .can-toggle__switch:after {
+  -webkit-transform: translate3d(23px, 0, 0);
+          transform: translate3d(23px, 0, 0);
+}
+/* line 226, ../sass/components/_filter.scss */
+.can-toggle label {
+  font-size: 10px;
+}
+/* line 228, ../sass/components/_filter.scss */
+.can-toggle label .can-toggle__switch {
+  height: 24px;
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 46px;
+      -ms-flex: 0 0 46px;
+          flex: 0 0 46px;
+  border-radius: 24px;
+}
+/* line 232, ../sass/components/_filter.scss */
+.can-toggle label .can-toggle__switch:before {
+  left: 23px;
+  font-size: 10px;
+  line-height: 24px;
+  width: 23px;
+  padding: 0 12px;
+}
+/* line 239, ../sass/components/_filter.scss */
+.can-toggle label .can-toggle__switch:after {
+  top: 0;
+  left: 0;
+  border-radius: 12px;
+  width: 23px;
+  line-height: 24px;
+  font-size: 10px;
+}
+/* line 247, ../sass/components/_filter.scss */
+.can-toggle label .can-toggle__switch:hover:after {
+  box-shadow: none;
+}
+/* line 330, ../sass/components/_filter.scss */
+.can-toggle.can-toggle--size-small {
+  width: 32px;
+}
+/* line 173, ../sass/components/_filter.scss */
+.can-toggle.can-toggle--size-small input[type="checkbox"][disabled] ~ label {
+  color: rgba(242, 242, 245, 0.5);
+}
+/* line 177, ../sass/components/_filter.scss */
+.can-toggle.can-toggle--size-small input[type="checkbox"]:focus ~ label .can-toggle__switch {
+  background-color: #f2f2f5;
+}
+/* line 181, ../sass/components/_filter.scss */
+.can-toggle.can-toggle--size-small input[type="checkbox"]:hover ~ label {
+  color: transparent;
+}
+/* line 184, ../sass/components/_filter.scss */
+.can-toggle.can-toggle--size-small input[type="checkbox"]:checked ~ label .can-toggle__switch {
+  background-color: #1bc79f;
+}
+/* line 191, ../sass/components/_filter.scss */
+.can-toggle.can-toggle--size-small label .can-toggle__label-text {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+}
+/* line 192, ../sass/components/_filter.scss */
+.can-toggle.can-toggle--size-small label .can-toggle__switch {
+  background: #f2f2f5;
+}
+/* line 194, ../sass/components/_filter.scss */
+.can-toggle.can-toggle--size-small label .can-toggle__switch:before {
+  color: transparent;
+}
+/* line 197, ../sass/components/_filter.scss */
+.can-toggle.can-toggle--size-small label .can-toggle__switch:after {
+  -webkit-transition: -webkit-transform 0.3s cubic-bezier(0.86, 0, 0.07, 1);
+  transition: transform 0.3s cubic-bezier(0.86, 0, 0.07, 1);
+  color: transparent;
+}
+/* line 221, ../sass/components/_filter.scss */
+.can-toggle.can-toggle--size-small input[type="checkbox"]:checked ~ label .can-toggle__switch:after {
+  -webkit-transform: translate3d(15px, 0, 0);
+          transform: translate3d(15px, 0, 0);
+}
+/* line 226, ../sass/components/_filter.scss */
+.can-toggle.can-toggle--size-small label {
+  font-size: 10px;
+}
+/* line 228, ../sass/components/_filter.scss */
+.can-toggle.can-toggle--size-small label .can-toggle__switch {
+  height: 15px;
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 30px;
+      -ms-flex: 0 0 30px;
+          flex: 0 0 30px;
+  border-radius: 15px;
+}
+/* line 232, ../sass/components/_filter.scss */
+.can-toggle.can-toggle--size-small label .can-toggle__switch:before {
+  left: 15px;
+  font-size: 10px;
+  line-height: 15px;
+  width: 15px;
+  padding: 0 12px;
+}
+/* line 239, ../sass/components/_filter.scss */
+.can-toggle.can-toggle--size-small label .can-toggle__switch:after {
+  top: 0px;
+  left: 0px;
+  border-radius: 7.5px;
+  width: 15px;
+  line-height: 15px;
+  font-size: 10px;
+}
+/* line 247, ../sass/components/_filter.scss */
+.can-toggle.can-toggle--size-small label .can-toggle__switch:hover:after {
+  box-shadow: none;
+}
+/* line 350, ../sass/components/_filter.scss */
+.can-toggle.can-toggle--size-large {
+  width: 46px;
+}
+/* line 173, ../sass/components/_filter.scss */
+.can-toggle.can-toggle--size-large input[type="checkbox"][disabled] ~ label {
+  color: rgba(242, 242, 245, 0.5);
+}
+/* line 177, ../sass/components/_filter.scss */
+.can-toggle.can-toggle--size-large input[type="checkbox"]:focus ~ label .can-toggle__switch {
+  background-color: #f2f2f5;
+}
+/* line 181, ../sass/components/_filter.scss */
+.can-toggle.can-toggle--size-large input[type="checkbox"]:hover ~ label {
+  color: transparent;
+}
+/* line 184, ../sass/components/_filter.scss */
+.can-toggle.can-toggle--size-large input[type="checkbox"]:checked ~ label .can-toggle__switch {
+  background-color: #1bc79f;
+}
+/* line 191, ../sass/components/_filter.scss */
+.can-toggle.can-toggle--size-large label .can-toggle__label-text {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+}
+/* line 192, ../sass/components/_filter.scss */
+.can-toggle.can-toggle--size-large label .can-toggle__switch {
+  background: #f2f2f5;
+}
+/* line 194, ../sass/components/_filter.scss */
+.can-toggle.can-toggle--size-large label .can-toggle__switch:before {
+  color: transparent;
+}
+/* line 197, ../sass/components/_filter.scss */
+.can-toggle.can-toggle--size-large label .can-toggle__switch:after {
+  -webkit-transition: -webkit-transform 0.3s cubic-bezier(0.86, 0, 0.07, 1);
+  transition: transform 0.3s cubic-bezier(0.86, 0, 0.07, 1);
+  color: transparent;
+}
+/* line 221, ../sass/components/_filter.scss */
+.can-toggle.can-toggle--size-large input[type="checkbox"]:checked ~ label .can-toggle__switch:after {
+  -webkit-transform: translate3d(22px, 0, 0);
+          transform: translate3d(22px, 0, 0);
+}
+/* line 226, ../sass/components/_filter.scss */
+.can-toggle.can-toggle--size-large label {
+  font-size: 10px;
+}
+/* line 228, ../sass/components/_filter.scss */
+.can-toggle.can-toggle--size-large label .can-toggle__switch {
+  height: 22px;
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 44px;
+      -ms-flex: 0 0 44px;
+          flex: 0 0 44px;
+  border-radius: 22px;
+}
+/* line 232, ../sass/components/_filter.scss */
+.can-toggle.can-toggle--size-large label .can-toggle__switch:before {
+  left: 22px;
+  font-size: 10px;
+  line-height: 22px;
+  width: 22px;
+  padding: 0 12px;
+}
+/* line 239, ../sass/components/_filter.scss */
+.can-toggle.can-toggle--size-large label .can-toggle__switch:after {
+  top: 0px;
+  left: 0px;
+  border-radius: 11px;
+  width: 22px;
+  line-height: 22px;
+  font-size: 10px;
+}
+/* line 247, ../sass/components/_filter.scss */
+.can-toggle.can-toggle--size-large label .can-toggle__switch:hover:after {
+  box-shadow: none;
 }
 
 /* line 4, ../sass/components/_form.scss */
