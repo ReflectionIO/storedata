@@ -52,9 +52,10 @@ public class HomePage extends Page {
 	@UiField HTMLPanel analysisScreenshot;
 
 	// elements for IE consitionals
-	Element picture1, source1, source2;
-	Element picture2, source3, source4;
-	Element picture3, source5, source6;
+	private Element picture1, source1, source2;
+	private Element picture2, source3, source4;
+	private Element picture3, source5, source6;
+	private boolean mapScriptInjected;
 
 	private static final ScriptElement scriptRespond = DOMHelper.getJSScriptFromUrl("js/respond.min.js");
 
@@ -333,8 +334,11 @@ public class HomePage extends Page {
 
 		Window.scrollTo(0, toTop);
 
-		ScriptInjector.fromUrl("https://maps.googleapis.com/maps/api/js?key=AIzaSyD7mXBIrN4EgMflWKxUOK6C9rfoDMa5zyo&callback=generateMap")
-				.setWindow(ScriptInjector.TOP_WINDOW).inject();
+		if (!mapScriptInjected) {
+			ScriptInjector.fromUrl("https://maps.googleapis.com/maps/api/js?key=AIzaSyD7mXBIrN4EgMflWKxUOK6C9rfoDMa5zyo&callback=generateMap")
+					.setWindow(ScriptInjector.TOP_WINDOW).inject();
+			mapScriptInjected = true;
+		}
 
 	}
 
