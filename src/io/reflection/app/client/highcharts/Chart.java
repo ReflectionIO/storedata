@@ -74,9 +74,9 @@ public class Chart extends BaseChart {
 								}
 							}
 							CalendarUtil.addDaysToDate(progressiveDate, 1);
-							if (rank.downloads != null && showModelPredictions) {
-								Double yPoint = getYPointValue(rank);
-								if (isPointIsolated(YDataType.DownloadsYAxisDataType, ranks, rank)) {
+							Double yPoint = getYPointValue(rank);
+							if (yPoint != null && showModelPredictions) {
+								if (isPointIsolated(yDataType, ranks, rank)) {
 									data.push(ChartHelper.createMarkerPoint(rank.date.getTime(), yPoint.doubleValue()));
 								} else {
 									data.push(ChartHelper.createPoint(rank.date.getTime(), yPoint.doubleValue()));
@@ -166,7 +166,7 @@ public class Chart extends BaseChart {
 		List<Rank> outOfRangeRanks = new ArrayList<Rank>();
 		for (Rank rank : ranks) {
 			if (XDataType.DateXAxisDataType.equals(xDataType) && dateRange != null) {
-				if (!withinChartRange(rank)) {
+				if (!withinChartDateRange(rank)) {
 					outOfRangeRanks.add(rank);
 				} else {
 					rank.date = FilterHelper.normalizeDate(rank.date);
@@ -182,38 +182,45 @@ public class Chart extends BaseChart {
 	 * @param rank
 	 * @return
 	 */
-	private boolean withinChartRange(Rank rank) {
+	private boolean withinChartDateRange(Rank rank) {
 		return FilterHelper.afterOrSameDate(rank.date, dateRange.getFrom()) && FilterHelper.beforeOrSameDate(rank.date, dateRange.getTo());
 	}
 
+	// Currently working for DateTime X Axis
 	private boolean isPointIsolated(YDataType yDataType, List<Rank> ranks, Rank rank) {
 		boolean isolated = false;
-		switch (yDataType) {
-		case DownloadsYAxisDataType:
-			isolated = ranks.size() == 1
-					|| ((ranks.indexOf(rank) == 0 && ranks.get(ranks.indexOf(rank) + 1) != null && ranks.get(ranks.indexOf(rank) + 1).downloads == null)
-							|| (ranks.indexOf(rank) > 0 && ranks.indexOf(rank) < (ranks.size() - 1) && ranks.get(ranks.indexOf(rank) - 1) != null
-									&& ranks.get(ranks.indexOf(rank) - 1).downloads == null && ranks.get(ranks.indexOf(rank) + 1) != null && ranks.get(ranks
-									.indexOf(rank) + 1).downloads == null) || (ranks.indexOf(rank) == (ranks.size() - 1)
-							&& ranks.get(ranks.indexOf(rank) - 1) != null && ranks.get(ranks.indexOf(rank) - 1).downloads == null));
-			break;
-		case RevenueYAxisDataType:
-			isolated = ranks.size() == 1
-					|| ((ranks.indexOf(rank) == 0 && ranks.get(ranks.indexOf(rank) + 1) != null && ranks.get(ranks.indexOf(rank) + 1).revenue == null)
-							|| (ranks.indexOf(rank) > 0 && ranks.indexOf(rank) < (ranks.size() - 1) && ranks.get(ranks.indexOf(rank) - 1) != null
-									&& ranks.get(ranks.indexOf(rank) - 1).revenue == null && ranks.get(ranks.indexOf(rank) + 1) != null && ranks.get(ranks
-									.indexOf(rank) + 1).revenue == null) || (ranks.indexOf(rank) == (ranks.size() - 1)
-							&& ranks.get(ranks.indexOf(rank) - 1) != null && ranks.get(ranks.indexOf(rank) - 1).revenue == null));
-			break;
-		case RankingYAxisDataType:
-		default:
-			isolated = ranks.size() == 1
-					|| ((ranks.indexOf(rank) == 0 && ranks.get(ranks.indexOf(rank) + 1) != null && getRankPosition(ranks.get(ranks.indexOf(rank) + 1)) == 0)
-							|| (ranks.indexOf(rank) > 0 && ranks.indexOf(rank) < (ranks.size() - 1) && ranks.get(ranks.indexOf(rank) - 1) != null
-									&& getRankPosition(ranks.get(ranks.indexOf(rank) - 1)) == 0 && ranks.get(ranks.indexOf(rank) + 1) != null && getRankPosition(ranks
-									.get(ranks.indexOf(rank) + 1)) == 0) || (ranks.indexOf(rank) == (ranks.size() - 1)
-							&& ranks.get(ranks.indexOf(rank) - 1) != null && getRankPosition(ranks.get(ranks.indexOf(rank) - 1)) == 0));
-			break;
+		if (ranks.size() == 1) {
+			isolated = true;
+		} else {
+			int rankIndex = ranks.indexOf(rank);
+			int lastIndex = ranks.size() - 1;
+			switch (yDataType) {
+			case DownloadsYAxisDataType:
+				isolated = (rankIndex == 0 && (ranks.get(1).downloads == null || CalendarUtil.getDaysBetween(rank.date, ranks.get(1).date) > 1))
+						|| (rankIndex > 0 && rankIndex < lastIndex && ((ranks.get(rankIndex - 1).downloads == null && ranks.get(rankIndex + 1).downloads == null) || (CalendarUtil
+								.getDaysBetween(rank.date, ranks.get(rankIndex - 1).date) > 1 && CalendarUtil.getDaysBetween(rank.date,
+								ranks.get(rankIndex + 1).date) > 1)))
+						|| (rankIndex == lastIndex && (ranks.get(lastIndex - 1).downloads == null || CalendarUtil.getDaysBetween(rank.date,
+								ranks.get(lastIndex - 1).date) > 1));
+				break;
+			case RevenueYAxisDataType:
+				isolated = (rankIndex == 0 && (ranks.get(1).revenue == null || CalendarUtil.getDaysBetween(rank.date, ranks.get(1).date) > 1))
+						|| (rankIndex > 0 && rankIndex < lastIndex && ((ranks.get(rankIndex - 1).revenue == null && ranks.get(rankIndex + 1).revenue == null) || (CalendarUtil
+								.getDaysBetween(rank.date, ranks.get(rankIndex - 1).date) > 1 && CalendarUtil.getDaysBetween(rank.date,
+								ranks.get(rankIndex + 1).date) > 1)))
+						|| (rankIndex == lastIndex && (ranks.get(lastIndex - 1).revenue == null || CalendarUtil.getDaysBetween(rank.date,
+								ranks.get(lastIndex - 1).date) > 1));
+				break;
+			case RankingYAxisDataType:
+			default:
+				isolated = (rankIndex == 0 && (getRankPosition(ranks.get(1)) == 0 || CalendarUtil.getDaysBetween(rank.date, ranks.get(1).date) > 1))
+						|| (rankIndex > 0 && rankIndex < lastIndex && ((getRankPosition(ranks.get(rankIndex - 1)) == 0 && getRankPosition(ranks
+								.get(rankIndex + 1)) == 0) || (CalendarUtil.getDaysBetween(rank.date, ranks.get(rankIndex - 1).date) > 1 && CalendarUtil
+								.getDaysBetween(rank.date, ranks.get(rankIndex + 1).date) > 1)))
+						|| (rankIndex == lastIndex && (getRankPosition(ranks.get(lastIndex - 1)) == 0 || CalendarUtil.getDaysBetween(rank.date,
+								ranks.get(lastIndex - 1).date) > 1));
+				break;
+			}
 		}
 		return isolated;
 	}
@@ -231,7 +238,7 @@ public class Chart extends BaseChart {
 				dateRange.setTo(FilterHelper.normalizeDate(FilterController.get().getEndDate()));
 				// TODO SUMMERTIME PROBLEM - e.g. in august the from date is 1 hour earlier, so the 23:00 of the day before
 				setXAxisExtremes(dateRange.getFrom().getTime(), dateRange.getTo().getTime());
-				rearrangeXAxisDatetimeLabels();
+				rearrangeXAxisLabels();
 			}
 			reflow();
 		}

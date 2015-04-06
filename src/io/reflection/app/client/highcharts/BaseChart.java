@@ -95,7 +95,7 @@ public abstract class BaseChart extends Composite {
 			@Override
 			public void onResize(ResizeEvent event) {
 				resize();
-				rearrangeXAxisDatetimeLabels();
+				rearrangeXAxisLabels();
 			}
 		});
 	}
@@ -169,7 +169,19 @@ public abstract class BaseChart extends Composite {
 		}
 	}
 
-	public void rearrangeXAxisDatetimeLabels() {
+	public void rearrangeXAxisLabels() {
+		switch (xDataType) {
+		case DateXAxisDataType:
+			rearrangeXAxisDatetimeLabels();
+			break;
+
+		case RankingXAxisDataType:
+			// TODO
+			break;
+		}
+	}
+
+	protected void rearrangeXAxisDatetimeLabels() {
 		if (chart != null && dateRange != null) {
 			double coeff = (double) dateRange.getDays() * X_LABELS_DISTANCE / this.getElement().getClientWidth();
 			int step = (int) coeff + 1;
@@ -178,7 +190,7 @@ public abstract class BaseChart extends Composite {
 			// boolean isSmallRange = dateRange.getDays() <= 4;
 			// getXAxis().setShowFirstLabel(isSmallRange).setShowLastLabel(isSmallRange);
 			NativeAxis.nativeUpdate(NativeAxis.nativeGetXAxis(chart, 0), getXAxis().getProperty(), true); // update x axis
-			reflow();
+			// reflow();
 		}
 	}
 
@@ -210,6 +222,10 @@ public abstract class BaseChart extends Composite {
 		NativeAxis.nativeSetExtremes(NativeAxis.nativeGetXAxis(chart, 0), min, NativeAxis.nativeGetMax(NativeAxis.nativeGetXAxis(chart, 0)), true, false);
 	}
 
+	public double getXAxisMin() {
+		return NativeAxis.nativeGetMin(NativeAxis.nativeGetXAxis(chart, 0));
+	}
+
 	public void resetXAxisMin() {
 		NativeAxis.nativeSetExtremes(NativeAxis.nativeGetXAxis(chart, 0), JavaScriptObjectHelper.getNativeNull(),
 				NativeAxis.nativeGetMax(NativeAxis.nativeGetXAxis(chart, 0)), true, false);
@@ -217,6 +233,10 @@ public abstract class BaseChart extends Composite {
 
 	public void setXAxisMax(double max) {
 		NativeAxis.nativeSetExtremes(NativeAxis.nativeGetXAxis(chart, 0), NativeAxis.nativeGetMin(NativeAxis.nativeGetXAxis(chart, 0)), max, true, false);
+	}
+
+	public double getXAxisMax() {
+		return NativeAxis.nativeGetMax(NativeAxis.nativeGetXAxis(chart, 0));
 	}
 
 	public void resetXAxisMax() {
@@ -234,6 +254,7 @@ public abstract class BaseChart extends Composite {
 
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
+		rearrangeXAxisLabels();
 		resize();
 	}
 
