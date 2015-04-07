@@ -1,4 +1,4 @@
-//  
+//
 //  DataAccountFetchService.java
 //  reflection.io
 //
@@ -22,6 +22,7 @@ import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProv
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.service.ServiceType;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -42,6 +43,7 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 	// a marker to help deleted rows that are added by developers
 	private static final String DEV_PREFIX = "__dev__";
 
+	@Override
 	public String getName() {
 		return ServiceType.ServiceTypeDataAccountFetch.toString();
 	}
@@ -50,9 +52,9 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 	public DataAccountFetch getDataAccountFetch(Long id) throws DataAccessException {
 		DataAccountFetch dataAccountFetch = null;
 
-		Connection dataAccountFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccountFetch.toString());
+		final Connection dataAccountFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccountFetch.toString());
 
-		String getDataAccountFetchQuery = String.format("SELECT * FROM `dataaccountfetch` WHERE `deleted`='n' AND `id`=%d LIMIT 1", id.longValue());
+		final String getDataAccountFetchQuery = String.format("SELECT * FROM `dataaccountfetch` WHERE `deleted`='n' AND `id`=%d LIMIT 1", id.longValue());
 		try {
 			dataAccountFetchConnection.connect();
 			dataAccountFetchConnection.executeQuery(getDataAccountFetchQuery);
@@ -70,12 +72,12 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 
 	/**
 	 * To dataAccountFetch
-	 * 
+	 *
 	 * @param connection
 	 * @return
 	 */
 	private DataAccountFetch toDataAccountFetch(Connection connection) throws DataAccessException {
-		DataAccountFetch dataAccountFetch = new DataAccountFetch();
+		final DataAccountFetch dataAccountFetch = new DataAccountFetch();
 
 		dataAccountFetch.id = connection.getCurrentRowLong("id");
 		dataAccountFetch.created = connection.getCurrentRowDateTime("created");
@@ -103,11 +105,11 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 
 		final String addDataAccountFetchQuery = String.format(
 				"INSERT INTO `dataaccountfetch` (`data`,`date`,`status`,`linkedaccountid`) VALUES ('%s',FROM_UNIXTIME(%d),'%s',%d)", SystemProperty.environment
-						.value() == SystemProperty.Environment.Value.Development ? DEV_PREFIX + addslashes(dataAccountFetch.data)
+				.value() == SystemProperty.Environment.Value.Development ? DEV_PREFIX + addslashes(dataAccountFetch.data)
 						: addslashes(dataAccountFetch.data), dataAccountFetch.date.getTime() / 1000, dataAccountFetch.status.toString(),
-				dataAccountFetch.linkedAccount.id.longValue());
+						dataAccountFetch.linkedAccount.id.longValue());
 
-		Connection dataAccountFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccountFetch.toString());
+		final Connection dataAccountFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccountFetch.toString());
 
 		try {
 			dataAccountFetchConnection.connect();
@@ -139,7 +141,7 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 				addslashes(dataAccountFetch.data), dataAccountFetch.date.getTime() / 1000, dataAccountFetch.status.toString(),
 				dataAccountFetch.linkedAccount.id.longValue(), dataAccountFetch.id.longValue());
 
-		Connection dataAccountFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccountFetch.toString());
+		final Connection dataAccountFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccountFetch.toString());
 
 		try {
 			dataAccountFetchConnection.connect();
@@ -166,7 +168,7 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.dataaccountfetch.IDataAccountFetchService#isFetchable(io.reflection.app.datatypes.shared.DataAccount)
 	 */
 	@Override
@@ -180,22 +182,22 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getFailedDataAccountFetches(io.reflection.app.datatypes.shared.DataAccount,
 	 * io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
 	public List<DataAccountFetch> getFailedDataAccountFetches(DataAccount dataAccount, Pager pager) throws DataAccessException {
-		List<DataAccountFetch> failedDataAccountFetches = new ArrayList<DataAccountFetch>();
+		final List<DataAccountFetch> failedDataAccountFetches = new ArrayList<DataAccountFetch>();
 
-		Connection dataAccountFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccountFetch.toString());
+		final Connection dataAccountFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccountFetch.toString());
 
 		String getFailedDataAccountFetchesQuery = String
 				.format("SELECT * FROM `dataaccountfetch` WHERE `linkedaccountid`=%d AND `status`='error' AND `date` BETWEEN CURDATE() - INTERVAL 30 DAY AND CURDATE() AND `deleted`='n'",
 						dataAccount.id.longValue());
 
 		if (pager != null) {
-			String sortByQuery = "id";
+			final String sortByQuery = "id";
 
 			String sortDirectionQuery = "DESC";
 
@@ -223,7 +225,7 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 			dataAccountFetchConnection.executeQuery(getFailedDataAccountFetchesQuery);
 
 			while (dataAccountFetchConnection.fetchNextRow()) {
-				DataAccountFetch dataAccountFetch = this.toDataAccountFetch(dataAccountFetchConnection);
+				final DataAccountFetch dataAccountFetch = toDataAccountFetch(dataAccountFetchConnection);
 
 				if (dataAccountFetch != null) {
 					failedDataAccountFetches.add(dataAccountFetch);
@@ -240,18 +242,18 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getFailedDataAccountFetchesCount(io.reflection.app.datatypes.shared.DataAccount)
 	 */
 	@Override
 	public Long getFailedDataAccountFetchesCount(DataAccount dataAccount) throws DataAccessException {
 		Long failedDataAccountFetchesCount = Long.valueOf(0);
 
-		String getFailedDataAccountFetchesCountQuery = String
+		final String getFailedDataAccountFetchesCountQuery = String
 				.format("SELECT COUNT(1) AS `count` FROM `dataaccountfetch` WHERE `linkedaccountid`=%d AND `status`='error' AND `date` BETWEEN CURDATE() - INTERVAL 30 DAY AND CURDATE() AND `deleted`='n'",
 						dataAccount.id.longValue());
 
-		Connection dataAccountFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccountFetch.toString());
+		final Connection dataAccountFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccountFetch.toString());
 
 		try {
 			dataAccountFetchConnection.connect();
@@ -271,7 +273,7 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.dataaccountfetch.IDataAccountFetchService#getDateDataAccountFetch(io.reflection.app.datatypes.shared.DataAccount,
 	 * java.util.Date)
 	 */
@@ -279,9 +281,9 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 	public DataAccountFetch getDateDataAccountFetch(DataAccount dataAccount, Date date) throws DataAccessException {
 		DataAccountFetch dataAccountFetch = null;
 
-		Connection dataAccountFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccountFetch.toString());
+		final Connection dataAccountFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccountFetch.toString());
 
-		String getDateDataAccountFetchQuery = String.format(
+		final String getDateDataAccountFetchQuery = String.format(
 				"SELECT * FROM `dataaccountfetch` WHERE `linkedaccountid`=%d AND `date`=FROM_UNIXTIME(%d) AND `deleted`='n' LIMIT 1",
 				dataAccount.id.longValue(), date.getTime() / 1000);
 		try {
@@ -301,15 +303,15 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.dataaccountfetch.IDataAccountFetchService#getDataAccountFetches(io.reflection.app.datatypes.shared.DataAccount,
 	 * io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
 	public List<DataAccountFetch> getDataAccountFetches(DataAccount dataAccount, Date start, Date end, Pager pager) throws DataAccessException {
-		List<DataAccountFetch> dataAccountFetches = new ArrayList<DataAccountFetch>();
+		final List<DataAccountFetch> dataAccountFetches = new ArrayList<DataAccountFetch>();
 
-		Connection dataAccountFetchesConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccountFetch.toString());
+		final Connection dataAccountFetchesConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccountFetch.toString());
 
 		String linkedAccountPart = "";
 		if (dataAccount != null && dataAccount.id != null) {
@@ -352,7 +354,7 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 			dataAccountFetchesConnection.executeQuery(getDataAccountFetchesQuery);
 
 			while (dataAccountFetchesConnection.fetchNextRow()) {
-				DataAccountFetch dataAccountFetch = this.toDataAccountFetch(dataAccountFetchesConnection);
+				final DataAccountFetch dataAccountFetch = toDataAccountFetch(dataAccountFetchesConnection);
 
 				if (dataAccountFetch != null) {
 					dataAccountFetches.add(dataAccountFetch);
@@ -369,7 +371,7 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.dataaccountfetch.IDataAccountFetchService#getDataAccountFetches(io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
@@ -379,21 +381,21 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.dataaccountfetch.IDataAccountFetchService#getDataAccountFetchesCount(io.reflection.app.datatypes.shared.DataAccount)
 	 */
 	@Override
 	public Long getDataAccountFetchesCount(DataAccount dataAccount, Date start, Date end) throws DataAccessException {
 		Long dataAccountFetchesCount = Long.valueOf(0);
 
-		Connection dataAccountFetchesCountConnection = DatabaseServiceProvider.provide().getNamedConnection(
+		final Connection dataAccountFetchesCountConnection = DatabaseServiceProvider.provide().getNamedConnection(
 				DatabaseType.DatabaseTypeDataAccountFetch.toString());
 
 		String linkedAccountPart = "";
 		if (dataAccount != null && dataAccount.id != null) {
 			linkedAccountPart = "`linkedaccountid`=" + dataAccount.id.longValue() + " AND";
 		}
-		String getDataAccountFetchesQuery = String.format("SELECT COUNT(1) AS `count` FROM `dataaccountfetch` WHERE %s AND %s `deleted`='n'",
+		final String getDataAccountFetchesQuery = String.format("SELECT COUNT(1) AS `count` FROM `dataaccountfetch` WHERE %s AND %s `deleted`='n'",
 				SqlQueryHelper.beforeAfterQuery(end, start), linkedAccountPart);
 
 		try {
@@ -414,7 +416,7 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.dataaccountfetch.IDataAccountFetchService#getDataAccountFetchesCount()
 	 */
 	@Override
@@ -422,9 +424,40 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 		return getDataAccountFetchesCount(null, start, end);
 	}
 
+	/* (non-Javadoc)
+	 * @see io.reflection.app.service.dataaccountfetch.IDataAccountFetchService#getDataAccountFetchesInprogressCount(java.util.Date)
+	 */
+	@Override
+	public Long getDataAccountFetchesInprogressCount(Date fetchForDate) throws DataAccessException {
+		Long dataAccountFetchesInprogressCount = Long.valueOf(0);
+
+		final Connection dataAccountFetchesInprogressCountConnection = DatabaseServiceProvider.provide().getNamedConnection(
+				DatabaseType.DatabaseTypeDataAccountFetch.toString());
+
+		// we create a new simple date format as it is not thread safe and we don't have a good control over requests / threadlocal memory leak safe environment
+		// as yet
+		final String date = new SimpleDateFormat("yyyy-MM-dd").format(fetchForDate);
+		final String getDataAccountFetchesInprogressQuery = String.format("select count(id) from dataaccountfetch where `date` = '%s' and `status` = 'gathered' and `deleted`='n'", date);
+
+		try {
+			dataAccountFetchesInprogressCountConnection.connect();
+			dataAccountFetchesInprogressCountConnection.executeQuery(getDataAccountFetchesInprogressQuery);
+
+			if (dataAccountFetchesInprogressCountConnection.fetchNextRow()) {
+				dataAccountFetchesInprogressCount = dataAccountFetchesInprogressCountConnection.getCurrentRowLong("count");
+			}
+		} finally {
+			if (dataAccountFetchesInprogressCountConnection != null) {
+				dataAccountFetchesInprogressCountConnection.disconnect();
+			}
+		}
+
+		return dataAccountFetchesInprogressCount;
+	}
+
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * io.reflection.app.service.dataaccountfetch.IDataAccountFetchService#triggerDataAccountFetchIngest(io.reflection.app.datatypes.shared.DataAccountFetch)
 	 */
@@ -434,7 +467,7 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param fetch
 	 */
 	private void enqueue(DataAccountFetch fetch) {
@@ -443,15 +476,15 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 		}
 
 		try {
-			Queue queue = QueueFactory.getQueue("dataaccountingest");
+			final Queue queue = QueueFactory.getQueue("dataaccountingest");
 
-			TaskOptions options = TaskOptions.Builder.withUrl("/dataaccountingest").method(Method.POST);
+			final TaskOptions options = TaskOptions.Builder.withUrl("/dataaccountingest").method(Method.POST);
 
 			options.param("fetchId", fetch.id.toString());
 
 			try {
 				queue.add(options);
-			} catch (TransientFailureException ex) {
+			} catch (final TransientFailureException ex) {
 
 				if (LOG.isLoggable(Level.WARNING)) {
 					LOG.warning(String.format("Could not queue a message because of [%s] - will retry it once", ex.toString()));
@@ -460,7 +493,7 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 				// retry once
 				try {
 					queue.add(options);
-				} catch (TransientFailureException reEx) {
+				} catch (final TransientFailureException reEx) {
 					if (LOG.isLoggable(Level.SEVERE)) {
 						LOG.log(Level.SEVERE,
 								String.format("Retry of with payload [%s] failed while adding to queue [%s] twice", options.toString(), queue.getQueueName()),
@@ -475,5 +508,4 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 			}
 		}
 	}
-
 }

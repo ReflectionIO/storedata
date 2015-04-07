@@ -132,9 +132,6 @@ public class CronServlet extends HttpServlet {
 		} else if (process != null) {
 			if ("accounts".equals(process)) {
 
-				final Pager pager = new Pager();
-				pager.count = Long.valueOf(100);
-
 				try {
 					final IDataAccountFetchService dataAccountFetchService = DataAccountFetchServiceProvider.provide();
 					final IDataAccountService dataAccountService = DataAccountServiceProvider.provide();
@@ -156,9 +153,20 @@ public class CronServlet extends HttpServlet {
 					 */
 					final DataAccountFetch testAccountFetch = dataAccountFetchService.getDateDataAccountFetch(dataAccountToTest, fetchForDate);
 					if (testAccountFetch != null && testAccountFetch.status != null) {
-						// we have already started a fetch for this account for this date. We don't need to do anything anymore.
+						// we have already started a fetch for this account for this date.
 						if (LOG.isLoggable(GaeLevel.DEBUG)) {
-							LOG.log(GaeLevel.DEBUG, String.format("A sales gather has already been run for %s. Doing nothing this cron run.", fetchForDate));
+							LOG.log(GaeLevel.DEBUG, String.format(
+									"A sales gather has already been run for %s. Checking to see if the gathers are done so we can model against their rank.",
+									fetchForDate));
+						}
+
+						/*
+						 * Check if all the sales data has been injected, if there are no gathers left in the gathering status, fire off the modeling jobs
+						 */
+
+						final Long dataAccountFetchesInprogressCount = dataAccountFetchService.getDataAccountFetchesInprogressCount(fetchForDate);
+						if (dataAccountFetchesInprogressCount == 0) {
+
 						}
 
 						resp.setHeader("Cache-Control", "no-cache");
@@ -198,6 +206,9 @@ public class CronServlet extends HttpServlet {
 					if (LOG.isLoggable(GaeLevel.DEBUG)) {
 						LOG.log(GaeLevel.DEBUG, "We have not collected sales data for this date and it is now available. Firing off all the sales gathers");
 					}
+
+					final Pager pager = new Pager();
+					pager.count = Long.valueOf(100);
 
 					// get the total number of accounts there are
 					pager.totalCount = dataAccountService.getDataAccountsCount();

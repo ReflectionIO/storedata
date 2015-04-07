@@ -1,4 +1,4 @@
-//  
+//
 //  IDataAccountFetchService.java
 //  reflection.io
 //
@@ -8,13 +8,13 @@
 //
 package io.reflection.app.service.dataaccountfetch;
 
-import java.util.Date;
-import java.util.List;
-
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataAccountFetch;
+
+import java.util.Date;
+import java.util.List;
 
 import com.spacehopperstudios.service.IService;
 
@@ -39,7 +39,7 @@ public interface IDataAccountFetchService extends IService {
 	public DataAccountFetch updateDataAccountFetch(DataAccountFetch dataAccountFetch) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param dataAccountFetch
 	 * @throws DataAccessException
 	 */
@@ -47,7 +47,7 @@ public interface IDataAccountFetchService extends IService {
 
 	/**
 	 * Checks whether there have been any errors in the last few (?) fetches of an account
-	 * 
+	 *
 	 * @param dataAccount
 	 * @return
 	 * @throws DataAccessException
@@ -55,7 +55,7 @@ public interface IDataAccountFetchService extends IService {
 	public Boolean isFetchable(DataAccount dataAccount) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param dataAccount
 	 * @param pager
 	 * @return
@@ -64,7 +64,7 @@ public interface IDataAccountFetchService extends IService {
 	public List<DataAccountFetch> getFailedDataAccountFetches(DataAccount dataAccount, Pager pager) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param dataAccount
 	 * @return
 	 * @throws DataAccessException
@@ -80,7 +80,7 @@ public interface IDataAccountFetchService extends IService {
 	public DataAccountFetch getDateDataAccountFetch(DataAccount dataAccount, Date date) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param dataAccount
 	 * @param pager
 	 * @return
@@ -89,7 +89,7 @@ public interface IDataAccountFetchService extends IService {
 	public List<DataAccountFetch> getDataAccountFetches(DataAccount dataAccount, Date start, Date end, Pager pager) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param pager
 	 * @return
 	 * @throws DataAccessException
@@ -97,7 +97,7 @@ public interface IDataAccountFetchService extends IService {
 	public List<DataAccountFetch> getDataAccountFetches(Date start, Date end, Pager pager) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param dataAccount
 	 * @param pager
 	 * @return
@@ -106,7 +106,7 @@ public interface IDataAccountFetchService extends IService {
 	public Long getDataAccountFetchesCount(DataAccount dataAccount, Date start, Date end) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param pager
 	 * @return
 	 * @throws DataAccessException
@@ -114,10 +114,16 @@ public interface IDataAccountFetchService extends IService {
 	public Long getDataAccountFetchesCount(Date start, Date end) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param fetch
 	 * @throws DataAccessException
 	 */
 	public void triggerDataAccountFetchIngest(DataAccountFetch fetch) throws DataAccessException;
+
+	/**
+	 * @param fetchForDate
+	 * @throws DataAccessException
+	 */
+	public Long getDataAccountFetchesInprogressCount(Date fetchForDate) throws DataAccessException;
 
 }
