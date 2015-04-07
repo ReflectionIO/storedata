@@ -88,7 +88,7 @@ public class ITunesConnectDownloadHelper {
 	 * @throws ProtocolException
 	 * @throws Exception
 	 */
-	private static HttpURLConnection connectToItunesConnect(String username, String password, String vendorId, String dateParameter, String bucketName,
+	public static HttpURLConnection connectToItunesConnect(String username, String password, String vendorId, String dateParameter, String bucketName,
 			String bucketPath, URL url) throws IOException, ProtocolException, Exception {
 		HttpURLConnection connection = null;
 
@@ -132,7 +132,7 @@ public class ITunesConnectDownloadHelper {
 	 * @param dateParameter
 	 * @return
 	 */
-	private static String getPostData(String username, String password, String vendorId, String dateParameter) {
+	public static String getPostData(String username, String password, String vendorId, String dateParameter) {
 		String data = USERNAME_KEY + "=" + StringUtils.urlencode(username);
 		data += "&" + PASSWORD_KEY + "=" + StringUtils.urlencode(password);
 		data += "&" + VENDOR_NUMBER_KEY + "=" + vendorId;
