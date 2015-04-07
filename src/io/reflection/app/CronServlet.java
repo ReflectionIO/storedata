@@ -1,5 +1,5 @@
-//
 //  CronServlet.java
+//
 //  from - jspacecloud
 //
 //  Created by William Shakour on Jul 1, 2012.
@@ -8,6 +8,7 @@
 package io.reflection.app;
 
 import static io.reflection.app.objectify.PersistenceService.ofy;
+import io.reflection.app.accountdatacollectors.ITunesConnectDownloadHelper;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.apple.ItemPropertyLookupServlet;
@@ -17,6 +18,7 @@ import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
+import io.reflection.app.helpers.ApiHelper;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.dataaccount.IDataAccountService;
@@ -27,6 +29,9 @@ import io.reflection.app.shared.util.DataTypeHelper;
 import io.reflection.app.shared.util.PagerHelper;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,7 +50,7 @@ import com.googlecode.objectify.cmd.QueryKeys;
 
 /**
  * @author William Shakour
- * 
+ *
  */
 @SuppressWarnings("serial")
 public class CronServlet extends HttpServlet {
@@ -54,11 +59,14 @@ public class CronServlet extends HttpServlet {
 
 	private static final int DELETE_COUNT = 1000;
 
+	private static final String TEST_DATA_ACCOUNT_USERNAME_KEY = "gather.dataaccount.testaccount.username";
+	private static final String TEST_DATA_ACCOUNT_SOURCEID_KEY = "gather.dataaccount.testaccount.sourceid";
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-		String appEngineCron = req.getHeader("X-AppEngine-Cron");
-		String appEngineQueue = req.getHeader("X-AppEngine-QueueName");
+		final String appEngineCron = req.getHeader("X-AppEngine-Cron");
+		final String appEngineQueue = req.getHeader("X-AppEngine-QueueName");
 
 		if (LOG.isLoggable(GaeLevel.DEBUG)) {
 			LOG.log(GaeLevel.DEBUG, String.format("appEngineCron is [%s] and appEngineQueue is [%s]", appEngineCron, appEngineQueue));
@@ -67,8 +75,8 @@ public class CronServlet extends HttpServlet {
 		boolean isNotCron = false, isNotQueue = false;
 
 		// bail out if we have not been called by app engine cron
-		if ((isNotCron = (appEngineCron == null || !Boolean.parseBoolean(appEngineCron)))
-				&& (isNotQueue = (appEngineQueue == null || !"deferred".toLowerCase().equals(appEngineQueue.toLowerCase())))) {
+		if ((isNotCron = appEngineCron == null || !Boolean.parseBoolean(appEngineCron))
+				&& (isNotQueue = appEngineQueue == null || !"deferred".toLowerCase().equals(appEngineQueue.toLowerCase()))) {
 			resp.setStatus(401);
 			resp.getOutputStream().print("failure");
 			LOG.log(Level.WARNING, "Attempt to run script directly, this is not permitted");
@@ -85,20 +93,20 @@ public class CronServlet extends HttpServlet {
 			}
 		}
 
-		String store = req.getParameter("store");
-		String deleteSome = req.getParameter("deletesome");
-		String process = req.getParameter("process");
-		String tidy = req.getParameter("tidy");
+		final String store = req.getParameter("store");
+		final String deleteSome = req.getParameter("deletesome");
+		final String process = req.getParameter("process");
+		final String tidy = req.getParameter("tidy");
 
 		int count = 0;
 
 		if (store != null) {
 			if (DataTypeHelper.IOS_STORE_A3.equals(store.toLowerCase())) {
 				// ios app store
-				count = (new CollectorIOS()).enqueue();
+				count = new CollectorIOS().enqueue();
 			} else if ("amazon".equals(store.toLowerCase())) {
 				// amazon store
-				count = (new CollectorAmazon()).enqueue();
+				count = new CollectorAmazon().enqueue();
 			} else if ("play".equals(store.toLowerCase())) {
 				// google play store
 			}
@@ -108,12 +116,12 @@ public class CronServlet extends HttpServlet {
 			}
 		} else if (deleteSome != null) {
 			if ("Rank".equals(deleteSome)) {
-				int deleteCount = DELETE_COUNT * 10;
-				QueryKeys<Rank> query = ofy().load().type(Rank.class).limit(deleteCount).keys();
+				final int deleteCount = DELETE_COUNT * 10;
+				final QueryKeys<Rank> query = ofy().load().type(Rank.class).limit(deleteCount).keys();
 				ofy().delete().keys(query.iterable());
 				count = deleteCount;
 			} else if ("Item".equals(deleteSome)) {
-				QueryKeys<Item> query = ofy().load().type(Item.class).limit(DELETE_COUNT).keys();
+				final QueryKeys<Item> query = ofy().load().type(Item.class).limit(DELETE_COUNT).keys();
 				ofy().delete().keys(query.iterable());
 				count = DELETE_COUNT;
 			}
@@ -124,12 +132,72 @@ public class CronServlet extends HttpServlet {
 		} else if (process != null) {
 			if ("accounts".equals(process)) {
 
-				Pager pager = new Pager();
+				final Pager pager = new Pager();
 				pager.count = Long.valueOf(100);
 
 				try {
-					IDataAccountFetchService dataAccountFetchService = DataAccountFetchServiceProvider.provide();
-					IDataAccountService dataAccountService = DataAccountServiceProvider.provide();
+					final IDataAccountFetchService dataAccountFetchService = DataAccountFetchServiceProvider.provide();
+					final IDataAccountService dataAccountService = DataAccountServiceProvider.provide();
+
+					final int daysToGoBackBy = Calendar.getInstance().get(Calendar.HOUR_OF_DAY) < 17 ? -2 : -1;
+
+					final Calendar dayToFetchAccountDataFor = Calendar.getInstance();
+					dayToFetchAccountDataFor.add(Calendar.DATE, daysToGoBackBy);
+
+					final Date fetchForDate = ApiHelper.removeTime(dayToFetchAccountDataFor.getTime());
+
+					final String dataAccountToTestUsername = System.getProperty(TEST_DATA_ACCOUNT_USERNAME_KEY);
+					final String dataAccountToTestSourceID = System.getProperty(TEST_DATA_ACCOUNT_SOURCEID_KEY);
+
+					final DataAccount dataAccountToTest = dataAccountService.getDataAccount(dataAccountToTestUsername, Long.valueOf(dataAccountToTestSourceID));
+
+					/*
+					 * Check whether we have already collected sales data for yesterday (or day before if we are checking before 5pm)
+					 */
+					final DataAccountFetch testAccountFetch = dataAccountFetchService.getDateDataAccountFetch(dataAccountToTest, fetchForDate);
+					if (testAccountFetch != null && testAccountFetch.status != null) {
+						// we have already started a fetch for this account for this date. We don't need to do anything anymore.
+						if (LOG.getLevel() == GaeLevel.DEBUG) {
+							LOG.log(GaeLevel.DEBUG, String.format("A sales gather has already been run for %s. Doing nothing this cron run.", fetchForDate));
+						}
+
+						resp.setHeader("Cache-Control", "no-cache");
+						return;
+					}
+
+					/*
+					 * Check whether the sales data is available for collection for yesterday (or the day before if we are checking before 5pm)
+					 */
+					HttpURLConnection connection = null;
+
+					try {
+						connection = ITunesConnectDownloadHelper.connectToItunesConnect(ITunesConnectDownloadHelper.getPostData(dataAccountToTest.username,
+								dataAccountToTest.password, ITunesConnectDownloadHelper.getVendorId(dataAccountToTest.properties),
+								ITunesConnectDownloadHelper.DATE_FORMATTER.format(fetchForDate)));
+					} catch (final Exception e) {
+						if (LOG.getLevel() == Level.WARNING) {
+							LOG.log(Level.WARNING, "An exception occured while trying to test a sales gather via ITunes Connect.", e);
+						}
+
+						resp.setHeader("Cache-Control", "no-cache");
+						return;
+					}
+
+					final String errorMessage = connection == null ? null : connection.getHeaderField("ERRORMSG");
+
+					if (errorMessage != null && errorMessage.startsWith("Daily reports are available only for past 30 days")) {
+						if (LOG.getLevel() == GaeLevel.DEBUG) {
+							LOG.log(GaeLevel.DEBUG,
+									"Ran a test check to see if sales data is available for a gather. ITunes returned an error stating that the report is not available as yet.");
+						}
+
+						resp.setHeader("Cache-Control", "no-cache");
+						return;
+					}
+
+					if (LOG.getLevel() == GaeLevel.DEBUG) {
+						LOG.log(GaeLevel.DEBUG, "We have not collected sales data for this date and it is now available. Firing off all the sales gathers");
+					}
 
 					// get the total number of accounts there are
 					pager.totalCount = dataAccountService.getDataAccountsCount();
@@ -137,42 +205,42 @@ public class CronServlet extends HttpServlet {
 					// get data accounts 100 at a time
 					for (pager.start = Long.valueOf(0); pager.start.longValue() < pager.totalCount.longValue(); pager.start = Long.valueOf(pager.start
 							.longValue() + pager.count.longValue())) {
-						List<DataAccount> dataAccounts = dataAccountService.getDataAccounts(pager);
+						final List<DataAccount> dataAccounts = dataAccountService.getDataAccounts(pager);
 
-						for (DataAccount dataAccount : dataAccounts) {
+						for (final DataAccount dataAccount : dataAccounts) {
 							// if the account has some errors then don't bother otherwise enqueue a message to do a gather for it
 
 							if (DataAccountFetchServiceProvider.provide().isFetchable(dataAccount) == Boolean.TRUE) {
 								dataAccountService.triggerDataAccountFetch(dataAccount);
 
 								// go through all the failed attempts and get them too (failed attempts = less than 30 days old)
-								List<DataAccountFetch> failedDataAccountFetches = dataAccountFetchService.getFailedDataAccountFetches(dataAccount,
+								final List<DataAccountFetch> failedDataAccountFetches = dataAccountFetchService.getFailedDataAccountFetches(dataAccount,
 										PagerHelper.createInfinitePager());
 
-								for (DataAccountFetch dataAccountFetch : failedDataAccountFetches) {
+								for (final DataAccountFetch dataAccountFetch : failedDataAccountFetches) {
 									dataAccountService.triggerSingleDateDataAccountFetch(dataAccount, dataAccountFetch.date);
 								}
 							}
 						}
 
 					}
-				} catch (DataAccessException daEx) {
+				} catch (final DataAccessException daEx) {
 					throw new RuntimeException(daEx);
 				}
 			} else if ("itemproperties".equals(process)) {
 				List<Long> propertylessItemIds;
-				Pager pager = PagerHelper.createInfinitePager();
+				final Pager pager = PagerHelper.createInfinitePager();
 
 				try {
 					propertylessItemIds = ItemServiceProvider.provide().getPropertylessItemIds(pager);
 
 					if (propertylessItemIds != null) {
-						for (Long id : propertylessItemIds) {
+						for (final Long id : propertylessItemIds) {
 							enqueueItemForPropertiesRefresh(id);
 						}
 					}
 
-				} catch (DataAccessException daEx) {
+				} catch (final DataAccessException daEx) {
 					throw new RuntimeException(daEx);
 				}
 			}
@@ -183,18 +251,18 @@ public class CronServlet extends HttpServlet {
 				// p.start = Long.valueOf(0);
 				// p.count = Long.valueOf(1000);
 
-				Pager p = PagerHelper.createInfinitePager();
+				final Pager p = PagerHelper.createInfinitePager();
 
 				// do {
 				itemsWithDuplicates = ItemServiceProvider.provide().getDuplicateItemsInternalId(p);
 
-				for (String internalId : itemsWithDuplicates) {
+				for (final String internalId : itemsWithDuplicates) {
 					ItemPropertyLookupServlet.enqueueItem(internalId, ItemPropertyLookupServlet.REMOVE_DUPLICATES_ACTION);
 				}
 
 				// p.start = Long.valueOf(p.start.longValue() + p.count.longValue());
 				// } while (itemsWithDuplicates.size() > 0);
-			} catch (DataAccessException daEx) {
+			} catch (final DataAccessException daEx) {
 				throw new RuntimeException(daEx);
 			}
 		}
@@ -208,14 +276,14 @@ public class CronServlet extends HttpServlet {
 		}
 
 		try {
-			Queue queue = QueueFactory.getQueue("refreshitemproperties");
+			final Queue queue = QueueFactory.getQueue("refreshitemproperties");
 
-			TaskOptions options = TaskOptions.Builder.withMethod(Method.PULL);
+			final TaskOptions options = TaskOptions.Builder.withMethod(Method.PULL);
 			options.param("itemid", itemId.toString());
 
 			try {
 				queue.add(options);
-			} catch (TransientFailureException ex) {
+			} catch (final TransientFailureException ex) {
 
 				if (LOG.isLoggable(Level.WARNING)) {
 					LOG.warning(String.format("Could not queue a message because of [%s] - will retry it once", ex.toString()));
@@ -224,7 +292,7 @@ public class CronServlet extends HttpServlet {
 				// retry once
 				try {
 					queue.add(options);
-				} catch (TransientFailureException reEx) {
+				} catch (final TransientFailureException reEx) {
 					if (LOG.isLoggable(Level.SEVERE)) {
 						LOG.log(Level.SEVERE,
 								String.format("Retry of with payload [%s] failed while adding to queue [%s] twice", options.toString(), queue.getQueueName()),
