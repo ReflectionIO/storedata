@@ -58,9 +58,26 @@ public class ITunesConnectDownloadHelper {
 
 
 		try {
-			final URL url = new URL("https://reportingitc.apple.com/autoingestion.tft?");
+			final String data = getPostData(username, password, vendorId, dateParameter);
 
-			final HttpURLConnection connection = connectToItunesConnect(username, password, vendorId, dateParameter, bucketName, bucketPath, url);
+			final HttpURLConnection connection = connectToItunesConnect(data);
+
+			String error = null;
+			if ((error = connection.getHeaderField("ERRORMSG")) != null) {
+				// OK error
+				// Daily reports are available only for past 30 days, please enter a date within past 30 days.
+
+				if (LOG.isLoggable(Level.WARNING)) {
+					if (data != null && password != null) {
+						// remove the password for the purposes of logging
+						data.replace(password, "**********");
+					}
+
+					LOG.warning(String.format("itunes connect return error message [%s] while trying to obtain data with request [%s] ", error, data));
+				}
+
+				throw new Exception(error);
+			}
 
 			if (connection != null && connection.getHeaderField("filename") != null) return getFile(bucketName, bucketPath, connection);
 		} catch (final IOException e) {
@@ -88,9 +105,11 @@ public class ITunesConnectDownloadHelper {
 	 * @throws ProtocolException
 	 * @throws Exception
 	 */
-	public static HttpURLConnection connectToItunesConnect(String username, String password, String vendorId, String dateParameter, String bucketName,
-			String bucketPath, URL url) throws IOException, ProtocolException, Exception {
+	public static HttpURLConnection connectToItunesConnect(String data)
+			throws IOException, ProtocolException, Exception {
 		HttpURLConnection connection = null;
+
+		final URL url = new URL("https://reportingitc.apple.com/autoingestion.tft?");
 
 		connection = (HttpURLConnection) url.openConnection();
 		connection.setRequestMethod("POST");
@@ -99,28 +118,10 @@ public class ITunesConnectDownloadHelper {
 
 		final OutputStreamWriter localOutputStreamWriter = new OutputStreamWriter(connection.getOutputStream());
 
-		final String data = getPostData(username, password, vendorId, dateParameter);
 
 		localOutputStreamWriter.write(data);
 		localOutputStreamWriter.flush();
 		localOutputStreamWriter.close();
-
-		String error = null;
-		if ((error = connection.getHeaderField("ERRORMSG")) != null) {
-			// OK error
-			// Daily reports are available only for past 30 days, please enter a date within past 30 days.
-
-			if (LOG.isLoggable(Level.WARNING)) {
-				if (data != null && password != null) {
-					// remove the password for the purposes of logging
-					data.replace(password, "**********");
-				}
-
-				LOG.warning(String.format("itunes connect return error message [%s] while trying to obtain data with request [%s] ", error, data));
-			}
-
-			throw new Exception(error);
-		}
 
 		return connection;
 	}
