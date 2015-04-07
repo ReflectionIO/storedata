@@ -157,7 +157,7 @@ public class CronServlet extends HttpServlet {
 					final DataAccountFetch testAccountFetch = dataAccountFetchService.getDateDataAccountFetch(dataAccountToTest, fetchForDate);
 					if (testAccountFetch != null && testAccountFetch.status != null) {
 						// we have already started a fetch for this account for this date. We don't need to do anything anymore.
-						if (LOG.getLevel() == GaeLevel.DEBUG) {
+						if (LOG.isLoggable(GaeLevel.DEBUG)) {
 							LOG.log(GaeLevel.DEBUG, String.format("A sales gather has already been run for %s. Doing nothing this cron run.", fetchForDate));
 						}
 
@@ -175,7 +175,7 @@ public class CronServlet extends HttpServlet {
 								dataAccountToTest.password, ITunesConnectDownloadHelper.getVendorId(dataAccountToTest.properties),
 								ITunesConnectDownloadHelper.DATE_FORMATTER.format(fetchForDate)));
 					} catch (final Exception e) {
-						if (LOG.getLevel() == Level.WARNING) {
+						if (LOG.isLoggable(Level.WARNING)) {
 							LOG.log(Level.WARNING, "An exception occured while trying to test a sales gather via ITunes Connect.", e);
 						}
 
@@ -186,7 +186,7 @@ public class CronServlet extends HttpServlet {
 					final String errorMessage = connection == null ? null : connection.getHeaderField("ERRORMSG");
 
 					if (errorMessage != null && errorMessage.startsWith("Daily reports are available only for past 30 days")) {
-						if (LOG.getLevel() == GaeLevel.DEBUG) {
+						if (LOG.isLoggable(GaeLevel.DEBUG)) {
 							LOG.log(GaeLevel.DEBUG,
 									"Ran a test check to see if sales data is available for a gather. ITunes returned an error stating that the report is not available as yet.");
 						}
@@ -195,7 +195,7 @@ public class CronServlet extends HttpServlet {
 						return;
 					}
 
-					if (LOG.getLevel() == GaeLevel.DEBUG) {
+					if (LOG.isLoggable(GaeLevel.DEBUG)) {
 						LOG.log(GaeLevel.DEBUG, "We have not collected sales data for this date and it is now available. Firing off all the sales gathers");
 					}
 
@@ -306,5 +306,4 @@ public class CronServlet extends HttpServlet {
 			}
 		}
 	}
-
 }
