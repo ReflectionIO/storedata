@@ -43,7 +43,7 @@ public class Chart extends BaseChart {
 		super(xDataType, yDataType);
 	}
 
-	public void drawData(List<Rank> ranks, String id, String seriesType, String color) {
+	public void drawData(List<Rank> ranks, String id, String seriesType, String color, boolean isCumulative, boolean hide) {
 		setLoading(false);
 
 		if (ranks != null && yDataType != null) {
@@ -65,6 +65,7 @@ public class Chart extends BaseChart {
 					removeOutOfRangeRanks(ranks);
 					Date progressiveDate = dateRange.getFrom();
 					if (NativeChart.nativeGet(chart, id) == null) {
+						double cumulative = 0;
 						for (Rank rank : ranks) {
 							// Fill with blank data missing dates
 							if (!FilterHelper.equalDate(progressiveDate, rank.date)) {
@@ -77,15 +78,20 @@ public class Chart extends BaseChart {
 							Double yPoint = getYPointValue(rank);
 							if (yPoint != null && showModelPredictions) {
 								if (isPointIsolated(yDataType, ranks, rank)) {
-									data.push(ChartHelper.createMarkerPoint(rank.date.getTime(), yPoint.doubleValue()));
+									data.push(ChartHelper.createMarkerPoint(rank.date.getTime(),
+											(isCumulative ? cumulative += yPoint.doubleValue() : yPoint.doubleValue())));
 								} else {
-									data.push(ChartHelper.createPoint(rank.date.getTime(), yPoint.doubleValue()));
+									data.push(ChartHelper.createPoint(rank.date.getTime(),
+											(isCumulative ? cumulative += yPoint.doubleValue() : yPoint.doubleValue())));
 								}
 							} else {
 								data.push(ChartHelper.createPoint(rank.date.getTime(), JavaScriptObjectHelper.getNativeNull()));
 							}
 						}
 						addSeries(data, seriesType, id, color);
+						if (hide) {
+							hideSeries(id);
+						}
 					}
 				}
 				break;
@@ -107,7 +113,23 @@ public class Chart extends BaseChart {
 	}
 
 	public void drawData(List<Rank> ranks, String id, String seriesType) {
-		drawData(ranks, id, seriesType, "");
+		drawData(ranks, id, seriesType, "", false, false);
+	}
+
+	public void drawData(List<Rank> ranks, String id, String seriesType, boolean isCumulative) {
+		drawData(ranks, id, seriesType, "", isCumulative, false);
+	}
+
+	public void drawData(List<Rank> ranks, String id, String seriesType, String color) {
+		drawData(ranks, id, seriesType, color, false, false);
+	}
+
+	public void drawData(List<Rank> ranks, String id, String seriesType, String color, boolean isCumulative) {
+		drawData(ranks, id, seriesType, color, isCumulative, false);
+	}
+
+	public void drawData(List<Rank> ranks, String id, String seriesType, boolean isCumulative, boolean hide) {
+		drawData(ranks, id, seriesType, "", isCumulative, hide);
 	}
 
 	private Double getYPointValue(Rank rank) {

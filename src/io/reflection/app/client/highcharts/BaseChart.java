@@ -254,8 +254,8 @@ public abstract class BaseChart extends Composite {
 
 	public void setVisible(boolean visible) {
 		super.setVisible(visible);
-		rearrangeXAxisLabels();
 		resize();
+		rearrangeXAxisLabels();
 	}
 
 	/*
