@@ -192,6 +192,11 @@ public interface Styles extends ClientBundle {
 		@ClassName("blog-tags")
 		String blogTags();
 
+		String breadcrumb();
+
+		@ClassName("breadcrumb-container")
+		String breadcrumbContainer();
+
 		String browserupgrade();
 
 		@ClassName("button-example-code-container")
@@ -223,6 +228,8 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("can-toggle__switch")
 		String canToggle__switch();
+
+		String cellTableLoading();
 
 		@ClassName("centre-content-container")
 		String centreContentContainer();
@@ -791,6 +798,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("label--hidden-text")
 		String labelHiddenText();
 
+		@ClassName("landing-page")
+		String landingPage();
+
 		String lato();
 
 		@ClassName("lato-bold")
@@ -1294,6 +1304,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("will-show")
 		String willShow();
 
+		@ClassName("window-warning")
+		String windowWarning();
+
 		@ClassName("with-icon")
 		String withIcon();
 
@@ -1486,6 +1499,10 @@ public interface Styles extends ClientBundle {
 	public interface BlogStyles extends CssResource {}
 
 	public static final Styles STYLES_INSTANCE = GWT.create(Styles.class);
+
+	@Source("preloader.gif")
+	@ImageOptions(repeatStyle = RepeatStyle.None)
+	ImageResource cellTableLoading();
 
 	@Source("footersprite.png")
 	@ImageOptions(repeatStyle = RepeatStyle.None)

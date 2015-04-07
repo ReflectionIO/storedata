@@ -340,6 +340,8 @@ public class HomePage extends Page {
 			mapScriptInjected = true;
 		}
 
+		DOMHelper.addClassName(Document.get().getBody(), Styles.STYLES_INSTANCE.reflectionMainStyle().landingPage());
+
 	}
 
 	/*
@@ -350,6 +352,8 @@ public class HomePage extends Page {
 	@Override
 	protected void onDetach() {
 		super.onDetach();
+
+		Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().landingPage());
 
 		toTop = Window.getScrollTop();
 

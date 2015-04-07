@@ -218,8 +218,8 @@ public class ChartHelper {
 	public static JsArrayString getDefaultColors() {
 		JsArrayString colors = JavaScriptObject.createArray().cast();
 		colors.push("#6a64c4");
-		colors.push("#1bc79f");
 		colors.push("#ff496a");
+		colors.push("#1bc79f");
 		colors.push("#29292c");
 		return colors;
 	}
