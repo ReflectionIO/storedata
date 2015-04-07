@@ -3,6 +3,27 @@
 // Use functions as variables to modularise and encapsulate component functionality in application.js - which contains reusable components JS for the application
 // Keep design kit only JS in this file, and resusable application JS in application.js
 
+/* COMPONENT OBJECTS FOR DESIGN KIT */
+var SubmitButtonWithFeedback = function() {
+	$('.js-submit-with-feedback').on("click", function(){
+		var thisButton = $(this);
+		if(!thisButton.hasClass("ref-button--is-loading") && !thisButton.hasClass("ref-button--success") && !thisButton.hasClass("ref-button--error")) {
+			thisButton.addClass("ref-button--is-loading").attr("value", "Loading...");
+
+  		window.setTimeout(function(){
+  			if(thisButton.hasClass("js-submit-success")) {
+  				thisButton.removeClass("ref-button--is-loading").addClass("ref-button--success").attr("value", "Success!");
+  			}
+  			else {
+  				thisButton.removeClass("ref-button--is-loading").addClass("ref-button--error").attr("value", "Oops, something went wrong");
+  			}
+  			window.setTimeout(function(){
+  				thisButton.removeClass("ref-button--success ref-button--error").attr("value", "Submit");
+  			}, 3000);
+  		}, 3000);
+		}
+	});
+};
 
 /* PAGE OBJECTS FOR TEMPLATES */
 
@@ -232,6 +253,3 @@
 		});
 	};
 /* END PAGE OBJECTS FOR TEMPLATES */
-
-
-

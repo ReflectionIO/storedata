@@ -56,7 +56,9 @@
 
 	Page.prototype.initBrowserPulling = function() {
 		$(window).resize(function () {
-			instance.setMainContentWidthForIE();
+			if(!$('body').hasClass('landing-page')) {
+				instance.setMainContentWidthForIE();
+			}
 	  });
 	};
 
@@ -206,7 +208,9 @@
 			$(this).toggleClass('is-selected');
 			if($('body').hasClass('panel-left-open')) {
 				$('body').removeClass('panel-left-open');
-				instance.setMainContentWidthForIE();
+				if(!$('body').hasClass('landing-page')) {
+					instance.setMainContentWidthForIE();
+				}				
 				if(!$('html.is-chrome').length && !$('html.is-opera').length) {
 					$('.panel-left').addClass('is-animating-out');
 					$('.l-main').addClass('is-animating-out');
@@ -216,7 +220,9 @@
 				}
 			} else {
 				$('body').toggleClass('panel-left-open');
-				instance.setMainContentWidthForIE();
+				if(!$('body').hasClass('landing-page')) {
+					instance.setMainContentWidthForIE();
+				}
 				if(!$('html.is-chrome').length && !$('html.is-opera').length) {
 					$('.panel-left').addClass('is-animating-in');
 					$('.l-main').addClass('is-animating-in');
@@ -249,27 +255,6 @@
 				}
 			});
 		}, 100); // fixes bug in IE11 for prepopulated data
-
-		$('.js-mock-password-entry').on("keyup", function(){
-			var $this = $(this),
-				$passwordIndicatorContainer = $this.siblings('label').find('.password-strength-indicator-container'),
-				$passwordIndicatorDescription = $passwordIndicatorContainer.find('.password-strength-description'),
-				$passwordIndicator = $passwordIndicatorContainer.find('.password-strength-indicator span'),
-				currentValueLength = $this.val().length;
-			if(currentValueLength > 0 && currentValueLength <= 3) {
-				$passwordIndicatorDescription.text('Pathetic');
-				$passwordIndicator.removeAttr("class").addClass('is-pathetic');
-			} else if(currentValueLength > 3 && currentValueLength <= 7) {
-				$passwordIndicatorDescription.text('Ok');
-				$passwordIndicator.removeAttr("class").addClass('is-ok');
-			} else if(currentValueLength > 7 && currentValueLength <= 11) {
-				$passwordIndicatorDescription.text('Strongish');
-				$passwordIndicator.removeAttr("class").addClass('is-strong');
-			} else if(currentValueLength > 11) {
-				$passwordIndicatorDescription.text('Impressive');
-				$passwordIndicator.removeAttr("class").addClass('is-impressive');
-			}
-		});
 	};
 
 	var PanelRightOverlay = function() {
@@ -452,28 +437,6 @@
 				$devList.append($('<li>').append($('<a>').append($('<span>').text(searchResultsDevs[i].creatorName))));
 			}
 		});
-	};
-
-
-	var SubmitButtonWithFeedback = function() {
-		$('.js-submit-with-feedback').on("click", function(){
-  		var thisButton = $(this);
-  		if(!thisButton.hasClass("ref-button--is-loading") && !thisButton.hasClass("ref-button--success") && !thisButton.hasClass("ref-button--error")) {
-  			thisButton.addClass("ref-button--is-loading").attr("value", "Loading...");
-
-	  		window.setTimeout(function(){
-	  			if(thisButton.hasClass("js-submit-success")) {
-	  				thisButton.removeClass("ref-button--is-loading").addClass("ref-button--success").attr("value", "Success!");
-	  			}
-	  			else {
-	  				thisButton.removeClass("ref-button--is-loading").addClass("ref-button--error").attr("value", "Oops, something went wrong");
-	  			}
-	  			window.setTimeout(function(){
-	  				thisButton.removeClass("ref-button--success ref-button--error").attr("value", "Submit");
-	  			}, 3000);
-	  		}, 3000);
-  		}
-  	});
 	};
 
 

@@ -13,12 +13,14 @@
 		<script src="js/vendor/picturefill.2.2.0.min.js" async></script>
 	<!-- <![endif]-->
 	<!--[if (gte IE 9)|(IEMobile)|(!IE)]><!-->
-		<link rel="stylesheet" media="screen, projection" type="text/css" href="account-access.60979fbb44e07508ccd4.css" />
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="css/account-access.css" />
 	<!--<![endif]-->
 </head>
 <body class="account-access-page create-password-form-is-showing">
-	<!--[if lt IE 8]>
-      <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+	<!--[if (lt IE 9)]>
+      <div class="window-warning">
+  			<p>Uh oh... Reflection doesn't work in this browser. &nbsp; &nbsp;<a href="http://outdatedbrowser.com/en" target="_blank">Download a compatible browser</a></p>
+  		</div>
   <![endif]-->
 
   <header id="js-component-import--global-header" class="global-header"></header>
@@ -127,10 +129,10 @@
 							<div class="list-partners">
 								<h2>Some of the partners you're joining</h2>
 								<ul>
-									<li><img src="images/Partner_Soundcloud@2x.ea554de6daac13e9327b.png" alt="Soundcloud logo" /></li>
-									<li><img src="images/Partner_Sega@2x.75250c27e36c0e325b55.png" alt="Sega logo" /></li>
-									<li><img src="images/Partner_Wooga@2x.95ceca5f61bc74a6ac9d.png" alt="Wooga logo" /></li>
-									<li><img src="images/Partner_TocaBoca@2x.a5c0880048489fada02a.png" alt="Toca Boca logo" /></li>					
+									<li><img src="images/Partner_Soundcloud@2x.png" alt="Soundcloud logo" /></li>
+									<li><img src="images/Partner_Sega@2x.png" alt="Sega logo" /></li>
+									<li><img src="images/Partner_Wooga@2x.png" alt="Wooga logo" /></li>
+									<li><img src="images/Partner_TocaBoca@2x.png" alt="Toca Boca logo" /></li>					
 								</ul>
 							</div>
 						</div>
@@ -144,19 +146,19 @@
 							<fieldset class="create-password-content">
 								<h2 class="heading-style--heading-five account-form-heading js-fade-content">Create your password to get started</h2>
 								<div class="form-field form-field--disabled js-rotate-content">						
-									<input type="text" name="apply-firstname" id="apply-firstname" autocomplete="off" disabled />
+									<input type="text" name="apply-firstname" id="apply-firstname" autocomplete="off" disabled value="Martin" />
 									<label for="apply-firstname">First Name</label>
 								</div>
 								<div class="form-field form-field--disabled js-rotate-content">						
-									<input type="text" name="apply-lastname" id="apply-lastname" autocomplete="off" disabled />
+									<input type="text" name="apply-lastname" id="apply-lastname" autocomplete="off" disabled value="Ollivere" />
 									<label for="apply-lastname">Last Name</label>
 								</div>
 								<div class="form-field form-field--disabled js-rotate-content">						
-									<input type="text" name="apply-company" id="apply-company" autocomplete="off" disabled />
+									<input type="text" name="apply-company" id="apply-company" autocomplete="off" disabled value="Reflection" />
 									<label for="apply-company">Your Company</label>
 								</div>	
 								<div class="form-field form-field--disabled js-rotate-content">						
-									<input type="email" name="apply-email" id="apply-email" autocomplete="off" disabled />
+									<input type="email" name="apply-email" id="apply-email" autocomplete="off" disabled value="martin@reflection.io" />
 									<label for="apply-email">Email</label>
 								</div>
 								<div class="form-field js-rotate-content">						
