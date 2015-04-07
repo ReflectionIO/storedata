@@ -27,6 +27,7 @@ import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.helper.ApiCallHelper;
 import io.reflection.app.client.helper.FilterHelper;
+import io.reflection.app.client.part.datatypes.AppRanking;
 import io.reflection.app.client.part.datatypes.ItemRevenue;
 import io.reflection.app.client.part.datatypes.RanksGroup;
 import io.reflection.app.datatypes.shared.Item;
@@ -61,6 +62,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 	private Request currentItemSalesRanks;
 
 	private ListDataProvider<ItemRevenue> itemRevenueData = new ListDataProvider<ItemRevenue>();
+	private ListDataProvider<AppRanking> appRankingDataProvider = new ListDataProvider<AppRanking>();
 
 	public static RankController get() {
 		if (mOne == null) {
@@ -95,7 +97,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 		if (CalendarUtil.isSameDate(input.on, today)) {
 			input.on = today;
 		}
-		
+
 		input.category = FilterController.get().getCategory();
 
 		if (pager == null) {
@@ -238,6 +240,8 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 					float paid = 0, iap = 0;
 					ItemRevenue itemRevenue = null;
+					appRankingDataProvider.getList().clear();
+					AppRanking appRanking = null;
 
 					if (itemRevenueData.getList().size() == 0) {
 						itemRevenue = new ItemRevenue();
@@ -251,6 +255,10 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 					if (output.ranks != null && output.ranks.size() > 0 && output.item.price != null) {
 						for (Rank rank : output.ranks) {
 							if (rank.downloads != null && rank.revenue != null) {
+								appRanking = new AppRanking();
+								appRanking.date = rank.date;
+								appRanking.revenue = rank.revenue;
+								appRankingDataProvider.getList().add(appRanking);
 								paid += (rankPaid = (float) rank.downloads.intValue() * output.item.price.floatValue());
 								iap += (rank.revenue.floatValue() - rankPaid);
 							}
@@ -273,7 +281,14 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 					itemRevenue.percentage = Float.valueOf(100.0f);
 					itemRevenue.total = Float.valueOf(iap + paid);
 
+					for (AppRanking ar : appRankingDataProvider.getList()) {
+						ar.currency = itemRevenue.currency;
+						ar.total = Float.valueOf(iap + paid);
+						ar.revenuePercentForPeriod = ar.revenue.floatValue() / ar.total.floatValue();
+					}
+
 					itemRevenueData.refresh();
+					appRankingDataProvider.refresh();
 				}
 
 				DefaultEventBus.get().fireEventFromSource(new GetItemSalesRanksSuccess(input, output), RankController.this);
@@ -332,6 +347,8 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 					float paid = 0, iap = 0;
 					ItemRevenue itemRevenue = null;
+					appRankingDataProvider.getList().clear();
+					AppRanking appRanking = null;
 
 					if (itemRevenueData.getList().size() == 0) {
 						itemRevenue = new ItemRevenue();
@@ -345,6 +362,10 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 					if (output.ranks != null) {
 						for (Rank rank : output.ranks) {
 							if (rank.downloads != null && rank.revenue != null) {
+								appRanking = new AppRanking();
+								appRanking.date = rank.date;
+								appRanking.revenue = rank.revenue;
+								appRankingDataProvider.getList().add(appRanking);
 								paid += (rankPaid = (float) rank.downloads.intValue() * rank.price.floatValue());
 								iap += (rank.revenue.floatValue() - rankPaid);
 							}
@@ -367,7 +388,14 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 					itemRevenue.percentage = Float.valueOf(100.0f);
 					itemRevenue.total = Float.valueOf(iap + paid);
 
+					for (AppRanking ar : appRankingDataProvider.getList()) {
+						ar.currency = itemRevenue.currency;
+						ar.total = Float.valueOf(iap + paid);
+						ar.revenuePercentForPeriod = ar.revenue.floatValue() / ar.total.floatValue();
+					}
+
 					itemRevenueData.refresh();
+					appRankingDataProvider.refresh();
 				}
 
 				DefaultEventBus.get().fireEventFromSource(new GetItemRanksEventHandler.GetItemRanksSuccess(input, output), RankController.this);
@@ -431,6 +459,10 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 	 */
 	public ListDataProvider<ItemRevenue> getItemRevenueDataProvider() {
 		return itemRevenueData;
+	}
+
+	public ListDataProvider<AppRanking> getRankDataProvider() {
+		return appRankingDataProvider;
 	}
 
 }
