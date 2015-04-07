@@ -18,8 +18,10 @@
 	<link rel="stylesheet" href="js/vendor/jquery.mCustomScrollbar.css" />
 </head>
 <body class="panel-left-open">
-	<!--[if lt IE 8]>
-      <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+	<!--[if (lt IE 9)]>
+      <div class="window-warning">
+  			<p>Uh oh... Reflection doesn't work in this browser. &nbsp; &nbsp;<a href="http://outdatedbrowser.com/en" target="_blank">Download a compatible browser</a></p>
+  		</div>
   <![endif]-->
 
   <header id="js-component-import--global-header" class="global-header"></header>
@@ -48,15 +50,13 @@
 								</select>
 							</div>
 						</div>
-						<div class="grid__column grid__column--five-columns grid__column--right">
-							<div class="form-field form-field--select">						
-								<select class="js-field--select reflection-select--filter">
-								    <option value="" disabled selected>Sort By:</option>
-								    <option value="b1">Most Recent</option>
-								    <option value="b2">Most Commented</option>
-								    <option value="b3">Most Shared</option>
-								</select>
-							</div>
+						<div class="grid__column grid__column--five-columns breadcrumb-container">
+							<ul class="breadcrumb">
+								<li><a href="#">All Categories</a></li>
+								<li> <span>-</span> <a href="#">Design</a></li>
+							</ul>
+						</div>
+						<div class="grid__column grid__column--one-quarter">
 							<div class="search-field-no-label">
 			        	<input type="text" autocomplete="off" name="search" placeholder="Search blog.." />
 				      	<input class="ref-button search-button-mobile is-highlighted" type="submit" value="a" />
