@@ -79,7 +79,6 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 
 	public PanelRightAccount() {
 		initWidget(uiBinder.createAndBindUi(this));
-		accessPanelContainer.setId("mCSB_2_container");
 
 		setLoggedIn(false);
 

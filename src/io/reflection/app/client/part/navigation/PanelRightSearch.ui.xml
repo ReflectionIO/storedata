@@ -17,88 +17,62 @@
 				<input type="submit" class="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth}" value="Show All Results" />
 			</form>
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.search__resultsContainer}">
-				<div
-					class="{STYLES_INSTANCE.reflectionMainStyle.search__resultsSection} js-item-results--apps js-custom-scrollbar mCustomScrollbar _mCS_3 mCS-autoHide mCS_no_scrollbar"
-					data-mcs-theme="minimal-dark" style="overflow: visible;">
-					<div id="mCSB_3" class="mCustomScrollBox mCS-minimal-dark mCSB_vertical mCSB_outside" tabindex="0">
-						<div id="mCSB_3_container" class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y" style="position: relative; top: 0px; left: 0px;" dir="ltr">
-							<h2>Apps</h2>
-							<ul>
-								<li>
-									<a href="#">
-										<!-- <img src="images/placeholder-app-thumb-sm1.png" alt="App icon" class="mCS_img_loaded"/> -->
-										<span>Lorem ipsum dolor</span>
-									</a>
-								</li>
-								<li>
-									<a href="#">
-										<!-- <img src="images/placeholder-app-thumb-sm2.png" alt="App icon" class="mCS_img_loaded"/> -->
-										<span>Lorem ipsum dolor</span>
-									</a>
-								</li>
-								<li>
-									<a href="#">
-										<!-- <img src="images/placeholder-app-thumb-sm3.png" alt="App icon" class="mCS_img_loaded"/> -->
-										<span>Lorem ipsum dolor</span>
-									</a>
-								</li>
-								<li>
-									<a href="#">
-										<!-- <img src="images/placeholder-app-thumb-sm4.png" alt="App icon" class="mCS_img_loaded"/> -->
-										<span>Lorem ipsum dolor</span>
-									</a>
-								</li>
-								<li>
-									<a href="#">
-										<!-- <img src="images/placeholder-app-thumb-sm5.png" alt="App icon" class="mCS_img_loaded"/> -->
-										<span>Lorem ipsum dolor</span>
-									</a>
-								</li>
-								<li>
-									<a href="#">
-										<!-- <img src="images/placeholder-app-thumb-sm6.png" alt="App icon" class="mCS_img_loaded"/> -->
-										<span>Lorem ipsum dolor</span>
-									</a>
-								</li>
-							</ul>
-						</div>
-					</div>
-					<div id="mCSB_3_scrollbar_vertical" class="mCSB_scrollTools mCSB_3_scrollbar mCS-minimal-dark mCSB_scrollTools_vertical" style="display: none;">
-						<div class="mCSB_draggerContainer">
-							<div id="mCSB_3_dragger_vertical" class="mCSB_dragger" style="position: absolute; min-height: 50px; height: 0px; top: 0px;" oncontextmenu="return false;">
-								<div class="mCSB_dragger_bar" style="line-height: 50px;"></div>
-							</div>
-							<div class="mCSB_draggerRail"></div>
-						</div>
-					</div>
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.search__resultsSection} js-item-results--apps js-custom-scrollbar" data-mcs-theme="minimal-dark">
+					<h2>Apps</h2>
+					<ul>
+						<li>
+							<a href="#">
+								<!-- <img src="images/placeholder-app-thumb-sm1.png" alt="App icon" class="mCS_img_loaded"/> -->
+								<span>Lorem ipsum dolor</span>
+							</a>
+						</li>
+						<li>
+							<a href="#">
+								<!-- <img src="images/placeholder-app-thumb-sm2.png" alt="App icon" class="mCS_img_loaded"/> -->
+								<span>Lorem ipsum dolor</span>
+							</a>
+						</li>
+						<li>
+							<a href="#">
+								<!-- <img src="images/placeholder-app-thumb-sm3.png" alt="App icon" class="mCS_img_loaded"/> -->
+								<span>Lorem ipsum dolor</span>
+							</a>
+						</li>
+						<li>
+							<a href="#">
+								<!-- <img src="images/placeholder-app-thumb-sm4.png" alt="App icon" class="mCS_img_loaded"/> -->
+								<span>Lorem ipsum dolor</span>
+							</a>
+						</li>
+						<li>
+							<a href="#">
+								<!-- <img src="images/placeholder-app-thumb-sm5.png" alt="App icon" class="mCS_img_loaded"/> -->
+								<span>Lorem ipsum dolor</span>
+							</a>
+						</li>
+						<li>
+							<a href="#">
+								<!-- <img src="images/placeholder-app-thumb-sm6.png" alt="App icon" class="mCS_img_loaded"/> -->
+								<span>Lorem ipsum dolor</span>
+							</a>
+						</li>
+					</ul>
 				</div>
 				<div
-					class="{STYLES_INSTANCE.reflectionMainStyle.search__resultsSection} {STYLES_INSTANCE.reflectionMainStyle.search__resultsSectionDevelopers} js-item-results--developers js-custom-scrollbar mCustomScrollbar _mCS_4 mCS-autoHide mCS_no_scrollbar"
-					data-mcs-theme="minimal-dark" style="overflow: visible;">
-					<div id="mCSB_4" class="mCustomScrollBox mCS-minimal-dark mCSB_vertical mCSB_outside" tabindex="0">
-						<div id="mCSB_4_container" class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y" style="position: relative; top: 0px; left: 0px;" dir="ltr">
-							<h2>Developers</h2>
-							<ul>
-								<li>
-									<a href="#">Lorem ipsum dolor</a>
-								</li>
-								<li>
-									<a href="#">Lorem ipsum dolor</a>
-								</li>
-								<li>
-									<a href="#">Lorem ipsum dolor</a>
-								</li>
-							</ul>
-						</div>
-					</div>
-					<div id="mCSB_4_scrollbar_vertical" class="mCSB_scrollTools mCSB_4_scrollbar mCS-minimal-dark mCSB_scrollTools_vertical" style="display: none;">
-						<div class="mCSB_draggerContainer">
-							<div id="mCSB_4_dragger_vertical" class="mCSB_dragger" style="position: absolute; min-height: 50px; height: 0px; top: 0px;" oncontextmenu="return false;">
-								<div class="mCSB_dragger_bar" style="line-height: 50px;"></div>
-							</div>
-							<div class="mCSB_draggerRail"></div>
-						</div>
-					</div>
+					class="{STYLES_INSTANCE.reflectionMainStyle.search__resultsSection} {STYLES_INSTANCE.reflectionMainStyle.search__resultsSectionDevelopers} js-item-results--developers js-custom-scrollbar"
+					data-mcs-theme="minimal-dark">
+					<h2>Developers</h2>
+					<ul>
+						<li>
+							<a href="#">Lorem ipsum dolor</a>
+						</li>
+						<li>
+							<a href="#">Lorem ipsum dolor</a>
+						</li>
+						<li>
+							<a href="#">Lorem ipsum dolor</a>
+						</li>
+					</ul>
 				</div>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.searchResultsNoneContainer} js-no-results">
 					<!-- <svg version="1.1" class="{STYLES_INSTANCE.reflectionMainStyle.svgUnhappy}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
