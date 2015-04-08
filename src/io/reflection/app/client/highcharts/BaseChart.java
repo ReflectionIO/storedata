@@ -109,21 +109,21 @@ public abstract class BaseChart extends Composite {
 	}
 
 	public void addAxis(JavaScriptObject options, boolean isX) {
-		if (chart != null) {
-			NativeChart.nativeAddAxis(chart, options, isX, true, true);
-		}
+		NativeChart.nativeAddAxis(chart, options, isX, true, false);
+	}
+
+	public void addSeries(JavaScriptObject series) {
+		NativeChart.nativeAddSeries(chart, series, true, false);
 	}
 
 	public void addSeries(JavaScriptObject data, String seriesType, String id, String color) {
-		if (chart != null) {
-			JavaScriptObject series = JavaScriptObject.createObject();
-			JavaScriptObjectHelper.setObjectProperty(series, "data", data);
-			JavaScriptObjectHelper.setStringProperty(series, "type", seriesType);
-			JavaScriptObjectHelper.setStringProperty(series, "id", id);
-			JavaScriptObjectHelper.setStringProperty(series, "name", id);
-			JavaScriptObjectHelper.setStringProperty(series, "color", color);
-			NativeChart.nativeAddSeries(chart, series, true, true);
-		}
+		JavaScriptObject series = JavaScriptObject.createObject();
+		JavaScriptObjectHelper.setObjectProperty(series, "data", data);
+		JavaScriptObjectHelper.setStringProperty(series, "type", seriesType);
+		JavaScriptObjectHelper.setStringProperty(series, "id", id);
+		JavaScriptObjectHelper.setStringProperty(series, "name", id);
+		JavaScriptObjectHelper.setStringProperty(series, "color", color);
+		addSeries(series);
 	}
 
 	public void addSeries(JavaScriptObject data, String seriesType, String id) {
@@ -146,8 +146,8 @@ public abstract class BaseChart extends Composite {
 		NativeChart.nativeDestroy(chart);
 	}
 
-	public void get(String id) {
-		NativeChart.nativeGet(chart, id);
+	public JavaScriptObject get(String id) {
+		return NativeChart.nativeGet(chart, id);
 	}
 
 	public void resize() {
