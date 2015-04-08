@@ -17,16 +17,6 @@ import com.google.gwt.core.client.JsArrayBoolean;
  */
 public class Tooltip extends Option<Tooltip> {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.highcharts.Option#getName()
-	 */
-	@Override
-	public String getName() {
-		return "tooltip";
-	}
-
 	public Tooltip setAnimation(boolean animated) {
 		return setOption("animate", animated);
 	}

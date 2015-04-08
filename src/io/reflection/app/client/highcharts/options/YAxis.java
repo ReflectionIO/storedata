@@ -19,16 +19,6 @@ public class YAxis extends Axis<YAxis> {
 
 	private JavaScriptObject stackLabels;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.highcharts.Option#getName()
-	 */
-	@Override
-	public String getName() {
-		return "yAxis";
-	}
-
 	public YAxis setGridLineInterpolation(String gridLineInterpolation) {
 		return setOption("gridLineInterpolation", gridLineInterpolation);
 	}

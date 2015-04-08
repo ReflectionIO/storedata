@@ -49,8 +49,6 @@ public abstract class Option<T> {
 		return (T) this;
 	}
 
-	public abstract String getName();
-
 	public JavaScriptObject getProperty() {
 		return option;
 	}

@@ -15,16 +15,6 @@ import com.google.gwt.core.client.JavaScriptObject;
  */
 public class Subtitle extends Option<Subtitle> {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.highcharts.Option#getName()
-	 */
-	@Override
-	public String getName() {
-		return "subSubtitle";
-	}
-
 	public Subtitle setAlign(String alignment) {
 		return setOption("align", alignment);
 	}

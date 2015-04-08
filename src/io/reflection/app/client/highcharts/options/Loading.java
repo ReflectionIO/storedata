@@ -15,16 +15,6 @@ import com.google.gwt.core.client.JavaScriptObject;
  */
 public class Loading extends Option<Loading> {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.highcharts.Option#getName()
-	 */
-	@Override
-	public String getName() {
-		return "loading";
-	}
-
 	public Loading setHideDuration(int hideDuration) {
 		return setOption("hideDuration", hideDuration);
 	}

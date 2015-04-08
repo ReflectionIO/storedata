@@ -13,14 +13,4 @@ package io.reflection.app.client.highcharts.options;
  */
 public class XAxis extends Axis<XAxis> {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.highcharts.Option#getName()
-	 */
-	@Override
-	public String getName() {
-		return "xAxis";
-	}
-
 }

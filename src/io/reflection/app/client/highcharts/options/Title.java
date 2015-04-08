@@ -15,16 +15,6 @@ import com.google.gwt.core.client.JavaScriptObject;
  */
 public class Title extends Option<Title> {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.highcharts.Option#getName()
-	 */
-	@Override
-	public String getName() {
-		return "title";
-	}
-
 	public Title setAlign(String alignment) {
 		return setOption("align", alignment);
 	}
