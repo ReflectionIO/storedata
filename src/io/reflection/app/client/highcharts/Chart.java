@@ -34,8 +34,8 @@ import com.google.gwt.user.datepicker.client.CalendarUtil;
 public class Chart extends BaseChart {
 
 	private String currency;
-	private final int yMinCeilingDownloads = 100;
-	private final int yMinCeilingRevenue = 100;
+	private final int yMinCeilingDownloads = 1;
+	private final int yMinCeilingRevenue = 1;
 
 	// private final int yMinCeilingRanking = 10;
 
