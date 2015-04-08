@@ -16,14 +16,20 @@ import io.reflection.app.collectors.CollectorAmazon;
 import io.reflection.app.collectors.CollectorIOS;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataAccountFetch;
+import io.reflection.app.datatypes.shared.DataAccountFetchStatusType;
+import io.reflection.app.datatypes.shared.FeedFetch;
+import io.reflection.app.datatypes.shared.FeedFetchStatusType;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.helpers.ApiHelper;
 import io.reflection.app.logging.GaeLevel;
+import io.reflection.app.modellers.Modeller;
+import io.reflection.app.modellers.ModellerFactory;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.dataaccount.IDataAccountService;
 import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
 import io.reflection.app.service.dataaccountfetch.IDataAccountFetchService;
+import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
 import io.reflection.app.shared.util.PagerHelper;
@@ -161,12 +167,56 @@ public class CronServlet extends HttpServlet {
 						}
 
 						/*
-						 * Check if all the sales data has been injected, if there are no gathers left in the gathering status, fire off the modeling jobs
+						 * Check if all the sales data has been ingested, if there are no gathers left in the gathering status, fire off the modeling jobs
 						 */
 
-						final Long dataAccountFetchesInprogressCount = dataAccountFetchService.getDataAccountFetchesInprogressCount(fetchForDate);
-						if (dataAccountFetchesInprogressCount == 0) {
+						final Long dataAccountFetchesGatheredCount = dataAccountFetchService.getDataAccountFetchesWithStatusCount(fetchForDate, DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered);
+						final Long dataAccountFetchesIngestedCount = dataAccountFetchService.getDataAccountFetchesWithStatusCount(fetchForDate,
+								DataAccountFetchStatusType.DataAccountFetchStatusTypeIngested);
 
+						if (dataAccountFetchesGatheredCount == 0 && dataAccountFetchesIngestedCount > 0) {
+							if (LOG.isLoggable(GaeLevel.DEBUG)) {
+								LOG.log(GaeLevel.DEBUG, String.format(
+										"There are no dataAccountFetches in progress (gathered) but there are at least some injested (%d). Checking availability of ranks that have been ingested",
+										dataAccountFetchesIngestedCount));
+							}
+
+							final List<Long> ingestedFeedFetchIds = FeedFetchServiceProvider.provide().getFeedFetchIdsForDateWithStatus(fetchForDate,
+									FeedFetchStatusType.FeedFetchStatusTypeIngested);
+
+							if (ingestedFeedFetchIds != null && ingestedFeedFetchIds.size() > 0) {
+								for (final Long feedFetchId : ingestedFeedFetchIds) {
+									final FeedFetch fetch = FeedFetchServiceProvider.provide().getFeedFetch(feedFetchId);
+
+									// this is just a sanity check. we expect that the query for getting the IDs only gave us feed fetches that exist and have
+									// the ingested status.
+									if (fetch != null && fetch.status == FeedFetchStatusType.FeedFetchStatusTypeIngested) {
+										if (LOG.isLoggable(GaeLevel.DEBUG)) {
+											LOG.log(GaeLevel.DEBUG, String.format(
+													"Enquing feed fetch id %d for modelling. Country: %s, category: %s, type: %s", feedFetchId, fetch.country,
+													fetch.category.id, fetch.type));
+										}
+
+										final Modeller modeller = ModellerFactory.getModellerForStore(DataTypeHelper.IOS_STORE_A3);
+
+										// once the feed fetch status is updated model the list
+										modeller.enqueue(fetch);
+									}
+								}
+							} else {
+								if (LOG.isLoggable(GaeLevel.DEBUG)) {
+									LOG.log(GaeLevel.DEBUG,
+											"Could not find any rank feed fetches that matched the date and the ingested status. Can't fire off the modelling process.");
+								}
+							}
+
+						} else {
+							if (LOG.isLoggable(GaeLevel.DEBUG)) {
+								LOG.log(GaeLevel.DEBUG,
+										String.format(
+												"Can't kick off the modelling process as the sales gathered count is %d and ingested count is %d. We need all the gathered to move on to ingested to kick off the sales process",
+												dataAccountFetchesGatheredCount, dataAccountFetchesIngestedCount));
+							}
 						}
 
 						resp.setHeader("Cache-Control", "no-cache");

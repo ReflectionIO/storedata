@@ -13,10 +13,10 @@ import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.DataAccountFetchStatusType;
 import io.reflection.app.helpers.ApiHelper;
-import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
 
 import java.util.Date;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.gson.JsonArray;
@@ -29,7 +29,7 @@ import com.willshex.gson.json.shared.Convert;
 
 /**
  * @author billy1380
- * 
+ *
  */
 public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 
@@ -37,20 +37,20 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.accountdatacollectors.DataAccountCollector#validateProperties(java.lang.String)
 	 */
 	@Override
 	public void validateProperties(String properties) throws ServiceException {
 		try {
-			JsonObject jsonProperties = Convert.toJsonObject(properties);
+			final JsonObject jsonProperties = Convert.toJsonObject(properties);
 
 			JsonElement element = jsonProperties.get("vendors");
 
 			if (element == null)
 				throw new InputValidationException(ITunesValidationError.NullVendorsArray.getCode(), ITunesValidationError.NullVendorsArray.getMessage());
 
-			JsonArray vendors = element.getAsJsonArray();
+			final JsonArray vendors = element.getAsJsonArray();
 
 			if (vendors == null)
 				throw new InputValidationException(ITunesValidationError.VendorsNotArray.getCode(), ITunesValidationError.VendorsNotArray.getMessage());
@@ -59,7 +59,7 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 				element = vendors.get(i);
 
 				if (element != null) {
-					String vendor = element.getAsString();
+					final String vendor = element.getAsString();
 
 					if (vendor == null)
 						throw new InputValidationException(ITunesValidationError.NullVendorId.getCode(), ITunesValidationError.NullVendorId.getMessage());
@@ -71,9 +71,9 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 				}
 			}
 
-		} catch (JsonParseException pe) {
-			if (LOG.isLoggable(GaeLevel.WARNING)) {
-				LOG.log(GaeLevel.WARNING, String.format("Error parsing properties [%s] properties", properties), pe);
+		} catch (final JsonParseException pe) {
+			if (LOG.isLoggable(Level.WARNING)) {
+				LOG.log(Level.WARNING, String.format("Error parsing properties [%s] properties", properties), pe);
 			}
 
 			throw new InputValidationException(ApiError.JsonParseException.getCode(), ApiError.JsonParseException.getMessage());
@@ -82,16 +82,16 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.accountdatacollectors.DataAccountCollector#collect(io.reflection.app.shared.datatypes.DataAccount, java.util.Date)
 	 */
 	@Override
 	public boolean collect(DataAccount dataAccount, Date date) throws ServiceException {
 		date = ApiHelper.removeTime(date);
 
-		String dateParameter = ITunesConnectDownloadHelper.DATE_FORMATTER.format(date);
+		final String dateParameter = ITunesConnectDownloadHelper.DATE_FORMATTER.format(date);
 
-		if (LOG.isLoggable(GaeLevel.INFO)) {
+		if (LOG.isLoggable(Level.INFO)) {
 			LOG.info(String.format("Getting data from itunes connect for data account [%s] and date [%s]", dataAccount.id == null ? dataAccount.username
 					: dataAccount.id.toString(), dateParameter));
 		}
@@ -102,7 +102,7 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 			cloudFileName = ITunesConnectDownloadHelper.getITunesSalesFile(dataAccount.username, dataAccount.password,
 					ITunesConnectDownloadHelper.getVendorId(dataAccount.properties), dateParameter, System.getProperty(ACCOUNT_DATA_BUCKET_KEY),
 					dataAccount.id.toString());
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
 			error = ex.getMessage();
 		}
 

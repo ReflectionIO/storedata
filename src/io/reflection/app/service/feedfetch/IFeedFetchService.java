@@ -1,4 +1,4 @@
-//  
+//
 //  IFeedFetchService.java
 //  storedata
 //
@@ -14,6 +14,7 @@ import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.FeedFetch;
+import io.reflection.app.datatypes.shared.FeedFetchStatusType;
 import io.reflection.app.datatypes.shared.Store;
 
 import java.util.Collection;
@@ -48,7 +49,7 @@ public interface IFeedFetchService extends IService {
 
 	/**
 	 * Get feed fetches
-	 * 
+	 *
 	 * @param country
 	 * @param store
 	 * @param category
@@ -59,7 +60,7 @@ public interface IFeedFetchService extends IService {
 	public List<FeedFetch> getFeedFetches(Country country, Store store, Category category, Collection<String> types, Pager pager) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param country
 	 * @param store
 	 * @param category
@@ -69,7 +70,7 @@ public interface IFeedFetchService extends IService {
 	public Long getFeedFetchesCount(Country country, Store store, Category category, Collection<String> types) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param country
 	 * @param store
 	 * @param types
@@ -79,7 +80,7 @@ public interface IFeedFetchService extends IService {
 	public List<FeedFetch> getIngestedFeedFetches(Country country, Store store, Collection<String> types, Pager pager) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param store
 	 * @param country
 	 * @param listType
@@ -97,7 +98,7 @@ public interface IFeedFetchService extends IService {
 	public List<FeedFetch> getUningestedFeedFetches(Country country, Store store, Collection<String> types, Pager pager) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param country
 	 * @param store
 	 * @param types
@@ -106,7 +107,7 @@ public interface IFeedFetchService extends IService {
 	public Long getUningestedFeedFetchesCount(Country country, Store store, Collection<String> types) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param country
 	 * @param store
 	 * @param listType
@@ -116,7 +117,7 @@ public interface IFeedFetchService extends IService {
 	public List<Long> getIngestableFeedFetchIds(Country country, Store store, String listType, Long code) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param country
 	 * @param store
 	 * @param types
@@ -126,7 +127,7 @@ public interface IFeedFetchService extends IService {
 	public Boolean isReadyToModel(Country country, Store store, Collection<String> types, Long code) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param country
 	 * @param store
 	 * @param types
@@ -137,14 +138,14 @@ public interface IFeedFetchService extends IService {
 
 	/**
 	 * Gets a feed fetch code instead of an guid
-	 * 
+	 *
 	 * @return
 	 * @throws DataAccessException
 	 */
 	public Long getCode() throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param date
 	 * @return
 	 * @throws DataAccessException
@@ -153,7 +154,7 @@ public interface IFeedFetchService extends IService {
 
 	/**
 	 * Gets the gather for the feed fetch
-	 * 
+	 *
 	 * @param country
 	 * @param store
 	 * @param after
@@ -164,7 +165,7 @@ public interface IFeedFetchService extends IService {
 	public Long getGatherCode(Country country, Store store, Date after, Date before) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param country
 	 * @param store
 	 * @param category
@@ -177,7 +178,7 @@ public interface IFeedFetchService extends IService {
 
 	/**
 	 * Get feed fetches within a date range
-	 * 
+	 *
 	 * @param country
 	 * @param store
 	 * @param category
@@ -189,5 +190,13 @@ public interface IFeedFetchService extends IService {
 	 */
 	public List<FeedFetch> getDatesFeedFetches(Country country, Store store, Category category, Collection<String> types, Date after, Date before)
 			throws DataAccessException;
+
+	/**
+	 * @param fetchForDate
+	 * @param feedfetchstatustypeingested
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<Long> getFeedFetchIdsForDateWithStatus(Date fetchForDate, FeedFetchStatusType statusType) throws DataAccessException;
 
 }

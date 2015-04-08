@@ -12,6 +12,7 @@ import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataAccountFetch;
+import io.reflection.app.datatypes.shared.DataAccountFetchStatusType;
 
 import java.util.Date;
 import java.util.List;
@@ -122,8 +123,11 @@ public interface IDataAccountFetchService extends IService {
 
 	/**
 	 * @param fetchForDate
+	 * @param dataaccountfetchstatustypegathered
+	 * @return
 	 * @throws DataAccessException
 	 */
-	public Long getDataAccountFetchesInprogressCount(Date fetchForDate) throws DataAccessException;
+	public Long getDataAccountFetchesWithStatusCount(Date fetchForDate, DataAccountFetchStatusType statusType)
+			throws DataAccessException;
 
 }

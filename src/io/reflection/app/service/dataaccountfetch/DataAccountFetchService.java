@@ -424,35 +424,40 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 		return getDataAccountFetchesCount(null, start, end);
 	}
 
-	/* (non-Javadoc)
-	 * @see io.reflection.app.service.dataaccountfetch.IDataAccountFetchService#getDataAccountFetchesInprogressCount(java.util.Date)
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see io.reflection.app.service.dataaccountfetch.IDataAccountFetchService#getDataAccountFetchesWithStatusCount(java.util.Date,
+	 * io.reflection.app.datatypes.shared.DataAccountFetchStatusType)
 	 */
 	@Override
-	public Long getDataAccountFetchesInprogressCount(Date fetchForDate) throws DataAccessException {
-		Long dataAccountFetchesInprogressCount = Long.valueOf(0);
+	public Long getDataAccountFetchesWithStatusCount(Date fetchForDate, DataAccountFetchStatusType statusType)
+			throws DataAccessException {
+		Long dataAccountFetchesWithStatusCount = Long.valueOf(0);
 
-		final Connection dataAccountFetchesInprogressCountConnection = DatabaseServiceProvider.provide().getNamedConnection(
+		final Connection dataAccountFetchesWithStatusCountConnection = DatabaseServiceProvider.provide().getNamedConnection(
 				DatabaseType.DatabaseTypeDataAccountFetch.toString());
 
 		// we create a new simple date format as it is not thread safe and we don't have a good control over requests / threadlocal memory leak safe environment
 		// as yet
 		final String date = new SimpleDateFormat("yyyy-MM-dd").format(fetchForDate);
-		final String getDataAccountFetchesInprogressQuery = String.format("select count(id) from dataaccountfetch where `date` = '%s' and `status` = 'gathered' and `deleted`='n'", date);
+		final String getDataAccountFetchesInprogressQuery = String.format(
+				"select count(id) as 'count' from dataaccountfetch where `date` = '%s' and `status` = '%s' and `deleted`='n'", date, statusType.toString());
 
 		try {
-			dataAccountFetchesInprogressCountConnection.connect();
-			dataAccountFetchesInprogressCountConnection.executeQuery(getDataAccountFetchesInprogressQuery);
+			dataAccountFetchesWithStatusCountConnection.connect();
+			dataAccountFetchesWithStatusCountConnection.executeQuery(getDataAccountFetchesInprogressQuery);
 
-			if (dataAccountFetchesInprogressCountConnection.fetchNextRow()) {
-				dataAccountFetchesInprogressCount = dataAccountFetchesInprogressCountConnection.getCurrentRowLong("count");
+			if (dataAccountFetchesWithStatusCountConnection.fetchNextRow()) {
+				dataAccountFetchesWithStatusCount = dataAccountFetchesWithStatusCountConnection.getCurrentRowLong("count");
 			}
 		} finally {
-			if (dataAccountFetchesInprogressCountConnection != null) {
-				dataAccountFetchesInprogressCountConnection.disconnect();
+			if (dataAccountFetchesWithStatusCountConnection != null) {
+				dataAccountFetchesWithStatusCountConnection.disconnect();
 			}
 		}
 
-		return dataAccountFetchesInprogressCount;
+		return dataAccountFetchesWithStatusCount;
 	}
 
 	/*
