@@ -284,7 +284,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 					for (AppRanking ar : appRankingDataProvider.getList()) {
 						ar.currency = itemRevenue.currency;
 						ar.total = Float.valueOf(iap + paid);
-						ar.revenuePercentForPeriod = ar.revenue.floatValue() / ar.total.floatValue();
+						ar.revenuePercentForPeriod = (ar.total.floatValue() > 0 ? ar.revenue.floatValue() / ar.total.floatValue() : 0);
 					}
 
 					itemRevenueData.refresh();
@@ -391,7 +391,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 					for (AppRanking ar : appRankingDataProvider.getList()) {
 						ar.currency = itemRevenue.currency;
 						ar.total = Float.valueOf(iap + paid);
-						ar.revenuePercentForPeriod = ar.revenue.floatValue() / ar.total.floatValue();
+						ar.revenuePercentForPeriod = (ar.total.floatValue() > 0 ? ar.revenue.floatValue() / ar.total.floatValue() : 0);
 					}
 
 					itemRevenueData.refresh();

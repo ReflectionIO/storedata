@@ -329,8 +329,8 @@ public class Chart extends BaseChart {
 				// setXAxisExtremes(dateRange.getFrom().getTime(), dateRange.getTo().getTime());
 				// rearrangeXAxisLabels();
 			}
-			// reflow();
 			removeAllSeries();
+			reflow();
 		}
 
 	}
