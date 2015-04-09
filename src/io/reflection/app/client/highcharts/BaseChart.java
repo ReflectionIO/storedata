@@ -14,7 +14,6 @@ import io.reflection.app.client.highcharts.ChartHelper.XDataType;
 import io.reflection.app.client.highcharts.ChartHelper.YDataType;
 import io.reflection.app.client.highcharts.options.ChartOption;
 import io.reflection.app.client.highcharts.options.Credits;
-import io.reflection.app.client.highcharts.options.Data;
 import io.reflection.app.client.highcharts.options.Labels;
 import io.reflection.app.client.highcharts.options.Legend;
 import io.reflection.app.client.highcharts.options.Loading;
@@ -33,6 +32,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArray;
+import com.google.gwt.core.client.JsArrayMixed;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
@@ -50,7 +51,6 @@ public abstract class BaseChart extends Composite {
 	public static final String OPTION_CHART = "chart";
 	public static final String OPTION_COLORS = "colors";
 	public static final String OPTION_CREDITS = "credits";
-	public static final String OPTION_DATA = "data";
 	public static final String OPTION_LABELS = "labels";
 	public static final String OPTION_LEGEND = "legend";
 	public static final String OPTION_LOADING = "loading";
@@ -62,6 +62,8 @@ public abstract class BaseChart extends Composite {
 	public static final String OPTION_TOOLTIP = "tooltip";
 	public static final String OPTION_X_AXIS = "xAxis";
 	public static final String OPTION_Y_AXIS = "yAxis";
+	public static final String OPTION_DEFAULT_Y_AXIS = "defaultYAxis";
+	public static final String OPTION_SECONDARY_Y_AXIS = "secondaryYAxis";
 
 	public static final int X_LABELS_DISTANCE = 65;
 
@@ -75,6 +77,8 @@ public abstract class BaseChart extends Composite {
 	private final String id = HTMLPanel.createUniqueId();
 	private JavaScriptObject options = JavaScriptObject.createObject();
 	private Map<String, Option<?>> optionsLookup = new HashMap<String, Option<?>>();
+	JsArray<JavaScriptObject> xAxisJSArray = JavaScriptObject.createArray().cast(); // list of x axis
+	JsArray<JavaScriptObject> yAxisJSArray = JavaScriptObject.createArray().cast(); // list of y axis
 
 	public BaseChart(XDataType xDataType, YDataType yDataType) {
 		chartWrapper.getElement().setId(id);
@@ -83,7 +87,7 @@ public abstract class BaseChart extends Composite {
 		this.yDataType = yDataType;
 		ChartHelper.setDefaultOptions(this);
 		ChartHelper.setDefaultXAxisOptions(this, xDataType);
-		ChartHelper.setDefaultYAxisOptions(this, yDataType);
+		ChartHelper.updateYAxisOptions(getDefaultYAxis(), yDataType);
 
 		initWidget(chartWrapper);
 	}
@@ -116,29 +120,60 @@ public abstract class BaseChart extends Composite {
 		NativeChart.nativeAddSeries(chart, series, true, false);
 	}
 
-	public void addSeries(JavaScriptObject data, String seriesType, String id, String color) {
+	public void addSeries(JavaScriptObject data, String seriesType, String seriesId, String color, boolean isSecondary) {
 		JavaScriptObject series = JavaScriptObject.createObject();
 		JavaScriptObjectHelper.setObjectProperty(series, "data", data);
 		JavaScriptObjectHelper.setStringProperty(series, "type", seriesType);
-		JavaScriptObjectHelper.setStringProperty(series, "id", id);
-		JavaScriptObjectHelper.setStringProperty(series, "name", id);
+		JavaScriptObjectHelper.setStringProperty(series, "id", seriesId);
+		JavaScriptObjectHelper.setStringProperty(series, "name", seriesId);
 		JavaScriptObjectHelper.setStringProperty(series, "color", color);
+		JavaScriptObjectHelper.setStringProperty(series, "yAxis", (isSecondary ? "yAxisSecondary" : "yAxisDefault"));
+		// JavaScriptObject tooltip = JavaScriptObject.createObject();
+		// JavaScriptObjectHelper.setObjectProperty(tooltip, "formatter", ChartHelper.getNativeTooltipFormatter("pippo"));
+		// JavaScriptObjectHelper.setObjectProperty(series, "tooltip", tooltip);
 		addSeries(series);
 	}
 
-	public void addSeries(JavaScriptObject data, String seriesType, String id) {
-		addSeries(data, seriesType, id, "");
+	public void addSeries(JavaScriptObject data, String seriesType, String id, String color) {
+		addSeries(data, seriesType, id, color, false);
 	}
 
-	public void showSeries(String id) {
-		if (NativeChart.nativeGet(chart, id) != null) {
-			NativeSeries.nativeShow(NativeChart.nativeGet(chart, id));
-		}
+	public JsArrayMixed createPoint(double x, double y) {
+		JsArrayMixed point = JavaScriptObject.createArray().cast();
+		point.push(x);
+		point.push(y);
+		return point;
 	}
 
-	public void hideSeries(String id) {
-		if (NativeChart.nativeGet(chart, id) != null) {
-			NativeSeries.nativeHide(NativeChart.nativeGet(chart, id));
+	public JsArrayMixed createPoint(double x, JavaScriptObject y) {
+		JsArrayMixed point = JavaScriptObject.createArray().cast();
+		point.push(x);
+		point.push(y);
+		return point;
+	}
+
+	public JavaScriptObject createMarkerPoint(double x, double y) {
+		JavaScriptObject point = JavaScriptObject.createObject();
+		JavaScriptObjectHelper.setDoubleProperty(point, "x", x);
+		JavaScriptObjectHelper.setDoubleProperty(point, "y", y);
+		JavaScriptObject marker = JavaScriptObject.createObject();
+		JavaScriptObjectHelper.setBooleanProperty(marker, "enabled", true);
+		JavaScriptObjectHelper.setIntegerProperty(marker, "radius", 4);
+		JavaScriptObjectHelper.setObjectProperty(point, "marker", marker);
+		return point;
+	}
+
+	public JavaScriptObject getAxis(String id) {
+		return get(id);
+	}
+
+	public void setSeriesVisible(String id, boolean visible) {
+		if (get(id) != null) {
+			if (visible) {
+				NativeSeries.nativeShow(get(id));
+			} else {
+				NativeSeries.nativeHide(get(id));
+			}
 		}
 	}
 
@@ -204,6 +239,10 @@ public abstract class BaseChart extends Composite {
 
 	public void removeAllSeries() {
 		NativeSeries.nativeRemoveAll(chart, true);
+	}
+
+	public void removeAllYAxis() {
+		NativeAxis.nativeRemoveAllY(chart, true);
 	}
 
 	public void setColors(JsArrayString colors) {
@@ -287,14 +326,6 @@ public abstract class BaseChart extends Composite {
 		return (Credits) optionsLookup.get(OPTION_CREDITS);
 	}
 
-	public Data getDataOption() {
-		if (optionsLookup.get(OPTION_DATA) == null) {
-			optionsLookup.put(OPTION_DATA, new Data());
-			JavaScriptObjectHelper.setObjectProperty(options, OPTION_DATA, optionsLookup.get(OPTION_DATA).getProperty());
-		}
-		return (Data) optionsLookup.get(OPTION_DATA);
-	}
-
 	public Labels getLabelsOption() {
 		if (optionsLookup.get(OPTION_LABELS) == null) {
 			optionsLookup.put(OPTION_LABELS, new Labels());
@@ -370,16 +401,27 @@ public abstract class BaseChart extends Composite {
 	public XAxis getXAxis() {
 		if (optionsLookup.get(OPTION_X_AXIS) == null) {
 			optionsLookup.put(OPTION_X_AXIS, new XAxis());
-			JavaScriptObjectHelper.setObjectProperty(options, OPTION_X_AXIS, optionsLookup.get(OPTION_X_AXIS).getProperty());
+			xAxisJSArray.push(optionsLookup.get(OPTION_X_AXIS).getProperty());
+			JavaScriptObjectHelper.setObjectProperty(options, OPTION_X_AXIS, xAxisJSArray);
 		}
 		return (XAxis) optionsLookup.get(OPTION_X_AXIS);
 	}
 
-	public YAxis getYAxis() {
-		if (optionsLookup.get(OPTION_Y_AXIS) == null) {
-			optionsLookup.put(OPTION_Y_AXIS, new YAxis());
-			JavaScriptObjectHelper.setObjectProperty(options, OPTION_Y_AXIS, optionsLookup.get(OPTION_Y_AXIS).getProperty());
+	public YAxis getDefaultYAxis() {
+		if (optionsLookup.get(OPTION_DEFAULT_Y_AXIS) == null) {
+			optionsLookup.put(OPTION_DEFAULT_Y_AXIS, new YAxis());
+			yAxisJSArray.push(optionsLookup.get(OPTION_DEFAULT_Y_AXIS).getProperty());
+			JavaScriptObjectHelper.setObjectProperty(options, OPTION_Y_AXIS, yAxisJSArray);
 		}
-		return (YAxis) optionsLookup.get(OPTION_Y_AXIS);
+		return (YAxis) optionsLookup.get(OPTION_DEFAULT_Y_AXIS);
+	}
+
+	public YAxis getSecondaryYAxis() {
+		if (optionsLookup.get(OPTION_SECONDARY_Y_AXIS) == null) {
+			optionsLookup.put(OPTION_SECONDARY_Y_AXIS, new YAxis());
+			yAxisJSArray.push(optionsLookup.get(OPTION_SECONDARY_Y_AXIS).getProperty());
+			JavaScriptObjectHelper.setObjectProperty(options, OPTION_Y_AXIS, yAxisJSArray);
+		}
+		return (YAxis) optionsLookup.get(OPTION_SECONDARY_Y_AXIS);
 	}
 }

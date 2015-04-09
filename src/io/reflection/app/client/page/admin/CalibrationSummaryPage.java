@@ -18,6 +18,7 @@ import io.reflection.app.client.controller.CountryController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.handler.NavigationEventHandler;
+import io.reflection.app.client.helper.ColorHelper;
 import io.reflection.app.client.helper.FormattingHelper;
 import io.reflection.app.client.highcharts.Chart;
 import io.reflection.app.client.highcharts.ChartHelper;
@@ -106,12 +107,7 @@ public class CalibrationSummaryPage extends Page implements NavigationEventHandl
 		} else {
 			chart.resetXAxisMin();
 		}
-		if (showMisses.getValue().booleanValue()) {
-			chart.showSeries("misses");
-		} else {
-			chart.hideSeries("misses");
-		}
-
+		chart.setSeriesVisible("misses", showMisses.getValue().booleanValue());
 	}
 
 	public CalibrationSummaryPage() {
@@ -151,17 +147,16 @@ public class CalibrationSummaryPage extends Page implements NavigationEventHandl
 					dummyRank.revenue = (float) prediction;
 					predictionsDummyRanks.add(dummyRank);
 				}
-				chart.drawData(predictionsDummyRanks, "prediction", ChartHelper.TYPE_SPLINE, ChartHelper.getDefaultColors().get(0));
-
+				chart.drawData(predictionsDummyRanks, "prediction", ChartHelper.TYPE_SPLINE, ColorHelper.getReflectionPurple(), false, false);
 			}
 
 			if (summary.misses != null) {
-				chart.drawData(summary.misses, "misses", ChartHelper.TYPE_SCATTER, ChartHelper.getDefaultColors().get(2));
-				chart.hideSeries("misses");
+				chart.drawData(summary.misses, "misses", ChartHelper.TYPE_SCATTER, ColorHelper.getReflectionPurple(), false, false);
+				chart.setSeriesVisible("misses", false);
 			}
 
 			if (summary.hits != null) {
-				chart.drawData(summary.hits, "hits", ChartHelper.TYPE_SCATTER, ChartHelper.getDefaultColors().get(1));
+				chart.drawData(summary.hits, "hits", ChartHelper.TYPE_SCATTER, ColorHelper.getReflectionPurple(), false, false);
 			}
 		}
 
