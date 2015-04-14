@@ -42,11 +42,11 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class PostsPage extends Page implements NavigationEventHandler, GetPostsEventHandler {
+public class BlogPage extends Page implements NavigationEventHandler, GetPostsEventHandler {
 
 	private static PostsPageUiBinder uiBinder = GWT.create(PostsPageUiBinder.class);
 
-	interface PostsPageUiBinder extends UiBinder<Widget, PostsPage> {}
+	interface PostsPageUiBinder extends UiBinder<Widget, BlogPage> {}
 
 	@UiField FormFieldSelect blogCategories;
 	@UiField FormFieldSelect blogSortBy;
@@ -57,7 +57,7 @@ public class PostsPage extends Page implements NavigationEventHandler, GetPostsE
 	private Element atomLink;
 	private Element head;
 
-	public PostsPage() {
+	public BlogPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		FilterHelper.addBlogCategories(blogCategories, SessionController.get().isLoggedInUserAdmin());
