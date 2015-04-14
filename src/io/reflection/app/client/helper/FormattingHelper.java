@@ -21,7 +21,7 @@ import com.google.gwt.safehtml.shared.SafeHtmlUtils;
  */
 public class FormattingHelper extends io.reflection.app.shared.util.FormattingHelper {
 
-	private static NumberFormat MONEY_FORMATTER = NumberFormat.getFormat(MONEY_FORMAT);
+	public static NumberFormat TWO_DECIMALS_FORMATTER = NumberFormat.getFormat(TWO_DECIMALS_FORMAT);
 	public static NumberFormat WHOLE_NUMBER_FORMATTER = NumberFormat.getFormat(WHOLE_NUMBER_FORMAT);
 
 	public static DateTimeFormat DATE_FORMATTER_EEE_DD_MMM_YYYY = DateTimeFormat.getFormat(DATE_FORMAT_EEE_DD_MMM_YYYY);
@@ -43,11 +43,11 @@ public class FormattingHelper extends io.reflection.app.shared.util.FormattingHe
 	}
 
 	public static String asMoneyString(String currency, float money) {
-		return (currency == null ? "" : getCurrencySymbol(currency) + " ") + MONEY_FORMATTER.format((double) money);
+		return (currency == null ? "" : getCurrencySymbol(currency)) + TWO_DECIMALS_FORMATTER.format((double) money);
 	}
 
 	public static String asWholeMoneyString(String currency, float money) {
-		return (currency == null ? "" : getCurrencySymbol(currency) + " ") + WHOLE_NUMBER_FORMATTER.format((double) money);
+		return (currency == null ? "" : getCurrencySymbol(currency)) + WHOLE_NUMBER_FORMATTER.format((double) money);
 	}
 
 	public static String asPriceRangeString(String currency, float from, float to) {

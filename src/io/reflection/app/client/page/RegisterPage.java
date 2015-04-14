@@ -31,8 +31,10 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.Error;
@@ -49,8 +51,9 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 
 	interface RegisterPageUiBinder extends UiBinder<Widget, RegisterPage> {}
 
+	@UiField SpanElement welcomeName;
 	@UiField DivElement applyPanel;
-	@UiField DivElement createPasswordPanel;
+	@UiField HTMLPanel createPasswordPanel;
 	@UiField DivElement accountFormContainer;
 	@UiField InlineHyperlink login;
 	@UiField InlineHyperlink register;
@@ -74,6 +77,7 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 	 */
 	@Override
 	protected void onAttach() {
+		createPasswordPanel.setVisible(false);
 		Document.get().getBody().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().accountAccessPage());
 		super.onAttach();
 
@@ -143,6 +147,7 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
 
+		welcomeName.setInnerText("");
 		// remove mail animation
 		tabContentRegister.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().tabs__contentIsSubmitted());
 		submittedSuccessPanel.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
@@ -204,8 +209,10 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 	public void getUserDetailsSuccess(GetUserDetailsRequest input, GetUserDetailsResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
 			if (output.user != null) {
+				welcomeName.setInnerText(output.user.forename + "!");
 				registerForm.resetForm();
 				registerForm.setUsername(username = output.user.username);
+				createPasswordPanel.setVisible(true);
 				registerForm.setForename(output.user.forename);
 				registerForm.setSurname(output.user.surname);
 				registerForm.setCompany(output.user.company);

@@ -43,7 +43,8 @@ public class CellListElem<T> extends AbstractHasData<T> {
 	private final DeckPanel messagesPanel = new DeckPanel();
 	private ValueUpdater<T> valueUpdater;
 
-	private String liStyle = "";
+	private String listStyle = "";
+	private String cellStyle = "";
 
 	/**
 	 * @param elem
@@ -59,13 +60,21 @@ public class CellListElem<T> extends AbstractHasData<T> {
 		this.cell = cell;
 		childContainer = (isOrderedList ? Document.get().createOLElement() : Document.get().createULElement());
 		getElement().appendChild(childContainer);
+		childContainer.setClassName(listStyle);
 		getElement().appendChild(messagesPanel.getElement());
 		messagesPanel.add(emptyListWidgetContainer);
 		messagesPanel.add(loadingIndicatorContainer);
 	}
 
+	public void setListStyle(String styleName) {
+		listStyle = styleName;
+		if (childContainer != null) {
+			childContainer.setClassName(listStyle);
+		}
+	}
+
 	public void setCellStyle(String styleName) {
-		liStyle = styleName;
+		cellStyle = styleName;
 	}
 
 	public void setEmptyListWidget(Widget widget) {
@@ -195,7 +204,7 @@ public class CellListElem<T> extends AbstractHasData<T> {
 			// boolean isSelected = selectionModel == null ? false : selectionModel.isSelected(value);
 
 			StringBuilder classesBuilder = new StringBuilder();
-			classesBuilder.append(liStyle);
+			classesBuilder.append(cellStyle);
 			// classesBuilder.append(i % 2 == 0 ? evenItem : oddItem);
 			// if (isSelected) {
 			// classesBuilder.append(selectedItem);

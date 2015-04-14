@@ -11,7 +11,7 @@
 	
 	</ui:style>
 
-	<article clas="{STYLES_INSTANCE.reflectionMainStyle.blogArticle}">
+	<article class="{STYLES_INSTANCE.reflectionMainStyle.blogArticle}">
 		<h2>
 			<a href="{link}">
 				<ui:text from="{title}" />

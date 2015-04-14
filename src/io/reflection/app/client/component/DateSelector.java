@@ -31,6 +31,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.datepicker.client.CalendarUtil;
 
 /**
  * @author stefanocapuzzi
@@ -149,8 +150,13 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 	public void setEnabled(boolean enabled) {
 		dateBoxFrom.setEnabled(enabled);
 		dateBoxTo.setEnabled(enabled);
-		applyDateRange.setEnabled(enabled);
 		selectFixedRange.setEnabled(enabled);
+		if (enabled) {
+			applyDateRange.setEnabled(!CalendarUtil.isSameDate(dateBoxFrom.getValue(), dateRange.getFrom())
+					|| !CalendarUtil.isSameDate(dateBoxTo.getValue(), dateRange.getTo()));
+		} else {
+			applyDateRange.setEnabled(false);
+		}
 	}
 
 	private boolean isPresetRange(DateRange dateRange) {
@@ -184,10 +190,16 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 		if (disableBefore != null) {
 			if (event.getValue().after(dateBoxTo.getValue()) || event.getValue().before(disableBefore)) {
 				dateBoxFrom.setValue(dateRange.getFrom());
+			} else {
+				applyDateRange.setEnabled(!CalendarUtil.isSameDate(dateBoxFrom.getValue(), dateRange.getFrom())
+						|| !CalendarUtil.isSameDate(dateBoxTo.getValue(), dateRange.getTo()));
 			}
 		} else {
 			if (event.getValue().after(dateBoxTo.getValue())) {
 				dateBoxFrom.setValue(dateRange.getFrom());
+			} else {
+				applyDateRange.setEnabled(!CalendarUtil.isSameDate(dateBoxFrom.getValue(), dateRange.getFrom())
+						|| !CalendarUtil.isSameDate(dateBoxTo.getValue(), dateRange.getTo()));
 			}
 		}
 	}
@@ -201,6 +213,9 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 	void onChangedSelectedTo(ValueChangeEvent<Date> event) {
 		if (event.getValue().before(dateBoxFrom.getValue()) || event.getValue().after(FilterHelper.getToday())) {
 			dateBoxTo.setValue(dateRange.getTo());
+		} else {
+			applyDateRange.setEnabled(!CalendarUtil.isSameDate(dateBoxFrom.getValue(), dateRange.getFrom())
+					|| !CalendarUtil.isSameDate(dateBoxTo.getValue(), dateRange.getTo()));
 		}
 	}
 
@@ -262,6 +277,8 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 		if (!FilterHelper.equalDate(value.getFrom(), dateBoxFrom.getValue()) || !FilterHelper.equalDate(value.getTo(), dateBoxTo.getValue())) {
 			setDateBoxes(value.getFrom(), value.getTo());
 		}
+
+		applyDateRange.setEnabled(false);
 
 		if (isPresetRange(value)) {
 			if (getDateRangeValue(value) != null) {

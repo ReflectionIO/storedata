@@ -20,16 +20,6 @@ public class Labels extends Option<Labels> {
 
 	private JsArray<JavaScriptObject> items;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.highcharts.Option#getName()
-	 */
-	@Override
-	public String getName() {
-		return "labels";
-	}
-
 	/**
 	 * Shared CSS styles for all labels. Defaults to: style: { color: '#3E576F' }
 	 * 

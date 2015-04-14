@@ -31,8 +31,8 @@
 		<div
 			class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnTwoThirds} {STYLES_INSTANCE.reflectionMainStyle.blogContentContainer}">
 
-			<c:CellListElem ui:field="postsCellList" listStyle="" cellStyle="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}"></c:CellListElem>
-			<p:SimplePager ui:field="simplePager" rangeLimited="true" />
+			<c:CellListElem ui:field="postsCellList" cellStyle="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}"></c:CellListElem>
+			<p:SimplePager ui:field="simplePager" rangeLimited="true" visible="false" />
 
 		</div>
 

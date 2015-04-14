@@ -14,10 +14,9 @@ import io.reflection.app.client.part.BackToTop;
 import io.reflection.app.client.part.SuperAlertBox;
 import io.reflection.app.client.res.Styles;
 
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -41,6 +40,8 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 	public void onModuleLoad() {
 		super.onModuleLoad();
 
+		UserAgentHelper.detectBrowser();
+
 		GChart.setCanvasFactory(new GwtCanvasBasedCanvasFactory());
 
 		// this registers the newly created singleton, so that
@@ -62,7 +63,21 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 	}
 
 	private void makeContainer() {
-		UserAgentHelper.detectBrowser();
+		if (UserAgentHelper.isIE()) {
+			Window.addResizeHandler(new ResizeHandler() {
+				@Override
+				public void onResize(ResizeEvent event) {
+					UserAgentHelper.setMainContentWidthForIE();
+				}
+			});
+			if (UserAgentHelper.getIEVersion() < 9) {
+				HTMLPanel outdatedBrowser = new HTMLPanel(
+						SafeHtmlUtils
+								.fromTrustedString("<p>Uh oh... Reflection doesn't work in this browser. &nbsp; &nbsp;<a href=\"http://outdatedbrowser.com/en\" target=\"_blank\">Download a compatible browser</a></p>"));
+				outdatedBrowser.setStyleName("window-warning");
+				RootPanel.get().add(outdatedBrowser);
+			}
+		}
 		lPageContainer.getElement().setClassName("l-page-container");
 		RootPanel.get().add(NavigationController.get().getHeader());
 		RootPanel.get().add(NavigationController.get().getPanelLeftMenu());
@@ -71,22 +86,6 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 		RootPanel.get().add(NavigationController.get().getPanelRightAccount());
 		RootPanel.get().add(NavigationController.get().getPanelRightSearch());
 		RootPanel.get().add(new BackToTop());
-		if (UserAgentHelper.isIE()) {
-			Window.addResizeHandler(new ResizeHandler() {
-				@Override
-				public void onResize(ResizeEvent event) {
-					UserAgentHelper.setMainContentWidthForIE();
-				}
-			});
-			if (UserAgentHelper.getIEVersion() < 8) {
-				ParagraphElement outdatedBrowser = Document.get().createPElement();
-				outdatedBrowser.addClassName("browserupgrade"); // TODO update style as in Components_Base.psd
-				outdatedBrowser
-						.setInnerHTML("You are using an <strong>outdated</strong> browser. Please <a href=\"http://browsehappy.com/\">upgrade your browser</a> to improve your experience.");
-				HTMLPanel outdatedBrowserContainer = new HTMLPanel(outdatedBrowser.toString());
-				RootPanel.get().add(outdatedBrowserContainer);
-			}
-		}
 		UserAgentHelper.initCustomScrollbars();
 	}
 }
