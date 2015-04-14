@@ -112,14 +112,32 @@ public interface Styles extends ClientBundle {
 
 		String addthis_sharing_toolbox();
 
+		@ClassName("app-creator")
+		String appCreator();
+
 		@ClassName("app-details")
 		String appDetails();
 
 		@ClassName("app-details-column")
 		String appDetailsColumn();
 
+		@ClassName("app-icon")
+		String appIcon();
+
+		@ClassName("app-icon-small")
+		String appIconSmall();
+
 		@ClassName("app-name")
 		String appName();
+
+		@ClassName("app-price")
+		String appPrice();
+
+		@ClassName("app-title")
+		String appTitle();
+
+		@ClassName("app-user-functions-container")
+		String appUserFunctionsContainer();
 
 		@ClassName("apply-content")
 		String applyContent();
@@ -129,6 +147,8 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("article-list--article")
 		String articleListArticle();
+
+		String ascending();
 
 		@ClassName("at-share-btn")
 		String atShareBtn();
@@ -172,6 +192,11 @@ public interface Styles extends ClientBundle {
 		@ClassName("blog-tags")
 		String blogTags();
 
+		String breadcrumb();
+
+		@ClassName("breadcrumb-container")
+		String breadcrumbContainer();
+
 		String browserupgrade();
 
 		@ClassName("button-example-code-container")
@@ -185,6 +210,26 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("calendar-container")
 		String calendarContainer();
+
+		@ClassName("can-be-sorted")
+		String canBeSorted();
+
+		@ClassName("can-toggle")
+		String canToggle();
+
+		@ClassName("can-toggle--size-large")
+		String canToggleSizeLarge();
+
+		@ClassName("can-toggle--size-small")
+		String canToggleSizeSmall();
+
+		@ClassName("can-toggle__label-text")
+		String canToggle__labelText();
+
+		@ClassName("can-toggle__switch")
+		String canToggle__switch();
+
+		String cellTableLoading();
 
 		@ClassName("centre-content-container")
 		String centreContentContainer();
@@ -301,11 +346,35 @@ public interface Styles extends ClientBundle {
 		@ClassName("custom--tablet-one-half")
 		String customTabletOneHalf();
 
+		@ClassName("data-bar")
+		String dataBar();
+
+		@ClassName("data-display-container")
+		String dataDisplayContainer();
+
+		@ClassName("data-display-header")
+		String dataDisplayHeader();
+
+		@ClassName("data-display-header--component")
+		String dataDisplayHeaderComponent();
+
+		@ClassName("data-heading")
+		String dataHeading();
+
+		@ClassName("data-summary-container")
+		String dataSummaryContainer();
+
+		@ClassName("data-summary-container-synced")
+		String dataSummaryContainerSynced();
+
 		@ClassName("date-select-container")
 		String dateSelectContainer();
 
 		@ClassName("date-select-to-indicator")
 		String dateSelectToIndicator();
+
+		@ClassName("date-value")
+		String dateValue();
 
 		String dateBoxPopup();
 
@@ -333,6 +402,8 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("default-tabs-transition")
 		String defaultTabsTransition();
+
+		String descending();
 
 		@ClassName("dk-component-row")
 		String dkComponentRow();
@@ -376,11 +447,26 @@ public interface Styles extends ClientBundle {
 		@ClassName("email-success-handle")
 		String emailSuccessHandle();
 
+		@ClassName("filter-container--app")
+		String filterContainerApp();
+
 		@ClassName("filter-container--my-apps")
 		String filterContainerMyApps();
 
+		@ClassName("filter-switch")
+		String filterSwitch();
+
+		@ClassName("filter-switch--small")
+		String filterSwitchSmall();
+
+		@ClassName("filter-toggle")
+		String filterToggle();
+
 		@ClassName("filters-container")
 		String filtersContainer();
+
+		@ClassName("filters-group-graph-options")
+		String filtersGroupGraphOptions();
 
 		@ClassName("filters-group-other")
 		String filtersGroupOther();
@@ -465,6 +551,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("global-header__actions")
 		String globalHeader__actions();
+
+		@ClassName("graph-container")
+		String graphContainer();
 
 		@ClassName("grid-container")
 		String gridContainer();
@@ -634,6 +723,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("is-animating-out")
 		String isAnimatingOut();
 
+		@ClassName("is-ascending")
+		String isAscending();
+
 		@ClassName("is-blurred-heavy")
 		String isBlurredHeavy();
 
@@ -645,6 +737,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("is-current")
 		String isCurrent();
+
+		@ClassName("is-descending")
+		String isDescending();
 
 		@ClassName("is-focused")
 		String isFocused();
@@ -702,6 +797,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("label--hidden-text")
 		String labelHiddenText();
+
+		@ClassName("landing-page")
+		String landingPage();
 
 		String lato();
 
@@ -777,6 +875,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("open-sans-semi")
 		String openSansSemi();
 
+		@ClassName("or-text")
+		String orText();
+
 		@ClassName("overflow-visible")
 		String overflowVisible();
 
@@ -785,6 +886,12 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("p-style--minor")
 		String pStyleMinor();
+
+		@ClassName("page-app")
+		String pageApp();
+
+		@ClassName("page-app__header")
+		String pageApp__header();
 
 		@ClassName("page-blog")
 		String pageBlog();
@@ -800,6 +907,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("page-my-account")
 		String pageMyAccount();
+
+		@ClassName("page-my-apps")
+		String pageMyApps();
 
 		@ClassName("page-section")
 		String pageSection();
@@ -1050,6 +1160,18 @@ public interface Styles extends ClientBundle {
 		@ClassName("revenue-column")
 		String revenueColumn();
 
+		@ClassName("revenue-date-range")
+		String revenueDateRange();
+
+		@ClassName("revenue-percentage")
+		String revenuePercentage();
+
+		@ClassName("revenue-summary-value")
+		String revenueSummaryValue();
+
+		@ClassName("revenue-value")
+		String revenueValue();
+
 		@ClassName("search-button-mobile")
 		String searchButtonMobile();
 
@@ -1088,6 +1210,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("site-logo")
 		String siteLogo();
 
+		@ClassName("sort-svg")
+		String sortSvg();
+
 		@ClassName("success-tick")
 		String successTick();
 
@@ -1120,6 +1245,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("table-overall")
 		String tableOverall();
+
+		@ClassName("table-revenue")
+		String tableRevenue();
 
 		@ClassName("tablet-width")
 		String tabletWidth();
@@ -1154,6 +1282,11 @@ public interface Styles extends ClientBundle {
 		@ClassName("th-first")
 		String thFirst();
 
+		String toggle();
+
+		@ClassName("toggle-calendar")
+		String toggleCalendar();
+
 		String touch();
 
 		@ClassName("user-company")
@@ -1170,6 +1303,12 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("will-show")
 		String willShow();
+
+		@ClassName("window-warning")
+		String windowWarning();
+
+		@ClassName("with-icon")
+		String withIcon();
 
 	}
 
@@ -1360,6 +1499,10 @@ public interface Styles extends ClientBundle {
 	public interface BlogStyles extends CssResource {}
 
 	public static final Styles STYLES_INSTANCE = GWT.create(Styles.class);
+
+	@Source("preloader.gif")
+	@ImageOptions(repeatStyle = RepeatStyle.None)
+	ImageResource cellTableLoading();
 
 	@Source("footersprite.png")
 	@ImageOptions(repeatStyle = RepeatStyle.None)

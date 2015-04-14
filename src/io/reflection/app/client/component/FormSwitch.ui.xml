@@ -1,0 +1,13 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
+	<ui:style>
+	
+	</ui:style>
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.filterSwitch}">
+		<span ui:field="label"></span>
+		<div ui:field="checkBoxContainer" class="{STYLES_INSTANCE.reflectionMainStyle.canToggle}">
+			<g:SimpleCheckBox ui:field="checkBox" styleName=""></g:SimpleCheckBox>
+		</div>
+	</g:HTMLPanel>
+</ui:UiBinder> 

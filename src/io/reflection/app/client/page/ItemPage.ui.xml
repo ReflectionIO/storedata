@@ -1,44 +1,44 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
-	xmlns:cv="urn:import:com.google.gwt.user.cellview.client" xmlns:pp="urn:import:io.reflection.app.client.page.part" xmlns:hc="urn:import:io.reflection.app.client.highcharts">
+	xmlns:cv="urn:import:com.google.gwt.user.cellview.client" xmlns:pp="urn:import:io.reflection.app.client.page.part" xmlns:hc="urn:import:io.reflection.app.client.highcharts"
+	xmlns:c="urn:import:io.reflection.app.client.component">
+	<ui:with field='images' type='io.reflection.app.client.res.Images' />
 
 	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 	<ui:style gss="true">
-	.cellTable {
-		margin-top: 50px;
-	}
 	
-	.chart {
-		margin-top: 50px;
-		margin-left: 20px;
-	}
-	
-	.content {
-		padding-left: 0px;
-		padding-right: 0px;
-		overflow-x: hidden;
-	}
-	
-	.table {
-		margin-left: 25px;
-		margin-right: 25px;
-		margin-top: 20px;
-	}
-	
-	.topPanel {
-		margin-bottom: 0px;
-		border-bottom-left-radius: 0px;
-		border-bottom-right-radius: 0px;
-		border-bottom: 0px;
-		padding-top: 14px;
-		padding-bottom: 32px;
-		padding-left: 16px;
-	}
 	</ui:style>
-	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.pageLeaderboard}">
-		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth}">
-			<pp:ItemSidePanel ui:field="sidePanel" />
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.pageApp}">
+
+		<header class="{STYLES_INSTANCE.reflectionMainStyle.pageApp__header}">
+
+			<g:Image ui:field="image" styleName="{STYLES_INSTANCE.reflectionMainStyle.appIcon}" />
+
+			<h1 ui:field="title" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree} {STYLES_INSTANCE.reflectionMainStyle.appTitle}"></h1>
+
+			<h2 class="{STYLES_INSTANCE.reflectionMainStyle.appCreator}">
+				By
+				<a ui:field="creatorName"></a>
+			</h2>
+
+			<span ui:field="price" class="{STYLES_INSTANCE.reflectionMainStyle.appPrice}"></span>
+
+			<g:Image resource="{images.spinner}" ui:field="spinnerLoader" visible="false" />
+		</header>
+
+
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.appUserFunctionsContainer}">
+			<form>
+				<c:FormSwitch ui:field="followSwitch" label="Follow (10.3k)" />
+
+				<a target="_blank" ui:field="viewInStore">
+					View in
+					<span ui:field="storeName">
+					</span>
+				</a>
+			</form>
 		</div>
+
 
 		<ul class="{STYLES_INSTANCE.reflectionMainStyle.tabsContainer} {STYLES_INSTANCE.reflectionMainStyle.defaultTabsTransition}">
 			<li ui:field="revenueItem"
@@ -46,18 +46,12 @@
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
 				<g:InlineHyperlink ui:field="revenueLink" targetHistoryToken="#tab-content" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
 					<span>
-						<svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 
-							32 32" xml:space="preserve"><path id="Overview" fill="#6D69C5"
-							d="M22.6,19.2c-2.6,0-5.1-1.7-6.4-4.2c-1.8-3.6-0.8-7.8,2.3-9.4C19.4,5.2,20.2,5,21.1,5
-						c2.6,0,5.1,1.7,6.4,4.2c1.8,3.6,0.8,7.8-2.3,9.4C24.4,19,23.5,19.2,22.6,19.2z M21.1,6c-0.7,0-1.4,0.2-2.1,0.5
-						c-2.6,1.3-3.5,4.9-1.9,8c1.1,2.2,3.3,3.7,5.5,3.7c0.7,0,1.4-0.2,2.1-0.5c2.6-1.3,3.5-4.9,1.9-8C25.5,7.5,23.3,6,21.1,6z M30.4,7.8
-						c-1.9-3.8-5.7-6.2-9.6-6.2c-1.4,0-2.8,0.3-4.1,1c-1.6,0.8-2.8,2-3.7,3.5L2.5,16.8c-2.2,1.8-2.8,4.5-1.4,6.8c0.9,1.6,2.7,2.9,4.7,2.9
-						c0.5,0,1-0.1,1.6-0.3l15.1-3.3c0.1,0,0.1,0,0.2,0c1.4,0,2.8-0.3,4.1-1C31.4,19.5,33.1,13.1,30.4,7.8z M6.8,24.2l-0.1,0
-						c-1.6,0.6-3.2-0.4-3.9-1.7c-0.3-0.6-1.2-2.5,1-4.4l2-2C5.5,18,6,19.7,6.8,21c0.6,1.1,1.6,2,2.8,2.7L6.8,24.2z M11.3,23.3
-						c-1.6-0.4-2.9-1.6-3.7-2.8c-1-1.6-1.4-3.9-0.1-6l4.1-4.2c-0.2,2.1,0.2,4.3,1.2,6.4c1.2,2.3,3,4,5.1,5.1L11.3,23.3z M25.7,20.1
-						c-1,0.5-2,0.8-3.2,0.8c-3.1,0-6.2-2-7.8-5.1c-2.2-4.4-0.9-9.5,2.9-11.4c1-0.5,2-0.8,3.2-0.8c3.1,0,6.2,2,7.8,5.1
-						C30.8,13.1,29.5,18.2,25.7,20.1z" /></svg>
-						<span ui:field="overviewAllText">Revenue</span>
+						<svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">
+									<path
+							d="M19.5,4.7L0,6.9v13.9l13.9,4.9L32,20.2V6.4L19.5,4.7z M30,15.1l-16.1,4.6L2,15.9v-3l11.9,3.4
+	L30,12.2V15.1z M13.9,12L30,8.4v2.8l-16.1,4.2L2,11.9v-3L13.9,12z M27.7,7.9l-13.8,3.1L4.2,8.4l15.3-1.7L27.7,7.9z M13.9,23.6
+	L2,19.4V17l11.9,3.8L30,16.2v2.6L13.9,23.6z" /></svg>
+						<span ui:field="revenueText">Revenue</span>
 					</span>
 				</g:InlineHyperlink>
 			</li>
@@ -66,13 +60,16 @@
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
 				<g:InlineHyperlink ui:field="downloadsLink" targetHistoryToken="#tab-content" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
 					<span>
-						<svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 
-							32 32" xml:space="preserve"><path id="Free" fill="#6D69C5"
-							d="M9.8,30.2L0.3,13.8L22.4,1L32,6.4v11L9.8,30.2z M3,14.5l7.5,13L30,16.3V7.6l-7.6-4.3L3,14.5z
-						M24.5,14c-1.2,0-2.2-0.6-2.8-1.6c-0.4-0.8-0.5-1.6-0.3-2.5c0.2-0.8,0.8-1.5,1.5-2c0.5-0.3,1.1-0.4,1.6-0.4c1.2,0,2.2,0.6,2.8,1.6
-						c0.9,1.6,0.4,3.5-1.2,4.4C25.6,13.9,25.1,14,24.5,14z M24.5,9c-0.3,0-0.6,0.1-0.9,0.2c-0.4,0.2-0.7,0.6-0.8,1.1
-						c-0.1,0.5-0.1,0.9,0.2,1.3c0.5,0.8,1.6,1.1,2.4,0.6c0.8-0.5,1.1-1.6,0.6-2.4C25.7,9.4,25.1,9,24.5,9z" /></svg>
-						<span>Downloads</span>
+						<svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">
+									<path fill-rule="evenodd" clip-rule="evenodd"
+							d="M32,16.5c0,3.6-2.7,6.5-6.7,6.5v0h-6v-2h6.5
+	c2.5,0,4.5-2,4.5-4.5c0-1.6-0.8-3-2.3-3.9c-1.4-0.8-1.5-0.9-0.9-2.4c0.1-0.3,0.1-0.5,0.1-0.8c0-1.4-1.1-2.5-2.5-2.5
+	c0,0-0.7,0-1.4,0.2c-1.1,0.5-1.3,0-1.8-1.2C20.4,3.6,17.9,2,15.2,2c-3.6,0-6.6,2.7-7,6.3c-0.1,1.4-0.2,1.4-1.7,1.8
+	C4,10.6,2,12.9,2,15.5c0,3,2.3,5.5,5.3,5.5v0h6v2h-6v0c-4,0-7.2-3.4-7.2-7.5c0-3.7,2.7-6.7,6.2-7.4c0.4-4.6,4.4-8.1,9-8.1
+	c3.6,0,6.7,2.1,8.1,5.2C23.8,5.1,24.2,5,24.7,5c2.5,0,4.5,2,4.5,4.5c0,0.5-0.2,1-0.3,1.4C30.8,12,32,14.1,32,16.5z M19,25.8
+	l-1.8,1.8V14.3c0-0.6-0.4-1.1-1-1.1c-0.6,0-1,0.5-1,1.1v13.3l-1.9-1.8c-0.4-0.4-1.2-0.4-1.6,0c-0.4,0.4-0.5,1.1,0,1.6l3.1,3.1
+	c0.4,0.4,0.8,0.5,1.3,0.5c0.5,0,0.9-0.2,1.3-0.5l3.1-3.1c0.4-0.4,0.4-1.1,0-1.6C20.2,25.4,19.5,25.4,19,25.8z" /></svg>
+						<span ui:field="downloadsText">Downloads</span>
 					</span>
 				</g:InlineHyperlink>
 			</li>
@@ -81,21 +78,10 @@
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
 				<g:InlineHyperlink ui:field="rankingLink" targetHistoryToken="#tab-content" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
 					<span>
-						<svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 
-							32 32" xml:space="preserve"><path id="Paid" fill="#6D69C5"
-							d="M9.8,30.2L0.3,13.8L22.4,1L32,6.4v11L9.8,30.2z M3,14.5l7.5,13L30,16.3V7.6l-7.6-4.3L3,14.5z
-						M24.5,14c-1.2,0-2.2-0.6-2.8-1.6c-0.9-1.6-0.4-3.5,1.2-4.4c0.5-0.3,1.1-0.4,1.6-0.4c1.2,0,2.2,0.6,2.8,1.6c0.4,0.8,0.5,1.6,0.3,2.5
-						c-0.2,0.8-0.8,1.5-1.5,2C25.6,13.9,25.1,14,24.5,14z M24.5,9c-0.3,0-0.6,0.1-0.9,0.2c-0.8,0.5-1.1,1.6-0.6,2.4
-						c0.5,0.8,1.6,1.1,2.4,0.6c0.4-0.2,0.7-0.6,0.8-1.1c0.1-0.5,0.1-0.9-0.2-1.3C25.7,9.4,25.1,9,24.5,9z M14.7,23.9l-1.2-2.1
-						c-0.5,0.2-0.9,0.2-1.3,0.2c-0.4-0.1-0.7-0.2-1-0.4L10.5,22l-0.7-1.1l1.6-1l0,0.1l0,0c0.2,0.4,0.5,0.6,0.8,0.6c0.4,0,0.8-0.1,1.2-0.3
-						c0.4-0.3,0.7-0.5,0.9-0.9s0.1-0.6,0-1c-0.1-0.2-0.2-0.3-0.4-0.3c-0.1-0.1-0.3-0.1-0.5-0.1c-0.2,0-0.3,0-0.5,0.1s-0.4,0.1-0.5,0.1
-						l-1.3,0.4c-0.3,0.1-0.6,0.1-0.8,0.1s-0.5,0-0.8-0.1s-0.5-0.2-0.7-0.4c-0.2-0.2-0.4-0.4-0.6-0.7c-0.1-0.3-0.2-0.5-0.3-0.8
-						s0-0.5,0.1-0.8c0.1-0.3,0.2-0.5,0.4-0.8C8.8,15,9,14.7,9.3,14.5L8,12.3l1.3-0.7l1.3,2.3c0.4-0.1,0.8-0.2,1.2-0.2s0.7,0.1,1,0.2
-						l0.7-0.4l0.7,1.1l-1.4,0.8l-0.1,0.1l0,0l0,0l-0.1-0.1c-0.2-0.3-0.5-0.4-0.8-0.4c-0.3,0-0.7,0.1-1.1,0.3c-0.5,0.3-0.8,0.6-1,0.9
-						s-0.2,0.6,0,0.9c0.1,0.2,0.2,0.3,0.4,0.4s0.3,0.1,0.5,0.1c0.2,0,0.3,0,0.5-0.1s0.3-0.1,0.5-0.1l1.3-0.3c0.3-0.1,0.7-0.1,0.9-0.1
-						c0.3,0,0.6,0,0.8,0.1c0.2,0.1,0.5,0.2,0.7,0.3c0.2,0.2,0.4,0.4,0.5,0.6c0.2,0.3,0.3,0.6,0.3,0.8s0,0.6-0.1,0.9s-0.2,0.6-0.4,0.9
-						s-0.4,0.5-0.7,0.8l1.2,2.1L14.7,23.9z" /></svg>
-						<span>Rank</span>
+						<svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">
+									<path d="M23,12V4H9v6H0v18h32V12H23z M11,6h10v7.3l0,0V26H11V12.3l0,0V6z M2,12h8v14H2V12z M30,26h-8V14h8
+	V26z" /></svg>
+						<span ui:field="rankingText">Rank</span>
 					</span>
 				</g:InlineHyperlink>
 			</li>
@@ -104,15 +90,11 @@
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
 				<g:InlineHyperlink targetHistoryToken="#tab-content" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
 					<span>
-						<svg version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 
-							0 0 32 32" xml:space="preserve"><path id="Top_Grossing"
-							fill="#6D69C5"
-							d="M24,11.1l-4,0.8V2.4l-7.9-2.3L0,2.3V23l8.7,3.7l3.3-1.2V28l8.7,3.7L32,27.6V13.2L24,11.1z
-						M2,3.9l9.9-1.8L18,3.9v0.1L8.8,6.4L2,4.3V3.9z M2,5.4l6.7,2.1L18,5v2L8.8,9.4L2,7.3V5.4z M2,8.4l6.7,2.1L18,8v2l-9.2,2.5L2,10.3
-						V8.4z M2,11.4l6.7,2.1L18,11v1.3l-6,1.2v1.1l-3.2,0.9L2,13.3V11.4z M2,14.4l6.7,2.1l3.3-0.9v2l-3.2,1L2,16.3V14.4z M2,17.3l6.7,2.4
-						l3.3-1v2.1l-3.2,1.1L2,19.2V17.3z M8.8,24.5L2,21.7v-1.3L8.7,23l3.3-1.1v1.6L8.8,24.5z M30,26.2l-9.2,3.4L14,26.7v-1.3l6.7,2.6
-						l9.3-3.2V26.2z M30,23.6l-9.2,3.2L14,24.2v-1.9l6.7,2.4l9.3-2.9V23.6z M30,20.7l-9.2,2.9L14,21.3v-1.9l6.7,2.1L30,19V20.7z M30,17.9
-						l-9.2,2.5L14,18.3v-2l6.7,2.1L30,16V17.9z M30,14.9l-9.2,2.5L14,15.3v-0.2l10-2l6,1.6V14.9z" /></svg>
+						<svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">
+									<path
+							d="M4,10c0,1.1-0.9,2-2,2s-2-0.9-2-2s0.9-2,2-2S4,8.9,4,10z M32,9H7v2h25V9z M2,14
+	c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S3.1,14,2,14z M32,15H7v2h25V15z M2,20c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S3.1,20,2,20z
+	 M32,21H7v2h25V21z" /></svg>
 						<span>App Details</span>
 					</span>
 				</g:InlineHyperlink>
@@ -120,23 +102,98 @@
 		</ul>
 
 		<div
-			class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth} {STYLES_INSTANCE.reflectionMainStyle.filtersContainer}">
-			<pp:ItemTopPanel ui:field="topPanel" styleName="{STYLES_INSTANCE.reflectionMainStyle.formsMidTheme}" />
+			class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth} {STYLES_INSTANCE.reflectionMainStyle.filtersContainer} {STYLES_INSTANCE.reflectionMainStyle.filterContainerApp}">
+			<form class="{STYLES_INSTANCE.reflectionMainStyle.formsMidTheme}">
+				<c:DateSelector ui:field="dateSelector" />
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.filtersGroupOther}">
+					<c:FormFieldSelect ui:field="countrySelector" labelText="Country" />
+					<c:FormFieldSelect ui:field="storeSelector" labelText="App Store" />
+					<div class="{STYLES_INSTANCE.reflectionMainStyle.filterToggle}">
+						<c:ToggleRadioButton ui:field="toggleChartGraph" value="true" labelClassName="{STYLES_INSTANCE.reflectionMainStyle.toggleCalendar}"
+							svgPath="M30.3,5.2c-0.5-0.4-1-0.7-1.6-0.7h-2.3V2.8c0-0.8-0.3-1.4-0.8-2C25,0.3,24.3,0,23.5,0h-1.2
+	c-0.8,0-1.5,0.3-2,0.8c-0.6,0.6-0.8,1.2-0.8,2v1.7h-6.9V2.8c0-0.8-0.3-1.4-0.8-2C11.1,0.3,10.4,0,9.6,0H8.5C7.7,0,7,0.3,6.4,0.8
+	c-0.6,0.6-0.8,1.2-0.8,2v1.7H3.3c-0.6,0-1.2,0.2-1.6,0.7C1.2,5.7,1,6.2,1,6.8v22.6c0,0.6,0.2,1.1,0.7,1.6c0.5,0.4,1,0.7,1.6,0.7
+	h25.4c0.6,0,1.2-0.2,1.6-0.7c0.5-0.4,0.7-1,0.7-1.6V6.8C31,6.2,30.8,5.7,30.3,5.2z M8.5,29.4H3.3v-5.1h5.2V29.4z M8.5,23.2H3.3v-5.7
+	h5.2V23.2z M8.5,16.4H3.3v-5.1h5.2V16.4z M8.1,8.3C8,8.2,7.9,8.1,7.9,7.9V2.8c0-0.2,0.1-0.3,0.2-0.4c0.1-0.1,0.2-0.2,0.4-0.2h1.2
+	c0.2,0,0.3,0.1,0.4,0.2c0.1,0.1,0.2,0.2,0.2,0.4v5.1c0,0.2-0.1,0.3-0.2,0.4C9.9,8.4,9.8,8.5,9.6,8.5H8.5C8.3,8.5,8.2,8.4,8.1,8.3z
+	 M15.4,29.4H9.6v-5.1h5.8V29.4z M15.4,23.2H9.6v-5.7h5.8V23.2z M15.4,16.4H9.6v-5.1h5.8V16.4z M22.4,29.4h-5.8v-5.1h5.8V29.4z
+	 M22.4,23.2h-5.8v-5.7h5.8V23.2z M22.4,16.4h-5.8v-5.1h5.8V16.4z M21.9,8.3c-0.1-0.1-0.2-0.2-0.2-0.4V2.8c0-0.2,0.1-0.3,0.2-0.4
+	c0.1-0.1,0.2-0.2,0.4-0.2h1.2c0.2,0,0.3,0.1,0.4,0.2c0.1,0.1,0.2,0.2,0.2,0.4v5.1c0,0.2-0.1,0.3-0.2,0.4c-0.1,0.1-0.2,0.2-0.4,0.2
+	h-1.2C22.2,8.5,22.1,8.4,21.9,8.3z M28.7,29.4h-5.2v-5.1h5.2V29.4z M28.7,23.2h-5.2v-5.7h5.2V23.2z M28.7,16.4h-5.2v-5.1h5.2V16.4z" />
+						<c:ToggleRadioButton ui:field="toggleChartMap"
+							svgPath="M16,0C7.2,0,0,7.2,0,16c0,8.8,7.2,16,16,16s16-7.2,16-16C32,7.2,24.8,0,16,0z M1.5,16
+	c0-2.9,0.9-5.6,2.3-7.8c0.1,0.1,0.2,0,0.3,0.1c0,0.2,0,0.5,0,0.7c-0.2,0.9,0.4,1.8,1.2,1.9c0.1,0.5-0.2,0.6,0.3,1.3
+	c0,0.1,0,0.3,0.1,0.4c0.1,0.1,0.3,0.2,0.5,0.3c0.5,0.3,0.4,0.9,0.2,1.4s-0.6,0.8-0.8,1.3c-0.3,0.8-0.3,1.8,0.3,2.4
+	c0.2,0.3,0.5,0.9,0.8,1s0.4,0.3,0.5,0.6c0.1,0.5,0.3,0.8,0.3,1.3c0,0.4-0.2,1.1-0.2,1.5c0,0.4,0.2,0.3,0.1,0.5
+	c0,0.2-0.1,0.1-0.2,0.4c-0.1,0.6,0,1.7,0.1,2.1c0.2,1.5,1.1,2.7,2,2.6c0.3-0.7-0.4-1.5-0.1-2.2c0.1-0.3,0.3-0.5,0.5-0.7
+	c1-0.8,1.8-1.5,2.4-2.5c0.1-0.1,0.2-0.4,0.3-0.5c0.1-0.1,0.3-0.1,0.5-0.1c0.7-0.1,1.1-0.5,1.4-1.1c0.3-0.6,0.3-1.1,0.9-1.7
+	c0.1-0.1,0.2-0.5,0.3-0.6c0.3-0.5-0.1-1.2-0.6-1.5c-0.5-0.3-1-0.4-1.4-0.7c-0.6-0.4-0.6-1-1-1.5c-0.4-0.5-1.1-0.9-1.7-1.2
+	c-0.7-0.4-0.7-0.7-1.9-1.2c-0.1-0.1-0.5-0.1-0.6,0c-0.1,0-0.2,0.2-0.4,0.3c-0.4,0.4-1.3,0.2-1.5-0.4c-0.1-0.3,0-0.5,0-0.7
+	c-0.1-0.3-0.1-0.7-0.4-0.6c-0.1-0.4,0.6-0.1,0.6-0.7c0.1-0.5-0.3-0.1-0.8-0.4C5.4,9.8,5.4,9,5.6,8.7c0.2-0.6,0.3-0.3,0.6-0.5
+	C6.6,7.8,7.4,7.5,8,7.8C8.4,8.1,8.4,9,8.6,9.1C8.8,9.3,9,9,9,8.8c0-0.2-0.1-0.6,0-0.8c0.1-0.1,0.2-0.2,0.3-0.3
+	c1.1-0.8,2.4-1.3,3.7-1.4c0.1,0,0.4,0,0.5-0.1c0.2-0.2,0.1-0.5,0.4-0.5c0.2,0,0.4,0.3,0.7,0.3c0.3,0.1,0.6-0.4,0.6-0.7
+	c0-0.3-0.1-0.7,0-1c0.1-0.1,0.1-0.3,0.1-0.4c0-0.1-0.1-0.1-0.2-0.1c-0.2-0.1-0.3-0.5-0.7-0.4c-0.4,0.2-0.7,0.2-1.1,0.4
+	c-0.3,0.2-0.5,0.5-1,0.6c-0.2-0.4,0-0.9,0.3-1.2C13.1,3,13.5,3,13.9,3c0.2,0,0.4-0.1,0.6,0c0.1,0,0.3,0.2,0.4,0.2
+	c0.3,0.2,0.6,0,0.8-0.3s0.4-0.5,0.2-0.8C16,1.9,16.2,2,16.3,2.2c0.1,0.2-0.1,0.4-0.2,0.6c-0.4,1,0.4,2,0.8,1.9
+	c0.5-0.1,0.9-1.2,1.5-1.4c0.2-0.1,0.4-0.1,0.5-0.2c0.2-0.2,0.2-0.4,0.3-0.7c0.1-0.2,0.4-0.3,0.7-0.4c1.4,0.4,2.6,1,3.8,1.7
+	c0,0,0,0,0,0c-0.1,0-0.2,0-0.3,0c-0.7-0.1-0.9,0.5-0.7,1.2c0.2,0.5,0.6,0.8,1.1,1c0.2,0.1,0.6,0.1,0.7,0.3c0,0.1-0.1,0.3-0.1,0.3
+	c0.1,0.5-0.1,0.8-0.5,1.1c-0.4,0.3-1.1,0.2-1.4,0.5c-0.3,0.3,0.2,1.2,0.6,1.5c0.4,0.4,1.2,0.3,1.5-0.1c0.2-0.3,0-0.6,0.1-0.8
+	c0.6,0.1,0.9,0.3,1.1,0.8c0,0.1,0.2,0.1,0.3,0.1c0.3,0.1,0.4-0.3,0.5-0.1c0,0.2,0.1,0.3,0.2,0.4c0.2,0.1,0.2-0.1,0.4,0
+	c0.2,0.1,0.3,0.5,0.6,0.5s0.6,0,0.8,0.2c0.1,0.2,0.2,0.4,0.1,0.6c-0.1,0.2-0.9,0.1-1.4-0.1s-0.6-0.5-1.1-0.8c-0.8-0.4-2.4-0.3-3.6,0
+	c-0.9,0.3-1.1,0.6-1.7,1.3c-0.1,0.1-0.2,0.5-0.3,0.7c-0.1,0.2-0.1,0.4-0.1,0.6c-0.2,1-0.7,2.3-0.2,3.1c0.2,0.4,0.6,0.6,1,0.8
+	c0.5,0.4,0.8,0.7,1.3,0.8c0.4,0.1,1,0,1.3,0c0.5,0,1,0.1,1.5,0.4c-0.3,0.7-0.4,1.9-0.3,2.3c0,0.3,0.2,0.4,0.2,0.7
+	c0.2,1.1-1.6,1.8-1.2,2.9c0.1,0.2,0.2,0.5,0.2,0.8c0,0.9-0.7,1.3-0.8,2c-0.1,0.4,0,0.6,0,1c0,0.2,0,0.3-0.1,0.5
+	c-2.2,1.4-4.9,2.3-7.8,2.3C8,30.5,1.5,24,1.5,16z" />
+					</div>
+				</div>
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.filtersGroupGraphOptions}">
+					<c:FormSwitch ui:field="accuracySwitch" label="Accuracy" />
+					<c:FormSwitch ui:field="eventsSwitch" label="Events" />
+					<c:FormSwitch ui:field="overlayRevenuesSwitch" label="Overlay Revenues" />
+					<c:FormSwitch ui:field="overlayDownloadsSwitch" label="Overlay Downloads" />
+					<c:FormSwitch ui:field="cumulativeChartSwitch" label="Cumulative Chart" />
+					<c:FormSwitch ui:field="oneMMovingAverageSwitch" label="1M Moving Average" />
+					<c:FormSwitch ui:field="overlayAppsSwitch" label="Overlay Apps (0/5)" />
+				</div>
+			</form>
 		</div>
 
 		<ul class="{STYLES_INSTANCE.reflectionMainStyle.tabs__contentContainer} {STYLES_INSTANCE.reflectionMainStyle.defaultTabsTransition}">
 			<li id="tab-content" class="{STYLES_INSTANCE.reflectionMainStyle.tabs__content} {STYLES_INSTANCE.reflectionMainStyle.tabs__contentIsShowing}">
-				<article class="tabs__content-area">
-					<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__row}">
-						<hc:Chart ui:field="chartRevenue"></hc:Chart>
-						<hc:Chart ui:field="chartDownloads"></hc:Chart>
-						<hc:Chart ui:field="chartRank"></hc:Chart>
-						<cv:CellTable ui:field="revenueTable" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}"></cv:CellTable>
-					</div>
-				</article>
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__row}">
+					<hc:Chart ui:field="chartRevenue"></hc:Chart>
+					<hc:Chart ui:field="chartDownloads"></hc:Chart>
+					<hc:Chart ui:field="chartRank"></hc:Chart>
+				</div>
 			</li>
 		</ul>
 
+		<section class="{STYLES_INSTANCE.reflectionMainStyle.dataDisplayContainer}">
+			<header class="{STYLES_INSTANCE.reflectionMainStyle.dataDisplayHeader}">
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.dataDisplayHeaderComponent}">
+					<g:Image ui:field="imageTable" styleName="{STYLES_INSTANCE.reflectionMainStyle.appIconSmall}" />
+					<h2
+						class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour} {STYLES_INSTANCE.reflectionMainStyle.dataHeading}">Total
+						Revenue</h2>
+				</div>
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.dataDisplayHeaderComponent} {STYLES_INSTANCE.reflectionMainStyle.dataSummaryContainer}">
+					<span ui:field="infoDateRange" class="{STYLES_INSTANCE.reflectionMainStyle.revenueDateRange}"></span>
+					<span ui:field="infoTotalRevenue" class="{STYLES_INSTANCE.reflectionMainStyle.revenueSummaryValue}"></span>
+				</div>
+				<div
+					class="{STYLES_INSTANCE.reflectionMainStyle.dataDisplayHeaderComponent} {STYLES_INSTANCE.reflectionMainStyle.dataSummaryContainer} {STYLES_INSTANCE.reflectionMainStyle.dataSummaryContainerSynced}">
+					<span class="{STYLES_INSTANCE.reflectionMainStyle.revenueDateRange}">Since First Synced (1 Feb
+						2014)</span>
+					<span class="{STYLES_INSTANCE.reflectionMainStyle.revenueSummaryValue}">&pound;9,291,005</span>
+				</div>
+				<button
+					class="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall} {STYLES_INSTANCE.reflectionMainStyle.withIcon} {STYLES_INSTANCE.reflectionMainStyle.pageFunctionButton}">
+					<span class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCloud}">Download</span>
+				</button>
+			</header>
+			<cv:CellTable ui:field="revenueTable2" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableRevenue}"></cv:CellTable>
+			<cv:CellTable ui:field="revenueTable" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableRevenue}"></cv:CellTable>
+		</section>
 
 	</g:HTMLPanel>
 </ui:UiBinder> 

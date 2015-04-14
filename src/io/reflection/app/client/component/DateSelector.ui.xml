@@ -21,10 +21,10 @@
 			</div>
 		</div>
 		<g:Button ui:field="applyDateRange"
-			styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall} {STYLES_INSTANCE.reflectionMainStyle.pageFunctionButton} {STYLES_INSTANCE.reflectionMainStyle.refreshButton}">
+			styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaSmall} {STYLES_INSTANCE.reflectionMainStyle.refreshButton} {STYLES_INSTANCE.reflectionMainStyle.refreshButton}">
 			<span class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeRefresh}">Refresh</span>
 		</g:Button>
-
+		<span class="{STYLES_INSTANCE.reflectionMainStyle.orText}">or</span>
 		<c:FormFieldSelect ui:field="selectFixedRange" labelText="Over Time"></c:FormFieldSelect>
 
 	</g:HTMLPanel>

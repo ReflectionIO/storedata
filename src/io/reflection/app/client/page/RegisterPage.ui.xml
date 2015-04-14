@@ -20,22 +20,25 @@
 					<h2>Who's using Reflection</h2>
 					<ul>
 						<li>
-							<img src="images/Partner_Soundcloud@2x.ea554de6daac13e9327b.png" alt="Soundcloud logo" />
+							<img src="images/Partner_Soundcloud@2x.png" alt="Soundcloud logo" />
 						</li>
 						<li>
-							<img src="images/Partner_Sega@2x.75250c27e36c0e325b55.png" alt="Sega logo" />
+							<img src="images/Partner_Sega@2x.png" alt="Sega logo" />
 						</li>
 						<li>
-							<img src="images/Partner_Wooga@2x.95ceca5f61bc74a6ac9d.png" alt="Wooga logo" />
+							<img src="images/Partner_Wooga@2x.png" alt="Wooga logo" />
 						</li>
 						<li>
-							<img src="images/Partner_TocaBoca@2x.a5c0880048489fada02a.png" alt="Toca Boca logo" />
+							<img src="images/Partner_TocaBoca@2x.png" alt="Toca Boca logo" />
 						</li>
 					</ul>
 				</div>
 			</div>
-			<div ui:field="createPasswordPanel" class="{STYLES_INSTANCE.reflectionMainStyle.createPasswordMainContent}">
-				<h1>Welcome to Reflection Jan!</h1>
+			<g:HTMLPanel ui:field="createPasswordPanel" styleName="{STYLES_INSTANCE.reflectionMainStyle.createPasswordMainContent}" visible="false">
+				<h1>
+					Welcome to Reflection
+					<span ui:field="welcomeName"></span>
+				</h1>
 				<p class="{STYLES_INSTANCE.reflectionMainStyle.pStyleFeatured}">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eius tempor incididunt ut labore et dolore lorem magna aliqua.
 					Ut enim ad minim
 					veniam, quis nostrud exercitat ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in</p>
@@ -43,20 +46,20 @@
 					<h2>Some of the partners you're joining</h2>
 					<ul>
 						<li>
-							<img src="images/Partner_Soundcloud@2x.ea554de6daac13e9327b.png" alt="Soundcloud logo" />
+							<img src="images/Partner_Soundcloud@2x.png" alt="Soundcloud logo" />
 						</li>
 						<li>
-							<img src="images/Partner_Sega@2x.75250c27e36c0e325b55.png" alt="Sega logo" />
+							<img src="images/Partner_Sega@2x.png" alt="Sega logo" />
 						</li>
 						<li>
-							<img src="images/Partner_Wooga@2x.95ceca5f61bc74a6ac9d.png" alt="Wooga logo" />
+							<img src="images/Partner_Wooga@2x.png" alt="Wooga logo" />
 						</li>
 						<li>
-							<img src="images/Partner_TocaBoca@2x.a5c0880048489fada02a.png" alt="Toca Boca logo" />
+							<img src="images/Partner_TocaBoca@2x.png" alt="Toca Boca logo" />
 						</li>
 					</ul>
 				</div>
-			</div>
+			</g:HTMLPanel>
 		</div>
 		<div ui:field="accountFormContainer" class="{STYLES_INSTANCE.reflectionMainStyle.accountFormContainer}">
 			<ul class="{STYLES_INSTANCE.reflectionMainStyle.tabsContainer}">

@@ -16,16 +16,6 @@ import com.google.gwt.core.client.JsArrayNumber;
  */
 public class ChartOption extends Option<ChartOption> {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.highcharts.Option#getName()
-	 */
-	@Override
-	public String getName() {
-		return "chart";
-	}
-
 	public ChartOption setAlignTicks(boolean aligned) {
 		return setOption("alignTicks", aligned);
 	}

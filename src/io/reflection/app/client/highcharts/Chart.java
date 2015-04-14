@@ -34,8 +34,8 @@ import com.google.gwt.user.datepicker.client.CalendarUtil;
 public class Chart extends BaseChart {
 
 	private String currency;
-	private final int yMinCeilingDownloads = 100;
-	private final int yMinCeilingRevenue = 100;
+	private final int yMinCeilingDownloads = 1;
+	private final int yMinCeilingRevenue = 1;
 
 	// private final int yMinCeilingRanking = 10;
 
@@ -43,8 +43,8 @@ public class Chart extends BaseChart {
 		super(xDataType, yDataType);
 	}
 
-	public void drawData(List<Rank> ranks, String id, String seriesType, String color) {
-		setLoading(false);
+	public void drawData(List<Rank> ranks, String seriesId, String seriesType, String color, boolean isCumulative, boolean hide) {
+		// setLoading(false);
 
 		if (ranks != null && yDataType != null) {
 
@@ -61,64 +61,184 @@ public class Chart extends BaseChart {
 
 			switch (xDataType) {
 			case DateXAxisDataType:
-				if (dateRange != null) {
+				if (get(seriesId) == null && dateRange != null) {
 					removeOutOfRangeRanks(ranks);
 					Date progressiveDate = dateRange.getFrom();
-					if (NativeChart.nativeGet(chart, id) == null) {
-						for (Rank rank : ranks) {
-							// Fill with blank data missing dates
-							if (!FilterHelper.equalDate(progressiveDate, rank.date)) {
-								while (!FilterHelper.equalDate(progressiveDate, rank.date) && FilterHelper.beforeOrSameDate(progressiveDate, dateRange.getTo())) {
-									data.push(ChartHelper.createPoint(progressiveDate.getTime(), JavaScriptObjectHelper.getNativeNull()));
-									CalendarUtil.addDaysToDate(progressiveDate, 1);
-								}
-							}
-							CalendarUtil.addDaysToDate(progressiveDate, 1);
-							if (rank.downloads != null && showModelPredictions) {
-								Double yPoint = getYPointValue(rank);
-								if (isPointIsolated(YDataType.DownloadsYAxisDataType, ranks, rank)) {
-									data.push(ChartHelper.createMarkerPoint(rank.date.getTime(), yPoint.doubleValue()));
-								} else {
-									data.push(ChartHelper.createPoint(rank.date.getTime(), yPoint.doubleValue()));
-								}
-							} else {
-								data.push(ChartHelper.createPoint(rank.date.getTime(), JavaScriptObjectHelper.getNativeNull()));
+					double cumulative = 0;
+					for (Rank rank : ranks) {
+						// Fill with blank data missing dates
+						if (!FilterHelper.equalDate(progressiveDate, rank.date)) {
+							while (!FilterHelper.equalDate(progressiveDate, rank.date) && FilterHelper.beforeOrSameDate(progressiveDate, dateRange.getTo())) {
+								data.push(createPoint(progressiveDate.getTime(), JavaScriptObjectHelper.getNativeNull()));
+								CalendarUtil.addDaysToDate(progressiveDate, 1);
 							}
 						}
-						addSeries(data, seriesType, id, color);
+						CalendarUtil.addDaysToDate(progressiveDate, 1);
+						Double yPoint = getYPointValue(rank, yDataType);
+						if (yPoint != null && showModelPredictions) {
+							if (isPointIsolated(yDataType, ranks, rank)) {
+								data.push(createMarkerPoint(rank.date.getTime(), (isCumulative ? cumulative += yPoint.doubleValue() : yPoint.doubleValue())));
+							} else {
+								data.push(createPoint(rank.date.getTime(), (isCumulative ? cumulative += yPoint.doubleValue() : yPoint.doubleValue())));
+							}
+						} else {
+							data.push(createPoint(rank.date.getTime(), JavaScriptObjectHelper.getNativeNull()));
+						}
 					}
+					addSeries(data, seriesType, seriesId, color);
 				}
 				break;
 
 			case RankingXAxisDataType:
-				if (NativeChart.nativeGet(chart, id) == null) {
+				if (get(seriesId) == null) {
 					for (Rank rank : ranks) {
-						Double yPoint = getYPointValue(rank);
-						data.push(ChartHelper.createMarkerPoint(rank.position.doubleValue(), yPoint));
+						Double yPoint = getYPointValue(rank, yDataType);
+						data.push(createMarkerPoint(rank.position.doubleValue(), yPoint));
 					}
-					addSeries(data, seriesType, id, color);
+					addSeries(data, seriesType, seriesId, color);
 				}
 				break;
 			}
 
-			setOptions();
+			switch (yDataType) {
+			case DownloadsYAxisDataType:
+				if (NativeAxis.nativeGetDataMax(NativeAxis.nativeGetYAxis(chart, 0)) < yMinCeilingDownloads) {
+					getDefaultYAxis().setMax(yMinCeilingDownloads);
+				} else {
+					getDefaultYAxis().setMax(JavaScriptObjectHelper.getNativeNull());
+				}
+				break;
+
+			case RevenueYAxisDataType:
+				getDefaultYAxis().setLabelsFormatter(ChartHelper.getNativeLabelFormatter(currency, ""));
+				// NativeChart.nativeUpdateTooltipFormatter(chart, ChartHelper.getNativeTooltipFormatter(currency));
+				if (NativeAxis.nativeGetDataMax(NativeAxis.nativeGetYAxis(chart, 0)) < yMinCeilingRevenue) {
+					getDefaultYAxis().setMax(yMinCeilingRevenue);
+				} else {
+					getDefaultYAxis().setMax(JavaScriptObjectHelper.getNativeNull());
+				}
+				break;
+
+			case RankingYAxisDataType:
+				getDefaultYAxis().setMax(JavaScriptObjectHelper.getNativeNull());
+				break;
+			}
+			NativeAxis.nativeUpdate(NativeAxis.nativeGetYAxis(chart, 0), getDefaultYAxis().getProperty(), true); // update y axis
+
 			resize();
+			reflow();
+			if (hide) {
+				setSeriesVisible(seriesId, false);
+			}
 		}
 	}
 
-	public void drawData(List<Rank> ranks, String id, String seriesType) {
-		drawData(ranks, id, seriesType, "");
+	public void drawOppositeData(List<Rank> ranks, String seriesId, String seriesType, String color, boolean isCumulative, boolean hide,
+			YDataType yDataTypeSecondary) {
+		getSecondaryYAxis().setLabelsStyle(ChartHelper.getYAxisLabelsStyle(color));
+		ChartHelper.updateYAxisOptions(getSecondaryYAxis(), yDataTypeSecondary);
+
+		if (ranks != null && yDataTypeSecondary != null) {
+
+			if (YDataType.RevenueYAxisDataType.equals(yDataTypeSecondary)) {
+				for (Rank rank : ranks) {
+					if (currency == null) {
+						setCurrency(FormattingHelper.getCurrencySymbol(rank.currency));
+						break;
+					}
+				}
+			}
+
+			JsArray<JavaScriptObject> data = JavaScriptObject.createArray().cast();
+
+			switch (xDataType) {
+			case DateXAxisDataType:
+				if (get(seriesId) == null && dateRange != null) {
+					removeOutOfRangeRanks(ranks);
+					Date progressiveDate = dateRange.getFrom();
+					double cumulative = 0;
+					for (Rank rank : ranks) {
+						// Fill with blank data missing dates
+						if (!FilterHelper.equalDate(progressiveDate, rank.date)) {
+							while (!FilterHelper.equalDate(progressiveDate, rank.date) && FilterHelper.beforeOrSameDate(progressiveDate, dateRange.getTo())) {
+								data.push(createPoint(progressiveDate.getTime(), JavaScriptObjectHelper.getNativeNull()));
+								CalendarUtil.addDaysToDate(progressiveDate, 1);
+							}
+						}
+						CalendarUtil.addDaysToDate(progressiveDate, 1);
+						Double yPoint = getYPointValue(rank, yDataTypeSecondary);
+						if (yPoint != null && showModelPredictions) {
+							if (isPointIsolated(yDataTypeSecondary, ranks, rank)) {
+								data.push(createMarkerPoint(rank.date.getTime(), (isCumulative ? cumulative += yPoint.doubleValue() : yPoint.doubleValue())));
+							} else {
+								data.push(createPoint(rank.date.getTime(), (isCumulative ? cumulative += yPoint.doubleValue() : yPoint.doubleValue())));
+							}
+						} else {
+							data.push(createPoint(rank.date.getTime(), JavaScriptObjectHelper.getNativeNull()));
+						}
+					}
+					addSeries(data, seriesType, seriesId, color, true);
+
+				}
+				break;
+
+			case RankingXAxisDataType:
+				if (get(seriesId) == null) {
+					for (Rank rank : ranks) {
+						Double yPoint = getYPointValue(rank, yDataTypeSecondary);
+						data.push(createMarkerPoint(rank.position.doubleValue(), yPoint));
+					}
+					addSeries(data, seriesType, seriesId, color, true);
+				}
+				break;
+			}
+
+			switch (yDataTypeSecondary) {
+			case DownloadsYAxisDataType:
+				// if (NativeAxis.nativeGetDataMax(NativeAxis.nativeGetYAxis(chart, 1)) < yMinCeilingDownloads) {
+				// getSecondaryYAxis().setMax(yMinCeilingDownloads);
+				// } else {
+				// getSecondaryYAxis().setMax(JavaScriptObjectHelper.getNativeNull());
+				// }
+				break;
+			//
+			case RevenueYAxisDataType:
+				getSecondaryYAxis().setLabelsFormatter(ChartHelper.getNativeLabelFormatter(currency, ""));
+				// NativeChart.nativeUpdateTooltipFormatter(chart, ChartHelper.getNativeTooltipFormatter(currency));
+				// if (NativeAxis.nativeGetDataMax(NativeAxis.nativeGetYAxis(chart, 1)) < yMinCeilingRevenue) {
+				// getSecondaryYAxis().setMax(yMinCeilingRevenue);
+				// } else {
+				// getSecondaryYAxis().setMax(JavaScriptObjectHelper.getNativeNull());
+				// }
+				break;
+			//
+			case RankingYAxisDataType:
+				// getSecondaryYAxis().setMax(JavaScriptObjectHelper.getNativeNull());
+				break;
+			}
+			NativeAxis.nativeUpdate(NativeAxis.nativeGetYAxis(chart, 1), getSecondaryYAxis().getProperty(), true); // update secondary y axis
+
+			resize();
+			reflow();
+			if (hide) {
+				setSeriesVisible(seriesId, false);
+			}
+		}
 	}
 
-	private Double getYPointValue(Rank rank) {
+	private Double getYPointValue(Rank rank, YDataType yDataType) {
 		Double yPointValue = null;
 		switch (yDataType) {
 		case DownloadsYAxisDataType:
-			yPointValue = Double.valueOf(rank.downloads.intValue());
+			if (rank.downloads != null) {
+				yPointValue = Double.valueOf(rank.downloads.intValue());
+			}
 			break;
 
 		case RevenueYAxisDataType:
-			yPointValue = Double.valueOf(rank.revenue);
+			if (rank.revenue != null) {
+				yPointValue = Double.valueOf(rank.revenue);
+			}
 			break;
 
 		case RankingYAxisDataType:
@@ -126,36 +246,6 @@ public class Chart extends BaseChart {
 			break;
 		}
 		return yPointValue;
-	}
-
-	/**
-	 * Set options dependent by dinamic values
-	 */
-	private void setOptions() {
-		switch (yDataType) {
-		case DownloadsYAxisDataType:
-			if (NativeAxis.nativeGetDataMax(NativeAxis.nativeGetYAxis(chart, 0)) < yMinCeilingDownloads) {
-				getYAxis().setMax(yMinCeilingDownloads);
-			} else {
-				getYAxis().setMax(JavaScriptObjectHelper.getNativeNull());
-			}
-			break;
-
-		case RevenueYAxisDataType:
-			getYAxis().setLabelsFormatter(ChartHelper.getNativeLabelFormatter(currency, ""));
-			NativeChart.nativeUpdateTooltipFormatter(chart, ChartHelper.getNativeTooltipFormatter(currency));
-			if (NativeAxis.nativeGetDataMax(NativeAxis.nativeGetYAxis(chart, 0)) < yMinCeilingRevenue) {
-				getYAxis().setMax(yMinCeilingRevenue);
-			} else {
-				getYAxis().setMax(JavaScriptObjectHelper.getNativeNull());
-			}
-			break;
-
-		case RankingYAxisDataType:
-			getYAxis().setMax(JavaScriptObjectHelper.getNativeNull());
-			break;
-		}
-		NativeAxis.nativeUpdate(NativeAxis.nativeGetYAxis(chart, 0), getYAxis().getProperty(), true); // update y axis
 	}
 
 	public void setCurrency(String currency) {
@@ -166,7 +256,7 @@ public class Chart extends BaseChart {
 		List<Rank> outOfRangeRanks = new ArrayList<Rank>();
 		for (Rank rank : ranks) {
 			if (XDataType.DateXAxisDataType.equals(xDataType) && dateRange != null) {
-				if (!withinChartRange(rank)) {
+				if (!withinChartDateRange(rank)) {
 					outOfRangeRanks.add(rank);
 				} else {
 					rank.date = FilterHelper.normalizeDate(rank.date);
@@ -182,38 +272,45 @@ public class Chart extends BaseChart {
 	 * @param rank
 	 * @return
 	 */
-	private boolean withinChartRange(Rank rank) {
+	private boolean withinChartDateRange(Rank rank) {
 		return FilterHelper.afterOrSameDate(rank.date, dateRange.getFrom()) && FilterHelper.beforeOrSameDate(rank.date, dateRange.getTo());
 	}
 
+	// Currently working for DateTime X Axis
 	private boolean isPointIsolated(YDataType yDataType, List<Rank> ranks, Rank rank) {
 		boolean isolated = false;
-		switch (yDataType) {
-		case DownloadsYAxisDataType:
-			isolated = ranks.size() == 1
-					|| ((ranks.indexOf(rank) == 0 && ranks.get(ranks.indexOf(rank) + 1) != null && ranks.get(ranks.indexOf(rank) + 1).downloads == null)
-							|| (ranks.indexOf(rank) > 0 && ranks.indexOf(rank) < (ranks.size() - 1) && ranks.get(ranks.indexOf(rank) - 1) != null
-									&& ranks.get(ranks.indexOf(rank) - 1).downloads == null && ranks.get(ranks.indexOf(rank) + 1) != null && ranks.get(ranks
-									.indexOf(rank) + 1).downloads == null) || (ranks.indexOf(rank) == (ranks.size() - 1)
-							&& ranks.get(ranks.indexOf(rank) - 1) != null && ranks.get(ranks.indexOf(rank) - 1).downloads == null));
-			break;
-		case RevenueYAxisDataType:
-			isolated = ranks.size() == 1
-					|| ((ranks.indexOf(rank) == 0 && ranks.get(ranks.indexOf(rank) + 1) != null && ranks.get(ranks.indexOf(rank) + 1).revenue == null)
-							|| (ranks.indexOf(rank) > 0 && ranks.indexOf(rank) < (ranks.size() - 1) && ranks.get(ranks.indexOf(rank) - 1) != null
-									&& ranks.get(ranks.indexOf(rank) - 1).revenue == null && ranks.get(ranks.indexOf(rank) + 1) != null && ranks.get(ranks
-									.indexOf(rank) + 1).revenue == null) || (ranks.indexOf(rank) == (ranks.size() - 1)
-							&& ranks.get(ranks.indexOf(rank) - 1) != null && ranks.get(ranks.indexOf(rank) - 1).revenue == null));
-			break;
-		case RankingYAxisDataType:
-		default:
-			isolated = ranks.size() == 1
-					|| ((ranks.indexOf(rank) == 0 && ranks.get(ranks.indexOf(rank) + 1) != null && getRankPosition(ranks.get(ranks.indexOf(rank) + 1)) == 0)
-							|| (ranks.indexOf(rank) > 0 && ranks.indexOf(rank) < (ranks.size() - 1) && ranks.get(ranks.indexOf(rank) - 1) != null
-									&& getRankPosition(ranks.get(ranks.indexOf(rank) - 1)) == 0 && ranks.get(ranks.indexOf(rank) + 1) != null && getRankPosition(ranks
-									.get(ranks.indexOf(rank) + 1)) == 0) || (ranks.indexOf(rank) == (ranks.size() - 1)
-							&& ranks.get(ranks.indexOf(rank) - 1) != null && getRankPosition(ranks.get(ranks.indexOf(rank) - 1)) == 0));
-			break;
+		if (ranks.size() == 1) {
+			isolated = true;
+		} else {
+			int rankIndex = ranks.indexOf(rank);
+			int lastIndex = ranks.size() - 1;
+			switch (yDataType) {
+			case DownloadsYAxisDataType:
+				isolated = (rankIndex == 0 && (ranks.get(1).downloads == null || CalendarUtil.getDaysBetween(rank.date, ranks.get(1).date) > 1))
+						|| (rankIndex > 0 && rankIndex < lastIndex && ((ranks.get(rankIndex - 1).downloads == null && ranks.get(rankIndex + 1).downloads == null) || (CalendarUtil
+								.getDaysBetween(rank.date, ranks.get(rankIndex - 1).date) > 1 && CalendarUtil.getDaysBetween(rank.date,
+								ranks.get(rankIndex + 1).date) > 1)))
+						|| (rankIndex == lastIndex && (ranks.get(lastIndex - 1).downloads == null || CalendarUtil.getDaysBetween(rank.date,
+								ranks.get(lastIndex - 1).date) > 1));
+				break;
+			case RevenueYAxisDataType:
+				isolated = (rankIndex == 0 && (ranks.get(1).revenue == null || CalendarUtil.getDaysBetween(rank.date, ranks.get(1).date) > 1))
+						|| (rankIndex > 0 && rankIndex < lastIndex && ((ranks.get(rankIndex - 1).revenue == null && ranks.get(rankIndex + 1).revenue == null) || (CalendarUtil
+								.getDaysBetween(rank.date, ranks.get(rankIndex - 1).date) > 1 && CalendarUtil.getDaysBetween(rank.date,
+								ranks.get(rankIndex + 1).date) > 1)))
+						|| (rankIndex == lastIndex && (ranks.get(lastIndex - 1).revenue == null || CalendarUtil.getDaysBetween(rank.date,
+								ranks.get(lastIndex - 1).date) > 1));
+				break;
+			case RankingYAxisDataType:
+			default:
+				isolated = (rankIndex == 0 && (getRankPosition(ranks.get(1)) == 0 || CalendarUtil.getDaysBetween(rank.date, ranks.get(1).date) > 1))
+						|| (rankIndex > 0 && rankIndex < lastIndex && ((getRankPosition(ranks.get(rankIndex - 1)) == 0 && getRankPosition(ranks
+								.get(rankIndex + 1)) == 0) || (CalendarUtil.getDaysBetween(rank.date, ranks.get(rankIndex - 1).date) > 1 && CalendarUtil
+								.getDaysBetween(rank.date, ranks.get(rankIndex + 1).date) > 1)))
+						|| (rankIndex == lastIndex && (getRankPosition(ranks.get(lastIndex - 1)) == 0 || CalendarUtil.getDaysBetween(rank.date,
+								ranks.get(lastIndex - 1).date) > 1));
+				break;
+			}
 		}
 		return isolated;
 	}
@@ -221,7 +318,6 @@ public class Chart extends BaseChart {
 	public void setLoading(boolean loading) {
 
 		if (loading) { // Reset chart
-			removeAllSeries();
 			currency = null;
 			if (XDataType.DateXAxisDataType.equals(xDataType)) {
 				if (dateRange == null) {
@@ -230,9 +326,10 @@ public class Chart extends BaseChart {
 				dateRange.setFrom(FilterHelper.normalizeDate(FilterController.get().getStartDate()));
 				dateRange.setTo(FilterHelper.normalizeDate(FilterController.get().getEndDate()));
 				// TODO SUMMERTIME PROBLEM - e.g. in august the from date is 1 hour earlier, so the 23:00 of the day before
-				setXAxisExtremes(dateRange.getFrom().getTime(), dateRange.getTo().getTime());
-				rearrangeXAxisDatetimeLabels();
+				// setXAxisExtremes(dateRange.getFrom().getTime(), dateRange.getTo().getTime());
+				// rearrangeXAxisLabels();
 			}
+			removeAllSeries();
 			reflow();
 		}
 
