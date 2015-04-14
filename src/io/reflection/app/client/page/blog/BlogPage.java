@@ -11,12 +11,11 @@ import io.reflection.app.api.blog.shared.call.GetPostsRequest;
 import io.reflection.app.api.blog.shared.call.GetPostsResponse;
 import io.reflection.app.api.blog.shared.call.event.GetPostsEventHandler;
 import io.reflection.app.client.DefaultEventBus;
-import io.reflection.app.client.component.FormFieldSelect;
 import io.reflection.app.client.component.CellListElem;
+import io.reflection.app.client.component.FormFieldSelect;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.PostController;
-import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.FilterHelper;
@@ -69,7 +68,7 @@ public class BlogPage extends Page implements NavigationEventHandler, GetPostsEv
 			createAtomLink();
 		}
 
-		postsCellList.setPageSize(ServiceConstants.SHORT_STEP_VALUE);
+		postsCellList.setPageSize(3);
 		postsCellList.setEmptyListWidget(new HTMLPanel("No posts found!"));
 
 		PostController.get().addDataDisplay(postsCellList);

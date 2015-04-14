@@ -88,7 +88,7 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
 
 		if (pager == null) {
 			pager = new Pager();
-			pager.count = SHORT_STEP;
+			pager.count = 3L;
 			pager.start = Long.valueOf(0);
 			pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
 		}
@@ -268,7 +268,7 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
 			input.post.commentsEnabled = commentsEnabled;
 
 			input.post.tags = TagHelper.convertToTagList(tags);
-			
+
 			service.updatePost(input, new AsyncCallback<UpdatePostResponse>() {
 
 				@Override
