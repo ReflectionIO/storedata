@@ -12,6 +12,7 @@ import io.reflection.app.api.blog.shared.call.GetPostsResponse;
 import io.reflection.app.api.blog.shared.call.event.GetPostsEventHandler;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.component.FormFieldSelect;
+import io.reflection.app.client.component.CellListElem;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.PostController;
@@ -21,7 +22,6 @@ import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.blog.part.PostSummaryCell;
-import io.reflection.app.client.part.BootstrapGwtCellList;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.datatypes.shared.Post;
 
@@ -34,7 +34,6 @@ import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.cellview.client.CellList;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -51,7 +50,8 @@ public class PostsPage extends Page implements NavigationEventHandler, GetPostsE
 
 	@UiField FormFieldSelect blogCategories;
 	@UiField FormFieldSelect blogSortBy;
-	@UiField(provided = true) CellList<Post> posts = new CellList<Post>(new PostSummaryCell(), BootstrapGwtCellList.INSTANCE);
+	@UiField(provided = true) CellListElem<Post> postsCellList = new CellListElem<Post>(false, new PostSummaryCell());
+
 	@UiField(provided = true) SimplePager simplePager = new SimplePager(false, false);
 
 	private Element atomLink;
@@ -69,12 +69,12 @@ public class PostsPage extends Page implements NavigationEventHandler, GetPostsE
 			createAtomLink();
 		}
 
-		posts.setPageSize(ServiceConstants.SHORT_STEP_VALUE);
-		posts.setEmptyListWidget(new HTMLPanel("No posts found!"));
+		postsCellList.setPageSize(ServiceConstants.SHORT_STEP_VALUE);
+		postsCellList.setEmptyListWidget(new HTMLPanel("No posts found!"));
 
-		PostController.get().addDataDisplay(posts);
+		PostController.get().addDataDisplay(postsCellList);
 
-		simplePager.setDisplay(posts);
+		simplePager.setDisplay(postsCellList);
 	}
 
 	public void createAtomLink() {
@@ -141,7 +141,7 @@ public class PostsPage extends Page implements NavigationEventHandler, GetPostsE
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
 		// Show pager if data loaded in Admin Blog page
-		if (PostController.get().hasPosts() && PostController.get().getPostsCount() > posts.getVisibleItemCount()) {
+		if (PostController.get().hasPosts() && PostController.get().getPostsCount() > postsCellList.getVisibleItemCount()) {
 			simplePager.setVisible(true);
 		}
 	}

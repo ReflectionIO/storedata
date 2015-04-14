@@ -1,6 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
-	xmlns:cv="urn:import:com.google.gwt.user.cellview.client" xmlns:c="urn:import:io.reflection.app.client.component">
+	xmlns:c="urn:import:io.reflection.app.client.component">
 	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 	<ui:style gss="true">
 	
@@ -31,7 +31,7 @@
 		<div
 			class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnTwoThirds} {STYLES_INSTANCE.reflectionMainStyle.blogContentContainer}">
 
-			<cv:CellList ui:field="posts" />
+			<c:CellListElem ui:field="postsCellList" listStyle="" cellStyle="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}"></c:CellListElem>
 			<p:SimplePager ui:field="simplePager" rangeLimited="true" />
 
 		</div>
