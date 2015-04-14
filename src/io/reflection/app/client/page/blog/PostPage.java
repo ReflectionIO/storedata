@@ -34,6 +34,7 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Timer;
@@ -70,7 +71,7 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 	DivElement comments;
 
 	@UiField SpanElement content;
-	// @UiField Preloader preloader;
+	private SpanElement notPublished = Document.get().createSpanElement();
 
 	private Post post;
 	private boolean installed;
@@ -79,6 +80,9 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 		initWidget(uiBinder.createAndBindUi(this));
 
 		FilterHelper.addBlogCategories(blogCategories, SessionController.get().isLoggedInUserAdmin());
+
+		notPublished.setInnerText("NOT PUBLISHED");
+		notPublished.getStyle().setColor(ColorHelper.getReflectionRed());
 	}
 
 	/*
@@ -150,11 +154,8 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 			date.setInnerText(DATE_FORMATTER_EEE_DD_MMM_YYYY.format(post.published));
 			dateFooter.setInnerText(DATE_FORMATTER_EEE_DD_MMM_YYYY.format(post.published));
 		} else {
-			SpanElement notPublished = Document.get().createSpanElement();
-			notPublished.setInnerText("NOT PUBLISHED");
-			notPublished.getStyle().setColor(ColorHelper.getReflectionRed());
-			date.setInnerHTML(notPublished.getInnerHTML());
-			dateFooter.setInnerHTML(notPublished.getInnerHTML());
+			date.setInnerSafeHtml(SafeHtmlUtils.fromTrustedString(notPublished.toString()));
+			dateFooter.setInnerSafeHtml(SafeHtmlUtils.fromTrustedString(notPublished.toString()));
 		}
 
 		if (tags.getWidgetCount() > 0) {
