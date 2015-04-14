@@ -664,6 +664,48 @@
 		});
 	};
 
+
+	var Accordion = function() {
+		$('.accordion').each(function(){
+			$this = $(this);
+			$this.find('> ul > li').addClass('is-closed');
+			$this.find('.accordion-content').each(function(){
+				$contentContainer = $(this);
+				var accordionHeight = $contentContainer.innerHeight();
+				$contentContainer.css('margin-top', -accordionHeight);
+			});
+			$this.find('.accordion-switch').on("click", function(){
+				var accordionSwitch = $(this), accordionSwitchParent = accordionSwitch.parent('li');
+				if(!accordionSwitch.hasClass('no-accordion-content')) {
+					if(accordionSwitchParent.hasClass('is-closed')) {
+						accordionSwitchParent.removeClass('is-closed');
+						accordionSwitch.next('.accordion-content').css('margin-top', "0");
+					}
+					else {
+						var accordionContent = accordionSwitch.next('.accordion-content');
+						accordionSwitchParent.addClass('is-closed');
+						accordionContent.css('margin-top', -accordionContent.innerHeight());
+					}
+				}				
+			});
+		});
+	};
+
+	var ReadMore = function() {
+		$('.more-content').hide();
+		$('.js-more-link').on("click", function(e){
+			e.preventDefault();
+			var $this = $(this), $thisLink = $this.find('a');
+			$this.prev('.more-content').slideToggle(150);
+			if($thisLink.text() == "Read more") {
+				$thisLink.text("Read less");
+			}
+			else {
+				$thisLink.text("Read more");
+			}
+		});
+	};
+
 /* END COMPONENT OBJECTS */
 
 
