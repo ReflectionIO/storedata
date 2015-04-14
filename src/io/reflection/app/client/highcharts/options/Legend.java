@@ -20,16 +20,6 @@ public class Legend extends Option<Legend> {
 	private JavaScriptObject navigation;
 	private JavaScriptObject title;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.highcharts.Option#getName()
-	 */
-	@Override
-	public String getName() {
-		return "legend";
-	}
-
 	public Legend setAlign(String alignment) {
 		return setOption("align", alignment);
 	}

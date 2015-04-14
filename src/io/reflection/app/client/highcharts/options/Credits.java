@@ -15,16 +15,6 @@ import com.google.gwt.core.client.JavaScriptObject;
  */
 public class Credits extends Option<Credits> {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.highcharts.Option#getName()
-	 */
-	@Override
-	public String getName() {
-		return "credits";
-	}
-
 	public Credits setEnabled(boolean enabled) {
 		return setOption("enabled", enabled);
 	}
