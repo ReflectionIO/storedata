@@ -29,6 +29,7 @@ import io.reflection.app.shared.util.FormattingHelper;
 import io.reflection.app.shared.util.LookupHelper;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.ScriptInjector;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.HeadingElement;
@@ -83,6 +84,9 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 
 		notPublished.setInnerText("NOT PUBLISHED");
 		notPublished.getStyle().setColor(ColorHelper.getReflectionRed());
+
+		ScriptInjector.fromUrl("//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5513f37846b6ec2e").setWindow(ScriptInjector.TOP_WINDOW).inject();
+
 	}
 
 	/*
