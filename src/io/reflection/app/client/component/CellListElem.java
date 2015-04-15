@@ -13,6 +13,7 @@ import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.cellview.client.AbstractHasData;
+import com.google.gwt.user.cellview.client.LoadingStateChangeEvent.LoadingState;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.DeckPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
@@ -182,6 +183,34 @@ public class CellListElem<T> extends AbstractHasData<T> {
 		return cellIsEditing;
 	}
 
+	/**
+	 * Called when the loading state changes.
+	 * 
+	 * @param state
+	 *            the new loading state
+	 */
+	@Override
+	protected void onLoadingStateChanged(LoadingState state) {
+		Widget message = null;
+		if (state == LoadingState.LOADING) {
+			// Loading indicator.
+			message = loadingIndicatorContainer;
+		} else if (state == LoadingState.LOADED && getRowCount() == 0) {
+			// Empty table.
+			message = emptyListWidgetContainer;
+		}
+
+		// Switch out the message to display.
+		if (message != null) {
+			messagesPanel.showWidget(messagesPanel.getWidgetIndex(message));
+		}
+
+		messagesPanel.setVisible(message != null);
+
+		// Fire an event.
+		super.onLoadingStateChanged(state);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -192,27 +221,13 @@ public class CellListElem<T> extends AbstractHasData<T> {
 	protected void renderRowValues(SafeHtmlBuilder sb, List<T> values, int start, SelectionModel<? super T> selectionModel)
 			throws UnsupportedOperationException {
 
-		// String keyboardSelectedItem = " " + style.cellListKeyboardSelectedItem();
-		// String selectedItem = " " + style.cellListSelectedItem();
-		// String evenItem = style.cellListEvenItem();
-		// String oddItem = style.cellListOddItem();
-		// int keyboardSelectedRow = getKeyboardSelectedRow() + getPageStart();
 		int length = values.size();
 		int end = start + length;
 		for (int i = start; i < end; i++) {
 			T value = values.get(i - start);
-			// boolean isSelected = selectionModel == null ? false : selectionModel.isSelected(value);
 
 			StringBuilder classesBuilder = new StringBuilder();
 			classesBuilder.append(cellStyle);
-			// classesBuilder.append(i % 2 == 0 ? evenItem : oddItem);
-			// if (isSelected) {
-			// classesBuilder.append(selectedItem);
-			// }
-			// if (i == keyboardSelectedRow) {
-			// classesBuilder.append(keyboardSelectedItem);
-			// }
-
 			SafeHtmlBuilder cellBuilder = new SafeHtmlBuilder();
 			Context context = new Context(i, 0, getValueKey(value));
 			cell.render(context, value, cellBuilder);
