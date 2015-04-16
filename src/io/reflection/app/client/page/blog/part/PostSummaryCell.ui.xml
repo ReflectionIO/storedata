@@ -11,13 +11,13 @@
 	
 	</ui:style>
 
-	<article class="{STYLES_INSTANCE.reflectionMainStyle.blogArticle}">
+	<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
 		<h2>
 			<a href="{link}">
 				<ui:text from="{title}" />
 			</a>
 		</h2>
-		<p class="{STYLES_INSTANCE.reflectionMainStyle.blogArticleInfo}">
+		<p class="{STYLES_INSTANCE.reflectionMainStyle.siteArticleInfo}">
 			<strong>Posted in</strong>
 
 			<span>

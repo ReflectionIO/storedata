@@ -137,10 +137,11 @@
 			</li>
 		</ul>
 
-		<g:Button ui:field="viewAllBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall} {STYLES_INSTANCE.reflectionMainStyle.pageFunctionButton}">
+		<g:Button ui:field="viewAllBtn" visible="false"
+			styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall} {STYLES_INSTANCE.reflectionMainStyle.pageFunctionButton}">
 			<span ui:field="viewAllSpan" class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeMyApps}">View all Apps</span>
 		</g:Button>
-		<g:InlineHyperlink ui:field="redirect" targetHistoryToken="{UpgradePageType.asTargetHistoryToken}"
+		<g:InlineHyperlink ui:field="redirect" visible="false" targetHistoryToken="{UpgradePageType.asTargetHistoryToken}"
 			styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall} {STYLES_INSTANCE.reflectionMainStyle.pageFunctionButton}">
 			<span class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeMyApps}">View all Apps</span>
 		</g:InlineHyperlink>

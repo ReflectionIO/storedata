@@ -42,11 +42,11 @@
 
 		<div
 			class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnTwoThirds} {STYLES_INSTANCE.reflectionMainStyle.blogContentContainer}">
-			<article class="{STYLES_INSTANCE.reflectionMainStyle.blogArticleFull}">
+			<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticleFull}">
 
 				<h1 ui:field="title"></h1>
 
-				<p class="{STYLES_INSTANCE.reflectionMainStyle.blogArticleInfo}">
+				<p class="{STYLES_INSTANCE.reflectionMainStyle.siteArticleInfo}">
 					<strong>Posted by</strong>
 					<span ui:field="author" />
 					<span ui:field="date" />
@@ -57,12 +57,12 @@
 
 				<span ui:field="content"></span>
 
-				<footer class="{STYLES_INSTANCE.reflectionMainStyle.blogArticle__footer}">
+				<footer class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle__footer}">
 					<p class="{STYLES_INSTANCE.reflectionMainStyle.blogTags}">
 						<strong>Tags:</strong>
 						<g:HTMLPanel ui:field="tags" />
 					</p>
-					<p class="{STYLES_INSTANCE.reflectionMainStyle.blogArticleInfo}">
+					<p class="{STYLES_INSTANCE.reflectionMainStyle.siteArticleInfo}">
 						<strong>Posted by</strong>
 						<span ui:field="authorFooter" />
 						<span ui:field="dateFooter" />
