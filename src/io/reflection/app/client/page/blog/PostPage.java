@@ -12,26 +12,30 @@ import io.reflection.app.api.blog.shared.call.GetPostRequest;
 import io.reflection.app.api.blog.shared.call.GetPostResponse;
 import io.reflection.app.api.blog.shared.call.event.GetPostEventHandler;
 import io.reflection.app.client.DefaultEventBus;
+import io.reflection.app.client.component.FormFieldSelect;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.PostController;
+import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.NavigationEventHandler;
+import io.reflection.app.client.helper.ColorHelper;
+import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.MarkdownHelper;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.page.blog.part.DisplayTag;
-import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Post;
 import io.reflection.app.shared.util.FormattingHelper;
 import io.reflection.app.shared.util.LookupHelper;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.ScriptInjector;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.HeadingElement;
-import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Timer;
@@ -57,6 +61,7 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 
 	private static final int POST_ID_PARAMETER_INDEX = 0;
 
+	@UiField FormFieldSelect blogCategories;
 	@UiField HeadingElement title;
 	@UiField SpanElement date;
 	@UiField SpanElement dateFooter;
@@ -66,8 +71,8 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 	@UiField HTMLPanel tags;
 	DivElement comments;
 
-	@UiField ParagraphElement content;
-	// @UiField Preloader preloader;
+	@UiField SpanElement content;
+	private SpanElement notPublished = Document.get().createSpanElement();
 
 	private Post post;
 	private boolean installed;
@@ -75,7 +80,13 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 	public PostPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		Styles.STYLES_INSTANCE.blog().ensureInjected();
+		FilterHelper.addBlogCategories(blogCategories, SessionController.get().isLoggedInUserAdmin());
+
+		notPublished.setInnerText("NOT PUBLISHED");
+		notPublished.getStyle().setColor(ColorHelper.getReflectionRed());
+
+		ScriptInjector.fromUrl("//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5513f37846b6ec2e").setWindow(ScriptInjector.TOP_WINDOW).inject();
+
 	}
 
 	/*
@@ -147,8 +158,8 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 			date.setInnerText(DATE_FORMATTER_EEE_DD_MMM_YYYY.format(post.published));
 			dateFooter.setInnerText(DATE_FORMATTER_EEE_DD_MMM_YYYY.format(post.published));
 		} else {
-			date.setInnerHTML("<span>NOT PUBLISHED</span>");
-			dateFooter.setInnerHTML("<span>NOT PUBLISHED</span>");
+			date.setInnerSafeHtml(SafeHtmlUtils.fromTrustedString(notPublished.toString()));
+			dateFooter.setInnerSafeHtml(SafeHtmlUtils.fromTrustedString(notPublished.toString()));
 		}
 
 		if (tags.getWidgetCount() > 0) {

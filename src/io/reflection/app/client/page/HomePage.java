@@ -88,12 +88,12 @@ public class HomePage extends Page {
 			// Append to Head
 			if (UserAgentHelper.isIE()) {
 				if (UserAgentHelper.getIEVersion() < 9) {
-					Document.get().getHead().appendChild(HomePage.scriptRespond);
+					Document.get().getHead().appendChild(scriptRespond);
 				} else {
-					Document.get().getHead().appendChild(HomePage.scriptPictureFill);
+					Document.get().getHead().appendChild(scriptPictureFill);
 				}
 			} else { // Not Internet Explorer
-				Document.get().getHead().appendChild(HomePage.scriptPictureFill);
+				Document.get().getHead().appendChild(scriptPictureFill);
 			}
 
 			tweeked = true;
@@ -105,12 +105,12 @@ public class HomePage extends Page {
 			// Remove from Head
 			if (UserAgentHelper.isIE()) {
 				if (UserAgentHelper.getIEVersion() < 9) {
-					Document.get().getHead().removeChild(HomePage.scriptRespond);
+					Document.get().getHead().removeChild(scriptRespond);
 				} else {
-					Document.get().getHead().removeChild(HomePage.scriptPictureFill);
+					Document.get().getHead().removeChild(scriptPictureFill);
 				}
 			} else { // Not Internet Explorer
-				Document.get().getHead().removeChild(HomePage.scriptPictureFill);
+				Document.get().getHead().removeChild(scriptPictureFill);
 			}
 
 			tweeked = false;

@@ -9,6 +9,7 @@ package io.reflection.app.client.page.blog.part;
 
 import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMATTER_EEE_DD_MMM_YYYY;
 import io.reflection.app.client.controller.NavigationController;
+import io.reflection.app.client.helper.ColorHelper;
 import io.reflection.app.client.helper.MarkdownHelper;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.datatypes.shared.Post;
@@ -32,11 +33,14 @@ public class PostSummaryCell extends AbstractCell<Post> {
 	interface DateTemplate extends SafeHtmlTemplates {
 		DateTemplate INSTANCE = GWT.create(DateTemplate.class);
 
-		@SafeHtmlTemplates.Template("<span class=\"label label-info\">NOT PUBLISHED</span>")
-		SafeHtml notPublished();
+		@SafeHtmlTemplates.Template("<span style=\"color: {0}\">NOT PUBLISHED</span>")
+		SafeHtml notPublished(String color);
 
 		@SafeHtmlTemplates.Template("<span>{0}</span>")
 		SafeHtml publishedDate(String formattedDate);
+
+		@SafeHtmlTemplates.Template("<span style=\"color: {0}\">NOT VISIBLE</span>")
+		SafeHtml notVisible(String color);
 
 	}
 
@@ -51,7 +55,7 @@ public class PostSummaryCell extends AbstractCell<Post> {
 		String s = value.code == null || value.code.length() == 0 ? value.id.toString() : value.code;
 
 		SafeUri link = PageType.BlogPostPageType.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE, s);
-		SafeHtml published = DateTemplate.INSTANCE.notPublished();
+		SafeHtml published = DateTemplate.INSTANCE.notPublished(ColorHelper.getReflectionRed());
 
 		if (value.published != null) {
 			published = DateTemplate.INSTANCE.publishedDate(DATE_FORMATTER_EEE_DD_MMM_YYYY.format(value.published));
@@ -60,7 +64,7 @@ public class PostSummaryCell extends AbstractCell<Post> {
 		String processedString = MarkdownHelper.process(value.description);
 
 		if (value.visible == Boolean.FALSE) {
-			processedString += "<p class=\"label label-warning\">NOT VISIBLE</p>";
+			processedString += DateTemplate.INSTANCE.notVisible(ColorHelper.getReflectionRed()).asString();
 		}
 
 		RENDERER.render(builder, link, value.title, SafeHtmlUtils.fromTrustedString(processedString), FormattingHelper.getUserName(value.author), published);

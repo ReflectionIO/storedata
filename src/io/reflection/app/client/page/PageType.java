@@ -23,7 +23,7 @@ import io.reflection.app.client.page.admin.UsersPage;
 import io.reflection.app.client.page.blog.EditPostPage;
 import io.reflection.app.client.page.blog.PostAdminPage;
 import io.reflection.app.client.page.blog.PostPage;
-import io.reflection.app.client.page.blog.PostsPage;
+import io.reflection.app.client.page.blog.BlogPage;
 import io.reflection.app.client.page.forum.AddTopicPage;
 import io.reflection.app.client.page.forum.EditTopicPage;
 import io.reflection.app.client.page.forum.ForumPage;
@@ -293,7 +293,7 @@ public enum PageType {
 			page = new PostPage();
 			break;
 		case BlogPostsPageType:
-			page = new PostsPage();
+			page = new BlogPage();
 			break;
 		case LoadingPageType:
 			page = new LoadingPage();

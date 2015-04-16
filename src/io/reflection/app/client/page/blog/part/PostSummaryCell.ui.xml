@@ -11,7 +11,7 @@
 	
 	</ui:style>
 
-	<div tag="article" clas="{STYLES_INSTANCE.reflectionMainStyle.blogArticle}">
+	<article class="{STYLES_INSTANCE.reflectionMainStyle.blogArticle}">
 		<h2>
 			<a href="{link}">
 				<ui:text from="{title}" />
@@ -35,7 +35,7 @@
 		<p class="{STYLES_INSTANCE.reflectionMainStyle.moreLink}">
 			<a href="{link}">Read more</a>
 		</p>
-	</div>
+	</article>
 
 
 </ui:UiBinder>
