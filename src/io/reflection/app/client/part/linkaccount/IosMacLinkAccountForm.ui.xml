@@ -4,19 +4,11 @@
 	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 
 	<ui:style gss="true">
-	.marginTop5 {
-		margin-top: 5px;
-	}
 	
-	.inlineAnchor {
-		margin-left: 15px;
-		font-size: 11px;
-	}
 	</ui:style>
-	<g:HTMLPanel>
+	<g:HTMLPanel tag="form">
 		<fieldset class="{STYLES_INSTANCE.reflectionMainStyle.connectAccountContent}" style="visibility: visible; position: relative;">
-			<h2
-				class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFive} {STYLES_INSTANCE.reflectionMainStyle.accountFormHeading} {STYLES_INSTANCE.reflectionMainStyle.maintainAfterSubmit}">Link your iTunes Connect Account</h2>
+			<h2 ui:field="title"></h2>
 
 			<c:FormField ui:field="accountUsername" labelText="Account name" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}"></c:FormField>
 
