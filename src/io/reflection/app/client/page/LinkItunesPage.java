@@ -12,21 +12,21 @@ import io.reflection.app.api.core.shared.call.LinkAccountResponse;
 import io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler;
 import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.client.DefaultEventBus;
-import io.reflection.app.client.component.FormButton;
 import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
-import io.reflection.app.client.handler.EnterPressedEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.part.linkaccount.IosMacLinkAccountForm;
 import io.reflection.app.client.part.linkaccount.LinkableAccountFields;
+import io.reflection.app.client.part.linkaccount.LinkedAccountChangeEvent.EVENT_TYPE;
+import io.reflection.app.client.part.linkaccount.LinkedAccountChangeEvent.LinkedAccountChangeEventHandler;
 import io.reflection.app.client.res.Styles;
+import io.reflection.app.datatypes.shared.DataAccount;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -49,31 +49,21 @@ public class LinkItunesPage extends Page implements NavigationEventHandler, Link
 	@UiField DivElement panelSuccess;
 	@UiField Anchor linkAnotherAccount;
 
-	private FormButton linkAccountBtn;
-
 	private LinkableAccountFields linkableAccount;
 
 	public LinkItunesPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		linkAccountBtn = iosMacForm.getButton();
-		linkAccountBtn.addClickHandler(new ClickHandler() {
+		iosMacForm.addLinkedAccountChangeEventHander(new LinkedAccountChangeEventHandler() {
 
 			@Override
-			public void onClick(ClickEvent event) {
-				if (linkableAccount.validate()) {
-					linkableAccount.setFormErrors();
-					iosMacForm.setEnabled(false);
-					linkAccountBtn.setStatusLoading("Linking ..");
-					LinkedAccountController.get().linkAccount(linkableAccount.getAccountSourceId(), linkableAccount.getUsername(),
-							linkableAccount.getPassword(), linkableAccount.getProperties()); // Link account
-				} else {
-					linkableAccount.setFormErrors();
-				}
-
+			public void onChange(DataAccount dataAccount, EVENT_TYPE eventType) {
+				iosMacForm.setEnabled(false);
+				iosMacForm.setStatusLoading("Linking ..");
+				LinkedAccountController.get().linkAccount(linkableAccount.getAccountSourceId(), linkableAccount.getUsername(), linkableAccount.getPassword(),
+						linkableAccount.getProperties()); // Link account
 			}
 		});
-
 	}
 
 	/*
@@ -112,7 +102,7 @@ public class LinkItunesPage extends Page implements NavigationEventHandler, Link
 	@Override
 	public void linkAccountSuccess(LinkAccountRequest input, LinkAccountResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			linkAccountBtn.setStatusSuccess("Account Linked!", 0);
+			iosMacForm.setStatusSuccess("Account Linked!", 0);
 			Document.get().getBody().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formSubmittedSuccessComplete());
 			accountConnectAnimation.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().plugsConnected());
 			panelSuccess.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
@@ -120,15 +110,16 @@ public class LinkItunesPage extends Page implements NavigationEventHandler, Link
 
 		} else if (output.error != null) {
 			if (output.error.code == ApiError.InvalidDataAccountCredentials.getCode()) {
-				linkAccountBtn.setStatusError("Invalid credentials!");
+				iosMacForm.setStatusError("Invalid credentials!");
 				linkableAccount.setUsernameError("iTunes Connect username or password entered incorrectly");
 				linkableAccount.setPasswordError("iTunes Connect username or password entered incorrectly");
 				linkableAccount.setFormErrors();
 			} else if (output.error.code == ApiError.InvalidDataAccountVendor.getCode()) {
-				linkAccountBtn.setStatusError("Invalid vendor ID!");
+				iosMacForm.setStatusError("Invalid vendor ID!");
 				iosMacForm.setVendorError("iTunes Connect vendor number entered incorrectly");
 				linkableAccount.setFormErrors();
 			}
+			iosMacForm.setEnabled(true);
 		}
 	}
 
@@ -141,7 +132,7 @@ public class LinkItunesPage extends Page implements NavigationEventHandler, Link
 	@Override
 	public void linkAccountFailure(LinkAccountRequest input, Throwable caught) {
 		// mLinkAccount.setEnabled(true);
-		linkAccountBtn.setStatusError();
+		iosMacForm.setStatusError();
 	}
 
 	@UiHandler("linkAnotherAccount")
@@ -151,7 +142,7 @@ public class LinkItunesPage extends Page implements NavigationEventHandler, Link
 		panelSuccess.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
 		accountConnectAnimation.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().plugsConnected());
 		Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formSubmittedSuccessComplete());
-		linkAccountBtn.resetStatus();
+		// linkAccountBtn.resetStatus(); // TODO CHECK
 	}
 
 	/*
@@ -164,12 +155,6 @@ public class LinkItunesPage extends Page implements NavigationEventHandler, Link
 	public void navigationChanged(Stack previous, Stack current) {
 		linkableAccount = iosMacForm;
 		// mLinkableAccount.resetForm();
-		linkableAccount.setOnEnterPressed(new EnterPressedEventHandler() {
-			public void onEnterPressed() {
-				linkAccountBtn.click();
-			}
-		});
-
 		iosMacForm.setVisible(true);
 		linkableAccount.getFirstToFocus().setFocus(true);
 	}

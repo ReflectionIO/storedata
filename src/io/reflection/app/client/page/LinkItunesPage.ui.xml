@@ -118,7 +118,9 @@
 			</div>
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.accountFormContainer}">
 
-				<l:IosMacLinkAccountForm ui:field="iosMacForm" styleName="{STYLES_INSTANCE.reflectionMainStyle.formsMidTheme}" />
+				<l:IosMacLinkAccountForm ui:field="iosMacForm" titleText="Link your iTunes Connect Account"
+					titleStyleName="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFive} {STYLES_INSTANCE.reflectionMainStyle.accountFormHeading} {STYLES_INSTANCE.reflectionMainStyle.maintainAfterSubmit}"
+					styleName="{STYLES_INSTANCE.reflectionMainStyle.formsMidTheme}" />
 
 				<div ui:field="panelSuccess" class="{STYLES_INSTANCE.reflectionMainStyle.formSubmittedSuccess}">
 					<svg version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 61 54" enable-background="new 0 0 61 54" xml:space="preserve" class="success-tick">
