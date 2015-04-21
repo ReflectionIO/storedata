@@ -77,6 +77,17 @@ public interface Styles extends ClientBundle {
 		@ClassName("MHXTE6C-r-a")
 		String mhxte6cRA();
 
+		String accordion();
+
+		@ClassName("accordion-bottom-with-divider")
+		String accordionBottomWithDivider();
+
+		@ClassName("accordion-content")
+		String accordionContent();
+
+		@ClassName("accordion-switch")
+		String accordionSwitch();
+
 		@ClassName("account-access-content")
 		String accountAccessContent();
 
@@ -171,18 +182,6 @@ public interface Styles extends ClientBundle {
 		@ClassName("blockquote-container")
 		String blockquoteContainer();
 
-		@ClassName("blog-article")
-		String blogArticle();
-
-		@ClassName("blog-article--info")
-		String blogArticleInfo();
-
-		@ClassName("blog-article-full")
-		String blogArticleFull();
-
-		@ClassName("blog-article__footer")
-		String blogArticle__footer();
-
 		@ClassName("blog-comments")
 		String blogComments();
 
@@ -207,6 +206,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("button-example-container--full-width")
 		String buttonExampleContainerFullWidth();
+
+		@ClassName("buttons-container")
+		String buttonsContainer();
 
 		@ClassName("calendar-container")
 		String calendarContainer();
@@ -447,6 +449,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("email-success-handle")
 		String emailSuccessHandle();
 
+		@ClassName("feature-complete")
+		String featureComplete();
+
 		@ClassName("filter-container--app")
 		String filterContainerApp();
 
@@ -610,6 +615,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("grid__column--right")
 		String grid__columnRight();
+
+		@ClassName("grid__column--seven-columns")
+		String grid__columnSevenColumns();
 
 		@ClassName("grid__column--three-quarters")
 		String grid__columnThreeQuarters();
@@ -801,6 +809,18 @@ public interface Styles extends ClientBundle {
 		@ClassName("landing-page")
 		String landingPage();
 
+		@ClassName("landing-section-contact")
+		String landingSectionContact();
+
+		@ClassName("landing-section-contact__address")
+		String landingSectionContact__address();
+
+		@ClassName("landing-section-contact__email")
+		String landingSectionContact__email();
+
+		@ClassName("landing-section-contact__tel")
+		String landingSectionContact__tel();
+
 		String lato();
 
 		@ClassName("lato-bold")
@@ -815,14 +835,50 @@ public interface Styles extends ClientBundle {
 		@ClassName("link-open-search")
 		String linkOpenSearch();
 
+		@ClassName("linked-account-date")
+		String linkedAccountDate();
+
+		@ClassName("linked-account-delete")
+		String linkedAccountDelete();
+
+		@ClassName("linked-account-edit")
+		String linkedAccountEdit();
+
+		@ClassName("linked-account-name")
+		String linkedAccountName();
+
+		@ClassName("linked-account-store")
+		String linkedAccountStore();
+
+		@ClassName("list-item-complete")
+		String listItemComplete();
+
 		@ClassName("list-partners")
 		String listPartners();
+
+		@ClassName("logged-in-section-content")
+		String loggedInSectionContent();
+
+		@ClassName("logged-in-section-main")
+		String loggedInSectionMain();
+
+		@ClassName("logged-in-section-main__column-one")
+		String loggedInSectionMain__columnOne();
+
+		@ClassName("logged-in-section-main__column-two")
+		String loggedInSectionMain__columnTwo();
 
 		@ClassName("login-content")
 		String loginContent();
 
 		@ClassName("login-form-is-showing")
 		String loginFormIsShowing();
+
+		@ClassName("logo-container")
+		String logoContainer();
+
+		@ClassName("logo-reflection-footer")
+		String logoReflectionFooter();
 
 		@ClassName("main-footer-links")
 		String mainFooterLinks();
@@ -845,8 +901,14 @@ public interface Styles extends ClientBundle {
 		@ClassName("mobile-width")
 		String mobileWidth();
 
+		@ClassName("more-content")
+		String moreContent();
+
 		@ClassName("more-link")
 		String moreLink();
+
+		@ClassName("no-accordion-content")
+		String noAccordionContent();
 
 		@ClassName("no-csstransitions")
 		String noCsstransitions();
@@ -856,6 +918,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("no-js")
 		String noJs();
+
+		@ClassName("no-linked-accounts-container")
+		String noLinkedAccountsContainer();
 
 		@ClassName("no-opacity")
 		String noOpacity();
@@ -905,11 +970,23 @@ public interface Styles extends ClientBundle {
 		@ClassName("page-leaderboard")
 		String pageLeaderboard();
 
+		@ClassName("page-logged-in-landing")
+		String pageLoggedInLanding();
+
 		@ClassName("page-my-account")
 		String pageMyAccount();
 
 		@ClassName("page-my-apps")
 		String pageMyApps();
+
+		@ClassName("page-overlay")
+		String pageOverlay();
+
+		@ClassName("page-overlay--confirm")
+		String pageOverlayConfirm();
+
+		@ClassName("page-popup")
+		String pagePopup();
 
 		@ClassName("page-section")
 		String pageSection();
@@ -974,6 +1051,21 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("plugs-connected")
 		String plugsConnected();
+
+		@ClassName("popup-close")
+		String popupClose();
+
+		@ClassName("popup-content")
+		String popupContent();
+
+		@ClassName("popup-content--account__heading")
+		String popupContentAccount__heading();
+
+		@ClassName("popup-content--delete-account")
+		String popupContentDeleteAccount();
+
+		@ClassName("popup-content--link-account")
+		String popupContentLinkAccount();
 
 		@ClassName("pre-selected")
 		String preSelected();
@@ -1118,6 +1210,12 @@ public interface Styles extends ClientBundle {
 		@ClassName("ref-icon-before--linkedin")
 		String refIconBeforeLinkedin();
 
+		@ClassName("ref-icon-before--location")
+		String refIconBeforeLocation();
+
+		@ClassName("ref-icon-before--mail")
+		String refIconBeforeMail();
+
 		@ClassName("ref-icon-before--minus")
 		String refIconBeforeMinus();
 
@@ -1207,6 +1305,18 @@ public interface Styles extends ClientBundle {
 		@ClassName("single-date-selector-container")
 		String singleDateSelectorContainer();
 
+		@ClassName("site-article")
+		String siteArticle();
+
+		@ClassName("site-article--info")
+		String siteArticleInfo();
+
+		@ClassName("site-article-full")
+		String siteArticleFull();
+
+		@ClassName("site-article__footer")
+		String siteArticle__footer();
+
 		@ClassName("site-logo")
 		String siteLogo();
 
@@ -1239,6 +1349,12 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("table-data-first")
 		String tableDataFirst();
+
+		@ClassName("table-linked-accounts")
+		String tableLinkedAccounts();
+
+		@ClassName("table-linked-accounts--disabled")
+		String tableLinkedAccountsDisabled();
 
 		@ClassName("table-my-apps")
 		String tableMyApps();
@@ -1289,6 +1405,9 @@ public interface Styles extends ClientBundle {
 
 		String touch();
 
+		@ClassName("update-linked-accounts-container")
+		String updateLinkedAccountsContainer();
+
 		@ClassName("user-company")
 		String userCompany();
 
@@ -1300,6 +1419,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("vertical-centre-content")
 		String verticalCentreContent();
+
+		@ClassName("warning-sign")
+		String warningSign();
 
 		@ClassName("will-show")
 		String willShow();

@@ -1,0 +1,17 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
+	<ui:style>
+	
+	</ui:style>
+	<g:HTMLPanel tag="li" ui:field="container" styleName="{STYLES_INSTANCE.reflectionMainStyle.isClosed}">
+		<h2 ui:field="title" class="{STYLES_INSTANCE.reflectionMainStyle.accordionSwitch}">
+			Germany
+			<span ui:field="subtitle">Coming Soon</span>
+		</h2>
+		<div ui:field="accordionContent" class="{STYLES_INSTANCE.reflectionMainStyle.accordionContent}">
+			<ul ui:field="contentList" class="{STYLES_INSTANCE.reflectionMainStyle.contentListMinor}">
+			</ul>
+		</div>
+	</g:HTMLPanel>
+</ui:UiBinder> 

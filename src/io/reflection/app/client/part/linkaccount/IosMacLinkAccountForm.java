@@ -13,16 +13,22 @@ import io.reflection.app.client.component.FormFieldPassword;
 import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
-import io.reflection.app.client.handler.EnterPressedEventHandler;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.page.PageType;
+import io.reflection.app.client.part.linkaccount.LinkedAccountChangeEvent.EVENT_TYPE;
+import io.reflection.app.client.part.linkaccount.LinkedAccountChangeEvent.HasLinkedAccountChangeEventHandlers;
+import io.reflection.app.client.part.linkaccount.LinkedAccountChangeEvent.LinkedAccountChangeEventHandler;
+import io.reflection.app.datatypes.shared.DataAccount;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.HeadingElement;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -35,11 +41,13 @@ import com.willshex.gson.json.shared.Convert;
  * @author billy1380
  * 
  */
-public class IosMacLinkAccountForm extends Composite implements LinkableAccountFields {
+public class IosMacLinkAccountForm extends Composite implements LinkableAccountFields, HasLinkedAccountChangeEventHandlers {
 
 	private static IosMacLinkAccountFormUiBinder uiBinder = GWT.create(IosMacLinkAccountFormUiBinder.class);
 
 	interface IosMacLinkAccountFormUiBinder extends UiBinder<Widget, IosMacLinkAccountForm> {}
+
+	@UiField HeadingElement title;
 
 	@UiField FormField accountUsername;
 	private String accountUsernameError;
@@ -52,49 +60,79 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 
 	@UiField FormButton linkAccountBtn;
 
-	private EnterPressedEventHandler enterHandler;
+	private DataAccount dataAccount;
 
 	public IosMacLinkAccountForm() {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		vendorId.setInfoHref(PageType.BlogPostPageType.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE, "7"));
-
-		accountUsername.getElement().setAttribute("placeholder", "iTunes Connect Username");
-		password.getElement().setAttribute("placeholder", "iTunes Connect Password");
-		vendorId.getElement().setAttribute("placeholder", "Vendor number (8xxxxxxx)");
-
-		accountUsername.setTabIndex(1);
-		password.setTabIndex(2);
-		vendorId.setTabIndex(3);
-
-	}
-
-	public FormButton getButton() {
-		return linkAccountBtn;
 	}
 
 	/**
-	 * Set the focus on 'mAccountUsername' field when this part of the page is set to visible
-	 * 
-	 * @see com.google.gwt.user.client.ui.UIObject#setVisible(boolean)
+	 * @param rowValue
 	 */
-	@Override
-	public void setVisible(boolean visible) {
-		super.setVisible(visible);
-		if (visible == Boolean.TRUE) {
-			// mAccountUsername.setFocus(true);
-		}
+	public void setAccount(DataAccount dataAccount) {
+		this.dataAccount = dataAccount;
+		accountUsername.setText(dataAccount.username);
+		JsonObject propertiesJson = Convert.toJsonObject(dataAccount.properties);
+		vendorId.setText(propertiesJson.get("vendors").getAsString());
+	}
+
+	public void setButtonText(String text) {
+		linkAccountBtn.setText(text);
+	}
+
+	public void setTitleText(String text) {
+		title.setInnerText(text);
+	}
+
+	public void setTitleStyleName(String style) {
+		title.setClassName(style);
+	}
+
+	public void setStatusLoading(String loadingText) {
+		linkAccountBtn.setStatusLoading(loadingText);
+	}
+
+	public void setStatusSuccess(String successText) {
+		linkAccountBtn.setStatusSuccess(successText);
+	}
+
+	public void setStatusSuccess(String successText, int hideTimeout) {
+		linkAccountBtn.setStatusSuccess(successText, hideTimeout);
+	}
+
+	public void setStatusError() {
+		linkAccountBtn.setStatusError();
+	}
+
+	public void setStatusError(String errorText) {
+		linkAccountBtn.setStatusError(errorText);
 	}
 
 	/**
 	 * On pressing key on form fields
 	 * 
-	 * @param e
+	 * @param event
 	 */
 	@UiHandler({ "accountUsername", "password", "vendorId" })
-	void onKeyPressed(KeyPressEvent e) {
-		if (enterHandler != null && e.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
-			enterHandler.onEnterPressed();
+	void onKeyPressed(KeyPressEvent event) {
+		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
+			linkAccountBtn.click();
+		}
+	}
+
+	@UiHandler("linkAccountBtn")
+	void onLinkedAccountBtnClicked(ClickEvent ce) {
+		dataAccount = new DataAccount();
+		dataAccount.username = accountUsername.getText();
+		dataAccount.password = password.getText();
+		dataAccount.properties = getProperties();
+		if (validate()) {
+			setFormErrors();
+			fireEvent(new LinkedAccountChangeEvent(dataAccount, dataAccount.id == null ? EVENT_TYPE.ADD : EVENT_TYPE.UPDATE));
+		} else {
+			setFormErrors();
 		}
 	}
 
@@ -131,6 +169,7 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 			validated = validated && true;
 		}
 
+		// The password constraints are relaxed here since they depends by the Store checking the password
 		if (pswd == null || pswd.length() == 0) {
 			passwordError = "Cannot be empty";
 			validated = false;
@@ -190,13 +229,6 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 		return accountUsername.getText();
 	}
 
-	public void setAccountUsername(String username) {
-		accountUsername.setText(username);
-	}
-
-	public void setVendorNumber(String vendorNumber) {
-		vendorId.setText(vendorNumber);
-	}
 
 	/*
 	 * (non-Javadoc)
@@ -225,16 +257,6 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 		properties.add("vendors", vendors);
 
 		return Convert.fromJsonObject(properties);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.part.linkaccount.LinkableAccountFields#setOnEnterPressed(io.reflection.app.client.handler.EnterPressedEventHandler)
-	 */
-	@Override
-	public void setOnEnterPressed(EnterPressedEventHandler handler) {
-		enterHandler = handler;
 	}
 
 	/*
@@ -313,11 +335,6 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 		}
 	}
 
-	public void setAccountUsernameEnabled(boolean enabled) {
-		accountUsername.setEnabled(enabled);
-		accountUsername.setFocus(enabled);
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -325,14 +342,26 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	 */
 	@Override
 	public void resetForm() {
-		setEnabled(true);
 		accountUsername.setText("");
-		accountUsername.setFocus(true);
 		accountUsername.hideNote();
 		password.hideNote();
 		password.clear();
 		vendorId.setText("");
 		vendorId.hideNote();
+		linkAccountBtn.resetStatus();
+		setEnabled(true);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.reflection.app.client.part.linkaccount.LinkedAccountChangeEvent.HasLinkedAccountChangeEventHandlers#addLinkedAccountChangeEventHander(io.reflection
+	 * .app.client.part.linkaccount.LinkedAccountChangeEvent.LinkedAccountChangeEventHandler)
+	 */
+	@Override
+	public HandlerRegistration addLinkedAccountChangeEventHander(LinkedAccountChangeEventHandler handler) {
+		return addHandler(handler, LinkedAccountChangeEvent.TYPE);
 	}
 
 }
