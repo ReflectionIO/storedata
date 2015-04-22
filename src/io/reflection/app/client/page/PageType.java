@@ -20,10 +20,10 @@ import io.reflection.app.client.page.admin.RolesPage;
 import io.reflection.app.client.page.admin.SendNotificationPage;
 import io.reflection.app.client.page.admin.SimpleModelRunsPage;
 import io.reflection.app.client.page.admin.UsersPage;
+import io.reflection.app.client.page.blog.BlogPage;
 import io.reflection.app.client.page.blog.EditPostPage;
 import io.reflection.app.client.page.blog.PostAdminPage;
 import io.reflection.app.client.page.blog.PostPage;
-import io.reflection.app.client.page.blog.BlogPage;
 import io.reflection.app.client.page.forum.AddTopicPage;
 import io.reflection.app.client.page.forum.EditTopicPage;
 import io.reflection.app.client.page.forum.ForumPage;
@@ -98,7 +98,6 @@ public enum PageType {
 
 	private String value;
 	private static Map<String, PageType> valueLookup = null;
-	private HomePage defaultPage = null;
 	private Map<String, Permission> requiredPermissions;
 	private boolean navigable;
 	private boolean requiresAuthentication;
@@ -328,19 +327,11 @@ public enum PageType {
 		case CalibrationSummaryPageType:
 			page = new CalibrationSummaryPage();
 			break;
-		case HomePageType:
 		default:
-			if (defaultPage == null) {
-				defaultPage = new HomePage();
-				defaultPage.setPageType(this);
-			}
-			page = defaultPage;
 			break;
 		}
 
-		if (page != defaultPage) {
-			page.setPageType(this);
-		}
+		page.setPageType(this);
 
 		return page;
 	}

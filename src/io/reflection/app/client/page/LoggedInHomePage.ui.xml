@@ -1,0 +1,206 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:io.reflection.app.client.component">
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
+	<ui:style>
+	
+	</ui:style>
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.pageLoggedInLanding}">
+		<section class="{STYLES_INSTANCE.reflectionMainStyle.loggedInSectionMain}">
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.loggedInSectionMain__columnOne}">
+				<img src="images/logged-in-main-screenshot.png" alt="Reflection app screenshot" />
+			</div>
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.loggedInSectionMain__columnTwo}">
+				<h1 class="{STYLES_INSTANCE.reflectionMainStyle.pageTitle}">
+					Hi
+					<span ui:field="userName"></span>
+					We've Been Busy
+				</h1>
+				<p>The Reflection team are hard at work developing and expanding the tools and features that you have been asking for. Monitor our progress here and keep
+					up
+					to date with what’s coming next.</p>
+			</div>
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.listPartners}">
+				<ul>
+					<li>
+						<img src="images/Partner_Soundcloud@2x.png" alt="Soundcloud logo" />
+					</li>
+					<li>
+						<img src="images/Partner_Wooga@2x.png" alt="Wooga logo" />
+					</li>
+					<li>
+						<img src="images/BBC_Worldwide@2x.png" alt="BBC Worldwide logo" />
+					</li>
+					<li>
+						<img src="images/Partner_TocaBoca@2x-v2.png" alt="Toca Boca logo" />
+					</li>
+					<li>
+						<img src="images/SwiftKey_Logo@2x.png" alt="SwiftKey logo" />
+					</li>
+					<li>
+						<img src="images/Partner_Miniclip@2x.png" alt="Miniclip logo" />
+					</li>
+					<li>
+						<img src="images/Nordeus_Logo@2x.png" alt="Nordeus logo" />
+					</li>
+					<li>
+						<img src="images/Endemol_Logo@2x.png" alt="Endemol logo" />
+					</li>
+				</ul>
+				<h2>A few of our current partners</h2>
+			</div>
+		</section>
+		<section class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.loggedInSectionContent}">
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnSevenColumns}">
+				<ul>
+					<li class="article-list--article">
+						<article class="site-article">
+							<h2>Creating an iTunes Finance user account</h2>
+							<p class="site-article--info">
+								<strong>Posted by Chi Dire</strong>
+								<span>10 mins ago</span>
+							</p>
+							<p>When linking your account to our site (or any external website) we recommend you create a new iTunes Connect User that only has the specific
+								permissions you intend to share. Our site will require permission to access your financial data.</p>
+							<img src="images/placeholder-gustaf.jpg" alt="Gustaf Leksell" />
+							<p>In 13 easy steps ;)</p>
+							<div class="more-content">
+								<p>
+									Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam varius nulla pellentesque bibendum semper. Pellentesque ullamcorper
+									<a href="#">dictum dictum</a>
+									. Sed tincidunt ut nulla in pharetra. Curabitur id neque id urna viverra tempus. Aliquam nec sapien purus.
+								</p>
+							</div>
+							<p class="more-link js-more-link">
+								<a href="site-article.html">Read more</a>
+							</p>
+						</article>
+					</li>
+					<li class="article-list--article">
+						<article class="site-article">
+							<h2>Dolor sit amet consectetur</h2>
+							<p class="site-article--info">
+								<strong>Posted by Gustaf Leksell</strong>
+								<span>2 hours ago</span>
+							</p>
+							<p>Aliquam nec sapien purus. Aenean sodales semper suscipit. Nunc vitae felis tincidunt, tincidunt felis nec, laoreet sem. Nullam urna ante, varius nec
+								dui et, tempus molestie justo. Duis tempor turpis a risus euismod convallis vel sit amet magna. Fusce ultricies cursus nulla ut bibendum.</p>
+							<p>Nam a diam quis orci iaculis pharetra pulvinar mattis elit.</p>
+						</article>
+					</li>
+					<li class="article-list--article">
+						<article class="site-article">
+							<h2>Lorem ipsum dolor sit amet consectetur adipiscing elit malesuada</h2>
+							<p class="site-article--info">
+								<strong>Posted by Gustaf Leksell</strong>
+								<span>Mon 1 Apr 2015</span>
+							</p>
+							<p>
+								Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam varius nulla pellentesque bibendum semper. Pellentesque ullamcorper
+								<a href="#">dictum dictum</a>
+								. Sed tincidunt ut nulla in pharetra. Curabitur id neque id urna viverra tempus. Aliquam nec sapien purus. Aenean sodales semper suscipit. Nunc vitae
+								felis tincidunt, tincidunt felis nec, laoreet sem. Nullam urna ante, varius nec dui et, tempus molestie justo. Duis tempor turpis a risus euismod
+								convallis vel sit amet magna. Fusce ultricies cursus nulla ut bibendum.
+							</p>
+						</article>
+					</li>
+				</ul>
+				<div class="pagination">
+					<a href="#" class="pages-link">Older</a>
+					<ul>
+						<li>
+							<a href="#">7</a>
+						</li>
+						<li class="is-current">
+							<a href="#">8</a>
+						</li>
+						<li>
+							<a href="#">9</a>
+						</li>
+						<li>
+							<a href="#">10</a>
+						</li>
+						<li>
+							<a href="#">11</a>
+						</li>
+						<li>
+							<a href="#">12</a>
+						</li>
+					</ul>
+					<a href="#" class="pages-link">Newer</a>
+				</div>
+			</div>
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFiveColumns}">
+				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Latest Releases</h2>
+				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam varius nulla pellentesque bibendum semper. Pellentesque ullamcorper dictum dictum. Sed
+					tincidunt ut nulla in pharetra. Curabitur id neque id urna viverra tempus.</p>
+				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Data</h2>
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.accordion}">
+					<ul>
+						<c:AccordionSwitch ui:field="accordionSwitchUK" featureComplete="true" titleText="United Kingdom" subtitleText="(2 Categories)" />
+						<c:AccordionSwitch ui:field="accordionSwitchDE" titleText="Germany" subtitleText="Coming Soon" />
+						<c:AccordionSwitch ui:field="accordionSwitchFR" titleText="France" subtitleText="Coming Soon" />
+						<c:AccordionSwitch ui:field="accordionSwitchIT" titleText="Italy" subtitleText="Coming Soon" />
+						<c:AccordionSwitch ui:field="accordionSwitchES" titleText="Spain" subtitleText="Coming Soon" />
+						<c:AccordionSwitch ui:field="accordionSwitchUS" titleText="USA" subtitleText="Coming Soon" />
+						<c:AccordionSwitch ui:field="accordionSwitchCA" titleText="Canada" subtitleText="Coming Soon" />
+						<c:AccordionSwitch ui:field="accordionSwitchAU" titleText="Australia" subtitleText="Coming Soon" />
+						<c:AccordionSwitch ui:field="accordionSwitchNZ" titleText="New Zealand" subtitleText="Coming Soon" />
+						<c:AccordionSwitch ui:field="accordionSwitchIR" titleText="Ireland" subtitleText="Coming Soon" />
+					</ul>
+				</div>
+				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Features</h2>
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.accordion} {STYLES_INSTANCE.reflectionMainStyle.accordionBottomWithDivider}">
+					<ul>
+						<c:AccordionSwitch featureComplete="true" empty="true" titleText="Historic download data" />
+						<c:AccordionSwitch featureComplete="true" empty="true" titleText="Download CSV" />
+						<c:AccordionSwitch empty="true" titleText="Forum" />
+						<c:AccordionSwitch empty="true" titleText="Google Play" />
+						<c:AccordionSwitch empty="true" titleText="Another Feature" />
+					</ul>
+				</div>
+				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">We're Hiring</h2>
+				<ul class="{STYLES_INSTANCE.reflectionMainStyle.contentList}">
+					<li>
+						<a href="#a">Senior Java Developer</a>
+					</li>
+					<li>
+						<a href="#a">Office Manager</a>
+					</li>
+					<li>
+						<a href="#a">Commnunity Manager</a>
+					</li>
+					<li>
+						<a href="#a">Senior Designer</a>
+					</li>
+					<li>
+						<a href="#a">Front-End Web Developer</a>
+					</li>
+					<li>
+						<a href="#a">Finance Manager</a>
+					</li>
+				</ul>
+			</div>
+		</section>
+		<section class="{STYLES_INSTANCE.reflectionMainStyle.landingSectionContact}">
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.logoContainer}">
+				<img src="images/logo-reflection-footer.png" alt="Reflection logo" class="{STYLES_INSTANCE.reflectionMainStyle.logoReflectionFooter}" />
+			</div>
+			<a href="mailto:info@reflection.io" class="{STYLES_INSTANCE.reflectionMainStyle.landingSectionContact__email}">
+				<span class="icon-mail {STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeMail}">info@reflection.io</span>
+			</a>
+			<a
+				href="https://www.google.co.uk/maps/place/44+Newman+St,+Marylebone,+London+W1T+1QD/@51.5187779,-0.1364135,17z/data=!4m7!1m4!3m3!1s0x48761b2b95192b1b:0xc2fcb9753b8ff12b!2s44+Newman+St,+Marylebone,+London+W1T+1QD!3b1!3m1!1s0x48761b2b95192b1b:0xc2fcb9753b8ff12b"
+				class="{STYLES_INSTANCE.reflectionMainStyle.landingSectionContact__address}" target="_blank">
+				<p class="icon-location {STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeLocation}">
+					<b>
+						40-44 Newman St
+						<br />
+						London
+						<br />
+						W1T 1QD
+					</b>
+				</p>
+			</a>
+		</section>
+	</g:HTMLPanel>
+</ui:UiBinder> 
