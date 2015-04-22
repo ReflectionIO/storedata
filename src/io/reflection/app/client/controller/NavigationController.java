@@ -8,11 +8,15 @@
 package io.reflection.app.client.controller;
 
 import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
+import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.handler.NavigationEventHandler;
+import io.reflection.app.client.handler.user.SessionEventHandler;
+import io.reflection.app.client.handler.user.UserPowersEventHandler;
 import io.reflection.app.client.helper.MixPanelApiHelper;
 import io.reflection.app.client.mixpanel.MixPanelApi;
 import io.reflection.app.client.page.HomePage;
+import io.reflection.app.client.page.LoggedInHomePage;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.navigation.Header;
@@ -20,6 +24,8 @@ import io.reflection.app.client.part.navigation.PanelLeftMenu;
 import io.reflection.app.client.part.navigation.PanelRightAccount;
 import io.reflection.app.client.part.navigation.PanelRightSearch;
 import io.reflection.app.client.res.Styles;
+import io.reflection.app.datatypes.shared.Permission;
+import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.shared.util.DataTypeHelper;
 
@@ -37,12 +43,13 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.gwt.crypto.bouncycastle.util.encoders.Base64;
 import com.spacehopperstudios.utility.StringUtils;
+import com.willshex.gson.json.service.shared.Error;
 
 /**
  * @author billy1380
  * 
  */
-public class NavigationController implements ValueChangeHandler<String> {
+public class NavigationController implements ValueChangeHandler<String>, SessionEventHandler, UserPowersEventHandler {
 
 	public static final String ADD_ACTION_PARAMETER_VALUE = "add";
 	public static final String EDIT_ACTION_PARAMETER_VALUE = "edit";
@@ -64,6 +71,9 @@ public class NavigationController implements ValueChangeHandler<String> {
 	private String intended = null;
 
 	private boolean loaded = false;
+
+	private HomePage homePage = null;
+	private LoggedInHomePage loggedInHomePage = null;
 
 	public static class Stack {
 		public static final String NEXT_KEY = "nextgoto:";
@@ -216,12 +226,16 @@ public class NavigationController implements ValueChangeHandler<String> {
 	public static NavigationController get() {
 		if (one == null) {
 			one = new NavigationController();
+			DefaultEventBus.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), one);
+			DefaultEventBus.get().addHandlerToSource(UserPowersEventHandler.TYPE, SessionController.get(), one);
 		}
 
 		return one;
 	}
 
 	private NavigationController() {
+		homePage = new HomePage();
+		pages.put(PageType.HomePageType.toString(), homePage);
 		MixPanelApi.get().init("400e244ec1aab9ad548fe51024506310");
 	}
 
@@ -241,8 +255,12 @@ public class NavigationController implements ValueChangeHandler<String> {
 	private void attachPage(PageType type) {
 		Page page = null;
 
-		if ((page = pages.get(type.toString())) == null) {
-			pages.put(type.toString(), page = type.create());
+		if (PageType.HomePageType.equals(type)) {
+			page = pages.get(PageType.HomePageType.toString());
+		} else {
+			if ((page = pages.get(type.toString())) == null) {
+				pages.put(type.toString(), page = type.create());
+			}
 		}
 
 		if (!page.isAttached()) {
@@ -492,6 +510,70 @@ public class NavigationController implements ValueChangeHandler<String> {
 	 */
 	public void purgeAllPages() {
 		pages.clear();
+		pages.put(PageType.HomePageType.toString(), homePage);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoggedIn(io.reflection.app.datatypes.shared.User,
+	 * io.reflection.app.api.shared.datatypes.Session)
+	 */
+	@Override
+	public void userLoggedIn(User user, Session session) {}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoggedOut()
+	 */
+	@Override
+	public void userLoggedOut() {
+		Page currentHomePage = pages.get(PageType.HomePageType);
+		if (currentHomePage instanceof HomePage) { return; }
+
+		// homePage init in the constructor
+
+		pages.put(PageType.HomePageType.toString(), homePage);
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoginFailed(com.willshex.gson.json.service.shared.Error)
+	 */
+	@Override
+	public void userLoginFailed(Error error) {
+		userLoggedOut();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.user.UserPowersEventHandler#gotUserPowers(io.reflection.app.datatypes.shared.User, java.util.List, java.util.List)
+	 */
+	@Override
+	public void gotUserPowers(User user, List<Role> roles, List<Permission> permissions) {
+		Page currentHomePage = pages.get(PageType.HomePageType);
+		if (currentHomePage instanceof LoggedInHomePage) { return; }
+
+		if (loggedInHomePage == null) {
+			loggedInHomePage = new LoggedInHomePage();
+		}
+
+		pages.put(PageType.HomePageType.toString(), loggedInHomePage);
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.user.UserPowersEventHandler#getGetUserPowersFailed(com.willshex.gson.json.service.shared.Error)
+	 */
+	@Override
+	public void getGetUserPowersFailed(Error error) {
+
 	}
 
 }

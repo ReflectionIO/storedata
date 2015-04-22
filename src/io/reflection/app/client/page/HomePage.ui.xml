@@ -1,19 +1,14 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:import field="io.reflection.app.client.page.PageType.TermsPageType" />
-	<ui:import field="io.reflection.app.client.page.PageType.HomePageType" />
+
 
 	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
-	<ui:with field="images" type="io.reflection.app.client.res.Images" />
 
 	<ui:style gss="true">
 	
 	</ui:style>
 	<g:HTMLPanel>
-
-		<!-- <div class="{STYLES_INSTANCE.homePageStyle.siteLogo}"> -->
-		<!-- <g:InlineHyperlink targetHistoryToken="{HomePageType.asTargetHistoryToken}" ui:field="homeBtn" /> -->
-		<!-- </div> -->
 
 		<div class="{STYLES_INSTANCE.homePageStyle.windowHeightScrollEffectContainer} {STYLES_INSTANCE.homePageStyle.landingSectionMainScrollEffectContainer}">
 			<div ui:field="sectionSizeShadowLayer" class="{STYLES_INSTANCE.homePageStyle.sectionSizeShadowLayer}"></div>
