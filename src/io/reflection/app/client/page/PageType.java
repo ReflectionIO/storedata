@@ -96,7 +96,6 @@ public enum PageType {
 
 	private String value;
 	private static Map<String, PageType> valueLookup = null;
-	private HomePage defaultPage = null;
 	private Map<String, Permission> requiredPermissions;
 	private boolean navigable;
 	private boolean requiresAuthentication;
@@ -325,17 +324,10 @@ public enum PageType {
 			break;
 		case HomePageType:
 		default:
-			if (defaultPage == null) {
-				defaultPage = new HomePage();
-				defaultPage.setPageType(this);
-			}
-			page = defaultPage;
 			break;
 		}
 
-		if (page != defaultPage) {
 			page.setPageType(this);
-		}
 
 		return page;
 	}
