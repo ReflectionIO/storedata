@@ -7,29 +7,18 @@
 //
 package io.reflection.app.client.page;
 
-import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
-import io.reflection.app.api.shared.datatypes.Session;
-import io.reflection.app.client.DefaultEventBus;
-import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.NavigationController;
-import io.reflection.app.client.controller.NavigationController.Stack;
-import io.reflection.app.client.controller.SessionController;
-import io.reflection.app.client.handler.NavigationEventHandler;
-import io.reflection.app.client.handler.user.SessionEventHandler;
 import io.reflection.app.client.helper.DOMHelper;
 import io.reflection.app.client.part.Footer;
 import io.reflection.app.client.part.Header;
 import io.reflection.app.client.res.Images;
-import io.reflection.app.datatypes.shared.User;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.LinkElement;
 import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.dom.client.ScriptElement;
-import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.VideoElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -39,24 +28,20 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
-import com.willshex.gson.json.service.shared.Error;
 
 /**
  * @author billy1380
  * 
  */
-public class HomePage extends Page implements NavigationEventHandler, SessionEventHandler {
+public class HomePage extends Page {
 
 	private static HomePageUiBinder uiBinder = GWT.create(HomePageUiBinder.class);
 
 	interface HomePageUiBinder extends UiBinder<Widget, HomePage> {}
 
-	@UiField DivElement headerLinks;
 	@UiField InlineHyperlink applyNowBtn;
 	@UiField InlineHyperlink applyBtn;
 	@UiField InlineHyperlink loginBtn;
-	@UiField InlineHyperlink logoutBtn;
-	@UiField InlineHyperlink leaderboardBtn;
 
 	@UiField InlineHyperlink homeBtn;
 	@UiField HTMLPanel leaderBoardScreenshot;
@@ -88,8 +73,6 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 		addAnalysisScreenshotPicture();
 
 		// StyleInjector.injectAtStart(Styles.INSTANCE.homePageStyle().getText());
-
-		headerLinks.removeAllChildren();
 
 		applyBtn.setTargetHistoryToken(PageType.RegisterPageType.asTargetHistoryToken("requestinvite"));
 		applyNowBtn.setTargetHistoryToken(PageType.RegisterPageType.asTargetHistoryToken("requestinvite"));
@@ -223,19 +206,18 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 	 */
 	@Override
 	protected void onAttach() {
+		applyHomePageTweeks();
+
 		super.onAttach();
 
 		Window.scrollTo(0, toTop);
 
-		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
-		register(DefaultEventBus.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this));
-
 		((Footer) NavigationController.get().getFooter()).setVisible(false);
 		((Header) NavigationController.get().getHeader()).setVisible(false);
-		headerLinks.getStyle().setDisplay(Display.INLINE_BLOCK);
-		
+
 		// Append to Body
 		Document.get().getBody().appendChild(scriptCustom);
+
 	}
 
 	/*
@@ -245,26 +227,18 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 	 */
 	@Override
 	protected void onDetach() {
+
 		super.onDetach();
 
 		((Footer) NavigationController.get().getFooter()).setVisible(true);
 		((Header) NavigationController.get().getHeader()).setVisible(true);
 
 		toTop = Window.getScrollTop();
-		
+
 		// Romove from Body
 		Document.get().getBody().removeChild(scriptCustom);
-	}
+		removeHomePageTweeks();
 
-	private void setLoggedInHeader(boolean loggedIn) {
-		headerLinks.removeAllChildren();
-		if (loggedIn) {
-			headerLinks.appendChild(leaderboardBtn.getElement());
-			headerLinks.appendChild(logoutBtn.getElement());
-		} else {
-			headerLinks.appendChild(applyBtn.getElement());
-			headerLinks.appendChild(loginBtn.getElement());
-		}
 	}
 
 	private void appendConditionalTags() {
@@ -300,50 +274,6 @@ public class HomePage extends Page implements NavigationEventHandler, SessionEve
 			video3.appendChild(source5);
 			video3.appendChild(source6);
 		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
-	 * io.reflection.app.client.controller.NavigationController.Stack)
-	 */
-	@Override
-	public void navigationChanged(Stack previous, Stack current) {
-		setLoggedInHeader(SessionController.get().isValidSession());
-		leaderboardBtn.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, OVERALL_LIST_TYPE,
-				FilterController.get().asRankFilterString()));
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoggedIn(io.reflection.app.datatypes.shared.User,
-	 * io.reflection.app.api.shared.datatypes.Session)
-	 */
-	@Override
-	public void userLoggedIn(User user, Session session) {
-		setLoggedInHeader(true);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoggedOut()
-	 */
-	@Override
-	public void userLoggedOut() {
-		setLoggedInHeader(false);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoginFailed(com.willshex.gson.json.service.shared.Error)
-	 */
-	@Override
-	public void userLoginFailed(Error error) {
-		userLoggedOut();
 	}
 
 }
