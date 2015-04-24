@@ -13,11 +13,9 @@
 			<div class="site-logo">
 				<g:InlineHyperlink targetHistoryToken="{HomePageType.asTargetHistoryToken}" ui:field="homeBtn" />
 			</div>
-			<div class="header__actions" ui:field="headerLinks">
+			<div class="header__actions">
 				<g:InlineHyperlink ui:field="applyBtn" styleName="ref-button-apply">Apply</g:InlineHyperlink>
 				<g:InlineHyperlink ui:field="loginBtn" styleName="link-log-in icon-login">Log In</g:InlineHyperlink>
-				<g:InlineHyperlink ui:field="leaderboardBtn" styleName="link-leaderboard icon-chart-bar">Leaderboard</g:InlineHyperlink>
-				<g:InlineHyperlink ui:field="logoutBtn" styleName="link-log-in icon-logout" targetHistoryToken="logout">Sign Out</g:InlineHyperlink>
 			</div>
 		</header>
 
@@ -31,7 +29,11 @@
 							<div class="landing-section-main__column-one">
 								<div>
 									<h1>Powerful Intelligence for the Global App Industry</h1>
-									<p>View revenue and download intelligence for apps.<br />Apply for free access to our data.</p>
+									<p>
+										View revenue and download intelligence for apps.
+										<br />
+										Apply for free access to our data.
+									</p>
 									<div class="actions-container">
 										<a href="#anchor-how-intelligence-helps" class="icon-angle-right js-scroll-to-anchor">How Intelligence Helps</a>
 										<g:InlineHyperlink ui:field="applyNowBtn" styleName="ref-button-cta-large">Apply Now</g:InlineHyperlink>
@@ -44,14 +46,30 @@
 						</div>
 						<div class="list-partners">
 							<ul>
-								<li><img src="images/logos/Partner_Soundcloud@2x.png" alt="Soundcloud logo" /></li>
-								<li><img src="images/logos/Partner_Wooga@2x.png" alt="Wooga logo" /></li>
-								<li><img src="images/logos/BBC_Worldwide@2x.png" alt="BBC Worldwide logo" /></li>
-								<li><img src="images/logos/Partner_TocaBoca@2x-v2.png" alt="Toca Boca logo" /></li>
-								<li><img src="images/logos/SwiftKey_Logo@2x.png" alt="SwiftKey logo" /></li>
-								<li><img src="images/logos/Partner_Miniclip@2x.png" alt="Miniclip logo" /></li>
-								<li><img src="images/logos/Nordeus_Logo@2x.png" alt="Nordeus logo" /></li>
-								<li><img src="images/logos/Endemol_Logo@2x.png" alt="Endemol logo" /></li>
+								<li>
+									<img src="images/logos/Partner_Soundcloud@2x.png" alt="Soundcloud logo" />
+								</li>
+								<li>
+									<img src="images/logos/Partner_Wooga@2x.png" alt="Wooga logo" />
+								</li>
+								<li>
+									<img src="images/logos/BBC_Worldwide@2x.png" alt="BBC Worldwide logo" />
+								</li>
+								<li>
+									<img src="images/logos/Partner_TocaBoca@2x-v2.png" alt="Toca Boca logo" />
+								</li>
+								<li>
+									<img src="images/logos/SwiftKey_Logo@2x.png" alt="SwiftKey logo" />
+								</li>
+								<li>
+									<img src="images/logos/Partner_Miniclip@2x.png" alt="Miniclip logo" />
+								</li>
+								<li>
+									<img src="images/logos/Nordeus_Logo@2x.png" alt="Nordeus logo" />
+								</li>
+								<li>
+									<img src="images/logos/Endemol_Logo@2x.png" alt="Endemol logo" />
+								</li>
 							</ul>
 							<h2>A few of our current partners</h2>
 						</div>
@@ -59,14 +77,18 @@
 				</div>
 
 				<section class="landing-section-insights" id="anchor-how-intelligence-helps">
-					<g:HTMLPanel styleName="landing-section-insights__column_one"  ui:field="leaderBoardScreenshot"/>						
+					<g:HTMLPanel styleName="landing-section-insights__column_one" ui:field="leaderBoardScreenshot" />
 					<div class="landing-column-thin">
 						<div class="landing-column-thin__content">
 							<h2>Essential Market Insight</h2>
 							<p>Analyse and benchmark apps and market data for revenue, rank and downloads. Make strategic decisions on app development, marketing and investment.</p>
 							<ul class="content-list">
-								<li><span>Daily updates of Top 200 paid and free apps for rank, revenue and download data.</span></li>
-								<li><span>Tailored view filtered by country, platform and category for your own insights.</span></li>
+								<li>
+									<span>Daily updates of Top 200 paid and free apps for rank, revenue and download data.</span>
+								</li>
+								<li>
+									<span>Tailored view filtered by country, platform and category for your own insights.</span>
+								</li>
 							</ul>
 						</div>
 					</div>
@@ -90,7 +112,10 @@
 							<blockquote>
 								<p>Reflection's approach to let developers have input on feature development is unique and refreshing. A great addition to the app intelligence space</p>
 								<footer>
-									<cite><span>Saad Choudri</span>Chief Commercial Officer, Miniclip</cite>
+									<cite>
+										<span>Saad Choudri</span>
+										Chief Commercial Officer, Miniclip
+									</cite>
 								</footer>
 							</blockquote>
 						</div>
@@ -99,8 +124,10 @@
 						<div class="landing-column-wide__content">
 							<h2>Building for the Future</h2>
 							<p>Reflection helps you reach where you want to be in the app market.</p>
-							<p>We understand that app intelligence is currently inaccessible and unaffordable, and it can be cumbersome to gain useful intelligence about apps and app markets. We are here to deliver what is missing.</p>
-							<p>Be a Reflection beta partner and help us define features that will impact the growing needs of developers, publishers, and other stakeholders in the flourishing app space.</p>
+							<p>We understand that app intelligence is currently inaccessible and unaffordable, and it can be cumbersome to gain useful intelligence about apps and
+								app markets. We are here to deliver what is missing.</p>
+							<p>Be a Reflection beta partner and help us define features that will impact the growing needs of developers, publishers, and other stakeholders in the
+								flourishing app space.</p>
 							<div class="logo-ref-imp-container">
 								<h4>Official Statistics Partner</h4>
 								<img src="images/logos/Imperial_College_London_Logo.png" alt="Imperial College London logo" class="logo-ref-imp" />
@@ -111,20 +138,33 @@
 
 				<section class="landing-section-careers">
 					<img src="images/careers/careers-col-thin-2.jpg" alt="Meeting" class="img-width-landing-column-thin" />
-					<img src="images/careers/careers-col-wide-2.jpg" alt="The Reflection office" class="img-width-landing-column-wide" />	
+					<img src="images/careers/careers-col-wide-2.jpg" alt="The Reflection office" class="img-width-landing-column-wide" />
 					<div class="landing-column-wide">
 						<div class="landing-column-wide__content">
 							<h2>Work With Us</h2>
 							<p>Reflection is a start-up with the ambition to disrupt the entire app ecosystem by providing accessible and affordable intelligence and tools.</p>
-							<p>We are always looking for talented people to join our growing team here in London. If you are a self-starter, would love to be part of an exciting, expanding company and have what it takes to get things done, we’d like to hear from you.</p>
+							<p>We are always looking for talented people to join our growing team here in London. If you are a self-starter, would love to be part of an exciting,
+								expanding company and have what it takes to get things done, we’d like to hear from you.</p>
 							<h3>Our Benefits</h3>
 							<ul class="content-list">
-								<li><span>Stock options plan</span></li>
-								<li><span>Hardware of your choice at work</span></li>
-								<li><span>Central London location just off Oxford Street</span></li>
-								<li><span>Opportunities to learn all there is to know about the mobile and app market</span></li>
-								<li><span>Friendly and collaborative culture</span></li>
-								<li><span>All the espresso you can drink</span></li>
+								<li>
+									<span>Stock options plan</span>
+								</li>
+								<li>
+									<span>Hardware of your choice at work</span>
+								</li>
+								<li>
+									<span>Central London location just off Oxford Street</span>
+								</li>
+								<li>
+									<span>Opportunities to learn all there is to know about the mobile and app market</span>
+								</li>
+								<li>
+									<span>Friendly and collaborative culture</span>
+								</li>
+								<li>
+									<span>All the espresso you can drink</span>
+								</li>
 							</ul>
 						</div>
 					</div>
