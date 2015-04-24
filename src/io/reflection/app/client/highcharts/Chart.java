@@ -242,7 +242,10 @@ public class Chart extends BaseChart {
 			break;
 
 		case RankingYAxisDataType:
-			yPointValue = Double.valueOf(getRankPosition(rank));
+			Double position = Double.valueOf(getRankPosition(rank));
+			if (position >= 1) {
+				yPointValue = position;
+			}
 			break;
 		}
 		return yPointValue;
