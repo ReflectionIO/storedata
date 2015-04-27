@@ -16,7 +16,7 @@ import static io.reflection.app.client.controller.FilterController.GROSSING_LIST
 import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
 import static io.reflection.app.client.controller.FilterController.PAID_LIST_TYPE;
 import static io.reflection.app.client.controller.FilterController.STORE_KEY;
-import static io.reflection.app.client.helper.FormattingHelper.WHOLE_NUMBER_FORMAT;
+import static io.reflection.app.client.helper.FormattingHelper.WHOLE_NUMBER_FORMATTER;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
 import io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler;
@@ -37,6 +37,7 @@ import io.reflection.app.client.page.part.RankSidePanel;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.datatypes.RanksGroup;
 import io.reflection.app.client.res.Images;
+import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.shared.util.DataTypeHelper;
 
@@ -46,6 +47,7 @@ import java.util.Map;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -80,11 +82,6 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	interface RanksPageUiBinder extends UiBinder<Widget, RanksPage> {}
 
 	interface RanksPageStyle extends CssResource {
-		String red();
-
-		String green();
-
-		String silver();
 
 		String emptyTableContainer();
 
@@ -101,7 +98,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	interface AllAdminCodeTemplate extends SafeHtmlTemplates {
 		AllAdminCodeTemplate INSTANCE = GWT.create(AllAdminCodeTemplate.class);
 
-		@Template(ALL_TEXT + " <span class=\"badge pull-right\">{0}</span>")
+		@Template(ALL_TEXT
+				+ " <span style=\"background-color: #474949;color: #fff;float: right;display: inline-block;padding: 0px 3px; margin-left: 20px;\">{0}</span>")
 		SafeHtml code(Long code);
 	}
 
@@ -110,6 +108,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	@UiField RankSidePanel mSidePanel;
 
 	@UiField InlineHyperlink allLink;
+	@UiField SpanElement overviewAllText;
 	@UiField InlineHyperlink freeLink;
 	@UiField InlineHyperlink grossingLink;
 	@UiField InlineHyperlink paidLink;
@@ -119,8 +118,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	@UiField LIElement grossingItem;
 	@UiField LIElement paidItem;
 
-	@UiField HTMLPanel showMorePanel;
 	@UiField Button viewAllBtn;
+	@UiField SpanElement viewAllSpan;
 	@UiField InlineHyperlink redirect;
 
 	private TextColumn<RanksGroup> rankColumn;
@@ -152,7 +151,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		initWidget(uiBinder.createAndBindUi(this));
 
 		// set the overall tab title (this is because it is modified for admins to contain the gather code)
-		allLink.setText(ALL_TEXT);
+		overviewAllText.setInnerText(ALL_TEXT);
 
 		showAllPredictions = SessionController.get().isLoggedInUserAdmin();
 
@@ -195,6 +194,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			}
 
 		};
+		rankColumn.setCellStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA() + " " + Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6cID());
 
 		AppRankCell appRankCell = new AppRankCell(showAllPredictions);
 
@@ -205,6 +205,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 				return object.paid;
 			}
 		};
+		paidColumn.setCellStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA());
 
 		freeColumn = new Column<RanksGroup, Rank>(appRankCell) {
 
@@ -214,6 +215,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			}
 
 		};
+		freeColumn.setCellStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA());
 
 		grossingColumn = new Column<RanksGroup, Rank>(appRankCell) {
 
@@ -222,6 +224,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 				return object.grossing;
 			}
 		};
+		grossingColumn.setCellStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA());
 
 		priceColumn = new TextColumn<RanksGroup>() {
 
@@ -231,16 +234,18 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 				return (rank.currency != null && rank.price != null) ? FormattingHelper.asPriceString(rank.currency, rank.price.floatValue()) : "-";
 			}
 		};
+		priceColumn.setCellStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA());
 
 		downloadsColumn = new TextColumn<RanksGroup>() {
 
 			@Override
 			public String getValue(RanksGroup object) {
 				Rank rank = rankForListType(object);
-				return (rank.downloads != null) ? WHOLE_NUMBER_FORMAT.format(rank.downloads) : "-";
+				return (rank.downloads != null) ? WHOLE_NUMBER_FORMATTER.format(rank.downloads) : "-";
 			}
 
 		};
+		downloadsColumn.setCellStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA());
 
 		revenueColumn = new TextColumn<RanksGroup>() {
 
@@ -251,11 +256,14 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			}
 
 		};
+		revenueColumn.setCellStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA());
 
 		iapColumn = new Column<RanksGroup, SafeHtml>(new SafeHtmlCell()) {
 
-			private final String IAP_DONT_KNOW_HTML = "<span class=\"icon-help " + style.silver() + "\"></span>";
-			private final String IAP_YES_HTML = "<span class=\"icon-ok " + style.green() + "\"></span>";
+			private final String IAP_DONT_KNOW_HTML = "<span class=\"" + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
+					+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeMinus() + "\"></span>";
+			private final String IAP_YES_HTML = "<span class=\"" + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
+					+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCheck() + "\"></span>";
 			private final String IAP_NO_HTML = "<span></span>";
 
 			@Override
@@ -265,6 +273,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			}
 
 		};
+		iapColumn.setCellStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA());
 
 		comingSoonColumn = new Column<RanksGroup, SafeHtml>(new SafeHtmlCell()) {
 
@@ -276,6 +285,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		};
 
 		rankHeader = new TextHeader("Rank");
+		rankHeader.setHeaderStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6cIF());
 		paidHeader = new TextHeader("Paid");
 		freeHeader = new TextHeader("Free");
 		grossingHeader = new TextHeader("Grossing");
@@ -322,7 +332,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 				} else {
 					RankController.get().reset();
 					RankController.get().fetchTopItems();
-					showMorePanel.setVisible(false);
+					setViewMoreVisible(false);
 				}
 
 				PageType.RanksPageType.show("view", selectedTab, FilterController.get().asRankFilterString());
@@ -349,7 +359,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 				} else {
 					RankController.get().reset();
 					RankController.get().fetchTopItems();
-					showMorePanel.setVisible(false);
+					setViewMoreVisible(false);
 				}
 
 				PageType.RanksPageType.show("view", selectedTab, FilterController.get().asRankFilterString());
@@ -439,17 +449,17 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			removeAllColumns();
 			if (SessionController.get().isLoggedInUserAdmin()) {
 				ranksTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-				ranksTable.setColumnWidth(freeColumn, 38.0, Unit.PCT);
-				ranksTable.setColumnWidth(priceColumn, 13.0, Unit.PCT);
-				ranksTable.setColumnWidth(downloadsColumn, 13.0, Unit.PCT);
-				ranksTable.setColumnWidth(revenueColumn, 13.0, Unit.PCT);
-				ranksTable.setColumnWidth(iapColumn, 13.0, Unit.PCT);
+				ranksTable.setColumnWidth(freeColumn, 36.7, Unit.PCT);
+				ranksTable.setColumnWidth(priceColumn, 13.6, Unit.PCT);
+				ranksTable.setColumnWidth(downloadsColumn, 16.7, Unit.PCT);
+				ranksTable.setColumnWidth(revenueColumn, 16.7, Unit.PCT);
+				ranksTable.setColumnWidth(iapColumn, 6.3, Unit.PCT);
 			} else {
 				ranksTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
 				ranksTable.setColumnWidth(freeColumn, 42.0, Unit.PCT);
-				ranksTable.setColumnWidth(priceColumn, 16.0, Unit.PCT);
-				ranksTable.setColumnWidth(downloadsColumn, 16.0, Unit.PCT);
-				ranksTable.setColumnWidth(iapColumn, 16.0, Unit.PCT);
+				ranksTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
+				ranksTable.setColumnWidth(downloadsColumn, 19.0, Unit.PCT);
+				ranksTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
 			}
 			addColumn(rankColumn, rankHeader);
 			addColumn(freeColumn, freeHeader);
@@ -463,11 +473,11 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			if (SessionController.get().isLoggedInUserAdmin()) {
 				removeAllColumns();
 				ranksTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-				ranksTable.setColumnWidth(paidColumn, 38.0, Unit.PCT);
-				ranksTable.setColumnWidth(priceColumn, 13.0, Unit.PCT);
-				ranksTable.setColumnWidth(downloadsColumn, 13.0, Unit.PCT);
-				ranksTable.setColumnWidth(revenueColumn, 13.0, Unit.PCT);
-				ranksTable.setColumnWidth(iapColumn, 13.0, Unit.PCT);
+				ranksTable.setColumnWidth(paidColumn, 36.7, Unit.PCT);
+				ranksTable.setColumnWidth(priceColumn, 13.6, Unit.PCT);
+				ranksTable.setColumnWidth(downloadsColumn, 16.7, Unit.PCT);
+				ranksTable.setColumnWidth(revenueColumn, 16.7, Unit.PCT);
+				ranksTable.setColumnWidth(iapColumn, 6.3, Unit.PCT);
 				addColumn(rankColumn, rankHeader);
 				addColumn(paidColumn, paidHeader);
 				addColumn(priceColumn, priceHeader);
@@ -479,11 +489,11 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			if (SessionController.get().isLoggedInUserAdmin()) {
 				removeAllColumns();
 				ranksTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-				ranksTable.setColumnWidth(grossingColumn, 38.0, Unit.PCT);
-				ranksTable.setColumnWidth(priceColumn, 13.0, Unit.PCT);
-				ranksTable.setColumnWidth(downloadsColumn, 13.0, Unit.PCT);
-				ranksTable.setColumnWidth(revenueColumn, 13.0, Unit.PCT);
-				ranksTable.setColumnWidth(iapColumn, 13.0, Unit.PCT);
+				ranksTable.setColumnWidth(grossingColumn, 36.7, Unit.PCT);
+				ranksTable.setColumnWidth(priceColumn, 13.6, Unit.PCT);
+				ranksTable.setColumnWidth(downloadsColumn, 16.7, Unit.PCT);
+				ranksTable.setColumnWidth(revenueColumn, 16.7, Unit.PCT);
+				ranksTable.setColumnWidth(iapColumn, 6.3, Unit.PCT);
 				addColumn(rankColumn, rankHeader);
 				addColumn(grossingColumn, grossingHeader);
 				addColumn(priceColumn, priceHeader);
@@ -520,13 +530,13 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 	private void refreshTabs() {
 		for (String key : tabs.keySet()) {
-			tabs.get(key).removeClassName("active");
+			tabs.get(key).removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isActive());
 		}
 
 		LIElement selected = tabs.get(selectedTab);
 
 		if (selected != null) {
-			selected.addClassName("active");
+			selected.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isActive());
 		}
 	}
 
@@ -535,10 +545,10 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		if (((Button) event.getSource()).isEnabled()) {
 			if (ranksTable.getVisibleItemCount() == ServiceConstants.STEP_VALUE) {
 				ranksTable.setVisibleRange(0, VIEW_ALL_LENGTH_VALUE);
-				viewAllBtn.setText("View Less Apps");
+				viewAllSpan.setInnerText("View Less Apps");
 			} else {
 				ranksTable.setVisibleRange(0, ServiceConstants.STEP_VALUE);
-				viewAllBtn.setText("View All Apps");
+				viewAllSpan.setInnerText("View All Apps");
 			}
 		}
 	}
@@ -555,7 +565,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		if (PageType.RanksPageType.equals(current.getPage())) {
 
 			if (ranksTable.getVisibleItemCount() > 0) {
-				showMorePanel.setVisible(true);
+				setViewMoreVisible(true);
 			}
 
 			boolean hasPermission = SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_FULL_RANK_VIEW_CODE);
@@ -608,6 +618,16 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		}
 	}
 
+	private void setViewMoreVisible(boolean visible) {
+		if (viewAllBtn.isAttached()) {
+			viewAllBtn.setVisible(visible);
+		}
+		if (redirect.isAttached()) {
+			redirect.setVisible(visible);
+		}
+
+	}
+
 	// private void checkPermissions() {
 	// List<Permission> permissions = new ArrayList<Permission>();
 	//
@@ -648,21 +668,21 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	@Override
 	public void getAllTopItemsSuccess(GetAllTopItemsRequest input, GetAllTopItemsResponse output) {
 		if (output.status.equals(StatusType.StatusTypeSuccess) && output.freeRanks != null) {
-			showMorePanel.setVisible(true);
+			setViewMoreVisible(true);
 
 			if (SessionController.get().isLoggedInUserAdmin()) {
 				if (output.freeRanks != null && output.freeRanks.size() > 0 && output.freeRanks.get(0).code != null) {
-					allLink.setHTML(AllAdminCodeTemplate.INSTANCE.code(output.freeRanks.get(0).code));
+					overviewAllText.setInnerSafeHtml(AllAdminCodeTemplate.INSTANCE.code(output.freeRanks.get(0).code));
 				} else if (output.paidRanks != null && output.paidRanks.size() > 0 && output.paidRanks.get(0).code != null) {
-					allLink.setHTML(AllAdminCodeTemplate.INSTANCE.code(output.paidRanks.get(0).code));
+					overviewAllText.setInnerSafeHtml(AllAdminCodeTemplate.INSTANCE.code(output.paidRanks.get(0).code));
 				} else if (output.grossingRanks != null && output.grossingRanks.size() > 0 && output.grossingRanks.get(0).code != null) {
-					allLink.setHTML(AllAdminCodeTemplate.INSTANCE.code(output.grossingRanks.get(0).code));
+					overviewAllText.setInnerSafeHtml(AllAdminCodeTemplate.INSTANCE.code(output.grossingRanks.get(0).code));
 				} else {
-					allLink.setText(ALL_TEXT);
+					overviewAllText.setInnerText(ALL_TEXT);
 				}
 			}
 		} else {
-			showMorePanel.setVisible(false);
+			setViewMoreVisible(false);
 		}
 	}
 
@@ -675,6 +695,6 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	 */
 	@Override
 	public void getAllTopItemsFailure(GetAllTopItemsRequest input, Throwable caught) {
-		showMorePanel.setVisible(false);
+		setViewMoreVisible(false);
 	}
 }

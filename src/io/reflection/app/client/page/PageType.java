@@ -7,6 +7,7 @@
 //
 package io.reflection.app.client.page;
 
+import io.reflection.app.client.page.admin.CalibrationSummaryPage;
 import io.reflection.app.client.page.admin.CategoriesPage;
 import io.reflection.app.client.page.admin.DataAccountFetchesPage;
 import io.reflection.app.client.page.admin.DataAccountsPage;
@@ -19,10 +20,10 @@ import io.reflection.app.client.page.admin.RolesPage;
 import io.reflection.app.client.page.admin.SendNotificationPage;
 import io.reflection.app.client.page.admin.SimpleModelRunsPage;
 import io.reflection.app.client.page.admin.UsersPage;
+import io.reflection.app.client.page.blog.BlogPage;
 import io.reflection.app.client.page.blog.EditPostPage;
 import io.reflection.app.client.page.blog.PostAdminPage;
 import io.reflection.app.client.page.blog.PostPage;
-import io.reflection.app.client.page.blog.PostsPage;
 import io.reflection.app.client.page.forum.AddTopicPage;
 import io.reflection.app.client.page.forum.EditTopicPage;
 import io.reflection.app.client.page.forum.ForumPage;
@@ -49,18 +50,18 @@ import com.spacehopperstudios.utility.StringUtils;
  */
 public enum PageType {
 	// navigable
-	BlogAdminPageType("blogadmin", "MBL"),
+	BlogAdminPageType("blogadmin", DataTypeHelper.PERMISSION_MANAGE_BLOG_POSTS_CODE),
 	BlogEditPostPageType("blogedit", "BLE", "BLU"),
 	BlogPostsPageType("blog", false),
 	BlogPostPageType("blogpost", false),
 	BlogTagPageType("blogtag", false),
-	CategoriesPageType("categories", "MCA"),
+	CategoriesPageType("categories", DataTypeHelper.PERMISSION_MANAGE_CATEGORIES_CODE),
 	ChangeDetailsPageType("changedetails", true),
 	ChangePasswordPageType("changepassword", true),
-	DataAccountFetchesPageType("dataaccountfetches", "MDF"),
-	DataAccountsPageType("dataaccounts", "MDA"),
+	DataAccountFetchesPageType("dataaccountfetches", DataTypeHelper.PERMISSION_MANAGE_DATA_ACCOUNT_FETCHES_CODE),
+	DataAccountsPageType("dataaccounts", DataTypeHelper.PERMISSION_MANAGE_DATA_ACCOUNTS_CODE),
 	EventsPageType("events", DataTypeHelper.PERMISSION_MANAGE_EVENTS_CODE),
-	FeedBrowserPageType("feedbrowser", "MFF"),
+	FeedBrowserPageType("feedbrowser", DataTypeHelper.PERMISSION_MANAGE_FEED_FETCHES_CODE),
 	ForgotPasswordPageType("forgotpassword", false),
 	ForumEditTopicPageType("forumtopicedit", false),
 	ForumPageType("forum", false),
@@ -68,20 +69,20 @@ public enum PageType {
 	ForumTopicPageType("forumtopic", false),
 	HomePageType("home", false),
 	ItemPageType("item", true),
-	ItemsPageType("items", "MIT"),
+	ItemsPageType("items", DataTypeHelper.PERMISSION_MANAGE_ITEMS_CODE),
 	LoginPageType("login", false),
 	LinkedAccountsPageType("linkedaccounts", true),
 	LinkItunesPageType("linkitunes", true),
 	MyAppsPageType("myapps", true),
 	NotPermittedPageType("notpermitted", false),
-	PermissionsPageType("permissions", "MPR"),
-	RanksPageType("ranks", "HLA"),
+	PermissionsPageType("permissions", DataTypeHelper.PERMISSION_MANAGE_PERMISSIONS_CODE),
+	RanksPageType("ranks", DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE),
 	ReadyToStartPageType("readytostart", true),
 	RegisterPageType("register", false),
 	ResetPasswordPageType("resetpassword", false),
-	RolesPageType("roles", "MRL"),
+	RolesPageType("roles", DataTypeHelper.PERMISSION_MANAGE_ROLES_CODE),
 	SearchPageType("search", true),
-	SimpleModelRunPageType("simplemodelrun", "MSM"),
+	SimpleModelRunPageType("simplemodelrun", DataTypeHelper.PERMISSION_MANAGE_SIMPLE_MODEL_RUN_CODE),
 	TermsPageType("terms", false),
 	UpgradePageType("upgrade", true),
 	UsersPageType("users", DataTypeHelper.PERMISSION_MANAGE_USERS_CODE),
@@ -90,6 +91,7 @@ public enum PageType {
 	SendNotificationPageType("sendnotification", DataTypeHelper.PERMISSION_SEND_NOTIFICATIONS_CODE),
 	EventSubscriptionsPageType("eventsubscriptions", DataTypeHelper.PERMISSION_MANAGE_EVENT_SUBSCRIPTIONS_CODE),
 	EditEventSubscriptionPageType("editeventsubscription", DataTypeHelper.PERMISSION_MANAGE_EVENT_SUBSCRIPTIONS_CODE),
+	CalibrationSummaryPageType("calibrationsummary", DataTypeHelper.PERMISSION_MANAGE_FEED_FETCHES_CODE),
 
 	// Non navigable
 	LoadingPageType("loading"), ;
@@ -290,7 +292,7 @@ public enum PageType {
 			page = new PostPage();
 			break;
 		case BlogPostsPageType:
-			page = new PostsPage();
+			page = new BlogPage();
 			break;
 		case LoadingPageType:
 			page = new LoadingPage();
@@ -322,7 +324,9 @@ public enum PageType {
 		case SendNotificationPageType:
 			page = new SendNotificationPage();
 			break;
-		case HomePageType:
+		case CalibrationSummaryPageType:
+			page = new CalibrationSummaryPage();
+			break;
 		default:
 			break;
 		}

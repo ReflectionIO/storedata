@@ -2,66 +2,73 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
 	xmlns:l="urn:import:io.reflection.app.client.part.login" xmlns:pp="urn:import:io.reflection.app.client.page.part">
 
-	<!-- <ui:import field="io.reflection.app.client.page.PageType.RegisterPageType" /> -->
-	<ui:import field="io.reflection.app.client.page.PageType.LoginPageType" />
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 
-	<ui:style gss="true" type="io.reflection.app.client.page.LoginPage.Style">
-	.noteDetail {
-		font-size: smaller;
-		margin-top: 5px;
-	}
-	
-	.other_options {
-		padding: 0;
-		margin: 0;
-	}
-	
-	.other_options li {
-		list-style: none;
-	}
-	
-	.panel {
-		margin-top: 80px;
-	}
-	
-	.mainPanel {
-		margin-top: 20px;
-	}
-	
-	.spaceFiller {
-		height: 100px;
-	}
-	
-	.loginform {
-		padding: 0px;
-		margin-top: 20px;
-	}
+
+	<ui:style gss="true">
+
 	</ui:style>
-	<g:HTMLPanel styleName="container">
-		<p:AlertBox ui:field="mAlertBox" visible="false" />
-		<g:HTMLPanel styleName="row">
+	
+	<g:HTMLPanel tag="section"
+		styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.horizontalCentreContent} {STYLES_INSTANCE.reflectionMainStyle.accountAccessContent}">
+	
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.fullScreenIntro}">
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.loginContent}">
+				<blockquote
+					class="{STYLES_INSTANCE.reflectionMainStyle.blockquoteLarge} {STYLES_INSTANCE.reflectionMainStyle.blockquoteOnPurple} {STYLES_INSTANCE.reflectionMainStyle.blockquoteLogin}">
+					<p>We see our customers as invited guests to a party, and we are the hosts. It's our job every day to make every important aspect of the customer
+						experience a little bit better.</p>
+					<footer>
+						<cite>
+							<span>Jeff Bezos</span>
+							Founder, Amazon
+						</cite>
+					</footer>
+				</blockquote>
+				<blockquote
+					class="{STYLES_INSTANCE.reflectionMainStyle.blockquoteLarge} {STYLES_INSTANCE.reflectionMainStyle.blockquoteOnPurple} {STYLES_INSTANCE.reflectionMainStyle.blockquoteResetPassword}">
+					<p>The advantage of a bad memory is that one enjoys several times the same good things for the first time.</p>
+					<footer>
+						<cite>
+							<span>Friedrich Nietzsche</span>
+							Philologist
+						</cite>
+					</footer>
+				</blockquote>
+			</div>
+		</div>
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.accountFormContainer}">
+			<ul class="{STYLES_INSTANCE.reflectionMainStyle.tabsContainer}">
+				<li
+					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneHalf} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab}">
+					<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
+					<g:InlineHyperlink ui:field="register" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
+						<span>Apply now</span>
+					</g:InlineHyperlink>
+				</li>
+				<li
+					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneHalf} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab} {STYLES_INSTANCE.reflectionMainStyle.isActive}">
+					<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
+					<g:InlineHyperlink ui:field="login" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
+						<span>Already a member</span>
+					</g:InlineHyperlink>
+				</li>
+			</ul>
+			<ul class="{STYLES_INSTANCE.reflectionMainStyle.tabs__contentContainer}">
+				<li id="tab-content-login" class="{STYLES_INSTANCE.reflectionMainStyle.tabs__content} {STYLES_INSTANCE.reflectionMainStyle.tabs__contentIsShowing}">
+					<l:LoginForm ui:field="loginForm" styleName="{STYLES_INSTANCE.reflectionMainStyle.formsMidTheme}" />
+				</li>
+			</ul>
+		</div>
+	
+	
+	
+	
 			<g:HTMLPanel ui:field="mDefaultLogin">
-				<div class="hidden-xs hidden-sm col-md-12 {style.spaceFiller}"></div>
-				<pp:LoginRegisterPanel styleName="col-md-6 col-xs-12 {style.mainPanel}" />
-				<g:HTMLPanel styleName="col-md-5 col-md-offset-1 col-xs-12">
-					<p:Preloader ui:field="preloader">
-						<g:HTMLPanel styleName="well {style.loginform}">
-							<ul class="nav nav-tabs nav-justified loginregister">
-								<li ui:field="registerItem" class="pull-left">
-									<g:InlineHyperlink ui:field="register" />
-								</li>
-								<li ui:field="loginItem" class="active pull-right">
-									<g:InlineHyperlink ui:field="login">Log in</g:InlineHyperlink>
-								</li>
-							</ul>
-							<l:LoginForm ui:field="mLoginForm" />
 						</g:HTMLPanel>
-					</p:Preloader>
-				</g:HTMLPanel>
-				<g:HTMLPanel styleName="filler-bottom col-md-12 hidden-xs hidden-sm" />
-			</g:HTMLPanel>
-			<l:WelcomePanel ui:field="mWelcomePanel" styleName="col-md-12 {style.panel}" visible="false" />
+		<!-- <l:WelcomePanel ui:field="mWelcomePanel" styleName="col-md-12 {style.panel}" visible="false" /> -->
+
+
 
 		</g:HTMLPanel>
-	</g:HTMLPanel>
 </ui:UiBinder> 

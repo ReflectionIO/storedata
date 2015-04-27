@@ -1,69 +1,199 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
-	xmlns:c="urn:import:com.google.gwt.user.cellview.client" xmlns:pp="urn:import:io.reflection.app.client.page.part">
-	<ui:style gss="true">
-	.cellTable {
-	    margin-top: 50px;
-	}
-	
-	.chart {
-	    margin-top: 50px;
-	    margin-left: 20px;
-	}
-	
-	.content {
-	    padding-left: 0px;
-	    padding-right: 0px;
-	    overflow-x: hidden;
-	}
-	
-	.table {
-	    margin-left: 25px;
-	    margin-right: 25px;
-	    margin-top: 20px;
-	}
-	
-	.downloads {
-	    border-left: 1px solid #d9dce0 !important;
-	    border-right: 1px solid #d9dce0 !important;
-	}
-	</ui:style>
-	<g:HTMLPanel styleName="row">
-		<pp:ItemSidePanel ui:field="sidePanel" styleName="sidepanel col-md-2 well" />
+	xmlns:cv="urn:import:com.google.gwt.user.cellview.client" xmlns:pp="urn:import:io.reflection.app.client.page.part" xmlns:hc="urn:import:io.reflection.app.client.highcharts"
+	xmlns:c="urn:import:io.reflection.app.client.component">
+	<ui:with field='images' type='io.reflection.app.client.res.Images' />
 
-		<div class="col-md-10 {style.content}">
-			<ul class="nav nav-tabs nav-justified ranks">
-				<li ui:field="revenueItem">
-					<g:InlineHyperlink ui:field="revenueLink">
-						Revenue
-						<i class="icon-dollar pull-right"></i>
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
+	<ui:style gss="true">
+	
+	</ui:style>
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.pageApp}">
+
+		<header class="{STYLES_INSTANCE.reflectionMainStyle.pageApp__header}">
+
+			<g:Image ui:field="image" styleName="{STYLES_INSTANCE.reflectionMainStyle.appIcon}" />
+
+			<h1 ui:field="title" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree} {STYLES_INSTANCE.reflectionMainStyle.appTitle}"></h1>
+
+			<h2 class="{STYLES_INSTANCE.reflectionMainStyle.appCreator}">
+				By
+				<a ui:field="creatorName"></a>
+			</h2>
+
+			<span ui:field="price" class="{STYLES_INSTANCE.reflectionMainStyle.appPrice}"></span>
+
+			<g:Image resource="{images.spinner}" ui:field="spinnerLoader" visible="false" />
+		</header>
+
+	
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.appUserFunctionsContainer}">
+			<form>
+				<c:FormSwitch ui:field="followSwitch" label="Follow (10.3k)" />
+	
+				<a target="_blank" ui:field="viewInStore">
+					View in
+					<span ui:field="storeName">
+					</span>
+				</a>
+			</form>
+		</div>
+	
+
+		<ul class="{STYLES_INSTANCE.reflectionMainStyle.tabsContainer} {STYLES_INSTANCE.reflectionMainStyle.defaultTabsTransition}">
+			<li ui:field="revenueItem"
+				class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab} {STYLES_INSTANCE.reflectionMainStyle.isActive}">
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
+				<g:InlineHyperlink ui:field="revenueLink" targetHistoryToken="#tab-content" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
+					<span>
+						<svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">
+									<path
+							d="M19.5,4.7L0,6.9v13.9l13.9,4.9L32,20.2V6.4L19.5,4.7z M30,15.1l-16.1,4.6L2,15.9v-3l11.9,3.4
+	L30,12.2V15.1z M13.9,12L30,8.4v2.8l-16.1,4.2L2,11.9v-3L13.9,12z M27.7,7.9l-13.8,3.1L4.2,8.4l15.3-1.7L27.7,7.9z M13.9,23.6
+	L2,19.4V17l11.9,3.8L30,16.2v2.6L13.9,23.6z" /></svg>
+						<span ui:field="revenueText">Revenue</span>
+					</span>
+				</g:InlineHyperlink>
+			</li>
+			<li ui:field="downloadsItem"
+				class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab}">
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
+				<g:InlineHyperlink ui:field="downloadsLink" targetHistoryToken="#tab-content" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
+					<span>
+						<svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">
+									<path fill-rule="evenodd" clip-rule="evenodd"
+							d="M32,16.5c0,3.6-2.7,6.5-6.7,6.5v0h-6v-2h6.5
+	c2.5,0,4.5-2,4.5-4.5c0-1.6-0.8-3-2.3-3.9c-1.4-0.8-1.5-0.9-0.9-2.4c0.1-0.3,0.1-0.5,0.1-0.8c0-1.4-1.1-2.5-2.5-2.5
+	c0,0-0.7,0-1.4,0.2c-1.1,0.5-1.3,0-1.8-1.2C20.4,3.6,17.9,2,15.2,2c-3.6,0-6.6,2.7-7,6.3c-0.1,1.4-0.2,1.4-1.7,1.8
+	C4,10.6,2,12.9,2,15.5c0,3,2.3,5.5,5.3,5.5v0h6v2h-6v0c-4,0-7.2-3.4-7.2-7.5c0-3.7,2.7-6.7,6.2-7.4c0.4-4.6,4.4-8.1,9-8.1
+	c3.6,0,6.7,2.1,8.1,5.2C23.8,5.1,24.2,5,24.7,5c2.5,0,4.5,2,4.5,4.5c0,0.5-0.2,1-0.3,1.4C30.8,12,32,14.1,32,16.5z M19,25.8
+	l-1.8,1.8V14.3c0-0.6-0.4-1.1-1-1.1c-0.6,0-1,0.5-1,1.1v13.3l-1.9-1.8c-0.4-0.4-1.2-0.4-1.6,0c-0.4,0.4-0.5,1.1,0,1.6l3.1,3.1
+	c0.4,0.4,0.8,0.5,1.3,0.5c0.5,0,0.9-0.2,1.3-0.5l3.1-3.1c0.4-0.4,0.4-1.1,0-1.6C20.2,25.4,19.5,25.4,19,25.8z" /></svg>
+						<span ui:field="downloadsText">Downloads</span>
+					</span>
 					</g:InlineHyperlink>
 				</li>
-				<li ui:field="downloadsItem">
-					<g:InlineHyperlink ui:field="downloadsLink" styleName="{style.downloads}">
-						Downloads
-						<i class="icon-download-alt pull-right"></i>
+			<li ui:field="rankingItem"
+				class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab}">
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
+				<g:InlineHyperlink ui:field="rankingLink" targetHistoryToken="#tab-content" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
+					<span>
+						<svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">
+									<path d="M23,12V4H9v6H0v18h32V12H23z M11,6h10v7.3l0,0V26H11V12.3l0,0V6z M2,12h8v14H2V12z M30,26h-8V14h8
+	V26z" /></svg>
+						<span ui:field="rankingText">Rank</span>
+					</span>
 					</g:InlineHyperlink>
 				</li>
-				<li ui:field="rankingItem">
-					<g:InlineHyperlink ui:field="rankingLink">
-						Rank
-						<i class="icon-list-numbered pull-right"></i>
+			<li
+				class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab}">
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
+				<g:InlineHyperlink targetHistoryToken="#tab-content" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
+					<span>
+						<svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">
+									<path
+							d="M4,10c0,1.1-0.9,2-2,2s-2-0.9-2-2s0.9-2,2-2S4,8.9,4,10z M32,9H7v2h25V9z M2,14
+	c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S3.1,14,2,14z M32,15H7v2h25V15z M2,20c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S3.1,20,2,20z
+	 M32,21H7v2h25V21z" /></svg>
+						<span>App Details</span>
+					</span>
 					</g:InlineHyperlink>
 				</li>
 			</ul>
-			<g:HTMLPanel styleName="{style.table}">
-				<pp:ItemTopPanel ui:field="topPanel" styleName="well well-sm" />
-				<!-- <p:CircleProgressBar visible="false" ui:field="loader" styleName="{style.loading}" /> -->
-				<p:Preloader ui:field="preloader">
-					<g:HTMLPanel>
-						<pp:ItemChart ui:field="historyChart" styleName="{style.chart}" />
-					</g:HTMLPanel>
-				</p:Preloader>
-				<c:CellTable ui:field="revenueTable" styleName="table table-hover table-striped table-item {style.cellTable}"></c:CellTable>
-			</g:HTMLPanel>
-			<g:HTMLPanel styleName="filler-bottom col-md-12 hidden-xs hidden-sm" />
+
+		<div
+			class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth} {STYLES_INSTANCE.reflectionMainStyle.filtersContainer} {STYLES_INSTANCE.reflectionMainStyle.filterContainerApp}">
+			<form class="{STYLES_INSTANCE.reflectionMainStyle.formsMidTheme}">
+				<c:DateSelector ui:field="dateSelector" />
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.filtersGroupOther}">
+					<c:FormFieldSelect ui:field="countrySelector" labelText="Country" />
+					<c:FormFieldSelect ui:field="storeSelector" labelText="App Store" />
+					<div class="{STYLES_INSTANCE.reflectionMainStyle.filterToggle}">
+						<c:ToggleRadioButton ui:field="toggleChartGraph" value="true" labelClassName="{STYLES_INSTANCE.reflectionMainStyle.toggleCalendar}"
+							svgPath="M30.3,5.2c-0.5-0.4-1-0.7-1.6-0.7h-2.3V2.8c0-0.8-0.3-1.4-0.8-2C25,0.3,24.3,0,23.5,0h-1.2
+	c-0.8,0-1.5,0.3-2,0.8c-0.6,0.6-0.8,1.2-0.8,2v1.7h-6.9V2.8c0-0.8-0.3-1.4-0.8-2C11.1,0.3,10.4,0,9.6,0H8.5C7.7,0,7,0.3,6.4,0.8
+	c-0.6,0.6-0.8,1.2-0.8,2v1.7H3.3c-0.6,0-1.2,0.2-1.6,0.7C1.2,5.7,1,6.2,1,6.8v22.6c0,0.6,0.2,1.1,0.7,1.6c0.5,0.4,1,0.7,1.6,0.7
+	h25.4c0.6,0,1.2-0.2,1.6-0.7c0.5-0.4,0.7-1,0.7-1.6V6.8C31,6.2,30.8,5.7,30.3,5.2z M8.5,29.4H3.3v-5.1h5.2V29.4z M8.5,23.2H3.3v-5.7
+	h5.2V23.2z M8.5,16.4H3.3v-5.1h5.2V16.4z M8.1,8.3C8,8.2,7.9,8.1,7.9,7.9V2.8c0-0.2,0.1-0.3,0.2-0.4c0.1-0.1,0.2-0.2,0.4-0.2h1.2
+	c0.2,0,0.3,0.1,0.4,0.2c0.1,0.1,0.2,0.2,0.2,0.4v5.1c0,0.2-0.1,0.3-0.2,0.4C9.9,8.4,9.8,8.5,9.6,8.5H8.5C8.3,8.5,8.2,8.4,8.1,8.3z
+	 M15.4,29.4H9.6v-5.1h5.8V29.4z M15.4,23.2H9.6v-5.7h5.8V23.2z M15.4,16.4H9.6v-5.1h5.8V16.4z M22.4,29.4h-5.8v-5.1h5.8V29.4z
+	 M22.4,23.2h-5.8v-5.7h5.8V23.2z M22.4,16.4h-5.8v-5.1h5.8V16.4z M21.9,8.3c-0.1-0.1-0.2-0.2-0.2-0.4V2.8c0-0.2,0.1-0.3,0.2-0.4
+	c0.1-0.1,0.2-0.2,0.4-0.2h1.2c0.2,0,0.3,0.1,0.4,0.2c0.1,0.1,0.2,0.2,0.2,0.4v5.1c0,0.2-0.1,0.3-0.2,0.4c-0.1,0.1-0.2,0.2-0.4,0.2
+	h-1.2C22.2,8.5,22.1,8.4,21.9,8.3z M28.7,29.4h-5.2v-5.1h5.2V29.4z M28.7,23.2h-5.2v-5.7h5.2V23.2z M28.7,16.4h-5.2v-5.1h5.2V16.4z" />
+						<c:ToggleRadioButton ui:field="toggleChartMap"
+							svgPath="M16,0C7.2,0,0,7.2,0,16c0,8.8,7.2,16,16,16s16-7.2,16-16C32,7.2,24.8,0,16,0z M1.5,16
+	c0-2.9,0.9-5.6,2.3-7.8c0.1,0.1,0.2,0,0.3,0.1c0,0.2,0,0.5,0,0.7c-0.2,0.9,0.4,1.8,1.2,1.9c0.1,0.5-0.2,0.6,0.3,1.3
+	c0,0.1,0,0.3,0.1,0.4c0.1,0.1,0.3,0.2,0.5,0.3c0.5,0.3,0.4,0.9,0.2,1.4s-0.6,0.8-0.8,1.3c-0.3,0.8-0.3,1.8,0.3,2.4
+	c0.2,0.3,0.5,0.9,0.8,1s0.4,0.3,0.5,0.6c0.1,0.5,0.3,0.8,0.3,1.3c0,0.4-0.2,1.1-0.2,1.5c0,0.4,0.2,0.3,0.1,0.5
+	c0,0.2-0.1,0.1-0.2,0.4c-0.1,0.6,0,1.7,0.1,2.1c0.2,1.5,1.1,2.7,2,2.6c0.3-0.7-0.4-1.5-0.1-2.2c0.1-0.3,0.3-0.5,0.5-0.7
+	c1-0.8,1.8-1.5,2.4-2.5c0.1-0.1,0.2-0.4,0.3-0.5c0.1-0.1,0.3-0.1,0.5-0.1c0.7-0.1,1.1-0.5,1.4-1.1c0.3-0.6,0.3-1.1,0.9-1.7
+	c0.1-0.1,0.2-0.5,0.3-0.6c0.3-0.5-0.1-1.2-0.6-1.5c-0.5-0.3-1-0.4-1.4-0.7c-0.6-0.4-0.6-1-1-1.5c-0.4-0.5-1.1-0.9-1.7-1.2
+	c-0.7-0.4-0.7-0.7-1.9-1.2c-0.1-0.1-0.5-0.1-0.6,0c-0.1,0-0.2,0.2-0.4,0.3c-0.4,0.4-1.3,0.2-1.5-0.4c-0.1-0.3,0-0.5,0-0.7
+	c-0.1-0.3-0.1-0.7-0.4-0.6c-0.1-0.4,0.6-0.1,0.6-0.7c0.1-0.5-0.3-0.1-0.8-0.4C5.4,9.8,5.4,9,5.6,8.7c0.2-0.6,0.3-0.3,0.6-0.5
+	C6.6,7.8,7.4,7.5,8,7.8C8.4,8.1,8.4,9,8.6,9.1C8.8,9.3,9,9,9,8.8c0-0.2-0.1-0.6,0-0.8c0.1-0.1,0.2-0.2,0.3-0.3
+	c1.1-0.8,2.4-1.3,3.7-1.4c0.1,0,0.4,0,0.5-0.1c0.2-0.2,0.1-0.5,0.4-0.5c0.2,0,0.4,0.3,0.7,0.3c0.3,0.1,0.6-0.4,0.6-0.7
+	c0-0.3-0.1-0.7,0-1c0.1-0.1,0.1-0.3,0.1-0.4c0-0.1-0.1-0.1-0.2-0.1c-0.2-0.1-0.3-0.5-0.7-0.4c-0.4,0.2-0.7,0.2-1.1,0.4
+	c-0.3,0.2-0.5,0.5-1,0.6c-0.2-0.4,0-0.9,0.3-1.2C13.1,3,13.5,3,13.9,3c0.2,0,0.4-0.1,0.6,0c0.1,0,0.3,0.2,0.4,0.2
+	c0.3,0.2,0.6,0,0.8-0.3s0.4-0.5,0.2-0.8C16,1.9,16.2,2,16.3,2.2c0.1,0.2-0.1,0.4-0.2,0.6c-0.4,1,0.4,2,0.8,1.9
+	c0.5-0.1,0.9-1.2,1.5-1.4c0.2-0.1,0.4-0.1,0.5-0.2c0.2-0.2,0.2-0.4,0.3-0.7c0.1-0.2,0.4-0.3,0.7-0.4c1.4,0.4,2.6,1,3.8,1.7
+	c0,0,0,0,0,0c-0.1,0-0.2,0-0.3,0c-0.7-0.1-0.9,0.5-0.7,1.2c0.2,0.5,0.6,0.8,1.1,1c0.2,0.1,0.6,0.1,0.7,0.3c0,0.1-0.1,0.3-0.1,0.3
+	c0.1,0.5-0.1,0.8-0.5,1.1c-0.4,0.3-1.1,0.2-1.4,0.5c-0.3,0.3,0.2,1.2,0.6,1.5c0.4,0.4,1.2,0.3,1.5-0.1c0.2-0.3,0-0.6,0.1-0.8
+	c0.6,0.1,0.9,0.3,1.1,0.8c0,0.1,0.2,0.1,0.3,0.1c0.3,0.1,0.4-0.3,0.5-0.1c0,0.2,0.1,0.3,0.2,0.4c0.2,0.1,0.2-0.1,0.4,0
+	c0.2,0.1,0.3,0.5,0.6,0.5s0.6,0,0.8,0.2c0.1,0.2,0.2,0.4,0.1,0.6c-0.1,0.2-0.9,0.1-1.4-0.1s-0.6-0.5-1.1-0.8c-0.8-0.4-2.4-0.3-3.6,0
+	c-0.9,0.3-1.1,0.6-1.7,1.3c-0.1,0.1-0.2,0.5-0.3,0.7c-0.1,0.2-0.1,0.4-0.1,0.6c-0.2,1-0.7,2.3-0.2,3.1c0.2,0.4,0.6,0.6,1,0.8
+	c0.5,0.4,0.8,0.7,1.3,0.8c0.4,0.1,1,0,1.3,0c0.5,0,1,0.1,1.5,0.4c-0.3,0.7-0.4,1.9-0.3,2.3c0,0.3,0.2,0.4,0.2,0.7
+	c0.2,1.1-1.6,1.8-1.2,2.9c0.1,0.2,0.2,0.5,0.2,0.8c0,0.9-0.7,1.3-0.8,2c-0.1,0.4,0,0.6,0,1c0,0.2,0,0.3-0.1,0.5
+	c-2.2,1.4-4.9,2.3-7.8,2.3C8,30.5,1.5,24,1.5,16z" />
+					</div>
+				</div>
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.filtersGroupGraphOptions}">
+					<c:FormSwitch ui:field="accuracySwitch" label="Accuracy" />
+					<c:FormSwitch ui:field="eventsSwitch" label="Events" />
+					<c:FormSwitch ui:field="overlayRevenuesSwitch" label="Overlay Revenues" />
+					<c:FormSwitch ui:field="overlayDownloadsSwitch" label="Overlay Downloads" />
+					<c:FormSwitch ui:field="cumulativeChartSwitch" label="Cumulative Chart" />
+					<c:FormSwitch ui:field="oneMMovingAverageSwitch" label="1M Moving Average" />
+					<c:FormSwitch ui:field="overlayAppsSwitch" label="Overlay Apps (0/5)" />
+				</div>
+			</form>
 		</div>
-		<!-- <p:AlertBox ui:field="mAlertBox" visible="false" /> -->
+
+		<ul class="{STYLES_INSTANCE.reflectionMainStyle.tabs__contentContainer} {STYLES_INSTANCE.reflectionMainStyle.defaultTabsTransition}">
+			<li id="tab-content" class="{STYLES_INSTANCE.reflectionMainStyle.tabs__content} {STYLES_INSTANCE.reflectionMainStyle.tabs__contentIsShowing}">
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__row}">
+					<hc:Chart ui:field="chartRevenue"></hc:Chart>
+					<hc:Chart ui:field="chartDownloads"></hc:Chart>
+					<hc:Chart ui:field="chartRank"></hc:Chart>
+				</div>
+			</li>
+		</ul>
+
+		<section class="{STYLES_INSTANCE.reflectionMainStyle.dataDisplayContainer}">
+			<header class="{STYLES_INSTANCE.reflectionMainStyle.dataDisplayHeader}">
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.dataDisplayHeaderComponent}">
+					<g:Image ui:field="imageTable" styleName="{STYLES_INSTANCE.reflectionMainStyle.appIconSmall}" />
+					<h2
+						class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour} {STYLES_INSTANCE.reflectionMainStyle.dataHeading}">Total
+						Revenue</h2>
+				</div>
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.dataDisplayHeaderComponent} {STYLES_INSTANCE.reflectionMainStyle.dataSummaryContainer}">
+					<span ui:field="infoDateRange" class="{STYLES_INSTANCE.reflectionMainStyle.revenueDateRange}"></span>
+					<span ui:field="infoTotalRevenue" class="{STYLES_INSTANCE.reflectionMainStyle.revenueSummaryValue}"></span>
+				</div>
+				<div
+					class="{STYLES_INSTANCE.reflectionMainStyle.dataDisplayHeaderComponent} {STYLES_INSTANCE.reflectionMainStyle.dataSummaryContainer} {STYLES_INSTANCE.reflectionMainStyle.dataSummaryContainerSynced}">
+					<span class="{STYLES_INSTANCE.reflectionMainStyle.revenueDateRange}">Since First Synced (1 Feb
+						2014)</span>
+					<span class="{STYLES_INSTANCE.reflectionMainStyle.revenueSummaryValue}">&pound;9,291,005</span>
+		</div>
+				<button
+					class="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall} {STYLES_INSTANCE.reflectionMainStyle.withIcon} {STYLES_INSTANCE.reflectionMainStyle.pageFunctionButton}">
+					<span class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCloud}">Download</span>
+				</button>
+			</header>
+			<cv:CellTable ui:field="revenueTable2" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableRevenue}"></cv:CellTable>
+			<cv:CellTable ui:field="revenueTable" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableRevenue}"></cv:CellTable>
+		</section>
+
 	</g:HTMLPanel>
 </ui:UiBinder> 
