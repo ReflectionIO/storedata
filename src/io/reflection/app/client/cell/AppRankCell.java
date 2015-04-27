@@ -8,7 +8,7 @@
 package io.reflection.app.client.cell;
 
 import static io.reflection.app.client.controller.FilterController.REVENUE_DAILY_DATA_TYPE;
-import static io.reflection.app.client.helper.FormattingHelper.WHOLE_NUMBER_FORMAT;
+import static io.reflection.app.client.helper.FormattingHelper.WHOLE_NUMBER_FORMATTER;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.FilterController.Filter;
 import io.reflection.app.client.controller.ItemController;
@@ -17,6 +17,7 @@ import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.helper.FormattingHelper;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.page.RanksPage;
+import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 
@@ -44,6 +45,8 @@ public class AppRankCell extends AbstractCell<Rank> {
 	}
 
 	private boolean showAllPredictions;
+	private boolean useFilter = true;
+	private String currency = null;
 
 	interface DailyDataTemplate extends SafeHtmlTemplates {
 		DailyDataTemplate INSTANCE = GWT.create(DailyDataTemplate.class);
@@ -73,21 +76,25 @@ public class AppRankCell extends AbstractCell<Rank> {
 
 		Filter filter = FilterController.get().getFilter();
 
-		String dailyDataType = filter.getDailyData(), listType = FilterController.OVERALL_LIST_TYPE;
+		SafeHtml dailyData = null;
+		SafeStyles display = null;
 
-		SafeHtml dailyData;
+		if (useFilter) {
+		String dailyDataType = filter.getDailyData(), listType = FilterController.OVERALL_LIST_TYPE;
 
 		if (REVENUE_DAILY_DATA_TYPE.equals(dailyDataType) && showAllPredictions) {
 			if (value.downloads != null && value.revenue != null) {
-				dailyData = DailyDataTemplate.INSTANCE.dailyData("icon-dollar", "padding-right: 6px",
+					dailyData = DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
+							+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue(), "",
 						FormattingHelper.asWholeMoneyString(value.currency, showAllPredictions ? value.revenue.floatValue() : 0.0f));
 			} else {
 				dailyData = SafeHtmlUtils.fromSafeConstant("-");
 			}
 		} else {
 			if (value.downloads != null) {
-				dailyData = DailyDataTemplate.INSTANCE.dailyData("icon-download-alt", "padding-right: 6px",
-						WHOLE_NUMBER_FORMAT.format(value.downloads.doubleValue()));
+					dailyData = DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
+							+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
+							WHOLE_NUMBER_FORMATTER.format(value.downloads.doubleValue()));
 			} else {
 				dailyData = SafeHtmlUtils.fromSafeConstant("-");
 			}
@@ -98,7 +105,6 @@ public class AppRankCell extends AbstractCell<Rank> {
 			listType = s.getParameter(RanksPage.SELECTED_TAB_PARAMETER_INDEX);
 		}
 
-		SafeStyles display = null;
 		if (FilterController.OVERALL_LIST_TYPE.equals(listType)) {
 			switch (context.getColumn()) {
 			case 1:
@@ -130,11 +136,34 @@ public class AppRankCell extends AbstractCell<Rank> {
 			filter.setListType(FilterController.GROSSING_LIST_TYPE);
 			display = SafeStylesUtils.forDisplay(Display.NONE);
 		}
+		} else {
+			display = showAllPredictions ? SafeStylesUtils.fromTrustedString("") : SafeStylesUtils.forDisplay(Display.NONE);
+
+			if (value.revenue != null) {
+				dailyData = DailyDataTemplate.INSTANCE.dailyData("icon-dollar", "padding-right: 6px", FormattingHelper.asWholeMoneyString(
+						value.currency == null ? currency : value.currency, showAllPredictions ? value.revenue.floatValue() : 0.0f));
+			} else if (value.downloads != null) {
+				dailyData = DailyDataTemplate.INSTANCE.dailyData("icon-download-alt", "padding-right: 6px",
+						WHOLE_NUMBER_FORMATTER.format(value.downloads.doubleValue()));
+			} else {
+				dailyData = SafeHtmlUtils.fromSafeConstant("-");
+			}
+		}
 
 		SafeUri link = PageType.ItemPageType.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE, item.internalId, FilterController.RANKING_CHART_TYPE,
 				RanksPage.COMING_FROM_PARAMETER, filter.asItemFilterString());
 		SafeUri smallImage = UriUtils.fromString(item.smallImage);
 
 		RENDERER.render(builder, item.name, item.creatorName, smallImage, link, dailyData, display.asString());
+	}
+
+	public AppRankCell useFilter(boolean value) {
+		useFilter = value;
+		return this;
+	}
+
+	public AppRankCell currency(String value) {
+		currency = value;
+		return this;
 	}
 }

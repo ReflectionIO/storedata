@@ -19,18 +19,16 @@ import com.google.gwt.safehtml.shared.SafeHtmlUtils;
  * @author William Shakour (billy1380)
  *
  */
-public class FormattingHelper {
+public class FormattingHelper extends io.reflection.app.shared.util.FormattingHelper {
 
-	private static NumberFormat MONEY_FORMAT = NumberFormat.getFormat(io.reflection.app.shared.util.FormattingHelper.MONEY_FORMAT);
-	public static NumberFormat WHOLE_NUMBER_FORMAT = NumberFormat.getFormat(io.reflection.app.shared.util.FormattingHelper.WHOLE_NUMBER_FORMAT);
+	public static NumberFormat TWO_DECIMALS_FORMATTER = NumberFormat.getFormat(TWO_DECIMALS_FORMAT);
+	public static NumberFormat WHOLE_NUMBER_FORMATTER = NumberFormat.getFormat(WHOLE_NUMBER_FORMAT);
 
-	public static DateTimeFormat DATE_FORMAT_EEE_DD_MMM_YYYY = DateTimeFormat
-			.getFormat(io.reflection.app.shared.util.FormattingHelper.DATE_FORMAT_EEE_DD_MMM_YYYY);
+	public static DateTimeFormat DATE_FORMATTER_EEE_DD_MMM_YYYY = DateTimeFormat.getFormat(DATE_FORMAT_EEE_DD_MMM_YYYY);
 
-	public static DateTimeFormat DATE_FORMAT_DD_MMM_YYYY = DateTimeFormat.getFormat(io.reflection.app.shared.util.FormattingHelper.DATE_FORMAT_DD_MMM_YYYY);
+	public static DateTimeFormat DATE_FORMATTER_DD_MMM_YYYY = DateTimeFormat.getFormat(DATE_FORMAT_DD_MMM_YYYY);
 
-	public static DateTimeFormat DATE_FORMAT_DD_MMM_YYYY_HH_MM = DateTimeFormat
-			.getFormat(io.reflection.app.shared.util.FormattingHelper.DATE_FORMAT_DD_MMM_YYYY_HH_MM);
+	public static DateTimeFormat DATE_FORMATTER_DD_MMM_YYYY_HH_MM = DateTimeFormat.getFormat(DATE_FORMAT_DD_MMM_YYYY_HH_MM);
 
 	public static String asPriceString(String currency, float price) {
 		String priceString;
@@ -45,12 +43,11 @@ public class FormattingHelper {
 	}
 
 	public static String asMoneyString(String currency, float money) {
-		return (currency == null ? "" : io.reflection.app.shared.util.FormattingHelper.getCurrencySymbol(currency) + " ") + MONEY_FORMAT.format((double) money);
+		return (currency == null ? "" : getCurrencySymbol(currency)) + TWO_DECIMALS_FORMATTER.format((double) money);
 	}
 
 	public static String asWholeMoneyString(String currency, float money) {
-		return (currency == null ? "" : io.reflection.app.shared.util.FormattingHelper.getCurrencySymbol(currency) + " ")
-				+ WHOLE_NUMBER_FORMAT.format((double) money);
+		return (currency == null ? "" : getCurrencySymbol(currency)) + WHOLE_NUMBER_FORMATTER.format((double) money);
 	}
 
 	public static String asPriceRangeString(String currency, float from, float to) {

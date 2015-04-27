@@ -56,7 +56,7 @@ public class MiniAppCell extends AbstractCell<Item> {
 		SafeStyles displayInactiveLink = (SessionController.get().isLoggedInUserAdmin() ? SafeStylesUtils.forDisplay(Display.NONE) : SafeStylesUtils
 				.fromTrustedString(""));
 
-		RENDERER.render(builder, value.name, value.creatorName, smallImage, Styles.INSTANCE.reflection().unknownAppSmall(), link, displayActiveLink.asString(),
+		RENDERER.render(builder, value.name, value.creatorName, smallImage, Styles.STYLES_INSTANCE.reflection().unknownAppSmall(), link, displayActiveLink.asString(),
 				displayInactiveLink.asString());
 	}
 }

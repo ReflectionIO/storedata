@@ -7,9 +7,10 @@
 //
 package io.reflection.app.client.helper;
 
+import io.reflection.app.client.component.FormFieldSelect;
+
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.ListBox;
 import com.willshex.gson.json.service.shared.Error;
 
 /**
@@ -30,6 +31,13 @@ public class FormHelper {
 	public static final String COMPLETE_ACTION_NAME = "complete";
 	public static final String REQUEST_INVITE_ACTION_NAME = "requestinvite";
 	public static final int CODE_PARAMETER_INDEX = 1;
+
+	public static final String HAS_MIXCASE = "(?=.*[a-z])(?=.*[A-Z])";
+	private static final RegExp REG_EXP_HAS_MIXCASE_CHECKER = RegExp.compile(HAS_MIXCASE);
+	public static final String HAS_SPECIALCASE = "(?=.*[!@#$&*])";
+	private static final RegExp REG_EXP_HAS_SPECIALCASE_CHECKER = RegExp.compile(HAS_SPECIALCASE);
+	public static final String HAS_DIGIT = "(?=.*[0-9])";
+	private static final RegExp REG_EXP_HAS_DIGIT_CHECKER = RegExp.compile(HAS_DIGIT);
 
 	public static boolean isValidEmail(String toValidate) {
 		return REG_EXP_EMAIL_CHECKER.test(toValidate);
@@ -88,11 +96,11 @@ public class FormHelper {
 	}
 
 	/**
-	 * @param listBox
+	 * @param FormFieldSelect
 	 * @param value
 	 * @return
 	 */
-	public static int getItemIndex(ListBox listBox, String value) {
+	public static int getItemIndex(FormFieldSelect listBox, String value) {
 		int index = -1;
 		int count = listBox.getItemCount();
 
@@ -107,4 +115,28 @@ public class FormHelper {
 		return index;
 	}
 
+	/**
+	 * Return password strength indicator from 0 (weak) to 4
+	 * 
+	 * @param toValidate
+	 * @return
+	 */
+	public static int getPasswordStrength(String toValidate) {
+		int strength = 0;
+		if (toValidate.length() >= 6) {
+			if (REG_EXP_HAS_MIXCASE_CHECKER.test(toValidate)) {
+				strength++;
+			}
+			if (REG_EXP_HAS_SPECIALCASE_CHECKER.test(toValidate)) {
+				strength++;
+			}
+			if (REG_EXP_HAS_DIGIT_CHECKER.test(toValidate)) {
+				strength++;
+			}
+			if (toValidate.length() > 12) {
+				strength++;
+			}
+		}
+		return strength;
+	}
 }
