@@ -1,37 +1,404 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part">
-    <ui:style gss="true">
-    .moveDown {
-    	margin-top: 10px;
-    }
-    
-    .padBottom {
-    	padding-bottom: 1000px;
-    }
-    </ui:style>
-    <g:HTMLPanel>
-        <div class="container {style.padBottom}">
-            <h2>Widget Testing</h2>
-            <p>This is our widget testing page... Developers will drop widgets here to test their layout before using it on the site pages.</p>
-            <p>Reflection.io dev team :)</p>
-            
-            <p:DateSelector ui:field="dateSelector"/>
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.google.gwt.user.datepicker.client"
+	xmlns:c="urn:import:io.reflection.app.client.component" xmlns:p="urn:import:io.reflection.app.client.part">
 
-            <p:DateRangePicker ui:field="picker1" />
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 
-            <g:FormPanel styleName="form {style.moveDown}">
-                <g:HTMLPanel>
-                    <div class="form-group col-sm-3">
-                        <div class="input-group ">
-                            <p:DateRangeBox styleName="form-control" ui:field="dateRange" />
+	<ui:style gss="true">
+	.moveDown {
+		margin-top: 10px;
+	}
+	
+	.page {
+		margin-left: 10%;
+		width: 80%;
+		margin-bottom: 200px;
+		overflow: visible !important;
+	}
+	</ui:style>
+	<g:HTMLPanel>
+		<div class="{style.page}">
+			<h2>Widget Testing</h2>
+			<p>This is our widget testing page... Developers will drop widgets here to test their layout before using it on the site pages.</p>
+			<p>Reflection.io dev team :)</p>
 
-                            <span class="input-group-addon">
-                                <i class="icon-calendar"></i>
-                            </span>
-                        </div>
-                    </div>
-                </g:HTMLPanel>
-            </g:FormPanel>
-        </div>
-    </g:HTMLPanel>
+			<c:DateSelector ui:field="dateSelector" />
+
+			<p:DateRangePicker ui:field="picker1" />
+
+			<g:FormPanel styleName="form {style.moveDown}">
+				<g:HTMLPanel>
+					<div class="form-group">
+						<div class="input-group ">
+							<p:DateRangeBox styleName="form-control" ui:field="dateRange" />
+
+							<span class="input-group-addon">
+								<i class="icon-calendar"></i>
+							</span>
+						</div>
+					</div>
+				</g:HTMLPanel>
+			</g:FormPanel>
+
+			<d:DatePicker></d:DatePicker>
+
+			<h2>UI COMPONENTS</h2>
+
+			<h3>Buttons</h3>
+			<div>
+				<h4>Primary Button Small</h4>
+				<g:Button styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaSmall}">Active</g:Button>
+				<g:Button styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaSmallWide}">Active</g:Button>
+				<g:Button styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaSmall}" enabled="false">Disabled</g:Button>
+				<g:Button styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaSmallWide}" enabled="false">Disabled</g:Button>
+			</div>
+			<br />
+			<div>
+				<h4>Secondary Button Large</h4>
+				<g:Button styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionLarge}">Active</g:Button>
+				<g:Button styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionLargeWide}">Active</g:Button>
+				<g:Button styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionLarge}" enabled="false">Disabled</g:Button>
+				<g:Button styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionLargeWide}" enabled="false">Disabled</g:Button>
+			</div>
+			<br />
+			<div>
+				<h4>Fluid Width Button</h4>
+				<input type="submit" class="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth}" value="Submit" />
+
+				<input type="submit" class="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth} {STYLES_INSTANCE.reflectionMainStyle.refButtonIsLoading}" value="Loading..." />
+
+				<input type="submit" class="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth} {STYLES_INSTANCE.reflectionMainStyle.refButtonSuccess}" value="Success!" />
+
+				<input type="submit" class="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth} {STYLES_INSTANCE.reflectionMainStyle.refButtonError}" value="Oops, something went wrong" />
+
+				<button class="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth} {STYLES_INSTANCE.reflectionMainStyle.refButtonWithIcon}">
+					<span class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeLeaderboard}">Lorem</span>
+				</button>
+			</div>
+			<br />
+			<div>
+				<h4>Tertiary Buttons</h4>
+				<g:Button styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionLarge}">Active</g:Button>
+				<g:Button styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionLargeWide}">Active</g:Button>
+				<g:Button styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionLarge}" enabled="false">Disabled</g:Button>
+				<g:Button styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionLargeWide}" enabled="false">Disabled</g:Button>
+
+				<g:Button styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonLink}" enabled="false">Lorem ipsum dolor</g:Button>
+				<g:Button styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonLinkLarge}" enabled="false">Lorem ipsum dolor</g:Button>
+				<g:Button styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonLink}" enabled="false">
+					<span class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeLeaderboard}">Lorem ipsum dolor</span>
+				</g:Button>
+				<g:Button styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonLinkLarge}" enabled="false">
+					<span class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeLeaderboard}">Lorem ipsum dolor</span>
+				</g:Button>
+
+				<g:Button styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonLink}">Lorem ipsum dolor</g:Button>
+				<g:Button styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonLinkLarge}">Lorem ipsum dolor</g:Button>
+				<g:Button styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonLink}">
+					<span class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeLeaderboard}">Lorem ipsum dolor</span>
+				</g:Button>
+				<g:Button styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonLinkLarge}">
+					<span class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeLeaderboard}">Lorem ipsum dolor</span>
+				</g:Button>
+			</div>
+			<br />
+
+			<h3>Tabs</h3>
+
+			<div>
+				<h4>Content Item Divider Tabs</h4>
+				<ul class="{STYLES_INSTANCE.reflectionMainStyle.tabsContainer}">
+					<li
+						class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneHalf} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab} {STYLES_INSTANCE.reflectionMainStyle.isActive} js-tab-select">
+						<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
+						<a href="#tab-content-one" class="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
+							<span class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCog}">
+								<span>Revenue</span>
+							</span>
+						</a>
+					</li>
+					<li
+						class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneHalf} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab} js-tab-select">
+						<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
+						<a href="#tab-content-two" class="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
+							<span class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCog}">
+								<span>Downloads</span>
+							</span>
+						</a>
+					</li>
+				</ul>
+
+				<ul class="{STYLES_INSTANCE.reflectionMainStyle.tabs__contentContainer}">
+					<li id="tab-content-one" class="{STYLES_INSTANCE.reflectionMainStyle.tabs__content} {STYLES_INSTANCE.reflectionMainStyle.tabs__contentIsShowing}">
+						<article>
+							<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth}">
+								<h2
+									class="{STYLES_INSTANCE.reflectionMainStyle.collapsibleTrigger} {STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCog}">
+									<span>Revenue</span>
+								</h2>
+								<div class="{STYLES_INSTANCE.reflectionMainStyle.collapsibleContent}">
+									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras finibus lacinia justo quis fermentum. Nam dictum et mi nec hendrerit. Donec imperdiet
+										sem at posuere pulvinar. Nam tristique tellus eu ipsum imperdiet, suscipit sodales nisl ornare. Sed vehicula, mauris nec suscipit sagittis, dui lorem
+										pretium est, ac feugiat nibh nisl id ligula. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec vitae mi nec
+										justo ultrices hendrerit. Fusce eu lorem sit amet risus blandit tempor a ac massa. Nulla sit amet vestibulum libero, et condimentum quam. Maecenas
+										lobortis id purus nec rutrum. Pellentesque luctus fermentum bibendum.</p>
+								</div>
+							</div>
+						</article>
+					</li>
+					<li id="tab-content-two" class="{STYLES_INSTANCE.reflectionMainStyle.tabs__content}">
+						<article>
+							<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth}">
+								<h2
+									class="{STYLES_INSTANCE.reflectionMainStyle.collapsibleTrigger} {STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCog}">
+									<span>Dowloads</span>
+								</h2>
+								<div class="{STYLES_INSTANCE.reflectionMainStyle.collapsibleContent}">
+									<p>vhoiafsuihasdiosdfiojsdioj</p>
+								</div>
+							</div>
+						</article>
+					</li>
+				</ul>
+			</div>
+
+
+			<div>
+				<h4>Page Divider Tabs</h4>
+				<ul class="{STYLES_INSTANCE.reflectionMainStyle.tabsContainer} {STYLES_INSTANCE.reflectionMainStyle.tabsContainerLargeTabs}">
+					<li
+						class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneHalf} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab} {STYLES_INSTANCE.reflectionMainStyle.isActive} js-tab-select">
+						<div class="{STYLES_INSTANCE.reflectionMainStyle.tabBorder}">
+							<span></span>
+						</div>
+						<a href="#tab-content-page-one" class="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
+							<span class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCog}">
+								<span>
+									Activity overview
+									<b>Monitor how all your apps are doing in global app stores</b>
+								</span>
+							</span>
+						</a>
+					</li>
+					<li
+						class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneHalf} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab} js-tab-select">
+						<div class="{STYLES_INSTANCE.reflectionMainStyle.tabBorder}">
+							<span></span>
+						</div>
+						<a href="#tab-content-page-two" class="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
+							<span class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCog}">
+								<span>
+									Apps (26)
+									<b>blalbalbalba bla lbal bla</b>
+								</span>
+							</span>
+						</a>
+					</li>
+				</ul>
+
+				<ul class="{STYLES_INSTANCE.reflectionMainStyle.tabs__contentContainer} {STYLES_INSTANCE.reflectionMainStyle.tabsContainerLargeTabs}">
+					<li id="tab-content-page-one" class="{STYLES_INSTANCE.reflectionMainStyle.tabs__content} {STYLES_INSTANCE.reflectionMainStyle.tabs__contentIsShowing}">
+						<article>
+							<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth}">
+								<h2
+									class="{STYLES_INSTANCE.reflectionMainStyle.collapsibleTrigger} {STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCog}">
+									<span>
+										Activity overview
+										<b>Monitor how all your apps are doing in global app stores</b>
+									</span>
+								</h2>
+								<div class="{STYLES_INSTANCE.reflectionMainStyle.collapsibleContent}">
+									<p>Tab content 1</p>
+								</div>
+							</div>
+						</article>
+					</li>
+					<li id="tab-content-page-two" class="{STYLES_INSTANCE.reflectionMainStyle.tabs__content}">
+						<article>
+							<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth}">
+								<h2
+									class="{STYLES_INSTANCE.reflectionMainStyle.collapsibleTrigger} {STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeBlog}">
+									<span>
+										asdfdsfsdaf
+										<b>Msdfdsfsdftores</b>
+									</span>
+								</h2>
+								<div class="{STYLES_INSTANCE.reflectionMainStyle.collapsibleContent}">
+									<p>Tab content 2</p>
+								</div>
+							</div>
+						</article>
+					</li>
+				</ul>
+
+			</div>
+			<br />
+
+			<h3>Form fields</h3>
+			<div>
+				<h4>Text input</h4>
+				<div
+					class="{STYLES_INSTANCE.reflectionMainStyle.formField} {STYLES_INSTANCE.reflectionMainStyle.formFieldDisabled} {STYLES_INSTANCE.reflectionMainStyle.isClosed}">
+					<input type="text" class="" disabled="" name="text" />
+					<label for="email">Hint Label Text</label>
+				</div>
+
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.formField} {STYLES_INSTANCE.reflectionMainStyle.isClosed}">
+					<input type="email" name="email" id="email" autocomplete="off" />
+					<label for="email">Hint Label Text</label>
+				</div>
+
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.formField}  {STYLES_INSTANCE.reflectionMainStyle.formFieldError} ">
+					<input type="email" name="email2" id="email2" autocomplete="off" />
+					<label for="email2">
+						Hint Label Text:
+						<span>Error message</span>
+					</label>
+				</div>
+
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.formField}  {STYLES_INSTANCE.reflectionMainStyle.isClosed}">
+					<input type="email" name="emailtest3" id="emailtest3" autocomplete="off" />
+					<label for="emailtest3">
+						Hint Label Text
+						<span class="{STYLES_INSTANCE.reflectionMainStyle.inputHint}">Caps Lock is on, just so you know</span>
+					</label>
+				</div>
+
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.formField}  {STYLES_INSTANCE.reflectionMainStyle.isClosed}">
+					<input type="email" name="emailtest4" id="emailtest4" autocomplete="off" />
+					<label for="emailtest4">
+						Hint Label Text
+					</label>
+					<a href="#" target="_blank"
+						class="{STYLES_INSTANCE.reflectionMainStyle.formFieldHelp} {STYLES_INSTANCE.reflectionMainStyle.refIconAfter} {STYLES_INSTANCE.reflectionMainStyle.refIconAfterQuestion}">
+						<span>What's this?</span>
+					</a>
+				</div>
+			</div>
+
+			<div>
+				<H4>Drop Down Default</H4>
+				<!-- <div class="{STYLES_INSTANCE.reflectionMainStyle.formField} {STYLES_INSTANCE.reflectionMainStyle.formFieldSelect} {STYLES_INSTANCE.reflectionMainStyle.formFieldSelectDisabled}"> -->
+				<!-- <select class="{STYLES_INSTANCE.reflectionMainStyle.jsFieldSelect}" disabled=""> -->
+				<!-- <option value="" disabled="" selected="">Choose your option</option> -->
+				<!-- <option value="s1">Option 1</option> -->
+				<!-- <option value="s2">Option 2</option> -->
+				<!-- <option value="s3">Option 3</option> -->
+				<!-- </select> -->
+				<!-- <div class="{STYLES_INSTANCE.reflectionMainStyle.reflectionSelect}"> -->
+				<!-- <span class="{STYLES_INSTANCE.reflectionMainStyle.refIconAfter} {STYLES_INSTANCE.reflectionMainStyle.refIconAfterAngleDown}">Choose your option</span> -->
+				<!-- <ul style="margin-top: -104px;"> -->
+				<!-- <li data-value="s1" data-selectedtext="">Option 1</li> -->
+				<!-- <li data-value="s2" data-selectedtext="">Option 2</li> -->
+				<!-- <li data-value="s3" data-selectedtext="">Option 3</li> -->
+				<!-- </ul> -->
+				<!-- </div> -->
+				<!-- </div> -->
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.formField} {STYLES_INSTANCE.reflectionMainStyle.formFieldSelect}">
+					<select class="{STYLES_INSTANCE.reflectionMainStyle.jsFieldSelect}">
+						<option value="" disabled="" selected="">Choose your option</option>
+						<option value="a1">Option 1</option>
+						<option value="a2">Option 2</option>
+						<option value="a3">Option 3</option>
+					</select>
+				</div>
+
+
+			</div>
+
+			<div>
+				<H4>Check Box</H4>
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.formFieldCheckboxList}">
+					<ul>
+						<li>
+							<input type="checkbox" name="checkboxOneDisabled" id="checkboxOneDisabled" enabled="false" />
+							<label for="checkboxOneDisabled" class="{STYLES_INSTANCE.reflectionMainStyle.checkboxLabelDisabled}">Option 1</label>
+							<label for="checkboxOneDisabled" class="{STYLES_INSTANCE.reflectionMainStyle.checkboxLabelVisible} {STYLES_INSTANCE.reflectionMainStyle.checkboxLabelVisibleDisabled}">Option
+								2</label>
+						</li>
+					</ul>
+				</div>
+
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.formFieldCheckboxList}">
+					<ul>
+						<li>
+							<input type="checkbox" name="checkboxOne" id="checkboxOne"></input>
+							<label for="checkboxOne" class="{STYLES_INSTANCE.reflectionMainStyle.checkboxLabel}">Option 1</label>
+							<label for="checkboxOne" class="{STYLES_INSTANCE.reflectionMainStyle.checkboxLabelVisible}">Option 2</label>
+						</li>
+						<li>
+							<input type="checkbox" name="checkboxOne" id="checkboxTwo"></input>
+							<label for="checkboxTwo" class="{STYLES_INSTANCE.reflectionMainStyle.checkboxLabel}">Option 1</label>
+							<label for="checkboxTwo" class="{STYLES_INSTANCE.reflectionMainStyle.checkboxLabelVisible}">Option 2</label>
+						</li>
+						<li>
+							<input type="checkbox" name="checkboxOne" id="checkboxThree"></input>
+							<label for="checkboxThree" class="{STYLES_INSTANCE.reflectionMainStyle.checkboxLabel}">Option 1</label>
+							<label for="checkboxThree" class="{STYLES_INSTANCE.reflectionMainStyle.checkboxLabelVisible}">Option 2</label>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div>
+				<H4>Radio Button</H4>
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.formFieldRadioList} {STYLES_INSTANCE.reflectionMainStyle.formFieldRadioListInline}">
+					<ul>
+						<li>
+							<input type="radio" name="radioButtonsDisabled" id="radioButtonOneDisabled" enabled="false"></input>
+							<label for="radioButtonOneDisabled" class="{STYLES_INSTANCE.reflectionMainStyle.radioButtonLabelDisabled}">Lorem ipsum dolor amet elict</label>
+							<label for="radioButtonOneDisabled" class="{STYLES_INSTANCE.reflectionMainStyle.radioButtonLabelVisibleDisabled}">Lorem ipsum dolor amet elict</label>
+						</li>
+					</ul>
+				</div>
+
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.formFieldRadioList} {STYLES_INSTANCE.reflectionMainStyle.formFieldRadioListInline}">
+					<ul>
+						<li>
+							<input type="radio" name="radioButtons" id="radioButtonOne" />
+							<label for="radioButtonOne" class="{STYLES_INSTANCE.reflectionMainStyle.radioButtonLabel}">Lorem ipsum dolor amet elict</label>
+							<label for="radioButtonOne" class="{STYLES_INSTANCE.reflectionMainStyle.radioButtonLabelVisible}">Lorem ipsum dolor amet elict</label>
+						</li>
+						<li>
+							<input type="radio" name="radioButtons" id="radioButtonTwo" />
+							<label for="radioButtonTwo" class="{STYLES_INSTANCE.reflectionMainStyle.radioButtonLabel}">Lorem ipsum dolor amet elict</label>
+							<label for="radioButtonTwo" class="{STYLES_INSTANCE.reflectionMainStyle.radioButtonLabelVisible}">Lorem ipsum dolor amet elict</label>
+						</li>
+						<li>
+							<input type="radio" name="radioButtons" id="radioButtonThree" />
+							<label for="radioButtonThree" class="{STYLES_INSTANCE.reflectionMainStyle.radioButtonLabel}">Lorem ipsum dolor amet elict</label>
+							<label for="radioButtonThree" class="{STYLES_INSTANCE.reflectionMainStyle.radioButtonLabelVisible}">Lorem ipsum dolor amet elict</label>
+						</li>
+					</ul>
+				</div>
+			</div>
+
+			<div>
+				<H4>Date Picker</H4>
+
+				<form class="{STYLES_INSTANCE.reflectionMainStyle.overflowVisible}">
+					<div class="{STYLES_INSTANCE.reflectionMainStyle.calendarContainer}">
+						<div class="{STYLES_INSTANCE.reflectionMainStyle.dateSelectContainer}">
+							<div class="{STYLES_INSTANCE.reflectionMainStyle.formField} {STYLES_INSTANCE.reflectionMainStyle.formFieldDateSelect}">
+								<input type="text" name="date-single" id="date-single" value="From Date" />
+								<span></span>
+							</div>
+						</div>
+						<div class="{STYLES_INSTANCE.reflectionMainStyle.dateSelectToIndicator}"></div>
+						<div class="{STYLES_INSTANCE.reflectionMainStyle.dateSelectContainer}">
+							<div class="{STYLES_INSTANCE.reflectionMainStyle.formField} {STYLES_INSTANCE.reflectionMainStyle.formFieldDateSelect}">
+								<input type="text" name="date-single-to" id="date-single-to" value="To Date" />
+								<span></span>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+
+			<div>
+				<H4>Form</H4>
+				<h5>Light Background</h5>
+			</div>
+
+		</div>
+	</g:HTMLPanel>
 </ui:UiBinder>

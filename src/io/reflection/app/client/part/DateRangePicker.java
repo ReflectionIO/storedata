@@ -97,8 +97,6 @@ public class DateRangePicker extends Composite implements HasValue<DateRange>, I
 	public DateRangePicker() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		BootstrapGwtDatePicker.INSTANCE.styles().ensureInjected();
-
 		// add styles so they don't trash existing styles
 		mFromPicker.addStyleName(style.inline());
 		mToPicker.addStyleName(style.inline());

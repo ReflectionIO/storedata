@@ -9,8 +9,6 @@ package io.reflection.app.client.part.linkaccount;
 
 import com.google.gwt.user.client.ui.Focusable;
 
-import io.reflection.app.client.handler.EnterPressedEventHandler;
-
 /**
  * @author billy1380
  * 
@@ -35,8 +33,6 @@ public interface LinkableAccountFields {
 	void setUsernameError(String error);
 
 	void setPasswordError(String error);
-
-	void setOnEnterPressed(EnterPressedEventHandler handler);
 
 	void setEnabled(boolean enable);
 

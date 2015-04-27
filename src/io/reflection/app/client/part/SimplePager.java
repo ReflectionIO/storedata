@@ -111,26 +111,31 @@ public class SimplePager extends AbstractPager {
 
 	@UiHandler("mFirstPage")
 	void onFirstPageClicked(ClickEvent e) {
+		e.preventDefault();
 		firstPage();
 	}
 
 	@UiHandler("mNextPage")
 	void onNextPageClicked(ClickEvent e) {
+		e.preventDefault();
 		nextPage();
 	}
 
 	@UiHandler("mPrevPage")
 	void onPrevPageClicked(ClickEvent e) {
+		e.preventDefault();
 		previousPage();
 	}
 	
 	@UiHandler("mLastPage")
 	void onLastPageClicked(ClickEvent e) {
+		e.preventDefault();
 		lastPage();
 	}
 	
 	@UiHandler("mFastForward")
 	void onFastForwardClicked(ClickEvent e) {
+		e.preventDefault();
 		setPage(getPage() + getFastForwardPages());
 	}
 

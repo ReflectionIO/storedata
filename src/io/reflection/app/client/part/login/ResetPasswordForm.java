@@ -10,8 +10,10 @@ package io.reflection.app.client.part.login;
 import io.reflection.app.api.core.shared.call.ChangePasswordRequest;
 import io.reflection.app.api.core.shared.call.ChangePasswordResponse;
 import io.reflection.app.api.core.shared.call.event.ChangePasswordEventHandler;
+import io.reflection.app.client.component.FormButton;
+import io.reflection.app.client.component.FormField;
+import io.reflection.app.client.component.FormFieldPassword;
 import io.reflection.app.client.controller.SessionController;
-import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.part.Preloader;
 import io.reflection.app.client.res.Images;
 
@@ -22,12 +24,7 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.PasswordTextBox;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -40,20 +37,15 @@ public class ResetPasswordForm extends Composite implements ChangePasswordEventH
 
 	interface ResetPasswordFormUiBinder extends UiBinder<Widget, ResetPasswordForm> {}
 
-	@UiField FormPanel form;
+	@UiField FormField resetCode;
 
-	@UiField TextBox resetCode;
-	@UiField HTMLPanel resetCodeGroup;
-
-	@UiField PasswordTextBox newPassword;
-	@UiField PasswordTextBox confirmPassword;
-	@UiField HTMLPanel newPasswordGroup;
-	@UiField HTMLPanel newPasswordNote;
+	@UiField FormFieldPassword newPassword;
+	@UiField FormFieldPassword confirmPassword;
 	private Preloader preloaderRef;
 
 	private String newPasswordError = null;
 
-	@UiField Button submit;
+	@UiField FormButton submit;
 
 	final String imageButtonLink = "<img style=\"vertical-align: 1px;\" src=\"" + Images.INSTANCE.buttonArrowWhite().getSafeUri().asString() + "\"/>";
 
@@ -71,14 +63,17 @@ public class ResetPasswordForm extends Composite implements ChangePasswordEventH
 	@UiHandler("submit")
 	void onSubmitClick(ClickEvent event) {
 		if (validate()) {
-			FormHelper.hideNote(newPasswordGroup, newPasswordNote);
+			newPassword.hideNote();
+			confirmPassword.hideNote();
 			preloaderRef.show();
 			SessionController.get().resetPassword(resetCode.getText(), newPassword.getText());
 		} else {
 			if (newPasswordError != null) {
-				FormHelper.showNote(true, newPasswordGroup, newPasswordNote, newPasswordError);
+				newPassword.showNote(newPasswordError, true);
+				confirmPassword.showNote(newPasswordError, true);
 			} else {
-				FormHelper.hideNote(newPasswordGroup, newPasswordNote);
+				newPassword.hideNote();
+				confirmPassword.hideNote();
 			}
 		}
 	}
@@ -143,10 +138,11 @@ public class ResetPasswordForm extends Composite implements ChangePasswordEventH
 
 	private void resetForm() {
 		resetCode.setText("");
-		newPassword.setText("");
-		confirmPassword.setText("");
+		newPassword.clear();
+		confirmPassword.clear();
 		setEnabled(true);
-		FormHelper.hideNote(newPasswordGroup, newPasswordNote);
+		newPassword.hideNote();
+		confirmPassword.hideNote();
 	}
 
 	private void setEnabled(boolean value) {
