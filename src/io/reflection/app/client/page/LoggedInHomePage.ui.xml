@@ -1,24 +1,25 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:io.reflection.app.client.component">
-
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 	<ui:style>
 	
 	</ui:style>
-	<g:HTMLPanel styleName="page-logged-in-landing">
-		<section class="logged-in-section-main">
-			<div class="logged-in-section-main__column-one">
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.pageLoggedInLanding}">
+		<section class="{STYLES_INSTANCE.reflectionMainStyle.loggedInSectionMain}">
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.loggedInSectionMain__columnOne}">
 				<img src="images/logged-in-main-screenshot.png" alt="Reflection app screenshot" />
 			</div>
-			<div class="logged-in-section-main__column-two">
-				<h1 class="page-title">
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.loggedInSectionMain__columnTwo}">
+				<h1 class="{STYLES_INSTANCE.reflectionMainStyle.pageTitle}">
 					Hi
 					<span ui:field="userName"></span>
 					We've Been Busy
 				</h1>
-				<p>The Reflection team are hard at work developing and expanding the tools and features that you have been asking for. Monitor our progress here and keep up
+				<p>The Reflection team are hard at work developing and expanding the tools and features that you have been asking for. Monitor our progress here and keep
+					up
 					to date with what’s coming next.</p>
 			</div>
-			<div class="list-partners">
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.listPartners}">
 				<ul>
 					<li>
 						<img src="images/Partner_Soundcloud@2x.png" alt="Soundcloud logo" />
@@ -48,8 +49,8 @@
 				<h2>A few of our current partners</h2>
 			</div>
 		</section>
-		<section class="grid-container logged-in-section-content">
-			<div class="grid__column grid__column--seven-columns">
+		<section class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.loggedInSectionContent}">
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnSevenColumns}">
 				<ul>
 					<li class="article-list--article">
 						<article class="site-article">
@@ -128,12 +129,12 @@
 					<a href="#" class="pages-link">Newer</a>
 				</div>
 			</div>
-			<div class="grid__column grid__column--five-columns">
-				<h2 class="heading-style heading-style--heading-three">Latest Releases</h2>
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFiveColumns}">
+				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Latest Releases</h2>
 				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam varius nulla pellentesque bibendum semper. Pellentesque ullamcorper dictum dictum. Sed
 					tincidunt ut nulla in pharetra. Curabitur id neque id urna viverra tempus.</p>
-				<h2 class="heading-style heading-style--heading-four">Data</h2>
-				<div class="accordion">
+				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Data</h2>
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.accordion}">
 					<ul>
 						<c:AccordionSwitch ui:field="accordionSwitchUK" featureComplete="true" titleText="United Kingdom" subtitleText="(2 Categories)" />
 						<c:AccordionSwitch ui:field="accordionSwitchDE" titleText="Germany" subtitleText="Coming Soon" />
@@ -147,8 +148,8 @@
 						<c:AccordionSwitch ui:field="accordionSwitchIR" titleText="Ireland" subtitleText="Coming Soon" />
 					</ul>
 				</div>
-				<h2 class="heading-style heading-style--heading-four">Features</h2>
-				<div class="accordion accordion-bottom-with-divider">
+				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Features</h2>
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.accordion} {STYLES_INSTANCE.reflectionMainStyle.accordionBottomWithDivider}">
 					<ul>
 						<c:AccordionSwitch featureComplete="true" empty="true" titleText="Historic download data" />
 						<c:AccordionSwitch featureComplete="true" empty="true" titleText="Download CSV" />
@@ -157,8 +158,8 @@
 						<c:AccordionSwitch empty="true" titleText="Another Feature" />
 					</ul>
 				</div>
-				<h2 class="heading-style heading-style--heading-four">We're Hiring</h2>
-				<ul class="content-list">
+				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">We're Hiring</h2>
+				<ul class="{STYLES_INSTANCE.reflectionMainStyle.contentList}">
 					<li>
 						<a href="#a">Senior Java Developer</a>
 					</li>
@@ -180,17 +181,17 @@
 				</ul>
 			</div>
 		</section>
-		<section class="landing-section-contact">
-			<div class="logo-container">
-				<img src="images/logo-reflection-footer.png" alt="Reflection logo" class="logo-reflection-footer" />
+		<section class="{STYLES_INSTANCE.reflectionMainStyle.landingSectionContact}">
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.logoContainer}">
+				<img src="images/logo-reflection-footer.png" alt="Reflection logo" class="{STYLES_INSTANCE.reflectionMainStyle.logoReflectionFooter}" />
 			</div>
-			<a href="mailto:info@reflection.io" class="landing-section-contact__email">
-				<span class="icon-mail ref-icon-before ref-icon-before--mail">info@reflection.io</span>
+			<a href="mailto:info@reflection.io" class="{STYLES_INSTANCE.reflectionMainStyle.landingSectionContact__email}">
+				<span class="icon-mail {STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeMail}">info@reflection.io</span>
 			</a>
 			<a
 				href="https://www.google.co.uk/maps/place/44+Newman+St,+Marylebone,+London+W1T+1QD/@51.5187779,-0.1364135,17z/data=!4m7!1m4!3m3!1s0x48761b2b95192b1b:0xc2fcb9753b8ff12b!2s44+Newman+St,+Marylebone,+London+W1T+1QD!3b1!3m1!1s0x48761b2b95192b1b:0xc2fcb9753b8ff12b"
-				class="landing-section-contact__address" target="_blank">
-				<p class="icon-location ref-icon-before ref-icon-before--location">
+				class="{STYLES_INSTANCE.reflectionMainStyle.landingSectionContact__address}" target="_blank">
+				<p class="icon-location {STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeLocation}">
 					<b>
 						40-44 Newman St
 						<br />

@@ -1,240 +1,227 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:import field="io.reflection.app.client.page.PageType.TermsPageType" />
-	<ui:import field="io.reflection.app.client.page.PageType.HomePageType" />
 
-	<ui:with field="images" type="io.reflection.app.client.res.Images" />
+
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 
 	<ui:style gss="true">
 	
 	</ui:style>
 	<g:HTMLPanel>
-		<header class="header">
-			<div class="site-logo">
-				<g:InlineHyperlink targetHistoryToken="{HomePageType.asTargetHistoryToken}" ui:field="homeBtn" />
-			</div>
-			<div class="header__actions">
-				<g:InlineHyperlink ui:field="applyBtn" styleName="ref-button-apply">Apply</g:InlineHyperlink>
-				<g:InlineHyperlink ui:field="loginBtn" styleName="link-log-in icon-login">Log In</g:InlineHyperlink>
-			</div>
-		</header>
 
-		<div>
-			<div id="main" class="l-main" role="main">
-
-				<div class="window-height-scroll-effect-container landing-section-main-scroll-effect-container">
-					<div class="section-size-shadow-layer"></div>
-					<section class="landing-section-main">
-						<div class="landing-section-main__content">
-							<div class="landing-section-main__column-one">
-								<div>
-									<h1>Powerful Intelligence for the Global App Industry</h1>
-									<p>
-										View revenue and download intelligence for apps.
-										<br />
-										Apply for free access to our data.
-									</p>
-									<div class="actions-container">
-										<a href="#anchor-how-intelligence-helps" class="icon-angle-right js-scroll-to-anchor">How Intelligence Helps</a>
-										<g:InlineHyperlink ui:field="applyNowBtn" styleName="ref-button-cta-large">Apply Now</g:InlineHyperlink>
-									</div>
-								</div>
-							</div>
-							<div class="landing-section-main__column-two">
-								<img src="images/screenshots/Leaderboard_Free.png" alt="Leaderboard screenshot" />
+		<div class="{STYLES_INSTANCE.homePageStyle.windowHeightScrollEffectContainer} {STYLES_INSTANCE.homePageStyle.landingSectionMainScrollEffectContainer}">
+			<div ui:field="sectionSizeShadowLayer" class="{STYLES_INSTANCE.homePageStyle.sectionSizeShadowLayer}"></div>
+			<section ui:field="sectionMain" class="{STYLES_INSTANCE.homePageStyle.landingSectionMain}">
+				<div class="{STYLES_INSTANCE.homePageStyle.landingSectionMain__content}">
+					<div class="{STYLES_INSTANCE.homePageStyle.landingSectionMain__columnOne}">
+						<div>
+							<h1>Powerful Intelligence for the Global App Industry</h1>
+							<p>
+								View revenue and download intelligence for apps.
+								<br />
+								Apply for free access to our data.
+							</p>
+							<div class="{STYLES_INSTANCE.homePageStyle.actionsContainer}">
+								<g:Anchor ui:field="linkScrollToAnchor" href="#" styleName="icon-angle-right">How Intelligence Helps</g:Anchor>
+								<g:InlineHyperlink ui:field="applyNowBtn" styleName="{STYLES_INSTANCE.homePageStyle.refButtonCtaLarge}">Apply Now</g:InlineHyperlink>
 							</div>
 						</div>
-						<div class="list-partners">
-							<ul>
-								<li>
-									<img src="images/logos/Partner_Soundcloud@2x.png" alt="Soundcloud logo" />
-								</li>
-								<li>
-									<img src="images/logos/Partner_Wooga@2x.png" alt="Wooga logo" />
-								</li>
-								<li>
-									<img src="images/logos/BBC_Worldwide@2x.png" alt="BBC Worldwide logo" />
-								</li>
-								<li>
-									<img src="images/logos/Partner_TocaBoca@2x-v2.png" alt="Toca Boca logo" />
-								</li>
-								<li>
-									<img src="images/logos/SwiftKey_Logo@2x.png" alt="SwiftKey logo" />
-								</li>
-								<li>
-									<img src="images/logos/Partner_Miniclip@2x.png" alt="Miniclip logo" />
-								</li>
-								<li>
-									<img src="images/logos/Nordeus_Logo@2x.png" alt="Nordeus logo" />
-								</li>
-								<li>
-									<img src="images/logos/Endemol_Logo@2x.png" alt="Endemol logo" />
-								</li>
-							</ul>
-							<h2>A few of our current partners</h2>
-						</div>
-					</section>
+					</div>
+					<div class="{STYLES_INSTANCE.homePageStyle.landingSectionMain__columnTwo}">
+						<img src="images/screenshots/Leaderboard_Free.png" alt="Leaderboard screenshot" />
+					</div>
 				</div>
-
-				<section class="landing-section-insights" id="anchor-how-intelligence-helps">
-					<g:HTMLPanel styleName="landing-section-insights__column_one" ui:field="leaderBoardScreenshot" />
-					<div class="landing-column-thin">
-						<div class="landing-column-thin__content">
-							<h2>Essential Market Insight</h2>
-							<p>Analyse and benchmark apps and market data for revenue, rank and downloads. Make strategic decisions on app development, marketing and investment.</p>
-							<ul class="content-list">
-								<li>
-									<span>Daily updates of Top 200 paid and free apps for rank, revenue and download data.</span>
-								</li>
-								<li>
-									<span>Tailored view filtered by country, platform and category for your own insights.</span>
-								</li>
-							</ul>
-						</div>
-					</div>
-				</section>
-
-				<section class="landing-section-analyse">
-					<g:HTMLPanel styleName="landing-section-analyse__column_two" ui:field="analysisScreenshot" />
-					<div class="landing-column-thin">
-						<div class="landing-column-thin__content">
-							<h2>Analyse App Performance</h2>
-							<p>Benchmark your apps’ revenue, rank and download performance against other apps over time.</p>
-							<p>Discover and identify competitive app pricing models, popular themes and designs to plan for your apps’ effective monetisation strategies.</p>
-							<p class="small-text">(Revenue values shown are not actual data)</p>
-						</div>
-					</div>
-				</section>
-
-				<section class="landing-section-story">
-					<div class="landing-column-thin">
-						<div class="landing-column-thin__content">
-							<blockquote>
-								<p>Reflection's approach to let developers have input on feature development is unique and refreshing. A great addition to the app intelligence space</p>
-								<footer>
-									<cite>
-										<span>Saad Choudri</span>
-										Chief Commercial Officer, Miniclip
-									</cite>
-								</footer>
-							</blockquote>
-						</div>
-					</div>
-					<div class="landing-column-wide">
-						<div class="landing-column-wide__content">
-							<h2>Building for the Future</h2>
-							<p>Reflection helps you reach where you want to be in the app market.</p>
-							<p>We understand that app intelligence is currently inaccessible and unaffordable, and it can be cumbersome to gain useful intelligence about apps and
-								app markets. We are here to deliver what is missing.</p>
-							<p>Be a Reflection beta partner and help us define features that will impact the growing needs of developers, publishers, and other stakeholders in the
-								flourishing app space.</p>
-							<div class="logo-ref-imp-container">
-								<h4>Official Statistics Partner</h4>
-								<img src="images/logos/Imperial_College_London_Logo.png" alt="Imperial College London logo" class="logo-ref-imp" />
-							</div>
-						</div>
-					</div>
-				</section>
-
-				<section class="landing-section-careers">
-					<img src="images/careers/careers-col-thin-2.jpg" alt="Meeting" class="img-width-landing-column-thin" />
-					<img src="images/careers/careers-col-wide-2.jpg" alt="The Reflection office" class="img-width-landing-column-wide" />
-					<div class="landing-column-wide">
-						<div class="landing-column-wide__content">
-							<h2>Work With Us</h2>
-							<p>Reflection is a start-up with the ambition to disrupt the entire app ecosystem by providing accessible and affordable intelligence and tools.</p>
-							<p>We are always looking for talented people to join our growing team here in London. If you are a self-starter, would love to be part of an exciting,
-								expanding company and have what it takes to get things done, we’d like to hear from you.</p>
-							<h3>Our Benefits</h3>
-							<ul class="content-list">
-								<li>
-									<span>Stock options plan</span>
-								</li>
-								<li>
-									<span>Hardware of your choice at work</span>
-								</li>
-								<li>
-									<span>Central London location just off Oxford Street</span>
-								</li>
-								<li>
-									<span>Opportunities to learn all there is to know about the mobile and app market</span>
-								</li>
-								<li>
-									<span>Friendly and collaborative culture</span>
-								</li>
-								<li>
-									<span>All the espresso you can drink</span>
-								</li>
-							</ul>
-						</div>
-					</div>
-					<div class="landing-column-thin">
-						<div class="landing-column-thin__content">
-							<h2>We're Hiring</h2>
-							<ul>
-								<li>
-									<a href="http://reflection.workable.com/jobs/40809" target="_blank">Java Developer</a>
-								</li>
-								<li>
-									<a href="http://reflection.workable.com/jobs/40810" target="_blank">Data Scientist</a>
-								</li>
-							</ul>
-						</div>
-					</div>
-				</section>
-
-				<section class="landing-section-map">
-					<div id="js-map-location"></div>
-				</section>
-
-				<section class="landing-section-contact">
-					<div>
-						<img src="images/global/logo-reflection-footer.png" alt="Reflection logo" class="logo-reflection-footer" />
-					</div>
-					<a href="mailto:info@reflection.io" class="landing-section-contact__email">
-						<span class="icon-mail">info@reflection.io</span>
-					</a>
-					<a
-						href="https://www.google.co.uk/maps/place/44+Newman+St,+Marylebone,+London+W1T+1QD/@51.5187779,-0.1364135,17z/data=!4m7!1m4!3m3!1s0x48761b2b95192b1b:0xc2fcb9753b8ff12b!2s44+Newman+St,+Marylebone,+London+W1T+1QD!3b1!3m1!1s0x48761b2b95192b1b:0xc2fcb9753b8ff12b"
-						class="landing-section-contact__address" target="_blank">
-						<p class="icon-location">
-							<b>
-								40-44 Newman St
-								<br />
-								London
-								<br />
-								W1T 1QD
-							</b>
-						</p>
-					</a>
-				</section>
-
-				<footer class="landing-footer">
-					<ul class="landing-footer__social-links">
+				<div class="{STYLES_INSTANCE.homePageStyle.listPartners}">
+					<ul>
 						<li>
-							<a href="https://www.facebook.com/reflection.io" target="_blank" class="icon-facebook-squared link-facebook"></a>
+							<img src="images/logos/Partner_Soundcloud@2x.png" alt="Soundcloud logo" />
 						</li>
 						<li>
-							<a href="http://www.linkedin.com/company/reflection-io-ltd" target="_blank" class="icon-linkedin-rect link-linkedin">
-								<span>LinkedIn</span>
-							</a>
+							<img src="images/logos/Partner_Wooga@2x.png" alt="Wooga logo" />
 						</li>
 						<li>
-							<a href="https://twitter.com/reflectionio" target="_blank" class="icon-twitter link-twitter">
-								<span>Twitter</span>
-							</a>
+							<img src="images/logos/BBC_Worldwide@2x.png" alt="BBC Worldwide logo" />
+						</li>
+						<li>
+							<img src="images/logos/Partner_TocaBoca@2x-v2.png" alt="Toca Boca logo" />
+						</li>
+						<li>
+							<img src="images/logos/SwiftKey_Logo@2x.png" alt="SwiftKey logo" />
+						</li>
+						<li>
+							<img src="images/logos/Partner_Miniclip@2x.png" alt="Miniclip logo" />
+						</li>
+						<li>
+							<img src="images/logos/Nordeus_Logo@2x.png" alt="Nordeus logo" />
+						</li>
+						<li>
+							<img src="images/logos/Endemol_Logo@2x.png" alt="Endemol logo" />
 						</li>
 					</ul>
-
-					<g:InlineHyperlink targetHistoryToken="{TermsPageType.asTargetHistoryToken}" styleName="landing-footer__inline-link">Terms &amp; Conditions and Privacy Policy</g:InlineHyperlink>
-					<span class="landing-footer__copyright">&copy;2015 Reflection. All Rights Reserved</span>
-					<a href="#" class="link-to-page-top js-scroll-to-page-top">
-						<span class="border-radius-point"></span>
-						<span class="link-to-page-top__text">Back to Top</span>
-					</a>
-				</footer>
-			</div>
+					<h2>A few of our current partners</h2>
+				</div>
+			</section>
 		</div>
+
+		<section ui:field="sectionHowIntelHelps" class="{STYLES_INSTANCE.homePageStyle.landingSectionInsights}">
+			<g:HTMLPanel styleName="{STYLES_INSTANCE.homePageStyle.landingSectionInsights__column_one}" ui:field="leaderBoardScreenshot" />
+			<div class="{STYLES_INSTANCE.homePageStyle.landingColumnThin}">
+				<div class="{STYLES_INSTANCE.homePageStyle.landingColumnThin__content}">
+					<h2>Essential Market Insight</h2>
+					<p>Analyse and benchmark apps and market data for revenue, rank and downloads. Make strategic decisions on app development, marketing and investment.</p>
+					<ul class="{STYLES_INSTANCE.homePageStyle.contentList}">
+						<li>
+							<span>Daily updates of Top 200 paid and free apps for rank, revenue and download data.</span>
+						</li>
+						<li>
+							<span>Tailored view filtered by country, platform and category for your own insights.</span>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</section>
+
+		<section class="{STYLES_INSTANCE.homePageStyle.landingSectionAnalyse}">
+			<g:HTMLPanel styleName="{STYLES_INSTANCE.homePageStyle.landingSectionAnalyse__column_two}" ui:field="analysisScreenshot" />
+			<div class="{STYLES_INSTANCE.homePageStyle.landingColumnThin}">
+				<div class="{STYLES_INSTANCE.homePageStyle.landingColumnThin__content}">
+					<h2>Analyse App Performance</h2>
+					<p>Benchmark your apps’ revenue, rank and download performance against other apps over time.</p>
+					<p>Discover and identify competitive app pricing models, popular themes and designs to plan for your apps’ effective monetisation strategies.</p>
+					<p class="{STYLES_INSTANCE.homePageStyle.smallText}">(Revenue values shown are not actual data)</p>
+				</div>
+			</div>
+		</section>
+
+		<section class="{STYLES_INSTANCE.homePageStyle.landingSectionStory}">
+			<div class="{STYLES_INSTANCE.homePageStyle.landingColumnThin}">
+				<div class="{STYLES_INSTANCE.homePageStyle.landingColumnThin__content}">
+					<blockquote>
+						<p>Reflection's approach to let developers have input on feature development is unique and refreshing. A great addition to the app intelligence space</p>
+						<footer>
+							<cite>
+								<span>Saad Choudri</span>
+								Chief Commercial Officer, Miniclip
+							</cite>
+						</footer>
+					</blockquote>
+				</div>
+			</div>
+			<div class="{STYLES_INSTANCE.homePageStyle.landingColumnWide}">
+				<div class="{STYLES_INSTANCE.homePageStyle.landingColumnWide__content}">
+					<h2>Building for the Future</h2>
+					<p>Reflection helps you reach where you want to be in the app market.</p>
+					<p>We understand that app intelligence is currently inaccessible and unaffordable, and it can be cumbersome to gain useful intelligence about apps and
+						app
+						markets. We are here to deliver what is missing.</p>
+					<p>Be a Reflection beta partner and help us define features that will impact the growing needs of developers, publishers, and other stakeholders in the
+						flourishing app space.</p>
+					<div class="{STYLES_INSTANCE.homePageStyle.logoRefImpContainer}">
+						<h4>Official Statistics Partner</h4>
+						<img src="images/logos/Imperial_College_London_Logo.png" alt="Imperial College London logo" class="{STYLES_INSTANCE.homePageStyle.logoRefImp}" />
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="{STYLES_INSTANCE.homePageStyle.landingSectionCareers}">
+			<img src="images/careers/careers-col-thin-2.jpg" alt="Meeting" class="{STYLES_INSTANCE.homePageStyle.imgWidthLandingColumnThin}" />
+			<img src="images/careers/careers-col-wide-2.jpg" alt="The Reflection office" class="{STYLES_INSTANCE.homePageStyle.imgWidthLandingColumnWide}" />
+			<div class="{STYLES_INSTANCE.homePageStyle.landingColumnWide}">
+				<div class="{STYLES_INSTANCE.homePageStyle.landingColumnWide__content}">
+					<h2>Work With Us</h2>
+					<p>Reflection is a start-up with the ambition to disrupt the entire app ecosystem by providing accessible and affordable intelligence and tools.</p>
+					<p>We are always looking for talented people to join our growing team here in London. If you are a self-starter, would love to be part of an exciting,
+						expanding company and have what it takes to get things done, we’d like to hear from you.</p>
+					<h3>Our Benefits</h3>
+					<ul class="{STYLES_INSTANCE.homePageStyle.contentList}">
+						<li>
+							<span>Stock options plan</span>
+						</li>
+						<li>
+							<span>Hardware of your choice at work</span>
+						</li>
+						<li>
+							<span>Central London location just off Oxford Street</span>
+						</li>
+						<li>
+							<span>Opportunities to learn all there is to know about the mobile and app market</span>
+						</li>
+						<li>
+							<span>Friendly and collaborative culture</span>
+						</li>
+						<li>
+							<span>All the espresso you can drink</span>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="{STYLES_INSTANCE.homePageStyle.landingColumnThin}">
+				<div class="{STYLES_INSTANCE.homePageStyle.landingColumnThin__content}">
+					<h2>We're Hiring</h2>
+					<ul>
+						<li>
+							<a href="http://reflection.workable.com/jobs/40809" target="_blank">Java Developer</a>
+						</li>
+						<li>
+							<a href="http://reflection.workable.com/jobs/40810" target="_blank">Data Scientist</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</section>
+
+		<section class="{STYLES_INSTANCE.homePageStyle.landingSectionMap}">
+			<div id="js-map-location"></div>
+		</section>
+
+		<section class="{STYLES_INSTANCE.homePageStyle.landingSectionContact}">
+			<div>
+				<img src="images/global/logo-reflection-footer.png" alt="Reflection logo" class="{STYLES_INSTANCE.homePageStyle.logoReflectionFooter}" />
+			</div>
+			<a href="mailto:info@reflection.io" class="{STYLES_INSTANCE.homePageStyle.landingSectionContact__email}">
+				<span class="icon-mail">info@reflection.io</span>
+			</a>
+			<a
+				href="https://www.google.co.uk/maps/place/44+Newman+St,+Marylebone,+London+W1T+1QD/@51.5187779,-0.1364135,17z/data=!4m7!1m4!3m3!1s0x48761b2b95192b1b:0xc2fcb9753b8ff12b!2s44+Newman+St,+Marylebone,+London+W1T+1QD!3b1!3m1!1s0x48761b2b95192b1b:0xc2fcb9753b8ff12b"
+				class="{STYLES_INSTANCE.homePageStyle.landingSectionContact__address}" target="_blank">
+				<p class="icon-location">
+					<b>
+						40-44 Newman St
+						<br />
+						London
+						<br />
+						W1T 1QD
+					</b>
+				</p>
+			</a>
+		</section>
+
+		<footer class="{STYLES_INSTANCE.homePageStyle.landingFooter}">
+			<ul class="{STYLES_INSTANCE.homePageStyle.landingFooter__socialLinks}">
+				<li>
+					<a href="https://www.facebook.com/reflection.io" target="_blank" class="icon-facebook-squared {STYLES_INSTANCE.homePageStyle.linkFacebook}"></a>
+				</li>
+				<li>
+					<a href="http://www.linkedin.com/company/reflection-io-ltd" target="_blank" class="icon-linkedin-rect {STYLES_INSTANCE.homePageStyle.linkLinkedin}">
+						<span>LinkedIn</span>
+					</a>
+				</li>
+				<li>
+					<a href="https://twitter.com/reflectionio" target="_blank" class="icon-twitter {STYLES_INSTANCE.homePageStyle.linkTwitter}">
+						<span>Twitter</span>
+					</a>
+				</li>
+			</ul>
+
+			<g:InlineHyperlink targetHistoryToken="{TermsPageType.asTargetHistoryToken}" styleName="{STYLES_INSTANCE.homePageStyle.landingFooter__inlineLink}">Terms &amp; Conditions and Privacy Policy</g:InlineHyperlink>
+			<span class="{STYLES_INSTANCE.homePageStyle.landingFooter__copyright}">&copy;2015 Reflection. All Rights Reserved</span>
+			<g:Anchor ui:field="linkToPageTop" href="#" styleName="{STYLES_INSTANCE.homePageStyle.linkToPageTop}">
+				<span class="{STYLES_INSTANCE.homePageStyle.borderRadiusPoint}"></span>
+				<span class="{STYLES_INSTANCE.homePageStyle.linkToPageTop__text}">Back to Top</span>
+			</g:Anchor>
+		</footer>
 
 
 	</g:HTMLPanel>
