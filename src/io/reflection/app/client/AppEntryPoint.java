@@ -9,12 +9,16 @@ package io.reflection.app.client;
 
 import io.reflection.app.client.charts.GwtCanvasBasedCanvasFactory;
 import io.reflection.app.client.controller.NavigationController;
+import io.reflection.app.client.helper.UserAgentHelper;
+import io.reflection.app.client.part.BackToTop;
 import io.reflection.app.client.part.SuperAlertBox;
 import io.reflection.app.client.res.Styles;
 
-import com.google.gwt.dom.client.StyleInjector;
-import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.googlecode.gchart.client.GChart;
@@ -25,15 +29,7 @@ import com.googlecode.gchart.client.GChart;
  */
 public class AppEntryPoint extends ErrorHandlingEntryPoint {
 
-	private HTMLPanel mContainer;
-
-	static {
-		Styles.INSTANCE.reflection().ensureInjected();
-		String mediaQueries = " @media (max-width: 1024px) {." + Styles.INSTANCE.reflection().footer()
-				+ " {display:none;} .navbar-fixed-top {position:relative;} .navbar {margin-bottom:0px;} .container-fluid{padding-top:0px !important;}}"
-				+ "@media (min-width: 992px) {html,body,.container-fluid,.container-fluid>.row{height: 100%} .sidepanel{height: 100%;margin-bottom:0px;}}";
-		StyleInjector.injectAtEnd(mediaQueries);
-	}
+	private HTMLPanel lPageContainer = new HTMLPanel("");
 
 	/*
 	 * (non-Javadoc)
@@ -44,6 +40,8 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 	public void onModuleLoad() {
 		super.onModuleLoad();
 
+		UserAgentHelper.detectBrowser();
+
 		GChart.setCanvasFactory(new GwtCanvasBasedCanvasFactory());
 
 		// this registers the newly created singleton, so that
@@ -51,17 +49,14 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 		History.addValueChangeHandler(NavigationController.get());
 
 		makeContainer();
+		Styles.STYLES_INSTANCE.reflectionMainStyle().ensureInjected();
+		if (UserAgentHelper.isIE() && UserAgentHelper.getIEVersion() < 9) {
+			Styles.STYLES_INSTANCE.reflectionMainIE8Style().ensureInjected();
+		}
 
 		SuperAlertBox.start();
 
-		// add header
-		mContainer.add(NavigationController.get().getHeader());
-
 		// add page area
-		mContainer.add(NavigationController.get().getPageHolderPanel());
-
-		// add footer
-		mContainer.add(NavigationController.get().getFooter());
 
 		// the above are just place holders, this kicks of the actual page loading
 		History.fireCurrentHistoryState();
@@ -69,11 +64,30 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 	}
 
 	private void makeContainer() {
-		Styles.INSTANCE.reflection().ensureInjected();
-
-		mContainer = new HTMLPanel("");
-		mContainer.getElement().getStyle().setHeight(100, Unit.PCT);
-		RootPanel.get().add(mContainer);
+		if (UserAgentHelper.isIE()) {
+			Window.addResizeHandler(new ResizeHandler() {
+				@Override
+				public void onResize(ResizeEvent event) {
+					UserAgentHelper.setMainContentWidthForIE();
+				}
+			});
+			if (UserAgentHelper.getIEVersion() < 9) {
+				HTMLPanel outdatedBrowser = new HTMLPanel(
+						SafeHtmlUtils
+								.fromTrustedString("<p>Uh oh... Reflection doesn't work in this browser. &nbsp; &nbsp;<a href=\"http://outdatedbrowser.com/en\" target=\"_blank\">Download a compatible browser</a></p>"));
+				outdatedBrowser.setStyleName("window-warning");
+				RootPanel.get().add(outdatedBrowser);
+			}
+		}
+		lPageContainer.getElement().setClassName("l-page-container");
+		RootPanel.get().add(NavigationController.get().getHeader());
+		RootPanel.get().add(NavigationController.get().getPanelLeftMenu());
+		RootPanel.get().add(lPageContainer);
+		lPageContainer.add(NavigationController.get().getMainPanel());
+		RootPanel.get().add(NavigationController.get().getPanelRightAccount());
+		RootPanel.get().add(NavigationController.get().getPanelRightSearch());
+		RootPanel.get().add(new BackToTop());
+		UserAgentHelper.initCustomScrollbars();
 	}
 
 }
