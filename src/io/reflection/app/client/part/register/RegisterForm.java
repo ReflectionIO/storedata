@@ -7,23 +7,25 @@
 //
 package io.reflection.app.client.part.register;
 
+import io.reflection.app.client.component.FormButton;
+import io.reflection.app.client.component.FormCheckbox;
+import io.reflection.app.client.component.FormField;
+import io.reflection.app.client.component.FormFieldPassword;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.UserController;
 import io.reflection.app.client.helper.FormHelper;
-import io.reflection.app.client.part.Preloader;
+import io.reflection.app.client.page.PageType;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -36,40 +38,29 @@ public class RegisterForm extends Composite {
 
     interface RegisterFormUiBinder extends UiBinder<Widget, RegisterForm> {}
 
-    @UiField TextBox forename;
-    @UiField HTMLPanel forenameGroup;
-    @UiField HTMLPanel forenameNote;
-    private String forenameError;
+	@UiField FormField forename;
+	private String forenameNote;
 
-    @UiField TextBox surname;
-    @UiField HTMLPanel surnameGroup;
-    @UiField HTMLPanel surnameNote;
-    private String surnameError;
+	@UiField FormField surname;
+	private String surnameNote;
 
-    @UiField TextBox company;
-    @UiField HTMLPanel companyGroup;
-    @UiField HTMLPanel companyNote;
-    private String companyError;
+	@UiField FormField company;
+	private String companyNote;
 
-    @UiField TextBox email;
-    @UiField HTMLPanel emailGroup;
-    @UiField HTMLPanel emailNote;
-    private String emailError;
+	@UiField FormField email;
+	private String emailNote;
 
-    @UiField TextBox password;
-    @UiField TextBox confirmPassword;
     @UiField HTMLPanel passwordGroup;
-    @UiField HTMLPanel passwordNote;
+	@UiField FormFieldPassword password;
+	@UiField FormFieldPassword confirmPassword;
     private String passwordError;
 
-    @UiField CheckBox termAndCond;
     @UiField HTMLPanel termAndCondGroup;
-    @UiField HTMLPanel termAndCondNote;
+	@UiField FormCheckbox termAndCond;
     private String termAndCondError;
+	@UiField ParagraphElement checkboxError;
 
-    @UiField Button mRegister;
-
-    private Preloader preloaderRef;
+	@UiField FormButton registerBtn;
 
     private boolean isRequestInvite;
 
@@ -77,13 +68,8 @@ public class RegisterForm extends Composite {
 
     public RegisterForm() {
         initWidget(uiBinder.createAndBindUi(this));
-
-        forename.getElement().setAttribute("placeholder", "First name");
-        surname.getElement().setAttribute("placeholder", "Last name");
-        company.getElement().setAttribute("placeholder", "Company");
-        email.getElement().setAttribute("placeholder", "Email");
-        password.getElement().setAttribute("placeholder", "Password");
-        confirmPassword.getElement().setAttribute("placeholder", "Confirm password");
+		this.getElement().setAttribute("autocomplete", "off");
+		termAndCond.setHTML("I agree with the <a href='" + PageType.TermsPageType.asHref().asString() + "' target='_blank'>terms and conditions</a>");
 
     }
 
@@ -105,27 +91,19 @@ public class RegisterForm extends Composite {
         focusFirstActiveField();
     }
 
-    /**
-     * Set preloader object from Login Page
-     * 
-     * @param p
-     */
-    public void setPreloader(Preloader p) {
-        preloaderRef = p;
-    }
-
-    @UiHandler({ "forename", "surname", "company", "email", "password", "confirmPassword", "termAndCond" })
+	@UiHandler({ "forename", "surname", "company", "email", "password", "confirmPassword" })
     void onEnterKeyPressRegisterFields(KeyPressEvent event) {
         if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
-            mRegister.click();
+			registerBtn.click();
         }
     }
 
-    @UiHandler("mRegister")
+	@UiHandler("registerBtn")
     void onRegisterClicked(ClickEvent event) {
         if (validate()) {
             clearErrors();
-            preloaderRef.show();
+			setEnabled(false);
+			registerBtn.setStatusLoading("Sending ..");
             if (actionCode == null) { // Create new user
                 UserController.get().registerUser(email.getText(), password.getText(), forename.getText(), surname.getText(), company.getText());
             } else { // Update user
@@ -133,37 +111,39 @@ public class RegisterForm extends Composite {
             }
 
         } else {
-            if (forenameError != null) {
-                FormHelper.showNote(true, forenameGroup, forenameNote, forenameError);
+			if (forenameNote != null) {
+				forename.showNote(forenameNote, true);
             } else {
-                FormHelper.hideNote(forenameGroup, forenameNote);
+				forename.hideNote();
             }
-            if (surnameError != null) {
-                FormHelper.showNote(true, surnameGroup, surnameNote, surnameError);
+			if (surnameNote != null) {
+				surname.showNote(surnameNote, true);
             } else {
-                FormHelper.hideNote(surnameGroup, surnameNote);
+				surname.hideNote();
             }
-            if (companyError != null) {
-                FormHelper.showNote(true, companyGroup, companyNote, companyError);
+			if (companyNote != null) {
+				company.showNote(companyNote, true);
             } else {
-                FormHelper.hideNote(companyGroup, companyNote);
+				company.hideNote();
             }
-            if (emailError != null) {
-                FormHelper.showNote(true, emailGroup, emailNote, emailError);
+			if (emailNote != null) {
+				email.showNote(emailNote, true);
             } else {
-                FormHelper.hideNote(emailGroup, emailNote);
+				email.hideNote();
             }
 
             if (passwordError != null) {
-                FormHelper.showNote(true, passwordGroup, passwordNote, passwordError);
+				password.showNote(passwordError, true);
+				confirmPassword.showNote(passwordError, true);
             } else {
-                FormHelper.hideNote(passwordGroup, passwordNote);
+				password.hideNote();
+				confirmPassword.hideNote();
             }
 
             if (termAndCondError != null) {
-                FormHelper.showNote(true, termAndCondGroup, termAndCondNote, termAndCondError);
+				checkboxError.setInnerText(termAndCondError);
             } else {
-                FormHelper.hideNote(termAndCondGroup, termAndCondNote);
+				checkboxError.setInnerText("");
             }
         }
     }
@@ -186,67 +166,67 @@ public class RegisterForm extends Composite {
 
         // Check fields constraints
         if (forenameValue == null || forenameValue.length() == 0) {
-            forenameError = "Cannot be empty";
+			forenameNote = "Cannot be empty";
             validated = false;
         } else if (forenameValue.length() < 2) {
-            forenameError = "Too short (minimum 2 characters)";
+			forenameNote = "Too short (minimum 2 characters)";
             validated = false;
         } else if (forenameValue.length() > 30) {
-            forenameError = "Too long (maximum 30 characters)";
+			forenameNote = "Too long (maximum 30 characters)";
             validated = false;
         } else if (!FormHelper.isTrimmed(forenameValue)) {
-            forenameError = "Whitespaces not allowed either before or after the string";
+			forenameNote = "Whitespaces not allowed either before or after the string";
             validated = false;
         } else {
-            forenameError = null;
+			forenameNote = null;
             validated = validated && true;
         }
         if (surnameValue == null || surnameValue.length() == 0) {
-            surnameError = "Cannot be empty";
+			surnameNote = "Cannot be empty";
             validated = false;
         } else if (surnameValue.length() < 2) {
-            surnameError = "(minimum 2 characters)";
+			surnameNote = "(minimum 2 characters)";
             validated = false;
         } else if (surnameValue.length() > 30) {
-            surnameError = "Too long (maximum 30 characters)";
+			surnameNote = "Too long (maximum 30 characters)";
             validated = false;
         } else if (!FormHelper.isTrimmed(surnameValue)) {
-            surnameError = "Whitespaces not allowed either before or after the string";
+			surnameNote = "Whitespaces not allowed either before or after the string";
             validated = false;
         } else {
-            surnameError = null;
+			surnameNote = null;
             validated = validated && true;
         }
         if (companyValue == null || companyValue.length() == 0) {
-            companyError = "Cannot be empty";
+			companyNote = "Cannot be empty";
             validated = false;
         } else if (companyValue.length() < 2) {
-            companyError = "(minimum 2 characters)";
+			companyNote = "(minimum 2 characters)";
             validated = false;
         } else if (companyValue.length() > 255) {
-            companyError = "Too long (maximum 255 characters)";
+			companyNote = "Too long (maximum 255 characters)";
             validated = false;
         } else if (!FormHelper.isTrimmed(companyValue)) {
-            companyError = "Whitespaces not allowed either before or after the string";
+			companyNote = "Whitespaces not allowed either before or after the string";
             validated = false;
         } else {
-            companyError = null;
+			companyNote = null;
             validated = validated && true;
         }
         if (emailValue == null || emailValue.length() == 0) {
-            emailError = "Cannot be empty";
+			emailNote = "Cannot be empty";
             validated = false;
         } else if (emailValue.length() < 6) {
-            emailError = "Too short (minimum 6 characters)";
+			emailNote = "Too short (minimum 6 characters)";
             validated = false;
         } else if (emailValue.length() > 255) {
-            emailError = "Too long (maximum 255 characters)";
+			emailNote = "Too long (maximum 255 characters)";
             validated = false;
         } else if (!FormHelper.isValidEmail(emailValue)) {
-            emailError = "Invalid email address";
+			emailNote = "Invalid email address";
             validated = false;
         } else {
-            emailError = null;
+			emailNote = null;
             validated = validated && true;
         }
 
@@ -309,11 +289,6 @@ public class RegisterForm extends Composite {
         termAndCond.setValue(value);
     }
 
-    public void clearPasswordValue() {
-        password.setValue("");
-        confirmPassword.setValue("");
-    }
-
     public void setActionCode(String value) {
         actionCode = value;
     }
@@ -326,18 +301,19 @@ public class RegisterForm extends Composite {
         surname.setText("");
         company.setText("");
         email.setText("");
-        password.setText("");
-        confirmPassword.setText("");
+		password.clear();
+		confirmPassword.clear();
+		termAndCond.setValue(Boolean.FALSE);
+		clearErrors();
+		actionCode = null;
+		registerBtn.resetStatus();
+		setEnabled(true);
         forename.setFocus(false);
         surname.setFocus(false);
         company.setFocus(false);
         email.setFocus(false);
         password.setFocus(false);
         confirmPassword.setFocus(false);
-        termAndCond.setValue(Boolean.FALSE);
-        clearErrors();
-        actionCode = null;
-        setEnabled(true);
     }
 
     /**
@@ -353,16 +329,17 @@ public class RegisterForm extends Composite {
         password.setEnabled(value);
         confirmPassword.setEnabled(value);
         termAndCond.setEnabled(value);
-        mRegister.setEnabled(value);
+		registerBtn.setEnabled(value);
     }
 
     private void clearErrors() {
-        FormHelper.hideNote(forenameGroup, forenameNote);
-        FormHelper.hideNote(surnameGroup, surnameNote);
-        FormHelper.hideNote(companyGroup, companyNote);
-        FormHelper.hideNote(emailGroup, emailNote);
-        FormHelper.hideNote(passwordGroup, passwordNote);
-        FormHelper.hideNote(termAndCondGroup, termAndCondNote);
+		forename.hideNote();
+		surname.hideNote();
+		company.hideNote();
+		email.hideNote();
+		password.hideNote();
+		confirmPassword.hideNote();
+		checkboxError.setInnerText("");
     }
 
     public void focusFirstActiveField() {
@@ -385,12 +362,33 @@ public class RegisterForm extends Composite {
             focusFirstActiveField();
             passwordGroup.setVisible(false);
             termAndCondGroup.setVisible(false);
-            mRegister.setHTML("Submit <span class=\"icon-right-small\"/>");
+			registerBtn.setText("Apply Now");
         } else {
             passwordGroup.setVisible(true);
             termAndCondGroup.setVisible(true);
-            mRegister.setText("Register");
+			registerBtn.setText("Continue");
+		}
+	}
+
+	public void setButtonLoading(String loadingText) {
+		setEnabled(false);
+		registerBtn.setStatusLoading(loadingText);
+	}
+
+	public void setButtonSuccess(String successText, int hideTimeout) {
+		registerBtn.setStatusSuccess(successText, hideTimeout);
+	}
+
+	public void setButtonError(String errorText) {
+		registerBtn.setStatusError(errorText);
+	}
+
+	public void setButtonError() {
+		setButtonError("Error!");
         }
+
+	public void resetButtonStatus() {
+		registerBtn.resetStatus();
     }
 
 }
