@@ -129,7 +129,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 		deleteLinkedAccountDialog.removeFromParent();
 		addLinkedAccountDialog.removeFromParent();
-		
+
 		createColumns();
 		linkedAccountsTable.setTableBuilder(new CustomTableBuilder(linkedAccountsTable));
 		linkedAccountsTable.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
@@ -392,6 +392,12 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		}
 	}
 
+	private void updateViewFromLinkedAccountCount() {
+		long count = LinkedAccountController.get().getLinkedAccountsCount();
+		linkedAccountsCount.setInnerText(Long.toString(count));
+		setTableEmpty(count == 0);
+	}
+
 	@UiHandler("addAnotherLinkedAccount")
 	void onAddLinkedAccountClicked(ClickEvent event) {
 		addLinkedAccountDialog.center();
@@ -435,7 +441,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	 */
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
-
+		updateViewFromLinkedAccountCount();
 		linkedAccountsLink.setTargetHistoryToken(current.toString());
 
 	}
@@ -449,9 +455,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	@Override
 	public void linkAccountSuccess(LinkAccountRequest input, LinkAccountResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			long count = LinkedAccountController.get().getLinkedAccountsCount();
-			linkedAccountsCount.setInnerText(Long.toString(count));
-			setTableEmpty(count == 0);
+			updateViewFromLinkedAccountCount();
 			iosMacAddForm.resetForm();
 			iosMacAddForm.setStatusSuccess("Account Linked!");
 			PageType.UsersPageType.show(PageType.LinkedAccountsPageType.toString(user.id.toString()));
@@ -494,9 +498,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		if (output.status == StatusType.StatusTypeSuccess) {
 			confirmDelete.resetStatus();
 			deleteLinkedAccountDialog.hide();
-			long count = LinkedAccountController.get().getLinkedAccountsCount();
-			linkedAccountsCount.setInnerText(Long.toString(count));
-			setTableEmpty(count == 0);
+			updateViewFromLinkedAccountCount();
 		} else {
 			confirmDelete.setStatusError();
 		}
@@ -551,9 +553,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 			// } else {
 			// simplePager.setVisible(false);
 			// }
-			long count = LinkedAccountController.get().getLinkedAccountsCount();
-			linkedAccountsCount.setInnerText(Long.toString(count));
-			setTableEmpty(count == 0);
+			updateViewFromLinkedAccountCount();
 		}
 	}
 
