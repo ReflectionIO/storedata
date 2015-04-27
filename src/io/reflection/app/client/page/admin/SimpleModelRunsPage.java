@@ -7,8 +7,10 @@
 //
 package io.reflection.app.client.page.admin;
 
-import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMAT_DD_MMM_YYYY;
+import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMATTER_DD_MMM_YYYY;
 import io.reflection.app.client.DefaultEventBus;
+import io.reflection.app.client.component.DateSelector;
+import io.reflection.app.client.component.FormFieldSelect;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.FilterController.Filter;
 import io.reflection.app.client.controller.NavigationController;
@@ -20,8 +22,6 @@ import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
-import io.reflection.app.client.part.BootstrapGwtDatePicker;
-import io.reflection.app.client.part.DateSelector;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.client.res.Images;
@@ -32,14 +32,15 @@ import java.util.Map;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.cellview.client.SafeHtmlHeader;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -56,22 +57,21 @@ public class SimpleModelRunsPage extends Page implements FilterEventHandler {
 			BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) SimplePager simplePager = new SimplePager(false, false);
 
-	@UiField ListBox listType;
+	@UiField FormFieldSelect listType;
 	@UiField DateSelector dateSelector;
-	@UiField ListBox country;
-	@UiField ListBox appStore;
-	@UiField ListBox category;
+	@UiField FormFieldSelect country;
+	@UiField FormFieldSelect appStore;
+	@UiField FormFieldSelect category;
 
 	public SimpleModelRunsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
-
-		BootstrapGwtDatePicker.INSTANCE.styles().ensureInjected();
 
 		addColumns();
 
 		FilterHelper.addCountries(country, true);
 		FilterHelper.addStores(appStore, true);
 		FilterHelper.addCategories(category, true);
+		FilterHelper.addListType(listType, true);
 
 		simpleModelRunTable.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 		simpleModelRunTable.setEmptyTableWidget(new HTMLPanel("<h6>No Simple Model Runs</h6>"));
@@ -100,7 +100,7 @@ public class SimpleModelRunsPage extends Page implements FilterEventHandler {
 
 			@Override
 			public String getValue(SimpleModelRun object) {
-				return DATE_FORMAT_DD_MMM_YYYY.format(object.created);
+				return DATE_FORMATTER_DD_MMM_YYYY.format(object.created);
 			}
 
 		};
@@ -140,11 +140,42 @@ public class SimpleModelRunsPage extends Page implements FilterEventHandler {
 
 			@Override
 			public String getValue(SimpleModelRun object) {
-				return object.feedFetch != null && object.feedFetch.date != null ? DATE_FORMAT_DD_MMM_YYYY.format(object.feedFetch.date) : "-";
+				return object.feedFetch != null && object.feedFetch.date != null ? DATE_FORMATTER_DD_MMM_YYYY.format(object.feedFetch.date) : "-";
 			}
 
 		};
 		simpleModelRunTable.addColumn(feedDateColumn, "Date");
+
+		TextColumn<SimpleModelRun> saleSummaryDateColumn = new TextColumn<SimpleModelRun>() {
+
+			@Override
+			public String getValue(SimpleModelRun object) {
+				return object.summaryDate == null ? "-" : DATE_FORMATTER_DD_MMM_YYYY.format(object.summaryDate);
+			}
+
+		};
+		simpleModelRunTable.addColumn(saleSummaryDateColumn, "Summary Date");
+
+		TextColumn<SimpleModelRun> adjustedR2Column = new TextColumn<SimpleModelRun>() {
+
+			@Override
+			public String getValue(SimpleModelRun object) {
+				return object.adjustedRSquared != null ? object.adjustedRSquared.toString() : "-";
+			}
+
+		};
+		simpleModelRunTable.addColumn(adjustedR2Column,
+				new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Adjusted r<span style=\"font-size: 12px; vertical-align: top;\">2</span>")));
+
+		TextColumn<SimpleModelRun> regressionSumSquaresColumn = new TextColumn<SimpleModelRun>() {
+
+			@Override
+			public String getValue(SimpleModelRun object) {
+				return object.regressionSumSquares != null ? object.regressionSumSquares.toString() : "-";
+			}
+
+		};
+		simpleModelRunTable.addColumn(regressionSumSquaresColumn, "RSS");
 
 	}
 

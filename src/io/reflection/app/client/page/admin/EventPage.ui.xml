@@ -1,7 +1,8 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:com.google.gwt.user.cellview.client"
-	xmlns:p="urn:import:io.reflection.app.client.part" xmlns:pt="urn:import:io.reflection.app.client.part.text">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:cv="urn:import:com.google.gwt.user.cellview.client"
+	xmlns:p="urn:import:io.reflection.app.client.part" xmlns:pt="urn:import:io.reflection.app.client.part.text" xmlns:c="urn:import:io.reflection.app.client.component">
 	<ui:import field="io.reflection.app.client.page.PageType.EventsPageType" />
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 	<ui:style gss="true">
 	.backLink {
 		margin-top: 20px;
@@ -15,12 +16,12 @@
 		margin-bottom: 20px;
 	}
 	</ui:style>
-	<g:HTMLPanel styleName="row">
-		<g:HTMLPanel styleName="col-sm-10 col-sm-offset-1">
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer}">
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth}">
 			<h2>Events</h2>
 
 			<g:HTMLPanel ui:field="eventTablePanel">
-				<c:CellTable ui:field="events" styleName="table table-hover table-striped" />
+				<cv:CellTable ui:field="events" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}" />
 				<p:SimplePager styleName="text-center" ui:field="simplePager" rangeLimited="true" visible="false" />
 			</g:HTMLPanel>
 
@@ -74,7 +75,7 @@
 
 					<g:HTMLPanel ui:field="priorityGroup" styleName="form-group">
 						<label>Priority</label>
-						<g:ListBox styleName="form-control" ui:field="priorityListBox" />
+						<c:FormFieldSelect ui:field="priorityListBox" labelText="Priority"></c:FormFieldSelect>
 						<g:HTMLPanel styleName="noteDetail" ui:field="priorityNote" visible="false" />
 					</g:HTMLPanel>
 
@@ -84,7 +85,7 @@
 				</g:HTMLPanel>
 			</p:Preloader>
 
+		</div>
+
 		</g:HTMLPanel>
-		<g:HTMLPanel styleName="filler-bottom col-md-12 hidden-xs hidden-sm" />
-	</g:HTMLPanel>
 </ui:UiBinder> 

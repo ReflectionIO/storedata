@@ -7,12 +7,13 @@
 //
 package io.reflection.app.client.page.admin;
 
-import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMAT_DD_MMM_YYYY;
+import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMATTER_DD_MMM_YYYY;
 import io.reflection.app.api.admin.shared.call.GetDataAccountFetchesRequest;
 import io.reflection.app.api.admin.shared.call.GetDataAccountFetchesResponse;
 import io.reflection.app.api.admin.shared.call.event.GetDataAccountFetchesEventHandler;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.StyledButtonCell;
+import io.reflection.app.client.component.DateSelector;
 import io.reflection.app.client.controller.DataAccountFetchController;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.FilterController.Filter;
@@ -25,8 +26,6 @@ import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
-import io.reflection.app.client.part.BootstrapGwtDatePicker;
-import io.reflection.app.client.part.DateSelector;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.client.res.Images;
@@ -72,8 +71,6 @@ public class DataAccountFetchesPage extends Page implements NavigationEventHandl
 	public DataAccountFetchesPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		BootstrapGwtDatePicker.INSTANCE.styles().ensureInjected();
-
 		addColumns();
 
 		dataAccountFetchTable.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
@@ -113,7 +110,7 @@ public class DataAccountFetchesPage extends Page implements NavigationEventHandl
 
 			@Override
 			public String getValue(DataAccountFetch object) {
-				return DATE_FORMAT_DD_MMM_YYYY.format(object.date);
+				return DATE_FORMATTER_DD_MMM_YYYY.format(object.date);
 			}
 
 		};

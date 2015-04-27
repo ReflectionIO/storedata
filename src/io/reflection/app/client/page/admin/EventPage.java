@@ -15,6 +15,7 @@ import io.reflection.app.api.admin.shared.call.UpdateEventResponse;
 import io.reflection.app.api.admin.shared.call.event.GetEventsEventHandler;
 import io.reflection.app.api.admin.shared.call.event.UpdateEventEventHandler;
 import io.reflection.app.client.DefaultEventBus;
+import io.reflection.app.client.component.FormFieldSelect;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
@@ -48,7 +49,6 @@ import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -108,7 +108,7 @@ public class EventPage extends Page implements NavigationEventHandler, GetEvents
 	@UiField HTMLPanel shortBodyNote;
 	private String shortBodyError = null;
 
-	@UiField ListBox priorityListBox;
+	@UiField FormFieldSelect priorityListBox;
 	@UiField HTMLPanel priorityGroup;
 	@UiField HTMLPanel priorityNote;
 	private String priorityError = null;
@@ -137,7 +137,7 @@ public class EventPage extends Page implements NavigationEventHandler, GetEvents
 	/**
 	 * @param listBox
 	 */
-	private void addPriorities(ListBox listBox) {
+	private void addPriorities(FormFieldSelect listBox) {
 		for (EventPriorityType p : EventPriorityType.values()) {
 			listBox.addItem(p.toString(), p.toString());
 		}

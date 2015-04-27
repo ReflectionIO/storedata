@@ -7,7 +7,7 @@
 //
 package io.reflection.app.client.page.admin;
 
-import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMAT_DD_MMM_YYYY_HH_MM;
+import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMATTER_DD_MMM_YYYY_HH_MM;
 import io.reflection.app.api.admin.shared.call.DeleteUserRequest;
 import io.reflection.app.api.admin.shared.call.DeleteUserResponse;
 import io.reflection.app.api.admin.shared.call.DeleteUsersRequest;
@@ -16,12 +16,14 @@ import io.reflection.app.api.admin.shared.call.event.DeleteUserEventHandler;
 import io.reflection.app.api.admin.shared.call.event.DeleteUsersEventHandler;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.StyledButtonCell;
+import io.reflection.app.client.component.FormButton;
+import io.reflection.app.client.component.FormField;
+import io.reflection.app.client.component.PopupDialog;
 import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.controller.UserController;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
-import io.reflection.app.client.part.ConfirmationDialog;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.User;
@@ -31,7 +33,6 @@ import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
@@ -41,10 +42,10 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
 
@@ -61,14 +62,19 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 	@UiField(provided = true) CellTable<User> usersTable = new CellTable<User>(ServiceConstants.SHORT_STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) SimplePager simplePager = new SimplePager(false, false);
 
-	private ConfirmationDialog confirmationDialog;
+	@UiField PopupDialog deleteUserDialog;
+	@UiField Button cancelDelete;
+	@UiField Anchor closeDeleteDialog;
+	@UiField FormButton confirmDelete;
 
 	@UiField Button deleteTestUsers;
-	@UiField TextBox queryTextBox;
+	@UiField FormField queryTextBox;
 	private String query = "";
 
 	public UsersPage() {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		deleteUserDialog.removeFromParent();
 
 		createColumns();
 
@@ -95,7 +101,9 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 		register(DefaultEventBus.get().addHandlerToSource(DeleteUsersEventHandler.TYPE, UserController.get(), this));
 	}
 	
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.client.page.Page#onDetach()
 	 */
 	@Override
@@ -151,7 +159,7 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 
 			@Override
 			public String getValue(User object) {
-				return (object.lastLoggedIn == null) ? "-" : DATE_FORMAT_DD_MMM_YYYY_HH_MM.format(object.lastLoggedIn);
+				return (object.lastLoggedIn == null) ? "-" : DATE_FORMATTER_DD_MMM_YYYY_HH_MM.format(object.lastLoggedIn);
 			}
 
 		};
@@ -163,8 +171,8 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 
 			@Override
 			public SafeHtml getValue(User object) {
-				return SafeHtmlUtils.fromTrustedString("<a class=\"btn btn-xs btn-default\" href=\"" + PageType.UsersPageType.asHref("changedetails", object.id.toString()).asString()
-						+ "\">Edit</a>");
+				return SafeHtmlUtils.fromTrustedString("<a class=\"btn btn-xs btn-default\" href=\""
+						+ PageType.UsersPageType.asHref("changedetails", object.id.toString()).asString() + "\">Edit</a>");
 			}
 		};
 
@@ -180,28 +188,8 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 					UserController.get().assignUserRoleId(object.id, "BT1");
 					break;
 				case "Delete":
-					confirmationDialog = new ConfirmationDialog("Delete " + object.forename + " " + object.surname + "\n" + object.company,
-							"Are you sure you want to remove " + object.username + " ?");
-					confirmationDialog.center();
-					confirmationDialog.setParameter(object.id);
-
-					confirmationDialog.getCancelButton().addClickHandler(new ClickHandler() {
-
-						@Override
-						public void onClick(ClickEvent event) {
-							confirmationDialog.reset();
-						}
-					});
-
-					confirmationDialog.getDeleteButton().addClickHandler(new ClickHandler() {
-
-						@Override
-						public void onClick(ClickEvent event) {
-							UserController.get().deleteUser(object.id);
-							confirmationDialog.reset();
-						}
-					});
-
+					deleteUserDialog.setParameter(object.id);
+					deleteUserDialog.center();
 					break;
 				}
 			}
@@ -243,28 +231,27 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 		usersTable.addColumn(delete);
 	}
 
+	@UiHandler("confirmDelete")
+	void onConfirmDeleteClicked(ClickEvent event) {
+		UserController.get().deleteUser(deleteUserDialog.getParameter());
+		confirmDelete.setStatusLoading("Deleting..");
+	}
+
+	@UiHandler("cancelDelete")
+	void onCancelDeleteClicked(ClickEvent event) {
+		deleteUserDialog.hide();
+	}
+
+	@UiHandler("closeDeleteDialog")
+	void onCloseDeleteDialogClicked(ClickEvent event) {
+		event.preventDefault();
+		deleteUserDialog.hide();
+			}
+
 	@UiHandler("deleteTestUsers")
 	void onDeleteTestUsersClick(ClickEvent event) {
-		confirmationDialog = new ConfirmationDialog("Delete test user", "Are you sure you want to remove all test users ?");
-		confirmationDialog.center();
-
-		confirmationDialog.getCancelButton().addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				confirmationDialog.reset();
-			}
-		});
-
-		confirmationDialog.getDeleteButton().addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
 				UserController.get().deleteTestUsers();
-				confirmationDialog.reset();
 			}
-		});
-	}
 
 	@UiHandler("queryTextBox")
 	void onKeyPressed(KeyUpEvent event) {
@@ -287,6 +274,10 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 		if (output.status == StatusType.StatusTypeSuccess) {
 			queryTextBox.setText("");
 			simplePager.setPageStart(0);
+			confirmDelete.resetStatus();
+			deleteUserDialog.hide();
+		} else {
+			confirmDelete.setStatusError();
 		}
 	}
 
@@ -297,7 +288,10 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 	 * java.lang.Throwable)
 	 */
 	@Override
-	public void deleteUserFailure(DeleteUserRequest input, Throwable caught) {}
+	public void deleteUserFailure(DeleteUserRequest input, Throwable caught) {
+		confirmDelete.setStatusError();
+
+	}
 
 	/*
 	 * (non-Javadoc)
