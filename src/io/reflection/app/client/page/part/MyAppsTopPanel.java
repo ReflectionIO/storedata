@@ -7,11 +7,12 @@
 //
 package io.reflection.app.client.page.part;
 
+import io.reflection.app.client.component.DateSelector;
+import io.reflection.app.client.component.FormFieldSelect;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormHelper;
-import io.reflection.app.client.part.DateSelector;
 import io.reflection.app.client.part.datatypes.DateRange;
 
 import com.google.gwt.core.client.GWT;
@@ -21,7 +22,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -34,9 +34,9 @@ public class MyAppsTopPanel extends Composite {
 
 	interface MyAppsTopPanelUiBinder extends UiBinder<Widget, MyAppsTopPanel> {}
 
-	@UiField ListBox accountName;
-	@UiField ListBox appStore;
-	@UiField ListBox country;
+	@UiField FormFieldSelect accountName;
+	@UiField FormFieldSelect appStore;
+	@UiField FormFieldSelect country;
 	@UiField DateSelector dateSelector;
 
 	/**
@@ -54,8 +54,6 @@ public class MyAppsTopPanel extends Composite {
 
 		// Reset linked account id in filter, to avoid problems after refreshing the page
 		FilterController.get().getFilter().setLinkedAccountId(0L);
-
-		updateFromFilter();
 
 	}
 

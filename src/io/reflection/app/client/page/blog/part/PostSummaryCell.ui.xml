@@ -6,31 +6,21 @@
     <ui:with field="author" type="java.lang.String" />
     <ui:with field="published" type="com.google.gwt.safehtml.shared.SafeHtml" />
 
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
     <ui:style gss="true">
-    .info {
-    	font-size: 13px;
-    	margin-bottom: 20px;
-    }
     
-    .bold {
-    	font-weight: 700;
-    }
-    
-    .readMore {
-    	display: inline-block;
-    	margin-top: 14px;
-    	margin-bottom: 36px;
-    }
     </ui:style>
 
-    <div>
-        <h3>
+	<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
+		<h2>
             <a href="{link}">
                 <ui:text from="{title}" />
             </a>
-        </h3>
-        <p class="{style.info}">
-            <span class="{style.bold}">
+		</h2>
+		<p class="{STYLES_INSTANCE.reflectionMainStyle.siteArticleInfo}">
+			<strong>Posted in</strong>
+
+			<span>
                 By
                 <span>
                     <ui:text from="{author}" />
@@ -42,7 +32,10 @@
             <ui:safehtml from="{description}" />
         </p>
 
-        <a href="{link}" class="{style.readMore}">Read More</a>
+		<p class="{STYLES_INSTANCE.reflectionMainStyle.moreLink}">
+			<a href="{link}">Read more</a>
+		</p>
+	</article>
 
-    </div>
+
 </ui:UiBinder>

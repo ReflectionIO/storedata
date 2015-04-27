@@ -7,31 +7,35 @@
 //
 package io.reflection.app.client.page.blog;
 
-import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMAT_EEE_DD_MMM_YYYY;
+import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMATTER_EEE_DD_MMM_YYYY;
 import io.reflection.app.api.blog.shared.call.GetPostRequest;
 import io.reflection.app.api.blog.shared.call.GetPostResponse;
 import io.reflection.app.api.blog.shared.call.event.GetPostEventHandler;
 import io.reflection.app.client.DefaultEventBus;
+import io.reflection.app.client.component.FormFieldSelect;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.PostController;
+import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.NavigationEventHandler;
+import io.reflection.app.client.helper.ColorHelper;
+import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.MarkdownHelper;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.page.blog.part.DisplayTag;
-import io.reflection.app.client.part.Preloader;
-import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Post;
 import io.reflection.app.shared.util.FormattingHelper;
+import io.reflection.app.shared.util.LookupHelper;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.ScriptInjector;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.HeadingElement;
-import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Timer;
@@ -57,23 +61,32 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 
 	private static final int POST_ID_PARAMETER_INDEX = 0;
 
+	@UiField FormFieldSelect blogCategories;
 	@UiField HeadingElement title;
 	@UiField SpanElement date;
+	@UiField SpanElement dateFooter;
 	@UiField SpanElement author;
+	@UiField SpanElement authorFooter;
 
 	@UiField HTMLPanel tags;
 	DivElement comments;
 
-	@UiField ParagraphElement content;
-	@UiField Preloader preloader;
+	@UiField SpanElement content;
+	private SpanElement notPublished = Document.get().createSpanElement();
 
-	private Long postId;
+	private Post post;
 	private boolean installed;
 
 	public PostPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		Styles.INSTANCE.blog().ensureInjected();
+		FilterHelper.addBlogCategories(blogCategories, SessionController.get().isLoggedInUserAdmin());
+
+		notPublished.setInnerText("NOT PUBLISHED");
+		notPublished.getStyle().setColor(ColorHelper.getReflectionRed());
+
+		ScriptInjector.fromUrl("//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5513f37846b6ec2e").setWindow(ScriptInjector.TOP_WINDOW).inject();
+
 	}
 
 	/*
@@ -114,20 +127,12 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 	public void navigationChanged(Stack previous, Stack current) {
 		if (current.getAction() != null) {
 			if (NavigationController.VIEW_ACTION_PARAMETER_VALUE.equals(current.getAction())) {
-				String postIdValue = current.getParameter(POST_ID_PARAMETER_INDEX);
+				String postParam = current.getParameter(POST_ID_PARAMETER_INDEX);
 
-				if (postIdValue != null) {
-					postId = null;
-
-					try {
-						postId = Long.parseLong(postIdValue);
-					} catch (NumberFormatException e) {}
-
-					if (postId != null) {
-						Post post = PostController.get().getPost(postId);
+				Post post = PostController.get().getPost(postParam);
 
 						if (post == null) {
-							post = PostController.get().getPostPart(postId);
+					post = PostController.get().getPostPart(postParam);
 
 							if (post != null) {
 								setLoading(LoadingType.PartialLoadingType);
@@ -140,8 +145,6 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 					}
 				}
 			}
-		}
-	}
 
 	/**
 	 * @param post
@@ -149,11 +152,14 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 	private void show(Post post) {
 		title.setInnerText(post.title);
 		author.setInnerText(FormattingHelper.getUserName(post.author));
+		authorFooter.setInnerText(FormattingHelper.getUserName(post.author));
 
 		if (post.published != null) {
-			date.setInnerText(DATE_FORMAT_EEE_DD_MMM_YYYY.format(post.published));
+			date.setInnerText(DATE_FORMATTER_EEE_DD_MMM_YYYY.format(post.published));
+			dateFooter.setInnerText(DATE_FORMATTER_EEE_DD_MMM_YYYY.format(post.published));
 		} else {
-			date.setInnerHTML("<span class=\"label label-info\">NOT PUBLISHED</span>");
+			date.setInnerSafeHtml(SafeHtmlUtils.fromTrustedString(notPublished.toString()));
+			dateFooter.setInnerSafeHtml(SafeHtmlUtils.fromTrustedString(notPublished.toString()));
 		}
 
 		if (tags.getWidgetCount() > 0) {
@@ -176,9 +182,10 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 			setLoading(LoadingType.NoneLoadingType);
 
 			if (post.commentsEnabled == Boolean.TRUE) {
-				final String identifier = "post" + post.id.toString();
+				final String lookup = LookupHelper.reference(post);
+				final String identifier = "post" + lookup;
 				final String url = GWT.getHostPageBaseURL()
-						+ PageType.BlogPostPageType.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE, post.id.toString()).asString();
+						+ PageType.BlogPostPageType.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE, lookup).asString();
 				final String title = post.title;
 				final String tag = post.tags == null || post.tags.size() == 0 ? "reflection.io" : post.tags.get(0);
 
@@ -208,23 +215,26 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 	private void setLoading(LoadingType value) {
 		switch (value) {
 		case CompleteLoadingType:
-			preloader.show();
+			// preloader.show();
 			title.getStyle().setDisplay(Display.NONE);
 			author.getParentElement().getStyle().setDisplay(Display.NONE);
+			authorFooter.getParentElement().getStyle().setDisplay(Display.NONE);
 			content.getStyle().setDisplay(Display.NONE);
 			comments.getStyle().setDisplay(Display.NONE);
 			break;
 		case PartialLoadingType:
-			preloader.show();
+			// preloader.show();
 			title.getStyle().clearDisplay();
 			author.getParentElement().getStyle().clearDisplay();
+			authorFooter.getParentElement().getStyle().clearDisplay();
 			content.getStyle().setDisplay(Display.NONE);
 			comments.getStyle().setDisplay(Display.NONE);
 			break;
 		case NoneLoadingType:
-			preloader.hide();
+			// preloader.hide();
 			title.getStyle().clearDisplay();
 			author.getParentElement().getStyle().clearDisplay();
+			authorFooter.getParentElement().getStyle().clearDisplay();
 			content.getStyle().clearDisplay();
 			comments.getStyle().clearDisplay();
 			break;
@@ -241,6 +251,8 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 	public void getPostSuccess(GetPostRequest input, GetPostResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess && output.post != null) {
 			show(output.post);
+		} else {
+			PageType.BlogPostsPageType.show();
 		}
 	}
 

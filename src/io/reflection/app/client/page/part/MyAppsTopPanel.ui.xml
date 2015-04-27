@@ -1,7 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-    xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.google.gwt.user.datepicker.client"
-    xmlns:p="urn:import:io.reflection.app.client.part">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.google.gwt.user.datepicker.client"
+	xmlns:c="urn:import:io.reflection.app.client.component">
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
     <ui:style gss="true">
     .title {
     	width: 100px;
@@ -30,44 +30,19 @@
     	width: 15px;
     }
     </ui:style>
-    <g:HTMLPanel>
-        <g:HTMLPanel styleName="row">
+	<g:HTMLPanel tag="form">
 
-            <div class="{style.title}">
-                <h5>My Apps</h5>
-            </div>
-            <g:FormPanel styleName="form-inline">
-                <g:HTMLPanel styleName="text-right pull-right {style.filters}">
+		<c:DateSelector ui:field="dateSelector" />
 
-                    <div class="form-group">
-                        <g:ListBox styleName="form-control"
-                            ui:field="accountName" />
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.filtersGroupOther}">
+
+			<c:FormFieldSelect ui:field="accountName" labelText="Account Name"></c:FormFieldSelect>
+
+			<c:FormFieldSelect ui:field="country" labelText="Country"></c:FormFieldSelect>
+
+			<c:FormFieldSelect ui:field="appStore" labelText="App Store"></c:FormFieldSelect>
+
                     </div>
 
-                    <div class="{style.store} hidden-xs hidden-sm hidden-md" />
-
-                    <div class="form-group">
-                        <g:ListBox styleName="form-control"
-                            ui:field="appStore" />
-                    </div>
-
-                    <div class="{style.country} hidden-xs hidden-sm hidden-md" />
-
-                    <div class="form-group">
-                        <g:ListBox styleName="form-control"
-                            ui:field="country" />
-                    </div>
-
-                    <div class="{style.dateSel} hidden-xs hidden-sm" />
-                    <div class="{style.dateSel} hidden-xs hidden-sm hidden-md" />
-
-                    <div class="form-group">
-                        <p:DateSelector ui:field="dateSelector" />
-                    </div>
-
-                </g:HTMLPanel>
-            </g:FormPanel>
-
-        </g:HTMLPanel>
     </g:HTMLPanel>
 </ui:UiBinder> 

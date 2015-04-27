@@ -11,18 +11,18 @@ import io.reflection.app.api.blog.shared.call.GetPostsRequest;
 import io.reflection.app.api.blog.shared.call.GetPostsResponse;
 import io.reflection.app.api.blog.shared.call.event.GetPostsEventHandler;
 import io.reflection.app.client.DefaultEventBus;
+import io.reflection.app.client.component.CellListElem;
+import io.reflection.app.client.component.FormFieldSelect;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.PostController;
-import io.reflection.app.client.controller.ServiceConstants;
+import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.NavigationEventHandler;
+import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.page.Page;
-import io.reflection.app.client.page.blog.part.BlogSidePanel;
 import io.reflection.app.client.page.blog.part.PostSummaryCell;
-import io.reflection.app.client.part.BootstrapGwtCellList;
-import io.reflection.app.client.part.Preloader;
 import io.reflection.app.client.part.SimplePager;
-import io.reflection.app.client.res.Styles;
+import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.Post;
 
 import com.google.gwt.core.client.GWT;
@@ -30,10 +30,13 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadElement;
 import com.google.gwt.dom.client.NodeList;
+import com.google.gwt.dom.client.Style.TextAlign;
+import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.cellview.client.CellList;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
 
@@ -41,27 +44,26 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class PostsPage extends Page implements NavigationEventHandler, GetPostsEventHandler {
+public class BlogPage extends Page implements NavigationEventHandler, GetPostsEventHandler {
 
 	private static PostsPageUiBinder uiBinder = GWT.create(PostsPageUiBinder.class);
 
-	interface PostsPageUiBinder extends UiBinder<Widget, PostsPage> {}
+	interface PostsPageUiBinder extends UiBinder<Widget, BlogPage> {}
 
-	@UiField(provided = true) CellList<Post> posts = new CellList<Post>(new PostSummaryCell(), BootstrapGwtCellList.INSTANCE);
+	@UiField FormFieldSelect blogCategories;
+	@UiField FormFieldSelect blogSortBy;
+	@UiField(provided = true) CellListElem<Post> postsCellListElem = new CellListElem<Post>(false, new PostSummaryCell());
+
 	@UiField(provided = true) SimplePager simplePager = new SimplePager(false, false);
-
-	@UiField BlogSidePanel blogSidePanel;
-	@UiField Preloader preloader;
 
 	private Element atomLink;
 	private Element head;
 
-	public PostsPage() {
+	public BlogPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		Styles.INSTANCE.blog().ensureInjected();
-
-		PostController.get().setPreloaderPosts(preloader);
+		FilterHelper.addBlogCategories(blogCategories, SessionController.get().isLoggedInUserAdmin());
+		FilterHelper.addBlogSortBy(blogSortBy, SessionController.get().isLoggedInUserAdmin());
 
 		NodeList<Element> nodes = Document.get().getElementsByTagName("head");
 		if (nodes != null && nodes.getLength() > 0) {
@@ -69,12 +71,15 @@ public class PostsPage extends Page implements NavigationEventHandler, GetPostsE
 			createAtomLink();
 		}
 
-		posts.setPageSize(ServiceConstants.SHORT_STEP_VALUE);
-		posts.setEmptyListWidget(new HTMLPanel("No posts found!"));
+		postsCellListElem.setPageSize(3);
+		postsCellListElem.setEmptyListWidget(new HTMLPanel("No posts found!"));
+		HTMLPanel loader = new HTMLPanel(new Image(Images.INSTANCE.preloader()).toString());
+		loader.getElement().getStyle().setTextAlign(TextAlign.CENTER);
+		postsCellListElem.setLoadingIndicator(loader);
 
-		PostController.get().addDataDisplay(posts);
+		PostController.get().addDataDisplay(postsCellListElem);
 
-		simplePager.setDisplay(posts);
+		simplePager.setDisplay(postsCellListElem);
 	}
 
 	public void createAtomLink() {
@@ -83,6 +88,12 @@ public class PostsPage extends Page implements NavigationEventHandler, GetPostsE
 		atomLink.setAttribute("type", "application/atom+xml");
 		atomLink.setAttribute("title", "Blog");
 		atomLink.setAttribute("href", "blogatom");
+	}
+
+	@UiHandler("blogCategories")
+	void onCountryValueChanged(ChangeEvent event) {
+
+		// FilterController.get().setCountry(countryListBox.getValue(countryListBox.getSelectedIndex()));
 	}
 
 	/*
@@ -134,9 +145,8 @@ public class PostsPage extends Page implements NavigationEventHandler, GetPostsE
 	 */
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
-		blogSidePanel.setBlogHomeLinkActive();
 		// Show pager if data loaded in Admin Blog page
-		if (PostController.get().hasPosts() && PostController.get().getPostsCount() > posts.getVisibleItemCount()) {
+		if (PostController.get().hasPosts() && PostController.get().getPostsCount() > postsCellListElem.getVisibleItemCount()) {
 			simplePager.setVisible(true);
 		}
 	}
@@ -156,7 +166,7 @@ public class PostsPage extends Page implements NavigationEventHandler, GetPostsE
 				simplePager.setVisible(false);
 			}
 		}
-		preloader.hide();
+		// preloader.hide();
 	}
 
 	/*
@@ -167,7 +177,7 @@ public class PostsPage extends Page implements NavigationEventHandler, GetPostsE
 	 */
 	@Override
 	public void getPostsFailure(GetPostsRequest input, Throwable caught) {
-		preloader.hide();
+		// preloader.hide();
 	}
 
 }

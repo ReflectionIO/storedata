@@ -1,130 +1,41 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.google.gwt.user.datepicker.client">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:d="urn:import:com.google.gwt.user.datepicker.client"
+	xmlns:c="urn:import:io.reflection.app.client.component">
+	
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
+	
 	<ui:style gss="true">
-	.moreMargin {
-		margin-right: 0.2em;
-	}
 	
-	.pageTitle {
-		padding-bottom: 30px;
-	}
-	
-	.filler {
-		height: 40px;
-	}
-	
-	.date {
-		height: 34px;
-		width: 100%;
-		text-align: left;
-		background: -webkit-linear-gradient(#f6f7f9, #eeeff1);
-		/* For Safari 5.1 to 6.0 */ /* @alternate */
-		background: -o-linear-gradient(#f6f7f9, #eeeff1);
-		/* For Opera 11.1 to 12.0 */ /* @alternate */
-		background: -moz-linear-gradient(#f6f7f9, #eeeff1);
-		/* For Firefox 3.6 to 15 */ /* @alternate */
-		background: linear-gradient(#f6f7f9, #eeeff1); /* Standard syntax */
-		color: #434346;
-		padding-left: 12px !important;
-		padding-top: 5px;
-		margin-right: 0px;
-		border-radius: 4px;
-		-webkit-border-radius: 4px;
-		-moz-border-radius: 4px;
-		-webkit-box-shadow: none;
-		box-shadow: none;
-		outline: 0;
-		-webkit-appearance: none;
-		-moz-appearance: none;
-		appearance: none;
-		cursor: pointer !important;
-		padding: 5px 4px;
-		border: 1px solid #ccc;
-		border-top: 1px solid #999;
-	}
-	
-	.appStore {
-		margin-left: -4px;
-	}
-	
-	.cat {
-		font-size: 14px;
-		padding-right: 4px;
-	}
-	
-	.dailyData {
-		padding-right: 4px;
-	}
 	</ui:style>
-	<g:HTMLPanel>
+	<g:HTMLPanel tag="form">
 
-		<h3 class="{style.pageTitle}">Leaderboard</h3>
+		<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.calendarContainer} {STYLES_INSTANCE.reflectionMainStyle.singleDateInput}">
 
-		<g:FormPanel>
-			<g:HTMLPanel>
-
-				<g:HTMLPanel styleName="form-group">
-					<label>
-						<i class="icon-calendar"></i>
-						Date
-					</label>
-					<div>
-						<d:DateBox ui:field="date" styleName="{style.date}" />
-					</div>
-				</g:HTMLPanel>
-
-				<!-- <g:HTMLPanel styleName="form-group"> <label>Overview</label> <g:ListBox styleName="form-control" ui:field="mListType"> <g:item value="all">All</g:item> 
-					<g:item value="paid">Paid</g:item> <g:item value="free">Free</g:item> <g:item value="grossing">Grossing</g:item> </g:ListBox> </g:HTMLPanel> -->
-
-				<g:HTMLPanel styleName="form-group">
-					<label>
-						<i class="icon-globe"></i>
-						Country
-					</label>
-					<g:ListBox styleName="form-control" ui:field="mCountry">
-					</g:ListBox>
-				</g:HTMLPanel>
-
-
-				<g:HTMLPanel styleName="form-group">
-					<label>
-						<span class="icon-basket-alt {style.moreMargin} {style.appStore}" />
-						App Store
-					</label>
-					<g:ListBox styleName="form-control" ui:field="mAppStore">
-					</g:ListBox>
-				</g:HTMLPanel>
-
-				<g:HTMLPanel styleName="form-group">
-					<label>
-						<span class="glyphicon glyphicon-folder-open {style.moreMargin} {style.cat}" />
-						Category
-					</label>
-					<g:ListBox styleName="form-control" ui:field="category">
-					</g:ListBox>
-				</g:HTMLPanel>
-
-				<g:HTMLPanel styleName="form-group" ui:field="dailyDataRadio">
-					<label>
-						<i class="glyphicon glyphicon-stats {style.dailyData}"></i>
-						Daily Data
-					</label>
-					<br />
-					<div style="display: inline-block; margin-right: 10px;">
-						<g:RadioButton ui:field="dailyDataRevenue" name="dailydata" checked="true">Revenue</g:RadioButton>
-					</div>
-					<div style="display: inline-block">
-						<g:RadioButton ui:field="dailyDataDownloads" name="dailydata">Downloads</g:RadioButton>
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.dateSelectContainer}">
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.formField} {STYLES_INSTANCE.reflectionMainStyle.formFieldDateSelect}">
+					<c:FormDateBox ui:field="dateBox"></c:FormDateBox>
+					<span></span>
+				</div>
 					</div>
 
 				</g:HTMLPanel>
 
-				<g:HTMLPanel styleName="{style.filler} hidden-xs hidden-sm" />
+		<c:FormFieldSelect ui:field="countryListBox" labelText="Country"></c:FormFieldSelect>
 
-				<!-- <g:HTMLPanel styleName="form-group"><label>Category</label> <g:ListBox styleName="form-control" id="category"> <g:item>All Categories</g:item> <g:item>Games</g:item> 
-					<g:item>Entertainment</g:item> <g:item>Health &amp; Fitness</g:item></g:ListBox> </g:HTMLPanel> -->
+		<c:FormFieldSelect ui:field="appStoreListBox" labelText="App Store"></c:FormFieldSelect>
+
+		<c:FormFieldSelect ui:field="categoryListBox" labelText="Category"></c:FormFieldSelect>
+
+		<g:HTMLPanel ui:field="dailyDataRadio" styleName="{STYLES_INSTANCE.reflectionMainStyle.formFieldRadioList} {STYLES_INSTANCE.reflectionMainStyle.formFieldRadioListInline}">
+			<ul>
+				<li>
+					<c:FormRadioButton ui:field="dailyDataRevenue" name="dailyData" label="Revenue" checked="true" />
+				</li>
+				<li>
+					<c:FormRadioButton ui:field="dailyDataDownloads" name="dailyData" label="Downloads" />
+				</li>
+			</ul>
 			</g:HTMLPanel>
-		</g:FormPanel>
 
 	</g:HTMLPanel>
 </ui:UiBinder> 
