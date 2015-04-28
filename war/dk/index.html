@@ -19,9 +19,11 @@
 	<link rel="stylesheet" href="js/vendor/jquery.mCustomScrollbar.css" />
 </head>
 <body class="panel-left-open">
-	<div class="window-warning">
-		<p>Uh oh... Reflection doesn't work in this browser. &nbsp; &nbsp;<a href="http://outdatedbrowser.com/en" target="_blank">Download a compatible browser</a></p>
-	</div>
+	<!--[if (lt IE 9)]>
+      <div class="window-warning">
+  			<p>Uh oh... Reflection doesn't work in this browser. &nbsp; &nbsp;<a href="http://outdatedbrowser.com/en" target="_blank">Download a compatible browser</a></p>
+  		</div>
+  <![endif]-->
 
   <header id="js-component-import--global-header" class="global-header"></header>
   
