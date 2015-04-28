@@ -158,7 +158,7 @@
 					</ul>
 				</div>
 				<h2 class="heading-style heading-style--heading-four">We're Hiring</h2>
-				<ul class="content-list">
+				<ul class="content-list content-list--no-bullets">
 					<li>
 						<a href="#a">Senior Java Developer</a>
 					</li>
