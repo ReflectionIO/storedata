@@ -16,6 +16,7 @@
 		<script src="js/vendor/picturefill.2.2.0.min.js" async></script>
 	<!-- <![endif]-->
 	<link rel="stylesheet" href="js/vendor/jquery.mCustomScrollbar.css" />
+	<link type="text/css" media="screen" rel="stylesheet" href="responsive-tables.css" />	
 </head>
 <body class="panel-left-open">
 	<!--[if (lt IE 9)]>
@@ -46,67 +47,64 @@
 				</div>
 				<div class="grid__column grid__column--full-width filters-container filter-container--my-apps">
 					<form class="forms--mid-theme">
-						<div class="filters-group-time">
-							<div class="calendar-container">
-									<div class="date-select-container">
-										<div class="form-field form-field--date-select form-field--date-select--no-icon">
-											<input type="text" name="date-single" id="date-single" value="01 Jan 2015" />
-										</div>
+						<div class="calendar-container">
+								<div class="date-select-container">
+									<div class="form-field form-field--date-select form-field--date-select--no-icon">
+										<input type="text" name="date-single" id="date-single" value="01 Jan 2015" />
 									</div>
-									<div class="date-select-to-indicator"></div>
-									<div class="date-select-container">
-										<div class="form-field form-field--date-select form-field--date-select--no-icon">
-											<input type="text" name="date-single-to" id="date-single-to" value="26 Feb 2015" />
-										</div>
+								</div>
+								<div class="date-select-to-indicator"></div>
+								<div class="date-select-container">
+									<div class="form-field form-field--date-select form-field--date-select--no-icon">
+										<input type="text" name="date-single-to" id="date-single-to" value="26 Feb 2015" />
 									</div>
-							</div>
-							<button class="ref-button--cta-small refresh-button" disabled><span class="ref-icon-before ref-icon-before--refresh">Refresh</span></button>
-							<span class="or-text">or</span>
-							<div class="form-field form-field--select">						
-								<select class="js-field--select reflection-select--filter">
-							    <option value="" disabled selected>Over Time</option>
-							    <option value="time1">1 Week</option>
-							    <option value="time2">2 Weeks</option>
-							    <option value="time3">4 Weeks</option>
-							    <option value="time4">6 Weeks</option>
-							    <option value="time5">8 Weeks</option>
-								</select>
-							</div>
+								</div>
+						</div>
+						<button class="ref-button--cta-small refresh-button" disabled><span class="ref-icon-before ref-icon-before--refresh">Refresh</span></button>
+						<span class="or-text">or</span>
+						<div class="form-field form-field--select time-period-select">						
+							<select class="js-field--select reflection-select--filter">
+						    <option value="" disabled selected>Over Time</option>
+						    <option value="time1">1 Week</option>
+						    <option value="time2">2 Weeks</option>
+						    <option value="time3">4 Weeks</option>
+						    <option value="time4">6 Weeks</option>
+						    <option value="time5">8 Weeks</option>
+							</select>
 						</div>
 
-						<div class="filters-group-other">
-							<div class="form-field form-field--select">						
-								<select class="js-field--select reflection-select--filter">
-							    <option value="" disabled selected>Country</option>
-							    <option value="a0">All Countries</option>
-							    <option value="a1">Japan</option>
-							    <option value="a2">United States</option>
-							    <option value="a3">China</option>
-							    <option value="a4">Germany</option>
-							    <option value="a5">France</option>
-							    <option value="a6">United Kingdom</option>
-							    <option value="a7">Italy</option>
-								</select>
-							</div>
-							<div class="form-field form-field--select">						
-								<select class="js-field--select reflection-select--filter">
-							    <option value="" disabled selected>App Store</option>
-							    <option value="b0">All Stores</option>
-							    <option value="b1">iPad Store</option>
-							    <option value="b2">iPhone Store</option>
-								</select>
-							</div>
-							<div class="form-field form-field--select">						
-								<select class="js-field--select reflection-select--filter">
-							    <option value="" disabled selected>Category</option>
-							    <option value="24">All Categories</option><option value="19">Book</option><option value="1">Business</option><option value="22">Catalogs</option><option value="18">Education</option><option value="17">Entertainment</option><option value="16">Finance</option><option value="23">Food &amp; Drink</option><option value="15">Games</option><option value="14">Health &amp; Fitness</option><option value="13">Lifestyle</option><option value="20">Medical</option><option value="12">Music</option><option value="11">Navigation</option><option value="10">News</option><option value="21">Newsstand</option><option value="9">Photo &amp; Video</option><option value="8">Productivity</option><option value="7">Reference</option><option value="6">Social Networking</option><option value="5">Sports</option><option value="4">Travel</option><option value="3">Utilities</option><option value="2">Weather</option>
-								</select>
-							</div>
+						<div class="form-field form-field--select category-select">						
+							<select class="js-field--select reflection-select--filter">
+						    <option value="" disabled selected>Category</option>
+						    <option value="24">All Categories</option><option value="19">Book</option><option value="1">Business</option><option value="22">Catalogs</option><option value="18">Education</option><option value="17">Entertainment</option><option value="16">Finance</option><option value="23">Food &amp; Drink</option><option value="15">Games</option><option value="14">Health &amp; Fitness</option><option value="13">Lifestyle</option><option value="20">Medical</option><option value="12">Music</option><option value="11">Navigation</option><option value="10">News</option><option value="21">Newsstand</option><option value="9">Photo &amp; Video</option><option value="8">Productivity</option><option value="7">Reference</option><option value="6">Social Networking</option><option value="5">Sports</option><option value="4">Travel</option><option value="3">Utilities</option><option value="2">Weather</option>
+							</select>
 						</div>
+						<div class="form-field form-field--select store-select">						
+							<select class="js-field--select reflection-select--filter">
+						    <option value="" disabled selected>App Store</option>
+						    <option value="b0">All Stores</option>
+						    <option value="b1">iPad Store</option>
+						    <option value="b2">iPhone Store</option>
+							</select>
+						</div>
+						<div class="form-field form-field--select country-select">						
+							<select class="js-field--select reflection-select--filter">
+						    <option value="" disabled selected>Country</option>
+						    <option value="a0">All Countries</option>
+						    <option value="a1">Japan</option>
+						    <option value="a2">United States</option>
+						    <option value="a3">China</option>
+						    <option value="a4">Germany</option>
+						    <option value="a5">France</option>
+						    <option value="a6">United Kingdom</option>
+						    <option value="a7">Italy</option>
+							</select>
+						</div>				
+
 					</form>
 				</div>
 				<div class="grid__row">
-					<table class="table-data table-my-apps" __gwtcellbasedwidgetimpldispatchingblur="true" __gwtcellbasedwidgetimpldispatchingfocus="true" cellspacing="0">
+					<table class="table-data table-my-apps responsive" __gwtcellbasedwidgetimpldispatchingblur="true" __gwtcellbasedwidgetimpldispatchingfocus="true" cellspacing="0">
 						<thead>
 							<tr __gwt_header_row="0">
 								<th colspan="1" class="MHXTE6C-i-h MHXTE6C-i-f" __gwt_column="column-gwt-uid-986" __gwt_header="header-gwt-uid-987">Rank</th>
@@ -143,6 +141,7 @@
  	<script src="js/vendor/handlebars-v2.0.0.js"></script>
  	<script src="js/templates/templates.js"></script>
 	<script src="js/vendor/modernizr.2.8.3.custom.min.js"></script>
+	<script type="text/javascript" src="js/vendor/responsive-tables.js"></script>
 	<!--[if IE 9]>
 		<script src="js/vendor/jquery.mCustomScrollbar.concat.min.js"></script>
 	<![endif]-->
