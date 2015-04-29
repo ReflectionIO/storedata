@@ -332,7 +332,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 			@Override
 			public String getValue(AppRanking object) {
-				return object.date != null ? FormattingHelper.DATE_FORMATTER_EEE_DD_MMM_YYYY.format(object.date) : "-";
+				return object.date != null ? FormattingHelper.DATE_FORMATTER_EEE_DD_MM_YY.format(object.date) : "-";
 			}
 		};
 		SafeHtmlHeader dateHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Revenue Generated " + sorterSvg));

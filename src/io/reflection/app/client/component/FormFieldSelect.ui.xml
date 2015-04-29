@@ -7,6 +7,7 @@
 	</ui:style>
 
 	<g:HTMLPanel ui:field="formField" styleName="{STYLES_INSTANCE.reflectionMainStyle.formField} {STYLES_INSTANCE.reflectionMainStyle.formFieldSelect}">
+		<div ui:field="overlayPanel" class="{STYLES_INSTANCE.reflectionMainStyle.pageOverlay}"></div>
 		<select ui:field="selectElem" class="{STYLES_INSTANCE.reflectionMainStyle.jsFieldSelect}">
 			<option value="" disabled="" selected="">
 			</option>

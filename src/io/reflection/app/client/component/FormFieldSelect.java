@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.OptionElement;
@@ -50,6 +51,7 @@ public class FormFieldSelect extends Composite implements HasChangeHandlers {
 	interface FormFieldSelectUiBinder extends UiBinder<Widget, FormFieldSelect> {}
 
 	@UiField HTMLPanel formField;
+	@UiField DivElement overlayPanel;
 	@UiField SelectElement selectElem;
 	@UiField HTMLPanel selectContainer;
 	@UiField UListElement uListElem;
@@ -61,6 +63,8 @@ public class FormFieldSelect extends Composite implements HasChangeHandlers {
 
 	public FormFieldSelect() {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		setOverlay(false);
 
 		selectContainer.sinkEvents(Event.ONCLICK);
 		selectContainer.addHandler(new ClickHandler() {
@@ -94,6 +98,14 @@ public class FormFieldSelect extends Composite implements HasChangeHandlers {
 		selectElem.getFirstChildElement().setInnerText(text);
 		spanSelectLabel.setInnerText(text);
 		spanOptionLabel.setInnerText(text);
+	}
+
+	public void setOverlay(boolean overlaid) {
+		if (overlaid) {
+			formField.getElement().insertFirst(overlayPanel);
+		} else {
+			overlayPanel.removeFromParent();
+		}
 	}
 
 	public void addItem(String item, String value) {
