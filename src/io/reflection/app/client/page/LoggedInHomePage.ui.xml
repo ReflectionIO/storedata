@@ -159,7 +159,7 @@
 					</ul>
 				</div>
 				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">We're Hiring</h2>
-				<ul class="{STYLES_INSTANCE.reflectionMainStyle.contentList}">
+				<ul class="{STYLES_INSTANCE.reflectionMainStyle.contentList} {STYLES_INSTANCE.reflectionMainStyle.contentListNoBullets}">
 					<li>
 						<a href="#a">Senior Java Developer</a>
 					</li>
