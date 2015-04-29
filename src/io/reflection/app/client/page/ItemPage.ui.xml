@@ -105,7 +105,7 @@
 			class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth} {STYLES_INSTANCE.reflectionMainStyle.filtersContainer} {STYLES_INSTANCE.reflectionMainStyle.filterContainerApp}">
 			<form class="{STYLES_INSTANCE.reflectionMainStyle.formsMidTheme}">
 				<c:DateSelector ui:field="dateSelector" />
-				<div class="{STYLES_INSTANCE.reflectionMainStyle.filtersGroupOther}">
+				<div>
 					<c:FormFieldSelect ui:field="countrySelector" labelText="Country" />
 					<c:FormFieldSelect ui:field="storeSelector" labelText="App Store" />
 					<div class="{STYLES_INSTANCE.reflectionMainStyle.filterToggle}">

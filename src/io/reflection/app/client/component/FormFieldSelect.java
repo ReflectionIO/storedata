@@ -240,6 +240,11 @@ public class FormFieldSelect extends Composite implements HasChangeHandlers {
 		return listItem;
 	}
 
+	@Override
+	public void setStyleName(String style) {
+		setStyleName(style, true);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 

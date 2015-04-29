@@ -35,6 +35,7 @@ public class MyAppsTopPanel extends Composite {
 	interface MyAppsTopPanelUiBinder extends UiBinder<Widget, MyAppsTopPanel> {}
 
 	@UiField FormFieldSelect accountName;
+	@UiField FormFieldSelect category;
 	@UiField FormFieldSelect appStore;
 	@UiField FormFieldSelect country;
 	@UiField DateSelector dateSelector;
@@ -47,6 +48,7 @@ public class MyAppsTopPanel extends Composite {
 	public MyAppsTopPanel() {
 		initWidget(uiBinder.createAndBindUi(this));
 
+		FilterHelper.addCategories(category, SessionController.get().isLoggedInUserAdmin());
 		FilterHelper.addStores(appStore, SessionController.get().isLoggedInUserAdmin());
 		FilterHelper.addCountries(country, SessionController.get().isLoggedInUserAdmin());
 
@@ -62,6 +64,11 @@ public class MyAppsTopPanel extends Composite {
 		FilterController.get().setLinkedAccount(Long.valueOf(accountName.getValue(accountName.getSelectedIndex())));
 	}
 
+	@UiHandler("category")
+	void onCategoryValueChanged(ChangeEvent event) {
+		FilterController.get().setCategory(Long.valueOf(category.getValue(category.getSelectedIndex())));
+	}
+
 	@UiHandler("appStore")
 	void onAppStoreValueChanged(ChangeEvent event) {
 		FilterController.get().setStore(appStore.getValue(appStore.getSelectedIndex()));
@@ -75,6 +82,7 @@ public class MyAppsTopPanel extends Composite {
 	public void updateFromFilter() {
 		FilterController fc = FilterController.get();
 
+		category.setSelectedIndex(FormHelper.getItemIndex(category, fc.getFilter().getCategoryId().toString()));
 		appStore.setSelectedIndex(FormHelper.getItemIndex(appStore, fc.getFilter().getStoreA3Code()));
 		DateRange range = new DateRange();
 
@@ -122,6 +130,7 @@ public class MyAppsTopPanel extends Composite {
 	public void setFiltersEnabled(boolean enabled) {
 		// TODO delete condition when the user can select the filters
 		if (SessionController.get().isLoggedInUserAdmin()) {
+			category.setEnabled(enabled);
 			appStore.setEnabled(enabled);
 			country.setEnabled(enabled);
 		}
