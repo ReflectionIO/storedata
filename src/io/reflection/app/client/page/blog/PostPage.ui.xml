@@ -11,14 +11,14 @@
 
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.componentsRowWithBorder} {STYLES_INSTANCE.reflectionMainStyle.filtersContainer}">
 			<form>
-				<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneTwelfth}">
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.headingContainer}">
 					<h1 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Blog</h1>
 				</div>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter}">
 					<c:FormFieldSelect ui:field="blogCategories" labelText="All Categories (4)"></c:FormFieldSelect>
 				</div>
 				<div
-					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFiveColumns} {STYLES_INSTANCE.reflectionMainStyle.breadcrumbContainer}">
+					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird} {STYLES_INSTANCE.reflectionMainStyle.breadcrumbContainer}">
 					<ul class="{STYLES_INSTANCE.reflectionMainStyle.breadcrumb}">
 						<li>
 							<a href="#">All Categories</a>
@@ -29,7 +29,8 @@
 						</li>
 					</ul>
 				</div>
-				<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter}">
+				<div
+					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter} {STYLES_INSTANCE.reflectionMainStyle.blogSearchContainer}">
 					<div class="{STYLES_INSTANCE.reflectionMainStyle.searchFieldNoLabel}">
 						<input type="text" autocomplete="off" name="search" placeholder="Search blog.." />
 						<input
