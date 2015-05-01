@@ -79,7 +79,11 @@ public class ITunesConnectDownloadHelper {
 				throw new Exception(error);
 			}
 
-			if (connection != null && connection.getHeaderField("filename") != null) return getFile(bucketName, bucketPath, connection);
+			if (connection != null && connection.getHeaderField("filename") != null) {
+				if (bucketName == null || bucketPath == null) return null;
+
+				return getFile(bucketName, bucketPath, connection);
+			}
 		} catch (final IOException e) {
 			final String message = String.format("Exception throw while obtaining file for data account [%s] and date [%s]", username, dateParameter);
 
