@@ -8,7 +8,7 @@
     <cron>
         <url>/cron?process=accounts</url>
         <description>Gather data account (linked account data)</description>
-        <schedule>every 6 hours from 2:00 to 21:00</schedule>
+        <schedule>every 6 hours from 2:00 to 20:00</schedule>
     </cron>
     <cron>
         <url>/cron?tidy=item</url>
@@ -20,4 +20,4 @@
         <description>Get missing item properties</description>
         <schedule>every day 20:00</schedule>
     </cron>
-</cronentries> 
+</cronentries>
