@@ -172,3 +172,15 @@ AccountSetup.prototype.mockLinkAccount = function() {
 		$('.form-submitted-success-complete').removeClass('form-submitted-success-complete');
 	});
 };
+
+var ResetPasswordPage = function() {
+	new FormInteractions();
+
+	// JS for reset password button
+	$('.js-mock-reset-password').on("click", function(e) {
+		e.preventDefault();
+		$('body').addClass('form-submitted-success-complete');
+		$(this).attr('value', "Your Password's Been Changed").addClass('ref-button--success');
+		$('.form-submitted-success').addClass('is-showing');
+	});
+};

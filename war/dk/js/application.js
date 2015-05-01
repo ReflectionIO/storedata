@@ -68,6 +68,7 @@
 		this.setIEClass();
 		this.setChromeClass();
 		this.setOperaClass();
+		this.setSafariClass();
 	}
 
 	BrowserDetection.prototype.setIEClass = function() {
@@ -90,6 +91,17 @@
 			$('html').addClass('is-opera');
 		}
 	};
+
+	BrowserDetection.prototype.setSafariClass = function() {
+		var isChrome = navigator.userAgent.indexOf('Chrome') > -1;
+	  var isSafari = navigator.userAgent.toLowerCase().indexOf('safari/') > -1;
+	  if (isChrome && isSafari) {
+	  	isSafari = false;
+	  }
+	  if(isSafari) {
+			$('html').addClass('is-safari');
+		}
+	}
 
 	BrowserDetection.prototype.detectIE = function() {
 	  var ua = window.navigator.userAgent;
@@ -237,7 +249,7 @@
 
 	var FormInteractions = function() {
 		setTimeout(function(){
-			$('.form-field input[type=email], .form-field input[type=password], .form-field input[type=text]').each(function(){
+			$('.form-field input[type=email], .form-field input[type=password], .form-field input[type=text], .form-field textarea').each(function(){
 				var $this = $(this);
 				var $thisParent = $this.parent('.form-field');
 				if(!$thisParent.hasClass('form-field--error')) {
@@ -535,8 +547,10 @@
 					selectOptions = selectInput.find('option'),
 					optionsList = $('<ul>'),
 					refSelectContainer = $('<div>').addClass('reflection-select'),
-					refSelectDefault = $('<span>').addClass('ref-icon-after ref-icon-after--angle-down').text('Choose your option');
-					if(selectInput.hasClass('reflection-select--filter')) {
+					refSelectDefault = $('<span>').addClass('ref-icon-after ref-icon-after--angle-down').text('Choose your option'),
+					isFilter = selectInput.hasClass('reflection-select--filter'),
+					listContainer = $("<div>").addClass("list-container");
+					if(isFilter) {
 						optionsList.append($('<a>').addClass('close-popup').text('K').on("click", function(e){
 							e.preventDefault();
 							$('.reflection-select').removeClass('is-open');
@@ -546,7 +560,7 @@
 							}							
 						}));
 						refSelectContainer.addClass('reflection-select--filter');
-						optionsList.append($('<span>').text($(selectOptions[0]).text()));
+						optionsList.append($('<span>').text($(selectOptions[0]).text())).append(listContainer);
 					}
 				selectOptions.each(function(){
 					$this = $(this);
@@ -557,13 +571,17 @@
 							preSelectedClass = 'pre-selected';
 							selectedText = $this.data("selectedtext");
 						}
-						optionsList.append($('<li>').addClass(preSelectedClass).attr('data-value', $this.attr('value')).attr('data-selectedtext', selectedText).text($this.text()));
+						if(isFilter) {
+							listContainer.append($('<li>').addClass(preSelectedClass).attr('data-value', $this.attr('value')).attr('data-selectedtext', selectedText).text($this.text()));
+						} else {
+							optionsList.append($('<li>').addClass(preSelectedClass).attr('data-value', $this.attr('value')).attr('data-selectedtext', selectedText).text($this.text()));
+						}						
 					}
 					else {
 						refSelectDefault.text($this.text());
 					}
 				});
-
+				
 				refSelectContainer.append(refSelectDefault).append(optionsList);
 				selectInput.parents('.form-field--select').append(refSelectContainer);
 

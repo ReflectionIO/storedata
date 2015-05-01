@@ -2,7 +2,7 @@
 <html lang="en" class="no-js">
 <head>
 	<meta charset="utf-8" />
-	<title>Reflection, Admin - Feed Browser</title>
+	<title>Reflection, Admin - Send Notification</title>
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">	
 	<!--[if (gte IE 9)|(IEMobile)|(!IE)]><!-->
@@ -30,8 +30,51 @@
 
 	<div class="l-page-container">
 		<div id="main" class="l-main" role="main">
-			<div class="grid-container">
-				<h1>App Base Template</h1>
+			<div class="grid-container page-admin">
+				<div class="grid__column grid__column--one-half">
+					<h1 class="heading-style--heading-three">Send Notification</h1>
+				</div>
+				<div class="grid__row">
+					<div class="grid__column grid__column--five-columns">
+						<form>
+							<div class="form-field">						
+								<input type="text" name="event" id="event" autocomplete="off" />
+								<label for="firstname">Event</label>
+							</div>
+							<div class="form-field form-field--select">						
+								<select class="js-field--select">
+								    <option value="" disabled selected>Priority</option>
+								    <option value="critical">Critical</option>
+								    <option value="high">High</option>
+								    <option value="critical">Normal</option>
+								    <option value="high">Low</option>
+								    <option value="debug">Debug</option>
+								</select>
+							</div>
+							<div class="form-field">						
+								<input type="text" name="user" id="user" autocomplete="off" />
+								<label for="user">User</label>
+							</div>
+							<div class="form-field form-field--select">						
+								<select class="js-field--select">
+								    <option value="" disabled selected>From</option>
+								    <option value="me">Me</option>
+								    <option value="beta">Beta</option>
+								    <option value="hello">Hello</option>
+								</select>
+							</div>
+							<div class="form-field">						
+								<input type="text" name="subject" id="subject" autocomplete="off" />
+								<label for="subject">Subject</label>
+							</div>
+							<div class="form-field form-field--textarea">								
+								<textarea name="body" id="body"></textarea>
+								<label for="body">Body</label>
+							</div>
+							<input type="submit" class="ref-button--full-width" value="Send Notification" />
+						</form>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -55,6 +98,9 @@
   <script>
   	function initScripts() {
   		new Page();
+
+  		// Components
+  		new FormFieldSelect();
   	}
 
   	window.onready = initScripts();
