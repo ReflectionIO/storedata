@@ -51,10 +51,8 @@ import com.google.gwt.dom.builder.shared.TableRowBuilder;
 import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.Style.Display;
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -192,37 +190,46 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		private void buildUpdateLinkedAccountRow(final DataAccount rowValue, final int absRowIndex) {
 			TableRowBuilder row = startRow();
 			row.style().display(Display.NONE);
-			TableCellBuilder td1 = row.startTD();
+			TableCellBuilder td = row.startTD();
 			final String uniqueCellId = DOM.createUniqueId();
-			td1.id(uniqueCellId);
-			td1.className(style.updateLinkedAccountsContainer());
-			td1.endTD();
+			td.id(uniqueCellId);
+			td.className(style.updateLinkedAccountsContainer());
 			if (cellTable.getColumnCount() > 1) {
-				TableCellBuilder td2 = row.startTD();
-				td2.colSpan(cellTable.getColumnCount() - 1);
-				td2.endTD();
+				td.colSpan(cellTable.getColumnCount());
 			}
+			td.endTD();
 			row.endTR();
-			final IosMacLinkAccountForm updateLinkedAccountform = new IosMacLinkAccountForm();
+			final IosMacLinkAccountForm updateLinkedAccountForm = new IosMacLinkAccountForm();
 			if (absRowIndex % 2 == 0) {
-				updateLinkedAccountform.setStyleName(style.formsMidTheme());
+				updateLinkedAccountForm.setStyleName(style.formsMidTheme());
 			}
-			updateLinkedAccountform.setTitleText("Edit Details");
-			updateLinkedAccountform.setTitleStyleName(style.headingStyleHeadingFive());
-			updateLinkedAccountform.setButtonText("Save Changes");
-			updateLinkedAccountform.setAccount(rowValue);
+			updateLinkedAccountForm.setTitleText("Edit Details");
+			updateLinkedAccountForm.setTitleStyleName(style.headingStyleHeadingFive());
+			updateLinkedAccountForm.setButtonText("Save Changes");
+			updateLinkedAccountForm.setAccount(rowValue);
 
-			updateLinkedAccountform.addLinkedAccountChangeEventHander(new LinkedAccountChangeEventHandler() {
+			updateLinkedAccountForm.addLinkedAccountChangeEventHander(new LinkedAccountChangeEventHandler() {
 
 				@Override
 				public void onChange(DataAccount dataAccount, EVENT_TYPE eventType) {
-					if (updateLinkedAccountform.validate()) {
-						updateLinkedAccountform.setFormErrors();
+					if (updateLinkedAccountForm.validate()) {
+						updateLinkedAccountForm.setFormErrors();
 						LinkedAccountController.get().updateLinkedAccont(rowValue.id, dataAccount.password, dataAccount.properties);
 						// updateLinkedAccountform.setStatusLoading("Updating ..");
 					} else {
-						updateLinkedAccountform.setFormErrors();
+						updateLinkedAccountForm.setFormErrors();
 					}
+				}
+			});
+
+			final Button updateLinkedAccountDeleteButton = new Button("Delete this account");
+			updateLinkedAccountDeleteButton.setStyleName(style.refButtonLink());
+			updateLinkedAccountDeleteButton.addClickHandler(new ClickHandler() {
+
+				@Override
+				public void onClick(ClickEvent event) {
+					deleteLinkedAccountDialog.setParameter(rowValue.id);
+					deleteLinkedAccountDialog.center();
 				}
 			});
 
@@ -232,10 +239,12 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 				public void execute() {
 					Element cell = Document.get().getElementById(uniqueCellId);
 					if (cell == null) return;
-					if (!updateLinkedAccountform.isAttached()) {
-						RootPanel.get().add(updateLinkedAccountform);
+					if (!updateLinkedAccountForm.isAttached()) {
+						RootPanel.get().add(updateLinkedAccountForm);
+						RootPanel.get().add(updateLinkedAccountDeleteButton);
+						updateLinkedAccountForm.getElement().appendChild(updateLinkedAccountDeleteButton.getElement());
 					}
-					cell.appendChild(updateLinkedAccountform.getElement());
+					cell.appendChild(updateLinkedAccountForm.getElement());
 				}
 			});
 
@@ -296,6 +305,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		};
 		SafeHtmlHeader dateAddedHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Date Added " + sorterSvg));
 		dateAddedHeader.setHeaderStyleNames(style.canBeSorted());
+		dateAddedHeader.setHeaderStyleNames(style.tableHeadingDateAdded());
 		columnDateAdded.setCellStyleNames(style.linkedAccountDate());
 		linkedAccountsTable.addColumn(columnDateAdded, dateAddedHeader);
 
@@ -350,10 +360,9 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 			@Override
 			public SafeHtml render(String object) {
 				AnchorElement deleteLink = Document.get().createAnchorElement();
-				SpanElement deleteIcon = Document.get().createSpanElement();
-				deleteLink.appendChild(deleteIcon);
-				deleteIcon.setClassName(style.refIconAfter() + " " + style.refIconAfterClose());
-				deleteLink.getStyle().setCursor(Cursor.POINTER);
+				deleteLink.addClassName(style.refButtonLink());
+				deleteLink.addClassName(style.warningText());
+				deleteLink.setInnerText("Delete");
 				return SafeHtmlUtils.fromTrustedString(deleteLink.toString());
 			}
 		})) {
@@ -374,12 +383,11 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 			}
 		});
 
-		linkedAccountsTable.setWidth("100%", true);
-		linkedAccountsTable.setColumnWidth(columnAccountName, 33.3, Unit.PCT);
-		linkedAccountsTable.setColumnWidth(columnStore, 31.3, Unit.PCT);
-		linkedAccountsTable.setColumnWidth(columnDateAdded, 24.4, Unit.PCT);
-		linkedAccountsTable.setColumnWidth(columnEdit, 7.5, Unit.PCT);
-		linkedAccountsTable.setColumnWidth(columnDelete, 3.5, Unit.PCT);
+		linkedAccountsTable.addColumnStyleName(0, style.tableColumnAccountName());
+		linkedAccountsTable.addColumnStyleName(1, style.tableColumnStore());
+		linkedAccountsTable.addColumnStyleName(2, style.tableColumnDateAdded());
+		linkedAccountsTable.addColumnStyleName(3, style.tableColumnEditAccount());
+		linkedAccountsTable.addColumnStyleName(4, style.tableColumnDeleteAccount());
 
 	}
 
@@ -394,7 +402,9 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 	private void updateViewFromLinkedAccountCount() {
 		long count = LinkedAccountController.get().getLinkedAccountsCount();
-		linkedAccountsCount.setInnerText(Long.toString(count));
+		if (count >= 0) {
+			linkedAccountsCount.setInnerText(Long.toString(count));
+		}
 		setTableEmpty(count == 0);
 	}
 
