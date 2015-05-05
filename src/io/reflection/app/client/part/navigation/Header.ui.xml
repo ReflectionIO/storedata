@@ -19,7 +19,7 @@
 			<a href="{HomePageType.asHref}" ui:field="homeBtn">
 			</a>
 		</div>
-		<div ui:field="actionsPanel" class="{STYLES_INSTANCE.reflectionMainStyle.globalHeader__actions}">
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.globalHeader__actions}">
 			<g:InlineHyperlink ui:field="applyBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaSmallWide}">Apply</g:InlineHyperlink>
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.searchLinkContainer}">
 				<g:Anchor ui:field="linkSearch" href="#"
@@ -28,13 +28,13 @@
 				</g:Anchor>
 			</div>
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.actionsGroupContainer}">
-				<g:HTMLPanel ui:field="actionsGroupPanel"
+				<g:HTMLPanel ui:field="actionsGroup"
 					styleName="{STYLES_INSTANCE.reflectionMainStyle.actionsGroup} {STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCog}">
-					<div ui:field="actionsGroupContent" class="{STYLES_INSTANCE.reflectionMainStyle.actionsGroup__content}">
+					<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.actionsGroup__content}">
 						<div class="{STYLES_INSTANCE.reflectionMainStyle.linkLogInContainer}">
 							<g:Anchor ui:field="linkLogin" href="#" styleName="{STYLES_INSTANCE.reflectionMainStyle.linkLogIn}">Log In</g:Anchor>
 						</div>
-					</div>
+					</g:HTMLPanel>
 				</g:HTMLPanel>
 			</div>
 		</div>
