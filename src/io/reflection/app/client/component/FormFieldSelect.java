@@ -7,6 +7,7 @@
 //
 package io.reflection.app.client.component;
 
+import io.reflection.app.client.helper.DOMHelper;
 import io.reflection.app.client.res.Styles;
 
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Window;
@@ -66,6 +68,7 @@ public class FormFieldSelect extends Composite implements HasChangeHandlers {
 
 		setOverlay(false);
 
+		// Toggle dropdown
 		selectContainer.sinkEvents(Event.ONCLICK);
 		selectContainer.addHandler(new ClickHandler() {
 
@@ -76,10 +79,16 @@ public class FormFieldSelect extends Composite implements HasChangeHandlers {
 						formField.getElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isOpen());
 						selectContainer.getElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isOpen());
 						uListElem.getStyle().setMarginTop(-(uListElem.getClientHeight()), Unit.PX);
+						if (Window.getClientWidth() < 720) {
+							DOMHelper.setScrollEnabled(false);
+						}
 					} else {
 						formField.getElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isOpen());
 						selectContainer.getElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isOpen());
 						uListElem.getStyle().setMarginTop(9, Unit.PX);
+						if (Window.getClientWidth() < 720) {
+							DOMHelper.setScrollEnabled(true);
+						}
 					}
 				}
 			}
@@ -92,6 +101,13 @@ public class FormFieldSelect extends Composite implements HasChangeHandlers {
 			}
 		});
 
+	}
+
+	@UiHandler("selectLink")
+	void onClick(ClickEvent event) {
+		if (Window.getClientWidth() < 720) {
+			DOMHelper.setScrollEnabled(true);
+		}
 	}
 
 	public void setLabelText(String text) {

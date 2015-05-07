@@ -9,16 +9,13 @@ package io.reflection.app.client;
 
 import io.reflection.app.client.charts.GwtCanvasBasedCanvasFactory;
 import io.reflection.app.client.controller.NavigationController;
+import io.reflection.app.client.helper.ResponsiveDesignHelper;
 import io.reflection.app.client.helper.UserAgentHelper;
 import io.reflection.app.client.part.BackToTop;
 import io.reflection.app.client.part.SuperAlertBox;
 import io.reflection.app.client.res.Styles;
 
-import com.google.gwt.event.logical.shared.ResizeEvent;
-import com.google.gwt.event.logical.shared.ResizeHandler;
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.googlecode.gchart.client.GChart;
@@ -63,21 +60,7 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 	}
 
 	private void makeContainer() {
-		if (UserAgentHelper.isIE()) {
-			Window.addResizeHandler(new ResizeHandler() {
-				@Override
-				public void onResize(ResizeEvent event) {
-					UserAgentHelper.setMainContentWidthForIE();
-				}
-			});
-			if (UserAgentHelper.getIEVersion() < 9) {
-				HTMLPanel outdatedBrowser = new HTMLPanel(
-						SafeHtmlUtils
-								.fromTrustedString("<p>Uh oh... Reflection doesn't work in this browser. &nbsp; &nbsp;<a href=\"http://outdatedbrowser.com/en\" target=\"_blank\">Download a compatible browser</a></p>"));
-				outdatedBrowser.setStyleName("window-warning");
-				RootPanel.get().add(outdatedBrowser);
-			}
-		}
+
 		lPageContainer.getElement().setClassName("l-page-container");
 		RootPanel.get().add(NavigationController.get().getHeader());
 		RootPanel.get().add(NavigationController.get().getPanelLeftMenu());
@@ -87,5 +70,8 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 		RootPanel.get().add(NavigationController.get().getPanelRightSearch());
 		RootPanel.get().add(new BackToTop());
 		UserAgentHelper.initCustomScrollbars();
+		UserAgentHelper.initIETweaks();
+		ResponsiveDesignHelper.initTabsResponsive();
+
 	}
 }
