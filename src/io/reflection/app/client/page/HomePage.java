@@ -7,6 +7,7 @@
 //
 package io.reflection.app.client.page;
 
+import io.reflection.app.client.helper.AnimationHelper;
 import io.reflection.app.client.helper.DOMHelper;
 import io.reflection.app.client.helper.UserAgentHelper;
 import io.reflection.app.client.res.Styles;
@@ -183,13 +184,13 @@ public class HomePage extends Page {
 		// String href = linkScrollToAnchor.getElement().getAttribute("href");
 		int navHeight = 60;
 		int targetTop = sectionHowIntelHelps.getOffsetTop();
-		DOMHelper.nativeScrollTop(targetTop - navHeight, 455, "swing");
+		AnimationHelper.nativeScrollTop(targetTop - navHeight, 455, "swing");
 	}
 
 	@UiHandler("linkToPageTop")
 	void onLinkToPageTopClicked(ClickEvent event) {
 		event.preventDefault();
-		DOMHelper.nativeScrollTop(0, "slow", "swing");
+		AnimationHelper.nativeScrollTop(0, "slow", "swing");
 	}
 
 	private void initScrollEffect() {

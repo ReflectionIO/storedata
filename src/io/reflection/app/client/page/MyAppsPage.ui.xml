@@ -4,18 +4,8 @@
 
 	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 
-	<ui:style gss="true" type="io.reflection.app.client.page.MyAppsPage.MyAppsPageStyle">
-	.red {
-		color: red;
-	}
+	<ui:style gss="true">
 	
-	.green {
-		color: green;
-	}
-	
-	.silver {
-		color: silver;
-	}
 	</ui:style>
 	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.pageMyApps}">
 

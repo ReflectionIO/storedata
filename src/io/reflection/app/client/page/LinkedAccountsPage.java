@@ -29,7 +29,9 @@ import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.NavigationEventHandler;
+import io.reflection.app.client.helper.AnimationHelper;
 import io.reflection.app.client.helper.DOMHelper;
+import io.reflection.app.client.helper.ResponsiveDesignHelper;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.linkaccount.IosMacLinkAccountForm;
 import io.reflection.app.client.part.linkaccount.LinkedAccountChangeEvent.EVENT_TYPE;
@@ -51,8 +53,8 @@ import com.google.gwt.dom.builder.shared.TableRowBuilder;
 import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.FormElement;
 import com.google.gwt.dom.client.Style.Cursor;
-import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -189,7 +191,6 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 		private void buildUpdateLinkedAccountRow(final DataAccount rowValue, final int absRowIndex) {
 			TableRowBuilder row = startRow();
-			row.style().display(Display.NONE);
 			TableCellBuilder td = row.startTD();
 			final String uniqueCellId = DOM.createUniqueId();
 			td.id(uniqueCellId);
@@ -245,6 +246,11 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 						updateLinkedAccountForm.getElement().appendChild(updateLinkedAccountDeleteButton.getElement());
 					}
 					cell.appendChild(updateLinkedAccountForm.getElement());
+					TableRowElement rowElem = linkedAccountsTable.getRowElement(absRowIndex).cast();
+					TableRowElement subRowElem = rowElem.getNextSiblingElement().cast();
+					AnimationHelper.nativeHide(subRowElem);
+					AnimationHelper.nativeHide(updateLinkedAccountForm.getElement());
+					AnimationHelper.nativeHide(updateLinkedAccountForm.getElement().getElementsByTagName("h2").getItem(0));
 				}
 			});
 
@@ -265,6 +271,8 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		register(DefaultEventBus.get().addHandlerToSource(GetLinkedAccountsEventHandler.TYPE, LinkedAccountController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(DeleteLinkedAccountEventHandler.TYPE, LinkedAccountController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(UpdateLinkedAccountEventHandler.TYPE, LinkedAccountController.get(), this));
+
+		ResponsiveDesignHelper.makeTabsResponsive();
 
 	}
 
@@ -336,17 +344,13 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 			@Override
 			public void update(int index, DataAccount object, String value) {
-				TableRowElement row = linkedAccountsTable.getRowElement(index).cast();
-				TableRowElement subRow = row.getNextSiblingElement().cast();
-				if (Display.NONE.name().equalsIgnoreCase(subRow.getStyle().getDisplay())) {
-					DOMHelper.addClassName(row.getCells().getItem(0), style.isOpen());
-					subRow.getStyle().setDisplay(Display.TABLE_ROW);
-					// new FadeInAnimation(subRow).run(200);
-				} else {
-					row.getCells().getItem(0).removeClassName(style.isOpen());
-					subRow.getStyle().setDisplay(Display.NONE);
-					// new FadeOutAnimation(subRow).run(100);
-				}
+				TableRowElement rowElem = linkedAccountsTable.getRowElement(index).cast();
+				TableRowElement subRowElem = rowElem.getNextSiblingElement().cast();
+				FormElement formElem = subRowElem.getFirstChildElement().getElementsByTagName("form").getItem(0).cast();
+				AnimationHelper.nativeSlideToggle(subRowElem, 200);
+				AnimationHelper.nativeSlideToggle(formElem, 200);
+				AnimationHelper.nativeSlideToggle(formElem.getElementsByTagName("h2").getItem(0), 200);
+				DOMHelper.toggleClassName(rowElem.getFirstChildElement(), style.isOpen());
 			}
 		});
 

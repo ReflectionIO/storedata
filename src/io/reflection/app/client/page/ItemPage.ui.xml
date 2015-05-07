@@ -32,7 +32,7 @@
 
 
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.appUserFunctionsContainer}">
-			<a href="#" class="{STYLES_INSTANCE.reflectionMainStyle.showHideLink} js-reveal-element" data-closed-text="Less..." data-open-text="More...">More...</a>
+			<a ui:field="revealContentStore" href="#" class="{STYLES_INSTANCE.reflectionMainStyle.showHideLink}" data-closed-text="Less..." data-open-text="More...">More...</a>
 			<form class="{STYLES_INSTANCE.reflectionMainStyle.revealElement}">
 				<c:FormSwitch ui:field="followSwitch" label="Follow (10.3k)" />
 
@@ -155,8 +155,8 @@
 				<c:FormFieldSelect ui:field="countrySelector" labelText="Country" styleName="{STYLES_INSTANCE.reflectionMainStyle.countrySelect}" />
 
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.filtersGroupGraphOptions}">
-					<a href="#"
-						class="{STYLES_INSTANCE.reflectionMainStyle.showHideLink} {STYLES_INSTANCE.reflectionMainStyle.refIconAfter} {STYLES_INSTANCE.reflectionMainStyle.refIconAfterAngleDown} js-reveal-element">Show / Hide Options</a>
+					<a ui:field="revealContentFilter" href="#"
+						class="{STYLES_INSTANCE.reflectionMainStyle.showHideLink} {STYLES_INSTANCE.reflectionMainStyle.refIconAfter} {STYLES_INSTANCE.reflectionMainStyle.refIconAfterAngleDown}">Show / Hide Options</a>
 					<div class="{STYLES_INSTANCE.reflectionMainStyle.revealElement}">
 						<c:FormSwitch ui:field="accuracySwitch" label="Accuracy" />
 						<c:FormSwitch ui:field="eventsSwitch" label="Events" />

@@ -43,6 +43,7 @@ import io.reflection.app.client.helper.ColorHelper;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.helper.FormattingHelper;
+import io.reflection.app.client.helper.ResponsiveDesignHelper;
 import io.reflection.app.client.highcharts.Chart;
 import io.reflection.app.client.highcharts.ChartHelper;
 import io.reflection.app.client.highcharts.ChartHelper.RankType;
@@ -168,8 +169,14 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	private static final String SERIES_ID_REVENUE_CUMULATIVE_SECONDARY = "revenueCumulativeSecondary";
 	private static final String SERIES_ID_DOWNLOAD_CUMULATIVE_SECONDARY = "downloadCumulativeSecondary";
 
+	@UiField AnchorElement revealContentFilter;
+	@UiField AnchorElement revealContentStore;
+
 	public ItemPage() {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		ResponsiveDesignHelper.nativeRevealContent(revealContentStore);
+		ResponsiveDesignHelper.nativeRevealContent(revealContentFilter);
 
 		tabs.put(REVENUE_CHART_TYPE, revenueItem);
 		tabs.put(DOWNLOADS_CHART_TYPE, downloadsItem);
@@ -192,6 +199,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		FilterHelper.addStores(storeSelector, SessionController.get().isLoggedInUserAdmin());
 		dateSelector.addFixedRanges(FilterHelper.getDefaultDateRanges());
 		updateFromFilter();
+
+		ResponsiveDesignHelper.makeTableResponsive(revenueTable2);
 	}
 
 	public void setItem(Item item) {
@@ -479,6 +488,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		register(DefaultEventBus.get().addHandlerToSource(GetItemSalesRanksEventHandler.TYPE, RankController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(GetLinkedAccountItemEventHandler.TYPE, LinkedAccountController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(TogglePanelEventHandler.TYPE, NavigationController.get().getHeader(), this));
+
+		ResponsiveDesignHelper.makeTabsResponsive();
 
 	}
 
