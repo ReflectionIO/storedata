@@ -294,7 +294,9 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 		} else {
 			PageType stackPage = PageType.fromString(page);
 
-			if (stackPage == null || !stackPage.isNavigable()) {
+			if (stackPage == null || PageType.Error404PageType.equals(stackPage)) {
+				stackPage = PageType.Error404PageType;
+			} else if (!stackPage.isNavigable()) {
 				stackPage = PageType.HomePageType;
 			} else if (PageType.UsersPageType == stackPage) {
 				if (value.hasAction()) {

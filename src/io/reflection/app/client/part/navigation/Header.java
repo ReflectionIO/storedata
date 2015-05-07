@@ -296,12 +296,12 @@ public class Header extends Composite implements NavigationEventHandler, Session
 		PageType currentPage = NavigationController.get().getCurrentPage();
 		if (Window.getClientWidth() > 960
 				&& !panelLeftWasClosed
-				&& currentPage != null
-				&& !PageType.LinkItunesPageType.equals(currentPage)
+				|| currentPage == null
+				|| !PageType.LinkItunesPageType.equals(currentPage)
 				&& (currentPage.requiresLogin() || PageType.BlogPostsPageType.equals(currentPage) || PageType.BlogPostPageType.equals(currentPage)
 						|| PageType.BlogTagPageType.equals(currentPage) || PageType.ForumEditTopicPageType.equals(currentPage)
-						|| PageType.ForumPageType.equals(currentPage) || PageType.ForumThreadPageType.equals(currentPage) || PageType.ForumTopicPageType
-							.equals(currentPage))) {
+						|| PageType.ForumPageType.equals(currentPage) || PageType.ForumThreadPageType.equals(currentPage)
+						|| PageType.ForumTopicPageType.equals(currentPage) || currentPage == null)) {
 			if (!isPanelLeftMenuOpen()) {
 				Document.get().getBody().addClassName(style.panelLeftOpen());
 			}
