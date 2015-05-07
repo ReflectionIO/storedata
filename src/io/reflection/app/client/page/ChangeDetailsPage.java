@@ -42,6 +42,7 @@ import io.reflection.app.client.dataprovider.UserRolesProvider;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.handler.user.UserPasswordChangedEventHandler;
 import io.reflection.app.client.helper.FormHelper;
+import io.reflection.app.client.helper.ResponsiveDesignHelper;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.client.res.Styles;
@@ -261,6 +262,8 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		register(DefaultEventBus.get().addHandlerToSource(RevokeRoleEventHandler.TYPE, UserController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(RevokePermissionEventHandler.TYPE, UserController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(GetUserDetailsEventHandler.TYPE, UserController.get(), this));
+
+		ResponsiveDesignHelper.makeTabsResponsive();
 
 	}
 

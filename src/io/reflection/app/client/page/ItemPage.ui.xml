@@ -14,21 +14,26 @@
 
 			<g:Image ui:field="image" styleName="{STYLES_INSTANCE.reflectionMainStyle.appIcon}" />
 
-			<h1 ui:field="title" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree} {STYLES_INSTANCE.reflectionMainStyle.appTitle}"></h1>
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.appDetails}">
 
-			<h2 class="{STYLES_INSTANCE.reflectionMainStyle.appCreator}">
-				By
-				<a ui:field="creatorName"></a>
-			</h2>
+				<h1 ui:field="title" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree} {STYLES_INSTANCE.reflectionMainStyle.appTitle}"></h1>
 
-			<span ui:field="price" class="{STYLES_INSTANCE.reflectionMainStyle.appPrice}"></span>
+				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.appCreator}">
+					By
+					<a ui:field="creatorName"></a>
+				</h2>
+
+				<span ui:field="price" class="{STYLES_INSTANCE.reflectionMainStyle.appPrice}"></span>
+
+			</div>
 
 			<g:Image resource="{images.spinner}" ui:field="spinnerLoader" visible="false" />
 		</header>
 
 
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.appUserFunctionsContainer}">
-			<form>
+			<a ui:field="revealContentStore" href="#" class="{STYLES_INSTANCE.reflectionMainStyle.showHideLink}" data-closed-text="Less..." data-open-text="More...">More...</a>
+			<form class="{STYLES_INSTANCE.reflectionMainStyle.revealElement}">
 				<c:FormSwitch ui:field="followSwitch" label="Follow (10.3k)" />
 
 				<a target="_blank" ui:field="viewInStore">
@@ -40,7 +45,8 @@
 		</div>
 
 
-		<ul class="{STYLES_INSTANCE.reflectionMainStyle.tabsContainer} {STYLES_INSTANCE.reflectionMainStyle.defaultTabsTransition}">
+		<ul
+			class="{STYLES_INSTANCE.reflectionMainStyle.tabsContainer} {STYLES_INSTANCE.reflectionMainStyle.defaultTabsTransition} {STYLES_INSTANCE.reflectionMainStyle.tabsToDropdown}">
 			<li ui:field="revenueItem"
 				class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab} {STYLES_INSTANCE.reflectionMainStyle.isActive}">
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
@@ -105,12 +111,10 @@
 			class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth} {STYLES_INSTANCE.reflectionMainStyle.filtersContainer} {STYLES_INSTANCE.reflectionMainStyle.filterContainerApp}">
 			<form class="{STYLES_INSTANCE.reflectionMainStyle.formsMidTheme}">
 				<c:DateSelector ui:field="dateSelector" />
-				<div class="{STYLES_INSTANCE.reflectionMainStyle.filtersGroupOther}">
-					<c:FormFieldSelect ui:field="countrySelector" labelText="Country" />
-					<c:FormFieldSelect ui:field="storeSelector" labelText="App Store" />
-					<div class="{STYLES_INSTANCE.reflectionMainStyle.filterToggle}">
-						<c:ToggleRadioButton ui:field="toggleChartGraph" value="true" labelClassName="{STYLES_INSTANCE.reflectionMainStyle.toggleCalendar}"
-							svgPath="M30.3,5.2c-0.5-0.4-1-0.7-1.6-0.7h-2.3V2.8c0-0.8-0.3-1.4-0.8-2C25,0.3,24.3,0,23.5,0h-1.2
+
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.filterToggle}">
+					<c:ToggleRadioButton ui:field="toggleChartGraph" value="true" labelClassName="{STYLES_INSTANCE.reflectionMainStyle.toggleCalendar}"
+						svgPath="M30.3,5.2c-0.5-0.4-1-0.7-1.6-0.7h-2.3V2.8c0-0.8-0.3-1.4-0.8-2C25,0.3,24.3,0,23.5,0h-1.2
 	c-0.8,0-1.5,0.3-2,0.8c-0.6,0.6-0.8,1.2-0.8,2v1.7h-6.9V2.8c0-0.8-0.3-1.4-0.8-2C11.1,0.3,10.4,0,9.6,0H8.5C7.7,0,7,0.3,6.4,0.8
 	c-0.6,0.6-0.8,1.2-0.8,2v1.7H3.3c-0.6,0-1.2,0.2-1.6,0.7C1.2,5.7,1,6.2,1,6.8v22.6c0,0.6,0.2,1.1,0.7,1.6c0.5,0.4,1,0.7,1.6,0.7
 	h25.4c0.6,0,1.2-0.2,1.6-0.7c0.5-0.4,0.7-1,0.7-1.6V6.8C31,6.2,30.8,5.7,30.3,5.2z M8.5,29.4H3.3v-5.1h5.2V29.4z M8.5,23.2H3.3v-5.7
@@ -120,8 +124,8 @@
 	 M22.4,23.2h-5.8v-5.7h5.8V23.2z M22.4,16.4h-5.8v-5.1h5.8V16.4z M21.9,8.3c-0.1-0.1-0.2-0.2-0.2-0.4V2.8c0-0.2,0.1-0.3,0.2-0.4
 	c0.1-0.1,0.2-0.2,0.4-0.2h1.2c0.2,0,0.3,0.1,0.4,0.2c0.1,0.1,0.2,0.2,0.2,0.4v5.1c0,0.2-0.1,0.3-0.2,0.4c-0.1,0.1-0.2,0.2-0.4,0.2
 	h-1.2C22.2,8.5,22.1,8.4,21.9,8.3z M28.7,29.4h-5.2v-5.1h5.2V29.4z M28.7,23.2h-5.2v-5.7h5.2V23.2z M28.7,16.4h-5.2v-5.1h5.2V16.4z" />
-						<c:ToggleRadioButton ui:field="toggleChartMap"
-							svgPath="M16,0C7.2,0,0,7.2,0,16c0,8.8,7.2,16,16,16s16-7.2,16-16C32,7.2,24.8,0,16,0z M1.5,16
+					<c:ToggleRadioButton ui:field="toggleChartMap"
+						svgPath="M16,0C7.2,0,0,7.2,0,16c0,8.8,7.2,16,16,16s16-7.2,16-16C32,7.2,24.8,0,16,0z M1.5,16
 	c0-2.9,0.9-5.6,2.3-7.8c0.1,0.1,0.2,0,0.3,0.1c0,0.2,0,0.5,0,0.7c-0.2,0.9,0.4,1.8,1.2,1.9c0.1,0.5-0.2,0.6,0.3,1.3
 	c0,0.1,0,0.3,0.1,0.4c0.1,0.1,0.3,0.2,0.5,0.3c0.5,0.3,0.4,0.9,0.2,1.4s-0.6,0.8-0.8,1.3c-0.3,0.8-0.3,1.8,0.3,2.4
 	c0.2,0.3,0.5,0.9,0.8,1s0.4,0.3,0.5,0.6c0.1,0.5,0.3,0.8,0.3,1.3c0,0.4-0.2,1.1-0.2,1.5c0,0.4,0.2,0.3,0.1,0.5
@@ -144,21 +148,30 @@
 	c0.5,0.4,0.8,0.7,1.3,0.8c0.4,0.1,1,0,1.3,0c0.5,0,1,0.1,1.5,0.4c-0.3,0.7-0.4,1.9-0.3,2.3c0,0.3,0.2,0.4,0.2,0.7
 	c0.2,1.1-1.6,1.8-1.2,2.9c0.1,0.2,0.2,0.5,0.2,0.8c0,0.9-0.7,1.3-0.8,2c-0.1,0.4,0,0.6,0,1c0,0.2,0,0.3-0.1,0.5
 	c-2.2,1.4-4.9,2.3-7.8,2.3C8,30.5,1.5,24,1.5,16z" />
-					</div>
 				</div>
+
+				<c:FormFieldSelect ui:field="storeSelector" labelText="App Store" styleName="{STYLES_INSTANCE.reflectionMainStyle.storeSelect}" />
+
+				<c:FormFieldSelect ui:field="countrySelector" labelText="Country" styleName="{STYLES_INSTANCE.reflectionMainStyle.countrySelect}" />
+
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.filtersGroupGraphOptions}">
-					<c:FormSwitch ui:field="accuracySwitch" label="Accuracy" />
-					<c:FormSwitch ui:field="eventsSwitch" label="Events" />
-					<c:FormSwitch ui:field="overlayRevenuesSwitch" label="Overlay Revenues" />
-					<c:FormSwitch ui:field="overlayDownloadsSwitch" label="Overlay Downloads" />
-					<c:FormSwitch ui:field="cumulativeChartSwitch" label="Cumulative Chart" />
-					<c:FormSwitch ui:field="oneMMovingAverageSwitch" label="1M Moving Average" />
-					<c:FormSwitch ui:field="overlayAppsSwitch" label="Overlay Apps (0/5)" />
+					<a ui:field="revealContentFilter" href="#"
+						class="{STYLES_INSTANCE.reflectionMainStyle.showHideLink} {STYLES_INSTANCE.reflectionMainStyle.refIconAfter} {STYLES_INSTANCE.reflectionMainStyle.refIconAfterAngleDown}">Show / Hide Options</a>
+					<div class="{STYLES_INSTANCE.reflectionMainStyle.revealElement}">
+						<c:FormSwitch ui:field="accuracySwitch" label="Accuracy" />
+						<c:FormSwitch ui:field="eventsSwitch" label="Events" />
+						<c:FormSwitch ui:field="overlayRevenuesSwitch" label="Overlay Revenues" />
+						<c:FormSwitch ui:field="overlayDownloadsSwitch" label="Overlay Downloads" />
+						<c:FormSwitch ui:field="cumulativeChartSwitch" label="Cumulative Chart" />
+						<c:FormSwitch ui:field="oneMMovingAverageSwitch" label="1M Moving Average" />
+						<c:FormSwitch ui:field="overlayAppsSwitch" label="Overlay Apps (0/5)" />
+					</div>
 				</div>
 			</form>
 		</div>
 
-		<ul class="{STYLES_INSTANCE.reflectionMainStyle.tabs__contentContainer} {STYLES_INSTANCE.reflectionMainStyle.defaultTabsTransition}">
+		<ul
+			class="{STYLES_INSTANCE.reflectionMainStyle.tabs__contentContainer} {STYLES_INSTANCE.reflectionMainStyle.defaultTabsTransition} {STYLES_INSTANCE.reflectionMainStyle.tabsToDropdownContent}">
 			<li id="tab-content" class="{STYLES_INSTANCE.reflectionMainStyle.tabs__content} {STYLES_INSTANCE.reflectionMainStyle.tabs__contentIsShowing}">
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__row}">
 					<hc:Chart ui:field="chartRevenue"></hc:Chart>
@@ -170,29 +183,33 @@
 
 		<section class="{STYLES_INSTANCE.reflectionMainStyle.dataDisplayContainer}">
 			<header class="{STYLES_INSTANCE.reflectionMainStyle.dataDisplayHeader}">
-				<div class="{STYLES_INSTANCE.reflectionMainStyle.dataDisplayHeaderComponent}">
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.dataDisplayHeaderComponent} {STYLES_INSTANCE.reflectionMainStyle.totalRevenueTitle}">
 					<g:Image ui:field="imageTable" styleName="{STYLES_INSTANCE.reflectionMainStyle.appIconSmall}" />
 					<h2
 						class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour} {STYLES_INSTANCE.reflectionMainStyle.dataHeading}">Total
 						Revenue</h2>
 				</div>
-				<div class="{STYLES_INSTANCE.reflectionMainStyle.dataDisplayHeaderComponent} {STYLES_INSTANCE.reflectionMainStyle.dataSummaryContainer}">
-					<span ui:field="infoDateRange" class="{STYLES_INSTANCE.reflectionMainStyle.revenueDateRange}"></span>
-					<span ui:field="infoTotalRevenue" class="{STYLES_INSTANCE.reflectionMainStyle.revenueSummaryValue}"></span>
-				</div>
+				<button
+					class="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall} {STYLES_INSTANCE.reflectionMainStyle.withIcon} {STYLES_INSTANCE.reflectionMainStyle.pageFunctionButton}">
+					<span class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCloud}">Download</span>
+				</button>
 				<div
 					class="{STYLES_INSTANCE.reflectionMainStyle.dataDisplayHeaderComponent} {STYLES_INSTANCE.reflectionMainStyle.dataSummaryContainer} {STYLES_INSTANCE.reflectionMainStyle.dataSummaryContainerSynced}">
 					<span class="{STYLES_INSTANCE.reflectionMainStyle.revenueDateRange}">Since First Synced (1 Feb
 						2014)</span>
 					<span class="{STYLES_INSTANCE.reflectionMainStyle.revenueSummaryValue}">&pound;9,291,005</span>
 				</div>
-				<button
-					class="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall} {STYLES_INSTANCE.reflectionMainStyle.withIcon} {STYLES_INSTANCE.reflectionMainStyle.pageFunctionButton}">
-					<span class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCloud}">Download</span>
-				</button>
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.dataDisplayHeaderComponent} {STYLES_INSTANCE.reflectionMainStyle.dataSummaryContainer}">
+					<span ui:field="infoDateRange" class="{STYLES_INSTANCE.reflectionMainStyle.revenueDateRange}"></span>
+					<span ui:field="infoTotalRevenue" class="{STYLES_INSTANCE.reflectionMainStyle.revenueSummaryValue}"></span>
+				</div>
 			</header>
-			<cv:CellTable ui:field="revenueTable2" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableRevenue}"></cv:CellTable>
+			<cv:CellTable ui:field="revenueTable2" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableRevenue} {STYLES_INSTANCE.reflectionMainStyle.responsive}"></cv:CellTable>
 			<cv:CellTable ui:field="revenueTable" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableRevenue}"></cv:CellTable>
+			<button
+				class="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall} {STYLES_INSTANCE.reflectionMainStyle.withIcon} {STYLES_INSTANCE.reflectionMainStyle.downloadButtonMobile}">
+				<span class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCloud}">Download</span>
+			</button>
 		</section>
 
 	</g:HTMLPanel>

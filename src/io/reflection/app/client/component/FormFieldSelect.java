@@ -7,12 +7,14 @@
 //
 package io.reflection.app.client.component;
 
+import io.reflection.app.client.helper.DOMHelper;
 import io.reflection.app.client.res.Styles;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.OptionElement;
@@ -31,6 +33,7 @@ import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Window;
@@ -50,6 +53,7 @@ public class FormFieldSelect extends Composite implements HasChangeHandlers {
 	interface FormFieldSelectUiBinder extends UiBinder<Widget, FormFieldSelect> {}
 
 	@UiField HTMLPanel formField;
+	@UiField DivElement overlayPanel;
 	@UiField SelectElement selectElem;
 	@UiField HTMLPanel selectContainer;
 	@UiField UListElement uListElem;
@@ -62,6 +66,9 @@ public class FormFieldSelect extends Composite implements HasChangeHandlers {
 	public FormFieldSelect() {
 		initWidget(uiBinder.createAndBindUi(this));
 
+		setOverlay(false);
+
+		// Toggle dropdown
 		selectContainer.sinkEvents(Event.ONCLICK);
 		selectContainer.addHandler(new ClickHandler() {
 
@@ -72,10 +79,16 @@ public class FormFieldSelect extends Composite implements HasChangeHandlers {
 						formField.getElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isOpen());
 						selectContainer.getElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isOpen());
 						uListElem.getStyle().setMarginTop(-(uListElem.getClientHeight()), Unit.PX);
+						if (Window.getClientWidth() < 720) {
+							DOMHelper.setScrollEnabled(false);
+						}
 					} else {
 						formField.getElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isOpen());
 						selectContainer.getElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isOpen());
 						uListElem.getStyle().setMarginTop(9, Unit.PX);
+						if (Window.getClientWidth() < 720) {
+							DOMHelper.setScrollEnabled(true);
+						}
 					}
 				}
 			}
@@ -90,10 +103,25 @@ public class FormFieldSelect extends Composite implements HasChangeHandlers {
 
 	}
 
+	@UiHandler("selectLink")
+	void onClick(ClickEvent event) {
+		if (Window.getClientWidth() < 720) {
+			DOMHelper.setScrollEnabled(true);
+		}
+	}
+
 	public void setLabelText(String text) {
 		selectElem.getFirstChildElement().setInnerText(text);
 		spanSelectLabel.setInnerText(text);
 		spanOptionLabel.setInnerText(text);
+	}
+
+	public void setOverlay(boolean overlaid) {
+		if (overlaid) {
+			formField.getElement().insertFirst(overlayPanel);
+		} else {
+			overlayPanel.removeFromParent();
+		}
 	}
 
 	public void addItem(String item, String value) {
@@ -238,6 +266,11 @@ public class FormFieldSelect extends Composite implements HasChangeHandlers {
 		listItem.setAttribute("data-selectedtext", "");
 		listItem.setInnerText(item);
 		return listItem;
+	}
+
+	@Override
+	public void setStyleName(String style) {
+		setStyleName(style, true);
 	}
 
 	/*

@@ -29,6 +29,7 @@ import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.dataprovider.UserItemProvider;
 import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
+import io.reflection.app.client.helper.ResponsiveDesignHelper;
 import io.reflection.app.client.page.part.MyAppsTopPanel;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.SimplePager;
@@ -36,6 +37,7 @@ import io.reflection.app.client.part.datatypes.MyApp;
 import io.reflection.app.client.part.myapps.MyAppsEmptyTable;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.client.res.Styles;
+import io.reflection.app.client.res.Styles.ReflectionMainStyles;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.shared.util.DataTypeHelper;
@@ -44,8 +46,6 @@ import java.util.Map;
 
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -67,17 +67,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 
 	interface MyAppsPageUiBinder extends UiBinder<Widget, MyAppsPage> {}
 
-	interface MyAppsPageStyle extends CssResource {
-		String red();
-
-		String green();
-
-		String silver();
-	}
-
 	UserItemProvider userItemProvider = new UserItemProvider();
-
-	@UiField MyAppsPageStyle style;
 
 	@UiField(provided = true) CellTable<MyApp> appsTable = new CellTable<MyApp>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) SimplePager simplePager = new SimplePager(false, false);
@@ -101,6 +91,8 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	private Column<MyApp, SafeHtml> columnRevenue;
 	private Column<MyApp, SafeHtml> columnIap;
 
+	private ReflectionMainStyles style = Styles.STYLES_INSTANCE.reflectionMainStyle();
+
 	public MyAppsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
@@ -119,6 +111,8 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 
 		myAppsTopPanel.setFiltersEnabled(false);
 		myAppsTopPanel.setFilterAccountEnabled(false);
+		
+		ResponsiveDesignHelper.makeTableResponsive(appsTable);
 	}
 
 	/*
@@ -216,13 +210,12 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		columnIap.setCellStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA());
 		appsTable.addColumn(columnIap, "IAP");
 
-		appsTable.setWidth("100%", true);
-		appsTable.setColumnWidth(columnRank, 10.2, Unit.PCT);
-		appsTable.setColumnWidth(columnAppDetails, 34.5, Unit.PCT);
-		appsTable.setColumnWidth(columnPrice, 11.7, Unit.PCT);
-		appsTable.setColumnWidth(columnDownloads, 15.1, Unit.PCT);
-		appsTable.setColumnWidth(columnRevenue, 15.1, Unit.PCT);
-		appsTable.setColumnWidth(columnIap, 6.4, Unit.PCT);
+		appsTable.addColumnStyleName(0, style.rankColumn());
+		appsTable.addColumnStyleName(1, style.appDetailsColumn());
+		appsTable.addColumnStyleName(2, style.priceColumn());
+		appsTable.addColumnStyleName(3, style.downloadsColumn());
+		appsTable.addColumnStyleName(4, style.revenueColumn());
+		appsTable.addColumnStyleName(5, style.iapColumn());
 
 	}
 
@@ -362,7 +355,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 				simplePager.setVisible(true);
 			} else {
 				simplePager.setVisible(false);
-			}
+			}			
 		}
 		myAppsTopPanel.setFiltersEnabled(true);
 

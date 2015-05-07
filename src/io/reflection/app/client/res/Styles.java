@@ -126,6 +126,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("app-creator")
 		String appCreator();
 
+		@ClassName("app-creator-price")
+		String appCreatorPrice();
+
 		@ClassName("app-details")
 		String appDetails();
 
@@ -188,6 +191,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("blog-content-container")
 		String blogContentContainer();
 
+		@ClassName("blog-search-container")
+		String blogSearchContainer();
+
 		@ClassName("blog-tags")
 		String blogTags();
 
@@ -230,6 +236,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("can-toggle__switch")
 		String canToggle__switch();
+
+		@ClassName("category-select")
+		String categorySelect();
 
 		String cellTableLoading();
 
@@ -331,10 +340,16 @@ public interface Styles extends ClientBundle {
 		@ClassName("content-list--minor")
 		String contentListMinor();
 
+		@ClassName("content-list--no-bullets")
+		String contentListNoBullets();
+
 		@ClassName("content-list-item")
 		String contentListItem();
 
 		String cord();
+
+		@ClassName("country-select")
+		String countrySelect();
 
 		@ClassName("create-password-content")
 		String createPasswordContent();
@@ -410,6 +425,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("dk-component-row")
 		String dkComponentRow();
 
+		@ClassName("download-button--mobile")
+		String downloadButtonMobile();
+
 		@ClassName("downloads-column")
 		String downloadsColumn();
 
@@ -472,12 +490,6 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("filters-group-graph-options")
 		String filtersGroupGraphOptions();
-
-		@ClassName("filters-group-other")
-		String filtersGroupOther();
-
-		@ClassName("filters-group-time")
-		String filtersGroupTime();
 
 		@ClassName("font-demo")
 		String fontDemo();
@@ -648,6 +660,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("has-transparency")
 		String hasTransparency();
+
+		@ClassName("heading-container")
+		String headingContainer();
 
 		@ClassName("heading-style")
 		String headingStyle();
@@ -1029,6 +1044,8 @@ public interface Styles extends ClientBundle {
 		@ClassName("phablet-width")
 		String phabletWidth();
 
+		String pinned();
+
 		@ClassName("plug-left")
 		String plugLeft();
 
@@ -1131,6 +1148,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("ref-button--toggle")
 		String refButtonToggle();
+
+		@ClassName("ref-button--warning")
+		String refButtonWarning();
 
 		@ClassName("ref-button--with-icon")
 		String refButtonWithIcon();
@@ -1255,6 +1275,11 @@ public interface Styles extends ClientBundle {
 		@ClassName("reset-password-form-is-showing")
 		String resetPasswordFormIsShowing();
 
+		String responsive();
+
+		@ClassName("reveal-element")
+		String revealElement();
+
 		@ClassName("revenue-column")
 		String revenueColumn();
 
@@ -1269,6 +1294,8 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("revenue-value")
 		String revenueValue();
+
+		String scrollable();
 
 		@ClassName("search-button-mobile")
 		String searchButtonMobile();
@@ -1295,6 +1322,12 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("search__results-section--developers")
 		String search__resultsSectionDevelopers();
+
+		@ClassName("selected-tab")
+		String selectedTab();
+
+		@ClassName("show-hide-link")
+		String showHideLink();
 
 		@ClassName("show-reset-password-form")
 		String showResetPasswordForm();
@@ -1323,6 +1356,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("sort-svg")
 		String sortSvg();
 
+		@ClassName("store-select")
+		String storeSelect();
+
 		@ClassName("success-tick")
 		String successTick();
 
@@ -1344,11 +1380,29 @@ public interface Styles extends ClientBundle {
 		@ClassName("table-cell-odd-row")
 		String tableCellOddRow();
 
+		@ClassName("table-column--account-name")
+		String tableColumnAccountName();
+
+		@ClassName("table-column--date-added")
+		String tableColumnDateAdded();
+
+		@ClassName("table-column--delete-account")
+		String tableColumnDeleteAccount();
+
+		@ClassName("table-column--edit-account")
+		String tableColumnEditAccount();
+
+		@ClassName("table-column--store")
+		String tableColumnStore();
+
 		@ClassName("table-data")
 		String tableData();
 
 		@ClassName("table-data-first")
 		String tableDataFirst();
+
+		@ClassName("table-heading--date-added")
+		String tableHeadingDateAdded();
 
 		@ClassName("table-linked-accounts")
 		String tableLinkedAccounts();
@@ -1365,6 +1419,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("table-revenue")
 		String tableRevenue();
 
+		@ClassName("table-wrapper")
+		String tableWrapper();
+
 		@ClassName("tablet-width")
 		String tabletWidth();
 
@@ -1376,6 +1433,15 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("tabs-template")
 		String tabsTemplate();
+
+		@ClassName("tabs-to-dropdown")
+		String tabsToDropdown();
+
+		@ClassName("tabs-to-dropdown--content")
+		String tabsToDropdownContent();
+
+		@ClassName("tabs-to-dropdown-container")
+		String tabsToDropdownContainer();
 
 		String tabs__content();
 
@@ -1392,16 +1458,31 @@ public interface Styles extends ClientBundle {
 
 		String tabs__tab();
 
+		@ClassName("text-link")
+		String textLink();
+
 		@ClassName("text-muted")
 		String textMuted();
 
 		@ClassName("th-first")
 		String thFirst();
 
+		@ClassName("time-period-select")
+		String timePeriodSelect();
+
 		String toggle();
 
 		@ClassName("toggle-calendar")
 		String toggleCalendar();
+
+		@ClassName("toggle-downloads")
+		String toggleDownloads();
+
+		@ClassName("toggle-revenue")
+		String toggleRevenue();
+
+		@ClassName("total-revenue-title")
+		String totalRevenueTitle();
 
 		String touch();
 
@@ -1422,6 +1503,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("warning-sign")
 		String warningSign();
+
+		@ClassName("warning-text")
+		String warningText();
 
 		@ClassName("will-show")
 		String willShow();

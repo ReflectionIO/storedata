@@ -33,6 +33,7 @@ import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.FormattingHelper;
+import io.reflection.app.client.helper.ResponsiveDesignHelper;
 import io.reflection.app.client.page.part.RankSidePanel;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.datatypes.RanksGroup;
@@ -185,6 +186,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		ranksTable.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 
 		RankController.get().addDataDisplay(ranksTable);
+		
+		ResponsiveDesignHelper.makeTableResponsive(ranksTable);
 	}
 
 	private void createColumns() {
@@ -296,7 +299,6 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		revenueHeader = new TextHeader("Revenue");
 		iapHeader = new TextHeader("IAP");
 
-		ranksTable.setWidth("100%", true);
 		ranksTable.setColumnWidth(comingSoonColumn, 100.0, Unit.PCT);
 	}
 
@@ -657,6 +659,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		// register(EventController.get().addHandlerToSource(IsAuthorisedEventHandler.TYPE, SessionController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(GetAllTopItemsEventHandler.TYPE, RankController.get(), this));
+
+		ResponsiveDesignHelper.makeTabsResponsive();
 
 	}
 

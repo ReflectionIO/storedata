@@ -26,6 +26,8 @@ public class FormattingHelper extends io.reflection.app.shared.util.FormattingHe
 
 	public static DateTimeFormat DATE_FORMATTER_EEE_DD_MMM_YYYY = DateTimeFormat.getFormat(DATE_FORMAT_EEE_DD_MMM_YYYY);
 
+	public static DateTimeFormat DATE_FORMATTER_EEE_DD_MM_YY = DateTimeFormat.getFormat(DATE_FORMAT_EEE_DD_MM_YY);
+
 	public static DateTimeFormat DATE_FORMATTER_DD_MMM_YYYY = DateTimeFormat.getFormat(DATE_FORMAT_DD_MMM_YYYY);
 
 	public static DateTimeFormat DATE_FORMATTER_DD_MMM_YYYY_HH_MM = DateTimeFormat.getFormat(DATE_FORMAT_DD_MMM_YYYY_HH_MM);
