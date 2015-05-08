@@ -150,9 +150,9 @@
 	c-2.2,1.4-4.9,2.3-7.8,2.3C8,30.5,1.5,24,1.5,16z" />
 				</div>
 
-				<c:Selector ui:field="storeSelector" labelText="App Store" styleName="{STYLES_INSTANCE.reflectionMainStyle.storeSelect}" />
+				<c:Selector ui:field="storeSelector" overlay="true" labelText="App Store" styleName="{STYLES_INSTANCE.reflectionMainStyle.storeSelect}" />
 
-				<c:Selector ui:field="countrySelector" labelText="Country" styleName="{STYLES_INSTANCE.reflectionMainStyle.countrySelect}" />
+				<c:Selector ui:field="countrySelector" overlay="true" labelText="Country" styleName="{STYLES_INSTANCE.reflectionMainStyle.countrySelect}" />
 
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.filtersGroupGraphOptions}">
 					<a ui:field="revealContentFilter" href="#"
