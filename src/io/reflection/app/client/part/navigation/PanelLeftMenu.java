@@ -287,6 +287,7 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 			liElem.addClassName(IS_OPEN);
 			liElem.addClassName(IS_SELECTED);
 			leaderboardItem.removeClassName(IS_SELECTED);
+			myAppsItem.removeClassName(IS_SELECTED);
 			blogItem.removeClassName(IS_SELECTED);
 			forumItem.removeClassName(IS_SELECTED);
 		}
@@ -298,6 +299,7 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 			ulElem.getStyle().setMarginTop(0, Unit.PX);
 			liElem.addClassName(IS_OPEN);
 			// liElem.addClassName(IS_SELECTED);
+			myAppsItem.removeClassName(IS_SELECTED);
 			leaderboardItem.removeClassName(IS_SELECTED);
 			blogItem.removeClassName(IS_SELECTED);
 			forumItem.removeClassName(IS_SELECTED);
@@ -354,6 +356,7 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 	@Override
 	public void userLoggedOut() {
 		leaderboardItem.removeFromParent();
+		myAppsItem.removeFromParent();
 		adminItem.removeFromParent();
 	}
 

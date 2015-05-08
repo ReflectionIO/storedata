@@ -729,6 +729,8 @@ public interface Styles extends ClientBundle {
 		@ClassName("icon-dollar")
 		String iconDollar();
 
+		String ie10();
+
 		String ie8();
 
 		String ie9();
@@ -950,6 +952,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("no-accordion-content")
 		String noAccordionContent();
+
+		@ClassName("no-csstransforms3d")
+		String noCsstransforms3d();
 
 		@ClassName("no-csstransitions")
 		String noCsstransitions();
@@ -1304,8 +1309,14 @@ public interface Styles extends ClientBundle {
 		@ClassName("reflection-select")
 		String reflectionSelect();
 
+		@ClassName("reflection-select--center")
+		String reflectionSelectCenter();
+
 		@ClassName("reflection-select--filter")
 		String reflectionSelectFilter();
+
+		@ClassName("reflection-select--right")
+		String reflectionSelectRight();
 
 		@ClassName("refresh-button")
 		String refreshButton();
