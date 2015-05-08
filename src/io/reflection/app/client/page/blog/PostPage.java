@@ -32,6 +32,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.ScriptInjector;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Display;
@@ -69,7 +70,6 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 	@UiField SpanElement authorFooter;
 
 	@UiField HTMLPanel tags;
-	DivElement comments;
 
 	@UiField SpanElement content;
 	private SpanElement notPublished = Document.get().createSpanElement();
@@ -77,8 +77,20 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 	private Post post;
 	private boolean installed;
 
+	@UiField DivElement breadcrumbPanel;
+	@UiField DivElement searchPanel;
+	@UiField Element comments;
+
 	public PostPage() {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		// TODO remove unused components if not admin
+		if (!SessionController.get().isLoggedInUserAdmin()) {
+			blogCategories.removeFromParent();
+			breadcrumbPanel.removeFromParent();
+			searchPanel.removeFromParent();
+			comments.removeFromParent();
+		}
 
 		FilterHelper.addBlogCategories(blogCategories, SessionController.get().isLoggedInUserAdmin());
 
