@@ -15,7 +15,7 @@
 					<h1 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Blog</h1>
 				</div>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter}">
-					<c:Selector ui:field="blogCategories" labelText="All Categories (4)" />
+					<c:Selector ui:field="blogCategories" overlay="true" labelText="All Categories (4)" />
 				</div>
 				<div
 					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird} {STYLES_INSTANCE.reflectionMainStyle.breadcrumbContainer}">

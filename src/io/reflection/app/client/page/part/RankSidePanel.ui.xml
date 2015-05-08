@@ -24,7 +24,7 @@
 
 		<c:Selector ui:field="appStoreListBox" labelText="App Store" overlay="true" />
 
-		<c:Selector ui:field="categoryListBox" labelText="Category" overlay="true" />
+		<c:Selector ui:field="categoryListBox" alignCenter="" labelText="Category" overlay="true" />
 
 		<g:HTMLPanel ui:field="dailyDataContainer" styleName="{STYLES_INSTANCE.reflectionMainStyle.filterToggle}">
 			<c:ToggleRadioButton ui:field="toggleDownloads" value="true" labelClassName="{STYLES_INSTANCE.reflectionMainStyle.toggleDownloads}"

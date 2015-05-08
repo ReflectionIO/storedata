@@ -13,11 +13,11 @@
 					<h1 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Blog</h1>
 				</div>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter}">
-					<c:Selector ui:field="blogCategories" labelText="All Categories (4)" />
+					<c:Selector ui:field="blogCategories" overlay="true" labelText="All Categories (4)" />
 				</div>
 				<div
 					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFiveColumns} {STYLES_INSTANCE.reflectionMainStyle.grid__columnRight}">
-					<c:Selector ui:field="blogSortBy" labelText="Sort By:" />
+					<c:Selector ui:field="blogSortBy" overlay="true" labelText="Sort By:" />
 					<div ui:field="searchPanel" class="{STYLES_INSTANCE.reflectionMainStyle.searchFieldNoLabel}">
 						<input type="text" autocomplete="off" name="search" placeholder="Search blog.." />
 						<input

@@ -281,6 +281,27 @@ public class Selector extends Composite implements HasChangeHandlers {
 		return listItem;
 	}
 
+	public void setAlignLeft(String s) {
+		selectElem.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().reflectionSelectCenter());
+		selectContainer.getElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().reflectionSelectCenter());
+		selectElem.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().reflectionSelectRight());
+		selectContainer.getElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().reflectionSelectRight());
+	}
+
+	public void setAlignCenter(String s) {
+		selectElem.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().reflectionSelectRight());
+		selectContainer.getElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().reflectionSelectRight());
+		selectElem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().reflectionSelectCenter());
+		selectContainer.getElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().reflectionSelectCenter());
+	}
+
+	public void setAlignRight(String s) {
+		selectElem.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().reflectionSelectCenter());
+		selectContainer.getElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().reflectionSelectCenter());
+		selectElem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().reflectionSelectRight());
+		selectContainer.getElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().reflectionSelectRight());
+	}
+
 	@Override
 	public void setStyleName(String style) {
 		setStyleName(style, true);

@@ -34,13 +34,13 @@
 
 		<c:DateSelector ui:field="dateSelector" />
 
-		<c:Selector ui:field="accountName" labelText="Account Name" />
+		<c:Selector ui:field="accountName" overlay="true" labelText="Account Name" />
 
-		<c:Selector ui:field="category" labelText="Category" styleName="{STYLES_INSTANCE.reflectionMainStyle.categorySelect}" />
+		<c:Selector ui:field="category" overlay="true" alignRight="" labelText="Category" styleName="{STYLES_INSTANCE.reflectionMainStyle.categorySelect}" />
 
-		<c:Selector ui:field="appStore" labelText="App Store" styleName="{STYLES_INSTANCE.reflectionMainStyle.storeSelect}" />
+		<c:Selector ui:field="appStore" overlay="true" alignCenter="" labelText="App Store" styleName="{STYLES_INSTANCE.reflectionMainStyle.storeSelect}" />
 
-		<c:Selector ui:field="country" labelText="Country" styleName="{STYLES_INSTANCE.reflectionMainStyle.countrySelect}" />
+		<c:Selector ui:field="country" overlay="true" labelText="Country" styleName="{STYLES_INSTANCE.reflectionMainStyle.countrySelect}" />
 
 
 	</g:HTMLPanel>
