@@ -549,6 +549,8 @@
 					refSelectContainer = $('<div>').addClass('reflection-select'),
 					refSelectDefault = $('<span>').addClass('ref-icon-after ref-icon-after--angle-down').text('Choose your option'),
 					isFilter = selectInput.hasClass('reflection-select--filter'),
+					isCentered = selectInput.hasClass('reflection-select--center'),
+					isRightAligned = selectInput.hasClass('reflection-select--right'),
 					listContainer = $("<div>").addClass("list-container");
 					if(isFilter) {
 						optionsList.append($('<a>').addClass('close-popup').text('K').on("click", function(e){
@@ -561,6 +563,12 @@
 						}));
 						refSelectContainer.addClass('reflection-select--filter');
 						optionsList.append($('<span>').text($(selectOptions[0]).text())).append(listContainer);
+					}
+					if(isCentered) {
+						refSelectContainer.addClass('reflection-select--center');
+					}
+					if(isRightAligned) {
+						refSelectContainer.addClass('reflection-select--right');
 					}
 				selectOptions.each(function(){
 					$this = $(this);
@@ -838,6 +846,7 @@
 		new Page();
 
 		// Components
+		new Tabs();
 		new TabsToMobileDropDown();
 		new FormFieldSelect();
 		new RevealContent();
