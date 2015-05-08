@@ -34,7 +34,7 @@ public class RolesPage extends Page {
 
 	interface RolesPageUiBinder extends UiBinder<Widget, RolesPage> {}
 
-	@UiField(provided = true) CellTable<Role> mRoles = new CellTable<Role>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
+	@UiField(provided = true) CellTable<Role> roleTable = new CellTable<Role>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) SimplePager mPager = new SimplePager(false, false);
 
 	public RolesPage() {
@@ -42,9 +42,9 @@ public class RolesPage extends Page {
 
 		addRoleColumns();
 
-		mRoles.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
-		RoleController.get().addDataDisplay(mRoles);
-		mPager.setDisplay(mRoles);
+		roleTable.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
+		RoleController.get().addDataDisplay(roleTable);
+		mPager.setDisplay(roleTable);
 	}
 
 	private void addRoleColumns() {
@@ -57,9 +57,7 @@ public class RolesPage extends Page {
 
 		};
 
-		TextHeader codeHeader = new TextHeader("Code");
-		codeHeader.setHeaderStyleNames("col-md-1");
-		mRoles.addColumn(code, codeHeader);
+		roleTable.addColumn(code, new TextHeader("Code"));
 
 		TextColumn<Role> name = new TextColumn<Role>() {
 
@@ -70,9 +68,7 @@ public class RolesPage extends Page {
 
 		};
 
-		TextHeader nameHeader = new TextHeader("Name");
-		nameHeader.setHeaderStyleNames("col-md-1");
-		mRoles.addColumn(name, nameHeader);
+		roleTable.addColumn(name, new TextHeader("Name"));
 
 		TextColumn<Role> description = new TextColumn<Role>() {
 
@@ -83,9 +79,7 @@ public class RolesPage extends Page {
 
 		};
 
-		TextHeader descriptionHeader = new TextHeader("Description");
-		descriptionHeader.setHeaderStyleNames("col-md-1");
-		mRoles.addColumn(description, descriptionHeader);
+		roleTable.addColumn(description, new TextHeader("Description"));
 
 	}
 

@@ -46,11 +46,11 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Stefano Capuzzi
  *
  */
-public class FormFieldSelect extends Composite implements HasChangeHandlers {
+public class Selector extends Composite implements HasChangeHandlers {
 
 	private static FormFieldSelectUiBinder uiBinder = GWT.create(FormFieldSelectUiBinder.class);
 
-	interface FormFieldSelectUiBinder extends UiBinder<Widget, FormFieldSelect> {}
+	interface FormFieldSelectUiBinder extends UiBinder<Widget, Selector> {}
 
 	@UiField HTMLPanel formField;
 	@UiField DivElement overlayPanel;
@@ -62,9 +62,12 @@ public class FormFieldSelect extends Composite implements HasChangeHandlers {
 	@UiField SpanElement spanOptionLabel;
 	private List<LIElement> itemList = new ArrayList<LIElement>(); // List of items excluded the placeholder
 	private int selectedIndex = -1; // Simulates a SELECT OPTION where there is no placegolder
+	private boolean isFilter;
 
-	public FormFieldSelect() {
+	public Selector(final boolean isFilter) {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		this.isFilter = isFilter;
 
 		setOverlay(false);
 
@@ -79,14 +82,14 @@ public class FormFieldSelect extends Composite implements HasChangeHandlers {
 						formField.getElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isOpen());
 						selectContainer.getElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isOpen());
 						uListElem.getStyle().setMarginTop(-(uListElem.getClientHeight()), Unit.PX);
-						if (Window.getClientWidth() < 720) {
+						if (Window.getClientWidth() < 720 && isFilter) {
 							DOMHelper.setScrollEnabled(false);
 						}
 					} else {
 						formField.getElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isOpen());
 						selectContainer.getElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isOpen());
 						uListElem.getStyle().setMarginTop(9, Unit.PX);
-						if (Window.getClientWidth() < 720) {
+						if (Window.getClientWidth() < 720 && isFilter) {
 							DOMHelper.setScrollEnabled(true);
 						}
 					}
@@ -101,11 +104,21 @@ public class FormFieldSelect extends Composite implements HasChangeHandlers {
 			}
 		});
 
+		if (!isFilter) {
+			selectLink.removeFromParent();
+			spanOptionLabel.removeFromParent();
+			selectContainer.getElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().reflectionSelectFilter());
+		}
+
+	}
+
+	public Selector() {
+		this(true);
 	}
 
 	@UiHandler("selectLink")
 	void onClick(ClickEvent event) {
-		if (Window.getClientWidth() < 720) {
+		if (Window.getClientWidth() < 720 && isFilter) {
 			DOMHelper.setScrollEnabled(true);
 		}
 	}

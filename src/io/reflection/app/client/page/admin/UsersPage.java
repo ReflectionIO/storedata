@@ -17,7 +17,7 @@ import io.reflection.app.api.admin.shared.call.event.DeleteUsersEventHandler;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.StyledButtonCell;
 import io.reflection.app.client.component.FormButton;
-import io.reflection.app.client.component.FormField;
+import io.reflection.app.client.component.TextField;
 import io.reflection.app.client.component.PopupDialog;
 import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.controller.UserController;
@@ -26,6 +26,7 @@ import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.res.Images;
+import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.shared.util.FormattingHelper;
 
@@ -68,7 +69,7 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 	@UiField FormButton confirmDelete;
 
 	@UiField Button deleteTestUsers;
-	@UiField FormField queryTextBox;
+	@UiField TextField queryTextBox;
 	private String query = "";
 
 	public UsersPage() {
@@ -82,7 +83,6 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 		usersTable.setEmptyTableWidget(new HTMLPanel("No Users found!"));
 		simplePager.setDisplay(usersTable);
 
-		queryTextBox.getElement().setAttribute("placeholder", "Find a user");
 	}
 
 	/*
@@ -165,13 +165,11 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 		};
 		usersTable.addColumn(lastLoginColumn, "Last login");
 
-		SafeHtmlCell prototype = new SafeHtmlCell();
-
-		Column<User, SafeHtml> changeDetails = new Column<User, SafeHtml>(prototype) {
+		Column<User, SafeHtml> changeDetails = new Column<User, SafeHtml>(new SafeHtmlCell()) {
 
 			@Override
 			public SafeHtml getValue(User object) {
-				return SafeHtmlUtils.fromTrustedString("<a class=\"btn btn-xs btn-default\" href=\""
+				return SafeHtmlUtils.fromTrustedString("<a class=\"" + Styles.STYLES_INSTANCE.reflectionMainStyle().refButtonFunctionSmall() + "\" href=\""
 						+ PageType.UsersPageType.asHref("changedetails", object.id.toString()).asString() + "\">Edit</a>");
 			}
 		};
@@ -195,9 +193,9 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 			}
 		};
 
-		StyledButtonCell prototype1 = new StyledButtonCell("btn", "btn-xs", "btn-default");
+		StyledButtonCell prototypeTestAndBeta = new StyledButtonCell(Styles.STYLES_INSTANCE.reflectionMainStyle().refButtonFunctionSmall());
 
-		Column<User, String> makeTest = new Column<User, String>(prototype1) {
+		Column<User, String> makeTest = new Column<User, String>(prototypeTestAndBeta) {
 
 			@Override
 			public String getValue(User object) {
@@ -206,7 +204,7 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 		};
 		makeTest.setFieldUpdater(action);
 
-		Column<User, String> addToBeta = new Column<User, String>(prototype1) {
+		Column<User, String> addToBeta = new Column<User, String>(prototypeTestAndBeta) {
 
 			@Override
 			public String getValue(User object) {
@@ -215,8 +213,8 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 		};
 		addToBeta.setFieldUpdater(action);
 
-		StyledButtonCell prototype2 = new StyledButtonCell("btn", "btn-xs", "btn-danger");
-		Column<User, String> delete = new Column<User, String>(prototype2) {
+		Column<User, String> delete = new Column<User, String>(new StyledButtonCell(Styles.STYLES_INSTANCE.reflectionMainStyle().refButtonLink() + " "
+				+ Styles.STYLES_INSTANCE.reflectionMainStyle().warningText())) {
 
 			@Override
 			public String getValue(User object) {

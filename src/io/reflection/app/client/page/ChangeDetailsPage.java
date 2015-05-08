@@ -31,8 +31,8 @@ import io.reflection.app.api.core.shared.call.event.GetUserDetailsEventHandler;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.StyledButtonCell;
 import io.reflection.app.client.component.FormButton;
-import io.reflection.app.client.component.FormField;
-import io.reflection.app.client.component.FormFieldPassword;
+import io.reflection.app.client.component.TextField;
+import io.reflection.app.client.component.PasswordField;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.SessionController;
@@ -95,25 +95,25 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	@UiField InlineHyperlink usersLink;
 	@UiField InlineHyperlink notificationsLink;
 
-	@UiField FormField username;
+	@UiField TextField username;
 	private String usernameError;
 
-	@UiField FormField forename;
+	@UiField TextField forename;
 	private String forenameError;
 
-	@UiField FormField surname;
+	@UiField TextField surname;
 	private String surnameError;
 
-	@UiField FormField company;
+	@UiField TextField company;
 	private String companyError;
 
 	@UiField FormButton changeDetailsBtn;
 
 	// Change Password
-	@UiField FormFieldPassword password;
+	@UiField PasswordField password;
 
-	@UiField FormFieldPassword newPassword;
-	@UiField FormFieldPassword confirmPassword;
+	@UiField PasswordField newPassword;
+	@UiField PasswordField confirmPassword;
 
 	@UiField FormButton changePasswordBtn;
 
@@ -122,14 +122,14 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	private String newPasswordError = null;
 
 	// User Roles
-	@UiField FormField addRole;
+	@UiField TextField addRole;
 	private String addRoleError;
 
 	@UiField HTMLPanel addRolePanel;
 	@UiField FormButton addRoleBtn;
 
 	// User Permissions
-	@UiField FormField addPermission;
+	@UiField TextField addPermission;
 	private String addPermissionError;
 
 	@UiField HTMLPanel addPermissionPanel;

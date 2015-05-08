@@ -7,14 +7,14 @@
 	
 	</ui:style>
 	<g:HTMLPanel tag="form">
-		<c:FormField ui:field="forename" labelText="First Name" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
-		<c:FormField ui:field="surname" labelText="Last Name" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
-		<c:FormField ui:field="company" labelText="Your Company" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
-		<c:FormField ui:field="email" labelText="Email" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
+		<c:TextField ui:field="forename" labelText="First Name" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
+		<c:TextField ui:field="surname" labelText="Last Name" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
+		<c:TextField ui:field="company" labelText="Your Company" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
+		<c:TextField ui:field="email" labelText="Email" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
 
 		<g:HTMLPanel ui:field="passwordGroup">
-			<c:FormFieldPassword ui:field="password" labelText="Password" checkActive="true" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
-			<c:FormFieldPassword ui:field="confirmPassword" labelText="Confirm Password" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
+			<c:PasswordField ui:field="password" labelText="Password" checkActive="true" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
+			<c:PasswordField ui:field="confirmPassword" labelText="Confirm Password" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
 		</g:HTMLPanel>
 
 

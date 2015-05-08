@@ -10,8 +10,8 @@
 	</ui:style>
 	<g:HTMLPanel tag="form">
 
-		<c:FormField ui:field="emailFormField" labelText="Email" />
-		<c:FormFieldPassword ui:field="passwordFormField" labelText="Password" />
+		<c:TextField ui:field="emailFormField" labelText="Email" />
+		<c:PasswordField ui:field="passwordFormField" labelText="Password" />
 
 		<g:InlineHyperlink targetHistoryToken="{ForgotPasswordPageType.asTargetHistoryToken}" styleName="{STYLES_INSTANCE.reflectionMainStyle.formLink}">I've misplaced my
 			password</g:InlineHyperlink>

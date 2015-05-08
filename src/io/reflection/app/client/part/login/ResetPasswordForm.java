@@ -11,7 +11,7 @@ import io.reflection.app.api.core.shared.call.ChangePasswordRequest;
 import io.reflection.app.api.core.shared.call.ChangePasswordResponse;
 import io.reflection.app.api.core.shared.call.event.ChangePasswordEventHandler;
 import io.reflection.app.client.component.FormButton;
-import io.reflection.app.client.component.FormFieldPassword;
+import io.reflection.app.client.component.PasswordField;
 import io.reflection.app.client.controller.SessionController;
 
 import com.google.gwt.core.client.GWT;
@@ -37,8 +37,8 @@ public class ResetPasswordForm extends Composite implements ChangePasswordEventH
 
 	private String resetCode;
 
-	@UiField FormFieldPassword newPassword;
-	@UiField FormFieldPassword confirmPassword;
+	@UiField PasswordField newPassword;
+	@UiField PasswordField confirmPassword;
 
 	private String newPasswordError = null;
 

@@ -9,8 +9,8 @@ package io.reflection.app.client.part.register;
 
 import io.reflection.app.client.component.FormButton;
 import io.reflection.app.client.component.FormCheckbox;
-import io.reflection.app.client.component.FormField;
-import io.reflection.app.client.component.FormFieldPassword;
+import io.reflection.app.client.component.TextField;
+import io.reflection.app.client.component.PasswordField;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.UserController;
 import io.reflection.app.client.helper.FormHelper;
@@ -38,21 +38,21 @@ public class RegisterForm extends Composite {
 
 	interface RegisterFormUiBinder extends UiBinder<Widget, RegisterForm> {}
 
-	@UiField FormField forename;
+	@UiField TextField forename;
 	private String forenameNote;
 
-	@UiField FormField surname;
+	@UiField TextField surname;
 	private String surnameNote;
 
-	@UiField FormField company;
+	@UiField TextField company;
 	private String companyNote;
 
-	@UiField FormField email;
+	@UiField TextField email;
 	private String emailNote;
 
 	@UiField HTMLPanel passwordGroup;
-	@UiField FormFieldPassword password;
-	@UiField FormFieldPassword confirmPassword;
+	@UiField PasswordField password;
+	@UiField PasswordField confirmPassword;
 	private String passwordError;
 
 	@UiField HTMLPanel termAndCondGroup;

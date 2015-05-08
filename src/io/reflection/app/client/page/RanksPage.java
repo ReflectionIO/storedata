@@ -32,6 +32,7 @@ import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
+import io.reflection.app.client.helper.ColorHelper;
 import io.reflection.app.client.helper.FormattingHelper;
 import io.reflection.app.client.helper.ResponsiveDesignHelper;
 import io.reflection.app.client.page.part.RankSidePanel;
@@ -66,7 +67,6 @@ import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -155,26 +155,20 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		// set the overall tab title (this is because it is modified for admins to contain the gather code)
 		overviewAllText.setInnerText(ALL_TEXT);
 
-		showAllPredictions = SessionController.get().isLoggedInUserAdmin();
-
 		createColumns();
 
 		tabs.put(OVERALL_LIST_TYPE, allItem);
 		tabs.put(FREE_LIST_TYPE, freeItem);
-		if (SessionController.get().isLoggedInUserAdmin()) {
+		if (showAllPredictions = SessionController.get().isLoggedInUserAdmin()) {
 			tabs.put(PAID_LIST_TYPE, paidItem);
 			tabs.put(GROSSING_LIST_TYPE, grossingItem);
-		}
-
-		if (!SessionController.get().isLoggedInUserAdmin()) {
-			InlineHTML comingSoon = new InlineHTML("&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;Coming soon");
-			comingSoon.getElement().getStyle().setFontSize(14.0, Unit.PX);
-			paidLink.setHTML(paidLink.getText() + comingSoon);
-			paidLink.getElement().getStyle().setColor("lightgrey");
+		} else {
+			paidLink.setText(paidLink.getText() + " - coming soon");
+			paidLink.getElement().getStyle().setColor(ColorHelper.getLightGrey2());
 			paidLink.getElement().getStyle().setCursor(Cursor.DEFAULT);
 			paidItem.getStyle().setCursor(Cursor.DEFAULT);
-			grossingLink.setHTML(grossingLink.getText() + comingSoon);
-			grossingLink.getElement().getStyle().setColor("lightgrey");
+			grossingLink.setText(grossingLink.getText() + " - coming soon");
+			grossingLink.getElement().getStyle().setColor(ColorHelper.getLightGrey2());
 			grossingLink.getElement().getStyle().setCursor(Cursor.DEFAULT);
 			grossingItem.getStyle().setCursor(Cursor.DEFAULT);
 		}
@@ -186,7 +180,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		ranksTable.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 
 		RankController.get().addDataDisplay(ranksTable);
-		
+
 		ResponsiveDesignHelper.makeTableResponsive(ranksTable);
 	}
 

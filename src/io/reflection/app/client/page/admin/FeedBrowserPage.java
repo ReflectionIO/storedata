@@ -13,7 +13,7 @@ import static io.reflection.app.client.controller.FilterController.LIST_TYPE_KEY
 import static io.reflection.app.client.controller.FilterController.STORE_KEY;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.StyledButtonCell;
-import io.reflection.app.client.component.FormFieldSelect;
+import io.reflection.app.client.component.Selector;
 import io.reflection.app.client.controller.FeedFetchController;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.FilterController.Filter;
@@ -30,6 +30,7 @@ import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.Breadcrumbs;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.res.Images;
+import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.FeedFetch;
 
 import java.util.Map;
@@ -64,10 +65,10 @@ public class FeedBrowserPage extends Page implements FilterEventHandler, Navigat
 	@UiField(provided = true) CellTable<FeedFetch> mFeeds = new CellTable<FeedFetch>(ServiceConstants.SHORT_STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) SimplePager mPager = new SimplePager(false, false);
 
-	@UiField FormFieldSelect mAppStore;
-	@UiField FormFieldSelect mCountry;
-	@UiField FormFieldSelect category;
-	@UiField FormFieldSelect mListType;
+	@UiField Selector mAppStore;
+	@UiField Selector mCountry;
+	@UiField Selector category;
+	@UiField Selector mListType;
 
 	@UiField Breadcrumbs mBreadcrumbs;
 
@@ -195,7 +196,7 @@ public class FeedBrowserPage extends Page implements FilterEventHandler, Navigat
 			}
 		};
 
-		StyledButtonCell prototype = new StyledButtonCell("btn", "btn-xs", "btn-default");
+		StyledButtonCell prototype = new StyledButtonCell(Styles.STYLES_INSTANCE.reflectionMainStyle().refButtonFunctionSmall());
 
 		Column<FeedFetch, String> ingest = new Column<FeedFetch, String>(prototype) {
 

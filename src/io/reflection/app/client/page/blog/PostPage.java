@@ -12,7 +12,7 @@ import io.reflection.app.api.blog.shared.call.GetPostRequest;
 import io.reflection.app.api.blog.shared.call.GetPostResponse;
 import io.reflection.app.api.blog.shared.call.event.GetPostEventHandler;
 import io.reflection.app.client.DefaultEventBus;
-import io.reflection.app.client.component.FormFieldSelect;
+import io.reflection.app.client.component.Selector;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.PostController;
@@ -61,7 +61,7 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 
 	private static final int POST_ID_PARAMETER_INDEX = 0;
 
-	@UiField FormFieldSelect blogCategories;
+	@UiField Selector blogCategories;
 	@UiField HeadingElement title;
 	@UiField SpanElement date;
 	@UiField SpanElement dateFooter;

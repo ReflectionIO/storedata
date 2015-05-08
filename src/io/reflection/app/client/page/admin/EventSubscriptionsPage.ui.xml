@@ -4,24 +4,24 @@
 	<ui:import field="io.reflection.app.client.page.PageType.EditEventSubscriptionPageType" />
 	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 	<ui:style gss="true">
-	.toolbar {
-		margin-top: 10px;
-		margin-bottom: 30px;
-	}
+	
 	</ui:style>
-	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer}">
-		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth}">
-			<h2>Event Subscriptions</h2>
-
-			<g:HTMLPanel styleName="btn-group {style.toolbar}">
-				<g:InlineHyperlink styleName="btn btn-primary" text="Add" targetHistoryToken="{EditEventSubscriptionPageType.asTargetHistoryToken}/new" />
-			</g:HTMLPanel>
-
-			<g:HTMLPanel ui:field="eventSubscriptionTablePanel">
-				<c:CellTable ui:field="eventSubscriptions" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}" />
-				<p:SimplePager styleName="text-center" ui:field="simplePager" rangeLimited="true" />
-			</g:HTMLPanel>
-
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.pageAdmin}">
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneHalf}">
+			<h1 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Event Subscriptions</h1>
 		</div>
+
+		<div
+			class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth} {STYLES_INSTANCE.reflectionMainStyle.filtersContainer} {STYLES_INSTANCE.reflectionMainStyle.adminFiltersContainer}">
+			<g:InlineHyperlink styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall}" text="Add"
+				targetHistoryToken="{EditEventSubscriptionPageType.asTargetHistoryToken}/new" />
+		</div>
+
+		<div styleName="{STYLES_INSTANCE.reflectionMainStyle.grid__row}">
+			<c:CellTable ui:field="eventSubscriptions" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}" />
+			<p:SimplePager ui:field="simplePager" rangeLimited="true" />
+		</div>
+
+
 	</g:HTMLPanel>
 </ui:UiBinder>

@@ -54,7 +54,7 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 
 	@UiField FormDateBox dateBoxFrom;
 	@UiField FormDateBox dateBoxTo;
-	@UiField FormFieldSelect selectFixedRange;
+	@UiField Selector selectFixedRange;
 	@UiField Button applyDateRange;
 
 	private Date disableBefore;

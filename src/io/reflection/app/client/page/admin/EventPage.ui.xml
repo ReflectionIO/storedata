@@ -4,88 +4,58 @@
 	<ui:import field="io.reflection.app.client.page.PageType.EventsPageType" />
 	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 	<ui:style gss="true">
-	.backLink {
-		margin-top: 20px;
-		margin-bottom: 20px;
-		margin-left: 25px;
-		display: inline-block;
-	}
 	
-	.addCodeButtons {
-		margin-top: 10px;
-		margin-bottom: 20px;
-	}
 	</ui:style>
-	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer}">
-		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth}">
-			<h2>Events</h2>
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.pageAdmin}">
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__row}">
+			<h1 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Events</h1>
+		</div>
 
-			<g:HTMLPanel ui:field="eventTablePanel">
-				<cv:CellTable ui:field="events" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}" />
-				<p:SimplePager styleName="text-center" ui:field="simplePager" rangeLimited="true" visible="false" />
-			</g:HTMLPanel>
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__row}">
+			<cv:CellTable ui:field="events" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}" />
+			<p:SimplePager ui:field="simplePager" rangeLimited="true" visible="false" />
+		</div>
 
-			<p:Preloader ui:field="preloader">
-				<g:HTMLPanel ui:field="editEventPanel" visible="false">
-					<g:InlineHyperlink styleName="{style.backLink}" targetHistoryToken="{EventsPageType.asTargetHistoryToken}">&#8592;
-						Back to Events</g:InlineHyperlink>
+		<g:HTMLPanel ui:field="editEventPanel" visible="false" styleName="{STYLES_INSTANCE.reflectionMainStyle.grid__row}">
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth}">
+				<form>
+					<g:InlineHyperlink styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonLink}" targetHistoryToken="{EventsPageType.asTargetHistoryToken}">&#8592;
+						Remove</g:InlineHyperlink>
 
-					<g:HTMLPanel ui:field="codeGroup" styleName="form-group">
-						<label>Code</label>
-						<g:TextBox styleName="form-control" ui:field="codeTextBox" />
-						<g:HTMLPanel styleName="noteDetail" ui:field="codeNote" visible="false" />
-					</g:HTMLPanel>
+					<c:TextField ui:field="codeTextBox" labelText="Code"></c:TextField>
 
-					<g:HTMLPanel ui:field="nameGroup" styleName="form-group">
-						<label>Name</label>
-						<g:TextBox styleName="form-control" ui:field="nameTextBox" />
-						<g:HTMLPanel styleName="noteDetail" ui:field="nameNote" visible="false" />
-					</g:HTMLPanel>
+					<c:TextField ui:field="nameTextBox" labelText="Name"></c:TextField>
 
-					<g:HTMLPanel ui:field="descriptionGroup" styleName="form-group">
-						<label>Description</label>
-						<g:TextBox styleName="form-control" ui:field="descriptionTextBox" />
-						<g:HTMLPanel styleName="noteDetail" ui:field="descriptionNote" visible="false" />
-					</g:HTMLPanel>
+					<c:TextField ui:field="descriptionTextBox" labelText="Description"></c:TextField>
 
-					<g:HTMLPanel ui:field="subjectGroup" styleName="form-group">
-						<label>Subject</label>
-						<g:TextBox styleName="form-control" ui:field="subjectTextBox" />
-						<g:HTMLPanel styleName="noteDetail" ui:field="subjectNote" visible="false" />
-					</g:HTMLPanel>
-					<g:HTMLPanel ui:field="shortBodyGroup" styleName="form-group">
-						<label>Short body</label>
+					<c:TextField ui:field="subjectTextBox" labelText="Subject"></c:TextField>
+
+					<label>Short body</label>
+					<div class="form-field form-field--textarea">
 						<g:TextArea ui:field="shortBodyTextArea" styleName="form-control" width="100%" height="200px" />
-						<g:HTMLPanel styleName="noteDetail" ui:field="shortBodyNote" visible="false" />
-					</g:HTMLPanel>
+					</div>
 
-					<g:HTMLPanel ui:field="longBodyGroup" styleName="form-group">
-						<label>Long body</label>
+					<label>Long body</label>
+					<div class="form-field form-field--textarea">
 						<pt:MarkdownEditor ui:field="longBodyEditor" />
-						<g:HTMLPanel styleName="noteDetail" ui:field="longBodyNote" visible="false" />
-					</g:HTMLPanel>
+					</div>
 
-					<g:HTMLPanel styleName="{style.addCodeButtons}">
-						<g:Button ui:field="addForenameBtn" styleName="btn btn-sm btn-default">Add forename</g:Button>
-						<g:Button ui:field="addSurnameBtn" styleName="btn btn-sm btn-default">Add surname</g:Button>
-						<g:Button ui:field="addUsernameBtn" styleName="btn btn-sm btn-default">Add username</g:Button>
-						<g:Button ui:field="addCompanyBtn" styleName="btn btn-sm btn-default">Add company</g:Button>
-						<g:Button ui:field="addLinkBtn" styleName="btn btn-sm btn-default">Add link</g:Button>
-					</g:HTMLPanel>
+					<div class="grid__column grid__column--full-width filters-container admin-filters-container">
+						<g:Button ui:field="addForenameBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall}">Add forename</g:Button>
+						<g:Button ui:field="addSurnameBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall}">Add surname</g:Button>
+						<g:Button ui:field="addUsernameBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall}">Add username</g:Button>
+						<g:Button ui:field="addCompanyBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall}">Add company</g:Button>
+						<g:Button ui:field="addLinkBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall}">Add link</g:Button>
+					</div>
 
-					<g:HTMLPanel ui:field="priorityGroup" styleName="form-group">
-						<label>Priority</label>
-						<c:FormFieldSelect ui:field="priorityListBox" labelText="Priority"></c:FormFieldSelect>
-						<g:HTMLPanel styleName="noteDetail" ui:field="priorityNote" visible="false" />
-					</g:HTMLPanel>
+					<c:Selector ui:field="priorityListBox" labelText="Priority" />
 
 					<g:HTMLPanel styleName="formEdit">
-						<g:Button ui:field="buttonUpdate" styleName="btn btn-lg btn-primary btn-block" text="Save changes" />
+						<g:Button ui:field="buttonUpdate" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth}" text="Save changes" />
 					</g:HTMLPanel>
-				</g:HTMLPanel>
-			</p:Preloader>
-
-		</div>
+				</form>
+			</div>
+		</g:HTMLPanel>
 
 	</g:HTMLPanel>
 </ui:UiBinder> 

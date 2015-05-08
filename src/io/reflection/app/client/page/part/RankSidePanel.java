@@ -10,7 +10,7 @@ package io.reflection.app.client.page.part;
 import static io.reflection.app.client.controller.FilterController.DOWNLOADS_DAILY_DATA_TYPE;
 import static io.reflection.app.client.controller.FilterController.REVENUE_DAILY_DATA_TYPE;
 import io.reflection.app.client.component.FormDateBox;
-import io.reflection.app.client.component.FormFieldSelect;
+import io.reflection.app.client.component.Selector;
 import io.reflection.app.client.component.ToggleRadioButton;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.SessionController;
@@ -45,10 +45,10 @@ public class RankSidePanel extends Composite {
 
 	@UiField FormDateBox dateBox;
 	Date currentDate = FilterHelper.getToday();
-	@UiField FormFieldSelect appStoreListBox;
+	@UiField Selector appStoreListBox;
 	// @UiField ListBox mListType;
-	@UiField FormFieldSelect countryListBox;
-	@UiField FormFieldSelect categoryListBox;
+	@UiField Selector countryListBox;
+	@UiField Selector categoryListBox;
 	@UiField(provided = true) ToggleRadioButton toggleRevenue = new ToggleRadioButton("dailydatatoggle");
 	@UiField(provided = true) ToggleRadioButton toggleDownloads = new ToggleRadioButton("dailydatatoggle");
 

@@ -5,31 +5,25 @@
 
 	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 	<ui:style gss="true">
-	.backLink {
-		margin-top: 20px;
-		margin-bottom: 20px;
-		margin-left: 25px;
-		display: inline-block;
-	}
+	
 	</ui:style>
-	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer}">
-		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth}">
-			<h2>Data Account fetches</h2>
-
-			<div class="form-group">
-				<label>Date</label>
-				<c:DateSelector ui:field="dateSelector" />
-			</div>
-
-			<g:InlineHyperlink ui:field="backLink" styleName="{style.backLink}" targetHistoryToken="{DataAccountsPageType.asTargetHistoryToken}"
-				visible="false">&#8592;
-				Back to data accounts</g:InlineHyperlink>
-			<cv:CellTable ui:field="dataAccountFetchTable" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}" />
-
-			<p:SimplePager styleName="text-center" ui:field="simplePager" rangeLimited="true" />
-
-
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.pageAdmin}">
+		<g:InlineHyperlink ui:field="backLink" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonLink}" targetHistoryToken="{DataAccountsPageType.asTargetHistoryToken}"
+			visible="false">&#8592;
+			Back to data accounts</g:InlineHyperlink>
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneHalf}">
+			<h1 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Data Account Fetches</h1>
 		</div>
-
+		<div
+			class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth} {STYLES_INSTANCE.reflectionMainStyle.filtersContainer} {STYLES_INSTANCE.reflectionMainStyle.filterContainerMyApps}">
+			<form class="{STYLES_INSTANCE.reflectionMainStyle.formsMidTheme}">
+				<c:DateSelector ui:field="dateSelector" />
+			</form>
+		</div>
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__row}">
+			<cv:CellTable ui:field="dataAccountFetchTable" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}" />
+			<p:SimplePager ui:field="simplePager" rangeLimited="true" />
+		</div>
 	</g:HTMLPanel>
-</ui:UiBinder> 
+</ui:UiBinder>
+

@@ -150,9 +150,9 @@
 	c-2.2,1.4-4.9,2.3-7.8,2.3C8,30.5,1.5,24,1.5,16z" />
 				</div>
 
-				<c:FormFieldSelect ui:field="storeSelector" labelText="App Store" styleName="{STYLES_INSTANCE.reflectionMainStyle.storeSelect}" />
+				<c:Selector ui:field="storeSelector" labelText="App Store" styleName="{STYLES_INSTANCE.reflectionMainStyle.storeSelect}" />
 
-				<c:FormFieldSelect ui:field="countrySelector" labelText="Country" styleName="{STYLES_INSTANCE.reflectionMainStyle.countrySelect}" />
+				<c:Selector ui:field="countrySelector" labelText="Country" styleName="{STYLES_INSTANCE.reflectionMainStyle.countrySelect}" />
 
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.filtersGroupGraphOptions}">
 					<a ui:field="revealContentFilter" href="#"
@@ -189,11 +189,11 @@
 						class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour} {STYLES_INSTANCE.reflectionMainStyle.dataHeading}">Total
 						Revenue</h2>
 				</div>
-				<button
+				<button ui:field="dnwBtn"
 					class="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall} {STYLES_INSTANCE.reflectionMainStyle.withIcon} {STYLES_INSTANCE.reflectionMainStyle.pageFunctionButton}">
 					<span class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCloud}">Download</span>
 				</button>
-				<div
+				<div ui:field="sincePanel"
 					class="{STYLES_INSTANCE.reflectionMainStyle.dataDisplayHeaderComponent} {STYLES_INSTANCE.reflectionMainStyle.dataSummaryContainer} {STYLES_INSTANCE.reflectionMainStyle.dataSummaryContainerSynced}">
 					<span class="{STYLES_INSTANCE.reflectionMainStyle.revenueDateRange}">Since First Synced (1 Feb
 						2014)</span>
@@ -206,7 +206,7 @@
 			</header>
 			<cv:CellTable ui:field="revenueTable2" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableRevenue} {STYLES_INSTANCE.reflectionMainStyle.responsive}"></cv:CellTable>
 			<cv:CellTable ui:field="revenueTable" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableRevenue}"></cv:CellTable>
-			<button
+			<button ui:field="dnwBtnMobile"
 				class="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall} {STYLES_INSTANCE.reflectionMainStyle.withIcon} {STYLES_INSTANCE.reflectionMainStyle.downloadButtonMobile}">
 				<span class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCloud}">Download</span>
 			</button>
