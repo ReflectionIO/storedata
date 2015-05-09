@@ -114,7 +114,7 @@ public class HomePage extends Page {
 		if (tweeked) {
 			// Compatibility code
 			Document.get().getElementsByTagName("html").getItem(0).removeAttribute("style");
-			NavigationController.get().getPageHolderPanel().getElement().setAttribute("style", "padding: 60px 0px 39px 0px;");
+			NavigationController.get().getPageHolderPanel().getElement().setAttribute("style", "padding: 60px 0px 0px 0px;");
 			Document.get().getBody().removeAttribute("style");
 
 			// Remove from Head
