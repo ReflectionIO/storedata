@@ -7,15 +7,21 @@
 //
 package io.reflection.app.accountdatacollectors;
 
+import io.reflection.app.logging.GaeLevel;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,7 +33,6 @@ import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.spacehopperstudios.utility.StringUtils;
 import com.willshex.gson.json.shared.Convert;
 
 /**
@@ -54,14 +59,27 @@ public class ITunesConnectDownloadHelper {
 	public static String getITunesSalesFile(String username, String password, String vendorId, String dateParameter, String bucketName, String bucketPath)
 			throws Exception {
 
+		if (LOG.isLoggable(GaeLevel.DEBUG)) {
+			LOG.log(GaeLevel.DEBUG, String.format("Getting Itunes Sales file for username: %s and vendorId%s for dateParam: %s to store in bucket/path: %s/%s",
+					username, vendorId, dateParameter, bucketName, bucketPath));
+		}
+
 		if (vendorId == null) return null;
 
-
 		try {
+			if (LOG.isLoggable(GaeLevel.DEBUG)) {
+				LOG.log(GaeLevel.DEBUG, "Getting post data");
+			}
 			final String data = getPostData(username, password, vendorId, dateParameter);
 
+			if (LOG.isLoggable(GaeLevel.DEBUG)) {
+				LOG.log(GaeLevel.DEBUG, "Connecting to Itunes");
+			}
 			final HttpURLConnection connection = connectToItunesConnect(data);
 
+			if (LOG.isLoggable(GaeLevel.DEBUG)) {
+				LOG.log(GaeLevel.DEBUG, "Checking error message header: ");
+			}
 			String error = null;
 			if ((error = connection.getHeaderField("ERRORMSG")) != null) {
 				// OK error
@@ -79,7 +97,21 @@ public class ITunesConnectDownloadHelper {
 				throw new Exception(error);
 			}
 
+			if (LOG.isLoggable(GaeLevel.DEBUG)) {
+				LOG.log(GaeLevel.DEBUG, String.format("The error message header is empty. Connection response code: %d", connection.getResponseCode()));
+
+
+				final Map<String, List<String>> headerFields = connection.getHeaderFields();
+				for (final String headerKey : headerFields.keySet()) {
+					LOG.log(GaeLevel.DEBUG, String.format("Connection Header %s = %s", headerKey, connection.getHeaderField(headerKey)));
+				}
+			}
+
 			if (connection != null && connection.getHeaderField("filename") != null) {
+				if (LOG.isLoggable(GaeLevel.DEBUG)) {
+					LOG.log(GaeLevel.DEBUG, String.format("Filename in connection is %s", connection.getHeaderField("filename")));
+				}
+
 				if (bucketName == null || bucketPath == null) return null;
 
 				return getFile(bucketName, bucketPath, connection);
@@ -136,10 +168,11 @@ public class ITunesConnectDownloadHelper {
 	 * @param vendorId
 	 * @param dateParameter
 	 * @return
+	 * @throws UnsupportedEncodingException
 	 */
-	public static String getPostData(String username, String password, String vendorId, String dateParameter) {
-		String data = USERNAME_KEY + "=" + StringUtils.urlencode(username);
-		data += "&" + PASSWORD_KEY + "=" + StringUtils.urlencode(password);
+	public static String getPostData(String username, String password, String vendorId, String dateParameter) throws UnsupportedEncodingException {
+		String data = USERNAME_KEY + "=" + URLEncoder.encode(username, "UTF-8");
+		data += "&" + PASSWORD_KEY + "=" + URLEncoder.encode(password, "UTF-8");
 		data += "&" + VENDOR_NUMBER_KEY + "=" + vendorId;
 
 		data = data + "&" + TYPE_KEY + "=Sales";
@@ -162,10 +195,17 @@ public class ITunesConnectDownloadHelper {
 		String cloudStorageFileName;
 
 		try {
+			if (LOG.isLoggable(GaeLevel.DEBUG)) {
+				LOG.log(GaeLevel.DEBUG, "Getting input stream from Itunes connection");
+			}
 			localBufferedInputStream = new BufferedInputStream(paramHttpURLConnection.getInputStream());
 
 			final GcsService fileService = GcsServiceFactory.createGcsService();
 			final GcsFilename fileName = new GcsFilename(bucketName, bucketPath + "/" + str);
+
+			if (LOG.isLoggable(GaeLevel.DEBUG)) {
+				LOG.log(GaeLevel.DEBUG, String.format("Writing to bucket: %s and path %s", bucketName, bucketPath + "/" + str));
+			}
 
 			writeChannel = fileService.createOrReplace(fileName, GcsFileOptions.getDefaultInstance());
 			final byte[] byteBuffer = new byte[1024];
@@ -180,6 +220,9 @@ public class ITunesConnectDownloadHelper {
 
 			cloudStorageFileName = "/gs/" + fileName.getBucketName() + "/" + fileName.getObjectName();
 
+			if (LOG.isLoggable(GaeLevel.DEBUG)) {
+				LOG.log(GaeLevel.DEBUG, String.format("cloudStorageFileName = %s", cloudStorageFileName));
+			}
 		} finally {
 			if (localBufferedInputStream != null) {
 				localBufferedInputStream.close();
