@@ -266,6 +266,15 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<filter-name>ObjectifyFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+
+	<filter>
+		<filter-name>DBConnectionPoolingFilter</filter-name>
+		<filter-class>io.reflection.app.DBConnectionPoolingFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>DBConnectionPoolingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 	
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
