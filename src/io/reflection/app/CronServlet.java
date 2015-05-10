@@ -36,6 +36,8 @@ import io.reflection.app.shared.util.PagerHelper;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -137,7 +139,9 @@ public class CronServlet extends HttpServlet {
 			}
 		} else if (process != null) {
 			if ("accounts".equals(process)) {
-
+				if (LOG.isLoggable(GaeLevel.DEBUG)) {
+					LOG.log(GaeLevel.DEBUG, "Processing accounts");
+				}
 				try {
 					final IDataAccountFetchService dataAccountFetchService = DataAccountFetchServiceProvider.provide();
 					final IDataAccountService dataAccountService = DataAccountServiceProvider.provide();
@@ -147,31 +151,43 @@ public class CronServlet extends HttpServlet {
 					final Calendar dayToFetchAccountDataFor = Calendar.getInstance();
 					dayToFetchAccountDataFor.add(Calendar.DATE, daysToGoBackBy);
 
-					final Date fetchForDate = ApiHelper.removeTime(dayToFetchAccountDataFor.getTime());
+					final Date lastSalesFetchDate = ApiHelper.removeTime(dayToFetchAccountDataFor.getTime());
+
+					if (LOG.isLoggable(GaeLevel.DEBUG)) {
+						LOG.log(GaeLevel.DEBUG, String.format("Last sales fetch date is: %s", lastSalesFetchDate));
+					}
 
 					final String dataAccountToTestUsername = System.getProperty(TEST_DATA_ACCOUNT_USERNAME_KEY);
 					final String dataAccountToTestSourceID = System.getProperty(TEST_DATA_ACCOUNT_SOURCEID_KEY);
 
+					if (LOG.isLoggable(GaeLevel.DEBUG)) {
+						LOG.log(GaeLevel.DEBUG, String.format("Data account to test: %s", dataAccountToTestUsername));
+					}
 					final DataAccount dataAccountToTest = dataAccountService.getDataAccount(dataAccountToTestUsername, Long.valueOf(dataAccountToTestSourceID));
+
+					if (LOG.isLoggable(GaeLevel.DEBUG)) {
+						LOG.log(GaeLevel.DEBUG, String.format("Loaded data account with ID: %s", dataAccountToTest.id));
+					}
 
 					/*
 					 * Check whether we have already collected sales data for yesterday (or day before if we are checking before 5pm)
 					 */
-					final DataAccountFetch testAccountFetch = dataAccountFetchService.getDateDataAccountFetch(dataAccountToTest, fetchForDate);
+					final DataAccountFetch testAccountFetch = dataAccountFetchService.getDateDataAccountFetch(dataAccountToTest, lastSalesFetchDate);
 					if (testAccountFetch != null && testAccountFetch.status != null) {
 						// we have already started a fetch for this account for this date.
 						if (LOG.isLoggable(GaeLevel.DEBUG)) {
 							LOG.log(GaeLevel.DEBUG, String.format(
 									"A sales gather has already been run for %s. Checking to see if the gathers are done so we can model against their rank.",
-									fetchForDate));
+									lastSalesFetchDate));
 						}
 
 						/*
 						 * Check if all the sales data has been ingested, if there are no gathers left in the gathering status, fire off the modeling jobs
 						 */
 
-						final Long dataAccountFetchesGatheredCount = dataAccountFetchService.getDataAccountFetchesWithStatusCount(fetchForDate, DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered);
-						final Long dataAccountFetchesIngestedCount = dataAccountFetchService.getDataAccountFetchesWithStatusCount(fetchForDate,
+						final Long dataAccountFetchesGatheredCount = dataAccountFetchService.getDataAccountFetchesWithStatusCount(lastSalesFetchDate,
+								DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered);
+						final Long dataAccountFetchesIngestedCount = dataAccountFetchService.getDataAccountFetchesWithStatusCount(lastSalesFetchDate,
 								DataAccountFetchStatusType.DataAccountFetchStatusTypeIngested);
 
 						if (dataAccountFetchesGatheredCount == 0 && dataAccountFetchesIngestedCount > 0) {
@@ -181,33 +197,53 @@ public class CronServlet extends HttpServlet {
 										dataAccountFetchesIngestedCount));
 							}
 
-							final List<Long> ingestedFeedFetchIds = FeedFetchServiceProvider.provide().getFeedFetchIdsForDateWithStatus(fetchForDate,
-									FeedFetchStatusType.FeedFetchStatusTypeIngested);
-
-							if (ingestedFeedFetchIds != null && ingestedFeedFetchIds.size() > 0) {
-								for (final Long feedFetchId : ingestedFeedFetchIds) {
-									final FeedFetch fetch = FeedFetchServiceProvider.provide().getFeedFetch(feedFetchId);
-
-									// this is just a sanity check. we expect that the query for getting the IDs only gave us feed fetches that exist and have
-									// the ingested status.
-									if (fetch != null && fetch.status == FeedFetchStatusType.FeedFetchStatusTypeIngested) {
-										if (LOG.isLoggable(GaeLevel.DEBUG)) {
-											LOG.log(GaeLevel.DEBUG, String.format(
-													"Enquing feed fetch id %d for modelling. Country: %s, category: %s, type: %s", feedFetchId, fetch.country,
-													fetch.category.id, fetch.type));
-										}
-
-										final Modeller modeller = ModellerFactory.getModellerForStore(DataTypeHelper.IOS_STORE_A3);
-
-										// once the feed fetch status is updated model the list
-										modeller.enqueue(fetch);
+							Date processFeedsFrom = lastSalesFetchDate;
+							final String processFeedsFromStr = req.getParameter("processFeedsFrom");
+							if (processFeedsFromStr != null && processFeedsFromStr.trim().length() > 0) {
+								try {
+									processFeedsFrom = new SimpleDateFormat("yyyy-MM-dd").parse(processFeedsFromStr);
+								} catch (final ParseException e) {
+									if (LOG.isLoggable(GaeLevel.DEBUG)) {
+										LOG.log(GaeLevel.DEBUG, "Could not parse the date from var processFeedsFrom: " + processFeedsFromStr);
 									}
 								}
-							} else {
-								if (LOG.isLoggable(GaeLevel.DEBUG)) {
-									LOG.log(GaeLevel.DEBUG,
-											"Could not find any rank feed fetches that matched the date and the ingested status. Can't fire off the modelling process.");
+							}
+
+							while (processFeedsFrom.compareTo(lastSalesFetchDate) < 1) {
+								final List<Long> ingestedFeedFetchIds = FeedFetchServiceProvider.provide().getFeedFetchIdsForDateWithStatus(processFeedsFrom,
+										FeedFetchStatusType.FeedFetchStatusTypeIngested);
+
+								if (ingestedFeedFetchIds != null && ingestedFeedFetchIds.size() > 0) {
+									for (final Long feedFetchId : ingestedFeedFetchIds) {
+										final FeedFetch fetch = FeedFetchServiceProvider.provide().getFeedFetch(feedFetchId);
+
+										// this is just a sanity check. we expect that the query for getting the IDs only gave us feed fetches that exist and
+										// have
+										// the ingested status.
+										if (fetch != null && fetch.status == FeedFetchStatusType.FeedFetchStatusTypeIngested) {
+											if (LOG.isLoggable(GaeLevel.DEBUG)) {
+												LOG.log(GaeLevel.DEBUG, String.format(
+														"Enquing feed fetch id %d for modelling. Country: %s, category: %s, type: %s", feedFetchId,
+														fetch.country, fetch.category.id, fetch.type));
+											}
+
+											final Modeller modeller = ModellerFactory.getModellerForStore(DataTypeHelper.IOS_STORE_A3);
+
+											// once the feed fetch status is updated model the list
+											modeller.enqueue(fetch);
+										}
+									}
+								} else {
+									if (LOG.isLoggable(GaeLevel.DEBUG)) {
+										LOG.log(GaeLevel.DEBUG,
+												"Could not find any rank feed fetches that matched the date and the ingested status. Can't fire off the modelling process.");
+									}
 								}
+
+								final Calendar cal = Calendar.getInstance();
+								cal.setTime(processFeedsFrom);
+								cal.add(Calendar.DAY_OF_YEAR, 1);
+								processFeedsFrom = cal.getTime();
 							}
 
 						} else {
@@ -231,7 +267,7 @@ public class CronServlet extends HttpServlet {
 					try {
 						connection = ITunesConnectDownloadHelper.connectToItunesConnect(ITunesConnectDownloadHelper.getPostData(dataAccountToTest.username,
 								dataAccountToTest.password, ITunesConnectDownloadHelper.getVendorId(dataAccountToTest.properties),
-								ITunesConnectDownloadHelper.DATE_FORMATTER.format(fetchForDate)));
+								ITunesConnectDownloadHelper.DATE_FORMATTER.format(lastSalesFetchDate)));
 					} catch (final Exception e) {
 						if (LOG.isLoggable(Level.WARNING)) {
 							LOG.log(Level.WARNING, "An exception occured while trying to test a sales gather via ITunes Connect.", e);
