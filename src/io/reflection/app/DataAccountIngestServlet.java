@@ -28,7 +28,7 @@ import com.willshex.service.ContextAwareServlet;
 
 /**
  * @author billy1380
- * 
+ *
  */
 @SuppressWarnings("serial")
 public class DataAccountIngestServlet extends ContextAwareServlet {
@@ -37,13 +37,13 @@ public class DataAccountIngestServlet extends ContextAwareServlet {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.willshex.service.ContextAwareServlet#doGet()
 	 */
 	@Override
 	protected void doGet() throws ServletException, IOException {
 
-		String appEngineQueue = REQUEST.get().getHeader("X-AppEngine-QueueName");
+		final String appEngineQueue = REQUEST.get().getHeader("X-AppEngine-QueueName");
 
 		if (LOG.isLoggable(GaeLevel.DEBUG)) {
 			LOG.log(GaeLevel.DEBUG, String.format("appEngineQueue is [%s]", appEngineQueue));
@@ -52,7 +52,8 @@ public class DataAccountIngestServlet extends ContextAwareServlet {
 		boolean isNotQueue = false;
 
 		// bail out if we have not been called by app engine cron
-		if (isNotQueue = (appEngineQueue == null || !"dataaccountingest".toLowerCase().equals(appEngineQueue.toLowerCase()))) {
+		if (isNotQueue = (appEngineQueue == null || (!"deferred".toLowerCase().equals(appEngineQueue.toLowerCase()) && !"dataaccountingest".toLowerCase()
+				.equals(appEngineQueue.toLowerCase())))) {
 			RESPONSE.get().setStatus(401);
 			RESPONSE.get().getOutputStream().print("failure");
 			LOG.log(Level.WARNING, "Attempt to run script directly, this is not permitted");
@@ -65,25 +66,25 @@ public class DataAccountIngestServlet extends ContextAwareServlet {
 			}
 		}
 
-		String fetchId = REQUEST.get().getParameter("fetchId");
+		final String fetchId = REQUEST.get().getParameter("fetchId");
 
 		if (fetchId != null) {
 			try {
-				DataAccountFetch fetch = DataAccountFetchServiceProvider.provide().getDataAccountFetch(Long.parseLong(fetchId));
+				final DataAccountFetch fetch = DataAccountFetchServiceProvider.provide().getDataAccountFetch(Long.parseLong(fetchId));
 
 				if (fetch != null) {
 
-					DataAccount linkedAccount = DataAccountServiceProvider.provide().getDataAccount(fetch.linkedAccount.id);
+					final DataAccount linkedAccount = DataAccountServiceProvider.provide().getDataAccount(fetch.linkedAccount.id);
 
 					if (linkedAccount != null) {
-						DataSource source = DataSourceServiceProvider.provide().getDataSource(linkedAccount.source.id);
+						final DataSource source = DataSourceServiceProvider.provide().getDataSource(linkedAccount.source.id);
 
 						fetch.linkedAccount = linkedAccount;
 
 						if (source != null) {
 							linkedAccount.source = source;
 
-							DataAccountIngestor ingestor = DataAccountIngestorFactory.getIngestorForSource(source.a3Code);
+							final DataAccountIngestor ingestor = DataAccountIngestorFactory.getIngestorForSource(source.a3Code);
 
 							if (ingestor != null) {
 								ingestor.ingest(fetch);
@@ -103,15 +104,15 @@ public class DataAccountIngestServlet extends ContextAwareServlet {
 					LOG.info(String.format("Could not find data account fetch for id [%s], skipping", fetchId));
 				}
 
-			} catch (DataAccessException e) {
-				LOG.log(GaeLevel.SEVERE, String.format("Database error occured while trying to ingest data with fetch id [%s]", fetchId), e);
+			} catch (final DataAccessException e) {
+				LOG.log(Level.SEVERE, String.format("Database error occured while trying to ingest data with fetch id [%s]", fetchId), e);
 			}
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.willshex.service.ContextAwareServlet#doPost()
 	 */
 	@Override
