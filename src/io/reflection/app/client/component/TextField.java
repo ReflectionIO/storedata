@@ -41,11 +41,11 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Stefano Capuzzi
  *
  */
-public class FormField extends Composite implements HasClickHandlers, HasKeyPressHandlers, HasKeyUpHandlers, Focusable {
+public class TextField extends Composite implements HasClickHandlers, HasKeyPressHandlers, HasKeyUpHandlers, Focusable {
 
 	private static FormFieldUiBinder uiBinder = GWT.create(FormFieldUiBinder.class);
 
-	interface FormFieldUiBinder extends UiBinder<Widget, FormField> {}
+	interface FormFieldUiBinder extends UiBinder<Widget, TextField> {}
 
 	@UiField TextBox textBox;
 	@UiField LabelElement label;
@@ -57,7 +57,7 @@ public class FormField extends Composite implements HasClickHandlers, HasKeyPres
 
 	private final ReflectionMainStyles refStyle = Styles.STYLES_INSTANCE.reflectionMainStyle();
 
-	public FormField() {
+	public TextField() {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		infoLink.removeFromParent();

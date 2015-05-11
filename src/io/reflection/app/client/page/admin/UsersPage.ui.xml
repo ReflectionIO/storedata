@@ -8,24 +8,25 @@
 	<ui:style gss="true">
 	
 	</ui:style>
-	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer}">
-		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth}">
-			<h2>Users</h2>
-
-			<g:HTMLPanel>
-				<g:InlineHyperlink styleName="btn btn-default" text="Add user" targetHistoryToken="{RegisterPageType.asTargetHistoryToken}" />
-
-				<g:Button styleName="btn btn-default" text="Delete test users" ui:field="deleteTestUsers" />
-
-				<c:FormField ui:field="queryTextBox"></c:FormField>
-
-			</g:HTMLPanel>
-
-			<cv:CellTable ui:field="usersTable" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}" />
-
-			<p:SimplePager styleName="text-center" ui:field="simplePager" />
-
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.pageAdmin}">
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneHalf}">
+			<h1 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Users</h1>
 		</div>
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.pageFunctions}">
+			<form class="{STYLES_INSTANCE.reflectionMainStyle.inlineSearchForm}">
+				<c:TextField ui:field="queryTextBox" labelText="Search User" styleName="{STYLES_INSTANCE.reflectionMainStyle.searchFieldNoLabel}"></c:TextField>
+			</form>
+		</div>
+		<div
+			class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth} {STYLES_INSTANCE.reflectionMainStyle.filtersContainer} {STYLES_INSTANCE.reflectionMainStyle.adminFiltersContainer}">
+			<g:InlineHyperlink styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall}" text="Add user" targetHistoryToken="{RegisterPageType.asTargetHistoryToken}" />
+			<g:Button styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall}" text="Delete Test Users" ui:field="deleteTestUsers" />
+		</div>
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__row}">
+			<cv:CellTable ui:field="usersTable" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}" />
+			<p:SimplePager ui:field="simplePager" />
+		</div>
+
 
 		<c:PopupDialog ui:field="deleteUserDialog" styleName="{STYLES_INSTANCE.reflectionMainStyle.popupContent} {STYLES_INSTANCE.reflectionMainStyle.popupContentDeleteAccount}">
 			<g:HTMLPanel>
@@ -39,6 +40,7 @@
 				</g:Anchor>
 			</g:HTMLPanel>
 		</c:PopupDialog>
+
 
 	</g:HTMLPanel>
 </ui:UiBinder> 

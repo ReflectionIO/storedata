@@ -55,12 +55,15 @@ public enum PageType {
 	BlogPostsPageType("blog", false),
 	BlogPostPageType("blogpost", false),
 	BlogTagPageType("blogtag", false),
+	CalibrationSummaryPageType("calibrationsummary", DataTypeHelper.PERMISSION_MANAGE_FEED_FETCHES_CODE),
 	CategoriesPageType("categories", DataTypeHelper.PERMISSION_MANAGE_CATEGORIES_CODE),
 	ChangeDetailsPageType("changedetails", true),
 	ChangePasswordPageType("changepassword", true),
 	DataAccountFetchesPageType("dataaccountfetches", DataTypeHelper.PERMISSION_MANAGE_DATA_ACCOUNT_FETCHES_CODE),
 	DataAccountsPageType("dataaccounts", DataTypeHelper.PERMISSION_MANAGE_DATA_ACCOUNTS_CODE),
+	EditEventSubscriptionPageType("editeventsubscription", DataTypeHelper.PERMISSION_MANAGE_EVENT_SUBSCRIPTIONS_CODE),
 	EventsPageType("events", DataTypeHelper.PERMISSION_MANAGE_EVENTS_CODE),
+	EventSubscriptionsPageType("eventsubscriptions", DataTypeHelper.PERMISSION_MANAGE_EVENT_SUBSCRIPTIONS_CODE),
 	FeedBrowserPageType("feedbrowser", DataTypeHelper.PERMISSION_MANAGE_FEED_FETCHES_CODE),
 	ForgotPasswordPageType("forgotpassword", false),
 	ForumEditTopicPageType("forumtopicedit", false),
@@ -74,6 +77,7 @@ public enum PageType {
 	LinkedAccountsPageType("linkedaccounts", true),
 	LinkItunesPageType("linkitunes", true),
 	MyAppsPageType("myapps", true),
+	NotificationsPageType("notifications", true),
 	NotPermittedPageType("notpermitted", false),
 	PermissionsPageType("permissions", DataTypeHelper.PERMISSION_MANAGE_PERMISSIONS_CODE),
 	RanksPageType("ranks", DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE),
@@ -81,19 +85,16 @@ public enum PageType {
 	RegisterPageType("register", false),
 	ResetPasswordPageType("resetpassword", false),
 	RolesPageType("roles", DataTypeHelper.PERMISSION_MANAGE_ROLES_CODE),
+	SendNotificationPageType("sendnotification", DataTypeHelper.PERMISSION_SEND_NOTIFICATIONS_CODE),
 	SearchPageType("search", true),
 	SimpleModelRunPageType("simplemodelrun", DataTypeHelper.PERMISSION_MANAGE_SIMPLE_MODEL_RUN_CODE),
 	TermsPageType("terms", false),
 	UpgradePageType("upgrade", true),
 	UsersPageType("users", DataTypeHelper.PERMISSION_MANAGE_USERS_CODE),
 	WidgetTestPage("test", false),
-	NotificationsPageType("notifications", true),
-	SendNotificationPageType("sendnotification", DataTypeHelper.PERMISSION_SEND_NOTIFICATIONS_CODE),
-	EventSubscriptionsPageType("eventsubscriptions", DataTypeHelper.PERMISSION_MANAGE_EVENT_SUBSCRIPTIONS_CODE),
-	EditEventSubscriptionPageType("editeventsubscription", DataTypeHelper.PERMISSION_MANAGE_EVENT_SUBSCRIPTIONS_CODE),
-	CalibrationSummaryPageType("calibrationsummary", DataTypeHelper.PERMISSION_MANAGE_FEED_FETCHES_CODE),
 
 	// Non navigable
+	Error404PageType("pagenotfound"),
 	LoadingPageType("loading"), ;
 
 	private String value;
@@ -328,6 +329,7 @@ public enum PageType {
 			page = new CalibrationSummaryPage();
 			break;
 		default:
+			page = new Error404Page();
 			break;
 		}
 

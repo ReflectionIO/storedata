@@ -12,7 +12,6 @@ import io.reflection.app.api.core.shared.call.ChangeUserDetailsResponse;
 import io.reflection.app.api.core.shared.call.event.ChangeUserDetailsEventHandler;
 import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.client.DefaultEventBus;
-import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.SessionController;
@@ -65,11 +64,9 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 	@UiField Element accountMenu;
 	@UiField HeadingElement userName;
 	@UiField HeadingElement userCompany;
-	@UiField LIElement myAppsItem;
 	@UiField LIElement linkedAccountsItem;
 	@UiField LIElement accountSettingsItem;
 	@UiField LIElement notificationItem;
-	@UiField InlineHyperlink myAppsLink;
 	@UiField InlineHyperlink linkedAccountsLink;
 	@UiField InlineHyperlink accountSettingsLink;
 	@UiField InlineHyperlink notificationLink;
@@ -111,7 +108,6 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 	private void createItemList() {
 		if (items == null) {
 			items = new ArrayList<LIElement>();
-			items.add(myAppsItem);
 			items.add(linkedAccountsItem);
 			items.add(accountSettingsItem);
 			items.add(notificationItem);
@@ -123,8 +119,6 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 			userName.setInnerText(user.forename + " " + user.surname);
 			userCompany.setInnerText(user.company);
 
-			myAppsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(),
-					FilterController.get().asMyAppsFilterString()));
 			linkedAccountsLink
 					.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.LinkedAccountsPageType.toString(), user.id.toString()));
 			accountSettingsLink
@@ -185,17 +179,9 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 	 */
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
-		User user = SessionController.get().getLoggedInUser();
-		if (user != null) {
-			myAppsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(),
-					FilterController.get().asMyAppsFilterString()));
-		}
 
 		// Highlight selected items
-		if (PageType.UsersPageType.equals(current.getPage()) && current.getAction() != null && PageType.MyAppsPageType.equals(current.getAction())) {
-			highlight(myAppsItem);
-		} else if (PageType.UsersPageType.equals(current.getPage()) && current.getAction() != null
-				&& PageType.LinkedAccountsPageType.equals(current.getAction())) {
+		if (PageType.UsersPageType.equals(current.getPage()) && current.getAction() != null && PageType.LinkedAccountsPageType.equals(current.getAction())) {
 			highlight(linkedAccountsItem);
 		} else if (PageType.UsersPageType.equals(current.getPage()) && current.getAction() != null
 				&& PageType.ChangeDetailsPageType.equals(current.getAction())) {

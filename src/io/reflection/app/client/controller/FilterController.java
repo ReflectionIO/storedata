@@ -270,8 +270,8 @@ public class FilterController {
 		setStore(DataTypeHelper.STORE_IPHONE_A3_CODE);
 		setListType(OVERALL_LIST_TYPE);
 		setCountry("gb");
-		setEndDate(FilterHelper.getToday());
-		setStartDate(FilterHelper.getWeeksAgo(4));
+		setEndDate(FilterHelper.getDaysAgo(2));
+		setStartDate(FilterHelper.getDaysAgo(30));
 		setCategory(Long.valueOf(15));
 		setDailyData(REVENUE_DAILY_DATA_TYPE);
 		setChartType(RANKING_CHART_TYPE);

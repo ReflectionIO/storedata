@@ -61,7 +61,7 @@
 							<g:HTMLPanel styleName="noteDetail" ui:field="titleNote" visible="false" />
 						</g:HTMLPanel>
 
-						<c:FormFieldSelect ui:field="forums" labelText="Forum"></c:FormFieldSelect>
+						<c:Selector ui:field="forums" labelText="Forum" />
 
 						<g:HTMLPanel ui:field="contentGroup" styleName="form-group">
 							<label>Content</label>

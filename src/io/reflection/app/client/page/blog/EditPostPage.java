@@ -17,6 +17,8 @@ import io.reflection.app.api.blog.shared.call.event.CreatePostEventHandler;
 import io.reflection.app.api.blog.shared.call.event.GetPostEventHandler;
 import io.reflection.app.api.blog.shared.call.event.UpdatePostEventHandler;
 import io.reflection.app.client.DefaultEventBus;
+import io.reflection.app.client.component.FormCheckbox;
+import io.reflection.app.client.component.TextField;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.PostController;
@@ -33,8 +35,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.spacehopperstudios.utility.StringUtils;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -53,12 +53,12 @@ public class EditPostPage extends Page implements NavigationEventHandler, Create
 	private static final String NEW_ACTION_NAME = "new";
 	private static final int POST_ID_PARAMETER_INDEX = 0;
 
-	@UiField TextBox title;
-	@UiField TextBox tags;
+	@UiField TextField title;
+	@UiField TextField tags;
 
-	@UiField CheckBox publish;
-	@UiField CheckBox visible;
-	@UiField CheckBox commentsEnabled;
+	@UiField FormCheckbox publish;
+	@UiField FormCheckbox visible;
+	@UiField FormCheckbox commentsEnabled;
 
 	@UiField MarkdownEditor descriptionText;
 
@@ -71,8 +71,6 @@ public class EditPostPage extends Page implements NavigationEventHandler, Create
 
 		Styles.STYLES_INSTANCE.blog().ensureInjected();
 
-		title.getElement().setAttribute("placeholder", "Title");
-		tags.getElement().setAttribute("placeholder", "Comma separated tags");
 	}
 
 	/*

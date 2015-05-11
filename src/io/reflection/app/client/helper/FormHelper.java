@@ -7,7 +7,7 @@
 //
 package io.reflection.app.client.helper;
 
-import io.reflection.app.client.component.FormFieldSelect;
+import io.reflection.app.client.component.Selector;
 
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -96,11 +96,11 @@ public class FormHelper {
 	}
 
 	/**
-	 * @param FormFieldSelect
+	 * @param Selector
 	 * @param value
 	 * @return
 	 */
-	public static int getItemIndex(FormFieldSelect listBox, String value) {
+	public static int getItemIndex(Selector listBox, String value) {
 		int index = -1;
 		int count = listBox.getItemCount();
 

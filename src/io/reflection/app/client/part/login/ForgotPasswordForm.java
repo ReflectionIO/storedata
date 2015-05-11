@@ -13,7 +13,7 @@ import io.reflection.app.api.core.shared.call.event.ForgotPasswordEventHandler;
 import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.component.FormButton;
-import io.reflection.app.client.component.FormField;
+import io.reflection.app.client.component.TextField;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.helper.FormHelper;
 
@@ -38,7 +38,7 @@ public class ForgotPasswordForm extends Composite implements ForgotPasswordEvent
 
 	interface ForgotPasswordFormUiBinder extends UiBinder<Widget, ForgotPasswordForm> {}
 
-	@UiField FormField email;
+	@UiField TextField email;
 	private String emailError = null;
 	@UiField FormButton submit;
 

@@ -20,11 +20,11 @@
 
 		</g:HTMLPanel>
 
-		<c:FormFieldSelect ui:field="countryListBox" labelText="Country" overlay="true"></c:FormFieldSelect>
+		<c:Selector ui:field="countryListBox" labelText="Country" overlay="true" />
 
-		<c:FormFieldSelect ui:field="appStoreListBox" labelText="App Store" overlay="true"></c:FormFieldSelect>
+		<c:Selector ui:field="appStoreListBox" labelText="App Store" overlay="true" />
 
-		<c:FormFieldSelect ui:field="categoryListBox" labelText="Category" overlay="true"></c:FormFieldSelect>
+		<c:Selector ui:field="categoryListBox" alignCenter="" labelText="Category" overlay="true" />
 
 		<g:HTMLPanel ui:field="dailyDataContainer" styleName="{STYLES_INSTANCE.reflectionMainStyle.filterToggle}">
 			<c:ToggleRadioButton ui:field="toggleDownloads" value="true" labelClassName="{STYLES_INSTANCE.reflectionMainStyle.toggleDownloads}"

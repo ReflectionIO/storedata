@@ -34,7 +34,7 @@ public class PermissionsPage extends Page {
 
 	interface PermissionsPageUiBinder extends UiBinder<Widget, PermissionsPage> {}
 
-	@UiField(provided = true) CellTable<Permission> mPermissions = new CellTable<Permission>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
+	@UiField(provided = true) CellTable<Permission> permissionTable = new CellTable<Permission>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) SimplePager mPager = new SimplePager(false, false);
 
 	public PermissionsPage() {
@@ -42,9 +42,9 @@ public class PermissionsPage extends Page {
 
 		addPermissionColumns();
 
-		mPermissions.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
-		PermissionController.get().addDataDisplay(mPermissions);
-		mPager.setDisplay(mPermissions);
+		permissionTable.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
+		PermissionController.get().addDataDisplay(permissionTable);
+		mPager.setDisplay(permissionTable);
 	}
 
 	private void addPermissionColumns() {
@@ -57,9 +57,7 @@ public class PermissionsPage extends Page {
 
 		};
 
-		TextHeader codeHeader = new TextHeader("Code");
-		codeHeader.setHeaderStyleNames("col-md-1");
-		mPermissions.addColumn(code, codeHeader);
+		permissionTable.addColumn(code, new TextHeader("Code"));
 
 		TextColumn<Permission> name = new TextColumn<Permission>() {
 
@@ -70,9 +68,7 @@ public class PermissionsPage extends Page {
 
 		};
 
-		TextHeader nameHeader = new TextHeader("Name");
-		nameHeader.setHeaderStyleNames("col-md-1");
-		mPermissions.addColumn(name, nameHeader);
+		permissionTable.addColumn(name, new TextHeader("Name"));
 
 		TextColumn<Permission> description = new TextColumn<Permission>() {
 
@@ -83,9 +79,7 @@ public class PermissionsPage extends Page {
 
 		};
 
-		TextHeader descriptionHeader = new TextHeader("Description");
-		descriptionHeader.setHeaderStyleNames("col-md-1");
-		mPermissions.addColumn(description, descriptionHeader);
+		permissionTable.addColumn(description, new TextHeader("Description"));
 	}
 
 }

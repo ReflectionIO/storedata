@@ -15,9 +15,9 @@
 					<h1 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Blog</h1>
 				</div>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter}">
-					<c:FormFieldSelect ui:field="blogCategories" labelText="All Categories (4)"></c:FormFieldSelect>
+					<c:Selector ui:field="blogCategories" overlay="true" labelText="All Categories (4)" />
 				</div>
-				<div
+				<div ui:field="breadcrumbPanel"
 					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird} {STYLES_INSTANCE.reflectionMainStyle.breadcrumbContainer}">
 					<ul class="{STYLES_INSTANCE.reflectionMainStyle.breadcrumb}">
 						<li>
@@ -31,7 +31,7 @@
 				</div>
 				<div
 					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter} {STYLES_INSTANCE.reflectionMainStyle.blogSearchContainer}">
-					<div class="{STYLES_INSTANCE.reflectionMainStyle.searchFieldNoLabel}">
+					<div ui:field="searchPanel" class="{STYLES_INSTANCE.reflectionMainStyle.searchFieldNoLabel}">
 						<input type="text" autocomplete="off" name="search" placeholder="Search blog.." />
 						<input
 							class="{STYLES_INSTANCE.reflectionMainStyle.refButton} {STYLES_INSTANCE.reflectionMainStyle.searchButtonMobile} {STYLES_INSTANCE.reflectionMainStyle.isHighlighted}"
@@ -74,7 +74,7 @@
 
 			</article>
 			<div id="disqus_thread" class="{STYLES_INSTANCE.reflectionMainStyle.blogComments}">
-				<form>
+				<form ui:field="comments">
 					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">15 Comments</h2>
 					<button class="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall} {STYLES_INSTANCE.reflectionMainStyle.makeCommentButton}">Make a Comment</button>
 					<div class="{STYLES_INSTANCE.reflectionMainStyle.formField}">

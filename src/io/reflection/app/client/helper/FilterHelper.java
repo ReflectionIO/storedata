@@ -7,7 +7,7 @@
 //
 package io.reflection.app.client.helper;
 
-import io.reflection.app.client.component.FormFieldSelect;
+import io.reflection.app.client.component.Selector;
 import io.reflection.app.client.component.DateSelector.PresetDateRange;
 import io.reflection.app.client.controller.CountryController;
 import io.reflection.app.client.controller.ForumController;
@@ -60,7 +60,7 @@ public class FilterHelper {
 		return getMonthsAgo(value * 12);
 	}
 
-	public static void addLinkedAccounts(FormFieldSelect list) {
+	public static void addLinkedAccounts(Selector list) {
 		List<DataAccount> linkedAccounts = LinkedAccountController.get().getAllLinkedAccounts();
 
 		if (linkedAccounts != null) {
@@ -78,7 +78,7 @@ public class FilterHelper {
 	 * @param isAdmin
 	 *            , if false add only iPhone store
 	 */
-	public static void addStores(FormFieldSelect list, boolean isAdmin) {
+	public static void addStores(Selector list, boolean isAdmin) {
 		if (isAdmin) {
 			List<Store> stores = StoreController.get().getStores();
 
@@ -93,7 +93,7 @@ public class FilterHelper {
 		}
 	}
 
-	public static void addStores(FormFieldSelect list) {
+	public static void addStores(Selector list) {
 		addStores(list, false);
 	}
 
@@ -105,7 +105,7 @@ public class FilterHelper {
 	 * @param isAdmin
 	 *            , if false add only USA
 	 */
-	public static void addCountries(FormFieldSelect list, boolean isAdmin) {
+	public static void addCountries(Selector list, boolean isAdmin) {
 		if (isAdmin) {
 			List<Country> countries = CountryController.get().getCountries();
 
@@ -121,7 +121,7 @@ public class FilterHelper {
 		}
 	}
 
-	public static void addCountries(FormFieldSelect list) {
+	public static void addCountries(Selector list) {
 		addCountries(list, false);
 	}
 
@@ -133,7 +133,7 @@ public class FilterHelper {
 	 * @param isAdmin
 	 *            , if false add only All categories
 	 */
-	public static void addCategories(FormFieldSelect list, boolean isAdmin) {
+	public static void addCategories(Selector list, boolean isAdmin) {
 		if (isAdmin) {
 			list.addItem("All", "24");
 			list.addItem("Book", "19");
@@ -165,11 +165,11 @@ public class FilterHelper {
 		}
 	}
 
-	public static void addCategories(FormFieldSelect list) {
+	public static void addCategories(Selector list) {
 		addCategories(list, false);
 	}
 
-	public static void addListType(FormFieldSelect list, boolean isAdmin) {
+	public static void addListType(Selector list, boolean isAdmin) {
 		// if (isAdmin) {
 		list.addItem("All", "all");
 		list.addItem("Paid", "paid");
@@ -178,11 +178,11 @@ public class FilterHelper {
 		// } else {}
 	}
 
-	public static void addListType(FormFieldSelect list) {
+	public static void addListType(Selector list) {
 		addListType(list, false);
 	}
 
-	public static void addBlogCategories(FormFieldSelect list, boolean isAdmin) {
+	public static void addBlogCategories(Selector list, boolean isAdmin) {
 		// if (isAdmin) {
 		list.addItem("All", "all");
 		list.addItem("Statistics", "statistics");
@@ -191,11 +191,11 @@ public class FilterHelper {
 		// } else {}
 	}
 
-	public static void addBlogCategories(FormFieldSelect list) {
+	public static void addBlogCategories(Selector list) {
 		addBlogCategories(list, false);
 	}
 
-	public static void addBlogSortBy(FormFieldSelect list, boolean isAdmin) {
+	public static void addBlogSortBy(Selector list, boolean isAdmin) {
 		// if (isAdmin) {
 		list.addItem("Most Recent", "recent");
 		list.addItem("Most Commented", "commented");
@@ -203,11 +203,11 @@ public class FilterHelper {
 		// } else {}
 	}
 
-	public static void addBlogSortBy(FormFieldSelect list) {
+	public static void addBlogSortBy(Selector list) {
 		addBlogSortBy(list, false);
 	}
 
-	public static void addForums(FormFieldSelect list) {
+	public static void addForums(Selector list) {
 		List<Forum> forums = ForumController.get().getForums();
 
 		if (forums != null) {

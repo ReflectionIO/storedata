@@ -5,31 +5,34 @@
 	<ui:style gss="true">
 	
 	</ui:style>
-	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer}">
-		<h3>Simple Model Run</h3>
-
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.pageAdmin}">
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneHalf}">
+			<h1 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Simple Model Run</h1>
+		</div>
 		<div
-			class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth} {STYLES_INSTANCE.reflectionMainStyle.filtersContainer}">
-			<form>
+			class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth} {STYLES_INSTANCE.reflectionMainStyle.filtersContainer} {STYLES_INSTANCE.reflectionMainStyle.filterContainerMyApps}">
+			<form class="{STYLES_INSTANCE.reflectionMainStyle.formsMidTheme}">
 
-				<g:HTMLPanel styleName="form-group">
-					<label>Date</label>
-					<c:DateSelector ui:field="dateSelector" />
-				</g:HTMLPanel>
+				<c:DateSelector ui:field="dateSelector" />
 
-				<c:FormFieldSelect ui:field="listType" labelText="List Type"></c:FormFieldSelect>
+				<c:Selector ui:field="category" labelText="Category" styleName="{STYLES_INSTANCE.reflectionMainStyle.categorySelect}" />
 
-				<c:FormFieldSelect ui:field="country" labelText="Country"></c:FormFieldSelect>
+				<c:Selector ui:field="appStore" labelText="App Store" styleName="{STYLES_INSTANCE.reflectionMainStyle.storeSelect}" />
 
-				<c:FormFieldSelect ui:field="appStore" labelText="App Store"></c:FormFieldSelect>
+				<c:Selector ui:field="country" labelText="Country" styleName="{STYLES_INSTANCE.reflectionMainStyle.countrySelect}" />
 
-				<c:FormFieldSelect ui:field="category" labelText="Category"></c:FormFieldSelect>
+				<c:Selector ui:field="listType" labelText="List Type" />
+
 			</form>
 		</div>
 
-		<cv:CellTable ui:field="simpleModelRunTable" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}" />
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__row}">
 
-		<p:SimplePager styleName="text-center" ui:field="simplePager" rangeLimited="true" />
+			<cv:CellTable ui:field="simpleModelRunTable" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}" />
+
+			<p:SimplePager ui:field="simplePager" rangeLimited="true" />
+
+		</div>
 
 	</g:HTMLPanel>
 </ui:UiBinder> 

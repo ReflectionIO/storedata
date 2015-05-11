@@ -5,34 +5,25 @@
 	<ui:style gss="true">
 	
 	</ui:style>
-	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer}">
-		<h2>
-			Feed Browser
-		</h2>
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.pageAdmin}">
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneHalf}">
+			<h1 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Simple Model Run</h1>
+			<p:Breadcrumbs ui:field="mBreadcrumbs" path="..." />
+		</div>
 		<div
-			class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth} {STYLES_INSTANCE.reflectionMainStyle.filtersContainer}">
-			<form>
-
-				<h5 class="text-muted">12-hourly feeds</h5>
-
-				<c:FormFieldSelect ui:field="mListType" labelText="List Type"></c:FormFieldSelect>
-
-				<c:FormFieldSelect ui:field="mCountry" labelText="Country"></c:FormFieldSelect>
-
-				<c:FormFieldSelect ui:field="mAppStore" labelText="App Store"></c:FormFieldSelect>
-
-				<c:FormFieldSelect ui:field="category" labelText="Category"></c:FormFieldSelect>
-
-
+			class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth} {STYLES_INSTANCE.reflectionMainStyle.filtersContainer} {STYLES_INSTANCE.reflectionMainStyle.adminFiltersContainer}">
+			<form class="{STYLES_INSTANCE.reflectionMainStyle.formsMidTheme}">
+				<c:Selector ui:field="mListType" labelText="List Type" />
+				<c:Selector ui:field="mCountry" labelText="Country" />
+				<c:Selector ui:field="mAppStore" labelText="App Store" />
+				<c:Selector ui:field="category" labelText="Category" />
 			</form>
 		</div>
 
-		<p:Breadcrumbs ui:field="mBreadcrumbs" path="..." styleName="topPanel" />
-
-		<cv:CellTable ui:field="mFeeds" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}" />
-
-		<p:SimplePager styleName="text-center" ui:field="mPager" rangeLimited="true" />
-
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__row}">
+			<cv:CellTable ui:field="mFeeds" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}" />
+			<p:SimplePager ui:field="mPager" rangeLimited="true" />
+		</div>
 
 	</g:HTMLPanel>
 </ui:UiBinder> 

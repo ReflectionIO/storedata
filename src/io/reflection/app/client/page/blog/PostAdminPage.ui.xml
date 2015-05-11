@@ -8,15 +8,17 @@
 	<ui:style gss="true">
 	
 	</ui:style>
-	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer}">
-		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth}">
-			<h2>Blog Admin</h2>
-
-			<g:InlineHyperlink text="Add Post" targetHistoryToken="{BlogEditPostPageType.asTargetHistoryToken}/new" />
-			<g:InlineHyperlink text="Go to Blog" targetHistoryToken="{BlogPostsPageType.asTargetHistoryToken}" />
-
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.pageAdmin}">
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneHalf}">
+			<h1 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Blog Admin</h1>
+		</div>
+		<div
+			class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth} {STYLES_INSTANCE.reflectionMainStyle.filtersContainer} {STYLES_INSTANCE.reflectionMainStyle.adminFiltersContainer}">
+			<g:InlineHyperlink text="Add Post" targetHistoryToken="{BlogEditPostPageType.asTargetHistoryToken}/new" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall}" />
+			<g:InlineHyperlink text="Go to Blog" targetHistoryToken="{BlogPostsPageType.asTargetHistoryToken}" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall}" />
+		</div>
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__row}">
 			<c:CellTable ui:field="posts" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}" />
-
 			<p:SimplePager ui:field="simplePager" rangeLimited="true" visible="false" />
 		</div>
 	</g:HTMLPanel>

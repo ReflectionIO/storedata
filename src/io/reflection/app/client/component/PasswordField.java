@@ -41,11 +41,11 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Stefano Capuzzi
  *
  */
-public class FormFieldPassword extends Composite implements HasClickHandlers, HasKeyPressHandlers, HasKeyUpHandlers, Focusable {
+public class PasswordField extends Composite implements HasClickHandlers, HasKeyPressHandlers, HasKeyUpHandlers, Focusable {
 
 	private static FormFieldPasswordUiBinder uiBinder = GWT.create(FormFieldPasswordUiBinder.class);
 
-	interface FormFieldPasswordUiBinder extends UiBinder<Widget, FormFieldPassword> {}
+	interface FormFieldPasswordUiBinder extends UiBinder<Widget, PasswordField> {}
 
 	@UiField TextBox passwordTextBox;
 	@UiField LabelElement label;
@@ -56,7 +56,7 @@ public class FormFieldPassword extends Composite implements HasClickHandlers, Ha
 	private SpanElement note = Document.get().createSpanElement();
 	private final ReflectionMainStyles refStyle = Styles.STYLES_INSTANCE.reflectionMainStyle();
 
-	public FormFieldPassword() {
+	public PasswordField() {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		strengthIndicatorPanel.removeFromParent();

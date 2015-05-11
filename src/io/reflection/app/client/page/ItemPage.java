@@ -24,8 +24,8 @@ import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.ImageAndTextCell;
 import io.reflection.app.client.cell.content.ConcreteImageAndText;
 import io.reflection.app.client.component.DateSelector;
-import io.reflection.app.client.component.FormFieldSelect;
 import io.reflection.app.client.component.FormSwitch;
+import io.reflection.app.client.component.Selector;
 import io.reflection.app.client.component.ToggleRadioButton;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.FilterController.Filter;
@@ -70,6 +70,8 @@ import java.util.Map;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.AnchorElement;
+import com.google.gwt.dom.client.ButtonElement;
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
@@ -87,7 +89,6 @@ import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.SafeHtmlHeader;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -114,8 +115,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	// Filters
 	@UiField FormSwitch followSwitch;
 	@UiField DateSelector dateSelector;
-	@UiField FormFieldSelect storeSelector;
-	@UiField FormFieldSelect countrySelector;
+	@UiField Selector storeSelector;
+	@UiField Selector countrySelector;
 	@UiField(provided = true) FormSwitch accuracySwitch = new FormSwitch(true);
 	@UiField(provided = true) FormSwitch eventsSwitch = new FormSwitch(true);
 	@UiField(provided = true) FormSwitch overlayRevenuesSwitch = new FormSwitch(true);
@@ -132,7 +133,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField SpanElement downloadsText;
 	@UiField InlineHyperlink rankingLink;
 	@UiField SpanElement rankingText;
-	private InlineHTML comingSoon = new InlineHTML("&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;Coming soon");
 	@UiField LIElement revenueItem;
 	@UiField LIElement downloadsItem;
 	@UiField LIElement rankingItem;
@@ -172,26 +172,41 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField AnchorElement revealContentFilter;
 	@UiField AnchorElement revealContentStore;
 
+	@UiField ButtonElement dnwBtn;
+	@UiField ButtonElement dnwBtnMobile;
+	@UiField DivElement sincePanel;
+
 	public ItemPage() {
 		initWidget(uiBinder.createAndBindUi(this));
-
-		ResponsiveDesignHelper.nativeRevealContent(revealContentStore);
-		ResponsiveDesignHelper.nativeRevealContent(revealContentFilter);
 
 		tabs.put(REVENUE_CHART_TYPE, revenueItem);
 		tabs.put(DOWNLOADS_CHART_TYPE, downloadsItem);
 		tabs.put(RANKING_CHART_TYPE, rankingItem);
-		comingSoon.getElement().getStyle().setFontSize(14.0, Unit.PX);
-		setRevenueDownloadTabsEnabled(false);
 
-		if (SessionController.get().isLoggedInUserAdmin()) {
+		// TODO remove not working elements for normal user
+		if (!SessionController.get().isLoggedInUserAdmin()) {
+			revenueTable2.removeFromParent();
+
+			followSwitch.removeFromParent();
+			accuracySwitch.removeFromParent();
+			eventsSwitch.removeFromParent();
+			oneMMovingAverageSwitch.removeFromParent();
+			overlayAppsSwitch.removeFromParent();
+			toggleChartGraph.removeFromParent();
+			toggleChartMap.removeFromParent();
+			sincePanel.removeFromParent();
+			dnwBtn.removeFromParent();
+			dnwBtnMobile.removeFromParent();
+		} else {
 			createColumns();
 			// RankController.get().getItemRevenueDataProvider().addDataDisplay(revenueTable);
 			RankController.get().getRankDataProvider().addDataDisplay(revenueTable2);
-		} else {
-			revenueTable2.removeFromParent();
 		}
 		revenueTable.removeFromParent();
+		setRevenueDownloadTabsEnabled(SessionController.get().isLoggedInUserAdmin());
+
+		ResponsiveDesignHelper.nativeRevealContent(revealContentStore);
+		ResponsiveDesignHelper.nativeRevealContent(revealContentFilter);
 
 		tablePlaceholder.add(itemRevenuePlaceholder);
 
@@ -884,21 +899,17 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 	private void setRevenueDownloadTabsEnabled(boolean enable) {
 		if (enable) {
-			revenueText.setInnerText("Revenue");
-			revenueItem.getStyle().setCursor(Cursor.DEFAULT);
-			downloadsText.setInnerText("Downloads");
-			downloadsItem.getStyle().setCursor(Cursor.DEFAULT);
 			revenueLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
 					REVENUE_CHART_TYPE, comingPage, filterContents));
 			downloadsLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
 					DOWNLOADS_CHART_TYPE, comingPage, filterContents));
-			tabs.put(REVENUE_CHART_TYPE, revenueItem);
-			tabs.put(DOWNLOADS_CHART_TYPE, downloadsItem);
 		} else {
-			revenueText.setInnerText("Revenue" + comingSoon);
-			revenueItem.getStyle().setCursor(Cursor.DEFAULT);
-			downloadsText.setInnerText("Downloads" + comingSoon);
-			downloadsItem.getStyle().setCursor(Cursor.DEFAULT);
+			revenueLink.getElement().setInnerText("Revenue - coming soon");
+			revenueLink.getElement().getStyle().setCursor(Cursor.DEFAULT);
+			revenueLink.getElement().getStyle().setColor(ColorHelper.getLightGrey2());
+			downloadsLink.getElement().setInnerText("Downloads - coming soon");
+			downloadsLink.getElement().getStyle().setCursor(Cursor.DEFAULT);
+			downloadsLink.getElement().getStyle().setColor(ColorHelper.getLightGrey2());
 			revenueLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 			downloadsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 			for (String key : tabs.keySet()) {

@@ -123,6 +123,9 @@ public interface Styles extends ClientBundle {
 
 		String addthis_sharing_toolbox();
 
+		@ClassName("admin-filters-container")
+		String adminFiltersContainer();
+
 		@ClassName("app-creator")
 		String appCreator();
 
@@ -476,6 +479,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("filter-container--my-apps")
 		String filterContainerMyApps();
 
+		@ClassName("filter-row-two")
+		String filterRowTwo();
+
 		@ClassName("filter-switch")
 		String filterSwitch();
 
@@ -539,6 +545,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("form-field--select-disabled")
 		String formFieldSelectDisabled();
 
+		@ClassName("form-field--textarea")
+		String formFieldTextarea();
+
 		@ClassName("form-field-help")
 		String formFieldHelp();
 
@@ -556,6 +565,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("forms--mid-theme")
 		String formsMidTheme();
+
+		@ClassName("full-page-message")
+		String fullPageMessage();
 
 		@ClassName("full-screen-intro")
 		String fullScreenIntro();
@@ -703,6 +715,8 @@ public interface Styles extends ClientBundle {
 		@ClassName("highcharts-yaxis-labels")
 		String highchartsYaxisLabels();
 
+		String hook();
+
 		@ClassName("horizontal-centre-content")
 		String horizontalCentreContent();
 
@@ -715,6 +729,8 @@ public interface Styles extends ClientBundle {
 		@ClassName("icon-dollar")
 		String iconDollar();
 
+		String ie10();
+
 		String ie8();
 
 		String ie9();
@@ -722,8 +738,14 @@ public interface Styles extends ClientBundle {
 		@ClassName("illustration-container")
 		String illustrationContainer();
 
+		@ClassName("img-reset")
+		String imgReset();
+
 		@ClassName("img-rounded")
 		String imgRounded();
+
+		@ClassName("img-signpost")
+		String imgSignpost();
 
 		@ClassName("inline-search-form")
 		String inlineSearchForm();
@@ -790,6 +812,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("is-pathetic")
 		String isPathetic();
+
+		@ClassName("is-safari")
+		String isSafari();
 
 		@ClassName("is-selected")
 		String isSelected();
@@ -865,6 +890,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("linked-account-store")
 		String linkedAccountStore();
 
+		@ClassName("list-container")
+		String listContainer();
+
 		@ClassName("list-item-complete")
 		String listItemComplete();
 
@@ -925,6 +953,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("no-accordion-content")
 		String noAccordionContent();
 
+		@ClassName("no-csstransforms3d")
+		String noCsstransforms3d();
+
 		@ClassName("no-csstransitions")
 		String noCsstransitions();
 
@@ -933,9 +964,6 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("no-js")
 		String noJs();
-
-		@ClassName("no-linked-accounts-container")
-		String noLinkedAccountsContainer();
 
 		@ClassName("no-opacity")
 		String noOpacity();
@@ -967,6 +995,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("p-style--minor")
 		String pStyleMinor();
 
+		@ClassName("page-admin")
+		String pageAdmin();
+
 		@ClassName("page-app")
 		String pageApp();
 
@@ -982,11 +1013,20 @@ public interface Styles extends ClientBundle {
 		@ClassName("page-functions")
 		String pageFunctions();
 
+		@ClassName("page-general-content")
+		String pageGeneralContent();
+
 		@ClassName("page-leaderboard")
 		String pageLeaderboard();
 
 		@ClassName("page-logged-in-landing")
 		String pageLoggedInLanding();
+
+		@ClassName("page-maintenance")
+		String pageMaintenance();
+
+		@ClassName("page-message-only")
+		String pageMessageOnly();
 
 		@ClassName("page-my-account")
 		String pageMyAccount();
@@ -1002,6 +1042,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("page-popup")
 		String pagePopup();
+
+		@ClassName("page-reset-password")
+		String pageResetPassword();
 
 		@ClassName("page-section")
 		String pageSection();
@@ -1266,8 +1309,14 @@ public interface Styles extends ClientBundle {
 		@ClassName("reflection-select")
 		String reflectionSelect();
 
+		@ClassName("reflection-select--center")
+		String reflectionSelectCenter();
+
 		@ClassName("reflection-select--filter")
 		String reflectionSelectFilter();
+
+		@ClassName("reflection-select--right")
+		String reflectionSelectRight();
 
 		@ClassName("refresh-button")
 		String refreshButton();

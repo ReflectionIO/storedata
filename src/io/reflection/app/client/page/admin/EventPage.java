@@ -15,7 +15,8 @@ import io.reflection.app.api.admin.shared.call.UpdateEventResponse;
 import io.reflection.app.api.admin.shared.call.event.GetEventsEventHandler;
 import io.reflection.app.api.admin.shared.call.event.UpdateEventEventHandler;
 import io.reflection.app.client.DefaultEventBus;
-import io.reflection.app.client.component.FormFieldSelect;
+import io.reflection.app.client.component.Selector;
+import io.reflection.app.client.component.TextField;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
@@ -25,10 +26,10 @@ import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
-import io.reflection.app.client.part.Preloader;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.part.text.MarkdownEditor;
 import io.reflection.app.client.res.Images;
+import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Event;
 import io.reflection.app.datatypes.shared.EventPriorityType;
 import io.reflection.app.helpers.NotificationHelper;
@@ -50,7 +51,6 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.TextArea;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
 
@@ -75,43 +75,27 @@ public class EventPage extends Page implements NavigationEventHandler, GetEvents
 
 	TextArea textArea;
 
-	@UiField HTMLPanel eventTablePanel;
 	@UiField HTMLPanel editEventPanel;
 
-	@UiField TextBox codeTextBox;
-	@UiField HTMLPanel codeGroup;
-	@UiField HTMLPanel codeNote;
-	private String codeError = null;
+	@UiField TextField codeTextBox;
+	// private String codeError = null;
 
-	@UiField TextBox descriptionTextBox;
-	@UiField HTMLPanel descriptionGroup;
-	@UiField HTMLPanel descriptionNote;
-	private String descriptionError = null;
+	@UiField TextField descriptionTextBox;
+	// private String descriptionError = null;
 
-	@UiField TextBox nameTextBox;
-	@UiField HTMLPanel nameGroup;
-	@UiField HTMLPanel nameNote;
-	private String nameError = null;
+	@UiField TextField nameTextBox;
+	// private String nameError = null;
 
-	@UiField TextBox subjectTextBox;
-	@UiField HTMLPanel subjectGroup;
-	@UiField HTMLPanel subjectNote;
-	private String subjectError = null;
+	@UiField TextField subjectTextBox;
+	// private String subjectError = null;
 
-	@UiField HTMLPanel longBodyGroup;
-	@UiField HTMLPanel longBodyNote;
 	@UiField MarkdownEditor longBodyEditor;
-	private String longBodyError = null;
+	// private String longBodyError = null;
 
 	@UiField TextArea shortBodyTextArea;
-	@UiField HTMLPanel shortBodyGroup;
-	@UiField HTMLPanel shortBodyNote;
-	private String shortBodyError = null;
+	// private String shortBodyError = null;
 
-	@UiField FormFieldSelect priorityListBox;
-	@UiField HTMLPanel priorityGroup;
-	@UiField HTMLPanel priorityNote;
-	private String priorityError = null;
+	@UiField(provided = true) Selector priorityListBox = new Selector(false);
 
 	@UiField Button addForenameBtn;
 	@UiField Button addSurnameBtn;
@@ -120,7 +104,6 @@ public class EventPage extends Page implements NavigationEventHandler, GetEvents
 	@UiField Button addLinkBtn;
 
 	@UiField Button buttonUpdate;
-	@UiField Preloader preloader;
 
 	public EventPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -137,7 +120,7 @@ public class EventPage extends Page implements NavigationEventHandler, GetEvents
 	/**
 	 * @param listBox
 	 */
-	private void addPriorities(FormFieldSelect listBox) {
+	private void addPriorities(Selector listBox) {
 		for (EventPriorityType p : EventPriorityType.values()) {
 			listBox.addItem(p.toString(), p.toString());
 		}
@@ -200,7 +183,7 @@ public class EventPage extends Page implements NavigationEventHandler, GetEvents
 			@Override
 			public SafeHtml getValue(Event object) {
 				String id = object.id.toString();
-				return SafeHtmlUtils.fromTrustedString("<a class=\"btn btn-xs btn-default\" href=\""
+				return SafeHtmlUtils.fromTrustedString("<a class=\"" + Styles.STYLES_INSTANCE.reflectionMainStyle().refButtonFunctionSmall() + "\" href=\""
 						+ PageType.EventsPageType.asHref(NavigationController.EDIT_ACTION_PARAMETER_VALUE, id).asString() + "\">Edit</a>");
 			}
 		};
@@ -222,7 +205,6 @@ public class EventPage extends Page implements NavigationEventHandler, GetEvents
 		if (isValidEditStack(actionParameter, typeParameter)) {
 			clearErrors();
 			event = EventController.get().getEvent(Long.valueOf(typeParameter));
-			eventTablePanel.setVisible(false);
 			editEventPanel.setVisible(true);
 
 			codeTextBox.setText(event.code);
@@ -236,7 +218,6 @@ public class EventPage extends Page implements NavigationEventHandler, GetEvents
 
 		} else {
 			editEventPanel.setVisible(false);
-			eventTablePanel.setVisible(true);
 			PageType.EventsPageType.show();
 		}
 	}
@@ -301,7 +282,7 @@ public class EventPage extends Page implements NavigationEventHandler, GetEvents
 	void onUpdateClicked(ClickEvent ce) {
 		if (validate()) {
 			clearErrors();
-			preloader.show();
+			// preloader.show();
 
 			event.subject = subjectTextBox.getText();
 			event.id = Long.valueOf(NavigationController.get().getStack().getParameter(EVENT_ID_PARAMETER));
@@ -314,47 +295,47 @@ public class EventPage extends Page implements NavigationEventHandler, GetEvents
 
 			EventController.get().updateEvent(event);
 		} else {
-			if (codeError != null) {
-				FormHelper.showNote(true, codeGroup, codeNote, codeError);
-			} else {
-				FormHelper.hideNote(codeGroup, codeNote);
-			}
-
-			if (nameError != null) {
-				FormHelper.showNote(true, nameGroup, nameNote, nameError);
-			} else {
-				FormHelper.hideNote(nameGroup, nameNote);
-			}
-
-			if (descriptionError != null) {
-				FormHelper.showNote(true, descriptionGroup, descriptionNote, descriptionError);
-			} else {
-				FormHelper.hideNote(descriptionGroup, descriptionNote);
-			}
-
-			if (subjectError != null) {
-				FormHelper.showNote(true, subjectGroup, subjectNote, subjectError);
-			} else {
-				FormHelper.hideNote(subjectGroup, subjectNote);
-			}
-
-			if (shortBodyError != null) {
-				FormHelper.showNote(true, shortBodyGroup, shortBodyNote, shortBodyError);
-			} else {
-				FormHelper.hideNote(shortBodyGroup, shortBodyNote);
-			}
-
-			if (longBodyError != null) {
-				FormHelper.showNote(true, longBodyGroup, longBodyNote, longBodyError);
-			} else {
-				FormHelper.hideNote(longBodyGroup, longBodyNote);
-			}
-
-			if (priorityError != null) {
-				FormHelper.showNote(true, priorityGroup, priorityNote, priorityError);
-			} else {
-				FormHelper.hideNote(priorityGroup, priorityNote);
-			}
+			// if (codeError != null) {
+			// FormHelper.showNote(true, codeGroup, codeNote, codeError);
+			// } else {
+			// FormHelper.hideNote(codeGroup, codeNote);
+			// }
+			//
+			// if (nameError != null) {
+			// FormHelper.showNote(true, nameGroup, nameNote, nameError);
+			// } else {
+			// FormHelper.hideNote(nameGroup, nameNote);
+			// }
+			//
+			// if (descriptionError != null) {
+			// FormHelper.showNote(true, descriptionGroup, descriptionNote, descriptionError);
+			// } else {
+			// FormHelper.hideNote(descriptionGroup, descriptionNote);
+			// }
+			//
+			// if (subjectError != null) {
+			// FormHelper.showNote(true, subjectGroup, subjectNote, subjectError);
+			// } else {
+			// FormHelper.hideNote(subjectGroup, subjectNote);
+			// }
+			//
+			// if (shortBodyError != null) {
+			// FormHelper.showNote(true, shortBodyGroup, shortBodyNote, shortBodyError);
+			// } else {
+			// FormHelper.hideNote(shortBodyGroup, shortBodyNote);
+			// }
+			//
+			// if (longBodyError != null) {
+			// FormHelper.showNote(true, longBodyGroup, longBodyNote, longBodyError);
+			// } else {
+			// FormHelper.hideNote(longBodyGroup, longBodyNote);
+			// }
+			//
+			// if (priorityError != null) {
+			// FormHelper.showNote(true, priorityGroup, priorityNote, priorityError);
+			// } else {
+			// FormHelper.hideNote(priorityGroup, priorityNote);
+			// }
 		}
 	}
 
@@ -362,61 +343,61 @@ public class EventPage extends Page implements NavigationEventHandler, GetEvents
 
 		boolean validated = true;
 		// Retrieve fields to validate
-		String code = codeTextBox.getText();
-		String name = nameTextBox.getText();
-		String description = descriptionTextBox.getText();
-		String subject = subjectTextBox.getText();
-		String shortBody = shortBodyTextArea.getText();
-		String longBody = longBodyEditor.getText();
+		// String code = codeTextBox.getText();
+		// String name = nameTextBox.getText();
+		// String description = descriptionTextBox.getText();
+		// String subject = subjectTextBox.getText();
+		// String shortBody = shortBodyTextArea.getText();
+		// String longBody = longBodyEditor.getText();
 		EventPriorityType priority = EventPriorityType.fromString(priorityListBox.getSelectedValue());
 
-		if (code == null || code.length() == 0) {
-			codeError = "Cannot be empty";
-			validated = false;
-		} else {
-			codeError = null;
-			validated = validated && true;
-		}
+		// if (code == null || code.length() == 0) {
+		// codeError = "Cannot be empty";
+		// validated = false;
+		// } else {
+		// codeError = null;
+		// validated = validated && true;
+		// }
+		//
+		// if (name == null || name.length() == 0) {
+		// nameError = "Cannot be empty";
+		// validated = false;
+		// } else {
+		// nameError = null;
+		// validated = validated && true;
+		// }
+		//
+		// if (description == null || description.length() == 0) {
+		// descriptionError = "Cannot be empty";
+		// validated = false;
+		// } else {
+		// descriptionError = null;
+		// validated = validated && true;
+		// }
+		//
+		// if (subject == null || subject.length() == 0) {
+		// subjectError = "Cannot be empty";
+		// validated = false;
+		// } else {
+		// subjectError = null;
+		// validated = validated && true;
+		// }
 
-		if (name == null || name.length() == 0) {
-			nameError = "Cannot be empty";
-			validated = false;
-		} else {
-			nameError = null;
-			validated = validated && true;
-		}
-
-		if (description == null || description.length() == 0) {
-			descriptionError = "Cannot be empty";
-			validated = false;
-		} else {
-			descriptionError = null;
-			validated = validated && true;
-		}
-
-		if (subject == null || subject.length() == 0) {
-			subjectError = "Cannot be empty";
-			validated = false;
-		} else {
-			subjectError = null;
-			validated = validated && true;
-		}
-
-		if (shortBody == null || shortBody.length() == 0) {
-			shortBodyError = "Cannot be empty";
-			validated = false;
-		} else {
-			shortBodyError = null;
-			validated = validated && true;
-		}
-
-		if (longBody == null || longBody.length() == 0) {
-			longBodyError = "Cannot be empty";
-			validated = false;
-		} else {
-			longBodyError = null;
-			validated = validated && true;
-		}
+		// if (shortBody == null || shortBody.length() == 0) {
+		// shortBodyError = "Cannot be empty";
+		// validated = false;
+		// } else {
+		// shortBodyError = null;
+		// validated = validated && true;
+		// }
+		//
+		// if (longBody == null || longBody.length() == 0) {
+		// longBodyError = "Cannot be empty";
+		// validated = false;
+		// } else {
+		// longBodyError = null;
+		// validated = validated && true;
+		// }
 
 		if (priority == null) {
 			StringBuffer values = new StringBuffer();
@@ -425,9 +406,9 @@ public class EventPage extends Page implements NavigationEventHandler, GetEvents
 				values.append(priorityType.toString());
 			}
 
-			priorityError = "Priority should be one of: " + values;
+			// priorityError = "Priority should be one of: " + values;
 		} else {
-			priorityError = null;
+			// priorityError = null;
 			validated = validated && true;
 		}
 
@@ -435,13 +416,13 @@ public class EventPage extends Page implements NavigationEventHandler, GetEvents
 	}
 
 	private void clearErrors() {
-		FormHelper.hideNote(codeGroup, codeNote);
-		FormHelper.hideNote(nameGroup, nameNote);
-		FormHelper.hideNote(descriptionGroup, descriptionNote);
-		FormHelper.hideNote(subjectGroup, subjectNote);
-		FormHelper.hideNote(shortBodyGroup, shortBodyNote);
-		FormHelper.hideNote(longBodyGroup, longBodyNote);
-		FormHelper.hideNote(priorityGroup, priorityNote);
+		// FormHelper.hideNote(codeGroup, codeNote);
+		// FormHelper.hideNote(nameGroup, nameNote);
+		// FormHelper.hideNote(descriptionGroup, descriptionNote);
+		// FormHelper.hideNote(subjectGroup, subjectNote);
+		// FormHelper.hideNote(shortBodyGroup, shortBodyNote);
+		// FormHelper.hideNote(longBodyGroup, longBodyNote);
+		// FormHelper.hideNote(priorityGroup, priorityNote);
 	}
 
 	/*
@@ -494,7 +475,7 @@ public class EventPage extends Page implements NavigationEventHandler, GetEvents
 			PageType.EventsPageType.show();
 		}
 
-		preloader.hide();
+		// preloader.hide();
 	}
 
 	/*
@@ -505,7 +486,7 @@ public class EventPage extends Page implements NavigationEventHandler, GetEvents
 	 */
 	@Override
 	public void updateEventFailure(UpdateEventRequest input, Throwable caught) {
-		preloader.hide();
+		// preloader.hide();
 	}
 
 }

@@ -29,6 +29,7 @@ import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.client.res.Images;
+import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.DataAccountFetchStatusType;
 
@@ -151,7 +152,8 @@ public class DataAccountFetchesPage extends Page implements NavigationEventHandl
 			}
 		};
 
-		Column<DataAccountFetch, String> operationColumn = new Column<DataAccountFetch, String>(new StyledButtonCell("btn", "btn-xs", "btn-default")) {
+		Column<DataAccountFetch, String> operationColumn = new Column<DataAccountFetch, String>(new StyledButtonCell(Styles.STYLES_INSTANCE
+				.reflectionMainStyle().refButtonFunctionSmall())) {
 
 			/*
 			 * (non-Javadoc)

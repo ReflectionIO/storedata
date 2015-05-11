@@ -10,7 +10,7 @@ package io.reflection.app.client.page.admin;
 import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMATTER_DD_MMM_YYYY;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.component.DateSelector;
-import io.reflection.app.client.component.FormFieldSelect;
+import io.reflection.app.client.component.Selector;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.FilterController.Filter;
 import io.reflection.app.client.controller.NavigationController;
@@ -57,11 +57,11 @@ public class SimpleModelRunsPage extends Page implements FilterEventHandler {
 			BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) SimplePager simplePager = new SimplePager(false, false);
 
-	@UiField FormFieldSelect listType;
+	@UiField Selector listType;
 	@UiField DateSelector dateSelector;
-	@UiField FormFieldSelect country;
-	@UiField FormFieldSelect appStore;
-	@UiField FormFieldSelect category;
+	@UiField Selector country;
+	@UiField Selector appStore;
+	@UiField Selector category;
 
 	public SimpleModelRunsPage() {
 		initWidget(uiBinder.createAndBindUi(this));

@@ -10,11 +10,11 @@
 		<fieldset class="{STYLES_INSTANCE.reflectionMainStyle.connectAccountContent}" style="visibility: visible; position: relative;">
 			<h2 ui:field="title"></h2>
 
-			<c:FormField ui:field="accountUsername" labelText="Account name" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}"></c:FormField>
+			<c:TextField ui:field="accountUsername" labelText="Account name" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
 
-			<c:FormFieldPassword ui:field="password" labelText="Account Password" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}"></c:FormFieldPassword>
+			<c:PasswordField ui:field="password" labelText="Account Password" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
 
-			<c:FormField ui:field="vendorId" labelText="Vendor ID" infoHref="" infoLabelText="What's this?" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}"></c:FormField>
+			<c:TextField ui:field="vendorId" labelText="Vendor ID" infoHref="" infoLabelText="What's this?" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
 
 			<c:FormButton ui:field="linkAccountBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth} {STYLES_INSTANCE.reflectionMainStyle.maintainAfterSubmit}"
 				text="Link this Account"></c:FormButton>

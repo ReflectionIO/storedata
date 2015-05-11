@@ -14,8 +14,8 @@ import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.component.FormButton;
 import io.reflection.app.client.component.FormCheckbox;
-import io.reflection.app.client.component.FormField;
-import io.reflection.app.client.component.FormFieldPassword;
+import io.reflection.app.client.component.TextField;
+import io.reflection.app.client.component.PasswordField;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.SessionController;
@@ -52,9 +52,9 @@ public class LoginForm extends Composite implements LoginEventHandler, UserPower
 
 	interface LoginFormUiBinder extends UiBinder<Widget, LoginForm> {}
 
-	@UiField FormField emailFormField;
+	@UiField TextField emailFormField;
 	private String EmailNote = null;
-	@UiField FormFieldPassword passwordFormField;
+	@UiField PasswordField passwordFormField;
 	private String passwordNote = null;
 	@UiField FormCheckbox rememberMe;
 	@UiField FormButton loginBtn;

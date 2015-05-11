@@ -15,6 +15,7 @@ import io.reflection.app.client.page.Page;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.res.Images;
+import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.EventSubscription;
 
 import com.google.gwt.cell.client.FieldUpdater;
@@ -114,8 +115,8 @@ public class EventSubscriptionsPage extends Page {
 		};
 		eventSubscriptions.addColumn(notificationCenter, "Notification Center");
 
-		StyledButtonCell prototype = new StyledButtonCell("btn", "btn-xs", "btn-danger");
-		Column<EventSubscription, String> deleteColumn = new Column<EventSubscription, String>(prototype) {
+		Column<EventSubscription, String> deleteColumn = new Column<EventSubscription, String>(new StyledButtonCell(Styles.STYLES_INSTANCE
+				.reflectionMainStyle().refButtonLink() + " " + Styles.STYLES_INSTANCE.reflectionMainStyle().warningText())) {
 
 			@Override
 			public String getValue(EventSubscription object) {

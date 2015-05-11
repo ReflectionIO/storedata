@@ -8,7 +8,7 @@
 package io.reflection.app.client.page.part;
 
 import io.reflection.app.client.component.DateSelector;
-import io.reflection.app.client.component.FormFieldSelect;
+import io.reflection.app.client.component.Selector;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.helper.FilterHelper;
@@ -34,10 +34,10 @@ public class MyAppsTopPanel extends Composite {
 
 	interface MyAppsTopPanelUiBinder extends UiBinder<Widget, MyAppsTopPanel> {}
 
-	@UiField FormFieldSelect accountName;
-	@UiField FormFieldSelect category;
-	@UiField FormFieldSelect appStore;
-	@UiField FormFieldSelect country;
+	@UiField Selector accountName;
+	@UiField Selector category;
+	@UiField Selector appStore;
+	@UiField Selector country;
 	@UiField DateSelector dateSelector;
 
 	/**
