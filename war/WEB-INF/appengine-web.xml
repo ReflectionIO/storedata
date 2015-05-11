@@ -75,7 +75,7 @@
  -->
 		<!-- Reflection DEV -->
 		<property name="gather.ios.countries" value="gb" />
-		<property name="gather.ios.categories" value="false" />
+		<property name="gather.ios.categories" value="true" />
 		<property name="ingest.ios.countries" value="gb" />
 
 		<property name="gather.bucket" value="devgather" />
