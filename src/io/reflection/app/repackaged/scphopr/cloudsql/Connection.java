@@ -109,6 +109,10 @@ public final class Connection {
 	public void connect() throws DataAccessException {
 		String url = null;
 
+		if (LOG.isLoggable(GaeLevel.DEBUG)) {
+			LOG.log(GaeLevel.DEBUG, "DB Connection ------- Really connecting");
+		}
+
 		if (isNative) {
 			if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Production) {
 				url = "jdbc:google:mysql://" + server + "/" + database;
@@ -351,6 +355,10 @@ public final class Connection {
 	}
 
 	public void disconnect() throws DataAccessException {
+		if (LOG.isLoggable(GaeLevel.DEBUG)) {
+			LOG.log(GaeLevel.DEBUG, "DB Connection ------- Fake disconnect");
+		}
+
 		queryResult = null;
 		statement = null;
 		affectedRowCount = 0;
@@ -359,6 +367,10 @@ public final class Connection {
 	}
 
 	public void realDisconnect() throws DataAccessException {
+		if (LOG.isLoggable(GaeLevel.DEBUG)) {
+			LOG.log(GaeLevel.DEBUG, "DB Connection ------- Real disconnect");
+		}
+
 		if (connection != null) {
 			try {
 				if (!connection.isClosed()) {

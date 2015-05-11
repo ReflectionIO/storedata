@@ -8,14 +8,18 @@
 package io.reflection.app.repackaged.scphopr.service.database;
 
 import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.service.ServiceType;
+
+import java.util.logging.Logger;
 
 /**
  * @author William Shakour
  *
  */
 public class DatabaseService implements IDatabaseService {
+	private static final Logger LOG = Logger.getLogger(DatabaseService.class.getName());
 
 	private static final ThreadLocal<Connection> localConnection = new ThreadLocal<Connection>();
 
@@ -28,8 +32,15 @@ public class DatabaseService implements IDatabaseService {
 	public Connection getConnection(String server, String database, String username, String password) throws DataAccessException {
 		Connection connection = localConnection.get();
 		if (connection == null) {
+			if (LOG.isLoggable(GaeLevel.DEBUG)) {
+				LOG.log(GaeLevel.DEBUG, "Local thread does not have a connection");
+			}
 			connection = new Connection(server, database, username, password);
 			localConnection.set(connection);
+		} else {
+			if (LOG.isLoggable(GaeLevel.DEBUG)) {
+				LOG.log(GaeLevel.DEBUG, "Local thread already has a connection. Returning that one.");
+			}
 		}
 
 		return connection;
