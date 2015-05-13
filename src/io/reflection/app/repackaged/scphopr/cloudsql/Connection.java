@@ -107,29 +107,31 @@ public final class Connection {
 	}
 
 	public void connect() throws DataAccessException {
-		String url = null;
-
-		if (LOG.isLoggable(GaeLevel.DEBUG)) {
-			LOG.log(GaeLevel.DEBUG, "DB Connection ------- Really connecting");
-		}
-
-		if (isNative) {
-			if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Production) {
-				url = "jdbc:google:mysql://" + server + "/" + database;
-			} else {
-				url = "jdbc:mysql://" + server + "/" + database;
-			}
-		} else {
-			url = "jdbc:google:rdbms://" + server + "/" + database;
-		}
-
 		try {
-			if (connection == null) {
-				connection = DriverManager.getConnection(url, username, password);
-				connection.setAutoCommit(!isTransactionMode);
-				executeQuery(String.format("SET NAMES \'%s\'", encoding));
-				// executeQuery(String.format("SET CHARACTER SET \'%s\'", encoding));
+			String url = null;
+
+			if (isConnected()) return;
+
+			// connection is null or has been disconnected
+
+			if (LOG.isLoggable(GaeLevel.DEBUG)) {
+				LOG.log(GaeLevel.DEBUG, "DB Connection ------- Really connecting");
 			}
+
+			if (isNative) {
+				if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Production) {
+					url = "jdbc:google:mysql://" + server + "/" + database;
+				} else {
+					url = "jdbc:mysql://" + server + "/" + database;
+				}
+			} else {
+				url = "jdbc:google:rdbms://" + server + "/" + database;
+			}
+
+			connection = DriverManager.getConnection(url, username, password);
+			connection.setAutoCommit(!isTransactionMode);
+			executeQuery(String.format("SET NAMES \'%s\'", encoding));
+
 		} catch (final SQLException ex) {
 			LOG.log(Level.SEVERE, "Error conneting to databse", ex);
 
