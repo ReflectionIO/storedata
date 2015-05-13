@@ -1,4 +1,4 @@
-//  
+//
 //  Connection.java
 //  repackageables
 //
@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.google.appengine.api.rdbms.AppEngineDriver;
@@ -25,18 +26,18 @@ public final class Connection {
 
 	public static final String CONNECTION_NATIVE_KEY = "connection.native";
 
-	private String server;
-	private String database;
+	private final String server;
+	private final String database;
 	private java.sql.Connection connection;
-	private String username;
-	private String password;
+	private final String username;
+	private final String password;
 	private ResultSet queryResult;
 	private Statement statement;
 	private long affectedRowCount;
 	private long insertedId;
 	private boolean isTransactionMode;
 	private boolean isNative = false;
-	private String encoding = "utf8mb4";
+	private final String encoding = "utf8mb4";
 
 	private static final Logger LOG = Logger.getLogger(Connection.class.getName());
 
@@ -45,7 +46,7 @@ public final class Connection {
 	}
 
 	public Connection(String server, String database, String username, String password, boolean transactionMode) throws DataAccessException {
-		String nativePropertyValue = System.getProperty(CONNECTION_NATIVE_KEY);
+		final String nativePropertyValue = System.getProperty(CONNECTION_NATIVE_KEY);
 
 		if (nativePropertyValue != null) {
 			isNative = Boolean.parseBoolean(nativePropertyValue);
@@ -64,7 +65,7 @@ public final class Connection {
 
 		if (password == null) throw new NullPointerException("password cannot be null");
 
-		this.isTransactionMode = transactionMode;
+		isTransactionMode = transactionMode;
 
 		this.server = server;
 		this.database = database;
@@ -72,28 +73,28 @@ public final class Connection {
 		this.password = password;
 
 		if (isNative) {
-			String databaseDriver = getDatabaseDriverName();
+			final String databaseDriver = getDatabaseDriverName();
 
 			try {
 				Class.forName(databaseDriver).newInstance();
-			} catch (InstantiationException ex) {
-				LOG.log(GaeLevel.SEVERE, "Error registering driver", ex);
+			} catch (final InstantiationException ex) {
+				LOG.log(Level.SEVERE, "Error registering driver", ex);
 
 				throw new DataAccessException(ex);
-			} catch (IllegalAccessException ex) {
-				LOG.log(GaeLevel.SEVERE, "Error registering driver", ex);
+			} catch (final IllegalAccessException ex) {
+				LOG.log(Level.SEVERE, "Error registering driver", ex);
 
 				throw new DataAccessException(ex);
-			} catch (ClassNotFoundException ex) {
-				LOG.log(GaeLevel.SEVERE, "Error registering driver", ex);
+			} catch (final ClassNotFoundException ex) {
+				LOG.log(Level.SEVERE, "Error registering driver", ex);
 
 				throw new DataAccessException(ex);
 			}
 		} else {
 			try {
 				DriverManager.registerDriver(new AppEngineDriver());
-			} catch (SQLException ex) {
-				LOG.log(GaeLevel.SEVERE, "Error registering driver", ex);
+			} catch (final SQLException ex) {
+				LOG.log(Level.SEVERE, "Error registering driver", ex);
 
 				throw new DataAccessException(ex);
 			}
@@ -101,15 +102,16 @@ public final class Connection {
 	}
 
 	private String getDatabaseDriverName() {
-		if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Production) {
-			return "com.mysql.jdbc.GoogleDriver";
-		} else {
-			return "com.mysql.jdbc.Driver";
-		}
+		if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Production) return "com.mysql.jdbc.GoogleDriver";
+		else return "com.mysql.jdbc.Driver";
 	}
 
 	public void connect() throws DataAccessException {
 		String url = null;
+
+		if (LOG.isLoggable(GaeLevel.DEBUG)) {
+			LOG.log(GaeLevel.DEBUG, "DB Connection ------- Really connecting");
+		}
 
 		if (isNative) {
 			if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Production) {
@@ -128,8 +130,8 @@ public final class Connection {
 				executeQuery(String.format("SET NAMES \'%s\'", encoding));
 				// executeQuery(String.format("SET CHARACTER SET \'%s\'", encoding));
 			}
-		} catch (SQLException ex) {
-			LOG.log(GaeLevel.SEVERE, "Error conneting to databse", ex);
+		} catch (final SQLException ex) {
+			LOG.log(Level.SEVERE, "Error conneting to databse", ex);
 
 			throw new DataAccessException(ex);
 		}
@@ -140,8 +142,8 @@ public final class Connection {
 	public boolean isConnected() throws DataAccessException {
 		try {
 			return connection != null && !connection.isClosed();
-		} catch (SQLException ex) {
-			LOG.log(GaeLevel.SEVERE, "Error checking if connection is closed", ex);
+		} catch (final SQLException ex) {
+			LOG.log(Level.SEVERE, "Error checking if connection is closed", ex);
 
 			throw new DataAccessException(ex);
 		}
@@ -173,8 +175,8 @@ public final class Connection {
 				queryResult = statement.getGeneratedKeys();
 			}
 
-		} catch (SQLException ex) {
-			LOG.log(GaeLevel.SEVERE, "Error executing query", ex);
+		} catch (final SQLException ex) {
+			LOG.log(Level.SEVERE, "Error executing query", ex);
 
 			throw new DataAccessException(ex);
 		}
@@ -193,8 +195,8 @@ public final class Connection {
 					if (queryResult.next()) {
 						insertedId = this.insertedId = queryResult.getInt(1);
 					}
-				} catch (SQLException ex) {
-					LOG.log(GaeLevel.SEVERE, "Error getting inserted id", ex);
+				} catch (final SQLException ex) {
+					LOG.log(Level.SEVERE, "Error getting inserted id", ex);
 
 					throw new DataAccessException(ex);
 				}
@@ -209,8 +211,8 @@ public final class Connection {
 		if (queryResult != null) {
 			try {
 				if (fetched = queryResult.next()) {}
-			} catch (SQLException ex) {
-				LOG.log(GaeLevel.SEVERE, "Error fetching next row", ex);
+			} catch (final SQLException ex) {
+				LOG.log(Level.SEVERE, "Error fetching next row", ex);
 
 				throw new DataAccessException(ex);
 			}
@@ -228,8 +230,8 @@ public final class Connection {
 				if (queryResult.wasNull()) {
 					value = null;
 				}
-			} catch (SQLException ex) {
-				LOG.log(GaeLevel.SEVERE, "Error getting value for column", ex);
+			} catch (final SQLException ex) {
+				LOG.log(Level.SEVERE, "Error getting value for column", ex);
 
 				throw new DataAccessException(ex);
 			}
@@ -247,8 +249,8 @@ public final class Connection {
 				if (queryResult.wasNull()) {
 					value = null;
 				}
-			} catch (SQLException ex) {
-				LOG.log(GaeLevel.SEVERE, "Error getting value for column", ex);
+			} catch (final SQLException ex) {
+				LOG.log(Level.SEVERE, "Error getting value for column", ex);
 
 				throw new DataAccessException(ex);
 			}
@@ -262,12 +264,12 @@ public final class Connection {
 
 		if (queryResult != null) {
 			try {
-				Timestamp t = queryResult.getTimestamp(key);
+				final Timestamp t = queryResult.getTimestamp(key);
 				if (!queryResult.wasNull() && t != null) {
 					value = new Date(t.getTime());
 				}
-			} catch (SQLException ex) {
-				LOG.log(GaeLevel.SEVERE, "Error getting value for column", ex);
+			} catch (final SQLException ex) {
+				LOG.log(Level.SEVERE, "Error getting value for column", ex);
 
 				throw new DataAccessException(ex);
 			}
@@ -285,8 +287,8 @@ public final class Connection {
 				if (queryResult.wasNull()) {
 					value = null;
 				}
-			} catch (SQLException ex) {
-				LOG.log(GaeLevel.SEVERE, "Error getting value for column", ex);
+			} catch (final SQLException ex) {
+				LOG.log(Level.SEVERE, "Error getting value for column", ex);
 
 				throw new DataAccessException(ex);
 			}
@@ -304,8 +306,8 @@ public final class Connection {
 				if (queryResult.wasNull()) {
 					value = null;
 				}
-			} catch (SQLException ex) {
-				LOG.log(GaeLevel.SEVERE, "Error getting value for column", ex);
+			} catch (final SQLException ex) {
+				LOG.log(Level.SEVERE, "Error getting value for column", ex);
 
 				throw new DataAccessException(ex);
 			}
@@ -323,8 +325,8 @@ public final class Connection {
 				if (queryResult.wasNull()) {
 					value = null;
 				}
-			} catch (SQLException ex) {
-				LOG.log(GaeLevel.SEVERE, "Error getting value for column", ex);
+			} catch (final SQLException ex) {
+				LOG.log(Level.SEVERE, "Error getting value for column", ex);
 
 				throw new DataAccessException(ex);
 			}
@@ -342,8 +344,8 @@ public final class Connection {
 				queryResult.last();
 				count = queryResult.getRow();
 				queryResult.beforeFirst();
-			} catch (SQLException ex) {
-				LOG.log(GaeLevel.SEVERE, "Error getting row count", ex);
+			} catch (final SQLException ex) {
+				LOG.log(Level.SEVERE, "Error getting row count", ex);
 
 				throw new DataAccessException(ex);
 			}
@@ -353,14 +355,30 @@ public final class Connection {
 	}
 
 	public void disconnect() throws DataAccessException {
+		if (LOG.isLoggable(GaeLevel.DEBUG)) {
+			LOG.log(GaeLevel.DEBUG, "DB Connection ------- Fake disconnect");
+		}
+
+		queryResult = null;
+		statement = null;
+		affectedRowCount = 0;
+		insertedId = 0;
+		isTransactionMode = false;
+	}
+
+	public void realDisconnect() throws DataAccessException {
+		if (LOG.isLoggable(GaeLevel.DEBUG)) {
+			LOG.log(GaeLevel.DEBUG, "DB Connection ------- Real disconnect");
+		}
+
 		if (connection != null) {
 			try {
 				if (!connection.isClosed()) {
 					connection.close();
 					connection = null;
 				}
-			} catch (SQLException ex) {
-				LOG.log(GaeLevel.SEVERE, "Error while closing connection", ex);
+			} catch (final SQLException ex) {
+				LOG.log(Level.SEVERE, "Error while closing connection", ex);
 
 				throw new DataAccessException(ex);
 			}
@@ -373,8 +391,8 @@ public final class Connection {
 		if (statement != null) {
 			try {
 				affectedRowCount = statement.getUpdateCount();
-			} catch (SQLException ex) {
-				LOG.log(GaeLevel.SEVERE, "Error getting affected row count", ex);
+			} catch (final SQLException ex) {
+				LOG.log(Level.SEVERE, "Error getting affected row count", ex);
 
 				throw new DataAccessException(ex);
 			}
@@ -388,8 +406,8 @@ public final class Connection {
 			if (isConnected()) {
 				try {
 					connection.commit();
-				} catch (SQLException ex) {
-					LOG.log(GaeLevel.SEVERE, "Error committing transaction", ex);
+				} catch (final SQLException ex) {
+					LOG.log(Level.SEVERE, "Error committing transaction", ex);
 
 					throw new DataAccessException(ex);
 				}

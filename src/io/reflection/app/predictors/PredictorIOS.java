@@ -29,6 +29,7 @@ import io.reflection.app.datatypes.shared.SimpleModelRun;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.helpers.ItemPropertyWrapper;
 import io.reflection.app.helpers.QueueHelper;
+import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.modellers.Modeller;
 import io.reflection.app.modellers.ModellerFactory;
 import io.reflection.app.service.category.CategoryServiceProvider;
@@ -55,7 +56,7 @@ import com.spacehopperstudios.utility.StringUtils;
 
 /**
  * @author billy1380
- * 
+ *
  */
 public class PredictorIOS implements Predictor {
 
@@ -63,7 +64,7 @@ public class PredictorIOS implements Predictor {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.predictors.Predictor#enqueue(java.lang.String, java.lang.String, java.lang.Long)
 	 */
 	@Override
@@ -79,20 +80,20 @@ public class PredictorIOS implements Predictor {
 	 * @throws DataAccessException
 	 */
 	private Map<String, Item> lookupItemsForRanks(List<Rank> ranks) throws DataAccessException {
-		Map<String, Item> lookup = new HashMap<String, Item>();
+		final Map<String, Item> lookup = new HashMap<String, Item>();
 
-		List<String> itemIds = new ArrayList<String>();
+		final List<String> itemIds = new ArrayList<String>();
 
-		for (Rank rank : ranks) {
+		for (final Rank rank : ranks) {
 			if (!itemIds.contains(rank.itemId)) {
 				itemIds.add(rank.itemId);
 			}
 		}
 
 		if (itemIds.size() > 0) {
-			List<Item> foundItems = ItemServiceProvider.provide().getInternalIdItemBatch(itemIds);
+			final List<Item> foundItems = ItemServiceProvider.provide().getInternalIdItemBatch(itemIds);
 
-			for (Item item : foundItems) {
+			for (final Item item : foundItems) {
 				lookup.put(item.internalId, item);
 			}
 		}
@@ -102,48 +103,48 @@ public class PredictorIOS implements Predictor {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.predictors.Predictor#predictRevenueAndDownloads(java.lang.String, java.lang.String, java.lang.Long, java.lang.Long)
 	 */
 	@Override
 	public void predictRevenueAndDownloads(String country, String type, Long code, Long categoryId) throws DataAccessException {
 
-		Country c = new Country();
+		final Country c = new Country();
 		c.a2Code = country;
 
-		Store s = DataTypeHelper.getIosStore();
+		final Store s = DataTypeHelper.getIosStore();
 
-		Pager p = new Pager();
+		final Pager p = new Pager();
 		p.start = Long.valueOf(0);
 		p.count = new Long(Long.MAX_VALUE);
 
-		Modeller modeller = ModellerFactory.getModellerForStore(DataTypeHelper.IOS_STORE_A3);
+		final Modeller modeller = ModellerFactory.getModellerForStore(DataTypeHelper.IOS_STORE_A3);
 
-		Collector collector = CollectorFactory.getCollectorForStore(DataTypeHelper.IOS_STORE_A3);
-		List<String> listTypes = new ArrayList<String>();
+		final Collector collector = CollectorFactory.getCollectorForStore(DataTypeHelper.IOS_STORE_A3);
+		final List<String> listTypes = new ArrayList<String>();
 		listTypes.addAll(collector.getCounterpartTypes(type));
 		listTypes.add(type);
 
-		FormType form = modeller.getForm(type);
-		ModelRun modelRun = ModelRunServiceProvider.provide().getGatherCodeModelRun(c, s, form, code);
+		final FormType form = modeller.getForm(type);
+		final ModelRun modelRun = ModelRunServiceProvider.provide().getGatherCodeModelRun(c, s, form, code);
 
-		Category category = CategoryServiceProvider.provide().getAllCategory(s);
+		final Category category = CategoryServiceProvider.provide().getAllCategory(s);
 
-		List<Rank> foundRanks = RankServiceProvider.provide().getGatherCodeRanks(c, s, category, type, code, p, Boolean.TRUE);
-		Map<String, Item> lookup = lookupItemsForRanks(foundRanks);
+		final List<Rank> foundRanks = RankServiceProvider.provide().getGatherCodeRanks(c, s, category, type, code, p, Boolean.TRUE);
+		final Map<String, Item> lookup = lookupItemsForRanks(foundRanks);
 
 		ItemRankArchiver archiver = null;
 
 		Item item = null;
-		for (Rank rank : foundRanks) {
+		for (final Rank rank : foundRanks) {
 			item = lookup.get(rank.itemId);
-			ItemPropertyWrapper properties = new ItemPropertyWrapper(item.properties);
+			final ItemPropertyWrapper properties = new ItemPropertyWrapper(item.properties);
 
 			if (archiver == null) {
 				archiver = ArchiverFactory.getItemRankArchiver();
 			}
 
-			boolean usesIap = properties.getBoolean(PROPERTY_IAP);
+			final boolean usesIap = properties.getBoolean(PROPERTY_IAP);
 
 			if (item != null) {
 				setDownloadsAndRevenue(rank, modelRun, usesIap, rank.price.floatValue());
@@ -210,7 +211,7 @@ public class PredictorIOS implements Predictor {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param country
 	 * @param store
 	 * @param category
@@ -219,9 +220,9 @@ public class PredictorIOS implements Predictor {
 	 * @throws DataAccessException
 	 */
 	private void alterFeedFetchStatus(Store store, Country country, Category category, List<String> listTypes, Long code) throws DataAccessException {
-		List<FeedFetch> feeds = FeedFetchServiceProvider.provide().getGatherCodeFeedFetches(country, store, listTypes, code);
+		final List<FeedFetch> feeds = FeedFetchServiceProvider.provide().getGatherCodeFeedFetches(country, store, listTypes, code);
 
-		for (FeedFetch feedFetch : feeds) {
+		for (final FeedFetch feedFetch : feeds) {
 			if (feedFetch.category.id.longValue() == category.id.longValue()) {
 				alterFeedFetchStatus(feedFetch);
 			}
@@ -240,7 +241,7 @@ public class PredictorIOS implements Predictor {
 		if (usesIap) {
 			if (DataTypeHelper.isZero(price)) {
 				if (rank.grossingPosition == null && rank.grossingPosition.intValue() == 0) {
-					downloads = (double) (output.freeB.doubleValue() * Math.pow(rank.position.doubleValue(), -output.freeA.doubleValue()));
+					downloads = output.freeB.doubleValue() * Math.pow(rank.position.doubleValue(), -output.freeA.doubleValue());
 					revenue = output.theta.doubleValue() * downloads;
 				} else {
 					revenue = output.grossingB.doubleValue() * Math.pow(rank.grossingPosition.doubleValue(), -output.grossingA.doubleValue());
@@ -248,7 +249,7 @@ public class PredictorIOS implements Predictor {
 				}
 			} else {
 				if (rank.grossingPosition == null && rank.grossingPosition.intValue() == 0) {
-					downloads = (double) (output.paidB.doubleValue() * Math.pow(rank.position.doubleValue(), -output.paidAIap.doubleValue()));
+					downloads = output.paidB.doubleValue() * Math.pow(rank.position.doubleValue(), -output.paidAIap.doubleValue());
 					revenue = downloads * (price + output.theta.doubleValue());
 				} else {
 					// downloads = (double) (output.paidB.doubleValue() * Math.pow(rank.position.doubleValue(), -output.paidAIap.doubleValue()));
@@ -260,10 +261,10 @@ public class PredictorIOS implements Predictor {
 			if (DataTypeHelper.isZero(price)) {
 				// revenue is zero since it is a free app and no IAP. Thus only
 				// download calculated here
-				downloads = (double) (output.freeB.doubleValue() * Math.pow(rank.position.doubleValue(), -output.freeA.doubleValue()));
+				downloads = output.freeB.doubleValue() * Math.pow(rank.position.doubleValue(), -output.freeA.doubleValue());
 			} else {
 				if (rank.grossingPosition == null && rank.grossingPosition.intValue() == 0) {
-					downloads = (double) (output.paidB.doubleValue() * Math.pow(rank.position.doubleValue(), -output.paidA.doubleValue()));
+					downloads = output.paidB.doubleValue() * Math.pow(rank.position.doubleValue(), -output.paidA.doubleValue());
 					revenue = downloads * price;
 				} else {
 					// downloads = (double) (output.paidB * Math.pow(rank, -output.paidA));
@@ -274,11 +275,11 @@ public class PredictorIOS implements Predictor {
 			}
 		}
 
-		if (rank.downloads == null || (rank.downloads.intValue() == 0 && (int) downloads != 0)) {
+		if (rank.downloads == null || rank.downloads.intValue() == 0 && (int) downloads != 0) {
 			rank.downloads = Integer.valueOf((int) downloads);
 		}
 
-		if (rank.revenue == null || (DataTypeHelper.isZero(rank.revenue.floatValue()) && !DataTypeHelper.isZero((float) revenue))) {
+		if (rank.revenue == null || DataTypeHelper.isZero(rank.revenue.floatValue()) && !DataTypeHelper.isZero((float) revenue)) {
 			rank.revenue = Float.valueOf((float) revenue);
 		}
 
@@ -330,7 +331,7 @@ public class PredictorIOS implements Predictor {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.predictors.Predictor#enqueue(io.reflection.app.datatypes.shared.SimpleModelRun)
 	 */
 	@Override
@@ -341,7 +342,7 @@ public class PredictorIOS implements Predictor {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.predictors.Predictor#enqueue(io.reflection.app.datatypes.shared.ModelRun)
 	 */
 	@Override
@@ -352,36 +353,45 @@ public class PredictorIOS implements Predictor {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.predictors.Predictor#predictWithSimpleModel(io.reflection.app.datatypes.shared.SimpleModelRun)
 	 */
 	@Override
 	public void predictWithSimpleModel(SimpleModelRun simpleModelRun) throws DataAccessException {
-		IRankService rankService = RankServiceProvider.provide();
+		final IRankService rankService = RankServiceProvider.provide();
 
-		Store s = new Store();
+		final Store s = new Store();
 		s.a3Code = simpleModelRun.feedFetch.store;
 
-		Country c = new Country();
+		final Country c = new Country();
 		c.a2Code = simpleModelRun.feedFetch.country;
 
-		List<Rank> foundRanks = rankService.getGatherCodeRanks(c, s, simpleModelRun.feedFetch.category, simpleModelRun.feedFetch.type,
+		if (LOG.isLoggable(GaeLevel.DEBUG)) {
+			LOG.log(GaeLevel.DEBUG, String.format("Loading ranks that are covered by the simplemodelrun (feedfetch type: %s and code: %s)",
+					simpleModelRun.feedFetch.type, simpleModelRun.feedFetch.code));
+		}
+
+		final List<Rank> foundRanks = rankService.getGatherCodeRanks(c, s, simpleModelRun.feedFetch.category, simpleModelRun.feedFetch.type,
 				simpleModelRun.feedFetch.code, PagerHelper.createInfinitePager(), Boolean.TRUE);
 
-		Map<String, Item> lookup = lookupItemsForRanks(foundRanks);
+		final Map<String, Item> lookup = lookupItemsForRanks(foundRanks);
 
-		ItemRankArchiver archiver = ArchiverFactory.getItemRankArchiver();
+		if (LOG.isLoggable(GaeLevel.DEBUG)) {
+			LOG.log(GaeLevel.DEBUG, String.format("Found %d ranks and %d items from them", foundRanks.size(), lookup.size()));
+		}
+
+		final ItemRankArchiver archiver = ArchiverFactory.getItemRankArchiver();
 
 		Item item = null;
 		Boolean usesIap = null;
 
-		for (Rank rank : foundRanks) {
+		for (final Rank rank : foundRanks) {
 			item = lookup.get(rank.itemId);
 
 			if (item == null) {
 				usesIap = null;
 			} else {
-				ItemPropertyWrapper properties = new ItemPropertyWrapper(item.properties);
+				final ItemPropertyWrapper properties = new ItemPropertyWrapper(item.properties);
 				usesIap = properties.getBoolean(PROPERTY_IAP, null);
 			}
 
@@ -396,9 +406,9 @@ public class PredictorIOS implements Predictor {
 
 		alterFeedFetchStatus(simpleModelRun.feedFetch);
 
-		Collector collector = CollectorFactory.getCollectorForStore(s.a3Code);
-		boolean isGrossing = collector.isGrossing(simpleModelRun.feedFetch.type);
-		Pager pager = PagerHelper.createInfinitePager();
+		final Collector collector = CollectorFactory.getCollectorForStore(s.a3Code);
+		final boolean isGrossing = collector.isGrossing(simpleModelRun.feedFetch.type);
+		final Pager pager = PagerHelper.createInfinitePager();
 		if (isGrossing) {
 			pager.sortBy = "grossingposition";
 		} else {
@@ -409,14 +419,14 @@ public class PredictorIOS implements Predictor {
 			pager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
 		}
 
-		List<String> listTypes = new ArrayList<String>();
+		final List<String> listTypes = new ArrayList<String>();
 
 		if (isGrossing) {
 			listTypes.addAll(collector.getCounterpartTypes(simpleModelRun.feedFetch.type));
 		}
 
 		listTypes.add(simpleModelRun.feedFetch.type);
-		String memcacheKey = RankServiceProvider.provide().getName() + ".gathercoderanks." + simpleModelRun.feedFetch.code.toString() + "." + c.a2Code + "."
+		final String memcacheKey = RankServiceProvider.provide().getName() + ".gathercoderanks." + simpleModelRun.feedFetch.code.toString() + "." + c.a2Code + "."
 				+ s.a3Code + "." + simpleModelRun.feedFetch.category.id.toString() + "." + StringUtils.join(listTypes, ".") + "." + pager.start + "."
 				+ pager.count + "." + pager.sortDirection + "." + pager.sortBy;
 
@@ -431,20 +441,20 @@ public class PredictorIOS implements Predictor {
 	}
 
 	private void setSimpleDownloadsAndRevenue(Rank rank, SimpleModelRun simpleModelRun, Boolean usesIap) {
-		float price = rank.price.floatValue();
-		boolean isDownload = isDownloadListType(simpleModelRun.feedFetch.type), isFree = DataTypeHelper.isZero(price);
+		final float price = rank.price.floatValue();
+		final boolean isDownload = isDownloadListType(simpleModelRun.feedFetch.type), isFree = DataTypeHelper.isZero(price);
 		double revenue = 0.0, downloads = 0.0;
 
 		if (usesIap == null || usesIap.booleanValue()) {
 			if (isFree) {
 				if (isDownload) {
-					downloads = (double) (simpleModelRun.b.doubleValue() * Math.pow(rank.position.doubleValue(), -simpleModelRun.a.doubleValue()));
+					downloads = simpleModelRun.b.doubleValue() * Math.pow(rank.position.doubleValue(), -simpleModelRun.a.doubleValue());
 				} else {
 					revenue = simpleModelRun.b.doubleValue() * Math.pow(rank.grossingPosition.doubleValue(), -simpleModelRun.a.doubleValue());
 				}
 			} else {
 				if (isDownload) {
-					downloads = (double) (simpleModelRun.b.doubleValue() * Math.pow(rank.position.doubleValue(), -simpleModelRun.a.doubleValue()));
+					downloads = simpleModelRun.b.doubleValue() * Math.pow(rank.position.doubleValue(), -simpleModelRun.a.doubleValue());
 				} else {
 					revenue = simpleModelRun.b.doubleValue() * Math.pow(rank.grossingPosition.doubleValue(), -simpleModelRun.a.doubleValue());
 				}
@@ -453,19 +463,19 @@ public class PredictorIOS implements Predictor {
 			if (isFree) {
 				// revenue is zero since it is a free app and no IAP. Thus only
 				// download calculated here
-				downloads = (double) (simpleModelRun.b.doubleValue() * Math.pow(rank.position.doubleValue(), -simpleModelRun.a.doubleValue()));
+				downloads = simpleModelRun.b.doubleValue() * Math.pow(rank.position.doubleValue(), -simpleModelRun.a.doubleValue());
 			} else {
 				if (isDownload) {
-					downloads = (double) (simpleModelRun.b.doubleValue() * Math.pow(rank.position.doubleValue(), -simpleModelRun.a.doubleValue()));
+					downloads = simpleModelRun.b.doubleValue() * Math.pow(rank.position.doubleValue(), -simpleModelRun.a.doubleValue());
 
 					if (rank.grossingPosition == null || rank.grossingPosition.intValue() == 0) {
-						revenue = (double) downloads * (double) price;
+						revenue = downloads * price;
 					}
 				} else {
 					revenue = simpleModelRun.b.doubleValue() * Math.pow(rank.grossingPosition.doubleValue(), -simpleModelRun.a.doubleValue());
 
 					if (rank.position == null || rank.position.intValue() == 0) {
-						downloads = (int) (revenue / (double) price);
+						downloads = (int) (revenue / price);
 					}
 				}
 			}

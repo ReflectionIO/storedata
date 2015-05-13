@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package io.reflection.app;
 
@@ -63,7 +63,7 @@ import com.googlecode.objectify.cmd.Query;
 
 /**
  * @author William Shakour
- * 
+ *
  */
 @SuppressWarnings("serial")
 public class DevHelperServlet extends HttpServlet {
@@ -75,7 +75,7 @@ public class DevHelperServlet extends HttpServlet {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
 	@Override
@@ -86,8 +86,8 @@ public class DevHelperServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-		String appEngineQueue = req.getHeader("X-AppEngine-QueueName");
-		boolean isNotQueue = (appEngineQueue == null || !"deferred".toLowerCase().equals(appEngineQueue.toLowerCase()));
+		final String appEngineQueue = req.getHeader("X-AppEngine-QueueName");
+		final boolean isNotQueue = appEngineQueue == null || !"deferred".toLowerCase().equals(appEngineQueue.toLowerCase());
 
 		// if (true) {
 		// com.google.appengine.api.datastore.Query query = new com.google.appengine.api.datastore.Query("__GsFileInfo__");
@@ -104,20 +104,26 @@ public class DevHelperServlet extends HttpServlet {
 		// }
 
 		if (isNotQueue && (req.getParameter("defer") == null || req.getParameter("defer").equals("yes"))) {
-			Queue deferredQueue = QueueFactory.getQueue("deferred");
+			final Queue deferredQueue = QueueFactory.getQueue("deferred");
 
 			if (req.getParameter("cron") == null) {
-				String query = req.getQueryString();
+				final String query = req.getQueryString();
 
 				if (query != null) {
-					deferredQueue.add(TaskOptions.Builder.withUrl("/dev/devhelper?" + query).method(Method.GET));
+					final String dest = req.getParameter("dest");
+					if (dest != null && dest.trim().length() > 0) {
+						deferredQueue.add(TaskOptions.Builder.withUrl("/" + dest + "?" + query).method(Method.GET));
+					} else {
+						deferredQueue.add(TaskOptions.Builder.withUrl("/dev/devhelper?" + query).method(Method.GET));
+					}
 				} else {
-					TaskOptions options = Builder.withUrl("/dev/devhelper");
+					final TaskOptions options = Builder.withUrl("/dev/devhelper");
 
 					@SuppressWarnings("rawtypes")
+					final
 					Map params = req.getParameterMap();
 
-					for (Object param : params.keySet()) {
+					for (final Object param : params.keySet()) {
 						options.param((String) param, req.getParameter((String) param));
 					}
 
@@ -136,17 +142,17 @@ public class DevHelperServlet extends HttpServlet {
 			return;
 		}
 
-		String action = req.getParameter("action");
-		String object = req.getParameter("object");
-		String start = req.getParameter("start");
-		String count = req.getParameter("count");
-		String all = req.getParameter("all");
-		String rankStart = req.getParameter("rankstart");
-		String rankEnd = req.getParameter("rankend");
-		String feedType = req.getParameter("feedtype");
-		String itemId = req.getParameter("itemid");
-		String date = req.getParameter("date");
-		String ids = req.getParameter("ids");
+		final String action = req.getParameter("action");
+		final String object = req.getParameter("object");
+		final String start = req.getParameter("start");
+		final String count = req.getParameter("count");
+		final String all = req.getParameter("all");
+		final String rankStart = req.getParameter("rankstart");
+		final String rankEnd = req.getParameter("rankend");
+		final String feedType = req.getParameter("feedtype");
+		final String itemId = req.getParameter("itemid");
+		final String date = req.getParameter("date");
+		final String ids = req.getParameter("ids");
 
 		boolean success = false;
 
@@ -196,7 +202,7 @@ public class DevHelperServlet extends HttpServlet {
 				success = true;
 			} else if ("ingest".equalsIgnoreCase(action)) {
 
-				Ingestor i = IngestorFactory.getIngestorForStore(DataTypeHelper.IOS_STORE_A3);
+				final Ingestor i = IngestorFactory.getIngestorForStore(DataTypeHelper.IOS_STORE_A3);
 				i.enqueue(Arrays.asList(Long.valueOf(itemId)));
 
 				success = true;
@@ -207,11 +213,11 @@ public class DevHelperServlet extends HttpServlet {
 				success = true;
 			} else if ("ingestmulti".equalsIgnoreCase(action)) {
 
-				Ingestor i = IngestorFactory.getIngestorForStore(DataTypeHelper.IOS_STORE_A3);
+				final Ingestor i = IngestorFactory.getIngestorForStore(DataTypeHelper.IOS_STORE_A3);
 
-				String[] feedIdsArray = ids.split(",");
+				final String[] feedIdsArray = ids.split(",");
 
-				for (String feedId : feedIdsArray) {
+				for (final String feedId : feedIdsArray) {
 					i.enqueue(Arrays.asList(Long.valueOf(feedId)));
 				}
 
@@ -220,14 +226,14 @@ public class DevHelperServlet extends HttpServlet {
 
 				Date startDate = null, endDate = null;
 				startDate = DateTime.parse(date, DateTimeFormat.forPattern("yyyy-MM-dd-HH").withZoneUTC()).toDate();
-				endDate = (new DateTime(startDate.getTime(), DateTimeZone.UTC)).plusHours(2).toDate();
+				endDate = new DateTime(startDate.getTime(), DateTimeZone.UTC).plusHours(2).toDate();
 
 				if (startDate != null) {
 					int i = 0;
 
 					try {
-						Long code = FeedFetchServiceProvider.provide().getCode();
-						for (FeedFetch feed : ofy().load().type(FeedFetch.class).filter("date >=", startDate).filter("date <", endDate)
+						final Long code = FeedFetchServiceProvider.provide().getCode();
+						for (final FeedFetch feed : ofy().load().type(FeedFetch.class).filter("date >=", startDate).filter("date <", endDate)
 								.offset(Integer.parseInt(start)).limit(Integer.parseInt(count)).iterable()) {
 
 							if (feed.code == null) {
@@ -247,8 +253,8 @@ public class DevHelperServlet extends HttpServlet {
 							}
 
 						}
-					} catch (DataAccessException dae) {
-						LOG.log(GaeLevel.SEVERE, "A database error occured attempting to to get an id code for gather enqueing", dae);
+					} catch (final DataAccessException dae) {
+						LOG.log(Level.SEVERE, "A database error occured attempting to to get an id code for gather enqueing", dae);
 					}
 
 					if (LOG.isLoggable(GaeLevel.DEBUG)) {
@@ -259,13 +265,13 @@ public class DevHelperServlet extends HttpServlet {
 				}
 			} else if ("remove".equalsIgnoreCase(action)) {
 				if (object != null) {
-					DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
+					final DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
 
-					com.google.appengine.api.datastore.Query query = new com.google.appengine.api.datastore.Query(object);
-					PreparedQuery preparedQuery = datastoreService.prepare(query);
+					final com.google.appengine.api.datastore.Query query = new com.google.appengine.api.datastore.Query(object);
+					final PreparedQuery preparedQuery = datastoreService.prepare(query);
 
 					int i = 0;
-					for (Entity entity : preparedQuery.asIterable(FetchOptions.Builder.withOffset(Integer.parseInt(start)).limit(Integer.parseInt(count)))) {
+					for (final Entity entity : preparedQuery.asIterable(FetchOptions.Builder.withOffset(Integer.parseInt(start)).limit(Integer.parseInt(count)))) {
 						datastoreService.delete(entity.getKey());
 
 						if (LOG.isLoggable(GaeLevel.TRACE)) {
@@ -371,10 +377,10 @@ public class DevHelperServlet extends HttpServlet {
 
 				success = true;
 			} else if ("appswithrank".equalsIgnoreCase(action)) {
-				int rankStartValue = Integer.parseInt(rankStart);
-				int rankEndValue = RANK_END_200_PLUS.equals(rankEnd) ? Integer.MAX_VALUE : Integer.parseInt(rankEnd);
+				final int rankStartValue = Integer.parseInt(rankStart);
+				final int rankEndValue = RANK_END_200_PLUS.equals(rankEnd) ? Integer.MAX_VALUE : Integer.parseInt(rankEnd);
 
-				StringBuffer buffer = new StringBuffer();
+				final StringBuffer buffer = new StringBuffer();
 
 				buffer.append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">");
 
@@ -429,7 +435,7 @@ public class DevHelperServlet extends HttpServlet {
 				query = query.offset(Integer.parseInt(start)).limit(Integer.parseInt(count));
 
 				int i = 0;
-				for (ItemRankSummary itemRankSummary : query.iterable()) {
+				for (final ItemRankSummary itemRankSummary : query.iterable()) {
 					buffer.append("<tr><td>");
 					buffer.append(itemRankSummary.itemId);
 					buffer.append("</td><td>");
@@ -465,7 +471,7 @@ public class DevHelperServlet extends HttpServlet {
 
 				success = true;
 			} else if ("ranksforapp".equalsIgnoreCase(action)) {
-				StringBuffer buffer = new StringBuffer();
+				final StringBuffer buffer = new StringBuffer();
 
 				buffer.append("# data for item ");
 				buffer.append(itemId);
@@ -474,16 +480,16 @@ public class DevHelperServlet extends HttpServlet {
 				buffer.append("#item id,date,paid position,grossing position,price");
 				buffer.append("\n");
 
-				Map<Long, Rank> paid = new HashMap<Long, Rank>();
-				Map<Long, Rank> grossing = new HashMap<Long, Rank>();
+				final Map<Long, Rank> paid = new HashMap<Long, Rank>();
+				final Map<Long, Rank> grossing = new HashMap<Long, Rank>();
 
-				List<Long> codes = new ArrayList<Long>();
+				final List<Long> codes = new ArrayList<Long>();
 
 				Query<Rank> query = ofy().load().type(Rank.class).filter("source =", DataTypeHelper.IOS_STORE_A3).filter("type =", CollectorIOS.TOP_PAID_APPS)
 						.filter("date >", new DateTime().minusDays(30).toDate()).filter("itemId = ", itemId).offset(Integer.parseInt(start))
 						.limit(Integer.parseInt(count));
 
-				for (Rank rank : query.iterable()) {
+				for (final Rank rank : query.iterable()) {
 					paid.put(rank.code, rank);
 
 					if (!codes.contains(rank.code)) {
@@ -494,7 +500,7 @@ public class DevHelperServlet extends HttpServlet {
 				query = ofy().load().type(Rank.class).filter("source =", DataTypeHelper.IOS_STORE_A3).filter("type =", CollectorIOS.TOP_GROSSING_APPS)
 						.filter("date >", DateTime.now().toDate()).filter("itemId = ", itemId).offset(Integer.parseInt(start)).limit(Integer.parseInt(count));
 
-				for (Rank rank : query.iterable()) {
+				for (final Rank rank : query.iterable()) {
 					grossing.put(rank.code, rank);
 
 					if (!codes.contains(rank.code)) {
@@ -504,7 +510,7 @@ public class DevHelperServlet extends HttpServlet {
 
 				Rank grossingItem, paidItem;
 				Rank masterItem;
-				for (Long code : codes) {
+				for (final Long code : codes) {
 					grossingItem = grossing.get(code);
 					paidItem = paid.get(code);
 
@@ -563,14 +569,14 @@ public class DevHelperServlet extends HttpServlet {
 			} else if ("addcountries".equalsIgnoreCase(action)) {
 				try {
 					CountriesInstaller.install();
-				} catch (DataAccessException e) {
+				} catch (final DataAccessException e) {
 					throw new RuntimeException(e);
 				}
 				success = true;
 			} else if ("addstores".equalsIgnoreCase(action)) {
 				try {
 					StoresInstaller.install();
-				} catch (DataAccessException e) {
+				} catch (final DataAccessException e) {
 					throw new RuntimeException(e);
 				}
 				success = true;
@@ -579,18 +585,18 @@ public class DevHelperServlet extends HttpServlet {
 				Store store;
 				try {
 					store = StoreServiceProvider.provide().getA3CodeStore(DataTypeHelper.IOS_STORE_A3);
-				} catch (DataAccessException e) {
+				} catch (final DataAccessException e) {
 					throw new RuntimeException(e);
 				}
 				List<String> itemIds;
 				try {
 					itemIds = ApplicationServiceProvider.provide().getStoreIapNaApplicationIds(store);
-				} catch (DataAccessException e) {
+				} catch (final DataAccessException e) {
 					throw new RuntimeException(e);
 				}
 
-				for (String id : itemIds) {
-					Queue itemPropertyLookupQueue = QueueFactory.getQueue("itempropertylookup");
+				for (final String id : itemIds) {
+					final Queue itemPropertyLookupQueue = QueueFactory.getQueue("itempropertylookup");
 					itemPropertyLookupQueue.add(TaskOptions.Builder.withUrl(String.format("/itempropertylookup?item=%s", id)).method(Method.GET));
 				}
 
@@ -604,27 +610,27 @@ public class DevHelperServlet extends HttpServlet {
 				if ("rank".equalsIgnoreCase(object)) {
 					if (start == null && count == null) {
 						try {
-							Store store = new Store();
+							final Store store = new Store();
 							store.a3Code = DataTypeHelper.IOS_STORE_A3;
 
-							Country country = new Country();
+							final Country country = new Country();
 							country.a2Code = "us";
 
-							Category allCategory = CategoryServiceProvider.provide().getAllCategory(store);
+							final Category allCategory = CategoryServiceProvider.provide().getAllCategory(store);
 
-							ItemRankArchiver ar = ArchiverFactory.getItemRankArchiver();
+							final ItemRankArchiver ar = ArchiverFactory.getItemRankArchiver();
 
-							List<Long> foundRankIds = RankServiceProvider.provide().getRankIds(country, store, allCategory, new Date(0L), new Date());
+							final List<Long> foundRankIds = RankServiceProvider.provide().getRankIds(country, store, allCategory, new Date(0L), new Date());
 
-							for (Long rankId : foundRankIds) {
+							for (final Long rankId : foundRankIds) {
 								ar.enqueueIdRank(rankId);
 							}
-						} catch (DataAccessException e) {
+						} catch (final DataAccessException e) {
 							throw new RuntimeException(e);
 						}
 					} else {
-						ItemRankArchiver ar = ArchiverFactory.getItemRankArchiver();
-						Pager p = new Pager();
+						final ItemRankArchiver ar = ArchiverFactory.getItemRankArchiver();
+						final Pager p = new Pager();
 						p.start = start == null ? Pager.DEFAULT_START : Long.valueOf(start);
 						p.count = count == null ? Pager.DEFAULT_COUNT : Long.valueOf(count);
 						ar.enqueuePagerRanks(p, all == null ? Boolean.FALSE : Boolean.valueOf(all));
@@ -632,24 +638,24 @@ public class DevHelperServlet extends HttpServlet {
 				} else if ("sale".equalsIgnoreCase(object)) {
 					if (start == null && count == null) {
 						try {
-							DataAccount linkedAccount = DataTypeHelper.createDataAccount(1L);
+							final DataAccount linkedAccount = DataTypeHelper.createDataAccount(1L);
 
-							Country country = new Country();
+							final Country country = new Country();
 							country.a2Code = "us";
 
-							ItemSaleArchiver ar = ArchiverFactory.getItemSaleArchiver();
+							final ItemSaleArchiver ar = ArchiverFactory.getItemSaleArchiver();
 
-							List<Long> foundSaleIds = SaleServiceProvider.provide().getSaleIds(country, linkedAccount, new Date(0L), DateTime.now().toDate());
+							final List<Long> foundSaleIds = SaleServiceProvider.provide().getSaleIds(country, linkedAccount, new Date(0L), DateTime.now().toDate());
 
-							for (Long saleId : foundSaleIds) {
+							for (final Long saleId : foundSaleIds) {
 								ar.enqueueIdSale(saleId);
 							}
-						} catch (DataAccessException e) {
+						} catch (final DataAccessException e) {
 							throw new RuntimeException(e);
 						}
 					} else {
-						ItemSaleArchiver ar = ArchiverFactory.getItemSaleArchiver();
-						Pager p = new Pager();
+						final ItemSaleArchiver ar = ArchiverFactory.getItemSaleArchiver();
+						final Pager p = new Pager();
 						p.start = start == null ? Pager.DEFAULT_START : Long.valueOf(start);
 						p.count = count == null ? Pager.DEFAULT_COUNT : Long.valueOf(count);
 						ar.enqueuePagerSales(p, all == null ? Boolean.FALSE : Boolean.valueOf(all));
@@ -659,36 +665,36 @@ public class DevHelperServlet extends HttpServlet {
 				success = true;
 			} else if ("archivemulti".equalsIgnoreCase(action)) {
 				if ("rank".equalsIgnoreCase(object)) {
-					ItemRankArchiver ar = ArchiverFactory.getItemRankArchiver();
+					final ItemRankArchiver ar = ArchiverFactory.getItemRankArchiver();
 
-					String[] rankIdsArray = ids.split(",");
+					final String[] rankIdsArray = ids.split(",");
 
-					for (String rankId : rankIdsArray) {
+					for (final String rankId : rankIdsArray) {
 						LOG.finer("Enqueueing rank [" + rankId + "]");
 						ar.enqueueIdRank(Long.valueOf(rankId));
 					}
 				} else if ("feedfetchrank".equalsIgnoreCase(object)) {
 					ArchiverFactory.getItemRankArchiver().enqueueIdFeedFetch(Long.valueOf(ids));
 				} else if ("sale".equalsIgnoreCase(object)) {
-					ItemSaleArchiver ar = ArchiverFactory.getItemSaleArchiver();
+					final ItemSaleArchiver ar = ArchiverFactory.getItemSaleArchiver();
 
-					String[] saleIdsArray = ids.split(",");
+					final String[] saleIdsArray = ids.split(",");
 
-					for (String saleId : saleIdsArray) {
+					for (final String saleId : saleIdsArray) {
 						LOG.finer("Enqueueing sale [" + saleId + "]");
 						ar.enqueueIdSale(Long.valueOf(saleId));
 					}
 				} else if ("dataaccountfetchsale".equalsIgnoreCase(object)) {
-					String[] dataAccountFetchIdsArray = ids.split(",");
+					final String[] dataAccountFetchIdsArray = ids.split(",");
 
-					for (String id : dataAccountFetchIdsArray) {
+					for (final String id : dataAccountFetchIdsArray) {
 						ArchiverFactory.getItemSaleArchiver().enqueueIdDataAccountFetch(Long.valueOf(id));
 					}
 				}
 
 				success = true;
 			} else if ("predict".equalsIgnoreCase(action)) {
-				Queue predictQueue = QueueFactory.getQueue("predict");
+				final Queue predictQueue = QueueFactory.getQueue("predict");
 				predictQueue.add(TaskOptions.Builder.withUrl("/predict?" + req.getQueryString()).method(Method.GET));
 
 				success = true;
@@ -728,24 +734,24 @@ public class DevHelperServlet extends HttpServlet {
 	// }
 
 	/**
-	 * 
+	 *
 	 */
 	private void cacheRanks() {
 
-		DateTime dt = DateTime.now(DateTimeZone.UTC).minusHours(12);
-		Date end = dt.toDate();
-		Date start = dt.minusDays(1).toDate();
+		final DateTime dt = DateTime.now(DateTimeZone.UTC).minusHours(12);
+		final Date end = dt.toDate();
+		final Date start = dt.minusDays(1).toDate();
 
-		Store s = new Store();
+		final Store s = new Store();
 		s.a3Code = DataTypeHelper.IOS_STORE_A3;
 
-		Country c = new Country();
+		final Country c = new Country();
 		c.a2Code = "us";
 
 		Long code = null;
 		try {
 			code = FeedFetchServiceProvider.provide().getGatherCode(c, s, start, end);
-		} catch (DataAccessException e) {
+		} catch (final DataAccessException e) {
 			throw new RuntimeException(e);
 		}
 
