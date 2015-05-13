@@ -93,6 +93,8 @@ public class DatabaseService implements IDatabaseService {
 			connection.realDisconnect();
 		} catch (final DataAccessException e) {
 			e.printStackTrace();
+		} finally {
+			localConnection.remove();
 		}
 	}
 }
