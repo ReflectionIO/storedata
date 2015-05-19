@@ -1,4 +1,4 @@
-//  
+//
 //  Core.java
 //  storedata
 //
@@ -488,6 +488,11 @@ public final class Core extends ActionHandler {
 					}
 
 					if (!isAdmin && !CollectorIOS.TOP_FREE_APPS.equals(listType)) {
+						if (LOG.isLoggable(GaeLevel.DEBUG)) {
+							LOG.log(GaeLevel.DEBUG, String.format(
+									"Hiding revenue and downloads because isAdmin = %b and list type is = %s. We hide for Top Free Apps", isAdmin, listType));
+						}
+
 						for (Rank rank : ranks) {
 							rank.downloads = null;
 							rank.revenue = null;
@@ -740,9 +745,7 @@ public final class Core extends ActionHandler {
 
 					if (output.session != null) {
 						output.session.user = user;
-					} else {
-						throw new Exception("Unexpected blank session after creating user session.");
-					}
+					} else throw new Exception("Unexpected blank session after creating user session.");
 				} else {
 					output.session = SessionServiceProvider.provide().extendSession(output.session, ISessionService.SESSION_SHORT_DURATION);
 					output.session.user = user;
@@ -1695,7 +1698,7 @@ public final class Core extends ActionHandler {
 								|| (form == FormType.FormTypeTablet && (UPDATE_IPAD_IOS.equals(sale.typeIdentifier))) // 7T
 								|| INAPP_PURCHASE_PURCHASE_IOS.equals(sale.typeIdentifier) // IA1
 								|| INAPP_PURCHASE_SUBSCRIPTION_IOS.equals(sale.typeIdentifier) // IA9
-						) {
+								) {
 							// If type identifier != IA1 or IA9, add parent identifiers into the Map
 							if (!sale.typeIdentifier.equals(INAPP_PURCHASE_PURCHASE_IOS) && !sale.typeIdentifier.equals(INAPP_PURCHASE_SUBSCRIPTION_IOS)) {
 								parentIdItemIdLookup.put(sale.sku, sale.item.internalId);
@@ -1886,7 +1889,7 @@ public final class Core extends ActionHandler {
 								|| (form == FormType.FormTypeTablet && (UPDATE_IPAD_IOS.equals(sale.typeIdentifier))) // 7T
 								|| INAPP_PURCHASE_PURCHASE_IOS.equals(sale.typeIdentifier) // IA1
 								|| INAPP_PURCHASE_SUBSCRIPTION_IOS.equals(sale.typeIdentifier) // IA9
-						) {
+								) {
 							dateKey = keyFormat.parse(keyFormat.format(sale.begin));
 
 							// Link list of item IDs with every day of the range
