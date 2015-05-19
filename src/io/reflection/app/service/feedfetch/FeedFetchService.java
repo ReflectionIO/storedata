@@ -28,6 +28,7 @@ import io.reflection.app.service.ServiceType;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -410,10 +411,22 @@ final class FeedFetchService implements IFeedFetchService {
 	public List<Long> getFeedFetchIdsForDateWithStatus(Date fetchForDate, FeedFetchStatusType statusType) throws DataAccessException {
 		final List<Long> feedFetchIds = new ArrayList<Long>();
 
-		final String date = new SimpleDateFormat("yyyy-MM-dd").format(fetchForDate);
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-		final String getFeedFetchIdsForDateWithStatusQuery = String.format("SELECT `id` FROM `feedfetch` WHERE DATE(`date`) = '%s' and status = '%s'", date,
-				statusType);
+		Calendar cal = Calendar.getInstance();
+
+		cal.setTime(fetchForDate);
+		cal.set(Calendar.HOUR, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+
+		final String date = simpleDateFormat.format(fetchForDate);
+		cal.add(Calendar.DATE, 1);
+		String nextDay = simpleDateFormat.format(cal.getTime());
+
+		final String getFeedFetchIdsForDateWithStatusQuery = String.format("SELECT `id` FROM `feedfetch` WHERE date between '%s' and '%s'and status = '%s'",
+				date, nextDay, statusType);
 
 		final Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
 
