@@ -53,7 +53,7 @@ public class ForgotPasswordForm extends Composite implements ForgotPasswordEvent
 			email.hideNote();
 			SessionController.get().forgotPassword(email.getText());
 			setEnabled(false);
-			submit.setStatusLoading("Sending ...");
+			submit.setStatusLoading("Sending");
 		} else {
 			email.showNote(emailError, true);
 		}

@@ -25,7 +25,7 @@
 			<span class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeRefresh}">Refresh</span>
 		</g:Button>
 		<span class="{STYLES_INSTANCE.reflectionMainStyle.orText}">or</span>
-		<c:Selector ui:field="selectFixedRange" overlay="true" labelText="Over Time" styleName="{STYLES_INSTANCE.reflectionMainStyle.timePeriodSelect}" />
+		<c:Selector ui:field="selectFixedRange" overlay="true" labelText="Time Period" styleName="{STYLES_INSTANCE.reflectionMainStyle.timePeriodSelect}" />
 
 	</g:HTMLPanel>
 </ui:UiBinder> 

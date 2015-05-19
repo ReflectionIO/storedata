@@ -18,9 +18,7 @@
 						<div>
 							<h1>Powerful Intelligence for the Global App Industry</h1>
 							<p>
-								View revenue and download intelligence for apps.
-								<br />
-								Apply for free access to our data.
+								View revenue and download intelligence for apps. Apply for free access to our data.
 							</p>
 							<div class="{STYLES_INSTANCE.homePageStyle.actionsContainer}">
 								<g:Anchor ui:field="linkScrollToAnchor" href="#" styleName="icon-angle-right">How Intelligence Helps</g:Anchor>
@@ -118,7 +116,7 @@
 					<p>Be a Reflection beta partner and help us define features that will impact the growing needs of developers, publishers, and other stakeholders in the
 						flourishing app space.</p>
 					<div class="{STYLES_INSTANCE.homePageStyle.logoRefImpContainer}">
-						<h4>Official Statistics Partner</h4>
+						<h4>Statistics Partner</h4>
 						<img src="images/logos/Imperial_College_London_Logo.png" alt="Imperial College London logo" class="{STYLES_INSTANCE.homePageStyle.logoRefImp}" />
 					</div>
 				</div>
@@ -134,7 +132,7 @@
 					<p>Reflection is a start-up with the ambition to disrupt the entire app ecosystem by providing accessible and affordable intelligence and tools.</p>
 					<p>We are always looking for talented people to join our growing team here in London. If you are a self-starter, would love to be part of an exciting,
 						expanding company and have what it takes to get things done, we’d like to hear from you.</p>
-					<h3>Our Benefits</h3>
+					<h3>Benefits</h3>
 					<ul class="{STYLES_INSTANCE.homePageStyle.contentList}">
 						<li>
 							<span>Stock options plan</span>
@@ -217,10 +215,6 @@
 
 			<g:InlineHyperlink targetHistoryToken="{TermsPageType.asTargetHistoryToken}" styleName="{STYLES_INSTANCE.homePageStyle.landingFooter__inlineLink}">Terms &amp; Conditions and Privacy Policy</g:InlineHyperlink>
 			<span class="{STYLES_INSTANCE.homePageStyle.landingFooter__copyright}">&copy;2015 Reflection. All Rights Reserved</span>
-			<g:Anchor ui:field="linkToPageTop" href="#" styleName="{STYLES_INSTANCE.homePageStyle.linkToPageTop}">
-				<span class="{STYLES_INSTANCE.homePageStyle.borderRadiusPoint}"></span>
-				<span class="{STYLES_INSTANCE.homePageStyle.linkToPageTop__text}">Back to Top</span>
-			</g:Anchor>
 		</footer>
 
 

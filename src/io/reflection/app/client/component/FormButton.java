@@ -24,7 +24,7 @@ public class FormButton extends Button {
 	public static final String STYLE_SUCCESS = Styles.STYLES_INSTANCE.reflectionMainStyle().refButtonSuccess();
 	public static final String STYLE_ERROR = Styles.STYLES_INSTANCE.reflectionMainStyle().refButtonError();
 	public static final int DEFAULT_TIMEOUT = 3000;
-	public static final String DEFAULT_ERROR_MESSAGE = "Ops, an error occurred";
+	public static final String DEFAULT_ERROR_MESSAGE = "Oops, an error occurred";
 
 	private SpanElement spanElem;
 	private String defaultText;

@@ -118,7 +118,7 @@
                 <div ui:field="bar6" class="progress-bar {style.purpleBar} {style.progressBar}"></div>
             </div>
         </g:HTMLPanel>
-        <p class="{style.task}"><span ui:field="task">Loading </span><span ui:field="dots"><span class="{style.one}">.</span><span class="{style.two}">.</span><span class="{style.three}">.</span></span></p>
+        <p class="{style.task}" style="margin: 40px auto 0; text-align: center;"><span ui:field="task">Loading </span><span ui:field="dots"><span class="{style.one}">.</span><span class="{style.two}">.</span><span class="{style.three}">.</span></span></p>
 
     </g:HTMLPanel>
 </ui:UiBinder> 

@@ -7,14 +7,11 @@
 	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.pageGeneralContent}">
 		<div
 			class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnTwoThirds} {STYLES_INSTANCE.reflectionMainStyle.blogContentContainer}">
-			<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticleFull}">
-
-				<h2>Reflection App Intelligence Service</h2>
-				<h3>Beta phase Terms and Conditions</h3>
+			<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticleFull}">				
 				<ol>
-					<li>
-						<h4>Introduction</h4>
-					</li>
+					<h2>Reflection App Intelligence Service</h2>
+					<h3>Beta phase Terms and Conditions</h3>
+					<h4>Introduction</h4>
 					<ol>
 						<li>
 							<p>
@@ -26,7 +23,7 @@
 								The Reflection
 								Service is
 								provided by
-
+				
 								Reflection.io
 								Limited
 								(
@@ -38,7 +35,7 @@
 								and
 								<b>&quot;our&quot;</b>
 								),
-
+				
 								a company registered in England and Wales, company number 08044310, whose place of business is at
 								40-44 Newman Street, London W1T 1QD,
 								United

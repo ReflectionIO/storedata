@@ -702,12 +702,13 @@ blockquote cite span {
 @media (min-width: 1850px) and (min-height: 800px) {
   /* line 95, ../sass/components/_landing-section-main.scss */
   .landing-section-main__column-one h1 {
-    font-size: 50px;
-    font-size: 5rem;
+    font-size: 40px;
+    font-size: 4rem;
   }
 }
 /* line 114, ../sass/components/_landing-section-main.scss */
 .landing-section-main__column-one p {
+  width: 90%;
   max-width: 450px;
   margin: 0 auto 1em;
   padding: 0;
@@ -720,6 +721,7 @@ blockquote cite span {
 @media (min-width: 720px) {
   /* line 114, ../sass/components/_landing-section-main.scss */
   .landing-section-main__column-one p {
+    width: 100%;
     padding: 0;
     font-size: 18px;
     font-size: 1.8rem;
@@ -741,29 +743,29 @@ blockquote cite span {
     font-size: 1.8rem;
   }
 }
-/* line 134, ../sass/components/_landing-section-main.scss */
+/* line 136, ../sass/components/_landing-section-main.scss */
 .landing-section-main__column-one p:last-of-type {
   margin-bottom: 2.1em;
 }
 @media (min-width: 720px) {
-  /* line 134, ../sass/components/_landing-section-main.scss */
+  /* line 136, ../sass/components/_landing-section-main.scss */
   .landing-section-main__column-one p:last-of-type {
     margin-bottom: 3.6em;
   }
 }
 @media (min-width: 480px) {
-  /* line 141, ../sass/components/_landing-section-main.scss */
+  /* line 143, ../sass/components/_landing-section-main.scss */
   .landing-section-main__column-one .actions-container {
     margin-bottom: 39px;
   }
 }
 @media (min-width: 980px) {
-  /* line 141, ../sass/components/_landing-section-main.scss */
+  /* line 143, ../sass/components/_landing-section-main.scss */
   .landing-section-main__column-one .actions-container {
     margin-bottom: 0;
   }
 }
-/* line 148, ../sass/components/_landing-section-main.scss */
+/* line 150, ../sass/components/_landing-section-main.scss */
 .landing-section-main__column-one .actions-container a {
   display: inline-block;
   font-family: "Source Sans Pro", sans-serif;
@@ -773,34 +775,34 @@ blockquote cite span {
   color: #fff;
 }
 @media (min-width: 720px) {
-  /* line 148, ../sass/components/_landing-section-main.scss */
+  /* line 150, ../sass/components/_landing-section-main.scss */
   .landing-section-main__column-one .actions-container a {
     font-size: 19.8px;
     font-size: 1.98rem;
   }
 }
 @media (min-width: 980px) {
-  /* line 148, ../sass/components/_landing-section-main.scss */
+  /* line 150, ../sass/components/_landing-section-main.scss */
   .landing-section-main__column-one .actions-container a {
     font-size: 22px;
   }
 }
-/* line 160, ../sass/components/_landing-section-main.scss */
+/* line 162, ../sass/components/_landing-section-main.scss */
 .landing-section-main__column-one .actions-container a:hover {
   color: #c3c6f6;
 }
-/* line 163, ../sass/components/_landing-section-main.scss */
+/* line 165, ../sass/components/_landing-section-main.scss */
 .landing-section-main__column-one .actions-container a:first-child {
   margin-right: 30px;
   margin-bottom: 30px;
 }
 @media (min-width: 1280px) {
-  /* line 163, ../sass/components/_landing-section-main.scss */
+  /* line 165, ../sass/components/_landing-section-main.scss */
   .landing-section-main__column-one .actions-container a:first-child {
     margin-bottom: 0;
   }
 }
-/* line 171, ../sass/components/_landing-section-main.scss */
+/* line 173, ../sass/components/_landing-section-main.scss */
 .landing-section-main__column-one .actions-container .icon-angle-right:before {
   position: relative;
   top: -2px;
@@ -810,41 +812,41 @@ blockquote cite span {
   font-size: 27px;
   color: #c3c6f6;
 }
-/* line 180, ../sass/components/_landing-section-main.scss */
+/* line 182, ../sass/components/_landing-section-main.scss */
 .landing-section-main__column-one .actions-container .ref-button-cta-large {
   width: 298px;
   margin-bottom: 1px;
   box-sizing: border-box;
 }
 @media (min-width: 480px) {
-  /* line 180, ../sass/components/_landing-section-main.scss */
+  /* line 182, ../sass/components/_landing-section-main.scss */
   .landing-section-main__column-one .actions-container .ref-button-cta-large {
     width: auto;
   }
 }
-/* line 187, ../sass/components/_landing-section-main.scss */
+/* line 189, ../sass/components/_landing-section-main.scss */
 .landing-section-main__column-one .actions-container .ref-button-cta-large:hover {
   color: white;
 }
 
-/* line 193, ../sass/components/_landing-section-main.scss */
+/* line 195, ../sass/components/_landing-section-main.scss */
 .landing-section-main__column-two {
   display: none;
   overflow: visible;
 }
 @media (min-width: 480px) {
-  /* line 193, ../sass/components/_landing-section-main.scss */
+  /* line 195, ../sass/components/_landing-section-main.scss */
   .landing-section-main__column-two {
     display: block;
     width: 100%;
   }
-  /* line 199, ../sass/components/_landing-section-main.scss */
+  /* line 201, ../sass/components/_landing-section-main.scss */
   .landing-section-main__column-two img {
     width: 100%;
   }
 }
 @media (min-width: 720px) {
-  /* line 193, ../sass/components/_landing-section-main.scss */
+  /* line 195, ../sass/components/_landing-section-main.scss */
   .landing-section-main__column-two {
     position: absolute;
     top: 71px;
@@ -853,20 +855,20 @@ blockquote cite span {
     display: inline-block;
     text-align: right;
   }
-  /* line 210, ../sass/components/_landing-section-main.scss */
+  /* line 212, ../sass/components/_landing-section-main.scss */
   .landing-section-main__column-two img {
     width: auto;
   }
 }
 @media screen and (min-width: 1402px) {
-  /* line 193, ../sass/components/_landing-section-main.scss */
+  /* line 195, ../sass/components/_landing-section-main.scss */
   .landing-section-main__column-two {
     width: 771px;
   }
 }
 
 @media screen and (min-width: 980px) and (min-height: 680px) {
-  /* line 220, ../sass/components/_landing-section-main.scss */
+  /* line 222, ../sass/components/_landing-section-main.scss */
   .no-touch .landing-section-main__content {
     height: 100%;
     margin-top: 30px;
@@ -884,43 +886,43 @@ blockquote cite span {
     display: inline-block;
     vertical-align: middle;
   }
-  /* line 224, ../sass/components/_landing-section-main.scss */
+  /* line 226, ../sass/components/_landing-section-main.scss */
   .no-touch .landing-section-main__column-one {
     position: relative;
     top: -65px;
     margin-top: 0;
     margin-bottom: 0;
   }
-  /* line 230, ../sass/components/_landing-section-main.scss */
+  /* line 232, ../sass/components/_landing-section-main.scss */
   .no-touch .landing-section-main__column-two {
     top: 50%;
     margin-top: -287px;
   }
 }
 @media (min-width: 1850px) and (min-height: 800px) {
-  /* line 237, ../sass/components/_landing-section-main.scss */
+  /* line 239, ../sass/components/_landing-section-main.scss */
   .landing-section-main__column-one {
     width: 790px;
   }
-  /* line 239, ../sass/components/_landing-section-main.scss */
+  /* line 241, ../sass/components/_landing-section-main.scss */
   .no-touch .landing-section-main__column-one {
     top: -80px;
   }
 
-  /* line 243, ../sass/components/_landing-section-main.scss */
+  /* line 245, ../sass/components/_landing-section-main.scss */
   .landing-section-main__column-two {
     width: 871px;
   }
-  /* line 245, ../sass/components/_landing-section-main.scss */
+  /* line 247, ../sass/components/_landing-section-main.scss */
   .no-touch .landing-section-main__column-two {
     margin-top: -325px;
   }
-  /* line 248, ../sass/components/_landing-section-main.scss */
+  /* line 250, ../sass/components/_landing-section-main.scss */
   .landing-section-main__column-two img {
     width: 100%;
   }
 }
-/* line 253, ../sass/components/_landing-section-main.scss */
+/* line 255, ../sass/components/_landing-section-main.scss */
 .list-partners {
   position: relative;
   width: 100%;
@@ -930,13 +932,13 @@ blockquote cite span {
   padding-bottom: 3px;
 }
 @media (min-width: 480px) {
-  /* line 253, ../sass/components/_landing-section-main.scss */
+  /* line 255, ../sass/components/_landing-section-main.scss */
   .list-partners {
     padding-bottom: 47px;
   }
 }
 @media (min-width: 720px) {
-  /* line 253, ../sass/components/_landing-section-main.scss */
+  /* line 255, ../sass/components/_landing-section-main.scss */
   .list-partners {
     bottom: 30px;
     margin-top: 150px;
@@ -944,7 +946,7 @@ blockquote cite span {
   }
 }
 @media screen and (min-width: 980px) and (min-height: 680px) {
-  /* line 269, ../sass/components/_landing-section-main.scss */
+  /* line 271, ../sass/components/_landing-section-main.scss */
   .no-touch .list-partners {
     position: absolute;
     left: 0;
@@ -954,33 +956,33 @@ blockquote cite span {
   }
 }
 @media (min-width: 980px) {
-  /* line 253, ../sass/components/_landing-section-main.scss */
+  /* line 255, ../sass/components/_landing-section-main.scss */
   .list-partners {
     padding-left: 30px;
     padding-right: 30px;
   }
 }
 @media screen and (min-width: 980px) and (min-height: 800px) {
-  /* line 282, ../sass/components/_landing-section-main.scss */
+  /* line 284, ../sass/components/_landing-section-main.scss */
   .no-touch .list-partners {
     bottom: 30px;
   }
 }
 @media screen and (min-width: 1402px) and (min-height: 920px) {
-  /* line 287, ../sass/components/_landing-section-main.scss */
+  /* line 289, ../sass/components/_landing-section-main.scss */
   .no-touch .list-partners {
     bottom: 50px;
   }
 }
 @media (min-width: 1850px) and (min-height: 800px) {
-  /* line 292, ../sass/components/_landing-section-main.scss */
+  /* line 294, ../sass/components/_landing-section-main.scss */
   .no-touch .list-partners {
     left: 50%;
     max-width: 1650px;
     margin-left: -825px;
   }
 }
-/* line 298, ../sass/components/_landing-section-main.scss */
+/* line 300, ../sass/components/_landing-section-main.scss */
 .list-partners h2 {
   display: block;
   width: 100%;
@@ -991,31 +993,31 @@ blockquote cite span {
   color: #c3c6f6;
 }
 @media (min-width: 480px) {
-  /* line 298, ../sass/components/_landing-section-main.scss */
+  /* line 300, ../sass/components/_landing-section-main.scss */
   .list-partners h2 {
     margin-top: 20px;
     margin-bottom: 0;
   }
 }
 @media (min-width: 720px) {
-  /* line 298, ../sass/components/_landing-section-main.scss */
+  /* line 300, ../sass/components/_landing-section-main.scss */
   .list-partners h2 {
     margin-top: 8px;
     margin-bottom: 2px;
   }
 }
-/* line 315, ../sass/components/_landing-section-main.scss */
+/* line 317, ../sass/components/_landing-section-main.scss */
 .list-partners ul {
   width: 100%;
 }
 @media (min-width: 480px) {
-  /* line 315, ../sass/components/_landing-section-main.scss */
+  /* line 317, ../sass/components/_landing-section-main.scss */
   .list-partners ul {
     text-align: center;
   }
 }
 @media (min-width: 720px) {
-  /* line 315, ../sass/components/_landing-section-main.scss */
+  /* line 317, ../sass/components/_landing-section-main.scss */
   .list-partners ul {
     display: -webkit-box;
     display: -ms-flexbox;
@@ -1036,7 +1038,7 @@ blockquote cite span {
             align-items: center;
   }
 }
-/* line 331, ../sass/components/_landing-section-main.scss */
+/* line 333, ../sass/components/_landing-section-main.scss */
 .list-partners li {
   width: 50%;
   display: inline-block;
@@ -1044,13 +1046,13 @@ blockquote cite span {
   text-align: center;
 }
 @media (min-width: 480px) {
-  /* line 331, ../sass/components/_landing-section-main.scss */
+  /* line 333, ../sass/components/_landing-section-main.scss */
   .list-partners li {
     width: 33%;
   }
 }
 @media (min-width: 720px) {
-  /* line 331, ../sass/components/_landing-section-main.scss */
+  /* line 333, ../sass/components/_landing-section-main.scss */
   .list-partners li {
     width: auto;
     -webkit-box-pack: center;
@@ -1062,67 +1064,67 @@ blockquote cite span {
         -ms-flex-positive: 1;
             flex-grow: 1;
   }
-  /* line 344, ../sass/components/_landing-section-main.scss */
+  /* line 346, ../sass/components/_landing-section-main.scss */
   .list-partners li:last-child {
     display: none;
   }
 }
 @media screen and (min-width: 1050px) {
-  /* line 349, ../sass/components/_landing-section-main.scss */
+  /* line 351, ../sass/components/_landing-section-main.scss */
   .list-partners li:last-child {
     display: inline-block;
   }
 }
-/* line 354, ../sass/components/_landing-section-main.scss */
+/* line 356, ../sass/components/_landing-section-main.scss */
 .list-partners img {
   max-width: 126px;
   padding: 0px 0px 9px;
 }
 @media (min-width: 480px) {
-  /* line 354, ../sass/components/_landing-section-main.scss */
+  /* line 356, ../sass/components/_landing-section-main.scss */
   .list-partners img {
     max-width: 136px;
     padding-bottom: 15px;
   }
 }
 @media (min-width: 720px) {
-  /* line 354, ../sass/components/_landing-section-main.scss */
+  /* line 356, ../sass/components/_landing-section-main.scss */
   .list-partners img {
     max-width: 100px;
     padding-bottom: 28px;
   }
 }
 @media (min-width: 980px) {
-  /* line 354, ../sass/components/_landing-section-main.scss */
+  /* line 356, ../sass/components/_landing-section-main.scss */
   .list-partners img {
     max-width: 140px;
   }
 }
 @media screen and (min-width: 980px) and (min-height: 680px) {
-  /* line 354, ../sass/components/_landing-section-main.scss */
+  /* line 356, ../sass/components/_landing-section-main.scss */
   .list-partners img {
     max-width: 120px;
   }
 }
 @media screen and (min-width: 980px) and (min-height: 800px) {
-  /* line 354, ../sass/components/_landing-section-main.scss */
+  /* line 356, ../sass/components/_landing-section-main.scss */
   .list-partners img {
     max-width: 140px;
   }
 }
 @media screen and (min-width: 1402px) and (min-height: 800px) {
-  /* line 354, ../sass/components/_landing-section-main.scss */
+  /* line 356, ../sass/components/_landing-section-main.scss */
   .list-partners img {
     max-width: 160px;
   }
 }
 
-/* line 380, ../sass/components/_landing-section-main.scss */
+/* line 382, ../sass/components/_landing-section-main.scss */
 .no-flexbox .list-partners ul {
   width: 100%;
   display: block;
 }
-/* line 383, ../sass/components/_landing-section-main.scss */
+/* line 385, ../sass/components/_landing-section-main.scss */
 .no-flexbox .list-partners ul li {
   display: inline-block;
 }
@@ -1670,30 +1672,31 @@ blockquote cite span {
 .img-width-landing-column-wide {
   width: 100%;
   display: inline-block;
+  float: left;
 }
 
 @media (min-width: 720px) {
-  /* line 352, ../sass/components/_landing-components.scss */
+  /* line 353, ../sass/components/_landing-components.scss */
   .img-width-landing-column-thin {
     max-width: 42.10938%;
   }
 }
 
 @media (min-width: 720px) {
-  /* line 357, ../sass/components/_landing-components.scss */
+  /* line 358, ../sass/components/_landing-components.scss */
   .img-width-landing-column-wide {
     max-width: 57.89062%;
   }
 }
 
-/* line 362, ../sass/components/_landing-components.scss */
+/* line 363, ../sass/components/_landing-components.scss */
 .landing-section-careers {
   position: relative;
   z-index: 10;
   font-size: 0;
   background-color: white;
 }
-/* line 367, ../sass/components/_landing-components.scss */
+/* line 368, ../sass/components/_landing-components.scss */
 .landing-section-careers .landing-column-thin {
   padding-top: 46px;
   padding-bottom: 48px;
@@ -1701,20 +1704,20 @@ blockquote cite span {
   background-color: #f4f4f4;
 }
 @media (min-width: 720px) {
-  /* line 367, ../sass/components/_landing-components.scss */
+  /* line 368, ../sass/components/_landing-components.scss */
   .landing-section-careers .landing-column-thin {
     min-height: 830px;
     padding: 168px 4.29688% 0 5.5%;
   }
 }
 @media (min-width: 1850px) and (min-height: 800px) {
-  /* line 367, ../sass/components/_landing-components.scss */
+  /* line 368, ../sass/components/_landing-components.scss */
   .landing-section-careers .landing-column-thin {
     min-height: 1000px;
     padding-left: 4.29688%;
   }
 }
-/* line 380, ../sass/components/_landing-components.scss */
+/* line 381, ../sass/components/_landing-components.scss */
 .landing-section-careers .landing-column-thin h2 {
   margin-bottom: 0.9em;
   letter-spacing: 0;
@@ -1722,7 +1725,7 @@ blockquote cite span {
   font-size: 2rem;
 }
 @media (min-width: 720px) {
-  /* line 380, ../sass/components/_landing-components.scss */
+  /* line 381, ../sass/components/_landing-components.scss */
   .landing-section-careers .landing-column-thin h2 {
     margin-bottom: 1.25em;
     font-size: 23.4px;
@@ -1730,102 +1733,102 @@ blockquote cite span {
   }
 }
 @media (min-width: 980px) {
-  /* line 380, ../sass/components/_landing-components.scss */
+  /* line 381, ../sass/components/_landing-components.scss */
   .landing-section-careers .landing-column-thin h2 {
     font-size: 26px;
     font-size: 2.6rem;
   }
 }
-/* line 392, ../sass/components/_landing-components.scss */
+/* line 393, ../sass/components/_landing-components.scss */
 .landing-section-careers .landing-column-thin li {
   margin-bottom: 0.42em;
 }
 @media (min-width: 720px) {
-  /* line 392, ../sass/components/_landing-components.scss */
+  /* line 393, ../sass/components/_landing-components.scss */
   .landing-section-careers .landing-column-thin li {
     margin-bottom: 0.28em;
   }
 }
-/* line 398, ../sass/components/_landing-components.scss */
+/* line 399, ../sass/components/_landing-components.scss */
 .landing-section-careers .landing-column-thin a {
   font-size: 18px;
   font-size: 1.8rem;
   color: #6d69c5;
 }
 @media (min-width: 720px) {
-  /* line 398, ../sass/components/_landing-components.scss */
+  /* line 399, ../sass/components/_landing-components.scss */
   .landing-section-careers .landing-column-thin a {
     font-size: 19.8px;
     font-size: 1.98rem;
   }
 }
 @media (min-width: 980px) {
-  /* line 398, ../sass/components/_landing-components.scss */
+  /* line 399, ../sass/components/_landing-components.scss */
   .landing-section-careers .landing-column-thin a {
     font-size: 22px;
     font-size: 2.2rem;
   }
 }
-/* line 408, ../sass/components/_landing-components.scss */
+/* line 409, ../sass/components/_landing-components.scss */
 .landing-section-careers .landing-column-thin a:hover {
   color: #4b46b5;
 }
 @media (min-width: 720px) {
-  /* line 413, ../sass/components/_landing-components.scss */
+  /* line 414, ../sass/components/_landing-components.scss */
   .landing-section-careers .landing-column-wide {
     margin-right: 2.34375%;
     float: right;
   }
 }
 
-/* line 420, ../sass/components/_landing-components.scss */
+/* line 421, ../sass/components/_landing-components.scss */
 .landing-section-map {
   position: relative;
   z-index: 10;
   background-color: white;
 }
-/* line 424, ../sass/components/_landing-components.scss */
+/* line 425, ../sass/components/_landing-components.scss */
 .landing-section-map > div {
   width: 100%;
   height: 300px;
 }
 @media (min-width: 480px) {
-  /* line 424, ../sass/components/_landing-components.scss */
+  /* line 425, ../sass/components/_landing-components.scss */
   .landing-section-map > div {
     height: 330px;
   }
 }
 @media (min-width: 720px) {
-  /* line 424, ../sass/components/_landing-components.scss */
+  /* line 425, ../sass/components/_landing-components.scss */
   .landing-section-map > div {
     height: 560px;
   }
 }
 @media (min-width: 980px) {
-  /* line 424, ../sass/components/_landing-components.scss */
+  /* line 425, ../sass/components/_landing-components.scss */
   .landing-section-map > div {
     height: 650px;
   }
 }
 @media (min-width: 1850px) and (min-height: 800px) {
-  /* line 424, ../sass/components/_landing-components.scss */
+  /* line 425, ../sass/components/_landing-components.scss */
   .landing-section-map > div {
     height: 850px;
   }
 }
-/* line 440, ../sass/components/_landing-components.scss */
+/* line 441, ../sass/components/_landing-components.scss */
 .landing-section-map div {
   overflow: visible;
 }
 
-/* line 444, ../sass/components/_landing-components.scss */
+/* line 445, ../sass/components/_landing-components.scss */
 .landing-section-contact {
   position: relative;
   z-index: 10;
   font-size: 0;
   background-color: white;
 }
-/* line 449, ../sass/components/_landing-components.scss */
+/* line 450, ../sass/components/_landing-components.scss */
 .landing-section-contact > div, .landing-section-contact > a {
   width: 100%;
   height: 60px;
@@ -1834,13 +1837,13 @@ blockquote cite span {
   vertical-align: top;
 }
 @media (min-width: 720px) {
-  /* line 449, ../sass/components/_landing-components.scss */
+  /* line 450, ../sass/components/_landing-components.scss */
   .landing-section-contact > div, .landing-section-contact > a {
     width: 33.3333%;
     height: 106px;
   }
 }
-/* line 461, ../sass/components/_landing-components.scss */
+/* line 462, ../sass/components/_landing-components.scss */
 .landing-section-contact p, .landing-section-contact span {
   position: relative;
   top: 2px;
@@ -1850,14 +1853,14 @@ blockquote cite span {
   color: white;
 }
 @media (min-width: 720px) {
-  /* line 461, ../sass/components/_landing-components.scss */
+  /* line 462, ../sass/components/_landing-components.scss */
   .landing-section-contact p, .landing-section-contact span {
     font-size: 16.2px;
     font-size: 1.62rem;
   }
 }
 @media (min-width: 980px) {
-  /* line 461, ../sass/components/_landing-components.scss */
+  /* line 462, ../sass/components/_landing-components.scss */
   .landing-section-contact p, .landing-section-contact span {
     top: -1px;
     left: -8px;
@@ -1865,7 +1868,7 @@ blockquote cite span {
     font-size: 1.8rem;
   }
 }
-/* line 476, ../sass/components/_landing-components.scss */
+/* line 477, ../sass/components/_landing-components.scss */
 .landing-section-contact p:before, .landing-section-contact span:before {
   position: relative;
   top: -2px;
@@ -1879,13 +1882,13 @@ blockquote cite span {
   color: rgba(0, 0, 0, 0.3);
 }
 @media (min-width: 720px) {
-  /* line 476, ../sass/components/_landing-components.scss */
+  /* line 477, ../sass/components/_landing-components.scss */
   .landing-section-contact p:before, .landing-section-contact span:before {
     display: none;
   }
 }
 @media screen and (min-width: 760px) {
-  /* line 476, ../sass/components/_landing-components.scss */
+  /* line 477, ../sass/components/_landing-components.scss */
   .landing-section-contact p:before, .landing-section-contact span:before {
     padding-right: 2px;
     display: inline-block;
@@ -1894,7 +1897,7 @@ blockquote cite span {
   }
 }
 @media (min-width: 980px) {
-  /* line 476, ../sass/components/_landing-components.scss */
+  /* line 477, ../sass/components/_landing-components.scss */
   .landing-section-contact p:before, .landing-section-contact span:before {
     margin-left: 0.2em !important;
     margin-right: 0.2em !important;
@@ -1903,27 +1906,27 @@ blockquote cite span {
     font-size: 3.5rem;
   }
 }
-/* line 501, ../sass/components/_landing-components.scss */
+/* line 502, ../sass/components/_landing-components.scss */
 .landing-section-contact p b, .landing-section-contact span b {
   position: relative;
   top: -2px;
   display: inline-block;
   vertical-align: middle;
 }
-/* line 508, ../sass/components/_landing-components.scss */
+/* line 509, ../sass/components/_landing-components.scss */
 .landing-section-contact p {
   display: inline-block;
   text-align: left;
 }
-/* line 512, ../sass/components/_landing-components.scss */
+/* line 513, ../sass/components/_landing-components.scss */
 .landing-section-contact .landing-section-contact__email {
   background-color: #ff496a;
 }
-/* line 514, ../sass/components/_landing-components.scss */
+/* line 515, ../sass/components/_landing-components.scss */
 .landing-section-contact .landing-section-contact__email:hover {
   background-color: #e54260;
 }
-/* line 517, ../sass/components/_landing-components.scss */
+/* line 518, ../sass/components/_landing-components.scss */
 .landing-section-contact .landing-section-contact__email span:before {
   position: relative;
   left: -7px;
@@ -1932,7 +1935,7 @@ blockquote cite span {
   font-size: 2.8rem;
 }
 @media (min-width: 720px) {
-  /* line 517, ../sass/components/_landing-components.scss */
+  /* line 518, ../sass/components/_landing-components.scss */
   .landing-section-contact .landing-section-contact__email span:before {
     left: -9px;
     left: -0.9rem;
@@ -1941,36 +1944,36 @@ blockquote cite span {
   }
 }
 @media (min-width: 980px) {
-  /* line 517, ../sass/components/_landing-components.scss */
+  /* line 518, ../sass/components/_landing-components.scss */
   .landing-section-contact .landing-section-contact__email span:before {
     font-size: 28px;
     font-size: 2.8rem;
   }
 }
-/* line 532, ../sass/components/_landing-components.scss */
+/* line 533, ../sass/components/_landing-components.scss */
 .landing-section-contact .landing-section-contact__tel {
   background-color: #6d69c5;
 }
-/* line 534, ../sass/components/_landing-components.scss */
+/* line 535, ../sass/components/_landing-components.scss */
 .landing-section-contact .landing-section-contact__tel:hover {
   background-color: #5e5ab8;
 }
-/* line 538, ../sass/components/_landing-components.scss */
+/* line 539, ../sass/components/_landing-components.scss */
 .landing-section-contact .landing-section-contact__address {
   height: 106px;
   background-color: #1bc79f;
 }
-/* line 541, ../sass/components/_landing-components.scss */
+/* line 542, ../sass/components/_landing-components.scss */
 .landing-section-contact .landing-section-contact__address:hover {
   background-color: #19b591;
 }
-/* line 544, ../sass/components/_landing-components.scss */
+/* line 545, ../sass/components/_landing-components.scss */
 .landing-section-contact .landing-section-contact__address p:before {
   font-size: 39px;
   font-size: 3.9rem;
 }
 @media (min-width: 720px) {
-  /* line 544, ../sass/components/_landing-components.scss */
+  /* line 545, ../sass/components/_landing-components.scss */
   .landing-section-contact .landing-section-contact__address p:before {
     margin: 0;
     font-size: 35.1px;
@@ -1978,7 +1981,7 @@ blockquote cite span {
   }
 }
 @media (min-width: 980px) {
-  /* line 544, ../sass/components/_landing-components.scss */
+  /* line 545, ../sass/components/_landing-components.scss */
   .landing-section-contact .landing-section-contact__address p:before {
     margin-left: 0.2em;
     margin-right: 0.2em;
@@ -1987,19 +1990,19 @@ blockquote cite span {
   }
 }
 @media (min-width: 720px) {
-  /* line 538, ../sass/components/_landing-components.scss */
+  /* line 539, ../sass/components/_landing-components.scss */
   .landing-section-contact .landing-section-contact__address {
     height: 106px;
   }
 }
 
-/* line 561, ../sass/components/_landing-components.scss */
+/* line 562, ../sass/components/_landing-components.scss */
 .logo-reflection-footer {
   width: 100%;
   max-width: 117px;
 }
 @media screen and (min-width: 760px) {
-  /* line 561, ../sass/components/_landing-components.scss */
+  /* line 562, ../sass/components/_landing-components.scss */
   .logo-reflection-footer {
     position: relative;
     top: -3px;

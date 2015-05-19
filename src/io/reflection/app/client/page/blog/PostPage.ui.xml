@@ -49,7 +49,7 @@
 
 				<p class="{STYLES_INSTANCE.reflectionMainStyle.siteArticleInfo}">
 					<strong>Posted by</strong>
-					<span ui:field="author" />
+					<span ui:field="author" class="posted-by" />
 					<span ui:field="date" />
 					<!-- <span class="comments-link"> -->
 					<!-- <a href="#comments">12 comments</a> -->
@@ -65,7 +65,7 @@
 					</p>
 					<p class="{STYLES_INSTANCE.reflectionMainStyle.siteArticleInfo}">
 						<strong>Posted by</strong>
-						<span ui:field="authorFooter" />
+						<span ui:field="authorFooter" class="posted-by" />
 						<span ui:field="dateFooter" />
 					</p>
 				</footer>

@@ -50,7 +50,7 @@
 					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneHalf} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab} {STYLES_INSTANCE.reflectionMainStyle.isActive}">
 					<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
 					<g:InlineHyperlink ui:field="login" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
-						<span>Already a member</span>
+						<span>Log In</span>
 					</g:InlineHyperlink>
 				</li>
 			</ul>

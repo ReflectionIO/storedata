@@ -13,7 +13,7 @@
 				<h1 class="{STYLES_INSTANCE.reflectionMainStyle.pageTitle}">
 					Hi
 					<span ui:field="userName"></span>
-					We've Been Busy
+					<br />We've Been Busy
 				</h1>
 				<p>The Reflection team are hard at work developing and expanding the tools and features that you have been asking for. Monitor our progress here and keep
 					up

@@ -117,7 +117,7 @@ public class LoginForm extends Composite implements LoginEventHandler, UserPower
 		if (validate()) {
 			clearErrors();
 			setEnabled(false);
-			loginBtn.setStatusLoading("Logging in ...");
+			loginBtn.setStatusLoading("Logging in");
 			SessionController.get().login(emailFormField.getText(), passwordFormField.getText(), rememberMe.getValue().booleanValue()); // Execute user login
 		} else {
 			if (EmailNote != null) {

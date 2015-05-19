@@ -163,7 +163,7 @@ public class PasswordField extends Composite implements HasClickHandlers, HasKey
 			} else {
 				switch (FormHelper.getPasswordStrength(passwordTextBox.getText())) {
 				case 0:
-					strengthDescription.setInnerText("Pathetic");
+					strengthDescription.setInnerText("Weak");
 					strengthIndicator.setClassName(refStyle.isPathetic());
 					break;
 				case 1:

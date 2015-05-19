@@ -47,7 +47,6 @@ public class HomePage extends Page {
 	@UiField Element sectionMain;
 	@UiField Element sectionSizeShadowLayer;
 	@UiField Element sectionHowIntelHelps;
-	@UiField Anchor linkToPageTop;
 	// @UiField InlineHyperlink homeBtn;
 	@UiField HTMLPanel leaderBoardScreenshot;
 	@UiField HTMLPanel analysisScreenshot;
@@ -187,15 +186,9 @@ public class HomePage extends Page {
 		AnimationHelper.nativeScrollTop(targetTop - navHeight, 455, "swing");
 	}
 
-	@UiHandler("linkToPageTop")
-	void onLinkToPageTopClicked(ClickEvent event) {
-		event.preventDefault();
-		AnimationHelper.nativeScrollTop(0, "slow", "swing");
-	}
-
 	private void initScrollEffect() {
 		if (DOMHelper.getHtmlElement().hasClassName("csstransforms") && DOMHelper.getHtmlElement().hasClassName("no-touch")) {
-			final int breakpointVertical = 680;
+			final int breakpointVertical = 710;
 			final int breakpointHorizontal = 980;
 			Window.addWindowScrollHandler(new Window.ScrollHandler() {
 				@Override
