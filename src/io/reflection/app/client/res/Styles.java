@@ -419,6 +419,9 @@ public interface Styles extends ClientBundle {
 		String datePickerWeekdayLabel();
 
 		String datePickerWeekendLabel();
+		
+		@ClassName("date-selection-filter-container")
+		String dateSelectionFilterContainer();
 
 		@ClassName("default-tabs-transition")
 		String defaultTabsTransition();

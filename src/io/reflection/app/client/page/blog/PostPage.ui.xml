@@ -48,9 +48,8 @@
 				<h1 ui:field="title"></h1>
 
 				<p class="{STYLES_INSTANCE.reflectionMainStyle.siteArticleInfo}">
-					<strong>Posted by</strong>
-					<span ui:field="author" class="posted-by" />
-					<span ui:field="date" />
+					<strong>Posted by</strong><span ui:field="author" class="posted-by" />
+					on<span ui:field="date" />
 					<!-- <span class="comments-link"> -->
 					<!-- <a href="#comments">12 comments</a> -->
 					<!-- </span> -->
@@ -66,7 +65,7 @@
 					<p class="{STYLES_INSTANCE.reflectionMainStyle.siteArticleInfo}">
 						<strong>Posted by</strong>
 						<span ui:field="authorFooter" class="posted-by" />
-						<span ui:field="dateFooter" />
+						on <span ui:field="dateFooter" />
 					</p>
 				</footer>
 				<div class="addthis_sharing_toolbox"></div>

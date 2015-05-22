@@ -51,7 +51,7 @@ public class AppRankCell extends AbstractCell<Rank> {
 	interface DailyDataTemplate extends SafeHtmlTemplates {
 		DailyDataTemplate INSTANCE = GWT.create(DailyDataTemplate.class);
 
-		@Template("<span class=\"{0}\" style=\"{1}\"></span>{2}")
+		@Template("<span class=\"{0}\" style=\"{1}\">{2}</span>")
 		SafeHtml dailyData(String icon, String style, String value);
 	}
 

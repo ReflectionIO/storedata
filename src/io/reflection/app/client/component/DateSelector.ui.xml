@@ -4,7 +4,7 @@
 	<ui:style gss="true">
 	
 	</ui:style>
-	<g:HTMLPanel>
+	<g:HTMLPanel addStyleNames="{STYLES_INSTANCE.reflectionMainStyle.dateSelectionFilterContainer}">
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.calendarContainer}">
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.dateSelectContainer}">
 				<div

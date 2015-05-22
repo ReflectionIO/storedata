@@ -3035,6 +3035,7 @@ textarea, .global-header .link-open-search, html, body {
 .app-user-functions-container {
   width: 100%;
   margin-top: -5px;
+  margin-bottom: 0.5rem;
   padding-left: 57px;
   float: left;
   text-align: left;
@@ -3043,7 +3044,7 @@ textarea, .global-header .link-open-search, html, body {
   /* line 181, ../sass/templates/_app.scss */
   .app-user-functions-container {
     width: 15.5rem;
-    margin-right: 2%;
+    margin-bottom: 0;
     padding-top: 6px;
     padding-left: 0;
     float: right;

@@ -32,9 +32,9 @@
 
 
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.appUserFunctionsContainer}">
-			<a ui:field="revealContentStore" href="#" class="{STYLES_INSTANCE.reflectionMainStyle.showHideLink}" data-closed-text="Less..." data-open-text="More...">More...</a>
-			<form class="{STYLES_INSTANCE.reflectionMainStyle.revealElement}">
-				<c:FormSwitch ui:field="followSwitch" label="Follow (10.3k)" />
+			<!-- <a ui:field="revealContentStore" href="#" class="{STYLES_INSTANCE.reflectionMainStyle.showHideLink}" data-closed-text="Less..." data-open-text="More...">More...</a> -->
+			<form>
+				<!-- <c:FormSwitch ui:field="followSwitch" label="Follow (10.3k)" /> -->
 
 				<a target="_blank" ui:field="viewInStore">
 					View in
