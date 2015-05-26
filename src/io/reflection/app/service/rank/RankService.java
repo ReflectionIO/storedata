@@ -29,6 +29,7 @@ import io.reflection.app.service.ServiceType;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -225,21 +226,22 @@ final class RankService implements IRankService {
 	public Rank getItemGatherCodeRank(String itemId, Long code, String store, String country, Collection<String> possibleTypes) throws DataAccessException {
 		Rank rank = null;
 
-		final String memcacheKey = getName() + ".itemgathercoderank." + itemId + country + "." + store + "." + StringUtils.join(possibleTypes, ".") + "." + code;
+		final String memcacheKey = getName() + ".itemgathercoderank." + itemId + country + "." + store + "." + StringUtils.join(possibleTypes, ".") + "."
+				+ code;
 		final String jsonString = (String) cache.get(memcacheKey);
 
 		if (jsonString == null) {
 
 			String typesQueryPart = null;
 			if (possibleTypes.size() == 1) {
-				typesQueryPart = String.format("CAST(`type` AS BINARY)=CAST('%s' AS BINARY)", possibleTypes.iterator().next());
+				typesQueryPart = String.format("`type`='%s'", possibleTypes.iterator().next());
 			} else {
-				typesQueryPart = "CAST(`type` AS BINARY) IN (CAST('" + StringUtils.join(possibleTypes, "' AS BINARY),CAST('") + "' AS BINARY))";
+				typesQueryPart = "CAST(`type` AS BINARY) IN ('" + StringUtils.join(possibleTypes, "', '") + "')";
 			}
 
-			final String getItemGatherCodeRankQuery = String
-					.format("SELECT * FROM `rank` WHERE `itemid`='%s' AND `code2`=%d AND CAST(`source` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND %s AND `deleted`='n' LIMIT 1",
-							itemId, code.longValue(), store, country, typesQueryPart);
+			final String getItemGatherCodeRankQuery = String.format(
+					"SELECT * FROM `rank` WHERE `itemid`='%s' AND `code2`=%d AND `country`='%s' AND %s AND `deleted`='n' LIMIT 1", itemId, code.longValue(),
+					country, typesQueryPart);
 
 			final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
@@ -250,11 +252,12 @@ final class RankService implements IRankService {
 				if (rankConnection.fetchNextRow()) {
 					rank = toRank(rankConnection);
 
-					// if (rank != null) {
-					// cal.setTime(new Date());
-					// cal.add(Calendar.DAY_OF_MONTH, 20);
-					// cache.put(memcacheKey, rank.toString(), cal.getTime());
-					// }
+					if (rank != null) {
+						Calendar cal = Calendar.getInstance();
+						cal.setTime(new Date());
+						cal.add(Calendar.DAY_OF_MONTH, 30);
+						cache.put(memcacheKey, rank.toString(), cal.getTime());
+					}
 				}
 			} finally {
 				if (rankConnection != null) {
@@ -316,22 +319,22 @@ final class RankService implements IRankService {
 			pager.sortBy = "position";
 		}
 
-		final String memcacheKey = getName() + ".itemranks." + item.id.toString() + "." + country.a2Code + "." + store.a3Code + "." + StringUtils.join(types, ".")
-				+ "." + (before == null ? "none" : before.getTime()) + "." + (after == null ? "none" : after.getTime()) + "." + pager.start + "." + pager.count
-				+ "." + pager.sortDirection + "." + pager.sortBy;
+		final String memcacheKey = getName() + ".itemranks." + item.id.toString() + "." + country.a2Code + "." + store.a3Code + "."
+				+ StringUtils.join(types, ".") + "." + (before == null ? "none" : before.getTime()) + "." + (after == null ? "none" : after.getTime()) + "."
+				+ pager.start + "." + pager.count + "." + pager.sortDirection + "." + pager.sortBy;
 		final String itemRanksString = (String) cache.get(memcacheKey);
 
 		if (itemRanksString == null) {
 			String typesQueryPart = null;
 			if (types.size() == 1) {
-				typesQueryPart = String.format("CAST(`type` AS BINARY)=CAST('%s' AS BINARY)", types.get(0));
+				typesQueryPart = String.format("`type`='%s'", types.get(0));
 			} else {
-				typesQueryPart = "CAST(`type` AS BINARY) IN (CAST('" + StringUtils.join(types, "' AS BINARY),CAST('") + "' AS BINARY))";
+				typesQueryPart = "`type` IN ('" + StringUtils.join(types, "', '") + "')";
 			}
 
 			final String getCountryStoreTypeRanksQuery = String
-					.format("SELECT * FROM `rank` WHERE %s AND CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`source` AS BINARY)=CAST('%s' AS BINARY) AND `itemid`='%s' AND `categoryid`=24 AND %s AND %s `deleted`='n' ORDER BY `date` ASC, `%s` %s LIMIT %d,%d",
-							typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), addslashes(item.internalId), beforeAfterQuery(before, after),
+					.format("SELECT * FROM `rank` WHERE %s AND `country`='%s' AND `itemid`='%s' AND `categoryid`=24 AND %s AND %s `deleted`='n' ORDER BY `date` ASC, `%s` %s LIMIT %d,%d",
+							typesQueryPart, addslashes(country.a2Code), addslashes(item.internalId), beforeAfterQuery(before, after),
 							isGrossing ? "`grossingposition`<>0 AND" : "", pager.sortBy,
 									pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start, pager.count);
 
@@ -499,21 +502,21 @@ final class RankService implements IRankService {
 
 		types.add(addslashes(listType));
 
-		final String memcacheKey = getName() + ".gathercoderankscount." + code.toString() + "." + country.a2Code + "." + store.a3Code + "." + category.id.toString()
-				+ "." + StringUtils.join(types, ".");
+		final String memcacheKey = getName() + ".gathercoderankscount." + code.toString() + "." + country.a2Code + "." + store.a3Code + "."
+				+ category.id.toString() + "." + StringUtils.join(types, ".");
 		ranksCount = (Long) cache.get(memcacheKey);
 
 		if (ranksCount == null) {
 			String typesQueryPart = null;
 			if (types.size() == 1) {
-				typesQueryPart = String.format("CAST(`type` AS BINARY)=CAST('%s' AS BINARY)", types.get(0));
+				typesQueryPart = String.format("`type`='%s'", types.get(0));
 			} else {
-				typesQueryPart = "CAST(`type` AS BINARY) IN (CAST('" + StringUtils.join(types, "' AS BINARY),CAST('") + "' AS BINARY))";
+				typesQueryPart = "CAST(`type` AS BINARY) IN ('" + StringUtils.join(types, "', '") + "')";
 			}
 
 			final String getRanksCountQuery = String
-					.format("SELECT COUNT(1) AS `count` FROM `rank` WHERE %s AND CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`source` AS BINARY)=CAST('%s' AS BINARY) AND `categoryid`=%d AND `code2`=%d AND %s `deleted`='n'",
-							typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), category.id.longValue(), code.longValue(),
+					.format("SELECT COUNT(1) AS `count` FROM `rank` WHERE %s AND `country`='%s' AND `categoryid`=%d AND `code2`=%d AND %s `deleted`='n'",
+							typesQueryPart, addslashes(country.a2Code), category.id.longValue(), code.longValue(),
 							isGrossing ? "`grossingposition`<>0 AND" : "");
 
 			final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
@@ -643,22 +646,24 @@ final class RankService implements IRankService {
 		types.add(addslashes(listType));
 
 		if (code != null) {
-			final String memcacheKey = getName() + ".gathercoderanks." + code.toString() + "." + country.a2Code + "." + store.a3Code + "." + category.id.toString()
-					+ "." + StringUtils.join(types, ".") + "." + pager.start + "." + pager.count + "." + pager.sortDirection + "." + pager.sortBy;
+			final String memcacheKey = getName() + ".gathercoderanks." + code.toString() + "." + country.a2Code + "." + store.a3Code + "."
+					+ category.id.toString() + "." + StringUtils.join(types, ".") + "." + pager.start + "." + pager.count + "." + pager.sortDirection + "."
+					+ pager.sortBy;
 
 			final String ranksString = (String) cache.get(memcacheKey);
 
 			if (ranksString == null) {
 				String typesQueryPart = null;
 				if (types.size() == 1) {
-					typesQueryPart = String.format("CAST(`type` AS BINARY)=CAST('%s' AS BINARY)", types.get(0));
+					typesQueryPart = String.format("`type`='%s'", types.get(0));
 				} else {
-					typesQueryPart = "CAST(`type` AS BINARY) IN (CAST('" + StringUtils.join(types, "' AS BINARY),CAST('") + "' AS BINARY))";
+					typesQueryPart = "`type` IN ('" + StringUtils.join(types, "', '") + "')";
 				}
 
 				final String getCountryStoreTypeRanksQuery = String
-						.format("SELECT * FROM `rank` WHERE %s AND CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`source` AS BINARY)=CAST('%s' AS BINARY) AND `categoryid`=%d AND `code2`=%d AND %s `deleted`='n' ORDER BY `%s` %s,`date` DESC LIMIT %d,%d",
-								typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), category.id.longValue(), code.longValue(), isGrossing
+						.format("SELECT * FROM `rank` WHERE %s AND `country`='%s' AND `categoryid`=%d AND `code2`=%d AND %s `deleted`='n' ORDER BY `%s` %s,`date` DESC LIMIT %d,%d",
+								typesQueryPart, addslashes(country.a2Code), category.id.longValue(), code.longValue(),
+								isGrossing
 								|| !ignoreGrossingRank.booleanValue() ? "`grossingposition`<>0 AND" : "", pager.sortBy,
 										pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start, pager.count);
 
@@ -798,8 +803,8 @@ final class RankService implements IRankService {
 
 		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 		final String getCountryStoreTypeRanksQuery = String
-				.format("SELECT `id` FROM `rank` WHERE CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`source` AS BINARY)=CAST('%s' AS BINARY) AND `categoryid`=%d AND %s AND `deleted`='n'",
-						addslashes(country.a2Code), addslashes(store.a3Code), category.id.longValue(), beforeAfterQuery(end, start));
+.format("SELECT `id` FROM `rank` WHERE `country`='%s' AND `categoryid`=%d AND %s AND `deleted`='n'",
+				addslashes(country.a2Code), category.id.longValue(), beforeAfterQuery(end, start));
 
 		try {
 			rankConnection.connect();
