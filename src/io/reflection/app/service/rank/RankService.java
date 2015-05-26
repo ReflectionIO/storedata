@@ -29,7 +29,6 @@ import io.reflection.app.service.ServiceType;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -253,10 +252,9 @@ final class RankService implements IRankService {
 					rank = toRank(rankConnection);
 
 					if (rank != null) {
-						Calendar cal = Calendar.getInstance();
-						cal.setTime(new Date());
-						cal.add(Calendar.DAY_OF_MONTH, 30);
-						cache.put(memcacheKey, rank.toString(), cal.getTime());
+						// cal.setTime(new Date());
+						// cal.add(Calendar.DAY_OF_MONTH, 30);
+						// cache.put(memcacheKey, rank.toString(), cal.getTime());
 					}
 				}
 			} finally {
@@ -803,8 +801,8 @@ final class RankService implements IRankService {
 
 		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 		final String getCountryStoreTypeRanksQuery = String
-.format("SELECT `id` FROM `rank` WHERE `country`='%s' AND `categoryid`=%d AND %s AND `deleted`='n'",
-				addslashes(country.a2Code), category.id.longValue(), beforeAfterQuery(end, start));
+				.format("SELECT `id` FROM `rank` WHERE `country`='%s' AND `categoryid`=%d AND %s AND `deleted`='n'",
+						addslashes(country.a2Code), category.id.longValue(), beforeAfterQuery(end, start));
 
 		try {
 			rankConnection.connect();
