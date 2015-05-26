@@ -6,6 +6,7 @@ package io.reflection.app;
 import static io.reflection.app.objectify.PersistenceService.ofy;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.archivers.ArchiverFactory;
 import io.reflection.app.archivers.ItemRankArchiver;
 import io.reflection.app.archivers.ItemSaleArchiver;
@@ -775,7 +776,9 @@ public class DevHelperServlet extends HttpServlet {
 	 *
 	 */
 	private void cacheRanks(String code2, String country, String category, String type) {
-
+		if (LOG.isLoggable(GaeLevel.DEBUG)) {
+			LOG.log(GaeLevel.DEBUG, String.format("Recaching the ranks for code2: %s, country:%s, category: %s, type: %s", code2, country, category, type));
+		}
 
 		final Store s = new Store();
 		s.a3Code = DataTypeHelper.IOS_STORE_A3;
@@ -826,14 +829,32 @@ public class DevHelperServlet extends HttpServlet {
 			try {
 
 				Pager pager = PagerHelper.createInfinitePager();
+				if (type.contains("grossing")) {
+					pager.sortBy = "grossingposition";
+				} else {
+					pager.sortBy = "position";
+				}
+
+				if (pager.sortDirection == null) {
+					pager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
+				}
 
 				final String memcacheKey = ServiceType.ServiceTypeRank.toString() + ".gathercoderanks." + code2 + "." + country + "." + s.a3Code + "."
 						+ category + "." + type + "." + pager.start + "." + pager.count + "." + pager.sortDirection + "." + pager.sortBy;
 
+				if (LOG.isLoggable(GaeLevel.DEBUG)) {
+					LOG.log(GaeLevel.DEBUG, "Check if memcache has the key :" + memcacheKey);
+				}
 				if (cache.contains(memcacheKey)) {
+					if (LOG.isLoggable(GaeLevel.DEBUG)) {
+						LOG.log(GaeLevel.DEBUG, "Key is present. deleting...");
+					}
 					cache.delete(memcacheKey);
 				}
 
+				if (LOG.isLoggable(GaeLevel.DEBUG)) {
+					LOG.log(GaeLevel.DEBUG, "Getting the ranks again and caching them via RankService.getGatherCodeRanks");
+				}
 				List<Rank> ranks = RankServiceProvider.provide().getGatherCodeRanks(c, s, categoryObj, type, code, PagerHelper.createInfinitePager(),
 						Boolean.TRUE);
 			} catch (DataAccessException e) {
