@@ -23,6 +23,7 @@ import io.reflection.app.ingestors.IngestorFactory;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.modellers.Modeller;
 import io.reflection.app.modellers.ModellerFactory;
+import io.reflection.app.service.ServiceType;
 import io.reflection.app.service.application.ApplicationServiceProvider;
 import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
@@ -32,6 +33,7 @@ import io.reflection.app.service.store.StoreServiceProvider;
 import io.reflection.app.setup.CountriesInstaller;
 import io.reflection.app.setup.StoresInstaller;
 import io.reflection.app.shared.util.DataTypeHelper;
+import io.reflection.app.shared.util.PagerHelper;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -52,6 +54,9 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 
+import co.spchopr.persistentmap.PersistentMap;
+import co.spchopr.persistentmap.PersistentMapFactory;
+
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -71,6 +76,7 @@ import com.googlecode.objectify.cmd.Query;
 @SuppressWarnings("serial")
 public class DevHelperServlet extends HttpServlet {
 	private static final Logger LOG = Logger.getLogger(DevHelperServlet.class.getName());
+	private final PersistentMap cache = PersistentMapFactory.createObjectify();
 
 	private static final String RANK_END_200_PLUS = "200+";
 
@@ -769,6 +775,8 @@ public class DevHelperServlet extends HttpServlet {
 	 *
 	 */
 	private void cacheRanks(String code2, String country, String category, String type) {
+
+
 		final Store s = new Store();
 		s.a3Code = DataTypeHelper.IOS_STORE_A3;
 
@@ -787,6 +795,9 @@ public class DevHelperServlet extends HttpServlet {
 				categoryid = Long.valueOf(24);
 			}
 		}
+
+		Category categoryObj = new Category();
+		categoryObj.id = categoryid;
 
 		if (type == null) {
 			type = CollectorIOS.TOP_GROSSING_APPS;
@@ -812,7 +823,22 @@ public class DevHelperServlet extends HttpServlet {
 		}
 
 		if (code != null) {
-			CallServiceMethodServlet.enqueueGetAllRanks(country, DataTypeHelper.IOS_STORE_A3, categoryid, type, code);
+			try {
+
+				Pager pager = PagerHelper.createInfinitePager();
+
+				final String memcacheKey = ServiceType.ServiceTypeRank.toString() + ".gathercoderanks." + code2 + "." + country + "." + s.a3Code + "."
+						+ category + "." + type + "." + pager.start + "." + pager.count + "." + pager.sortDirection + "." + pager.sortBy;
+
+				if (cache.contains(memcacheKey)) {
+					cache.delete(memcacheKey);
+				}
+
+				List<Rank> ranks = RankServiceProvider.provide().getGatherCodeRanks(c, s, categoryObj, type, code, PagerHelper.createInfinitePager(),
+						Boolean.TRUE);
+			} catch (DataAccessException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
