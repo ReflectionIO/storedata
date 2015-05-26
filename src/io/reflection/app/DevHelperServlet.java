@@ -14,12 +14,15 @@ import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.FeedFetch;
+import io.reflection.app.datatypes.shared.FeedFetchStatusType;
 import io.reflection.app.datatypes.shared.ItemRankSummary;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.ingestors.Ingestor;
 import io.reflection.app.ingestors.IngestorFactory;
 import io.reflection.app.logging.GaeLevel;
+import io.reflection.app.modellers.Modeller;
+import io.reflection.app.modellers.ModellerFactory;
 import io.reflection.app.service.application.ApplicationServiceProvider;
 import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
@@ -160,7 +163,36 @@ public class DevHelperServlet extends HttpServlet {
 		String csv = null;
 
 		if (action != null) {
-			if ("addingested".equalsIgnoreCase(action)) {
+			if ("model".equalsIgnoreCase(action)) {
+				String feedfetchidStr = req.getParameter("feedfetchid");
+
+				if (feedfetchidStr == null || feedfetchidStr.trim().length() == 0) return;
+
+				try {
+					Long feedFetchId = Long.valueOf(feedfetchidStr);
+
+					final FeedFetch fetch = FeedFetchServiceProvider.provide().getFeedFetch(feedFetchId);
+
+					// this is just a sanity check. we expect that the query for getting the IDs only gave us feed fetches that exist and
+					// have the ingested status.
+					if (fetch != null && fetch.status == FeedFetchStatusType.FeedFetchStatusTypeIngested) {
+						if (LOG.isLoggable(GaeLevel.DEBUG)) {
+							LOG.log(GaeLevel.DEBUG, String.format(
+									"Enquing feed fetch id %d for modelling. Country: %s, category: %s, type: %s", feedFetchId,
+									fetch.country, fetch.category.id, fetch.type));
+						}
+
+						final Modeller modeller = ModellerFactory.getModellerForStore(DataTypeHelper.IOS_STORE_A3);
+
+						// once the feed fetch status is updated model the list
+						modeller.enqueue(fetch);
+					}
+				} catch (Exception e) {
+					if (LOG.isLoggable(GaeLevel.DEBUG)) {
+						LOG.log(GaeLevel.DEBUG, "Error occured when trying to process a model request via devhelper", e);
+					}
+				}
+			} else if ("addingested".equalsIgnoreCase(action)) {
 
 				// int i = 0;
 				// for (FeedFetch entity : ofy().load().type(FeedFetch.class).offset(Integer.parseInt(start)).limit(Integer.parseInt(count)).iterable()) {
@@ -603,7 +635,7 @@ public class DevHelperServlet extends HttpServlet {
 				success = true;
 
 			} else if ("cacheranks".equalsIgnoreCase(action)) {
-				cacheRanks();
+				cacheRanks(req.getParameter("code2"), req.getParameter("country"), req.getParameter("category"), req.getParameter("type"));
 
 				success = true;
 			} else if ("archive".equalsIgnoreCase(action)) {
@@ -736,27 +768,51 @@ public class DevHelperServlet extends HttpServlet {
 	/**
 	 *
 	 */
-	private void cacheRanks() {
-
-		final DateTime dt = DateTime.now(DateTimeZone.UTC).minusHours(12);
-		final Date end = dt.toDate();
-		final Date start = dt.minusDays(1).toDate();
-
+	private void cacheRanks(String code2, String country, String category, String type) {
 		final Store s = new Store();
 		s.a3Code = DataTypeHelper.IOS_STORE_A3;
 
+		if (country == null) {
+			country = "gb";
+		}
+
+		Long categoryid = null;
+
+		if (category == null) {
+			categoryid = Long.valueOf(24);
+		} else {
+			try {
+				categoryid = Long.valueOf(category);
+			} catch (Exception e) {
+				categoryid = Long.valueOf(24);
+			}
+		}
+
+		if (type == null) {
+			type = CollectorIOS.TOP_GROSSING_APPS;
+		}
+
 		final Country c = new Country();
-		c.a2Code = "us";
+		c.a2Code = country;
 
 		Long code = null;
-		try {
-			code = FeedFetchServiceProvider.provide().getGatherCode(c, s, start, end);
-		} catch (final DataAccessException e) {
-			throw new RuntimeException(e);
+
+		if (code2 == null) {
+			final DateTime dt = DateTime.now(DateTimeZone.UTC).minusHours(12);
+			final Date end = dt.toDate();
+			final Date start = dt.minusDays(1).toDate();
+
+			try {
+				code = FeedFetchServiceProvider.provide().getGatherCode(c, s, start, end);
+			} catch (final DataAccessException e) {
+				throw new RuntimeException(e);
+			}
+		} else {
+			code = Long.valueOf(code2);
 		}
 
 		if (code != null) {
-			CallServiceMethodServlet.enqueueGetAllRanks("us", DataTypeHelper.IOS_STORE_A3, Long.valueOf(24), CollectorIOS.TOP_GROSSING_APPS, code);
+			CallServiceMethodServlet.enqueueGetAllRanks(country, DataTypeHelper.IOS_STORE_A3, categoryid, type, code);
 		}
 	}
 
