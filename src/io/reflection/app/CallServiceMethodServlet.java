@@ -58,7 +58,7 @@ import com.google.appengine.api.taskqueue.TransientFailureException;
 
 /**
  * @author billy1380
- * 
+ *
  */
 @SuppressWarnings("serial")
 public class CallServiceMethodServlet extends HttpServlet {
@@ -74,7 +74,8 @@ public class CallServiceMethodServlet extends HttpServlet {
 		boolean isNotQueue = false;
 
 		// bail out if we have not been called by app engine cron
-		if ((isNotQueue = (appEngineQueue == null || !"callservicemethod".toLowerCase().equals(appEngineQueue.toLowerCase())))) {
+		if ((isNotQueue = (appEngineQueue == null || (!"deferred".toLowerCase().equals(appEngineQueue.toLowerCase()) && !"callservicemethod".toLowerCase()
+				.equals(appEngineQueue.toLowerCase()))))) {
 			resp.setStatus(401);
 			resp.getOutputStream().print("failure");
 			LOG.warning("Attempt to run script directly, this is not permitted");
@@ -179,7 +180,7 @@ public class CallServiceMethodServlet extends HttpServlet {
 						}
 					}
 				} catch (DataAccessException | NullPointerException ex) {
-					LOG.log(GaeLevel.SEVERE, "Error while trying to call service method " + GETALLRANKS_SUPPORTED_METHOD, ex);
+					LOG.log(Level.SEVERE, "Error while trying to call service method " + GETALLRANKS_SUPPORTED_METHOD, ex);
 				}
 			}
 		}
@@ -188,7 +189,7 @@ public class CallServiceMethodServlet extends HttpServlet {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param country
 	 * @param store
 	 * @param categoryId
