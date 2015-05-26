@@ -23,7 +23,9 @@
 			<span class="{STYLES_INSTANCE.reflectionMainStyle.textMuted}">
 				<ui:text from="{creatorName}" />
 			</span>
-			<ui:safehtml from="{dailyData}" />
+			<span style="{displayDailyData}">
+				<ui:safehtml from="{dailyData}" />
+			</span>
 		</div>
 	</div>
 </ui:UiBinder>

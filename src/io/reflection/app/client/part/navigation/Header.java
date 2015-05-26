@@ -297,6 +297,7 @@ public class Header extends Composite implements NavigationEventHandler, Session
 		if (Window.getClientWidth() > 960
 				&& !panelLeftWasClosed
 				&& !PageType.LinkItunesPageType.equals(currentPage)
+				&& !"".equals(current.getPage()) // empty URL
 				&& (currentPage == null || currentPage.requiresLogin() || PageType.BlogPostsPageType.equals(currentPage)
 						|| PageType.BlogPostPageType.equals(currentPage) || PageType.BlogTagPageType.equals(currentPage)
 						|| PageType.ForumEditTopicPageType.equals(currentPage) || PageType.ForumPageType.equals(currentPage)
