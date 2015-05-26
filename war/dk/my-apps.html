@@ -6,11 +6,11 @@
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">	
 	<!--[if (gte IE 9)|(IEMobile)|(!IE)]><!-->
-		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main.d2856cd3e586b6a37d2f.css" />
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main.css" />
 	<!--<![endif]-->
 	<!--[if (lt IE 9)]>
 		<script src="js/vendor/html5shiv.min.js"></script>
-		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main-ie8.a4a8aa7ae27e2e1ace82.css" />
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main-ie8.css" />
 	<![endif]-->
  	<!--[if !lt IE 9]><!-->
 		<script src="js/vendor/picturefill.2.2.0.min.js" async></script>
@@ -34,46 +34,53 @@
 		<div id="main" class="l-main" role="main">
 			<div class="grid-container page-my-apps">
 				<div class="grid__column grid__column--one-half">
-					<h1 class="heading-style--heading-three">My Apps</h1>
+					<h1 class="heading-style--heading-three page-title">My Apps</h1>
 				</div>
-				<div class="grid__column page-functions">
-					<form class="inline-search-form">
-						<div class="search-field-no-label">
-		        	<input type="text" autocomplete="off" name="search" placeholder="Find an app" />
-			      	<input class="ref-button search-button-mobile is-highlighted" type="submit" value="a" />
-				    </div>
+				<div class="grid__column page-functions overflow-visible">
+					<form class="overflow-visible">
+						<div class="form-field form-field--select">
+							<div class="page-overlay"></div>		
+							<select class="js-field--select reflection-select--filter reflection-select--right">
+						    <option value="" disabled selected>Account Name</option>
+						    <option value="accname1">gustaf@reflection.io</option>
+						    <option value="accname2">martin@reflection.io</option>
+						    <option value="accname3">jamie@reflection.io</option>
+						    <option value="accname4">Test Account 1</option>
+						    <option value="accname5">Test Account 2</option>
+							</select>
+						</div>
 					</form>
-					<button class="ref-button--function-small page-function-button with-icon"><span class="ref-icon-before ref-icon-before--cloud">Download</span></button>
 				</div>
 				<div class="grid__column grid__column--full-width filters-container filter-container--my-apps">
 					<form class="forms--mid-theme">
-						<div class="calendar-container">
-								<div class="date-select-container">
-									<div class="form-field form-field--date-select form-field--date-select--no-icon">
-										<input type="text" name="date-single" id="date-single" value="01 Jan 2015" />
+						<div class="date-selection-filter-container">
+							<div class="calendar-container">
+									<div class="date-select-container">
+										<div class="form-field form-field--date-select form-field--date-select--no-icon">
+											<input type="text" name="date-single" id="date-single" value="01 Jan 2015" />
+										</div>
 									</div>
-								</div>
-								<div class="date-select-to-indicator"></div>
-								<div class="date-select-container">
-									<div class="form-field form-field--date-select form-field--date-select--no-icon">
-										<input type="text" name="date-single-to" id="date-single-to" value="26 Feb 2015" />
+									<div class="date-select-to-indicator"></div>
+									<div class="date-select-container">
+										<div class="form-field form-field--date-select form-field--date-select--no-icon">
+											<input type="text" name="date-single-to" id="date-single-to" value="26 Feb 2015" />
+										</div>
 									</div>
-								</div>
+							</div>
+							<button class="ref-button--cta-small refresh-button" disabled><span class="ref-icon-before ref-icon-before--refresh">Refresh</span></button>
+							<span class="or-text">or</span>
+							<div class="form-field form-field--select time-period-select">
+								<div class="page-overlay"></div>		
+								<select class="js-field--select reflection-select--filter">
+							    <option value="" disabled selected>Time Period</option>
+							    <option value="time1">1 Week</option>
+							    <option value="time2">2 Weeks</option>
+							    <option value="time3">4 Weeks</option>
+							    <option value="time4">6 Weeks</option>
+							    <option value="time5">8 Weeks</option>
+								</select>
+							</div>
 						</div>
-						<button class="ref-button--cta-small refresh-button" disabled><span class="ref-icon-before ref-icon-before--refresh">Refresh</span></button>
-						<span class="or-text">or</span>
-						<div class="form-field form-field--select time-period-select">
-							<div class="page-overlay"></div>		
-							<select class="js-field--select reflection-select--filter">
-						    <option value="" disabled selected>Over Time</option>
-						    <option value="time1">1 Week</option>
-						    <option value="time2">2 Weeks</option>
-						    <option value="time3">4 Weeks</option>
-						    <option value="time4">6 Weeks</option>
-						    <option value="time5">8 Weeks</option>
-							</select>
-						</div>
-
 						<div class="form-field form-field--select category-select">
 							<div class="page-overlay"></div>
 							<select class="js-field--select reflection-select--filter reflection-select--right">

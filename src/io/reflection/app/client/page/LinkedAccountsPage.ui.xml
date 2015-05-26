@@ -92,7 +92,7 @@
 				<strong ui:field="linkedAccountsCount">-</strong>
 				app store accounts linked with Reflection.
 			</p>
-			<g:Button ui:field="addAnotherLinkedAccount" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaSmall}" enabled="false">Link Another Account</g:Button>
+			<g:Button ui:field="addAnotherLinkedAccount" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall}" enabled="false">Link Another Account</g:Button>
 		</div>
 
 		<ul

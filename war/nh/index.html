@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="no-js">
+<html lang="en" class="no-js is-chrome">
 <head>
 	<meta charset="utf-8" />
   <!--[if IE 8]><html class="no-js ie8"><![endif]-->
@@ -8,213 +8,269 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:600' rel='stylesheet' type='text/css'>
 	<link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
-	<link href='http://fonts.googleapis.com/css?family=Open+Sans:700' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:600,700' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="fonts/fontello-4005c752/css/reflectionglyphs.css">
-	<link rel="stylesheet" media="screen, projection" type="text/css" href="css/landing.5ae6e6285273bf762cd73794cf7cc7d9.css" />
-	<!--[if lt IE 9]>
-		<link href="css/landing-ie8.686fe24fa588d1b5513edfedf6161d5d.css" media="screen, projection" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" media="screen, projection" type="text/css" href="css/reflection-main.css" />	
+	<link rel="stylesheet" media="screen, projection" type="text/css" href="css/landing.css" />		
+	<!--[if lt IE 9]>		
 		<script src="js/html5shiv.min.js"></script>
 		<script src="js/respond.min.js"></script>
+		<link href="css/landing-ie9.css" media="screen, projection" rel="stylesheet" type="text/css" />
 	<![endif]-->
-	<!--[if IE 9]>		
-		<link href="css/landing-ie9.42a5a45361f9f95fe006be82a699c864.css" media="screen, projection" rel="stylesheet" type="text/css" />
+	<!--[if lt IE 8]>		
+		<link href="css/landing-ie8.css" media="screen, projection" rel="stylesheet" type="text/css" />
 	<![endif]-->
 	<!--[if !lt IE 9]><!-->
 		<script src="js/picturefill.2.2.0.min.js" async></script>
 	<!-- <![endif]-->
 </head>
-<body>
-	<!--[if lt IE 8]>
-      <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+<body class="landing-page">
+	<!--[if (lt IE 9)]>
+      <div class="window-warning">
+  			<p>Uh oh... Reflection doesn't work in this browser. &nbsp; &nbsp;<a href="http://outdatedbrowser.com/en" target="_blank">Download a compatible browser</a></p>
+  		</div>
   <![endif]-->
-	<header class="header">
-		<div class="site-logo">
-			<a href="/">
-				<picture> <!-- uses js/picturefill.2.2.0.min.js -->
-					<!--[if IE 9]><video style="display: none;"><![endif]-->
-					<source srcset="imgs/global/logo-reflection-header.png" media="(min-width: 480px)" />
-					<source srcset="imgs/global/logo-reflection-header-mobile.png" />
-					<!--[if IE 9]></video><![endif]-->
-					<img src="imgs/global/logo-reflection-header.png" alt="Reflection logo" />
-				</picture>
-			</a>
+
+  <header class="header"> <div class="site-logo"> <a href="#!home" class="gwt-InlineHyperlink"><picture><source media="(min-width: 480px)" srcset="data:image/png;base64,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"><source srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAG8AAAA1CAYAAABP0LXxAAAFOElEQVR42u1cTYjbRhR2tllKW0LSUkJJNmHJqdBSlhJyKCnpLbewPewlEAgJVSRZcmy6tGE3XvXQ3Ao+FEoCATn0ULKH5JZNCMEUa7SbYurSS+kfPhQKJQcTSilt2HXm6Wd3ZjSyvF7LO0Lz4GGwPJL8vnnvfe/NSIVCjuWKZU9ftewPQrUs+0Dm/kRZRzOmhlpY17H2BNB/Td29rSit/Wn+70WrXltcqvdCzRx4ltWbMDT0uyCg0aq7X6YKXrXeIMDrjMPepKfv+GS6/u0RIYHz9ftUwSO8bqFavzsO4EY6WSoX3dcECpeMuo20DLlg2TMUeEu3rLTBI8P0yCaLqTvXBQRvo6S6H6YGXtU+T4I3kjCW7OmdFCZLb09JRecgx+D8d2O31dTRF6bmvJ+mIcF4JHibYc2q214uxJ/gnf35gn1gsWqXwYvCMewkgN94E4UhRzAG7gEUWC9vzOZ58TVCdhyOufqZPZvbMoEhK23PUIRxA+3GAQjGg+OcMZRXMXmOq+Q1gnDeifzOnxy1cYZ5ccGLMXzEsJzcBJ6QNC70JtbDecoAN9B95dbzwLAcg3S8mQ1hM8a4hMdR4HrU3/++zXoGfM8BsB2GPwiPmyGY9TjsbcHYdtzkKHxywdlnqOhznGdWsD4UW9F9yIm6/t0bQ1N2BgAwDlmgsyGUzGMU6WC8kjovNjyVGxOYbQRgPImY8SSw3S22CQYRt9aLKeDRT4rSmhwFWWHzGns8BI9lqGxHhspvBHhs3uMxWwacTt/j4blVFR3MHHCBGpec48OVCbRnJYG7BR41ruszQULJ8EZ4Dns+ll1GSE3ALuMaChDevS8NwzmUVfBKuvveTust0kOSwB2UTPgh1c9lPNC3GwlYcMlzF4KmdNbA+7NScV/afi+Xzj+bs3gAcHlkIk7JkDrsZIljtxS4prk2hYvjb7BBfoYmtciK7/EXQ3fulFT09gj6i/Qs5uQ1MoQlgT5QD5VDVpias8dpq9n9judGIqyOAIdTZ3UpD2JWIVjCwltSikyWAcCjivbIZKo3cgser44L6rtaJKcxxCFSnGNDQnkAAAVG7rBMktNh6Xi1H5kT4+pAXteHIEJ57Ky0ByIdHCMF+TKJtLT7MkWOhyW00Lp0zmSYqL8g65zB7G0e55RPd1sN3b1cLK6+m/YaXmx/sk8+S2xhYW9kw2dsi4zMp7yIAB7IXC9SIxqaWxeQTa7j+zo76rZYyAZDw3nG2VpJqCWtJHBXE0Lm2WdssLLgXccfZ5fZes8Ly8FxNqyGSp30Y6XxOqydCVoOPC5IiZeS0jwqbC2noh8lQn1kfv7BK9hQ/4gJoLMiEUryPlhF19DfgoH3W7HovCXRGUAUpfVyWWseE0LV1em5ueUXJCpSpEgRWEzz3ovjDI2a1nxVWn0EYqjuaUwQ/hozIXlmqMiS1t8ZUZnEhnyStQVVKSIU6SrSJApDCuwcw0b8b9c8L8Ut7fkgK5qztEvgNYfdASaFBFB1T5Q0pIxLDc2dtazGXml5KVKkSJEyTgleKPBIoO19v+ISwk77hQKZF+jeY0P9IeSOaM29KRESuUiXK+nDS0V1Dwu8pf0HiVBikS7sswrXJDoJ4u8gc2q4eF4WRXHILMnVdClSpEiRMmqBBrGpo48wQfhKhJfo9H3BDr5HXP8VYb+pRA5qPQ19ncEnY5vwgEy+6zz/xXEbWXwm/bK29k6+azxzbSqrLxQwNfdUzvNdbwKe884geE9hC0fuc56huG/iIt3BBvk/A6A9g45QSW+ezDtuzwEJJBLPkcyNowAAAABJRU5ErkJggg=="><img alt="Reflection logo" class="gwt-Image" src="data:image/png;base64,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" height="26" width="150"></picture></a> </div> <div style="display: inline-block;" class="header__actions"><a href="#!register/requestinvite" class="ref-button-apply">Apply</a><a href="#!login/requestinvite" class="link-log-in icon-login">Log In</a></div> </header>
+
+  <div class="panel-left">
+		<nav class="main-navigation js-main-nav js-main-navigation" role="navigation">
+			<ul>
+				<li>
+					<a href="#">
+						<svg version=1.1 id=Layer_1 xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path id=Leaderboard fill=#3B3735 d="M0,2v28h32V2H0z M30,4v5h-8h-2h-8h-2H2V4H30z M20,11v17h-8V11H20z M2,11h8v17H2V11z M22,28
+		V11h8v17H22z"/></svg>
+						<span>Leaderboard</span>
+					</a>
+				</li>
+				<li>
+					<a href="#">
+						<svg version=1.1 id=Layer_1 xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path id=Blog fill=#3B3735 d="M28,14.7V26c0,2.2-1.8,4-4,4H4c-2.2,0-4-1.8-4-4V5c0-2.2,1.8-4,4-4h18.8l-2.5,2H4C2.9,3,2,3.9,2,5
+		v21c0,1.1,0.9,2,2,2h20c1.1,0,2-0.9,2-2v-9.7L28,14.7z M30.1,9.2c-1.2,1-14.2,12.3-14.4,12.4l-0.2,0.2l-7.6,0.8l2.1-7.3l0.2-0.2
+		C10.3,15,22.2,4.8,24.6,2.7c0.4-0.3,0.9-0.5,1.5-0.5c1.8,0,3.9,2,4.5,3.9C31.1,7.4,30.9,8.5,30.1,9.2z M28.8,6.7
+		c-0.5-1.3-1.9-2.6-2.7-2.6c-0.1,0-0.2,0-0.2,0.1c-2,1.7-10.6,9.1-13.4,11.6c1.2,0.5,2.5,2.1,2.9,3.4c3.1-2.7,12.4-10.7,13.4-11.5
+		C29,7.5,28.8,6.9,28.8,6.7z"/></svg>
+						<span>Blog</span>
+					</a>
+				</li>
+				<li>
+					<a href="#">
+						<svg version=1.1 id=Layer_1 xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path id=Forum fill=#3B3735 d="M7,31.9V24H4c-2.2,0-4-1.8-4-4V4c0-2.2,1.8-4,4-4h24c2.2,0,4,1.8,4,4v16c0,2.2-1.8,4-4,4h-9.7
+		L7,31.9z M4,2C2.9,2,2,2.9,2,4v16c0,1.1,0.9,2,2,2h5v6.1l8.7-6.1H28c1.1,0,2-0.9,2-2V4c0-1.1-0.9-2-2-2H4z"/></svg>
+						<span>Forum</span>
+					</a>
+				</li>
+				<li class="has-child js-is-collapsible">
+					<a href="#">
+						<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path id=Admin fill-rule=evenodd clip-rule=evenodd fill=#5A5A68 d="M24.4,4.4c0,0.8-0.6,1.4-1.4,1.4H4.4
+		C3.6,5.8,3,5.2,3,4.4l0,0C3,3.6,3.6,3,4.4,3H23C23.7,3,24.4,3.6,24.4,4.4L24.4,4.4z M29,9c0,0.8-0.6,1.4-1.4,1.4H4.4
+		C3.6,10.4,3,9.8,3,9l0,0c0-0.8,0.6-1.4,1.4-1.4h23.2C28.4,7.6,29,8.3,29,9L29,9z M19.7,18.3c0,0.8-0.6,1.4-1.4,1.4H4.4
+		c-0.8,0-1.4-0.6-1.4-1.4l0,0c0-0.8,0.6-1.4,1.4-1.4h13.9C19.1,16.9,19.7,17.6,19.7,18.3L19.7,18.3z M24.4,23c0,0.8-0.6,1.4-1.4,1.4
+		H4.4C3.6,24.4,3,23.7,3,23l0,0c0-0.8,0.6-1.4,1.4-1.4H23C23.7,21.6,24.4,22.2,24.4,23L24.4,23z M24.4,13.7c0,0.8-0.6,1.4-1.4,1.4
+		H4.4c-0.8,0-1.4-0.6-1.4-1.4l0,0c0-0.8,0.6-1.4,1.4-1.4H23C23.7,12.3,24.4,12.9,24.4,13.7L24.4,13.7z M29,27.6
+		c0,0.8-0.6,1.4-1.4,1.4H4.4C3.6,29,3,28.4,3,27.6l0,0c0-0.8,0.6-1.4,1.4-1.4h23.2C28.4,26.2,29,26.8,29,27.6L29,27.6z"/></svg>
+						<span>Admin</span>
+					</a>
+					<ul>
+						<li><a href="feed-browser.html">Feed Browser</a></li>
+						<li><a href="simple-modal-run.html">Simple Modal Run</a></li>
+						<li><a href="items.html">Items</a></li>
+						<li><a href="categories.html">Categories</a></li>
+						<li><a href="users.html">Users</a></li>
+						<li><a href="roles.html">Roles</a></li>
+						<li><a href="permissions.html">Permissions</a></li>
+						<li><a href="data-accounts.html">Data accounts</a></li>
+						<li><a href="data-account-fetches.html">Data account fetches</a></li>
+						<li><a href="events.html">Events</a></li>
+						<li><a href="event-subscriptions.html">Event Subscriptions</a></li>
+						<li><a href="send-notification.html">Send Notification</a></li>
+						<li><a href="blog-admin.html">Blog Admin</a></li>
+					</ul>
+				</li>
+			</ul>
+		</nav>
+		<ul class="main-social-links">
+			<li><a href="https://www.facebook.com/reflection.io" class="ref-icon-before ref-icon-before--facebook" target="_blank"><span>Facebook</span></a></li>
+			<li><a href="https://twitter.com/reflectionio" class="ref-icon-before ref-icon-before--twitter" target="_blank"><span>Twitter</span></a></li>
+			<li><a href="https://www.linkedin.com/company/reflection-io-ltd" class="ref-icon-before ref-icon-before--linkedin" target="_blank"><span>LinkedIn</span></a></li>
+		</ul>
+		<div class="main-footer-links">
+			<ul>
+				<li><a href="#">Contact Us</a></li>
+				<li><a href="#">Terms &amp; Conditions</a></li>
+			</ul>
 		</div>
-		<div class="header__actions">
-			<a href="#" class="ref-button-apply">Apply</a>
-			<a href="#" class="link-log-in icon-login">Log In</a>
-		</div>
-	</header>
+	</div>
 
 	<div class="l-page-container">
 		<div id="main" class="l-main" role="main">
-
-			<div class="window-height-scroll-effect-container landing-section-main-scroll-effect-container">
-				<div class="section-size-shadow-layer"></div>
-				<section class="landing-section-main">
-					<div class="landing-section-main__content">
-						<div class="landing-section-main__column-one">
-							<div>
-								<h1>App Intelligence to Create &amp; Plan More Successful Products</h1>
-								<p>Reflection is the only intelligence tool with a freemium pricing model that fits the needs of the entire app ecosystem.</p>
-								<div class="actions-container">
-									<a href="#anchor-how-intelligence-helps" class="icon-angle-right js-scroll-to-anchor">How Intelligence Helps</a>
-									<a href="#" class="ref-button-cta-large">Apply Now</a>
+			<div>
+				<div class="window-height-scroll-effect-container landing-section-main-scroll-effect-container">
+					<div class="section-size-shadow-layer"></div>
+					<section class="landing-section-main">
+						<div class="landing-section-main__content">
+							<div class="landing-section-main__column-one">
+								<div>
+									<h1>App Intelligence to Create &amp; Plan More Successful Products</h1>
+									<p>Reflection is the only intelligence tool with a freemium pricing model that fits the needs of the entire app ecosystem.</p>
+									<div class="actions-container">
+										<a href="#anchor-how-intelligence-helps" class="icon-angle-right js-scroll-to-anchor">How Intelligence Helps</a>
+										<a href="#" class="ref-button-cta-large">Apply Now</a>
+									</div>
 								</div>
 							</div>
+							<div class="landing-section-main__column-two">
+								<img src="imgs/screenshots/Leaderboard_Free.png" alt="Leaderboard screenshot" />
+							</div>
 						</div>
-						<div class="landing-section-main__column-two">
-							<img src="imgs/screenshots/Leaderboard_Free.png" alt="Leaderboard screenshot" />
+						<div class="list-partners">
+							<ul>
+								<li><img src="imgs/logos/Partner_Soundcloud@2x.png" alt="Soundcloud logo" /></li>
+								<li><img src="imgs/logos/Partner_Wooga@2x.png" alt="Wooga logo" /></li>
+								<li><img src="imgs/logos/BBC_Worldwide@2x.png" alt="BBC Worldwide logo" /></li>
+								<li><img src="imgs/logos/Partner_TocaBoca@2x-v2.png" alt="Toca Boca logo" /></li>
+								<li><img src="imgs/logos/SwiftKey_Logo@2x.png" alt="SwiftKey logo" /></li>
+								<li><img src="imgs/logos/Partner_Miniclip@2x.png" alt="Miniclip logo" /></li>
+								<li><img src="imgs/logos/Nordeus_Logo@2x.png" alt="Nordeus logo" /></li>
+								<li><img src="imgs/logos/Endemol_Logo@2x.png" alt="Endemol logo" /></li>
+							</ul>
+							<h2>Some of our current partners</h2>
 						</div>
+					</section>
+				</div>
+
+				<section class="landing-section-insights" id="anchor-how-intelligence-helps">
+					<div class="landing-section-insights__column_one">
+						<picture>
+							<!--[if IE 9]><video style="display: none;"><![endif]-->
+							<source srcset="imgs/screenshots/Leaderboard_Revenue.png" media="(min-width: 720px)" />
+							<source srcset="imgs/screenshots/Leaderboard_Revenue_Mobile.png" />
+							<!--[if IE 9]></video><![endif]-->
+							<img src="imgs/screenshots/Leaderboard_Revenue.png" alt="Leaderboard screenshot" />
+						</picture>
 					</div>
-					<div class="list-partners">
-						<ul>
-							<li><img src="imgs/logos/Partner_Soundcloud@2x.png" alt="Soundcloud logo" /></li>
-							<li><img src="imgs/logos/Partner_Wooga@2x.png" alt="Wooga logo" /></li>
-							<li><img src="imgs/logos/BBC_Worldwide@2x.png" alt="BBC Worldwide logo" /></li>
-							<li><img src="imgs/logos/Partner_TocaBoca@2x-v2.png" alt="Toca Boca logo" /></li>
-							<li><img src="imgs/logos/SwiftKey_Logo@2x.png" alt="SwiftKey logo" /></li>
-							<li><img src="imgs/logos/Partner_Miniclip@2x.png" alt="Miniclip logo" /></li>
-							<li><img src="imgs/logos/Nordeus_Logo@2x.png" alt="Nordeus logo" /></li>
-							<li><img src="imgs/logos/Endemol_Logo@2x.png" alt="Endemol logo" /></li>
-						</ul>
-						<h2>Who's using Reflection</h2>
+					<div class="landing-column-thin">
+						<div class="landing-column-thin__content">
+							<h2>Essential Market Insight</h2>
+							<p>Reflection makes it easy to analyse revenue, rank and download data for apps and markets. This enables you to make better development, marketing and investment decisions.</p>
+							<ul class="content-list">
+								<li><span>Revenue, rank and download data for the Top 200 free, paid and grossing apps updated daily.</span></li>
+								<li><span>Filter by day, country, store and category to get a tailored view of the data you are most interested in.</span></li>	
+							</ul>
+						</div>
 					</div>
 				</section>
-			</div>
 
-			<section class="landing-section-insights" id="anchor-how-intelligence-helps">
-				<div class="landing-section-insights__column_one">
-					<picture>
-						<!--[if IE 9]><video style="display: none;"><![endif]-->
-						<source srcset="imgs/screenshots/Leaderboard_Revenue.png" media="(min-width: 720px)" />
-						<source srcset="imgs/screenshots/Leaderboard_Revenue_Mobile.png" />
-						<!--[if IE 9]></video><![endif]-->
-						<img src="imgs/screenshots/Leaderboard_Revenue.png" alt="Leaderboard screenshot" />
-					</picture>
-				</div>
-				<div class="landing-column-thin">
-					<div class="landing-column-thin__content">
-						<h2>Essential Market Insight</h2>
-						<p>Reflection makes it easy to analyse revenue, rank and download data for apps and markets. This enables you to make better development, marketing and investment decisions.</p>
-						<ul class="content-list">
-							<li><span>Revenue, rank and download data for the Top 200 free, paid and grossing apps updated daily.</span></li>
-							<li><span>Filter by day, country, store and category to get a tailored view of the data you are most interested in.</span></li>	
-						</ul>
+				<section class="landing-section-analyse">
+					<div class="landing-section-analyse__column_two">
+						<picture>
+							<!--[if IE 9]><video style="display: none;"><![endif]-->
+							<source srcset="imgs/screenshots/App_Page.png" media="(min-width: 720px)" />
+							<source srcset="imgs/screenshots/App_Page_Mobile.png" />
+							<!--[if IE 9]></video><![endif]-->
+							<img src="imgs/screenshots/App_Page.png" alt="App page screenshot" />
+						</picture>
 					</div>
-				</div>
-			</section>
+					<div class="landing-column-thin">
+						<div class="landing-column-thin__content">
+							<h2>Analyse App Performance</h2>
+							<p>Drill down into your own individual apps and those of other developers to analyse their rank, downloads and revenue data over a given period of time.</p>
+							<p>Discover how they are affected by internal or external influences such as time, day of the week, app update releases or promotions and use this insight to evolve or plan your own product strategy.</p>
+							<p class="small-text">(Revenue values shown are not actual data)</p>
+						</div>
+					</div>				
+				</section>
 
-			<section class="landing-section-analyse">
-				<div class="landing-section-analyse__column_two">
-					<picture>
-						<!--[if IE 9]><video style="display: none;"><![endif]-->
-						<source srcset="imgs/screenshots/App_Page.png" media="(min-width: 720px)" />
-						<source srcset="imgs/screenshots/App_Page_Mobile.png" />
-						<!--[if IE 9]></video><![endif]-->
-						<img src="imgs/screenshots/App_Page.png" alt="App page screenshot" />
-					</picture>
-				</div>
-				<div class="landing-column-thin">
-					<div class="landing-column-thin__content">
-						<h2>Analyse App Performance</h2>
-						<p>Drill down into your own individual apps and those of other developers to analyse their rank, downloads and revenue data over a given period of time.</p>
-						<p>Discover how they are affected by internal or external influences such as time, day of the week, app update releases or promotions and use this insight to evolve or plan your own product strategy.</p>
-						<p class="small-text">(Revenue values shown are not actual data)</p>
-					</div>
-				</div>				
-			</section>
-
-			<section class="landing-section-story">
-				<div class="landing-column-thin">
-					<div class="landing-column-thin__content">
-						<blockquote>
-							<p>Reflection's approach to let developers have an input on feature development is unique and refreshing. A great addition to the app intelligence space</p>
-							<footer>
-								<cite><span>Saad Choudri</span>Chief Commercial Officer, Miniclip</cite>
-							</footer>
-						</blockquote>
-					</div>
-				</div>
-				<div class="landing-column-wide">
-					<div class="landing-column-wide__content">
-						<h2>Our Story</h2>
-						<p>Revenue, download and rank data is an essential source ofw product and commercial insight that until now was only available to the few members of the development community who could afford to pay the hefty fee for it.</p>
-						<p>Reflection is revolutionising the app industry by providing freemium access to a comprehensive intelligence and analytics platform comprised of a set of tools our partners and members have helped to create. These include some of the app industries biggest names such as Peter Molyneux OBE, Toca Boca, Sega, Miniclip, Soundcloud etc etc etc</p>
-						<p>The accuracy of our data is all-important and maintained through detailed mathematical algorithms developed in conjunction with our statistical partner, Imperial College London.</p>
-						<div class="logo-ref-imp-container">
-							<h4>Official Statistics Partner</h4>
-							<img src="imgs/logos/Imperial_College_London_Logo.png" alt="Imperial College London logo" class="logo-ref-imp" />
+				<section class="landing-section-story">
+					<div class="landing-column-thin">
+						<div class="landing-column-thin__content">
+							<blockquote>
+								<p>Reflection's approach to let developers have an input on feature development is unique and refreshing. A great addition to the app intelligence space</p>
+								<footer>
+									<cite><span>Saad Choudri</span>Chief Commercial Officer, Miniclip</cite>
+								</footer>
+							</blockquote>
 						</div>
 					</div>
-				</div>
-			</section>
-
-			<section class="landing-section-careers">
-				<img src="imgs/careers/careers-col-thin-2.jpg" alt="Meeting" class="img-width-landing-column-thin" />
-				<img src="imgs/careers/careers-col-wide-2.jpg" alt="The Reflection office" class="img-width-landing-column-wide" />				
-				<div class="landing-column-wide">
-					<div class="landing-column-wide__content">
-						<h2>Work With Us</h2>
-						<p>Reflection is a startup focused on providing the most useful and accessible intelligence tool for the entire app ecosystem.</p>
-						<p>We are always looking for talented people to join our growing team here in London. If you are a self-starter, would love to be part of an exciting, expanding company and have what it take to get things done, we’d like to hear from you.</p>
-						<h3>Our Benefits</h3>
-						<ul class="content-list">
-							<li><span>Stock options plan</span></li>
-							<li><span>Work station hardware of your choice</span></li>
-							<li><span>Superb location just off Oxford street</span></li>
-							<li><span>The chance to learn all there is to know about the mobile and app market</span></li>
-							<li><span>Friendly and collaborative culture</span></li>
-							<li><span>Support for your own personal experimentation and research projects</span></li>
-							<li><span>A fully stocked fridge and all the espresso you can drink</span></li>
-						</ul>
+					<div class="landing-column-wide">
+						<div class="landing-column-wide__content">
+							<h2>Our Story</h2>
+							<p>Revenue, download and rank data is an essential source ofw product and commercial insight that until now was only available to the few members of the development community who could afford to pay the hefty fee for it.</p>
+							<p>Reflection is revolutionising the app industry by providing freemium access to a comprehensive intelligence and analytics platform comprised of a set of tools our partners and members have helped to create. These include some of the app industries biggest names such as Peter Molyneux OBE, Toca Boca, Sega, Miniclip, Soundcloud etc etc etc</p>
+							<p>The accuracy of our data is all-important and maintained through detailed mathematical algorithms developed in conjunction with our statistical partner, Imperial College London.</p>
+							<div class="logo-ref-imp-container">
+								<h4>Statistics Partner</h4>
+								<img src="imgs/logos/Imperial_College_London_Logo.png" alt="Imperial College London logo" class="logo-ref-imp" />
+							</div>
+						</div>
 					</div>
-				</div>
-				<div class="landing-column-thin">
-					<div class="landing-column-thin__content">
-						<h2>We're Hiring</h2>
-						<ul>
-							<li><a href="#">Senior Front End Web Developer</a></li>
-							<li><a href="#">Junior Designer</a></li>
-							<li><a href="#">Community Manager</a></li>
-							<li><a href="#">Sales Executive</a></li>
-						</ul>
+				</section>
+
+				<section class="landing-section-careers">
+					<img src="imgs/careers/careers-col-thin-2.jpg" alt="Meeting" class="img-width-landing-column-thin" />
+					<img src="imgs/careers/careers-col-wide-2.jpg" alt="The Reflection office" class="img-width-landing-column-wide" />				
+					<div class="landing-column-wide">
+						<div class="landing-column-wide__content">
+							<h2>Work With Us</h2>
+							<p>Reflection is a startup focused on providing the most useful and accessible intelligence tool for the entire app ecosystem.</p>
+							<p>We are always looking for talented people to join our growing team here in London. If you are a self-starter, would love to be part of an exciting, expanding company and have what it take to get things done, we’d like to hear from you.</p>
+							<h3>Benefits</h3>
+							<ul class="content-list">
+								<li><span>Stock options plan</span></li>
+								<li><span>Work station hardware of your choice</span></li>
+								<li><span>Superb location just off Oxford street</span></li>
+								<li><span>The chance to learn all there is to know about the mobile and app market</span></li>
+								<li><span>Friendly and collaborative culture</span></li>
+								<li><span>Support for your own personal experimentation and research projects</span></li>
+								<li><span>A fully stocked fridge and all the espresso you can drink</span></li>
+							</ul>
+						</div>
 					</div>
-				</div>
-			</section>
+					<div class="landing-column-thin">
+						<div class="landing-column-thin__content">
+							<h2>We're Hiring</h2>
+							<ul>
+								<li><a href="#">Senior Front End Web Developer</a></li>
+								<li><a href="#">Junior Designer</a></li>
+								<li><a href="#">Community Manager</a></li>
+								<li><a href="#">Sales Executive</a></li>
+							</ul>
+						</div>
+					</div>
+				</section>
 
-			<section class="landing-section-map">
-				<div id="js-map-location"></div>
-			</section>
+				<section class="landing-section-map">
+					<div id="js-map-location"></div>
+				</section>
 
-			<section class="landing-section-contact">
-				<div>
-					<img src="imgs/global/logo-reflection-footer.png" alt="Reflection logo" class="logo-reflection-footer" />
-				</div>
-				<a href="mailto:info@reflection.io" class="landing-section-contact__email">
-					<span class="icon-mail">info@reflection.io</span>
-				</a>
-				<a href="https://www.google.co.uk/maps/place/44+Newman+St,+Marylebone,+London+W1T+1QD/@51.5187779,-0.1364135,17z/data=!4m7!1m4!3m3!1s0x48761b2b95192b1b:0xc2fcb9753b8ff12b!2s44+Newman+St,+Marylebone,+London+W1T+1QD!3b1!3m1!1s0x48761b2b95192b1b:0xc2fcb9753b8ff12b" class="landing-section-contact__address" target="_blank">
-					<p class="icon-location"><b>40-44 Newman St<br />London<br />W1T 1QD</b></p>
-				</a>
-			</section>
+				<section class="landing-section-contact">
+					<div>
+						<img src="imgs/global/logo-reflection-footer.png" alt="Reflection logo" class="logo-reflection-footer" />
+					</div>
+					<a href="mailto:info@reflection.io" class="landing-section-contact__email">
+						<span class="icon-mail">info@reflection.io</span>
+					</a>
+					<a href="https://www.google.co.uk/maps/place/44+Newman+St,+Marylebone,+London+W1T+1QD/@51.5187779,-0.1364135,17z/data=!4m7!1m4!3m3!1s0x48761b2b95192b1b:0xc2fcb9753b8ff12b!2s44+Newman+St,+Marylebone,+London+W1T+1QD!3b1!3m1!1s0x48761b2b95192b1b:0xc2fcb9753b8ff12b" class="landing-section-contact__address" target="_blank">
+						<p class="icon-location"><b>40-44 Newman St<br />London<br />W1T 1QD</b></p>
+					</a>
+				</section>
 
-			<footer class="landing-footer">
-				<ul class="landing-footer__social-links">
-					<li><a href="#" class="icon-facebook-squared link-facebook"></a></li>
-					<li><a href="#" class="icon-linkedin-rect link-linkedin"><span>LinkedIn</span></a></li>
-					<li><a href="#" class="icon-twitter link-twitter"><span>Twitter</span></a></li>
-				</ul>
-				<a href="" class="landing-footer__inline-link">Terms &amp; Conditions and Privacy Policy</a>
-				<span class="landing-footer__copyright">&copy;2014 Reflection. All Rights Reserved</span>
-				<a href="#" class="link-to-page-top js-scroll-to-page-top">
-					<span class="border-radius-point"></span>
-					<span class="link-to-page-top__text">Back to Top</span>
-				</a>
-			</footer>
+				<footer class="landing-footer">
+					<ul class="landing-footer__social-links">
+						<li><a href="#" class="icon-facebook-squared link-facebook"></a></li>
+						<li><a href="#" class="icon-linkedin-rect link-linkedin"><span>LinkedIn</span></a></li>
+						<li><a href="#" class="icon-twitter link-twitter"><span>Twitter</span></a></li>
+					</ul>
+					<a href="" class="landing-footer__inline-link">Terms &amp; Conditions and Privacy Policy</a>
+					<span class="landing-footer__copyright">&copy;2014 Reflection. All Rights Reserved</span>
+				</footer>
+			</div>
 		</div>
 	</div> <!-- .l-page-container -->
 
-	<script src="js/jquery-1.11.1.min.js"></script>		
-	<script src="js/modernizr.2.8.3.custom.v3.js"></script>
-	<script src="js/scripts.180cd4275030bac3e6c6f190e5c98813.js"></script>
+ 	<script src="js/vendor/jquery-1.11.1.min.js"></script>
+ 	<script src="js/vendor/jquery-ui.custom.min.js"></script> 	
+	<script src="js/vendor/modernizr.2.8.3.custom.min.js"></script>
+
+  <script src="js/scripts.js"></script>
 </body>

@@ -117,7 +117,7 @@ public class LoginForm extends Composite implements LoginEventHandler, UserPower
 		if (validate()) {
 			clearErrors();
 			setEnabled(false);
-			loginBtn.setStatusLoading("Logging in ...");
+			loginBtn.setStatusLoading("Logging in");
 			SessionController.get().login(emailFormField.getText(), passwordFormField.getText(), rememberMe.getValue().booleanValue()); // Execute user login
 		} else {
 			if (EmailNote != null) {
@@ -227,7 +227,7 @@ public class LoginForm extends Composite implements LoginEventHandler, UserPower
 	 */
 	@Override
 	public void gotUserPowers(User user, List<Role> roles, List<Permission> permissions) {
-		loginBtn.setStatusSuccess("Logged in !", 0);
+		loginBtn.setStatusSuccess("Logged in", 0);
 	}
 
 	/*
@@ -255,7 +255,7 @@ public class LoginForm extends Composite implements LoginEventHandler, UserPower
 		if (SessionController.get().isValidSession()) { // TODO test
 			passwordFormField.clear();
 			setEnabled(false);
-			loginBtn.setStatusSuccess("Logged in !", 0);
+			loginBtn.setStatusSuccess("Logged in", 0);
 		}
 		if (current != null && current.hasAction() && !LoginPage.WELCOME_ACTION_NAME.equals(current.getAction())) {
 			String email = getEmail(current.getAction());

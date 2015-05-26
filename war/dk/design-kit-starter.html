@@ -2,12 +2,10 @@
 <html lang="en" class="no-js">
 <head>
 	<meta charset="utf-8" />
-	<title>Reflection, 404 Error Page Not Found</title>
+	<title>Reflection Design Kit</title>
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">	
-	<!--[if (gte IE 9)|(IEMobile)|(!IE)]><!-->
-		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main.css" />
-	<!--<![endif]-->
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link rel="stylesheet" media="screen, projection" type="text/css" href="designkit.css" />
 	<!--[if (lt IE 9)]>
 		<script src="js/vendor/html5shiv.min.js"></script>
 		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main-ie8.css" />
@@ -15,6 +13,9 @@
  	<!--[if !lt IE 9]><!-->
 		<script src="js/vendor/picturefill.2.2.0.min.js" async></script>
 	<!-- <![endif]-->
+	<!--[if (gte IE 9)|(IEMobile)|(!IE)]><!-->
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main.css" />
+	<!--<![endif]-->
 	<link rel="stylesheet" href="js/vendor/jquery.mCustomScrollbar.css" />
 </head>
 <body class="panel-left-open">
@@ -29,12 +30,14 @@
 	<div id="js-component-import--panel-left" class="panel-left js-custom-scrollbar" data-mcs-theme="minimal-dark"></div>
 
 	<div class="l-page-container">
+
 		<div id="main" class="l-main" role="main">
-			<div class="grid-container full-page-message page-message-only">
-				<div class="grid__column grid__column--five-columns">
-					<img src="images/404.png" alt="404 error sign post" class="img-signpost" />
-					<h2 class="heading-style--heading-three">Oops</h2>
-					<p>You've taken a wrong turn or done something unexpected. Try looking elsewhere or <a href="#">email us</a> if there's a problem.</p>
+			
+			<div id="js-component-import--design-kit-banner" class="banner"></div>
+
+			<div class="grid-container dk-components-container">
+				<div class="grid__column grid__column--full-width">
+					<h2>Design Kit Component Page</h2>
 				</div>
 			</div>
 		</div>
@@ -54,11 +57,12 @@
 
 	<div id="js-appendScriptsContainer"></div>
 
-	<script src="js/application-global-modules-logged-in.js"></script>
+	<script src="js/designkit-global-templates.js"></script>
   <script src="js/application.js"></script>
+  <script src="js/designkit-app.js"></script>
   <script>
   	function initScripts() {
-  		new Page();
+  		new DKStarterPage();
   	}
 
   	window.onready = initScripts();

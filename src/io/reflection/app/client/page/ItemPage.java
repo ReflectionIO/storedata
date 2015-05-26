@@ -113,7 +113,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	private String iapDescription;
 
 	// Filters
-	@UiField FormSwitch followSwitch;
+//	@UiField FormSwitch followSwitch;
 	@UiField DateSelector dateSelector;
 	@UiField Selector storeSelector;
 	@UiField Selector countrySelector;
@@ -170,7 +170,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	private static final String SERIES_ID_DOWNLOAD_CUMULATIVE_SECONDARY = "downloadCumulativeSecondary";
 
 	@UiField AnchorElement revealContentFilter;
-	@UiField AnchorElement revealContentStore;
+//	@UiField AnchorElement revealContentStore;
 
 	@UiField ButtonElement dnwBtn;
 	@UiField ButtonElement dnwBtnMobile;
@@ -187,7 +187,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		if (!SessionController.get().isLoggedInUserAdmin()) {
 			revenueTable2.removeFromParent();
 
-			followSwitch.removeFromParent();
+//			followSwitch.removeFromParent();
 			accuracySwitch.removeFromParent();
 			eventsSwitch.removeFromParent();
 			oneMMovingAverageSwitch.removeFromParent();
@@ -205,7 +205,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		revenueTable.removeFromParent();
 		setRevenueDownloadTabsEnabled(SessionController.get().isLoggedInUserAdmin());
 
-		ResponsiveDesignHelper.nativeRevealContent(revealContentStore);
+//		ResponsiveDesignHelper.nativeRevealContent(revealContentStore);
 		ResponsiveDesignHelper.nativeRevealContent(revealContentFilter);
 
 		tablePlaceholder.add(itemRevenuePlaceholder);

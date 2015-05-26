@@ -271,7 +271,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	void onChangeDetailsClicked(ClickEvent event) {
 		if (validateDetails()) {
 			clearDetailsErrors();
-			changeDetailsBtn.setStatusLoading("Changing details ..");
+			changeDetailsBtn.setStatusLoading("Changing details");
 
 			SessionController.get().changeUserDetails(username.getText(), forename.getText(), surname.getText(), company.getText());
 		} else {
@@ -306,7 +306,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 
 		if (validatePassword()) {
 			clearPasswordErrors();
-			changePasswordBtn.setStatusLoading("Changing password ..");
+			changePasswordBtn.setStatusLoading("Changing password");
 
 			if (SessionController.get().isLoggedInUserAdmin()) {
 				UserController.get().setPassword(editingUserId, newPassword.getText());

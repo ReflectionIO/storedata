@@ -27,6 +27,7 @@
 	initLinkToPageTop();
 	initScrollToAnchor();
 	initLandingScrollEffect();
+	initHomePage();
 	$(window).on("load", function(){
 		initializeMap();
 	});
@@ -141,7 +142,7 @@
 		if($('.window-height-scroll-effect-container').length > 0 && $('.csstransforms').length > 0 && $('.no-touch').length > 0) {
 			var windowHeight = $(window).height(),
 					windowWidth = $(window).width(),
-					breakpointVertical = 680,
+					breakpointVertical = 710,
 					breakpointHorizontal = 980;
 			
 			if(windowHeight >= breakpointVertical && windowWidth >= breakpointHorizontal) {
@@ -156,6 +157,12 @@
 					$('.section-size-shadow-layer').css('opacity', opacityScaleShadowLayer);
 				});
 			}
+		}
+	}
+
+	function initHomePage() {
+		if($('body.landing-page').length) {
+			$('html').addClass('landing-page');
 		}
 	}
 
