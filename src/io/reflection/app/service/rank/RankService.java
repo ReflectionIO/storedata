@@ -21,6 +21,7 @@ import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.helpers.ApiHelper;
+import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
@@ -34,6 +35,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -48,7 +51,7 @@ import com.spacehopperstudios.utility.JsonUtils;
 import com.spacehopperstudios.utility.StringUtils;
 
 final class RankService implements IRankService {
-
+	private static final Logger LOG = Logger.getLogger(RankService.class.getName());
 	private final PersistentMap cache = PersistentMapFactory.createObjectify();
 
 	@Override
@@ -618,6 +621,11 @@ final class RankService implements IRankService {
 	@Override
 	public List<Rank> getGatherCodeRanks(Country country, Store store, Category category, String listType, Long code, Pager pager, Boolean ignoreGrossingRank)
 			throws DataAccessException {
+		if (LOG.isLoggable(GaeLevel.DEBUG)) {
+			LOG.log(GaeLevel.DEBUG,
+					String.format("getFatherCodeRanks called for country: %s, category: %s, listType: %s, code2: %d", country, category, listType, code));
+		}
+
 		final List<Rank> ranks = new ArrayList<Rank>();
 
 		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
@@ -650,6 +658,11 @@ final class RankService implements IRankService {
 
 			final String ranksString = (String) cache.get(memcacheKey);
 
+			if (LOG.isLoggable(GaeLevel.DEBUG)) {
+				LOG.log(GaeLevel.DEBUG,
+						String.format("Checked memcache if these ranks have already been cached (%B) with key: %s", ranksString == null, memcacheKey));
+			}
+
 			if (ranksString == null) {
 				String typesQueryPart = null;
 				if (types.size() == 1) {
@@ -665,6 +678,9 @@ final class RankService implements IRankService {
 								|| !ignoreGrossingRank.booleanValue() ? "`grossingposition`<>0 AND" : "", pager.sortBy,
 										pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start, pager.count);
 
+				if (LOG.isLoggable(GaeLevel.DEBUG)) {
+					LOG.log(GaeLevel.DEBUG, "Executing query to fetch ranks");
+				}
 				try {
 					rankConnection.connect();
 					rankConnection.executeQuery(getCountryStoreTypeRanksQuery);
@@ -685,8 +701,12 @@ final class RankService implements IRankService {
 
 						try {
 							cache.put(memcacheKey, JsonUtils.cleanJson(jsonArray.toString()), DateTime.now(DateTimeZone.UTC).plusDays(20).toDate());
-						} catch (final Exception e) {}
+						} catch (final Exception e) {
+							LOG.log(Level.WARNING, "Exception occured while trying to store ranks into the cache with key: " + memcacheKey, e);
+						}
 					}
+				} catch (Exception e) {
+					LOG.log(Level.WARNING, "Exception occured while trying to load ranks from DB and process them.", e);
 				} finally {
 					if (rankConnection != null) {
 						rankConnection.disconnect();
