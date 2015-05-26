@@ -40,6 +40,7 @@ public final class Connection {
 	private final String encoding = "utf8mb4";
 
 	private static final Logger LOG = Logger.getLogger(Connection.class.getName());
+	private static boolean classLoaded = false;
 
 	public Connection(String server, String database, String username, String password) throws DataAccessException {
 		this(server, database, username, password, false);
@@ -52,10 +53,10 @@ public final class Connection {
 			isNative = Boolean.parseBoolean(nativePropertyValue);
 		}
 
-		if (LOG.isLoggable(GaeLevel.DEBUG)) {
-			LOG.log(GaeLevel.DEBUG, "create connection with server: " + server + ", database: " + database + ", username: " + username
-					+ " and password: ********");
-		}
+		// if (LOG.isLoggable(GaeLevel.DEBUG)) {
+		// LOG.log(GaeLevel.DEBUG, "create connection with server: " + server + ", database: " + database + ", username: " + username
+		// + " and password: ********");
+		// }
 
 		if (server == null) throw new NullPointerException("server name cannot be null");
 
@@ -71,6 +72,10 @@ public final class Connection {
 		this.database = database;
 		this.username = username;
 		this.password = password;
+
+		if (classLoaded) return;
+
+		classLoaded = true;
 
 		if (isNative) {
 			final String databaseDriver = getDatabaseDriverName();
@@ -114,9 +119,9 @@ public final class Connection {
 
 			// connection is null or has been disconnected
 
-			if (LOG.isLoggable(GaeLevel.DEBUG)) {
-				LOG.log(GaeLevel.DEBUG, "DB Connection ------- Really connecting");
-			}
+			// if (LOG.isLoggable(GaeLevel.DEBUG)) {
+			// LOG.log(GaeLevel.DEBUG, "DB Connection ------- Really connecting");
+			// }
 
 			if (isNative) {
 				if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Production) {
@@ -357,9 +362,9 @@ public final class Connection {
 	}
 
 	public void disconnect() throws DataAccessException {
-		if (LOG.isLoggable(GaeLevel.DEBUG)) {
-			LOG.log(GaeLevel.DEBUG, "DB Connection ------- Fake disconnect");
-		}
+		// if (LOG.isLoggable(GaeLevel.DEBUG)) {
+		// LOG.log(GaeLevel.DEBUG, "DB Connection ------- Fake disconnect");
+		// }
 
 		queryResult = null;
 		statement = null;
@@ -369,9 +374,9 @@ public final class Connection {
 	}
 
 	public void realDisconnect() throws DataAccessException {
-		if (LOG.isLoggable(GaeLevel.DEBUG)) {
-			LOG.log(GaeLevel.DEBUG, "DB Connection ------- Real disconnect");
-		}
+		// if (LOG.isLoggable(GaeLevel.DEBUG)) {
+		// LOG.log(GaeLevel.DEBUG, "DB Connection ------- Real disconnect");
+		// }
 
 		if (connection != null) {
 			try {
