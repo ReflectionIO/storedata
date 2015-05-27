@@ -623,7 +623,7 @@ final class RankService implements IRankService {
 			throws DataAccessException {
 		if (LOG.isLoggable(GaeLevel.DEBUG)) {
 			LOG.log(GaeLevel.DEBUG,
-					String.format("getFatherCodeRanks called for country: %s, category: %s, listType: %s, code2: %d", country, category, listType, code));
+					String.format("getGatherCodeRanks called for country: %s, category: %s, listType: %s, code2: %d", country, category, listType, code));
 		}
 
 		final List<Rank> ranks = new ArrayList<Rank>();
@@ -660,7 +660,7 @@ final class RankService implements IRankService {
 
 			if (LOG.isLoggable(GaeLevel.DEBUG)) {
 				LOG.log(GaeLevel.DEBUG,
-						String.format("Checked memcache if these ranks have already been cached (%B) with key: %s", ranksString == null, memcacheKey));
+						String.format("Checked memcache if these ranks have already been cached (%B) with key: %s", ranksString != null, memcacheKey));
 			}
 
 			if (ranksString == null) {
@@ -672,7 +672,7 @@ final class RankService implements IRankService {
 				}
 
 				final String getCountryStoreTypeRanksQuery = String
-						.format("SELECT * FROM `rank` WHERE %s AND `country`='%s' AND `categoryid`=%d AND `code2`=%d AND %s `deleted`='n' ORDER BY `%s` %s,`date` DESC LIMIT %d,%d",
+						.format("SELECT * FROM `rank` WHERE %s AND `country`='%s' AND `categoryid`=%d AND `code2`=%d AND %s `deleted`='n' ORDER BY `%s` %s LIMIT %d,%d",
 								typesQueryPart, addslashes(country.a2Code), category.id.longValue(), code.longValue(),
 								isGrossing
 								|| !ignoreGrossingRank.booleanValue() ? "`grossingposition`<>0 AND" : "", pager.sortBy,
