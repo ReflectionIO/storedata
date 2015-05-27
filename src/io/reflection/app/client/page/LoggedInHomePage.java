@@ -53,6 +53,7 @@ public class LoggedInHomePage extends Page {
 		accordionSwitchUK.addItemIncomplete("Overall", "Coming Soon");
 		accordionSwitchUK.addItemIncomplete("Education", "Coming Soon");
 		accordionSwitchUK.addItemIncomplete("Music", "Coming Soon");
+		accordionSwitchUK.setSubtitleHtml("(1<span>Category</span>)");
 
 		accordionSwitchDE.addItemIncomplete("Overall", "Coming Soon");
 		accordionSwitchDE.addItemIncomplete("Games", "Coming Soon");
@@ -98,7 +99,7 @@ public class LoggedInHomePage extends Page {
 		accordionSwitchIR.addItemIncomplete("Games", "Coming Soon");
 		accordionSwitchIR.addItemIncomplete("Education", "Coming Soon");
 		accordionSwitchIR.addItemIncomplete("Music", "Coming Soon");
-		
+
 		accordionSwitchJP.addItemIncomplete("Overall", "Coming Soon");
 		accordionSwitchJP.addItemIncomplete("Games", "Coming Soon");
 		accordionSwitchJP.addItemIncomplete("Education", "Coming Soon");
