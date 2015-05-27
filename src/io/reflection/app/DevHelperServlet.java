@@ -840,7 +840,8 @@ public class DevHelperServlet extends HttpServlet {
 				}
 
 				final String memcacheKey = ServiceType.ServiceTypeRank.toString() + ".gathercoderanks." + code2 + "." + country + "." + s.a3Code + "."
-						+ category + "." + type + "." + pager.start + "." + pager.count + "." + pager.sortDirection + "." + pager.sortBy;
+						+ category + ".toppaidapplications.topfreeapplications.topgrossingapplications.0.9223372036854775807." + pager.sortDirection + "."
+						+ pager.sortBy;
 
 				if (LOG.isLoggable(GaeLevel.DEBUG)) {
 					LOG.log(GaeLevel.DEBUG, "Check if memcache has the key :" + memcacheKey);
