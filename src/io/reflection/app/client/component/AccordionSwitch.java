@@ -80,8 +80,10 @@ public class AccordionSwitch extends Composite {
 
 			@Override
 			public void onResize(ResizeEvent event) {
-				container.getElement().addClassName("is-closed");
-				accordionContent.getStyle().setMarginTop(-Double.valueOf(accordionContent.getClientHeight()), Unit.PX);
+				if (!title.hasClassName(style.noAccordionContent())) {
+					container.getElement().addClassName(style.isClosed());
+					accordionContent.getStyle().setMarginTop(-Double.valueOf(accordionContent.getClientHeight()), Unit.PX);
+				}
 			}
 		});
 
@@ -146,9 +148,7 @@ public class AccordionSwitch extends Composite {
 		super.onAttach();
 
 		if (!title.hasClassName(style.noAccordionContent())) {
-			if (!container.getElement().hasClassName(style.isClosed())) {
-				container.getElement().addClassName(style.isClosed());
-			}
+			container.getElement().addClassName(style.isClosed());
 			accordionContent.getStyle().setMarginTop(-Double.valueOf(accordionContent.getClientHeight()), Unit.PX);
 		}
 	}
