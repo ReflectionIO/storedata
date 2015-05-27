@@ -13,9 +13,11 @@
 				<h1 class="{STYLES_INSTANCE.reflectionMainStyle.pageTitle}">
 					Hi
 					<span ui:field="userName"></span>
-					<br />We've Been Busy
+					<br />
+					We've Been Busy
 				</h1>
-				<p>The Reflection team is hard at work optimising accuracy and building the tools and features that you have been asking for. Monitor our progress here and keep up to date with what's coming next.</p>
+				<p>The Reflection team is hard at work optimising accuracy and building the tools and features that you have been asking for. Monitor our progress here and
+					keep up to date with what's coming next.</p>
 			</div>
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.listPartners}">
 				<ul>
@@ -50,39 +52,69 @@
 		<section class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.loggedInSectionContent}">
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnSevenColumns}">
 				<ul>
-				<li class="article-list--article">
-					<article class="site-article">
-						<h2>Help us help you!</h2>
-						<p class="site-article--info"><strong>Posted by</strong> <span class="posted-by">Gustaf Leksell Founder &amp; CEO</span> <span>May 14th 2015</span></p>
-						<img src="images/reflection-connect.png" alt="Laptop connected to Reflection" class="image-full-width" />
-						<p>We're all very excited that you have decided to join us on this journey. Our goal is to deliver highly accurate intelligence and tools that streamline and take the hard work out of your market analysis and business planning.</p>
-						<p>How can you help? Firstly, we need more partners! The quicker we get partners to sign up the faster we can launch and focus on tools. If you know any developer or publisher who will benefit from joining us please direct them to our site. Secondly, we need your feedback. Let us build the tools you need but can't find.</p>
-						<p>Please email us at <a href="mailto:beta@reflection.io">beta@reflection.io</a> for both positive and negative comments or if you have a feature suggestion.</p>
-						<p>And finally, please remember that we are in beta so expect slow access times and various bugs as we tweak and hone our system.</p>
-						<p>Gustaf<br />Founder &amp; CEO</p>
-					</article>
-				</li>
-				<li class="article-list--article">
-					<article class="site-article">
-						<h2>Creating an iTunes Finance user account</h2>
-						<p class="site-article--info"><strong>Posted by</strong> <span class="posted-by">Chi Dire</span> <span>Sep 18th 2014</span></p>
-						<p>When linking your account to our site (or any external website) we recommend you create a new iTunes Connect User that only has the specific permissions you intend to share. Our site will require permission to access your financial data.</p>
-						<p><a href="http://www.reflection.io/#!blogpost/view/12">Read more</a></p>
-					</article>
-				</li>
-				<li class="article-list--article">
-					<article class="site-article">
-						<h2>Finding your Vendor ID on iTunesConnect</h2>
-						<p class="site-article--info"><strong>Posted by</strong> <span class="posted-by">Chi Dire</span> <span>Aug 21st 2014</span></p>
-						<p>Your iTunes username and password are what you use to log into iTunesConnect. Your Vendor ID is a little buried on iTunesConnect and the following guide will help you locate it.</p>
-						<p><a href="http://www.reflection.io/#!blogpost/view/7">Read more</a></p>
-					</article>
-				</li>
+					<li class="article-list--article">
+						<article class="site-article">
+							<h2>Help us help you!</h2>
+							<p class="site-article--info">
+								<strong>Posted by</strong>
+								<span class="posted-by">Gustaf Leksell Founder &amp; CEO</span>
+								<span>May 14th 2015</span>
+							</p>
+							<img src="images/reflection-connect.png" alt="Laptop connected to Reflection" class="image-full-width" />
+							<p>We're all very excited that you have decided to join us on this journey. Our goal is to deliver highly accurate intelligence and tools that streamline
+								and take the hard work out of your market analysis and business planning.</p>
+							<p>How can you help? Firstly, we need more partners! The quicker we get partners to sign up the faster we can launch and focus on tools. If you know any
+								developer or publisher who will benefit from joining us please direct them to our site. Secondly, we need your feedback. Let us build the tools you need
+								but can't find.</p>
+							<p>
+								Please email us at
+								<a href="mailto:beta@reflection.io">beta@reflection.io</a>
+								for both positive and negative comments or if you have a feature suggestion.
+							</p>
+							<p>And finally, please remember that we are in beta so expect slow access times and various bugs as we tweak and hone our system.</p>
+							<p>
+								Gustaf
+								<br />Founder
+								&amp; CEO
+							</p>
+						</article>
+					</li>
+					<li class="article-list--article">
+						<article class="site-article">
+							<h2>Creating an iTunes Finance user account</h2>
+							<p class="site-article--info">
+								<strong>Posted by</strong>
+								<span class="posted-by">Chi Dire</span>
+								<span>Sep 18th 2014</span>
+							</p>
+							<p>When linking your account to our site (or any external website) we recommend you create a new iTunes Connect User that only has the specific
+								permissions you intend to share. Our site will require permission to access your financial data.</p>
+							<p>
+								<a href="http://www.reflection.io/#!blogpost/view/12">Read more</a>
+							</p>
+						</article>
+					</li>
+					<li class="article-list--article">
+						<article class="site-article">
+							<h2>Finding your Vendor ID on iTunesConnect</h2>
+							<p class="site-article--info">
+								<strong>Posted by</strong>
+								<span class="posted-by">Chi Dire</span>
+								<span>Aug 21st 2014</span>
+							</p>
+							<p>Your iTunes username and password are what you use to log into iTunesConnect. Your Vendor ID is a little buried on iTunesConnect and the following
+								guide will help you locate it.</p>
+							<p>
+								<a href="http://www.reflection.io/#!blogpost/view/7">Read more</a>
+							</p>
+						</article>
+					</li>
 				</ul>
 			</div>
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFiveColumns}">
 				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Latest Releases</h2>
-				<p>We're launching with 10+ countries with up to 4 categories each. We will add more countries and categories after launch when we have scaled up and integrated more data.</p>
+				<p>We're launching with 10+ countries with up to 4 categories each. We will add more countries and categories after launch when we have scaled up and
+					integrated more data.</p>
 				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Leaderboard Data</h2>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.accordion}">
 					<ul>
@@ -90,10 +122,10 @@
 						<c:AccordionSwitch ui:field="accordionSwitchDE" titleText="Germany" subtitleText="Coming Soon" />
 						<c:AccordionSwitch ui:field="accordionSwitchUS" titleText="USA" subtitleText="Coming Soon" />
 						<c:AccordionSwitch ui:field="accordionSwitchFR" titleText="France" subtitleText="Coming Soon" />
-						<c:AccordionSwitch ui:field="accordionSwitchIT" titleText="Italy" subtitleText="Coming Soon" />						
+						<c:AccordionSwitch ui:field="accordionSwitchIT" titleText="Italy" subtitleText="Coming Soon" />
 						<c:AccordionSwitch ui:field="accordionSwitchIR" titleText="Ireland" subtitleText="Coming Soon" />
 						<c:AccordionSwitch ui:field="accordionSwitchJP" titleText="Japan" subtitleText="Coming Soon" />
-						<c:AccordionSwitch ui:field="accordionSwitchES" titleText="Spain" subtitleText="Coming Soon" />						
+						<c:AccordionSwitch ui:field="accordionSwitchES" titleText="Spain" subtitleText="Coming Soon" />
 						<c:AccordionSwitch ui:field="accordionSwitchCA" titleText="Canada" subtitleText="Coming Soon" />
 						<c:AccordionSwitch ui:field="accordionSwitchAU" titleText="Australia" subtitleText="Coming Soon" />
 						<c:AccordionSwitch ui:field="accordionSwitchNZ" titleText="New Zealand" subtitleText="Coming Soon" />
@@ -103,20 +135,28 @@
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.accordion} {STYLES_INSTANCE.reflectionMainStyle.accordionBottomWithDivider}">
 					<ul>
 						<c:AccordionSwitch empty="true" titleText="Historic Revenue data" subtitleText="Coming Soon" />
-						<c:AccordionSwitch empty="true" titleText="Historic Download data" subtitleText="Coming Soon"/>
-						<c:AccordionSwitch empty="true" titleText="Download CSV file for our data" subtitleText="Coming Soon"/>
-						<c:AccordionSwitch empty="true" titleText="Business Planning Tools" subtitleText="After Launch"/>
-						<c:AccordionSwitch empty="true" titleText="Google Play" subtitleText="After Launch"/>
-						<c:AccordionSwitch empty="true" titleText="Amazon Store" subtitleText="After Launch"/>
-						<c:AccordionSwitch empty="true" titleText="Custom API" subtitleText="After Launch"/>
-						<c:AccordionSwitch empty="true" titleText="Your feature?" subtitleText="Suggest one"/>
+						<c:AccordionSwitch empty="true" titleText="Historic Download data" subtitleText="Coming Soon" />
+						<c:AccordionSwitch empty="true" titleText="Download CSV file for our data" subtitleText="Coming Soon" />
+						<c:AccordionSwitch empty="true" titleText="Business Planning Tools" subtitleText="After Launch" />
+						<c:AccordionSwitch empty="true" titleText="Google Play" subtitleText="After Launch" />
+						<c:AccordionSwitch empty="true" titleText="Amazon Store" subtitleText="After Launch" />
+						<c:AccordionSwitch empty="true" titleText="Custom API" subtitleText="After Launch" />
+						<c:AccordionSwitch empty="true" titleText="Your feature?" subtitleText="Suggest one" subtitleLinkHref="mailto:beta@reflection.io?subject=New feature suggestion"
+							highlighted="true" />
 					</ul>
-					<p>Do you have feedback or want to suggest a feature? Email <a href="mailto:beta@reflection.io">beta@reflection.io</a></p>
+					<p>
+						Do you have feedback or want to suggest a feature? Email
+						<a href="mailto:beta@reflection.io">beta@reflection.io</a>
+					</p>
 				</div>
 				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">We're Hiring</h2>
 				<ul class="{STYLES_INSTANCE.reflectionMainStyle.contentList} {STYLES_INSTANCE.reflectionMainStyle.contentListNoBullets}">
-					<li><a href="http://reflection.workable.com/jobs/40810" target="_blank">Senior Java Developer</a></li>
-					<li><a href="http://reflection.workable.com/jobs/40810" target="_blank">Research Analyst</a></li>
+					<li>
+						<a href="http://reflection.workable.com/jobs/40810" target="_blank">Senior Java Developer</a>
+					</li>
+					<li>
+						<a href="http://reflection.workable.com/jobs/40810" target="_blank">Research Analyst</a>
+					</li>
 				</ul>
 			</div>
 		</section>

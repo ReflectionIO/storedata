@@ -6,8 +6,7 @@
 	</ui:style>
 	<g:HTMLPanel tag="li" ui:field="container" styleName="{STYLES_INSTANCE.reflectionMainStyle.isClosed}">
 		<h2 ui:field="title" class="{STYLES_INSTANCE.reflectionMainStyle.accordionSwitch}">
-			Germany
-			<span ui:field="subtitle">Coming Soon</span>
+			<span ui:field="subtitle"></span>
 		</h2>
 		<div ui:field="accordionContent" class="{STYLES_INSTANCE.reflectionMainStyle.accordionContent}">
 			<ul ui:field="contentList" class="{STYLES_INSTANCE.reflectionMainStyle.contentListMinor}">

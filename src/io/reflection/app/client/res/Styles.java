@@ -85,6 +85,12 @@ public interface Styles extends ClientBundle {
 		@ClassName("accordion-content")
 		String accordionContent();
 
+		@ClassName("accordion-item-highlighted")
+		String accordionItemHighlighted();
+
+		@ClassName("accordion-static")
+		String accordionStatic();
+
 		@ClassName("accordion-switch")
 		String accordionSwitch();
 
@@ -393,6 +399,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("date-select-to-indicator")
 		String dateSelectToIndicator();
 
+		@ClassName("date-selection-filter-container")
+		String dateSelectionFilterContainer();
+
 		@ClassName("date-value")
 		String dateValue();
 
@@ -419,9 +428,6 @@ public interface Styles extends ClientBundle {
 		String datePickerWeekdayLabel();
 
 		String datePickerWeekendLabel();
-		
-		@ClassName("date-selection-filter-container")
-		String dateSelectionFilterContainer();
 
 		@ClassName("default-tabs-transition")
 		String defaultTabsTransition();
@@ -718,6 +724,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("highcharts-yaxis-labels")
 		String highchartsYaxisLabels();
 
+		@ClassName("hiring-title")
+		String hiringTitle();
+
 		String hook();
 
 		@ClassName("horizontal-centre-content")
@@ -740,6 +749,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("illustration-container")
 		String illustrationContainer();
+
+		@ClassName("image-full-width")
+		String imageFullWidth();
 
 		@ClassName("img-reset")
 		String imgReset();
@@ -788,6 +800,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("is-descending")
 		String isDescending();
+
+		@ClassName("is-disabled")
+		String isDisabled();
 
 		@ClassName("is-focused")
 		String isFocused();
@@ -848,9 +863,6 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("label--hidden-text")
 		String labelHiddenText();
-
-		@ClassName("landing-page")
-		String landingPage();
 
 		@ClassName("landing-section-contact")
 		String landingSectionContact();
@@ -1129,6 +1141,12 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("popup-content--link-account")
 		String popupContentLinkAccount();
+
+		@ClassName("posted-by")
+		String postedBy();
+
+		@ClassName("posted-time")
+		String postedTime();
 
 		@ClassName("pre-selected")
 		String preSelected();
@@ -1477,6 +1495,8 @@ public interface Styles extends ClientBundle {
 		@ClassName("tablet-width")
 		String tabletWidth();
 
+		String tabs();
+
 		@ClassName("tabs-container")
 		String tabsContainer();
 
@@ -1509,6 +1529,9 @@ public interface Styles extends ClientBundle {
 		String tabs__link();
 
 		String tabs__tab();
+
+		@ClassName("text--disabled")
+		String textDisabled();
 
 		@ClassName("text-link")
 		String textLink();
@@ -1574,6 +1597,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("actions-container")
 		String actionsContainer();
 
+		@ClassName("blockquote-container")
+		String blockquoteContainer();
+
 		@ClassName("border-radius-point")
 		String borderRadiusPoint();
 
@@ -1584,6 +1610,12 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("content-list")
 		String contentList();
+
+		@ClassName("gm-style")
+		String gmStyle();
+
+		@ClassName("gm-style-iw")
+		String gmStyleIw();
 
 		String header();
 
@@ -1600,6 +1632,15 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("img-width-landing-column-wide")
 		String imgWidthLandingColumnWide();
+
+		@ClassName("is-chrome")
+		String isChrome();
+
+		@ClassName("is-opera")
+		String isOpera();
+
+		@ClassName("l-main")
+		String lMain();
 
 		@ClassName("landing-column-thin")
 		String landingColumnThin();
@@ -1624,6 +1665,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("landing-footer__social-links")
 		String landingFooter__socialLinks();
+
+		@ClassName("landing-page")
+		String landingPage();
 
 		@ClassName("landing-section-analyse")
 		String landingSectionAnalyse();
@@ -1685,9 +1729,6 @@ public interface Styles extends ClientBundle {
 		@ClassName("link-log-in")
 		String linkLogIn();
 
-		@ClassName("link-to-page-top")
-		String linkToPageTop();
-
 		@ClassName("link-to-page-top__text")
 		String linkToPageTop__text();
 
@@ -1706,6 +1747,18 @@ public interface Styles extends ClientBundle {
 		@ClassName("logo-reflection-footer")
 		String logoReflectionFooter();
 
+		@ClassName("map__info-box")
+		String map__infoBox();
+
+		@ClassName("map__info-box__down-arrow")
+		String map__infoBox__downArrow();
+
+		@ClassName("map__street-view-link")
+		String map__streetViewLink();
+
+		@ClassName("map__text-content")
+		String map__textContent();
+
 		@ClassName("no-flexbox")
 		String noFlexbox();
 
@@ -1714,6 +1767,15 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("no-scroll")
 		String noScroll();
+
+		@ClassName("no-touch")
+		String noTouch();
+
+		@ClassName("panel-left-open")
+		String panelLeftOpen();
+
+		@ClassName("panel-right")
+		String panelRight();
 
 		@ClassName("ref-button")
 		String refButton();
