@@ -8,6 +8,7 @@
 package io.reflection.app.client.component;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.HeadingElement;
@@ -75,8 +76,10 @@ public class AccordionSwitch extends Composite {
 
 			@Override
 			public void onResize(ResizeEvent event) {
-				container.getElement().addClassName("is-closed");
-				accordionContent.getStyle().setMarginTop(-Double.valueOf(accordionContent.getClientHeight()), Unit.PX);
+				if (!title.hasClassName("no-accordion-content")) {
+					container.getElement().addClassName("is-closed");
+					accordionContent.getStyle().setMarginTop(-Double.valueOf(accordionContent.getClientHeight()), Unit.PX);
+				}
 			}
 		});
 
@@ -85,36 +88,34 @@ public class AccordionSwitch extends Composite {
 	public void setEmpty(boolean isEmpty) {
 		if (isEmpty) {
 			title.addClassName("no-accordion-content");
-			subtitle.removeFromParent();
 			accordionContent.removeFromParent();
-		} else {
-
 		}
 	}
 
 	public void setFeatureComplete(boolean complete) {
-		if (complete) {
-			if (!this.getElement().hasClassName("feature-complete")) {
-				container.getElement().addClassName("feature-complete");
-			}
-		} else {
-			this.getElement().removeClassName("feature-complete");
-		}
+		container.setStyleName("feature-complete", complete);
 	}
 
 	public void setTitleText(String text) {
-		boolean hasSubtitle;
-		if (hasSubtitle = title.isOrHasChild(subtitle)) {
-			subtitle.removeFromParent();
-		}
+		subtitle.removeFromParent();
 		title.setInnerText(text);
-		if (hasSubtitle) {
-			title.appendChild(subtitle);
-		}
+		title.appendChild(subtitle);
 	}
 
 	public void setSubtitleText(String text) {
 		subtitle.setInnerText(text);
+	}
+
+	public void setSubtitleLinkHref(String href) {
+		AnchorElement emailLink = Document.get().createAnchorElement();
+		emailLink.setInnerText(subtitle.getInnerText());
+		emailLink.setHref(href);
+		subtitle.setInnerText("");
+		subtitle.appendChild(emailLink);
+	}
+
+	public void setHighlighted(boolean highlight) {
+		container.setStyleName("accordion-item-highlighted", highlight);
 	}
 
 	public void addItemIncomplete(String titleText, String subtitleText) {
@@ -143,9 +144,7 @@ public class AccordionSwitch extends Composite {
 		super.onAttach();
 
 		if (!title.hasClassName("no-accordion-content")) {
-			if (!container.getElement().hasClassName("is-closed")) {
-				container.getElement().addClassName("is-closed");
-			}
+			container.getElement().addClassName("is-closed");
 		}
 		Timer timer = new Timer() {
 			@Override
