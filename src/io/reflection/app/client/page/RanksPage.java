@@ -32,7 +32,6 @@ import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
-import io.reflection.app.client.helper.ColorHelper;
 import io.reflection.app.client.helper.FormattingHelper;
 import io.reflection.app.client.helper.ResponsiveDesignHelper;
 import io.reflection.app.client.page.part.RankSidePanel;
@@ -50,7 +49,6 @@ import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
-import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.resources.client.CssResource;
@@ -95,8 +93,6 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	public static final String ALL_TEXT = "Overview / All";
 	public static final String COMING_FROM_PARAMETER = "leaderboard";
 
-	@UiField RanksPageStyle style;
-
 	interface AllAdminCodeTemplate extends SafeHtmlTemplates {
 		AllAdminCodeTemplate INSTANCE = GWT.create(AllAdminCodeTemplate.class);
 
@@ -111,6 +107,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 	@UiField InlineHyperlink allLink;
 	@UiField SpanElement overviewAllText;
+	@UiField SpanElement paidText;
+	@UiField SpanElement grossingText;
 	@UiField InlineHyperlink freeLink;
 	@UiField InlineHyperlink grossingLink;
 	@UiField InlineHyperlink paidLink;
@@ -163,18 +161,13 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			tabs.put(PAID_LIST_TYPE, paidItem);
 			tabs.put(GROSSING_LIST_TYPE, grossingItem);
 		} else {
-			paidLink.setText(paidLink.getText() + " - coming soon");
-			paidLink.getElement().getStyle().setColor(ColorHelper.getLightGrey2());
-			paidLink.getElement().getStyle().setCursor(Cursor.DEFAULT);
-			paidItem.getStyle().setCursor(Cursor.DEFAULT);
-			grossingLink.setText(grossingLink.getText() + " - coming soon");
-			grossingLink.getElement().getStyle().setColor(ColorHelper.getLightGrey2());
-			grossingLink.getElement().getStyle().setCursor(Cursor.DEFAULT);
-			grossingItem.getStyle().setCursor(Cursor.DEFAULT);
+			paidText.setInnerText("Top Paid - coming soon");
+			paidItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
+			grossingText.setInnerText("Top Grossing - coming soon");
+			grossingItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
 		}
 
-		HTMLPanel emptyTableWidget = new HTMLPanel("<h6 class=" + style.emptyTableHeading() + ">No ranking data for filter!</h6>");
-		emptyTableWidget.setStyleName(style.emptyTableContainer());
+		HTMLPanel emptyTableWidget = new HTMLPanel("<h6>No ranking data for filter!</h6>");
 		ranksTable.setEmptyTableWidget(emptyTableWidget);
 
 		ranksTable.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
@@ -432,6 +425,10 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	// public void isAuthorisedFailure(IsAuthorisedRequest input, Throwable caught) {}
 
 	private void refreshRanks() {
+
+		ranksTable.setStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().tableOverall(), OVERALL_LIST_TYPE.equals(selectedTab));
+		ranksTable.setStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().tableAppGroup(),
+				(FREE_LIST_TYPE.equals(selectedTab) || PAID_LIST_TYPE.equals(selectedTab) || GROSSING_LIST_TYPE.equals(selectedTab)));
 
 		if (OVERALL_LIST_TYPE.equals(selectedTab)) {
 			removeAllColumns();
