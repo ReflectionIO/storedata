@@ -110,6 +110,10 @@ public class AccordionSwitch extends Composite {
 		subtitle.setInnerText(text);
 	}
 
+	public void setSubtitleHtml(String html) {
+		subtitle.setInnerHTML(html);
+	}
+
 	public void setSubtitleLinkHref(String href) {
 		AnchorElement emailLink = Document.get().createAnchorElement();
 		emailLink.setInnerText(subtitle.getInnerText());

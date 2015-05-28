@@ -118,7 +118,7 @@
 				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Leaderboard Data</h2>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.accordion}">
 					<ul>
-						<c:AccordionSwitch ui:field="accordionSwitchUK" featureComplete="true" titleText="United Kingdom" subtitleText="(1 Category)" />
+						<c:AccordionSwitch ui:field="accordionSwitchUK" featureComplete="true" titleText="United Kingdom" />
 						<c:AccordionSwitch ui:field="accordionSwitchDE" titleText="Germany" subtitleText="Coming Soon" />
 						<c:AccordionSwitch ui:field="accordionSwitchUS" titleText="USA" subtitleText="Coming Soon" />
 						<c:AccordionSwitch ui:field="accordionSwitchFR" titleText="France" subtitleText="Coming Soon" />
