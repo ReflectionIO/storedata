@@ -38,7 +38,9 @@ public class FormButton extends Button {
 	protected void onAttach() {
 		super.onAttach();
 
-		defaultText = this.getText();
+		if (defaultText == null) {
+			defaultText = this.getText();
+		}
 	}
 
 	public void setSpanClassName(String className) {

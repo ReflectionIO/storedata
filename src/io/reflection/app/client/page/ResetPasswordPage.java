@@ -45,7 +45,7 @@ public class ResetPasswordPage extends Page implements NavigationEventHandler, C
 	public ResetPasswordPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		continueToSiteLink.setHref(PageType.LoginPageType.asHref("requestinvite"));	
+		continueToSiteLink.setHref(PageType.LoginPageType.asHref("requestinvite"));
 	}
 
 	/*
@@ -62,7 +62,6 @@ public class ResetPasswordPage extends Page implements NavigationEventHandler, C
 
 		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(ChangePasswordEventHandler.TYPE, SessionController.get(), this));
-		register(DefaultEventBus.get().addHandlerToSource(ChangePasswordEventHandler.TYPE, SessionController.get(), form));
 
 	}
 
@@ -112,7 +111,7 @@ public class ResetPasswordPage extends Page implements NavigationEventHandler, C
 			form.setStatusSuccess();
 			DOMHelper.addClassName(formSubmittedSuccessPanel, Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
 		} else {
-
+			form.setStatusError();
 		}
 	}
 
@@ -124,6 +123,8 @@ public class ResetPasswordPage extends Page implements NavigationEventHandler, C
 	 * , java.lang.Throwable)
 	 */
 	@Override
-	public void changePasswordFailure(ChangePasswordRequest input, Throwable caught) {}
+	public void changePasswordFailure(ChangePasswordRequest input, Throwable caught) {
+		form.setStatusError();
+	}
 
 }
