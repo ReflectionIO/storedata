@@ -7,40 +7,53 @@
 //
 package io.reflection.app.client.part.myapps;
 
-import io.reflection.app.client.controller.SessionController;
-import io.reflection.app.client.page.PageType;
-import io.reflection.app.datatypes.shared.User;
-
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author Stefano Capuzzi (stefanocapuzzi)
  * 
  */
-public class MyAppsEmptyTable extends Composite {
+public class MyAppsEmptyTable extends Composite implements HasClickHandlers {
 
-    private static MyAppsEmptyTableUiBinder uiBinder = GWT.create(MyAppsEmptyTableUiBinder.class);
+	private static MyAppsEmptyTableUiBinder uiBinder = GWT.create(MyAppsEmptyTableUiBinder.class);
 
-    interface MyAppsEmptyTableUiBinder extends UiBinder<Widget, MyAppsEmptyTable> {}
+	interface MyAppsEmptyTableUiBinder extends UiBinder<Widget, MyAppsEmptyTable> {}
 
-    @UiField HTMLPanel linkAccount;
-    @UiField InlineHyperlink link;
+	@UiField Button button;
 
-    public MyAppsEmptyTable() {
-        initWidget(uiBinder.createAndBindUi(this));
-        User user = SessionController.get().getLoggedInUser();
-        if (user != null) {
-            link.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.LinkedAccountsPageType.toString(), user.id.toString(), "add"));
-        }
-    }
+	public MyAppsEmptyTable() {
+		initWidget(uiBinder.createAndBindUi(this));
 
-    public void setLinkAccountVisible(boolean visible) {
-        linkAccount.setVisible(visible);
-    }
+		button.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				fireEvent(event);
+			}
+		});
+	}
+
+	public void setNoDataAccounts(boolean noDataAccounts) {
+		// TODO
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.event.dom.client.HasClickHandlers#addClickHandler(com.google.gwt.event.dom.client.ClickHandler)
+	 */
+	@Override
+	public HandlerRegistration addClickHandler(ClickHandler handler) {
+		return addHandler(handler, ClickEvent.getType());
+	}
+
 }
