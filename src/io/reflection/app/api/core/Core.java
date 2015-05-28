@@ -1,4 +1,4 @@
-//  
+//
 //  Core.java
 //  storedata
 //
@@ -740,9 +740,7 @@ public final class Core extends ActionHandler {
 
 					if (output.session != null) {
 						output.session.user = user;
-					} else {
-						throw new Exception("Unexpected blank session after creating user session.");
-					}
+					} else throw new Exception("Unexpected blank session after creating user session.");
 				} else {
 					output.session = SessionServiceProvider.provide().extendSession(output.session, ISessionService.SESSION_SHORT_DURATION);
 					output.session.user = user;
@@ -1219,13 +1217,18 @@ public final class Core extends ActionHandler {
 					String error = daEx.getCause() == null ? null : daEx.getCause().getMessage();
 
 					if (error != null) {
+
 						if (error.equals("Please enter a valid vendor number."))
 							throw new InputValidationException(ApiError.InvalidDataAccountVendor.getCode(),
 									ApiError.InvalidDataAccountVendor.getMessage(dataAccountToTest.properties));
 
-						if (!error.equals("Daily reports are available only for past 30 days, please enter a date within past 30 days."))
+						if (!error.equalsIgnoreCase("Daily reports are available only for past 30 days, please enter a date within past 30 days.")
+								&& !error.equalsIgnoreCase("There is no report available to download, for the selected period")) {
+							LOG.log(Level.WARNING, "There was an unexpected error when trying to link the account. Cause: ", daEx.getCause());
+
 							throw new InputValidationException(ApiError.InvalidDataAccountCredentials.getCode(),
 									ApiError.InvalidDataAccountCredentials.getMessage(dataAccountToTest.username));
+						}
 					}
 				}
 			}
@@ -1695,7 +1698,7 @@ public final class Core extends ActionHandler {
 								|| (form == FormType.FormTypeTablet && (UPDATE_IPAD_IOS.equals(sale.typeIdentifier))) // 7T
 								|| INAPP_PURCHASE_PURCHASE_IOS.equals(sale.typeIdentifier) // IA1
 								|| INAPP_PURCHASE_SUBSCRIPTION_IOS.equals(sale.typeIdentifier) // IA9
-						) {
+								) {
 							// If type identifier != IA1 or IA9, add parent identifiers into the Map
 							if (!sale.typeIdentifier.equals(INAPP_PURCHASE_PURCHASE_IOS) && !sale.typeIdentifier.equals(INAPP_PURCHASE_SUBSCRIPTION_IOS)) {
 								parentIdItemIdLookup.put(sale.sku, sale.item.internalId);
@@ -1886,7 +1889,7 @@ public final class Core extends ActionHandler {
 								|| (form == FormType.FormTypeTablet && (UPDATE_IPAD_IOS.equals(sale.typeIdentifier))) // 7T
 								|| INAPP_PURCHASE_PURCHASE_IOS.equals(sale.typeIdentifier) // IA1
 								|| INAPP_PURCHASE_SUBSCRIPTION_IOS.equals(sale.typeIdentifier) // IA9
-						) {
+								) {
 							dateKey = keyFormat.parse(keyFormat.format(sale.begin));
 
 							// Link list of item IDs with every day of the range
