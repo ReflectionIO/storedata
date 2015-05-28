@@ -535,7 +535,10 @@ final class DataAccountService implements IDataAccountService {
 			try {
 				ITunesConnectDownloadHelper.getITunesSalesFile(dataAccount.username, dataAccount.password,
 						ITunesConnectDownloadHelper.getVendorId(dataAccount.properties), ITunesConnectDownloadHelper.DATE_FORMATTER.format(date), null, null);
-			} catch (Exception e) {
+			} catch (final Exception e) {
+				if (LOG.isLoggable(Level.WARNING)) {
+					LOG.log(Level.WARNING, String.format("Trying to verify a data account for date %s, which threw an exception", date.toString()), e);
+				}
 				throw new DataAccessException(e);
 			}
 
