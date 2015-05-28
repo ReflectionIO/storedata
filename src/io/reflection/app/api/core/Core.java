@@ -1222,13 +1222,18 @@ public final class Core extends ActionHandler {
 					String error = daEx.getCause() == null ? null : daEx.getCause().getMessage();
 
 					if (error != null) {
+
 						if (error.equals("Please enter a valid vendor number."))
 							throw new InputValidationException(ApiError.InvalidDataAccountVendor.getCode(),
 									ApiError.InvalidDataAccountVendor.getMessage(dataAccountToTest.properties));
 
-						if (!error.equals("Daily reports are available only for past 30 days, please enter a date within past 30 days."))
+						if (!error.equalsIgnoreCase("Daily reports are available only for past 30 days, please enter a date within past 30 days.")
+								&& !error.equalsIgnoreCase("There is no report available to download, for the selected period")) {
+							LOG.log(Level.WARNING, "There was an unexpected error when trying to link the account. Cause: ", daEx.getCause());
+
 							throw new InputValidationException(ApiError.InvalidDataAccountCredentials.getCode(),
 									ApiError.InvalidDataAccountCredentials.getMessage(dataAccountToTest.username));
+						}
 					}
 				}
 			}
