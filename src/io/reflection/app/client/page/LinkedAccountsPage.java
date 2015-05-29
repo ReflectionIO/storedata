@@ -397,11 +397,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 	private void setTableEmpty(boolean empty) {
 		addAnotherLinkedAccount.setEnabled(!empty);
-		if (empty) {
-			DOMHelper.addClassName(linkedAccountsTable.getElement(), style.tableLinkedAccountsDisabled());
-		} else {
-			linkedAccountsTable.getElement().removeClassName(style.tableLinkedAccountsDisabled());
-		}
+		linkedAccountsTable.setStyleName(style.tableLinkedAccountsDisabled(), empty);
 	}
 
 	private void updateViewFromLinkedAccountCount() {
