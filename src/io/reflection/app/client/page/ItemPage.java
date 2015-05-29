@@ -75,7 +75,6 @@ import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
-import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -113,7 +112,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	private String iapDescription;
 
 	// Filters
-//	@UiField FormSwitch followSwitch;
+	// @UiField FormSwitch followSwitch;
 	@UiField DateSelector dateSelector;
 	@UiField Selector storeSelector;
 	@UiField Selector countrySelector;
@@ -170,7 +169,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	private static final String SERIES_ID_DOWNLOAD_CUMULATIVE_SECONDARY = "downloadCumulativeSecondary";
 
 	@UiField AnchorElement revealContentFilter;
-//	@UiField AnchorElement revealContentStore;
+	// @UiField AnchorElement revealContentStore;
 
 	@UiField ButtonElement dnwBtn;
 	@UiField ButtonElement dnwBtnMobile;
@@ -187,7 +186,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		if (!SessionController.get().isLoggedInUserAdmin()) {
 			revenueTable2.removeFromParent();
 
-//			followSwitch.removeFromParent();
+			// followSwitch.removeFromParent();
 			accuracySwitch.removeFromParent();
 			eventsSwitch.removeFromParent();
 			oneMMovingAverageSwitch.removeFromParent();
@@ -205,7 +204,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		revenueTable.removeFromParent();
 		setRevenueDownloadTabsEnabled(SessionController.get().isLoggedInUserAdmin());
 
-//		ResponsiveDesignHelper.nativeRevealContent(revealContentStore);
+		// ResponsiveDesignHelper.nativeRevealContent(revealContentStore);
 		ResponsiveDesignHelper.nativeRevealContent(revealContentFilter);
 
 		tablePlaceholder.add(itemRevenuePlaceholder);
@@ -899,18 +898,20 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 	private void setRevenueDownloadTabsEnabled(boolean enable) {
 		if (enable) {
+			revenueText.setInnerText("Revenue");
+			revenueItem.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
 			revenueLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
 					REVENUE_CHART_TYPE, comingPage, filterContents));
+			downloadsText.setInnerText("Downloads");
+			downloadsItem.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
 			downloadsLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
 					DOWNLOADS_CHART_TYPE, comingPage, filterContents));
 		} else {
-			revenueLink.getElement().setInnerText("Revenue - coming soon");
-			revenueLink.getElement().getStyle().setCursor(Cursor.DEFAULT);
-			revenueLink.getElement().getStyle().setColor(ColorHelper.getLightGrey2());
-			downloadsLink.getElement().setInnerText("Downloads - coming soon");
-			downloadsLink.getElement().getStyle().setCursor(Cursor.DEFAULT);
-			downloadsLink.getElement().getStyle().setColor(ColorHelper.getLightGrey2());
+			revenueText.setInnerText("Revenue - coming soon");
+			revenueItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
 			revenueLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
+			downloadsText.setInnerText("Downloads - coming soon");
+			downloadsItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
 			downloadsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 			for (String key : tabs.keySet()) {
 				tabs.get(key).removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isActive());
