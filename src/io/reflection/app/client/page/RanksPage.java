@@ -533,6 +533,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		if (selected != null) {
 			selected.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isActive());
 		}
+
+		ResponsiveDesignHelper.makeTabsResponsive();
 	}
 
 	@UiHandler("viewAllBtn")
@@ -650,8 +652,6 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		// register(EventController.get().addHandlerToSource(IsAuthorisedEventHandler.TYPE, SessionController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(GetAllTopItemsEventHandler.TYPE, RankController.get(), this));
-
-		ResponsiveDesignHelper.makeTabsResponsive();
 
 	}
 
