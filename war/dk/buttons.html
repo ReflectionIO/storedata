@@ -17,7 +17,14 @@
 		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main.css" />
 	<!--<![endif]-->
 	<link rel="stylesheet" href="js/vendor/jquery.mCustomScrollbar.css" />
-</head>
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
+<script>
+  WebFont.load({
+    google: {
+      families: ['Open Sans:400,600,700,400italic,600italic', 'Source Sans Pro:400,600,700', 'Lato:400,700,400italic']
+    }
+  });
+</script></head>
 <body class="panel-left-open">
 	<!--[if (lt IE 9)]>
       <div class="window-warning">
@@ -93,6 +100,35 @@
 									// Active<br />
 									&lt;button class="ref-button--function-small"&gt;Lorem&lt;/button&gt;<br />
 									&lt;button class="ref-button--function-small--wide"&gt;Lorem&lt;/button&gt;
+								</code>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="grid__row dk-component-row">
+					<div class="grid__column grid__column--one-third">
+						<h2 class="heading-style--heading-three">Secondary Button With Icon</h2>
+						<p></p>
+					</div>
+					<div class="grid__row-container grid__column grid__column--two-thirds">
+						<div class="button-example-container">
+							<h2 class="heading-style--heading-six">Disabled</h2>
+							<button class="ref-button--function-small ref-button--function-small--with-icon" disabled><span class="ref-icon-before ref-icon-before--cloud">Download</span></button>
+							<button class="ref-button--function-small ref-button--function-small--with-icon" disabled><span class="ref-icon-before ref-icon-before--my-apps">View all Apps</span></button>
+						</div>
+						<div class="button-example-container">
+							<h2 class="heading-style--heading-six">Active</h2>
+							<button class="ref-button--function-small ref-button--function-small--with-icon"><span class="ref-icon-before ref-icon-before--cloud">Download</span></button>
+							<button class="ref-button--function-small ref-button--function-small--with-icon"><span class="ref-icon-before ref-icon-before--my-apps">View all Apps</span></button>
+						</div>
+						<div class="grid__column button-example-code-container">
+							<div class="code-box">
+								<code>
+									// Disabled<br />
+									&lt;button class="ref-button--function-small ref-button--function-small--with-icon" disabled&gt;&lt;span class="ref-icon-before ref-icon-before--cloud"&gt;Download&lt;/span&gt;&lt;/button&gt;<br /><br />
+									// Active<br />
+									&lt;button class="ref-button--function-small ref-button--function-small--with-icon"&gt;&lt;span class="ref-icon-before ref-icon-before--cloud"&gt;Download&lt;/span&gt;&lt;/button&gt;
 								</code>
 							</div>
 						</div>
@@ -183,7 +219,7 @@
 						</div>
 						<div class="button-example-container--full-width">
 							<div>
-								<button class="ref-button--full-width ref-button--with-icon"><span class="ref-icon-before ref-icon-before--leaderboard">Lorem</span></button>
+								<button class="ref-button--full-width ref-button--full-width--with-icon"><span class="ref-icon-before ref-icon-before--leaderboard">Lorem</span></button>
 							</div>
 							<h2 class="heading-style--heading-six">Button with Icon</h2>
 						</div>
@@ -217,7 +253,7 @@
 									// Error State<br />
 									&lt;input type="submit" class="ref-button--full-width ref-button--error" value="Oops, something went wrong" /&gt;<br /><br />
 									// Button with Icon<br />
-									&lt;button class="ref-button--full-width ref-button--with-icon"&gt;<br />
+									&lt;button class="ref-button--full-width ref-button--full-width--with-icon"&gt;<br />
 									&nbsp;&lt;span class="ref-icon-before ref-icon-before--leaderboard"&gt;Lorem&lt;/span&gt;<br />
 									&lt;/button&gt;
 								</code>

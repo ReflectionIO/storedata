@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="utf-8" />
+	<title>Reflection, App</title>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">	
+	<!--[if (gte IE 9)|(IEMobile)|(!IE)]><!-->
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main.css" />
+	<!--<![endif]-->
+	<!--[if (lt IE 9)]>
+		<script src="js/vendor/html5shiv.min.js"></script>
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main-ie8.css" />
+	<![endif]-->
+ 	<!--[if !lt IE 9]><!-->
+		<script src="js/vendor/picturefill.2.2.0.min.js" async></script>
+	<!-- <![endif]-->
+	<link rel="stylesheet" href="js/vendor/jquery.mCustomScrollbar.css" />
+	<link type="text/css" media="screen" rel="stylesheet" href="css/responsive-tables.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
+<script>
+  WebFont.load({
+    google: {
+      families: ['Open Sans:400,600,700,400italic,600italic', 'Source Sans Pro:400,600,700', 'Lato:400,700,400italic']
+    }
+  });
+</script></head>
+<body class="panel-left-open">
+	<!--[if (lt IE 9)]>
+      <div class="window-warning">
+  			<p>Uh oh... Reflection doesn't work in this browser. &nbsp; &nbsp;<a href="http://outdatedbrowser.com/en" target="_blank">Download a compatible browser</a></p>
+  		</div>
+  <![endif]-->
+
+  <header id="js-component-import--global-header" class="global-header"></header>
+  
+	<div id="js-component-import--panel-left" class="panel-left js-custom-scrollbar" data-mcs-theme="minimal-dark"></div>
+
+	<div class="l-page-container">
+		<div id="main" class="l-main" role="main">
+			<div class="grid-container page-app">
+				<header class="page-app__header">
+					<img src="images/placeholder-app-icon.png" alt="Monument Valley app icon" class="app-icon" />
+					<div class="app-details">
+						<h1 class="heading-style--heading-three app-title">Monument Valley</h1>
+						
+							<h2 class="app-creator">By <a href="#">Ustwo</a></h2>
+							<span class="app-price">&pound; 2.99 + IAP</span>
+						
+					</div>
+				</header>
+				<div class="app-user-functions-container">
+					<a href="#" class="show-hide-link js-reveal-element" data-closed-text="Less..." data-open-text="More...">More...</a>
+					<form class="reveal-element">
+						<div class="filter-switch">							
+							<span>Follow <span>(10.3k)</span></span>
+							<div class="can-toggle can-toggle--size-large">
+							  <input id="e" type="checkbox">
+							  <label for="e">
+							    <div class="can-toggle__switch" data-checked="Y" data-unchecked="N"></div>
+							  </label>
+							</div>
+						</div>
+						<a href="#">View in Appstore</a>
+					</form>
+				</div>
+				<div class="tabs">
+					<ul class="tabs-container default-tabs-transition tabs-to-dropdown">
+						<li class="grid__column grid__column--one-quarter tabs__tab is-active js-tab-select">
+							<div class="tab-animate-active"></div>
+							<a href="#tab-content-overall" class="tabs__link">
+								<span>
+									<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path d="M19.5,4.7L0,6.9v13.9l13.9,4.9L32,20.2V6.4L19.5,4.7z M30,15.1l-16.1,4.6L2,15.9v-3l11.9,3.4
+		L30,12.2V15.1z M13.9,12L30,8.4v2.8l-16.1,4.2L2,11.9v-3L13.9,12z M27.7,7.9l-13.8,3.1L4.2,8.4l15.3-1.7L27.7,7.9z M13.9,23.6
+		L2,19.4V17l11.9,3.8L30,16.2v2.6L13.9,23.6z"/></svg>
+		 							<span>Revenue</span>
+		 						</span>
+							</a>
+						</li>
+						<li class="grid__column grid__column--one-quarter tabs__tab js-tab-select">
+							<div class="tab-animate-active"></div>
+							<a href="#tab-content-free" class="tabs__link">
+								<span>
+									<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path fill-rule=evenodd clip-rule=evenodd d="M32,16.5c0,3.6-2.7,6.5-6.7,6.5v0h-6v-2h6.5
+		c2.5,0,4.5-2,4.5-4.5c0-1.6-0.8-3-2.3-3.9c-1.4-0.8-1.5-0.9-0.9-2.4c0.1-0.3,0.1-0.5,0.1-0.8c0-1.4-1.1-2.5-2.5-2.5
+		c0,0-0.7,0-1.4,0.2c-1.1,0.5-1.3,0-1.8-1.2C20.4,3.6,17.9,2,15.2,2c-3.6,0-6.6,2.7-7,6.3c-0.1,1.4-0.2,1.4-1.7,1.8
+		C4,10.6,2,12.9,2,15.5c0,3,2.3,5.5,5.3,5.5v0h6v2h-6v0c-4,0-7.2-3.4-7.2-7.5c0-3.7,2.7-6.7,6.2-7.4c0.4-4.6,4.4-8.1,9-8.1
+		c3.6,0,6.7,2.1,8.1,5.2C23.8,5.1,24.2,5,24.7,5c2.5,0,4.5,2,4.5,4.5c0,0.5-0.2,1-0.3,1.4C30.8,12,32,14.1,32,16.5z M19,25.8
+		l-1.8,1.8V14.3c0-0.6-0.4-1.1-1-1.1c-0.6,0-1,0.5-1,1.1v13.3l-1.9-1.8c-0.4-0.4-1.2-0.4-1.6,0c-0.4,0.4-0.5,1.1,0,1.6l3.1,3.1
+		c0.4,0.4,0.8,0.5,1.3,0.5c0.5,0,0.9-0.2,1.3-0.5l3.1-3.1c0.4-0.4,0.4-1.1,0-1.6C20.2,25.4,19.5,25.4,19,25.8z"/></svg>
+									<span>Downloads</span></span>
+							</a>
+						</li>
+						<li class="grid__column grid__column--one-quarter tabs__tab js-tab-select">
+							<div class="tab-animate-active"></div>
+							<a href="#tab-content-paid" class="tabs__link">
+								<span>
+									<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path d="M23,12V4H9v6H0v18h32V12H23z M11,6h10v7.3l0,0V26H11V12.3l0,0V6z M2,12h8v14H2V12z M30,26h-8V14h8
+		V26z"/></svg>
+									<span>Rank</span></span>
+							</a>
+						</li>
+						<li class="grid__column grid__column--one-quarter tabs__tab js-tab-select">
+							<div class="tab-animate-active"></div>
+							<a href="#tab-content-grossing" class="tabs__link">
+								<span>
+									<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path d="M4,10c0,1.1-0.9,2-2,2s-2-0.9-2-2s0.9-2,2-2S4,8.9,4,10z M32,9H7v2h25V9z M2,14
+		c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S3.1,14,2,14z M32,15H7v2h25V15z M2,20c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S3.1,20,2,20z
+		 M32,21H7v2h25V21z"/></svg>
+									<span>App Details</span></span>
+							</a>
+						</li>
+					</ul>
+				</div>
+				<div class="grid__column grid__column--full-width filters-container filter-container--app">
+					<form class="forms--mid-theme">
+						<div class="date-selection-filter-container">
+							<div class="calendar-container">
+									<div class="date-select-container">
+										<div class="form-field form-field--date-select form-field--date-select--no-icon">
+											<input type="text" name="date-single" id="date-single" value="01 Jan 2015" disabled/>
+										</div>
+									</div>
+									<div class="date-select-to-indicator text--disabled"></div>
+									<div class="date-select-container">
+										<div class="form-field form-field--date-select form-field--date-select--no-icon">
+											<input type="text" name="date-single-to" id="date-single-to" value="26 Feb 2015" disabled/>
+										</div>
+									</div>
+							</div>						
+							<button class="ref-button--cta-small refresh-button" disabled><span class="ref-icon-before ref-icon-before--refresh">Refresh</span></button>
+							<span class="or-text">or</span>
+							<div class="form-field form-field--select time-period-select form-field--select-disabled">
+								<div class="page-overlay"></div>				
+								<select class="js-field--select reflection-select--filter" disabled>
+							    <option value="" disabled selected>Time Period</option>
+							    <option value="time1">1 Week</option>
+							    <option value="time2">2 Weeks</option>
+							    <option value="time3">4 Weeks</option>
+							    <option value="time4">6 Weeks</option>
+							    <option value="time5">8 Weeks</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="filter-toggle">
+							<div class="toggle">
+								<input type="radio" id="calendar" name="radiogroupname" checked />
+								<label for="calendar" class="toggle-calendar">
+									<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path d="M30.3,5.2c-0.5-0.4-1-0.7-1.6-0.7h-2.3V2.8c0-0.8-0.3-1.4-0.8-2C25,0.3,24.3,0,23.5,0h-1.2
+c-0.8,0-1.5,0.3-2,0.8c-0.6,0.6-0.8,1.2-0.8,2v1.7h-6.9V2.8c0-0.8-0.3-1.4-0.8-2C11.1,0.3,10.4,0,9.6,0H8.5C7.7,0,7,0.3,6.4,0.8
+c-0.6,0.6-0.8,1.2-0.8,2v1.7H3.3c-0.6,0-1.2,0.2-1.6,0.7C1.2,5.7,1,6.2,1,6.8v22.6c0,0.6,0.2,1.1,0.7,1.6c0.5,0.4,1,0.7,1.6,0.7
+h25.4c0.6,0,1.2-0.2,1.6-0.7c0.5-0.4,0.7-1,0.7-1.6V6.8C31,6.2,30.8,5.7,30.3,5.2z M8.5,29.4H3.3v-5.1h5.2V29.4z M8.5,23.2H3.3v-5.7
+h5.2V23.2z M8.5,16.4H3.3v-5.1h5.2V16.4z M8.1,8.3C8,8.2,7.9,8.1,7.9,7.9V2.8c0-0.2,0.1-0.3,0.2-0.4c0.1-0.1,0.2-0.2,0.4-0.2h1.2
+c0.2,0,0.3,0.1,0.4,0.2c0.1,0.1,0.2,0.2,0.2,0.4v5.1c0,0.2-0.1,0.3-0.2,0.4C9.9,8.4,9.8,8.5,9.6,8.5H8.5C8.3,8.5,8.2,8.4,8.1,8.3z
+ M15.4,29.4H9.6v-5.1h5.8V29.4z M15.4,23.2H9.6v-5.7h5.8V23.2z M15.4,16.4H9.6v-5.1h5.8V16.4z M22.4,29.4h-5.8v-5.1h5.8V29.4z
+ M22.4,23.2h-5.8v-5.7h5.8V23.2z M22.4,16.4h-5.8v-5.1h5.8V16.4z M21.9,8.3c-0.1-0.1-0.2-0.2-0.2-0.4V2.8c0-0.2,0.1-0.3,0.2-0.4
+c0.1-0.1,0.2-0.2,0.4-0.2h1.2c0.2,0,0.3,0.1,0.4,0.2c0.1,0.1,0.2,0.2,0.2,0.4v5.1c0,0.2-0.1,0.3-0.2,0.4c-0.1,0.1-0.2,0.2-0.4,0.2
+h-1.2C22.2,8.5,22.1,8.4,21.9,8.3z M28.7,29.4h-5.2v-5.1h5.2V29.4z M28.7,23.2h-5.2v-5.7h5.2V23.2z M28.7,16.4h-5.2v-5.1h5.2V16.4z"/></svg>
+									<img src="images/blank-image.png" alt="" />
+								</label>
+							</div>
+							<div class="toggle">
+								<input type="radio" id="map" name="radiogroupname" />
+								<label for="map">
+									<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path d="M16,0C7.2,0,0,7.2,0,16c0,8.8,7.2,16,16,16s16-7.2,16-16C32,7.2,24.8,0,16,0z M1.5,16
+c0-2.9,0.9-5.6,2.3-7.8c0.1,0.1,0.2,0,0.3,0.1c0,0.2,0,0.5,0,0.7c-0.2,0.9,0.4,1.8,1.2,1.9c0.1,0.5-0.2,0.6,0.3,1.3
+c0,0.1,0,0.3,0.1,0.4c0.1,0.1,0.3,0.2,0.5,0.3c0.5,0.3,0.4,0.9,0.2,1.4s-0.6,0.8-0.8,1.3c-0.3,0.8-0.3,1.8,0.3,2.4
+c0.2,0.3,0.5,0.9,0.8,1s0.4,0.3,0.5,0.6c0.1,0.5,0.3,0.8,0.3,1.3c0,0.4-0.2,1.1-0.2,1.5c0,0.4,0.2,0.3,0.1,0.5
+c0,0.2-0.1,0.1-0.2,0.4c-0.1,0.6,0,1.7,0.1,2.1c0.2,1.5,1.1,2.7,2,2.6c0.3-0.7-0.4-1.5-0.1-2.2c0.1-0.3,0.3-0.5,0.5-0.7
+c1-0.8,1.8-1.5,2.4-2.5c0.1-0.1,0.2-0.4,0.3-0.5c0.1-0.1,0.3-0.1,0.5-0.1c0.7-0.1,1.1-0.5,1.4-1.1c0.3-0.6,0.3-1.1,0.9-1.7
+c0.1-0.1,0.2-0.5,0.3-0.6c0.3-0.5-0.1-1.2-0.6-1.5c-0.5-0.3-1-0.4-1.4-0.7c-0.6-0.4-0.6-1-1-1.5c-0.4-0.5-1.1-0.9-1.7-1.2
+c-0.7-0.4-0.7-0.7-1.9-1.2c-0.1-0.1-0.5-0.1-0.6,0c-0.1,0-0.2,0.2-0.4,0.3c-0.4,0.4-1.3,0.2-1.5-0.4c-0.1-0.3,0-0.5,0-0.7
+c-0.1-0.3-0.1-0.7-0.4-0.6c-0.1-0.4,0.6-0.1,0.6-0.7c0.1-0.5-0.3-0.1-0.8-0.4C5.4,9.8,5.4,9,5.6,8.7c0.2-0.6,0.3-0.3,0.6-0.5
+C6.6,7.8,7.4,7.5,8,7.8C8.4,8.1,8.4,9,8.6,9.1C8.8,9.3,9,9,9,8.8c0-0.2-0.1-0.6,0-0.8c0.1-0.1,0.2-0.2,0.3-0.3
+c1.1-0.8,2.4-1.3,3.7-1.4c0.1,0,0.4,0,0.5-0.1c0.2-0.2,0.1-0.5,0.4-0.5c0.2,0,0.4,0.3,0.7,0.3c0.3,0.1,0.6-0.4,0.6-0.7
+c0-0.3-0.1-0.7,0-1c0.1-0.1,0.1-0.3,0.1-0.4c0-0.1-0.1-0.1-0.2-0.1c-0.2-0.1-0.3-0.5-0.7-0.4c-0.4,0.2-0.7,0.2-1.1,0.4
+c-0.3,0.2-0.5,0.5-1,0.6c-0.2-0.4,0-0.9,0.3-1.2C13.1,3,13.5,3,13.9,3c0.2,0,0.4-0.1,0.6,0c0.1,0,0.3,0.2,0.4,0.2
+c0.3,0.2,0.6,0,0.8-0.3s0.4-0.5,0.2-0.8C16,1.9,16.2,2,16.3,2.2c0.1,0.2-0.1,0.4-0.2,0.6c-0.4,1,0.4,2,0.8,1.9
+c0.5-0.1,0.9-1.2,1.5-1.4c0.2-0.1,0.4-0.1,0.5-0.2c0.2-0.2,0.2-0.4,0.3-0.7c0.1-0.2,0.4-0.3,0.7-0.4c1.4,0.4,2.6,1,3.8,1.7
+c0,0,0,0,0,0c-0.1,0-0.2,0-0.3,0c-0.7-0.1-0.9,0.5-0.7,1.2c0.2,0.5,0.6,0.8,1.1,1c0.2,0.1,0.6,0.1,0.7,0.3c0,0.1-0.1,0.3-0.1,0.3
+c0.1,0.5-0.1,0.8-0.5,1.1c-0.4,0.3-1.1,0.2-1.4,0.5c-0.3,0.3,0.2,1.2,0.6,1.5c0.4,0.4,1.2,0.3,1.5-0.1c0.2-0.3,0-0.6,0.1-0.8
+c0.6,0.1,0.9,0.3,1.1,0.8c0,0.1,0.2,0.1,0.3,0.1c0.3,0.1,0.4-0.3,0.5-0.1c0,0.2,0.1,0.3,0.2,0.4c0.2,0.1,0.2-0.1,0.4,0
+c0.2,0.1,0.3,0.5,0.6,0.5s0.6,0,0.8,0.2c0.1,0.2,0.2,0.4,0.1,0.6c-0.1,0.2-0.9,0.1-1.4-0.1s-0.6-0.5-1.1-0.8c-0.8-0.4-2.4-0.3-3.6,0
+c-0.9,0.3-1.1,0.6-1.7,1.3c-0.1,0.1-0.2,0.5-0.3,0.7c-0.1,0.2-0.1,0.4-0.1,0.6c-0.2,1-0.7,2.3-0.2,3.1c0.2,0.4,0.6,0.6,1,0.8
+c0.5,0.4,0.8,0.7,1.3,0.8c0.4,0.1,1,0,1.3,0c0.5,0,1,0.1,1.5,0.4c-0.3,0.7-0.4,1.9-0.3,2.3c0,0.3,0.2,0.4,0.2,0.7
+c0.2,1.1-1.6,1.8-1.2,2.9c0.1,0.2,0.2,0.5,0.2,0.8c0,0.9-0.7,1.3-0.8,2c-0.1,0.4,0,0.6,0,1c0,0.2,0,0.3-0.1,0.5
+c-2.2,1.4-4.9,2.3-7.8,2.3C8,30.5,1.5,24,1.5,16z"/></svg>
+									<img src="images/blank-image.png" alt="" />
+								</label>
+							</div>
+						</div>
+
+						<div class="form-field form-field--select store-select form-field--select-disabled">
+							<div class="page-overlay"></div>
+							<select class="js-field--select reflection-select--filter reflection-select--right" disabled>
+						    <option value="" disabled selected>App Store</option>
+						    <option value="b0">All Stores</option>
+						    <option value="b1">iPad Store</option>
+						    <option value="b2">iPhone Store</option>
+							</select>
+						</div>
+						<div class="form-field form-field--select country-select form-field--select-disabled">
+							<div class="page-overlay"></div>			
+							<select class="js-field--select reflection-select--filter disabled">
+						    <option value="" disabled selected>Country</option>
+						    <option value="a0">All Countries</option>
+						    <option value="a1">Japan</option>
+						    <option value="a2">United States</option>
+						    <option value="a3">China</option>
+						    <option value="a4">Germany</option>
+						    <option value="a5">France</option>
+						    <option value="a6">United Kingdom</option>
+						    <option value="a7">Italy</option>
+							</select>
+						</div>
+						
+						<div class="filters-group-graph-options">
+							<a href="#" class="show-hide-link ref-icon-after ref-icon-after--angle-down js-reveal-element">Show / Hide Options</a>
+							<div class="reveal-element">
+								<div class="filter-switch filter-switch--small filter-switch--disabled">
+									<span>Accuracy</span>
+									<div class="can-toggle can-toggle--size-small">
+									  <input id="accuracy" type="checkbox" disabled>
+									  <label for="accuracy">
+									    <div class="can-toggle__switch" data-checked="Y" data-unchecked="N"></div>
+									  </label>
+									</div>
+								</div>
+								<div class="filter-switch filter-switch--small filter-switch--disabled">
+									<span>Events</span>
+									<div class="can-toggle can-toggle--size-small">
+									  <input id="events" type="checkbox" disabled>
+									  <label for="events">
+									    <div class="can-toggle__switch" data-checked="Y" data-unchecked="N"></div>
+									  </label>
+									</div>
+								</div>
+								<div class="filter-switch filter-switch--small filter-switch--disabled">
+									<span>Overlay Downloads</span>
+									<div class="can-toggle can-toggle--size-small">
+									  <input id="overlaydownloads" type="checkbox" disabled>
+									  <label for="overlaydownloads">
+									    <div class="can-toggle__switch" data-checked="Y" data-unchecked="N"></div>
+									  </label>
+									</div>
+								</div>
+								<div class="filter-switch filter-switch--small filter-switch--disabled">
+									<span>Cumulative Chart</span>
+									<div class="can-toggle can-toggle--size-small">
+									  <input id="cumulative" type="checkbox" disabled>
+									  <label for="cumulative">
+									    <div class="can-toggle__switch" data-checked="Y" data-unchecked="N"></div>
+									  </label>
+									</div>
+								</div>
+								<div class="filter-switch filter-switch--small filter-switch--disabled">
+									<span>1M Moving Average</span>
+									<div class="can-toggle can-toggle--size-small">
+									  <input id="average" type="checkbox" disabled>
+									  <label for="average">
+									    <div class="can-toggle__switch" data-checked="Y" data-unchecked="N"></div>
+									  </label>
+									</div>
+								</div>
+								<div class="filter-switch filter-switch--small filter-switch--disabled">
+									<span>Overlay Apps (0/5)</span>
+									<div class="can-toggle can-toggle--size-small">
+									  <input id="overlayapps" type="checkbox" disabled>
+									  <label for="overlayapps">
+									    <div class="can-toggle__switch" data-checked="Y" data-unchecked="N"></div>
+									  </label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="graph-container full-page-message">
+					<div class="grid__column grid__column--five-columns">
+						<svg class="svg-warning-laptop" version="1.1" viewBox="0 0 70.9 49.6" enable-background="new 0 0 70.9 49.6" xml:space="preserve"><g><path fill="none" stroke="#6D69C5" stroke-width="2.6788" stroke-miterlimit="10" d="M2,46.7"/><path fill="none" stroke="#6D69C5" stroke-width="3.528089e-02" stroke-miterlimit="10" d="M68.8,46.7"/><line fill="none" stroke="#A0A0A9" stroke-width="1.0715" stroke-miterlimit="10" x1="7.1" y1="37.9" x2="64.5" y2="37.9"/><rect x="10.1" y="4.2" fill="none" stroke="#A0A0A9" stroke-miterlimit="10" width="50.7" height="30.8"/><g><path fill="#A0A0A9" d="M60.8,2c1.2,0,1.9,0.9,1.9,2c0,1,0,32.9,0,33.5s-0.2,0.9-0.2,0.9l6.3,6.3c0,0,0,1.9,0,2c-0.1,0.2-1.8,0.9-2.9,0.9c-0.7,0-29.8,0-30.5,0c0,0-29.8,0-30.5,0c-1.2,0-2.9-0.7-2.9-0.9c0-0.1,0-2,0-2l6.3-6.3c0,0-0.2-0.3-0.2-0.9S8.1,5,8.1,4c0-1.1,0.8-2,1.9-2c1,0,25.3,0,25.3,0h0C35.4,2,59.7,2,60.8,2 M35.4,47.6L35.4,47.6C35.4,47.6,35.4,47.6,35.4,47.6 M60.8,0H35.4H10.1C7.9,0,6.1,1.8,6.1,4v33.5c0,0.1,0,0.2,0,0.2l-5.6,5.5L0,43.9v0.8v2V47l0.1,0.3c0.6,2.1,4.8,2.3,4.9,2.3h30.5h30.5c0,0,4.2-0.2,4.9-2.3l0.1-0.3v-0.3v-2v-0.8l-0.6-0.6l-5.6-5.5c0-0.1,0-0.2,0-0.2V4C64.7,1.8,63,0,60.8,0L60.8,0z"/></g><polyline fill="none" stroke="#A0A0A9" stroke-width="1.5" stroke-miterlimit="10" points="11.1,37.9 6.4,43.1 64.2,43.1 59.9,37.9 "/><path fill="none" stroke="#A0A0A9" stroke-width="0.4209" stroke-miterlimit="10" d="M24.7,37.9"/><path fill="none" stroke="#A0A0A9" stroke-width="0.4209" stroke-miterlimit="10" d="M22.8,42.7"/><path fill="none" stroke="#ACB0C6" stroke-width="0.4209" stroke-miterlimit="10" d="M61.9,40.4"/><path fill="none" stroke="#A0A0A9" stroke-width="0.4209" stroke-miterlimit="10" d="M9.8,40.4"/><path fill="none" stroke="#A0A0A9" stroke-width="0.4209" stroke-miterlimit="10" d="M61.3,39.2"/><path fill="none" stroke="#A0A0A9" stroke-width="0.4209" stroke-miterlimit="10" d="M10.1,39.2"/><path fill="none" stroke="#ACB0C6" stroke-width="0.4209" stroke-miterlimit="10" d="M62.5,41.7"/><path fill="none" stroke="#ACB0C6" stroke-width="0.4209" stroke-miterlimit="10" d="M8,41.7"/></g><path fill="#9F9FA9" d="M47.3,28L36.4,9.6C36.2,9.2,35.8,9,35.4,9c-0.4,0-0.7,0.2-0.9,0.5l-11,18.5c-0.2,0.3-0.2,0.7,0,1.1c0.2,0.3,0.6,0.5,0.9,0.5h21.9c0.6,0,1.1-0.5,1.1-1.1C47.5,28.4,47.4,28.2,47.3,28z M26.3,27.6l9.1-15.4l9.1,15.4L26.3,27.6L26.3,27.6z M34.3,16.9v4.7c0,0.6,0.5,1.1,1.1,1.1c0.6,0,1.1-0.5,1.1-1.1v-4.7c0-0.6-0.5-1.1-1.1-1.1C34.8,15.9,34.3,16.3,34.3,16.9z M35.4,23.6c-0.4,0-0.7,0.1-1,0.4c-0.3,0.2-0.4,0.6-0.4,0.9c0,0.3,0.1,0.7,0.4,0.9c0.3,0.2,0.6,0.4,1,0.4c0.4,0,0.7-0.1,1-0.4c0.3-0.2,0.4-0.6,0.4-0.9c0-0.3-0.1-0.7-0.4-0.9C36.1,23.8,35.8,23.6,35.4,23.6z"/></svg>
+						<h2 class="heading-style--heading-three">App is Outside Top 200</h2>
+						<p>There's no data to show as this app is currently ranked outside of the top 200 that we track at the moment.</p>
+						<p><br />An app currently requires at least 220,000 downloads and £400,000 of revenue to break into the top 200.</p>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+
+	<div id="js-component-import--account-container" class="panel-right-container js-account-container"></div>
+	<div id="js-component-import--search-container" class="panel-right-container js-search-container"></div>
+
+ 	<script src="js/vendor/jquery-1.11.1.min.js"></script>
+ 	<script src="js/vendor/jquery-ui.custom.min.js"></script>
+ 	<script src="js/vendor/handlebars-v2.0.0.js"></script>
+ 	<script src="js/templates/templates.js"></script>
+	<script src="js/vendor/modernizr.2.8.3.custom.min.js"></script>
+	<script type="text/javascript" src="js/vendor/responsive-tables.js"></script>
+	<!--[if IE 9]>
+		<script src="js/vendor/jquery.mCustomScrollbar.concat.min.js"></script>
+	<![endif]-->
+
+	<div id="js-appendScriptsContainer"></div>
+
+	<script src="js/application-global-modules-logged-in.js"></script>
+  <script src="js/application.js"></script>
+  <script>
+  	function initScripts() {
+  		new AppPage();  		
+
+  		// FRONT END DEMO JS ONLY FROM THIS POINT
+  		$('.can-be-sorted').on("click", function() {
+  			var $this = $(this), siblingSortCells = $this.siblings('.can-be-sorted');
+  			if($this.hasClass('is-descending')) {
+  				$this.toggleClass('is-descending is-ascending');
+  			}
+  			else if($this.hasClass('is-ascending')) {
+  					$this.removeClass('is-ascending');
+  			}
+  			else {
+  				$this.addClass('is-descending');
+  			}
+  			siblingSortCells.removeClass('is-ascending is-descending');
+  		});
+
+  		$('.date-select-container input').on("focus", function(){
+  			$('.refresh-button').removeAttr("disabled");
+  		});
+  	}
+
+  	window.onready = initScripts();
+  </script>
+</body>
