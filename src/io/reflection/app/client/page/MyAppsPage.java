@@ -17,6 +17,8 @@ import io.reflection.app.api.core.shared.call.event.GetLinkedAccountsEventHandle
 import io.reflection.app.api.core.shared.call.event.GetSalesRanksEventHandler;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.MiniAppCell;
+import io.reflection.app.client.component.DateSelector;
+import io.reflection.app.client.component.Selector;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.FilterController.Filter;
 import io.reflection.app.client.controller.ItemController;
@@ -29,13 +31,17 @@ import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.dataprovider.UserItemProvider;
 import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
-import io.reflection.app.client.page.part.MyAppsTopPanel;
+import io.reflection.app.client.helper.FilterHelper;
+import io.reflection.app.client.helper.FormHelper;
+import io.reflection.app.client.helper.ResponsiveDesignHelper;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.SimplePager;
+import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.client.part.datatypes.MyApp;
 import io.reflection.app.client.part.myapps.MyAppsEmptyTable;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.client.res.Styles;
+import io.reflection.app.client.res.Styles.ReflectionMainStyles;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.shared.util.DataTypeHelper;
@@ -44,14 +50,19 @@ import java.util.Map;
 
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.cellview.client.LoadingStateChangeEvent;
+import com.google.gwt.user.cellview.client.LoadingStateChangeEvent.LoadingState;
 import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
@@ -67,23 +78,16 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 
 	interface MyAppsPageUiBinder extends UiBinder<Widget, MyAppsPage> {}
 
-	interface MyAppsPageStyle extends CssResource {
-		String red();
-
-		String green();
-
-		String silver();
-	}
-
 	UserItemProvider userItemProvider = new UserItemProvider();
-
-	@UiField MyAppsPageStyle style;
 
 	@UiField(provided = true) CellTable<MyApp> appsTable = new CellTable<MyApp>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) SimplePager simplePager = new SimplePager(false, false);
 
-	@UiField MyAppsTopPanel myAppsTopPanel;
-	// @UiField MyAccountSidePanel myAccountSidePanel;
+	@UiField Selector accountName;
+	@UiField Selector category;
+	@UiField Selector appStore;
+	@UiField Selector country;
+	@UiField DateSelector dateSelector;
 
 	public static final String COMING_FROM_PARAMETER = "myapps";
 
@@ -101,15 +105,35 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	private Column<MyApp, SafeHtml> columnRevenue;
 	private Column<MyApp, SafeHtml> columnIap;
 
+	private ReflectionMainStyles style = Styles.STYLES_INSTANCE.reflectionMainStyle();
+
 	public MyAppsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		Styles.STYLES_INSTANCE.reflection().ensureInjected();
+		FilterHelper.addCategories(category, SessionController.get().isLoggedInUserAdmin());
+		FilterHelper.addStores(appStore, SessionController.get().isLoggedInUserAdmin());
+		FilterHelper.addCountries(country, SessionController.get().isLoggedInUserAdmin());
+
+		dateSelector.addFixedRanges(FilterHelper.getDefaultDateRanges());
+
+		// Reset linked account id in filter, to avoid problems after refreshing the page
+		FilterController.get().getFilter().setLinkedAccountId(0L);
 
 		FilterController.get().setListType(OVERALL_LIST_TYPE);
 
 		createColumns();
 
+		myAppsEmptyTable = new MyAppsEmptyTable();
+		myAppsEmptyTable.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				User user = SessionController.get().getLoggedInUser();
+				if (user != null) {
+					PageType.UsersPageType.show(PageType.LinkedAccountsPageType.toString(), user.id.toString());
+				}
+			}
+		});
 		appsTable.setEmptyTableWidget(myAppsEmptyTable);
 
 		appsTable.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
@@ -117,8 +141,20 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 
 		simplePager.setDisplay(appsTable);
 
-		myAppsTopPanel.setFiltersEnabled(false);
-		myAppsTopPanel.setFilterAccountEnabled(false);
+		setFiltersEnabled(false);
+		accountName.setEnabled(false);
+
+		ResponsiveDesignHelper.makeTableResponsive(appsTable);
+
+		appsTable.addLoadingStateChangeHandler(new LoadingStateChangeEvent.Handler() {
+
+			@Override
+			public void onLoadingStateChanged(LoadingStateChangeEvent event) {
+				if (event.getLoadingState() == LoadingState.LOADED) {
+					appsTable.setStyleName(style.tableLinkedAccountsDisabled(), appsTable.getRowCount() == 0);
+				}
+			}
+		});
 	}
 
 	/*
@@ -216,14 +252,82 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		columnIap.setCellStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA());
 		appsTable.addColumn(columnIap, "IAP");
 
-		appsTable.setWidth("100%", true);
-		appsTable.setColumnWidth(columnRank, 10.2, Unit.PCT);
-		appsTable.setColumnWidth(columnAppDetails, 34.5, Unit.PCT);
-		appsTable.setColumnWidth(columnPrice, 11.7, Unit.PCT);
-		appsTable.setColumnWidth(columnDownloads, 15.1, Unit.PCT);
-		appsTable.setColumnWidth(columnRevenue, 15.1, Unit.PCT);
-		appsTable.setColumnWidth(columnIap, 6.4, Unit.PCT);
+		appsTable.addColumnStyleName(0, style.rankColumn());
+		appsTable.addColumnStyleName(1, style.appDetailsColumn());
+		appsTable.addColumnStyleName(2, style.priceColumn());
+		appsTable.addColumnStyleName(3, style.downloadsColumn());
+		appsTable.addColumnStyleName(4, style.revenueColumn());
+		appsTable.addColumnStyleName(5, style.iapColumn());
 
+	}
+
+	@UiHandler("accountName")
+	void onAccountNameChanged(ChangeEvent event) {
+		FilterController.get().setLinkedAccount(Long.valueOf(accountName.getValue(accountName.getSelectedIndex())));
+	}
+
+	@UiHandler("category")
+	void onCategoryValueChanged(ChangeEvent event) {
+		FilterController.get().setCategory(Long.valueOf(category.getValue(category.getSelectedIndex())));
+	}
+
+	@UiHandler("appStore")
+	void onAppStoreValueChanged(ChangeEvent event) {
+		FilterController.get().setStore(appStore.getValue(appStore.getSelectedIndex()));
+	}
+
+	@UiHandler("country")
+	void onCountryValueChanged(ChangeEvent event) {
+		FilterController.get().setCountry(country.getValue(country.getSelectedIndex()));
+	}
+
+	private void updateFromFilter() {
+		FilterController fc = FilterController.get();
+
+		category.setSelectedIndex(FormHelper.getItemIndex(category, fc.getFilter().getCategoryId().toString()));
+		appStore.setSelectedIndex(FormHelper.getItemIndex(appStore, fc.getFilter().getStoreA3Code()));
+		DateRange range = new DateRange();
+
+		range.setFrom(fc.getStartDate());
+		range.setTo(fc.getEndDate());
+		dateSelector.setValue(range);
+
+		country.setSelectedIndex(FormHelper.getItemIndex(country, fc.getFilter().getCountryA2Code()));
+
+		if (fc.getFilter().getLinkedAccountId() > 0) {
+			accountName.setSelectedIndex(FormHelper.getItemIndex(accountName, fc.getFilter().getLinkedAccountId().toString()));
+		}
+
+	}
+
+	@UiHandler("dateSelector")
+	void onDateRangeValueChanged(ValueChangeEvent<DateRange> event) {
+		FilterController fc = FilterController.get();
+
+		fc.start();
+		fc.setEndDate(event.getValue().getTo());
+		fc.setStartDate(event.getValue().getFrom());
+		fc.commit();
+	}
+
+	public void fillAccountNameList() {
+		accountName.clear();
+		FilterHelper.addLinkedAccounts(accountName);
+	}
+
+	/**
+	 * Excluded linked account filter
+	 * 
+	 * @param enabled
+	 */
+	private void setFiltersEnabled(boolean enabled) {
+		// TODO delete condition when the user can select the filters
+		if (SessionController.get().isLoggedInUserAdmin()) {
+			category.setEnabled(enabled);
+			appStore.setEnabled(enabled);
+			country.setEnabled(enabled);
+		}
+		dateSelector.setEnabled(enabled);
 	}
 
 	/*
@@ -234,10 +338,10 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	@Override
 	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
 		if (LinkedAccountController.get().hasLinkedAccounts()) { // There are linked accounts
-			myAppsEmptyTable.setLinkAccountVisible(false);
+			myAppsEmptyTable.setNoDataAccounts(false);
 			simplePager.setPageStart(0);
 			userItemProvider.reset();
-			myAppsTopPanel.setFiltersEnabled(false);
+			setFiltersEnabled(false);
 			ItemController.get().fetchLinkedAccountItems();
 		}
 		// myAccountSidePanel.setUser(user);
@@ -252,10 +356,10 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	@Override
 	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {
 		if (LinkedAccountController.get().hasLinkedAccounts()) { // There are linked accounts
-			myAppsEmptyTable.setLinkAccountVisible(false);
+			myAppsEmptyTable.setNoDataAccounts(false);
 			simplePager.setPageStart(0);
 			userItemProvider.reset();
-			myAppsTopPanel.setFiltersEnabled(false);
+			setFiltersEnabled(false);
 			ItemController.get().fetchLinkedAccountItems();
 		}
 		// myAccountSidePanel.setUser(user);
@@ -282,7 +386,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		// Linked accounts retrieved in LinkedAccountPage but not here, or Check if Added or deleted a linked account
 		if ((linkedAccountsCount == -1 && LinkedAccountController.get().linkedAccountsFetched())
 				|| linkedAccountsCount != LinkedAccountController.get().getLinkedAccountsCount()) {
-			myAppsTopPanel.fillAccountNameList();
+			fillAccountNameList();
 			linkedAccountsCount = LinkedAccountController.get().getLinkedAccountsCount();
 			if (LinkedAccountController.get().getLinkedAccountsCount() > 0) {
 				FilterController.get().setLinkedAccount(LinkedAccountController.get().getAllLinkedAccounts().get(0).id);
@@ -293,14 +397,15 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		}
 
 		if (linkedAccountsCount > 0) {
-			myAppsEmptyTable.setLinkAccountVisible(false);
-			myAppsTopPanel.setFilterAccountEnabled(true);
+			myAppsEmptyTable.setNoDataAccounts(false);
+			accountName.setEnabled(true);
 		} else {
-			myAppsEmptyTable.setLinkAccountVisible(true);
-			myAppsTopPanel.setFilterAccountEnabled(false);
+			myAppsEmptyTable.setNoDataAccounts(true);
+			accountName.setEnabled(false);
+			setFiltersEnabled(false);
 		}
 
-		myAppsTopPanel.updateFromFilter();
+		updateFromFilter();
 
 	}
 
@@ -315,15 +420,15 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		if (output.status == StatusType.StatusTypeSuccess) {
 			if (output.pager.totalCount != null) {
 				if (LinkedAccountController.get().linkedAccountsFetched()) {
-					myAppsTopPanel.fillAccountNameList();
+					fillAccountNameList();
 					linkedAccountsCount = LinkedAccountController.get().getLinkedAccountsCount();
 					if (LinkedAccountController.get().getLinkedAccountsCount() > 0) {
 						FilterController.get().setLinkedAccount(LinkedAccountController.get().getAllLinkedAccounts().get(0).id);
-						myAppsTopPanel.setFilterAccountEnabled(true);
+						accountName.setEnabled(true);
 					} else {
 						userItemProvider.reset();
 						userItemProvider.updateRowCount(0, true);
-						myAppsTopPanel.setFilterAccountEnabled(false);
+						accountName.setEnabled(false);
 					}
 				} else { // No linked accounts associated with this user
 					userItemProvider.reset();
@@ -332,7 +437,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		} else {
 			userItemProvider.reset();
 			userItemProvider.updateRowCount(0, true);
-			myAppsTopPanel.setFilterAccountEnabled(false);
+			accountName.setEnabled(false);
 		}
 	}
 
@@ -346,7 +451,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	public void getLinkedAccountsFailure(GetLinkedAccountsRequest input, Throwable caught) {
 		userItemProvider.reset();
 		userItemProvider.updateRowCount(0, true);
-		myAppsTopPanel.setFilterAccountEnabled(false);
+		accountName.setEnabled(false);
 	}
 
 	/*
@@ -364,7 +469,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 				simplePager.setVisible(false);
 			}
 		}
-		myAppsTopPanel.setFiltersEnabled(true);
+		setFiltersEnabled(true);
 
 	}
 
@@ -377,7 +482,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	@Override
 	public void getLinkedAccountItemsFailure(GetLinkedAccountItemsRequest input, Throwable caught) {
 		userItemProvider.reset();
-		myAppsTopPanel.setFiltersEnabled(true);
+		setFiltersEnabled(true);
 	}
 
 }

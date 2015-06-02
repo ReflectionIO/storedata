@@ -8,6 +8,7 @@
 package io.reflection.app.client.component;
 
 import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMATTER_DD_MMM_YYYY;
+import io.reflection.app.client.helper.FilterHelper;
 
 import java.util.Date;
 
@@ -21,7 +22,7 @@ import com.google.gwt.user.datepicker.client.DatePicker;
 public class FormDateBox extends DateBox {
 
 	public FormDateBox() {
-		this(new DatePicker(), null, new DateBox.DefaultFormat(DATE_FORMATTER_DD_MMM_YYYY));
+		this(new DatePicker(), FilterHelper.getDaysAgo(2), new DateBox.DefaultFormat(DATE_FORMATTER_DD_MMM_YYYY));
 	}
 
 	public FormDateBox(DatePicker picker, Date date, Format format) {

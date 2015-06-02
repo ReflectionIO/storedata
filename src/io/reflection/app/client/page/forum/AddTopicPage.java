@@ -14,7 +14,7 @@ import io.reflection.app.api.forum.shared.call.GetForumsResponse;
 import io.reflection.app.api.forum.shared.call.event.CreateTopicEventHandler;
 import io.reflection.app.api.forum.shared.call.event.GetForumsEventHandler;
 import io.reflection.app.client.DefaultEventBus;
-import io.reflection.app.client.component.FormFieldSelect;
+import io.reflection.app.client.component.Selector;
 import io.reflection.app.client.controller.ForumController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
@@ -54,7 +54,7 @@ public class AddTopicPage extends Page implements CreateTopicEventHandler, GetFo
 	@UiField TextBox title;
 	@UiField TextBox tags;
 
-	@UiField FormFieldSelect forums;
+	@UiField Selector forums;
 
 	@UiField MarkdownEditor contentText;
 

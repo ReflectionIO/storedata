@@ -10,6 +10,7 @@
 			<svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">
 			<path ui:field="svgPath" />
 			</svg>
+			<img src="images/blank-image.png" alt="" />
 		</label>
 	</g:HTMLPanel>
 </ui:UiBinder> 

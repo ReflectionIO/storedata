@@ -24,8 +24,8 @@ import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.ImageAndTextCell;
 import io.reflection.app.client.cell.content.ConcreteImageAndText;
 import io.reflection.app.client.component.DateSelector;
-import io.reflection.app.client.component.FormFieldSelect;
 import io.reflection.app.client.component.FormSwitch;
+import io.reflection.app.client.component.Selector;
 import io.reflection.app.client.component.ToggleRadioButton;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.FilterController.Filter;
@@ -43,6 +43,7 @@ import io.reflection.app.client.helper.ColorHelper;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.helper.FormattingHelper;
+import io.reflection.app.client.helper.ResponsiveDesignHelper;
 import io.reflection.app.client.highcharts.Chart;
 import io.reflection.app.client.highcharts.ChartHelper;
 import io.reflection.app.client.highcharts.ChartHelper.RankType;
@@ -69,10 +70,11 @@ import java.util.Map;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.AnchorElement;
+import com.google.gwt.dom.client.ButtonElement;
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
-import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -86,7 +88,6 @@ import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.SafeHtmlHeader;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -111,10 +112,10 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	private String iapDescription;
 
 	// Filters
-	@UiField FormSwitch followSwitch;
+	// @UiField FormSwitch followSwitch;
 	@UiField DateSelector dateSelector;
-	@UiField FormFieldSelect storeSelector;
-	@UiField FormFieldSelect countrySelector;
+	@UiField Selector storeSelector;
+	@UiField Selector countrySelector;
 	@UiField(provided = true) FormSwitch accuracySwitch = new FormSwitch(true);
 	@UiField(provided = true) FormSwitch eventsSwitch = new FormSwitch(true);
 	@UiField(provided = true) FormSwitch overlayRevenuesSwitch = new FormSwitch(true);
@@ -131,7 +132,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField SpanElement downloadsText;
 	@UiField InlineHyperlink rankingLink;
 	@UiField SpanElement rankingText;
-	private InlineHTML comingSoon = new InlineHTML("&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;Coming soon");
 	@UiField LIElement revenueItem;
 	@UiField LIElement downloadsItem;
 	@UiField LIElement rankingItem;
@@ -168,23 +168,44 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	private static final String SERIES_ID_REVENUE_CUMULATIVE_SECONDARY = "revenueCumulativeSecondary";
 	private static final String SERIES_ID_DOWNLOAD_CUMULATIVE_SECONDARY = "downloadCumulativeSecondary";
 
+	@UiField AnchorElement revealContentFilter;
+	// @UiField AnchorElement revealContentStore;
+
+	@UiField ButtonElement dnwBtn;
+	@UiField ButtonElement dnwBtnMobile;
+	@UiField DivElement sincePanel;
+
 	public ItemPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		tabs.put(REVENUE_CHART_TYPE, revenueItem);
 		tabs.put(DOWNLOADS_CHART_TYPE, downloadsItem);
 		tabs.put(RANKING_CHART_TYPE, rankingItem);
-		comingSoon.getElement().getStyle().setFontSize(14.0, Unit.PX);
-		setRevenueDownloadTabsEnabled(false);
 
-		if (SessionController.get().isLoggedInUserAdmin()) {
+		// TODO remove not working elements for normal user
+		if (!SessionController.get().isLoggedInUserAdmin()) {
+			revenueTable2.removeFromParent();
+
+			// followSwitch.removeFromParent();
+			accuracySwitch.removeFromParent();
+			eventsSwitch.removeFromParent();
+			oneMMovingAverageSwitch.removeFromParent();
+			overlayAppsSwitch.removeFromParent();
+			toggleChartGraph.removeFromParent();
+			toggleChartMap.removeFromParent();
+			sincePanel.removeFromParent();
+			dnwBtn.removeFromParent();
+			dnwBtnMobile.removeFromParent();
+		} else {
 			createColumns();
 			// RankController.get().getItemRevenueDataProvider().addDataDisplay(revenueTable);
 			RankController.get().getRankDataProvider().addDataDisplay(revenueTable2);
-		} else {
-			revenueTable2.removeFromParent();
 		}
 		revenueTable.removeFromParent();
+		setRevenueDownloadTabsEnabled(SessionController.get().isLoggedInUserAdmin());
+
+		// ResponsiveDesignHelper.nativeRevealContent(revealContentStore);
+		ResponsiveDesignHelper.nativeRevealContent(revealContentFilter);
 
 		tablePlaceholder.add(itemRevenuePlaceholder);
 
@@ -192,6 +213,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		FilterHelper.addStores(storeSelector, SessionController.get().isLoggedInUserAdmin());
 		dateSelector.addFixedRanges(FilterHelper.getDefaultDateRanges());
 		updateFromFilter();
+
+		ResponsiveDesignHelper.makeTableResponsive(revenueTable2);
 	}
 
 	public void setItem(Item item) {
@@ -332,7 +355,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 			@Override
 			public String getValue(AppRanking object) {
-				return object.date != null ? FormattingHelper.DATE_FORMATTER_EEE_DD_MMM_YYYY.format(object.date) : "-";
+				return object.date != null ? FormattingHelper.DATE_FORMATTER_EEE_DD_MM_YY.format(object.date) : "-";
 			}
 		};
 		SafeHtmlHeader dateHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Revenue Generated " + sorterSvg));
@@ -479,6 +502,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		register(DefaultEventBus.get().addHandlerToSource(GetItemSalesRanksEventHandler.TYPE, RankController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(GetLinkedAccountItemEventHandler.TYPE, LinkedAccountController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(TogglePanelEventHandler.TYPE, NavigationController.get().getHeader(), this));
+
+		ResponsiveDesignHelper.makeTabsResponsive();
 
 	}
 
@@ -874,21 +899,19 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	private void setRevenueDownloadTabsEnabled(boolean enable) {
 		if (enable) {
 			revenueText.setInnerText("Revenue");
-			revenueItem.getStyle().setCursor(Cursor.DEFAULT);
-			downloadsText.setInnerText("Downloads");
-			downloadsItem.getStyle().setCursor(Cursor.DEFAULT);
+			revenueItem.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
 			revenueLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
 					REVENUE_CHART_TYPE, comingPage, filterContents));
+			downloadsText.setInnerText("Downloads");
+			downloadsItem.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
 			downloadsLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
 					DOWNLOADS_CHART_TYPE, comingPage, filterContents));
-			tabs.put(REVENUE_CHART_TYPE, revenueItem);
-			tabs.put(DOWNLOADS_CHART_TYPE, downloadsItem);
 		} else {
-			revenueText.setInnerText("Revenue" + comingSoon);
-			revenueItem.getStyle().setCursor(Cursor.DEFAULT);
-			downloadsText.setInnerText("Downloads" + comingSoon);
-			downloadsItem.getStyle().setCursor(Cursor.DEFAULT);
+			revenueText.setInnerText("Revenue - coming soon");
+			revenueItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
 			revenueLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
+			downloadsText.setInnerText("Downloads - coming soon");
+			downloadsItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
 			downloadsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 			for (String key : tabs.keySet()) {
 				tabs.get(key).removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isActive());

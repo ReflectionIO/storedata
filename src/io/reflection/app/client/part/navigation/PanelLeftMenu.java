@@ -67,6 +67,7 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 
 	@UiField UListElement itemList;
 	@UiField LIElement leaderboardItem;
+	@UiField LIElement myAppsItem;
 	@UiField LIElement blogItem;
 	@UiField LIElement forumItem;
 	@UiField LIElement adminItem;
@@ -85,6 +86,7 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 	@UiField LIElement adminBlogItem;
 	@UiField Anchor adminLink;
 	@UiField InlineHyperlink leaderboardLink;
+	@UiField InlineHyperlink myAppsLink;
 	@UiField InlineHyperlink adminFeedBrowserLink;
 	@UiField InlineHyperlink adminSimpleModelRunLink;
 	@UiField InlineHyperlink adminDataAccountFetchesLink;
@@ -97,6 +99,7 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 		initWidget(uiBinder.createAndBindUi(this));
 
 		leaderboardItem.removeFromParent();
+		myAppsItem.removeFromParent();
 		adminItem.removeFromParent();
 		createItemList();
 
@@ -105,11 +108,15 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 	private void attachUserLinks(User user) {
 		if (user != null) {
 			if (SessionController.get().isLoggedInUserAdmin() || SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE)) {
+				if (!itemList.isOrHasChild(myAppsItem)) {
+					itemList.insertFirst(myAppsItem);
+				}
 				if (!itemList.isOrHasChild(leaderboardItem)) {
 					itemList.insertFirst(leaderboardItem);
 				}
 			} else {
 				leaderboardItem.removeFromParent();
+				myAppsItem.removeFromParent();
 			}
 			if (SessionController.get().isLoggedInUserAdmin()) {
 				itemList.appendChild(adminItem);
@@ -126,6 +133,7 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 		if (items == null) {
 			items = new ArrayList<LIElement>();
 			items.add(leaderboardItem);
+			items.add(myAppsItem);
 			items.add(blogItem);
 			items.add(forumItem);
 			items.add(adminItem);
@@ -198,6 +206,11 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 	public void navigationChanged(Stack previous, Stack current) {
 		leaderboardLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, OVERALL_LIST_TYPE,
 				FilterController.get().asRankFilterString()));
+		User user = SessionController.get().getLoggedInUser();
+		if (user != null) {
+			myAppsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(),
+					FilterController.get().asMyAppsFilterString()));
+		}
 		adminFeedBrowserLink.setTargetHistoryToken(PageType.FeedBrowserPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
 				FilterController.get().asFeedFilterString()));
 		adminSimpleModelRunLink.setTargetHistoryToken(PageType.SimpleModelRunPageType.asTargetHistoryToken(FilterController.get().asFeedFilterString()));
@@ -208,6 +221,8 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 		if (PageType.RanksPageType.equals(current.getPage())) {
 			highlight(leaderboardItem);
 			closeDropDownItem(adminItem);
+		} else if (PageType.UsersPageType.equals(current.getPage()) && current.getAction() != null && PageType.MyAppsPageType.equals(current.getAction())) {
+			highlight(myAppsItem);
 		} else if (PageType.BlogPostsPageType.equals(current.getPage()) || PageType.BlogPostPageType.equals(current.getPage())) {
 			highlight(blogItem);
 			closeDropDownItem(adminItem);
@@ -272,6 +287,7 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 			liElem.addClassName(IS_OPEN);
 			liElem.addClassName(IS_SELECTED);
 			leaderboardItem.removeClassName(IS_SELECTED);
+			myAppsItem.removeClassName(IS_SELECTED);
 			blogItem.removeClassName(IS_SELECTED);
 			forumItem.removeClassName(IS_SELECTED);
 		}
@@ -283,6 +299,7 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 			ulElem.getStyle().setMarginTop(0, Unit.PX);
 			liElem.addClassName(IS_OPEN);
 			// liElem.addClassName(IS_SELECTED);
+			myAppsItem.removeClassName(IS_SELECTED);
 			leaderboardItem.removeClassName(IS_SELECTED);
 			blogItem.removeClassName(IS_SELECTED);
 			forumItem.removeClassName(IS_SELECTED);
@@ -339,6 +356,7 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 	@Override
 	public void userLoggedOut() {
 		leaderboardItem.removeFromParent();
+		myAppsItem.removeFromParent();
 		adminItem.removeFromParent();
 	}
 

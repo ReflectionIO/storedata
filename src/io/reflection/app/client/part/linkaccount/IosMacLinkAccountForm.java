@@ -8,8 +8,8 @@
 package io.reflection.app.client.part.linkaccount;
 
 import io.reflection.app.client.component.FormButton;
-import io.reflection.app.client.component.FormField;
-import io.reflection.app.client.component.FormFieldPassword;
+import io.reflection.app.client.component.TextField;
+import io.reflection.app.client.component.PasswordField;
 import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
@@ -49,13 +49,13 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 
 	@UiField HeadingElement title;
 
-	@UiField FormField accountUsername;
+	@UiField TextField accountUsername;
 	private String accountUsernameError;
 
-	@UiField FormFieldPassword password;
+	@UiField PasswordField password;
 	private String passwordError;
 
-	@UiField FormField vendorId;
+	@UiField TextField vendorId;
 	private String vendorIdError;
 
 	@UiField FormButton linkAccountBtn;
@@ -104,7 +104,7 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 
 	public void setStatusError() {
 		linkAccountBtn.setStatusError();
-		}
+	}
 
 	public void setStatusError(String errorText) {
 		linkAccountBtn.setStatusError(errorText);

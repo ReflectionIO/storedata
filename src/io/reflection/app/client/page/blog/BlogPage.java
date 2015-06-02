@@ -12,7 +12,7 @@ import io.reflection.app.api.blog.shared.call.GetPostsResponse;
 import io.reflection.app.api.blog.shared.call.event.GetPostsEventHandler;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.component.CellListElem;
-import io.reflection.app.client.component.FormFieldSelect;
+import io.reflection.app.client.component.Selector;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.PostController;
@@ -26,6 +26,7 @@ import io.reflection.app.client.res.Images;
 import io.reflection.app.datatypes.shared.Post;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadElement;
@@ -50,8 +51,8 @@ public class BlogPage extends Page implements NavigationEventHandler, GetPostsEv
 
 	interface PostsPageUiBinder extends UiBinder<Widget, BlogPage> {}
 
-	@UiField FormFieldSelect blogCategories;
-	@UiField FormFieldSelect blogSortBy;
+	@UiField Selector blogCategories;
+	@UiField Selector blogSortBy;
 	@UiField(provided = true) CellListElem<Post> postsCellListElem = new CellListElem<Post>(false, new PostSummaryCell());
 
 	@UiField(provided = true) SimplePager simplePager = new SimplePager(false, false);
@@ -59,8 +60,17 @@ public class BlogPage extends Page implements NavigationEventHandler, GetPostsEv
 	private Element atomLink;
 	private Element head;
 
+	@UiField DivElement searchPanel;
+
 	public BlogPage() {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		// TODO remove unused components if not admin
+		if (!SessionController.get().isLoggedInUserAdmin()) {
+			blogCategories.removeFromParent();
+			blogSortBy.removeFromParent();
+			searchPanel.removeFromParent();
+		}
 
 		FilterHelper.addBlogCategories(blogCategories, SessionController.get().isLoggedInUserAdmin());
 		FilterHelper.addBlogSortBy(blogSortBy, SessionController.get().isLoggedInUserAdmin());

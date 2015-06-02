@@ -20,7 +20,6 @@ import com.google.gwt.resources.client.ImageResource.RepeatStyle;
  */
 public interface Styles extends ClientBundle {
 	public interface ReflectionStyles extends CssResource {
-
 		String footerFacebook();
 
 		String footerLinkedin();
@@ -86,6 +85,12 @@ public interface Styles extends ClientBundle {
 		@ClassName("accordion-content")
 		String accordionContent();
 
+		@ClassName("accordion-item-highlighted")
+		String accordionItemHighlighted();
+
+		@ClassName("accordion-static")
+		String accordionStatic();
+
 		@ClassName("accordion-switch")
 		String accordionSwitch();
 
@@ -124,8 +129,14 @@ public interface Styles extends ClientBundle {
 
 		String addthis_sharing_toolbox();
 
+		@ClassName("admin-filters-container")
+		String adminFiltersContainer();
+
 		@ClassName("app-creator")
 		String appCreator();
+
+		@ClassName("app-creator-price")
+		String appCreatorPrice();
 
 		@ClassName("app-details")
 		String appDetails();
@@ -189,6 +200,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("blog-content-container")
 		String blogContentContainer();
 
+		@ClassName("blog-search-container")
+		String blogSearchContainer();
+
 		@ClassName("blog-tags")
 		String blogTags();
 
@@ -231,6 +245,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("can-toggle__switch")
 		String canToggle__switch();
+
+		@ClassName("category-select")
+		String categorySelect();
 
 		String cellTableLoading();
 
@@ -332,10 +349,16 @@ public interface Styles extends ClientBundle {
 		@ClassName("content-list--minor")
 		String contentListMinor();
 
+		@ClassName("content-list--no-bullets")
+		String contentListNoBullets();
+
 		@ClassName("content-list-item")
 		String contentListItem();
 
 		String cord();
+
+		@ClassName("country-select")
+		String countrySelect();
 
 		@ClassName("create-password-content")
 		String createPasswordContent();
@@ -376,6 +399,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("date-select-to-indicator")
 		String dateSelectToIndicator();
 
+		@ClassName("date-selection-filter-container")
+		String dateSelectionFilterContainer();
+
 		@ClassName("date-value")
 		String dateValue();
 
@@ -410,6 +436,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("dk-component-row")
 		String dkComponentRow();
+
+		@ClassName("download-button--mobile")
+		String downloadButtonMobile();
 
 		@ClassName("downloads-column")
 		String downloadsColumn();
@@ -459,6 +488,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("filter-container--my-apps")
 		String filterContainerMyApps();
 
+		@ClassName("filter-row-two")
+		String filterRowTwo();
+
 		@ClassName("filter-switch")
 		String filterSwitch();
 
@@ -473,12 +505,6 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("filters-group-graph-options")
 		String filtersGroupGraphOptions();
-
-		@ClassName("filters-group-other")
-		String filtersGroupOther();
-
-		@ClassName("filters-group-time")
-		String filtersGroupTime();
 
 		@ClassName("font-demo")
 		String fontDemo();
@@ -528,6 +554,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("form-field--select-disabled")
 		String formFieldSelectDisabled();
 
+		@ClassName("form-field--textarea")
+		String formFieldTextarea();
+
 		@ClassName("form-field-help")
 		String formFieldHelp();
 
@@ -545,6 +574,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("forms--mid-theme")
 		String formsMidTheme();
+
+		@ClassName("full-page-message")
+		String fullPageMessage();
 
 		@ClassName("full-screen-intro")
 		String fullScreenIntro();
@@ -650,6 +682,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("has-transparency")
 		String hasTransparency();
 
+		@ClassName("heading-container")
+		String headingContainer();
+
 		@ClassName("heading-style")
 		String headingStyle();
 
@@ -689,6 +724,11 @@ public interface Styles extends ClientBundle {
 		@ClassName("highcharts-yaxis-labels")
 		String highchartsYaxisLabels();
 
+		@ClassName("hiring-title")
+		String hiringTitle();
+
+		String hook();
+
 		@ClassName("horizontal-centre-content")
 		String horizontalCentreContent();
 
@@ -701,6 +741,8 @@ public interface Styles extends ClientBundle {
 		@ClassName("icon-dollar")
 		String iconDollar();
 
+		String ie10();
+
 		String ie8();
 
 		String ie9();
@@ -708,8 +750,17 @@ public interface Styles extends ClientBundle {
 		@ClassName("illustration-container")
 		String illustrationContainer();
 
+		@ClassName("image-full-width")
+		String imageFullWidth();
+
+		@ClassName("img-reset")
+		String imgReset();
+
 		@ClassName("img-rounded")
 		String imgRounded();
+
+		@ClassName("img-signpost")
+		String imgSignpost();
 
 		@ClassName("inline-search-form")
 		String inlineSearchForm();
@@ -750,6 +801,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("is-descending")
 		String isDescending();
 
+		@ClassName("is-disabled")
+		String isDisabled();
+
 		@ClassName("is-focused")
 		String isFocused();
 
@@ -776,6 +830,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("is-pathetic")
 		String isPathetic();
+
+		@ClassName("is-safari")
+		String isSafari();
 
 		@ClassName("is-selected")
 		String isSelected();
@@ -806,9 +863,6 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("label--hidden-text")
 		String labelHiddenText();
-
-		@ClassName("landing-page")
-		String landingPage();
 
 		@ClassName("landing-section-contact")
 		String landingSectionContact();
@@ -850,6 +904,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("linked-account-store")
 		String linkedAccountStore();
+
+		@ClassName("list-container")
+		String listContainer();
 
 		@ClassName("list-item-complete")
 		String listItemComplete();
@@ -911,6 +968,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("no-accordion-content")
 		String noAccordionContent();
 
+		@ClassName("no-csstransforms3d")
+		String noCsstransforms3d();
+
 		@ClassName("no-csstransitions")
 		String noCsstransitions();
 
@@ -919,9 +979,6 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("no-js")
 		String noJs();
-
-		@ClassName("no-linked-accounts-container")
-		String noLinkedAccountsContainer();
 
 		@ClassName("no-opacity")
 		String noOpacity();
@@ -953,6 +1010,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("p-style--minor")
 		String pStyleMinor();
 
+		@ClassName("page-admin")
+		String pageAdmin();
+
 		@ClassName("page-app")
 		String pageApp();
 
@@ -968,11 +1028,20 @@ public interface Styles extends ClientBundle {
 		@ClassName("page-functions")
 		String pageFunctions();
 
+		@ClassName("page-general-content")
+		String pageGeneralContent();
+
 		@ClassName("page-leaderboard")
 		String pageLeaderboard();
 
 		@ClassName("page-logged-in-landing")
 		String pageLoggedInLanding();
+
+		@ClassName("page-maintenance")
+		String pageMaintenance();
+
+		@ClassName("page-message-only")
+		String pageMessageOnly();
 
 		@ClassName("page-my-account")
 		String pageMyAccount();
@@ -988,6 +1057,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("page-popup")
 		String pagePopup();
+
+		@ClassName("page-reset-password")
+		String pageResetPassword();
 
 		@ClassName("page-section")
 		String pageSection();
@@ -1030,6 +1102,8 @@ public interface Styles extends ClientBundle {
 		@ClassName("phablet-width")
 		String phabletWidth();
 
+		String pinned();
+
 		@ClassName("plug-left")
 		String plugLeft();
 
@@ -1067,6 +1141,12 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("popup-content--link-account")
 		String popupContentLinkAccount();
+
+		@ClassName("posted-by")
+		String postedBy();
+
+		@ClassName("posted-time")
+		String postedTime();
 
 		@ClassName("pre-selected")
 		String preSelected();
@@ -1132,6 +1212,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("ref-button--toggle")
 		String refButtonToggle();
+
+		@ClassName("ref-button--warning")
+		String refButtonWarning();
 
 		@ClassName("ref-button--with-icon")
 		String refButtonWithIcon();
@@ -1247,14 +1330,25 @@ public interface Styles extends ClientBundle {
 		@ClassName("reflection-select")
 		String reflectionSelect();
 
+		@ClassName("reflection-select--center")
+		String reflectionSelectCenter();
+
 		@ClassName("reflection-select--filter")
 		String reflectionSelectFilter();
+
+		@ClassName("reflection-select--right")
+		String reflectionSelectRight();
 
 		@ClassName("refresh-button")
 		String refreshButton();
 
 		@ClassName("reset-password-form-is-showing")
 		String resetPasswordFormIsShowing();
+
+		String responsive();
+
+		@ClassName("reveal-element")
+		String revealElement();
 
 		@ClassName("revenue-column")
 		String revenueColumn();
@@ -1270,6 +1364,8 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("revenue-value")
 		String revenueValue();
+
+		String scrollable();
 
 		@ClassName("search-button-mobile")
 		String searchButtonMobile();
@@ -1296,6 +1392,12 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("search__results-section--developers")
 		String search__resultsSectionDevelopers();
+
+		@ClassName("selected-tab")
+		String selectedTab();
+
+		@ClassName("show-hide-link")
+		String showHideLink();
 
 		@ClassName("show-reset-password-form")
 		String showResetPasswordForm();
@@ -1324,6 +1426,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("sort-svg")
 		String sortSvg();
 
+		@ClassName("store-select")
+		String storeSelect();
+
 		@ClassName("success-tick")
 		String successTick();
 
@@ -1345,11 +1450,29 @@ public interface Styles extends ClientBundle {
 		@ClassName("table-cell-odd-row")
 		String tableCellOddRow();
 
+		@ClassName("table-column--account-name")
+		String tableColumnAccountName();
+
+		@ClassName("table-column--date-added")
+		String tableColumnDateAdded();
+
+		@ClassName("table-column--delete-account")
+		String tableColumnDeleteAccount();
+
+		@ClassName("table-column--edit-account")
+		String tableColumnEditAccount();
+
+		@ClassName("table-column--store")
+		String tableColumnStore();
+
 		@ClassName("table-data")
 		String tableData();
 
 		@ClassName("table-data-first")
 		String tableDataFirst();
+
+		@ClassName("table-heading--date-added")
+		String tableHeadingDateAdded();
 
 		@ClassName("table-linked-accounts")
 		String tableLinkedAccounts();
@@ -1366,8 +1489,13 @@ public interface Styles extends ClientBundle {
 		@ClassName("table-revenue")
 		String tableRevenue();
 
+		@ClassName("table-wrapper")
+		String tableWrapper();
+
 		@ClassName("tablet-width")
 		String tabletWidth();
+
+		String tabs();
 
 		@ClassName("tabs-container")
 		String tabsContainer();
@@ -1377,6 +1505,15 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("tabs-template")
 		String tabsTemplate();
+
+		@ClassName("tabs-to-dropdown")
+		String tabsToDropdown();
+
+		@ClassName("tabs-to-dropdown--content")
+		String tabsToDropdownContent();
+
+		@ClassName("tabs-to-dropdown-container")
+		String tabsToDropdownContainer();
 
 		String tabs__content();
 
@@ -1393,16 +1530,34 @@ public interface Styles extends ClientBundle {
 
 		String tabs__tab();
 
+		@ClassName("text--disabled")
+		String textDisabled();
+
+		@ClassName("text-link")
+		String textLink();
+
 		@ClassName("text-muted")
 		String textMuted();
 
 		@ClassName("th-first")
 		String thFirst();
 
+		@ClassName("time-period-select")
+		String timePeriodSelect();
+
 		String toggle();
 
 		@ClassName("toggle-calendar")
 		String toggleCalendar();
+
+		@ClassName("toggle-downloads")
+		String toggleDownloads();
+
+		@ClassName("toggle-revenue")
+		String toggleRevenue();
+
+		@ClassName("total-revenue-title")
+		String totalRevenueTitle();
 
 		String touch();
 
@@ -1424,6 +1579,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("warning-sign")
 		String warningSign();
 
+		@ClassName("warning-text")
+		String warningText();
+
 		@ClassName("will-show")
 		String willShow();
 
@@ -1439,6 +1597,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("actions-container")
 		String actionsContainer();
 
+		@ClassName("blockquote-container")
+		String blockquoteContainer();
+
 		@ClassName("border-radius-point")
 		String borderRadiusPoint();
 
@@ -1449,6 +1610,12 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("content-list")
 		String contentList();
+
+		@ClassName("gm-style")
+		String gmStyle();
+
+		@ClassName("gm-style-iw")
+		String gmStyleIw();
 
 		String header();
 
@@ -1465,6 +1632,15 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("img-width-landing-column-wide")
 		String imgWidthLandingColumnWide();
+
+		@ClassName("is-chrome")
+		String isChrome();
+
+		@ClassName("is-opera")
+		String isOpera();
+
+		@ClassName("l-main")
+		String lMain();
 
 		@ClassName("landing-column-thin")
 		String landingColumnThin();
@@ -1489,6 +1665,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("landing-footer__social-links")
 		String landingFooter__socialLinks();
+
+		@ClassName("landing-page")
+		String landingPage();
 
 		@ClassName("landing-section-analyse")
 		String landingSectionAnalyse();
@@ -1550,9 +1729,6 @@ public interface Styles extends ClientBundle {
 		@ClassName("link-log-in")
 		String linkLogIn();
 
-		@ClassName("link-to-page-top")
-		String linkToPageTop();
-
 		@ClassName("link-to-page-top__text")
 		String linkToPageTop__text();
 
@@ -1571,6 +1747,18 @@ public interface Styles extends ClientBundle {
 		@ClassName("logo-reflection-footer")
 		String logoReflectionFooter();
 
+		@ClassName("map__info-box")
+		String map__infoBox();
+
+		@ClassName("map__info-box__down-arrow")
+		String map__infoBox__downArrow();
+
+		@ClassName("map__street-view-link")
+		String map__streetViewLink();
+
+		@ClassName("map__text-content")
+		String map__textContent();
+
 		@ClassName("no-flexbox")
 		String noFlexbox();
 
@@ -1579,6 +1767,15 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("no-scroll")
 		String noScroll();
+
+		@ClassName("no-touch")
+		String noTouch();
+
+		@ClassName("panel-left-open")
+		String panelLeftOpen();
+
+		@ClassName("panel-right")
+		String panelRight();
 
 		@ClassName("ref-button")
 		String refButton();

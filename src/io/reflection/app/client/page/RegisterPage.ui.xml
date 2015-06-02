@@ -17,7 +17,7 @@
 					Ut enim ad minim
 					veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure</p>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.listPartners}">
-					<h2>Who's using Reflection</h2>
+					<h2>A few of our current partners</h2>
 					<ul>
 						<li>
 							<img src="images/Partner_Soundcloud@2x.png" alt="Soundcloud logo" />
@@ -53,13 +53,13 @@
 						</li>
 						<li>
 							<img src="images/Partner_Wooga@2x.png" alt="Wooga logo" />
-								</li>
+						</li>
 						<li>
 							<img src="images/Partner_TocaBoca@2x.png" alt="Toca Boca logo" />
-								</li>
-							</ul>
+						</li>
+					</ul>
 				</div>
-						</g:HTMLPanel>
+			</g:HTMLPanel>
 		</div>
 		<div ui:field="accountFormContainer" class="{STYLES_INSTANCE.reflectionMainStyle.accountFormContainer}">
 			<ul class="{STYLES_INSTANCE.reflectionMainStyle.tabsContainer}">
@@ -74,7 +74,7 @@
 					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneHalf} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab}">
 					<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
 					<g:InlineHyperlink ui:field="login" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
-						<span>Already a member</span>
+						<span>Log In</span>
 					</g:InlineHyperlink>
 				</li>
 			</ul>
@@ -136,11 +136,11 @@
 						<p>Thank you for your application, we'll review and get back to you via email if you’ve been successful.</p>
 					</div>
 					<r:RegisterForm ui:field="registerForm" styleName="{STYLES_INSTANCE.reflectionMainStyle.formsMidTheme}" />
-								</li>
-							</ul>
+				</li>
+			</ul>
 		</div>
 
 
 
-			</g:HTMLPanel>
+	</g:HTMLPanel>
 </ui:UiBinder> 

@@ -17,19 +17,15 @@ import io.reflection.app.api.admin.shared.call.event.GetEventsEventHandler;
 import io.reflection.app.api.admin.shared.call.event.GetUsersEventHandler;
 import io.reflection.app.api.admin.shared.call.event.SendNotificationEventHandler;
 import io.reflection.app.client.DefaultEventBus;
-import io.reflection.app.client.component.FormField;
-import io.reflection.app.client.component.FormFieldSelect;
+import io.reflection.app.client.component.TextField;
+import io.reflection.app.client.component.Selector;
 import io.reflection.app.client.controller.EventController;
 import io.reflection.app.client.controller.NotificationController;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.UserController;
-import io.reflection.app.client.helper.AlertBoxHelper;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.page.Page;
-import io.reflection.app.client.part.AlertBox;
-import io.reflection.app.client.part.AlertBox.AlertBoxType;
 import io.reflection.app.client.part.BootstrapGwtSuggestBox;
-import io.reflection.app.client.part.Preloader;
 import io.reflection.app.client.part.text.MarkdownEditor;
 import io.reflection.app.datatypes.shared.Event;
 import io.reflection.app.datatypes.shared.EventPriorityType;
@@ -45,9 +41,7 @@ import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.SuggestOracle.Suggestion;
 import com.google.gwt.user.client.ui.Widget;
@@ -63,36 +57,23 @@ public class SendNotificationPage extends Page implements GetUsersEventHandler, 
 
 	interface SendNotificationPageUiBinder extends UiBinder<Widget, SendNotificationPage> {}
 
-	@UiField Preloader preloader;
-	@UiField AlertBox alert;
-
 	@UiField(provided = true) SuggestBox eventSuggestBox = new SuggestBox(EventController.get().oracle());
-	@UiField HTMLPanel eventGroup;
-	@UiField HTMLPanel eventNote;
 	String eventError;
 
 	@UiField(provided = true) SuggestBox userSuggestBox = new SuggestBox(UserController.get().oracle());
-	@UiField HTMLPanel userGroup;
-	@UiField HTMLPanel userNote;
 	String userError;
 
-	@UiField HTMLPanel fromGroup;
-	@UiField FormFieldSelect fromListBox;
-	@UiField HTMLPanel fromNote;
+	@UiField(provided = true) Selector fromListBox = new Selector(false);
 	String fromError;
 
-	@UiField FormField subjectTextBox;
+	@UiField TextField subjectTextBox;
 	String subjectError;
 
-	@UiField HTMLPanel bodyGroup;
 	@UiField MarkdownEditor bodyEditor;
-	@UiField HTMLPanel bodyNote;
 	String bodyError;
 
-	@UiField FormFieldSelect priorityListBox;
-	@UiField HTMLPanel priorityGroup;
-	@UiField HTMLPanel priorityNote;
-	private String priorityError = null;
+	@UiField(provided = true) Selector priorityListBox = new Selector(false);
+	// private String priorityError = null;
 
 	@UiField Button buttonSend;
 
@@ -113,7 +94,7 @@ public class SendNotificationPage extends Page implements GetUsersEventHandler, 
 	/**
 	 * @param listBox
 	 */
-	private void addPriorities(FormFieldSelect listBox) {
+	private void addPriorities(Selector listBox) {
 		for (EventPriorityType p : EventPriorityType.values()) {
 			listBox.addItem(p.toString(), p.toString());
 		}
@@ -187,27 +168,27 @@ public class SendNotificationPage extends Page implements GetUsersEventHandler, 
 	void onButtonSendClicked(ClickEvent e) {
 		if (validate()) {
 			clearErrors();
-			preloader.show();
+			// preloader.show();
 			NotificationController.get().sendNotification(event == null ? null : event.id, user.id, fromListBox.getSelectedValue(), subjectTextBox.getText(),
 					bodyEditor.getText(), EventPriorityType.fromString(priorityListBox.getSelectedValue()));
 		} else {
-			if (eventError != null) {
-				FormHelper.showNote(true, eventGroup, eventNote, eventError);
-			} else {
-				FormHelper.hideNote(eventGroup, eventNote);
-			}
+			// if (eventError != null) {
+			// FormHelper.showNote(true, eventGroup, eventNote, eventError);
+			// } else {
+			// FormHelper.hideNote(eventGroup, eventNote);
+			// }
 
-			if (userError != null) {
-				FormHelper.showNote(true, userGroup, userNote, userError);
-			} else {
-				FormHelper.hideNote(userGroup, userNote);
-			}
+			// if (userError != null) {
+			// FormHelper.showNote(true, userGroup, userNote, userError);
+			// } else {
+			// FormHelper.hideNote(userGroup, userNote);
+			// }
 
-			if (fromError != null) {
-				FormHelper.showNote(true, fromGroup, fromNote, fromError);
-			} else {
-				FormHelper.hideNote(fromGroup, fromNote);
-			}
+			// if (fromError != null) {
+			// FormHelper.showNote(true, fromGroup, fromNote, fromError);
+			// } else {
+			// FormHelper.hideNote(fromGroup, fromNote);
+			// }
 
 			if (subjectError != null) {
 				subjectTextBox.showNote(subjectError, true);
@@ -215,17 +196,17 @@ public class SendNotificationPage extends Page implements GetUsersEventHandler, 
 				subjectTextBox.hideNote();
 			}
 
-			if (bodyError != null) {
-				FormHelper.showNote(true, bodyGroup, bodyNote, bodyError);
-			} else {
-				FormHelper.hideNote(bodyGroup, bodyNote);
-			}
+			// if (bodyError != null) {
+			// FormHelper.showNote(true, bodyGroup, bodyNote, bodyError);
+			// } else {
+			// FormHelper.hideNote(bodyGroup, bodyNote);
+			// }
 
-			if (priorityError != null) {
-				FormHelper.showNote(true, priorityGroup, priorityNote, priorityError);
-			} else {
-				FormHelper.hideNote(priorityGroup, priorityNote);
-			}
+			// if (priorityError != null) {
+			// FormHelper.showNote(true, priorityGroup, priorityNote, priorityError);
+			// } else {
+			// FormHelper.hideNote(priorityGroup, priorityNote);
+			// }
 		}
 	}
 
@@ -290,9 +271,9 @@ public class SendNotificationPage extends Page implements GetUsersEventHandler, 
 				values.append(priorityType.toString());
 			}
 
-			priorityError = "Priority should be one of: " + values;
+			// priorityError = "Priority should be one of: " + values;
 		} else {
-			priorityError = null;
+			// priorityError = null;
 			validated = validated && true;
 		}
 
@@ -300,14 +281,12 @@ public class SendNotificationPage extends Page implements GetUsersEventHandler, 
 	}
 
 	private void clearErrors() {
-		FormHelper.hideNote(userGroup, userNote);
-		FormHelper.hideNote(eventGroup, eventNote);
-		FormHelper.hideNote(fromGroup, fromNote);
+		// FormHelper.hideNote(userGroup, userNote);
+		// FormHelper.hideNote(eventGroup, eventNote);
+		// FormHelper.hideNote(fromGroup, fromNote);
 		subjectTextBox.hideNote();
-		FormHelper.hideNote(bodyGroup, bodyNote);
-		FormHelper.hideNote(priorityGroup, priorityNote);
-
-		alert.setVisible(false);
+		// FormHelper.hideNote(bodyGroup, bodyNote);
+		// FormHelper.hideNote(priorityGroup, priorityNote);
 	}
 
 	/*
@@ -370,23 +349,13 @@ public class SendNotificationPage extends Page implements GetUsersEventHandler, 
 	 */
 	@Override
 	public void sendNotificationSuccess(SendNotificationRequest input, SendNotificationResponse output) {
-		if (output.status == StatusType.StatusTypeFailure) {
-			AlertBoxHelper.showError(alert, output.error);
-		} else if (output.status == StatusType.StatusTypeSuccess) {
+		if (output.status == StatusType.StatusTypeSuccess) {
 			clearForm();
+		} else if (output.status == StatusType.StatusTypeFailure) {
 
-			AlertBoxHelper.configureAlert(alert, AlertBoxType.SuccessAlertBoxType, false, "Done", "Notification sent", true);
-			alert.setVisible(true);
-
-			(new Timer() {
-				@Override
-				public void run() {
-					alert.setVisible(false);
-				}
-			}).schedule(2000);
 		}
 
-		preloader.hide();
+		// preloader.hide();
 	}
 
 	/*
@@ -397,9 +366,7 @@ public class SendNotificationPage extends Page implements GetUsersEventHandler, 
 	 */
 	@Override
 	public void sendNotificationFailure(SendNotificationRequest input, Throwable caught) {
-		AlertBoxHelper.showError(alert, FormHelper.convertToError(caught));
-
-		preloader.hide();
+		// preloader.hide();
 	}
 
 	private void clearForm() {

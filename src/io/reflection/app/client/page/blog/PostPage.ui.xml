@@ -11,14 +11,14 @@
 
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.componentsRowWithBorder} {STYLES_INSTANCE.reflectionMainStyle.filtersContainer}">
 			<form>
-				<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneTwelfth}">
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.headingContainer}">
 					<h1 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Blog</h1>
 				</div>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter}">
-					<c:FormFieldSelect ui:field="blogCategories" labelText="All Categories (4)"></c:FormFieldSelect>
+					<c:Selector ui:field="blogCategories" overlay="true" labelText="All Categories (4)" />
 				</div>
-				<div
-					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFiveColumns} {STYLES_INSTANCE.reflectionMainStyle.breadcrumbContainer}">
+				<div ui:field="breadcrumbPanel"
+					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird} {STYLES_INSTANCE.reflectionMainStyle.breadcrumbContainer}">
 					<ul class="{STYLES_INSTANCE.reflectionMainStyle.breadcrumb}">
 						<li>
 							<a href="#">All Categories</a>
@@ -29,8 +29,9 @@
 						</li>
 					</ul>
 				</div>
-				<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter}">
-					<div class="{STYLES_INSTANCE.reflectionMainStyle.searchFieldNoLabel}">
+				<div
+					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter} {STYLES_INSTANCE.reflectionMainStyle.blogSearchContainer}">
+					<div ui:field="searchPanel" class="{STYLES_INSTANCE.reflectionMainStyle.searchFieldNoLabel}">
 						<input type="text" autocomplete="off" name="search" placeholder="Search blog.." />
 						<input
 							class="{STYLES_INSTANCE.reflectionMainStyle.refButton} {STYLES_INSTANCE.reflectionMainStyle.searchButtonMobile} {STYLES_INSTANCE.reflectionMainStyle.isHighlighted}"
@@ -47,9 +48,8 @@
 				<h1 ui:field="title"></h1>
 
 				<p class="{STYLES_INSTANCE.reflectionMainStyle.siteArticleInfo}">
-					<strong>Posted by</strong>
-							<span ui:field="author" />
-						<span ui:field="date" />
+					<strong>Posted by</strong><span ui:field="author" class="posted-by" />
+					on<span ui:field="date" />
 					<!-- <span class="comments-link"> -->
 					<!-- <a href="#comments">12 comments</a> -->
 					<!-- </span> -->
@@ -64,8 +64,8 @@
 					</p>
 					<p class="{STYLES_INSTANCE.reflectionMainStyle.siteArticleInfo}">
 						<strong>Posted by</strong>
-						<span ui:field="authorFooter" />
-						<span ui:field="dateFooter" />
+						<span ui:field="authorFooter" class="posted-by" />
+						on <span ui:field="dateFooter" />
 					</p>
 				</footer>
 				<div class="addthis_sharing_toolbox"></div>
@@ -73,7 +73,7 @@
 
 			</article>
 			<div id="disqus_thread" class="{STYLES_INSTANCE.reflectionMainStyle.blogComments}">
-				<form>
+				<form ui:field="comments">
 					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">15 Comments</h2>
 					<button class="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall} {STYLES_INSTANCE.reflectionMainStyle.makeCommentButton}">Make a Comment</button>
 					<div class="{STYLES_INSTANCE.reflectionMainStyle.formField}">

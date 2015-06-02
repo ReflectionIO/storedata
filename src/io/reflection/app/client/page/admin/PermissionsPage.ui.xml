@@ -5,14 +5,14 @@
 	<ui:style gss="true">
 	
 	</ui:style>
-	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer}">
-		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth}">
-				<h2>Permissions</h2>
-
-			<c:CellTable ui:field="mPermissions" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}" />
-
-				<p:SimplePager styleName="text-center" ui:field="mPager" />
-
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.pageAdmin}">
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__row}">
+			<h1 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Permissions</h1>
 		</div>
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__row}">
+			<c:CellTable ui:field="permissionTable" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}" />
+			<p:SimplePager ui:field="mPager" />
+		</div>
+
 	</g:HTMLPanel>
 </ui:UiBinder> 

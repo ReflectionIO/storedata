@@ -9,16 +9,16 @@
 
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.componentsRowWithBorder} {STYLES_INSTANCE.reflectionMainStyle.filtersContainer}">
 			<form>
-				<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneTwelfth}">
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.headingContainer}">
 					<h1 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Blog</h1>
 				</div>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter}">
-					<c:FormFieldSelect ui:field="blogCategories" labelText="All Categories (4)"></c:FormFieldSelect>
+					<c:Selector ui:field="blogCategories" overlay="true" labelText="All Categories (4)" />
 				</div>
 				<div
 					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFiveColumns} {STYLES_INSTANCE.reflectionMainStyle.grid__columnRight}">
-					<c:FormFieldSelect ui:field="blogSortBy" labelText="Sort By:"></c:FormFieldSelect>
-					<div class="{STYLES_INSTANCE.reflectionMainStyle.searchFieldNoLabel}">
+					<c:Selector ui:field="blogSortBy" overlay="true" labelText="Sort By:" />
+					<div ui:field="searchPanel" class="{STYLES_INSTANCE.reflectionMainStyle.searchFieldNoLabel}">
 						<input type="text" autocomplete="off" name="search" placeholder="Search blog.." />
 						<input
 							class="{STYLES_INSTANCE.reflectionMainStyle.refButton} {STYLES_INSTANCE.reflectionMainStyle.searchButtonMobile} {STYLES_INSTANCE.reflectionMainStyle.isHighlighted}"

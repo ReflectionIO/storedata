@@ -7,7 +7,6 @@
 //
 package io.reflection.app.client.controller;
 
-import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
 import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.handler.NavigationEventHandler;
@@ -294,7 +293,11 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 		} else {
 			PageType stackPage = PageType.fromString(page);
 
-			if (stackPage == null || !stackPage.isNavigable()) {
+			if ("".equals(page)) {
+				stackPage = PageType.HomePageType;
+			} else if (stackPage == null || PageType.Error404PageType.equals(stackPage)) {
+				stackPage = PageType.Error404PageType;
+			} else if (!stackPage.isNavigable()) {
 				stackPage = PageType.HomePageType;
 			} else if (PageType.UsersPageType == stackPage) {
 				if (value.hasAction()) {
@@ -464,12 +467,8 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 		if (mStack.hasNext()) {
 			PageType.fromString(mStack.getNext().getPage()).show(mStack.getNext().toString(1));
 		} else {
-			if (SessionController.get().getLoggedInUser() != null) {
-				PageType.RanksPageType.show(VIEW_ACTION_PARAMETER_VALUE, OVERALL_LIST_TYPE, FilterController.get().asRankFilterString());
-			} else {
 				PageType.HomePageType.show();
 			}
-		}
 
 	}
 

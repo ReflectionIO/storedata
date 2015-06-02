@@ -29,7 +29,6 @@ import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.AnchorElement;
-import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.VideoElement;
@@ -71,10 +70,8 @@ public class Header extends Composite implements NavigationEventHandler, Session
 	@UiField HTMLPanel hamburgerPanel;
 	@UiField Button hamburgerBtn;
 	@UiField AnchorElement homeBtn;
-	@UiField DivElement actionsPanel;
 	@UiField InlineHyperlink applyBtn;
-	@UiField HTMLPanel actionsGroupPanel;
-	@UiField DivElement actionsGroupContent;
+	@UiField HTMLPanel actionsGroup;
 	@UiField Anchor linkLogin;
 	@UiField Anchor linkSearch;
 
@@ -152,6 +149,22 @@ public class Header extends Composite implements NavigationEventHandler, Session
 	}
 
 	private void initPanelRightAccount() {
+
+		// Toggle panel
+		actionsGroup.sinkEvents(Event.ONCLICK);
+		actionsGroup.addHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				closePanelRightSearch();
+				if (NavigationController.get().getPanelRightAccount().getElement().hasClassName(style.isShowing())) {
+					closePanelRightAccount();
+				} else {
+					openPanelRightAccount();
+				}
+			}
+		}, ClickEvent.getType());
+
 		// Close panel if clicking outside of it
 		Event.sinkEvents(NavigationController.get().getPanelRightAccount().getPanelOverlay(), Event.ONCLICK);
 		Event.setEventListener(NavigationController.get().getPanelRightAccount().getPanelOverlay(), new EventListener() {
@@ -179,22 +192,40 @@ public class Header extends Composite implements NavigationEventHandler, Session
 		});
 	}
 
+	public void openPanelRightAccount() {
+		NavigationController.get().getPanelRightAccount().getElement().addClassName(style.isShowing());
+		DOMHelper.setScrollEnabled(false);
+		DOMHelper.addClassName(actionsGroup.getElement(), style.isOn());
+		if (!linkLogin.getElement().hasClassName(style.isSelected())) {
+			linkLogin.getElement().addClassName(style.isSelected());
+		}
+	}
+
 	public void closePanelRightAccount() {
 		NavigationController.get().getPanelRightAccount().getElement().removeClassName(style.isShowing());
+		DOMHelper.setScrollEnabled(true);
+		actionsGroup.getElement().removeClassName(style.isOn());
 		if (linkLogin.getElement().hasClassName(style.isSelected())) {
 			linkLogin.getElement().removeClassName(style.isSelected());
 			linkLogin.setFocus(false);
 		}
-		DOMHelper.setScrollEnabled(true);
+	}
+
+	public void openPanelRightSearch() {
+		NavigationController.get().getPanelRightSearch().getElement().addClassName(style.isShowing());
+		DOMHelper.setScrollEnabled(false);
+		if (!linkSearch.getElement().hasClassName(style.isSelected())) {
+			linkSearch.getElement().addClassName(style.isSelected());
+		}
 	}
 
 	public void closePanelRightSearch() {
 		NavigationController.get().getPanelRightSearch().getElement().removeClassName(style.isShowing());
+		DOMHelper.setScrollEnabled(true);
 		if (linkSearch.getElement().hasClassName(style.isSelected())) {
 			linkSearch.getElement().removeClassName(style.isSelected());
 			linkSearch.setFocus(false);
 		}
-		DOMHelper.setScrollEnabled(true);
 	}
 
 	public boolean isPanelLeftMenuOpen() {
@@ -229,32 +260,16 @@ public class Header extends Composite implements NavigationEventHandler, Session
 		event.preventDefault();
 		closePanelRightAccount();
 		DOMHelper.toggleClassName(linkSearch.getElement(), style.isSelected());
-		if (!NavigationController.get().getPanelRightSearch().getElement().hasClassName(style.isShowing())) {
-			NavigationController.get().getPanelRightSearch().getElement().addClassName(style.isShowing());
-			DOMHelper.setScrollEnabled(false);
+		if (NavigationController.get().getPanelRightSearch().getElement().hasClassName(style.isShowing())) {
+			closePanelRightSearch();
 		} else {
-			NavigationController.get().getPanelRightSearch().getElement().removeClassName(style.isShowing());
-			DOMHelper.setScrollEnabled(true);
+			openPanelRightSearch();
 		}
 	}
 
 	@UiHandler("linkLogin")
 	void onLinkLogInClicked(ClickEvent event) {
 		event.preventDefault();
-		closePanelRightSearch();
-		if (!linkLogin.getElement().hasClassName(style.isSelected())) {
-			linkLogin.getElement().addClassName(style.isSelected());
-		} else {
-			linkLogin.getElement().removeClassName(style.isSelected());
-			linkLogin.setFocus(false);
-		}
-		if (!NavigationController.get().getPanelRightAccount().getElement().hasClassName(style.isShowing())) {
-			NavigationController.get().getPanelRightAccount().getElement().addClassName(style.isShowing());
-			DOMHelper.setScrollEnabled(false);
-		} else {
-			NavigationController.get().getPanelRightAccount().getElement().removeClassName(style.isShowing());
-			DOMHelper.setScrollEnabled(true);
-		}
 	}
 
 	/*
@@ -281,12 +296,12 @@ public class Header extends Composite implements NavigationEventHandler, Session
 		PageType currentPage = NavigationController.get().getCurrentPage();
 		if (Window.getClientWidth() > 960
 				&& !panelLeftWasClosed
-				&& currentPage != null
 				&& !PageType.LinkItunesPageType.equals(currentPage)
-				&& (currentPage.requiresLogin() || PageType.BlogPostsPageType.equals(currentPage) || PageType.BlogPostPageType.equals(currentPage)
-						|| PageType.BlogTagPageType.equals(currentPage) || PageType.ForumEditTopicPageType.equals(currentPage)
-						|| PageType.ForumPageType.equals(currentPage) || PageType.ForumThreadPageType.equals(currentPage) || PageType.ForumTopicPageType
-							.equals(currentPage))) {
+				&& !"".equals(current.getPage()) // empty URL
+				&& (currentPage == null || currentPage.requiresLogin() || PageType.BlogPostsPageType.equals(currentPage)
+						|| PageType.BlogPostPageType.equals(currentPage) || PageType.BlogTagPageType.equals(currentPage)
+						|| PageType.ForumEditTopicPageType.equals(currentPage) || PageType.ForumPageType.equals(currentPage)
+						|| PageType.ForumThreadPageType.equals(currentPage) || PageType.ForumTopicPageType.equals(currentPage))) {
 			if (!isPanelLeftMenuOpen()) {
 				Document.get().getBody().addClassName(style.panelLeftOpen());
 			}

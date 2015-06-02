@@ -7,6 +7,7 @@
 //
 package io.reflection.app.client.page;
 
+import io.reflection.app.client.helper.AnimationHelper;
 import io.reflection.app.client.helper.DOMHelper;
 import io.reflection.app.client.helper.UserAgentHelper;
 import io.reflection.app.client.res.Styles;
@@ -46,7 +47,6 @@ public class HomePage extends Page {
 	@UiField Element sectionMain;
 	@UiField Element sectionSizeShadowLayer;
 	@UiField Element sectionHowIntelHelps;
-	@UiField Anchor linkToPageTop;
 	// @UiField InlineHyperlink homeBtn;
 	@UiField HTMLPanel leaderBoardScreenshot;
 	@UiField HTMLPanel analysisScreenshot;
@@ -183,18 +183,12 @@ public class HomePage extends Page {
 		// String href = linkScrollToAnchor.getElement().getAttribute("href");
 		int navHeight = 60;
 		int targetTop = sectionHowIntelHelps.getOffsetTop();
-		DOMHelper.nativeScrollTop(targetTop - navHeight, 455, "swing");
-	}
-
-	@UiHandler("linkToPageTop")
-	void onLinkToPageTopClicked(ClickEvent event) {
-		event.preventDefault();
-		DOMHelper.nativeScrollTop(0, "slow", "swing");
+		AnimationHelper.nativeScrollTop(targetTop - navHeight, 455, "swing");
 	}
 
 	private void initScrollEffect() {
 		if (DOMHelper.getHtmlElement().hasClassName("csstransforms") && DOMHelper.getHtmlElement().hasClassName("no-touch")) {
-			final int breakpointVertical = 680;
+			final int breakpointVertical = 710;
 			final int breakpointHorizontal = 980;
 			Window.addWindowScrollHandler(new Window.ScrollHandler() {
 				@Override
@@ -340,7 +334,7 @@ public class HomePage extends Page {
 			mapScriptInjected = true;
 		}
 
-		DOMHelper.addClassName(Document.get().getBody(), Styles.STYLES_INSTANCE.reflectionMainStyle().landingPage());
+		DOMHelper.addClassName(Document.get().getBody(), Styles.STYLES_INSTANCE.homePageStyle().landingPage());
 
 	}
 
@@ -353,7 +347,7 @@ public class HomePage extends Page {
 	protected void onDetach() {
 		super.onDetach();
 
-		Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().landingPage());
+		Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.homePageStyle().landingPage());
 
 		toTop = Window.getScrollTop();
 

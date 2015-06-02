@@ -7,7 +7,7 @@
 //
 package io.reflection.app.client.part;
 
-import io.reflection.app.client.helper.DOMHelper;
+import io.reflection.app.client.helper.AnimationHelper;
 import io.reflection.app.client.res.Styles;
 
 import com.google.gwt.core.client.GWT;
@@ -40,7 +40,7 @@ public class BackToTop extends Composite {
 		Window.addWindowScrollHandler(new Window.ScrollHandler() {
 			@Override
 			public void onWindowScroll(ScrollEvent event) {
-				if (event.getScrollTop() > (Document.get().getBody().getOffsetHeight() / 3)) {
+				if (event.getScrollTop() > (Document.get().getBody().getClientHeight() / 3)) {
 					link.getElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
 				} else {
 					link.getElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
@@ -51,7 +51,7 @@ public class BackToTop extends Composite {
 
 	@UiHandler("link")
 	void onBackToTopClicked(ClickEvent event) {
-		DOMHelper.nativeScrollTop(0, 300, "swing");
+		AnimationHelper.nativeScrollTop(0, 300, "swing");
 	}
 
 }

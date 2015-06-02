@@ -10,8 +10,8 @@ package io.reflection.app.client.page.part;
 import static io.reflection.app.client.controller.FilterController.DOWNLOADS_DAILY_DATA_TYPE;
 import static io.reflection.app.client.controller.FilterController.REVENUE_DAILY_DATA_TYPE;
 import io.reflection.app.client.component.FormDateBox;
-import io.reflection.app.client.component.FormFieldSelect;
-import io.reflection.app.client.component.FormRadioButton;
+import io.reflection.app.client.component.Selector;
+import io.reflection.app.client.component.ToggleRadioButton;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.helper.FilterHelper;
@@ -21,7 +21,6 @@ import java.util.Date;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ShowRangeEvent;
 import com.google.gwt.event.logical.shared.ShowRangeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -46,20 +45,20 @@ public class RankSidePanel extends Composite {
 
 	@UiField FormDateBox dateBox;
 	Date currentDate = FilterHelper.getToday();
-	@UiField FormFieldSelect appStoreListBox;
+	@UiField Selector appStoreListBox;
 	// @UiField ListBox mListType;
-	@UiField FormFieldSelect countryListBox;
-	@UiField FormFieldSelect categoryListBox;
-	@UiField FormRadioButton dailyDataRevenue;
-	@UiField FormRadioButton dailyDataDownloads;
+	@UiField Selector countryListBox;
+	@UiField Selector categoryListBox;
+	@UiField(provided = true) ToggleRadioButton toggleRevenue = new ToggleRadioButton("dailydatatoggle");
+	@UiField(provided = true) ToggleRadioButton toggleDownloads = new ToggleRadioButton("dailydatatoggle");
 
-	@UiField HTMLPanel dailyDataRadio;
+	@UiField HTMLPanel dailyDataContainer;
 
 	public RankSidePanel() {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		if (!SessionController.get().isLoggedInUserAdmin()) {
-			dailyDataRadio.removeFromParent();
+			dailyDataContainer.removeFromParent();
 		}
 
 		dateBox.getDatePicker().addShowRangeHandler(new ShowRangeHandler<Date>() {
@@ -124,13 +123,13 @@ public class RankSidePanel extends Composite {
 		FilterController.get().setCategory(getCatgegory());
 	}
 
-	@UiHandler("dailyDataRevenue")
-	void onDailyDataRevenueSelected(ClickEvent event) {
+	@UiHandler("toggleRevenue")
+	void onDailyDataRevenueValueChanged(ValueChangeEvent<Boolean> event) {
 		FilterController.get().setDailyData(REVENUE_DAILY_DATA_TYPE);
 	}
 
-	@UiHandler("dailyDataDownloads")
-	void onDailyDataDownloadsSelected(ClickEvent event) {
+	@UiHandler("toggleDownloads")
+	void onDailyDataDownloadsValueChanged(ValueChangeEvent<Boolean> event) {
 		FilterController.get().setDailyData(DOWNLOADS_DAILY_DATA_TYPE);
 	}
 
@@ -187,17 +186,17 @@ public class RankSidePanel extends Composite {
 
 		String dailyDataType = fc.getFilter().getDailyData();
 		if (REVENUE_DAILY_DATA_TYPE.equals(dailyDataType)) {
-			dailyDataRevenue.setValue(true);
+			toggleRevenue.setValue(true);
 		} else {
-			dailyDataDownloads.setValue(true);
+			toggleDownloads.setValue(true);
 		}
 	}
 
 	public void setDataFilterVisible(boolean visible) {
 		if (visible) {
-			dailyDataRadio.setVisible(true);
+			dailyDataContainer.setVisible(true);
 		} else {
-			dailyDataRadio.setVisible(false);
+			dailyDataContainer.setVisible(false);
 		}
 	}
 

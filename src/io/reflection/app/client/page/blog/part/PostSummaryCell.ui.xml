@@ -1,36 +1,29 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder">
-    <ui:with field="link" type="com.google.gwt.safehtml.shared.SafeUri" />
-    <ui:with field="title" type="java.lang.String" />
-    <ui:with field="description" type="com.google.gwt.safehtml.shared.SafeHtml" />
-    <ui:with field="author" type="java.lang.String" />
-    <ui:with field="published" type="com.google.gwt.safehtml.shared.SafeHtml" />
+	<ui:with field="link" type="com.google.gwt.safehtml.shared.SafeUri" />
+	<ui:with field="title" type="java.lang.String" />
+	<ui:with field="description" type="com.google.gwt.safehtml.shared.SafeHtml" />
+	<ui:with field="author" type="java.lang.String" />
+	<ui:with field="published" type="com.google.gwt.safehtml.shared.SafeHtml" />
 
 	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
-    <ui:style gss="true">
-    
-    </ui:style>
+	<ui:style gss="true">
+	
+	</ui:style>
 
 	<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
 		<h2>
-            <a href="{link}">
-                <ui:text from="{title}" />
-            </a>
+			<a href="{link}">
+				<ui:text from="{title}" />
+			</a>
 		</h2>
 		<p class="{STYLES_INSTANCE.reflectionMainStyle.siteArticleInfo}">
-			<strong>Posted in</strong>
-
-			<span>
-                By
-                <span>
-                    <ui:text from="{author}" />
-                </span>
-            </span>
-            <ui:safehtml from="{published}" />
-        </p>
-        <p>
-            <ui:safehtml from="{description}" />
-        </p>
+			<strong>Posted by <ui:text from="{author}" /></strong>
+			on<ui:safehtml from="{published}" />
+		</p>
+		<p>
+			<ui:safehtml from="{description}" />
+		</p>
 
 		<p class="{STYLES_INSTANCE.reflectionMainStyle.moreLink}">
 			<a href="{link}">Read more</a>

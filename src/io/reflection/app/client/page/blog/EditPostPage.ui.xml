@@ -1,61 +1,62 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part.text">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part.text"
+	xmlns:c="urn:import:io.reflection.app.client.component">
 	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 	<ui:style gss="true">
 	
 	</ui:style>
-	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer}">
-		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth}">
-				<h2>Add Post</h2>
-
-				<g:FormPanel ui:field="form">
-					<g:HTMLPanel>
-						<g:HTMLPanel ui:field="titleGroup" styleName="form-group">
-							<label>Title</label>
-							<g:TextBox styleName="form-control" ui:field="title" />
-							<g:HTMLPanel styleName="noteDetail" ui:field="titleNote" visible="false" />
-						</g:HTMLPanel>
-
-						<g:HTMLPanel>
-							<g:CheckBox ui:field="visible">Visible without direct link</g:CheckBox>
-						</g:HTMLPanel>
-
-						<g:HTMLPanel>
-							<g:CheckBox ui:field="commentsEnabled">
-								Enable
-								<a href="http://disqus.com" target="_blank">disqus.com</a>
-								comments
-							</g:CheckBox>
-						</g:HTMLPanel>
-
-						<g:HTMLPanel ui:field="descriptionGroup" styleName="form-group">
-							<label>Description</label>
-							<p:MarkdownEditor ui:field="descriptionText" />
-						</g:HTMLPanel>
-
-						<g:HTMLPanel ui:field="contentGroup" styleName="form-group">
-							<label>Content</label>
-							<p:MarkdownEditor ui:field="contentText" />
-						</g:HTMLPanel>
-
-						<g:HTMLPanel ui:field="tagsGroup" styleName="form-group">
-							<label>Tags</label>
-							<g:TextBox styleName="form-control" ui:field="tags" />
-							<g:HTMLPanel styleName="noteDetail" ui:field="tagsNote" visible="false" />
-						</g:HTMLPanel>
-
-						<g:HTMLPanel>
-							<g:CheckBox ui:field="publish">Publish on submit</g:CheckBox>
-						</g:HTMLPanel>
-
-						<g:Button ui:field="submit" styleName="btn btn-lg btn-primary col-sm-4 col-sm-offset-4">
-							Submit
-						</g:Button>
-
-					</g:HTMLPanel>
-
-				</g:FormPanel>
-
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.pageAdmin}">
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneHalf}">
+			<h1 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Add / Edit Post</h1>
 		</div>
-			</g:HTMLPanel>
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__row}">
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth}">
+				<form>
+
+					<c:TextField ui:field="title" labelText="Title"></c:TextField>
+
+					<div class="{STYLES_INSTANCE.reflectionMainStyle.formFieldCheckboxList}">
+						<ul>
+							<li>
+								<c:FormCheckbox ui:field="visible" label="Visible without direct link" />
+							</li>
+							<li>
+								<c:FormCheckbox ui:field="commentsEnabled" label="Enable comments" />
+							</li>
+							<li>
+								<c:FormCheckbox ui:field="publish" label="Publish on submit" />
+							</li>
+						</ul>
+					</div>
+
+					<!-- <g:HTMLPanel> -->
+					<!-- <g:CheckBox ui:field="commentsEnabled"> -->
+					<!-- Enable -->
+					<!-- <a href="http://disqus.com" target="_blank">disqus.com</a> -->
+					<!-- comments -->
+					<!-- </g:CheckBox> -->
+					<!-- </g:HTMLPanel> -->
+
+					<label>Description</label>
+					<div class="form-field form-field--textarea">
+						<p:MarkdownEditor ui:field="descriptionText" />
+						<!-- <textarea name="body" id="body"></textarea> -->
+					</div>
+
+					<label>Content</label>
+					<div class="form-field form-field--textarea">
+						<p:MarkdownEditor ui:field="contentText" />
+						<!-- <textarea name="body" id="body"></textarea> -->
+					</div>
+
+					<c:TextField ui:field="tags" labelText="Tags"></c:TextField>
+
+					<g:Button ui:field="submit" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth}">
+						Submit
+					</g:Button>
+
+				</form>
+			</div>
+		</div>
+	</g:HTMLPanel>
 </ui:UiBinder> 

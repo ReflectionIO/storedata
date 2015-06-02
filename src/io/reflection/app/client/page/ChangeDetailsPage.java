@@ -31,8 +31,8 @@ import io.reflection.app.api.core.shared.call.event.GetUserDetailsEventHandler;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.StyledButtonCell;
 import io.reflection.app.client.component.FormButton;
-import io.reflection.app.client.component.FormField;
-import io.reflection.app.client.component.FormFieldPassword;
+import io.reflection.app.client.component.TextField;
+import io.reflection.app.client.component.PasswordField;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.SessionController;
@@ -42,6 +42,7 @@ import io.reflection.app.client.dataprovider.UserRolesProvider;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.handler.user.UserPasswordChangedEventHandler;
 import io.reflection.app.client.helper.FormHelper;
+import io.reflection.app.client.helper.ResponsiveDesignHelper;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.client.res.Styles;
@@ -94,25 +95,25 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	@UiField InlineHyperlink usersLink;
 	@UiField InlineHyperlink notificationsLink;
 
-	@UiField FormField username;
+	@UiField TextField username;
 	private String usernameError;
 
-	@UiField FormField forename;
+	@UiField TextField forename;
 	private String forenameError;
 
-	@UiField FormField surname;
+	@UiField TextField surname;
 	private String surnameError;
 
-	@UiField FormField company;
+	@UiField TextField company;
 	private String companyError;
 
 	@UiField FormButton changeDetailsBtn;
 
 	// Change Password
-	@UiField FormFieldPassword password;
+	@UiField PasswordField password;
 
-	@UiField FormFieldPassword newPassword;
-	@UiField FormFieldPassword confirmPassword;
+	@UiField PasswordField newPassword;
+	@UiField PasswordField confirmPassword;
 
 	@UiField FormButton changePasswordBtn;
 
@@ -121,14 +122,14 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	private String newPasswordError = null;
 
 	// User Roles
-	@UiField FormField addRole;
+	@UiField TextField addRole;
 	private String addRoleError;
 
 	@UiField HTMLPanel addRolePanel;
 	@UiField FormButton addRoleBtn;
 
 	// User Permissions
-	@UiField FormField addPermission;
+	@UiField TextField addPermission;
 	private String addPermissionError;
 
 	@UiField HTMLPanel addPermissionPanel;
@@ -262,13 +263,15 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		register(DefaultEventBus.get().addHandlerToSource(RevokePermissionEventHandler.TYPE, UserController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(GetUserDetailsEventHandler.TYPE, UserController.get(), this));
 
+		ResponsiveDesignHelper.makeTabsResponsive();
+
 	}
 
 	@UiHandler("changeDetailsBtn")
 	void onChangeDetailsClicked(ClickEvent event) {
 		if (validateDetails()) {
 			clearDetailsErrors();
-			changeDetailsBtn.setStatusLoading("Changing details ..");
+			changeDetailsBtn.setStatusLoading("Changing details");
 
 			SessionController.get().changeUserDetails(username.getText(), forename.getText(), surname.getText(), company.getText());
 		} else {
@@ -303,7 +306,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 
 		if (validatePassword()) {
 			clearPasswordErrors();
-			changePasswordBtn.setStatusLoading("Changing password ..");
+			changePasswordBtn.setStatusLoading("Changing password");
 
 			if (SessionController.get().isLoggedInUserAdmin()) {
 				UserController.get().setPassword(editingUserId, newPassword.getText());
@@ -703,7 +706,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 				resetPasswordForm();
 				resetRoleForm();
 				resetPermissionForm();
-				
+
 				// Create and fetch Roles and Permissions providers
 				editingUserId = Long.valueOf(current.getParameter(0)); // Update user to edit
 				User dummyEditingUser = DataTypeHelper.createUser(editingUserId);
@@ -736,18 +739,18 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 				if (currentUser.id.toString().equals(editingUserId.toString())) { // Current user is the same as in the stack parameter
 					fillDetailsForm(currentUser);
 				} else if (SessionController.get().isLoggedInUserAdmin()) {
-//					User editingUser = UserController.get().getUser(editingUserId);
-//					if (editingUser != null) { // User already retrieved
-//						fillDetailsForm(editingUser);
-//					} else { // Coming from a page refreshing
+					// User editingUser = UserController.get().getUser(editingUserId);
+					// if (editingUser != null) { // User already retrieved
+					// fillDetailsForm(editingUser);
+					// } else { // Coming from a page refreshing
 					// preloaderDetails.show();
-						UserController.get().fetchUser(editingUserId);
-//					}
+					UserController.get().fetchUser(editingUserId);
+					// }
 				} else { // No access to this user
 					userRolesProvider.updateRowCount(0, true);
 					userPermissionsProvider.updateRowCount(0, true);
 				}
-				
+
 			}
 
 		} else {
@@ -1016,7 +1019,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		if (output.status == StatusType.StatusTypeSuccess && output.user != null) {
 			fillDetailsForm(output.user);
 		}
-		
+
 		// preloaderDetails.hide();
 	}
 

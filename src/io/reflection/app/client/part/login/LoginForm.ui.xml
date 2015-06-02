@@ -5,13 +5,13 @@
 
 	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 
-    <ui:style gss="true">
+	<ui:style gss="true">
 	
-    </ui:style>
+	</ui:style>
 	<g:HTMLPanel tag="form">
 
-		<c:FormField ui:field="emailFormField" labelText="Email" />
-		<c:FormFieldPassword ui:field="passwordFormField" labelText="Password" />
+		<c:TextField ui:field="emailFormField" labelText="Email" />
+		<c:PasswordField ui:field="passwordFormField" labelText="Password" />
 
 		<g:InlineHyperlink targetHistoryToken="{ForgotPasswordPageType.asTargetHistoryToken}" styleName="{STYLES_INSTANCE.reflectionMainStyle.formLink}">I've misplaced my
 			password</g:InlineHyperlink>
@@ -24,6 +24,5 @@
 			</ul>
 		</div>
 		<c:FormButton ui:field="loginBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth}" text="Log in" />
-                </g:HTMLPanel>
+	</g:HTMLPanel>
 </ui:UiBinder>
-

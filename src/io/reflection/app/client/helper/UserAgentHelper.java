@@ -14,7 +14,12 @@ import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.ScriptInjector;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.RootPanel;
 
 /**
  * @author Stefano Capuzzi (capuzzistefano)
@@ -86,7 +91,7 @@ public class UserAgentHelper {
 	}
 
 	public static void initCustomScrollbars() {
-		if (UserAgentHelper.getIEVersion() != 8 && UserAgentHelper.getIEVersion() != 10) {
+		if (getIEVersion() != 8 && getIEVersion() != 10) {
 			ScriptInjector.fromUrl("js/vendor/jquery.mCustomScrollbar.concat.min.js").setWindow(ScriptInjector.TOP_WINDOW)
 					.setCallback(new Callback<Void, Exception>() {
 
@@ -107,5 +112,23 @@ public class UserAgentHelper {
 			scrollInertia : 200
 		});
 	}-*/;
+
+	public static void initIETweaks() {
+		if (isIE()) {
+			Window.addResizeHandler(new ResizeHandler() {
+				@Override
+				public void onResize(ResizeEvent event) {
+					setMainContentWidthForIE();
+				}
+			});
+			if (getIEVersion() < 9) {
+				HTMLPanel outdatedBrowser = new HTMLPanel(
+						SafeHtmlUtils
+								.fromTrustedString("<p>Uh oh... Reflection doesn't work in this browser. &nbsp; &nbsp;<a href=\"http://outdatedbrowser.com/en\" target=\"_blank\">Download a compatible browser</a></p>"));
+				outdatedBrowser.setStyleName("window-warning");
+				RootPanel.get().add(outdatedBrowser);
+			}
+		}
+	}
 
 }

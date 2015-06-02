@@ -70,24 +70,20 @@ public class DOMHelper {
 
 	public static void setScrollEnabled(boolean enabled) {
 		if (enabled) {
-			DOMHelper.getHtmlElement().removeClassName(style.noScroll());
-			Document.get().getBody().removeClassName(style.noScroll());
+			if (getHtmlElement().hasClassName("touch")) {
+				DOMHelper.getHtmlElement().removeClassName(style.noScroll());
+			}
+			if (Document.get().getBody().hasClassName("touch")) {
+				Document.get().getBody().removeClassName(style.noScroll());
+			}
 		} else {
-			addClassName(DOMHelper.getHtmlElement(), style.noScroll());
-			addClassName(Document.get().getBody(), style.noScroll());
+			if (getHtmlElement().hasClassName("touch")) {
+				addClassName(DOMHelper.getHtmlElement(), style.noScroll());
+			}
+			if (Document.get().getBody().hasClassName("touch")) {
+				addClassName(Document.get().getBody(), style.noScroll());
+			}
 		}
 	}
-
-	public static native void nativeScrollTop(int position, int duration, String easing)/*-{
-		$wnd.$('html, body').animate({
-			scrollTop : position
-		}, duration, easing);
-	}-*/;
-
-	public static native void nativeScrollTop(int position, String duration, String easing)/*-{
-		$wnd.$('html, body').animate({
-			scrollTop : position
-		}, duration, easing);
-	}-*/;
 
 }

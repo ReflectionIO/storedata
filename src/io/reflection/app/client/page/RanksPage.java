@@ -33,6 +33,7 @@ import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.FormattingHelper;
+import io.reflection.app.client.helper.ResponsiveDesignHelper;
 import io.reflection.app.client.page.part.RankSidePanel;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.datatypes.RanksGroup;
@@ -48,7 +49,6 @@ import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
-import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.resources.client.CssResource;
@@ -65,7 +65,6 @@ import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.InlineHTML;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -86,14 +85,13 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		String emptyTableContainer();
 
 		String emptyTableHeading();
+
 	}
 
 	public static final int SELECTED_TAB_PARAMETER_INDEX = 0;
 	public static final int VIEW_ALL_LENGTH_VALUE = Integer.MAX_VALUE;
 	public static final String ALL_TEXT = "Overview / All";
 	public static final String COMING_FROM_PARAMETER = "leaderboard";
-
-	@UiField RanksPageStyle style;
 
 	interface AllAdminCodeTemplate extends SafeHtmlTemplates {
 		AllAdminCodeTemplate INSTANCE = GWT.create(AllAdminCodeTemplate.class);
@@ -109,6 +107,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 	@UiField InlineHyperlink allLink;
 	@UiField SpanElement overviewAllText;
+	@UiField SpanElement paidText;
+	@UiField SpanElement grossingText;
 	@UiField InlineHyperlink freeLink;
 	@UiField InlineHyperlink grossingLink;
 	@UiField InlineHyperlink paidLink;
@@ -153,36 +153,28 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		// set the overall tab title (this is because it is modified for admins to contain the gather code)
 		overviewAllText.setInnerText(ALL_TEXT);
 
-		showAllPredictions = SessionController.get().isLoggedInUserAdmin();
-
 		createColumns();
 
 		tabs.put(OVERALL_LIST_TYPE, allItem);
 		tabs.put(FREE_LIST_TYPE, freeItem);
-		if (SessionController.get().isLoggedInUserAdmin()) {
+		if (showAllPredictions = SessionController.get().isLoggedInUserAdmin()) {
 			tabs.put(PAID_LIST_TYPE, paidItem);
 			tabs.put(GROSSING_LIST_TYPE, grossingItem);
+		} else {
+			paidText.setInnerText("Top Paid - coming soon");
+			paidItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
+			grossingText.setInnerText("Top Grossing - coming soon");
+			grossingItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
 		}
 
-		if (!SessionController.get().isLoggedInUserAdmin()) {
-			InlineHTML comingSoon = new InlineHTML("&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;Coming soon");
-			comingSoon.getElement().getStyle().setFontSize(14.0, Unit.PX);
-			paidLink.setHTML(paidLink.getText() + comingSoon);
-			paidLink.getElement().getStyle().setColor("lightgrey");
-			paidLink.getElement().getStyle().setCursor(Cursor.DEFAULT);
-			paidItem.getStyle().setCursor(Cursor.DEFAULT);
-			grossingLink.setHTML(grossingLink.getText() + comingSoon);
-			grossingLink.getElement().getStyle().setColor("lightgrey");
-			grossingLink.getElement().getStyle().setCursor(Cursor.DEFAULT);
-			grossingItem.getStyle().setCursor(Cursor.DEFAULT);
-		}
-
-		HTMLPanel emptyTableWidget = new HTMLPanel("<h6 class=" + style.emptyTableHeading() + ">No ranking data for filter!</h6>");
-		emptyTableWidget.setStyleName(style.emptyTableContainer());
+		HTMLPanel emptyTableWidget = new HTMLPanel("<h6>No ranking data for filter!</h6>");
 		ranksTable.setEmptyTableWidget(emptyTableWidget);
+
 		ranksTable.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 
 		RankController.get().addDataDisplay(ranksTable);
+
+		ResponsiveDesignHelper.makeTableResponsive(ranksTable);
 	}
 
 	private void createColumns() {
@@ -294,7 +286,6 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		revenueHeader = new TextHeader("Revenue");
 		iapHeader = new TextHeader("IAP");
 
-		ranksTable.setWidth("100%", true);
 		ranksTable.setColumnWidth(comingSoonColumn, 100.0, Unit.PCT);
 	}
 
@@ -434,6 +425,10 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	// public void isAuthorisedFailure(IsAuthorisedRequest input, Throwable caught) {}
 
 	private void refreshRanks() {
+
+		ranksTable.setStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().tableOverall(), OVERALL_LIST_TYPE.equals(selectedTab));
+		ranksTable.setStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().tableAppGroup(),
+				(FREE_LIST_TYPE.equals(selectedTab) || PAID_LIST_TYPE.equals(selectedTab) || GROSSING_LIST_TYPE.equals(selectedTab)));
 
 		if (OVERALL_LIST_TYPE.equals(selectedTab)) {
 			removeAllColumns();
@@ -655,6 +650,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		// register(EventController.get().addHandlerToSource(IsAuthorisedEventHandler.TYPE, SessionController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(GetAllTopItemsEventHandler.TYPE, RankController.get(), this));
+
+		ResponsiveDesignHelper.makeTabsResponsive();
 
 	}
 

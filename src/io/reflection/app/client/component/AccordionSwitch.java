@@ -7,11 +7,11 @@
 //
 package io.reflection.app.client.component;
 
-import io.reflection.app.client.helper.DOMHelper;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.client.res.Styles.ReflectionMainStyles;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.HeadingElement;
@@ -19,10 +19,13 @@ import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.UListElement;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -73,39 +76,54 @@ public class AccordionSwitch extends Composite {
 			}
 		});
 
+		Window.addResizeHandler(new ResizeHandler() {
+
+			@Override
+			public void onResize(ResizeEvent event) {
+				if (!title.hasClassName(style.noAccordionContent())) {
+					container.getElement().addClassName(style.isClosed());
+					accordionContent.getStyle().setMarginTop(-Double.valueOf(accordionContent.getClientHeight()), Unit.PX);
+				}
+			}
+		});
+
 	}
 
 	public void setEmpty(boolean isEmpty) {
 		if (isEmpty) {
 			title.addClassName(style.noAccordionContent());
-			subtitle.removeFromParent();
 			accordionContent.removeFromParent();
-		} else {
-
 		}
 	}
 
 	public void setFeatureComplete(boolean complete) {
-		if (complete) {
-			DOMHelper.addClassName(this.getElement(), style.featureComplete());
-		} else {
-			this.getElement().removeClassName(style.featureComplete());
-		}
+		container.setStyleName(style.featureComplete(), complete);
 	}
 
 	public void setTitleText(String text) {
-		boolean hasSubtitle;
-		if (hasSubtitle = title.isOrHasChild(subtitle)) {
-			subtitle.removeFromParent();
-		}
+		subtitle.removeFromParent();
 		title.setInnerText(text);
-		if (hasSubtitle) {
-			title.appendChild(subtitle);
-		}
+		title.appendChild(subtitle);
 	}
 
 	public void setSubtitleText(String text) {
 		subtitle.setInnerText(text);
+	}
+
+	public void setSubtitleHtml(String html) {
+		subtitle.setInnerHTML(html);
+	}
+
+	public void setSubtitleLinkHref(String href) {
+		AnchorElement emailLink = Document.get().createAnchorElement();
+		emailLink.setInnerText(subtitle.getInnerText());
+		emailLink.setHref(href);
+		subtitle.setInnerText("");
+		subtitle.appendChild(emailLink);
+	}
+
+	public void setHighlighted(boolean highlight) {
+		container.setStyleName(style.accordionItemHighlighted(), highlight);
 	}
 
 	public void addItemIncomplete(String titleText, String subtitleText) {
@@ -134,9 +152,7 @@ public class AccordionSwitch extends Composite {
 		super.onAttach();
 
 		if (!title.hasClassName(style.noAccordionContent())) {
-			if (!container.getElement().hasClassName(style.isClosed())) {
-				container.getElement().addClassName(style.isClosed());
-			}
+			container.getElement().addClassName(style.isClosed());
 			accordionContent.getStyle().setMarginTop(-Double.valueOf(accordionContent.getClientHeight()), Unit.PX);
 		}
 	}

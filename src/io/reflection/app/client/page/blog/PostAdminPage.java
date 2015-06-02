@@ -143,7 +143,7 @@ public class PostAdminPage extends Page implements GetPostsEventHandler, Navigat
 			@Override
 			public SafeHtml getValue(Post object) {
 				return SafeHtmlUtils.fromTrustedString("<a href=\"" + PageType.BlogEditPostPageType.asHref("change", LookupHelper.reference(object)).asString()
-						+ "\" class=\"btn btn-xs btn-default\">Edit</a>");
+						+ "\" class=\"" + Styles.STYLES_INSTANCE.reflectionMainStyle().refButtonFunctionSmall() + "\">Edit</a>");
 			}
 		};
 
@@ -153,12 +153,12 @@ public class PostAdminPage extends Page implements GetPostsEventHandler, Navigat
 			public SafeHtml getValue(Post object) {
 				return SafeHtmlUtils.fromTrustedString("<a href=\""
 						+ PageType.BlogPostPageType.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE, LookupHelper.reference(object)).asString()
-						+ "\" class=\"btn btn-xs btn-default\">View</a>");
+						+ "\" class=\"" + Styles.STYLES_INSTANCE.reflectionMainStyle().refButtonFunctionSmall() + "\">View</a>");
 			}
 		};
 
-		StyledButtonCell prototype1 = new StyledButtonCell("btn", "btn-xs", "btn-danger");
-		Column<Post, String> deleteColumn = new Column<Post, String>(prototype1) {
+		Column<Post, String> deleteColumn = new Column<Post, String>(new StyledButtonCell(Styles.STYLES_INSTANCE.reflectionMainStyle().refButtonLink() + " "
+				+ Styles.STYLES_INSTANCE.reflectionMainStyle().warningText())) {
 
 			@Override
 			public String getValue(Post object) {

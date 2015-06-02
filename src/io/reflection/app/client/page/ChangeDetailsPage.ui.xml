@@ -8,8 +8,9 @@
 	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.pageMyAccount}">
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneHalf}">
 			<h1 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree} {STYLES_INSTANCE.reflectionMainStyle.pageTitle}">My Account</h1>
-				</div>
-		<ul class="{STYLES_INSTANCE.reflectionMainStyle.tabsContainer} {STYLES_INSTANCE.reflectionMainStyle.defaultTabsTransition}">
+		</div>
+		<ul
+			class="{STYLES_INSTANCE.reflectionMainStyle.tabsContainer} {STYLES_INSTANCE.reflectionMainStyle.defaultTabsTransition} {STYLES_INSTANCE.reflectionMainStyle.tabsToDropdown}">
 			<li
 				class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab} {STYLES_INSTANCE.reflectionMainStyle.isActive}">
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
@@ -89,70 +90,65 @@
 				below.</p>
 		</div>
 
-		<ul class="{STYLES_INSTANCE.reflectionMainStyle.tabs__contentContainer} {STYLES_INSTANCE.reflectionMainStyle.defaultTabsTransition}">
+		<ul
+			class="{STYLES_INSTANCE.reflectionMainStyle.tabs__contentContainer} {STYLES_INSTANCE.reflectionMainStyle.defaultTabsTransition} {STYLES_INSTANCE.reflectionMainStyle.tabsToDropdownContent}">
 			<li class="{STYLES_INSTANCE.reflectionMainStyle.tabs__content} {STYLES_INSTANCE.reflectionMainStyle.tabs__contentIsShowing}">
 				<article>
 					<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth}">
-						<h2
-							class="{STYLES_INSTANCE.reflectionMainStyle.collapsibleTrigger} {STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCog}">
-							<span>Revenue</span>
-						</h2>
-						<div class="{STYLES_INSTANCE.reflectionMainStyle.collapsibleContent}">
 
-							<div
-								class="{STYLES_INSTANCE.reflectionMainStyle.pageSection} {STYLES_INSTANCE.reflectionMainStyle.pageSectionWithBorder} {STYLES_INSTANCE.reflectionMainStyle.accountSettingsSection}">
-								<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird}">
-									<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Personal Details</h2>
-									<form>
-										<c:FormField ui:field="forename" labelText="First name" />
+						<div
+							class="{STYLES_INSTANCE.reflectionMainStyle.pageSection} {STYLES_INSTANCE.reflectionMainStyle.pageSectionWithBorder} {STYLES_INSTANCE.reflectionMainStyle.accountSettingsSection}">
+							<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird}">
+								<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Personal Details</h2>
+								<form>
+									<c:TextField ui:field="forename" labelText="First name" />
 
-										<c:FormField ui:field="surname" labelText="Last name" />
+									<c:TextField ui:field="surname" labelText="Last name" />
 
-										<c:FormField ui:field="company" labelText="Company" />
+									<c:TextField ui:field="company" labelText="Company" />
 
-										<c:FormField ui:field="username" labelText="Email" />
+									<c:TextField ui:field="username" labelText="Email" />
 
-										<c:FormButton ui:field="changeDetailsBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth}" text="Save Changes"
-											enabled="false" />
-									</form>
-								</div>
-								<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird}">
-									<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Change Password</h2>
-									<form>
-										<c:FormFieldPassword ui:field="password" labelText="Current password" />
-
-										<c:FormFieldPassword ui:field="newPassword" labelText="New password" checkActive="true" />
-
-										<c:FormFieldPassword ui:field="confirmPassword" labelText="Confirm password" />
-
-										<c:FormButton ui:field="changePasswordBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth}" text="Save New Password"
-											enabled="false" />
-									</form>
-								</div>
+									<c:FormButton ui:field="changeDetailsBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth}" text="Save Changes"
+										enabled="false" />
+								</form>
 							</div>
+							<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird}">
+								<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Change Password</h2>
+								<form>
+									<c:PasswordField ui:field="password" labelText="Current password" />
 
-							<div
-								class="{STYLES_INSTANCE.reflectionMainStyle.pageSection} {STYLES_INSTANCE.reflectionMainStyle.pageSectionWithBorder} {STYLES_INSTANCE.reflectionMainStyle.accountSettingsSection}">
-								<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">User Access</h2>
-								<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird}">
-									<h3 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Roles</h3>
-									<cv:CellTable ui:field="rolesTable" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}" />
-									<g:HTMLPanel tag="form" ui:field="addRolePanel">
-										<c:FormField ui:field="addRole" labelText="User Role" />
-										<c:FormButton ui:field="addRoleBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth}" text="Add Role" />
-						</g:HTMLPanel>
-								</div>
-								<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird}">
-									<h3 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Permissions</h3>
-									<cv:CellTable ui:field="permissionsTable" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}" />
-									<g:HTMLPanel tag="form" ui:field="addPermissionPanel">
-										<c:FormField ui:field="addPermission" labelText="User Permission" />
-										<c:FormButton ui:field="addPermissionBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth}" text="Add Permission" />
-			</g:HTMLPanel>
-								</div>
+									<c:PasswordField ui:field="newPassword" labelText="New password" checkActive="true" />
+
+									<c:PasswordField ui:field="confirmPassword" labelText="Confirm password" />
+
+									<c:FormButton ui:field="changePasswordBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth}" text="Save New Password"
+										enabled="false" />
+								</form>
 							</div>
-
 						</div>
+
+						<div
+							class="{STYLES_INSTANCE.reflectionMainStyle.pageSection} {STYLES_INSTANCE.reflectionMainStyle.pageSectionWithBorder} {STYLES_INSTANCE.reflectionMainStyle.accountSettingsSection}">
+							<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">User Access</h2>
+							<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird}">
+								<h3 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Roles</h3>
+								<cv:CellTable ui:field="rolesTable" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}" />
+								<g:HTMLPanel tag="form" ui:field="addRolePanel">
+									<c:TextField ui:field="addRole" labelText="User Role" />
+									<c:FormButton ui:field="addRoleBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth}" text="Add Role" />
+								</g:HTMLPanel>
+							</div>
+							<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird}">
+								<h3 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Permissions</h3>
+								<cv:CellTable ui:field="permissionsTable" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}" />
+								<g:HTMLPanel tag="form" ui:field="addPermissionPanel">
+									<c:TextField ui:field="addPermission" labelText="User Permission" />
+									<c:FormButton ui:field="addPermissionBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth}" text="Add Permission" />
+								</g:HTMLPanel>
+							</div>
+						</div>
+
 					</div>
 				</article>
 			</li>

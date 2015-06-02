@@ -5,13 +5,13 @@
 	<ui:style gss="true">
 	
 	</ui:style>
-	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer}">
-		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth}">
-				<h2>Categories</h2>
-
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.pageAdmin}">
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__row}">
+			<h1 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Categories</h1>
+		</div>
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__row}">
 			<c:CellTable ui:field="tableCategories" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}" />
-
-				<p:SimplePager styleName="text-center" ui:field="simplePager" visible="false" />
+			<p:SimplePager styleName="text-center" ui:field="simplePager" visible="false" />
 		</div>
 	</g:HTMLPanel>
-</ui:UiBinder> 
+</ui:UiBinder>

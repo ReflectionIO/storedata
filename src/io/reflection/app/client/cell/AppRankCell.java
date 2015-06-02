@@ -51,7 +51,7 @@ public class AppRankCell extends AbstractCell<Rank> {
 	interface DailyDataTemplate extends SafeHtmlTemplates {
 		DailyDataTemplate INSTANCE = GWT.create(DailyDataTemplate.class);
 
-		@Template("<span class=\"{0}\" style=\"{1}\"></span>{2}")
+		@Template("<span class=\"{0}\" style=\"{1}\">{2}</span>")
 		SafeHtml dailyData(String icon, String style, String value);
 	}
 
@@ -80,62 +80,62 @@ public class AppRankCell extends AbstractCell<Rank> {
 		SafeStyles display = null;
 
 		if (useFilter) {
-		String dailyDataType = filter.getDailyData(), listType = FilterController.OVERALL_LIST_TYPE;
+			String dailyDataType = filter.getDailyData(), listType = FilterController.OVERALL_LIST_TYPE;
 
-		if (REVENUE_DAILY_DATA_TYPE.equals(dailyDataType) && showAllPredictions) {
-			if (value.downloads != null && value.revenue != null) {
+			if (REVENUE_DAILY_DATA_TYPE.equals(dailyDataType) && showAllPredictions) {
+				if (value.downloads != null && value.revenue != null) {
 					dailyData = DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
 							+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue(), "",
-						FormattingHelper.asWholeMoneyString(value.currency, showAllPredictions ? value.revenue.floatValue() : 0.0f));
+							FormattingHelper.asWholeMoneyString(value.currency, showAllPredictions ? value.revenue.floatValue() : 0.0f));
+				} else {
+					dailyData = SafeHtmlUtils.fromSafeConstant("-");
+				}
 			} else {
-				dailyData = SafeHtmlUtils.fromSafeConstant("-");
-			}
-		} else {
-			if (value.downloads != null) {
+				if (value.downloads != null) {
 					dailyData = DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
 							+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
 							WHOLE_NUMBER_FORMATTER.format(value.downloads.doubleValue()));
-			} else {
-				dailyData = SafeHtmlUtils.fromSafeConstant("-");
+				} else {
+					dailyData = SafeHtmlUtils.fromSafeConstant("-");
+				}
 			}
-		}
 
-		Stack s = NavigationController.get().getStack();
-		if (s != null) {
-			listType = s.getParameter(RanksPage.SELECTED_TAB_PARAMETER_INDEX);
-		}
+			Stack s = NavigationController.get().getStack();
+			if (s != null) {
+				listType = s.getParameter(RanksPage.SELECTED_TAB_PARAMETER_INDEX);
+			}
 
-		if (FilterController.OVERALL_LIST_TYPE.equals(listType)) {
-			switch (context.getColumn()) {
-			case 1:
+			if (FilterController.OVERALL_LIST_TYPE.equals(listType)) {
+				switch (context.getColumn()) {
+				case 1:
+					filter = Filter.parse(filter.asItemFilterString());
+					filter.setListType(FilterController.FREE_LIST_TYPE);
+					display = SafeStylesUtils.fromTrustedString("");
+					break;
+				case 2:
+					filter = Filter.parse(filter.asItemFilterString());
+					filter.setListType(FilterController.PAID_LIST_TYPE);
+					display = showAllPredictions ? SafeStylesUtils.fromTrustedString("") : SafeStylesUtils.forDisplay(Display.NONE);
+					break;
+				case 3:
+					filter = Filter.parse(filter.asItemFilterString());
+					filter.setListType(FilterController.GROSSING_LIST_TYPE);
+					display = showAllPredictions ? SafeStylesUtils.fromTrustedString("") : SafeStylesUtils.forDisplay(Display.NONE);
+					break;
+				}
+			} else if (FilterController.FREE_LIST_TYPE.equals(listType)) {
 				filter = Filter.parse(filter.asItemFilterString());
 				filter.setListType(FilterController.FREE_LIST_TYPE);
-				display = SafeStylesUtils.fromTrustedString("");
-				break;
-			case 2:
+				display = SafeStylesUtils.forDisplay(Display.NONE);
+			} else if (FilterController.PAID_LIST_TYPE.equals(listType)) {
 				filter = Filter.parse(filter.asItemFilterString());
 				filter.setListType(FilterController.PAID_LIST_TYPE);
-				display = showAllPredictions ? SafeStylesUtils.fromTrustedString("") : SafeStylesUtils.forDisplay(Display.NONE);
-				break;
-			case 3:
+				display = SafeStylesUtils.forDisplay(Display.NONE);
+			} else if (FilterController.GROSSING_LIST_TYPE.equals(listType)) {
 				filter = Filter.parse(filter.asItemFilterString());
 				filter.setListType(FilterController.GROSSING_LIST_TYPE);
-				display = showAllPredictions ? SafeStylesUtils.fromTrustedString("") : SafeStylesUtils.forDisplay(Display.NONE);
-				break;
+				display = SafeStylesUtils.forDisplay(Display.NONE);
 			}
-		} else if (FilterController.FREE_LIST_TYPE.equals(listType)) {
-			filter = Filter.parse(filter.asItemFilterString());
-			filter.setListType(FilterController.FREE_LIST_TYPE);
-			display = SafeStylesUtils.forDisplay(Display.NONE);
-		} else if (FilterController.PAID_LIST_TYPE.equals(listType)) {
-			filter = Filter.parse(filter.asItemFilterString());
-			filter.setListType(FilterController.PAID_LIST_TYPE);
-			display = SafeStylesUtils.forDisplay(Display.NONE);
-		} else if (FilterController.GROSSING_LIST_TYPE.equals(listType)) {
-			filter = Filter.parse(filter.asItemFilterString());
-			filter.setListType(FilterController.GROSSING_LIST_TYPE);
-			display = SafeStylesUtils.forDisplay(Display.NONE);
-		}
 		} else {
 			display = showAllPredictions ? SafeStylesUtils.fromTrustedString("") : SafeStylesUtils.forDisplay(Display.NONE);
 
