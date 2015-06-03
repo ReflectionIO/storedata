@@ -13,10 +13,17 @@
 		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main-ie8.css" />
 	<![endif]-->
  	<!--[if !lt IE 9]><!-->
-		<script src="js/vendor/picturefill.2.2.0.min.js" async></script>
+		<script src="js/vendor/picturefill.2.3.1.min.js" async></script>
 	<!-- <![endif]-->
 	<link rel="stylesheet" href="js/vendor/jquery.mCustomScrollbar.css" />
-</head>
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
+<script>
+  WebFont.load({
+    google: {
+      families: ['Open Sans:400,600,700,400italic,600italic', 'Source Sans Pro:400,600,700', 'Lato:400,700,400italic']
+    }
+  });
+</script></head>
 <body class="panel-left-open">
 	<!--[if (lt IE 9)]>
       <div class="window-warning">
@@ -205,7 +212,7 @@
 												<div tabindex="0" style="outline-style:none;" __gwt_cell="cell-gwt-uid-306">Account Name</div>
 											</td>
 											<td class="HJF4TJC-m-a HJF4TJC-m-c HJF4TJC-m-j linked-account-store">
-												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-307">iTunes Connect</div>
+												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-307"><span class="ref-icon-before ref-icon-before--apple">iTunes Connect</div>
 											</td>
 											<td class="HJF4TJC-m-a HJF4TJC-m-c HJF4TJC-m-j linked-account-date">
 												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-308">30 Jan 2015</div>
@@ -248,7 +255,7 @@
 												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-306">martinollivere@gmail.com</div>
 											</td>
 											<td class="HJF4TJC-m-a HJF4TJC-m-s linked-account-store">
-												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-307">iTunes Connect</div>
+												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-307"><span class="ref-icon-before ref-icon-before--apple">iTunes Connect</span></div>
 											</td>
 											<td class="HJF4TJC-m-a HJF4TJC-m-s linked-account-date">
 												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-308">17 Sep 2014</div>
@@ -291,7 +298,7 @@
 												<div tabindex="0" style="outline-style:none;" __gwt_cell="cell-gwt-uid-306">Account Name</div>
 											</td>
 											<td class="HJF4TJC-m-a HJF4TJC-m-c HJF4TJC-m-j linked-account-store">
-												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-307">iTunes Connect</div>
+												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-307"><span class="ref-icon-before ref-icon-before--apple">iTunes Connect</span></div>
 											</td>
 											<td class="HJF4TJC-m-a HJF4TJC-m-c HJF4TJC-m-j linked-account-date">
 												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-308">30 Jan 2015</div>
@@ -334,7 +341,7 @@
 												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-306">martinollivere@gmail.com</div>
 											</td>
 											<td class="HJF4TJC-m-a HJF4TJC-m-s linked-account-store">
-												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-307">iTunes Connect</div>
+												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-307"><span class="ref-icon-before ref-icon-before--apple">iTunes Connect</span></div>
 											</td>
 											<td class="HJF4TJC-m-a HJF4TJC-m-s linked-account-date">
 												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-308">17 Sep 2014</div>
@@ -447,6 +454,7 @@
 						nextRowHeading = $this.parent('tr').next('tr').find('h2').hide(),
 						thisName = $this.parents('tr').find('.linked-account-name');
 				$this.on("click", function(){
+					$this.find('.ref-button--function-small').toggleClass('is-pressed');
 					nextRow.slideToggle(200);
 					nextRowForm.slideToggle(200);
 					nextRowHeading.slideToggle(200);

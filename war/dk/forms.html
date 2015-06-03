@@ -11,13 +11,20 @@
 		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main-ie8.css" />
 	<![endif]-->
  	<!--[if !lt IE 9]><!-->
-		<script src="js/vendor/picturefill.2.2.0.min.js" async></script>
+		<script src="js/vendor/picturefill.2.3.1.min.js" async></script>
 	<!-- <![endif]-->
 	<!--[if (gte IE 9)|(IEMobile)|(!IE)]><!-->
 		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main.css" />
 	<!--<![endif]-->
 	<link rel="stylesheet" href="js/vendor/jquery.mCustomScrollbar.css" />
-</head>
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
+<script>
+  WebFont.load({
+    google: {
+      families: ['Open Sans:400,600,700,400italic,600italic', 'Source Sans Pro:400,600,700', 'Lato:400,700,400italic']
+    }
+  });
+</script></head>
 <body class="panel-left-open">
 	<!--[if (lt IE 9)]>
       <div class="window-warning">
@@ -300,13 +307,18 @@
 									<label for="checkboxOneDisabled" class="checkboxLabel checkboxLabelDisabled">Check box option disabled</label>
 									<label for="checkboxOneDisabled" class="checkboxLabelVisible checkboxLabelVisibleDisabled">Check box option disabled</label>
 								</li>
+								<li>
+									<input type="checkbox" name="checkboxOneDisabled" id="checkboxOneDisabled" disabled checked />
+									<label for="checkboxOneDisabled" class="checkboxLabel checkboxLabelDisabled">Check box option disabled</label>
+									<label for="checkboxOneDisabled" class="checkboxLabelVisible checkboxLabelVisibleDisabled">Check box option disabled</label>
+								</li>
 							</ul>
 						</div>
 						<h3 class="heading-style--heading-six">Active</h3>
 						<div class="form-field--checkbox-list">
 							<ul>
 								<li>
-									<input type="checkbox" name="checkboxOne" id="checkboxOne" />
+									<input type="checkbox" name="checkboxOne" id="checkboxOne" checked/>
 									<label for="checkboxOne" class="checkboxLabel">Option 1</label>
 									<label for="checkboxOne" class="checkboxLabelVisible">Option 1</label>
 								</li>
@@ -537,6 +549,11 @@
 									<label for="radioButtonDisabledExampleB" class="radioButtonLabel radioButtonLabelDisabled">Disabled</label>
 									<label for="radioButtonDisabledExampleB" class="radioButtonLabelVisible radioButtonLabelVisibleDisabled">Disabled</label>
 								</li>
+								<li>
+									<input type="radio" name="radioButtonDisabledExampleB" id="radioButtonDisabledExampleB" disabled checked/>
+									<label for="radioButtonDisabledExampleB" class="radioButtonLabel radioButtonLabelDisabled">Disabled checked</label>
+									<label for="radioButtonDisabledExampleB" class="radioButtonLabelVisible radioButtonLabelVisibleDisabled">Disabled checked</label>
+								</li>
 							</ul>
 						</div>
 						<div class="calendar-container">
@@ -559,15 +576,20 @@
 						</div>
 						<div class="form-field--checkbox-list">
 							<ul>
-								<li>
+								<li class="is-error-message-showing">
 									<input type="checkbox" name="checkboxTerms" id="checkboxTerms" />
 									<label for="checkboxTerms" class="checkboxLabel">Lorem ipsum dolor amet elict</label>
-									<label for="checkboxTerms" class="checkboxLabelVisible">I agree with the <a href="#">terms and conditions</a></label>
+									<label for="checkboxTerms" class="checkboxLabelVisible"><span class="block-error-message">Error message lorem ipsum dolor amet elict</span> I agree with the <a href="#">terms and conditions</a></label>
 								</li>
 								<li>
 									<input type="checkbox" name="checkboxDefaultDisabled" id="checkboxDefaultDisabled" disabled />
 									<label for="checkboxDefaultDisabled" class="checkboxLabel checkboxLabelDisabled">Check box option disabled</label>
 									<label for="checkboxDefaultDisabled" class="checkboxLabelVisible checkboxLabelVisibleDisabled">Check box option disabled</label>
+								</li>
+								<li>
+									<input type="checkbox" name="checkboxDefaultDisabled" id="checkboxDefaultDisabled" disabled checked/>
+									<label for="checkboxDefaultDisabled" class="checkboxLabel checkboxLabelDisabled">Check box option disabled checked</label>
+									<label for="checkboxDefaultDisabled" class="checkboxLabelVisible checkboxLabelVisibleDisabled">Check box option disabled checked</label>
 								</li>
 							</ul>
 						</div>
@@ -578,7 +600,7 @@
 				<div class="grid__column form-demo grid__column--push-one forms--mid-theme overflow-visible">
 					<form class="overflow-visible">
 						<h3 class="heading-style--heading-six">Mid background</h3>
-						<div class="form-field form-field--disabled">						
+						<div class="form-field form-field--disabled">
 							<input type="text" name="text" id="textmid" autocomplete="off" disabled/>
 							<label for="textmid">Deactivated</label>
 						</div>
@@ -619,15 +641,22 @@
 									<label for="radioButtonYesMid" class="radioButtonLabel">Yes</label>
 									<label for="radioButtonYesMid" class="radioButtonLabelVisible">Yes</label>
 								</li>
-								<li>
+								<li class="is-error-message-showing">
 									<input type="radio" name="radioButtonsBoolMid" id="radioButtonNoMid" />
 									<label for="radioButtonNoMid" class="radioButtonLabel">No</label>
-									<label for="radioButtonNoMid" class="radioButtonLabelVisible">No</label>
+									<label for="radioButtonNoMid" class="radioButtonLabelVisible">
+										<span class="block-error-message">Error message lorem ipsum dolor amet elict</span>
+										No</label>
 								</li>
 								<li>
 									<input type="radio" name="radioButtonDisabledExampleBMid" id="radioButtonDisabledExampleBMid" disabled />
 									<label for="radioButtonDisabledExampleBMid" class="radioButtonLabel radioButtonLabelDisabled">Disabled</label>
 									<label for="radioButtonDisabledExampleBMid" class="radioButtonLabelVisible radioButtonLabelVisibleDisabled">Disabled</label>
+								</li>
+								<li>
+									<input type="radio" name="radioButtonDisabledExampleBMid" id="radioButtonDisabledExampleBMid" disabled checked/>
+									<label for="radioButtonDisabledExampleBMid" class="radioButtonLabel radioButtonLabelDisabled">Disabled checked</label>
+									<label for="radioButtonDisabledExampleBMid" class="radioButtonLabelVisible radioButtonLabelVisibleDisabled">Disabled checked</label>
 								</li>
 							</ul>
 						</div>
@@ -660,6 +689,11 @@
 									<input type="checkbox" name="checkboxMidDisabled" id="checkboxMidDisabled" disabled />
 									<label for="checkboxMidDisabled" class="checkboxLabel checkboxLabelDisabled">Check box option disabled</label>
 									<label for="checkboxMidDisabled" class="checkboxLabelVisible checkboxLabelVisibleDisabled">Check box option disabled</label>
+								</li>
+								<li>
+									<input type="checkbox" name="checkboxMidDisabled" id="checkboxMidDisabled" disabled checked/>
+									<label for="checkboxMidDisabled" class="checkboxLabel checkboxLabelDisabled">Check box option disabled checked</label>
+									<label for="checkboxMidDisabled" class="checkboxLabelVisible checkboxLabelVisibleDisabled">Check box option disabled checked</label>
 								</li>
 							</ul>
 						</div>
@@ -706,20 +740,25 @@
 						</div>					
 						<div class="form-field--radio-list">
 							<ul>
-								<li>
-									<input type="radio" name="radioButtonsBoolDark" id="radioButtonYesDark" checked />
+								<li class="is-error-message-showing">
+									<input type="radio" name="radioButtonsBoolDark" id="radioButtonYesDark"/>
 									<label for="radioButtonYesDark" class="radioButtonLabel">Yes</label>
-									<label for="radioButtonYesDark" class="radioButtonLabelVisible">Yes</label>
+									<label for="radioButtonYesDark" class="radioButtonLabelVisible"><span class="block-error-message">Error message lorem ipsum dolor amet elict</span> Yes</label>
 								</li>
 								<li>
-									<input type="radio" name="radioButtonsBoolDark" id="radioButtonNoDark" />
+									<input type="radio" name="radioButtonsBoolDark" id="radioButtonNoDark"/>
 									<label for="radioButtonNoDark" class="radioButtonLabel">No</label>
 									<label for="radioButtonNoDark" class="radioButtonLabelVisible">No</label>
 								</li>
 								<li>
-									<input type="radio" name="radioButtonDisabledExampleBDark" id="radioButtonDisabledExampleBDark" disabled />
+									<input type="radio" name="radioButtonDisabledExampleBDark" id="radioButtonDisabledExampleBDark" disabled/>
 									<label for="radioButtonDisabledExampleBDark" class="radioButtonLabel radioButtonLabelDisabled">Disabled</label>
 									<label for="radioButtonDisabledExampleBDark" class="radioButtonLabelVisible radioButtonLabelVisibleDisabled">Disabled</label>
+								</li>
+								<li>
+									<input type="radio" name="radioButtonDisabledExampleBDark2" id="radioButtonDisabledExampleBDark2" disabled checked/>
+									<label for="radioButtonDisabledExampleBDark2" class="radioButtonLabel radioButtonLabelDisabled">Disabled Checked</label>
+									<label for="radioButtonDisabledExampleBDark2" class="radioButtonLabelVisible radioButtonLabelVisibleDisabled">Disabled Checked</label>
 								</li>
 							</ul>
 						</div>
@@ -749,9 +788,14 @@
 									<label for="checkboxTermsDark" class="checkboxLabelVisible">I agree with the <a href="#">terms and conditions</a></label>
 								</li>
 								<li>
-									<input type="checkbox" name="checkboxDarkDisabled" id="checkboxDarkDisabled" disabled />
+									<input type="checkbox" name="checkboxDarkDisabled" id="checkboxDarkDisabled" disabled/>
 									<label for="checkboxDarkDisabled" class="checkboxLabel checkboxLabelDisabled">Check box option disabled</label>
 									<label for="checkboxDarkDisabled" class="checkboxLabelVisible checkboxLabelVisibleDisabled">Check box option disabled</label>
+								</li>
+								<li>
+									<input type="checkbox" name="checkboxDarkDisabled" id="checkboxDarkDisabled" disabled checked/>
+									<label for="checkboxDarkDisabled" class="checkboxLabel checkboxLabelDisabled">Check box option disabled checked</label>
+									<label for="checkboxDarkDisabled" class="checkboxLabelVisible checkboxLabelVisibleDisabled">Check box option disabled checked</label>
 								</li>
 							</ul>
 						</div>

@@ -13,9 +13,17 @@
 		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main-ie8.css" />
 	<![endif]-->
  	<!--[if !lt IE 9]><!-->
-		<script src="js/vendor/picturefill.2.2.0.min.js" async></script>
+		<script src="js/vendor/picturefill.2.3.1.min.js" async></script>
 	<!-- <![endif]-->
 	<link rel="stylesheet" href="js/vendor/jquery.mCustomScrollbar.css" />
+	<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
+	<script>
+	  WebFont.load({
+	    google: {
+	      families: ['Open Sans:400,600,700,400italic,600italic', 'Source Sans Pro:400,600,700', 'Lato:400,700,400italic']
+	    }
+	  });
+	</script>
 </head>
 <body class="account-access-page">
 	<!--[if (lt IE 9)]>
@@ -26,6 +34,8 @@
 	
   <header id="js-component-import--global-header" class="global-header"></header>
   
+  <div id="js-component-import--panel-left" class="panel-left js-custom-scrollbar" data-mcs-theme="minimal-dark"></div>
+
 	<div class="l-page-container">
 		<div id="main" class="l-main" role="main">
 			<section class="grid-container horizontal-centre-content account-access-content">
@@ -103,7 +113,7 @@
 														c-0.5,0.1-0.9,0.4-1.2,0.9c-0.3,0.5-0.4,1.2-0.2,1.9c0.3,1.3,1.4,2.2,2.4,2c0.5-0.1,0.9-0.4,1.2-0.9c0.3-0.5,0.4-1.2,0.2-1.9
 														C23.4,23.2,22.5,22.3,21.5,22.3z"/></g></g></svg>
 								</div>
-								<p>Thank you for your application, we'll review and get back to you via email if you’ve been successful.</p>
+								<p>Thank you for your application, we'll review and get back to you via email if you’ve been successful.<br /><br /><a href="leaderboard.html">Browse the Leaderboard</a></p>
 							</div>
 							<form class="forms--mid-theme">
 								<div class="form-field js-rotate-content">						
@@ -185,9 +195,14 @@
 	<script src="js/vendor/modernizr.2.8.3.custom.min.js"></script>
 	<script src="js/application.js"></script>
 	<script src="js/account-access.js"></script>
+	<!--[if IE 9]>
+		<script src="js/vendor/jquery.mCustomScrollbar.concat.min.js"></script>
+	<![endif]-->
+	<div id="js-appendScriptsContainer"></div>
   <script>
   	function initScripts() {
   		new AccountAccess();
+  		new Page();
   	}
 
   	window.onready = initScripts();

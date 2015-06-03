@@ -14,9 +14,11 @@
 		new LeftPanelAndHamburger();
 		new FormInteractions();
 		new PanelRightOverlay();
+		new PanelRightMisplacedPassword();
 		new AccountContainer();
 		new SearchContainer();
 		this.customScrollbars();
+		this.pictureFillFix();
 	};
 
 	Page.prototype.customScrollbars = function() {
@@ -62,6 +64,55 @@
 	  });
 	};
 
+	Page.prototype.pictureFillFix = function() {
+		if($('.is-firefox').length) {
+			/**
+			 * FF's first picture implementation is static and does not react to viewport changes, this tiny script fixes this.
+			 */
+			var ua = navigator.userAgent;
+
+			if(window.HTMLPictureElement && ((/ecko/).test(ua) && ua.match(/rv\:(\d+)/) && RegExp.$1 < 41)){
+				addEventListener('resize', (function(){
+					var timer;
+
+					var dummySrc = document.createElement('source');
+
+					var fixPicture = function(img){
+						var picture = img.parentNode;
+						var source = dummySrc.cloneNode();
+						picture.insertBefore(source, picture.firstElementChild);
+						setTimeout(function(){
+							picture.removeChild(source);
+						});
+					};
+
+					var findPictureImgs = function(){
+						var i;
+						var imgs = document.querySelectorAll('picture > img');
+						for(i = 0; i < imgs.length; i++){
+							if(imgs[i].complete){
+								if(imgs[i].currentSrc){
+									fixPicture(imgs[i]);
+								}
+							} else if(imgs[i].currentSrc){
+								removeEventListener('resize', onResize);
+								break;
+							}
+						}
+					};
+					var onResize = function(){
+						clearTimeout(timer);
+						timer = setTimeout(findPictureImgs, 99);
+					};
+
+					dummySrc.srcset = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
+
+					return onResize;
+				})());
+			}
+		}
+	}
+
 
 // object for browser detection related functionality
 	var BrowserDetection = function() {
@@ -69,6 +120,7 @@
 		this.setChromeClass();
 		this.setOperaClass();
 		this.setSafariClass();
+		this.setFireFoxClass();
 	}
 
 	BrowserDetection.prototype.setIEClass = function() {
@@ -122,6 +174,11 @@
 	  // other browser
 	  return false;
 	};
+
+	BrowserDetection.prototype.setFireFoxClass = function() {
+		var is_firefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+		if(is_firefox) { $('html').addClass('is-firefox'); }
+	}
 
 
 /* COMPONENT OBJECTS */
@@ -285,6 +342,28 @@
 			$('html, body').removeClass('no-scroll');
 		});
 	};
+
+	var PanelRightMisplacedPassword = function() {
+		$('.panel-right .js-mock-show-reset-password').on("click", function(e){
+			$('.panel-right').addClass('show-reset-password-form').addClass('will-show');
+			setTimeout(function(){
+				$('.panel-right .form--login').css({"visibility":"hidden","position":"absolute"});
+				$('.panel-right .form--password-reset').css({"visibility":"visible","position":"relative"});
+				$('.panel-right').removeClass('will-show');
+				if($('.ie8').length > 0) {
+					$('.panel-right .form--login').css("display","none");
+					$('.panel-right .form--password-reset').css("display","block");
+				}
+			}, 150);
+		});
+
+		$('.panel-right .js-mock-send-reset-password').on("click", function(e){
+			e.preventDefault();
+			var $this = $(this);
+			$this.attr('value', 'Email is on the way').addClass('ref-button--success');
+			$('.panel-right').addClass('reset-password-is-submitted').find('.form-submitted-success').addClass('is-showing');
+		});
+	}
 
 	var AccountContainer = function() {
 		$('.actions-group').on("click", function() {
@@ -533,7 +612,7 @@
 					else {
 						$this.addClass('is-open');
 						optionsList.css('margin-top', "9px");
-					}				
+					}	
 				});
 			}
 
@@ -563,7 +642,8 @@
 							}							
 						}));
 						refSelectContainer.addClass('reflection-select--filter');
-						optionsList.append($('<span>').text($(selectOptions[0]).text())).append(listContainer);
+						var selectTitle = (selectInput.data("title")) ? selectInput.data("title") : $(selectOptions[0]).text();
+						optionsList.append($('<span>').text(selectTitle)).append(listContainer);
 					}
 					if(isCentered) {
 						refSelectContainer.addClass('reflection-select--center');
@@ -611,6 +691,9 @@
 						refSelectContainer.addClass('is-open');
 						refSelectContainer.parents('.form-field--select').addClass('is-open');
 						optionsList.css('margin-top', "9px");
+						if($('.touch').length) {
+							refSelectContainer.siblings('.js-field--select').focus();
+						}
 					}
 					if($(window).width() < 720) {
 						if(refSelectContainer.hasClass('reflection-select--filter') && refSelectContainer.hasClass('is-open')) {
@@ -658,8 +741,14 @@
 						}
 					}
 				});
+
+				$(this).siblings('.page-overlay').on("click", function() {
+					toggleDropDown();
+				});
 			});
 		}
+
+
 	};
 
 	FormFieldSelect.prototype.populateSelectedValues = function(listItems, selectedOptionsContainer) {
@@ -680,7 +769,6 @@
 		}
 	};
 
-
 	var BackToTop = function() {
 		if($('.MHXTE6C-ob-c').length > 0) {
 			$('.MHXTE6C-ob-c').on("click", function(e){
@@ -692,7 +780,7 @@
 		$(window).scroll(function(){
 			var scrollTop = $(window).scrollTop();
 			var windowHeight = $('body').height();
-			if(scrollTop > windowHeight / 3) {
+			if(scrollTop > 500) {
 				$('.MHXTE6C-ob-c').addClass('is-showing');
 			}
 			else {
@@ -710,7 +798,7 @@
 		});		
 	};
 
-	Accordion.prototype.calculateAccordionHeights = function() {	
+	Accordion.prototype.calculateAccordionHeights = function() {
 		$('.accordion').each(function(){
 			$this = $(this);
 			$this.find('> ul > li').addClass('is-closed');
@@ -834,6 +922,31 @@
 			}			
 		});
 	};
+
+	var ResponsiveTable = function() {
+		$('.table-wrapper').each(function(){
+			$this = $(this);
+			var tr = $this.find('.scrollable table.responsive tr'),
+        tr_copy = $this.find('.pinned table tr'),
+        heights = [];
+
+		    tr.each(function (index) {
+		      var self = $(this),
+		          tx = self.find('th, td');
+
+		      tx.each(function () {
+		        var height = $(this).innerHeight();
+		        heights[index] = heights[index] || 0;
+		        if (height > heights[index]) heights[index] = height;
+		      });
+
+		    });
+
+		    tr_copy.each(function (index) {
+		      $(this).height(heights[index]);
+		    });
+		});
+	}
 /* END COMPONENT OBJECTS */
 
 /* PAGE OBJECTS FOR TEMPLATES */
@@ -847,6 +960,11 @@
 		new TabsToMobileDropDown();
 		new FormFieldSelect();
 		new BackToTop();
+		new ResponsiveTable();
+
+		$(window).on("resize", function(){
+			new ResponsiveTable();
+		});
 	}
 
 // BlogPage object
