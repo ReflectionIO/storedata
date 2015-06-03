@@ -44,68 +44,69 @@
 			</form>
 		</div>
 
-
-		<ul
-			class="{STYLES_INSTANCE.reflectionMainStyle.tabsContainer} {STYLES_INSTANCE.reflectionMainStyle.defaultTabsTransition} {STYLES_INSTANCE.reflectionMainStyle.tabsToDropdown}">
-			<li ui:field="revenueItem"
-				class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab} {STYLES_INSTANCE.reflectionMainStyle.isActive}">
-				<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
-				<g:InlineHyperlink ui:field="revenueLink" targetHistoryToken="#tab-content" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
-					<span>
-						<svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.tabs}">
+			<ul
+				class="{STYLES_INSTANCE.reflectionMainStyle.tabsContainer} {STYLES_INSTANCE.reflectionMainStyle.defaultTabsTransition} {STYLES_INSTANCE.reflectionMainStyle.tabsToDropdown}">
+				<li ui:field="revenueItem"
+					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab} {STYLES_INSTANCE.reflectionMainStyle.isActive}">
+					<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
+					<g:InlineHyperlink ui:field="revenueLink" targetHistoryToken="#tab-content" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
+						<span>
+							<svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">
 									<path
-							d="M19.5,4.7L0,6.9v13.9l13.9,4.9L32,20.2V6.4L19.5,4.7z M30,15.1l-16.1,4.6L2,15.9v-3l11.9,3.4
+								d="M19.5,4.7L0,6.9v13.9l13.9,4.9L32,20.2V6.4L19.5,4.7z M30,15.1l-16.1,4.6L2,15.9v-3l11.9,3.4
 	L30,12.2V15.1z M13.9,12L30,8.4v2.8l-16.1,4.2L2,11.9v-3L13.9,12z M27.7,7.9l-13.8,3.1L4.2,8.4l15.3-1.7L27.7,7.9z M13.9,23.6
 	L2,19.4V17l11.9,3.8L30,16.2v2.6L13.9,23.6z" /></svg>
-						<span ui:field="revenueText">Revenue</span>
-					</span>
-				</g:InlineHyperlink>
-			</li>
-			<li ui:field="downloadsItem"
-				class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab}">
-				<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
-				<g:InlineHyperlink ui:field="downloadsLink" targetHistoryToken="#tab-content" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
-					<span>
-						<svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">
+							<span ui:field="revenueText">Revenue</span>
+						</span>
+					</g:InlineHyperlink>
+				</li>
+				<li ui:field="downloadsItem"
+					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab}">
+					<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
+					<g:InlineHyperlink ui:field="downloadsLink" targetHistoryToken="#tab-content" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
+						<span>
+							<svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">
 									<path fill-rule="evenodd" clip-rule="evenodd"
-							d="M32,16.5c0,3.6-2.7,6.5-6.7,6.5v0h-6v-2h6.5
+								d="M32,16.5c0,3.6-2.7,6.5-6.7,6.5v0h-6v-2h6.5
 	c2.5,0,4.5-2,4.5-4.5c0-1.6-0.8-3-2.3-3.9c-1.4-0.8-1.5-0.9-0.9-2.4c0.1-0.3,0.1-0.5,0.1-0.8c0-1.4-1.1-2.5-2.5-2.5
 	c0,0-0.7,0-1.4,0.2c-1.1,0.5-1.3,0-1.8-1.2C20.4,3.6,17.9,2,15.2,2c-3.6,0-6.6,2.7-7,6.3c-0.1,1.4-0.2,1.4-1.7,1.8
 	C4,10.6,2,12.9,2,15.5c0,3,2.3,5.5,5.3,5.5v0h6v2h-6v0c-4,0-7.2-3.4-7.2-7.5c0-3.7,2.7-6.7,6.2-7.4c0.4-4.6,4.4-8.1,9-8.1
 	c3.6,0,6.7,2.1,8.1,5.2C23.8,5.1,24.2,5,24.7,5c2.5,0,4.5,2,4.5,4.5c0,0.5-0.2,1-0.3,1.4C30.8,12,32,14.1,32,16.5z M19,25.8
 	l-1.8,1.8V14.3c0-0.6-0.4-1.1-1-1.1c-0.6,0-1,0.5-1,1.1v13.3l-1.9-1.8c-0.4-0.4-1.2-0.4-1.6,0c-0.4,0.4-0.5,1.1,0,1.6l3.1,3.1
 	c0.4,0.4,0.8,0.5,1.3,0.5c0.5,0,0.9-0.2,1.3-0.5l3.1-3.1c0.4-0.4,0.4-1.1,0-1.6C20.2,25.4,19.5,25.4,19,25.8z" /></svg>
-						<span ui:field="downloadsText">Downloads</span>
-					</span>
-				</g:InlineHyperlink>
-			</li>
-			<li ui:field="rankingItem"
-				class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab}">
-				<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
-				<g:InlineHyperlink ui:field="rankingLink" targetHistoryToken="#tab-content" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
-					<span>
-						<svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">
+							<span ui:field="downloadsText">Downloads</span>
+						</span>
+					</g:InlineHyperlink>
+				</li>
+				<li ui:field="rankingItem"
+					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab}">
+					<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
+					<g:InlineHyperlink ui:field="rankingLink" targetHistoryToken="#tab-content" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
+						<span>
+							<svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">
 									<path d="M23,12V4H9v6H0v18h32V12H23z M11,6h10v7.3l0,0V26H11V12.3l0,0V6z M2,12h8v14H2V12z M30,26h-8V14h8
 	V26z" /></svg>
-						<span ui:field="rankingText">Rank</span>
-					</span>
-				</g:InlineHyperlink>
-			</li>
-			<li
-				class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab}">
-				<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
-				<g:InlineHyperlink targetHistoryToken="#tab-content" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
-					<span>
-						<svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">
+							<span ui:field="rankingText">Rank</span>
+						</span>
+					</g:InlineHyperlink>
+				</li>
+				<li
+					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab}">
+					<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
+					<g:InlineHyperlink targetHistoryToken="#tab-content" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
+						<span>
+							<svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">
 									<path
-							d="M4,10c0,1.1-0.9,2-2,2s-2-0.9-2-2s0.9-2,2-2S4,8.9,4,10z M32,9H7v2h25V9z M2,14
+								d="M4,10c0,1.1-0.9,2-2,2s-2-0.9-2-2s0.9-2,2-2S4,8.9,4,10z M32,9H7v2h25V9z M2,14
 	c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S3.1,14,2,14z M32,15H7v2h25V15z M2,20c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S3.1,20,2,20z
 	 M32,21H7v2h25V21z" /></svg>
-						<span>App Details</span>
-					</span>
-				</g:InlineHyperlink>
-			</li>
-		</ul>
+							<span>App Details</span>
+						</span>
+					</g:InlineHyperlink>
+				</li>
+			</ul>
+		</div>
 
 		<div
 			class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth} {STYLES_INSTANCE.reflectionMainStyle.filtersContainer} {STYLES_INSTANCE.reflectionMainStyle.filterContainerApp}">

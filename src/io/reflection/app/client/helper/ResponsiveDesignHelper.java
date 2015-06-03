@@ -66,21 +66,16 @@ public class ResponsiveDesignHelper {
 							}
 						});
 			} else if ($wnd.$($wnd).width() > 720) {
-				$wnd
-						.$(".tabs-to-dropdown")
-						.each(
-								function(i, element) {
-									var tabSwitched = $wnd.$(
-											".tabs-to-dropdown").attr(
-											'switched');
-									if (tabSwitched) {
-										$wnd.$(".tabs-to-dropdown").removeAttr(
-												"switched");
-										console
-												.log("Jamie need to give us the javascript to turn the dropdowns back to tabs");
-										//					instance.unsplitTabs($wnd.$(element));
-									}
-								});
+				$wnd.$(".tabs-to-dropdown").each(
+						function(i, element) {
+							var tabSwitched = $wnd.$(".tabs-to-dropdown").attr(
+									'switched');
+							if (tabSwitched) {
+								$wnd.$(".tabs-to-dropdown").removeAttr(
+										"switched");
+								unsplitTabsToMobileDropDown($wnd.$(element));
+							}
+						});
 			}
 		};
 
@@ -93,8 +88,8 @@ public class ResponsiveDesignHelper {
 						activeElement.html($this.find('span').html()).addClass(
 								'ref-icon-after ref-icon-after--angle-down');
 					});
-			$container = $wnd.$('<div>').addClass('tabs-to-dropdown-container');
-			original.wrap($container);
+			$container = original.parent('div').addClass(
+					'tabs-to-dropdown-container');
 			original.hide();
 			activeElement.insertBefore(original);
 
@@ -115,6 +110,18 @@ public class ResponsiveDesignHelper {
 						"opacity", 1);
 			}
 		};
+
+		unsplitTabsToMobileDropDown = function(element) {
+			$wnd.$('.tabs-to-dropdown-container').find('ul.tabs-to-dropdown')
+					.css("display", "block");
+			$wnd.$('.tabs-to-dropdown-container').removeClass(
+					'tabs-to-dropdown-container').find('> span').remove();
+			element.find(".tabs__tab").unbind("click");
+			element.find(".tabs__tab").on("click", function(e) {
+				e.preventDefault();
+			});
+		};
+
 	}-*/;
 
 	public static native void makeTabsResponsive()/*-{

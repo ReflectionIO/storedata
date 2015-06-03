@@ -503,8 +503,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		register(DefaultEventBus.get().addHandlerToSource(GetLinkedAccountItemEventHandler.TYPE, LinkedAccountController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(TogglePanelEventHandler.TYPE, NavigationController.get().getHeader(), this));
 
-		ResponsiveDesignHelper.makeTabsResponsive();
-
 	}
 
 	/*
@@ -688,8 +686,9 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		for (String key : tabs.keySet()) {
 			tabs.get(key).removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isActive());
 		}
-
 		tabs.get(selectedTab).addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isActive());
+
+		ResponsiveDesignHelper.makeTabsResponsive();
 	}
 
 	private void getChartData() {
