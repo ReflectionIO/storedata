@@ -30,6 +30,7 @@ import io.reflection.app.shared.util.LookupHelper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.ScriptInjector;
+import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -80,6 +81,7 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 	@UiField DivElement breadcrumbPanel;
 	@UiField DivElement searchPanel;
 	@UiField Element comments;
+	@UiField AnchorElement facebookShareLink;
 
 	public PostPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -221,6 +223,8 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 
 			}
 		}
+
+		facebookShareLink.setHref("#" + NavigationController.get().getStack().toString() + "#f");
 
 	}
 

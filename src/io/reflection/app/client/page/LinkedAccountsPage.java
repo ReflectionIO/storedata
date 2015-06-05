@@ -45,6 +45,7 @@ import io.reflection.app.datatypes.shared.User;
 
 import com.google.gwt.cell.client.ClickableTextCell;
 import com.google.gwt.cell.client.FieldUpdater;
+import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -54,6 +55,7 @@ import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.FormElement;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -114,7 +116,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	@UiField Anchor closeAddDialog;
 
 	private TextColumn<DataAccount> columnAccountName;
-	private TextColumn<DataAccount> columnStore;
+	private Column<DataAccount, SafeHtml> columnStore;
 	private TextColumn<DataAccount> columnDateAdded;
 	private Column<DataAccount, String> columnEdit;
 	private Column<DataAccount, String> columnDelete;
@@ -294,11 +296,17 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		columnAccountName.setCellStyleNames(style.linkedAccountName());
 		linkedAccountsTable.addColumn(columnAccountName, accountNameHeader);
 
-		columnStore = new TextColumn<DataAccount>() {
+		columnStore = new Column<DataAccount, SafeHtml>(new SafeHtmlCell()) {
+
 			@Override
-			public String getValue(DataAccount object) {
-				return (object.source != null) ? object.source.name : "-";
+			public SafeHtml getValue(DataAccount object) {
+				SpanElement storeElem = Document.get().createSpanElement();
+				storeElem.addClassName(style.refIconBefore());
+				storeElem.addClassName(style.refIconBeforeApple());
+				storeElem.setInnerText(object.source.name);
+				return (object.source != null) ? SafeHtmlUtils.fromTrustedString(storeElem.toString()) : SafeHtmlUtils.fromSafeConstant("-");
 			}
+
 		};
 		SafeHtmlHeader storeHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Store " + sorterSvg));
 		storeHeader.setHeaderStyleNames(style.canBeSorted());
@@ -349,8 +357,10 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 				FormElement formElem = subRowElem.getFirstChildElement().getElementsByTagName("form").getItem(0).cast();
 				AnimationHelper.nativeSlideToggle(subRowElem, 200);
 				AnimationHelper.nativeSlideToggle(formElem, 200);
-				AnimationHelper.nativeSlideToggle(formElem.getElementsByTagName("h2").getItem(0), 200);
+				AnimationHelper.nativeSlideToggle(formElem.getFirstChildElement().getElementsByTagName("h2").getItem(0), 200);
 				DOMHelper.toggleClassName(rowElem.getFirstChildElement(), style.isOpen());
+				DOMHelper.toggleClassName(linkedAccountsTable.getRowElement(index).getCells().getItem(3).getFirstChildElement().getElementsByTagName("a")
+						.getItem(0), style.isPressed());
 			}
 		});
 

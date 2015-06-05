@@ -7,11 +7,13 @@
 //
 package io.reflection.app.client.page;
 
+import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
 import io.reflection.app.api.core.shared.call.LinkAccountRequest;
 import io.reflection.app.api.core.shared.call.LinkAccountResponse;
 import io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler;
 import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.client.DefaultEventBus;
+import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
@@ -31,6 +33,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
 
@@ -48,6 +51,7 @@ public class LinkItunesPage extends Page implements NavigationEventHandler, Link
 	@UiField IosMacLinkAccountForm iosMacForm;
 	@UiField DivElement panelSuccess;
 	@UiField Anchor linkAnotherAccount;
+	@UiField InlineHyperlink continueToLeaderboard;
 
 	private LinkableAccountFields linkableAccount;
 
@@ -64,6 +68,9 @@ public class LinkItunesPage extends Page implements NavigationEventHandler, Link
 						linkableAccount.getProperties()); // Link account
 			}
 		});
+
+		continueToLeaderboard.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
+				OVERALL_LIST_TYPE, FilterController.get().asRankFilterString()));
 	}
 
 	/*
