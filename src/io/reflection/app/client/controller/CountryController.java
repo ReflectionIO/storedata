@@ -14,7 +14,7 @@ import io.reflection.app.api.core.shared.call.event.GetCountriesEventHandler.Get
 import io.reflection.app.api.core.shared.call.event.GetCountriesEventHandler.GetCountriesSuccess;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.client.DefaultEventBus;
-import io.reflection.app.client.res.flags.Styles;
+import io.reflection.app.client.res.flags.StylesFlags;
 import io.reflection.app.datatypes.shared.Country;
 
 import java.util.ArrayList;
@@ -132,19 +132,19 @@ public class CountryController implements ServiceConstants {
 		String styleName = null;
 
 		if ("us".equals(a2Code)) {
-			styleName = Styles.INSTANCE.flags().us();
+			styleName = StylesFlags.INSTANCE.flags().us();
 		} else if ("gb".equals(a2Code)) {
-			styleName = Styles.INSTANCE.flags().gb();
+			styleName = StylesFlags.INSTANCE.flags().gb();
 		} else if ("cn".equals(a2Code)) {
-			styleName = Styles.INSTANCE.flags().cn();
+			styleName = StylesFlags.INSTANCE.flags().cn();
 		} else if ("de".equals(a2Code)) {
-			styleName = Styles.INSTANCE.flags().de();
+			styleName = StylesFlags.INSTANCE.flags().de();
 		} else if ("fr".equals(a2Code)) {
-			styleName = Styles.INSTANCE.flags().fr();
+			styleName = StylesFlags.INSTANCE.flags().fr();
 		} else if ("jp".equals(a2Code)) {
-			styleName = Styles.INSTANCE.flags().jp();
+			styleName = StylesFlags.INSTANCE.flags().jp();
 		} else if ("it".equals(a2Code)) {
-			styleName = Styles.INSTANCE.flags().it();
+			styleName = StylesFlags.INSTANCE.flags().it();
 		}
 
 		return styleName;

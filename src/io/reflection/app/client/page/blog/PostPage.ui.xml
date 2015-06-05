@@ -48,8 +48,10 @@
 				<h1 ui:field="title"></h1>
 
 				<p class="{STYLES_INSTANCE.reflectionMainStyle.siteArticleInfo}">
-					<strong>Posted by</strong><span ui:field="author" class="posted-by" />
-					on<span ui:field="date" />
+					<strong>Posted by</strong>
+					<span ui:field="author" class="{STYLES_INSTANCE.reflectionMainStyle.postedBy}" />
+					on
+					<span ui:field="date" />
 					<!-- <span class="comments-link"> -->
 					<!-- <a href="#comments">12 comments</a> -->
 					<!-- </span> -->
@@ -65,10 +67,29 @@
 					<p class="{STYLES_INSTANCE.reflectionMainStyle.siteArticleInfo}">
 						<strong>Posted by</strong>
 						<span ui:field="authorFooter" class="posted-by" />
-						on <span ui:field="dateFooter" />
+						on
+						<span ui:field="dateFooter" />
 					</p>
 				</footer>
-				<div class="addthis_sharing_toolbox"></div>
+
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.sharingContainer}">
+					<a ui:field="facebookShareLink" class="addthis_button_facebook">
+						<span class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeFacebook}"></span>
+						<span class="{STYLES_INSTANCE.reflectionMainStyle.hiddenText}">Share on Facebook</span>
+					</a>
+					<a href="#t" class="addthis_button_twitter">
+						<span class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeTwitter}"></span>
+						<span class="{STYLES_INSTANCE.reflectionMainStyle.hiddenText}">Share on Twitter</span>
+					</a>
+					<a href="#t" class="addthis_button_linkedin">
+						<span class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeLinkedin}"></span>
+						<span class="{STYLES_INSTANCE.reflectionMainStyle.hiddenText}">Share on LinkedIn</span>
+					</a>
+					<a href="#t" class="addthis_button_google_plusone_share">
+						<span class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeGooglePlus}"></span>
+						<span class="{STYLES_INSTANCE.reflectionMainStyle.hiddenText}">Share on Google Plus</span>
+					</a>
+				</div>
 
 
 			</article>

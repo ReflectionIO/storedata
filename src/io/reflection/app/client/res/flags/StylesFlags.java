@@ -18,8 +18,8 @@ import com.google.gwt.resources.client.ImageResource.RepeatStyle;
  * @author billy1380
  * 
  */
-public interface Styles extends ClientBundle {
-	public static final Styles INSTANCE = GWT.create(Styles.class);
+public interface StylesFlags extends ClientBundle {
+	public static final StylesFlags INSTANCE = GWT.create(StylesFlags.class);
 
 	interface FlagStyles extends CssResource {
 		String cn();

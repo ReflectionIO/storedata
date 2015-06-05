@@ -59,7 +59,7 @@ public class HomePage extends Page {
 
 	private static final ScriptElement scriptRespond = DOMHelper.getJSScriptFromUrl("js/respond.min.js");
 
-	private static final ScriptElement scriptPictureFill = DOMHelper.getJSScriptFromUrl("js/picturefill.2.2.0.min.js", "async");
+	private static final ScriptElement scriptPictureFill = DOMHelper.getJSScriptFromUrl("js/vendor/picturefill.2.3.1.min.js", "async");
 
 	private int toTop = 0;
 	private static boolean tweeked = false;

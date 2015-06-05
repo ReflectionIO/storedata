@@ -130,7 +130,8 @@
 									c0.4,0,0.7-0.2,0.9-0.4L60.7,9.2C61.2,8.7,61.1,7.9,60.6,7.4z"></path>
 								</svg>
 					<p>
-						<g:Anchor href="#" ui:field="linkAnotherAccount">Link another account</g:Anchor>
+						<g:Anchor ui:field="linkAnotherAccount">Link another account</g:Anchor>
+						<g:InlineHyperlink ui:field="continueToLeaderboard">Continue to Leaderboard</g:InlineHyperlink>
 					</p>
 				</div>
 			</div>
