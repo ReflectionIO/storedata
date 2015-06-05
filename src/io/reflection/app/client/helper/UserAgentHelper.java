@@ -44,6 +44,10 @@ public class UserAgentHelper {
 		return !!window.opera || /opera|opr/i.test(navigator.userAgent);
 	}-*/;
 
+	static native boolean nativeIsFirefox()/*-{
+		return navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+	}-*/;
+
 	public static int getIEVersion() {
 		int version = -1;
 		if (userAgent.contains(IE_11_VALUE)) {
@@ -56,17 +60,13 @@ public class UserAgentHelper {
 
 	public static void detectBrowser() {
 		if (isIE()) {
-			if (!Document.get().getBody().hasClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isIe())) {
-				Document.get().getBody().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isIe() + " ie" + getIEVersion());
-			}
+			Document.get().getBody().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isIe() + " ie" + getIEVersion());
 		} else if (nativeIsChrome()) {
-			if (!DOMHelper.getHtmlElement().hasClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isChrome())) {
-				DOMHelper.getHtmlElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isChrome());
-			}
+			DOMHelper.getHtmlElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isChrome());
 		} else if (nativeIsOpera()) {
-			if (!DOMHelper.getHtmlElement().hasClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isOpera())) {
-				DOMHelper.getHtmlElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isOpera());
-			}
+			DOMHelper.getHtmlElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isOpera());
+		} else if (nativeIsFirefox()) {
+			DOMHelper.getHtmlElement().addClassName("is-firefox");
 		}
 	}
 

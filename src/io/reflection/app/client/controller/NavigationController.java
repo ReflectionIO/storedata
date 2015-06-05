@@ -361,10 +361,6 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 
 				final PageType currentPage = stackPage;
 
-				if (currentPage == PageType.HomePageType) {
-					HomePage.applyHomePageTweeks();
-				}
-
 				// So in the web.bindery SimpleEventBus, it records the state of
 				// firingDepth i.e. if eventA calls eventB call eventC, we'd be
 				// 3 levels deep at
@@ -381,9 +377,6 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 				Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 					@Override
 					public void execute() {
-						if (currentPage != PageType.HomePageType) {
-							HomePage.removeHomePageTweeks();
-						}
 
 						attachPage(currentPage);
 

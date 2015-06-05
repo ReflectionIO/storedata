@@ -9,12 +9,14 @@ package io.reflection.app.client;
 
 import io.reflection.app.client.charts.GwtCanvasBasedCanvasFactory;
 import io.reflection.app.client.controller.NavigationController;
+import io.reflection.app.client.helper.DOMHelper;
 import io.reflection.app.client.helper.ResponsiveDesignHelper;
 import io.reflection.app.client.helper.UserAgentHelper;
 import io.reflection.app.client.part.BackToTop;
 import io.reflection.app.client.part.SuperAlertBox;
 import io.reflection.app.client.res.Styles;
 
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -71,6 +73,7 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 		RootPanel.get().add(NavigationController.get().getPanelRightSearch());
 		RootPanel.get().add(new BackToTop());
 		UserAgentHelper.initCustomScrollbars();
+		Document.get().getHead().appendChild(DOMHelper.getJSScriptFromUrl("js/vendor/picturefillFirefox.js"));
 		UserAgentHelper.initIETweaks();
 		ResponsiveDesignHelper.initTabsResponsive();
 

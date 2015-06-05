@@ -16,7 +16,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.ScriptInjector;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.ScriptElement;
 import com.google.gwt.dom.client.StyleInjector;
 import com.google.gwt.dom.client.VideoElement;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -57,12 +56,7 @@ public class HomePage extends Page {
 	private Element picture3, source5, source6;
 	private boolean mapScriptInjected;
 
-	private static final ScriptElement scriptRespond = DOMHelper.getJSScriptFromUrl("js/respond.min.js");
-
-	private static final ScriptElement scriptPictureFill = DOMHelper.getJSScriptFromUrl("js/vendor/picturefill.2.3.1.min.js", "async");
-
 	private int toTop = 0;
-	private static boolean tweeked = false;
 
 	public HomePage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -81,40 +75,6 @@ public class HomePage extends Page {
 
 		nativeInitMap();
 
-	}
-
-	public static void applyHomePageTweeks() {
-		if (!tweeked) {
-			// Append to Head
-			if (UserAgentHelper.isIE()) {
-				if (UserAgentHelper.getIEVersion() < 9) {
-					Document.get().getHead().appendChild(scriptRespond);
-				} else {
-					Document.get().getHead().appendChild(scriptPictureFill);
-				}
-			} else { // Not Internet Explorer
-				Document.get().getHead().appendChild(scriptPictureFill);
-			}
-
-			tweeked = true;
-		}
-	}
-
-	public static void removeHomePageTweeks() {
-		if (tweeked) {
-			// Remove from Head
-			if (UserAgentHelper.isIE()) {
-				if (UserAgentHelper.getIEVersion() < 9) {
-					Document.get().getHead().removeChild(scriptRespond);
-				} else {
-					Document.get().getHead().removeChild(scriptPictureFill);
-				}
-			} else { // Not Internet Explorer
-				Document.get().getHead().removeChild(scriptPictureFill);
-			}
-
-			tweeked = false;
-		}
 	}
 
 	private void addHomeBtnPicture() {
