@@ -530,7 +530,6 @@
 		});
 	};
 
-
 	var Tabs = function() {
 		var isIE8 = $('.ie8').length;
 		if(!isIE8) {

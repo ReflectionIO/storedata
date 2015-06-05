@@ -8,18 +8,18 @@ var SubmitButtonWithFeedback = function() {
 	$('.js-submit-with-feedback').on("click", function(){
 		var thisButton = $(this);
 		if(!thisButton.hasClass("ref-button--is-loading") && !thisButton.hasClass("ref-button--success") && !thisButton.hasClass("ref-button--error")) {
-			thisButton.addClass("ref-button--is-loading").attr("value", "Loading...");
+			thisButton.addClass("ref-button--is-loading").attr("value", "Loading");
 
   		window.setTimeout(function(){
   			if(thisButton.hasClass("js-submit-success")) {
   				thisButton.removeClass("ref-button--is-loading").addClass("ref-button--success").attr("value", "Success!");
   			}
   			else {
-  				thisButton.removeClass("ref-button--is-loading").addClass("ref-button--error").attr("value", "Oops, something went wrong");
+  				thisButton.removeClass("ref-button--is-loading").addClass("ref-button--error").attr("value", "Oops, there's an error");
   			}
   			window.setTimeout(function(){
   				thisButton.removeClass("ref-button--success ref-button--error").attr("value", "Submit");
-  			}, 3000);
+  			}, 2000);
   		}, 3000);
 		}
 	});
@@ -252,7 +252,222 @@ var SubmitButtonWithFeedback = function() {
 			}
 		});
 	};
+
+
+	// Loading indicators page object
+	var LoadingPage = function() {
+		var instance = this;
+		new Page();
+		var dkPageProperties = {
+			bannerImage: "images/banner-icon-timer.png",
+			bannerImageAlt: "Timer icon",
+			sectionTitle: "UI Interactions",
+			componentTitle: "Loading Indicators",
+			intro: "The loading indicators are consistent throughout the site and flexible enough to work in every application. They clearly indicate to the user that something is happening, how long it will take (where possible) and make any downtime useful with interesting stats and facts about the app market.",
+			pageUrl: "loading-indicators.html"
+		}
+		new DesignKitPage(dkPageProperties);
+
+		// Components
+		new SubmitButtonWithFeedback();
+
+		// Functionality just for this template, and not reusable
+		this.templateFunctions();		
+	};
+
+	LoadingPage.prototype.templateFunctions = function() {
+		var instance = this;		
+		$(".js-submit-loading").on("click", function() {
+			instance.createLoadingBar();
+		}); // demo loading bar
+		$(".js-submit-loading-determinate").on("click", function() {
+			instance.createLoadingBarDeterminate();
+		}); // demo loading bar
+		$(".js-submit-component-loading").on("click", function() {
+			instance.createComponentLoadingBar();
+		}); // demo loading bar
+		$(".js-submit-component-loading-determinate").on("click", function() {
+			instance.createComponentLoadingBarDeterminate();
+		}); // demo loading bar
+		$(".js-submit-determinate-with-feedback").on("click", function(){
+			instance.loadingButtonDeterminate($(this));
+		});
+
+		instance.loadTableDataSwitch = 1;
+		$(".js-load-table-data").on("click", function(){
+			instance.simulateLoadTableData();
+		});
+
+		$('.js-load-app-icon').on("click", function(){
+			instance.mockLoadAppDetails();		
+		});
+	};
+
+	LoadingPage.prototype.createLoadingBar = function() {
+		var $loadingText = $("<span>").text("Loading...");
+		var $loadingBar = $("<div>").addClass("page-loading").addClass("is-opening").append($loadingText);
+		$("body").append($loadingBar);			
+		this.mockLoading($loadingBar, $loadingText);
+	};
+
+	LoadingPage.prototype.createLoadingBarDeterminate = function() {
+		var $loadingText = $("<span>").text("Loading...");
+		var $loadingBar = $("<div>").addClass("page-loading").addClass("page-loading--determinate").addClass("is-opening").append($loadingText);
+		var $progressBar = $("<div>").addClass("loading-progress");
+		$loadingBar.append($progressBar);
+		$("body").append($loadingBar);
+		this.mockLoadingDeterminate($loadingBar, $loadingText, $progressBar);
+	}
+
+	LoadingPage.prototype.createComponentLoadingBar = function() {
+		var $loadingText = $("<span>").text("Loading...");
+		var $loadingBar = $("<div>").addClass("page-loading").addClass("componenet-loading").addClass("is-opening").append($loadingText);
+		$(".component-example").append($loadingBar);
+		this.mockLoading($loadingBar, $loadingText);
+	};
+
+	LoadingPage.prototype.createComponentLoadingBarDeterminate = function() {
+		var $loadingText = $("<span>").text("Loading...");
+		var $loadingBar = $("<div>").addClass("page-loading").addClass("componenet-loading").addClass("page-loading--determinate").addClass("is-opening").append($loadingText);
+		var $progressBar = $("<div>").addClass("loading-progress");
+		$loadingBar.append($progressBar);
+		$(".component-example").append($loadingBar);
+		this.mockLoadingDeterminate($loadingBar, $loadingText, $progressBar);
+	};
+
+	LoadingPage.prototype.mockLoading = function($loadingBar, $loadingText) {
+		setTimeout(function(){
+			$loadingBar.removeClass("is-opening");
+		}, 100);
+		setTimeout(function(){
+			$loadingText.text("Searching app data...");
+			setTimeout(function(){
+				$loadingText.text("Loading app details...");
+				setTimeout(function(){
+					$loadingText.text("Done!");
+					$loadingBar.addClass('is-complete');
+					setTimeout(function(){
+						$loadingBar.addClass("is-closing");
+						setTimeout(function(){
+							$loadingBar.remove();
+						}, 1000);
+					}, 500);
+				}, 3000);
+			}, 2000);
+		}, 1000);
+	}
+
+	LoadingPage.prototype.mockLoadingDeterminate = function($loadingBar, $loadingText, $progressBar) {
+		setTimeout(function(){
+			$loadingBar.removeClass("is-opening");
+		}, 100);
+		setTimeout(function(){
+			$progressBar.width("25%");
+			setTimeout(function(){
+				$loadingText.text("Searching app data...");
+				$progressBar.width("35%");
+				setTimeout(function(){
+					$loadingText.text("Loading app details...");
+					$progressBar.width("56%");
+					setTimeout(function(){
+						$progressBar.width("80%");
+						setTimeout(function(){
+							$progressBar.width("100%");
+							setTimeout(function(){
+								$loadingText.text("Done!");
+								$loadingBar.addClass('is-complete');
+								setTimeout(function(){
+									$loadingBar.addClass("is-closing");
+									setTimeout(function(){
+										$loadingBar.remove();
+									}, 1000);
+								}, 500);
+							}, 400);
+						}, 1500);
+					}, 500);
+				}, 1000);
+			}, 500);
+		}, 300);
+	}
+
+	LoadingPage.prototype.loadingButtonDeterminate = function($button) {
+		if(!$button.hasClass("ref-button--is-loading") && !$button.hasClass("ref-button--success") && !$button.hasClass("ref-button--error")) {
+			$button.addClass("ref-button--is-loading");
+			var $buttonText = $button.find(".loading-button-text").text("Loading");
+			var $progressBar = $button.find(".loading-progress");
+			$progressBar.show();
+			setTimeout(function(){
+				$progressBar.width("25%");
+				setTimeout(function(){
+					$progressBar.width("35%");
+					setTimeout(function(){
+						$progressBar.width("56%");
+						setTimeout(function(){
+							$progressBar.width("80%");
+							setTimeout(function(){
+								$progressBar.width("100%");
+								setTimeout(function(){
+									$progressBar.hide().width(0);
+									if($button.hasClass("js-submit-success")) {
+										$button.removeClass("ref-button--is-loading").addClass("ref-button--success");
+										$buttonText.text("Success!");
+									}
+									else {
+										$button.removeClass("ref-button--is-loading").addClass("ref-button--error");
+										$buttonText.text("Oops, there's an error");
+									}
+									window.setTimeout(function(){
+					  				$button.removeClass("ref-button--success ref-button--error");
+					  				$buttonText.text("Submit");
+					  			}, 2000);
+								}, 400);
+							}, 1500);
+						}, 500);
+					}, 1000);
+				}, 500);
+			}, 300);
+		}
+	};
+
+	LoadingPage.prototype.simulateLoadTableData = function() {
+		instance = this;
+		var $loadingIcon = $('<svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"/><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"/><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"/></svg>');
+		if(!$('.table-demo-loading').hasClass("is-loading")) {
+			$('.table-demo-loading').addClass("is-loading");
+			$('.table-demo-loading span').hide();
+			$('.table-demo-loading td').append($loadingIcon);
+			var mockData = [];
+			if(instance.loadTableDataSwitch > 0) {
+				mockData.push("Delta-V Racing", "Zoo Keeper Ken", "Clash of Clans");
+			} else {
+				mockData.push("Crossy Road", "MineCraft", "Candy Crush Saga");
+			}
+			var i = 0;
+			$('.table-demo-loading td span.js-demo-app-name').each(function(){
+				$(this).text(mockData[i]);
+				i++;
+			});
+			setTimeout(function(){
+				$('.table-demo-loading').removeClass('is-loading');
+				$('.table-demo-loading td svg').remove();
+				$('.table-demo-loading td span').fadeIn(200);
+			}, 3000);
+			instance.loadTableDataSwitch *= -1;
+		}
+	};
+
+	LoadingPage.prototype.mockLoadAppDetails = function() {
+		if(!$('.loading-demo-icon-container').hasClass('is-loading')) {
+			$('.loading-demo-icon-container').addClass('is-loading');
+			var $loadingIcon = $('<svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"/><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"/><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"/></svg>');
+			var $appHeading = $('.loading-demo-app-details h2').html($loadingIcon);
+			setTimeout(function(){
+				$appHeading.hide().html("Monument Valley").fadeIn(200);
+				$appIconImage = $('<img>').attr("src", "images/loading-demo-app-icon.png").attr("alt", "App Icon");
+				$('.loading-demo-icon-container').append($appIconImage.hide().fadeIn(200));
+				$('.loading-demo-icon-container').removeClass('is-loading');
+			}, 3000);
+		}
+	};
 /* END PAGE OBJECTS FOR TEMPLATES */
-
-
 
