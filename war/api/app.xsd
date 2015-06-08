@@ -154,6 +154,33 @@
 		</xsd:complexContent>
 	</xsd:complexType>
 
+	<xsd:complexType name="SaleSummary">
+		<xsd:complexContent>
+			<xsd:extension base="DataType">
+				<xsd:attribute name="dataaccountid" type="xsd:int" />
+				<xsd:attribute name="date" type="xsd:date" />
+				<xsd:attribute name="itemid" type="xsd:string" />
+				<xsd:attribute name="title" type="xsd:string" />
+				<xsd:attribute name="country" type="xsd:string" />
+				<xsd:attribute name="iphone_app_revenue" type="xsd:float" />
+				<xsd:attribute name="ipad_app_revenue" type="xsd:float" />
+				<xsd:attribute name="universal_app_revenue" type="xsd:float" />
+				<xsd:attribute name="total_app_revenue" type="xsd:float" />
+				<xsd:attribute name="iap_revenue" type="xsd:float" />
+				<xsd:attribute name="total_revenue" type="xsd:float" />
+				<xsd:attribute name="iphone_downloads" type="xsd:int" />
+				<xsd:attribute name="universal_downloads" type="xsd:int" />
+				<xsd:attribute name="ipad_downloads" type="xsd:int" />
+				<xsd:attribute name="total_downloads" type="xsd:int" />
+				<xsd:attribute name="iphone_updates" type="xsd:int" />
+				<xsd:attribute name="universal_updates" type="xsd:int" />
+				<xsd:attribute name="ipad_updates" type="xsd:int" />
+				<xsd:attribute name="total_updates" type="xsd:int" />
+				<xsd:attribute name="total_download_and_updates" type="xsd:int" />
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
 	<xsd:complexType name="Store">
 		<xsd:complexContent>
 			<xsd:extension base="DataType">

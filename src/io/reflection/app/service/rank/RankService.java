@@ -17,6 +17,7 @@ import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
+import io.reflection.app.datatypes.shared.FormType;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
@@ -28,7 +29,9 @@ import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
+import io.reflection.app.shared.util.DataTypeHelper;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -515,10 +518,9 @@ final class RankService implements IRankService {
 				typesQueryPart = "CAST(`type` AS BINARY) IN ('" + StringUtils.join(types, "', '") + "')";
 			}
 
-			final String getRanksCountQuery = String
-					.format("SELECT COUNT(1) AS `count` FROM `rank` WHERE %s AND `country`='%s' AND `categoryid`=%d AND `code2`=%d AND %s `deleted`='n'",
-							typesQueryPart, addslashes(country.a2Code), category.id.longValue(), code.longValue(),
-							isGrossing ? "`grossingposition`<>0 AND" : "");
+			final String getRanksCountQuery = String.format(
+					"SELECT COUNT(1) AS `count` FROM `rank` WHERE %s AND `country`='%s' AND `categoryid`=%d AND `code2`=%d AND %s `deleted`='n'",
+					typesQueryPart, addslashes(country.a2Code), category.id.longValue(), code.longValue(), isGrossing ? "`grossingposition`<>0 AND" : "");
 
 			final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
@@ -674,8 +676,7 @@ final class RankService implements IRankService {
 				final String getCountryStoreTypeRanksQuery = String
 						.format("SELECT * FROM `rank` WHERE %s AND `country`='%s' AND `categoryid`=%d AND `code2`=%d AND %s `deleted`='n' ORDER BY `%s` %s LIMIT %d,%d",
 								typesQueryPart, addslashes(country.a2Code), category.id.longValue(), code.longValue(),
-								isGrossing
-								|| !ignoreGrossingRank.booleanValue() ? "`grossingposition`<>0 AND" : "", pager.sortBy,
+								isGrossing || !ignoreGrossingRank.booleanValue() ? "`grossingposition`<>0 AND" : "", pager.sortBy,
 										pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start, pager.count);
 
 				if (LOG.isLoggable(GaeLevel.DEBUG)) {
@@ -820,9 +821,8 @@ final class RankService implements IRankService {
 		final List<Long> rankIds = new ArrayList<Long>();
 
 		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
-		final String getCountryStoreTypeRanksQuery = String
-				.format("SELECT `id` FROM `rank` WHERE `country`='%s' AND `categoryid`=%d AND %s AND `deleted`='n'",
-						addslashes(country.a2Code), category.id.longValue(), beforeAfterQuery(end, start));
+		final String getCountryStoreTypeRanksQuery = String.format("SELECT `id` FROM `rank` WHERE `country`='%s' AND `categoryid`=%d AND %s AND `deleted`='n'",
+				addslashes(country.a2Code), category.id.longValue(), beforeAfterQuery(end, start));
 
 		try {
 			rankConnection.connect();
@@ -931,5 +931,119 @@ final class RankService implements IRankService {
 		}
 
 		return rankIds;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see io.reflection.app.service.rank.IRankService#getSaleSummaryAndRankForItemAndFormType(java.lang.String, io.reflection.app.datatypes.shared.Country,
+	 * io.reflection.app.datatypes.shared.FormType, java.util.Date, java.util.Date)
+	 */
+	@Override
+	public List<Rank> getSaleSummaryAndRankForItemAndFormType(String internalId, Country country, Long categoryId, FormType form, Date start, Date end, Pager pager)
+			throws DataAccessException {
+		ArrayList<Rank> ranks = new ArrayList<Rank>();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+
+		String platform = form == FormType.FormTypeOther ? "PHONE" : "TABLET";
+		String sortDirection = pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC";
+
+		final String getRanksQuery = String.format("SELECT  s.date, s.total_revenue as revenue, s.total_download_and_updates as downloads, "
+				+ "    max(IF(rf.type='FREE' or rf.type='PAID', r.position, NULL)) as position, "
+				+ "    max(IF(rf.type='GROSSING', r.position, NULL)) as grossing_position, max(r.currency) as currency FROM sale_summary s USE INDEX (idx_item_search) "
+				+ "    LEFT JOIN rank_fetch rf USE INDEX (idx_rank_fetch_search) ON (s.date=rf.fetch_date and s.country=rf.country and rf.category=%d and rf.platform='%s') "
+				+ "    LEFT JOIN rank2 r ON (r.rank_fetch_id=rf.rank_fetch_id and r.itemid=s.itemid) "
+				+ "		WHERE s.date BETWEEN '%s' AND '%s' AND s.itemid = %s AND s.country = '%s' GROUP BY s.date ORDER BY s.%s %s LIMIT %d, %d", categoryId,
+				platform, dateFormat.format(start), dateFormat.format(end), internalId, country.a2Code, pager.sortBy, sortDirection,
+				pager.start, pager.count);
+
+		try {
+			rankConnection.connect();
+			rankConnection.executeQuery(getRanksQuery);
+
+			while (rankConnection.fetchNextRow()) {
+				Rank rank = new Rank();
+
+				rank.country = country.a2Code;
+				rank.currency = rankConnection.getCurrentRowString("currency");
+				rank.date = rankConnection.getCurrentRowDateTime("date");
+				rank.source = DataTypeHelper.IOS_STORE_A3;
+				rank.itemId = internalId;
+
+				rank.position = rankConnection.getCurrentRowInteger("position");
+				rank.grossingPosition = rankConnection.getCurrentRowInteger("grossing_position");
+
+				rank.downloads = rankConnection.getCurrentRowInteger("downloads");
+				Double revenue = rankConnection.getCurrentRowDouble("revenue");
+				rank.revenue = revenue == null ? 0 : revenue.floatValue();
+
+				ranks.add(rank);
+			}
+
+		} finally {
+			if (rankConnection != null) {
+				rankConnection.disconnect();
+			}
+		}
+
+		return ranks;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see io.reflection.app.service.rank.IRankService#getSaleSummaryAndRankForDataAccountAndFormType(java.lang.Long,
+	 * io.reflection.app.datatypes.shared.Country, io.reflection.app.datatypes.shared.FormType, java.util.Date, java.util.Date,
+	 * io.reflection.app.api.shared.datatypes.Pager)
+	 */
+	@Override
+	public List<Rank> getSaleSummaryAndRankForDataAccountAndFormType(Long dataaccountId, Country country, FormType form, Date start, Date end, Pager pager)
+			throws DataAccessException {
+		ArrayList<Rank> ranks = new ArrayList<Rank>();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+
+		final String getRanksQuery = String.format("SELECT s.itemid, s.price, SUM(s.total_revenue) as revenue, SUM(s.total_download_and_updates) as downloads "
+				+ "   FROM sale_summary s "
+ + "		WHERE s.date BETWEEN '%s' AND '%s' AND s.dataaccountid = %s AND s.country = '%s' GROUP BY s.itemid",
+				dateFormat.format(start), dateFormat.format(end), dataaccountId, country.a2Code);
+
+		try {
+			rankConnection.connect();
+			rankConnection.executeQuery(getRanksQuery);
+
+			while (rankConnection.fetchNextRow()) {
+				Rank rank = new Rank();
+
+				rank.country = country.a2Code;
+				rank.source = DataTypeHelper.IOS_STORE_A3;
+
+				rank.itemId = rankConnection.getCurrentRowString("itemid");
+
+				Double price = rankConnection.getCurrentRowDouble("price");
+				rank.price = price == null ? null : price.floatValue();
+
+				rank.downloads = rankConnection.getCurrentRowInteger("downloads");
+
+				Double revenue = rankConnection.getCurrentRowDouble("revenue");
+				rank.revenue = revenue == null ? 0 : revenue.floatValue();
+
+				if (LOG.isLoggable(GaeLevel.DEBUG)) {
+					LOG.log(GaeLevel.DEBUG, String.format("Got a rank -> itemid: %s, downloads: %s, revenue: %s", rank.itemId, rank.downloads, rank.revenue));
+				}
+
+				ranks.add(rank);
+			}
+		} finally {
+			if (rankConnection != null) {
+				rankConnection.disconnect();
+			}
+		}
+
+		return ranks;
+
 	}
 }
