@@ -7,9 +7,9 @@
 //
 package io.reflection.app.client.page.admin;
 
-import io.reflection.app.api.admin.shared.call.GetCalibrationSummaryRequest;
-import io.reflection.app.api.admin.shared.call.GetCalibrationSummaryResponse;
-import io.reflection.app.api.admin.shared.call.event.GetCalibrationSummaryEventHandler;
+//import io.reflection.app.api.admin.shared.call.GetCalibrationSummaryRequest;
+//import io.reflection.app.api.admin.shared.call.GetCalibrationSummaryResponse;
+//import io.reflection.app.api.admin.shared.call.event.GetCalibrationSummaryEventHandler;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.AppRankCell;
 import io.reflection.app.client.controller.CalibrationSummaryController;
@@ -53,13 +53,12 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import com.spacehopperstudios.utility.StringUtils;
-import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author William Shakour (billy1380)
  *
  */
-public class CalibrationSummaryPage extends Page implements NavigationEventHandler, GetCalibrationSummaryEventHandler {
+public class CalibrationSummaryPage extends Page implements NavigationEventHandler {
 
 	private static CalibrationSummaryPagePageUiBinder uiBinder = GWT.create(CalibrationSummaryPagePageUiBinder.class);
 
@@ -180,7 +179,7 @@ public class CalibrationSummaryPage extends Page implements NavigationEventHandl
 	protected void onAttach() {
 		super.onAttach();
 
-		register(DefaultEventBus.get().addHandlerToSource(GetCalibrationSummaryEventHandler.TYPE, CalibrationSummaryController.get(), this));
+		// register(DefaultEventBus.get().addHandlerToSource(GetCalibrationSummaryEventHandler.TYPE, CalibrationSummaryController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 
 	}
@@ -227,56 +226,56 @@ public class CalibrationSummaryPage extends Page implements NavigationEventHandl
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * io.reflection.app.api.admin.shared.call.event.GetCalibrationSummaryEventHandler#getCalibrationSummarySuccess(io.reflection.app.api.admin.shared.call.
-	 * GetCalibrationSummaryRequest, io.reflection.app.api.admin.shared.call.GetCalibrationSummaryResponse)
-	 */
-	@Override
-	public void getCalibrationSummarySuccess(GetCalibrationSummaryRequest input, GetCalibrationSummaryResponse output) {
-		if (output == null || output.status == StatusType.StatusTypeFailure || output.calibrationSummary == null) {
-			showFailed();
-		} else {
-			summaryListType = output.listType;
-			summaryListProperty = output.listProperty;
-			chart.setYDataType((ListPropertyType.ListPropertyTypeDownloads.equals(summaryListProperty)) ? YDataType.DownloadsYAxisDataType
-					: YDataType.RevenueYAxisDataType);
+	// /*
+	// * (non-Javadoc)
+	// *
+	// * @see
+	// * io.reflection.app.api.admin.shared.call.event.GetCalibrationSummaryEventHandler#getCalibrationSummarySuccess(io.reflection.app.api.admin.shared.call.
+	// * GetCalibrationSummaryRequest, io.reflection.app.api.admin.shared.call.GetCalibrationSummaryResponse)
+	// */
+	// @Override
+	// public void getCalibrationSummarySuccess(GetCalibrationSummaryRequest input, GetCalibrationSummaryResponse output) {
+	// if (output == null || output.status == StatusType.StatusTypeFailure || output.calibrationSummary == null) {
+	// showFailed();
+	// } else {
+	// summaryListType = output.listType;
+	// summaryListProperty = output.listProperty;
+	// chart.setYDataType((ListPropertyType.ListPropertyTypeDownloads.equals(summaryListProperty)) ? YDataType.DownloadsYAxisDataType
+	// : YDataType.RevenueYAxisDataType);
+	//
+	// show(output.calibrationSummary);
+	// }
+	// }
+	//
+	// /*
+	// * (non-Javadoc)
+	// *
+	// * @see
+	// * io.reflection.app.api.admin.shared.call.event.GetCalibrationSummaryEventHandler#getCalibrationSummaryFailure(io.reflection.app.api.admin.shared.call.
+	// * GetCalibrationSummaryRequest, java.lang.Throwable)
+	// */
+	// @Override
+	// public void getCalibrationSummaryFailure(GetCalibrationSummaryRequest input, Throwable caught) {
+	// showFailed();
+	// }
 
-			show(output.calibrationSummary);
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * io.reflection.app.api.admin.shared.call.event.GetCalibrationSummaryEventHandler#getCalibrationSummaryFailure(io.reflection.app.api.admin.shared.call.
-	 * GetCalibrationSummaryRequest, java.lang.Throwable)
-	 */
-	@Override
-	public void getCalibrationSummaryFailure(GetCalibrationSummaryRequest input, Throwable caught) {
-		showFailed();
-	}
-
-	private void showFailed() {
-		this.summary = null;
-
-		refreshBreadcrumbs();
-
-		title.setInnerHTML("Not found");
-		description.setInnerHTML("Calibration summary of feed fetch " + feedFetchParam + " was not found.");
-
-		hitsProvider.setList(Collections.<Rank> emptyList());
-		missesProvider.setList(Collections.<Rank> emptyList());
-
-		drawChartData();
-
-		showMisses.setEnabled(true);
-		showTop.setEnabled(true);
-		showTail.setEnabled(true);
-	}
+	// private void showFailed() {
+	// this.summary = null;
+	//
+	// refreshBreadcrumbs();
+	//
+	// title.setInnerHTML("Not found");
+	// description.setInnerHTML("Calibration summary of feed fetch " + feedFetchParam + " was not found.");
+	//
+	// hitsProvider.setList(Collections.<Rank> emptyList());
+	// missesProvider.setList(Collections.<Rank> emptyList());
+	//
+	// drawChartData();
+	//
+	// showMisses.setEnabled(true);
+	// showTop.setEnabled(true);
+	// showTail.setEnabled(true);
+	// }
 
 	private void show(CalibrationSummary summary) {
 		this.summary = summary;
