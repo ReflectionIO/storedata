@@ -173,11 +173,8 @@ public interface Styles extends ClientBundle {
 
 		String ascending();
 
-		@ClassName("at-share-btn")
-		String atShareBtn();
-
-		@ClassName("at-share-tbx-element")
-		String atShareTbxElement();
+		@ClassName("block-error-message")
+		String blockErrorMessage();
 
 		@ClassName("blockquote--large")
 		String blockquoteLarge();
@@ -494,6 +491,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("filter-switch")
 		String filterSwitch();
 
+		@ClassName("filter-switch--disabled")
+		String filterSwitchDisabled();
+
 		@ClassName("filter-switch--small")
 		String filterSwitchSmall();
 
@@ -804,6 +804,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("is-disabled")
 		String isDisabled();
 
+		@ClassName("is-error-message-showing")
+		String isErrorMessageShowing();
+
 		@ClassName("is-focused")
 		String isFocused();
 
@@ -830,6 +833,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("is-pathetic")
 		String isPathetic();
+
+		@ClassName("is-pressed")
+		String isPressed();
 
 		@ClassName("is-safari")
 		String isSafari();
@@ -1022,9 +1028,6 @@ public interface Styles extends ClientBundle {
 		@ClassName("page-blog")
 		String pageBlog();
 
-		@ClassName("page-function-button")
-		String pageFunctionButton();
-
 		@ClassName("page-functions")
 		String pageFunctions();
 
@@ -1186,6 +1189,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("ref-button--full-width")
 		String refButtonFullWidth();
 
+		@ClassName("ref-button--full-width--with-icon")
+		String refButtonFullWidthWithIcon();
+
 		@ClassName("ref-button--function-large")
 		String refButtonFunctionLarge();
 
@@ -1197,6 +1203,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("ref-button--function-small--wide")
 		String refButtonFunctionSmallWide();
+
+		@ClassName("ref-button--function-small--with-icon")
+		String refButtonFunctionSmallWithIcon();
 
 		@ClassName("ref-button--is-loading")
 		String refButtonIsLoading();
@@ -1215,9 +1224,6 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("ref-button--warning")
 		String refButtonWarning();
-
-		@ClassName("ref-button--with-icon")
-		String refButtonWithIcon();
 
 		@ClassName("ref-icon-after")
 		String refIconAfter();
@@ -1258,6 +1264,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("ref-icon-before--angle-up")
 		String refIconBeforeAngleUp();
 
+		@ClassName("ref-icon-before--apple")
+		String refIconBeforeApple();
+
 		@ClassName("ref-icon-before--blog")
 		String refIconBeforeBlog();
 
@@ -1278,6 +1287,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("ref-icon-before--forum")
 		String refIconBeforeForum();
+
+		@ClassName("ref-icon-before--google-plus")
+		String refIconBeforeGooglePlus();
 
 		@ClassName("ref-icon-before--hamburger")
 		String refIconBeforeHamburger();
@@ -1345,6 +1357,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("reset-password-form-is-showing")
 		String resetPasswordFormIsShowing();
 
+		@ClassName("reset-password-is-submitted")
+		String resetPasswordIsSubmitted();
+
 		String responsive();
 
 		@ClassName("reveal-element")
@@ -1396,6 +1411,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("selected-tab")
 		String selectedTab();
 
+		@ClassName("sharing-container")
+		String sharingContainer();
+
 		@ClassName("show-hide-link")
 		String showHideLink();
 
@@ -1432,8 +1450,14 @@ public interface Styles extends ClientBundle {
 		@ClassName("success-tick")
 		String successTick();
 
+		@ClassName("svg-create-password")
+		String svgCreatePassword();
+
 		@ClassName("svg-unhappy")
 		String svgUnhappy();
+
+		@ClassName("svg-warning-laptop")
+		String svgWarningLaptop();
 
 		@ClassName("tab-animate-active")
 		String tabAnimateActive();
@@ -1470,6 +1494,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("table-data-first")
 		String tableDataFirst();
+
+		@ClassName("table-disabled")
+		String tableDisabled();
 
 		@ClassName("table-heading--date-added")
 		String tableHeadingDateAdded();
@@ -1587,9 +1614,6 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("window-warning")
 		String windowWarning();
-
-		@ClassName("with-icon")
-		String withIcon();
 
 	}
 

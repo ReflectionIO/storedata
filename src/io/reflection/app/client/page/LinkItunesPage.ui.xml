@@ -9,8 +9,8 @@
 		<div ui:field="accountConnectAnimation" class="{STYLES_INSTANCE.reflectionMainStyle.accountConnectAnimation}">
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.cord}">
 				<div>
-					</div>
-					</div>
+				</div>
+			</div>
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.plugs}">
 				<svg version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 563.4 92.5" enable-background="new 0 0 563.4 92.5" xml:space="preserve" class="plug-left"><g><path
 					fill="#484492"
@@ -110,12 +110,11 @@
 							</li>
 						</ul>
 					</div>
-					</div>
+				</div>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.connectAccountMainContent}">
 					<h1>Your New Source of Free App Intelligence</h1>
 					<p class="{STYLES_INSTANCE.reflectionMainStyle.pStyleFeatured}">All you need to do now is link your iTunes Connect account(s) so that Reflection can import your all-important data.</p>
 				</div>
-
 			</div>
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.accountFormContainer}">
 
@@ -131,7 +130,8 @@
 									c0.4,0,0.7-0.2,0.9-0.4L60.7,9.2C61.2,8.7,61.1,7.9,60.6,7.4z"></path>
 								</svg>
 					<p>
-						<g:Anchor href="#" ui:field="linkAnotherAccount">Link another account</g:Anchor>
+						<g:Anchor ui:field="linkAnotherAccount">Link another account</g:Anchor>
+						<g:InlineHyperlink ui:field="continueToLeaderboard">Continue to Leaderboard</g:InlineHyperlink>
 					</p>
 				</div>
 			</div>

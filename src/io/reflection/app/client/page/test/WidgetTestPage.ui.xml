@@ -71,7 +71,7 @@
 
 				<input type="submit" class="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth} {STYLES_INSTANCE.reflectionMainStyle.refButtonError}" value="Oops, something went wrong" />
 
-				<button class="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth} {STYLES_INSTANCE.reflectionMainStyle.refButtonWithIcon}">
+				<button class="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth}">
 					<span class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeLeaderboard}">Lorem</span>
 				</button>
 			</div>

@@ -87,6 +87,7 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.SafeHtmlHeader;
 import com.google.gwt.user.cellview.client.TextColumn;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
@@ -136,8 +137,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField LIElement downloadsItem;
 	@UiField LIElement rankingItem;
 
-	// @UiField Preloader preloader;
-
 	@UiField(provided = true) CellTable<ItemRevenue> revenueTable = new CellTable<ItemRevenue>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) CellTable<AppRanking> revenueTable2 = new CellTable<AppRanking>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
 
@@ -174,6 +173,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField ButtonElement dnwBtn;
 	@UiField ButtonElement dnwBtnMobile;
 	@UiField DivElement sincePanel;
+	@UiField HTMLPanel noDataPanel;
 
 	public ItemPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -503,8 +503,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		register(DefaultEventBus.get().addHandlerToSource(GetLinkedAccountItemEventHandler.TYPE, LinkedAccountController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(TogglePanelEventHandler.TYPE, NavigationController.get().getHeader(), this));
 
-		ResponsiveDesignHelper.makeTabsResponsive();
-
 	}
 
 	/*
@@ -688,8 +686,9 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		for (String key : tabs.keySet()) {
 			tabs.get(key).removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isActive());
 		}
-
 		tabs.get(selectedTab).addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isActive());
+
+		ResponsiveDesignHelper.makeTabsResponsive();
 	}
 
 	private void getChartData() {
@@ -697,7 +696,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			chartRevenue.setLoading(true);
 			chartDownloads.setLoading(true);
 			chartRank.setLoading(true);
-			// preloader.show(true);
 			RankController.get().cancelRequestItemRanks();
 			RankController.get().cancelRequestItemSalesRanks();
 			revenueTable2.setRowCount(0, true);
@@ -770,20 +768,20 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	 */
 	@Override
 	public void getItemRanksSuccess(GetItemRanksRequest input, GetItemRanksResponse output) {
-		if (output != null && output.status == StatusType.StatusTypeSuccess) {
-			if (output.ranks != null && output.ranks.size() > 0 && output.item != null) {
+		if (output != null && output.item != null && output.status == StatusType.StatusTypeSuccess) {
+			if (output.ranks != null && output.ranks.size() > 0) {
 				setItemInfo(output.item);
 				displayItemDetails(output.ranks.get(0));
 				drawData(output.ranks);
 			} else {
 				setPriceInnerText("-");
 				setLoadingSpinnerEnabled(false);
+				// TODO show no data panel
 			}
 		} else {
 			setPriceInnerText("-");
 			setLoadingSpinnerEnabled(false);
 		}
-		// preloader.hide();
 	}
 
 	/*
@@ -795,7 +793,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	 */
 	@Override
 	public void getItemRanksFailure(GetItemRanksRequest input, Throwable caught) {
-		// preloader.hide();
 		setPriceInnerText("-");
 		setLoadingSpinnerEnabled(false);
 
@@ -809,20 +806,20 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	 */
 	@Override
 	public void getItemSalesRanksSuccess(GetItemSalesRanksRequest input, GetItemSalesRanksResponse output) {
-		if (output != null && output.status == StatusType.StatusTypeSuccess) {
-			if (output.ranks != null && output.ranks.size() > 0 && output.item != null) {
+		if (output != null && output.item != null && output.status == StatusType.StatusTypeSuccess) {
+			if (output.ranks != null && output.ranks.size() > 0) {
 				setItemInfo(output.item);
 				displayItemDetails(output.ranks.get(0));
 				drawData(output.ranks);
 			} else {
 				setPriceInnerText("-");
 				setLoadingSpinnerEnabled(false);
+				// TODO show no data panel
 			}
 		} else {
 			setPriceInnerText("-");
 			setLoadingSpinnerEnabled(false);
 		}
-		// preloader.hide();
 	}
 
 	/*
@@ -833,7 +830,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	 */
 	@Override
 	public void getItemSalesRanksFailure(GetItemSalesRanksRequest input, Throwable caught) {
-		// preloader.hide();
 		setPriceInnerText("-");
 		setLoadingSpinnerEnabled(false);
 	}
@@ -860,7 +856,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			}
 		} else {
 			setPriceInnerText("-");
-			// preloader.hide();
 			setLoadingSpinnerEnabled(false);
 		}
 	}
@@ -873,7 +868,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	 */
 	@Override
 	public void getLinkedAccountItemFailure(GetLinkedAccountItemRequest input, Throwable caught) {
-		// preloader.hide();
 		setPriceInnerText("-");
 		setLoadingSpinnerEnabled(false);
 	}

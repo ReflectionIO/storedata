@@ -16,11 +16,9 @@ import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.handler.user.UserPasswordChangedEventHandler;
 import io.reflection.app.client.helper.AlertBoxHelper;
 import io.reflection.app.client.helper.FormHelper;
-import io.reflection.app.client.page.part.MyAccountSidePanel;
 import io.reflection.app.client.part.AlertBox;
 import io.reflection.app.client.part.AlertBox.AlertBoxType;
 import io.reflection.app.client.part.Preloader;
-import io.reflection.app.datatypes.shared.User;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -47,10 +45,6 @@ public class ChangePasswordPage extends Page implements NavigationEventHandler, 
 	private static ChangePasswordPageUiBinder uiBinder = GWT.create(ChangePasswordPageUiBinder.class);
 
 	interface ChangePasswordPageUiBinder extends UiBinder<Widget, ChangePasswordPage> {}
-
-	@UiField MyAccountSidePanel myAccountSidePanel;
-
-	private User user = SessionController.get().getLoggedInUser();
 
 	@UiField PasswordTextBox mPassword;
 	@UiField HTMLPanel mPasswordGroup;
@@ -299,14 +293,6 @@ public class ChangePasswordPage extends Page implements NavigationEventHandler, 
 	public void navigationChanged(Stack previous, Stack current) {
 
 		mChangePassword.setEnabled(false);
-
-		myAccountSidePanel.setActive(getPageType());
-
-		user = SessionController.get().getLoggedInUser();
-
-		if (user != null) {
-			myAccountSidePanel.setUser(user);
-		}
 
 		resetForm();
 

@@ -62,12 +62,15 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 
 	@UiField LIElement tabContentRegister;
 	@UiField DivElement submittedSuccessPanel;
+//	@UiField InlineHyperlink continueToLeaderboard;
 
 	private String username;
 
 	public RegisterPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
+		// continueToLeaderboard.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
+		// OVERALL_LIST_TYPE, FilterController.get().asRankFilterString()));
 		setRequestInvite(true);
 	}
 
