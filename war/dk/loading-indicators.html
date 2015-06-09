@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="utf-8" />
+	<title>Reflection Design Kit - Loading Indicators</title>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link rel="stylesheet" media="screen, projection" type="text/css" href="designkit.css" />
+	<!--[if (lt IE 9)]>
+		<script src="js/vendor/html5shiv.min.js"></script>
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main-ie8.css" />
+	<![endif]-->
+ 	<!--[if !lt IE 9]><!-->
+		<script src="js/vendor/picturefill.2.3.1.min.js" async></script>
+	<!-- <![endif]-->
+	<link rel="stylesheet" href="js/vendor/jquery.mCustomScrollbar.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
+<script>
+  WebFont.load({
+    google: {
+      families: ['Open Sans:400,600,700,400italic,600italic', 'Source Sans Pro:400,600,700', 'Lato:400,700,400italic']
+    }
+  });
+</script></head>
+<body class="panel-left-open">
+	<!--[if (lt IE 9)]>
+      <div class="window-warning">
+  			<p>Uh oh... Reflection doesn't work in this browser. &nbsp; &nbsp;<a href="http://outdatedbrowser.com/en" target="_blank">Download a compatible browser</a></p>
+  		</div>
+  <![endif]-->
+
+  <header id="js-component-import--global-header" class="global-header"></header>
+  
+	<div id="js-component-import--panel-left" class="panel-left js-custom-scrollbar" data-mcs-theme="minimal-dark"></div>
+
+	<div class="l-page-container">
+
+		<div id="main" class="l-main page-loading-indicators" role="main">
+			
+			<div id="js-component-import--design-kit-banner" class="banner banner--interactions"></div>
+
+			<div class="grid-container dk-components-container">
+				<div class="grid__row dk-component-row">
+					<div class="grid__column grid__column--one-half">
+						<h2 class="heading-style--heading-three">Universal Loading Bar</h2>
+						<p>Any action performed on the site which results in a short period of loading or processing initiates the universal pop-up loading bar. This bar is subtle enough to not be too distracting but visible enough via it’s animation effects to keep the user informed of what’s happening on the site, and where possible, how long it will take. The bar rises up from the bottom of the browser window and overlays all of the page content. It is slightly transparent and has a  loading message contained within which can be changed depending on what is processing.</p>
+						<p>There are 2 versions: a default animated striped version when the loading time is not known and a solid version which fills as loading progresses (see demos).</p>
+						<p>Once complete the page content will refresh or reload with the relevant transition or animation and the bar slides out of view.</p>
+					</div>
+					<div class="grid__row-container grid__column  grid__column--one-half">						
+						<div class="loading-button-example-container">
+							<h3 class="heading-style--heading-six">Indeterminate Demo</h3>
+							<button class="ref-button--function-large js-submit-loading">Demo</button>
+						</div>
+						<div class="loading-button-example-container">
+							<h3 class="heading-style--heading-six">Determinate Demo</h3>
+							<button class="ref-button--function-large js-submit-loading-determinate">Demo</button>
+						</div>
+					</div>
+				</div>
+
+				<div class="grid__row dk-component-row">
+					<div class="grid__column grid__column--one-half">
+						<h2 class="heading-style--heading-three">Component Loading Bar</h2>
+						<p>Where the loading or processing relates to a specific content item (such as a graph or a pop-up box) the loading bar appears within the actual element itself. See the demos on the right to see a couple of examples.</p>
+						<p>The loading bars themselves have the same properties as the universal loading bar and behave in the same manner.</p>
+					</div>
+					<div class="grid__row-container grid__column  grid__column--one-half">			
+						<div class="component-loading-example-container">			
+							<h3 class="heading-style--heading-six">Component Loading Bar Examples</h3>
+							<div class="component-example">
+								<blockquote class="blockquote--large">
+									<p>We see our customers as invited guests to a party, and we are the hosts. It's our job every day to make every important aspect of the customer experience a little bit better.</p>
+									<footer>
+										<cite>
+											<span>Jeff Bezos</span>
+											Founder, Amazon
+										</cite>
+									</footer>
+								</blockquote>
+							</div>
+						</div>
+						<div class="loading-button-example-container">
+							<button class="ref-button--function-large js-submit-component-loading">Example 1</button>
+						</div>
+						<div class="loading-button-example-container">
+							<button class="ref-button--function-large js-submit-component-loading-determinate">Example 2</button>
+						</div>
+					</div>
+				</div>
+
+				<div class="grid__row dk-component-row">
+					<div class="grid__column grid__column--one-half">
+						<h2 class="heading-style--heading-three">Loading Buttons</h2>
+						<p>Loading buttons are used in any application where pressing of a button initiates some kind of processing (e.g. submit a form, post a comment, download a file, save changes etc).</p>
+						<p>As with the universal loading bar they indicate clearly through animation that an action is being processed and (where possible) how long that action will take.</p>
+					</div>
+					<div class="grid__row-container grid__column  grid__column--one-half">						
+						<div class="loading-button-example-container">
+							<h3 class="heading-style--heading-six">Indeterminate - Success</h3>
+							<input class="ref-button--full-width js-submit-with-feedback js-submit-success" value="Submit" type="submit">
+						</div>
+						<div class="loading-button-example-container">
+							<h3 class="heading-style--heading-six">Indeterminate - Error</h3>
+							<input class="ref-button--full-width js-submit-with-feedback js-submit-error" value="Submit" type="submit">
+						</div>
+					</div>
+					<div class="grid__row-container grid__column  grid__column--one-half">						
+						<div class="loading-button-example-container">
+							<h3 class="heading-style--heading-six">Determinate - Success</h3>
+							<button class="ref-button--full-width ref-button--loading-determinate js-submit-determinate-with-feedback js-submit-success" type="submit">
+								<span class="loading-progress"></span>
+								<span class="loading-button-text">Submit</span>
+							</button>
+						</div>
+						<div class="loading-button-example-container">
+							<h3 class="heading-style--heading-six">Determinate - Error</h3>
+							<button class="ref-button--full-width ref-button--loading-determinate js-submit-determinate-with-feedback js-submit-error" type="submit">
+								<span class="loading-progress"></span>
+								<span class="loading-button-text">Submit</span>
+							</button>
+						</div>
+					</div>
+				</div>
+
+				<div class="grid__row dk-component-row">
+					<div class="grid__column grid__column--one-half">
+						<h2 class="heading-style--heading-three">Ellipsis Loader</h2>
+						<p>When specific items on a page take a short time to appear the ellipsis loader is used. It is very subtle so as not to be too prominent but must indicate to the user that a value or other item is about to appear in that location once loaded/processed. It avoids the problem of having empty gaps all over a page as data is loaded in the background.</p>
+						<p>It is used in place of items such as app titles or data values in tables (see examples on the right).</p>
+					</div>
+					<div class="grid__column grid__column--one-half">
+						<h3 class="heading-style--heading-six">Table Data Loading Example</h3>
+						<table class="table-data table-demo-loading">
+							<thead>
+								<tr><th class="can-be-sorted is-ascending">Rank</th>
+								<th class="can-be-sorted">Name</th>
+							</tr></thead>
+							<colgroup>
+								<col style="width: 30%">
+								<col style="width: 70%">
+							</colgroup>
+							<tbody>
+								<tr>
+									<td>
+										<span>1</span>
+									</td>
+									<td>
+										<span class="js-demo-app-name">Crossy Road</span>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<span>2</span>
+									</td>
+									<td>
+										<span class="js-demo-app-name">MineCraft</span>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<span>3</span>
+									</td>
+									<td>
+										<span class="js-demo-app-name">Candy Crush Saga</span>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<button class="ref-button--function-large js-load-table-data">Example 1</button>
+						<h3 class="heading-style--heading-six">App Title Loading Example</h3>
+						<div class="loading-demo-app-details">
+							<div class="loading-demo-icon-container">
+							</div>							
+							<h2 class="heading-style--heading-three"></h2>
+						</div>
+						<button class="ref-button--function-large js-load-app-icon">Example 2</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="js-component-import--account-container" class="panel-right-container js-account-container"></div>
+	<div id="js-component-import--search-container" class="panel-right-container js-search-container"></div>
+
+ 	<script src="js/vendor/jquery-1.11.1.min.js"></script>
+ 	<script src="js/vendor/jquery-ui.custom.min.js"></script>
+ 	<script src="js/vendor/handlebars-v2.0.0.js"></script>
+ 	<script src="js/templates/templates.js"></script>
+	<script src="js/vendor/modernizr.2.8.3.custom.min.js"></script>
+	<!--[if IE 9]>
+		<script src="js/vendor/jquery.mCustomScrollbar.concat.min.js"></script>
+	<![endif]-->
+
+	<div id="js-appendScriptsContainer"></div>
+
+	<script src="js/designkit-global-templates.js"></script>
+  <script src="js/application.js"></script>
+  <script src="js/designkit-app.js"></script>
+  <script>
+  	function initScripts() {
+  		new LoadingPage();
+  	}
+
+  	window.onready = initScripts();
+  </script>
+</body>

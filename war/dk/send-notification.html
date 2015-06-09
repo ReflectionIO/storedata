@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="utf-8" />
+	<title>Reflection, Admin - Send Notification</title>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">	
+	<!--[if (gte IE 9)|(IEMobile)|(!IE)]><!-->
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main.css" />
+	<!--<![endif]-->
+	<!--[if (lt IE 9)]>
+		<script src="js/vendor/html5shiv.min.js"></script>
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main-ie8.css" />
+	<![endif]-->
+ 	<!--[if !lt IE 9]><!-->
+		<script src="js/vendor/picturefill.2.3.1.min.js" async></script>
+	<!-- <![endif]-->
+	<link rel="stylesheet" href="js/vendor/jquery.mCustomScrollbar.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
+<script>
+  WebFont.load({
+    google: {
+      families: ['Open Sans:400,600,700,400italic,600italic', 'Source Sans Pro:400,600,700', 'Lato:400,700,400italic']
+    }
+  });
+</script></head>
+<body class="panel-left-open">
+	<!--[if (lt IE 9)]>
+      <div class="window-warning">
+  			<p>Uh oh... Reflection doesn't work in this browser. &nbsp; &nbsp;<a href="http://outdatedbrowser.com/en" target="_blank">Download a compatible browser</a></p>
+  		</div>
+  <![endif]-->
+
+  <header id="js-component-import--global-header" class="global-header"></header>
+  
+	<div id="js-component-import--panel-left" class="panel-left js-custom-scrollbar" data-mcs-theme="minimal-dark"></div>
+
+	<div class="l-page-container">
+		<div id="main" class="l-main" role="main">
+			<div class="grid-container page-admin">
+				<div class="grid__column grid__column--one-half">
+					<h1 class="heading-style--heading-three">Send Notification</h1>
+				</div>
+				<div class="grid__row">
+					<div class="grid__column grid__column--five-columns">
+						<form>
+							<div class="form-field">						
+								<input type="text" name="event" id="event" autocomplete="off" />
+								<label for="firstname">Event</label>
+							</div>
+							<div class="form-field form-field--select">						
+								<select class="js-field--select">
+								    <option value="" disabled selected>Priority</option>
+								    <option value="critical">Critical</option>
+								    <option value="high">High</option>
+								    <option value="critical">Normal</option>
+								    <option value="high">Low</option>
+								    <option value="debug">Debug</option>
+								</select>
+							</div>
+							<div class="form-field">						
+								<input type="text" name="user" id="user" autocomplete="off" />
+								<label for="user">User</label>
+							</div>
+							<div class="form-field form-field--select">						
+								<select class="js-field--select">
+								    <option value="" disabled selected>From</option>
+								    <option value="me">Me</option>
+								    <option value="beta">Beta</option>
+								    <option value="hello">Hello</option>
+								</select>
+							</div>
+							<div class="form-field">						
+								<input type="text" name="subject" id="subject" autocomplete="off" />
+								<label for="subject">Subject</label>
+							</div>
+							<div class="form-field form-field--textarea">								
+								<textarea name="body" id="body"></textarea>
+								<label for="body">Body</label>
+							</div>
+							<input type="submit" class="ref-button--full-width" value="Send Notification" />
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="js-component-import--account-container" class="panel-right-container js-account-container"></div>
+	<div id="js-component-import--search-container" class="panel-right-container js-search-container"></div>
+
+ 	<script src="js/vendor/jquery-1.11.1.min.js"></script>
+ 	<script src="js/vendor/jquery-ui.custom.min.js"></script>
+ 	<script src="js/vendor/handlebars-v2.0.0.js"></script>
+ 	<script src="js/templates/templates.js"></script>
+	<script src="js/vendor/modernizr.2.8.3.custom.min.js"></script>
+	<!--[if IE 9]>
+		<script src="js/vendor/jquery.mCustomScrollbar.concat.min.js"></script>
+	<![endif]-->
+
+	<div id="js-appendScriptsContainer"></div>
+
+	<script src="js/application-global-modules-logged-in.js"></script>
+  <script src="js/application.js"></script>
+  <script>
+  	function initScripts() {
+  		new Page();
+
+  		// Components
+  		new FormFieldSelect();
+  	}
+
+  	window.onready = initScripts();
+  </script>
+</body>
