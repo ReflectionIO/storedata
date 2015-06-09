@@ -1,4 +1,4 @@
-//  
+//
 //  FeedFetchStatusType.java
 //  reflection.io
 //
@@ -19,6 +19,7 @@ public enum FeedFetchStatusType {
 	private String value;
 	private static Map<String, FeedFetchStatusType> valueLookup = null;
 
+	@Override
 	public String toString() {
 		return value;
 	}

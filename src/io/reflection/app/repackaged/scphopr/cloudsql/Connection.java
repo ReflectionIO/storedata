@@ -11,6 +11,7 @@ import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.logging.GaeLevel;
 
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -214,10 +215,9 @@ public final class Connection {
 	}
 
 	public boolean fetchNextRow() throws DataAccessException {
-		boolean fetched = false;
 		if (queryResult != null) {
 			try {
-				if (fetched = queryResult.next()) {}
+				return queryResult.next();
 			} catch (final SQLException ex) {
 				LOG.log(Level.SEVERE, "Error fetching next row", ex);
 
@@ -225,7 +225,7 @@ public final class Connection {
 			}
 		}
 
-		return fetched;
+		return false;
 	}
 
 	public Object getCurrentRowValue(String key) throws DataAccessException {
@@ -432,4 +432,27 @@ public final class Connection {
 		}
 	}
 
+	public java.sql.Connection getRealConnection() {
+		return connection;
+	}
+
+	public void closeStatement(Statement stat) {
+		try {
+			if (stat == null) return;
+
+			if (stat.isClosed()) return;
+
+			stat.close();
+		} catch (Exception e) {
+			LOG.log(Level.SEVERE, "Exception occured while trying to close a statement", e);
+		}
+	}
+
+	public void executePreparedStatement(PreparedStatement pstat) {
+		try {
+			queryResult = pstat.executeQuery();
+		} catch (SQLException e) {
+			LOG.log(Level.SEVERE, "Exception occured while trying to execute a statement", e);
+		}
+	}
 }

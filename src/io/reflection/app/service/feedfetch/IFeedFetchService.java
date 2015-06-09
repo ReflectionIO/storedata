@@ -73,58 +73,11 @@ public interface IFeedFetchService extends IService {
 	 *
 	 * @param country
 	 * @param store
-	 * @param types
-	 * @param pager
-	 * @return
-	 */
-	public List<FeedFetch> getIngestedFeedFetches(Country country, Store store, Collection<String> types, Pager pager) throws DataAccessException;
-
-	/**
-	 *
-	 * @param store
-	 * @param country
-	 * @param listType
-	 * @return
-	 */
-	public Long getIngestedFeedFetchesCount(Country country, Store store, Collection<String> listType) throws DataAccessException;
-
-	/**
-	 * @param store
-	 * @param country
-	 * @param types
-	 * @param pager
-	 * @return
-	 */
-	public List<FeedFetch> getUningestedFeedFetches(Country country, Store store, Collection<String> types, Pager pager) throws DataAccessException;
-
-	/**
-	 *
-	 * @param country
-	 * @param store
-	 * @param types
-	 * @return
-	 */
-	public Long getUningestedFeedFetchesCount(Country country, Store store, Collection<String> types) throws DataAccessException;
-
-	/**
-	 *
-	 * @param country
-	 * @param store
 	 * @param listType
 	 * @param code
 	 * @return
 	 */
 	public List<Long> getIngestableFeedFetchIds(Country country, Store store, String listType, Long code) throws DataAccessException;
-
-	/**
-	 *
-	 * @param country
-	 * @param store
-	 * @param types
-	 * @param code
-	 * @return
-	 */
-	public Boolean isReadyToModel(Country country, Store store, Collection<String> types, Long code) throws DataAccessException;
 
 	/**
 	 *
@@ -145,14 +98,6 @@ public interface IFeedFetchService extends IService {
 	public Long getCode() throws DataAccessException;
 
 	/**
-	 *
-	 * @param date
-	 * @return
-	 * @throws DataAccessException
-	 */
-	public Long getDateCode(Date date, Integer gatherTimes) throws DataAccessException;
-
-	/**
 	 * Gets the gather for the feed fetch
 	 *
 	 * @param country
@@ -163,18 +108,6 @@ public interface IFeedFetchService extends IService {
 	 * @throws DataAccessException
 	 */
 	public Long getGatherCode(Country country, Store store, Date after, Date before) throws DataAccessException;
-
-	/**
-	 *
-	 * @param country
-	 * @param store
-	 * @param category
-	 * @param listType
-	 * @param code
-	 * @return
-	 * @throws DataAccessException
-	 */
-	public FeedFetch getListTypeCodeFeedFetch(Country country, Store store, Category category, String listType, Long code) throws DataAccessException;
 
 	/**
 	 * Get feed fetches within a date range
