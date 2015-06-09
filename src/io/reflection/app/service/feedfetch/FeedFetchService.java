@@ -133,6 +133,8 @@ final class FeedFetchService implements IFeedFetchService {
 			feedFetchConnection.connect();
 			feedFetchConnection.executeQuery(addFeedFetchQuery);
 
+			String status = feedFetch.status == null ? null : feedFetch.status.toString().toUpperCase();
+
 			stat.setLong(1, feedFetch.code);
 			stat.setDate(2, new java.sql.Date(feedFetch.date.getTime()));
 			stat.setTime(3, new Time(feedFetch.date.getTime()));
@@ -142,7 +144,7 @@ final class FeedFetchService implements IFeedFetchService {
 			stat.setString(7, getDBPlatformForFeedFetchType(feedFetch.type));
 			stat.setString(8, feedFetch.data);
 			stat.setString(9, "JSON");
-			stat.setString(10, feedFetch.status.toString().toUpperCase());
+			stat.setString(10, status);
 
 			stat.executeUpdate();
 			ResultSet generatedKeys = stat.getGeneratedKeys();
@@ -192,9 +194,8 @@ final class FeedFetchService implements IFeedFetchService {
 			stat.setString(6, getDBTypeForFeedFetchType(feedFetch.type));
 			stat.setString(7, getDBPlatformForFeedFetchType(feedFetch.type));
 			stat.setString(8, feedFetch.data);
-			stat.setString(9, "JSON");
-			stat.setString(10, feedFetch.status.toString().toUpperCase());
-			stat.setLong(11, feedFetch.id);
+			stat.setString(9, feedFetch.status.toString().toUpperCase());
+			stat.setLong(10, feedFetch.id);
 
 			stat.executeUpdate();
 
@@ -597,12 +598,16 @@ final class FeedFetchService implements IFeedFetchService {
 
 
 	public static String getDBTypeForFeedFetchType(String type) {
+		if (type == null) return "FREE";
+
 		if (type.contains("free")) return "FREE";
 		else if (type.contains("paid")) return "PAID";
 		else return "GROSSING";
 	}
 
 	public static String getDBPlatformForFeedFetchType(String type) {
+		if (type == null) return "PHONE";
+
 		if (type.contains("ipad")) return "TABLET";
 		else return "PHONE";
 	}
