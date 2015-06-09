@@ -12,7 +12,9 @@
 
 		<header class="{STYLES_INSTANCE.reflectionMainStyle.pageApp__header}">
 
-			<g:Image ui:field="image" styleName="{STYLES_INSTANCE.reflectionMainStyle.appIcon}" />
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.appIconContainer}">
+				<g:Image ui:field="image" styleName="{STYLES_INSTANCE.reflectionMainStyle.appIcon}" />
+			</div>
 
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.appDetails}">
 
@@ -185,7 +187,9 @@
 		<section class="{STYLES_INSTANCE.reflectionMainStyle.dataDisplayContainer}">
 			<header class="{STYLES_INSTANCE.reflectionMainStyle.dataDisplayHeader}">
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.dataDisplayHeaderComponent} {STYLES_INSTANCE.reflectionMainStyle.totalRevenueTitle}">
-					<g:Image ui:field="imageTable" styleName="{STYLES_INSTANCE.reflectionMainStyle.appIconSmall}" />
+					<div class="{STYLES_INSTANCE.reflectionMainStyle.appIconSmallContainer}">
+						<g:Image ui:field="imageTable" styleName="{STYLES_INSTANCE.reflectionMainStyle.appIconSmall}" />
+					</div>
 					<h2
 						class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour} {STYLES_INSTANCE.reflectionMainStyle.dataHeading}">Total
 						Revenue</h2>
