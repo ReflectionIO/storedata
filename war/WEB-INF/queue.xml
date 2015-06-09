@@ -54,9 +54,17 @@
         <mode>pull</mode>
         <acl>
             <user-email>535523482315@project.gserviceaccount.com</user-email>
+            <user-email>486144765626-rou2fcsep286nm5s00ofdjpdbajrej04@developer.gserviceaccount.com</user-email>
+            <user-email>486144765626-compute@developer.gserviceaccount.com</user-email>
             <user-email>hello@reflection.io</user-email>
+            <user-email>mitul@reflection.io</user-email>
+            <user-email>466680728919-3hiu2j5f8bshu9btn0oc4ihvmbv529ca@developer.gserviceaccount.com</user-email>
             <writer-email>535523482315@project.gserviceaccount.com</writer-email>
+            <writer-email>486144765626-rou2fcsep286nm5s00ofdjpdbajrej04@developer.gserviceaccount.com</writer-email>
+            <writer-email>486144765626-compute@developer.gserviceaccount.com</writer-email>
             <writer-email>hello@reflection.io</writer-email>
+            <writer-email>mitul@reflection.io</writer-email>
+            <writer-email>466680728919-3hiu2j5f8bshu9btn0oc4ihvmbv529ca@developer.gserviceaccount.com</writer-email>
         </acl>
     </queue>
     <queue>
@@ -121,9 +129,17 @@
         <mode>pull</mode>
         <acl>
             <user-email>535523482315@project.gserviceaccount.com</user-email>
+            <user-email>486144765626-compute@developer.gserviceaccount.com</user-email>
+            <user-email>486144765626-rou2fcsep286nm5s00ofdjpdbajrej04@developer.gserviceaccount.com</user-email>
             <user-email>hello@reflection.io</user-email>
+            <user-email>mitul@reflection.io</user-email>
+            <user-email>466680728919-3hiu2j5f8bshu9btn0oc4ihvmbv529ca@developer.gserviceaccount.com</user-email>
             <writer-email>535523482315@project.gserviceaccount.com</writer-email>
+            <writer-email>486144765626-compute@developer.gserviceaccount.com</writer-email>
+            <writer-email>486144765626-rou2fcsep286nm5s00ofdjpdbajrej04@developer.gserviceaccount.com</writer-email>
             <writer-email>hello@reflection.io</writer-email>
+            <writer-email>mitul@reflection.io</writer-email>
+            <writer-email>466680728919-3hiu2j5f8bshu9btn0oc4ihvmbv529ca@developer.gserviceaccount.com</writer-email>
         </acl>
     </queue>
     

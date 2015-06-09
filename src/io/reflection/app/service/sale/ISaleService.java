@@ -1,4 +1,4 @@
-//  
+//
 //  ISaleService.java
 //  reflection.io
 //
@@ -20,6 +20,7 @@ import io.reflection.app.datatypes.shared.Sale;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.spacehopperstudios.service.IService;
 
@@ -111,7 +112,7 @@ public interface ISaleService extends IService {
 	public List<Sale> getSales(Country country, Category category, DataAccount linkedAccount, Date start, Date end, Pager pager) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param country
 	 * @param category
 	 * @param linkedAccount
@@ -123,7 +124,7 @@ public interface ISaleService extends IService {
 	public Long getSalesCount(Country country, Category category, DataAccount linkedAccount, Date start, Date end) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param item
 	 * @param country
 	 * @param category
@@ -138,7 +139,7 @@ public interface ISaleService extends IService {
 			throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param item
 	 * @param country
 	 * @param category
@@ -152,7 +153,7 @@ public interface ISaleService extends IService {
 
 	/**
 	 * Gets a "mock" item id based on the sales data
-	 * 
+	 *
 	 * @param itemId
 	 *            The item internal id
 	 * @return
@@ -162,7 +163,7 @@ public interface ISaleService extends IService {
 
 	/**
 	 * Gets the data account for an item
-	 * 
+	 *
 	 * @param internalId
 	 * @return
 	 * @throws DataAccessException
@@ -170,7 +171,7 @@ public interface ISaleService extends IService {
 	public DataAccount getDataAccount(String itemId) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param country
 	 * @param linkedAccount
 	 * @param start
@@ -182,7 +183,7 @@ public interface ISaleService extends IService {
 
 	/**
 	 * Get all sale ids
-	 * 
+	 *
 	 * @param pager
 	 * @return
 	 * @throws DataAccessException
@@ -191,7 +192,7 @@ public interface ISaleService extends IService {
 
 	/**
 	 * Get data account fetch sales
-	 * 
+	 *
 	 * @param dataAccountFetch
 	 * @param pager
 	 * @return
@@ -201,7 +202,7 @@ public interface ISaleService extends IService {
 
 	/**
 	 * Get data account fetch sale ids
-	 * 
+	 *
 	 * @param dataAccountFetch
 	 * @param pager
 	 * @return
@@ -215,5 +216,14 @@ public interface ISaleService extends IService {
 	 * @throws DataAccessException
 	 */
 	public String getSkuItemId(String sku) throws DataAccessException;
+
+	/**
+	 * @param itemIds
+	 * @param start
+	 * @param end
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public Map<String, Sale> getItemPrices(String[] itemIds, String country, Date start, Date end) throws DataAccessException;
 
 }

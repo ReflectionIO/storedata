@@ -33,4 +33,5 @@ public interface IDatabaseService extends IService {
 
 	public Connection getCronNamedConnection(String name) throws DataAccessException;
 
+	public void realDisconnect();
 }

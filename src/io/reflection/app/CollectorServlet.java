@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author William Shakour
- * 
+ *
  */
 @SuppressWarnings("serial")
 public class CollectorServlet extends HttpServlet {
@@ -36,12 +36,12 @@ public class CollectorServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-		String appEngineQueue = req.getHeader("X-AppEngine-QueueName");
+		final String appEngineQueue = req.getHeader("X-AppEngine-QueueName");
 
 		boolean isNotQueue = false;
 
 		// bail out if we have not been called by app engine cron
-		if ((isNotQueue = (appEngineQueue == null || !"gather".toLowerCase().equals(appEngineQueue.toLowerCase())))) {
+		if (isNotQueue = appEngineQueue == null || !"gather".toLowerCase().equals(appEngineQueue.toLowerCase())) {
 			resp.setStatus(401);
 			resp.getOutputStream().print("failure");
 			LOG.warning("Attempt to run script directly, this is not permitted");
@@ -54,23 +54,23 @@ public class CollectorServlet extends HttpServlet {
 			}
 		}
 
-		String store = req.getParameter("store");
-		String country = req.getParameter("country");
-		String type = req.getParameter("type");
-		
-		String codeParam = req.getParameter("code");
-		Long code = codeParam == null ? null : Long.valueOf(codeParam);
-		
-		String category = req.getParameter("category");
+		final String store = req.getParameter("store");
+		final String country = req.getParameter("country");
+		final String type = req.getParameter("type");
+
+		final String codeParam = req.getParameter("code");
+		final Long code = codeParam == null ? null : Long.valueOf(codeParam);
+
+		final String category = req.getParameter("category");
 
 		List<Long> collected = null;
 
-		Collector collector = CollectorFactory.getCollectorForStore(store);
+		final Collector collector = CollectorFactory.getCollectorForStore(store);
 
 		if (collector != null) {
 			try {
 				collected = collector.collect(country, type, category, code);
-			} catch (DataAccessException e) {
+			} catch (final DataAccessException e) {
 				throw new RuntimeException(e);
 			}
 		} else {
@@ -79,10 +79,10 @@ public class CollectorServlet extends HttpServlet {
 			}
 		}
 
-		List<String> countries = IngestorFactory.getIngestorCountries(store);
+		final List<String> countries = IngestorFactory.getIngestorCountries(store);
 
 		if (countries.contains(country)) {
-			Ingestor ingestor = IngestorFactory.getIngestorForStore(store);
+			final Ingestor ingestor = IngestorFactory.getIngestorForStore(store);
 
 			if (ingestor != null) {
 				ingestor.enqueue(collected);

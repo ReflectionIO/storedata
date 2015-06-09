@@ -1,4 +1,4 @@
-//  
+//
 //  DataAccountService.java
 //  reflection.io
 //
@@ -51,13 +51,14 @@ final class DataAccountService implements IDataAccountService {
 	private static final String KEY_PART_4 = "9002";
 	private static final String KEY_PART_5 = "61E14A750D98";
 
+	@Override
 	public String getName() {
 		return ServiceType.ServiceTypeDataAccount.toString();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getDataAccount(java.lang.Long)
 	 */
 	@Override
@@ -66,7 +67,7 @@ final class DataAccountService implements IDataAccountService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @param deleted
 	 *            If true, retrieve deleted linked accounts as well
@@ -77,10 +78,10 @@ final class DataAccountService implements IDataAccountService {
 	public DataAccount getDataAccount(Long id, Boolean deleted) throws DataAccessException {
 		DataAccount dataAccount = null;
 
-		IDatabaseService databaseService = DatabaseServiceProvider.provide();
-		Connection dataAccountConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
+		final IDatabaseService databaseService = DatabaseServiceProvider.provide();
+		final Connection dataAccountConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
-		String getDataAccountQuery = String.format(
+		final String getDataAccountQuery = String.format(
 				"SELECT *, convert(aes_decrypt(`password`,UNHEX('%s')), CHAR(1000)) AS `clearpassword` FROM `dataaccount` WHERE `id`=%d %s LIMIT 1", key(),
 				id.longValue(), deleted ? "" : "AND `deleted`='n'");
 
@@ -101,7 +102,7 @@ final class DataAccountService implements IDataAccountService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getDataAccount(java.lang.String, java.lang.Long)
 	 */
 	@Override
@@ -111,17 +112,17 @@ final class DataAccountService implements IDataAccountService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getDataAccount(java.lang.String, java.lang.Long, java.lang.Boolean)
 	 */
 	@Override
 	public DataAccount getDataAccount(String username, Long sourceid, Boolean deleted) throws DataAccessException {
 		DataAccount dataAccount = null;
 
-		IDatabaseService databaseService = DatabaseServiceProvider.provide();
-		Connection dataAccountConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
+		final IDatabaseService databaseService = DatabaseServiceProvider.provide();
+		final Connection dataAccountConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
-		String getDataAccountQuery = String
+		final String getDataAccountQuery = String
 				.format("SELECT *, convert(aes_decrypt(`password`,UNHEX('%s')), CHAR(1000)) AS `clearpassword` FROM `dataaccount` WHERE `username`='%s' AND `sourceid`=%d %s LIMIT 1",
 						key(), username, sourceid, deleted ? "" : "AND `deleted`='n'");
 
@@ -142,12 +143,12 @@ final class DataAccountService implements IDataAccountService {
 
 	/**
 	 * To dataAccount
-	 * 
+	 *
 	 * @param connection
 	 * @return
 	 */
 	private DataAccount toDataAccount(Connection connection) throws DataAccessException {
-		DataAccount dataAccount = new DataAccount();
+		final DataAccount dataAccount = new DataAccount();
 		dataAccount.id = connection.getCurrentRowLong("id");
 		dataAccount.created = connection.getCurrentRowDateTime("created");
 		dataAccount.deleted = connection.getCurrentRowString("deleted");
@@ -157,7 +158,7 @@ final class DataAccountService implements IDataAccountService {
 
 		dataAccount.username = stripslashes(connection.getCurrentRowString("username"));
 		dataAccount.password = stripslashes(connection.getCurrentRowString("clearpassword")); // column name is password but all select queries should return
-																								// decrypted password as clearpassword
+		// decrypted password as clearpassword
 		dataAccount.properties = stripslashes(connection.getCurrentRowString("properties"));
 
 		return dataAccount;
@@ -176,7 +177,7 @@ final class DataAccountService implements IDataAccountService {
 				"INSERT INTO `dataaccount` (`sourceid`,`username`,`password`,`properties`) VALUES (%d,'%s',AES_ENCRYPT('%s',UNHEX('%s')),'%s')",
 				dataAccount.source.id, addslashes(dataAccount.username), addslashes(dataAccount.password), key(), addslashes(dataAccount.properties));
 
-		Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
+		final Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
 		try {
 			dataAccountConnection.connect();
@@ -190,16 +191,14 @@ final class DataAccountService implements IDataAccountService {
 					addedDataAccount.id = Long.valueOf(dataAccountConnection.getInsertedId());
 				}
 			}
-		} catch (DataAccessException ex) {
+		} catch (final DataAccessException ex) {
 			if (ex.getCause() instanceof MySQLIntegrityConstraintViolationException) { // Data account already exists
 				// Restore deactivated Data Account
-				Long restoredId = getDataAccount(dataAccount.username, dataAccount.source.id).id;
+				final Long restoredId = getDataAccount(dataAccount.username, dataAccount.source.id).id;
 				dataAccount.id = restoredId;
 				dataAccount.active = DataTypeHelper.ACTIVE_VALUE;
 				addedDataAccount = updateDataAccount(dataAccount);
-			} else {
-				throw ex;
-			}
+			} else throw ex;
 		}
 
 		finally {
@@ -221,9 +220,9 @@ final class DataAccountService implements IDataAccountService {
 		}
 
 		try {
-			Queue queue = QueueFactory.getQueue("dataaccountgather");
+			final Queue queue = QueueFactory.getQueue("dataaccountgather");
 
-			TaskOptions options = TaskOptions.Builder.withUrl("/dataaccountgather").method(Method.POST);
+			final TaskOptions options = TaskOptions.Builder.withUrl("/dataaccountgather").method(Method.POST);
 
 			options.param("accountId", dataAccount.id.toString());
 			options.param("date", Long.toString(date.getTime()));
@@ -234,7 +233,7 @@ final class DataAccountService implements IDataAccountService {
 
 			try {
 				queue.add(options);
-			} catch (TransientFailureException ex) {
+			} catch (final TransientFailureException ex) {
 
 				if (LOG.isLoggable(Level.WARNING)) {
 					LOG.warning(String.format("Could not queue a message because of [%s] - will retry it once", ex.toString()));
@@ -243,7 +242,7 @@ final class DataAccountService implements IDataAccountService {
 				// retry once
 				try {
 					queue.add(options);
-				} catch (TransientFailureException reEx) {
+				} catch (final TransientFailureException reEx) {
 					if (LOG.isLoggable(Level.SEVERE)) {
 						LOG.log(Level.SEVERE,
 								String.format("Retry of with payload [%s] failed while adding to queue [%s] twice", options.toString(), queue.getQueueName()),
@@ -260,7 +259,14 @@ final class DataAccountService implements IDataAccountService {
 	}
 
 	private void enqueue(DataAccount dataAccount, int days, boolean requiresNotification) {
-		enqueue(dataAccount, DateTime.now().minusDays(1).toDate(), days, requiresNotification);
+		/*
+		 * The date we fetch from depends on the time. If it is past 5pm today, we fetch from yesterday and older, else we fetch from day before yesterday
+		 */
+
+		final DateTime now = DateTime.now();
+		final Date dateToFetchFrom = now.minusDays(now.getHourOfDay() > 17 ? 1 : 2).toDate();
+
+		enqueue(dataAccount, dateToFetchFrom, days, requiresNotification);
 	}
 
 	/**
@@ -269,7 +275,7 @@ final class DataAccountService implements IDataAccountService {
 	 */
 	private void enqueue(DataAccount dataAccount, Date date, int days, boolean requiresNotification) {
 		for (int i = 0; i < days; i++) {
-			enqueue(dataAccount, (new DateTime(date.getTime(), DateTimeZone.UTC)).minusDays(i).toDate(), requiresNotification && (days - i == 1));
+			enqueue(dataAccount, new DateTime(date.getTime(), DateTimeZone.UTC).minusDays(i).toDate(), requiresNotification && days - i == 1);
 		}
 	}
 
@@ -283,7 +289,7 @@ final class DataAccountService implements IDataAccountService {
 						addslashes(dataAccount.username), addslashes(dataAccount.password), key(), addslashes(dataAccount.properties),
 						addslashes(dataAccount.active), dataAccount.id.longValue());
 
-		Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
+		final Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
 		try {
 			dataAccountConnection.connect();
@@ -314,7 +320,7 @@ final class DataAccountService implements IDataAccountService {
 				"UPDATE `dataaccount` SET `created`=NOW(), `password`=AES_ENCRYPT('%s',UNHEX('%s')), `properties`='%s', `deleted`='n' WHERE `username`='%s'",
 				addslashes(dataAccount.password), key(), addslashes(dataAccount.properties), addslashes(dataAccount.username));
 
-		Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
+		final Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
 		try {
 			dataAccountConnection.connect();
@@ -339,9 +345,9 @@ final class DataAccountService implements IDataAccountService {
 
 	@Override
 	public void deleteDataAccount(DataAccount dataAccount) throws DataAccessException {
-		String deleteDataAccountQuery = String.format("UPDATE `dataaccount` SET `deleted`='y' WHERE `id`=%d AND `deleted`='n'", dataAccount.id.longValue());
+		final String deleteDataAccountQuery = String.format("UPDATE `dataaccount` SET `deleted`='y' WHERE `id`=%d AND `deleted`='n'", dataAccount.id.longValue());
 
-		Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
+		final Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 		try {
 			dataAccountConnection.connect();
 			dataAccountConnection.executeQuery(deleteDataAccountQuery);
@@ -360,7 +366,7 @@ final class DataAccountService implements IDataAccountService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getDataAccounts(io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
@@ -380,23 +386,23 @@ final class DataAccountService implements IDataAccountService {
 
 	private List<DataAccount> getDataAccounts(Pager pager, Boolean includeInactive) throws DataAccessException {
 
-		List<DataAccount> dataAccounts = new ArrayList<DataAccount>();
+		final List<DataAccount> dataAccounts = new ArrayList<DataAccount>();
 
-		String getDataAccountsQuery = String
+		final String getDataAccountsQuery = String
 				.format("SELECT *, convert(aes_decrypt(`password`,UNHEX('%s')), CHAR(1000)) AS `clearpassword` FROM `dataaccount` WHERE %s `deleted`='n' ORDER BY `%s` %s LIMIT %d,%d",
 						key(), includeInactive == null || !includeInactive.booleanValue() ? "`active`='y' AND" : "", pager.sortBy == null ? "id" : stripslashes(pager.sortBy),
 						pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
 						pager.start == null ? Pager.DEFAULT_START.longValue() : pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue()
 								: pager.count.longValue());
 
-		Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
+		final Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
 		try {
 			dataAccountConnection.connect();
 			dataAccountConnection.executeQuery(getDataAccountsQuery);
 
 			while (dataAccountConnection.fetchNextRow()) {
-				DataAccount dataAccount = toDataAccount(dataAccountConnection);
+				final DataAccount dataAccount = toDataAccount(dataAccountConnection);
 
 				if (dataAccount != null) {
 					dataAccounts.add(dataAccount);
@@ -413,7 +419,7 @@ final class DataAccountService implements IDataAccountService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getDataAccountsCount()
 	 */
 	@Override
@@ -435,7 +441,7 @@ final class DataAccountService implements IDataAccountService {
 		String getDataAccountsCountQuery = String.format("SELECT count(1) AS `count` FROM `dataaccount` WHERE %s `deleted`='n' LIMIT 1",
 				includeInactive == null || !includeInactive.booleanValue() ? "`active`='y' AND" : "");
 
-		Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
+		final Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
 		try {
 			dataAccountConnection.connect();
@@ -455,13 +461,13 @@ final class DataAccountService implements IDataAccountService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#addDataAccount(io.reflection.app.shared.datatypes.DataSource, java.lang.String,
 	 * java.lang.String, java.lang.String)
 	 */
 	@Override
 	public DataAccount addDataAccount(DataSource dataSource, String username, String password, String properties) throws DataAccessException {
-		DataAccount dataAccount = new DataAccount();
+		final DataAccount dataAccount = new DataAccount();
 
 		dataAccount.source = dataSource;
 		dataAccount.username = username;
@@ -473,16 +479,16 @@ final class DataAccountService implements IDataAccountService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getIdsDataAccounts(java.util.Collection, io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
 	public List<DataAccount> getIdsDataAccounts(Collection<Long> ids, Pager pager) throws DataAccessException {
-		List<DataAccount> dataAccounts = new ArrayList<DataAccount>();
+		final List<DataAccount> dataAccounts = new ArrayList<DataAccount>();
 
-		StringBuffer joinedIds = new StringBuffer();
+		final StringBuffer joinedIds = new StringBuffer();
 
-		for (Long id : ids) {
+		for (final Long id : ids) {
 			if (joinedIds.length() != 0) {
 				joinedIds.append(",");
 			}
@@ -490,19 +496,19 @@ final class DataAccountService implements IDataAccountService {
 			joinedIds.append(id.toString());
 		}
 
-		String getIdsDataAccountsQuery = String
+		final String getIdsDataAccountsQuery = String
 				.format("SELECT *, convert(aes_decrypt(`password`,UNHEX('%s')), CHAR(1000)) AS `clearpassword` FROM `dataaccount` WHERE `id` in (%s) AND `deleted`='n' ORDER BY `%s` %s",
 						key(), joinedIds, pager.sortBy == null ? "id" : stripslashes(pager.sortBy),
-						pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC");
+								pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC");
 
-		Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
+		final Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
 		try {
 			dataAccountConnection.connect();
 			dataAccountConnection.executeQuery(getIdsDataAccountsQuery);
 
 			while (dataAccountConnection.fetchNextRow()) {
-				DataAccount dataAccount = toDataAccount(dataAccountConnection);
+				final DataAccount dataAccount = toDataAccount(dataAccountConnection);
 
 				if (dataAccount != null) {
 					dataAccounts.add(dataAccount);
@@ -520,7 +526,7 @@ final class DataAccountService implements IDataAccountService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#triggerDataAccountFetch(io.reflection.app.datatypes.shared.DataAccount)
 	 */
 	@Override
@@ -531,7 +537,7 @@ final class DataAccountService implements IDataAccountService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#triggerSingleDateDataAccountFetch(io.reflection.app.datatypes.shared.DataAccount,
 	 * java.util.Date)
 	 */
@@ -542,7 +548,7 @@ final class DataAccountService implements IDataAccountService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#triggerMultipleDateDataAccountFetch(io.reflection.app.datatypes.shared.DataAccount,
 	 * java.util.Date, java.lang.Integer)
 	 */
@@ -553,7 +559,7 @@ final class DataAccountService implements IDataAccountService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#verifyDataAccount(io.reflection.app.datatypes.shared.DataAccount, java.util.Date)
 	 */
 	@Override

@@ -1,4 +1,4 @@
-//  
+//
 //  IRankService.java
 //  storedata
 //
@@ -11,6 +11,7 @@ import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
+import io.reflection.app.datatypes.shared.FormType;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
@@ -104,7 +105,7 @@ public interface IRankService extends IService {
 	public Long addRanksBatch(Collection<Rank> ranks) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param country
 	 * @param store
 	 * @param category
@@ -118,7 +119,7 @@ public interface IRankService extends IService {
 			throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param country
 	 * @param store
 	 * @param category
@@ -155,7 +156,7 @@ public interface IRankService extends IService {
 
 	/**
 	 * Get Rank Ids
-	 * 
+	 *
 	 * @param country
 	 * @param store
 	 * @param category
@@ -171,5 +172,33 @@ public interface IRankService extends IService {
 	public List<Rank> getRanksCount() throws DataAccessException;
 
 	public List<Long> getRankIds(Pager pager) throws DataAccessException;
+
+	/**
+	 * @param internalId
+	 * @param country
+	 * @param categoryId
+	 * @param form
+	 * @param start
+	 * @param end
+	 * @param pager
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<Rank> getSaleSummaryAndRankForItemAndFormType(String internalId, Country country, Long categoryId, FormType form, Date start, Date end,
+			Pager pager)
+					throws DataAccessException;
+
+	/**
+	 * @param id
+	 * @param country
+	 * @param form
+	 * @param start
+	 * @param end
+	 * @param pager
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<Rank> getSaleSummaryAndRankForDataAccountAndFormType(Long id, Country country, FormType form, Date start, Date end, Pager pager)
+			throws DataAccessException;
 
 }

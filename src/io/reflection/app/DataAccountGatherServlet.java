@@ -40,7 +40,7 @@ import com.willshex.service.ContextAwareServlet;
 
 /**
  * @author William Shakour
- * 
+ *
  */
 @SuppressWarnings("serial")
 public class DataAccountGatherServlet extends ContextAwareServlet {
@@ -48,12 +48,12 @@ public class DataAccountGatherServlet extends ContextAwareServlet {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.willshex.service.ContextAwareServlet#doGet()
 	 */
 	@Override
 	protected void doGet() throws ServletException, IOException {
-		String appEngineQueue = REQUEST.get().getHeader("X-AppEngine-QueueName");
+		final String appEngineQueue = REQUEST.get().getHeader("X-AppEngine-QueueName");
 
 		if (LOG.isLoggable(GaeLevel.DEBUG)) {
 			LOG.log(GaeLevel.DEBUG, String.format("appEngineQueue is [%s]", appEngineQueue));
@@ -61,8 +61,9 @@ public class DataAccountGatherServlet extends ContextAwareServlet {
 
 		boolean isNotQueue = false;
 
-		// bail out if we have not been called by app engine cron
-		if (isNotQueue = (appEngineQueue == null || !"dataaccountgather".toLowerCase().equals(appEngineQueue.toLowerCase()))) {
+		// bail out if we have not been called by app engine cron or the deferred queue
+		if (isNotQueue = appEngineQueue == null || (!"deferred".toLowerCase().equals(appEngineQueue.toLowerCase())
+				&& !"dataaccountgather".toLowerCase().equals(appEngineQueue.toLowerCase()))) {
 			RESPONSE.get().setStatus(401);
 			RESPONSE.get().getOutputStream().print("failure");
 			LOG.log(Level.WARNING, "Attempt to run script directly, this is not permitted");
@@ -75,13 +76,13 @@ public class DataAccountGatherServlet extends ContextAwareServlet {
 			}
 		}
 
-		String accountIdParameter = REQUEST.get().getParameter("accountId");
-		String dateParameter = REQUEST.get().getParameter("date");
-		String notifyParameter = REQUEST.get().getParameter("notify");
+		final String accountIdParameter = REQUEST.get().getParameter("accountId");
+		final String dateParameter = REQUEST.get().getParameter("date");
+		final String notifyParameter = REQUEST.get().getParameter("notify");
 
 		if (accountIdParameter != null) {
 			try {
-				DataAccount account = DataAccountServiceProvider.provide().getDataAccount(Long.valueOf(accountIdParameter));
+				final DataAccount account = DataAccountServiceProvider.provide().getDataAccount(Long.valueOf(accountIdParameter));
 
 				if (account != null) {
 					Date date;
@@ -92,28 +93,28 @@ public class DataAccountGatherServlet extends ContextAwareServlet {
 						date = new Date();
 					}
 
-					DataSource dataSource = DataSourceServiceProvider.provide().getDataSource(account.source.id);
+					final DataSource dataSource = DataSourceServiceProvider.provide().getDataSource(account.source.id);
 
 					if (dataSource != null) {
 						account.source = dataSource;
 
-						DataAccountCollector collector = DataAccountCollectorFactory.getCollectorForSource(dataSource.a3Code);
+						final DataAccountCollector collector = DataAccountCollectorFactory.getCollectorForSource(dataSource.a3Code);
 
 						if (collector != null) {
-							boolean status = collector.collect(account, date);
+							final boolean status = collector.collect(account, date);
 
 							if (status && notifyParameter != null && Boolean.parseBoolean(notifyParameter)) {
-								Event event = EventServiceProvider.provide().getCodeEvent(DataTypeHelper.NEW_USER_EVENT_CODE);
-								User user = UserServiceProvider.provide().getDataAccountOwner(account);
-								
-								Map<String, Object> parameters = new HashMap<String, Object>();
+								final Event event = EventServiceProvider.provide().getCodeEvent(DataTypeHelper.NEW_USER_EVENT_CODE);
+								final User user = UserServiceProvider.provide().getDataAccountOwner(account);
+
+								final Map<String, Object> parameters = new HashMap<String, Object>();
 								parameters.put("user", user);
 
-								String body = NotificationHelper.inflate(parameters, event.longBody);
+								final String body = NotificationHelper.inflate(parameters, event.longBody);
 
-								Notification notification = (new Notification()).from("hello@reflection.io").user(user).event(event).body(body)
+								final Notification notification = new Notification().from("hello@reflection.io").user(user).event(event).body(body)
 										.subject(event.subject);
-								Notification added = NotificationServiceProvider.provide().addNotification(notification);
+								final Notification added = NotificationServiceProvider.provide().addNotification(notification);
 
 								if (added.type != NotificationTypeType.NotificationTypeTypeInternal) {
 									notification.type = NotificationTypeType.NotificationTypeTypeInternal;
@@ -122,21 +123,21 @@ public class DataAccountGatherServlet extends ContextAwareServlet {
 							}
 
 						} else {
-							if (LOG.isLoggable(GaeLevel.WARNING)) {
-								LOG.log(GaeLevel.WARNING, "Could not find a collector for [%s]", dataSource.a3Code);
+							if (LOG.isLoggable(Level.WARNING)) {
+								LOG.log(Level.WARNING, "Could not find a collector for [%s]", dataSource.a3Code);
 							}
 						}
 					} else {
-						if (LOG.isLoggable(GaeLevel.WARNING)) {
-							LOG.log(GaeLevel.WARNING, "Could not find a data source for id [%d]", account.source.id.longValue());
+						if (LOG.isLoggable(Level.WARNING)) {
+							LOG.log(Level.WARNING, "Could not find a data source for id [%d]", account.source.id.longValue());
 						}
 					}
 
 				}
-			} catch (DataAccessException e) {
-				LOG.log(GaeLevel.SEVERE, String.format("Database error occured while trying to import data with accountid [%s] and date [%s]",
+			} catch (final DataAccessException e) {
+				LOG.log(Level.SEVERE, String.format("Database error occured while trying to import data with accountid [%s] and date [%s]",
 						accountIdParameter, dateParameter), e);
-			} catch (ServiceException e) {
+			} catch (final ServiceException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -147,7 +148,7 @@ public class DataAccountGatherServlet extends ContextAwareServlet {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.willshex.service.ContextAwareServlet#doPost()
 	 */
 	@Override
