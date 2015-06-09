@@ -14,10 +14,11 @@ import io.reflection.app.api.core.shared.call.event.GetCountriesEventHandler.Get
 import io.reflection.app.api.core.shared.call.event.GetCountriesEventHandler.GetCountriesSuccess;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.client.DefaultEventBus;
-import io.reflection.app.client.res.flags.Styles;
+import io.reflection.app.client.res.flags.StylesFlags;
 import io.reflection.app.datatypes.shared.Country;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,14 +72,7 @@ public class CountryController implements ServiceConstants {
 			public void onSuccess(GetCountriesResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {
 					if (output.countries != null && output.countries.size() > 0) {
-
-						if (mCountryLookup == null) {
-							mCountryLookup = new HashMap<String, Country>();
-						}
-
-						for (Country country : output.countries) {
-							mCountryLookup.put(country.a2Code, country);
-						}
+						addCountriesToCache(output.countries);
 
 						countries = output.countries;
 					}
@@ -108,6 +102,28 @@ public class CountryController implements ServiceConstants {
 		return country;
 	}
 
+	public void addCountryToCache(Country country) {
+		if (country != null) {
+			if (mCountryLookup == null) {
+				mCountryLookup = new HashMap<String, Country>();
+			}
+
+			mCountryLookup.put(country.a2Code, country);
+		}
+	}
+
+	public void addCountriesToCache(Collection<Country> countries) {
+		if (countries != null && countries.size() > 0) {
+			if (mCountryLookup == null) {
+				mCountryLookup = new HashMap<String, Country>();
+			}
+
+			for (Country country : countries) {
+				mCountryLookup.put(country.a2Code, country);
+			}
+		}
+	}
+
 	/**
 	 * @param a2Code
 	 * @return
@@ -116,19 +132,19 @@ public class CountryController implements ServiceConstants {
 		String styleName = null;
 
 		if ("us".equals(a2Code)) {
-			styleName = Styles.INSTANCE.flags().us();
+			styleName = StylesFlags.INSTANCE.flags().us();
 		} else if ("gb".equals(a2Code)) {
-			styleName = Styles.INSTANCE.flags().gb();
+			styleName = StylesFlags.INSTANCE.flags().gb();
 		} else if ("cn".equals(a2Code)) {
-			styleName = Styles.INSTANCE.flags().cn();
+			styleName = StylesFlags.INSTANCE.flags().cn();
 		} else if ("de".equals(a2Code)) {
-			styleName = Styles.INSTANCE.flags().de();
+			styleName = StylesFlags.INSTANCE.flags().de();
 		} else if ("fr".equals(a2Code)) {
-			styleName = Styles.INSTANCE.flags().fr();
+			styleName = StylesFlags.INSTANCE.flags().fr();
 		} else if ("jp".equals(a2Code)) {
-			styleName = Styles.INSTANCE.flags().jp();
+			styleName = StylesFlags.INSTANCE.flags().jp();
 		} else if ("it".equals(a2Code)) {
-			styleName = Styles.INSTANCE.flags().it();
+			styleName = StylesFlags.INSTANCE.flags().it();
 		}
 
 		return styleName;

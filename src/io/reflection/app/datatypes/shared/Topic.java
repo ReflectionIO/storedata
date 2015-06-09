@@ -25,6 +25,7 @@ public class Topic extends DataType {
 	public Forum forum;
 	public User lastReplier;
 	public String title;
+	public String code;
 	public String content;
 	public Integer heat;
 	public Boolean sticky;
@@ -62,6 +63,8 @@ public class Topic extends DataType {
 		object.add("lastReplier", jsonLastReplier);
 		JsonElement jsonTitle = title == null ? JsonNull.INSTANCE : new JsonPrimitive(title);
 		object.add("title", jsonTitle);
+		JsonElement jsonCode = code == null ? JsonNull.INSTANCE : new JsonPrimitive(code);
+		object.add("code", jsonCode);
 		JsonElement jsonContent = content == null ? JsonNull.INSTANCE : new JsonPrimitive(content);
 		object.add("content", jsonContent);
 		JsonElement jsonHeat = heat == null ? JsonNull.INSTANCE : new JsonPrimitive(heat);
@@ -137,6 +140,12 @@ public class Topic extends DataType {
 				title = jsonTitle.getAsString();
 			}
 		}
+		if (jsonObject.has("code")) {
+			JsonElement jsonCode = jsonObject.get("code");
+			if (jsonCode != null) {
+				code = jsonCode.getAsString();
+			}
+		}
 		if (jsonObject.has("content")) {
 			JsonElement jsonContent = jsonObject.get("content");
 			if (jsonContent != null) {
@@ -208,6 +217,11 @@ public class Topic extends DataType {
 
 	public Topic title(String title) {
 		this.title = title;
+		return this;
+	}
+
+	public Topic code(String code) {
+		this.code = code;
 		return this;
 	}
 

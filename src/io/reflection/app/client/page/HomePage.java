@@ -7,23 +7,25 @@
 //
 package io.reflection.app.client.page;
 
-import io.reflection.app.client.controller.NavigationController;
+import io.reflection.app.client.helper.AnimationHelper;
 import io.reflection.app.client.helper.DOMHelper;
-import io.reflection.app.client.part.Footer;
-import io.reflection.app.client.part.Header;
-import io.reflection.app.client.res.Images;
+import io.reflection.app.client.helper.UserAgentHelper;
+import io.reflection.app.client.res.Styles;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.ScriptInjector;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.LinkElement;
-import com.google.gwt.dom.client.ParagraphElement;
-import com.google.gwt.dom.client.ScriptElement;
+import com.google.gwt.dom.client.StyleInjector;
 import com.google.gwt.dom.client.VideoElement;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Window.ScrollEvent;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
@@ -40,30 +42,21 @@ public class HomePage extends Page {
 	interface HomePageUiBinder extends UiBinder<Widget, HomePage> {}
 
 	@UiField InlineHyperlink applyNowBtn;
-	@UiField InlineHyperlink applyBtn;
-	@UiField InlineHyperlink loginBtn;
-
-	@UiField InlineHyperlink homeBtn;
+	@UiField Anchor linkScrollToAnchor;
+	@UiField Element sectionMain;
+	@UiField Element sectionSizeShadowLayer;
+	@UiField Element sectionHowIntelHelps;
+	// @UiField InlineHyperlink homeBtn;
 	@UiField HTMLPanel leaderBoardScreenshot;
 	@UiField HTMLPanel analysisScreenshot;
 
 	// elements for IE consitionals
-	Element picture1, source1, source2;
-	Element picture2, source3, source4;
-	Element picture3, source5, source6;
-
-	private static final LinkElement cssCustom = DOMHelper.getCssLinkFromUrl("css/landing.62eddb2b4c6320dc1a0039800cee0bf0.css");
-
-	private static final LinkElement cssCustomIE8 = DOMHelper.getCssLinkFromUrl("css/landing-ie8.659484547a4409f243a1bb7d085c2c52.css");
-	private static final LinkElement cssCustomIE9 = DOMHelper.getCssLinkFromUrl("css/landing-ie9.42a5a45361f9f95fe006be82a699c864.css");
-
-	private static final ScriptElement scriptCustom = DOMHelper.getJSScriptFromUrl("js/scripts.180cd4275030bac3e6c6f190e5c98813.js");
-	private static final ScriptElement scriptRespond = DOMHelper.getJSScriptFromUrl("js/respond.min.js");
-
-	private static final ScriptElement scriptPictureFill = DOMHelper.getJSScriptFromUrl("js/picturefill.2.2.0.min.js", "async");
+	private Element picture1, source1, source2;
+	private Element picture2, source3, source4;
+	private Element picture3, source5, source6;
+	private boolean mapScriptInjected;
 
 	private int toTop = 0;
-	private static boolean tweeked = false;
 
 	public HomePage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -72,91 +65,36 @@ public class HomePage extends Page {
 		addLeaderboardScreenshotPicture();
 		addAnalysisScreenshotPicture();
 
-		// StyleInjector.injectAtStart(Styles.INSTANCE.homePageStyle().getText());
+		StyleInjector.injectAtStart(Styles.STYLES_INSTANCE.homePageStyle().getText());
 
-		applyBtn.setTargetHistoryToken(PageType.RegisterPageType.asTargetHistoryToken("requestinvite"));
 		applyNowBtn.setTargetHistoryToken(PageType.RegisterPageType.asTargetHistoryToken("requestinvite"));
-		loginBtn.setTargetHistoryToken(PageType.LoginPageType.asTargetHistoryToken("requestinvite"));
 
 		appendConditionalTags();
-	}
 
-	public static void applyHomePageTweeks() {
-		if (!tweeked) {
-			// Compatibility code
-			Document.get().getElementsByTagName("html").getItem(0).setAttribute("style", "height: auto");
-			NavigationController.get().getPageHolderPanel().getElement().setAttribute("style", "padding: 0px 0px 0px 0px;");
-			Document.get().getBody().setAttribute("style", "height: auto");
+		initScrollEffect();
 
-			// Append to Head
-			Document.get().getHead().appendChild(HomePage.cssCustom);
-			String userAgent = Window.Navigator.getUserAgent();
-			if (userAgent.contains("MSIE")) { // Internet Explorer
-				if (userAgent.contains("MSIE 2") || userAgent.contains("MSIE 3") || userAgent.contains("MSIE 4") || userAgent.contains("MSIE 5")
-						|| userAgent.contains("MSIE 6") || userAgent.contains("MSIE 7") || userAgent.contains("MSIE 8")) {
-					Document.get().getHead().appendChild(HomePage.cssCustomIE8);
-					Document.get().getHead().appendChild(HomePage.scriptRespond);
-				} else {
-					Document.get().getHead().appendChild(HomePage.scriptPictureFill);
-				}
-				if (userAgent.contains("MSIE 9")) {
-					Document.get().getHead().appendChild(HomePage.cssCustomIE9);
-				}
-			} else { // Not Internet Explorer
-				Document.get().getHead().appendChild(HomePage.scriptPictureFill);
-			}
+		nativeInitMap();
 
-			tweeked = true;
-		}
-	}
-
-	public static void removeHomePageTweeks() {
-		if (tweeked) {
-			// Compatibility code
-			Document.get().getElementsByTagName("html").getItem(0).removeAttribute("style");
-			NavigationController.get().getPageHolderPanel().getElement().setAttribute("style", "padding: 60px 0px 39px 0px;");
-			Document.get().getBody().removeAttribute("style");
-
-			// Remove from Head
-			Document.get().getHead().removeChild(HomePage.cssCustom);
-			String userAgent = Window.Navigator.getUserAgent();
-			if (userAgent.contains("MSIE")) { // Internet Explorer
-				if (userAgent.contains("MSIE 2") || userAgent.contains("MSIE 3") || userAgent.contains("MSIE 4") || userAgent.contains("MSIE 5")
-						|| userAgent.contains("MSIE 6") || userAgent.contains("MSIE 7") || userAgent.contains("MSIE 8")) {
-					Document.get().getHead().removeChild(HomePage.cssCustomIE8);
-					Document.get().getHead().removeChild(HomePage.scriptRespond);
-				} else {
-					Document.get().getHead().removeChild(HomePage.scriptPictureFill);
-				}
-				if (userAgent.contains("MSIE 9")) {
-					Document.get().getHead().removeChild(HomePage.cssCustomIE9);
-				}
-			} else { // Not Internet Explorer
-				Document.get().getHead().removeChild(HomePage.scriptPictureFill);
-			}
-
-			tweeked = false;
-		}
 	}
 
 	private void addHomeBtnPicture() {
-		picture1 = DOM.createElement("picture");
+		// picture1 = DOM.createElement("picture");
+		//
+		// source1 = DOM.createElement("source");
+		// source1.setAttribute("srcset", Images.INSTANCE.reflectionLogoBeta().getSafeUri().asString());
+		// source1.setAttribute("media", "(min-width: 480px)");
+		//
+		// source2 = DOM.createElement("source");
+		// source2.setAttribute("srcset", Images.INSTANCE.mobileReflectionLogoBeta().getSafeUri().asString());
+		//
+		// Image img = new Image(Images.INSTANCE.reflectionLogoBeta());
+		// img.setAltText("Reflection logo");
+		//
+		// picture1.appendChild(source1);
+		// picture1.appendChild(source2);
+		// picture1.appendChild(img.getElement());
 
-		source1 = DOM.createElement("source");
-		source1.setAttribute("srcset", Images.INSTANCE.reflectionLogoBeta().getSafeUri().asString());
-		source1.setAttribute("media", "(min-width: 480px)");
-
-		source2 = DOM.createElement("source");
-		source2.setAttribute("srcset", Images.INSTANCE.mobileReflectionLogoBeta().getSafeUri().asString());
-
-		Image img = new Image(Images.INSTANCE.reflectionLogoBeta());
-		img.setAltText("Reflection logo");
-
-		picture1.appendChild(source1);
-		picture1.appendChild(source2);
-		picture1.appendChild(img.getElement());
-
-		homeBtn.getElement().appendChild(picture1);
+		// homeBtn.getElement().appendChild(picture1);
 	}
 
 	private void addLeaderboardScreenshotPicture() {
@@ -199,6 +137,146 @@ public class HomePage extends Page {
 		analysisScreenshot.getElement().appendChild(picture3);
 	}
 
+	@UiHandler("linkScrollToAnchor")
+	void onLinkScrollToAnchorClicked(ClickEvent event) {
+		event.preventDefault();
+		// String href = linkScrollToAnchor.getElement().getAttribute("href");
+		int navHeight = 60;
+		int targetTop = sectionHowIntelHelps.getOffsetTop();
+		AnimationHelper.nativeScrollTop(targetTop - navHeight, 455, "swing");
+	}
+
+	private void initScrollEffect() {
+		if (DOMHelper.getHtmlElement().hasClassName("csstransforms") && DOMHelper.getHtmlElement().hasClassName("no-touch")) {
+			final int breakpointVertical = 710;
+			final int breakpointHorizontal = 980;
+			Window.addWindowScrollHandler(new Window.ScrollHandler() {
+				@Override
+				public void onWindowScroll(ScrollEvent event) {
+					int windowHeight = Window.getClientHeight();
+					int windowWidth = Window.getClientWidth();
+					int scrollTop = Window.getScrollTop();
+					if (windowHeight >= breakpointVertical && windowWidth >= breakpointHorizontal) {
+						double scrollAsPercentageOfWindowHeight = ((double) scrollTop / windowHeight) * 50.0;
+						double scale = 1 - (scrollAsPercentageOfWindowHeight / 100.0);
+						double opacityScale = 1 - ((scrollAsPercentageOfWindowHeight * 2.5) / 100.0);
+						double opacityScaleShadowLayer = 0 + ((scrollAsPercentageOfWindowHeight * 2.0) / 85.0);
+						sectionMain.setAttribute("style", "-ms-transform: scale(" + scale + "); -webkit-transform : scale(" + scale + "); transform : scale("
+								+ scale + "); top: " + -(double) scrollTop / 4.3 + "px; opacity: " + opacityScale);
+						sectionSizeShadowLayer.getStyle().setOpacity(opacityScaleShadowLayer);
+					} else {
+						sectionMain.setAttribute("style", "-ms-transform: scale(1); -webkit-transform : scale(1); transform : scale(1); top: 0px; opacity: 1");
+						sectionSizeShadowLayer.getStyle().setOpacity(0);
+					}
+				}
+			});
+
+		}
+	}
+
+	native void nativeInitMap() /*-{
+
+		$wnd.refMap; // global map object
+		$wnd.generateMap = function() {
+			$wnd.refMap = new $wnd.reflectionMap();
+			mapTop = $wnd.$('.landing-section-map').offset().top;
+			dropped = false;
+
+			if ($wnd.$('.no-touch').length > 0
+					&& $wnd.$($wnd).scrollTop() < (mapTop - ($wnd.$($wnd)
+							.height() / 2))) {
+				$wnd.$($wnd).on(
+						"scroll",
+						function() {
+							if (!dropped) {
+								if ($wnd.$($wnd).scrollTop() > (mapTop - ($wnd
+										.$($wnd).height() / 2))) {
+									$wnd.refMap.addMarker();
+									dropped = true;
+								}
+							}
+						});
+			} else {
+				$wnd.refMap.addMarker();
+				dropped = true;
+			}
+		}
+
+		$wnd.reflectionMap = function() {
+			var isDraggable = $wnd.$('html.touch').length == 0;
+			var mapStyles = [ {
+				featureType : "poi",
+				elementType : "labels",
+				stylers : [ {
+					visibility : "off"
+				} ]
+			} ];
+			this.myLatlng = new $wnd.google.maps.LatLng(51.518680, -0.136578);
+			this.mapOptions = {
+				zoom : 17,
+				center : this.myLatlng,
+				disableDefaultUI : true,
+				scrollwheel : false,
+				streetViewControl : true,
+				draggable : isDraggable,
+				styles : mapStyles
+			}
+			this.markerImage = {
+				url : 'images/contact/Map_Pin@2x.png',
+				size : new $wnd.google.maps.Size(30, 43),
+				scaledSize : new $wnd.google.maps.Size(30, 43),
+				anchor : new $wnd.google.maps.Point(30, 43)
+			};
+			this.map = new $wnd.google.maps.Map($doc
+					.getElementById("js-map-location"), this.mapOptions);
+
+			this.addMarker = function() {
+				var marker = this.marker = new $wnd.google.maps.Marker({
+					position : this.myLatlng,
+					map : this.map,
+					title : "40-44 Newman Street",
+					icon : this.markerImage,
+					animation : $wnd.google.maps.Animation.DROP
+				});
+
+				var contentString = '<div class="map__info-box">'
+						+ '<h1>Reflection</h1>'
+						+ '<div class="map__text-content">'
+						+ '<p>40-44 Newman Street<br />London<br />W1T 1QD</p>'
+						+ '<p onclick="window.refMap.toggleStreetView();" class="map__street-view-link">Streetview</p>'
+						+ '<p><a href="https://www.google.co.uk/maps/place/44+Newman+St,+Marylebone,+London+W1T+1QD/@51.5187779,-0.1364135,17z/data=!4m7!1m4!3m3!1s0x48761b2b95192b1b:0xc2fcb9753b8ff12b!2s44+Newman+St,+Marylebone,+London+W1T+1QD!3b1!3m1!1s0x48761b2b95192b1b:0xc2fcb9753b8ff12b" target="_blank">Open in Google Maps</a></p></div></div><div class="map__info-box__down-arrow"></div>';
+
+				var infowindow = new $wnd.google.maps.InfoWindow({
+					content : contentString
+				});
+
+				$wnd.google.maps.event.addListener(marker, 'click', function() {
+					infowindow.open(this.map, marker);
+				});
+			}
+
+			this.panorama = this.map.getStreetView();
+			this.panorama.setPosition(new $wnd.google.maps.LatLng(51.518660,
+					-0.136540));
+			this.panorama.setPov(({
+				heading : 40,
+				pitch : 0
+			}));
+
+			this.toggleStreetView = function() {
+				var toggle = this.panorama.getVisible();
+				if (toggle == false) {
+					this.panorama.setVisible(true);
+				} else {
+					this.panorama.setVisible(false);
+				}
+			}
+
+			return this;
+		}
+
+	}-*/;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -206,17 +284,18 @@ public class HomePage extends Page {
 	 */
 	@Override
 	protected void onAttach() {
-		applyHomePageTweeks();
-
 		super.onAttach();
 
 		Window.scrollTo(0, toTop);
 
-		((Footer) NavigationController.get().getFooter()).setVisible(false);
-		((Header) NavigationController.get().getHeader()).setVisible(false);
+		if (!mapScriptInjected) {
+			ScriptInjector.fromUrl("https://maps.googleapis.com/maps/api/js?key=AIzaSyD7mXBIrN4EgMflWKxUOK6C9rfoDMa5zyo&callback=generateMap")
+					.setWindow(ScriptInjector.TOP_WINDOW).inject();
+			mapScriptInjected = true;
+		}
 
-		// Append to Body
-		Document.get().getBody().appendChild(scriptCustom);
+		Document.get().getBody().addClassName(Styles.STYLES_INSTANCE.homePageStyle().landingPage());
+		DOMHelper.getHtmlElement().addClassName(Styles.STYLES_INSTANCE.homePageStyle().landingPage());
 
 	}
 
@@ -227,31 +306,17 @@ public class HomePage extends Page {
 	 */
 	@Override
 	protected void onDetach() {
-
 		super.onDetach();
 
-		((Footer) NavigationController.get().getFooter()).setVisible(true);
-		((Header) NavigationController.get().getHeader()).setVisible(true);
+		Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.homePageStyle().landingPage());
+		DOMHelper.getHtmlElement().removeClassName(Styles.STYLES_INSTANCE.homePageStyle().landingPage());
 
 		toTop = Window.getScrollTop();
-
-		// Romove from Body
-		Document.get().getBody().removeChild(scriptCustom);
-		removeHomePageTweeks();
 
 	}
 
 	private void appendConditionalTags() {
-		String userAgent = Window.Navigator.getUserAgent();
-		if (userAgent.contains("MSIE 2") || userAgent.contains("MSIE 3") || userAgent.contains("MSIE 4") || userAgent.contains("MSIE 5")
-				|| userAgent.contains("MSIE 6") || userAgent.contains("MSIE 7")) {
-			ParagraphElement outdatedBrowser = Document.get().createPElement(); // TODO the element z-index need to be set up higher
-			outdatedBrowser.addClassName("browserupgrade");
-			outdatedBrowser
-					.setInnerHTML("You are using an <strong>outdated</strong> browser. Please <a href=\"http://browsehappy.com/\">upgrade your browser</a> to improve your experience.");
-			this.getElement().insertFirst(outdatedBrowser);
-		}
-		if (userAgent.contains("MSIE 9")) {
+		if (UserAgentHelper.isIE() && UserAgentHelper.getIEVersion() == 9) {
 			picture1.removeChild(source1);
 			picture1.removeChild(source2);
 			picture2.removeChild(source3);

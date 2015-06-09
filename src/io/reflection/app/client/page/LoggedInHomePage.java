@@ -8,15 +8,10 @@
 package io.reflection.app.client.page;
 
 import io.reflection.app.client.component.AccordionSwitch;
-import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.SessionController;
-import io.reflection.app.client.helper.DOMHelper;
-import io.reflection.app.client.part.Footer;
 import io.reflection.app.datatypes.shared.User;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.LinkElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -46,8 +41,6 @@ public class LoggedInHomePage extends Page {
 	@UiField AccordionSwitch accordionSwitchIR;
 	@UiField AccordionSwitch accordionSwitchJP;
 
-	private static final LinkElement cssCustom = DOMHelper.getCssLinkFromUrl("css/logged-in-landing.css");
-
 	public LoggedInHomePage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
@@ -60,6 +53,7 @@ public class LoggedInHomePage extends Page {
 		accordionSwitchUK.addItemIncomplete("Overall", "Coming Soon");
 		accordionSwitchUK.addItemIncomplete("Education", "Coming Soon");
 		accordionSwitchUK.addItemIncomplete("Music", "Coming Soon");
+		accordionSwitchUK.setSubtitleHtml("(1<span>Category</span>)");
 
 		accordionSwitchDE.addItemIncomplete("Overall", "Coming Soon");
 		accordionSwitchDE.addItemIncomplete("Games", "Coming Soon");
@@ -120,33 +114,12 @@ public class LoggedInHomePage extends Page {
 	 */
 	@Override
 	protected void onAttach() {
-		Document.get().getHead().appendChild(cssCustom);
-		Document.get().getElementsByTagName("html").getItem(0).setAttribute("style", "height: auto");
-		Document.get().getBody().setAttribute("style", "height: auto");
-
-		((Footer) NavigationController.get().getFooter()).setVisible(false);
+		super.onAttach();
 
 		User user = SessionController.get().getLoggedInUser();
 		if (user != null) {
 			userName.setInnerText(user.forename + ",");
 		}
-
-		super.onAttach();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.page.Page#onDetach()
-	 */
-	@Override
-	protected void onDetach() {
-		super.onDetach();
-
-		((Footer) NavigationController.get().getFooter()).setVisible(true);
-		Document.get().getElementsByTagName("html").getItem(0).removeAttribute("style");
-		Document.get().getBody().removeAttribute("style");
-		Document.get().getHead().removeChild(cssCustom);
 	}
 
 }

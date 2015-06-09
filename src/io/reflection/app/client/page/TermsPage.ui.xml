@@ -1,45 +1,20 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 	<ui:style gss="true">
-	.title {
-		margin-top: 76px;
-		margin-bottom: 0px;
-	}
 	
-	.subtitle {
-		margin-top: 26px;
-		margin-bottom: 0px;
-	}
-	
-	.paragraph {
-		margin-top: 56px;
-		margin-bottom: 0px;
-	}
-	
-	.subparagraph {
-		margin-top: 26px;
-		margin-bottom: 0px;
-	}
-	
-	.subsubparagraph {
-		margin-top: 16px;
-		margin-bottom: 0px;
-	}
-	
-	.xsDivider {
-		height: 30px;
-	}
 	</ui:style>
-	<g:HTMLPanel styleName="container">
-		<h2 class="{style.title}">Reflection App Intelligence Service</h2>
-		<h3 class="{style.subtitle}">Beta phase Terms and Conditions</h3>
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.pageGeneralContent}">
+		<div
+			class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnTwoThirds} {STYLES_INSTANCE.reflectionMainStyle.blogContentContainer}">
+			<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticleFull}">				
 		<ol>
-			<li>
-				<h4 class="{style.paragraph}">Introduction</h4>
-			</li>
+					<h2>Reflection App Intelligence Service</h2>
+					<h3>Beta phase Terms and Conditions</h3>
+					<h4>Introduction</h4>
 			<ol>
 				<li>
-					<p class="{style.subparagraph}">
+							<p>
 						The Reflection
 						Service (the
 						<b>&quot;Service&quot;</b>
@@ -68,7 +43,7 @@
 					</p>
 				</li>
 				<li>
-					<p class="{style.subparagraph}">
+							<p>
 						Please read these
 						Terms and Conditions (
 						<b>&quot;Terms&quot;</b>
@@ -84,7 +59,8 @@
 						work for (if you are
 						using the
 						Reflection Service
-						on behalf of the company you
+								on behalf of the company
+								you
 						work for) (
 						<b>&quot;you&quot;</b>
 						,
@@ -94,20 +70,20 @@
 					</p>
 				</li>
 				<li>
-					<p class="{style.subparagraph}">If you do not accept
+							<p>If you do not accept
 						these Terms, you may not use any features of the Reflection
 						Service.</p>
 				</li>
 			</ol>
 
 			<li>
-				<h4 class="{style.paragraph}">Definitions Used in these Terms</h4>
+						<h4>Definitions Used in these Terms</h4>
 			</li>
 
 			<div class="row">
-				<div class="visible-xs {style.xsDivider}"></div>
-				<b class="col-sm-3 {style.subparagraph}">&quot;App Intelligence&quot;</b>
-				<p class="col-sm-9 {style.subparagraph}">means analytical information
+						<div></div>
+						<b>&quot;App Intelligence&quot;</b>
+						<p>means analytical information
 					(whether in data, text, graphic or other form) which we create and
 					give you access to via the Reflection
 					Service
@@ -117,62 +93,66 @@
 					from the Sources.</p>
 			</div>
 			<div class="row">
-				<div class="visible-xs {style.xsDivider}"></div>
-				<b class="col-sm-3 {style.subparagraph}">&quot;App Platform Account&quot; </b>
-				<p class="col-sm-9 {style.subparagraph}">means the account you use for
+						<div></div>
+						<b>&quot;App Platform Account&quot; </b>
+						<p>means the account you use for
 					development of your apps, for example your iTunes Connect or Google
 					Play account.</p>
 			</div>
 			<div class="row">
-				<div class="visible-xs {style.xsDivider}"></div>
-				<b class="col-sm-3 {style.subparagraph}">&quot;User Input Data&quot; </b>
-				<p class="col-sm-9 {style.subparagraph}">means data that you send us or
+						<div></div>
+						<b>&quot;User Input Data&quot; </b>
+						<p>means data that you send us or
 					that we collect from your App Platform Account when you link it to
 					the Reflection Service for the
-					purpose of analysis
-					using our
+							purpose of
+							analysis
+							using
+							our
 					algorithmic statistic generation model, to compile App Intelligence
 					and make it available to Users (but User
 					Input Data excludes data
-					that is
-					publically available via the Sources without access to your
+							that
+							is
+							publically
+							available via the Sources without access to your
 					App Platform Account).</p>
 			</div>
 			<div class="row">
-				<div class="visible-xs {style.xsDivider}"></div>
-				<b class="col-sm-3 {style.subparagraph}">&quot;User Account Information&quot;</b>
-				<p class="col-sm-9 {style.subparagraph}">means your user login
+						<div></div>
+						<b>&quot;User Account Information&quot;</b>
+						<p>means your user login
 					and password details for access to your data from a specific Source,
 					for example, your App Platform Account user
 					name and
 					password.</p>
 			</div>
 			<div class="row">
-				<div class="visible-xs {style.xsDivider}"></div>
-				<b class="col-sm-3 {style.subparagraph}">&quot;Reflection Service&quot;</b>
-				<p class="col-sm-9 {style.subparagraph}">
+						<div></div>
+						<b>&quot;Reflection Service&quot;</b>
+						<p>
 					means service accessible via
 					the web url
 
-					<a href="/">http://reflection.io</a>
+					<a href="/">reflection.io</a>
 
 					including any pages of that website and any other services made
 					available to you by us under these Terms.
 				</p>
 			</div>
 			<div class="row">
-				<div class="visible-xs {style.xsDivider}"></div>
-				<b class="col-sm-3 {style.subparagraph}">&quot;Sources&quot;</b>
-				<p class="col-sm-9 {style.subparagraph}">means online third-party data sources,
+						<div></div>
+						<b>&quot;Sources&quot;</b>
+						<p>means online third-party data sources,
 					including websites, the App Platform Account and various digital
 					distribution, analytics,
 					advertising and
 					monetisation platforms.</p>
 			</div>
 			<li>
-				<h4 class="{style.paragraph}">Eligibility and warranty</h4>
+						<h4>Eligibility and warranty</h4>
 			</li>
-			<p class="{style.subparagraph}">You warrant and
+					<p>You warrant and
 				represent that you are over 18 (or over 13 with parental consent) and
 				you have capacity to enter into these
 				Terms. If you are using
@@ -180,14 +160,15 @@
 				Reflection Service on behalf of a business, you warrant and represent
 				that you have all necessary authority from that
 				business entity (i.e.
-				company or other
+						company or
+						other
 				body) to enter into a binding contract with
 				Reflection to use the Reflection Service.
 			</p>
 			<li>
-				<h4 class="{style.paragraph}">Changes</h4>
+						<h4>Changes</h4>
 			</li>
-			<p class="{style.subparagraph}">We may occasionally make changes to the Reflection Service or these Terms.
+					<p>We may occasionally make changes to the Reflection Service or these Terms.
 				If we do, the new Terms will be effective as soon as they
 				are posted
 				on
@@ -196,34 +177,37 @@
 				so that you are aware of any modifications. By continuing to use
 				the
 				Reflection
-				Service after
+						Service
+						after
 				we
 				post an update of these Terms on the
 				Reflection Service, you express acceptance of the changes.
 			</p>
 			<li>
-				<h4 class="{style.paragraph}">Your Data, Privacy and Security</h4>
+						<h4>Your Data, Privacy and Security</h4>
 			</li>
 			<ol>
 				<li>
-					<p class="{style.subparagraph}">
+							<p>
 						By using the Reflection
 						Service, you continue to own all data we collect from you or your
 						App Platform Account,
 						including any personal data,
 						User
-						Input Data
+								Input
+								Data
 						and User Account Information which you own at the time we collect
 						it.</p>
 				</li>
 				<li>
-					<p class="{style.subparagraph}">Your
+							<p>Your
 						User Input
 						Data (such as iTunes Sale Reports) informs our App Intelligence but
 						remains private to you. We do
 						not share your User Input Data
 						with
-						other users of
+								other users
+								of
 						the Reflection Service. You can view and analyse
 						your own User Input Data
 						in the &quot;My Apps&quot; section of the
@@ -233,19 +217,21 @@
 					</p>
 				</li>
 				<li>
-					<p class="{style.subparagraph}">We will immediately
+							<p>We will immediately
 						cease collection of your User Input Data if you delete your
 						Reflection account, but any
 						of your previously collected
-						User Input
-						Data that
+								User
+								Input
+								Data
+								that
 						is already included in the pool of data used to compile
 						our App Intelligence
 						will not be deleted.
 					</p>
 				</li>
 				<li>
-					<p class="{style.subparagraph}">
+							<p>
 						We retain information you provide us (
 						<b>except</b>
 						your User Input Data and User Account Information) for as long as
@@ -255,16 +241,18 @@
 					</p>
 				</li>
 				<li>
-					<p class="{style.subparagraph}">We use cookies. When
+							<p>We use cookies. When
 						you use the Reflection Service, we may collect, process and use
 						information
 						about you which may not personally identify
-						you but
+								you
+								but
 						which
 						may be helpful for improving the operation of the Site.
 						Such
 						information may be collected through “traffic data” and may
-						entail the use of cookies, IP
+								entail the use of cookies,
+								IP
 						Addresses or other
 						numeric codes used
 						to identify your device and compile information about your use of
@@ -283,7 +271,7 @@
 					</p>
 				</li>
 				<li>
-					<p class="{style.subparagraph}">We will never sell or
+							<p>We will never sell or
 						share your data with any third parties, or use it in any way that
 						is not
 						necessary for the purpose of compiling and
@@ -292,7 +280,7 @@
 						Intelligence, without your prior consent.</p>
 				</li>
 				<li>
-					<p class="{style.subparagraph}">
+							<p>
 						<b>We take the
 							security of your data very seriously.</b>
 						The data host we currently use is Google Cloud Platform, whose
@@ -313,27 +301,27 @@
 				</li>
 			</ol>
 			<li>
-				<h4 class="{style.paragraph}">Your
+						<h4>Your
 					Use of the Reflection Service
 				</h4>
 			</li>
 			<ol type="a">
 				<li>
-					<p class="{style.subparagraph}">You agree:</p>
+							<p>You agree:</p>
 					<ol>
 						<li>
-							<p class="{style.subsubparagraph}">not to use the
+									<p>not to use the
 								Reflection Service for any unlawful purpose or in any way that
 								interrupts, damages or
 								impairs the Reflection Service;
 							</p>
 						</li>
 						<li>
-							<p class="{style.subsubparagraph}">not to access or
+									<p>not to access or
 								attempt to access the accounts of other users;</p>
 						</li>
 						<li>
-							<p class="{style.subsubparagraph}">to indemnify (i.e.
+									<p>to indemnify (i.e.
 								compensate) and defend us fully against any claims or legal
 								proceedings
 								brought against us by any person as a
@@ -342,7 +330,7 @@
 								these Terms; and</p>
 						</li>
 						<li>
-							<p class="{style.subsubparagraph}">to keep your account
+									<p>to keep your account
 								username and password secure at all times and not to disclose
 								your
 								account username and/or password to any
@@ -351,14 +339,14 @@
 					</ol>
 				</li>
 				<li>
-					<p class="{style.subparagraph}">You must not:</p>
+							<p>You must not:</p>
 					<ol type="a">
 						<li>
-							<p class="{style.subsubparagraph}">infringe any law,
+									<p>infringe any law,
 								regulation or any order of a court;</p>
 						</li>
 						<li>
-							<p class="{style.subsubparagraph}">infringe the rights
+									<p>infringe the rights
 								of any person or entity, whether us or a fellow user of the
 								Reflection
 								Service or not including but not limited
@@ -369,12 +357,12 @@
 							</p>
 						</li>
 						<li>
-							<p class="{style.subsubparagraph}">use automated scripts
+									<p>use automated scripts
 								to collect information or otherwise interact with the Reflection
 								Service or the Site;</p>
 						</li>
 						<li>
-							<p class="{style.subsubparagraph}">upload or use
+									<p>upload or use
 								fraudulent, inaccurate or misleading, or is otherwise
 								objectionable
 								content of any kind in connection with the
@@ -382,7 +370,7 @@
 								or</p>
 						</li>
 						<li>
-							<p class="{style.subsubparagraph}">claim or represent
+									<p>claim or represent
 								that we endorse your business, apps or other products or
 								service
 								without our prior express written approval.</p>
@@ -392,11 +380,11 @@
 			</ol>
 			<li>
 
-				<h4 class="{style.paragraph}">Termination</h4>
+						<h4>Termination</h4>
 			</li>
 			<ol>
 				<li>
-					<p class="{style.subparagraph}">We may terminate these
+							<p>We may terminate these
 						Terms and close your account any time without notice if we cease to
 						provide the
 						Reflection Service in your country.
@@ -408,7 +396,7 @@
 					</p>
 				</li>
 				<li>
-					<p class="{style.subparagraph}">Without limiting any
+							<p>Without limiting any
 						other rights we may have, we reserve the right to suspend, restrict
 						or terminate
 						your access to the Reflection Service
@@ -420,12 +408,12 @@
 				</li>
 			</ol>
 			<li>
-				<h4 class="{style.paragraph}">Licensing
+						<h4>Licensing
 					and Promotional Materials</h4>
 			</li>
 			<ol>
 				<li>
-					<p class="{style.subparagraph}">
+							<p>
 						The Reflection Service, all App Intelligence and any content
 						provided through the Reflection Service (including text,
 						logos,
@@ -441,7 +429,8 @@
 						revocable licence
 						to use the Reflection Service and to view and
 						access
-						the App Intelligence and other content that we
+								the App Intelligence and other content that
+								we
 						make
 						available through
 						the Reflection Service for the purpose of your
@@ -449,7 +438,7 @@
 					</p>
 				</li>
 				<li>
-					<p class="{style.subparagraph}">We may refer to your
+							<p>We may refer to your
 						organisation's use of the Reflection Service in promotional
 						materials and
 						publications. For this purpose only, you
@@ -457,13 +446,14 @@
 						limited
 						licence to use and copy (but not modify, except minor
 						resizing as required for the relevant publication) the name and
-						logos of your organisation and
+								logos of your organisation
+								and
 						its
 						products.
 					</p>
 				</li>
 				<li>
-					<p class="{style.subparagraph}">For the avoidance of
+							<p>For the avoidance of
 						doubt, unless we expressly permit you to do so in writing, you may
 						not
 						extract any App Intelligence, other data or code
@@ -476,37 +466,38 @@
 				</li>
 			</ol>
 			<li>
-				<h4 class="{style.paragraph}">Our
+						<h4>Our
 					Legal Obligations
 				</h4>
 			</li>
 			<ol>
 				<li>
-					<p class="{style.subparagraph}">Nothing in these Terms
+							<p>Nothing in these Terms
 						excludes or limits our liability for death or personal injury
 						caused by our
 						negligence or fraud and your liability
-						for death
+								for
+								death
 						or
 						personal injury caused by your negligence or fraud.</p>
 				</li>
 				<li>
-					<p class="{style.subparagraph}">We are not responsible
+							<p>We are not responsible
 						for:
 					</p>
 
 					<ol type="a">
 						<li>
-							<p class="{style.subsubparagraph}">Losses, damage,
+									<p>Losses, damage,
 								costs or expenses not caused by our breach of these terms;</p>
 						</li>
 						<li>
-							<p class="{style.subsubparagraph}">the actions or
+									<p>the actions or
 								omissions of other users of the Reflection Service;
 							</p>
 						</li>
 						<li>
-							<p class="{style.subsubparagraph}">any indirect or
+									<p>any indirect or
 								consequential loss or damage which means a loss suffered by you
 								which is a side
 								effect of the main loss or damage
@@ -517,13 +508,13 @@
 							</p>
 						</li>
 						<li>
-							<p class="{style.subsubparagraph}">any decisions or
+									<p>any decisions or
 								losses you may incur as a result of the accuracy or inaccuracy
 								of any App
 								Intelligence; or</p>
 						</li>
 						<li>
-							<p class="{style.subsubparagraph}">any harm, loss or
+									<p>any harm, loss or
 								damage suffered by you or anyone else if the Reflection Service
 								is
 								interrupted, suspended or otherwise not
@@ -542,7 +533,7 @@
 					</ol>
 				</li>
 				<li>
-					<p class="{style.subparagraph}">For any loss or
+							<p>For any loss or
 						damage suffered by you or anyone else that may arise from use of
 						the Reflection Service and which is not
 						otherwise excluded
@@ -553,11 +544,11 @@
 				</li>
 			</ol>
 			<li>
-				<h4 class="{style.paragraph}">Disclaimer and Technical Limitations</h4>
+						<h4>Disclaimer and Technical Limitations</h4>
 			</li>
 			<ol>
 				<li>
-					<p class="{style.subparagraph}">We do not endorse or
+							<p>We do not endorse or
 						take any responsibility for statements, advertisements or any
 						content whatsoever transmitted
 						through, or linked to
@@ -574,7 +565,7 @@
 					</p>
 				</li>
 				<li>
-					<p class="{style.subparagraph}">The App Intelligence
+							<p>The App Intelligence
 						and other information or forecasts on the Reflection Service are
 						algorithm-driven and
 						therefore not intended to be
@@ -585,12 +576,14 @@
 						the Reflection Service is also
 						dependent on your
 						device's
-						connectivity. We do
+								connectivity. We
+								do
 						our best to provide a useful service
 						to you, but the
 						Reflection Service is provided without
 						express or
-						implied warranty or condition of any
+								implied warranty or
+								condition of any
 						kind, on an
 						&quot;as-is&quot;
 						basis (unless
@@ -600,26 +593,28 @@
 				</li>
 			</ol>
 			<li>
-				<h4 class="{style.paragraph}">Contacting Us</h4>
+						<h4>Contacting Us</h4>
 			</li>
-			<p class="{style.subparagraph}">
+					<p>
 				If you
 				need to contact us, please email us at
 				<a href="mailto:info@reflection.io">info@reflection.io</a>
 				or write to us at 40-44 Newman Street, London, W1T 1QD. Please note that we
 				are only responsible for the Reflection
 				Service and do not represent any
-				other user
+						other
+						user
 				from whom we gather User Input Data.
 			</p>
 			<li>
-				<h4 class="{style.paragraph}">Disputes</h4>
+						<h4>Disputes</h4>
 			</li>
-			<p class="{style.subparagraph}">Unless
+					<p>Unless
 				otherwise required by mandatory law in your country, any disputes in
 				connection with these Terms will be
 				governed by and interpreted in
-				accordance with
+						accordance
+						with
 				the laws of England and Wales. If either of us brings
 				a claim in connection with these Terms, we agree
 				to only do so in the
@@ -628,11 +623,11 @@
 				England.
 			</p>
 			<li>
-				<h4 class="{style.paragraph}">Other Important Legal Terms</h4>
+						<h4>Other Important Legal Terms</h4>
 			</li>
 			<ol>
 				<li>
-					<p class="{style.subparagraph}">We can assign,
+							<p>We can assign,
 						sub-contract and/or otherwise transfer any or all of our rights
 						and/or obligations under these Terms
 						to any company, firm or
@@ -642,13 +637,15 @@
 						under these Terms. Please note that you may
 						terminate your
 						agreement with us
-						at any time. You may not
+								at any time. You
+								may not
 						transfer
 						your rights or
 						obligations under these Terms to anyone else without
 						our prior
 						written consent (which we
-						will not unreasonably withhold or delay),
+								will not unreasonably withhold or
+								delay),
 						unless the
 						transfer is to a company within the same
 						group structure
@@ -658,36 +655,39 @@
 					</p>
 				</li>
 				<li>
-					<p class="{style.subparagraph}">If either of us
+							<p>If either of us
 						breaches these Terms and the other party takes no action against
 						the breaching party, that other
 						party will still be
 						entitled to
-						enforce its
+								enforce
+								its
 						rights and remedies against the breaching party in
 						relation to that breach and to use
 						its rights and remedies in
 						any
 						other situation where the
-						breaching party
+								breaching
+								party
 						breaches these Terms.</p>
 				</li>
 				<li>
-					<p class="{style.subparagraph}">If any part of these
+							<p>If any part of these
 						Terms is disallowed or found to be ineffective by any court or
 						regulator, the remainder
 						of the Terms will continue to
 						govern
 						each
-						of our
+								of
+								our
 						respective obligations.</p>
 				</li>
 				<li>
-					<p class="{style.subparagraph}">These Terms are not
+							<p>These Terms are not
 						intended to give rights to anyone except you and us.</p>
 				</li>
 				<li>
-					<p class="{style.subparagraph}">Except as otherwise
+							<p>Except as otherwise
 						expressly stated, these Terms contain the entire agreement between
 						us and you
 						relating to use of the Reflection Service
@@ -702,11 +702,11 @@
 			</ol>
 		</ol>
 
-		<p class="{style.paragraph}">These terms
+				<p>These terms
 			were last updated on 17th February 2015
 		</p>
 
-		<g:HTMLPanel styleName="filler-bottom col-md-12 hidden-xs hidden-sm" />
-
+			</article>
+		</div>
 	</g:HTMLPanel>
 </ui:UiBinder>

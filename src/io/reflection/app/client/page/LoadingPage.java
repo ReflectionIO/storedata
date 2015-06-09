@@ -26,8 +26,6 @@ import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.StoreController;
 import io.reflection.app.client.handler.NavigationEventHandler;
-import io.reflection.app.client.part.Footer;
-import io.reflection.app.client.part.Header;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -162,8 +160,8 @@ public class LoadingPage extends Page implements NavigationEventHandler, LoginEv
 
         currentTaskIndex = 0;
 
-        ((Header) NavigationController.get().getHeader()).setReadOnly(true);
-        ((Footer) NavigationController.get().getFooter()).setVisible(false);
+		// ((Header) NavigationController.get().getHeader()).setReadOnly(true);
+		// ((Footer) NavigationController.get().getFooter()).setVisible(false);
 
     }
 
@@ -175,8 +173,8 @@ public class LoadingPage extends Page implements NavigationEventHandler, LoginEv
     @Override
     protected void onDetach() {
 
-        ((Header) NavigationController.get().getHeader()).setReadOnly(false);
-        ((Footer) NavigationController.get().getFooter()).setVisible(true);
+		// ((Header) NavigationController.get().getHeader()).setReadOnly(false);
+		// ((Footer) NavigationController.get().getFooter()).setVisible(true);
 
         super.onDetach();
     }

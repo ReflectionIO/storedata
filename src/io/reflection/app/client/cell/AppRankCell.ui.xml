@@ -8,34 +8,21 @@
     <ui:with field="dailyData" type="com.google.gwt.safehtml.shared.SafeHtml" />
     <ui:with field="displayDailyData" type="java.lang.String" />
 
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
+
     <ui:style gss="true">
-    .image {
-        width: 45px;
-        height: 45px;
-        float: left;
-    }
     
-    .description {
-        overflow: hidden;
-        padding-left: 20px;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-    }
     </ui:style>
 
     <div>
-        <img class="img-rounded {style.image}" src="{smallImage}" />
-        <div class="{style.description}">
-            <span>
+		<img class="{STYLES_INSTANCE.reflectionMainStyle.imgRounded}" src="{smallImage}" />
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.mhxte6cRA}">
                 <a href="{link}">
                     <ui:text from="{name}" />
                 </a>
-                <br />
-            </span>
-            <span class="text-muted">
+			<span class="{STYLES_INSTANCE.reflectionMainStyle.textMuted}">
                 <ui:text from="{creatorName}" />
             </span>
-            <br />
             <span style="{displayDailyData}">
                 <ui:safehtml from="{dailyData}" />
             </span>

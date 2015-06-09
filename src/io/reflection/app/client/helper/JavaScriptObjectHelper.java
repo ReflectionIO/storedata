@@ -31,6 +31,18 @@ public class JavaScriptObjectHelper {
 		object[propertyName] = value;
 	}-*/;
 
+	public static native void setIntegerProperty(JavaScriptObject object, String propertyName, int value) /*-{
+		object[propertyName] = value;
+	}-*/;
+
+	public static native void setDoubleProperty(JavaScriptObject object, String propertyName, double value) /*-{
+		object[propertyName] = value;
+	}-*/;
+
+	public static native JavaScriptObject createtStringObject(String propertyName, String value) /*-{
+		return object.propertyName;
+	}-*/;
+
 	public static native void setBooleanProperty(JavaScriptObject object, String propertyName, boolean value) /*-{
 		object[propertyName] = value;
 	}-*/;
@@ -54,14 +66,21 @@ public class JavaScriptObjectHelper {
 				setStringProperty(object, key, (String) value);
 			} else if (value instanceof Date) {
 				setDateProperty(object, key, (Date) value);
+			} else if (value instanceof Integer) {
+				setIntegerProperty(object, key, ((Integer) value).intValue());
+			} else if (value instanceof Double) {
+				setDoubleProperty(object, key, ((Double) value).doubleValue());
 			}
 
-			// TODO: need numbers
 		}
 	}
 
-	private static native void setObjectProperty(JavaScriptObject object, String propertyName, JavaScriptObject value) /*-{
+	public static native void setObjectProperty(JavaScriptObject object, String propertyName, JavaScriptObject value) /*-{
 		object[propertyName] = value;
+	}-*/;
+
+	public static native JavaScriptObject getNativeNull() /*-{
+		return null;
 	}-*/;
 
 }

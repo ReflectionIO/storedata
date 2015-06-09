@@ -14,6 +14,7 @@ import io.reflection.app.api.forum.shared.call.GetForumsResponse;
 import io.reflection.app.api.forum.shared.call.event.CreateTopicEventHandler;
 import io.reflection.app.api.forum.shared.call.event.GetForumsEventHandler;
 import io.reflection.app.client.DefaultEventBus;
+import io.reflection.app.client.component.Selector;
 import io.reflection.app.client.controller.ForumController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
@@ -39,7 +40,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -54,7 +54,7 @@ public class AddTopicPage extends Page implements CreateTopicEventHandler, GetFo
 	@UiField TextBox title;
 	@UiField TextBox tags;
 
-	@UiField ListBox forums;
+	@UiField Selector forums;
 
 	@UiField MarkdownEditor contentText;
 

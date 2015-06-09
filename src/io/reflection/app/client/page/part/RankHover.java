@@ -8,9 +8,10 @@
 //
 package io.reflection.app.client.page.part;
 
-import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMAT_EEE_DD_MMM_YYYY;
-import static io.reflection.app.client.helper.FormattingHelper.WHOLE_NUMBER_FORMAT;
+import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMATTER_EEE_DD_MMM_YYYY;
+import static io.reflection.app.client.helper.FormattingHelper.WHOLE_NUMBER_FORMATTER;
 import io.reflection.app.client.helper.FormattingHelper;
+import io.reflection.app.client.page.part.ItemChart.XAxisDataType;
 import io.reflection.app.client.page.part.ItemChart.YAxisDataType;
 
 import java.util.Date;
@@ -35,10 +36,11 @@ public class RankHover extends Composite implements HoverUpdateable {
 
 	interface RankHoverUiBinder extends UiBinder<Widget, RankHover> {}
 
-	@UiField HTMLPanel date;
+	@UiField HTMLPanel title;
 	@UiField HTMLPanel detail;
 
-	private ItemChart.YAxisDataType dataType;
+	private ItemChart.YAxisDataType yDataType;
+	private ItemChart.XAxisDataType xDataType;
 	private String currency;
 
 	public RankHover() {
@@ -62,22 +64,43 @@ public class RankHover extends Composite implements HoverUpdateable {
 	 */
 	@Override
 	public void hoverUpdate(Point hoveredOver) {
-		date.getElement().setInnerHTML(DATE_FORMAT_EEE_DD_MMM_YYYY.format(new Date((long) hoveredOver.getX())));
-		switch (dataType) {
+		if (xDataType != null) {
+			switch (xDataType) {
+			case DateXAxisDataType:
+				title.getElement().setInnerHTML(DATE_FORMATTER_EEE_DD_MMM_YYYY.format(new Date((long) hoveredOver.getX())));
+				break;
+			case RankingXAxisDataType:
+				if (hoveredOver.getX() == 0) {
+					title.getElement().setInnerHTML("Not ranked");
+				} else {
+					title.getElement().setInnerHTML("Rank " + Double.toString(hoveredOver.getX()));
+				}
+
+				break;
+			}
+		}
+
+		if (yDataType != null) {
+			switch (yDataType) {
 		case RevenueYAxisDataType:
 			detail.getElement().setInnerHTML(FormattingHelper.asWholeMoneyString(currency, (float) hoveredOver.getY()));
 			break;
 		case DownloadsYAxisDataType:
-			detail.getElement().setInnerHTML(WHOLE_NUMBER_FORMAT.format((double) hoveredOver.getY()));
+				detail.getElement().setInnerHTML(WHOLE_NUMBER_FORMATTER.format((double) hoveredOver.getY()));
 			break;
 		case RankingYAxisDataType:
 			detail.getElement().setInnerHTML(Integer.toString((int) hoveredOver.getY()));
 			break;
 		}
 	}
+	}
 
 	public void setYAxisDataType(YAxisDataType value) {
-		dataType = value;
+		yDataType = value;
+	}
+
+	public void setXAxisDataType(XAxisDataType value) {
+		xDataType = value;
 	}
 
 	public void setCurrency(String value) {

@@ -59,9 +59,6 @@ public class StoreController implements ServiceConstants {
 			public void onSuccess(GetStoresResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {
 					if (output.stores != null && output.stores.size() > 0) {
-
-						stores = output.stores;
-
 						if (mStoreLookup == null) {
 							mStoreLookup = new HashMap<String, Store>();
 						}
@@ -103,6 +100,8 @@ public class StoreController implements ServiceConstants {
 
 							output.stores.remove(iosStore);
 						}
+
+						stores = output.stores;
 					}
 				}
 

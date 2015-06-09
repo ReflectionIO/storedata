@@ -2,74 +2,216 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
 	xmlns:r="urn:import:io.reflection.app.client.part.register" xmlns:pp="urn:import:io.reflection.app.client.page.part">
 
-	<ui:import field="io.reflection.app.client.page.PageType.RegisterPageType" />
-	<ui:import field="io.reflection.app.client.page.PageType.LoginPageType" />
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 
-	<ui:with field='images' type='io.reflection.app.client.res.Images' />
-	<ui:style gss="true" type="io.reflection.app.client.page.RegisterPage.Style">
-	.mainPanel {
-		margin-top: 20px;
-	}
+	<ui:style gss="true">
 	
-	.registerform {
-		padding: 0px;
-		margin-top: 20px;
-	}
-	
-	.spaceFiller {
-		height: 100px;
-	}
-	
-	.inviteRegisterTab {
-		background-color: #fafafa;
-		font-weight: 600;
-		height: 65px;
-		font-size: 18px;
-		padding-top: 35px;
-		border-radius: 0px;
-		border: 0px;
-		outline: 0;
-		text-align: center;
-		color: #0e0e1f;
-	}
 	</ui:style>
-	<g:HTMLPanel styleName="container">
-		<p:AlertBox ui:field="mAlertBox" visible="false" />
-		<g:HTMLPanel styleName="row">
-			<div class="hidden-xs hidden-sm col-md-12 {style.spaceFiller}"></div>
+	<g:HTMLPanel tag="section"
+		styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.horizontalCentreContent} {STYLES_INSTANCE.reflectionMainStyle.accountAccessContent}">
 
-			<div class="col-md-6 col-xs-12 {style.mainPanel}">
-				<pp:LoginRegisterPanel ui:field="loginRegisterPanel" />
-				<pp:InviteRegisterPanel ui:field="inviteRegisterPanel" visible="false" />
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.fullScreenIntro}">
+			<div ui:field="applyPanel" class="{STYLES_INSTANCE.reflectionMainStyle.applyContent}">
+				<h1>You're moments away from free app intelligence</h1>
+				<p class="{STYLES_INSTANCE.reflectionMainStyle.pStyleFeatured}">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eius tempor incididunt ut labore et dolore lorem magna aliqua.
+					Ut enim ad minim
+					veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure</p>
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.listPartners}">
+					<h2>A few of our current partners</h2>
+					<ul>
+						<li>
+							<img src="images/Partner_Soundcloud@2x.png" alt="Soundcloud logo" />
+						</li>
+						<li>
+							<img src="images/Partner_Sega@2x.png" alt="Sega logo" />
+						</li>
+						<li>
+							<img src="images/Partner_Wooga@2x.png" alt="Wooga logo" />
+						</li>
+						<li>
+							<img src="images/Partner_TocaBoca@2x.png" alt="Toca Boca logo" />
+						</li>
+					</ul>
+				</div>
 			</div>
-			<g:HTMLPanel styleName="col-md-5 col-md-offset-1 col-xs-12">
-
-				<p:Preloader ui:field="preloader">
-					<g:HTMLPanel styleName="well {style.registerform}">
-						<g:HTMLPanel ui:field="loginRegisterTabs">
-							<ul class="nav nav-tabs nav-justified loginregister">
-								<li ui:field="registerItem" class="active pull-left">
-									<g:InlineHyperlink ui:field="register" targetHistoryToken="{RegisterPageType.asTargetHistoryToken}" />
-								</li>
-								<li ui:field="loginItem" class="pull-right">
-									<g:InlineHyperlink ui:field="login">Log in</g:InlineHyperlink>
-								</li>
-							</ul>
-						</g:HTMLPanel>
-						<g:HTMLPanel ui:field="inviteRegisterTabs">
-							<ul class="nav nav-tabs nav-justified register">
-								<li class="{style.inviteRegisterTab}">
-									Create Password and Register
-								</li>
-							</ul>
-						</g:HTMLPanel>
-						<r:RegisterForm ui:field="mRegisterForm" />
-						<r:ThankYouRegisterPanel ui:field="mThankYouRegisterPanel" visible="false" />
-					</g:HTMLPanel>
-				</p:Preloader>
-
+			<g:HTMLPanel ui:field="createPasswordPanel" styleName="{STYLES_INSTANCE.reflectionMainStyle.createPasswordMainContent}" visible="false">
+				<svg class="{STYLES_INSTANCE.reflectionMainStyle.svgCreatePassword}" version="1.1" x="0px" y="0px" viewBox="0 0 159.3 100.6" enable-background="new 0 0 159.3 100.6"
+					xml:space="preserve">
+<path fill="#7C7BD6"
+					d="M137.2,23v6.7l-6-1.6v-6.8L137.2,23z M141,23.8v6.8l5.2,1.2l0-6.2L141,23.8z M149.5,26.7v6l4.4,0.9l0.1-5.7
+	L149.5,26.7z M131.4,32.7v7.2l6,0.6v-6.7L131.4,32.7z M141.1,34.6v6.2l5.2,1.2l0-6.2L141.1,34.6z M149.5,36.3l0.1,6l4.4,0.9l0-5.7
+	L149.5,36.3z M131.1,44.3v6.8l6.4,0.7v-6.7L131.1,44.3z M141.1,45.1v6.8l5.2,0l-0.1-6L141.1,45.1z M149.5,46.3l0,5.9l4.3,0.4v-5.8
+	L149.5,46.3z M131.1,55.7v7.1l6.1-0.3l-0.2-6.6L131.1,55.7z M141.1,56v6.4l4.9-0.3v-5.9L141.1,56z M149.5,56.2v5.9l4.3-0.3v-5.5
+	L149.5,56.2z M131.1,67.4v7.1l6.1-0.8V67L131.1,67.4z M141.1,66.7V73l5.2-0.6v-6.1L141.1,66.7z M149.5,66.2v5.7l4.5-0.6l-0.2-5.6
+	L149.5,66.2z M131.1,78.9v7.1l6.1-1.4v-6.6L131.1,78.9z M141.3,77.3l-0.2,6.4l5.2-1.1l-0.2-6.2L141.3,77.3z M149.5,75.8v5.9l4.3-0.6
+	v-5.8L149.5,75.8z" />
+<polygon fill="#6161BA" points="8.2,69.5 13.5,65.4 18.8,68.1 24.8,61.9 29.7,65.6 34.9,64 40.4,57.9 45.8,60.6 45.8,75.8 7.9,76.1 
+	" />
+<path fill="#474691"
+					d="M122.9,66.9l-5.6-0.4v7.2l5.6,1.1V66.9z M121.9,73.6l-3.6-0.7v-5.3l3.6,0.3V73.6z M122.9,44.4l-5.6,1.7v7.2
+	l5.6-0.9V44.4z M121.9,51.5l-3.6,0.6v-5.3l3.6-1.1V51.5z M122.9,21.9l-5.6,3.7v7.2l5.6-3V21.9z M121.9,29.2l-3.6,1.9v-5l3.6-2.4
+	V29.2z M122.9,55.6l-5.6,0.6v7.2l5.6,0.1V55.6z M121.9,62.5l-3.6-0.1v-5.3l3.6-0.4V62.5z M122.9,33.1l-5.6,2.7V43l5.6-2V33.1z
+	 M121.9,40.4l-3.6,1.3v-5.2l3.6-1.7V40.4z M146.7,25.2l-6.1-1.8V31l6.1,1.4V25.2z M145.7,31.1l-4.1-0.9v-5.4l4.1,1.2V31.1z
+	 M146.7,45.5l-6.1-0.7v7.6l6.1,0.3V45.5z M145.7,51.6l-4.1-0.2v-5.5l4.1,0.5V51.6z M146.7,55.6l-6.1-0.1V63l6.1-0.3V55.6z
+	 M145.7,61.8l-4.1,0.2v-5.5l4.1,0.1V61.8z M146.7,65.7l-6.1,0.4v7.6l6.1-0.8V65.7z M145.7,72l-4.1,0.6v-5.5l4.1-0.3V72z M146.7,35.4
+	l-6.1-1.2v7.6l6.1,0.8V35.4z M145.7,41.4l-4.1-0.6v-5.5l4.1,0.8V41.4z M154.3,65.2l-5.3,0.4v7l5.3-0.7V65.2z M153.3,71l-3.3,0.4
+	v-4.9l3.3-0.2V71z M154.3,55.8l-5.3-0.1v7l5.3-0.2V55.8z M153.3,61.5l-3.3,0.1v-4.9l3.3,0.1V61.5z M154.3,74.6l-5.3,0.9v7l5.3-1.2
+	V74.6z M153.3,80.5l-3.3,0.7v-4.9l3.3-0.5V80.5z M146.7,75.9l-6.1,1v7.6l6.1-1.4V75.9z M145.7,82.2l-4.1,0.9v-5.5l4.1-0.7V82.2z
+	 M137.9,66.4l-7.2,0.5v8.2l7.2-1V66.4z M136.9,73.2l-5.2,0.7v-6.1l5.2-0.4V73.2z M137.9,77.3l-7.2,1.2v8.2l7.2-1.6V77.3z
+	 M136.9,84.2l-5.2,1.2v-6.1l5.2-0.8V84.2z M137.9,22.6l-7.2-2.1v8.2l7.2,1.6V22.6z M136.9,29.1l-5.2-1.2v-6.1l5.2,1.5V29.1z
+	 M139.6,15.6c0-0.4-0.2-0.9-0.8-1.4c-0.4-0.4-1.2-0.7-2.1-1.1c-0.1-0.9-0.7-1.8-1.6-2.1c0.8-0.2,1.4-0.8,1.5-1.5c0,0,0,0,0.1,0
+	c1.2,0,2.1-0.9,2.1-2.1c0-1.1-0.7-2.1-1.8-2.4l-0.3-0.1c0-0.1,0-0.2,0-0.3c0-1.1-0.7-2.1-1.8-2.4l-7.8-2.1C127,0,126.8,0,126.6,0h0
+	c-1.1,0-2,0.9-2,2.1c0,0.4,0.1,0.7,0.3,1.1c-0.2,0.3-0.3,0.6-0.3,1c0,0.4,0.1,0.7,0.3,1.1c-0.2,0.3-0.3,0.6-0.3,1
+	c0,0.4,0.1,0.7,0.3,1.1c-0.2,0.3-0.3,0.6-0.3,1c0,0.4,0.1,0.7,0.3,1.1c-0.2,0.3-0.3,0.6-0.3,1c0,0.5,0.2,0.9,0.4,1.3l-22.8,16.7V64
+	H86.7v-2.4c0-1.2-0.9-2.5-2.5-2.5h-5.4v-0.2c0-0.7-0.6-1.2-1.2-1.2h-1.1c-0.2,0-0.3,0-0.5,0.1c-0.1-0.1-0.3-0.1-0.5-0.1h-1.1
+	c-0.7,0-1.2,0.6-1.2,1.2v0.2h-2.3c-1.3,0-2.2,0.9-2.8,1.6c-0.2,0.2-0.6,0.7-0.8,0.7c-1.2,0-2.4,0.3-2.7,2.4H49.3V52.7
+	c0-2-1.5-3.5-3.4-3.5H27H8c-1.9,0-3.4,1.5-3.4,3.5v25l-4,4L0,82.3v0.8v1.5v0.3l0.1,0.3c0.6,2,4.1,2.1,4.1,2.1H27h22.8
+	c0,0,3.5-0.1,4.1-2.1l0.1-0.3v-0.3v-1.5v-0.8l-0.6-0.6l-4-4V65.5h15.3c0.2,2.4,1.5,2.7,2.8,2.7c0.1,0,0.6,0.5,0.8,0.7
+	c0.6,0.7,1.5,1.6,2.8,1.6c0.9,0,1.7,0,2.3,0v0.2c0,0.7,0.6,1.2,1.2,1.2h1.1c0.2,0,0.3,0,0.5-0.1c0.1,0.1,0.3,0.1,0.5,0.1h1.1
+	c0.7,0,1.2-0.6,1.2-1.2v-0.2h5.4c1.1,0,2.5-0.4,2.5-2.5v-2.4h15.4v21.9l23.8,13.1l33.3-8.4v-70L139.6,15.6z M6.6,52.7
+	c0-0.8,0.6-1.5,1.4-1.5c0.8,0,18.8,0,18.9,0c0,0,0,0,0,0c0.2,0,18.2,0,18.9,0c0.9,0,1.4,0.7,1.4,1.5c0,0.7,0,23.2,0,24.9h-39l0,0
+	l0,0H6.6C6.6,76,6.6,53.5,6.6,52.7z M9.2,78.4h35.5l2.4,2.9H6.6L9.2,78.4L9.2,78.4z M51.9,83.1c0,0,0,1.4,0,1.5
+	c-0.1,0.2-1.3,0.7-2.2,0.7c-0.5,0-22.3,0-22.8,0h0c-0.2,0-22.2,0-22.8,0c-0.9,0-2.1-0.5-2.2-0.7c0-0.1,0-1.5,0-1.5l4.7-4.7h0.9
+	l-3.7,4.1h45.8l-3.4-4.1h0.9L51.9,83.1z M73.6,69h-2.7c-0.6,0-1.1-0.5-1.7-1.1c-0.5-0.6-1.1-1.2-1.9-1.2c-0.8,0-1.3,0-1.3-1.9
+	c0-1.8,0.5-1.8,1.3-1.8c0.8,0,1.3-0.6,1.9-1.2c0.5-0.6,1-1.1,1.7-1.1h2.7V69z M75.3,70.4h-0.6V69h0v-8.4h0v-1.4h0.6V70.4z M77.4,69
+	L77.4,69l0,1.4h-0.6V59.2h0.6v1.4h0V69z M85.2,68.1c0,0.6,0,1-1,1h-5.9v-8.4h5.9c0.9,0,1,0.9,1,1V68.1z M126.6,1.6c0,0,0.1,0,0.1,0
+	l7.8,2.1c0.3,0.1,0.5,0.4,0.6,0.7c0,0,0,0.1,0,0.1c0,0.3-0.2,0.5-0.5,0.5c0,0-0.1,0-0.2,0l-7.8-2.2c-0.3-0.1-0.5-0.4-0.6-0.7
+	c0,0,0,0,0,0C126.2,1.8,126.4,1.6,126.6,1.6z M126.6,3.7c0,0,0.1,0,0.1,0l9.1,2.6l0.7,0.2c0.3,0.1,0.6,0.5,0.6,0.8
+	c0,0.3-0.2,0.5-0.5,0.5c-0.1,0-0.1,0-0.2,0l-0.1,0L126.8,5c-0.2-0.1-0.5-0.3-0.5-0.6c0,0,0-0.1,0-0.1c0,0,0,0,0-0.1
+	C126.2,3.9,126.4,3.7,126.6,3.7z M126.6,5.8c0,0,0.1,0,0.1,0l7.8,2.3c0.3,0.1,0.6,0.5,0.6,0.8c0,0,0,0.1,0,0.1
+	c0,0.2-0.2,0.4-0.4,0.4c-0.1,0-0.1,0-0.2,0l-0.1,0l-7.7-2.3c-0.2-0.1-0.5-0.3-0.5-0.6c0,0,0-0.1,0-0.2c0,0,0,0,0-0.1
+	C126.2,6,126.4,5.8,126.6,5.8z M126.6,7.9c0,0,0.1,0,0.1,0l5.8,1.8c0.3,0.1,0.5,0.4,0.6,0.7c0,0.1,0,0.1,0,0.2c0,0.1,0,0.1,0,0.1
+	c-0.1,0.2-0.2,0.3-0.4,0.3c-0.1,0-0.1,0-0.2,0l-5.8-1.8c-0.2-0.1-0.4-0.3-0.5-0.6c0-0.1,0-0.1,0-0.2c0,0,0,0,0-0.1
+	C126.2,8.1,126.4,7.9,126.6,7.9z M126.6,10c0,0,0.1,0,0.2,0l5.1,1.6l2,0.6l0.7,0.2c0.3,0.1,0.6,0.5,0.6,0.8c0,0.3-0.2,0.5-0.4,0.5
+	c-0.1,0-0.1,0-0.2,0l-7.6-2.5l-0.1,0c-0.2-0.1-0.4-0.3-0.5-0.6c0-0.1,0-0.1,0-0.2C126.2,10.2,126.4,10,126.6,10z M125.7,98.2
+	l-21.5-11.8V29.5l21.5-15.8V98.2z M157.3,90.7l-30.6,7.7V13.5l30.6,10.1V90.7z M137.9,33.6l-7.2-1.5v8.2l7.2,1V33.6z M136.9,40.2
+	l-5.2-0.7v-6.1l5.2,1V40.2z M137.9,55.4l-7.2-0.1v8.2l7.2-0.3V55.4z M136.9,62.2l-5.2,0.2v-6.1l5.2,0.1V62.2z M137.9,44.5l-7.2-0.8
+	v8.2l7.2,0.3V44.5z M136.9,51.2l-5.2-0.2v-6.1l5.2,0.6V51.2z M115.3,66.3l-4.4-0.3v6.4l4.4,0.9V66.3z M114.3,72.1l-2.4-0.5v-4.5
+	l2.4,0.2V72.1z M122.9,78.1l-5.6-1.4v7.2l5.6,2.1V78.1z M121.9,84.6l-3.6-1.4V78l3.6,0.9V84.6z M115.3,76.2l-4.4-1.1v6.4l4.4,1.7
+	V76.2z M114.3,81.7l-2.4-0.9v-4.4l2.4,0.6V81.7z M115.3,56.5l-4.4,0.5v6.4l4.4,0.1V56.5z M114.3,62.4l-2.4,0v-4.5l2.4-0.3V62.4z
+	 M109.3,30.9l-3.5,2.3v5.7l3.5-1.9V30.9z M108.3,36.5l-1.5,0.8v-3.5l1.5-1V36.5z M115.3,46.6l-4.4,1.3v6.4l4.4-0.7V46.6z
+	 M114.3,52.8l-2.4,0.4v-4.5l2.4-0.7V52.8z M109.3,39.7l-3.5,1.7v5.7l3.5-1.2V39.7z M108.3,45.1l-1.5,0.5V42l1.5-0.7V45.1z M115.3,27
+	l-4.4,2.9v6.4l4.4-2.3V27z M114.3,33.3l-2.4,1.3v-4.2l2.4-1.6V33.3z M115.3,36.8l-4.4,2.1v6.4l4.4-1.5V36.8z M114.3,43l-2.4,0.8
+	v-4.4l2.4-1.1V43z M109.3,57.2l-3.5,0.4v5.7l3.5,0.1V57.2z M108.3,62.3l-1.5,0v-3.9l1.5-0.2V62.3z M154.3,27.5l-5.3-1.6v7l5.3,1.2
+	V27.5z M153.3,32.9l-3.3-0.8v-4.9l3.3,1V32.9z M109.3,74.7l-3.5-0.9v5.7l3.5,1.3V74.7z M108.3,79.4l-1.5-0.6v-3.8l1.5,0.4V79.4z
+	 M154.3,36.9l-5.3-1.1v7l5.3,0.7V36.9z M153.3,42.4l-3.3-0.5v-4.9l3.3,0.7V42.4z M154.3,46.3l-5.3-0.6v7l5.3,0.2V46.3z M153.3,52
+	l-3.3-0.2v-4.9l3.3,0.4V52z M109.3,48.4l-3.5,1v5.7l3.5-0.6V48.4z M108.3,53.7l-1.5,0.2v-3.8l1.5-0.4V53.7z M109.3,65.9l-3.5-0.2
+	v5.7l3.5,0.7V65.9z M108.3,70.9l-1.5-0.3v-3.8l1.5,0.1V70.9z M46.4,52.4H7.5v24h38.9V52.4z M13.2,75.4H8.5v-5.5l4.7-3.9V75.4z
+	 M18.6,75.4h-4.9v-9.5l4.9,2.7V75.4z M24,75.4h-4.9v-6.7l4.9-5.2V75.4z M29.4,75.4h-4.9V62.9l0.3-0.3l4.6,3.6V75.4z M34.8,75.4h-4.9
+	v-9.2l4.9-1.8V75.4z M40.2,75.4h-4.9V64.3l0,0l4.9-5.3V75.4z M45.4,75.4h-4.7V58.6l4.7,2.3V75.4z M45.4,59.8l-5-2.5l-5.6,6.1l-5,1.8
+	l-5-3.9L24,62h0v0l-5.3,5.6l-5.4-3l-4.9,4V53.4h36.9V59.8z" />
+							</svg>
+				<h1>
+					Welcome to Reflection
+					<span ui:field="welcomeName"></span>
+				</h1>
+				<p class="{STYLES_INSTANCE.reflectionMainStyle.pStyleFeatured}">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eius tempor incididunt ut labore et dolore lorem magna aliqua.
+					Ut enim ad minim
+					veniam, quis nostrud exercitat ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in</p>
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.listPartners}">
+					<h2>Some of the partners you're joining</h2>
+					<ul>
+						<li>
+							<img src="images/Partner_Soundcloud@2x.png" alt="Soundcloud logo" />
+						</li>
+						<li>
+							<img src="images/Partner_Sega@2x.png" alt="Sega logo" />
+						</li>
+						<li>
+							<img src="images/Partner_Wooga@2x.png" alt="Wooga logo" />
+						</li>
+						<li>
+							<img src="images/Partner_TocaBoca@2x.png" alt="Toca Boca logo" />
+						</li>
+					</ul>
+				</div>
 			</g:HTMLPanel>
-			<g:HTMLPanel styleName="filler-bottom col-md-12 hidden-xs hidden-sm" />
-		</g:HTMLPanel>
+		</div>
+		<div ui:field="accountFormContainer" class="{STYLES_INSTANCE.reflectionMainStyle.accountFormContainer}">
+			<ul class="{STYLES_INSTANCE.reflectionMainStyle.tabsContainer}">
+				<li
+					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneHalf} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab} {STYLES_INSTANCE.reflectionMainStyle.isActive}">
+					<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
+					<g:InlineHyperlink ui:field="register" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
+						<span>Apply now</span>
+					</g:InlineHyperlink>
+				</li>
+				<li
+					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneHalf} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab}">
+					<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
+					<g:InlineHyperlink ui:field="login" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
+						<span>Log In</span>
+					</g:InlineHyperlink>
+				</li>
+			</ul>
+			<ul class="{STYLES_INSTANCE.reflectionMainStyle.tabs__contentContainer}">
+				<li ui:field="tabContentRegister" class="{STYLES_INSTANCE.reflectionMainStyle.tabs__content} {STYLES_INSTANCE.reflectionMainStyle.tabs__contentIsShowing}">
+					<div ui:field="submittedSuccessPanel" class="{STYLES_INSTANCE.reflectionMainStyle.formSubmittedSuccess}">
+						<div class="{STYLES_INSTANCE.reflectionMainStyle.illustrationContainer}">
+							<svg version="1.1" x="0px" y="0px" viewBox="0 0 71 43.6" enable-background="new 0 0 71 43.6" xml:space="preserve" class="email-post-animation"><g><polygon fill="#D2D2DB"
+								points="31.6,28.6 31.6,26 41.6,22.2 41.6,24.8 	"></polygon><g><polygon
+								fill="#F2F2F5" points="31.2,27.7 31.2,41.6 42,37.5 42,23.3 39.4,24.2 39.4,24.9 		"></polygon><polygon
+								fill="#A0A0A9" points="43,22.2 41,22.8 41,36.9 31.2,40.6 31.2,42.8 43,38.3 		"></polygon><polygon
+								fill="#A0A0A9" points="40.6,23.8 39.4,24.2 39.4,24.9 31.3,27.7 31.3,29 40.6,25.8 		"></polygon></g></g><path
+								fill="none" d="M36.4,17c-3.1,0-6.4,2.6-6.4,7.5c0,4.2,0,13.1,0,16.6l1.6-0.6V28.9l-1.2,0.4v-3.9L40.6,22v2l0.4-0.1v-1.3
+											C41,18.4,38.6,17,36.4,17z"></path><polyline
+								fill="none" points="39.4,24.4 39.4,23.7 31.6,26.2 31.6,27 "></polyline><g
+								class="email-success-envelope"><g><polygon fill="#F2F2F5" points="62.1,37.7 50.6,33.8 58,31.1 69.2,34.3 		"></polygon><path fill="#A0A0A9"
+								d="M62.1,38.4l-13.5-4.6l9.4-3.4L71,34.1L62.1,38.4z M52.6,33.8L62,37l5.3-2.6L58,31.8L52.6,33.8z"></path></g><polygon
+								fill="#A0A0A9" points="69.2,34.7 58.1,34.1 57.6,31.1 58.4,31 58.8,33.3 69.2,33.8 	"></polygon></g><g><path
+								fill="#F2F2F5"
+								d="M39.5,24.2l2.4-0.9l0-2.1c0,0-0.1-4.2-4-5.9c-2.5-1-25.8-6.8-27.7-7.2C4.5,7,1.2,12.8,1,15.1
+												c-0.2,2.4-0.2,17.8-0.2,17.8L29,42.6l2.6-1L31.5,27l0-0.9l8-2.7L39.5,24.2z"></path><path
+								fill-rule="evenodd" clip-rule="evenodd" fill="#A0A0A9"
+								d="M11.6,20.8c0,0.3-0.2,0.5-0.5,0.4l-5.7-1.5
+												c-0.3-0.1-0.5-0.4-0.5-0.6l0,0c0-0.3,0.2-0.5,0.5-0.4l5.7,1.5C11.3,20.3,11.6,20.5,11.6,20.8L11.6,20.8z"></path><path
+								fill-rule="evenodd" clip-rule="evenodd" fill="#A0A0A9"
+								d="M13.3,23c0,0.3-0.2,0.5-0.5,0.4l-7.5-1.9
+												c-0.3-0.1-0.5-0.4-0.5-0.6l0,0c0-0.3,0.2-0.5,0.5-0.4l7.5,1.9C13.1,22.4,13.3,22.7,13.3,23L13.3,23z"></path><path
+								fill-rule="evenodd" clip-rule="evenodd" fill="#A0A0A9"
+								d="M9.8,25.8c0,0.3-0.2,0.5-0.5,0.4l-4-1.1C5,25,4.7,24.7,4.7,24.5
+												l0,0C4.7,24.2,5,24,5.3,24l4,1.1C9.5,25.2,9.8,25.5,9.8,25.8L9.8,25.8z"></path><path
+								fill-rule="evenodd" clip-rule="evenodd" fill="#A0A0A9"
+								d="M11.6,28c0,0.3-0.2,0.5-0.5,0.4l-5.7-1.5
+												c-0.3-0.1-0.5-0.4-0.5-0.6l0,0c0-0.3,0.2-0.5,0.5-0.4l5.7,1.5C11.3,27.4,11.6,27.7,11.6,28L11.6,28z"></path><path
+								fill-rule="evenodd" clip-rule="evenodd" fill="#A0A0A9"
+								d="M11.6,24.4c0,0.3-0.2,0.5-0.5,0.4l-5.7-1.5
+												C5,23.3,4.7,23,4.7,22.7l0,0c0-0.3,0.2-0.5,0.5-0.4l5.7,1.5C11.3,23.8,11.6,24.1,11.6,24.4L11.6,24.4z"></path><path
+								fill-rule="evenodd" clip-rule="evenodd" fill="#A0A0A9"
+								d="M13.3,30.2c0,0.3-0.2,0.5-0.5,0.4l-7.5-1.9
+												C5,28.6,4.7,28.3,4.7,28l0,0c0-0.3,0.2-0.5,0.5-0.4l7.5,1.9C13.1,29.6,13.3,29.9,13.3,30.2L13.3,30.2z"></path><path
+								fill="none"
+								d="M34.7,15.2C29.4,13.9,12,9.5,11.8,9.5C10.9,9.3,10,9.2,9.2,9.2C2.5,9.2,2,15.8,2,15.8v16.4l26,8.9
+												c0-3.4,0-12.4,0-16.6C28,19.4,31.2,16,34.7,15.2z"></path><path
+								fill="#A0A0A9"
+								d="M30,41.1c0-3.5,0-12.3,0-16.6c0-4.9,3.3-7.5,6.4-7.5c2.2,0,4.6,1.4,4.6,5.5v1.3l2-0.7v-0.7
+												c0-6.7-3.2-8-6.7-9c-3.3-0.9-23.8-6-24.1-6c-1-0.2-2-0.3-3-0.3C1.6,7.2,0,14.1,0,15.8v17.8l29.1,9.9l2.5-1v-2.1L30,41.1z M28,41.1
+												L2,32.2V15.8c0-0.1,0.5-6.6,7.2-6.6c0.8,0,1.7,0.1,2.5,0.3c0.2,0,17.7,4.4,22.9,5.7C31.2,16,28,19.4,28,24.5
+												C28,28.8,28,37.7,28,41.1z"></path></g><polygon
+								fill="#A0A0A9" points="31.6,27 31.6,26.2 39.4,23.7 39.4,24.4 40.6,24 40.6,22 30.4,25.4 30.4,29.3 31.6,28.9 31.6,27.6 
+											"></polygon><g><g
+								class="email-success-handle"><path fill="#F2F2F5" d="M21.9,21.3L21.7,6.1c0,0-2.7-0.7-4.1-1c-1.4-0.3-1.6-3.2-0.3-3.4C18.7,1.5,24,0.8,24,0.8l0.3,23.1"></path><path fill="#A0A0A9"
+								d="M23.5,23.9L23.2,1.7l-5.8,0.7c-0.1,0-0.2,0.2-0.2,0.6c0,0.6,0.2,1.2,0.6,1.3c1.4,0.3,4.1,1,4.2,1l0.5,0.1
+														l0.2,15.8l-1.5,0L21,6.7c-0.9-0.2-2.5-0.7-3.5-0.9c-1.2-0.3-1.8-1.6-1.8-2.8c0.1-1.1,0.7-2,1.6-2.1L24.7,0L25,23.9L23.5,23.9z"></path><path
+								fill="#A0A0A9"
+								d="M21.9,28.7c-1.7,0-3.2-1.4-3.6-3.2c-0.2-1-0.1-2,0.4-2.9c0.5-0.9,1.3-1.5,2.2-1.7c1.8-0.4,3.8,1.1,4.2,3.2
+														c0.2,1,0.1,2-0.4,2.9c-0.5,0.9-1.3,1.5-2.2,1.7C22.3,28.7,22.1,28.7,21.9,28.7z M21.5,22.3c-0.1,0-0.2,0-0.3,0
+														c-0.5,0.1-0.9,0.4-1.2,0.9c-0.3,0.5-0.4,1.2-0.2,1.9c0.3,1.3,1.4,2.2,2.4,2c0.5-0.1,0.9-0.4,1.2-0.9c0.3-0.5,0.4-1.2,0.2-1.9
+														C23.4,23.2,22.5,22.3,21.5,22.3z"></path></g></g></svg>
+						</div>
+						<p>
+							Thank you for your application, we'll review and get back to you via email if you’ve been successful.
+							<!-- <br /> -->
+							<!-- <br /> -->
+							<!-- <g:InlineHyperlink ui:field="continueToLeaderboard">Browse the Leaderboard</g:InlineHyperlink> -->
+						</p>
+					</div>
+					<r:RegisterForm ui:field="registerForm" styleName="{STYLES_INSTANCE.reflectionMainStyle.formsMidTheme}" />
+				</li>
+			</ul>
+		</div>
+
+
+
 	</g:HTMLPanel>
 </ui:UiBinder> 

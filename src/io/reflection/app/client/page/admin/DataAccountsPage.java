@@ -7,7 +7,7 @@
 //
 package io.reflection.app.client.page.admin;
 
-import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMAT_DD_MMM_YYYY;
+import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMATTER_DD_MMM_YYYY;
 import io.reflection.app.client.cell.StyledButtonCell;
 import io.reflection.app.client.controller.DataAccountController;
 import io.reflection.app.client.controller.FilterController;
@@ -17,6 +17,7 @@ import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.res.Images;
+import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.DataAccount;
 
 import com.google.gwt.cell.client.FieldUpdater;
@@ -79,7 +80,7 @@ public class DataAccountsPage extends Page {
 
 			@Override
 			public String getValue(DataAccount object) {
-				return DATE_FORMAT_DD_MMM_YYYY.format(object.created);
+				return DATE_FORMATTER_DD_MMM_YYYY.format(object.created);
 			}
 
 		};
@@ -119,8 +120,9 @@ public class DataAccountsPage extends Page {
 
 			@Override
 			public SafeHtml getValue(DataAccount object) {
-				return object.active.equals("y") ? SafeHtmlUtils.fromSafeConstant("<span class=\"icon-ok " + style.green() + "\"></span>")
-						: SafeHtmlUtils.EMPTY_SAFE_HTML;
+				return object.active.equals("y") ? SafeHtmlUtils.fromSafeConstant("<span class=\""
+						+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
+						+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCheck() + "\"></span>") : SafeHtmlUtils.EMPTY_SAFE_HTML;
 			}
 
 		};
@@ -142,14 +144,15 @@ public class DataAccountsPage extends Page {
 			public SafeHtml getValue(DataAccount object) {
 				String id = object.id.toString();
 				return SafeHtmlUtils.fromTrustedString("<a href=\""
-						+ PageType.DataAccountFetchesPageType.asHref(id, FilterController.get().asDataAccountFetchFilterString()).asString()
-						+ "\" class=\"btn btn-xs btn-default\">Fetches</a>");
+						+ PageType.DataAccountFetchesPageType.asHref(id, FilterController.get().asDataAccountFetchFilterString()).asString() + "\" class=\""
+						+ Styles.STYLES_INSTANCE.reflectionMainStyle().refButtonFunctionSmall() + "\">Fetches</a>");
 			}
 
 		};
 		dataAccountTable.addColumn(fetchColumn);
 
-		Column<DataAccount, String> linkToMeColumn = new Column<DataAccount, String>(new StyledButtonCell("btn", "btn-xs", "btn-warning")) {
+		Column<DataAccount, String> linkToMeColumn = new Column<DataAccount, String>(new StyledButtonCell(Styles.STYLES_INSTANCE.reflectionMainStyle()
+				.refButtonFunctionSmall())) {
 
 			@Override
 			public String getValue(DataAccount object) {

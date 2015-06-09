@@ -83,7 +83,7 @@ public class Footer extends Composite implements FilterEventHandler, SessionEven
 	public Footer() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		Styles.INSTANCE.reflection().ensureInjected();
+		Styles.STYLES_INSTANCE.reflection().ensureInjected();
 
 		open = false;
 
@@ -161,10 +161,10 @@ public class Footer extends Composite implements FilterEventHandler, SessionEven
 	@UiHandler("footer")
 	void onClickFooter(ClickEvent event) {
 		if (open) {
-			mArrow.setStyleName(Styles.INSTANCE.reflection().footerUpArrow());
+			mArrow.setStyleName(Styles.STYLES_INSTANCE.reflection().footerUpArrow());
 			footer.getElement().getStyle().setBottom(footerBottom, Unit.PX);
 		} else {
-			mArrow.setStyleName(Styles.INSTANCE.reflection().footerDownArrow());
+			mArrow.setStyleName(Styles.STYLES_INSTANCE.reflection().footerDownArrow());
 			footer.getElement().getStyle().setBottom(0, Unit.PX);
 		}
 		open = !open;
@@ -206,7 +206,7 @@ public class Footer extends Composite implements FilterEventHandler, SessionEven
 		footerHeight = FOOTER_HEIGHT_LINKS;
 		footer.getElement().getStyle().setHeight(footerHeight, Unit.PX);
 		footer.getElement().getStyle().setBottom(footerBottom, Unit.PX);
-		mArrow.setStyleName(Styles.INSTANCE.reflection().footerUpArrow());
+		mArrow.setStyleName(Styles.STYLES_INSTANCE.reflection().footerUpArrow());
 		open = false;
 
 		// Add links
@@ -229,7 +229,7 @@ public class Footer extends Composite implements FilterEventHandler, SessionEven
 		footerHeight = FOOTER_HEIGHT_LINKLESS;
 		footer.getElement().getStyle().setHeight(footerHeight, Unit.PX);
 		footer.getElement().getStyle().setBottom(footerBottom, Unit.PX);
-		mArrow.setStyleName(Styles.INSTANCE.reflection().footerUpArrow());
+		mArrow.setStyleName(Styles.STYLES_INSTANCE.reflection().footerUpArrow());
 		open = false;
 
 		// Remove links

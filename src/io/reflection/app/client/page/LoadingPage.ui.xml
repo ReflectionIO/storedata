@@ -5,6 +5,7 @@
     .wrap {
         margin-top: 154px;
         margin-bottom: 30px;
+		text-align: center;
     }
     
     .loader {
@@ -14,17 +15,30 @@
     }
     
     .progress {
+  overflow: hidden;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
         height: 8px;
         margin: 0px;
         background-color: #e8e8e8;
-        border-radius: 4px;
-        box-shadow: none;
-        -webkit-box-shadow: none;
     }
     
     .progressBar {
-        box-shadow: none;
-        -webkit-box-shadow: none;
+
+		  float: left;
+  width: 0;
+  height: 100%;
+  font-size: 12px;
+  line-height: 20px;
+  color: #fff;
+  text-align: center;
+  background-color: #337ab7;
+  -webkit-box-shadow: inset 0 -1px 0 rgba(0,0,0,.15);
+  box-shadow: inset 0 -1px 0 rgba(0,0,0,.15);
+  -webkit-transition: width .6s ease;
+  -o-transition: width .6s ease;
+  transition: width .6s ease;
     }
     
     .barSeparator {
@@ -92,33 +106,40 @@
         100% { opacity: 1; }
     }
     </ui:style>
-    <g:HTMLPanel styleName="text-center {style.wrap}">
+	<g:HTMLPanel styleName="{style.wrap}">
         <g:HTMLPanel styleName="{style.loader}">
-            <div class="progress {style.progress} {style.mediumLegth}">
-                <div ui:field="bar" class="progress-bar {style.purpleBar} {style.progressBar}"></div>
+			<div class="{style.progress} {style.mediumLegth}">
+				<div ui:field="bar" class="{style.purpleBar} {style.progressBar}"></div>
             </div>
             <g:HTMLPanel styleName="{style.barSeparator}" />
-            <div class="progress {style.progress} {style.longLegth}">
-                <div ui:field="bar2" class="progress-bar {style.purpleBar} {style.progressBar}"></div>
+			<div class="{style.progress} {style.longLegth}">
+				<div ui:field="bar2" class="{style.purpleBar} {style.progressBar}"></div>
             </div>
             <g:HTMLPanel styleName="{style.barSeparator}" />
-            <div class="progress {style.progress} {style.mediumLegth}">
-                <div ui:field="bar3" class="progress-bar {style.purpleBar} {style.progressBar}"></div>
+			<div class="{style.progress} {style.mediumLegth}">
+				<div ui:field="bar3" class="{style.purpleBar} {style.progressBar}"></div>
             </div>
             <g:HTMLPanel styleName="{style.barSeparator}" />
-            <div class="progress {style.progress} {style.shortLegth}">
-                <div ui:field="bar4" class="progress-bar {style.purpleBar} {style.progressBar}"></div>
+			<div class="{style.progress} {style.shortLegth}">
+				<div ui:field="bar4" class="{style.purpleBar} {style.progressBar}"></div>
             </div>
             <g:HTMLPanel styleName="{style.barSeparator}" />
-            <div class="progress {style.progress} {style.mediumLegth}">
-                <div ui:field="bar5" class="progress-bar {style.purpleBar} {style.progressBar}"></div>
+			<div class="{style.progress} {style.mediumLegth}">
+				<div ui:field="bar5" class="{style.purpleBar} {style.progressBar}"></div>
             </div>
             <g:HTMLPanel styleName="{style.barSeparator}" />
-            <div class="progress {style.progress} {style.longLegth}">
-                <div ui:field="bar6" class="progress-bar {style.purpleBar} {style.progressBar}"></div>
+			<div class="{style.progress} {style.longLegth}">
+				<div ui:field="bar6" class="{style.purpleBar} {style.progressBar}"></div>
             </div>
         </g:HTMLPanel>
-        <p class="{style.task}"><span ui:field="task">Loading </span><span ui:field="dots"><span class="{style.one}">.</span><span class="{style.two}">.</span><span class="{style.three}">.</span></span></p>
+		<p class="{style.task}" style="margin: 40px auto 0; text-align: center;">
+			<span ui:field="task">Loading </span>
+			<span ui:field="dots">
+				<span class="{style.one}">.</span>
+				<span class="{style.two}">.</span>
+				<span class="{style.three}">.</span>
+			</span>
+		</p>
 
     </g:HTMLPanel>
 </ui:UiBinder> 

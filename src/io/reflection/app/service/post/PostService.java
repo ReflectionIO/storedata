@@ -21,6 +21,7 @@ import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProv
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
+import io.reflection.app.shared.util.LookupHelper;
 import io.reflection.app.shared.util.TagHelper;
 
 import java.util.ArrayList;
@@ -86,6 +87,7 @@ final class PostService implements IPostService {
 		post.description = stripslashes(connection.getCurrentRowString("description"));
 		post.published = connection.getCurrentRowDateTime("published");
 		post.title = stripslashes(connection.getCurrentRowString("title"));
+		post.code = connection.getCurrentRowString("code");
 
 		post.author = new User();
 		post.author.id = connection.getCurrentRowLong("authorid");
@@ -107,10 +109,10 @@ final class PostService implements IPostService {
 		Connection postConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypePost.toString());
 
 		String addPostQuery = String
-				.format("INSERT INTO `post` (`authorid`,`title`,`description`,`content`,`published`,`visible`,`tags`,`commentsenabled`) VALUES (%d,'%s','%s','%s',%s,%d,%s,%d)",
-						post.author.id.longValue(), addslashes(post.title), addslashes(post.description), addslashes(post.content),
-						post.published == null ? "NULL" : String.format("FROM_UNIXTIME(%d)", post.published.getTime() / 1000), post.visible == null ? 0
-								: (post.visible.booleanValue() ? 1 : 0), post.tags == null ? "NULL" : "'" + addslashes(join(post.tags)) + "'",
+				.format("INSERT INTO `post` (`authorid`,`title`,`code`,`description`,`content`,`published`,`visible`,`tags`,`commentsenabled`) VALUES (%d,'%s','%s','%s','%s',%s,%d,%s,%d)",
+						post.author.id.longValue(), addslashes(post.title), LookupHelper.codify(post.title), addslashes(post.description),
+						addslashes(post.content), post.published == null ? "NULL" : String.format("FROM_UNIXTIME(%d)", post.published.getTime() / 1000),
+						post.visible == null ? 0 : (post.visible.booleanValue() ? 1 : 0), post.tags == null ? "NULL" : "'" + addslashes(join(post.tags)) + "'",
 						post.commentsEnabled == null ? 0 : (post.commentsEnabled.booleanValue() ? 1 : 0));
 		try {
 			postConnection.connect();
@@ -118,7 +120,7 @@ final class PostService implements IPostService {
 
 			if (postConnection.getAffectedRowCount() > 0) {
 				post.id = postConnection.getInsertedId();
-				addedPost = post;
+				addedPost = getPost(post.id);
 			}
 		} finally {
 			if (postConnection != null) {
@@ -138,8 +140,8 @@ final class PostService implements IPostService {
 		Connection postConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypePost.toString());
 
 		String updatePostQuery = String
-				.format("UPDATE `post` SET `title`='%s',`description`='%s',`content`='%s',`published`=%s,`visible`=%d,`tags`=%s,`commentsenabled`=%d WHERE `id`=%d AND `deleted`='n'",
-						addslashes(post.title), addslashes(post.description), addslashes(post.content),
+				.format("UPDATE `post` SET `title`='%s',`code`='%s',`description`='%s',`content`='%s',`published`=%s,`visible`=%d,`tags`=%s,`commentsenabled`=%d WHERE `id`=%d AND `deleted`='n'",
+						addslashes(post.title), LookupHelper.codify(post.title), addslashes(post.description), addslashes(post.content),
 						post.published == null ? "NULL" : String.format("FROM_UNIXTIME(%d)", post.published.getTime() / 1000), post.visible == null ? 0
 								: (post.visible.booleanValue() ? 1 : 0), post.tags == null ? "NULL" : "'" + addslashes(join(post.tags)) + "'",
 						post.commentsEnabled == null ? 0 : (post.commentsEnabled.booleanValue() ? 1 : 0), post.id.longValue());
@@ -205,7 +207,7 @@ final class PostService implements IPostService {
 			getPostsQuery = "SELECT *";
 		} else {
 			// no content column
-			getPostsQuery = "SELECT `id`,`created`,`authorid`, `published`,`title`,`description`,`visible`,`tags`,`commentsenabled`,`deleted`";
+			getPostsQuery = "SELECT `id`,`created`,`authorid`, `published`,`title`,`code`,`description`,`visible`,`tags`,`commentsenabled`,`deleted`";
 		}
 
 		if (user != null && user.id != null) {
@@ -280,16 +282,16 @@ final class PostService implements IPostService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.service.post.IPostService#getTitlePost(java.lang.String)
+	 * @see io.reflection.app.service.post.IPostService#getCodePost(java.lang.String)
 	 */
 	@Override
-	public Post getTitlePost(String title) throws DataAccessException {
+	public Post getCodePost(String code) throws DataAccessException {
 		Post post = null;
 
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection postConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypePost.toString());
 
-		String getTitlePostQuery = String.format("SELECT * FROM `post` WHERE `deleted`='n' AND `title`='%s' LIMIT 1", addslashes(title));
+			String getTitlePostQuery = String.format("SELECT * FROM `post` WHERE `deleted`='n' AND `code`='%s' LIMIT 1", addslashes(code));
 
 		try {
 			postConnection.connect();

@@ -44,7 +44,7 @@ public class Preloader extends Composite implements HasWidgets {
 	}
 
 	public void show() {
-		show(Boolean.FALSE);
+		show(false);
 	}
 
 	public void show(boolean transparent) {
@@ -53,11 +53,11 @@ public class Preloader extends Composite implements HasWidgets {
 		} else {
 			content.addStyleName(style.opaque());
 		}
-		content.setVisible(Boolean.TRUE);
+		content.setVisible(true);
 	}
 
 	public void hide() {
-		content.setVisible(Boolean.FALSE);
+		content.setVisible(false);
 	}
 
 	/*

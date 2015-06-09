@@ -19,10 +19,8 @@ import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.NotificationController;
 import io.reflection.app.client.controller.ServiceConstants;
-import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.MarkdownHelper;
-import io.reflection.app.client.page.part.MyAccountSidePanel;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.ExpandableCellTableBuilder;
 import io.reflection.app.client.part.ExpandableCellTableBuilder.ExpandMultiSelectionModel;
@@ -32,7 +30,6 @@ import io.reflection.app.client.res.Images;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Notification;
 import io.reflection.app.datatypes.shared.NotificationStatusType;
-import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.shared.util.FormattingHelper;
 
 import com.google.gwt.cell.client.SafeHtmlCell;
@@ -61,11 +58,9 @@ public class NotificationsPage extends Page implements NavigationEventHandler, D
 
 	interface NotificationsPageUiBinder extends UiBinder<Widget, NotificationsPage> {}
 
-	@UiField MyAccountSidePanel myAccountSidePanel;
 	@UiField(provided = true) CellTable<Notification> notificationsTable = new CellTable<Notification>(ServiceConstants.SHORT_STEP.intValue(),
 			BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) SimplePager simplePager = new SimplePager(false, false);
-	private User user;
 	private TextColumn<Notification> columnCreated;
 	private Column<Notification, SafeHtml> columnPriority;
 	private Column<Notification, SafeHtml> columnSubject;
@@ -75,7 +70,7 @@ public class NotificationsPage extends Page implements NavigationEventHandler, D
 	public NotificationsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		Styles.INSTANCE.reflection().ensureInjected();
+		Styles.STYLES_INSTANCE.reflection().ensureInjected();
 
 		createColumns();
 
@@ -185,13 +180,7 @@ public class NotificationsPage extends Page implements NavigationEventHandler, D
 	 */
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
-		myAccountSidePanel.setActive(getPageType());
 
-		user = SessionController.get().getLoggedInUser();
-
-		if (user != null) {
-			myAccountSidePanel.setUser(user);
-		}
 	}
 
 	/*

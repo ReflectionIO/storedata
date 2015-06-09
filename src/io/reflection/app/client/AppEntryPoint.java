@@ -9,11 +9,14 @@ package io.reflection.app.client;
 
 import io.reflection.app.client.charts.GwtCanvasBasedCanvasFactory;
 import io.reflection.app.client.controller.NavigationController;
+import io.reflection.app.client.helper.DOMHelper;
+import io.reflection.app.client.helper.ResponsiveDesignHelper;
+import io.reflection.app.client.helper.UserAgentHelper;
+import io.reflection.app.client.part.BackToTop;
 import io.reflection.app.client.part.SuperAlertBox;
 import io.reflection.app.client.res.Styles;
 
-import com.google.gwt.dom.client.StyleInjector;
-import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -25,15 +28,7 @@ import com.googlecode.gchart.client.GChart;
  */
 public class AppEntryPoint extends ErrorHandlingEntryPoint {
 
-	private HTMLPanel mContainer;
-
-	static {
-		Styles.INSTANCE.reflection().ensureInjected();
-		String mediaQueries = " @media (max-width: 1024px) {." + Styles.INSTANCE.reflection().footer()
-				+ " {display:none;} .navbar-fixed-top {position:relative;} .navbar {margin-bottom:0px;} .container-fluid{padding-top:0px !important;}}"
-				+ "@media (min-width: 992px) {html,body,.container-fluid,.container-fluid>.row{height: 100%} .sidepanel{height: 100%;margin-bottom:0px;}}";
-		StyleInjector.injectAtEnd(mediaQueries);
-	}
+	private HTMLPanel lPageContainer = new HTMLPanel("");
 
 	/*
 	 * (non-Javadoc)
@@ -44,6 +39,8 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 	public void onModuleLoad() {
 		super.onModuleLoad();
 
+		UserAgentHelper.detectBrowser();
+
 		GChart.setCanvasFactory(new GwtCanvasBasedCanvasFactory());
 
 		// this registers the newly created singleton, so that
@@ -51,29 +48,34 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 		History.addValueChangeHandler(NavigationController.get());
 
 		makeContainer();
+		Styles.STYLES_INSTANCE.reflectionMainStyle().ensureInjected();
+		if (UserAgentHelper.isIE() && UserAgentHelper.getIEVersion() < 9) {
+			Styles.STYLES_INSTANCE.reflectionMainIE8Style().ensureInjected();
+		}
 
 		SuperAlertBox.start();
 
-		// add header
-		mContainer.add(NavigationController.get().getHeader());
-
 		// add page area
-		mContainer.add(NavigationController.get().getPageHolderPanel());
-
-		// add footer
-		mContainer.add(NavigationController.get().getFooter());
 
 		// the above are just place holders, this kicks of the actual page loading
 		History.fireCurrentHistoryState();
-
 	}
 
 	private void makeContainer() {
-		Styles.INSTANCE.reflection().ensureInjected();
+		// PAGE MAINTENANCE RootPanel.get().add(new SiteMaintenance());
 
-		mContainer = new HTMLPanel("");
-		mContainer.getElement().getStyle().setHeight(100, Unit.PCT);
-		RootPanel.get().add(mContainer);
+		lPageContainer.getElement().setClassName("l-page-container");
+		RootPanel.get().add(NavigationController.get().getHeader());
+		RootPanel.get().add(NavigationController.get().getPanelLeftMenu());
+		RootPanel.get().add(lPageContainer);
+		lPageContainer.add(NavigationController.get().getMainPanel());
+		RootPanel.get().add(NavigationController.get().getPanelRightAccount());
+		RootPanel.get().add(NavigationController.get().getPanelRightSearch());
+		RootPanel.get().add(new BackToTop());
+		UserAgentHelper.initCustomScrollbars();
+		Document.get().getHead().appendChild(DOMHelper.getJSScriptFromUrl("js/vendor/picturefillFirefox.js"));
+		UserAgentHelper.initIETweaks();
+		ResponsiveDesignHelper.initTabsResponsive();
+
 	}
-
 }

@@ -1,9 +1,6 @@
-@external show, collapse, navbar-collapse, small, filler-bottom, delete, table-access, table-linkedaccount, table-rank, table-item, table-striped, table, tbody, td, thead, th,  headerCaret, navbar-brand, navbar-toggle, p-small, form, formEdit, noteDetail, label, gwt-CheckBox, topPanel, sidepanel, btn, btn-group, btn-default, row, divider-vertical, divider-horizontal, divider-horizontal-header, nav-pills, nav-stacked, nav-tabs, nav-justified, ranks, loginregister, register, well, well-title, form-inline, form-group, gwt-RadioButton, hr, navbar-fixed-top, navbar, pagination, btn-primary, disabled, active, open, dropdown-toggle, dropdown-menu, i, badge, dropdown, nav, navbar-inverse, navbar-nav, navbar-text, caret, form-control;
+@external small, filler-bottom, delete, table-access, table-linkedaccount, table-rank, table-item, table-striped, table, tbody, td, thead, th,  headerCaret, navbar-brand, navbar-toggle, p-small, form, formEdit, noteDetail topPanel, sidepanel, btn, btn-group, btn-default, row, divider-vertical, divider-horizontal, divider-horizontal-header, nav-pills, nav-stacked, nav-tabs, nav-justified, ranks, loginregister, register, well, well-title, form-inline, form-group, gwt-RadioButton, hr, navbar-fixed-top, navbar, pagination, btn-primary, disabled, active, open, dropdown-toggle, dropdown-menu, i, badge, dropdown, nav, navbar-inverse, navbar-nav, navbar-text, caret, form-control;
 	/* Colors palette: Purple #6d69c5; DarkBlue 272933; Gold #eabc3e; LightGrey: #f8f9f9; Green: #1bc79f; Blue: #3357cc; Red: #e73c48; */
 /* Small devices (tablets, 768px and up) - Medium devices (desktop, 992px and up) - Large devices (large desktop, 1200px and up) */
-body {
-	font-family: 'Lato', sans-serif;
-}
 
 .delete {
 	color: #9c9d9f;
@@ -14,18 +11,7 @@ body {
 }
 
 .header {
-	background: #272733;
-	padding-left: 0px;
-	padding-right: 14px;
-	margin-left: 0px;
-	margin-right: 0px;
-	padding-top: 5px;
-	height: 60px;
-	color: #8d8ea1;
-	min-width: 290px;
-	border: none;
-	font-size: 14px;
-	overflow: visible;
+
 }
 
 .navbar-inverse .navbar-toggle {
@@ -65,14 +51,11 @@ body {
 
 /* Forms */
 .form {
-	padding-left: 55px;
-	padding-right: 55px;
-	margin-top: 30px;
+	
 }
 
 .form>div {
-	margin-top: 20px;
-	margin-bottom: 40px;
+	
 }
 
 .form .btn-primary {
@@ -172,69 +155,6 @@ body {
 	box-shadow: none;
 }
 
-input[type="radio"] {
-	cursor: pointer;
-}
-
-input[type="text"]:disabled {
-	color: #AAA;
-}
-
-select {
-	cursor: pointer;
-}
-
-/* Cell Table */
-.table>tbody+tbody {
-	border: none;
-}
-
-.table-striped>tbody>tr>td:FIRST-CHILD, .table-striped>thead>tr>th:FIRST-CHILD
-	{
-	padding-left: 24px;
-}
-
-.table-striped>tbody>tr>td, .table-striped>thead>tr>th {
-	vertical-align: middle;
-	border: 0px;
-}
-
-.table-striped>thead>tr>th {
-	border: 0px;
-}
-
-.table-striped>tbody>tr:nth-child(odd)>td {
-	background-color: #eff2f5;
-}
-
-.table-striped>tbody>tr:nth-child(even)>td {
-	background-color: #ffffff;
-}
-
-/* Cell Table - ItemPage */
-.table-striped.table-item>tbody>tr>td, .table-striped.table-item>thead>tr>th
-	{
-	height: 50px;
-}
-
-/* Cell Table - RankPage */
-.table-striped.table-rank>tbody>tr>td {
-	height: 78px;
-}
-
-.table-striped.table-rank>tbody>tr>td:FIRST-CHILD+td {
-	vertical-align: top;
-}
-
-/* Cell Table - LinkedAccountsPage */
-.table-striped.table-linkedaccount>tbody>tr>td {
-	height: 50px;
-}
-
-/* Cell Table - UserAccess */
-.table-striped.table-access>tbody>tr>td {
-	height: 30px;
-}
 
 .row {
 	margin-left: 0px;
@@ -261,108 +181,6 @@ select {
 	height: 55px;
 }
 
-.gwt-RadioButton label {
-	font-size: 12px;
-	font-weight: normal;
-	margin-left: 4px;
-}
-
-.gwt-CheckBox input {
-	outline: 0;
-	cursor: pointer;
-}
-
-.gwt-CheckBox label {
-	padding-left: 8px;
-	font-weight: 400;
-	font-size: 14px;
-	font-family: 'Lato', sans-serif;
-	line-height: 22px;
-	cursor: pointer;
-}
-
-/* TEXT */
-p {
-	font-weight: 400;
-	font-size: 16px;
-	font-family: 'Lato', sans-serif;
-	color: #63656a;
-	line-height: 24px;
-}
-
-p.p-small {
-	font-weight: 400;
-	font-size: 14px;
-	font-family: 'Lato', sans-serif;
-	line-height: 22px;
-}
-
-h1, h2, h3, h4, h5, h6 {
-	font-family: 'Source Sans Pro', sans-serif;
-	color: #0e0e1f;
-	font-weight: 600;
-}
-
-/* Forms title */
-h6 {
-	font-size: 16px;
-}
-
-h5 {
-	font-size: 18px;
-}
-
-h4 {
-	font-size: 20px;
-}
-
-h3 {
-	font-size: 24px;
-}
-
-h2 {
-	font-size: 28px;
-}
-
-h1 {
-	font-size: 34px;
-}
-
-hr {
-	background-color: #d6d6d6;
-	color: #d6d6d6;
-	border-color: #d6d6d6;
-	height: 1px;
-}
-
-label {
-	font-weight: 400;
-	font-size: 18px;
-	font-family: 'Source Sans Pro', sans-serif;
-	color: #58595d;
-	line-height: 30px;
-}
-
-a {
-	font-weight: 400;
-	font-family: 'Lato', sans-serif;
-	cursor: pointer;
-	color: #6D69C5;
-	outline: none;
-	text-decoration: none;
-}
-
-a:hover {
-	color: #1bc79f;
-	text-decoration: none;
-	outline: none;
-}
-
-a:active, a:focus {
-	color: #434346;
-	text-decoration: none;
-	outline: none;
-}
 
 /* Pagination */
 .pagination {
@@ -868,14 +686,3 @@ header a:hover, header a:active, header a:focus {
 	color: #6d69c5;
 }
 
-.collapse.navbar-collapse.show{
-	overflow: visible;
-}
-
-.nav.navbar-nav{
-	overflow: visible;
-}
-
-.dropdown{
-	overflow: visible;
-}

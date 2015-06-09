@@ -7,6 +7,9 @@
 //
 package io.reflection.app.client.component;
 
+import io.reflection.app.client.res.Styles;
+import io.reflection.app.client.res.Styles.ReflectionMainStyles;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.DivElement;
@@ -22,7 +25,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -44,6 +46,8 @@ public class AccordionSwitch extends Composite {
 	@UiField DivElement accordionContent;
 	@UiField UListElement contentList;
 
+	ReflectionMainStyles style = Styles.STYLES_INSTANCE.reflectionMainStyle();
+
 	public AccordionSwitch() {
 		this(false);
 	}
@@ -59,12 +63,12 @@ public class AccordionSwitch extends Composite {
 			@Override
 			public void onBrowserEvent(Event event) {
 				if (Event.ONCLICK == event.getTypeInt()) {
-					if (!title.hasClassName("no-accordion-content")) {
-						if (container.getElement().hasClassName("is-closed")) {
-							container.getElement().removeClassName("is-closed");
+					if (!title.hasClassName(style.noAccordionContent())) {
+						if (container.getElement().hasClassName(style.isClosed())) {
+							container.getElement().removeClassName(style.isClosed());
 							accordionContent.getStyle().setMarginTop(0, Unit.PX);
 						} else {
-							container.getElement().addClassName("is-closed");
+							container.getElement().addClassName(style.isClosed());
 							accordionContent.getStyle().setMarginTop(-Double.valueOf(accordionContent.getClientHeight()), Unit.PX);
 						}
 					}
@@ -76,8 +80,8 @@ public class AccordionSwitch extends Composite {
 
 			@Override
 			public void onResize(ResizeEvent event) {
-				if (!title.hasClassName("no-accordion-content")) {
-					container.getElement().addClassName("is-closed");
+				if (!title.hasClassName(style.noAccordionContent())) {
+					container.getElement().addClassName(style.isClosed());
 					accordionContent.getStyle().setMarginTop(-Double.valueOf(accordionContent.getClientHeight()), Unit.PX);
 				}
 			}
@@ -87,13 +91,13 @@ public class AccordionSwitch extends Composite {
 
 	public void setEmpty(boolean isEmpty) {
 		if (isEmpty) {
-			title.addClassName("no-accordion-content");
+			title.addClassName(style.noAccordionContent());
 			accordionContent.removeFromParent();
 		}
 	}
 
 	public void setFeatureComplete(boolean complete) {
-		container.setStyleName("feature-complete", complete);
+		container.setStyleName(style.featureComplete(), complete);
 	}
 
 	public void setTitleText(String text) {
@@ -106,6 +110,10 @@ public class AccordionSwitch extends Composite {
 		subtitle.setInnerText(text);
 	}
 
+	public void setSubtitleHtml(String html) {
+		subtitle.setInnerHTML(html);
+	}
+
 	public void setSubtitleLinkHref(String href) {
 		AnchorElement emailLink = Document.get().createAnchorElement();
 		emailLink.setInnerText(subtitle.getInnerText());
@@ -115,7 +123,7 @@ public class AccordionSwitch extends Composite {
 	}
 
 	public void setHighlighted(boolean highlight) {
-		container.setStyleName("accordion-item-highlighted", highlight);
+		container.setStyleName(style.accordionItemHighlighted(), highlight);
 	}
 
 	public void addItemIncomplete(String titleText, String subtitleText) {
@@ -129,7 +137,7 @@ public class AccordionSwitch extends Composite {
 
 	public void addItemComplete(String titleText) {
 		LIElement liElem = Document.get().createLIElement();
-		liElem.addClassName("list-item-complete");
+		liElem.addClassName(style.listItemComplete());
 		liElem.setInnerText(titleText);
 		contentList.appendChild(liElem);
 	}
@@ -143,16 +151,10 @@ public class AccordionSwitch extends Composite {
 	protected void onAttach() {
 		super.onAttach();
 
-		if (!title.hasClassName("no-accordion-content")) {
-			container.getElement().addClassName("is-closed");
+		if (!title.hasClassName(style.noAccordionContent())) {
+			container.getElement().addClassName(style.isClosed());
+			accordionContent.getStyle().setMarginTop(-Double.valueOf(accordionContent.getClientHeight()), Unit.PX);
 		}
-		Timer timer = new Timer() {
-			@Override
-			public void run() {
-				accordionContent.getStyle().setMarginTop(-Double.valueOf(accordionContent.getClientHeight()), Unit.PX);
-			}
-		};
-		timer.schedule(100);
-
 	}
+
 }
