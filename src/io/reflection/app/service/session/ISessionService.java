@@ -1,4 +1,4 @@
-//  
+//
 //  ISessionService.java
 //  reflection.io
 //
@@ -18,7 +18,7 @@ public interface ISessionService extends IService {
 	/**
 	 * 20 minutes in seconds
 	 */
-	public static final long SESSION_SHORT_DURATION = 60 * 20;
+	public static final long SESSION_SHORT_DURATION = 60 * 120; // 2 hours instead of the older 20 minutes (this helps over come the daylight savings timeout
 
 	/**
 	 * Approximately 30 days in seconds
@@ -50,7 +50,7 @@ public interface ISessionService extends IService {
 
 	/**
 	 * Create user session
-	 * 
+	 *
 	 * @param user
 	 * @param longTerm
 	 * @return
@@ -59,7 +59,7 @@ public interface ISessionService extends IService {
 
 	/**
 	 * Get user session
-	 * 
+	 *
 	 * @param user
 	 * @return
 	 */
