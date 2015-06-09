@@ -23,8 +23,9 @@ public class FormButton extends Button {
 	public static final String STYLE_LOADING = Styles.STYLES_INSTANCE.reflectionMainStyle().refButtonIsLoading();
 	public static final String STYLE_SUCCESS = Styles.STYLES_INSTANCE.reflectionMainStyle().refButtonSuccess();
 	public static final String STYLE_ERROR = Styles.STYLES_INSTANCE.reflectionMainStyle().refButtonError();
-	public static final int DEFAULT_TIMEOUT = 3000;
-	public static final String DEFAULT_ERROR_MESSAGE = "Oops, an error occurred";
+	public static final int DEFAULT_TIMEOUT = 2000;
+	public static final String DEFAULT_ERROR_MESSAGE = "Oops, there's an error";
+	public static final String DEFAULT_LOADING_MESSAGE = "Loading";
 
 	private SpanElement spanElem;
 	private String defaultText;
@@ -66,6 +67,8 @@ public class FormButton extends Button {
 		this.getElement().addClassName(STYLE_LOADING);
 		if (loadingText != null) {
 			this.setText(loadingText);
+		} else {
+			this.setText(DEFAULT_LOADING_MESSAGE);
 		}
 	}
 
