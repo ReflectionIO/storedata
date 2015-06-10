@@ -5703,7 +5703,7 @@ table.table-linked-accounts .update-linked-accounts-container .ref-button--link:
   font-weight: 600;
   line-height: 1.2;
   color: #363a47;
-  background: #fcfdfd url(fonts/bg-bullet.png) no-repeat 17px 1.8rem;
+  background: #fcfdfd url(images/bg-bullet.png) no-repeat 17px 1.8rem;
   background-size: 10px auto;
 }
 /* line 31, ../sass/templates/_logged-in-landing.scss */
@@ -7705,7 +7705,7 @@ table.table-linked-accounts .update-linked-accounts-container .ref-button--link:
 .can-toggle input[type="checkbox"]:checked ~ label .can-toggle__switch:before {
   content: attr(data-unchecked);
   left: 0;
-  background: url(fonts/icon-switch-on-x2.png) no-repeat 6px 6px/12px 10px;
+  background: url(images/icon-switch-on-x2.png) no-repeat 6px 6px/12px 10px;
 }
 /* line 365, ../sass/components/_filter.scss */
 .can-toggle input[type="checkbox"]:checked ~ label .can-toggle__switch:after {
@@ -7713,7 +7713,7 @@ table.table-linked-accounts .update-linked-accounts-container .ref-button--link:
 }
 /* line 376, ../sass/components/_filter.scss */
 .can-toggle.can-toggle--size-small input:checked ~ label .can-toggle__switch:before {
-  background: url(fonts/icon-switch-on-x2.png) no-repeat 3px 4px/9px 7px;
+  background: url(images/icon-switch-on-x2.png) no-repeat 3px 4px/9px 7px;
 }
 /* line 379, ../sass/components/_filter.scss */
 .can-toggle label {
@@ -12912,7 +12912,7 @@ table.table-data .ref-icon-before--cloud:before {
   font-weight: 600;
   font-size: 16px;
   color: #fcfdfd;
-  background: url(fonts/warning-icon.png) no-repeat 0 0;
+  background: url(images/warning-icon.png) no-repeat 0 0;
 }
 /* line 22, ../sass/components/_window-warning.scss */
 .window-warning a {
