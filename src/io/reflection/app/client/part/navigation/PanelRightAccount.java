@@ -81,6 +81,7 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 
 		createItemList();
 
+		notificationItem.removeFromParent();
 	}
 
 	public void setLoggedIn(boolean loggedIn) {

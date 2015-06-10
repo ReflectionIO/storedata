@@ -359,10 +359,20 @@ public class RegisterForm extends Composite {
 		if (requestInvite) {
 			resetForm();
 			focusFirstActiveField();
+			forename.setVisible(true);
+			surname.setVisible(true);
+			company.setVisible(true);
+			email.setVisible(true);
 			passwordGroup.setVisible(false);
 			termAndCondGroup.setVisible(false);
 			registerBtn.setText("Apply Now");
 		} else {
+			if (!SessionController.get().isLoggedInUserAdmin()) {
+				forename.setVisible(false);
+				surname.setVisible(false);
+				company.setVisible(false);
+				email.setVisible(false);
+			}
 			passwordGroup.setVisible(true);
 			termAndCondGroup.setVisible(true);
 			registerBtn.setText("Continue");
