@@ -82,8 +82,10 @@ public class LoadingButton extends Button {
 		if (successText != null) {
 			setText(successText);
 		}
-		progressBar.getStyle().setDisplay(Display.NONE);
-		setProgressiveStatus(0);
+		if (isProgressive) {
+			progressBar.getStyle().setDisplay(Display.NONE);
+			setProgressiveStatus(0);
+		}
 		if (hideTimeout != 0) {
 			Timer t = new Timer() {
 				@Override
@@ -117,8 +119,10 @@ public class LoadingButton extends Button {
 		} else {
 			setText(DEFAULT_ERROR_MESSAGE);
 		}
-		progressBar.getStyle().setDisplay(Display.NONE);
-		setProgressiveStatus(0);
+		if (isProgressive) {
+			progressBar.getStyle().setDisplay(Display.NONE);
+			setProgressiveStatus(0);
+		}
 		if (hideTimeout != 0) {
 			Timer t = new Timer() {
 				@Override
@@ -178,7 +182,9 @@ public class LoadingButton extends Button {
 			originalText = (isProgressive ? textElem.getInnerText() : getText());
 		}
 
-		setStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().refButtonLoadingDeterminate(), true);
+		if (isProgressive) {
+			setStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().refButtonLoadingDeterminate(), true);
+		}
 	}
 
 }
