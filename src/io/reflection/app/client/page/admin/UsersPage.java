@@ -16,7 +16,7 @@ import io.reflection.app.api.admin.shared.call.event.DeleteUserEventHandler;
 import io.reflection.app.api.admin.shared.call.event.DeleteUsersEventHandler;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.StyledButtonCell;
-import io.reflection.app.client.component.FormButton;
+import io.reflection.app.client.component.LoadingButton;
 import io.reflection.app.client.component.TextField;
 import io.reflection.app.client.component.PopupDialog;
 import io.reflection.app.client.controller.ServiceConstants;
@@ -66,7 +66,7 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 	@UiField PopupDialog deleteUserDialog;
 	@UiField Button cancelDelete;
 	@UiField Anchor closeDeleteDialog;
-	@UiField FormButton confirmDelete;
+	@UiField LoadingButton confirmDelete;
 
 	@UiField Button deleteTestUsers;
 	@UiField TextField queryTextBox;

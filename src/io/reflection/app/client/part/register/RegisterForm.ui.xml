@@ -29,10 +29,10 @@
 			</ul>
 		</g:HTMLPanel>
 
-		<c:FormButton ui:field="registerBtn"
+		<c:LoadingButton ui:field="registerBtn"
 			styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth} {STYLES_INSTANCE.reflectionMainStyle.maintainAfterSubmit} {STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}">
 			Apply Now
-		</c:FormButton>
+		</c:LoadingButton>
 	</g:HTMLPanel>
 
 

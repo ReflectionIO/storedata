@@ -147,8 +147,14 @@ public interface Styles extends ClientBundle {
 		@ClassName("app-icon")
 		String appIcon();
 
+		@ClassName("app-icon-container")
+		String appIconContainer();
+
 		@ClassName("app-icon-small")
 		String appIconSmall();
+
+		@ClassName("app-icon-small-container")
+		String appIconSmallContainer();
 
 		@ClassName("app-name")
 		String appName();
@@ -325,6 +331,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("comments-link")
 		String commentsLink();
 
+		@ClassName("componenet-loading")
+		String componenetLoading();
+
 		@ClassName("components-row-with-border")
 		String componentsRowWithBorder();
 
@@ -433,6 +442,15 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("dk-component-row")
 		String dkComponentRow();
+
+		@ClassName("dot-1")
+		String dot1();
+
+		@ClassName("dot-2")
+		String dot2();
+
+		@ClassName("dot-3")
+		String dot3();
 
 		@ClassName("download-button--mobile")
 		String downloadButtonMobile();
@@ -795,6 +813,12 @@ public interface Styles extends ClientBundle {
 		@ClassName("is-closed")
 		String isClosed();
 
+		@ClassName("is-closing")
+		String isClosing();
+
+		@ClassName("is-complete")
+		String isComplete();
+
 		@ClassName("is-current")
 		String isCurrent();
 
@@ -827,6 +851,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("is-open")
 		String isOpen();
+
+		@ClassName("is-opening")
+		String isOpening();
 
 		@ClassName("is-opera")
 		String isOpera();
@@ -919,6 +946,15 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("list-partners")
 		String listPartners();
+
+		@ClassName("loading-button-text")
+		String loadingButtonText();
+
+		@ClassName("loading-ellipsis")
+		String loadingEllipsis();
+
+		@ClassName("loading-progress")
+		String loadingProgress();
 
 		@ClassName("logged-in-section-content")
 		String loggedInSectionContent();
@@ -1036,6 +1072,12 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("page-leaderboard")
 		String pageLeaderboard();
+
+		@ClassName("page-loading")
+		String pageLoading();
+
+		@ClassName("page-loading--determinate")
+		String pageLoadingDeterminate();
 
 		@ClassName("page-logged-in-landing")
 		String pageLoggedInLanding();
@@ -1215,6 +1257,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("ref-button--link-large")
 		String refButtonLinkLarge();
+
+		@ClassName("ref-button--loading-determinate")
+		String refButtonLoadingDeterminate();
 
 		@ClassName("ref-button--success")
 		String refButtonSuccess();

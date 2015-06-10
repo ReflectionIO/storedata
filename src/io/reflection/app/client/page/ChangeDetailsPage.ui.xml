@@ -109,7 +109,7 @@
 
 									<c:TextField ui:field="username" labelText="Email" />
 
-									<c:FormButton ui:field="changeDetailsBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth}" text="Save Changes"
+									<c:LoadingButton ui:field="changeDetailsBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth}" text="Save Changes"
 										enabled="false" />
 								</form>
 							</div>
@@ -122,7 +122,7 @@
 
 									<c:PasswordField ui:field="confirmPassword" labelText="Confirm password" />
 
-									<c:FormButton ui:field="changePasswordBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth}" text="Save New Password"
+									<c:LoadingButton ui:field="changePasswordBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth}" text="Save New Password"
 										enabled="false" />
 								</form>
 							</div>
@@ -136,7 +136,7 @@
 								<cv:CellTable ui:field="rolesTable" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}" />
 								<g:HTMLPanel tag="form" ui:field="addRolePanel">
 									<c:TextField ui:field="addRole" labelText="User Role" />
-									<c:FormButton ui:field="addRoleBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth}" text="Add Role" />
+									<c:LoadingButton ui:field="addRoleBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth}" text="Add Role" />
 								</g:HTMLPanel>
 							</div>
 							<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird}">
@@ -144,7 +144,7 @@
 								<cv:CellTable ui:field="permissionsTable" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}" />
 								<g:HTMLPanel tag="form" ui:field="addPermissionPanel">
 									<c:TextField ui:field="addPermission" labelText="User Permission" />
-									<c:FormButton ui:field="addPermissionBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth}" text="Add Permission" />
+									<c:LoadingButton ui:field="addPermissionBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth}" text="Add Permission" />
 								</g:HTMLPanel>
 							</div>
 						</div>

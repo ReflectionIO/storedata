@@ -103,6 +103,7 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 		adminItem.removeFromParent();
 		createItemList();
 
+		forumItem.removeFromParent();
 	}
 
 	private void attachUserLinks(User user) {

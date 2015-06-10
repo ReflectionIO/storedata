@@ -22,7 +22,7 @@ import io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler;
 import io.reflection.app.api.core.shared.call.event.UpdateLinkedAccountEventHandler;
 import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.client.DefaultEventBus;
-import io.reflection.app.client.component.FormButton;
+import io.reflection.app.client.component.LoadingButton;
 import io.reflection.app.client.component.PopupDialog;
 import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.NavigationController;
@@ -110,7 +110,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	@UiField PopupDialog deleteLinkedAccountDialog;
 	@UiField Anchor closeDeleteDialog;
 	@UiField Button cancelDelete;
-	@UiField FormButton confirmDelete;
+	@UiField LoadingButton confirmDelete;
 
 	@UiField PopupDialog addLinkedAccountDialog;
 	@UiField Anchor closeAddDialog;

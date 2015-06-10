@@ -21,7 +21,7 @@
 		</div>
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.globalHeader__actions}">
 			<g:InlineHyperlink ui:field="applyBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaSmallWide}">Apply</g:InlineHyperlink>
-			<div class="{STYLES_INSTANCE.reflectionMainStyle.searchLinkContainer}">
+			<div ui:field="tempSearchContainer" class="{STYLES_INSTANCE.reflectionMainStyle.searchLinkContainer}">
 				<g:Anchor ui:field="linkSearch" href="#"
 					styleName="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeSearch} {STYLES_INSTANCE.reflectionMainStyle.linkOpenSearch}">
 					<span>Search for app or developer</span>

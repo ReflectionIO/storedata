@@ -7,7 +7,7 @@
 //
 package io.reflection.app.client.part.login;
 
-import io.reflection.app.client.component.FormButton;
+import io.reflection.app.client.component.LoadingButton;
 import io.reflection.app.client.component.PasswordField;
 import io.reflection.app.client.controller.SessionController;
 
@@ -38,7 +38,7 @@ public class ResetPasswordForm extends Composite {
 
 	private String newPasswordError = null;
 
-	@UiField FormButton submit;
+	@UiField LoadingButton submit;
 
 	public ResetPasswordForm() {
 		initWidget(uiBinder.createAndBindUi(this));

@@ -23,6 +23,6 @@
 				</li>
 			</ul>
 		</div>
-		<c:FormButton ui:field="loginBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth}" text="Log in" />
+		<c:LoadingButton ui:field="loginBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth}" text="Log in" />
 	</g:HTMLPanel>
 </ui:UiBinder>

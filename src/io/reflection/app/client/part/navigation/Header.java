@@ -29,6 +29,7 @@ import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.AnchorElement;
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.VideoElement;
@@ -75,6 +76,8 @@ public class Header extends Composite implements NavigationEventHandler, Session
 	@UiField Anchor linkLogin;
 	@UiField Anchor linkSearch;
 
+	@UiField DivElement tempSearchContainer;
+
 	private boolean panelLeftWasClosed;
 
 	Element picture, source1, source2;
@@ -92,6 +95,7 @@ public class Header extends Composite implements NavigationEventHandler, Session
 		initPanelRightAccount();
 		initPanelRightSearch();
 
+		tempSearchContainer.removeFromParent();
 	}
 
 	private void addHomeBtnPicture() {
