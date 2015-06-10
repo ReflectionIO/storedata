@@ -133,9 +133,12 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField SpanElement downloadsText;
 	@UiField InlineHyperlink rankingLink;
 	@UiField SpanElement rankingText;
+	@UiField InlineHyperlink appDetailsLink;
+	@UiField SpanElement appDetailsText;
 	@UiField LIElement revenueItem;
 	@UiField LIElement downloadsItem;
 	@UiField LIElement rankingItem;
+	@UiField LIElement appDetailsItem;
 
 	@UiField(provided = true) CellTable<ItemRevenue> revenueTable = new CellTable<ItemRevenue>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) CellTable<AppRanking> revenueTable2 = new CellTable<AppRanking>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
@@ -182,6 +185,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		tabs.put(REVENUE_CHART_TYPE, revenueItem);
 		tabs.put(DOWNLOADS_CHART_TYPE, downloadsItem);
 		tabs.put(RANKING_CHART_TYPE, rankingItem);
+		tabs.put("appdetails", appDetailsItem);
 
 		// TODO remove not working elements for normal user
 		if (!SessionController.get().isLoggedInUserAdmin()) {
@@ -644,8 +648,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				chartRank.setVisible(false);
 				break;
 			case RankingYAxisDataType:
-				overlayRevenuesSwitch.setVisible(true);
-				overlayDownloadsSwitch.setVisible(true);
+				overlayRevenuesSwitch.setVisible(SessionController.get().isLoggedInUserAdmin());
+				overlayDownloadsSwitch.setVisible(SessionController.get().isLoggedInUserAdmin());
 				cumulativeChartSwitch.setVisible(false);
 				chartRank.setVisible(true);
 				chartRevenue.setVisible(false);
@@ -901,6 +905,9 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			downloadsItem.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
 			downloadsLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
 					DOWNLOADS_CHART_TYPE, comingPage, filterContents));
+			appDetailsText.setInnerText("App Details");
+			appDetailsItem.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
+			appDetailsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 		} else {
 			revenueText.setInnerText("Revenue - coming soon");
 			revenueItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
@@ -908,12 +915,16 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			downloadsText.setInnerText("Downloads - coming soon");
 			downloadsItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
 			downloadsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
+			appDetailsText.setInnerText("App Details - coming soon");
+			appDetailsItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
+			appDetailsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 			for (String key : tabs.keySet()) {
 				tabs.get(key).removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isActive());
 			}
 			tabs.get(RANKING_CHART_TYPE).addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isActive());
 			tabs.remove(REVENUE_CHART_TYPE);
 			tabs.remove(DOWNLOADS_CHART_TYPE);
+			tabs.remove("appdetails");
 
 		}
 	}

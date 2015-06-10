@@ -93,17 +93,17 @@
 						</span>
 					</g:InlineHyperlink>
 				</li>
-				<li
+				<li ui:field="appDetailsItem"
 					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab}">
 					<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
-					<g:InlineHyperlink targetHistoryToken="#tab-content" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
+					<g:InlineHyperlink ui:field="appDetailsLink" targetHistoryToken="#tab-content" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
 						<span>
 							<svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">
 									<path
 								d="M4,10c0,1.1-0.9,2-2,2s-2-0.9-2-2s0.9-2,2-2S4,8.9,4,10z M32,9H7v2h25V9z M2,14
 	c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S3.1,14,2,14z M32,15H7v2h25V15z M2,20c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S3.1,20,2,20z
 	 M32,21H7v2h25V21z" /></svg>
-							<span>App Details</span>
+							<span ui:field="appDetailsText">App Details</span>
 						</span>
 					</g:InlineHyperlink>
 				</li>

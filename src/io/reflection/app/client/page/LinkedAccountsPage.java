@@ -55,6 +55,7 @@ import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.FormElement;
+import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.TableRowElement;
@@ -105,6 +106,12 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	@UiField InlineHyperlink usersLink;
 	@UiField InlineHyperlink notificationsLink;
 
+	// TODO remove when tabs will be enabled
+	@UiField LIElement usersItem;
+	@UiField LIElement notifItem;
+	@UiField SpanElement usersText;
+	@UiField SpanElement notifText;
+
 	@UiField Element linkedAccountsCount;
 
 	@UiField PopupDialog deleteLinkedAccountDialog;
@@ -153,11 +160,23 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 		linkedAccountsTable.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 
+		if (!SessionController.get().isLoggedInUserAdmin()) {
+			usersText.setInnerText("Users - coming soon");
+			usersItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
+			notifText.setInnerText("Notifications - coming soon");
+			notifItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
+			usersLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
+			notificationsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
+		} else {
+			if (user != null) {
+				notificationsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.NotificationsPageType.toString(),
+						user.id.toString()));
+			}
+		}
 		if (user != null) {
 			accountSettingsLink
 					.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.ChangeDetailsPageType.toString(), user.id.toString()));
-			notificationsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.NotificationsPageType.toString(), user.id.toString()));
-			// TODO users account page link
+
 		}
 
 		iosMacAddForm.addLinkedAccountChangeEventHander(new LinkedAccountChangeEventHandler() {
