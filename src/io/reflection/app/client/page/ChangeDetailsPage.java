@@ -30,7 +30,7 @@ import io.reflection.app.api.core.shared.call.event.ChangeUserDetailsEventHandle
 import io.reflection.app.api.core.shared.call.event.GetUserDetailsEventHandler;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.StyledButtonCell;
-import io.reflection.app.client.component.FormButton;
+import io.reflection.app.client.component.LoadingButton;
 import io.reflection.app.client.component.TextField;
 import io.reflection.app.client.component.PasswordField;
 import io.reflection.app.client.controller.NavigationController;
@@ -107,7 +107,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	@UiField TextField company;
 	private String companyError;
 
-	@UiField FormButton changeDetailsBtn;
+	@UiField LoadingButton changeDetailsBtn;
 
 	// Change Password
 	@UiField PasswordField password;
@@ -115,7 +115,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	@UiField PasswordField newPassword;
 	@UiField PasswordField confirmPassword;
 
-	@UiField FormButton changePasswordBtn;
+	@UiField LoadingButton changePasswordBtn;
 
 	// Error definition during validation
 	private String passwordError = null;
@@ -126,14 +126,14 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	private String addRoleError;
 
 	@UiField HTMLPanel addRolePanel;
-	@UiField FormButton addRoleBtn;
+	@UiField LoadingButton addRoleBtn;
 
 	// User Permissions
 	@UiField TextField addPermission;
 	private String addPermissionError;
 
 	@UiField HTMLPanel addPermissionPanel;
-	@UiField FormButton addPermissionBtn;
+	@UiField LoadingButton addPermissionBtn;
 
 	private User currentUser; // User using the system
 	private Long editingUserId; // User Id to Edit

@@ -7,7 +7,7 @@
 //
 package io.reflection.app.client.part.register;
 
-import io.reflection.app.client.component.FormButton;
+import io.reflection.app.client.component.LoadingButton;
 import io.reflection.app.client.component.FormCheckbox;
 import io.reflection.app.client.component.TextField;
 import io.reflection.app.client.component.PasswordField;
@@ -60,7 +60,7 @@ public class RegisterForm extends Composite {
 	private String termAndCondError;
 	@UiField ParagraphElement checkboxError;
 
-	@UiField FormButton registerBtn;
+	@UiField LoadingButton registerBtn;
 
 	private boolean isRequestInvite;
 
