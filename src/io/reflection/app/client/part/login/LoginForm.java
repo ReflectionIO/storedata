@@ -12,7 +12,7 @@ import io.reflection.app.api.core.shared.call.LoginResponse;
 import io.reflection.app.api.core.shared.call.event.LoginEventHandler;
 import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.client.DefaultEventBus;
-import io.reflection.app.client.component.FormButton;
+import io.reflection.app.client.component.LoadingButton;
 import io.reflection.app.client.component.FormCheckbox;
 import io.reflection.app.client.component.TextField;
 import io.reflection.app.client.component.PasswordField;
@@ -57,7 +57,7 @@ public class LoginForm extends Composite implements LoginEventHandler, UserPower
 	@UiField PasswordField passwordFormField;
 	private String passwordNote = null;
 	@UiField FormCheckbox rememberMe;
-	@UiField FormButton loginBtn;
+	@UiField LoadingButton loginBtn;
 
 	public LoginForm() {
 		initWidget(uiBinder.createAndBindUi(this));

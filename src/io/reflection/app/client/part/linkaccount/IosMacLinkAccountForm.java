@@ -7,7 +7,7 @@
 //
 package io.reflection.app.client.part.linkaccount;
 
-import io.reflection.app.client.component.FormButton;
+import io.reflection.app.client.component.LoadingButton;
 import io.reflection.app.client.component.TextField;
 import io.reflection.app.client.component.PasswordField;
 import io.reflection.app.client.controller.LinkedAccountController;
@@ -58,7 +58,7 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	@UiField TextField vendorId;
 	private String vendorIdError;
 
-	@UiField FormButton linkAccountBtn;
+	@UiField LoadingButton linkAccountBtn;
 
 	private DataAccount dataAccount;
 
