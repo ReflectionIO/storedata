@@ -174,6 +174,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField ButtonElement dnwBtnMobile;
 	@UiField DivElement sincePanel;
 	@UiField HTMLPanel noDataPanel;
+	@UiField HTMLPanel waitingForDataPanel;
 
 	public ItemPage() {
 		initWidget(uiBinder.createAndBindUi(this));
