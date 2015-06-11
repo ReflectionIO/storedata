@@ -13,7 +13,8 @@
 		<c:TextField ui:field="emailFormField" labelText="Email" />
 		<c:PasswordField ui:field="passwordFormField" labelText="Password" />
 
-		<g:InlineHyperlink targetHistoryToken="{ForgotPasswordPageType.asTargetHistoryToken}" styleName="{STYLES_INSTANCE.reflectionMainStyle.formLink}">I've misplaced my
+		<g:InlineHyperlink ui:field="resetPasswordLink" targetHistoryToken="{ForgotPasswordPageType.asTargetHistoryToken}" styleName="{STYLES_INSTANCE.reflectionMainStyle.formLink}">I've misplaced
+			my
 			password</g:InlineHyperlink>
 
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.formFieldCheckboxList}">
