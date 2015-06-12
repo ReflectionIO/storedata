@@ -83,6 +83,8 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	private User mLoggedInUser = null;
 	private Session mSession = null;
 
+	private boolean isSessionRestored;
+
 	private SessionController() {
 		DefaultEventBus.get().addHandler(JsonServiceCallEventHandler.TYPE, this);
 	}
@@ -252,6 +254,8 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	 * Release the session and clear user data
 	 */
 	public void logout() {
+		isSessionRestored = false;
+
 		CoreService service = ServiceCreator.createCoreService();
 
 		final LogoutRequest input = new LogoutRequest();
@@ -585,12 +589,20 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 		});
 	}
 
+	public boolean isSessionRestored() {
+		return isSessionRestored;
+	}
+
 	public boolean restoreSession() {
+
 		boolean attemptRestore;
 
 		String token = Cookies.getCookie(COOKIE_KEY_TOKEN);
 
 		if (attemptRestore = (token != null && getSession() == null)) {
+
+			isSessionRestored = true;
+
 			CoreService core = ServiceCreator.createCoreService();
 
 			final LoginRequest input = new LoginRequest();

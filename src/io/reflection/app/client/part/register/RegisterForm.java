@@ -7,17 +7,16 @@
 //
 package io.reflection.app.client.part.register;
 
-import io.reflection.app.client.component.LoadingButton;
 import io.reflection.app.client.component.FormCheckbox;
-import io.reflection.app.client.component.TextField;
+import io.reflection.app.client.component.LoadingButton;
 import io.reflection.app.client.component.PasswordField;
+import io.reflection.app.client.component.TextField;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.UserController;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.page.PageType;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
@@ -58,7 +57,6 @@ public class RegisterForm extends Composite {
 	@UiField HTMLPanel termAndCondGroup;
 	@UiField FormCheckbox termAndCond;
 	private String termAndCondError;
-	@UiField ParagraphElement checkboxError;
 
 	@UiField LoadingButton registerBtn;
 
@@ -140,9 +138,9 @@ public class RegisterForm extends Composite {
 			}
 
 			if (termAndCondError != null) {
-				checkboxError.setInnerText(termAndCondError);
+				termAndCond.showError(termAndCondError);
 			} else {
-				checkboxError.setInnerText("");
+				termAndCond.hideError();
 			}
 		}
 	}
@@ -338,7 +336,7 @@ public class RegisterForm extends Composite {
 		email.hideNote();
 		password.hideNote();
 		confirmPassword.hideNote();
-		checkboxError.setInnerText("");
+		termAndCond.hideError();
 	}
 
 	public void focusFirstActiveField() {
