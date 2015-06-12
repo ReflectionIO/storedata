@@ -331,7 +331,7 @@ public class Header extends Composite implements NavigationEventHandler, Session
 	 */
 	@Override
 	public void userLoggedIn(User user, Session session) {
-
+		NavigationController.get().showNext();
 	}
 
 	/*

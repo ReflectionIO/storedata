@@ -7,17 +7,13 @@
 //
 package io.reflection.app.client.page;
 
-import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
-import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.NavigationEventHandler;
-import io.reflection.app.client.handler.user.SessionEventHandler;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.part.login.LoginForm;
 import io.reflection.app.client.res.Styles;
-import io.reflection.app.datatypes.shared.User;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
@@ -26,13 +22,12 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
-import com.willshex.gson.json.service.shared.Error;
 
 /**
  * @author billy1380
  * 
  */
-public class LoginPage extends Page implements NavigationEventHandler, SessionEventHandler {
+public class LoginPage extends Page implements NavigationEventHandler {
 
 	private static LoginPageUiBinder uiBinder = GWT.create(LoginPageUiBinder.class);
 
@@ -72,7 +67,6 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
 		super.onAttach();
 
 		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
-		register(DefaultEventBus.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this));
 
 	}
 
@@ -120,33 +114,6 @@ public class LoginPage extends Page implements NavigationEventHandler, SessionEv
 
 		}
 
-		}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.SessionEventHandler#userLoggedIn(io.reflection.app.shared.datatypes.User,
-	 * io.reflection.app.api.shared.datatypes.Session)
-	 */
-	@Override
-	public void userLoggedIn(User user, Session session) {
-		NavigationController.get().showNext();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.SessionEventHandler#userLoggedOut()
-	 */
-	@Override
-	public void userLoggedOut() {}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.SessionEventHandler#userLoginFailed(com.willshex.gson.json.service.shared.Error)
-	 */
-	@Override
-	public void userLoginFailed(Error error) {}
 
 }
