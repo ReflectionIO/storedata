@@ -28,9 +28,13 @@ import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProv
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
-import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
+import io.reflection.app.service.feedfetch.FeedFetchService;
 import io.reflection.app.shared.util.DataTypeHelper;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Types;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -53,7 +57,7 @@ import com.google.gson.JsonParser;
 import com.spacehopperstudios.utility.JsonUtils;
 import com.spacehopperstudios.utility.StringUtils;
 
-final class RankService implements IRankService {
+public class RankService implements IRankService {
 	private static final Logger LOG = Logger.getLogger(RankService.class.getName());
 	private final PersistentMap cache = PersistentMapFactory.createObjectify();
 
@@ -66,36 +70,23 @@ final class RankService implements IRankService {
 	public Rank getRank(Long id) throws DataAccessException {
 		Rank rank = null;
 
-		final String memcacheKey = getName() + ".id." + id;
-		final String jsonString = (String) cache.get(memcacheKey);
+		final IDatabaseService databaseService = DatabaseServiceProvider.provide();
+		final Connection rankConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
-		if (jsonString == null) {
-			final IDatabaseService databaseService = DatabaseServiceProvider.provide();
-			final Connection rankConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+		final String getRankQuery = String.format("SELECT r.*, rf.group_fetch_code, rf.fetch_date, rf.country, rf.category, rf.type, rf.platform "
+				+ " FROM `rank2` r inner join rank_fetch rf on (r.rank_fetch_id = rf.rank_fetch_id) WHERE r.`id`=%d LIMIT 1", id.longValue());
 
-			final String getRankQuery = String.format("SELECT * FROM `rank` WHERE `deleted`='n' AND `id`=%d LIMIT 1", id.longValue());
+		try {
+			rankConnection.connect();
+			rankConnection.executeQuery(getRankQuery);
 
-			try {
-				rankConnection.connect();
-				rankConnection.executeQuery(getRankQuery);
-
-				if (rankConnection.fetchNextRow()) {
-					rank = toRank(rankConnection);
-
-					// if (rank != null) {
-					// cal.setTime(new Date());
-					// cal.add(Calendar.DAY_OF_MONTH, 20);
-					// cache.put(memcacheKey, rank.toString(), cal.getTime());
-					// }
-				}
-			} finally {
-				if (rankConnection != null) {
-					rankConnection.disconnect();
-				}
+			if (rankConnection.fetchNextRow()) {
+				rank = toRank(rankConnection);
 			}
-		} else {
-			rank = new Rank();
-			rank.fromJson(jsonString);
+		} finally {
+			if (rankConnection != null) {
+				rankConnection.disconnect();
+			}
 		}
 
 		return rank;
@@ -112,33 +103,41 @@ final class RankService implements IRankService {
 		final Rank rank = new Rank();
 
 		rank.id = connection.getCurrentRowLong("id");
-		rank.created = connection.getCurrentRowDateTime("created");
-		rank.deleted = connection.getCurrentRowString("deleted");
+		rank.created = connection.getCurrentRowDateTime("fetch_date");
+		rank.deleted = "n";
 
-		rank.code = connection.getCurrentRowLong("code2");
+		rank.code = connection.getCurrentRowLong("group_fetch_code");
 		rank.country = stripslashes(connection.getCurrentRowString("country"));
 		rank.currency = stripslashes(connection.getCurrentRowString("currency"));
-		rank.date = connection.getCurrentRowDateTime("date");
-		rank.grossingPosition = connection.getCurrentRowInteger("grossingposition");
+		rank.date = connection.getCurrentRowDateTime("fetch_date");
 		rank.itemId = stripslashes(connection.getCurrentRowString("itemid"));
-		rank.position = connection.getCurrentRowInteger("position");
+
+		String type = connection.getCurrentRowString("type");
+
+		Integer position = connection.getCurrentRowInteger("position");
+
+		if ("GROSSING".equalsIgnoreCase(type)) {
+			rank.grossingPosition = position;
+		} else {
+			rank.position = position;
+		}
 
 		final Integer price = connection.getCurrentRowInteger("price");
 		if (price != null) {
 			rank.price = Float.valueOf(price.floatValue() / 100.0f);
 		}
 
-		rank.source = stripslashes(connection.getCurrentRowString("source"));
-		rank.type = stripslashes(connection.getCurrentRowString("type"));
+		rank.source = "ios";
+		rank.type = FeedFetchService.getOldTypeFromDBType(type, connection.getCurrentRowString("platform"));
 
-		final Long revenue = connection.getCurrentRowLong("revenue");
+		final Long revenue = connection.getCurrentRowLong("revenue_universal");
 		if (revenue != null) {
 			rank.revenue = Float.valueOf(revenue.floatValue() / 100.0f);
 		}
 
-		rank.downloads = connection.getCurrentRowInteger("downloads");
+		rank.downloads = connection.getCurrentRowInteger("downloads_universal");
 
-		final Long categoryId = connection.getCurrentRowLong("categoryid");
+		final Long categoryId = connection.getCurrentRowLong("category");
 		if (categoryId != null) {
 			(rank.category = new Category()).id(categoryId);
 		}
@@ -147,43 +146,10 @@ final class RankService implements IRankService {
 	}
 
 	@Override
-	public Rank addRank(Rank rank) throws DataAccessException {
-		Rank addedRank = null;
-
-		final String addeRankQuery = String
-				.format("INSERT INTO `rank` (`position`,`grossingposition`,`itemid`,`type`,`country`,`date`,`source`,`price`,`currency`,`categoryid`,`code2`,`revenue`,`downloads`) VALUES (%d,%d,'%s','%s','%s',FROM_UNIXTIME(%d),'%s',%d,'%s',%d,%d,%s,%s)",
-						rank.position.longValue(), rank.grossingPosition.longValue(), addslashes(rank.itemId), addslashes(rank.type), addslashes(rank.country),
-						rank.date.getTime() / 1000, addslashes(rank.source), (int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency),
-						rank.category.id.longValue(), rank.code.longValue(),
-						rank.revenue == null ? "NULL" : Integer.toString((int) (rank.revenue.floatValue() * 100.0f)), rank.downloads == null ? "NULL"
-								: rank.downloads.toString());
-
-		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
-
-		try {
-			rankConnection.connect();
-			rankConnection.executeQuery(addeRankQuery);
-
-			if (rankConnection.getAffectedRowCount() > 0) {
-				addedRank = getRank(Long.valueOf(rankConnection.getInsertedId()));
-
-				if (addedRank == null) {
-					addedRank = rank;
-					addedRank.id = Long.valueOf(rankConnection.getInsertedId());
-				}
-			}
-		} finally {
-			if (rankConnection != null) {
-				rankConnection.disconnect();
-			}
-		}
-
-		return addedRank;
-	}
-
-	@Override
 	public Rank updateRank(Rank rank) throws DataAccessException {
 		Rank updatedRank = null;
+
+		String updateQuery = "UPDATE rank2 set position=?, itemid=?, price=?, currency=?, revenue_universal=?, downloads_universal=? where id=?";
 
 		final String updateRankQuery = String
 				.format("UPDATE `rank` SET `position`=%d,`grossingposition`=%d,`itemid`='%s',`type`='%s',`country`='%s',`date`=FROM_UNIXTIME(%d),`source`='%s',`price`=%d,`currency`='%s',`categoryid`=%d,`code2`=%d,`revenue`=%s,`downloads`=%s WHERE `id`=%d;",
@@ -195,19 +161,39 @@ final class RankService implements IRankService {
 
 		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
-		try {
+		try (PreparedStatement pstat = rankConnection.getRealConnection().prepareStatement(updateQuery, Statement.NO_GENERATED_KEYS)) {
 			rankConnection.connect();
 			rankConnection.executeQuery(updateRankQuery);
 
 			if (rankConnection.getAffectedRowCount() > 0) {
-				final String memcacheKey = getName() + ".id." + rank.id;
-				cache.delete(memcacheKey);
-
 				updatedRank = getRank(rank.id);
 			} else {
 				updatedRank = rank;
 			}
 
+			pstat.setInt(1, rank.position == null ? rank.grossingPosition : rank.position);
+			pstat.setString(2, rank.itemId);
+			pstat.setFloat(3, rank.price);
+			pstat.setString(4, rank.currency);
+
+			if (rank.revenue == null) {
+				pstat.setNull(5, Types.BIGINT);
+			} else {
+				pstat.setLong(5, (long) (rank.revenue * 100));
+			}
+
+			if (rank.downloads == null) {
+				pstat.setNull(6, Types.INTEGER);
+			} else {
+				pstat.setInt(6, rank.downloads);
+			}
+
+			pstat.setLong(7, rank.id);
+
+			pstat.executeUpdate();
+
+		} catch (SQLException e) {
+			LOG.log(Level.SEVERE, "Exception occured while trying to update a rank", e);
 		} finally {
 			if (rankConnection != null) {
 				rankConnection.disconnect();
@@ -215,85 +201,6 @@ final class RankService implements IRankService {
 		}
 
 		return updatedRank;
-	}
-
-	@Override
-	public void deleteRank(Rank rank) {
-		throw new UnsupportedOperationException();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see io.reflection.app.service.rank.IRankService#getItemGatherCodeRank(java.lang.String, java.lang.String)
-	 */
-	@Override
-	public Rank getItemGatherCodeRank(String itemId, Long code, String store, String country, Collection<String> possibleTypes) throws DataAccessException {
-		Rank rank = null;
-
-		final String memcacheKey = getName() + ".itemgathercoderank." + itemId + country + "." + store + "." + StringUtils.join(possibleTypes, ".") + "."
-				+ code;
-		final String jsonString = (String) cache.get(memcacheKey);
-
-		if (jsonString == null) {
-
-			String typesQueryPart = null;
-			if (possibleTypes.size() == 1) {
-				typesQueryPart = String.format("`type`='%s'", possibleTypes.iterator().next());
-			} else {
-				typesQueryPart = "CAST(`type` AS BINARY) IN ('" + StringUtils.join(possibleTypes, "', '") + "')";
-			}
-
-			final String getItemGatherCodeRankQuery = String.format(
-					"SELECT * FROM `rank` WHERE `itemid`='%s' AND `code2`=%d AND `country`='%s' AND %s AND `deleted`='n' LIMIT 1", itemId, code.longValue(),
-					country, typesQueryPart);
-
-			final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
-
-			try {
-				rankConnection.connect();
-				rankConnection.executeQuery(getItemGatherCodeRankQuery);
-
-				if (rankConnection.fetchNextRow()) {
-					rank = toRank(rankConnection);
-
-					if (rank != null) {
-						// cal.setTime(new Date());
-						// cal.add(Calendar.DAY_OF_MONTH, 30);
-						// cache.put(memcacheKey, rank.toString(), cal.getTime());
-					}
-				}
-			} finally {
-				if (rankConnection != null) {
-					rankConnection.disconnect();
-				}
-			}
-		} else {
-			rank = new Rank();
-			rank.fromJson(jsonString);
-		}
-
-		return rank;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see io.reflection.app.service.rank.IRankService#getRanks(io.reflection.app.datatypes.Country, io.reflection.app.datatypes.Store,
-	 * io.reflection.app.datatypes.Category, java.lang.String, java.util.Date, java.util.Date, io.reflection.app.api.datatypes.Pager)
-	 */
-	@Override
-	public List<Rank> getRanks(Country country, Store store, Category category, String listType, Date after, Date before, Pager pager)
-			throws DataAccessException {
-		final List<Rank> ranks = new ArrayList<Rank>();
-
-		final Long code = FeedFetchServiceProvider.provide().getGatherCode(country, store, after, before);
-
-		if (code != null) {
-			ranks.addAll(getGatherCodeRanks(country, store, category, listType, code, pager, Boolean.FALSE));
-		}
-
-		return ranks;
 	}
 
 	/*
@@ -394,24 +301,6 @@ final class RankService implements IRankService {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see io.reflection.app.service.rank.IRankService#getRanksCount(java.lang.String, java.lang.String, java.lang.String, java.util.Date, java.util.Date)
-	 */
-	@Override
-	public Long getRanksCount(Country country, Store store, Category category, String listType, Date after, Date before) throws DataAccessException {
-		Long ranksCount = Long.valueOf(0);
-
-		final Long code = FeedFetchServiceProvider.provide().getGatherCode(country, store, after, before);
-
-		if (code != null) {
-			ranksCount = getGatherCodeRanksCount(country, store, category, listType, code);
-		}
-
-		return ranksCount;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
 	 * @see io.reflection.app.service.rank.IRankService#getItemHasGrossingRank(io.reflection.app.datatypes.Item)
 	 */
 	@Override
@@ -445,8 +334,10 @@ final class RankService implements IRankService {
 	 * @see io.reflection.app.service.rank.IRankService#addRanksBatch(java.util.Collection)
 	 */
 	@Override
-	public Long addRanksBatch(Collection<Rank> ranks) throws DataAccessException {
-		Long addedRankCount = Long.valueOf(0);
+	public Long addRanksBatch(Long feedfetchId, Collection<Rank> ranks) throws DataAccessException {
+		Long addedRankCount = 0L;
+
+		String insertQuery = "INSERT INTO rank2 (rank_fetch_id, position, itemid, price, currency, revenue_universal, downloads_universal) values (?,?,?,?,?,?,?)";
 
 		final StringBuffer addRanksBatchQuery = new StringBuffer();
 
@@ -469,13 +360,40 @@ final class RankService implements IRankService {
 
 		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
-		try {
+		try (PreparedStatement pstat = rankConnection.getRealConnection().prepareStatement(insertQuery, Statement.NO_GENERATED_KEYS)) {
 			rankConnection.connect();
+
+			for (Rank rank : ranks) {
+				pstat.setLong(1, feedfetchId);
+				pstat.setInt(2, rank.position == null ? rank.grossingPosition : rank.position);
+				pstat.setString(3, rank.itemId);
+				pstat.setFloat(4, rank.price);
+				pstat.setString(5, rank.currency);
+
+				if (rank.revenue == null) {
+					pstat.setNull(6, Types.BIGINT);
+				} else {
+					pstat.setLong(6, (long) (rank.revenue * 100));
+				}
+
+				if (rank.downloads == null) {
+					pstat.setNull(7, Types.INTEGER);
+				} else {
+					pstat.setInt(7, rank.downloads);
+				}
+
+				pstat.addBatch();
+			}
+
+			pstat.executeBatch();
+
 			rankConnection.executeQuery(addRanksBatchQuery.toString());
 
 			if (rankConnection.getAffectedRowCount() > 0) {
 				addedRankCount = Long.valueOf(rankConnection.getAffectedRowCount());
 			}
+		} catch (SQLException e) {
+			LOG.log(Level.SEVERE, "Exception occured while trying to execute a statement", e);
 		} finally {
 			if (rankConnection != null) {
 				rankConnection.disconnect();
@@ -488,104 +406,18 @@ final class RankService implements IRankService {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see io.reflection.app.service.rank.IRankService#getGatherCodeRanksCount(io.reflection.app.shared.datatypes.Country,
-	 * io.reflection.app.shared.datatypes.Store, io.reflection.app.shared.datatypes.Category, java.lang.String, java.lang.Long)
-	 */
-	@Override
-	public Long getGatherCodeRanksCount(Country country, Store store, Category category, String listType, Long code) throws DataAccessException {
-		Long ranksCount = null;
-
-		final Collector collector = CollectorFactory.getCollectorForStore(store.a3Code);
-		final boolean isGrossing = collector.isGrossing(listType);
-
-		final List<String> types = new ArrayList<String>();
-
-		if (isGrossing) {
-			types.addAll(collector.getCounterpartTypes(listType));
-		}
-
-		types.add(addslashes(listType));
-
-		final String memcacheKey = getName() + ".gathercoderankscount." + code.toString() + "." + country.a2Code + "." + store.a3Code + "."
-				+ category.id.toString() + "." + StringUtils.join(types, ".");
-		ranksCount = (Long) cache.get(memcacheKey);
-
-		if (ranksCount == null) {
-			String typesQueryPart = null;
-			if (types.size() == 1) {
-				typesQueryPart = String.format("`type`='%s'", types.get(0));
-			} else {
-				typesQueryPart = "CAST(`type` AS BINARY) IN ('" + StringUtils.join(types, "', '") + "')";
-			}
-
-			final String getRanksCountQuery = String.format(
-					"SELECT COUNT(1) AS `count` FROM `rank` WHERE %s AND `country`='%s' AND `categoryid`=%d AND `code2`=%d AND %s `deleted`='n'",
-					typesQueryPart, addslashes(country.a2Code), category.id.longValue(), code.longValue(), isGrossing ? "`grossingposition`<>0 AND" : "");
-
-			final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
-
-			try {
-				rankConnection.connect();
-				rankConnection.executeQuery(getRanksCountQuery);
-
-				if (rankConnection.fetchNextRow()) {
-					ranksCount = rankConnection.getCurrentRowLong("count");
-					cache.put(memcacheKey, ranksCount, DateTime.now(DateTimeZone.UTC).plusDays(20).toDate());
-				}
-
-			} finally {
-				if (rankConnection != null) {
-					rankConnection.disconnect();
-				}
-			}
-		}
-
-		return ranksCount;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see io.reflection.app.service.rank.IRankService#getCodeLastRankDate(java.lang.Long)
-	 */
-	@Override
-	public Date getCodeLastRankDate(Long code) throws DataAccessException {
-		Date date = null;
-
-		final String getCodeLastRankDateQuery = String.format("SELECT `date` FROM `rank` WHERE `code2`=%d ORDER BY `date` DESC LIMIT 1", code.longValue());
-
-		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
-
-		try {
-			rankConnection.connect();
-			rankConnection.executeQuery(getCodeLastRankDateQuery);
-
-			if (rankConnection.fetchNextRow()) {
-				date = rankConnection.getCurrentRowDateTime("date");
-			}
-		} finally {
-			if (rankConnection != null) {
-				rankConnection.disconnect();
-			}
-		}
-
-		return date;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
 	 * @see io.reflection.app.service.rank.IRankService#updateRanksBatch(java.util.Collection)
 	 */
 	@Override
 	public Long updateRanksBatch(Collection<Rank> updateRanks) throws DataAccessException {
 		long ranksCount = 0;
 
+		String updateQuery = "UPDATE rank2 set position=?, itemid=?, price=?, currency=?, revenue_universal=?, downloads_universal=? where id=?";
 		final String updateRanksBatchQueryFormat = "UPDATE `rank` SET `position`=%d,`grossingposition`=%d,`itemid`='%s',`type`='%s',`country`='%s',`date`=FROM_UNIXTIME(%d),`source`='%s',`price`=%d,`currency`='%s',`categoryid`=%d,`code2`=%d,`revenue`=%s,`downloads`=%s WHERE `id`=%d;";
 
 		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
-		try {
+		try (PreparedStatement pstat = rankConnection.getRealConnection().prepareStatement(updateQuery, Statement.NO_GENERATED_KEYS)) {
 			rankConnection.connect();
 
 			String updateRanksBatchQuery;
@@ -599,12 +431,32 @@ final class RankService implements IRankService {
 				rankConnection.executeQuery(updateRanksBatchQuery);
 
 				if (rankConnection.getAffectedRowCount() > 0) {
-					final String memcacheKey = getName() + ".id." + rank.id;
-					cache.delete(memcacheKey);
-
 					ranksCount++;
 				}
+
+				pstat.setInt(1, rank.position == null ? rank.grossingPosition : rank.position);
+				pstat.setString(2, rank.itemId);
+				pstat.setFloat(3, rank.price);
+				pstat.setString(4, rank.currency);
+
+				if (rank.revenue == null) {
+					pstat.setNull(5, Types.BIGINT);
+				} else {
+					pstat.setLong(5, (long) (rank.revenue * 100));
+				}
+
+				if (rank.downloads == null) {
+					pstat.setNull(6, Types.INTEGER);
+				} else {
+					pstat.setInt(6, rank.downloads);
+				}
+
+				pstat.setLong(7, rank.id);
+				pstat.addBatch();
 			}
+			pstat.executeUpdate();
+		} catch (SQLException e) {
+			LOG.log(Level.SEVERE, "Exception occured while trying to update a rank", e);
 		} finally {
 			if (rankConnection != null) {
 				rankConnection.disconnect();
@@ -621,194 +473,73 @@ final class RankService implements IRankService {
 	 * io.reflection.app.shared.datatypes.Category java.lang.String, java.lang.Long, io.reflection.app.api.shared.datatypes.Pager, java.lang.Boolean)
 	 */
 	@Override
-	public List<Rank> getGatherCodeRanks(Country country, Store store, Category category, String listType, Long code, Pager pager, Boolean ignoreGrossingRank)
-			throws DataAccessException {
+	public List<Rank> getGatherCodeRanks(Country country, Category category, String listType, Long code) throws DataAccessException {
 		if (LOG.isLoggable(GaeLevel.DEBUG)) {
 			LOG.log(GaeLevel.DEBUG,
 					String.format("getGatherCodeRanks called for country: %s, category: %s, listType: %s, code2: %d", country, category, listType, code));
 		}
 
-		final List<Rank> ranks = new ArrayList<Rank>();
+		List<Rank> ranks = new ArrayList<Rank>(200);
+
+		final String memcacheKey = getName() + ".getGatherCodeRanks." + code + "." + country.a2Code + "." + category.id.toString() + "." + listType;
+
+		final String selectQuery = "SELECT r.*, rf.group_fetch_code, rf.fetch_date, rf.country, rf.category, rf.type, rf.platform "
+				+ " FROM `rank2` r inner join rank_fetch rf on (r.rank_fetch_id = rf.rank_fetch_id) WHERE "
+				+ " rf.rank_fetch_id = (SELECT rank_fetch_id FROM rank_fetch WHERE group_fetch_code = ? AND country=? AND category=? AND type=? AND platform=? LIMIT 1)";
 
 		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
-		final Collector collector = CollectorFactory.getCollectorForStore(store.a3Code);
-		final boolean isGrossing = collector.isGrossing(listType);
+		final String ranksString = (String) cache.get(memcacheKey);
 
-		if (isGrossing) {
-			pager.sortBy = "grossingposition";
-		} else {
-			pager.sortBy = "position";
-		}
+		if (ranksString == null) {
+			try (PreparedStatement pstat = rankConnection.getRealConnection().prepareStatement(selectQuery, Statement.NO_GENERATED_KEYS)) {
+				rankConnection.connect();
 
-		if (pager.sortDirection == null) {
-			pager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
-		}
+				int paramCount = 1;
+				pstat.setLong(paramCount++, code);
+				pstat.setString(paramCount++, country.a2Code);
+				pstat.setLong(paramCount++, category.id);
+				pstat.setString(paramCount++, FeedFetchService.getDBTypeForFeedFetchType(listType));
+				pstat.setString(paramCount++, FeedFetchService.getDBPlatformForFeedFetchType(listType));
 
-		final List<String> types = new ArrayList<String>();
+				rankConnection.executePreparedStatement(pstat);
 
-		if (isGrossing) {
-			types.addAll(collector.getCounterpartTypes(listType));
-		}
-
-		types.add(addslashes(listType));
-
-		if (code != null) {
-			final String memcacheKey = getName() + ".gathercoderanks." + code.toString() + "." + country.a2Code + "." + store.a3Code + "."
-					+ category.id.toString() + "." + StringUtils.join(types, ".") + "." + pager.start + "." + pager.count + "." + pager.sortDirection + "."
-					+ pager.sortBy;
-
-			final String ranksString = (String) cache.get(memcacheKey);
-
-			if (LOG.isLoggable(GaeLevel.DEBUG)) {
-				LOG.log(GaeLevel.DEBUG,
-						String.format("Checked memcache if these ranks have already been cached (%B) with key: %s", ranksString != null, memcacheKey));
-			}
-
-			if (ranksString == null) {
-				String typesQueryPart = null;
-				if (types.size() == 1) {
-					typesQueryPart = String.format("`type`='%s'", types.get(0));
-				} else {
-					typesQueryPart = "`type` IN ('" + StringUtils.join(types, "', '") + "')";
-				}
-
-				final String getCountryStoreTypeRanksQuery = String
-						.format("SELECT * FROM `rank` WHERE %s AND `country`='%s' AND `categoryid`=%d AND `code2`=%d AND %s `deleted`='n' ORDER BY `%s` %s LIMIT %d,%d",
-								typesQueryPart, addslashes(country.a2Code), category.id.longValue(), code.longValue(),
-								isGrossing || !ignoreGrossingRank.booleanValue() ? "`grossingposition`<>0 AND" : "", pager.sortBy,
-										pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start, pager.count);
-
-				if (LOG.isLoggable(GaeLevel.DEBUG)) {
-					LOG.log(GaeLevel.DEBUG, "Executing query to fetch ranks");
-				}
-				try {
-					rankConnection.connect();
-					rankConnection.executeQuery(getCountryStoreTypeRanksQuery);
-
-					while (rankConnection.fetchNextRow()) {
-						final Rank rank = toRank(rankConnection);
-
-						if (rank != null) {
-							ranks.add(rank);
-						}
-					}
-
-					if (ranks.size() > 0) {
-						final JsonArray jsonArray = new JsonArray();
-						for (final Rank rank : ranks) {
-							jsonArray.add(rank.toJson());
-						}
-
-						try {
-							cache.put(memcacheKey, JsonUtils.cleanJson(jsonArray.toString()), DateTime.now(DateTimeZone.UTC).plusDays(20).toDate());
-						} catch (final Exception e) {
-							LOG.log(Level.WARNING, "Exception occured while trying to store ranks into the cache with key: " + memcacheKey, e);
-						}
-					}
-				} catch (Exception e) {
-					LOG.log(Level.WARNING, "Exception occured while trying to load ranks from DB and process them.", e);
-				} finally {
-					if (rankConnection != null) {
-						rankConnection.disconnect();
-					}
-				}
-			} else {
-				final JsonArray parsed = (JsonArray) new JsonParser().parse(ranksString);
-				Rank rank;
-				for (final JsonElement jsonElement : parsed) {
-					rank = new Rank();
-					rank.fromJson(jsonElement.getAsJsonObject());
+				while (rankConnection.fetchNextRow()) {
+					Rank rank = toRank(rankConnection);
 					ranks.add(rank);
 				}
+			} catch (SQLException e) {
+				LOG.log(Level.SEVERE, "Exception occured while trying to gather code ranks", e);
+			} finally {
+				if (rankConnection != null) {
+					rankConnection.disconnect();
+				}
+			}
+
+			if (ranks.size() > 0) {
+				final JsonArray jsonArray = new JsonArray();
+				for (final Rank rank : ranks) {
+					jsonArray.add(rank.toJson());
+				}
+
+				try {
+					cache.put(memcacheKey, JsonUtils.cleanJson(jsonArray.toString()), DateTime.now(DateTimeZone.UTC).plusDays(20).toDate());
+				} catch (final Exception e) {
+					LOG.log(Level.WARNING, "Exception occured while trying to store ranks into the cache with key: " + memcacheKey, e);
+				}
+			}
+		} else {
+			final JsonArray parsed = (JsonArray) new JsonParser().parse(ranksString);
+			Rank rank;
+			for (final JsonElement jsonElement : parsed) {
+				rank = new Rank();
+				rank.fromJson(jsonElement.getAsJsonObject());
+				ranks.add(rank);
 			}
 		}
 
 		return ranks;
 	}
-
-	// /*
-	// * (non-Javadoc)
-	// *
-	// * @see io.reflection.app.service.rank.IRankService#getAllRanks(io.reflection.app.datatypes.shared.Country, io.reflection.app.datatypes.shared.Store,
-	// * io.reflection.app.datatypes.shared.Category, java.lang.String, java.util.Date, java.util.Date)
-	// */
-	// @Override
-	// public List<Rank> getAllRanks(Country country, Store store, Category category, String listType, Date start, Date end) throws DataAccessException {
-	// List<Rank> ranks = new ArrayList<Rank>();
-	//
-	// Collector collector = CollectorFactory.getCollectorForStore(store.a3Code);
-	// boolean isGrossing = collector.isGrossing(listType);
-	//
-	// List<String> types = new ArrayList<String>();
-	//
-	// if (isGrossing) {
-	// types.addAll(collector.getCounterpartTypes(listType));
-	// }
-	//
-	// types.add(addslashes(listType));
-	//
-	// String memcacheKey = getName() + ".allranks." + country.a2Code + "." + store.a3Code + "." + category.id.toString() + "." + StringUtils.join(types, ".")
-	// + "." + (start == null ? "none" : start.getTime()) + "." + (end == null ? "none" : end.getTime());
-	// String allRanksString = (String) cache.get(memcacheKey);
-	//
-	// if (allRanksString == null) {
-	// String typesQueryPart = null;
-	// if (types.size() == 1) {
-	// typesQueryPart = String.format("CAST(`type` AS BINARY)=CAST('%s' AS BINARY)", types.get(0));
-	// } else {
-	// typesQueryPart = "CAST(`type` AS BINARY) IN (CAST('" + StringUtils.join(types, "' AS BINARY),CAST('") + "' AS BINARY))";
-	// }
-	//
-	// Long code = FeedFetchServiceProvider.provide().getGatherCode(country, store, start, end);
-	//
-	// if (code != null) {
-	// Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
-	// String getCountryStoreTypeRanksQuery = String
-	// .format("SELECT * FROM `rank` WHERE %s AND CAST(`country` AS BINARY)=CAST('%s' AS BINARY) AND CAST(`source` AS BINARY)=CAST('%s' AS BINARY) AND `categoryid`=%d AND `code2`=%d AND `deleted`='n'",
-	// typesQueryPart, addslashes(country.a2Code), addslashes(store.a3Code), category.id.longValue(), code.longValue());
-	//
-	// try {
-	// rankConnection.connect();
-	// rankConnection.executeQuery(getCountryStoreTypeRanksQuery);
-	//
-	// while (rankConnection.fetchNextRow()) {
-	// Rank rank = toRank(rankConnection);
-	//
-	// if (rank != null) {
-	// ranks.add(rank);
-	// }
-	// }
-	//
-	// if (ranks.size() > 0) {
-	// JsonArray jsonArray = new JsonArray();
-	// for (Rank rank : ranks) {
-	// jsonArray.add(rank.toJson());
-	// }
-	//
-	// cal.setTime(new Date());
-	// cal.add(Calendar.DAY_OF_MONTH, 20);
-	// cache.put(memcacheKey, JsonUtils.cleanJson(jsonArray.toString()), cal.getTime());
-	// }
-	//
-	// } finally {
-	// if (rankConnection != null) {
-	// rankConnection.disconnect();
-	// }
-	// }
-	// }
-	// } else {
-	// JsonArray parsed = (JsonArray) new JsonParser().parse(allRanksString);
-	// Rank rank;
-	// for (JsonElement jsonElement : parsed) {
-	// rank = new Rank();
-	// rank.fromJson(jsonElement.getAsJsonObject());
-	// ranks.add(rank);
-	// }
-	// }
-	//
-	// return ranks;
-	// }
 
 	/*
 	 * (non-Javadoc)
@@ -842,61 +573,6 @@ final class RankService implements IRankService {
 		}
 
 		return rankIds;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see io.reflection.app.service.rank.IRankService#getRanksCount()
-	 */
-	@Override
-	public List<Rank> getRanksCount() throws DataAccessException {
-		throw new UnsupportedOperationException("Ranks is an exteremely large table and it rows should not be counted like this");
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see io.reflection.app.service.rank.IRankService#getRanks(io.reflection.app.api.shared.datatypes.Pager)
-	 */
-	@Override
-	public List<Rank> getRanks(Pager pager) throws DataAccessException {
-		final List<Rank> ranks = new ArrayList<Rank>();
-
-		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
-
-		if (pager.sortDirection == null) {
-			pager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
-		}
-
-		switch (pager.sortBy) {
-		case "id":
-		default:
-			pager.sortBy = "id";
-			break;
-		}
-
-		final String getRanksQuery = String.format("SELECT * FROM `rank` WHERE `deleted`='n' ORDER BY `%s` %s LIMIT %d, %d", pager.sortBy,
-				pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start, pager.count);
-
-		try {
-			rankConnection.connect();
-			rankConnection.executeQuery(getRanksQuery);
-
-			while (rankConnection.fetchNextRow()) {
-				final Rank rank = toRank(rankConnection);
-
-				if (rank != null) {
-					ranks.add(rank);
-				}
-			}
-		} finally {
-			if (rankConnection != null) {
-				rankConnection.disconnect();
-			}
-		}
-
-		return ranks;
 	}
 
 	/*
@@ -940,8 +616,8 @@ final class RankService implements IRankService {
 	 * io.reflection.app.datatypes.shared.FormType, java.util.Date, java.util.Date)
 	 */
 	@Override
-	public List<Rank> getSaleSummaryAndRankForItemAndFormType(String internalId, Country country, Long categoryId, FormType form, Date start, Date end, Pager pager)
-			throws DataAccessException {
+	public List<Rank> getSaleSummaryAndRankForItemAndFormType(String internalId, Country country, Long categoryId, FormType form, Date start, Date end,
+			Pager pager) throws DataAccessException {
 		ArrayList<Rank> ranks = new ArrayList<Rank>();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -950,14 +626,15 @@ final class RankService implements IRankService {
 		String platform = form == FormType.FormTypeOther ? "PHONE" : "TABLET";
 		String sortDirection = pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC";
 
-		final String getRanksQuery = String.format("SELECT  s.date, s.total_revenue as revenue, s.total_download_and_updates as downloads, "
-				+ "    max(IF(rf.type='FREE' or rf.type='PAID', r.position, NULL)) as position, "
-				+ "    max(IF(rf.type='GROSSING', r.position, NULL)) as grossing_position, max(r.currency) as currency FROM sale_summary s USE INDEX (idx_item_search) "
-				+ "    LEFT JOIN rank_fetch rf USE INDEX (idx_rank_fetch_search) ON (s.date=rf.fetch_date and s.country=rf.country and rf.category=%d and rf.platform='%s') "
-				+ "    LEFT JOIN rank2 r ON (r.rank_fetch_id=rf.rank_fetch_id and r.itemid=s.itemid) "
-				+ "		WHERE s.date BETWEEN '%s' AND '%s' AND s.itemid = %s AND s.country = '%s' GROUP BY s.date ORDER BY s.%s %s LIMIT %d, %d", categoryId,
-				platform, dateFormat.format(start), dateFormat.format(end), internalId, country.a2Code, pager.sortBy, sortDirection,
-				pager.start, pager.count);
+		final String getRanksQuery = String
+				.format("SELECT  s.date, s.total_revenue as revenue, s.total_download_and_updates as downloads, "
+						+ "    max(IF(rf.type='FREE' or rf.type='PAID', r.position, NULL)) as position, "
+						+ "    max(IF(rf.type='GROSSING', r.position, NULL)) as grossing_position, max(r.currency) as currency FROM sale_summary s USE INDEX (idx_item_search) "
+						+ "    LEFT JOIN rank_fetch rf USE INDEX (idx_rank_fetch_search) ON (s.date=rf.fetch_date and s.country=rf.country and rf.category=%d and rf.platform='%s') "
+						+ "    LEFT JOIN rank2 r ON (r.rank_fetch_id=rf.rank_fetch_id and r.itemid=s.itemid) "
+						+ "		WHERE s.date BETWEEN '%s' AND '%s' AND s.itemid = %s AND s.country = '%s' GROUP BY s.date ORDER BY s.%s %s LIMIT %d, %d",
+						categoryId, platform, dateFormat.format(start), dateFormat.format(end), internalId, country.a2Code, pager.sortBy, sortDirection,
+						pager.start, pager.count);
 
 		try {
 			rankConnection.connect();
@@ -1007,10 +684,9 @@ final class RankService implements IRankService {
 		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
 		final String getRanksQuery = String.format("SELECT s.itemid, s.price, SUM(s.total_revenue) as revenue, SUM(s.total_download_and_updates) as downloads "
-				+ "   FROM sale_summary s "
- + "		WHERE s.date BETWEEN '%s' AND '%s' AND s.dataaccountid = %s AND s.country = '%s' GROUP BY s.itemid",
-				dateFormat.format(start), dateFormat.format(end), dataaccountId, country.a2Code);
+				+ "   FROM sale_summary s WHERE s.date BETWEEN '%s' AND '%s' AND s.dataaccountid = %s AND s.country = '%s' GROUP BY s.itemid",
 
+				dateFormat.format(start), dateFormat.format(end), dataaccountId, country.a2Code);
 		try {
 			rankConnection.connect();
 			rankConnection.executeQuery(getRanksQuery);
@@ -1044,6 +720,100 @@ final class RankService implements IRankService {
 		}
 
 		return ranks;
+	}
 
+	@Override
+	public List<Rank> getRanks(Country country, Category category, String listType, Date onDate) throws DataAccessException {
+		List<Rank> ranks = new ArrayList<Rank>(200);
+
+		final String memcacheKey = getName() + ".getRanks." + country.a2Code + "." + category.id.toString() + "." + listType + "." + onDate.getTime();
+
+		final String selectQuery = "SELECT r.*, rf.group_fetch_code, rf.fetch_date, rf.country, rf.category, rf.type, rf.platform "
+				+ " FROM `rank2` r inner join rank_fetch rf on (r.rank_fetch_id = rf.rank_fetch_id) WHERE "
+				+ " rf.rank_fetch_id = (SELECT rank_fetch_id FROM rank_fetch WHERE country=? AND category=? AND type=? AND platform=? AND fetch_date = ? order by fetch_time desc LIMIT 1)";
+
+		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+
+		final String ranksString = (String) cache.get(memcacheKey);
+
+		if (ranksString == null) {
+			try (PreparedStatement pstat = rankConnection.getRealConnection().prepareStatement(selectQuery, Statement.NO_GENERATED_KEYS)) {
+				rankConnection.connect();
+
+				int paramCount = 1;
+				pstat.setString(paramCount++, country.a2Code);
+				pstat.setLong(paramCount++, category.id);
+				pstat.setString(paramCount++, FeedFetchService.getDBTypeForFeedFetchType(listType));
+				pstat.setString(paramCount++, FeedFetchService.getDBPlatformForFeedFetchType(listType));
+				pstat.setDate(paramCount++, new java.sql.Date(onDate.getTime()));
+
+				rankConnection.executePreparedStatement(pstat);
+
+				while (rankConnection.fetchNextRow()) {
+					Rank rank = toRank(rankConnection);
+					ranks.add(rank);
+				}
+			} catch (SQLException e) {
+				LOG.log(Level.SEVERE, "Exception occured while trying to get ranks", e);
+			} finally {
+				if (rankConnection != null) {
+					rankConnection.disconnect();
+				}
+			}
+
+			if (ranks.size() > 0) {
+				final JsonArray jsonArray = new JsonArray();
+				for (final Rank rank : ranks) {
+					jsonArray.add(rank.toJson());
+				}
+
+				try {
+					cache.put(memcacheKey, JsonUtils.cleanJson(jsonArray.toString()), DateTime.now(DateTimeZone.UTC).plusDays(20).toDate());
+				} catch (final Exception e) {
+					LOG.log(Level.WARNING, "Exception occured while trying to store ranks into the cache with key: " + memcacheKey, e);
+				}
+			}
+		} else {
+			final JsonArray parsed = (JsonArray) new JsonParser().parse(ranksString);
+			Rank rank;
+			for (final JsonElement jsonElement : parsed) {
+				rank = new Rank();
+				rank.fromJson(jsonElement.getAsJsonObject());
+				ranks.add(rank);
+			}
+		}
+
+		return ranks;
+	}
+
+	@Override
+	public Long getRanksCount(Country country, Category category, String listType, Date onDate) throws DataAccessException {
+		final String selectQuery = "SELECT count(r.id) as count FROM `rank2` r inner join rank_fetch rf on (r.rank_fetch_id = rf.rank_fetch_id) WHERE "
+				+ " rf.rank_fetch_id = (SELECT rank_fetch_id FROM rank_fetch WHERE country=? AND category=? AND type=? AND platform=? AND fetch_date = ? order by fetch_time desc LIMIT 1)";
+
+		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+
+		try (PreparedStatement pstat = rankConnection.getRealConnection().prepareStatement(selectQuery, Statement.NO_GENERATED_KEYS)) {
+			rankConnection.connect();
+
+			int paramCount = 1;
+			pstat.setString(paramCount++, country.a2Code);
+			pstat.setLong(paramCount++, category.id);
+			pstat.setString(paramCount++, FeedFetchService.getDBTypeForFeedFetchType(listType));
+			pstat.setString(paramCount++, FeedFetchService.getDBPlatformForFeedFetchType(listType));
+			pstat.setDate(paramCount++, new java.sql.Date(onDate.getTime()));
+
+			rankConnection.executePreparedStatement(pstat);
+
+			if (rankConnection.fetchNextRow()) return rankConnection.getCurrentRowLong("count");
+		} catch (SQLException e) {
+			LOG.log(Level.SEVERE, "Exception occured while trying to count ranks", e);
+		} finally {
+			if (rankConnection != null) {
+				rankConnection.disconnect();
+			}
+		}
+
+		return 0L;
 	}
 }

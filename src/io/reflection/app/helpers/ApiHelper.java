@@ -24,7 +24,7 @@ import org.joda.time.LocalDate;
 
 /**
  * @author billy1380
- * 
+ *
  */
 public class ApiHelper {
 
@@ -50,7 +50,7 @@ public class ApiHelper {
 
 	/**
 	 * Get all list types uses the form type in the list name and returns the names of all the lists (3) for a specified store
-	 * 
+	 *
 	 * @param store
 	 * @param listType
 	 * @return
@@ -59,7 +59,7 @@ public class ApiHelper {
 		List<String> listTypes = null;
 
 		if (DataTypeHelper.IOS_STORE_A3.equalsIgnoreCase(store.a3Code)) {
-			if (type != null && type.contains("ipad") || type.toLowerCase().contains("ipad")) {
+			if (type != null && type.toLowerCase().contains("ipad")) {
 				listTypes = Arrays.asList(TOP_GROSSING_IPAD_APPS, TOP_FREE_IPAD_APPS, TOP_PAID_IPAD_APPS);
 			} else {
 				listTypes = Arrays.asList(TOP_GROSSING_APPS, TOP_FREE_APPS, TOP_PAID_APPS);

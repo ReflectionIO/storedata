@@ -130,7 +130,7 @@ public class PredictorIOS implements Predictor {
 
 		final Category category = CategoryServiceProvider.provide().getAllCategory(s);
 
-		final List<Rank> foundRanks = RankServiceProvider.provide().getGatherCodeRanks(c, s, category, type, code, p, Boolean.TRUE);
+		final List<Rank> foundRanks = RankServiceProvider.provide().getGatherCodeRanks(c, category, type, code);
 		final Map<String, Item> lookup = lookupItemsForRanks(foundRanks);
 
 		ItemRankArchiver archiver = null;
@@ -371,8 +371,8 @@ public class PredictorIOS implements Predictor {
 					simpleModelRun.feedFetch.type, simpleModelRun.feedFetch.code));
 		}
 
-		final List<Rank> foundRanks = rankService.getGatherCodeRanks(c, s, simpleModelRun.feedFetch.category, simpleModelRun.feedFetch.type,
-				simpleModelRun.feedFetch.code, PagerHelper.createInfinitePager(), Boolean.TRUE);
+		final List<Rank> foundRanks = rankService.getGatherCodeRanks(c, simpleModelRun.feedFetch.category, simpleModelRun.feedFetch.type,
+				simpleModelRun.feedFetch.code);
 
 		final Map<String, Item> lookup = lookupItemsForRanks(foundRanks);
 

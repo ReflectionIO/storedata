@@ -37,7 +37,7 @@ import java.util.logging.Logger;
 
 import com.google.appengine.api.utils.SystemProperty;
 
-final class FeedFetchService implements IFeedFetchService {
+public class FeedFetchService implements IFeedFetchService {
 	private static final Logger LOG = Logger.getLogger(FeedFetchService.class.getName());
 
 	// private Calendar cal = Calendar.getInstance();
@@ -612,7 +612,7 @@ final class FeedFetchService implements IFeedFetchService {
 		else return "PHONE";
 	}
 
-	private String getOldTypeFromDBType(String type, String platform) {
+	public static String getOldTypeFromDBType(String type, String platform) {
 		if ("PHONE".equalsIgnoreCase(platform)) {
 			if ("FREE".equalsIgnoreCase(type)) return "topfreeapplications";
 			else if ("PAID".equalsIgnoreCase(type)) return "toppaidapplications";
