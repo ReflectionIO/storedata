@@ -126,7 +126,16 @@ public class Selector extends Composite implements HasChangeHandlers {
 	public void setLabelText(String text) {
 		selectElem.getFirstChildElement().setInnerText(text);
 		spanSelectLabel.setInnerText(text);
-		spanOptionLabel.setInnerText(text);
+		if ("".equals(selectElem.getAttribute("data-title"))) {
+			spanOptionLabel.setInnerText(text);
+		}
+	}
+
+	public void setDropdownTitle(String text) {
+		if (isFilter) {
+			selectElem.setAttribute("data-title", text);
+			spanOptionLabel.setInnerText(text);
+		}
 	}
 
 	public void setOverlay(boolean overlaid) {
