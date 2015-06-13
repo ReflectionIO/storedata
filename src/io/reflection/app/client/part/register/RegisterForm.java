@@ -15,8 +15,11 @@ import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.UserController;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.page.PageType;
+import io.reflection.app.client.res.Styles;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
@@ -64,11 +67,15 @@ public class RegisterForm extends Composite {
 
 	private String actionCode;
 
+	private HeadingElement registerTitle = Document.get().createHElement(2);
+
 	public RegisterForm() {
 		initWidget(uiBinder.createAndBindUi(this));
 		this.getElement().setAttribute("autocomplete", "off");
 		termAndCond.setHTML("I agree with the <a href='" + PageType.TermsPageType.asHref().asString() + "' target='_blank'>terms and conditions</a>");
-
+		registerTitle.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().headingStyleHeadingFive() + " "
+				+ Styles.STYLES_INSTANCE.reflectionMainStyle().accountFormHeading());
+		registerTitle.setInnerText("Create your password to get started");
 	}
 
 	/*
@@ -364,6 +371,7 @@ public class RegisterForm extends Composite {
 			passwordGroup.setVisible(false);
 			termAndCondGroup.setVisible(false);
 			registerBtn.setText("Apply Now");
+			registerTitle.removeFromParent();
 		} else {
 			if (!SessionController.get().isLoggedInUserAdmin()) {
 				forename.setVisible(false);
@@ -374,6 +382,9 @@ public class RegisterForm extends Composite {
 			passwordGroup.setVisible(true);
 			termAndCondGroup.setVisible(true);
 			registerBtn.setText("Continue");
+			if (!getElement().isOrHasChild(registerTitle)) {
+				getElement().insertFirst(registerTitle);
+			}
 		}
 	}
 
