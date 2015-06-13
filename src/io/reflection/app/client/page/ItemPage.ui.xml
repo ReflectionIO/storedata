@@ -161,13 +161,13 @@
 					<a ui:field="revealContentFilter" href="#"
 						class="{STYLES_INSTANCE.reflectionMainStyle.showHideLink} {STYLES_INSTANCE.reflectionMainStyle.refIconAfter} {STYLES_INSTANCE.reflectionMainStyle.refIconAfterAngleDown}">Show / Hide Options</a>
 					<div class="{STYLES_INSTANCE.reflectionMainStyle.revealElement}">
-						<c:FormSwitch ui:field="accuracySwitch" label="Accuracy" />
-						<c:FormSwitch ui:field="eventsSwitch" label="Events" />
-						<c:FormSwitch ui:field="overlayRevenuesSwitch" label="Overlay Revenues" />
-						<c:FormSwitch ui:field="overlayDownloadsSwitch" label="Overlay Downloads" />
-						<c:FormSwitch ui:field="cumulativeChartSwitch" label="Cumulative Chart" />
-						<c:FormSwitch ui:field="oneMMovingAverageSwitch" label="1M Moving Average" />
-						<c:FormSwitch ui:field="overlayAppsSwitch" label="Overlay Apps (0/5)" />
+						<c:FilterSwitch ui:field="accuracySwitch" label="Accuracy" />
+						<c:FilterSwitch ui:field="eventsSwitch" label="Events" />
+						<c:FilterSwitch ui:field="overlayRevenuesSwitch" label="Overlay Revenues" />
+						<c:FilterSwitch ui:field="overlayDownloadsSwitch" label="Overlay Downloads" />
+						<c:FilterSwitch ui:field="cumulativeChartSwitch" label="Cumulative Chart" />
+						<c:FilterSwitch ui:field="oneMMovingAverageSwitch" label="1M Moving Average" />
+						<c:FilterSwitch ui:field="overlayAppsSwitch" label="Overlay Apps (0/5)" />
 					</div>
 				</div>
 			</form>

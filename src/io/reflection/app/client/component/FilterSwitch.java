@@ -33,11 +33,11 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Stefano Capuzzi (capuzzistefano)
  *
  */
-public class FormSwitch extends Composite implements HasValue<Boolean> {
+public class FilterSwitch extends Composite implements HasValue<Boolean> {
 
-	private static FormSwitchUiBinder uiBinder = GWT.create(FormSwitchUiBinder.class);
+	private static FilterSwitchUiBinder uiBinder = GWT.create(FilterSwitchUiBinder.class);
 
-	interface FormSwitchUiBinder extends UiBinder<Widget, FormSwitch> {}
+	interface FilterSwitchUiBinder extends UiBinder<Widget, FilterSwitch> {}
 
 	@UiField SpanElement label;
 	@UiField DivElement checkBoxContainer;
@@ -45,7 +45,7 @@ public class FormSwitch extends Composite implements HasValue<Boolean> {
 	private final String checkBoxId = HTMLPanel.createUniqueId();
 	private LabelElement iconSwitchLabel;
 
-	public FormSwitch(boolean isSmall) {
+	public FilterSwitch(boolean isSmall) {
 
 		initWidget(uiBinder.createAndBindUi(this));
 
@@ -70,7 +70,7 @@ public class FormSwitch extends Composite implements HasValue<Boolean> {
 		DOM.sinkEvents(checkBoxContainer, Event.ONCLICK);
 		DOM.setEventListener(checkBoxContainer, new EventListener() {
 			public void onBrowserEvent(Event event) {
-				if (Event.ONCLICK == event.getTypeInt()) {
+				if (Event.ONCLICK == event.getTypeInt() && checkBox.isEnabled()) {
 					setValue(!getValue(), true);
 				}
 			}
@@ -78,12 +78,18 @@ public class FormSwitch extends Composite implements HasValue<Boolean> {
 
 	}
 
-	public FormSwitch() {
+	public FilterSwitch() {
 		this(false);
 	}
 
 	public void setLabel(String text) {
 		label.setInnerText(text);
+	}
+
+	public void setEnabled(boolean enabled) {
+		setValue(Boolean.FALSE, true);
+		setStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().filterSwitchDisabled(), !enabled);
+		checkBox.setEnabled(enabled);
 	}
 
 	/*
