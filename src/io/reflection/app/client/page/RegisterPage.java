@@ -33,6 +33,8 @@ import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -62,7 +64,8 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 
 	@UiField LIElement tabContentRegister;
 	@UiField DivElement submittedSuccessPanel;
-//	@UiField InlineHyperlink continueToLeaderboard;
+	// @UiField InlineHyperlink continueToLeaderboard;
+	@UiField UListElement tabsContainer;
 
 	private String username;
 
@@ -184,6 +187,7 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 
 	private void setRequestInvite(boolean requestInvite) {
 		registerForm.setRequestInvite(requestInvite);
+		tabsContainer.getStyle().setDisplay(requestInvite ? Display.BLOCK : Display.NONE);
 		setApply(requestInvite);
 	}
 

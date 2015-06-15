@@ -128,7 +128,7 @@
 			</g:HTMLPanel>
 		</div>
 		<div ui:field="accountFormContainer" class="{STYLES_INSTANCE.reflectionMainStyle.accountFormContainer}">
-			<ul class="{STYLES_INSTANCE.reflectionMainStyle.tabsContainer}">
+			<ul ui:field="tabsContainer" class="{STYLES_INSTANCE.reflectionMainStyle.tabsContainer}">
 				<li
 					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneHalf} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab} {STYLES_INSTANCE.reflectionMainStyle.isActive}">
 					<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>

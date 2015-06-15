@@ -24,7 +24,7 @@ import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.ImageAndTextCell;
 import io.reflection.app.client.cell.content.ConcreteImageAndText;
 import io.reflection.app.client.component.DateSelector;
-import io.reflection.app.client.component.FormSwitch;
+import io.reflection.app.client.component.FilterSwitch;
 import io.reflection.app.client.component.Selector;
 import io.reflection.app.client.component.ToggleRadioButton;
 import io.reflection.app.client.controller.FilterController;
@@ -39,6 +39,7 @@ import io.reflection.app.client.controller.StoreController;
 import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.handler.TogglePanelEventHandler;
+import io.reflection.app.client.helper.AnimationHelper;
 import io.reflection.app.client.helper.ColorHelper;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormHelper;
@@ -55,7 +56,6 @@ import io.reflection.app.client.part.datatypes.AppRanking;
 import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.client.part.datatypes.ItemRevenue;
 import io.reflection.app.client.part.navigation.Header.PanelType;
-import io.reflection.app.client.res.Images;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
@@ -72,6 +72,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
@@ -109,7 +110,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField SpanElement storeName;
 	@UiField AnchorElement viewInStore;
 	@UiField SpanElement price;
-	@UiField Image spinnerLoader;
 	private String iapDescription;
 
 	// Filters
@@ -117,13 +117,13 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField DateSelector dateSelector;
 	@UiField Selector storeSelector;
 	@UiField Selector countrySelector;
-	@UiField(provided = true) FormSwitch accuracySwitch = new FormSwitch(true);
-	@UiField(provided = true) FormSwitch eventsSwitch = new FormSwitch(true);
-	@UiField(provided = true) FormSwitch overlayRevenuesSwitch = new FormSwitch(true);
-	@UiField(provided = true) FormSwitch overlayDownloadsSwitch = new FormSwitch(true);
-	@UiField(provided = true) FormSwitch cumulativeChartSwitch = new FormSwitch(true);
-	@UiField(provided = true) FormSwitch oneMMovingAverageSwitch = new FormSwitch(true);
-	@UiField(provided = true) FormSwitch overlayAppsSwitch = new FormSwitch(true);
+	@UiField(provided = true) FilterSwitch accuracySwitch = new FilterSwitch(true);
+	@UiField(provided = true) FilterSwitch eventsSwitch = new FilterSwitch(true);
+	@UiField(provided = true) FilterSwitch overlayRevenuesSwitch = new FilterSwitch(true);
+	@UiField(provided = true) FilterSwitch overlayDownloadsSwitch = new FilterSwitch(true);
+	@UiField(provided = true) FilterSwitch cumulativeChartSwitch = new FilterSwitch(true);
+	@UiField(provided = true) FilterSwitch oneMMovingAverageSwitch = new FilterSwitch(true);
+	@UiField(provided = true) FilterSwitch overlayAppsSwitch = new FilterSwitch(true);
 	@UiField(provided = true) ToggleRadioButton toggleChartGraph = new ToggleRadioButton("charttype");
 	@UiField(provided = true) ToggleRadioButton toggleChartMap = new ToggleRadioButton("charttype");
 
@@ -133,9 +133,12 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField SpanElement downloadsText;
 	@UiField InlineHyperlink rankingLink;
 	@UiField SpanElement rankingText;
+	@UiField InlineHyperlink appDetailsLink;
+	@UiField SpanElement appDetailsText;
 	@UiField LIElement revenueItem;
 	@UiField LIElement downloadsItem;
 	@UiField LIElement rankingItem;
+	@UiField LIElement appDetailsItem;
 
 	@UiField(provided = true) CellTable<ItemRevenue> revenueTable = new CellTable<ItemRevenue>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) CellTable<AppRanking> revenueTable2 = new CellTable<AppRanking>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
@@ -174,6 +177,10 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField ButtonElement dnwBtnMobile;
 	@UiField DivElement sincePanel;
 	@UiField HTMLPanel noDataPanel;
+	@UiField HTMLPanel waitingForDataPanel;
+	@UiField DivElement appDetailsPanel;
+
+	private Element loaderInline = AnimationHelper.getLoaderInlineElement();
 
 	public ItemPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -181,6 +188,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		tabs.put(REVENUE_CHART_TYPE, revenueItem);
 		tabs.put(DOWNLOADS_CHART_TYPE, downloadsItem);
 		tabs.put(RANKING_CHART_TYPE, rankingItem);
+		tabs.put("appdetails", appDetailsItem);
 
 		// TODO remove not working elements for normal user
 		if (!SessionController.get().isLoggedInUserAdmin()) {
@@ -254,11 +262,11 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 	public void setPriceInnerText(String s) {
 		if (s != null) {
-			spinnerLoader.setVisible(false);
+			loaderInline.removeFromParent();
 			price.setInnerText(s);
 		} else {
+			appDetailsPanel.appendChild(loaderInline);
 			price.setInnerText("");
-			spinnerLoader.setVisible(true);
 		}
 	}
 
@@ -279,8 +287,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	}
 
 	private void createColumns() {
-
-		final SafeHtml spinnerLoaderHTML = SafeHtmlUtils.fromSafeConstant("<img src=\"" + Images.INSTANCE.spinner().getSafeUri().asString() + "\"/>");
 
 		Column<ItemRevenue, ConcreteImageAndText> countryColumn = new Column<ItemRevenue, ConcreteImageAndText>(new ImageAndTextCell<ConcreteImageAndText>()) {
 
@@ -305,7 +311,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			@Override
 			public SafeHtml getValue(ItemRevenue object) {
 				return (object.currency != null) ? SafeHtmlUtils
-						.fromSafeConstant(FormattingHelper.asWholeMoneyString(object.currency, object.paid.floatValue())) : spinnerLoaderHTML;
+						.fromSafeConstant(FormattingHelper.asWholeMoneyString(object.currency, object.paid.floatValue())) : AnimationHelper
+						.getLoaderInlineSafeHTML();
 			}
 		};
 
@@ -313,7 +320,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 			@Override
 			public SafeHtml getValue(ItemRevenue object) {
-				return (object.currency != null) ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.asMoneyString(object.currency, 0.0f)) : spinnerLoaderHTML;
+				return (object.currency != null) ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.asMoneyString(object.currency, 0.0f)) : AnimationHelper
+						.getLoaderInlineSafeHTML();
 			}
 		};
 
@@ -322,7 +330,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			@Override
 			public SafeHtml getValue(ItemRevenue object) {
 				return (object.currency != null && object.iap != null) ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.asWholeMoneyString(object.currency,
-						object.iap.floatValue())) : spinnerLoaderHTML;
+						object.iap.floatValue())) : AnimationHelper.getLoaderInlineSafeHTML();
 			}
 		};
 
@@ -331,7 +339,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			@Override
 			public SafeHtml getValue(ItemRevenue object) {
 				return (object.currency != null && object.total != null) ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.asWholeMoneyString(object.currency,
-						object.total.floatValue())) : spinnerLoaderHTML;
+						object.total.floatValue())) : AnimationHelper.getLoaderInlineSafeHTML();
 			}
 		};
 
@@ -643,8 +651,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				chartRank.setVisible(false);
 				break;
 			case RankingYAxisDataType:
-				overlayRevenuesSwitch.setVisible(true);
-				overlayDownloadsSwitch.setVisible(true);
+				overlayRevenuesSwitch.setVisible(SessionController.get().isLoggedInUserAdmin());
+				overlayDownloadsSwitch.setVisible(SessionController.get().isLoggedInUserAdmin());
 				cumulativeChartSwitch.setVisible(false);
 				chartRank.setVisible(true);
 				chartRevenue.setVisible(false);
@@ -900,6 +908,9 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			downloadsItem.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
 			downloadsLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
 					DOWNLOADS_CHART_TYPE, comingPage, filterContents));
+			appDetailsText.setInnerText("App Details");
+			appDetailsItem.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
+			appDetailsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 		} else {
 			revenueText.setInnerText("Revenue - coming soon");
 			revenueItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
@@ -907,12 +918,16 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			downloadsText.setInnerText("Downloads - coming soon");
 			downloadsItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
 			downloadsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
+			appDetailsText.setInnerText("App Details - coming soon");
+			appDetailsItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
+			appDetailsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 			for (String key : tabs.keySet()) {
 				tabs.get(key).removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isActive());
 			}
 			tabs.get(RANKING_CHART_TYPE).addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isActive());
 			tabs.remove(REVENUE_CHART_TYPE);
 			tabs.remove(DOWNLOADS_CHART_TYPE);
+			tabs.remove("appdetails");
 
 		}
 	}

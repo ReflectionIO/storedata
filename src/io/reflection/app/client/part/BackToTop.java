@@ -11,7 +11,6 @@ import io.reflection.app.client.helper.AnimationHelper;
 import io.reflection.app.client.res.Styles;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -40,7 +39,7 @@ public class BackToTop extends Composite {
 		Window.addWindowScrollHandler(new Window.ScrollHandler() {
 			@Override
 			public void onWindowScroll(ScrollEvent event) {
-				if (event.getScrollTop() > (Document.get().getBody().getClientHeight() / 3)) {
+				if (event.getScrollTop() > 500) {
 					link.getElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
 				} else {
 					link.getElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());

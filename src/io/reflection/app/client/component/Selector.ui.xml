@@ -16,7 +16,7 @@
 			<span ui:field="spanSelectLabel" class="{STYLES_INSTANCE.reflectionMainStyle.refIconAfter} {STYLES_INSTANCE.reflectionMainStyle.refIconAfterAngleDown}">
 			</span>
 			<ul ui:field="uListElem">
-				<g:Anchor ui:field="selectLink" styleName="{STYLES_INSTANCE.reflectionMainStyle.closePopup}">K</g:Anchor>
+				<g:Anchor ui:field="closeLink" styleName="{STYLES_INSTANCE.reflectionMainStyle.closePopup}">K</g:Anchor>
 				<span ui:field="spanOptionLabel">
 				</span>
 			</ul>

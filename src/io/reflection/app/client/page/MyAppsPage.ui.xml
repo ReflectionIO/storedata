@@ -16,7 +16,7 @@
 			class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.pageFunctions} {STYLES_INSTANCE.reflectionMainStyle.overflowVisible}">
 			<form class="{STYLES_INSTANCE.reflectionMainStyle.overflowVisible}">
 
-				<c:Selector ui:field="accountName" overlay="true" alignRight="" labelText="Account Name" />
+				<c:Selector ui:field="accountName" overlay="true" alignRight="" labelText="Account Name" dropdownTitle="Select an account" />
 
 			</form>
 		</div>
@@ -26,11 +26,11 @@
 			<form class="{STYLES_INSTANCE.reflectionMainStyle.formsMidTheme}">
 				<c:DateSelector ui:field="dateSelector" />
 
-				<c:Selector ui:field="category" overlay="true" alignRight="" labelText="Category" styleName="{STYLES_INSTANCE.reflectionMainStyle.categorySelect}" />
+				<c:Selector ui:field="category" overlay="true" alignRight="" labelText="Category"  dropdownTitle="Select a category" styleName="{STYLES_INSTANCE.reflectionMainStyle.categorySelect}" />
 
-				<c:Selector ui:field="appStore" overlay="true" alignCenter="" labelText="App Store" styleName="{STYLES_INSTANCE.reflectionMainStyle.storeSelect}" />
+				<c:Selector ui:field="appStore" overlay="true" alignCenter="" labelText="App Store"  dropdownTitle="Select a store" styleName="{STYLES_INSTANCE.reflectionMainStyle.storeSelect}" />
 
-				<c:Selector ui:field="country" overlay="true" labelText="Country" styleName="{STYLES_INSTANCE.reflectionMainStyle.countrySelect}" />
+				<c:Selector ui:field="country" overlay="true" labelText="Country" dropdownTitle="Select a country" styleName="{STYLES_INSTANCE.reflectionMainStyle.countrySelect}" />
 			</form>
 		</div>
 

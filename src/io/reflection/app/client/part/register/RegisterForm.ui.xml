@@ -22,9 +22,6 @@
 			<ul>
 				<li>
 					<c:FormCheckbox ui:field="termAndCond" label="" />
-					<div class="{STYLES_INSTANCE.reflectionMainStyle.generalErrorMessage}">
-						<p ui:field="checkboxError"></p>
-					</div>
 				</li>
 			</ul>
 		</g:HTMLPanel>

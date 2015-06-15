@@ -101,7 +101,7 @@ public class TextField extends Composite implements HasClickHandlers, HasKeyPres
 
 	@UiHandler("textBox")
 	void onBlurred(BlurEvent event) {
-		if (!this.getElement().hasClassName(refStyle.isClosed()) && getText().length() < 1) {
+		if (getText().length() < 1) {
 			this.getElement().addClassName(refStyle.isClosed());
 		}
 	}
@@ -121,9 +121,7 @@ public class TextField extends Composite implements HasClickHandlers, HasKeyPres
 
 	public void showNote(String text, boolean isError) {
 		if (isError) {
-			if (!this.getElement().hasClassName(refStyle.formFieldError())) {
-				this.getElement().addClassName(refStyle.formFieldError());
-			}
+			this.getElement().addClassName(refStyle.formFieldError());
 		}
 		note.setInnerText(text);
 		label.appendChild(note);

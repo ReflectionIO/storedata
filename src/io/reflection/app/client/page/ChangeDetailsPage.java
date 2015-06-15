@@ -55,6 +55,8 @@ import java.util.List;
 
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
@@ -89,6 +91,12 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	UserPermissionsProvider userPermissionsProvider;
 	@UiField(provided = true) CellTable<Role> rolesTable = new CellTable<Role>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) CellTable<Permission> permissionsTable = new CellTable<Permission>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
+
+	// TODO remove when tabs will be enabled
+	@UiField LIElement usersItem;
+	@UiField LIElement notificationsItem;
+	@UiField SpanElement usersText;
+	@UiField SpanElement notifText;
 
 	@UiField InlineHyperlink accountSettingsLink;
 	@UiField InlineHyperlink linkedAccountsLink;
@@ -141,9 +149,27 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	public ChangeDetailsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
+		User user = SessionController.get().getLoggedInUser();
+
 		if (!SessionController.get().isLoggedInUserAdmin()) {
 			addRolePanel.removeFromParent();
 			addPermissionPanel.removeFromParent();
+			usersText.setInnerText("Users - coming soon");
+			usersItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
+			notifText.setInnerText("Notifications - coming soon");
+			notificationsItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
+			usersLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
+			notificationsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
+		} else {
+			if (user != null) {
+				notificationsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.NotificationsPageType.toString(),
+						user.id.toString()));
+			}
+		}
+
+		if (user != null) {
+			linkedAccountsLink
+					.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.LinkedAccountsPageType.toString(), user.id.toString()));
 		}
 
 		addRoleColumns(SessionController.get().isLoggedInUserAdmin());
@@ -157,14 +183,6 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		permissionsTable.setEmptyTableWidget(emptyRowPermissions);
 		rolesTable.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 		permissionsTable.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
-
-		User user = SessionController.get().getLoggedInUser();
-		if (user != null) {
-			linkedAccountsLink
-					.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.LinkedAccountsPageType.toString(), user.id.toString()));
-			notificationsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.NotificationsPageType.toString(), user.id.toString()));
-			// TODO users account page link
-		}
 
 	}
 

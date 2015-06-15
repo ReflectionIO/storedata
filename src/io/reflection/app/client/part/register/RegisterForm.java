@@ -7,17 +7,19 @@
 //
 package io.reflection.app.client.part.register;
 
-import io.reflection.app.client.component.LoadingButton;
 import io.reflection.app.client.component.FormCheckbox;
-import io.reflection.app.client.component.TextField;
+import io.reflection.app.client.component.LoadingButton;
 import io.reflection.app.client.component.PasswordField;
+import io.reflection.app.client.component.TextField;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.UserController;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.page.PageType;
+import io.reflection.app.client.res.Styles;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.ParagraphElement;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
@@ -58,7 +60,6 @@ public class RegisterForm extends Composite {
 	@UiField HTMLPanel termAndCondGroup;
 	@UiField FormCheckbox termAndCond;
 	private String termAndCondError;
-	@UiField ParagraphElement checkboxError;
 
 	@UiField LoadingButton registerBtn;
 
@@ -66,11 +67,15 @@ public class RegisterForm extends Composite {
 
 	private String actionCode;
 
+	private HeadingElement registerTitle = Document.get().createHElement(2);
+
 	public RegisterForm() {
 		initWidget(uiBinder.createAndBindUi(this));
 		this.getElement().setAttribute("autocomplete", "off");
 		termAndCond.setHTML("I agree with the <a href='" + PageType.TermsPageType.asHref().asString() + "' target='_blank'>terms and conditions</a>");
-
+		registerTitle.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().headingStyleHeadingFive() + " "
+				+ Styles.STYLES_INSTANCE.reflectionMainStyle().accountFormHeading());
+		registerTitle.setInnerText("Create your password to get started");
 	}
 
 	/*
@@ -140,9 +145,9 @@ public class RegisterForm extends Composite {
 			}
 
 			if (termAndCondError != null) {
-				checkboxError.setInnerText(termAndCondError);
+				termAndCond.showError(termAndCondError);
 			} else {
-				checkboxError.setInnerText("");
+				termAndCond.hideError();
 			}
 		}
 	}
@@ -338,7 +343,7 @@ public class RegisterForm extends Composite {
 		email.hideNote();
 		password.hideNote();
 		confirmPassword.hideNote();
-		checkboxError.setInnerText("");
+		termAndCond.hideError();
 	}
 
 	public void focusFirstActiveField() {
@@ -359,13 +364,27 @@ public class RegisterForm extends Composite {
 		if (requestInvite) {
 			resetForm();
 			focusFirstActiveField();
+			forename.setVisible(true);
+			surname.setVisible(true);
+			company.setVisible(true);
+			email.setVisible(true);
 			passwordGroup.setVisible(false);
 			termAndCondGroup.setVisible(false);
 			registerBtn.setText("Apply Now");
+			registerTitle.removeFromParent();
 		} else {
+			if (!SessionController.get().isLoggedInUserAdmin()) {
+				forename.setVisible(false);
+				surname.setVisible(false);
+				company.setVisible(false);
+				email.setVisible(false);
+			}
 			passwordGroup.setVisible(true);
 			termAndCondGroup.setVisible(true);
 			registerBtn.setText("Continue");
+			if (!getElement().isOrHasChild(registerTitle)) {
+				getElement().insertFirst(registerTitle);
+			}
 		}
 	}
 

@@ -11,6 +11,7 @@ import io.reflection.app.api.core.shared.call.ForgotPasswordRequest;
 import io.reflection.app.api.core.shared.call.ForgotPasswordResponse;
 import io.reflection.app.api.core.shared.call.event.ForgotPasswordEventHandler;
 import io.reflection.app.client.DefaultEventBus;
+import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.part.login.ForgotPasswordForm;
@@ -67,6 +68,11 @@ public class ForgotPasswordPage extends Page implements ForgotPasswordEventHandl
 
 		register(DefaultEventBus.get().addHandlerToSource(ForgotPasswordEventHandler.TYPE, SessionController.get(), this));
 
+		if (NavigationController.get().getStack().hasAction() && FormHelper.isValidEmail(NavigationController.get().getStack().getAction())) {
+			forgotPasswordForm.setEmail(NavigationController.get().getStack().getAction());
+		} else {
+			forgotPasswordForm.setEmail("");
+		}
 	}
 
 	/*

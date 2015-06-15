@@ -38,6 +38,7 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.gwt.crypto.bouncycastle.util.encoders.Base64;
@@ -460,8 +461,12 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 		if (mStack.hasNext()) {
 			PageType.fromString(mStack.getNext().getPage()).show(mStack.getNext().toString(1));
 		} else {
+			if (PageType.HomePageType.equals(NavigationController.get().getCurrentPage())) {
+				History.fireCurrentHistoryState();
+			} else {
 				PageType.HomePageType.show();
 			}
+		}
 
 	}
 

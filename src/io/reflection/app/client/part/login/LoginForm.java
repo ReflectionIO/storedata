@@ -24,6 +24,7 @@ import io.reflection.app.client.handler.user.SessionEventHandler;
 import io.reflection.app.client.handler.user.UserPowersEventHandler;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.page.LoginPage;
+import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
@@ -35,10 +36,12 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.Error;
 
@@ -56,6 +59,7 @@ public class LoginForm extends Composite implements LoginEventHandler, UserPower
 	private String EmailNote = null;
 	@UiField PasswordField passwordFormField;
 	private String passwordNote = null;
+	@UiField InlineHyperlink resetPasswordLink;
 	@UiField FormCheckbox rememberMe;
 	@UiField LoadingButton loginBtn;
 
@@ -96,6 +100,11 @@ public class LoginForm extends Composite implements LoginEventHandler, UserPower
 			emailFormField.getElement().getParentElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isClosed());
 			passwordFormField.getElement().getParentElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isClosed());
 			emailFormField.setText(value);
+			if (FormHelper.isValidEmail(emailFormField.getText())) {
+				resetPasswordLink.setTargetHistoryToken(PageType.ForgotPasswordPageType.asTargetHistoryToken(value));
+			} else {
+				resetPasswordLink.setTargetHistoryToken(PageType.ForgotPasswordPageType.asTargetHistoryToken());
+			}
 			passwordFormField.setFocus(true);
 		}
 	}
@@ -218,6 +227,15 @@ public class LoginForm extends Composite implements LoginEventHandler, UserPower
 
 	public void setLoggedIn(boolean loggedIn) {
 
+	}
+
+	@UiHandler("emailFormField")
+	void onEmailKeyUp(KeyUpEvent event) {
+		if (FormHelper.isValidEmail(emailFormField.getText())) {
+			resetPasswordLink.setTargetHistoryToken(PageType.ForgotPasswordPageType.asTargetHistoryToken(emailFormField.getText()));
+		} else {
+			resetPasswordLink.setTargetHistoryToken(PageType.ForgotPasswordPageType.asTargetHistoryToken());
+		}
 	}
 
 	/*
