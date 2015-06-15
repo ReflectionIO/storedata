@@ -2,7 +2,6 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
 	xmlns:cv="urn:import:com.google.gwt.user.cellview.client" xmlns:pp="urn:import:io.reflection.app.client.page.part" xmlns:hc="urn:import:io.reflection.app.client.highcharts"
 	xmlns:c="urn:import:io.reflection.app.client.component">
-	<ui:with field='images' type='io.reflection.app.client.res.Images' />
 
 	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 	<ui:style gss="true">
@@ -16,7 +15,7 @@
 				<g:Image ui:field="image" styleName="{STYLES_INSTANCE.reflectionMainStyle.appIcon}" />
 			</div>
 
-			<div class="{STYLES_INSTANCE.reflectionMainStyle.appDetails}">
+			<div ui:field="appDetailsPanel" class="{STYLES_INSTANCE.reflectionMainStyle.appDetails}">
 
 				<h1 ui:field="title" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree} {STYLES_INSTANCE.reflectionMainStyle.appTitle}"></h1>
 
@@ -29,7 +28,6 @@
 
 			</div>
 
-			<g:Image resource="{images.spinner}" ui:field="spinnerLoader" visible="false" />
 		</header>
 
 

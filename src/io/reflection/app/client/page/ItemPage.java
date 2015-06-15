@@ -39,6 +39,7 @@ import io.reflection.app.client.controller.StoreController;
 import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.handler.TogglePanelEventHandler;
+import io.reflection.app.client.helper.AnimationHelper;
 import io.reflection.app.client.helper.ColorHelper;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormHelper;
@@ -55,7 +56,6 @@ import io.reflection.app.client.part.datatypes.AppRanking;
 import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.client.part.datatypes.ItemRevenue;
 import io.reflection.app.client.part.navigation.Header.PanelType;
-import io.reflection.app.client.res.Images;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
@@ -72,6 +72,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
@@ -109,7 +110,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField SpanElement storeName;
 	@UiField AnchorElement viewInStore;
 	@UiField SpanElement price;
-	@UiField Image spinnerLoader;
 	private String iapDescription;
 
 	// Filters
@@ -178,6 +178,9 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField DivElement sincePanel;
 	@UiField HTMLPanel noDataPanel;
 	@UiField HTMLPanel waitingForDataPanel;
+	@UiField DivElement appDetailsPanel;
+
+	private Element loaderInline = AnimationHelper.getLoaderInlineElement();
 
 	public ItemPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -259,11 +262,11 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 	public void setPriceInnerText(String s) {
 		if (s != null) {
-			spinnerLoader.setVisible(false);
+			loaderInline.removeFromParent();
 			price.setInnerText(s);
 		} else {
+			appDetailsPanel.appendChild(loaderInline);
 			price.setInnerText("");
-			spinnerLoader.setVisible(true);
 		}
 	}
 
@@ -284,8 +287,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	}
 
 	private void createColumns() {
-
-		final SafeHtml spinnerLoaderHTML = SafeHtmlUtils.fromSafeConstant("<img src=\"" + Images.INSTANCE.spinner().getSafeUri().asString() + "\"/>");
 
 		Column<ItemRevenue, ConcreteImageAndText> countryColumn = new Column<ItemRevenue, ConcreteImageAndText>(new ImageAndTextCell<ConcreteImageAndText>()) {
 
@@ -310,7 +311,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			@Override
 			public SafeHtml getValue(ItemRevenue object) {
 				return (object.currency != null) ? SafeHtmlUtils
-						.fromSafeConstant(FormattingHelper.asWholeMoneyString(object.currency, object.paid.floatValue())) : spinnerLoaderHTML;
+						.fromSafeConstant(FormattingHelper.asWholeMoneyString(object.currency, object.paid.floatValue())) : AnimationHelper
+						.getLoaderInlineSafeHTML();
 			}
 		};
 
@@ -318,7 +320,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 			@Override
 			public SafeHtml getValue(ItemRevenue object) {
-				return (object.currency != null) ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.asMoneyString(object.currency, 0.0f)) : spinnerLoaderHTML;
+				return (object.currency != null) ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.asMoneyString(object.currency, 0.0f)) : AnimationHelper
+						.getLoaderInlineSafeHTML();
 			}
 		};
 
@@ -327,7 +330,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			@Override
 			public SafeHtml getValue(ItemRevenue object) {
 				return (object.currency != null && object.iap != null) ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.asWholeMoneyString(object.currency,
-						object.iap.floatValue())) : spinnerLoaderHTML;
+						object.iap.floatValue())) : AnimationHelper.getLoaderInlineSafeHTML();
 			}
 		};
 
@@ -336,7 +339,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			@Override
 			public SafeHtml getValue(ItemRevenue object) {
 				return (object.currency != null && object.total != null) ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.asWholeMoneyString(object.currency,
-						object.total.floatValue())) : spinnerLoaderHTML;
+						object.total.floatValue())) : AnimationHelper.getLoaderInlineSafeHTML();
 			}
 		};
 

@@ -31,6 +31,7 @@ import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.dataprovider.UserItemProvider;
 import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
+import io.reflection.app.client.helper.AnimationHelper;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.helper.ResponsiveDesignHelper;
@@ -185,12 +186,12 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	 */
 	private void createColumns() {
 
-		final SafeHtml spinnerLoaderHTML = SafeHtmlUtils.fromSafeConstant("<img src=\"" + Images.INSTANCE.spinner().getSafeUri().asString() + "\"/>");
+		final SafeHtml loaderInline = AnimationHelper.getLoaderInlineSafeHTML();
 
 		columnRank = new Column<MyApp, SafeHtml>(new SafeHtmlCell()) {
 			@Override
 			public SafeHtml getValue(MyApp object) {
-				return (object.overallPosition != null) ? SafeHtmlUtils.fromSafeConstant(object.overallPosition) : spinnerLoaderHTML;
+				return (object.overallPosition != null) ? SafeHtmlUtils.fromSafeConstant(object.overallPosition) : loaderInline;
 			}
 		};
 		columnRank.setCellStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA() + " " + Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6cID());
@@ -210,7 +211,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		columnPrice = new Column<MyApp, SafeHtml>(new SafeHtmlCell()) {
 			@Override
 			public SafeHtml getValue(MyApp object) {
-				return (object.overallPrice != null) ? SafeHtmlUtils.fromSafeConstant(object.overallPrice) : spinnerLoaderHTML;
+				return (object.overallPrice != null) ? SafeHtmlUtils.fromSafeConstant(object.overallPrice) : loaderInline;
 			}
 		};
 		columnPrice.setCellStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA());
@@ -219,7 +220,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		columnDownloads = new Column<MyApp, SafeHtml>(new SafeHtmlCell()) {
 			@Override
 			public SafeHtml getValue(MyApp object) {
-				return (object.overallDownloads != null) ? SafeHtmlUtils.fromSafeConstant(object.overallDownloads) : spinnerLoaderHTML;
+				return (object.overallDownloads != null) ? SafeHtmlUtils.fromSafeConstant(object.overallDownloads) : loaderInline;
 			}
 		};
 		columnDownloads.setCellStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA());
@@ -228,7 +229,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		columnRevenue = new Column<MyApp, SafeHtml>(new SafeHtmlCell()) {
 			@Override
 			public SafeHtml getValue(MyApp object) {
-				return (object.overallRevenue != null) ? SafeHtmlUtils.fromSafeConstant(object.overallRevenue) : spinnerLoaderHTML;
+				return (object.overallRevenue != null) ? SafeHtmlUtils.fromSafeConstant(object.overallRevenue) : loaderInline;
 			}
 		};
 		columnRevenue.setCellStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA());
@@ -245,7 +246,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 			@Override
 			public SafeHtml getValue(MyApp object) {
 				return (object.item != null) ? SafeHtmlUtils.fromSafeConstant(DataTypeHelper.itemIapState(object.item, IAP_YES_HTML, IAP_NO_HTML,
-						IAP_DONT_KNOW_HTML)) : spinnerLoaderHTML;
+						IAP_DONT_KNOW_HTML)) : loaderInline;
 			}
 
 		};
