@@ -25,7 +25,6 @@ import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.dom.client.HasChangeHandlers;
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -57,7 +56,7 @@ public class Selector extends Composite implements HasChangeHandlers {
 	@UiField SelectElement selectElem;
 	@UiField HTMLPanel selectContainer;
 	@UiField UListElement uListElem;
-	@UiField Anchor selectLink;
+	@UiField Anchor closeLink;
 	@UiField SpanElement spanSelectLabel;
 	@UiField SpanElement spanOptionLabel;
 	private List<LIElement> itemList = new ArrayList<LIElement>(); // List of items excluded the placeholder
@@ -71,32 +70,30 @@ public class Selector extends Composite implements HasChangeHandlers {
 
 		setOverlay(false);
 
-		// Toggle dropdown
-		selectContainer.sinkEvents(Event.ONCLICK);
-		selectContainer.addHandler(new ClickHandler() {
+		Event.sinkEvents(spanSelectLabel, Event.ONCLICK);
+		Event.setEventListener(spanSelectLabel, new EventListener() {
 
 			@Override
-			public void onClick(ClickEvent event) {
-				if (!selectElem.getPropertyBoolean("disabled")) {
-					if (formField.getElement().hasClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isOpen())) {
-						formField.getElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isOpen());
-						selectContainer.getElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isOpen());
-						uListElem.getStyle().setMarginTop(-(uListElem.getClientHeight()), Unit.PX);
-						if (Window.getClientWidth() < 720 && isFilter) {
-							DOMHelper.setScrollEnabled(false);
-						}
-					} else {
-						formField.getElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isOpen());
-						selectContainer.getElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isOpen());
-						uListElem.getStyle().setMarginTop(9, Unit.PX);
-						if (Window.getClientWidth() < 720 && isFilter) {
-							DOMHelper.setScrollEnabled(true);
-						}
-					}
+			public void onBrowserEvent(Event event) {
+				if (Event.ONCLICK == event.getTypeInt()) {
+					open();
 				}
 			}
-		}, ClickEvent.getType());
+		});
 
+		// Close drop-down clicking out of it, i.e. on the overlay
+		Event.sinkEvents(overlayPanel, Event.ONCLICK);
+		Event.setEventListener(overlayPanel, new EventListener() {
+
+			@Override
+			public void onBrowserEvent(Event event) {
+				if (Event.ONCLICK == event.getTypeInt()) {
+					close();
+				}
+			}
+		});
+
+		// Update margin when resizing window
 		Window.addResizeHandler(new ResizeHandler() {
 			@Override
 			public void onResize(ResizeEvent event) {
@@ -105,7 +102,7 @@ public class Selector extends Composite implements HasChangeHandlers {
 		});
 
 		if (!isFilter) {
-			selectLink.removeFromParent();
+			closeLink.removeFromParent();
 			spanOptionLabel.removeFromParent();
 			selectContainer.getElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().reflectionSelectFilter());
 		}
@@ -116,11 +113,31 @@ public class Selector extends Composite implements HasChangeHandlers {
 		this(true);
 	}
 
-	@UiHandler("selectLink")
-	void onClick(ClickEvent event) {
-		if (Window.getClientWidth() < 720 && isFilter) {
-			DOMHelper.setScrollEnabled(true);
+	private void open() {
+		if (!selectElem.getPropertyBoolean("disabled")) {
+			formField.getElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isOpen());
+			selectContainer.getElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isOpen());
+			uListElem.getStyle().setMarginTop(9, Unit.PX);
+			if (Window.getClientWidth() < 720 && isFilter) {
+				DOMHelper.setScrollEnabled(true);
+			}
 		}
+	}
+
+	private void close() {
+		formField.getElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isOpen());
+		selectContainer.getElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isOpen());
+		uListElem.getStyle().setMarginTop(-(uListElem.getClientHeight()), Unit.PX);
+		if (Window.getClientWidth() < 720 && isFilter) {
+			DOMHelper.setScrollEnabled(false);
+		}
+	}
+
+	// Close drop-down clicking on 'X'
+	@UiHandler("closeLink")
+	void onClick(ClickEvent event) {
+		event.preventDefault();
+		close();
 	}
 
 	public void setLabelText(String text) {
@@ -171,15 +188,14 @@ public class Selector extends Composite implements HasChangeHandlers {
 	private void selectOption(final LIElement listElem, boolean fireEvents) {
 		selectedIndex = itemList.indexOf(listElem);
 		spanSelectLabel.setInnerText(listElem.getInnerText());
-		if (!spanSelectLabel.hasClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isActivated())) {
-			spanSelectLabel.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isActivated());
-		}
+		spanSelectLabel.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isActivated());
+
 		for (LIElement le : itemList) {
 			le.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isSelected());
 		}
-		if (!listElem.hasClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isSelected())) {
-			listElem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isSelected());
-		}
+
+		listElem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isSelected());
+
 		for (int i = 0; i < selectElem.getOptions().getLength(); i++) {
 			if (i == selectedIndex + 1) {
 				selectElem.getOptions().getItem(i).setAttribute("selected", "");
@@ -188,15 +204,11 @@ public class Selector extends Composite implements HasChangeHandlers {
 			}
 		}
 
-		if (formField.getElement().hasClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isOpen())) {
-			formField.getElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isOpen());
-			selectContainer.getElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isOpen());
-			uListElem.getStyle().setMarginTop(-(uListElem.getClientHeight()), Unit.PX);
-		}
-
 		if (fireEvents) {
 			DomEvent.fireNativeEvent(Document.get().createChangeEvent(), this); // Fire Change Event
 		}
+
+		close();
 
 	}
 
@@ -275,9 +287,7 @@ public class Selector extends Composite implements HasChangeHandlers {
 		if (enabled) {
 			formField.getElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formFieldSelectDisabled());
 		} else {
-			if (!formField.getElement().hasClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formFieldSelectDisabled())) {
-				formField.getElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formFieldSelectDisabled());
-			}
+			formField.getElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formFieldSelectDisabled());
 		}
 		selectElem.setPropertyBoolean("disabled", !enabled);
 	}
