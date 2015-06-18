@@ -34,7 +34,6 @@ import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.AnimationHelper;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormHelper;
-import io.reflection.app.client.helper.ResponsiveDesignHelper;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.part.datatypes.DateRange;
@@ -81,7 +80,8 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 
 	UserItemProvider userItemProvider = new UserItemProvider();
 
-	@UiField(provided = true) CellTable<MyApp> appsTable = new CellTable<MyApp>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
+	@UiField(provided = true) CellTable<MyApp> appsTableDesktop = new CellTable<MyApp>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
+	@UiField(provided = true) CellTable<MyApp> appsTableMobile = new CellTable<MyApp>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) SimplePager simplePager = new SimplePager(false, false);
 
 	@UiField Selector accountName;
@@ -135,24 +135,24 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 				}
 			}
 		});
-		appsTable.setEmptyTableWidget(myAppsEmptyTable);
+		appsTableDesktop.setEmptyTableWidget(myAppsEmptyTable);
 
-		appsTable.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
-		userItemProvider.addDataDisplay(appsTable);
+		appsTableDesktop.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
+		userItemProvider.addDataDisplay(appsTableDesktop);
+		userItemProvider.addDataDisplay(appsTableMobile);
 
-		simplePager.setDisplay(appsTable);
+		simplePager.setDisplay(appsTableDesktop);
+		simplePager.setDisplay(appsTableMobile);
 
 		setFiltersEnabled(false);
 		accountName.setEnabled(false);
 
-		ResponsiveDesignHelper.makeTableResponsive(appsTable);
-
-		appsTable.addLoadingStateChangeHandler(new LoadingStateChangeEvent.Handler() {
+		appsTableDesktop.addLoadingStateChangeHandler(new LoadingStateChangeEvent.Handler() {
 
 			@Override
 			public void onLoadingStateChanged(LoadingStateChangeEvent event) {
 				if (event.getLoadingState() == LoadingState.LOADED) {
-					appsTable.setStyleName(style.tableLinkedAccountsDisabled(), appsTable.getRowCount() == 0);
+					appsTableDesktop.setStyleName(style.tableLinkedAccountsDisabled(), appsTableDesktop.getRowCount() == 0);
 				}
 			}
 		});
@@ -197,7 +197,8 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		columnRank.setCellStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA() + " " + Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6cID());
 		TextHeader rankHeader = new TextHeader("Rank");
 		rankHeader.setHeaderStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6cIF());
-		appsTable.addColumn(columnRank, rankHeader);
+		appsTableDesktop.addColumn(columnRank, rankHeader);
+		appsTableMobile.addColumn(columnRank, rankHeader);
 
 		columnAppDetails = new Column<MyApp, Item>(new MiniAppCell()) {
 			@Override
@@ -206,7 +207,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 			}
 		};
 		columnAppDetails.setCellStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA());
-		appsTable.addColumn(columnAppDetails, "App Details");
+		appsTableDesktop.addColumn(columnAppDetails, "App Details");
 
 		columnPrice = new Column<MyApp, SafeHtml>(new SafeHtmlCell()) {
 			@Override
@@ -215,7 +216,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 			}
 		};
 		columnPrice.setCellStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA());
-		appsTable.addColumn(columnPrice, "Price");
+		appsTableDesktop.addColumn(columnPrice, "Price");
 
 		columnDownloads = new Column<MyApp, SafeHtml>(new SafeHtmlCell()) {
 			@Override
@@ -224,7 +225,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 			}
 		};
 		columnDownloads.setCellStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA());
-		appsTable.addColumn(columnDownloads, "Downloads");
+		appsTableDesktop.addColumn(columnDownloads, "Downloads");
 
 		columnRevenue = new Column<MyApp, SafeHtml>(new SafeHtmlCell()) {
 			@Override
@@ -233,7 +234,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 			}
 		};
 		columnRevenue.setCellStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA());
-		appsTable.addColumn(columnRevenue, "Revenue");
+		appsTableDesktop.addColumn(columnRevenue, "Revenue");
 
 		columnIap = new Column<MyApp, SafeHtml>(new SafeHtmlCell()) {
 
@@ -251,14 +252,16 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 
 		};
 		columnIap.setCellStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA());
-		appsTable.addColumn(columnIap, "IAP");
+		appsTableDesktop.addColumn(columnIap, "IAP");
 
-		appsTable.addColumnStyleName(0, style.rankColumn());
-		appsTable.addColumnStyleName(1, style.appDetailsColumn());
-		appsTable.addColumnStyleName(2, style.priceColumn());
-		appsTable.addColumnStyleName(3, style.downloadsColumn());
-		appsTable.addColumnStyleName(4, style.revenueColumn());
-		appsTable.addColumnStyleName(5, style.iapColumn());
+		appsTableDesktop.addColumnStyleName(0, style.rankColumn());
+		appsTableDesktop.addColumnStyleName(1, style.appDetailsColumn());
+		appsTableDesktop.addColumnStyleName(2, style.priceColumn());
+		appsTableDesktop.addColumnStyleName(3, style.downloadsColumn());
+		appsTableDesktop.addColumnStyleName(4, style.revenueColumn());
+		appsTableDesktop.addColumnStyleName(5, style.iapColumn());
+
+		appsTableMobile.addColumnStyleName(0, style.rankColumn());
 
 	}
 

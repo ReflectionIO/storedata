@@ -113,7 +113,10 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		SafeHtml code(Long code);
 	}
 
-	@UiField(provided = true) CellTable<RanksGroup> ranksTable = new CellTable<RanksGroup>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
+	@UiField(provided = true) CellTable<RanksGroup> leaderboardTableOverallDesktop = new CellTable<RanksGroup>(ServiceConstants.STEP_VALUE,
+			BootstrapGwtCellTable.INSTANCE);
+	@UiField(provided = true) CellTable<RanksGroup> leaderboardTableOverallMobile = new CellTable<RanksGroup>(ServiceConstants.STEP_VALUE,
+			BootstrapGwtCellTable.INSTANCE);
 
 	@UiField FormDateBox dateBox;
 	Date currentDate = FilterHelper.getToday();
@@ -150,7 +153,6 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	private TextColumn<RanksGroup> downloadsColumn;
 	private TextColumn<RanksGroup> revenueColumn;
 	private Column<RanksGroup, SafeHtml> iapColumn;
-	private Column<RanksGroup, SafeHtml> comingSoonColumn;
 
 	private Map<String, LIElement> tabs = new HashMap<String, LIElement>();
 
@@ -204,13 +206,13 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		}
 
 		HTMLPanel emptyTableWidget = new HTMLPanel("<h6>No ranking data for filter!</h6>");
-		ranksTable.setEmptyTableWidget(emptyTableWidget);
+		leaderboardTableOverallDesktop.setEmptyTableWidget(emptyTableWidget);
 
-		ranksTable.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
+		leaderboardTableOverallDesktop.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 
-		RankController.get().addDataDisplay(ranksTable);
+		RankController.get().addDataDisplay(leaderboardTableOverallDesktop);
+		RankController.get().addDataDisplay(leaderboardTableOverallMobile);
 
-		ResponsiveDesignHelper.makeTableResponsive(ranksTable);
 	}
 
 	private void createColumns() {
@@ -303,15 +305,6 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		};
 		iapColumn.setCellStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA());
 
-		comingSoonColumn = new Column<RanksGroup, SafeHtml>(new SafeHtmlCell()) {
-
-			@Override
-			public SafeHtml getValue(RanksGroup object) {
-				return SafeHtmlUtils.fromSafeConstant("<p>Coming Soon</p>");
-			}
-
-		};
-
 		rankHeader = new TextHeader("Rank");
 		rankHeader.setHeaderStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6cIF());
 		paidHeader = new TextHeader("Paid");
@@ -322,7 +315,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		revenueHeader = new TextHeader("Revenue");
 		iapHeader = new TextHeader("IAP");
 
-		ranksTable.setColumnWidth(comingSoonColumn, 100.0, Unit.PCT);
+		leaderboardTableOverallMobile.addColumn(rankColumn, rankHeader);
 	}
 
 	/**
@@ -355,7 +348,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 							.equals(name)))) {
 
 				if (foundDailyData) {
-					ranksTable.redraw();
+					leaderboardTableOverallDesktop.redraw();
+					leaderboardTableOverallMobile.redraw();
 				} else {
 					RankController.get().reset();
 					RankController.get().fetchTopItems();
@@ -382,7 +376,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 					|| previousValues.get(END_DATE_KEY) != null || (foundDailyData = (previousValues.get(DAILY_DATA_KEY) != null))) {
 
 				if (foundDailyData) {
-					ranksTable.redraw();
+					leaderboardTableOverallDesktop.redraw();
+					leaderboardTableOverallMobile.redraw();
 				} else {
 					RankController.get().reset();
 					RankController.get().fetchTopItems();
@@ -468,16 +463,20 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 	private void refreshRanks() {
 
-		ranksTable.setStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().tableOverall(), OVERALL_LIST_TYPE.equals(selectedTab));
-		ranksTable.setStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().tableAppGroup(),
-				(FREE_LIST_TYPE.equals(selectedTab) || PAID_LIST_TYPE.equals(selectedTab) || GROSSING_LIST_TYPE.equals(selectedTab)));
+		leaderboardTableOverallDesktop.setStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().tableOverall(), OVERALL_LIST_TYPE.equals(selectedTab));
+		leaderboardTableOverallDesktop.setStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().tableAppGroup(), (FREE_LIST_TYPE.equals(selectedTab)
+				|| PAID_LIST_TYPE.equals(selectedTab) || GROSSING_LIST_TYPE.equals(selectedTab)));
+
+		leaderboardTableOverallMobile.setStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().tableOverall(), OVERALL_LIST_TYPE.equals(selectedTab));
+		leaderboardTableOverallMobile.setStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().tableAppGroup(), (FREE_LIST_TYPE.equals(selectedTab)
+				|| PAID_LIST_TYPE.equals(selectedTab) || GROSSING_LIST_TYPE.equals(selectedTab)));
 
 		if (OVERALL_LIST_TYPE.equals(selectedTab)) {
 			removeAllColumns();
-			ranksTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-			ranksTable.setColumnWidth(freeColumn, 30.0, Unit.PCT);
-			ranksTable.setColumnWidth(paidColumn, 30.0, Unit.PCT);
-			ranksTable.setColumnWidth(grossingColumn, 30.0, Unit.PCT);
+			leaderboardTableOverallDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+			leaderboardTableOverallDesktop.setColumnWidth(freeColumn, 30.0, Unit.PCT);
+			leaderboardTableOverallDesktop.setColumnWidth(paidColumn, 30.0, Unit.PCT);
+			leaderboardTableOverallDesktop.setColumnWidth(grossingColumn, 30.0, Unit.PCT);
 			addColumn(rankColumn, rankHeader);
 			addColumn(freeColumn, freeHeader);
 			addColumn(paidColumn, paidHeader);
@@ -485,18 +484,18 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		} else if (FREE_LIST_TYPE.equals(selectedTab)) {
 			removeAllColumns();
 			if (SessionController.get().isLoggedInUserAdmin()) {
-				ranksTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-				ranksTable.setColumnWidth(freeColumn, 36.7, Unit.PCT);
-				ranksTable.setColumnWidth(priceColumn, 13.6, Unit.PCT);
-				ranksTable.setColumnWidth(downloadsColumn, 16.7, Unit.PCT);
-				ranksTable.setColumnWidth(revenueColumn, 16.7, Unit.PCT);
-				ranksTable.setColumnWidth(iapColumn, 6.3, Unit.PCT);
+				leaderboardTableOverallDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+				leaderboardTableOverallDesktop.setColumnWidth(freeColumn, 36.7, Unit.PCT);
+				leaderboardTableOverallDesktop.setColumnWidth(priceColumn, 13.6, Unit.PCT);
+				leaderboardTableOverallDesktop.setColumnWidth(downloadsColumn, 16.7, Unit.PCT);
+				leaderboardTableOverallDesktop.setColumnWidth(revenueColumn, 16.7, Unit.PCT);
+				leaderboardTableOverallDesktop.setColumnWidth(iapColumn, 6.3, Unit.PCT);
 			} else {
-				ranksTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-				ranksTable.setColumnWidth(freeColumn, 42.0, Unit.PCT);
-				ranksTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
-				ranksTable.setColumnWidth(downloadsColumn, 19.0, Unit.PCT);
-				ranksTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
+				leaderboardTableOverallDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+				leaderboardTableOverallDesktop.setColumnWidth(freeColumn, 42.0, Unit.PCT);
+				leaderboardTableOverallDesktop.setColumnWidth(priceColumn, 19.0, Unit.PCT);
+				leaderboardTableOverallDesktop.setColumnWidth(downloadsColumn, 19.0, Unit.PCT);
+				leaderboardTableOverallDesktop.setColumnWidth(iapColumn, 10.0, Unit.PCT);
 			}
 			addColumn(rankColumn, rankHeader);
 			addColumn(freeColumn, freeHeader);
@@ -509,12 +508,12 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		} else if (PAID_LIST_TYPE.equals(selectedTab)) {
 			if (SessionController.get().isLoggedInUserAdmin()) {
 				removeAllColumns();
-				ranksTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-				ranksTable.setColumnWidth(paidColumn, 36.7, Unit.PCT);
-				ranksTable.setColumnWidth(priceColumn, 13.6, Unit.PCT);
-				ranksTable.setColumnWidth(downloadsColumn, 16.7, Unit.PCT);
-				ranksTable.setColumnWidth(revenueColumn, 16.7, Unit.PCT);
-				ranksTable.setColumnWidth(iapColumn, 6.3, Unit.PCT);
+				leaderboardTableOverallDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+				leaderboardTableOverallDesktop.setColumnWidth(paidColumn, 36.7, Unit.PCT);
+				leaderboardTableOverallDesktop.setColumnWidth(priceColumn, 13.6, Unit.PCT);
+				leaderboardTableOverallDesktop.setColumnWidth(downloadsColumn, 16.7, Unit.PCT);
+				leaderboardTableOverallDesktop.setColumnWidth(revenueColumn, 16.7, Unit.PCT);
+				leaderboardTableOverallDesktop.setColumnWidth(iapColumn, 6.3, Unit.PCT);
 				addColumn(rankColumn, rankHeader);
 				addColumn(paidColumn, paidHeader);
 				addColumn(priceColumn, priceHeader);
@@ -525,12 +524,12 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		} else if (GROSSING_LIST_TYPE.equals(selectedTab)) {
 			if (SessionController.get().isLoggedInUserAdmin()) {
 				removeAllColumns();
-				ranksTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-				ranksTable.setColumnWidth(grossingColumn, 36.7, Unit.PCT);
-				ranksTable.setColumnWidth(priceColumn, 13.6, Unit.PCT);
-				ranksTable.setColumnWidth(downloadsColumn, 16.7, Unit.PCT);
-				ranksTable.setColumnWidth(revenueColumn, 16.7, Unit.PCT);
-				ranksTable.setColumnWidth(iapColumn, 6.3, Unit.PCT);
+				leaderboardTableOverallDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+				leaderboardTableOverallDesktop.setColumnWidth(grossingColumn, 36.7, Unit.PCT);
+				leaderboardTableOverallDesktop.setColumnWidth(priceColumn, 13.6, Unit.PCT);
+				leaderboardTableOverallDesktop.setColumnWidth(downloadsColumn, 16.7, Unit.PCT);
+				leaderboardTableOverallDesktop.setColumnWidth(revenueColumn, 16.7, Unit.PCT);
+				leaderboardTableOverallDesktop.setColumnWidth(iapColumn, 6.3, Unit.PCT);
 				addColumn(rankColumn, rankHeader);
 				addColumn(grossingColumn, grossingHeader);
 				addColumn(priceColumn, priceHeader);
@@ -543,10 +542,10 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	}
 
 	private void removeColumn(Column<RanksGroup, ?> column) {
-		int currentIndex = ranksTable.getColumnIndex(column);
+		int currentIndex = leaderboardTableOverallDesktop.getColumnIndex(column);
 
 		if (currentIndex != -1) {
-			ranksTable.removeColumn(column);
+			leaderboardTableOverallDesktop.removeColumn(column);
 		}
 	}
 
@@ -562,7 +561,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	}
 
 	private void addColumn(Column<RanksGroup, ?> column, TextHeader header) {
-		ranksTable.addColumn(column, header);
+		leaderboardTableOverallDesktop.addColumn(column, header);
 	}
 
 	private void refreshTabs() {
@@ -582,11 +581,13 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	@UiHandler("viewAllBtn")
 	void onViewAllButtonClicked(ClickEvent event) {
 		if (((Button) event.getSource()).isEnabled()) {
-			if (ranksTable.getVisibleItemCount() == ServiceConstants.STEP_VALUE) {
-				ranksTable.setVisibleRange(0, VIEW_ALL_LENGTH_VALUE);
+			if (leaderboardTableOverallDesktop.getVisibleItemCount() == ServiceConstants.STEP_VALUE) {
+				leaderboardTableOverallDesktop.setVisibleRange(0, VIEW_ALL_LENGTH_VALUE);
+				leaderboardTableOverallMobile.setVisibleRange(0, VIEW_ALL_LENGTH_VALUE);
 				viewAllSpan.setInnerText("View Less Apps");
 			} else {
-				ranksTable.setVisibleRange(0, ServiceConstants.STEP_VALUE);
+				leaderboardTableOverallDesktop.setVisibleRange(0, ServiceConstants.STEP_VALUE);
+				leaderboardTableOverallMobile.setVisibleRange(0, ServiceConstants.STEP_VALUE);
 				viewAllSpan.setInnerText("View All Apps");
 			}
 		}
@@ -603,7 +604,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 		if (PageType.RanksPageType.equals(current.getPage())) {
 
-			if (ranksTable.getVisibleItemCount() > 0) {
+			if (leaderboardTableOverallDesktop.getVisibleItemCount() > 0) {
 				setViewMoreVisible(true);
 			}
 

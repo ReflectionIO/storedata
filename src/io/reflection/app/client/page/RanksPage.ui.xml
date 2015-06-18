@@ -159,7 +159,14 @@
 			<li id="tab-content" class="{STYLES_INSTANCE.reflectionMainStyle.tabs__content} {STYLES_INSTANCE.reflectionMainStyle.tabs__contentIsShowing}">
 				<article class="tabs__content-area">
 					<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__row}">
-						<cv:CellTable ui:field="ranksTable" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData} {STYLES_INSTANCE.reflectionMainStyle.responsive}" />
+						<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.tableWrapper}">
+							<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.scrollable}">
+								<cv:CellTable ui:field="leaderboardTableOverallDesktop" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}  {STYLES_INSTANCE.reflectionMainStyle.responsive}" />
+							</g:HTMLPanel>
+							<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.pinned}">
+								<cv:CellTable ui:field="leaderboardTableOverallMobile" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}" />
+							</g:HTMLPanel>
+						</g:HTMLPanel>
 					</div>
 				</article>
 			</li>
