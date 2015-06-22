@@ -7,14 +7,8 @@
 //
 package io.reflection.app.client.helper;
 
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.ScriptElement;
-import com.google.gwt.user.cellview.client.CellTable;
-import com.google.gwt.user.cellview.client.LoadingStateChangeEvent;
-import com.google.gwt.user.cellview.client.LoadingStateChangeEvent.Handler;
-import com.google.gwt.user.cellview.client.LoadingStateChangeEvent.LoadingState;
 
 /**
  * @author Stefano Capuzzi (capuzzistefano)
@@ -128,27 +122,4 @@ public class ResponsiveDesignHelper {
 		new updateTabs();
 	}-*/;
 
-	/**
-	 * @param appsTable
-	 */
-	public static void makeTableResponsive(CellTable<?> table) {
-		table.addLoadingStateChangeHandler(new Handler() {
-			@Override
-			public void onLoadingStateChanged(LoadingStateChangeEvent event) {
-				if (event.getLoadingState() == LoadingState.LOADED) {
-					Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-
-						@Override
-						public void execute() {
-							updateResponsiveTables();
-						}
-					});
-				}
-			}
-		});
-	}
-
-	private static native void updateResponsiveTables() /*-{
-		$wnd.updateTables();
-	}-*/;
 }

@@ -206,8 +206,15 @@
 					<span ui:field="infoTotalRevenue" class="{STYLES_INSTANCE.reflectionMainStyle.revenueSummaryValue}"></span>
 				</div>
 			</header>
-			<cv:CellTable ui:field="revenueTable2" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableRevenue} {STYLES_INSTANCE.reflectionMainStyle.responsive}"></cv:CellTable>
-			<cv:CellTable ui:field="revenueTable" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableRevenue}"></cv:CellTable>
+			<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.tableWrapper}">
+				<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.scrollable}">
+					<cv:CellTable ui:field="revenueTableDesktop" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableRevenue} {STYLES_INSTANCE.reflectionMainStyle.responsive}"></cv:CellTable>
+					<!-- <cv:CellTable ui:field="revenueTable" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableRevenue}"></cv:CellTable> -->
+				</g:HTMLPanel>
+				<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.pinned}">
+					<cv:CellTable ui:field="revenueTableMobile" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableRevenue}"></cv:CellTable>
+				</g:HTMLPanel>
+			</g:HTMLPanel>
 			<button ui:field="dnwBtnMobile"
 				class="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall} {STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmallWithIcon} {STYLES_INSTANCE.reflectionMainStyle.downloadButtonMobile}">
 				<span class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCloud}">Download</span>

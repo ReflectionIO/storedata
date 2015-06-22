@@ -26,17 +26,26 @@
 			<form class="{STYLES_INSTANCE.reflectionMainStyle.formsMidTheme}">
 				<c:DateSelector ui:field="dateSelector" />
 
-				<c:Selector ui:field="category" overlay="true" alignRight="" labelText="Category"  dropdownTitle="Select a category" styleName="{STYLES_INSTANCE.reflectionMainStyle.categorySelect}" />
+				<c:Selector ui:field="category" overlay="true" alignRight="" labelText="Category" dropdownTitle="Select a category"
+					styleName="{STYLES_INSTANCE.reflectionMainStyle.categorySelect}" />
 
-				<c:Selector ui:field="appStore" overlay="true" alignCenter="" labelText="App Store"  dropdownTitle="Select a store" styleName="{STYLES_INSTANCE.reflectionMainStyle.storeSelect}" />
+				<c:Selector ui:field="appStore" overlay="true" alignCenter="" labelText="App Store" dropdownTitle="Select a store"
+					styleName="{STYLES_INSTANCE.reflectionMainStyle.storeSelect}" />
 
 				<c:Selector ui:field="country" overlay="true" labelText="Country" dropdownTitle="Select a country" styleName="{STYLES_INSTANCE.reflectionMainStyle.countrySelect}" />
 			</form>
 		</div>
 
 		<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.grid__row}">
-			<cell:CellTable ui:field="appsTable"
-				styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData} {STYLES_INSTANCE.reflectionMainStyle.tableMyApps} {STYLES_INSTANCE.reflectionMainStyle.responsive}" />
+			<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.tableWrapper}">
+				<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.scrollable}">
+					<cell:CellTable ui:field="appsTableDesktop"
+						styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData} {STYLES_INSTANCE.reflectionMainStyle.tableMyApps} {STYLES_INSTANCE.reflectionMainStyle.responsive}" />
+				</g:HTMLPanel>
+				<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.pinned}">
+					<cell:CellTable ui:field="appsTableMobile" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData} {STYLES_INSTANCE.reflectionMainStyle.tableMyApps}" />
+				</g:HTMLPanel>
+			</g:HTMLPanel>
 			<p:SimplePager ui:field="simplePager" visible="false" />
 		</g:HTMLPanel>
 
