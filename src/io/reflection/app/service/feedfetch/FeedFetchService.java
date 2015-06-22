@@ -27,7 +27,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -189,7 +188,7 @@ public class FeedFetchService implements IFeedFetchService {
 
 			stat.setLong(1, feedFetch.code);
 			stat.setDate(2, new java.sql.Date(feedFetch.date.getTime()));
-			stat.setTime(3, new Time(feedFetch.date.getTime()));
+			stat.setTimestamp(3, new Timestamp(feedFetch.date.getTime()));
 			stat.setString(4, feedFetch.country);
 			stat.setLong(5, feedFetch.category.id);
 			stat.setString(6, getDBTypeForFeedFetchType(feedFetch.type));
