@@ -154,8 +154,8 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 			pager.start = Long.valueOf(0);
 			pager.count = new Long(Long.MAX_VALUE);
 
-			final List<Rank> foundRanks = RankServiceProvider.provide().getGatherCodeRanks(country, store, firstFeedFetch.category, firstFeedFetch.type,
-					firstFeedFetch.code, pager, Boolean.TRUE);
+			final List<Rank> foundRanks = RankServiceProvider.provide().getGatherCodeRanks(country, firstFeedFetch.category, firstFeedFetch.type,
+					firstFeedFetch.code);
 
 			final Map<String, Rank> lookup = indexRanks(foundRanks);
 			final List<String> itemIds = new ArrayList<String>();
@@ -205,7 +205,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 			}
 
 			if (addRanks.size() > 0) {
-				RankServiceProvider.provide().addRanksBatch(addRanks);
+				RankServiceProvider.provide().addRanksBatch(firstFeedFetch.id, addRanks);
 			}
 
 			if (updateRanks.size() > 0) {
