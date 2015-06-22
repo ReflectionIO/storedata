@@ -27,7 +27,6 @@ import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
-import io.reflection.app.shared.util.PagerHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,7 +52,7 @@ import com.spacehopperstudios.utility.StringUtils;
 
 /**
  * @author billy1380
- * 
+ *
  */
 public class DefaultItemRankArchiver implements ItemRankArchiver {
 
@@ -61,7 +60,7 @@ public class DefaultItemRankArchiver implements ItemRankArchiver {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.itemrankarchivers.ItemRankArchiver#enqueue(java.lang.Long)
 	 */
 	@Override
@@ -104,7 +103,7 @@ public class DefaultItemRankArchiver implements ItemRankArchiver {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.itemrankarchivers.ItemRankArchiver#archive(java.lang.Long)
 	 */
 	@Override
@@ -114,7 +113,7 @@ public class DefaultItemRankArchiver implements ItemRankArchiver {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.itemrankarchivers.ItemRankArchiver#archive(io.reflection.app.datatypes.shared.Rank)
 	 */
 	@Override
@@ -185,7 +184,7 @@ public class DefaultItemRankArchiver implements ItemRankArchiver {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.itemrankarchivers.ItemRankArchiver#getItemRanks(java.lang.String)
 	 */
 	@Override
@@ -258,7 +257,7 @@ public class DefaultItemRankArchiver implements ItemRankArchiver {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.itemrankarchivers.ItemRankArchiver#enqueue(io.reflection.app.api.shared.datatypes.Pager, java.lang.Boolean)
 	 */
 	@Override
@@ -323,7 +322,7 @@ public class DefaultItemRankArchiver implements ItemRankArchiver {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.itemrankarchivers.ItemRankArchiver#enqueueFeedFetch(java.lang.Long)
 	 */
 	@Override
@@ -331,8 +330,8 @@ public class DefaultItemRankArchiver implements ItemRankArchiver {
 		try {
 			FeedFetch feedFetch = FeedFetchServiceProvider.provide().getFeedFetch(id);
 
-			List<Rank> ranks = RankServiceProvider.provide().getGatherCodeRanks(DataTypeHelper.createCountry(feedFetch.country),
-					DataTypeHelper.createStore(feedFetch.store), feedFetch.category, feedFetch.type, feedFetch.code, PagerHelper.createInfinitePager(), Boolean.TRUE);
+			List<Rank> ranks = RankServiceProvider.provide().getGatherCodeRanks(DataTypeHelper.createCountry(feedFetch.country), feedFetch.category,
+					feedFetch.type, feedFetch.code);
 
 			for (Rank rank : ranks) {
 				archiveRank(rank);
@@ -344,7 +343,7 @@ public class DefaultItemRankArchiver implements ItemRankArchiver {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.itemrankarchivers.ItemRankArchiver#enqueueIdFeedFetch(java.lang.Long)
 	 */
 	@Override

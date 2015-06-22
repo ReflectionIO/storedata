@@ -856,8 +856,7 @@ public class DevHelperServlet extends HttpServlet {
 				if (LOG.isLoggable(GaeLevel.DEBUG)) {
 					LOG.log(GaeLevel.DEBUG, "Getting the ranks again and caching them via RankService.getGatherCodeRanks");
 				}
-				List<Rank> ranks = RankServiceProvider.provide().getGatherCodeRanks(c, s, categoryObj, type, code, PagerHelper.createInfinitePager(),
-						Boolean.TRUE);
+				List<Rank> ranks = RankServiceProvider.provide().getGatherCodeRanks(c, categoryObj, type, code);
 			} catch (DataAccessException e) {
 				e.printStackTrace();
 			}

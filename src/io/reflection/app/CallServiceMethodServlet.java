@@ -30,7 +30,6 @@ import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
 import io.reflection.app.service.store.StoreServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
-import io.reflection.app.shared.util.PagerHelper;
 
 import java.io.IOException;
 import java.util.Date;
@@ -131,8 +130,7 @@ public class CallServiceMethodServlet extends HttpServlet {
 					for (String listType : listTypes) {
 						// get all the ranks for the list type (we are using an infinite pager with no sorting to allow us to generate a deletion key during
 						// prediction)
-						ranks = RankServiceProvider.provide().getGatherCodeRanks(country, store, category, listType, code, PagerHelper.createInfinitePager(),
-								Boolean.TRUE);
+						ranks = RankServiceProvider.provide().getGatherCodeRanks(country, category, listType, code);
 
 						// if the ranks are for a grossing list check that none are free and don't have iaps
 						if (collector != null && collector.isGrossing(listType)) {

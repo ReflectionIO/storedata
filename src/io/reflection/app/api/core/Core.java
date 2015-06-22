@@ -107,7 +107,6 @@ import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.country.CountryServiceProvider;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.datasource.DataSourceServiceProvider;
-import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.notification.NotificationServiceProvider;
 import io.reflection.app.service.permission.PermissionServiceProvider;
@@ -321,7 +320,7 @@ public final class Core extends ActionHandler {
 				start = date.minusHours(24).toDate();
 			}
 
-			List<Rank> ranks = RankServiceProvider.provide().getRanks(input.country, input.store, input.category, input.listType, start, end, input.pager);
+			List<Rank> ranks = RankServiceProvider.provide().getRanks(input.country, input.category, input.listType, input.on);
 
 			if (ranks != null && ranks.size() != 0) {
 				List<String> itemIds = new ArrayList<String>();
@@ -341,8 +340,8 @@ public final class Core extends ActionHandler {
 				updatePager(
 						output.pager,
 						output.ranks,
-						input.pager.totalCount == null ? RankServiceProvider.provide().getRanksCount(input.country, input.store, input.category,
-								input.listType, start, end) : input.pager.totalCount);
+						input.pager.totalCount == null ? RankServiceProvider.provide().getRanksCount(input.country, input.category, input.listType, start)
+								: input.pager.totalCount);
 			}
 
 			output.status = StatusType.StatusTypeSuccess;
@@ -445,28 +444,28 @@ public final class Core extends ActionHandler {
 								ApiError.CategoryStoreMismatch.getMessage("input.category"));
 				}
 
-				DateTime date = new DateTime(input.on.getTime(), DateTimeZone.UTC);
-				int secondOfMinute = date.getSecondOfMinute();
-				int millisOfSeconds = date.getMillisOfSecond();
-
-				Date end;
-				Date start;
-
-				boolean isPastDate = (secondOfMinute == 0) && (millisOfSeconds == 0);
-
-				if (isPastDate) { // a date in the past
-					end = date.plusHours(24).toDate();
-					start = date.toDate();
-				} else { // today
-					end = date.minusHours(12).toDate();
-					start = date.minusHours(24).toDate();
-				}
+				// DateTime date = new DateTime(input.on.getTime(), DateTimeZone.UTC);
+				// int secondOfMinute = date.getSecondOfMinute();
+				// int millisOfSeconds = date.getMillisOfSecond();
+				//
+				// Date end;
+				// Date start;
+				//
+				// boolean isPastDate = (secondOfMinute == 0) && (millisOfSeconds == 0);
+				//
+				// if (isPastDate) { // a date in the past
+				// end = date.plusHours(24).toDate();
+				// start = date.toDate();
+				// } else { // today
+				// end = date.minusHours(12).toDate();
+				// start = date.minusHours(24).toDate();
+				// }
+				//
+				// // final Map<String, Rank> lookup = new HashMap<String, Rank>();
+				//
+				// Long code = FeedFetchServiceProvider.provide().getGatherCode(input.country, input.store, start, end);
 
 				Set<String> itemIds = new HashSet<String>();
-				// final Map<String, Rank> lookup = new HashMap<String, Rank>();
-
-				Long code = FeedFetchServiceProvider.provide().getGatherCode(input.country, input.store, start, end);
-
 				List<String> listTypes = ApiHelper.getAllListTypes(input.store, input.listType);
 				Collector collector = CollectorFactory.getCollectorForStore(input.store.a3Code);
 
@@ -474,8 +473,7 @@ public final class Core extends ActionHandler {
 				for (String listType : listTypes) {
 					// get all the ranks for the list type (we are using an infinite pager with no sorting to allow us to generate a deletion key during
 					// prediction)
-					ranks = RankServiceProvider.provide().getGatherCodeRanks(input.country, input.store, input.category, listType, code,
-							PagerHelper.createInfinitePager(), Boolean.TRUE);
+					ranks = RankServiceProvider.provide().getRanks(input.country, input.category, listType, input.on);
 
 					for (Rank rank : ranks) {
 						itemIds.add(rank.itemId);
@@ -501,38 +499,6 @@ public final class Core extends ActionHandler {
 						output.grossingRanks = ranks;
 					}
 				}
-
-				// List<Rank> ranks = RankServiceProvider.provide().getAllRanks(input.country, input.store, input.category,
-				// getGrossingListName(input.store, input.listType), start, end);
-				//
-				// if (ranks != null && ranks.size() != 0) {
-				// SparseArray<Rank> free = new SparseArray<Rank>();
-				// SparseArray<Rank> paid = new SparseArray<Rank>();
-				// SparseArray<Rank> grossing = new SparseArray<Rank>();
-				//
-				// for (Rank rank : ranks) {
-				// if (!lookup.containsKey(rank.itemId)) {
-				// itemIds.add(rank.itemId);
-				// lookup.put(rank.itemId, rank);
-				// }
-				//
-				// if (rank.price.floatValue() == 0 && rank.position.intValue() > 0) {
-				// free.append(rank.position.intValue(), rank);
-				// }
-				//
-				// if (rank.price.floatValue() != 0 && rank.position.intValue() > 0) {
-				// paid.append(rank.position.intValue(), rank);
-				// }
-				//
-				// if (rank.grossingPosition.intValue() != 0) {
-				// grossing.append(rank.grossingPosition.intValue(), rank);
-				// }
-				// }
-				//
-				// output.freeRanks = free.toList();
-				// output.paidRanks = paid.toList();
-				// output.grossingRanks = grossing.toList();
-				// }
 
 				output.items = ItemServiceProvider.provide().getInternalIdItemBatch(itemIds);
 

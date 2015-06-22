@@ -450,6 +450,9 @@ public final class Connection {
 
 	public void executePreparedStatement(PreparedStatement pstat) {
 		try {
+			if (LOG.isLoggable(GaeLevel.DEBUG)) {
+				LOG.log(GaeLevel.DEBUG, String.format("Executing prepared statement: %s", pstat.toString()));
+			}
 			queryResult = pstat.executeQuery();
 		} catch (SQLException e) {
 			LOG.log(Level.SEVERE, "Exception occured while trying to execute a statement", e);
