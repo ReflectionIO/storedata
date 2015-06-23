@@ -36,6 +36,7 @@ import io.reflection.app.shared.util.DataTypeHelper;
 import io.reflection.app.shared.util.PagerHelper;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -154,6 +155,7 @@ public class DevHelperServlet extends HttpServlet {
 		final String action = req.getParameter("action");
 		final String object = req.getParameter("object");
 		final String start = req.getParameter("start");
+		final String end = req.getParameter("end");
 		final String count = req.getParameter("count");
 		final String all = req.getParameter("all");
 		final String rankStart = req.getParameter("rankstart");
@@ -169,7 +171,32 @@ public class DevHelperServlet extends HttpServlet {
 		String csv = null;
 
 		if (action != null) {
-			if ("model".equalsIgnoreCase(action)) {
+			if ("modelByDates".equalsIgnoreCase(action)) {
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+
+				List<FeedFetch> feeds = null;
+
+				try {
+					Date startDate = sdf.parse(start);
+					Date endDate = sdf.parse(end);
+
+					feeds = FeedFetchServiceProvider.provide().getFeedFetchIdsBetweenDates(startDate, endDate);
+				} catch (Exception e) {
+					LOG.log(Level.SEVERE, "Exception occured while trying to get rank_fetches between start and end date: " + start + ", " + end, e);
+				}
+
+				final Modeller modeller = ModellerFactory.getModellerForStore(DataTypeHelper.IOS_STORE_A3);
+				if (feeds != null) {
+					for (FeedFetch fetch : feeds) {
+						modeller.enqueue(fetch);
+						if (LOG.isLoggable(GaeLevel.DEBUG)) {
+							LOG.log(GaeLevel.DEBUG, String.format("Enqueued fetch with id %d for modelling", fetch.id));
+						}
+					}
+				}
+
+			} else if ("model".equalsIgnoreCase(action)) {
 				String feedfetchidStr = req.getParameter("feedfetchid");
 
 				if (feedfetchidStr == null || feedfetchidStr.trim().length() == 0) return;

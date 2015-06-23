@@ -623,4 +623,40 @@ public class FeedFetchService implements IFeedFetchService {
 			else return "topgrossingipadapplications";
 		}
 	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see io.reflection.app.service.feedfetch.IFeedFetchService#getFeedFetchIdsBetweenDates(java.util.Date, java.util.Date)
+	 */
+	@Override
+	public List<FeedFetch> getFeedFetchIdsBetweenDates(Date startDate, Date endDate) throws DataAccessException {
+		final List<FeedFetch> feedFetches = new ArrayList<FeedFetch>();
+
+		String selectQuery = "SELECT * from rank_fetch where fetch_date between ? AND ?";
+
+		final Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
+
+		try (PreparedStatement pstat = feedFetchConnection.getRealConnection().prepareStatement(selectQuery, ResultSet.TYPE_FORWARD_ONLY,
+				ResultSet.CONCUR_READ_ONLY)) {
+			feedFetchConnection.connect();
+
+			pstat.setDate(1, new java.sql.Date(startDate.getTime()));
+			pstat.setDate(2, new java.sql.Date(endDate.getTime()));
+
+			feedFetchConnection.executePreparedStatement(pstat);
+
+			while (feedFetchConnection.fetchNextRow()) {
+				feedFetches.add(toFeedFetch(feedFetchConnection));
+			}
+		} catch (SQLException e) {
+			LOG.log(Level.SEVERE, "Exception occured while executing prepared statement", e);
+		} finally {
+			if (feedFetchConnection != null) {
+				feedFetchConnection.disconnect();
+			}
+		}
+
+		return feedFetches;
+	}
 }
