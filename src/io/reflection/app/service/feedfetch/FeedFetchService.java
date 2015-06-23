@@ -645,9 +645,11 @@ public class FeedFetchService implements IFeedFetchService {
 
 		final Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
 
-		try (PreparedStatement pstat = feedFetchConnection.getRealConnection().prepareStatement(selectQuery, ResultSet.TYPE_FORWARD_ONLY,
-				ResultSet.CONCUR_READ_ONLY)) {
+		PreparedStatement pstat = null;
+		try {
 			feedFetchConnection.connect();
+			pstat = feedFetchConnection.getRealConnection().prepareStatement(selectQuery, ResultSet.TYPE_FORWARD_ONLY,
+					ResultSet.CONCUR_READ_ONLY);
 
 			pstat.setDate(1, new java.sql.Date(startDate.getTime()));
 			pstat.setDate(2, new java.sql.Date(endDate.getTime()));
@@ -661,6 +663,7 @@ public class FeedFetchService implements IFeedFetchService {
 			LOG.log(Level.SEVERE, "Exception occured while executing prepared statement", e);
 		} finally {
 			if (feedFetchConnection != null) {
+				feedFetchConnection.closeStatement(pstat);
 				feedFetchConnection.disconnect();
 			}
 		}
