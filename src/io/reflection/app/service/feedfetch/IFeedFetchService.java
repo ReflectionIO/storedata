@@ -138,6 +138,6 @@ public interface IFeedFetchService extends IService {
 	 * @return
 	 * @throws DataAccessException
 	 */
-	public List<FeedFetch> getFeedFetchIdsBetweenDates(Date startDate, Date endDate) throws DataAccessException;
+	public List<Long> getFeedFetchIdsBetweenDates(Date startDate, Date endDate) throws DataAccessException;
 
 }

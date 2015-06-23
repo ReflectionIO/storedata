@@ -99,20 +99,6 @@ public class DevHelperServlet extends HttpServlet {
 		final String appEngineQueue = req.getHeader("X-AppEngine-QueueName");
 		final boolean isNotQueue = appEngineQueue == null || !"deferred".toLowerCase().equals(appEngineQueue.toLowerCase());
 
-		// if (true) {
-		// com.google.appengine.api.datastore.Query query = new com.google.appengine.api.datastore.Query("__GsFileInfo__");
-		// PreparedQuery p = DatastoreServiceFactory.getDatastoreService().prepare(query);
-		// for (Entity e : p.asIterable()) {
-		// String name = e.getKey().getName();
-		// String destname = (String) e.getProperty("filename");
-		//
-		// System.out.println(name + " " + destname);
-		// }
-		//
-		//
-		// return;
-		// }
-
 		if (isNotQueue && (req.getParameter("defer") == null || req.getParameter("defer").equals("yes"))) {
 			final Queue deferredQueue = QueueFactory.getQueue("deferred");
 
@@ -175,23 +161,23 @@ public class DevHelperServlet extends HttpServlet {
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 
-				List<FeedFetch> feeds = null;
+				List<Long> feedIds = null;
 
 				try {
 					Date startDate = sdf.parse(start);
 					Date endDate = sdf.parse(end);
 
-					feeds = FeedFetchServiceProvider.provide().getFeedFetchIdsBetweenDates(startDate, endDate);
+					feedIds = FeedFetchServiceProvider.provide().getFeedFetchIdsBetweenDates(startDate, endDate);
 				} catch (Exception e) {
 					LOG.log(Level.SEVERE, "Exception occured while trying to get rank_fetches between start and end date: " + start + ", " + end, e);
 				}
 
 				final Modeller modeller = ModellerFactory.getModellerForStore(DataTypeHelper.IOS_STORE_A3);
-				if (feeds != null) {
-					for (FeedFetch fetch : feeds) {
-						modeller.enqueue(fetch);
+				if (feedIds != null) {
+					for (Long fetchId : feedIds) {
+						modeller.enqueueFetchId(fetchId);
 						if (LOG.isLoggable(GaeLevel.DEBUG)) {
-							LOG.log(GaeLevel.DEBUG, String.format("Enqueued fetch with id %d for modelling", fetch.id));
+							LOG.log(GaeLevel.DEBUG, String.format("Enqueued fetch with id %d for modelling", fetchId));
 						}
 					}
 				}

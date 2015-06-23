@@ -638,10 +638,10 @@ public class FeedFetchService implements IFeedFetchService {
 	 * @see io.reflection.app.service.feedfetch.IFeedFetchService#getFeedFetchIdsBetweenDates(java.util.Date, java.util.Date)
 	 */
 	@Override
-	public List<FeedFetch> getFeedFetchIdsBetweenDates(Date startDate, Date endDate) throws DataAccessException {
-		final List<FeedFetch> feedFetches = new ArrayList<FeedFetch>();
+	public List<Long> getFeedFetchIdsBetweenDates(Date startDate, Date endDate) throws DataAccessException {
+		final List<Long> feedFetches = new ArrayList<Long>();
 
-		String selectQuery = "SELECT rank_fetch_id, group_fetch_code, CONCAT(fetch_date, ' ', fetch_time) as date, country, category, type, platform, url, data_format, status from rank_fetch where fetch_date between ? AND ?";
+		String selectQuery = "SELECT rank_fetch_id from rank_fetch where fetch_date between ? AND ?";
 
 		final Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
 
@@ -657,7 +657,7 @@ public class FeedFetchService implements IFeedFetchService {
 			feedFetchConnection.executePreparedStatement(pstat);
 
 			while (feedFetchConnection.fetchNextRow()) {
-				feedFetches.add(toFeedFetch(feedFetchConnection));
+				feedFetches.add(feedFetchConnection.getCurrentRowLong("rank_fetch_id"));
 			}
 		} catch (SQLException e) {
 			LOG.log(Level.SEVERE, "Exception occured while executing prepared statement", e);
