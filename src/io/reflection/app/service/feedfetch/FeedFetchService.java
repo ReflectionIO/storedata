@@ -55,7 +55,9 @@ public class FeedFetchService implements IFeedFetchService {
 		final IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		final Connection feedFetchConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
 
-		final String getFeedFetchQuery = String.format("SELECT * FROM `rank_fetch` WHERE `rank_fetch_id`=%d LIMIT 1", id.longValue());
+		final String getFeedFetchQuery = String
+				.format("SELECT rank_fetch_id, group_fetch_code, CONCAT(fetch_date, ' ', fetch_time) as date, country, category, type, platform, url, data_format, status FROM `rank_fetch` WHERE `rank_fetch_id`=%d LIMIT 1",
+						id.longValue());
 		try {
 			feedFetchConnection.connect();
 			feedFetchConnection.executeQuery(getFeedFetchQuery);
@@ -98,7 +100,7 @@ public class FeedFetchService implements IFeedFetchService {
 
 
 		feedFetch.id = connection.getCurrentRowLong("rank_fetch_id");
-		feedFetch.created = connection.getCurrentRowDateTime("fetch_date");
+		feedFetch.created = connection.getCurrentRowDateTime("date");
 		feedFetch.date = feedFetch.created;
 
 		feedFetch.category = new Category();
@@ -230,7 +232,9 @@ public class FeedFetchService implements IFeedFetchService {
 			typeQueryParts.append("(type=? and platform=?)");
 		}
 
-		String selectQuery = String.format("SELECT * FROM rank_fetch WHERE country=? AND category=? AND ( %s ) ORDER BY ? ? LIMIT ? ?", typeQueryParts);
+		String selectQuery = String
+				.format("SELECT rank_fetch_id, group_fetch_code, CONCAT(fetch_date, ' ', fetch_time) as date, country, category, type, platform, url, data_format, status FROM rank_fetch WHERE country=? AND category=? AND ( %s ) ORDER BY ? ? LIMIT ? ?",
+						typeQueryParts);
 
 		final Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
 
@@ -429,7 +433,9 @@ public class FeedFetchService implements IFeedFetchService {
 			typeQueryParts.append("(type=? and platform=?)");
 		}
 
-		String selectQuery = String.format("SELECT * FROM rank_fetch WHERE group_fetch_code=? AND country=? AND ( %s )", typeQueryParts);
+		String selectQuery = String
+				.format("SELECT rank_fetch_id, group_fetch_code, CONCAT(fetch_date, ' ', fetch_time) as date, country, category, type, platform, url, data_format, status FROM rank_fetch WHERE group_fetch_code=? AND country=? AND ( %s )",
+						typeQueryParts);
 
 		final Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
 
@@ -553,7 +559,9 @@ public class FeedFetchService implements IFeedFetchService {
 			typeQueryParts.append("(type=? and platform=?)");
 		}
 
-		String selectQuery = String.format("SELECT * FROM rank_fetch WHERE fetch_date BETWEEN ? AND ? AND country=? AND category=? AND ( %s )", typeQueryParts);
+		String selectQuery = String
+				.format("SELECT rank_fetch_id, group_fetch_code, CONCAT(fetch_date, ' ', fetch_time) as date, country, category, type, platform, url, data_format, status FROM rank_fetch WHERE fetch_date BETWEEN ? AND ? AND country=? AND category=? AND ( %s )",
+						typeQueryParts);
 
 		final Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
 
@@ -633,7 +641,7 @@ public class FeedFetchService implements IFeedFetchService {
 	public List<FeedFetch> getFeedFetchIdsBetweenDates(Date startDate, Date endDate) throws DataAccessException {
 		final List<FeedFetch> feedFetches = new ArrayList<FeedFetch>();
 
-		String selectQuery = "SELECT * from rank_fetch where fetch_date between ? AND ?";
+		String selectQuery = "SELECT rank_fetch_id, group_fetch_code, CONCAT(fetch_date, ' ', fetch_time) as date, country, category, type, platform, url, data_format, status from rank_fetch where fetch_date between ? AND ?";
 
 		final Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
 
