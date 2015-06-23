@@ -15,7 +15,6 @@ import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.FeedFetch;
-import io.reflection.app.datatypes.shared.FeedFetchStatusType;
 import io.reflection.app.datatypes.shared.ItemRankSummary;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
@@ -182,7 +181,7 @@ public class DevHelperServlet extends HttpServlet {
 
 					// this is just a sanity check. we expect that the query for getting the IDs only gave us feed fetches that exist and
 					// have the ingested status.
-					if (fetch != null && fetch.status == FeedFetchStatusType.FeedFetchStatusTypeIngested) {
+					if (fetch != null) {
 						if (LOG.isLoggable(GaeLevel.DEBUG)) {
 							LOG.log(GaeLevel.DEBUG, String.format(
 									"Enquing feed fetch id %d for modelling. Country: %s, category: %s, type: %s", feedFetchId,
@@ -193,6 +192,9 @@ public class DevHelperServlet extends HttpServlet {
 
 						// once the feed fetch status is updated model the list
 						modeller.enqueue(fetch);
+						if (LOG.isLoggable(GaeLevel.DEBUG)) {
+							LOG.log(GaeLevel.DEBUG, String.format("Enqueued fetch with id %d for modelling", fetch.id));
+						}
 					}
 				} catch (Exception e) {
 					if (LOG.isLoggable(GaeLevel.DEBUG)) {
