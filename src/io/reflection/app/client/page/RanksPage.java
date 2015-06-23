@@ -209,6 +209,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		leaderboardTableOverallDesktop.setEmptyTableWidget(emptyTableWidget);
 
 		leaderboardTableOverallDesktop.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
+		leaderboardTableOverallMobile.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 
 		RankController.get().addDataDisplay(leaderboardTableOverallDesktop);
 		RankController.get().addDataDisplay(leaderboardTableOverallMobile);

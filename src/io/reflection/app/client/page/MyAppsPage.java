@@ -138,6 +138,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		appsTableDesktop.setEmptyTableWidget(myAppsEmptyTable);
 
 		appsTableDesktop.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
+		appsTableMobile.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 		userItemProvider.addDataDisplay(appsTableDesktop);
 		userItemProvider.addDataDisplay(appsTableMobile);
 
