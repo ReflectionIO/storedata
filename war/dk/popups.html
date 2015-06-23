@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="utf-8" />
+	<title>Reflection Design Kit - Popups</title>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link rel="stylesheet" media="screen, projection" type="text/css" href="designkit.css" />
+	<!--[if (lt IE 9)]>
+		<script src="js/vendor/html5shiv.min.js"></script>
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main-ie8.css" />
+	<![endif]-->
+ 	<!--[if !lt IE 9]><!-->
+		<script src="js/vendor/picturefill.2.3.1.min.js" async></script>
+	<!-- <![endif]-->
+	<link rel="stylesheet" href="js/vendor/jquery.mCustomScrollbar.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
+<script>
+  WebFont.load({
+    google: {
+      families: ['Open Sans:400,600,700,400italic,600italic', 'Source Sans Pro:400,600,700', 'Lato:400,700,400italic']
+    }
+  });
+</script></head>
+<body class="panel-left-open">
+	<!--[if (lt IE 9)]>
+      <div class="window-warning">
+  			<p>Uh oh... Reflection doesn't work in this browser. &nbsp; &nbsp;<a href="http://outdatedbrowser.com/en" target="_blank">Download a compatible browser</a></p>
+  		</div>
+  <![endif]-->
+  <header id="js-component-import--global-header" class="global-header"></header>
+
+  <div id="js-component-import--panel-left" class="panel-left js-custom-scrollbar" data-mcs-theme="minimal-dark"></div>
+
+	<div class="l-page-container">
+
+		<div id="main" class="l-main page-popups" role="main">
+			
+			<div id="js-component-import--design-kit-banner" class="banner banner--component"></div>
+
+			<div class="grid-container dk-components-container overflow-visible">
+				<div class="grid__row dk-component-row overflow-visible">
+					<div class="grid__column grid__column--one-half">
+						<h2 class="heading-style--heading-three">Helper Tooltip</h2>
+						<p>These pop ups appear when a user hovers on an object (such as a filter tool) after a short delay and contain a brief description of the objects function. They act as a prompt to help the user identify certain important elements or features on a page.</p>
+						<p>The tooltip always appears above the item that the user interacts with. (see examples). They should contain as few words as possible, they serve as a prompt rather than an explanation.</p>
+					</div>
+					<div class="grid__column grid__column--one-half overflow-visible helper-tooltip-demo-container">
+						<h3 class="heading-style--heading-six">Helper Tooltip Examples</h3>
+						<div class="filters-container">
+							<form class="forms--mid-theme">
+								<div class="form-field form-field--select js-tooltip" data-tooltip="Select a Country">
+									<div class="page-overlay"></div>
+									<select class="js-field--select reflection-select--filter" data-title="Select a Country">
+								    <option value="" disabled selected>Country</option>
+								    <option value="a0">All Countries</option>
+								    <option value="a1">Japan</option>
+								    <option value="a2">United States</option>
+								    <option value="a3">China</option>
+								    <option value="a4">Germany</option>
+								    <option value="a5">France</option>
+								    <option value="a6">United Kingdom</option>
+								    <option value="a7">Italy</option>
+									</select>
+								</div>
+								<div class="filter-toggle js-tooltip" data-tooltip="Display downloads or revenue below">
+									<div class="toggle">
+										<input type="radio" id="downloads" name="radiogroupname" checked />
+										<label for="downloads" class="toggle-downloads">
+											<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path fill-rule=evenodd clip-rule=evenodd fill=#3B3735 d="M32,16.5c0,3.6-2.7,6.5-6.7,6.5v0h-6v-2h6.5
+			c2.5,0,4.5-2,4.5-4.5c0-1.6-0.8-3-2.3-3.9c-1.4-0.8-1.5-0.9-0.9-2.4c0.1-0.3,0.1-0.5,0.1-0.8c0-1.4-1.1-2.5-2.5-2.5
+			c0,0-0.7,0-1.4,0.2c-1.1,0.5-1.3,0-1.8-1.2C20.4,3.6,17.9,2,15.2,2c-3.6,0-6.6,2.7-7,6.3c-0.1,1.4-0.2,1.4-1.7,1.8
+			C4,10.6,2,12.9,2,15.5c0,3,2.3,5.5,5.3,5.5v0h6v2h-6v0c-4,0-7.2-3.4-7.2-7.5c0-3.7,2.7-6.7,6.2-7.4c0.4-4.6,4.4-8.1,9-8.1
+			c3.6,0,6.7,2.1,8.1,5.2C23.8,5.1,24.2,5,24.7,5c2.5,0,4.5,2,4.5,4.5c0,0.5-0.2,1-0.3,1.4C30.8,12,32,14.1,32,16.5z M19,25.8
+			l-1.8,1.8V14.3c0-0.6-0.4-1.1-1-1.1c-0.6,0-1,0.5-1,1.1v13.3l-1.9-1.8c-0.4-0.4-1.2-0.4-1.6,0c-0.4,0.4-0.5,1.1,0,1.6l3.1,3.1
+			c0.4,0.4,0.8,0.5,1.3,0.5c0.5,0,0.9-0.2,1.3-0.5l3.1-3.1c0.4-0.4,0.4-1.1,0-1.6C20.2,25.4,19.5,25.4,19,25.8z"/></svg>
+											<img src="images/blank-image.png" alt="" />
+										</label>
+										<!-- <div class="tooltip">Display downloads or revenue below</div> -->
+									</div>
+									<div class="toggle">
+										<input type="radio" id="revenue" name="radiogroupname" />
+										<label for="revenue" class="toggle-revenue">
+											<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path d="M19.5,4.7L0,6.9v13.9l13.9,4.9L32,20.2V6.4L19.5,4.7z M30,15.1l-16.1,4.6L2,15.9v-3l11.9,3.4
+			L30,12.2V15.1z M13.9,12L30,8.4v2.8l-16.1,4.2L2,11.9v-3L13.9,12z M27.7,7.9l-13.8,3.1L4.2,8.4l15.3-1.7L27.7,7.9z M13.9,23.6
+			L2,19.4V17l11.9,3.8L30,16.2v2.6L13.9,23.6z"/></svg>
+											<img src="images/blank-image.png" alt="" />
+										</label>
+									</div>
+								</div>
+							</form>
+						</div>
+						<div class="code-box">
+							<code>
+								// Add the class js-tooltip on the tooltip element<br />
+								// Add the data attribute data-tooltip for the tooltip content<br />
+								&lt;div class="form-field form-field--select js-tooltip" data-tooltip="Select a Country"&gt;
+							</code>
+						</div>
+					</div>
+				</div>
+
+				<div class="grid__row dk-component-row overflow-visible">
+					<div class="grid__column grid__column--one-half">
+						<h2 class="heading-style--heading-three">What's This? Tooltip</h2>
+						<p>These tooltips are used in areas where some explanation would be helpful for some users but not required at all times. They don’t appear automatically and the user activates them by clicking a question mark 'what's this' icon.</p>
+						<p>The pop up always appears in the most relevant place to the surrounding content (above, below, left or right). The arrow pointer can therefore appear centrally on any side of the box whilst the content's format is always the same (see examples).</p>
+					</div>
+					<div class="grid__column grid__column--one-half overflow-visible helper-tooltip-demo-container">
+						<h3 class="heading-style--heading-six">What's This? Tooltip Examples</h3>
+						<div class="whats-this-tooltip-container">
+							<form class="forms--mid-theme">
+								<div class="whats-this-tooltip-example">
+									<span>Viewing estimated data</span>
+									<a href="#" class="whats-this-tooltip-icon whats-this-tooltip--dark js-whats-this-tooltip" data-whatsthis="As this is your own app you can view your actual sales data rather than the estimated data that everyone else sees."><span>What's this?</span></a>
+								</div>
+								<div class="form-field">
+									<input type="email" name="email" id="email" autocomplete="off" />
+									<label for="email">Hint Label Text</label>
+									<a href="#" target="_blank" class="form-field-help js-whats-this-tooltip position-tooltip-left" data-whatsthis="As this is your own app you can view your actual sales data rather than the estimated data that everyone else sees."><span>What's this?</span></a>
+								</div>
+								<div class="whats-this-position-examples">
+									<a href="#" class="whats-this-tooltip-icon js-whats-this-tooltip position-tooltip-left" data-whatsthis="As this is your own app you can view your actual sales data rather than the estimated data that everyone else sees."><span>What's this?</span></a>
+									<a href="#" class="whats-this-tooltip-icon js-whats-this-tooltip position-tooltip-right" data-whatsthis="As this is your own app you can view your actual sales data rather than the estimated data that everyone else sees."><span>What's this?</span></a>
+									<a href="#" class="whats-this-tooltip-icon js-whats-this-tooltip" data-whatsthis="As this is your own app you can view your actual sales data rather than the estimated data that everyone else sees."><span>What's this?</span></a>
+									<a href="#" class="whats-this-tooltip-icon whats-this-tooltip--dark js-whats-this-tooltip position-tooltip-top" data-whatsthis="As this is your own app you can view your actual sales data rather than the estimated data that everyone else sees."><span>What's this?</span></a>
+								</div>
+							</form>
+						</div>
+						<div class="code-box">
+							<code>
+								// Info icon<br />
+								&lt;a href="#" class="whats-this-tooltip-icon js-whats-this-tooltip" data-whatsthis="Popup content"&gt;<br />
+								&nbsp;&lt;span>What's this?&lt;/span&gt;<br />
+								&lt;/a&gt;<br /><br />
+								// Popup positioning classes<br />
+								// Position Tooltip Left with .position-tooltip-left<br />
+								&lt;a href="#" target="_blank" class="form-field-help js-whats-this-tooltip position-tooltip-left" data-whatsthis="Popup content"&gt;
+							</code>
+						</div>
+					</div>
+				</div>
+
+				<div class="grid__row dk-component-row overflow-visible">
+					<div class="grid__column grid__column--one-half">
+						<h2 class="heading-style--heading-three">Lightbox</h2>
+						<p>When an action needs to be performed or a decision needs to be confirmed without taking the user away from the page they are working on a lightbox is used. This is to ensure a smooth user journey, allowing them to return to what they were doing once the action is performed.</p>
+						<p>The box appears as a lightbox centred over the existing content and can be closed simply by clicking away from the box itself.</p>
+						<p>If required the box can contain several steps for the user to move through.</p>
+					</div>
+					<div class="grid__column grid__column--one-half overflow-visible lightbox-demo-container">
+						<h3 class="heading-style--heading-six">Lightbox Examples</h3>
+						<div class="filters-container">
+							<button class="ref-button--function-small ref-button--function-small--with-icon js-demo-popup-download"><span class="ref-icon-before ref-icon-before--cloud">Download</span></button>
+							<button class="ref-button--function-small js-demo-popup">Link Another Account</button>
+							<a href="#" class="ref-button--link warning-text js-demo-popup--confirm">Delete</a>
+						</div>
+					</div>
+				</div>
+
+				<div class="grid__row dk-component-row overflow-visible">
+					<div class="grid__column grid__column--one-half">
+						<h2 class="heading-style--heading-three">Alert Toast</h2>
+						<p>Alert toasts pop up from the bottom right corner of the screen every time a notification is sent to the user. They contain a summary title and when clicked link to the notifications page where the full alert can be read and acted upon if necessary. They appear for a few seconds and then disappear unless they require urgent attention in which case they remain in position until clicked or closed.</p>
+						<p>Alert toasts appear in conjunction with a small alert bubble in the 'My Account' button in the site header. The bubble indicates how many unread alerts the user has and remains visible until there are no more unread notifications.</p>
+					</div>
+					<div class="grid__row-container grid__column  grid__column--one-half">			
+						<div class="loading-button-example-container">
+							<button class="ref-button--function-large js-demo-toast-standard">Standard Alert</button>
+						</div>
+						<div class="loading-button-example-container">
+							<button class="ref-button--function-large js-demo-toast-alert">Urgent Alert</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="js-component-import--account-container" class="panel-right-container js-account-container"></div>
+	<div id="js-component-import--search-container" class="panel-right-container js-search-container"></div>
+	
+	<div class="page-overlay">
+		<div class="page-popup">
+			<div class="popup-content popup-content--link-account forms--mid-theme">
+				<form>					
+					<h2 class="heading-style--heading-five popup-content--account__heading">Link Another Account</h2>
+					<div class="form-field">						
+						<input type="text" name="accountnamep" id="accountnamep" autocomplete="off"/>
+						<label for="accountnamep">Account Name</label>
+					</div>
+					<div class="form-field">						
+						<input type="password" name="itunesconnectpasswordp" id="itunesconnectpasswordp" autocomplete="off"/>
+						<label for="itunesconnectpasswordp">Account Password</label>
+					</div>
+					<div class="form-field">						
+						<input type="text" name="vendoridp" id="vendoridp" autocomplete="off"/>
+						<label for="vendoridp">Vendor ID</label>
+						<a href="#" target="_blank" class="form-field-help ref-icon-after ref-icon-after--question"><span>What's this?</span></a>
+					</div>
+					<input type="submit" class="ref-button--full-width" value="Link this Account" />
+				</form>
+				<a href="#" class="popup-close"><span class="ref-icon-after ref-icon-after--close">Close</span></a>
+			</div>
+		</div>
+	</div>
+
+	<div class="page-overlay--confirm">
+		<div class="page-popup">
+			<div class="popup-content popup-content--delete-account">
+				<h2 class="heading-style--heading-five popup-content--account__heading">Are you sure you want to delete this account?</h2>
+				<div class="buttons-container">
+					<button class="ref-button--function-small">No, keep it linked</button>
+					<button class="ref-button--cta-small ref-button--warning">Yes, delete account</button>
+				</div>
+				<a href="#" class="popup-close"><span class="ref-icon-after ref-icon-after--close">Close</span></a>
+			</div>
+		</div>
+	</div>
+
+	<div class="page-overlay--download">
+		<div class="page-popup">
+			<div class="popup-content popup-content--download">
+				<h2 class="heading-style--heading-five popup-content--account__heading">Download Leaderboard Data</h2>
+				<p>Download the raw data file in the following formats for use in your own analysis:</p>
+				<button class="ref-button--full-width">Download CSV</button>
+				<button class="ref-button--full-width">Download XLS</button>
+				<button class="ref-button--full-width">Download PDF</button>
+				<a href="#" class="popup-close"><span class="ref-icon-after ref-icon-after--close">Close</span></a>
+			</div>
+		</div>
+	</div>
+
+ 	<script src="js/vendor/jquery-1.11.1.min.js"></script>
+ 	<script src="js/vendor/jquery-ui.custom.min.js"></script>
+ 	<script src="js/vendor/handlebars-v2.0.0.js"></script>
+ 	<script src="js/templates/templates.js"></script>
+	<script src="js/vendor/modernizr.2.8.3.custom.min.js"></script>
+	<!--[if IE 9]>
+		<script src="js/vendor/jquery.mCustomScrollbar.concat.min.js"></script>
+	<![endif]-->
+
+	<div id="js-appendScriptsContainer"></div>
+
+	<script src="js/designkit-global-templates.js"></script>
+  <script src="js/application.js"></script>
+  <script src="js/designkit-app.js"></script>
+  <script>
+  	function initScripts() {
+  		new PopupsPage();
+  	}
+
+  	// DK demo JS
+
+  	// Lightbox
+  	$('.js-demo-popup').on("click", function(e){
+  		e.preventDefault();
+			$('.page-overlay').fadeIn(200);
+			setTimeout(function(){
+				$('.page-overlay .popup-content').addClass("is-showing");
+			}, 100);
+		});
+		$('.js-demo-popup-download').on("click", function(e){
+			e.preventDefault();
+			$('.page-overlay--download').fadeIn(200);
+			setTimeout(function(){
+				$('.page-overlay--download .popup-content').addClass("is-showing");
+			}, 100);
+		});
+		$('.popup-close').on("click", function(e){
+			e.preventDefault();
+			$('.page-overlay, .page-overlay--download, .page-overlay--confirm').fadeOut(100);
+			$('.page-overlay .popup-content, .page-overlay--download .popup-content, .page-overlay--confirm .popup-content').removeClass("is-showing");
+		});
+
+		$('.js-demo-popup--confirm').on("click", function(e){
+			e.preventDefault();
+			$('.page-overlay--confirm').fadeIn(200);
+			setTimeout(function(){
+				$('.page-overlay--confirm .popup-content').addClass("is-showing");
+			}, 100);
+		});
+		$('.page-overlay--confirm .ref-button--function-small').on("click", function(e){
+			e.preventDefault();
+			$('.page-overlay--confirm').fadeOut(100);
+			$('.page-overlay--confirm').removelass("is-showing");
+		});
+
+		$('.page-popup').on("click", function(e){
+			if(!$(e.target).parents('.popup-content').length && !($(e.target).is($('.popup-content')))) {
+				$('.page-overlay, .page-overlay--download, .page-overlay--confirm').fadeOut(100);
+				$('.page-overlay .popup-content, .page-overlay--download .popup-content, .page-overlay--confirm .popup-content').removeClass("is-showing");
+			}
+		});
+
+		// Alert Toast
+		$('.js-demo-toast-standard').on("click", function(){
+
+			var popupToastContainer = $("<div>").addClass("popup-toast-container js-popup-toast-container");
+			var popupToast = $("<div>").addClass("popup-toast").html('<h2>You Have a New Follower!</h2><p>King just started following Feeding Time With Zookeeper Ken</p><p><a href="#">Read more</a></p><img alt="Bulb icon" src="images/icon-bulb.png">');
+			popupToastContainer.append(popupToast);
+			$('body').append(popupToastContainer);
+
+			var popupHeight = popupToast.innerHeight();
+			popupToastContainer.css("z-index", 10000);
+			popupToastContainer.css("top", "calc(100% - " + popupHeight + "px)");
+			setTimeout(function(){
+				popupToast.addClass("is-read");
+				setTimeout(function(){
+					popupToastContainer.removeAttr("style");
+					popupToast.removeClass("is-read");
+					setTimeout(function(){
+						popupToastContainer.remove();
+					}, 500);
+				}, 1000);
+			}, 3000);
+		});
+
+		$('.js-demo-toast-alert').on("click", function(){
+
+			var popupToastContainer = $("<div>").addClass("popup-toast-container js-popup-toast-alert-container");
+			var popupToast = $("<div>").addClass("popup-toast popup-toast--alert").html('<h2>Your Account Password Was Changed</h2><p>You need to take action straight away</p><p><a href="#">Read more</a></p><img alt="Bulb icon" src="images/icon-warning.png">');
+			popupToastContainer.append(popupToast);
+			$('body').append(popupToastContainer);
+
+			var popupHeight = popupToast.innerHeight();
+			popupToastContainer.css("z-index", 10000);
+			popupToastContainer.css("top", "calc(100% - " + popupHeight + "px)");
+		});
+
+  	window.onready = initScripts();
+  </script>
+</body>
