@@ -35,6 +35,6 @@ public enum FeedFetchStatusType {
 				valueLookup.put(currentFeedFetchStatusType.value, currentFeedFetchStatusType);
 			}
 		}
-		return valueLookup.get(value);
+		return valueLookup.get(value.toLowerCase());
 	}
 }
