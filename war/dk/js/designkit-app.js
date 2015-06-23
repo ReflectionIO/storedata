@@ -469,5 +469,41 @@ var SubmitButtonWithFeedback = function() {
 			}, 3000);
 		}
 	};
+
+
+// PopupsPage object
+	var PopupsPage = function() {
+		new Page();
+		var dkPageProperties = {
+			bannerImage: "images/banner-icon-popup.png",
+			bannerImageAlt: "Popup icon", 
+			sectionTitle: "UI Components", 
+			componentTitle: "Popups", 
+			intro: "Content that is only required at specific points in a user journey is contained within pop ups e.g. help copy that identifies features or modal boxes that carry out specific functions. The various applications are detailed below.",
+			pageUrl: "popups.html"
+		}
+		new DesignKitPage(dkPageProperties);
+
+		// Components
+		new FormFieldSelect();
+		new ToolTip();
+	};
+
+// ChartsPage object
+	var ChartsPage = function() {
+		new Page();
+		var dkPageProperties = {
+			bannerImage: "images/banner-icon-grids.png",
+			bannerImageAlt: "Button icon", 
+			sectionTitle: "Charts", 
+			componentTitle: "Highcharts Demos", 
+			intro: "",
+			pageUrl: "highcharts.html"
+		}
+		new DesignKitPage(dkPageProperties);
+
+		// Components
+		
+	};
 /* END PAGE OBJECTS FOR TEMPLATES */
 

@@ -946,6 +946,80 @@
 		    });
 		});
 	}
+
+	var ToolTip = function() {
+		if($('.no-touch').length) {
+			$('.js-tooltip').each(function(){
+				var $this = $(this);
+				var tooltipText = $(this).data("tooltip");
+				var tooltip = $('<div>').addClass("tooltip").text(tooltipText);
+				var topPosition = $this.offset().top;
+				var leftPosition = $this.offset().left;
+				var componentHeight = $this.innerHeight();
+				$this.on("mouseenter", function(){
+					$('body').append(tooltip);
+					var tooltipHeight = tooltip.innerHeight();
+					tooltip.hide()
+					tooltip.css({"top": topPosition - tooltipHeight - 20, "left": leftPosition});
+					setTimeout(function(){
+						tooltip.fadeIn(200);
+					}, 800);
+				});
+				$this.on("mouseleave", function(){
+					tooltip.remove();
+				});
+			});
+		}
+
+		$('.js-whats-this-tooltip').on("click", function(e){
+			e.preventDefault();
+			var $this = $(this);
+			if(!($this.hasClass('is-open'))) {
+				$this.addClass('is-open');
+				var topPosition = $this.offset().top;
+				var leftPosition = $this.offset().left;
+				var tooltipContainer = $('<div>').addClass("whats-this-tooltip-popup");
+				if($this.hasClass('whats-this-tooltip--dark')) {
+					tooltipContainer.addClass("whats-this-tooltip--dark");
+				}
+				var tooltip = $('<div>').addClass("whats-this-tooltip");
+				tooltip.append($('<h2>').text("What's This?"));
+				tooltip.append($('<p>').text($this.data("whatsthis")));
+				tooltip.append($('<img>').attr("src", "images/icon-bulb.png").attr("alt", "Bulb icon"));
+				tooltipContainer.append(tooltip);
+				$('body').append(tooltipContainer);
+				var tooltipWidth = tooltip.innerWidth();
+				var tooltipHeight = tooltip.innerHeight();
+				var iconOffset = 10;
+				if($(window).width() > 480) {
+					if($this.hasClass('position-tooltip-left')) {
+						tooltip.addClass("position-tooltip-left");
+						tooltipContainer.css({"top": topPosition - (tooltipHeight/2) + iconOffset, "left": leftPosition - tooltipWidth - 20});
+					} else if($this.hasClass('position-tooltip-right')) {
+						tooltip.addClass("position-tooltip-right");
+						tooltipContainer.css({"top": topPosition - (tooltipHeight/2) + iconOffset, "left": leftPosition + 38});
+					} else if($this.hasClass('position-tooltip-top')) {
+						tooltip.addClass("position-tooltip-top");
+						tooltipContainer.css({"top": topPosition - 20 - tooltipHeight, "left": leftPosition - (tooltipWidth/2) + iconOffset});
+					} else {
+						tooltipContainer.css({"top": topPosition + 40, "left": leftPosition - (tooltipWidth/2) + 8});
+					}
+				} else {
+					tooltipContainer.css({"top": topPosition + 38, "left": "50%", "margin-left": -(tooltipWidth/2)});
+				}
+				
+				setTimeout(function(){
+					tooltip.addClass("is-open");
+				}, 10);				
+				$('body').on("click", function(e){
+					if(!($(e.target).is($this))) {
+						tooltipContainer.remove();
+						$this.removeClass('is-open');
+					}
+				});
+			}
+		});
+	}
 /* END COMPONENT OBJECTS */
 
 /* PAGE OBJECTS FOR TEMPLATES */
