@@ -49,7 +49,7 @@
 			      	<input class="ref-button search-button-mobile is-highlighted" type="submit" value="a" />
 				    </div>
 					</form>
-					<button class="ref-button--function-small with-icon"><span class="ref-icon-before ref-icon-before--cloud">Download</span></button>
+					<button class="ref-button--function-small ref-button--function-small--with-icon"><span class="ref-icon-before ref-icon-before--cloud">Download</span></button>
 				</div>
 				<div class="tabs">
 					<ul class="tabs-container default-tabs-transition tabs-to-dropdown">
@@ -541,11 +541,6 @@
 				else {
 					$popup.addClass('is-showing');
 				}
-			});
-
-			// mock JS for calculate responsive tables td height on tabs click
-			$('.js-tab-select').on("click", function(){
-				new ResponsiveTable();
 			});
   	}
 

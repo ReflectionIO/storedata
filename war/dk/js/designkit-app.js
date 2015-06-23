@@ -321,14 +321,14 @@ var SubmitButtonWithFeedback = function() {
 
 	LoadingPage.prototype.createComponentLoadingBar = function() {
 		var $loadingText = $("<span>").text("Loading...");
-		var $loadingBar = $("<div>").addClass("page-loading").addClass("componenet-loading").addClass("is-opening").append($loadingText);
+		var $loadingBar = $("<div>").addClass("page-loading").addClass("component-loading").addClass("is-opening").append($loadingText);
 		$(".component-example").append($loadingBar);
 		this.mockLoading($loadingBar, $loadingText);
 	};
 
 	LoadingPage.prototype.createComponentLoadingBarDeterminate = function() {
 		var $loadingText = $("<span>").text("Loading...");
-		var $loadingBar = $("<div>").addClass("page-loading").addClass("componenet-loading").addClass("page-loading--determinate").addClass("is-opening").append($loadingText);
+		var $loadingBar = $("<div>").addClass("page-loading").addClass("component-loading").addClass("page-loading--determinate").addClass("is-opening").append($loadingText);
 		var $progressBar = $("<div>").addClass("loading-progress");
 		$loadingBar.append($progressBar);
 		$(".component-example").append($loadingBar);

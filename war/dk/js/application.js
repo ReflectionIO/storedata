@@ -922,31 +922,6 @@
 		});
 	};
 
-	var ResponsiveTable = function() {
-		$('.table-wrapper').each(function(){
-			$this = $(this);
-			var tr = $this.find('.scrollable table.responsive tr'),
-        tr_copy = $this.find('.pinned table tr'),
-        heights = [];
-
-		    tr.each(function (index) {
-		      var self = $(this),
-		          tx = self.find('th, td');
-
-		      tx.each(function () {
-		        var height = $(this).innerHeight();
-		        heights[index] = heights[index] || 0;
-		        if (height > heights[index]) heights[index] = height;
-		      });
-
-		    });
-
-		    tr_copy.each(function (index) {
-		      $(this).height(heights[index]);
-		    });
-		});
-	}
-
 	var ToolTip = function() {
 		if($('.no-touch').length) {
 			$('.js-tooltip').each(function(){
@@ -1033,11 +1008,6 @@
 		new TabsToMobileDropDown();
 		new FormFieldSelect();
 		new BackToTop();
-		new ResponsiveTable();
-
-		$(window).on("resize", function(){
-			new ResponsiveTable();
-		});
 	}
 
 // BlogPage object

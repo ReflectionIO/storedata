@@ -5378,13 +5378,13 @@ table.table-data > tbody > tr:nth-child(even) > td {
   /* line 168, ../sass/templates/_leaderboard.scss */
   .pinned .table-overall tr,
   .scrollable .table-overall tr {
-    height: 80px;
+    height: 82px;
   }
 
   /* line 172, ../sass/templates/_leaderboard.scss */
   .pinned .table-app-group tr,
   .scrollable .table-app-group tr {
-    height: 68px;
+    height: 70px;
   }
 }
 /* line 2, ../sass/templates/_linked-accounts.scss */
