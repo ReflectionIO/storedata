@@ -86,7 +86,7 @@ public class FeedFetchService implements IFeedFetchService {
 		//		feedFetch.id = connection.getCurrentRowLong("id");
 		//		feedFetch.created = connection.getCurrentRowDateTime("created");
 		//		feedFetch.deleted = connection.getCurrentRowString("deleted");
-		//
+
 		//		feedFetch.code = connection.getCurrentRowLong("code2");
 		//		feedFetch.country = stripslashes(connection.getCurrentRowString("country"));
 		//		feedFetch.data = stripslashes(connection.getCurrentRowString("data"));
@@ -94,7 +94,7 @@ public class FeedFetchService implements IFeedFetchService {
 		//		feedFetch.store = stripslashes(connection.getCurrentRowString("store"));
 		//		feedFetch.type = stripslashes(connection.getCurrentRowString("type"));
 		//		feedFetch.status = FeedFetchStatusType.fromString(connection.getCurrentRowString("status"));
-		//
+
 		//		feedFetch.category = new Category();
 		//		feedFetch.category.id = connection.getCurrentRowLong("categoryid");
 
@@ -653,6 +653,42 @@ public class FeedFetchService implements IFeedFetchService {
 
 			pstat.setDate(1, new java.sql.Date(startDate.getTime()));
 			pstat.setDate(2, new java.sql.Date(endDate.getTime()));
+
+			feedFetchConnection.executePreparedStatement(pstat);
+
+			while (feedFetchConnection.fetchNextRow()) {
+				feedFetches.add(feedFetchConnection.getCurrentRowLong("rank_fetch_id"));
+			}
+		} catch (SQLException e) {
+			LOG.log(Level.SEVERE, "Exception occured while executing prepared statement", e);
+		} finally {
+			if (feedFetchConnection != null) {
+				feedFetchConnection.closeStatement(pstat);
+				feedFetchConnection.disconnect();
+			}
+		}
+
+		return feedFetches;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see io.reflection.app.service.feedfetch.IFeedFetchService#getFeedFetchIdsByCode(java.lang.Long)
+	 */
+	@Override
+	public List<Long> getFeedFetchIdsByCode(Long code) throws DataAccessException {
+		final List<Long> feedFetches = new ArrayList<Long>();
+
+		String selectQuery = "SELECT rank_fetch_id from rank_fetch where group_fetch_code = ?";
+
+		final Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
+
+		PreparedStatement pstat = null;
+		try {
+			feedFetchConnection.connect();
+			pstat = feedFetchConnection.getRealConnection().prepareStatement(selectQuery, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+			pstat.setLong(1, code);
 
 			feedFetchConnection.executePreparedStatement(pstat);
 

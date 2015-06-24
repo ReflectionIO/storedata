@@ -160,7 +160,6 @@ public class DevHelperServlet extends HttpServlet {
 			if ("modelByDates".equalsIgnoreCase(action)) {
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-
 				List<Long> feedIds = null;
 
 				try {
@@ -170,6 +169,7 @@ public class DevHelperServlet extends HttpServlet {
 					feedIds = FeedFetchServiceProvider.provide().getFeedFetchIdsBetweenDates(startDate, endDate);
 				} catch (Exception e) {
 					LOG.log(Level.SEVERE, "Exception occured while trying to get rank_fetches between start and end date: " + start + ", " + end, e);
+					success = false;
 				}
 
 				final Modeller modeller = ModellerFactory.getModellerForStore(DataTypeHelper.IOS_STORE_A3);
@@ -180,8 +180,8 @@ public class DevHelperServlet extends HttpServlet {
 							LOG.log(GaeLevel.DEBUG, String.format("Enqueued fetch with id %d for modelling", fetchId));
 						}
 					}
+					success = true;
 				}
-
 			} else if ("model".equalsIgnoreCase(action)) {
 				String feedfetchidStr = req.getParameter("feedfetchid");
 
@@ -209,29 +209,37 @@ public class DevHelperServlet extends HttpServlet {
 							LOG.log(GaeLevel.DEBUG, String.format("Enqueued fetch with id %d for modelling", fetch.id));
 						}
 					}
+					success = true;
 				} catch (Exception e) {
 					if (LOG.isLoggable(GaeLevel.DEBUG)) {
 						LOG.log(GaeLevel.DEBUG, "Error occured when trying to process a model request via devhelper", e);
 					}
+					success = false;
 				}
-			} else if ("addingested".equalsIgnoreCase(action)) {
+			} else if ("ingestByCode".equalsIgnoreCase(action)) {
+				List<Long> feedIds = null;
 
-				// int i = 0;
-				// for (FeedFetch entity : ofy().load().type(FeedFetch.class).offset(Integer.parseInt(start)).limit(Integer.parseInt(count)).iterable()) {
-				// entity.ingested = Boolean.FALSE;
-				//
-				// ofy().save().entity(entity).now();
-				//
-				// if (LOG.isLoggable(GaeLevel.TRACE)) {
-				// LOG.log(GaeLevel.TRACE, String.format("Set entity [%d] ingested to false", entity.id.longValue()));
-				// }
-				//
-				// i++;
-				// }
-				//
-				// if (LOG.isLoggable(GaeLevel.DEBUG)) {
-				// LOG.log(GaeLevel.DEBUG, String.format("Processed [%d] entities", i));
-				// }
+				String codeStr = req.getParameter("code");
+				try {
+					feedIds = FeedFetchServiceProvider.provide().getFeedFetchIdsByCode(Long.valueOf(codeStr));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				if (feedIds == null) {
+					if (LOG.isLoggable(GaeLevel.DEBUG)) {
+						LOG.log(GaeLevel.DEBUG, "Could not find any fetches for code: " + codeStr);
+					}
+				} else {
+					final Ingestor ingestor = IngestorFactory.getIngestorForStore(DataTypeHelper.IOS_STORE_A3);
+
+					for (Long fetchId : feedIds) {
+						ingestor.enqueue(Arrays.asList(Long.valueOf(fetchId)));
+					}
+
+					if (LOG.isLoggable(GaeLevel.DEBUG)) {
+						LOG.log(GaeLevel.DEBUG, String.format("Enqueued %d fetches for ingesting", feedIds.size()));
+					}
+				}
 
 				success = true;
 			} else if ("uningest".equalsIgnoreCase(action)) {
