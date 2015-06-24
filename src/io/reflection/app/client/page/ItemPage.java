@@ -54,6 +54,7 @@ import io.reflection.app.client.part.datatypes.AppRanking;
 import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.client.part.navigation.Header.PanelType;
 import io.reflection.app.client.res.Styles;
+import io.reflection.app.client.res.Styles.ReflectionMainStyles;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
@@ -178,6 +179,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField DivElement appDetailsPanel;
 
 	private Element loaderInline = AnimationHelper.getLoaderInlineElement();
+	private ReflectionMainStyles style = Styles.STYLES_INSTANCE.reflectionMainStyle();
 
 	public ItemPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -228,17 +230,17 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 		if (item.mediumImage != null) {
 			image.setUrl(item.mediumImage);
-			image.removeStyleName(io.reflection.app.client.res.Styles.STYLES_INSTANCE.reflection().unknownAppSmall());
+			image.removeStyleName(Styles.STYLES_INSTANCE.reflection().unknownAppSmall());
 		} else {
 			image.setUrl("");
-			image.addStyleName(io.reflection.app.client.res.Styles.STYLES_INSTANCE.reflection().unknownAppSmall());
+			image.addStyleName(Styles.STYLES_INSTANCE.reflection().unknownAppSmall());
 		}
 		if (item.smallImage != null) {
 			imageTable.setUrl(item.smallImage);
-			imageTable.removeStyleName(io.reflection.app.client.res.Styles.STYLES_INSTANCE.reflection().unknownAppSmall());
+			imageTable.removeStyleName(Styles.STYLES_INSTANCE.reflection().unknownAppSmall());
 		} else {
 			imageTable.setUrl("");
-			imageTable.addStyleName(io.reflection.app.client.res.Styles.STYLES_INSTANCE.reflection().unknownAppSmall());
+			imageTable.addStyleName(Styles.STYLES_INSTANCE.reflection().unknownAppSmall());
 		}
 
 		Store s = StoreController.get().getStore(item.source);
@@ -365,10 +367,10 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			}
 		};
 		SafeHtmlHeader dateHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Date " + sorterSvg));
-		dateHeader.setHeaderStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().canBeSorted());
+		dateHeader.setHeaderStyleNames(style.canBeSorted());
 		revenueTableDesktop.addColumn(dateColumn, dateHeader);
 		revenueTableMobile.addColumn(dateColumn, dateHeader);
-		dateColumn.setCellStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().dateValue());
+		dateColumn.setCellStyleNames(style.dateValue());
 
 		TextColumn<AppRanking> revenueColumn = new TextColumn<AppRanking>() {
 
@@ -381,9 +383,9 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			}
 		};
 		SafeHtmlHeader revenueHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Revenue Generated " + sorterSvg));
-		revenueHeader.setHeaderStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().canBeSorted());
+		revenueHeader.setHeaderStyleNames(style.canBeSorted());
 		revenueTableDesktop.addColumn(revenueColumn, revenueHeader);
-		revenueColumn.setCellStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().revenueValue());
+		revenueColumn.setCellStyleNames(style.revenueValue());
 
 		Column<AppRanking, SafeHtml> revenueForPeriodColumn = new Column<AppRanking, SafeHtml>(new SafeHtmlCell()) {
 
@@ -392,16 +394,16 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				SafeHtml value = SafeHtmlUtils.fromSafeConstant("");
 				if (object.revenuePercentForPeriod != null) {
 					String percentage = FormattingHelper.TWO_DECIMALS_FORMATTER.format(object.revenuePercentForPeriod.floatValue() * 100);
-					value = SafeHtmlUtils.fromTrustedString("<span>" + percentage + "%</span><div class=\""
-							+ Styles.STYLES_INSTANCE.reflectionMainStyle().dataBar() + "\"><div style=\"width: " + percentage + "%\"></div></div>");
+					value = SafeHtmlUtils.fromTrustedString("<span>" + percentage + "%</span><div class=\"" + style.dataBar() + "\"><div style=\"width: "
+							+ percentage + "%\"></div></div>");
 				}
 				return value;
 			}
 		};
 		SafeHtmlHeader revenueForPeriodHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("% of Total Revenue for Period " + sorterSvg));
-		revenueForPeriodHeader.setHeaderStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().canBeSorted());
+		revenueForPeriodHeader.setHeaderStyleNames(style.canBeSorted());
 		revenueTableDesktop.addColumn(revenueForPeriodColumn, revenueForPeriodHeader);
-		revenueForPeriodColumn.setCellStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().revenuePercentage());
+		revenueForPeriodColumn.setCellStyleNames(style.revenuePercentage());
 
 	}
 
@@ -682,9 +684,9 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 	private void refreshTabs() {
 		for (String key : tabs.keySet()) {
-			tabs.get(key).removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isActive());
+			tabs.get(key).removeClassName(style.isActive());
 		}
-		tabs.get(selectedTab).addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isActive());
+		tabs.get(selectedTab).addClassName(style.isActive());
 
 		ResponsiveDesignHelper.makeTabsResponsive();
 	}
@@ -892,30 +894,30 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	private void setRevenueDownloadTabsEnabled(boolean enable) {
 		if (enable) {
 			revenueText.setInnerText("Revenue");
-			revenueItem.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
+			revenueItem.removeClassName(style.isDisabled());
 			revenueLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
 					REVENUE_CHART_TYPE, comingPage, filterContents));
 			downloadsText.setInnerText("Downloads");
-			downloadsItem.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
+			downloadsItem.removeClassName(style.isDisabled());
 			downloadsLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
 					DOWNLOADS_CHART_TYPE, comingPage, filterContents));
 			appDetailsText.setInnerText("App Details");
-			appDetailsItem.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
+			appDetailsItem.removeClassName(style.isDisabled());
 			appDetailsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 		} else {
 			revenueText.setInnerText("Revenue - coming soon");
-			revenueItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
+			revenueItem.addClassName(style.isDisabled());
 			revenueLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 			downloadsText.setInnerText("Downloads - coming soon");
-			downloadsItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
+			downloadsItem.addClassName(style.isDisabled());
 			downloadsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 			appDetailsText.setInnerText("App Details - coming soon");
-			appDetailsItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
+			appDetailsItem.addClassName(style.isDisabled());
 			appDetailsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 			for (String key : tabs.keySet()) {
-				tabs.get(key).removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isActive());
+				tabs.get(key).removeClassName(style.isActive());
 			}
-			tabs.get(RANKING_CHART_TYPE).addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isActive());
+			tabs.get(RANKING_CHART_TYPE).addClassName(style.isActive());
 			tabs.remove(REVENUE_CHART_TYPE);
 			tabs.remove(DOWNLOADS_CHART_TYPE);
 			tabs.remove("appdetails");
