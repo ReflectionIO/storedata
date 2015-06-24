@@ -316,7 +316,9 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	}
 
 	public void fillAccountNameList() {
+		if (accountName.getItemCount() > 0) {
 		accountName.clear();
+		}
 		FilterHelper.addLinkedAccounts(accountName);
 	}
 
@@ -425,7 +427,9 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		if (output.status == StatusType.StatusTypeSuccess) {
 			if (output.pager.totalCount != null) {
 				if (LinkedAccountController.get().linkedAccountsFetched()) {
+					if (accountName.getItemCount() == 0) {
 					fillAccountNameList();
+					}
 					linkedAccountsCount = LinkedAccountController.get().getLinkedAccountsCount();
 					if (LinkedAccountController.get().getLinkedAccountsCount() > 0) {
 						FilterController.get().setLinkedAccount(LinkedAccountController.get().getAllLinkedAccounts().get(0).id);
