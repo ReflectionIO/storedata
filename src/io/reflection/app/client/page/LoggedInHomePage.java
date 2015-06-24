@@ -50,60 +50,60 @@ public class LoggedInHomePage extends Page {
 
 	private void populateAccordionSwitches() {
 		accordionSwitchUK.addItemComplete("Games");
-		accordionSwitchUK.addItemIncomplete("Overall", "Coming Soon");
-		accordionSwitchUK.addItemIncomplete("Education", "Coming Soon");
-		accordionSwitchUK.addItemIncomplete("Music", "Coming Soon");
+		accordionSwitchUK.addItemIncomplete("Overall", "");
+		accordionSwitchUK.addItemIncomplete("Education", "");
+		accordionSwitchUK.addItemIncomplete("Music", "");
 		accordionSwitchUK.setSubtitleHtml("(1<span>Category</span>)");
 
-		accordionSwitchDE.addItemIncomplete("Overall", "Coming Soon");
-		accordionSwitchDE.addItemIncomplete("Games", "Coming Soon");
-		accordionSwitchDE.addItemIncomplete("Education", "Coming Soon");
-		accordionSwitchDE.addItemIncomplete("Music", "Coming Soon");
+		accordionSwitchDE.addItemIncomplete("Overall", "");
+		accordionSwitchDE.addItemIncomplete("Games", "");
+		accordionSwitchDE.addItemIncomplete("Education", "");
+		accordionSwitchDE.addItemIncomplete("Music", "");
 
-		accordionSwitchFR.addItemIncomplete("Overall", "Coming Soon");
-		accordionSwitchFR.addItemIncomplete("Games", "Coming Soon");
-		accordionSwitchFR.addItemIncomplete("Education", "Coming Soon");
-		accordionSwitchFR.addItemIncomplete("Music", "Coming Soon");
+		accordionSwitchFR.addItemIncomplete("Overall", "");
+		accordionSwitchFR.addItemIncomplete("Games", "");
+		accordionSwitchFR.addItemIncomplete("Education", "");
+		accordionSwitchFR.addItemIncomplete("Music", "");
 
-		accordionSwitchIT.addItemIncomplete("Overall", "Coming Soon");
-		accordionSwitchIT.addItemIncomplete("Games", "Coming Soon");
-		accordionSwitchIT.addItemIncomplete("Education", "Coming Soon");
-		accordionSwitchIT.addItemIncomplete("Music", "Coming Soon");
+		accordionSwitchIT.addItemIncomplete("Overall", "");
+		accordionSwitchIT.addItemIncomplete("Games", "");
+		accordionSwitchIT.addItemIncomplete("Education", "");
+		accordionSwitchIT.addItemIncomplete("Music", "");
 
-		accordionSwitchES.addItemIncomplete("Overall", "Coming Soon");
-		accordionSwitchES.addItemIncomplete("Games", "Coming Soon");
-		accordionSwitchES.addItemIncomplete("Education", "Coming Soon");
-		accordionSwitchES.addItemIncomplete("Music", "Coming Soon");
+		accordionSwitchES.addItemIncomplete("Overall", "");
+		accordionSwitchES.addItemIncomplete("Games", "");
+		accordionSwitchES.addItemIncomplete("Education", "");
+		accordionSwitchES.addItemIncomplete("Music", "");
 
-		accordionSwitchUS.addItemIncomplete("Overall", "Coming Soon");
-		accordionSwitchUS.addItemIncomplete("Games", "Coming Soon");
-		accordionSwitchUS.addItemIncomplete("Education", "Coming Soon");
-		accordionSwitchUS.addItemIncomplete("Music", "Coming Soon");
+		accordionSwitchUS.addItemIncomplete("Overall", "");
+		accordionSwitchUS.addItemIncomplete("Games", "");
+		accordionSwitchUS.addItemIncomplete("Education", "");
+		accordionSwitchUS.addItemIncomplete("Music", "");
 
-		accordionSwitchCA.addItemIncomplete("Overall", "Coming Soon");
-		accordionSwitchCA.addItemIncomplete("Games", "Coming Soon");
-		accordionSwitchCA.addItemIncomplete("Education", "Coming Soon");
-		accordionSwitchCA.addItemIncomplete("Music", "Coming Soon");
+		accordionSwitchCA.addItemIncomplete("Overall", "");
+		accordionSwitchCA.addItemIncomplete("Games", "");
+		accordionSwitchCA.addItemIncomplete("Education", "");
+		accordionSwitchCA.addItemIncomplete("Music", "");
 
-		accordionSwitchAU.addItemIncomplete("Overall", "Coming Soon");
-		accordionSwitchAU.addItemIncomplete("Games", "Coming Soon");
-		accordionSwitchAU.addItemIncomplete("Education", "Coming Soon");
-		accordionSwitchAU.addItemIncomplete("Music", "Coming Soon");
+		accordionSwitchAU.addItemIncomplete("Overall", "");
+		accordionSwitchAU.addItemIncomplete("Games", "");
+		accordionSwitchAU.addItemIncomplete("Education", "");
+		accordionSwitchAU.addItemIncomplete("Music", "");
 
-		accordionSwitchNZ.addItemIncomplete("Overall", "Coming Soon");
-		accordionSwitchNZ.addItemIncomplete("Games", "Coming Soon");
-		accordionSwitchNZ.addItemIncomplete("Education", "Coming Soon");
-		accordionSwitchNZ.addItemIncomplete("Music", "Coming Soon");
+		accordionSwitchNZ.addItemIncomplete("Overall", "");
+		accordionSwitchNZ.addItemIncomplete("Games", "");
+		accordionSwitchNZ.addItemIncomplete("Education", "");
+		accordionSwitchNZ.addItemIncomplete("Music", "");
 
-		accordionSwitchIR.addItemIncomplete("Overall", "Coming Soon");
-		accordionSwitchIR.addItemIncomplete("Games", "Coming Soon");
-		accordionSwitchIR.addItemIncomplete("Education", "Coming Soon");
-		accordionSwitchIR.addItemIncomplete("Music", "Coming Soon");
+		accordionSwitchIR.addItemIncomplete("Overall", "");
+		accordionSwitchIR.addItemIncomplete("Games", "");
+		accordionSwitchIR.addItemIncomplete("Education", "");
+		accordionSwitchIR.addItemIncomplete("Music", "");
 
-		accordionSwitchMore.addItemIncomplete("Overall", "Coming Soon");
-		accordionSwitchMore.addItemIncomplete("Games", "Coming Soon");
-		accordionSwitchMore.addItemIncomplete("Education", "Coming Soon");
-		accordionSwitchMore.addItemIncomplete("Music", "Coming Soon");
+		accordionSwitchMore.addItemIncomplete("Overall", "");
+		accordionSwitchMore.addItemIncomplete("Games", "");
+		accordionSwitchMore.addItemIncomplete("Education", "");
+		accordionSwitchMore.addItemIncomplete("Music", "");
 
 	}
 
