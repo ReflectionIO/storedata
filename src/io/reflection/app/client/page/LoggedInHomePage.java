@@ -39,7 +39,7 @@ public class LoggedInHomePage extends Page {
 	@UiField AccordionSwitch accordionSwitchAU;
 	@UiField AccordionSwitch accordionSwitchNZ;
 	@UiField AccordionSwitch accordionSwitchIR;
-	@UiField AccordionSwitch accordionSwitchJP;
+	@UiField AccordionSwitch accordionSwitchMore;
 
 	public LoggedInHomePage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -100,10 +100,10 @@ public class LoggedInHomePage extends Page {
 		accordionSwitchIR.addItemIncomplete("Education", "Coming Soon");
 		accordionSwitchIR.addItemIncomplete("Music", "Coming Soon");
 
-		accordionSwitchJP.addItemIncomplete("Overall", "Coming Soon");
-		accordionSwitchJP.addItemIncomplete("Games", "Coming Soon");
-		accordionSwitchJP.addItemIncomplete("Education", "Coming Soon");
-		accordionSwitchJP.addItemIncomplete("Music", "Coming Soon");
+		accordionSwitchMore.addItemIncomplete("Overall", "Coming Soon");
+		accordionSwitchMore.addItemIncomplete("Games", "Coming Soon");
+		accordionSwitchMore.addItemIncomplete("Education", "Coming Soon");
+		accordionSwitchMore.addItemIncomplete("Music", "Coming Soon");
 
 	}
 

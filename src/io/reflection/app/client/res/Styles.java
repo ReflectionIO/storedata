@@ -331,8 +331,8 @@ public interface Styles extends ClientBundle {
 		@ClassName("comments-link")
 		String commentsLink();
 
-		@ClassName("componenet-loading")
-		String componenetLoading();
+		@ClassName("component-loading")
+		String componentLoading();
 
 		@ClassName("components-row-with-border")
 		String componentsRowWithBorder();
@@ -345,6 +345,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("connect-account-main-content")
 		String connectAccountMainContent();
+
+		@ClassName("connect-account-submitted")
+		String connectAccountSubmitted();
 
 		@ClassName("content-list")
 		String contentList();
@@ -733,6 +736,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("highcharts-container")
 		String highchartsContainer();
 
+		@ClassName("highcharts-series")
+		String highchartsSeries();
+
 		@ClassName("highcharts-tooltip")
 		String highchartsTooltip();
 
@@ -863,6 +869,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("is-pressed")
 		String isPressed();
+
+		@ClassName("is-read")
+		String isRead();
 
 		@ClassName("is-safari")
 		String isSafari();
@@ -1100,6 +1109,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("page-overlay--confirm")
 		String pageOverlayConfirm();
 
+		@ClassName("page-overlay--download")
+		String pageOverlayDownload();
+
 		@ClassName("page-popup")
 		String pagePopup();
 
@@ -1186,6 +1198,24 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("popup-content--link-account")
 		String popupContentLinkAccount();
+
+		@ClassName("popup-toast")
+		String popupToast();
+
+		@ClassName("popup-toast--alert")
+		String popupToastAlert();
+
+		@ClassName("popup-toast-container")
+		String popupToastContainer();
+
+		@ClassName("position-tooltip-left")
+		String positionTooltipLeft();
+
+		@ClassName("position-tooltip-right")
+		String positionTooltipRight();
+
+		@ClassName("position-tooltip-top")
+		String positionTooltipTop();
 
 		@ClassName("posted-by")
 		String postedBy();
@@ -1453,6 +1483,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("search__results-section--developers")
 		String search__resultsSectionDevelopers();
 
+		@ClassName("selected-series")
+		String selectedSeries();
+
 		@ClassName("selected-tab")
 		String selectedTab();
 
@@ -1628,6 +1661,11 @@ public interface Styles extends ClientBundle {
 		@ClassName("toggle-revenue")
 		String toggleRevenue();
 
+		String tooltip();
+
+		@ClassName("top-five-section")
+		String topFiveSection();
+
 		@ClassName("total-revenue-title")
 		String totalRevenueTitle();
 
@@ -1654,12 +1692,23 @@ public interface Styles extends ClientBundle {
 		@ClassName("warning-text")
 		String warningText();
 
+		@ClassName("whats-this-tooltip")
+		String whatsThisTooltip();
+
+		@ClassName("whats-this-tooltip--dark")
+		String whatsThisTooltipDark();
+
+		@ClassName("whats-this-tooltip-icon")
+		String whatsThisTooltipIcon();
+
+		@ClassName("whats-this-tooltip-popup")
+		String whatsThisTooltipPopup();
+
 		@ClassName("will-show")
 		String willShow();
 
 		@ClassName("window-warning")
 		String windowWarning();
-
 	}
 
 	public interface HomePageStyles extends CssResource {
