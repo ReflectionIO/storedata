@@ -8,6 +8,7 @@
 package io.reflection.app.client.component;
 
 import io.reflection.app.client.helper.DOMHelper;
+import io.reflection.app.client.res.Styles;
 
 import com.google.gwt.user.client.ui.PopupPanel;
 
@@ -47,6 +48,8 @@ public class PopupDialog extends PopupPanel {
 		super.center();
 
 		DOMHelper.setScrollEnabled(false);
+
+		getElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
 	}
 
 	/*
@@ -56,6 +59,8 @@ public class PopupDialog extends PopupPanel {
 	 */
 	@Override
 	public void hide() {
+		getElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
+
 		super.hide();
 		parameter = null;
 		DOMHelper.setScrollEnabled(true);
