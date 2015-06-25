@@ -6,8 +6,6 @@
 	<ui:with field="smallImage" type="com.google.gwt.safehtml.shared.SafeUri" />
 	<ui:with field="styleName" type="java.lang.String" />
 	<ui:with field="link" type="com.google.gwt.safehtml.shared.SafeUri" />
-	<ui:with field="displayActiveLink" type="java.lang.String" />
-	<ui:with field="displayInactiveLink" type="java.lang.String" />
 
 	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 	<ui:style gss="true">
@@ -15,14 +13,11 @@
 	</ui:style>
 
 	<div>
-		<img class="{STYLES_INSTANCE.reflectionMainStyle.imgRounded}" src="{smallImage}" />
+		<img class="{STYLES_INSTANCE.reflectionMainStyle.imgRounded} {STYLES_INSTANCE.reflection.unknownAppSmall}" src="{smallImage}" />
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.mhxte6cRA}">
-				<a href="{link}" style="{displayActiveLink}">
-					<ui:text from="{name}" />
-				</a>
-				<span style="{displayInactiveLink}">
-					<ui:text from="{name}" />
-				</span>
+			<a href="{link}">
+				<ui:text from="{name}" />
+			</a>
 			<span class="{STYLES_INSTANCE.reflectionMainStyle.textMuted}">
 				<ui:text from="{creatorName}" />
 			</span>
