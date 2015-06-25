@@ -14,7 +14,7 @@
 					Hi
 					<span ui:field="userName"></span>
 				</h1>
-				<p>Our team have been hard at work optimising accuracy and building features from your feedback.</p><p>Monitor our progress here and stay up to date with what's coming next.</p>
+				<p>Our team has been hard at work improving accuracy and building features from your feedback. Keep up to date with our news and progress here.</p>
 			</div>
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.listPartners}">
 				<ul>
@@ -108,10 +108,9 @@
 			</div>
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFiveColumns}">
 				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Beta Roadmap</h2>
-				<p>Below you can find our plan for country and category data rollout as well as our feature roadmap. 
-We continuously work on improving our accuracy across all countries and categories as we add more data. 
-Please note that during our private beta, all of Reflection's features will be free.</p>
-				<p>For any suggestions or feedback, please email us at <a href="mailto:beta@reflection.io">beta@reflection.io</a>.</p>
+				<p>Below you can find our roadmap for country and category data as well as our upcoming features. We also continuously work to improve accuracy across all countries and categories as we add more data.</p>
+<p>Reflection's features are free for all partners during our private beta.</p>
+<p>For any suggestions or feedback, please e-mail us at <a href="mailto:beta@reflection.io">beta@reflection.io</a>.</p>
 				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Data Roadmap</h2>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.accordion}">
 					<ul>
