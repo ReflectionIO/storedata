@@ -761,7 +761,9 @@ public class DevHelperServlet extends HttpServlet {
 
 				success = true;
 			} else if ("enqueuegetallranks".equalsIgnoreCase(action)) {
-				CallServiceMethodServlet.enqueueGetAllRanks("us", "ios", Long.valueOf(24), "topfreeapplications", Long.valueOf(33));
+				CallServiceMethodServlet.enqueueGetAllRanks("gb", "ios", Long.valueOf(24), "topfreeapplications", Long.valueOf(33));
+				CallServiceMethodServlet.enqueueGetAllRanks("gb", "ios", Long.valueOf(24), "toppaidapplications", Long.valueOf(33));
+				CallServiceMethodServlet.enqueueGetAllRanks("gb", "ios", Long.valueOf(24), "topgrossingapplications", Long.valueOf(33));
 				success = true;
 			} else {
 				if (LOG.isLoggable(Level.INFO)) {

@@ -11,7 +11,6 @@ import static io.reflection.app.helpers.ItemPropertyWrapper.PROPERTY_IAP;
 import io.reflection.app.CallServiceMethodServlet;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
-import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.archivers.ArchiverFactory;
 import io.reflection.app.archivers.ItemRankArchiver;
 import io.reflection.app.collectors.Collector;
@@ -39,7 +38,6 @@ import io.reflection.app.service.modelrun.ModelRunServiceProvider;
 import io.reflection.app.service.rank.IRankService;
 import io.reflection.app.service.rank.RankServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
-import io.reflection.app.shared.util.PagerHelper;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
@@ -52,7 +50,6 @@ import java.util.logging.Logger;
 import co.spchopr.persistentmap.PersistentMapFactory;
 
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
-import com.spacehopperstudios.utility.StringUtils;
 
 /**
  * @author billy1380
@@ -406,29 +403,8 @@ public class PredictorIOS implements Predictor {
 
 		alterFeedFetchStatus(simpleModelRun.feedFetch);
 
-		final Collector collector = CollectorFactory.getCollectorForStore(s.a3Code);
-		final boolean isGrossing = collector.isGrossing(simpleModelRun.feedFetch.type);
-		final Pager pager = PagerHelper.createInfinitePager();
-		if (isGrossing) {
-			pager.sortBy = "grossingposition";
-		} else {
-			pager.sortBy = "position";
-		}
-
-		if (pager.sortDirection == null) {
-			pager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
-		}
-
-		final List<String> listTypes = new ArrayList<String>();
-
-		if (isGrossing) {
-			listTypes.addAll(collector.getCounterpartTypes(simpleModelRun.feedFetch.type));
-		}
-
-		listTypes.add(simpleModelRun.feedFetch.type);
-		final String memcacheKey = RankServiceProvider.provide().getName() + ".gathercoderanks." + simpleModelRun.feedFetch.code.toString() + "." + c.a2Code + "."
-				+ s.a3Code + "." + simpleModelRun.feedFetch.category.id.toString() + "." + StringUtils.join(listTypes, ".") + "." + pager.start + "."
-				+ pager.count + "." + pager.sortDirection + "." + pager.sortBy;
+		final String memcacheKey = RankServiceProvider.provide().getName() + ".getGatherCodeRanks." + simpleModelRun.feedFetch.code + "." + c.a2Code + "."
+				+ simpleModelRun.feedFetch.category.id.toString() + "." + simpleModelRun.feedFetch.type;
 
 		PersistentMapFactory.createObjectify().delete(memcacheKey);
 
