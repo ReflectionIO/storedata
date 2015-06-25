@@ -182,6 +182,37 @@ public class DevHelperServlet extends HttpServlet {
 					}
 					success = true;
 				}
+			} else if ("modelByCode".equalsIgnoreCase(action)) {
+				String codeStr = req.getParameter("code");
+
+				if (codeStr == null || codeStr.trim().length() == 0) return;
+
+				try {
+					List<Long> feedIds = null;
+
+					try {
+						feedIds = FeedFetchServiceProvider.provide().getFeedFetchIdsByCode(Long.valueOf(codeStr));
+					} catch (Exception e) {
+						LOG.log(Level.SEVERE, "Exception occured while trying to get rank_fetches for code: " + codeStr, e);
+						success = false;
+					}
+
+					final Modeller modeller = ModellerFactory.getModellerForStore(DataTypeHelper.IOS_STORE_A3);
+					if (feedIds != null) {
+						for (Long fetchId : feedIds) {
+							modeller.enqueueFetchId(fetchId);
+							if (LOG.isLoggable(GaeLevel.DEBUG)) {
+								LOG.log(GaeLevel.DEBUG, String.format("Enqueued fetch with id %d for modelling", fetchId));
+							}
+						}
+						success = true;
+					}
+				} catch (Exception e) {
+					if (LOG.isLoggable(GaeLevel.DEBUG)) {
+						LOG.log(GaeLevel.DEBUG, "Error occured when trying to process a model request via devhelper", e);
+					}
+					success = false;
+				}
 			} else if ("model".equalsIgnoreCase(action)) {
 				String feedfetchidStr = req.getParameter("feedfetchid");
 
