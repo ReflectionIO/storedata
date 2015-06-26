@@ -18,7 +18,6 @@ import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
-import io.reflection.app.helpers.ApiHelper;
 import io.reflection.app.helpers.ItemPropertyWrapper;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.ServiceType;
@@ -121,25 +120,22 @@ public class CallServiceMethodServlet extends HttpServlet {
 						code = FeedFetchServiceProvider.provide().getGatherCode(country, store, start, end);
 					}
 
-					List<String> listTypes = ApiHelper.getAllListTypes(store, listTypeParameter);
 					Set<String> itemIds = new HashSet<String>();
 					List<Rank> ranks;
 					List<Rank> grossingRanks = null;
 					Collector collector = CollectorFactory.getCollectorForStore(a3StoreCodeParameter);
 
-					for (String listType : listTypes) {
-						// get all the ranks for the list type (we are using an infinite pager with no sorting to allow us to generate a deletion key during
-						// prediction)
-						ranks = RankServiceProvider.provide().getGatherCodeRanks(country, category, listType, code);
+					// get all the ranks for the list type (we are using an infinite pager with no sorting to allow us to generate a deletion key during
+					// prediction)
+					ranks = RankServiceProvider.provide().getGatherCodeRanks(country, category, listTypeParameter, code);
 
-						// if the ranks are for a grossing list check that none are free and don't have iaps
-						if (collector != null && collector.isGrossing(listType)) {
-							grossingRanks = ranks;
-						}
+					// if the ranks are for a grossing list check that none are free and don't have iaps
+					if (collector != null && collector.isGrossing(listTypeParameter)) {
+						grossingRanks = ranks;
+					}
 
-						for (Rank rank : ranks) {
-							itemIds.add(rank.itemId);
-						}
+					for (Rank rank : ranks) {
+						itemIds.add(rank.itemId);
 					}
 
 					IItemService itemService = ItemServiceProvider.provide();
@@ -201,7 +197,6 @@ public class CallServiceMethodServlet extends HttpServlet {
 		TaskOptions options = TaskOptions.Builder.withUrl("/callservicemethod");
 		options.param("service", ServiceType.ServiceTypeRank.toString());
 		options.param("method", GETALLRANKS_SUPPORTED_METHOD);
-		// options.param("date", Long.toString(date.getTime()));
 		options.param("code", code.toString());
 		options.param("country", country);
 		options.param("store", store);

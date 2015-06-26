@@ -15,7 +15,6 @@ import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.FeedFetch;
-import io.reflection.app.datatypes.shared.FeedFetchStatusType;
 import io.reflection.app.datatypes.shared.ItemRankSummary;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
@@ -37,6 +36,7 @@ import io.reflection.app.shared.util.DataTypeHelper;
 import io.reflection.app.shared.util.PagerHelper;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -99,20 +99,6 @@ public class DevHelperServlet extends HttpServlet {
 		final String appEngineQueue = req.getHeader("X-AppEngine-QueueName");
 		final boolean isNotQueue = appEngineQueue == null || !"deferred".toLowerCase().equals(appEngineQueue.toLowerCase());
 
-		// if (true) {
-		// com.google.appengine.api.datastore.Query query = new com.google.appengine.api.datastore.Query("__GsFileInfo__");
-		// PreparedQuery p = DatastoreServiceFactory.getDatastoreService().prepare(query);
-		// for (Entity e : p.asIterable()) {
-		// String name = e.getKey().getName();
-		// String destname = (String) e.getProperty("filename");
-		//
-		// System.out.println(name + " " + destname);
-		// }
-		//
-		//
-		// return;
-		// }
-
 		if (isNotQueue && (req.getParameter("defer") == null || req.getParameter("defer").equals("yes"))) {
 			final Queue deferredQueue = QueueFactory.getQueue("deferred");
 
@@ -155,6 +141,7 @@ public class DevHelperServlet extends HttpServlet {
 		final String action = req.getParameter("action");
 		final String object = req.getParameter("object");
 		final String start = req.getParameter("start");
+		final String end = req.getParameter("end");
 		final String count = req.getParameter("count");
 		final String all = req.getParameter("all");
 		final String rankStart = req.getParameter("rankstart");
@@ -170,7 +157,63 @@ public class DevHelperServlet extends HttpServlet {
 		String csv = null;
 
 		if (action != null) {
-			if ("model".equalsIgnoreCase(action)) {
+			if ("modelByDates".equalsIgnoreCase(action)) {
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+				List<Long> feedIds = null;
+
+				try {
+					Date startDate = sdf.parse(start);
+					Date endDate = sdf.parse(end);
+
+					feedIds = FeedFetchServiceProvider.provide().getFeedFetchIdsBetweenDates(startDate, endDate);
+				} catch (Exception e) {
+					LOG.log(Level.SEVERE, "Exception occured while trying to get rank_fetches between start and end date: " + start + ", " + end, e);
+					success = false;
+				}
+
+				final Modeller modeller = ModellerFactory.getModellerForStore(DataTypeHelper.IOS_STORE_A3);
+				if (feedIds != null) {
+					for (Long fetchId : feedIds) {
+						modeller.enqueueFetchId(fetchId);
+						if (LOG.isLoggable(GaeLevel.DEBUG)) {
+							LOG.log(GaeLevel.DEBUG, String.format("Enqueued fetch with id %d for modelling", fetchId));
+						}
+					}
+					success = true;
+				}
+			} else if ("modelByCode".equalsIgnoreCase(action)) {
+				String codeStr = req.getParameter("code");
+
+				if (codeStr == null || codeStr.trim().length() == 0) return;
+
+				try {
+					List<Long> feedIds = null;
+
+					try {
+						feedIds = FeedFetchServiceProvider.provide().getFeedFetchIdsByCode(Long.valueOf(codeStr));
+					} catch (Exception e) {
+						LOG.log(Level.SEVERE, "Exception occured while trying to get rank_fetches for code: " + codeStr, e);
+						success = false;
+					}
+
+					final Modeller modeller = ModellerFactory.getModellerForStore(DataTypeHelper.IOS_STORE_A3);
+					if (feedIds != null) {
+						for (Long fetchId : feedIds) {
+							modeller.enqueueFetchId(fetchId);
+							if (LOG.isLoggable(GaeLevel.DEBUG)) {
+								LOG.log(GaeLevel.DEBUG, String.format("Enqueued fetch with id %d for modelling", fetchId));
+							}
+						}
+						success = true;
+					}
+				} catch (Exception e) {
+					if (LOG.isLoggable(GaeLevel.DEBUG)) {
+						LOG.log(GaeLevel.DEBUG, "Error occured when trying to process a model request via devhelper", e);
+					}
+					success = false;
+				}
+			} else if ("model".equalsIgnoreCase(action)) {
 				String feedfetchidStr = req.getParameter("feedfetchid");
 
 				if (feedfetchidStr == null || feedfetchidStr.trim().length() == 0) return;
@@ -182,7 +225,7 @@ public class DevHelperServlet extends HttpServlet {
 
 					// this is just a sanity check. we expect that the query for getting the IDs only gave us feed fetches that exist and
 					// have the ingested status.
-					if (fetch != null && fetch.status == FeedFetchStatusType.FeedFetchStatusTypeIngested) {
+					if (fetch != null) {
 						if (LOG.isLoggable(GaeLevel.DEBUG)) {
 							LOG.log(GaeLevel.DEBUG, String.format(
 									"Enquing feed fetch id %d for modelling. Country: %s, category: %s, type: %s", feedFetchId,
@@ -193,30 +236,41 @@ public class DevHelperServlet extends HttpServlet {
 
 						// once the feed fetch status is updated model the list
 						modeller.enqueue(fetch);
+						if (LOG.isLoggable(GaeLevel.DEBUG)) {
+							LOG.log(GaeLevel.DEBUG, String.format("Enqueued fetch with id %d for modelling", fetch.id));
+						}
 					}
+					success = true;
 				} catch (Exception e) {
 					if (LOG.isLoggable(GaeLevel.DEBUG)) {
 						LOG.log(GaeLevel.DEBUG, "Error occured when trying to process a model request via devhelper", e);
 					}
+					success = false;
 				}
-			} else if ("addingested".equalsIgnoreCase(action)) {
+			} else if ("ingestByCode".equalsIgnoreCase(action)) {
+				List<Long> feedIds = null;
 
-				// int i = 0;
-				// for (FeedFetch entity : ofy().load().type(FeedFetch.class).offset(Integer.parseInt(start)).limit(Integer.parseInt(count)).iterable()) {
-				// entity.ingested = Boolean.FALSE;
-				//
-				// ofy().save().entity(entity).now();
-				//
-				// if (LOG.isLoggable(GaeLevel.TRACE)) {
-				// LOG.log(GaeLevel.TRACE, String.format("Set entity [%d] ingested to false", entity.id.longValue()));
-				// }
-				//
-				// i++;
-				// }
-				//
-				// if (LOG.isLoggable(GaeLevel.DEBUG)) {
-				// LOG.log(GaeLevel.DEBUG, String.format("Processed [%d] entities", i));
-				// }
+				String codeStr = req.getParameter("code");
+				try {
+					feedIds = FeedFetchServiceProvider.provide().getFeedFetchIdsByCode(Long.valueOf(codeStr));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				if (feedIds == null) {
+					if (LOG.isLoggable(GaeLevel.DEBUG)) {
+						LOG.log(GaeLevel.DEBUG, "Could not find any fetches for code: " + codeStr);
+					}
+				} else {
+					final Ingestor ingestor = IngestorFactory.getIngestorForStore(DataTypeHelper.IOS_STORE_A3);
+
+					for (Long fetchId : feedIds) {
+						ingestor.enqueue(Arrays.asList(Long.valueOf(fetchId)));
+					}
+
+					if (LOG.isLoggable(GaeLevel.DEBUG)) {
+						LOG.log(GaeLevel.DEBUG, String.format("Enqueued %d fetches for ingesting", feedIds.size()));
+					}
+				}
 
 				success = true;
 			} else if ("uningest".equalsIgnoreCase(action)) {
@@ -738,7 +792,9 @@ public class DevHelperServlet extends HttpServlet {
 
 				success = true;
 			} else if ("enqueuegetallranks".equalsIgnoreCase(action)) {
-				CallServiceMethodServlet.enqueueGetAllRanks("us", "ios", Long.valueOf(24), "topfreeapplications", Long.valueOf(33));
+				CallServiceMethodServlet.enqueueGetAllRanks("gb", "ios", Long.valueOf(24), "topfreeapplications", Long.valueOf(33));
+				CallServiceMethodServlet.enqueueGetAllRanks("gb", "ios", Long.valueOf(24), "toppaidapplications", Long.valueOf(33));
+				CallServiceMethodServlet.enqueueGetAllRanks("gb", "ios", Long.valueOf(24), "topgrossingapplications", Long.valueOf(33));
 				success = true;
 			} else {
 				if (LOG.isLoggable(Level.INFO)) {
