@@ -9,19 +9,14 @@ package io.reflection.app.client.cell;
 
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.NavigationController;
-import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.page.MyAppsPage;
 import io.reflection.app.client.page.PageType;
-import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Item;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.SpanElement;
-import com.google.gwt.dom.client.Style.Display;
-import com.google.gwt.safecss.shared.SafeStyles;
-import com.google.gwt.safecss.shared.SafeStylesUtils;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.safehtml.shared.UriUtils;
@@ -38,8 +33,7 @@ public class MiniAppCell extends AbstractCell<Item> {
 	@UiField SpanElement inactiveLink;
 
 	interface MiniAppCellRenderer extends UiRenderer {
-		void render(SafeHtmlBuilder sb, String name, String creatorName, SafeUri smallImage, String styleName, SafeUri link, String displayActiveLink,
-				String displayInactiveLink);
+		void render(SafeHtmlBuilder sb, String name, String creatorName, SafeUri smallImage, SafeUri link);
 	}
 
 	private static MiniAppCellRenderer RENDERER = GWT.create(MiniAppCellRenderer.class);
@@ -51,12 +45,6 @@ public class MiniAppCell extends AbstractCell<Item> {
 				MyAppsPage.COMING_FROM_PARAMETER, FilterController.get().getFilter().asItemFilterString());
 		SafeUri smallImage = UriUtils.fromString(value.smallImage == null ? "" : value.smallImage);
 
-		SafeStyles displayActiveLink = (SessionController.get().isLoggedInUserAdmin() ? SafeStylesUtils.fromTrustedString("") : SafeStylesUtils
-				.forDisplay(Display.NONE));
-		SafeStyles displayInactiveLink = (SessionController.get().isLoggedInUserAdmin() ? SafeStylesUtils.forDisplay(Display.NONE) : SafeStylesUtils
-				.fromTrustedString(""));
-
-		RENDERER.render(builder, value.name, value.creatorName, smallImage, Styles.STYLES_INSTANCE.reflection().unknownAppSmall(), link, displayActiveLink.asString(),
-				displayInactiveLink.asString());
+		RENDERER.render(builder, value.name, value.creatorName, smallImage, link);
 	}
 }
