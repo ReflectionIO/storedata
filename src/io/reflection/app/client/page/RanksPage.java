@@ -167,8 +167,6 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 	private String selectedTab = OVERALL_LIST_TYPE;
 
-	private boolean showAllPredictions;
-
 	public RanksPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
@@ -195,7 +193,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 		tabs.put(OVERALL_LIST_TYPE, allItem);
 		tabs.put(FREE_LIST_TYPE, freeItem);
-		if (showAllPredictions = SessionController.get().isLoggedInUserAdmin()) {
+		if (SessionController.get().isLoggedInUserAdmin()) {
 			tabs.put(PAID_LIST_TYPE, paidItem);
 			tabs.put(GROSSING_LIST_TYPE, grossingItem);
 		} else {
@@ -227,7 +225,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		};
 		rankColumn.setCellStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA() + " " + Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6cID());
 
-		AppRankCell appRankCell = new AppRankCell(showAllPredictions);
+		AppRankCell appRankCell = new AppRankCell();
 
 		paidColumn = new Column<RanksGroup, Rank>(appRankCell) {
 
