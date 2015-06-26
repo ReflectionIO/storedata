@@ -24,17 +24,17 @@ import com.google.appengine.api.taskqueue.TaskOptions.Method;
 
 /**
  * @author billy1380
- * 
+ *
  */
 public class ModellerIOS
 // extends RenjinRModellerBase
-		implements Modeller {
+implements Modeller {
 
 	// private static final Logger LOG = Logger.getLogger(ModellerIOS.class.getName());
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.modellers.Modeller#getForm(java.lang.String)
 	 */
 	@Override
@@ -44,7 +44,7 @@ public class ModellerIOS
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.modellers.Modeller#getGrossingType(io.reflection.app.datatypes.shared.FormType)
 	 */
 	@Override
@@ -54,7 +54,7 @@ public class ModellerIOS
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.modellers.Modeller#getType(io.reflection.app.datatypes.shared.FormType, java.lang.Boolean)
 	 */
 	@Override
@@ -83,18 +83,30 @@ public class ModellerIOS
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.modellers.Modeller#enqueue(io.reflection.app.datatypes.shared.FeedFetch)
 	 */
 	@Override
 	public void enqueue(FeedFetch feedFetch) {
-		QueueHelper.enqueue("model", Method.PULL, new SimpleEntry<String, String>("fetchid", feedFetch.id.toString()), new SimpleEntry<String, String>(
+		enqueueFetchId(feedFetch.id);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see io.reflection.app.modellers.Modeller#enqueueFetchId(java.lang.Long)
+	 */
+	@Override
+	public void enqueueFetchId(Long fetchId) {
+		if (fetchId == null) return;
+
+		QueueHelper.enqueue("model", Method.PULL, new SimpleEntry<String, String>("fetchid", String.valueOf(fetchId)), new SimpleEntry<String, String>(
 				"modeltype", ModelTypeType.ModelTypeTypeSimple.toString()));
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.modellers.Modeller#enqueue(io.reflection.app.datatypes.shared.FeedFetch, io.reflection.app.datatypes.shared.FeedFetch,
 	 * io.reflection.app.datatypes.shared.FeedFetch)
 	 */

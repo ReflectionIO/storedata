@@ -364,10 +364,15 @@ public class RankService implements IRankService {
 			rankConnection.connect();
 
 			for (Rank rank : ranks) {
+
+				int price = 0;
+				if (rank.revenue != null) {
+					price = (int) (rank.price.floatValue() * 100f);
+				}
 				pstat.setLong(1, feedfetchId);
 				pstat.setInt(2, rank.position == null ? rank.grossingPosition : rank.position);
 				pstat.setString(3, rank.itemId);
-				pstat.setFloat(4, rank.price);
+				pstat.setFloat(4, price);
 				pstat.setString(5, rank.currency);
 
 				if (rank.revenue == null) {
@@ -726,7 +731,7 @@ public class RankService implements IRankService {
 	public List<Rank> getRanks(Country country, Category category, String listType, Date onDate) throws DataAccessException {
 		List<Rank> ranks = new ArrayList<Rank>(200);
 
-		final String memcacheKey = getName() + ".getRanks." + country.a2Code + "." + category.id.toString() + "." + listType + "." + onDate.getTime();
+		// final String memcacheKey = getName() + ".getRanks." + country.a2Code + "." + category.id.toString() + "." + listType + "." + onDate.getTime();
 
 		final String selectQuery = "SELECT r.*, rf.group_fetch_code, rf.fetch_date, rf.country, rf.category, rf.type, rf.platform "
 				+ " FROM `rank2` r inner join rank_fetch rf on (r.rank_fetch_id = rf.rank_fetch_id) WHERE "
@@ -734,7 +739,7 @@ public class RankService implements IRankService {
 
 		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
-		final String ranksString = (String) cache.get(memcacheKey);
+		final String ranksString = null; // (String) cache.get(memcacheKey);
 
 		if (ranksString == null) {
 			try (PreparedStatement pstat = rankConnection.getRealConnection().prepareStatement(selectQuery, Statement.NO_GENERATED_KEYS)) {
@@ -767,11 +772,11 @@ public class RankService implements IRankService {
 					jsonArray.add(rank.toJson());
 				}
 
-				try {
-					cache.put(memcacheKey, JsonUtils.cleanJson(jsonArray.toString()), DateTime.now(DateTimeZone.UTC).plusDays(20).toDate());
-				} catch (final Exception e) {
-					LOG.log(Level.WARNING, "Exception occured while trying to store ranks into the cache with key: " + memcacheKey, e);
-				}
+				// try {
+				// cache.put(memcacheKey, JsonUtils.cleanJson(jsonArray.toString()), DateTime.now(DateTimeZone.UTC).plusDays(20).toDate());
+				// } catch (final Exception e) {
+				// LOG.log(Level.WARNING, "Exception occured while trying to store ranks into the cache with key: " + memcacheKey, e);
+				// }
 			}
 		} else {
 			final JsonArray parsed = (JsonArray) new JsonParser().parse(ranksString);
