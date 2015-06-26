@@ -50,7 +50,7 @@ import io.reflection.app.client.highcharts.ChartHelper.XDataType;
 import io.reflection.app.client.highcharts.ChartHelper.YDataType;
 import io.reflection.app.client.page.part.ItemChart.RankingType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
-import io.reflection.app.client.part.datatypes.AppRanking;
+import io.reflection.app.client.part.datatypes.AppRevenue;
 import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.client.part.navigation.Header.PanelType;
 import io.reflection.app.client.res.Styles;
@@ -138,8 +138,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField LIElement appDetailsItem;
 
 	// @UiField(provided = true) CellTable<ItemRevenue> revenueTable = new CellTable<ItemRevenue>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
-	@UiField(provided = true) CellTable<AppRanking> revenueTableDesktop = new CellTable<AppRanking>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
-	@UiField(provided = true) CellTable<AppRanking> revenueTableMobile = new CellTable<AppRanking>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
+	@UiField(provided = true) CellTable<AppRevenue> revenueTableDesktop = new CellTable<AppRevenue>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
+	@UiField(provided = true) CellTable<AppRevenue> revenueTableMobile = new CellTable<AppRevenue>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
 
 	private String internalId;
 	private String comingPage;
@@ -150,8 +150,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	private Map<String, LIElement> tabs = new HashMap<String, LIElement>();
 	private String selectedTab;
 	private String filterContents;
-	private AppRanking itemRevenuePlaceholder = new AppRanking();
-	private List<AppRanking> tablePlaceholder = new ArrayList<AppRanking>();
+	private AppRevenue itemRevenuePlaceholder = new AppRevenue();
+	private List<AppRevenue> tablePlaceholder = new ArrayList<AppRevenue>();
 	@UiField SpanElement infoDateRange;
 	@UiField SpanElement infoTotalRevenue;
 
@@ -360,10 +360,10 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 		String sorterSvg = "<svg version=\"1.1\" x=\"0px\" y=\"0px\" viewBox=\"0 0 7 10\" enable-background=\"new 0 0 7 10\" xml:space=\"preserve\" class=\"sort-svg\"><path class=\"ascending\" d=\"M0.4,4.1h6.1c0.1,0,0.2,0,0.3-0.1C7,3.9,7,3.8,7,3.7c0-0.1,0-0.2-0.1-0.3L3.8,0.1C3.7,0,3.6,0,3.5,0C3.4,0,3.3,0,3.2,0.1L0.1,3.3C0,3.4,0,3.5,0,3.7C0,3.8,0,3.9,0.1,4C0.2,4.1,0.3,4.1,0.4,4.1z\"></path><path class=\"descending\" d=\"M6.6,5.9H0.4c-0.1,0-0.2,0-0.3,0.1C0,6.1,0,6.2,0,6.3c0,0.1,0,0.2,0.1,0.3l3.1,3.2C3.3,10,3.4,10,3.5,10c0.1,0,0.2,0,0.3-0.1l3.1-3.2C7,6.6,7,6.5,7,6.3C7,6.2,7,6.1,6.9,6C6.8,5.9,6.7,5.9,6.6,5.9z\"></path></svg>";
 
-		TextColumn<AppRanking> dateColumn = new TextColumn<AppRanking>() {
+		TextColumn<AppRevenue> dateColumn = new TextColumn<AppRevenue>() {
 
 			@Override
-			public String getValue(AppRanking object) {
+			public String getValue(AppRevenue object) {
 				return object.date != null ? FormattingHelper.DATE_FORMATTER_EEE_DD_MM_YY.format(object.date) : "-";
 			}
 		};
@@ -373,10 +373,10 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		revenueTableMobile.addColumn(dateColumn, dateHeader);
 		dateColumn.setCellStyleNames(style.dateValue());
 
-		TextColumn<AppRanking> revenueColumn = new TextColumn<AppRanking>() {
+		TextColumn<AppRevenue> revenueColumn = new TextColumn<AppRevenue>() {
 
 			@Override
-			public String getValue(AppRanking object) {
+			public String getValue(AppRevenue object) {
 				if (infoTotalRevenue.getInnerText().equals("")) {
 					infoTotalRevenue.setInnerText(FormattingHelper.asWholeMoneyString(object.currency, object.total.floatValue()));
 				}
@@ -388,10 +388,10 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		revenueTableDesktop.addColumn(revenueColumn, revenueHeader);
 		revenueColumn.setCellStyleNames(style.revenueValue());
 
-		Column<AppRanking, SafeHtml> revenueForPeriodColumn = new Column<AppRanking, SafeHtml>(new SafeHtmlCell()) {
+		Column<AppRevenue, SafeHtml> revenueForPeriodColumn = new Column<AppRevenue, SafeHtml>(new SafeHtmlCell()) {
 
 			@Override
-			public SafeHtml getValue(AppRanking object) {
+			public SafeHtml getValue(AppRevenue object) {
 				SafeHtml value = SafeHtmlUtils.fromSafeConstant("");
 				if (object.revenuePercentForPeriod != null) {
 					String percentage = FormattingHelper.TWO_DECIMALS_FORMATTER.format(object.revenuePercentForPeriod.floatValue() * 100);

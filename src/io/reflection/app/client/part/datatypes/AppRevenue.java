@@ -13,7 +13,7 @@ import java.util.Date;
  * @author Stefano Capuzzi (capuzzistefano)
  *
  */
-public class AppRanking {
+public class AppRevenue {
 	public Date date;
 	public String currency;
 	public Float revenue;

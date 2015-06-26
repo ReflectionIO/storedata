@@ -46,7 +46,7 @@
 					<cell:CellTable ui:field="appsTableMobile" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData} {STYLES_INSTANCE.reflectionMainStyle.tableMyApps}" />
 				</g:HTMLPanel>
 			</g:HTMLPanel>
-			<p:SimplePager ui:field="simplePager" visible="false" />
+			<!-- <p:SimplePager ui:field="simplePager" visible="false" /> -->
 		</g:HTMLPanel>
 
 	</g:HTMLPanel>

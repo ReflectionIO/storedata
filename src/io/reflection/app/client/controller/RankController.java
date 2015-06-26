@@ -27,7 +27,7 @@ import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.helper.ApiCallHelper;
 import io.reflection.app.client.helper.FilterHelper;
-import io.reflection.app.client.part.datatypes.AppRanking;
+import io.reflection.app.client.part.datatypes.AppRevenue;
 import io.reflection.app.client.part.datatypes.ItemRevenue;
 import io.reflection.app.client.part.datatypes.RanksGroup;
 import io.reflection.app.datatypes.shared.Item;
@@ -62,7 +62,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 	private Request currentItemSalesRanks;
 
 	private ListDataProvider<ItemRevenue> itemRevenueData = new ListDataProvider<ItemRevenue>();
-	private ListDataProvider<AppRanking> appRankingDataProvider = new ListDataProvider<AppRanking>();
+	private ListDataProvider<AppRevenue> appRankingDataProvider = new ListDataProvider<AppRevenue>();
 
 	public static RankController get() {
 		if (mOne == null) {
@@ -241,7 +241,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 					float paid = 0, iap = 0;
 					ItemRevenue itemRevenue = null;
 					appRankingDataProvider.getList().clear();
-					AppRanking appRanking = null;
+					AppRevenue appRanking = null;
 
 					if (itemRevenueData.getList().size() == 0) {
 						itemRevenue = new ItemRevenue();
@@ -255,7 +255,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 					if (output.ranks != null && output.ranks.size() > 0 && output.item.price != null) {
 						for (Rank rank : output.ranks) {
 							if (rank.downloads != null && rank.revenue != null) {
-								appRanking = new AppRanking();
+								appRanking = new AppRevenue();
 								appRanking.date = rank.date;
 								appRanking.revenue = rank.revenue;
 								appRankingDataProvider.getList().add(appRanking);
@@ -281,7 +281,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 					itemRevenue.percentage = Float.valueOf(100.0f);
 					itemRevenue.total = Float.valueOf(iap + paid);
 
-					for (AppRanking ar : appRankingDataProvider.getList()) {
+					for (AppRevenue ar : appRankingDataProvider.getList()) {
 						ar.currency = itemRevenue.currency;
 						ar.total = Float.valueOf(iap + paid);
 						ar.revenuePercentForPeriod = (ar.total.floatValue() > 0 ? ar.revenue.floatValue() / ar.total.floatValue() : 0);
@@ -348,7 +348,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 					float paid = 0, iap = 0;
 					ItemRevenue itemRevenue = null;
 					appRankingDataProvider.getList().clear();
-					AppRanking appRanking = null;
+					AppRevenue appRanking = null;
 
 					if (itemRevenueData.getList().size() == 0) {
 						itemRevenue = new ItemRevenue();
@@ -362,7 +362,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 					if (output.ranks != null) {
 						for (Rank rank : output.ranks) {
 							if (rank.downloads != null && rank.revenue != null) {
-								appRanking = new AppRanking();
+								appRanking = new AppRevenue();
 								appRanking.date = rank.date;
 								appRanking.revenue = rank.revenue;
 								appRankingDataProvider.getList().add(appRanking);
@@ -388,7 +388,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 					itemRevenue.percentage = Float.valueOf(100.0f);
 					itemRevenue.total = Float.valueOf(iap + paid);
 
-					for (AppRanking ar : appRankingDataProvider.getList()) {
+					for (AppRevenue ar : appRankingDataProvider.getList()) {
 						ar.currency = itemRevenue.currency;
 						ar.total = Float.valueOf(iap + paid);
 						ar.revenuePercentForPeriod = (ar.total.floatValue() > 0 ? ar.revenue.floatValue() / ar.total.floatValue() : 0);
@@ -461,7 +461,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 		return itemRevenueData;
 	}
 
-	public ListDataProvider<AppRanking> getRankDataProvider() {
+	public ListDataProvider<AppRevenue> getRankDataProvider() {
 		return appRankingDataProvider;
 	}
 
