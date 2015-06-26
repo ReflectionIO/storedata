@@ -21,7 +21,7 @@
 
 				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.appCreator}">
 					By
-					<a ui:field="creatorName"></a>
+					<span ui:field="creatorName"></span>
 				</h2>
 
 				<span ui:field="price" class="{STYLES_INSTANCE.reflectionMainStyle.appPrice}"></span>

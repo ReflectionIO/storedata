@@ -102,7 +102,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField HeadingElement title;
 	@UiField Image image;
 	@UiField Image imageTable;
-	@UiField AnchorElement creatorName;
+	@UiField SpanElement creatorName;
 	@UiField SpanElement storeName;
 	@UiField AnchorElement viewInStore;
 	@UiField SpanElement price;
