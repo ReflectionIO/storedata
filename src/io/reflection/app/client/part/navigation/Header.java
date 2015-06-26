@@ -78,7 +78,7 @@ public class Header extends Composite implements NavigationEventHandler, Session
 
 	@UiField DivElement tempSearchContainer;
 
-	private boolean panelLeftWasClosed;
+	private boolean panelLeftWasClosed; // Remeber if the user closed the panel
 
 	Element picture, source1, source2;
 
@@ -298,14 +298,8 @@ public class Header extends Composite implements NavigationEventHandler, Session
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
 		PageType currentPage = NavigationController.get().getCurrentPage();
-		if (Window.getClientWidth() > 960
-				&& !panelLeftWasClosed
-				&& !PageType.LinkItunesPageType.equals(currentPage)
-				&& !"".equals(current.getPage()) // empty URL
-				&& (currentPage == null || currentPage.requiresLogin() || PageType.BlogPostsPageType.equals(currentPage)
-						|| PageType.BlogPostPageType.equals(currentPage) || PageType.BlogTagPageType.equals(currentPage)
-						|| PageType.ForumEditTopicPageType.equals(currentPage) || PageType.ForumPageType.equals(currentPage)
-						|| PageType.ForumThreadPageType.equals(currentPage) || PageType.ForumTopicPageType.equals(currentPage))) {
+		if (Window.getClientWidth() > 960 && !panelLeftWasClosed && !PageType.LoadingPageType.equals(currentPage)
+				&& !PageType.LinkItunesPageType.equals(currentPage) && !PageType.RegisterPageType.equals(currentPage)) {
 			if (!isPanelLeftMenuOpen()) {
 				Document.get().getBody().addClassName(style.panelLeftOpen());
 			}
