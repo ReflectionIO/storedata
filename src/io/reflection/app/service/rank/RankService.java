@@ -364,10 +364,15 @@ public class RankService implements IRankService {
 			rankConnection.connect();
 
 			for (Rank rank : ranks) {
+
+				int price = 0;
+				if (rank.revenue != null) {
+					price = (int) (rank.price.floatValue() * 100f);
+				}
 				pstat.setLong(1, feedfetchId);
 				pstat.setInt(2, rank.position == null ? rank.grossingPosition : rank.position);
 				pstat.setString(3, rank.itemId);
-				pstat.setFloat(4, rank.price);
+				pstat.setFloat(4, price);
 				pstat.setString(5, rank.currency);
 
 				if (rank.revenue == null) {
