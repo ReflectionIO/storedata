@@ -62,7 +62,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 	private Request currentItemSalesRanks;
 
 	private ListDataProvider<ItemRevenue> itemRevenueData = new ListDataProvider<ItemRevenue>();
-	private ListDataProvider<AppRevenue> appRankingDataProvider = new ListDataProvider<AppRevenue>();
+	private ListDataProvider<AppRevenue> appRevenueDataProvider = new ListDataProvider<AppRevenue>();
 
 	public static RankController get() {
 		if (mOne == null) {
@@ -240,7 +240,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 					float paid = 0, iap = 0;
 					ItemRevenue itemRevenue = null;
-					appRankingDataProvider.getList().clear();
+					appRevenueDataProvider.getList().clear();
 					AppRevenue appRanking = null;
 
 					if (itemRevenueData.getList().size() == 0) {
@@ -258,7 +258,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 								appRanking = new AppRevenue();
 								appRanking.date = rank.date;
 								appRanking.revenue = rank.revenue;
-								appRankingDataProvider.getList().add(appRanking);
+								appRevenueDataProvider.getList().add(appRanking);
 								paid += (rankPaid = (float) rank.downloads.intValue() * output.item.price.floatValue());
 								iap += (rank.revenue.floatValue() - rankPaid);
 							}
@@ -281,14 +281,14 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 					itemRevenue.percentage = Float.valueOf(100.0f);
 					itemRevenue.total = Float.valueOf(iap + paid);
 
-					for (AppRevenue ar : appRankingDataProvider.getList()) {
+					for (AppRevenue ar : appRevenueDataProvider.getList()) {
 						ar.currency = itemRevenue.currency;
 						ar.total = Float.valueOf(iap + paid);
 						ar.revenuePercentForPeriod = (ar.total.floatValue() > 0 ? ar.revenue.floatValue() / ar.total.floatValue() : 0);
 					}
 
 					itemRevenueData.refresh();
-					appRankingDataProvider.refresh();
+					appRevenueDataProvider.refresh();
 				}
 
 				DefaultEventBus.get().fireEventFromSource(new GetItemSalesRanksSuccess(input, output), RankController.this);
@@ -347,7 +347,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 					float paid = 0, iap = 0;
 					ItemRevenue itemRevenue = null;
-					appRankingDataProvider.getList().clear();
+					appRevenueDataProvider.getList().clear();
 					AppRevenue appRanking = null;
 
 					if (itemRevenueData.getList().size() == 0) {
@@ -365,7 +365,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 								appRanking = new AppRevenue();
 								appRanking.date = rank.date;
 								appRanking.revenue = rank.revenue;
-								appRankingDataProvider.getList().add(appRanking);
+								appRevenueDataProvider.getList().add(appRanking);
 								paid += (rankPaid = (float) rank.downloads.intValue() * rank.price.floatValue());
 								iap += (rank.revenue.floatValue() - rankPaid);
 							}
@@ -388,14 +388,14 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 					itemRevenue.percentage = Float.valueOf(100.0f);
 					itemRevenue.total = Float.valueOf(iap + paid);
 
-					for (AppRevenue ar : appRankingDataProvider.getList()) {
+					for (AppRevenue ar : appRevenueDataProvider.getList()) {
 						ar.currency = itemRevenue.currency;
 						ar.total = Float.valueOf(iap + paid);
 						ar.revenuePercentForPeriod = (ar.total.floatValue() > 0 ? ar.revenue.floatValue() / ar.total.floatValue() : 0);
 					}
 
 					itemRevenueData.refresh();
-					appRankingDataProvider.refresh();
+					appRevenueDataProvider.refresh();
 				}
 
 				DefaultEventBus.get().fireEventFromSource(new GetItemRanksEventHandler.GetItemRanksSuccess(input, output), RankController.this);
@@ -461,8 +461,8 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 		return itemRevenueData;
 	}
 
-	public ListDataProvider<AppRevenue> getRankDataProvider() {
-		return appRankingDataProvider;
+	public ListDataProvider<AppRevenue> getRevenueDataProvider() {
+		return appRevenueDataProvider;
 	}
 
 }

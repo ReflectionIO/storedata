@@ -7,6 +7,7 @@
 //
 package io.reflection.app.client.part.datatypes;
 
+import java.util.Comparator;
 import java.util.Date;
 
 /**
@@ -19,4 +20,34 @@ public class AppRevenue {
 	public Float revenue;
 	public Float total;
 	public Float revenuePercentForPeriod;
+
+	public static Comparator<AppRevenue> getDateComparator() {
+		return new Comparator<AppRevenue>() {
+
+			@Override
+			public int compare(AppRevenue o1, AppRevenue o2) {
+				return o1.date.compareTo(o2.date);
+			}
+		};
+	}
+
+	public static Comparator<AppRevenue> getRevenueComparator() {
+		return new Comparator<AppRevenue>() {
+
+			@Override
+			public int compare(AppRevenue o1, AppRevenue o2) {
+				return o1.revenue.compareTo(o2.revenue);
+			}
+		};
+	}
+
+	public static Comparator<AppRevenue> getRevenuePercentForPeriodComparator() {
+		return new Comparator<AppRevenue>() {
+
+			@Override
+			public int compare(AppRevenue o1, AppRevenue o2) {
+				return o1.revenuePercentForPeriod.compareTo(o2.revenuePercentForPeriod);
+			}
+		};
+	}
 }
