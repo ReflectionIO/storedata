@@ -63,7 +63,7 @@ public class LinkItunesPage extends Page implements NavigationEventHandler, Link
 			@Override
 			public void onChange(DataAccount dataAccount, EVENT_TYPE eventType) {
 				iosMacForm.setEnabled(false);
-				iosMacForm.setStatusLoading("Linking ..");
+				iosMacForm.setStatusLoading("Linking");
 				LinkedAccountController.get().linkAccount(linkableAccount.getAccountSourceId(), linkableAccount.getUsername(), linkableAccount.getPassword(),
 						linkableAccount.getProperties()); // Link account
 			}

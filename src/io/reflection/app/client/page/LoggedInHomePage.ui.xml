@@ -7,11 +7,11 @@
 	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.pageLoggedInLanding}">
 		<section class="{STYLES_INSTANCE.reflectionMainStyle.loggedInSectionMain}">
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.loggedInSectionMain__columnOne}">
-				<img src="images/logged-in-main-screenshot.png" alt="Reflection app screenshot" />
+				<img src="images/logged-in-main-screenshot.jpg" alt="Reflection app screenshot" />
 			</div>
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.loggedInSectionMain__columnTwo}">
 				<h1 class="{STYLES_INSTANCE.reflectionMainStyle.pageTitle}">
-					Hi
+					Welcome
 					<span ui:field="userName"></span>
 				</h1>
 				<p>Our team has been hard at work improving accuracy and building features from your feedback. Keep up to date with our news and progress here.</p>
@@ -124,7 +124,7 @@
 						<c:AccordionSwitch ui:field="accordionSwitchIR" titleText="Ireland" />
 						<c:AccordionSwitch ui:field="accordionSwitchAU" titleText="Australia" />
 						<c:AccordionSwitch ui:field="accordionSwitchNZ" titleText="New Zealand" />
-						<c:AccordionSwitch ui:field="accordionSwitchMore" titleText="More countries after launch" />						
+						<c:AccordionSwitch empty="true" ui:field="accordionSwitchMore" titleText="More countries after launch" />						
 					</ul>
 				</div>
 				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Feature roadmap</h2>

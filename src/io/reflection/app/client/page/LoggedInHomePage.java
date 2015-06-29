@@ -100,11 +100,6 @@ public class LoggedInHomePage extends Page {
 		accordionSwitchIR.addItemIncomplete("Education", "");
 		accordionSwitchIR.addItemIncomplete("Music", "");
 
-		accordionSwitchMore.addItemIncomplete("Overall", "");
-		accordionSwitchMore.addItemIncomplete("Games", "");
-		accordionSwitchMore.addItemIncomplete("Education", "");
-		accordionSwitchMore.addItemIncomplete("Music", "");
-
 	}
 
 	/*
@@ -118,7 +113,7 @@ public class LoggedInHomePage extends Page {
 
 		User user = SessionController.get().getLoggedInUser();
 		if (user != null) {
-			userName.setInnerText(user.forename + ",");
+			userName.setInnerText(user.forename);
 		}
 	}
 
