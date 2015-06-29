@@ -227,6 +227,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 					revenueHeader.setHeaderStyleNames(style.canBeSorted() + " " + (event.isSortAscending() ? style.isAscending() : style.isDescending()));
 				}
 				appsTableDesktop.setRowData(0, userItemProvider.getList());
+				appsTableMobile.setRowData(0, userItemProvider.getList());
 
 			}
 		};

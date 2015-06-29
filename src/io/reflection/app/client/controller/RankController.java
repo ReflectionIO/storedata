@@ -7,6 +7,8 @@
 //
 package io.reflection.app.client.controller;
 
+import static io.reflection.app.client.controller.FilterController.GROSSING_LIST_TYPE;
+import static io.reflection.app.client.controller.FilterController.PAID_LIST_TYPE;
 import io.reflection.app.api.core.client.CoreService;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
@@ -35,6 +37,8 @@ import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -72,6 +76,10 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 		return mOne;
 	}
 
+	public List<RanksGroup> getList() {
+		return rows;
+	}
+
 	public void fetchTopItems() {
 		if (currentTopItems != null) {
 			currentTopItems.cancel();
@@ -97,7 +105,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 		if (CalendarUtil.isSameDate(input.on, today)) {
 			input.on = today;
 		}
-		
+
 		input.category = FilterController.get().getCategory();
 
 		if (pager == null) {
@@ -465,4 +473,101 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 		return appRevenueDataProvider;
 	}
 
+	/**
+	 * @param selectedTab
+	 * @param sortAscending
+	 */
+	public void sortByDownloads(final String selectedTab, final boolean sortAscending) {
+		Collections.sort(rows, new Comparator<RanksGroup>() {
+
+			@Override
+			public int compare(RanksGroup o1, RanksGroup o2) {
+				Rank r1 = o1.free;
+				Rank r2 = o2.free;
+				if (selectedTab.equals(PAID_LIST_TYPE)) {
+					r1 = o1.paid;
+					r2 = o2.paid;
+				} else if (selectedTab.equals(GROSSING_LIST_TYPE)) {
+					r1 = o1.grossing;
+					r2 = o2.grossing;
+				}
+				int res = 0;
+				if (r1.downloads != null && r2.downloads != null) {
+					if (r1.downloads == null) {
+						res = 1;
+					} else if (r2.downloads == null) {
+						res = -1;
+					} else if (r1.downloads.intValue() == r2.downloads.intValue()) {
+						res = 0;
+					} else {
+						res = (r1.downloads.intValue() < r2.downloads.intValue() ? 1 : -1);
+					}
+				}
+				return (sortAscending ? res : -res);
+			}
+		});
+	}
+
+	/**
+	 * @param selectedTab
+	 * @param sortAscending
+	 */
+	public void sortByRevenue(final String selectedTab, final boolean sortAscending) {
+		Collections.sort(rows, new Comparator<RanksGroup>() {
+
+			@Override
+			public int compare(RanksGroup o1, RanksGroup o2) {
+				Rank r1 = o1.free;
+				Rank r2 = o2.free;
+				if (selectedTab.equals(PAID_LIST_TYPE)) {
+					r1 = o1.paid;
+					r2 = o2.paid;
+				} else if (selectedTab.equals(GROSSING_LIST_TYPE)) {
+					r1 = o1.grossing;
+					r2 = o2.grossing;
+				}
+				int res = 0;
+				if (r1.revenue != null && r2.revenue != null) {
+					if (r1.revenue == null) {
+						res = 1;
+					} else if (r2.revenue == null) {
+						res = -1;
+					} else if (r1.revenue.floatValue() == r2.revenue.floatValue()) {
+						res = 0;
+					} else {
+						res = (r1.revenue.floatValue() < r2.revenue.floatValue() ? 1 : -1);
+					}
+				}
+				return (sortAscending ? res : -res);
+			}
+		});
+	}
+
+	/**
+	 * @param selectedTab
+	 * @param b
+	 */
+	public void sortByRank(final String selectedTab, final boolean sortAscending) {
+		Collections.sort(rows, new Comparator<RanksGroup>() {
+
+			@Override
+			public int compare(RanksGroup o1, RanksGroup o2) {
+				Rank r1 = o1.free;
+				Rank r2 = o2.free;
+				int res = 0;
+				if (r1.position != null && r2.position != null) {
+					if (r1.position == null) {
+						res = 1;
+					} else if (r2.position == null) {
+						res = -1;
+					} else if (r1.position.intValue() == r2.position.intValue()) {
+						res = 0;
+					} else {
+						res = (r1.position.intValue() < r2.position.intValue() ? 1 : -1);
+					}
+				}
+				return (sortAscending ? res : -res);
+			}
+		});
+	}
 }
