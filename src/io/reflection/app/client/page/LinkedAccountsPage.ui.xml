@@ -10,6 +10,7 @@
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneHalf}">
 			<h1 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree} {STYLES_INSTANCE.reflectionMainStyle.pageTitle}">My Account</h1>
 		</div>
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.tabs}">
 		<ul
 			class="{STYLES_INSTANCE.reflectionMainStyle.tabsContainer} {STYLES_INSTANCE.reflectionMainStyle.defaultTabsTransition} {STYLES_INSTANCE.reflectionMainStyle.tabsToDropdown}">
 			<li
@@ -84,7 +85,7 @@
 				</g:InlineHyperlink>
 			</li>
 		</ul>
-
+		</div>
 		<div
 			class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth} {STYLES_INSTANCE.reflectionMainStyle.filtersContainer}">
 			<p>

@@ -7,16 +7,14 @@
 	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.pageLoggedInLanding}">
 		<section class="{STYLES_INSTANCE.reflectionMainStyle.loggedInSectionMain}">
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.loggedInSectionMain__columnOne}">
-				<img src="images/logged-in-main-screenshot.png" alt="Reflection app screenshot" />
+				<img src="images/logged-in-main-screenshot.jpg" alt="Reflection app screenshot" />
 			</div>
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.loggedInSectionMain__columnTwo}">
 				<h1 class="{STYLES_INSTANCE.reflectionMainStyle.pageTitle}">
-					Hi
+					Welcome
 					<span ui:field="userName"></span>
-					<br />
-					We've Been Busy
 				</h1>
-				<p>We're hard at work optimising accuracy and building the features you have been asking for. Monitor Reflection's progress here and keep up to date with what's coming next.</p>
+				<p>Our team has been hard at work improving accuracy and building features from your feedback. Keep up to date with our news and progress here.</p>
 			</div>
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.listPartners}">
 				<ul>
@@ -53,24 +51,22 @@
 				<ul>
 					<li class="article-list--article">
 						<article class="site-article">
-							<h2>Help us help you!</h2>
+							<h2>Welcome aboard!</h2>
 							<p class="site-article--info">
 								<strong>Posted by</strong>
 								<span class="posted-by">Gustaf Leksell Founder &amp; CEO</span>
 								<span>May 14th 2015</span>
 							</p>
-							<img src="images/reflection-connect.png" alt="Laptop connected to Reflection" class="image-full-width" />
-							<p>We're all very excited that you have decided to join us on this journey. Our goal is to deliver highly accurate intelligence and tools that streamline
-								and take the hard work out of your market analysis and business planning.</p>
-							<p>How can you help? Firstly, we need more partners! The quicker we get partners to sign up the faster we can launch and focus on tools. If you know any
-								developer or publisher who will benefit from joining us please direct them to our site. Secondly, we need your feedback. Let us build the tools you need
-								but can't find.</p>
+							<p>Everyone here at Reflection is very excited that you have decided to join us. Our mission is to deliver a highly accurate and reliable app intelligence platform with features and tools to help developers make informed business decisions. You'll start to see the rollout of suggested features as our beta progresses. Here you can keep track of upcoming features and data.</p>
+							<img src="images/office-photo.jpg" alt="The Reflection office" class="image-full-width" />
+							<figcaption>
+								The development of new features being undertaken furiously at our London office.
+							</figcaption>
 							<p>
-								Please email us at
-								<a href="mailto:beta@reflection.io">beta@reflection.io</a>
-								for both positive and negative comments or if you have a feature suggestion.
+								As one of our partners, you can help us accelerate our progress and improve our accuracy across all countries and categories by spreading the word. If you know a developer or publisher who will benefit by joining us, please introduce them to me at <a href="mailto:gustaf@reflection.io">gustaf@reflection.io</a>.
 							</p>
-							<p>And finally, please remember that we are in beta so expect slow access times and various bugs as we tweak and hone our system.</p>
+							<p>We also love to hear from you as we approach our launch, and we welcome your positive and negative comments along with your feedback on new features at <a href="mailto:beta@reflection.io">beta@reflection.io</a>.</p>
+							<p>Finally, please remember that we are still in beta so sometimes we may be slow or you may find some bugs while we tune and hone our system.</p>
 							<p>
 								Gustaf
 								<br />Founder
@@ -112,8 +108,9 @@
 			</div>
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFiveColumns}">
 				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Beta Roadmap</h2>
-				<p>Reflection's data and feature rollout is based on close feedback from our beta partners. We also continuously work to improve our accuracy across all countries and categories as we add more data. For suggestions and any feedback please email <a href="mailto:beta@reflection.io">beta@reflection.io</a>.</p>
-				<p>Please note that during our private beta, all of Reflection's features will be free.</p>
+				<p>Below you can find our roadmap for country and category data as well as our upcoming features. We also continuously work to improve accuracy across all countries and categories as we add more data.</p>
+<p>Reflection's features are free for all partners during our private beta.</p>
+<p>For any suggestions or feedback, please e-mail us at <a href="mailto:beta@reflection.io">beta@reflection.io</a>.</p>
 				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Data Roadmap</h2>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.accordion}">
 					<ul>
@@ -127,30 +124,26 @@
 						<c:AccordionSwitch ui:field="accordionSwitchIR" titleText="Ireland" />
 						<c:AccordionSwitch ui:field="accordionSwitchAU" titleText="Australia" />
 						<c:AccordionSwitch ui:field="accordionSwitchNZ" titleText="New Zealand" />
-						<c:AccordionSwitch ui:field="accordionSwitchMore" titleText="More countries after launch" />						
+						<c:AccordionSwitch empty="true" ui:field="accordionSwitchMore" titleText="More countries after launch" />						
 					</ul>
 				</div>
 				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Feature roadmap</h2>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.accordion} {STYLES_INSTANCE.reflectionMainStyle.accordionBottomWithDivider}">
 					<ul>
-						<c:AccordionSwitch empty="true" titleText="Fully Responsive Site" />
+						<c:AccordionSwitch empty="true" featureComplete="true" titleText="Fully Responsive Site" />
 						<c:AccordionSwitch empty="true" titleText="Historic Download Data" />
 						<c:AccordionSwitch empty="true" titleText="Historic Revenue Data" />
 						<c:AccordionSwitch empty="true" titleText="Download CSV files" />
 						<c:AccordionSwitch empty="true" titleText="Follow and Track Apps" />
 						<c:AccordionSwitch empty="true" titleText="Revenue and Download Graph Overlays"/>
 						<c:AccordionSwitch empty="true" titleText="Developer Leaderboard" />
-						<c:AccordionSwitch empty="true" titleText="Google Play" subtitleText="(Early 2016)" />
-						<c:AccordionSwitch empty="true" titleText="Your feature?" subtitleText="Let Us Know" subtitleLinkHref="mailto:beta@reflection.io?subject=New feature suggestion"
+						<c:AccordionSwitch empty="true" titleText="Google Play (Early 2016)" />
+						<c:AccordionSwitch empty="true" titleText="Your feature? More to come..." subtitleText="Let Us Know" subtitleLinkHref="mailto:beta@reflection.io?subject=New feature suggestion"
 							highlighted="true" />
 					</ul>
-					<p>
-						We will be adding more features to our roadmap as we move along during development. For any feedback please email
-						<a href="mailto:beta@reflection.io">beta@reflection.io</a>
-					</p>
 				</div>
 				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">We're Hiring</h2>
-				<ul class="{STYLES_INSTANCE.reflectionMainStyle.contentList} {STYLES_INSTANCE.reflectionMainStyle.contentListNoBullets}">
+				<ul class="{STYLES_INSTANCE.reflectionMainStyle.contentList}">
 					<li>
 						<a href="http://reflection.workable.com/jobs/40810" target="_blank">Senior Java Developer</a>
 					</li>
