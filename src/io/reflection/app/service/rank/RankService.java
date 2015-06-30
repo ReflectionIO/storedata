@@ -167,7 +167,7 @@ public class RankService implements IRankService {
 			}
 
 			int price = 0;
-			if (rank.revenue != null) {
+			if (rank.price != null) {
 				price = (int) (rank.price.floatValue() * 100f);
 			}
 
@@ -334,7 +334,7 @@ public class RankService implements IRankService {
 			for (Rank rank : ranks) {
 
 				int price = 0;
-				if (rank.revenue != null) {
+				if (rank.price != null) {
 					price = (int) (rank.price.floatValue() * 100f);
 				}
 				pstat.setLong(1, feedfetchId);
