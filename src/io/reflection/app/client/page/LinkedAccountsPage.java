@@ -186,7 +186,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 				LinkedAccountController.get().linkAccount(iosMacAddForm.getAccountSourceId(), iosMacAddForm.getUsername(), iosMacAddForm.getPassword(),
 						iosMacAddForm.getProperties());
 				iosMacAddForm.setEnabled(false);
-				iosMacAddForm.setStatusLoading("Linking ..");
+				iosMacAddForm.setStatusLoading("Linking");
 			}
 		});
 
