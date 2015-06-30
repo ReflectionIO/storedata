@@ -62,6 +62,17 @@ public interface IRankService extends IService {
 	public List<Rank> getGatherCodeRanks(Country country, Category category, String listType, Long code) throws DataAccessException;
 
 	/**
+	 * @param country
+	 * @param category
+	 * @param type
+	 * @param code
+	 * @param b
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<Rank> getGatherCodeRanks(Country country, Category category, String type, Long code, boolean useCache) throws DataAccessException;
+
+	/**
 	 * @param item
 	 * @return
 	 */

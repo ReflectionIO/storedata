@@ -447,6 +447,17 @@ public class RankService implements IRankService {
 	 */
 	@Override
 	public List<Rank> getGatherCodeRanks(Country country, Category category, String listType, Long code) throws DataAccessException {
+		return getGatherCodeRanks(country, category, listType, code, true);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see io.reflection.app.service.rank.IRankService#getGatherCodeRanks(io.reflection.app.shared.datatypes.Country, io.reflection.app.shared.datatypes.Store,
+	 * io.reflection.app.shared.datatypes.Category java.lang.String, java.lang.Long, io.reflection.app.api.shared.datatypes.Pager, java.lang.Boolean)
+	 */
+	@Override
+	public List<Rank> getGatherCodeRanks(Country country, Category category, String listType, Long code, boolean useCache) throws DataAccessException {
 		if (LOG.isLoggable(GaeLevel.DEBUG)) {
 			LOG.log(GaeLevel.DEBUG,
 					String.format("getGatherCodeRanks called for country: %s, category: %s, listType: %s, code2: %d", country, category, listType, code));
@@ -454,7 +465,12 @@ public class RankService implements IRankService {
 
 		List<Rank> ranks = new ArrayList<Rank>(200);
 
+		String ranksString = null;
 		final String memcacheKey = getName() + ".getGatherCodeRanks." + code + "." + country.a2Code + "." + category.id.toString() + "." + listType;
+
+		if (useCache) {
+			ranksString = (String) cache.get(memcacheKey);
+		}
 
 		final String selectQuery = "SELECT r.*, rf.group_fetch_code, rf.fetch_date, rf.country, rf.category, rf.type, rf.platform "
 				+ " FROM `rank2` r inner join rank_fetch rf on (r.rank_fetch_id = rf.rank_fetch_id) WHERE "
@@ -462,7 +478,6 @@ public class RankService implements IRankService {
 
 		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
-		final String ranksString = (String) cache.get(memcacheKey);
 
 		if (ranksString == null) {
 			try (PreparedStatement pstat = rankConnection.getRealConnection().prepareStatement(selectQuery, Statement.NO_GENERATED_KEYS)) {
@@ -489,16 +504,18 @@ public class RankService implements IRankService {
 				}
 			}
 
-			if (ranks.size() > 0) {
-				final JsonArray jsonArray = new JsonArray();
-				for (final Rank rank : ranks) {
-					jsonArray.add(rank.toJson());
-				}
+			if (useCache) {
+				if (ranks.size() > 0) {
+					final JsonArray jsonArray = new JsonArray();
+					for (final Rank rank : ranks) {
+						jsonArray.add(rank.toJson());
+					}
 
-				try {
-					cache.put(memcacheKey, JsonUtils.cleanJson(jsonArray.toString()), DateTime.now(DateTimeZone.UTC).plusDays(20).toDate());
-				} catch (final Exception e) {
-					LOG.log(Level.WARNING, "Exception occured while trying to store ranks into the cache with key: " + memcacheKey, e);
+					try {
+						cache.put(memcacheKey, JsonUtils.cleanJson(jsonArray.toString()), DateTime.now(DateTimeZone.UTC).plusDays(20).toDate());
+					} catch (final Exception e) {
+						LOG.log(Level.WARNING, "Exception occured while trying to store ranks into the cache with key: " + memcacheKey, e);
+					}
 				}
 			}
 		} else {

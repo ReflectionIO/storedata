@@ -290,7 +290,7 @@ public class PredictorIOS implements Predictor {
 		}
 
 		final List<Rank> foundRanks = rankService.getGatherCodeRanks(c, simpleModelRun.feedFetch.category, simpleModelRun.feedFetch.type,
-				simpleModelRun.feedFetch.code);
+				simpleModelRun.feedFetch.code, false);
 
 		final Map<String, Item> lookup = lookupItemsForRanks(foundRanks);
 
