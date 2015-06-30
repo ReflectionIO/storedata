@@ -78,8 +78,6 @@ import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
-import io.reflection.app.archivers.ArchiverFactory;
-import io.reflection.app.archivers.ItemRankArchiver;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.collectors.CollectorIOS;
@@ -99,7 +97,6 @@ import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.helpers.ApiHelper;
 import io.reflection.app.helpers.NotificationHelper;
-import io.reflection.app.helpers.SliceHelper;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.modellers.Modeller;
 import io.reflection.app.modellers.ModellerFactory;
@@ -568,30 +565,30 @@ public final class Core extends ActionHandler {
 
 			input.listType = ValidationHelper.validateListType(input.listType, store);
 
-			FormType form = ModellerFactory.getModellerForStore(store.a3Code).getForm(input.listType);
-
-			ItemRankArchiver archiver = ArchiverFactory.getItemRankArchiver();
-			long[] slices = SliceHelper.offsets(input.start, input.end);
-
-			String key;
-			List<Rank> ranks;
-			for (long slice : slices) {
-				key = archiver.createKey(slice, input.item, form, store, input.country, input.category);
-
-				ranks = archiver.getRanks(key);
-
-				if (ranks != null) {
-					if (output.ranks == null) {
-						output.ranks = new ArrayList<Rank>();
-					}
-
-					output.ranks.addAll(ranks);
-				}
-			}
+			// FormType form = ModellerFactory.getModellerForStore(store.a3Code).getForm(input.listType);
+			//
+			// ItemRankArchiver archiver = ArchiverFactory.getItemRankArchiver();
+			// long[] slices = SliceHelper.offsets(input.start, input.end);
+			//
+			// String key;
+			// List<Rank> ranks;
+			// for (long slice : slices) {
+			// key = archiver.createKey(slice, input.item, form, store, input.country, input.category);
+			//
+			// ranks = archiver.getRanks(key);
+			//
+			// if (ranks != null) {
+			// if (output.ranks == null) {
+			// output.ranks = new ArrayList<Rank>();
+			// }
+			//
+			// output.ranks.addAll(ranks);
+			// }
+			// }
 
 			if (output.ranks == null) {
-				output.ranks = RankServiceProvider.provide()
-						.getItemRanks(input.country, store, input.listType, input.item, input.start, input.end, input.pager);
+				output.ranks = RankServiceProvider.provide().getItemRanks(input.country, input.category, input.listType, input.item, input.start, input.end,
+						input.pager);
 			}
 
 			if (input.pager.start.intValue() == 0) {
