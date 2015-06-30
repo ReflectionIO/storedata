@@ -1114,6 +1114,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("page-title")
 		String pageTitle();
+		
+		@ClassName("page-terms")
+		String pageTerms();
 
 		@ClassName("pages-link")
 		String pagesLink();

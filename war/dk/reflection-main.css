@@ -1270,7 +1270,7 @@ h6 + .content-list {
 /* line 424, ../sass/ui/_typography.scss */
 .content-list--featured {
   margin-bottom: 1.5em;
-  font-size: 2em;
+  font-size: 2rem;
   line-height: 1.3em;
 }
 /* line 428, ../sass/ui/_typography.scss */
@@ -1286,7 +1286,7 @@ h6 + .content-list {
 /* line 436, ../sass/ui/_typography.scss */
 .content-list--minor {
   margin-bottom: 2.14285714285714em;
-  font-size: 1.4em;
+  font-size: 1.4rem;
   line-height: 1.42857142857143em;
 }
 /* line 440, ../sass/ui/_typography.scss */
@@ -1310,31 +1310,68 @@ ol.content-list li,
 ol.content-list--minor li,
 ol.content-list--featured li {
   position: relative;
+  padding-left: 60px;
+  color: #5b5b68;
 }
-/* line 455, ../sass/ui/_typography.scss */
+/* line 456, ../sass/ui/_typography.scss */
 ol.content-list li:before,
 ol.content-list--minor li:before,
 ol.content-list--featured li:before {
   position: absolute;
   top: 0;
   left: 0;
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 600;
+  color: #29292c;
   content: counter(ordered-counter);
   counter-increment: ordered-counter;
-  color: #c4c7d0;
+}
+/* line 465, ../sass/ui/_typography.scss */
+.page-terms ol.content-list li:before, .page-terms
+ol.content-list--minor li:before, .page-terms
+ol.content-list--featured li:before {
+  content: counter(ordered-counter) ".0";
+}
+/* line 469, ../sass/ui/_typography.scss */
+ol.content-list li ol,
+ol.content-list--minor li ol,
+ol.content-list--featured li ol {
+  counter-reset: ordered-sub-counter;
+}
+/* line 471, ../sass/ui/_typography.scss */
+ol.content-list li ol li:before,
+ol.content-list--minor li ol li:before,
+ol.content-list--featured li ol li:before {
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 600;
+  content: counter(ordered-counter) "." counter(ordered-sub-counter);
+  counter-increment: ordered-sub-counter;
+}
+/* line 476, ../sass/ui/_typography.scss */
+.page-terms ol.content-list li ol li:before, .page-terms
+ol.content-list--minor li ol li:before, .page-terms
+ol.content-list--featured li ol li:before {
+  content: counter(ordered-counter) "." counter(ordered-sub-counter);
+}
+/* line 482, ../sass/ui/_typography.scss */
+ol.content-list p,
+ol.content-list--minor p,
+ol.content-list--featured p {
+  color: #5b5b68;
 }
 
-/* line 471, ../sass/ui/_typography.scss */
+/* line 493, ../sass/ui/_typography.scss */
 ol.content-list--featured li:before {
   font-size: 1.9rem;
 }
 
-/* line 479, ../sass/ui/_typography.scss */
+/* line 501, ../sass/ui/_typography.scss */
 ul.content-list li,
 ul.content-list--featured li,
 ul.content-list--minor li {
   position: relative;
 }
-/* line 481, ../sass/ui/_typography.scss */
+/* line 503, ../sass/ui/_typography.scss */
 ul.content-list li:before,
 ul.content-list--featured li:before,
 ul.content-list--minor li:before {
@@ -1346,7 +1383,7 @@ ul.content-list--minor li:before {
   color: #6d69c5;
 }
 
-/* line 491, ../sass/ui/_typography.scss */
+/* line 513, ../sass/ui/_typography.scss */
 blockquote {
   position: relative;
   padding-top: 38px;
@@ -1356,7 +1393,7 @@ blockquote {
   margin-bottom: 3em;
   margin-top: 3rem;
 }
-/* line 500, ../sass/ui/_typography.scss */
+/* line 522, ../sass/ui/_typography.scss */
 blockquote:before {
   position: absolute;
   top: 20px;
@@ -1368,7 +1405,7 @@ blockquote:before {
   font-size: 80px;
   color: #e8e7f1;
 }
-/* line 511, ../sass/ui/_typography.scss */
+/* line 533, ../sass/ui/_typography.scss */
 blockquote p {
   margin-bottom: 1em;
   font-family: "Source Sans Pro", sans-serif;
@@ -1377,14 +1414,14 @@ blockquote p {
   font-size: 1.6em;
   color: #5b5b68;
 }
-/* line 519, ../sass/ui/_typography.scss */
+/* line 541, ../sass/ui/_typography.scss */
 blockquote cite {
   font-family: "Lato", sans-serif;
   font-weight: 400;
   font-size: 1.2rem;
   line-height: 1.5;
 }
-/* line 524, ../sass/ui/_typography.scss */
+/* line 546, ../sass/ui/_typography.scss */
 blockquote cite span {
   margin-bottom: 4px;
   display: block;
@@ -1393,30 +1430,30 @@ blockquote cite span {
   font-weight: 600;
   color: #29292c;
 }
-/* line 534, ../sass/ui/_typography.scss */
+/* line 556, ../sass/ui/_typography.scss */
 blockquote.blockquote--on-purple:before {
   color: #5f5bb4;
 }
-/* line 537, ../sass/ui/_typography.scss */
+/* line 559, ../sass/ui/_typography.scss */
 blockquote.blockquote--on-purple p {
   color: #fff;
 }
-/* line 540, ../sass/ui/_typography.scss */
+/* line 562, ../sass/ui/_typography.scss */
 blockquote.blockquote--on-purple cite {
   color: #c3c6f6;
 }
-/* line 542, ../sass/ui/_typography.scss */
+/* line 564, ../sass/ui/_typography.scss */
 blockquote.blockquote--on-purple cite span {
   color: #fefefe;
 }
 
-/* line 548, ../sass/ui/_typography.scss */
+/* line 570, ../sass/ui/_typography.scss */
 strong {
   font-weight: 700;
   color: #29292c;
 }
 
-/* line 552, ../sass/ui/_typography.scss */
+/* line 574, ../sass/ui/_typography.scss */
 .blockquote--large {
   padding-top: 0;
   padding-left: 65px;
@@ -1424,27 +1461,27 @@ strong {
   margin-bottom: 3.5rem;
   font-size: 1.1em;
 }
-/* line 558, ../sass/ui/_typography.scss */
+/* line 580, ../sass/ui/_typography.scss */
 .blockquote--large p {
   margin-bottom: 1.2em;
   font-size: 1.6em;
 }
-/* line 562, ../sass/ui/_typography.scss */
+/* line 584, ../sass/ui/_typography.scss */
 .blockquote--large:before {
   top: 32px;
   left: 0;
   font-size: 100px;
 }
-/* line 567, ../sass/ui/_typography.scss */
+/* line 589, ../sass/ui/_typography.scss */
 .blockquote--large cite {
   font-size: 1.4rem;
 }
-/* line 569, ../sass/ui/_typography.scss */
+/* line 591, ../sass/ui/_typography.scss */
 .blockquote--large cite span {
   font-size: 1.8rem;
 }
 
-/* line 574, ../sass/ui/_typography.scss */
+/* line 596, ../sass/ui/_typography.scss */
 figcaption {
   margin-top: 1.2rem;
   margin-bottom: 1.9em;
@@ -1455,17 +1492,17 @@ figcaption {
   color: #81869e;
 }
 
-/* line 583, ../sass/ui/_typography.scss */
+/* line 605, ../sass/ui/_typography.scss */
 .warning-text {
   color: #ff496a !important;
 }
 
-/* line 586, ../sass/ui/_typography.scss */
+/* line 608, ../sass/ui/_typography.scss */
 a.warning-text:hover {
   color: #d23753 !important;
 }
 
-/* line 589, ../sass/ui/_typography.scss */
+/* line 611, ../sass/ui/_typography.scss */
 img.image-full-width {
   width: 100%;
 }
@@ -6840,6 +6877,61 @@ table.table-linked-accounts .update-linked-accounts-container .ref-button--link:
   .tabs-template .tabs__content {
     padding: 4% 5% 5%;
   }
+}
+
+/* line 2, ../sass/templates/_terms.scss */
+.page-terms .site-article-full {
+  border-bottom: 0;
+}
+/* line 4, ../sass/templates/_terms.scss */
+.page-terms .site-article-full h1 {
+  margin-top: 2rem;
+}
+/* line 7, ../sass/templates/_terms.scss */
+.page-terms .site-article-full > ol.content-list {
+  border-bottom: none;
+}
+/* line 9, ../sass/templates/_terms.scss */
+.page-terms .site-article-full > ol.content-list > li {
+  padding-bottom: 3rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #e1e5e8;
+}
+/* line 13, ../sass/templates/_terms.scss */
+.page-terms .site-article-full > ol.content-list > li:before {
+  padding-top: 0.6rem;
+  font-size: 2.7rem;
+}
+/* line 17, ../sass/templates/_terms.scss */
+.page-terms .site-article-full > ol.content-list > li:last-child {
+  border-bottom: none;
+}
+/* line 21, ../sass/templates/_terms.scss */
+.page-terms .site-article-full > ol.content-list > li > ol li:before {
+  font-size: 1.8rem;
+}
+/* line 24, ../sass/templates/_terms.scss */
+.page-terms .site-article-full > ol.content-list > li > ol ol {
+  margin-top: 1rem;
+}
+/* line 26, ../sass/templates/_terms.scss */
+.page-terms .site-article-full > ol.content-list > li > ol ol li {
+  list-style-type: lower-latin;
+  margin-left: 80px;
+  padding-left: 15px;
+  overflow: visible;
+}
+/* line 31, ../sass/templates/_terms.scss */
+.page-terms .site-article-full > ol.content-list > li > ol ol li:before {
+  display: none;
+}
+/* line 37, ../sass/templates/_terms.scss */
+.page-terms .site-article-full > ol.content-list > li ol, .page-terms .site-article-full > ol.content-list > li h4, .page-terms .site-article-full > ol.content-list > li p {
+  margin-left: -60px;
+}
+/* line 40, ../sass/templates/_terms.scss */
+.page-terms .site-article-full > ol.content-list > li .heading-style--heading-five {
+  margin-top: 2.1rem;
 }
 
 /* line 1, ../sass/templates/_typography.scss */
