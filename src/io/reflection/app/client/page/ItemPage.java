@@ -74,6 +74,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -447,6 +448,9 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		revenueForPeriodColumn.setSortable(true);
 		columnSortHandler.setComparator(revenueForPeriodColumn, AppRevenue.getRevenuePercentForPeriodComparator());
 
+		revenueTableDesktop.setColumnWidth(dateColumn, 25, Unit.PCT);
+		revenueTableDesktop.setColumnWidth(revenueColumn, 25, Unit.PCT);
+		revenueTableDesktop.setColumnWidth(revenueForPeriodColumn, 50, Unit.PCT);
 	}
 
 	@UiHandler("storeSelector")
