@@ -59,6 +59,7 @@ public class Selector extends Composite implements HasChangeHandlers {
 	@UiField Anchor closeLink;
 	@UiField SpanElement spanSelectLabel;
 	@UiField SpanElement spanOptionLabel;
+	@UiField DivElement listContainer;
 	private List<LIElement> itemList = new ArrayList<LIElement>(); // List of items excluded the placeholder
 	private int selectedIndex = -1; // Simulates a SELECT OPTION where there is no placegolder
 	private boolean isFilter;
@@ -169,7 +170,7 @@ public class Selector extends Composite implements HasChangeHandlers {
 		option.setAttribute("value", value);
 		selectElem.appendChild(option);
 		final LIElement listElem = createListItemOption(item, value);
-		uListElem.appendChild(listElem);
+		listContainer.appendChild(listElem);
 		itemList.add(listElem);
 
 		Event.sinkEvents(listElem, Event.ONCLICK);
