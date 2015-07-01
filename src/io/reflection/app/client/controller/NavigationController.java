@@ -573,4 +573,11 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 
 	}
 
+	/**
+	 * 
+	 */
+	public void resetBlogPage() {
+		pages.put(PageType.BlogPostsPageType.toString(), null);
+	}
+
 }

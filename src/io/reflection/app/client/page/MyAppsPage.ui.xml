@@ -49,5 +49,10 @@
 			<!-- <p:SimplePager ui:field="simplePager" visible="false" /> -->
 		</g:HTMLPanel>
 
+		<g:Button ui:field="viewAllBtn" visible="false"
+			styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall} {STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmallWithIcon}">
+			<span ui:field="viewAllSpan" class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeMyApps}">View all Apps</span>
+		</g:Button>
+
 	</g:HTMLPanel>
 </ui:UiBinder> 

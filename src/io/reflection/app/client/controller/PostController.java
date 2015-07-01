@@ -31,8 +31,6 @@ import io.reflection.app.api.blog.shared.call.event.UpdatePostEventHandler.Updat
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.client.DefaultEventBus;
-import io.reflection.app.client.page.PageType;
-import io.reflection.app.client.part.Preloader;
 import io.reflection.app.datatypes.shared.Post;
 import io.reflection.app.shared.util.LookupHelper;
 import io.reflection.app.shared.util.TagHelper;
@@ -45,7 +43,6 @@ import java.util.Map;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
-import com.google.gwt.view.client.Range;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**
@@ -60,8 +57,6 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
 	private Map<String, Post> postSummaryLookup = null;
 	private Map<String, Post> postLookup = null;
 
-	private Preloader preloaderPosts = null;
-
 	private static PostController one = null;
 
 	public static PostController get() {
@@ -74,10 +69,6 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
 
 	public void fetchPosts() {
 
-		if (preloaderPosts != null && NavigationController.get().getCurrentPage().equals(PageType.BlogPostsPageType)) {
-			preloaderPosts.show();
-		}
-
 		BlogService service = ServiceCreator.createBlogService();
 
 		final GetPostsRequest input = new GetPostsRequest();
@@ -88,7 +79,7 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
 
 		if (pager == null) {
 			pager = new Pager();
-			pager.count = 3L;
+			pager.count = 100000L;
 			pager.start = Long.valueOf(0);
 			pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
 		}
@@ -153,7 +144,7 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
 		if (id == null) {
 			input.code = lookup;
 		} else {
-		input.id = id;
+			input.id = id;
 		}
 
 		service.getPost(input, new AsyncCallback<GetPostResponse>() {
@@ -221,15 +212,22 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
 	 */
 	@Override
 	protected void onRangeChanged(HasData<Post> display) {
-		Range r = display.getVisibleRange();
+		// Range r = display.getVisibleRange();
+		//
+		// int start = r.getStart();
+		// int end = start + r.getLength();
+		//
+		// if (!postsFetched() || (postsFetched() && getPostsCount() != posts.size() && end > posts.size())) {
+		// fetchPosts();
+		// } else {
+		// updateRowData(start, posts.size() == 0 ? posts : posts.subList(start, Math.min(posts.size(), end)));
+		// }
 
-		int start = r.getStart();
-		int end = start + r.getLength();
-
-		if (!postsFetched() || (postsFetched() && getPostsCount() != posts.size() && end > posts.size())) {
+		if (posts.isEmpty()) {
 			fetchPosts();
 		} else {
-			updateRowData(start, posts.size() == 0 ? posts : posts.subList(start, Math.min(posts.size(), end)));
+			int end = (display.getVisibleRange().getLength() > posts.size() ? posts.size() : display.getVisibleRange().getLength());
+			updateRowData(0, posts.subList(0, end));
 		}
 
 	}
@@ -258,35 +256,35 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
 		if (input.post != null) {
 			postLookup.remove(lookup);
 
-		input.post.title = title;
-		input.post.description = description;
-		input.post.content = content;
+			input.post.title = title;
+			input.post.description = description;
+			input.post.content = content;
 			input.post.code = LookupHelper.codify(title);
-		input.publish = publish;
+			input.publish = publish;
 
-		input.post.visible = visible;
-		input.post.commentsEnabled = commentsEnabled;
+			input.post.visible = visible;
+			input.post.commentsEnabled = commentsEnabled;
 
-		input.post.tags = TagHelper.convertToTagList(tags);
+			input.post.tags = TagHelper.convertToTagList(tags);
 
-		service.updatePost(input, new AsyncCallback<UpdatePostResponse>() {
+			service.updatePost(input, new AsyncCallback<UpdatePostResponse>() {
 
-			@Override
-			public void onSuccess(UpdatePostResponse output) {
-				if (output.status == StatusType.StatusTypeSuccess) {
-					reset();
-					fetchPosts();
+				@Override
+				public void onSuccess(UpdatePostResponse output) {
+					if (output.status == StatusType.StatusTypeSuccess) {
+						reset();
+						fetchPosts();
+					}
+
+					DefaultEventBus.get().fireEventFromSource(new UpdatePostSuccess(input, output), PostController.this);
 				}
 
-				DefaultEventBus.get().fireEventFromSource(new UpdatePostSuccess(input, output), PostController.this);
-			}
-
-			@Override
-			public void onFailure(Throwable caught) {
-				DefaultEventBus.get().fireEventFromSource(new UpdatePostFailure(input, caught), PostController.this);
-			}
-		});
-	}
+				@Override
+				public void onFailure(Throwable caught) {
+					DefaultEventBus.get().fireEventFromSource(new UpdatePostFailure(input, caught), PostController.this);
+				}
+			});
+		}
 	}
 
 	/**
@@ -383,43 +381,35 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
 		input.post = postSummaryLookup.get(lookup);
 
 		if (input.post != null) {
-		service.deletePost(input, new AsyncCallback<DeletePostResponse>() {
+			service.deletePost(input, new AsyncCallback<DeletePostResponse>() {
 
-			@Override
-			public void onSuccess(DeletePostResponse output) {
-				if (output.status == StatusType.StatusTypeSuccess) {
+				@Override
+				public void onSuccess(DeletePostResponse output) {
+					if (output.status == StatusType.StatusTypeSuccess) {
 						if (input.post != null) {
 							posts.remove(input.post);
 							postSummaryLookup.remove(lookup);
 
-						count--;
+							count--;
 
-						pager.totalCount = Long.valueOf(pager.totalCount.longValue() - 1);
+							pager.totalCount = Long.valueOf(pager.totalCount.longValue() - 1);
 
-						updateRowCount((int) count, true);
-						updateRowData(0, posts);
-					} else {
-						fetchPosts();
+							updateRowCount((int) count, true);
+							updateRowData(0, posts);
+						} else {
+							fetchPosts();
+						}
 					}
+
+					DefaultEventBus.get().fireEventFromSource(new DeletePostSuccess(input, output), PostController.this);
 				}
 
-				DefaultEventBus.get().fireEventFromSource(new DeletePostSuccess(input, output), PostController.this);
-			}
-
-			@Override
-			public void onFailure(Throwable caught) {
-				DefaultEventBus.get().fireEventFromSource(new DeletePostFailure(input, caught), PostController.this);
-			}
-		});
-	}
+				@Override
+				public void onFailure(Throwable caught) {
+					DefaultEventBus.get().fireEventFromSource(new DeletePostFailure(input, caught), PostController.this);
+				}
+			});
+		}
 	}
 
-	/**
-	 * Pass PostsPage Preloader reference, in order to show it when fetchPosts is called
-	 * 
-	 * @param p
-	 */
-	public void setPreloaderPosts(Preloader p) {
-		preloaderPosts = p;
-	}
 }
