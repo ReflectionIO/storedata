@@ -229,6 +229,8 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 								}
 							}
 
+							resetPublicPagesAfterLogin();
+
 							DefaultEventBus.get().fireEventFromSource(new GotUserPowers(mLoggedInUser, mLoggedInUser.roles, mLoggedInUser.permissions),
 									SessionController.this);
 						}
@@ -248,6 +250,11 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 		}
 
 		return attemptPrefetch;
+	}
+	
+	private void resetPublicPagesAfterLogin() {
+		PostController.get().reset();
+		NavigationController.get().resetBlogPage();
 	}
 
 	/**
