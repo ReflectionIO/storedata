@@ -178,11 +178,9 @@ final class SaleService implements ISaleService {
 		Map<String, Item> itemsFoundInSalesSummary = new HashMap<String, Item>();
 		List<String> itemIdsToLookForInRanks = new ArrayList<String>();
 
-		String getSaleQuery = String
-				.format("select itemid, title, developer_name from dataaccount d inner join sale_summary s on (d.id=s.dataaccountid) where d.id=%d group by itemid LIMIT %d, %d",
-						dataAccount.id.longValue(),
-						pager.start == null ? Pager.DEFAULT_START.longValue() : pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue()
-								: pager.count.longValue());
+		String getSaleQuery = String.format(
+				"select itemid, title, developer_name from dataaccount d inner join sale_summary s on (d.id=s.dataaccountid) where d.id=%d group by itemid",
+				dataAccount.id.longValue());
 
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection saleConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
@@ -281,8 +279,7 @@ final class SaleService implements ISaleService {
 		if (typeIdentifiers != null && typeIdentifiers.size() > 0) {
 			typeId = "AND `typeidentifier` IN ('" + StringUtils.join(typeIdentifiers, "','") + "')";
 		}
-		String getDataAccountsCountQuery = String.format(
-				"SELECT COUNT(DISTINCT `itemid`) AS `datacount` FROM `sale_summary` WHERE `dataaccountid`=%d",
+		String getDataAccountsCountQuery = String.format("SELECT COUNT(DISTINCT `itemid`) AS `datacount` FROM `sale_summary` WHERE `dataaccountid`=%d",
 				dataAccount.id.longValue());
 
 		Connection dataConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
@@ -820,20 +817,19 @@ final class SaleService implements ISaleService {
 	public Map<String, Sale> getItemPrices(String[] itemIds, String country, Date start, Date end) throws DataAccessException {
 		Map<String, Sale> result = new HashMap<String, Sale>();
 
-
 		StringBuilder itemIdsAsSqlArray = new StringBuilder();
 
-		for(String itemid: itemIds) {
-			if(itemIdsAsSqlArray.length()>0) {
+		for (String itemid : itemIds) {
+			if (itemIdsAsSqlArray.length() > 0) {
 				itemIdsAsSqlArray.append(',');
 			}
 
 			itemIdsAsSqlArray.append('\'').append(itemid).append('\'');
 		}
 
-		String getItemPricesQuery = String.format(
-				"select max(id), itemid, customerprice, currency from sale where country='%s' and itemid in(%s) and typeidentifier in ('1', '1T', '1F') and %s group by itemid;",
-				country, itemIdsAsSqlArray.toString(), SqlQueryHelper.beforeAfterQuery(end, start, "begin"));
+		String getItemPricesQuery = String
+				.format("select max(id), itemid, customerprice, currency from sale where country='%s' and itemid in(%s) and typeidentifier in ('1', '1T', '1F') and %s group by itemid;",
+						country, itemIdsAsSqlArray.toString(), SqlQueryHelper.beforeAfterQuery(end, start, "begin"));
 
 		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
 

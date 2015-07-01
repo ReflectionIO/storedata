@@ -13,15 +13,12 @@ import static io.reflection.app.helpers.SqlQueryHelper.beforeAfterQuery;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
-import io.reflection.app.collectors.Collector;
-import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.FormType;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
-import io.reflection.app.helpers.ApiHelper;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
@@ -37,11 +34,10 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -55,7 +51,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.spacehopperstudios.utility.JsonUtils;
-import com.spacehopperstudios.utility.StringUtils;
 
 public class RankService implements IRankService {
 	private static final Logger LOG = Logger.getLogger(RankService.class.getName());
@@ -171,9 +166,14 @@ public class RankService implements IRankService {
 				updatedRank = rank;
 			}
 
+			int price = 0;
+			if (rank.price != null) {
+				price = (int) (rank.price.floatValue() * 100f);
+			}
+
 			pstat.setInt(1, rank.position == null ? rank.grossingPosition : rank.position);
 			pstat.setString(2, rank.itemId);
-			pstat.setFloat(3, rank.price);
+			pstat.setInt(3, price);
 			pstat.setString(4, rank.currency);
 
 			if (rank.revenue == null) {
@@ -210,88 +210,56 @@ public class RankService implements IRankService {
 	 * java.util.Date, java.util.Date, io.reflection.app.api.datatypes.Pager)
 	 */
 	@Override
-	public List<Rank> getItemRanks(Country country, Store store, String listType, Item item, Date after, Date before, Pager pager) throws DataAccessException {
+	public List<Rank> getItemRanks(Country country, Category category, String listType, Item item, Date after, Date before, Pager pager)
+			throws DataAccessException {
 		final List<Rank> ranks = new ArrayList<Rank>();
 
-		final Collector collector = CollectorFactory.getCollectorForStore(store.a3Code);
-		final boolean isGrossing = collector.isGrossing(listType);
+		final String selectQuery = "SELECT r.*, rf.group_fetch_code, rf.fetch_date, rf.country, rf.category, rf.type, rf.platform "
+				+ " FROM rank_fetch rf inner join rank2 r on (r.rank_fetch_id = rf.rank_fetch_id and r.itemid=?) WHERE "
+				+ " rf.country=? AND rf.category=? AND rf.type=? AND rf.platform=? AND rf.fetch_date BETWEEN ? AND ? and rf.fetch_time > '21:00'";
 
-		final List<String> types = new ArrayList<String>();
+		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
-		if (isGrossing) {
-			types.addAll(collector.getCounterpartTypes(listType));
-		}
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(after);
+		cal.set(Calendar.HOUR, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
 
-		types.add(addslashes(listType));
+		java.sql.Date afterParam = new java.sql.Date(cal.getTimeInMillis());
 
-		if (isGrossing) {
-			pager.sortBy = "grossingposition";
-		} else {
-			pager.sortBy = "position";
-		}
+		cal.setTime(before);
+		cal.set(Calendar.HOUR, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
 
-		final String memcacheKey = getName() + ".itemranks." + item.id.toString() + "." + country.a2Code + "." + store.a3Code + "."
-				+ StringUtils.join(types, ".") + "." + (before == null ? "none" : before.getTime()) + "." + (after == null ? "none" : after.getTime()) + "."
-				+ pager.start + "." + pager.count + "." + pager.sortDirection + "." + pager.sortBy;
-		final String itemRanksString = (String) cache.get(memcacheKey);
+		java.sql.Date beforeParam = new java.sql.Date(cal.getTimeInMillis());
 
-		if (itemRanksString == null) {
-			String typesQueryPart = null;
-			if (types.size() == 1) {
-				typesQueryPart = String.format("`type`='%s'", types.get(0));
-			} else {
-				typesQueryPart = "`type` IN ('" + StringUtils.join(types, "', '") + "')";
-			}
+		try (PreparedStatement pstat = rankConnection.getRealConnection().prepareStatement(selectQuery, Statement.NO_GENERATED_KEYS)) {
+			rankConnection.connect();
 
-			final String getCountryStoreTypeRanksQuery = String
-					.format("SELECT * FROM `rank` WHERE %s AND `country`='%s' AND `itemid`='%s' AND `categoryid`=24 AND %s AND %s `deleted`='n' ORDER BY `date` ASC, `%s` %s LIMIT %d,%d",
-							typesQueryPart, addslashes(country.a2Code), addslashes(item.internalId), beforeAfterQuery(before, after),
-							isGrossing ? "`grossingposition`<>0 AND" : "", pager.sortBy,
-									pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start, pager.count);
+			int paramCount = 1;
+			pstat.setString(paramCount++, item.internalId);
+			pstat.setString(paramCount++, country.a2Code);
+			pstat.setLong(paramCount++, category.id);
+			pstat.setString(paramCount++, FeedFetchService.getDBTypeForFeedFetchType(listType));
+			pstat.setString(paramCount++, FeedFetchService.getDBPlatformForFeedFetchType(listType));
+			pstat.setDate(paramCount++, afterParam);
+			pstat.setDate(paramCount++, beforeParam);
 
-			final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+			rankConnection.executePreparedStatement(pstat);
 
-			try {
-				rankConnection.connect();
-				rankConnection.executeQuery(getCountryStoreTypeRanksQuery);
-
-				final Map<Date, Rank> ranksLookup = new HashMap<Date, Rank>();
-				Date date;
-
-				while (rankConnection.fetchNextRow()) {
-					// strip out duplicates for date
-					date = ApiHelper.removeTime(rankConnection.getCurrentRowDateTime("date"));
-
-					if (ranksLookup.get(date) == null) {
-						final Rank rank = toRank(rankConnection);
-
-						if (rank != null) {
-							rank.date = date;
-							ranks.add(rank);
-							ranksLookup.put(date, rank);
-						}
-					}
-				}
-
-				if (ranks.size() > 0) {
-					final JsonArray jsonArray = new JsonArray();
-					for (final Rank rank : ranks) {
-						jsonArray.add(rank.toJson());
-					}
-					cache.put(memcacheKey, JsonUtils.cleanJson(jsonArray.toString()), DateTime.now(DateTimeZone.UTC).plusDays(20).toDate());
-				}
-			} finally {
-				if (rankConnection != null) {
-					rankConnection.disconnect();
-				}
-			}
-		} else {
-			final JsonArray parsed = (JsonArray) new JsonParser().parse(itemRanksString);
-			Rank rank;
-			for (final JsonElement jsonElement : parsed) {
-				rank = new Rank();
-				rank.fromJson(jsonElement.getAsJsonObject());
+			while (rankConnection.fetchNextRow()) {
+				Rank rank = toRank(rankConnection);
 				ranks.add(rank);
+			}
+		} catch (SQLException e) {
+			LOG.log(Level.SEVERE, "Exception occured while trying to gather code ranks", e);
+		} finally {
+			if (rankConnection != null) {
+				rankConnection.disconnect();
 			}
 		}
 
@@ -366,13 +334,13 @@ public class RankService implements IRankService {
 			for (Rank rank : ranks) {
 
 				int price = 0;
-				if (rank.revenue != null) {
+				if (rank.price != null) {
 					price = (int) (rank.price.floatValue() * 100f);
 				}
 				pstat.setLong(1, feedfetchId);
 				pstat.setInt(2, rank.position == null ? rank.grossingPosition : rank.position);
 				pstat.setString(3, rank.itemId);
-				pstat.setFloat(4, price);
+				pstat.setInt(4, price);
 				pstat.setString(5, rank.currency);
 
 				if (rank.revenue == null) {
@@ -479,6 +447,17 @@ public class RankService implements IRankService {
 	 */
 	@Override
 	public List<Rank> getGatherCodeRanks(Country country, Category category, String listType, Long code) throws DataAccessException {
+		return getGatherCodeRanks(country, category, listType, code, true);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see io.reflection.app.service.rank.IRankService#getGatherCodeRanks(io.reflection.app.shared.datatypes.Country, io.reflection.app.shared.datatypes.Store,
+	 * io.reflection.app.shared.datatypes.Category java.lang.String, java.lang.Long, io.reflection.app.api.shared.datatypes.Pager, java.lang.Boolean)
+	 */
+	@Override
+	public List<Rank> getGatherCodeRanks(Country country, Category category, String listType, Long code, boolean useCache) throws DataAccessException {
 		if (LOG.isLoggable(GaeLevel.DEBUG)) {
 			LOG.log(GaeLevel.DEBUG,
 					String.format("getGatherCodeRanks called for country: %s, category: %s, listType: %s, code2: %d", country, category, listType, code));
@@ -486,7 +465,12 @@ public class RankService implements IRankService {
 
 		List<Rank> ranks = new ArrayList<Rank>(200);
 
+		String ranksString = null;
 		final String memcacheKey = getName() + ".getGatherCodeRanks." + code + "." + country.a2Code + "." + category.id.toString() + "." + listType;
+
+		if (useCache) {
+			ranksString = (String) cache.get(memcacheKey);
+		}
 
 		final String selectQuery = "SELECT r.*, rf.group_fetch_code, rf.fetch_date, rf.country, rf.category, rf.type, rf.platform "
 				+ " FROM `rank2` r inner join rank_fetch rf on (r.rank_fetch_id = rf.rank_fetch_id) WHERE "
@@ -494,7 +478,6 @@ public class RankService implements IRankService {
 
 		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
-		final String ranksString = (String) cache.get(memcacheKey);
 
 		if (ranksString == null) {
 			try (PreparedStatement pstat = rankConnection.getRealConnection().prepareStatement(selectQuery, Statement.NO_GENERATED_KEYS)) {
@@ -521,16 +504,18 @@ public class RankService implements IRankService {
 				}
 			}
 
-			if (ranks.size() > 0) {
-				final JsonArray jsonArray = new JsonArray();
-				for (final Rank rank : ranks) {
-					jsonArray.add(rank.toJson());
-				}
+			if (useCache) {
+				if (ranks.size() > 0) {
+					final JsonArray jsonArray = new JsonArray();
+					for (final Rank rank : ranks) {
+						jsonArray.add(rank.toJson());
+					}
 
-				try {
-					cache.put(memcacheKey, JsonUtils.cleanJson(jsonArray.toString()), DateTime.now(DateTimeZone.UTC).plusDays(20).toDate());
-				} catch (final Exception e) {
-					LOG.log(Level.WARNING, "Exception occured while trying to store ranks into the cache with key: " + memcacheKey, e);
+					try {
+						cache.put(memcacheKey, JsonUtils.cleanJson(jsonArray.toString()), DateTime.now(DateTimeZone.UTC).plusDays(20).toDate());
+					} catch (final Exception e) {
+						LOG.log(Level.WARNING, "Exception occured while trying to store ranks into the cache with key: " + memcacheKey, e);
+					}
 				}
 			}
 		} else {
@@ -635,7 +620,7 @@ public class RankService implements IRankService {
 				.format("SELECT  s.date, s.total_revenue as revenue, s.total_download_and_updates as downloads, "
 						+ "    max(IF(rf.type='FREE' or rf.type='PAID', r.position, NULL)) as position, "
 						+ "    max(IF(rf.type='GROSSING', r.position, NULL)) as grossing_position, max(r.currency) as currency FROM sale_summary s USE INDEX (idx_item_search) "
-						+ "    LEFT JOIN rank_fetch rf USE INDEX (idx_rank_fetch_search) ON (s.date=rf.fetch_date and s.country=rf.country and rf.category=%d and rf.platform='%s') "
+						+ "    LEFT JOIN rank_fetch rf USE INDEX (idx_rank_fetch_search_time) ON (s.date=rf.fetch_date and s.country=rf.country and rf.category=%d and rf.platform='%s') "
 						+ "    LEFT JOIN rank2 r ON (r.rank_fetch_id=rf.rank_fetch_id and r.itemid=s.itemid) "
 						+ "		WHERE s.date BETWEEN '%s' AND '%s' AND s.itemid = %s AND s.country = '%s' GROUP BY s.date ORDER BY s.%s %s LIMIT %d, %d",
 						categoryId, platform, dateFormat.format(start), dateFormat.format(end), internalId, country.a2Code, pager.sortBy, sortDirection,
