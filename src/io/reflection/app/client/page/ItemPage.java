@@ -785,7 +785,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		revenueTableDesktop.getColumnSortList().push(dateColumn);
 		revenueTableMobile.getColumnSortList().push(dateColumn);
 
-		chartRank.setRankingType(RankType.PositionRankingType);
+		chartRank.setRankingType(rankType);
 		chartRank.drawData(ranks, SERIES_ID_RANK, ChartHelper.TYPE_LINE, ColorHelper.getReflectionGreen(), false, false);
 		chartRevenue.drawData(ranks, SERIES_ID_REVENUE, ChartHelper.TYPE_AREA, ColorHelper.getReflectionPurple(), false, cumulativeChartSwitch.getValue()
 				.booleanValue());
