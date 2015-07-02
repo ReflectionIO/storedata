@@ -673,7 +673,7 @@ public class RankService implements IRankService {
 
 		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
-		final String getRanksQuery = String.format("SELECT s.itemid, s.price, SUM(s.total_revenue) as revenue, SUM(s.total_downloads) as downloads "
+		final String getRanksQuery = String.format("SELECT s.itemid, s.price, SUM(s.total_revenue) as revenue, SUM(s.total_download) as downloads "
 				+ "   FROM sale_summary s WHERE s.date BETWEEN '%s' AND '%s' AND s.dataaccountid = %s AND s.country = '%s' GROUP BY s.itemid",
 
 				dateFormat.format(start), dateFormat.format(end), dataaccountId, country.a2Code);
@@ -690,7 +690,7 @@ public class RankService implements IRankService {
 				rank.itemId = rankConnection.getCurrentRowString("itemid");
 
 				Double price = rankConnection.getCurrentRowDouble("price");
-				rank.price = price == null ? null : (price.floatValue() / 100f);
+				rank.price = price == null ? null : (price.floatValue()/100f);
 
 				rank.downloads = rankConnection.getCurrentRowInteger("downloads");
 
