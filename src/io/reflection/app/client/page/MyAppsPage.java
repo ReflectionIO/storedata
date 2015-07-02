@@ -26,6 +26,7 @@ import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.RankController;
+import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.dataprovider.UserItemProvider;
 import io.reflection.app.client.handler.FilterEventHandler;
@@ -48,6 +49,7 @@ import java.util.Map;
 
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -64,6 +66,7 @@ import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.LoadingStateChangeEvent;
 import com.google.gwt.user.cellview.client.LoadingStateChangeEvent.LoadingState;
 import com.google.gwt.user.cellview.client.SafeHtmlHeader;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -80,8 +83,8 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 
 	UserItemProvider userItemProvider = new UserItemProvider();
 
-	@UiField(provided = true) CellTable<MyApp> appsTableDesktop = new CellTable<MyApp>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
-	@UiField(provided = true) CellTable<MyApp> appsTableMobile = new CellTable<MyApp>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
+	@UiField(provided = true) CellTable<MyApp> appsTableDesktop = new CellTable<MyApp>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
+	@UiField(provided = true) CellTable<MyApp> appsTableMobile = new CellTable<MyApp>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 	private String sorterSvg = "<svg version=\"1.1\" x=\"0px\" y=\"0px\" viewBox=\"0 0 7 10\" enable-background=\"new 0 0 7 10\" xml:space=\"preserve\" class=\"sort-svg\"><path class=\"ascending\" d=\"M0.4,4.1h6.1c0.1,0,0.2,0,0.3-0.1C7,3.9,7,3.8,7,3.7c0-0.1,0-0.2-0.1-0.3L3.8,0.1C3.7,0,3.6,0,3.5,0C3.4,0,3.3,0,3.2,0.1L0.1,3.3C0,3.4,0,3.5,0,3.7C0,3.8,0,3.9,0.1,4C0.2,4.1,0.3,4.1,0.4,4.1z\"></path><path class=\"descending\" d=\"M6.6,5.9H0.4c-0.1,0-0.2,0-0.3,0.1C0,6.1,0,6.2,0,6.3c0,0.1,0,0.2,0.1,0.3l3.1,3.2C3.3,10,3.4,10,3.5,10c0.1,0,0.2,0,0.3-0.1l3.1-3.2C7,6.6,7,6.5,7,6.3C7,6.2,7,6.1,6.9,6C6.8,5.9,6.7,5.9,6.6,5.9z\"></path></svg>";
 	private SafeHtmlHeader rankHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Rank " + sorterSvg));
 	private SafeHtmlHeader appDetailsHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("App Details " + sorterSvg));
@@ -96,6 +99,9 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	@UiField Selector appStore;
 	@UiField Selector country;
 	@UiField DateSelector dateSelector;
+
+	@UiField Button viewAllBtn;
+	@UiField SpanElement viewAllSpan;
 
 	public static final String COMING_FROM_PARAMETER = "myapps";
 
@@ -376,6 +382,21 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		FilterHelper.addLinkedAccounts(accountName);
 	}
 
+	@UiHandler("viewAllBtn")
+	void onViewAllButtonClicked(ClickEvent event) {
+		if (((Button) event.getSource()).isEnabled()) {
+			if (appsTableDesktop.getVisibleItemCount() == ServiceConstants.STEP_VALUE) {
+				appsTableDesktop.setVisibleRange(0, Integer.MAX_VALUE);
+				appsTableMobile.setVisibleRange(0, Integer.MAX_VALUE);
+				viewAllSpan.setInnerText("View Less Apps");
+			} else {
+				appsTableDesktop.setVisibleRange(0, ServiceConstants.STEP_VALUE);
+				appsTableMobile.setVisibleRange(0, ServiceConstants.STEP_VALUE);
+				viewAllSpan.setInnerText("View All Apps");
+			}
+		}
+	}
+
 	/**
 	 * Excluded linked account filter
 	 * 
@@ -403,6 +424,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 			// simplePager.setPageStart(0);
 			userItemProvider.reset();
 			setFiltersEnabled(false);
+			viewAllBtn.setVisible(false);
 			ItemController.get().fetchLinkedAccountItems();
 			rankHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.mhxte6cIF());
 			appDetailsHeader.setHeaderStyleNames(style.canBeSorted());
@@ -426,6 +448,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 			// simplePager.setPageStart(0);
 			userItemProvider.reset();
 			setFiltersEnabled(false);
+			viewAllBtn.setVisible(false);
 			ItemController.get().fetchLinkedAccountItems();
 			rankHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.mhxte6cIF());
 			appDetailsHeader.setHeaderStyleNames(style.canBeSorted());
@@ -538,11 +561,9 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		if (output.status == StatusType.StatusTypeSuccess) {
 			appDetailsHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.isAscending());
 			columnAppDetails.setDefaultSortAscending(false);
-			// if (ItemController.get().getUserItemsCount() > output.pager.count.longValue()) {
-			// simplePager.setVisible(true);
-			// } else {
-			// simplePager.setVisible(false);
-			// }
+			if (output.items.size() > ServiceConstants.STEP_VALUE) {
+				viewAllBtn.setVisible(true);
+			}
 		}
 		setFiltersEnabled(true);
 
