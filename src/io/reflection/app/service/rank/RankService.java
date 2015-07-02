@@ -152,7 +152,7 @@ public class RankService implements IRankService {
 						rank.date.getTime() / 1000, addslashes(rank.source), (int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency),
 						rank.category.id.longValue(), rank.code.longValue(),
 						rank.revenue == null || rank.revenue.isInfinite() ? "NULL" : Integer.toString((int) (rank.revenue.floatValue() * 100.0f)),
-						rank.downloads == null || rank.downloads.intValue() == Integer.MAX_VALUE ? "NULL" : rank.downloads.intValue(), rank.id.longValue());
+								rank.downloads == null || rank.downloads.intValue() == Integer.MAX_VALUE ? "NULL" : rank.downloads.intValue(), rank.id.longValue());
 
 		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
@@ -205,7 +205,7 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.rank.IRankService#getItemRanks(io.reflection.app.datatypes.Country, java.lang.String, io.reflection.app.datatypes.Item,
 	 * java.util.Date, java.util.Date, io.reflection.app.api.datatypes.Pager)
 	 */
@@ -268,7 +268,7 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.rank.IRankService#getItemHasGrossingRank(io.reflection.app.datatypes.Item)
 	 */
 	@Override
@@ -298,7 +298,7 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.rank.IRankService#addRanksBatch(java.util.Collection)
 	 */
 	@Override
@@ -310,7 +310,7 @@ public class RankService implements IRankService {
 		final StringBuffer addRanksBatchQuery = new StringBuffer();
 
 		addRanksBatchQuery
-				.append("INSERT INTO `rank` (`position`,`grossingposition`,`itemid`,`type`,`country`,`date`,`source`,`price`,`currency`,`categoryid`,`code2`,`revenue`,`downloads`) VALUES ");
+		.append("INSERT INTO `rank` (`position`,`grossingposition`,`itemid`,`type`,`country`,`date`,`source`,`price`,`currency`,`categoryid`,`code2`,`revenue`,`downloads`) VALUES ");
 
 		boolean addComma = false;
 		for (final Rank rank : ranks) {
@@ -321,8 +321,8 @@ public class RankService implements IRankService {
 			addRanksBatchQuery.append(String.format("(%d,%d,'%s','%s','%s',FROM_UNIXTIME(%d),'%s',%d,'%s',%d,%d,%s,%s)", rank.position.longValue(),
 					rank.grossingPosition.longValue(), addslashes(rank.itemId), addslashes(rank.type), addslashes(rank.country), rank.date.getTime() / 1000,
 					addslashes(rank.source), (int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency), rank.category.id.longValue(), rank.code
-							.longValue(), rank.revenue == null ? "NULL" : Integer.toString((int) (rank.revenue.floatValue() * 100.0f)),
-					rank.downloads == null ? "NULL" : rank.downloads.toString()));
+					.longValue(), rank.revenue == null ? "NULL" : Integer.toString((int) (rank.revenue.floatValue() * 100.0f)),
+							rank.downloads == null ? "NULL" : rank.downloads.toString()));
 			addComma = true;
 		}
 
@@ -338,7 +338,7 @@ public class RankService implements IRankService {
 					price = (int) (rank.price.floatValue() * 100f);
 				}
 				pstat.setLong(1, feedfetchId);
-				pstat.setInt(2, rank.position == null ? rank.grossingPosition : rank.position);
+				pstat.setInt(2, rank.position == null || rank.position == 0 ? rank.grossingPosition : rank.position);
 				pstat.setString(3, rank.itemId);
 				pstat.setInt(4, price);
 				pstat.setString(5, rank.currency);
@@ -378,7 +378,7 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.rank.IRankService#updateRanksBatch(java.util.Collection)
 	 */
 	@Override
@@ -407,7 +407,7 @@ public class RankService implements IRankService {
 					ranksCount++;
 				}
 
-				pstat.setInt(1, rank.position == null ? rank.grossingPosition : rank.position);
+				pstat.setInt(1, rank.position == null || rank.position == 0 ? rank.grossingPosition : rank.position);
 				pstat.setString(2, rank.itemId);
 				pstat.setFloat(3, rank.price);
 				pstat.setString(4, rank.currency);
@@ -441,7 +441,7 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.rank.IRankService#getGatherCodeRanks(io.reflection.app.shared.datatypes.Country, io.reflection.app.shared.datatypes.Store,
 	 * io.reflection.app.shared.datatypes.Category java.lang.String, java.lang.Long, io.reflection.app.api.shared.datatypes.Pager, java.lang.Boolean)
 	 */
@@ -452,7 +452,7 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.rank.IRankService#getGatherCodeRanks(io.reflection.app.shared.datatypes.Country, io.reflection.app.shared.datatypes.Store,
 	 * io.reflection.app.shared.datatypes.Category java.lang.String, java.lang.Long, io.reflection.app.api.shared.datatypes.Pager, java.lang.Boolean)
 	 */
@@ -532,7 +532,7 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.rank.IRankService#getRankIds(io.reflection.app.datatypes.shared.Country, io.reflection.app.datatypes.shared.Store,
 	 * io.reflection.app.datatypes.shared.Category, java.util.Date, java.util.Date)
 	 */
@@ -566,7 +566,7 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.rank.IRankService#getRankIds(io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
@@ -600,7 +600,7 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.rank.IRankService#getSaleSummaryAndRankForItemAndFormType(java.lang.String, io.reflection.app.datatypes.shared.Country,
 	 * io.reflection.app.datatypes.shared.FormType, java.util.Date, java.util.Date)
 	 */
@@ -665,7 +665,7 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.rank.IRankService#getSaleSummaryAndRankForDataAccountAndFormType(java.lang.Long,
 	 * io.reflection.app.datatypes.shared.Country, io.reflection.app.datatypes.shared.FormType, java.util.Date, java.util.Date,
 	 * io.reflection.app.api.shared.datatypes.Pager)
@@ -681,7 +681,7 @@ public class RankService implements IRankService {
 		final String getRanksQuery = String.format("SELECT s.itemid, s.price, SUM(s.total_revenue) as revenue, SUM(s.total_download) as downloads "
 				+ "   FROM sale_summary s WHERE s.date BETWEEN '%s' AND '%s' AND s.dataaccountid = %s AND s.country = '%s' GROUP BY s.itemid",
 
-		dateFormat.format(start), dateFormat.format(end), dataaccountId, country.a2Code);
+				dateFormat.format(start), dateFormat.format(end), dataaccountId, country.a2Code);
 		try {
 			rankConnection.connect();
 			rankConnection.executeQuery(getRanksQuery);
