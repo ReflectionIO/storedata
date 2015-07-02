@@ -26,7 +26,7 @@ public class AppRevenue {
 
 			@Override
 			public int compare(AppRevenue o1, AppRevenue o2) {
-				return o1.date.compareTo(o2.date);
+				return o2.date.compareTo(o1.date);
 			}
 		};
 	}
@@ -36,7 +36,7 @@ public class AppRevenue {
 
 			@Override
 			public int compare(AppRevenue o1, AppRevenue o2) {
-				return o1.revenue.compareTo(o2.revenue);
+				return o2.revenue.compareTo(o1.revenue);
 			}
 		};
 	}
@@ -46,7 +46,7 @@ public class AppRevenue {
 
 			@Override
 			public int compare(AppRevenue o1, AppRevenue o2) {
-				return o1.revenuePercentForPeriod.compareTo(o2.revenuePercentForPeriod);
+				return o2.revenuePercentForPeriod.compareTo(o1.revenuePercentForPeriod);
 			}
 		};
 	}

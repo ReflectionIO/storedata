@@ -395,9 +395,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		revenueTableDesktop.addColumnSortHandler(columnSortHandler);
 		revenueTableMobile.addColumnSortHandler(columnSortHandler);
 
-		revenueTableDesktop.getColumnSortList().push(dateColumn);
-		revenueTableMobile.getColumnSortList().push(dateColumn);
-
 		dateColumn = new TextColumn<AppRevenue>() {
 
 			@Override
@@ -405,7 +402,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				return object.date != null ? FormattingHelper.DATE_FORMATTER_EEE_DD_MM_YY.format(object.date) : "-";
 			}
 		};
-
+		dateColumn.setDefaultSortAscending(false);
 		revenueTableDesktop.addColumn(dateColumn, dateHeader);
 		revenueTableMobile.addColumn(dateColumn, dateHeader);
 		dateColumn.setCellStyleNames(style.dateValue());
@@ -742,13 +739,15 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			RankController.get().cancelRequestItemSalesRanks();
 			revenueTableDesktop.setRowCount(0, true);
 			revenueTableMobile.setRowCount(0, true);
+			dateHeader.setHeaderStyleNames(style.canBeSorted());
+			revenueHeader.setHeaderStyleNames(style.canBeSorted());
+			revenueForPeriodHeader.setHeaderStyleNames(style.canBeSorted());
 			if (LinkedAccountController.get().getLinkedAccountItem(item) != null) {
 				if (MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage)) {
 					RankController.get().fetchItemSalesRanks(item);
 				} else {
 					RankController.get().fetchItemRanks(item);
 				}
-
 			}
 		} else {
 			// item == null
@@ -766,9 +765,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			PageType.ItemPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId, selectedTab, comingPage, FilterController.get()
 					.asItemFilterString());
 		}
-		dateHeader.setHeaderStyleNames(style.canBeSorted());
-		revenueHeader.setHeaderStyleNames(style.canBeSorted());
-		revenueForPeriodHeader.setHeaderStyleNames(style.canBeSorted());
 	}
 
 	/*
@@ -782,12 +778,13 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			PageType.ItemPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId, selectedTab, comingPage, FilterController.get()
 					.asItemFilterString());
 		}
-		dateHeader.setHeaderStyleNames(style.canBeSorted());
-		revenueHeader.setHeaderStyleNames(style.canBeSorted());
-		revenueForPeriodHeader.setHeaderStyleNames(style.canBeSorted());
 	}
 
 	private void drawData(List<Rank> ranks) {
+		dateHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.isDescending());
+		revenueTableDesktop.getColumnSortList().push(dateColumn);
+		revenueTableMobile.getColumnSortList().push(dateColumn);
+
 		chartRank.setRankingType(RankType.PositionRankingType);
 		chartRank.drawData(ranks, SERIES_ID_RANK, ChartHelper.TYPE_LINE, ColorHelper.getReflectionGreen(), false, false);
 		chartRevenue.drawData(ranks, SERIES_ID_REVENUE, ChartHelper.TYPE_AREA, ColorHelper.getReflectionPurple(), false, cumulativeChartSwitch.getValue()

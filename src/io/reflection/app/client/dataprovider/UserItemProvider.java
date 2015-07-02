@@ -231,7 +231,8 @@ public class UserItemProvider extends AsyncDataProvider<MyApp> implements GetLin
 					} else if (o2.overallPrice.equalsIgnoreCase("free")) {
 						res = -1;
 					} else {
-						res = (Float.parseFloat(o1.overallPrice.replaceAll(",", "")) < Float.parseFloat(o2.overallPrice.replaceAll(",", "")) ? 1 : -1);
+						res = (Float.parseFloat(o1.overallPrice.replaceAll(",|\\.|$|€|¥|£", "").trim()) < Float.parseFloat(o2.overallPrice.replaceAll(
+								",|\\.|$|€|¥|£", "").trim()) ? 1 : -1);
 					}
 				}
 				return (sortAscending ? res : -res);
@@ -278,7 +279,8 @@ public class UserItemProvider extends AsyncDataProvider<MyApp> implements GetLin
 					} else if (o2.overallRevenue.equals("-")) {
 						res = -1;
 					} else {
-						res = (Float.parseFloat(o1.overallRevenue.replaceAll(",", "")) < Float.parseFloat(o2.overallRevenue.replaceAll(",", "")) ? 1 : -1);
+						res = (Float.parseFloat(o1.overallRevenue.replaceAll(",|\\.|$|€|¥|£", "").trim()) < Float.parseFloat(o2.overallRevenue.replaceAll(
+								",|\\.|$|€|¥|£", "").trim()) ? 1 : -1);
 					}
 				}
 				return (sortAscending ? res : -res);
