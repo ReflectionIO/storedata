@@ -43,7 +43,7 @@ public class MiniAppCell extends AbstractCell<Item> {
 
 		SafeUri link = PageType.ItemPageType.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE, value.internalId, FilterController.DOWNLOADS_CHART_TYPE,
 				MyAppsPage.COMING_FROM_PARAMETER, FilterController.get().getFilter().asItemFilterString());
-		SafeUri smallImage = UriUtils.fromString(value.smallImage == null ? "" : value.smallImage);
+		SafeUri smallImage = UriUtils.fromString(value.smallImage == null ? "images/placeholder_app_icon_2x.png" : value.smallImage);
 
 		RENDERER.render(builder, value.name, value.creatorName, smallImage, link);
 	}

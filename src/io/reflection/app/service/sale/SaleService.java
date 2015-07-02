@@ -167,7 +167,7 @@ final class SaleService implements ISaleService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.sale.ISaleService#getDataAccountItems(io.reflection.app.shared.datatypes.DataAccount,
 	 * io.reflection.app.api.shared.datatypes.Pager)
 	 */
@@ -176,7 +176,6 @@ final class SaleService implements ISaleService {
 		List<Item> items = new ArrayList<Item>();
 
 		Map<String, Item> itemsFoundInSalesSummary = new HashMap<String, Item>();
-		List<String> itemIdsToLookForInRanks = new ArrayList<String>();
 
 		String getSaleQuery = String.format(
 				"select itemid, title, developer_name from dataaccount d inner join sale_summary s on (d.id=s.dataaccountid) where d.id=%d group by itemid",
@@ -198,17 +197,16 @@ final class SaleService implements ISaleService {
 
 				itemsFoundInSalesSummary.put(item.internalId, item);
 
-				itemIdsToLookForInRanks.add(saleConnection.getCurrentRowString("itemid"));
 			}
 
-			// return only Items which were found in the item table (these will have icons. we found during rank gathers)
-			items.addAll(ItemServiceProvider.provide().getInternalIdItemBatch(itemIdsToLookForInRanks));
-
-			// remove all the items found from ranks (via item table) and
-			for (Item itemFromRanks : items) {
-				String internalId = itemFromRanks.internalId;
-
-				itemsFoundInSalesSummary.remove(internalId);
+			// GET MISSING IMAGES FROM ITEM TABLE
+			List<Item> itemsFromItemTable = ItemServiceProvider.provide().getInternalIdItemBatch(itemsFoundInSalesSummary.keySet());
+			for (Item i : itemsFromItemTable) {
+				if (itemsFoundInSalesSummary.get(i.internalId) != null) {
+					itemsFoundInSalesSummary.get(i.internalId).smallImage = i.smallImage;
+					itemsFoundInSalesSummary.get(i.internalId).mediumImage = i.mediumImage;
+					itemsFoundInSalesSummary.get(i.internalId).largeImage = i.largeImage;
+				}
 			}
 
 			items.addAll(itemsFoundInSalesSummary.values());
@@ -268,7 +266,7 @@ final class SaleService implements ISaleService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.sale.ISaleService#getDataAccountItemsCount()
 	 */
 	@Override
@@ -301,7 +299,7 @@ final class SaleService implements ISaleService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.sale.ISaleService#addSalesBatch(java.util.Collection)
 	 */
 	@Override
@@ -313,7 +311,7 @@ final class SaleService implements ISaleService {
 		StringBuffer addSalesBatchQuery = new StringBuffer();
 
 		addSalesBatchQuery
-		.append("INSERT INTO `sale` (`dataaccountid`,`itemid`,`country`,`sku`,`developer`,`title`,`version`,`typeidentifier`,`units`,`proceeds`,`currency`,`begin`,`end`,`customercurrency`,`customerprice`,`promocode`,`parentidentifier`,`subscription`,`period`,`category`) VALUES");
+				.append("INSERT INTO `sale` (`dataaccountid`,`itemid`,`country`,`sku`,`developer`,`title`,`version`,`typeidentifier`,`units`,`proceeds`,`currency`,`begin`,`end`,`customercurrency`,`customerprice`,`promocode`,`parentidentifier`,`subscription`,`period`,`category`) VALUES");
 
 		for (Sale sale : sales) {
 			if (addSalesBatchQuery.charAt(addSalesBatchQuery.length() - 1) != 'S') {
@@ -323,10 +321,10 @@ final class SaleService implements ISaleService {
 			addSalesBatchQuery.append(String.format(
 					"(%d,%s,'%s','%s','%s','%s','%s','%s',%d,%d,'%s',FROM_UNIXTIME(%d),FROM_UNIXTIME(%d),'%s',%d,'%s','%s','%s','%s','%s')",
 					sale.account.id.longValue(), sale.item.internalId == null ? "NULL" : "'" + sale.item.internalId + "'", addslashes(sale.country),
-							addslashes(sale.sku), addslashes(sale.developer), addslashes(sale.title), addslashes(sale.version), addslashes(sale.typeIdentifier),
-							sale.units.intValue(), (int) (sale.proceeds.floatValue() * 100.0f), addslashes(sale.currency), sale.begin.getTime() / 1000,
-							sale.end.getTime() / 1000, addslashes(sale.customerCurrency), (int) (sale.customerPrice.floatValue() * 100.0f), addslashes(sale.promoCode),
-							addslashes(sale.parentIdentifier), addslashes(sale.subscription), addslashes(sale.period), addslashes(sale.category)));
+					addslashes(sale.sku), addslashes(sale.developer), addslashes(sale.title), addslashes(sale.version), addslashes(sale.typeIdentifier),
+					sale.units.intValue(), (int) (sale.proceeds.floatValue() * 100.0f), addslashes(sale.currency), sale.begin.getTime() / 1000,
+					sale.end.getTime() / 1000, addslashes(sale.customerCurrency), (int) (sale.customerPrice.floatValue() * 100.0f), addslashes(sale.promoCode),
+					addslashes(sale.parentIdentifier), addslashes(sale.subscription), addslashes(sale.period), addslashes(sale.category)));
 		}
 
 		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
@@ -347,7 +345,7 @@ final class SaleService implements ISaleService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.sale.ISaleService#getSales(io.reflection.app.datatypes.shared.Country, io.reflection.app.datatypes.shared.Category,
 	 * io.reflection.app.datatypes.shared.DataAccount, java.util.Date, java.util.Date, io.reflection.app.api.shared.datatypes.Pager)
 	 */
@@ -361,7 +359,7 @@ final class SaleService implements ISaleService {
 		String getSalesQuery = String.format(
 				"SELECT * FROM `sale` WHERE `country`='%s' AND (%d=%d OR `category`='%s') AND `dataaccountid`=%d AND %s AND `deleted`='n'", country.a2Code, 24,
 				category == null ? 24 : category.id.longValue(), category == null ? "" : category.name, linkedAccount.id.longValue(),
-						SqlQueryHelper.beforeAfterQuery(end, start, "end"));
+				SqlQueryHelper.beforeAfterQuery(end, start, "end"));
 
 		if (pager != null) {
 			String sortByQuery = "id";
@@ -415,7 +413,7 @@ final class SaleService implements ISaleService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.sale.ISaleService#getSalesCount(io.reflection.app.datatypes.shared.Country, io.reflection.app.datatypes.shared.Category,
 	 * io.reflection.app.datatypes.shared.DataAccount, java.util.Date, java.util.Date)
 	 */
@@ -426,7 +424,7 @@ final class SaleService implements ISaleService {
 		String getSalesQuery = String
 				.format("SELECT count(1) AS `salescount` FROM `sale` WHERE `country`='%s' AND (%d=%d OR `category`='%s') AND `dataaccountid`=%d AND %s AND `deleted`='n'",
 						country.a2Code, 24, category == null ? 24 : category.id.longValue(), category == null ? "" : category.name,
-								linkedAccount.id.longValue(), SqlQueryHelper.beforeAfterQuery(end, start, "end"));
+						linkedAccount.id.longValue(), SqlQueryHelper.beforeAfterQuery(end, start, "end"));
 
 		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
 
@@ -448,7 +446,7 @@ final class SaleService implements ISaleService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.sale.ISaleService#getItemSales(io.reflection.app.datatypes.shared.Item, io.reflection.app.datatypes.shared.Country,
 	 * io.reflection.app.datatypes.shared.Category, io.reflection.app.datatypes.shared.DataAccount, java.util.Date, java.util.Date,
 	 * io.reflection.app.api.shared.datatypes.Pager)
@@ -465,7 +463,7 @@ final class SaleService implements ISaleService {
 		String getSalesQuery = String
 				.format("SELECT * FROM `sale` WHERE `country`='%s' AND (%d=%d OR `category`='%s') AND `dataaccountid`=%d AND %s AND (`itemid`='%7$s' OR parentidentifier = (SELECT `sku` FROM `sale` WHERE `itemid`='%7$s' LIMIT 1)) AND `deleted`='n'",
 						country.a2Code, 24, category == null ? 24 : category.id.longValue(), category == null ? "" : category.name,
-								linkedAccount.id.longValue(), SqlQueryHelper.beforeAfterQuery(end, start, "end"), item.internalId);
+						linkedAccount.id.longValue(), SqlQueryHelper.beforeAfterQuery(end, start, "end"), item.internalId);
 
 		if (pager != null) {
 			String sortByQuery = "id";
@@ -519,7 +517,7 @@ final class SaleService implements ISaleService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.sale.ISaleService#getItemSalesCount(io.reflection.app.datatypes.shared.Item, io.reflection.app.datatypes.shared.Country,
 	 * io.reflection.app.datatypes.shared.Category, io.reflection.app.datatypes.shared.DataAccount, java.util.Date, java.util.Date)
 	 */
@@ -530,7 +528,7 @@ final class SaleService implements ISaleService {
 		String getSalesQuery = String
 				.format("SELECT count(1) AS `salescount` FROM `sale` WHERE `country`='%s' AND (%d=%d OR `category`='%s') AND `dataaccountid`=%d AND %s AND `itemid`='%s' AND `deleted`='n'",
 						country.a2Code, 24, category == null ? 24 : category.id.longValue(), category == null ? "" : category.name,
-								linkedAccount.id.longValue(), SqlQueryHelper.beforeAfterQuery(end, start, "end"), item.internalId);
+						linkedAccount.id.longValue(), SqlQueryHelper.beforeAfterQuery(end, start, "end"), item.internalId);
 
 		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
 
@@ -562,7 +560,7 @@ final class SaleService implements ISaleService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.sale.ISaleService#getItem(java.lang.String)
 	 */
 	@Override
@@ -590,7 +588,7 @@ final class SaleService implements ISaleService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.sale.ISaleService#getDataAccount(java.lang.String)
 	 */
 	@Override
@@ -619,7 +617,7 @@ final class SaleService implements ISaleService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.sale.ISaleService#getSaleIds(io.reflection.app.datatypes.shared.Country, io.reflection.app.datatypes.shared.DataAccount,
 	 * java.util.Date, java.util.Date)
 	 */
@@ -658,7 +656,7 @@ final class SaleService implements ISaleService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.sale.ISaleService#getAllSaleIds(io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
@@ -667,8 +665,8 @@ final class SaleService implements ISaleService {
 
 		String getAllSalesIdsQuery = String.format("SELECT `id` FROM `sale` WHERE `deleted`='n' ORDER BY `%s` %s LIMIT %d, %d", pager.sortBy == null ? "id"
 				: stripslashes(pager.sortBy), pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
-						pager.start == null ? Pager.DEFAULT_START.longValue() : pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue()
-								: pager.count.longValue());
+				pager.start == null ? Pager.DEFAULT_START.longValue() : pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue()
+						: pager.count.longValue());
 
 		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
 
@@ -695,7 +693,7 @@ final class SaleService implements ISaleService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.sale.ISaleService#getDataAccountFetchSales(io.reflection.app.datatypes.shared.DataAccountFetch,
 	 * io.reflection.app.api.shared.datatypes.Pager)
 	 */
@@ -711,8 +709,8 @@ final class SaleService implements ISaleService {
 				"SELECT * FROM `sale` WHERE `end`=FROM_UNIXTIME(%d) AND `dataaccountid`=%d AND `deleted`='n' ORDER BY `%s` %s LIMIT %d, %d",
 				dataAccountFetch.date.getTime() / 1000, dataAccountFetch.linkedAccount.id.longValue(),
 				pager.sortBy == null ? "id" : stripslashes(pager.sortBy), pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
-						pager.start == null ? Pager.DEFAULT_START.longValue() : pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue()
-								: pager.count.longValue());
+				pager.start == null ? Pager.DEFAULT_START.longValue() : pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue()
+						: pager.count.longValue());
 		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
 
 		try {
@@ -738,7 +736,7 @@ final class SaleService implements ISaleService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.sale.ISaleService#getDataAccountFetchSaleIds(io.reflection.app.datatypes.shared.DataAccountFetch,
 	 * io.reflection.app.api.shared.datatypes.Pager)
 	 */
@@ -754,8 +752,8 @@ final class SaleService implements ISaleService {
 				"SELECT `id` FROM `sale` WHERE `end`=FROM_UNIXTIME(%d) AND `dataaccountid`=%d AND `deleted`='n' ORDER BY `%s` %s LIMIT %d, %d",
 				dataAccountFetch.date.getTime() / 1000, dataAccountFetch.linkedAccount.id.longValue(),
 				pager.sortBy == null ? "id" : stripslashes(pager.sortBy), pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
-						pager.start == null ? Pager.DEFAULT_START.longValue() : pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue()
-								: pager.count.longValue());
+				pager.start == null ? Pager.DEFAULT_START.longValue() : pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue()
+						: pager.count.longValue());
 		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
 
 		try {
@@ -781,7 +779,7 @@ final class SaleService implements ISaleService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.sale.ISaleService#getSkuItemId(java.lang.String)
 	 */
 	@Override
@@ -810,7 +808,7 @@ final class SaleService implements ISaleService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.sale.ISaleService#getItemPrices(java.lang.String[], java.util.Date, java.util.Date)
 	 */
 	@Override
