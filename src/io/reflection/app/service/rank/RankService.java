@@ -171,7 +171,7 @@ public class RankService implements IRankService {
 				price = (int) (rank.price.floatValue() * 100f);
 			}
 
-			pstat.setInt(1, rank.position == null ? rank.grossingPosition : rank.position);
+			pstat.setInt(1, rank.position == null || rank.position == 0 ? rank.grossingPosition : rank.position);
 			pstat.setString(2, rank.itemId);
 			pstat.setInt(3, price);
 			pstat.setString(4, rank.currency);
