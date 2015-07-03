@@ -19,6 +19,8 @@
 				<g:Anchor ui:field="closeLink" styleName="{STYLES_INSTANCE.reflectionMainStyle.closePopup}">K</g:Anchor>
 				<span ui:field="spanOptionLabel">
 				</span>
+				<div ui:field="listContainer" class="{STYLES_INSTANCE.reflectionMainStyle.listContainer}">
+				</div>
 			</ul>
 		</g:HTMLPanel>
 	</g:HTMLPanel>

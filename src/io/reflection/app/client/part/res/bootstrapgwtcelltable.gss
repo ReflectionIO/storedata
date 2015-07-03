@@ -48,4 +48,12 @@
 
 .cellTableSortedHeaderDescending {}
 	
+.cellTableSortedHeaderAscending>div, .cellTableSortedHeaderDescending>div {
+	padding-left: 0px !important;
+}
+
+.cellTableSortedHeaderAscending>div>div:first-child, .cellTableSortedHeaderDescending>div>div:first-child {
+	display: none !important;
+}
+	
 .cellTableLoading {}

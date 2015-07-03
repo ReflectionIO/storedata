@@ -45,6 +45,7 @@ import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.datatypes.RanksGroup;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.client.res.Styles;
+import io.reflection.app.client.res.Styles.ReflectionMainStyles;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.shared.util.DataTypeHelper;
 
@@ -71,6 +72,9 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.cellview.client.ColumnSortEvent;
+import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
+import com.google.gwt.user.cellview.client.SafeHtmlHeader;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.ui.Button;
@@ -113,9 +117,9 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		SafeHtml code(Long code);
 	}
 
-	@UiField(provided = true) CellTable<RanksGroup> leaderboardTableOverallDesktop = new CellTable<RanksGroup>(ServiceConstants.STEP_VALUE,
+	@UiField(provided = true) CellTable<RanksGroup> leaderboardTableDesktop = new CellTable<RanksGroup>(ServiceConstants.STEP_VALUE,
 			BootstrapGwtCellTable.INSTANCE);
-	@UiField(provided = true) CellTable<RanksGroup> leaderboardTableOverallMobile = new CellTable<RanksGroup>(ServiceConstants.STEP_VALUE,
+	@UiField(provided = true) CellTable<RanksGroup> leaderboardTableMobile = new CellTable<RanksGroup>(ServiceConstants.STEP_VALUE,
 			BootstrapGwtCellTable.INSTANCE);
 
 	@UiField FormDateBox dateBox;
@@ -154,20 +158,23 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	private TextColumn<RanksGroup> revenueColumn;
 	private Column<RanksGroup, SafeHtml> iapColumn;
 
+	@SuppressWarnings("rawtypes") private Column lastOrderedColumn = rankColumn;
+
 	private Map<String, LIElement> tabs = new HashMap<String, LIElement>();
 
-	private TextHeader rankHeader;
-	private TextHeader paidHeader;
-	private TextHeader freeHeader;
-	private TextHeader grossingHeader;
-	private TextHeader downloadsHeader;
-	private TextHeader revenueHeader;
-	private TextHeader iapHeader;
-	private TextHeader priceHeader;
+	private String sorterSvg = "<svg version=\"1.1\" x=\"0px\" y=\"0px\" viewBox=\"0 0 7 10\" enable-background=\"new 0 0 7 10\" xml:space=\"preserve\" class=\"sort-svg\"><path class=\"ascending\" d=\"M0.4,4.1h6.1c0.1,0,0.2,0,0.3-0.1C7,3.9,7,3.8,7,3.7c0-0.1,0-0.2-0.1-0.3L3.8,0.1C3.7,0,3.6,0,3.5,0C3.4,0,3.3,0,3.2,0.1L0.1,3.3C0,3.4,0,3.5,0,3.7C0,3.8,0,3.9,0.1,4C0.2,4.1,0.3,4.1,0.4,4.1z\"></path><path class=\"descending\" d=\"M6.6,5.9H0.4c-0.1,0-0.2,0-0.3,0.1C0,6.1,0,6.2,0,6.3c0,0.1,0,0.2,0.1,0.3l3.1,3.2C3.3,10,3.4,10,3.5,10c0.1,0,0.2,0,0.3-0.1l3.1-3.2C7,6.6,7,6.5,7,6.3C7,6.2,7,6.1,6.9,6C6.8,5.9,6.7,5.9,6.6,5.9z\"></path></svg>";
+	private SafeHtmlHeader downloadsHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Downloads " + sorterSvg));
+	private SafeHtmlHeader revenueHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Revenue " + sorterSvg));
+	private TextHeader rankHeader = new TextHeader("Rank");
+	private TextHeader paidHeader = new TextHeader("Paid");
+	private TextHeader freeHeader = new TextHeader("Free");
+	private TextHeader grossingHeader = new TextHeader("Grossing");
+	private TextHeader priceHeader = new TextHeader("Price");
+	private TextHeader iapHeader = new TextHeader("IAP");
 
 	private String selectedTab = OVERALL_LIST_TYPE;
 
-	private boolean showAllPredictions;
+	private ReflectionMainStyles style = Styles.STYLES_INSTANCE.reflectionMainStyle();
 
 	public RanksPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -195,27 +202,70 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 		tabs.put(OVERALL_LIST_TYPE, allItem);
 		tabs.put(FREE_LIST_TYPE, freeItem);
-		if (showAllPredictions = SessionController.get().isLoggedInUserAdmin()) {
+		if (SessionController.get().isLoggedInUserAdmin()) {
 			tabs.put(PAID_LIST_TYPE, paidItem);
 			tabs.put(GROSSING_LIST_TYPE, grossingItem);
 		} else {
 			paidText.setInnerText("Top Paid - coming soon");
-			paidItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
+			paidItem.addClassName(style.isDisabled());
 			grossingText.setInnerText("Top Grossing - coming soon");
-			grossingItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
+			grossingItem.addClassName(style.isDisabled());
 		}
 
 		HTMLPanel emptyTableWidget = new HTMLPanel("<h6>No ranking data for filter!</h6>");
-		leaderboardTableOverallDesktop.setEmptyTableWidget(emptyTableWidget);
+		leaderboardTableDesktop.setEmptyTableWidget(emptyTableWidget);
 
-		leaderboardTableOverallDesktop.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
+		leaderboardTableDesktop.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
+		leaderboardTableMobile.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 
-		RankController.get().addDataDisplay(leaderboardTableOverallDesktop);
-		RankController.get().addDataDisplay(leaderboardTableOverallMobile);
+		RankController.get().addDataDisplay(leaderboardTableDesktop);
+		RankController.get().addDataDisplay(leaderboardTableMobile);
 
 	}
 
 	private void createColumns() {
+		ListHandler<RanksGroup> columnSortHandler = new ListHandler<RanksGroup>(RankController.get().getList()) {
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler#onColumnSort(com.google.gwt.user.cellview.client.ColumnSortEvent)
+			 */
+			@Override
+			public void onColumnSort(ColumnSortEvent event) {
+				super.onColumnSort(event);
+				downloadsHeader.setHeaderStyleNames(style.canBeSorted());
+				revenueHeader.setHeaderStyleNames(style.canBeSorted());
+				if (event.getColumn() == downloadsColumn) {
+					if (lastOrderedColumn == downloadsColumn && event.isSortAscending()) {
+						RankController.get().sortByRank(selectedTab, false);
+						downloadsHeader.setHeaderStyleNames(style.canBeSorted());
+						lastOrderedColumn = rankColumn;
+						leaderboardTableDesktop.getColumnSortList().push(rankColumn);
+					} else {
+						RankController.get().sortByDownloads(selectedTab, event.isSortAscending());
+						downloadsHeader.setHeaderStyleNames(style.canBeSorted() + " " + (event.isSortAscending() ? style.isAscending() : style.isDescending()));
+						lastOrderedColumn = downloadsColumn;
+					}
+				} else if (event.getColumn() == revenueColumn) {
+					if (lastOrderedColumn == revenueColumn && event.isSortAscending()) {
+						RankController.get().sortByRank(selectedTab, false);
+						revenueHeader.setHeaderStyleNames(style.canBeSorted());
+						lastOrderedColumn = rankColumn;
+						leaderboardTableDesktop.getColumnSortList().push(rankColumn);
+					} else {
+						RankController.get().sortByRevenue(selectedTab, event.isSortAscending());
+						revenueHeader.setHeaderStyleNames(style.canBeSorted() + " " + (event.isSortAscending() ? style.isAscending() : style.isDescending()));
+						lastOrderedColumn = revenueColumn;
+					}
+				}
+				leaderboardTableDesktop.setRowData(0, RankController.get().getList());
+				leaderboardTableMobile.setRowData(0, RankController.get().getList());
+			}
+		};
+
+		leaderboardTableDesktop.addColumnSortHandler(columnSortHandler);
+		leaderboardTableMobile.addColumnSortHandler(columnSortHandler);
+
 		rankColumn = new TextColumn<RanksGroup>() {
 
 			@Override
@@ -224,9 +274,9 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			}
 
 		};
-		rankColumn.setCellStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA() + " " + Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6cID());
+		rankColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.mhxte6cID());
 
-		AppRankCell appRankCell = new AppRankCell(showAllPredictions);
+		AppRankCell appRankCell = new AppRankCell();
 
 		paidColumn = new Column<RanksGroup, Rank>(appRankCell) {
 
@@ -235,7 +285,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 				return object.paid;
 			}
 		};
-		paidColumn.setCellStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA());
+		paidColumn.setCellStyleNames(style.mhxte6ciA());
 
 		freeColumn = new Column<RanksGroup, Rank>(appRankCell) {
 
@@ -245,7 +295,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			}
 
 		};
-		freeColumn.setCellStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA());
+		freeColumn.setCellStyleNames(style.mhxte6ciA());
 
 		grossingColumn = new Column<RanksGroup, Rank>(appRankCell) {
 
@@ -254,7 +304,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 				return object.grossing;
 			}
 		};
-		grossingColumn.setCellStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA());
+		grossingColumn.setCellStyleNames(style.mhxte6ciA());
 
 		priceColumn = new TextColumn<RanksGroup>() {
 
@@ -264,7 +314,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 				return (rank.currency != null && rank.price != null) ? FormattingHelper.asPriceString(rank.currency, rank.price.floatValue()) : "-";
 			}
 		};
-		priceColumn.setCellStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA());
+		priceColumn.setCellStyleNames(style.mhxte6ciA());
 
 		downloadsColumn = new TextColumn<RanksGroup>() {
 
@@ -275,7 +325,9 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			}
 
 		};
-		downloadsColumn.setCellStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA());
+		downloadsColumn.setCellStyleNames(style.mhxte6ciA());
+		downloadsColumn.setSortable(true);
+		downloadsHeader.setHeaderStyleNames(style.canBeSorted());
 
 		revenueColumn = new TextColumn<RanksGroup>() {
 
@@ -286,14 +338,14 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			}
 
 		};
-		revenueColumn.setCellStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA());
+		revenueColumn.setCellStyleNames(style.mhxte6ciA());
+		revenueColumn.setSortable(true);
+		revenueHeader.setHeaderStyleNames(style.canBeSorted());
 
 		iapColumn = new Column<RanksGroup, SafeHtml>(new SafeHtmlCell()) {
 
-			private final String IAP_DONT_KNOW_HTML = "<span class=\"" + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
-					+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeMinus() + "\"></span>";
-			private final String IAP_YES_HTML = "<span class=\"" + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
-					+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCheck() + "\"></span>";
+			private final String IAP_DONT_KNOW_HTML = "<span class=\"" + style.refIconBefore() + " " + style.refIconBeforeMinus() + "\"></span>";
+			private final String IAP_YES_HTML = "<span class=\"" + style.refIconBefore() + " " + style.refIconBeforeCheck() + "\"></span>";
 			private final String IAP_NO_HTML = "<span></span>";
 
 			@Override
@@ -303,19 +355,13 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			}
 
 		};
-		iapColumn.setCellStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6ciA());
+		iapColumn.setCellStyleNames(style.mhxte6ciA());
 
-		rankHeader = new TextHeader("Rank");
-		rankHeader.setHeaderStyleNames(Styles.STYLES_INSTANCE.reflectionMainStyle().mhxte6cIF());
-		paidHeader = new TextHeader("Paid");
-		freeHeader = new TextHeader("Free");
-		grossingHeader = new TextHeader("Grossing");
-		priceHeader = new TextHeader("Price");
-		downloadsHeader = new TextHeader("Downloads");
-		revenueHeader = new TextHeader("Revenue");
-		iapHeader = new TextHeader("IAP");
+		rankHeader.setHeaderStyleNames(style.mhxte6cIF());
 
-		leaderboardTableOverallMobile.addColumn(rankColumn, rankHeader);
+		leaderboardTableMobile.addColumn(rankColumn, rankHeader);
+
+		leaderboardTableDesktop.getColumnSortList().push(rankColumn);
 	}
 
 	/**
@@ -348,8 +394,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 							.equals(name)))) {
 
 				if (foundDailyData) {
-					leaderboardTableOverallDesktop.redraw();
-					leaderboardTableOverallMobile.redraw();
+					leaderboardTableDesktop.redraw();
+					leaderboardTableMobile.redraw();
 				} else {
 					RankController.get().reset();
 					RankController.get().fetchTopItems();
@@ -359,6 +405,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 				PageType.RanksPageType.show("view", selectedTab, FilterController.get().asRankFilterString());
 			}
 		}
+		downloadsHeader.setHeaderStyleNames(style.canBeSorted());
+		revenueHeader.setHeaderStyleNames(style.canBeSorted());
 	}
 
 	/*
@@ -376,8 +424,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 					|| previousValues.get(END_DATE_KEY) != null || (foundDailyData = (previousValues.get(DAILY_DATA_KEY) != null))) {
 
 				if (foundDailyData) {
-					leaderboardTableOverallDesktop.redraw();
-					leaderboardTableOverallMobile.redraw();
+					leaderboardTableDesktop.redraw();
+					leaderboardTableMobile.redraw();
 				} else {
 					RankController.get().reset();
 					RankController.get().fetchTopItems();
@@ -387,7 +435,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 				PageType.RanksPageType.show("view", selectedTab, FilterController.get().asRankFilterString());
 			}
 		}
-
+		downloadsHeader.setHeaderStyleNames(style.canBeSorted());
+		revenueHeader.setHeaderStyleNames(style.canBeSorted());
 	}
 
 	@UiHandler("appStoreListBox")
@@ -463,89 +512,89 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 	private void refreshRanks() {
 
-		leaderboardTableOverallDesktop.setStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().tableOverall(), OVERALL_LIST_TYPE.equals(selectedTab));
-		leaderboardTableOverallDesktop.setStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().tableAppGroup(), (FREE_LIST_TYPE.equals(selectedTab)
-				|| PAID_LIST_TYPE.equals(selectedTab) || GROSSING_LIST_TYPE.equals(selectedTab)));
+		leaderboardTableDesktop.setStyleName(style.tableOverall(), OVERALL_LIST_TYPE.equals(selectedTab));
+		leaderboardTableDesktop.setStyleName(style.tableAppGroup(),
+				(FREE_LIST_TYPE.equals(selectedTab) || PAID_LIST_TYPE.equals(selectedTab) || GROSSING_LIST_TYPE.equals(selectedTab)));
 
-		leaderboardTableOverallMobile.setStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().tableOverall(), OVERALL_LIST_TYPE.equals(selectedTab));
-		leaderboardTableOverallMobile.setStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().tableAppGroup(), (FREE_LIST_TYPE.equals(selectedTab)
-				|| PAID_LIST_TYPE.equals(selectedTab) || GROSSING_LIST_TYPE.equals(selectedTab)));
+		leaderboardTableMobile.setStyleName(style.tableOverall(), OVERALL_LIST_TYPE.equals(selectedTab));
+		leaderboardTableMobile.setStyleName(style.tableAppGroup(),
+				(FREE_LIST_TYPE.equals(selectedTab) || PAID_LIST_TYPE.equals(selectedTab) || GROSSING_LIST_TYPE.equals(selectedTab)));
 
 		if (OVERALL_LIST_TYPE.equals(selectedTab)) {
 			removeAllColumns();
-			leaderboardTableOverallDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-			leaderboardTableOverallDesktop.setColumnWidth(freeColumn, 30.0, Unit.PCT);
-			leaderboardTableOverallDesktop.setColumnWidth(paidColumn, 30.0, Unit.PCT);
-			leaderboardTableOverallDesktop.setColumnWidth(grossingColumn, 30.0, Unit.PCT);
-			addColumn(rankColumn, rankHeader);
-			addColumn(freeColumn, freeHeader);
-			addColumn(paidColumn, paidHeader);
-			addColumn(grossingColumn, grossingHeader);
+			leaderboardTableDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+			leaderboardTableDesktop.setColumnWidth(freeColumn, 30.0, Unit.PCT);
+			leaderboardTableDesktop.setColumnWidth(paidColumn, 30.0, Unit.PCT);
+			leaderboardTableDesktop.setColumnWidth(grossingColumn, 30.0, Unit.PCT);
+			leaderboardTableDesktop.addColumn(rankColumn, rankHeader);
+			leaderboardTableDesktop.addColumn(freeColumn, freeHeader);
+			leaderboardTableDesktop.addColumn(paidColumn, paidHeader);
+			leaderboardTableDesktop.addColumn(grossingColumn, grossingHeader);
 		} else if (FREE_LIST_TYPE.equals(selectedTab)) {
 			removeAllColumns();
 			if (SessionController.get().isLoggedInUserAdmin()) {
-				leaderboardTableOverallDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-				leaderboardTableOverallDesktop.setColumnWidth(freeColumn, 36.7, Unit.PCT);
-				leaderboardTableOverallDesktop.setColumnWidth(priceColumn, 13.6, Unit.PCT);
-				leaderboardTableOverallDesktop.setColumnWidth(downloadsColumn, 16.7, Unit.PCT);
-				leaderboardTableOverallDesktop.setColumnWidth(revenueColumn, 16.7, Unit.PCT);
-				leaderboardTableOverallDesktop.setColumnWidth(iapColumn, 6.3, Unit.PCT);
+				leaderboardTableDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+				leaderboardTableDesktop.setColumnWidth(freeColumn, 36.7, Unit.PCT);
+				leaderboardTableDesktop.setColumnWidth(priceColumn, 13.6, Unit.PCT);
+				leaderboardTableDesktop.setColumnWidth(downloadsColumn, 16.7, Unit.PCT);
+				leaderboardTableDesktop.setColumnWidth(revenueColumn, 16.7, Unit.PCT);
+				leaderboardTableDesktop.setColumnWidth(iapColumn, 6.3, Unit.PCT);
 			} else {
-				leaderboardTableOverallDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-				leaderboardTableOverallDesktop.setColumnWidth(freeColumn, 42.0, Unit.PCT);
-				leaderboardTableOverallDesktop.setColumnWidth(priceColumn, 19.0, Unit.PCT);
-				leaderboardTableOverallDesktop.setColumnWidth(downloadsColumn, 19.0, Unit.PCT);
-				leaderboardTableOverallDesktop.setColumnWidth(iapColumn, 10.0, Unit.PCT);
+				leaderboardTableDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+				leaderboardTableDesktop.setColumnWidth(freeColumn, 42.0, Unit.PCT);
+				leaderboardTableDesktop.setColumnWidth(priceColumn, 19.0, Unit.PCT);
+				leaderboardTableDesktop.setColumnWidth(downloadsColumn, 19.0, Unit.PCT);
+				leaderboardTableDesktop.setColumnWidth(iapColumn, 10.0, Unit.PCT);
 			}
-			addColumn(rankColumn, rankHeader);
-			addColumn(freeColumn, freeHeader);
-			addColumn(priceColumn, priceHeader);
-			addColumn(downloadsColumn, downloadsHeader);
+			leaderboardTableDesktop.addColumn(rankColumn, rankHeader);
+			leaderboardTableDesktop.addColumn(freeColumn, freeHeader);
+			leaderboardTableDesktop.addColumn(priceColumn, priceHeader);
+			leaderboardTableDesktop.addColumn(downloadsColumn, downloadsHeader);
 			if (SessionController.get().isLoggedInUserAdmin()) {
-				addColumn(revenueColumn, revenueHeader);
+				leaderboardTableDesktop.addColumn(revenueColumn, revenueHeader);
 			}
-			addColumn(iapColumn, iapHeader);
+			leaderboardTableDesktop.addColumn(iapColumn, iapHeader);
 		} else if (PAID_LIST_TYPE.equals(selectedTab)) {
 			if (SessionController.get().isLoggedInUserAdmin()) {
 				removeAllColumns();
-				leaderboardTableOverallDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-				leaderboardTableOverallDesktop.setColumnWidth(paidColumn, 36.7, Unit.PCT);
-				leaderboardTableOverallDesktop.setColumnWidth(priceColumn, 13.6, Unit.PCT);
-				leaderboardTableOverallDesktop.setColumnWidth(downloadsColumn, 16.7, Unit.PCT);
-				leaderboardTableOverallDesktop.setColumnWidth(revenueColumn, 16.7, Unit.PCT);
-				leaderboardTableOverallDesktop.setColumnWidth(iapColumn, 6.3, Unit.PCT);
-				addColumn(rankColumn, rankHeader);
-				addColumn(paidColumn, paidHeader);
-				addColumn(priceColumn, priceHeader);
-				addColumn(downloadsColumn, downloadsHeader);
-				addColumn(revenueColumn, revenueHeader);
-				addColumn(iapColumn, iapHeader);
+				leaderboardTableDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+				leaderboardTableDesktop.setColumnWidth(paidColumn, 36.7, Unit.PCT);
+				leaderboardTableDesktop.setColumnWidth(priceColumn, 13.6, Unit.PCT);
+				leaderboardTableDesktop.setColumnWidth(downloadsColumn, 16.7, Unit.PCT);
+				leaderboardTableDesktop.setColumnWidth(revenueColumn, 16.7, Unit.PCT);
+				leaderboardTableDesktop.setColumnWidth(iapColumn, 6.3, Unit.PCT);
+				leaderboardTableDesktop.addColumn(rankColumn, rankHeader);
+				leaderboardTableDesktop.addColumn(paidColumn, paidHeader);
+				leaderboardTableDesktop.addColumn(priceColumn, priceHeader);
+				leaderboardTableDesktop.addColumn(downloadsColumn, downloadsHeader);
+				leaderboardTableDesktop.addColumn(revenueColumn, revenueHeader);
+				leaderboardTableDesktop.addColumn(iapColumn, iapHeader);
 			}
 		} else if (GROSSING_LIST_TYPE.equals(selectedTab)) {
 			if (SessionController.get().isLoggedInUserAdmin()) {
 				removeAllColumns();
-				leaderboardTableOverallDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-				leaderboardTableOverallDesktop.setColumnWidth(grossingColumn, 36.7, Unit.PCT);
-				leaderboardTableOverallDesktop.setColumnWidth(priceColumn, 13.6, Unit.PCT);
-				leaderboardTableOverallDesktop.setColumnWidth(downloadsColumn, 16.7, Unit.PCT);
-				leaderboardTableOverallDesktop.setColumnWidth(revenueColumn, 16.7, Unit.PCT);
-				leaderboardTableOverallDesktop.setColumnWidth(iapColumn, 6.3, Unit.PCT);
-				addColumn(rankColumn, rankHeader);
-				addColumn(grossingColumn, grossingHeader);
-				addColumn(priceColumn, priceHeader);
-				addColumn(downloadsColumn, downloadsHeader);
-				addColumn(revenueColumn, revenueHeader);
-				addColumn(iapColumn, iapHeader);
+				leaderboardTableDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+				leaderboardTableDesktop.setColumnWidth(grossingColumn, 36.7, Unit.PCT);
+				leaderboardTableDesktop.setColumnWidth(priceColumn, 13.6, Unit.PCT);
+				leaderboardTableDesktop.setColumnWidth(downloadsColumn, 16.7, Unit.PCT);
+				leaderboardTableDesktop.setColumnWidth(revenueColumn, 16.7, Unit.PCT);
+				leaderboardTableDesktop.setColumnWidth(iapColumn, 6.3, Unit.PCT);
+				leaderboardTableDesktop.addColumn(rankColumn, rankHeader);
+				leaderboardTableDesktop.addColumn(grossingColumn, grossingHeader);
+				leaderboardTableDesktop.addColumn(priceColumn, priceHeader);
+				leaderboardTableDesktop.addColumn(downloadsColumn, downloadsHeader);
+				leaderboardTableDesktop.addColumn(revenueColumn, revenueHeader);
+				leaderboardTableDesktop.addColumn(iapColumn, iapHeader);
 			}
 		}
 
 	}
 
 	private void removeColumn(Column<RanksGroup, ?> column) {
-		int currentIndex = leaderboardTableOverallDesktop.getColumnIndex(column);
+		int currentIndex = leaderboardTableDesktop.getColumnIndex(column);
 
 		if (currentIndex != -1) {
-			leaderboardTableOverallDesktop.removeColumn(column);
+			leaderboardTableDesktop.removeColumn(column);
 		}
 	}
 
@@ -560,34 +609,34 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		removeColumn(iapColumn);
 	}
 
-	private void addColumn(Column<RanksGroup, ?> column, TextHeader header) {
-		leaderboardTableOverallDesktop.addColumn(column, header);
-	}
-
 	private void refreshTabs() {
 		for (String key : tabs.keySet()) {
-			tabs.get(key).removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isActive());
+			tabs.get(key).removeClassName(style.isActive());
 		}
 
 		LIElement selected = tabs.get(selectedTab);
 
 		if (selected != null) {
-			selected.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isActive());
+			selected.addClassName(style.isActive());
 		}
 
 		ResponsiveDesignHelper.makeTabsResponsive();
+
+		// downloadsHeader.setHeaderStyleNames(style.canBeSorted());
+		// revenueHeader.setHeaderStyleNames(style.canBeSorted());
+		// RankController.get().sortByRank(selectedTab, false);
 	}
 
 	@UiHandler("viewAllBtn")
 	void onViewAllButtonClicked(ClickEvent event) {
 		if (((Button) event.getSource()).isEnabled()) {
-			if (leaderboardTableOverallDesktop.getVisibleItemCount() == ServiceConstants.STEP_VALUE) {
-				leaderboardTableOverallDesktop.setVisibleRange(0, VIEW_ALL_LENGTH_VALUE);
-				leaderboardTableOverallMobile.setVisibleRange(0, VIEW_ALL_LENGTH_VALUE);
+			if (leaderboardTableDesktop.getVisibleItemCount() == ServiceConstants.STEP_VALUE) {
+				leaderboardTableDesktop.setVisibleRange(0, VIEW_ALL_LENGTH_VALUE);
+				leaderboardTableMobile.setVisibleRange(0, VIEW_ALL_LENGTH_VALUE);
 				viewAllSpan.setInnerText("View Less Apps");
 			} else {
-				leaderboardTableOverallDesktop.setVisibleRange(0, ServiceConstants.STEP_VALUE);
-				leaderboardTableOverallMobile.setVisibleRange(0, ServiceConstants.STEP_VALUE);
+				leaderboardTableDesktop.setVisibleRange(0, ServiceConstants.STEP_VALUE);
+				leaderboardTableMobile.setVisibleRange(0, ServiceConstants.STEP_VALUE);
 				viewAllSpan.setInnerText("View All Apps");
 			}
 		}
@@ -604,7 +653,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 		if (PageType.RanksPageType.equals(current.getPage())) {
 
-			if (leaderboardTableOverallDesktop.getVisibleItemCount() > 0) {
+			if (leaderboardTableDesktop.getVisibleItemCount() > 0) {
 				setViewMoreVisible(true);
 			}
 

@@ -37,7 +37,7 @@ public interface IRankService extends IService {
 
 	/**
 	 * @param country
-	 * @param store
+	 * @param category
 	 * @param listType
 	 * @param item
 	 * @param after
@@ -45,7 +45,8 @@ public interface IRankService extends IService {
 	 * @param pager
 	 * @return
 	 */
-	public List<Rank> getItemRanks(Country country, Store store, String listType, Item item, Date after, Date before, Pager pager) throws DataAccessException;
+	public List<Rank> getItemRanks(Country country, Category category, String listType, Item item, Date after, Date before, Pager pager)
+			throws DataAccessException;
 
 	/**
 	 *
@@ -59,6 +60,17 @@ public interface IRankService extends IService {
 	 * @return
 	 */
 	public List<Rank> getGatherCodeRanks(Country country, Category category, String listType, Long code) throws DataAccessException;
+
+	/**
+	 * @param country
+	 * @param category
+	 * @param type
+	 * @param code
+	 * @param b
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<Rank> getGatherCodeRanks(Country country, Category category, String type, Long code, boolean useCache) throws DataAccessException;
 
 	/**
 	 * @param item

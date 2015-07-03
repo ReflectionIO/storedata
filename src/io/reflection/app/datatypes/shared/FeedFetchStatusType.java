@@ -29,12 +29,15 @@ public enum FeedFetchStatusType {
 	}
 
 	public static FeedFetchStatusType fromString(String value) {
+		if (value == null) return null;
+
 		if (valueLookup == null) {
 			valueLookup = new HashMap<String, FeedFetchStatusType>();
 			for (FeedFetchStatusType currentFeedFetchStatusType : FeedFetchStatusType.values()) {
 				valueLookup.put(currentFeedFetchStatusType.value, currentFeedFetchStatusType);
 			}
 		}
-		return valueLookup.get(value);
+
+		return valueLookup.get(value.toLowerCase());
 	}
 }

@@ -58,7 +58,7 @@ public class LoadingBar extends Composite {
 
 		// Check if it's a full-screen loader or a component loader
 		if (!container.isOrHasChild(Document.get().getBody())) {
-			bar.getElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().componenetLoading());
+			bar.getElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().componentLoading());
 		}
 	}
 

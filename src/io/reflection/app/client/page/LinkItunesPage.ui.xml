@@ -115,6 +115,10 @@
 					<h1>Your New Source of Free App Intelligence</h1>
 					<p class="{STYLES_INSTANCE.reflectionMainStyle.pStyleFeatured}">All you need to do now is link your iTunes Connect account(s) so that Reflection can import your all-important data.</p>
 				</div>
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.connectAccountSubmitted}">
+					<h1>Thanks For Linking</h1>
+					<p class="{STYLES_INSTANCE.reflectionMainStyle.pStyleFeatured}">We're currently fetching your app data and will send you an email as soon as we're done. It wil only take a moment.</p>
+				</div>
 			</div>
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.accountFormContainer}">
 

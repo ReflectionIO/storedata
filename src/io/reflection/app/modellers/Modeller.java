@@ -14,14 +14,16 @@ import io.reflection.app.datatypes.shared.ModelTypeType;
 
 /**
  * @author billy1380
- * 
+ *
  */
 public interface Modeller {
 
 	void enqueue(ModelTypeType modelType, String country, Category category, String listType, Long code);
-	
+
 	void enqueue(FeedFetch feedFetch);
-	
+
+	void enqueueFetchId(Long fetchId);
+
 	void enqueue(FeedFetch free, FeedFetch paid, FeedFetch grossing);
 
 	FormType getForm(String type);

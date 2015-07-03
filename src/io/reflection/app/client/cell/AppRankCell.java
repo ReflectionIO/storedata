@@ -13,6 +13,7 @@ import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.FilterController.Filter;
 import io.reflection.app.client.controller.ItemController;
 import io.reflection.app.client.controller.NavigationController;
+import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.helper.FormattingHelper;
 import io.reflection.app.client.page.PageType;
@@ -44,7 +45,6 @@ public class AppRankCell extends AbstractCell<Rank> {
 		void render(SafeHtmlBuilder sb, String name, String creatorName, SafeUri smallImage, SafeUri link, SafeHtml dailyData, String displayDailyData);
 	}
 
-	private boolean showAllPredictions;
 	private boolean useFilter = true;
 	private String currency = null;
 
@@ -53,10 +53,6 @@ public class AppRankCell extends AbstractCell<Rank> {
 
 		@Template("<span class=\"{0}\" style=\"{1}\">{2}</span>")
 		SafeHtml dailyData(String icon, String style, String value);
-	}
-
-	public AppRankCell(boolean showAllPredictions) {
-		this.showAllPredictions = showAllPredictions;
 	}
 
 	private static AppRankCellRenderer RENDERER = GWT.create(AppRankCellRenderer.class);
@@ -82,11 +78,11 @@ public class AppRankCell extends AbstractCell<Rank> {
 		if (useFilter) {
 			String dailyDataType = filter.getDailyData(), listType = FilterController.OVERALL_LIST_TYPE;
 
-			if (REVENUE_DAILY_DATA_TYPE.equals(dailyDataType) && showAllPredictions) {
+			if (REVENUE_DAILY_DATA_TYPE.equals(dailyDataType) && SessionController.get().isLoggedInUserAdmin()) {
 				if (value.downloads != null && value.revenue != null) {
 					dailyData = DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
-							+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue(), "",
-							FormattingHelper.asWholeMoneyString(value.currency, showAllPredictions ? value.revenue.floatValue() : 0.0f));
+							+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue(), "", FormattingHelper.asWholeMoneyString(value.currency,
+							SessionController.get().isLoggedInUserAdmin() ? value.revenue.floatValue() : 0.0f));
 				} else {
 					dailyData = SafeHtmlUtils.fromSafeConstant("-");
 				}
@@ -115,33 +111,48 @@ public class AppRankCell extends AbstractCell<Rank> {
 				case 2:
 					filter = Filter.parse(filter.asItemFilterString());
 					filter.setListType(FilterController.PAID_LIST_TYPE);
-					display = showAllPredictions ? SafeStylesUtils.fromTrustedString("") : SafeStylesUtils.forDisplay(Display.NONE);
+					display = SessionController.get().isLoggedInUserAdmin() ? SafeStylesUtils.fromTrustedString("") : SafeStylesUtils.forDisplay(Display.NONE);
+					if (!SessionController.get().isLoggedInUserAdmin()) { // clear data for normal user
+						dailyData = SafeHtmlUtils.fromSafeConstant("");
+					}
 					break;
 				case 3:
 					filter = Filter.parse(filter.asItemFilterString());
 					filter.setListType(FilterController.GROSSING_LIST_TYPE);
-					display = showAllPredictions ? SafeStylesUtils.fromTrustedString("") : SafeStylesUtils.forDisplay(Display.NONE);
+					display = SessionController.get().isLoggedInUserAdmin() ? SafeStylesUtils.fromTrustedString("") : SafeStylesUtils.forDisplay(Display.NONE);
+					if (!SessionController.get().isLoggedInUserAdmin()) {
+						dailyData = SafeHtmlUtils.fromSafeConstant("");
+					}
 					break;
 				}
 			} else if (FilterController.FREE_LIST_TYPE.equals(listType)) {
 				filter = Filter.parse(filter.asItemFilterString());
 				filter.setListType(FilterController.FREE_LIST_TYPE);
 				display = SafeStylesUtils.forDisplay(Display.NONE);
+				if (!SessionController.get().isLoggedInUserAdmin()) {
+					dailyData = SafeHtmlUtils.fromSafeConstant("");
+				}
 			} else if (FilterController.PAID_LIST_TYPE.equals(listType)) {
 				filter = Filter.parse(filter.asItemFilterString());
 				filter.setListType(FilterController.PAID_LIST_TYPE);
 				display = SafeStylesUtils.forDisplay(Display.NONE);
+				if (!SessionController.get().isLoggedInUserAdmin()) {
+					dailyData = SafeHtmlUtils.fromSafeConstant("");
+				}
 			} else if (FilterController.GROSSING_LIST_TYPE.equals(listType)) {
 				filter = Filter.parse(filter.asItemFilterString());
 				filter.setListType(FilterController.GROSSING_LIST_TYPE);
 				display = SafeStylesUtils.forDisplay(Display.NONE);
+				if (!SessionController.get().isLoggedInUserAdmin()) {
+					dailyData = SafeHtmlUtils.fromSafeConstant("");
+				}
 			}
 		} else {
-			display = showAllPredictions ? SafeStylesUtils.fromTrustedString("") : SafeStylesUtils.forDisplay(Display.NONE);
+			display = SessionController.get().isLoggedInUserAdmin() ? SafeStylesUtils.fromTrustedString("") : SafeStylesUtils.forDisplay(Display.NONE);
 
 			if (value.revenue != null) {
 				dailyData = DailyDataTemplate.INSTANCE.dailyData("icon-dollar", "padding-right: 6px", FormattingHelper.asWholeMoneyString(
-						value.currency == null ? currency : value.currency, showAllPredictions ? value.revenue.floatValue() : 0.0f));
+						value.currency == null ? currency : value.currency, SessionController.get().isLoggedInUserAdmin() ? value.revenue.floatValue() : 0.0f));
 			} else if (value.downloads != null) {
 				dailyData = DailyDataTemplate.INSTANCE.dailyData("icon-download-alt", "padding-right: 6px",
 						WHOLE_NUMBER_FORMATTER.format(value.downloads.doubleValue()));

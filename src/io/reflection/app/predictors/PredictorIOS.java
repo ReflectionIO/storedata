@@ -11,7 +11,6 @@ import static io.reflection.app.helpers.ItemPropertyWrapper.PROPERTY_IAP;
 import io.reflection.app.CallServiceMethodServlet;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
-import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.archivers.ArchiverFactory;
 import io.reflection.app.archivers.ItemRankArchiver;
 import io.reflection.app.collectors.Collector;
@@ -39,10 +38,10 @@ import io.reflection.app.service.modelrun.ModelRunServiceProvider;
 import io.reflection.app.service.rank.IRankService;
 import io.reflection.app.service.rank.RankServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
-import io.reflection.app.shared.util.PagerHelper;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +51,6 @@ import java.util.logging.Logger;
 import co.spchopr.persistentmap.PersistentMapFactory;
 
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
-import com.spacehopperstudios.utility.StringUtils;
 
 /**
  * @author billy1380
@@ -154,50 +152,6 @@ public class PredictorIOS implements Predictor {
 					continue;
 				}
 
-				// if (rank.price.floatValue() > 0) {
-				// if (usesIap) {
-				// if (rank.grossingPosition != null) {
-				// rank.downloads = Integer.valueOf((int) (modelRun.grossingB.doubleValue() * Math.pow(rank.grossingPosition.doubleValue(),
-				// -modelRun.grossingAIap)));
-				// rank.revenue = Float.valueOf((float) (rank.downloads.doubleValue() * (rank.price.doubleValue() + modelRun.theta.doubleValue())));
-				// } else {
-				// rank.downloads = Integer.valueOf((int) (modelRun.paidB.doubleValue() * Math.pow(rank.position.doubleValue(), -modelRun.paidAIap)));
-				// rank.revenue = Float.valueOf((float) ((modelRun.theta.doubleValue() + rank.price.doubleValue()) * rank.downloads.doubleValue()));
-				// }
-				//
-				// } else {
-				// if (rank.grossingPosition != null) {
-				// rank.downloads = Integer.valueOf((int) (modelRun.grossingB.doubleValue() * Math.pow(rank.grossingPosition.doubleValue(),
-				// -modelRun.grossingA.doubleValue())));
-				// rank.revenue = Float.valueOf((float) (rank.downloads.floatValue() * rank.price.floatValue()));
-				// } else {
-				// rank.downloads = Integer.valueOf((int) (modelRun.paidB.doubleValue() * Math.pow(rank.position.doubleValue(), -modelRun.paidA)));
-				// rank.revenue = Float.valueOf(rank.price.floatValue() * rank.downloads.floatValue());
-				// }
-				//
-				// }
-				// } else if (rank.price.floatValue() == 0) {
-				// if (usesIap || rank.grossingPosition != null) {
-				// if (rank.grossingPosition != null) {
-				// rank.downloads = Integer.valueOf((int) (modelRun.grossingB.doubleValue() * Math.pow(rank.grossingPosition.doubleValue(),
-				// -modelRun.grossingAIap.doubleValue())));
-				// rank.revenue = Float.valueOf((float) (rank.downloads.doubleValue() * modelRun.theta.doubleValue()));
-				// } else {
-				// rank.downloads = Integer.valueOf((int) (modelRun.freeB.doubleValue() * Math.pow(rank.position.doubleValue(), -modelRun.freeA)));
-				// rank.revenue = Float.valueOf((float) (modelRun.theta.doubleValue() * rank.downloads.doubleValue()));
-				// }
-				// } else {
-				// if (rank.grossingPosition != null) {
-				// // ERROR!!!
-				// } else {
-				// rank.downloads = Integer.valueOf((int) (modelRun.freeB.doubleValue() * Math.pow(rank.position.doubleValue(), -modelRun.freeA)));
-				// rank.revenue = Float.valueOf(0);
-				//
-				// }
-				//
-				// }
-				// }
-
 				RankServiceProvider.provide().updateRank(rank);
 				archiver.enqueueIdRank(rank.id);
 			}
@@ -289,42 +243,6 @@ public class PredictorIOS implements Predictor {
 		}
 	}
 
-	// private void rank(ModelRun output, int downloads, double revenue, String rankType, boolean usesIap, float price) {
-	// double predictedRank = 0;
-	//
-	// if (usesIap) {
-	// if ("revenue".equals(rankType)) {
-	// if (isFree(price)) {
-	// predictedRank = (double) Math.pow(((revenue / output.theta.doubleValue()) / output.freeB.doubleValue()),
-	// (1.0 / -output.freeA.doubleValue()));
-	// } else {
-	// predictedRank = (double) Math.pow((revenue / (price + output.theta.doubleValue()) / output.paidB.doubleValue()),
-	// (-1.0 / output.paidA.doubleValue()));
-	// }
-	// } else {
-	// if (isFree(price)) {
-	// predictedRank = (double) Math.pow((downloads / output.freeB.doubleValue()), (1.0 / -output.freeA.doubleValue()));
-	// } else {
-	// predictedRank = (double) Math.pow((downloads / output.paidB.doubleValue()), (1.0 / -output.paidA.doubleValue()));
-	// }
-	// }
-	// } else {
-	// if ("revenue".equals(rankType)) {
-	// if (!isFree(price)) {
-	// predictedRank = (double) Math.pow((revenue / output.grossingB.doubleValue()), (1.0 / -output.grossingA.doubleValue()));
-	// }
-	// } else {
-	// if (isFree(price)) {
-	// predictedRank = (double) Math.pow((downloads / output.freeB.doubleValue()), (1.0 / -output.freeA.doubleValue()));
-	// } else {
-	// predictedRank = (double) Math.pow((downloads / output.paidB.doubleValue()), (1.0 / -output.paidA.doubleValue()));
-	// }
-	// }
-	// }
-	//
-	// LOG.info("predictedRank :" + predictedRank);
-	// }
-
 	private boolean isDownloadListType(String listType) {
 		return !listType.contains("grossing");
 	}
@@ -372,7 +290,7 @@ public class PredictorIOS implements Predictor {
 		}
 
 		final List<Rank> foundRanks = rankService.getGatherCodeRanks(c, simpleModelRun.feedFetch.category, simpleModelRun.feedFetch.type,
-				simpleModelRun.feedFetch.code);
+				simpleModelRun.feedFetch.code, false);
 
 		final Map<String, Item> lookup = lookupItemsForRanks(foundRanks);
 
@@ -406,29 +324,19 @@ public class PredictorIOS implements Predictor {
 
 		alterFeedFetchStatus(simpleModelRun.feedFetch);
 
-		final Collector collector = CollectorFactory.getCollectorForStore(s.a3Code);
-		final boolean isGrossing = collector.isGrossing(simpleModelRun.feedFetch.type);
-		final Pager pager = PagerHelper.createInfinitePager();
-		if (isGrossing) {
-			pager.sortBy = "grossingposition";
-		} else {
-			pager.sortBy = "position";
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(simpleModelRun.feedFetch.date);
+		cal.set(Calendar.HOUR, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+
+		final String memcacheKey = RankServiceProvider.provide().getName() + ".getRanks." + c.a2Code + "." + simpleModelRun.feedFetch.category.id.toString()
+				+ "." + simpleModelRun.feedFetch.type + "." + cal.getTime().getTime();
+
+		if (LOG.isLoggable(GaeLevel.DEBUG)) {
+			LOG.log(GaeLevel.DEBUG, String.format("PredictorIOS clearing rank cache with key: %s and enqueuing call to re-get the rank", memcacheKey));
 		}
-
-		if (pager.sortDirection == null) {
-			pager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
-		}
-
-		final List<String> listTypes = new ArrayList<String>();
-
-		if (isGrossing) {
-			listTypes.addAll(collector.getCounterpartTypes(simpleModelRun.feedFetch.type));
-		}
-
-		listTypes.add(simpleModelRun.feedFetch.type);
-		final String memcacheKey = RankServiceProvider.provide().getName() + ".gathercoderanks." + simpleModelRun.feedFetch.code.toString() + "." + c.a2Code + "."
-				+ s.a3Code + "." + simpleModelRun.feedFetch.category.id.toString() + "." + StringUtils.join(listTypes, ".") + "." + pager.start + "."
-				+ pager.count + "." + pager.sortDirection + "." + pager.sortBy;
 
 		PersistentMapFactory.createObjectify().delete(memcacheKey);
 

@@ -71,7 +71,7 @@ public class CalibrationSummaryPage extends Page implements NavigationEventHandl
 	@UiField CheckBox showTail;
 	@UiField Breadcrumbs breadcrumbs;
 
-	private AppRankCell prototype = new AppRankCell(true).useFilter(false);
+	private AppRankCell prototype = new AppRankCell().useFilter(false);
 	@UiField(provided = true) CellList<Rank> hitsCellList = new CellList<Rank>(prototype, BootstrapGwtCellList.INSTANCE);
 	@UiField(provided = true) CellList<Rank> missesCellList = new CellList<Rank>(prototype, BootstrapGwtCellList.INSTANCE);
 

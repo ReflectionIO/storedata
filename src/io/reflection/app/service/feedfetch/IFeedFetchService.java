@@ -132,4 +132,19 @@ public interface IFeedFetchService extends IService {
 	 */
 	public List<Long> getFeedFetchIdsForDateWithStatus(Date fetchForDate, FeedFetchStatusType statusType) throws DataAccessException;
 
+	/**
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<Long> getFeedFetchIdsBetweenDates(Date startDate, Date endDate) throws DataAccessException;
+
+	/**
+	 * @param code
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<Long> getFeedFetchIdsByCode(Long code) throws DataAccessException;
+
 }

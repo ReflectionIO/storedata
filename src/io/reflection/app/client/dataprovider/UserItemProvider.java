@@ -21,13 +21,14 @@ import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
-import com.google.gwt.view.client.Range;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**
@@ -39,6 +40,10 @@ public class UserItemProvider extends AsyncDataProvider<MyApp> implements GetLin
 	private List<MyApp> myAppList = new ArrayList<MyApp>();
 	private Map<String, MyApp> myAppsLookup = new HashMap<String, MyApp>();
 
+	public List<MyApp> getList() {
+		return myAppList;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -47,15 +52,11 @@ public class UserItemProvider extends AsyncDataProvider<MyApp> implements GetLin
 	@Override
 	protected void onRangeChanged(HasData<MyApp> display) {
 		if (LinkedAccountController.get().linkedAccountsFetched()) {
-
-			Range r = display.getVisibleRange();
-			int start = r.getStart();
-			int end = start + r.getLength();
-			if (end > ItemController.get().getUserItems().size()) {
-				// Changed page
+			if (myAppList.isEmpty()) {
 				ItemController.get().fetchLinkedAccountItems();
 			} else {
-				updateRowData(start, myAppList.subList(start, end)); // Paging with all data already retrieved
+				int end = (display.getVisibleRange().getLength() > myAppList.size() ? myAppList.size() : display.getVisibleRange().getLength());
+				updateRowData(0, myAppList.subList(0, end));
 			}
 		} else {
 			LinkedAccountController.get().fetchLinkedAccounts(); // After refresh or the user didn't visit the linked accounts page
@@ -94,7 +95,7 @@ public class UserItemProvider extends AsyncDataProvider<MyApp> implements GetLin
 				}
 
 			}
-
+			sortByAppDetails(true);
 			updateRowData(
 					input.pager.start.intValue(),
 					myAppList.subList(input.pager.start.intValue(),
@@ -174,5 +175,117 @@ public class UserItemProvider extends AsyncDataProvider<MyApp> implements GetLin
 	 */
 	@Override
 	public void getSalesRanksFailure(GetSalesRanksRequest input, Throwable caught) {}
+
+	/**
+	 * @param sortAscending
+	 */
+	public void sortByRank(final boolean sortAscending) {
+		Collections.sort(myAppList, new Comparator<MyApp>() {
+
+			@Override
+			public int compare(MyApp o1, MyApp o2) {
+				int res = 0;
+				if (!o1.overallPosition.equals(o2.overallPosition)) {
+					if (o1.overallPosition.equals("-")) {
+						res = 1;
+					} else if (o2.overallPosition.equals("-")) {
+						res = -1;
+					} else {
+						res = (Float.parseFloat(o1.overallPosition) < Float.parseFloat(o2.overallPosition) ? 1 : -1);
+					}
+				}
+				return (sortAscending ? res : -res);
+			}
+		});
+	}
+
+	/**
+	 * @param sortAscending
+	 */
+	public void sortByAppDetails(final boolean sortAscending) {
+		Collections.sort(myAppList, new Comparator<MyApp>() {
+
+			@Override
+			public int compare(MyApp o1, MyApp o2) {
+				return (sortAscending ? o1.item.name.compareTo(o2.item.name) : o2.item.name.compareTo(o1.item.name));
+			}
+		});
+	}
+
+	/**
+	 * @param sortAscending
+	 */
+	public void sortByPrice(final boolean sortAscending) {
+		Collections.sort(myAppList, new Comparator<MyApp>() {
+
+			@Override
+			public int compare(MyApp o1, MyApp o2) {
+				int res = 0;
+				if (!o1.overallPrice.equals(o2.overallPrice)) {
+					if (o1.overallPrice.equals("-")) {
+						res = 1;
+					} else if (o2.overallPrice.equals("-")) {
+						res = -1;
+					} else if (o1.overallPrice.equalsIgnoreCase("free")) {
+						res = 1;
+					} else if (o2.overallPrice.equalsIgnoreCase("free")) {
+						res = -1;
+					} else {
+						res = (Float.parseFloat(o1.overallPrice.replaceAll(",|\\.|$|€|¥|£", "").trim()) < Float.parseFloat(o2.overallPrice.replaceAll(
+								",|\\.|$|€|¥|£", "").trim()) ? 1 : -1);
+					}
+				}
+				return (sortAscending ? res : -res);
+			}
+		});
+
+	}
+
+	/**
+	 * @param sortAscending
+	 */
+	public void sortByDownloads(final boolean sortAscending) {
+		Collections.sort(myAppList, new Comparator<MyApp>() {
+
+			@Override
+			public int compare(MyApp o1, MyApp o2) {
+				int res = 0;
+				if (!o1.overallDownloads.equals(o2.overallDownloads)) {
+					if (o1.overallDownloads.equals("-")) {
+						res = 1;
+					} else if (o2.overallDownloads.equals("-")) {
+						res = -1;
+					} else {
+						res = (Integer.parseInt(o1.overallDownloads.replaceAll(",", "")) < Integer.parseInt(o2.overallDownloads.replaceAll(",", "")) ? 1 : -1);
+					}
+				}
+				return (sortAscending ? res : -res);
+			}
+		});
+	}
+
+	/**
+	 * @param sortAscending
+	 */
+	public void sortByRevenue(final boolean sortAscending) {
+		Collections.sort(myAppList, new Comparator<MyApp>() {
+
+			@Override
+			public int compare(MyApp o1, MyApp o2) {
+				int res = 0;
+				if (!o1.overallRevenue.equals(o2.overallRevenue)) {
+					if (o1.overallRevenue.equals("-")) {
+						res = 1;
+					} else if (o2.overallRevenue.equals("-")) {
+						res = -1;
+					} else {
+						res = (Float.parseFloat(o1.overallRevenue.replaceAll(",|\\.|$|€|¥|£", "").trim()) < Float.parseFloat(o2.overallRevenue.replaceAll(
+								",|\\.|$|€|¥|£", "").trim()) ? 1 : -1);
+					}
+				}
+				return (sortAscending ? res : -res);
+			}
+		});
+	}
 
 }
