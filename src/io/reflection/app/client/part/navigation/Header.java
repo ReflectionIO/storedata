@@ -199,7 +199,7 @@ public class Header extends Composite implements NavigationEventHandler, Session
 	public void openPanelRightAccount() {
 		NavigationController.get().getPanelRightAccount().getElement().addClassName(style.isShowing());
 		DOMHelper.setScrollEnabled(false);
-		DOMHelper.addClassName(actionsGroup.getElement(), style.isOn());
+		actionsGroup.getElement().addClassName(style.isOn());
 		if (!linkLogin.getElement().hasClassName(style.isSelected())) {
 			linkLogin.getElement().addClassName(style.isSelected());
 		}

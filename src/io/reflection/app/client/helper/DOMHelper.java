@@ -62,12 +62,6 @@ public class DOMHelper {
 		}
 	}
 
-	public static void addClassName(Element element, String className) {
-		if (!element.hasClassName(className)) {
-			element.addClassName(className);
-		}
-	}
-
 	public static void setScrollEnabled(boolean enabled) {
 		if (enabled) {
 			if (getHtmlElement().hasClassName("touch")) {
@@ -78,10 +72,10 @@ public class DOMHelper {
 			}
 		} else {
 			if (getHtmlElement().hasClassName("touch")) {
-				addClassName(DOMHelper.getHtmlElement(), style.noScroll());
+				DOMHelper.getHtmlElement().addClassName(style.noScroll());
 			}
 			if (Document.get().getBody().hasClassName("touch")) {
-				addClassName(Document.get().getBody(), style.noScroll());
+				Document.get().getBody().addClassName(style.noScroll());
 			}
 		}
 	}
