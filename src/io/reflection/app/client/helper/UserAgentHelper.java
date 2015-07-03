@@ -48,6 +48,10 @@ public class UserAgentHelper {
 		return navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
 	}-*/;
 
+	static native boolean nativeIsSafari()/*-{
+		return navigator.userAgent.toLowerCase().indexOf('safari/') > -1;
+	}-*/;
+
 	public static int getIEVersion() {
 		int version = -1;
 		if (userAgent.contains(IE_11_VALUE)) {
@@ -67,6 +71,8 @@ public class UserAgentHelper {
 			DOMHelper.getHtmlElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isOpera());
 		} else if (nativeIsFirefox()) {
 			DOMHelper.getHtmlElement().addClassName("is-firefox");
+		} else if (nativeIsSafari()) {
+			DOMHelper.getHtmlElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isSafari());
 		}
 	}
 
