@@ -22,7 +22,6 @@ import io.reflection.app.client.controller.UserController;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.handler.user.SessionEventHandler;
 import io.reflection.app.client.handler.user.UserRegisteredEventHandler;
-import io.reflection.app.client.helper.DOMHelper;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.part.register.RegisterForm;
 import io.reflection.app.client.res.Styles;
@@ -85,7 +84,7 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 	@Override
 	protected void onAttach() {
 		createPasswordPanel.setVisible(false);
-		DOMHelper.addClassName(Document.get().getBody(), Styles.STYLES_INSTANCE.reflectionMainStyle().accountAccessPage());
+		Document.get().getBody().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().accountAccessPage());
 
 		super.onAttach();
 
@@ -194,11 +193,11 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 	private void setApply(boolean apply) {
 		if (apply) {
 			Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().createPasswordFormIsShowing());
-			DOMHelper.addClassName(Document.get().getBody(), Styles.STYLES_INSTANCE.reflectionMainStyle().applyFormIsShowing());
+			Document.get().getBody().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().applyFormIsShowing());
 			accountFormContainer.removeAttribute("style");
 		} else {
 			Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().applyFormIsShowing());
-			DOMHelper.addClassName(Document.get().getBody(), Styles.STYLES_INSTANCE.reflectionMainStyle().createPasswordFormIsShowing());
+			Document.get().getBody().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().createPasswordFormIsShowing());
 			accountFormContainer.setAttribute("style", "padding: 0px");
 		}
 	}

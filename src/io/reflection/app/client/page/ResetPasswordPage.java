@@ -15,7 +15,6 @@ import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.NavigationEventHandler;
-import io.reflection.app.client.helper.DOMHelper;
 import io.reflection.app.client.part.login.ResetPasswordForm;
 import io.reflection.app.client.res.Styles;
 
@@ -57,8 +56,8 @@ public class ResetPasswordPage extends Page implements NavigationEventHandler, C
 	protected void onAttach() {
 		super.onAttach();
 
-		DOMHelper.addClassName(Document.get().getBody(), Styles.STYLES_INSTANCE.reflectionMainStyle().accountAccessPage());
-		DOMHelper.addClassName(Document.get().getBody(), Styles.STYLES_INSTANCE.reflectionMainStyle().connectAccountIsShowing());
+		Document.get().getBody().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().accountAccessPage());
+		Document.get().getBody().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().connectAccountIsShowing());
 
 		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(ChangePasswordEventHandler.TYPE, SessionController.get(), this));
@@ -107,9 +106,9 @@ public class ResetPasswordPage extends Page implements NavigationEventHandler, C
 	@Override
 	public void changePasswordSuccess(ChangePasswordRequest input, ChangePasswordResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			DOMHelper.addClassName(Document.get().getBody(), Styles.STYLES_INSTANCE.reflectionMainStyle().formSubmittedSuccessComplete());
+			Document.get().getBody().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formSubmittedSuccessComplete());
 			form.setStatusSuccess();
-			DOMHelper.addClassName(formSubmittedSuccessPanel, Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
+			formSubmittedSuccessPanel.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
 		} else {
 			form.setStatusError();
 		}
