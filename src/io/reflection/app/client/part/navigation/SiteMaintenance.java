@@ -7,7 +7,6 @@
 //
 package io.reflection.app.client.part.navigation;
 
-import io.reflection.app.client.helper.DOMHelper;
 import io.reflection.app.client.res.Styles;
 
 import com.google.gwt.core.client.GWT;
@@ -39,7 +38,7 @@ public class SiteMaintenance extends Composite {
 	protected void onAttach() {
 		super.onAttach();
 
-		DOMHelper.addClassName(Document.get().getBody(), Styles.STYLES_INSTANCE.reflectionMainStyle().pageMaintenance());
+		Document.get().getBody().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().pageMaintenance());
 	}
 
 	/*

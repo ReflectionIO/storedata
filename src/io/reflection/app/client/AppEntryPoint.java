@@ -64,7 +64,7 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 	private void makeContainer() {
 		// PAGE MAINTENANCE RootPanel.get().add(new SiteMaintenance());
 
-		lPageContainer.getElement().setClassName("l-page-container");
+		lPageContainer.getElement().setClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().lPageContainer());
 		RootPanel.get().add(NavigationController.get().getHeader());
 		RootPanel.get().add(NavigationController.get().getPanelLeftMenu());
 		RootPanel.get().add(lPageContainer);
