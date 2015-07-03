@@ -118,7 +118,7 @@ public class UserAgentHelper {
 			Window.addResizeHandler(new ResizeHandler() {
 				@Override
 				public void onResize(ResizeEvent event) {
-					setMainContentWidthForIE();
+					// setMainContentWidthForIE();
 				}
 			});
 			if (getIEVersion() < 9) {

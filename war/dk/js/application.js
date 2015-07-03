@@ -9,8 +9,6 @@
 	var Page = function() {
 		instance = this;
 		new BrowserDetection();
-		this.setMainContentWidthForIE();
-		this.initBrowserPulling();
 		new LeftPanelAndHamburger();
 		new FormInteractions();
 		new PanelRightOverlay();
@@ -35,33 +33,6 @@
 	    	scrollInertia: 200
 	    });
 		}
-	};
-
-	Page.prototype.setMainContentWidthForIE = function() {
-		// calc(100%-220px) CSS does work for IE to set the width, but the width transition effect doesn't work for calc'd width in IE
-		// calculate the width for IE instead using JavaScript
-		if($('.is-ie').length > 0) {
-			if($(window).width() > 960) {
-				if($('.panel-left-open').length > 0) {
-					var mainContentElement = $('.is-ie .l-main');
-					mainContentElement.width($(window).width() - 220);
-				}
-				else {
-					$('.is-ie .l-main').width("100%");
-				}
-			}
-			else {
-				$('.is-ie .l-main').width("100%");
-			}
-		}
-	};
-
-	Page.prototype.initBrowserPulling = function() {
-		$(window).resize(function () {
-			if(!$('body').hasClass('landing-page')) {
-				instance.setMainContentWidthForIE();
-			}
-	  });
 	};
 
 	Page.prototype.pictureFillFix = function() {
@@ -327,7 +298,20 @@
 	};
 
 	var PanelRightOverlay = function() {
+		var instance = this;
+		$('body.ie10').on("click", function(e){
+			if($(this).hasClass("no-scroll")) {
+				if($(e.target).find('.panel-right__overlay').length) {
+					instance.CloseRightPanel();
+				}
+			}
+		});
 		$('.panel-right__overlay').on("click", function() {
+			instance.CloseRightPanel();
+		});
+	};
+
+	PanelRightOverlay.prototype.CloseRightPanel = function() {
 			if($('.js-account-container').hasClass('is-showing')) {
 				if(!$('.actions-group__content').is(':visible')) {
 					$('.actions-group').trigger("click");
@@ -340,7 +324,6 @@
 				$('.js-open-search').click();
 			}
 			$('html, body').removeClass('no-scroll');
-		});
 	};
 
 	var PanelRightMisplacedPassword = function() {
