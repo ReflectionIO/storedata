@@ -248,7 +248,7 @@ public class Header extends Composite implements NavigationEventHandler, Session
 			panelLeftWasClosed = true;
 		}
 		DOMHelper.toggleClassName(hamburgerBtn.getElement(), style.isSelected());
-		UserAgentHelper.setMainContentWidthForIE();
+		// UserAgentHelper.setMainContentWidthForIE();
 		DefaultEventBus.get().fireEventFromSource(
 				new TogglePanelEventHandler.ChangedEvent(PanelType.PanelLeftMenuType, !panelLeftWasClosed, isPanelLeftMenuOpen()), this);
 	}

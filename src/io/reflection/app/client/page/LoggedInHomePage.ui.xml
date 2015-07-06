@@ -14,7 +14,7 @@
 					Welcome
 					<span ui:field="userName"></span>
 				</h1>
-				<p>Our team has been hard at work improving accuracy and building features from your feedback. Keep up to date with our news and progress here.</p>
+				<p>Our team are hard at work improving accuracy and building features from your feedback. Keep up to date with our news and progress here.</p>
 			</div>
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.listPartners}">
 				<ul>
@@ -51,26 +51,27 @@
 				<ul>
 					<li class="article-list--article">
 						<article class="site-article">
-							<h2>Welcome aboard!</h2>
+							<h2>Welcome aboard! A message from the CEO</h2>
 							<p class="site-article--info">
 								<strong>Posted by</strong>
 								<span class="posted-by">Gustaf Leksell Founder &amp; CEO</span>
 								<span>May 14th 2015</span>
 							</p>
-							<p>Everyone here at Reflection is very excited that you have decided to join us. Our mission is to deliver a highly accurate and reliable app intelligence platform with features and tools to help developers make informed business decisions. You'll start to see the rollout of suggested features as our beta progresses. Here you can keep track of upcoming features and data.</p>
+							<p>Everyone here at Reflection is very excited that you have decided to join us. Our mission is to deliver a highly accurate and reliable app intelligence platform with features and tools to help you make smarter decisions.</p>
 							<img src="images/office-photo.jpg" alt="The Reflection office" class="image-full-width" />
 							<figcaption>
 								The development of new features being undertaken furiously at our London office.
 							</figcaption>
 							<p>
-								As one of our partners, you can help us accelerate our progress and improve our accuracy across all countries and categories by spreading the word. If you know a developer or publisher who will benefit by joining us, please introduce them to me at <a href="mailto:gustaf@reflection.io">gustaf@reflection.io</a>.
+								You'll start to see our rollout of requested features as our beta progresses. On this page, you can also keep track of what country and category intelligence is coming next.
 							</p>
-							<p>We also love to hear from you as we approach our launch, and we welcome your positive and negative comments along with your feedback on new features at <a href="mailto:beta@reflection.io">beta@reflection.io</a>.</p>
-							<p>Finally, please remember that we are still in beta so sometimes we may be slow or you may find some bugs while we tune and hone our system.</p>
+							<p>As one of our partners, you can help us accelerate our progress and data by spreading the word. If you know a developer or publisher who will benefit from joining us, please introduce them to me at <a href="mailto:gustaf@reflection.io">gustaf@reflection.io</a>.</p>
+							<p>It would also be great to get your feedback as we approach launch. Please send any negative and positive comments as well as any feature feedback to <a href="mailto:beta@reflection.io">beta@reflection.io</a>.</p>
+							<p>And finally, please remember that we are still in beta so we might be slow or you may find bugs as we tune our system.</p>
+							<p>Thank you,</p>
 							<p>
-								Gustaf
-								<br />Founder
-								&amp; CEO
+								Gustaf Leksell
+								<br />Founder &amp; CEO
 							</p>
 						</article>
 					</li>
@@ -108,7 +109,7 @@
 			</div>
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFiveColumns}">
 				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Beta Roadmap</h2>
-				<p>Below you can find our roadmap for country and category data as well as our upcoming features. We also continuously work to improve accuracy across all countries and categories as we add more data.</p>
+				<p>This is our roadmap for country and category data as well as for our upcoming features. We also continuously work to improve accuracy across all countries and categories as we add more data.</p>
 <p>Reflection's features are free for all partners during our private beta.</p>
 <p>For any suggestions or feedback, please e-mail us at <a href="mailto:beta@reflection.io">beta@reflection.io</a>.</p>
 				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Data Roadmap</h2>

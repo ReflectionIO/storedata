@@ -7,7 +7,6 @@
 //
 package io.reflection.app.client.highcharts;
 
-import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.helper.JavaScriptObjectHelper;
 import io.reflection.app.client.highcharts.ChartHelper.RankType;
 import io.reflection.app.client.highcharts.ChartHelper.XDataType;
@@ -72,7 +71,6 @@ public abstract class BaseChart extends Composite {
 	protected YDataType yDataType;
 	protected RankType rankingType;
 	protected DateRange dateRange;
-	protected final boolean showModelPredictions = SessionController.get().isLoggedInUserAdmin();
 	private final HTMLPanel chartWrapper = new HTMLPanel("");
 	private final String id = HTMLPanel.createUniqueId();
 	private JavaScriptObject options = JavaScriptObject.createObject();

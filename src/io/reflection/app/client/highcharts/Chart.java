@@ -75,7 +75,7 @@ public class Chart extends BaseChart {
 						}
 						CalendarUtil.addDaysToDate(progressiveDate, 1);
 						Double yPoint = getYPointValue(rank, yDataType);
-						if (yPoint != null && showModelPredictions) {
+						if (yPoint != null) {
 							if (isPointIsolated(yDataType, ranks, rank)) {
 								data.push(createMarkerPoint(rank.date.getTime(), (isCumulative ? cumulative += yPoint.doubleValue() : yPoint.doubleValue())));
 							} else {
@@ -167,7 +167,7 @@ public class Chart extends BaseChart {
 						}
 						CalendarUtil.addDaysToDate(progressiveDate, 1);
 						Double yPoint = getYPointValue(rank, yDataTypeSecondary);
-						if (yPoint != null && showModelPredictions) {
+						if (yPoint != null) {
 							if (isPointIsolated(yDataTypeSecondary, ranks, rank)) {
 								data.push(createMarkerPoint(rank.date.getTime(), (isCumulative ? cumulative += yPoint.doubleValue() : yPoint.doubleValue())));
 							} else {

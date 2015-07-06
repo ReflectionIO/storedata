@@ -33,7 +33,7 @@
 			<ul ui:field="itemList">
 				<li ui:field="leaderboardItem">
 					<g:InlineHyperlink ui:field="leaderboardLink">
-						<svg version="1.1" id="Icons" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">
+						<svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">
 								<path id="Leaderboard" fill="#5B5B68" d="M0,2v28h32V2H0z M30,4v5h-8h-2h-8h-2H2V4H30z M20,28h-8V11h8V28z M2,11h8v17H2V11z M22,28
 								V11h8v17H22z"></path>
 								</svg>
@@ -54,7 +54,7 @@
 				</li>
 				<li ui:field="blogItem">
 					<g:InlineHyperlink targetHistoryToken="{BlogPostsPageType.asTargetHistoryToken}">
-						<svg version="1.1" id="Icons" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">
+						<svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">
 								<g id="Blog">
 								<path fill="#5B5B68"
 							d="M26.9,26.2c0,1.1-0.9,2-2,2h-20c-1.1,0-2-0.9-2-2v-21c0-1.1,0.9-2,2-2h16.2l2.5-2H4.9c-2.2,0-4,1.8-4,4v21
@@ -70,7 +70,7 @@
 				</li>
 				<li ui:field="forumItem">
 					<g:InlineHyperlink targetHistoryToken="{ForumPageType.asTargetHistoryToken}">
-						<svg version="1.1" id="Icons" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">
+						<svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">
 								<path id="Forum" fill="#5B5B68"
 							d="M7,31.9V24H4c-2.2,0-4-1.8-4-4V4c0-2.2,1.8-4,4-4h24c2.2,0,4,1.8,4,4v16c0,2.2-1.8,4-4,4h-9.7
 								L7,31.9z M4,2C2.9,2,2,2.9,2,4v16c0,1.1,0.9,2,2,2h5v6.1l8.7-6.1H28c1.1,0,2-0.9,2-2V4c0-1.1-0.9-2-2-2H4z"></path>

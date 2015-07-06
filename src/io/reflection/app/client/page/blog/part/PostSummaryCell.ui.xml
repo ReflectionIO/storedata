@@ -18,12 +18,15 @@
 			</a>
 		</h2>
 		<p class="{STYLES_INSTANCE.reflectionMainStyle.siteArticleInfo}">
-			<strong>Posted by <ui:text from="{author}" /></strong>
-			on<ui:safehtml from="{published}" />
+			<strong>
+				Posted by
+				<ui:text from="{author}" />
+			</strong>
+			on
+			<ui:safehtml from="{published}" />
 		</p>
-		<p>
-			<ui:safehtml from="{description}" />
-		</p>
+
+		<ui:safehtml from="{description}" />
 
 		<p class="{STYLES_INSTANCE.reflectionMainStyle.moreLink}">
 			<a href="{link}">Read more</a>
