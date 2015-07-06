@@ -66,7 +66,7 @@
 			<g:HTMLPanel styleName="{STYLES_INSTANCE.homePageStyle.landingSectionInsights__column_one}" ui:field="leaderBoardScreenshot" />
 			<div class="{STYLES_INSTANCE.homePageStyle.landingColumnThin}">
 				<div class="{STYLES_INSTANCE.homePageStyle.landingColumnThin__content}">
-					<h2>Essential Market Insight</h2>
+					<h2>Essential Intelligence</h2>
 					<p>Analyse and benchmark apps and market data for revenue, rank and downloads. Make strategic decisions on app development, marketing and investment.</p>
 					<ul class="{STYLES_INSTANCE.homePageStyle.contentList}">
 						<li>
@@ -115,10 +115,6 @@
 						markets. We are here to deliver what is missing.</p>
 					<p>Be a Reflection beta partner and help us define features that will impact the growing needs of developers, publishers, and other stakeholders in the
 						flourishing app space.</p>
-					<div class="{STYLES_INSTANCE.homePageStyle.logoRefImpContainer}">
-						<h4>Statistics Partner</h4>
-						<img src="images/logos/Imperial_College_London_Logo.png" alt="Imperial College London logo" class="{STYLES_INSTANCE.homePageStyle.logoRefImp}" />
-					</div>
 				</div>
 			</div>
 		</section>
