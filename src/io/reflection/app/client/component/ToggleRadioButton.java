@@ -7,8 +7,6 @@
 //
 package io.reflection.app.client.component;
 
-import io.reflection.app.client.helper.DOMHelper;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.LabelElement;
@@ -72,7 +70,7 @@ public class ToggleRadioButton extends Composite implements HasName, HasValue<Bo
 	}
 
 	public void setLabelClassName(String className) {
-		DOMHelper.addClassName(label, className);
+		label.addClassName(className);
 	}
 
 	/*

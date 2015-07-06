@@ -7,7 +7,6 @@
 //
 package io.reflection.app.client.component;
 
-import io.reflection.app.client.helper.DOMHelper;
 import io.reflection.app.client.res.Styles;
 
 import com.google.gwt.core.client.GWT;
@@ -50,10 +49,10 @@ public class FilterSwitch extends Composite implements HasValue<Boolean> {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		if (isSmall) {
-			DOMHelper.addClassName(this.getElement(), Styles.STYLES_INSTANCE.reflectionMainStyle().filterSwitchSmall());
-			DOMHelper.addClassName(checkBoxContainer, Styles.STYLES_INSTANCE.reflectionMainStyle().canToggleSizeSmall());
+			this.getElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().filterSwitchSmall());
+			checkBoxContainer.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().canToggleSizeSmall());
 		} else {
-			DOMHelper.addClassName(checkBoxContainer, Styles.STYLES_INSTANCE.reflectionMainStyle().canToggleSizeLarge());
+			checkBoxContainer.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().canToggleSizeLarge());
 		}
 
 		checkBox.getElement().setId(checkBoxId);
