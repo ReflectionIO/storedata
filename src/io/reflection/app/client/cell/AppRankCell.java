@@ -73,7 +73,7 @@ public class AppRankCell extends AbstractCell<Rank> {
 		Filter filter = FilterController.get().getFilter();
 
 		SafeHtml dailyData = null;
-		SafeStyles display = null;
+		SafeStyles display = SafeStylesUtils.fromTrustedString("");
 
 		if (useFilter) {
 			String dailyDataType = filter.getDailyData(), listType = FilterController.OVERALL_LIST_TYPE;

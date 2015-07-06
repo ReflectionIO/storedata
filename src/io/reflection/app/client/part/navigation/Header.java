@@ -92,8 +92,7 @@ public class Header extends Composite implements NavigationEventHandler, Session
 		appendConditionalTags();
 
 		initPanelLeftMenu();
-		initPanelRightAccount();
-		initPanelRightSearch();
+		initPanelsRight();
 
 		tempSearchContainer.removeFromParent();
 	}
@@ -152,7 +151,7 @@ public class Header extends Composite implements NavigationEventHandler, Session
 		}, ClickEvent.getType());
 	}
 
-	private void initPanelRightAccount() {
+	private void initPanelsRight() {
 
 		// Toggle panel
 		actionsGroup.sinkEvents(Event.ONCLICK);
@@ -180,10 +179,7 @@ public class Header extends Composite implements NavigationEventHandler, Session
 				}
 			}
 		});
-	}
 
-	private void initPanelRightSearch() {
-		// Close panel if clicking outside of it
 		Event.sinkEvents(NavigationController.get().getPanelRightSearch().getPanelOverlay(), Event.ONCLICK);
 		Event.setEventListener(NavigationController.get().getPanelRightSearch().getPanelOverlay(), new EventListener() {
 
@@ -194,6 +190,12 @@ public class Header extends Composite implements NavigationEventHandler, Session
 				}
 			}
 		});
+
+		if (Document.get().getBody().hasClassName("ie10") && !DOMHelper.isScrollEnabled()) {
+			closePanelRightAccount();
+			closePanelRightSearch();
+		}
+
 	}
 
 	public void openPanelRightAccount() {
