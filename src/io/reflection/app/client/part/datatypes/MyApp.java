@@ -88,8 +88,7 @@ public class MyApp {
 			if (minPrice == Float.MAX_VALUE || maxPrice == -Float.MAX_VALUE) {
 				overallPrice = UNKNOWN_VALUE;
 			} else {
-				// Dividing by 100 gives back price with 2 decimals
-				overallPrice = FormattingHelper.asPriceRangeString(sample.currency, minPrice / 100, maxPrice / 100);
+				overallPrice = FormattingHelper.asPriceRangeString(sample.currency, minPrice, maxPrice);
 			}
 
 			if (minPosition == Integer.MAX_VALUE || maxPosition == Integer.MIN_VALUE) {

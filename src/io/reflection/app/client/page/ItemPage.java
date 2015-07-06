@@ -189,6 +189,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	private ReflectionMainStyles style = Styles.STYLES_INSTANCE.reflectionMainStyle();
 
 	@UiField Element tablePanel;
+	@UiField Element togglePanel;
 
 	private TextColumn<AppRevenue> dateColumn;
 	private TextColumn<AppRevenue> revenueColumn;
@@ -212,8 +213,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			eventsSwitch.removeFromParent();
 			oneMMovingAverageSwitch.removeFromParent();
 			overlayAppsSwitch.removeFromParent();
-			toggleChartGraph.removeFromParent();
-			toggleChartMap.removeFromParent();
+			togglePanel.removeFromParent();
 			sincePanel.removeFromParent();
 			dnwBtn.removeFromParent();
 			dnwBtnMobile.removeFromParent();
