@@ -264,6 +264,7 @@ public final class Core extends ActionHandler {
 		return output;
 	}
 
+	// Nothing on the client app call this.
 	public GetTopItemsResponse getTopItems(GetTopItemsRequest input) {
 		LOG.finer("Entering getTopItems");
 		GetTopItemsResponse output = new GetTopItemsResponse();
@@ -440,27 +441,6 @@ public final class Core extends ActionHandler {
 						throw new InputValidationException(ApiError.CategoryStoreMismatch.getCode(),
 								ApiError.CategoryStoreMismatch.getMessage("input.category"));
 				}
-
-				// DateTime date = new DateTime(input.on.getTime(), DateTimeZone.UTC);
-				// int secondOfMinute = date.getSecondOfMinute();
-				// int millisOfSeconds = date.getMillisOfSecond();
-				//
-				// Date end;
-				// Date start;
-				//
-				// boolean isPastDate = (secondOfMinute == 0) && (millisOfSeconds == 0);
-				//
-				// if (isPastDate) { // a date in the past
-				// end = date.plusHours(24).toDate();
-				// start = date.toDate();
-				// } else { // today
-				// end = date.minusHours(12).toDate();
-				// start = date.minusHours(24).toDate();
-				// }
-				//
-				// // final Map<String, Rank> lookup = new HashMap<String, Rank>();
-				//
-				// Long code = FeedFetchServiceProvider.provide().getGatherCode(input.country, input.store, start, end);
 
 				Set<String> itemIds = new HashSet<String>();
 				List<String> listTypes = ApiHelper.getAllListTypes(input.store, input.listType);
