@@ -25,7 +25,7 @@ public class FormattingHelper {
 	public static final String DATE_FORMAT_DD_MM_YYYY = "dd-MM-yyyy";
 	// public static final String DATE_FORMAT_YYYY_MM_DD = "yyyy-MM-dd";
 	public static final String DATE_FORMAT_DD_MMM_YYYY_HH_MM = "dd MMM yyyy - HH:mm";
-	
+
 	public static final String TWO_DECIMALS_FORMAT = ",###.##";
 	public static final String WHOLE_NUMBER_FORMAT = ",###";
 
@@ -33,12 +33,13 @@ public class FormattingHelper {
 	private static Map<String, String> countryCurrencyLookup = null;
 
 	static {
-			currencySymbolLookup = new HashMap<String, String>();
+		currencySymbolLookup = new HashMap<String, String>();
 
-			currencySymbolLookup.put("USD", "$");
-			currencySymbolLookup.put("EUR", "€");
-			currencySymbolLookup.put("CNY", "¥");
-			currencySymbolLookup.put("GBP", "£");
+		currencySymbolLookup.put("USD", "$");
+		currencySymbolLookup.put("EUR", "€");
+		currencySymbolLookup.put("CNY", "¥");
+		currencySymbolLookup.put("JPY", "¥");
+		currencySymbolLookup.put("GBP", "£");
 
 		countryCurrencyLookup = new HashMap<String, String>();
 
@@ -70,7 +71,7 @@ public class FormattingHelper {
 		countryCurrencyLookup.put("CN", "CNY");
 		countryCurrencyLookup.put("GB", "GBP");
 
-		}
+	}
 
 	/**
 	 * Returns a currency sumbol or code if none are found
@@ -82,7 +83,7 @@ public class FormattingHelper {
 		String symbol = currencySymbolLookup.get(currency);
 
 		return symbol == null ? currency : symbol;
-		}
+	}
 
 	public static String getCountryCurrency(String country) {
 		String currency = countryCurrencyLookup.get(country);
