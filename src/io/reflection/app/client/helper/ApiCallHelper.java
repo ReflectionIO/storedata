@@ -15,9 +15,11 @@ import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.shared.util.DataTypeHelper;
 
+import java.util.Date;
+
 /**
  * @author billy1380
- * 
+ *
  */
 public class ApiCallHelper {
 	public static Store createStoreForApiCall(Store store) {
@@ -56,5 +58,24 @@ public class ApiCallHelper {
 	 */
 	public static FeedFetch createFeedFetchForApiCall(FeedFetch feedFetch) {
 		return DataTypeHelper.createFeedFetch(feedFetch.id);
+	}
+
+	/**
+	 * @param year
+	 * @param month
+	 * @param day
+	 * @return
+	 */
+	public static Date getUTCDate(int year, int month, int day) {
+		if (year < 0 || month < 1 || month > 12 || day < 1 || day > 31) return null;
+
+		Date date = new Date(year - 1900, month - 1, day);
+		return getUTCDate(date);
+	}
+
+	public static Date getUTCDate(Date date) {
+		if (date == null) return null;
+
+		return new Date(date.getTime() - (date.getTimezoneOffset() * 60 * 1000));
 	}
 }

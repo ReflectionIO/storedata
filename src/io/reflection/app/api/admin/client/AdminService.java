@@ -1,4 +1,4 @@
-//  
+//
 //  admin/AdminService.java
 //  reflection.io
 //
@@ -72,6 +72,7 @@ import io.reflection.app.api.admin.shared.call.TriggerPredictRequest;
 import io.reflection.app.api.admin.shared.call.TriggerPredictResponse;
 import io.reflection.app.api.admin.shared.call.UpdateEventRequest;
 import io.reflection.app.api.admin.shared.call.UpdateEventResponse;
+import io.reflection.app.client.helper.ApiCallHelper;
 
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
@@ -188,6 +189,9 @@ public final class AdminService extends JsonService {
 	public Request getFeedFetches(final GetFeedFetchesRequest input, final AsyncCallback<GetFeedFetchesResponse> output) {
 		Request handle = null;
 		try {
+			input.start = ApiCallHelper.getUTCDate(input.start);
+			input.end = ApiCallHelper.getUTCDate(input.end);
+
 			handle = sendRequest(AdminMethodGetFeedFetches, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
@@ -881,6 +885,9 @@ public final class AdminService extends JsonService {
 	public Request getDataAccountFetches(final GetDataAccountFetchesRequest input, final AsyncCallback<GetDataAccountFetchesResponse> output) {
 		Request handle = null;
 		try {
+			input.start = ApiCallHelper.getUTCDate(input.start);
+			input.end = ApiCallHelper.getUTCDate(input.end);
+
 			handle = sendRequest(AdminMethodGetDataAccountFetches, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
@@ -914,6 +921,8 @@ public final class AdminService extends JsonService {
 	public Request triggerDataAccountGather(final TriggerDataAccountGatherRequest input, final AsyncCallback<TriggerDataAccountGatherResponse> output) {
 		Request handle = null;
 		try {
+			input.from = ApiCallHelper.getUTCDate(input.from);
+
 			handle = sendRequest(AdminMethodTriggerDataAccountGather, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
@@ -948,6 +957,8 @@ public final class AdminService extends JsonService {
 			final AsyncCallback<TriggerDataAccountFetchIngestResponse> output) {
 		Request handle = null;
 		try {
+			input.fetch.date = ApiCallHelper.getUTCDate(input.fetch.date);
+
 			handle = sendRequest(AdminMethodTriggerDataAccountFetchIngest, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
@@ -1014,6 +1025,9 @@ public final class AdminService extends JsonService {
 	public Request getSimpleModelRuns(final GetSimpleModelRunsRequest input, final AsyncCallback<GetSimpleModelRunsResponse> output) {
 		Request handle = null;
 		try {
+			input.start = ApiCallHelper.getUTCDate(input.start);
+			input.end = ApiCallHelper.getUTCDate(input.end);
+
 			handle = sendRequest(AdminMethodGetSimpleModelRuns, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {

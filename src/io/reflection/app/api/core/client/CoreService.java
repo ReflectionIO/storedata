@@ -1,4 +1,4 @@
-//  
+//
 //  core/CoreService.java
 //  storedata
 //
@@ -68,6 +68,7 @@ import io.reflection.app.api.core.shared.call.UpdateLinkedAccountRequest;
 import io.reflection.app.api.core.shared.call.UpdateLinkedAccountResponse;
 import io.reflection.app.api.core.shared.call.UpdateNotificationsRequest;
 import io.reflection.app.api.core.shared.call.UpdateNotificationsResponse;
+import io.reflection.app.client.helper.ApiCallHelper;
 
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestCallback;
@@ -150,6 +151,7 @@ public final class CoreService extends JsonService {
 	public Request getTopItems(final GetTopItemsRequest input, final AsyncCallback<GetTopItemsResponse> output) {
 		Request handle = null;
 		try {
+			input.on = ApiCallHelper.getUTCDate(input.on);
 			handle = sendRequest(CoreMethodGetTopItems, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
@@ -183,6 +185,7 @@ public final class CoreService extends JsonService {
 	public Request getAllTopItems(final GetAllTopItemsRequest input, final AsyncCallback<GetAllTopItemsResponse> output) {
 		Request handle = null;
 		try {
+			input.on = ApiCallHelper.getUTCDate(input.on);
 			handle = sendRequest(CoreMethodGetAllTopItems, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
@@ -216,6 +219,9 @@ public final class CoreService extends JsonService {
 	public Request getItemRanks(final GetItemRanksRequest input, final AsyncCallback<GetItemRanksResponse> output) {
 		Request handle = null;
 		try {
+			input.start = ApiCallHelper.getUTCDate(input.start);
+			input.end = ApiCallHelper.getUTCDate(input.end);
+
 			handle = sendRequest(CoreMethodGetItemRanks, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
@@ -810,6 +816,9 @@ public final class CoreService extends JsonService {
 	public Request getSales(final GetSalesRequest input, final AsyncCallback<GetSalesResponse> output) {
 		Request handle = null;
 		try {
+			input.start = ApiCallHelper.getUTCDate(input.start);
+			input.end = ApiCallHelper.getUTCDate(input.end);
+
 			handle = sendRequest(CoreMethodGetSales, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
@@ -843,6 +852,9 @@ public final class CoreService extends JsonService {
 	public Request getItemSales(final GetItemSalesRequest input, final AsyncCallback<GetItemSalesResponse> output) {
 		Request handle = null;
 		try {
+			input.start = ApiCallHelper.getUTCDate(input.start);
+			input.end = ApiCallHelper.getUTCDate(input.end);
+
 			handle = sendRequest(CoreMethodGetItemSales, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
@@ -876,6 +888,9 @@ public final class CoreService extends JsonService {
 	public Request getSalesRanks(final GetSalesRanksRequest input, final AsyncCallback<GetSalesRanksResponse> output) {
 		Request handle = null;
 		try {
+			input.start = ApiCallHelper.getUTCDate(input.start);
+			input.end = ApiCallHelper.getUTCDate(input.end);
+
 			handle = sendRequest(CoreMethodGetSalesRanks, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
@@ -909,6 +924,9 @@ public final class CoreService extends JsonService {
 	public Request getItemSalesRanks(final GetItemSalesRanksRequest input, final AsyncCallback<GetItemSalesRanksResponse> output) {
 		Request handle = null;
 		try {
+			input.start = ApiCallHelper.getUTCDate(input.start);
+			input.end = ApiCallHelper.getUTCDate(input.end);
+
 			handle = sendRequest(CoreMethodGetItemSalesRanks, input, new RequestCallback() {
 				@Override
 				public void onResponseReceived(Request request, Response response) {
