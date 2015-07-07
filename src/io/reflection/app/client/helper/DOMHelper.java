@@ -64,20 +64,30 @@ public class DOMHelper {
 
 	public static void setScrollEnabled(boolean enabled) {
 		if (enabled) {
-			if (getHtmlElement().hasClassName("touch")) {
-				DOMHelper.getHtmlElement().removeClassName(style.noScroll());
+			if (getHtmlElement().hasClassName(style.touch())) {
+				getHtmlElement().removeClassName(style.noScroll());
 			}
-			if (Document.get().getBody().hasClassName("touch")) {
+			if (Document.get().getBody().hasClassName(style.touch())) {
 				Document.get().getBody().removeClassName(style.noScroll());
 			}
 		} else {
-			if (getHtmlElement().hasClassName("touch")) {
-				DOMHelper.getHtmlElement().addClassName(style.noScroll());
+			if (getHtmlElement().hasClassName(style.touch())) {
+				getHtmlElement().addClassName(style.noScroll());
 			}
-			if (Document.get().getBody().hasClassName("touch")) {
+			if (Document.get().getBody().hasClassName(style.touch())) {
 				Document.get().getBody().addClassName(style.noScroll());
 			}
 		}
 	}
 
+	public static boolean isScrollEnabled() {
+		boolean isEnabled = true;
+		if (getHtmlElement().hasClassName(style.touch())) {
+			isEnabled = !getHtmlElement().hasClassName(style.noScroll());
+		}
+		if (Document.get().getBody().hasClassName(style.touch())) {
+			isEnabled = !Document.get().getBody().hasClassName(style.noScroll());
+		}
+		return isEnabled;
+	}
 }

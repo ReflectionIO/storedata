@@ -206,9 +206,9 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			tabs.put(PAID_LIST_TYPE, paidItem);
 			tabs.put(GROSSING_LIST_TYPE, grossingItem);
 		} else {
-			paidText.setInnerText("Top Paid - coming soon");
+			paidText.setInnerHTML("Top Paid <span class=\"text-small\">coming soon</span>");
 			paidItem.addClassName(style.isDisabled());
-			grossingText.setInnerText("Top Grossing - coming soon");
+			grossingText.setInnerHTML("Top Grossing <span class=\"text-small\">coming soon</span>");
 			grossingItem.addClassName(style.isDisabled());
 		}
 
