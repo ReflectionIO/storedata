@@ -950,10 +950,10 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 					DOWNLOADS_CHART_TYPE, comingPage, filterContents));
 			appDetailsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 		} else {
-			revenueText.setInnerText("Revenue - coming soon");
+			revenueText.setInnerHTML("Revenue <span class=\"text-small\">coming soon</span>");
 			revenueItem.addClassName(style.isDisabled());
 			revenueLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
-			downloadsText.setInnerText("Downloads - coming soon");
+			downloadsText.setInnerHTML("Downloads <span class=\"text-small\">coming soon</span>");
 			downloadsItem.addClassName(style.isDisabled());
 			downloadsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 			appDetailsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());

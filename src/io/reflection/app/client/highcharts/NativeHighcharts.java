@@ -43,4 +43,12 @@ public class NativeHighcharts {
 		$wnd.Highcharts.setOptions(options);
 	}-*/;
 
+	public static native void nativeSetUTC(JavaScriptObject options, boolean isUTC)/*-{
+		$wnd.Highcharts.setOptions({
+			global : {
+				useUTC : isUTC
+			}
+		});
+	}-*/;
+
 }

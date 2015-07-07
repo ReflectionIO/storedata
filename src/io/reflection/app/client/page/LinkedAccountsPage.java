@@ -161,9 +161,9 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		linkedAccountsTable.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 
 		if (!SessionController.get().isLoggedInUserAdmin()) {
-			usersText.setInnerText("Users - coming soon");
+			usersText.setInnerHTML("Users <span class=\"text-small\">coming soon</span>");
 			usersItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
-			notifText.setInnerText("Notifications - coming soon");
+			notifText.setInnerHTML("Notifications <span class=\"text-small\">coming soon</span>");
 			notifItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
 			usersLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 			notificationsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());

@@ -17,7 +17,7 @@
 	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.pageLeaderboard}">
 
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneHalf}">
-			<h1 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">App Leaderboard</h1>
+			<h1 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree} {STYLES_INSTANCE.reflectionMainStyle.pageTitle}">App Leaderboard</h1>
 		</div>
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.pageFunctions}">
 			<form class="{STYLES_INSTANCE.reflectionMainStyle.inlineSearchForm}">

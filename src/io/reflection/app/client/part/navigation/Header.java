@@ -92,8 +92,7 @@ public class Header extends Composite implements NavigationEventHandler, Session
 		appendConditionalTags();
 
 		initPanelLeftMenu();
-		initPanelRightAccount();
-		initPanelRightSearch();
+		initPanelsRight();
 
 		tempSearchContainer.removeFromParent();
 	}
@@ -152,7 +151,7 @@ public class Header extends Composite implements NavigationEventHandler, Session
 		}, ClickEvent.getType());
 	}
 
-	private void initPanelRightAccount() {
+	private void initPanelsRight() {
 
 		// Toggle panel
 		actionsGroup.sinkEvents(Event.ONCLICK);
@@ -180,10 +179,7 @@ public class Header extends Composite implements NavigationEventHandler, Session
 				}
 			}
 		});
-	}
 
-	private void initPanelRightSearch() {
-		// Close panel if clicking outside of it
 		Event.sinkEvents(NavigationController.get().getPanelRightSearch().getPanelOverlay(), Event.ONCLICK);
 		Event.setEventListener(NavigationController.get().getPanelRightSearch().getPanelOverlay(), new EventListener() {
 
@@ -194,6 +190,12 @@ public class Header extends Composite implements NavigationEventHandler, Session
 				}
 			}
 		});
+
+		if (Document.get().getBody().hasClassName("ie10") && !DOMHelper.isScrollEnabled()) {
+			closePanelRightAccount();
+			closePanelRightSearch();
+		}
+
 	}
 
 	public void openPanelRightAccount() {
@@ -248,7 +250,6 @@ public class Header extends Composite implements NavigationEventHandler, Session
 			panelLeftWasClosed = true;
 		}
 		DOMHelper.toggleClassName(hamburgerBtn.getElement(), style.isSelected());
-		// UserAgentHelper.setMainContentWidthForIE();
 		DefaultEventBus.get().fireEventFromSource(
 				new TogglePanelEventHandler.ChangedEvent(PanelType.PanelLeftMenuType, !panelLeftWasClosed, isPanelLeftMenuOpen()), this);
 	}
@@ -298,14 +299,9 @@ public class Header extends Composite implements NavigationEventHandler, Session
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
 		PageType currentPage = NavigationController.get().getCurrentPage();
-		if (Window.getClientWidth() > 960 && !panelLeftWasClosed && !PageType.LoadingPageType.equals(currentPage)
-				&& !PageType.LinkItunesPageType.equals(currentPage) && !PageType.RegisterPageType.equals(currentPage)) {
-			if (!isPanelLeftMenuOpen()) {
-				Document.get().getBody().addClassName(style.panelLeftOpen());
-			}
-			if (!hamburgerBtn.getElement().hasClassName(style.isSelected())) {
-				hamburgerBtn.getElement().addClassName(style.isSelected());
-			}
+		if (Window.getClientWidth() > 960 && !panelLeftWasClosed && !PageType.LoadingPageType.equals(currentPage) && !PageType.HomePageType.equals(currentPage)) {
+			Document.get().getBody().addClassName(style.panelLeftOpen());
+			hamburgerBtn.getElement().addClassName(style.isSelected());
 		} else {
 			Document.get().getBody().removeClassName(style.panelLeftOpen());
 			hamburgerBtn.getElement().removeClassName(style.isSelected());

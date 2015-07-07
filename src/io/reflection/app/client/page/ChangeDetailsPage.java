@@ -154,9 +154,9 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		if (!SessionController.get().isLoggedInUserAdmin()) {
 			addRolePanel.removeFromParent();
 			addPermissionPanel.removeFromParent();
-			usersText.setInnerText("Users - coming soon");
+			usersText.setInnerHTML("Users <span class=\"text-small\">coming soon</span>");
 			usersItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
-			notifText.setInnerText("Notifications - coming soon");
+			notifText.setInnerHTML("Notifications <span class=\"text-small\">coming soon</span>");
 			notificationsItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
 			usersLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 			notificationsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
