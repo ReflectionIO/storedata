@@ -1859,12 +1859,6 @@ public interface Styles extends ClientBundle {
 		@ClassName("list-partners")
 		String listPartners();
 
-		@ClassName("logo-ref-imp")
-		String logoRefImp();
-
-		@ClassName("logo-ref-imp-container")
-		String logoRefImpContainer();
-
 		@ClassName("logo-reflection-footer")
 		String logoReflectionFooter();
 
