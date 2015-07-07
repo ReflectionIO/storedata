@@ -36,7 +36,6 @@ cp ~/.m2/repository/spchopr/gson.json.service/1.0/gson.json.service-1.0.jar $1/s
 cp ~/.m2/repository/spchopr/service_appengine/1.0/service_appengine-1.0.jar $1/storedata/war/WEB-INF/lib/.
 cp ~/.m2/repository/spchopr/utility/1.0/utility-1.0.jar $1/storedata/war/WEB-INF/lib/.
 cp ~/.m2/repository/spchopr/persistentmap/1.0/persistentmap-1.0.jar $1/storedata/war/WEB-INF/lib/.
-cp ~/.m2/repository/com/googlecode/gchart/gchart/2.7/gchart-2.7.jar $1/storedata/war/WEB-INF/lib/.
 cp ~/.m2/repository/junit/junit/4.11/junit-4.11.jar $1/storedata/war/WEB-INF/lib/.
 cp ~/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar $1/storedata/war/WEB-INF/lib/.
 cp ~/.m2/repository/com/googlecode/gwt-crypto/gwt-crypto/2.3.0/gwt-crypto-2.3.0.jar $1/storedata/war/WEB-INF/lib/.
