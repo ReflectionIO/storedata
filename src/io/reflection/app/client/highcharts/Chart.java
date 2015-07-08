@@ -10,9 +10,12 @@ package io.reflection.app.client.highcharts;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.JavaScriptObjectHelper;
+import io.reflection.app.client.highcharts.ChartHelper.LineType;
 import io.reflection.app.client.highcharts.ChartHelper.RankType;
 import io.reflection.app.client.highcharts.ChartHelper.XDataType;
+import io.reflection.app.client.highcharts.ChartHelper.YAxisPosition;
 import io.reflection.app.client.highcharts.ChartHelper.YDataType;
+import io.reflection.app.client.highcharts.options.YAxis;
 import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.shared.util.FormattingHelper;
@@ -39,16 +42,51 @@ public class Chart extends BaseChart {
 
 	// private final int yMinCeilingRanking = 10;
 
-	public Chart(XDataType xDataType, YDataType yDataType) {
-		super(xDataType, yDataType);
+	public Chart(XDataType xDataType) {
+		super(xDataType);
 	}
 
-	public void drawData(List<Rank> ranks, String seriesId, String seriesType, String color, boolean isCumulative, boolean hide) {
-		// setLoading(false);
+	public void drawData(List<Rank> ranks, YAxisPosition yAxisPosition, YDataType yDataType, String seriesId, LineType lineType, String color,
+			boolean isCumulative, boolean hide) {
 
 		if (ranks != null && yDataType != null) {
 
-			if (YDataType.RevenueYAxisDataType.equals(yDataType)) {
+			boolean isOpposite = (yAxisPosition != YAxisPosition.PRIMARY);
+
+			YAxis yAxis = getPrimaryAxis();
+			switch (yAxisPosition) {
+			case PRIMARY:
+				break;
+			case SECONDARY:
+				yAxis = getSecondaryYAxis();
+				yAxis.setLabelsStyle(ChartHelper.getYAxisLabelsStyle(color));
+				break;
+			case TERTIARY:
+				yAxis = getTertiaryYAxis();
+				yAxis.setLabelsStyle(ChartHelper.getYAxisLabelsStyle(color));
+				break;
+			}
+
+			String seriesName = seriesId;
+
+			// UPDATE AXIS RELATED CHATACTERISTICS
+			switch (yDataType) {
+			case DownloadsYAxisDataType:
+				seriesName = "Downloads";
+				yAxis.setMin(0).setFloor(0).setShowFirstLabel(false);
+				if (!isOpposite) {
+					if (NativeAxis.nativeGetDataMax(get(yAxisPosition.toString())) < yMinCeilingDownloads) {
+						yAxis.setMax(yMinCeilingDownloads);
+					} else {
+						yAxis.setMax(JavaScriptObjectHelper.getNativeNull());
+					}
+				}
+				break;
+
+			case RevenueYAxisDataType:
+				seriesName = "Revenue";
+
+				// Set currency
 				for (Rank rank : ranks) {
 					if (currency == null && rank.currency != null) {
 						setCurrency(FormattingHelper.getCurrencySymbol(rank.currency));
@@ -58,6 +96,27 @@ public class Chart extends BaseChart {
 				if (currency == null) {
 					setCurrency(FormattingHelper.getCurrencySymbol(""));
 				}
+
+				yAxis.setLabelsFormatter(ChartHelper.getNativeLabelFormatter(currency, ""));
+
+				yAxis.setMin(0).setFloor(0).setShowFirstLabel(false);
+				if (!isOpposite) {
+					// NativeChart.nativeUpdateTooltipFormatter(chart, ChartHelper.getNativeTooltipFormatter(currency));
+					if (NativeAxis.nativeGetDataMax(get(yAxisPosition.toString())) < yMinCeilingRevenue) {
+						yAxis.setMax(yMinCeilingRevenue);
+					} else {
+						yAxis.setMax(JavaScriptObjectHelper.getNativeNull());
+					}
+				}
+				break;
+
+			case RankingYAxisDataType:
+				seriesName = "Ranking";
+				yAxis.setReversed(true).setLabelsFormatter(ChartHelper.getNativeLabelFormatterRank()).setMin(1).setFloor(1).setShowLastLabel(false);
+				if (!isOpposite) {
+					yAxis.setMax(JavaScriptObjectHelper.getNativeNull());
+				}
+				break;
 			}
 
 			JsArray<JavaScriptObject> data = JavaScriptObject.createArray().cast();
@@ -88,7 +147,7 @@ public class Chart extends BaseChart {
 							data.push(createPoint(rank.date.getTime(), JavaScriptObjectHelper.getNativeNull()));
 						}
 					}
-					addSeries(data, seriesType, seriesId, color);
+					addSeries(data, lineType, seriesId, seriesName, color, yAxisPosition);
 				}
 				break;
 
@@ -98,137 +157,19 @@ public class Chart extends BaseChart {
 						Double yPoint = getYPointValue(rank, yDataType);
 						data.push(createMarkerPoint(rank.position.doubleValue(), yPoint));
 					}
-					addSeries(data, seriesType, seriesId, color);
+					addSeries(data, lineType, seriesId, seriesName, color, yAxisPosition);
 				}
 				break;
 			}
 
-			switch (yDataType) {
-			case DownloadsYAxisDataType:
-				if (NativeAxis.nativeGetDataMax(NativeAxis.nativeGetYAxis(chart, 0)) < yMinCeilingDownloads) {
-					getDefaultYAxis().setMax(yMinCeilingDownloads);
-				} else {
-					getDefaultYAxis().setMax(JavaScriptObjectHelper.getNativeNull());
-				}
-				break;
-
-			case RevenueYAxisDataType:
-				getDefaultYAxis().setLabelsFormatter(ChartHelper.getNativeLabelFormatter(currency, ""));
-				// NativeChart.nativeUpdateTooltipFormatter(chart, ChartHelper.getNativeTooltipFormatter(currency));
-				if (NativeAxis.nativeGetDataMax(NativeAxis.nativeGetYAxis(chart, 0)) < yMinCeilingRevenue) {
-					getDefaultYAxis().setMax(yMinCeilingRevenue);
-				} else {
-					getDefaultYAxis().setMax(JavaScriptObjectHelper.getNativeNull());
-				}
-				break;
-
-			case RankingYAxisDataType:
-				getDefaultYAxis().setMax(JavaScriptObjectHelper.getNativeNull());
-				break;
-			}
-			NativeAxis.nativeUpdate(NativeAxis.nativeGetYAxis(chart, 0), getDefaultYAxis().getProperty(), true); // update y axis
+			NativeAxis.nativeUpdate(get(yAxisPosition.toString()), yAxis.getOptions(), true); // update secondary y axis
 
 			resize();
 			reflow();
 			if (hide) {
 				setSeriesVisible(seriesId, false);
 			}
-		}
-	}
 
-	public void drawOppositeData(List<Rank> ranks, String seriesId, String seriesType, String color, boolean isCumulative, boolean hide,
-			YDataType yDataTypeSecondary) {
-		getSecondaryYAxis().setLabelsStyle(ChartHelper.getYAxisLabelsStyle(color));
-		ChartHelper.updateYAxisOptions(getSecondaryYAxis(), yDataTypeSecondary);
-
-		if (ranks != null && yDataTypeSecondary != null) {
-
-			if (YDataType.RevenueYAxisDataType.equals(yDataTypeSecondary)) {
-				for (Rank rank : ranks) {
-					if (currency == null && rank.currency != null) {
-						setCurrency(FormattingHelper.getCurrencySymbol(rank.currency));
-						break;
-					}
-				}
-				if (currency == null) {
-					setCurrency(FormattingHelper.getCurrencySymbol(""));
-				}
-			}
-
-			JsArray<JavaScriptObject> data = JavaScriptObject.createArray().cast();
-
-			switch (xDataType) {
-			case DateXAxisDataType:
-				if (get(seriesId) == null && dateRange != null) {
-					removeOutOfRangeRanks(ranks);
-					Date progressiveDate = dateRange.getFrom();
-					double cumulative = 0;
-					for (Rank rank : ranks) {
-						// Fill with blank data missing dates
-						if (!FilterHelper.equalDate(progressiveDate, rank.date)) {
-							while (!FilterHelper.equalDate(progressiveDate, rank.date) && FilterHelper.beforeOrSameDate(progressiveDate, dateRange.getTo())) {
-								data.push(createPoint(progressiveDate.getTime(), JavaScriptObjectHelper.getNativeNull()));
-								CalendarUtil.addDaysToDate(progressiveDate, 1);
-							}
-						}
-						CalendarUtil.addDaysToDate(progressiveDate, 1);
-						Double yPoint = getYPointValue(rank, yDataTypeSecondary);
-						if (yPoint != null) {
-							if (isPointIsolated(yDataTypeSecondary, ranks, rank)) {
-								data.push(createMarkerPoint(rank.date.getTime(), (isCumulative ? cumulative += yPoint.doubleValue() : yPoint.doubleValue())));
-							} else {
-								data.push(createPoint(rank.date.getTime(), (isCumulative ? cumulative += yPoint.doubleValue() : yPoint.doubleValue())));
-							}
-						} else {
-							data.push(createPoint(rank.date.getTime(), JavaScriptObjectHelper.getNativeNull()));
-						}
-					}
-					addSeries(data, seriesType, seriesId, color, true);
-
-				}
-				break;
-
-			case RankingXAxisDataType:
-				if (get(seriesId) == null) {
-					for (Rank rank : ranks) {
-						Double yPoint = getYPointValue(rank, yDataTypeSecondary);
-						data.push(createMarkerPoint(rank.position.doubleValue(), yPoint));
-					}
-					addSeries(data, seriesType, seriesId, color, true);
-				}
-				break;
-			}
-
-			switch (yDataTypeSecondary) {
-			case DownloadsYAxisDataType:
-				// if (NativeAxis.nativeGetDataMax(NativeAxis.nativeGetYAxis(chart, 1)) < yMinCeilingDownloads) {
-				// getSecondaryYAxis().setMax(yMinCeilingDownloads);
-				// } else {
-				// getSecondaryYAxis().setMax(JavaScriptObjectHelper.getNativeNull());
-				// }
-				break;
-			//
-			case RevenueYAxisDataType:
-				getSecondaryYAxis().setLabelsFormatter(ChartHelper.getNativeLabelFormatter(currency, ""));
-				// NativeChart.nativeUpdateTooltipFormatter(chart, ChartHelper.getNativeTooltipFormatter(currency));
-				// if (NativeAxis.nativeGetDataMax(NativeAxis.nativeGetYAxis(chart, 1)) < yMinCeilingRevenue) {
-				// getSecondaryYAxis().setMax(yMinCeilingRevenue);
-				// } else {
-				// getSecondaryYAxis().setMax(JavaScriptObjectHelper.getNativeNull());
-				// }
-				break;
-			//
-			case RankingYAxisDataType:
-				// getSecondaryYAxis().setMax(JavaScriptObjectHelper.getNativeNull());
-				break;
-			}
-			NativeAxis.nativeUpdate(NativeAxis.nativeGetYAxis(chart, 1), getSecondaryYAxis().getProperty(), true); // update secondary y axis
-
-			resize();
-			reflow();
-			if (hide) {
-				setSeriesVisible(seriesId, false);
-			}
 		}
 	}
 

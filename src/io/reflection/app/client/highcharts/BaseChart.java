@@ -8,9 +8,10 @@
 package io.reflection.app.client.highcharts;
 
 import io.reflection.app.client.helper.JavaScriptObjectHelper;
+import io.reflection.app.client.highcharts.ChartHelper.LineType;
 import io.reflection.app.client.highcharts.ChartHelper.RankType;
 import io.reflection.app.client.highcharts.ChartHelper.XDataType;
-import io.reflection.app.client.highcharts.ChartHelper.YDataType;
+import io.reflection.app.client.highcharts.ChartHelper.YAxisPosition;
 import io.reflection.app.client.highcharts.options.ChartOption;
 import io.reflection.app.client.highcharts.options.Credits;
 import io.reflection.app.client.highcharts.options.Labels;
@@ -61,31 +62,28 @@ public abstract class BaseChart extends Composite {
 	public static final String OPTION_TOOLTIP = "tooltip";
 	public static final String OPTION_X_AXIS = "xAxis";
 	public static final String OPTION_Y_AXIS = "yAxis";
-	public static final String OPTION_DEFAULT_Y_AXIS = "defaultYAxis";
+	public static final String OPTION_PRIMARY_Y_AXIS = "primaryYAxis";
 	public static final String OPTION_SECONDARY_Y_AXIS = "secondaryYAxis";
+	public static final String OPTION_TERTIARY_Y_AXIS = "tertiaryYAxis";
 
 	public static final int X_LABELS_DISTANCE = 65;
 
 	protected JavaScriptObject chart;
 	protected XDataType xDataType;
-	protected YDataType yDataType;
 	protected RankType rankingType;
 	protected DateRange dateRange;
 	private final HTMLPanel chartWrapper = new HTMLPanel("");
 	private final String id = HTMLPanel.createUniqueId();
 	private JavaScriptObject options = JavaScriptObject.createObject();
 	private Map<String, Option<?>> optionsLookup = new HashMap<String, Option<?>>();
-	JsArray<JavaScriptObject> xAxisJSArray = JavaScriptObject.createArray().cast(); // list of x axis
 	JsArray<JavaScriptObject> yAxisJSArray = JavaScriptObject.createArray().cast(); // list of y axis
 
-	public BaseChart(XDataType xDataType, YDataType yDataType) {
+	public BaseChart(XDataType xDataType) {
 		chartWrapper.getElement().setId(id);
 		getChartOption().setRenderTo(id);
 		this.xDataType = xDataType;
-		this.yDataType = yDataType;
 		ChartHelper.setDefaultOptions(this);
 		ChartHelper.setDefaultXAxisOptions(this, xDataType);
-		ChartHelper.updateYAxisOptions(getDefaultYAxis(), yDataType);
 
 		initWidget(chartWrapper);
 	}
@@ -107,34 +105,23 @@ public abstract class BaseChart extends Composite {
 		this.xDataType = xDataType;
 	}
 
-	public void setYDataType(YDataType yDataType) {
-		this.yDataType = yDataType;
-	}
-
 	public void addAxis(JavaScriptObject options, boolean isX) {
 		NativeChart.nativeAddAxis(chart, options, isX, true, false);
 	}
 
-	public void addSeries(JavaScriptObject series) {
-		NativeChart.nativeAddSeries(chart, series, true, false);
-	}
-
-	public void addSeries(JavaScriptObject data, String seriesType, String seriesId, String color, boolean isSecondary) {
+	public void addSeries(JavaScriptObject data, LineType lineType, String seriesId, String name, String color, YAxisPosition axisId) {
 		JavaScriptObject series = JavaScriptObject.createObject();
 		JavaScriptObjectHelper.setObjectProperty(series, "data", data);
-		JavaScriptObjectHelper.setStringProperty(series, "type", seriesType);
+		JavaScriptObjectHelper.setStringProperty(series, "type", lineType.toString());
 		JavaScriptObjectHelper.setStringProperty(series, "id", seriesId);
-		JavaScriptObjectHelper.setStringProperty(series, "name", seriesId);
+		JavaScriptObjectHelper.setStringProperty(series, "name", name);
 		JavaScriptObjectHelper.setStringProperty(series, "color", color);
-		JavaScriptObjectHelper.setStringProperty(series, "yAxis", (isSecondary ? "yAxisSecondary" : "yAxisDefault"));
+		// Link series with axis
+		JavaScriptObjectHelper.setStringProperty(series, "yAxis", axisId.toString());
 		// JavaScriptObject tooltip = JavaScriptObject.createObject();
 		// JavaScriptObjectHelper.setObjectProperty(tooltip, "formatter", ChartHelper.getNativeTooltipFormatter("pippo"));
 		// JavaScriptObjectHelper.setObjectProperty(series, "tooltip", tooltip);
-		addSeries(series);
-	}
-
-	public void addSeries(JavaScriptObject data, String seriesType, String id, String color) {
-		addSeries(data, seriesType, id, color, false);
+		NativeChart.nativeAddSeries(chart, series, true, false);
 	}
 
 	public JsArrayMixed createPoint(double x, double y) {
@@ -162,8 +149,8 @@ public abstract class BaseChart extends Composite {
 		return point;
 	}
 
-	public JavaScriptObject getAxis(String id) {
-		return get(id);
+	public JavaScriptObject get(String id) {
+		return NativeChart.nativeGet(chart, id);
 	}
 
 	public void setSeriesVisible(String id, boolean visible) {
@@ -178,10 +165,6 @@ public abstract class BaseChart extends Composite {
 
 	public void destroy() {
 		NativeChart.nativeDestroy(chart);
-	}
-
-	public JavaScriptObject get(String id) {
-		return NativeChart.nativeGet(chart, id);
 	}
 
 	public void resize() {
@@ -223,7 +206,7 @@ public abstract class BaseChart extends Composite {
 			getXAxis().setLabelsFormatter(ChartHelper.getNativeDatetimeLabelFormatter(chart, step));
 			// boolean isSmallRange = dateRange.getDays() <= 4;
 			// getXAxis().setShowFirstLabel(isSmallRange).setShowLastLabel(isSmallRange);
-			NativeAxis.nativeUpdate(NativeAxis.nativeGetXAxis(chart, 0), getXAxis().getProperty(), true); // update x axis
+			NativeAxis.nativeUpdate(NativeAxis.nativeGetXAxis(chart, 0), getXAxis().getOptions(), true); // update x axis
 			// reflow();
 		}
 	}
@@ -312,7 +295,7 @@ public abstract class BaseChart extends Composite {
 	public ChartOption getChartOption() {
 		if (optionsLookup.get(OPTION_CHART) == null) {
 			optionsLookup.put(OPTION_CHART, new ChartOption());
-			JavaScriptObjectHelper.setObjectProperty(options, OPTION_CHART, optionsLookup.get(OPTION_CHART).getProperty());
+			JavaScriptObjectHelper.setObjectProperty(options, OPTION_CHART, optionsLookup.get(OPTION_CHART).getOptions());
 		}
 		return (ChartOption) optionsLookup.get(OPTION_CHART);
 	}
@@ -320,7 +303,7 @@ public abstract class BaseChart extends Composite {
 	public Credits getCreditsOption() {
 		if (optionsLookup.get(OPTION_CREDITS) == null) {
 			optionsLookup.put(OPTION_CREDITS, new Credits());
-			JavaScriptObjectHelper.setObjectProperty(options, OPTION_CREDITS, optionsLookup.get(OPTION_CREDITS).getProperty());
+			JavaScriptObjectHelper.setObjectProperty(options, OPTION_CREDITS, optionsLookup.get(OPTION_CREDITS).getOptions());
 		}
 		return (Credits) optionsLookup.get(OPTION_CREDITS);
 	}
@@ -328,7 +311,7 @@ public abstract class BaseChart extends Composite {
 	public Labels getLabelsOption() {
 		if (optionsLookup.get(OPTION_LABELS) == null) {
 			optionsLookup.put(OPTION_LABELS, new Labels());
-			JavaScriptObjectHelper.setObjectProperty(options, OPTION_LABELS, optionsLookup.get(OPTION_LABELS).getProperty());
+			JavaScriptObjectHelper.setObjectProperty(options, OPTION_LABELS, optionsLookup.get(OPTION_LABELS).getOptions());
 		}
 		return (Labels) optionsLookup.get(OPTION_LABELS);
 	}
@@ -336,7 +319,7 @@ public abstract class BaseChart extends Composite {
 	public Legend getLegendOption() {
 		if (optionsLookup.get(OPTION_LEGEND) == null) {
 			optionsLookup.put(OPTION_LEGEND, new Legend());
-			JavaScriptObjectHelper.setObjectProperty(options, OPTION_LEGEND, optionsLookup.get(OPTION_LEGEND).getProperty());
+			JavaScriptObjectHelper.setObjectProperty(options, OPTION_LEGEND, optionsLookup.get(OPTION_LEGEND).getOptions());
 		}
 		return (Legend) optionsLookup.get(OPTION_LEGEND);
 	}
@@ -344,7 +327,7 @@ public abstract class BaseChart extends Composite {
 	public Loading getLoadingOption() {
 		if (optionsLookup.get(OPTION_LOADING) == null) {
 			optionsLookup.put(OPTION_LOADING, new Loading());
-			JavaScriptObjectHelper.setObjectProperty(options, OPTION_LOADING, optionsLookup.get(OPTION_LOADING).getProperty());
+			JavaScriptObjectHelper.setObjectProperty(options, OPTION_LOADING, optionsLookup.get(OPTION_LOADING).getOptions());
 		}
 		return (Loading) optionsLookup.get(OPTION_LOADING);
 	}
@@ -352,7 +335,7 @@ public abstract class BaseChart extends Composite {
 	public NoData getNoDataOption() {
 		if (optionsLookup.get(OPTION_NO_DATA) == null) {
 			optionsLookup.put(OPTION_NO_DATA, new NoData());
-			JavaScriptObjectHelper.setObjectProperty(options, OPTION_NO_DATA, optionsLookup.get(OPTION_NO_DATA).getProperty());
+			JavaScriptObjectHelper.setObjectProperty(options, OPTION_NO_DATA, optionsLookup.get(OPTION_NO_DATA).getOptions());
 		}
 		return (NoData) optionsLookup.get(OPTION_NO_DATA);
 	}
@@ -360,7 +343,7 @@ public abstract class BaseChart extends Composite {
 	public PlotOption getPlotOption() {
 		if (optionsLookup.get(OPTION_PLOT_OPTIONS) == null) {
 			optionsLookup.put(OPTION_PLOT_OPTIONS, new PlotOption());
-			JavaScriptObjectHelper.setObjectProperty(options, OPTION_PLOT_OPTIONS, optionsLookup.get(OPTION_PLOT_OPTIONS).getProperty());
+			JavaScriptObjectHelper.setObjectProperty(options, OPTION_PLOT_OPTIONS, optionsLookup.get(OPTION_PLOT_OPTIONS).getOptions());
 		}
 		return (PlotOption) optionsLookup.get(OPTION_PLOT_OPTIONS);
 	}
@@ -368,7 +351,7 @@ public abstract class BaseChart extends Composite {
 	public Series getSeriesOption() {
 		if (optionsLookup.get(OPTION_SERIES) == null) {
 			optionsLookup.put(OPTION_SERIES, new Series());
-			JavaScriptObjectHelper.setObjectProperty(options, OPTION_SERIES, optionsLookup.get(OPTION_SERIES).getProperty());
+			JavaScriptObjectHelper.setObjectProperty(options, OPTION_SERIES, optionsLookup.get(OPTION_SERIES).getOptions());
 		}
 		return (Series) optionsLookup.get(OPTION_SERIES);
 	}
@@ -376,7 +359,7 @@ public abstract class BaseChart extends Composite {
 	public Subtitle getSubtitleOption() {
 		if (optionsLookup.get(OPTION_SUBTITLE) == null) {
 			optionsLookup.put(OPTION_SUBTITLE, new Subtitle());
-			JavaScriptObjectHelper.setObjectProperty(options, OPTION_SUBTITLE, optionsLookup.get(OPTION_SUBTITLE).getProperty());
+			JavaScriptObjectHelper.setObjectProperty(options, OPTION_SUBTITLE, optionsLookup.get(OPTION_SUBTITLE).getOptions());
 		}
 		return (Subtitle) optionsLookup.get(OPTION_SUBTITLE);
 	}
@@ -384,7 +367,7 @@ public abstract class BaseChart extends Composite {
 	public Title getTitleOption() {
 		if (optionsLookup.get(OPTION_TITLE) == null) {
 			optionsLookup.put(OPTION_TITLE, new Title());
-			JavaScriptObjectHelper.setObjectProperty(options, OPTION_TITLE, optionsLookup.get(OPTION_TITLE).getProperty());
+			JavaScriptObjectHelper.setObjectProperty(options, OPTION_TITLE, optionsLookup.get(OPTION_TITLE).getOptions());
 		}
 		return (Title) optionsLookup.get(OPTION_TITLE);
 	}
@@ -392,7 +375,7 @@ public abstract class BaseChart extends Composite {
 	public Tooltip getTooltipOption() {
 		if (optionsLookup.get(OPTION_TOOLTIP) == null) {
 			optionsLookup.put(OPTION_TOOLTIP, new Tooltip());
-			JavaScriptObjectHelper.setObjectProperty(options, OPTION_TOOLTIP, optionsLookup.get(OPTION_TOOLTIP).getProperty());
+			JavaScriptObjectHelper.setObjectProperty(options, OPTION_TOOLTIP, optionsLookup.get(OPTION_TOOLTIP).getOptions());
 		}
 		return (Tooltip) optionsLookup.get(OPTION_TOOLTIP);
 	}
@@ -400,27 +383,35 @@ public abstract class BaseChart extends Composite {
 	public XAxis getXAxis() {
 		if (optionsLookup.get(OPTION_X_AXIS) == null) {
 			optionsLookup.put(OPTION_X_AXIS, new XAxis());
-			xAxisJSArray.push(optionsLookup.get(OPTION_X_AXIS).getProperty());
-			JavaScriptObjectHelper.setObjectProperty(options, OPTION_X_AXIS, xAxisJSArray);
+			JavaScriptObjectHelper.setObjectProperty(options, OPTION_X_AXIS, optionsLookup.get(OPTION_X_AXIS).getOptions());
 		}
 		return (XAxis) optionsLookup.get(OPTION_X_AXIS);
 	}
 
-	public YAxis getDefaultYAxis() {
-		if (optionsLookup.get(OPTION_DEFAULT_Y_AXIS) == null) {
-			optionsLookup.put(OPTION_DEFAULT_Y_AXIS, new YAxis());
-			yAxisJSArray.push(optionsLookup.get(OPTION_DEFAULT_Y_AXIS).getProperty());
+	public YAxis getPrimaryAxis() {
+		if (optionsLookup.get(OPTION_PRIMARY_Y_AXIS) == null) {
+			optionsLookup.put(OPTION_PRIMARY_Y_AXIS, new YAxis());
+			yAxisJSArray.push(optionsLookup.get(OPTION_PRIMARY_Y_AXIS).getOptions());
 			JavaScriptObjectHelper.setObjectProperty(options, OPTION_Y_AXIS, yAxisJSArray);
 		}
-		return (YAxis) optionsLookup.get(OPTION_DEFAULT_Y_AXIS);
+		return (YAxis) optionsLookup.get(OPTION_PRIMARY_Y_AXIS);
 	}
 
 	public YAxis getSecondaryYAxis() {
 		if (optionsLookup.get(OPTION_SECONDARY_Y_AXIS) == null) {
 			optionsLookup.put(OPTION_SECONDARY_Y_AXIS, new YAxis());
-			yAxisJSArray.push(optionsLookup.get(OPTION_SECONDARY_Y_AXIS).getProperty());
+			yAxisJSArray.push(optionsLookup.get(OPTION_SECONDARY_Y_AXIS).getOptions());
 			JavaScriptObjectHelper.setObjectProperty(options, OPTION_Y_AXIS, yAxisJSArray);
 		}
 		return (YAxis) optionsLookup.get(OPTION_SECONDARY_Y_AXIS);
+	}
+
+	public YAxis getTertiaryYAxis() {
+		if (optionsLookup.get(OPTION_TERTIARY_Y_AXIS) == null) {
+			optionsLookup.put(OPTION_TERTIARY_Y_AXIS, new YAxis());
+			yAxisJSArray.push(optionsLookup.get(OPTION_TERTIARY_Y_AXIS).getOptions());
+			JavaScriptObjectHelper.setObjectProperty(options, OPTION_Y_AXIS, yAxisJSArray);
+		}
+		return (YAxis) optionsLookup.get(OPTION_TERTIARY_Y_AXIS);
 	}
 }

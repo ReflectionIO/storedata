@@ -49,7 +49,7 @@ public abstract class Option<T> {
 		return (T) this;
 	}
 
-	public JavaScriptObject getProperty() {
+	public JavaScriptObject getOptions() {
 		return option;
 	}
 }
