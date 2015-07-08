@@ -7,8 +7,6 @@
 //
 package io.reflection.app.client.helper;
 
-import javax.print.DocFlavor.STRING;
-
 import io.reflection.app.datatypes.shared.EventPriorityType;
 import io.reflection.app.shared.util.DataTypeHelper;
 
