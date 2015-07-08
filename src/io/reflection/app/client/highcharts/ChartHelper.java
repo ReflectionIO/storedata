@@ -134,8 +134,8 @@ public class ChartHelper {
 		chart.getCreditsOption().setEnabled(false); // Disable credits text
 		chart.getLegendOption().setEnabled(false); // Disable legend
 		chart.getTitleOption().setText(null); // Disable title
-		chart.getTooltipOption().setUseHTML(true).setShadow(false).setBackgroundColor("#ffffff").setBorderColor("#dedede").setBorderWidth(1).setBorderRadius(0)
-				.setValueDecimals(0).setCrosshairs(getCrosshairStyle()).setDateTimeLabelFormats(getDefaultTooltipDateTimeLabelFormat());
+		chart.getTooltipOption().setUseHTML(true).setShared(true).setShadow(false).setBackgroundColor("#ffffff").setBorderColor("#dedede").setBorderWidth(1)
+				.setBorderRadius(0).setValueDecimals(0).setCrosshairs(getCrosshairStyle()).setDateTimeLabelFormats(getDefaultTooltipDateTimeLabelFormat());
 		// chart.getTooltipOption().setFormatter(ChartHelper.getNativeTooltipFormatter("asd"));
 		// .setHeaderFormat(
 		// "<span style=\"font-size: 10px; line-height: 30px; font-weight: bold; color: #81879d; font-family: 'Lato', sans-serif;\">{point.key}</span><br/>")
