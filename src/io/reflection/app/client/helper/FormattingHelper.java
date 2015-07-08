@@ -7,6 +7,8 @@
 //
 package io.reflection.app.client.helper;
 
+import javax.print.DocFlavor.STRING;
+
 import io.reflection.app.datatypes.shared.EventPriorityType;
 import io.reflection.app.shared.util.DataTypeHelper;
 
@@ -45,7 +47,8 @@ public class FormattingHelper extends io.reflection.app.shared.util.FormattingHe
 	}
 
 	public static String asMoneyString(String currency, float money) {
-		return (currency == null ? "" : getCurrencySymbol(currency)) + TWO_DECIMALS_FORMATTER.format((double) money);
+		String numberString = (DataTypeHelper.isZero(money) ? "0" : TWO_DECIMALS_FORMATTER.format((double) money));
+		return (currency == null ? "" : getCurrencySymbol(currency)) + numberString;
 	}
 
 	public static String asWholeMoneyString(String currency, float money) {
