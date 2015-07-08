@@ -50,10 +50,13 @@ public class Chart extends BaseChart {
 
 			if (YDataType.RevenueYAxisDataType.equals(yDataType)) {
 				for (Rank rank : ranks) {
-					if (currency == null) {
+					if (currency == null && rank.currency != null) {
 						setCurrency(FormattingHelper.getCurrencySymbol(rank.currency));
 						break;
 					}
+				}
+				if (currency == null) {
+					setCurrency(FormattingHelper.getCurrencySymbol(""));
 				}
 			}
 
@@ -142,10 +145,13 @@ public class Chart extends BaseChart {
 
 			if (YDataType.RevenueYAxisDataType.equals(yDataTypeSecondary)) {
 				for (Rank rank : ranks) {
-					if (currency == null) {
+					if (currency == null && rank.currency != null) {
 						setCurrency(FormattingHelper.getCurrencySymbol(rank.currency));
 						break;
 					}
+				}
+				if (currency == null) {
+					setCurrency(FormattingHelper.getCurrencySymbol(""));
 				}
 			}
 
