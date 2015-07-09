@@ -431,7 +431,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			public SafeHtml getValue(AppRevenue object) {
 				SafeHtml value = SafeHtmlUtils.fromSafeConstant("");
 				if (object.revenuePercentForPeriod != null) {
-					String percentage = FormattingHelper.TWO_DECIMALS_FORMATTER.format(object.revenuePercentForPeriod.floatValue() * 100);
+					String percentage = (DataTypeHelper.isZero(object.revenuePercentForPeriod.floatValue()) ? "0" : FormattingHelper.TWO_DECIMALS_FORMATTER
+							.format(object.revenuePercentForPeriod.floatValue() * 100));
 					value = SafeHtmlUtils.fromTrustedString("<span>" + percentage + "%</span><div class=\"" + style.dataBar() + "\"><div style=\"width: "
 							+ percentage + "%\"></div></div>");
 				}
