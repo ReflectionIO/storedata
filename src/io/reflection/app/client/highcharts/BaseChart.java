@@ -90,7 +90,7 @@ public abstract class BaseChart extends Composite {
 
 	private void inject() {
 		chart = NativeHighcharts.nativeChart(options);
-		NativeHighcharts.nativeSetUTC(options, false);
+//		NativeHighcharts.nativeSetUTC(options, false);
 		resize();
 		Window.addResizeHandler(new ResizeHandler() {
 			@Override
@@ -124,14 +124,14 @@ public abstract class BaseChart extends Composite {
 		NativeChart.nativeAddSeries(chart, series, true, false);
 	}
 
-	public JsArrayMixed createPoint(double x, double y) {
+	public JsArrayMixed createConnectingPoint(double x, double y) {
 		JsArrayMixed point = JavaScriptObject.createArray().cast();
 		point.push(x);
 		point.push(y);
 		return point;
 	}
 
-	public JsArrayMixed createPoint(double x, JavaScriptObject y) {
+	public JsArrayMixed createConnectingPoint(double x, JavaScriptObject y) {
 		JsArrayMixed point = JavaScriptObject.createArray().cast();
 		point.push(x);
 		point.push(y);

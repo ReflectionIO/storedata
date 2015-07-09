@@ -499,8 +499,8 @@ public class FilterHelper {
 	}
 
 	@SuppressWarnings("deprecation")
-	public static Date normalizeDate(Date date) {
-		return new Date(date.getYear(), date.getMonth(), date.getDate());
+	public static Date normalizeDateUTC(Date date) {
+		return ApiCallHelper.getUTCDate(date.getYear() + 1900, date.getMonth() + 1, date.getDate());
 	}
 
 }

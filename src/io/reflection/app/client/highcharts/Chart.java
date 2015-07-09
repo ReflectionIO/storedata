@@ -20,7 +20,6 @@ import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.shared.util.FormattingHelper;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -49,10 +48,11 @@ public class Chart extends BaseChart {
 	public void drawData(List<Rank> ranks, YAxisPosition yAxisPosition, YDataType yDataType, String seriesId, LineType lineType, String color,
 			boolean isCumulative, boolean hide) {
 
-		if (ranks != null && yDataType != null) {
+		if (ranks != null && ranks.size() > 0) {
 
 			boolean isOpposite = (yAxisPosition != YAxisPosition.PRIMARY);
 
+			// Get axis options to use
 			YAxis yAxis = getPrimaryAxis();
 			switch (yAxisPosition) {
 			case PRIMARY:
@@ -69,10 +69,75 @@ public class Chart extends BaseChart {
 
 			String seriesName = seriesId;
 
-			// UPDATE AXIS RELATED CHATACTERISTICS
+			// Set series names and currency
 			switch (yDataType) {
 			case DownloadsYAxisDataType:
 				seriesName = "Downloads";
+				break;
+
+			case RevenueYAxisDataType:
+				seriesName = "Revenue";
+				// Set currency
+				for (Rank rank : ranks) {
+					if (currency == null && rank.currency != null) {
+						setCurrency(FormattingHelper.getCurrencySymbol(rank.currency));
+						break;
+					}
+				}
+				if (currency == null) {
+					setCurrency(FormattingHelper.getCurrencySymbol(""));
+				}
+				yAxis.setLabelsFormatter(ChartHelper.getNativeLabelFormatter(currency, ""));
+				break;
+
+			case RankingYAxisDataType:
+				seriesName = "Ranking";
+				break;
+			}
+
+			JsArray<JavaScriptObject> data = JavaScriptObject.createArray().cast();
+
+			switch (xDataType) {
+			case DateXAxisDataType:
+				if (get(seriesId) == null && dateRange != null) {
+					Date progressiveDate = dateRange.getFrom();
+					double cumulative = 0;
+					for (Rank rank : ranks) {
+						CalendarUtil.addDaysToDate(progressiveDate, 1);
+						Double yPoint = getYPointValue(rank, yDataType);
+						if (yPoint != null) {
+							if (isPointIsolated(yDataType, ranks, rank)) {
+								data.push(createMarkerPoint(rank.date.getTime(), (isCumulative ? cumulative += yPoint.doubleValue() : yPoint.doubleValue())));
+							} else {
+								data.push(createConnectingPoint(rank.date.getTime(), (isCumulative ? cumulative += yPoint.doubleValue() : yPoint.doubleValue())));
+							}
+						} else {
+							data.push(createConnectingPoint(rank.date.getTime(), JavaScriptObjectHelper.getNativeNull()));
+						}
+					}
+					addSeries(data, lineType, seriesId, seriesName, color, yAxisPosition);
+				}
+				break;
+
+			case RankingXAxisDataType:
+				if (get(seriesId) == null) {
+					for (Rank rank : ranks) {
+						Double yPoint = getYPointValue(rank, yDataType);
+						if (yPoint != null) {
+							data.push(createMarkerPoint(rank.position.doubleValue(), yPoint));
+						} else {
+							data.push(createConnectingPoint(rank.position.doubleValue(), JavaScriptObjectHelper.getNativeNull()));
+						}
+
+					}
+					addSeries(data, lineType, seriesId, seriesName, color, yAxisPosition);
+				}
+				break;
+			}
+
+			// Set y axis extremes
+			switch (yDataType) {
+			case DownloadsYAxisDataType:
 				yAxis.setMin(0).setFloor(0).setShowFirstLabel(false);
 				if (!isOpposite) {
 					if (NativeAxis.nativeGetDataMax(get(yAxisPosition.toString())) < yMinCeilingDownloads) {
@@ -84,21 +149,6 @@ public class Chart extends BaseChart {
 				break;
 
 			case RevenueYAxisDataType:
-				seriesName = "Revenue";
-
-				// Set currency
-				for (Rank rank : ranks) {
-					if (currency == null && rank.currency != null) {
-						setCurrency(FormattingHelper.getCurrencySymbol(rank.currency));
-						break;
-					}
-				}
-				if (currency == null) {
-					setCurrency(FormattingHelper.getCurrencySymbol(""));
-				}
-
-				yAxis.setLabelsFormatter(ChartHelper.getNativeLabelFormatter(currency, ""));
-
 				yAxis.setMin(0).setFloor(0).setShowFirstLabel(false);
 				if (!isOpposite) {
 					// NativeChart.nativeUpdateTooltipFormatter(chart, ChartHelper.getNativeTooltipFormatter(currency));
@@ -111,57 +161,12 @@ public class Chart extends BaseChart {
 				break;
 
 			case RankingYAxisDataType:
-				seriesName = "Ranking";
 				yAxis.setReversed(true).setLabelsFormatter(ChartHelper.getNativeLabelFormatterRank()).setMin(1).setFloor(1).setShowLastLabel(false);
 				if (!isOpposite) {
 					yAxis.setMax(JavaScriptObjectHelper.getNativeNull());
 				}
 				break;
 			}
-
-			JsArray<JavaScriptObject> data = JavaScriptObject.createArray().cast();
-
-			switch (xDataType) {
-			case DateXAxisDataType:
-				if (get(seriesId) == null && dateRange != null) {
-					removeOutOfRangeRanks(ranks);
-					Date progressiveDate = dateRange.getFrom();
-					double cumulative = 0;
-					for (Rank rank : ranks) {
-						// Fill with blank data missing dates
-						if (!FilterHelper.equalDate(progressiveDate, rank.date)) {
-							while (!FilterHelper.equalDate(progressiveDate, rank.date) && FilterHelper.beforeOrSameDate(progressiveDate, dateRange.getTo())) {
-								data.push(createPoint(progressiveDate.getTime(), JavaScriptObjectHelper.getNativeNull()));
-								CalendarUtil.addDaysToDate(progressiveDate, 1);
-							}
-						}
-						CalendarUtil.addDaysToDate(progressiveDate, 1);
-						Double yPoint = getYPointValue(rank, yDataType);
-						if (yPoint != null) {
-							if (isPointIsolated(yDataType, ranks, rank)) {
-								data.push(createMarkerPoint(rank.date.getTime(), (isCumulative ? cumulative += yPoint.doubleValue() : yPoint.doubleValue())));
-							} else {
-								data.push(createPoint(rank.date.getTime(), (isCumulative ? cumulative += yPoint.doubleValue() : yPoint.doubleValue())));
-							}
-						} else {
-							data.push(createPoint(rank.date.getTime(), JavaScriptObjectHelper.getNativeNull()));
-						}
-					}
-					addSeries(data, lineType, seriesId, seriesName, color, yAxisPosition);
-				}
-				break;
-
-			case RankingXAxisDataType:
-				if (get(seriesId) == null) {
-					for (Rank rank : ranks) {
-						Double yPoint = getYPointValue(rank, yDataType);
-						data.push(createMarkerPoint(rank.position.doubleValue(), yPoint));
-					}
-					addSeries(data, lineType, seriesId, seriesName, color, yAxisPosition);
-				}
-				break;
-			}
-
 			NativeAxis.nativeUpdate(get(yAxisPosition.toString()), yAxis.getOptions(), true); // update secondary y axis
 
 			resize();
@@ -184,7 +189,7 @@ public class Chart extends BaseChart {
 
 		case RevenueYAxisDataType:
 			if (rank.revenue != null) {
-				yPointValue = Double.valueOf(rank.revenue);
+				yPointValue = Double.valueOf(rank.revenue.floatValue());
 			}
 			break;
 
@@ -200,30 +205,6 @@ public class Chart extends BaseChart {
 
 	public void setCurrency(String currency) {
 		this.currency = currency;
-	}
-
-	private void removeOutOfRangeRanks(List<Rank> ranks) {
-		List<Rank> outOfRangeRanks = new ArrayList<Rank>();
-		for (Rank rank : ranks) {
-			if (XDataType.DateXAxisDataType.equals(xDataType) && dateRange != null) {
-				if (!withinChartDateRange(rank)) {
-					outOfRangeRanks.add(rank);
-				} else {
-					rank.date = FilterHelper.normalizeDate(rank.date);
-				}
-			}
-		}
-		ranks.removeAll(outOfRangeRanks);
-	}
-
-	/**
-	 * Check if x data is contained within the wished range (it can be excluded because of the windowing cache that retrieves bunche)
-	 * 
-	 * @param rank
-	 * @return
-	 */
-	private boolean withinChartDateRange(Rank rank) {
-		return FilterHelper.afterOrSameDate(rank.date, dateRange.getFrom()) && FilterHelper.beforeOrSameDate(rank.date, dateRange.getTo());
 	}
 
 	// Currently working for DateTime X Axis
@@ -273,11 +254,9 @@ public class Chart extends BaseChart {
 				if (dateRange == null) {
 					dateRange = new DateRange();
 				}
-				dateRange.setFrom(FilterHelper.normalizeDate(FilterController.get().getStartDate()));
-				dateRange.setTo(FilterHelper.normalizeDate(FilterController.get().getEndDate()));
-				// TODO SUMMERTIME PROBLEM - e.g. in august the from date is 1 hour earlier, so the 23:00 of the day before
-				// setXAxisExtremes(dateRange.getFrom().getTime(), dateRange.getTo().getTime());
-				// rearrangeXAxisLabels();
+				dateRange.setFrom(FilterHelper.normalizeDateUTC(FilterController.get().getStartDate()));
+				dateRange.setTo(FilterHelper.normalizeDateUTC(FilterController.get().getEndDate()));
+				setXAxisExtremes((double) dateRange.getFrom().getTime(), (double) dateRange.getTo().getTime());
 			}
 			removeAllSeries();
 			reflow();
