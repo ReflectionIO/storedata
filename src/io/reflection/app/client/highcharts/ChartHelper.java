@@ -16,7 +16,6 @@ import static io.reflection.app.client.controller.FilterController.REVENUE_CHART
 import io.reflection.app.client.helper.ColorHelper;
 import io.reflection.app.client.helper.JavaScriptObjectHelper;
 import io.reflection.app.client.highcharts.options.Axis;
-import io.reflection.app.client.highcharts.options.YAxis;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,33 +31,10 @@ import com.google.gwt.dom.client.Style.Cursor;
  */
 public class ChartHelper {
 
-	public static final String TYPE_LINE = "line";
-	public static final String TYPE_SPLINE = "spline";
-	public static final String TYPE_AREA = "area";
-	public static final String TYPE_AREASPLINE = "areaspline";
-	public static final String TYPE_COLUMN = "column";
-	public static final String TYPE_BAR = "bar";
-	public static final String TYPE_PIE = "pie";
-	public static final String TYPE_SCATTER = "scatter";
-
-	public static final String DASH_STYLE_SOLID = "Solid";
-	public static final String DASH_STYLE_SHORT_DASH = "ShortDash";
-	public static final String DASH_STYLE_SHORT_DOT = "ShortDot";
-	public static final String DASH_STYLE_SHORT_DASH_DOT = "ShortDashDot";
-	public static final String DASH_STYLE_DASH_DOT_DOT = "ShortDashDotDot";
-	public static final String DASH_STYLE_DOT = "Dot";
-	public static final String DASH_STYLE_DASH = "Dash";
-	public static final String DASH_STYLE_LONG_DASH = "LongDash";
-	public static final String DASH_STYLE_DASH_DOT = "DashDot";
-	public static final String DASH_STYLE_LONG_DASH_DOT = "LongDashDot";
-	public static final String DASH_STYLE_LONG_DASH_DOT_DOT = "LongDashDotDot";
-
 	public static final String PLOT_BACKGROUND_COLOR_TOP = "rgba(109,105,197,0.14)";
 	public static final String PLOT_BACKGROUND_COLOR_BOTTOM = "rgba(27,199,159,0.14)";
 	public static final int ONE_DAY_INTERVAL = 86400000;
 	public static final int ONE_WEEK_INTERVAL = 604800000;
-	public static final String Y_AXIS_DEFAULT_ID = "yAxisDefault";
-	public static final String Y_AXIS_SECONDARY_ID = "yAxisSecondary";
 
 	public enum XDataType {
 		DateXAxisDataType,
@@ -93,6 +69,31 @@ public class ChartHelper {
 		}
 	}
 
+	public enum YAxisPosition {
+		PRIMARY("yAxisPrimary"),
+		SECONDARY("yAxisSecondary"),
+		TERTIARY("yAxisTertiary");
+
+		private final String position;
+
+		/**
+		 * @param text
+		 */
+		private YAxisPosition(final String position) {
+			this.position = position;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.lang.Enum#toString()
+		 */
+		@Override
+		public String toString() {
+			return position;
+		}
+	}
+
 	public enum RankType {
 		PositionRankingType,
 		GrossingPositionRankingType;
@@ -119,6 +120,69 @@ public class ChartHelper {
 		}
 	}
 
+	public enum LineType {
+		LINE("line"),
+		SPLINE("spline"),
+		AREA("area"),
+		AREASPLINE("areaspline"),
+		COLUMN("column"),
+		BAR("bar"),
+		PIE("pie"),
+		SCATTER("scatter");
+
+		private final String type;
+
+		/**
+		 * @param text
+		 */
+		private LineType(final String type) {
+			this.type = type;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.lang.Enum#toString()
+		 */
+		@Override
+		public String toString() {
+			return type;
+		}
+	}
+
+	public enum DashStyle {
+		SOLID("Solid"),
+		SHORT_DASH("ShortDash"),
+		SHORT_DOT("ShortDot"),
+		SHORT_DASH_DOT("ShortDashDot"),
+		DASH_DOT_DOT("ShortDashDotDot"),
+		DOT("Dot"),
+		DASH("Dash"),
+		LONG_DASH("LongDash"),
+		DASH_DOT("DashDot"),
+		LONG_DASH_DOT("LongDashDot"),
+		LONG_DASH_DOT_DOT("LongDashDotDot");
+
+		private final String style;
+
+		/**
+		 * @param text
+		 */
+		private DashStyle(final String style) {
+			this.style = style;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see java.lang.Enum#toString()
+		 */
+		@Override
+		public String toString() {
+			return style;
+		}
+	}
+
 	public static void setDefaultOptions(BaseChart chart) {
 		chart.getChartOption().setBackgroundColor(ColorHelper.getLinearGradientColor(0, 1, 0, 0, "#ffffff", ColorHelper.getPanelGrey()))
 				.setPlotBackgroundColor(ColorHelper.getPanelGrey()).setPlotBorderColor(ColorHelper.getPanelGrey()).setPlotBorderWidth(1)
@@ -136,17 +200,18 @@ public class ChartHelper {
 		chart.getTitleOption().setText(null); // Disable title
 		chart.getTooltipOption().setUseHTML(true).setShared(true).setShadow(false).setBackgroundColor("#ffffff").setBorderColor("#dedede").setBorderWidth(1)
 				.setBorderRadius(0).setValueDecimals(0).setCrosshairs(getCrosshairStyle()).setDateTimeLabelFormats(getDefaultTooltipDateTimeLabelFormat());
-		// chart.getTooltipOption().setFormatter(ChartHelper.getNativeTooltipFormatter("asd"));
 		// .setHeaderFormat(
 		// "<span style=\"font-size: 10px; line-height: 30px; font-weight: bold; color: #81879d; font-family: 'Lato', sans-serif;\">{point.key}</span><br/>")
 		// .setPointFormat("<span style=\"font-size: 18px; font-weight: regular; color: #363a47; font-family: 'Lato', sans-serif;\">{point.y}</span>");
 		chart.getXAxis().setTickWidth(1).setTickLength(10).setTickColor("#e7e7e7").setLabelsStyle(getXAxisLabelsStyle()).setLabelsY(30).setStartOnTick(true)
 				.setEndOnTick(true).setMinPadding(0).setMaxPadding(0).setLineColor("#e5e5e5").setLabelsMaxStaggerLines(1).setLabelsPadding(30)
 				.setLabelsUseHTML(false).setLabelsAlign("center");
-		chart.getDefaultYAxis().setId(Y_AXIS_DEFAULT_ID).setAllowDecimals(false).setTitleText(null).setOffset(-30).setLabelsY(5)
+		chart.getPrimaryAxis().setId(YAxisPosition.PRIMARY.toString()).setAllowDecimals(false).setTitleText(null).setOffset(-30).setLabelsY(5)
 				.setLabelsStyle(getYAxisLabelsStyle("#81879d")).setLabelsAlign("left").setGridLineColor(ColorHelper.getDividerGrey()).setLabelsUseHTML(false);
-		chart.getSecondaryYAxis().setId(Y_AXIS_SECONDARY_ID).setOpposite(true).setAllowDecimals(false).setTitleText(null).setOffset(-30).setLabelsY(5)
-				.setLabelsAlign("right").setGridLineColor(ColorHelper.getDividerGrey()).setLabelsUseHTML(false);
+		chart.getSecondaryYAxis().setId(YAxisPosition.SECONDARY.toString()).setOpposite(true).setAllowDecimals(false).setTitleText(null).setOffset(-30)
+				.setLabelsY(5).setLabelsAlign("right").setGridLineColor(ColorHelper.getDividerGrey()).setLabelsUseHTML(false);
+		chart.getTertiaryYAxis().setId(YAxisPosition.TERTIARY.toString()).setOpposite(true).setAllowDecimals(false).setTitleText(null).setOffset(-90)
+				.setLabelsY(5).setLabelsAlign("right").setGridLineColor(ColorHelper.getDividerGrey()).setLabelsUseHTML(false);
 	}
 
 	public static void setDefaultXAxisOptions(BaseChart chart, XDataType xDataType) {
@@ -157,20 +222,6 @@ public class ChartHelper {
 			break;
 		case RankingXAxisDataType:
 			chart.getXAxis().setType(Axis.TYPE_LINEAR);
-			break;
-		}
-	}
-
-	public static void updateYAxisOptions(YAxis yAxis, YDataType yDataType) {
-		switch (yDataType) {
-		case RevenueYAxisDataType:
-			yAxis.setMin(0).setFloor(0).setShowFirstLabel(false);
-			break;
-		case DownloadsYAxisDataType:
-			yAxis.setMin(0).setFloor(0).setShowFirstLabel(false);
-			break;
-		case RankingYAxisDataType:
-			yAxis.setReversed(true).setLabelsFormatter(getNativeLabelFormatterRank()).setMin(1).setFloor(1).setShowLastLabel(false);
 			break;
 		}
 	}

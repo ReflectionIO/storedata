@@ -7,7 +7,6 @@
 //
 package io.reflection.app.client.page;
 
-import io.reflection.app.client.page.admin.CalibrationSummaryPage;
 import io.reflection.app.client.page.admin.CategoriesPage;
 import io.reflection.app.client.page.admin.DataAccountFetchesPage;
 import io.reflection.app.client.page.admin.DataAccountsPage;
@@ -324,9 +323,6 @@ public enum PageType {
 			break;
 		case SendNotificationPageType:
 			page = new SendNotificationPage();
-			break;
-		case CalibrationSummaryPageType:
-			page = new CalibrationSummaryPage();
 			break;
 		default:
 			page = new Error404Page();

@@ -299,7 +299,8 @@ public class Header extends Composite implements NavigationEventHandler, Session
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
 		PageType currentPage = NavigationController.get().getCurrentPage();
-		if (Window.getClientWidth() > 960 && !panelLeftWasClosed && !PageType.LoadingPageType.equals(currentPage) && !PageType.HomePageType.equals(currentPage)) {
+		if (Window.getClientWidth() > 960 && !panelLeftWasClosed && !PageType.LoadingPageType.equals(currentPage)
+				&& (!PageType.HomePageType.equals(currentPage) || (PageType.HomePageType.equals(currentPage) && SessionController.get().isValidSession()))) {
 			Document.get().getBody().addClassName(style.panelLeftOpen());
 			hamburgerBtn.getElement().addClassName(style.isSelected());
 		} else {

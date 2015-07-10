@@ -39,7 +39,7 @@ public class DateRange {
 	}
 
 	public int getDaysBetween() {
-		return CalendarUtil.getDaysBetween(mFromDate, mToDate);
+		return Math.abs(CalendarUtil.getDaysBetween(mFromDate, mToDate));
 	}
 
 	public List<Date> getDatesBetween() {

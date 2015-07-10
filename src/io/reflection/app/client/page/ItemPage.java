@@ -44,9 +44,10 @@ import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.helper.FormattingHelper;
 import io.reflection.app.client.helper.ResponsiveDesignHelper;
 import io.reflection.app.client.highcharts.Chart;
-import io.reflection.app.client.highcharts.ChartHelper;
+import io.reflection.app.client.highcharts.ChartHelper.LineType;
 import io.reflection.app.client.highcharts.ChartHelper.RankType;
 import io.reflection.app.client.highcharts.ChartHelper.XDataType;
+import io.reflection.app.client.highcharts.ChartHelper.YAxisPosition;
 import io.reflection.app.client.highcharts.ChartHelper.YDataType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.datatypes.AppRevenue;
@@ -160,9 +161,9 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField SpanElement infoDateRange;
 	@UiField SpanElement infoTotalRevenue;
 
-	@UiField(provided = true) Chart chartRevenue = new Chart(XDataType.DateXAxisDataType, YDataType.RevenueYAxisDataType);
-	@UiField(provided = true) Chart chartDownloads = new Chart(XDataType.DateXAxisDataType, YDataType.DownloadsYAxisDataType);
-	@UiField(provided = true) Chart chartRank = new Chart(XDataType.DateXAxisDataType, YDataType.RankingYAxisDataType);
+	@UiField(provided = true) Chart chartRevenue = new Chart(XDataType.DateXAxisDataType);
+	@UiField(provided = true) Chart chartDownloads = new Chart(XDataType.DateXAxisDataType);
+	@UiField(provided = true) Chart chartRank = new Chart(XDataType.DateXAxisDataType);
 	private static final String SERIES_ID_RANK = "rank";
 	private static final String SERIES_ID_REVENUE = "revenue";
 	private static final String SERIES_ID_DOWNLOAD = "download";
@@ -430,7 +431,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			public SafeHtml getValue(AppRevenue object) {
 				SafeHtml value = SafeHtmlUtils.fromSafeConstant("");
 				if (object.revenuePercentForPeriod != null) {
-					String percentage = FormattingHelper.TWO_DECIMALS_FORMATTER.format(object.revenuePercentForPeriod.floatValue() * 100);
+					String percentage = (DataTypeHelper.isZero(object.revenuePercentForPeriod.floatValue()) ? "0" : FormattingHelper.TWO_DECIMALS_FORMATTER
+							.format(object.revenuePercentForPeriod.floatValue() * 100));
 					value = SafeHtmlUtils.fromTrustedString("<span>" + percentage + "%</span><div class=\"" + style.dataBar() + "\"><div style=\"width: "
 							+ percentage + "%\"></div></div>");
 				}
@@ -483,6 +485,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		chartDownloads.setSeriesVisible(SERIES_ID_REVENUE_SECONDARY, event.getValue().booleanValue() && !cumulativeChartSwitch.getValue().booleanValue());
 		chartDownloads.setSeriesVisible(SERIES_ID_REVENUE_CUMULATIVE_SECONDARY, event.getValue().booleanValue()
 				&& cumulativeChartSwitch.getValue().booleanValue());
+		chartRank.setSeriesVisible(SERIES_ID_REVENUE_SECONDARY, SessionController.get().isLoggedInUserAdmin() && event.getValue().booleanValue());
 	}
 
 	@UiHandler("overlayDownloadsSwitch")
@@ -490,6 +493,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		chartRevenue.setSeriesVisible(SERIES_ID_DOWNLOAD_SECONDARY, event.getValue().booleanValue() && !cumulativeChartSwitch.getValue().booleanValue());
 		chartRevenue.setSeriesVisible(SERIES_ID_DOWNLOAD_CUMULATIVE_SECONDARY, event.getValue().booleanValue()
 				&& cumulativeChartSwitch.getValue().booleanValue());
+		chartRank.setSeriesVisible(SERIES_ID_DOWNLOAD_SECONDARY, SessionController.get().isLoggedInUserAdmin() && event.getValue().booleanValue());
 	}
 
 	@UiHandler("cumulativeChartSwitch")
@@ -780,24 +784,35 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		revenueTableMobile.getColumnSortList().push(dateColumn);
 
 		chartRank.setRankingType(rankType);
-		chartRank.drawData(ranks, SERIES_ID_RANK, ChartHelper.TYPE_LINE, ColorHelper.getReflectionGreen(), false, false);
+		chartRank.drawData(ranks, YAxisPosition.PRIMARY, YDataType.RankingYAxisDataType, SERIES_ID_RANK, LineType.LINE, ColorHelper.getReflectionGreen(),
+				false, false);
 		if (MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage) || SessionController.get().isLoggedInUserAdmin()) {
-			chartRevenue.drawData(ranks, SERIES_ID_REVENUE, ChartHelper.TYPE_AREA, ColorHelper.getReflectionPurple(), false, cumulativeChartSwitch.getValue()
-					.booleanValue());
-			chartDownloads.drawData(ranks, SERIES_ID_DOWNLOAD, ChartHelper.TYPE_AREA, ColorHelper.getReflectionRed(), false, cumulativeChartSwitch.getValue()
-					.booleanValue());
-			chartRevenue.drawData(ranks, SERIES_ID_REVENUE_CUMULATIVE, ChartHelper.TYPE_AREA, ColorHelper.getReflectionPurple(), true, !cumulativeChartSwitch
-					.getValue().booleanValue());
-			chartDownloads.drawData(ranks, SERIES_ID_DOWNLOAD_CUMULATIVE, ChartHelper.TYPE_AREA, ColorHelper.getReflectionRed(), true, !cumulativeChartSwitch
-					.getValue().booleanValue());
-			chartRevenue.drawOppositeData(ranks, SERIES_ID_DOWNLOAD_SECONDARY, ChartHelper.TYPE_LINE, ColorHelper.getReflectionRed(), false,
-					cumulativeChartSwitch.getValue().booleanValue() || !overlayDownloadsSwitch.getValue().booleanValue(), YDataType.DownloadsYAxisDataType);
-			chartDownloads.drawOppositeData(ranks, SERIES_ID_REVENUE_SECONDARY, ChartHelper.TYPE_LINE, ColorHelper.getReflectionPurple(), false,
-					cumulativeChartSwitch.getValue().booleanValue() || !overlayRevenuesSwitch.getValue().booleanValue(), YDataType.RevenueYAxisDataType);
-			chartRevenue.drawOppositeData(ranks, SERIES_ID_DOWNLOAD_CUMULATIVE_SECONDARY, ChartHelper.TYPE_LINE, ColorHelper.getReflectionRed(), true,
-					!cumulativeChartSwitch.getValue().booleanValue() || !overlayDownloadsSwitch.getValue().booleanValue(), YDataType.DownloadsYAxisDataType);
-			chartDownloads.drawOppositeData(ranks, SERIES_ID_REVENUE_CUMULATIVE_SECONDARY, ChartHelper.TYPE_LINE, ColorHelper.getReflectionPurple(), true,
-					!cumulativeChartSwitch.getValue().booleanValue() || !overlayRevenuesSwitch.getValue().booleanValue(), YDataType.RevenueYAxisDataType);
+			chartRevenue.drawData(ranks, YAxisPosition.PRIMARY, YDataType.RevenueYAxisDataType, SERIES_ID_REVENUE, LineType.AREA,
+					ColorHelper.getReflectionPurple(), false, cumulativeChartSwitch.getValue().booleanValue());
+			chartDownloads.drawData(ranks, YAxisPosition.PRIMARY, YDataType.DownloadsYAxisDataType, SERIES_ID_DOWNLOAD, LineType.AREA,
+					ColorHelper.getReflectionRed(), false, cumulativeChartSwitch.getValue().booleanValue());
+			chartRevenue.drawData(ranks, YAxisPosition.PRIMARY, YDataType.RevenueYAxisDataType, SERIES_ID_REVENUE_CUMULATIVE, LineType.AREA,
+					ColorHelper.getReflectionPurple(), true, !cumulativeChartSwitch.getValue().booleanValue());
+			chartDownloads.drawData(ranks, YAxisPosition.PRIMARY, YDataType.DownloadsYAxisDataType, SERIES_ID_DOWNLOAD_CUMULATIVE, LineType.AREA,
+					ColorHelper.getReflectionRed(), true, !cumulativeChartSwitch.getValue().booleanValue());
+			chartRevenue
+					.drawData(ranks, YAxisPosition.SECONDARY, YDataType.DownloadsYAxisDataType, SERIES_ID_DOWNLOAD_SECONDARY, LineType.LINE,
+							ColorHelper.getReflectionRed(), false, cumulativeChartSwitch.getValue().booleanValue()
+									|| !overlayDownloadsSwitch.getValue().booleanValue());
+			chartDownloads.drawData(ranks, YAxisPosition.SECONDARY, YDataType.RevenueYAxisDataType, SERIES_ID_REVENUE_SECONDARY, LineType.LINE,
+					ColorHelper.getReflectionPurple(), false, cumulativeChartSwitch.getValue().booleanValue()
+							|| !overlayRevenuesSwitch.getValue().booleanValue());
+			chartRevenue
+					.drawData(ranks, YAxisPosition.SECONDARY, YDataType.DownloadsYAxisDataType, SERIES_ID_DOWNLOAD_CUMULATIVE_SECONDARY, LineType.LINE,
+							ColorHelper.getReflectionRed(), true, !cumulativeChartSwitch.getValue().booleanValue()
+									|| !overlayDownloadsSwitch.getValue().booleanValue());
+			chartDownloads.drawData(ranks, YAxisPosition.SECONDARY, YDataType.RevenueYAxisDataType, SERIES_ID_REVENUE_CUMULATIVE_SECONDARY, LineType.LINE,
+					ColorHelper.getReflectionPurple(), true, !cumulativeChartSwitch.getValue().booleanValue()
+							|| !overlayRevenuesSwitch.getValue().booleanValue());
+			chartRank.drawData(ranks, YAxisPosition.SECONDARY, YDataType.RevenueYAxisDataType, SERIES_ID_REVENUE_SECONDARY, LineType.LINE,
+					ColorHelper.getReflectionPurple(), false, !overlayRevenuesSwitch.getValue().booleanValue());
+			chartRank.drawData(ranks, YAxisPosition.TERTIARY, YDataType.DownloadsYAxisDataType, SERIES_ID_DOWNLOAD_SECONDARY, LineType.LINE,
+					ColorHelper.getReflectionRed(), false, !overlayDownloadsSwitch.getValue().booleanValue());
 		}
 	}
 

@@ -66,6 +66,7 @@ public class ApiCallHelper {
 	 * @param day
 	 * @return
 	 */
+	@SuppressWarnings("deprecation")
 	public static Date getUTCDate(int year, int month, int day) {
 		if (year < 0 || month < 1 || month > 12 || day < 1 || day > 31) return null;
 
@@ -73,6 +74,7 @@ public class ApiCallHelper {
 		return getUTCDate(date);
 	}
 
+	@SuppressWarnings("deprecation")
 	public static Date getUTCDate(Date date) {
 		if (date == null) return null;
 
