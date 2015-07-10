@@ -1,0 +1,1330 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="utf-8" />
+	<title>Reflection Design Kit - Graphs</title>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link rel="stylesheet" media="screen, projection" type="text/css" href="designkit.css" />
+	<!--[if (lt IE 9)]>
+		<script src="js/vendor/html5shiv.min.js"></script>
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main-ie8.css" />
+	<![endif]-->
+ 	<!--[if !lt IE 9]><!-->
+		<script src="js/vendor/picturefill.2.3.1.min.js" async></script>
+	<!-- <![endif]-->
+	<link rel="stylesheet" href="js/vendor/jquery.mCustomScrollbar.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
+<script src="js/vendor/snap.svg.js"></script>
+<script>
+  WebFont.load({
+    google: {
+      families: ['Open Sans:400,600,700,400italic,600italic', 'Source Sans Pro:400,600,700', 'Lato:400,700,400italic']
+    }
+  });
+</script>
+<script src="js/vendor/amcharts/amcharts.js" type="text/javascript"></script>
+<script src="js/vendor/amcharts/serial.js" type="text/javascript"></script>
+<style>
+  .amcharts-graph-stroke {
+    cursor: pointer;
+  }
+  .amcharts-graph-fill {
+    pointer-events: none;
+  }
+</style>
+</head>
+<body class="panel-left-open">
+	<!--[if (lt IE 9)]>
+      <div class="window-warning">
+  			<p>Uh oh... Reflection doesn't work in this browser. &nbsp; &nbsp;<a href="http://outdatedbrowser.com/en" target="_blank">Download a compatible browser</a></p>
+  		</div>
+  <![endif]-->
+  <header id="js-component-import--global-header" class="global-header"></header>
+
+  <div id="js-component-import--panel-left" class="panel-left js-custom-scrollbar" data-mcs-theme="minimal-dark"></div>
+
+	<div class="l-page-container">
+
+		<div id="main" class="l-main" role="main">
+			
+			<div id="js-component-import--design-kit-banner" class="banner banner--component"></div>
+
+			<div class="grid-container dk-components-container">
+				<div class="grid__row dk-component-row">
+					<h2 class="heading-style--heading-four">App, Overlay Other Apps</h2>
+					<div id="container-app-overlay" style="width:100%; height:500px;"></div>
+				</div>
+				<div class="grid__row dk-component-row">
+					<h2 class="heading-style--heading-four">App Revenue for selected Country</h2>
+					<div id="container-revenue" style="width:100%; height:500px;"></div>
+				</div>
+				<div class="grid__row dk-component-row">
+					<h2 class="heading-style--heading-four">App Revenue, Revenue Sources</h2>
+					<div id="container-revenue-split" style="width:100%; height:500px;"></div>
+				</div>
+				<div class="grid__row dk-component-row">
+					<h2 class="heading-style--heading-four">App Revenue, overlay downloads</h2>
+					<div class="grid__column grid__column--full-width filters-container filter-container--app">
+						<div class="filters-group-graph-options">
+							<a href="#" class="show-hide-link ref-icon-after ref-icon-after--angle-down">Show / Hide Options</a>
+							<div class="reveal-element">
+								<div class="filter-switch filter-switch--small">
+									<span>Overlay Downloads</span>
+									<div class="can-toggle can-toggle--size-small">
+									  <input id="js-overlay-downloads" type="checkbox">
+									  <label for="js-overlay-downloads">
+									    <div class="can-toggle__switch" data-checked="Y" data-unchecked="N"></div>
+									  </label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="container-revenue-overlay-downloads" style="width:100%; height:500px;"></div>
+				</div>
+        <div class="grid__row dk-component-row">
+          <h2 class="heading-style--heading-four">App Revenue, Revenue Sources</h2>
+          <div id="container-countries-categories" style="width:100%; height:500px;"></div>
+        </div>
+			</div>
+		</div>
+	</div>
+
+	<div id="js-component-import--account-container" class="panel-right-container js-account-container"></div>
+	<div id="js-component-import--search-container" class="panel-right-container js-search-container"></div>
+	
+ 	<script src="js/vendor/jquery-1.11.1.min.js"></script>
+ 	<script src="js/vendor/jquery-ui.custom.min.js"></script>
+ 	<script src="js/vendor/handlebars-v2.0.0.js"></script>
+ 	<script src="js/templates/templates.js"></script>
+	<script src="js/vendor/modernizr.2.8.3.custom.min.js"></script>
+	<!--[if IE 9]>
+		<script src="js/vendor/jquery.mCustomScrollbar.concat.min.js"></script>
+	<![endif]-->
+
+	<div id="js-appendScriptsContainer"></div>
+
+	<script src="js/designkit-global-templates.js"></script>
+  <script src="js/application.js"></script>
+  <script src="js/designkit-app.js"></script>
+  <script>
+      new AMChartsPage();
+
+      var chartrevenue;
+      var chartRevenueData = [];
+
+      // generate some random data, quite different range
+      function generateRevenueChartData() {
+        // current date
+        var firstDate = new Date();
+        // now set 1000 minutes back
+        firstDate.setDate(firstDate.getDate() - 500);
+
+        // and generate 1000 data items
+        for (var i = 0; i < 30; i++) {
+          var newDate = new Date(firstDate);
+          // each time we add one minute
+          newDate.setDate(newDate.getDate() + i);
+          // some random number
+          var revenue = Math.round(Math.random() * 40) + 10;
+          // add data item to the array
+          chartRevenueData.push({
+              date: newDate,
+              revenue: revenue
+          });
+        }
+      }
+
+      AmCharts.ready(function () {
+          // first we generate some random data
+          generateRevenueChartData();
+
+          // SERIAL CHART
+          chartrevenue = new AmCharts.AmSerialChart();
+
+          chartrevenue.dataProvider = chartRevenueData;
+          chartrevenue.categoryField = "date";
+
+          // data updated event will be fired when chart is first displayed,
+          // also when data will be updated. We'll use it to set some
+          // initial zoom
+          //chartrevenue.addListener("dataUpdated", zoomChart);
+
+          // Chart styles
+          chartrevenue.addClassNames = true;
+          chartrevenue.color = "#81879d";
+          chartrevenue.fontFamily = "Lato";
+          chartrevenue.fontSize = 13;
+          chartrevenue.marginLeft = 0;
+
+          // CURSOR
+          var chartCursor = new AmCharts.ChartCursor();
+          chartCursor.cursorAlpha = 0.5;
+          chartCursor.cursorPosition = "mouse";
+          chartCursor.categoryBalloonDateFormat = "YYYY";
+          chartCursor.bulletsEnabled = true;
+          chartCursor.bulletSize = 6;
+          chartrevenue.addChartCursor(chartCursor);
+          
+          // AXES
+          // Category
+          var categoryAxis = chartrevenue.categoryAxis;
+          categoryAxis.parseDates = true; // in order char to understand dates, we should set parseDates to true
+          categoryAxis.minPeriod = "DD"; // as we have data with minute interval, we have to set "mm" here.
+          categoryAxis.gridAlpha = 0;
+          categoryAxis.axisColor = "#e1e5e8";
+
+          // Value
+          var valueAxis = new AmCharts.ValueAxis();
+          valueAxis.gridAlpha = 0.07;
+          valueAxis.title = "Revenue";
+          valueAxis.axisColor = "#e1e5e8";
+          valueAxis.axisAlpha = 0;
+          valueAxis.inside = true;
+          valueAxis.offset = 0;
+          valueAxis.showFirstLabel = true;
+          valueAxis.showLastLabel = true;
+          chartrevenue.addValueAxis(valueAxis);
+          chartrevenue.balloon = {
+            "adjustBorderColor": true,
+            "animationDuration": 0,
+            "color": "#000000",
+            "cornerRadius": 5,
+            "fillColor": "#FFFFFF"
+          };
+          chartrevenue.creditsPosition = "bottom-right";
+
+          // GRAPH
+          var graph = new AmCharts.AmGraph();
+          graph.type = "line"; // try to change it to "column"
+          graph.title = "United Kingdom";
+          graph.valueField = "revenue";
+          graph.lineAlpha = 1;
+          graph.lineColor = "#6d69c5";
+          graph.lineThickness = 3;
+          graph.fillAlphas = 0.3; // setting fillAlphas to > 0 value makes it area graph
+          graph.fontSize = 13;
+          graph.balloonFunction = function(g) {
+            //console.log(g);
+            return '<div style="font-size: 16px;">' + g.graph.title + '</div><div style="font-size: 14px;">' + g.category + '</div><div><span style="font-size: 14px;">£' + g.values.value + '</span></div><div class="top-five-section"><h5>Top 5 Countries</h5><div><b>£18</b>: <span>USA</span></div><div><b style="color: #1bc79f">£' + g.values.value + '</b>: <span style="color: #1bc79f">' + g.graph.title + '</span></div></div><div><b>£120</b>: <span>Germany</span></div><div><b>£53</b>: <span>Italy</span></div><div><b>£21</b>: <span>China</span></div>';
+          };
+          graph.bullet = "round";
+          graph.bulletAlpha = 0;
+          graph.bulletSize = 6;
+          graph.bulletBorderColor = "#81879d";
+          graph.bulletBorderThickness = 10;
+          graph.bulletBorderAlpha = 0;
+
+          chartrevenue.addGraph(graph);
+
+          // CURSOR
+          var chartCursor = new AmCharts.ChartCursor();
+          chartCursor.cursorPosition = "mouse";
+          chartCursor.categoryBalloonDateFormat = "DD MMMM";
+          chartrevenue.addChartCursor(chartCursor);
+
+          // SCROLLBAR
+          var chartScrollbar = new AmCharts.ChartScrollbar();
+
+          chartrevenue.addChartScrollbar(chartScrollbar);
+
+          // WRITE
+          chartrevenue.write("container-revenue");
+      });      
+
+      // this method is called when chart is first inited as we listen for "dataUpdated" event
+      function zoomChart() {
+          // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
+          chartrevenue.zoomToIndexes(chartRevenueData.length - 40, chartRevenueData.length - 1);
+      }
+
+      var chartApps;
+      var chartAppsData = [
+          {
+              "year": 1930,
+              "zookeeper": 1,
+              "deltav": 5,
+              "candycrush": 3
+          },
+          {
+              "year": 1934,
+              "zookeeper": 1,
+              "deltav": 2,
+              "candycrush": 6
+          },
+          {
+              "year": 1938,
+              "zookeeper": 2,
+              "deltav": 3,
+              "candycrush": 1
+          },
+          {
+              "year": 1950,
+              "zookeeper": 3,
+              "deltav": 4,
+              "candycrush": 1
+          },
+          {
+              "year": 1954,
+              "zookeeper": 5,
+              "deltav": 1,
+              "candycrush": 2
+          },
+          {
+              "year": 1958,
+              "zookeeper": 3,
+              "deltav": 2,
+              "ucandycrushk": 1
+          },
+          {
+              "year": 1962,
+              "zookeeper": 1,
+              "deltav": 2,
+              "candycrush": 3
+          },
+          {
+              "year": 1966,
+              "zookeeper": 5,
+              "deltav": 1,
+              "candycrush": 5
+          },
+          {
+              "year": 1970,
+              "zookeeper": 3,
+              "deltav": 5,
+              "candycrush": 2
+          },
+          {
+              "year": 1974,
+              "zookeeper": 4,
+              "deltav": 3,
+              "candycrush": 6
+          },
+          {
+              "year": 1978,
+              "zookeeper": 1,
+              "deltav": 2,
+              "candycrush": 4
+          }
+      ];
+
+      initChartInteraction = function() {
+        $('.amcharts-graph-line').on("click", function(){
+          var $this = $(this);
+          $this.find('.amcharts-graph-stroke').animate({'opacity': 1}, 300);
+          $this.find('.amcharts-graph-fill').animate({'opacity': 1}, 300).css("pointer-events", "none");
+          $this.siblings('.amcharts-graph-line').find('.amcharts-graph-stroke').animate({'opacity': 0.3}, 300);
+          $this.siblings('.amcharts-graph-line').find('.amcharts-graph-fill').animate({'opacity': 0}, 300).css("pointer-events", "none");;
+        });
+      }
+
+      AmCharts.ready(function () {
+          // SERIAL CHART
+          chartApps = new AmCharts.AmSerialChart();
+          chartApps.dataProvider = chartAppsData;
+          chartApps.categoryField = "year";
+          chartApps.startDuration = 0.5;
+          chartApps.balloon.color = "#000000";
+
+          // Chart styles
+          chartApps.addClassNames = true;
+          chartApps.color = "#81879d";
+          chartApps.fontFamily = "Lato";
+          chartApps.fontSize = 13;
+          chartApps.marginLeft = 0;
+
+          // AXES
+          // category
+          var categoryAxis = chartApps.categoryAxis;
+          categoryAxis.fillAlpha = 1;
+          categoryAxis.fillColor = "#FAFAFA";
+          categoryAxis.gridAlpha = 0;
+          categoryAxis.axisAlpha = 0;
+          categoryAxis.gridPosition = "start";
+          categoryAxis.position = "bottom";
+
+          // value
+          var valueAxis = new AmCharts.ValueAxis();
+          valueAxis.title = "Rank";
+          valueAxis.axisAlpha = 0;
+          valueAxis.minimum = 1;
+          valueAxis.maximum = 6;
+          valueAxis.integersOnly = true;
+          valueAxis.gridCount = 10;
+          valueAxis.reversed = false; // this line makes the value axis reversed
+          chartApps.addValueAxis(valueAxis);
+
+          // GRAPHS
+          // Italy graph
+          var graph = new AmCharts.AmGraph();
+          graph.title = "Zoo Keeper Ken";
+          graph.valueField = "zookeeper";
+          graph.balloonText = "[[category]]: [[value]]";
+          graph.lineAlpha = 1;
+          graph.bullet = "none";
+          graph.lineColor = "#ffb449";
+          graph.lineThickness = 3;
+          graph.fillAlphas = 0.5;
+          chartApps.addGraph(graph);
+
+          // Germany graph
+          var graph = new AmCharts.AmGraph();
+          graph.title = "Delta V Racing";
+          graph.valueField = "deltav";
+          graph.balloonText = "[[category]]: [[value]]";
+          graph.bullet = "none";
+          graph.lineColor = "#6d69c5";
+          graph.lineThickness = 3;
+          graph.fillAlphas = 0.5;
+          chartApps.addGraph(graph);
+
+          // United Kingdom graph
+          var graph = new AmCharts.AmGraph();
+          graph.title = "Candy Crush Saga";
+          graph.valueField = "candycrush";
+          graph.balloonText = "[[category]]: [[value]]";
+          graph.bullet = "none";
+          graph.lineColor = "#ff496a";
+          graph.lineThickness = 3;
+          graph.fillAlphas = 0.5;
+          chartApps.addGraph(graph);
+
+          // CURSOR
+          var chartCursor = new AmCharts.ChartCursor();
+          chartCursor.cursorPosition = "mouse";
+          chartCursor.zoomable = false;
+          chartCursor.cursorAlpha = 0;
+          chartApps.addChartCursor(chartCursor);
+
+          // LEGEND
+          var legend = new AmCharts.AmLegend();
+          legend.useGraphSettings = true;
+          chartApps.addLegend(legend);
+
+          // WRITE
+          chartApps.write("container-app-overlay");
+
+          initChartInteraction();
+      });
+      
+      var chartSubData = [{
+          "year": 1994,
+          "iap": 1587,
+          "motorcycles": 650,
+          "bicycles": 121
+      }, {
+          "year": 1995,
+          "iap": 1275,
+          "motorcycles": 664,
+          "bicycles": 97
+      }, {
+          "year": 1996,
+          "iap": 1617,
+          "motorcycles": 691,
+          "bicycles": 138
+      }, {
+          "year": 1997,
+          "iap": 1691,
+          "motorcycles": 737,
+          "bicycles": 112
+      }, {
+          "year": 1998,
+          "iap": 1660,
+          "motorcycles": 699,
+          "bicycles": 105
+      }, {
+          "year": 1999,
+          "iap": 1199,
+          "motorcycles": 621,
+          "bicycles": 79
+      }, {
+          "year": 2000,
+          "iap": 1630,
+          "motorcycles": 642,
+          "bicycles": 127
+      }, {
+          "year": 2001,
+          "iap": 1298,
+          "motorcycles": 680,
+          "bicycles": 101
+      }, {
+          "year": 2002,
+          "iap": 1567,
+          "motorcycles": 683,
+          "bicycles": 146
+      }, {
+          "year": 2003,
+          "iap": 1180,
+          "motorcycles": 285,
+          "bicycles": 87
+      }, {
+          "year": 2004,
+          "iap": 1318,
+          "motorcycles": 697,
+          "bicycles": 111
+      }, {
+          "year": 2005,
+          "iap": 1213,
+          "motorcycles": 633,
+          "bicycles": 87
+      }, {
+          "year": 2006,
+          "iap": 1683,
+          "motorcycles": 721,
+          "bicycles": 109
+      }, {
+          "year": 2007,
+          "iap": 1159,
+          "motorcycles": 277,
+          "bicycles": 71
+      }, {
+          "year": 2008,
+          "iap": 1165,
+          "motorcycles": 232,
+          "bicycles": 75
+      }, {
+          "year": 2009,
+          "iap": 1145,
+          "motorcycles": 219,
+          "bicycles": 88
+      }, {
+          "year": 2010,
+          "iap": 1163,
+          "motorcycles": 201,
+          "bicycles": 82
+      }, {
+          "year": 2011,
+          "iap": 1246,
+          "motorcycles": 648,
+          "bicycles": 93
+      }, {
+          "year": 2012,          
+          "iap": 1110,
+          "motorcycles": 210,
+          "bicycles": 81
+      }];
+
+      var iapBreakdownData = [{
+        "Remove ads": 223,
+        "Unlock levels": 35,
+        "100 coins": 232
+      },
+      {
+        "Remove ads": 33,
+        "Unlock levels": 53,
+        "100 coins": 223
+      },
+      {
+        "Remove ads": 33,
+        "Unlock levels": 35,
+        "100 coins": 212
+      },
+      {
+        "Remove ads": 33,
+        "Unlock levels": 25,
+        "100 coins": 122
+      },
+      {
+        "Remove ads": 213,
+        "Unlock levels": 54,
+        "100 coins": 242
+      },
+      {
+        "Remove ads": 34,
+        "Unlock levels": 554,
+        "100 coins": 562
+      },
+      {
+        "Remove ads": 563,
+        "Unlock levels": 755,
+        "100 coins": 89
+      },
+      {
+        "Remove ads": 443,
+        "Unlock levels": 55,
+        "100 coins": 45
+      },
+      {
+        "Remove ads": 345,
+        "Unlock levels": 543,
+        "100 coins": 234
+      },
+      {
+        "Remove ads": 773,
+        "Unlock levels": 45,
+        "100 coins": 242
+      },
+      {
+        "Remove ads": 34,
+        "Unlock levels": 45,
+        "100 coins": 224
+      },
+      {
+        "Remove ads": 43,
+        "Unlock levels": 434,
+        "100 coins": 366
+      },
+      {
+        "Remove ads": 234,
+        "Unlock levels": 234,
+        "100 coins": 456
+      },
+      {
+        "Remove ads": 53,
+        "Unlock levels": 555,
+        "100 coins": 5
+      },
+      {
+        "Remove ads": 53,
+        "Unlock levels": 456,
+        "100 coins": 257
+      },
+      {
+        "Remove ads": 422,
+        "Unlock levels": 387,
+        "100 coins": 275
+      },
+      {
+        "Remove ads": 342,
+        "Unlock levels": 236,
+        "100 coins": 35
+      },
+      {
+        "Remove ads": 65,
+        "Unlock levels": 234,
+        "100 coins": 234
+      },
+      {
+        "Remove ads": 30,
+        "Unlock levels": 55,
+        "100 coins": 242
+      }]
+
+      var chartSplit = AmCharts.makeChart("container-revenue-split", {
+      "type": "serial",
+      "theme": "light",
+      "marginRight":30,
+      "legend": {
+          "equalWidths": false,
+          "periodValueText": "total: [[value.sum]]",
+          "position": "top",
+          "valueAlign": "left",
+          "valueWidth": 100
+      },
+      "dataProvider": [{
+          "year": 1994,
+          "cars": 1587,
+          "motorcycles": 650,
+          "bicycles": 121
+      }, {
+          "year": 1995,
+          "cars": 1567,
+          "motorcycles": 683,
+          "bicycles": 146
+      }, {
+          "year": 1996,
+          "cars": 1617,
+          "motorcycles": 691,
+          "bicycles": 138
+      }, {
+          "year": 1997,
+          "cars": 1630,
+          "motorcycles": 642,
+          "bicycles": 127
+      }, {
+          "year": 1998,
+          "cars": 1660,
+          "motorcycles": 699,
+          "bicycles": 105
+      }, {
+          "year": 1999,
+          "cars": 1683,
+          "motorcycles": 721,
+          "bicycles": 109
+      }, {
+          "year": 2000,
+          "cars": 1691,
+          "motorcycles": 737,
+          "bicycles": 112
+      }, {
+          "year": 2001,
+          "cars": 1298,
+          "motorcycles": 680,
+          "bicycles": 101
+      }, {
+          "year": 2002,
+          "cars": 1275,
+          "motorcycles": 664,
+          "bicycles": 97
+      }, {
+          "year": 2003,
+          "cars": 1246,
+          "motorcycles": 648,
+          "bicycles": 93
+      }, {
+          "year": 2004,
+          "cars": 1318,
+          "motorcycles": 697,
+          "bicycles": 111
+      }, {
+          "year": 2005,
+          "cars": 1213,
+          "motorcycles": 633,
+          "bicycles": 87
+      }, {
+          "year": 2006,
+          "cars": 1199,
+          "motorcycles": 621,
+          "bicycles": 79
+      }, {
+          "year": 2007,
+          "cars": 1110,
+          "motorcycles": 210,
+          "bicycles": 81
+      }, {
+          "year": 2008,
+          "cars": 1165,
+          "motorcycles": 232,
+          "bicycles": 75
+      }, {
+          "year": 2009,
+          "cars": 1145,
+          "motorcycles": 219,
+          "bicycles": 88
+      }, {
+          "year": 2010,
+          "cars": 1163,
+          "motorcycles": 201,
+          "bicycles": 82
+      }, {
+          "year": 2011,
+          "cars": 1180,
+          "motorcycles": 285,
+          "bicycles": 87
+      }, {
+          "year": 2012,
+          "cars": 1159,
+          "motorcycles": 277,
+          "bicycles": 71
+      }],
+      "valueAxes": [{
+          "stackType": "regular",
+          "gridAlpha": 0.07,
+          "position": "left",
+          "title": "Traffic incidents"
+      }],
+      "graphs": [{          
+          "fillAlphas": 0.6,
+          "lineAlpha": 0.4,
+          "title": "IAPs (3)",
+          "valueField": "cars",
+          "bullet": "round",
+          "balloonFunction" : function(g) { // you could check here if there are IAP breakdown in the data and if so output external data object (iapBreakdownData)
+            var currentIndex = g.index;
+            var outputString = "", breakdownString = "", pointTotal = 0;            
+            for (var i = 0; i < g.graph.chart.graphs.length; i++) { // this could be made quicker but not looping through all graphs but just dataContext
+              var graphTitle = g.graph.chart.graphs[i].title;
+              var graphColour = g.graph.chart.graphs[i].fillColorsR;
+              breakdownString += '<div style="color: ' + graphColour + '; font-weight: bold;">' + graphTitle + ': ';
+              var thisValueField = g.graph.chart.graphs[i].valueField;
+              var currentData = g.graph.chart.graphs[i].data[currentIndex].dataContext;
+              for(var p in currentData) {
+                if (p == thisValueField) {
+                  breakdownString += currentData[p] + '</div>';
+                  pointTotal += currentData[p];
+                }
+              }
+              if(thisValueField == "cars") {
+                for(var name in iapBreakdownData[currentIndex]) {
+                  breakdownString += '<div style="color: ' + graphColour + '">' + name + ': ' + iapBreakdownData[currentIndex][name] + '</div>';
+                }
+              }
+            }            
+
+            outputString += '<div style="font-size: 16px;">Total: ' + pointTotal + '</div>';
+            return outputString + breakdownString;
+          }
+      }, {
+          "fillAlphas": 0.6,
+          "lineAlpha": 0.4,
+          "title": "Motorcycles",
+          "valueField": "motorcycles",
+          "bullet": "round",
+          "balloonFunction" : function(g) {
+            var currentIndex = g.index;
+            var outputString = "", breakdownString = "", pointTotal = 0;            
+            for (var i = 0; i < g.graph.chart.graphs.length; i++) {
+              var graphTitle = g.graph.chart.graphs[i].title;
+              var graphColour = g.graph.chart.graphs[i].fillColorsR;
+              breakdownString += '<div style="color: ' + graphColour + '; font-weight: bold;">' + graphTitle + ': ';
+              var thisValueField = g.graph.chart.graphs[i].valueField;
+              var currentData = g.graph.chart.graphs[i].data[currentIndex].dataContext;
+              for(var p in currentData) {
+                if (p == thisValueField) {
+                  breakdownString += currentData[p] + '</div>';
+                  pointTotal += currentData[p];
+                }
+              }
+            }            
+
+            outputString += '<div style="font-size: 16px;">Total: ' + pointTotal + '</div>';
+            return outputString + breakdownString;
+          }
+      }, {
+          "fillAlphas": 0.6,
+          "lineAlpha": 0.4,
+          "title": "Bicycles",
+          "valueField": "bicycles",
+          "bullet": "round",
+          "balloonFunction" : function(g) {
+            var currentIndex = g.index;
+            var outputString = "", breakdownString = "", pointTotal = 0;            
+            for (var i = 0; i < g.graph.chart.graphs.length; i++) {
+              var graphTitle = g.graph.chart.graphs[i].title;
+              var graphColour = g.graph.chart.graphs[i].fillColorsR;
+              breakdownString += '<div style="color: ' + graphColour + '; font-weight: bold;">' + graphTitle + ': ';
+              var thisValueField = g.graph.chart.graphs[i].valueField;
+              var currentData = g.graph.chart.graphs[i].data[currentIndex].dataContext;
+              for(var p in currentData) {
+                if (p == thisValueField) {
+                  breakdownString += currentData[p] + '</div>';
+                  pointTotal += currentData[p];
+                }
+              }
+            }            
+
+            outputString += '<div style="font-size: 16px;">Total: ' + pointTotal + '</div>';
+            return outputString + breakdownString;
+          }
+      }],
+      "plotAreaBorderAlpha": 0,
+      "marginTop": 10,
+      "marginLeft": 0,
+      "marginBottom": 0,
+      "chartScrollbar": {},
+      "chartCursor": {
+          "cursorAlpha": 0,
+          "oneBalloonOnly": true
+      },
+      "categoryField": "year",
+      "categoryAxis": {
+          "startOnAxis": true,
+          "axisColor": "#DADADA",
+          "gridAlpha": 0.07,
+          "title": "Year",
+          "guides": [{
+              category: "2001",
+              toCategory: "2003",
+              lineColor: "#CC0000",
+              lineAlpha: 1,
+              fillAlpha: 0.2,
+              fillColor: "#CC0000",
+              dashLength: 2,
+              inside: true,
+              labelRotation: 90,
+              label: "fines for speeding increased"
+          }, {
+              category: "2007",
+              lineColor: "#CC0000",
+              lineAlpha: 1,
+              dashLength: 2,
+              inside: true,
+              labelRotation: 90,
+              label: "motorcycle fee introduced"
+          }]
+      },
+          "export": {
+            "enabled": true
+           }
+      });
+
+      chartSplit.addListener("clickGraphItem", function (event) {
+        // let's look if the clicked graph item had any subdata to drill-down into
+        //if (event.item.dataContext.subdata != undefined) {
+          // wow it has!
+          // let's set that as chart's dataProvider
+          console.log(event);
+          event.chart.dataProvider = chartSubData; //event.item.dataContext.subdata;
+          event.chart.graphs[0].valueField = "iap";
+          event.chart.graphs[0].title = "IAP";
+          event.chart.validateData();
+        //}
+      });
+
+
+      var chartAppsOverlay;
+      var chartAppsOverlayData = [
+          {
+              "year": 1930,
+              "zookeeper": 1,
+              "deltav": 500,
+              "candycrush": 3
+          },
+          {
+              "year": 1934,
+              "zookeeper": 1,
+              "deltav": 453,
+              "candycrush": 6
+          },
+          {
+              "year": 1938,
+              "zookeeper": 2,
+              "deltav": 365,
+              "candycrush": 1
+          },
+          {
+              "year": 1950,
+              "zookeeper": 3,
+              "deltav": 454,
+              "candycrush": 1
+          },
+          {
+              "year": 1954,
+              "zookeeper": 5,
+              "deltav": 134,
+              "candycrush": 2
+          },
+          {
+              "year": 1958,
+              "zookeeper": 3,
+              "deltav": 234,
+              "ucandycrushk": 1
+          },
+          {
+              "year": 1962,
+              "zookeeper": 1,
+              "deltav": 245,
+              "candycrush": 3
+          },
+          {
+              "year": 1966,
+              "zookeeper": 5,
+              "deltav": 156,
+              "candycrush": 5
+          },
+          {
+              "year": 1970,
+              "zookeeper": 3,
+              "deltav": 534,
+              "candycrush": 2
+          },
+          {
+              "year": 1974,
+              "zookeeper": 4,
+              "deltav": 323,
+              "candycrush": 6
+          },
+          {
+              "year": 1978,
+              "zookeeper": 1,
+              "deltav": 223,
+              "candycrush": 4
+          }
+      ];
+
+      AmCharts.ready(function () {
+          // SERIAL CHART
+          chartAppsOverlay = new AmCharts.AmSerialChart();
+          chartAppsOverlay.dataProvider = chartAppsOverlayData;
+          chartAppsOverlay.categoryField = "year";
+          chartAppsOverlay.startDuration = 0.5;
+          chartAppsOverlay.balloon.color = "#000000";
+
+          // Chart styles
+          chartAppsOverlay.addClassNames = true;
+          chartAppsOverlay.color = "#81879d";
+          chartAppsOverlay.fontFamily = "Lato";
+          chartAppsOverlay.fontSize = 13;
+          chartAppsOverlay.marginLeft = 0;
+
+          // AXES
+          // category
+          var categoryAxis = chartAppsOverlay.categoryAxis;
+          categoryAxis.fillAlpha = 1;
+          categoryAxis.fillColor = "#FAFAFA";
+          categoryAxis.gridAlpha = 0;
+          categoryAxis.axisAlpha = 0;
+          categoryAxis.gridPosition = "start";
+          categoryAxis.position = "bottom";
+
+          // value
+          var valueAxis = new AmCharts.ValueAxis();
+          valueAxis.id = "a1";
+          valueAxis.title = "Rank";
+          valueAxis.axisAlpha = 0;
+          valueAxis.integersOnly = true;
+          valueAxis.gridCount = 10;
+          valueAxis.reversed = false; // this line makes the value axis reversed
+          chartAppsOverlay.addValueAxis(valueAxis);
+
+          // second vertical value axis
+          var yAxis2 = new AmCharts.ValueAxis();
+          yAxis2.id = "a2";
+          yAxis2.title = "Downloads";
+          yAxis2.axisAlpha = 0;
+          yAxis2.gridAlpha = 0;
+          yAxis2.position = "right"; // set this to "right" if you want it on the right
+          yAxis2.offset = 0;
+          yAxis2.fillAlphas = 0;
+          yAxis2.color = "#ff496a";
+          chartAppsOverlay.addValueAxis(yAxis2);
+
+          // GRAPHS
+          // Italy graph
+          var graph = new AmCharts.AmGraph();
+          graph.title = "Rank";
+          graph.valueField = "zookeeper";
+          graph.balloonText = "[[category]]: [[value]]";
+          graph.lineAlpha = 1;
+          graph.bullet = "none";
+          graph.lineColor = "#6d69c5";
+          graph.lineThickness = 3;
+          graph.fillAlphas = 0.5;
+          graph.valueAxis = "a1";
+          chartAppsOverlay.addGraph(graph);
+
+          // Germany graph
+          var graph = new AmCharts.AmGraph();
+          graph.title = "Downloads";
+          graph.valueField = "deltav";
+          graph.balloonText = "[[category]]: [[value]]";
+          graph.bullet = "none";
+          graph.lineColor = "#ff496a";
+          graph.lineThickness = 3;
+          graph.fillAlphas = 0;
+          graph.valueAxis = "a2";
+          chartAppsOverlay.addGraph(graph);
+
+          // CURSOR
+          var chartCursor = new AmCharts.ChartCursor();
+          chartCursor.cursorPosition = "mouse";
+          chartCursor.zoomable = false;
+          chartCursor.cursorAlpha = 0;
+          chartAppsOverlay.addChartCursor(chartCursor);
+
+          // LEGEND
+          var legend = new AmCharts.AmLegend();
+          legend.useGraphSettings = true;
+          chartAppsOverlay.addLegend(legend);
+
+          // WRITE
+          chartAppsOverlay.write("container-revenue-overlay-downloads");
+      });
+
+      var chartCatCountry;
+      var chartCatCountryData = [
+          {
+              "year": 1930,
+              "gbroverall": 123,
+              "gbrcategory1": 234,
+              "gbrcategory2": 232,
+              "gbrcategory3": 165,
+              "fraoverall": 378,
+              "fracategory1": 254,
+              "fracategory2": 187,
+              "fracategory3": 159
+          },
+          {
+              "year": 1934,
+              "gbroverall": 299,
+              "gbrcategory1": 287,
+              "gbrcategory2": 256,
+              "gbrcategory3": 222,
+              "fraoverall": 200,
+              "fracategory1": 190,
+              "fracategory2": 186,
+              "fracategory3": 165
+          },
+          {
+              "year": 1938,
+              "gbroverall": 180,
+              "gbrcategory1": 195,
+              "gbrcategory2": 200,
+              "gbrcategory3": 211,
+              "fraoverall": 267,
+              "fracategory1": 254,
+              "fracategory2": 212,
+              "fracategory3": 175
+          },
+          {
+              "year": 1950,
+              "gbroverall": 266,
+              "gbrcategory1": 255,
+              "gbrcategory2": 230,
+              "gbrcategory3": 298,
+              "fraoverall": 256,
+              "fracategory1": 167,
+              "fracategory2": 265,
+              "fracategory3": 175
+          },
+          {
+              "year": 1954,
+              "gbroverall": 290,
+              "gbrcategory1": 243,
+              "gbrcategory2": 286,
+              "gbrcategory3": 264,
+              "fraoverall": 223,
+              "fracategory1": 196,
+              "fracategory2": 186,
+              "fracategory3": 154
+          },
+          {
+              "year": 1958,
+              "gbroverall": 265,
+              "gbrcategory1": 165,
+              "gbrcategory2": 134,
+              "gbrcategory3": 186,
+              "fraoverall": 202,
+              "fracategory1": 145,
+              "fracategory2": 196,
+              "fracategory3": 185
+          },
+          {
+              "year": 1962,
+              "gbroverall": 187,
+              "gbrcategory1": 157,
+              "gbrcategory2": 176,
+              "gbrcategory3": 120,
+              "fraoverall": 265,
+              "fracategory1": 190,
+              "fracategory2": 297,
+              "fracategory3": 265
+          },
+          {
+              "year": 1966,
+              "gbroverall": 257,
+              "gbrcategory1": 168,
+              "gbrcategory2": 146,
+              "gbrcategory3": 357,
+              "fraoverall": 356,
+              "fracategory1": 176,
+              "fracategory2": 276,
+              "fracategory3": 256
+          },
+          {
+              "year": 1970,
+              "gbroverall": 278,
+              "gbrcategory1": 146,
+              "gbrcategory2": 278,
+              "gbrcategory3": 246,
+              "fraoverall": 323,
+              "fracategory1": 389,
+              "fracategory2": 387,
+              "fracategory3": 326
+          },
+          {
+              "year": 1974,
+              "gbroverall": 265,
+              "gbrcategory1": 232,
+              "gbrcategory2": 232,
+              "gbrcategory3": 265,
+              "fraoverall": 178,
+              "fracategory1": 154,
+              "fracategory2": 345,
+              "fracategory3": 286
+          },
+          {
+              "year": 1978,
+              "gbroverall": 287,
+              "gbrcategory1": 276,
+              "gbrcategory2": 321,
+              "gbrcategory3": 189,
+              "fraoverall": 254,
+              "fracategory1": 154,
+              "fracategory2": 287,
+              "fracategory3": 343
+          }
+      ];
+
+      var chartCatCountry = new AmCharts.AmSerialChart();
+
+      AmCharts.ready(function () {
+          // SERIAL CHART
+          chartCatCountry.dataProvider = chartCatCountryData;
+          chartCatCountry.categoryField = "year";
+          chartCatCountry.startDuration = 0.5;
+          chartCatCountry.balloon.color = "#000000";
+
+          // Chart styles
+          chartCatCountry.addClassNames = true;
+          chartCatCountry.color = "#81879d";
+          chartCatCountry.fontFamily = "Lato";
+          chartCatCountry.fontSize = 13;
+          chartCatCountry.marginLeft = 0;
+
+          // AXES
+          // category
+          var categoryAxis = chartCatCountry.categoryAxis;
+          categoryAxis.fillAlpha = 1;
+          categoryAxis.fillColor = "#FAFAFA";
+          categoryAxis.gridAlpha = 0;
+          categoryAxis.axisAlpha = 0;
+          categoryAxis.gridPosition = "start";
+          categoryAxis.position = "bottom";
+
+          // value
+          var valueAxis = new AmCharts.ValueAxis();
+          valueAxis.title = "Rank";
+          valueAxis.axisAlpha = 0;
+          valueAxis.integersOnly = true;
+          valueAxis.gridCount = 10;
+          valueAxis.reversed = false; // this line makes the value axis reversed
+          chartCatCountry.addValueAxis(valueAxis);
+
+          // GRAPHS
+          var graph = new AmCharts.AmGraph();
+          graph.id = "g1";
+          graph.title = "GBR, Overall";
+          graph.valueField = "gbroverall";
+          graph.balloonText = "[[category]]: [[value]]";
+          graph.lineAlpha = 1;
+          graph.bullet = "none";
+          graph.lineColor = "#ffb449";          
+          graph.lineThickness = 3;
+          graph.fillAlphas = 0.5;
+          graph.balloonFunction = function(g) {
+            console.log(g);
+            
+            return '';
+          };
+          chartCatCountry.addGraph(graph);
+
+          //
+          var graph = new AmCharts.AmGraph();
+          graph.id = "g2";
+          graph.title = "GBR, Category 1";
+          graph.valueField = "gbrcategory1";
+          graph.balloonText = "[[category]]: [[value]]";
+          graph.bullet = "none";
+          graph.lineColor = "#6d69c5";
+          graph.lineAlpha = 0.3;
+          graph.lineThickness = 3;
+          graph.fillAlphas = 0;
+          chartCatCountry.addGraph(graph);
+
+          //
+          var graph = new AmCharts.AmGraph();
+          graph.id = "g3";
+          graph.title = "GBR, Category 2";
+          graph.valueField = "gbrcategory2";
+          graph.balloonText = "[[category]]: [[value]]";
+          graph.bullet = "none";
+          graph.lineColor = "#ff496a";
+          graph.lineAlpha = 0.3;
+          graph.lineThickness = 3;
+          graph.fillAlphas = 0;
+          chartCatCountry.addGraph(graph);
+
+          //
+          var graph = new AmCharts.AmGraph();
+          graph.id = "g4";
+          graph.title = "GBR, Category 3";
+          graph.valueField = "gbrcategory3";
+          graph.balloonText = "[[category]]: [[value]]";
+          graph.bullet = "none";
+          graph.lineColor = "#e98fec";
+          graph.lineAlpha = 0.3;
+          graph.lineThickness = 3;
+          graph.fillAlphas = 0;
+          chartCatCountry.addGraph(graph);
+
+          //
+          var graph = new AmCharts.AmGraph();
+          graph.id = "g5";
+          graph.title = "FRA, Overall";
+          graph.valueField = "fraoverall";
+          graph.balloonText = "[[category]]: [[value]]";
+          graph.bullet = "none";
+          graph.lineColor = "#ffb449";
+          graph.lineAlpha = 0.3;
+          graph.lineThickness = 3;
+          graph.fillAlphas = 0;
+          chartCatCountry.addGraph(graph);
+
+          //
+          var graph = new AmCharts.AmGraph();
+          graph.id = "g6";
+          graph.title = "FRA, Category 1";
+          graph.valueField = "fracategory1";
+          graph.balloonText = "[[category]]: [[value]]";
+          graph.bullet = "none";
+          graph.lineColor = "#6d69c5";
+          graph.lineAlpha = 0.3;
+          graph.lineThickness = 3;
+          graph.fillAlphas = 0;
+          chartCatCountry.addGraph(graph);
+
+          //
+          var graph = new AmCharts.AmGraph();
+          graph.id = "g7";
+          graph.title = "FRA, Category 2";
+          graph.valueField = "fracategory2";
+          graph.balloonText = "[[category]]: [[value]]";
+          graph.bullet = "none";
+          graph.lineColor = "#ff496a";
+          graph.lineAlpha = 0.3;
+          graph.lineThickness = 3;
+          graph.fillAlphas = 0;
+          chartCatCountry.addGraph(graph);
+
+          //
+          var graph = new AmCharts.AmGraph();
+          graph.id = "g8";
+          graph.title = "FRA, Category 3";
+          graph.valueField = "fracategory3";
+          graph.balloonText = "[[category]]: [[value]]";
+          graph.bullet = "none";
+          graph.lineColor = "#e98fec";
+          graph.lineAlpha = 0.3;
+          graph.lineThickness = 3;
+          graph.fillAlphas = 0;
+          chartCatCountry.addGraph(graph);
+
+          // CURSOR
+          var chartCursor = new AmCharts.ChartCursor();
+          chartCursor.cursorPosition = "mouse";
+          chartCursor.zoomable = false;
+          chartCursor.cursorAlpha = 1;
+          chartCursor.bulletsEnabled = true;
+          chartCursor.oneBalloonOnly = true;
+          chartCatCountry.addChartCursor(chartCursor);
+
+          // LEGEND
+          var legend = new AmCharts.AmLegend();
+          legend.useGraphSettings = true;
+          chartCatCountry.addLegend(legend);
+
+          // WRITE
+          chartCatCountry.write("container-countries-categories");
+      });
+
+      /**
+       * Add an event to handle hovers
+       */
+      chartCatCountry.timeout;
+      chartCatCountry.addListener( "rollOverGraph", function( event ) {
+          setOpacity( event.graph, 1 );
+      } );
+      chartCatCountry.addListener( "rollOutGraph", function( event ) {
+        setOpacity( event.graph, 0.5 );
+      } );
+
+      function setOpacity( graph, opacity ) {
+        var className = "amcharts-graph-" + graph.id;
+        var items = document.getElementsByClassName( className );
+        if ( undefined === items ) {          
+          return;
+        }
+        for ( var x in items ) {
+          if ( "object" !== typeof items[x] )
+            continue;
+          var path = items[x].getElementsByTagName( "path" )[ 0 ];
+          if ( undefined !== path ) {
+            // path.style.fillOpacity = opacity;
+            path.style.strokeOpacity = opacity;
+          }
+        }
+      }
+    </script>
+</body>
