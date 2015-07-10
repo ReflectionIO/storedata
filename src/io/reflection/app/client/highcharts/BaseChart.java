@@ -92,6 +92,7 @@ public abstract class BaseChart extends Composite {
 
 	private void inject() {
 		chart = NativeHighcharts.nativeChart(options);
+		NativeHighcharts.nativeSetUTC(options, false);
 		resize();
 		Window.addResizeHandler(new ResizeHandler() {
 			@Override

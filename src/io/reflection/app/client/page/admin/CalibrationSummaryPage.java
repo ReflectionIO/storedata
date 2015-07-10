@@ -75,7 +75,6 @@ public class CalibrationSummaryPage extends Page implements NavigationEventHandl
 	@UiField(provided = true) CellList<Rank> hitsCellList = new CellList<Rank>(prototype, BootstrapGwtCellList.INSTANCE);
 	@UiField(provided = true) CellList<Rank> missesCellList = new CellList<Rank>(prototype, BootstrapGwtCellList.INSTANCE);
 
-	// @UiField GChart chart;
 	@UiField(provided = true) Chart chart = new Chart(XDataType.RankingXAxisDataType, YDataType.DownloadsYAxisDataType);
 
 	@UiField Element title;

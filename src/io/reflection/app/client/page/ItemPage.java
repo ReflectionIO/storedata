@@ -48,7 +48,6 @@ import io.reflection.app.client.highcharts.ChartHelper;
 import io.reflection.app.client.highcharts.ChartHelper.RankType;
 import io.reflection.app.client.highcharts.ChartHelper.XDataType;
 import io.reflection.app.client.highcharts.ChartHelper.YDataType;
-import io.reflection.app.client.page.part.ItemChart.RankingType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.datatypes.AppRevenue;
 import io.reflection.app.client.part.datatypes.DateRange;
@@ -150,7 +149,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 	private String internalId;
 	private String comingPage;
-	private RankingType rankingType;
 	private RankType rankType;
 	// private YAxisDataType dataType;
 	private Item item;
@@ -591,10 +589,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			if (filterContents == null || !filterContents.equals(newFilterContents)) {
 				filterContents = newFilterContents;
 
-				RankingType newRankingType = RankingType.fromString(newFilter.getListType());
-				if (rankingType == null || rankingType != newRankingType) {
-					rankingType = newRankingType;
-				}
 				RankType newRankType = RankType.fromString(newFilter.getListType());
 				if (rankType == null || rankType != newRankType) {
 					rankType = newRankType;
@@ -787,7 +781,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 		chartRank.setRankingType(rankType);
 		chartRank.drawData(ranks, SERIES_ID_RANK, ChartHelper.TYPE_LINE, ColorHelper.getReflectionGreen(), false, false);
-		if (MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage)) {
+		if (MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage) || SessionController.get().isLoggedInUserAdmin()) {
 			chartRevenue.drawData(ranks, SERIES_ID_REVENUE, ChartHelper.TYPE_AREA, ColorHelper.getReflectionPurple(), false, cumulativeChartSwitch.getValue()
 					.booleanValue());
 			chartDownloads.drawData(ranks, SERIES_ID_DOWNLOAD, ChartHelper.TYPE_AREA, ColorHelper.getReflectionRed(), false, cumulativeChartSwitch.getValue()
@@ -950,10 +944,10 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 					DOWNLOADS_CHART_TYPE, comingPage, filterContents));
 			appDetailsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 		} else {
-			revenueText.setInnerText("Revenue - coming soon");
+			revenueText.setInnerHTML("Revenue <span class=\"text-small\">coming soon</span>");
 			revenueItem.addClassName(style.isDisabled());
 			revenueLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
-			downloadsText.setInnerText("Downloads - coming soon");
+			downloadsText.setInnerHTML("Downloads <span class=\"text-small\">coming soon</span>");
 			downloadsItem.addClassName(style.isDisabled());
 			downloadsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 			appDetailsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());

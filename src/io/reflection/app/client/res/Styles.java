@@ -361,9 +361,6 @@ public interface Styles extends ClientBundle {
 		@ClassName("content-list--no-bullets")
 		String contentListNoBullets();
 
-		@ClassName("content-list-item")
-		String contentListItem();
-
 		String cord();
 
 		@ClassName("country-select")
@@ -762,10 +759,15 @@ public interface Styles extends ClientBundle {
 		@ClassName("iap-column")
 		String iapColumn();
 
+		@ClassName("icon--my-apps")
+		String iconMyApps();
+
 		@ClassName("icon-dollar")
 		String iconDollar();
 
 		String ie10();
+
+		String ie11();
 
 		String ie8();
 
@@ -1124,11 +1126,11 @@ public interface Styles extends ClientBundle {
 		@ClassName("page-section--with-border")
 		String pageSectionWithBorder();
 
-		@ClassName("page-title")
-		String pageTitle();
-		
 		@ClassName("page-terms")
 		String pageTerms();
+
+		@ClassName("page-title")
+		String pageTitle();
 
 		@ClassName("pages-link")
 		String pagesLink();
@@ -1646,6 +1648,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("text-muted")
 		String textMuted();
+
+		@ClassName("text-small")
+		String textSmall();
 
 		@ClassName("th-first")
 		String thFirst();

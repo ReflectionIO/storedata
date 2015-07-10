@@ -27,7 +27,7 @@ import java.util.Map;
 
 /**
  * @author billy1380
- * 
+ *
  */
 public class FilterController {
 
@@ -241,16 +241,16 @@ public class FilterController {
 
 		public Filter copyFilter() {
 			Filter filterCopy = new Filter();
-			filterCopy.setCategoryId(this.getCategoryId());
-			filterCopy.setChartType(this.getChartType());
-			filterCopy.setCountryA2Code(this.getCountryA2Code());
-			filterCopy.setDailyData(this.getDailyData());
-			filterCopy.setEndTime(this.getEndTime());
-			filterCopy.setLinkedAccountId(this.getLinkedAccountId());
-			filterCopy.setListType(this.getListType());
-			filterCopy.setStartTime(this.getStartTime());
-			filterCopy.setStoreA3Code(this.getStoreA3Code());
-			filterCopy.setSummaryType(this.getSummaryType());
+			filterCopy.setCategoryId(getCategoryId());
+			filterCopy.setChartType(getChartType());
+			filterCopy.setCountryA2Code(getCountryA2Code());
+			filterCopy.setDailyData(getDailyData());
+			filterCopy.setEndTime(getEndTime());
+			filterCopy.setLinkedAccountId(getLinkedAccountId());
+			filterCopy.setListType(getListType());
+			filterCopy.setStartTime(getStartTime());
+			filterCopy.setStoreA3Code(getStoreA3Code());
+			filterCopy.setSummaryType(getSummaryType());
 			return filterCopy;
 		}
 	}
@@ -305,7 +305,7 @@ public class FilterController {
 
 	/**
 	 * Set the proper filter page - Item Page filter will reflect the changes made in other pages, but not the opposite
-	 * 
+	 *
 	 * @param p
 	 */
 	public void setFilter(String stackValue) {
@@ -514,7 +514,6 @@ public class FilterController {
 
 				mPreviousValues.put(START_DATE_KEY, previousStartDate);
 			}
-
 		}
 	}
 
@@ -554,7 +553,7 @@ public class FilterController {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void start() {
 		mInTransaction++;
@@ -565,7 +564,7 @@ public class FilterController {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void commit(boolean fireEvents) {
 		mInTransaction--;

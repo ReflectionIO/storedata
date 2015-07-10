@@ -28,7 +28,6 @@ import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.helper.ApiCallHelper;
-import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.part.datatypes.AppRevenue;
 import io.reflection.app.client.part.datatypes.ItemRevenue;
 import io.reflection.app.client.part.datatypes.RanksGroup;
@@ -39,12 +38,10 @@ import io.reflection.app.shared.util.DataTypeHelper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.http.client.Request;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.datepicker.client.CalendarUtil;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
 import com.google.gwt.view.client.ListDataProvider;
@@ -53,7 +50,7 @@ import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author billy1380
- * 
+ *
  */
 public class RankController extends AsyncDataProvider<RanksGroup> implements ServiceConstants {
 
@@ -100,11 +97,6 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 		input.listType = FilterController.get().getListTypes().get(0);
 
 		input.on = FilterController.get().getEndDate(); // Get start date from filter
-
-		Date today = FilterHelper.getToday();
-		if (CalendarUtil.isSameDate(input.on, today)) {
-			input.on = today;
-		}
 
 		input.category = FilterController.get().getCategory();
 
@@ -174,8 +166,8 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 	}
 
 	/**
-     * 
-     */
+	 *
+	 */
 	public void fetchSalesRanks() {
 		CoreService service = ServiceCreator.createCoreService();
 
@@ -207,7 +199,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 	/**
 	 * Retrieve real data
-	 * 
+	 *
 	 * @param item
 	 */
 	public void fetchItemSalesRanks(final Item item) {
@@ -267,7 +259,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 								appRanking.date = rank.date;
 								appRanking.revenue = rank.revenue;
 								appRevenueDataProvider.getList().add(appRanking);
-								paid += (rankPaid = (float) rank.downloads.intValue() * output.item.price.floatValue());
+								paid += (rankPaid = rank.downloads.intValue() * output.item.price.floatValue());
 								iap += (rank.revenue.floatValue() - rankPaid);
 							}
 						}
@@ -312,7 +304,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 	/**
 	 * Retrieve predictions
-	 * 
+	 *
 	 * @param item
 	 */
 	public void fetchItemRanks(final Item item) {
@@ -374,7 +366,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 								appRanking.date = rank.date;
 								appRanking.revenue = rank.revenue;
 								appRevenueDataProvider.getList().add(appRanking);
-								paid += (rankPaid = (float) rank.downloads.intValue() * rank.price.floatValue());
+								paid += (rankPaid = rank.downloads.intValue() * rank.price.floatValue());
 								iap += (rank.revenue.floatValue() - rankPaid);
 							}
 						}
@@ -434,7 +426,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.google.gwt.view.client.AbstractDataProvider#onRangeChanged(com.google.gwt.view.client.HasData)
 	 */
 	@Override
