@@ -505,5 +505,22 @@ var SubmitButtonWithFeedback = function() {
 		// Components
 		
 	};
+
+// ChartsPage object
+	var AMChartsPage = function() {
+		new Page();
+		var dkPageProperties = {
+			bannerImage: "images/banner-icon-grids.png",
+			bannerImageAlt: "Button icon", 
+			sectionTitle: "Charts", 
+			componentTitle: "AM Charts Demos", 
+			intro: "",
+			pageUrl: "am-charts.html"
+		}
+		new DesignKitPage(dkPageProperties);
+
+		// Components
+		
+	};
 /* END PAGE OBJECTS FOR TEMPLATES */
 
