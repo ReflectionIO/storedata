@@ -460,6 +460,8 @@ public class FilterHelper {
 	}
 
 	/**
+	 * Use CalendarUtils instead
+	 * 
 	 * @param value
 	 * @param date
 	 * @return

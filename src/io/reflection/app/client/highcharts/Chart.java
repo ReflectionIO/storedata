@@ -49,7 +49,6 @@ public class Chart extends BaseChart {
 			boolean isCumulative, boolean hide) {
 
 		if (ranks != null && ranks.size() > 0) {
-
 			boolean isOpposite = (yAxisPosition != YAxisPosition.PRIMARY);
 
 			// Get axis options to use
@@ -59,11 +58,9 @@ public class Chart extends BaseChart {
 				break;
 			case SECONDARY:
 				yAxis = getSecondaryYAxis();
-				yAxis.setLabelsStyle(ChartHelper.getYAxisLabelsStyle(color));
 				break;
 			case TERTIARY:
 				yAxis = getTertiaryYAxis();
-				yAxis.setLabelsStyle(ChartHelper.getYAxisLabelsStyle(color));
 				break;
 			}
 
@@ -72,11 +69,12 @@ public class Chart extends BaseChart {
 			// Set series names and currency
 			switch (yDataType) {
 			case DownloadsYAxisDataType:
+				yAxis.setLabelsStyle(ChartHelper.getYAxisLabelsStyle(color));
 				seriesName = "Downloads";
 				break;
 
 			case RevenueYAxisDataType:
-				seriesName = "Revenue";
+				yAxis.setLabelsStyle(ChartHelper.getYAxisLabelsStyle(color));
 				// Set currency
 				for (Rank rank : ranks) {
 					if (currency == null && rank.currency != null) {
@@ -88,6 +86,7 @@ public class Chart extends BaseChart {
 					setCurrency(FormattingHelper.getCurrencySymbol(""));
 				}
 				yAxis.setLabelsFormatter(ChartHelper.getNativeLabelFormatter(currency, ""));
+				seriesName = "Revenue " + getCurrency();
 				break;
 
 			case RankingYAxisDataType:
@@ -100,9 +99,16 @@ public class Chart extends BaseChart {
 			switch (xDataType) {
 			case DateXAxisDataType:
 				if (get(seriesId) == null && dateRange != null) {
-					Date progressiveDate = dateRange.getFrom();
 					double cumulative = 0;
+					Date progressiveDate = dateRange.getFrom();
 					for (Rank rank : ranks) {
+						// Fill with blank data next range of missing dates
+						if (!CalendarUtil.isSameDate(progressiveDate, rank.date)) {
+							while (!CalendarUtil.isSameDate(progressiveDate, rank.date) && FilterHelper.beforeDate(progressiveDate, dateRange.getTo())) {
+								data.push(createConnectingPoint(progressiveDate.getTime(), JavaScriptObjectHelper.getNativeNull()));
+								CalendarUtil.addDaysToDate(progressiveDate, 1);
+							}
+						}
 						CalendarUtil.addDaysToDate(progressiveDate, 1);
 						Double yPoint = getYPointValue(rank, yDataType);
 						if (yPoint != null) {
@@ -207,42 +213,54 @@ public class Chart extends BaseChart {
 		this.currency = currency;
 	}
 
+	public String getCurrency() {
+		return currency;
+	}
+
 	// Currently working for DateTime X Axis
 	private boolean isPointIsolated(YDataType yDataType, List<Rank> ranks, Rank rank) {
 		boolean isolated = false;
-		if (ranks.size() == 1) {
-			isolated = true;
-		} else {
-			int rankIndex = ranks.indexOf(rank);
-			int lastIndex = ranks.size() - 1;
-			switch (yDataType) {
-			case DownloadsYAxisDataType:
-				isolated = (rankIndex == 0 && (ranks.get(1).downloads == null || CalendarUtil.getDaysBetween(rank.date, ranks.get(1).date) > 1))
-						|| (rankIndex > 0 && rankIndex < lastIndex && ((ranks.get(rankIndex - 1).downloads == null && ranks.get(rankIndex + 1).downloads == null) || (CalendarUtil
-								.getDaysBetween(rank.date, ranks.get(rankIndex - 1).date) > 1 && CalendarUtil.getDaysBetween(rank.date,
-								ranks.get(rankIndex + 1).date) > 1)))
-						|| (rankIndex == lastIndex && (ranks.get(lastIndex - 1).downloads == null || CalendarUtil.getDaysBetween(rank.date,
-								ranks.get(lastIndex - 1).date) > 1));
-				break;
-			case RevenueYAxisDataType:
-				isolated = (rankIndex == 0 && (ranks.get(1).revenue == null || CalendarUtil.getDaysBetween(rank.date, ranks.get(1).date) > 1))
-						|| (rankIndex > 0 && rankIndex < lastIndex && ((ranks.get(rankIndex - 1).revenue == null && ranks.get(rankIndex + 1).revenue == null) || (CalendarUtil
-								.getDaysBetween(rank.date, ranks.get(rankIndex - 1).date) > 1 && CalendarUtil.getDaysBetween(rank.date,
-								ranks.get(rankIndex + 1).date) > 1)))
-						|| (rankIndex == lastIndex && (ranks.get(lastIndex - 1).revenue == null || CalendarUtil.getDaysBetween(rank.date,
-								ranks.get(lastIndex - 1).date) > 1));
-				break;
-			case RankingYAxisDataType:
-			default:
-				isolated = (rankIndex == 0 && (getRankPosition(ranks.get(1)) == 0 || CalendarUtil.getDaysBetween(rank.date, ranks.get(1).date) > 1))
-						|| (rankIndex > 0 && rankIndex < lastIndex && ((getRankPosition(ranks.get(rankIndex - 1)) == 0 && getRankPosition(ranks
-								.get(rankIndex + 1)) == 0) || (CalendarUtil.getDaysBetween(rank.date, ranks.get(rankIndex - 1).date) > 1 && CalendarUtil
-								.getDaysBetween(rank.date, ranks.get(rankIndex + 1).date) > 1)))
-						|| (rankIndex == lastIndex && (getRankPosition(ranks.get(lastIndex - 1)) == 0 || CalendarUtil.getDaysBetween(rank.date,
-								ranks.get(lastIndex - 1).date) > 1));
-				break;
+		int rankIndex = ranks.indexOf(rank);
+		int lastIndex = ranks.size() - 1;
+		switch (yDataType) {
+		case DownloadsYAxisDataType:
+			if ((ranks.size() == 1)
+					|| (rankIndex == 0 && (Math.abs(CalendarUtil.getDaysBetween(rank.date, ranks.get(1).date)) > 1 || ranks.get(1).downloads == null))
+					|| (rankIndex > 0 && rankIndex < lastIndex && Math.abs(CalendarUtil.getDaysBetween(rank.date, ranks.get(rankIndex - 1).date)) > 1
+							&& Math.abs(CalendarUtil.getDaysBetween(rank.date, ranks.get(rankIndex + 1).date)) > 1
+							&& ranks.get(rankIndex - 1).downloads != null && ranks.get(rankIndex + 1).downloads != null)
+					|| (rankIndex == lastIndex && (Math.abs(CalendarUtil.getDaysBetween(rank.date, ranks.get(lastIndex - 1).date)) > 1 || ranks
+							.get(lastIndex - 1).downloads == null))) {
+				isolated = true;
 			}
+			break;
+
+		case RevenueYAxisDataType:
+			if ((ranks.size() == 1)
+					|| (rankIndex == 0 && (Math.abs(CalendarUtil.getDaysBetween(rank.date, ranks.get(1).date)) > 1 || ranks.get(1).revenue == null))
+					|| (rankIndex > 0 && rankIndex < lastIndex && Math.abs(CalendarUtil.getDaysBetween(rank.date, ranks.get(rankIndex - 1).date)) > 1
+							&& Math.abs(CalendarUtil.getDaysBetween(rank.date, ranks.get(rankIndex + 1).date)) > 1 && ranks.get(rankIndex - 1).revenue != null && ranks
+							.get(rankIndex + 1).revenue != null)
+					|| (rankIndex == lastIndex && (Math.abs(CalendarUtil.getDaysBetween(rank.date, ranks.get(lastIndex - 1).date)) > 1 || ranks
+							.get(lastIndex - 1).revenue == null))) {
+				isolated = true;
+			}
+			break;
+
+		case RankingYAxisDataType:
+			if ((ranks.size() == 1)
+					|| (rankIndex == 0 && (Math.abs(CalendarUtil.getDaysBetween(rank.date, ranks.get(1).date)) > 1 || getRankPosition(ranks.get(1)) == 0))
+					|| (rankIndex > 0
+							&& rankIndex < lastIndex
+							&& (Math.abs(CalendarUtil.getDaysBetween(rank.date, ranks.get(rankIndex - 1).date)) > 1 || getRankPosition(ranks.get(rankIndex - 1)) == 0) && (Math
+							.abs(CalendarUtil.getDaysBetween(rank.date, ranks.get(rankIndex + 1).date)) > 1 || getRankPosition(ranks.get(rankIndex + 1)) == 0))
+					|| (rankIndex == lastIndex && (Math.abs(CalendarUtil.getDaysBetween(rank.date, ranks.get(lastIndex - 1).date)) > 1 || getRankPosition(ranks
+							.get(lastIndex - 1)) == 0))) {
+				isolated = true;
+			}
+			break;
 		}
+
 		return isolated;
 	}
 
@@ -257,6 +275,10 @@ public class Chart extends BaseChart {
 				dateRange.setFrom(FilterHelper.normalizeDateUTC(FilterController.get().getStartDate()));
 				dateRange.setTo(FilterHelper.normalizeDateUTC(FilterController.get().getEndDate()));
 				setXAxisExtremes((double) dateRange.getFrom().getTime(), (double) dateRange.getTo().getTime());
+				// TODO reset y axis extremes
+				// getPrimaryAxis().setMin(JavaScriptObjectHelper.getNativeNull());
+				// getPrimaryAxis().setMax(JavaScriptObjectHelper.getNativeNull());
+				// NativeAxis.nativeUpdate(NativeAxis.nativeGetYAxis(chart, 0), getPrimaryAxis().getOptions(), true); // update y axis
 			}
 			removeAllSeries();
 			reflow();
