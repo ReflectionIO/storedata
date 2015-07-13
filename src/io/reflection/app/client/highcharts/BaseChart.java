@@ -90,7 +90,7 @@ public abstract class BaseChart extends Composite {
 
 	private void inject() {
 		chart = NativeHighcharts.nativeChart(options);
-//		NativeHighcharts.nativeSetUTC(options, false);
+		// NativeHighcharts.nativeSetUTC(options, false);
 		resize();
 		Window.addResizeHandler(new ResizeHandler() {
 			@Override
@@ -109,18 +109,16 @@ public abstract class BaseChart extends Composite {
 		NativeChart.nativeAddAxis(chart, options, isX, true, false);
 	}
 
-	public void addSeries(JavaScriptObject data, LineType lineType, String seriesId, String name, String color, YAxisPosition axisId) {
+	public void addSeries(JavaScriptObject data, LineType lineType, String seriesId, String name, String color, YAxisPosition axisId, JavaScriptObject tooltip) {
 		JavaScriptObject series = JavaScriptObject.createObject();
-		JavaScriptObjectHelper.setObjectProperty(series, "data", data);
+		JavaScriptObjectHelper.setObjectProperty(series, "data", data); // Add points to draw
+		JavaScriptObjectHelper.setObjectProperty(series, "tooltip", tooltip); // Set custom tooltip options
 		JavaScriptObjectHelper.setStringProperty(series, "type", lineType.toString());
-		JavaScriptObjectHelper.setStringProperty(series, "id", seriesId);
+		JavaScriptObjectHelper.setStringProperty(series, "id", seriesId); // Unique series id
 		JavaScriptObjectHelper.setStringProperty(series, "name", name);
 		JavaScriptObjectHelper.setStringProperty(series, "color", color);
-		// Link series with axis
-		JavaScriptObjectHelper.setStringProperty(series, "yAxis", axisId.toString());
-		// JavaScriptObject tooltip = JavaScriptObject.createObject();
-		// JavaScriptObjectHelper.setObjectProperty(tooltip, "formatter", ChartHelper.getNativeTooltipFormatter("pippo"));
-		// JavaScriptObjectHelper.setObjectProperty(series, "tooltip", tooltip);
+		JavaScriptObjectHelper.setStringProperty(series, "yAxis", axisId.toString()); // Link series with proper axis
+
 		NativeChart.nativeAddSeries(chart, series, true, false);
 	}
 

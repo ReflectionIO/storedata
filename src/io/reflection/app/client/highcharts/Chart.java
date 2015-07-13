@@ -66,11 +66,14 @@ public class Chart extends BaseChart {
 
 			String seriesName = seriesId;
 
+			JavaScriptObject tooltip = JavaScriptObject.createObject();
+
 			// Set series names and currency
 			switch (yDataType) {
 			case DownloadsYAxisDataType:
 				yAxis.setLabelsStyle(ChartHelper.getYAxisLabelsStyle(color));
 				seriesName = "Downloads";
+				tooltip = ChartHelper.getTooltipSeriesOption();
 				break;
 
 			case RevenueYAxisDataType:
@@ -86,11 +89,13 @@ public class Chart extends BaseChart {
 					setCurrency(FormattingHelper.getCurrencySymbol(""));
 				}
 				yAxis.setLabelsFormatter(ChartHelper.getNativeLabelFormatter(currency, ""));
-				seriesName = "Revenue " + getCurrency();
+				seriesName = "Revenue";
+				tooltip = ChartHelper.getTooltipRevenueSeriesOption(currency);
 				break;
 
 			case RankingYAxisDataType:
 				seriesName = "Ranking";
+				tooltip = ChartHelper.getTooltipSeriesOption();
 				break;
 			}
 
@@ -121,7 +126,7 @@ public class Chart extends BaseChart {
 							data.push(createConnectingPoint(rank.date.getTime(), JavaScriptObjectHelper.getNativeNull()));
 						}
 					}
-					addSeries(data, lineType, seriesId, seriesName, color, yAxisPosition);
+					addSeries(data, lineType, seriesId, seriesName, color, yAxisPosition, tooltip);
 				}
 				break;
 
@@ -136,7 +141,7 @@ public class Chart extends BaseChart {
 						}
 
 					}
-					addSeries(data, lineType, seriesId, seriesName, color, yAxisPosition);
+					addSeries(data, lineType, seriesId, seriesName, color, yAxisPosition, tooltip);
 				}
 				break;
 			}

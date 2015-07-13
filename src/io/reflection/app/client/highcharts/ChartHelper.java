@@ -251,6 +251,9 @@ public class ChartHelper {
 			if (entry.getValue() instanceof Integer) {
 				JavaScriptObjectHelper.setIntegerProperty(JSObject, entry.getKey(), (Integer) entry.getValue());
 			}
+			if (entry.getValue() instanceof Boolean) {
+				JavaScriptObjectHelper.setBooleanProperty(JSObject, entry.getKey(), (Boolean) entry.getValue());
+			}
 		}
 		return JSObject;
 
@@ -266,6 +269,16 @@ public class ChartHelper {
 		HashMap<String, Object> dateTimeLabelFormatValues = new HashMap<String, Object>();
 		dateTimeLabelFormatValues.put("day", "%e %b %Y");
 		return getJSObjectFromMap(dateTimeLabelFormatValues);
+	}
+
+	public static JavaScriptObject getTooltipRevenueSeriesOption(String currency) {
+		HashMap<String, Object> tooltipRevenueSeriesValues = new HashMap<String, Object>();
+		tooltipRevenueSeriesValues.put("valuePrefix", currency);
+		return getJSObjectFromMap(tooltipRevenueSeriesValues);
+	}
+
+	public static JavaScriptObject getTooltipSeriesOption() {
+		return JavaScriptObject.createObject(); // TODO
 	}
 
 	public static native JavaScriptObject getNativeLabelFormatter(String prefix, String suffix) /*-{
