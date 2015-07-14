@@ -190,6 +190,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 			}
 		});
 
+		linkedAccountsCount.setInnerSafeHtml(AnimationHelper.getLoaderInlineSafeHTML());
 	}
 
 	private class CustomTableBuilder extends DefaultCellTableBuilder<DataAccount> {

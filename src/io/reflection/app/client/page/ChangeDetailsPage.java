@@ -31,8 +31,9 @@ import io.reflection.app.api.core.shared.call.event.GetUserDetailsEventHandler;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.StyledButtonCell;
 import io.reflection.app.client.component.LoadingButton;
-import io.reflection.app.client.component.TextField;
+import io.reflection.app.client.component.LoadingButton.IResetStatusCallback;
 import io.reflection.app.client.component.PasswordField;
+import io.reflection.app.client.component.TextField;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.SessionController;
@@ -67,7 +68,6 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
@@ -285,12 +285,19 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 
 	}
 
+	private void setUserDetailsFormEnabled(boolean enabled) {
+		username.setEnabled(enabled);
+		forename.setEnabled(enabled);
+		surname.setEnabled(enabled);
+		company.setEnabled(enabled);
+	}
+
 	@UiHandler("changeDetailsBtn")
 	void onChangeDetailsClicked(ClickEvent event) {
 		if (validateDetails()) {
 			clearDetailsErrors();
 			changeDetailsBtn.setStatusLoading("Changing details");
-
+			setUserDetailsFormEnabled(false);
 			SessionController.get().changeUserDetails(username.getText(), forename.getText(), surname.getText(), company.getText());
 		} else {
 			if (usernameError != null) {
@@ -797,9 +804,24 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 
 			changeDetailsBtn.setEnabled(false);
 			forename.setFocus(true);
-			changeDetailsBtn.setStatusSuccess("Details changed!");
+			changeDetailsBtn.setStatusSuccess("Details changed!", new IResetStatusCallback() {
+
+				@Override
+				public void onResetStatus() {
+					setUserDetailsFormEnabled(true);
+					changeDetailsBtn.setEnabled(false);
+				}
+			});
 		} else {
-			changeDetailsBtn.setStatusError();
+			changeDetailsBtn.setStatusError(new IResetStatusCallback() {
+
+				@Override
+				public void onResetStatus() {
+					fillDetailsForm(currentUser); // Restore previous values
+					setUserDetailsFormEnabled(true);
+					changeDetailsBtn.setEnabled(false);
+				}
+			});
 		}
 
 	}
@@ -812,7 +834,15 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	 */
 	@Override
 	public void changeUserDetailsFailure(ChangeUserDetailsRequest input, Throwable caught) {
-		changeDetailsBtn.setStatusError();
+		changeDetailsBtn.setStatusError(new IResetStatusCallback() {
+
+			@Override
+			public void onResetStatus() {
+				fillDetailsForm(currentUser); // Restore previous values
+				setUserDetailsFormEnabled(true);
+				changeDetailsBtn.setEnabled(false);
+			}
+		});
 	}
 
 	/*
@@ -823,24 +853,18 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	@Override
 	public void userPasswordChanged(Long userId) {
 
-		changePasswordBtn.setEnabled(false);
 		resetPasswordForm();
-		changePasswordBtn.setStatusSuccess("Password changed!");
+		changePasswordBtn.setStatusSuccess("Password changed!", new IResetStatusCallback() {
 
-		if (SessionController.get().isLoggedInUserAdmin()) {
-			Timer t = new Timer() {
-
-				@Override
-				public void run() {
-					changePasswordBtn.resetStatus();
+			@Override
+			public void onResetStatus() {
+				changePasswordBtn.setEnabled(false);
+				if (SessionController.get().isLoggedInUserAdmin()) {
 					PageType.UsersPageType.show();
 				}
-			};
+			}
+		});
 
-			t.schedule(2000);
-		} else {
-			changePasswordBtn.setStatusError();
-		}
 	}
 
 	/*
@@ -851,8 +875,13 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	@Override
 	public void userPasswordChangeFailed(Error error) {
 
-		changePasswordBtn.setEnabled(false);
-		changePasswordBtn.setStatusError();
+		changePasswordBtn.setStatusError(new IResetStatusCallback() {
+
+			@Override
+			public void onResetStatus() {
+				changePasswordBtn.setEnabled(false);
+			}
+		});
 		resetPasswordForm();
 
 	}
