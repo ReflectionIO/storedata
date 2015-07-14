@@ -34,6 +34,10 @@ public class LoadingButton extends Button {
 	private SpanElement textElem = Document.get().createSpanElement();
 	private boolean isProgressive;
 
+	public interface IResetStatusCallback {
+		void onResetStatus();
+	}
+
 	public LoadingButton() {
 		this(false);
 	}
@@ -74,7 +78,7 @@ public class LoadingButton extends Button {
 		setStatusLoading(null);
 	}
 
-	public void setStatusSuccess(String successText, int hideTimeout) {
+	public void setStatusSuccess(String successText, int hideTimeout, final IResetStatusCallback callback) {
 		setEnabled(false);
 		getElement().removeClassName(STYLE_ERROR);
 		getElement().removeClassName(STYLE_LOADING);
@@ -91,25 +95,40 @@ public class LoadingButton extends Button {
 				@Override
 				public void run() {
 					resetStatus();
+					if (callback != null) {
+						callback.onResetStatus();
+					}
 				}
 			};
 			t.schedule(hideTimeout);
 		}
 	}
 
+	public void setStatusSuccess(String successText, int hideTimeout) {
+		setStatusSuccess(null, DEFAULT_TIMEOUT, null);
+	}
+
 	public void setStatusSuccess() {
-		setStatusSuccess(null, DEFAULT_TIMEOUT);
+		setStatusSuccess(null, DEFAULT_TIMEOUT, null);
+	}
+
+	public void setStatusSuccess(IResetStatusCallback callback) {
+		setStatusSuccess(null, DEFAULT_TIMEOUT, callback);
 	}
 
 	public void setStatusSuccess(int hideTimeout) {
-		setStatusSuccess(null, hideTimeout);
+		setStatusSuccess(null, hideTimeout, null);
 	}
 
 	public void setStatusSuccess(String successText) {
-		setStatusError(successText, DEFAULT_TIMEOUT);
+		setStatusSuccess(successText, DEFAULT_TIMEOUT, null);
 	}
 
-	public void setStatusError(String errorText, int hideTimeout) {
+	public void setStatusSuccess(String successText, IResetStatusCallback callback) {
+		setStatusSuccess(successText, DEFAULT_TIMEOUT, callback);
+	}
+
+	public void setStatusError(String errorText, int hideTimeout, final IResetStatusCallback callback) {
 		setEnabled(false);
 		getElement().removeClassName(STYLE_LOADING);
 		getElement().removeClassName(STYLE_SUCCESS);
@@ -128,6 +147,9 @@ public class LoadingButton extends Button {
 				@Override
 				public void run() {
 					resetStatus();
+					if (callback != null) {
+						callback.onResetStatus();
+					}
 				}
 			};
 
@@ -135,16 +157,28 @@ public class LoadingButton extends Button {
 		}
 	}
 
+	public void setStatusError(String errorText, int hideTimeout) {
+		setStatusError(null, DEFAULT_TIMEOUT, null);
+	}
+
 	public void setStatusError() {
-		setStatusError(null, DEFAULT_TIMEOUT);
+		setStatusError(null, DEFAULT_TIMEOUT, null);
+	}
+
+	public void setStatusError(IResetStatusCallback callback) {
+		setStatusError(null, DEFAULT_TIMEOUT, callback);
 	}
 
 	public void setStatusError(int hideTimeout) {
-		setStatusError(null, hideTimeout);
+		setStatusError(null, hideTimeout, null);
 	}
 
 	public void setStatusError(String errorText) {
-		setStatusError(errorText, DEFAULT_TIMEOUT);
+		setStatusError(errorText, DEFAULT_TIMEOUT, null);
+	}
+
+	public void setStatusError(String errorText, IResetStatusCallback callback) {
+		setStatusError(errorText, DEFAULT_TIMEOUT, callback);
 	}
 
 	public void setProgressiveStatus(double percentage) {

@@ -12,6 +12,8 @@ import io.reflection.app.api.core.shared.call.GetLinkedAccountItemsRequest;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountItemsResponse;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountsRequest;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountsResponse;
+import io.reflection.app.api.core.shared.call.GetSalesRanksRequest;
+import io.reflection.app.api.core.shared.call.GetSalesRanksResponse;
 import io.reflection.app.api.core.shared.call.event.GetLinkedAccountItemsEventHandler;
 import io.reflection.app.api.core.shared.call.event.GetLinkedAccountsEventHandler;
 import io.reflection.app.api.core.shared.call.event.GetSalesRanksEventHandler;
@@ -75,7 +77,8 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author stefanocapuzzi
  * 
  */
-public class MyAppsPage extends Page implements FilterEventHandler, NavigationEventHandler, GetLinkedAccountsEventHandler, GetLinkedAccountItemsEventHandler {
+public class MyAppsPage extends Page implements FilterEventHandler, NavigationEventHandler, GetLinkedAccountsEventHandler, GetLinkedAccountItemsEventHandler,
+		GetSalesRanksEventHandler {
 
 	private static MyAppsPageUiBinder uiBinder = GWT.create(MyAppsPageUiBinder.class);
 
@@ -152,7 +155,6 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		appsTableDesktop.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 		appsTableMobile.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 		userItemProvider.addDataDisplay(appsTableDesktop);
-		userItemProvider.addDataDisplay(appsTableMobile);
 
 		// simplePager.setDisplay(appsTableDesktop);
 		// simplePager.setDisplay(appsTableMobile);
@@ -186,6 +188,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		register(DefaultEventBus.get().addHandlerToSource(GetLinkedAccountItemsEventHandler.TYPE, ItemController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(GetLinkedAccountItemsEventHandler.TYPE, ItemController.get(), userItemProvider));
 		register(DefaultEventBus.get().addHandlerToSource(GetSalesRanksEventHandler.TYPE, RankController.get(), userItemProvider));
+		register(DefaultEventBus.get().addHandlerToSource(GetSalesRanksEventHandler.TYPE, RankController.get(), this));
 
 		// boolean hasPermission = SessionController.get().loggedInUserHas(SessionController.);
 
@@ -580,5 +583,31 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		userItemProvider.reset();
 		setFiltersEnabled(true);
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.reflection.app.api.core.shared.call.event.GetSalesRanksEventHandler#getSalesRanksSuccess(io.reflection.app.api.core.shared.call.GetSalesRanksRequest,
+	 * io.reflection.app.api.core.shared.call.GetSalesRanksResponse)
+	 */
+	@Override
+	public void getSalesRanksSuccess(GetSalesRanksRequest input, GetSalesRanksResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess) {
+			if (!userItemProvider.getDataDisplays().contains(appsTableMobile)) { // Avoid initial double call to server
+				userItemProvider.addDataDisplay(appsTableMobile);
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.reflection.app.api.core.shared.call.event.GetSalesRanksEventHandler#getSalesRanksFailure(io.reflection.app.api.core.shared.call.GetSalesRanksRequest,
+	 * java.lang.Throwable)
+	 */
+	@Override
+	public void getSalesRanksFailure(GetSalesRanksRequest input, Throwable caught) {}
 
 }

@@ -255,6 +255,7 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 		if (output.status == StatusType.StatusTypeSuccess) {
 			User user = SessionController.get().getLoggedInUser();
 			userName.setInnerText(user.forename + " " + user.surname);
+			userCompany.setInnerText(user.company);
 		}
 	}
 

@@ -57,6 +57,7 @@ import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.dom.client.Style.TextAlign;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -213,13 +214,15 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		}
 
 		HTMLPanel emptyTableWidget = new HTMLPanel("<h6>No ranking data for filter!</h6>");
+		emptyTableWidget.getElement().getStyle().setTextAlign(TextAlign.CENTER);
+		emptyTableWidget.getElement().getStyle().setHeight(100.0, Unit.PX);
+		emptyTableWidget.getElement().getStyle().setPaddingTop(35.0, Unit.PX);
 		leaderboardTableDesktop.setEmptyTableWidget(emptyTableWidget);
 
 		leaderboardTableDesktop.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 		leaderboardTableMobile.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 
 		RankController.get().addDataDisplay(leaderboardTableDesktop);
-		RankController.get().addDataDisplay(leaderboardTableMobile);
 
 	}
 
@@ -779,6 +782,9 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 				} else {
 					overviewAllText.setInnerText(ALL_TEXT);
 				}
+			}
+			if (!RankController.get().getDataDisplays().contains(leaderboardTableMobile)) { // Avoid initial double call to server
+				RankController.get().addDataDisplay(leaderboardTableMobile);
 			}
 		} else {
 			setViewMoreVisible(false);
