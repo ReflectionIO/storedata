@@ -8,8 +8,7 @@
 //
 package io.reflection.app.service.sale;
 
-import static com.spacehopperstudios.utility.StringUtils.addslashes;
-import static com.spacehopperstudios.utility.StringUtils.stripslashes;
+import static com.spacehopperstudios.utility.StringUtils.*;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
@@ -29,6 +28,7 @@ import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -856,5 +856,26 @@ final class SaleService implements ISaleService {
 		}
 
 		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see io.reflection.app.service.sale.ISaleService#summariseSalesForDataAccountOnDate(java.lang.Long, java.util.Date)
+	 */
+	@Override
+	public void summariseSalesForDataAccountOnDate(Long id, Date date) throws DataAccessException {
+		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+			saleConnection.connect();
+			String query = String.format("CALL repopulate_sale_summary_for_dataaccount_on_date(%d, %s)", id, sdf.format(date));
+			saleConnection.executeQuery(query);
+		} finally {
+			if (saleConnection != null) {
+				saleConnection.disconnect();
+			}
+		}
 	}
 }

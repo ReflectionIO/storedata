@@ -226,4 +226,11 @@ public interface ISaleService extends IService {
 	 */
 	public Map<String, Sale> getItemPrices(String[] itemIds, String country, Date start, Date end) throws DataAccessException;
 
+	/**
+	 * @param id
+	 * @param date
+	 * @throws DataAccessException
+	 */
+	public void summariseSalesForDataAccountOnDate(Long id, Date date) throws DataAccessException;
+
 }
