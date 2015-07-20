@@ -80,7 +80,6 @@ import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
-import io.reflection.app.collectors.CollectorIOS;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
@@ -335,9 +334,7 @@ public final class Core extends ActionHandler {
 				output.items = ItemServiceProvider.provide().getInternalIdItemBatch(itemIds);
 
 				output.pager = input.pager;
-				updatePager(
-						output.pager,
-						output.ranks,
+				updatePager(output.pager, output.ranks,
 						input.pager.totalCount == null ? RankServiceProvider.provide().getRanksCount(input.country, input.category, input.listType, start)
 								: input.pager.totalCount);
 			}
@@ -454,18 +451,6 @@ public final class Core extends ActionHandler {
 
 					for (Rank rank : ranks) {
 						itemIds.add(rank.itemId);
-					}
-
-					if (!isAdmin && !CollectorIOS.TOP_FREE_APPS.equals(listType)) {
-						if (LOG.isLoggable(GaeLevel.DEBUG)) {
-							LOG.log(GaeLevel.DEBUG, String.format(
-									"Hiding revenue and downloads because isAdmin = %b and list type is = %s. We hide for Top Free Apps", isAdmin, listType));
-						}
-
-						for (Rank rank : ranks) {
-							rank.downloads = null;
-							rank.revenue = null;
-						}
 					}
 
 					if (collector.isFree(listType)) {
