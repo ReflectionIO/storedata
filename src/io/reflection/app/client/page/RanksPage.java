@@ -203,15 +203,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 		tabs.put(OVERALL_LIST_TYPE, allItem);
 		tabs.put(FREE_LIST_TYPE, freeItem);
-		if (SessionController.get().isLoggedInUserAdmin()) {
-			tabs.put(PAID_LIST_TYPE, paidItem);
-			tabs.put(GROSSING_LIST_TYPE, grossingItem);
-		} else {
-			paidText.setInnerHTML("Top Paid <span class=\"text-small\">coming soon</span>");
-			paidItem.addClassName(style.isDisabled());
-			grossingText.setInnerHTML("Top Grossing <span class=\"text-small\">coming soon</span>");
-			grossingItem.addClassName(style.isDisabled());
-		}
+		tabs.put(PAID_LIST_TYPE, paidItem);
+		tabs.put(GROSSING_LIST_TYPE, grossingItem);
 
 		HTMLPanel emptyTableWidget = new HTMLPanel("<h6>No ranking data for filter!</h6>");
 		emptyTableWidget.getElement().getStyle().setTextAlign(TextAlign.CENTER);
@@ -558,37 +551,53 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			}
 			leaderboardTableDesktop.addColumn(iapColumn, iapHeader);
 		} else if (PAID_LIST_TYPE.equals(selectedTab)) {
+			removeAllColumns();
 			if (SessionController.get().isLoggedInUserAdmin()) {
-				removeAllColumns();
 				leaderboardTableDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
 				leaderboardTableDesktop.setColumnWidth(paidColumn, 36.7, Unit.PCT);
 				leaderboardTableDesktop.setColumnWidth(priceColumn, 13.6, Unit.PCT);
 				leaderboardTableDesktop.setColumnWidth(downloadsColumn, 16.7, Unit.PCT);
 				leaderboardTableDesktop.setColumnWidth(revenueColumn, 16.7, Unit.PCT);
 				leaderboardTableDesktop.setColumnWidth(iapColumn, 6.3, Unit.PCT);
-				leaderboardTableDesktop.addColumn(rankColumn, rankHeader);
-				leaderboardTableDesktop.addColumn(paidColumn, paidHeader);
-				leaderboardTableDesktop.addColumn(priceColumn, priceHeader);
-				leaderboardTableDesktop.addColumn(downloadsColumn, downloadsHeader);
-				leaderboardTableDesktop.addColumn(revenueColumn, revenueHeader);
-				leaderboardTableDesktop.addColumn(iapColumn, iapHeader);
+			} else {
+				leaderboardTableDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+				leaderboardTableDesktop.setColumnWidth(paidColumn, 42.0, Unit.PCT);
+				leaderboardTableDesktop.setColumnWidth(priceColumn, 19.0, Unit.PCT);
+				leaderboardTableDesktop.setColumnWidth(downloadsColumn, 19.0, Unit.PCT);
+				leaderboardTableDesktop.setColumnWidth(iapColumn, 10.0, Unit.PCT);
 			}
-		} else if (GROSSING_LIST_TYPE.equals(selectedTab)) {
+			leaderboardTableDesktop.addColumn(rankColumn, rankHeader);
+			leaderboardTableDesktop.addColumn(paidColumn, paidHeader);
+			leaderboardTableDesktop.addColumn(priceColumn, priceHeader);
+			leaderboardTableDesktop.addColumn(downloadsColumn, downloadsHeader);
 			if (SessionController.get().isLoggedInUserAdmin()) {
-				removeAllColumns();
+				leaderboardTableDesktop.addColumn(revenueColumn, revenueHeader);
+			}
+			leaderboardTableDesktop.addColumn(iapColumn, iapHeader);
+		} else if (GROSSING_LIST_TYPE.equals(selectedTab)) {
+			removeAllColumns();
+			if (SessionController.get().isLoggedInUserAdmin()) {
 				leaderboardTableDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
 				leaderboardTableDesktop.setColumnWidth(grossingColumn, 36.7, Unit.PCT);
 				leaderboardTableDesktop.setColumnWidth(priceColumn, 13.6, Unit.PCT);
 				leaderboardTableDesktop.setColumnWidth(downloadsColumn, 16.7, Unit.PCT);
 				leaderboardTableDesktop.setColumnWidth(revenueColumn, 16.7, Unit.PCT);
 				leaderboardTableDesktop.setColumnWidth(iapColumn, 6.3, Unit.PCT);
-				leaderboardTableDesktop.addColumn(rankColumn, rankHeader);
-				leaderboardTableDesktop.addColumn(grossingColumn, grossingHeader);
-				leaderboardTableDesktop.addColumn(priceColumn, priceHeader);
-				leaderboardTableDesktop.addColumn(downloadsColumn, downloadsHeader);
-				leaderboardTableDesktop.addColumn(revenueColumn, revenueHeader);
-				leaderboardTableDesktop.addColumn(iapColumn, iapHeader);
+			} else {
+				leaderboardTableDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+				leaderboardTableDesktop.setColumnWidth(grossingColumn, 42.0, Unit.PCT);
+				leaderboardTableDesktop.setColumnWidth(priceColumn, 19.0, Unit.PCT);
+				leaderboardTableDesktop.setColumnWidth(revenueColumn, 19.0, Unit.PCT);
+				leaderboardTableDesktop.setColumnWidth(iapColumn, 10.0, Unit.PCT);
 			}
+			leaderboardTableDesktop.addColumn(rankColumn, rankHeader);
+			leaderboardTableDesktop.addColumn(grossingColumn, grossingHeader);
+			leaderboardTableDesktop.addColumn(priceColumn, priceHeader);
+			if (SessionController.get().isLoggedInUserAdmin()) {
+				leaderboardTableDesktop.addColumn(downloadsColumn, downloadsHeader);
+			}
+			leaderboardTableDesktop.addColumn(revenueColumn, revenueHeader);
+			leaderboardTableDesktop.addColumn(iapColumn, iapHeader);
 		}
 
 	}
@@ -680,15 +689,10 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 							OVERALL_LIST_TYPE, currentFilter));
 					freeLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
 							FREE_LIST_TYPE, currentFilter));
-					if (SessionController.get().isLoggedInUserAdmin()) {
-						paidLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
-								PAID_LIST_TYPE, currentFilter));
-						grossingLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
-								GROSSING_LIST_TYPE, currentFilter));
-					} else {
-						paidLink.setTargetHistoryToken(current.toString());
-						grossingLink.setTargetHistoryToken(current.toString());
-					}
+					paidLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
+							PAID_LIST_TYPE, currentFilter));
+					grossingLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
+							GROSSING_LIST_TYPE, currentFilter));
 				}
 
 				selectedTab = current.getParameter(SELECTED_TAB_PARAMETER_INDEX);

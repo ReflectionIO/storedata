@@ -25,12 +25,29 @@
 </script>
 <script src="js/vendor/amcharts/amcharts.js" type="text/javascript"></script>
 <script src="js/vendor/amcharts/serial.js" type="text/javascript"></script>
+<link rel="stylesheet" href="http://extra.amcharts.com/support/css3/ameffects.css">
 <style>
   .amcharts-graph-stroke {
     cursor: pointer;
   }
   .amcharts-graph-fill {
-    pointer-events: none;
+    pointer-events: none;    
+  }
+  #container-app-overlay .amcharts-graph-fill,
+  #container-countries-categories .amcharts-graph-fill {
+    fill: url(#sample);
+  }
+  #container-app-overlay .amcharts-graph-bullet,
+  #container-revenue .amcharts-graph-bullet,
+  #container-revenue-split .amcharts-graph-bullet {
+    display: none;
+  }
+  #container-revenue .amcharts-graph-fill {
+    fill: url(#gradientfill);
+  }
+  .amcharts-graph-line {
+    -webkit-animation: am-pulsate-line 1s linear infinite;
+    animation: am-pulsate-line 1s linear infinite;
   }
 </style>
 </head>
@@ -84,7 +101,7 @@
 					<div id="container-revenue-overlay-downloads" style="width:100%; height:500px;"></div>
 				</div>
         <div class="grid__row dk-component-row">
-          <h2 class="heading-style--heading-four">App Revenue, Revenue Sources</h2>
+          <h2 class="heading-style--heading-four">App Data, Categories and Countries Overlay</h2>
           <div id="container-countries-categories" style="width:100%; height:500px;"></div>
         </div>
 			</div>
@@ -111,6 +128,351 @@
   <script>
       new AMChartsPage();
 
+// GRAPH APPS, OVERLAY OTHER APPS
+      var chartApps;
+      var chartAppsData = [
+          {
+              "year": 1930,
+              "zookeeper": 4,
+              "deltav": 5,
+              "candycrush": 3
+          },
+          {
+              "year": 1934,
+              "zookeeper": 6,
+              "deltav": 2,
+              "candycrush": 4
+          },
+          {
+              "year": 1938,
+              "zookeeper": 2,
+              "deltav": 3,
+              "candycrush": 7
+          },
+          {
+              "year": 1950,
+              "zookeeper": 3,
+              "deltav": 4,
+              "candycrush": 5
+          },
+          {
+              "year": 1954,
+              "zookeeper": 5,
+              "deltav": 1,
+              "candycrush": 2
+          },
+          {
+              "year": 1958,
+              "zookeeper": 3,
+              "deltav": 2,
+              "candycrush": 1
+          },
+          {
+              "year": 1962,
+              "zookeeper": 6,
+              "deltav": 2,
+              "candycrush": 3
+          },
+          {
+              "year": 1966,
+              "zookeeper": 7,
+              "deltav": 1,
+              "candycrush": 5
+          },
+          {
+              "year": 1970,
+              "zookeeper": 3,
+              "deltav": 5,
+              "candycrush": 2
+          },
+          {
+              "year": 1974,
+              "zookeeper": 4,
+              "deltav": 3,
+              "candycrush": 6
+          },
+          {
+              "year": 1978,
+              "zookeeper": 3,
+              "deltav": 2,
+              "candycrush": 4
+          }
+      ];
+
+      initChartColours = function() {
+        $('.amcharts-graph-line:not(:first-child)').each(function(){
+          $this = $(this);
+          $this.find('.amcharts-graph-stroke').animate({'opacity': 0.3}, 300);
+          $this.find('.amcharts-graph-fill').animate({'opacity': 0}, 300).css("pointer-events", "none");
+        });
+        $('.amcharts-graph-line:first-child').each(function(){
+          $this = $(this);
+          $this.find('.amcharts-graph-stroke').attr("stroke-width", "3");
+        });
+      }
+
+      initChartInteraction = function() {
+        $('.amcharts-graph-line').on("click", function(){
+          var $this = $(this);
+          $this.data("is-selected-graph", "true");
+          $this.find('.amcharts-graph-stroke').animate({'opacity': 1}, 300).attr("stroke-width", "3");
+          $this.find('.amcharts-graph-fill').animate({'opacity': 1}, 300).css("pointer-events", "none");
+          $this.siblings('.amcharts-graph-line').find('.amcharts-graph-stroke').animate({'opacity': 0.3}, 300).attr("stroke-width", "2");
+          $this.siblings('.amcharts-graph-line').find('.amcharts-graph-fill').animate({'opacity': 0}, 300).css("pointer-events", "none");
+        });
+      }      
+      var chartApps;
+
+      AmCharts.ready(function () {
+          // SERIAL CHART
+          chartApps = new AmCharts.AmSerialChart();
+          chartApps.dataProvider = chartAppsData;
+          chartApps.categoryField = "year";
+          chartApps.startDuration = 0.5;
+          chartApps.balloon.color = "#000000";
+          chartApps.backgroundColor = "#f1f1f6";
+          chartApps.backgroundAlpha = 1;
+
+          // Chart styles
+          chartApps.addClassNames = true;
+          chartApps.defs = {
+            "linearGradient": {
+                "id": "sample",
+                "x1": "0%",
+                "y1": "0%",
+                "x2": "0%",
+                "y2": "100%",
+                "stop": [{
+                  "offset": "0%",
+                  "stop-color": "rgba(109,105,197,0.14)"
+                },{
+                  "offset": "100%",
+                  "stop-color": "rgba(27,199,159,0.14)"
+                }]
+              }
+          }
+          chartApps.color = "#81879d";
+          chartApps.fontFamily = "Lato";
+          chartApps.fontSize = 13;
+          chartApps.theme = "none";
+          chartApps.marginRight = 0;
+          chartApps.marginLeft = 0;
+          chartApps.creditsPosition = "bottom-right";
+
+          // AXES
+          // category
+          var categoryAxis = chartApps.categoryAxis;
+          categoryAxis.fillAlpha = 0;
+          categoryAxis.gridAlpha = 0;
+          categoryAxis.axisAlpha = 0;
+          categoryAxis.gridPosition = "start";
+          categoryAxis.position = "bottom";
+          categoryAxis.inside = false;
+          categoryAxis.showFirstLabel = false;
+          categoryAxis.showLastLabel = false;
+          categoryAxis.startOnAxis = true;
+
+          // value
+          var valueAxis = new AmCharts.ValueAxis();
+          valueAxis.title = "Rank";
+          valueAxis.axisAlpha = 0;
+          valueAxis.gridColor = "#e1e5e8";
+          valueAxis.gridThickness = 1;
+          valueAxis.gridAlpha = 1;
+          valueAxis.gridPosition = "start";
+          valueAxis.integersOnly = true;
+          valueAxis.gridCount = 10;
+          valueAxis.reversed = false; // this line makes the value axis reversed
+          valueAxis.titleColor = "#f1f1f6";
+          valueAxis.inside = true;
+          valueAxis.ignoreAxisWidth = true;
+          valueAxis.showFirstLabel = false;
+          valueAxis.centerLabelOnFullPeriod = true;
+          chartApps.addValueAxis(valueAxis);
+
+          // GRAPHS
+          // Italy graph
+          var graph = new AmCharts.AmGraph();
+          graph.title = "Zoo Keeper Ken";
+          graph.valueField = "zookeeper";
+          graph.balloonText = "[[category]]: [[value]]";
+          graph.lineAlpha = 1;
+          graph.bullet = "round";
+          graph.bulletSize = 4
+          graph.bulletBorderAlpha = 0.3
+          graph.bulletBorderThickness = 8
+          graph.maxBulletSize = 7
+          graph.cursorBulletAlpha = 0
+          graph.lineColor = "#1bc79f";
+          graph.lineThickness = 2;
+          graph.fillAlphas = 1;
+          graph.balloonFunction = function(g) {
+            var currentIndex = g.index;
+            var outputString = "", breakdownString = "", titleString = "";
+            for (var i = 0; i < g.graph.chart.graphs.length; i++) {
+              var graphTitle = g.graph.chart.graphs[i].title;
+              var graphColour = g.graph.chart.graphs[i].fillColorsR;
+              breakdownString += '<div style="color: ' + graphColour + '; font-weight: bold;">' + graphTitle + ': ';
+              var thisValueField = g.graph.chart.graphs[i].valueField;
+              var currentData = g.graph.chart.graphs[i].data[currentIndex].dataContext;
+              for(var p in currentData) {
+                if (p == thisValueField) {
+                  breakdownString += currentData[p] + '</div>';
+                  if(currentData[p] == g.values.value) {
+                    titleString = '<div style="color: ' + graphColour + '; font-weight: bold; margin-bottom: 10px">' + graphTitle + ': ' + g.values.value + '</div>';
+                  }
+                }
+              }
+            }            
+
+            outputString += '<div style="font-size: 16px;">Total: ' + g.values.total + '</div>';
+            return outputString + titleString + breakdownString;
+          };
+          chartApps.addGraph(graph);
+
+          // Germany graph
+          var graphTwo = new AmCharts.AmGraph();
+          graphTwo.title = "Delta V Racing";
+          graphTwo.valueField = "deltav";
+          graphTwo.balloonText = "[[category]]: [[value]]";
+          graphTwo.bullet = "round";
+          graphTwo.bulletSize = 4
+          graphTwo.bulletBorderAlpha = 0.3
+          graphTwo.bulletBorderThickness = 8
+          graphTwo.maxBulletSize = 7
+          graphTwo.cursorBulletAlpha = 0
+          graphTwo.lineColor = "#ffb449";
+          graphTwo.lineThickness = 2;
+          graphTwo.fillAlphas = 1;
+          graphTwo.balloonFunction = function(g) {
+            var currentIndex = g.index;
+            var outputString = "", breakdownString = "", titleString = "";
+            for (var i = 0; i < g.graph.chart.graphs.length; i++) {
+              var graphTitle = g.graph.chart.graphs[i].title;
+              var graphColour = g.graph.chart.graphs[i].fillColorsR;
+              breakdownString += '<div style="color: ' + graphColour + '; font-weight: bold;">' + graphTitle + ': ';
+              var thisValueField = g.graph.chart.graphs[i].valueField;
+              var currentData = g.graph.chart.graphs[i].data[currentIndex].dataContext;
+              for(var p in currentData) {
+                if (p == thisValueField) {
+                  breakdownString += currentData[p] + '</div>';
+                  if(currentData[p] == g.values.value) {
+                    titleString = '<div style="color: ' + graphColour + '; font-weight: bold; margin-bottom: 10px">' + graphTitle + ': ' + g.values.value + '</div>';
+                  }
+                }
+              }
+            }            
+
+            outputString += '<div style="font-size: 16px;">Total: ' + g.values.total + '</div>';
+            return outputString + titleString + breakdownString;
+          };
+          chartApps.addGraph(graphTwo);
+
+          // United Kingdom graph
+          var graph = new AmCharts.AmGraph();
+          graph.title = "Candy Crush Saga";
+          graph.valueField = "candycrush";
+          graph.balloonText = "[[category]]: [[value]]";
+          graph.bullet = "round";
+          graph.bulletSize = 4
+          graph.bulletBorderAlpha = 0.3
+          graph.bulletBorderThickness = 8
+          graph.maxBulletSize = 7
+          graph.cursorBulletAlpha = 0
+          graph.lineColor = "#ff496a";
+          graph.lineThickness = 2;
+          graph.fillAlphas = 1;
+          graph.balloonFunction = function(g) {
+            var currentIndex = g.index;
+            var outputString = "", breakdownString = "", titleString = "";
+            for (var i = 0; i < g.graph.chart.graphs.length; i++) {
+              var graphTitle = g.graph.chart.graphs[i].title;
+              var graphColour = g.graph.chart.graphs[i].fillColorsR;
+              breakdownString += '<div style="color: ' + graphColour + '; font-weight: bold;">' + graphTitle + ': ';
+              var thisValueField = g.graph.chart.graphs[i].valueField;
+              var currentData = g.graph.chart.graphs[i].data[currentIndex].dataContext;
+              for(var p in currentData) {
+                if (p == thisValueField) {
+                  breakdownString += currentData[p] + '</div>';
+                  if(currentData[p] == g.values.value) {
+                    titleString = '<div style="color: ' + graphColour + '; font-weight: bold; margin-bottom: 10px">' + graphTitle + ': ' + g.values.value + '</div>';
+                  }
+                }
+              }
+            }            
+
+            outputString += '<div style="font-size: 16px;">Total: ' + g.values.total + '</div>';
+            return outputString + titleString + breakdownString;
+          };
+          chartApps.addGraph(graph);
+
+          // CURSOR
+          var chartCursor = new AmCharts.ChartCursor();
+          chartCursor.cursorPosition = "middle";
+          chartCursor.zoomable = false;
+          chartCursor.cursorAlpha = 1;
+          chartCursor.oneBalloonOnly = true;
+          chartCursor.addListener("changed", handleChanged);
+          chartCursor.bulletsEnabled = true;
+          chartCursor.bulletSize = 7;
+          chartCursor.cursorBulletAlpha = 0.5
+          chartCursor.animationDuration = 0
+          chartApps.addChartCursor(chartCursor);
+
+          // LEGEND
+          var legend = new AmCharts.AmLegend();
+          legend.useGraphSettings = true;
+          chartApps.addLegend(legend);
+
+          // BALLOON
+          chartApps.balloon = {
+            "horizontalPadding": 20,
+            "verticalPadding": 20,
+            "borderThickness": 2,
+            "animationDuration": 0,
+            "fadeOutDuration": 0
+          }
+
+          // WRITE
+          chartApps.write("container-app-overlay");
+
+          initChartInteraction();
+          initChartColours();
+      });
+  
+      var preventInfinite = false;
+
+      function handleChanged(e){
+        if(e.mostCloseGraph && !preventInfinite) {
+          preventInfinite = true;
+          
+          var closestGraphId = e.mostCloseGraph.id;
+          $this = $('.amcharts-graph-' + closestGraphId);
+          if($this.find('.amcharts-graph-fill').css("opacity") == 0) {
+            $this.find('.amcharts-graph-stroke').css("opacity", 1).attr("stroke-width", "3");            
+          }
+          $this.siblings('.amcharts-graph-line').each(function(){
+            var $sibling = $(this);
+            if($sibling.find('.amcharts-graph-fill').css("opacity") == 0) {
+              $sibling.find('.amcharts-graph-stroke').css('opacity', 0.3).attr("stroke-width", "2");;
+            }
+          });
+
+          // show bullets
+          var bulletIndex = e.index + 1;
+          $('#container-app-overlay .amcharts-graph-line circle').css("display", "none");
+          $this.find('circle:nth-child(' + bulletIndex + ')').css("display", "block");          
+          $this.siblings('.amcharts-graph-line').each(function(){
+            $(this).find('circle').css("display", "none");
+          });
+
+          setTimeout(function() {
+              preventInfinite=false;
+          },100);          
+        }       
+      }      
+
+// GRAPH REVENUE FOR SELECTED COUNTRY
       var chartrevenue;
       var chartRevenueData = [];
 
@@ -154,84 +516,124 @@
           // Chart styles
           chartrevenue.addClassNames = true;
           chartrevenue.color = "#81879d";
+          chartrevenue.backgroundColor = "#f1f1f6";
+          chartrevenue.backgroundAlpha = 1;
           chartrevenue.fontFamily = "Lato";
           chartrevenue.fontSize = 13;
+          chartrevenue.theme = "none";
           chartrevenue.marginLeft = 0;
+          chartrevenue.marginLeft = 0;
+          chartrevenue.defs = {
+            "linearGradient": {
+                "id": "gradientfill",
+                "x1": "0%",
+                "y1": "0%",
+                "x2": "0%",
+                "y2": "100%",
+                "stop": [{
+                  "offset": "0%",
+                  "stop-color": "rgba(109,105,197,0.14)"
+                },{
+                  "offset": "100%",
+                  "stop-color": "rgba(27,199,159,0.14)"
+                }]
+              }
+          }
 
-          // CURSOR
-          var chartCursor = new AmCharts.ChartCursor();
-          chartCursor.cursorAlpha = 0.5;
-          chartCursor.cursorPosition = "mouse";
-          chartCursor.categoryBalloonDateFormat = "YYYY";
-          chartCursor.bulletsEnabled = true;
-          chartCursor.bulletSize = 6;
-          chartrevenue.addChartCursor(chartCursor);
-          
           // AXES
           // Category
           var categoryAxis = chartrevenue.categoryAxis;
           categoryAxis.parseDates = true; // in order char to understand dates, we should set parseDates to true
-          categoryAxis.minPeriod = "DD"; // as we have data with minute interval, we have to set "mm" here.
+          //categoryAxis.minPeriod = "DD"; // as we have data with minute interval, we have to set "mm" here.
+          categoryAxis.fillAlpha = 0;
+          categoryAxis.fillColor = "#FAFAFA";
           categoryAxis.gridAlpha = 0;
+          categoryAxis.axisAlpha = 0;
           categoryAxis.axisColor = "#e1e5e8";
+          categoryAxis.position = "bottom";
+          categoryAxis.inside = false;
+          categoryAxis.showFirstLabel = false;
+          categoryAxis.showLastLabel = false;
+          categoryAxis.equalSpacing = true;
+          categoryAxis.startOnAxis = true;
+          categoryAxis.gridPosition = "start";
 
           // Value
           var valueAxis = new AmCharts.ValueAxis();
-          valueAxis.gridAlpha = 0.07;
           valueAxis.title = "Revenue";
-          valueAxis.axisColor = "#e1e5e8";
           valueAxis.axisAlpha = 0;
+          valueAxis.gridColor = "#e1e5e8";
+          valueAxis.gridThickness = 1;
+          valueAxis.gridAlpha = 1;
+          valueAxis.gridPosition = "start";
+          valueAxis.gridCount = 10;
+          valueAxis.reversed = false; // this line makes the value axis reversed
+          valueAxis.titleColor = "#f1f1f6";
           valueAxis.inside = true;
+          valueAxis.ignoreAxisWidth = true;
+          valueAxis.showFirstLabel = false;
+          valueAxis.centerLabelOnFullPeriod = true;
           valueAxis.offset = 0;
-          valueAxis.showFirstLabel = true;
-          valueAxis.showLastLabel = true;
           chartrevenue.addValueAxis(valueAxis);
           chartrevenue.balloon = {
             "adjustBorderColor": true,
-            "animationDuration": 0,
+            "animationDuration": 0.1,
             "color": "#000000",
-            "cornerRadius": 5,
-            "fillColor": "#FFFFFF"
+            "fillColor": "#FFFFFF",
+            "animationDuration": 0.2
           };
           chartrevenue.creditsPosition = "bottom-right";
 
           // GRAPH
           var graph = new AmCharts.AmGraph();
-          graph.type = "line"; // try to change it to "column"
+          // graph.type = "line"; // try to change it to "column"
           graph.title = "United Kingdom";
           graph.valueField = "revenue";
           graph.lineAlpha = 1;
           graph.lineColor = "#6d69c5";
           graph.lineThickness = 3;
-          graph.fillAlphas = 0.3; // setting fillAlphas to > 0 value makes it area graph
+          graph.fillAlphas = 1; // setting fillAlphas to > 0 value makes it area graph
           graph.fontSize = 13;
           graph.balloonFunction = function(g) {
-            //console.log(g);
-            return '<div style="font-size: 16px;">' + g.graph.title + '</div><div style="font-size: 14px;">' + g.category + '</div><div><span style="font-size: 14px;">£' + g.values.value + '</span></div><div class="top-five-section"><h5>Top 5 Countries</h5><div><b>£18</b>: <span>USA</span></div><div><b style="color: #1bc79f">£' + g.values.value + '</b>: <span style="color: #1bc79f">' + g.graph.title + '</span></div></div><div><b>£120</b>: <span>Germany</span></div><div><b>£53</b>: <span>Italy</span></div><div><b>£21</b>: <span>China</span></div>';
+            return '<div style="font-size: 12px;">' + g.graph.title + '</div><div style="font-size: 11px;">' + g.category + '</div><div><span style="font-size: 12px;">£' + g.values.value + '</span></div><div class="top-five-section"><h5 style="font-size: 12px;">Top 5 Countries</h5><div><b>£18</b>: <span>USA</span></div><div><b style="color: #1bc79f">£' + g.values.value + '</b>: <span style="color: #1bc79f">' + g.graph.title + '</span></div></div><div><b>£120</b>: <span>Germany</span></div><div><b>£53</b>: <span>Italy</span></div><div><b>£21</b>: <span>China</span></div>';
           };
           graph.bullet = "round";
-          graph.bulletAlpha = 0;
-          graph.bulletSize = 6;
-          graph.bulletBorderColor = "#81879d";
-          graph.bulletBorderThickness = 10;
-          graph.bulletBorderAlpha = 0;
+          graph.bulletSize = 4
+          graph.bulletBorderAlpha = 0.3
+          graph.bulletBorderThickness = 8
 
           chartrevenue.addGraph(graph);
 
           // CURSOR
           var chartCursor = new AmCharts.ChartCursor();
-          chartCursor.cursorPosition = "mouse";
+          chartCursor.cursorPosition = "middle";
           chartCursor.categoryBalloonDateFormat = "DD MMMM";
+          chartCursor.zoomable = false;
+          chartCursor.cursorAlpha = 1;
+          chartCursor.animationDuration = 0.2;
+          chartCursor.addListener("changed", reveneCursorChanged);
           chartrevenue.addChartCursor(chartCursor);
-
-          // SCROLLBAR
-          var chartScrollbar = new AmCharts.ChartScrollbar();
-
-          chartrevenue.addChartScrollbar(chartScrollbar);
 
           // WRITE
           chartrevenue.write("container-revenue");
-      });      
+      });
+  
+      function reveneCursorChanged(e) {
+        if(e.index && !preventInfinite) {
+          preventInfinite = true;
+          
+          $this = $('#container-revenue .amcharts-graph-line');
+
+          // show bullets
+          var bulletIndex = e.index + 1;
+          $('#container-revenue .amcharts-graph-line circle').css("display", "none");
+          $this.find('circle:nth-child(' + bulletIndex + ')').css("display", "block");          
+
+          setTimeout(function() {
+              preventInfinite=false;
+          },100);          
+        }       
+      }
 
       // this method is called when chart is first inited as we listen for "dataUpdated" event
       function zoomChart() {
@@ -239,175 +641,9 @@
           chartrevenue.zoomToIndexes(chartRevenueData.length - 40, chartRevenueData.length - 1);
       }
 
-      var chartApps;
-      var chartAppsData = [
-          {
-              "year": 1930,
-              "zookeeper": 1,
-              "deltav": 5,
-              "candycrush": 3
-          },
-          {
-              "year": 1934,
-              "zookeeper": 1,
-              "deltav": 2,
-              "candycrush": 6
-          },
-          {
-              "year": 1938,
-              "zookeeper": 2,
-              "deltav": 3,
-              "candycrush": 1
-          },
-          {
-              "year": 1950,
-              "zookeeper": 3,
-              "deltav": 4,
-              "candycrush": 1
-          },
-          {
-              "year": 1954,
-              "zookeeper": 5,
-              "deltav": 1,
-              "candycrush": 2
-          },
-          {
-              "year": 1958,
-              "zookeeper": 3,
-              "deltav": 2,
-              "ucandycrushk": 1
-          },
-          {
-              "year": 1962,
-              "zookeeper": 1,
-              "deltav": 2,
-              "candycrush": 3
-          },
-          {
-              "year": 1966,
-              "zookeeper": 5,
-              "deltav": 1,
-              "candycrush": 5
-          },
-          {
-              "year": 1970,
-              "zookeeper": 3,
-              "deltav": 5,
-              "candycrush": 2
-          },
-          {
-              "year": 1974,
-              "zookeeper": 4,
-              "deltav": 3,
-              "candycrush": 6
-          },
-          {
-              "year": 1978,
-              "zookeeper": 1,
-              "deltav": 2,
-              "candycrush": 4
-          }
-      ];
 
-      initChartInteraction = function() {
-        $('.amcharts-graph-line').on("click", function(){
-          var $this = $(this);
-          $this.find('.amcharts-graph-stroke').animate({'opacity': 1}, 300);
-          $this.find('.amcharts-graph-fill').animate({'opacity': 1}, 300).css("pointer-events", "none");
-          $this.siblings('.amcharts-graph-line').find('.amcharts-graph-stroke').animate({'opacity': 0.3}, 300);
-          $this.siblings('.amcharts-graph-line').find('.amcharts-graph-fill').animate({'opacity': 0}, 300).css("pointer-events", "none");;
-        });
-      }
+// GRAPH REVENUE SPLIT
 
-      AmCharts.ready(function () {
-          // SERIAL CHART
-          chartApps = new AmCharts.AmSerialChart();
-          chartApps.dataProvider = chartAppsData;
-          chartApps.categoryField = "year";
-          chartApps.startDuration = 0.5;
-          chartApps.balloon.color = "#000000";
-
-          // Chart styles
-          chartApps.addClassNames = true;
-          chartApps.color = "#81879d";
-          chartApps.fontFamily = "Lato";
-          chartApps.fontSize = 13;
-          chartApps.marginLeft = 0;
-
-          // AXES
-          // category
-          var categoryAxis = chartApps.categoryAxis;
-          categoryAxis.fillAlpha = 1;
-          categoryAxis.fillColor = "#FAFAFA";
-          categoryAxis.gridAlpha = 0;
-          categoryAxis.axisAlpha = 0;
-          categoryAxis.gridPosition = "start";
-          categoryAxis.position = "bottom";
-
-          // value
-          var valueAxis = new AmCharts.ValueAxis();
-          valueAxis.title = "Rank";
-          valueAxis.axisAlpha = 0;
-          valueAxis.minimum = 1;
-          valueAxis.maximum = 6;
-          valueAxis.integersOnly = true;
-          valueAxis.gridCount = 10;
-          valueAxis.reversed = false; // this line makes the value axis reversed
-          chartApps.addValueAxis(valueAxis);
-
-          // GRAPHS
-          // Italy graph
-          var graph = new AmCharts.AmGraph();
-          graph.title = "Zoo Keeper Ken";
-          graph.valueField = "zookeeper";
-          graph.balloonText = "[[category]]: [[value]]";
-          graph.lineAlpha = 1;
-          graph.bullet = "none";
-          graph.lineColor = "#ffb449";
-          graph.lineThickness = 3;
-          graph.fillAlphas = 0.5;
-          chartApps.addGraph(graph);
-
-          // Germany graph
-          var graph = new AmCharts.AmGraph();
-          graph.title = "Delta V Racing";
-          graph.valueField = "deltav";
-          graph.balloonText = "[[category]]: [[value]]";
-          graph.bullet = "none";
-          graph.lineColor = "#6d69c5";
-          graph.lineThickness = 3;
-          graph.fillAlphas = 0.5;
-          chartApps.addGraph(graph);
-
-          // United Kingdom graph
-          var graph = new AmCharts.AmGraph();
-          graph.title = "Candy Crush Saga";
-          graph.valueField = "candycrush";
-          graph.balloonText = "[[category]]: [[value]]";
-          graph.bullet = "none";
-          graph.lineColor = "#ff496a";
-          graph.lineThickness = 3;
-          graph.fillAlphas = 0.5;
-          chartApps.addGraph(graph);
-
-          // CURSOR
-          var chartCursor = new AmCharts.ChartCursor();
-          chartCursor.cursorPosition = "mouse";
-          chartCursor.zoomable = false;
-          chartCursor.cursorAlpha = 0;
-          chartApps.addChartCursor(chartCursor);
-
-          // LEGEND
-          var legend = new AmCharts.AmLegend();
-          legend.useGraphSettings = true;
-          chartApps.addLegend(legend);
-
-          // WRITE
-          chartApps.write("container-app-overlay");
-
-          initChartInteraction();
-      });
-      
       var chartSubData = [{
           "year": 1994,
           "iap": 1587,
@@ -603,9 +839,16 @@
 
       var chartSplit = AmCharts.makeChart("container-revenue-split", {
       "type": "serial",
-      "theme": "light",
-      "marginRight":30,
+      "theme": "none",
+      "marginRight": 0,
+      "marginLeft": 0,
+      "addClassNames": true,
+      "color": "#81879d",
+      "fontFamily": "Lato",
+      "fontSize": 13,
+      "creditsPosition":"bottom-right",
       "legend": {
+          "color": "#81879d",
           "equalWidths": false,
           "periodValueText": "total: [[value.sum]]",
           "position": "top",
@@ -710,16 +953,34 @@
       }],
       "valueAxes": [{
           "stackType": "regular",
-          "gridAlpha": 0.07,
           "position": "left",
-          "title": "Traffic incidents"
+          "title": "Downloads",
+          "axisAlpha": 0,
+          "gridColor": "#e1e5e8",
+          "gridThickness": 1,
+          "gridAlpha": 1,
+          "gridPosition": "start",
+          "gridCount": 10,
+          "reversed": false,
+          "titleColor": "#f1f1f6",
+          "inside": true,
+          "ignoreAxisWidth": true,
+          "showFirstLabel":false,
+          "centerLabelOnFullPeriod": true,
+          "offset": 0
       }],
       "graphs": [{          
-          "fillAlphas": 0.6,
-          "lineAlpha": 0.4,
+          "fillAlphas": 0.3,
+          "lineAlpha": 1,
+          "lineThickness": 2,
+          "lineColor": "#6d69c5",
           "title": "IAPs (3)",
           "valueField": "cars",
           "bullet": "round",
+          "bulletSize": 4,
+          "bulletBorderAlpha": 0.3,
+          "bulletBorderThickness": 8,
+          "borderAlpha": 1,
           "balloonFunction" : function(g) { // you could check here if there are IAP breakdown in the data and if so output external data object (iapBreakdownData)
             var currentIndex = g.index;
             var outputString = "", breakdownString = "", pointTotal = 0;            
@@ -746,11 +1007,17 @@
             return outputString + breakdownString;
           }
       }, {
-          "fillAlphas": 0.6,
-          "lineAlpha": 0.4,
+          "fillAlphas": 0.3,
+          "lineAlpha": 1,
+          "lineThickness": 2,
+          "lineColor": "#ffb449",
           "title": "Motorcycles",
           "valueField": "motorcycles",
           "bullet": "round",
+          "bulletSize": 4,
+          "bulletBorderAlpha": 0.3,
+          "bulletBorderThickness": 8,
+          "borderAlpha": 1,
           "balloonFunction" : function(g) {
             var currentIndex = g.index;
             var outputString = "", breakdownString = "", pointTotal = 0;            
@@ -772,11 +1039,17 @@
             return outputString + breakdownString;
           }
       }, {
-          "fillAlphas": 0.6,
-          "lineAlpha": 0.4,
+          "fillAlphas": 0.3,
+          "lineAlpha": 1,
+          "lineThickness": 2,
+          "lineColor": "#ff496a",
           "title": "Bicycles",
           "valueField": "bicycles",
           "bullet": "round",
+          "bulletSize": 4,
+          "bulletBorderAlpha": 0.3,
+          "bulletBorderThickness": 8,
+          "borderAlpha": 1,
           "balloonFunction" : function(g) {
             var currentIndex = g.index;
             var outputString = "", breakdownString = "", pointTotal = 0;            
@@ -802,36 +1075,40 @@
       "marginTop": 10,
       "marginLeft": 0,
       "marginBottom": 0,
-      "chartScrollbar": {},
       "chartCursor": {
-          "cursorAlpha": 0,
-          "oneBalloonOnly": true
+          "cursorAlpha": 1,
+          "oneBalloonOnly": true,
+          "bulletsEnabled": true          
       },
       "categoryField": "year",
       "categoryAxis": {
-          "startOnAxis": true,
           "axisColor": "#DADADA",
-          "gridAlpha": 0.07,
+          "gridAlpha": 0,
           "title": "Year",
+          "startOnAxis": true,
+          "equalSpacing": true,
           "guides": [{
-              category: "2001",
+              category: "2000",
               toCategory: "2003",
-              lineColor: "#CC0000",
+              color: "#6d69c5",
+              lineColor: "#6d69c5",              
               lineAlpha: 1,
-              fillAlpha: 0.2,
-              fillColor: "#CC0000",
+              fillAlpha: 0.1,
+              fillColor: "#6d69c5",
               dashLength: 2,
               inside: true,
               labelRotation: 90,
-              label: "fines for speeding increased"
+              balloonText: "Featured in the iOS App Store",
           }, {
-              category: "2007",
-              lineColor: "#CC0000",
+              category: "1995",
+              color: "#6d69c5",
+              lineColor: "#6d69c5",
               lineAlpha: 1,
               dashLength: 2,
               inside: true,
               labelRotation: 90,
-              label: "motorcycle fee introduced"
+              label: "App Update Released",
+              balloonText: "App Update Released"
           }]
       },
           "export": {
@@ -844,7 +1121,7 @@
         //if (event.item.dataContext.subdata != undefined) {
           // wow it has!
           // let's set that as chart's dataProvider
-          console.log(event);
+          // console.log(event);
           event.chart.dataProvider = chartSubData; //event.item.dataContext.subdata;
           event.chart.graphs[0].valueField = "iap";
           event.chart.graphs[0].title = "IAP";
@@ -852,7 +1129,73 @@
         //}
       });
 
+      function addAxisImage(i1, labels, imageUrl, width, height, x, y) {
+        var parent = labels[0].node.parentNode;
+          var label = labels[i1].node;
+          var group = document.createElementNS('http://www.w3.org/2000/svg', "g");
+          var img   = document.createElementNS('http://www.w3.org/2000/svg', "image");
 
+          // Setup image
+          img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', imageUrl);
+          img.setAttribute('x',x);
+          img.setAttribute('y',y); // half the height
+          img.setAttribute('width',width);
+          img.setAttribute('height',height);
+
+          // Swap position to group; remove from label
+          group.setAttribute('transform',label.getAttribute('transform'));
+          label.setAttribute('transform','');
+
+          // Group axis labels
+          group.appendChild(label);
+          group.appendChild(img);
+          parent.appendChild(group);
+      }
+
+      function modifyAxis(e) {
+        console.log("modifyAxis");
+        var axes = e.chart.categoryAxis;
+
+        if ( axes ) {
+          var labels = axes.allLabels;
+          addAxisImage(1, labels, "images/icon-launch.png", 23, 57, -11, -75);
+          addAxisImage(6, labels, "images/icon-star.png", 17, 31, -8, -49);
+          addAxisImage(12, labels, "images/icon-flag.png", 19, 27, 0, -45);
+        }
+      }
+
+      chartSplit.addListener("drawn",modifyAxis);
+
+      chartSplit.addListener("changed", handleSplitCursorChanged);
+
+      function handleSplitCursorChanged(e){
+        if(e.mostCloseGraph && !preventInfinite) {
+          preventInfinite = true;
+          
+          var closestGraphId = e.mostCloseGraph.id;
+          $this = $('.amcharts-graph-' + closestGraphId);
+          $this.find('.amcharts-graph-stroke').css("opacity", 1).attr("stroke-width", "3");
+          $this.siblings('.amcharts-graph-line').each(function(){
+            var $sibling = $(this);
+            $sibling.find('.amcharts-graph-stroke').css("opacity", 0.5).attr("stroke-width", "2");
+          });
+
+          // show bullets
+          var bulletIndex = e.index + 1;
+          $('#container-revenue-split .amcharts-graph-line circle').css("display", "none");
+          $this.find('circle:nth-child(' + bulletIndex + ')').css("display", "block");          
+          $this.siblings('.amcharts-graph-line').each(function(){
+            $(this).find('circle:nth-child(' + bulletIndex + ')').css("display", "block");
+          });
+
+          setTimeout(function() {
+              preventInfinite=false;
+          },200);
+        }       
+      } 
+
+
+// GRAPH APP REVENUE, OVERLAY DOWNLOADS
       var chartAppsOverlay;
       var chartAppsOverlayData = [
           {
@@ -882,7 +1225,7 @@
           {
               "year": 1954,
               "zookeeper": 5,
-              "deltav": 134,
+              "deltav": 600,
               "candycrush": 2
           },
           {
@@ -933,45 +1276,74 @@
 
           // Chart styles
           chartAppsOverlay.addClassNames = true;
+          chartAppsOverlay.backgroundColor = "#f1f1f6";
+          chartAppsOverlay.backgroundAlpha = 1;
           chartAppsOverlay.color = "#81879d";
           chartAppsOverlay.fontFamily = "Lato";
           chartAppsOverlay.fontSize = 13;
           chartAppsOverlay.marginLeft = 0;
+          chartAppsOverlay.creditsPosition = "bottom-right";
 
           // AXES
           // category
-          var categoryAxis = chartAppsOverlay.categoryAxis;
-          categoryAxis.fillAlpha = 1;
-          categoryAxis.fillColor = "#FAFAFA";
+          var categoryAxis = chartAppsOverlay.categoryAxis;          
+          categoryAxis.fillAlpha = 0;
           categoryAxis.gridAlpha = 0;
           categoryAxis.axisAlpha = 0;
           categoryAxis.gridPosition = "start";
           categoryAxis.position = "bottom";
+          categoryAxis.inside = false;
+          categoryAxis.showFirstLabel = false;
+          categoryAxis.showLastLabel = false;
+          categoryAxis.startOnAxis = true;
+          categoryAxis.equalSpacing = true;
 
           // value
           var valueAxis = new AmCharts.ValueAxis();
           valueAxis.id = "a1";
           valueAxis.title = "Rank";
           valueAxis.axisAlpha = 0;
+          valueAxis.color = "#6d69c5";
+          valueAxis.gridColor = "#e1e5e8";
+          valueAxis.gridThickness = 1;
+          valueAxis.gridAlpha = 1;
+          valueAxis.gridPosition = "start";
           valueAxis.integersOnly = true;
           valueAxis.gridCount = 10;
           valueAxis.reversed = false; // this line makes the value axis reversed
-          chartAppsOverlay.addValueAxis(valueAxis);
+          valueAxis.titleColor = "#f1f1f6";
+          valueAxis.inside = true;
+          valueAxis.ignoreAxisWidth = true;
+          valueAxis.showFirstLabel = false;
+          valueAxis.centerLabelOnFullPeriod = true;
+          valueAxis.includeHidden = true;
+          chartAppsOverlay.addValueAxis(valueAxis);          
 
           // second vertical value axis
           var yAxis2 = new AmCharts.ValueAxis();
           yAxis2.id = "a2";
           yAxis2.title = "Downloads";
-          yAxis2.axisAlpha = 0;
-          yAxis2.gridAlpha = 0;
           yAxis2.position = "right"; // set this to "right" if you want it on the right
           yAxis2.offset = 0;
-          yAxis2.fillAlphas = 0;
           yAxis2.color = "#ff496a";
+          yAxis2.axisAlpha = 0;
+          yAxis2.gridColor = "#e1e5e8";
+          yAxis2.gridThickness = 1;
+          yAxis2.gridAlpha = 0;
+          yAxis2.gridPosition = "start";
+          yAxis2.integersOnly = true;
+          yAxis2.gridCount = 10;
+          yAxis2.reversed = false; // this line makes the value axis reversed
+          yAxis2.titleColor = "#f1f1f6";
+          yAxis2.inside = true;
+          yAxis2.ignoreAxisWidth = true;
+          yAxis2.showFirstLabel = false;
+          yAxis2.centerLabelOnFullPeriod = true;
+          yAxis2.includeHidden = false;
           chartAppsOverlay.addValueAxis(yAxis2);
 
           // GRAPHS
-          // Italy graph
+          // Rank graph
           var graph = new AmCharts.AmGraph();
           graph.title = "Rank";
           graph.valueField = "zookeeper";
@@ -984,9 +1356,10 @@
           graph.valueAxis = "a1";
           chartAppsOverlay.addGraph(graph);
 
-          // Germany graph
+          // Downloads graph
           var graph = new AmCharts.AmGraph();
           graph.title = "Downloads";
+          graph.id = "downloads-graph";
           graph.valueField = "deltav";
           graph.balloonText = "[[category]]: [[value]]";
           graph.bullet = "none";
@@ -994,11 +1367,12 @@
           graph.lineThickness = 3;
           graph.fillAlphas = 0;
           graph.valueAxis = "a2";
+          graph.hidden = true;
           chartAppsOverlay.addGraph(graph);
 
           // CURSOR
           var chartCursor = new AmCharts.ChartCursor();
-          chartCursor.cursorPosition = "mouse";
+          chartCursor.cursorPosition = "middle";
           chartCursor.zoomable = false;
           chartCursor.cursorAlpha = 0;
           chartAppsOverlay.addChartCursor(chartCursor);
@@ -1008,10 +1382,53 @@
           legend.useGraphSettings = true;
           chartAppsOverlay.addLegend(legend);
 
+          // GUIDES
+          chartAppsOverlay.guides = [{
+              above: true,
+              color: "red",
+              category: "1950",
+              toCategory: "1958",
+              dashLength: 2,
+              lineColor: "#6d69c5",
+              lineAlpha: 1,
+              fillAlpha: 0.1,
+              fillColor: "#6d69c5",
+              inside: true,
+              labelRotation: 90,
+              balloonText: "Featured in the iOS App Store",
+          }, {
+              above: true,
+              category: "1934",
+              lineColor: "#6d69c5",
+              lineAlpha: 1,
+              inside: true,
+              labelRotation: 90,              
+              balloonText: "App Update Released"
+          }]
+
           // WRITE
           chartAppsOverlay.write("container-revenue-overlay-downloads");
-      });
 
+        $('.can-toggle').on("click", function(){
+          if($(this).find("#js-overlay-downloads:checked").val()) {
+            for (var i = 0; i < chartAppsOverlay.graphs.length; i++) {
+              if(chartAppsOverlay.graphs[i].id == "downloads-graph") {
+                chartAppsOverlay.graphs[i].hidden = false;
+              }
+            }
+          } else {
+            for (var i = 0; i < chartAppsOverlay.graphs.length; i++) {
+              if(chartAppsOverlay.graphs[i].id == "downloads-graph") {
+                chartAppsOverlay.graphs[i].hidden = true;
+              }
+            }
+          }
+          chartAppsOverlay.validateData();
+        });
+    });    
+
+
+// GRAPH APP CATEGORY AND COUNTRY
       var chartCatCountry;
       var chartCatCountryData = [
           {
@@ -1152,6 +1569,22 @@
           chartCatCountry.fontFamily = "Lato";
           chartCatCountry.fontSize = 13;
           chartCatCountry.marginLeft = 0;
+          chartCatCountry.defs = {
+            "linearGradient": {
+                "id": "sample",
+                "x1": "0%",
+                "y1": "0%",
+                "x2": "0%",
+                "y2": "100%",
+                "stop": [{
+                  "offset": "0%",
+                  "stop-color": "rgba(109,105,197,0.14)"
+                },{
+                  "offset": "100%",
+                  "stop-color": "rgba(27,199,159,0.14)"
+                }]
+              }
+          }
 
           // AXES
           // category
@@ -1162,6 +1595,8 @@
           categoryAxis.axisAlpha = 0;
           categoryAxis.gridPosition = "start";
           categoryAxis.position = "bottom";
+          categoryAxis.startOnAxis = true;
+          categoryAxis.equalSpacing = true;
 
           // value
           var valueAxis = new AmCharts.ValueAxis();
@@ -1182,12 +1617,7 @@
           graph.bullet = "none";
           graph.lineColor = "#ffb449";          
           graph.lineThickness = 3;
-          graph.fillAlphas = 0.5;
-          graph.balloonFunction = function(g) {
-            console.log(g);
-            
-            return '';
-          };
+          graph.fillAlphas = 1;
           chartCatCountry.addGraph(graph);
 
           //
@@ -1198,9 +1628,9 @@
           graph.balloonText = "[[category]]: [[value]]";
           graph.bullet = "none";
           graph.lineColor = "#6d69c5";
-          graph.lineAlpha = 0.3;
+          graph.lineAlpha = 1;
           graph.lineThickness = 3;
-          graph.fillAlphas = 0;
+          graph.fillAlphas = 1;
           chartCatCountry.addGraph(graph);
 
           //
@@ -1211,9 +1641,9 @@
           graph.balloonText = "[[category]]: [[value]]";
           graph.bullet = "none";
           graph.lineColor = "#ff496a";
-          graph.lineAlpha = 0.3;
+          graph.lineAlpha = 1;
           graph.lineThickness = 3;
-          graph.fillAlphas = 0;
+          graph.fillAlphas = 1;
           chartCatCountry.addGraph(graph);
 
           //
@@ -1224,9 +1654,9 @@
           graph.balloonText = "[[category]]: [[value]]";
           graph.bullet = "none";
           graph.lineColor = "#e98fec";
-          graph.lineAlpha = 0.3;
+          graph.lineAlpha = 1;
           graph.lineThickness = 3;
-          graph.fillAlphas = 0;
+          graph.fillAlphas = 1;
           chartCatCountry.addGraph(graph);
 
           //
@@ -1237,9 +1667,9 @@
           graph.balloonText = "[[category]]: [[value]]";
           graph.bullet = "none";
           graph.lineColor = "#ffb449";
-          graph.lineAlpha = 0.3;
+          graph.lineAlpha = 1;
           graph.lineThickness = 3;
-          graph.fillAlphas = 0;
+          graph.fillAlphas = 1;
           chartCatCountry.addGraph(graph);
 
           //
@@ -1250,9 +1680,9 @@
           graph.balloonText = "[[category]]: [[value]]";
           graph.bullet = "none";
           graph.lineColor = "#6d69c5";
-          graph.lineAlpha = 0.3;
+          graph.lineAlpha = 1;
           graph.lineThickness = 3;
-          graph.fillAlphas = 0;
+          graph.fillAlphas = 1;
           chartCatCountry.addGraph(graph);
 
           //
@@ -1263,9 +1693,9 @@
           graph.balloonText = "[[category]]: [[value]]";
           graph.bullet = "none";
           graph.lineColor = "#ff496a";
-          graph.lineAlpha = 0.3;
+          graph.lineAlpha = 1;
           graph.lineThickness = 3;
-          graph.fillAlphas = 0;
+          graph.fillAlphas = 1;
           chartCatCountry.addGraph(graph);
 
           //
@@ -1276,18 +1706,22 @@
           graph.balloonText = "[[category]]: [[value]]";
           graph.bullet = "none";
           graph.lineColor = "#e98fec";
-          graph.lineAlpha = 0.3;
+          graph.lineAlpha = 1;
           graph.lineThickness = 3;
-          graph.fillAlphas = 0;
+          graph.fillAlphas = 1;
           chartCatCountry.addGraph(graph);
 
           // CURSOR
           var chartCursor = new AmCharts.ChartCursor();
-          chartCursor.cursorPosition = "mouse";
+          chartCursor.cursorPosition = "middle";
           chartCursor.zoomable = false;
           chartCursor.cursorAlpha = 1;
-          chartCursor.bulletsEnabled = true;
           chartCursor.oneBalloonOnly = true;
+          chartCursor.bulletsEnabled = true;
+          chartCursor.bulletSize = 7;
+          chartCursor.cursorBulletAlpha = 0.5
+          chartCursor.animationDuration = 0
+          chartCursor.addListener("changed", handleCatCounChanged);
           chartCatCountry.addChartCursor(chartCursor);
 
           // LEGEND
@@ -1297,11 +1731,45 @@
 
           // WRITE
           chartCatCountry.write("container-countries-categories");
+          initChartInteraction();
+          initChartColours();
       });
+
+      var preventInfinite = false;
+
+      function handleCatCounChanged(e){
+        if(e.mostCloseGraph && !preventInfinite) {
+          preventInfinite = true;
+          
+          var closestGraphId = e.mostCloseGraph.id;
+          $this = $('.amcharts-graph-' + closestGraphId);
+          if($this.find('.amcharts-graph-fill').css("opacity") == 0) {
+            $this.find('.amcharts-graph-stroke').css("opacity", 1).attr("stroke-width", "3");            
+          }
+          $this.siblings('.amcharts-graph-line').each(function(){
+            var $sibling = $(this);
+            if($sibling.find('.amcharts-graph-fill').css("opacity") == 0) {
+              $sibling.find('.amcharts-graph-stroke').css('opacity', 0.3).attr("stroke-width", "2");;
+            }
+          });
+
+          // show bullets
+          var bulletIndex = e.index + 1;
+          $('#container-countries-categories .amcharts-graph-line circle').css("display", "none");
+          $this.find('circle:nth-child(' + bulletIndex + ')').css("display", "block");          
+          $this.siblings('.amcharts-graph-line').each(function(){
+            $(this).find('circle').css("display", "none");
+          });
+
+          setTimeout(function() {
+              preventInfinite=false;
+          },100);          
+        }       
+      }      
 
       /**
        * Add an event to handle hovers
-       */
+      
       chartCatCountry.timeout;
       chartCatCountry.addListener( "rollOverGraph", function( event ) {
           setOpacity( event.graph, 1 );
@@ -1325,6 +1793,6 @@
             path.style.strokeOpacity = opacity;
           }
         }
-      }
+      }*/
     </script>
 </body>
