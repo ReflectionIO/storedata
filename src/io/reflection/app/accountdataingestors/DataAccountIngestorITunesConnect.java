@@ -14,7 +14,6 @@ import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.DataAccountFetchStatusType;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Sale;
-import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
 import io.reflection.app.service.sale.SaleServiceProvider;
 
@@ -25,10 +24,12 @@ import java.nio.channels.Channels;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 
@@ -39,7 +40,7 @@ import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
 
 /**
  * @author billy1380
- * 
+ *
  */
 public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 
@@ -69,7 +70,7 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.accountdataingestors.DataAccountIngestor#ingest(io.reflection.app.datatypes.shared.DataAccountFetch)
 	 */
 	@Override
@@ -85,18 +86,37 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 					fetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeIngested;
 
 					fetch = DataAccountFetchServiceProvider.provide().updateDataAccountFetch(fetch);
-					
-//					ArchiverFactory.getItemSaleArchiver().enqueueIdDataAccountFetch(fetch.id);
+
+					//					ArchiverFactory.getItemSaleArchiver().enqueueIdDataAccountFetch(fetch.id);
+
+					SaleServiceProvider.provide().summariseSalesForDataAccountOnDate(fetch.linkedAccount.id, fetch.date);
+					enqueueDataAccountItemsToGatherSplitData(fetch.linkedAccount.id, fetch.date);
 				}
 			} catch (DataAccessException e) {
-				LOG.log(GaeLevel.SEVERE, String.format("Exception occured while ingesting file for data account fetch [%d]", fetch.id.longValue()), e);
+				LOG.log(Level.SEVERE, String.format("Exception occured while ingesting file for data account fetch [%d]", fetch.id.longValue()), e);
 			} catch (IOException e) {
-				LOG.log(GaeLevel.SEVERE, String.format("Exception occured while parsing sales for data account fetch [%d]", fetch.id.longValue()), e);
+				LOG.log(Level.SEVERE, String.format("Exception occured while parsing sales for data account fetch [%d]", fetch.id.longValue()), e);
 			}
 		} else {
-			LOG.log(GaeLevel.WARNING,
+			LOG.log(Level.WARNING,
 					String.format("Could not ingest data account fetch [%d] because it has status [%s]", fetch.id.longValue(), fetch.status.toString()));
 		}
+	}
+
+	/**
+	 * @param dataAccountId
+	 * @param date
+	 */
+	private void enqueueDataAccountItemsToGatherSplitData(Long dataAccountId, Date date) {
+		/*
+		 * Get all sale summary rows for this dataaccount for this date. For each item id, get its iap ids and then for each country the main item is in,
+		 * enqueue the item for gathering the splits
+		 */
+
+		// QueueHelper.enqueue("gather-split-sales-data", Method.PULL, new SimpleEntry<String, String>("store", DataTypeHelper.IOS_STORE_A3),
+		// new SimpleEntry<String, String>("country", country), new SimpleEntry<String, String>("type", listType), new SimpleEntry<String, String>("code",
+		// code.toString()), new SimpleEntry<String, String>("categoryid", category == null ? Long.toString(24) : category.id.toString()),
+		// new SimpleEntry<String, String>("modeltype", modelType.toString()));
 	}
 
 	/**
@@ -148,7 +168,7 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 
 				Set<String> items = new HashSet<String>();
 				boolean inBody = false;
-				
+
 				while ((line = reader.readLine()) != null) {
 					// skip the first line
 					if (inBody) {
@@ -171,7 +191,7 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 					try {
 						reader.close();
 					} catch (IOException e) {
-						LOG.log(GaeLevel.WARNING, "Exception occured while closing reader", e);
+						LOG.log(Level.WARNING, "Exception occured while closing reader", e);
 					}
 				}
 
@@ -179,7 +199,7 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 					try {
 						gzipInputStream.close();
 					} catch (IOException e) {
-						LOG.log(GaeLevel.WARNING, "Exception occured while closing gzip stream", e);
+						LOG.log(Level.WARNING, "Exception occured while closing gzip stream", e);
 					}
 				}
 
@@ -224,7 +244,7 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 			try {
 				proceeds = Float.valueOf(split[DEVELOPER_PROCEEDS_INDEX]);
 			} catch (NumberFormatException e) {
-				LOG.log(GaeLevel.WARNING, String.format("Exception occured while obtaining file for data account [%d]", fetch.id.longValue()), e);
+				LOG.log(Level.WARNING, String.format("Exception occured while obtaining file for data account [%d]", fetch.id.longValue()), e);
 			}
 
 			sale.proceeds = proceeds;
@@ -233,7 +253,7 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 				sale.begin = sdf.parse(split[BEGIN_DATE_INDEX]);
 				sale.end = sdf.parse(split[END_DATE_INDEX]);
 			} catch (ParseException e) {
-				LOG.log(GaeLevel.WARNING, String.format("Exception occured while obtaining file for data account [%d]", fetch.id.longValue()), e);
+				LOG.log(Level.WARNING, String.format("Exception occured while obtaining file for data account [%d]", fetch.id.longValue()), e);
 			}
 
 			sale.customerCurrency = split[CUSTOMER_CURRENCY_INDEX];
@@ -247,7 +267,7 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 			try {
 				customerPrice = Float.valueOf(split[CUSTOMER_PRICE_INDEX]);
 			} catch (NumberFormatException e) {
-				LOG.log(GaeLevel.WARNING, String.format("Exception occured while obtaining file for data account [%d]", fetch.id.longValue()), e);
+				LOG.log(Level.WARNING, String.format("Exception occured while obtaining file for data account [%d]", fetch.id.longValue()), e);
 			}
 
 			sale.customerPrice = customerPrice;
