@@ -870,7 +870,7 @@ final class SaleService implements ISaleService {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 			saleConnection.connect();
-			String query = String.format("CALL repopulate_sale_summary_for_dataaccount_on_date(%d, %s)", id, sdf.format(date));
+			String query = String.format("CALL repopulate_sale_summary_for_dataaccount_on_date(%d, '%s')", id, sdf.format(date));
 			saleConnection.executeQuery(query);
 		} finally {
 			if (saleConnection != null) {
