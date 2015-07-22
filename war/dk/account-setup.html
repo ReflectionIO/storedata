@@ -217,7 +217,7 @@
 						</div>
 						<div class="connect-account-submitted">
 							<h1>Thanks For Linking</h1>
-							<p class="p-style--featured">We're currently fetching your app data and will send you an email as soon as we're done. It will only take a moment.</p>
+							<p class="p-style--featured">We're currently fetching your app data and will send you an email as soon as we're done. It wil only take a moment.</p>
 						</div>
 					</div>
 					<div class="account-form-container">
@@ -250,7 +250,15 @@
 								<input type="submit" class="ref-button--full-width js-mock-continue js-rotate-content" value="Continue" />
 							</fieldset>
 							<fieldset class="connect-account-content">
-									<h2 class="heading-style--heading-five account-form-heading maintain-after-submit js-fade-content">Link your iTunes Connect Account</h2>
+									<h2 class="heading-style--heading-five account-form-heading maintain-after-submit js-fade-content">Link Your iTunes Connect Account</h2>
+									<div class="linked-account-loading-state">
+										<div class="hamster-wheel">
+											<img src="images/hamster-wheel.png" alt="hamster wheel" />
+										</div>
+										<div class="animation-hamster">
+										</div>
+										<p>Linking may take up to 5 minutes but most likely less, we’ll send you an email as soon as it's done.</p>
+									</div>
 									<div class="form-field js-rotate-content">
 										<input type="text" name="account-username" id="account-username" autocomplete="off" required />
 										<label for="account-username">Account Username</label>
@@ -264,7 +272,7 @@
 										<label for="account-vendor-id">Vendor ID</label>
 										<a href="#" target="_blank" class="form-field-help ref-icon-after ref-icon-after--question"><span>What's this?</span></a>
 									</div>
-									<input type="submit" class="ref-button--full-width maintain-after-submit js-mock-link-account js-rotate-content" value="Link this Account" />
+									<input type="submit" class="ref-button--full-width js-mock-link-account js-rotate-content" value="Link this Account" />
 							</fieldset>
 						</form>
 						<div class="form-submitted-success">
@@ -274,9 +282,10 @@
 									c-0.2-0.3-0.5-0.4-0.8-0.5c-0.3,0-0.7,0-0.9,0.2l-8.6,6.5c-0.6,0.4-0.7,1.2-0.2,1.7l19.4,25.5c0.2,0.3,0.6,0.5,1,0.5c0,0,0,0,0,0
 									c0.4,0,0.7-0.2,0.9-0.4L60.7,9.2C61.2,8.7,61.1,7.9,60.6,7.4z"/>
 								</svg>
-								<p>
-									<a href="#" class="js-mock-link-another-account">Link another account</a>
-									<a href="leaderboard.html">Continue to Leaderboard</a>
+								<h2>Account Linked!</h2>
+								<p>									
+									<a href="#" class="js-mock-link-another-account">Link Another Account</a>
+									<a href="leaderboard.html">Go to My Data Homepage</a>
 								</p>
 						</div>
 					</div>

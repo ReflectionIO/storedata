@@ -394,29 +394,37 @@
 	<div class="page-overlay">
 		<div class="page-popup">
 			<div class="popup-content popup-content--link-account forms--mid-theme">
-				<form>					
+				<div class="linked-account-loading-state">
+					<div class="hamster-wheel">
+						<img src="images/hamster-wheel.png" alt="hamster wheel" />
+					</div>
+					<div class="animation-hamster">
+					</div>
+					<p>Linking may take up to 5 minutes but most likely less, we’ll send you an email as soon as it's done.</p>
+				</div>
+				<form>
 					<h2 class="heading-style--heading-five popup-content--account__heading">Link Another Account</h2>
-					<div class="form-field">						
+					<div class="form-field js-rotate-content">						
 						<input type="text" name="accountnamep" id="accountnamep" autocomplete="off"/>
 						<label for="accountnamep">Account Name</label>
 					</div>
-					<div class="form-field">						
+					<div class="form-field js-rotate-content">						
 						<input type="password" name="itunesconnectpasswordp" id="itunesconnectpasswordp" autocomplete="off"/>
 						<label for="itunesconnectpasswordp">Account Password</label>
 					</div>
-					<div class="form-field">						
+					<div class="form-field js-rotate-content">						
 						<input type="text" name="vendoridp" id="vendoridp" autocomplete="off"/>
 						<label for="vendoridp">Vendor ID</label>
 						<a href="#" target="_blank" class="form-field-help ref-icon-after ref-icon-after--question"><span>What's this?</span></a>
 					</div>
-					<input type="submit" class="ref-button--full-width" value="Link this Account" />
+					<input type="submit" class="ref-button--full-width js-mock-submit-link-account js-rotate-content" value="Link This Account" />
 				</form>
 				<a href="#" class="popup-close"><span class="ref-icon-after ref-icon-after--close">Close</span></a>
 			</div>
 		</div>
 	</div>
 
-	<div class="page-overlay--confirm">
+	<div class="page-overlay--confirm"> 
 		<div class="page-popup">
 			<div class="popup-content popup-content--delete-account">
 				<h2 class="heading-style--heading-five popup-content--account__heading">Are you sure you want to delete this account?</h2>
@@ -447,6 +455,35 @@
   		new AccountSettingsPage();
 
 			// DEMO ONLY, NOT FOR INTEGRATION
+			$('.js-demo-popup').on("click", function(){
+					$('.page-overlay').fadeIn(200);
+					setTimeout(function(){
+						$('.page-overlay .popup-content').addClass("is-showing");
+					}, 100);
+			});
+
+			$('.page-overlay .popup-close').on("click", function(){
+					$('.page-overlay').fadeOut(100);
+					$('.page-overlay .popup-content').removeClass("is-showing");
+			});
+
+			$('.page-overlay .js-mock-submit-link-account').on("click", function(e){
+				e.preventDefault();
+				var $this = $(this);
+				if(!$this.hasClass("ref-button--is-loading") && !$this.hasClass("ref-button--success")) {
+					$('body').addClass("form-submitted-loading");
+					$this.addClass("ref-button--is-loading").attr("value", "Linking");
+					setTimeout(function(){					
+						$this.addClass('ref-button--success').attr("value", "Success!").removeClass('ref-button--is-loading');					
+						setTimeout(function(){
+							$('.page-overlay .popup-close').trigger("click");
+							$('body').removeClass("form-submitted-loading");
+							$this.removeClass('ref-button--success').attr("value", "Link This Account");
+						}, 1000);
+					}, 5000);
+				}
+			});
+ 
 			$('.linked-account-edit').each(function(){
 				var $this = $(this),
 						nextRow = $this.parent('tr').next('tr').hide(),
@@ -459,20 +496,17 @@
 					nextRowForm.slideToggle(200);
 					nextRowHeading.slideToggle(200);
 					$(thisName).toggleClass('is-open');
-				});
-
-				$('.js-demo-popup').on("click", function(){
-					$('.page-overlay').fadeIn(200);
-				});
-				$('.page-overlay .popup-close').on("click", function(){
-					$('.page-overlay').fadeOut(100);
-				});
+				});				
 
 				$('.js-demo-popup--confirm').on("click", function(){
 					$('.page-overlay--confirm').fadeIn(200);
+					setTimeout(function(){
+						$('.page-overlay--confirm .popup-content').addClass("is-showing");
+					}, 100);
 				});
 				$('.page-overlay--confirm .popup-close, .page-overlay--confirm .ref-button--function-small').on("click", function(){
 					$('.page-overlay--confirm').fadeOut(100);
+					$('.page-overlay--confirm .popup-content').removeClass("is-showing");
 				});
 			});
   	}

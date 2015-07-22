@@ -163,16 +163,22 @@ AccountSetup.prototype.mockSubmitContinue = function() {
 AccountSetup.prototype.mockLinkAccount = function() {
 	$('.js-mock-link-account').on("click", function(e) {
 		e.preventDefault();
-		$('body').addClass('form-submitted-success-complete');
-		$(this).attr('value', 'Account Linked!').addClass('ref-button--success');
-		$('.account-connect-animation').addClass('plugs-connected');
-		$('.form-submitted-success').addClass('is-showing');
+		if(!$('body').hasClass("form-submitted-loading")) {
+			$('body').addClass('form-submitted-loading');
+			$(this).addClass("ref-button--is-loading").attr("value", "Loading");
+			setTimeout(function(){
+				$('body').addClass('form-submitted-success-complete').removeClass("form-submitted-loading");
+				$(this).attr('value', 'Account Linked!').addClass('ref-button--success');
+				$('.account-connect-animation').addClass('plugs-connected');
+				$('.form-submitted-success').addClass('is-showing');
+			}, 10000)
+		}
 	});
 	$('.js-mock-link-another-account').on("click", function(e){
 		e.preventDefault();
 		$(this).parents('.form-submitted-success').removeClass('is-showing');
 		$('.account-connect-animation').removeClass('plugs-connected');
-		$('.js-mock-link-account').attr('value', 'Link this Account').removeClass('ref-button--success');
+		$('.js-mock-link-account').attr('value', 'Link this Account').removeClass('ref-button--success ref-button--is-loading');
 		$('.form-submitted-success-complete').removeClass('form-submitted-success-complete');
 	});
 };
