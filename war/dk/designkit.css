@@ -1,5 +1,5 @@
-/* 	All design kit styles:
-* 	Includes reflection-main.scss styles (base/base) but also additional components just used in the design kit that won't be required on the live app
+/*  All design kit styles:
+*   Includes reflection-main.scss styles (base/base) but also additional components just used in the design kit that won't be required on the live app
 */
 /* line 5, ../../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.3/stylesheets/compass/reset/_utilities.scss */
 html, body, div, span, applet, object, iframe,
@@ -654,6 +654,64 @@ input::-ms-clear {
 /* line 167, ../sass/layout/_grid.scss */
 .grid__column--right {
   float: right;
+}
+
+@-webkit-keyframes spinweb {
+  100% {
+    -webkit-transform: rotate(-360deg);
+  }
+}
+@-webkit-keyframes spin {
+  100% {
+    -webkit-transform: rotate(-360deg);
+            transform: rotate(-360deg);
+  }
+}
+@keyframes spin {
+  100% {
+    -webkit-transform: rotate(-360deg);
+            transform: rotate(-360deg);
+  }
+}
+@-webkit-keyframes hamsterrun {
+  100% {
+    background-position: -392px 0;
+  }
+}
+@keyframes hamsterrun {
+  100% {
+    background-position: -392px 0;
+  }
+}
+/* line 15, ../sass/ui/_animation.scss */
+.hamster-wheel {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  margin-left: -65px;
+  width: 131px;
+  height: 131px;
+}
+/* line 22, ../sass/ui/_animation.scss */
+.hamster-wheel img {
+  width: 100%;
+  animation: spin 1s linear 0s infinite;
+  -webkit-animation: spinweb 1s linear 0s infinite;
+}
+
+/* line 28, ../sass/ui/_animation.scss */
+.animation-hamster {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  margin-left: -65px;
+  width: 130px;
+  height: 131px;
+  background-image: url("images/sprite-hamsters.png");
+  background-size: 392px 131px;
+  background-position: 0 0;
+  -webkit-animation: hamsterrun 0.2s infinite steps(3);
+  animation: hamsterrun 0.2s infinite steps(3);
 }
 
 /* Global */
@@ -2051,7 +2109,7 @@ textarea, .global-header .link-open-search, html, body {
   color: #363a47;
 }
 /* line 204, ../sass/templates/_account-access.scss */
-.account-form-container .js-rotate-content, .form-submitted-success-complete.connect-account-is-showing .account-form-container .js-rotate-content:not(.maintain-after-submit),
+.account-form-container .js-rotate-content, .form-submitted-loading.connect-account-is-showing .account-form-container .js-rotate-content:not(.maintain-after-submit), .form-submitted-success-complete.form-submitted-loading.connect-account-is-showing .account-form-container .ref-button--is-loading.js-rotate-content, .form-submitted-success-complete.connect-account-is-showing .account-form-container .js-rotate-content:not(.maintain-after-submit),
 .account-form-container .tabs__content--is-showing.tabs__content--is-submitted .js-rotate-content:not(.maintain-after-submit),
 .account-form-container .tabs__content--is-showing .form--password-reset .js-rotate-content,
 .account-form-container .tabs__content--is-showing.show-reset-password-form .form--login .js-rotate-content,
@@ -2061,36 +2119,36 @@ textarea, .global-header .link-open-search, html, body {
   -webkit-transition: -webkit-transform 0.15s;
           transition: transform 0.15s;
 }
-/* line 212, ../sass/templates/_account-access.scss */
-.ie9 .account-form-container .js-rotate-content, .ie9 .form-submitted-success-complete.connect-account-is-showing .account-form-container .js-rotate-content:not(.maintain-after-submit), .ie9
+/* line 214, ../sass/templates/_account-access.scss */
+.ie9 .account-form-container .js-rotate-content, .ie9 .form-submitted-loading.connect-account-is-showing .account-form-container .js-rotate-content:not(.maintain-after-submit), .ie9 .form-submitted-success-complete.form-submitted-loading.connect-account-is-showing .account-form-container .ref-button--is-loading.js-rotate-content, .ie9 .form-submitted-success-complete.connect-account-is-showing .account-form-container .js-rotate-content:not(.maintain-after-submit), .ie9
 .account-form-container .tabs__content--is-showing.tabs__content--is-submitted .js-rotate-content:not(.maintain-after-submit), .ie9
 .account-form-container .tabs__content--is-showing .form--password-reset .js-rotate-content, .ie9
 .account-form-container .tabs__content--is-showing.show-reset-password-form .form--login .js-rotate-content, .ie9
 .account-form-container .tabs__content--is-showing.tabs__content--is-submitted.show-reset-password-form .js-rotate-content:not(.maintain-after-submit) {
   visibility: hidden;
 }
-/* line 216, ../sass/templates/_account-access.scss */
+/* line 218, ../sass/templates/_account-access.scss */
 .account-form-container .will-show .js-rotate-content,
 .account-form-container .tabs__content--is-showing.show-reset-password-form.will-show .form--login .js-rotate-content, .connect-account-is-showing .account-form-container .connect-account-content.will-show .js-rotate-content {
   -webkit-transform: rotateX(-90deg);
           transform: rotateX(-90deg);
 }
-/* line 220, ../sass/templates/_account-access.scss */
+/* line 222, ../sass/templates/_account-access.scss */
 .ie9 .account-form-container .will-show .js-rotate-content, .ie9
 .account-form-container .tabs__content--is-showing.show-reset-password-form.will-show .form--login .js-rotate-content, .ie9 .connect-account-is-showing .account-form-container .connect-account-content.will-show .js-rotate-content {
   visibility: hidden;
 }
-/* line 224, ../sass/templates/_account-access.scss */
+/* line 226, ../sass/templates/_account-access.scss */
 .account-form-container .tabs__content--is-showing .js-rotate-content,
 .account-form-container .tabs__content--is-showing .form--login .js-rotate-content,
-.account-form-container .tabs__content--is-showing.show-reset-password-form .form--password-reset .js-rotate-content, .create-password-form-is-showing .account-form-container .create-password-content .js-rotate-content, .create-password-form-is-showing.ie9 .account-form-container .create-password-content .js-rotate-content, .connect-account-is-showing .account-form-container .connect-account-content .js-rotate-content {
+.account-form-container .tabs__content--is-showing.show-reset-password-form .form--password-reset .js-rotate-content, .create-password-form-is-showing .account-form-container .create-password-content .js-rotate-content, .create-password-form-is-showing.ie9 .account-form-container .create-password-content .js-rotate-content, .connect-account-is-showing .account-form-container .connect-account-content .js-rotate-content, .form-submitted-loading.connect-account-is-showing .account-form-container .ref-button--is-loading.js-rotate-content {
   -webkit-transform: rotateX(0deg);
           transform: rotateX(0deg);
   -webkit-transition: -webkit-transform 0.15s 0.15s, background-color 0.3s, margin-top 0.3s;
           transition: transform 0.15s 0.15s, background-color 0.3s, margin-top 0.3s;
   visibility: visible;
 }
-/* line 234, ../sass/templates/_account-access.scss */
+/* line 237, ../sass/templates/_account-access.scss */
 .account-form-container .tabs__content {
   position: relative;
   width: 100%;
@@ -2098,18 +2156,18 @@ textarea, .global-header .link-open-search, html, body {
   display: block;
 }
 @media (min-width: 480px) {
-  /* line 234, ../sass/templates/_account-access.scss */
+  /* line 237, ../sass/templates/_account-access.scss */
   .account-form-container .tabs__content {
     padding: 30px 30px;
   }
 }
-/* line 242, ../sass/templates/_account-access.scss */
+/* line 245, ../sass/templates/_account-access.scss */
 .account-form-container .tabs__content .form--password-reset {
   position: absolute;
   left: 0;
   visibility: hidden;
 }
-/* line 248, ../sass/templates/_account-access.scss */
+/* line 251, ../sass/templates/_account-access.scss */
 .account-form-container .js-fade-content, .form-submitted-success-complete.connect-account-is-showing .account-form-container .js-fade-content:not(.maintain-after-submit),
 .account-form-container .tabs__content--is-showing.tabs__content--is-submitted .js-fade-content:not(.maintain-after-submit),
 .account-form-container .tabs__content--is-showing .form--password-reset .js-fade-content,
@@ -2119,7 +2177,7 @@ textarea, .global-header .link-open-search, html, body {
   -webkit-transition: opacity 0.15s;
           transition: opacity 0.15s;
 }
-/* line 256, ../sass/templates/_account-access.scss */
+/* line 259, ../sass/templates/_account-access.scss */
 .ie9 .account-form-container .js-fade-content, .ie9 .form-submitted-success-complete.connect-account-is-showing .account-form-container .js-fade-content:not(.maintain-after-submit), .ie9
 .account-form-container .tabs__content--is-showing.tabs__content--is-submitted .js-fade-content:not(.maintain-after-submit), .ie9
 .account-form-container .tabs__content--is-showing .form--password-reset .js-fade-content, .ie9
@@ -2127,7 +2185,7 @@ textarea, .global-header .link-open-search, html, body {
 .account-form-container .tabs__content--is-showing.tabs__content--is-submitted.show-reset-password-form .js-fade-content:not(.maintain-after-submit) {
   visibility: hidden;
 }
-/* line 260, ../sass/templates/_account-access.scss */
+/* line 263, ../sass/templates/_account-access.scss */
 .account-form-container .tabs__content--is-showing .js-fade-content,
 .account-form-container .tabs__content--is-showing .form--login .js-fade-content,
 .account-form-container .tabs__content--is-showing.show-reset-password-form .form--password-reset .js-fade-content, .create-password-form-is-showing .account-form-container .create-password-content .js-fade-content, .connect-account-is-showing .account-form-container .connect-account-content .js-fade-content, .create-password-form-is-showing.ie9 .account-form-container .create-password-content .js-fade-content {
@@ -2136,51 +2194,51 @@ textarea, .global-header .link-open-search, html, body {
           transition: opacity 0.15s 0.15s;
   visibility: visible;
 }
-/* line 270, ../sass/templates/_account-access.scss */
+/* line 273, ../sass/templates/_account-access.scss */
 .account-form-container .tabs__content-container {
   position: relative;
   margin-bottom: 1rem;
 }
-/* line 275, ../sass/templates/_account-access.scss */
+/* line 278, ../sass/templates/_account-access.scss */
 .account-form-container form p {
   font-size: 1.4rem;
   text-align: center;
 }
-/* line 280, ../sass/templates/_account-access.scss */
+/* line 283, ../sass/templates/_account-access.scss */
 .account-form-container form.form--password-reset p {
   margin-top: 1.5rem;
   margin-bottom: 8.5rem;
 }
-/* line 286, ../sass/templates/_account-access.scss */
+/* line 289, ../sass/templates/_account-access.scss */
 .account-form-container .account-form-heading {
   text-align: center;
   margin-bottom: 2.7rem;
   font-size: 1.8rem;
 }
 @media (min-width: 720px) {
-  /* line 286, ../sass/templates/_account-access.scss */
+  /* line 289, ../sass/templates/_account-access.scss */
   .account-form-container .account-form-heading {
     font-size: 1.8rem;
   }
 }
-/* line 295, ../sass/templates/_account-access.scss */
+/* line 298, ../sass/templates/_account-access.scss */
 .account-form-container .tabs__content--is-submitted input[type="submit"] {
   margin-top: 3rem;
   -webkit-transition: margin-top 0.3s;
           transition: margin-top 0.3s;
 }
-/* line 300, ../sass/templates/_account-access.scss */
+/* line 303, ../sass/templates/_account-access.scss */
 .account-form-container .tabs__content--is-submitted#tab-content-apply input[type="submit"] {
   margin-top: 6rem;
 }
 
-/* line 306, ../sass/templates/_account-access.scss */
+/* line 309, ../sass/templates/_account-access.scss */
 .form-submitted-success-complete.connect-account-is-showing.ie9 .account-form-container .js-fade-content:not(.maintain-after-submit),
 .form-submitted-success-complete.connect-account-is-showing.ie9 .account-form-container .js-rotate-content:not(.maintain-after-submit) {
   visibility: hidden;
 }
 
-/* line 310, ../sass/templates/_account-access.scss */
+/* line 313, ../sass/templates/_account-access.scss */
 .form-submitted-success {
   position: absolute;
   top: 30px;
@@ -2193,13 +2251,13 @@ textarea, .global-header .link-open-search, html, body {
   opacity: 0;
 }
 @media (min-width: 480px) {
-  /* line 310, ../sass/templates/_account-access.scss */
+  /* line 313, ../sass/templates/_account-access.scss */
   .form-submitted-success {
     padding-left: 30px;
     padding-right: 30px;
   }
 }
-/* line 323, ../sass/templates/_account-access.scss */
+/* line 326, ../sass/templates/_account-access.scss */
 .form-submitted-success.is-showing {
   text-align: center;
   visibility: visible;
@@ -2208,7 +2266,7 @@ textarea, .global-header .link-open-search, html, body {
   -webkit-transition: opacity 0.3s 0.3s;
           transition: opacity 0.3s 0.3s;
 }
-/* line 329, ../sass/templates/_account-access.scss */
+/* line 332, ../sass/templates/_account-access.scss */
 .form-submitted-success p {
   margin-bottom: 3.8rem;
   padding-left: 18px;
@@ -2217,14 +2275,14 @@ textarea, .global-header .link-open-search, html, body {
   text-align: center;
   color: #5b5d61;
 }
-/* line 337, ../sass/templates/_account-access.scss */
+/* line 340, ../sass/templates/_account-access.scss */
 .form-submitted-success .illustration-container {
   margin-top: 0.5rem;
   margin-bottom: 2.7rem;
   text-align: center;
   overflow: visible;
 }
-/* line 343, ../sass/templates/_account-access.scss */
+/* line 346, ../sass/templates/_account-access.scss */
 .form-submitted-success .email-post-animation {
   position: relative;
   left: 0;
@@ -2234,12 +2292,12 @@ textarea, .global-header .link-open-search, html, body {
   overflow: visible;
   margin-left: 58px;
 }
-/* line 353, ../sass/templates/_account-access.scss */
+/* line 356, ../sass/templates/_account-access.scss */
 .tabs__content--is-submitted .form-submitted-success .email-success-envelope {
   -webkit-animation: mail-send 0.6s 0.8s forwards;
           animation: mail-send 0.6s 0.8s forwards;
 }
-/* line 357, ../sass/templates/_account-access.scss */
+/* line 360, ../sass/templates/_account-access.scss */
 .form-submitted-success .email-success-handle {
   -webkit-transform: rotateZ(-74deg);
           transform: rotateZ(-74deg);
@@ -2247,14 +2305,14 @@ textarea, .global-header .link-open-search, html, body {
       -ms-transform-origin: 22px 25px 0px;
           transform-origin: 22px 25px 0px;
 }
-/* line 360, ../sass/templates/_account-access.scss */
+/* line 363, ../sass/templates/_account-access.scss */
 .tabs__content--is-submitted .form-submitted-success .email-success-handle {
   -webkit-transform: rotateZ(0deg);
           transform: rotateZ(0deg);
   -webkit-transition: -webkit-transform 0.2s 1.3s;
           transition: transform 0.2s 1.3s;
 }
-/* line 365, ../sass/templates/_account-access.scss */
+/* line 368, ../sass/templates/_account-access.scss */
 .form-submitted-success .email-delivery-animation {
   position: relative;
   margin-top: 15px;
@@ -2263,7 +2321,7 @@ textarea, .global-header .link-open-search, html, body {
   height: 81px;
   overflow: visible;
 }
-/* line 372, ../sass/templates/_account-access.scss */
+/* line 375, ../sass/templates/_account-access.scss */
 .tabs__content--is-submitted .form-submitted-success .email-delivery-animation, .reset-password-is-submitted .form-submitted-success .email-delivery-animation {
   -ms-transform: translateX(300px);
   -webkit-transform: translateX(300px);
@@ -2271,21 +2329,21 @@ textarea, .global-header .link-open-search, html, body {
   -webkit-transition: -webkit-transform 0.4s 1.7s ease-in;
           transition: transform 0.4s 1.7s ease-in;
 }
-/* line 377, ../sass/templates/_account-access.scss */
+/* line 380, ../sass/templates/_account-access.scss */
 .is-ie .form-submitted-success .email-delivery-animation {
   visibility: hidden;
 }
-/* line 382, ../sass/templates/_account-access.scss */
+/* line 385, ../sass/templates/_account-access.scss */
 .tabs__content--is-submitted .form-submitted-success .email-delivery-animation--email, .reset-password-is-submitted .form-submitted-success .email-delivery-animation--email {
   -webkit-animation: mail-deliver 0.6s 0.8s forwards;
           animation: mail-deliver 0.6s 0.8s forwards;
 }
-/* line 388, ../sass/templates/_account-access.scss */
+/* line 391, ../sass/templates/_account-access.scss */
 .tabs__content--is-submitted .form-submitted-success .email-delivery-animation--van-body, .reset-password-is-submitted .form-submitted-success .email-delivery-animation--van-body {
   -webkit-animation: van-shake 0.6s 1.3s;
           animation: van-shake 0.6s 1.3s;
 }
-/* line 393, ../sass/templates/_account-access.scss */
+/* line 396, ../sass/templates/_account-access.scss */
 .form-submitted-success .success-tick {
   position: absolute;
   top: 30px;
@@ -2299,7 +2357,7 @@ textarea, .global-header .link-open-search, html, body {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0;
 }
-/* line 402, ../sass/templates/_account-access.scss */
+/* line 405, ../sass/templates/_account-access.scss */
 .tabs__content--is-submitted .form-submitted-success .success-tick, .reset-password-is-submitted .form-submitted-success .success-tick {
   filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
   opacity: 1;
@@ -2309,12 +2367,12 @@ textarea, .global-header .link-open-search, html, body {
   -webkit-transition: opacity 0.4s 2.2s, -webkit-transform 0.4s 2.2s;
           transition: opacity 0.4s 2.2s, transform 0.4s 2.2s;
 }
-/* line 407, ../sass/templates/_account-access.scss */
+/* line 410, ../sass/templates/_account-access.scss */
 .is-ie .tabs__content--is-submitted .form-submitted-success .success-tick, .is-ie .reset-password-is-submitted .form-submitted-success .success-tick {
   -webkit-transition: opacity 0.4s 0.3s, -webkit-transform 0.4s 0.3s;
           transition: opacity 0.4s 0.3s, transform 0.4s 0.3s;
 }
-/* line 411, ../sass/templates/_account-access.scss */
+/* line 414, ../sass/templates/_account-access.scss */
 .form-submitted-success-complete .form-submitted-success .success-tick {
   filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
   opacity: 1;
@@ -2324,7 +2382,7 @@ textarea, .global-header .link-open-search, html, body {
   -webkit-transition: opacity 0.4s 0.4s, -webkit-transform 0.4s 0.4s;
           transition: opacity 0.4s 0.4s, transform 0.4s 0.4s;
 }
-/* line 417, ../sass/templates/_account-access.scss */
+/* line 420, ../sass/templates/_account-access.scss */
 .account-setup-content-wrapper .form-submitted-success {
   position: absolute;
   top: 0;
@@ -2332,61 +2390,69 @@ textarea, .global-header .link-open-search, html, body {
   height: 297px;
   overflow: visible;
 }
-/* line 423, ../sass/templates/_account-access.scss */
+/* line 426, ../sass/templates/_account-access.scss */
 .account-setup-content-wrapper .form-submitted-success .success-tick {
   top: 10.2rem;
 }
-/* line 426, ../sass/templates/_account-access.scss */
+/* line 429, ../sass/templates/_account-access.scss */
+.account-setup-content-wrapper .form-submitted-success h2 {
+  margin-top: 19.4rem;
+  margin-bottom: 0.3rem;
+  width: 100%;
+  font-family: "Lato", sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+/* line 437, ../sass/templates/_account-access.scss */
 .account-setup-content-wrapper .form-submitted-success p {
   position: relative;
   left: 0;
-  margin-top: 16rem;
   width: 100%;
   font-size: 1.6rem;
   font-weight: 700;
 }
-/* line 436, ../sass/templates/_account-access.scss */
+/* line 443, ../sass/templates/_account-access.scss */
 .account-setup-content-wrapper .form-submitted-success p a {
-  padding: 2.3rem 0px 0px 0rem;
+  padding: 0.9rem 0px 0px 0rem;
   display: block;
 }
-/* line 441, ../sass/templates/_account-access.scss */
+/* line 448, ../sass/templates/_account-access.scss */
 .account-setup-content-wrapper .form-submitted-success .connect-account-content input[type="submit"] {
   -webkit-transition: margin-top 0.3s;
           transition: margin-top 0.3s;
 }
-/* line 443, ../sass/templates/_account-access.scss */
+/* line 450, ../sass/templates/_account-access.scss */
 .account-setup-content-wrapper .form-submitted-success .connect-account-content input[type="submit"].ref-button--success {
   margin-top: 6rem;
 }
 
-/* line 451, ../sass/templates/_account-access.scss */
+/* line 458, ../sass/templates/_account-access.scss */
 .form-submitted-success-complete .account-setup-content-wrapper .connect-account-content input[type="submit"] {
   -webkit-transition: margin-top 0.3s;
           transition: margin-top 0.3s;
 }
-/* line 453, ../sass/templates/_account-access.scss */
+/* line 460, ../sass/templates/_account-access.scss */
 .form-submitted-success-complete .account-setup-content-wrapper .connect-account-content input[type="submit"].ref-button--success {
   margin-top: 3rem;
 }
 @media (min-width: 1600px) {
-  /* line 453, ../sass/templates/_account-access.scss */
+  /* line 460, ../sass/templates/_account-access.scss */
   .form-submitted-success-complete .account-setup-content-wrapper .connect-account-content input[type="submit"].ref-button--success {
     margin-top: 6rem;
   }
 }
-/* line 462, ../sass/templates/_account-access.scss */
+/* line 469, ../sass/templates/_account-access.scss */
 .form-submitted-success-complete .account-setup-content-wrapper.page-reset-password .connect-account-content input[type="submit"].ref-button--success {
   margin-top: 6rem;
 }
 @media (min-width: 1600px) {
-  /* line 462, ../sass/templates/_account-access.scss */
+  /* line 469, ../sass/templates/_account-access.scss */
   .form-submitted-success-complete .account-setup-content-wrapper.page-reset-password .connect-account-content input[type="submit"].ref-button--success {
     margin-top: 6rem;
   }
 }
 
-/* line 472, ../sass/templates/_account-access.scss */
+/* line 479, ../sass/templates/_account-access.scss */
 .no-touch .account-access-page .account-access-content .list-partners,
 .touch .account-access-page .account-access-content .list-partners {
   position: relative;
@@ -2400,31 +2466,31 @@ textarea, .global-header .link-open-search, html, body {
   overflow: visible;
 }
 @media (min-width: 720px) {
-  /* line 472, ../sass/templates/_account-access.scss */
+  /* line 479, ../sass/templates/_account-access.scss */
   .no-touch .account-access-page .account-access-content .list-partners,
   .touch .account-access-page .account-access-content .list-partners {
     display: inline-block;
   }
 }
-/* line 486, ../sass/templates/_account-access.scss */
+/* line 493, ../sass/templates/_account-access.scss */
 .no-touch .account-access-page .account-access-content .list-partners h2,
 .touch .account-access-page .account-access-content .list-partners h2 {
   margin-top: 0.8rem;
   margin-bottom: 1.7rem;
 }
-/* line 490, ../sass/templates/_account-access.scss */
+/* line 497, ../sass/templates/_account-access.scss */
 .no-touch .account-access-page .account-access-content .list-partners img,
 .touch .account-access-page .account-access-content .list-partners img {
   max-width: 130px;
   padding-bottom: 0;
 }
-/* line 494, ../sass/templates/_account-access.scss */
+/* line 501, ../sass/templates/_account-access.scss */
 .no-touch .account-access-page .account-access-content .list-partners li,
 .touch .account-access-page .account-access-content .list-partners li {
   display: none;
 }
 @media (min-width: 720px) {
-  /* line 494, ../sass/templates/_account-access.scss */
+  /* line 501, ../sass/templates/_account-access.scss */
   .no-touch .account-access-page .account-access-content .list-partners li,
   .touch .account-access-page .account-access-content .list-partners li {
     display: inline-block;
@@ -2432,14 +2498,14 @@ textarea, .global-header .link-open-search, html, body {
   }
 }
 @media (min-width: 720px) {
-  /* line 472, ../sass/templates/_account-access.scss */
+  /* line 479, ../sass/templates/_account-access.scss */
   .no-touch .account-access-page .account-access-content .list-partners,
   .touch .account-access-page .account-access-content .list-partners {
     padding-top: 3rem;
   }
 }
 @media (min-width: 1280px) {
-  /* line 505, ../sass/templates/_account-access.scss */
+  /* line 512, ../sass/templates/_account-access.scss */
   .no-touch .account-access-page .account-access-content .list-partners ul,
   .touch .account-access-page .account-access-content .list-partners ul {
     display: -webkit-box;
@@ -2463,7 +2529,7 @@ textarea, .global-header .link-open-search, html, body {
         -ms-flex-align: center;
             align-items: center;
   }
-  /* line 514, ../sass/templates/_account-access.scss */
+  /* line 521, ../sass/templates/_account-access.scss */
   .no-touch .account-access-page .account-access-content .list-partners li,
   .touch .account-access-page .account-access-content .list-partners li {
     width: auto;
@@ -2476,7 +2542,7 @@ textarea, .global-header .link-open-search, html, body {
         -ms-flex-positive: 1;
             flex-grow: 1;
   }
-  /* line 520, ../sass/templates/_account-access.scss */
+  /* line 527, ../sass/templates/_account-access.scss */
   .no-touch .account-access-page .account-access-content .list-partners li:last-child,
   .touch .account-access-page .account-access-content .list-partners li:last-child {
     display: inline-block;
@@ -2484,26 +2550,26 @@ textarea, .global-header .link-open-search, html, body {
 }
 
 @media (min-width: 480px) {
-  /* line 525, ../sass/templates/_account-access.scss */
+  /* line 532, ../sass/templates/_account-access.scss */
   .no-touch .account-setup-content-wrapper .list-partners,
   .touch .account-setup-content-wrapper .list-partners {
     display: none;
   }
 }
 @media (min-width: 960px) {
-  /* line 525, ../sass/templates/_account-access.scss */
+  /* line 532, ../sass/templates/_account-access.scss */
   .no-touch .account-setup-content-wrapper .list-partners,
   .touch .account-setup-content-wrapper .list-partners {
     display: block;
   }
 }
-/* line 533, ../sass/templates/_account-access.scss */
+/* line 540, ../sass/templates/_account-access.scss */
 .no-touch .account-setup-content-wrapper .list-partners li,
 .touch .account-setup-content-wrapper .list-partners li {
   width: 49%;
 }
 
-/* line 537, ../sass/templates/_account-access.scss */
+/* line 544, ../sass/templates/_account-access.scss */
 .apply-content {
   position: absolute;
   visibility: hidden;
@@ -2512,13 +2578,13 @@ textarea, .global-header .link-open-search, html, body {
   opacity: 0;
 }
 @media (min-width: 960px) {
-  /* line 537, ../sass/templates/_account-access.scss */
+  /* line 544, ../sass/templates/_account-access.scss */
   .apply-content {
     -webkit-transition: opacity 0.6s;
             transition: opacity 0.6s;
   }
 }
-/* line 545, ../sass/templates/_account-access.scss */
+/* line 552, ../sass/templates/_account-access.scss */
 .apply-form-is-showing .apply-content {
   position: relative;
   visibility: visible;
@@ -2528,7 +2594,7 @@ textarea, .global-header .link-open-search, html, body {
           transition: opacity 0.6s;
 }
 
-/* line 552, ../sass/templates/_account-access.scss */
+/* line 559, ../sass/templates/_account-access.scss */
 .login-content {
   position: absolute;
   visibility: hidden;
@@ -2538,7 +2604,7 @@ textarea, .global-header .link-open-search, html, body {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0;
 }
-/* line 559, ../sass/templates/_account-access.scss */
+/* line 566, ../sass/templates/_account-access.scss */
 .login-form-is-showing .login-content {
   position: relative;
   visibility: visible;
@@ -2548,28 +2614,28 @@ textarea, .global-header .link-open-search, html, body {
           transition: opacity 0.6s;
 }
 @media (min-width: 480px) {
-  /* line 559, ../sass/templates/_account-access.scss */
+  /* line 566, ../sass/templates/_account-access.scss */
   .login-form-is-showing .login-content {
     display: block;
   }
 }
-/* line 568, ../sass/templates/_account-access.scss */
+/* line 575, ../sass/templates/_account-access.scss */
 .login-content .blockquote--reset-password,
 .login-content .blockquote--login {
   margin-top: 0;
   margin-bottom: 3em;
 }
-/* line 573, ../sass/templates/_account-access.scss */
+/* line 580, ../sass/templates/_account-access.scss */
 .login-content .blockquote--large {
   margin-left: -5px;
 }
-/* line 575, ../sass/templates/_account-access.scss */
+/* line 582, ../sass/templates/_account-access.scss */
 .login-content .blockquote--large p {
   font-size: 2.2rem;
   font-weight: 700;
   line-height: 1.45;
 }
-/* line 581, ../sass/templates/_account-access.scss */
+/* line 588, ../sass/templates/_account-access.scss */
 .login-content .blockquote--reset-password {
   position: absolute;
   visibility: hidden;
@@ -2577,12 +2643,12 @@ textarea, .global-header .link-open-search, html, body {
   opacity: 0;
 }
 @media (min-width: 720px) {
-  /* line 581, ../sass/templates/_account-access.scss */
+  /* line 588, ../sass/templates/_account-access.scss */
   .login-content .blockquote--reset-password {
     margin-top: 72px;
   }
 }
-/* line 588, ../sass/templates/_account-access.scss */
+/* line 595, ../sass/templates/_account-access.scss */
 .reset-password-form-is-showing .login-content .blockquote--reset-password {
   position: relative;
   visibility: visible;
@@ -2591,7 +2657,7 @@ textarea, .global-header .link-open-search, html, body {
   -webkit-transition: opacity 0.6s;
           transition: opacity 0.6s;
 }
-/* line 595, ../sass/templates/_account-access.scss */
+/* line 602, ../sass/templates/_account-access.scss */
 .login-content .blockquote--login {
   position: relative;
   visibility: visible;
@@ -2599,12 +2665,12 @@ textarea, .global-header .link-open-search, html, body {
           transition: opacity 0.6s;
 }
 @media (min-width: 720px) {
-  /* line 595, ../sass/templates/_account-access.scss */
+  /* line 602, ../sass/templates/_account-access.scss */
   .login-content .blockquote--login {
     margin-top: 47px;
   }
 }
-/* line 602, ../sass/templates/_account-access.scss */
+/* line 609, ../sass/templates/_account-access.scss */
 .reset-password-form-is-showing .login-content .blockquote--login {
   position: absolute;
   visibility: hidden;
@@ -2614,7 +2680,7 @@ textarea, .global-header .link-open-search, html, body {
           transition: opacity 0.6s;
 }
 
-/* line 610, ../sass/templates/_account-access.scss */
+/* line 617, ../sass/templates/_account-access.scss */
 .create-password-main-content,
 .connect-account-main-content,
 .connect-account-is-showing.form-submitted-success-complete .connect-account-main-content,
@@ -2628,13 +2694,13 @@ textarea, .global-header .link-open-search, html, body {
           transition: opacity 0.6s;
 }
 
-/* line 622, ../sass/templates/_account-access.scss */
+/* line 629, ../sass/templates/_account-access.scss */
 .connect-account-main-content h1:first-child,
 .connect-account-submitted h1:first-child {
   margin-top: 3rem;
 }
 
-/* line 626, ../sass/templates/_account-access.scss */
+/* line 633, ../sass/templates/_account-access.scss */
 .create-password-form-is-showing .create-password-main-content,
 .connect-account-is-showing .connect-account-main-content,
 .connect-account-is-showing.form-submitted-success-complete .connect-account-submitted,
@@ -2647,7 +2713,7 @@ textarea, .global-header .link-open-search, html, body {
   -webkit-transition: opacity 0.6s;
           transition: opacity 0.6s;
 }
-/* line 635, ../sass/templates/_account-access.scss */
+/* line 642, ../sass/templates/_account-access.scss */
 .create-password-form-is-showing .create-password-main-content p,
 .connect-account-is-showing .connect-account-main-content p,
 .connect-account-is-showing.form-submitted-success-complete .connect-account-submitted p,
@@ -2684,61 +2750,61 @@ textarea, .global-header .link-open-search, html, body {
     opacity: 1;
   }
 }
-/* line 644, ../sass/templates/_account-access.scss */
+/* line 651, ../sass/templates/_account-access.scss */
 .account-setup-content-wrapper {
   position: relative;
   overflow: visible;
   min-height: 93vh;
 }
 @media (min-width: 960px) {
-  /* line 644, ../sass/templates/_account-access.scss */
+  /* line 651, ../sass/templates/_account-access.scss */
   .account-setup-content-wrapper {
     min-height: 76vh;
   }
 }
-/* line 651, ../sass/templates/_account-access.scss */
+/* line 658, ../sass/templates/_account-access.scss */
 .account-setup-content-wrapper .full-screen-intro {
   padding-top: 0;
 }
 
-/* line 656, ../sass/templates/_account-access.scss */
+/* line 663, ../sass/templates/_account-access.scss */
 .create-password-main-content .svg-create-password {
   display: none;
   width: 80%;
   max-width: 333px;
 }
 @media (min-width: 720px) {
-  /* line 656, ../sass/templates/_account-access.scss */
+  /* line 663, ../sass/templates/_account-access.scss */
   .create-password-main-content .svg-create-password {
     display: inline-block;
     max-width: 270px;
   }
 }
 @media screen and (min-width: 960px) and (min-height: 780px) {
-  /* line 656, ../sass/templates/_account-access.scss */
+  /* line 663, ../sass/templates/_account-access.scss */
   .create-password-main-content .svg-create-password {
     max-width: 333px;
   }
 }
 @media screen and (max-height: 800px) {
-  /* line 656, ../sass/templates/_account-access.scss */
+  /* line 663, ../sass/templates/_account-access.scss */
   .create-password-main-content .svg-create-password {
     max-width: 270px;
   }
 }
 @media (min-width: 960px) {
-  /* line 656, ../sass/templates/_account-access.scss */
+  /* line 663, ../sass/templates/_account-access.scss */
   .create-password-main-content .svg-create-password {
     max-width: 235px;
   }
 }
-/* line 674, ../sass/templates/_account-access.scss */
+/* line 681, ../sass/templates/_account-access.scss */
 .create-password-main-content h1,
 .create-password-main-content .heading-style--heading-one {
   margin-top: 3.6rem;
 }
 
-/* line 679, ../sass/templates/_account-access.scss */
+/* line 686, ../sass/templates/_account-access.scss */
 .account-connect-animation {
   position: absolute;
   display: none;
@@ -2752,59 +2818,59 @@ textarea, .global-header .link-open-search, html, body {
   opacity: 0;
 }
 @media (min-width: 720px) {
-  /* line 679, ../sass/templates/_account-access.scss */
+  /* line 686, ../sass/templates/_account-access.scss */
   .account-connect-animation {
     top: 685px;
     display: block;
   }
 }
 @media (min-width: 960px) {
-  /* line 679, ../sass/templates/_account-access.scss */
+  /* line 686, ../sass/templates/_account-access.scss */
   .account-connect-animation {
     top: 35.6rem;
     display: block;
   }
 }
 @media screen and (max-width: 1150px) {
-  /* line 698, ../sass/templates/_account-access.scss */
+  /* line 705, ../sass/templates/_account-access.scss */
   .panel-left-open .account-connect-animation {
     display: none;
   }
 }
 @media screen and (min-width: 960px) and (min-height: 780px) {
-  /* line 679, ../sass/templates/_account-access.scss */
+  /* line 686, ../sass/templates/_account-access.scss */
   .account-connect-animation {
     top: 39.6rem;
   }
 }
 @media screen and (min-width: 960px) and (min-height: 960px) {
-  /* line 679, ../sass/templates/_account-access.scss */
+  /* line 686, ../sass/templates/_account-access.scss */
   .account-connect-animation {
     top: 44.6rem;
   }
 }
-/* line 708, ../sass/templates/_account-access.scss */
+/* line 715, ../sass/templates/_account-access.scss */
 .connect-account-is-showing .account-connect-animation {
   filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
   opacity: 1;
   -webkit-transition: opacity 0.6s 0.3s;
           transition: opacity 0.6s 0.3s;
 }
-/* line 712, ../sass/templates/_account-access.scss */
+/* line 719, ../sass/templates/_account-access.scss */
 .account-connect-animation .cord {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
 }
-/* line 717, ../sass/templates/_account-access.scss */
+/* line 724, ../sass/templates/_account-access.scss */
 .account-connect-animation .cord div {
   width: 100%;
   height: 6px;
   margin-top: 42px;
   background-color: #474492;
 }
-/* line 724, ../sass/templates/_account-access.scss */
+/* line 731, ../sass/templates/_account-access.scss */
 .account-connect-animation .plugs {
   position: absolute;
   top: 0;
@@ -2815,137 +2881,137 @@ textarea, .global-header .link-open-search, html, body {
   background-color: #6d69c5;
 }
 @media (min-width: 960px) {
-  /* line 724, ../sass/templates/_account-access.scss */
+  /* line 731, ../sass/templates/_account-access.scss */
   .account-connect-animation .plugs {
     left: calc(50% - 439px);
   }
 }
-/* line 736, ../sass/templates/_account-access.scss */
+/* line 743, ../sass/templates/_account-access.scss */
 .account-connect-animation .plug-left, .account-connect-animation .plug-right {
   position: absolute;
   height: 93px;
 }
-/* line 740, ../sass/templates/_account-access.scss */
+/* line 747, ../sass/templates/_account-access.scss */
 .account-connect-animation .plug-right {
   width: 189px;
   top: -1px;
 }
-/* line 744, ../sass/templates/_account-access.scss */
+/* line 751, ../sass/templates/_account-access.scss */
 .account-connect-animation .plug-left {
   left: -417px;
   width: 563px;
   -webkit-transition: left 0.3s ease-out;
           transition: left 0.3s ease-out;
 }
-/* line 749, ../sass/templates/_account-access.scss */
+/* line 756, ../sass/templates/_account-access.scss */
 .account-connect-animation.plugs-connected .plug-left {
   left: -293px;
   -webkit-transition: left 0.3s 0.7s ease-out;
           transition: left 0.3s 0.7s ease-out;
 }
-/* line 753, ../sass/templates/_account-access.scss */
+/* line 760, ../sass/templates/_account-access.scss */
 .account-connect-animation .plug-right {
   right: -68px;
 }
-/* line 756, ../sass/templates/_account-access.scss */
+/* line 763, ../sass/templates/_account-access.scss */
 .account-connect-animation .plug-logo path {
   fill: #474492;
 }
-/* line 761, ../sass/templates/_account-access.scss */
+/* line 768, ../sass/templates/_account-access.scss */
 .account-connect-animation.plugs-connected .plug-logo path {
   fill: #fff;
   -webkit-transition: fill 0.3s 1.1s ease-out;
           transition: fill 0.3s 1.1s ease-out;
 }
-/* line 766, ../sass/templates/_account-access.scss */
+/* line 773, ../sass/templates/_account-access.scss */
 .account-connect-animation.plugs-connected .plug-logo-glow,
 .account-connect-animation.plugs-connected .plug-logo-container .plug-logo-part-glow {
   opacity: 1;
   -webkit-transition: opacity 0.5s 1.4s ease-out;
           transition: opacity 0.5s 1.4s ease-out;
 }
-/* line 771, ../sass/templates/_account-access.scss */
+/* line 778, ../sass/templates/_account-access.scss */
 .account-connect-animation.plugs-connected .plug-logo-part-glow {
   -webkit-animation: glowPulse 1s 1.9s ease infinite;
           animation: glowPulse 1s 1.9s ease infinite;
 }
-/* line 775, ../sass/templates/_account-access.scss */
+/* line 782, ../sass/templates/_account-access.scss */
 .account-connect-animation .plug-logo-glow,
 .account-connect-animation .plug-logo-container .plug-logo-part-glow {
   opacity: 0;
 }
 
-/* line 781, ../sass/templates/_account-access.scss */
+/* line 788, ../sass/templates/_account-access.scss */
 .page-reset-password .account-access-content {
   padding-top: 0;
 }
 @media (min-width: 720px) {
-  /* line 781, ../sass/templates/_account-access.scss */
+  /* line 788, ../sass/templates/_account-access.scss */
   .page-reset-password .account-access-content {
     padding-top: 50px;
   }
 }
 @media (min-width: 960px) {
-  /* line 781, ../sass/templates/_account-access.scss */
+  /* line 788, ../sass/templates/_account-access.scss */
   .page-reset-password .account-access-content {
     padding-top: 11rem;
   }
 }
 @media screen and (min-width: 960px) and (max-height: 800px) {
-  /* line 781, ../sass/templates/_account-access.scss */
+  /* line 788, ../sass/templates/_account-access.scss */
   .page-reset-password .account-access-content {
     padding-top: 8rem;
   }
 }
 @media screen and (min-width: 960px) and (max-height: 700px) {
-  /* line 781, ../sass/templates/_account-access.scss */
+  /* line 788, ../sass/templates/_account-access.scss */
   .page-reset-password .account-access-content {
     padding-top: 10rem;
   }
 }
 @media (min-width: 720px) {
-  /* line 796, ../sass/templates/_account-access.scss */
+  /* line 803, ../sass/templates/_account-access.scss */
   .page-reset-password.account-setup-content-wrapper {
     height: calc(100vh - 62px);
   }
-  /* line 799, ../sass/templates/_account-access.scss */
+  /* line 806, ../sass/templates/_account-access.scss */
   .is-safari .page-reset-password.account-setup-content-wrapper {
     height: 100vh;
   }
 }
 @media screen and (max-width: 960px) {
-  /* line 805, ../sass/templates/_account-access.scss */
+  /* line 812, ../sass/templates/_account-access.scss */
   .page-reset-password .full-screen-intro p {
     max-width: 400px;
     margin: 0 auto;
   }
 }
-/* line 812, ../sass/templates/_account-access.scss */
+/* line 819, ../sass/templates/_account-access.scss */
 .page-reset-password .img-reset {
   display: none;
   width: 80%;
   max-width: 122px;
 }
 @media (min-width: 720px) {
-  /* line 812, ../sass/templates/_account-access.scss */
+  /* line 819, ../sass/templates/_account-access.scss */
   .page-reset-password .img-reset {
     display: inline-block;
     max-width: 85px;
   }
 }
 @media (min-width: 960px) {
-  /* line 812, ../sass/templates/_account-access.scss */
+  /* line 819, ../sass/templates/_account-access.scss */
   .page-reset-password .img-reset {
     max-width: 122px;
   }
 }
 @media screen and (max-height: 800px) {
-  /* line 812, ../sass/templates/_account-access.scss */
+  /* line 819, ../sass/templates/_account-access.scss */
   .page-reset-password .img-reset {
     max-width: 85px;
   }
 }
-/* line 827, ../sass/templates/_account-access.scss */
+/* line 834, ../sass/templates/_account-access.scss */
 .form-submitted-success-complete .page-reset-password .img-reset .hook {
   -webkit-transform: translateY(17px);
       -ms-transform: translateY(17px);
@@ -2953,58 +3019,108 @@ textarea, .global-header .link-open-search, html, body {
   -webkit-transition: -webkit-transform 0.5s 0.8s;
   transition: transform 0.5s 0.8s;
 }
-/* line 835, ../sass/templates/_account-access.scss */
+/* line 842, ../sass/templates/_account-access.scss */
 .page-reset-password .form-submitted-success .success-tick {
   top: 10.2rem;
 }
-/* line 838, ../sass/templates/_account-access.scss */
+/* line 845, ../sass/templates/_account-access.scss */
 .page-reset-password .form-submitted-success p {
   position: relative;
   margin-top: 16rem;
 }
 @media (min-width: 1600px) {
-  /* line 838, ../sass/templates/_account-access.scss */
+  /* line 845, ../sass/templates/_account-access.scss */
   .page-reset-password .form-submitted-success p {
     margin-top: 14rem;
   }
 }
-/* line 846, ../sass/templates/_account-access.scss */
+/* line 853, ../sass/templates/_account-access.scss */
 .page-reset-password .connect-account-content .ref-button--full-width {
   margin-top: 4.5rem;
 }
 @media screen and (max-width: 960px) {
-  /* line 849, ../sass/templates/_account-access.scss */
+  /* line 856, ../sass/templates/_account-access.scss */
   .page-reset-password .list-partners {
     display: none;
   }
 }
 @media screen and (max-width: 1150px) {
-  /* line 854, ../sass/templates/_account-access.scss */
+  /* line 861, ../sass/templates/_account-access.scss */
   .panel-left-open .page-reset-password .list-partners {
     display: none;
   }
 }
 @media screen and (max-height: 700px) {
-  /* line 859, ../sass/templates/_account-access.scss */
+  /* line 866, ../sass/templates/_account-access.scss */
   .touch .page-reset-password .list-partners, .no-touch .page-reset-password .list-partners {
     display: none;
   }
 }
-/* line 864, ../sass/templates/_account-access.scss */
+/* line 871, ../sass/templates/_account-access.scss */
 .ie10 .page-reset-password .list-partners, .ie9 .page-reset-password .list-partners {
   display: none;
 }
-/* line 869, ../sass/templates/_account-access.scss */
+/* line 876, ../sass/templates/_account-access.scss */
 .page-reset-password .account-form-container {
   margin-bottom: 50px;
 }
 
 @media (min-width: 720px) {
-  /* line 873, ../sass/templates/_account-access.scss */
+  /* line 880, ../sass/templates/_account-access.scss */
   .is-safari .page-reset-password .img-reset {
     height: 150px;
     margin: 0 auto;
     display: block;
+  }
+}
+
+/* line 887, ../sass/templates/_account-access.scss */
+.linked-account-loading-state {
+  position: absolute;
+  top: 5.7rem;
+  opacity: 0;
+  -webkit-transition: opacity 0.2s;
+          transition: opacity 0.2s;
+  pointer-events: none;
+}
+/* line 893, ../sass/templates/_account-access.scss */
+.form-submitted-loading .linked-account-loading-state {
+  opacity: 1;
+  -webkit-transition: opacity 0.4s 0.3s;
+          transition: opacity 0.4s 0.3s;
+}
+/* line 897, ../sass/templates/_account-access.scss */
+.form-submitted-success-complete .linked-account-loading-state {
+  opacity: 0;
+  -webkit-transition: opacity 0.2s;
+          transition: opacity 0.2s;
+}
+/* line 901, ../sass/templates/_account-access.scss */
+.linked-account-loading-state p {
+  margin-top: 16rem;
+  line-height: 1.6;
+}
+
+/* line 907, ../sass/templates/_account-access.scss */
+.connect-account-content input[type="submit"].ref-button--is-loading,
+.connect-account-content button.ref-button--is-loading {
+  margin-top: 5.6rem;
+  margin-bottom: 0.7rem;
+  -webkit-transition: margin-top 0.3s;
+          transition: margin-top 0.3s;
+}
+@media (min-width: 720px) {
+  /* line 907, ../sass/templates/_account-access.scss */
+  .connect-account-content input[type="submit"].ref-button--is-loading,
+  .connect-account-content button.ref-button--is-loading {
+    margin-top: 4.6rem;
+  }
+}
+@media (min-width: 1600px) {
+  /* line 907, ../sass/templates/_account-access.scss */
+  .connect-account-content input[type="submit"].ref-button--is-loading,
+  .connect-account-content button.ref-button--is-loading {
+    margin-top: 6.6rem;
   }
 }
 
@@ -3059,7 +3175,7 @@ textarea, .global-header .link-open-search, html, body {
   /* line 1, ../sass/templates/_app.scss */
   .page-app__header {
     width: 73%;
-    margin-bottom: 2.5rem;
+    margin-bottom: 1.1rem;
   }
 }
 @media (min-width: 960px) {
@@ -3077,7 +3193,7 @@ textarea, .global-header .link-open-search, html, body {
 
 /* line 18, ../sass/templates/_app.scss */
 .page-app {
-  padding-top: 23px;
+  padding-top: 20px;
   padding-bottom: 66px;
   overflow: visible;
 }
@@ -3890,43 +4006,37 @@ textarea, .global-header .link-open-search, html, body {
   padding-top: 20px;
   padding-bottom: 66px;
 }
-@media (min-width: 720px) {
-  /* line 1, ../sass/templates/_blog.scss */
-  .page-blog {
-    padding-top: 34px;
-  }
-}
 @media screen and (min-width: 720px) and (max-width: 960px) {
-  /* line 7, ../sass/templates/_blog.scss */
+  /* line 4, ../sass/templates/_blog.scss */
   .page-blog .blog-content-container {
     width: 75%;
   }
 }
-/* line 12, ../sass/templates/_blog.scss */
+/* line 9, ../sass/templates/_blog.scss */
 .page-blog .breadcrumb-container {
   padding: 0px 2%;
 }
 @media (min-width: 720px) {
-  /* line 12, ../sass/templates/_blog.scss */
+  /* line 9, ../sass/templates/_blog.scss */
   .page-blog .breadcrumb-container {
     padding: 0;
   }
 }
-/* line 18, ../sass/templates/_blog.scss */
+/* line 15, ../sass/templates/_blog.scss */
 .page-blog .search-field-no-label {
   padding: 7px 14px 9px 13px;
 }
-/* line 20, ../sass/templates/_blog.scss */
+/* line 17, ../sass/templates/_blog.scss */
 .page-blog .search-field-no-label input[type="text"] {
   font-size: 1.5rem;
   overflow: visible;
 }
-/* line 24, ../sass/templates/_blog.scss */
+/* line 21, ../sass/templates/_blog.scss */
 .page-blog .search-field-no-label input[type="submit"] {
   font-size: 1.75rem;
   color: #81879D;
 }
-/* line 29, ../sass/templates/_blog.scss */
+/* line 26, ../sass/templates/_blog.scss */
 .page-blog .filters-container {
   width: 100%;
   padding-top: 0;
@@ -3934,109 +4044,117 @@ textarea, .global-header .link-open-search, html, body {
   float: left;
   background-color: transparent;
 }
-/* line 35, ../sass/templates/_blog.scss */
+/* line 32, ../sass/templates/_blog.scss */
 .page-blog .filters-container h1 {
   margin-bottom: 0;
 }
-/* line 38, ../sass/templates/_blog.scss */
+/* line 35, ../sass/templates/_blog.scss */
 .page-blog .filters-container .grid__column {
   overflow: visible;
 }
-/* line 41, ../sass/templates/_blog.scss */
+/* line 38, ../sass/templates/_blog.scss */
 .page-blog .filters-container .grid__column--right {
   float: right;
   font-size: 0;
 }
-/* line 44, ../sass/templates/_blog.scss */
+/* line 41, ../sass/templates/_blog.scss */
 .page-blog .filters-container .grid__column--right > div {
   width: 48%;
   display: inline-block;
 }
-/* line 47, ../sass/templates/_blog.scss */
+/* line 44, ../sass/templates/_blog.scss */
 .page-blog .filters-container .grid__column--right > div:last-child {
   float: right;
 }
 @media (min-width: 720px) {
-  /* line 44, ../sass/templates/_blog.scss */
+  /* line 41, ../sass/templates/_blog.scss */
   .page-blog .filters-container .grid__column--right > div {
     width: 48%;
   }
 }
-/* line 56, ../sass/templates/_blog.scss */
+/* line 53, ../sass/templates/_blog.scss */
 .page-blog .filters-container .reflection-select span {
   background-color: transparent;
 }
-/* line 60, ../sass/templates/_blog.scss */
+/* line 57, ../sass/templates/_blog.scss */
 .page-blog .filters-container .grid__column--five-columns {
   width: 100%;
 }
 @media (min-width: 720px) {
-  /* line 60, ../sass/templates/_blog.scss */
+  /* line 57, ../sass/templates/_blog.scss */
   .page-blog .filters-container .grid__column--five-columns {
     width: 60%;
   }
 }
 @media (min-width: 960px) {
-  /* line 60, ../sass/templates/_blog.scss */
+  /* line 57, ../sass/templates/_blog.scss */
   .page-blog .filters-container .grid__column--five-columns {
     width: 41.6667%;
   }
 }
 @media screen and (max-width: 720px) {
-  /* line 70, ../sass/templates/_blog.scss */
-  .page-blog .filters-container .page-title {
+  /* line 67, ../sass/templates/_blog.scss */
+  .page-blog .filters-container .page-title,
+  .page-blog .filters-container .page-title:last-child {
     font-size: 2.2em;
   }
 }
-/* line 75, ../sass/templates/_blog.scss */
+@media screen and (min-width: 720px) {
+  /* line 73, ../sass/templates/_blog.scss */
+  .page-blog .filters-container .page-title,
+  .page-blog .filters-container .page-title:last-child {
+    margin-bottom: 0.78em;
+  }
+}
+/* line 79, ../sass/templates/_blog.scss */
 .page-blog .components-row-with-border {
   margin-bottom: 2rem;
 }
 @media (min-width: 720px) {
-  /* line 75, ../sass/templates/_blog.scss */
+  /* line 79, ../sass/templates/_blog.scss */
   .page-blog .components-row-with-border {
     margin-bottom: 4rem;
   }
 }
-/* line 81, ../sass/templates/_blog.scss */
+/* line 85, ../sass/templates/_blog.scss */
 .page-blog .heading-container {
   width: 8.2rem;
-  padding: 0 0 0 2%;
+  padding: 0;
   display: inline-block;
   float: left;
   overflow: visible;
 }
 @media (min-width: 1600px) {
-  /* line 81, ../sass/templates/_blog.scss */
+  /* line 85, ../sass/templates/_blog.scss */
   .page-blog .heading-container {
     width: 8.5rem;
   }
 }
-/* line 91, ../sass/templates/_blog.scss */
+/* line 95, ../sass/templates/_blog.scss */
 .page-blog .sharing-container {
   position: relative;
   display: block;
   margin-top: 20px;
 }
-/* line 95, ../sass/templates/_blog.scss */
+/* line 99, ../sass/templates/_blog.scss */
 .page-blog .sharing-container a:first-child {
   margin-left: 0;
 }
 @media (min-width: 720px) {
-  /* line 91, ../sass/templates/_blog.scss */
+  /* line 95, ../sass/templates/_blog.scss */
   .page-blog .sharing-container {
     position: absolute;
     right: 0px;
     bottom: 2.2rem;
     margin-top: 0;
   }
-  /* line 103, ../sass/templates/_blog.scss */
+  /* line 107, ../sass/templates/_blog.scss */
   .page-blog .sharing-container a:first-child {
     margin-left: 5;
   }
 }
 
-/* line 109, ../sass/templates/_blog.scss */
+/* line 113, ../sass/templates/_blog.scss */
 .blog-content-container {
   margin-left: auto;
   margin-right: auto;
@@ -4044,44 +4162,44 @@ textarea, .global-header .link-open-search, html, body {
   float: none;
 }
 @media (min-width: 1280px) {
-  /* line 109, ../sass/templates/_blog.scss */
+  /* line 113, ../sass/templates/_blog.scss */
   .blog-content-container {
     max-width: 850px;
   }
 }
 
-/* line 119, ../sass/templates/_blog.scss */
+/* line 123, ../sass/templates/_blog.scss */
 .blog-tags strong {
   padding-right: 3px;
 }
-/* line 122, ../sass/templates/_blog.scss */
+/* line 126, ../sass/templates/_blog.scss */
 .blog-tags a {
   padding: 0 3px;
   font-weight: 700;
 }
 
-/* line 127, ../sass/templates/_blog.scss */
+/* line 131, ../sass/templates/_blog.scss */
 .blog-comments {
   position: relative;
 }
-/* line 129, ../sass/templates/_blog.scss */
+/* line 133, ../sass/templates/_blog.scss */
 .blog-comments h2 {
   margin-bottom: 2.3rem;
 }
-/* line 132, ../sass/templates/_blog.scss */
+/* line 136, ../sass/templates/_blog.scss */
 .blog-comments .make-comment-button {
   position: absolute;
   top: 0;
   right: 0;
 }
-/* line 137, ../sass/templates/_blog.scss */
+/* line 141, ../sass/templates/_blog.scss */
 .blog-comments textarea {
   width: 100%;
   height: 123px;
   resize: none;
 }
 
-/* line 143, ../sass/templates/_blog.scss */
+/* line 147, ../sass/templates/_blog.scss */
 .blog-search-container {
   float: right;
 }
@@ -5208,45 +5326,39 @@ textarea, .global-header .link-open-search, html, body {
   padding-bottom: 66px;
   overflow: visible;
 }
-@media (min-width: 720px) {
-  /* line 1, ../sass/templates/_leaderboard.scss */
-  .page-leaderboard {
-    padding-top: 34px;
-  }
-}
-/* line 8, ../sass/templates/_leaderboard.scss */
+/* line 5, ../sass/templates/_leaderboard.scss */
 .page-leaderboard .filters-container {
   padding: 0.9rem 3% 1.2rem;
   margin-bottom: 0;
 }
 @media (min-width: 720px) {
-  /* line 8, ../sass/templates/_leaderboard.scss */
+  /* line 5, ../sass/templates/_leaderboard.scss */
   .page-leaderboard .filters-container {
     padding: 1.4rem 2% 1.4rem;
   }
 }
-/* line 15, ../sass/templates/_leaderboard.scss */
+/* line 12, ../sass/templates/_leaderboard.scss */
 .page-leaderboard .filters-container form > div:nth-child(even) {
   float: right;
   text-align: left;
 }
 @media (min-width: 720px) {
-  /* line 15, ../sass/templates/_leaderboard.scss */
+  /* line 12, ../sass/templates/_leaderboard.scss */
   .page-leaderboard .filters-container form > div:nth-child(even) {
     float: none;
   }
 }
-/* line 22, ../sass/templates/_leaderboard.scss */
+/* line 19, ../sass/templates/_leaderboard.scss */
 .page-leaderboard .filters-container form > div:nth-child(2) {
   margin-bottom: 0;
 }
-/* line 26, ../sass/templates/_leaderboard.scss */
+/* line 23, ../sass/templates/_leaderboard.scss */
 .page-leaderboard .filters-container .form-field:not(.form-field--date-select),
 .page-leaderboard .filters-container .calendar-container {
   width: 48%;
 }
 @media (min-width: 720px) {
-  /* line 26, ../sass/templates/_leaderboard.scss */
+  /* line 23, ../sass/templates/_leaderboard.scss */
   .page-leaderboard .filters-container .form-field:not(.form-field--date-select),
   .page-leaderboard .filters-container .calendar-container {
     width: 20%;
@@ -5255,26 +5367,29 @@ textarea, .global-header .link-open-search, html, body {
   }
 }
 @media (min-width: 1280px) {
-  /* line 26, ../sass/templates/_leaderboard.scss */
+  /* line 23, ../sass/templates/_leaderboard.scss */
   .page-leaderboard .filters-container .form-field:not(.form-field--date-select),
   .page-leaderboard .filters-container .calendar-container {
     width: 16%;
   }
 }
-/* line 39, ../sass/templates/_leaderboard.scss */
+/* line 36, ../sass/templates/_leaderboard.scss */
 .page-leaderboard .filter-toggle {
   float: right;
 }
 @media (min-width: 720px) {
-  /* line 39, ../sass/templates/_leaderboard.scss */
+  /* line 36, ../sass/templates/_leaderboard.scss */
   .page-leaderboard .filter-toggle {
     float: none;
   }
 }
-@media screen and (max-width: 720px) {
-  /* line 46, ../sass/templates/_leaderboard.scss */
-  .page-leaderboard .page-title {
-    font-size: 2.2em;
+@media screen and (min-width: 720px) {
+  /* line 43, ../sass/templates/_leaderboard.scss */
+  .page-leaderboard .page-title,
+  .page-leaderboard .page-title:last-child {
+    padding-top: 0;
+    margin-bottom: 0.78em;
+    font-size: 2.1rem;
   }
 }
 
@@ -5446,7 +5561,7 @@ table.table-data > tbody > tr:nth-child(even) > td {
   /* line 172, ../sass/templates/_leaderboard.scss */
   .pinned .table-app-group tbody tr,
   .scrollable .table-app-group tbody tr {
-    height: 70px;
+    height: 65px;
   }
 }
 /* line 2, ../sass/templates/_linked-accounts.scss */
@@ -5774,6 +5889,52 @@ table.table-linked-accounts .update-linked-accounts-container .ref-button--link:
 .popup-content--delete-account .buttons-container .ref-button--cta-small, .popup-content--delete-account .buttons-container .ref-button--cta-small--wide, .popup-content--delete-account .buttons-container .ref-button--cta-large, .popup-content--delete-account .buttons-container .ref-button--cta-large--wide, .popup-content--delete-account .buttons-container .ref-button--full-width {
   position: relative;
   top: 1px;
+}
+
+/* line 253, ../sass/templates/_linked-accounts.scss */
+.popup-content .linked-account-loading-state {
+  top: 8rem;
+  left: 0;
+  padding-left: 30px;
+  padding-right: 30px;
+}
+/* line 258, ../sass/templates/_linked-accounts.scss */
+.popup-content .linked-account-loading-state p {
+  font-size: 14px;
+}
+
+/* line 262, ../sass/templates/_linked-accounts.scss */
+.form-submitted-loading .js-rotate-content:not(.maintain-after-submit),
+.form-submitted-success-complete .js-rotate-content:not(.maintain-after-submit),
+.form-submitted-success-complete .ref-button--is-loading.js-rotate-content {
+  -webkit-transform: rotateX(90deg);
+          transform: rotateX(90deg);
+  -webkit-transition: -webkit-transform 0.15s;
+          transition: transform 0.15s;
+}
+/* line 267, ../sass/templates/_linked-accounts.scss */
+.ie9 .form-submitted-loading .js-rotate-content:not(.maintain-after-submit), .ie9
+.form-submitted-success-complete .js-rotate-content:not(.maintain-after-submit), .ie9
+.form-submitted-success-complete .ref-button--is-loading.js-rotate-content {
+  visibility: hidden;
+}
+
+/* line 271, ../sass/templates/_linked-accounts.scss */
+.form-submitted-loading .ref-button--is-loading.js-rotate-content,
+.form-submitted-loading .ref-button--success.js-rotate-content {
+  margin-top: 6rem;
+  -webkit-transform: rotateX(0deg);
+          transform: rotateX(0deg);
+  -webkit-transition: -webkit-transform 0.15s 0.15s, background-color 0.3s, margin-top 0.3s;
+          transition: transform 0.15s 0.15s, background-color 0.3s, margin-top 0.3s;
+  visibility: visible;
+}
+@media (min-width: 720px) {
+  /* line 271, ../sass/templates/_linked-accounts.scss */
+  .form-submitted-loading .ref-button--is-loading.js-rotate-content,
+  .form-submitted-loading .ref-button--success.js-rotate-content {
+    margin-top: 5rem;
+  }
 }
 
 /* line 5, ../sass/templates/_logged-in-landing.scss */
@@ -7205,12 +7366,12 @@ table.table-linked-accounts .update-linked-accounts-container .ref-button--link:
 
 /* line 4, ../sass/components/_button.scss */
 .ref-button.ref-button--success:disabled, .ref-button--success.ref-button--cta-small:disabled, .ref-button--success.ref-button--cta-small--wide:disabled, .ref-button--success.ref-button--cta-large:disabled, .ref-button--success.ref-button--cta-large--wide:disabled, .ref-button--success.ref-button--full-width:disabled, .ref-button--success.ref-button--function-small:disabled, .ref-button--success.ref-button--function-small--wide:disabled, .ref-button--success.ref-button--function-large:disabled, .ref-button--success.ref-button--function-large--wide:disabled {
-  background-color: #1bc79f;
+  background-color: transparent;
   cursor: default;
 }
 /* line 7, ../sass/components/_button.scss */
 .ref-button.ref-button--success:disabled:hover, .ref-button--success.ref-button--cta-small:disabled:hover, .ref-button--success.ref-button--cta-small--wide:disabled:hover, .ref-button--success.ref-button--cta-large:disabled:hover, .ref-button--success.ref-button--cta-large--wide:disabled:hover, .ref-button--success.ref-button--full-width:disabled:hover, .ref-button--success.ref-button--function-small:disabled:hover, .ref-button--success.ref-button--function-small--wide:disabled:hover, .ref-button--success.ref-button--function-large:disabled:hover, .ref-button--success.ref-button--function-large--wide:disabled:hover {
-  background-color: #1bc79f;
+  background-color: transparent;
   cursor: default;
 }
 /* line 12, ../sass/components/_button.scss */
@@ -7556,27 +7717,31 @@ table.table-linked-accounts .update-linked-accounts-container .ref-button--link:
 }
 
 /* line 296, ../sass/components/_button.scss */
-.ref-button--success {
-  background-color: #1bc79f;
+.ref-button--success,
+.ref-button--success:disabled {
+  color: #29292c;
+  background-color: transparent;
   cursor: default;
   -webkit-transition: background-color 0s;
           transition: background-color 0s;
 }
-/* line 300, ../sass/components/_button.scss */
-.ref-button--success:active, .ref-button--success:hover {
+/* line 302, ../sass/components/_button.scss */
+.ref-button--success:active, .ref-button--success:hover,
+.ref-button--success:disabled:active,
+.ref-button--success:disabled:hover {
   top: 0;
   border: none;
-  background-color: #1bc79f;
+  background-color: transparent;
 }
 
-/* line 306, ../sass/components/_button.scss */
+/* line 308, ../sass/components/_button.scss */
 .ref-button--error {
   background-color: #d23753;
   cursor: default;
   -webkit-transition: background-color 0s;
           transition: background-color 0s;
 }
-/* line 310, ../sass/components/_button.scss */
+/* line 312, ../sass/components/_button.scss */
 .ref-button--error:active, .ref-button--error:hover {
   top: 0;
   border: none;
@@ -12889,8 +13054,8 @@ table.table-data .table-cell-even-row {
 /* line 64, ../sass/components/_table-data.scss */
 table.table-data .MHXTE6C-i-a,
 table.table-data .table-data {
-  padding-top: 5px;
-  padding-bottom: 6px;
+  padding-top: 3px;
+  padding-bottom: 4px;
   vertical-align: middle;
   font-size: 1.5rem;
   color: #363A47;
@@ -13051,7 +13216,7 @@ table.table-data .ref-icon-before--cloud:before {
   }
   /* line 9, ../sass/components/_tabs.scss */
   .tabs-container li {
-    height: 7rem;
+    height: 6.2rem;
   }
   /* line 11, ../sass/components/_tabs.scss */
   .tabs-container--large-tabs .tabs-container li {
@@ -13193,31 +13358,25 @@ table.table-data .ref-icon-before--cloud:before {
 .tabs__tab.is-disabled .tabs__link .text-small, .tabs__tab.is-disabled
 .tabs-to-dropdown-container .text-small {
   padding-top: 0;
+  display: block;
+  clear: both;
+  text-transform: none;
+  font-size: 1.2rem;
+  letter-spacing: 0.3px;
 }
-@media screen and (max-width: 1023px) {
-  /* line 108, ../sass/components/_tabs.scss */
-  .tabs__tab.is-disabled .tabs__link .text-small, .tabs__tab.is-disabled
-  .tabs-to-dropdown-container .text-small {
-    margin-top: -3px;
-    padding-top: 0;
-    text-transform: none;
-    font-size: 1.2rem;
-    letter-spacing: 0.3px;
-  }
-}
-/* line 120, ../sass/components/_tabs.scss */
+/* line 118, ../sass/components/_tabs.scss */
 .is-active .tabs__link span, .is-active
 .tabs-to-dropdown-container span {
   color: #363a47;
   -webkit-transition: color 0.3s;
           transition: color 0.3s;
 }
-/* line 123, ../sass/components/_tabs.scss */
+/* line 121, ../sass/components/_tabs.scss */
 .is-active .tabs__link span:hover, .is-active
 .tabs-to-dropdown-container span:hover {
   color: #363a47;
 }
-/* line 128, ../sass/components/_tabs.scss */
+/* line 126, ../sass/components/_tabs.scss */
 .tabs__link > span,
 .tabs-to-dropdown-container > span {
   width: 100%;
@@ -13226,13 +13385,13 @@ table.table-data .ref-icon-before--cloud:before {
   -webkit-transition: margin-top 0.1s;
           transition: margin-top 0.1s;
 }
-/* line 134, ../sass/components/_tabs.scss */
+/* line 132, ../sass/components/_tabs.scss */
 .tabs__link span span, .tabs__link span:before,
 .tabs-to-dropdown-container span span,
 .tabs-to-dropdown-container span:before {
   vertical-align: middle;
 }
-/* line 137, ../sass/components/_tabs.scss */
+/* line 135, ../sass/components/_tabs.scss */
 .tabs__link span > span,
 .tabs-to-dropdown-container span > span {
   width: 75%;
@@ -13243,13 +13402,13 @@ table.table-data .ref-icon-before--cloud:before {
   white-space: no-wrap;
 }
 @media (min-width: 720px) {
-  /* line 137, ../sass/components/_tabs.scss */
+  /* line 135, ../sass/components/_tabs.scss */
   .tabs__link span > span,
   .tabs-to-dropdown-container span > span {
     width: auto;
   }
 }
-/* line 147, ../sass/components/_tabs.scss */
+/* line 145, ../sass/components/_tabs.scss */
 .tabs-container--large-tabs .tabs__link span > span, .tabs-container--large-tabs
 .tabs-to-dropdown-container span > span {
   width: 80%;
@@ -13257,34 +13416,34 @@ table.table-data .ref-icon-before--cloud:before {
   margin-bottom: 10px;
 }
 @media (min-width: 720px) {
-  /* line 147, ../sass/components/_tabs.scss */
+  /* line 145, ../sass/components/_tabs.scss */
   .tabs-container--large-tabs .tabs__link span > span, .tabs-container--large-tabs
   .tabs-to-dropdown-container span > span {
     width: auto;
     max-width: 80%;
   }
 }
-/* line 157, ../sass/components/_tabs.scss */
+/* line 155, ../sass/components/_tabs.scss */
 .tabs__link span b,
 .tabs-to-dropdown-container span b {
   padding-top: 10px;
   display: inline-block;
   line-height: 1.6;
 }
-/* line 161, ../sass/components/_tabs.scss */
+/* line 159, ../sass/components/_tabs.scss */
 .tabs-container--large-tabs .tabs__link span b, .tabs-container--large-tabs
 .tabs-to-dropdown-container span b {
   font-size: 1.4rem;
   text-transform: none;
   font-weight: 400;
 }
-/* line 167, ../sass/components/_tabs.scss */
+/* line 165, ../sass/components/_tabs.scss */
 .tabs__link span:before,
 .tabs-to-dropdown-container span:before {
   margin-right: 0.6em;
   font-size: 2.2rem;
 }
-/* line 170, ../sass/components/_tabs.scss */
+/* line 168, ../sass/components/_tabs.scss */
 .tabs-container--large-tabs .tabs__link span:before, .tabs-container--large-tabs
 .tabs-to-dropdown-container span:before {
   font-size: 2.9rem;
@@ -13292,20 +13451,20 @@ table.table-data .ref-icon-before--cloud:before {
   vertical-align: top;
 }
 @media (min-width: 720px) {
-  /* line 170, ../sass/components/_tabs.scss */
+  /* line 168, ../sass/components/_tabs.scss */
   .tabs-container--large-tabs .tabs__link span:before, .tabs-container--large-tabs
   .tabs-to-dropdown-container span:before {
     font-size: 3.2rem;
   }
 }
 @media (min-width: 960px) {
-  /* line 170, ../sass/components/_tabs.scss */
+  /* line 168, ../sass/components/_tabs.scss */
   .tabs-container--large-tabs .tabs__link span:before, .tabs-container--large-tabs
   .tabs-to-dropdown-container span:before {
     font-size: 3.8rem;
   }
 }
-/* line 182, ../sass/components/_tabs.scss */
+/* line 180, ../sass/components/_tabs.scss */
 .tabs__link span svg,
 .tabs-to-dropdown-container span svg {
   width: 15%;
@@ -13316,37 +13475,37 @@ table.table-data .ref-icon-before--cloud:before {
   vertical-align: middle;
 }
 @media (min-width: 720px) {
-  /* line 182, ../sass/components/_tabs.scss */
+  /* line 180, ../sass/components/_tabs.scss */
   .tabs__link span svg,
   .tabs-to-dropdown-container span svg {
     margin-right: 7%;
   }
 }
-/* line 192, ../sass/components/_tabs.scss */
+/* line 190, ../sass/components/_tabs.scss */
 .tabs__link span svg path,
 .tabs-to-dropdown-container span svg path {
   fill: #6d69c5;
   -webkit-transition: fill 0.2s;
           transition: fill 0.2s;
 }
-/* line 195, ../sass/components/_tabs.scss */
+/* line 193, ../sass/components/_tabs.scss */
 .is-active .tabs__link span svg path, .is-active
 .tabs-to-dropdown-container span svg path {
   fill: #5b5b68;
   -webkit-transition: fill 0.3s;
           transition: fill 0.3s;
 }
-/* line 199, ../sass/components/_tabs.scss */
+/* line 197, ../sass/components/_tabs.scss */
 .is-disabled .tabs__link span svg path, .is-disabled
 .tabs-to-dropdown-container span svg path {
   fill: #c4c7d0;
 }
 
-/* line 205, ../sass/components/_tabs.scss */
+/* line 203, ../sass/components/_tabs.scss */
 .tabs-to-dropdown-container {
   padding: 0;
 }
-/* line 207, ../sass/components/_tabs.scss */
+/* line 205, ../sass/components/_tabs.scss */
 .tabs-to-dropdown-container > span {
   padding: 12px 6% 13px;
   display: block;
@@ -13356,14 +13515,14 @@ table.table-data .ref-icon-before--cloud:before {
   background-color: #f2f2f5;
   cursor: pointer;
 }
-/* line 215, ../sass/components/_tabs.scss */
+/* line 213, ../sass/components/_tabs.scss */
 .tabs-to-dropdown-container > span:after {
   position: absolute;
   right: 4%;
   -webkit-transition: -webkit-transform 0.2s;
           transition: transform 0.2s;
 }
-/* line 221, ../sass/components/_tabs.scss */
+/* line 219, ../sass/components/_tabs.scss */
 .tabs-to-dropdown-container > span.is-open:after {
   -webkit-transform: rotate(179.5deg);
       -ms-transform: rotate(179.5deg);
@@ -13371,64 +13530,64 @@ table.table-data .ref-icon-before--cloud:before {
   -webkit-transition: -webkit-transform 0.3s;
           transition: transform 0.3s;
 }
-/* line 226, ../sass/components/_tabs.scss */
+/* line 224, ../sass/components/_tabs.scss */
 .tabs-to-dropdown-container > span svg path {
   fill: #363a47;
 }
-/* line 230, ../sass/components/_tabs.scss */
+/* line 228, ../sass/components/_tabs.scss */
 .tabs-to-dropdown-container > span:hover svg path {
   fill: #363a47;
 }
-/* line 235, ../sass/components/_tabs.scss */
+/* line 233, ../sass/components/_tabs.scss */
 .tabs-to-dropdown-container .tabs__link > span {
   text-align: left;
 }
-/* line 238, ../sass/components/_tabs.scss */
+/* line 236, ../sass/components/_tabs.scss */
 .tabs-to-dropdown-container .tabs-to-dropdown {
   width: 100%;
 }
-/* line 241, ../sass/components/_tabs.scss */
+/* line 239, ../sass/components/_tabs.scss */
 .tabs-to-dropdown-container li.is-active {
   display: none;
 }
-/* line 244, ../sass/components/_tabs.scss */
+/* line 242, ../sass/components/_tabs.scss */
 .tabs-to-dropdown-container .tabs__tab {
   height: 5.2rem;
 }
-/* line 247, ../sass/components/_tabs.scss */
+/* line 245, ../sass/components/_tabs.scss */
 .tabs-to-dropdown-container .tabs__link {
   padding-left: 6%;
   padding-right: 2%;
 }
 @media (min-width: 720px) {
-  /* line 247, ../sass/components/_tabs.scss */
+  /* line 245, ../sass/components/_tabs.scss */
   .tabs-to-dropdown-container .tabs__link {
     padding-left: 2%;
     padding-right: 2%;
   }
 }
-/* line 255, ../sass/components/_tabs.scss */
+/* line 253, ../sass/components/_tabs.scss */
 .tabs-to-dropdown-container span svg {
   width: 24px;
   height: 24px;
 }
 
-/* line 261, ../sass/components/_tabs.scss */
+/* line 259, ../sass/components/_tabs.scss */
 .is-ie .tabs__link:active {
   position: relative;
   top: 4px;
 }
-/* line 265, ../sass/components/_tabs.scss */
+/* line 263, ../sass/components/_tabs.scss */
 .is-ie .tabs__link span, .is-ie .tabs__link span:before, .is-ie .tabs__link:before {
   pointer-events: none;
 }
 
-/* line 269, ../sass/components/_tabs.scss */
+/* line 267, ../sass/components/_tabs.scss */
 .tab-border {
   width: 100%;
   height: 3px;
 }
-/* line 272, ../sass/components/_tabs.scss */
+/* line 270, ../sass/components/_tabs.scss */
 .tab-border span {
   width: 0%;
   height: 3px;
@@ -13437,54 +13596,54 @@ table.table-data .ref-icon-before--cloud:before {
   -webkit-transition: width 0.2s ease-out;
           transition: width 0.2s ease-out;
 }
-/* line 280, ../sass/components/_tabs.scss */
+/* line 278, ../sass/components/_tabs.scss */
 .is-active .tab-border span {
   width: 100%;
   -webkit-transition: width 0.2s 0.2s ease-in;
           transition: width 0.2s 0.2s ease-in;
 }
-/* line 286, ../sass/components/_tabs.scss */
+/* line 284, ../sass/components/_tabs.scss */
 .tabs__tab:first-child .tab-border span {
   float: right;
 }
 
-/* line 291, ../sass/components/_tabs.scss */
+/* line 289, ../sass/components/_tabs.scss */
 .tabs__content-container {
   width: 100%;
   margin-bottom: 4rem;
 }
 
-/* line 295, ../sass/components/_tabs.scss */
+/* line 293, ../sass/components/_tabs.scss */
 .tabs__content {
   display: block;
   padding: 0;
   background-color: #f2f2f5;
 }
 @media (min-width: 720px) {
-  /* line 295, ../sass/components/_tabs.scss */
+  /* line 293, ../sass/components/_tabs.scss */
   .tabs__content {
     display: none;
   }
-  /* line 301, ../sass/components/_tabs.scss */
+  /* line 299, ../sass/components/_tabs.scss */
   .no-js .tabs__content {
     filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
     opacity: 1;
   }
 }
 
-/* line 306, ../sass/components/_tabs.scss */
+/* line 304, ../sass/components/_tabs.scss */
 .default-tabs-transition .tabs__content {
   background-color: transparent;
 }
 @media (min-width: 720px) {
-  /* line 306, ../sass/components/_tabs.scss */
+  /* line 304, ../sass/components/_tabs.scss */
   .default-tabs-transition .tabs__content {
     background-color: #f2f2f5;
   }
 }
 
 @media screen and (max-width: 720px) {
-  /* line 313, ../sass/components/_tabs.scss */
+  /* line 311, ../sass/components/_tabs.scss */
   .collapsible-trigger {
     position: relative;
     width: 100%;
@@ -13501,7 +13660,7 @@ table.table-data .ref-icon-before--cloud:before {
     -webkit-transition: color 0.3s;
             transition: color 0.3s;
   }
-  /* line 327, ../sass/components/_tabs.scss */
+  /* line 325, ../sass/components/_tabs.scss */
   .collapsible-trigger b {
     line-height: 1.6;
     text-transform: none;
@@ -13511,46 +13670,46 @@ table.table-data .ref-icon-before--cloud:before {
     font-size: 1.3rem;
     padding-top: 4px;
   }
-  /* line 336, ../sass/components/_tabs.scss */
+  /* line 334, ../sass/components/_tabs.scss */
   .tabs__content--is-showing .collapsible-trigger {
     color: #29292c;
   }
-  /* line 338, ../sass/components/_tabs.scss */
+  /* line 336, ../sass/components/_tabs.scss */
   .tabs__content--is-showing .collapsible-trigger:before {
     color: #29292c;
   }
-  /* line 341, ../sass/components/_tabs.scss */
+  /* line 339, ../sass/components/_tabs.scss */
   .tabs__content--is-showing .collapsible-trigger:hover {
     color: #29292c;
   }
-  /* line 345, ../sass/components/_tabs.scss */
+  /* line 343, ../sass/components/_tabs.scss */
   .collapsible-trigger:hover {
     color: #4b46b5;
     -webkit-transition: color 0.3s;
             transition: color 0.3s;
   }
-  /* line 350, ../sass/components/_tabs.scss */
+  /* line 348, ../sass/components/_tabs.scss */
   .collapsible-trigger:active span, .collapsible-trigger:active:before {
     position: relative;
     top: 4px;
   }
-  /* line 355, ../sass/components/_tabs.scss */
+  /* line 353, ../sass/components/_tabs.scss */
   .collapsible-trigger:before, .collapsible-trigger span {
     vertical-align: middle;
   }
-  /* line 358, ../sass/components/_tabs.scss */
+  /* line 356, ../sass/components/_tabs.scss */
   .collapsible-trigger span {
     padding-left: 10px;
   }
 
-  /* line 362, ../sass/components/_tabs.scss */
+  /* line 360, ../sass/components/_tabs.scss */
   .collapsible-content {
     margin-top: 0;
     padding-bottom: 3rem;
     -webkit-transition: margin-top 0.3s;
             transition: margin-top 0.3s;
   }
-  /* line 366, ../sass/components/_tabs.scss */
+  /* line 364, ../sass/components/_tabs.scss */
   .tabs__content--is-showing .collapsible-content {
     margin-top: 0;
     -webkit-transition: margin-top 0.3s;
@@ -13558,38 +13717,38 @@ table.table-data .ref-icon-before--cloud:before {
   }
 }
 @media (min-width: 720px) {
-  /* line 373, ../sass/components/_tabs.scss */
+  /* line 371, ../sass/components/_tabs.scss */
   .collapsible-trigger {
     display: none;
   }
 }
-/* line 377, ../sass/components/_tabs.scss */
+/* line 375, ../sass/components/_tabs.scss */
 .tabs__content.tabs__content--is-showing {
   display: block;
 }
 
-/* line 383, ../sass/components/_tabs.scss */
+/* line 381, ../sass/components/_tabs.scss */
 .tabs-to-dropdown-container .selected-tab {
   display: inline-block;
 }
-/* line 387, ../sass/components/_tabs.scss */
+/* line 385, ../sass/components/_tabs.scss */
 .tabs-to-dropdown-container .tabs-to-dropdown li {
   padding: 0px;
 }
-/* line 390, ../sass/components/_tabs.scss */
+/* line 388, ../sass/components/_tabs.scss */
 .tabs-to-dropdown-container .tabs-to-dropdown span {
   color: #6d69c5;
 }
-/* line 394, ../sass/components/_tabs.scss */
+/* line 392, ../sass/components/_tabs.scss */
 .tabs-to-dropdown-container .tabs-to-dropdown .is-disabled span {
   color: #c4c7d0;
 }
 
-/* line 401, ../sass/components/_tabs.scss */
+/* line 399, ../sass/components/_tabs.scss */
 .tabs-to-dropdown--content .tabs__content {
   display: none;
 }
-/* line 403, ../sass/components/_tabs.scss */
+/* line 401, ../sass/components/_tabs.scss */
 .tabs-to-dropdown--content .tabs__content.tabs__content--is-showing {
   display: block;
 }

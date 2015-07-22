@@ -7365,12 +7365,12 @@ table.table-linked-accounts .update-linked-accounts-container .ref-button--link:
 
 /* line 4, ../sass/components/_button.scss */
 .ref-button.ref-button--success:disabled, .ref-button--success.ref-button--cta-small:disabled, .ref-button--success.ref-button--cta-small--wide:disabled, .ref-button--success.ref-button--cta-large:disabled, .ref-button--success.ref-button--cta-large--wide:disabled, .ref-button--success.ref-button--full-width:disabled, .ref-button--success.ref-button--function-small:disabled, .ref-button--success.ref-button--function-small--wide:disabled, .ref-button--success.ref-button--function-large:disabled, .ref-button--success.ref-button--function-large--wide:disabled {
-  background-color: #1bc79f;
+  background-color: transparent;
   cursor: default;
 }
 /* line 7, ../sass/components/_button.scss */
 .ref-button.ref-button--success:disabled:hover, .ref-button--success.ref-button--cta-small:disabled:hover, .ref-button--success.ref-button--cta-small--wide:disabled:hover, .ref-button--success.ref-button--cta-large:disabled:hover, .ref-button--success.ref-button--cta-large--wide:disabled:hover, .ref-button--success.ref-button--full-width:disabled:hover, .ref-button--success.ref-button--function-small:disabled:hover, .ref-button--success.ref-button--function-small--wide:disabled:hover, .ref-button--success.ref-button--function-large:disabled:hover, .ref-button--success.ref-button--function-large--wide:disabled:hover {
-  background-color: #1bc79f;
+  background-color: transparent;
   cursor: default;
 }
 /* line 12, ../sass/components/_button.scss */
@@ -7716,27 +7716,31 @@ table.table-linked-accounts .update-linked-accounts-container .ref-button--link:
 }
 
 /* line 296, ../sass/components/_button.scss */
-.ref-button--success {
-  background-color: #1bc79f;
+.ref-button--success,
+.ref-button--success:disabled {
+  color: #29292c;
+  background-color: transparent;
   cursor: default;
   -webkit-transition: background-color 0s;
           transition: background-color 0s;
 }
-/* line 300, ../sass/components/_button.scss */
-.ref-button--success:active, .ref-button--success:hover {
+/* line 302, ../sass/components/_button.scss */
+.ref-button--success:active, .ref-button--success:hover,
+.ref-button--success:disabled:active,
+.ref-button--success:disabled:hover {
   top: 0;
   border: none;
-  background-color: #1bc79f;
+  background-color: transparent;
 }
 
-/* line 306, ../sass/components/_button.scss */
+/* line 308, ../sass/components/_button.scss */
 .ref-button--error {
   background-color: #d23753;
   cursor: default;
   -webkit-transition: background-color 0s;
           transition: background-color 0s;
 }
-/* line 310, ../sass/components/_button.scss */
+/* line 312, ../sass/components/_button.scss */
 .ref-button--error:active, .ref-button--error:hover {
   top: 0;
   border: none;
