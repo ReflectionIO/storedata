@@ -7,22 +7,13 @@
 //
 package io.reflection.app.accountdataingestors;
 
-import io.reflection.app.accountdatacollectors.DataAccountCollector;
-import io.reflection.app.api.exception.DataAccessException;
-import io.reflection.app.apple.ItemPropertyLookupServlet;
-import io.reflection.app.datatypes.shared.DataAccountFetch;
-import io.reflection.app.datatypes.shared.DataAccountFetchStatusType;
-import io.reflection.app.datatypes.shared.Item;
-import io.reflection.app.datatypes.shared.Sale;
-import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
-import io.reflection.app.service.sale.SaleServiceProvider;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.channels.Channels;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -33,10 +24,22 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 
+import com.google.appengine.api.taskqueue.TaskOptions.Method;
 import com.google.appengine.tools.cloudstorage.GcsFilename;
 import com.google.appengine.tools.cloudstorage.GcsInputChannel;
 import com.google.appengine.tools.cloudstorage.GcsService;
 import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
+
+import io.reflection.app.accountdatacollectors.DataAccountCollector;
+import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.apple.ItemPropertyLookupServlet;
+import io.reflection.app.datatypes.shared.DataAccountFetch;
+import io.reflection.app.datatypes.shared.DataAccountFetchStatusType;
+import io.reflection.app.datatypes.shared.Item;
+import io.reflection.app.datatypes.shared.Sale;
+import io.reflection.app.helpers.QueueHelper;
+import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
+import io.reflection.app.service.sale.SaleServiceProvider;
 
 /**
  * @author billy1380
@@ -112,11 +115,12 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 		 * Get all sale summary rows for this dataaccount for this date. For each item id, get its iap ids and then for each country the main item is in,
 		 * enqueue the item for gathering the splits
 		 */
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyy-MM-dd");
 
-		// QueueHelper.enqueue("gather-split-sales-data", Method.PULL, new SimpleEntry<String, String>("store", DataTypeHelper.IOS_STORE_A3),
-		// new SimpleEntry<String, String>("country", country), new SimpleEntry<String, String>("type", listType), new SimpleEntry<String, String>("code",
-		// code.toString()), new SimpleEntry<String, String>("categoryid", category == null ? Long.toString(24) : category.id.toString()),
-		// new SimpleEntry<String, String>("modeltype", modelType.toString()));
+		 QueueHelper.enqueue("gathersplitsaledata", Method.PULL, 
+				 new SimpleEntry<String, String>("dataaccountid", String.valueOf(dataAccountId)),
+				 new SimpleEntry<String, String>("date", sdf.format(date)));
 	}
 
 	/**
