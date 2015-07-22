@@ -180,9 +180,9 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	public RanksPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		if (!SessionController.get().isLoggedInUserAdmin()) {
-			dailyDataContainer.removeFromParent();
-		}
+		// if (!SessionController.get().isLoggedInUserAdmin()) {
+		dailyDataContainer.removeFromParent();
+		// }
 
 		dateBox.getDatePicker().addShowRangeHandler(new ShowRangeHandler<Date>() {
 
@@ -528,74 +528,74 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			leaderboardTableDesktop.addColumn(grossingColumn, grossingHeader);
 		} else if (FREE_LIST_TYPE.equals(selectedTab)) {
 			removeAllColumns();
-			if (SessionController.get().isLoggedInUserAdmin()) {
-				leaderboardTableDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-				leaderboardTableDesktop.setColumnWidth(freeColumn, 36.7, Unit.PCT);
-				leaderboardTableDesktop.setColumnWidth(priceColumn, 13.6, Unit.PCT);
-				leaderboardTableDesktop.setColumnWidth(downloadsColumn, 16.7, Unit.PCT);
-				leaderboardTableDesktop.setColumnWidth(revenueColumn, 16.7, Unit.PCT);
-				leaderboardTableDesktop.setColumnWidth(iapColumn, 6.3, Unit.PCT);
-			} else {
-				leaderboardTableDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-				leaderboardTableDesktop.setColumnWidth(freeColumn, 42.0, Unit.PCT);
-				leaderboardTableDesktop.setColumnWidth(priceColumn, 19.0, Unit.PCT);
-				leaderboardTableDesktop.setColumnWidth(downloadsColumn, 19.0, Unit.PCT);
-				leaderboardTableDesktop.setColumnWidth(iapColumn, 10.0, Unit.PCT);
-			}
+			// if (SessionController.get().isLoggedInUserAdmin()) {
+			// leaderboardTableDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+			// leaderboardTableDesktop.setColumnWidth(freeColumn, 36.7, Unit.PCT);
+			// leaderboardTableDesktop.setColumnWidth(priceColumn, 13.6, Unit.PCT);
+			// leaderboardTableDesktop.setColumnWidth(downloadsColumn, 16.7, Unit.PCT);
+			// leaderboardTableDesktop.setColumnWidth(revenueColumn, 16.7, Unit.PCT);
+			// leaderboardTableDesktop.setColumnWidth(iapColumn, 6.3, Unit.PCT);
+			// } else {
+			leaderboardTableDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+			leaderboardTableDesktop.setColumnWidth(freeColumn, 42.0, Unit.PCT);
+			leaderboardTableDesktop.setColumnWidth(priceColumn, 19.0, Unit.PCT);
+			leaderboardTableDesktop.setColumnWidth(downloadsColumn, 19.0, Unit.PCT);
+			leaderboardTableDesktop.setColumnWidth(iapColumn, 10.0, Unit.PCT);
+			// }
 			leaderboardTableDesktop.addColumn(rankColumn, rankHeader);
 			leaderboardTableDesktop.addColumn(freeColumn, freeHeader);
 			leaderboardTableDesktop.addColumn(priceColumn, priceHeader);
 			leaderboardTableDesktop.addColumn(downloadsColumn, downloadsHeader);
-			if (SessionController.get().isLoggedInUserAdmin()) {
-				leaderboardTableDesktop.addColumn(revenueColumn, revenueHeader);
-			}
+			// if (SessionController.get().isLoggedInUserAdmin()) {
+			// leaderboardTableDesktop.addColumn(revenueColumn, revenueHeader);
+			// }
 			leaderboardTableDesktop.addColumn(iapColumn, iapHeader);
 		} else if (PAID_LIST_TYPE.equals(selectedTab)) {
 			removeAllColumns();
-			if (SessionController.get().isLoggedInUserAdmin()) {
-				leaderboardTableDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-				leaderboardTableDesktop.setColumnWidth(paidColumn, 36.7, Unit.PCT);
-				leaderboardTableDesktop.setColumnWidth(priceColumn, 13.6, Unit.PCT);
-				leaderboardTableDesktop.setColumnWidth(downloadsColumn, 16.7, Unit.PCT);
-				leaderboardTableDesktop.setColumnWidth(revenueColumn, 16.7, Unit.PCT);
-				leaderboardTableDesktop.setColumnWidth(iapColumn, 6.3, Unit.PCT);
-			} else {
-				leaderboardTableDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-				leaderboardTableDesktop.setColumnWidth(paidColumn, 42.0, Unit.PCT);
-				leaderboardTableDesktop.setColumnWidth(priceColumn, 19.0, Unit.PCT);
-				leaderboardTableDesktop.setColumnWidth(downloadsColumn, 19.0, Unit.PCT);
-				leaderboardTableDesktop.setColumnWidth(iapColumn, 10.0, Unit.PCT);
-			}
+			// if (SessionController.get().isLoggedInUserAdmin()) {
+			// leaderboardTableDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+			// leaderboardTableDesktop.setColumnWidth(paidColumn, 36.7, Unit.PCT);
+			// leaderboardTableDesktop.setColumnWidth(priceColumn, 13.6, Unit.PCT);
+			// leaderboardTableDesktop.setColumnWidth(downloadsColumn, 16.7, Unit.PCT);
+			// leaderboardTableDesktop.setColumnWidth(revenueColumn, 16.7, Unit.PCT);
+			// leaderboardTableDesktop.setColumnWidth(iapColumn, 6.3, Unit.PCT);
+			// } else {
+			leaderboardTableDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+			leaderboardTableDesktop.setColumnWidth(paidColumn, 42.0, Unit.PCT);
+			leaderboardTableDesktop.setColumnWidth(priceColumn, 19.0, Unit.PCT);
+			leaderboardTableDesktop.setColumnWidth(downloadsColumn, 19.0, Unit.PCT);
+			leaderboardTableDesktop.setColumnWidth(iapColumn, 10.0, Unit.PCT);
+			// }
 			leaderboardTableDesktop.addColumn(rankColumn, rankHeader);
 			leaderboardTableDesktop.addColumn(paidColumn, paidHeader);
 			leaderboardTableDesktop.addColumn(priceColumn, priceHeader);
 			leaderboardTableDesktop.addColumn(downloadsColumn, downloadsHeader);
-			if (SessionController.get().isLoggedInUserAdmin()) {
-				leaderboardTableDesktop.addColumn(revenueColumn, revenueHeader);
-			}
+			// if (SessionController.get().isLoggedInUserAdmin()) {
+			// leaderboardTableDesktop.addColumn(revenueColumn, revenueHeader);
+			// }
 			leaderboardTableDesktop.addColumn(iapColumn, iapHeader);
 		} else if (GROSSING_LIST_TYPE.equals(selectedTab)) {
 			removeAllColumns();
-			if (SessionController.get().isLoggedInUserAdmin()) {
-				leaderboardTableDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-				leaderboardTableDesktop.setColumnWidth(grossingColumn, 36.7, Unit.PCT);
-				leaderboardTableDesktop.setColumnWidth(priceColumn, 13.6, Unit.PCT);
-				leaderboardTableDesktop.setColumnWidth(downloadsColumn, 16.7, Unit.PCT);
-				leaderboardTableDesktop.setColumnWidth(revenueColumn, 16.7, Unit.PCT);
-				leaderboardTableDesktop.setColumnWidth(iapColumn, 6.3, Unit.PCT);
-			} else {
-				leaderboardTableDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-				leaderboardTableDesktop.setColumnWidth(grossingColumn, 42.0, Unit.PCT);
-				leaderboardTableDesktop.setColumnWidth(priceColumn, 19.0, Unit.PCT);
-				leaderboardTableDesktop.setColumnWidth(revenueColumn, 19.0, Unit.PCT);
-				leaderboardTableDesktop.setColumnWidth(iapColumn, 10.0, Unit.PCT);
-			}
+			// if (SessionController.get().isLoggedInUserAdmin()) {
+			// leaderboardTableDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+			// leaderboardTableDesktop.setColumnWidth(grossingColumn, 36.7, Unit.PCT);
+			// leaderboardTableDesktop.setColumnWidth(priceColumn, 13.6, Unit.PCT);
+			// leaderboardTableDesktop.setColumnWidth(downloadsColumn, 16.7, Unit.PCT);
+			// leaderboardTableDesktop.setColumnWidth(revenueColumn, 16.7, Unit.PCT);
+			// leaderboardTableDesktop.setColumnWidth(iapColumn, 6.3, Unit.PCT);
+			// } else {
+			leaderboardTableDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+			leaderboardTableDesktop.setColumnWidth(grossingColumn, 42.0, Unit.PCT);
+			leaderboardTableDesktop.setColumnWidth(priceColumn, 19.0, Unit.PCT);
+			leaderboardTableDesktop.setColumnWidth(revenueColumn, 19.0, Unit.PCT);
+			leaderboardTableDesktop.setColumnWidth(iapColumn, 10.0, Unit.PCT);
+			// }
 			leaderboardTableDesktop.addColumn(rankColumn, rankHeader);
 			leaderboardTableDesktop.addColumn(grossingColumn, grossingHeader);
 			leaderboardTableDesktop.addColumn(priceColumn, priceHeader);
-			if (SessionController.get().isLoggedInUserAdmin()) {
-				leaderboardTableDesktop.addColumn(downloadsColumn, downloadsHeader);
-			}
+			// if (SessionController.get().isLoggedInUserAdmin()) {
+			// leaderboardTableDesktop.addColumn(downloadsColumn, downloadsHeader);
+			// }
 			leaderboardTableDesktop.addColumn(revenueColumn, revenueHeader);
 			leaderboardTableDesktop.addColumn(iapColumn, iapHeader);
 		}
@@ -700,27 +700,27 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 				refreshTabs();
 				refreshRanks();
 
-				if (SessionController.get().isLoggedInUserAdmin()) {
-					if (FREE_LIST_TYPE.equals(selectedTab) || PAID_LIST_TYPE.equals(selectedTab) || GROSSING_LIST_TYPE.equals(selectedTab)) {
-						setDataFilterVisible(false);
-					} else {
-						setDataFilterVisible(true);
-						selectedTab = OVERALL_LIST_TYPE;
-					}
-				}
+				// if (SessionController.get().isLoggedInUserAdmin()) {
+				// if (FREE_LIST_TYPE.equals(selectedTab) || PAID_LIST_TYPE.equals(selectedTab) || GROSSING_LIST_TYPE.equals(selectedTab)) {
+				// setDataFilterVisible(false);
+				// } else {
+				// setDataFilterVisible(true);
+				// selectedTab = OVERALL_LIST_TYPE;
+				// }
+				// }
 
 				updateFromFilter();
 			}
 		}
 	}
 
-	private void setDataFilterVisible(boolean visible) {
-		if (visible) {
-			dailyDataContainer.setVisible(true);
-		} else {
-			dailyDataContainer.setVisible(false);
-		}
-	}
+	// private void setDataFilterVisible(boolean visible) {
+	// if (visible) {
+	// dailyDataContainer.setVisible(true);
+	// } else {
+	// dailyDataContainer.setVisible(false);
+	// }
+	// }
 
 	private void setViewMoreVisible(boolean visible) {
 		if (viewAllBtn.isAttached()) {
