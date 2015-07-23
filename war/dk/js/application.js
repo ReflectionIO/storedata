@@ -247,10 +247,7 @@
 		$('.js-hamburger-button').on("click", function(){
 			$(this).toggleClass('is-selected');
 			if($('body').hasClass('panel-left-open')) {
-				$('body, html').removeClass('panel-left-open');
-				if(!$('body').hasClass('landing-page')) {
-					instance.setMainContentWidthForIE();
-				}				
+				$('body, html').removeClass('panel-left-open');			
 				if(!$('html.is-chrome').length && !$('html.is-opera').length) {
 					$('.panel-left').addClass('is-animating-out');
 					$('.l-main').addClass('is-animating-out');
@@ -260,9 +257,6 @@
 				}
 			} else {
 				$('body, html').toggleClass('panel-left-open');
-				if(!$('body').hasClass('landing-page')) {
-					instance.setMainContentWidthForIE();
-				}
 				if(!$('html.is-chrome').length && !$('html.is-opera').length) {
 					$('.panel-left').addClass('is-animating-in');
 					$('.l-main').addClass('is-animating-in');
