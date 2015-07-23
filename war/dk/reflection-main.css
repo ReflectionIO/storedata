@@ -3550,7 +3550,7 @@ textarea, .global-header .link-open-search, html, body {
 /* line 280, ../sass/templates/_app.scss */
 .filters-group-graph-options .filter-switch--small {
   width: 100%;
-  margin-right: 2rem;
+  margin-right: 0.8rem;
   margin-top: 1.1rem;
   display: inline-block;
   text-align: center;
@@ -8033,7 +8033,7 @@ table.table-linked-accounts .update-linked-accounts-container .ref-button--link:
 }
 /* line 241, ../sass/components/_filter.scss */
 .filter-switch.filter-switch--small > span {
-  margin-right: 8px;
+  margin-left: 8px;
   font-size: 1.4rem;
 }
 /* line 247, ../sass/components/_filter.scss */
