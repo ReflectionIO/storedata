@@ -132,6 +132,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("admin-filters-container")
 		String adminFiltersContainer();
 
+		@ClassName("animation-hamster")
+		String animationHamster();
+
 		@ClassName("app-creator")
 		String appCreator();
 
@@ -581,6 +584,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("form-link")
 		String formLink();
 
+		@ClassName("form-submitted-loading")
+		String formSubmittedLoading();
+
 		@ClassName("form-submitted-success")
 		String formSubmittedSuccess();
 
@@ -690,6 +696,9 @@ public interface Styles extends ClientBundle {
 		String hamburger();
 
 		String hamburger__button();
+
+		@ClassName("hamster-wheel")
+		String hamsterWheel();
 
 		@ClassName("has-child")
 		String hasChild();
@@ -942,6 +951,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("linked-account-edit")
 		String linkedAccountEdit();
+
+		@ClassName("linked-account-loading-state")
+		String linkedAccountLoadingState();
 
 		@ClassName("linked-account-name")
 		String linkedAccountName();
