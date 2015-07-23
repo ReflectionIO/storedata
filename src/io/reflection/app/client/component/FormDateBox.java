@@ -28,6 +28,7 @@ public class FormDateBox extends DateBox {
 	public FormDateBox(DatePicker picker, Date date, Format format) {
 		super(picker, date, format);
 		setStyleName("");
+		getElement().setAttribute("readonly", "true");
 	}
 
 }
