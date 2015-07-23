@@ -65,7 +65,8 @@ public class LinkItunesPage extends Page implements NavigationEventHandler, Link
 			@Override
 			public void onChange(DataAccount dataAccount, EVENT_TYPE eventType) {
 				iosMacForm.setEnabled(false);
-				iosMacForm.setStatusLoading("Linking");
+				iosMacForm.setStatusLoading("Loading");
+				Document.get().getBody().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formSubmittedLoading());
 				LinkedAccountController.get().linkAccount(linkableAccount.getAccountSourceId(), linkableAccount.getUsername(), linkableAccount.getPassword(),
 						linkableAccount.getProperties()); // Link account
 			}
@@ -118,9 +119,9 @@ public class LinkItunesPage extends Page implements NavigationEventHandler, Link
 		if (output.status == StatusType.StatusTypeSuccess) {
 			iosMacForm.setStatusSuccess("Account Linked!", 0);
 			Document.get().getBody().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formSubmittedSuccessComplete());
+			Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formSubmittedLoading());
 			accountConnectAnimation.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().plugsConnected());
 			panelSuccess.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
-			// TODO tell the user the email will come
 
 		} else if (output.error != null) {
 			if (output.error.code == ApiError.InvalidDataAccountCredentials.getCode()) {
