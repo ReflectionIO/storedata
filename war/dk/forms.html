@@ -58,7 +58,7 @@
 						<h3 class="heading-style--heading-six">Inline Error</h3>
 						<div class="form-field form-field--error js-inline-form-field-error-demo">
 							<input type="email" name="emailtest2" id="emailtest2" autocomplete="off" />
-							<label for="emailtest2">Hint Label Text <span>Error message example</span></label>
+							<label for="emailtest2">Hint Label Text <span>Error message example <a href="#">with a link</a></span></label>
 						</div>
 						<h3 class="heading-style--heading-six">Hint inputs (focus to view)</h3>
 						<div class="form-field">
@@ -331,6 +331,27 @@
 								</li>
 							</ul>
 						</div>
+						<h3 class="heading-style--heading-six">Error</h3>
+						<div class="form-field--checkbox-list form-field--error">
+							<p class="form-field--list__error-message">You still need to select from the options below</p>
+							<ul>
+								<li>
+									<input type="checkbox" name="checkboxOneError" id="checkboxOneError" />
+									<label for="checkboxOneError" class="checkboxLabel">Option 1</label>
+									<label for="checkboxOneError" class="checkboxLabelVisible">Option 1</label>
+								</li>
+								<li>
+									<input type="checkbox" name="checkboxTwoError" id="checkboxTwoError" />
+									<label for="checkboxTwoError" class="checkboxLabel">Option 2</label>
+									<label for="checkboxTwoError" class="checkboxLabelVisible">Option 2</label>
+								</li>
+								<li>
+									<input type="checkbox" name="checkboxThreeError" id="checkboxThreeError" />
+									<label for="checkboxThreeError" class="checkboxLabel">Option 3</label>
+									<label for="checkboxThreeError" class="checkboxLabelVisible">Option 3</label>
+								</li>
+							</ul>
+						</div>
 					</div>
 					<div class="grid__column grid__column--two-thirds">
 						<div class="code-box">
@@ -395,6 +416,27 @@
 								</li>
 							</ul>
 						</div>
+						<h3 class="heading-style--heading-six">Error</h3>
+						<div class="form-field--radio-list form-field--error">
+							<p class="form-field--list__error-message">You still need to select an option below</p>
+							<ul>
+								<li>
+									<input type="radio" name="radioButtons" id="radioButtonOneError" />
+									<label for="radioButtonOneError" class="radioButtonLabel">Option 1</label>
+									<label for="radioButtonOneError" class="radioButtonLabelVisible">Option 1</label>
+								</li>
+								<li>
+									<input type="radio" name="radioButtons" id="radioButtonTwoError" />
+									<label for="radioButtonTwoError" class="radioButtonLabel">Option 2</label>
+									<label for="radioButtonTwoError" class="radioButtonLabelVisible">Option 2</label>
+								</li>
+								<li>
+									<input type="radio" name="radioButtons" id="radioButtonThreeError" />
+									<label for="radioButtonThreeError" class="radioButtonLabel">Option 3</label>
+									<label for="radioButtonThreeError" class="radioButtonLabelVisible">Option 3</label>
+								</li>
+							</ul>
+						</div>
 					</div>
 					<div class="grid__column grid__column--two-thirds">
 						<div class="code-box">
@@ -427,14 +469,14 @@
 							<div class="calendar-container">
 								<div class="date-select-container">
 									<div class="form-field form-field--date-select">
-										<input type="text" name="date-single" id="date-single" value="From Date" />
+										<input type="text" name="date-single" id="date-single" value="From Date" readonly="true" />
 										<span></span>
 									</div>
 								</div>
 								<div class="date-select-to-indicator"></div>
 								<div class="date-select-container">
 									<div class="form-field form-field--date-select">
-										<input type="text" name="date-single-to" id="date-single-to" value="To Date" />
+										<input type="text" name="date-single-to" id="date-single-to" value="To Date" readonly="true" />
 										<span></span>
 									</div>
 								</div>
