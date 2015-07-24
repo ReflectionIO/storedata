@@ -15,6 +15,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -39,6 +40,7 @@ import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Sale;
 import io.reflection.app.helpers.QueueHelper;
 import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
+import io.reflection.app.service.sale.ISaleService;
 import io.reflection.app.service.sale.SaleServiceProvider;
 
 /**
@@ -115,12 +117,34 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 		 * Get all sale summary rows for this dataaccount for this date. For each item id, get its iap ids and then for each country the main item is in,
 		 * enqueue the item for gathering the splits
 		 */
-		
+
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.set(Calendar.DAY_OF_MONTH, 1);
+
+		Date gatherFrom = cal.getTime();
+		Date gatherTo = date;
+
 		SimpleDateFormat sdf = new SimpleDateFormat("yyy-MM-dd");
 
-		 QueueHelper.enqueue("gathersplitsaledata", Method.PULL, 
-				 new SimpleEntry<String, String>("dataaccountid", String.valueOf(dataAccountId)),
-				 new SimpleEntry<String, String>("date", sdf.format(date)));
+		try {
+			ISaleService saleService = SaleServiceProvider.provide();
+			List<SimpleEntry<String, String>> mainItemIdsAndCountries = saleService.getSoldItemIdsForAccountInDateRange(dataAccountId,
+					gatherFrom, gatherTo);
+
+			for (SimpleEntry<String, String> entry : mainItemIdsAndCountries) {
+				String mainItemId = entry.getKey();
+				String country = entry.getValue();
+				// List<String> iapItemIds = saleService.getIapItemIdsFor
+			}
+		} catch (DataAccessException e) {
+			LOG.log(Level.SEVERE, String.format("Exception occured while retrieving main item id for data account [%d] between [%s] and [%s]", dataAccountId,
+					sdf.format(gatherFrom), sdf.format(gatherTo)), e);
+		}
+
+		QueueHelper.enqueue("gathersplitsaledata", Method.PULL,
+				new SimpleEntry<String, String>("dataaccountid", String.valueOf(dataAccountId)),
+				new SimpleEntry<String, String>("date", sdf.format(date)));
 	}
 
 	/**

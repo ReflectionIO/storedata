@@ -9,6 +9,18 @@
 package io.reflection.app.service.sale;
 
 import static com.spacehopperstudios.utility.StringUtils.*;
+
+import java.text.SimpleDateFormat;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.spacehopperstudios.utility.StringUtils;
+
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
@@ -27,16 +39,6 @@ import io.reflection.app.service.ServiceType;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.spacehopperstudios.utility.StringUtils;
 
 final class SaleService implements ISaleService {
 	@Override
@@ -872,6 +874,41 @@ final class SaleService implements ISaleService {
 			saleConnection.connect();
 			String query = String.format("CALL repopulate_sale_summary_for_dataaccount_on_date(%d, '%s')", id, sdf.format(date));
 			saleConnection.executeQuery(query);
+		} finally {
+			if (saleConnection != null) {
+				saleConnection.disconnect();
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see io.reflection.app.service.sale.ISaleService#getSoldItemIdsForAccountInDateRange(java.lang.Long, java.util.Date, java.util.Date)
+	 */
+	@Override
+	public List<SimpleEntry<String, String>> getSoldItemIdsForAccountInDateRange(Long dataAccountId, Date gatherFrom, Date gatherTo)
+			throws DataAccessException {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+		String getItemsByCountryQuery = String.format("SELECT itemid, country FROM `sale_summary` WHERE dataaccountid=%d AND date BETWEEN '%s' AND '%s'",
+				dataAccountId, sdf.format(gatherFrom), sdf.format(gatherTo));
+
+		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
+
+		try {
+			saleConnection.connect();
+			saleConnection.executeQuery(getItemsByCountryQuery);
+
+			ArrayList<SimpleEntry<String, String>> list = new ArrayList<SimpleEntry<String, String>>();
+
+			while (saleConnection.fetchNextRow()) {
+				SimpleEntry<String, String> entry = new SimpleEntry<String, String>(saleConnection.getCurrentRowString("itemid"),
+						saleConnection.getCurrentRowString("country"));
+				list.add(entry);
+			}
+
+			return list;
 		} finally {
 			if (saleConnection != null) {
 				saleConnection.disconnect();
