@@ -73,6 +73,11 @@ public class ToggleRadioButton extends Composite implements HasName, HasValue<Bo
 		label.addClassName(className);
 	}
 
+	public void setTooltip(String text) {
+		getElement().addClassName("js-tooltip");
+		getElement().setAttribute("data-tooltip", text);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
