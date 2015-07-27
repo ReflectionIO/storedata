@@ -10717,6 +10717,21 @@ form .gwt-DatePicker * {
   border-top: 1px solid #e1e5e8;
 }
 
+/* line 52, ../sass/components/_highcharts.scss */
+.watermark-container {
+  position: relative;
+}
+
+/* line 55, ../sass/components/_highcharts.scss */
+.chart-watermark {
+  position: absolute;
+  right: 26px;
+  bottom: 68px;
+  width: 100px;
+  height: 16px;
+  z-index: 100;
+}
+
 /* line 5, ../sass/components/_list-partners.scss */
 .list-partners {
   position: relative;
