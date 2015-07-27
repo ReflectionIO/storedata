@@ -70,7 +70,7 @@ public class TooltipHelper {
 										"whats-this-tooltip");
 								tooltip.append($wnd.$('<h2>').text(
 										"What's This?"));
-								tooltip.append($wnd.$('<p>').text(
+								tooltip.append($wnd.$('<p>').html(
 										$this.data("whatsthis")));
 								tooltip.append($wnd.$('<img>').attr("src",
 										"images/icon-bulb.png").attr("alt",

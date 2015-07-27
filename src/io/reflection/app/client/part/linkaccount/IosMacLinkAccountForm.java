@@ -8,12 +8,13 @@
 package io.reflection.app.client.part.linkaccount;
 
 import io.reflection.app.client.component.LoadingButton;
-import io.reflection.app.client.component.TextField;
 import io.reflection.app.client.component.PasswordField;
+import io.reflection.app.client.component.TextField;
 import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.helper.FormHelper;
+import io.reflection.app.client.helper.TooltipHelper;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.linkaccount.LinkedAccountChangeEvent.EVENT_TYPE;
 import io.reflection.app.client.part.linkaccount.LinkedAccountChangeEvent.HasLinkedAccountChangeEventHandlers;
@@ -65,7 +66,9 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	public IosMacLinkAccountForm() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		vendorId.setInfoHref(PageType.BlogPostPageType.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE, "7"));
+		vendorId.setInfoLabelText("Your Vendor ID is an 8 digit number beginning with 8. See this <a href=\""
+				+ PageType.BlogPostPageType.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE, "7").asString()
+				+ "\">blog post</a> on how to find it in iTunes Connect.");
 	}
 
 	/**
@@ -229,7 +232,6 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 		return accountUsername.getText();
 	}
 
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -362,6 +364,18 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	@Override
 	public HandlerRegistration addLinkedAccountChangeEventHander(LinkedAccountChangeEventHandler handler) {
 		return addHandler(handler, LinkedAccountChangeEvent.TYPE);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
+	 */
+	@Override
+	protected void onAttach() {
+		super.onAttach();
+
+		TooltipHelper.initWhatsThisTooltip();
 	}
 
 }
