@@ -10,11 +10,14 @@ package io.reflection.app.client;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.helper.DOMHelper;
 import io.reflection.app.client.helper.ResponsiveDesignHelper;
+import io.reflection.app.client.helper.TooltipHelper;
 import io.reflection.app.client.helper.UserAgentHelper;
 import io.reflection.app.client.part.BackToTop;
 import io.reflection.app.client.part.SuperAlertBox;
 import io.reflection.app.client.res.Styles;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -55,6 +58,14 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 
 		// the above are just place holders, this kicks of the actual page loading
 		History.fireCurrentHistoryState();
+
+		Scheduler.get().scheduleDeferred(new ScheduledCommand() { // Update back-to-top tooltip
+
+					@Override
+					public void execute() {
+						TooltipHelper.updateHelperTooltip();
+					}
+				});
 	}
 
 	private void makeContainer() {

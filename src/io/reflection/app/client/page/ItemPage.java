@@ -43,6 +43,7 @@ import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.helper.FormattingHelper;
 import io.reflection.app.client.helper.ResponsiveDesignHelper;
+import io.reflection.app.client.helper.TooltipHelper;
 import io.reflection.app.client.highcharts.Chart;
 import io.reflection.app.client.highcharts.ChartHelper.LineType;
 import io.reflection.app.client.highcharts.ChartHelper.RankType;
@@ -124,8 +125,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField(provided = true) FilterSwitch cumulativeChartSwitch = new FilterSwitch(true);
 	@UiField(provided = true) FilterSwitch oneMMovingAverageSwitch = new FilterSwitch(true);
 	@UiField(provided = true) FilterSwitch overlayAppsSwitch = new FilterSwitch(true);
-	@UiField(provided = true) ToggleRadioButton toggleChartGraph = new ToggleRadioButton("charttype");
-	@UiField(provided = true) ToggleRadioButton toggleChartMap = new ToggleRadioButton("charttype");
+	@UiField(provided = true) ToggleRadioButton toggleChartDate = new ToggleRadioButton("charttype");
+	@UiField(provided = true) ToggleRadioButton toggleChartCountry = new ToggleRadioButton("charttype");
 
 	@UiField InlineHyperlink revenueLink;
 	@UiField SpanElement revenueText;
@@ -222,6 +223,11 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			RankController.get().getRevenueDataProvider().addDataDisplay(revenueTableDesktop);
 			RankController.get().getRevenueDataProvider().addDataDisplay(revenueTableMobile);
 		}
+
+		dnwBtn.setAttribute("data-tooltip", "Download data in CSV file");
+		dnwBtn.addClassName("js-tooltip");
+		dnwBtnMobile.setAttribute("data-tooltip", "Download data in CSV file");
+		dnwBtnMobile.addClassName("js-tooltip");
 
 		// ResponsiveDesignHelper.nativeRevealContent(revealContentStore);
 		ResponsiveDesignHelper.nativeRevealContent(revealContentFilter);
@@ -510,12 +516,12 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				&& event.getValue().booleanValue());
 	}
 
-	@UiHandler("toggleChartGraph")
+	@UiHandler("toggleChartDate")
 	void onToggleChartGraphSelected(ValueChangeEvent<Boolean> event) {
 		setChartGraphsVisible(true);
 	}
 
-	@UiHandler("toggleChartMap")
+	@UiHandler("toggleChartCountry")
 	void onToggleChartMapSelected(ValueChangeEvent<Boolean> event) {
 		setChartGraphsVisible(false);
 	}
@@ -553,6 +559,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		register(DefaultEventBus.get().addHandlerToSource(GetLinkedAccountItemEventHandler.TYPE, LinkedAccountController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(TogglePanelEventHandler.TYPE, NavigationController.get().getHeader(), this));
 
+		TooltipHelper.initHelperTooltip();
 	}
 
 	/*
@@ -650,7 +657,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				setRevenueDownloadTabsEnabled(false);
 			}
 
-			setChartGraphsVisible(toggleChartGraph.getValue());
+			setChartGraphsVisible(toggleChartDate.getValue());
 
 		} else {
 

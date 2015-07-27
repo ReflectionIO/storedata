@@ -41,6 +41,7 @@ import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.helper.FormattingHelper;
 import io.reflection.app.client.helper.ResponsiveDesignHelper;
+import io.reflection.app.client.helper.TooltipHelper;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.datatypes.RanksGroup;
 import io.reflection.app.client.res.Images;
@@ -762,6 +763,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 		updateFromFilter();
 
+		TooltipHelper.initHelperTooltip();
 	}
 
 	/*

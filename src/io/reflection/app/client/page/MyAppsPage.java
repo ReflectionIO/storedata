@@ -36,6 +36,7 @@ import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.AnimationHelper;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormHelper;
+import io.reflection.app.client.helper.TooltipHelper;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.client.part.datatypes.MyApp;
@@ -190,11 +191,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		register(DefaultEventBus.get().addHandlerToSource(GetSalesRanksEventHandler.TYPE, RankController.get(), userItemProvider));
 		register(DefaultEventBus.get().addHandlerToSource(GetSalesRanksEventHandler.TYPE, RankController.get(), this));
 
-		// boolean hasPermission = SessionController.get().loggedInUserHas(SessionController.);
-
-		// pager.setVisible(hasPermission);
-		// redirect.setVisible(!hasPermission);
-
+		TooltipHelper.initHelperTooltip();
 	}
 
 	/**
