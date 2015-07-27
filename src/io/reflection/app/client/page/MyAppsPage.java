@@ -69,7 +69,6 @@ import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.LoadingStateChangeEvent;
 import com.google.gwt.user.cellview.client.LoadingStateChangeEvent.LoadingState;
 import com.google.gwt.user.cellview.client.SafeHtmlHeader;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
@@ -128,6 +127,12 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 
 	public MyAppsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		if (!SessionController.get().isLoggedInUserAdmin()) {
+			category.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
+			appStore.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
+			country.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
+		}
 
 		FilterHelper.addCategories(category, SessionController.get().isLoggedInUserAdmin());
 		FilterHelper.addStores(appStore, SessionController.get().isLoggedInUserAdmin());

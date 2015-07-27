@@ -185,6 +185,12 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		dailyDataContainer.removeFromParent();
 		// }
 
+		if (!SessionController.get().isLoggedInUserAdmin()) {
+			countryListBox.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
+			appStoreListBox.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
+			categoryListBox.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
+		}
+
 		dateBox.getDatePicker().addShowRangeHandler(new ShowRangeHandler<Date>() {
 
 			@Override
