@@ -178,28 +178,29 @@
 					</div>
 					<div class="grid__column grid__column--one-half">
 						<div class="code-box code-box-tall">
-							<code>
-								/* Structure of a grid based layout */<br />
-								&lt;div class="grid-container"&gt;<br />
-								&nbsp;&lt;div class="grid__row"&gt;<br />
-								&nbsp;&nbsp;&lt;div class="grid__column grid__column--one-third&gt;<br />
-								&nbsp;&nbsp;&nbsp;Column content<br />
-								&nbsp;&nbsp;&lt;/div&gt;<br />
-								&nbsp;&nbsp;&lt;div class="grid__column grid__column--two-thirds&gt;<br />
-								&nbsp;&nbsp;&nbsp;Column content<br />
-								&nbsp;&nbsp;&lt;/div&gt;<br />
-								&nbsp;&lt;/div&gt;<br />
-								&lt;/div&gt;<br /><br />
-								/* Classes available for column widths */<br />
-								.grid__column--one-twelfth<br />
-								.grid__column--one-sixth<br />
-								.grid__column--one-quarter<br />
-								.grid__column--one-third<br />
-								.grid__column--one-half<br />
-								.grid__column--two-thirds<br />
-								.grid__column--three-quarters<br />
+							<pre><code class="language-markup">
+								/* Structure of a grid based layout */
+								&lt;div class="grid-container"&gt;
+								&nbsp;&lt;div class="grid__row"&gt;
+								&nbsp;&nbsp;&lt;div class="grid__column grid__column--one-third"&gt;
+								&nbsp;&nbsp;&nbsp;Column content
+								&nbsp;&nbsp;&lt;/div&gt;
+								&nbsp;&nbsp;&lt;div class="grid__column grid__column--two-thirds"&gt;
+								&nbsp;&nbsp;&nbsp;Column content
+								&nbsp;&nbsp;&lt;/div&gt;
+								&nbsp;&lt;/div&gt;
+								&lt;/div&gt;
+
+								/* Classes available for column widths */
+								.grid__column--one-twelfth
+								.grid__column--one-sixth
+								.grid__column--one-quarter
+								.grid__column--one-third
+								.grid__column--one-half
+								.grid__column--two-thirds
+								.grid__column--three-quarters
 								.grid__column--full-width
-							</code>
+							</code></pre>
 						</div>
 					</div>
 				</div>
@@ -210,12 +211,13 @@
 					</div>
 					<div class="grid__column grid__column--one-half">
 						<div class="code-box">
-							<code>
-								@include column(9);<br /><br />
-								/* Columns within a nested grid */
-								// Creating a three column width column within a nested grid, where the nested grid container is 9 columns wide */
+							<pre><code class="language-css">
+								@include column(9);
+								/* Columns within a nested grid
+								Creating a three column width column within a nested grid,
+								where the nested grid container is 9 columns wide */
 								@include column(3,9)
-							</code>
+							</code></pre>
 						</div>
 					</div>
 				</div>
@@ -228,18 +230,18 @@
 					</div>
 					<div class="grid__column grid__column--one-half">
 						<div class="code-box code-box-tall">
-							<code>
-								&lt;div class="grid-container"&gt;<br />
-								&nbsp;&lt;div class="grid__row-container grid__column--two-thirds"&gt;<br />
-         				&nbsp;&nbsp;&lt;ul class="grid__row"&gt;<br />
-								&nbsp;&nbsp;&nbsp;&lt;li>Blog article&lt;/li&gt;<br />
-								&nbsp;&nbsp;&nbsp;&lt;li>Blog article&lt;/li&gt;<br />
-								&nbsp;&nbsp;&nbsp;&lt;li>Blog article&lt;/li&gt;<br />
-								&nbsp;&nbsp;&nbsp;&lt;li>Blog article&lt;/li&gt;<br />
-								&nbsp;&nbsp;&lt;/ul&gt;<br />
-								&nbsp;&lt;/div&gt;<br />
-      					&nbsp;&lt;div class="grid__column grid__column--one-third">Sidebar&lt;/div&gt;
-							</code>
+							<pre><code class="language-markup">
+								&lt;div class="grid-container"&gt;
+								&nbsp;&lt;div class="grid__row-container grid__column--two-thirds"&gt;
+								&nbsp;&nbsp;&lt;ul class="grid__row"&gt;
+								&nbsp;&nbsp;&nbsp;&lt;li>Blog article&lt;/li&gt;
+								&nbsp;&nbsp;&nbsp;&lt;li>Blog article&lt;/li&gt;
+								&nbsp;&nbsp;&nbsp;&lt;li>Blog article&lt;/li&gt;
+								&nbsp;&nbsp;&nbsp;&lt;li>Blog article&lt;/li&gt;
+								&nbsp;&nbsp;&lt;/ul&gt;
+								&nbsp;&lt;/div&gt;
+								&nbsp;&lt;div class="grid__column grid__column--one-third">Sidebar&lt;/div&gt;
+							</code></pre>
 						</div>
 					</div>
 				</div>
@@ -257,21 +259,22 @@
 					</div>
 					<div class="grid__column grid__column--one-half">
 						<div class="code-box code-box-tall">
-							<code>
+							<pre><code class="language-css">
 								/* Breakpoint mixin example */
-								.global-header {<br />
-								&nbsp;height: 42px;<br />
-								&nbsp;@include breakpoint($phablet, true) {<br />
-								&nbsp;&nbsp;height: 62px;<br />
-								&nbsp;}<br />
-								}<br /><br />
+								.global-header {
+								&nbsp;height: 42px;
+								&nbsp;@include breakpoint($phablet, true) {
+								&nbsp;&nbsp;height: 62px;
+								&nbsp;}
+								}
+
 								/* Breakpoint variables */<br />
 								$phablet: 480px;<br />
 								$tablet: 720px;<br />
 								$laptop: 960px;<br />
 								$desktop: 1240px;<br />
 								$desktop-wide: 1600px;<br />
-							</code>
+							</code></pre>
 						</div>
 					</div>
 
