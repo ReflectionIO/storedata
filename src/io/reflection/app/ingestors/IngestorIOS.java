@@ -1,4 +1,4 @@
-//  
+//
 //  IngestorIOS.java
 //  storedata
 //
@@ -7,6 +7,32 @@
 // 	Copyrights © 2013 reflection.io. All rights reserved.
 //
 package io.reflection.app.ingestors;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.nio.channels.Channels;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+
+import com.google.appengine.api.taskqueue.Queue;
+import com.google.appengine.api.taskqueue.QueueFactory;
+import com.google.appengine.api.taskqueue.TaskOptions;
+import com.google.appengine.api.taskqueue.TaskOptions.Method;
+import com.google.appengine.api.taskqueue.TransientFailureException;
+import com.google.appengine.tools.cloudstorage.GcsFilename;
+import com.google.appengine.tools.cloudstorage.GcsInputChannel;
+import com.google.appengine.tools.cloudstorage.GcsService;
+import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
 
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
@@ -20,6 +46,7 @@ import io.reflection.app.datatypes.shared.FeedFetchStatusType;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
+import io.reflection.app.helpers.GoogleCloudClientHelper;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.modellers.Modeller;
 import io.reflection.app.modellers.ModellerFactory;
@@ -28,34 +55,9 @@ import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.nio.channels.Channels;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-
-import com.google.appengine.api.files.AppEngineFile;
-import com.google.appengine.api.files.FileReadChannel;
-import com.google.appengine.api.files.FileService;
-import com.google.appengine.api.files.FileServiceFactory;
-import com.google.appengine.api.taskqueue.Queue;
-import com.google.appengine.api.taskqueue.QueueFactory;
-import com.google.appengine.api.taskqueue.TaskOptions;
-import com.google.appengine.api.taskqueue.TaskOptions.Method;
-import com.google.appengine.api.taskqueue.TransientFailureException;
-
 /**
  * @author billy1380
- * 
+ *
  */
 @SuppressWarnings("deprecation")
 public class IngestorIOS extends StoreCollector implements Ingestor {
@@ -111,7 +113,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 
 	/**
 	 * extractItemRanks
-	 * 
+	 *
 	 * @param stored
 	 * @param grouped
 	 * @param combined
@@ -298,7 +300,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 			for (int i = 0; i < group.size(); i++) {
 				fetch = group.get(Integer.valueOf(i));
 				fetch.status = FeedFetchStatusType.FeedFetchStatusTypeIngested;
-				
+
 				fetch = FeedFetchServiceProvider.provide().updateFeedFetch(fetch);
 
 				ArchiverFactory.getItemRankArchiver().enqueueIdFeedFetch(fetch.id);
@@ -432,22 +434,23 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 			StringBuffer buffer = new StringBuffer();
 
 			if (blob) {
-				FileService fileService = FileServiceFactory.getFileService();
+				GcsService gcsService = GcsServiceFactory.createGcsService();
+				SimpleEntry<String, String> bucketAndFileName = GoogleCloudClientHelper.getGCSBucketAndFileName(data);
+				GcsFilename filename = new GcsFilename(bucketAndFileName.getKey(), bucketAndFileName.getValue());
 
-				AppEngineFile file = new AppEngineFile(data);
-				FileReadChannel readChannel = null;
+				GcsInputChannel readChannel = null;
 				BufferedReader reader = null;
 
 				try {
-					readChannel = fileService.openReadChannel(file, false);
+					readChannel = gcsService.openReadChannel(filename, 0); // fileService.openReadChannel(file, false);
 					reader = new BufferedReader(Channels.newReader(readChannel, "UTF8"));
 					int length;
 					char[] bytes = new char[1024];
 					while ((length = reader.read(bytes)) > 0) {
 						buffer.append(bytes, 0, length);
 					}
-				} catch (IOException e) {
-					LOG.log(Level.SEVERE, String.format("Error closing read channel for file [%s]", file.getFullPath()), e);
+				} catch (final IOException e) {
+					LOG.log(Level.SEVERE, String.format("Error closing read channel for file [%s]", data), e);
 				} finally {
 					if (reader != null) {
 						try {
@@ -458,11 +461,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 					}
 
 					if (readChannel != null) {
-						try {
-							readChannel.close();
-						} catch (IOException e) {
-							LOG.log(Level.SEVERE, String.format("Error closing read channel for file [%s]", file.getFullPath()), e);
-						}
+						readChannel.close();
 					}
 				}
 
