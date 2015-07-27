@@ -67,7 +67,7 @@ public class AppRankCell extends AbstractCell<Rank> {
 
 		Filter filter = FilterController.get().getFilter();
 
-		SafeHtml dailyData = SafeHtmlUtils.fromSafeConstant("-");
+		SafeHtml dailyData = SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
 		SafeStyles display = SafeStylesUtils.fromTrustedString("");
 
 		// String dailyDataType = filter.getDailyData();

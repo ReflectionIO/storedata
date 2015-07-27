@@ -375,7 +375,7 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	protected void onAttach() {
 		super.onAttach();
 
-		TooltipHelper.initWhatsThisTooltip();
+		TooltipHelper.nativeUpdateWhatsThisTooltip();
 	}
 
 }

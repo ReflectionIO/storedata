@@ -59,13 +59,8 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 		// the above are just place holders, this kicks of the actual page loading
 		History.fireCurrentHistoryState();
 
-		Scheduler.get().scheduleDeferred(new ScheduledCommand() { // Update back-to-top tooltip
+		TooltipHelper.updateHelperTooltip();
 
-					@Override
-					public void execute() {
-						TooltipHelper.updateHelperTooltip();
-					}
-				});
 	}
 
 	private void makeContainer() {
