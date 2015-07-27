@@ -513,14 +513,14 @@
 			$('.default-tabs-transition .tabs__content-area').css("opacity", 1);
 		}
 
-		$('.js-tab-select').unbind("click");
-		$('.js-tab-select').on("click", function(e){
+		$('.js-tab-select').unbind("mouseup");
+		$('.js-tab-select').on("mouseup", function(e){
   		e.preventDefault();
   		var $this = $(this);
   		var thisParent = $this.parents(".tabs-container");
   		thisParent.find('.is-active').removeClass('is-active');
   		$this.addClass('is-active');
-  		var contentId = $this.find('.tabs__link').attr("href");
+  		var contentId = $this.find('.tabs__link').data("content");
   		$(contentId).parents('.tabs__content-container').find('.tabs__content--is-showing').removeClass('tabs__content--is-showing');
   		$(contentId).addClass('tabs__content--is-showing');
   		if(!isIE8 && $(contentId).parents('.tabs__content-container').hasClass('default-tabs-transition')) {
@@ -566,7 +566,6 @@
   		}, 500);
   	}
 	};
-
 
 	var FormFieldSelect = function() {
 		var pInstance = this;

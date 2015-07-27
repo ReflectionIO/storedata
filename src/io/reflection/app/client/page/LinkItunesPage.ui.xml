@@ -123,8 +123,8 @@
 			</div>
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.accountFormContainer}">
 
-				<l:IosMacLinkAccountForm ui:field="iosMacForm" titleText="Link your iTunes Connect Account"
-					titleStyleName="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFive} {STYLES_INSTANCE.reflectionMainStyle.accountFormHeading} {STYLES_INSTANCE.reflectionMainStyle.maintainAfterSubmit}"
+				<l:IosMacLinkAccountForm ui:field="iosMacForm" titleText="Link Your iTunes Connect Account"
+					titleStyleName="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFive} {STYLES_INSTANCE.reflectionMainStyle.accountFormHeading} {STYLES_INSTANCE.reflectionMainStyle.maintainAfterSubmit} {STYLES_INSTANCE.reflectionMainStyle.jsFadeContent}"
 					styleName="{STYLES_INSTANCE.reflectionMainStyle.formsMidTheme}" />
 
 				<div ui:field="panelSuccess" class="{STYLES_INSTANCE.reflectionMainStyle.formSubmittedSuccess}">
@@ -134,9 +134,10 @@
 									c-0.2-0.3-0.5-0.4-0.8-0.5c-0.3,0-0.7,0-0.9,0.2l-8.6,6.5c-0.6,0.4-0.7,1.2-0.2,1.7l19.4,25.5c0.2,0.3,0.6,0.5,1,0.5c0,0,0,0,0,0
 									c0.4,0,0.7-0.2,0.9-0.4L60.7,9.2C61.2,8.7,61.1,7.9,60.6,7.4z"></path>
 								</svg>
+					<h2>Account Linked!</h2>
 					<p>
-						<g:Anchor href="#" ui:field="linkAnotherAccount">Link another account</g:Anchor>
-						<g:InlineHyperlink ui:field="continueToLeaderboard">Continue to Leaderboard</g:InlineHyperlink>
+						<g:Anchor href="#" ui:field="linkAnotherAccount">Link Another Account</g:Anchor>
+						<g:InlineHyperlink ui:field="continueToLeaderboard">Go to My Data Homepage</g:InlineHyperlink>
 					</p>
 				</div>
 			</div>

@@ -37,6 +37,7 @@ import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
+import io.reflection.app.client.helper.AnimationHelper;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.helper.FormattingHelper;
@@ -217,10 +218,15 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		emptyTableWidget.getElement().getStyle().setTextAlign(TextAlign.CENTER);
 		emptyTableWidget.getElement().getStyle().setHeight(100.0, Unit.PX);
 		emptyTableWidget.getElement().getStyle().setPaddingTop(35.0, Unit.PX);
+		HTMLPanel emptyMobileTableWidget = new HTMLPanel("");
+		emptyMobileTableWidget.getElement().getStyle().setTextAlign(TextAlign.CENTER);
+		emptyMobileTableWidget.getElement().getStyle().setHeight(100.0, Unit.PX);
+		emptyMobileTableWidget.getElement().getStyle().setPaddingTop(35.0, Unit.PX);
 		leaderboardTableDesktop.setEmptyTableWidget(emptyTableWidget);
+		leaderboardTableMobile.setEmptyTableWidget(emptyMobileTableWidget);
 
 		leaderboardTableDesktop.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
-		leaderboardTableMobile.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
+		leaderboardTableMobile.setLoadingIndicator(new HTMLPanel(AnimationHelper.getLoaderInlineSafeHTML()));
 
 		RankController.get().addDataDisplay(leaderboardTableDesktop);
 
@@ -807,15 +813,15 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 					overviewAllText.setInnerText(ALL_TEXT);
 				}
 			}
-			if (!RankController.get().getDataDisplays().contains(leaderboardTableMobile)) { // Avoid initial double call to server
-				RankController.get().addDataDisplay(leaderboardTableMobile);
-			}
-
-			TooltipHelper.updateHelperTooltip();
-
 		} else {
 			setViewMoreVisible(false);
 		}
+		if (!RankController.get().getDataDisplays().contains(leaderboardTableMobile)) { // Avoid initial double call to server
+			RankController.get().addDataDisplay(leaderboardTableMobile);
+		}
+
+		TooltipHelper.updateHelperTooltip();
+
 	}
 
 	/*
@@ -828,5 +834,9 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	@Override
 	public void getAllTopItemsFailure(GetAllTopItemsRequest input, Throwable caught) {
 		setViewMoreVisible(false);
+		if (!RankController.get().getDataDisplays().contains(leaderboardTableMobile)) { // Avoid initial double call to server
+			RankController.get().addDataDisplay(leaderboardTableMobile);
+		}
+
 	}
 }

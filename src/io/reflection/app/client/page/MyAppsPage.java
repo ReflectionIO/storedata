@@ -53,6 +53,8 @@ import java.util.Map;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.dom.client.Style.TextAlign;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -70,6 +72,7 @@ import com.google.gwt.user.cellview.client.LoadingStateChangeEvent;
 import com.google.gwt.user.cellview.client.LoadingStateChangeEvent.LoadingState;
 import com.google.gwt.user.cellview.client.SafeHtmlHeader;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -159,8 +162,14 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		});
 		appsTableDesktop.setEmptyTableWidget(myAppsEmptyTable);
 
+		HTMLPanel emptyMobileTableWidget = new HTMLPanel("");
+		emptyMobileTableWidget.getElement().getStyle().setTextAlign(TextAlign.CENTER);
+		emptyMobileTableWidget.getElement().getStyle().setHeight(100.0, Unit.PX);
+		emptyMobileTableWidget.getElement().getStyle().setPaddingTop(35.0, Unit.PX);
+		appsTableMobile.setEmptyTableWidget(emptyMobileTableWidget);
+
 		appsTableDesktop.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
-		appsTableMobile.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
+		appsTableMobile.setLoadingIndicator(new HTMLPanel(AnimationHelper.getLoaderInlineSafeHTML()));
 		userItemProvider.addDataDisplay(appsTableDesktop);
 
 		// simplePager.setDisplay(appsTableDesktop);
@@ -631,13 +640,11 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	 */
 	@Override
 	public void getSalesRanksSuccess(GetSalesRanksRequest input, GetSalesRanksResponse output) {
-		if (output.status == StatusType.StatusTypeSuccess) {
 			if (!userItemProvider.getDataDisplays().contains(appsTableMobile)) { // Avoid initial double call to server
 				userItemProvider.addDataDisplay(appsTableMobile);
 			}
 			TooltipHelper.updateHelperTooltip();
 		}
-	}
 
 	/*
 	 * (non-Javadoc)
@@ -647,6 +654,10 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	 * java.lang.Throwable)
 	 */
 	@Override
-	public void getSalesRanksFailure(GetSalesRanksRequest input, Throwable caught) {}
+	public void getSalesRanksFailure(GetSalesRanksRequest input, Throwable caught) {
+		if (!userItemProvider.getDataDisplays().contains(appsTableMobile)) { // Avoid initial double call to server
+			userItemProvider.addDataDisplay(appsTableMobile);
+		}
+	}
 
 }

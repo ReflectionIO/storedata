@@ -10,14 +10,23 @@
 		<fieldset class="{STYLES_INSTANCE.reflectionMainStyle.connectAccountContent}" style="visibility: visible; position: relative;">
 			<h2 ui:field="title"></h2>
 
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.linkedAccountLoadingState}">
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.hamsterWheel}">
+					<img src="images/hamster-wheel.png" alt="hamster wheel" />
+				</div>
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.animationHamster}">
+				</div>
+				<p>Linking may take up to 5 minutes but most likely less, we’ll send you an email as soon as it's done.</p>
+			</div>
+
 			<c:TextField ui:field="accountUsername" labelText="Account name" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
 
 			<c:PasswordField ui:field="password" labelText="Account Password" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
 
 			<c:TextField ui:field="vendorId" labelText="Vendor ID" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
 
-			<c:LoadingButton ui:field="linkAccountBtn"
-				styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth} {STYLES_INSTANCE.reflectionMainStyle.maintainAfterSubmit}" text="Link this Account" />
+			<c:LoadingButton ui:field="linkAccountBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth} {STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}"
+				text="Link this Account" />
 
 		</fieldset>
 	</g:HTMLPanel>
