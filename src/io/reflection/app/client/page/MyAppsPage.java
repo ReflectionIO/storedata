@@ -69,6 +69,7 @@ import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.LoadingStateChangeEvent;
 import com.google.gwt.user.cellview.client.LoadingStateChangeEvent.LoadingState;
 import com.google.gwt.user.cellview.client.SafeHtmlHeader;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
@@ -172,6 +173,8 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 				}
 			}
 		});
+
+		TooltipHelper.updateHelperTooltip();
 	}
 
 	/*
@@ -191,7 +194,6 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		register(DefaultEventBus.get().addHandlerToSource(GetSalesRanksEventHandler.TYPE, RankController.get(), userItemProvider));
 		register(DefaultEventBus.get().addHandlerToSource(GetSalesRanksEventHandler.TYPE, RankController.get(), this));
 
-		TooltipHelper.initHelperTooltip();
 	}
 
 	/**
@@ -234,7 +236,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 				}
 				appsTableDesktop.setRowData(0, userItemProvider.getList());
 				appsTableMobile.setRowData(0, userItemProvider.getList());
-
+				TooltipHelper.updateHelperTooltip();
 			}
 		};
 
@@ -246,7 +248,15 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		columnRank = new Column<MyApp, SafeHtml>(new SafeHtmlCell()) {
 			@Override
 			public SafeHtml getValue(MyApp object) {
-				return (object.overallPosition != null) ? SafeHtmlUtils.fromSafeConstant(object.overallPosition) : loaderInline;
+				if (object.overallPosition != null) {
+					if (object.overallPosition.equals(MyApp.UNKNOWN_VALUE)) {
+						return SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
+					} else {
+						return SafeHtmlUtils.fromSafeConstant(object.overallPosition);
+					}
+				} else {
+					return loaderInline;
+				}
 			}
 		};
 		columnRank.setCellStyleNames(style.mhxte6ciA() + " " + style.mhxte6cID());
@@ -269,7 +279,15 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		columnPrice = new Column<MyApp, SafeHtml>(new SafeHtmlCell()) {
 			@Override
 			public SafeHtml getValue(MyApp object) {
-				return (object.overallPrice != null) ? SafeHtmlUtils.fromSafeConstant(object.overallPrice) : loaderInline;
+				if (object.overallPrice != null) {
+					if (object.overallPrice.equals(MyApp.UNKNOWN_VALUE)) {
+						return SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
+					} else {
+						return SafeHtmlUtils.fromSafeConstant(object.overallPrice);
+					}
+				} else {
+					return loaderInline;
+				}
 			}
 		};
 		columnPrice.setCellStyleNames(style.mhxte6ciA());
@@ -280,7 +298,15 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		columnDownloads = new Column<MyApp, SafeHtml>(new SafeHtmlCell()) {
 			@Override
 			public SafeHtml getValue(MyApp object) {
-				return (object.overallDownloads != null) ? SafeHtmlUtils.fromSafeConstant(object.overallDownloads) : loaderInline;
+				if (object.overallDownloads != null) {
+					if (object.overallDownloads.equals(MyApp.UNKNOWN_VALUE)) {
+						return SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
+					} else {
+						return SafeHtmlUtils.fromSafeConstant(object.overallDownloads);
+					}
+				} else {
+					return loaderInline;
+				}
 			}
 		};
 		columnDownloads.setCellStyleNames(style.mhxte6ciA());
@@ -291,7 +317,15 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		columnRevenue = new Column<MyApp, SafeHtml>(new SafeHtmlCell()) {
 			@Override
 			public SafeHtml getValue(MyApp object) {
-				return (object.overallRevenue != null) ? SafeHtmlUtils.fromSafeConstant(object.overallRevenue) : loaderInline;
+				if (object.overallRevenue != null) {
+					if (object.overallRevenue.equals(MyApp.UNKNOWN_VALUE)) {
+						return SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
+					} else {
+						return SafeHtmlUtils.fromSafeConstant(object.overallRevenue);
+					}
+				} else {
+					return loaderInline;
+				}
 			}
 		};
 		columnRevenue.setCellStyleNames(style.mhxte6ciA());
@@ -301,19 +335,20 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 
 		columnIap = new Column<MyApp, SafeHtml>(new SafeHtmlCell()) {
 
-			private final String IAP_DONT_KNOW_HTML = "<span class=\"" + style.refIconBefore() + " " + style.refIconBeforeMinus() + "\"></span>";
 			private final String IAP_YES_HTML = "<span class=\"" + style.refIconBefore() + " " + style.refIconBeforeCheck() + "\"></span>";
 			private final String IAP_NO_HTML = "<span></span>";
 
 			@Override
 			public SafeHtml getValue(MyApp object) {
 				return (object.item != null) ? SafeHtmlUtils.fromSafeConstant(DataTypeHelper.itemIapState(object.item, IAP_YES_HTML, IAP_NO_HTML,
-						IAP_DONT_KNOW_HTML)) : loaderInline;
+						"<span class=\"" + style.refIconBefore() + " " + style.refIconBeforeMinus()
+								+ " js-tooltip\" data-tooltip=\"No data available\"></span>")) : loaderInline;
 			}
 
 		};
 		columnIap.setCellStyleNames(style.mhxte6ciA());
-		appsTableDesktop.addColumn(columnIap, "IAP");
+		appsTableDesktop.addColumn(columnIap,
+				new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"In App Purchases\">IAP</span>")));
 
 		appsTableDesktop.addColumnStyleName(0, style.rankColumn());
 		appsTableDesktop.addColumnStyleName(1, style.appDetailsColumn());
@@ -389,6 +424,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 				appsTableDesktop.setVisibleRange(0, Integer.MAX_VALUE);
 				appsTableMobile.setVisibleRange(0, Integer.MAX_VALUE);
 				viewAllSpan.setInnerText("View Less Apps");
+				TooltipHelper.updateHelperTooltip();
 			} else {
 				appsTableDesktop.setVisibleRange(0, ServiceConstants.STEP_VALUE);
 				appsTableMobile.setVisibleRange(0, ServiceConstants.STEP_VALUE);
@@ -594,6 +630,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 			if (!userItemProvider.getDataDisplays().contains(appsTableMobile)) { // Avoid initial double call to server
 				userItemProvider.addDataDisplay(appsTableMobile);
 			}
+			TooltipHelper.updateHelperTooltip();
 		}
 	}
 

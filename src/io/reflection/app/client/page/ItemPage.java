@@ -191,8 +191,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField Element tablePanel;
 	@UiField Element togglePanel;
 
-	private TextColumn<AppRevenue> dateColumn;
-	private TextColumn<AppRevenue> revenueColumn;
+	private Column<AppRevenue, SafeHtml> dateColumn;
+	private Column<AppRevenue, SafeHtml> revenueColumn;
 	private Column<AppRevenue, SafeHtml> revenueForPeriodColumn;
 
 	public ItemPage() {
@@ -238,7 +238,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		FilterHelper.addStores(storeSelector, SessionController.get().isLoggedInUserAdmin());
 		dateSelector.addFixedRanges(FilterHelper.getDefaultDateRanges());
 		updateFromFilter();
-
+		TooltipHelper.updateHelperTooltip();
 	}
 
 	public void setItem(Item item) {
@@ -279,7 +279,11 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	public void setPriceInnerText(String s) {
 		if (s != null) {
 			loaderInline.removeFromParent();
-			price.setInnerText(s);
+			if ("-".equals(s)) {
+				price.setInnerSafeHtml(SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
+			} else {
+				price.setInnerText(s);
+			}
 		} else {
 			appDetailsPanel.appendChild(loaderInline);
 			price.setInnerText("");
@@ -394,17 +398,19 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 					revenueForPeriodHeader.setHeaderStyleNames(style.canBeSorted() + " "
 							+ (event.isSortAscending() ? style.isAscending() : style.isDescending()));
 				}
+				TooltipHelper.updateHelperTooltip();
 			}
 		};
 
 		revenueTableDesktop.addColumnSortHandler(columnSortHandler);
 		revenueTableMobile.addColumnSortHandler(columnSortHandler);
 
-		dateColumn = new TextColumn<AppRevenue>() {
+		dateColumn = new Column<AppRevenue, SafeHtml>(new SafeHtmlCell()) {
 
 			@Override
-			public String getValue(AppRevenue object) {
-				return object.date != null ? FormattingHelper.DATE_FORMATTER_EEE_DD_MM_YY.format(object.date) : "-";
+			public SafeHtml getValue(AppRevenue object) {
+				return object.date != null ? SafeHtmlUtils.fromTrustedString(FormattingHelper.DATE_FORMATTER_EEE_DD_MM_YY.format(object.date)) : SafeHtmlUtils
+						.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
 			}
 		};
 		dateColumn.setDefaultSortAscending(false);
@@ -415,14 +421,16 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		dateColumn.setSortable(true);
 		columnSortHandler.setComparator(dateColumn, AppRevenue.getDateComparator());
 
-		revenueColumn = new TextColumn<AppRevenue>() {
+		revenueColumn = new Column<AppRevenue, SafeHtml>(new SafeHtmlCell()) {
 
 			@Override
-			public String getValue(AppRevenue object) {
+			public SafeHtml getValue(AppRevenue object) {
 				if (infoTotalRevenue.getInnerText().equals("")) {
 					infoTotalRevenue.setInnerText(FormattingHelper.asWholeMoneyString(object.currency, object.total.floatValue()));
 				}
-				return object.revenue != null ? FormattingHelper.asWholeMoneyString(object.currency, object.revenue.floatValue()) : "-";
+				return object.revenue != null ? SafeHtmlUtils.fromTrustedString(FormattingHelper.asWholeMoneyString(object.currency,
+						object.revenue.floatValue())) : SafeHtmlUtils
+						.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
 			}
 		};
 		revenueTableDesktop.addColumn(revenueColumn, revenueHeader);
@@ -559,7 +567,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		register(DefaultEventBus.get().addHandlerToSource(GetLinkedAccountItemEventHandler.TYPE, LinkedAccountController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(TogglePanelEventHandler.TYPE, NavigationController.get().getHeader(), this));
 
-		TooltipHelper.initHelperTooltip();
 	}
 
 	/*
@@ -842,6 +849,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				setLoadingSpinnerEnabled(false);
 				// TODO show no data panel
 			}
+			TooltipHelper.updateHelperTooltip();
 		} else {
 			setPriceInnerText("-");
 			setLoadingSpinnerEnabled(false);
@@ -880,6 +888,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				setLoadingSpinnerEnabled(false);
 				// TODO show no data panel
 			}
+			TooltipHelper.updateHelperTooltip();
 		} else {
 			setPriceInnerText("-");
 			setLoadingSpinnerEnabled(false);
