@@ -7,8 +7,6 @@
 //
 package io.reflection.app.accountdatacollectors;
 
-import io.reflection.app.logging.GaeLevel;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -30,6 +28,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.willshex.gson.json.shared.Convert;
+
+import io.reflection.app.logging.GaeLevel;
 
 /**
  * @author William Shakour (billy1380)
@@ -105,6 +105,7 @@ public class ITunesConnectDownloadHelper {
 
 				throw new Exception(error);
 			} else if (connection.getHeaderField("filename") != null) {
+				if (bucketName == null || bucketPath == null || bucketName.trim().length() == 0 || bucketPath.trim().length() == 0) return null;
 				fileName = getFile(bucketName, bucketPath, connection);
 			}
 		} catch (IOException e) {
