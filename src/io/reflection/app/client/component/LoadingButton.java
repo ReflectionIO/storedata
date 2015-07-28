@@ -105,7 +105,7 @@ public class LoadingButton extends Button {
 	}
 
 	public void setStatusSuccess(String successText, int hideTimeout) {
-		setStatusSuccess(null, DEFAULT_TIMEOUT, null);
+		setStatusSuccess(successText, hideTimeout, null);
 	}
 
 	public void setStatusSuccess() {
