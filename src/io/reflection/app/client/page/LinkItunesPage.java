@@ -106,6 +106,8 @@ public class LinkItunesPage extends Page implements NavigationEventHandler, Link
 		super.onDetach();
 		Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().accountAccessPage());
 		Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().connectAccountIsShowing());
+		Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formSubmittedLoading());
+		Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formSubmittedSuccessComplete());
 	}
 
 	/*
@@ -116,13 +118,12 @@ public class LinkItunesPage extends Page implements NavigationEventHandler, Link
 	 */
 	@Override
 	public void linkAccountSuccess(LinkAccountRequest input, LinkAccountResponse output) {
+		Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formSubmittedLoading());
 		if (output.status == StatusType.StatusTypeSuccess) {
 			iosMacForm.setStatusSuccess("Account Linked!", 0);
 			Document.get().getBody().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formSubmittedSuccessComplete());
-			Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formSubmittedLoading());
 			accountConnectAnimation.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().plugsConnected());
 			panelSuccess.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
-
 		} else if (output.error != null) {
 			if (output.error.code == ApiError.InvalidDataAccountCredentials.getCode()) {
 				iosMacForm.setStatusError("Invalid credentials!");
@@ -146,7 +147,8 @@ public class LinkItunesPage extends Page implements NavigationEventHandler, Link
 	 */
 	@Override
 	public void linkAccountFailure(LinkAccountRequest input, Throwable caught) {
-		// mLinkAccount.setEnabled(true);
+		Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formSubmittedLoading());
+
 		iosMacForm.setStatusError();
 	}
 
