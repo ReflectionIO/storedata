@@ -17,6 +17,7 @@ import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -30,6 +31,7 @@ import com.google.appengine.tools.cloudstorage.GcsFilename;
 import com.google.appengine.tools.cloudstorage.GcsInputChannel;
 import com.google.appengine.tools.cloudstorage.GcsService;
 import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
+import com.spacehopperstudios.utility.StringUtils;
 
 import io.reflection.app.accountdatacollectors.DataAccountCollector;
 import io.reflection.app.api.exception.DataAccessException;
@@ -51,27 +53,29 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 
 	private static final Logger LOG = Logger.getLogger(DataAccountIngestorITunesConnect.class.getName());
 
-	@SuppressWarnings("unused") private static final int PROVIDER_INDEX = 0; // seems to always be apple
-	@SuppressWarnings("unused") private static final int PROVIDER_COUNTRY_INDEX = 1; // seems to always be US
-	private static final int SKU_INDEX = 2;
-	private static final int DEVELOPER_INDEX = 3;
-	private static final int TITLE_INDEX = 4;
-	private static final int VERSION_INDEX = 5;
-	private static final int PRODUCT_TYPE_IDENTIFIER_INDEX = 6;
-	private static final int UNITS_INDEX = 7;
-	private static final int DEVELOPER_PROCEEDS_INDEX = 8;
-	private static final int BEGIN_DATE_INDEX = 9;
-	private static final int END_DATE_INDEX = 10;
-	private static final int CUSTOMER_CURRENCY_INDEX = 11;
-	private static final int COUNTRY_CODE_INDEX = 12;
-	private static final int CURRENCY_OF_PROCEEDS_INDEX = 13;
-	private static final int APPLE_IDENTIFIER_INDEX = 14;
-	private static final int CUSTOMER_PRICE_INDEX = 15;
-	private static final int PROMO_CODE_INDEX = 16;
-	private static final int PARENT_IDENTIFIER_INDEX = 17;
-	private static final int SUBSCRIPTION_INDEX = 18;
-	private static final int PERIOD_INDEX = 19;
-	private static final int CATEGORY_INDEX = 20;
+	@SuppressWarnings("unused")
+	private static final int	PROVIDER_INDEX								= 0;	// seems to always be apple
+	@SuppressWarnings("unused")
+	private static final int	PROVIDER_COUNTRY_INDEX				= 1;	// seems to always be US
+	private static final int	SKU_INDEX											= 2;
+	private static final int	DEVELOPER_INDEX								= 3;
+	private static final int	TITLE_INDEX										= 4;
+	private static final int	VERSION_INDEX									= 5;
+	private static final int	PRODUCT_TYPE_IDENTIFIER_INDEX	= 6;
+	private static final int	UNITS_INDEX										= 7;
+	private static final int	DEVELOPER_PROCEEDS_INDEX			= 8;
+	private static final int	BEGIN_DATE_INDEX							= 9;
+	private static final int	END_DATE_INDEX								= 10;
+	private static final int	CUSTOMER_CURRENCY_INDEX				= 11;
+	private static final int	COUNTRY_CODE_INDEX						= 12;
+	private static final int	CURRENCY_OF_PROCEEDS_INDEX		= 13;
+	private static final int	APPLE_IDENTIFIER_INDEX				= 14;
+	private static final int	CUSTOMER_PRICE_INDEX					= 15;
+	private static final int	PROMO_CODE_INDEX							= 16;
+	private static final int	PARENT_IDENTIFIER_INDEX				= 17;
+	private static final int	SUBSCRIPTION_INDEX						= 18;
+	private static final int	PERIOD_INDEX									= 19;
+	private static final int	CATEGORY_INDEX								= 20;
 
 	/*
 	 * (non-Javadoc)
@@ -92,7 +96,7 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 
 					fetch = DataAccountFetchServiceProvider.provide().updateDataAccountFetch(fetch);
 
-					//					ArchiverFactory.getItemSaleArchiver().enqueueIdDataAccountFetch(fetch.id);
+					// ArchiverFactory.getItemSaleArchiver().enqueueIdDataAccountFetch(fetch.id);
 
 					SaleServiceProvider.provide().summariseSalesForDataAccountOnDate(fetch.linkedAccount.id, fetch.date);
 					enqueueDataAccountItemsToGatherSplitData(fetch.linkedAccount.id, fetch.date);
@@ -114,7 +118,8 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 	 */
 	private void enqueueDataAccountItemsToGatherSplitData(Long dataAccountId, Date date) {
 		/*
-		 * Get all sale summary rows for this dataaccount for this date. For each item id, get its iap ids and then for each country the main item is in,
+		 * Get all sale summary rows for this dataaccount for this date. For each
+		 * item id, get its iap ids and then for each country the main item is in,
 		 * enqueue the item for gathering the splits
 		 */
 
@@ -132,19 +137,35 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 			List<SimpleEntry<String, String>> mainItemIdsAndCountries = saleService.getSoldItemIdsForAccountInDateRange(dataAccountId,
 					gatherFrom, gatherTo);
 
+			HashMap<String, String> iapItemsMapByParentItem = new HashMap<String, String>(mainItemIdsAndCountries.size());
+
+			for (SimpleEntry<String, String> entry : mainItemIdsAndCountries) {
+				String mainItemId = entry.getKey();
+				List<String> iapItemIds = saleService.getIapItemIdsForParentItemOnDate(dataAccountId, mainItemId, date);
+
+				String iapItemIdsString = StringUtils.join(iapItemIds);
+
+				iapItemsMapByParentItem.put(mainItemId, iapItemIdsString);
+			}
+
 			for (SimpleEntry<String, String> entry : mainItemIdsAndCountries) {
 				String mainItemId = entry.getKey();
 				String country = entry.getValue();
-				// List<String> iapItemIds = saleService.getIapItemIdsFor
+
+				String iapItemIds = iapItemsMapByParentItem.get(mainItemId);
+
+				QueueHelper.enqueue("gathersplitsaledata", Method.PULL,
+						new SimpleEntry<String, String>("dataAccountId", String.valueOf(dataAccountId)),
+						new SimpleEntry<String, String>("gatherFrom", sdf.format(gatherFrom)),
+						new SimpleEntry<String, String>("gatherTo", sdf.format(gatherTo)),
+						new SimpleEntry<String, String>("mainItemId", mainItemId),
+						new SimpleEntry<String, String>("countryCode", country),
+						new SimpleEntry<String, String>("iapItemIds", iapItemIds));
 			}
 		} catch (DataAccessException e) {
 			LOG.log(Level.SEVERE, String.format("Exception occured while retrieving main item id for data account [%d] between [%s] and [%s]", dataAccountId,
 					sdf.format(gatherFrom), sdf.format(gatherTo)), e);
 		}
-
-		QueueHelper.enqueue("gathersplitsaledata", Method.PULL,
-				new SimpleEntry<String, String>("dataaccountid", String.valueOf(dataAccountId)),
-				new SimpleEntry<String, String>("date", sdf.format(date)));
 	}
 
 	/**

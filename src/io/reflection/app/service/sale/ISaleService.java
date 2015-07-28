@@ -243,4 +243,13 @@ public interface ISaleService extends IService {
 	 */
 	public List<SimpleEntry<String, String>> getSoldItemIdsForAccountInDateRange(Long dataAccountId, Date gatherFrom, Date gatherTo) throws DataAccessException;
 
+	/**
+	 * @param dataAccountId
+	 * @param mainItemId
+	 * @param date
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<String> getIapItemIdsForParentItemOnDate(Long dataAccountId, String mainItemId, Date date) throws DataAccessException;
+
 }

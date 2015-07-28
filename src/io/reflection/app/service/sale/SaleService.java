@@ -376,11 +376,11 @@ final class SaleService implements ISaleService {
 
 			if (pager.sortDirection != null) {
 				switch (pager.sortDirection) {
-				case SortDirectionTypeAscending:
-					sortDirectionQuery = "ASC";
-					break;
-				default:
-					break;
+					case SortDirectionTypeAscending:
+						sortDirectionQuery = "ASC";
+						break;
+					default:
+						break;
 				}
 			}
 
@@ -480,11 +480,11 @@ final class SaleService implements ISaleService {
 
 			if (pager.sortDirection != null) {
 				switch (pager.sortDirection) {
-				case SortDirectionTypeAscending:
-					sortDirectionQuery = "ASC";
-					break;
-				default:
-					break;
+					case SortDirectionTypeAscending:
+						sortDirectionQuery = "ASC";
+						break;
+					default:
+						break;
 				}
 			}
 
@@ -905,6 +905,39 @@ final class SaleService implements ISaleService {
 			while (saleConnection.fetchNextRow()) {
 				SimpleEntry<String, String> entry = new SimpleEntry<String, String>(saleConnection.getCurrentRowString("itemid"),
 						saleConnection.getCurrentRowString("country"));
+				list.add(entry);
+			}
+
+			return list;
+		} finally {
+			if (saleConnection != null) {
+				saleConnection.disconnect();
+			}
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.service.sale.ISaleService#getIapItemIdsForParentItemOnDate(java.lang.Long, java.lang.String, java.util.Date)
+	 */
+	@Override
+	public List<String> getIapItemIdsForParentItemOnDate(Long dataAccountId, String mainItemId, Date date) throws DataAccessException {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+		String getItemsByCountryQuery = String.format("select distinct(itemid) as itemid from sale where "
+				+ "dataaccountid=%d and `begin`='%s' and parentidentifier="
+				+ "  (select sku from sale where dataaccountid=%d and itemid='%s' limit 1)",
+				dataAccountId, sdf.format(date), dataAccountId, mainItemId);
+
+		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
+
+		try {
+			saleConnection.connect();
+			saleConnection.executeQuery(getItemsByCountryQuery);
+
+			ArrayList<String> list = new ArrayList<String>();
+
+			while (saleConnection.fetchNextRow()) {
+				String entry = saleConnection.getCurrentRowString("itemid");
 				list.add(entry);
 			}
 
