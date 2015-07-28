@@ -3213,8 +3213,12 @@ textarea, .global-header .link-open-search, html, body {
 .page-blog .sharing-container a:first-child {
   margin-left: 0;
 }
+/* line 112, ../sass/templates/_blog.scss */
+.page-blog > button {
+  margin-top: 4rem;
+}
 
-/* line 113, ../sass/templates/_blog.scss */
+/* line 116, ../sass/templates/_blog.scss */
 .blog-content-container {
   margin-left: auto;
   margin-right: auto;
@@ -3222,38 +3226,38 @@ textarea, .global-header .link-open-search, html, body {
   float: none;
 }
 
-/* line 123, ../sass/templates/_blog.scss */
+/* line 126, ../sass/templates/_blog.scss */
 .blog-tags strong {
   padding-right: 3px;
 }
-/* line 126, ../sass/templates/_blog.scss */
+/* line 129, ../sass/templates/_blog.scss */
 .blog-tags a {
   padding: 0 3px;
   font-weight: 700;
 }
 
-/* line 131, ../sass/templates/_blog.scss */
+/* line 134, ../sass/templates/_blog.scss */
 .blog-comments {
   position: relative;
 }
-/* line 133, ../sass/templates/_blog.scss */
+/* line 136, ../sass/templates/_blog.scss */
 .blog-comments h2 {
   margin-bottom: 2.3rem;
 }
-/* line 136, ../sass/templates/_blog.scss */
+/* line 139, ../sass/templates/_blog.scss */
 .blog-comments .make-comment-button {
   position: absolute;
   top: 0;
   right: 0;
 }
-/* line 141, ../sass/templates/_blog.scss */
+/* line 144, ../sass/templates/_blog.scss */
 .blog-comments textarea {
   width: 100%;
   height: 123px;
   resize: none;
 }
 
-/* line 147, ../sass/templates/_blog.scss */
+/* line 150, ../sass/templates/_blog.scss */
 .blog-search-container {
   float: right;
 }
@@ -4162,124 +4166,128 @@ textarea, .global-header .link-open-search, html, body {
     font-size: 2.1rem;
   }
 }
+/* line 50, ../sass/templates/_leaderboard.scss */
+.page-leaderboard .pagination {
+  padding-top: 0;
+}
 
-/* line 51, ../sass/templates/_leaderboard.scss */
+/* line 54, ../sass/templates/_leaderboard.scss */
 .table-overall.table-data .MHXTE6C-i-a {
   padding-top: 1px;
   padding-bottom: 4px;
 }
 
-/* line 56, ../sass/templates/_leaderboard.scss */
+/* line 59, ../sass/templates/_leaderboard.scss */
 .table-overall {
   width: 100%;
 }
-/* line 58, ../sass/templates/_leaderboard.scss */
+/* line 61, ../sass/templates/_leaderboard.scss */
 .is-safari .table-overall {
   table-layout: auto;
   width: auto;
 }
-/* line 62, ../sass/templates/_leaderboard.scss */
+/* line 65, ../sass/templates/_leaderboard.scss */
 .table-overall.table-data th {
   padding-left: 10px;
   padding-right: 10px;
 }
-/* line 69, ../sass/templates/_leaderboard.scss */
+/* line 72, ../sass/templates/_leaderboard.scss */
 .is-safari .table-overall.table-data th {
   padding-left: 10px;
   padding-right: 10px;
 }
-/* line 75, ../sass/templates/_leaderboard.scss */
+/* line 78, ../sass/templates/_leaderboard.scss */
 .table-overall.table-data td {
   padding-left: 10px;
   padding-right: 10px;
   vertical-align: top;
 }
-/* line 83, ../sass/templates/_leaderboard.scss */
+/* line 86, ../sass/templates/_leaderboard.scss */
 .is-safari .table-overall.table-data td {
   width: 30%;
   padding-left: 10px;
   padding-right: 10px;
 }
-/* line 89, ../sass/templates/_leaderboard.scss */
+/* line 92, ../sass/templates/_leaderboard.scss */
 .table-overall.table-data .MHXTE6C-i-a,
 .table-overall.table-data .table-data {
   vertical-align: top;
 }
-/* line 93, ../sass/templates/_leaderboard.scss */
+/* line 96, ../sass/templates/_leaderboard.scss */
 .table-overall.table-data .MHXTE6C-i-d,
 .table-overall.table-data .table-data-first {
   vertical-align: middle;
 }
 
-/* line 105, ../sass/templates/_leaderboard.scss */
+/* line 108, ../sass/templates/_leaderboard.scss */
 .table-my-apps.table-data th {
   padding-left: 10px;
   padding-right: 10px;
 }
-/* line 113, ../sass/templates/_leaderboard.scss */
+/* line 116, ../sass/templates/_leaderboard.scss */
 .table-my-apps.table-data td {
   padding-left: 10px;
   padding-right: 10px;
 }
 
-/* line 122, ../sass/templates/_leaderboard.scss */
+/* line 125, ../sass/templates/_leaderboard.scss */
 .table-app-group {
   width: 100%;
 }
-/* line 124, ../sass/templates/_leaderboard.scss */
+/* line 127, ../sass/templates/_leaderboard.scss */
 .table-app-group.table-data th {
   padding-left: 10px;
   padding-right: 10px;
 }
-/* line 132, ../sass/templates/_leaderboard.scss */
+/* line 135, ../sass/templates/_leaderboard.scss */
 .table-app-group.table-data td {
   padding-left: 10px;
   padding-right: 10px;
 }
-/* line 139, ../sass/templates/_leaderboard.scss */
+/* line 142, ../sass/templates/_leaderboard.scss */
 .table-app-group.table-data td.table-data-first {
   width: 80px;
 }
-/* line 143, ../sass/templates/_leaderboard.scss */
+/* line 146, ../sass/templates/_leaderboard.scss */
 .table-app-group .MHXTE6C-i-a,
 .table-app-group .table-data {
   padding-top: 0.9rem;
   padding-bottom: 0.6rem;
 }
 
-/* line 149, ../sass/templates/_leaderboard.scss */
+/* line 152, ../sass/templates/_leaderboard.scss */
 table.table-data > tbody > tr:nth-child(odd) {
   background-color: #eff2f5;
 }
-/* line 151, ../sass/templates/_leaderboard.scss */
+/* line 154, ../sass/templates/_leaderboard.scss */
 table.table-data > tbody > tr:nth-child(odd) > td {
   background-color: #eff2f5;
 }
 
-/* line 156, ../sass/templates/_leaderboard.scss */
+/* line 159, ../sass/templates/_leaderboard.scss */
 table.table-data > tbody > tr:nth-child(even) {
   background-color: #ffffff;
 }
-/* line 158, ../sass/templates/_leaderboard.scss */
+/* line 161, ../sass/templates/_leaderboard.scss */
 table.table-data > tbody > tr:nth-child(even) > td {
   background-color: #ffffff;
 }
 
 @media screen and (max-width: 720px) {
-  /* line 163, ../sass/templates/_leaderboard.scss */
+  /* line 166, ../sass/templates/_leaderboard.scss */
   .page-leaderboard .scrollable .table-data .MHXTE6C-i-a:nth-child(2),
   .page-leaderboard .scrollable .table-data .table-data:nth-child(2),
   .page-leaderboard .scrollable table.responsive th:nth-child(2) {
     padding-left: 2%;
   }
 
-  /* line 168, ../sass/templates/_leaderboard.scss */
+  /* line 171, ../sass/templates/_leaderboard.scss */
   .pinned .table-overall tbody tr,
   .scrollable .table-overall tbody tr {
     height: 82px;
   }
 
-  /* line 172, ../sass/templates/_leaderboard.scss */
+  /* line 175, ../sass/templates/_leaderboard.scss */
   .pinned .table-app-group tbody tr,
   .scrollable .table-app-group tbody tr {
     height: 65px;
@@ -5345,36 +5353,40 @@ table.table-linked-accounts .update-linked-accounts-container .ref-button--link:
     font-size: 2.2em;
   }
 }
+/* line 75, ../sass/templates/_my-apps.scss */
+.page-my-apps > button {
+  margin-top: 4rem;
+}
 
-/* line 76, ../sass/templates/_my-apps.scss */
+/* line 79, ../sass/templates/_my-apps.scss */
 .table-my-apps {
   width: 100%;
 }
-/* line 78, ../sass/templates/_my-apps.scss */
+/* line 81, ../sass/templates/_my-apps.scss */
 .table-my-apps .rank-column {
   width: 10.2%;
 }
-/* line 81, ../sass/templates/_my-apps.scss */
+/* line 84, ../sass/templates/_my-apps.scss */
 .table-my-apps .app-details-column {
   width: 34.5%;
 }
-/* line 84, ../sass/templates/_my-apps.scss */
+/* line 87, ../sass/templates/_my-apps.scss */
 .table-my-apps .price-column {
   width: 11.7%;
 }
-/* line 87, ../sass/templates/_my-apps.scss */
+/* line 90, ../sass/templates/_my-apps.scss */
 .table-my-apps .downloads-column {
   width: 15.1%;
 }
-/* line 90, ../sass/templates/_my-apps.scss */
+/* line 93, ../sass/templates/_my-apps.scss */
 .table-my-apps .revenue-column {
   width: 15.1%;
 }
-/* line 93, ../sass/templates/_my-apps.scss */
+/* line 96, ../sass/templates/_my-apps.scss */
 .table-my-apps .iap-column {
   width: 6.4%;
 }
-/* line 96, ../sass/templates/_my-apps.scss */
+/* line 99, ../sass/templates/_my-apps.scss */
 .table-my-apps .app-name {
   margin-bottom: 0.6rem;
   display: block;
@@ -5387,7 +5399,7 @@ table.table-linked-accounts .update-linked-accounts-container .ref-button--link:
 }
 
 @media screen and (max-width: 720px) {
-  /* line 108, ../sass/templates/_my-apps.scss */
+  /* line 111, ../sass/templates/_my-apps.scss */
   .pinned .table-my-apps tbody tr,
   .scrollable .table-my-apps tbody tr {
     height: 70px;
@@ -9140,13 +9152,18 @@ svg.loading-ellipsis .dot-3 {
   fill: #ffffff;
 }
 /* line 49, ../sass/components/_main-navigation.scss */
+.main-navigation li.is-selected a svg.icon--my-apps path {
+  fill: none;
+  stroke: #ffffff;
+}
+/* line 55, ../sass/components/_main-navigation.scss */
 .main-navigation > ul > li {
   margin-bottom: 4px;
   font-size: 1.2em;
   line-height: 1.5;
   font-weight: 700;
 }
-/* line 54, ../sass/components/_main-navigation.scss */
+/* line 60, ../sass/components/_main-navigation.scss */
 .main-navigation > ul > li > a {
   float: left;
   width: 100%;
@@ -9154,35 +9171,35 @@ svg.loading-ellipsis .dot-3 {
   text-transform: uppercase;
   background-color: #29292c;
 }
-/* line 62, ../sass/components/_main-navigation.scss */
+/* line 68, ../sass/components/_main-navigation.scss */
 .main-navigation > ul > li.is-selected > a {
   color: #fcfdfd;
   background-color: #6d69c5;
 }
-/* line 65, ../sass/components/_main-navigation.scss */
+/* line 71, ../sass/components/_main-navigation.scss */
 .is-animating-out .main-navigation > ul > li.is-selected > a {
   text-shadow: 4px 0px 1px rgba(252, 253, 253, 0.5);
 }
-/* line 68, ../sass/components/_main-navigation.scss */
+/* line 74, ../sass/components/_main-navigation.scss */
 .is-animating-in .main-navigation > ul > li.is-selected > a {
   text-shadow: -4px 0px 1px rgba(252, 253, 253, 0.5);
 }
-/* line 71, ../sass/components/_main-navigation.scss */
+/* line 77, ../sass/components/_main-navigation.scss */
 .main-navigation > ul > li.is-selected > a:hover {
   color: #fcfdfd;
 }
-/* line 76, ../sass/components/_main-navigation.scss */
+/* line 82, ../sass/components/_main-navigation.scss */
 .main-navigation > ul > li > ul {
   display: block;
   z-index: 0;
   -webkit-transition: margin-top 0.16s ease-in;
           transition: margin-top 0.16s ease-in;
 }
-/* line 81, ../sass/components/_main-navigation.scss */
+/* line 87, ../sass/components/_main-navigation.scss */
 .main-navigation > ul > li.is-open {
   background-color: #363a47;
 }
-/* line 83, ../sass/components/_main-navigation.scss */
+/* line 89, ../sass/components/_main-navigation.scss */
 .main-navigation > ul > li.is-open > ul {
   position: relative;
   margin-top: 0;
@@ -9190,40 +9207,40 @@ svg.loading-ellipsis .dot-3 {
   -webkit-transition: margin-top 0.2s ease-out;
           transition: margin-top 0.2s ease-out;
 }
-/* line 92, ../sass/components/_main-navigation.scss */
+/* line 98, ../sass/components/_main-navigation.scss */
 .main-navigation > ul ul {
   width: 100%;
   display: none;
   float: left;
   background-color: #363a47;
 }
-/* line 97, ../sass/components/_main-navigation.scss */
+/* line 103, ../sass/components/_main-navigation.scss */
 .main-navigation > ul ul li {
   position: relative;
   z-index: 1;
   font-size: 13px;
 }
-/* line 102, ../sass/components/_main-navigation.scss */
+/* line 108, ../sass/components/_main-navigation.scss */
 .main-navigation > ul ul li.is-selected > a {
   color: #fcfdfd;
 }
-/* line 104, ../sass/components/_main-navigation.scss */
+/* line 110, ../sass/components/_main-navigation.scss */
 .is-animating-out .main-navigation > ul ul li.is-selected > a {
   text-shadow: 4px 0px 1px rgba(252, 253, 253, 0.5);
 }
-/* line 107, ../sass/components/_main-navigation.scss */
+/* line 113, ../sass/components/_main-navigation.scss */
 .is-animating-in .main-navigation > ul ul li.is-selected > a {
   text-shadow: -4px 0px 1px rgba(252, 253, 253, 0.5);
 }
-/* line 110, ../sass/components/_main-navigation.scss */
+/* line 116, ../sass/components/_main-navigation.scss */
 .main-navigation > ul ul li.is-selected > a:hover {
   color: #fcfdfd;
 }
-/* line 115, ../sass/components/_main-navigation.scss */
+/* line 121, ../sass/components/_main-navigation.scss */
 .main-navigation > ul ul li.has-child {
   line-height: 1.5;
 }
-/* line 119, ../sass/components/_main-navigation.scss */
+/* line 125, ../sass/components/_main-navigation.scss */
 .main-navigation > ul ul li.has-child:after {
   position: absolute;
   right: 9px;
@@ -9234,65 +9251,65 @@ svg.loading-ellipsis .dot-3 {
   -webkit-transition: color 0.2s;
           transition: color 0.2s;
 }
-/* line 129, ../sass/components/_main-navigation.scss */
+/* line 135, ../sass/components/_main-navigation.scss */
 .main-navigation > ul ul li.has-child.is-open:after {
   color: #7e79e2;
   -webkit-transition: color 0.33s;
           transition: color 0.33s;
 }
-/* line 132, ../sass/components/_main-navigation.scss */
+/* line 138, ../sass/components/_main-navigation.scss */
 .is-animating-out .main-navigation > ul ul li.has-child.is-open:after {
   text-shadow: 4px 0px 1px rgba(109, 105, 197, 0.5);
 }
-/* line 135, ../sass/components/_main-navigation.scss */
+/* line 141, ../sass/components/_main-navigation.scss */
 .is-animating-in .main-navigation > ul ul li.has-child.is-open:after {
   text-shadow: -4px 0px 1px rgba(109, 105, 197, 0.5);
 }
-/* line 141, ../sass/components/_main-navigation.scss */
+/* line 147, ../sass/components/_main-navigation.scss */
 .main-navigation > ul ul li a {
   padding: 0 38px 15px 29px;
   color: #81879d;
 }
-/* line 144, ../sass/components/_main-navigation.scss */
+/* line 150, ../sass/components/_main-navigation.scss */
 .is-animating-out .main-navigation > ul ul li a {
   text-shadow: 4px 0px 1px rgba(129, 135, 157, 0.5);
 }
-/* line 147, ../sass/components/_main-navigation.scss */
+/* line 153, ../sass/components/_main-navigation.scss */
 .is-animating-in .main-navigation > ul ul li a {
   text-shadow: -4px 0px 1px rgba(129, 135, 157, 0.5);
 }
-/* line 150, ../sass/components/_main-navigation.scss */
+/* line 156, ../sass/components/_main-navigation.scss */
 .main-navigation > ul ul li a:hover {
   color: #bec2d2;
 }
-/* line 154, ../sass/components/_main-navigation.scss */
+/* line 160, ../sass/components/_main-navigation.scss */
 .main-navigation > ul ul li ul {
   background-color: #2e313b;
   display: block;
   -webkit-transition: margin-top 0.16s ease-in;
           transition: margin-top 0.16s ease-in;
 }
-/* line 158, ../sass/components/_main-navigation.scss */
+/* line 164, ../sass/components/_main-navigation.scss */
 .main-navigation > ul ul li ul a {
   padding-left: 38px;
 }
-/* line 165, ../sass/components/_main-navigation.scss */
+/* line 171, ../sass/components/_main-navigation.scss */
 .main-navigation > ul > li > ul > li > a {
   background-color: #363a47;
 }
-/* line 168, ../sass/components/_main-navigation.scss */
+/* line 174, ../sass/components/_main-navigation.scss */
 .main-navigation > ul > li > ul > li:first-child {
   margin-top: 22px;
 }
-/* line 171, ../sass/components/_main-navigation.scss */
+/* line 177, ../sass/components/_main-navigation.scss */
 .main-navigation > ul > li > ul > li:last-child a {
   padding-bottom: 20px;
 }
-/* line 175, ../sass/components/_main-navigation.scss */
+/* line 181, ../sass/components/_main-navigation.scss */
 .main-navigation > ul > li > ul li.is-open + li {
   margin-top: 22px;
 }
-/* line 178, ../sass/components/_main-navigation.scss */
+/* line 184, ../sass/components/_main-navigation.scss */
 .main-navigation > ul > li > ul li.is-open ul {
   position: relative;
   margin-top: 0;
@@ -9302,47 +9319,47 @@ svg.loading-ellipsis .dot-3 {
   -webkit-transition: margin-top 0.2s ease-out;
           transition: margin-top 0.2s ease-out;
 }
-/* line 186, ../sass/components/_main-navigation.scss */
+/* line 192, ../sass/components/_main-navigation.scss */
 .main-navigation > ul > li > ul li.is-open > a {
   color: #e1e5e8;
 }
-/* line 188, ../sass/components/_main-navigation.scss */
+/* line 194, ../sass/components/_main-navigation.scss */
 .is-animating-out .main-navigation > ul > li > ul li.is-open > a {
   text-shadow: 4px 0px 1px rgba(225, 229, 232, 0.5);
 }
-/* line 191, ../sass/components/_main-navigation.scss */
+/* line 197, ../sass/components/_main-navigation.scss */
 .is-animating-in .main-navigation > ul > li > ul li.is-open > a {
   text-shadow: -4px 0px 1px rgba(225, 229, 232, 0.5);
 }
-/* line 194, ../sass/components/_main-navigation.scss */
+/* line 200, ../sass/components/_main-navigation.scss */
 .main-navigation > ul > li > ul li.is-open > a:hover {
   color: #e1e5e8;
 }
-/* line 201, ../sass/components/_main-navigation.scss */
+/* line 207, ../sass/components/_main-navigation.scss */
 .main-navigation ul ul ul li:first-child {
   margin-top: 8px;
 }
-/* line 204, ../sass/components/_main-navigation.scss */
+/* line 210, ../sass/components/_main-navigation.scss */
 .main-navigation ul ul ul li:last-child a {
   padding-bottom: 24px;
 }
-/* line 208, ../sass/components/_main-navigation.scss */
+/* line 214, ../sass/components/_main-navigation.scss */
 .main-navigation ul ul ul li.is-selected > a {
   color: #e1e5e8;
 }
-/* line 210, ../sass/components/_main-navigation.scss */
+/* line 216, ../sass/components/_main-navigation.scss */
 .is-animating-out .main-navigation ul ul ul li.is-selected > a {
   text-shadow: 4px 0px 1px rgba(225, 229, 232, 0.5);
 }
-/* line 213, ../sass/components/_main-navigation.scss */
+/* line 219, ../sass/components/_main-navigation.scss */
 .is-animating-in .main-navigation ul ul ul li.is-selected > a {
   text-shadow: -4px 0px 1px rgba(225, 229, 232, 0.5);
 }
-/* line 216, ../sass/components/_main-navigation.scss */
+/* line 222, ../sass/components/_main-navigation.scss */
 .main-navigation ul ul ul li.is-selected > a:hover {
   color: #e1e5e8;
 }
-/* line 222, ../sass/components/_main-navigation.scss */
+/* line 228, ../sass/components/_main-navigation.scss */
 .main-navigation a {
   position: relative;
   padding: 14px 0px 14px 29px;
@@ -9351,19 +9368,19 @@ svg.loading-ellipsis .dot-3 {
   color: #767683;
   box-sizing: border-box;
 }
-/* line 229, ../sass/components/_main-navigation.scss */
+/* line 235, ../sass/components/_main-navigation.scss */
 .is-animating-out .main-navigation a {
   text-shadow: 4px 0px 1px rgba(118, 118, 131, 0.5);
 }
-/* line 232, ../sass/components/_main-navigation.scss */
+/* line 238, ../sass/components/_main-navigation.scss */
 .is-animating-in .main-navigation a {
   text-shadow: -4px 0px 1px rgba(118, 118, 131, 0.5);
 }
-/* line 235, ../sass/components/_main-navigation.scss */
+/* line 241, ../sass/components/_main-navigation.scss */
 .main-navigation a:hover {
   color: #c6c6d4;
 }
-/* line 239, ../sass/components/_main-navigation.scss */
+/* line 245, ../sass/components/_main-navigation.scss */
 .main-navigation .ref-icon-before:before, .main-navigation .page-logged-in-landing .accordion-switch:before, .page-logged-in-landing .main-navigation .accordion-switch:before, .main-navigation .page-logged-in-landing .accordion .list-item-complete:before, .page-logged-in-landing .accordion .main-navigation .list-item-complete:before {
   position: absolute;
   left: 30px;
@@ -10210,7 +10227,17 @@ svg.loading-ellipsis .dot-3 {
   line-height: 1.7;
   color: #c3c6f6;
 }
-/* line 90, ../sass/components/_popup.scss */
+/* line 89, ../sass/components/_popup.scss */
+.whats-this-tooltip p a,
+.popup-toast p a {
+  color: #fff;
+}
+/* line 91, ../sass/components/_popup.scss */
+.whats-this-tooltip p a:hover,
+.popup-toast p a:hover {
+  color: #e6e6e6;
+}
+/* line 96, ../sass/components/_popup.scss */
 .whats-this-tooltip img,
 .popup-toast img {
   position: absolute;
@@ -10219,7 +10246,7 @@ svg.loading-ellipsis .dot-3 {
   width: 36px;
 }
 
-/* line 97, ../sass/components/_popup.scss */
+/* line 103, ../sass/components/_popup.scss */
 .whats-this-tooltip {
   position: relative;
   top: 0;
@@ -10231,7 +10258,7 @@ svg.loading-ellipsis .dot-3 {
   -webkit-transform-origin: center top;
   transform-origin: center top;
 }
-/* line 107, ../sass/components/_popup.scss */
+/* line 113, ../sass/components/_popup.scss */
 .whats-this-tooltip.is-open {
   -ms-transform-origin: center top;
   -webkit-transform-origin: center top;
@@ -10242,7 +10269,7 @@ svg.loading-ellipsis .dot-3 {
   -webkit-transition: -webkit-transform 0.18s ease-out;
           transition: transform 0.18s ease-out;
 }
-/* line 132, ../sass/components/_popup.scss */
+/* line 138, ../sass/components/_popup.scss */
 .whats-this-tooltip.position-tooltip-left {
   -ms-transform-origin: right center;
   -webkit-transform-origin: right center;
@@ -10251,7 +10278,7 @@ svg.loading-ellipsis .dot-3 {
   -webkit-transform: rotateX(0deg) rotateY(-96deg);
   transform: rotateX(0deg) rotateY(-96deg);
 }
-/* line 139, ../sass/components/_popup.scss */
+/* line 145, ../sass/components/_popup.scss */
 .whats-this-tooltip.position-tooltip-left.is-open {
   -ms-transform-origin: right center;
   -webkit-transform-origin: right center;
@@ -10262,7 +10289,7 @@ svg.loading-ellipsis .dot-3 {
   -webkit-transition: -webkit-transform 0.18s ease-out;
           transition: transform 0.18s ease-out;
 }
-/* line 162, ../sass/components/_popup.scss */
+/* line 168, ../sass/components/_popup.scss */
 .whats-this-tooltip.position-tooltip-right {
   -ms-transform-origin: left center;
   -webkit-transform-origin: left center;
@@ -10271,7 +10298,7 @@ svg.loading-ellipsis .dot-3 {
   -webkit-transform: rotateX(0deg) rotateY(96deg);
   transform: rotateX(0deg) rotateY(96deg);
 }
-/* line 169, ../sass/components/_popup.scss */
+/* line 175, ../sass/components/_popup.scss */
 .whats-this-tooltip.position-tooltip-right.is-open {
   -ms-transform-origin: left center;
   -webkit-transform-origin: left center;
@@ -10282,7 +10309,7 @@ svg.loading-ellipsis .dot-3 {
   -webkit-transition: -webkit-transform 0.18s ease-out;
           transition: transform 0.18s ease-out;
 }
-/* line 191, ../sass/components/_popup.scss */
+/* line 197, ../sass/components/_popup.scss */
 .whats-this-tooltip.position-tooltip-top {
   -ms-transform-origin: center bottom;
   -webkit-transform-origin: center bottom;
@@ -10291,7 +10318,7 @@ svg.loading-ellipsis .dot-3 {
   -webkit-transform: rotateX(-86deg);
   transform: rotateX(-86deg);
 }
-/* line 198, ../sass/components/_popup.scss */
+/* line 204, ../sass/components/_popup.scss */
 .whats-this-tooltip.position-tooltip-top.is-open {
   -ms-transform-origin: center bottom;
   -webkit-transform-origin: center bottom;
@@ -10303,7 +10330,7 @@ svg.loading-ellipsis .dot-3 {
           transition: transform 0.18s ease-out;
 }
 
-/* line 222, ../sass/components/_popup.scss */
+/* line 228, ../sass/components/_popup.scss */
 .popup-toast-container {
   -webkit-perspective: 1300px;
   perspective: 1300px;
@@ -10319,14 +10346,14 @@ svg.loading-ellipsis .dot-3 {
           transition: top 0.3s;
 }
 
-/* line 239, ../sass/components/_popup.scss */
+/* line 245, ../sass/components/_popup.scss */
 .popup-toast {
   position: relative;
   width: 100%;
   -webkit-transform: rotateX(0deg);
           transform: rotateX(0deg);
 }
-/* line 243, ../sass/components/_popup.scss */
+/* line 249, ../sass/components/_popup.scss */
 .popup-toast.is-read {
   -ms-transform-origin: center bottom;
   -webkit-transform-origin: center bottom;
@@ -10337,32 +10364,32 @@ svg.loading-ellipsis .dot-3 {
   -webkit-transition: -webkit-transform 0.35s ease-in;
           transition: transform 0.35s ease-in;
 }
-/* line 252, ../sass/components/_popup.scss */
+/* line 258, ../sass/components/_popup.scss */
 .popup-toast a {
   font-weight: 700;
   color: #c3c6f6;
 }
-/* line 255, ../sass/components/_popup.scss */
+/* line 261, ../sass/components/_popup.scss */
 .popup-toast a:hover {
   color: #eff0fd;
 }
-/* line 259, ../sass/components/_popup.scss */
+/* line 265, ../sass/components/_popup.scss */
 .popup-toast.popup-toast--alert {
   background-color: #ff496a;
 }
-/* line 261, ../sass/components/_popup.scss */
+/* line 267, ../sass/components/_popup.scss */
 .popup-toast.popup-toast--alert p {
   color: #ffe3e8;
 }
-/* line 264, ../sass/components/_popup.scss */
+/* line 270, ../sass/components/_popup.scss */
 .popup-toast.popup-toast--alert a {
   color: #ffe3e8;
 }
-/* line 266, ../sass/components/_popup.scss */
+/* line 272, ../sass/components/_popup.scss */
 .popup-toast.popup-toast--alert a:hover {
   color: #ffb0be;
 }
-/* line 270, ../sass/components/_popup.scss */
+/* line 276, ../sass/components/_popup.scss */
 .popup-toast.popup-toast--alert img {
   width: 45px;
 }

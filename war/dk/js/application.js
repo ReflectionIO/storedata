@@ -568,6 +568,7 @@
 	};
 
 	var FormFieldSelect = function() {
+		// List of checkboxes drop down
 		var pInstance = this;
 		$('.reflection-select').each(function(){
 			var $this = $(this),
@@ -596,36 +597,37 @@
 			});
 		});
 
+		// List of select options drop down
 		if(!$('.ie8').length) {
 			$('.js-field--select').each(function() {
-			var selectInput = $(this),
-					selectOptions = selectInput.find('option'),
-					optionsList = $('<ul>'),
-					refSelectContainer = $('<div>').addClass('reflection-select'),
-					refSelectDefault = $('<span>').addClass('ref-icon-after ref-icon-after--angle-down').text('Choose your option'),
-					isFilter = selectInput.hasClass('reflection-select--filter'),
-					isCentered = selectInput.hasClass('reflection-select--center'),
-					isRightAligned = selectInput.hasClass('reflection-select--right'),
-					listContainer = $("<div>").addClass("list-container");
-					if(isFilter) {
-						optionsList.append($('<a>').addClass('close-popup').text('K').on("click", function(e){
-							e.preventDefault();
-							$('.reflection-select').removeClass('is-open');
-							$('.form-field--select').removeClass('is-open');
-							if($(window).width() < 720) {
-								$('html.touch body, html.touch').removeClass('no-scroll');
-							}							
-						}));
-						refSelectContainer.addClass('reflection-select--filter');
-						var selectTitle = (selectInput.data("title")) ? selectInput.data("title") : $(selectOptions[0]).text();
-						optionsList.append($('<span>').text(selectTitle)).append(listContainer);
-					}
-					if(isCentered) {
-						refSelectContainer.addClass('reflection-select--center');
-					}
-					if(isRightAligned) {
-						refSelectContainer.addClass('reflection-select--right');
-					}
+				var selectInput = $(this),
+				selectOptions = selectInput.find('option'),
+				optionsList = $('<ul>'),
+				refSelectContainer = $('<div>').addClass('reflection-select'),
+				refSelectDefault = $('<span>').addClass('ref-icon-after ref-icon-after--angle-down').text('Choose your option'),
+				isFilter = selectInput.hasClass('reflection-select--filter'),
+				isCentered = selectInput.hasClass('reflection-select--center'),
+				isRightAligned = selectInput.hasClass('reflection-select--right'),
+				listContainer = $("<div>").addClass("list-container");
+				if(isFilter) {
+					optionsList.append($('<a>').addClass('close-popup').text('K').on("click", function(e){
+						e.preventDefault();
+						$('.reflection-select').removeClass('is-open');
+						$('.form-field--select').removeClass('is-open');
+						if($(window).width() < 720) {
+							$('html.touch body, html.touch').removeClass('no-scroll');
+						}							
+					}));
+					refSelectContainer.addClass('reflection-select--filter');
+					var selectTitle = (selectInput.data("title")) ? selectInput.data("title") : $(selectOptions[0]).text();
+					optionsList.append($('<span>').text(selectTitle)).append(listContainer);
+				}
+				if(isCentered) {
+					refSelectContainer.addClass('reflection-select--center');
+				}
+				if(isRightAligned) {
+					refSelectContainer.addClass('reflection-select--right');
+				}
 				selectOptions.each(function(){
 					$this = $(this);
 					if($this.attr('value')) {
@@ -654,39 +656,32 @@
 					optionsList.css('margin-top', -listHeight);
 				}				
 
-				function toggleDropDown() {
-					if(refSelectContainer.hasClass('is-open')) {
-						refSelectContainer.removeClass('is-open');
-						refSelectContainer.parents('.form-field--select').removeClass('is-open');
-						optionsList.css('margin-top', -listHeight);
-					}
-					else {
-						$('.reflection-select').removeClass('is-open');
-						$('.form-field--select').removeClass('is-open');
-						refSelectContainer.addClass('is-open');
-						refSelectContainer.parents('.form-field--select').addClass('is-open');
-						optionsList.css('margin-top', "9px");
-						if($('.touch').length) {
-							refSelectContainer.siblings('.js-field--select').focus();
-						}
-					}
-					if($(window).width() < 720) {
-						if(refSelectContainer.hasClass('reflection-select--filter') && refSelectContainer.hasClass('is-open')) {
-							$('html.touch body, html.touch').addClass('no-scroll');
-						} else {
-							$('html.touch body, html.touch').removeClass('no-scroll');
-						}
-					}
-				};
-
 				if(selectInput.parent('.form-field--select-disabled').length == 0) {
 					optionsList.find('li').on('click', function() {
 						if(!$(this).hasClass('pre-selected')) {
-							toggleDropDown();
+							listItem = $(this);
+							optionsList.find('li').removeClass('is-selected');
+							listItem.addClass('is-selected');
+							refSelectDefault.text(listItem.text()).addClass('is-activated');
+
+							selectOptions.each(function() {
+								if($(this).val() == listItem.data("value")) {
+									$(this).attr("selected", "selected");
+								}
+								else {
+									$(this).removeAttr("selected");	
+								}
+							});
+
+							if(selectInput.hasClass('reflection-select--filter')) {
+								$('.reflection-select').removeClass('is-open');
+							}
+							toggleDropDown(refSelectContainer, optionsList, listHeight);
 						}
 					});
+					
 					refSelectDefault.on('click', function() {
-						toggleDropDown();
+						toggleDropDown(refSelectContainer, optionsList, listHeight);
 					});
 				}
 
@@ -695,35 +690,36 @@
 					optionsList.css('margin-top', -listHeight);	
 				});
 
-				optionsList.find('li').on('click', function(){
-					if(!$(this).hasClass('pre-selected')) {
-						listItem = $(this);
-						optionsList.find('li').removeClass('is-selected');
-						listItem.addClass('is-selected');
-						refSelectDefault.text(listItem.text()).addClass('is-activated');
-
-						selectOptions.each(function() {
-							if($(this).val() == listItem.data("value")) {
-								$(this).attr("selected", "selected");
-							}
-							else {
-								$(this).removeAttr("selected");	
-							}
-						});
-
-						if(selectInput.hasClass('reflection-select--filter')) {
-							$('.reflection-select').removeClass('is-open');
-						}
-					}
-				});
-
 				$(this).siblings('.page-overlay').on("click", function() {
-					toggleDropDown();
+					toggleDropDown(refSelectContainer, optionsList, listHeight);
 				});
 			});
 		}
+	};
 
-
+	function toggleDropDown(refSelectContainer, optionsList, listHeight) {
+		if(refSelectContainer.hasClass('is-open')) {
+			refSelectContainer.removeClass('is-open');
+			refSelectContainer.parents('.form-field--select').removeClass('is-open');
+			optionsList.css('margin-top', -listHeight);
+		}
+		else {
+			$('.reflection-select').removeClass('is-open');
+			$('.form-field--select').removeClass('is-open');
+			refSelectContainer.addClass('is-open');
+			refSelectContainer.parents('.form-field--select').addClass('is-open');
+			optionsList.css('margin-top', "9px");
+			if($('.touch').length) {
+				refSelectContainer.siblings('.js-field--select').focus();
+			}
+		}
+		if($(window).width() < 720) {
+			if(refSelectContainer.hasClass('reflection-select--filter') && refSelectContainer.hasClass('is-open')) {
+				$('html.touch body, html.touch').addClass('no-scroll');
+			} else {
+				$('html.touch body, html.touch').removeClass('no-scroll');
+			}
+		}
 	};
 
 	FormFieldSelect.prototype.populateSelectedValues = function(listItems, selectedOptionsContainer) {
@@ -935,7 +931,7 @@
 				}
 				var tooltip = $('<div>').addClass("whats-this-tooltip");
 				tooltip.append($('<h2>').text("What's This?"));
-				tooltip.append($('<p>').text($this.data("whatsthis")));
+				tooltip.append($('<p>').html($this.data("whatsthis")));
 				tooltip.append($('<img>').attr("src", "images/icon-bulb.png").attr("alt", "Bulb icon"));
 				tooltipContainer.append(tooltip);
 				$('body').append(tooltipContainer);
@@ -967,8 +963,13 @@
 						tooltipContainer.remove();
 						$this.removeClass('is-open');
 					}
-				});
-			}
+				});				
+			}	
+		});
+		
+		$(window).on("resize", function(){
+			$('.whats-this-tooltip-popup').remove();
+			$('.js-whats-this-tooltip.is-open').removeClass('is-open');
 		});
 	}
 /* END COMPONENT OBJECTS */
