@@ -151,6 +151,20 @@ public class TooltipHelper {
 									}
 								});
 							}
+							$wnd
+									.$($wnd)
+									.on(
+											"resize",
+											function() {
+												$wnd
+														.$(
+																'.whats-this-tooltip-popup')
+														.remove();
+												$wnd
+														.$(
+																'.js-whats-this-tooltip.is-open')
+														.removeClass('is-open');
+											});
 						});
 
 	}-*/;
