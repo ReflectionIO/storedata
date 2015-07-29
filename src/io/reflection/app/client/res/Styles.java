@@ -263,6 +263,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("centred-element")
 		String centredElement();
 
+		@ClassName("chart-watermark")
+		String chartWatermark();
+
 		String checkboxLabel();
 
 		String checkboxLabelDisabled();
@@ -562,6 +565,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("form-field--error")
 		String formFieldError();
+
+		@ClassName("form-field--list__error-message")
+		String formFieldList__errorMessage();
 
 		@ClassName("form-field--radio-list")
 		String formFieldRadioList();

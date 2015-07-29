@@ -40,6 +40,12 @@ var SubmitButtonWithFeedback = function() {
 		});
 		$("#js-component-import--design-kit-banner").html(htmlDesignKitBanner);
 
+		// syntax highlighter
+		var script = document.createElement('script');
+		  script.type = 'text/javascript';
+		  script.src = 'js/vendor/prism/prism.js';
+	  	$('#js-appendScriptsContainer').append(script);
+
 		// Trigger menu click for current page
 		if(dkPageProperties.pageUrl) {
 			var thisPageLink = $('#js-component-import--panel-left').find('a[href="' + dkPageProperties.pageUrl + '"]');

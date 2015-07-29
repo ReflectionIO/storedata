@@ -1,7 +1,3 @@
-var templateFontDeclarations = Handlebars.templates['fontDeclarations'];
-var htmlFontDeclarations = templateFontDeclarations({});
-$("head").append(htmlFontDeclarations);
-
 var templateGlobalHeader = Handlebars.templates['globalHeader'];
 var htmlGlobalHeader = templateGlobalHeader({});
 $("#js-component-import--global-header").html(htmlGlobalHeader);

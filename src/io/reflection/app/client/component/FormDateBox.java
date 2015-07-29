@@ -31,4 +31,9 @@ public class FormDateBox extends DateBox {
 		getElement().setAttribute("readonly", "true");
 	}
 
+	public void setTooltip(String text) {
+		getElement().addClassName("js-tooltip");
+		getElement().setAttribute("data-tooltip", text);
+	}
+
 }

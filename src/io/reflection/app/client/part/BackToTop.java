@@ -34,7 +34,7 @@ public class BackToTop extends Composite {
 	@UiField Anchor link;
 
 	public BackToTop() {
-		initWidget(uiBinder.createAndBindUi(this)); // TODO isShowing should be isDisplaying
+		initWidget(uiBinder.createAndBindUi(this));
 
 		Window.addWindowScrollHandler(new Window.ScrollHandler() {
 			@Override
@@ -46,6 +46,13 @@ public class BackToTop extends Composite {
 				}
 			}
 		});
+
+		setTooltip("Back to top");
+	}
+
+	private void setTooltip(String text) {
+		getElement().addClassName("js-tooltip");
+		getElement().setAttribute("data-tooltip", text);
 	}
 
 	@UiHandler("link")

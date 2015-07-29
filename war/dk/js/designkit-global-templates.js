@@ -1,6 +1,6 @@
-var templateFontDeclarations = Handlebars.templates['fontDeclarations'];
-var htmlFontDeclarations = templateFontDeclarations({});
-$("head").append(htmlFontDeclarations);
+var templateVendorCSS = Handlebars.templates['vendorCSS'];
+var htmlVendorCSS = templateVendorCSS({});
+$("head").append(htmlVendorCSS);
 
 var templateGlobalHeader = Handlebars.templates['globalHeader'];
 var htmlGlobalHeader = templateGlobalHeader({});

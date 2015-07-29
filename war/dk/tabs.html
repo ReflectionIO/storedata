@@ -158,32 +158,35 @@
 					</div>
 					<div class="grid__column grid__column--one-half">
 						<div class="code-box code-box-tall">
-							<code>
-								// Tabs structure<br />
-								&lt;ul class="tabs-container"&gt;<br />
-									&nbsp;&lt;li class="grid__column grid__column--one-quarter tabs__tab is-active js-tab-select"&gt;<br />
-										&nbsp;&nbsp;&lt;div class="tab-animate-active"&gt;&lt;/div&gt;<br />
-										&nbsp;&nbsp;&lt;a href="#tab-content-one" class="tabs__link"&gt;<br />
-											&nbsp;&nbsp;&nbsp;&lt;span class="ref-icon-before ref-icon-before--cog"&gt;&lt;span>Revenue&lt;/span&gt;&lt;/span&gt;<br />
-										&nbsp;&nbsp;&lt;a&gt;<br />
-									&nbsp;&lt;/li&gt;<br />
-									&nbsp;... etc<br />
-								&lt;/ul&gt;<br /><br />
-								// Tabs content structure<br />
-								&lt;ul class="tabs__content-container"&gt;<br />
-									&nbsp;&lt;li id="tab-content-one" class="tabs__content tabs__content--is-showing"&gt;<br />
-										&nbsp;&nbsp;&lt;article&gt;<br />
-											&nbsp;&nbsp;&nbsp;&lt;div class="grid__column grid__column--full-width"&gt;<br />
-												&nbsp;&nbsp;&nbsp;&nbsp;&lt;h2 class="collapsible-trigger ref-icon-before ref-icon-before--cog"&gt;&lt;span&gt;Revenue&lt;/span&gt;&lt;/h2&gt;<br />
-												&nbsp;&nbsp;&nbsp;&nbsp;&lt;div class="collapsible-content"&gt;<br />
-													&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras finibus lacinia justo quis fermentum. Nam dictum et mi nec hendrerit. Donec imperdiet sem at posuere pulvinar. Nam tristique tellus eu ipsum imperdiet, suscipit sodales nisl ornare. Sed vehicula, mauris nec suscipit sagittis, dui lorem pretium est, ac feugiat nibh nisl id ligula. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec vitae mi nec justo ultrices hendrerit. Fusce eu lorem sit amet risus blandit tempor a ac massa. Nulla sit amet vestibulum libero, et condimentum quam. Maecenas lobortis id purus nec rutrum. Pellentesque luctus fermentum bibendum.&lt;/p&gt;<br />
-												&nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;<br />
-											&nbsp;&nbsp;&nbsp;&lt;/div&gt;<br />
-										&nbsp;&nbsp;&lt;/article&gt;<br />
-									&nbsp;&lt;/li&gt;<br />
-									&nbsp;//... etc<br />
+							<pre><code class="language-markup">
+								/* Tabs structure */
+								&lt;ul class="tabs-container"&gt;
+									&nbsp;&lt;li class="grid__column grid__column--one-quarter tabs__tab is-active js-tab-select"&gt;
+										&nbsp;&nbsp;&lt;div class="tab-animate-active"&gt;&lt;/div&gt;
+										&nbsp;&nbsp;&lt;a href="#tab-content-one" class="tabs__link"&gt;
+											&nbsp;&nbsp;&nbsp;&lt;span class="ref-icon-before ref-icon-before--cog"&gt;&lt;span>Revenue&lt;/span&gt;&lt;/span&gt;
+										&nbsp;&nbsp;&lt;a&gt;
+									&nbsp;&lt;/li&gt;
+									&nbsp;... etc
 								&lt;/ul&gt;
-							</code>
+
+								/* Tabs content structure */
+								&lt;ul class="tabs__content-container"&gt;
+									&nbsp;&lt;li id="tab-content-one" class="tabs__content tabs__content--is-showing"&gt;
+										&nbsp;&nbsp;&lt;article&gt;
+											&nbsp;&nbsp;&nbsp;&lt;div class="grid__column grid__column--full-width"&gt;
+												&nbsp;&nbsp;&nbsp;&nbsp;&lt;h2 class="collapsible-trigger ref-icon-before ref-icon-before--cog"&gt;&lt;span&gt;Revenue&lt;/span&gt;&lt;/h2&gt;
+												&nbsp;&nbsp;&nbsp;&nbsp;&lt;div class="collapsible-content"&gt;
+													&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+													&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cras finibus lacinia justo quis fermentum. 
+													&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pellentesque luctus fermentum bibendum.&lt;/p&gt;
+												&nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;
+											&nbsp;&nbsp;&nbsp;&lt;/div&gt;
+										&nbsp;&nbsp;&lt;/article&gt;
+									&nbsp;&lt;/li&gt;
+									&nbsp;//... etc
+								&lt;/ul&gt;
+							</code></pre>
 						</div>
 					</div>
 				</div>
@@ -239,33 +242,35 @@
 					</div>
 					<div class="grid__column grid__column--one-half">
 						<div class="code-box code-box-tall">
-							<code>
-								// Tabs structure<br />
-								&lt;ul class="tabs-container tabs-container--large-tabs"&gt;<br />
-									&lt;li class="grid__column grid__column--one-half tabs__tab is-active js-tab-select"&gt;<br />
-										&lt;div class="tab-border"&gt;&lt;span&gt;&lt;/span&gt;&lt;/div&gt;<br />
-										&lt;a href="#tab-content-page-one" class="tabs__link"&gt;<br />
-											&lt;span class="ref-icon-before ref-icon-before--cog"&gt;<br />
-												&lt;span&gt;Activity overview &lt;b>Monitor how all your apps are doing in global app stores&lt;/b&gt;&lt;/span&gt;<br />
-											&lt;/span&gt;<br />
-										&lt;/a&gt;<br />
-									&lt;/li&gt;<br />
+							<pre><code class="language-markup">
+								/* Tabs structure */
+								&lt;ul class="tabs-container tabs-container--large-tabs"&gt;
+								&nbsp;&lt;li class="grid__column grid__column--one-half tabs__tab is-active js-tab-select"&gt;
+								&nbsp;&nbsp;&lt;div class="tab-border"&gt;&lt;span&gt;&lt;/span&gt;&lt;/div&gt;
+								&nbsp;&nbsp;&lt;a href="#tab-content-page-one" class="tabs__link"&gt;
+								&nbsp;&nbsp;&nbsp;&lt;span class="ref-icon-before ref-icon-before--cog"&gt;
+								&nbsp;&nbsp;&nbsp;&nbsp;&lt;span&gt;Activity overview &lt;b>Monitor how all your apps are doing in global app stores&lt;/b&gt;&lt;/span&gt;
+								&nbsp;&nbsp;&nbsp;&lt;/span&gt;
+								&nbsp;&nbsp;&lt;/a&gt;
+								&nbsp;&lt;/li&gt;
 								...etc
-								<br /><br />
-								// Tabs content structure<br />
-								&lt;ul class="tabs__content-container tabs__content-container--large-tabs"&gt;<br />
-									&lt;li id="tab-content-page-one" class="tabs__content tabs__content--is-showing"&gt;<br />
-										&lt;article&gt;<br />
-											&lt;div class="grid__column grid__column--full-width"&gt;<br />
-												&lt;h2 class="collapsible-trigger ref-icon-before ref-icon-before--cog"&gt;&lt;span&gt;Activity overview &lt;b&gt;Monitor how all your apps are doing in global app stores&lt;/b&gt;&lt;/span&gt;&lt;/h2&gt;<br />
-												&lt;div class="collapsible-content"&gt;<br />
-													&lt;p&gt;Tab content here&lt;/p&gt;<br />
-												&lt;/div&gt;<br />
-											&lt;/div&gt;<br />
-										&lt;/article&gt;<br />
-									&lt;/li&gt;<br />
+
+								/* Tabs content structure */
+								&lt;ul class="tabs__content-container tabs__content-container--large-tabs"&gt;
+								&nbsp;&lt;li id="tab-content-page-one" class="tabs__content tabs__content--is-showing"&gt;
+								&nbsp;&nbsp;&lt;article&gt;
+								&nbsp;&nbsp;&nbsp;&lt;div class="grid__column grid__column--full-width"&gt;
+								&nbsp;&nbsp;&nbsp;&nbsp;&lt;h2 class="collapsible-trigger ref-icon-before ref-icon-before--cog"&gt;
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;span&gt;Activity overview &lt;b&gt;Monitor how all your apps are doing in global app stores&lt;/b&gt;&lt;/span&gt;
+								&nbsp;&nbsp;&nbsp;&nbsp;&lt;/h2&gt;
+								&nbsp;&nbsp;&nbsp;&nbsp;&lt;div class="collapsible-content"&gt;
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;p&gt;Tab content here&lt;/p&gt;
+								&nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;
+								&nbsp;&nbsp;&nbsp;&lt;/div&gt;
+								&nbsp;&nbsp;&lt;/article&gt;
+								&nbsp;&lt;/li&gt;
 								...etc
-							</code>
+							</code></pre>
 						</div>
 					</div>
 				</div>

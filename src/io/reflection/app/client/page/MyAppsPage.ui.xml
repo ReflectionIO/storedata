@@ -24,15 +24,16 @@
 		<div
 			class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth} {STYLES_INSTANCE.reflectionMainStyle.filtersContainer} {STYLES_INSTANCE.reflectionMainStyle.filterContainerMyApps}">
 			<form class="{STYLES_INSTANCE.reflectionMainStyle.formsMidTheme}">
-				<c:DateSelector ui:field="dateSelector" />
+				<c:DateSelector ui:field="dateSelector" tooltip="Select a date range" />
 
 				<c:Selector ui:field="category" overlay="true" alignRight="" labelText="Category" dropdownTitle="Select a category"
-					styleName="{STYLES_INSTANCE.reflectionMainStyle.categorySelect}" />
+					styleName="{STYLES_INSTANCE.reflectionMainStyle.categorySelect}" tooltip="Select a category" />
 
 				<c:Selector ui:field="appStore" overlay="true" alignCenter="" labelText="App Store" dropdownTitle="Select a store"
-					styleName="{STYLES_INSTANCE.reflectionMainStyle.storeSelect}" />
+					styleName="{STYLES_INSTANCE.reflectionMainStyle.storeSelect}" tooltip="View data for iPhone or iPad" />
 
-				<c:Selector ui:field="country" overlay="true" labelText="Country" dropdownTitle="Select a country" styleName="{STYLES_INSTANCE.reflectionMainStyle.countrySelect}" />
+				<c:Selector ui:field="country" overlay="true" labelText="Country" dropdownTitle="Select a country" styleName="{STYLES_INSTANCE.reflectionMainStyle.countrySelect}"
+					tooltip="Select up to 5 countries" />
 			</form>
 		</div>
 

@@ -1,14 +1,14 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
-	
+
 	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
-	
+
 	<ui:style gss="true">
 	
 	</ui:style>
 
 	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.mhxte6cObA}">
-		<g:Anchor ui:field="link">
+		<g:Anchor ui:field="link" styleName="">
 			<span class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeAngleUp}"></span>
 			<span class="{STYLES_INSTANCE.reflectionMainStyle.hiddenText}">Back to Top</span>
 		</g:Anchor>

@@ -8,21 +8,7 @@
 //
 package io.reflection.app.service.dataaccount;
 
-import static com.spacehopperstudios.utility.StringUtils.addslashes;
-import static com.spacehopperstudios.utility.StringUtils.stripslashes;
-import io.reflection.app.accountdatacollectors.ITunesConnectDownloadHelper;
-import io.reflection.app.api.exception.DataAccessException;
-import io.reflection.app.api.shared.datatypes.Pager;
-import io.reflection.app.api.shared.datatypes.SortDirectionType;
-import io.reflection.app.datatypes.shared.DataAccount;
-import io.reflection.app.datatypes.shared.DataSource;
-import io.reflection.app.logging.GaeLevel;
-import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
-import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
-import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
-import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
-import io.reflection.app.service.ServiceType;
-import io.reflection.app.shared.util.DataTypeHelper;
+import static com.spacehopperstudios.utility.StringUtils.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -40,6 +26,20 @@ import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
 import com.google.appengine.api.taskqueue.TransientFailureException;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
+
+import io.reflection.app.accountdatacollectors.ITunesConnectDownloadHelper;
+import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.datatypes.shared.DataAccount;
+import io.reflection.app.datatypes.shared.DataSource;
+import io.reflection.app.logging.GaeLevel;
+import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
+import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
+import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
+import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
+import io.reflection.app.service.ServiceType;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 final class DataAccountService implements IDataAccountService {
 
@@ -376,7 +376,7 @@ final class DataAccountService implements IDataAccountService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getActiveDataAccounts(io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
@@ -385,15 +385,14 @@ final class DataAccountService implements IDataAccountService {
 	}
 
 	private List<DataAccount> getDataAccounts(Pager pager, Boolean includeInactive) throws DataAccessException {
-
 		final List<DataAccount> dataAccounts = new ArrayList<DataAccount>();
 
 		final String getDataAccountsQuery = String
 				.format("SELECT *, convert(aes_decrypt(`password`,UNHEX('%s')), CHAR(1000)) AS `clearpassword` FROM `dataaccount` WHERE %s `deleted`='n' ORDER BY `%s` %s LIMIT %d,%d",
 						key(), includeInactive == null || !includeInactive.booleanValue() ? "`active`='y' AND" : "", pager.sortBy == null ? "id" : stripslashes(pager.sortBy),
-						pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
-						pager.start == null ? Pager.DEFAULT_START.longValue() : pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue()
-								: pager.count.longValue());
+								pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
+										pager.start == null ? Pager.DEFAULT_START.longValue() : pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue()
+												: pager.count.longValue());
 
 		final Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
@@ -426,7 +425,7 @@ final class DataAccountService implements IDataAccountService {
 	public Long getDataAccountsCount() throws DataAccessException {
 		return getDataAccountsCount(Boolean.TRUE);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getActiveDataAccountsCount()
 	 */
