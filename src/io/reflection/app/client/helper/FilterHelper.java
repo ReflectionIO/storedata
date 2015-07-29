@@ -331,7 +331,7 @@ public class FilterHelper {
 
 				@Override
 				public String getName() {
-					return "1 Week";
+					return "Last 7 days";
 				}
 
 				@Override
@@ -344,7 +344,7 @@ public class FilterHelper {
 
 				@Override
 				public String getName() {
-					return "2 Weeks";
+					return "Last 14 days";
 				}
 
 				@Override
@@ -357,12 +357,12 @@ public class FilterHelper {
 
 				@Override
 				public String getName() {
-					return "4 Weeks";
+					return "Last 30 days";
 				}
 
 				@Override
 				public DateRange getDateRange() {
-					return FilterHelper.createRange(FilterHelper.getWeeksAgo(4), FilterHelper.getToday());
+					return FilterHelper.createRange(FilterHelper.getDaysAgo(30), FilterHelper.getToday());
 				}
 			});
 
@@ -370,12 +370,12 @@ public class FilterHelper {
 
 				@Override
 				public String getName() {
-					return "6 Weeks";
+					return "Last 60 days";
 				}
 
 				@Override
 				public DateRange getDateRange() {
-					return FilterHelper.createRange(FilterHelper.getWeeksAgo(6), FilterHelper.getToday());
+					return FilterHelper.createRange(FilterHelper.getDaysAgo(60), FilterHelper.getToday());
 				}
 			});
 
@@ -383,12 +383,12 @@ public class FilterHelper {
 
 				@Override
 				public String getName() {
-					return "8 Weeks";
+					return "Last 3 months";
 				}
 
 				@Override
 				public DateRange getDateRange() {
-					return FilterHelper.createRange(FilterHelper.getWeeksAgo(8), FilterHelper.getToday());
+					return FilterHelper.createRange(FilterHelper.getMonthsAgo(3), FilterHelper.getToday());
 				}
 			});
 		}
