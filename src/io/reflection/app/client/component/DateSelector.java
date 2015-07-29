@@ -180,6 +180,11 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 		return value;
 	}
 
+	public void setTooltip(String text) {
+		getElement().addClassName("js-tooltip");
+		getElement().setAttribute("data-tooltip", text);
+	}
+
 	/**
 	 * Check if out of range clicked
 	 * 

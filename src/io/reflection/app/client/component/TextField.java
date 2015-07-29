@@ -27,7 +27,6 @@ import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -50,8 +49,7 @@ public class TextField extends Composite implements HasClickHandlers, HasKeyPres
 	@UiField TextBox textBox;
 	@UiField LabelElement label;
 
-	@UiField Anchor infoLink;
-	@UiField SpanElement infoLabel;
+	@UiField Anchor tooltipLink;
 
 	private SpanElement note = Document.get().createSpanElement();
 
@@ -60,7 +58,7 @@ public class TextField extends Composite implements HasClickHandlers, HasKeyPres
 	public TextField() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		infoLink.removeFromParent();
+		tooltipLink.removeFromParent();
 		note.addClassName(refStyle.inputHint());
 	}
 
@@ -134,18 +132,11 @@ public class TextField extends Composite implements HasClickHandlers, HasKeyPres
 		}
 	}
 
-	public void setInfoHref(SafeUri href) {
-		if (!infoLink.isAttached()) {
-			this.getElement().appendChild(infoLink.getElement());
+	public void setTooltip(String text) {
+		if (!tooltipLink.isAttached()) {
+			this.getElement().appendChild(tooltipLink.getElement());
 		}
-		infoLink.setHref(href);
-	}
-
-	public void setInfoLabelText(String text) {
-		if (!infoLink.isAttached()) {
-			this.getElement().appendChild(infoLink.getElement());
-		}
-		infoLabel.setInnerText(text);
+		tooltipLink.getElement().setAttribute("data-whatsthis", text);
 	}
 
 	public void setTabIndex(int index) {

@@ -30,7 +30,7 @@ AccountAccess.prototype.pageLoad = function() {
 	var urlHash = window.location.hash;	
 	if(urlHash == '#login') {
 		$('body').addClass('login-form-is-showing');
-		$('a[href=#tab-content-login]').parents('.tabs__tab').addClass('is-active');
+		$('a[data-content=#tab-content-login]').parents('.tabs__tab').addClass('is-active');
 		$('#tab-content-login').addClass('tabs__content--is-showing');
 	} else {
 		$('body').addClass('apply-form-is-showing');
@@ -59,9 +59,9 @@ AccountAccess.prototype.customTabTransition = function() {
 		$('.account-form-container .tabs__content:not(.tabs__content--is-showing)').css("display","none");
 	}
 
-	$('.account-form-container .js-tab-select').on("click", function(e){
+	$('.account-form-container .js-tab-select').on("mouseup", function(e){
 		var $this = $(this);
-		var contentId = $this.find('.tabs__link').attr("href");
+		var contentId = $this.find('.tabs__link').data("content");
 		$(contentId).addClass('will-show');
 		var $body = $('body');
 		if($body.hasClass('apply-form-is-showing') && contentId == '#tab-content-login') {

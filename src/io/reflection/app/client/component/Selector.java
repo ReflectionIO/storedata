@@ -322,6 +322,11 @@ public class Selector extends Composite implements HasChangeHandlers {
 		selectContainer.getElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().reflectionSelectRight());
 	}
 
+	public void setTooltip(String text) {
+		getElement().addClassName("js-tooltip");
+		getElement().setAttribute("data-tooltip", text);
+	}
+
 	@Override
 	public void setStyleName(String style) {
 		setStyleName(style, true);

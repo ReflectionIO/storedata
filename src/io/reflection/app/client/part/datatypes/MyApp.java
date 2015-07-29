@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class MyApp {
 
-	private static final String UNKNOWN_VALUE = "-";
+	public static final String UNKNOWN_VALUE = "-";
 	// private static final String NIL_VALUE = "0";
 
 	public Item item;

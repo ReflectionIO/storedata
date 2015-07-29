@@ -4,10 +4,10 @@
 	<ui:style>
 	
 	</ui:style>
-	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.filterSwitch}">
-		<span ui:field="label"></span>
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.filterSwitch}">		
 		<div ui:field="checkBoxContainer" class="{STYLES_INSTANCE.reflectionMainStyle.canToggle}">
 			<g:SimpleCheckBox ui:field="checkBox" styleName=""></g:SimpleCheckBox>
 		</div>
+		<span ui:field="label"></span>
 	</g:HTMLPanel>
 </ui:UiBinder> 
