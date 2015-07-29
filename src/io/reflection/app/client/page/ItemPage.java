@@ -75,6 +75,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -88,7 +89,9 @@ import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.SafeHtmlHeader;
-import com.google.gwt.user.cellview.client.TextColumn;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.EventListener;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
@@ -203,6 +206,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		tabs.put(RANKING_CHART_TYPE, rankingItem);
 		tabs.put("appdetails", appDetailsItem);
 
+		appDetailsItem.getStyle().setCursor(Cursor.DEFAULT);
+
 		// TODO remove not working elements for normal user
 		if (!SessionController.get().isLoggedInUserAdmin()) {
 			tablePanel.removeFromParent();
@@ -239,6 +244,48 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		dateSelector.addFixedRanges(FilterHelper.getDefaultDateRanges());
 		updateFromFilter();
 		TooltipHelper.updateHelperTooltip();
+
+		// Add click event to LI element so the event is fired when clicking on the whole tab
+		Event.sinkEvents(revenueItem, Event.ONCLICK);
+		Event.sinkEvents(downloadsItem, Event.ONCLICK);
+		Event.sinkEvents(rankingItem, Event.ONCLICK);
+		Event.sinkEvents(appDetailsItem, Event.ONCLICK);
+		Event.setEventListener(revenueItem, new EventListener() {
+
+			@Override
+			public void onBrowserEvent(Event event) {
+				if (Event.ONCLICK == event.getTypeInt()) {
+					History.newItem(revenueLink.getTargetHistoryToken());
+				}
+			}
+		});
+		Event.setEventListener(downloadsItem, new EventListener() {
+
+			@Override
+			public void onBrowserEvent(Event event) {
+				if (Event.ONCLICK == event.getTypeInt()) {
+					History.newItem(downloadsLink.getTargetHistoryToken());
+				}
+			}
+		});
+		Event.setEventListener(rankingItem, new EventListener() {
+
+			@Override
+			public void onBrowserEvent(Event event) {
+				if (Event.ONCLICK == event.getTypeInt()) {
+					History.newItem(rankingLink.getTargetHistoryToken());
+				}
+			}
+		});
+		Event.setEventListener(appDetailsItem, new EventListener() {
+
+			@Override
+			public void onBrowserEvent(Event event) {
+				if (Event.ONCLICK == event.getTypeInt()) {
+					History.newItem(appDetailsLink.getTargetHistoryToken());
+				}
+			}
+		});
 	}
 
 	public void setItem(Item item) {
@@ -967,19 +1014,23 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		if (enable) {
 			revenueText.setInnerText("Revenue");
 			revenueItem.removeClassName(style.isDisabled());
+			revenueItem.getStyle().setCursor(Cursor.POINTER);
 			revenueLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
 					REVENUE_CHART_TYPE, comingPage, filterContents));
 			downloadsText.setInnerText("Downloads");
 			downloadsItem.removeClassName(style.isDisabled());
+			downloadsItem.getStyle().setCursor(Cursor.POINTER);
 			downloadsLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
 					DOWNLOADS_CHART_TYPE, comingPage, filterContents));
 			appDetailsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 		} else {
 			revenueText.setInnerHTML("Revenue <span class=\"text-small\">coming soon</span>");
 			revenueItem.addClassName(style.isDisabled());
+			revenueItem.getStyle().setCursor(Cursor.DEFAULT);
 			revenueLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 			downloadsText.setInnerHTML("Downloads <span class=\"text-small\">coming soon</span>");
 			downloadsItem.addClassName(style.isDisabled());
+			downloadsItem.getStyle().setCursor(Cursor.DEFAULT);
 			downloadsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 			appDetailsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 			selectedTab = RANKING_CHART_TYPE;

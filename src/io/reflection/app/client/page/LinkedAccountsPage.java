@@ -56,6 +56,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.FormElement;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -166,8 +167,10 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		if (!SessionController.get().isLoggedInUserAdmin()) {
 			usersText.setInnerHTML("Users <span class=\"text-small\">coming soon</span>");
 			usersItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
+			usersItem.getStyle().setCursor(Cursor.DEFAULT);
 			notifText.setInnerHTML("Notifications <span class=\"text-small\">coming soon</span>");
 			notificationsItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
+			notificationsItem.getStyle().setCursor(Cursor.DEFAULT);
 			usersLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 			notificationsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 		} else {
@@ -553,7 +556,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 				public void run() {
 					Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formSubmittedLoading());
 					addLinkedAccountDialog.hide();
-			iosMacAddForm.resetForm();
+					iosMacAddForm.resetForm();
 				}
 			};
 			t.schedule(1000);

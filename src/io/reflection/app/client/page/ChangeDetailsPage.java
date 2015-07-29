@@ -58,6 +58,7 @@ import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
@@ -160,8 +161,10 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 			addPermissionPanel.removeFromParent();
 			usersText.setInnerHTML("Users <span class=\"text-small\">coming soon</span>");
 			usersItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
+			usersItem.getStyle().setCursor(Cursor.DEFAULT);
 			notifText.setInnerHTML("Notifications <span class=\"text-small\">coming soon</span>");
 			notificationsItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
+			notificationsItem.getStyle().setCursor(Cursor.DEFAULT);
 			usersLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 			notificationsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 		} else {
