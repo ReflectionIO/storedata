@@ -51,13 +51,11 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.builder.shared.TableCellBuilder;
 import com.google.gwt.dom.builder.shared.TableRowBuilder;
-import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.FormElement;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
-import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -75,6 +73,7 @@ import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSe
 import com.google.gwt.user.cellview.client.SafeHtmlHeader;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Image;
@@ -183,10 +182,11 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 			@Override
 			public void onChange(DataAccount dataAccount, EVENT_TYPE eventType) {
+				iosMacAddForm.setEnabled(false);
+				iosMacAddForm.setStatusLoading("Loading");
+				Document.get().getBody().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formSubmittedLoading());
 				LinkedAccountController.get().linkAccount(iosMacAddForm.getAccountSourceId(), iosMacAddForm.getUsername(), iosMacAddForm.getPassword(),
 						iosMacAddForm.getProperties());
-				iosMacAddForm.setEnabled(false);
-				iosMacAddForm.setStatusLoading("Linking");
 			}
 		});
 
@@ -298,6 +298,20 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.page.Page#onDetach()
+	 */
+	@Override
+	protected void onDetach() {
+		super.onDetach();
+
+		Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formSubmittedLoading());
+		addLinkedAccountDialog.hide();
+		deleteLinkedAccountDialog.hide();
+	}
+
 	/**
 	 * Create and add the Linked Account Table columns and cells
 	 */
@@ -320,11 +334,8 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 			@Override
 			public SafeHtml getValue(DataAccount object) {
-				SpanElement storeElem = Document.get().createSpanElement();
-				storeElem.addClassName(style.refIconBefore());
-				storeElem.addClassName(style.refIconBeforeApple());
-				storeElem.setInnerText(object.source.name);
-				return (object.source != null) ? SafeHtmlUtils.fromTrustedString(storeElem.toString()) : SafeHtmlUtils.fromSafeConstant("-");
+				return (object.source != null) ? SafeHtmlUtils.fromSafeConstant("<span class=\"" + style.refIconBefore() + " " + style.refIconBeforeApple()
+						+ "\">" + object.source.name + "</span>") : SafeHtmlUtils.fromSafeConstant("-");
 			}
 
 		};
@@ -354,11 +365,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 			@Override
 			public SafeHtml render(String object) {
-				AnchorElement editLink = Document.get().createAnchorElement();
-				editLink.setInnerText("Edit");
-				editLink.setClassName(style.refButtonFunctionSmall());
-				editLink.getStyle().setCursor(Cursor.POINTER);
-				return SafeHtmlUtils.fromTrustedString(editLink.toString());
+				return SafeHtmlUtils.fromSafeConstant("<a class=\"" + style.refButtonFunctionSmall() + "\" style=\"cursor: pointer\">Edit</a>");
 			}
 		})) {
 			@Override
@@ -393,11 +400,8 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 			@Override
 			public SafeHtml render(String object) {
-				AnchorElement deleteLink = Document.get().createAnchorElement();
-				deleteLink.addClassName(style.refButtonLink());
-				deleteLink.addClassName(style.warningText());
-				deleteLink.setInnerText("Delete");
-				return SafeHtmlUtils.fromTrustedString(deleteLink.toString());
+				return SafeHtmlUtils.fromSafeConstant("<a class=\"" + style.refButtonLink() + " " + style.warningText()
+						+ "\" style=\"cursor: pointer\">Delete</a>");
 			}
 		})) {
 			@Override
@@ -496,10 +500,19 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	public void linkAccountSuccess(LinkAccountRequest input, LinkAccountResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
 			updateViewFromLinkedAccountCount();
-			iosMacAddForm.resetForm();
-			iosMacAddForm.setStatusSuccess("Account Linked!");
-			PageType.UsersPageType.show(PageType.LinkedAccountsPageType.toString(user.id.toString()));
+			iosMacAddForm.setStatusSuccess("Success!");
+			Timer t = new Timer() {
+
+				@Override
+				public void run() {
+					Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formSubmittedLoading());
+					addLinkedAccountDialog.hide();
+					iosMacAddForm.resetForm();
+				}
+			};
+			t.schedule(1000);
 		} else if (output.error != null) {
+			Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formSubmittedLoading());
 			if (output.error.code == ApiError.InvalidDataAccountCredentials.getCode()) {
 				iosMacAddForm.setStatusError("Invalid credentials!");
 				iosMacAddForm.setUsernameError("iTunes Connect username or password entered incorrectly");
@@ -523,6 +536,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	 */
 	@Override
 	public void linkAccountFailure(LinkAccountRequest input, Throwable caught) {
+		Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formSubmittedLoading());
 		iosMacAddForm.resetForm();
 		iosMacAddForm.setStatusError();
 	}
@@ -565,7 +579,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	@Override
 	public void updateLinkedAccountSuccess(UpdateLinkedAccountRequest input, UpdateLinkedAccountResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			PageType.UsersPageType.show(PageType.LinkedAccountsPageType.toString(user.id.toString()));
+
 		} else {}
 	}
 
