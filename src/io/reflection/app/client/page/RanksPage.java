@@ -42,6 +42,7 @@ import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.helper.FormattingHelper;
 import io.reflection.app.client.helper.ResponsiveDesignHelper;
+import io.reflection.app.client.helper.TooltipHelper;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.datatypes.RanksGroup;
 import io.reflection.app.client.res.Images;
@@ -77,7 +78,6 @@ import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.SafeHtmlHeader;
-import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -151,13 +151,13 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	@UiField SpanElement viewAllSpan;
 	@UiField InlineHyperlink redirect;
 
-	private TextColumn<RanksGroup> rankColumn;
+	private Column<RanksGroup, SafeHtml> rankColumn;
 	private Column<RanksGroup, Rank> grossingColumn;
 	private Column<RanksGroup, Rank> freeColumn;
 	private Column<RanksGroup, Rank> paidColumn;
-	private TextColumn<RanksGroup> priceColumn;
-	private TextColumn<RanksGroup> downloadsColumn;
-	private TextColumn<RanksGroup> revenueColumn;
+	private Column<RanksGroup, SafeHtml> priceColumn;
+	private Column<RanksGroup, SafeHtml> downloadsColumn;
+	private Column<RanksGroup, SafeHtml> revenueColumn;
 	private Column<RanksGroup, SafeHtml> iapColumn;
 
 	@SuppressWarnings("rawtypes") private Column lastOrderedColumn = rankColumn;
@@ -172,7 +172,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	private TextHeader freeHeader = new TextHeader("Free");
 	private TextHeader grossingHeader = new TextHeader("Grossing");
 	private TextHeader priceHeader = new TextHeader("Price");
-	private TextHeader iapHeader = new TextHeader("IAP");
+	private SafeHtmlHeader iapHeader = new SafeHtmlHeader(
+			SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"In App Purchases\">IAP</span>"));
 
 	private String selectedTab = OVERALL_LIST_TYPE;
 
@@ -184,6 +185,12 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		// if (!SessionController.get().isLoggedInUserAdmin()) {
 		dailyDataContainer.removeFromParent();
 		// }
+
+		if (!SessionController.get().isLoggedInUserAdmin()) {
+			countryListBox.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
+			appStoreListBox.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
+			categoryListBox.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
+		}
 
 		dateBox.getDatePicker().addShowRangeHandler(new ShowRangeHandler<Date>() {
 
@@ -223,6 +230,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 		RankController.get().addDataDisplay(leaderboardTableDesktop);
 
+		TooltipHelper.updateHelperTooltip();
 	}
 
 	private void createColumns() {
@@ -262,17 +270,21 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 				}
 				leaderboardTableDesktop.setRowData(0, RankController.get().getList());
 				leaderboardTableMobile.setRowData(0, RankController.get().getList());
+
+				TooltipHelper.updateHelperTooltip();
+
 			}
 		};
 
 		leaderboardTableDesktop.addColumnSortHandler(columnSortHandler);
 		leaderboardTableMobile.addColumnSortHandler(columnSortHandler);
 
-		rankColumn = new TextColumn<RanksGroup>() {
+		rankColumn = new Column<RanksGroup, SafeHtml>(new SafeHtmlCell()) {
 
 			@Override
-			public String getValue(RanksGroup object) {
-				return (object.free.position != null) ? object.free.position.toString() : "-";
+			public SafeHtml getValue(RanksGroup object) {
+				return (object.free.position != null) ? SafeHtmlUtils.fromTrustedString(object.free.position.toString()) : SafeHtmlUtils
+						.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
 			}
 
 		};
@@ -308,22 +320,24 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		};
 		grossingColumn.setCellStyleNames(style.mhxte6ciA());
 
-		priceColumn = new TextColumn<RanksGroup>() {
+		priceColumn = new Column<RanksGroup, SafeHtml>(new SafeHtmlCell()) {
 
 			@Override
-			public String getValue(RanksGroup object) {
+			public SafeHtml getValue(RanksGroup object) {
 				Rank rank = rankForListType(object);
-				return (rank.currency != null && rank.price != null) ? FormattingHelper.asPriceString(rank.currency, rank.price.floatValue()) : "-";
+				return (rank.currency != null && rank.price != null) ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.asPriceString(rank.currency,
+						rank.price.floatValue())) : SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
 			}
 		};
 		priceColumn.setCellStyleNames(style.mhxte6ciA());
 
-		downloadsColumn = new TextColumn<RanksGroup>() {
+		downloadsColumn = new Column<RanksGroup, SafeHtml>(new SafeHtmlCell()) {
 
 			@Override
-			public String getValue(RanksGroup object) {
+			public SafeHtml getValue(RanksGroup object) {
 				Rank rank = rankForListType(object);
-				return (rank.downloads != null) ? WHOLE_NUMBER_FORMATTER.format(rank.downloads) : "-";
+				return (rank.downloads != null) ? SafeHtmlUtils.fromSafeConstant(WHOLE_NUMBER_FORMATTER.format(rank.downloads)) : SafeHtmlUtils
+						.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
 			}
 
 		};
@@ -331,12 +345,13 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		downloadsColumn.setSortable(true);
 		downloadsHeader.setHeaderStyleNames(style.canBeSorted());
 
-		revenueColumn = new TextColumn<RanksGroup>() {
+		revenueColumn = new Column<RanksGroup, SafeHtml>(new SafeHtmlCell()) {
 
 			@Override
-			public String getValue(RanksGroup object) {
+			public SafeHtml getValue(RanksGroup object) {
 				Rank rank = rankForListType(object);
-				return (rank.currency != null && rank.revenue != null) ? FormattingHelper.asWholeMoneyString(rank.currency, rank.revenue.floatValue()) : "-";
+				return (rank.currency != null && rank.revenue != null) ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.asWholeMoneyString(rank.currency,
+						rank.revenue.floatValue())) : SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
 			}
 
 		};
@@ -346,14 +361,14 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 		iapColumn = new Column<RanksGroup, SafeHtml>(new SafeHtmlCell()) {
 
-			private final String IAP_DONT_KNOW_HTML = "<span class=\"" + style.refIconBefore() + " " + style.refIconBeforeMinus() + "\"></span>";
 			private final String IAP_YES_HTML = "<span class=\"" + style.refIconBefore() + " " + style.refIconBeforeCheck() + "\"></span>";
 			private final String IAP_NO_HTML = "<span></span>";
 
 			@Override
 			public SafeHtml getValue(RanksGroup object) {
 				return SafeHtmlUtils.fromSafeConstant(DataTypeHelper.itemIapState(ItemController.get().lookupItem(rankForListType(object).itemId),
-						IAP_YES_HTML, IAP_NO_HTML, IAP_DONT_KNOW_HTML));
+						IAP_YES_HTML, IAP_NO_HTML, "<span class=\"" + style.refIconBefore() + " " + style.refIconBeforeMinus()
+								+ " js-tooltip\" data-tooltip=\"No data available\"></span>"));
 			}
 
 		};
@@ -606,6 +621,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			leaderboardTableDesktop.addColumn(iapColumn, iapHeader);
 		}
 
+		TooltipHelper.updateHelperTooltip();
+
 	}
 
 	private void removeColumn(Column<RanksGroup, ?> column) {
@@ -652,6 +669,9 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 				leaderboardTableDesktop.setVisibleRange(0, VIEW_ALL_LENGTH_VALUE);
 				leaderboardTableMobile.setVisibleRange(0, VIEW_ALL_LENGTH_VALUE);
 				viewAllSpan.setInnerText("View Less Apps");
+
+				TooltipHelper.updateHelperTooltip();
+
 			} else {
 				leaderboardTableDesktop.setVisibleRange(0, ServiceConstants.STEP_VALUE);
 				leaderboardTableMobile.setVisibleRange(0, ServiceConstants.STEP_VALUE);
@@ -799,6 +819,9 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		if (!RankController.get().getDataDisplays().contains(leaderboardTableMobile)) { // Avoid initial double call to server
 			RankController.get().addDataDisplay(leaderboardTableMobile);
 		}
+
+		TooltipHelper.updateHelperTooltip();
+
 	}
 
 	/*

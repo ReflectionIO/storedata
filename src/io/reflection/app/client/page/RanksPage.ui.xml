@@ -123,18 +123,18 @@
 
 					<div class="{STYLES_INSTANCE.reflectionMainStyle.dateSelectContainer}">
 						<div class="{STYLES_INSTANCE.reflectionMainStyle.formField} {STYLES_INSTANCE.reflectionMainStyle.formFieldDateSelect}">
-							<c:FormDateBox ui:field="dateBox"></c:FormDateBox>
+							<c:FormDateBox ui:field="dateBox" tooltip="Select a date"></c:FormDateBox>
 							<span></span>
 						</div>
 					</div>
 
 				</g:HTMLPanel>
 
-				<c:Selector ui:field="countryListBox" labelText="Country" overlay="true" dropdownTitle="Select a country" />
+				<c:Selector ui:field="countryListBox" labelText="Country" overlay="true" dropdownTitle="Select a country" tooltip="Select up to 5 countries" />
 
-				<c:Selector ui:field="appStoreListBox" labelText="App Store" overlay="true" dropdownTitle="Select a store" />
+				<c:Selector ui:field="appStoreListBox" labelText="App Store" overlay="true" dropdownTitle="Select a store" tooltip="View data for iPhone or iPad" />
 
-				<c:Selector ui:field="categoryListBox" alignCenter="" labelText="Category" dropdownTitle="Select a category" overlay="true" />
+				<c:Selector ui:field="categoryListBox" alignCenter="" labelText="Category" dropdownTitle="Select a category" tooltip="Select a category" overlay="true" />
 
 				<g:HTMLPanel ui:field="dailyDataContainer" styleName="{STYLES_INSTANCE.reflectionMainStyle.filterToggle}">
 					<c:ToggleRadioButton ui:field="toggleDownloads" value="true" labelClassName="{STYLES_INSTANCE.reflectionMainStyle.toggleDownloads}"

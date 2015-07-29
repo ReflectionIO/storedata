@@ -7,16 +7,29 @@
 //
 package io.reflection.app.client.helper;
 
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+
 /**
  * @author Stefano Capuzzi (capuzzistefano)
  *
  */
 public class TooltipHelper {
 
+	public static void updateHelperTooltip() {
+		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+
+			@Override
+			public void execute() {
+				TooltipHelper.nativeUpdateHelperTooltip();
+			}
+		});
+	}
+
 	/**
 	 * To be called in onAttach
 	 */
-	public static native void initHelperTooltip()/*-{
+	public static native void nativeUpdateHelperTooltip()/*-{
 
 		if ($wnd.$('.no-touch').length) {
 			$wnd.$('.js-tooltip').each(
@@ -43,11 +56,12 @@ public class TooltipHelper {
 						$this.on("mouseleave", function() {
 							tooltip.remove();
 						});
+						$this.removeClass("js-tooltip");
 					});
 		}
 	}-*/;
 
-	public static native void initWhatsThisTooltip()/*-{
+	public static native void nativeUpdateWhatsThisTooltip()/*-{
 
 		$wnd
 				.$('.js-whats-this-tooltip')
@@ -70,7 +84,7 @@ public class TooltipHelper {
 										"whats-this-tooltip");
 								tooltip.append($wnd.$('<h2>').text(
 										"What's This?"));
-								tooltip.append($wnd.$('<p>').text(
+								tooltip.append($wnd.$('<p>').html(
 										$this.data("whatsthis")));
 								tooltip.append($wnd.$('<img>').attr("src",
 										"images/icon-bulb.png").attr("alt",

@@ -23,7 +23,7 @@
 
 			<c:PasswordField ui:field="password" labelText="Account Password" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
 
-			<c:TextField ui:field="vendorId" labelText="Vendor ID" infoHref="" infoLabelText="What's this?" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
+			<c:TextField ui:field="vendorId" labelText="Vendor ID" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
 
 			<c:LoadingButton ui:field="linkAccountBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth} {STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}"
 				text="Link this Account" />
