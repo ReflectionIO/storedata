@@ -40,6 +40,10 @@ public class TooltipHelper {
 								tooltip.fadeIn(200);
 							}, 800);
 						});
+						$(window).on("resize", function() {
+							$('.tooltip').remove();
+							$('.js-tooltip.is-open').removeClass('is-open');
+						});
 						$this.on("mouseleave", function() {
 							tooltip.remove();
 						});
@@ -137,6 +141,16 @@ public class TooltipHelper {
 									}
 								});
 							}
+							$(window)
+									.on(
+											"resize",
+											function() {
+												$('.whats-this-tooltip-popup')
+														.remove();
+												$(
+														'.js-whats-this-tooltip.is-open')
+														.removeClass('is-open');
+											});
 						});
 
 	}-*/;
