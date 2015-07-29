@@ -148,10 +148,16 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 				iapItemsMapByParentItem.put(mainItemId, iapItemIdsString);
 			}
 
+			String countriesToIngest = System.getProperty("ingest.ios.countries");
+
 			for (SimpleEntry<String, String> entry : mainItemIdsAndCountries) {
-				String mainItemId = entry.getKey();
 				String country = entry.getValue();
 
+				if (countriesToIngest != null && !countriesToIngest.contains(country)) {
+					continue;
+				}
+
+				String mainItemId = entry.getKey();
 				String iapItemIds = iapItemsMapByParentItem.get(mainItemId);
 
 				QueueHelper.enqueue("gathersplitsaledata", Method.PULL,

@@ -141,7 +141,7 @@
             <task-retry-limit>5</task-retry-limit>
         </retry-parameters>
     </queue>
-    
+
     <queue>
         <name>refreshitemproperties</name>
         <mode>pull</mode>
@@ -160,7 +160,7 @@
             <writer-email>466680728919-3hiu2j5f8bshu9btn0oc4ihvmbv529ca@developer.gserviceaccount.com</writer-email>
         </acl>
     </queue>
-    
+
     <queue>
         <name>archive</name>
         <rate>20/s</rate>
