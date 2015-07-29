@@ -179,10 +179,11 @@
 		<ul
 			class="{STYLES_INSTANCE.reflectionMainStyle.tabs__contentContainer} {STYLES_INSTANCE.reflectionMainStyle.defaultTabsTransition} {STYLES_INSTANCE.reflectionMainStyle.tabsToDropdownContent}">
 			<li id="tab-content" class="{STYLES_INSTANCE.reflectionMainStyle.tabs__content} {STYLES_INSTANCE.reflectionMainStyle.tabs__contentIsShowing}">
-				<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__row}">
-					<hc:Chart ui:field="chartRevenue"></hc:Chart>
-					<hc:Chart ui:field="chartDownloads"></hc:Chart>
-					<hc:Chart ui:field="chartRank"></hc:Chart>
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__row}" style="position: relative">
+					<img src="images/chart-watermark.png" class="{STYLES_INSTANCE.reflectionMainStyle.chartWatermark}" />
+					<hc:Chart ui:field="chartRevenue" styleName="{STYLES_INSTANCE.reflectionMainStyle.highchartsContainer}"></hc:Chart>
+					<hc:Chart ui:field="chartDownloads" styleName="{STYLES_INSTANCE.reflectionMainStyle.highchartsContainer}"></hc:Chart>
+					<hc:Chart ui:field="chartRank" styleName="{STYLES_INSTANCE.reflectionMainStyle.highchartsContainer}"></hc:Chart>
 				</div>
 			</li>
 		</ul>
