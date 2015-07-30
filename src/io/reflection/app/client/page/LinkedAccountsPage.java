@@ -56,6 +56,7 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.FormElement;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -74,6 +75,9 @@ import com.google.gwt.user.cellview.client.SafeHtmlHeader;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.EventListener;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Image;
@@ -105,9 +109,10 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	@UiField InlineHyperlink usersLink;
 	@UiField InlineHyperlink notificationsLink;
 
-	// TODO remove when tabs will be enabled
+	@UiField LIElement accountSettingsItem;
+	@UiField LIElement linkedAccountsItem;
 	@UiField LIElement usersItem;
-	@UiField LIElement notifItem;
+	@UiField LIElement notificationsItem;
 	@UiField SpanElement usersText;
 	@UiField SpanElement notifText;
 
@@ -162,8 +167,10 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		if (!SessionController.get().isLoggedInUserAdmin()) {
 			usersText.setInnerHTML("Users <span class=\"text-small\">coming soon</span>");
 			usersItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
+			usersItem.getStyle().setCursor(Cursor.DEFAULT);
 			notifText.setInnerHTML("Notifications <span class=\"text-small\">coming soon</span>");
-			notifItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
+			notificationsItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
+			notificationsItem.getStyle().setCursor(Cursor.DEFAULT);
 			usersLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 			notificationsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 		} else {
@@ -191,6 +198,48 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		});
 
 		linkedAccountsCount.setInnerSafeHtml(AnimationHelper.getLoaderInlineSafeHTML());
+
+		// Add click event to LI element so the event is fired when clicking on the whole tab
+		Event.sinkEvents(accountSettingsItem, Event.ONCLICK);
+		Event.sinkEvents(linkedAccountsItem, Event.ONCLICK);
+		Event.sinkEvents(usersItem, Event.ONCLICK);
+		Event.sinkEvents(notificationsItem, Event.ONCLICK);
+		Event.setEventListener(accountSettingsItem, new EventListener() {
+
+			@Override
+			public void onBrowserEvent(Event event) {
+				if (Event.ONCLICK == event.getTypeInt()) {
+					History.newItem(accountSettingsLink.getTargetHistoryToken());
+				}
+			}
+		});
+		Event.setEventListener(linkedAccountsItem, new EventListener() {
+
+			@Override
+			public void onBrowserEvent(Event event) {
+				if (Event.ONCLICK == event.getTypeInt()) {
+					History.newItem(linkedAccountsLink.getTargetHistoryToken());
+				}
+			}
+		});
+		Event.setEventListener(usersItem, new EventListener() {
+
+			@Override
+			public void onBrowserEvent(Event event) {
+				if (Event.ONCLICK == event.getTypeInt()) {
+					History.newItem(usersLink.getTargetHistoryToken());
+				}
+			}
+		});
+		Event.setEventListener(notificationsItem, new EventListener() {
+
+			@Override
+			public void onBrowserEvent(Event event) {
+				if (Event.ONCLICK == event.getTypeInt()) {
+					History.newItem(notificationsLink.getTargetHistoryToken());
+				}
+			}
+		});
 	}
 
 	private class CustomTableBuilder extends DefaultCellTableBuilder<DataAccount> {

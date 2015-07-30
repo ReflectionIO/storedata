@@ -16,8 +16,6 @@ import io.reflection.app.client.part.BackToTop;
 import io.reflection.app.client.part.SuperAlertBox;
 import io.reflection.app.client.res.Styles;
 
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -52,7 +50,7 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 			Styles.STYLES_INSTANCE.reflectionMainIE8Style().ensureInjected();
 		}
 
-		SuperAlertBox.start();
+		// SuperAlertBox.start();
 
 		// add page area
 

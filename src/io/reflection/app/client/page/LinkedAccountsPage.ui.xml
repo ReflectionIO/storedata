@@ -13,7 +13,7 @@
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.tabs}">
 			<ul
 				class="{STYLES_INSTANCE.reflectionMainStyle.tabsContainer} {STYLES_INSTANCE.reflectionMainStyle.defaultTabsTransition} {STYLES_INSTANCE.reflectionMainStyle.tabsToDropdown}">
-				<li
+				<li ui:field="accountSettingsItem"
 					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab}">
 					<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
 					<g:InlineHyperlink ui:field="accountSettingsLink" targetHistoryToken="#tab-content" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
@@ -31,7 +31,7 @@
 						</span>
 					</g:InlineHyperlink>
 				</li>
-				<li
+				<li ui:field="linkedAccountsItem"
 					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab}  {STYLES_INSTANCE.reflectionMainStyle.isActive}">
 					<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
 					<g:InlineHyperlink ui:field="linkedAccountsLink" targetHistoryToken="#tab-content" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
@@ -69,7 +69,7 @@
 						</span>
 					</g:InlineHyperlink>
 				</li>
-				<li ui:field="notifItem"
+				<li ui:field="notificationsItem"
 					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab}">
 
 					<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
