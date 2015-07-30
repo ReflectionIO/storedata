@@ -79,6 +79,9 @@ import com.google.gwt.user.cellview.client.ColumnSortEvent;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.SafeHtmlHeader;
 import com.google.gwt.user.cellview.client.TextHeader;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.EventListener;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -213,6 +216,48 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		tabs.put(FREE_LIST_TYPE, freeItem);
 		tabs.put(PAID_LIST_TYPE, paidItem);
 		tabs.put(GROSSING_LIST_TYPE, grossingItem);
+
+		// Add click event to LI element so the event is fired when clicking on the whole tab
+		Event.sinkEvents(allItem, Event.ONCLICK);
+		Event.sinkEvents(freeItem, Event.ONCLICK);
+		Event.sinkEvents(paidItem, Event.ONCLICK);
+		Event.sinkEvents(grossingItem, Event.ONCLICK);
+		Event.setEventListener(allItem, new EventListener() {
+
+			@Override
+			public void onBrowserEvent(Event event) {
+				if (Event.ONCLICK == event.getTypeInt()) {
+					History.newItem(allLink.getTargetHistoryToken());
+				}
+			}
+		});
+		Event.setEventListener(freeItem, new EventListener() {
+
+			@Override
+			public void onBrowserEvent(Event event) {
+				if (Event.ONCLICK == event.getTypeInt()) {
+					History.newItem(freeLink.getTargetHistoryToken());
+				}
+			}
+		});
+		Event.setEventListener(paidItem, new EventListener() {
+
+			@Override
+			public void onBrowserEvent(Event event) {
+				if (Event.ONCLICK == event.getTypeInt()) {
+					History.newItem(paidLink.getTargetHistoryToken());
+				}
+			}
+		});
+		Event.setEventListener(grossingItem, new EventListener() {
+
+			@Override
+			public void onBrowserEvent(Event event) {
+				if (Event.ONCLICK == event.getTypeInt()) {
+					History.newItem(grossingLink.getTargetHistoryToken());
+				}
+			}
+		});
 
 		HTMLPanel emptyTableWidget = new HTMLPanel("<h6>No ranking data for filter!</h6>");
 		emptyTableWidget.getElement().getStyle().setTextAlign(TextAlign.CENTER);
