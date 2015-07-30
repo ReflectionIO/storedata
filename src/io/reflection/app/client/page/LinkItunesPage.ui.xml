@@ -137,7 +137,7 @@
 					<h2>Account Linked!</h2>
 					<p>
 						<g:Anchor href="#" ui:field="linkAnotherAccount">Link Another Account</g:Anchor>
-						<g:InlineHyperlink ui:field="continueToLeaderboard">Go to My Data Homepage</g:InlineHyperlink>
+						<g:InlineHyperlink ui:field="continueToLeaderboard">Continue to Leaderboard</g:InlineHyperlink>
 					</p>
 				</div>
 			</div>
