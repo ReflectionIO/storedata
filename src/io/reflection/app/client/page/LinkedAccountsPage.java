@@ -571,6 +571,8 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 				iosMacAddForm.setStatusError("Invalid vendor ID!");
 				iosMacAddForm.setVendorError("iTunes Connect vendor number entered incorrectly");
 				iosMacAddForm.setFormErrors();
+			} else { // TODO NULL POINTER EXCEPTION DUE TO DUPLICATE LINKED ACCOUNT
+				iosMacAddForm.setStatusError();
 			}
 			iosMacAddForm.setEnabled(true);
 		}

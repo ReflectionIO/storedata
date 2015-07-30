@@ -140,6 +140,8 @@ public class LinkItunesPage extends Page implements NavigationEventHandler, Link
 				iosMacForm.setStatusError("Invalid vendor ID!");
 				iosMacForm.setVendorError("iTunes Connect vendor number entered incorrectly");
 				linkableAccount.setFormErrors();
+			} else { // TODO NULL POINTER EXCEPTION DUE TO DUPLICATE LINKED ACCOUNT
+				iosMacForm.setStatusError();
 			}
 			iosMacForm.setEnabled(true);
 		}
@@ -154,7 +156,6 @@ public class LinkItunesPage extends Page implements NavigationEventHandler, Link
 	@Override
 	public void linkAccountFailure(LinkAccountRequest input, Throwable caught) {
 		Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formSubmittedLoading());
-
 		iosMacForm.setStatusError();
 	}
 
