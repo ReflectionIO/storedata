@@ -279,6 +279,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 			updateLinkedAccountForm.setTitleStyleName(style.headingStyleHeadingFive());
 			updateLinkedAccountForm.setButtonText("Save Changes");
 			updateLinkedAccountForm.setAccount(rowValue);
+			updateLinkedAccountForm.showAccountUsername(false);
 
 			updateLinkedAccountForm.addLinkedAccountChangeEventHander(new LinkedAccountChangeEventHandler() {
 
@@ -571,6 +572,8 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 				iosMacAddForm.setStatusError("Invalid vendor ID!");
 				iosMacAddForm.setVendorError("iTunes Connect vendor number entered incorrectly");
 				iosMacAddForm.setFormErrors();
+			} else { // TODO NULL POINTER EXCEPTION DUE TO DUPLICATE LINKED ACCOUNT
+				iosMacAddForm.setStatusError();
 			}
 			iosMacAddForm.setEnabled(true);
 		}

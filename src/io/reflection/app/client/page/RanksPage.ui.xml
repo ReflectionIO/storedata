@@ -121,9 +121,9 @@
 			<form class="{STYLES_INSTANCE.reflectionMainStyle.formsMidTheme}">
 				<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.calendarContainer} {STYLES_INSTANCE.reflectionMainStyle.singleDateInput}">
 
-					<div class="{STYLES_INSTANCE.reflectionMainStyle.dateSelectContainer}">
+					<div ui:field="dateSelectContainer" class="{STYLES_INSTANCE.reflectionMainStyle.dateSelectContainer}">
 						<div class="{STYLES_INSTANCE.reflectionMainStyle.formField} {STYLES_INSTANCE.reflectionMainStyle.formFieldDateSelect}">
-							<c:FormDateBox ui:field="dateBox" tooltip="Select a date"></c:FormDateBox>
+							<c:FormDateBox ui:field="dateBox"></c:FormDateBox>
 							<span></span>
 						</div>
 					</div>

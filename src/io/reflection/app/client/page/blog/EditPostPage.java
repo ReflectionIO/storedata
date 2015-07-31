@@ -18,6 +18,7 @@ import io.reflection.app.api.blog.shared.call.event.GetPostEventHandler;
 import io.reflection.app.api.blog.shared.call.event.UpdatePostEventHandler;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.component.FormCheckbox;
+import io.reflection.app.client.component.LoadingBar;
 import io.reflection.app.client.component.TextField;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
@@ -65,6 +66,7 @@ public class EditPostPage extends Page implements NavigationEventHandler, Create
 	@UiField MarkdownEditor contentText;
 
 	private Post post;
+	private LoadingBar loadingBar = new LoadingBar(false);
 
 	public EditPostPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -93,6 +95,18 @@ public class EditPostPage extends Page implements NavigationEventHandler, Create
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see io.reflection.app.client.page.Page#onDetach()
+	 */
+	@Override
+	protected void onDetach() {
+		super.onDetach();
+
+		loadingBar.reset();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.client.page.Page#getTitle()
 	 */
 	@Override
@@ -113,12 +127,15 @@ public class EditPostPage extends Page implements NavigationEventHandler, Create
 				String postParam = current.getParameter(POST_ID_PARAMETER_INDEX);
 
 				if (postParam != null) {
-					post = PostController.get().getPost(postParam);
+					post = PostController.get().lookupPost(postParam);
 
-						if (post != null) {
-							show(post);
-						}
+					if (post != null) {
+						show(post);
+					} else {
+						loadingBar.show();
+						PostController.get().fetchPost(postParam);
 					}
+				}
 			} else if (NEW_ACTION_NAME.equals(current.getAction())) {
 				resetForm();
 			}
@@ -141,6 +158,8 @@ public class EditPostPage extends Page implements NavigationEventHandler, Create
 		if (post.tags != null) {
 			tags.setText(StringUtils.join(post.tags));
 		}
+
+		loadingBar.hide();
 	}
 
 	@UiHandler("submit")
@@ -208,6 +227,8 @@ public class EditPostPage extends Page implements NavigationEventHandler, Create
 	public void getPostSuccess(GetPostRequest input, GetPostResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess && output.post != null) {
 			show(post = output.post);
+		} else {
+
 		}
 	}
 

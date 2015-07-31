@@ -9,8 +9,13 @@ package io.reflection.app.client.helper;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.dom.client.TableCellElement;
+import com.google.gwt.dom.client.TableElement;
+import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
+import com.google.gwt.user.client.ui.HTMLPanel;
 
 /**
  * @author Stefano Capuzzi (capuzzistefano)
@@ -19,32 +24,32 @@ import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 public class AnimationHelper {
 
 	public static native void nativeScrollTop(int position, int duration, String easing)/*-{
-		$wnd.$('html, body').animate({
-			scrollTop : position
-		}, duration, easing);
-	}-*/;
+																						$wnd.$('html, body').animate({
+																						scrollTop : position
+																						}, duration, easing);
+																						}-*/;
 
 	public static native void nativeScrollTop(int position, String duration, String easing)/*-{
-		$wnd.$('html, body').animate({
-			scrollTop : position
-		}, duration, easing);
-	}-*/;
+																							$wnd.$('html, body').animate({
+																							scrollTop : position
+																							}, duration, easing);
+																							}-*/;
 
 	public static native void nativeHide(Element elem)/*-{
-		$wnd.$(elem).hide();
-	}-*/;
+														$wnd.$(elem).hide();
+														}-*/;
 
 	public static native void nativeSlideToggle(Element elem, int duration)/*-{
-		$wnd.$(elem).slideToggle(duration);
-	}-*/;
+																			$wnd.$(elem).slideToggle(duration);
+																			}-*/;
 
 	public static native void nativeFadeIn(Element elem, int duration)/*-{
-		$wnd.$(elem).fadeIn(duration);
-	}-*/;
+																		$wnd.$(elem).fadeIn(duration);
+																		}-*/;
 
 	public static native void nativeFadeOut(Element elem, int duration)/*-{
-		$wnd.$(elem).fadeOut(duration);
-	}-*/;
+																		$wnd.$(elem).fadeOut(duration);
+																		}-*/;
 
 	public static SafeHtml getLoaderInlineSafeHTML() {
 		return SafeHtmlUtils
@@ -64,4 +69,19 @@ public class AnimationHelper {
 		return loaderElem;
 	}
 
+	public static HTMLPanel createLoadingIndicator(int rowNumber, int columnNumber) {
+		TableElement table = Document.get().createTableElement();
+		table.getStyle().setWidth(100, Unit.PCT);
+		for (int i = 0; i < rowNumber; i++) {
+			TableRowElement row = Document.get().createTRElement();
+			for (int j = 0; j < columnNumber; j++) {
+				TableCellElement cell = Document.get().createTDElement();
+				cell.appendChild(getLoaderInlineElement());
+				row.appendChild(cell);
+			}
+			table.appendChild(row);
+		}
+		SafeHtml placeholder = SafeHtmlUtils.fromSafeConstant(table.toString());
+		return new HTMLPanel(placeholder);
+	}
 }
