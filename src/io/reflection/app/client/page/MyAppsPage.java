@@ -20,6 +20,7 @@ import io.reflection.app.api.core.shared.call.event.GetSalesRanksEventHandler;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.MiniAppCell;
 import io.reflection.app.client.component.DateSelector;
+import io.reflection.app.client.component.LoadingBar;
 import io.reflection.app.client.component.Selector;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.FilterController.Filter;
@@ -41,7 +42,6 @@ import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.client.part.datatypes.MyApp;
 import io.reflection.app.client.part.myapps.MyAppsEmptyTable;
-import io.reflection.app.client.res.Images;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.client.res.Styles.ReflectionMainStyles;
 import io.reflection.app.datatypes.shared.Item;
@@ -73,7 +73,6 @@ import com.google.gwt.user.cellview.client.LoadingStateChangeEvent.LoadingState;
 import com.google.gwt.user.cellview.client.SafeHtmlHeader;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
 
@@ -128,6 +127,8 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 
 	private ReflectionMainStyles style = Styles.STYLES_INSTANCE.reflectionMainStyle();
 
+	private LoadingBar loadingBar = new LoadingBar(true);
+
 	public MyAppsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
@@ -168,7 +169,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		emptyMobileTableWidget.getElement().getStyle().setPaddingTop(35.0, Unit.PX);
 		appsTableMobile.setEmptyTableWidget(emptyMobileTableWidget);
 
-		appsTableDesktop.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
+		appsTableDesktop.setLoadingIndicator(AnimationHelper.createLoadingIndicator(5, 6));
 		appsTableMobile.setLoadingIndicator(new HTMLPanel(AnimationHelper.getLoaderInlineSafeHTML()));
 		userItemProvider.addDataDisplay(appsTableDesktop);
 
@@ -189,6 +190,13 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		});
 
 		TooltipHelper.updateHelperTooltip();
+
+		loadingBar.show();
+		if (LinkedAccountController.get().linkedAccountsFetched()) {
+			loadingBar.setText("Getting apps...");
+		} else {
+			loadingBar.setText("Getting linked accounts...");
+		}
 	}
 
 	/*
@@ -208,6 +216,17 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		register(DefaultEventBus.get().addHandlerToSource(GetSalesRanksEventHandler.TYPE, RankController.get(), userItemProvider));
 		register(DefaultEventBus.get().addHandlerToSource(GetSalesRanksEventHandler.TYPE, RankController.get(), this));
 
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.page.Page#onDetach()
+	 */
+	@Override
+	protected void onDetach() {
+		super.onDetach();
+		loadingBar.reset();
 	}
 
 	/**
@@ -355,8 +374,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 			@Override
 			public SafeHtml getValue(MyApp object) {
 				return (object.item != null) ? SafeHtmlUtils.fromSafeConstant(DataTypeHelper.itemIapState(object.item, IAP_YES_HTML, IAP_NO_HTML,
-						"<span class=\"" + style.refIconBefore() + " " + style.refIconBeforeMinus()
-								+ " js-tooltip\" data-tooltip=\"No data available\"></span>")) : loaderInline;
+						"<span class=\"js-tooltip " + style.whatsThisTooltipIcon() + "\" data-tooltip=\"No data available\"></span>")) : loaderInline;
 			}
 
 		};
@@ -476,6 +494,8 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 			setFiltersEnabled(false);
 			viewAllBtn.setVisible(false);
 			ItemController.get().fetchLinkedAccountItems();
+			loadingBar.setProgressiveStatus("Getting apps...", 33);
+			loadingBar.show("Getting apps...");
 			rankHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.mhxte6cIF());
 			appDetailsHeader.setHeaderStyleNames(style.canBeSorted());
 			priceHeader.setHeaderStyleNames(style.canBeSorted());
@@ -500,6 +520,8 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 			setFiltersEnabled(false);
 			viewAllBtn.setVisible(false);
 			ItemController.get().fetchLinkedAccountItems();
+			loadingBar.setProgressiveStatus("Getting apps...", 33);
+			loadingBar.show("Getting apps...");
 			rankHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.mhxte6cIF());
 			appDetailsHeader.setHeaderStyleNames(style.canBeSorted());
 			priceHeader.setHeaderStyleNames(style.canBeSorted());
@@ -614,6 +636,9 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 			if (output.items.size() > ServiceConstants.STEP_VALUE) {
 				viewAllBtn.setVisible(true);
 			}
+			loadingBar.setProgressiveStatus("Getting data...", 66);
+		} else {
+
 		}
 		setFiltersEnabled(true);
 
@@ -640,11 +665,17 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	 */
 	@Override
 	public void getSalesRanksSuccess(GetSalesRanksRequest input, GetSalesRanksResponse output) {
-			if (!userItemProvider.getDataDisplays().contains(appsTableMobile)) { // Avoid initial double call to server
-				userItemProvider.addDataDisplay(appsTableMobile);
-			}
-			TooltipHelper.updateHelperTooltip();
+		if (output.status == StatusType.StatusTypeSuccess) {
+			loadingBar.hide();
+		} else {
+
 		}
+
+		if (!userItemProvider.getDataDisplays().contains(appsTableMobile)) { // Avoid initial double call to server
+			userItemProvider.addDataDisplay(appsTableMobile);
+		}
+		TooltipHelper.updateHelperTooltip();
+	}
 
 	/*
 	 * (non-Javadoc)

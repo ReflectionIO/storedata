@@ -23,6 +23,7 @@ import io.reflection.app.api.core.shared.call.event.GetLinkedAccountItemEventHan
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.component.DateSelector;
 import io.reflection.app.client.component.FilterSwitch;
+import io.reflection.app.client.component.LoadingBar;
 import io.reflection.app.client.component.Selector;
 import io.reflection.app.client.component.ToggleRadioButton;
 import io.reflection.app.client.controller.FilterController;
@@ -96,6 +97,7 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.datepicker.client.CalendarUtil;
 import com.willshex.gson.json.service.shared.StatusType;
 
 public class ItemPage extends Page implements NavigationEventHandler, GetItemRanksEventHandler, GetItemSalesRanksEventHandler, FilterEventHandler,
@@ -165,6 +167,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField SpanElement infoDateRange;
 	@UiField SpanElement infoTotalRevenue;
 
+	@UiField DivElement chartContainer;
 	@UiField(provided = true) Chart chartRevenue = new Chart(XDataType.DateXAxisDataType);
 	@UiField(provided = true) Chart chartDownloads = new Chart(XDataType.DateXAxisDataType);
 	@UiField(provided = true) Chart chartRank = new Chart(XDataType.DateXAxisDataType);
@@ -188,6 +191,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField HTMLPanel waitingForDataPanel;
 	@UiField DivElement appDetailsPanel;
 
+	private LoadingBar loadingBar;
 	private Element loaderInline = AnimationHelper.getLoaderInlineElement();
 	private ReflectionMainStyles style = Styles.STYLES_INSTANCE.reflectionMainStyle();
 
@@ -227,6 +231,10 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			// RankController.get().getItemRevenueDataProvider().addDataDisplay(revenueTable);
 			RankController.get().getRevenueDataProvider().addDataDisplay(revenueTableDesktop);
 			RankController.get().getRevenueDataProvider().addDataDisplay(revenueTableMobile);
+			revenueTableDesktop.setLoadingIndicator(AnimationHelper.createLoadingIndicator(
+					CalendarUtil.getDaysBetween(dateSelector.getValue().getFrom(), dateSelector.getValue().getTo()) + 1, 3));
+			revenueTableDesktop.setRowCount(0, false);
+			revenueTableMobile.setRowCount(0, false);
 		}
 
 		dnwBtn.setAttribute("data-tooltip", "Download data in CSV file");
@@ -286,6 +294,9 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				}
 			}
 		});
+
+		loadingBar = new LoadingBar(false);
+		loadingBar.show();
 	}
 
 	public void setItem(Item item) {
@@ -334,22 +345,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		} else {
 			appDetailsPanel.appendChild(loaderInline);
 			price.setInnerText("");
-		}
-	}
-
-	/**
-	 * If enables, set the row with null values to force loading state
-	 * 
-	 * @param enabled
-	 */
-	private void setLoadingSpinnerEnabled(boolean enabled) {
-		if (SessionController.get().isLoggedInUserAdmin()) {
-			if (enabled) {
-				revenueTableDesktop.setRowData(1, tablePlaceholder);
-			} else {
-				revenueTableDesktop.setRowCount(0, true);
-				// revenueTable2.setRowCount(0, true);
-			}
 		}
 	}
 
@@ -472,7 +467,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 			@Override
 			public SafeHtml getValue(AppRevenue object) {
-				if (infoTotalRevenue.getInnerText().equals("")) {
+				if (object.currency != null && object.total != null) {
 					infoTotalRevenue.setInnerText(FormattingHelper.asWholeMoneyString(object.currency, object.total.floatValue()));
 				}
 				return object.revenue != null ? SafeHtmlUtils.fromTrustedString(FormattingHelper.asWholeMoneyString(object.currency,
@@ -619,6 +614,17 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see io.reflection.app.client.page.Page#onDetach()
+	 */
+	@Override
+	protected void onDetach() {
+		super.onDetach();
+		loadingBar.reset();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
 	 * io.reflection.app.client.controller.NavigationController.Stack)
 	 */
@@ -699,8 +705,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			// chartRank.drawData();
 			// }
 			if (isNewDataRequired) {
-				infoTotalRevenue.setInnerText("");
-				setLoadingSpinnerEnabled(true);
+				infoTotalRevenue.setInnerSafeHtml(AnimationHelper.getLoaderInlineSafeHTML());
 				setPriceInnerText(null);
 				getChartData();
 			}
@@ -756,6 +761,16 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		}
 	}
 
+	private void setNoData(boolean noData) {
+		if (noData) {
+			infoTotalRevenue.setInnerHTML("-");
+			revenueTableDesktop.setRowCount(0, true);
+			revenueTableMobile.setRowCount(0, true);
+		}
+		// noDataPanel.setVisible(noData);
+		// setChartGraphsVisible(!noData);
+	}
+
 	private boolean isValidStack(Stack current) {
 		return (current != null
 				&& current.getParameterCount() >= 4
@@ -796,11 +811,15 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			chartRank.setLoading(true);
 			RankController.get().cancelRequestItemRanks();
 			RankController.get().cancelRequestItemSalesRanks();
-			revenueTableDesktop.setRowCount(0, true);
-			revenueTableMobile.setRowCount(0, true);
+			revenueTableDesktop.setLoadingIndicator(AnimationHelper.createLoadingIndicator(
+					CalendarUtil.getDaysBetween(dateSelector.getValue().getFrom(), dateSelector.getValue().getTo()) + 1, 3));
+			revenueTableDesktop.setRowCount(0, false);
+			revenueTableMobile.setRowCount(0, false);
 			dateHeader.setHeaderStyleNames(style.canBeSorted());
 			revenueHeader.setHeaderStyleNames(style.canBeSorted());
 			revenueForPeriodHeader.setHeaderStyleNames(style.canBeSorted());
+			setNoData(false);
+			loadingBar.show();
 			if (LinkedAccountController.get().getLinkedAccountItem(item) != null) {
 				if (MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage)) {
 					RankController.get().fetchItemSalesRanks(item);
@@ -893,13 +912,12 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				drawData(output.ranks);
 			} else {
 				setPriceInnerText("-");
-				setLoadingSpinnerEnabled(false);
-				// TODO show no data panel
+				setNoData(true);
 			}
 			TooltipHelper.updateHelperTooltip();
+			loadingBar.hide();
 		} else {
 			setPriceInnerText("-");
-			setLoadingSpinnerEnabled(false);
 		}
 	}
 
@@ -913,7 +931,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public void getItemRanksFailure(GetItemRanksRequest input, Throwable caught) {
 		setPriceInnerText("-");
-		setLoadingSpinnerEnabled(false);
 
 	}
 
@@ -932,13 +949,12 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				drawData(output.ranks);
 			} else {
 				setPriceInnerText("-");
-				setLoadingSpinnerEnabled(false);
-				// TODO show no data panel
+				setNoData(true);
 			}
 			TooltipHelper.updateHelperTooltip();
+			loadingBar.hide();
 		} else {
 			setPriceInnerText("-");
-			setLoadingSpinnerEnabled(false);
 		}
 	}
 
@@ -951,7 +967,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public void getItemSalesRanksFailure(GetItemSalesRanksRequest input, Throwable caught) {
 		setPriceInnerText("-");
-		setLoadingSpinnerEnabled(false);
 	}
 
 	/*
@@ -976,7 +991,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			}
 		} else {
 			setPriceInnerText("-");
-			setLoadingSpinnerEnabled(false);
 		}
 	}
 
@@ -989,7 +1003,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public void getLinkedAccountItemFailure(GetLinkedAccountItemRequest input, Throwable caught) {
 		setPriceInnerText("-");
-		setLoadingSpinnerEnabled(false);
 	}
 
 	private void setItemInfo(Item i) {

@@ -25,6 +25,7 @@ import io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.AppRankCell;
 import io.reflection.app.client.component.FormDateBox;
+import io.reflection.app.client.component.LoadingBar;
 import io.reflection.app.client.component.Selector;
 import io.reflection.app.client.component.ToggleRadioButton;
 import io.reflection.app.client.controller.FilterController;
@@ -45,7 +46,6 @@ import io.reflection.app.client.helper.ResponsiveDesignHelper;
 import io.reflection.app.client.helper.TooltipHelper;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.datatypes.RanksGroup;
-import io.reflection.app.client.res.Images;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.client.res.Styles.ReflectionMainStyles;
 import io.reflection.app.datatypes.shared.Rank;
@@ -57,6 +57,7 @@ import java.util.Map;
 
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.TextAlign;
@@ -84,7 +85,6 @@ import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
@@ -127,6 +127,10 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	@UiField(provided = true) CellTable<RanksGroup> leaderboardTableMobile = new CellTable<RanksGroup>(ServiceConstants.STEP_VALUE,
 			BootstrapGwtCellTable.INSTANCE);
 
+	private HTMLPanel loadingIndicatorAll = AnimationHelper.createLoadingIndicator(5, 4);
+	private HTMLPanel loadingIndicatorList = AnimationHelper.createLoadingIndicator(5, 5);
+
+	@UiField DivElement dateSelectContainer;
 	@UiField FormDateBox dateBox;
 	Date currentDate = FilterHelper.getToday();
 	@UiField Selector appStoreListBox;
@@ -179,7 +183,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"In App Purchases\">IAP</span>"));
 
 	private String selectedTab = OVERALL_LIST_TYPE;
-
+	private LoadingBar loadingBar = new LoadingBar(false);
 	private ReflectionMainStyles style = Styles.STYLES_INSTANCE.reflectionMainStyle();
 
 	public RanksPage() {
@@ -270,12 +274,15 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		leaderboardTableDesktop.setEmptyTableWidget(emptyTableWidget);
 		leaderboardTableMobile.setEmptyTableWidget(emptyMobileTableWidget);
 
-		leaderboardTableDesktop.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
-		leaderboardTableMobile.setLoadingIndicator(new HTMLPanel(AnimationHelper.getLoaderInlineSafeHTML()));
+		leaderboardTableDesktop.setLoadingIndicator(loadingIndicatorAll);
 
 		RankController.get().addDataDisplay(leaderboardTableDesktop);
 
+		dateSelectContainer.addClassName("js-tooltip");
+		dateSelectContainer.setAttribute("data-tooltip", "Select a date");
 		TooltipHelper.updateHelperTooltip();
+
+		loadingBar.show();
 	}
 
 	private void createColumns() {
@@ -411,9 +418,9 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 			@Override
 			public SafeHtml getValue(RanksGroup object) {
-				return SafeHtmlUtils.fromSafeConstant(DataTypeHelper.itemIapState(ItemController.get().lookupItem(rankForListType(object).itemId),
-						IAP_YES_HTML, IAP_NO_HTML, "<span class=\"" + style.refIconBefore() + " " + style.refIconBeforeMinus()
-								+ " js-tooltip\" data-tooltip=\"No data available\"></span>"));
+				return SafeHtmlUtils
+						.fromSafeConstant(DataTypeHelper.itemIapState(ItemController.get().lookupItem(rankForListType(object).itemId), IAP_YES_HTML,
+								IAP_NO_HTML, "<span class=\"js-tooltip " + style.whatsThisTooltipIcon() + "\" data-tooltip=\"No data available\"></span>"));
 			}
 
 		};
@@ -459,6 +466,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 					leaderboardTableDesktop.redraw();
 					leaderboardTableMobile.redraw();
 				} else {
+					loadingBar.show();
 					RankController.get().reset();
 					RankController.get().fetchTopItems();
 					setViewMoreVisible(false);
@@ -489,6 +497,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 					leaderboardTableDesktop.redraw();
 					leaderboardTableMobile.redraw();
 				} else {
+					loadingBar.show();
 					RankController.get().reset();
 					RankController.get().fetchTopItems();
 					setViewMoreVisible(false);
@@ -582,7 +591,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		leaderboardTableMobile.setStyleName(style.tableAppGroup(),
 				(FREE_LIST_TYPE.equals(selectedTab) || PAID_LIST_TYPE.equals(selectedTab) || GROSSING_LIST_TYPE.equals(selectedTab)));
 
-		if (OVERALL_LIST_TYPE.equals(selectedTab)) {
+		switch (selectedTab) {
+		case OVERALL_LIST_TYPE:
 			removeAllColumns();
 			leaderboardTableDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
 			leaderboardTableDesktop.setColumnWidth(freeColumn, 30.0, Unit.PCT);
@@ -592,7 +602,9 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			leaderboardTableDesktop.addColumn(freeColumn, freeHeader);
 			leaderboardTableDesktop.addColumn(paidColumn, paidHeader);
 			leaderboardTableDesktop.addColumn(grossingColumn, grossingHeader);
-		} else if (FREE_LIST_TYPE.equals(selectedTab)) {
+			leaderboardTableDesktop.setLoadingIndicator(loadingIndicatorAll);
+			break;
+		case FREE_LIST_TYPE:
 			removeAllColumns();
 			// if (SessionController.get().isLoggedInUserAdmin()) {
 			// leaderboardTableDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
@@ -616,7 +628,9 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			// leaderboardTableDesktop.addColumn(revenueColumn, revenueHeader);
 			// }
 			leaderboardTableDesktop.addColumn(iapColumn, iapHeader);
-		} else if (PAID_LIST_TYPE.equals(selectedTab)) {
+			leaderboardTableDesktop.setLoadingIndicator(loadingIndicatorList);
+			break;
+		case PAID_LIST_TYPE:
 			removeAllColumns();
 			// if (SessionController.get().isLoggedInUserAdmin()) {
 			// leaderboardTableDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
@@ -640,7 +654,9 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			// leaderboardTableDesktop.addColumn(revenueColumn, revenueHeader);
 			// }
 			leaderboardTableDesktop.addColumn(iapColumn, iapHeader);
-		} else if (GROSSING_LIST_TYPE.equals(selectedTab)) {
+			leaderboardTableDesktop.setLoadingIndicator(loadingIndicatorList);
+			break;
+		case GROSSING_LIST_TYPE:
 			removeAllColumns();
 			// if (SessionController.get().isLoggedInUserAdmin()) {
 			// leaderboardTableDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
@@ -664,6 +680,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			// }
 			leaderboardTableDesktop.addColumn(revenueColumn, revenueHeader);
 			leaderboardTableDesktop.addColumn(iapColumn, iapHeader);
+			leaderboardTableDesktop.setLoadingIndicator(loadingIndicatorList);
+			break;
 		}
 
 		TooltipHelper.updateHelperTooltip();
@@ -838,35 +856,51 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see io.reflection.app.client.page.Page#onDetach()
+	 */
+	@Override
+	protected void onDetach() {
+		super.onDetach();
+
+		loadingBar.reset();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see
 	 * io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler#getAllTopItemsSuccess(io.reflection.app.api.core.shared.call.GetAllTopItemsRequest
 	 * , io.reflection.app.api.core.shared.call.GetAllTopItemsResponse)
 	 */
 	@Override
 	public void getAllTopItemsSuccess(GetAllTopItemsRequest input, GetAllTopItemsResponse output) {
-		if (output.status.equals(StatusType.StatusTypeSuccess) && output.freeRanks != null) {
-			setViewMoreVisible(true);
+		if (output.status.equals(StatusType.StatusTypeSuccess)) {
+			if (output.freeRanks != null) {
+				setViewMoreVisible(true);
 
-			if (SessionController.get().isLoggedInUserAdmin()) {
-				if (output.freeRanks != null && output.freeRanks.size() > 0 && output.freeRanks.get(0).code != null) {
-					overviewAllText.setInnerSafeHtml(AllAdminCodeTemplate.INSTANCE.code(output.freeRanks.get(0).code));
-				} else if (output.paidRanks != null && output.paidRanks.size() > 0 && output.paidRanks.get(0).code != null) {
-					overviewAllText.setInnerSafeHtml(AllAdminCodeTemplate.INSTANCE.code(output.paidRanks.get(0).code));
-				} else if (output.grossingRanks != null && output.grossingRanks.size() > 0 && output.grossingRanks.get(0).code != null) {
-					overviewAllText.setInnerSafeHtml(AllAdminCodeTemplate.INSTANCE.code(output.grossingRanks.get(0).code));
-				} else {
-					overviewAllText.setInnerText(ALL_TEXT);
+				if (SessionController.get().isLoggedInUserAdmin()) {
+					if (output.freeRanks != null && output.freeRanks.size() > 0 && output.freeRanks.get(0).code != null) {
+						overviewAllText.setInnerSafeHtml(AllAdminCodeTemplate.INSTANCE.code(output.freeRanks.get(0).code));
+					} else if (output.paidRanks != null && output.paidRanks.size() > 0 && output.paidRanks.get(0).code != null) {
+						overviewAllText.setInnerSafeHtml(AllAdminCodeTemplate.INSTANCE.code(output.paidRanks.get(0).code));
+					} else if (output.grossingRanks != null && output.grossingRanks.size() > 0 && output.grossingRanks.get(0).code != null) {
+						overviewAllText.setInnerSafeHtml(AllAdminCodeTemplate.INSTANCE.code(output.grossingRanks.get(0).code));
+					} else {
+						overviewAllText.setInnerText(ALL_TEXT);
+					}
 				}
+				loadingBar.hide();
+			} else {
+				setViewMoreVisible(false);
 			}
 		} else {
 			setViewMoreVisible(false);
 		}
+
 		if (!RankController.get().getDataDisplays().contains(leaderboardTableMobile)) { // Avoid initial double call to server
 			RankController.get().addDataDisplay(leaderboardTableMobile);
 		}
-
 		TooltipHelper.updateHelperTooltip();
-
 	}
 
 	/*

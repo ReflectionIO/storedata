@@ -128,7 +128,7 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
 		});
 	}
 
-	private void fetchPost(String lookup) {
+	public void fetchPost(String lookup) {
 		BlogService service = ServiceCreator.createBlogService();
 
 		final GetPostRequest input = new GetPostRequest();
@@ -173,14 +173,6 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
 				DefaultEventBus.get().fireEventFromSource(new GetPostFailure(input, caught), PostController.this);
 			}
 		});
-	}
-
-	public List<Post> getPosts() {
-		if (pager == null) {
-			fetchPosts();
-		}
-
-		return posts;
 	}
 
 	public long getPostsCount() {
@@ -347,17 +339,11 @@ public class PostController extends AsyncDataProvider<Post> implements ServiceCo
 	 * @param id
 	 * @return
 	 */
-	public Post getPost(String lookup) {
+	public Post lookupPost(String lookup) {
 		Post post = null;
-
-		if (postLookup != null) {
+		if (postLookup != null && postLookup.containsKey(lookup)) {
 			post = postLookup.get(lookup);
 		}
-
-		if (post == null) {
-			fetchPost(lookup);
-		}
-
 		return post;
 	}
 
