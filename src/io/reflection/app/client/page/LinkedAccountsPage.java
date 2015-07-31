@@ -279,6 +279,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 			updateLinkedAccountForm.setTitleStyleName(style.headingStyleHeadingFive());
 			updateLinkedAccountForm.setButtonText("Save Changes");
 			updateLinkedAccountForm.setAccount(rowValue);
+			updateLinkedAccountForm.showAccountUsername(false);
 
 			updateLinkedAccountForm.addLinkedAccountChangeEventHander(new LinkedAccountChangeEventHandler() {
 

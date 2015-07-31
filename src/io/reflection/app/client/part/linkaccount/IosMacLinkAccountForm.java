@@ -81,6 +81,10 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 		vendorId.setText(propertiesJson.get("vendors").getAsString());
 	}
 
+	public void showAccountUsername(boolean show) {
+		accountUsername.setVisible(show);
+	}
+
 	public void setButtonText(String text) {
 		linkAccountBtn.setText(text);
 	}
@@ -318,6 +322,10 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 
 	public void setVendorError(String error) {
 		vendorIdError = error;
+	}
+
+	public void clearPassword() {
+		password.clear();
 	}
 
 	/*
