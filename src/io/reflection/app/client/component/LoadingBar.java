@@ -36,12 +36,12 @@ public class LoadingBar extends Composite {
 	@UiField SpanElement textElem;
 	@UiField DivElement progressBar;
 
-	private Element container;
+	private Element container; // Loading bar wrapper
 	private boolean isProgressive;
 	private boolean isLoading; // Check if the loader is currently active
 
-	public LoadingBar(Element container) {
-		this(container, false);
+	public LoadingBar(boolean isProgressive) {
+		this(Document.get().getBody(), isProgressive);
 	}
 
 	public LoadingBar(Element container, boolean isProgressive) {
@@ -66,6 +66,10 @@ public class LoadingBar extends Composite {
 		textElem.setInnerText(text);
 	}
 
+	public void show() {
+		this.show("Loading...");
+	}
+
 	public void show(String text) {
 		if (!isLoading) {
 			isLoading = true;
@@ -83,22 +87,28 @@ public class LoadingBar extends Composite {
 	}
 
 	public void hide() {
-		if (isProgressive) {
-			setProgressiveStatus(100.0);
-			Timer timerClose = new Timer() {
-				@Override
-				public void run() {
-					close();
-				}
-			};
-			timerClose.schedule(400);
-		} else {
-			close();
+		this.hide("Done!");
+	}
+
+	public void hide(final String closingMessage) {
+		if (container.isOrHasChild(this.getElement())) {
+			if (isProgressive) {
+				setProgressiveStatus(100.0);
+				Timer timerClose = new Timer() {
+					@Override
+					public void run() {
+						close(closingMessage);
+					}
+				};
+				timerClose.schedule(400);
+			} else {
+				close(closingMessage);
+			}
 		}
 	}
 
-	private void close() {
-		textElem.setInnerText("Done!");
+	private void close(String closingMessage) {
+		textElem.setInnerText(closingMessage);
 		bar.getElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isComplete());
 		Timer timerDone = new Timer() {
 			@Override
@@ -108,8 +118,6 @@ public class LoadingBar extends Composite {
 					@Override
 					public void run() {
 						reset();
-						bar.getElement().removeFromParent();
-						isLoading = false;
 					}
 				};
 				timerClose.schedule(1000);
@@ -138,7 +146,8 @@ public class LoadingBar extends Composite {
 		}
 		bar.getElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isComplete());
 		bar.getElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isClosing());
-
+		bar.getElement().removeFromParent();
+		isLoading = false;
 	}
 
 }

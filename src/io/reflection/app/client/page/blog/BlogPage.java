@@ -12,6 +12,7 @@ import io.reflection.app.api.blog.shared.call.GetPostsResponse;
 import io.reflection.app.api.blog.shared.call.event.GetPostsEventHandler;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.component.CellListElem;
+import io.reflection.app.client.component.LoadingBar;
 import io.reflection.app.client.component.Selector;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
@@ -65,7 +66,7 @@ public class BlogPage extends Page implements NavigationEventHandler, GetPostsEv
 
 	private Element atomLink;
 	private Element head;
-
+	private LoadingBar loadingBar = new LoadingBar(false);
 	@UiField DivElement searchPanel;
 
 	public BlogPage() {
@@ -96,6 +97,7 @@ public class BlogPage extends Page implements NavigationEventHandler, GetPostsEv
 		PostController.get().addDataDisplay(postsCellListElem);
 
 		simplePager.setDisplay(postsCellListElem);
+		loadingBar.show();
 	}
 
 	public void createAtomLink() {
@@ -151,6 +153,8 @@ public class BlogPage extends Page implements NavigationEventHandler, GetPostsEv
 		}
 
 		super.onDetach();
+
+		loadingBar.reset();
 	}
 
 	/*
@@ -185,8 +189,10 @@ public class BlogPage extends Page implements NavigationEventHandler, GetPostsEv
 			// } else {
 			// simplePager.setVisible(false);
 			// }
+			loadingBar.hide();
+		} else {
+
 		}
-		// preloader.hide();
 	}
 
 	/*

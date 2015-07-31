@@ -12,6 +12,7 @@ import io.reflection.app.api.blog.shared.call.GetPostRequest;
 import io.reflection.app.api.blog.shared.call.GetPostResponse;
 import io.reflection.app.api.blog.shared.call.event.GetPostEventHandler;
 import io.reflection.app.client.DefaultEventBus;
+import io.reflection.app.client.component.LoadingBar;
 import io.reflection.app.client.component.Selector;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
@@ -77,7 +78,7 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 
 	private Post post;
 	private boolean installed;
-
+	private LoadingBar loadingBar = new LoadingBar(false);
 	@UiField DivElement breadcrumbPanel;
 	@UiField DivElement searchPanel;
 	@UiField Element comments;
@@ -124,6 +125,18 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see io.reflection.app.client.page.Page#onDetach()
+	 */
+	@Override
+	protected void onDetach() {
+		super.onDetach();
+
+		loadingBar.reset();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.client.page.Page#getTitle()
 	 */
 	@Override
@@ -143,18 +156,13 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 			if (NavigationController.VIEW_ACTION_PARAMETER_VALUE.equals(current.getAction())) {
 				String postParam = current.getParameter(POST_ID_PARAMETER_INDEX);
 
-				Post post = PostController.get().getPost(postParam);
-
-				if (post == null) {
-					post = PostController.get().getPostPart(postParam);
-
-					if (post != null) {
-						setLoading(LoadingType.PartialLoadingType);
-					}
-				}
+				Post post = PostController.get().lookupPost(postParam);
 
 				if (post != null) {
 					show(post);
+				} else {
+					loadingBar.show();
+					PostController.get().fetchPost(postParam);
 				}
 			}
 		}
@@ -226,12 +234,12 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 
 		facebookShareLink.setHref("#" + NavigationController.get().getStack().toString() + "#f");
 
+		loadingBar.hide();
 	}
 
 	private void setLoading(LoadingType value) {
 		switch (value) {
 		case CompleteLoadingType:
-			// preloader.show();
 			title.getStyle().setDisplay(Display.NONE);
 			author.getParentElement().getStyle().setDisplay(Display.NONE);
 			authorFooter.getParentElement().getStyle().setDisplay(Display.NONE);
@@ -239,7 +247,6 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 			comments.getStyle().setDisplay(Display.NONE);
 			break;
 		case PartialLoadingType:
-			// preloader.show();
 			title.getStyle().clearDisplay();
 			author.getParentElement().getStyle().clearDisplay();
 			authorFooter.getParentElement().getStyle().clearDisplay();
@@ -247,7 +254,6 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 			comments.getStyle().setDisplay(Display.NONE);
 			break;
 		case NoneLoadingType:
-			// preloader.hide();
 			title.getStyle().clearDisplay();
 			author.getParentElement().getStyle().clearDisplay();
 			authorFooter.getParentElement().getStyle().clearDisplay();

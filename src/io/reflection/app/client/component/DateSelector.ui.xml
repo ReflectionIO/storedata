@@ -5,7 +5,7 @@
 	
 	</ui:style>
 	<g:HTMLPanel addStyleNames="{STYLES_INSTANCE.reflectionMainStyle.dateSelectionFilterContainer}">
-		<div class="{STYLES_INSTANCE.reflectionMainStyle.calendarContainer}">
+		<div ui:field="calendarContainer" class="{STYLES_INSTANCE.reflectionMainStyle.calendarContainer}">
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.dateSelectContainer}">
 				<div
 					class="{STYLES_INSTANCE.reflectionMainStyle.formField} {STYLES_INSTANCE.reflectionMainStyle.formFieldDateSelect} {STYLES_INSTANCE.reflectionMainStyle.formFieldDateSelectNoIcon}">

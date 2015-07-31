@@ -12,6 +12,7 @@ import io.reflection.app.api.blog.shared.call.GetPostsResponse;
 import io.reflection.app.api.blog.shared.call.event.GetPostsEventHandler;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.StyledButtonCell;
+import io.reflection.app.client.component.LoadingBar;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.PostController;
@@ -58,6 +59,8 @@ public class PostAdminPage extends Page implements GetPostsEventHandler, Navigat
 	@UiField(provided = true) CellTable<Post> posts = new CellTable<Post>(ServiceConstants.SHORT_STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) SimplePager simplePager = new SimplePager(false, false);
 
+	private LoadingBar loadingBar = new LoadingBar(false);
+
 	public PostAdminPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
@@ -68,6 +71,7 @@ public class PostAdminPage extends Page implements GetPostsEventHandler, Navigat
 		posts.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 		PostController.get().addDataDisplay(posts);
 		simplePager.setDisplay(posts);
+		loadingBar.show();
 	}
 
 	/*
@@ -81,6 +85,18 @@ public class PostAdminPage extends Page implements GetPostsEventHandler, Navigat
 
 		register(DefaultEventBus.get().addHandlerToSource(GetPostsEventHandler.TYPE, PostController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.page.Page#onDetach()
+	 */
+	@Override
+	protected void onDetach() {
+		super.onDetach();
+
+		loadingBar.reset();
 	}
 
 	private void createColumns() {
@@ -198,6 +214,9 @@ public class PostAdminPage extends Page implements GetPostsEventHandler, Navigat
 			} else {
 				simplePager.setVisible(false);
 			}
+			loadingBar.hide();
+		} else {
+
 		}
 	}
 

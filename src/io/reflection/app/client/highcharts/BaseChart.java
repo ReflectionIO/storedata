@@ -169,17 +169,17 @@ public abstract class BaseChart extends Composite {
 		if (chart != null) {
 			int chartWidth = this.getElement().getClientWidth();
 			if (chartWidth > 1920) {
-				setSize(chartWidth, 750);
+				setHeight(750);
 			} else if (chartWidth > 1680) {
-				setSize(chartWidth, 650);
+				setHeight(650);
 			} else if (chartWidth > 1280) {
-				setSize(chartWidth, 550);
+				setHeight(550);
 			} else if (chartWidth > 768) {
-				setSize(chartWidth, 450);
+				setHeight(450);
 			} else if (chartWidth > 480) {
-				setSize(chartWidth, 350);
+				setHeight(350);
 			} else {
-				setSize(chartWidth, 250);
+				setHeight(250);
 			}
 		}
 	}
@@ -265,6 +265,14 @@ public abstract class BaseChart extends Composite {
 
 	public void setSize(int width, int height) {
 		NativeChart.nativeSetSize(chart, width, height, false);
+	}
+
+	public void setHeight(int height) {
+		NativeChart.nativeSetSize(chart, this.getElement().getClientWidth(), height, false);
+	}
+
+	public void setWidth(int width) {
+		NativeChart.nativeSetSize(chart, width, this.getElement().getClientHeight(), false);
 	}
 
 	public void setTitle(JavaScriptObject title, JavaScriptObject subtitle) {

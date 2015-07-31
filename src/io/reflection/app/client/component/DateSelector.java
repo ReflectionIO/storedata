@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ShowRangeEvent;
@@ -56,6 +57,7 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 	@UiField FormDateBox dateBoxTo;
 	@UiField Selector selectFixedRange;
 	@UiField Button applyDateRange;
+	@UiField DivElement calendarContainer;
 
 	private Date disableBefore;
 
@@ -181,8 +183,8 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 	}
 
 	public void setTooltip(String text) {
-		getElement().addClassName("js-tooltip");
-		getElement().setAttribute("data-tooltip", text);
+		calendarContainer.addClassName("js-tooltip");
+		calendarContainer.setAttribute("data-tooltip", text);
 	}
 
 	/**
