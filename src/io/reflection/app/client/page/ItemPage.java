@@ -222,6 +222,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			sincePanel.removeFromParent();
 			dnwBtn.removeFromParent();
 			dnwBtnMobile.removeFromParent();
+			countrySelector.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
+			storeSelector.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
 		} else {
 			createColumns();
 			// RankController.get().getItemRevenueDataProvider().addDataDisplay(revenueTable);

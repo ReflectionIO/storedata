@@ -67,7 +67,7 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 		initWidget(uiBinder.createAndBindUi(this));
 
 		vendorId.setTooltip("Your Vendor ID is an 8 digit number beginning with 8. See this <a target=\"_blank\" href=\""
-				+ PageType.BlogPostPageType.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE, "7").asString()
+				+ PageType.BlogPostPageType.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE, "finding_your_vendor_id_on_itunesconnect").asString()
 				+ "\">blog post</a> on how to find it in iTunes Connect.");
 	}
 
