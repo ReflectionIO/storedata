@@ -128,7 +128,7 @@ public class ForgotPasswordForm extends Composite implements ForgotPasswordEvent
 	@Override
 	public void forgotPasswordSuccess(ForgotPasswordRequest input, ForgotPasswordResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			submit.setStatusSuccess("Email is on the way", 0);
+			submit.setStatusSuccess("Email Sent", 0);
 		} else if (output.status == StatusType.StatusTypeFailure && output.error != null && output.error.code == ApiError.UserNotFound.getCode()) {
 			submit.setStatusError("Invalid email address");
 			setEnabled(true);
