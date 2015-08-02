@@ -105,7 +105,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	@UiField Selector appStore;
 	@UiField Selector country;
 	@UiField DateSelector dateSelector;
-
+	@UiField HTMLPanel waitingForDataPanel;
 	@UiField Button viewAllBtn;
 	@UiField SpanElement viewAllSpan;
 

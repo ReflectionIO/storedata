@@ -77,6 +77,7 @@ import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Cursor;
+import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -167,7 +168,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField SpanElement infoDateRange;
 	@UiField SpanElement infoTotalRevenue;
 
-	@UiField DivElement chartContainer;
+	@UiField HTMLPanel chartContainer;
 	@UiField(provided = true) Chart chartRevenue = new Chart(XDataType.DateXAxisDataType);
 	@UiField(provided = true) Chart chartDownloads = new Chart(XDataType.DateXAxisDataType);
 	@UiField(provided = true) Chart chartRank = new Chart(XDataType.DateXAxisDataType);
@@ -188,7 +189,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField ButtonElement dnwBtnMobile;
 	@UiField DivElement sincePanel;
 	@UiField HTMLPanel noDataPanel;
-	@UiField HTMLPanel waitingForDataPanel;
 	@UiField DivElement appDetailsPanel;
 
 	private LoadingBar loadingBar;
@@ -205,6 +205,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	public ItemPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
+		chartContainer.getElement().getStyle().setPosition(Position.RELATIVE);
+
 		tabs.put(REVENUE_CHART_TYPE, revenueItem);
 		tabs.put(DOWNLOADS_CHART_TYPE, downloadsItem);
 		tabs.put(RANKING_CHART_TYPE, rankingItem);
@@ -212,7 +214,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 		appDetailsItem.getStyle().setCursor(Cursor.DEFAULT);
 
-		// TODO remove not working elements for normal user
 		if (!SessionController.get().isLoggedInUserAdmin()) {
 			tablePanel.removeFromParent();
 			revenueTableDesktop.removeFromParent();
@@ -707,6 +708,18 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			if (isNewDataRequired) {
 				infoTotalRevenue.setInnerSafeHtml(AnimationHelper.getLoaderInlineSafeHTML());
 				setPriceInnerText(null);
+				setNoData(false);
+				chartRevenue.setLoading(true);
+				chartDownloads.setLoading(true);
+				chartRank.setLoading(true);
+				revenueTableDesktop.setLoadingIndicator(AnimationHelper.createLoadingIndicator(
+						CalendarUtil.getDaysBetween(dateSelector.getValue().getFrom(), dateSelector.getValue().getTo()) + 1, 3));
+				revenueTableDesktop.setRowCount(0, false);
+				revenueTableMobile.setRowCount(0, false);
+				dateHeader.setHeaderStyleNames(style.canBeSorted());
+				revenueHeader.setHeaderStyleNames(style.canBeSorted());
+				revenueForPeriodHeader.setHeaderStyleNames(style.canBeSorted());
+				loadingBar.show();
 				getChartData();
 			}
 
@@ -725,7 +738,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	}
 
 	private void setChartGraphsVisible(boolean visible) {
-		if (visible) {
+		if (visible && !noDataPanel.isVisible()) {
 			// TODO hide map
 			switch (YDataType.fromString(selectedTab)) {
 			case RevenueYAxisDataType:
@@ -767,8 +780,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			revenueTableDesktop.setRowCount(0, true);
 			revenueTableMobile.setRowCount(0, true);
 		}
-		// noDataPanel.setVisible(noData);
-		// setChartGraphsVisible(!noData);
+		noDataPanel.setVisible(noData);
+		setChartGraphsVisible(!noData);
 	}
 
 	private boolean isValidStack(Stack current) {
@@ -806,20 +819,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 	private void getChartData() {
 		if (item != null) {
-			chartRevenue.setLoading(true);
-			chartDownloads.setLoading(true);
-			chartRank.setLoading(true);
 			RankController.get().cancelRequestItemRanks();
 			RankController.get().cancelRequestItemSalesRanks();
-			revenueTableDesktop.setLoadingIndicator(AnimationHelper.createLoadingIndicator(
-					CalendarUtil.getDaysBetween(dateSelector.getValue().getFrom(), dateSelector.getValue().getTo()) + 1, 3));
-			revenueTableDesktop.setRowCount(0, false);
-			revenueTableMobile.setRowCount(0, false);
-			dateHeader.setHeaderStyleNames(style.canBeSorted());
-			revenueHeader.setHeaderStyleNames(style.canBeSorted());
-			revenueForPeriodHeader.setHeaderStyleNames(style.canBeSorted());
-			setNoData(false);
-			loadingBar.show();
 			if (LinkedAccountController.get().getLinkedAccountItem(item) != null) {
 				if (MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage)) {
 					RankController.get().fetchItemSalesRanks(item);
