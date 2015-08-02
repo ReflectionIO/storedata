@@ -1948,14 +1948,6 @@ public interface Styles extends ClientBundle {
 		String windowHeightScrollEffectContainer();
 	}
 
-	public interface ReflectionMainIE8Styles extends CssResource {
-
-	}
-
-	public interface ConfirmationDialogStyles extends CssResource {}
-
-	public interface BlogStyles extends CssResource {}
-
 	public static final Styles STYLES_INSTANCE = GWT.create(Styles.class);
 
 	@Source("preloader.gif")
@@ -1977,18 +1969,10 @@ public interface Styles extends ClientBundle {
 	@Source("reflection.gss")
 	ReflectionStyles reflection();
 
-	@Source("confirmationdialog.gss")
-	ConfirmationDialogStyles confirmationDialog();
-
-	@Source("blog.gss")
-	ConfirmationDialogStyles blog();
-
 	@Source("homepage.gss")
 	HomePageStyles homePageStyle();
 
 	@Source("reflectionMain.gss")
 	ReflectionMainStyles reflectionMainStyle();
 
-	@Source("reflectionMainIE8.gss")
-	ReflectionMainIE8Styles reflectionMainIE8Style();
 }
