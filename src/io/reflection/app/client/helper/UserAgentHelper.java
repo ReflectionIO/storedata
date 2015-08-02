@@ -95,14 +95,16 @@ public class UserAgentHelper {
 		});
 	}-*/;
 
-	public static void initIETweaks() {
+	public static boolean checkIECompatibility() {
 		if (isIE() && getIEVersion() < 9) {
 			HTMLPanel outdatedBrowser = new HTMLPanel(
 					SafeHtmlUtils
 							.fromTrustedString("<p>Uh oh... Reflection doesn't work in this browser. &nbsp; &nbsp;<a href=\"http://outdatedbrowser.com/en\" target=\"_blank\">Download a compatible browser</a></p>"));
 			outdatedBrowser.setStyleName("window-warning");
 			RootPanel.get().add(outdatedBrowser);
+			return false;
 		}
+		return true;
 	}
 
 }
