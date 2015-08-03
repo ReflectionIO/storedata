@@ -329,7 +329,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		register(DefaultEventBus.get().addHandlerToSource(RevokePermissionEventHandler.TYPE, UserController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(GetUserDetailsEventHandler.TYPE, UserController.get(), this));
 
-		ResponsiveDesignHelper.makeTabsResponsive();
+		ResponsiveDesignHelper.makeTabsResponsiveMultiPage();
 
 	}
 

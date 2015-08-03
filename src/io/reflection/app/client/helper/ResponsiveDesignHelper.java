@@ -69,6 +69,32 @@ public class ResponsiveDesignHelper {
 			}
 		};
 
+		updateTabsMultiPage = function() {
+			var instance = this;
+			if ($wnd.$($wnd).width() < 720) {
+				$wnd.$(".tabs-to-dropdown").each(
+						function(i, element) {
+							var tabSwitched = $wnd.$(element).parent('div')
+									.hasClass('tabs-to-dropdown-container');
+							if (!tabSwitched) {
+								turnTabsToDropDown($wnd.$(element));
+							} else {
+								unsplitTabsToMobileDropDown($wnd.$(element));
+								turnTabsToDropDown($wnd.$(element));
+							}
+						});
+			} else if ($wnd.$($wnd).width() > 720) {
+				$wnd.$(".tabs-to-dropdown").each(
+						function(i, element) {
+							var tabSwitched = $wnd.$(element).parent('div')
+									.hasClass('tabs-to-dropdown-container');
+							if (tabSwitched) {
+								unsplitTabsToMobileDropDown($wnd.$(element));
+							}
+						});
+			}
+		};
+
 		turnTabsToDropDown = function(original) {
 			var activeElement = $wnd.$('<span>');
 
@@ -117,6 +143,13 @@ public class ResponsiveDesignHelper {
 
 	public static native void makeTabsResponsive()/*-{
 		new updateTabs();
+	}-*/;
+
+	/**
+	 * This is a temporary fix for mobile tabs used in multiple pages (Account section)
+	 */
+	public static native void makeTabsResponsiveMultiPage()/*-{
+		new updateTabsMultiPage();
 	}-*/;
 
 }
