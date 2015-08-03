@@ -130,7 +130,7 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 				submittedSuccessPanel.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
 			}
 		}
-		registerForm.setButtonSuccess("Application Sent!", 0);
+		registerForm.setButtonSuccess("Application Sent", 0);
 	}
 
 	/*

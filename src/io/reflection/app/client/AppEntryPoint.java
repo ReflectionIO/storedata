@@ -43,21 +43,22 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 		// fireCurrentHistoryState -> onValueChange -> addPages
 		History.addValueChangeHandler(NavigationController.get());
 
-		makeContainer();
 		Styles.STYLES_INSTANCE.reflectionMainStyle().ensureInjected();
-		if (UserAgentHelper.isIE() && UserAgentHelper.getIEVersion() < 9) {
-			Styles.STYLES_INSTANCE.reflectionMainIE8Style().ensureInjected();
+
+		if (UserAgentHelper.checkIECompatibility()) {
+
+			makeContainer();
+
+			// SuperAlertBox.start();
+
+			// add page area
+
+			// the above are just place holders, this kicks of the actual page loading
+			History.fireCurrentHistoryState();
+
+			TooltipHelper.updateHelperTooltip();
+
 		}
-
-		// SuperAlertBox.start();
-
-		// add page area
-
-		// the above are just place holders, this kicks of the actual page loading
-		History.fireCurrentHistoryState();
-
-		TooltipHelper.updateHelperTooltip();
-
 	}
 
 	private void makeContainer() {
@@ -73,7 +74,6 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 		RootPanel.get().add(new BackToTop());
 		UserAgentHelper.initCustomScrollbars();
 		Document.get().getHead().appendChild(DOMHelper.getJSScriptFromUrl("js/vendor/picturefillFirefox.js"));
-		UserAgentHelper.initIETweaks();
 		ResponsiveDesignHelper.initTabsResponsive();
 
 	}

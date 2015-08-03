@@ -92,7 +92,8 @@ public class ResponsiveDesignHelper {
 				activeElement.toggleClass("is-open");
 			});
 
-			original.find(".tabs__tab").on("click", function() {
+			original.find(".tabs__tab").not(".is-disabled").on("click",
+					function() {
 				original.slideUp(200);
 				activeElement.html($wnd.$(this).find('span').html());
 				activeElement.removeClass("is-open");
