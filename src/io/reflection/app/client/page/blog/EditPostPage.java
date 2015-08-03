@@ -27,7 +27,6 @@ import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.text.MarkdownEditor;
-import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Post;
 import io.reflection.app.shared.util.LookupHelper;
 
@@ -70,8 +69,6 @@ public class EditPostPage extends Page implements NavigationEventHandler, Create
 
 	public EditPostPage() {
 		initWidget(uiBinder.createAndBindUi(this));
-
-		Styles.STYLES_INSTANCE.blog().ensureInjected();
 
 	}
 

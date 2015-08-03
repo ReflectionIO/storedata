@@ -433,7 +433,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 		pager = null;
 		linkedAccountsCount = -1;
 		rows.clear();
-
+		linkedAccountsFetched = false;
 		updateRowData(0, rows);
 		updateRowCount(0, false);
 
