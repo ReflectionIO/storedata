@@ -635,6 +635,12 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 			comingPage = current.getParameter(2);
 
+			if (SessionController.get().isLoggedInUserAdmin() || MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage)) {
+				setRevenueDownloadTabsEnabled(true);
+			} else {
+				setRevenueDownloadTabsEnabled(false);
+			}
+
 			String newInternalId = current.getParameter(0);
 			boolean isNewDataRequired = false;
 
@@ -721,12 +727,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				revenueForPeriodHeader.setHeaderStyleNames(style.canBeSorted());
 				loadingBar.show();
 				getChartData();
-			}
-
-			if (SessionController.get().isLoggedInUserAdmin() || MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage)) {
-				setRevenueDownloadTabsEnabled(true);
-			} else {
-				setRevenueDownloadTabsEnabled(false);
 			}
 
 			setChartGraphsVisible(toggleChartDate.getValue());
