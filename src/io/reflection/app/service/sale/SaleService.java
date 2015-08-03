@@ -891,7 +891,7 @@ final class SaleService implements ISaleService {
 			throws DataAccessException {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-		String getItemsByCountryQuery = String.format("SELECT itemid, country FROM `sale_summary` WHERE dataaccountid=%d AND date BETWEEN '%s' AND '%s'",
+		String getItemsByCountryQuery = String.format("SELECT DISTINCT itemid, country FROM `sale_summary` WHERE dataaccountid=%d AND date BETWEEN '%s' AND '%s'",
 				dataAccountId, sdf.format(gatherFrom), sdf.format(gatherTo));
 
 		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
@@ -924,9 +924,44 @@ final class SaleService implements ISaleService {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 		String getItemsByCountryQuery = String.format("select distinct(itemid) as itemid from sale where "
-				+ "dataaccountid=%d and `begin`='%s' and parentidentifier="
-				+ "  (select sku from sale where dataaccountid=%d and itemid='%s' limit 1)",
+				+ "dataaccountid=%s and `begin`='%s' and parentidentifier="
+				+ "  (select sku from sale where dataaccountid=%s and itemid='%s' limit 1)",
 				dataAccountId, sdf.format(date), dataAccountId, mainItemId);
+
+		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
+
+		try {
+			saleConnection.connect();
+			saleConnection.executeQuery(getItemsByCountryQuery);
+
+			ArrayList<String> list = new ArrayList<String>();
+
+			while (saleConnection.fetchNextRow()) {
+				String entry = saleConnection.getCurrentRowString("itemid");
+				list.add(entry);
+			}
+
+			return list;
+		} finally {
+			if (saleConnection != null) {
+				saleConnection.disconnect();
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see io.reflection.app.service.sale.ISaleService#getIapItemIdsForParentItemBetweenDates(java.lang.String, java.lang.String, java.util.Date, java.util.Date)
+	 */
+	@Override
+	public List<String> getIapItemIdsForParentItemBetweenDates(Long dataAccountId, String mainItemId, Date from, Date to) throws DataAccessException {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+		String getItemsByCountryQuery = String.format("select distinct(itemid) as itemid from sale where "
+				+ "dataaccountid=%s and `begin` BETWEEN '%s' and '%s' and parentidentifier="
+				+ "  (select sku from sale where dataaccountid=%d and itemid='%s' limit 1)",
+				dataAccountId, sdf.format(from), sdf.format(to), dataAccountId, mainItemId);
 
 		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
 

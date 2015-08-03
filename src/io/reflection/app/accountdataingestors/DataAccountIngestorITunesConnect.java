@@ -116,7 +116,7 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 	 * @param dataAccountId
 	 * @param date
 	 */
-	private void enqueueDataAccountItemsToGatherSplitData(Long dataAccountId, Date date) {
+	public void enqueueDataAccountItemsToGatherSplitData(Long dataAccountId, Date date) {
 		/*
 		 * Get all sale summary rows for this dataaccount for this date. For each
 		 * item id, get its iap ids and then for each country the main item is in,
@@ -132,6 +132,8 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyy-MM-dd");
 
+		String gatherFromStr = sdf.format(gatherFrom);
+		String gatherToStr = sdf.format(gatherTo);
 		try {
 			ISaleService saleService = SaleServiceProvider.provide();
 			List<SimpleEntry<String, String>> mainItemIdsAndCountries = saleService.getSoldItemIdsForAccountInDateRange(dataAccountId,
@@ -162,15 +164,15 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 
 				QueueHelper.enqueue("gathersplitsaledata", Method.PULL,
 						new SimpleEntry<String, String>("dataAccountId", String.valueOf(dataAccountId)),
-						new SimpleEntry<String, String>("gatherFrom", sdf.format(gatherFrom)),
-						new SimpleEntry<String, String>("gatherTo", sdf.format(gatherTo)),
+						new SimpleEntry<String, String>("gatherFrom", gatherFromStr),
+						new SimpleEntry<String, String>("gatherTo", gatherToStr),
 						new SimpleEntry<String, String>("mainItemId", mainItemId),
 						new SimpleEntry<String, String>("countryCode", country),
 						new SimpleEntry<String, String>("iapItemIds", iapItemIds));
 			}
 		} catch (DataAccessException e) {
 			LOG.log(Level.SEVERE, String.format("Exception occured while retrieving main item id for data account [%d] between [%s] and [%s]", dataAccountId,
-					sdf.format(gatherFrom), sdf.format(gatherTo)), e);
+					gatherFromStr, gatherToStr), e);
 		}
 	}
 
