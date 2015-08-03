@@ -61,6 +61,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
+@Deprecated
 public class Header extends Composite implements UsersEventHandler, NavigationEventHandler, SessionEventHandler, UserPowersEventHandler,
 		ChangeUserDetailsEventHandler, LinkAccountEventHandler, DeleteLinkedAccountEventHandler {
 
