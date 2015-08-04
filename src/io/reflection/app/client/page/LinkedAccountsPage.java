@@ -74,10 +74,10 @@ import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSe
 import com.google.gwt.user.cellview.client.SafeHtmlHeader;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Image;
@@ -134,6 +134,8 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 	@UiField IosMacLinkAccountForm iosMacAddForm;
 	@UiField Button addAnotherLinkedAccount;
+
+	private IosMacLinkAccountForm updatingLinkedAccountForm = null;
 
 	private User user = SessionController.get().getLoggedInUser();
 
@@ -287,8 +289,10 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 				public void onChange(DataAccount dataAccount, EVENT_TYPE eventType) {
 					if (updateLinkedAccountForm.validate()) {
 						updateLinkedAccountForm.setFormErrors();
+						updateLinkedAccountForm.setEnabled(false);
+						updateLinkedAccountForm.setStatusLoading("Updating ..");
+						updatingLinkedAccountForm = updateLinkedAccountForm;
 						LinkedAccountController.get().updateLinkedAccont(rowValue.id, dataAccount.password, dataAccount.properties);
-						// updateLinkedAccountform.setStatusLoading("Updating ..");
 					} else {
 						updateLinkedAccountForm.setFormErrors();
 					}
@@ -429,6 +433,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 			@Override
 			public void update(int index, DataAccount object, String value) {
+
 				TableRowElement rowElem = linkedAccountsTable.getRowElement(index).cast();
 				TableRowElement subRowElem = rowElem.getNextSiblingElement().cast();
 				FormElement formElem = subRowElem.getFirstChildElement().getElementsByTagName("form").getItem(0).cast();
@@ -630,9 +635,16 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	 */
 	@Override
 	public void updateLinkedAccountSuccess(UpdateLinkedAccountRequest input, UpdateLinkedAccountResponse output) {
-		if (output.status == StatusType.StatusTypeSuccess) {
-
-		} else {}
+		if (updatingLinkedAccountForm != null) {
+			if (output.status == StatusType.StatusTypeSuccess) {
+				updatingLinkedAccountForm.setStatusSuccess("Updated!");
+			} else {
+				updatingLinkedAccountForm.setStatusError();
+			}
+			updatingLinkedAccountForm.clearPassword();
+			updatingLinkedAccountForm.setEnabled(true);
+			updatingLinkedAccountForm = null;
+		}
 	}
 
 	/*
@@ -642,7 +654,14 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	 * UpdateLinkedAccountRequest, java.lang.Throwable)
 	 */
 	@Override
-	public void updateLinkedAccountFailure(UpdateLinkedAccountRequest input, Throwable caught) {}
+	public void updateLinkedAccountFailure(UpdateLinkedAccountRequest input, Throwable caught) {
+		if (updatingLinkedAccountForm != null) {
+			updatingLinkedAccountForm.setStatusError();
+			updatingLinkedAccountForm.clearPassword();
+			updatingLinkedAccountForm.setEnabled(true);
+			updatingLinkedAccountForm = null;
+		}
+	}
 
 	/*
 	 * (non-Javadoc)
