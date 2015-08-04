@@ -585,16 +585,16 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		String usernameText = username.getText();
 		// Check fields constraints
 		if (usernameText == null || usernameText.length() == 0) {
-			usernameError = "Cannot be empty";
-			validated = false;
-		} else if (usernameText.length() < 6) {
-			usernameError = "Too short (minimum 6 characters)";
+			usernameError = FormHelper.ERROR_EMAIL_EMPTY;
 			validated = false;
 		} else if (usernameText.length() > 255) {
 			usernameError = "Too long (maximum 255 characters)";
 			validated = false;
+		} else if (!usernameText.contains("@")) {
+			usernameError = FormHelper.ERROR_EMAIL_MISSING_AT;
+			validated = false;
 		} else if (!FormHelper.isValidEmail(usernameText)) {
-			usernameError = "Invalid email address";
+			usernameError = FormHelper.ERROR_EMAIL_WRONG;
 			validated = false;
 		} else {
 			usernameError = null;
@@ -602,10 +602,10 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		}
 
 		if (forenameText == null || forenameText.length() == 0) {
-			forenameError = "Cannot be empty";
+			forenameError = FormHelper.ERROR_FIRST_NAME_EMPTY;
 			validated = false;
 		} else if (forenameText.length() < 2) {
-			forenameError = "Too short (minimum 2 characters)";
+			forenameError = FormHelper.ERROR_NAME_SHORT;
 			validated = false;
 		} else if (forenameText.length() > 30) {
 			forenameError = "Too long (maximum 30 characters)";
@@ -619,10 +619,10 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		}
 
 		if (surnameText == null || surnameText.length() == 0) {
-			surnameError = "Cannot be empty";
+			surnameError = FormHelper.ERROR_LAST_NAME_EMPTY;
 			validated = false;
 		} else if (surnameText.length() < 2) {
-			surnameError = "(minimum 2 characters)";
+			surnameError = FormHelper.ERROR_NAME_SHORT;
 			validated = false;
 		} else if (surnameText.length() > 30) {
 			surnameError = "Too long (maximum 30 characters)";
@@ -636,10 +636,10 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		}
 
 		if (companyText == null || companyText.length() == 0) {
-			companyError = "Cannot be empty";
+			companyError = FormHelper.ERROR_COMPANY_EMPTY;
 			validated = false;
 		} else if (companyText.length() < 2) {
-			companyError = "(minimum 2 characters)";
+			companyError = FormHelper.ERROR_COMPANY_SHORT;
 			validated = false;
 		} else if (companyText.length() > 255) {
 			companyError = "Too long (maximum 255 characters)";
@@ -668,16 +668,16 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		String passwordText = password.getText();
 		// Check password constraints for normal user
 		if (newPasswordText == null || newPasswordText.length() == 0) {
-			newPasswordError = "Cannot be empty";
+			newPasswordError = FormHelper.ERROR_PASSWORD_CREATE_EMPTY;
 			validated = false;
 		} else if (newPasswordText.length() < 6) {
-			newPasswordError = "Too short (minimum 6 characters)";
+			newPasswordError = FormHelper.ERROR_PASSWORD_CREATE_SHORT;
 			validated = false;
 		} else if (newPasswordText.length() > 64) {
 			newPasswordError = "Too long (maximum 64 characters)";
 			validated = false;
 		} else if (!newPasswordText.equals(confirmPasswordText)) {
-			newPasswordError = "Password and confirmation should match";
+			newPasswordError = FormHelper.ERROR_PASSWORD_CREATE_CONFIRMATION_MATCH;
 			validated = false;
 		} else if (!FormHelper.isTrimmed(newPasswordText)) {
 			newPasswordError = "Whitespaces not allowed either before or after the string";
@@ -689,10 +689,10 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		// Check password constraints for not admin user
 		if (!SessionController.get().isLoggedInUserAdmin()) {
 			if (passwordText == null || passwordText.length() == 0) {
-				passwordError = "Cannot be empty";
+				passwordError = FormHelper.ERROR_PASSWORD_LOGIN_EMPTY;
 				validated = false;
 			} else if (passwordText.length() < 6) {
-				passwordError = "Too short (minimum 6 characters)";
+				passwordError = FormHelper.ERROR_PASSWORD_CREATE_SHORT;
 				validated = false;
 			} else if (passwordText.length() > 64) {
 				passwordError = "Too long (maximum 64 characters)";

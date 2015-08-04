@@ -12,10 +12,10 @@ import io.reflection.app.api.core.shared.call.LoginResponse;
 import io.reflection.app.api.core.shared.call.event.LoginEventHandler;
 import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.client.DefaultEventBus;
-import io.reflection.app.client.component.LoadingButton;
 import io.reflection.app.client.component.FormCheckbox;
-import io.reflection.app.client.component.TextField;
+import io.reflection.app.client.component.LoadingButton;
 import io.reflection.app.client.component.PasswordField;
+import io.reflection.app.client.component.TextField;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.SessionController;
@@ -33,6 +33,7 @@ import io.reflection.app.datatypes.shared.User;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
@@ -56,12 +57,14 @@ public class LoginForm extends Composite implements LoginEventHandler, UserPower
 	interface LoginFormUiBinder extends UiBinder<Widget, LoginForm> {}
 
 	@UiField TextField emailFormField;
-	private String EmailNote = null;
+	private String emailNote = null;
 	@UiField PasswordField passwordFormField;
 	private String passwordNote = null;
 	@UiField InlineHyperlink resetPasswordLink;
 	@UiField FormCheckbox rememberMe;
 	@UiField LoadingButton loginBtn;
+	@UiField ParagraphElement generalErrorParagraph;
+	private String generalErrorNote = "";
 
 	public LoginForm() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -129,8 +132,8 @@ public class LoginForm extends Composite implements LoginEventHandler, UserPower
 			loginBtn.setStatusLoading("Logging in");
 			SessionController.get().login(emailFormField.getText(), passwordFormField.getText(), rememberMe.getValue().booleanValue()); // Execute user login
 		} else {
-			if (EmailNote != null) {
-				emailFormField.showNote(EmailNote, true);
+			if (emailNote != null) {
+				emailFormField.showNote(emailNote, true);
 			} else {
 				emailFormField.hideNote();
 			}
@@ -139,6 +142,10 @@ public class LoginForm extends Composite implements LoginEventHandler, UserPower
 			} else {
 				passwordFormField.hideNote();
 			}
+			generalErrorParagraph.setInnerText(generalErrorNote);
+			loginBtn.setStatusError(generalErrorNote.equals(FormHelper.ERROR_FORM_EMPTY_FIELDS) ? FormHelper.ERROR_BUTTON_INCOMPLETE
+					: FormHelper.ERROR_BUTTON_WRONG);
+			generalErrorNote = "";
 		}
 	}
 
@@ -151,33 +158,41 @@ public class LoginForm extends Composite implements LoginEventHandler, UserPower
 
 		// Check fields constraints
 		if (emailText == null || emailText.length() == 0) {
-			EmailNote = "Cannot be empty";
-			validated = false;
-		} else if (emailText.length() < 6) {
-			EmailNote = "Too short (minimum 6 characters)";
+			emailNote = FormHelper.ERROR_EMAIL_LOGIN_EMPTY;
+			generalErrorNote = FormHelper.ERROR_FORM_EMPTY_FIELDS;
 			validated = false;
 		} else if (emailText.length() > 255) {
-			EmailNote = "Too long (maximum 255 characters)";
+			emailNote = "Too long (maximum 255 characters)";
+			generalErrorNote = FormHelper.ERROR_FORM_WRONG_FIELDS;
+			validated = false;
+		} else if (!emailText.contains("@")) {
+			emailNote = FormHelper.ERROR_EMAIL_MISSING_AT;
+			generalErrorNote = FormHelper.ERROR_FORM_WRONG_FIELDS;
 			validated = false;
 		} else if (!FormHelper.isValidEmail(emailText)) {
-			EmailNote = "Invalid email address";
+			emailNote = FormHelper.ERROR_EMAIL_WRONG;
+			generalErrorNote = FormHelper.ERROR_FORM_WRONG_FIELDS;
 			validated = false;
 		} else {
-			EmailNote = null;
+			emailNote = null;
 			validated = validated && true;
 		}
 
 		if (passwordText == null || passwordText.length() == 0) {
-			passwordNote = "Cannot be empty";
+			passwordNote = FormHelper.ERROR_PASSWORD_LOGIN_EMPTY;
+			generalErrorNote = FormHelper.ERROR_FORM_EMPTY_FIELDS;
 			validated = false;
 		} else if (passwordText.length() < 6) {
-			passwordNote = "Too short (minimum 6 characters)";
+			passwordNote = FormHelper.ERROR_PASSWORD_LOGIN_WRONG;
+			generalErrorNote = FormHelper.ERROR_FORM_WRONG_FIELDS;
 			validated = false;
 		} else if (passwordText.length() > 64) {
-			passwordNote = "Too long (maximum 64 characters)";
+			passwordNote = FormHelper.ERROR_PASSWORD_LOGIN_WRONG;
+			generalErrorNote = FormHelper.ERROR_FORM_WRONG_FIELDS;
 			validated = false;
 		} else if (!FormHelper.isTrimmed(passwordText)) {
 			passwordNote = "Whitespaces not allowed either before or after the string";
+			generalErrorNote = FormHelper.ERROR_FORM_WRONG_FIELDS;
 			validated = false;
 		} else {
 			passwordNote = null;
@@ -203,6 +218,7 @@ public class LoginForm extends Composite implements LoginEventHandler, UserPower
 	private void clearErrors() {
 		emailFormField.hideNote();
 		passwordFormField.hideNote();
+		generalErrorParagraph.setInnerText("");
 	}
 
 	public void setEnabled(boolean enabled) {
@@ -305,7 +321,7 @@ public class LoginForm extends Composite implements LoginEventHandler, UserPower
 	 */
 	@Override
 	public void loginFailure(LoginRequest input, Throwable caught) {
-		loginBtn.setStatusError("Oops, something went wrong");
+		loginBtn.setStatusError("Oops..Wrong Email or Password");
 		setEnabled(true);
 	}
 
@@ -338,7 +354,7 @@ public class LoginForm extends Composite implements LoginEventHandler, UserPower
 	 */
 	@Override
 	public void userLoginFailed(Error error) {
-		loginBtn.setStatusError("Oops, something went wrong");
+		loginBtn.setStatusError("Oops..Wrong Email or Password");
 		setEnabled(true);
 	}
 

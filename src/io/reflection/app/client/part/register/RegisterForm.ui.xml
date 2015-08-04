@@ -30,6 +30,11 @@
 			styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth} {STYLES_INSTANCE.reflectionMainStyle.maintainAfterSubmit} {STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}">
 			Apply Now
 		</c:LoadingButton>
+
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.generalErrorMessage}">
+			<p ui:field="generalErrorParagraph"></p>
+		</div>
+
 	</g:HTMLPanel>
 
 

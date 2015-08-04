@@ -10,6 +10,7 @@ package io.reflection.app.client.part.login;
 import io.reflection.app.client.component.LoadingButton;
 import io.reflection.app.client.component.PasswordField;
 import io.reflection.app.client.controller.SessionController;
+import io.reflection.app.client.helper.FormHelper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -92,16 +93,16 @@ public class ResetPasswordForm extends Composite {
 
 		// Check password constraints for normal user
 		if (newPasswordValue == null || newPasswordValue.length() == 0) {
-			newPasswordError = "Cannot be empty";
+			newPasswordError = FormHelper.ERROR_PASSWORD_CREATE_EMPTY;
 			validated = false;
 		} else if (newPasswordValue.length() < 6) {
-			newPasswordError = "Too short (minimum 6 characters)";
+			newPasswordError = FormHelper.ERROR_PASSWORD_CREATE_SHORT;
 			validated = false;
 		} else if (newPasswordValue.length() > 64) {
 			newPasswordError = "Too long (maximum 64 characters)";
 			validated = false;
 		} else if (!newPasswordValue.equals(confirmPasswordValue)) {
-			newPasswordError = "Password and confirmation should match";
+			newPasswordError = FormHelper.ERROR_PASSWORD_CREATE_CONFIRMATION_MATCH;
 			validated = false;
 		} else {
 			newPasswordError = null;

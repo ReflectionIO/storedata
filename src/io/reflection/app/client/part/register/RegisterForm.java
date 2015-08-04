@@ -20,6 +20,7 @@ import io.reflection.app.client.res.Styles;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.HeadingElement;
+import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyPressEvent;
@@ -60,6 +61,9 @@ public class RegisterForm extends Composite {
 	@UiField HTMLPanel termAndCondGroup;
 	@UiField FormCheckbox termAndCond;
 	private String termAndCondError;
+
+	@UiField ParagraphElement generalErrorParagraph;
+	private String generalErrorNote = "";
 
 	@UiField LoadingButton registerBtn;
 
@@ -149,6 +153,10 @@ public class RegisterForm extends Composite {
 			} else {
 				termAndCond.hideError();
 			}
+			generalErrorParagraph.setInnerText(generalErrorNote);
+			registerBtn.setStatusError(generalErrorNote.equals(FormHelper.ERROR_FORM_EMPTY_FIELDS) ? FormHelper.ERROR_BUTTON_INCOMPLETE
+					: FormHelper.ERROR_BUTTON_WRONG);
+			generalErrorNote = "";
 		}
 	}
 
@@ -169,86 +177,109 @@ public class RegisterForm extends Composite {
 		String confirmPasswordValue = confirmPassword.getText();
 
 		// Check fields constraints
-		if (forenameValue == null || forenameValue.length() == 0) {
-			forenameNote = "Cannot be empty";
-			validated = false;
-		} else if (forenameValue.length() < 2) {
-			forenameNote = "Too short (minimum 2 characters)";
-			validated = false;
-		} else if (forenameValue.length() > 30) {
-			forenameNote = "Too long (maximum 30 characters)";
-			validated = false;
-		} else if (!FormHelper.isTrimmed(forenameValue)) {
-			forenameNote = "Whitespaces not allowed either before or after the string";
-			validated = false;
-		} else {
-			forenameNote = null;
-			validated = validated && true;
-		}
-		if (surnameValue == null || surnameValue.length() == 0) {
-			surnameNote = "Cannot be empty";
-			validated = false;
-		} else if (surnameValue.length() < 2) {
-			surnameNote = "(minimum 2 characters)";
-			validated = false;
-		} else if (surnameValue.length() > 30) {
-			surnameNote = "Too long (maximum 30 characters)";
-			validated = false;
-		} else if (!FormHelper.isTrimmed(surnameValue)) {
-			surnameNote = "Whitespaces not allowed either before or after the string";
-			validated = false;
-		} else {
-			surnameNote = null;
-			validated = validated && true;
-		}
-		if (companyValue == null || companyValue.length() == 0) {
-			companyNote = "Cannot be empty";
-			validated = false;
-		} else if (companyValue.length() < 2) {
-			companyNote = "(minimum 2 characters)";
-			validated = false;
-		} else if (companyValue.length() > 255) {
-			companyNote = "Too long (maximum 255 characters)";
-			validated = false;
-		} else if (!FormHelper.isTrimmed(companyValue)) {
-			companyNote = "Whitespaces not allowed either before or after the string";
-			validated = false;
-		} else {
-			companyNote = null;
-			validated = validated && true;
-		}
-		if (emailValue == null || emailValue.length() == 0) {
-			emailNote = "Cannot be empty";
-			validated = false;
-		} else if (emailValue.length() < 6) {
-			emailNote = "Too short (minimum 6 characters)";
-			validated = false;
-		} else if (emailValue.length() > 255) {
-			emailNote = "Too long (maximum 255 characters)";
-			validated = false;
-		} else if (!FormHelper.isValidEmail(emailValue)) {
-			emailNote = "Invalid email address";
-			validated = false;
-		} else {
-			emailNote = null;
-			validated = validated && true;
-		}
+		if (isRequestInvite || SessionController.get().isLoggedInUserAdmin()) {
+			if (forenameValue == null || forenameValue.length() == 0) {
+				forenameNote = FormHelper.ERROR_FIRST_NAME_EMPTY;
+				generalErrorNote = FormHelper.ERROR_FORM_EMPTY_FIELDS;
+				validated = false;
+			} else if (forenameValue.length() < 2) {
+				forenameNote = FormHelper.ERROR_NAME_SHORT;
+				generalErrorNote = FormHelper.ERROR_FORM_WRONG_FIELDS;
+				validated = false;
+			} else if (forenameValue.length() > 30) {
+				forenameNote = "Too long (maximum 30 characters)";
+				generalErrorNote = FormHelper.ERROR_FORM_WRONG_FIELDS;
+				validated = false;
+			} else if (!FormHelper.isTrimmed(forenameValue)) {
+				forenameNote = "Whitespaces not allowed either before or after the string";
+				generalErrorNote = FormHelper.ERROR_FORM_WRONG_FIELDS;
+				validated = false;
+			} else {
+				forenameNote = null;
+				validated = validated && true;
+			}
+			if (surnameValue == null || surnameValue.length() == 0) {
+				surnameNote = FormHelper.ERROR_LAST_NAME_EMPTY;
+				generalErrorNote = FormHelper.ERROR_FORM_EMPTY_FIELDS;
+				validated = false;
+			} else if (surnameValue.length() < 2) {
+				surnameNote = FormHelper.ERROR_NAME_SHORT;
+				generalErrorNote = FormHelper.ERROR_FORM_WRONG_FIELDS;
+				validated = false;
+			} else if (surnameValue.length() > 30) {
+				surnameNote = "Too long (maximum 30 characters)";
+				generalErrorNote = FormHelper.ERROR_FORM_WRONG_FIELDS;
+				validated = false;
+			} else if (!FormHelper.isTrimmed(surnameValue)) {
+				surnameNote = "Whitespaces not allowed either before or after the string";
+				generalErrorNote = FormHelper.ERROR_FORM_WRONG_FIELDS;
+				validated = false;
+			} else {
+				surnameNote = null;
+				validated = validated && true;
+			}
+			if (companyValue == null || companyValue.length() == 0) {
+				companyNote = FormHelper.ERROR_COMPANY_EMPTY;
+				generalErrorNote = FormHelper.ERROR_FORM_EMPTY_FIELDS;
+				validated = false;
+			} else if (companyValue.length() < 2) {
+				companyNote = FormHelper.ERROR_COMPANY_SHORT;
+				generalErrorNote = FormHelper.ERROR_FORM_WRONG_FIELDS;
+				validated = false;
+			} else if (companyValue.length() > 255) {
+				companyNote = "Too long (maximum 255 characters)";
+				generalErrorNote = FormHelper.ERROR_FORM_WRONG_FIELDS;
+				validated = false;
+			} else if (!FormHelper.isTrimmed(companyValue)) {
+				companyNote = "Whitespaces not allowed either before or after the string";
+				generalErrorNote = FormHelper.ERROR_FORM_WRONG_FIELDS;
+				validated = false;
+			} else {
+				companyNote = null;
+				validated = validated && true;
+			}
+			if (emailValue == null || emailValue.length() == 0) {
+				emailNote = FormHelper.ERROR_EMAIL_EMPTY;
+				generalErrorNote = FormHelper.ERROR_FORM_EMPTY_FIELDS;
+				validated = false;
+			} else if (emailValue.length() > 255) {
+				emailNote = "Too long (maximum 255 characters)";
+				generalErrorNote = FormHelper.ERROR_FORM_WRONG_FIELDS;
+				validated = false;
+			} else if (!emailValue.contains("@")) {
+				emailNote = FormHelper.ERROR_EMAIL_MISSING_AT;
+				generalErrorNote = FormHelper.ERROR_FORM_WRONG_FIELDS;
+				validated = false;
+			} else if (!FormHelper.isValidEmail(emailValue)) {
+				emailNote = FormHelper.ERROR_EMAIL_WRONG;
+				generalErrorNote = FormHelper.ERROR_FORM_WRONG_FIELDS;
+				validated = false;
+			} else {
+				emailNote = null;
+				validated = validated && true;
+			}
 
-		if (!isRequestInvite) {
+		}
+		if (!isRequestInvite || SessionController.get().isLoggedInUserAdmin()) {
 			if (passwordValue == null || passwordValue.length() == 0) {
-				passwordError = "Cannot be empty";
+				passwordError = FormHelper.ERROR_PASSWORD_CREATE_EMPTY;
+				generalErrorNote = FormHelper.ERROR_FORM_EMPTY_FIELDS;
 				validated = false;
 			} else if (passwordValue.length() < 6) {
-				passwordError = "Too short (minimum 6 characters)";
+				passwordError = FormHelper.ERROR_PASSWORD_CREATE_SHORT;
+				generalErrorNote = FormHelper.ERROR_FORM_WRONG_FIELDS;
 				validated = false;
 			} else if (passwordValue.length() > 64) {
 				passwordError = "Too long (maximum 64 characters)";
+				generalErrorNote = FormHelper.ERROR_FORM_WRONG_FIELDS;
 				validated = false;
 			} else if (!passwordValue.equals(confirmPasswordValue)) {
-				passwordError = "Password and confirmation should match";
+				passwordError = FormHelper.ERROR_PASSWORD_CREATE_CONFIRMATION_MATCH;
+				generalErrorNote = FormHelper.ERROR_FORM_WRONG_FIELDS;
 				validated = false;
 			} else if (!FormHelper.isTrimmed(passwordValue)) {
 				passwordError = "Whitespaces not allowed either before or after the string";
+				generalErrorNote = FormHelper.ERROR_FORM_WRONG_FIELDS;
 				validated = false;
 			} else {
 				passwordError = null;
@@ -257,7 +288,8 @@ public class RegisterForm extends Composite {
 
 			if (!SessionController.get().isLoggedInUserAdmin()) {
 				if (termAndCond.getValue() == Boolean.FALSE) {
-					termAndCondError = "Must accept terms and conditions";
+					termAndCondError = "Just checking you agree with our very resonable terms before we continue";
+					generalErrorNote = FormHelper.ERROR_FORM_EMPTY_FIELDS;
 					validated = false;
 				} else {
 					termAndCondError = null;
@@ -344,6 +376,7 @@ public class RegisterForm extends Composite {
 		password.hideNote();
 		confirmPassword.hideNote();
 		termAndCond.hideError();
+		generalErrorParagraph.setInnerText("");
 	}
 
 	public void focusFirstActiveField() {

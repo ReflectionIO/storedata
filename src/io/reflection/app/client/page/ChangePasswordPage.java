@@ -40,6 +40,7 @@ import com.willshex.gson.json.service.shared.Error;
  * @author billy1380
  * 
  */
+@Deprecated
 public class ChangePasswordPage extends Page implements NavigationEventHandler, UserPasswordChangedEventHandler {
 
 	private static ChangePasswordPageUiBinder uiBinder = GWT.create(ChangePasswordPageUiBinder.class);
