@@ -1,0 +1,987 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="utf-8" />
+	<title>Reflection, Leaderboard</title>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">	
+	<!--[if (gte IE 9)|(IEMobile)|(!IE)]><!-->
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main.css" />
+	<!--<![endif]-->
+	<!--[if (lt IE 9)]>
+		<script src="js/vendor/html5shiv.min.js"></script>
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main-ie8.css" />
+	<![endif]-->
+ 	<!--[if !lt IE 9]><!-->
+		<script src="js/vendor/picturefill.2.3.1.min.js" async></script>
+	<!-- <![endif]-->
+	<link rel="stylesheet" href="js/vendor/jquery.mCustomScrollbar.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
+<script>
+  WebFont.load({
+    google: {
+      families: ['Open Sans:400,600,700,400italic,600italic', 'Source Sans Pro:400,600,700', 'Lato:400,700,400italic']
+    }
+  });
+</script></head>
+<body class="panel-left-open">
+	<!--[if (lt IE 9)]>
+      <div class="window-warning">
+  			<p>Uh oh... Reflection doesn't work in this browser. &nbsp; &nbsp;<a href="http://outdatedbrowser.com/en" target="_blank">Download a compatible browser</a></p>
+  		</div>
+  <![endif]-->
+
+  <header id="js-component-import--global-header" class="global-header"></header>
+  
+	<div id="js-component-import--panel-left" class="panel-left js-custom-scrollbar" data-mcs-theme="minimal-dark"></div>
+
+	<div class="l-page-container">
+
+		<div id="main" class="l-main" role="main">
+			<div class="grid-container page-leaderboard">
+				<div class="grid__column grid__column--one-half">
+					<h1 class="heading-style--heading-three page-title">App Leaderboard</h1>
+				</div>
+				<div class="grid__column page-functions">
+					<form class="inline-search-form">
+						<div class="search-field-no-label">
+		        	<input type="text" autocomplete="off" name="search" placeholder="Find an app" />
+			      	<input class="ref-button search-button-mobile is-highlighted" type="submit" value="a" />
+				    </div>
+					</form>
+					<button class="ref-button--function-small ref-button--function-small--with-icon"><span class="ref-icon-before ref-icon-before--cloud">Download</span></button>
+				</div>
+				<div class="tabs">
+					<ul class="tabs-container default-tabs-transition tabs-to-dropdown">
+						<li class="grid__column grid__column--one-quarter tabs__tab is-active js-tab-select">
+							<div class="tab-animate-active"></div>
+							<a data-content="#tab-content-overall" class="tabs__link">
+								<span>
+									<svg version=1.1 xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path id=Overview fill=#6D69C5 d="M22.6,19.2c-2.6,0-5.1-1.7-6.4-4.2c-1.8-3.6-0.8-7.8,2.3-9.4C19.4,5.2,20.2,5,21.1,5
+		c2.6,0,5.1,1.7,6.4,4.2c1.8,3.6,0.8,7.8-2.3,9.4C24.4,19,23.5,19.2,22.6,19.2z M21.1,6c-0.7,0-1.4,0.2-2.1,0.5
+		c-2.6,1.3-3.5,4.9-1.9,8c1.1,2.2,3.3,3.7,5.5,3.7c0.7,0,1.4-0.2,2.1-0.5c2.6-1.3,3.5-4.9,1.9-8C25.5,7.5,23.3,6,21.1,6z M30.4,7.8
+		c-1.9-3.8-5.7-6.2-9.6-6.2c-1.4,0-2.8,0.3-4.1,1c-1.6,0.8-2.8,2-3.7,3.5L2.5,16.8c-2.2,1.8-2.8,4.5-1.4,6.8c0.9,1.6,2.7,2.9,4.7,2.9
+		c0.5,0,1-0.1,1.6-0.3l15.1-3.3c0.1,0,0.1,0,0.2,0c1.4,0,2.8-0.3,4.1-1C31.4,19.5,33.1,13.1,30.4,7.8z M6.8,24.2l-0.1,0
+		c-1.6,0.6-3.2-0.4-3.9-1.7c-0.3-0.6-1.2-2.5,1-4.4l2-2C5.5,18,6,19.7,6.8,21c0.6,1.1,1.6,2,2.8,2.7L6.8,24.2z M11.3,23.3
+		c-1.6-0.4-2.9-1.6-3.7-2.8c-1-1.6-1.4-3.9-0.1-6l4.1-4.2c-0.2,2.1,0.2,4.3,1.2,6.4c1.2,2.3,3,4,5.1,5.1L11.3,23.3z M25.7,20.1
+		c-1,0.5-2,0.8-3.2,0.8c-3.1,0-6.2-2-7.8-5.1c-2.2-4.4-0.9-9.5,2.9-11.4c1-0.5,2-0.8,3.2-0.8c3.1,0,6.2,2,7.8,5.1
+		C30.8,13.1,29.5,18.2,25.7,20.1z"/></svg>
+		 							<span>Overview / All</span>
+		 						</span>
+							</a>
+						</li>
+						<li class="grid__column grid__column--one-quarter tabs__tab js-tab-select">
+							<div class="tab-animate-active"></div>
+							<a data-content="#tab-content-free" class="tabs__link">
+								<span>
+									<svg version=1.1 xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path id=Free fill=#6D69C5 d="M9.8,30.2L0.3,13.8L22.4,1L32,6.4v11L9.8,30.2z M3,14.5l7.5,13L30,16.3V7.6l-7.6-4.3L3,14.5z
+		 M24.5,14c-1.2,0-2.2-0.6-2.8-1.6c-0.4-0.8-0.5-1.6-0.3-2.5c0.2-0.8,0.8-1.5,1.5-2c0.5-0.3,1.1-0.4,1.6-0.4c1.2,0,2.2,0.6,2.8,1.6
+		c0.9,1.6,0.4,3.5-1.2,4.4C25.6,13.9,25.1,14,24.5,14z M24.5,9c-0.3,0-0.6,0.1-0.9,0.2c-0.4,0.2-0.7,0.6-0.8,1.1
+		c-0.1,0.5-0.1,0.9,0.2,1.3c0.5,0.8,1.6,1.1,2.4,0.6c0.8-0.5,1.1-1.6,0.6-2.4C25.7,9.4,25.1,9,24.5,9z"/></svg>
+									<span>Top Free</span></span>
+							</a>
+						</li>
+						<li class="grid__column grid__column--one-quarter tabs__tab js-tab-select">
+							<div class="tab-animate-active"></div>
+							<a data-content="#tab-content-paid" class="tabs__link">
+								<span>
+									<svg version=1.1 xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path id=Paid fill=#6D69C5 d="M9.8,30.2L0.3,13.8L22.4,1L32,6.4v11L9.8,30.2z M3,14.5l7.5,13L30,16.3V7.6l-7.6-4.3L3,14.5z
+		 M24.5,14c-1.2,0-2.2-0.6-2.8-1.6c-0.9-1.6-0.4-3.5,1.2-4.4c0.5-0.3,1.1-0.4,1.6-0.4c1.2,0,2.2,0.6,2.8,1.6c0.4,0.8,0.5,1.6,0.3,2.5
+		c-0.2,0.8-0.8,1.5-1.5,2C25.6,13.9,25.1,14,24.5,14z M24.5,9c-0.3,0-0.6,0.1-0.9,0.2c-0.8,0.5-1.1,1.6-0.6,2.4
+		c0.5,0.8,1.6,1.1,2.4,0.6c0.4-0.2,0.7-0.6,0.8-1.1c0.1-0.5,0.1-0.9-0.2-1.3C25.7,9.4,25.1,9,24.5,9z M14.7,23.9l-1.2-2.1
+		c-0.5,0.2-0.9,0.2-1.3,0.2c-0.4-0.1-0.7-0.2-1-0.4L10.5,22l-0.7-1.1l1.6-1l0,0.1l0,0c0.2,0.4,0.5,0.6,0.8,0.6c0.4,0,0.8-0.1,1.2-0.3
+		c0.4-0.3,0.7-0.5,0.9-0.9s0.1-0.6,0-1c-0.1-0.2-0.2-0.3-0.4-0.3c-0.1-0.1-0.3-0.1-0.5-0.1c-0.2,0-0.3,0-0.5,0.1s-0.4,0.1-0.5,0.1
+		l-1.3,0.4c-0.3,0.1-0.6,0.1-0.8,0.1s-0.5,0-0.8-0.1s-0.5-0.2-0.7-0.4c-0.2-0.2-0.4-0.4-0.6-0.7c-0.1-0.3-0.2-0.5-0.3-0.8
+		s0-0.5,0.1-0.8c0.1-0.3,0.2-0.5,0.4-0.8C8.8,15,9,14.7,9.3,14.5L8,12.3l1.3-0.7l1.3,2.3c0.4-0.1,0.8-0.2,1.2-0.2s0.7,0.1,1,0.2
+		l0.7-0.4l0.7,1.1l-1.4,0.8l-0.1,0.1l0,0l0,0l-0.1-0.1c-0.2-0.3-0.5-0.4-0.8-0.4c-0.3,0-0.7,0.1-1.1,0.3c-0.5,0.3-0.8,0.6-1,0.9
+		s-0.2,0.6,0,0.9c0.1,0.2,0.2,0.3,0.4,0.4s0.3,0.1,0.5,0.1c0.2,0,0.3,0,0.5-0.1s0.3-0.1,0.5-0.1l1.3-0.3c0.3-0.1,0.7-0.1,0.9-0.1
+		c0.3,0,0.6,0,0.8,0.1c0.2,0.1,0.5,0.2,0.7,0.3c0.2,0.2,0.4,0.4,0.5,0.6c0.2,0.3,0.3,0.6,0.3,0.8s0,0.6-0.1,0.9s-0.2,0.6-0.4,0.9
+		s-0.4,0.5-0.7,0.8l1.2,2.1L14.7,23.9z"/></svg>
+									<span>Top Paid</span></span>
+							</a>
+						</li>
+						<li class="grid__column grid__column--one-quarter tabs__tab js-tab-select">
+							<div class="tab-animate-active"></div>
+							<a data-content="#tab-content-grossing" class="tabs__link">
+								<span>
+									<svg version=1.1 id=Layer_1 xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path id=Top_Grossing fill=#6D69C5 d="M24,11.1l-4,0.8V2.4l-7.9-2.3L0,2.3V23l8.7,3.7l3.3-1.2V28l8.7,3.7L32,27.6V13.2L24,11.1z
+		 M2,3.9l9.9-1.8L18,3.9v0.1L8.8,6.4L2,4.3V3.9z M2,5.4l6.7,2.1L18,5v2L8.8,9.4L2,7.3V5.4z M2,8.4l6.7,2.1L18,8v2l-9.2,2.5L2,10.3
+		V8.4z M2,11.4l6.7,2.1L18,11v1.3l-6,1.2v1.1l-3.2,0.9L2,13.3V11.4z M2,14.4l6.7,2.1l3.3-0.9v2l-3.2,1L2,16.3V14.4z M2,17.3l6.7,2.4
+		l3.3-1v2.1l-3.2,1.1L2,19.2V17.3z M8.8,24.5L2,21.7v-1.3L8.7,23l3.3-1.1v1.6L8.8,24.5z M30,26.2l-9.2,3.4L14,26.7v-1.3l6.7,2.6
+		l9.3-3.2V26.2z M30,23.6l-9.2,3.2L14,24.2v-1.9l6.7,2.4l9.3-2.9V23.6z M30,20.7l-9.2,2.9L14,21.3v-1.9l6.7,2.1L30,19V20.7z M30,17.9
+		l-9.2,2.5L14,18.3v-2l6.7,2.1L30,16V17.9z M30,14.9l-9.2,2.5L14,15.3v-0.2l10-2l6,1.6V14.9z"/></svg>
+									<span>Top Grossing</span></span>
+							</a>
+						</li>
+					</ul>
+				</div>
+				<div class="grid__column grid__column--full-width filters-container">
+					<form class="forms--mid-theme">
+						<div class="calendar-container single-date-input">
+							<div class="date-select-container">
+								<div class="form-field form-field--date-select">
+									<input type="text" name="date-single" id="date-single" value="26 Mar 2015" />
+									<span></span>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-field form-field--select">
+							<div class="page-overlay"></div>
+							<select class="js-field--select reflection-select--filter" data-title="Select a Country">
+						    <option value="" disabled selected>Country</option>
+						    <option value="a0">All Countries</option>
+						    <option value="a1">Japan</option>
+						    <option value="a2">United States</option>
+						    <option value="a3">China</option>
+						    <option value="a4">Germany</option>
+						    <option value="a5">France</option>
+						    <option value="a6">United Kingdom</option>
+						    <option value="a7">Italy</option>
+							</select>
+						</div>
+						<div class="form-field form-field--select">
+							<div class="page-overlay"></div>		
+							<select class="js-field--select reflection-select--filter" data-title="Select a Store">
+						    <option value="" disabled selected>App Store</option>
+						    <option value="b0">All Stores</option>
+						    <option value="b1">iPad Store</option>
+						    <option value="b2">iPhone Store</option>
+							</select>
+						</div>
+						<div class="form-field form-field--select">		
+							<div class="page-overlay"></div>				
+							<select class="js-field--select reflection-select--filter reflection-select--center">
+						    <option value="" disabled selected>Category</option>
+						    <option value="24">All Categories</option><option value="19">Book</option><option value="1">Business</option><option value="22">Catalogs</option><option value="18">Education</option><option value="17">Entertainment</option><option value="16">Finance</option><option value="23">Food &amp; Drink</option><option value="15">Games</option><option value="14">Health &amp; Fitness</option><option value="13">Lifestyle</option><option value="20">Medical</option><option value="12">Music</option><option value="11">Navigation</option><option value="10">News</option><option value="21">Newsstand</option><option value="9">Photo &amp; Video</option><option value="8">Productivity</option><option value="7">Reference</option><option value="6">Social Networking</option><option value="5">Sports</option><option value="4">Travel</option><option value="3">Utilities</option><option value="2">Weather</option>
+							</select>
+						</div>
+
+						<div class="filter-toggle">
+							<div class="toggle">
+								<input type="radio" id="downloads" name="radiogroupname" checked />
+								<label for="downloads" class="toggle-downloads">
+									<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path fill-rule=evenodd clip-rule=evenodd fill=#3B3735 d="M32,16.5c0,3.6-2.7,6.5-6.7,6.5v0h-6v-2h6.5
+	c2.5,0,4.5-2,4.5-4.5c0-1.6-0.8-3-2.3-3.9c-1.4-0.8-1.5-0.9-0.9-2.4c0.1-0.3,0.1-0.5,0.1-0.8c0-1.4-1.1-2.5-2.5-2.5
+	c0,0-0.7,0-1.4,0.2c-1.1,0.5-1.3,0-1.8-1.2C20.4,3.6,17.9,2,15.2,2c-3.6,0-6.6,2.7-7,6.3c-0.1,1.4-0.2,1.4-1.7,1.8
+	C4,10.6,2,12.9,2,15.5c0,3,2.3,5.5,5.3,5.5v0h6v2h-6v0c-4,0-7.2-3.4-7.2-7.5c0-3.7,2.7-6.7,6.2-7.4c0.4-4.6,4.4-8.1,9-8.1
+	c3.6,0,6.7,2.1,8.1,5.2C23.8,5.1,24.2,5,24.7,5c2.5,0,4.5,2,4.5,4.5c0,0.5-0.2,1-0.3,1.4C30.8,12,32,14.1,32,16.5z M19,25.8
+	l-1.8,1.8V14.3c0-0.6-0.4-1.1-1-1.1c-0.6,0-1,0.5-1,1.1v13.3l-1.9-1.8c-0.4-0.4-1.2-0.4-1.6,0c-0.4,0.4-0.5,1.1,0,1.6l3.1,3.1
+	c0.4,0.4,0.8,0.5,1.3,0.5c0.5,0,0.9-0.2,1.3-0.5l3.1-3.1c0.4-0.4,0.4-1.1,0-1.6C20.2,25.4,19.5,25.4,19,25.8z"/></svg>
+									<img src="images/blank-image.png" alt="" />
+								</label>
+							</div>
+							<div class="toggle">
+								<input type="radio" id="revenue" name="radiogroupname" />
+								<label for="revenue" class="toggle-revenue">
+									<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path d="M19.5,4.7L0,6.9v13.9l13.9,4.9L32,20.2V6.4L19.5,4.7z M30,15.1l-16.1,4.6L2,15.9v-3l11.9,3.4
+	L30,12.2V15.1z M13.9,12L30,8.4v2.8l-16.1,4.2L2,11.9v-3L13.9,12z M27.7,7.9l-13.8,3.1L4.2,8.4l15.3-1.7L27.7,7.9z M13.9,23.6
+	L2,19.4V17l11.9,3.8L30,16.2v2.6L13.9,23.6z"/></svg>
+									<img src="images/blank-image.png" alt="" />
+								</label>
+							</div>
+						</div>
+					</form>
+				</div>
+
+				<ul class="tabs__content-container default-tabs-transition tabs-to-dropdown--content">
+						<li id="tab-content-overall" class="tabs__content tabs__content--is-showing">
+							<article class="tabs__content-area"> <div class="grid__row"> <div class="table-wrapper"><div class="scrollable"><table class="table-data  responsive table-overall" __gwtcellbasedwidgetimpldispatchingblur="true" __gwtcellbasedwidgetimpldispatchingfocus="true" cellspacing="0"><thead style=""><tr __gwt_header_row="0"><th colspan="1" class="cellTableHeader cellTableFirstColumnHeader MHXTE6C-i-f" __gwt_column="column-gwt-uid-565" __gwt_header="header-gwt-uid-566">Rank</th><th colspan="1" class="cellTableHeader" __gwt_column="column-gwt-uid-567" __gwt_header="header-gwt-uid-568">Free</th><th colspan="1" class="cellTableHeader" __gwt_column="column-gwt-uid-569" __gwt_header="header-gwt-uid-570">Paid</th><th colspan="1" class="cellTableHeader cellTableLastColumnHeader" __gwt_column="column-gwt-uid-571" __gwt_header="header-gwt-uid-572">Grossing</th></tr></thead><colgroup><col style="width: 10%;"><col style="width: 30%;"><col style="width: 30%;"><col style="width: 30%;"></colgroup>
+
+										<tbody class="table-body--loading">
+											<tr>
+												<td colspan="4" align="center">
+													<div>
+														<div style="width: 100%; height: 100%; padding: 0px; margin: 0px;">
+															<div class="cellTableLoading" style="width: 100%; height: 100%;">
+																<div>
+																	
+																	<table style="width: 100%">
+										<colgroup>
+											<col style="width: 10%;">
+											<col style="width: 30%;">
+											<col style="width: 30%;">
+											<col style="width: 30%;">
+										</colgroup>
+										<tbody>
+											<tr>
+												<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"> <svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"> <svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"> <svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+											</tr>
+											<tr>
+												<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"> <svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg> 
+												</td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"> <svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"> <svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+											</tr>
+											<tr>
+												<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"> <svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"> <svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+											</tr>
+											<tr>
+												<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"> <svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"> <svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+											</tr>
+											<tr>
+												<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"> <svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"> <svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+											</tr>
+											<tr>
+												<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"> <svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"> <svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+											</tr>
+											
+											<tr>
+												<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"> <svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"> <svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+											</tr>
+											<tr>
+												<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"> <svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"> <svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+											</tr>
+											<tr>
+												<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"> <svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"> <svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+											</tr>
+											<tr>
+												<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"> <svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"> <svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+											</tr>
+											<tr>
+												<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"> <svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"> <svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+											</tr>
+											<tr>
+												<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"> <svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"> <svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+											</tr>
+											<tr>
+												<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"> <svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"> <svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+											</tr>
+											<tr>
+												<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"> <svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"> <svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+											</tr>
+											<tr>
+												<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"> <svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"> <svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+											</tr>
+											<tr>
+												<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"> <svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"> <svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+												<td>
+													<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+												</td>
+											</tr>
+										</tbody>
+							</table>
+																</div>
+															</div>
+														</div>
+													</div>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+									</div>
+								</div>
+							</div>
+							</article>
+						</li>
+						<li id="tab-content-free" class="tabs__content">
+							<article class="tabs__content-area">
+								<div class="grid__row"> 
+									<div class="table-wrapper">
+										<div class="scrollable">
+											<table class="table-data  responsive table-app-group" __gwtcellbasedwidgetimpldispatchingblur="true" __gwtcellbasedwidgetimpldispatchingfocus="true" cellspacing="0"><thead style=""><tr __gwt_header_row="0">
+												<th colspan="1" class="cellTableHeader cellTableFirstColumnHeader MHXTE6C-i-f" __gwt_column="column-gwt-uid-652" __gwt_header="header-gwt-uid-653">Rank</th>
+												<th colspan="1" class="cellTableHeader" __gwt_column="column-gwt-uid-654" __gwt_header="header-gwt-uid-655">Free</th>
+												<th colspan="1" class="cellTableHeader column-hidden--mobile" __gwt_column="column-gwt-uid-656" __gwt_header="header-gwt-uid-657">Price</th>
+												<th colspan="1" class="cellTableHeader cellTableSortableHeader can-be-sorted" __gwt_column="column-gwt-uid-658" role="button" tabindex="-1" __gwt_header="header-gwt-uid-659">Downloads <svg version="1.1" x="0px" y="0px" viewBox="0 0 7 10" enable-background="new 0 0 7 10" xml:space="preserve" class="sort-svg"><path class="ascending" d="M0.4,4.1h6.1c0.1,0,0.2,0,0.3-0.1C7,3.9,7,3.8,7,3.7c0-0.1,0-0.2-0.1-0.3L3.8,0.1C3.7,0,3.6,0,3.5,0C3.4,0,3.3,0,3.2,0.1L0.1,3.3C0,3.4,0,3.5,0,3.7C0,3.8,0,3.9,0.1,4C0.2,4.1,0.3,4.1,0.4,4.1z"></path><path class="descending" d="M6.6,5.9H0.4c-0.1,0-0.2,0-0.3,0.1C0,6.1,0,6.2,0,6.3c0,0.1,0,0.2,0.1,0.3l3.1,3.2C3.3,10,3.4,10,3.5,10c0.1,0,0.2,0,0.3-0.1l3.1-3.2C7,6.6,7,6.5,7,6.3C7,6.2,7,6.1,6.9,6C6.8,5.9,6.7,5.9,6.6,5.9z"></path></svg></th>
+												<th colspan="1" class="cellTableHeader cellTableLastColumnHeader" __gwt_column="column-gwt-uid-660" __gwt_header="header-gwt-uid-661"><span class="" data-tooltip="In App Purchases">IAP</span></th>
+											</tr></thead><colgroup><col style="width: 10%;"><col style="width: 42%;"><col style="width: 19%;" class="column-hidden--mobile"><col style="width: 19%;"><col style="width: 10%;"></colgroup>
+
+							<tbody class="table-body--loading">
+								<tr>
+									<td colspan="5" align="center">
+									<div>
+									<div style="width: 100%; height: 100%; padding: 0px; margin: 0px;">
+									<div class="cellTableLoading" style="width: 100%; height: 100%;">
+									<div>
+								<table style="width: 100%">
+								<colgroup><col style="width: 10%;"><col style="width: 42%;"><col style="width: 19%;" class="column-hidden--mobile"><col style="width: 19%;"><col style="width: 10%;"></colgroup>
+								<tbody>
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+								</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+						</div>
+						</div>
+						</div> </article>
+						</li>
+						<li id="tab-content-paid" class="tabs__content">
+							<article class="tabs__content-area"> <div class="grid__row"> <div class="table-wrapper"><div class="scrollable"><table class="table-data  responsive table-app-group" __gwtcellbasedwidgetimpldispatchingblur="true" __gwtcellbasedwidgetimpldispatchingfocus="true" cellspacing="0">
+								<thead style="">
+									<tr __gwt_header_row="0">
+										<th colspan="1" class="cellTableHeader cellTableFirstColumnHeader MHXTE6C-i-f" __gwt_column="column-gwt-uid-692" __gwt_header="header-gwt-uid-693">Rank</th>
+										<th colspan="1" class="cellTableHeader" __gwt_column="column-gwt-uid-694" __gwt_header="header-gwt-uid-695">Paid</th><th colspan="1" class="cellTableHeader" __gwt_column="column-gwt-uid-696" __gwt_header="header-gwt-uid-697">Price</th>
+										<th colspan="1" class="cellTableHeader cellTableSortableHeader can-be-sorted" __gwt_column="column-gwt-uid-698" role="button" tabindex="-1" __gwt_header="header-gwt-uid-699">Downloads <svg version="1.1" x="0px" y="0px" viewBox="0 0 7 10" enable-background="new 0 0 7 10" xml:space="preserve" class="sort-svg"><path class="ascending" d="M0.4,4.1h6.1c0.1,0,0.2,0,0.3-0.1C7,3.9,7,3.8,7,3.7c0-0.1,0-0.2-0.1-0.3L3.8,0.1C3.7,0,3.6,0,3.5,0C3.4,0,3.3,0,3.2,0.1L0.1,3.3C0,3.4,0,3.5,0,3.7C0,3.8,0,3.9,0.1,4C0.2,4.1,0.3,4.1,0.4,4.1z"></path><path class="descending" d="M6.6,5.9H0.4c-0.1,0-0.2,0-0.3,0.1C0,6.1,0,6.2,0,6.3c0,0.1,0,0.2,0.1,0.3l3.1,3.2C3.3,10,3.4,10,3.5,10c0.1,0,0.2,0,0.3-0.1l3.1-3.2C7,6.6,7,6.5,7,6.3C7,6.2,7,6.1,6.9,6C6.8,5.9,6.7,5.9,6.6,5.9z"></path></svg></th>
+										<th colspan="1" class="cellTableHeader cellTableLastColumnHeader column-hidden--mobile" __gwt_column="column-gwt-uid-700" __gwt_header="header-gwt-uid-701"><span class="" data-tooltip="In App Purchases">IAP</span></th>
+									</tr></thead>
+
+									<colgroup><col style="width: 10%;"><col style="width: 42%;"><col style="width: 19%;"><col style="width: 19%;"><col style="width: 10%;" class="column-hidden--mobile"></colgroup>
+
+								<tbody class="table-body--loading">
+								<tr>
+									<td colspan="5" align="center">
+									<div>
+									<div style="width: 100%; height: 100%; padding: 0px; margin: 0px;">
+									<div class="cellTableLoading" style="width: 100%; height: 100%;">
+									<div>
+								<table style="width: 100%">
+								<colgroup><col style="width: 10%;"><col style="width: 42%;"><col style="width: 19%;"><col style="width: 19%;"><col style="width: 10%;" class="column-hidden--mobile"></colgroup>
+								<tbody>
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+								</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+						</div>
+						</div>
+						</div> </article>
+						</li>
+						<li id="tab-content-grossing" class="tabs__content">
+							<article class="tabs__content-area"> <div class="grid__row"> <div class="table-wrapper"><div class="scrollable"><table class="table-data  responsive table-app-group" __gwtcellbasedwidgetimpldispatchingblur="true" __gwtcellbasedwidgetimpldispatchingfocus="true" cellspacing="0"><thead style=""><tr __gwt_header_row="0"><th colspan="1" class="cellTableHeader cellTableFirstColumnHeader MHXTE6C-i-f" __gwt_column="column-gwt-uid-732" __gwt_header="header-gwt-uid-733">Rank</th><th colspan="1" class="cellTableHeader" __gwt_column="column-gwt-uid-734" __gwt_header="header-gwt-uid-735">Grossing</th><th colspan="1" class="cellTableHeader" __gwt_column="column-gwt-uid-736" __gwt_header="header-gwt-uid-737">Price</th><th colspan="1" class="cellTableHeader cellTableSortableHeader can-be-sorted" __gwt_column="column-gwt-uid-738" role="button" tabindex="-1" __gwt_header="header-gwt-uid-739">Revenue <svg version="1.1" x="0px" y="0px" viewBox="0 0 7 10" enable-background="new 0 0 7 10" xml:space="preserve" class="sort-svg"><path class="ascending" d="M0.4,4.1h6.1c0.1,0,0.2,0,0.3-0.1C7,3.9,7,3.8,7,3.7c0-0.1,0-0.2-0.1-0.3L3.8,0.1C3.7,0,3.6,0,3.5,0C3.4,0,3.3,0,3.2,0.1L0.1,3.3C0,3.4,0,3.5,0,3.7C0,3.8,0,3.9,0.1,4C0.2,4.1,0.3,4.1,0.4,4.1z"></path><path class="descending" d="M6.6,5.9H0.4c-0.1,0-0.2,0-0.3,0.1C0,6.1,0,6.2,0,6.3c0,0.1,0,0.2,0.1,0.3l3.1,3.2C3.3,10,3.4,10,3.5,10c0.1,0,0.2,0,0.3-0.1l3.1-3.2C7,6.6,7,6.5,7,6.3C7,6.2,7,6.1,6.9,6C6.8,5.9,6.7,5.9,6.6,5.9z"></path></svg></th><th colspan="1" class="column-hidden--mobile cellTableHeader cellTableLastColumnHeader" __gwt_column="column-gwt-uid-740" __gwt_header="header-gwt-uid-741"><span class="" data-tooltip="In App Purchases">IAP</span></th></tr></thead>
+								<colgroup>
+								<col style="width: 10%;"><col style="width: 42%;"><col style="width: 19%;"><col style="width: 19%;"><col style="width: 10%;" class="column-hidden--mobile"></colgroup>
+								<tbody class="table-body--loading">
+								<tr>
+									<td colspan="5" align="center">
+									<div>
+									<div style="width: 100%; height: 100%; padding: 0px; margin: 0px;">
+									<div class="cellTableLoading" style="width: 100%; height: 100%;">
+									<div>
+								<table style="width: 100%">
+								<colgroup><col style="width: 10%;"><col style="width: 42%;"><col style="width: 19%;"><col style="width: 19%;"><col style="width: 10%;" class="column-hidden--mobile"></colgroup>
+								<tbody>
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+
+									<tr>
+										<td><svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td>
+												<img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg>
+										</td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+									</tr>
+								</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+						</div>
+						</div>
+						</div>  </article>
+						</li>				
+				</ul>
+				<button class="ref-button--function-small">View all Apps</button>
+			</div>			
+		</div>
+		<div class="MHXTE6C-ob-a">
+			<a class="btn btn-default MHXTE6C-ob-c MHXTE6C-ob-d"><span class="ref-icon-before ref-icon-before--angle-up"></span><span class="hidden-text">Back to Top</span></a>
+		</div>
+	</div>	
+
+	<div id="js-component-import--account-container" class="panel-right-container js-account-container"></div>
+	<div id="js-component-import--search-container" class="panel-right-container js-search-container"></div>
+
+ 	<script src="js/vendor/jquery-1.11.1.min.js"></script>
+ 	<script src="js/vendor/jquery-ui.custom.min.js"></script>
+ 	<script src="js/vendor/handlebars-v2.0.0.js"></script>
+ 	<script src="js/templates/templates.js"></script>
+	<script src="js/vendor/modernizr.2.8.3.custom.min.js"></script>
+
+	<!--[if IE 9]>
+		<script src="js/vendor/jquery.mCustomScrollbar.concat.min.js"></script>
+	<![endif]-->
+
+	<div id="js-appendScriptsContainer"></div>
+
+	<script src="js/application-global-modules-logged-in.js"></script>
+  <script src="js/application.js"></script>
+  <script>
+  	function initScripts() {
+  		new LeaderboardPage();  		
+
+  		// mock calendar open - for template only, should be handled by GWT
+  		$('.form-field--date-select input').on("click", function(){
+				$this = $(this);
+				$this.select();
+				$popup = $this.parents('.date-select-container').siblings('.dateBoxPopup');
+				if($popup.hasClass('is-showing')) {
+					$popup.removeClass('is-showing');
+				}
+				else {
+					$popup.addClass('is-showing');
+				}
+			});
+  	}
+
+  	window.onready = initScripts();
+  </script>
+</body>

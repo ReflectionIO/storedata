@@ -167,7 +167,7 @@ AccountSetup.prototype.mockLinkAccount = function() {
 				$(this).attr('value', 'Account Linked!').addClass('ref-button--success');
 				$('.account-connect-animation').addClass('plugs-connected');
 				$('.form-submitted-success').addClass('is-showing');
-			}, 10000)
+			}, 10000000)
 		}
 	});
 	$('.js-mock-link-another-account').on("click", function(e){

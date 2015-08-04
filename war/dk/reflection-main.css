@@ -750,17 +750,17 @@ input::-ms-clear {
 }
 /* line 33, ../sass/ui/_icons.scss */
 .sort-svg path {
-  fill: #6d69c5;
+  fill: #c4c7d0;
   -webkit-transition: fill 0.1s;
           transition: fill 0.1s;
 }
 /* line 38, ../sass/ui/_icons.scss */
-.is-descending .sort-svg .ascending {
-  fill: #c4c7d0;
+.is-descending .sort-svg .descending {
+  fill: #6d69c5;
 }
 /* line 43, ../sass/ui/_icons.scss */
-.is-ascending .sort-svg .descending {
-  fill: #c4c7d0;
+.is-ascending .sort-svg .ascending {
+  fill: #6d69c5;
 }
 
 /* Base */
@@ -3101,10 +3101,12 @@ textarea, .global-header .link-open-search, html, body {
 /* line 901, ../sass/templates/_account-access.scss */
 .linked-account-loading-state p {
   margin-top: 16rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
   line-height: 1.6;
 }
 
-/* line 907, ../sass/templates/_account-access.scss */
+/* line 909, ../sass/templates/_account-access.scss */
 .connect-account-content input[type="submit"].ref-button--is-loading,
 .connect-account-content button.ref-button--is-loading {
   margin-top: 5.6rem;
@@ -3113,17 +3115,17 @@ textarea, .global-header .link-open-search, html, body {
           transition: margin-top 0.3s;
 }
 @media (min-width: 720px) {
-  /* line 907, ../sass/templates/_account-access.scss */
+  /* line 909, ../sass/templates/_account-access.scss */
   .connect-account-content input[type="submit"].ref-button--is-loading,
   .connect-account-content button.ref-button--is-loading {
     margin-top: 4.6rem;
   }
 }
 @media (min-width: 1600px) {
-  /* line 907, ../sass/templates/_account-access.scss */
+  /* line 909, ../sass/templates/_account-access.scss */
   .connect-account-content input[type="submit"].ref-button--is-loading,
   .connect-account-content button.ref-button--is-loading {
-    margin-top: 6.6rem;
+    margin-top: 7.6rem;
   }
 }
 
@@ -5396,8 +5398,12 @@ textarea, .global-header .link-open-search, html, body {
     float: none;
   }
 }
+/* line 42, ../sass/templates/_leaderboard.scss */
+.page-leaderboard .cellTableLoading tr {
+  height: 74px;
+}
 @media screen and (min-width: 720px) {
-  /* line 43, ../sass/templates/_leaderboard.scss */
+  /* line 46, ../sass/templates/_leaderboard.scss */
   .page-leaderboard .page-title,
   .page-leaderboard .page-title:last-child {
     padding-top: 0;
@@ -5406,146 +5412,128 @@ textarea, .global-header .link-open-search, html, body {
   }
 }
 
-/* line 51, ../sass/templates/_leaderboard.scss */
+/* line 54, ../sass/templates/_leaderboard.scss */
 .table-overall.table-data .MHXTE6C-i-a {
   padding-top: 1px;
   padding-bottom: 4px;
 }
 
-/* line 55, ../sass/templates/_leaderboard.scss */
+/* line 58, ../sass/templates/_leaderboard.scss */
 .table-overall {
   width: 100%;
 }
-/* line 57, ../sass/templates/_leaderboard.scss */
+/* line 60, ../sass/templates/_leaderboard.scss */
 .is-safari .table-overall {
   table-layout: auto;
   width: auto;
 }
-/* line 61, ../sass/templates/_leaderboard.scss */
+/* line 64, ../sass/templates/_leaderboard.scss */
 .table-overall.table-data th {
   padding-left: 10px;
   padding-right: 10px;
 }
 @media (min-width: 960px) {
-  /* line 61, ../sass/templates/_leaderboard.scss */
+  /* line 64, ../sass/templates/_leaderboard.scss */
   .table-overall.table-data th {
     padding-left: 0;
     padding-right: 0;
   }
 }
-/* line 68, ../sass/templates/_leaderboard.scss */
+/* line 71, ../sass/templates/_leaderboard.scss */
 .is-safari .table-overall.table-data th {
   padding-left: 10px;
   padding-right: 10px;
 }
-/* line 74, ../sass/templates/_leaderboard.scss */
+/* line 77, ../sass/templates/_leaderboard.scss */
 .table-overall.table-data td {
   padding-left: 10px;
   padding-right: 10px;
   vertical-align: top;
 }
 @media (min-width: 960px) {
-  /* line 74, ../sass/templates/_leaderboard.scss */
+  /* line 77, ../sass/templates/_leaderboard.scss */
   .table-overall.table-data td {
     padding-left: 0;
     padding-right: 0;
   }
 }
-/* line 82, ../sass/templates/_leaderboard.scss */
+/* line 85, ../sass/templates/_leaderboard.scss */
 .is-safari .table-overall.table-data td {
   width: 30%;
   padding-left: 10px;
   padding-right: 10px;
 }
-/* line 88, ../sass/templates/_leaderboard.scss */
+/* line 91, ../sass/templates/_leaderboard.scss */
 .table-overall.table-data .MHXTE6C-i-a,
 .table-overall.table-data .table-data {
   vertical-align: top;
 }
-/* line 92, ../sass/templates/_leaderboard.scss */
+/* line 95, ../sass/templates/_leaderboard.scss */
 .table-overall.table-data .MHXTE6C-i-d,
 .table-overall.table-data .table-data-first {
   vertical-align: middle;
 }
 @media (min-width: 720px) {
-  /* line 95, ../sass/templates/_leaderboard.scss */
+  /* line 98, ../sass/templates/_leaderboard.scss */
   .is-safari .table-overall.table-data .MHXTE6C-i-d, .is-safari
   .table-overall.table-data .table-data-first {
     width: 80px;
   }
 }
 
-/* line 103, ../sass/templates/_leaderboard.scss */
+/* line 106, ../sass/templates/_leaderboard.scss */
 .table-app-group {
   width: 100%;
 }
-/* line 105, ../sass/templates/_leaderboard.scss */
+/* line 108, ../sass/templates/_leaderboard.scss */
 .table-app-group.table-data th {
   padding-left: 7px;
   padding-right: 7px;
 }
 @media (min-width: 960px) {
-  /* line 105, ../sass/templates/_leaderboard.scss */
+  /* line 108, ../sass/templates/_leaderboard.scss */
   .table-app-group.table-data th {
     padding-left: 0;
     padding-right: 0;
   }
 }
-/* line 113, ../sass/templates/_leaderboard.scss */
+/* line 116, ../sass/templates/_leaderboard.scss */
 .table-app-group.table-data td {
   padding-left: 7px;
   padding-right: 7px;
 }
 @media (min-width: 960px) {
-  /* line 113, ../sass/templates/_leaderboard.scss */
+  /* line 116, ../sass/templates/_leaderboard.scss */
   .table-app-group.table-data td {
     padding-left: 0;
     padding-right: 0;
   }
 }
-/* line 120, ../sass/templates/_leaderboard.scss */
+/* line 123, ../sass/templates/_leaderboard.scss */
 .table-app-group.table-data td.table-data-first {
   width: 80px;
 }
-/* line 124, ../sass/templates/_leaderboard.scss */
+/* line 127, ../sass/templates/_leaderboard.scss */
 .table-app-group .MHXTE6C-i-a,
 .table-app-group .table-data {
   padding-top: 0.9rem;
   padding-bottom: 0.6rem;
 }
 
-/* line 130, ../sass/templates/_leaderboard.scss */
-table.table-data > tbody > tr:nth-child(odd) {
-  background-color: #eff2f5;
-}
-/* line 132, ../sass/templates/_leaderboard.scss */
-table.table-data > tbody > tr:nth-child(odd) > td {
-  background-color: #eff2f5;
-}
-
-/* line 137, ../sass/templates/_leaderboard.scss */
-table.table-data > tbody > tr:nth-child(even) {
-  background-color: #ffffff;
-}
-/* line 139, ../sass/templates/_leaderboard.scss */
-table.table-data > tbody > tr:nth-child(even) > td {
-  background-color: #ffffff;
-}
-
 @media screen and (max-width: 720px) {
-  /* line 144, ../sass/templates/_leaderboard.scss */
+  /* line 134, ../sass/templates/_leaderboard.scss */
   .page-leaderboard .scrollable .table-data .MHXTE6C-i-a:nth-child(2),
   .page-leaderboard .scrollable .table-data .table-data:nth-child(2),
   .page-leaderboard .scrollable table.responsive th:nth-child(2) {
     padding-left: 3%;
   }
 
-  /* line 149, ../sass/templates/_leaderboard.scss */
+  /* line 139, ../sass/templates/_leaderboard.scss */
   .scrollable .table-overall tbody tr {
     height: 82px;
   }
 
-  /* line 152, ../sass/templates/_leaderboard.scss */
+  /* line 142, ../sass/templates/_leaderboard.scss */
   .scrollable .table-app-group tbody tr {
     height: 65px;
   }
@@ -5879,17 +5867,18 @@ table.table-linked-accounts .update-linked-accounts-container .ref-button--link:
 
 /* line 253, ../sass/templates/_linked-accounts.scss */
 .popup-content .linked-account-loading-state {
-  top: 8rem;
-  left: 0;
-  padding-left: 30px;
-  padding-right: 30px;
+  top: 6rem;
+  left: 0px;
 }
-/* line 258, ../sass/templates/_linked-accounts.scss */
+/* line 256, ../sass/templates/_linked-accounts.scss */
 .popup-content .linked-account-loading-state p {
+  padding-left: 0;
+  padding-right: 0;
   font-size: 14px;
+  text-align: center;
 }
 
-/* line 262, ../sass/templates/_linked-accounts.scss */
+/* line 263, ../sass/templates/_linked-accounts.scss */
 .form-submitted-loading .js-rotate-content:not(.maintain-after-submit),
 .form-submitted-success-complete .js-rotate-content:not(.maintain-after-submit),
 .form-submitted-success-complete .ref-button--is-loading.js-rotate-content {
@@ -5898,14 +5887,14 @@ table.table-linked-accounts .update-linked-accounts-container .ref-button--link:
   -webkit-transition: -webkit-transform 0.15s;
           transition: transform 0.15s;
 }
-/* line 267, ../sass/templates/_linked-accounts.scss */
+/* line 268, ../sass/templates/_linked-accounts.scss */
 .ie9 .form-submitted-loading .js-rotate-content:not(.maintain-after-submit), .ie9
 .form-submitted-success-complete .js-rotate-content:not(.maintain-after-submit), .ie9
 .form-submitted-success-complete .ref-button--is-loading.js-rotate-content {
   visibility: hidden;
 }
 
-/* line 271, ../sass/templates/_linked-accounts.scss */
+/* line 272, ../sass/templates/_linked-accounts.scss */
 .form-submitted-loading .ref-button--is-loading.js-rotate-content,
 .form-submitted-loading .ref-button--success.js-rotate-content {
   margin-top: 6rem;
@@ -5916,7 +5905,7 @@ table.table-linked-accounts .update-linked-accounts-container .ref-button--link:
   visibility: visible;
 }
 @media (min-width: 720px) {
-  /* line 271, ../sass/templates/_linked-accounts.scss */
+  /* line 272, ../sass/templates/_linked-accounts.scss */
   .form-submitted-loading .ref-button--is-loading.js-rotate-content,
   .form-submitted-loading .ref-button--success.js-rotate-content {
     margin-top: 5rem;
@@ -6973,80 +6962,84 @@ table.table-data.table-linked-accounts--disabled thead {
     width: 25%;
   }
 }
+/* line 70, ../sass/templates/_my-apps.scss */
+.page-my-apps .cellTableLoading tr {
+  height: 74px;
+}
 @media screen and (max-width: 720px) {
-  /* line 71, ../sass/templates/_my-apps.scss */
+  /* line 74, ../sass/templates/_my-apps.scss */
   .page-my-apps .page-title {
     font-size: 2.2em;
   }
 }
-/* line 75, ../sass/templates/_my-apps.scss */
+/* line 78, ../sass/templates/_my-apps.scss */
 .page-my-apps > button {
   margin-top: 4rem;
 }
 @media only screen and (max-width: 719px) {
-  /* line 79, ../sass/templates/_my-apps.scss */
+  /* line 82, ../sass/templates/_my-apps.scss */
   .page-my-apps table.table-data {
     table-layout: fixed;
   }
-  /* line 81, ../sass/templates/_my-apps.scss */
+  /* line 84, ../sass/templates/_my-apps.scss */
   .page-my-apps table.table-data .app-details {
     width: 110px;
   }
 }
 
-/* line 87, ../sass/templates/_my-apps.scss */
+/* line 90, ../sass/templates/_my-apps.scss */
 .table-my-apps {
   width: 100%;
 }
-/* line 89, ../sass/templates/_my-apps.scss */
+/* line 92, ../sass/templates/_my-apps.scss */
 .table-my-apps.table-data th {
   padding-left: 5px;
   padding-right: 5px;
 }
 @media (min-width: 960px) {
-  /* line 89, ../sass/templates/_my-apps.scss */
+  /* line 92, ../sass/templates/_my-apps.scss */
   .table-my-apps.table-data th {
     padding-left: 0;
     padding-right: 0;
   }
 }
-/* line 97, ../sass/templates/_my-apps.scss */
+/* line 100, ../sass/templates/_my-apps.scss */
 .table-my-apps.table-data td {
   padding-left: 5px;
   padding-right: 5px;
 }
 @media (min-width: 960px) {
-  /* line 97, ../sass/templates/_my-apps.scss */
+  /* line 100, ../sass/templates/_my-apps.scss */
   .table-my-apps.table-data td {
     padding-left: 0;
     padding-right: 0;
   }
 }
-/* line 105, ../sass/templates/_my-apps.scss */
+/* line 108, ../sass/templates/_my-apps.scss */
 .table-my-apps .rank-column {
   width: 10.2%;
 }
-/* line 108, ../sass/templates/_my-apps.scss */
+/* line 111, ../sass/templates/_my-apps.scss */
 .table-my-apps .app-details-column {
   width: 34.5%;
 }
-/* line 111, ../sass/templates/_my-apps.scss */
+/* line 114, ../sass/templates/_my-apps.scss */
 .table-my-apps .price-column {
   width: 11.7%;
 }
-/* line 114, ../sass/templates/_my-apps.scss */
+/* line 117, ../sass/templates/_my-apps.scss */
 .table-my-apps .downloads-column {
   width: 15.1%;
 }
-/* line 117, ../sass/templates/_my-apps.scss */
+/* line 120, ../sass/templates/_my-apps.scss */
 .table-my-apps .revenue-column {
   width: 15.1%;
 }
-/* line 120, ../sass/templates/_my-apps.scss */
+/* line 123, ../sass/templates/_my-apps.scss */
 .table-my-apps .iap-column {
   width: 6.4%;
 }
-/* line 123, ../sass/templates/_my-apps.scss */
+/* line 126, ../sass/templates/_my-apps.scss */
 .table-my-apps .app-name {
   margin-bottom: 5px;
   display: block;
@@ -7058,14 +7051,14 @@ table.table-data.table-linked-accounts--disabled thead {
   overflow: hidden;
 }
 @media (min-width: 720px) {
-  /* line 123, ../sass/templates/_my-apps.scss */
+  /* line 126, ../sass/templates/_my-apps.scss */
   .table-my-apps .app-name {
     font-size: 16px;
   }
 }
 
 @media screen and (max-width: 720px) {
-  /* line 138, ../sass/templates/_my-apps.scss */
+  /* line 141, ../sass/templates/_my-apps.scss */
   .scrollable .table-my-apps tbody tr {
     height: 70px;
   }
@@ -11659,8 +11652,8 @@ svg.loading-ellipsis .dot-3 {
 /* line 22, ../sass/components/_page-popup.scss */
 .popup-content {
   position: relative;
-  padding: 22px 30px 30px;
-  max-width: 400px;
+  padding: 2.2rem 3rem 3rem;
+  max-width: 40rem;
   opacity: 0;
   text-align: center;
   -webkit-transform: scale(0.8);
@@ -13256,16 +13249,58 @@ table.table-data .ref-icon-before--cloud:before {
 /* line 172, ../sass/components/_table-data.scss */
 .cellTableLoading {
   gwt-sprite: 'cellTableLoading';
-  padding: 30px;
+  padding: 0;
   background: none;
   text-align: center;
 }
 
 @media only screen and (max-width: 719px) {
   /* line 178, ../sass/components/_table-data.scss */
-  .column-hidden--mobile {
+  .column-hidden--mobile,
+  svg.loading-ellipsis-hidden--mobile {
     display: none;
   }
+}
+
+/* line 184, ../sass/components/_table-data.scss */
+table.table-data > tbody > tr:nth-child(odd),
+.cellTableLoading table > tbody > tr:nth-child(odd) {
+  background-color: #eff2f5;
+}
+/* line 187, ../sass/components/_table-data.scss */
+table.table-data > tbody > tr:nth-child(odd) > td,
+.cellTableLoading table > tbody > tr:nth-child(odd) > td {
+  background-color: #eff2f5;
+}
+
+/* line 191, ../sass/components/_table-data.scss */
+table.table-data > tbody > tr:nth-child(even),
+.cellTableLoading table > tbody > tr:nth-child(even) {
+  background-color: #ffffff;
+}
+/* line 194, ../sass/components/_table-data.scss */
+table.table-data > tbody > tr:nth-child(even) > td,
+.cellTableLoading table > tbody > tr:nth-child(even) > td {
+  background-color: #ffffff;
+}
+
+/* line 199, ../sass/components/_table-data.scss */
+.cellTableLoading td {
+  vertical-align: middle !important;
+}
+/* line 201, ../sass/components/_table-data.scss */
+.cellTableLoading td:first-child {
+  padding-left: 2%;
+}
+
+/* line 206, ../sass/components/_table-data.scss */
+table.table-data .cellTableLoading .img-rounded {
+  vertical-align: middle;
+}
+
+/* line 210, ../sass/components/_table-data.scss */
+.table-body--loading > tr > td {
+  padding: 0 !important;
 }
 
 /* line 1, ../sass/components/_tabs.scss */
