@@ -919,7 +919,7 @@ public class DevHelperServlet extends HttpServlet {
 			int processed = 0;
 			for (SimpleEntry<String, String> entry : mainItemIdAndCountries) {
 				String mainItemId = entry.getKey();
-				String itemsCountry = entry.getKey();
+				String itemsCountry = entry.getValue();
 
 				if (!country.equalsIgnoreCase(itemsCountry)) {
 					missed++;
@@ -963,7 +963,8 @@ public class DevHelperServlet extends HttpServlet {
 				new SimpleEntry<String, String>("gatherTo", dateToStr),
 				new SimpleEntry<String, String>("mainItemId", itemid),
 				new SimpleEntry<String, String>("countryCode", country),
-				new SimpleEntry<String, String>("iapItemIds", iapItemIds));
+				new SimpleEntry<String, String>("iapItemIds", iapItemIds),
+				new SimpleEntry<String, String>("taskName", String.format("%s_%s_%s_%s_%s", dataAccountId, itemid, dateFromStr, dateToStr, country)));
 	}
 
 	/**
