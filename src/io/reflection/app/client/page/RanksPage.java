@@ -45,6 +45,7 @@ import io.reflection.app.client.helper.FormattingHelper;
 import io.reflection.app.client.helper.ResponsiveDesignHelper;
 import io.reflection.app.client.helper.TooltipHelper;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
+import io.reflection.app.client.part.LoadingIndicator;
 import io.reflection.app.client.part.datatypes.RanksGroup;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.client.res.Styles.ReflectionMainStyles;
@@ -124,8 +125,9 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 	@UiField(provided = true) CellTable<RanksGroup> leaderboardTable = new CellTable<RanksGroup>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 
-	private HTMLPanel loadingIndicatorAll = AnimationHelper.createLoadingIndicator(5, 4);
-	private HTMLPanel loadingIndicatorList = AnimationHelper.createLoadingIndicator(5, 5);
+	private LoadingIndicator loadingIndicatorAll = AnimationHelper.getLeaderboardAllLoadingIndicator(25);
+	private LoadingIndicator loadingIndicatorFreeList = AnimationHelper.getLeaderboardListLoadingIndicator(25, true);
+	private LoadingIndicator loadingIndicatorPaidGrossingList = AnimationHelper.getLeaderboardListLoadingIndicator(25, false);
 
 	@UiField DivElement dateSelectContainer;
 	@UiField FormDateBox dateBox;
@@ -168,9 +170,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 	private Map<String, LIElement> tabs = new HashMap<String, LIElement>();
 
-	private String sorterSvg = "<svg version=\"1.1\" x=\"0px\" y=\"0px\" viewBox=\"0 0 7 10\" enable-background=\"new 0 0 7 10\" xml:space=\"preserve\" class=\"sort-svg\"><path class=\"ascending\" d=\"M0.4,4.1h6.1c0.1,0,0.2,0,0.3-0.1C7,3.9,7,3.8,7,3.7c0-0.1,0-0.2-0.1-0.3L3.8,0.1C3.7,0,3.6,0,3.5,0C3.4,0,3.3,0,3.2,0.1L0.1,3.3C0,3.4,0,3.5,0,3.7C0,3.8,0,3.9,0.1,4C0.2,4.1,0.3,4.1,0.4,4.1z\"></path><path class=\"descending\" d=\"M6.6,5.9H0.4c-0.1,0-0.2,0-0.3,0.1C0,6.1,0,6.2,0,6.3c0,0.1,0,0.2,0.1,0.3l3.1,3.2C3.3,10,3.4,10,3.5,10c0.1,0,0.2,0,0.3-0.1l3.1-3.2C7,6.6,7,6.5,7,6.3C7,6.2,7,6.1,6.9,6C6.8,5.9,6.7,5.9,6.6,5.9z\"></path></svg>";
-	private SafeHtmlHeader downloadsHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Downloads " + sorterSvg));
-	private SafeHtmlHeader revenueHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Revenue " + sorterSvg));
+	private SafeHtmlHeader downloadsHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Downloads " + AnimationHelper.getSorterSvg()));
+	private SafeHtmlHeader revenueHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Revenue " + AnimationHelper.getSorterSvg()));
 	private TextHeader rankHeader = new TextHeader("Rank");
 	private TextHeader paidHeader = new TextHeader("Paid");
 	private TextHeader freeHeader = new TextHeader("Free");
@@ -265,8 +266,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		emptyTableWidget.getElement().getStyle().setHeight(100.0, Unit.PX);
 		emptyTableWidget.getElement().getStyle().setPaddingTop(35.0, Unit.PX);
 		leaderboardTable.setEmptyTableWidget(emptyTableWidget);
-
 		leaderboardTable.setLoadingIndicator(loadingIndicatorAll);
+		leaderboardTable.getTableLoadingSection().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().tableBodyLoading());
 
 		RankController.get().addDataDisplay(leaderboardTable);
 
@@ -598,10 +599,10 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			leaderboardTable.addColumn(priceColumn, priceHeader);
 			leaderboardTable.addColumn(downloadsColumn, downloadsHeader);
 			leaderboardTable.addColumn(iapColumn, iapHeader);
-			leaderboardTable.setLoadingIndicator(loadingIndicatorList);
 			priceHeader.setHeaderStyleNames(style.columnHiddenMobile());
 			priceColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
 			leaderboardTable.addColumnStyleName(2, style.columnHiddenMobile());
+			leaderboardTable.setLoadingIndicator(loadingIndicatorFreeList);
 			break;
 		case PAID_LIST_TYPE:
 			removeAllColumns();
@@ -615,10 +616,10 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			leaderboardTable.addColumn(priceColumn, priceHeader);
 			leaderboardTable.addColumn(downloadsColumn, downloadsHeader);
 			leaderboardTable.addColumn(iapColumn, iapHeader);
-			leaderboardTable.setLoadingIndicator(loadingIndicatorList);
 			iapHeader.setHeaderStyleNames(style.columnHiddenMobile());
 			iapColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
 			leaderboardTable.addColumnStyleName(4, style.columnHiddenMobile());
+			leaderboardTable.setLoadingIndicator(loadingIndicatorPaidGrossingList);
 			break;
 		case GROSSING_LIST_TYPE:
 			removeAllColumns();
@@ -632,10 +633,10 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			leaderboardTable.addColumn(priceColumn, priceHeader);
 			leaderboardTable.addColumn(revenueColumn, revenueHeader);
 			leaderboardTable.addColumn(iapColumn, iapHeader);
-			leaderboardTable.setLoadingIndicator(loadingIndicatorList);
 			iapHeader.setHeaderStyleNames(style.columnHiddenMobile());
 			iapColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
 			leaderboardTable.addColumnStyleName(4, style.columnHiddenMobile());
+			leaderboardTable.setLoadingIndicator(loadingIndicatorPaidGrossingList);
 			break;
 		}
 

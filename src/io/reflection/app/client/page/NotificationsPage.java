@@ -27,7 +27,6 @@ import io.reflection.app.client.part.ExpandableCellTableBuilder.ExpandMultiSelec
 import io.reflection.app.client.part.ExpandableCellTableBuilder.PlaceHolderColumn;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.res.Images;
-import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Notification;
 import io.reflection.app.datatypes.shared.NotificationStatusType;
 import io.reflection.app.shared.util.FormattingHelper;
@@ -69,8 +68,6 @@ public class NotificationsPage extends Page implements NavigationEventHandler, D
 
 	public NotificationsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
-
-		Styles.STYLES_INSTANCE.reflection().ensureInjected();
 
 		createColumns();
 
