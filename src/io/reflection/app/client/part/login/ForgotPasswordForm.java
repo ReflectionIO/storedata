@@ -84,16 +84,16 @@ public class ForgotPasswordForm extends Composite implements ForgotPasswordEvent
 		boolean validated = true;
 		String emailText = email.getText();
 		if (emailText == null || emailText.length() == 0) {
-			emailError = "Cannot be empty";
-			validated = false;
-		} else if (emailText.length() < 6) {
-			emailError = "Too short (minimum 6 characters)";
+			emailError = FormHelper.ERROR_EMAIL_EMPTY;
 			validated = false;
 		} else if (emailText.length() > 255) {
 			emailError = "Too long (maximum 255 characters)";
 			validated = false;
+		} else if (!emailText.contains("@")) {
+			emailError = FormHelper.ERROR_EMAIL_MISSING_AT;
+			validated = false;
 		} else if (!FormHelper.isValidEmail(emailText)) {
-			emailError = "Invalid email address";
+			emailError = FormHelper.ERROR_EMAIL_WRONG;
 			validated = false;
 		} else {
 			emailError = null;

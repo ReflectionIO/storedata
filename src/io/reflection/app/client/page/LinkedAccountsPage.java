@@ -348,7 +348,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		register(DefaultEventBus.get().addHandlerToSource(DeleteLinkedAccountEventHandler.TYPE, LinkedAccountController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(UpdateLinkedAccountEventHandler.TYPE, LinkedAccountController.get(), this));
 
-		ResponsiveDesignHelper.makeTabsResponsive();
+		ResponsiveDesignHelper.makeTabsResponsiveMultiPage();
 
 	}
 

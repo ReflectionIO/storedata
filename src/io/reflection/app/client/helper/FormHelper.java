@@ -39,6 +39,33 @@ public class FormHelper {
 	public static final String HAS_DIGIT = "(?=.*[0-9])";
 	private static final RegExp REG_EXP_HAS_DIGIT_CHECKER = RegExp.compile(HAS_DIGIT);
 
+	public static final String ERROR_FIRST_NAME_EMPTY = "Please tell us your first name";
+	public static final String ERROR_LAST_NAME_EMPTY = "Please tell us your last name";
+	public static final String ERROR_NAME_SHORT = "Name must be a minimum of 2 characters long";
+	public static final String ERROR_EMAIL_EMPTY = "Please enter your email address";
+	public static final String ERROR_EMAIL_WRONG = "Email address is invalid, please check what you've entered";
+	public static final String ERROR_EMAIL_MISSING_AT = "Invalid email address: @ symbol is missing";
+	// public static final String ERROR_EMAIL_INVALID_EXTENSION = ""; TODO ?
+	public static final String ERROR_EMAIL_LOGIN_EMPTY = "We can't let you in without your email address";
+	public static final String ERROR_COMPANY_EMPTY = "Please tell us your company name";
+	public static final String ERROR_COMPANY_SHORT = "Company must be a minimum of 2 characters long";
+	public static final String ERROR_PASSWORD_CREATE_EMPTY = "Very trusting of you but we need a password for security";
+	public static final String ERROR_PASSWORD_CREATE_SHORT = "Passwords must be at least 6 characters (you can use any characters though)";
+	public static final String ERROR_PASSWORD_CREATE_CONFIRMATION_MATCH = "Oops..the passwords you've entered don't match";
+	public static final String ERROR_PASSWORD_LOGIN_EMPTY = "We can't let you in without your password";
+	public static final String ERROR_PASSWORD_LOGIN_WRONG = "Hang on...that's not your password, please try again";
+	public static final String ERROR_LOGIN_CREDENTIALS_WRONG = "Hang on...the email or password you entered is not right, please try again";
+	public static final String ERROR_BUTTON_INCOMPLETE = "Oops, Something's Missing";
+	public static final String ERROR_BUTTON_WRONG = "Oops, Something's Wrong";
+	public static final String ERROR_FORM_EMPTY_FIELDS = "Please complete the highlighted fields above you may have missed";
+	public static final String ERROR_FORM_WRONG_FIELDS = "Please check the highlighted fields above for errors";
+	public static final String ERROR_FORM_GENERIC = "Please check the information above for errors and try again";
+	public static final String ERROR_LINKEDACCOUNT_NAME_EMPTY = "We need your app store account name in order to link it";
+	public static final String ERROR_LINKEDACCOUNT_PASSWORD_EMPTY = "We need your app store account password in order to link it";
+	public static final String ERROR_LINKEDACCOUNT_UPDATE_PASSWORD_EMPTY = "We need your app store account password in order to update it";
+	public static final String ERROR_VENDORID_EMPTY = "We need your Apple Vendor ID please, you can find it here";
+	public static final String ERROR_VENDORID_WRONG = "The vendor ID you entered is invalid, it must start with 8 and be 8 characters long";
+
 	public static boolean isValidEmail(String toValidate) {
 		return REG_EXP_EMAIL_CHECKER.test(toValidate);
 	}

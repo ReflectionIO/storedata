@@ -10,9 +10,7 @@ package io.reflection.app.client.part.linkaccount;
 import io.reflection.app.client.component.LoadingButton;
 import io.reflection.app.client.component.PasswordField;
 import io.reflection.app.client.component.TextField;
-import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.NavigationController;
-import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.helper.TooltipHelper;
 import io.reflection.app.client.page.PageType;
@@ -156,20 +154,12 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 		String pswd = password.getText();
 		String vendor = vendorId.getText();
 
-		Stack stack = NavigationController.get().getStack();
-
 		// Check fields constraints
-		if (username == null || username.length() == 0) {
-			accountUsernameError = "Cannot be empty";
-			validated = false;
-		} else if (username.length() < 2) {
-			accountUsernameError = "Too short";
+		if (username == null || username.length() < 2) {
+			accountUsernameError = FormHelper.ERROR_LINKEDACCOUNT_NAME_EMPTY;
 			validated = false;
 		} else if (username.length() > 255) {
 			accountUsernameError = "Too long";
-			validated = false;
-		} else if (stack.getParameter(1) != null && stack.getParameter(1).equals("add") && LinkedAccountController.get().hasLinkedAccount(username)) {
-			accountUsernameError = "Linked account already exists";
 			validated = false;
 		} else {
 			accountUsernameError = null;
@@ -177,12 +167,8 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 		}
 
 		// The password constraints are relaxed here since they depends by the Store checking the password
-		if (pswd == null || pswd.length() == 0) {
-			passwordError = "Cannot be empty";
-			validated = false;
-
-		} else if (pswd.length() < 2) {
-			passwordError = "Too short";
+		if (pswd == null || pswd.length() < 2) {
+			passwordError = (accountUsername.isVisible() ? FormHelper.ERROR_LINKEDACCOUNT_PASSWORD_EMPTY : FormHelper.ERROR_LINKEDACCOUNT_UPDATE_PASSWORD_EMPTY);
 			validated = false;
 		} else if (pswd.length() > 64) {
 			passwordError = "Too long";
@@ -193,10 +179,10 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 		}
 
 		if (vendor == null || vendor.length() == 0) {
-			vendorIdError = "Cannot be empty";
+			vendorIdError = FormHelper.ERROR_VENDORID_EMPTY;
 			validated = false;
 		} else if (!FormHelper.isValidAppleVendorId(vendor)) {
-			vendorIdError = "Invalid vendor id";
+			vendorIdError = FormHelper.ERROR_VENDORID_WRONG;
 			validated = false;
 		} else {
 			vendorIdError = null;

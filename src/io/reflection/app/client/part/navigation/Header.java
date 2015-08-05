@@ -136,16 +136,14 @@ public class Header extends Composite implements NavigationEventHandler, Session
 	}
 
 	private void initPanelLeftMenu() {
-		// Close left panel on touching the screen and right panels on clicking
+		// Close left panel on touching the mobile screen
 		NavigationController.get().getMainPanel().sinkEvents(Event.ONCLICK);
 		NavigationController.get().getMainPanel().addHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				if (isPanelLeftMenuOpen()) {
-					if (DOMHelper.getHtmlElement().hasClassName(style.touch()) && Window.getClientWidth() < 940) {
-						hamburgerBtn.click();
-					}
+				if (DOMHelper.getHtmlElement().hasClassName("touch") && isPanelLeftMenuOpen() && Window.getClientWidth() < 940) {
+					hamburgerBtn.click();
 				}
 			}
 		}, ClickEvent.getType());
