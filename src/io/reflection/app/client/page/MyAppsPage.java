@@ -53,8 +53,6 @@ import java.util.Map;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.SpanElement;
-import com.google.gwt.dom.client.Style.TextAlign;
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -89,14 +87,16 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 
 	UserItemProvider userItemProvider = new UserItemProvider();
 
-	@UiField(provided = true) CellTable<MyApp> appsTableDesktop = new CellTable<MyApp>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
-	@UiField(provided = true) CellTable<MyApp> appsTableMobile = new CellTable<MyApp>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
+	@UiField(provided = true) CellTable<MyApp> myAppsTable = new CellTable<MyApp>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
+
 	private String sorterSvg = "<svg version=\"1.1\" x=\"0px\" y=\"0px\" viewBox=\"0 0 7 10\" enable-background=\"new 0 0 7 10\" xml:space=\"preserve\" class=\"sort-svg\"><path class=\"ascending\" d=\"M0.4,4.1h6.1c0.1,0,0.2,0,0.3-0.1C7,3.9,7,3.8,7,3.7c0-0.1,0-0.2-0.1-0.3L3.8,0.1C3.7,0,3.6,0,3.5,0C3.4,0,3.3,0,3.2,0.1L0.1,3.3C0,3.4,0,3.5,0,3.7C0,3.8,0,3.9,0.1,4C0.2,4.1,0.3,4.1,0.4,4.1z\"></path><path class=\"descending\" d=\"M6.6,5.9H0.4c-0.1,0-0.2,0-0.3,0.1C0,6.1,0,6.2,0,6.3c0,0.1,0,0.2,0.1,0.3l3.1,3.2C3.3,10,3.4,10,3.5,10c0.1,0,0.2,0,0.3-0.1l3.1-3.2C7,6.6,7,6.5,7,6.3C7,6.2,7,6.1,6.9,6C6.8,5.9,6.7,5.9,6.6,5.9z\"></path></svg>";
 	private SafeHtmlHeader rankHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Rank " + sorterSvg));
 	private SafeHtmlHeader appDetailsHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("App Details " + sorterSvg));
 	private SafeHtmlHeader priceHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Price " + sorterSvg));
 	private SafeHtmlHeader downloadsHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Downloads " + sorterSvg));
 	private SafeHtmlHeader revenueHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Revenue " + sorterSvg));
+	private SafeHtmlHeader iapHeader = new SafeHtmlHeader(
+			SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"In App Purchases\">IAP</span>"));
 
 	// @UiField(provided = true) SimplePager simplePager = new SimplePager(false, false);
 
@@ -161,17 +161,11 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 				}
 			}
 		});
-		appsTableDesktop.setEmptyTableWidget(myAppsEmptyTable);
+		myAppsTable.setEmptyTableWidget(myAppsEmptyTable);
 
-		HTMLPanel emptyMobileTableWidget = new HTMLPanel("");
-		emptyMobileTableWidget.getElement().getStyle().setTextAlign(TextAlign.CENTER);
-		emptyMobileTableWidget.getElement().getStyle().setHeight(100.0, Unit.PX);
-		emptyMobileTableWidget.getElement().getStyle().setPaddingTop(35.0, Unit.PX);
-		appsTableMobile.setEmptyTableWidget(emptyMobileTableWidget);
+		myAppsTable.setLoadingIndicator(AnimationHelper.createLoadingIndicator(5, 6));
 
-		appsTableDesktop.setLoadingIndicator(AnimationHelper.createLoadingIndicator(5, 6));
-		appsTableMobile.setLoadingIndicator(new HTMLPanel(AnimationHelper.getLoaderInlineSafeHTML()));
-		userItemProvider.addDataDisplay(appsTableDesktop);
+		userItemProvider.addDataDisplay(myAppsTable);
 
 		// simplePager.setDisplay(appsTableDesktop);
 		// simplePager.setDisplay(appsTableMobile);
@@ -179,12 +173,12 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		setFiltersEnabled(false);
 		accountName.setEnabled(false);
 
-		appsTableDesktop.addLoadingStateChangeHandler(new LoadingStateChangeEvent.Handler() {
+		myAppsTable.addLoadingStateChangeHandler(new LoadingStateChangeEvent.Handler() {
 
 			@Override
 			public void onLoadingStateChanged(LoadingStateChangeEvent event) {
 				if (event.getLoadingState() == LoadingState.LOADED) {
-					appsTableDesktop.setStyleName(style.tableLinkedAccountsDisabled(), appsTableDesktop.getRowCount() == 0);
+					myAppsTable.setStyleName(style.tableLinkedAccountsDisabled(), myAppsTable.getRowCount() == 0);
 				}
 			}
 		});
@@ -248,7 +242,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 				}
 				rankHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.mhxte6cIF());
 				appDetailsHeader.setHeaderStyleNames(style.canBeSorted());
-				priceHeader.setHeaderStyleNames(style.canBeSorted());
+				priceHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.columnHiddenMobile());
 				downloadsHeader.setHeaderStyleNames(style.canBeSorted());
 				revenueHeader.setHeaderStyleNames(style.canBeSorted());
 				if (event.getColumn() == columnRank) {
@@ -259,7 +253,8 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 					appDetailsHeader.setHeaderStyleNames(style.canBeSorted() + " " + (event.isSortAscending() ? style.isAscending() : style.isDescending()));
 				} else if (event.getColumn() == columnPrice) {
 					userItemProvider.sortByPrice(event.isSortAscending());
-					priceHeader.setHeaderStyleNames(style.canBeSorted() + " " + (event.isSortAscending() ? style.isAscending() : style.isDescending()));
+					priceHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.columnHiddenMobile() + " "
+							+ (event.isSortAscending() ? style.isAscending() : style.isDescending()));
 				} else if (event.getColumn() == columnDownloads) {
 					userItemProvider.sortByDownloads(event.isSortAscending());
 					downloadsHeader.setHeaderStyleNames(style.canBeSorted() + " " + (event.isSortAscending() ? style.isAscending() : style.isDescending()));
@@ -267,14 +262,13 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 					userItemProvider.sortByRevenue(event.isSortAscending());
 					revenueHeader.setHeaderStyleNames(style.canBeSorted() + " " + (event.isSortAscending() ? style.isAscending() : style.isDescending()));
 				}
-				appsTableDesktop.setRowData(0, userItemProvider.getList());
-				appsTableMobile.setRowData(0, userItemProvider.getList());
+				myAppsTable.setRowData(0, userItemProvider.getList());
+
 				TooltipHelper.updateHelperTooltip();
 			}
 		};
 
-		appsTableDesktop.addColumnSortHandler(columnSortHandler);
-		appsTableMobile.addColumnSortHandler(columnSortHandler);
+		myAppsTable.addColumnSortHandler(columnSortHandler);
 
 		final SafeHtml loaderInline = AnimationHelper.getLoaderInlineSafeHTML();
 
@@ -294,8 +288,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		};
 		columnRank.setCellStyleNames(style.mhxte6ciA() + " " + style.mhxte6cID());
 		rankHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.mhxte6cIF());
-		appsTableDesktop.addColumn(columnRank, rankHeader);
-		appsTableMobile.addColumn(columnRank, rankHeader);
+		myAppsTable.addColumn(columnRank, rankHeader);
 		columnRank.setSortable(true);
 
 		columnAppDetails = new Column<MyApp, Item>(new MiniAppCell()) {
@@ -306,7 +299,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		};
 		columnAppDetails.setCellStyleNames(style.mhxte6ciA());
 
-		appsTableDesktop.addColumn(columnAppDetails, appDetailsHeader);
+		myAppsTable.addColumn(columnAppDetails, appDetailsHeader);
 		columnAppDetails.setSortable(true);
 
 		columnPrice = new Column<MyApp, SafeHtml>(new SafeHtmlCell()) {
@@ -323,9 +316,9 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 				}
 			}
 		};
-		columnPrice.setCellStyleNames(style.mhxte6ciA());
-		priceHeader.setHeaderStyleNames(style.canBeSorted());
-		appsTableDesktop.addColumn(columnPrice, priceHeader);
+		columnPrice.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
+		priceHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.columnHiddenMobile());
+		myAppsTable.addColumn(columnPrice, priceHeader);
 		columnPrice.setSortable(true);
 
 		columnDownloads = new Column<MyApp, SafeHtml>(new SafeHtmlCell()) {
@@ -344,7 +337,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		};
 		columnDownloads.setCellStyleNames(style.mhxte6ciA());
 		downloadsHeader.setHeaderStyleNames(style.canBeSorted());
-		appsTableDesktop.addColumn(columnDownloads, downloadsHeader);
+		myAppsTable.addColumn(columnDownloads, downloadsHeader);
 		columnDownloads.setSortable(true);
 
 		columnRevenue = new Column<MyApp, SafeHtml>(new SafeHtmlCell()) {
@@ -363,7 +356,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		};
 		columnRevenue.setCellStyleNames(style.mhxte6ciA());
 		revenueHeader.setHeaderStyleNames(style.canBeSorted());
-		appsTableDesktop.addColumn(columnRevenue, revenueHeader);
+		myAppsTable.addColumn(columnRevenue, revenueHeader);
 		columnRevenue.setSortable(true);
 
 		columnIap = new Column<MyApp, SafeHtml>(new SafeHtmlCell()) {
@@ -378,18 +371,16 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 			}
 
 		};
-		columnIap.setCellStyleNames(style.mhxte6ciA());
-		appsTableDesktop.addColumn(columnIap,
-				new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"In App Purchases\">IAP</span>")));
+		columnIap.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
+		iapHeader.setHeaderStyleNames(style.columnHiddenMobile());
+		myAppsTable.addColumn(columnIap, iapHeader);
 
-		appsTableDesktop.addColumnStyleName(0, style.rankColumn());
-		appsTableDesktop.addColumnStyleName(1, style.appDetailsColumn());
-		appsTableDesktop.addColumnStyleName(2, style.priceColumn());
-		appsTableDesktop.addColumnStyleName(3, style.downloadsColumn());
-		appsTableDesktop.addColumnStyleName(4, style.revenueColumn());
-		appsTableDesktop.addColumnStyleName(5, style.iapColumn());
-
-		appsTableMobile.addColumnStyleName(0, style.rankColumn());
+		myAppsTable.addColumnStyleName(0, style.rankColumn());
+		myAppsTable.addColumnStyleName(1, style.appDetailsColumn());
+		myAppsTable.addColumnStyleName(2, style.priceColumn() + " " + style.columnHiddenMobile());
+		myAppsTable.addColumnStyleName(3, style.downloadsColumn());
+		myAppsTable.addColumnStyleName(4, style.revenueColumn());
+		myAppsTable.addColumnStyleName(5, style.iapColumn() + " " + style.columnHiddenMobile());
 
 	}
 
@@ -452,14 +443,12 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	@UiHandler("viewAllBtn")
 	void onViewAllButtonClicked(ClickEvent event) {
 		if (((Button) event.getSource()).isEnabled()) {
-			if (appsTableDesktop.getVisibleItemCount() == ServiceConstants.STEP_VALUE) {
-				appsTableDesktop.setVisibleRange(0, Integer.MAX_VALUE);
-				appsTableMobile.setVisibleRange(0, Integer.MAX_VALUE);
+			if (myAppsTable.getVisibleItemCount() == ServiceConstants.STEP_VALUE) {
+				myAppsTable.setVisibleRange(0, Integer.MAX_VALUE);
 				viewAllSpan.setInnerText("View Less Apps");
 				TooltipHelper.updateHelperTooltip();
 			} else {
-				appsTableDesktop.setVisibleRange(0, ServiceConstants.STEP_VALUE);
-				appsTableMobile.setVisibleRange(0, ServiceConstants.STEP_VALUE);
+				myAppsTable.setVisibleRange(0, ServiceConstants.STEP_VALUE);
 				viewAllSpan.setInnerText("View All Apps");
 			}
 		}
@@ -498,7 +487,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 			loadingBar.show("Getting apps...");
 			rankHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.mhxte6cIF());
 			appDetailsHeader.setHeaderStyleNames(style.canBeSorted());
-			priceHeader.setHeaderStyleNames(style.canBeSorted());
+			priceHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.columnHiddenMobile());
 			downloadsHeader.setHeaderStyleNames(style.canBeSorted());
 			revenueHeader.setHeaderStyleNames(style.canBeSorted());
 		}
@@ -524,7 +513,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 			loadingBar.show("Getting apps...");
 			rankHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.mhxte6cIF());
 			appDetailsHeader.setHeaderStyleNames(style.canBeSorted());
-			priceHeader.setHeaderStyleNames(style.canBeSorted());
+			priceHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.columnHiddenMobile());
 			downloadsHeader.setHeaderStyleNames(style.canBeSorted());
 			revenueHeader.setHeaderStyleNames(style.canBeSorted());
 		}
@@ -671,9 +660,6 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 
 		}
 
-		if (!userItemProvider.getDataDisplays().contains(appsTableMobile)) { // Avoid initial double call to server
-			userItemProvider.addDataDisplay(appsTableMobile);
-		}
 		TooltipHelper.updateHelperTooltip();
 	}
 
@@ -686,9 +672,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	 */
 	@Override
 	public void getSalesRanksFailure(GetSalesRanksRequest input, Throwable caught) {
-		if (!userItemProvider.getDataDisplays().contains(appsTableMobile)) { // Avoid initial double call to server
-			userItemProvider.addDataDisplay(appsTableMobile);
-		}
+
 	}
 
 }
