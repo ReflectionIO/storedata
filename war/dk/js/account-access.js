@@ -1,8 +1,4 @@
 //import the header from handlebars
-var templateFontDeclarations = Handlebars.templates['fontDeclarations'];
-var htmlFontDeclarations = templateFontDeclarations({});
-$("head").append(htmlFontDeclarations);
-
 var templateGlobalHeader = Handlebars.templates['globalHeader'];
 var htmlGlobalHeader = templateGlobalHeader({});
 $("#js-component-import--global-header").html(htmlGlobalHeader);
@@ -171,7 +167,7 @@ AccountSetup.prototype.mockLinkAccount = function() {
 				$(this).attr('value', 'Account Linked!').addClass('ref-button--success');
 				$('.account-connect-animation').addClass('plugs-connected');
 				$('.form-submitted-success').addClass('is-showing');
-			}, 10000)
+			}, 10000000)
 		}
 	});
 	$('.js-mock-link-another-account').on("click", function(e){

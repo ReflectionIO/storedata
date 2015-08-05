@@ -73,7 +73,7 @@
 									<span>Linked Accounts</span></span>
 							</a>
 						</li>
-						<li class="grid__column grid__column--one-quarter tabs__tab js-tab-select">
+						<li class="grid__column grid__column--one-quarter tabs__tab is-disabled">
 							<div class="tab-animate-active"></div>
 							<a data-content="#tab-content-users" class="tabs__link">
 								<span>
@@ -84,17 +84,17 @@
 		l-3.6,8c-0.2,0.6-0.2,1.7,0.1,2.2C0.7,31.2,1.2,32,1.8,32h28.3c0.6,0,1.2-0.8,1.5-1.3c0.3-0.5,0.4-1.6,0.1-2.2l-3.6-8
 		c-0.2-0.4-0.5-0.7-0.8-0.9l-5.6-2.9c-0.1,0-0.1,0-0.2,0c-0.1,0-0.2,0-0.2,0.1c-1.6,1.2-3.5,1.8-5.4,1.8c-1.9,0-3.8-0.6-5.4-1.8
 		C10.5,16.8,10.5,16.8,10.4,16.8L10.4,16.8z"/></svg>
-									<span>Users</span></span>
+									<span>Users <span class="text-small">coming soon</span></span></span>
 							</a>
 						</li>
-						<li class="grid__column grid__column--one-quarter tabs__tab js-tab-select">
+						<li class="grid__column grid__column--one-quarter tabs__tab is-disabled">
 							<div class="tab-animate-active"></div>
 							<a data-content="#tab-content-notifications" class="tabs__link">
 								<span>
 									<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path fill=#5A5A68 d="M12.1,29h7.8c-0.4,1.1-2,3-3.9,3S12.5,30.1,12.1,29z M30,24v3H2v-3l3-2v-9
 		c0-5.7,3.7-9.3,8-10.4c0,0,0-0.1,0-0.1C13,1.1,14.3,0,16,0s3,1.1,3,2.5c0,0,0,0.1,0,0.1c1.7,0.4,3.3,1.2,4.6,2.3
 		c2.3,2,3.5,4.7,3.5,8.1v9v0L30,24z M7,13v11h18V13c0-2.7-1-5-2.8-6.5C20.6,5,18.4,4.3,16,4.3C11.7,4.3,7,7,7,13z"/></svg>
-									<span>Notifications</span></span>
+									<span>Notifications <span class="text-small">coming soon</span></span></span>
 							</a>
 						</li>
 					</ul>
@@ -394,31 +394,35 @@
 	<div class="page-overlay">
 		<div class="page-popup">
 			<div class="popup-content popup-content--link-account forms--mid-theme">
-				<div class="linked-account-loading-state">
-					<div class="hamster-wheel">
-						<img src="images/hamster-wheel.png" alt="hamster wheel" />
-					</div>
-					<div class="animation-hamster">
-					</div>
-					<p>Linking may take up to 5 minutes but most likely less, we’ll send you an email as soon as it's done.</p>
-				</div>
+				<div>	
 				<form>
-					<h2 class="heading-style--heading-five popup-content--account__heading">Link Another Account</h2>
-					<div class="form-field js-rotate-content">						
-						<input type="text" name="accountnamep" id="accountnamep" autocomplete="off"/>
-						<label for="accountnamep">Account Name</label>
-					</div>
-					<div class="form-field js-rotate-content">						
-						<input type="password" name="itunesconnectpasswordp" id="itunesconnectpasswordp" autocomplete="off"/>
-						<label for="itunesconnectpasswordp">Account Password</label>
-					</div>
-					<div class="form-field js-rotate-content">						
-						<input type="text" name="vendoridp" id="vendoridp" autocomplete="off"/>
-						<label for="vendoridp">Vendor ID</label>
-						<a href="#" target="_blank" class="form-field-help ref-icon-after ref-icon-after--question"><span>What's this?</span></a>
-					</div>
-					<input type="submit" class="ref-button--full-width js-mock-submit-link-account js-rotate-content" value="Link This Account" />
+					<fieldset class="connect-account-content" style="position: relative">
+						<h2 class="heading-style--heading-five popup-content--account__heading">Link Another Account</h2>
+						<div class="linked-account-loading-state">
+							<div class="hamster-wheel">
+								<img src="images/hamster-wheel.png" alt="hamster wheel" />
+							</div>
+							<div class="animation-hamster">
+							</div>
+							<p>Linking may take up to 5 minutes but most likely less, we’ll send you an email as soon as it's done.</p>
+						</div>
+						<div class="form-field js-rotate-content">						
+							<input type="text" name="accountnamep" id="accountnamep" autocomplete="off"/>
+							<label for="accountnamep">Account Name</label>
+						</div>
+						<div class="form-field js-rotate-content">						
+							<input type="password" name="itunesconnectpasswordp" id="itunesconnectpasswordp" autocomplete="off"/>
+							<label for="itunesconnectpasswordp">Account Password</label>
+						</div>
+						<div class="form-field js-rotate-content">						
+							<input type="text" name="vendoridp" id="vendoridp" autocomplete="off"/>
+							<label for="vendoridp">Vendor ID</label>
+							<a href="#" target="_blank" class="form-field-help ref-icon-after ref-icon-after--question"><span>What's this?</span></a>
+						</div>
+						<input type="submit" class="ref-button--full-width js-mock-submit-link-account js-rotate-content" value="Link This Account" />
+					</fieldset>
 				</form>
+				</div>
 				<a href="#" class="popup-close"><span class="ref-icon-after ref-icon-after--close">Close</span></a>
 			</div>
 		</div>
@@ -480,7 +484,7 @@
 							$('body').removeClass("form-submitted-loading");
 							$this.removeClass('ref-button--success').attr("value", "Link This Account");
 						}, 1000);
-					}, 5000);
+					}, 5000000);
 				}
 			});
  

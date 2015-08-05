@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="utf-8" />
+	<title>Reflection, My Apps</title>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">	
+	<!--[if (gte IE 9)|(IEMobile)|(!IE)]><!-->
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main.css" />
+	<!--<![endif]-->
+	<!--[if (lt IE 9)]>
+		<script src="js/vendor/html5shiv.min.js"></script>
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main-ie8.css" />
+	<![endif]-->
+ 	<!--[if !lt IE 9]><!-->
+		<script src="js/vendor/picturefill.2.3.1.min.js" async></script>
+	<!-- <![endif]-->
+	<link rel="stylesheet" href="js/vendor/jquery.mCustomScrollbar.css" />
+	<link type="text/css" media="screen" rel="stylesheet" href="css/responsive-tables.css" />	
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
+<script>
+  WebFont.load({
+    google: {
+      families: ['Open Sans:400,600,700,400italic,600italic', 'Source Sans Pro:400,600,700', 'Lato:400,700,400italic']
+    }
+  });
+</script></head>
+<body class="panel-left-open">
+	<!--[if (lt IE 9)]>
+      <div class="window-warning">
+  			<p>Uh oh... Reflection doesn't work in this browser. &nbsp; &nbsp;<a href="http://outdatedbrowser.com/en" target="_blank">Download a compatible browser</a></p>
+  		</div>
+  <![endif]-->
+
+  <header id="js-component-import--global-header" class="global-header"></header>
+  
+	<div id="js-component-import--panel-left" class="panel-left js-custom-scrollbar" data-mcs-theme="minimal-dark"></div>
+
+	<div class="l-page-container">
+
+		<div id="main" class="l-main" role="main">
+			<div class="grid-container page-my-apps">
+				<div class="grid__column grid__column--one-half">
+					<h1 class="heading-style--heading-three page-title">My Apps</h1>
+				</div>
+				<div class="grid__column page-functions overflow-visible">
+					<form class="overflow-visible">
+						<div class="form-field form-field--select">
+							<div class="page-overlay"></div>		
+							<select class="js-field--select reflection-select--filter reflection-select--right">
+						    <option value="" disabled selected>Account Name</option>
+						    <option value="accname1">gustaf@reflection.io</option>
+						    <option value="accname2">martin@reflection.io</option>
+						    <option value="accname3">jamie@reflection.io</option>
+						    <option value="accname4">Test Account 1</option>
+						    <option value="accname5">Test Account 2</option>
+							</select>
+						</div>
+					</form>
+				</div>
+				<div class="grid__column grid__column--full-width filters-container filter-container--my-apps">
+					<form class="forms--mid-theme">
+						<div class="date-selection-filter-container">
+							<div class="calendar-container">
+									<div class="date-select-container">
+										<div class="form-field form-field--date-select form-field--date-select--no-icon">
+											<input type="text" name="date-single" id="date-single" value="01 Jan 2015" />
+										</div>
+									</div>
+									<div class="date-select-to-indicator"></div>
+									<div class="date-select-container">
+										<div class="form-field form-field--date-select form-field--date-select--no-icon">
+											<input type="text" name="date-single-to" id="date-single-to" value="26 Feb 2015" />
+										</div>
+									</div>
+							</div>
+							<button class="ref-button--cta-small refresh-button" disabled><span class="ref-icon-before ref-icon-before--refresh">Refresh</span></button>
+							<span class="or-text">or</span>
+							<div class="form-field form-field--select time-period-select">
+								<div class="page-overlay"></div>		
+								<select class="js-field--select reflection-select--filter">
+							    <option value="" disabled selected>Time Period</option>
+							    <option value="time1">1 Week</option>
+							    <option value="time2">2 Weeks</option>
+							    <option value="time3">4 Weeks</option>
+							    <option value="time4">6 Weeks</option>
+							    <option value="time5">8 Weeks</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-field form-field--select category-select">
+							<div class="page-overlay"></div>
+							<select class="js-field--select reflection-select--filter reflection-select--right">
+						    <option value="" disabled selected>Category</option>
+						    <option value="24">All Categories</option><option value="19">Book</option><option value="1">Business</option><option value="22">Catalogs</option><option value="18">Education</option><option value="17">Entertainment</option><option value="16">Finance</option><option value="23">Food &amp; Drink</option><option value="15">Games</option><option value="14">Health &amp; Fitness</option><option value="13">Lifestyle</option><option value="20">Medical</option><option value="12">Music</option><option value="11">Navigation</option><option value="10">News</option><option value="21">Newsstand</option><option value="9">Photo &amp; Video</option><option value="8">Productivity</option><option value="7">Reference</option><option value="6">Social Networking</option><option value="5">Sports</option><option value="4">Travel</option><option value="3">Utilities</option><option value="2">Weather</option>
+							</select>
+						</div>
+						<div class="form-field form-field--select store-select">
+							<div class="page-overlay"></div>
+							<select class="js-field--select reflection-select--filter reflection-select--center">
+						    <option value="" disabled selected>App Store</option>
+						    <option value="b0">All Stores</option>
+						    <option value="b1">iPad Store</option>
+						    <option value="b2">iPhone Store</option>
+							</select>
+						</div>
+						<div class="form-field form-field--select country-select">
+							<div class="page-overlay"></div>
+							<select class="js-field--select reflection-select--filter">
+						    <option value="" disabled selected>Country</option>
+						    <option value="a0">All Countries</option>
+						    <option value="a1">Japan</option>
+						    <option value="a2">United States</option>
+						    <option value="a3">China</option>
+						    <option value="a4">Germany</option>
+						    <option value="a5">France</option>
+						    <option value="a6">United Kingdom</option>
+						    <option value="a7">Italy</option>
+							</select>
+						</div>				
+
+					</form>
+				</div>
+				<div class="grid__row">
+					<div class="table-wrapper">
+						<div class="scrollable">
+					<table class="table-data table-my-apps responsive" __gwtcellbasedwidgetimpldispatchingblur="true" __gwtcellbasedwidgetimpldispatchingfocus="true" cellspacing="0">
+						<thead>
+							<tr __gwt_header_row="0">
+								<th colspan="1" class="MHXTE6C-i-h MHXTE6C-i-f" __gwt_column="column-gwt-uid-986" __gwt_header="header-gwt-uid-987">Rank</th>
+								<th colspan="1" class="MHXTE6C-i-h" __gwt_column="column-gwt-uid-988" __gwt_header="header-gwt-uid-989">App Details</th>
+								<th colspan="1" class="MHXTE6C-i-h column-hidden--mobile" __gwt_column="column-gwt-uid-990" __gwt_header="header-gwt-uid-991">Price</th>
+								<th colspan="1" class="MHXTE6C-i-h" __gwt_column="column-gwt-uid-992" __gwt_header="header-gwt-uid-993">Downloads</th>
+								<th colspan="1" class="MHXTE6C-i-h" __gwt_column="column-gwt-uid-994" __gwt_header="header-gwt-uid-995">Revenue</th><th colspan="1" class="MHXTE6C-i-h MHXTE6C-i-p column-hidden--mobile" __gwt_column="column-gwt-uid-996" __gwt_header="header-gwt-uid-997">IAP</th>
+							</tr>
+						</thead>
+						<colgroup>
+							<col class="rank-column">
+							<col class="app-details-column">
+							<col class="price-column column-hidden--mobile">
+							<col class="downloads-column">
+							<col class="revenue-column">
+							<col class="iap-column column-hidden--mobile">
+						</colgroup>
+						<tbody style="display:none">
+							<tr __gwt_row="0" __gwt_subrow="0" class="MHXTE6C-i-b MHXTE6C-i-i"><td class="MHXTE6C-i-a MHXTE6C-i-c MHXTE6C-i-d MHXTE6C-i-j"><div tabindex="0" style="outline-style:none;" __gwt_cell="cell-gwt-uid-998">125</div></td><td class="MHXTE6C-i-a MHXTE6C-i-c MHXTE6C-i-j"><div style="outline-style:none;" __gwt_cell="cell-gwt-uid-999"><div gwtuirendered="gwt-uid-1000"><img class="img-rounded MHXTE6C-I-b MHXTE6C-c-o" src="http://a1830.phobos.apple.com/us/r30/Purple/v4/de/e5/0c/dee50c23-5bda-8f28-4da0-1ae88739c46f/mzl.yxlwbcnd.53x53-50.png"> <div class="MHXTE6C-I-a app-details"> <span> <a href="#!item/view/832617887/downloads/myapps/itemfilter:aXBoL2diLzE1L2FsbC8xNDIyNDcxODc5NTEyLzE0MjQ4OTEwNzk1MTIvcmFua2luZy90b2RheQ==" style="display:none;"> Feeding Time with Zookeeper Ken </a> <span class="app-name"> Feeding Time with Zookeeper Ken </span> </span> <span class="text-muted"> Martin Ollivere </span> </div></div></div></td><td class="MHXTE6C-i-a MHXTE6C-i-c MHXTE6C-i-j column-hidden--mobile"><div style="outline-style:none;" __gwt_cell="cell-gwt-uid-1001">£1.49</div></td><td class="MHXTE6C-i-a MHXTE6C-i-c MHXTE6C-i-j"><div style="outline-style:none;" __gwt_cell="cell-gwt-uid-1002">126,000</div></td><td class="MHXTE6C-i-a MHXTE6C-i-c MHXTE6C-i-j"><div style="outline-style:none;" __gwt_cell="cell-gwt-uid-1003">£187,740</div></td><td class="MHXTE6C-i-a MHXTE6C-i-c MHXTE6C-i-n MHXTE6C-i-j column-hidden--mobile"><div style="outline-style:none;" __gwt_cell="cell-gwt-uid-1004"><span class="ref-icon-before ref-icon-before--check"></span></div></td></tr></tbody><tbody style="display: none;"><tr><td colspan="6" align="center"><div><div aria-hidden="true" style="width: 100%; height: 100%; padding: 0px; margin: 0px; display: none;"><div aria-hidden="true" style="width: 100%; height: 100%; display: none;"><div><div class="MHXTE6C-gb-a"><h6 class="MHXTE6C-gb-b">No Apps Found!</h6> <div aria-hidden="true" style="display: none;" class="MHXTE6C-gb-c"><p class="MHXTE6C-gb-d"> You must first <a href="#!users/linkedaccounts/38/add" class="gwt-InlineHyperlink">link your account</a> </p></div></div></div></div></div><div style="width: 100%; height: 100%; padding: 0px; margin: 0px;"><div class="MHXTE6C-i-q" style="width: 100%; height: 100%;"><img class="gwt-Image" src="data:image/gif;base64,R0lGODlhJAAoAKIHAJGO0XJvx62r3f7+/vHx9Ojo6G1pxf///yH/C05FVFNDQVBFMi4wAwEAAAAh/wtYTVAgRGF0YVhNUDw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDIxIDc5LjE1NDkxMSwgMjAxMy8xMC8yOS0xMTo0NzoxNiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDowYzdmNTdmNC03ZTM4LTRjOGYtOGYwZi01ZjA5ZGRiNjM5MGEiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6Q0JEQUY0NUNGOUFBMTFFM0FENzU4RjRERkQwMjM2NUQiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6Q0JEQUY0NUJGOUFBMTFFM0FENzU4RjRERkQwMjM2NUQiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChNYWNpbnRvc2gpIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6ZTYzOTMzYWYtMTgyYS00YTY1LWE0ODUtMzQ1Nzc4OTRhODJjIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjBjN2Y1N2Y0LTdlMzgtNGM4Zi04ZjBmLTVmMDlkZGI2MzkwYSIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8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" height="40" width="36"></div></div></div></td></tr></tbody><tfoot aria-hidden="true" style="display: none;"></tfoot>
+
+
+						<tbody class="table-body--loading" style=""><tr><td colspan="6" align="center"><div><div aria-hidden="true" style="width: 100%; height: 100%; padding: 0px; margin: 0px; display: none;"><div aria-hidden="true" style="width: 100%; height: 100%; display: none;"><div class="grid__row full-page-message"><div class="grid__column grid__column--five-columns"> <svg enable-background="new 0 0 176.3 100.6" viewBox="0 0 176.3 100.6" x="0px" xml:space="preserve" y="0px"><g id="Building"><path d="M156.6,15.7c0-0.4-0.2-1-0.8-1.4c-0.4-0.4-1.2-0.7-2.1-1.1c-0.1-0.9-0.7-1.8-1.6-2.1 c0.8-0.2,1.4-0.8,1.5-1.5c0,0,0,0,0.1,0c1.2,0,2.1-0.9,2.1-2.1c0-1.1-0.7-2.1-1.8-2.4l-0.3-0.1c0-0.1,0-0.2,0-0.3 c0-1.1-0.7-2.1-1.8-2.4l-7.8-2.1C144,0,143.8,0,143.6,0h0c-1.1,0-2,0.9-2,2.1c0,0.4,0.1,0.7,0.3,1.1c-0.2,0.3-0.3,0.6-0.3,1 c0,0.4,0.1,0.7,0.3,1.1c-0.2,0.3-0.3,0.6-0.3,1c0,0.4,0.1,0.7,0.3,1.1c-0.2,0.3-0.3,0.6-0.3,1c0,0.4,0.1,0.7,0.3,1.1 c-0.2,0.3-0.3,0.6-0.3,1c0,0.5,0.2,0.9,0.4,1.3l-22.9,16.7V64h-14.4v-2.4c0-1.2-0.9-2.5-2.5-2.5h-5.4V59c0-0.7-0.6-1.2-1.2-1.2 h-1.1c-0.7,0-1.2,0.6-1.2,1.2v11.7c0,0.7,0.6,1.2,1.2,1.2h1.1c0.7,0,1.2-0.6,1.2-1.2v-0.2h5.4c1.1,0,2.5-0.4,2.5-2.5v-2.4h14.4 v21.9l23.8,13.1l33.3-8.4v-70L156.6,15.7z M95.4,69L95.4,69l0,1.4h-0.6V59.2h0.6v1.4h0V69z M103.2,68.1c0,0.6,0,1-1,1h-5.9v-8.4 h5.9c0.9,0,1,0.9,1,1V68.1z M143.6,1.6c0,0,0.1,0,0.1,0l7.8,2.1c0.3,0.1,0.5,0.4,0.6,0.7c0,0,0,0.1,0,0.1c0,0.3-0.2,0.5-0.5,0.5 c0,0-0.1,0-0.2,0l-7.8-2.2c-0.3-0.1-0.5-0.4-0.6-0.7c0,0,0,0,0,0C143.2,1.8,143.4,1.6,143.6,1.6z M143.6,3.7c0,0,0.1,0,0.1,0 l9.1,2.6l0.7,0.2c0.3,0.1,0.6,0.5,0.6,0.8c0,0.3-0.2,0.5-0.5,0.5c-0.1,0-0.1,0-0.2,0l-0.1,0L143.8,5c-0.2-0.1-0.5-0.3-0.5-0.6 c0,0,0-0.1,0-0.1c0,0,0,0,0-0.1C143.2,3.9,143.4,3.7,143.6,3.7z M143.6,5.8c0,0,0.1,0,0.1,0l7.8,2.3c0.3,0.1,0.6,0.5,0.6,0.8 c0,0,0,0.1,0,0.1c0,0.2-0.2,0.4-0.4,0.4c-0.1,0-0.1,0-0.2,0l-0.1,0l-7.7-2.3c-0.2-0.1-0.5-0.3-0.5-0.6c0,0,0-0.1,0-0.2 c0,0,0,0,0-0.1C143.2,6,143.4,5.8,143.6,5.8z M143.6,7.9c0,0,0.1,0,0.1,0l5.8,1.8c0.3,0.1,0.5,0.4,0.6,0.7c0,0.1,0,0.1,0,0.2 c0,0.1,0,0.1,0,0.1c-0.1,0.2-0.2,0.3-0.4,0.3c-0.1,0-0.1,0-0.2,0l-5.8-1.8c-0.2-0.1-0.4-0.3-0.5-0.6c0-0.1,0-0.1,0-0.2 c0,0,0,0,0-0.1C143.2,8.1,143.4,7.9,143.6,7.9z M143.6,10c0,0,0.1,0,0.2,0l5.1,1.6l2,0.6l0.7,0.2c0.3,0.1,0.6,0.5,0.6,0.8 c0,0.3-0.2,0.5-0.4,0.5c-0.1,0-0.1,0-0.2,0l-7.6-2.5l-0.1,0c-0.2-0.1-0.4-0.3-0.5-0.6c0-0.1,0-0.1,0-0.2 C143.2,10.2,143.4,10,143.6,10z M142.7,98.2l-21.5-11.8V29.5l21.5-15.8V98.2z M174.3,90.7l-30.6,7.7V13.5l30.6,10.1V90.7z" fill="#9F9FA9"></path><path d="M171.3,55.8l-5.3-0.1v7l5.3-0.2V55.8z M170.3,61.5l-3.3,0.1v-4.9l3.3,0.1V61.5z" fill="#9F9FA9"></path><path d="M154.9,44.5l-7.2-0.8v8.2l7.2,0.3V44.5z M153.9,51.2l-5.2-0.2v-6.1l5.2,0.6V51.2z" fill="#9F9FA9"></path><path d="M154.9,22.6l-7.2-2.1v8.2l7.2,1.6V22.6z M153.9,29.1l-5.2-1.2v-6.1l5.2,1.5V29.1z" fill="#9F9FA9"></path><path d="M154.9,77.3l-7.2,1.2v8.2l7.2-1.6V77.3z M153.9,84.3l-5.2,1.2v-6.1l5.2-0.8V84.3z" fill="#9F9FA9"></path><path d="M163.7,75.9l-6.1,1v7.6l6.1-1.4V75.9z M162.7,82.2l-4.1,0.9v-5.5l4.1-0.7V82.2z" fill="#9F9FA9"></path><path d="M171.3,27.5l-5.3-1.6v7l5.3,1.2V27.5z M170.3,32.9l-3.3-0.8v-4.9l3.3,1V32.9z" fill="#9F9FA9"></path><path d="M154.9,66.4l-7.2,0.5v8.2l7.2-1V66.4z M153.9,73.2l-5.2,0.7v-6.1l5.2-0.4V73.2z" fill="#9F9FA9"></path><path d="M163.7,65.8l-6.1,0.4v7.6l6.1-0.8V65.8z M162.7,72l-4.1,0.6v-5.5l4.1-0.3V72z" fill="#9F9FA9"></path><path d="M154.9,55.5l-7.2-0.1v8.2l7.2-0.3V55.5z M153.9,62.2l-5.2,0.2v-6.1l5.2,0.1V62.2z" fill="#9F9FA9"></path><path d="M154.9,33.6l-7.2-1.5v8.2l7.2,1V33.6z M153.9,40.2l-5.2-0.7v-6.1l5.2,1V40.2z" fill="#9F9FA9"></path><path d="M171.3,65.2l-5.3,0.4v7l5.3-0.7V65.2z M170.3,71l-3.3,0.4v-4.9l3.3-0.2V71z" fill="#9F9FA9"></path><path d="M171.3,46.4l-5.3-0.6v7l5.3,0.2V46.4z M170.3,52l-3.3-0.2v-4.9l3.3,0.4V52z" fill="#9F9FA9"></path><path d="M163.7,55.6l-6.1-0.1v7.6l6.1-0.3V55.6z M162.7,61.8l-4.1,0.2v-5.5l4.1,0.1V61.8z" fill="#9F9FA9"></path><path d="M171.3,74.6l-5.3,0.9v7l5.3-1.2V74.6z M170.3,80.5l-3.3,0.7v-4.9l3.3-0.5V80.5z" fill="#9F9FA9"></path><path d="M171.3,36.9l-5.3-1.1v7l5.3,0.7V36.9z M170.3,42.4l-3.3-0.5v-4.9l3.3,0.7V42.4z" fill="#9F9FA9"></path><path d="M163.7,25.2l-6.1-1.8V31l6.1,1.4V25.2z M162.7,31.2l-4.1-0.9v-5.4l4.1,1.2V31.2z" fill="#9F9FA9"></path><path d="M163.7,45.5l-6.1-0.7v7.6l6.1,0.3V45.5z M162.7,51.6l-4.1-0.2v-5.5l4.1,0.5V51.6z" fill="#9F9FA9"></path><path d="M163.7,35.4l-6.1-1.2v7.6l6.1,0.8V35.4z M162.7,41.4l-4.1-0.6v-5.5l4.1,0.8V41.4z" fill="#9F9FA9"></path><path d="M126.3,39.7l-3.5,1.7v5.7l3.5-1.2V39.7z M125.3,45.2l-1.5,0.5V42l1.5-0.7V45.2z" fill="#9F9FA9"></path><path d="M126.3,30.9l-3.5,2.3V39l3.5-1.9V30.9z M125.3,36.5l-1.5,0.8v-3.5l1.5-1V36.5z" fill="#9F9FA9"></path><path d="M126.3,65.9l-3.5-0.2v5.7l3.5,0.7V65.9z M125.3,70.9l-1.5-0.3v-3.8l1.5,0.1V70.9z" fill="#9F9FA9"></path><path d="M126.3,74.7l-3.5-0.9v5.7l3.5,1.3V74.7z M125.3,79.4l-1.5-0.6v-3.8l1.5,0.4V79.4z" fill="#9F9FA9"></path><path d="M126.3,48.4l-3.5,1v5.7l3.5-0.6V48.4z M125.3,53.8l-1.5,0.2v-3.8l1.5-0.4V53.8z" fill="#9F9FA9"></path><path d="M126.3,57.2l-3.5,0.4v5.7l3.5,0.1V57.2z M125.3,62.3l-1.5,0v-3.9l1.5-0.2V62.3z" fill="#9F9FA9"></path><path d="M139.9,21.9l-5.6,3.7v7.2l5.6-3V21.9z M138.9,29.2l-3.6,1.9v-5l3.6-2.4V29.2z" fill="#9F9FA9"></path><path d="M139.9,55.6l-5.6,0.6v7.2l5.6,0.1V55.6z M138.9,62.6l-3.6-0.1v-5.3l3.6-0.4V62.6z" fill="#9F9FA9"></path><path d="M139.9,66.9l-5.6-0.4v7.2l5.6,1.1V66.9z M138.9,73.6l-3.6-0.7v-5.3l3.6,0.3V73.6z" fill="#9F9FA9"></path><path d="M139.9,44.4l-5.6,1.7v7.2l5.6-0.9V44.4z M138.9,51.5l-3.6,0.6v-5.3l3.6-1.1V51.5z" fill="#9F9FA9"></path><path d="M139.9,33.1l-5.6,2.7v7.2l5.6-2V33.1z M138.9,40.4l-3.6,1.3v-5.2l3.6-1.7V40.4z" fill="#9F9FA9"></path><path d="M139.9,78.1l-5.6-1.4v7.2l5.6,2.1V78.1z M138.9,84.6l-3.6-1.4V78l3.6,0.9V84.6z" fill="#9F9FA9"></path><path d="M132.3,56.5l-4.4,0.5v6.4l4.4,0.1V56.5z M131.3,62.4l-2.4,0v-4.5l2.4-0.3V62.4z" fill="#9F9FA9"></path><path d="M132.3,66.3l-4.4-0.3v6.4l4.4,0.9V66.3z M131.3,72.1l-2.4-0.5v-4.5l2.4,0.2V72.1z" fill="#9F9FA9"></path><path d="M132.3,27l-4.4,2.9v6.4l4.4-2.3V27z M131.3,33.3l-2.4,1.3v-4.2l2.4-1.6V33.3z" fill="#9F9FA9"></path><path d="M132.3,76.2l-4.4-1.1v6.4l4.4,1.7V76.2z M131.3,81.7l-2.4-0.9v-4.4l2.4,0.6V81.7z" fill="#9F9FA9"></path><path d="M132.3,36.8l-4.4,2.1v6.4l4.4-1.5V36.8z M131.3,43.1l-2.4,0.8v-4.4l2.4-1.1V43.1z" fill="#9F9FA9"></path><path d="M132.3,46.7l-4.4,1.3v6.4l4.4-0.7V46.7z M131.3,52.8l-2.4,0.4v-4.5l2.4-0.7V52.8z" fill="#9F9FA9"></path></g><g id="Laptop"><path d="M46.4,52.4H7.5v24h38.9V52.4z M45.4,75.4H8.5v-22h36.9V75.4z" fill="#9F9FA9"></path><path d="M78.9,66.1h-4.1v-2.7h4.1c0.6,0,0.9-0.2,1.1-0.5c0.3-0.3,0.4-0.6,0.4-1c0-0.7-0.5-1.5-1.5-1.5h-4.1V59 c0-0.7-0.6-1.2-1.2-1.2h-1.1c-0.7,0-1.2,0.6-1.2,1.2v0.2h-2.3c-1.3,0-2.2,0.9-2.8,1.6c-0.2,0.2-0.6,0.7-0.8,0.7 c-1.2,0-2.4,0.3-2.7,2.4H49.3V52.8c0-2-1.5-3.5-3.4-3.5H27H8c-1.9,0-3.4,1.5-3.4,3.5v25l-4,4L0,82.3v0.8v1.5v0.3l0.1,0.3 c0.6,2,4.1,2.1,4.1,2.1H27h22.8c0,0,3.5-0.1,4.1-2.1l0.1-0.3v-0.3v-1.5v-0.8l-0.6-0.6l-4-4V65.5h13.3c0.2,2.4,1.5,2.7,2.8,2.7 c0.1,0,0.6,0.5,0.8,0.7c0.6,0.7,1.5,1.6,2.8,1.6c0.9,0,1.7,0,2.3,0v0.2c0,0.7,0.6,1.2,1.2,1.2h1.1c0.7,0,1.2-0.6,1.2-1.2V69h4.1 c0.6,0,0.9-0.2,1.1-0.5c0.3-0.3,0.4-0.6,0.4-1C80.4,66.8,79.9,66.1,78.9,66.1z M8,51.3c0.8,0,18.8,0,18.9,0c0,0,0,0,0,0 c0.2,0,18.2,0,18.9,0c0.9,0,1.4,0.7,1.4,1.5c0,0.7,0,23.2,0,24.9h-39l0,0l0,0H6.6c0-1.7,0-24.2,0-24.9C6.6,52,7.2,51.3,8,51.3z M44.8,78.5l2.4,2.9H6.6l2.6-2.9l0,0H44.8z M51.9,83.1c0,0,0,1.4,0,1.5c-0.1,0.2-1.3,0.7-2.2,0.7c-0.5,0-22.3,0-22.8,0h0 c-0.2,0-22.2,0-22.8,0c-0.9,0-2.1-0.5-2.2-0.7c0-0.1,0-1.5,0-1.5l4.7-4.7h0.9l-3.7,4.1h45.8l-3.4-4.1h0.9L51.9,83.1z M68.9,69 c-0.6,0-1.1-0.5-1.7-1.1c-0.5-0.6-1.1-1.2-1.9-1.2c-0.8,0-1.3,0-1.3-1.9c0-1.8,0.5-1.8,1.3-1.8c0.8,0,1.3-0.6,1.9-1.2 c0.5-0.6,1-1.1,1.7-1.1h2.7V69H68.9z M73.3,70.4h-0.6V69h0v-8.4h0v-1.4h0.6V70.4z M78.9,61.4c0.5,0,0.5,0.4,0.5,0.5 c0,0.1,0,0.2-0.1,0.3c-0.1,0.1-0.2,0.1-0.4,0.1h-4.1v-0.9H78.9z M79.3,67.8c-0.1,0.1-0.2,0.1-0.4,0.1h-4.1v-0.9h4.1 c0.5,0,0.5,0.4,0.5,0.5C79.4,67.6,79.4,67.8,79.3,67.8z" fill="#9F9FA9"></path></g><path class="warning-sign" d="M35.8,70.7l-8.2-13.8c-0.1-0.2-0.4-0.4-0.7-0.4c-0.3,0-0.6,0.2-0.7,0.4l-8.2,13.8 c-0.1,0.2-0.1,0.5,0,0.8c0.1,0.2,0.4,0.4,0.7,0.4h16.4c0.4,0,0.8-0.4,0.8-0.8C36,71,35.9,70.8,35.8,70.7z M20.2,70.3L27,58.9 l6.8,11.5L20.2,70.3L20.2,70.3z M26.1,62.4v3.5c0,0.4,0.4,0.8,0.8,0.8c0.4,0,0.8-0.4,0.8-0.8v-3.5c0-0.4-0.4-0.8-0.8-0.8 C26.5,61.6,26.1,62,26.1,62.4z M27,67.4c-0.3,0-0.5,0.1-0.7,0.3c-0.2,0.2-0.3,0.4-0.3,0.7c0,0.3,0.1,0.5,0.3,0.7 c0.2,0.2,0.4,0.3,0.7,0.3c0.3,0,0.5-0.1,0.7-0.3c0.2-0.2,0.3-0.4,0.3-0.7c0-0.3-0.1-0.5-0.3-0.7C27.5,67.5,27.2,67.4,27,67.4z" fill="#9F9FA9"></path></svg> <h2 class="heading-style--heading-three">This Account is App-less</h2> <p>You don't currently have any apps in this linked account.</p> <button class="ref-button--full-width" type="button">Link another Account</button> </div></div></div></div><div style="width: 100%; height: 100%; padding: 0px; margin: 0px;"><div class="cellTableLoading" style="width: 100%; height: 100%;"><div>
+						<table style="width: 100%">
+						<colgroup>
+							<col class="rank-column">
+							<col class="app-details-column">
+							<col class="price-column column-hidden--mobile">
+							<col class="downloads-column">
+							<col class="revenue-column">
+							<col class="iap-column column-hidden--mobile">
+						</colgroup>
+								<tbody>
+									<tr>
+										<td>
+											<svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td></tr>
+
+									<tr>
+										<td>
+											<svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td></tr>
+										<tr>
+										<td>
+											<svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td></tr>
+										<tr>
+										<td>
+											<svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td></tr>
+										<tr>
+										<td>
+											<svg class="loading-ellipsis loading-ellipsis-hidden--mobile" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><img class="img-rounded" src="images/leaderboard-app-icon-placeholder.png"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td>
+										<td class="column-hidden--mobile"><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#dedee0" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#dedee0" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#dedee0" cx="21" cy="3.2" r="3.2"></circle></svg></td></tr>
+								</tbody></table></div></div></div></div></td></tr></tbody>
+						</table>
+				</div></div></div>
+				<button style="" class="ref-button--function-small" type="button">View all Apps</button>
+			</div>	
+		</div>
+	</div>
+
+	<div class="MHXTE6C-ob-a">
+		<a class="btn btn-default MHXTE6C-ob-c MHXTE6C-ob-d"><span class="ref-icon-before ref-icon-before--angle-up"></span><span class="hidden-text">Back to Top</span></a>
+	</div>
+
+	<div id="js-component-import--account-container" class="panel-right-container js-account-container"></div>
+	<div id="js-component-import--search-container" class="panel-right-container js-search-container"></div>
+
+ 	<script src="js/vendor/jquery-1.11.1.min.js"></script>
+ 	<script src="js/vendor/jquery-ui.custom.min.js"></script>
+ 	<script src="js/vendor/handlebars-v2.0.0.js"></script>
+ 	<script src="js/templates/templates.js"></script>
+	<script src="js/vendor/modernizr.2.8.3.custom.min.js"></script>
+	<!--[if IE 9]>
+		<script src="js/vendor/jquery.mCustomScrollbar.concat.min.js"></script>
+	<![endif]-->
+
+	<div id="js-appendScriptsContainer"></div>
+
+	<script src="js/application-global-modules-logged-in.js"></script>
+  <script src="js/application.js"></script>
+  <script>
+  	function initScripts() {
+  		new LeaderboardPage();
+
+  		// DEMO JS ONLY FROM THIS POINT
+  		$('.form-field--date-select input').on("click", function(){
+				$this = $(this);
+				$this.select();
+				$popup = $this.parents('.date-select-container').siblings('.dateBoxPopup');
+				if($popup.hasClass('is-showing')) {
+					$popup.removeClass('is-showing');
+				}
+				else {
+					$popup.addClass('is-showing');
+				}
+			});
+
+			$('.date-select-container input').on("focus", function(){
+  			$('.refresh-button').removeAttr("disabled");
+  		});
+  	}
+
+  	window.onready = initScripts();
+  </script>
+</body>

@@ -24,6 +24,12 @@
 				</li>
 			</ul>
 		</div>
+
 		<c:LoadingButton ui:field="loginBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth}" text="Log in" />
+
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.generalErrorMessage}">
+			<p ui:field="generalErrorParagraph"></p>
+		</div>
+
 	</g:HTMLPanel>
 </ui:UiBinder>
