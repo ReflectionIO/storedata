@@ -19,37 +19,6 @@ import com.google.gwt.resources.client.ImageResource.RepeatStyle;
  * 
  */
 public interface Styles extends ClientBundle {
-	public interface ReflectionStyles extends CssResource {
-		String footerFacebook();
-
-		String footerLinkedin();
-
-		String footerTwitter();
-
-		String footerLogo();
-
-		String footerUpArrow();
-
-		String footerDownArrow();
-
-		String unknownAppSmall();
-
-		String unknownAppLarge();
-
-		String linkedAccountClose();
-
-		String linkedAccountMinus();
-
-		String linkedAccountPlus();
-
-		String smooth();
-
-		String noteDetail();
-
-		String header();
-
-		String footer();
-	}
 
 	public interface ReflectionMainStyles extends CssResource {
 
@@ -1980,9 +1949,6 @@ public interface Styles extends ClientBundle {
 	@Source("linkedaccountssprite.png")
 	@ImageOptions(repeatStyle = RepeatStyle.None)
 	ImageResource linkedAccountSprite();
-
-	@Source("reflection.gss")
-	ReflectionStyles reflection();
 
 	@Source("homepage.gss")
 	HomePageStyles homePageStyle();
