@@ -334,6 +334,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("colour-palette-container")
 		String colourPaletteContainer();
 
+		@ClassName("column-hidden--mobile")
+		String columnHiddenMobile();
+
 		@ClassName("comments-link")
 		String commentsLink();
 
@@ -854,6 +857,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("is-error-message-showing")
 		String isErrorMessageShowing();
 
+		@ClassName("is-firefox")
+		String isFirefox();
+
 		@ClassName("is-focused")
 		String isFocused();
 
@@ -981,6 +987,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("loading-ellipsis")
 		String loadingEllipsis();
+
+		@ClassName("loading-ellipsis-hidden--mobile")
+		String loadingEllipsisHiddenMobile();
 
 		@ClassName("loading-progress")
 		String loadingProgress();
@@ -1569,6 +1578,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("table-app-group")
 		String tableAppGroup();
 
+		@ClassName("table-body--loading")
+		String tableBodyLoading();
+
 		@ClassName("table-cell-even-row")
 		String tableCellEvenRow();
 
@@ -1688,6 +1700,9 @@ public interface Styles extends ClientBundle {
 		String toggleRevenue();
 
 		String tooltip();
+
+		@ClassName("tooltip-right")
+		String tooltipRight();
 
 		@ClassName("top-five-section")
 		String topFiveSection();
