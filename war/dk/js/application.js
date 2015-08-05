@@ -898,16 +898,23 @@
 		if($('.no-touch').length) {
 			$('.js-tooltip').each(function(){
 				var $this = $(this);
-				var tooltipText = $(this).data("tooltip");
-				var tooltip = $('<div>').addClass("tooltip").text(tooltipText);
-				var topPosition = $this.offset().top;
-				var leftPosition = $this.offset().left;
-				var componentHeight = $this.innerHeight();
+				var tooltip;
 				$this.on("mouseenter", function(){
+					var tooltipText = $(this).data("tooltip");
+					tooltip = $('<div>').addClass("tooltip").text(tooltipText);			
 					$('body').append(tooltip);
+					var topPosition = $this.offset().top;
+					var leftPosition = $this.offset().left;
 					var tooltipHeight = tooltip.innerHeight();
-					tooltip.hide()
-					tooltip.css({"top": topPosition - tooltipHeight - 20, "left": leftPosition});
+					var componentHeight = $this.innerHeight();					
+					tooltip.hide();
+					if($this.hasClass('js-tooltip--right')) {
+						var componentWidth = $this.innerWidth();
+						var tooltipWidth = tooltip.innerWidth();
+						leftPosition = leftPosition + componentWidth - tooltipWidth;
+						tooltip.addClass("tooltip-right");
+					}
+					tooltip.css({"top": topPosition - tooltipHeight - 20, "left": leftPosition});				
 					setTimeout(function(){
 						tooltip.fadeIn(200);
 					}, 800);
@@ -964,7 +971,10 @@
 						$this.removeClass('is-open');
 					}
 				});				
-			}	
+			} else {
+				$('.whats-this-tooltip-popup').remove();
+				$this.removeClass('is-open');
+			}
 		});
 		
 		$(window).on("resize", function(){
