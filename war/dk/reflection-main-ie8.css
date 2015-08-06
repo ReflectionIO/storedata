@@ -3027,7 +3027,7 @@ textarea, .global-header .link-open-search, html, body {
 .table-revenue .cellTableLoading tr {
   height: 40px;
 }
-/* line 483, sass/templates/_app.scss */
+/* line 486, sass/templates/_app.scss */
 .table-revenue th {
   padding: 1.3rem 20px 1.1rem 10px;
   font-family: "Source Sans Pro", sans-serif;
@@ -3036,28 +3036,28 @@ textarea, .global-header .link-open-search, html, body {
   color: #28292c;
   background-color: transparent;
 }
-/* line 490, sass/templates/_app.scss */
+/* line 493, sass/templates/_app.scss */
 .table-revenue th:first-child {
   padding-left: 10px;
 }
-/* line 501, sass/templates/_app.scss */
+/* line 504, sass/templates/_app.scss */
 .table-revenue .date-value,
 .table-revenue .revenue-value,
 .table-revenue .revenue-percentage {
   font-size: 1.2rem;
   color: #363a47;
 }
-/* line 511, sass/templates/_app.scss */
+/* line 514, sass/templates/_app.scss */
 .table-revenue .date-value {
   width: 100%;
   padding-left: 10px;
   height: 40px;
 }
-/* line 520, sass/templates/_app.scss */
+/* line 523, sass/templates/_app.scss */
 .table-revenue .revenue-percentage {
   font-size: 0;
 }
-/* line 522, sass/templates/_app.scss */
+/* line 525, sass/templates/_app.scss */
 .table-revenue .revenue-percentage span {
   width: 18%;
   display: inline-block;
@@ -3065,14 +3065,14 @@ textarea, .global-header .link-open-search, html, body {
   font-size: 1.2rem;
   color: #363a47;
 }
-/* line 536, sass/templates/_app.scss */
+/* line 539, sass/templates/_app.scss */
 .table-revenue .revenue-percentage .data-bar {
   height: 44px;
   width: 82%;
   display: none;
   vertical-align: middle;
 }
-/* line 548, sass/templates/_app.scss */
+/* line 551, sass/templates/_app.scss */
 .table-revenue .revenue-percentage .data-bar div {
   height: 44px;
   width: 86%;
@@ -3080,34 +3080,34 @@ textarea, .global-header .link-open-search, html, body {
   background-color: #dedeef;
 }
 
-/* line 557, sass/templates/_app.scss */
+/* line 560, sass/templates/_app.scss */
 .can-be-sorted {
   cursor: pointer;
 }
-/* line 559, sass/templates/_app.scss */
+/* line 562, sass/templates/_app.scss */
 .can-be-sorted:active {
   position: relative;
   top: 2px;
 }
 
-/* line 564, sass/templates/_app.scss */
+/* line 567, sass/templates/_app.scss */
 .total-revenue-title {
   width: 100%;
 }
 
-/* line 570, sass/templates/_app.scss */
+/* line 573, sass/templates/_app.scss */
 .data-summary-container-synced {
   width: 100%;
   text-align: center;
 }
 
-/* line 579, sass/templates/_app.scss */
+/* line 582, sass/templates/_app.scss */
 .download-button--mobile {
   float: right;
 }
 
 @media screen and (max-width: 720px) {
-  /* line 586, sass/templates/_app.scss */
+  /* line 589, sass/templates/_app.scss */
   .scrollable .table-revenue tr {
     height: 45px;
   }
@@ -10898,23 +10898,23 @@ table.table-data .ref-icon-before--cloud:before {
 /* line 189, sass/components/_table-data.scss */
 table.table-data > tbody > tr:nth-child(odd),
 .cellTableLoading table > tbody > tr:nth-child(odd) {
-  background-color: #eff2f5;
+  background-color: #F2F2F5;
 }
 /* line 192, sass/components/_table-data.scss */
 table.table-data > tbody > tr:nth-child(odd) > td,
 .cellTableLoading table > tbody > tr:nth-child(odd) > td {
-  background-color: #eff2f5;
+  background-color: #F2F2F5;
 }
 
 /* line 196, sass/components/_table-data.scss */
 table.table-data > tbody > tr:nth-child(even),
 .cellTableLoading table > tbody > tr:nth-child(even) {
-  background-color: #ffffff;
+  background-color: #fcfdfd;
 }
 /* line 199, sass/components/_table-data.scss */
 table.table-data > tbody > tr:nth-child(even) > td,
 .cellTableLoading table > tbody > tr:nth-child(even) > td {
-  background-color: #ffffff;
+  background-color: #fcfdfd;
 }
 
 /* line 204, sass/components/_table-data.scss */
