@@ -234,9 +234,6 @@ public enum PageType {
 		case RegisterPageType:
 			page = new RegisterPage();
 			break;
-		case ChangePasswordPageType:
-			page = new ChangePasswordPage();
-			break;
 		case RolesPageType:
 			page = new RolesPage();
 			break;

@@ -631,14 +631,18 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	@Override
 	public void getLinkedAccountItemsSuccess(GetLinkedAccountItemsRequest input, GetLinkedAccountItemsResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			appDetailsHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.isAscending());
-			columnAppDetails.setDefaultSortAscending(false);
-			if (output.items.size() > ServiceConstants.STEP_VALUE) {
-				viewAllBtn.setVisible(true);
+			if (output.items != null) {
+				appDetailsHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.isAscending());
+				columnAppDetails.setDefaultSortAscending(false);
+				if (output.items.size() > ServiceConstants.STEP_VALUE) {
+					viewAllBtn.setVisible(true);
+				}
+				loadingBar.setProgressiveStatus("Getting data...", 66);
+			} else {
+				loadingBar.hide(); // Since there are no Apps to display, show success status
 			}
-			loadingBar.setProgressiveStatus("Getting data...", 66);
 		} else {
-
+			// error
 		}
 		setFiltersEnabled(true);
 
