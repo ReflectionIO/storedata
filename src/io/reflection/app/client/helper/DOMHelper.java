@@ -64,17 +64,17 @@ public class DOMHelper {
 
 	public static void setScrollEnabled(boolean enabled) {
 		if (enabled) {
-			if (getHtmlElement().hasClassName(style.touch())) {
+			if (getHtmlElement().hasClassName("touch")) {
 				getHtmlElement().removeClassName(style.noScroll());
 			}
-			if (Document.get().getBody().hasClassName(style.touch())) {
+			if (Document.get().getBody().hasClassName("touch")) {
 				Document.get().getBody().removeClassName(style.noScroll());
 			}
 		} else {
-			if (getHtmlElement().hasClassName(style.touch())) {
+			if (getHtmlElement().hasClassName("touch")) {
 				getHtmlElement().addClassName(style.noScroll());
 			}
-			if (Document.get().getBody().hasClassName(style.touch())) {
+			if (Document.get().getBody().hasClassName("touch")) {
 				Document.get().getBody().addClassName(style.noScroll());
 			}
 		}
@@ -82,10 +82,10 @@ public class DOMHelper {
 
 	public static boolean isScrollEnabled() {
 		boolean isEnabled = true;
-		if (getHtmlElement().hasClassName(style.touch())) {
+		if (getHtmlElement().hasClassName("touch")) {
 			isEnabled = !getHtmlElement().hasClassName(style.noScroll());
 		}
-		if (Document.get().getBody().hasClassName(style.touch())) {
+		if (Document.get().getBody().hasClassName("touch")) {
 			isEnabled = !Document.get().getBody().hasClassName(style.noScroll());
 		}
 		return isEnabled;

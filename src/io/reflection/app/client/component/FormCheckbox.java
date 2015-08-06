@@ -24,6 +24,7 @@ public class FormCheckbox extends CheckBox {
 	private LabelElement firstLabel;
 	private LabelElement secondLabel = Document.get().createLabelElement();
 	private SpanElement errorSpan = Document.get().createSpanElement();
+	private final String ERROR_CHECKBOX_UNTICKED = "You still need to select from the options below";
 
 	// private final String checkboxId = HTMLPanel.createUniqueId();
 
@@ -42,15 +43,26 @@ public class FormCheckbox extends CheckBox {
 		errorSpan.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().blockErrorMessage());
 	}
 
+	public void showError() {
+		this.showError(ERROR_CHECKBOX_UNTICKED);
+	}
+
 	public void showError(String text) {
 		getElement().getParentElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isErrorMessageShowing());
 		errorSpan.setInnerText(text);
 		secondLabel.insertFirst(errorSpan);
+		if (getElement().getParentElement().getParentElement().getParentElement() != null) {
+			getElement().getParentElement().getParentElement().getParentElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formFieldError());
+		}
 	}
 
 	public void hideError() {
 		getElement().getParentElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isErrorMessageShowing());
 		errorSpan.removeFromParent();
+		if (getElement().getParentElement().getParentElement().getParentElement() != null) {
+			getElement().getParentElement().getParentElement().getParentElement()
+					.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formFieldError());
+		}
 	}
 
 	/*

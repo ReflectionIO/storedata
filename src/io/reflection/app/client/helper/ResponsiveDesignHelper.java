@@ -51,22 +51,44 @@ public class ResponsiveDesignHelper {
 			if ($wnd.$($wnd).width() < 720) {
 				$wnd.$(".tabs-to-dropdown").each(
 						function(i, element) {
-							var tabSwitched = $wnd.$(".tabs-to-dropdown").attr(
-									'switched');
+							var tabSwitched = $wnd.$(element).parent('div')
+									.hasClass('tabs-to-dropdown-container');
 							if (!tabSwitched) {
-								$wnd.$(".tabs-to-dropdown").attr("switched",
-										true);
 								turnTabsToDropDown($wnd.$(element));
 							}
 						});
 			} else if ($wnd.$($wnd).width() > 720) {
 				$wnd.$(".tabs-to-dropdown").each(
 						function(i, element) {
-							var tabSwitched = $wnd.$(".tabs-to-dropdown").attr(
-									'switched');
+							var tabSwitched = $wnd.$(element).parent('div')
+									.hasClass('tabs-to-dropdown-container');
 							if (tabSwitched) {
-								$wnd.$(".tabs-to-dropdown").removeAttr(
-										"switched");
+								unsplitTabsToMobileDropDown($wnd.$(element));
+							}
+						});
+			}
+		};
+
+		updateTabsMultiPage = function() {
+			var instance = this;
+			if ($wnd.$($wnd).width() < 720) {
+				$wnd.$(".tabs-to-dropdown").each(
+						function(i, element) {
+							var tabSwitched = $wnd.$(element).parent('div')
+									.hasClass('tabs-to-dropdown-container');
+							if (!tabSwitched) {
+								turnTabsToDropDown($wnd.$(element));
+							} else {
+								unsplitTabsToMobileDropDown($wnd.$(element));
+								turnTabsToDropDown($wnd.$(element));
+							}
+						});
+			} else if ($wnd.$($wnd).width() > 720) {
+				$wnd.$(".tabs-to-dropdown").each(
+						function(i, element) {
+							var tabSwitched = $wnd.$(element).parent('div')
+									.hasClass('tabs-to-dropdown-container');
+							if (tabSwitched) {
 								unsplitTabsToMobileDropDown($wnd.$(element));
 							}
 						});
@@ -94,10 +116,10 @@ public class ResponsiveDesignHelper {
 
 			original.find(".tabs__tab").not(".is-disabled").on("click",
 					function() {
-				original.slideUp(200);
-				activeElement.html($wnd.$(this).find('span').html());
-				activeElement.removeClass("is-open");
-			});
+						original.slideUp(200);
+						activeElement.html($wnd.$(this).find('span').html());
+						activeElement.removeClass("is-open");
+					});
 
 			var isIE8 = $wnd.$('.ie8').length;
 			if (!isIE8) {
@@ -121,6 +143,13 @@ public class ResponsiveDesignHelper {
 
 	public static native void makeTabsResponsive()/*-{
 		new updateTabs();
+	}-*/;
+
+	/**
+	 * This is a temporary fix for mobile tabs used in multiple pages (Account section)
+	 */
+	public static native void makeTabsResponsiveMultiPage()/*-{
+		new updateTabsMultiPage();
 	}-*/;
 
 }
