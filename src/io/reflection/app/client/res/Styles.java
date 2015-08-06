@@ -1726,7 +1726,10 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("whats-this-tooltip-icon")
 		String whatsThisTooltipIcon();
-
+		
+		@ClassName("whats-this-tooltip-icon-static")
+		String whatsThisTooltipIconStatic();		
+		
 		@ClassName("whats-this-tooltip-popup")
 		String whatsThisTooltipPopup();
 

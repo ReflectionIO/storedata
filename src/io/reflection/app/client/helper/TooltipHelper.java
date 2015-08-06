@@ -43,13 +43,17 @@ public class TooltipHelper {
 							$wnd.$('body').append(tooltip);
 							var topPosition = $this.offset().top;
 							var leftPosition = $this.offset().left;
-							var componentHeight = $this.innerHeight();
 							var tooltipHeight = tooltip.innerHeight();
-							tooltip.hide()
+							var componentHeight = $this.innerHeight();						
+							tooltip.hide();
 							if($this.hasClass('js-tooltip--right')) {
-								var componentWidth = $this.innerWidth();
 								var tooltipWidth = tooltip.innerWidth();
-								leftPosition = leftPosition + componentWidth - tooltipWidth;
+								var componentWidth = $this.innerWidth();	
+								if($this.hasClass('js-tooltip--right--no-pointer-padding')) {
+									leftPosition = (leftPosition + componentWidth - tooltipWidth) + 10;
+								} else {
+									leftPosition = leftPosition + componentWidth - tooltipWidth;
+								}
 								tooltip.addClass("tooltip-right");
 							}
 							tooltip.css({

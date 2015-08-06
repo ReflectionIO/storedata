@@ -420,7 +420,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			public SafeHtml getValue(RanksGroup object) {
 				return SafeHtmlUtils
 						.fromSafeConstant(DataTypeHelper.itemIapState(ItemController.get().lookupItem(rankForListType(object).itemId), IAP_YES_HTML,
-								IAP_NO_HTML, "<span class=\"js-tooltip " + style.whatsThisTooltipIcon() + "\" data-tooltip=\"No data available\"></span>"));
+								IAP_NO_HTML, "<span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding " + style.whatsThisTooltipIconStatic() + "\" data-tooltip=\"No data available\"></span>"));
 			}
 
 		};
