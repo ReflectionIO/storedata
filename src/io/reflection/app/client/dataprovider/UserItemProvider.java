@@ -94,14 +94,14 @@ public class UserItemProvider extends AsyncDataProvider<MyApp> implements GetLin
 					RankController.get().fetchSalesRanks();
 				}
 
+				sortByAppDetails(true);
+				updateRowData(
+						input.pager.start.intValue(),
+						myAppList.subList(input.pager.start.intValue(),
+								Math.min(input.pager.start.intValue() + input.pager.count.intValue(), ItemController.get().getUserItemsCount())));
 			}
-			sortByAppDetails(true);
-			updateRowData(
-					input.pager.start.intValue(),
-					myAppList.subList(input.pager.start.intValue(),
-							Math.min(input.pager.start.intValue() + input.pager.count.intValue(), (int) ItemController.get().getUserItemsCount())));
 		}
-		updateRowCount((int) ItemController.get().getUserItemsCount(), true);
+		updateRowCount(ItemController.get().getUserItemsCount(), true);
 	}
 
 	/*
