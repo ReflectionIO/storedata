@@ -66,7 +66,7 @@ public class UserAgentHelper {
 		} else if (nativeIsOpera()) {
 			DOMHelper.getHtmlElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isOpera());
 		} else if (nativeIsFirefox()) {
-			DOMHelper.getHtmlElement().addClassName("is-firefox");
+			DOMHelper.getHtmlElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isFirefox());
 		} else if (nativeIsSafari()) {
 			DOMHelper.getHtmlElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isSafari());
 		}

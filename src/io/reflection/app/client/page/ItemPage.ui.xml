@@ -238,11 +238,8 @@
 			</header>
 			<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.tableWrapper}">
 				<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.scrollable}">
-					<cv:CellTable ui:field="revenueTableDesktop" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableRevenue} {STYLES_INSTANCE.reflectionMainStyle.responsive}"></cv:CellTable>
+					<cv:CellTable ui:field="revenueTable" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableRevenue} {STYLES_INSTANCE.reflectionMainStyle.responsive}"></cv:CellTable>
 					<!-- <cv:CellTable ui:field="revenueTable" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableRevenue}"></cv:CellTable> -->
-				</g:HTMLPanel>
-				<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.pinned}">
-					<cv:CellTable ui:field="revenueTableMobile" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableRevenue}"></cv:CellTable>
 				</g:HTMLPanel>
 			</g:HTMLPanel>
 			<button ui:field="dnwBtnMobile"

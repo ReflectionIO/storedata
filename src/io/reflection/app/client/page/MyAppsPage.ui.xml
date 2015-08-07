@@ -40,11 +40,8 @@
 		<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.grid__row}">
 			<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.tableWrapper}">
 				<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.scrollable}">
-					<cell:CellTable ui:field="appsTableDesktop"
+					<cell:CellTable ui:field="myAppsTable"
 						styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData} {STYLES_INSTANCE.reflectionMainStyle.tableMyApps} {STYLES_INSTANCE.reflectionMainStyle.responsive}" />
-				</g:HTMLPanel>
-				<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.pinned}">
-					<cell:CellTable ui:field="appsTableMobile" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData} {STYLES_INSTANCE.reflectionMainStyle.tableMyApps}" />
 				</g:HTMLPanel>
 			</g:HTMLPanel>
 			<!-- <p:SimplePager ui:field="simplePager" visible="false" /> -->
