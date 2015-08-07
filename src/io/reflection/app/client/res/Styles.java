@@ -19,37 +19,6 @@ import com.google.gwt.resources.client.ImageResource.RepeatStyle;
  * 
  */
 public interface Styles extends ClientBundle {
-	public interface ReflectionStyles extends CssResource {
-		String footerFacebook();
-
-		String footerLinkedin();
-
-		String footerTwitter();
-
-		String footerLogo();
-
-		String footerUpArrow();
-
-		String footerDownArrow();
-
-		String unknownAppSmall();
-
-		String unknownAppLarge();
-
-		String linkedAccountClose();
-
-		String linkedAccountMinus();
-
-		String linkedAccountPlus();
-
-		String smooth();
-
-		String noteDetail();
-
-		String header();
-
-		String footer();
-	}
 
 	public interface ReflectionMainStyles extends CssResource {
 
@@ -333,6 +302,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("colour-palette-container")
 		String colourPaletteContainer();
+
+		@ClassName("column-hidden--mobile")
+		String columnHiddenMobile();
 
 		@ClassName("comments-link")
 		String commentsLink();
@@ -854,6 +826,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("is-error-message-showing")
 		String isErrorMessageShowing();
 
+		@ClassName("is-firefox")
+		String isFirefox();
+
 		@ClassName("is-focused")
 		String isFocused();
 
@@ -981,6 +956,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("loading-ellipsis")
 		String loadingEllipsis();
+
+		@ClassName("loading-ellipsis-hidden--mobile")
+		String loadingEllipsisHiddenMobile();
 
 		@ClassName("loading-progress")
 		String loadingProgress();
@@ -1569,6 +1547,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("table-app-group")
 		String tableAppGroup();
 
+		@ClassName("table-body--loading")
+		String tableBodyLoading();
+
 		@ClassName("table-cell-even-row")
 		String tableCellEvenRow();
 
@@ -1688,6 +1669,9 @@ public interface Styles extends ClientBundle {
 		String toggleRevenue();
 
 		String tooltip();
+
+		@ClassName("tooltip-right")
+		String tooltipRight();
 
 		@ClassName("top-five-section")
 		String topFiveSection();
@@ -1968,9 +1952,6 @@ public interface Styles extends ClientBundle {
 	@Source("linkedaccountssprite.png")
 	@ImageOptions(repeatStyle = RepeatStyle.None)
 	ImageResource linkedAccountSprite();
-
-	@Source("reflection.gss")
-	ReflectionStyles reflection();
 
 	@Source("homepage.gss")
 	HomePageStyles homePageStyle();
