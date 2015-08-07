@@ -45,6 +45,7 @@ import io.reflection.app.client.helper.FormattingHelper;
 import io.reflection.app.client.helper.ResponsiveDesignHelper;
 import io.reflection.app.client.helper.TooltipHelper;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
+import io.reflection.app.client.part.LoadingIndicator;
 import io.reflection.app.client.part.datatypes.RanksGroup;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.client.res.Styles.ReflectionMainStyles;
@@ -122,13 +123,11 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		SafeHtml code(Long code);
 	}
 
-	@UiField(provided = true) CellTable<RanksGroup> leaderboardTableDesktop = new CellTable<RanksGroup>(ServiceConstants.STEP_VALUE,
-			BootstrapGwtCellTable.INSTANCE);
-	@UiField(provided = true) CellTable<RanksGroup> leaderboardTableMobile = new CellTable<RanksGroup>(ServiceConstants.STEP_VALUE,
-			BootstrapGwtCellTable.INSTANCE);
+	@UiField(provided = true) CellTable<RanksGroup> leaderboardTable = new CellTable<RanksGroup>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 
-	private HTMLPanel loadingIndicatorAll = AnimationHelper.createLoadingIndicator(5, 4);
-	private HTMLPanel loadingIndicatorList = AnimationHelper.createLoadingIndicator(5, 5);
+	private LoadingIndicator loadingIndicatorAll = AnimationHelper.getLeaderboardAllLoadingIndicator(25);
+	private LoadingIndicator loadingIndicatorFreeList = AnimationHelper.getLeaderboardListLoadingIndicator(25, true);
+	private LoadingIndicator loadingIndicatorPaidGrossingList = AnimationHelper.getLeaderboardListLoadingIndicator(25, false);
 
 	@UiField DivElement dateSelectContainer;
 	@UiField FormDateBox dateBox;
@@ -171,9 +170,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 	private Map<String, LIElement> tabs = new HashMap<String, LIElement>();
 
-	private String sorterSvg = "<svg version=\"1.1\" x=\"0px\" y=\"0px\" viewBox=\"0 0 7 10\" enable-background=\"new 0 0 7 10\" xml:space=\"preserve\" class=\"sort-svg\"><path class=\"ascending\" d=\"M0.4,4.1h6.1c0.1,0,0.2,0,0.3-0.1C7,3.9,7,3.8,7,3.7c0-0.1,0-0.2-0.1-0.3L3.8,0.1C3.7,0,3.6,0,3.5,0C3.4,0,3.3,0,3.2,0.1L0.1,3.3C0,3.4,0,3.5,0,3.7C0,3.8,0,3.9,0.1,4C0.2,4.1,0.3,4.1,0.4,4.1z\"></path><path class=\"descending\" d=\"M6.6,5.9H0.4c-0.1,0-0.2,0-0.3,0.1C0,6.1,0,6.2,0,6.3c0,0.1,0,0.2,0.1,0.3l3.1,3.2C3.3,10,3.4,10,3.5,10c0.1,0,0.2,0,0.3-0.1l3.1-3.2C7,6.6,7,6.5,7,6.3C7,6.2,7,6.1,6.9,6C6.8,5.9,6.7,5.9,6.6,5.9z\"></path></svg>";
-	private SafeHtmlHeader downloadsHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Downloads " + sorterSvg));
-	private SafeHtmlHeader revenueHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Revenue " + sorterSvg));
+	private SafeHtmlHeader downloadsHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Downloads " + AnimationHelper.getSorterSvg()));
+	private SafeHtmlHeader revenueHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Revenue " + AnimationHelper.getSorterSvg()));
 	private TextHeader rankHeader = new TextHeader("Rank");
 	private TextHeader paidHeader = new TextHeader("Paid");
 	private TextHeader freeHeader = new TextHeader("Free");
@@ -267,16 +265,11 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		emptyTableWidget.getElement().getStyle().setTextAlign(TextAlign.CENTER);
 		emptyTableWidget.getElement().getStyle().setHeight(100.0, Unit.PX);
 		emptyTableWidget.getElement().getStyle().setPaddingTop(35.0, Unit.PX);
-		HTMLPanel emptyMobileTableWidget = new HTMLPanel("");
-		emptyMobileTableWidget.getElement().getStyle().setTextAlign(TextAlign.CENTER);
-		emptyMobileTableWidget.getElement().getStyle().setHeight(100.0, Unit.PX);
-		emptyMobileTableWidget.getElement().getStyle().setPaddingTop(35.0, Unit.PX);
-		leaderboardTableDesktop.setEmptyTableWidget(emptyTableWidget);
-		leaderboardTableMobile.setEmptyTableWidget(emptyMobileTableWidget);
+		leaderboardTable.setEmptyTableWidget(emptyTableWidget);
+		leaderboardTable.setLoadingIndicator(loadingIndicatorAll);
+		leaderboardTable.getTableLoadingSection().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().tableBodyLoading());
 
-		leaderboardTableDesktop.setLoadingIndicator(loadingIndicatorAll);
-
-		RankController.get().addDataDisplay(leaderboardTableDesktop);
+		RankController.get().addDataDisplay(leaderboardTable);
 
 		dateSelectContainer.addClassName("js-tooltip");
 		dateSelectContainer.setAttribute("data-tooltip", "Select a date");
@@ -302,7 +295,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 						RankController.get().sortByRank(selectedTab, false);
 						downloadsHeader.setHeaderStyleNames(style.canBeSorted());
 						lastOrderedColumn = rankColumn;
-						leaderboardTableDesktop.getColumnSortList().push(rankColumn);
+						leaderboardTable.getColumnSortList().push(rankColumn);
 					} else {
 						RankController.get().sortByDownloads(selectedTab, event.isSortAscending());
 						downloadsHeader.setHeaderStyleNames(style.canBeSorted() + " " + (event.isSortAscending() ? style.isAscending() : style.isDescending()));
@@ -313,23 +306,21 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 						RankController.get().sortByRank(selectedTab, false);
 						revenueHeader.setHeaderStyleNames(style.canBeSorted());
 						lastOrderedColumn = rankColumn;
-						leaderboardTableDesktop.getColumnSortList().push(rankColumn);
+						leaderboardTable.getColumnSortList().push(rankColumn);
 					} else {
 						RankController.get().sortByRevenue(selectedTab, event.isSortAscending());
 						revenueHeader.setHeaderStyleNames(style.canBeSorted() + " " + (event.isSortAscending() ? style.isAscending() : style.isDescending()));
 						lastOrderedColumn = revenueColumn;
 					}
 				}
-				leaderboardTableDesktop.setRowData(0, RankController.get().getList());
-				leaderboardTableMobile.setRowData(0, RankController.get().getList());
+				leaderboardTable.setRowData(0, RankController.get().getList());
 
 				TooltipHelper.updateHelperTooltip();
 
 			}
 		};
 
-		leaderboardTableDesktop.addColumnSortHandler(columnSortHandler);
-		leaderboardTableMobile.addColumnSortHandler(columnSortHandler);
+		leaderboardTable.addColumnSortHandler(columnSortHandler);
 
 		rankColumn = new Column<RanksGroup, SafeHtml>(new SafeHtmlCell()) {
 
@@ -428,9 +419,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 		rankHeader.setHeaderStyleNames(style.mhxte6cIF());
 
-		leaderboardTableMobile.addColumn(rankColumn, rankHeader);
-
-		leaderboardTableDesktop.getColumnSortList().push(rankColumn);
+		leaderboardTable.getColumnSortList().push(rankColumn);
 	}
 
 	/**
@@ -463,8 +452,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 							.equals(name)))) {
 
 				if (foundDailyData) {
-					leaderboardTableDesktop.redraw();
-					leaderboardTableMobile.redraw();
+					leaderboardTable.redraw();
 				} else {
 					loadingBar.show();
 					RankController.get().reset();
@@ -494,8 +482,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 					|| previousValues.get(END_DATE_KEY) != null || (foundDailyData = (previousValues.get(DAILY_DATA_KEY) != null))) {
 
 				if (foundDailyData) {
-					leaderboardTableDesktop.redraw();
-					leaderboardTableMobile.redraw();
+					leaderboardTable.redraw();
 				} else {
 					loadingBar.show();
 					RankController.get().reset();
@@ -583,104 +570,73 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 	private void refreshRanks() {
 
-		leaderboardTableDesktop.setStyleName(style.tableOverall(), OVERALL_LIST_TYPE.equals(selectedTab));
-		leaderboardTableDesktop.setStyleName(style.tableAppGroup(),
-				(FREE_LIST_TYPE.equals(selectedTab) || PAID_LIST_TYPE.equals(selectedTab) || GROSSING_LIST_TYPE.equals(selectedTab)));
-
-		leaderboardTableMobile.setStyleName(style.tableOverall(), OVERALL_LIST_TYPE.equals(selectedTab));
-		leaderboardTableMobile.setStyleName(style.tableAppGroup(),
+		leaderboardTable.setStyleName(style.tableOverall(), OVERALL_LIST_TYPE.equals(selectedTab));
+		leaderboardTable.setStyleName(style.tableAppGroup(),
 				(FREE_LIST_TYPE.equals(selectedTab) || PAID_LIST_TYPE.equals(selectedTab) || GROSSING_LIST_TYPE.equals(selectedTab)));
 
 		switch (selectedTab) {
 		case OVERALL_LIST_TYPE:
 			removeAllColumns();
-			leaderboardTableDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-			leaderboardTableDesktop.setColumnWidth(freeColumn, 30.0, Unit.PCT);
-			leaderboardTableDesktop.setColumnWidth(paidColumn, 30.0, Unit.PCT);
-			leaderboardTableDesktop.setColumnWidth(grossingColumn, 30.0, Unit.PCT);
-			leaderboardTableDesktop.addColumn(rankColumn, rankHeader);
-			leaderboardTableDesktop.addColumn(freeColumn, freeHeader);
-			leaderboardTableDesktop.addColumn(paidColumn, paidHeader);
-			leaderboardTableDesktop.addColumn(grossingColumn, grossingHeader);
-			leaderboardTableDesktop.setLoadingIndicator(loadingIndicatorAll);
+			leaderboardTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+			leaderboardTable.setColumnWidth(freeColumn, 30.0, Unit.PCT);
+			leaderboardTable.setColumnWidth(paidColumn, 30.0, Unit.PCT);
+			leaderboardTable.setColumnWidth(grossingColumn, 30.0, Unit.PCT);
+			leaderboardTable.addColumn(rankColumn, rankHeader);
+			leaderboardTable.addColumn(freeColumn, freeHeader);
+			leaderboardTable.addColumn(paidColumn, paidHeader);
+			leaderboardTable.addColumn(grossingColumn, grossingHeader);
+			leaderboardTable.setLoadingIndicator(loadingIndicatorAll);
 			break;
 		case FREE_LIST_TYPE:
 			removeAllColumns();
-			// if (SessionController.get().isLoggedInUserAdmin()) {
-			// leaderboardTableDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-			// leaderboardTableDesktop.setColumnWidth(freeColumn, 36.7, Unit.PCT);
-			// leaderboardTableDesktop.setColumnWidth(priceColumn, 13.6, Unit.PCT);
-			// leaderboardTableDesktop.setColumnWidth(downloadsColumn, 16.7, Unit.PCT);
-			// leaderboardTableDesktop.setColumnWidth(revenueColumn, 16.7, Unit.PCT);
-			// leaderboardTableDesktop.setColumnWidth(iapColumn, 6.3, Unit.PCT);
-			// } else {
-			leaderboardTableDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-			leaderboardTableDesktop.setColumnWidth(freeColumn, 42.0, Unit.PCT);
-			leaderboardTableDesktop.setColumnWidth(priceColumn, 19.0, Unit.PCT);
-			leaderboardTableDesktop.setColumnWidth(downloadsColumn, 19.0, Unit.PCT);
-			leaderboardTableDesktop.setColumnWidth(iapColumn, 10.0, Unit.PCT);
-			// }
-			leaderboardTableDesktop.addColumn(rankColumn, rankHeader);
-			leaderboardTableDesktop.addColumn(freeColumn, freeHeader);
-			leaderboardTableDesktop.addColumn(priceColumn, priceHeader);
-			leaderboardTableDesktop.addColumn(downloadsColumn, downloadsHeader);
-			// if (SessionController.get().isLoggedInUserAdmin()) {
-			// leaderboardTableDesktop.addColumn(revenueColumn, revenueHeader);
-			// }
-			leaderboardTableDesktop.addColumn(iapColumn, iapHeader);
-			leaderboardTableDesktop.setLoadingIndicator(loadingIndicatorList);
+			leaderboardTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+			leaderboardTable.setColumnWidth(freeColumn, 42.0, Unit.PCT);
+			leaderboardTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
+			leaderboardTable.setColumnWidth(downloadsColumn, 19.0, Unit.PCT);
+			leaderboardTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
+			leaderboardTable.addColumn(rankColumn, rankHeader);
+			leaderboardTable.addColumn(freeColumn, freeHeader);
+			leaderboardTable.addColumn(priceColumn, priceHeader);
+			leaderboardTable.addColumn(downloadsColumn, downloadsHeader);
+			leaderboardTable.addColumn(iapColumn, iapHeader);
+			priceHeader.setHeaderStyleNames(style.columnHiddenMobile());
+			priceColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
+			leaderboardTable.addColumnStyleName(2, style.columnHiddenMobile());
+			leaderboardTable.setLoadingIndicator(loadingIndicatorFreeList);
 			break;
 		case PAID_LIST_TYPE:
 			removeAllColumns();
-			// if (SessionController.get().isLoggedInUserAdmin()) {
-			// leaderboardTableDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-			// leaderboardTableDesktop.setColumnWidth(paidColumn, 36.7, Unit.PCT);
-			// leaderboardTableDesktop.setColumnWidth(priceColumn, 13.6, Unit.PCT);
-			// leaderboardTableDesktop.setColumnWidth(downloadsColumn, 16.7, Unit.PCT);
-			// leaderboardTableDesktop.setColumnWidth(revenueColumn, 16.7, Unit.PCT);
-			// leaderboardTableDesktop.setColumnWidth(iapColumn, 6.3, Unit.PCT);
-			// } else {
-			leaderboardTableDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-			leaderboardTableDesktop.setColumnWidth(paidColumn, 42.0, Unit.PCT);
-			leaderboardTableDesktop.setColumnWidth(priceColumn, 19.0, Unit.PCT);
-			leaderboardTableDesktop.setColumnWidth(downloadsColumn, 19.0, Unit.PCT);
-			leaderboardTableDesktop.setColumnWidth(iapColumn, 10.0, Unit.PCT);
-			// }
-			leaderboardTableDesktop.addColumn(rankColumn, rankHeader);
-			leaderboardTableDesktop.addColumn(paidColumn, paidHeader);
-			leaderboardTableDesktop.addColumn(priceColumn, priceHeader);
-			leaderboardTableDesktop.addColumn(downloadsColumn, downloadsHeader);
-			// if (SessionController.get().isLoggedInUserAdmin()) {
-			// leaderboardTableDesktop.addColumn(revenueColumn, revenueHeader);
-			// }
-			leaderboardTableDesktop.addColumn(iapColumn, iapHeader);
-			leaderboardTableDesktop.setLoadingIndicator(loadingIndicatorList);
+			leaderboardTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+			leaderboardTable.setColumnWidth(paidColumn, 42.0, Unit.PCT);
+			leaderboardTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
+			leaderboardTable.setColumnWidth(downloadsColumn, 19.0, Unit.PCT);
+			leaderboardTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
+			leaderboardTable.addColumn(rankColumn, rankHeader);
+			leaderboardTable.addColumn(paidColumn, paidHeader);
+			leaderboardTable.addColumn(priceColumn, priceHeader);
+			leaderboardTable.addColumn(downloadsColumn, downloadsHeader);
+			leaderboardTable.addColumn(iapColumn, iapHeader);
+			iapHeader.setHeaderStyleNames(style.columnHiddenMobile());
+			iapColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
+			leaderboardTable.addColumnStyleName(4, style.columnHiddenMobile());
+			leaderboardTable.setLoadingIndicator(loadingIndicatorPaidGrossingList);
 			break;
 		case GROSSING_LIST_TYPE:
 			removeAllColumns();
-			// if (SessionController.get().isLoggedInUserAdmin()) {
-			// leaderboardTableDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-			// leaderboardTableDesktop.setColumnWidth(grossingColumn, 36.7, Unit.PCT);
-			// leaderboardTableDesktop.setColumnWidth(priceColumn, 13.6, Unit.PCT);
-			// leaderboardTableDesktop.setColumnWidth(downloadsColumn, 16.7, Unit.PCT);
-			// leaderboardTableDesktop.setColumnWidth(revenueColumn, 16.7, Unit.PCT);
-			// leaderboardTableDesktop.setColumnWidth(iapColumn, 6.3, Unit.PCT);
-			// } else {
-			leaderboardTableDesktop.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-			leaderboardTableDesktop.setColumnWidth(grossingColumn, 42.0, Unit.PCT);
-			leaderboardTableDesktop.setColumnWidth(priceColumn, 19.0, Unit.PCT);
-			leaderboardTableDesktop.setColumnWidth(revenueColumn, 19.0, Unit.PCT);
-			leaderboardTableDesktop.setColumnWidth(iapColumn, 10.0, Unit.PCT);
-			// }
-			leaderboardTableDesktop.addColumn(rankColumn, rankHeader);
-			leaderboardTableDesktop.addColumn(grossingColumn, grossingHeader);
-			leaderboardTableDesktop.addColumn(priceColumn, priceHeader);
-			// if (SessionController.get().isLoggedInUserAdmin()) {
-			// leaderboardTableDesktop.addColumn(downloadsColumn, downloadsHeader);
-			// }
-			leaderboardTableDesktop.addColumn(revenueColumn, revenueHeader);
-			leaderboardTableDesktop.addColumn(iapColumn, iapHeader);
-			leaderboardTableDesktop.setLoadingIndicator(loadingIndicatorList);
+			leaderboardTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+			leaderboardTable.setColumnWidth(grossingColumn, 42.0, Unit.PCT);
+			leaderboardTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
+			leaderboardTable.setColumnWidth(revenueColumn, 19.0, Unit.PCT);
+			leaderboardTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
+			leaderboardTable.addColumn(rankColumn, rankHeader);
+			leaderboardTable.addColumn(grossingColumn, grossingHeader);
+			leaderboardTable.addColumn(priceColumn, priceHeader);
+			leaderboardTable.addColumn(revenueColumn, revenueHeader);
+			leaderboardTable.addColumn(iapColumn, iapHeader);
+			iapHeader.setHeaderStyleNames(style.columnHiddenMobile());
+			iapColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
+			leaderboardTable.addColumnStyleName(4, style.columnHiddenMobile());
+			leaderboardTable.setLoadingIndicator(loadingIndicatorPaidGrossingList);
 			break;
 		}
 
@@ -689,14 +645,23 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	}
 
 	private void removeColumn(Column<RanksGroup, ?> column) {
-		int currentIndex = leaderboardTableDesktop.getColumnIndex(column);
+		int currentIndex = leaderboardTable.getColumnIndex(column);
 
 		if (currentIndex != -1) {
-			leaderboardTableDesktop.removeColumn(column);
+			leaderboardTable.removeColumn(column);
 		}
 	}
 
 	private void removeAllColumns() {
+		// Reset styles for mobile
+		priceHeader.setHeaderStyleNames("");
+		priceColumn.setCellStyleNames(style.mhxte6ciA());
+		iapHeader.setHeaderStyleNames("");
+		iapColumn.setCellStyleNames(style.mhxte6ciA());
+		for (int i = 0; i < leaderboardTable.getColumnCount(); i++) {
+			leaderboardTable.removeColumnStyleName(i, style.columnHiddenMobile());
+		}
+
 		removeColumn(rankColumn);
 		removeColumn(freeColumn);
 		removeColumn(paidColumn);
@@ -728,16 +693,14 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	@UiHandler("viewAllBtn")
 	void onViewAllButtonClicked(ClickEvent event) {
 		if (((Button) event.getSource()).isEnabled()) {
-			if (leaderboardTableDesktop.getVisibleItemCount() == ServiceConstants.STEP_VALUE) {
-				leaderboardTableDesktop.setVisibleRange(0, VIEW_ALL_LENGTH_VALUE);
-				leaderboardTableMobile.setVisibleRange(0, VIEW_ALL_LENGTH_VALUE);
+			if (leaderboardTable.getVisibleItemCount() == ServiceConstants.STEP_VALUE) {
+				leaderboardTable.setVisibleRange(0, VIEW_ALL_LENGTH_VALUE);
 				viewAllSpan.setInnerText("View Less Apps");
 
 				TooltipHelper.updateHelperTooltip();
 
 			} else {
-				leaderboardTableDesktop.setVisibleRange(0, ServiceConstants.STEP_VALUE);
-				leaderboardTableMobile.setVisibleRange(0, ServiceConstants.STEP_VALUE);
+				leaderboardTable.setVisibleRange(0, ServiceConstants.STEP_VALUE);
 				viewAllSpan.setInnerText("View All Apps");
 			}
 		}
@@ -754,7 +717,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 		if (PageType.RanksPageType.equals(current.getPage())) {
 
-			if (leaderboardTableDesktop.getVisibleItemCount() > 0) {
+			if (leaderboardTable.getVisibleItemCount() > 0) {
 				setViewMoreVisible(true);
 			}
 
@@ -897,9 +860,6 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			setViewMoreVisible(false);
 		}
 
-		if (!RankController.get().getDataDisplays().contains(leaderboardTableMobile)) { // Avoid initial double call to server
-			RankController.get().addDataDisplay(leaderboardTableMobile);
-		}
 		TooltipHelper.updateHelperTooltip();
 	}
 
@@ -913,9 +873,5 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	@Override
 	public void getAllTopItemsFailure(GetAllTopItemsRequest input, Throwable caught) {
 		setViewMoreVisible(false);
-		if (!RankController.get().getDataDisplays().contains(leaderboardTableMobile)) { // Avoid initial double call to server
-			RankController.get().addDataDisplay(leaderboardTableMobile);
-		}
-
 	}
 }

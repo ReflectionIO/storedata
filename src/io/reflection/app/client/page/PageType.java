@@ -57,7 +57,6 @@ public enum PageType {
 	CalibrationSummaryPageType("calibrationsummary", DataTypeHelper.PERMISSION_MANAGE_FEED_FETCHES_CODE),
 	CategoriesPageType("categories", DataTypeHelper.PERMISSION_MANAGE_CATEGORIES_CODE),
 	ChangeDetailsPageType("changedetails", true),
-	ChangePasswordPageType("changepassword", true),
 	DataAccountFetchesPageType("dataaccountfetches", DataTypeHelper.PERMISSION_MANAGE_DATA_ACCOUNT_FETCHES_CODE),
 	DataAccountsPageType("dataaccounts", DataTypeHelper.PERMISSION_MANAGE_DATA_ACCOUNTS_CODE),
 	EditEventSubscriptionPageType("editeventsubscription", DataTypeHelper.PERMISSION_MANAGE_EVENT_SUBSCRIPTIONS_CODE),
@@ -80,7 +79,6 @@ public enum PageType {
 	NotPermittedPageType("notpermitted", false),
 	PermissionsPageType("permissions", DataTypeHelper.PERMISSION_MANAGE_PERMISSIONS_CODE),
 	RanksPageType("ranks", DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE),
-	ReadyToStartPageType("readytostart", true),
 	RegisterPageType("register", false),
 	ResetPasswordPageType("resetpassword", false),
 	RolesPageType("roles", DataTypeHelper.PERMISSION_MANAGE_ROLES_CODE),
@@ -234,9 +232,6 @@ public enum PageType {
 		case RegisterPageType:
 			page = new RegisterPage();
 			break;
-		case ChangePasswordPageType:
-			page = new ChangePasswordPage();
-			break;
 		case RolesPageType:
 			page = new RolesPage();
 			break;
@@ -260,9 +255,6 @@ public enum PageType {
 			break;
 		case LinkItunesPageType:
 			page = new LinkItunesPage();
-			break;
-		case ReadyToStartPageType:
-			page = new ReadyToStartPage();
 			break;
 		case MyAppsPageType:
 			page = new MyAppsPage();

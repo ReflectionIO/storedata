@@ -52,6 +52,7 @@ import io.reflection.app.client.highcharts.ChartHelper.XDataType;
 import io.reflection.app.client.highcharts.ChartHelper.YAxisPosition;
 import io.reflection.app.client.highcharts.ChartHelper.YDataType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
+import io.reflection.app.client.part.LoadingIndicator;
 import io.reflection.app.client.part.datatypes.AppRevenue;
 import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.client.part.navigation.Header.PanelType;
@@ -148,12 +149,12 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField LIElement appDetailsItem;
 
 	// @UiField(provided = true) CellTable<ItemRevenue> revenueTable = new CellTable<ItemRevenue>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
-	@UiField(provided = true) CellTable<AppRevenue> revenueTableDesktop = new CellTable<AppRevenue>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
-	@UiField(provided = true) CellTable<AppRevenue> revenueTableMobile = new CellTable<AppRevenue>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
-	private String sorterSvg = "<svg version=\"1.1\" x=\"0px\" y=\"0px\" viewBox=\"0 0 7 10\" enable-background=\"new 0 0 7 10\" xml:space=\"preserve\" class=\"sort-svg\"><path class=\"ascending\" d=\"M0.4,4.1h6.1c0.1,0,0.2,0,0.3-0.1C7,3.9,7,3.8,7,3.7c0-0.1,0-0.2-0.1-0.3L3.8,0.1C3.7,0,3.6,0,3.5,0C3.4,0,3.3,0,3.2,0.1L0.1,3.3C0,3.4,0,3.5,0,3.7C0,3.8,0,3.9,0.1,4C0.2,4.1,0.3,4.1,0.4,4.1z\"></path><path class=\"descending\" d=\"M6.6,5.9H0.4c-0.1,0-0.2,0-0.3,0.1C0,6.1,0,6.2,0,6.3c0,0.1,0,0.2,0.1,0.3l3.1,3.2C3.3,10,3.4,10,3.5,10c0.1,0,0.2,0,0.3-0.1l3.1-3.2C7,6.6,7,6.5,7,6.3C7,6.2,7,6.1,6.9,6C6.8,5.9,6.7,5.9,6.6,5.9z\"></path></svg>";
-	private SafeHtmlHeader dateHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Date " + sorterSvg));
-	private SafeHtmlHeader revenueHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Revenue Generated " + sorterSvg));
-	private SafeHtmlHeader revenueForPeriodHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("% of Total Revenue for Period " + sorterSvg));
+	@UiField(provided = true) CellTable<AppRevenue> revenueTable = new CellTable<AppRevenue>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
+
+	private SafeHtmlHeader dateHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Date " + AnimationHelper.getSorterSvg()));
+	private SafeHtmlHeader revenueHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Revenue Generated " + AnimationHelper.getSorterSvg()));
+	private SafeHtmlHeader revenueForPeriodHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("% of Total Revenue for Period "
+			+ AnimationHelper.getSorterSvg()));
 
 	private String internalId;
 	private String comingPage;
@@ -216,8 +217,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 		if (!SessionController.get().isLoggedInUserAdmin()) {
 			tablePanel.removeFromParent();
-			revenueTableDesktop.removeFromParent();
-			revenueTableMobile.removeFromParent();
+			revenueTable.removeFromParent();
 			// followSwitch.removeFromParent();
 			accuracySwitch.removeFromParent();
 			eventsSwitch.removeFromParent();
@@ -232,12 +232,11 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		} else {
 			createColumns();
 			// RankController.get().getItemRevenueDataProvider().addDataDisplay(revenueTable);
-			RankController.get().getRevenueDataProvider().addDataDisplay(revenueTableDesktop);
-			RankController.get().getRevenueDataProvider().addDataDisplay(revenueTableMobile);
-			revenueTableDesktop.setLoadingIndicator(AnimationHelper.createLoadingIndicator(
-					CalendarUtil.getDaysBetween(dateSelector.getValue().getFrom(), dateSelector.getValue().getTo()) + 1, 3));
-			revenueTableDesktop.setRowCount(0, false);
-			revenueTableMobile.setRowCount(0, false);
+			RankController.get().getRevenueDataProvider().addDataDisplay(revenueTable);
+			revenueTable.setLoadingIndicator(new LoadingIndicator(CalendarUtil.getDaysBetween(dateSelector.getValue().getFrom(), dateSelector.getValue()
+					.getTo()) + 1, 3));
+			revenueTable.getTableLoadingSection().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().tableBodyLoading());
+			revenueTable.setRowCount(0, false);
 		}
 
 		dnwBtn.setAttribute("data-tooltip", "Download data in CSV file");
@@ -308,17 +307,13 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 		if (item.mediumImage != null) {
 			image.setUrl(item.mediumImage);
-			image.removeStyleName(Styles.STYLES_INSTANCE.reflection().unknownAppSmall());
 		} else {
 			image.setUrl("");
-			image.addStyleName(Styles.STYLES_INSTANCE.reflection().unknownAppSmall());
 		}
 		if (item.smallImage != null) {
 			imageTable.setUrl(item.smallImage);
-			imageTable.removeStyleName(Styles.STYLES_INSTANCE.reflection().unknownAppSmall());
 		} else {
-			imageTable.setUrl("");
-			imageTable.addStyleName(Styles.STYLES_INSTANCE.reflection().unknownAppSmall());
+			image.setUrl("");
 		}
 
 		Store s = StoreController.get().getStore(item.source);
@@ -447,8 +442,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			}
 		};
 
-		revenueTableDesktop.addColumnSortHandler(columnSortHandler);
-		revenueTableMobile.addColumnSortHandler(columnSortHandler);
+		revenueTable.addColumnSortHandler(columnSortHandler);
 
 		dateColumn = new Column<AppRevenue, SafeHtml>(new SafeHtmlCell()) {
 
@@ -459,8 +453,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			}
 		};
 		dateColumn.setDefaultSortAscending(false);
-		revenueTableDesktop.addColumn(dateColumn, dateHeader);
-		revenueTableMobile.addColumn(dateColumn, dateHeader);
+		revenueTable.addColumn(dateColumn, dateHeader);
 		dateColumn.setCellStyleNames(style.dateValue());
 		dateHeader.setHeaderStyleNames(style.canBeSorted());
 		dateColumn.setSortable(true);
@@ -478,7 +471,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 						.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
 			}
 		};
-		revenueTableDesktop.addColumn(revenueColumn, revenueHeader);
+		revenueTable.addColumn(revenueColumn, revenueHeader);
 		revenueColumn.setCellStyleNames(style.revenueValue());
 		revenueHeader.setHeaderStyleNames(style.canBeSorted());
 		revenueColumn.setSortable(true);
@@ -498,15 +491,15 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				return value;
 			}
 		};
-		revenueTableDesktop.addColumn(revenueForPeriodColumn, revenueForPeriodHeader);
+		revenueTable.addColumn(revenueForPeriodColumn, revenueForPeriodHeader);
 		revenueForPeriodColumn.setCellStyleNames(style.revenuePercentage());
 		revenueForPeriodHeader.setHeaderStyleNames(style.canBeSorted());
 		revenueForPeriodColumn.setSortable(true);
 		columnSortHandler.setComparator(revenueForPeriodColumn, AppRevenue.getRevenuePercentForPeriodComparator());
 
-		revenueTableDesktop.setColumnWidth(dateColumn, 25, Unit.PCT);
-		revenueTableDesktop.setColumnWidth(revenueColumn, 25, Unit.PCT);
-		revenueTableDesktop.setColumnWidth(revenueForPeriodColumn, 50, Unit.PCT);
+		revenueTable.setColumnWidth(dateColumn, 25, Unit.PCT);
+		revenueTable.setColumnWidth(revenueColumn, 25, Unit.PCT);
+		revenueTable.setColumnWidth(revenueForPeriodColumn, 50, Unit.PCT);
 	}
 
 	@UiHandler("storeSelector")
@@ -637,12 +630,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 			comingPage = current.getParameter(2);
 
-			if (SessionController.get().isLoggedInUserAdmin() || MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage)) {
-				setRevenueDownloadTabsEnabled(true);
-			} else {
-				setRevenueDownloadTabsEnabled(false);
-			}
-
 			String newInternalId = current.getParameter(0);
 			boolean isNewDataRequired = false;
 
@@ -691,12 +678,18 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				break;
 			}
 
-			// revenueLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
-			// REVENUE_CHART_TYPE, comingPage, filterContents));
-			// downloadsLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
-			// DOWNLOADS_CHART_TYPE, comingPage, filterContents));
+			revenueLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
+					REVENUE_CHART_TYPE, comingPage, filterContents));
+			downloadsLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
+					DOWNLOADS_CHART_TYPE, comingPage, filterContents));
 			rankingLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
 					RANKING_CHART_TYPE, comingPage, filterContents));
+
+			if (SessionController.get().isLoggedInUserAdmin() || MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage)) {
+				setRevenueDownloadTabsEnabled(true);
+			} else {
+				setRevenueDownloadTabsEnabled(false);
+			}
 
 			updateFromFilter();
 			String newSelectedTab = current.getParameter(SELECTED_TAB_PARAMETER_INDEX);
@@ -720,10 +713,9 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				chartRevenue.setLoading(true);
 				chartDownloads.setLoading(true);
 				chartRank.setLoading(true);
-				revenueTableDesktop.setLoadingIndicator(AnimationHelper.createLoadingIndicator(
-						CalendarUtil.getDaysBetween(dateSelector.getValue().getFrom(), dateSelector.getValue().getTo()) + 1, 3));
-				revenueTableDesktop.setRowCount(0, false);
-				revenueTableMobile.setRowCount(0, false);
+				revenueTable.setLoadingIndicator(new LoadingIndicator(CalendarUtil.getDaysBetween(dateSelector.getValue().getFrom(), dateSelector.getValue()
+						.getTo()) + 1, 3));
+				revenueTable.setRowCount(0, false);
 				dateHeader.setHeaderStyleNames(style.canBeSorted());
 				revenueHeader.setHeaderStyleNames(style.canBeSorted());
 				revenueForPeriodHeader.setHeaderStyleNames(style.canBeSorted());
@@ -779,8 +771,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	private void setNoData(boolean noData) {
 		if (noData) {
 			infoTotalRevenue.setInnerHTML("-");
-			revenueTableDesktop.setRowCount(0, true);
-			revenueTableMobile.setRowCount(0, true);
+			revenueTable.setRowCount(0, true);
 		}
 		noDataPanel.setVisible(noData);
 		setChartGraphsVisible(!noData);
@@ -863,8 +854,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 	private void drawData(List<Rank> ranks) {
 		dateHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.isDescending());
-		revenueTableDesktop.getColumnSortList().push(dateColumn);
-		revenueTableMobile.getColumnSortList().push(dateColumn);
+		revenueTable.getColumnSortList().push(dateColumn);
 
 		chartRank.setRankingType(rankType);
 		chartRank.drawData(ranks, YAxisPosition.PRIMARY, YDataType.RankingYAxisDataType, SERIES_ID_RANK, LineType.LINE, ColorHelper.getReflectionGreen(),
@@ -1031,13 +1021,9 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			revenueText.setInnerText("Revenue");
 			revenueItem.removeClassName(style.isDisabled());
 			revenueItem.getStyle().setCursor(Cursor.POINTER);
-			revenueLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
-					REVENUE_CHART_TYPE, comingPage, filterContents));
 			downloadsText.setInnerText("Downloads");
 			downloadsItem.removeClassName(style.isDisabled());
 			downloadsItem.getStyle().setCursor(Cursor.POINTER);
-			downloadsLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
-					DOWNLOADS_CHART_TYPE, comingPage, filterContents));
 			appDetailsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 		} else {
 			revenueText.setInnerHTML("Revenue <span class=\"text-small\">coming soon</span>");

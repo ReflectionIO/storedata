@@ -13,7 +13,7 @@
 	</ui:style>
 
 	<div>
-		<img class="{STYLES_INSTANCE.reflectionMainStyle.imgRounded} {STYLES_INSTANCE.reflection.unknownAppSmall}" src="{smallImage}" />
+		<img class="{STYLES_INSTANCE.reflectionMainStyle.imgRounded}" src="{smallImage}" />
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.mhxte6cRA}">
 			<a href="{link}">
 				<ui:text from="{name}" />

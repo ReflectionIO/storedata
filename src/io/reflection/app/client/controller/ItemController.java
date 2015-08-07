@@ -56,7 +56,7 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 
 	private List<Item> userItemList = new ArrayList<Item>();
 	private Map<String, Item> userItemsLookup = new HashMap<String, Item>();
-	private long userItemCount = -1;
+	private int userItemCount = -1;
 
 	// private List<Item> rows;
 	// private long count = 0;
@@ -248,7 +248,7 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 					pagerUserItem = output.pager;
 
 					if (pagerUserItem.totalCount != null) {
-						userItemCount = pagerUserItem.totalCount.longValue();
+						userItemCount = pagerUserItem.totalCount.intValue();
 						if (output.items != null) {
 							for (Item item : output.items) {
 								setUserItem(item);
@@ -392,7 +392,7 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 		return userItemList;
 	}
 
-	public long getUserItemsCount() {
+	public int getUserItemsCount() {
 		return userItemCount;
 	}
 
