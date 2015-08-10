@@ -15,6 +15,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -40,6 +41,8 @@ public class LoggedInHomePage extends Page {
 	@UiField AccordionSwitch accordionSwitchNZ;
 	@UiField AccordionSwitch accordionSwitchIR;
 	@UiField AccordionSwitch accordionSwitchMore;
+	
+	private int toTop = 0;
 
 	public LoggedInHomePage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -110,11 +113,24 @@ public class LoggedInHomePage extends Page {
 	@Override
 	protected void onAttach() {
 		super.onAttach();
+		
+		Window.scrollTo(0, toTop);
 
 		User user = SessionController.get().getLoggedInUser();
 		if (user != null) {
 			userName.setInnerText(user.forename);
 		}
 	}
-
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.page.Page#onDetach()
+	 */
+	@Override
+	protected void onDetach() {
+		super.onDetach();
+		
+		toTop = Window.getScrollTop();
+	}
 }
