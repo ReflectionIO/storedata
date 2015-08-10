@@ -7,7 +7,7 @@
 	
 	</ui:style>
 	<g:HTMLPanel tag="form">
-		<fieldset class="{STYLES_INSTANCE.reflectionMainStyle.connectAccountContent}" style="visibility: visible; position: relative;">
+		<fieldset ui:field="fieldset" class="{STYLES_INSTANCE.reflectionMainStyle.connectAccountContent}" style="visibility: visible; position: relative;">
 			<h2 ui:field="title"></h2>
 
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.linkedAccountLoadingState}">
