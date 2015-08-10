@@ -499,7 +499,8 @@ input::-ms-clear {
 /* Global */
 /* line 1, sass/ui/_icons.scss */
 .ref-icon-before, .page-logged-in-landing .accordion-switch, .page-logged-in-landing .accordion .list-item-complete, .ref-icon-after, .accordion-switch, .form-field .form-field-help,
-.search-field-no-label .form-field-help, .form-field.form-field--date-select span, .main-navigation > ul ul li.has-child, .whats-this-tooltip-icon, .date-select-to-indicator, .datePickerPreviousButton,
+.search-field-no-label .form-field-help, .form-field.form-field--date-select span, .main-navigation > ul ul li.has-child, .whats-this-tooltip-icon,
+.whats-this-tooltip-icon-static, .date-select-to-indicator, .datePickerPreviousButton,
 .datePickerNextButton {
   padding: 0;
   line-height: 1;
@@ -515,7 +516,8 @@ input::-ms-clear {
 
 /* line 18, sass/ui/_icons.scss */
 .ref-icon-after:after, .accordion-switch:after, .form-field .form-field-help:after,
-.search-field-no-label .form-field-help:after, .form-field.form-field--date-select span:after, .main-navigation > ul ul li.has-child:after, .whats-this-tooltip-icon:after {
+.search-field-no-label .form-field-help:after, .form-field.form-field--date-select span:after, .main-navigation > ul ul li.has-child:after, .whats-this-tooltip-icon:after,
+.whats-this-tooltip-icon-static:after {
   font-size: 22px;
   position: relative;
 }
@@ -562,7 +564,8 @@ input::-ms-clear {
 /* Typography placeholders */
 /* line 22, sass/ui/_typography.scss */
 .ref-icon-before:before, .page-logged-in-landing .accordion-switch:before, .page-logged-in-landing .accordion .list-item-complete:before, .ref-icon-after:after, .accordion-switch:after, .form-field .form-field-help:after,
-.search-field-no-label .form-field-help:after, .form-field.form-field--date-select span:after, .main-navigation > ul ul li.has-child:after, .whats-this-tooltip-icon:after, .reflection-select.reflection-select--filter .close-popup, .search-field-no-label input[type=submit], .date-select-to-indicator:after, .reflection-select li.pre-selected:before, .datePickerPreviousButton:after,
+.search-field-no-label .form-field-help:after, .form-field.form-field--date-select span:after, .main-navigation > ul ul li.has-child:after, .whats-this-tooltip-icon:after,
+.whats-this-tooltip-icon-static:after, .reflection-select.reflection-select--filter .close-popup, .search-field-no-label input[type=submit], .date-select-to-indicator:after, .reflection-select li.pre-selected:before, .datePickerPreviousButton:after,
 .datePickerNextButton:after, .panel-right .form-field .search-button-mobile {
   speak: none;
   font-family: "reflection-icons";
@@ -767,7 +770,8 @@ ol.content-list--minor li:before {
 
 /* line 152, sass/ui/_typography.scss */
 .ref-icon-after--question:after, .form-field .form-field-help:after,
-.search-field-no-label .form-field-help:after, .whats-this-tooltip-icon:after {
+.search-field-no-label .form-field-help:after, .whats-this-tooltip-icon:after,
+.whats-this-tooltip-icon-static:after {
   content: "F";
 }
 
@@ -1849,11 +1853,13 @@ textarea, .global-header .link-open-search, html, body {
 
 /* line 309, sass/templates/_account-access.scss */
 .form-submitted-success-complete.connect-account-is-showing.ie9 .account-form-container .js-fade-content:not(.maintain-after-submit),
-.form-submitted-success-complete.connect-account-is-showing.ie9 .account-form-container .js-rotate-content:not(.maintain-after-submit) {
+.form-submitted-success-complete.connect-account-is-showing.ie9 .account-form-container .js-rotate-content:not(.maintain-after-submit),
+.form-submitted-loading.connect-account-is-showing.ie9 .account-form-container .js-rotate-content:not(.maintain-after-submit),
+.form-submitted-success-complete.connect-account-is-showing.ie9 .js-rotate-content:not(.maintain-after-submit) {
   visibility: hidden;
 }
 
-/* line 313, sass/templates/_account-access.scss */
+/* line 315, sass/templates/_account-access.scss */
 .form-submitted-success {
   position: absolute;
   top: 30px;
@@ -1867,7 +1873,7 @@ textarea, .global-header .link-open-search, html, body {
   padding-left: 30px;
   padding-right: 30px;
 }
-/* line 326, sass/templates/_account-access.scss */
+/* line 328, sass/templates/_account-access.scss */
 .form-submitted-success.is-showing {
   text-align: center;
   visibility: visible;
@@ -1876,7 +1882,7 @@ textarea, .global-header .link-open-search, html, body {
   -webkit-transition: opacity 0.3s 0.3s;
           transition: opacity 0.3s 0.3s;
 }
-/* line 332, sass/templates/_account-access.scss */
+/* line 334, sass/templates/_account-access.scss */
 .form-submitted-success p {
   margin-bottom: 3.8rem;
   padding-left: 18px;
@@ -1885,14 +1891,14 @@ textarea, .global-header .link-open-search, html, body {
   text-align: center;
   color: #5b5d61;
 }
-/* line 340, sass/templates/_account-access.scss */
+/* line 342, sass/templates/_account-access.scss */
 .form-submitted-success .illustration-container {
   margin-top: 0.5rem;
   margin-bottom: 2.7rem;
   text-align: center;
   overflow: visible;
 }
-/* line 346, sass/templates/_account-access.scss */
+/* line 348, sass/templates/_account-access.scss */
 .form-submitted-success .email-post-animation {
   position: relative;
   left: 0;
@@ -1902,12 +1908,12 @@ textarea, .global-header .link-open-search, html, body {
   overflow: visible;
   margin-left: 58px;
 }
-/* line 356, sass/templates/_account-access.scss */
+/* line 358, sass/templates/_account-access.scss */
 .tabs__content--is-submitted .form-submitted-success .email-success-envelope {
   -webkit-animation: mail-send 0.6s 0.8s forwards;
           animation: mail-send 0.6s 0.8s forwards;
 }
-/* line 360, sass/templates/_account-access.scss */
+/* line 362, sass/templates/_account-access.scss */
 .form-submitted-success .email-success-handle {
   -webkit-transform: rotateZ(-74deg);
           transform: rotateZ(-74deg);
@@ -1915,14 +1921,14 @@ textarea, .global-header .link-open-search, html, body {
       -ms-transform-origin: 22px 25px 0px;
           transform-origin: 22px 25px 0px;
 }
-/* line 363, sass/templates/_account-access.scss */
+/* line 365, sass/templates/_account-access.scss */
 .tabs__content--is-submitted .form-submitted-success .email-success-handle {
   -webkit-transform: rotateZ(0deg);
           transform: rotateZ(0deg);
   -webkit-transition: -webkit-transform 0.2s 1.3s;
           transition: transform 0.2s 1.3s;
 }
-/* line 368, sass/templates/_account-access.scss */
+/* line 370, sass/templates/_account-access.scss */
 .form-submitted-success .email-delivery-animation {
   position: relative;
   margin-top: 15px;
@@ -1931,7 +1937,7 @@ textarea, .global-header .link-open-search, html, body {
   height: 81px;
   overflow: visible;
 }
-/* line 375, sass/templates/_account-access.scss */
+/* line 377, sass/templates/_account-access.scss */
 .tabs__content--is-submitted .form-submitted-success .email-delivery-animation, .reset-password-is-submitted .form-submitted-success .email-delivery-animation {
   -ms-transform: translateX(300px);
   -webkit-transform: translateX(300px);
@@ -1939,21 +1945,21 @@ textarea, .global-header .link-open-search, html, body {
   -webkit-transition: -webkit-transform 0.4s 1.7s ease-in;
           transition: transform 0.4s 1.7s ease-in;
 }
-/* line 380, sass/templates/_account-access.scss */
+/* line 382, sass/templates/_account-access.scss */
 .is-ie .form-submitted-success .email-delivery-animation {
   visibility: hidden;
 }
-/* line 385, sass/templates/_account-access.scss */
+/* line 387, sass/templates/_account-access.scss */
 .tabs__content--is-submitted .form-submitted-success .email-delivery-animation--email, .reset-password-is-submitted .form-submitted-success .email-delivery-animation--email {
   -webkit-animation: mail-deliver 0.6s 0.8s forwards;
           animation: mail-deliver 0.6s 0.8s forwards;
 }
-/* line 391, sass/templates/_account-access.scss */
+/* line 393, sass/templates/_account-access.scss */
 .tabs__content--is-submitted .form-submitted-success .email-delivery-animation--van-body, .reset-password-is-submitted .form-submitted-success .email-delivery-animation--van-body {
   -webkit-animation: van-shake 0.6s 1.3s;
           animation: van-shake 0.6s 1.3s;
 }
-/* line 396, sass/templates/_account-access.scss */
+/* line 398, sass/templates/_account-access.scss */
 .form-submitted-success .success-tick {
   position: absolute;
   top: 30px;
@@ -1967,7 +1973,7 @@ textarea, .global-header .link-open-search, html, body {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0;
 }
-/* line 405, sass/templates/_account-access.scss */
+/* line 407, sass/templates/_account-access.scss */
 .tabs__content--is-submitted .form-submitted-success .success-tick, .reset-password-is-submitted .form-submitted-success .success-tick {
   filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
   opacity: 1;
@@ -1977,12 +1983,12 @@ textarea, .global-header .link-open-search, html, body {
   -webkit-transition: opacity 0.4s 2.2s, -webkit-transform 0.4s 2.2s;
           transition: opacity 0.4s 2.2s, transform 0.4s 2.2s;
 }
-/* line 410, sass/templates/_account-access.scss */
+/* line 412, sass/templates/_account-access.scss */
 .is-ie .tabs__content--is-submitted .form-submitted-success .success-tick, .is-ie .reset-password-is-submitted .form-submitted-success .success-tick {
   -webkit-transition: opacity 0.4s 0.3s, -webkit-transform 0.4s 0.3s;
           transition: opacity 0.4s 0.3s, transform 0.4s 0.3s;
 }
-/* line 414, sass/templates/_account-access.scss */
+/* line 416, sass/templates/_account-access.scss */
 .form-submitted-success-complete .form-submitted-success .success-tick {
   filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
   opacity: 1;
@@ -1992,7 +1998,7 @@ textarea, .global-header .link-open-search, html, body {
   -webkit-transition: opacity 0.4s 0.4s, -webkit-transform 0.4s 0.4s;
           transition: opacity 0.4s 0.4s, transform 0.4s 0.4s;
 }
-/* line 420, sass/templates/_account-access.scss */
+/* line 422, sass/templates/_account-access.scss */
 .account-setup-content-wrapper .form-submitted-success {
   position: absolute;
   top: 0;
@@ -2000,11 +2006,11 @@ textarea, .global-header .link-open-search, html, body {
   height: 297px;
   overflow: visible;
 }
-/* line 426, sass/templates/_account-access.scss */
+/* line 428, sass/templates/_account-access.scss */
 .account-setup-content-wrapper .form-submitted-success .success-tick {
   top: 10.2rem;
 }
-/* line 429, sass/templates/_account-access.scss */
+/* line 431, sass/templates/_account-access.scss */
 .account-setup-content-wrapper .form-submitted-success h2 {
   margin-top: 19.4rem;
   margin-bottom: 0.3rem;
@@ -2013,7 +2019,7 @@ textarea, .global-header .link-open-search, html, body {
   font-size: 1.6rem;
   font-weight: 700;
 }
-/* line 437, sass/templates/_account-access.scss */
+/* line 439, sass/templates/_account-access.scss */
 .account-setup-content-wrapper .form-submitted-success p {
   position: relative;
   left: 0;
@@ -2021,36 +2027,36 @@ textarea, .global-header .link-open-search, html, body {
   font-size: 1.6rem;
   font-weight: 700;
 }
-/* line 443, sass/templates/_account-access.scss */
+/* line 445, sass/templates/_account-access.scss */
 .account-setup-content-wrapper .form-submitted-success p a {
   padding: 0.9rem 0px 0px 0rem;
   display: block;
 }
-/* line 448, sass/templates/_account-access.scss */
+/* line 450, sass/templates/_account-access.scss */
 .account-setup-content-wrapper .form-submitted-success .connect-account-content input[type="submit"] {
   -webkit-transition: margin-top 0.3s;
           transition: margin-top 0.3s;
 }
-/* line 450, sass/templates/_account-access.scss */
+/* line 452, sass/templates/_account-access.scss */
 .account-setup-content-wrapper .form-submitted-success .connect-account-content input[type="submit"].ref-button--success {
   margin-top: 6rem;
 }
 
-/* line 458, sass/templates/_account-access.scss */
+/* line 460, sass/templates/_account-access.scss */
 .form-submitted-success-complete .account-setup-content-wrapper .connect-account-content input[type="submit"] {
   -webkit-transition: margin-top 0.3s;
           transition: margin-top 0.3s;
 }
-/* line 460, sass/templates/_account-access.scss */
+/* line 462, sass/templates/_account-access.scss */
 .form-submitted-success-complete .account-setup-content-wrapper .connect-account-content input[type="submit"].ref-button--success {
   margin-top: 3rem;
 }
-/* line 469, sass/templates/_account-access.scss */
+/* line 471, sass/templates/_account-access.scss */
 .form-submitted-success-complete .account-setup-content-wrapper.page-reset-password .connect-account-content input[type="submit"].ref-button--success {
   margin-top: 6rem;
 }
 
-/* line 479, sass/templates/_account-access.scss */
+/* line 481, sass/templates/_account-access.scss */
 .no-touch .account-access-page .account-access-content .list-partners,
 .touch .account-access-page .account-access-content .list-partners {
   position: relative;
@@ -2065,26 +2071,26 @@ textarea, .global-header .link-open-search, html, body {
   display: inline-block;
   padding-top: 3rem;
 }
-/* line 493, sass/templates/_account-access.scss */
+/* line 495, sass/templates/_account-access.scss */
 .no-touch .account-access-page .account-access-content .list-partners h2,
 .touch .account-access-page .account-access-content .list-partners h2 {
   margin-top: 0.8rem;
   margin-bottom: 1.7rem;
 }
-/* line 497, sass/templates/_account-access.scss */
+/* line 499, sass/templates/_account-access.scss */
 .no-touch .account-access-page .account-access-content .list-partners img,
 .touch .account-access-page .account-access-content .list-partners img {
   max-width: 130px;
   padding-bottom: 0;
 }
-/* line 501, sass/templates/_account-access.scss */
+/* line 503, sass/templates/_account-access.scss */
 .no-touch .account-access-page .account-access-content .list-partners li,
 .touch .account-access-page .account-access-content .list-partners li {
   display: none;
   display: inline-block;
   width: 23%;
 }
-/* line 512, sass/templates/_account-access.scss */
+/* line 514, sass/templates/_account-access.scss */
 .no-touch .account-access-page .account-access-content .list-partners ul,
 .touch .account-access-page .account-access-content .list-partners ul {
   display: -webkit-box;
@@ -2108,7 +2114,7 @@ textarea, .global-header .link-open-search, html, body {
       -ms-flex-align: center;
           align-items: center;
 }
-/* line 521, sass/templates/_account-access.scss */
+/* line 523, sass/templates/_account-access.scss */
 .no-touch .account-access-page .account-access-content .list-partners li,
 .touch .account-access-page .account-access-content .list-partners li {
   width: auto;
@@ -2121,24 +2127,24 @@ textarea, .global-header .link-open-search, html, body {
       -ms-flex-positive: 1;
           flex-grow: 1;
 }
-/* line 527, sass/templates/_account-access.scss */
+/* line 529, sass/templates/_account-access.scss */
 .no-touch .account-access-page .account-access-content .list-partners li:last-child,
 .touch .account-access-page .account-access-content .list-partners li:last-child {
   display: inline-block;
 }
 
-/* line 532, sass/templates/_account-access.scss */
+/* line 534, sass/templates/_account-access.scss */
 .no-touch .account-setup-content-wrapper .list-partners,
 .touch .account-setup-content-wrapper .list-partners {
   display: block;
 }
-/* line 540, sass/templates/_account-access.scss */
+/* line 542, sass/templates/_account-access.scss */
 .no-touch .account-setup-content-wrapper .list-partners li,
 .touch .account-setup-content-wrapper .list-partners li {
   width: 49%;
 }
 
-/* line 544, sass/templates/_account-access.scss */
+/* line 546, sass/templates/_account-access.scss */
 .apply-content {
   position: absolute;
   visibility: hidden;
@@ -2148,7 +2154,7 @@ textarea, .global-header .link-open-search, html, body {
   -webkit-transition: opacity 0.6s;
           transition: opacity 0.6s;
 }
-/* line 552, sass/templates/_account-access.scss */
+/* line 554, sass/templates/_account-access.scss */
 .apply-form-is-showing .apply-content {
   position: relative;
   visibility: visible;
@@ -2158,7 +2164,7 @@ textarea, .global-header .link-open-search, html, body {
           transition: opacity 0.6s;
 }
 
-/* line 559, sass/templates/_account-access.scss */
+/* line 561, sass/templates/_account-access.scss */
 .login-content {
   position: absolute;
   visibility: hidden;
@@ -2168,7 +2174,7 @@ textarea, .global-header .link-open-search, html, body {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=0);
   opacity: 0;
 }
-/* line 566, sass/templates/_account-access.scss */
+/* line 568, sass/templates/_account-access.scss */
 .login-form-is-showing .login-content {
   position: relative;
   visibility: visible;
@@ -2177,23 +2183,23 @@ textarea, .global-header .link-open-search, html, body {
   -webkit-transition: opacity 0.6s;
           transition: opacity 0.6s;
 }
-/* line 575, sass/templates/_account-access.scss */
+/* line 577, sass/templates/_account-access.scss */
 .login-content .blockquote--reset-password,
 .login-content .blockquote--login {
   margin-top: 0;
   margin-bottom: 3em;
 }
-/* line 580, sass/templates/_account-access.scss */
+/* line 582, sass/templates/_account-access.scss */
 .login-content .blockquote--large {
   margin-left: -5px;
 }
-/* line 582, sass/templates/_account-access.scss */
+/* line 584, sass/templates/_account-access.scss */
 .login-content .blockquote--large p {
   font-size: 2.2rem;
   font-weight: 700;
   line-height: 1.45;
 }
-/* line 588, sass/templates/_account-access.scss */
+/* line 590, sass/templates/_account-access.scss */
 .login-content .blockquote--reset-password {
   position: absolute;
   visibility: hidden;
@@ -2201,7 +2207,7 @@ textarea, .global-header .link-open-search, html, body {
   opacity: 0;
   margin-top: 72px;
 }
-/* line 595, sass/templates/_account-access.scss */
+/* line 597, sass/templates/_account-access.scss */
 .reset-password-form-is-showing .login-content .blockquote--reset-password {
   position: relative;
   visibility: visible;
@@ -2210,7 +2216,7 @@ textarea, .global-header .link-open-search, html, body {
   -webkit-transition: opacity 0.6s;
           transition: opacity 0.6s;
 }
-/* line 602, sass/templates/_account-access.scss */
+/* line 604, sass/templates/_account-access.scss */
 .login-content .blockquote--login {
   position: relative;
   visibility: visible;
@@ -2218,7 +2224,7 @@ textarea, .global-header .link-open-search, html, body {
           transition: opacity 0.6s;
   margin-top: 47px;
 }
-/* line 609, sass/templates/_account-access.scss */
+/* line 611, sass/templates/_account-access.scss */
 .reset-password-form-is-showing .login-content .blockquote--login {
   position: absolute;
   visibility: hidden;
@@ -2228,7 +2234,7 @@ textarea, .global-header .link-open-search, html, body {
           transition: opacity 0.6s;
 }
 
-/* line 617, sass/templates/_account-access.scss */
+/* line 619, sass/templates/_account-access.scss */
 .create-password-main-content,
 .connect-account-main-content,
 .connect-account-is-showing.form-submitted-success-complete .connect-account-main-content,
@@ -2242,13 +2248,13 @@ textarea, .global-header .link-open-search, html, body {
           transition: opacity 0.6s;
 }
 
-/* line 629, sass/templates/_account-access.scss */
+/* line 631, sass/templates/_account-access.scss */
 .connect-account-main-content h1:first-child,
 .connect-account-submitted h1:first-child {
   margin-top: 3rem;
 }
 
-/* line 633, sass/templates/_account-access.scss */
+/* line 635, sass/templates/_account-access.scss */
 .create-password-form-is-showing .create-password-main-content,
 .connect-account-is-showing .connect-account-main-content,
 .connect-account-is-showing.form-submitted-success-complete .connect-account-submitted,
@@ -2261,7 +2267,7 @@ textarea, .global-header .link-open-search, html, body {
   -webkit-transition: opacity 0.6s;
           transition: opacity 0.6s;
 }
-/* line 642, sass/templates/_account-access.scss */
+/* line 644, sass/templates/_account-access.scss */
 .create-password-form-is-showing .create-password-main-content p,
 .connect-account-is-showing .connect-account-main-content p,
 .connect-account-is-showing.form-submitted-success-complete .connect-account-submitted p,
@@ -2298,43 +2304,43 @@ textarea, .global-header .link-open-search, html, body {
     opacity: 1;
   }
 }
-/* line 651, sass/templates/_account-access.scss */
+/* line 653, sass/templates/_account-access.scss */
 .account-setup-content-wrapper {
   position: relative;
   overflow: visible;
   min-height: 93vh;
   min-height: 76vh;
 }
-/* line 658, sass/templates/_account-access.scss */
+/* line 660, sass/templates/_account-access.scss */
 .account-setup-content-wrapper .full-screen-intro {
   padding-top: 0;
 }
 
-/* line 663, sass/templates/_account-access.scss */
+/* line 665, sass/templates/_account-access.scss */
 .create-password-main-content .svg-create-password {
   display: none;
   width: 80%;
   max-width: 333px;
 }
 @media screen and (min-width: 960px) and (min-height: 780px) {
-  /* line 663, sass/templates/_account-access.scss */
+  /* line 665, sass/templates/_account-access.scss */
   .create-password-main-content .svg-create-password {
     max-width: 333px;
   }
 }
 @media screen and (max-height: 800px) {
-  /* line 663, sass/templates/_account-access.scss */
+  /* line 665, sass/templates/_account-access.scss */
   .create-password-main-content .svg-create-password {
     max-width: 270px;
   }
 }
-/* line 681, sass/templates/_account-access.scss */
+/* line 683, sass/templates/_account-access.scss */
 .create-password-main-content h1,
 .create-password-main-content .heading-style--heading-one {
   margin-top: 3.6rem;
 }
 
-/* line 686, sass/templates/_account-access.scss */
+/* line 688, sass/templates/_account-access.scss */
 .account-connect-animation {
   position: absolute;
   display: none;
@@ -2348,45 +2354,45 @@ textarea, .global-header .link-open-search, html, body {
   opacity: 0;
 }
 @media screen and (max-width: 1150px) {
-  /* line 705, sass/templates/_account-access.scss */
+  /* line 707, sass/templates/_account-access.scss */
   .panel-left-open .account-connect-animation {
     display: none;
   }
 }
 @media screen and (min-width: 960px) and (min-height: 780px) {
-  /* line 686, sass/templates/_account-access.scss */
+  /* line 688, sass/templates/_account-access.scss */
   .account-connect-animation {
     top: 39.6rem;
   }
 }
 @media screen and (min-width: 960px) and (min-height: 960px) {
-  /* line 686, sass/templates/_account-access.scss */
+  /* line 688, sass/templates/_account-access.scss */
   .account-connect-animation {
     top: 44.6rem;
   }
 }
-/* line 715, sass/templates/_account-access.scss */
+/* line 717, sass/templates/_account-access.scss */
 .connect-account-is-showing .account-connect-animation {
   filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
   opacity: 1;
   -webkit-transition: opacity 0.6s 0.3s;
           transition: opacity 0.6s 0.3s;
 }
-/* line 719, sass/templates/_account-access.scss */
+/* line 721, sass/templates/_account-access.scss */
 .account-connect-animation .cord {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
 }
-/* line 724, sass/templates/_account-access.scss */
+/* line 726, sass/templates/_account-access.scss */
 .account-connect-animation .cord div {
   width: 100%;
   height: 6px;
   margin-top: 42px;
   background-color: #474492;
 }
-/* line 731, sass/templates/_account-access.scss */
+/* line 733, sass/templates/_account-access.scss */
 .account-connect-animation .plugs {
   position: absolute;
   top: 0;
@@ -2397,97 +2403,97 @@ textarea, .global-header .link-open-search, html, body {
   background-color: #6d69c5;
   left: calc(50% - 439px);
 }
-/* line 743, sass/templates/_account-access.scss */
+/* line 745, sass/templates/_account-access.scss */
 .account-connect-animation .plug-left, .account-connect-animation .plug-right {
   position: absolute;
   height: 93px;
 }
-/* line 747, sass/templates/_account-access.scss */
+/* line 749, sass/templates/_account-access.scss */
 .account-connect-animation .plug-right {
   width: 189px;
   top: -1px;
 }
-/* line 751, sass/templates/_account-access.scss */
+/* line 753, sass/templates/_account-access.scss */
 .account-connect-animation .plug-left {
   left: -417px;
   width: 563px;
   -webkit-transition: left 0.3s ease-out;
           transition: left 0.3s ease-out;
 }
-/* line 756, sass/templates/_account-access.scss */
+/* line 758, sass/templates/_account-access.scss */
 .account-connect-animation.plugs-connected .plug-left {
   left: -293px;
   -webkit-transition: left 0.3s 0.7s ease-out;
           transition: left 0.3s 0.7s ease-out;
 }
-/* line 760, sass/templates/_account-access.scss */
+/* line 762, sass/templates/_account-access.scss */
 .account-connect-animation .plug-right {
   right: -68px;
 }
-/* line 763, sass/templates/_account-access.scss */
+/* line 765, sass/templates/_account-access.scss */
 .account-connect-animation .plug-logo path {
   fill: #474492;
 }
-/* line 768, sass/templates/_account-access.scss */
+/* line 770, sass/templates/_account-access.scss */
 .account-connect-animation.plugs-connected .plug-logo path {
   fill: #fff;
   -webkit-transition: fill 0.3s 1.1s ease-out;
           transition: fill 0.3s 1.1s ease-out;
 }
-/* line 773, sass/templates/_account-access.scss */
+/* line 775, sass/templates/_account-access.scss */
 .account-connect-animation.plugs-connected .plug-logo-glow,
 .account-connect-animation.plugs-connected .plug-logo-container .plug-logo-part-glow {
   opacity: 1;
   -webkit-transition: opacity 0.5s 1.4s ease-out;
           transition: opacity 0.5s 1.4s ease-out;
 }
-/* line 778, sass/templates/_account-access.scss */
+/* line 780, sass/templates/_account-access.scss */
 .account-connect-animation.plugs-connected .plug-logo-part-glow {
   -webkit-animation: glowPulse 1s 1.9s ease infinite;
           animation: glowPulse 1s 1.9s ease infinite;
 }
-/* line 782, sass/templates/_account-access.scss */
+/* line 784, sass/templates/_account-access.scss */
 .account-connect-animation .plug-logo-glow,
 .account-connect-animation .plug-logo-container .plug-logo-part-glow {
   opacity: 0;
 }
 
-/* line 788, sass/templates/_account-access.scss */
+/* line 790, sass/templates/_account-access.scss */
 .page-reset-password .account-access-content {
   padding-top: 0;
 }
 @media screen and (min-width: 960px) and (max-height: 800px) {
-  /* line 788, sass/templates/_account-access.scss */
+  /* line 790, sass/templates/_account-access.scss */
   .page-reset-password .account-access-content {
     padding-top: 8rem;
   }
 }
 @media screen and (min-width: 960px) and (max-height: 700px) {
-  /* line 788, sass/templates/_account-access.scss */
+  /* line 790, sass/templates/_account-access.scss */
   .page-reset-password .account-access-content {
     padding-top: 10rem;
   }
 }
 @media screen and (max-width: 960px) {
-  /* line 812, sass/templates/_account-access.scss */
+  /* line 814, sass/templates/_account-access.scss */
   .page-reset-password .full-screen-intro p {
     max-width: 400px;
     margin: 0 auto;
   }
 }
-/* line 819, sass/templates/_account-access.scss */
+/* line 821, sass/templates/_account-access.scss */
 .page-reset-password .img-reset {
   display: none;
   width: 80%;
   max-width: 122px;
 }
 @media screen and (max-height: 800px) {
-  /* line 819, sass/templates/_account-access.scss */
+  /* line 821, sass/templates/_account-access.scss */
   .page-reset-password .img-reset {
     max-width: 85px;
   }
 }
-/* line 834, sass/templates/_account-access.scss */
+/* line 836, sass/templates/_account-access.scss */
 .form-submitted-success-complete .page-reset-password .img-reset .hook {
   -webkit-transform: translateY(17px);
       -ms-transform: translateY(17px);
@@ -2495,47 +2501,47 @@ textarea, .global-header .link-open-search, html, body {
   -webkit-transition: -webkit-transform 0.5s 0.8s;
   transition: transform 0.5s 0.8s;
 }
-/* line 842, sass/templates/_account-access.scss */
+/* line 844, sass/templates/_account-access.scss */
 .page-reset-password .form-submitted-success .success-tick {
   top: 10.2rem;
 }
-/* line 845, sass/templates/_account-access.scss */
+/* line 847, sass/templates/_account-access.scss */
 .page-reset-password .form-submitted-success p {
   position: relative;
   margin-top: 16rem;
 }
-/* line 853, sass/templates/_account-access.scss */
+/* line 855, sass/templates/_account-access.scss */
 .page-reset-password .connect-account-content .ref-button--full-width {
   margin-top: 4.5rem;
 }
 @media screen and (max-width: 960px) {
-  /* line 856, sass/templates/_account-access.scss */
+  /* line 858, sass/templates/_account-access.scss */
   .page-reset-password .list-partners {
     display: none;
   }
 }
 @media screen and (max-width: 1150px) {
-  /* line 861, sass/templates/_account-access.scss */
+  /* line 863, sass/templates/_account-access.scss */
   .panel-left-open .page-reset-password .list-partners {
     display: none;
   }
 }
 @media screen and (max-height: 700px) {
-  /* line 866, sass/templates/_account-access.scss */
+  /* line 868, sass/templates/_account-access.scss */
   .touch .page-reset-password .list-partners, .no-touch .page-reset-password .list-partners {
     display: none;
   }
 }
-/* line 871, sass/templates/_account-access.scss */
+/* line 873, sass/templates/_account-access.scss */
 .ie10 .page-reset-password .list-partners, .ie9 .page-reset-password .list-partners {
   display: none;
 }
-/* line 876, sass/templates/_account-access.scss */
+/* line 878, sass/templates/_account-access.scss */
 .page-reset-password .account-form-container {
   margin-bottom: 50px;
 }
 
-/* line 887, sass/templates/_account-access.scss */
+/* line 889, sass/templates/_account-access.scss */
 .linked-account-loading-state {
   position: absolute;
   top: 5.7rem;
@@ -2544,19 +2550,19 @@ textarea, .global-header .link-open-search, html, body {
           transition: opacity 0.2s;
   pointer-events: none;
 }
-/* line 893, sass/templates/_account-access.scss */
+/* line 895, sass/templates/_account-access.scss */
 .form-submitted-loading .linked-account-loading-state {
   opacity: 1;
   -webkit-transition: opacity 0.4s 0.3s;
           transition: opacity 0.4s 0.3s;
 }
-/* line 897, sass/templates/_account-access.scss */
+/* line 899, sass/templates/_account-access.scss */
 .form-submitted-success-complete .linked-account-loading-state {
   opacity: 0;
   -webkit-transition: opacity 0.2s;
           transition: opacity 0.2s;
 }
-/* line 901, sass/templates/_account-access.scss */
+/* line 903, sass/templates/_account-access.scss */
 .linked-account-loading-state p {
   margin-top: 16rem;
   padding-left: 1rem;
@@ -2564,7 +2570,7 @@ textarea, .global-header .link-open-search, html, body {
   line-height: 1.6;
 }
 
-/* line 909, sass/templates/_account-access.scss */
+/* line 911, sass/templates/_account-access.scss */
 .connect-account-content input[type="submit"].ref-button--is-loading,
 .connect-account-content button.ref-button--is-loading {
   margin-top: 5.6rem;
@@ -4382,7 +4388,8 @@ table.table-linked-accounts .linked-account-delete a {
 /* line 139, sass/templates/_linked-accounts.scss */
 table.table-linked-accounts .linked-account-delete .ref-icon-after:after, table.table-linked-accounts .linked-account-delete .accordion-switch:after, table.table-linked-accounts .linked-account-delete .form-field .form-field-help:after, .form-field table.table-linked-accounts .linked-account-delete .form-field-help:after,
 table.table-linked-accounts .linked-account-delete .search-field-no-label .form-field-help:after,
-.search-field-no-label table.table-linked-accounts .linked-account-delete .form-field-help:after, table.table-linked-accounts .linked-account-delete .form-field.form-field--date-select span:after, .form-field.form-field--date-select table.table-linked-accounts .linked-account-delete span:after, table.table-linked-accounts .linked-account-delete .main-navigation > ul ul li.has-child:after, .main-navigation > ul ul table.table-linked-accounts .linked-account-delete li.has-child:after, table.table-linked-accounts .linked-account-delete .whats-this-tooltip-icon:after {
+.search-field-no-label table.table-linked-accounts .linked-account-delete .form-field-help:after, table.table-linked-accounts .linked-account-delete .form-field.form-field--date-select span:after, .form-field.form-field--date-select table.table-linked-accounts .linked-account-delete span:after, table.table-linked-accounts .linked-account-delete .main-navigation > ul ul li.has-child:after, .main-navigation > ul ul table.table-linked-accounts .linked-account-delete li.has-child:after, table.table-linked-accounts .linked-account-delete .whats-this-tooltip-icon:after,
+table.table-linked-accounts .linked-account-delete .whats-this-tooltip-icon-static:after {
   position: relative;
   top: 3px;
   font-size: 1.8rem;
@@ -4393,7 +4400,8 @@ table.table-linked-accounts .linked-account-delete .search-field-no-label .form-
 /* line 147, sass/templates/_linked-accounts.scss */
 table.table-linked-accounts .linked-account-delete .ref-icon-after:hover:after, table.table-linked-accounts .linked-account-delete .accordion-switch:hover:after, table.table-linked-accounts .linked-account-delete .form-field .form-field-help:hover:after, .form-field table.table-linked-accounts .linked-account-delete .form-field-help:hover:after,
 table.table-linked-accounts .linked-account-delete .search-field-no-label .form-field-help:hover:after,
-.search-field-no-label table.table-linked-accounts .linked-account-delete .form-field-help:hover:after, table.table-linked-accounts .linked-account-delete .form-field.form-field--date-select span:hover:after, .form-field.form-field--date-select table.table-linked-accounts .linked-account-delete span:hover:after, table.table-linked-accounts .linked-account-delete .main-navigation > ul ul li.has-child:hover:after, .main-navigation > ul ul table.table-linked-accounts .linked-account-delete li.has-child:hover:after, table.table-linked-accounts .linked-account-delete .whats-this-tooltip-icon:hover:after {
+.search-field-no-label table.table-linked-accounts .linked-account-delete .form-field-help:hover:after, table.table-linked-accounts .linked-account-delete .form-field.form-field--date-select span:hover:after, .form-field.form-field--date-select table.table-linked-accounts .linked-account-delete span:hover:after, table.table-linked-accounts .linked-account-delete .main-navigation > ul ul li.has-child:hover:after, .main-navigation > ul ul table.table-linked-accounts .linked-account-delete li.has-child:hover:after, table.table-linked-accounts .linked-account-delete .whats-this-tooltip-icon:hover:after,
+table.table-linked-accounts .linked-account-delete .whats-this-tooltip-icon-static:hover:after {
   color: #b0b4c0;
   -webkit-transition: color 0.2s;
           transition: color 0.2s;
@@ -4401,7 +4409,8 @@ table.table-linked-accounts .linked-account-delete .search-field-no-label .form-
 /* line 153, sass/templates/_linked-accounts.scss */
 table.table-linked-accounts .linked-account-delete .ref-icon-after:active:after, table.table-linked-accounts .linked-account-delete .accordion-switch:active:after, table.table-linked-accounts .linked-account-delete .form-field .form-field-help:active:after, .form-field table.table-linked-accounts .linked-account-delete .form-field-help:active:after,
 table.table-linked-accounts .linked-account-delete .search-field-no-label .form-field-help:active:after,
-.search-field-no-label table.table-linked-accounts .linked-account-delete .form-field-help:active:after, table.table-linked-accounts .linked-account-delete .form-field.form-field--date-select span:active:after, .form-field.form-field--date-select table.table-linked-accounts .linked-account-delete span:active:after, table.table-linked-accounts .linked-account-delete .main-navigation > ul ul li.has-child:active:after, .main-navigation > ul ul table.table-linked-accounts .linked-account-delete li.has-child:active:after, table.table-linked-accounts .linked-account-delete .whats-this-tooltip-icon:active:after {
+.search-field-no-label table.table-linked-accounts .linked-account-delete .form-field-help:active:after, table.table-linked-accounts .linked-account-delete .form-field.form-field--date-select span:active:after, .form-field.form-field--date-select table.table-linked-accounts .linked-account-delete span:active:after, table.table-linked-accounts .linked-account-delete .main-navigation > ul ul li.has-child:active:after, .main-navigation > ul ul table.table-linked-accounts .linked-account-delete li.has-child:active:after, table.table-linked-accounts .linked-account-delete .whats-this-tooltip-icon:active:after,
+table.table-linked-accounts .linked-account-delete .whats-this-tooltip-icon-static:active:after {
   top: 5px;
 }
 /* line 159, sass/templates/_linked-accounts.scss */
@@ -4528,14 +4537,8 @@ table.table-linked-accounts .update-linked-accounts-container .ref-button--link:
   -webkit-transition: -webkit-transform 0.15s;
           transition: transform 0.15s;
 }
-/* line 268, sass/templates/_linked-accounts.scss */
-.ie9 .form-submitted-loading .js-rotate-content:not(.maintain-after-submit), .ie9
-.form-submitted-success-complete .js-rotate-content:not(.maintain-after-submit), .ie9
-.form-submitted-success-complete .ref-button--is-loading.js-rotate-content {
-  visibility: hidden;
-}
 
-/* line 272, sass/templates/_linked-accounts.scss */
+/* line 269, sass/templates/_linked-accounts.scss */
 .form-submitted-loading .ref-button--is-loading.js-rotate-content,
 .form-submitted-loading .ref-button--success.js-rotate-content {
   margin-top: 6rem;
@@ -4544,6 +4547,13 @@ table.table-linked-accounts .update-linked-accounts-container .ref-button--link:
   -webkit-transition: -webkit-transform 0.15s 0.15s, background-color 0.3s, margin-top 0.3s;
           transition: transform 0.15s 0.15s, background-color 0.3s, margin-top 0.3s;
   visibility: visible;
+}
+
+/* line 279, sass/templates/_linked-accounts.scss */
+.form-submitted-loading.ie9 .js-rotate-content:not(.maintain-after-submit),
+.form-submitted-success-complete.ie9 .js-rotate-content:not(.maintain-after-submit),
+.form-submitted-success-complete.ie9 .ref-button--is-loading.js-rotate-content {
+  visibility: hidden;
 }
 
 /* line 5, sass/templates/_logged-in-landing.scss */
@@ -4831,20 +4841,24 @@ table.table-linked-accounts .update-linked-accounts-container .ref-button--link:
     font-size: 3.7em;
   }
 }
-/* line 265, sass/templates/_logged-in-landing.scss */
+/* line 264, sass/templates/_logged-in-landing.scss */
+.ie9 .logged-in-section-main__column-two .page-title {
+  margin-top: 30px;
+}
+/* line 271, sass/templates/_logged-in-landing.scss */
 .logged-in-section-main__column-two p {
   font-size: 1.6rem;
   color: #c3c6f6;
 }
 
-/* line 273, sass/templates/_logged-in-landing.scss */
+/* line 279, sass/templates/_logged-in-landing.scss */
 .logged-in-section-content {
   max-width: 1600px;
   margin: 0 auto;
   padding-top: 4.4rem;
 }
 @media screen and (max-width: 719px) {
-  /* line 273, sass/templates/_logged-in-landing.scss */
+  /* line 279, sass/templates/_logged-in-landing.scss */
   .logged-in-section-content {
     display: -webkit-box;
     /* @alternate */
@@ -4867,27 +4881,27 @@ table.table-linked-accounts .update-linked-accounts-container .ref-button--link:
             justify-content: space-between;
   }
 }
-/* line 287, sass/templates/_logged-in-landing.scss */
+/* line 293, sass/templates/_logged-in-landing.scss */
 .logged-in-section-content .site-article .addthis_sharing_toolbox {
   position: relative;
   bottom: 0;
   display: inline-block;
 }
-/* line 292, sass/templates/_logged-in-landing.scss */
+/* line 298, sass/templates/_logged-in-landing.scss */
 .logged-in-section-content .site-article .more-link + .addthis_sharing_toolbox {
   position: absolute;
   right: 0px;
   bottom: 0.4rem;
 }
-/* line 297, sass/templates/_logged-in-landing.scss */
+/* line 303, sass/templates/_logged-in-landing.scss */
 .logged-in-section-content .site-article .more-link a:visited, .logged-in-section-content .site-article a:focus {
   color: #6d69c5;
 }
-/* line 300, sass/templates/_logged-in-landing.scss */
+/* line 306, sass/templates/_logged-in-landing.scss */
 .logged-in-section-content .site-article img {
   margin-bottom: 0.5em;
 }
-/* line 304, sass/templates/_logged-in-landing.scss */
+/* line 310, sass/templates/_logged-in-landing.scss */
 .logged-in-section-content .grid__column--seven-columns {
   -webkit-box-ordinal-group: 3;
   -webkit-order: 2;
@@ -4895,23 +4909,23 @@ table.table-linked-accounts .update-linked-accounts-container .ref-button--link:
           order: 2;
 }
 @media screen and (min-width: 720px) and (max-width: 959px) {
-  /* line 304, sass/templates/_logged-in-landing.scss */
+  /* line 310, sass/templates/_logged-in-landing.scss */
   .logged-in-section-content .grid__column--seven-columns {
     width: 50%;
   }
 }
 @media screen and (min-width: 960px) and (max-width: 1279px) {
-  /* line 309, sass/templates/_logged-in-landing.scss */
+  /* line 315, sass/templates/_logged-in-landing.scss */
   .panel-left-open .logged-in-section-content .grid__column--seven-columns {
     width: 50%;
   }
 }
-/* line 315, sass/templates/_logged-in-landing.scss */
+/* line 321, sass/templates/_logged-in-landing.scss */
 .logged-in-section-content .grid__column--five-columns {
   margin-bottom: 3rem;
 }
 @media screen and (max-width: 719px) {
-  /* line 315, sass/templates/_logged-in-landing.scss */
+  /* line 321, sass/templates/_logged-in-landing.scss */
   .logged-in-section-content .grid__column--five-columns {
     -webkit-box-ordinal-group: 2;
     -webkit-order: 1;
@@ -4922,32 +4936,32 @@ table.table-linked-accounts .update-linked-accounts-container .ref-button--link:
   }
 }
 @media screen and (min-width: 720px) and (max-width: 959px) {
-  /* line 315, sass/templates/_logged-in-landing.scss */
+  /* line 321, sass/templates/_logged-in-landing.scss */
   .logged-in-section-content .grid__column--five-columns {
     width: 50%;
   }
 }
 @media screen and (min-width: 960px) and (max-width: 1279px) {
-  /* line 325, sass/templates/_logged-in-landing.scss */
+  /* line 331, sass/templates/_logged-in-landing.scss */
   .panel-left-open .logged-in-section-content .grid__column--five-columns {
     width: 50%;
   }
 }
 @media screen and (max-width: 959px) {
-  /* line 345, sass/templates/_logged-in-landing.scss */
+  /* line 351, sass/templates/_logged-in-landing.scss */
   .no-flexbox .logged-in-section-content .grid__column--seven-columns {
     border-bottom: 1px solid #e1e5e8;
   }
 }
 
-/* line 352, sass/templates/_logged-in-landing.scss */
+/* line 358, sass/templates/_logged-in-landing.scss */
 .accordion-bottom-with-divider {
   padding-bottom: 4rem;
   margin-bottom: 3rem;
   border-bottom: 1px solid #e1e5e8;
 }
 
-/* line 357, sass/templates/_logged-in-landing.scss */
+/* line 363, sass/templates/_logged-in-landing.scss */
 .hiring-title {
   margin-top: 3rem;
 }
@@ -6083,7 +6097,8 @@ table.table-data.table-linked-accounts--disabled thead {
 /* line 90, sass/components/_filter.scss */
 .forms--mid-theme .reflection-select.reflection-select--filter.is-open span.ref-icon-after, .forms--mid-theme .reflection-select.reflection-select--filter.is-open span.accordion-switch, .forms--mid-theme .reflection-select.reflection-select--filter.is-open .form-field span.form-field-help, .form-field .forms--mid-theme .reflection-select.reflection-select--filter.is-open span.form-field-help,
 .forms--mid-theme .reflection-select.reflection-select--filter.is-open .search-field-no-label span.form-field-help,
-.search-field-no-label .forms--mid-theme .reflection-select.reflection-select--filter.is-open span.form-field-help, .forms--mid-theme .reflection-select.reflection-select--filter.is-open .form-field.form-field--date-select span, .form-field.form-field--date-select .forms--mid-theme .reflection-select.reflection-select--filter.is-open span, .forms--mid-theme .reflection-select.reflection-select--filter.is-open span.whats-this-tooltip-icon {
+.search-field-no-label .forms--mid-theme .reflection-select.reflection-select--filter.is-open span.form-field-help, .forms--mid-theme .reflection-select.reflection-select--filter.is-open .form-field.form-field--date-select span, .form-field.form-field--date-select .forms--mid-theme .reflection-select.reflection-select--filter.is-open span, .forms--mid-theme .reflection-select.reflection-select--filter.is-open span.whats-this-tooltip-icon,
+.forms--mid-theme .reflection-select.reflection-select--filter.is-open span.whats-this-tooltip-icon-static {
   background-color: #f7f7f9;
   -webkit-transition: background-color 0.3s;
           transition: background-color 0.3s;
@@ -7035,37 +7050,39 @@ textarea {
 }
 /* line 235, sass/components/_form.scss */
 .ie10 .form-field--date-select input[type=text] {
-  padding: 10px 32px 10px 14px !important;
+  padding: 10px 10px 10px 14px !important;
+  box-sizing: border-box;
 }
-/* line 238, sass/components/_form.scss */
+/* line 239, sass/components/_form.scss */
 .ie10 .form-field--date-select span {
   padding-top: 1px;
 }
-/* line 243, sass/components/_form.scss */
+/* line 244, sass/components/_form.scss */
 .ie10 .form-field--date-select.form-field--date-select--no-icon {
   padding: 0;
 }
-/* line 245, sass/components/_form.scss */
+/* line 246, sass/components/_form.scss */
 .ie10 .form-field--date-select.form-field--date-select--no-icon input {
   padding: 10px 32px 10px 14px !important;
+  box-sizing: border-box;
 }
 
-/* line 251, sass/components/_form.scss */
+/* line 253, sass/components/_form.scss */
 .form-field--date-select--no-icon {
   padding-right: 13px;
 }
 
-/* line 254, sass/components/_form.scss */
+/* line 256, sass/components/_form.scss */
 .search-field-no-label {
   padding: 8px 14px 10px 13px;
 }
-/* line 256, sass/components/_form.scss */
+/* line 258, sass/components/_form.scss */
 .search-field-no-label input[type=text] {
   position: relative;
   top: 0;
   left: 0;
 }
-/* line 261, sass/components/_form.scss */
+/* line 263, sass/components/_form.scss */
 .search-field-no-label input[type=submit] {
   position: absolute;
   top: 9px;
@@ -7074,70 +7091,70 @@ textarea {
   font-size: 22px;
 }
 
-/* line 270, sass/components/_form.scss */
+/* line 272, sass/components/_form.scss */
 .input-hint {
   padding-top: 0.2rem;
   display: block;
   font-size: 1.3rem;
   color: #81879d;
 }
-/* line 275, sass/components/_form.scss */
+/* line 277, sass/components/_form.scss */
 .is-closed .input-hint {
   display: none;
   font-size: 1.3rem;
 }
 
-/* line 280, sass/components/_form.scss */
+/* line 282, sass/components/_form.scss */
 .form-link {
   font-size: 1.4em;
   margin-bottom: 18px;
   display: block;
   color: #6d69c5;
 }
-/* line 285, sass/components/_form.scss */
+/* line 287, sass/components/_form.scss */
 .form-link:hover {
   color: #918ed3;
 }
 
-/* line 289, sass/components/_form.scss */
+/* line 291, sass/components/_form.scss */
 .form-field.form-field--disabled {
   background-color: #f7f7f9;
 }
-/* line 291, sass/components/_form.scss */
+/* line 293, sass/components/_form.scss */
 .forms--dark-theme .form-field.form-field--disabled {
   background-color: #2d2d31;
 }
-/* line 293, sass/components/_form.scss */
+/* line 295, sass/components/_form.scss */
 .forms--dark-theme .form-field.form-field--disabled label, .forms--dark-theme .form-field.form-field--disabled input {
   color: #5b5b68;
 }
-/* line 297, sass/components/_form.scss */
+/* line 299, sass/components/_form.scss */
 .form-field.form-field--disabled label, .form-field.form-field--disabled input {
   color: #c4c7d0;
 }
 
-/* line 301, sass/components/_form.scss */
+/* line 303, sass/components/_form.scss */
 .form-field input[disabled],
 .form-field input[disabled] ~ label {
   -webkit-text-fill-color: #c4c7d0;
   color: #c4c7d0;
 }
-/* line 305, sass/components/_form.scss */
+/* line 307, sass/components/_form.scss */
 .forms--dark-theme .form-field input[disabled], .forms--dark-theme
 .form-field input[disabled] ~ label {
   -webkit-text-fill-color: #5b5b68;
   color: #5b5b68;
 }
 
-/* line 310, sass/components/_form.scss */
+/* line 312, sass/components/_form.scss */
 .form-field.form-field--error {
   border: 1px solid #e37f26;
 }
-/* line 312, sass/components/_form.scss */
+/* line 314, sass/components/_form.scss */
 .forms--dark-theme .form-field.form-field--error {
   border-color: #d07423;
 }
-/* line 315, sass/components/_form.scss */
+/* line 317, sass/components/_form.scss */
 .form-field.form-field--error label span {
   font-family: "Source Sans Pro", sans-serif;
   font-size: 1.4rem;
@@ -7146,24 +7163,24 @@ textarea {
   display: block;
   color: #e37f26;
 }
-/* line 322, sass/components/_form.scss */
+/* line 324, sass/components/_form.scss */
 .forms--dark-theme .form-field.form-field--error label span {
   color: #d07423;
 }
-/* line 325, sass/components/_form.scss */
+/* line 327, sass/components/_form.scss */
 .form-field.form-field--error label span a {
   color: #6d69c5;
   -webkit-transition: color 0.2s;
           transition: color 0.2s;
 }
-/* line 328, sass/components/_form.scss */
+/* line 330, sass/components/_form.scss */
 .form-field.form-field--error label span a:hover {
   color: #4b46b5;
   -webkit-transition: color 0.3s;
           transition: color 0.3s;
 }
 
-/* line 335, sass/components/_form.scss */
+/* line 337, sass/components/_form.scss */
 .calendar-container {
   position: relative;
   margin-bottom: 1.2rem;
@@ -7171,7 +7188,7 @@ textarea {
   font-size: 0;
 }
 
-/* line 341, sass/components/_form.scss */
+/* line 343, sass/components/_form.scss */
 .date-select-container {
   position: relative;
   width: 45.3125%;
@@ -7180,12 +7197,12 @@ textarea {
   vertical-align: middle;
   width: 45.3125%;
 }
-/* line 353, sass/components/_form.scss */
+/* line 355, sass/components/_form.scss */
 .single-date-input .date-select-container {
   width: 100%;
 }
 
-/* line 357, sass/components/_form.scss */
+/* line 359, sass/components/_form.scss */
 .date-select-to-indicator {
   position: relative;
   width: 9.375%;
@@ -7196,7 +7213,7 @@ textarea {
   width: 9.375%;
   height: 26px;
 }
-/* line 365, sass/components/_form.scss */
+/* line 367, sass/components/_form.scss */
 .date-select-to-indicator:after {
   content: "l";
   font-size: 18px;
@@ -7206,19 +7223,19 @@ textarea {
   margin-left: -9px;
   color: #828a91;
 }
-/* line 384, sass/components/_form.scss */
+/* line 386, sass/components/_form.scss */
 .date-select-to-indicator:after {
   content: "l";
 }
 
-/* line 389, sass/components/_form.scss */
+/* line 391, sass/components/_form.scss */
 .form-field.form-field--date-select {
   position: relative;
   width: 100%;
   margin-bottom: 0;
   overflow: visible;
 }
-/* line 394, sass/components/_form.scss */
+/* line 396, sass/components/_form.scss */
 .form-field.form-field--date-select input[type="text"] {
   position: relative;
   bottom: 0;
@@ -7227,102 +7244,102 @@ textarea {
   padding-bottom: 2px;
   z-index: 10;
 }
-/* line 401, sass/components/_form.scss */
+/* line 403, sass/components/_form.scss */
 .is-safari .form-field.form-field--date-select input[type="text"], .touch.is-chrome .form-field.form-field--date-select input[type="text"] {
   padding-bottom: 1px;
 }
-/* line 406, sass/components/_form.scss */
+/* line 408, sass/components/_form.scss */
 .form-field.form-field--date-select span {
   position: absolute;
   top: calc(50% - 9px);
   right: 12px;
   z-index: 5;
 }
-/* line 412, sass/components/_form.scss */
+/* line 414, sass/components/_form.scss */
 .form-field.form-field--date-select span:after {
   content: "u";
   font-size: 17px;
   color: #81879d;
 }
-/* line 418, sass/components/_form.scss */
+/* line 420, sass/components/_form.scss */
 .form-field.form-field--date-select input[type="text"]:focus + span:after,
 .form-field.form-field--date-select input[type="text"].is-focused + span:after {
   color: #1bc79f;
 }
 
-/* line 423, sass/components/_form.scss */
+/* line 425, sass/components/_form.scss */
 input:required {
   box-shadow: none;
 }
 
-/* line 426, sass/components/_form.scss */
+/* line 428, sass/components/_form.scss */
 input:invalid {
   box-shadow: none;
 }
 
-/* line 429, sass/components/_form.scss */
+/* line 431, sass/components/_form.scss */
 .js-field--select {
   display: none;
 }
-/* line 431, sass/components/_form.scss */
+/* line 433, sass/components/_form.scss */
 .no-js .js-field--select {
   display: block;
 }
 
-/* line 435, sass/components/_form.scss */
+/* line 437, sass/components/_form.scss */
 .form-field--select {
   padding: 8px 9px 0 14px;
   overflow: visible;
 }
-/* line 438, sass/components/_form.scss */
+/* line 440, sass/components/_form.scss */
 .form-field--select.form-field--select-disabled {
   background-color: #f7f7f9;
 }
-/* line 440, sass/components/_form.scss */
+/* line 442, sass/components/_form.scss */
 .forms--dark-theme .form-field--select.form-field--select-disabled {
   background-color: #2D2D31;
 }
-/* line 442, sass/components/_form.scss */
+/* line 444, sass/components/_form.scss */
 .forms--dark-theme .form-field--select.form-field--select-disabled span, .forms--dark-theme .form-field--select.form-field--select-disabled li, .forms--dark-theme .form-field--select.form-field--select-disabled input {
   color: #5B5B68;
   background-color: #2D2D31;
 }
-/* line 445, sass/components/_form.scss */
+/* line 447, sass/components/_form.scss */
 .forms--dark-theme .form-field--select.form-field--select-disabled span:hover, .forms--dark-theme .form-field--select.form-field--select-disabled li:hover, .forms--dark-theme .form-field--select.form-field--select-disabled input:hover {
   color: #5B5B68;
 }
-/* line 449, sass/components/_form.scss */
+/* line 451, sass/components/_form.scss */
 .forms--dark-theme .form-field--select.form-field--select-disabled span:after {
   color: #5B5B68;
 }
-/* line 453, sass/components/_form.scss */
+/* line 455, sass/components/_form.scss */
 .form-field--select.form-field--select-disabled span, .form-field--select.form-field--select-disabled li, .form-field--select.form-field--select-disabled input {
   color: #c4c7d0;
   background-color: #f7f7f9;
 }
-/* line 456, sass/components/_form.scss */
+/* line 458, sass/components/_form.scss */
 .form-field--select.form-field--select-disabled span:hover, .form-field--select.form-field--select-disabled li:hover, .form-field--select.form-field--select-disabled input:hover {
   color: #c4c7d0;
 }
-/* line 460, sass/components/_form.scss */
+/* line 462, sass/components/_form.scss */
 .form-field--select.form-field--select-disabled span:after {
   color: #c4c7d0;
 }
-/* line 464, sass/components/_form.scss */
+/* line 466, sass/components/_form.scss */
 .forms--mid-theme .form-field--select.form-field--select-disabled span, .forms--mid-theme .form-field--select.form-field--select-disabled li, .forms--mid-theme .form-field--select.form-field--select-disabled input {
   color: #c4c7d0;
   background-color: #f7f7f9;
 }
-/* line 467, sass/components/_form.scss */
+/* line 469, sass/components/_form.scss */
 .forms--mid-theme .form-field--select.form-field--select-disabled span:hover, .forms--mid-theme .form-field--select.form-field--select-disabled li:hover, .forms--mid-theme .form-field--select.form-field--select-disabled input:hover {
   color: #c4c7d0;
 }
-/* line 471, sass/components/_form.scss */
+/* line 473, sass/components/_form.scss */
 .forms--mid-theme .form-field--select.form-field--select-disabled span:after {
   color: #c4c7d0;
 }
 
-/* line 478, sass/components/_form.scss */
+/* line 480, sass/components/_form.scss */
 .reflection-select span, .reflection-select li {
   display: block;
   font-family: "Source Sans Pro", sans-serif;
@@ -7332,13 +7349,13 @@ input:invalid {
   -webkit-transition: color 0.2s;
           transition: color 0.2s;
 }
-/* line 485, sass/components/_form.scss */
+/* line 487, sass/components/_form.scss */
 .reflection-select span:hover, .reflection-select li:hover {
   color: #5b5b68;
   -webkit-transition: color 0.3s;
           transition: color 0.3s;
 }
-/* line 490, sass/components/_form.scss */
+/* line 492, sass/components/_form.scss */
 .reflection-select span {
   position: relative;
   margin-top: 0px;
@@ -7353,16 +7370,16 @@ input:invalid {
   text-overflow: ellipsis;
   background: #f2f2f5;
 }
-/* line 501, sass/components/_form.scss */
+/* line 503, sass/components/_form.scss */
 .forms--mid-theme .reflection-select span {
   background-color: #ffffff;
 }
-/* line 504, sass/components/_form.scss */
+/* line 506, sass/components/_form.scss */
 .forms--dark-theme .reflection-select span {
   color: #737383;
   background-color: #333338;
 }
-/* line 508, sass/components/_form.scss */
+/* line 510, sass/components/_form.scss */
 .reflection-select span:after {
   position: absolute;
   top: 2px;
@@ -7372,22 +7389,22 @@ input:invalid {
   -webkit-transition: -webkit-transform 0.2s;
           transition: transform 0.2s;
 }
-/* line 516, sass/components/_form.scss */
+/* line 518, sass/components/_form.scss */
 .reflection-select span.is-activated {
   color: #5b5b68;
 }
-/* line 518, sass/components/_form.scss */
+/* line 520, sass/components/_form.scss */
 .forms--dark-theme .reflection-select span.is-activated {
   color: #E8E7F0;
 }
-/* line 523, sass/components/_form.scss */
+/* line 525, sass/components/_form.scss */
 .reflection-select ul {
   margin-top: 0.8rem;
   padding-bottom: 1.4rem;
   -webkit-transition: margin-top 0.16s ease-in;
           transition: margin-top 0.16s ease-in;
 }
-/* line 528, sass/components/_form.scss */
+/* line 530, sass/components/_form.scss */
 .reflection-select li {
   margin-bottom: 1.8rem;
   padding-left: 1.6rem;
@@ -7395,42 +7412,42 @@ input:invalid {
   color: #6d69c5;
   overflow: visible;
 }
-/* line 534, sass/components/_form.scss */
+/* line 536, sass/components/_form.scss */
 .reflection-select li:hover {
   color: #4b46b5;
 }
-/* line 536, sass/components/_form.scss */
+/* line 538, sass/components/_form.scss */
 .forms--dark-theme .reflection-select li:hover {
   color: #918ed3;
 }
-/* line 540, sass/components/_form.scss */
+/* line 542, sass/components/_form.scss */
 .forms--dark-theme .reflection-select li {
   color: #81879d;
 }
-/* line 542, sass/components/_form.scss */
+/* line 544, sass/components/_form.scss */
 .forms--dark-theme .reflection-select li:hover {
   color: #9ea2b3;
 }
-/* line 546, sass/components/_form.scss */
+/* line 548, sass/components/_form.scss */
 .no-touch .reflection-select li {
   margin-bottom: 1.4rem;
 }
-/* line 549, sass/components/_form.scss */
+/* line 551, sass/components/_form.scss */
 .reflection-select li.is-selected {
   font-weight: 600;
   color: #1bc79f;
 }
-/* line 553, sass/components/_form.scss */
+/* line 555, sass/components/_form.scss */
 .reflection-select li.pre-selected {
   position: relative;
   padding-right: 6rem;
   color: #c4c7d0;
 }
-/* line 557, sass/components/_form.scss */
+/* line 559, sass/components/_form.scss */
 .reflection-select li.pre-selected:hover {
   color: #c4c7d0;
 }
-/* line 560, sass/components/_form.scss */
+/* line 562, sass/components/_form.scss */
 .reflection-select li.pre-selected:after {
   content: attr(data-selectedtext);
   position: absolute;
@@ -7439,7 +7456,7 @@ input:invalid {
   font-size: 1.29rem;
   color: #1bc79f;
 }
-/* line 568, sass/components/_form.scss */
+/* line 570, sass/components/_form.scss */
 .reflection-select li.pre-selected:before {
   content: "t";
   position: absolute;
@@ -7448,7 +7465,7 @@ input:invalid {
   font-size: 1.2rem;
   color: #1bc79f;
 }
-/* line 580, sass/components/_form.scss */
+/* line 582, sass/components/_form.scss */
 .is-open .reflection-select span:after {
   -ms-transform: rotate(179.5deg);
   -webkit-transform: rotate(179.5deg);
@@ -7456,14 +7473,14 @@ input:invalid {
   -webkit-transition: -webkit-transform 0.3s;
           transition: transform 0.3s;
 }
-/* line 584, sass/components/_form.scss */
+/* line 586, sass/components/_form.scss */
 .is-open .reflection-select ul {
   z-index: 5000;
   -webkit-transition: margin-top 0.2s ease-out;
           transition: margin-top 0.2s ease-out;
 }
 
-/* line 591, sass/components/_form.scss */
+/* line 593, sass/components/_form.scss */
 .form-field--select .page-overlay {
   opacity: 0;
   display: block;
@@ -7471,6 +7488,10 @@ input:invalid {
   z-index: -1;
 }
 /* line 598, sass/components/_form.scss */
+.ie10 .form-field--select .page-overlay {
+  display: none;
+}
+/* line 603, sass/components/_form.scss */
 .form-field--select.is-open .page-overlay {
   display: block;
   z-index: 5000;
@@ -7481,44 +7502,44 @@ input:invalid {
           transition: opacity 0.2s;
 }
 
-/* line 610, sass/components/_form.scss */
+/* line 615, sass/components/_form.scss */
 .is-safari .panel-left-open .form-field--select.is-open .page-overlay {
   display: none;
 }
-/* line 614, sass/components/_form.scss */
+/* line 619, sass/components/_form.scss */
 .is-safari .panel-left-open .reflection-select.reflection-select--filter ul {
   box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.1), 1px -3px 6px rgba(0, 0, 0, 0.05), -3px 0px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* line 618, sass/components/_form.scss */
+/* line 623, sass/components/_form.scss */
 .form-field--checkbox-list,
 .form-field--radio-list {
   position: relative;
   width: 100%;
   margin-top: 1.8rem;
 }
-/* line 620, sass/components/_form.scss */
+/* line 625, sass/components/_form.scss */
 .form-field--checkbox-list *,
 .form-field--radio-list * {
   overflow: visible;
 }
-/* line 626, sass/components/_form.scss */
+/* line 631, sass/components/_form.scss */
 .reflection-select .form-field--checkbox-list, .reflection-select
 .form-field--radio-list {
   margin-top: 0;
   margin-bottom: 0;
 }
-/* line 630, sass/components/_form.scss */
+/* line 635, sass/components/_form.scss */
 .form-field--checkbox-list ul,
 .form-field--radio-list ul {
   padding-bottom: 9px;
 }
-/* line 632, sass/components/_form.scss */
+/* line 637, sass/components/_form.scss */
 .reflection-select .form-field--checkbox-list ul, .reflection-select
 .form-field--radio-list ul {
   padding-bottom: 0.2rem;
 }
-/* line 636, sass/components/_form.scss */
+/* line 641, sass/components/_form.scss */
 .form-field--checkbox-list li,
 .form-field--radio-list li {
   position: relative;
@@ -7526,22 +7547,22 @@ input:invalid {
   padding: 0;
   font-size: 0;
 }
-/* line 641, sass/components/_form.scss */
+/* line 646, sass/components/_form.scss */
 .reflection-select .form-field--checkbox-list li, .reflection-select
 .form-field--radio-list li {
   margin-left: 2.4%;
 }
-/* line 643, sass/components/_form.scss */
+/* line 648, sass/components/_form.scss */
 .touch .reflection-select .form-field--checkbox-list li, .touch .reflection-select
 .form-field--radio-list li {
   margin-bottom: 1.7rem;
 }
-/* line 647, sass/components/_form.scss */
+/* line 652, sass/components/_form.scss */
 .touch .form-field--checkbox-list li, .touch
 .form-field--radio-list li {
   margin-bottom: 1.4rem;
 }
-/* line 651, sass/components/_form.scss */
+/* line 656, sass/components/_form.scss */
 .form-field--checkbox-list input[type=checkbox],
 .form-field--checkbox-list input[type=radio],
 .form-field--radio-list input[type=checkbox],
@@ -7552,12 +7573,12 @@ input:invalid {
   padding: 0;
   display: inline-block;
 }
-/* line 659, sass/components/_form.scss */
+/* line 664, sass/components/_form.scss */
 .form-field--checkbox-list.form-field--error,
 .form-field--radio-list.form-field--error {
   overflow: visible;
 }
-/* line 661, sass/components/_form.scss */
+/* line 666, sass/components/_form.scss */
 .form-field--checkbox-list.form-field--error input[type=checkbox],
 .form-field--checkbox-list.form-field--error input[type=radio],
 .form-field--checkbox-list.form-field--error .checkboxLabel,
@@ -7568,7 +7589,7 @@ input:invalid {
 .form-field--radio-list.form-field--error .radioButtonLabel {
   border: 1px solid #e37f26;
 }
-/* line 668, sass/components/_form.scss */
+/* line 673, sass/components/_form.scss */
 .form-field--checkbox-list label,
 .form-field--radio-list label {
   padding-top: -1px;
@@ -7576,12 +7597,12 @@ input:invalid {
   display: inline-block;
   font-weight: 400;
 }
-/* line 674, sass/components/_form.scss */
+/* line 679, sass/components/_form.scss */
 .form-field--checkbox-list .checkboxLabelVisible,
 .form-field--radio-list .checkboxLabelVisible {
   line-height: 1.4;
 }
-/* line 676, sass/components/_form.scss */
+/* line 681, sass/components/_form.scss */
 .reflection-select .form-field--checkbox-list .checkboxLabelVisible, .reflection-select
 .form-field--radio-list .checkboxLabelVisible {
   position: relative;
@@ -7589,20 +7610,20 @@ input:invalid {
   padding-top: 0;
 }
 
-/* line 683, sass/components/_form.scss */
+/* line 688, sass/components/_form.scss */
 .form-field--checkbox-list + input[type="submit"],
 .form-field--radio-list + input[type="submit"] {
   margin-top: 0.9rem;
 }
 
-/* line 689, sass/components/_form.scss */
+/* line 694, sass/components/_form.scss */
 .form-field--checkbox-list--inline li,
 .form-field--radio-list--inline li {
   margin-right: 20px;
   display: inline-block;
 }
 
-/* line 694, sass/components/_form.scss */
+/* line 699, sass/components/_form.scss */
 .checkboxLabel,
 .checkboxLabelDisabled,
 .radioButtonLabel,
@@ -7621,7 +7642,7 @@ input:invalid {
   line-height: 1;
   text-decoration: none;
 }
-/* line 711, sass/components/_form.scss */
+/* line 716, sass/components/_form.scss */
 .is-error-message-showing .checkboxLabel, .is-error-message-showing
 .checkboxLabelDisabled, .is-error-message-showing
 .radioButtonLabel, .is-error-message-showing
@@ -7630,63 +7651,63 @@ input:invalid {
   bottom: 0.4rem;
 }
 
-/* line 716, sass/components/_form.scss */
+/* line 721, sass/components/_form.scss */
 .radioButtonLabel,
 .radioButtonLabelDisabled {
   border-radius: 9px;
 }
 
-/* line 720, sass/components/_form.scss */
+/* line 725, sass/components/_form.scss */
 .checkboxLabel,
 .radioButtonLabel {
   background-color: #f2f2f5;
   overflow: visible;
 }
-/* line 724, sass/components/_form.scss */
+/* line 729, sass/components/_form.scss */
 .forms--mid-theme .checkboxLabel, .forms--mid-theme
 .radioButtonLabel {
   background-color: #ffffff;
 }
-/* line 727, sass/components/_form.scss */
+/* line 732, sass/components/_form.scss */
 .forms--dark-theme .checkboxLabel, .forms--dark-theme
 .radioButtonLabel {
   background-color: #333338;
 }
-/* line 730, sass/components/_form.scss */
+/* line 735, sass/components/_form.scss */
 .checkboxLabel:hover,
 .radioButtonLabel:hover {
   background-color: #e1e5e8;
 }
-/* line 732, sass/components/_form.scss */
+/* line 737, sass/components/_form.scss */
 .forms--mid-theme .checkboxLabel:hover, .forms--mid-theme
 .radioButtonLabel:hover {
   background-color: #e6e6e6;
 }
-/* line 735, sass/components/_form.scss */
+/* line 740, sass/components/_form.scss */
 .forms--dark-theme .checkboxLabel:hover, .forms--dark-theme
 .radioButtonLabel:hover {
   background-color: #4b4b53;
 }
-/* line 739, sass/components/_form.scss */
+/* line 744, sass/components/_form.scss */
 .checkboxLabel:active,
 .radioButtonLabel:active {
   border-top: 2px solid #bfc3c5;
   background-color: #e1e5e8;
 }
-/* line 742, sass/components/_form.scss */
+/* line 747, sass/components/_form.scss */
 .forms--dark-theme .checkboxLabel:active, .forms--dark-theme
 .radioButtonLabel:active {
   border-top: 2px solid #333338;
 }
 
-/* line 747, sass/components/_form.scss */
+/* line 752, sass/components/_form.scss */
 input[type="checkbox"]:disabled + .checkboxLabel:active,
 input[type="radio"]:disabled + .radioButtonLabel:active,
 input[type="checkbox"]:disabled:checked + .checkboxLabel:active,
 input[type="radio"]:disabled:checked + .radioButtonLabel:active {
   border-top: 0;
 }
-/* line 752, sass/components/_form.scss */
+/* line 757, sass/components/_form.scss */
 .forms--dark-theme input[type="checkbox"]:disabled + .checkboxLabel:active, .forms--dark-theme
 input[type="radio"]:disabled + .radioButtonLabel:active, .forms--dark-theme
 input[type="checkbox"]:disabled:checked + .checkboxLabel:active, .forms--dark-theme
@@ -7694,7 +7715,7 @@ input[type="radio"]:disabled:checked + .radioButtonLabel:active {
   border-top: 0;
 }
 
-/* line 757, sass/components/_form.scss */
+/* line 762, sass/components/_form.scss */
 .checkboxLabel:after {
   opacity: 0;
   position: absolute;
@@ -7718,51 +7739,51 @@ input[type="radio"]:disabled:checked + .radioButtonLabel:active {
   -webkit-transition: color 0.2s;
           transition: color 0.2s;
 }
-/* line 778, sass/components/_form.scss */
+/* line 783, sass/components/_form.scss */
 .no-opacity .checkboxLabel:after {
   display: none;
 }
-/* line 782, sass/components/_form.scss */
+/* line 787, sass/components/_form.scss */
 .reflection-select .checkboxLabel {
   font-size: 0;
   text-align: left;
   text-indent: -999em;
   background-color: #fcfdfd;
 }
-/* line 787, sass/components/_form.scss */
+/* line 792, sass/components/_form.scss */
 .reflection-select .checkboxLabel:hover {
   background-color: #e1e5e8;
 }
 
-/* line 792, sass/components/_form.scss */
+/* line 797, sass/components/_form.scss */
 input[type="checkbox"]:disabled + .checkboxLabel,
 input[type="radio"]:disabled + .radioButtonLabel {
   background-color: #f7f7f9;
   overflow: visible;
 }
-/* line 796, sass/components/_form.scss */
+/* line 801, sass/components/_form.scss */
 .forms--dark-theme input[type="checkbox"]:disabled + .checkboxLabel, .forms--dark-theme
 input[type="radio"]:disabled + .radioButtonLabel {
   background-color: #2D2D31;
 }
 
-/* line 801, sass/components/_form.scss */
+/* line 806, sass/components/_form.scss */
 .forms--dark-theme input[type="radio"]:disabled:checked + .radioButtonLabel {
   background-color: #1bc79f;
 }
 
-/* line 805, sass/components/_form.scss */
+/* line 810, sass/components/_form.scss */
 input[type="checkbox"]:checked:disabled + .checkboxLabel,
 input[type="radio"]:checked:disabled + .radioButtonLabel {
   opacity: 0.5;
 }
 
-/* line 809, sass/components/_form.scss */
+/* line 814, sass/components/_form.scss */
 input[type="checkbox"]:checked + .checkboxLabel,
 input[type="radio"]:checked + .radioButtonLabel {
   background-color: #1bc79f;
 }
-/* line 812, sass/components/_form.scss */
+/* line 817, sass/components/_form.scss */
 input[type="checkbox"]:checked + .checkboxLabel:after,
 input[type="radio"]:checked + .radioButtonLabel:after {
   opacity: 1;
@@ -7770,38 +7791,38 @@ input[type="radio"]:checked + .radioButtonLabel:after {
   -webkit-transition: opacity 0.3s;
           transition: opacity 0.3s;
 }
-/* line 816, sass/components/_form.scss */
+/* line 821, sass/components/_form.scss */
 .no-opacity input[type="checkbox"]:checked + .checkboxLabel:after, .no-opacity
 input[type="radio"]:checked + .radioButtonLabel:after {
   display: block;
 }
-/* line 820, sass/components/_form.scss */
+/* line 825, sass/components/_form.scss */
 input[type="checkbox"]:checked + .checkboxLabel:active,
 input[type="radio"]:checked + .radioButtonLabel:active {
   border-top: 2px solid #169f7f;
 }
 
-/* line 824, sass/components/_form.scss */
+/* line 829, sass/components/_form.scss */
 .forms--dark-theme input[type="checkbox"]:checked + .checkboxLabel {
   background-color: #333338;
 }
-/* line 826, sass/components/_form.scss */
+/* line 831, sass/components/_form.scss */
 .forms--dark-theme input[type="checkbox"]:checked + .checkboxLabel:active {
   border-top: 2px solid #29292c;
   background-color: #333338;
 }
-/* line 830, sass/components/_form.scss */
+/* line 835, sass/components/_form.scss */
 .forms--dark-theme input[type="checkbox"]:checked + .checkboxLabel:after {
   color: #1BC79F;
 }
 
-/* line 834, sass/components/_form.scss */
+/* line 839, sass/components/_form.scss */
 input[type="checkbox"]:checked + .checkboxLabel {
   -webkit-transition: background-color 0.3s;
           transition: background-color 0.3s;
 }
 
-/* line 837, sass/components/_form.scss */
+/* line 842, sass/components/_form.scss */
 .checkboxLabelVisible,
 .checkboxLabelVisibleDisabled,
 .radioButtonLabelVisible,
@@ -7812,18 +7833,18 @@ input[type="checkbox"]:checked + .checkboxLabel {
   text-align: left;
 }
 
-/* line 846, sass/components/_form.scss */
+/* line 851, sass/components/_form.scss */
 .checkboxLabelVisible,
 .radioButtonLabelVisible {
   color: #363a47;
   cursor: pointer;
 }
-/* line 850, sass/components/_form.scss */
+/* line 855, sass/components/_form.scss */
 .forms--dark-theme .checkboxLabelVisible, .forms--dark-theme
 .radioButtonLabelVisible {
   color: #81879d;
 }
-/* line 853, sass/components/_form.scss */
+/* line 858, sass/components/_form.scss */
 .reflection-select .checkboxLabelVisible, .reflection-select
 .radioButtonLabelVisible {
   font-size: 1.5rem;
@@ -7831,7 +7852,7 @@ input[type="checkbox"]:checked + .checkboxLabel {
   -webkit-transition: color 0.2s;
           transition: color 0.2s;
 }
-/* line 857, sass/components/_form.scss */
+/* line 862, sass/components/_form.scss */
 .reflection-select .checkboxLabelVisible:hover, .reflection-select
 .radioButtonLabelVisible:hover {
   color: #363a47;
@@ -7839,39 +7860,39 @@ input[type="checkbox"]:checked + .checkboxLabel {
           transition: color 0.3s;
 }
 
-/* line 863, sass/components/_form.scss */
+/* line 868, sass/components/_form.scss */
 .reflection-select input:checked + label + .checkboxLabelVisible {
   color: #363a47;
 }
 
-/* line 866, sass/components/_form.scss */
+/* line 871, sass/components/_form.scss */
 input[type="checkbox"]:disabled + label + .checkboxLabelVisible,
 input[type="radio"]:disabled + label + .radioButtonLabelVisible {
   color: #c4c7d0;
 }
-/* line 869, sass/components/_form.scss */
+/* line 874, sass/components/_form.scss */
 .forms--dark-theme input[type="checkbox"]:disabled + label + .checkboxLabelVisible, .forms--dark-theme
 input[type="radio"]:disabled + label + .radioButtonLabelVisible {
   color: #5B5B68;
 }
 
-/* line 873, sass/components/_form.scss */
+/* line 878, sass/components/_form.scss */
 .form-field--radio-list + .form-field--checkbox-list,
 .form-field--checkbox-list + .form-field--radio-list {
   margin-top: 0;
 }
 
-/* line 877, sass/components/_form.scss */
+/* line 882, sass/components/_form.scss */
 .forms--mid-theme {
   background-color: #f2f2f5;
 }
 
-/* line 880, sass/components/_form.scss */
+/* line 885, sass/components/_form.scss */
 .forms--dark-theme {
   background-color: #29292c;
 }
 
-/* line 885, sass/components/_form.scss */
+/* line 890, sass/components/_form.scss */
 .dateBoxPopup {
   position: absolute;
   width: 300px;
@@ -7882,122 +7903,122 @@ input[type="radio"]:disabled + label + .radioButtonLabelVisible {
           transition: opacity 0.1s, visibility 0.1s 0.1s;
   box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.1), 1px -3px 6px rgba(0, 0, 0, 0.05), -3px 0px 6px rgba(0, 0, 0, 0.1);
 }
-/* line 893, sass/components/_form.scss */
+/* line 898, sass/components/_form.scss */
 .forms--dark-theme .dateBoxPopup {
   background-color: #333338;
 }
-/* line 896, sass/components/_form.scss */
+/* line 901, sass/components/_form.scss */
 .forms--mid-theme .dateBoxPopup {
   background-color: #fff;
 }
-/* line 902, sass/components/_form.scss */
+/* line 907, sass/components/_form.scss */
 .dateBoxPopup tbody, .dateBoxPopup tr {
   width: 100%;
 }
 @media screen and (max-width: 719px) {
-  /* line 885, sass/components/_form.scss */
+  /* line 890, sass/components/_form.scss */
   .dateBoxPopup {
     left: 50% !important;
     margin-left: -150px !important;
   }
 }
 
-/* line 910, sass/components/_form.scss */
+/* line 915, sass/components/_form.scss */
 .gwt-DatePicker {
   width: 100%;
 }
-/* line 912, sass/components/_form.scss */
+/* line 917, sass/components/_form.scss */
 .gwt-DatePicker tr {
   width: 100%;
 }
-/* line 915, sass/components/_form.scss */
+/* line 920, sass/components/_form.scss */
 .gwt-DatePicker * {
   text-align: center;
 }
-/* line 917, sass/components/_form.scss */
+/* line 922, sass/components/_form.scss */
 form .gwt-DatePicker * {
   text-align: center;
 }
-/* line 921, sass/components/_form.scss */
+/* line 926, sass/components/_form.scss */
 .gwt-DatePicker td {
   padding-left: 0;
   padding-right: 0;
 }
 
-/* line 926, sass/components/_form.scss */
+/* line 931, sass/components/_form.scss */
 .single-date-selector-container {
   text-align: center;
 }
 
-/* line 929, sass/components/_form.scss */
+/* line 934, sass/components/_form.scss */
 .datePickerMonthSelector {
   background-color: #e1e5e8;
 }
-/* line 931, sass/components/_form.scss */
+/* line 936, sass/components/_form.scss */
 .datePickerMonthSelector .form-field--checkbox-list {
   width: auto;
   margin: 0 auto;
   display: inline-block;
 }
-/* line 935, sass/components/_form.scss */
+/* line 940, sass/components/_form.scss */
 .datePickerMonthSelector .form-field--checkbox-list li {
   margin: 0;
 }
-/* line 937, sass/components/_form.scss */
+/* line 942, sass/components/_form.scss */
 .datePickerMonthSelector .form-field--checkbox-list li label.checkboxLabel {
   z-index: 2;
 }
-/* line 939, sass/components/_form.scss */
+/* line 944, sass/components/_form.scss */
 .datePickerMonthSelector .form-field--checkbox-list li label.checkboxLabel:hover {
   background-color: #c4c7d0;
 }
-/* line 941, sass/components/_form.scss */
+/* line 946, sass/components/_form.scss */
 .forms--dark-theme .datePickerMonthSelector .form-field--checkbox-list li label.checkboxLabel:hover {
   border-top-color: #333338;
   background-color: #4b4b53;
 }
-/* line 946, sass/components/_form.scss */
+/* line 951, sass/components/_form.scss */
 .datePickerMonthSelector .form-field--checkbox-list li label.checkboxLabel:active {
   border-top-color: #727686;
 }
-/* line 951, sass/components/_form.scss */
+/* line 956, sass/components/_form.scss */
 .datePickerMonthSelector .form-field--checkbox-list li input:checked + label.checkboxLabel:hover {
   background-color: #1bc79f;
 }
-/* line 953, sass/components/_form.scss */
+/* line 958, sass/components/_form.scss */
 .forms--dark-theme .datePickerMonthSelector .form-field--checkbox-list li input:checked + label.checkboxLabel:hover {
   background-color: #333338;
 }
-/* line 957, sass/components/_form.scss */
+/* line 962, sass/components/_form.scss */
 .datePickerMonthSelector .form-field--checkbox-list li input:checked + label.checkboxLabel:active {
   border-top-color: #169f7f;
 }
-/* line 959, sass/components/_form.scss */
+/* line 964, sass/components/_form.scss */
 .forms--dark-theme .datePickerMonthSelector .form-field--checkbox-list li input:checked + label.checkboxLabel:active {
   border-top: 2px solid #29292c;
   background-color: #333338;
 }
-/* line 965, sass/components/_form.scss */
+/* line 970, sass/components/_form.scss */
 .datePickerMonthSelector .form-field--checkbox-list li label.checkboxLabelVisible {
   position: relative;
   padding-left: 30px;
   z-index: 0;
   font-size: 12px;
 }
-/* line 970, sass/components/_form.scss */
+/* line 975, sass/components/_form.scss */
 .forms--dark-theme .datePickerMonthSelector .form-field--checkbox-list li label.checkboxLabelVisible {
   color: #fcfdfd;
 }
-/* line 976, sass/components/_form.scss */
+/* line 981, sass/components/_form.scss */
 .forms--mid-theme .datePickerMonthSelector {
   background-color: #e8e7f1;
 }
-/* line 979, sass/components/_form.scss */
+/* line 984, sass/components/_form.scss */
 .forms--dark-theme .datePickerMonthSelector {
   background-color: #5b5b68;
 }
 
-/* line 983, sass/components/_form.scss */
+/* line 988, sass/components/_form.scss */
 .datePickerDays {
   width: 90%;
   margin-left: 5%;
@@ -8006,15 +8027,15 @@ form .gwt-DatePicker * {
   text-align: center;
   background-color: #f2f2f5;
 }
-/* line 990, sass/components/_form.scss */
+/* line 995, sass/components/_form.scss */
 .forms--mid-theme .datePickerDays {
   background-color: #fff;
 }
-/* line 993, sass/components/_form.scss */
+/* line 998, sass/components/_form.scss */
 .forms--dark-theme .datePickerDays {
   background-color: #333338;
 }
-/* line 996, sass/components/_form.scss */
+/* line 1001, sass/components/_form.scss */
 .datePickerDays td {
   padding-left: 0;
   padding-right: 0;
@@ -8026,16 +8047,16 @@ form .gwt-DatePicker * {
   border-left: 1px solid #e1e5e8;
   border-top: 1px solid #e1e5e8;
 }
-/* line 1006, sass/components/_form.scss */
+/* line 1011, sass/components/_form.scss */
 .datePickerDays td:first-child {
   border-left: 0;
 }
-/* line 1009, sass/components/_form.scss */
+/* line 1014, sass/components/_form.scss */
 .forms--dark-theme .datePickerDays td {
   color: #fcfdfd;
   border-color: #29292c;
 }
-/* line 1013, sass/components/_form.scss */
+/* line 1018, sass/components/_form.scss */
 .datePickerDays td > div {
   padding-top: 12px;
   padding-bottom: 14px;
@@ -8043,132 +8064,132 @@ form .gwt-DatePicker * {
   outline: none;
   cursor: pointer;
 }
-/* line 1020, sass/components/_form.scss */
+/* line 1025, sass/components/_form.scss */
 .no-touch .datePickerDays td > div:active, .no-touch .datePickerDays td > div:hover {
   color: #fcfdfd;
   background-color: #81879d;
 }
-/* line 1024, sass/components/_form.scss */
+/* line 1029, sass/components/_form.scss */
 .no-touch .forms--dark-theme .datePickerDays td > div:active, .no-touch .forms--dark-theme .datePickerDays td > div:hover {
   background-color: #5b5b68;
 }
-/* line 1028, sass/components/_form.scss */
+/* line 1033, sass/components/_form.scss */
 .datePickerDays td > div:active {
   padding-bottom: 12px;
   color: #fcfdfd;
   background-color: #81879d;
   border-top: 2px solid #5a5e6e;
 }
-/* line 1033, sass/components/_form.scss */
+/* line 1038, sass/components/_form.scss */
 .forms--dark-theme .datePickerDays td > div:active {
   border-top: 2px solid #404049;
   background-color: #5b5b68;
 }
-/* line 1039, sass/components/_form.scss */
+/* line 1044, sass/components/_form.scss */
 .datePickerDays td > div.datePickerDayIsValue {
   color: #fcfdfd;
   background-color: #1bc79f;
 }
-/* line 1043, sass/components/_form.scss */
+/* line 1048, sass/components/_form.scss */
 .no-touch .datePickerDays td > div.datePickerDayIsValue:hover, .no-touch .datePickerDays td > div.datePickerDayIsValue:active {
   padding-bottom: 14px;
   border-top: 0;
   background-color: #1bc79f;
 }
-/* line 1050, sass/components/_form.scss */
+/* line 1055, sass/components/_form.scss */
 .datePickerDays td > div.datePickerDayIsToday {
   color: #363A47;
   background-color: #fcfdfd;
 }
-/* line 1053, sass/components/_form.scss */
+/* line 1058, sass/components/_form.scss */
 .forms--mid-theme .datePickerDays td > div.datePickerDayIsToday {
   background-color: #f2f2f5;
 }
-/* line 1056, sass/components/_form.scss */
+/* line 1061, sass/components/_form.scss */
 .forms--dark-theme .datePickerDays td > div.datePickerDayIsToday {
   color: #727686;
   background-color: #29292c;
 }
-/* line 1061, sass/components/_form.scss */
+/* line 1066, sass/components/_form.scss */
 .no-touch .datePickerDays td > div.datePickerDayIsToday:hover, .no-touch .datePickerDays td > div.datePickerDayIsToday:active {
   padding-bottom: 14px;
   border-top: 0;
   color: #363a47;
   background-color: #fcfdfd;
 }
-/* line 1067, sass/components/_form.scss */
+/* line 1072, sass/components/_form.scss */
 .no-touch .forms--mid-theme .datePickerDays td > div.datePickerDayIsToday:hover, .no-touch .forms--mid-theme .datePickerDays td > div.datePickerDayIsToday:active {
   background-color: #f2f2f5;
 }
-/* line 1070, sass/components/_form.scss */
+/* line 1075, sass/components/_form.scss */
 .no-touch .forms--dark-theme .datePickerDays td > div.datePickerDayIsToday:hover, .no-touch .forms--dark-theme .datePickerDays td > div.datePickerDayIsToday:active {
   color: #727686;
   background-color: #29292c;
 }
-/* line 1076, sass/components/_form.scss */
+/* line 1081, sass/components/_form.scss */
 .datePickerDays td .datePickerDayIsFiller {
   color: #c4c7d0;
 }
-/* line 1078, sass/components/_form.scss */
+/* line 1083, sass/components/_form.scss */
 .forms--dark-theme .datePickerDays td .datePickerDayIsFiller {
   color: #5b5b68;
 }
-/* line 1082, sass/components/_form.scss */
+/* line 1087, sass/components/_form.scss */
 .no-touch .forms--dark-theme .datePickerDays td .datePickerDayIsFiller:hover {
   color: #fcfdfd;
 }
-/* line 1087, sass/components/_form.scss */
+/* line 1092, sass/components/_form.scss */
 .datePickerDays td .datePickerDayIsDisabled {
   color: #c4c7d0;
   font-style: italic;
   cursor: not-allowed;
 }
-/* line 1091, sass/components/_form.scss */
+/* line 1096, sass/components/_form.scss */
 .forms--mid-theme .datePickerDays td .datePickerDayIsDisabled {
   color: #c4c7d0;
 }
-/* line 1094, sass/components/_form.scss */
+/* line 1099, sass/components/_form.scss */
 .forms--dark-theme .datePickerDays td .datePickerDayIsDisabled {
   color: #5b5b68;
 }
-/* line 1098, sass/components/_form.scss */
+/* line 1103, sass/components/_form.scss */
 .no-touch .datePickerDays td .datePickerDayIsDisabled:hover, .touch .datePickerDays td .datePickerDayIsDisabled:hover, .no-touch .datePickerDays td .datePickerDayIsDisabled:active, .touch .datePickerDays td .datePickerDayIsDisabled:active {
   padding-bottom: 14px;
   border-top: 0;
   color: #c4c7d0;
   background-color: #f2f2f5;
 }
-/* line 1104, sass/components/_form.scss */
+/* line 1109, sass/components/_form.scss */
 .no-touch .forms--mid-theme .datePickerDays td .datePickerDayIsDisabled:hover, .touch .forms--mid-theme .datePickerDays td .datePickerDayIsDisabled:hover, .no-touch .forms--mid-theme .datePickerDays td .datePickerDayIsDisabled:active, .touch .forms--mid-theme .datePickerDays td .datePickerDayIsDisabled:active {
   color: #c4c7d0;
   border-top: 0;
   background-color: #fff;
 }
-/* line 1110, sass/components/_form.scss */
+/* line 1115, sass/components/_form.scss */
 .no-touch .forms--dark-theme .datePickerDays td .datePickerDayIsDisabled:hover, .touch .forms--dark-theme .datePickerDays td .datePickerDayIsDisabled:hover, .no-touch .forms--dark-theme .datePickerDays td .datePickerDayIsDisabled:active, .touch .forms--dark-theme .datePickerDays td .datePickerDayIsDisabled:active {
   color: #5b5b68;
   border-top: 0;
   background-color: #333338;
 }
-/* line 1119, sass/components/_form.scss */
+/* line 1124, sass/components/_form.scss */
 .datePickerDays tr:first-child td {
   border-top: 0;
 }
 
-/* line 1123, sass/components/_form.scss */
+/* line 1128, sass/components/_form.scss */
 .datePickerDays .datePickerWeekdayLabel,
 .datePickerDays .datePickerWeekendLabel {
   padding-top: 10px;
   padding-bottom: 10px;
   color: #81879d;
 }
-/* line 1128, sass/components/_form.scss */
+/* line 1133, sass/components/_form.scss */
 .forms--dark-theme .datePickerDays .datePickerWeekdayLabel, .forms--dark-theme
 .datePickerDays .datePickerWeekendLabel {
   color: #81879d;
 }
 
-/* line 1132, sass/components/_form.scss */
+/* line 1137, sass/components/_form.scss */
 .datePickerPreviousButton,
 .datePickerNextButton {
   cursor: pointer;
@@ -8176,14 +8197,14 @@ form .gwt-DatePicker * {
   padding: 0px 4px;
   outline: none;
 }
-/* line 1138, sass/components/_form.scss */
+/* line 1143, sass/components/_form.scss */
 .has-single-option .datePickerPreviousButton, .has-single-option
 .datePickerNextButton {
   position: relative;
   top: 5px;
 }
 
-/* line 1143, sass/components/_form.scss */
+/* line 1148, sass/components/_form.scss */
 .datePickerMonth {
   padding-top: 18px;
   padding-bottom: 19px;
@@ -8194,66 +8215,66 @@ form .gwt-DatePicker * {
   text-transform: uppercase;
   color: #363a47;
 }
-/* line 1152, sass/components/_form.scss */
+/* line 1157, sass/components/_form.scss */
 .has-single-option .datePickerMonth {
   padding-bottom: 10px;
 }
-/* line 1155, sass/components/_form.scss */
+/* line 1160, sass/components/_form.scss */
 .forms--dark-theme .datePickerMonth {
   color: #fcfdfd;
 }
 
-/* line 1159, sass/components/_form.scss */
+/* line 1164, sass/components/_form.scss */
 .datePickerPreviousButton,
 .datePickerNextButton {
   margin-top: -2px;
   padding: 0 13px;
 }
-/* line 1164, sass/components/_form.scss */
+/* line 1169, sass/components/_form.scss */
 .datePickerPreviousButton:after,
 .datePickerNextButton:after {
   font-size: 18px;
   position: relative;
   color: #828a91;
 }
-/* line 1169, sass/components/_form.scss */
+/* line 1174, sass/components/_form.scss */
 .forms--dark-theme .datePickerPreviousButton:after, .forms--dark-theme
 .datePickerNextButton:after {
   color: #c4c7d0;
 }
-/* line 1174, sass/components/_form.scss */
+/* line 1179, sass/components/_form.scss */
 .datePickerPreviousButton:hover:after,
 .datePickerNextButton:hover:after {
   color: #697077;
 }
-/* line 1176, sass/components/_form.scss */
+/* line 1181, sass/components/_form.scss */
 .forms--dark-theme .datePickerPreviousButton:hover:after, .forms--dark-theme
 .datePickerNextButton:hover:after {
   color: #e0e2e7;
 }
-/* line 1181, sass/components/_form.scss */
+/* line 1186, sass/components/_form.scss */
 .datePickerPreviousButton:active,
 .datePickerNextButton:active {
   margin-top: 0;
 }
 
-/* line 1185, sass/components/_form.scss */
+/* line 1190, sass/components/_form.scss */
 .datePickerPreviousButton:after {
   content: "k";
 }
 
-/* line 1188, sass/components/_form.scss */
+/* line 1193, sass/components/_form.scss */
 .datePickerNextButton:after {
   content: "l";
 }
 
-/* line 1191, sass/components/_form.scss */
+/* line 1196, sass/components/_form.scss */
 .datePickerPreviousButton .html-face,
 .datePickerNextButton .html-face {
   display: none;
 }
 
-/* line 1195, sass/components/_form.scss */
+/* line 1200, sass/components/_form.scss */
 .password-strength-indicator-container {
   position: relative;
   margin-top: 0.4rem;
@@ -8261,12 +8282,12 @@ form .gwt-DatePicker * {
   left: 0;
   font-size: 1.25rem;
 }
-/* line 1201, sass/components/_form.scss */
+/* line 1206, sass/components/_form.scss */
 .is-closed .password-strength-indicator-container {
   display: none;
 }
 
-/* line 1205, sass/components/_form.scss */
+/* line 1210, sass/components/_form.scss */
 .password-strength-indicator,
 .password-strength-description {
   display: inline-block;
@@ -8274,7 +8295,7 @@ form .gwt-DatePicker * {
   vertical-align: top;
 }
 
-/* line 1211, sass/components/_form.scss */
+/* line 1216, sass/components/_form.scss */
 .password-strength-indicator {
   position: relative;
   width: 97px;
@@ -8284,15 +8305,15 @@ form .gwt-DatePicker * {
   border-radius: 3px;
   background-color: #e1e5e8;
 }
-/* line 1219, sass/components/_form.scss */
+/* line 1224, sass/components/_form.scss */
 .forms--mid-theme .password-strength-indicator {
   background-color: #f2f2f5;
 }
-/* line 1222, sass/components/_form.scss */
+/* line 1227, sass/components/_form.scss */
 .forms--dark-theme .password-strength-indicator {
   background-color: #29292c;
 }
-/* line 1225, sass/components/_form.scss */
+/* line 1230, sass/components/_form.scss */
 .password-strength-indicator span {
   position: absolute;
   top: 0;
@@ -8304,40 +8325,40 @@ form .gwt-DatePicker * {
   -webkit-transition: background-color 0.3s ease-out, width 0.3s ease-out;
           transition: background-color 0.3s ease-out, width 0.3s ease-out;
 }
-/* line 1234, sass/components/_form.scss */
+/* line 1239, sass/components/_form.scss */
 .password-strength-indicator span.is-pathetic {
   width: 25%;
   background-color: #d5855e;
 }
-/* line 1238, sass/components/_form.scss */
+/* line 1243, sass/components/_form.scss */
 .password-strength-indicator span.is-ok {
   width: 50%;
   background-color: #e7b94b;
 }
-/* line 1242, sass/components/_form.scss */
+/* line 1247, sass/components/_form.scss */
 .password-strength-indicator span.is-strong {
   width: 75%;
   background-color: #d0eb53;
 }
-/* line 1246, sass/components/_form.scss */
+/* line 1251, sass/components/_form.scss */
 .password-strength-indicator span.is-impressive {
   width: 100%;
   background-color: #68d656;
 }
 
-/* line 1252, sass/components/_form.scss */
+/* line 1257, sass/components/_form.scss */
 .password-strength-description {
   font-size: 1.24rem;
   color: #81879d;
 }
 
-/* line 1256, sass/components/_form.scss */
+/* line 1261, sass/components/_form.scss */
 .general-error-message {
   padding: 1rem 0 0;
   display: block;
   text-align: center;
 }
-/* line 1260, sass/components/_form.scss */
+/* line 1265, sass/components/_form.scss */
 .general-error-message p, .general-error-message span {
   margin: 0;
   font-family: "Source Sans Pro", sans-serif;
@@ -8347,7 +8368,7 @@ form .gwt-DatePicker * {
   text-align: center;
 }
 
-/* line 1269, sass/components/_form.scss */
+/* line 1274, sass/components/_form.scss */
 .block-error-message,
 .block-error-message:last-child {
   width: 100%;
@@ -8360,7 +8381,7 @@ form .gwt-DatePicker * {
   color: #d07423;
 }
 
-/* line 1280, sass/components/_form.scss */
+/* line 1285, sass/components/_form.scss */
 .form-field--list__error-message {
   width: 100%;
   margin-bottom: 1.2rem;
@@ -8802,15 +8823,27 @@ form .gwt-DatePicker * {
   }
 }
 
-/* line 139, sass/components/_list-partners.scss */
-.no-flexbox .list-partners ul {
+/* line 140, sass/components/_list-partners.scss */
+.no-flexbox .list-partners ul,
+.ie9 .list-partners ul {
   width: 100%;
   display: block;
 }
-/* line 142, sass/components/_list-partners.scss */
-.no-flexbox .list-partners ul li {
+/* line 143, sass/components/_list-partners.scss */
+.no-flexbox .list-partners ul li,
+.ie9 .list-partners ul li {
   display: inline-block;
-  max-width: 140px;
+  max-width: 100px;
+}
+/* line 146, sass/components/_list-partners.scss */
+.no-flexbox .list-partners ul li:last-child,
+.ie9 .list-partners ul li:last-child {
+  display: none;
+}
+/* line 155, sass/components/_list-partners.scss */
+.no-flexbox .list-partners ul li img,
+.ie9 .list-partners ul li img {
+  max-width: 100%;
 }
 
 /* line 1, sass/components/_loading.scss */
@@ -9795,7 +9828,7 @@ svg.loading-ellipsis .dot-3 {
   left: 0;
   bottom: 0;
   overflow: hidden;
-  z-index: 500;
+  z-index: -1;
   -ms-pointer-events: none;
   pointer-events: none;
 }
@@ -9805,41 +9838,42 @@ svg.loading-ellipsis .dot-3 {
   overflow-x: hidden;
   -ms-pointer-events: auto;
   pointer-events: auto;
+  z-index: 500;
 }
-/* line 20, sass/components/_panel-right.scss */
+/* line 21, sass/components/_panel-right.scss */
 .no-csstransitions .panel-right-container {
   display: none;
 }
-/* line 22, sass/components/_panel-right.scss */
+/* line 23, sass/components/_panel-right.scss */
 .no-csstransitions .panel-right-container.is-showing {
   display: block;
 }
-/* line 26, sass/components/_panel-right.scss */
+/* line 27, sass/components/_panel-right.scss */
 .panel-right-container .form--password-reset {
   position: absolute;
   left: 0px;
   visibility: hidden;
 }
-/* line 30, sass/components/_panel-right.scss */
+/* line 31, sass/components/_panel-right.scss */
 .panel-right-container .form--password-reset p {
   font-size: 1.4em;
 }
-/* line 35, sass/components/_panel-right.scss */
+/* line 36, sass/components/_panel-right.scss */
 .panel-right-container .form-submitted-success svg.email-delivery-animation {
   width: 70%;
 }
-/* line 38, sass/components/_panel-right.scss */
+/* line 39, sass/components/_panel-right.scss */
 .panel-right-container .form-submitted-success p {
   margin-top: -9px;
   font-size: 1.4em;
   color: #81879d;
 }
-/* line 43, sass/components/_panel-right.scss */
+/* line 44, sass/components/_panel-right.scss */
 .panel-right-container .form-submitted-success .email-delivery-animation {
   margin-top: 0;
 }
 
-/* line 48, sass/components/_panel-right.scss */
+/* line 49, sass/components/_panel-right.scss */
 .panel-right__overlay {
   position: fixed;
   top: 0;
@@ -9851,28 +9885,28 @@ svg.loading-ellipsis .dot-3 {
   opacity: 0;
   visibility: hidden;
 }
-/* line 57, sass/components/_panel-right.scss */
+/* line 58, sass/components/_panel-right.scss */
 .no-touch .panel-right__overlay {
   -webkit-transition: opacity 0.18s, visibility 0.01s 0.27s;
           transition: opacity 0.18s, visibility 0.01s 0.27s;
 }
-/* line 60, sass/components/_panel-right.scss */
+/* line 61, sass/components/_panel-right.scss */
 .is-showing .panel-right__overlay {
   visibility: visible;
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=50);
   opacity: 0.5;
 }
-/* line 63, sass/components/_panel-right.scss */
+/* line 64, sass/components/_panel-right.scss */
 .no-touch .is-showing .panel-right__overlay {
   -webkit-transition: opacity 0.27s;
           transition: opacity 0.27s;
 }
-/* line 67, sass/components/_panel-right.scss */
+/* line 68, sass/components/_panel-right.scss */
 .no-js .panel-right__overlay {
   display: none;
 }
 
-/* line 71, sass/components/_panel-right.scss */
+/* line 72, sass/components/_panel-right.scss */
 .panel-right,
 .no-js .panel-right {
   position: fixed;
@@ -9887,61 +9921,61 @@ svg.loading-ellipsis .dot-3 {
   background-color: #29292c;
   padding-top: 62px;
 }
-/* line 83, sass/components/_panel-right.scss */
+/* line 84, sass/components/_panel-right.scss */
 .no-touch .panel-right, .no-touch
 .no-js .panel-right {
   -webkit-transition: right 0.18s ease-in;
           transition: right 0.18s ease-in;
 }
-/* line 86, sass/components/_panel-right.scss */
+/* line 87, sass/components/_panel-right.scss */
 .is-showing .panel-right, .is-showing
 .no-js .panel-right {
   right: 0;
 }
-/* line 88, sass/components/_panel-right.scss */
+/* line 89, sass/components/_panel-right.scss */
 .no-touch .is-showing .panel-right, .no-touch .is-showing
 .no-js .panel-right {
   -webkit-transition: right 0.12s 0.12s ease-out;
           transition: right 0.12s 0.12s ease-out;
 }
-/* line 92, sass/components/_panel-right.scss */
+/* line 93, sass/components/_panel-right.scss */
 .panel-right .reflection-form,
 .no-js .panel-right .reflection-form {
   padding: 36px 26px 39px 28px;
   font-family: "Source Sans Pro", sans-serif;
 }
-/* line 97, sass/components/_panel-right.scss */
+/* line 98, sass/components/_panel-right.scss */
 .panel-right .form-field label,
 .no-js .panel-right .form-field label {
   font-size: 11.9px;
 }
-/* line 99, sass/components/_panel-right.scss */
+/* line 100, sass/components/_panel-right.scss */
 .is-animating-out .panel-right .form-field label, .is-animating-out
 .no-js .panel-right .form-field label {
   text-shadow: -4px 0px 1px rgba(252, 253, 253, 0.7);
 }
-/* line 102, sass/components/_panel-right.scss */
+/* line 103, sass/components/_panel-right.scss */
 .is-animating-in .panel-right .form-field label, .is-animating-in
 .no-js .panel-right .form-field label {
   text-shadow: 4px 0px 1px rgba(252, 253, 253, 0.7);
 }
-/* line 106, sass/components/_panel-right.scss */
+/* line 107, sass/components/_panel-right.scss */
 .panel-right .form-field input,
 .no-js .panel-right .form-field input {
   font-size: 15px;
   color: #81879d;
 }
-/* line 109, sass/components/_panel-right.scss */
+/* line 110, sass/components/_panel-right.scss */
 .is-animating-out .panel-right .form-field input, .is-animating-out
 .no-js .panel-right .form-field input {
   text-shadow: -4px 0px 1px rgba(129, 135, 157, 0.7);
 }
-/* line 112, sass/components/_panel-right.scss */
+/* line 113, sass/components/_panel-right.scss */
 .is-animating-in .panel-right .form-field input, .is-animating-in
 .no-js .panel-right .form-field input {
   text-shadow: 4px 0px 1px rgba(129, 135, 157, 0.7);
 }
-/* line 116, sass/components/_panel-right.scss */
+/* line 117, sass/components/_panel-right.scss */
 .panel-right .form-field input[type="text"],
 .panel-right .form-field input[type="email"],
 .panel-right .form-field input[type="password"],
@@ -9950,164 +9984,164 @@ svg.loading-ellipsis .dot-3 {
 .no-js .panel-right .form-field input[type="password"] {
   width: calc(100% - 28px);
 }
-/* line 122, sass/components/_panel-right.scss */
+/* line 123, sass/components/_panel-right.scss */
 .panel-right .form-field.is-closed label,
 .no-js .panel-right .form-field.is-closed label {
   font-size: 15px;
 }
-/* line 124, sass/components/_panel-right.scss */
+/* line 125, sass/components/_panel-right.scss */
 .is-animating-out .panel-right .form-field.is-closed label, .is-animating-out
 .no-js .panel-right .form-field.is-closed label {
   text-shadow: -4px 0px 1px rgba(129, 135, 157, 0.7);
 }
-/* line 127, sass/components/_panel-right.scss */
+/* line 128, sass/components/_panel-right.scss */
 .is-animating-in .panel-right .form-field.is-closed label, .is-animating-in
 .no-js .panel-right .form-field.is-closed label {
   text-shadow: 4px 0px 1px rgba(129, 135, 157, 0.7);
 }
-/* line 133, sass/components/_panel-right.scss */
+/* line 134, sass/components/_panel-right.scss */
 .panel-right .checkboxLabelVisible,
 .no-js .panel-right .checkboxLabelVisible {
   font-size: 14px;
 }
-/* line 137, sass/components/_panel-right.scss */
+/* line 138, sass/components/_panel-right.scss */
 .is-animating-out .panel-right input:-webkit-autofill, .is-animating-out
 .no-js .panel-right input:-webkit-autofill {
   text-shadow: -4px 0px 1px rgba(129, 135, 157, 0.7);
 }
-/* line 140, sass/components/_panel-right.scss */
+/* line 141, sass/components/_panel-right.scss */
 .is-animating-in .panel-right input:-webkit-autofill, .is-animating-in
 .no-js .panel-right input:-webkit-autofill {
   text-shadow: 4px 0px 1px rgba(129, 135, 157, 0.7);
 }
-/* line 144, sass/components/_panel-right.scss */
+/* line 145, sass/components/_panel-right.scss */
 .panel-right .form-link,
 .no-js .panel-right .form-link {
   margin-bottom: 15px;
   font-size: 14px;
   font-weight: 600;
 }
-/* line 148, sass/components/_panel-right.scss */
+/* line 149, sass/components/_panel-right.scss */
 .is-animating-out .panel-right .form-link, .is-animating-out
 .no-js .panel-right .form-link {
   text-shadow: -4px 0px 1px rgba(109, 105, 197, 0.7);
 }
-/* line 151, sass/components/_panel-right.scss */
+/* line 152, sass/components/_panel-right.scss */
 .is-animating-in .panel-right .form-link, .is-animating-in
 .no-js .panel-right .form-link {
   text-shadow: 4px 0px 1px rgba(109, 105, 197, 0.7);
 }
-/* line 159, sass/components/_panel-right.scss */
+/* line 160, sass/components/_panel-right.scss */
 .panel-right .form-field--checkbox label,
 .no-js .panel-right .form-field--checkbox label {
   font-size: 1.3em;
 }
-/* line 161, sass/components/_panel-right.scss */
+/* line 162, sass/components/_panel-right.scss */
 .is-animating-out .panel-right .form-field--checkbox label, .is-animating-out
 .no-js .panel-right .form-field--checkbox label {
   text-shadow: -4px 0px 1px rgba(114, 118, 134, 0.7);
 }
-/* line 164, sass/components/_panel-right.scss */
+/* line 165, sass/components/_panel-right.scss */
 .is-animating-in .panel-right .form-field--checkbox label, .is-animating-in
 .no-js .panel-right .form-field--checkbox label {
   text-shadow: 4px 0px 1px rgba(114, 118, 134, 0.7);
 }
-/* line 169, sass/components/_panel-right.scss */
+/* line 170, sass/components/_panel-right.scss */
 .panel-right .ref-button--full-width,
 .no-js .panel-right .ref-button--full-width {
   margin-top: 11px;
 }
-/* line 171, sass/components/_panel-right.scss */
+/* line 172, sass/components/_panel-right.scss */
 .is-animating-out .panel-right .ref-button--full-width, .is-animating-out
 .no-js .panel-right .ref-button--full-width {
   text-shadow: -4px 0px 1px rgba(252, 253, 253, 0.7);
   box-shadow: -4px 0px 1px rgba(109, 105, 197, 0.7);
 }
-/* line 175, sass/components/_panel-right.scss */
+/* line 176, sass/components/_panel-right.scss */
 .is-animating-in .panel-right .ref-button--full-width, .is-animating-in
 .no-js .panel-right .ref-button--full-width {
   text-shadow: 4px 0px 1px rgba(252, 253, 253, 0.7);
   box-shadow: -4px 0px 1px rgba(109, 105, 197, 0.7);
 }
-/* line 180, sass/components/_panel-right.scss */
+/* line 181, sass/components/_panel-right.scss */
 .panel-right .blockquote-container,
 .no-js .panel-right .blockquote-container {
   width: 100%;
   padding: 29px 26px 38px 28px;
   border-top: 1px solid #161617;
 }
-/* line 184, sass/components/_panel-right.scss */
+/* line 185, sass/components/_panel-right.scss */
 .panel-right .blockquote-container blockquote,
 .no-js .panel-right .blockquote-container blockquote {
   margin-top: 0;
   margin-bottom: 0;
   padding-top: 42px;
 }
-/* line 188, sass/components/_panel-right.scss */
+/* line 189, sass/components/_panel-right.scss */
 .panel-right .blockquote-container blockquote:before,
 .no-js .panel-right .blockquote-container blockquote:before {
   height: 55px;
   font-size: 80px;
   color: #36363a;
 }
-/* line 192, sass/components/_panel-right.scss */
+/* line 193, sass/components/_panel-right.scss */
 .is-animating-out .panel-right .blockquote-container blockquote:before, .is-animating-out
 .no-js .panel-right .blockquote-container blockquote:before {
   text-shadow: -4px 0px 1px rgba(54, 54, 58, 0.7);
 }
-/* line 195, sass/components/_panel-right.scss */
+/* line 196, sass/components/_panel-right.scss */
 .is-animating-in .panel-right .blockquote-container blockquote:before, .is-animating-in
 .no-js .panel-right .blockquote-container blockquote:before {
   text-shadow: 4px 0px 1px rgba(54, 54, 58, 0.7);
 }
-/* line 199, sass/components/_panel-right.scss */
+/* line 200, sass/components/_panel-right.scss */
 .panel-right .blockquote-container blockquote p,
 .no-js .panel-right .blockquote-container blockquote p {
   font-size: 16px;
 }
-/* line 201, sass/components/_panel-right.scss */
+/* line 202, sass/components/_panel-right.scss */
 .is-animating-out .panel-right .blockquote-container blockquote p, .is-animating-out
 .no-js .panel-right .blockquote-container blockquote p {
   text-shadow: -4px 0px 1px rgba(91, 91, 104, 0.7);
 }
-/* line 204, sass/components/_panel-right.scss */
+/* line 205, sass/components/_panel-right.scss */
 .is-animating-in .panel-right .blockquote-container blockquote p, .is-animating-in
 .no-js .panel-right .blockquote-container blockquote p {
   text-shadow: 4px 0px 1px rgba(91, 91, 104, 0.7);
 }
-/* line 208, sass/components/_panel-right.scss */
+/* line 209, sass/components/_panel-right.scss */
 .panel-right .blockquote-container blockquote cite,
 .no-js .panel-right .blockquote-container blockquote cite {
   font-size: 14px;
 }
-/* line 210, sass/components/_panel-right.scss */
+/* line 211, sass/components/_panel-right.scss */
 .is-animating-out .panel-right .blockquote-container blockquote cite, .is-animating-out
 .no-js .panel-right .blockquote-container blockquote cite {
   text-shadow: -4px 0px 1px rgba(114, 118, 134, 0.7);
 }
-/* line 213, sass/components/_panel-right.scss */
+/* line 214, sass/components/_panel-right.scss */
 .is-animating-in .panel-right .blockquote-container blockquote cite, .is-animating-in
 .no-js .panel-right .blockquote-container blockquote cite {
   text-shadow: 4px 0px 1px rgba(114, 118, 134, 0.7);
 }
-/* line 216, sass/components/_panel-right.scss */
+/* line 217, sass/components/_panel-right.scss */
 .panel-right .blockquote-container blockquote cite span,
 .no-js .panel-right .blockquote-container blockquote cite span {
   font-size: 16px;
   color: #fcfdfd;
 }
-/* line 219, sass/components/_panel-right.scss */
+/* line 220, sass/components/_panel-right.scss */
 .is-animating-out .panel-right .blockquote-container blockquote cite span, .is-animating-out
 .no-js .panel-right .blockquote-container blockquote cite span {
   text-shadow: -4px 0px 1px rgba(252, 253, 253, 0.7);
 }
-/* line 222, sass/components/_panel-right.scss */
+/* line 223, sass/components/_panel-right.scss */
 .is-animating-in .panel-right .blockquote-container blockquote cite span, .is-animating-in
 .no-js .panel-right .blockquote-container blockquote cite span {
   text-shadow: 4px 0px 1px rgba(252, 253, 253, 0.7);
 }
 
-/* line 230, sass/components/_panel-right.scss */
+/* line 231, sass/components/_panel-right.scss */
 .no-js .panel-right {
   right: 0;
 }
@@ -10155,21 +10189,24 @@ svg.loading-ellipsis .dot-3 {
   -webkit-transform-style: preserve-3d;
   transform-style: preserve-3d;
   position: absolute;
-  z-index: 10000;
+  z-index: 20000;
   overflow: visible;
 }
 
 /* line 48, sass/components/_popup.scss */
-.whats-this-tooltip-icon {
+.whats-this-tooltip-icon,
+.whats-this-tooltip-icon-static {
   display: inline-block;
   vertical-align: middle;
 }
-/* line 54, sass/components/_popup.scss */
-.whats-this-tooltip-icon.is-open:after {
+/* line 55, sass/components/_popup.scss */
+.whats-this-tooltip-icon.is-open:after,
+.whats-this-tooltip-icon-static.is-open:after {
   color: #1bc79f;
 }
-/* line 58, sass/components/_popup.scss */
-.whats-this-tooltip-icon:after {
+/* line 59, sass/components/_popup.scss */
+.whats-this-tooltip-icon:after,
+.whats-this-tooltip-icon-static:after {
   position: relative;
   top: 2px;
   font-size: 18px;
@@ -10177,21 +10214,32 @@ svg.loading-ellipsis .dot-3 {
   -webkit-transition: color 0.2s;
           transition: color 0.2s;
 }
-/* line 66, sass/components/_popup.scss */
-.whats-this-tooltip-icon:hover:after {
+/* line 67, sass/components/_popup.scss */
+.whats-this-tooltip-icon:hover:after,
+.whats-this-tooltip-icon-static:hover:after {
   color: #1bc79f;
   -webkit-transition: color 0.2s;
           transition: color 0.2s;
 }
-/* line 71, sass/components/_popup.scss */
-.whats-this-tooltip-icon span {
+/* line 72, sass/components/_popup.scss */
+.whats-this-tooltip-icon span,
+.whats-this-tooltip-icon-static span {
   width: 0;
   display: inline-block;
   text-align: left;
   text-indent: -999em;
 }
 
-/* line 78, sass/components/_popup.scss */
+/* line 80, sass/components/_popup.scss */
+.whats-this-tooltip-icon-static:after {
+  color: #c4c7d0;
+}
+/* line 84, sass/components/_popup.scss */
+.whats-this-tooltip-icon-static:hover:after {
+  color: #c4c7d0;
+}
+
+/* line 89, sass/components/_popup.scss */
 .whats-this-tooltip,
 .popup-toast {
   position: absolute;
@@ -10202,41 +10250,42 @@ svg.loading-ellipsis .dot-3 {
   color: #e1e5e8;
   background-color: #81879d;
 }
-/* line 87, sass/components/_popup.scss */
+/* line 98, sass/components/_popup.scss */
 .whats-this-tooltip h2,
 .popup-toast h2 {
   max-width: 200px;
   font-size: 18px;
   color: #fcfdfd;
 }
-/* line 92, sass/components/_popup.scss */
+/* line 103, sass/components/_popup.scss */
 .whats-this-tooltip p,
 .popup-toast p {
   font-size: 14px;
   line-height: 1.7;
   color: #e1e5e8;
 }
-/* line 96, sass/components/_popup.scss */
+/* line 107, sass/components/_popup.scss */
 .whats-this-tooltip p a,
 .popup-toast p a {
   font-weight: 700;
   color: #fff;
 }
-/* line 99, sass/components/_popup.scss */
+/* line 110, sass/components/_popup.scss */
 .whats-this-tooltip p a:hover,
 .popup-toast p a:hover {
   color: #e6e6e6;
 }
-/* line 104, sass/components/_popup.scss */
+/* line 115, sass/components/_popup.scss */
 .whats-this-tooltip img,
 .popup-toast img {
   position: absolute;
   top: -9px;
   right: 20px;
   width: 36px;
+  height: 53px;
 }
 
-/* line 111, sass/components/_popup.scss */
+/* line 123, sass/components/_popup.scss */
 .whats-this-tooltip {
   position: relative;
   top: 0;
@@ -10248,7 +10297,7 @@ svg.loading-ellipsis .dot-3 {
   -webkit-transform-origin: center top;
   transform-origin: center top;
 }
-/* line 121, sass/components/_popup.scss */
+/* line 133, sass/components/_popup.scss */
 .whats-this-tooltip.is-open {
   -ms-transform-origin: center top;
   -webkit-transform-origin: center top;
@@ -10259,7 +10308,7 @@ svg.loading-ellipsis .dot-3 {
   -webkit-transition: -webkit-transform 0.18s ease-out;
           transition: transform 0.18s ease-out;
 }
-/* line 143, sass/components/_popup.scss */
+/* line 155, sass/components/_popup.scss */
 .whats-this-tooltip.position-tooltip-left {
   -ms-transform-origin: right center;
   -webkit-transform-origin: right center;
@@ -10268,7 +10317,7 @@ svg.loading-ellipsis .dot-3 {
   -webkit-transform: rotateX(0deg) rotateY(-96deg);
   transform: rotateX(0deg) rotateY(-96deg);
 }
-/* line 150, sass/components/_popup.scss */
+/* line 162, sass/components/_popup.scss */
 .whats-this-tooltip.position-tooltip-left.is-open {
   -ms-transform-origin: right center;
   -webkit-transform-origin: right center;
@@ -10279,7 +10328,7 @@ svg.loading-ellipsis .dot-3 {
   -webkit-transition: -webkit-transform 0.18s ease-out;
           transition: transform 0.18s ease-out;
 }
-/* line 170, sass/components/_popup.scss */
+/* line 182, sass/components/_popup.scss */
 .whats-this-tooltip.position-tooltip-right {
   -ms-transform-origin: left center;
   -webkit-transform-origin: left center;
@@ -10288,7 +10337,7 @@ svg.loading-ellipsis .dot-3 {
   -webkit-transform: rotateX(0deg) rotateY(96deg);
   transform: rotateX(0deg) rotateY(96deg);
 }
-/* line 177, sass/components/_popup.scss */
+/* line 189, sass/components/_popup.scss */
 .whats-this-tooltip.position-tooltip-right.is-open {
   -ms-transform-origin: left center;
   -webkit-transform-origin: left center;
@@ -10299,7 +10348,7 @@ svg.loading-ellipsis .dot-3 {
   -webkit-transition: -webkit-transform 0.18s ease-out;
           transition: transform 0.18s ease-out;
 }
-/* line 199, sass/components/_popup.scss */
+/* line 211, sass/components/_popup.scss */
 .whats-this-tooltip.position-tooltip-top {
   -ms-transform-origin: center bottom;
   -webkit-transform-origin: center bottom;
@@ -10308,7 +10357,7 @@ svg.loading-ellipsis .dot-3 {
   -webkit-transform: rotateX(-86deg);
   transform: rotateX(-86deg);
 }
-/* line 206, sass/components/_popup.scss */
+/* line 218, sass/components/_popup.scss */
 .whats-this-tooltip.position-tooltip-top.is-open {
   -ms-transform-origin: center bottom;
   -webkit-transform-origin: center bottom;
@@ -10320,7 +10369,7 @@ svg.loading-ellipsis .dot-3 {
           transition: transform 0.18s ease-out;
 }
 
-/* line 227, sass/components/_popup.scss */
+/* line 239, sass/components/_popup.scss */
 .popup-toast-container {
   -webkit-perspective: 1300px;
   perspective: 1300px;
@@ -10336,14 +10385,14 @@ svg.loading-ellipsis .dot-3 {
           transition: top 0.3s;
 }
 
-/* line 244, sass/components/_popup.scss */
+/* line 256, sass/components/_popup.scss */
 .popup-toast {
   position: relative;
   width: 100%;
   -webkit-transform: rotateX(0deg);
           transform: rotateX(0deg);
 }
-/* line 248, sass/components/_popup.scss */
+/* line 260, sass/components/_popup.scss */
 .popup-toast.is-read {
   -ms-transform-origin: center bottom;
   -webkit-transform-origin: center bottom;
@@ -10354,32 +10403,32 @@ svg.loading-ellipsis .dot-3 {
   -webkit-transition: -webkit-transform 0.35s ease-in;
           transition: transform 0.35s ease-in;
 }
-/* line 257, sass/components/_popup.scss */
+/* line 269, sass/components/_popup.scss */
 .popup-toast a {
   font-weight: 700;
   color: #c3c6f6;
 }
-/* line 260, sass/components/_popup.scss */
+/* line 272, sass/components/_popup.scss */
 .popup-toast a:hover {
   color: #eff0fd;
 }
-/* line 264, sass/components/_popup.scss */
+/* line 276, sass/components/_popup.scss */
 .popup-toast.popup-toast--alert {
   background-color: #ff496a;
 }
-/* line 266, sass/components/_popup.scss */
+/* line 278, sass/components/_popup.scss */
 .popup-toast.popup-toast--alert p {
   color: #ffe3e8;
 }
-/* line 269, sass/components/_popup.scss */
+/* line 281, sass/components/_popup.scss */
 .popup-toast.popup-toast--alert a {
   color: #ffe3e8;
 }
-/* line 271, sass/components/_popup.scss */
+/* line 283, sass/components/_popup.scss */
 .popup-toast.popup-toast--alert a:hover {
   color: #ffb0be;
 }
-/* line 275, sass/components/_popup.scss */
+/* line 287, sass/components/_popup.scss */
 .popup-toast.popup-toast--alert img {
   width: 45px;
 }
