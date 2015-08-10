@@ -13,6 +13,7 @@ import io.reflection.app.client.helper.ResponsiveDesignHelper;
 import io.reflection.app.client.helper.TooltipHelper;
 import io.reflection.app.client.helper.UserAgentHelper;
 import io.reflection.app.client.part.BackToTop;
+import io.reflection.app.client.part.SuperAlertBox;
 import io.reflection.app.client.res.Styles;
 
 import com.google.gwt.dom.client.Document;
@@ -49,7 +50,7 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 
 			makeContainer();
 
-			// SuperAlertBox.start();
+			SuperAlertBox.start();
 
 			// add page area
 

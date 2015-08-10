@@ -277,8 +277,6 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 			if (absRowIndex % 2 == 0) {
 				updateLinkedAccountForm.setStyleName(style.formsMidTheme());
 			}
-			updateLinkedAccountForm.setTitleText("Edit Details");
-			updateLinkedAccountForm.setTitleStyleName(style.headingStyleHeadingFive());
 			updateLinkedAccountForm.setButtonText("Save Changes");
 			updateLinkedAccountForm.setAccount(rowValue);
 			updateLinkedAccountForm.showAccountUsername(false);
