@@ -711,6 +711,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("heading-style--heading-two")
 		String headingStyleHeadingTwo();
 
+		@ClassName("hidden-for-mobile")
+		String hiddenForMobile();
+
 		@ClassName("hidden-text")
 		String hiddenText();
 
@@ -1710,10 +1713,10 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("whats-this-tooltip-icon")
 		String whatsThisTooltipIcon();
-		
+
 		@ClassName("whats-this-tooltip-icon-static")
-		String whatsThisTooltipIconStatic();		
-		
+		String whatsThisTooltipIconStatic();
+
 		@ClassName("whats-this-tooltip-popup")
 		String whatsThisTooltipPopup();
 
