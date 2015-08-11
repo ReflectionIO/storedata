@@ -61,10 +61,13 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.TextAlign;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.logical.shared.ShowRangeEvent;
 import com.google.gwt.event.logical.shared.ShowRangeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -84,6 +87,7 @@ import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineHyperlink;
@@ -276,6 +280,22 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		TooltipHelper.updateHelperTooltip();
 
 		loadingBar.show();
+
+		// Hide Overall tab on mobile and go to grossing link
+		Window.addResizeHandler(new ResizeHandler() {
+			@Override
+			public void onResize(ResizeEvent event) {
+				if (event.getWidth() <= 719) {
+					if (tabs.get(OVERALL_LIST_TYPE).hasClassName(style.isActive())) {
+						History.replaceItem(grossingLink.getTargetHistoryToken());
+					}
+					allItem.getStyle().setDisplay(Display.NONE);
+				} else {
+					allItem.getStyle().setDisplay(Display.BLOCK);
+				}
+			}
+		});
+
 	}
 
 	private void createColumns() {
@@ -409,9 +429,10 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 			@Override
 			public SafeHtml getValue(RanksGroup object) {
-				return SafeHtmlUtils
-						.fromSafeConstant(DataTypeHelper.itemIapState(ItemController.get().lookupItem(rankForListType(object).itemId), IAP_YES_HTML,
-								IAP_NO_HTML, "<span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding " + style.whatsThisTooltipIconStatic() + "\" data-tooltip=\"No data available\"></span>"));
+				return SafeHtmlUtils.fromSafeConstant(DataTypeHelper.itemIapState(ItemController.get().lookupItem(rankForListType(object).itemId),
+						IAP_YES_HTML, IAP_NO_HTML,
+						"<span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding " + style.whatsThisTooltipIconStatic()
+								+ "\" data-tooltip=\"No data available\"></span>"));
 			}
 
 		};
@@ -763,7 +784,17 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 				updateFromFilter();
 			}
+
+			if (Window.getClientWidth() <= 719) {
+				if (tabs.get(OVERALL_LIST_TYPE).hasClassName(style.isActive())) {
+					History.replaceItem(grossingLink.getTargetHistoryToken());
+				}
+				allItem.getStyle().setDisplay(Display.NONE);
+			} else {
+				allItem.getStyle().setDisplay(Display.BLOCK);
+			}
 		}
+
 	}
 
 	// private void setDataFilterVisible(boolean visible) {
