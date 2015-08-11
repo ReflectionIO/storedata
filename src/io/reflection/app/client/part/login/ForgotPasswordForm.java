@@ -104,7 +104,6 @@ public class ForgotPasswordForm extends Composite implements ForgotPasswordEvent
 
 	public void setEnabled(boolean enabled) {
 		email.setEnabled(enabled);
-		email.setFocus(enabled);
 	}
 
 	private void resetForm() {
