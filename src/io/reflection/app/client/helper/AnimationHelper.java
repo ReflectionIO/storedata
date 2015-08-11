@@ -144,4 +144,22 @@ public class AnimationHelper {
 
 		return loadingIndicator;
 	}
+
+	public static LoadingIndicator getAppRevenueLoadingIndicator(int rowNumber) {
+		LoadingIndicator loadingIndicator = new LoadingIndicator(rowNumber, 3);
+		loadingIndicator.setColStyle(0, "width: 25%;");
+		loadingIndicator.setColStyle(1, "width: 25%;");
+		loadingIndicator.setColStyle(2, "width: 50%;");
+
+		loadingIndicator.setColStyleName(0, Styles.STYLES_INSTANCE.reflectionMainStyle().dateValue());
+		loadingIndicator.setColStyleName(1, Styles.STYLES_INSTANCE.reflectionMainStyle().revenueValue());
+		loadingIndicator.setColStyleName(2, Styles.STYLES_INSTANCE.reflectionMainStyle().revenuePercentage());
+
+		loadingIndicator.setColumnCellsSafeHtml(0, getLoaderInlineSafeHTML());
+		loadingIndicator.setColumnCellsSafeHtml(1, getLoaderInlineSafeHTML());
+		loadingIndicator.setColumnCellsSafeHtml(2, getLoaderInlineSafeHTML());
+
+		return loadingIndicator;
+	}
+
 }
