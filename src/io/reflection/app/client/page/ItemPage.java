@@ -52,7 +52,6 @@ import io.reflection.app.client.highcharts.ChartHelper.XDataType;
 import io.reflection.app.client.highcharts.ChartHelper.YAxisPosition;
 import io.reflection.app.client.highcharts.ChartHelper.YDataType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
-import io.reflection.app.client.part.LoadingIndicator;
 import io.reflection.app.client.part.datatypes.AppRevenue;
 import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.client.part.navigation.Header.PanelType;
@@ -109,6 +108,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 	interface ItemPageUiBinder extends UiBinder<Widget, ItemPage> {}
 
+	private ReflectionMainStyles style = Styles.STYLES_INSTANCE.reflectionMainStyle();
+
 	public static final int SELECTED_TAB_PARAMETER_INDEX = 1;
 
 	@UiField HeadingElement title;
@@ -152,9 +153,10 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField(provided = true) CellTable<AppRevenue> revenueTable = new CellTable<AppRevenue>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
 
 	private SafeHtmlHeader dateHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Date " + AnimationHelper.getSorterSvg()));
-	private SafeHtmlHeader revenueHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Revenue Generated " + AnimationHelper.getSorterSvg()));
-	private SafeHtmlHeader revenueForPeriodHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("% of Total Revenue for Period "
-			+ AnimationHelper.getSorterSvg()));
+	private SafeHtmlHeader revenueHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Revenue <span class=\"" + style.hiddenForMobile()
+			+ "\">Generated</span> " + AnimationHelper.getSorterSvg()));
+	private SafeHtmlHeader revenueForPeriodHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("% <span class=\"" + style.hiddenForMobile()
+			+ "\">of</span> Total <span class=\"" + style.hiddenForMobile() + "\">Revenue</span> for Period " + AnimationHelper.getSorterSvg()));
 
 	private String internalId;
 	private String comingPage;
@@ -194,7 +196,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 	private LoadingBar loadingBar;
 	private Element loaderInline = AnimationHelper.getLoaderInlineElement();
-	private ReflectionMainStyles style = Styles.STYLES_INSTANCE.reflectionMainStyle();
 
 	@UiField Element tablePanel;
 	@UiField Element togglePanel;
@@ -233,8 +234,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			createColumns();
 			// RankController.get().getItemRevenueDataProvider().addDataDisplay(revenueTable);
 			RankController.get().getRevenueDataProvider().addDataDisplay(revenueTable);
-			revenueTable.setLoadingIndicator(new LoadingIndicator(CalendarUtil.getDaysBetween(dateSelector.getValue().getFrom(), dateSelector.getValue()
-					.getTo()) + 1, 3));
+			revenueTable.setLoadingIndicator(AnimationHelper.getAppRevenueLoadingIndicator(CalendarUtil.getDaysBetween(dateSelector.getValue().getFrom(),
+					dateSelector.getValue().getTo()) + 1));
 			revenueTable.getTableLoadingSection().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().tableBodyLoading());
 			revenueTable.setRowCount(0, false);
 		}
@@ -713,8 +714,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				chartRevenue.setLoading(true);
 				chartDownloads.setLoading(true);
 				chartRank.setLoading(true);
-				revenueTable.setLoadingIndicator(new LoadingIndicator(CalendarUtil.getDaysBetween(dateSelector.getValue().getFrom(), dateSelector.getValue()
-						.getTo()) + 1, 3));
+				revenueTable.setLoadingIndicator(AnimationHelper.getAppRevenueLoadingIndicator(CalendarUtil.getDaysBetween(dateSelector.getValue().getFrom(),
+						dateSelector.getValue().getTo()) + 1));
 				revenueTable.setRowCount(0, false);
 				dateHeader.setHeaderStyleNames(style.canBeSorted());
 				revenueHeader.setHeaderStyleNames(style.canBeSorted());
