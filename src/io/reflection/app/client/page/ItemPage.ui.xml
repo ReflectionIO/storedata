@@ -160,7 +160,7 @@
 				<c:Selector ui:field="countrySelector" overlay="true" labelText="Country" styleName="{STYLES_INSTANCE.reflectionMainStyle.countrySelect}"
 					tooltip="Select up to 5 countries" />
 
-				<div class="{STYLES_INSTANCE.reflectionMainStyle.filtersGroupGraphOptions}">
+				<g:HTMLPanel ui:field="filtersGroupGraphOptions" styleName="{STYLES_INSTANCE.reflectionMainStyle.filtersGroupGraphOptions}">
 					<a ui:field="revealContentFilter" href="#"
 						class="{STYLES_INSTANCE.reflectionMainStyle.showHideLink} {STYLES_INSTANCE.reflectionMainStyle.refIconAfter} {STYLES_INSTANCE.reflectionMainStyle.refIconAfterAngleDown}">Show / Hide Options</a>
 					<div class="{STYLES_INSTANCE.reflectionMainStyle.revealElement}">
@@ -172,7 +172,7 @@
 						<c:FilterSwitch ui:field="oneMMovingAverageSwitch" label="1M Moving Average" />
 						<c:FilterSwitch ui:field="overlayAppsSwitch" label="Overlay Apps (0/5)" />
 					</div>
-				</div>
+				</g:HTMLPanel>
 			</form>
 		</div>
 
