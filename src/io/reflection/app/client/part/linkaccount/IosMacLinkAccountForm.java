@@ -27,7 +27,7 @@ import com.google.gwt.dom.client.FieldSetElement;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -132,7 +132,10 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	 * @param event
 	 */
 	@UiHandler({ "accountUsername", "password", "vendorId" })
-	void onKeyPressed(KeyPressEvent event) {
+	void onKeyDown(KeyDownEvent event) {
+		accountUsername.hideNote();
+		password.hideNote();
+		vendorId.hideNote();
 		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
 			linkAccountBtn.click();
 		}

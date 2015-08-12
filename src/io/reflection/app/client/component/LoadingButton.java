@@ -203,6 +203,34 @@ public class LoadingButton extends Button {
 		}
 	}
 
+	public boolean isStatusLoading() {
+		return getElement().hasClassName(STYLE_LOADING);
+	}
+
+	public boolean isStatusError() {
+		return getElement().hasClassName(STYLE_ERROR);
+	}
+
+	public boolean isStatusSuccess() {
+		return getElement().hasClassName(STYLE_SUCCESS);
+	}
+
+	public boolean isStatusDefault() {
+		return !isStatusLoading() && !isStatusError() && !isStatusSuccess();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.user.client.ui.Button#click()
+	 */
+	@Override
+	public void click() {
+		if (this.isStatusDefault()) {
+			super.click();
+		}
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 

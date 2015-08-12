@@ -28,6 +28,7 @@ import io.reflection.app.api.core.shared.call.GetUserDetailsRequest;
 import io.reflection.app.api.core.shared.call.GetUserDetailsResponse;
 import io.reflection.app.api.core.shared.call.event.ChangeUserDetailsEventHandler;
 import io.reflection.app.api.core.shared.call.event.GetUserDetailsEventHandler;
+import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.StyledButtonCell;
 import io.reflection.app.client.component.LoadingButton;
@@ -57,11 +58,12 @@ import java.util.List;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -130,6 +132,9 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 
 	@UiField LoadingButton changePasswordBtn;
 
+	@UiField ParagraphElement changePasswordGeneralErrorParagraph;
+	private String changePasswordGeneralErrorNote = "";
+
 	// Error definition during validation
 	private String passwordError = null;
 	private String newPasswordError = null;
@@ -149,7 +154,8 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	@UiField LoadingButton addPermissionBtn;
 
 	private User currentUser; // User using the system
-	private Long editingUserId; // User Id to Edit
+	private User editingUser; // User being edited
+	private Long editingUserId; // User being edited ID
 
 	public ChangeDetailsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -340,6 +346,12 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		company.setEnabled(enabled);
 	}
 
+	private void setChangePasswordFormEnabled(boolean enabled) {
+		password.setEnabled(enabled);
+		newPassword.setEnabled(enabled);
+		confirmPassword.setEnabled(enabled);
+	}
+
 	@UiHandler("changeDetailsBtn")
 	void onChangeDetailsClicked(ClickEvent event) {
 		if (validateDetails()) {
@@ -380,7 +392,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		if (validatePassword()) {
 			clearPasswordErrors();
 			changePasswordBtn.setStatusLoading("Changing password");
-
+			setChangePasswordFormEnabled(false);
 			if (SessionController.get().isLoggedInUserAdmin()) {
 				UserController.get().setPassword(editingUserId, newPassword.getText());
 			} else {
@@ -399,6 +411,10 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 				newPassword.hideNote();
 				confirmPassword.hideNote();
 			}
+			changePasswordGeneralErrorParagraph.setInnerText(changePasswordGeneralErrorNote);
+			changePasswordBtn.setStatusError(changePasswordGeneralErrorNote.equals(FormHelper.ERROR_FORM_EMPTY_FIELDS) ? FormHelper.ERROR_BUTTON_INCOMPLETE
+					: FormHelper.ERROR_BUTTON_WRONG);
+			changePasswordGeneralErrorNote = "";
 		}
 	}
 
@@ -453,6 +469,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		password.hideNote();
 		newPassword.hideNote();
 		confirmPassword.hideNote();
+		changePasswordGeneralErrorParagraph.setInnerText("");
 	}
 
 	private void clearAddRoleErrors() {
@@ -469,7 +486,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	 * @param event
 	 */
 	@UiHandler({ "username", "forename", "surname", "company" })
-	void onEnterKeyPressChangeDetailsFields(KeyPressEvent event) {
+	void onEnterKeyDownChangeDetailsFields(KeyDownEvent event) {
 		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
 			changeDetailsBtn.click();
 		}
@@ -477,11 +494,13 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 
 	@UiHandler({ "username", "forename", "surname", "company" })
 	void onDetailsFieldsModified(KeyUpEvent event) {
-		if (!username.getText().equals(currentUser.username) || !forename.getText().equals(currentUser.forename)
-				|| !surname.getText().equals(currentUser.surname) || !company.getText().equals(currentUser.company)) {
-			changeDetailsBtn.setEnabled(true);
-		} else {
-			changeDetailsBtn.setEnabled(false);
+		if (changeDetailsBtn.isStatusDefault()) {
+			if (!username.getText().equals(editingUser.username) || !forename.getText().equals(editingUser.forename)
+					|| !surname.getText().equals(editingUser.surname) || !company.getText().equals(editingUser.company)) {
+				changeDetailsBtn.setEnabled(true);
+			} else {
+				changeDetailsBtn.setEnabled(false);
+			}
 		}
 	}
 
@@ -490,8 +509,12 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	 * 
 	 * @param event
 	 */
-	@UiHandler({ "password", "password", "confirmPassword" })
-	void onEnterKeyPressChangePasswordFields(KeyPressEvent event) {
+	@UiHandler({ "password", "newPassword", "confirmPassword" })
+	void onEnterKeyDownChangePasswordFields(KeyDownEvent event) {
+		password.hideNote();
+		newPassword.hideNote();
+		confirmPassword.hideNote();
+		changePasswordGeneralErrorParagraph.setInnerText("");
 		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
 			changePasswordBtn.click();
 		}
@@ -499,30 +522,32 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 
 	@UiHandler({ "password", "newPassword", "confirmPassword" })
 	void onPasswordFieldsModified(KeyUpEvent event) {
-		if (!SessionController.get().isLoggedInUserAdmin()) {
-			if (!password.getText().isEmpty() && !newPassword.getText().isEmpty() && !confirmPassword.getText().isEmpty()) {
-				changePasswordBtn.setEnabled(true);
+		if (changePasswordBtn.isStatusDefault()) {
+			if (!SessionController.get().isLoggedInUserAdmin()) {
+				if (!password.getText().isEmpty() && !newPassword.getText().isEmpty() && !confirmPassword.getText().isEmpty()) {
+					changePasswordBtn.setEnabled(true);
+				} else {
+					changePasswordBtn.setEnabled(false);
+				}
 			} else {
-				changePasswordBtn.setEnabled(false);
-			}
-		} else {
-			if (!newPassword.getText().isEmpty() && !confirmPassword.getText().isEmpty()) {
-				changePasswordBtn.setEnabled(true);
-			} else {
-				changePasswordBtn.setEnabled(false);
+				if (!newPassword.getText().isEmpty() && !confirmPassword.getText().isEmpty()) {
+					changePasswordBtn.setEnabled(true);
+				} else {
+					changePasswordBtn.setEnabled(false);
+				}
 			}
 		}
 	}
 
 	@UiHandler("addRole")
-	void onEnterKeyPressAddRoleFields(KeyPressEvent event) {
+	void onEnterKeyDownAddRoleFields(KeyDownEvent event) {
 		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
 			addRoleBtn.click();
 		}
 	}
 
 	@UiHandler("addPermission")
-	void onEnterKeyPressAddPermissionFields(KeyPressEvent event) {
+	void onEnterKeyDownAddPermissionFields(KeyDownEvent event) {
 		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
 			addPermissionBtn.click();
 		}
@@ -669,18 +694,23 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		// Check password constraints for normal user
 		if (newPasswordText == null || newPasswordText.length() == 0) {
 			newPasswordError = FormHelper.ERROR_PASSWORD_CREATE_EMPTY;
+			changePasswordGeneralErrorNote = FormHelper.ERROR_FORM_EMPTY_FIELDS;
 			validated = false;
 		} else if (newPasswordText.length() < 6) {
 			newPasswordError = FormHelper.ERROR_PASSWORD_CREATE_SHORT;
+			changePasswordGeneralErrorNote = FormHelper.ERROR_FORM_WRONG_FIELDS;
 			validated = false;
 		} else if (newPasswordText.length() > 64) {
 			newPasswordError = "Too long (maximum 64 characters)";
+			changePasswordGeneralErrorNote = FormHelper.ERROR_FORM_WRONG_FIELDS;
 			validated = false;
 		} else if (!newPasswordText.equals(confirmPasswordText)) {
 			newPasswordError = FormHelper.ERROR_PASSWORD_CREATE_CONFIRMATION_MATCH;
+			changePasswordGeneralErrorNote = FormHelper.ERROR_FORM_WRONG_FIELDS;
 			validated = false;
 		} else if (!FormHelper.isTrimmed(newPasswordText)) {
 			newPasswordError = "Whitespaces not allowed either before or after the string";
+			changePasswordGeneralErrorNote = FormHelper.ERROR_FORM_WRONG_FIELDS;
 			validated = false;
 		} else {
 			newPasswordError = null;
@@ -690,15 +720,19 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		if (!SessionController.get().isLoggedInUserAdmin()) {
 			if (passwordText == null || passwordText.length() == 0) {
 				passwordError = FormHelper.ERROR_PASSWORD_LOGIN_EMPTY;
+				changePasswordGeneralErrorNote = FormHelper.ERROR_FORM_EMPTY_FIELDS;
 				validated = false;
 			} else if (passwordText.length() < 6) {
 				passwordError = FormHelper.ERROR_PASSWORD_CREATE_SHORT;
+				changePasswordGeneralErrorNote = FormHelper.ERROR_FORM_WRONG_FIELDS;
 				validated = false;
 			} else if (passwordText.length() > 64) {
 				passwordError = "Too long (maximum 64 characters)";
+				changePasswordGeneralErrorNote = FormHelper.ERROR_FORM_WRONG_FIELDS;
 				validated = false;
 			} else if (!FormHelper.isTrimmed(passwordText)) {
 				passwordError = "Whitespaces not allowed either before or after the string";
+				changePasswordGeneralErrorNote = FormHelper.ERROR_FORM_WRONG_FIELDS;
 				validated = false;
 			} else {
 				passwordError = null;
@@ -810,15 +844,10 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 
 				// Fill user details form
 				if (currentUser.id.toString().equals(editingUserId.toString())) { // Current user is the same as in the stack parameter
-					fillDetailsForm(currentUser);
+					editingUser = currentUser;
+					fillDetailsForm(editingUser);
 				} else if (SessionController.get().isLoggedInUserAdmin()) {
-					// User editingUser = UserController.get().getUser(editingUserId);
-					// if (editingUser != null) { // User already retrieved
-					// fillDetailsForm(editingUser);
-					// } else { // Coming from a page refreshing
-					// preloaderDetails.show();
 					UserController.get().fetchUser(editingUserId);
-					// }
 				} else { // No access to this user
 					userRolesProvider.updateRowCount(0, true);
 					userPermissionsProvider.updateRowCount(0, true);
@@ -848,8 +877,6 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	public void changeUserDetailsSuccess(ChangeUserDetailsRequest input, ChangeUserDetailsResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
 
-			currentUser = SessionController.get().getLoggedInUser();
-
 			changeDetailsBtn.setEnabled(false);
 			forename.setFocus(true);
 			changeDetailsBtn.setStatusSuccess("Details changed!", new IResetStatusCallback() {
@@ -865,7 +892,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 
 				@Override
 				public void onResetStatus() {
-					fillDetailsForm(currentUser); // Restore previous values
+					fillDetailsForm(editingUser); // Restore previous values
 					setUserDetailsFormEnabled(true);
 					changeDetailsBtn.setEnabled(false);
 				}
@@ -886,7 +913,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 
 			@Override
 			public void onResetStatus() {
-				fillDetailsForm(currentUser); // Restore previous values
+				fillDetailsForm(editingUser); // Restore previous values
 				setUserDetailsFormEnabled(true);
 				changeDetailsBtn.setEnabled(false);
 			}
@@ -902,6 +929,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	public void userPasswordChanged(Long userId) {
 
 		resetPasswordForm();
+		setChangePasswordFormEnabled(true);
 		changePasswordBtn.setStatusSuccess("Password changed!", new IResetStatusCallback() {
 
 			@Override
@@ -923,14 +951,24 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	@Override
 	public void userPasswordChangeFailed(Error error) {
 
-		changePasswordBtn.setStatusError(new IResetStatusCallback() {
+		if (error.code.intValue() == ApiError.IncorrectPasswordForChange.getCode()) {
+			passwordError = "Hang on...that's not your existing password, please try again";
+		} else if (error.code.intValue() == ApiError.InvalidPasswordSameAsCurrent.getCode()) {
+			newPasswordError = "Sorry, you can't use the same password, please enter a new one";
+		}
+		if (passwordError != null) {
+			password.showNote(passwordError, true);
+		} else {
+			password.hideNote();
+		}
+		if (newPasswordError != null) {
+			newPassword.showNote(newPasswordError, true);
+		} else {
+			newPassword.hideNote();
+		}
+		setChangePasswordFormEnabled(true);
 
-			@Override
-			public void onResetStatus() {
-				changePasswordBtn.setEnabled(false);
-			}
-		});
-		resetPasswordForm();
+		changePasswordBtn.setStatusError();
 
 	}
 
@@ -1112,10 +1150,10 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	@Override
 	public void getUserDetailsSuccess(GetUserDetailsRequest input, GetUserDetailsResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess && output.user != null) {
-			fillDetailsForm(output.user);
+			editingUser = output.user;
+			fillDetailsForm(editingUser);
 		}
 
-		// preloaderDetails.hide();
 	}
 
 	/*
@@ -1127,7 +1165,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	 */
 	@Override
 	public void getUserDetailsFailure(GetUserDetailsRequest input, Throwable caught) {
-		// preloaderDetails.hide();
+
 	}
 
 }

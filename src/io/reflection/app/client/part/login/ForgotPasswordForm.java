@@ -20,7 +20,7 @@ import io.reflection.app.client.helper.FormHelper;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -74,7 +74,7 @@ public class ForgotPasswordForm extends Composite implements ForgotPasswordEvent
 	}
 
 	@UiHandler("email")
-	void onEnterKeyPressForgotPassword(KeyPressEvent event) {
+	void onEnterKeyDownForgotPassword(KeyDownEvent event) {
 		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
 			submit.click();
 		}
