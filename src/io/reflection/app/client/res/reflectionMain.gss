@@ -1589,6 +1589,7 @@ img.image-full-width {
 /* line 2, sass/helpers/_helpers.scss */
 .no-scroll {
   overflow: hidden;
+  color: #000;
 }
 
 /* line 5, sass/helpers/_helpers.scss */
@@ -2471,8 +2472,8 @@ textarea, .global-header .link-open-search, html, body {
 }
 
 /* line 481, sass/templates/_account-access.scss */
-.no-touch .account-access-page .account-access-content .list-partners,
-.touch .account-access-page .account-access-content .list-partners {
+.account-access-page .account-access-content .list-partners,
+.account-access-page .account-access-content .list-partners {
   position: relative;
   left: 0;
   bottom: 0;
@@ -2569,21 +2570,18 @@ textarea, .global-header .link-open-search, html, body {
 
 @media (min-width: 480px) {
   /* line 534, sass/templates/_account-access.scss */
-  .no-touch .account-setup-content-wrapper .list-partners,
-  .touch .account-setup-content-wrapper .list-partners {
+  .account-setup-content-wrapper .list-partners {
     display: none;
   }
 }
 @media (min-width: 960px) {
   /* line 534, sass/templates/_account-access.scss */
-  .no-touch .account-setup-content-wrapper .list-partners,
-  .touch .account-setup-content-wrapper .list-partners {
+  .account-setup-content-wrapper .list-partners {
     display: block;
   }
 }
 /* line 542, sass/templates/_account-access.scss */
-.no-touch .account-setup-content-wrapper .list-partners li,
-.touch .account-setup-content-wrapper .list-partners li {
+.account-setup-content-wrapper .list-partners li {
   width: 49%;
 }
 
