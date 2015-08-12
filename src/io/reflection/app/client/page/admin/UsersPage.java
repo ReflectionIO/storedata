@@ -232,7 +232,7 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 	@UiHandler("confirmDelete")
 	void onConfirmDeleteClicked(ClickEvent event) {
 		UserController.get().deleteUser(deleteUserDialog.getParameter());
-		confirmDelete.setStatusLoading("Deleting..");
+		confirmDelete.setStatusLoading("Deleting");
 	}
 
 	@UiHandler("cancelDelete")

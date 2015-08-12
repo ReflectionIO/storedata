@@ -512,7 +512,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	@UiHandler("confirmDelete")
 	void onConfirmDeleteClicked(ClickEvent event) {
 		LinkedAccountController.get().deleteLinkedAccount(LinkedAccountController.get().getLinkedAccount(deleteLinkedAccountDialog.getParameter()));
-		confirmDelete.setStatusLoading("Deleting..");
+		confirmDelete.setStatusLoading("Deleting");
 		// deleteAccountOverlay.setVisible(false);
 	}
 
