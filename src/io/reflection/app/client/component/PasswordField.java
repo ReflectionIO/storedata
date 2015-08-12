@@ -21,11 +21,12 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.FocusEvent;
 import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.HasKeyPressHandlers;
+import com.google.gwt.event.dom.client.HasKeyDownHandlers;
 import com.google.gwt.event.dom.client.HasKeyUpHandlers;
 import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyDownEvent;
+import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -41,7 +42,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @author Stefano Capuzzi
  *
  */
-public class PasswordField extends Composite implements HasClickHandlers, HasKeyPressHandlers, HasKeyUpHandlers, Focusable {
+public class PasswordField extends Composite implements HasClickHandlers, HasKeyDownHandlers, HasKeyUpHandlers, Focusable {
 
 	private static FormFieldPasswordUiBinder uiBinder = GWT.create(FormFieldPasswordUiBinder.class);
 
@@ -197,16 +198,6 @@ public class PasswordField extends Composite implements HasClickHandlers, HasKey
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.google.gwt.event.dom.client.HasKeyPressHandlers#addKeyPressHandler(com.google.gwt.event.dom.client.KeyPressHandler)
-	 */
-	@Override
-	public HandlerRegistration addKeyPressHandler(KeyPressHandler handler) {
-		return addDomHandler(handler, KeyPressEvent.getType());
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see com.google.gwt.event.dom.client.HasKeyUpHandlers#addKeyUpHandler(com.google.gwt.event.dom.client.KeyUpHandler)
 	 */
 	@Override
@@ -232,6 +223,16 @@ public class PasswordField extends Composite implements HasClickHandlers, HasKey
 	@Override
 	public void setAccessKey(char key) {
 		passwordTextBox.setAccessKey(key);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.event.dom.client.HasKeyDownHandlers#addKeyDownHandler(com.google.gwt.event.dom.client.KeyDownHandler)
+	 */
+	@Override
+	public HandlerRegistration addKeyDownHandler(KeyDownHandler handler) {
+		return addDomHandler(handler, KeyDownEvent.getType());
 	}
 
 }
