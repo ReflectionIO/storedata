@@ -288,7 +288,7 @@ public class RegisterForm extends Composite {
 
 			if (!SessionController.get().isLoggedInUserAdmin()) {
 				if (termAndCond.getValue() == Boolean.FALSE) {
-					termAndCondError = "Just checking you agree with our very resonable terms before we continue";
+					termAndCondError = "Just checking you agree with our very reasonable terms before we continue";
 					generalErrorNote = FormHelper.ERROR_FORM_EMPTY_FIELDS;
 					validated = false;
 				} else {

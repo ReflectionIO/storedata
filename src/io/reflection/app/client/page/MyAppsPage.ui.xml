@@ -48,8 +48,8 @@
 		</g:HTMLPanel>
 
 		<g:Button ui:field="viewAllBtn" visible="false"
-			styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall} {STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmallWithIcon}">
-			<span ui:field="viewAllSpan" class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeMyApps}">View all Apps</span>
+			styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall}">
+			<span ui:field="viewAllSpan">View all Apps</span>
 		</g:Button>
 
 		<g:HTMLPanel ui:field="waitingForDataPanel" styleName="{STYLES_INSTANCE.reflectionMainStyle.grid__row} {STYLES_INSTANCE.reflectionMainStyle.fullPageMessage}"
