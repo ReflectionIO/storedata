@@ -125,6 +125,10 @@
 
 									<c:LoadingButton ui:field="changePasswordBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth}" text="Save New Password"
 										enabled="false" />
+
+									<div class="{STYLES_INSTANCE.reflectionMainStyle.generalErrorMessage}">
+										<p ui:field="changePasswordGeneralErrorParagraph"></p>
+									</div>
 								</form>
 							</div>
 						</div>
