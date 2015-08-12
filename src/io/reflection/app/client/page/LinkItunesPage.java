@@ -138,12 +138,12 @@ public class LinkItunesPage extends Page implements NavigationEventHandler, Link
 			accountConnectAnimation.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().plugsConnected());
 			panelSuccess.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
 		} else if (output.error != null) {
-			if (output.error.code == ApiError.InvalidDataAccountCredentials.getCode()) {
+			if (output.error.code.intValue() == ApiError.InvalidDataAccountCredentials.getCode()) {
 				iosMacForm.setStatusError("Invalid credentials!");
 				linkableAccount.setUsernameError("iTunes Connect username or password entered incorrectly");
 				linkableAccount.setPasswordError("iTunes Connect username or password entered incorrectly");
 				linkableAccount.setFormErrors();
-			} else if (output.error.code == ApiError.InvalidDataAccountVendor.getCode()) {
+			} else if (output.error.code.intValue() == ApiError.InvalidDataAccountVendor.getCode()) {
 				iosMacForm.setStatusError("Invalid vendor ID!");
 				iosMacForm.setVendorError("iTunes Connect vendor number entered incorrectly");
 				linkableAccount.setFormErrors();
