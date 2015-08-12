@@ -128,10 +128,10 @@ public class PasswordField extends Composite implements HasClickHandlers, HasKey
 	}
 
 	public void setCheckActive(boolean activated) {
-		checkActive = activated;
-		if (checkActive && !label.isOrHasChild(strengthIndicatorPanel)) {
+		if (!checkActive && activated) {
 			label.appendChild(strengthIndicatorPanel);
 		}
+		checkActive = activated;
 	}
 
 	public void setTabIndex(int index) {
