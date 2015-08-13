@@ -130,6 +130,7 @@
 	  var ua = window.navigator.userAgent;
 	  var msie = ua.indexOf('MSIE ');
 	  var trident = ua.indexOf('Trident/');
+	  var edge = ua.indexOf('Edge/');
 
 	  if (msie > 0) {
 	      // IE 10 or older => return version number
@@ -140,6 +141,10 @@
 	      // IE 11 (or newer) => return version number
 	      var rv = ua.indexOf('rv:');
 	      return parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10);
+	  }
+
+	  if (edge > 0) {
+	  	return "edge";
 	  }
 
 	  // other browser
@@ -906,12 +911,16 @@
 					var topPosition = $this.offset().top;
 					var leftPosition = $this.offset().left;
 					var tooltipHeight = tooltip.innerHeight();
-					var componentHeight = $this.innerHeight();					
+					var componentHeight = $this.innerHeight();						
 					tooltip.hide();
 					if($this.hasClass('js-tooltip--right')) {
-						var componentWidth = $this.innerWidth();
 						var tooltipWidth = tooltip.innerWidth();
-						leftPosition = leftPosition + componentWidth - tooltipWidth;
+						var componentWidth = $this.innerWidth();	
+						if($this.hasClass('js-tooltip--right--no-pointer-padding')) {
+							leftPosition = (leftPosition + componentWidth - tooltipWidth) + 10;
+						} else {
+							leftPosition = leftPosition + componentWidth - tooltipWidth;
+						}
 						tooltip.addClass("tooltip-right");
 					}
 					tooltip.css({"top": topPosition - tooltipHeight - 20, "left": leftPosition});				
