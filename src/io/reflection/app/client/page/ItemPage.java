@@ -126,6 +126,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField DateSelector dateSelector;
 	@UiField Selector storeSelector;
 	@UiField Selector countrySelector;
+	@UiField HTMLPanel filtersGroupGraphOptions;
 	@UiField(provided = true) FilterSwitch accuracySwitch = new FilterSwitch(true);
 	@UiField(provided = true) FilterSwitch eventsSwitch = new FilterSwitch(true);
 	@UiField(provided = true) FilterSwitch overlayRevenuesSwitch = new FilterSwitch(true);
@@ -725,6 +726,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			}
 
 			setChartGraphsVisible(toggleChartDate.getValue());
+			
+			ResponsiveDesignHelper.makeTabsResponsive();
 
 		} else {
 
@@ -740,6 +743,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				overlayRevenuesSwitch.setVisible(false);
 				overlayDownloadsSwitch.setVisible(true);
 				cumulativeChartSwitch.setVisible(true);
+				filtersGroupGraphOptions.setVisible(SessionController.get().isLoggedInUserAdmin() || MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage));
 				chartRevenue.setVisible(true);
 				chartDownloads.setVisible(false);
 				chartRank.setVisible(false);
@@ -748,14 +752,16 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				overlayDownloadsSwitch.setVisible(false);
 				overlayRevenuesSwitch.setVisible(true);
 				cumulativeChartSwitch.setVisible(true);
+				filtersGroupGraphOptions.setVisible(SessionController.get().isLoggedInUserAdmin() || MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage));
 				chartDownloads.setVisible(true);
 				chartRevenue.setVisible(false);
 				chartRank.setVisible(false);
 				break;
 			case RankingYAxisDataType:
-				overlayRevenuesSwitch.setVisible(SessionController.get().isLoggedInUserAdmin());
-				overlayDownloadsSwitch.setVisible(SessionController.get().isLoggedInUserAdmin());
+				overlayRevenuesSwitch.setVisible(true);
+				overlayDownloadsSwitch.setVisible(true);
 				cumulativeChartSwitch.setVisible(false);
+				filtersGroupGraphOptions.setVisible(SessionController.get().isLoggedInUserAdmin());
 				chartRank.setVisible(true);
 				chartRevenue.setVisible(false);
 				chartDownloads.setVisible(false);
@@ -765,6 +771,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			chartRevenue.setVisible(false);
 			chartDownloads.setVisible(false);
 			chartRank.setVisible(false);
+			filtersGroupGraphOptions.setVisible(SessionController.get().isLoggedInUserAdmin());
 			// TODO show map
 		}
 	}
@@ -808,7 +815,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 		tabs.get(selectedTab).addClassName(style.isActive());
 
-		ResponsiveDesignHelper.makeTabsResponsive();
 	}
 
 	private void getChartData() {

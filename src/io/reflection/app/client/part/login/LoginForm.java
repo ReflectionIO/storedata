@@ -36,7 +36,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -118,7 +118,7 @@ public class LoginForm extends Composite implements LoginEventHandler, UserPower
 	 * @param event
 	 */
 	@UiHandler({ "emailFormField", "passwordFormField" })
-	void onEnterKeyPressFields(KeyPressEvent event) {
+	void onEnterKeyDownFields(KeyDownEvent event) {
 		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
 			loginBtn.click();
 		}
