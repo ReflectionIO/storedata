@@ -123,12 +123,8 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 			PageType.UsersPageType.show();
 		} else {
 			// show mail animation
-			if (!tabContentRegister.hasClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().tabs__contentIsSubmitted())) {
-				tabContentRegister.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().tabs__contentIsSubmitted());
-			}
-			if (!submittedSuccessPanel.hasClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing())) {
-				submittedSuccessPanel.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
-			}
+			tabContentRegister.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().tabs__contentIsSubmitted());
+			submittedSuccessPanel.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
 		}
 		registerForm.setButtonSuccess("Application Sent", 0);
 	}

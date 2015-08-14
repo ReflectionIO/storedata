@@ -51,9 +51,9 @@ AccountAccess.prototype.mockSubmitApply = function() {
 AccountAccess.prototype.customTabTransition = function() {
 	$('.account-form-container .tabs__content:not(.tabs__content--is-showing)').css({"visibility":"hidden","position":"absolute"});
 	$('.account-form-container .tabs__content--is-showing').css({"visibility":"visible","position":"relative"});
-	if($('.ie8').length > 0) {
-		$('.account-form-container .tabs__content:not(.tabs__content--is-showing)').css("display","none");
-	}
+//	if($('.ie8').length > 0) {
+//		$('.account-form-container .tabs__content:not(.tabs__content--is-showing)').css("display","none");
+//	}
 
 	$('.account-form-container .js-tab-select').on("mouseup", function(e){
 		var $this = $(this);
@@ -68,10 +68,10 @@ AccountAccess.prototype.customTabTransition = function() {
 		setTimeout(function(){
 			$('.account-form-container .tabs__content:not(.tabs__content--is-showing)').css({"visibility":"hidden","position":"absolute"});
 			$('.account-form-container .tabs__content--is-showing').css({"visibility":"visible","position":"relative"});
-			if($('.ie8').length > 0) {
-				$('.account-form-container .tabs__content:not(.tabs__content--is-showing)').css("display","none");
-				$('.account-form-container .tabs__content--is-showing').css("display","block");
-			}
+//			if($('.ie8').length > 0) {
+//				$('.account-form-container .tabs__content:not(.tabs__content--is-showing)').css("display","none");
+//				$('.account-form-container .tabs__content--is-showing').css("display","block");
+//			}
 			$(contentId).removeClass('will-show');
 		}, 150);
 
@@ -99,10 +99,10 @@ AccountAccess.prototype.resetPasswordForm = function() {
 			$('.tabs__content--is-showing .form--login').css({"visibility":"hidden","position":"absolute"});
 			$('.tabs__content--is-showing .form--password-reset').css({"visibility":"visible","position":"relative"});
 			$currentTab.removeClass('will-show');
-			if($('.ie8').length > 0) {
-				$('.tabs__content--is-showing .form--login').css("display","none");
-				$('.tabs__content--is-showing .form--password-reset').css("display","block");
-			}
+//			if($('.ie8').length > 0) {
+//				$('.tabs__content--is-showing .form--login').css("display","none");
+//				$('.tabs__content--is-showing .form--password-reset').css("display","block");
+//			}
 		}, 150);
 		if($(window).width() <= 720) {
 			instance.scrollToFormContainerTop();
@@ -134,10 +134,10 @@ var AccountSetup = function() {
 AccountSetup.prototype.pageLoad = function() {
 	$('.connect-account-content').css({"visibility":"hidden","position":"absolute"});
 	$('.create-password-content').css({"visibility":"visible","position":"relative"});
-	if($('.ie8').length > 0) {
-		$('.connect-account-content').css("display","none");
-		$('.create-password-content').css("display","block");
-	}
+//	if($('.ie8').length > 0) {
+//		$('.connect-account-content').css("display","none");
+//		$('.create-password-content').css("display","block");
+//	}
 };
 
 AccountSetup.prototype.mockSubmitContinue = function() {
@@ -148,10 +148,10 @@ AccountSetup.prototype.mockSubmitContinue = function() {
 		setTimeout(function(){
 			$('.create-password-content').css({"visibility":"hidden","position":"absolute"});
 			$connectAccountContainer.css({"visibility":"visible","position":"relative"});
-			if($('.ie8').length > 0) {
-				$('.create-password-content').css("display","none");
-				$connectAccountContainer.css("display","block");
-			}
+//			if($('.ie8').length > 0) {
+//				$('.create-password-content').css("display","none");
+//				$connectAccountContainer.css("display","block");
+//			}
 		}, 150);
 	});
 };
