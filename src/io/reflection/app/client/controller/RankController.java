@@ -218,7 +218,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 		input.category = FilterController.get().getCategory();
 
-		input.listType = FilterController.get().getListTypes().get(0);
+		input.listType = DataTypeHelper.STORE_IPAD_A3_CODE.equals(FilterController.get().getFilter().getStoreA3Code()) ? "ipad" : "";
 
 		input.item = new Item();
 		input.item.internalId = item.internalId;
@@ -426,7 +426,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.google.gwt.view.client.AbstractDataProvider#onRangeChanged(com.google.gwt.view.client.HasData)
 	 */
 	@Override

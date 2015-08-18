@@ -124,7 +124,9 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	// Filters
 	// @UiField FormSwitch followSwitch;
 	@UiField DateSelector dateSelector;
+	@UiField Element filtersForm;
 	@UiField Selector storeSelector;
+	@UiField Selector storeSelectorDisabled;
 	@UiField Selector countrySelector;
 	@UiField HTMLPanel filtersGroupGraphOptions;
 	@UiField(provided = true) FilterSwitch accuracySwitch = new FilterSwitch(true);
@@ -230,7 +232,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			dnwBtn.removeFromParent();
 			dnwBtnMobile.removeFromParent();
 			countrySelector.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
-			storeSelector.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
 		} else {
 			createColumns();
 			// RankController.get().getItemRevenueDataProvider().addDataDisplay(revenueTable);
@@ -252,10 +253,12 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		tablePlaceholder.add(itemRevenuePlaceholder);
 
 		FilterHelper.addCountries(countrySelector, SessionController.get().isLoggedInUserAdmin());
-		FilterHelper.addStores(storeSelector, SessionController.get().isLoggedInUserAdmin());
+		FilterHelper.addStores(storeSelector, true);
+		FilterHelper.addStores(storeSelectorDisabled, false);
+		storeSelector.removeFromParent();
+
 		dateSelector.addFixedRanges(FilterHelper.getDefaultDateRanges());
 		updateFromFilter();
-		TooltipHelper.updateHelperTooltip();
 
 		// Add click event to LI element so the event is fired when clicking on the whole tab
 		Event.sinkEvents(revenueItem, Event.ONCLICK);
@@ -301,6 +304,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 		loadingBar = new LoadingBar(false);
 		loadingBar.show();
+
+		TooltipHelper.updateHelperTooltip();
 	}
 
 	public void setItem(Item item) {
@@ -509,6 +514,11 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		FilterController.get().setStore(storeSelector.getValue(storeSelector.getSelectedIndex()));
 	}
 
+	@UiHandler("storeSelectorDisabled")
+	void onAppStoreValueChangedDisabled(ChangeEvent event) {
+		FilterController.get().setStore(storeSelectorDisabled.getValue(storeSelectorDisabled.getSelectedIndex()));
+	}
+
 	@UiHandler("countrySelector")
 	void onCountryValueChanged(ChangeEvent event) {
 		FilterController.get().setCountry(countrySelector.getValue(countrySelector.getSelectedIndex()));
@@ -586,6 +596,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				+ FormattingHelper.DATE_FORMATTER_DD_MMM_YYYY.format(dateRange.getTo()));
 
 		storeSelector.setSelectedIndex(FormHelper.getItemIndex(storeSelector, fc.getFilter().getStoreA3Code()));
+		storeSelectorDisabled.setSelectedIndex(FormHelper.getItemIndex(storeSelectorDisabled, fc.getFilter().getStoreA3Code()));
 		countrySelector.setSelectedIndex(FormHelper.getItemIndex(countrySelector, fc.getFilter().getCountryA2Code()));
 
 	}
@@ -689,8 +700,16 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 			if (SessionController.get().isLoggedInUserAdmin() || MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage)) {
 				setRevenueDownloadTabsEnabled(true);
+				storeSelectorDisabled.setVisible(false);
+				if (!filtersForm.isOrHasChild(storeSelector.getElement())) {
+					filtersForm.insertBefore(storeSelector.getElement(), storeSelectorDisabled.getElement());
+				}
 			} else {
 				setRevenueDownloadTabsEnabled(false);
+				if (filtersForm.isOrHasChild(storeSelector.getElement())) {
+					filtersForm.removeChild(storeSelector.getElement());
+				}
+				storeSelectorDisabled.setVisible(true);
 			}
 
 			updateFromFilter();
@@ -726,7 +745,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			}
 
 			setChartGraphsVisible(toggleChartDate.getValue());
-			
+
 			ResponsiveDesignHelper.makeTabsResponsive();
 
 		} else {
