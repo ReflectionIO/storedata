@@ -778,6 +778,12 @@ public interface Styles extends ClientBundle {
 		@ClassName("img-signpost")
 		String imgSignpost();
 
+		@ClassName("img-site-logo")
+		String imgSiteLogo();
+
+		@ClassName("img-site-logo--mobile")
+		String imgSiteLogoMobile();
+
 		@ClassName("inline-search-form")
 		String inlineSearchForm();
 
@@ -1725,6 +1731,7 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("window-warning")
 		String windowWarning();
+
 	}
 
 	public interface HomePageStyles extends CssResource {
