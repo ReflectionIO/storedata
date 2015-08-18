@@ -113,7 +113,7 @@
 
 		<div
 			class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth} {STYLES_INSTANCE.reflectionMainStyle.filtersContainer} {STYLES_INSTANCE.reflectionMainStyle.filterContainerApp}">
-			<form class="{STYLES_INSTANCE.reflectionMainStyle.formsMidTheme}">
+			<form ui:field="filtersForm" class="{STYLES_INSTANCE.reflectionMainStyle.formsMidTheme}">
 				<c:DateSelector ui:field="dateSelector" tooltip="Select a date range" />
 
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.filterToggle}" ui:field="togglePanel">
@@ -156,6 +156,8 @@
 				</div>
 
 				<c:Selector ui:field="storeSelector" overlay="true" labelText="App Store" styleName="{STYLES_INSTANCE.reflectionMainStyle.storeSelect}" tooltip="View data for iPhone or iPad" />
+				<c:Selector ui:field="storeSelectorDisabled" overlay="true" labelText="App Store" styleName="{STYLES_INSTANCE.reflectionMainStyle.storeSelect}"
+					tooltip="This field is currently locked but will soon be editable as we integrate more data" visible="false" enabled="false" />
 
 				<c:Selector ui:field="countrySelector" overlay="true" labelText="Country" styleName="{STYLES_INSTANCE.reflectionMainStyle.countrySelect}"
 					tooltip="Select up to 5 countries" />
