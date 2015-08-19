@@ -275,7 +275,7 @@ var SubmitButtonWithFeedback = function() {
 		new DesignKitPage(dkPageProperties);
 
 		// Components
-		new SubmitButtonWithFeedback();
+		new SubmitButtonWithFeedback();		
 
 		// Functionality just for this template, and not reusable
 		this.templateFunctions();		
@@ -285,9 +285,11 @@ var SubmitButtonWithFeedback = function() {
 		var instance = this;		
 		$(".js-submit-loading").on("click", function() {
 			instance.createLoadingBar();
+			new LoadingMessageBox();
 		}); // demo loading bar
 		$(".js-submit-loading-determinate").on("click", function() {
 			instance.createLoadingBarDeterminate();
+			new LoadingMessageBox();
 		}); // demo loading bar
 		$(".js-submit-component-loading").on("click", function() {
 			instance.createComponentLoadingBar();

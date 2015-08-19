@@ -30,17 +30,17 @@
 
 					<c:TextField ui:field="subjectTextBox" labelText="Subject"></c:TextField>
 
-					<label>Short body</label>
+					<h5>Short body</h5>
 					<div class="form-field form-field--textarea">
 						<g:TextArea ui:field="shortBodyTextArea" styleName="form-control" width="100%" height="200px" />
 					</div>
 
-					<label>Long body</label>
+					<h5>Long body</h5>
 					<div class="form-field form-field--textarea">
 						<pt:MarkdownEditor ui:field="longBodyEditor" />
 					</div>
 
-					<div class="grid__column grid__column--full-width filters-container admin-filters-container">
+					<div class="grid__column">
 						<g:Button ui:field="addForenameBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall}">Add forename</g:Button>
 						<g:Button ui:field="addSurnameBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall}">Add surname</g:Button>
 						<g:Button ui:field="addUsernameBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall}">Add username</g:Button>
@@ -50,9 +50,8 @@
 
 					<c:Selector ui:field="priorityListBox" labelText="Priority" />
 
-					<g:HTMLPanel styleName="formEdit">
-						<g:Button ui:field="buttonUpdate" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth}" text="Save changes" />
-					</g:HTMLPanel>
+					<g:Button ui:field="buttonUpdate" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth}" text="Save changes" />
+
 				</form>
 			</div>
 		</g:HTMLPanel>

@@ -16,9 +16,9 @@
 				<div class="{STYLES_INSTANCE.homePageStyle.landingSectionMain__content}">
 					<div class="{STYLES_INSTANCE.homePageStyle.landingSectionMain__columnOne}">
 						<div>
-							<h1>Powerful Intelligence for the Global App Industry</h1>
+							<h1>The Essential Intelligence to Succeed in the App Market</h1>
 							<p>
-								View revenue and download intelligence for apps. Apply for free access to our data.
+								We're currently in Closed Beta. Apply for free access to our data
 							</p>
 							<div class="{STYLES_INSTANCE.homePageStyle.actionsContainer}">
 								<g:Anchor ui:field="linkScrollToAnchor" href="#" styleName="icon-angle-right">How Intelligence Helps</g:Anchor>
@@ -57,7 +57,7 @@
 							<img src="images/logos/Endemol_Logo@2x.png" alt="Endemol logo" />
 						</li>
 					</ul>
-					<h2>A few of our current partners</h2>
+					<h2>Used by</h2>
 				</div>
 			</section>
 		</div>
@@ -66,14 +66,17 @@
 			<g:HTMLPanel styleName="{STYLES_INSTANCE.homePageStyle.landingSectionInsights__column_one}" ui:field="leaderBoardScreenshot" />
 			<div class="{STYLES_INSTANCE.homePageStyle.landingColumnThin}">
 				<div class="{STYLES_INSTANCE.homePageStyle.landingColumnThin__content}">
-					<h2>Essential Intelligence</h2>
-					<p>Analyse and benchmark apps and market data for revenue, rank and downloads. Make strategic decisions on app development, marketing and investment.</p>
+					<h2>Identify What to Develop &amp; Plan Your Marketing</h2>
+					<p>Reflection’s intelligence will help you track the market, identify what apps to develop, and help you plan your marketing strategy.</p>
 					<ul class="{STYLES_INSTANCE.homePageStyle.contentList}">
 						<li>
-							<span>Daily updates of Top 200 paid and free apps for rank, revenue and download data.</span>
+							<span>View daily revenue, download and rank intelligence for the Top 200 Paid, Grossing and Free apps</span>
 						</li>
 						<li>
-							<span>Tailored view filtered by country, platform and category for your own insights.</span>
+							<span>Tailor your view by country, category and platform for your own insight and specific industry</span>
+						</li>
+						<li>
+							<span>Make informed decisions on product development, marketing and investment</span>
 						</li>
 					</ul>
 				</div>
@@ -84,9 +87,19 @@
 			<g:HTMLPanel styleName="{STYLES_INSTANCE.homePageStyle.landingSectionAnalyse__column_two}" ui:field="analysisScreenshot" />
 			<div class="{STYLES_INSTANCE.homePageStyle.landingColumnThin}">
 				<div class="{STYLES_INSTANCE.homePageStyle.landingColumnThin__content}">
-					<h2>Analyse App Performance</h2>
-					<p>Benchmark your apps’ revenue, rank and download performance against other apps over time.</p>
-					<p>Discover and identify competitive app pricing models, popular themes and designs to plan for your apps’ effective monetisation strategies.</p>
+					<h2>Track Your Competitors &amp; Market Trends</h2>
+					<p>Identify market trends and discover popular app monetisation strategies to help you succeed in the crowded app space.</p>
+					<ul class="{STYLES_INSTANCE.homePageStyle.contentList}">
+						<li>
+							<span>View historic data – revenue, download and rank data for the Top 200 apps filtered by country, category and store</span>
+						</li>
+						<li>
+							<span>Benchmark your apps – revenue, download and rank performance against other apps over time</span>
+						</li>
+						<li>
+							<span>Track market trends - discover popular apps and analyse effective app pricing models</span>
+						</li>
+					</ul>
 					<p class="{STYLES_INSTANCE.homePageStyle.smallText}">(Revenue values shown are not actual data)</p>
 				</div>
 			</div>
@@ -109,12 +122,8 @@
 			<div class="{STYLES_INSTANCE.homePageStyle.landingColumnWide}">
 				<div class="{STYLES_INSTANCE.homePageStyle.landingColumnWide__content}">
 					<h2>Building for the Future</h2>
-					<p>Reflection helps you reach where you want to be in the app market.</p>
-					<p>We understand that app intelligence is currently inaccessible and unaffordable, and it can be cumbersome to gain useful intelligence about apps and
-						app
-						markets. We are here to deliver what is missing.</p>
-					<p>Be a Reflection beta partner and help us define features that will impact the growing needs of developers, publishers, and other stakeholders in the
-						flourishing app space.</p>
+					<p>Reflection's mission is to provide actionable intelligence and tools to developers so that they can focus on building successful apps. Our ambition is to serve the entire app industry by offering market intelligence for all emerging platforms and technologies.</p>
+					<p>Apply for access to our closed beta to help us define features and tools for the growing needs of developers, publishers and other stakeholders in the app industry.</p>
 				</div>
 			</div>
 		</section>
@@ -125,9 +134,8 @@
 			<div class="{STYLES_INSTANCE.homePageStyle.landingColumnWide}">
 				<div class="{STYLES_INSTANCE.homePageStyle.landingColumnWide__content}">
 					<h2>Work With Us</h2>
-					<p>Reflection is a start-up with the ambition to disrupt the entire app ecosystem by providing accessible and affordable intelligence and tools.</p>
-					<p>We are always looking for talented people to join our growing team here in London. If you are a self-starter, would love to be part of an exciting,
-						expanding company and have what it takes to get things done, we’d like to hear from you.</p>
+					<p>We're on the lookout for like-minded individuals who can help us shape the future of the app industry and join our growing team in London.</p>
+					<p>If you are a self-starter, have what it takes to get things done, and want to be part of a talented team who genuinely love what they do, then we’d like to hear from you. </p>
 					<h3>Benefits</h3>
 					<ul class="{STYLES_INSTANCE.homePageStyle.contentList}">
 						<li>
@@ -140,7 +148,7 @@
 							<span>Central London location just off Oxford Street</span>
 						</li>
 						<li>
-							<span>Opportunities to learn all there is to know about the mobile and app market</span>
+							<span>Opportunities to learn all there is to know about the mobile and app markets</span>
 						</li>
 						<li>
 							<span>Friendly and collaborative culture</span>
