@@ -301,9 +301,14 @@ public class RegisterForm extends Composite {
 		return validated;
 	}
 
-	public void setUsername(String value) {
+	public void setEmail(String value) {
 		email.setText(value);
 		email.setEnabled(false);
+	}
+
+	public void setEmailError(String errorText) {
+		email.showNote(errorText, true);
+		generalErrorParagraph.setInnerText(FormHelper.ERROR_FORM_WRONG_FIELDS);
 	}
 
 	public void setForename(String value) {
