@@ -130,6 +130,7 @@
 	  var ua = window.navigator.userAgent;
 	  var msie = ua.indexOf('MSIE ');
 	  var trident = ua.indexOf('Trident/');
+	  var edge = ua.indexOf('Edge/');
 
 	  if (msie > 0) {
 	      // IE 10 or older => return version number
@@ -140,6 +141,10 @@
 	      // IE 11 (or newer) => return version number
 	      var rv = ua.indexOf('rv:');
 	      return parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10);
+	  }
+
+	  if (edge > 0) {
+	  	return "edge";
 	  }
 
 	  // other browser
@@ -906,12 +911,16 @@
 					var topPosition = $this.offset().top;
 					var leftPosition = $this.offset().left;
 					var tooltipHeight = tooltip.innerHeight();
-					var componentHeight = $this.innerHeight();					
+					var componentHeight = $this.innerHeight();						
 					tooltip.hide();
 					if($this.hasClass('js-tooltip--right')) {
-						var componentWidth = $this.innerWidth();
 						var tooltipWidth = tooltip.innerWidth();
-						leftPosition = leftPosition + componentWidth - tooltipWidth;
+						var componentWidth = $this.innerWidth();	
+						if($this.hasClass('js-tooltip--right--no-pointer-padding')) {
+							leftPosition = (leftPosition + componentWidth - tooltipWidth) + 10;
+						} else {
+							leftPosition = leftPosition + componentWidth - tooltipWidth;
+						}
 						tooltip.addClass("tooltip-right");
 					}
 					tooltip.css({"top": topPosition - tooltipHeight - 20, "left": leftPosition});				
@@ -982,6 +991,75 @@
 			$('.js-whats-this-tooltip.is-open').removeClass('is-open');
 		});
 	}
+
+	var LoadingMessageBoxMessages = [{
+		message: "<h2>Did you know...</h2><p>The app market is currently worth $40.5 Billion annually (2015)</p><img alt=\"Bulb icon\" src=\"images/icon-bulb.png\">"
+	},
+	{
+		message: "<h2>Did you know...</h2><p>There are currently 5.5 Million developers making apps (2015)</p><img alt=\"Bulb icon\" src=\"images/icon-bulb.png\">"
+	},
+	{
+		message: "<h2>Did you know...</h2><p>More than 3.7 Million apps are available across all stores today (2015)</p><img alt=\"Bulb icon\" src=\"images/icon-bulb.png\">"
+	},
+	{
+		message: "<h2>Did you know...</h2><p>Over 2000 apps are released every day (2015)</p><img alt=\"Bulb icon\" src=\"images/icon-bulb.png\">"
+	},
+	{
+		message: "<h2>Did you know...</h2><p>52% of app developers make less than $1,000 per month (2015)</p><img alt=\"Bulb icon\" src=\"images/icon-bulb.png\">"
+	},
+	{
+		message: "<h2>Did you know...</h2><p>17% of app developers make absolutely nothing :( (2015)</p><img alt=\"Bulb icon\" src=\"images/icon-bulb.png\">"
+	},
+	{
+		message: "<h2>Did you know...</h2><p>Mobile games revenue ($30.3 Billion) eclipsed console games ($26.4 Billion) for first time in 2015</p><img alt=\"Bulb icon\" src=\"images/icon-bulb.png\">"
+	},
+	{
+		message: "<h2>Did you know...</h2><p>Only 5% of developers make over $500,000 a month (2015)</p><img alt=\"Bulb icon\" src=\"images/icon-bulb.png\">"
+	},
+	{
+		message: "<h2>Did you know...</h2><p>Only 10% of developers make over $100,000 a month (2015)</p><img alt=\"Bulb icon\" src=\"images/icon-bulb.png\">"
+	}];
+
+	var LoadingMessageBox = function() {
+		var popupToastContainer = $("<div>").addClass("loading-message-box-container");
+		var firstMessageObject = LoadingMessageBoxMessages[0];
+		var popupToast = $("<div>").addClass("loading-message-box").html(firstMessageObject.message);
+		LoadingMessageBoxMessages.shift();
+		LoadingMessageBoxMessages.push(firstMessageObject);
+		popupToastContainer.append(popupToast);
+		$('body').append(popupToastContainer);
+		popupToastContainer.css("z-index", 900);
+		setTimeout(function(){
+			popupToast.addClass("is-open");
+		}, 500);
+		
+		setTimeout(function(){
+			popupToast.removeClass("is-open");
+			setTimeout(function(){
+				popupToastContainer.remove();
+			}, 1000);
+		}, 5000);
+
+		popupToastContainer.on("click", function(){
+			popupToast.removeClass("is-open");
+		});
+	}
+
+	var StickyTableHead = function() {
+		$('.sticky-table-head:visible').each(function(){
+			var $this = $(this);
+			var headerHeight = $('.global-header').innerHeight();
+			var dataTableTopPosition = $this.siblings('table').offset().top - headerHeight;
+			
+			$(window).on("scroll", function(){
+				if($(window).scrollTop() >= dataTableTopPosition) {
+					$this.css({"visibility": "visible", "opacity": 1});
+				} else {
+					$this.css({"visibility": "hidden", "opacity": 0});
+				}
+			});
+		});
+	}
 /* END COMPONENT OBJECTS */
 
 /* PAGE OBJECTS FOR TEMPLATES */
@@ -995,6 +1073,20 @@
 		new TabsToMobileDropDown();
 		new FormFieldSelect();
 		new BackToTop();
+		new StickyTableHead();
+
+		$('.js-tab-select').on("mouseup", function(e){
+			new StickyTableHead();
+		});
+
+		if($('.toggle-view-state #compact-view').attr("checked") !== undefined) {
+			$(".page-leaderboard").addClass("compact-view");
+		}
+
+		$('.toggle-view-state input').on("click", function(){
+			$(".page-leaderboard").removeClass("list-view compact-view");
+			$(".page-leaderboard").addClass($(this).attr("id"));
+		});
 	}
 
 // BlogPage object

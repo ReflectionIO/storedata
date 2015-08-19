@@ -613,6 +613,7 @@ public class RankService implements IRankService {
 		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
 		String platform = form == FormType.FormTypeOther ? "PHONE" : "TABLET";
+		String platformIOS = form == FormType.FormTypeOther ? "iphone" : "ipad";
 		String sortDirection = pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC";
 
 		/*
@@ -621,14 +622,14 @@ public class RankService implements IRankService {
 		 */
 
 		final String getRanksQuery = String
-				.format("SELECT  s.date, s.total_revenue as revenue, s.total_downloads as downloads, "
+				.format("SELECT  s.date, (%s_app_revenue + %s_iap_revenue) as revenue, %s_downloads as downloads, "
 						+ "    max(IF(rf.type='FREE' or rf.type='PAID', r.position, NULL)) as position, "
 						+ "    max(IF(rf.type='GROSSING', r.position, NULL)) as grossing_position, s.currency FROM sale_summary s USE INDEX (idx_item_search) "
 						+ "    LEFT JOIN rank_fetch rf USE INDEX (idx_rank_fetch_search_time) ON (s.date=rf.fetch_date and s.country=rf.country and rf.category=%d and rf.platform='%s') "
 						+ "    LEFT JOIN rank2 r ON (r.rank_fetch_id=rf.rank_fetch_id and r.itemid=s.itemid) "
 						+ "		WHERE s.date BETWEEN '%s' AND '%s' AND s.itemid = %s AND s.country = '%s' GROUP BY s.date ORDER BY s.%s %s LIMIT %d, %d",
-						categoryId, platform, dateFormat.format(start), dateFormat.format(end), internalId, country.a2Code, pager.sortBy, sortDirection,
-						pager.start, pager.count);
+						platformIOS, platformIOS, platformIOS, categoryId, platform, dateFormat.format(start), dateFormat.format(end), internalId,
+						country.a2Code, pager.sortBy, sortDirection, pager.start, pager.count);
 
 		try {
 			rankConnection.connect();
@@ -673,16 +674,17 @@ public class RankService implements IRankService {
 	@Override
 	public List<Rank> getSaleSummaryAndRankForDataAccountAndFormType(Long dataaccountId, Country country, FormType form, Date start, Date end, Pager pager)
 			throws DataAccessException {
+
+		String platformIOS = form == FormType.FormTypeOther ? "iphone" : "ipad";
+
 		ArrayList<Rank> ranks = new ArrayList<Rank>();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
-		final String getRanksQuery = String.format(
-				"SELECT s.itemid, s.price, s.currency, SUM(s.total_revenue) as revenue, SUM(s.total_downloads) as downloads "
-				+ "   FROM sale_summary s WHERE s.date BETWEEN '%s' AND '%s' AND s.dataaccountid = %s AND s.country = '%s' GROUP BY s.itemid",
-
-				dateFormat.format(start), dateFormat.format(end), dataaccountId, country.a2Code);
+		final String getRanksQuery = String
+				.format("SELECT s.itemid, s.price, s.currency, SUM(%s_app_revenue + %s_iap_revenue) as revenue, SUM(%s_downloads) as downloads FROM sale_summary s WHERE s.date BETWEEN '%s' AND '%s' AND s.dataaccountid = %s AND s.country = '%s' GROUP BY s.itemid",
+						platformIOS, platformIOS, platformIOS, dateFormat.format(start), dateFormat.format(end), dataaccountId, country.a2Code);
 		try {
 			rankConnection.connect();
 			rankConnection.executeQuery(getRanksQuery);

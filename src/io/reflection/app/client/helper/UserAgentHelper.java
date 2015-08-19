@@ -27,9 +27,10 @@ public class UserAgentHelper {
 
 	public static final String IE_VALUE = "MSIE ";
 	public static final String IE_11_VALUE = "Trident/7";
+	public static final String IE_EDGE_VALUE = "Edge/";
 
 	public static boolean isIE() {
-		return userAgent.contains(IE_VALUE) || userAgent.contains(IE_11_VALUE);
+		return userAgent.contains(IE_VALUE) || userAgent.contains(IE_11_VALUE) || userAgent.contains(IE_EDGE_VALUE);
 	}
 
 	static native boolean nativeIsChrome()/*-{
@@ -54,6 +55,8 @@ public class UserAgentHelper {
 			version = 11;
 		} else if (userAgent.contains(IE_VALUE)) {
 			version = Integer.parseInt(userAgent.substring(userAgent.indexOf(IE_VALUE) + 5, userAgent.indexOf(".", userAgent.indexOf(IE_VALUE))), 10);
+		} else if(userAgent.contains(IE_EDGE_VALUE)) {
+			version = 12;
 		}
 		return version;
 	}

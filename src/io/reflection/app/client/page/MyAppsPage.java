@@ -133,12 +133,11 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 
 		if (!SessionController.get().isLoggedInUserAdmin()) {
 			category.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
-			appStore.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
 			country.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
 		}
 
 		FilterHelper.addCategories(category, SessionController.get().isLoggedInUserAdmin());
-		FilterHelper.addStores(appStore, SessionController.get().isLoggedInUserAdmin());
+		FilterHelper.addStores(appStore, true);
 		FilterHelper.addCountries(country, SessionController.get().isLoggedInUserAdmin());
 
 		dateSelector.addFixedRanges(FilterHelper.getDefaultDateRanges());
@@ -462,9 +461,9 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		// TODO delete condition when the user can select the filters
 		if (SessionController.get().isLoggedInUserAdmin()) {
 			category.setEnabled(enabled);
-			appStore.setEnabled(enabled);
 			country.setEnabled(enabled);
 		}
+		appStore.setEnabled(enabled);
 		dateSelector.setEnabled(enabled);
 	}
 

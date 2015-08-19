@@ -29,46 +29,70 @@ public class TooltipHelper {
 	/**
 	 * To be called in onAttach
 	 */
-	public static native void nativeUpdateHelperTooltip()/*-{
+	private static native void nativeUpdateHelperTooltip()/*-{
 
 		if ($wnd.$('.no-touch').length) {
-			$wnd.$('.js-tooltip').each(
-					function() {
-						var $this = $wnd.$(this);
-						var tooltip;						
-						$this.on("mouseenter", function() {
-							var tooltipText = $wnd.$(this).data("tooltip");
-							tooltip = $wnd.$('<div>').addClass("tooltip").text(
-								tooltipText);
-							$wnd.$('body').append(tooltip);
-							var topPosition = $this.offset().top;
-							var leftPosition = $this.offset().left;
-							var tooltipHeight = tooltip.innerHeight();
-							var componentHeight = $this.innerHeight();						
-							tooltip.hide();
-							if($this.hasClass('js-tooltip--right')) {
-								var tooltipWidth = tooltip.innerWidth();
-								var componentWidth = $this.innerWidth();	
-								if($this.hasClass('js-tooltip--right--no-pointer-padding')) {
-									leftPosition = (leftPosition + componentWidth - tooltipWidth) + 10;
-								} else {
-									leftPosition = leftPosition + componentWidth - tooltipWidth;
-								}
-								tooltip.addClass("tooltip-right");
-							}
-							tooltip.css({
-								"top" : topPosition - tooltipHeight - 20,
-								"left" : leftPosition
+			$wnd
+					.$('.js-tooltip')
+					.each(
+							function() {
+								var $this = $wnd.$(this);
+								var tooltip;
+								$this
+										.on(
+												"mouseenter",
+												function() {
+													var tooltipText = $wnd.$(
+															this).data(
+															"tooltip");
+													tooltip = $wnd
+															.$('<div>')
+															.addClass("tooltip")
+															.text(tooltipText);
+													$wnd.$('body').append(
+															tooltip);
+													var topPosition = $this
+															.offset().top;
+													var leftPosition = $this
+															.offset().left;
+													var tooltipHeight = tooltip
+															.innerHeight();
+													var componentHeight = $this
+															.innerHeight();
+													tooltip.hide();
+													if ($this
+															.hasClass('js-tooltip--right')) {
+														var tooltipWidth = tooltip
+																.innerWidth();
+														var componentWidth = $this
+																.innerWidth();
+														if ($this
+																.hasClass('js-tooltip--right--no-pointer-padding')) {
+															leftPosition = (leftPosition
+																	+ componentWidth - tooltipWidth) + 10;
+														} else {
+															leftPosition = leftPosition
+																	+ componentWidth
+																	- tooltipWidth;
+														}
+														tooltip
+																.addClass("tooltip-right");
+													}
+													tooltip.css({
+														"top" : topPosition
+																- tooltipHeight
+																- 20,
+														"left" : leftPosition
+													});
+													setTimeout(function() {
+														tooltip.fadeIn(200);
+													}, 800);
+												});
+								$this.on("mouseleave", function() {
+									tooltip.remove();
+								});
+								$this.removeClass("js-tooltip");
 							});
-							setTimeout(function() {
-								tooltip.fadeIn(200);
-							}, 800);
-						});
-						$this.on("mouseleave", function() {
-							tooltip.remove();
-						});
-						$this.removeClass("js-tooltip");
-					});
 		}
 	}-*/;
 
@@ -161,7 +185,7 @@ public class TooltipHelper {
 										$this.removeClass('is-open');
 									}
 								});
-							} else {								
+							} else {
 								$wnd.$('.whats-this-tooltip-popup').remove();
 								$this.removeClass('is-open');
 							}
