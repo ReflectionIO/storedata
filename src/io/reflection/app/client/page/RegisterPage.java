@@ -123,12 +123,8 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 			PageType.UsersPageType.show();
 		} else {
 			// show mail animation
-			if (!tabContentRegister.hasClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().tabs__contentIsSubmitted())) {
-				tabContentRegister.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().tabs__contentIsSubmitted());
-			}
-			if (!submittedSuccessPanel.hasClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing())) {
-				submittedSuccessPanel.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
-			}
+			tabContentRegister.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().tabs__contentIsSubmitted());
+			submittedSuccessPanel.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
 		}
 		registerForm.setButtonSuccess("Application Sent", 0);
 	}
@@ -141,8 +137,10 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 	@Override
 	public void userRegistrationFailed(Error error) {
 		registerForm.setEnabled(true);
-		registerForm.setButtonError(); // probably the user already exists
-
+		registerForm.setButtonError();
+		if (error.code == 400000) { // Database error, the user already exists 
+			registerForm.setEmailError(FormHelper.ERROR_EMAIL_DUPLICATE);
+		}
 	}
 
 	/*
@@ -215,7 +213,7 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Re
 			if (output.user != null) {
 				welcomeName.setInnerText(output.user.forename + "!");
 				registerForm.resetForm();
-				registerForm.setUsername(username = output.user.username);
+				registerForm.setEmail(username = output.user.username);
 				createPasswordPanel.setVisible(true);
 				registerForm.setForename(output.user.forename);
 				registerForm.setSurname(output.user.surname);

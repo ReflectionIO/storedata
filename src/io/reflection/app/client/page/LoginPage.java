@@ -7,50 +7,83 @@
 //
 package io.reflection.app.client.page;
 
+import io.reflection.app.api.core.shared.call.ForgotPasswordRequest;
+import io.reflection.app.api.core.shared.call.ForgotPasswordResponse;
+import io.reflection.app.api.core.shared.call.event.ForgotPasswordEventHandler;
+import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.client.DefaultEventBus;
-import io.reflection.app.client.controller.NavigationController;
-import io.reflection.app.client.controller.NavigationController.Stack;
-import io.reflection.app.client.handler.NavigationEventHandler;
+import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.helper.FormHelper;
+import io.reflection.app.client.part.login.ForgotPasswordForm;
 import io.reflection.app.client.part.login.LoginForm;
 import io.reflection.app.client.res.Styles;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Style.Position;
+import com.google.gwt.dom.client.Style.Visibility;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author billy1380
  * 
  */
-public class LoginPage extends Page implements NavigationEventHandler {
+public class LoginPage extends Page implements ForgotPasswordEventHandler {
 
 	private static LoginPageUiBinder uiBinder = GWT.create(LoginPageUiBinder.class);
 
 	interface LoginPageUiBinder extends UiBinder<Widget, LoginPage> {}
 
-	public static final String WELCOME_ACTION_NAME = "welcome";
-	public static final String TIMEOUT_ACTION_NAME = "timeout";
-
-	// @UiField WelcomePanel mWelcomePanel; // Welcome panel, showed when action 'welcome' is in the stack
-
-	@UiField HTMLPanel mDefaultLogin;
-
 	@UiField InlineHyperlink register;
 	@UiField InlineHyperlink login;
-	@UiField LoginForm loginForm; // Usual login panel
-
-	// @UiField Preloader preloader;
+	@UiField LoginForm loginForm;
+	@UiField ForgotPasswordForm forgotPasswordForm;
+	@UiField DivElement formSubmittedSuccessPanel;
 
 	public LoginPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		login.setTargetHistoryToken(PageType.LoginPageType.asTargetHistoryToken(FormHelper.REQUEST_INVITE_ACTION_NAME));
 		register.setTargetHistoryToken(PageType.RegisterPageType.asTargetHistoryToken(FormHelper.REQUEST_INVITE_ACTION_NAME));
+
+		loginForm.getResetPasswordLink().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				event.preventDefault();
+				forgotPasswordForm.setEmail(loginForm.getEmail());
+				if (Window.getClientWidth() <= 720) {
+					// TODO scroll to form top
+				}
+
+				loginForm.getElement().getParentElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().showResetPasswordForm());
+				loginForm.getElement().getParentElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().willShow());
+				Document.get().getBody().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().resetPasswordFormIsShowing());
+
+				Timer t = new Timer() {
+
+					@Override
+					public void run() {
+						loginForm.getElement().getStyle().setVisibility(Visibility.HIDDEN);
+						loginForm.getElement().getStyle().setPosition(Position.ABSOLUTE);
+						forgotPasswordForm.getElement().getStyle().setVisibility(Visibility.VISIBLE);
+						forgotPasswordForm.getElement().getStyle().setPosition(Position.RELATIVE);
+						loginForm.getElement().getParentElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().willShow());
+					}
+				};
+				t.schedule(150);
+
+			}
+		});
 	}
 
 	/*
@@ -60,13 +93,11 @@ public class LoginPage extends Page implements NavigationEventHandler {
 	 */
 	@Override
 	protected void onAttach() {
+		super.onAttach();
+		DefaultEventBus.get().addHandlerToSource(ForgotPasswordEventHandler.TYPE, SessionController.get(), this);
 
 		Document.get().getBody().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().accountAccessPage());
 		Document.get().getBody().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().loginFormIsShowing());
-
-		super.onAttach();
-
-		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 
 	}
 
@@ -80,40 +111,56 @@ public class LoginPage extends Page implements NavigationEventHandler {
 		super.onDetach();
 		Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().accountAccessPage());
 		Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().loginFormIsShowing());
+		Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().resetPasswordFormIsShowing());
+
+		loginForm.getElement().getParentElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().tabs__contentIsSubmitted());
+		formSubmittedSuccessPanel.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
+		loginForm.getElement().getParentElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().showResetPasswordForm());
+		loginForm.getElement().removeAttribute("style");
+		forgotPasswordForm.getElement().removeAttribute("style");
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
-	 * io.reflection.app.client.controller.NavigationController.Stack)
+	 * @see
+	 * io.reflection.app.api.core.shared.call.event.ForgotPasswordEventHandler#forgotPasswordSuccess(io.reflection.app.api.core.shared.call.ForgotPasswordRequest
+	 * , io.reflection.app.api.core.shared.call.ForgotPasswordResponse)
 	 */
 	@Override
-	public void navigationChanged(Stack previous, Stack current) {
+	public void forgotPasswordSuccess(ForgotPasswordRequest input, ForgotPasswordResponse output) {
+		if (forgotPasswordForm.isStatusLoading()) {
+			if (output.status == StatusType.StatusTypeSuccess) {
 
-		if (current != null && current.hasAction()) {
-			if (WELCOME_ACTION_NAME.equals(current.getAction())) { // If action == 'welcome', show the Welcome panel
-				// mWelcomePanel.setVisible(true);
-				mDefaultLogin.setVisible(false);
-			} else { // If action == email (user has been just registered to the system) attach him email to field
-				String email = loginForm.getEmail(current.getAction());
+				forgotPasswordForm.getElement().getStyle().setVisibility(Visibility.HIDDEN); // TODO add in CSS
 
-				if (email == null) {
-					email = loginForm.getEmail(current.getParameter(0));
-				}
-
-				if (email != null) {
-					// mWelcomePanel.setVisible(false);
-					mDefaultLogin.setVisible(true);
-					loginForm.setUsername(email);
-				}
+				forgotPasswordForm.setStatusSuccess();
+				formSubmittedSuccessPanel.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
+				loginForm.getElement().getParentElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().tabs__contentIsSubmitted());
+			} else if (output.status == StatusType.StatusTypeFailure && output.error != null && output.error.code == ApiError.UserNotFound.getCode()) {
+				forgotPasswordForm.setStatusError("Invalid email address");
+			} else {
+				forgotPasswordForm.setStatusError();
+				loginForm.getElement().getParentElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().tabs__contentIsSubmitted());
+				formSubmittedSuccessPanel.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
 			}
-		} else {
-			// mWelcomePanel.setVisible(false);
-			mDefaultLogin.setVisible(true);
-
 		}
+	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.reflection.app.api.core.shared.call.event.ForgotPasswordEventHandler#forgotPasswordFailure(io.reflection.app.api.core.shared.call.ForgotPasswordRequest
+	 * , java.lang.Throwable)
+	 */
+	@Override
+	public void forgotPasswordFailure(ForgotPasswordRequest input, Throwable caught) {
+		if (forgotPasswordForm.isStatusLoading()) {
+			forgotPasswordForm.setStatusError();
+			loginForm.getElement().getParentElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().tabs__contentIsSubmitted());
+			formSubmittedSuccessPanel.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
+		}
 	}
 
 }
