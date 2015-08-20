@@ -55,20 +55,60 @@
 				</li>
 			</ul>
 			<ul class="{STYLES_INSTANCE.reflectionMainStyle.tabs__contentContainer}">
-				<li id="tab-content-login" class="{STYLES_INSTANCE.reflectionMainStyle.tabs__content} {STYLES_INSTANCE.reflectionMainStyle.tabs__contentIsShowing}">
-					<l:LoginForm ui:field="loginForm" styleName="{STYLES_INSTANCE.reflectionMainStyle.formsMidTheme}" />
+				<li class="{STYLES_INSTANCE.reflectionMainStyle.tabs__content} {STYLES_INSTANCE.reflectionMainStyle.tabs__contentIsShowing}" style="visibility: visible; position: relative;">
+
+					<l:LoginForm ui:field="loginForm" styleName="{STYLES_INSTANCE.reflectionMainStyle.formsMidTheme} {STYLES_INSTANCE.reflectionMainStyle.formLogin}" />
+
+					<l:ForgotPasswordForm ui:field="forgotPasswordForm"
+						styleName="{STYLES_INSTANCE.reflectionMainStyle.formsMidTheme} {STYLES_INSTANCE.reflectionMainStyle.formPasswordReset}" />
+
+					<div ui:field="formSubmittedSuccessPanel" class="{STYLES_INSTANCE.reflectionMainStyle.formSubmittedSuccess}">
+						<svg version="1.1" x="0px" y="0px" viewBox="0 0 93 32.7" enable-background="new 0 0 93 32.7" xml:space="preserve"
+							class="{STYLES_INSTANCE.reflectionMainStyle.emailDeliveryAnimation}"><g class="{STYLES_INSTANCE.reflectionMainStyle.emailDeliveryAnimationEmail}"><rect x="0.8" y="9" fill="none" stroke="#A0A0A9" stroke-width="1.7" stroke-miterlimit="10" width="16.6" height="10.4"></rect><polyline
+							fill="none" stroke="#A0A0A9" stroke-miterlimit="10" points="0.8,9 9.1,14.2 17.4,9 	"></polyline></g><g
+							class="{STYLES_INSTANCE.reflectionMainStyle.emailDeliveryAnimationVanBody}"><path fill="none" stroke="#A0A0A9" stroke-width="2.117" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10"
+							d="
+											M87.9,23"></path><polyline
+							fill="#F2F2F5" stroke="#A0A0A9" stroke-width="2" stroke-miterlimit="10" points="39.9,27.2 29.8,27.2 29.8,1 69.2,1 
+											69.2,27.6 	"></polyline><path
+							fill="none" stroke="#A0A0A9" stroke-width="2" stroke-miterlimit="10"
+							d="M70.1,8.1c0,0,3.2,0,4.1,0c0.9,0,2.2,0.8,2.2,0.8
+											l5.6,5.4c0,0,5.9,1.4,7.2,1.8c0.5,0.1,1.2,0.9,1.5,1.5c0.3,0.6,1.4,2,1.4,3.5c0,0.9,0,4.1,0,5.2s-0.9,1.2-0.9,1.2h-2.6"></path><line
+							fill="none" stroke="#A0A0A9" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="71.3" y1="19.1" x2="73.1" y2="19.1"></line><polyline
+							fill="none" stroke="#A0A0A9" stroke-miterlimit="10" points="69.9,10.5 74.5,10.5 78.4,14.6 78.4,16.9 69.8,16.9 	"></polyline><line
+							fill="none" stroke="#A0A0A9" stroke-width="2" stroke-miterlimit="10" x1="49.5" y1="27.3" x2="79.2" y2="27.3"></line><path
+							fill-rule="evenodd" clip-rule="evenodd" fill="#A0A0A9"
+							d="M42.1,5.8c0,0.3-0.2,0.5-0.5,0.5h-6.3c-0.3,0-0.5-0.2-0.5-0.5l0,0
+											c0-0.3,0.2-0.5,0.5-0.5h6.3C41.9,5.3,42.1,5.6,42.1,5.8L42.1,5.8z"></path><path
+							fill-rule="evenodd" clip-rule="evenodd" fill="#A0A0A9"
+							d="M43.7,7.4c0,0.3-0.2,0.5-0.5,0.5h-7.9c-0.3,0-0.5-0.2-0.5-0.5l0,0
+											c0-0.3,0.2-0.5,0.5-0.5h7.9C43.5,6.9,43.7,7.1,43.7,7.4L43.7,7.4z"></path><path
+							fill-rule="evenodd" clip-rule="evenodd" fill="#A0A0A9"
+							d="M40.6,10.6c0,0.3-0.2,0.5-0.5,0.5h-4.8c-0.3,0-0.5-0.2-0.5-0.5
+											l0,0c0-0.3,0.2-0.5,0.5-0.5h4.8C40.3,10.1,40.6,10.3,40.6,10.6L40.6,10.6z"></path><path
+							fill-rule="evenodd" clip-rule="evenodd" fill="#A0A0A9"
+							d="M42.1,12.2c0,0.3-0.2,0.5-0.5,0.5h-6.3c-0.3,0-0.5-0.2-0.5-0.5
+											l0,0c0-0.3,0.2-0.5,0.5-0.5h6.3C41.9,11.7,42.1,11.9,42.1,12.2L42.1,12.2z"></path><path
+							fill-rule="evenodd" clip-rule="evenodd" fill="#A0A0A9"
+							d="M42.1,9c0,0.3-0.2,0.5-0.5,0.5h-6.3c-0.3,0-0.5-0.2-0.5-0.5l0,0
+											c0-0.3,0.2-0.5,0.5-0.5h6.3C41.9,8.5,42.1,8.7,42.1,9L42.1,9z"></path><path
+							fill-rule="evenodd" clip-rule="evenodd" fill="#A0A0A9"
+							d="M43.7,13.8c0,0.3-0.2,0.5-0.5,0.5h-7.9c-0.3,0-0.5-0.2-0.5-0.5
+											l0,0c0-0.3,0.2-0.5,0.5-0.5h7.9C43.5,13.3,43.7,13.5,43.7,13.8L43.7,13.8z"></path></g><g><g><circle
+							fill="#F2F2F5" stroke="#A0A0A9" stroke-width="2" stroke-miterlimit="10" cx="44.6" cy="26.6" r="5.1"></circle><circle
+							fill="none" stroke="#A0A0A9" stroke-miterlimit="10" cx="44.6" cy="26.6" r="2.4"></circle></g><g><circle
+							fill="#F2F2F5" stroke="#A0A0A9" stroke-width="2" stroke-miterlimit="10" cx="84.1" cy="26.6" r="5.1"></circle><circle
+							fill="none" stroke="#A0A0A9" stroke-miterlimit="10" cx="84.1" cy="26.6" r="2.4"></circle></g></g></svg>
+						<svg version="1.1" x="0px" y="0px" viewBox="0 0 61 54" enable-background="new 0 0 61 54" xml:space="preserve" class="{STYLES_INSTANCE.reflectionMainStyle.successTick}"><path fill="#1BC79F"
+							d="M60.6,7.4l-8.1-7.1C52.2,0.1,51.9,0,51.6,0c-0.3,0-0.6,0.2-0.9,0.4L21.3,33.8L10.9,20
+									c-0.2-0.3-0.5-0.4-0.8-0.5c-0.3,0-0.7,0-0.9,0.2l-8.6,6.5c-0.6,0.4-0.7,1.2-0.2,1.7l19.4,25.5c0.2,0.3,0.6,0.5,1,0.5c0,0,0,0,0,0
+									c0.4,0,0.7-0.2,0.9-0.4L60.7,9.2C61.2,8.7,61.1,7.9,60.6,7.4z"></path></svg>
+						<p>We've sent the email, click on the link contained therein to reset your password once it arrives</p>
+					</div>
+
 				</li>
 			</ul>
 		</div>
-
-
-
-
-		<g:HTMLPanel ui:field="mDefaultLogin">
-		</g:HTMLPanel>
-		<!-- <l:WelcomePanel ui:field="mWelcomePanel" styleName="col-md-12 {style.panel}" visible="false" /> -->
-
-
 
 	</g:HTMLPanel>
 </ui:UiBinder> 

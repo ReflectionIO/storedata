@@ -78,9 +78,7 @@ public class TextField extends Composite implements HasClickHandlers, HasKeyDown
 		if (text != null && text.length() > 0) {
 			this.getElement().removeClassName(refStyle.isClosed());
 		} else {
-			if (!this.getElement().hasClassName(refStyle.isClosed())) {
-				this.getElement().addClassName(refStyle.isClosed());
-			}
+			this.getElement().addClassName(refStyle.isClosed());
 		}
 		textBox.setText(text);
 	}

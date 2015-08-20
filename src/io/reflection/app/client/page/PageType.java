@@ -63,7 +63,6 @@ public enum PageType {
 	EventsPageType("events", DataTypeHelper.PERMISSION_MANAGE_EVENTS_CODE),
 	EventSubscriptionsPageType("eventsubscriptions", DataTypeHelper.PERMISSION_MANAGE_EVENT_SUBSCRIPTIONS_CODE),
 	FeedBrowserPageType("feedbrowser", DataTypeHelper.PERMISSION_MANAGE_FEED_FETCHES_CODE),
-	ForgotPasswordPageType("forgotpassword", false),
 	ForumEditTopicPageType("forumtopicedit", false),
 	ForumPageType("forum", false),
 	ForumThreadPageType("forumthread", false),
@@ -261,9 +260,6 @@ public enum PageType {
 			break;
 		case EventsPageType:
 			page = new EventPage();
-			break;
-		case ForgotPasswordPageType:
-			page = new ForgotPasswordPage();
 			break;
 		case ResetPasswordPageType:
 			page = new ResetPasswordPage();

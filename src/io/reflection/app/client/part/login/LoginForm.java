@@ -23,8 +23,6 @@ import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.handler.user.SessionEventHandler;
 import io.reflection.app.client.handler.user.UserPowersEventHandler;
 import io.reflection.app.client.helper.FormHelper;
-import io.reflection.app.client.page.LoginPage;
-import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
@@ -37,12 +35,11 @@ import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.Error;
 
@@ -56,11 +53,11 @@ public class LoginForm extends Composite implements LoginEventHandler, UserPower
 
 	interface LoginFormUiBinder extends UiBinder<Widget, LoginForm> {}
 
-	@UiField TextField emailFormField;
+	@UiField TextField emailTextField;
 	private String emailNote = null;
-	@UiField PasswordField passwordFormField;
+	@UiField PasswordField passwordField;
 	private String passwordNote = null;
-	@UiField InlineHyperlink resetPasswordLink;
+	@UiField Anchor resetPasswordLink;
 	@UiField FormCheckbox rememberMe;
 	@UiField LoadingButton loginBtn;
 	@UiField ParagraphElement generalErrorParagraph;
@@ -68,7 +65,6 @@ public class LoginForm extends Composite implements LoginEventHandler, UserPower
 
 	public LoginForm() {
 		initWidget(uiBinder.createAndBindUi(this));
-		this.getElement().setAttribute("autocomplete", "off");
 
 	}
 
@@ -88,28 +84,29 @@ public class LoginForm extends Composite implements LoginEventHandler, UserPower
 
 		Stack s = NavigationController.get().getStack();
 		if (s != null && s.hasAction()) {
-			if (LoginPage.TIMEOUT_ACTION_NAME.equals(s.getAction())) {
-				String email = getEmail(s.getParameter(0));
-				if (email != null) {
-					setUsername(email);
+			if ("timeout".equals(s.getAction())) {
+				if (FormHelper.isValidEmail(s.getParameter(0))) {
+					setEmail(s.getParameter(0));
 				}
 			}
 		}
-
 	}
 
-	public void setUsername(String value) {
+	public Anchor getResetPasswordLink() {
+		return resetPasswordLink;
+	}
+
+	public void setEmail(String value) {
 		if (value != null && value.length() > 0) {
-			emailFormField.getElement().getParentElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isClosed());
-			passwordFormField.getElement().getParentElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isClosed());
-			emailFormField.setText(value);
-			if (FormHelper.isValidEmail(emailFormField.getText())) {
-				resetPasswordLink.setTargetHistoryToken(PageType.ForgotPasswordPageType.asTargetHistoryToken(value));
-			} else {
-				resetPasswordLink.setTargetHistoryToken(PageType.ForgotPasswordPageType.asTargetHistoryToken());
-			}
-			passwordFormField.setFocus(true);
+			emailTextField.getElement().getParentElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isClosed());
+			passwordField.getElement().getParentElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isClosed());
+			emailTextField.setText(value);
+			passwordField.setFocus(true);
 		}
+	}
+
+	public String getEmail() {
+		return (FormHelper.isValidEmail(emailTextField.getText()) ? emailTextField.getText() : null);
 	}
 
 	/**
@@ -117,7 +114,7 @@ public class LoginForm extends Composite implements LoginEventHandler, UserPower
 	 * 
 	 * @param event
 	 */
-	@UiHandler({ "emailFormField", "passwordFormField" })
+	@UiHandler({ "emailTextField", "passwordField" })
 	void onEnterKeyDownFields(KeyDownEvent event) {
 		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
 			loginBtn.click();
@@ -130,17 +127,17 @@ public class LoginForm extends Composite implements LoginEventHandler, UserPower
 			clearErrors();
 			setEnabled(false);
 			loginBtn.setStatusLoading("Logging in");
-			SessionController.get().login(emailFormField.getText(), passwordFormField.getText(), rememberMe.getValue().booleanValue()); // Execute user login
+			SessionController.get().login(emailTextField.getText(), passwordField.getText(), rememberMe.getValue().booleanValue()); // Execute user login
 		} else {
 			if (emailNote != null) {
-				emailFormField.showNote(emailNote, true);
+				emailTextField.showNote(emailNote, true);
 			} else {
-				emailFormField.hideNote();
+				emailTextField.hideNote();
 			}
 			if (passwordNote != null) {
-				passwordFormField.showNote(passwordNote, true);
+				passwordField.showNote(passwordNote, true);
 			} else {
-				passwordFormField.hideNote();
+				passwordField.hideNote();
 			}
 			generalErrorParagraph.setInnerText(generalErrorNote);
 			loginBtn.setStatusError(generalErrorNote.equals(FormHelper.ERROR_FORM_EMPTY_FIELDS) ? FormHelper.ERROR_BUTTON_INCOMPLETE
@@ -153,8 +150,8 @@ public class LoginForm extends Composite implements LoginEventHandler, UserPower
 
 		boolean validated = true;
 		// Retrieve fields to validate
-		String emailText = emailFormField.getText();
-		String passwordText = passwordFormField.getText();
+		String emailText = emailTextField.getText();
+		String passwordText = passwordField.getText();
 
 		// Check fields constraints
 		if (emailText == null || emailText.length() == 0) {
@@ -216,16 +213,16 @@ public class LoginForm extends Composite implements LoginEventHandler, UserPower
 	// }
 
 	private void clearErrors() {
-		emailFormField.hideNote();
-		passwordFormField.hideNote();
+		emailTextField.hideNote();
+		passwordField.hideNote();
 		generalErrorParagraph.setInnerText("");
 	}
 
 	public void setEnabled(boolean enabled) {
-		emailFormField.setEnabled(enabled);
+		emailTextField.setEnabled(enabled);
 		rememberMe.setEnabled(enabled);
-		passwordFormField.setEnabled(enabled);
-		emailFormField.setFocus(enabled);
+		passwordField.setEnabled(enabled);
+		emailTextField.setFocus(enabled);
 
 		// if (!value) {
 		// rememberMe.setFocus(false);
@@ -233,25 +230,8 @@ public class LoginForm extends Composite implements LoginEventHandler, UserPower
 		// }
 	}
 
-	public String getEmail(String value) {
-		String email = null;
-		if (value != null && value.length() > 0 && FormHelper.isValidEmail(value)) {
-			email = value;
-		}
-		return email;
-	}
-
 	public void setLoggedIn(boolean loggedIn) {
 
-	}
-
-	@UiHandler("emailFormField")
-	void onEmailKeyUp(KeyUpEvent event) {
-		if (FormHelper.isValidEmail(emailFormField.getText())) {
-			resetPasswordLink.setTargetHistoryToken(PageType.ForgotPasswordPageType.asTargetHistoryToken(emailFormField.getText()));
-		} else {
-			resetPasswordLink.setTargetHistoryToken(PageType.ForgotPasswordPageType.asTargetHistoryToken());
-		}
 	}
 
 	/*
@@ -284,20 +264,22 @@ public class LoginForm extends Composite implements LoginEventHandler, UserPower
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
 		if (SessionController.get().getLastUsername() != null) {
-			setUsername(SessionController.get().getLastUsername());
+			setEmail(SessionController.get().getLastUsername());
 		}
 		if (SessionController.get().isValidSession()) { // TODO test
-			passwordFormField.clear();
+			passwordField.clear();
 			setEnabled(false);
 			loginBtn.setStatusSuccess("Logged in", 0);
 		}
-		if (current != null && current.hasAction() && !LoginPage.WELCOME_ACTION_NAME.equals(current.getAction())) {
-			String email = getEmail(current.getAction());
-			if (email == null) {
-				email = getEmail(current.getParameter(0));
+		if (current != null && current.hasAction()) {
+			String email = null;
+			if (FormHelper.isValidEmail(current.getAction())) {
+				email = current.getAction();
+			} else if (FormHelper.isValidEmail(current.getParameter(0))) {
+				email = current.getParameter(0);
 			}
 			if (email != null) {
-				setUsername(email);
+				setEmail(email);
 			}
 		}
 	}
@@ -333,7 +315,7 @@ public class LoginForm extends Composite implements LoginEventHandler, UserPower
 	 */
 	@Override
 	public void userLoggedIn(User user, Session session) {
-		passwordFormField.clear();
+		passwordField.clear();
 	}
 
 	/*

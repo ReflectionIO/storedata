@@ -7,11 +7,6 @@
 //
 package io.reflection.app.client.part.login;
 
-import io.reflection.app.api.core.shared.call.ForgotPasswordRequest;
-import io.reflection.app.api.core.shared.call.ForgotPasswordResponse;
-import io.reflection.app.api.core.shared.call.event.ForgotPasswordEventHandler;
-import io.reflection.app.api.shared.ApiError;
-import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.component.LoadingButton;
 import io.reflection.app.client.component.TextField;
 import io.reflection.app.client.controller.SessionController;
@@ -26,13 +21,12 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
-import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author billy1380
  * 
  */
-public class ForgotPasswordForm extends Composite implements ForgotPasswordEventHandler {
+public class ForgotPasswordForm extends Composite {
 
 	private static ForgotPasswordFormUiBinder uiBinder = GWT.create(ForgotPasswordFormUiBinder.class);
 
@@ -67,8 +61,6 @@ public class ForgotPasswordForm extends Composite implements ForgotPasswordEvent
 	@Override
 	protected void onAttach() {
 		super.onAttach();
-
-		DefaultEventBus.get().addHandlerToSource(ForgotPasswordEventHandler.TYPE, SessionController.get(), this);
 
 		resetForm();
 	}
@@ -117,37 +109,22 @@ public class ForgotPasswordForm extends Composite implements ForgotPasswordEvent
 		email.setText(text);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * io.reflection.app.api.core.shared.call.event.ForgotPasswordEventHandler#forgotPasswordSuccess(io.reflection.app.api.core.shared.call.ForgotPasswordRequest
-	 * , io.reflection.app.api.core.shared.call.ForgotPasswordResponse)
-	 */
-	@Override
-	public void forgotPasswordSuccess(ForgotPasswordRequest input, ForgotPasswordResponse output) {
-		if (output.status == StatusType.StatusTypeSuccess) {
-			submit.setStatusSuccess("Email Sent", 0);
-		} else if (output.status == StatusType.StatusTypeFailure && output.error != null && output.error.code == ApiError.UserNotFound.getCode()) {
-			submit.setStatusError("Invalid email address");
-			setEnabled(true);
-		} else {
-			submit.setStatusError();
-			setEnabled(true);
-		}
+	public void setStatusSuccess() {
+		submit.setStatusSuccess("Email Sent", 0);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * io.reflection.app.api.core.shared.call.event.ForgotPasswordEventHandler#forgotPasswordFailure(io.reflection.app.api.core.shared.call.ForgotPasswordRequest
-	 * , java.lang.Throwable)
-	 */
-	@Override
-	public void forgotPasswordFailure(ForgotPasswordRequest input, Throwable caught) {
+	public void setStatusError(String errorText) {
+		submit.setStatusError(errorText);
+		setEnabled(true);
+	}
+
+	public void setStatusError() {
 		submit.setStatusError();
 		setEnabled(true);
+	}
+
+	public boolean isStatusLoading() {
+		return submit.isStatusLoading();
 	}
 
 }
