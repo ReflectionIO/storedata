@@ -511,10 +511,6 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	 */
 	@UiHandler({ "password", "newPassword", "confirmPassword" })
 	void onEnterKeyDownChangePasswordFields(KeyDownEvent event) {
-		password.hideNote();
-		newPassword.hideNote();
-		confirmPassword.hideNote();
-		changePasswordGeneralErrorParagraph.setInnerText("");
 		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
 			changePasswordBtn.click();
 		}

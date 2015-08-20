@@ -47,6 +47,7 @@ public class FormHelper {
 	public static final String ERROR_EMAIL_MISSING_AT = "Invalid email address: @ symbol is missing";
 	// public static final String ERROR_EMAIL_INVALID_EXTENSION = ""; TODO ?
 	public static final String ERROR_EMAIL_LOGIN_EMPTY = "We can't let you in without your email address";
+	public static final String ERROR_EMAIL_DUPLICATE = "It looks like you already have an account with that email";
 	public static final String ERROR_COMPANY_EMPTY = "Please tell us your company name";
 	public static final String ERROR_COMPANY_SHORT = "Company must be a minimum of 2 characters long";
 	public static final String ERROR_PASSWORD_CREATE_EMPTY = "Very trusting of you but we need a password for security";
