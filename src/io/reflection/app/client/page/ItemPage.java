@@ -194,7 +194,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField ButtonElement dnwBtn;
 	@UiField ButtonElement dnwBtnMobile;
 	@UiField DivElement sincePanel;
-	@UiField HTMLPanel noDataPanel;
+	@UiField HTMLPanel appOutOfTop200Panel;
 	@UiField DivElement appDetailsPanel;
 
 	private LoadingBar loadingBar;
@@ -731,6 +731,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				infoTotalRevenue.setInnerSafeHtml(AnimationHelper.getLoaderInlineSafeHTML());
 				setPriceInnerText(null);
 				setNoData(false);
+				appOutOfTop200Panel.setVisible(false);
 				chartRevenue.setLoading(true);
 				chartDownloads.setLoading(true);
 				chartRank.setLoading(true);
@@ -755,7 +756,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	}
 
 	private void setChartGraphsVisible(boolean visible) {
-		if (visible && !noDataPanel.isVisible()) {
+		if (visible && !appOutOfTop200Panel.isVisible()) {
 			// TODO hide map
 			switch (YDataType.fromString(selectedTab)) {
 			case RevenueYAxisDataType:
@@ -800,8 +801,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			infoTotalRevenue.setInnerHTML("-");
 			revenueTable.setRowCount(0, true);
 		}
-		noDataPanel.setVisible(noData);
-		setChartGraphsVisible(!noData);
+		// setChartGraphsVisible(!noData);
 	}
 
 	private boolean isValidStack(Stack current) {
@@ -925,6 +925,10 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public void getItemRanksSuccess(GetItemRanksRequest input, GetItemRanksResponse output) {
 		if (output != null && output.item != null && output.status == StatusType.StatusTypeSuccess) {
+			if (output.outOfLeaderboardDates != null && output.outOfLeaderboardDates.size() == FilterController.get().getDateRange().getDays()) {
+				appOutOfTop200Panel.setVisible(true);
+				setChartGraphsVisible(false);
+			}
 			if (output.ranks != null && output.ranks.size() > 0) {
 				setItemInfo(output.item);
 				displayItemDetails(output.ranks.get(0));

@@ -118,6 +118,7 @@ import io.reflection.app.shared.util.DataTypeHelper;
 import io.reflection.app.shared.util.PagerHelper;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -128,6 +129,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeComparator;
 import org.joda.time.DateTimeZone;
 
 import com.willshex.gson.json.service.server.ActionHandler;
@@ -522,10 +524,14 @@ public final class Core extends ActionHandler {
 
 			if (input.end == null) {
 				input.end = DateTime.now(DateTimeZone.UTC).toDate();
+			} else {
+				input.end = (new DateTime(input.end.getTime(), DateTimeZone.UTC)).toDate();
 			}
 
 			if (input.start == null) {
 				input.start = (new DateTime(input.end.getTime(), DateTimeZone.UTC)).minusDays(30).toDate();
+			} else {
+				input.start = (new DateTime(input.start.getTime(), DateTimeZone.UTC)).toDate();
 			}
 
 			input.listType = ValidationHelper.validateListType(input.listType, store);
@@ -554,6 +560,29 @@ public final class Core extends ActionHandler {
 			if (output.ranks == null) {
 				output.ranks = RankServiceProvider.provide().getItemRanks(input.country, input.category, input.listType, input.item, input.start, input.end,
 						input.pager);
+			}
+
+			// Identify out of leaderboard dates
+			List<Date> itemRanksDates = new ArrayList<Date>(); // Dates retrieved from the query
+			for (Rank r : output.ranks) {
+				itemRanksDates.add(r.date);
+			}
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(input.start);
+			cal.set(Calendar.HOUR_OF_DAY, 0);
+			cal.set(Calendar.MINUTE, 0);
+			cal.set(Calendar.SECOND, 0);
+			cal.set(Calendar.MILLISECOND, 0);
+			List<Date> missingDates = new ArrayList<Date>(); // Dates missed from the query
+			while (DateTimeComparator.getDateOnlyInstance().compare(cal.getTimeInMillis(), input.end.getTime()) <= 0) {
+				if (!itemRanksDates.contains(cal.getTime())) { // No data retrieved in this date
+					missingDates.add(cal.getTime());
+				}
+				cal.add(Calendar.DAY_OF_MONTH, 1);
+			}
+			if (missingDates.size() > 0) {
+				output.outOfLeaderboardDates = RankServiceProvider.provide().getOutOfLeaderboardDates(missingDates, input.country, input.category,
+						input.listType);
 			}
 
 			if (input.pager.start.intValue() == 0) {

@@ -136,4 +136,7 @@ public interface IRankService extends IService {
 	public List<Rank> getRanks(Country country, Category category, String listType, Date onDate) throws DataAccessException;
 
 	public Long getRanksCount(Country country, Category category, String listType, Date onDate) throws DataAccessException;
+
+	public List<Date> getOutOfLeaderboardDates(List<Date> missingDates, Country country, Category category, String listType) throws DataAccessException;
+
 }
