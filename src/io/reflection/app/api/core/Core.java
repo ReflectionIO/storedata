@@ -574,13 +574,13 @@ public final class Core extends ActionHandler {
 			cal.set(Calendar.SECOND, 0);
 			cal.set(Calendar.MILLISECOND, 0);
 			List<Date> missingDates = new ArrayList<Date>(); // Dates missed from the query
-			while (DateTimeComparator.getDateOnlyInstance().compare(cal.getTimeInMillis(), input.end.getTime()) <= 0) {
+			while (DateTimeComparator.getDateOnlyInstance().compare(cal.getTime(), input.end) <= 0) {
 				if (!itemRanksDates.contains(cal.getTime())) { // No data retrieved in this date
 					missingDates.add(cal.getTime());
 				}
 				cal.add(Calendar.DAY_OF_MONTH, 1);
 			}
-			if (missingDates.size() > 0) {
+			if (missingDates.size() > 0) { // Identify which dates are missing because the App was out of the rank that day
 				output.outOfLeaderboardDates = RankServiceProvider.provide().getOutOfLeaderboardDates(missingDates, input.country, input.category,
 						input.listType);
 			}

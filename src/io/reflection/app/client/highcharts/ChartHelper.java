@@ -199,10 +199,8 @@ public class ChartHelper {
 		chart.getLegendOption().setEnabled(false); // Disable legend
 		chart.getTitleOption().setText(null); // Disable title
 		chart.getTooltipOption().setUseHTML(true).setShared(true).setShadow(false).setBackgroundColor("#ffffff").setBorderColor("#dedede").setBorderWidth(1)
-				.setBorderRadius(0).setValueDecimals(0).setCrosshairs(getCrosshairStyle()).setDateTimeLabelFormats(getDefaultTooltipDateTimeLabelFormat());
-		// .setHeaderFormat(
-		// "<span style=\"font-size: 10px; line-height: 30px; font-weight: bold; color: #81879d; font-family: 'Lato', sans-serif;\">{point.key}</span><br/>")
-		// .setPointFormat("<span style=\"font-size: 18px; font-weight: regular; color: #363a47; font-family: 'Lato', sans-serif;\">{point.y}</span>");
+				.setBorderRadius(0).setValueDecimals(0).setCrosshairs(getCrosshairStyle()).setDateTimeLabelFormats(getDefaultTooltipDateTimeLabelFormat())
+				.setFormatter(getNativeTooltipFormatter());
 		chart.getXAxis().setTickWidth(1).setTickLength(10).setTickColor("#e7e7e7").setLabelsStyle(getXAxisLabelsStyle()).setLabelsY(30).setStartOnTick(true)
 				.setEndOnTick(true).setMinPadding(0).setMaxPadding(0).setLineColor("#e5e5e5").setLabelsMaxStaggerLines(1).setLabelsPadding(30)
 				.setLabelsUseHTML(false).setLabelsAlign("center");
@@ -310,23 +308,51 @@ public class ChartHelper {
 
 	public static native JavaScriptObject getNativeTooltipFormatter() /*-{
 		return function() {
-			return "<div><span style=\"font-size: 10px; font-weight: bold; color: #81879d; font-family: 'Lato', sans-serif;\">"
+			var s = "<span style=\"font-size: 12px; font-weight: bold; color: #81879d; font-family: 'Lato', sans-serif; line-height: 20px;\">"
 					+ $wnd.Highcharts.dateFormat('%e %b %Y', this.x, true)
-					+ "</span><br/><span style=\"font-size: 18px; font-weight: regular; color: #363a47; font-family: 'Lato', sans-serif;\">"
-					+ $wnd.Highcharts.numberFormat(this.y, 0, '.', ',')
-					+ '</span></div>';
+					+ "</span>";
+			var isRanking = false;
+			$wnd.$
+					.each(
+							this.points,
+							function(i, point) {
+								if (i == 0 && point.series.name == "Ranking") {
+									isRanking = true;
+								}
+								var currency = '';
+								if (point.series.options.tooltip.valuePrefix != null) {
+									currency = point.series.options.tooltip.valuePrefix;
+								}
+								s += '<br/><span style="color:'
+										+ point.series.color
+										+ '">\u25CF</span> <span style="font-size: 14px; font-weight: regular; color: #363a47; font-family: \'Lato\', sans-serif;">'
+										+ point.series.name
+										+ ': '
+										+ currency
+										+ $wnd.Highcharts.numberFormat(this.y,
+												0, '.', ',');
+								+"</span>";
+							});
+
+			if (isRanking && this.y > 200) {
+				// return '<span style="font-size: 14px; font-weight: regular; color: #363a47; font-family: \'Lato\', sans-serif;">App is Outside Top 200</span>';
+				return false;
+			} else {
+				return s;
+			}
 		}
+
 	}-*/;
 
-	public static native JavaScriptObject getNativeTooltipFormatter(String currency) /*-{
-		return function() {
-			return "<div><span style=\"font-size: 10px; font-weight: bold; color: #81879d; font-family: 'Lato', sans-serif;\">"
-					+ $wnd.Highcharts.dateFormat('%e %b %Y', this.x, true)
-					+ "</span><br/><span style=\"font-size: 18px; font-weight: regular; color: #363a47; font-family: 'Lato', sans-serif;\">"
-					+ currency
-					+ " "
-					+ $wnd.Highcharts.numberFormat(this.y, 0, '.', ',')
-					+ "</span></div>";
+	public static native JavaScriptObject getNativeTooltipPositioner() /*-{
+		return function(w, h, point) {
+			//			var tooltipX, tooltipY;
+			//			tooltipX = point.plotX + w;
+			//			tooltipY = point.plotY - h;
+			//			return {
+			//				x : tooltipX,
+			//				y : tooltipY
+			//			};
 		}
 	}-*/;
 
