@@ -6,10 +6,12 @@ package io.reflection.app;
 import static io.reflection.app.objectify.PersistenceService.*;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -38,9 +40,11 @@ import com.google.appengine.api.taskqueue.TaskOptions.Builder;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
 import com.googlecode.objectify.cmd.Query;
 import com.spacehopperstudios.utility.StringUtils;
+import com.willshex.gson.json.service.server.ServiceException;
 
 import co.spchopr.persistentmap.PersistentMap;
 import co.spchopr.persistentmap.PersistentMapFactory;
+import io.reflection.app.accountdatacollectors.DataAccountCollectorFactory;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
@@ -51,6 +55,8 @@ import io.reflection.app.collectors.CollectorIOS;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
+import io.reflection.app.datatypes.shared.DataAccountFetch;
+import io.reflection.app.datatypes.shared.DataAccountFetchStatusType;
 import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.ItemRankSummary;
 import io.reflection.app.datatypes.shared.Rank;
@@ -65,8 +71,11 @@ import io.reflection.app.service.ServiceType;
 import io.reflection.app.service.application.ApplicationServiceProvider;
 import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
+import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
+import io.reflection.app.service.dataaccountfetch.IDataAccountFetchService;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
+import io.reflection.app.service.sale.ISaleService;
 import io.reflection.app.service.sale.SaleServiceProvider;
 import io.reflection.app.service.store.StoreServiceProvider;
 import io.reflection.app.setup.CountriesInstaller;
@@ -282,8 +291,13 @@ public class DevHelperServlet extends HttpServlet {
 					}
 					success = false;
 				}
-			} else if ("splitDataForItem".equalsIgnoreCase(action)) {
+			} else if ("gatherSales".equalsIgnoreCase(action)) {
+				String dataAccountId = req.getParameter("dataaccountid");
+				String dateFromStr = req.getParameter("from");
+				String dateToStr = req.getParameter("to");
 
+				regatherSales(dataAccountId, dateFromStr, dateToStr);
+			} else if ("splitDataForItem".equalsIgnoreCase(action)) {
 				String dataAccountId = req.getParameter("dataaccountid");
 				String itemid = req.getParameter("itemid");
 				String country = req.getParameter("country");
@@ -294,7 +308,6 @@ public class DevHelperServlet extends HttpServlet {
 
 				success = true;
 			} else if ("splitDataForAccount".equalsIgnoreCase(action)) {
-
 				String dataAccountId = req.getParameter("dataaccountid");
 				String country = req.getParameter("country");
 				String dateFromStr = req.getParameter("from");
@@ -333,38 +346,13 @@ public class DevHelperServlet extends HttpServlet {
 				}
 
 				success = true;
-			} else if ("uningest".equalsIgnoreCase(action)) {
-
-				// int i = 0;
-				// for (FeedFetch entity : ofy().load().type(FeedFetch.class).offset(Integer.parseInt(start)).limit(Integer.parseInt(count)).iterable()) {
-				// entity.ingested = false;
-				//
-				// ofy().save().entity(entity).now();
-				//
-				// if (LOG.isLoggable(GaeLevel.TRACE)) {
-				// LOG.log(GaeLevel.TRACE, String.format("Set entity [%d] ingested to false", entity.id.longValue()));
-				// }
-				//
-				// i++;
-				// }
-				//
-				// if (LOG.isLoggable(GaeLevel.DEBUG)) {
-				// LOG.log(GaeLevel.DEBUG, String.format("Processed [%d] entities", i));
-				// }
-
-				success = true;
 			} else if ("ingest".equalsIgnoreCase(action)) {
 
 				final Ingestor i = IngestorFactory.getIngestorForStore(DataTypeHelper.IOS_STORE_A3);
 				i.enqueue(Arrays.asList(Long.valueOf(itemId)));
 
 				success = true;
-
-			} else if ("refreshproperties".equalsIgnoreCase(action)) {
-				CronServlet.enqueueItemForPropertiesRefresh(Long.valueOf(itemId));
-
-				success = true;
-			} else if ("ingestmulti".equalsIgnoreCase(action)) {
+			} else if ("ingestMulti".equalsIgnoreCase(action)) {
 
 				final Ingestor i = IngestorFactory.getIngestorForStore(DataTypeHelper.IOS_STORE_A3);
 
@@ -373,6 +361,10 @@ public class DevHelperServlet extends HttpServlet {
 				for (final String feedId : feedIdsArray) {
 					i.enqueue(Arrays.asList(Long.valueOf(feedId)));
 				}
+
+				success = true;
+			} else if ("refreshproperties".equalsIgnoreCase(action)) {
+				CronServlet.enqueueItemForPropertiesRefresh(Long.valueOf(itemId));
 
 				success = true;
 			} else if ("addcode".equalsIgnoreCase(action)) {
@@ -441,95 +433,6 @@ public class DevHelperServlet extends HttpServlet {
 
 					success = true;
 				}
-			} else if ("countitemrank".equalsIgnoreCase(action)) {
-				// int i = 0;
-				// Query<Rank> queryRank = ofy().cache(false).load().type(Rank.class).filter("counted =", Boolean.FALSE).offset(Integer.parseInt(start))
-				// .limit(Integer.parseInt(count));
-				//
-				// // Query<Rank> queryRank = ofy().load().type(Rank.class).filter("id =", Long.valueOf(19816));
-				//
-				// for (Rank rank : queryRank.iterable()) {
-				// // get the item rank summary
-				// Query<ItemRankSummary> querySummary = PersistenceService.ofy().load().type(ItemRankSummary.class).filter("itemId =", rank.itemId)
-				// .filter("type =", rank.type).filter("source =", rank.source);
-				//
-				// ItemRankSummary itemRankSummary = null;
-				//
-				// if (querySummary.count() > 0) {
-				// // we already have an item for this
-				// itemRankSummary = querySummary.list().get(0);
-				// } else {
-				// itemRankSummary = new ItemRankSummary();
-				// itemRankSummary.itemId = rank.itemId;
-				// itemRankSummary.type = rank.type;
-				// itemRankSummary.source = rank.source;
-				// }
-				//
-				// itemRankSummary.numberOfTimesRanked = Integer.valueOf(itemRankSummary.numberOfTimesRanked.intValue() + 1);
-				//
-				// if (rank.position.intValue() <= 10) {
-				// itemRankSummary.numberOfTimesRankedTop10 = Integer.valueOf(itemRankSummary.numberOfTimesRankedTop10 + 1);
-				// }
-				//
-				// if (rank.position.intValue() <= 25) {
-				// itemRankSummary.numberOfTimesRankedTop25 = Integer.valueOf(itemRankSummary.numberOfTimesRankedTop25 + 1);
-				// }
-				//
-				// if (rank.position.intValue() <= 50) {
-				// itemRankSummary.numberOfTimesRankedTop50 = Integer.valueOf(itemRankSummary.numberOfTimesRankedTop50 + 1);
-				// }
-				//
-				// if (rank.position.intValue() <= 100) {
-				// itemRankSummary.numberOfTimesRankedTop100 = Integer.valueOf(itemRankSummary.numberOfTimesRankedTop100 + 1);
-				// }
-				//
-				// if (rank.position.intValue() <= 200) {
-				// itemRankSummary.numberOfTimesRankedTop200 = Integer.valueOf(itemRankSummary.numberOfTimesRankedTop200 + 1);
-				// }
-				//
-				// ofy().save().entity(itemRankSummary).now();
-				//
-				// if (LOG.isLoggable(GaeLevel.TRACE)) {
-				// LOG.log(GaeLevel.TRACE,
-				// String.format("Updated item item summary for [%s:%s:%s]", itemRankSummary.source, itemRankSummary.type, itemRankSummary.itemId));
-				// }
-				//
-				// rank.counted = true;
-				//
-				// ofy().save().entity(rank).now();
-				//
-				// if (LOG.isLoggable(GaeLevel.TRACE)) {
-				// LOG.log(GaeLevel.TRACE, String.format("Updated rank counted for %d", rank.id.longValue()));
-				// }
-				//
-				// i++;
-				// }
-				//
-				// if (LOG.isLoggable(GaeLevel.DEBUG)) {
-				// LOG.log(GaeLevel.DEBUG, String.format("Processed [%d] entities", i));
-				// }
-
-				success = true;
-
-			} else if ("uncountranks".equalsIgnoreCase(action)) {
-				// int i = 0;
-				// for (Rank rank : ofy().load().type(Rank.class).offset(Integer.parseInt(start)).limit(Integer.parseInt(count)).iterable()) {
-				// rank.counted = false;
-				//
-				// ofy().save().entity(rank);
-				//
-				// if (LOG.isLoggable(GaeLevel.TRACE)) {
-				// LOG.log(GaeLevel.TRACE, String.format("Uncounted rank [%d]", rank.id.longValue()));
-				// }
-				//
-				// i++;
-				// }
-				//
-				// if (LOG.isLoggable(GaeLevel.DEBUG)) {
-				// LOG.log(GaeLevel.DEBUG, String.format("Processed [%d] entities", i));
-				// }
-
-				success = true;
 			} else if ("appswithrank".equalsIgnoreCase(action)) {
 				final int rankStartValue = Integer.parseInt(rankStart);
 				final int rankEndValue = RANK_END_200_PLUS.equals(rankEnd) ? Integer.MAX_VALUE : Integer.parseInt(rankEnd);
@@ -696,30 +599,6 @@ public class DevHelperServlet extends HttpServlet {
 				csv = buffer.toString();
 
 				success = true;
-			} else if ("convertdatatoblobs".equalsIgnoreCase(action)) {
-				// will not support this
-			} else if ("countitemrankmr".equalsIgnoreCase(action)) {
-
-				// int rankStartValue = Integer.parseInt(rankStart);
-				// int rankEndValue = RANK_END_200_PLUS.equals(rankEnd) ? Integer.MAX_VALUE : Integer.parseInt(rankEnd);
-				//
-				// redirectToPipelineStatus(req, resp, startStatsJob(5, 2, DataTypeHelper.IOS_STORE_A3, "us", feedType, rankStartValue, rankEndValue));
-				//
-				success = true;
-			} else if ("countranksmr".equalsIgnoreCase(action)) {
-				// redirectToPipelineStatus(req, resp, startRankCountJob(5, 2, DataTypeHelper.IOS_STORE_A3, "us", feedType));
-
-				success = true;
-			} else if ("createcsvofpaidranks".equalsIgnoreCase(action)) {
-				// redirectToPipelineStatus(req, resp,
-				// startCreateCsvBlobRank(5, 1, CollectorIOS.TOP_PAID_APPS, CollectorIOS.TOP_GROSSING_APPS, DataTypeHelper.IOS_STORE_A3, "us", feedType));
-
-				success = true;
-			} else if ("createcsvoffreeranks".equalsIgnoreCase(action)) {
-				// redirectToPipelineStatus(req, resp,
-				// startCreateCsvBlobRank(5, 1, CollectorIOS.TOP_FREE_APPS, CollectorIOS.TOP_GROSSING_APPS, DataTypeHelper.IOS_STORE_A3, "us", feedType));
-
-				success = true;
 			} else if ("addcountries".equalsIgnoreCase(action)) {
 				try {
 					CountriesInstaller.install();
@@ -879,6 +758,119 @@ public class DevHelperServlet extends HttpServlet {
 			resp.getOutputStream().print(success ? "success" : "failure");
 		}
 
+	}
+
+	/**
+	 * @param dataAccountId
+	 * @param dateFromStr
+	 * @param dateToStr
+	 *
+	 *          We have built in protection to this call. We will re-gather sales from date to ( to date or 31 days after from date which ever comes first)
+	 */
+	private void regatherSales(String dataAccountId, String dateFromStr, String dateToStr) {
+		try {
+			if(dataAccountId==null || dateFromStr==null || dateToStr==null) return;
+
+			DataAccount dataAccount = DataAccountServiceProvider.provide().getDataAccount(Long.valueOf(dataAccountId));
+
+			if (dataAccount == null) return;
+
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date from = sdf.parse(dateFromStr);
+			Date to = sdf.parse(dateToStr);
+
+			LOG.log(GaeLevel.DEBUG, String.format("Regathing sales for account: %s, from: %s, to: %s", dataAccountId, dateFromStr, dateToStr));
+
+			if (from.after(to)) {
+				Date t = from;
+				from = to;
+				to = t;
+			}
+
+			LOG.log(GaeLevel.DEBUG, String.format("Sorted the dates. Now from: %s, to: %s", dateFromStr, dateToStr));
+
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(from);
+			int loopCount = 0;
+
+			while (!cal.getTime().after(to) && loopCount < 31) { // the ! is to make sure the date to is inclusive
+				regatherSales(dataAccount, cal.getTime());
+				cal.add(Calendar.DATE, 1);
+				loopCount++;
+			}
+		} catch (NumberFormatException | DataAccessException | ParseException e) {
+			LOG.log(Level.SEVERE, "Exception occured while trying to regather sales data for dates", e);
+		}
+	}
+
+	/**
+	 * @param dataAccount
+	 * @param date
+	 */
+	private void regatherSales(DataAccount dataAccount, Date date) {
+		/*
+		 * check if a data account fetch already exists.
+		 * If it does,
+		 * clean out sales for that day and re-ingest
+		 * else
+		 * re-gather the sale and then ingest
+		 */
+
+		if (dataAccount == null || date == null) {
+			LOG.log(GaeLevel.DEBUG, String.format("Data account or date is null. Returning - account: %s on date: %s.", dataAccount, date));
+			return;
+		}
+
+		try {
+			IDataAccountFetchService fetchServiceProvider = DataAccountFetchServiceProvider.provide();
+			DataAccountFetch dataAccountFetch = fetchServiceProvider.getDateDataAccountFetch(dataAccount, date);
+			if (dataAccountFetch == null
+					|| (dataAccountFetch.status != DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered
+					&& dataAccountFetch.status != DataAccountFetchStatusType.DataAccountFetchStatusTypeIngested)) {
+				boolean collected = DataAccountCollectorFactory.getCollectorForSource("itc").collect(dataAccount, date);
+				if (collected) {
+					dataAccountFetch = fetchServiceProvider.getDateDataAccountFetch(dataAccount, date);
+				}
+			}
+
+			if (dataAccountFetch == null) {
+				LOG.log(GaeLevel.DEBUG, String.format("Could not gather the sales report for account: %s on date: %s.", dataAccount, date));
+				return;
+			}
+
+			reingestDataAccountFetch(dataAccountFetch);
+
+		} catch (ServiceException e) {
+			LOG.log(Level.SEVERE, String.format("Exception occured while trying to regather sales data for account: %s, on the date: %s", dataAccount, date), e);
+		}
+	}
+
+	/**
+	 * @param dataAccountFetch
+	 */
+	private void reingestDataAccountFetch(DataAccountFetch dataAccountFetch) {
+		if (dataAccountFetch == null) {
+			LOG.log(GaeLevel.DEBUG, "Data account fetch is null. Returning");
+			return;
+		}
+
+		if (dataAccountFetch.status == DataAccountFetchStatusType.DataAccountFetchStatusTypeIngested) {
+			dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered;
+			try {
+				DataAccountFetchServiceProvider.provide().updateDataAccountFetch(dataAccountFetch);
+			} catch (DataAccessException e) {
+				LOG.log(Level.SEVERE, String.format("Could not update the status of dataaccountfetch: %s", dataAccountFetch), e);
+			}
+		}
+
+		ISaleService salesService = SaleServiceProvider.provide();
+		salesService.deleteSales(dataAccountFetch.linkedAccount.id, dataAccountFetch.date);
+
+		try {
+			DataAccountFetchServiceProvider.provide().triggerDataAccountFetchIngest(dataAccountFetch);
+		} catch (DataAccessException e) {
+			LOG.log(Level.SEVERE, String.format("Exception occured while trying to reingest dataaccountfetch: %s", dataAccountFetch), e);
+		}
 	}
 
 	/**

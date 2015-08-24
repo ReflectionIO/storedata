@@ -262,4 +262,10 @@ public interface ISaleService extends IService {
 	 */
 	public List<String> getIapItemIdsForParentItemBetweenDates(Long dataAccountId, String itemId, Date parse, Date parse2) throws DataAccessException;
 
+	/**
+	 * @param dataAccountId
+	 * @param date
+	 */
+	public void deleteSales(Long dataAccountId, Date date);
+
 }

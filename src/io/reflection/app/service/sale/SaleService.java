@@ -983,4 +983,20 @@ final class SaleService implements ISaleService {
 			}
 		}
 	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see io.reflection.app.service.sale.ISaleService#deleteSales(java.lang.Long, java.util.Date)
+	 */
+	@Override
+	public void deleteSales(Long dataAccountId, Date date) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+		try {
+			Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
+			saleConnection.executeQuery(String.format("delete from sale where dataaccountid=%d and begin='%s'", dataAccountId, sdf.format(date)));
+		} catch (Exception e) {
+		}
+	}
 }
