@@ -222,7 +222,7 @@ public class RankService implements IRankService {
 
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(after);
-		cal.set(Calendar.HOUR, 0);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);
@@ -230,7 +230,7 @@ public class RankService implements IRankService {
 		java.sql.Date afterParam = new java.sql.Date(cal.getTimeInMillis());
 
 		cal.setTime(before);
-		cal.set(Calendar.HOUR, 0);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);
@@ -815,5 +815,52 @@ public class RankService implements IRankService {
 		}
 
 		return 0L;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.rank.IRankService#getOutOfLeaderboardDates(java.util.List, io.reflection.app.datatypes.shared.Country,
+	 * io.reflection.app.datatypes.shared.Category, java.lang.String)
+	 */
+	@Override
+	public List<Date> getOutOfLeaderboardDates(List<Date> missingDates, Country country, Category category, String listType) throws DataAccessException {
+		List<Date> outOfLeaderboardDates = new ArrayList<Date>();
+
+		String datesPart = "";
+		for (int i = 0; i < missingDates.size(); i++) {
+			datesPart += "'" + new java.sql.Date(missingDates.get(i).getTime()).toString() + "'" + (i == missingDates.size() - 1 ? "" : ",");
+		}
+
+		final String query = String
+				.format("select fetch_date, count(id) from leaderboard where fetch_date IN (%s) and country=? and category=? and type=? and platform=? group by fetch_date order by fetch_date;",
+						datesPart);
+
+		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+
+		try (PreparedStatement pstat = rankConnection.getRealConnection().prepareStatement(query, Statement.NO_GENERATED_KEYS)) {
+			rankConnection.connect();
+
+			int paramCount = 1;
+			pstat.setString(paramCount++, country.a2Code);
+			pstat.setLong(paramCount++, category.id);
+			pstat.setString(paramCount++, FeedFetchService.getDBTypeForFeedFetchType(listType));
+			pstat.setString(paramCount++, FeedFetchService.getDBPlatformForFeedFetchType(listType));
+
+			rankConnection.executePreparedStatement(pstat);
+
+			while (rankConnection.fetchNextRow()) {
+				outOfLeaderboardDates.add(rankConnection.getCurrentRowDateTime("fetch_date"));
+			}
+
+		} catch (SQLException e) {
+			LOG.log(Level.SEVERE, "SQL Exception during identifying out of leaderboard dates", e);
+		} finally {
+			if (rankConnection != null) {
+				rankConnection.disconnect();
+			}
+		}
+
+		return outOfLeaderboardDates;
 	}
 }

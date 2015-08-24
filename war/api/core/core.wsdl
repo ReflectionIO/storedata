@@ -215,6 +215,7 @@
 							<xsd:element name="ranks" type="sd:Rank" maxOccurs="unbounded" />
 							<xsd:element name="pager" type="sd:Pager" />
 							<xsd:element name="item" type="sd:Item" />
+							<xsd:element name="outOfLeaderboardDates" type="sd:Date" maxOccurs="unbounded" />
 						</xsd:sequence>
 					</xsd:extension>
 				</xsd:complexContent>

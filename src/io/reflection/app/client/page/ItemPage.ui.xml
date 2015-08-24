@@ -187,7 +187,7 @@
 					<hc:Chart ui:field="chartDownloads" styleName="{STYLES_INSTANCE.reflectionMainStyle.highchartsContainer}"></hc:Chart>
 					<hc:Chart ui:field="chartRank" styleName="{STYLES_INSTANCE.reflectionMainStyle.highchartsContainer}"></hc:Chart>
 				</g:HTMLPanel>
-				<g:HTMLPanel ui:field="noDataPanel" styleName="{STYLES_INSTANCE.reflectionMainStyle.graphContainer} {STYLES_INSTANCE.reflectionMainStyle.fullPageMessage}"
+				<g:HTMLPanel ui:field="appOutOfTop200Panel" styleName="{STYLES_INSTANCE.reflectionMainStyle.graphContainer} {STYLES_INSTANCE.reflectionMainStyle.fullPageMessage}"
 					visible="false">
 					<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFiveColumns}">
 						<svg class="{STYLES_INSTANCE.reflectionMainStyle.svgWarningLaptop}" version="1.1" viewBox="0 0 70.9 49.6" enable-background="new 0 0 70.9 49.6"
