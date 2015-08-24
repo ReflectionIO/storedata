@@ -127,6 +127,8 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 	public void setLoggedIn(boolean loggedIn) {
 		if (loggedIn) {
 			loginForm.getElement().removeFromParent();
+			forgotPasswordForm.getElement().removeFromParent();
+			formSubmittedSuccessPanel.removeFromParent();
 			quotePanel.removeFromParent();
 			if (!accessPanelContainer.isOrHasChild(userDetailsPanel)) {
 				accessPanelContainer.appendChild(userDetailsPanel);
@@ -139,6 +141,12 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 			accountMenu.removeFromParent();
 			if (!accessPanelContainer.isOrHasChild(loginForm.getElement())) {
 				accessPanelContainer.appendChild(loginForm.getElement());
+			}
+			if (!accessPanelContainer.isOrHasChild(forgotPasswordForm.getElement())) {
+				accessPanelContainer.appendChild(forgotPasswordForm.getElement());
+			}
+			if (!accessPanelContainer.isOrHasChild(formSubmittedSuccessPanel)) {
+				accessPanelContainer.appendChild(formSubmittedSuccessPanel);
 			}
 			if (!accessPanelContainer.isOrHasChild(quotePanel)) {
 				accessPanelContainer.appendChild(quotePanel);

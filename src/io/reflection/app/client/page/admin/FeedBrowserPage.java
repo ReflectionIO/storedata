@@ -238,22 +238,22 @@ public class FeedBrowserPage extends Page implements FilterEventHandler, Navigat
 
 	@UiHandler("mAppStore")
 	void onAppStoreValueChanged(ChangeEvent event) {
-		FilterController.get().setStore(mAppStore.getValue(mAppStore.getSelectedIndex()));
+		FilterController.get().setStore(mAppStore.getSelectedValue());
 	}
 
 	@UiHandler("mListType")
 	void onListTypeValueChanged(ChangeEvent event) {
-		FilterController.get().setListType(mListType.getValue(mListType.getSelectedIndex()));
+		FilterController.get().setListType(mListType.getSelectedValue());
 	}
 
 	@UiHandler("mCountry")
 	void onCountryValueChanged(ChangeEvent event) {
-		FilterController.get().setCountry(mCountry.getValue(mCountry.getSelectedIndex()));
+		FilterController.get().setCountry(mCountry.getSelectedValue());
 	}
 
 	@UiHandler("category")
 	void onCategoryValueChanged(ChangeEvent event) {
-		FilterController.get().setCategory(Long.valueOf(category.getValue(category.getSelectedIndex())));
+		FilterController.get().setCategory(Long.valueOf(category.getSelectedValue()));
 	}
 
 	/*

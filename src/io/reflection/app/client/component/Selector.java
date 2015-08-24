@@ -120,7 +120,7 @@ public class Selector extends Composite implements HasChangeHandlers {
 			selectContainer.getElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isOpen());
 			uListElem.getStyle().setMarginTop(9, Unit.PX);
 			if (Window.getClientWidth() < 720 && isFilter) {
-				DOMHelper.setScrollEnabled(true);
+				DOMHelper.setScrollEnabled(false);
 			}
 		}
 	}
@@ -130,7 +130,7 @@ public class Selector extends Composite implements HasChangeHandlers {
 		selectContainer.getElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isOpen());
 		uListElem.getStyle().setMarginTop(-(uListElem.getClientHeight()), Unit.PX);
 		if (Window.getClientWidth() < 720 && isFilter) {
-			DOMHelper.setScrollEnabled(false);
+			DOMHelper.setScrollEnabled(true);
 		}
 	}
 
@@ -246,7 +246,7 @@ public class Selector extends Composite implements HasChangeHandlers {
 	}
 
 	public String getSelectedValue() {
-		return selectedIndex != -1 ? itemList.get(selectedIndex).getAttribute("value") : "";
+		return selectedIndex != -1 ? getValue(getSelectedIndex()) : null;
 	}
 
 	public int getItemCount() {

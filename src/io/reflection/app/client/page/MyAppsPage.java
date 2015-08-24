@@ -384,22 +384,22 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 
 	@UiHandler("accountName")
 	void onAccountNameChanged(ChangeEvent event) {
-		FilterController.get().setLinkedAccount(Long.valueOf(accountName.getValue(accountName.getSelectedIndex())));
+		FilterController.get().setLinkedAccount(Long.valueOf(accountName.getSelectedValue()));
 	}
 
 	@UiHandler("category")
 	void onCategoryValueChanged(ChangeEvent event) {
-		FilterController.get().setCategory(Long.valueOf(category.getValue(category.getSelectedIndex())));
+		FilterController.get().setCategory(Long.valueOf(category.getSelectedValue()));
 	}
 
 	@UiHandler("appStore")
 	void onAppStoreValueChanged(ChangeEvent event) {
-		FilterController.get().setStore(appStore.getValue(appStore.getSelectedIndex()));
+		FilterController.get().setStore(appStore.getSelectedValue());
 	}
 
 	@UiHandler("country")
 	void onCountryValueChanged(ChangeEvent event) {
-		FilterController.get().setCountry(country.getValue(country.getSelectedIndex()));
+		FilterController.get().setCountry(country.getSelectedValue());
 	}
 
 	private void updateFromFilter() {

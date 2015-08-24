@@ -25,6 +25,8 @@ import java.util.List;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
 
 /**
@@ -38,6 +40,7 @@ public class Chart extends BaseChart {
 	private String currency;
 	private final int yMinCeilingDownloads = 1;
 	private final int yMinCeilingRevenue = 1;
+	private final int yMaxCeilingLeaderboard = 200;
 
 	// private final int yMinCeilingRanking = 10;
 
@@ -45,7 +48,7 @@ public class Chart extends BaseChart {
 		super(xDataType);
 	}
 
-	public void drawData(List<Rank> ranks, YAxisPosition yAxisPosition, YDataType yDataType, String seriesId, LineType lineType, String color,
+	public void drawSeries(List<Rank> ranks, YAxisPosition yAxisPosition, YDataType yDataType, String seriesId, LineType lineType, String color,
 			boolean isCumulative, boolean hide) {
 
 		if (ranks != null && ranks.size() > 0) {
@@ -174,18 +177,28 @@ public class Chart extends BaseChart {
 			case RankingYAxisDataType:
 				yAxis.setReversed(true).setLabelsFormatter(ChartHelper.getNativeLabelFormatterRank()).setMin(1).setFloor(1).setShowLastLabel(false);
 				if (!isOpposite) {
-					yAxis.setMax(JavaScriptObjectHelper.getNativeNull());
+					// if (NativeAxis.nativeGetDataMax(get(yAxisPosition.toString())) > yMaxCeilingLeaderboard) {
+					yAxis.setMax(yMaxCeilingLeaderboard);
+					// } else {
+					// yAxis.setMax(JavaScriptObjectHelper.getNativeNull());
+					// }
 				}
 				break;
 			}
-			NativeAxis.nativeUpdate(get(yAxisPosition.toString()), yAxis.getOptions(), true); // update secondary y axis
+			NativeAxis.nativeUpdate(get(yAxisPosition.toString()), yAxis.getOptions(), true); // update y axis options
 
-			resize();
-			reflow();
 			if (hide) {
 				setSeriesVisible(seriesId, false);
 			}
+			Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 
+				@Override
+				public void execute() {
+					rearrangeXAxisLabels();
+					reflow();
+					resize();
+				}
+			});
 		}
 	}
 
@@ -281,9 +294,9 @@ public class Chart extends BaseChart {
 				dateRange.setTo(FilterHelper.normalizeDateUTC(FilterController.get().getEndDate()));
 				setXAxisExtremes((double) dateRange.getFrom().getTime(), (double) dateRange.getTo().getTime());
 				// TODO reset y axis extremes
-				// getPrimaryAxis().setMin(JavaScriptObjectHelper.getNativeNull());
-				// getPrimaryAxis().setMax(JavaScriptObjectHelper.getNativeNull());
-				// NativeAxis.nativeUpdate(NativeAxis.nativeGetYAxis(chart, 0), getPrimaryAxis().getOptions(), true); // update y axis
+				getPrimaryAxis().setMin(JavaScriptObjectHelper.getNativeNull());
+				getPrimaryAxis().setMax(JavaScriptObjectHelper.getNativeNull());
+				NativeAxis.nativeUpdate(get(YAxisPosition.PRIMARY.toString()), getPrimaryAxis().getOptions(), true);
 			}
 			removeAllSeries();
 			reflow();

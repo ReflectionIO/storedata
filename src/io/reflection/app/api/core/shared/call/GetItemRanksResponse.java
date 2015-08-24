@@ -9,22 +9,25 @@
 package io.reflection.app.api.core.shared.call;
 
 import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.api.shared.datatypes.Response;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
-import io.reflection.app.api.shared.datatypes.Response;
+import com.google.gson.JsonPrimitive;
 
 public class GetItemRanksResponse extends Response {
 	public List<Rank> ranks;
 	public Pager pager;
 	public Item item;
+	public List<Date> outOfLeaderboardDates;
 
 	@Override
 	public JsonObject toJson() {
@@ -42,6 +45,16 @@ public class GetItemRanksResponse extends Response {
 		object.add("pager", jsonPager);
 		JsonElement jsonItem = item == null ? JsonNull.INSTANCE : item.toJson();
 		object.add("item", jsonItem);
+		JsonElement jsonOutOfLeaderboardDates = JsonNull.INSTANCE;
+		if (outOfLeaderboardDates != null) {
+			jsonOutOfLeaderboardDates = new JsonArray();
+			for (int i = 0; i < outOfLeaderboardDates.size(); i++) {
+				JsonElement jsonOutOfTop200DatesItem = outOfLeaderboardDates.get(i) == null ? JsonNull.INSTANCE : new JsonPrimitive(outOfLeaderboardDates
+						.get(i).getTime());
+				((JsonArray) jsonOutOfLeaderboardDates).add(jsonOutOfTop200DatesItem);
+			}
+		}
+		object.add("outOfLeaderboardDates", jsonOutOfLeaderboardDates);
 		return object;
 	}
 
@@ -74,6 +87,20 @@ public class GetItemRanksResponse extends Response {
 			if (jsonItem != null) {
 				item = new Item();
 				item.fromJson(jsonItem.getAsJsonObject());
+			}
+		}
+
+		if (jsonObject.has("outOfLeaderboardDates")) {
+			JsonElement jsonOutOfLeaderboardDates = jsonObject.get("outOfLeaderboardDates");
+			if (jsonOutOfLeaderboardDates != null) {
+				outOfLeaderboardDates = new ArrayList<Date>();
+				Date item = null;
+				for (int i = 0; i < jsonOutOfLeaderboardDates.getAsJsonArray().size(); i++) {
+					if (jsonOutOfLeaderboardDates.getAsJsonArray().get(i) != null) {
+						item = new Date(jsonOutOfLeaderboardDates.getAsJsonArray().get(i).getAsLong());
+						outOfLeaderboardDates.add(item);
+					}
+				}
 			}
 		}
 	}

@@ -123,7 +123,7 @@ public class AddTopicPage extends Page implements CreateTopicEventHandler, GetFo
 			contentText.setLoading(true);
 
 			if (forums.getItemCount() > 0) {
-				String forumIdString = forums.getValue(forums.getSelectedIndex());
+				String forumIdString = forums.getSelectedValue();
 				forumId = Long.valueOf(forumIdString);
 			}
 
