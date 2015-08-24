@@ -17,7 +17,6 @@ import io.reflection.app.client.handler.TogglePanelEventHandler;
 import io.reflection.app.client.handler.user.SessionEventHandler;
 import io.reflection.app.client.handler.user.UserPowersEventHandler;
 import io.reflection.app.client.helper.DOMHelper;
-import io.reflection.app.client.helper.UserAgentHelper;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.client.res.Styles.ReflectionMainStyles;
@@ -28,17 +27,13 @@ import io.reflection.app.datatypes.shared.User;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.VideoElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Window;
@@ -70,7 +65,6 @@ public class Header extends Composite implements NavigationEventHandler, Session
 
 	@UiField HTMLPanel hamburgerPanel;
 	@UiField Button hamburgerBtn;
-	@UiField AnchorElement homeBtn;
 	@UiField InlineHyperlink applyBtn;
 	@UiField HTMLPanel actionsGroup;
 	@UiField Anchor linkLogin;
@@ -78,9 +72,7 @@ public class Header extends Composite implements NavigationEventHandler, Session
 
 	@UiField DivElement tempSearchContainer;
 
-	private boolean panelLeftWasClosed; // Remeber if the user closed the panel
-
-	Element picture, source1, source2;
+	private boolean panelLeftWasClosed; // Remember if the user closed the panel
 
 	public Header() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -88,46 +80,11 @@ public class Header extends Composite implements NavigationEventHandler, Session
 		setLoggedIn(false);
 
 		applyBtn.setTargetHistoryToken(PageType.RegisterPageType.asTargetHistoryToken("requestinvite"));
-		addHomeBtnPicture();
-		appendConditionalTags();
 
 		initPanelLeftMenu();
 		initPanelsRight();
 
 		tempSearchContainer.removeFromParent();
-	}
-
-	private void addHomeBtnPicture() {
-		picture = DOM.createElement("picture");
-
-		source1 = DOM.createElement("source");
-		source1.setAttribute("srcset", "images/logo-reflection-header.png");
-		source1.setAttribute("media", "(min-width: 720px)");
-
-		source2 = DOM.createElement("source");
-		source2.setAttribute("srcset", "images/logo-reflection-header-mobile.png");
-
-		Element img = DOM.createImg();
-		img.setAttribute("src", "images/logo-reflection-header.png");
-		img.setAttribute("alt", "Reflection logo");
-
-		picture.appendChild(source1);
-		picture.appendChild(source2);
-		picture.appendChild(img);
-
-		homeBtn.appendChild(picture);
-	}
-
-	private void appendConditionalTags() {
-		if (UserAgentHelper.isIE() && UserAgentHelper.getIEVersion() == 9) {
-			picture.removeChild(source1);
-			picture.removeChild(source2);
-			VideoElement video = Document.get().createVideoElement();
-			video.setAttribute("style", "display: none;");
-			picture.insertFirst(video);
-			video.appendChild(source1);
-			video.appendChild(source2);
-		}
 	}
 
 	private void setLoggedIn(boolean loggedIn) {
