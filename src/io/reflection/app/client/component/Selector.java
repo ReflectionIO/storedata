@@ -246,7 +246,7 @@ public class Selector extends Composite implements HasChangeHandlers {
 	}
 
 	public String getSelectedValue() {
-		return selectedIndex != -1 ? itemList.get(selectedIndex).getAttribute("value") : "";
+		return selectedIndex != -1 ? getValue(getSelectedIndex()) : null;
 	}
 
 	public int getItemCount() {

@@ -511,17 +511,17 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 	@UiHandler("storeSelector")
 	void onAppStoreValueChanged(ChangeEvent event) {
-		FilterController.get().setStore(storeSelector.getValue(storeSelector.getSelectedIndex()));
+		FilterController.get().setStore(storeSelector.getSelectedValue());
 	}
 
 	@UiHandler("storeSelectorDisabled")
 	void onAppStoreValueChangedDisabled(ChangeEvent event) {
-		FilterController.get().setStore(storeSelectorDisabled.getValue(storeSelectorDisabled.getSelectedIndex()));
+		FilterController.get().setStore(storeSelectorDisabled.getSelectedValue());
 	}
 
 	@UiHandler("countrySelector")
 	void onCountryValueChanged(ChangeEvent event) {
-		FilterController.get().setCountry(countrySelector.getValue(countrySelector.getSelectedIndex()));
+		FilterController.get().setCountry(countrySelector.getSelectedValue());
 	}
 
 	@UiHandler("dateSelector")

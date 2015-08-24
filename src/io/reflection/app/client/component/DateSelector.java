@@ -124,7 +124,7 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 
 	@UiHandler("selectFixedRange")
 	void onCountryValueChanged(ChangeEvent event) {
-		setValue(lookupValuePresetDateRange.get(selectFixedRange.getValue(selectFixedRange.getSelectedIndex())).getDateRange(), true);
+		setValue(lookupValuePresetDateRange.get(selectFixedRange.getSelectedValue()).getDateRange(), true);
 	}
 
 	/**

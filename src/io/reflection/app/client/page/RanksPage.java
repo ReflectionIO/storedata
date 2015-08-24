@@ -520,7 +520,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 	@UiHandler("appStoreListBox")
 	void onAppStoreValueChanged(ChangeEvent event) {
-		FilterController.get().setStore(appStoreListBox.getValue(appStoreListBox.getSelectedIndex()));
+		FilterController.get().setStore(appStoreListBox.getSelectedValue());
 	}
 
 	// @UiHandler("mListType")
@@ -530,7 +530,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 	@UiHandler("countryListBox")
 	void onCountryValueChanged(ChangeEvent event) {
-		FilterController.get().setCountry(countryListBox.getValue(countryListBox.getSelectedIndex()));
+		FilterController.get().setCountry(countryListBox.getSelectedValue());
 	}
 
 	@UiHandler("dateBox")
@@ -551,7 +551,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 	@UiHandler("categoryListBox")
 	void onCategoryListBoxValueChanged(ChangeEvent event) {
-		FilterController.get().setCategory(Long.valueOf(categoryListBox.getValue(categoryListBox.getSelectedIndex())));
+		FilterController.get().setCategory(Long.valueOf(categoryListBox.getSelectedValue()));
 	}
 
 	@UiHandler("toggleRevenue")
