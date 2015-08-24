@@ -20,7 +20,6 @@
 				<h1 ui:field="title" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree} {STYLES_INSTANCE.reflectionMainStyle.appTitle}"></h1>
 
 				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.appCreator}">
-					By
 					<span ui:field="creatorName"></span>
 				</h2>
 
@@ -37,7 +36,6 @@
 				<!-- <c:FormSwitch ui:field="followSwitch" label="Follow (10.3k)" /> -->
 
 				<a target="_blank" ui:field="viewInStore">
-					View in
 					<span ui:field="storeName">
 					</span>
 				</a>
