@@ -251,7 +251,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 
 		return attemptPrefetch;
 	}
-	
+
 	private void resetPublicPagesAfterLogin() {
 		PostController.get().reset();
 		NavigationController.get().resetBlogPage();
@@ -261,7 +261,6 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	 * Release the session and clear user data
 	 */
 	public void logout() {
-		isSessionRestored = false;
 
 		CoreService service = ServiceCreator.createCoreService();
 
@@ -300,6 +299,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	}
 
 	public void makeSessionInvalid() {
+		isSessionRestored = false;
 		setLoggedInUser(null, null);
 		// ItemController.get().clearItemCache();
 		clearRolePermissionCache();
