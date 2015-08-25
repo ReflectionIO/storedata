@@ -53,14 +53,13 @@ public class PasswordField extends Composite implements HasClickHandlers, HasKey
 	@UiField DivElement strengthIndicatorPanel;
 	@UiField SpanElement strengthDescription;
 	@UiField SpanElement strengthIndicator;
-	private boolean checkActive;
+	private boolean isCheckActive;
 	private SpanElement note = Document.get().createSpanElement();
 	private final ReflectionMainStyles refStyle = Styles.STYLES_INSTANCE.reflectionMainStyle();
 
 	public PasswordField() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		strengthIndicatorPanel.removeFromParent();
 		note.addClassName(refStyle.inputHint());
 	}
 
@@ -85,7 +84,7 @@ public class PasswordField extends Composite implements HasClickHandlers, HasKey
 		if (!this.getElement().hasClassName(refStyle.isClosed())) {
 			this.getElement().addClassName(refStyle.isClosed());
 		}
-		if (checkActive) {
+		if (isCheckActive) {
 			strengthDescription.setInnerText("Strength");
 			strengthIndicator.setClassName("");
 		}
@@ -129,10 +128,12 @@ public class PasswordField extends Composite implements HasClickHandlers, HasKey
 	}
 
 	public void setCheckActive(boolean activated) {
-		if (!checkActive && activated) {
+		if (!isCheckActive && activated) {
 			label.appendChild(strengthIndicatorPanel);
+		} else {
+			strengthIndicatorPanel.removeFromParent();
 		}
-		checkActive = activated;
+		isCheckActive = activated;
 	}
 
 	public void setTabIndex(int index) {
@@ -157,7 +158,7 @@ public class PasswordField extends Composite implements HasClickHandlers, HasKey
 
 	@UiHandler("passwordTextBox")
 	void onFieldModified(KeyUpEvent event) {
-		if (checkActive) {
+		if (isCheckActive) {
 			if (passwordTextBox.getText().length() < 1) {
 				strengthDescription.setInnerText("Strength");
 				strengthIndicator.setClassName("");
@@ -233,6 +234,20 @@ public class PasswordField extends Composite implements HasClickHandlers, HasKey
 	@Override
 	public HandlerRegistration addKeyDownHandler(KeyDownHandler handler) {
 		return addDomHandler(handler, KeyDownEvent.getType());
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
+	 */
+	@Override
+	protected void onAttach() {
+		super.onAttach();
+
+		if (!isCheckActive) {
+			strengthIndicatorPanel.removeFromParent();
+		}
 	}
 
 }

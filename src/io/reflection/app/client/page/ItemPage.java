@@ -162,15 +162,15 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	private SafeHtmlHeader revenueForPeriodHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("% <span class=\"" + style.hiddenForMobile()
 			+ "\">of</span> Total <span class=\"" + style.hiddenForMobile() + "\">Revenue</span> for Period " + AnimationHelper.getSorterSvg()));
 
-	private String internalId;
+	private String displayingAppId;
 	private String comingPage;
 	private RankType rankType;
 	// private YAxisDataType dataType;
-	private Item item;
+	private Item displayingApp;
 	private Map<String, LIElement> tabs = new HashMap<String, LIElement>();
 	private String selectedTab;
 	private String filterContents;
-	private AppRevenue itemRevenuePlaceholder = new AppRevenue();
+	private AppRevenue appRevenuePlaceholder = new AppRevenue();
 	private List<AppRevenue> tablePlaceholder = new ArrayList<AppRevenue>();
 	@UiField SpanElement infoDateRange;
 	@UiField SpanElement infoTotalRevenue;
@@ -199,7 +199,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField DivElement appDetailsPanel;
 
 	private LoadingBar loadingBar;
-	private Element loaderInline = AnimationHelper.getLoaderInlineElement();
 
 	@UiField Element tablePanel;
 	@UiField Element togglePanel;
@@ -251,7 +250,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		// ResponsiveDesignHelper.nativeRevealContent(revealContentStore);
 		ResponsiveDesignHelper.nativeRevealContent(revealContentFilter);
 
-		tablePlaceholder.add(itemRevenuePlaceholder);
+		tablePlaceholder.add(appRevenuePlaceholder);
 
 		FilterHelper.addCountries(countrySelector, SessionController.get().isLoggedInUserAdmin());
 		FilterHelper.addStores(storeSelector, true);
@@ -303,55 +302,71 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			}
 		});
 
+		resetAppProperties();
 		loadingBar = new LoadingBar(false);
 		loadingBar.show();
 
 		TooltipHelper.updateHelperTooltip();
 	}
 
-	public void setItem(Item item) {
-		title.setInnerText(item.name);
-		creatorName.setInnerText(item.creatorName);
-
-		if (item.mediumImage != null) {
-			image.setUrl(item.mediumImage);
-		} else {
-			image.setUrl("");
+	private void setAppDetails(Item item) {
+		if (item.name != null) {
+			displayingApp.name = item.name;
+		}
+		if (item.creatorName != null) {
+			displayingApp.creatorName = item.creatorName;
 		}
 		if (item.smallImage != null) {
-			imageTable.setUrl(item.smallImage);
-		} else {
-			image.setUrl("");
+			displayingApp.smallImage = item.smallImage;
+		}
+		if (item.mediumImage != null) {
+			displayingApp.mediumImage = item.mediumImage;
+		}
+		if (item.largeImage != null) {
+			displayingApp.largeImage = item.largeImage;
+		}
+		if (item.currency != null && item.price != null) {
+			displayingApp.currency = item.currency;
+			displayingApp.price = item.price;
 		}
 
-		Store s = StoreController.get().getStore(item.source);
-		storeName.setInnerText((s == null || s.name == null || s.name.length() == 0) ? item.source.toUpperCase() : s.name);
-
-		viewInStore.setHref(StoreController.get().getExternalUri(item));
-
-		iapDescription = DataTypeHelper.itemIapState(item, " + In App Purchases", "", "");
+		title.setInnerText(displayingApp.name);
+		creatorName.setInnerText("By " + displayingApp.creatorName);
+		image.setUrl(displayingApp.mediumImage != null ? displayingApp.mediumImage : "");
+		imageTable.setUrl(displayingApp.smallImage != null ? displayingApp.smallImage : "");
+		if (displayingApp.currency != null && displayingApp.price != null) { // Restore the price if showing the previous visible App
+			price.setInnerText(FormattingHelper.asPriceString(displayingApp.currency, displayingApp.price.floatValue()) + iapDescription);
+		}
+		Store store = StoreController.get().getStore(displayingApp.source);
+		storeName
+				.setInnerText("View in " + (store == null || store.name == null || store.name.length() == 0 ? displayingApp.source.toUpperCase() : store.name));
+		viewInStore.setHref(StoreController.get().getExternalUri(displayingApp));
+		iapDescription = DataTypeHelper.itemIapState(displayingApp, " + In App Purchases", "", "");
 	}
 
-	public void setPrice(String currency, Float value) {
-		if (currency != null && value != null) {
-			setPriceInnerText(FormattingHelper.asPriceString(currency, value.floatValue()) + iapDescription);
-		} else {
-			setPriceInnerText("-");
+	private void setAppPriceFromRank(Rank rank) {
+		if (rank != null && rank.currency != null && rank.price != null) {
+			displayingApp.currency = rank.currency;
+			displayingApp.price = rank.price;
+			price.setInnerText(FormattingHelper.asPriceString(displayingApp.currency, displayingApp.price.floatValue()) + iapDescription);
 		}
 	}
 
-	public void setPriceInnerText(String s) {
-		if (s != null) {
-			loaderInline.removeFromParent();
-			if ("-".equals(s)) {
-				price.setInnerSafeHtml(SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
-			} else {
-				price.setInnerText(s);
-			}
-		} else {
-			appDetailsPanel.appendChild(loaderInline);
-			price.setInnerText("");
-		}
+	private void resetAppProperties() {
+		title.setInnerText("");
+		creatorName.setInnerText("");
+		image.setUrl("");
+		imageTable.setUrl("");
+		storeName.setInnerSafeHtml(AnimationHelper.getLoaderInlineSafeHTML());
+		price.setInnerSafeHtml(AnimationHelper.getLoaderInlineSafeHTML());
+	}
+
+	private void setError() {
+		displayingApp.currency = null;
+		displayingApp.price = null;
+		price.setInnerSafeHtml(SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
+		infoTotalRevenue.setInnerSafeHtml(SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
+		revenueTable.setRowCount(0, true);
 	}
 
 	private void createColumns() {
@@ -629,6 +644,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	protected void onDetach() {
 		super.onDetach();
+
+		resetAppProperties();
 		loadingBar.reset();
 	}
 
@@ -647,21 +664,23 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			String newInternalId = current.getParameter(0);
 			boolean isNewDataRequired = false;
 
-			// Item changed
-			if (internalId == null || !internalId.equals(newInternalId)) {
+			// App changed
+			if (displayingAppId == null || !displayingAppId.equals(newInternalId)) {
 				isNewDataRequired = true;
 
-				internalId = newInternalId;
+				displayingAppId = newInternalId;
 
-				if ((item = ItemController.get().lookupItem(internalId)) != null) {
-					item.source = StoreController.get().getStore(FilterController.get().getFilter().getStoreA3Code()).a3Code;
-					displayItemDetails(null);
+				if ((displayingApp = ItemController.get().lookupItem(displayingAppId)) != null) { // App details already retrieved
+					displayingApp.source = StoreController.get().getStore(FilterController.get().getFilter().getStoreA3Code()).a3Code;
+					setAppDetails(displayingApp);
 				} else {
 					// Coming from a refresh page
-					item = new Item();
-					item.internalId = internalId;
-					item.source = StoreController.get().getStore(FilterController.get().getFilter().getStoreA3Code()).a3Code;
+					displayingApp = new Item();
+					displayingApp.internalId = displayingAppId;
+					displayingApp.source = StoreController.get().getStore(FilterController.get().getFilter().getStoreA3Code()).a3Code;
 				}
+			} else {
+				setAppDetails(displayingApp);
 			}
 
 			Filter newFilter = FilterController.get().getFilter();
@@ -692,11 +711,11 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				break;
 			}
 
-			revenueLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
+			revenueLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, displayingAppId,
 					REVENUE_CHART_TYPE, comingPage, filterContents));
-			downloadsLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
+			downloadsLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, displayingAppId,
 					DOWNLOADS_CHART_TYPE, comingPage, filterContents));
-			rankingLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId,
+			rankingLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, displayingAppId,
 					RANKING_CHART_TYPE, comingPage, filterContents));
 
 			if (SessionController.get().isLoggedInUserAdmin() || MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage)) {
@@ -715,23 +734,16 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 			updateFromFilter();
 			String newSelectedTab = current.getParameter(SELECTED_TAB_PARAMETER_INDEX);
-			// boolean isNewSelectedTab = false;
 			if (selectedTab == null || !selectedTab.equals(newSelectedTab)) {
 				selectedTab = newSelectedTab;
 				refreshTabs();
-
-				// isNewSelectedTab = true;
 			}
 
-			// if (isNewSelectedTab && !isNewDataRequired) {
-			// chartRevenue.drawData();
-			// chartDownloads.drawData();
-			// chartRank.drawData();
-			// }
 			if (isNewDataRequired) {
 				infoTotalRevenue.setInnerSafeHtml(AnimationHelper.getLoaderInlineSafeHTML());
-				setPriceInnerText(null);
-				setNoData(false);
+				displayingApp.currency = null;
+				displayingApp.price = null;
+				price.setInnerSafeHtml(AnimationHelper.getLoaderInlineSafeHTML());
 				appOutOfTop200Panel.setVisible(false);
 				chartRevenue.setLoading(true);
 				chartDownloads.setLoading(true);
@@ -797,14 +809,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		}
 	}
 
-	private void setNoData(boolean noData) {
-		if (noData) {
-			infoTotalRevenue.setInnerHTML("-");
-			revenueTable.setRowCount(0, true);
-		}
-		// setChartGraphsVisible(!noData);
-	}
-
 	private boolean isValidStack(Stack current) {
 		return (current != null
 				&& current.getParameterCount() >= 4
@@ -817,14 +821,27 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				.getParameter(3).startsWith(FilterController.ITEM_FILTER_KEY));
 	}
 
-	private void displayItemDetails(Rank rank) {
-
-		setItem(item);
-
-		if (rank != null) {
-			setPrice(rank.currency, rank.price);
+	private void setRevenueDownloadTabsEnabled(boolean enable) {
+		if (enable) {
+			revenueText.setInnerText("Revenue");
+			revenueItem.removeClassName(style.isDisabled());
+			revenueItem.getStyle().setCursor(Cursor.POINTER);
+			downloadsText.setInnerText("Downloads");
+			downloadsItem.removeClassName(style.isDisabled());
+			downloadsItem.getStyle().setCursor(Cursor.POINTER);
+			appDetailsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 		} else {
-			setPriceInnerText(null);
+			revenueText.setInnerHTML("Revenue <span class=\"text-small\">coming soon</span>");
+			revenueItem.addClassName(style.isDisabled());
+			revenueItem.getStyle().setCursor(Cursor.DEFAULT);
+			revenueLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
+			downloadsText.setInnerHTML("Downloads <span class=\"text-small\">coming soon</span>");
+			downloadsItem.addClassName(style.isDisabled());
+			downloadsItem.getStyle().setCursor(Cursor.DEFAULT);
+			downloadsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
+			appDetailsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
+			selectedTab = RANKING_CHART_TYPE;
+			refreshTabs();
 		}
 	}
 
@@ -838,14 +855,14 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	}
 
 	private void getChartData() {
-		if (item != null) {
+		if (displayingApp != null) {
 			RankController.get().cancelRequestItemRanks();
 			RankController.get().cancelRequestItemSalesRanks();
-			if (LinkedAccountController.get().getLinkedAccountItem(item) != null) {
+			if (LinkedAccountController.get().getLinkedAccountItem(displayingApp) != null) {
 				if (MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage)) {
-					RankController.get().fetchItemSalesRanks(item);
+					RankController.get().fetchItemSalesRanks(displayingApp);
 				} else {
-					RankController.get().fetchItemRanks(item);
+					RankController.get().fetchItemRanks(displayingApp);
 				}
 			}
 		} else {
@@ -861,7 +878,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
 		if (NavigationController.get().getCurrentPage() == PageType.ItemPageType) {
-			PageType.ItemPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId, selectedTab, comingPage, FilterController.get()
+			PageType.ItemPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, displayingAppId, selectedTab, comingPage, FilterController.get()
 					.asItemFilterString());
 		}
 	}
@@ -874,7 +891,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {
 		if (NavigationController.get().getCurrentPage() == PageType.ItemPageType) {
-			PageType.ItemPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, internalId, selectedTab, comingPage, FilterController.get()
+			PageType.ItemPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, displayingAppId, selectedTab, comingPage, FilterController.get()
 					.asItemFilterString());
 		}
 	}
@@ -954,17 +971,16 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				setChartGraphsVisible(false);
 			}
 			if (output.ranks != null && output.ranks.size() > 0) {
-				setItemInfo(output.item);
-				displayItemDetails(output.ranks.get(0));
+				setAppDetails(output.item);
+				setAppPriceFromRank(output.ranks.get(0));
 				drawData(output.ranks, output.outOfLeaderboardDates);
 			} else {
-				setPriceInnerText("-");
-				setNoData(true);
+				setError();
 			}
 			TooltipHelper.updateHelperTooltip();
 			loadingBar.hide();
 		} else {
-			setPriceInnerText("-");
+			setError();
 		}
 	}
 
@@ -977,7 +993,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	 */
 	@Override
 	public void getItemRanksFailure(GetItemRanksRequest input, Throwable caught) {
-		setPriceInnerText("-");
+		setError();
 
 	}
 
@@ -991,17 +1007,16 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	public void getItemSalesRanksSuccess(GetItemSalesRanksRequest input, GetItemSalesRanksResponse output) {
 		if (output != null && output.item != null && output.status == StatusType.StatusTypeSuccess) {
 			if (output.ranks != null && output.ranks.size() > 0) {
-				setItemInfo(output.item);
-				displayItemDetails(output.ranks.get(0));
+				setAppDetails(output.item);
+				setAppPriceFromRank(output.ranks.get(0));
 				drawData(output.ranks, null);
 			} else {
-				setPriceInnerText("-");
-				setNoData(true);
+				setError();
 			}
 			TooltipHelper.updateHelperTooltip();
 			loadingBar.hide();
 		} else {
-			setPriceInnerText("-");
+			setError();
 		}
 	}
 
@@ -1013,7 +1028,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	 */
 	@Override
 	public void getItemSalesRanksFailure(GetItemSalesRanksRequest input, Throwable caught) {
-		setPriceInnerText("-");
+		setError();
 	}
 
 	/*
@@ -1026,18 +1041,17 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	public void getLinkedAccountItemSuccess(GetLinkedAccountItemRequest input, GetLinkedAccountItemResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
 			if (output.item == null) { // Not my app
-				RankController.get().fetchItemRanks(item);
-			} else {
-				setItemInfo(output.item);
-				setItem(item);
+				RankController.get().fetchItemRanks(displayingApp);
+			} else { // My App
+				setAppDetails(output.item);
 				if (MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage)) {
-					RankController.get().fetchItemSalesRanks(item);
+					RankController.get().fetchItemSalesRanks(displayingApp);
 				} else {
-					RankController.get().fetchItemRanks(item);
+					RankController.get().fetchItemRanks(displayingApp);
 				}
 			}
 		} else {
-			setPriceInnerText("-");
+			setError();
 		}
 	}
 
@@ -1049,49 +1063,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	 */
 	@Override
 	public void getLinkedAccountItemFailure(GetLinkedAccountItemRequest input, Throwable caught) {
-		setPriceInnerText("-");
-	}
-
-	private void setItemInfo(Item i) {
-		if (i.name != null) {
-			item.name = i.name;
-		}
-		if (i.creatorName != null) {
-			item.creatorName = i.creatorName;
-		}
-		if (i.smallImage != null) {
-			item.smallImage = i.smallImage;
-		}
-		if (i.mediumImage != null) {
-			item.mediumImage = i.mediumImage;
-		}
-		if (i.largeImage != null) {
-			item.largeImage = i.largeImage;
-		}
-	}
-
-	private void setRevenueDownloadTabsEnabled(boolean enable) {
-		if (enable) {
-			revenueText.setInnerText("Revenue");
-			revenueItem.removeClassName(style.isDisabled());
-			revenueItem.getStyle().setCursor(Cursor.POINTER);
-			downloadsText.setInnerText("Downloads");
-			downloadsItem.removeClassName(style.isDisabled());
-			downloadsItem.getStyle().setCursor(Cursor.POINTER);
-			appDetailsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
-		} else {
-			revenueText.setInnerHTML("Revenue <span class=\"text-small\">coming soon</span>");
-			revenueItem.addClassName(style.isDisabled());
-			revenueItem.getStyle().setCursor(Cursor.DEFAULT);
-			revenueLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
-			downloadsText.setInnerHTML("Downloads <span class=\"text-small\">coming soon</span>");
-			downloadsItem.addClassName(style.isDisabled());
-			downloadsItem.getStyle().setCursor(Cursor.DEFAULT);
-			downloadsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
-			appDetailsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
-			selectedTab = RANKING_CHART_TYPE;
-			refreshTabs();
-		}
+		setError();
 	}
 
 	/*
