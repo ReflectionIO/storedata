@@ -160,7 +160,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 			}
 		});
 		myAppsTable.setEmptyTableWidget(myAppsEmptyTable);
-		myAppsTable.setLoadingIndicator(AnimationHelper.getMyAppsLoadingIndicator(5));
+		myAppsTable.setLoadingIndicator(AnimationHelper.getMyAppsLoadingIndicator(4));
 		myAppsTable.getTableLoadingSection().addClassName(style.tableBodyLoading());
 
 		userItemProvider.addDataDisplay(myAppsTable);

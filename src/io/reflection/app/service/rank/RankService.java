@@ -624,7 +624,7 @@ public class RankService implements IRankService {
 		final String getRanksQuery = String
 				.format("SELECT  s.date, (%s_app_revenue + %s_iap_revenue) as revenue, %s_downloads as downloads, "
 						+ "    max(IF(rf.type='FREE' or rf.type='PAID', r.position, NULL)) as position, "
-						+ "    max(IF(rf.type='GROSSING', r.position, NULL)) as grossing_position, s.currency FROM sale_summary s USE INDEX (idx_item_search) "
+						+ "    max(IF(rf.type='GROSSING', r.position, NULL)) as grossing_position, s.price, s.currency FROM sale_summary s USE INDEX (idx_item_search) "
 						+ "    LEFT JOIN rank_fetch rf USE INDEX (idx_rank_fetch_search_time) ON (s.date=rf.fetch_date and s.country=rf.country and rf.category=%d and rf.platform='%s') "
 						+ "    LEFT JOIN rank2 r ON (r.rank_fetch_id=rf.rank_fetch_id and r.itemid=s.itemid) "
 						+ "		WHERE s.date BETWEEN '%s' AND '%s' AND s.itemid = %s AND s.country = '%s' GROUP BY s.date ORDER BY s.%s %s LIMIT %d, %d",
@@ -639,6 +639,8 @@ public class RankService implements IRankService {
 				Rank rank = new Rank();
 
 				rank.country = country.a2Code;
+				Double price = rankConnection.getCurrentRowDouble("price");
+				rank.price = price == null ? null : (price.floatValue() / 100f);
 				rank.currency = rankConnection.getCurrentRowString("currency");
 				rank.date = rankConnection.getCurrentRowDateTime("date");
 				rank.source = DataTypeHelper.IOS_STORE_A3;
