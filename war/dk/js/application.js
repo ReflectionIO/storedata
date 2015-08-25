@@ -572,6 +572,359 @@
   	}
 	};
 
+	var MockFormSelectMultipleWithSearch = function() {
+		$('.js-field--country-select').each(function(){
+			new FormSelectMultipleWithSearch($(this));
+		});
+	}
+
+	var FormSelectMultipleWithSearch = function($element) {
+		var instance = this,
+				inputValue;
+
+		instance.$moduleContainer = $element;
+		instance.$selectedValueContainer = instance.$moduleContainer.find('.selected-value');
+		instance.$currentSelectedItemsContainer = instance.$moduleContainer.find('.js-country-select--container');
+		instance.$resultsContainer = instance.$moduleContainer.find('.js-suggested-results-container'),
+		instance.$noResultsContainer = instance.$moduleContainer.find('.js-no-results'),
+		instance.$appsList = instance.$resultsContainer.find('ul');
+		instance.$closeButton = instance.$moduleContainer.find('.close-popup');
+		instance.$removeAllButton = instance.$moduleContainer.find('.js-multiple-select__remove-all-selected');
+		instance.$applyButton = instance.$moduleContainer.find('.js-multiple-select-apply');
+		instance.$addAnotherButton = instance.$moduleContainer.find('.js-btn-add-another-country');
+		instance.maxNumberAllowed = 5;
+
+		$.ajax({
+        url: "js/search-countries.json",
+        async: true,
+        dataType: "json",
+        success: function (items){
+          instance.mockData = items;
+        }
+    });
+
+		instance.$moduleContainer.find('.js-country-search-form-field').each(function(){
+			instance.initFormField($(this));
+		});
+
+		instance.initPopupDisplay();
+		instance.initAddAnotherButton();
+		instance.initRemoveAll();
+		instance.initApply();
+		instance.multipleSelectWasUpdated();
+	}
+
+	FormSelectMultipleWithSearch.prototype.initPopupDisplay = function() {
+		var instance = this;
+		if(!instance.$moduleContainer.hasClass('.form-field--select-disabled')) {
+			instance.$moduleContainer.find('.selected-value').on('click', function() {
+				if(instance.$moduleContainer.hasClass('is-open')) {
+					instance.$moduleContainer.removeClass('is-open');
+				}
+				else {
+					instance.$moduleContainer.addClass('is-open');
+				}
+			});
+			instance.$moduleContainer.find(".close-popup, .page-overlay").on("click", function(e){
+				e.preventDefault();
+				instance.$moduleContainer.removeClass('is-open');
+				if($(window).width() < 720) {
+					$('html.touch body, html.touch').removeClass('no-scroll');
+				}
+			});
+		}
+	}	
+
+	FormSelectMultipleWithSearch.prototype.initFormField = function($element) {
+		var instance = this;
+
+		var $thisFormField = $element,
+				$thisInputBox = $thisFormField.find('input[type=text]');
+
+		$thisFormField.find('.remove-form-field').on("click", function(){
+			var allFormFields = instance.$currentSelectedItemsContainer.find('.form-field'),
+			$firstFormField = instance.$currentSelectedItemsContainer.find('.form-field:first-child');
+			if(allFormFields.length > 1) {
+				var allFieldsHaveAcceptedValue = true;
+				if($thisFormField.is($firstFormField)) { // If first form field remove clicked, make sure another form field is available and has an accepted value
+					allFormFields.each(function(){
+						if(!$(this).hasClass("js-has-accepted-value")) {
+							allFieldsHaveAcceptedValue = false;
+						}
+					});
+					if(allFieldsHaveAcceptedValue) {
+						$thisFormField.remove();
+					}	
+				} else {
+					$thisFormField.remove(); // not the first form field so can be removed regardless of whether it has content or not
+				}
+				instance.$resultsContainer.hide();
+				instance.$noResultsContainer.hide();
+				instance.multipleSelectWasUpdated();
+				instance.$applyButton.removeAttr("disabled");
+			}			
+		});
+
+		$thisInputBox.on("focus", function(){
+			$thisInputBox.select();
+			instance.showPopularResults($thisFormField);
+		});
+
+		$thisFormField.currentSelectedValue = $thisInputBox.val();
+		$thisFormField.currentFlag = $thisFormField.find('svg');
+		// on key up loop through object and search - for implementation, amend to call service to return results in json and display
+		$thisInputBox.keyup(function(e){			
+			var currentInput = $(this);
+			var searchResults = [];
+			var inputValueCaseInsensitiveRegEx = new RegExp($(this).val(), "i");
+
+			if(e.key == "Enter") {
+				if(currentInput.val().length > 0) {
+					instance.$appsList.find('li:first-child a').trigger("click");
+					$thisInputBox.blur();
+				}
+			} else {
+				$thisFormField.currentFlag.hide()
+				$thisFormField.removeClass("js-has-accepted-value");
+
+				if(currentInput.val().length == 0) {
+					$thisFormField.find('svg').hide();
+				}
+
+				if($thisFormField.hasClass("form-field--alert")) {
+					$thisFormField.removeClass("form-field--alert");
+				}
+				
+				// get search results
+				searchResults = instance.mockSearch(inputValueCaseInsensitiveRegEx);
+
+				// show and hide containers for nil results
+				if (searchResults.length == 0) {			
+					instance.$resultsContainer.hide();
+				} else {
+					instance.positionSearchResultsContainer($thisFormField);
+					instance.$resultsContainer.show();
+					instance.$noResultsContainer.hide();
+				}
+
+				if(searchResults.length == 0) {
+					instance.$noResultsContainer.show();
+				}
+				
+				instance.populateSearchResults($thisFormField, searchResults);
+			}
+
+		});
+
+		$thisInputBox.blur(function(e){
+			setTimeout(function(){
+				if(!$thisFormField.hasClass("js-has-accepted-value")) { // add previous value before false edit
+					$thisInputBox.val($thisFormField.currentSelectedValue);
+					if($thisFormField.currentSelectedValue != 0) {
+						$thisFormField.currentFlag.show();
+						$thisFormField.addClass("js-has-accepted-value");
+					}
+				}
+				var isFocusOnInput = false;
+				instance.$currentSelectedItemsContainer.find('.form-field input').each(function(){
+					if($(this).is(":focus")) {
+						isFocusOnInput = true;
+					}
+				});
+
+				if(!isFocusOnInput) {
+					instance.$resultsContainer.hide();
+					instance.$noResultsContainer.hide();
+				}
+			}, 200);
+		});
+	}
+
+	FormSelectMultipleWithSearch.prototype.mockSearch = function(inputValueCaseInsensitiveRegEx) {
+		var instance = this,
+				searchResults = [];
+		for(var i = 0; i < instance.mockData.items.length; i++) {
+			if(instance.mockData.items[i].name.search(inputValueCaseInsensitiveRegEx) > -1) {
+				searchResults.push(instance.mockData.items[i]);
+			}
+		}
+
+		return searchResults;
+	}
+
+	FormSelectMultipleWithSearch.prototype.populateSearchResults = function($thisFormField, searchResults) {
+		var instance = this,
+				$thisInputBox = $thisFormField.find("input[type=text]");
+		instance.$appsList.empty();
+		for(var i = 0; i < searchResults.length; i++) {
+
+			// see if chosen country is already selected
+			var resultId = searchResults[i].id,
+					countryAlreadySelected = false,
+					countryAlreadySelectedFormField;
+
+			instance.$currentSelectedItemsContainer.find('.form-field').each(function(){
+				if($(this).attr("data-id") == resultId) {
+					countryAlreadySelected = true;
+				}
+			});
+
+			var newLink = $('<a>').html(searchResults[i].flag)
+														.append($('<span>').text(searchResults[i].name).attr("data-id", searchResults[i].id))
+														.on("click", function(){ // on click add value to currently edited input
+															var selectedSpan = $(this).find('span'),
+																	selectedId = selectedSpan.data("id");
+
+															if(!$(this).hasClass("is-selected")) {
+																$thisFormField.attr("data-id", selectedId);
+																if(instance.$resultsContainer.is(":visible")) {
+																	$thisFormField.find('svg').remove();
+																}
+																$thisInputBox.val(selectedSpan.text());
+																$thisFormField.append($(this).find('svg'));
+																$thisFormField.addClass("js-has-accepted-value js-country-search-form-field");
+																instance.$resultsContainer.hide();
+																$thisFormField.currentSelectedValue = $thisInputBox.val();
+																$thisFormField.currentFlag = $thisFormField.find('svg');
+																$thisFormField.id = selectedId;
+																instance.multipleSelectWasUpdated();
+																instance.$applyButton.removeAttr("disabled");
+															}
+														});
+
+			if(countryAlreadySelected) {
+				newLink.addClass("is-selected");
+			}
+
+			instance.$appsList.append($('<li>').append(newLink));					
+		}
+	}
+
+	FormSelectMultipleWithSearch.prototype.multipleSelectWasUpdated = function() {
+		var instance = this;
+		instance.setNumberSelected();
+		instance.setRemoveAllButton();
+		instance.setAddAnotherButton();
+		instance.setFirstItemRemoveVisibility();
+	}
+
+	FormSelectMultipleWithSearch.prototype.initAddAnotherButton = function () {
+		var instance = this;
+		instance.$addAnotherButton.on("click", function(e){
+			e.preventDefault();
+			var currentSelectedItems = instance.$currentSelectedItemsContainer.find('.form-field'),
+			allInputsHaveValues = true,
+			$emptyInput;
+
+			currentSelectedItems.each(function(){
+				if(!$(this).hasClass("js-has-accepted-value")) {
+					allInputsHaveValues = false;
+					$emptyInput = $(this).find('input');
+				}
+			});
+
+			if(allInputsHaveValues && currentSelectedItems.length < instance.maxNumberAllowed) {
+				// add another input select option
+				var newInput = $('<input>').attr("type", "text").attr("id", "country" + currentSelectedItems.length).attr("name", "country" + currentSelectedItems.length).attr("autocomplete", "off");
+				var newFormField = $('<div>').addClass("form-field is-closed")						
+							.append(newInput)
+							.append($('<label>').attr("for", "country" + currentSelectedItems.length).text("Add Another Country"));
+				var newRemoveButton = $('<a>').addClass("remove-form-field")
+																			.text("K");
+																			
+				newFormField.append(newRemoveButton);
+				setTimeout(function() { newInput.focus(); }, 100);
+				instance.$currentSelectedItemsContainer.append(newFormField);
+				instance.initFormField(newFormField);
+			}
+		});
+	}
+
+	FormSelectMultipleWithSearch.prototype.initRemoveAll = function() {
+		var instance = this;
+		instance.$removeAllButton.on("click", function(){
+			instance.$currentSelectedItemsContainer.find('.form-field:not(:first-child)').each(function(){
+				$(this).find('.remove-form-field').trigger("click");
+			});
+		});
+	}
+
+	FormSelectMultipleWithSearch.prototype.setNumberSelected = function() {
+		var instance = this,
+				numberSelected = instance.$currentSelectedItemsContainer.find('.form-field').length;
+		instance.$moduleContainer.find('.js-multiple-select__number-selected').text(numberSelected + " / " + instance.maxNumberAllowed);
+	}
+
+	FormSelectMultipleWithSearch.prototype.setRemoveAllButton = function() {
+		var instance = this;
+		if(instance.$currentSelectedItemsContainer.find('.form-field').length > 1) {
+			instance.$removeAllButton.removeClass("is-disabled");
+		} else {
+			instance.$removeAllButton.addClass("is-disabled");
+		}
+	}
+
+	FormSelectMultipleWithSearch.prototype.setFirstItemRemoveVisibility = function() {
+		var instance = this,
+				allFormFields = instance.$currentSelectedItemsContainer.find('.form-field');
+
+		if(allFormFields.length > 1) {
+			allFormFields.first().find('.remove-form-field').show();
+		} else {
+			allFormFields.first().find('.remove-form-field').hide();
+		}
+	}
+
+	FormSelectMultipleWithSearch.prototype.setAddAnotherButton = function() {
+		var instance = this;
+		if(instance.$currentSelectedItemsContainer.find('.form-field').length == instance.maxNumberAllowed) {
+			instance.$addAnotherButton.hide();
+		} else {
+			instance.$addAnotherButton.show();
+		}
+	}
+
+	FormSelectMultipleWithSearch.prototype.initApply = function() {
+		var instance = this;
+		instance.$applyButton.on("click", function(e){
+			e.preventDefault();
+			instance.$closeButton.trigger("click");
+			var formFields = instance.$currentSelectedItemsContainer.find('.js-has-accepted-value');
+			if(formFields.length > 1) {
+				instance.$selectedValueContainer.text(formFields.length + " Countries");
+			} else {
+				instance.$selectedValueContainer.text(formFields.first().find('input[type=text]').val());
+			}
+			instance.$applyButton.attr("disabled", "disabled");
+			var formFieldsNotAccepted = instance.$currentSelectedItemsContainer.find('.form-field:not(.js-has-accepted-value)');
+			formFieldsNotAccepted.remove();
+		});
+	}
+
+	FormSelectMultipleWithSearch.prototype.showPopularResults = function($thisFormField) {
+		var instance = this,
+				inputValueCaseInsensitiveRegEx = new RegExp("", "i"),
+				searchResults = instance.mockSearch(inputValueCaseInsensitiveRegEx);				
+
+				// show and hide containers for nil results
+				if (searchResults.length > 0) {
+					instance.populateSearchResults($thisFormField, searchResults);
+					instance.positionSearchResultsContainer($thisFormField);
+					instance.$resultsContainer.show();
+				}
+	}
+
+	FormSelectMultipleWithSearch.prototype.positionSearchResultsContainer = function($thisFormField) {
+		var instance = this;
+		var containerOffsetTop = instance.$currentSelectedItemsContainer.offset().top,
+				formFieldOffsetTop = $thisFormField.offset().top;
+
+		var topPosition = formFieldOffsetTop - containerOffsetTop + $thisFormField.innerHeight() + 1;
+		instance.$resultsContainer.css("top", topPosition);
+		instance.$noResultsContainer.css("top", topPosition);
+	}
+
+
 	var FormFieldSelect = function() {
 		// List of checkboxes drop down
 		var pInstance = this;
@@ -609,7 +962,7 @@
 				selectOptions = selectInput.find('option'),
 				optionsList = $('<ul>'),
 				refSelectContainer = $('<div>').addClass('reflection-select'),
-				refSelectDefault = $('<span>').addClass('ref-icon-after ref-icon-after--angle-down').text('Choose your option'),
+				refSelectDefault = $('<span>').addClass('selected-value').text('Choose your option'),
 				isFilter = selectInput.hasClass('reflection-select--filter'),
 				isCentered = selectInput.hasClass('reflection-select--center'),
 				isRightAligned = selectInput.hasClass('reflection-select--right'),
@@ -700,6 +1053,24 @@
 				});
 			});
 		}
+	};	
+
+	FormFieldSelect.prototype.populateSelectedValues = function(listItems, selectedOptionsContainer) {
+		var selectedValues = '';
+		listItems.each(function(){
+			var $this = $(this);
+			if($this.find('input:checked').length > 0) {
+				selectedValues += $this.find('.checkboxLabelVisible').text() + ', ';
+			}
+		});
+
+		if(selectedValues.length > 0) {
+			selectedValues = selectedValues.substring(0, selectedValues.length - 2);
+			selectedOptionsContainer.text(selectedValues);
+		}
+		else {
+			selectedOptionsContainer.text('Choose your option(s)');
+		}
 	};
 
 	function toggleDropDown(refSelectContainer, optionsList, listHeight) {
@@ -724,24 +1095,6 @@
 			} else {
 				$('html.touch body, html.touch').removeClass('no-scroll');
 			}
-		}
-	};
-
-	FormFieldSelect.prototype.populateSelectedValues = function(listItems, selectedOptionsContainer) {
-		var selectedValues = '';
-		listItems.each(function(){
-			var $this = $(this);
-			if($this.find('input:checked').length > 0) {
-				selectedValues += $this.find('.checkboxLabelVisible').text() + ', ';
-			}
-		});
-
-		if(selectedValues.length > 0) {
-			selectedValues = selectedValues.substring(0, selectedValues.length - 2);
-			selectedOptionsContainer.text(selectedValues);
-		}
-		else {
-			selectedOptionsContainer.text('Choose your option(s)');
 		}
 	};
 
@@ -1074,6 +1427,7 @@
 		new FormFieldSelect();
 		new BackToTop();
 		new StickyTableHead();
+		new MockFormSelectMultipleWithSearch();
 
 		$('.js-tab-select').on("mouseup", function(e){
 			new StickyTableHead();
@@ -1086,6 +1440,18 @@
 		$('.toggle-view-state input').on("click", function(){
 			$(".page-leaderboard").removeClass("list-view compact-view");
 			$(".page-leaderboard").addClass($(this).attr("id"));
+		});
+
+		var resetFiltersButton = $('.js-reset-filters');
+
+		resetFiltersButton.on("click", function(e){
+			e.preventDefault();
+			$(this).parents("form").find("select").each(function(){
+				var popupList = $(this).siblings(".reflection-select").find("ul");
+				popupList.find("li:first-child").trigger("click");
+				popupList.find(".close-popup").trigger("click");
+			});
+			$(this).attr("disabled", "disabled");
 		});
 	}
 
