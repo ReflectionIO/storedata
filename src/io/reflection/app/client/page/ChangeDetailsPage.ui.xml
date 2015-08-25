@@ -119,7 +119,7 @@
 								<form>
 									<c:PasswordField ui:field="password" labelText="Current password" />
 
-									<c:PasswordField ui:field="newPassword" labelText="New password" checkActive="true" />
+									<c:PasswordField ui:field="newPassword" labelText="New password" />
 
 									<c:PasswordField ui:field="confirmPassword" labelText="Confirm password" />
 

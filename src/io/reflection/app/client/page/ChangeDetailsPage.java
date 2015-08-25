@@ -127,7 +127,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	// Change Password
 	@UiField PasswordField password;
 
-	@UiField PasswordField newPassword;
+	@UiField(provided = true) PasswordField newPassword = new PasswordField(true);
 	@UiField PasswordField confirmPassword;
 
 	@UiField LoadingButton changePasswordBtn;

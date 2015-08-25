@@ -53,18 +53,31 @@ public class PasswordField extends Composite implements HasClickHandlers, HasKey
 	@UiField DivElement strengthIndicatorPanel;
 	@UiField SpanElement strengthDescription;
 	@UiField SpanElement strengthIndicator;
-	private boolean isCheckActive;
+	private boolean isStrengthIndicator;
 	private SpanElement note = Document.get().createSpanElement();
 	private final ReflectionMainStyles refStyle = Styles.STYLES_INSTANCE.reflectionMainStyle();
 
 	public PasswordField() {
+		this(false);
+	}
+
+	public PasswordField(boolean isStrengthIndicator) {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		this.isStrengthIndicator = isStrengthIndicator;
+		if (!isStrengthIndicator) {
+			strengthIndicatorPanel.removeFromParent();
+		}
 
 		note.addClassName(refStyle.inputHint());
 	}
 
 	public void setLabelText(String text) {
+		strengthIndicatorPanel.removeFromParent();
 		label.setInnerText(text);
+		if (isStrengthIndicator) {
+			label.appendChild(strengthIndicatorPanel);
+		}
 	}
 
 	public String getText() {
@@ -81,10 +94,8 @@ public class PasswordField extends Composite implements HasClickHandlers, HasKey
 	public void clear() {
 		passwordTextBox.setText("");
 		hideNote();
-		if (!this.getElement().hasClassName(refStyle.isClosed())) {
-			this.getElement().addClassName(refStyle.isClosed());
-		}
-		if (isCheckActive) {
+		this.getElement().addClassName(refStyle.isClosed());
+		if (isStrengthIndicator) {
 			strengthDescription.setInnerText("Strength");
 			strengthIndicator.setClassName("");
 		}
@@ -96,11 +107,7 @@ public class PasswordField extends Composite implements HasClickHandlers, HasKey
 	}
 
 	public void setEnabled(boolean enabled) {
-		if (enabled) {
-			this.getElement().removeClassName(refStyle.formFieldDisabled());
-		} else {
-			this.getElement().addClassName(refStyle.formFieldDisabled());
-		}
+		this.setStyleName(refStyle.formFieldDisabled(), !enabled);
 		passwordTextBox.setEnabled(enabled);
 	}
 
@@ -110,9 +117,7 @@ public class PasswordField extends Composite implements HasClickHandlers, HasKey
 
 	public void showNote(String text, boolean isError) {
 		if (isError) {
-			if (!this.getElement().hasClassName(refStyle.formFieldError())) {
-				this.getElement().addClassName(refStyle.formFieldError());
-			}
+			this.getElement().addClassName(refStyle.formFieldError());
 		}
 		note.setInnerText(text);
 		if (!label.isOrHasChild(note)) {
@@ -125,15 +130,6 @@ public class PasswordField extends Composite implements HasClickHandlers, HasKey
 		if (label.isOrHasChild(note)) {
 			label.removeChild(note);
 		}
-	}
-
-	public void setCheckActive(boolean activated) {
-		if (!isCheckActive && activated) {
-			label.appendChild(strengthIndicatorPanel);
-		} else {
-			strengthIndicatorPanel.removeFromParent();
-		}
-		isCheckActive = activated;
 	}
 
 	public void setTabIndex(int index) {
@@ -151,14 +147,14 @@ public class PasswordField extends Composite implements HasClickHandlers, HasKey
 
 	@UiHandler("passwordTextBox")
 	void onBlurred(BlurEvent event) {
-		if (!this.getElement().hasClassName(refStyle.isClosed()) && getText().length() < 1) {
+		if (getText().length() < 1) {
 			this.getElement().addClassName(refStyle.isClosed());
 		}
 	}
 
 	@UiHandler("passwordTextBox")
 	void onFieldModified(KeyUpEvent event) {
-		if (isCheckActive) {
+		if (isStrengthIndicator) {
 			if (passwordTextBox.getText().length() < 1) {
 				strengthDescription.setInnerText("Strength");
 				strengthIndicator.setClassName("");
@@ -234,20 +230,6 @@ public class PasswordField extends Composite implements HasClickHandlers, HasKey
 	@Override
 	public HandlerRegistration addKeyDownHandler(KeyDownHandler handler) {
 		return addDomHandler(handler, KeyDownEvent.getType());
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
-	 */
-	@Override
-	protected void onAttach() {
-		super.onAttach();
-
-		if (!isCheckActive) {
-			strengthIndicatorPanel.removeFromParent();
-		}
 	}
 
 }

@@ -54,7 +54,7 @@ public class RegisterForm extends Composite {
 	private String emailNote;
 
 	@UiField HTMLPanel passwordGroup;
-	@UiField PasswordField password;
+	@UiField(provided = true) PasswordField password = new PasswordField(true);
 	@UiField PasswordField confirmPassword;
 	private String passwordError;
 
