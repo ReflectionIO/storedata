@@ -9,6 +9,18 @@
 package io.reflection.app.service.sale;
 
 import static com.spacehopperstudios.utility.StringUtils.*;
+
+import java.text.SimpleDateFormat;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.spacehopperstudios.utility.StringUtils;
+
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
@@ -27,16 +39,6 @@ import io.reflection.app.service.ServiceType;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.spacehopperstudios.utility.StringUtils;
 
 final class SaleService implements ISaleService {
 	@Override
@@ -374,11 +376,11 @@ final class SaleService implements ISaleService {
 
 			if (pager.sortDirection != null) {
 				switch (pager.sortDirection) {
-				case SortDirectionTypeAscending:
-					sortDirectionQuery = "ASC";
-					break;
-				default:
-					break;
+					case SortDirectionTypeAscending:
+						sortDirectionQuery = "ASC";
+						break;
+					default:
+						break;
 				}
 			}
 
@@ -478,11 +480,11 @@ final class SaleService implements ISaleService {
 
 			if (pager.sortDirection != null) {
 				switch (pager.sortDirection) {
-				case SortDirectionTypeAscending:
-					sortDirectionQuery = "ASC";
-					break;
-				default:
-					break;
+					case SortDirectionTypeAscending:
+						sortDirectionQuery = "ASC";
+						break;
+					default:
+						break;
 				}
 			}
 
@@ -876,6 +878,125 @@ final class SaleService implements ISaleService {
 			if (saleConnection != null) {
 				saleConnection.disconnect();
 			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see io.reflection.app.service.sale.ISaleService#getSoldItemIdsForAccountInDateRange(java.lang.Long, java.util.Date, java.util.Date)
+	 */
+	@Override
+	public List<SimpleEntry<String, String>> getSoldItemIdsForAccountInDateRange(Long dataAccountId, Date gatherFrom, Date gatherTo)
+			throws DataAccessException {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+		String getItemsByCountryQuery = String.format("SELECT DISTINCT itemid, country FROM `sale_summary` WHERE dataaccountid=%d AND date BETWEEN '%s' AND '%s'",
+				dataAccountId, sdf.format(gatherFrom), sdf.format(gatherTo));
+
+		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
+
+		try {
+			saleConnection.connect();
+			saleConnection.executeQuery(getItemsByCountryQuery);
+
+			ArrayList<SimpleEntry<String, String>> list = new ArrayList<SimpleEntry<String, String>>();
+
+			while (saleConnection.fetchNextRow()) {
+				SimpleEntry<String, String> entry = new SimpleEntry<String, String>(saleConnection.getCurrentRowString("itemid"),
+						saleConnection.getCurrentRowString("country"));
+				list.add(entry);
+			}
+
+			return list;
+		} finally {
+			if (saleConnection != null) {
+				saleConnection.disconnect();
+			}
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.service.sale.ISaleService#getIapItemIdsForParentItemOnDate(java.lang.Long, java.lang.String, java.util.Date)
+	 */
+	@Override
+	public List<String> getIapItemIdsForParentItemOnDate(Long dataAccountId, String mainItemId, Date date) throws DataAccessException {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+		String getItemsByCountryQuery = String.format("select distinct(itemid) as itemid from sale where "
+				+ "dataaccountid=%s and `begin`='%s' and parentidentifier="
+				+ "  (select sku from sale where dataaccountid=%s and itemid='%s' limit 1)",
+				dataAccountId, sdf.format(date), dataAccountId, mainItemId);
+
+		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
+
+		try {
+			saleConnection.connect();
+			saleConnection.executeQuery(getItemsByCountryQuery);
+
+			ArrayList<String> list = new ArrayList<String>();
+
+			while (saleConnection.fetchNextRow()) {
+				String entry = saleConnection.getCurrentRowString("itemid");
+				list.add(entry);
+			}
+
+			return list;
+		} finally {
+			if (saleConnection != null) {
+				saleConnection.disconnect();
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see io.reflection.app.service.sale.ISaleService#getIapItemIdsForParentItemBetweenDates(java.lang.String, java.lang.String, java.util.Date, java.util.Date)
+	 */
+	@Override
+	public List<String> getIapItemIdsForParentItemBetweenDates(Long dataAccountId, String mainItemId, Date from, Date to) throws DataAccessException {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+		String getItemsByCountryQuery = String.format("select distinct(itemid) as itemid from sale where "
+				+ "dataaccountid=%s and `begin` BETWEEN '%s' and '%s' and parentidentifier="
+				+ "  (select sku from sale where dataaccountid=%d and itemid='%s' limit 1)",
+				dataAccountId, sdf.format(from), sdf.format(to), dataAccountId, mainItemId);
+
+		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
+
+		try {
+			saleConnection.connect();
+			saleConnection.executeQuery(getItemsByCountryQuery);
+
+			ArrayList<String> list = new ArrayList<String>();
+
+			while (saleConnection.fetchNextRow()) {
+				String entry = saleConnection.getCurrentRowString("itemid");
+				list.add(entry);
+			}
+
+			return list;
+		} finally {
+			if (saleConnection != null) {
+				saleConnection.disconnect();
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see io.reflection.app.service.sale.ISaleService#deleteSales(java.lang.Long, java.util.Date)
+	 */
+	@Override
+	public void deleteSales(Long dataAccountId, Date date) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+		try {
+			Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
+			saleConnection.executeQuery(String.format("delete from sale where dataaccountid=%d and begin='%s'", dataAccountId, sdf.format(date)));
+		} catch (Exception e) {
 		}
 	}
 }

@@ -8,6 +8,14 @@
 //
 package io.reflection.app.service.sale;
 
+import java.util.AbstractMap.SimpleEntry;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import com.spacehopperstudios.service.IService;
+
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.Category;
@@ -16,13 +24,6 @@ import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Sale;
-
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import com.spacehopperstudios.service.IService;
 
 public interface ISaleService extends IService {
 
@@ -232,5 +233,39 @@ public interface ISaleService extends IService {
 	 * @throws DataAccessException
 	 */
 	public void summariseSalesForDataAccountOnDate(Long id, Date date) throws DataAccessException;
+
+	/**
+	 * @param dataAccountId
+	 * @param gatherFrom
+	 * @param gatherTo
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<SimpleEntry<String, String>> getSoldItemIdsForAccountInDateRange(Long dataAccountId, Date gatherFrom, Date gatherTo) throws DataAccessException;
+
+	/**
+	 * @param dataAccountId
+	 * @param mainItemId
+	 * @param date
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<String> getIapItemIdsForParentItemOnDate(Long dataAccountId, String mainItemId, Date date) throws DataAccessException;
+
+	/**
+	 * @param dataAccountId
+	 * @param itemId
+	 * @param parse
+	 * @param parse2
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<String> getIapItemIdsForParentItemBetweenDates(Long dataAccountId, String itemId, Date parse, Date parse2) throws DataAccessException;
+
+	/**
+	 * @param dataAccountId
+	 * @param date
+	 */
+	public void deleteSales(Long dataAccountId, Date date);
 
 }
