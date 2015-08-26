@@ -184,7 +184,7 @@ public class ChartHelper {
 	}
 
 	public static void setDefaultOptions(BaseChart chart) {
-		chart.getChartOption().setBackgroundColor(ColorHelper.getLinearGradientColor(0, 1, 0, 0, "#ffffff", ColorHelper.getPanelGrey()))
+		chart.getChartOption().setAnimation(false).setBackgroundColor(ColorHelper.getLinearGradientColor(0, 1, 0, 0, "#ffffff", ColorHelper.getPanelGrey()))
 				.setPlotBackgroundColor(ColorHelper.getPanelGrey()).setPlotBorderColor(ColorHelper.getPanelGrey()).setPlotBorderWidth(1)
 				.setSpacing(createMarginsArray(40, 1, 1, 1));
 		chart.getPlotOption().setCursor(Cursor.DEFAULT.getCssName()).setMarkerEnabled(false).setMarkerRadius(4).setMarkerHoverRadius(4)

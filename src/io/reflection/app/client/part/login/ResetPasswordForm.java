@@ -34,7 +34,7 @@ public class ResetPasswordForm extends Composite {
 
 	private String resetCode;
 
-	@UiField PasswordField newPassword;
+	@UiField(provided = true) PasswordField newPassword = new PasswordField(true);
 	@UiField PasswordField confirmPassword;
 
 	private String newPasswordError = null;

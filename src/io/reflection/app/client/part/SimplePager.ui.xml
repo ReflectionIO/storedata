@@ -6,10 +6,10 @@
 	</ui:style>
 	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.pagination}">
 		<g:Anchor ui:field="mFirstPage" href="#" styleName="{STYLES_INSTANCE.reflectionMainStyle.pagesLink}">
-					First
-				</g:Anchor>
+			First
+		</g:Anchor>
 		<g:Anchor ui:field="mPrevPage" href="#" styleName="{STYLES_INSTANCE.reflectionMainStyle.pagesLink}">
-			Older
+			Previous
 		</g:Anchor>
 
 		<ul ui:field="mList" style="display: none">
@@ -33,8 +33,9 @@
 				</g:Anchor>
 			</li>
 		</ul>
+
 		<g:Anchor ui:field="mNextPage" href="#" styleName="{STYLES_INSTANCE.reflectionMainStyle.pagesLink}">
-			Newer
+			Next
 		</g:Anchor>
 	</g:HTMLPanel>
 </ui:UiBinder> 
