@@ -678,7 +678,7 @@
 			var searchResults = [];
 			var inputValueCaseInsensitiveRegEx = new RegExp($(this).val(), "i");
 
-			if(e.key == "Enter") {
+			if(e.keyCode == "13") { // user pressed Enter
 				if(currentInput.val().length > 0) {
 					instance.$appsList.find('li:first-child a').trigger("click");
 					$thisInputBox.blur();
