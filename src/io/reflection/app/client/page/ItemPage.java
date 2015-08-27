@@ -899,9 +899,37 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	private void drawData(List<Rank> ranks, List<Date> outOfLeaderboardDates) {
 		dateHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.isDescending());
 		revenueTable.getColumnSortList().push(dateColumn);
-
 		chartRank.setRankingType(rankType);
+		List<Rank> rankingRanksWithOutOfLeaderboardValues = new ArrayList<Rank>(ranks);
+		if (outOfLeaderboardDates != null) {
+			for (Date outOfLeaderboardDate : outOfLeaderboardDates) { // Add placeholder rank object with position > 200
+				for (int i = 0; i < rankingRanksWithOutOfLeaderboardValues.size(); i++) {
+					if (FilterHelper.beforeDate(outOfLeaderboardDate, rankingRanksWithOutOfLeaderboardValues.get(i).date)) {
+						Rank outOfLeaderboardRankPlaceholder = new Rank();
+						outOfLeaderboardRankPlaceholder.date = outOfLeaderboardDate;
+						outOfLeaderboardRankPlaceholder.position = new Integer(300);
+						outOfLeaderboardRankPlaceholder.grossingPosition = new Integer(300);
+						rankingRanksWithOutOfLeaderboardValues.add(i, outOfLeaderboardRankPlaceholder);
+						break;
+					} else if (i + 1 == rankingRanksWithOutOfLeaderboardValues.size()) {
+						Rank outOfLeaderboardRankPlaceholder = new Rank();
+						outOfLeaderboardRankPlaceholder.date = outOfLeaderboardDate;
+						outOfLeaderboardRankPlaceholder.position = new Integer(300);
+						outOfLeaderboardRankPlaceholder.grossingPosition = new Integer(300);
+						rankingRanksWithOutOfLeaderboardValues.add(rankingRanksWithOutOfLeaderboardValues.size(), outOfLeaderboardRankPlaceholder);
+						break;
+					}
+				}
+			}
+		}
+		chartRank.drawSeries(rankingRanksWithOutOfLeaderboardValues, YAxisPosition.PRIMARY, YDataType.RankingYAxisDataType, SERIES_ID_RANK, LineType.LINE,
+				ColorHelper.getReflectionGreen(), false, false);
+
 		if (MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage) || SessionController.get().isLoggedInUserAdmin()) {
+			chartRank.drawSeries(ranks, YAxisPosition.SECONDARY, YDataType.RevenueYAxisDataType, SERIES_ID_REVENUE_SECONDARY, LineType.LINE,
+					ColorHelper.getReflectionPurple(), false, !overlayRevenuesSwitch.getValue().booleanValue());
+			chartRank.drawSeries(ranks, YAxisPosition.TERTIARY, YDataType.DownloadsYAxisDataType, SERIES_ID_DOWNLOAD_SECONDARY, LineType.LINE,
+					ColorHelper.getReflectionRed(), false, !overlayDownloadsSwitch.getValue().booleanValue());
 			chartRevenue.drawSeries(ranks, YAxisPosition.PRIMARY, YDataType.RevenueYAxisDataType, SERIES_ID_REVENUE, LineType.AREA,
 					ColorHelper.getReflectionPurple(), false, cumulativeChartSwitch.getValue().booleanValue());
 			chartDownloads.drawSeries(ranks, YAxisPosition.PRIMARY, YDataType.DownloadsYAxisDataType, SERIES_ID_DOWNLOAD, LineType.AREA,
@@ -924,36 +952,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			chartDownloads.drawSeries(ranks, YAxisPosition.SECONDARY, YDataType.RevenueYAxisDataType, SERIES_ID_REVENUE_CUMULATIVE_SECONDARY, LineType.LINE,
 					ColorHelper.getReflectionPurple(), true, !cumulativeChartSwitch.getValue().booleanValue()
 							|| !overlayRevenuesSwitch.getValue().booleanValue());
-
-			List<Rank> rankingRanks = new ArrayList<Rank>(ranks);
-			if (outOfLeaderboardDates != null) {
-				for (Date outOfLeaderboardDate : outOfLeaderboardDates) { // Add placeholder rank object with position > 200
-					for (int i = 0; i < rankingRanks.size(); i++) {
-						if (FilterHelper.beforeDate(outOfLeaderboardDate, rankingRanks.get(i).date)) {
-							Rank outOfLeaderboardRankPlaceholder = new Rank();
-							outOfLeaderboardRankPlaceholder.date = outOfLeaderboardDate;
-							outOfLeaderboardRankPlaceholder.position = new Integer(300);
-							outOfLeaderboardRankPlaceholder.grossingPosition = new Integer(300);
-							rankingRanks.add(i, outOfLeaderboardRankPlaceholder);
-							break;
-						} else if (i + 1 == rankingRanks.size()) {
-							Rank outOfLeaderboardRankPlaceholder = new Rank();
-							outOfLeaderboardRankPlaceholder.date = outOfLeaderboardDate;
-							outOfLeaderboardRankPlaceholder.position = new Integer(300);
-							outOfLeaderboardRankPlaceholder.grossingPosition = new Integer(300);
-							rankingRanks.add(rankingRanks.size(), outOfLeaderboardRankPlaceholder);
-							break;
-						}
-					}
-				}
-			}
-			chartRank.drawSeries(rankingRanks, YAxisPosition.PRIMARY, YDataType.RankingYAxisDataType, SERIES_ID_RANK, LineType.LINE,
-					ColorHelper.getReflectionGreen(), false, false);
-			chartRank.drawSeries(ranks, YAxisPosition.SECONDARY, YDataType.RevenueYAxisDataType, SERIES_ID_REVENUE_SECONDARY, LineType.LINE,
-					ColorHelper.getReflectionPurple(), false, !overlayRevenuesSwitch.getValue().booleanValue());
-			chartRank.drawSeries(ranks, YAxisPosition.TERTIARY, YDataType.DownloadsYAxisDataType, SERIES_ID_DOWNLOAD_SECONDARY, LineType.LINE,
-					ColorHelper.getReflectionRed(), false, !overlayDownloadsSwitch.getValue().booleanValue());
 		}
+
 	}
 
 	/*
