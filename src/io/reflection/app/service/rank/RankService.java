@@ -7,26 +7,7 @@
 //
 package io.reflection.app.service.rank;
 
-import static com.spacehopperstudios.utility.StringUtils.addslashes;
-import static com.spacehopperstudios.utility.StringUtils.stripslashes;
-import static io.reflection.app.helpers.SqlQueryHelper.beforeAfterQuery;
-import io.reflection.app.api.exception.DataAccessException;
-import io.reflection.app.api.shared.datatypes.Pager;
-import io.reflection.app.api.shared.datatypes.SortDirectionType;
-import io.reflection.app.datatypes.shared.Category;
-import io.reflection.app.datatypes.shared.Country;
-import io.reflection.app.datatypes.shared.FormType;
-import io.reflection.app.datatypes.shared.Item;
-import io.reflection.app.datatypes.shared.Rank;
-import io.reflection.app.datatypes.shared.Store;
-import io.reflection.app.logging.GaeLevel;
-import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
-import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
-import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
-import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
-import io.reflection.app.service.ServiceType;
-import io.reflection.app.service.feedfetch.FeedFetchService;
-import io.reflection.app.shared.util.DataTypeHelper;
+import static com.spacehopperstudios.utility.StringUtils.*;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -44,13 +25,30 @@ import java.util.logging.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
-import co.spchopr.persistentmap.PersistentMap;
-import co.spchopr.persistentmap.PersistentMapFactory;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.spacehopperstudios.utility.JsonUtils;
+
+import co.spchopr.persistentmap.PersistentMap;
+import co.spchopr.persistentmap.PersistentMapFactory;
+import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.datatypes.shared.Category;
+import io.reflection.app.datatypes.shared.Country;
+import io.reflection.app.datatypes.shared.FormType;
+import io.reflection.app.datatypes.shared.Item;
+import io.reflection.app.datatypes.shared.Rank;
+import io.reflection.app.datatypes.shared.Store;
+import io.reflection.app.logging.GaeLevel;
+import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
+import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
+import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
+import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
+import io.reflection.app.service.ServiceType;
+import io.reflection.app.service.feedfetch.FeedFetchService;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 public class RankService implements IRankService {
 	private static final Logger LOG = Logger.getLogger(RankService.class.getName());
@@ -146,19 +144,19 @@ public class RankService implements IRankService {
 
 		String updateQuery = "UPDATE rank2 set position=?, itemid=?, price=?, currency=?, revenue_universal=?, downloads_universal=? where id=?";
 
-		final String updateRankQuery = String
-				.format("UPDATE `rank` SET `position`=%d,`grossingposition`=%d,`itemid`='%s',`type`='%s',`country`='%s',`date`=FROM_UNIXTIME(%d),`source`='%s',`price`=%d,`currency`='%s',`categoryid`=%d,`code2`=%d,`revenue`=%s,`downloads`=%s WHERE `id`=%d;",
-						rank.position.longValue(), rank.grossingPosition.longValue(), addslashes(rank.itemId), addslashes(rank.type), addslashes(rank.country),
-						rank.date.getTime() / 1000, addslashes(rank.source), (int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency),
-						rank.category.id.longValue(), rank.code.longValue(),
-						rank.revenue == null || rank.revenue.isInfinite() ? "NULL" : Integer.toString((int) (rank.revenue.floatValue() * 100.0f)),
-						rank.downloads == null || rank.downloads.intValue() == Integer.MAX_VALUE ? "NULL" : rank.downloads.intValue(), rank.id.longValue());
+		//		final String updateRankQuery = String
+		//				.format("UPDATE `rank` SET `position`=%d,`grossingposition`=%d,`itemid`='%s',`type`='%s',`country`='%s',`date`=FROM_UNIXTIME(%d),`source`='%s',`price`=%d,`currency`='%s',`categoryid`=%d,`code2`=%d,`revenue`=%s,`downloads`=%s WHERE `id`=%d;",
+		//						rank.position.longValue(), rank.grossingPosition.longValue(), addslashes(rank.itemId), addslashes(rank.type), addslashes(rank.country),
+		//						rank.date.getTime() / 1000, addslashes(rank.source), (int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency),
+		//						rank.category.id.longValue(), rank.code.longValue(),
+		//						rank.revenue == null || rank.revenue.isInfinite() ? "NULL" : Integer.toString((int) (rank.revenue.floatValue() * 100.0f)),
+		//						rank.downloads == null || rank.downloads.intValue() == Integer.MAX_VALUE ? "NULL" : rank.downloads.intValue(), rank.id.longValue());
 
 		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
 		try (PreparedStatement pstat = rankConnection.getRealConnection().prepareStatement(updateQuery, Statement.NO_GENERATED_KEYS)) {
 			rankConnection.connect();
-			rankConnection.executeQuery(updateRankQuery);
+			//			rankConnection.executeQuery(updateRankQuery);
 
 			if (rankConnection.getAffectedRowCount() > 0) {
 				updatedRank = getRank(rank.id);
@@ -205,7 +203,7 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.rank.IRankService#getItemRanks(io.reflection.app.datatypes.Country, java.lang.String, io.reflection.app.datatypes.Item,
 	 * java.util.Date, java.util.Date, io.reflection.app.api.datatypes.Pager)
 	 */
@@ -268,14 +266,15 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.rank.IRankService#getItemHasGrossingRank(io.reflection.app.datatypes.Item)
 	 */
 	@Override
 	public Boolean getItemHasGrossingRank(Item item) throws DataAccessException {
 		Boolean hasGrossingRank = Boolean.FALSE;
 
-		final String getItemHasGrossingRankQuery = String.format("SELECT `id` FROM `rank` WHERE itemid`='%s' AND `grossingposition`<>0 LIMIT 1",
+		final String getItemHasGrossingRankQuery = String.format(
+				"select rank_fetch_id from rank_fetch where rank_fetch_id in ( select rank_fetch_id from rank2 where itemid='%s' ) and type='GROSSING' limit 1",
 				addslashes(item.internalId));
 
 		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
@@ -298,7 +297,7 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.rank.IRankService#addRanksBatch(java.util.Collection)
 	 */
 	@Override
@@ -307,24 +306,24 @@ public class RankService implements IRankService {
 
 		String insertQuery = "INSERT INTO rank2 (rank_fetch_id, position, itemid, price, currency, revenue_universal, downloads_universal) values (?,?,?,?,?,?,?)";
 
-		final StringBuffer addRanksBatchQuery = new StringBuffer();
-
-		addRanksBatchQuery
-				.append("INSERT INTO `rank` (`position`,`grossingposition`,`itemid`,`type`,`country`,`date`,`source`,`price`,`currency`,`categoryid`,`code2`,`revenue`,`downloads`) VALUES ");
-
-		boolean addComma = false;
-		for (final Rank rank : ranks) {
-			if (addComma) {
-				addRanksBatchQuery.append(",");
-			}
-
-			addRanksBatchQuery.append(String.format("(%d,%d,'%s','%s','%s',FROM_UNIXTIME(%d),'%s',%d,'%s',%d,%d,%s,%s)", rank.position.longValue(),
-					rank.grossingPosition.longValue(), addslashes(rank.itemId), addslashes(rank.type), addslashes(rank.country), rank.date.getTime() / 1000,
-					addslashes(rank.source), (int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency), rank.category.id.longValue(), rank.code
-							.longValue(), rank.revenue == null ? "NULL" : Integer.toString((int) (rank.revenue.floatValue() * 100.0f)),
-					rank.downloads == null ? "NULL" : rank.downloads.toString()));
-			addComma = true;
-		}
+		// final StringBuffer addRanksBatchQuery = new StringBuffer();
+		//
+		// addRanksBatchQuery
+		// .append("INSERT INTO `rank` (`position`,`grossingposition`,`itemid`,`type`,`country`,`date`,`source`,`price`,`currency`,`categoryid`,`code2`,`revenue`,`downloads`) VALUES ");
+		//
+		// boolean addComma = false;
+		// for (final Rank rank : ranks) {
+		// if (addComma) {
+		// addRanksBatchQuery.append(",");
+		// }
+		//
+		// addRanksBatchQuery.append(String.format("(%d,%d,'%s','%s','%s',FROM_UNIXTIME(%d),'%s',%d,'%s',%d,%d,%s,%s)", rank.position.longValue(),
+		// rank.grossingPosition.longValue(), addslashes(rank.itemId), addslashes(rank.type), addslashes(rank.country), rank.date.getTime() / 1000,
+		// addslashes(rank.source), (int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency), rank.category.id.longValue(), rank.code
+		// .longValue(), rank.revenue == null ? "NULL" : Integer.toString((int) (rank.revenue.floatValue() * 100.0f)),
+		// rank.downloads == null ? "NULL" : rank.downloads.toString()));
+		// addComma = true;
+		// }
 
 		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
@@ -360,7 +359,7 @@ public class RankService implements IRankService {
 
 			pstat.executeBatch();
 
-			rankConnection.executeQuery(addRanksBatchQuery.toString());
+			// rankConnection.executeQuery(addRanksBatchQuery.toString());
 
 			if (rankConnection.getAffectedRowCount() > 0) {
 				addedRankCount = Long.valueOf(rankConnection.getAffectedRowCount());
@@ -378,7 +377,7 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.rank.IRankService#updateRanksBatch(java.util.Collection)
 	 */
 	@Override
@@ -386,22 +385,24 @@ public class RankService implements IRankService {
 		long ranksCount = 0;
 
 		String updateQuery = "UPDATE rank2 set position=?, itemid=?, price=?, currency=?, revenue_universal=?, downloads_universal=? where id=?";
-		final String updateRanksBatchQueryFormat = "UPDATE `rank` SET `position`=%d,`grossingposition`=%d,`itemid`='%s',`type`='%s',`country`='%s',`date`=FROM_UNIXTIME(%d),`source`='%s',`price`=%d,`currency`='%s',`categoryid`=%d,`code2`=%d,`revenue`=%s,`downloads`=%s WHERE `id`=%d;";
+		// final String updateRanksBatchQueryFormat = "UPDATE `rank` SET
+		// `position`=%d,`grossingposition`=%d,`itemid`='%s',`type`='%s',`country`='%s',`date`=FROM_UNIXTIME(%d),`source`='%s',`price`=%d,`currency`='%s',`categoryid`=%d,`code2`=%d,`revenue`=%s,`downloads`=%s
+		// WHERE `id`=%d;";
 
 		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
 		try (PreparedStatement pstat = rankConnection.getRealConnection().prepareStatement(updateQuery, Statement.NO_GENERATED_KEYS)) {
 			rankConnection.connect();
 
-			String updateRanksBatchQuery;
+			// String updateRanksBatchQuery;
 			for (final Rank rank : updateRanks) {
-				updateRanksBatchQuery = String.format(updateRanksBatchQueryFormat, rank.position.longValue(), rank.grossingPosition.longValue(),
-						addslashes(rank.itemId), addslashes(rank.type), addslashes(rank.country), rank.date.getTime() / 1000, addslashes(rank.source),
-						(int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency), rank.category.id.longValue(), rank.code.longValue(),
-						rank.revenue == null ? "NULL" : Integer.toString((int) (rank.revenue.floatValue() * 100.0f)), rank.downloads == null ? "NULL"
-								: rank.downloads.toString(), rank.id.longValue());
+				// updateRanksBatchQuery = String.format(updateRanksBatchQueryFormat, rank.position.longValue(), rank.grossingPosition.longValue(),
+				// addslashes(rank.itemId), addslashes(rank.type), addslashes(rank.country), rank.date.getTime() / 1000, addslashes(rank.source),
+				// (int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency), rank.category.id.longValue(), rank.code.longValue(),
+				// rank.revenue == null ? "NULL" : Integer.toString((int) (rank.revenue.floatValue() * 100.0f)), rank.downloads == null ? "NULL"
+				// : rank.downloads.toString(), rank.id.longValue());
 
-				rankConnection.executeQuery(updateRanksBatchQuery);
+				// rankConnection.executeQuery(updateRanksBatchQuery);
 
 				if (rankConnection.getAffectedRowCount() > 0) {
 					ranksCount++;
@@ -441,7 +442,7 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.rank.IRankService#getGatherCodeRanks(io.reflection.app.shared.datatypes.Country, io.reflection.app.shared.datatypes.Store,
 	 * io.reflection.app.shared.datatypes.Category java.lang.String, java.lang.Long, io.reflection.app.api.shared.datatypes.Pager, java.lang.Boolean)
 	 */
@@ -452,7 +453,7 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.rank.IRankService#getGatherCodeRanks(io.reflection.app.shared.datatypes.Country, io.reflection.app.shared.datatypes.Store,
 	 * io.reflection.app.shared.datatypes.Category java.lang.String, java.lang.Long, io.reflection.app.api.shared.datatypes.Pager, java.lang.Boolean)
 	 */
@@ -532,7 +533,7 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.rank.IRankService#getRankIds(io.reflection.app.datatypes.shared.Country, io.reflection.app.datatypes.shared.Store,
 	 * io.reflection.app.datatypes.shared.Category, java.util.Date, java.util.Date)
 	 */
@@ -540,21 +541,28 @@ public class RankService implements IRankService {
 	public List<Long> getRankIds(Country country, Store store, Category category, Date start, Date end) throws DataAccessException {
 		final List<Long> rankIds = new ArrayList<Long>();
 
-		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
-		final String getCountryStoreTypeRanksQuery = String.format("SELECT `id` FROM `rank` WHERE `country`='%s' AND `categoryid`=%d AND %s AND `deleted`='n'",
-				addslashes(country.a2Code), category.id.longValue(), beforeAfterQuery(end, start));
+		final String selectQuery = "SELECT r.id "
+				+ " FROM rank_fetch rf inner join rank2 r on (r.rank_fetch_id = rf.rank_fetch_id) WHERE "
+				+ " rf.country=? AND rf.category=? AND rf.fetch_date BETWEEN ? AND ? and rf.fetch_time > '21:00'";
 
-		try {
+		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
+
+		try (PreparedStatement pstat = rankConnection.getRealConnection().prepareStatement(selectQuery, Statement.NO_GENERATED_KEYS)) {
 			rankConnection.connect();
-			rankConnection.executeQuery(getCountryStoreTypeRanksQuery);
+
+			int paramCount = 1;
+			pstat.setString(paramCount++, country.a2Code);
+			pstat.setLong(paramCount++, category.id);
+			pstat.setDate(paramCount++, new java.sql.Date(start.getTime()));
+			pstat.setDate(paramCount++, new java.sql.Date(end.getTime()));
+
+			rankConnection.executePreparedStatement(pstat);
 
 			while (rankConnection.fetchNextRow()) {
-				final Long id = rankConnection.getCurrentRowLong("id");
-
-				if (id != null) {
-					rankIds.add(id);
-				}
+				rankIds.add(rankConnection.getCurrentRowLong("id"));
 			}
+		} catch (SQLException e) {
+			LOG.log(Level.SEVERE, "Exception occured while trying to rank ids by country, category and dates", e);
 		} finally {
 			if (rankConnection != null) {
 				rankConnection.disconnect();
@@ -566,29 +574,33 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.rank.IRankService#getRankIds(io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
 	public List<Long> getRankIds(Pager pager) throws DataAccessException {
 		final List<Long> rankIds = new ArrayList<Long>();
 
+		final String selectQuery = "SELECT r.id "
+				+ " FROM rank_fetch rf inner join rank2 r on (r.rank_fetch_id = rf.rank_fetch_id) WHERE "
+				+ " rf.fetch_time > '21:00' limit ?, ?";
+
 		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
-		final String getRankIdsQuery = String.format("SELECT `id` FROM `rank` WHERE `deleted`='n' LIMIT %d, %d", pager.start, pager.count);
-
-		try {
+		try (PreparedStatement pstat = rankConnection.getRealConnection().prepareStatement(selectQuery, Statement.NO_GENERATED_KEYS)) {
 			rankConnection.connect();
-			rankConnection.executeQuery(getRankIdsQuery);
+
+			int paramCount = 1;
+			pstat.setLong(paramCount++, pager.start);
+			pstat.setLong(paramCount++, pager.count);
+
+			rankConnection.executePreparedStatement(pstat);
 
 			while (rankConnection.fetchNextRow()) {
-				final Long rankId = rankConnection.getCurrentRowLong("id");
-
-				if (rankId != null) {
-					rankIds.add(rankId);
-				}
+				rankIds.add(rankConnection.getCurrentRowLong("id"));
 			}
-
+		} catch (SQLException e) {
+			LOG.log(Level.SEVERE, "Exception occured while trying to rank ids by country, category and dates", e);
 		} finally {
 			if (rankConnection != null) {
 				rankConnection.disconnect();
@@ -600,7 +612,7 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.rank.IRankService#getSaleSummaryAndRankForItemAndFormType(java.lang.String, io.reflection.app.datatypes.shared.Country,
 	 * io.reflection.app.datatypes.shared.FormType, java.util.Date, java.util.Date)
 	 */
@@ -668,7 +680,7 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.rank.IRankService#getSaleSummaryAndRankForDataAccountAndFormType(java.lang.Long,
 	 * io.reflection.app.datatypes.shared.Country, io.reflection.app.datatypes.shared.FormType, java.util.Date, java.util.Date,
 	 * io.reflection.app.api.shared.datatypes.Pager)
@@ -821,7 +833,7 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.rank.IRankService#getOutOfLeaderboardDates(java.util.List, io.reflection.app.datatypes.shared.Country,
 	 * io.reflection.app.datatypes.shared.Category, java.lang.String)
 	 */

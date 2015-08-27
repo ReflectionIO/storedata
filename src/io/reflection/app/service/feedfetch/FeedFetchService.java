@@ -8,7 +8,18 @@
 //
 package io.reflection.app.service.feedfetch;
 
-import static com.spacehopperstudios.utility.StringUtils.addslashes;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
@@ -22,20 +33,6 @@ import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProv
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
-
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import com.google.appengine.api.utils.SystemProperty;
 
 public class FeedFetchService implements IFeedFetchService {
 	private static final Logger LOG = Logger.getLogger(FeedFetchService.class.getName());
@@ -120,11 +117,11 @@ public class FeedFetchService implements IFeedFetchService {
 	public FeedFetch addFeedFetch(FeedFetch feedFetch) throws DataAccessException {
 		FeedFetch addedFeedFetch = null;
 
-		final String addFeedFetchQuery = String
-				.format("INSERT INTO `feedfetch` (`country`,`data`,`date`,`store`,`type`,`categoryid`,`code2`, `oldkey`) VALUES ('%s','%s',FROM_UNIXTIME(%d),'%s','%s',%d,%d,%s)",
-						addslashes(feedFetch.country), addslashes(feedFetch.data), feedFetch.date.getTime() / 1000, addslashes(feedFetch.store),
-						addslashes(feedFetch.type), feedFetch.category.id.longValue(), feedFetch.code.longValue(),
-						SystemProperty.environment.value() == SystemProperty.Environment.Value.Development ? "-1" : "NULL");
+		// final String addFeedFetchQuery = String
+		// .format("INSERT INTO `feedfetch` (`country`,`data`,`date`,`store`,`type`,`categoryid`,`code2`, `oldkey`) VALUES ('%s','%s',FROM_UNIXTIME(%d),'%s','%s',%d,%d,%s)",
+		// addslashes(feedFetch.country), addslashes(feedFetch.data), feedFetch.date.getTime() / 1000, addslashes(feedFetch.store),
+		// addslashes(feedFetch.type), feedFetch.category.id.longValue(), feedFetch.code.longValue(),
+		// SystemProperty.environment.value() == SystemProperty.Environment.Value.Development ? "-1" : "NULL");
 
 		final Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
 
@@ -133,7 +130,7 @@ public class FeedFetchService implements IFeedFetchService {
 
 		try (PreparedStatement stat = feedFetchConnection.getRealConnection().prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS)) {
 			feedFetchConnection.connect();
-			feedFetchConnection.executeQuery(addFeedFetchQuery);
+			// feedFetchConnection.executeQuery(addFeedFetchQuery);
 
 			String status = feedFetch.status == null ? null : feedFetch.status.toString().toUpperCase();
 
@@ -172,11 +169,11 @@ public class FeedFetchService implements IFeedFetchService {
 	public FeedFetch updateFeedFetch(FeedFetch feedFetch) throws DataAccessException {
 		FeedFetch updatedFeedFetch = null;
 
-		final String updateFeedFetchQuery = String
-				.format("UPDATE `feedfetch` SET `country`='%s',`data`='%s',`date`=FROM_UNIXTIME(%d),`store`='%s',`type`='%s',`categoryid`=%d,`code2`=%d,`status`='%s' WHERE `id`=%d",
-						addslashes(feedFetch.country), addslashes(feedFetch.data), feedFetch.date.getTime() / 1000, addslashes(feedFetch.store),
-						addslashes(feedFetch.type), feedFetch.category.id.longValue(), feedFetch.code.longValue(), feedFetch.status.toString(),
-						feedFetch.id.longValue());
+		// final String updateFeedFetchQuery = String
+		// .format("UPDATE `feedfetch` SET `country`='%s',`data`='%s',`date`=FROM_UNIXTIME(%d),`store`='%s',`type`='%s',`categoryid`=%d,`code2`=%d,`status`='%s' WHERE `id`=%d",
+		// addslashes(feedFetch.country), addslashes(feedFetch.data), feedFetch.date.getTime() / 1000, addslashes(feedFetch.store),
+		// addslashes(feedFetch.type), feedFetch.category.id.longValue(), feedFetch.code.longValue(), feedFetch.status.toString(),
+		// feedFetch.id.longValue());
 
 		final Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
 
@@ -186,7 +183,7 @@ public class FeedFetchService implements IFeedFetchService {
 		try (PreparedStatement stat = feedFetchConnection.getRealConnection().prepareStatement(updateQuery, Statement.NO_GENERATED_KEYS)) {
 
 			feedFetchConnection.connect();
-			feedFetchConnection.executeQuery(updateFeedFetchQuery);
+			// feedFetchConnection.executeQuery(updateFeedFetchQuery);
 
 			stat.setLong(1, feedFetch.code);
 			stat.setDate(2, new java.sql.Date(feedFetch.date.getTime()));
