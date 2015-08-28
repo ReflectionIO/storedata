@@ -2,7 +2,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 	<ui:style>
-	
+
 	</ui:style>
 	<g:HTMLPanel>
 		<header class="{STYLES_INSTANCE.reflectionMainStyle.globalHeader}">
@@ -93,11 +93,11 @@
 				l6.8,11.5L20.2,70.3L20.2,70.3z M26.1,62.4v3.5c0,0.4,0.4,0.8,0.8,0.8c0.4,0,0.8-0.4,0.8-0.8v-3.5c0-0.4-0.4-0.8-0.8-0.8
 				C26.5,61.6,26.1,62,26.1,62.4z M27,67.4c-0.3,0-0.5,0.1-0.7,0.3c-0.2,0.2-0.3,0.4-0.3,0.7c0,0.3,0.1,0.5,0.3,0.7
 				c0.2,0.2,0.4,0.3,0.7,0.3c0.3,0,0.5-0.1,0.7-0.3c0.2-0.2,0.3-0.4,0.3-0.7c0-0.3-0.1-0.5-0.3-0.7C27.5,67.5,27.2,67.4,27,67.4z" /></svg>
-						<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Oops</h2>
+						<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">We're upgrading</h2>
 						<p>The site is undergoing maintenance and we'll be back up and running momentarily, apologies for the inconvenience.</p>
 					</div>
 				</div>
 			</div>
 		</div>
 	</g:HTMLPanel>
-</ui:UiBinder> 
+</ui:UiBinder>

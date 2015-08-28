@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
-	<application>reflection-dev</application>
+	<application>storedatacollector</application>
 	<version>31</version>
 
 	<!--
@@ -28,11 +28,10 @@
 		<property name="gather.ios.category.feed.url" value="http://itunes.apple.com/%s/rss/%s/limit=200/genre=%d/json" />
 
 		<!-- Production -->
-<!--
  		<property name="gather.ios.countries" value="us,gb,de,fr,cn,jp,it,ae,ag,ai,al,am,ao,ar,at,au,az,bb,be,bf,bg,bh,bj,bm,bn,bo,br,bs,bt,bw,by,bz,ca,cg,ch,cl,co,cr,cv,cy,cz,dk,dm,do,dz,ec,ee,eg,es,fi,fj,fm,gd,gh,gm,gr,gt,gw,gy,hk,hn,hr,hu,id,ie,il,in,is,jm,jo,ke,kg,kh,kn,kr,kw,ky,kz,la,lb,lc,lk,lr,lt,lu,lv,md,mg,mk,ml,mn,mo,mr,ms,mt,mu,mw,mx,my,mz,na,ne,ng,ni,nl,no,np,nz,om,pa,pe,pg,ph,pk,pl,pt,pw,py,qa,ro,ru,sa,sb,sc,se,sg,si,sk,sl,sn,sr,st,sv,sz,tc,td,th,tj,tm,tn,tr,tt,tw,tz,ua,ug,uy,uz,vc,ve,vg,vn,ye,za,zw" />
 		<property name="ingest.ios.countries" value="us,gb,cn,de,fr,jp,it" />
 		<property name="gather.ios.categories" value="true" />
-		<property name="splitdata.countries" value="us,gb,de,fr,cn,jp,it,ae,ag,ai,al,am,ao,ar,at,au,az,bb,be,bf,bg,bh,bj,bm,bn,bo,br,bs,bt,bw,by,bz,ca,cg,ch,cl,co,cr,cv,cy,cz,dk,dm,do,dz,ec,ee,eg,es,fi,fj,fm,gd,gh,gm,gr,gt,gw,gy,hk,hn,hr,hu,id,ie,il,in,is,jm,jo,ke,kg,kh,kn,kr,kw,ky,kz,la,lb,lc,lk,lr,lt,lu,lv,md,mg,mk,ml,mn,mo,mr,ms,mt,mu,mw,mx,my,mz,na,ne,ng,ni,nl,no,np,nz,om,pa,pe,pg,ph,pk,pl,pt,pw,py,qa,ro,ru,sa,sb,sc,se,sg,si,sk,sl,sn,sr,st,sv,sz,tc,td,th,tj,tm,tn,tr,tt,tw,tz,ua,ug,uy,uz,vc,ve,vg,vn,ye,za,zw" />
+		<property name="splitdata.countries" value="gb,us,de,fr,it" />
 
 		<property name="gather.bucket" value="gather" />
 		<property name="account.data.bucket" value="gather/accounts" />
@@ -41,7 +40,6 @@
 		<property name="db.connection.server" value="173.194.104.108" />
 		<property name="db.connection.username" value="rio_app_user" />
 		<property name="db.connection.password" value="sooth28@duns" />
- -->
 
 		<!-- Local Development with local DB-->
 <!--
@@ -79,6 +77,7 @@
 
 
 		<!-- Reflection DEV -->
+<!--
 		<property name="gather.ios.countries" value="gb,us,de,fr,it" />
 		<property name="gather.ios.categories" value="true" />
 		<property name="ingest.ios.countries" value="gb,us,de,fr,it" />
@@ -92,6 +91,7 @@
 		<property name="db.connection.server" value="173.194.226.90" />
 		<property name="db.connection.username" value="rio_app_user" />
 		<property name="db.connection.password" value="sooth28@duns" />
+ -->
 
 	</system-properties>
 
