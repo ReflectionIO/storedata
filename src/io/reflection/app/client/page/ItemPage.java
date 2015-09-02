@@ -714,6 +714,12 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				setRevenueDownloadTabsEnabled(false);
 			}
 
+			if (!SessionController.get().isLoggedInUserAdmin() && MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage)) {
+				setRankTabEnabled(false);
+			} else {
+				setRankTabEnabled(true);
+			}
+
 			updateFromFilter();
 			String newSelectedTab = current.getParameter(SELECTED_TAB_PARAMETER_INDEX);
 			if (selectedTab == null || !selectedTab.equals(newSelectedTab)) {
@@ -823,6 +829,21 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			downloadsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 			appDetailsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 			selectedTab = RANKING_CHART_TYPE;
+			refreshTabs();
+		}
+	}
+
+	private void setRankTabEnabled(boolean enable) {
+		if (enable) {
+			rankingText.setInnerText("Rank");
+			rankingItem.removeClassName(style.isDisabled());
+			rankingItem.getStyle().setCursor(Cursor.POINTER);
+		} else {
+			rankingText.setInnerHTML("Rank <span class=\"text-small\">coming soon</span>");
+			rankingItem.addClassName(style.isDisabled());
+			rankingItem.getStyle().setCursor(Cursor.DEFAULT);
+			rankingLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
+			selectedTab = DOWNLOADS_CHART_TYPE;
 			refreshTabs();
 		}
 	}
