@@ -136,10 +136,10 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	@UiField DivElement dateSelectContainer;
 	@UiField FormDateBox dateBox;
 	Date currentDate = FilterHelper.getToday();
-	@UiField Selector appStoreListBox;
+	@UiField Selector appStoreSelector;
 	// @UiField ListBox mListType;
-	@UiField Selector countryListBox;
-	@UiField Selector categoryListBox;
+	@UiField Selector countrySelector;
+	@UiField Selector categorySelector;
 	@UiField(provided = true) ToggleRadioButton toggleRevenue = new ToggleRadioButton("dailydatatoggle");
 	@UiField(provided = true) ToggleRadioButton toggleDownloads = new ToggleRadioButton("dailydatatoggle");
 	@UiField HTMLPanel dailyDataContainer;
@@ -196,9 +196,9 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		// }
 
 		if (!SessionController.get().isLoggedInUserAdmin()) {
-			countryListBox.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
-			appStoreListBox.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
-			categoryListBox.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
+			countrySelector.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
+			appStoreSelector.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
+			categorySelector.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
 		}
 
 		dateBox.getDatePicker().addShowRangeHandler(new ShowRangeHandler<Date>() {
@@ -209,9 +209,9 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			}
 		});
 
-		FilterHelper.addStores(appStoreListBox, SessionController.get().isLoggedInUserAdmin());
-		FilterHelper.addCountries(countryListBox, SessionController.get().isLoggedInUserAdmin());
-		FilterHelper.addCategories(categoryListBox, SessionController.get().isLoggedInUserAdmin());
+		FilterHelper.addStores(appStoreSelector, SessionController.get().isLoggedInUserAdmin());
+		FilterHelper.addCountries(countrySelector, SessionController.get().isLoggedInUserAdmin());
+		FilterHelper.addCategories(categorySelector, SessionController.get().isLoggedInUserAdmin());
 
 		// set the overall tab title (this is because it is modified for admins to contain the gather code)
 		overviewAllText.setInnerText(ALL_TEXT);
@@ -399,8 +399,13 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			@Override
 			public SafeHtml getValue(RanksGroup object) {
 				Rank rank = rankForListType(object);
-				return (rank.downloads != null) ? SafeHtmlUtils.fromSafeConstant(WHOLE_NUMBER_FORMATTER.format(rank.downloads)) : SafeHtmlUtils
-						.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
+				int position = (rank.position.intValue() > 0 ? rank.position.intValue() : rank.grossingPosition.intValue());
+				if (!SessionController.get().isLoggedInUserAdmin() && position <= 5 && position > 0) {
+					return SafeHtmlUtils.fromSafeConstant("coming soon");
+				} else {
+					return (rank.downloads != null) ? SafeHtmlUtils.fromSafeConstant(WHOLE_NUMBER_FORMATTER.format(rank.downloads)) : SafeHtmlUtils
+							.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
+				}
 			}
 
 		};
@@ -413,8 +418,14 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			@Override
 			public SafeHtml getValue(RanksGroup object) {
 				Rank rank = rankForListType(object);
-				return (rank.currency != null && rank.revenue != null) ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.asWholeMoneyString(rank.currency,
-						rank.revenue.floatValue())) : SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
+				int position = (rank.position.intValue() > 0 ? rank.position.intValue() : rank.grossingPosition.intValue());
+				if (!SessionController.get().isLoggedInUserAdmin() && position <= 5 && position > 0) {
+					return SafeHtmlUtils.fromSafeConstant("coming soon");
+				} else {
+					return (rank.currency != null && rank.revenue != null) ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.asWholeMoneyString(rank.currency,
+							rank.revenue.floatValue())) : SafeHtmlUtils
+							.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
+				}
 			}
 
 		};
@@ -518,9 +529,9 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		revenueHeader.setHeaderStyleNames(style.canBeSorted());
 	}
 
-	@UiHandler("appStoreListBox")
+	@UiHandler("appStoreSelector")
 	void onAppStoreValueChanged(ChangeEvent event) {
-		FilterController.get().setStore(appStoreListBox.getSelectedValue());
+		FilterController.get().setStore(appStoreSelector.getSelectedValue());
 	}
 
 	// @UiHandler("mListType")
@@ -528,9 +539,9 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	// FilterController.get().setListType(mListType.getValue(mListType.getSelectedIndex()));
 	// }
 
-	@UiHandler("countryListBox")
+	@UiHandler("countrySelector")
 	void onCountryValueChanged(ChangeEvent event) {
-		FilterController.get().setCountry(countryListBox.getSelectedValue());
+		FilterController.get().setCountry(countrySelector.getSelectedValue());
 	}
 
 	@UiHandler("dateBox")
@@ -549,9 +560,9 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		}
 	}
 
-	@UiHandler("categoryListBox")
+	@UiHandler("categorySelector")
 	void onCategoryListBoxValueChanged(ChangeEvent event) {
-		FilterController.get().setCategory(Long.valueOf(categoryListBox.getSelectedValue()));
+		FilterController.get().setCategory(Long.valueOf(categorySelector.getSelectedValue()));
 	}
 
 	@UiHandler("toggleRevenue")
@@ -572,13 +583,13 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		dateBox.setValue(endDate);
 		currentDate.setTime(endDate.getTime());
 		if (SessionController.get().isLoggedInUserAdmin()) {
-			appStoreListBox.setSelectedIndex(FormHelper.getItemIndex(appStoreListBox, fc.getFilter().getStoreA3Code()));
-			countryListBox.setSelectedIndex(FormHelper.getItemIndex(countryListBox, fc.getFilter().getCountryA2Code()));
-			categoryListBox.setSelectedIndex(FormHelper.getItemIndex(categoryListBox, fc.getFilter().getCategoryId().toString()));
+			appStoreSelector.setSelectedIndex(FormHelper.getItemIndex(appStoreSelector, fc.getFilter().getStoreA3Code()));
+			countrySelector.setSelectedIndex(FormHelper.getItemIndex(countrySelector, fc.getFilter().getCountryA2Code()));
+			categorySelector.setSelectedIndex(FormHelper.getItemIndex(categorySelector, fc.getFilter().getCategoryId().toString()));
 		} else {
-			appStoreListBox.setSelectedIndex(0);
-			countryListBox.setSelectedIndex(0);
-			categoryListBox.setSelectedIndex(0);
+			appStoreSelector.setSelectedIndex(0);
+			countrySelector.setSelectedIndex(0);
+			categorySelector.setSelectedIndex(0);
 		}
 
 		String dailyDataType = fc.getFilter().getDailyData();

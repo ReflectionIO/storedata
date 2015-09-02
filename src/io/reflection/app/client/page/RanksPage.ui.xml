@@ -130,11 +130,12 @@
 
 				</g:HTMLPanel>
 
-				<c:Selector ui:field="countryListBox" labelText="Country" overlay="true" dropdownTitle="Select a country" tooltip="Select up to 5 countries" />
+				<c:Selector ui:field="countrySelector" labelText="Country" overlay="true" dropdownTitle="Select a country" tooltip="Select up to 5 countries" />
 
-				<c:Selector ui:field="appStoreListBox" labelText="App Store" overlay="true" dropdownTitle="Select a store" tooltip="View data for iPhone or iPad" />
+				<c:Selector ui:field="appStoreSelector" labelText="App Store" overlay="true" dropdownTitle="Select a store" tooltip="View data for iPhone or iPad" />
 
-				<c:Selector ui:field="categoryListBox" alignCenter="" labelText="Category" dropdownTitle="Select a category" tooltip="Select a category" overlay="true" />
+				<c:Selector ui:field="categorySelector" alignCenter="" labelText="Category" dropdownTitle="Select a category" tooltip="Select a category"
+					overlay="true" />
 
 				<g:HTMLPanel ui:field="dailyDataContainer" styleName="{STYLES_INSTANCE.reflectionMainStyle.filterToggle}">
 					<c:ToggleRadioButton ui:field="toggleDownloads" value="true" labelClassName="{STYLES_INSTANCE.reflectionMainStyle.toggleDownloads}"
