@@ -196,7 +196,6 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		// }
 
 		if (!SessionController.get().isLoggedInUserAdmin()) {
-			appStoreSelector.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
 			categorySelector.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
 		}
 
@@ -585,12 +584,11 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		dateBox.setValue(endDate);
 		currentDate.setTime(endDate.getTime());
 		if (SessionController.get().isLoggedInUserAdmin()) {
-			appStoreSelector.setSelectedIndex(FormHelper.getItemIndex(appStoreSelector, fc.getFilter().getStoreA3Code()));
 			categorySelector.setSelectedIndex(FormHelper.getItemIndex(categorySelector, fc.getFilter().getCategoryId().toString()));
 		} else {
-			appStoreSelector.setSelectedIndex(0);
 			categorySelector.setSelectedIndex(0);
 		}
+		appStoreSelector.setSelectedIndex(FormHelper.getItemIndex(appStoreSelector, fc.getFilter().getStoreA3Code()));
 		countrySelector.setSelectedIndex(FormHelper.getItemIndex(countrySelector, fc.getFilter().getCountryA2Code()));
 
 		String dailyDataType = fc.getFilter().getDailyData();

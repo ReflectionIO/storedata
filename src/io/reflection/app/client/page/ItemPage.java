@@ -127,7 +127,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField DateSelector dateSelector;
 	@UiField Element filtersForm;
 	@UiField Selector storeSelector;
-	@UiField Selector storeSelectorDisabled;
 	@UiField Selector countrySelector;
 	@UiField HTMLPanel filtersGroupGraphOptions;
 	@UiField(provided = true) FilterSwitch accuracySwitch = new FilterSwitch(true);
@@ -253,8 +252,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 		FilterHelper.addCountries(countrySelector, SessionController.get().isLoggedInUserAdmin());
 		FilterHelper.addStores(storeSelector, true);
-		FilterHelper.addStores(storeSelectorDisabled, false);
-		storeSelector.removeFromParent();
 
 		dateSelector.addFixedRanges(FilterHelper.getDefaultDateRanges());
 		updateFromFilter();
@@ -529,11 +526,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		FilterController.get().setStore(storeSelector.getSelectedValue());
 	}
 
-	@UiHandler("storeSelectorDisabled")
-	void onAppStoreValueChangedDisabled(ChangeEvent event) {
-		FilterController.get().setStore(storeSelectorDisabled.getSelectedValue());
-	}
-
 	@UiHandler("countrySelector")
 	void onCountryValueChanged(ChangeEvent event) {
 		FilterController.get().setCountry(countrySelector.getSelectedValue());
@@ -611,7 +603,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				+ FormattingHelper.DATE_FORMATTER_DD_MMM_YYYY.format(dateRange.getTo()));
 
 		storeSelector.setSelectedIndex(FormHelper.getItemIndex(storeSelector, fc.getFilter().getStoreA3Code()));
-		storeSelectorDisabled.setSelectedIndex(FormHelper.getItemIndex(storeSelectorDisabled, fc.getFilter().getStoreA3Code()));
 		countrySelector.setSelectedIndex(FormHelper.getItemIndex(countrySelector, fc.getFilter().getCountryA2Code()));
 
 	}
@@ -719,16 +710,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 			if (SessionController.get().isLoggedInUserAdmin() || MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage)) {
 				setRevenueDownloadTabsEnabled(true);
-				storeSelectorDisabled.setVisible(false);
-				if (!filtersForm.isOrHasChild(storeSelector.getElement())) {
-					filtersForm.insertBefore(storeSelector.getElement(), storeSelectorDisabled.getElement());
-				}
 			} else {
 				setRevenueDownloadTabsEnabled(false);
-				if (filtersForm.isOrHasChild(storeSelector.getElement())) {
-					filtersForm.removeChild(storeSelector.getElement());
-				}
-				storeSelectorDisabled.setVisible(true);
 			}
 
 			updateFromFilter();
