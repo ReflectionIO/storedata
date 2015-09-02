@@ -118,9 +118,14 @@ public class FilterHelper {
 				}
 			}
 		} else {
-			Country defaultCountry = CountryController.get().getCountry("gb");
-			list.addItem(defaultCountry.name, defaultCountry.a2Code);
-			list.setEnabled(false);
+			Country france = CountryController.get().getCountry("fr");
+			Country germany = CountryController.get().getCountry("de");
+			Country italy = CountryController.get().getCountry("it");
+			Country unitedKingdom = CountryController.get().getCountry("gb");
+			list.addItem(france.name, france.a2Code);
+			list.addItem(germany.name, germany.a2Code);
+			list.addItem(italy.name, italy.a2Code);
+			list.addItem(unitedKingdom.name, unitedKingdom.a2Code);
 		}
 	}
 

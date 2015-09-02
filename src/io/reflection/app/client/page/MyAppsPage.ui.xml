@@ -30,7 +30,7 @@
 					styleName="{STYLES_INSTANCE.reflectionMainStyle.storeSelect}" tooltip="View data for iPhone or iPad" />
 
 				<c:Selector ui:field="country" overlay="true" labelText="Country" dropdownTitle="Select a country" styleName="{STYLES_INSTANCE.reflectionMainStyle.countrySelect}"
-					tooltip="Select up to 5 countries" />
+					tooltip="Select a country" />
 			</form>
 		</div>
 

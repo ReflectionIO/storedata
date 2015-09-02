@@ -108,7 +108,8 @@ public class AppRankCell extends AbstractCell<Rank> {
 				if (value.downloads != null) {
 					if (!SessionController.get().isLoggedInUserAdmin() && value.position != null && value.position.intValue() > 0
 							&& value.position.intValue() <= 5) {
-						dailyData = SafeHtmlUtils.fromSafeConstant("coming soon");
+						dailyData = SafeHtmlUtils
+								.fromSafeConstant("<span class=\"js-tooltip\" data-tooltip=\"We are working on a new model to improve accuracy for the top 5, it will be implemented soon\" style=\"color: #727686\">coming soon</span>");
 					} else {
 						dailyData = DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
 								+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
@@ -124,7 +125,8 @@ public class AppRankCell extends AbstractCell<Rank> {
 				if (value.downloads != null) {
 					if (!SessionController.get().isLoggedInUserAdmin() && !SessionController.get().isLoggedInUserAdmin() && value.position != null
 							&& value.position.intValue() > 0 && value.position.intValue() <= 5) {
-						dailyData = SafeHtmlUtils.fromSafeConstant("coming soon");
+						dailyData = SafeHtmlUtils
+								.fromSafeConstant("<span class=\"js-tooltip\" data-tooltip=\"We are working on a new model to improve accuracy for the top 5, it will be implemented soon\" style=\"color: #727686\">coming soon</span>");
 					} else {
 						dailyData = DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
 								+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
@@ -141,7 +143,8 @@ public class AppRankCell extends AbstractCell<Rank> {
 				if (value.currency != null && value.revenue != null) {
 					if (!SessionController.get().isLoggedInUserAdmin() && value.grossingPosition != null && value.grossingPosition.intValue() > 0
 							&& value.grossingPosition.intValue() <= 5) {
-						dailyData = SafeHtmlUtils.fromSafeConstant("coming soon");
+						dailyData = SafeHtmlUtils
+								.fromSafeConstant("<span class=\"js-tooltip\" data-tooltip=\"We are working on a new model to improve accuracy for the top 5, it will be implemented soon\" style=\"color: #727686\">coming soon</span>");
 					} else {
 						dailyData = DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
 								+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue(), "",

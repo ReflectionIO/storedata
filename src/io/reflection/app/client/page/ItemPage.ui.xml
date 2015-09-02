@@ -158,7 +158,8 @@
 					tooltip="This field is currently locked but will soon be editable as we integrate more data" visible="false" enabled="false" />
 
 				<c:Selector ui:field="countrySelector" overlay="true" labelText="Country" styleName="{STYLES_INSTANCE.reflectionMainStyle.countrySelect}"
-					tooltip="Select up to 5 countries" />
+					tooltip="Select a country" />
+				<!-- tooltip="Select up to 5 countries" /> -->
 
 				<g:HTMLPanel ui:field="filtersGroupGraphOptions" styleName="{STYLES_INSTANCE.reflectionMainStyle.filtersGroupGraphOptions}">
 					<a ui:field="revealContentFilter" href="#"

@@ -196,7 +196,6 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		// }
 
 		if (!SessionController.get().isLoggedInUserAdmin()) {
-			countrySelector.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
 			appStoreSelector.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
 			categorySelector.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
 		}
@@ -205,7 +204,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 			@Override
 			public void onShowRange(ShowRangeEvent<Date> event) {
-				FilterHelper.disableOutOfRangeDates(dateBox.getDatePicker(), null, FilterHelper.getDaysAgo(2));
+				FilterHelper.disableOutOfRangeDates(dateBox.getDatePicker(), null, (SessionController.get().isLoggedInUserAdmin() ? FilterHelper.getToday()
+						: FilterHelper.getDaysAgo(2)));
 			}
 		});
 
@@ -400,8 +400,9 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			public SafeHtml getValue(RanksGroup object) {
 				Rank rank = rankForListType(object);
 				int position = (rank.position.intValue() > 0 ? rank.position.intValue() : rank.grossingPosition.intValue());
-				if (!SessionController.get().isLoggedInUserAdmin() && position <= 5 && position > 0) {
-					return SafeHtmlUtils.fromSafeConstant("coming soon");
+				if (!SessionController.get().isLoggedInUserAdmin() && rank.downloads != null && position <= 5 && position > 0) {
+					return SafeHtmlUtils
+							.fromSafeConstant("<span class=\"js-tooltip\" data-tooltip=\"We are working on a new model to improve accuracy for the top 5, it will be implemented soon\" style=\"color: #727686\">coming soon</span>");
 				} else {
 					return (rank.downloads != null) ? SafeHtmlUtils.fromSafeConstant(WHOLE_NUMBER_FORMATTER.format(rank.downloads)) : SafeHtmlUtils
 							.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
@@ -419,8 +420,9 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			public SafeHtml getValue(RanksGroup object) {
 				Rank rank = rankForListType(object);
 				int position = (rank.position.intValue() > 0 ? rank.position.intValue() : rank.grossingPosition.intValue());
-				if (!SessionController.get().isLoggedInUserAdmin() && position <= 5 && position > 0) {
-					return SafeHtmlUtils.fromSafeConstant("coming soon");
+				if (!SessionController.get().isLoggedInUserAdmin() && rank.revenue != null && position <= 5 && position > 0) {
+					return SafeHtmlUtils
+							.fromSafeConstant("<span class=\"js-tooltip\" data-tooltip=\"We are working on a new model to improve accuracy for the top 5, it will be implemented soon\" style=\"color: #727686\">coming soon</span>");
 				} else {
 					return (rank.currency != null && rank.revenue != null) ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.asWholeMoneyString(rank.currency,
 							rank.revenue.floatValue())) : SafeHtmlUtils
@@ -584,13 +586,12 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		currentDate.setTime(endDate.getTime());
 		if (SessionController.get().isLoggedInUserAdmin()) {
 			appStoreSelector.setSelectedIndex(FormHelper.getItemIndex(appStoreSelector, fc.getFilter().getStoreA3Code()));
-			countrySelector.setSelectedIndex(FormHelper.getItemIndex(countrySelector, fc.getFilter().getCountryA2Code()));
 			categorySelector.setSelectedIndex(FormHelper.getItemIndex(categorySelector, fc.getFilter().getCategoryId().toString()));
 		} else {
 			appStoreSelector.setSelectedIndex(0);
-			countrySelector.setSelectedIndex(0);
 			categorySelector.setSelectedIndex(0);
 		}
+		countrySelector.setSelectedIndex(FormHelper.getItemIndex(countrySelector, fc.getFilter().getCountryA2Code()));
 
 		String dailyDataType = fc.getFilter().getDailyData();
 		if (REVENUE_DAILY_DATA_TYPE.equals(dailyDataType)) {

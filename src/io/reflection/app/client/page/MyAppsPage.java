@@ -130,10 +130,6 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	public MyAppsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		if (!SessionController.get().isLoggedInUserAdmin()) {
-			country.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
-		}
-
 		FilterHelper.addStores(appStore, true);
 		FilterHelper.addCountries(country, SessionController.get().isLoggedInUserAdmin());
 
@@ -449,10 +445,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	 * @param enabled
 	 */
 	private void setFiltersEnabled(boolean enabled) {
-		// TODO delete condition when the user can select the filters
-		if (SessionController.get().isLoggedInUserAdmin()) {
-			country.setEnabled(enabled);
-		}
+		country.setEnabled(enabled);
 		appStore.setEnabled(enabled);
 		dateSelector.setEnabled(enabled);
 	}

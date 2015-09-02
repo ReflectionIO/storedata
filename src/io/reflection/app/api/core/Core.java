@@ -118,6 +118,7 @@ import io.reflection.app.shared.util.DataTypeHelper;
 import io.reflection.app.shared.util.PagerHelper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -409,8 +410,10 @@ public final class Core extends ActionHandler {
 				boolean isAdmin = UserServiceProvider.provide().hasRole(input.session.user, DataTypeHelper.adminRole());
 
 				if (!isAdmin) {
-					input.country = new Country();
-					input.country.a2Code = "gb";
+					if (!(Arrays.asList("fr", "de", "gb", "it").contains(input.country.a2Code))) {
+						input.country = new Country();
+						input.country.a2Code = "gb";
+					}
 					input.store = new Store();
 					input.store.a3Code = DataTypeHelper.IOS_STORE_A3;
 					input.category = new Category();
