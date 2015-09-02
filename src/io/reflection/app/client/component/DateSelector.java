@@ -80,7 +80,7 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 		dateBoxTo.getDatePicker().addShowRangeHandler(new ShowRangeHandler<Date>() {
 			@Override
 			public void onShowRange(ShowRangeEvent<Date> event) {
-				FilterHelper.disableOutOfRangeDates(dateBoxTo.getDatePicker(), dateBoxFrom.getValue(), FilterHelper.getToday());
+				FilterHelper.disableOutOfRangeDates(dateBoxTo.getDatePicker(), dateBoxFrom.getValue(), FilterHelper.getDaysAgo(2));
 			}
 		});
 	}

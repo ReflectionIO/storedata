@@ -205,7 +205,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 			@Override
 			public void onShowRange(ShowRangeEvent<Date> event) {
-				FilterHelper.disableFutureDates(dateBox.getDatePicker());
+				FilterHelper.disableOutOfRangeDates(dateBox.getDatePicker(), null, FilterHelper.getDaysAgo(2));
 			}
 		});
 
