@@ -151,9 +151,9 @@
 						<c:AccordionSwitch empty="true" featureComplete="true" titleText="Fully Responsive Site" />
 						<c:AccordionSwitch empty="true" titleText="Historic Download Data" />
 						<c:AccordionSwitch empty="true" titleText="Historic Revenue Data" />
+						<c:AccordionSwitch empty="true" titleText="Revenue and Download Graph Overlays" />
 						<c:AccordionSwitch empty="true" titleText="Download CSV files" />
 						<c:AccordionSwitch empty="true" titleText="Follow and Track Apps" />
-						<c:AccordionSwitch empty="true" titleText="Revenue and Download Graph Overlays" />
 						<c:AccordionSwitch empty="true" titleText="Developer Leaderboard" />
 						<c:AccordionSwitch empty="true" titleText="Google Play (Early 2016)" />
 						<c:AccordionSwitch empty="true" titleText="Your feature? More to come..." subtitleText="Let Us Know"
