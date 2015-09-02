@@ -599,31 +599,14 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		case OVERALL_LIST_TYPE:
 			removeAllColumns();
 			leaderboardTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-			leaderboardTable.setColumnWidth(freeColumn, 30.0, Unit.PCT);
 			leaderboardTable.setColumnWidth(paidColumn, 30.0, Unit.PCT);
+			leaderboardTable.setColumnWidth(freeColumn, 30.0, Unit.PCT);
 			leaderboardTable.setColumnWidth(grossingColumn, 30.0, Unit.PCT);
 			leaderboardTable.addColumn(rankColumn, rankHeader);
-			leaderboardTable.addColumn(freeColumn, freeHeader);
 			leaderboardTable.addColumn(paidColumn, paidHeader);
+			leaderboardTable.addColumn(freeColumn, freeHeader);
 			leaderboardTable.addColumn(grossingColumn, grossingHeader);
 			leaderboardTable.setLoadingIndicator(loadingIndicatorAll);
-			break;
-		case FREE_LIST_TYPE:
-			removeAllColumns();
-			leaderboardTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-			leaderboardTable.setColumnWidth(freeColumn, 42.0, Unit.PCT);
-			leaderboardTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
-			leaderboardTable.setColumnWidth(downloadsColumn, 19.0, Unit.PCT);
-			leaderboardTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
-			leaderboardTable.addColumn(rankColumn, rankHeader);
-			leaderboardTable.addColumn(freeColumn, freeHeader);
-			leaderboardTable.addColumn(priceColumn, priceHeader);
-			leaderboardTable.addColumn(downloadsColumn, downloadsHeader);
-			leaderboardTable.addColumn(iapColumn, iapHeader);
-			priceHeader.setHeaderStyleNames(style.columnHiddenMobile());
-			priceColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
-			leaderboardTable.addColumnStyleName(2, style.columnHiddenMobile());
-			leaderboardTable.setLoadingIndicator(loadingIndicatorFreeList);
 			break;
 		case PAID_LIST_TYPE:
 			removeAllColumns();
@@ -641,6 +624,23 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			iapColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
 			leaderboardTable.addColumnStyleName(4, style.columnHiddenMobile());
 			leaderboardTable.setLoadingIndicator(loadingIndicatorPaidGrossingList);
+			break;
+		case FREE_LIST_TYPE:
+			removeAllColumns();
+			leaderboardTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+			leaderboardTable.setColumnWidth(freeColumn, 42.0, Unit.PCT);
+			leaderboardTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
+			leaderboardTable.setColumnWidth(downloadsColumn, 19.0, Unit.PCT);
+			leaderboardTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
+			leaderboardTable.addColumn(rankColumn, rankHeader);
+			leaderboardTable.addColumn(freeColumn, freeHeader);
+			leaderboardTable.addColumn(priceColumn, priceHeader);
+			leaderboardTable.addColumn(downloadsColumn, downloadsHeader);
+			leaderboardTable.addColumn(iapColumn, iapHeader);
+			priceHeader.setHeaderStyleNames(style.columnHiddenMobile());
+			priceColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
+			leaderboardTable.addColumnStyleName(2, style.columnHiddenMobile());
+			leaderboardTable.setLoadingIndicator(loadingIndicatorFreeList);
 			break;
 		case GROSSING_LIST_TYPE:
 			removeAllColumns();
@@ -684,8 +684,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		}
 
 		removeColumn(rankColumn);
-		removeColumn(freeColumn);
 		removeColumn(paidColumn);
+		removeColumn(freeColumn);
 		removeColumn(grossingColumn);
 		removeColumn(priceColumn);
 		removeColumn(revenueColumn);
