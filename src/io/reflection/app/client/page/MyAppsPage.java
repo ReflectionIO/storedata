@@ -100,7 +100,6 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	// @UiField(provided = true) SimplePager simplePager = new SimplePager(false, false);
 
 	@UiField Selector accountName;
-	@UiField Selector category;
 	@UiField Selector appStore;
 	@UiField Selector country;
 	@UiField DateSelector dateSelector;
@@ -132,11 +131,9 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		initWidget(uiBinder.createAndBindUi(this));
 
 		if (!SessionController.get().isLoggedInUserAdmin()) {
-			category.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
 			country.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
 		}
 
-		FilterHelper.addCategories(category, SessionController.get().isLoggedInUserAdmin());
 		FilterHelper.addStores(appStore, true);
 		FilterHelper.addCountries(country, SessionController.get().isLoggedInUserAdmin());
 
@@ -387,11 +384,6 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		FilterController.get().setLinkedAccount(Long.valueOf(accountName.getSelectedValue()));
 	}
 
-	@UiHandler("category")
-	void onCategoryValueChanged(ChangeEvent event) {
-		FilterController.get().setCategory(Long.valueOf(category.getSelectedValue()));
-	}
-
 	@UiHandler("appStore")
 	void onAppStoreValueChanged(ChangeEvent event) {
 		FilterController.get().setStore(appStore.getSelectedValue());
@@ -405,7 +397,6 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	private void updateFromFilter() {
 		FilterController fc = FilterController.get();
 
-		category.setSelectedIndex(FormHelper.getItemIndex(category, fc.getFilter().getCategoryId().toString()));
 		appStore.setSelectedIndex(FormHelper.getItemIndex(appStore, fc.getFilter().getStoreA3Code()));
 		DateRange range = new DateRange();
 
@@ -460,7 +451,6 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	private void setFiltersEnabled(boolean enabled) {
 		// TODO delete condition when the user can select the filters
 		if (SessionController.get().isLoggedInUserAdmin()) {
-			category.setEnabled(enabled);
 			country.setEnabled(enabled);
 		}
 		appStore.setEnabled(enabled);
