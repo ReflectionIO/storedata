@@ -7,6 +7,7 @@
 //
 package io.reflection.app.client.component;
 
+import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.client.part.datatypes.DateRangeChangeEvent;
@@ -80,7 +81,8 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 		dateBoxTo.getDatePicker().addShowRangeHandler(new ShowRangeHandler<Date>() {
 			@Override
 			public void onShowRange(ShowRangeEvent<Date> event) {
-				FilterHelper.disableOutOfRangeDates(dateBoxTo.getDatePicker(), dateBoxFrom.getValue(), FilterHelper.getToday());
+				FilterHelper.disableOutOfRangeDates(dateBoxTo.getDatePicker(), dateBoxFrom.getValue(),
+						(SessionController.get().isLoggedInUserAdmin() ? FilterHelper.getToday() : FilterHelper.getDaysAgo(2)));
 			}
 		});
 	}

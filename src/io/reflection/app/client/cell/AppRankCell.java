@@ -13,6 +13,7 @@ import io.reflection.app.client.controller.FilterController.Filter;
 import io.reflection.app.client.controller.ItemController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
+import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.helper.FormattingHelper;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.page.RanksPage;
@@ -104,13 +105,17 @@ public class AppRankCell extends AbstractCell<Rank> {
 				filter = Filter.parse(filter.asItemFilterString());
 				filter.setListType(FilterController.FREE_LIST_TYPE);
 				display = SafeStylesUtils.fromTrustedString("");
-				// if (!SessionController.get().isLoggedInUserAdmin()) {
 				if (value.downloads != null) {
-					dailyData = DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
-							+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
-							WHOLE_NUMBER_FORMATTER.format(value.downloads.doubleValue()));
+					if (!SessionController.get().isLoggedInUserAdmin() && value.position != null && value.position.intValue() > 0
+							&& value.position.intValue() <= 5) {
+						dailyData = SafeHtmlUtils
+								.fromSafeConstant("<span class=\"js-tooltip\" data-tooltip=\"We are working on a new model to improve accuracy for the top 5, it will be implemented soon\" style=\"color: #727686\">coming soon</span>");
+					} else {
+						dailyData = DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
+								+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
+								WHOLE_NUMBER_FORMATTER.format(value.downloads.doubleValue()));
+					}
 				}
-				// }
 				break;
 			case 2:
 				filter = Filter.parse(filter.asItemFilterString());
@@ -118,9 +123,15 @@ public class AppRankCell extends AbstractCell<Rank> {
 				display = SafeStylesUtils.fromTrustedString("");
 				// if (!SessionController.get().isLoggedInUserAdmin()) {
 				if (value.downloads != null) {
-					dailyData = DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
-							+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
-							WHOLE_NUMBER_FORMATTER.format(value.downloads.doubleValue()));
+					if (!SessionController.get().isLoggedInUserAdmin() && !SessionController.get().isLoggedInUserAdmin() && value.position != null
+							&& value.position.intValue() > 0 && value.position.intValue() <= 5) {
+						dailyData = SafeHtmlUtils
+								.fromSafeConstant("<span class=\"js-tooltip\" data-tooltip=\"We are working on a new model to improve accuracy for the top 5, it will be implemented soon\" style=\"color: #727686\">coming soon</span>");
+					} else {
+						dailyData = DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
+								+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
+								WHOLE_NUMBER_FORMATTER.format(value.downloads.doubleValue()));
+					}
 				}
 				// }
 				break;
@@ -130,9 +141,15 @@ public class AppRankCell extends AbstractCell<Rank> {
 				display = SafeStylesUtils.fromTrustedString("");
 				// if (!SessionController.get().isLoggedInUserAdmin()) {
 				if (value.currency != null && value.revenue != null) {
-					dailyData = DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
-							+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue(), "",
-							FormattingHelper.asWholeMoneyString(value.currency, value.revenue.floatValue()));
+					if (!SessionController.get().isLoggedInUserAdmin() && value.grossingPosition != null && value.grossingPosition.intValue() > 0
+							&& value.grossingPosition.intValue() <= 5) {
+						dailyData = SafeHtmlUtils
+								.fromSafeConstant("<span class=\"js-tooltip\" data-tooltip=\"We are working on a new model to improve accuracy for the top 5, it will be implemented soon\" style=\"color: #727686\">coming soon</span>");
+					} else {
+						dailyData = DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
+								+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue(), "",
+								FormattingHelper.asWholeMoneyString(value.currency, value.revenue.floatValue()));
+					}
 				}
 				// }
 				break;

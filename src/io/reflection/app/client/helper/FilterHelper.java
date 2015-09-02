@@ -18,7 +18,6 @@ import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.Forum;
 import io.reflection.app.datatypes.shared.Store;
-import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -81,18 +80,18 @@ public class FilterHelper {
 	 */
 	public static void addStores(Selector list, boolean isAdmin) {
 		list.clear();
-		if (isAdmin) {
-			List<Store> stores = StoreController.get().getStores();
+		// if (isAdmin) {
+		List<Store> stores = StoreController.get().getStores();
 
-			if (stores != null) {
-				for (Store store : stores) {
-					list.addItem(store.name, store.a3Code);
-				}
+		if (stores != null) {
+			for (Store store : stores) {
+				list.addItem(store.name, store.a3Code);
 			}
-		} else {
-			list.addItem(DataTypeHelper.STORE_IPHONE_NAME, DataTypeHelper.STORE_IPHONE_A3_CODE);
 		}
-		list.setEnabled(isAdmin);
+		// } else {
+		// list.addItem(DataTypeHelper.STORE_IPHONE_NAME, DataTypeHelper.STORE_IPHONE_A3_CODE);
+		// list.addItem(DataTypeHelper.STORE_IPAD_NAME, DataTypeHelper.STORE_IPAD_A3_CODE);
+		// }
 	}
 
 	public static void addStores(Selector list) {
@@ -118,9 +117,14 @@ public class FilterHelper {
 				}
 			}
 		} else {
-			Country defaultCountry = CountryController.get().getCountry("gb");
-			list.addItem(defaultCountry.name, defaultCountry.a2Code);
-			list.setEnabled(false);
+			Country france = CountryController.get().getCountry("fr");
+			Country germany = CountryController.get().getCountry("de");
+			Country italy = CountryController.get().getCountry("it");
+			Country unitedKingdom = CountryController.get().getCountry("gb");
+			list.addItem(france.name, france.a2Code);
+			list.addItem(germany.name, germany.a2Code);
+			list.addItem(italy.name, italy.a2Code);
+			list.addItem(unitedKingdom.name, unitedKingdom.a2Code);
 		}
 	}
 
