@@ -103,22 +103,6 @@ public class AppRankCell extends AbstractCell<Rank> {
 			switch (context.getColumn()) {
 			case 1:
 				filter = Filter.parse(filter.asItemFilterString());
-				filter.setListType(FilterController.FREE_LIST_TYPE);
-				display = SafeStylesUtils.fromTrustedString("");
-				if (value.downloads != null) {
-					if (!SessionController.get().isLoggedInUserAdmin() && value.position != null && value.position.intValue() > 0
-							&& value.position.intValue() <= 5) {
-						dailyData = SafeHtmlUtils
-								.fromSafeConstant("<span class=\"js-tooltip\" data-tooltip=\"We are working on a new model to improve accuracy for the top 5, it will be implemented soon\" style=\"color: #727686\">coming soon</span>");
-					} else {
-						dailyData = DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
-								+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
-								WHOLE_NUMBER_FORMATTER.format(value.downloads.doubleValue()));
-					}
-				}
-				break;
-			case 2:
-				filter = Filter.parse(filter.asItemFilterString());
 				filter.setListType(FilterController.PAID_LIST_TYPE);
 				display = SafeStylesUtils.fromTrustedString("");
 				// if (!SessionController.get().isLoggedInUserAdmin()) {
@@ -134,6 +118,22 @@ public class AppRankCell extends AbstractCell<Rank> {
 					}
 				}
 				// }
+				break;
+			case 2:
+				filter = Filter.parse(filter.asItemFilterString());
+				filter.setListType(FilterController.FREE_LIST_TYPE);
+				display = SafeStylesUtils.fromTrustedString("");
+				if (value.downloads != null) {
+					if (!SessionController.get().isLoggedInUserAdmin() && value.position != null && value.position.intValue() > 0
+							&& value.position.intValue() <= 5) {
+						dailyData = SafeHtmlUtils
+								.fromSafeConstant("<span class=\"js-tooltip\" data-tooltip=\"We are working on a new model to improve accuracy for the top 5, it will be implemented soon\" style=\"color: #727686\">coming soon</span>");
+					} else {
+						dailyData = DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
+								+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
+								WHOLE_NUMBER_FORMATTER.format(value.downloads.doubleValue()));
+					}
+				}
 				break;
 			case 3:
 				filter = Filter.parse(filter.asItemFilterString());
