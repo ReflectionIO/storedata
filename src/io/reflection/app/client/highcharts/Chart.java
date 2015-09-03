@@ -282,9 +282,10 @@ public class Chart extends BaseChart {
 		case DownloadsYAxisDataType:
 			if ((ranks.size() == 1)
 					|| (rankIndex == 0 && (Math.abs(CalendarUtil.getDaysBetween(rank.date, ranks.get(1).date)) > 1 || ranks.get(1).downloads == null))
-					|| (rankIndex > 0 && rankIndex < lastIndex && Math.abs(CalendarUtil.getDaysBetween(rank.date, ranks.get(rankIndex - 1).date)) > 1
-							&& Math.abs(CalendarUtil.getDaysBetween(rank.date, ranks.get(rankIndex + 1).date)) > 1
-							&& ranks.get(rankIndex - 1).downloads != null && ranks.get(rankIndex + 1).downloads != null)
+					|| (rankIndex > 0
+							&& rankIndex < lastIndex
+							&& (Math.abs(CalendarUtil.getDaysBetween(rank.date, ranks.get(rankIndex - 1).date)) > 1 || ranks.get(rankIndex - 1).downloads == null) && (Math
+							.abs(CalendarUtil.getDaysBetween(rank.date, ranks.get(rankIndex + 1).date)) > 1 || ranks.get(rankIndex + 1).downloads == null))
 					|| (rankIndex == lastIndex && (Math.abs(CalendarUtil.getDaysBetween(rank.date, ranks.get(lastIndex - 1).date)) > 1 || ranks
 							.get(lastIndex - 1).downloads == null))) {
 				isolated = true;
@@ -294,9 +295,10 @@ public class Chart extends BaseChart {
 		case RevenueYAxisDataType:
 			if ((ranks.size() == 1)
 					|| (rankIndex == 0 && (Math.abs(CalendarUtil.getDaysBetween(rank.date, ranks.get(1).date)) > 1 || ranks.get(1).revenue == null))
-					|| (rankIndex > 0 && rankIndex < lastIndex && Math.abs(CalendarUtil.getDaysBetween(rank.date, ranks.get(rankIndex - 1).date)) > 1
-							&& Math.abs(CalendarUtil.getDaysBetween(rank.date, ranks.get(rankIndex + 1).date)) > 1 && ranks.get(rankIndex - 1).revenue != null && ranks
-							.get(rankIndex + 1).revenue != null)
+					|| (rankIndex > 0
+							&& rankIndex < lastIndex
+							&& (Math.abs(CalendarUtil.getDaysBetween(rank.date, ranks.get(rankIndex - 1).date)) > 1 || ranks.get(rankIndex - 1).revenue == null) && (Math
+							.abs(CalendarUtil.getDaysBetween(rank.date, ranks.get(rankIndex + 1).date)) > 1 || ranks.get(rankIndex + 1).revenue == null))
 					|| (rankIndex == lastIndex && (Math.abs(CalendarUtil.getDaysBetween(rank.date, ranks.get(lastIndex - 1).date)) > 1 || ranks
 							.get(lastIndex - 1).revenue == null))) {
 				isolated = true;
