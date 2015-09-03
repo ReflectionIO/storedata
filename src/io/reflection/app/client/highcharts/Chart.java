@@ -53,6 +53,10 @@ public class Chart extends BaseChart {
 
 		if (ranks != null && ranks.size() > 0) {
 			boolean isOpposite = (yAxisPosition != YAxisPosition.PRIMARY);
+			boolean needPlotLines = (yAxisPosition == YAxisPosition.PRIMARY && yDataType != YDataType.RankingYAxisDataType);
+			// if (needPlotLines) {
+			// Window.alert("needs "+yAxisPosition.toString()+" "+yDataType.toString());
+			// }
 
 			// Get axis options to use
 			YAxis yAxis = getPrimaryAxis();
@@ -103,30 +107,57 @@ public class Chart extends BaseChart {
 			}
 
 			JsArray<JavaScriptObject> data = JavaScriptObject.createArray().cast();
+			JsArray<JavaScriptObject> plotLines = JavaScriptObject.createArray().cast();
 
 			switch (xDataType) {
 			case DateXAxisDataType:
 				if (get(seriesId) == null && dateRange != null) {
 					double cumulative = 0;
 					Date progressiveDate = dateRange.getFrom();
+					boolean isInsideMissingDataRange = false;
 					for (Rank rank : ranks) {
-						// Fill with blank data next range of missing dates
+						// Fill with blank data next range of missing dates and add missing data plot lines
 						if (!CalendarUtil.isSameDate(progressiveDate, rank.date)) {
+							if (!isInsideMissingDataRange && needPlotLines) {
+								if (CalendarUtil.isSameDate(ranks.get(0).date, rank.date)) {
+									plotLines.push(createNoDataPlotLine(progressiveDate.getTime(), true));
+								} else {
+									Date d = new Date(progressiveDate.getTime());
+									CalendarUtil.addDaysToDate(d, -1);
+									plotLines.push(createNoDataPlotLine(d.getTime(), true));
+								}
+								isInsideMissingDataRange = true;
+							}
 							while (!CalendarUtil.isSameDate(progressiveDate, rank.date) && FilterHelper.beforeDate(progressiveDate, dateRange.getTo())) {
 								data.push(createConnectingPoint(progressiveDate.getTime(), JavaScriptObjectHelper.getNativeNull()));
 								CalendarUtil.addDaysToDate(progressiveDate, 1);
 							}
 						}
-						CalendarUtil.addDaysToDate(progressiveDate, 1);
+						// Add point to data series
 						Double yPoint = getYPointValue(rank, yDataType);
 						if (yPoint != null) {
 							if (isPointIsolated(yDataType, ranks, rank)) {
 								data.push(createMarkerPoint(rank.date.getTime(), (isCumulative ? cumulative += yPoint.doubleValue() : yPoint.doubleValue())));
 							} else {
 								data.push(createConnectingPoint(rank.date.getTime(), (isCumulative ? cumulative += yPoint.doubleValue() : yPoint.doubleValue())));
+								if (isInsideMissingDataRange && needPlotLines) {
+									plotLines.push(createNoDataPlotLine(progressiveDate.getTime(), false));
+									isInsideMissingDataRange = false;
+								}
 							}
 						} else {
 							data.push(createConnectingPoint(rank.date.getTime(), JavaScriptObjectHelper.getNativeNull()));
+						}
+						CalendarUtil.addDaysToDate(progressiveDate, 1);
+					}
+					// Fill with blank data ending range of missing dates and add missing data plot lines
+					if (!CalendarUtil.isSameDate(ranks.get(ranks.size() - 1).date, dateRange.getTo())) {
+						if (!isInsideMissingDataRange && needPlotLines) {
+							plotLines.push(createNoDataPlotLine(ranks.get(ranks.size() - 1).date.getTime(), true));
+						}
+						while (FilterHelper.beforeOrSameDate(progressiveDate, dateRange.getTo())) {
+							data.push(createConnectingPoint(progressiveDate.getTime(), JavaScriptObjectHelper.getNativeNull()));
+							CalendarUtil.addDaysToDate(progressiveDate, 1);
 						}
 					}
 					addSeries(data, lineType, seriesId, seriesName, color, yAxisPosition, tooltip);
@@ -149,7 +180,7 @@ public class Chart extends BaseChart {
 				break;
 			}
 
-			// Set y axis extremes
+			// Set y axis extremes and x axis plot lines
 			switch (yDataType) {
 			case DownloadsYAxisDataType:
 				yAxis.setMin(0).setFloor(0).setShowFirstLabel(false);
@@ -159,6 +190,9 @@ public class Chart extends BaseChart {
 					} else {
 						yAxis.setMax(JavaScriptObjectHelper.getNativeNull());
 					}
+				}
+				if (needPlotLines) {
+					getXAxis().setPlotLines(plotLines);
 				}
 				break;
 
@@ -171,6 +205,9 @@ public class Chart extends BaseChart {
 					} else {
 						yAxis.setMax(JavaScriptObjectHelper.getNativeNull());
 					}
+				}
+				if (needPlotLines) {
+					getXAxis().setPlotLines(plotLines);
 				}
 				break;
 
@@ -185,6 +222,7 @@ public class Chart extends BaseChart {
 				}
 				break;
 			}
+
 			NativeAxis.nativeUpdate(get(yAxisPosition.toString()), yAxis.getOptions(), true); // update y axis options
 
 			if (hide) {
@@ -286,19 +324,22 @@ public class Chart extends BaseChart {
 
 		if (loading) { // Reset chart
 			currency = null;
+			removeAllSeries();
 			if (XDataType.DateXAxisDataType.equals(xDataType)) {
 				if (dateRange == null) {
 					dateRange = new DateRange();
 				}
 				dateRange.setFrom(FilterHelper.normalizeDateUTC(FilterController.get().getStartDate()));
 				dateRange.setTo(FilterHelper.normalizeDateUTC(FilterController.get().getEndDate()));
+				JsArray<JavaScriptObject> emptyJSArray = JavaScriptObject.createArray().cast();
+				getXAxis().setPlotLines(emptyJSArray); // Reset plot lines
 				setXAxisExtremes((double) dateRange.getFrom().getTime(), (double) dateRange.getTo().getTime());
 				// TODO reset y axis extremes
 				getPrimaryAxis().setMin(JavaScriptObjectHelper.getNativeNull());
 				getPrimaryAxis().setMax(JavaScriptObjectHelper.getNativeNull());
 				NativeAxis.nativeUpdate(get(YAxisPosition.PRIMARY.toString()), getPrimaryAxis().getOptions(), true);
+
 			}
-			removeAllSeries();
 			reflow();
 		}
 
