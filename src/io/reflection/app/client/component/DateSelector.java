@@ -69,7 +69,7 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 
 		this.disableBefore = disableBefore;
 
-		setDateRange(FilterHelper.getWeeksAgo(4), FilterHelper.getToday());
+		setDateRange(FilterHelper.getDaysAgo(29), FilterHelper.getDaysAgo(2));
 
 		// Disable out of range dates
 		dateBoxFrom.getDatePicker().addShowRangeHandler(new ShowRangeHandler<Date>() {
