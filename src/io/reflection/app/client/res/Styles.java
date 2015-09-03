@@ -101,6 +101,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("admin-filters-container")
 		String adminFiltersContainer();
 
+		@ClassName("animated-line")
+		String animatedLine();
+
 		@ClassName("animation-hamster")
 		String animationHamster();
 
@@ -151,6 +154,12 @@ public interface Styles extends ClientBundle {
 
 		String ascending();
 
+		@ClassName("back-link-text")
+		String backLinkText();
+
+		@ClassName("back-link-text--form")
+		String backLinkTextForm();
+
 		@ClassName("block-error-message")
 		String blockErrorMessage();
 
@@ -187,6 +196,15 @@ public interface Styles extends ClientBundle {
 		String breadcrumbContainer();
 
 		String browserupgrade();
+
+		@ClassName("btn-add-another-country")
+		String btnAddAnotherCountry();
+
+		@ClassName("btn-apply")
+		String btnApply();
+
+		@ClassName("btn-reset-filters")
+		String btnResetFilters();
 
 		@ClassName("button-example-code-container")
 		String buttonExampleCodeContainer();
@@ -309,6 +327,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("comments-link")
 		String commentsLink();
 
+		@ClassName("compact-view")
+		String compactView();
+
 		@ClassName("component-loading")
 		String componentLoading();
 
@@ -327,6 +348,14 @@ public interface Styles extends ClientBundle {
 		@ClassName("connect-account-submitted")
 		String connectAccountSubmitted();
 
+		String contact__image();
+
+		@ClassName("contact__map-container")
+		String contact__mapContainer();
+
+		@ClassName("contact__text-content")
+		String contact__textContent();
+
 		@ClassName("content-list")
 		String contentList();
 
@@ -343,6 +372,12 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("country-select")
 		String countrySelect();
+
+		@ClassName("country-select--popup")
+		String countrySelectPopup();
+
+		@ClassName("county-select--container")
+		String countySelectContainer();
 
 		@ClassName("create-password-content")
 		String createPasswordContent();
@@ -481,6 +516,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("filter-container--my-apps")
 		String filterContainerMyApps();
 
+		@ClassName("filter-group")
+		String filterGroup();
+
 		@ClassName("filter-row-two")
 		String filterRowTwo();
 
@@ -495,6 +533,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("filter-toggle")
 		String filterToggle();
+
+		@ClassName("filter-toggles")
+		String filterToggles();
 
 		@ClassName("filters-container")
 		String filtersContainer();
@@ -517,6 +558,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("form-field")
 		String formField();
 
+		@ClassName("form-field--alert")
+		String formFieldAlert();
+
 		@ClassName("form-field--checkbox")
 		String formFieldCheckbox();
 
@@ -525,6 +569,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("form-field--checkbox-list--inline")
 		String formFieldCheckboxListInline();
+
+		@ClassName("form-field--country-select")
+		String formFieldCountrySelect();
 
 		@ClassName("form-field--date-select")
 		String formFieldDateSelect();
@@ -549,6 +596,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("form-field--select")
 		String formFieldSelect();
+
+		@ClassName("form-field--select--filter")
+		String formFieldSelectFilter();
 
 		@ClassName("form-field--select-disabled")
 		String formFieldSelectDisabled();
@@ -594,6 +644,12 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("graph-container")
 		String graphContainer();
+
+		@ClassName("graph-loading-indicator")
+		String graphLoadingIndicator();
+
+		@ClassName("graph-loading-line")
+		String graphLoadingLine();
 
 		@ClassName("grid-container")
 		String gridContainer();
@@ -738,6 +794,21 @@ public interface Styles extends ClientBundle {
 		@ClassName("hiring-title")
 		String hiringTitle();
 
+		@ClassName("home-title-container")
+		String homeTitleContainer();
+
+		@ClassName("home-welcome-container")
+		String homeWelcomeContainer();
+
+		@ClassName("home-welcome__call-to-action")
+		String homeWelcome__callToAction();
+
+		@ClassName("home-welcome__image")
+		String homeWelcome__image();
+
+		@ClassName("home-welcome__text")
+		String homeWelcome__text();
+
 		String hook();
 
 		@ClassName("horizontal-centre-content")
@@ -823,6 +894,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("is-complete")
 		String isComplete();
 
+		@ClassName("is-complete--error")
+		String isCompleteError();
+
 		@ClassName("is-current")
 		String isCurrent();
 
@@ -849,6 +923,12 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("is-impressive")
 		String isImpressive();
+
+		@ClassName("is-loading")
+		String isLoading();
+
+		@ClassName("is-loading-success")
+		String isLoadingSuccess();
 
 		@ClassName("is-ok")
 		String isOk();
@@ -969,6 +1049,12 @@ public interface Styles extends ClientBundle {
 		@ClassName("loading-ellipsis-hidden--mobile")
 		String loadingEllipsisHiddenMobile();
 
+		@ClassName("loading-message-box")
+		String loadingMessageBox();
+
+		@ClassName("loading-message-box-container")
+		String loadingMessageBoxContainer();
+
 		@ClassName("loading-progress")
 		String loadingProgress();
 
@@ -1014,6 +1100,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("make-comment-button")
 		String makeCommentButton();
 
+		@ClassName("map--contact")
+		String mapContact();
+
 		@ClassName("mobile-width")
 		String mobileWidth();
 
@@ -1022,6 +1111,12 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("more-link")
 		String moreLink();
+
+		@ClassName("multiple-select__number-selected")
+		String multipleSelect__numberSelected();
+
+		@ClassName("multiple-select__remove-all-selected")
+		String multipleSelect__removeAllSelected();
 
 		@ClassName("no-accordion-content")
 		String noAccordionContent();
@@ -1040,6 +1135,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("no-opacity")
 		String noOpacity();
+
+		@ClassName("no-results-container")
+		String noResultsContainer();
 
 		@ClassName("no-scroll")
 		String noScroll();
@@ -1080,11 +1178,17 @@ public interface Styles extends ClientBundle {
 		@ClassName("page-blog")
 		String pageBlog();
 
+		@ClassName("page-contact")
+		String pageContact();
+
 		@ClassName("page-functions")
 		String pageFunctions();
 
 		@ClassName("page-general-content")
 		String pageGeneralContent();
+
+		@ClassName("page-home")
+		String pageHome();
 
 		@ClassName("page-leaderboard")
 		String pageLeaderboard();
@@ -1147,6 +1251,18 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("panel-left-open")
 		String panelLeftOpen();
+
+		@ClassName("panel-link")
+		String panelLink();
+
+		@ClassName("panel-link__description")
+		String panelLink__description();
+
+		@ClassName("panel-link__link")
+		String panelLink__link();
+
+		@ClassName("panel-links")
+		String panelLinks();
 
 		@ClassName("panel-right")
 		String panelRight();
@@ -1249,6 +1365,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("rank-column")
 		String rankColumn();
+
+		@ClassName("read-only-date")
+		String readOnlyDate();
 
 		@ClassName("ref-button")
 		String refButton();
@@ -1439,6 +1558,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("refresh-button")
 		String refreshButton();
 
+		@ClassName("remove-form-field")
+		String removeFormField();
+
 		@ClassName("reset-password-form-is-showing")
 		String resetPasswordFormIsShowing();
 
@@ -1499,6 +1621,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("selected-tab")
 		String selectedTab();
 
+		@ClassName("selected-value")
+		String selectedValue();
+
 		@ClassName("sharing-container")
 		String sharingContainer();
 
@@ -1532,11 +1657,17 @@ public interface Styles extends ClientBundle {
 		@ClassName("sort-svg")
 		String sortSvg();
 
+		@ClassName("sticky-table-head")
+		String stickyTableHead();
+
 		@ClassName("store-select")
 		String storeSelect();
 
 		@ClassName("success-tick")
 		String successTick();
+
+		@ClassName("suggested-results-container")
+		String suggestedResultsContainer();
 
 		@ClassName("svg-create-password")
 		String svgCreatePassword();
@@ -1681,9 +1812,6 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("tooltip-right")
 		String tooltipRight();
-
-		@ClassName("top-five-section")
-		String topFiveSection();
 
 		@ClassName("total-revenue-title")
 		String totalRevenueTitle();
