@@ -271,7 +271,7 @@ public class FilterController {
 		setListType(OVERALL_LIST_TYPE);
 		setCountry("gb");
 		setEndDate(FilterHelper.getDaysAgo(2));
-		setStartDate(FilterHelper.getDaysAgo(30));
+		setStartDate(FilterHelper.getDaysAgo(31));
 		setCategory(Long.valueOf(15));
 		setDailyData(REVENUE_DAILY_DATA_TYPE);
 		setChartType(RANKING_CHART_TYPE);
