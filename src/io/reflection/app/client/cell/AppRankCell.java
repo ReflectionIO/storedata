@@ -109,14 +109,10 @@ public class AppRankCell extends AbstractCell<Rank> {
 				if (value.downloads != null) {
 					if (!SessionController.get().isLoggedInUserAdmin() && !SessionController.get().isLoggedInUserAdmin() && value.position != null
 							&& value.position.intValue() > 0 && value.position.intValue() <= 5) {
-						dailyData = SafeHtmlUtils
-								.fromSafeConstant("<span class=\""
-										+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore()
-										+ " "
-										+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud()
-										+ "\">-</span><span class=\"js-tooltip "
-										+ Styles.STYLES_INSTANCE.reflectionMainStyle().whatsThisTooltipIconStatic()
-										+ "\" data-tooltip=\"We are working on a new model to improve accuracy for the top 5, it will be implemented soon\" style=\"padding: 0px 0px 3px 7px\"></span>");
+						dailyData = SafeHtmlUtils.fromSafeConstant("<span class=\"" + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
+								+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud() + "\">&nbsp;</span><span class=\"js-tooltip "
+								+ Styles.STYLES_INSTANCE.reflectionMainStyle().whatsThisTooltipIconStatic()
+								+ "\" data-tooltip=\"We are working on a new model to improve accuracy for the top 5, it will be implemented soon\"></span>");
 					} else {
 						dailyData = DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
 								+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
@@ -132,14 +128,10 @@ public class AppRankCell extends AbstractCell<Rank> {
 				if (value.downloads != null) {
 					if (!SessionController.get().isLoggedInUserAdmin() && value.position != null && value.position.intValue() > 0
 							&& value.position.intValue() <= 5) {
-						dailyData = SafeHtmlUtils
-								.fromSafeConstant("<span class=\""
-										+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore()
-										+ " "
-										+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud()
-										+ "\">-</span><span class=\"js-tooltip "
-										+ Styles.STYLES_INSTANCE.reflectionMainStyle().whatsThisTooltipIconStatic()
-										+ "\" data-tooltip=\"We are working on a new model to improve accuracy for the top 5, it will be implemented soon\" style=\"padding: 0px 0px 3px 7px\"></span>");
+						dailyData = SafeHtmlUtils.fromSafeConstant("<span class=\"" + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
+								+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud() + "\">&nbsp;</span><span class=\"js-tooltip "
+								+ Styles.STYLES_INSTANCE.reflectionMainStyle().whatsThisTooltipIconStatic()
+								+ "\" data-tooltip=\"We are working on a new model to improve accuracy for the top 5, it will be implemented soon\"></span>");
 					} else {
 						dailyData = DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
 								+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
@@ -155,14 +147,10 @@ public class AppRankCell extends AbstractCell<Rank> {
 				if (value.currency != null && value.revenue != null) {
 					if (!SessionController.get().isLoggedInUserAdmin() && value.grossingPosition != null && value.grossingPosition.intValue() > 0
 							&& value.grossingPosition.intValue() <= 5) {
-						dailyData = SafeHtmlUtils
-								.fromSafeConstant("<span class=\""
-										+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore()
-										+ " "
-										+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue()
-										+ "\">-</span><span class=\"js-tooltip "
-										+ Styles.STYLES_INSTANCE.reflectionMainStyle().whatsThisTooltipIconStatic()
-										+ "\" data-tooltip=\"We are working on a new model to improve accuracy for the top 5, it will be implemented soon\" style=\"padding: 0px 0px 3px 7px\"></span>");
+						dailyData = SafeHtmlUtils.fromSafeConstant("<span class=\"" + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
+								+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue() + "\">&nbsp;</span><span class=\"js-tooltip "
+								+ Styles.STYLES_INSTANCE.reflectionMainStyle().whatsThisTooltipIconStatic()
+								+ "\" data-tooltip=\"We are working on a new model to improve accuracy for the top 5, it will be implemented soon\"></span>");
 					} else {
 						dailyData = DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
 								+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue(), "",
