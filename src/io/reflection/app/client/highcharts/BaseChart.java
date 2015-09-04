@@ -7,6 +7,7 @@
 //
 package io.reflection.app.client.highcharts;
 
+import io.reflection.app.client.helper.ColorHelper;
 import io.reflection.app.client.helper.JavaScriptObjectHelper;
 import io.reflection.app.client.highcharts.ChartHelper.LineType;
 import io.reflection.app.client.highcharts.ChartHelper.RankType;
@@ -122,21 +123,21 @@ public abstract class BaseChart extends Composite {
 		NativeChart.nativeAddSeries(chart, series, true, false);
 	}
 
-	public JsArrayMixed createConnectingPoint(double x, double y) {
+	protected JsArrayMixed createConnectingPoint(double x, double y) {
 		JsArrayMixed point = JavaScriptObject.createArray().cast();
 		point.push(x);
 		point.push(y);
 		return point;
 	}
 
-	public JsArrayMixed createConnectingPoint(double x, JavaScriptObject y) {
+	protected JsArrayMixed createConnectingPoint(double x, JavaScriptObject y) {
 		JsArrayMixed point = JavaScriptObject.createArray().cast();
 		point.push(x);
 		point.push(y);
 		return point;
 	}
 
-	public JavaScriptObject createMarkerPoint(double x, double y) {
+	protected JavaScriptObject createMarkerPoint(double x, double y) {
 		JavaScriptObject point = JavaScriptObject.createObject();
 		JavaScriptObjectHelper.setDoubleProperty(point, "x", x);
 		JavaScriptObjectHelper.setDoubleProperty(point, "y", y);
@@ -145,6 +146,31 @@ public abstract class BaseChart extends Composite {
 		JavaScriptObjectHelper.setIntegerProperty(marker, "radius", 4);
 		JavaScriptObjectHelper.setObjectProperty(point, "marker", marker);
 		return point;
+	}
+
+	protected JavaScriptObject createNoDataPlotLine(double value, boolean isBeginning) {
+		JavaScriptObject plotLine = JavaScriptObject.createObject();
+		JavaScriptObjectHelper.setStringProperty(plotLine, "color", ColorHelper.getLightGrey2());
+		JavaScriptObjectHelper.setIntegerProperty(plotLine, "width", 1);
+		JavaScriptObjectHelper.setDoubleProperty(plotLine, "value", value);
+		if (isBeginning) {
+			JavaScriptObject label = JavaScriptObject.createObject();
+			JavaScriptObjectHelper.setStringProperty(label, "text", "INCOMPLETE DATA");
+			JavaScriptObjectHelper.setIntegerProperty(label, "rotation", 270);
+			JavaScriptObjectHelper.setStringProperty(label, "verticalAlign", "bottom");
+			JavaScriptObjectHelper.setStringProperty(label, "textAlign", "left");
+			JavaScriptObjectHelper.setIntegerProperty(label, "y", -20);
+			JavaScriptObjectHelper.setIntegerProperty(label, "x", 12);
+			JavaScriptObject labelStyle = JavaScriptObject.createObject();
+			JavaScriptObjectHelper.setStringProperty(labelStyle, "color", ColorHelper.getLightGrey1());
+			JavaScriptObjectHelper.setStringProperty(labelStyle, "fontSize", "12px");
+			JavaScriptObjectHelper.setStringProperty(labelStyle, "fontFamily", "\"Lato\", sans-serif");
+			JavaScriptObjectHelper.setStringProperty(labelStyle, "fontWeight", "bold");
+			JavaScriptObjectHelper.setStringProperty(labelStyle, "letterSpacing", "0.15em");
+			JavaScriptObjectHelper.setObjectProperty(label, "style", labelStyle);
+			JavaScriptObjectHelper.setObjectProperty(plotLine, "label", label);
+		}
+		return plotLine;
 	}
 
 	public JavaScriptObject get(String id) {

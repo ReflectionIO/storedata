@@ -201,9 +201,9 @@ public class ChartHelper {
 		chart.getTooltipOption().setUseHTML(true).setShared(true).setShadow(false).setBackgroundColor("#ffffff").setBorderColor("#dedede").setBorderWidth(1)
 				.setBorderRadius(0).setValueDecimals(0).setCrosshairs(getCrosshairStyle()).setDateTimeLabelFormats(getDefaultTooltipDateTimeLabelFormat())
 				.setFormatter(getNativeTooltipFormatter());
-		chart.getXAxis().setTickWidth(1).setTickLength(10).setTickColor("#e7e7e7").setLabelsStyle(getXAxisLabelsStyle()).setLabelsY(30).setStartOnTick(true)
-				.setEndOnTick(true).setMinPadding(0).setMaxPadding(0).setLineColor("#e5e5e5").setLabelsMaxStaggerLines(1).setLabelsPadding(30)
-				.setLabelsUseHTML(false).setLabelsAlign("center");
+		chart.getXAxis().setId("xAxis").setTickWidth(1).setTickLength(10).setTickColor("#e7e7e7").setLabelsStyle(getXAxisLabelsStyle()).setLabelsY(30)
+				.setStartOnTick(true).setEndOnTick(true).setMinPadding(0).setMaxPadding(0).setLineColor("#e5e5e5").setLabelsMaxStaggerLines(1)
+				.setLabelsPadding(30).setLabelsUseHTML(false).setLabelsAlign("center");
 		chart.getPrimaryAxis().setId(YAxisPosition.PRIMARY.toString()).setAllowDecimals(false).setTitleText(null).setOffset(-30).setLabelsY(5)
 				.setLabelsStyle(getYAxisLabelsStyle("#81879d")).setLabelsAlign("left").setGridLineColor(ColorHelper.getDividerGrey()).setLabelsUseHTML(false);
 		chart.getSecondaryYAxis().setId(YAxisPosition.SECONDARY.toString()).setOpposite(true).setAllowDecimals(false).setTitleText(null).setOffset(-30)
