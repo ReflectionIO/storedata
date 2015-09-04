@@ -162,4 +162,16 @@ public class AnimationHelper {
 		return loadingIndicator;
 	}
 
+	public static LoadingIndicator getLinkedAccountsIndicator(int rowNumber) {
+		LoadingIndicator loadingIndicator = new LoadingIndicator(rowNumber, 5);
+
+		loadingIndicator.setColumnCellsSafeHtml(0, getLoaderInlineSafeHTML());
+		loadingIndicator.setColumnCellsSafeHtml(1, getLoaderInlineSafeHTML());
+		loadingIndicator.setColumnCellsSafeHtml(2, getLoaderInlineSafeHTML());
+		loadingIndicator.setColumnCellsSafeHtml(3, getLoaderInlineSafeHTML());
+		loadingIndicator.setColumnCellsSafeHtml(4, getLoaderInlineSafeHTML());
+
+		return loadingIndicator;
+	}
+
 }

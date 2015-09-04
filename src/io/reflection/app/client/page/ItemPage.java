@@ -363,6 +363,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		price.setInnerSafeHtml(SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
 		infoTotalRevenue.setInnerSafeHtml(SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
 		revenueTable.setRowCount(0, true);
+		loadingBar.hide(false);
 	}
 
 	private void createColumns() {
@@ -978,10 +979,10 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				setAppPriceFromRank(output.ranks.get(0));
 				drawData(output.ranks, output.outOfLeaderboardDates);
 			} else {
-				setError();
+
 			}
 			TooltipHelper.updateHelperTooltip();
-			loadingBar.hide();
+			loadingBar.hide(true);
 		} else {
 			setError();
 		}
@@ -1017,7 +1018,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				setError();
 			}
 			TooltipHelper.updateHelperTooltip();
-			loadingBar.hide();
+			loadingBar.hide(true);
 		} else {
 			setError();
 		}

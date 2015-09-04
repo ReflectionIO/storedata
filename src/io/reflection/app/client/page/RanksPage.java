@@ -897,12 +897,13 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 						overviewAllText.setInnerText(ALL_TEXT);
 					}
 				}
-				loadingBar.hide();
 			} else {
 				setViewMoreVisible(false);
 			}
+			loadingBar.hide(true);
 		} else {
 			setViewMoreVisible(false);
+			loadingBar.hide(false);
 		}
 
 		TooltipHelper.updateHelperTooltip();
@@ -917,6 +918,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	 */
 	@Override
 	public void getAllTopItemsFailure(GetAllTopItemsRequest input, Throwable caught) {
+		loadingBar.hide(false);
 		setViewMoreVisible(false);
 	}
 }

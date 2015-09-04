@@ -156,7 +156,7 @@ public class EditPostPage extends Page implements NavigationEventHandler, Create
 			tags.setText(StringUtils.join(post.tags));
 		}
 
-		loadingBar.hide();
+		loadingBar.hide(true);
 	}
 
 	@UiHandler("submit")

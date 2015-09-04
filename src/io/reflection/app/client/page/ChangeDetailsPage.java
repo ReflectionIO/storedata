@@ -31,6 +31,7 @@ import io.reflection.app.api.core.shared.call.event.GetUserDetailsEventHandler;
 import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.StyledButtonCell;
+import io.reflection.app.client.component.LoadingBar;
 import io.reflection.app.client.component.LoadingButton;
 import io.reflection.app.client.component.LoadingButton.IResetStatusCallback;
 import io.reflection.app.client.component.PasswordField;
@@ -156,6 +157,8 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	private User currentUser; // User using the system
 	private User editingUser; // User being edited
 	private Long editingUserId; // User being edited ID
+
+	private LoadingBar loadingBar = new LoadingBar(false);
 
 	public ChangeDetailsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -336,7 +339,18 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		register(DefaultEventBus.get().addHandlerToSource(GetUserDetailsEventHandler.TYPE, UserController.get(), this));
 
 		ResponsiveDesignHelper.makeTabsResponsive();
+	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.page.Page#onDetach()
+	 */
+	@Override
+	protected void onDetach() {
+		super.onDetach();
+
+		loadingBar.reset();
 	}
 
 	private void setUserDetailsFormEnabled(boolean enabled) {
@@ -822,6 +836,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 
 				if (SessionController.get().isLoggedInUserAdmin()) {
 					UserController.get().fetchUserRolesAndPermissions(dummyEditingUser);
+					loadingBar.show("Getting credentials ..");
 				} else {
 					// If non admin, can retrieve only his own powers, so get from SessionController
 					List<Role> currentUserRoles = SessionController.get().getLoggedInUser().roles;
@@ -977,6 +992,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	@Override
 	public void assignRoleSuccess(AssignRoleRequest input, AssignRoleResponse output) {
 		UserController.get().fetchUserRolesAndPermissions(input.user);
+		loadingBar.show("Getting credentials ..");
 		if (output.status == StatusType.StatusTypeSuccess) {
 			addRoleBtn.setStatusSuccess("Role added!");
 		} else {
@@ -993,6 +1009,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	@Override
 	public void assignRoleFailure(AssignRoleRequest input, Throwable caught) {
 		UserController.get().fetchUserRolesAndPermissions(input.user);
+		loadingBar.show("Getting credentials ..");
 		addRoleBtn.setStatusError();
 	}
 
@@ -1005,6 +1022,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	@Override
 	public void assignPermissionSuccess(AssignPermissionRequest input, AssignPermissionResponse output) {
 		UserController.get().fetchUserRolesAndPermissions(input.user);
+		loadingBar.show("Getting credentials ..");
 		if (output.status == StatusType.StatusTypeSuccess) {
 			addPermissionBtn.setStatusSuccess("Permission added!");
 		} else {
@@ -1021,6 +1039,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	@Override
 	public void assignPermissionFailure(AssignPermissionRequest input, Throwable caught) {
 		UserController.get().fetchUserRolesAndPermissions(input.user);
+		loadingBar.show("Getting credentials ..");
 		addPermissionBtn.setStatusError();
 	}
 
@@ -1034,6 +1053,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	@Override
 	public void getRolesAndPermissionsSuccess(GetRolesAndPermissionsRequest input, GetRolesAndPermissionsResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
+			loadingBar.hide(true);
 			// Roles and Permissions must be retrieved with one call
 			if (output.roles != null) {
 				userRolesProvider.updateRowData(0, output.roles);
@@ -1046,6 +1066,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 				userPermissionsProvider.updateRowCount(0, true);
 			}
 		} else {
+			loadingBar.hide(false);
 			userRolesProvider.updateRowCount(0, true);
 			userPermissionsProvider.updateRowCount(0, true);
 		}
@@ -1060,6 +1081,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	 */
 	@Override
 	public void getRolesAndPermissionsFailure(GetRolesAndPermissionsRequest input, Throwable caught) {
+		loadingBar.hide(false);
 		userRolesProvider.updateRowCount(0, true);
 		userPermissionsProvider.updateRowCount(0, true);
 	}
@@ -1074,6 +1096,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	public void revokePermissionSuccess(RevokePermissionRequest input, RevokePermissionResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
 			UserController.get().fetchUserRolesAndPermissions(input.user);
+			loadingBar.show("Getting credentials ..");
 		} else {
 			List<Permission> currentUserPermissions = SessionController.get().getLoggedInUser().permissions;
 			if (currentUserPermissions != null) {
@@ -1110,6 +1133,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	public void revokeRoleSuccess(RevokeRoleRequest input, RevokeRoleResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
 			UserController.get().fetchUserRolesAndPermissions(input.user);
+			loadingBar.show("Getting credentials ..");
 		} else {
 			List<Role> currentUserRoles = SessionController.get().getLoggedInUser().roles;
 			if (currentUserRoles != null) {
@@ -1148,6 +1172,9 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		if (output.status == StatusType.StatusTypeSuccess && output.user != null) {
 			editingUser = output.user;
 			fillDetailsForm(editingUser);
+
+		} else {
+
 		}
 
 	}

@@ -573,6 +573,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 				}
 			}
 		} else {
+			loadingBar.hide(false);
 			userItemProvider.reset();
 			userItemProvider.updateRowCount(0, true);
 			accountName.setEnabled(false);
@@ -587,6 +588,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	 */
 	@Override
 	public void getLinkedAccountsFailure(GetLinkedAccountsRequest input, Throwable caught) {
+		loadingBar.hide(false);
 		userItemProvider.reset();
 		userItemProvider.updateRowCount(0, true);
 		accountName.setEnabled(false);
@@ -609,10 +611,10 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 				}
 				loadingBar.setProgressiveStatus("Getting data...", 66);
 			} else {
-				loadingBar.hide(); // Since there are no Apps to display, show success status
+				loadingBar.hide(true); // Since there are no Apps to display, show success status
 			}
 		} else {
-			// error
+			loadingBar.hide(false);
 		}
 		setFiltersEnabled(true);
 
@@ -626,6 +628,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	 */
 	@Override
 	public void getLinkedAccountItemsFailure(GetLinkedAccountItemsRequest input, Throwable caught) {
+		loadingBar.hide(false);
 		userItemProvider.reset();
 		setFiltersEnabled(true);
 	}
@@ -640,9 +643,9 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	@Override
 	public void getSalesRanksSuccess(GetSalesRanksRequest input, GetSalesRanksResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			loadingBar.hide();
+			loadingBar.hide(true);
 		} else {
-
+			loadingBar.hide(false);
 		}
 
 		TooltipHelper.updateHelperTooltip();
@@ -657,7 +660,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	 */
 	@Override
 	public void getSalesRanksFailure(GetSalesRanksRequest input, Throwable caught) {
-
+		loadingBar.hide(false);
 	}
 
 }
