@@ -95,6 +95,7 @@ import com.google.gwt.user.cellview.client.SafeHtmlHeader;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
@@ -174,7 +175,9 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField SpanElement infoDateRange;
 	@UiField SpanElement infoTotalRevenue;
 
+	@UiField DivElement graphContainer;
 	@UiField HTMLPanel chartContainer;
+	@UiField DivElement graphLoadingIndicator;
 	@UiField(provided = true) Chart chartRevenue = new Chart(XDataType.DateXAxisDataType);
 	@UiField(provided = true) Chart chartDownloads = new Chart(XDataType.DateXAxisDataType);
 	@UiField(provided = true) Chart chartRank = new Chart(XDataType.DateXAxisDataType);
@@ -364,6 +367,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		infoTotalRevenue.setInnerSafeHtml(SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
 		revenueTable.setRowCount(0, true);
 		loadingBar.hide(false);
+		graphLoadingIndicator.removeClassName(style.isLoadingSuccess());
+		graphContainer.removeClassName(style.isLoading());
 	}
 
 	private void createColumns() {
@@ -734,6 +739,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				displayingApp.price = null;
 				price.setInnerSafeHtml(AnimationHelper.getLoaderInlineSafeHTML());
 				appOutOfTop200Panel.setVisible(false);
+				graphContainer.addClassName(style.isLoading());
 				chartRevenue.setLoading(true);
 				chartDownloads.setLoading(true);
 				chartRank.setLoading(true);
@@ -900,63 +906,72 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		}
 	}
 
-	private void drawData(List<Rank> ranks, List<Date> outOfLeaderboardDates) {
-		dateHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.isDescending());
-		revenueTable.getColumnSortList().push(dateColumn);
-		chartRank.setRankingType(rankType);
-		List<Rank> rankingRanksWithOutOfLeaderboardValues = new ArrayList<Rank>(ranks);
-		if (outOfLeaderboardDates != null) {
-			for (Date outOfLeaderboardDate : outOfLeaderboardDates) { // Add placeholder rank object with position > 200
-				for (int i = 0; i < rankingRanksWithOutOfLeaderboardValues.size(); i++) {
-					if (FilterHelper.beforeDate(outOfLeaderboardDate, rankingRanksWithOutOfLeaderboardValues.get(i).date)) {
-						Rank outOfLeaderboardRankPlaceholder = new Rank();
-						outOfLeaderboardRankPlaceholder.date = outOfLeaderboardDate;
-						outOfLeaderboardRankPlaceholder.position = new Integer(300);
-						outOfLeaderboardRankPlaceholder.grossingPosition = new Integer(300);
-						rankingRanksWithOutOfLeaderboardValues.add(i, outOfLeaderboardRankPlaceholder);
-						break;
-					} else if (i + 1 == rankingRanksWithOutOfLeaderboardValues.size()) {
-						Rank outOfLeaderboardRankPlaceholder = new Rank();
-						outOfLeaderboardRankPlaceholder.date = outOfLeaderboardDate;
-						outOfLeaderboardRankPlaceholder.position = new Integer(300);
-						outOfLeaderboardRankPlaceholder.grossingPosition = new Integer(300);
-						rankingRanksWithOutOfLeaderboardValues.add(rankingRanksWithOutOfLeaderboardValues.size(), outOfLeaderboardRankPlaceholder);
-						break;
+	private void drawData(final List<Rank> ranks, final List<Date> outOfLeaderboardDates) {
+		graphLoadingIndicator.addClassName(style.isLoadingSuccess());
+		Timer t = new Timer() {
+
+			@Override
+			public void run() {
+				graphContainer.removeClassName(style.isLoading());
+				dateHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.isDescending());
+				revenueTable.getColumnSortList().push(dateColumn);
+				chartRank.setRankingType(rankType);
+				List<Rank> rankingRanksWithOutOfLeaderboardValues = new ArrayList<Rank>(ranks);
+				if (outOfLeaderboardDates != null) {
+					for (Date outOfLeaderboardDate : outOfLeaderboardDates) { // Add placeholder rank object with position > 200
+						for (int i = 0; i < rankingRanksWithOutOfLeaderboardValues.size(); i++) {
+							if (FilterHelper.beforeDate(outOfLeaderboardDate, rankingRanksWithOutOfLeaderboardValues.get(i).date)) {
+								Rank outOfLeaderboardRankPlaceholder = new Rank();
+								outOfLeaderboardRankPlaceholder.date = outOfLeaderboardDate;
+								outOfLeaderboardRankPlaceholder.position = new Integer(300);
+								outOfLeaderboardRankPlaceholder.grossingPosition = new Integer(300);
+								rankingRanksWithOutOfLeaderboardValues.add(i, outOfLeaderboardRankPlaceholder);
+								break;
+							} else if (i + 1 == rankingRanksWithOutOfLeaderboardValues.size()) {
+								Rank outOfLeaderboardRankPlaceholder = new Rank();
+								outOfLeaderboardRankPlaceholder.date = outOfLeaderboardDate;
+								outOfLeaderboardRankPlaceholder.position = new Integer(300);
+								outOfLeaderboardRankPlaceholder.grossingPosition = new Integer(300);
+								rankingRanksWithOutOfLeaderboardValues.add(rankingRanksWithOutOfLeaderboardValues.size(), outOfLeaderboardRankPlaceholder);
+								break;
+							}
+						}
 					}
 				}
-			}
-		}
-		chartRank.drawSeries(rankingRanksWithOutOfLeaderboardValues, YAxisPosition.PRIMARY, YDataType.RankingYAxisDataType, SERIES_ID_RANK, LineType.LINE,
-				ColorHelper.getReflectionGreen(), false, false);
+				chartRank.drawSeries(rankingRanksWithOutOfLeaderboardValues, YAxisPosition.PRIMARY, YDataType.RankingYAxisDataType, SERIES_ID_RANK,
+						LineType.LINE, ColorHelper.getReflectionGreen(), false, false);
 
-		if (MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage) || SessionController.get().isLoggedInUserAdmin()) {
-			chartRank.drawSeries(ranks, YAxisPosition.SECONDARY, YDataType.RevenueYAxisDataType, SERIES_ID_REVENUE_SECONDARY, LineType.LINE,
-					ColorHelper.getReflectionPurple(), false, !overlayRevenuesSwitch.getValue().booleanValue());
-			chartRank.drawSeries(ranks, YAxisPosition.TERTIARY, YDataType.DownloadsYAxisDataType, SERIES_ID_DOWNLOAD_SECONDARY, LineType.LINE,
-					ColorHelper.getReflectionRed(), false, !overlayDownloadsSwitch.getValue().booleanValue());
-			chartRevenue.drawSeries(ranks, YAxisPosition.PRIMARY, YDataType.RevenueYAxisDataType, SERIES_ID_REVENUE, LineType.AREA,
-					ColorHelper.getReflectionPurple(), false, cumulativeChartSwitch.getValue().booleanValue());
-			chartDownloads.drawSeries(ranks, YAxisPosition.PRIMARY, YDataType.DownloadsYAxisDataType, SERIES_ID_DOWNLOAD, LineType.AREA,
-					ColorHelper.getReflectionRed(), false, cumulativeChartSwitch.getValue().booleanValue());
-			chartRevenue.drawSeries(ranks, YAxisPosition.PRIMARY, YDataType.RevenueYAxisDataType, SERIES_ID_REVENUE_CUMULATIVE, LineType.AREA,
-					ColorHelper.getReflectionPurple(), true, !cumulativeChartSwitch.getValue().booleanValue());
-			chartDownloads.drawSeries(ranks, YAxisPosition.PRIMARY, YDataType.DownloadsYAxisDataType, SERIES_ID_DOWNLOAD_CUMULATIVE, LineType.AREA,
-					ColorHelper.getReflectionRed(), true, !cumulativeChartSwitch.getValue().booleanValue());
-			chartRevenue
-					.drawSeries(ranks, YAxisPosition.SECONDARY, YDataType.DownloadsYAxisDataType, SERIES_ID_DOWNLOAD_SECONDARY, LineType.LINE,
+				if (MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage) || SessionController.get().isLoggedInUserAdmin()) {
+					chartRank.drawSeries(ranks, YAxisPosition.SECONDARY, YDataType.RevenueYAxisDataType, SERIES_ID_REVENUE_SECONDARY, LineType.LINE,
+							ColorHelper.getReflectionPurple(), false, !overlayRevenuesSwitch.getValue().booleanValue());
+					chartRank.drawSeries(ranks, YAxisPosition.TERTIARY, YDataType.DownloadsYAxisDataType, SERIES_ID_DOWNLOAD_SECONDARY, LineType.LINE,
+							ColorHelper.getReflectionRed(), false, !overlayDownloadsSwitch.getValue().booleanValue());
+					chartRevenue.drawSeries(ranks, YAxisPosition.PRIMARY, YDataType.RevenueYAxisDataType, SERIES_ID_REVENUE, LineType.AREA,
+							ColorHelper.getReflectionPurple(), false, cumulativeChartSwitch.getValue().booleanValue());
+					chartDownloads.drawSeries(ranks, YAxisPosition.PRIMARY, YDataType.DownloadsYAxisDataType, SERIES_ID_DOWNLOAD, LineType.AREA,
+							ColorHelper.getReflectionRed(), false, cumulativeChartSwitch.getValue().booleanValue());
+					chartRevenue.drawSeries(ranks, YAxisPosition.PRIMARY, YDataType.RevenueYAxisDataType, SERIES_ID_REVENUE_CUMULATIVE, LineType.AREA,
+							ColorHelper.getReflectionPurple(), true, !cumulativeChartSwitch.getValue().booleanValue());
+					chartDownloads.drawSeries(ranks, YAxisPosition.PRIMARY, YDataType.DownloadsYAxisDataType, SERIES_ID_DOWNLOAD_CUMULATIVE, LineType.AREA,
+							ColorHelper.getReflectionRed(), true, !cumulativeChartSwitch.getValue().booleanValue());
+					chartRevenue.drawSeries(ranks, YAxisPosition.SECONDARY, YDataType.DownloadsYAxisDataType, SERIES_ID_DOWNLOAD_SECONDARY, LineType.LINE,
 							ColorHelper.getReflectionRed(), false, cumulativeChartSwitch.getValue().booleanValue()
 									|| !overlayDownloadsSwitch.getValue().booleanValue());
-			chartDownloads.drawSeries(ranks, YAxisPosition.SECONDARY, YDataType.RevenueYAxisDataType, SERIES_ID_REVENUE_SECONDARY, LineType.LINE,
-					ColorHelper.getReflectionPurple(), false, cumulativeChartSwitch.getValue().booleanValue()
-							|| !overlayRevenuesSwitch.getValue().booleanValue());
-			chartRevenue
-					.drawSeries(ranks, YAxisPosition.SECONDARY, YDataType.DownloadsYAxisDataType, SERIES_ID_DOWNLOAD_CUMULATIVE_SECONDARY, LineType.LINE,
-							ColorHelper.getReflectionRed(), true, !cumulativeChartSwitch.getValue().booleanValue()
+					chartDownloads.drawSeries(ranks, YAxisPosition.SECONDARY, YDataType.RevenueYAxisDataType, SERIES_ID_REVENUE_SECONDARY, LineType.LINE,
+							ColorHelper.getReflectionPurple(), false, cumulativeChartSwitch.getValue().booleanValue()
+									|| !overlayRevenuesSwitch.getValue().booleanValue());
+					chartRevenue.drawSeries(ranks, YAxisPosition.SECONDARY, YDataType.DownloadsYAxisDataType, SERIES_ID_DOWNLOAD_CUMULATIVE_SECONDARY,
+							LineType.LINE, ColorHelper.getReflectionRed(), true, !cumulativeChartSwitch.getValue().booleanValue()
 									|| !overlayDownloadsSwitch.getValue().booleanValue());
-			chartDownloads.drawSeries(ranks, YAxisPosition.SECONDARY, YDataType.RevenueYAxisDataType, SERIES_ID_REVENUE_CUMULATIVE_SECONDARY, LineType.LINE,
-					ColorHelper.getReflectionPurple(), true, !cumulativeChartSwitch.getValue().booleanValue()
-							|| !overlayRevenuesSwitch.getValue().booleanValue());
-		}
+					chartDownloads.drawSeries(ranks, YAxisPosition.SECONDARY, YDataType.RevenueYAxisDataType, SERIES_ID_REVENUE_CUMULATIVE_SECONDARY,
+							LineType.LINE, ColorHelper.getReflectionPurple(), true, !cumulativeChartSwitch.getValue().booleanValue()
+									|| !overlayRevenuesSwitch.getValue().booleanValue());
+				}
+
+				graphLoadingIndicator.removeClassName(style.isLoadingSuccess());
+			}
+		};
+		t.schedule(200);
 
 	}
 
@@ -979,7 +994,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				setAppPriceFromRank(output.ranks.get(0));
 				drawData(output.ranks, output.outOfLeaderboardDates);
 			} else {
-
+				setError();
 			}
 			TooltipHelper.updateHelperTooltip();
 			loadingBar.hide(true);
