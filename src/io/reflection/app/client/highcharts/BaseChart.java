@@ -157,13 +157,13 @@ public abstract class BaseChart extends Composite {
 			JavaScriptObject label = JavaScriptObject.createObject();
 			JavaScriptObjectHelper.setStringProperty(label, "text", "INCOMPLETE DATA");
 			JavaScriptObjectHelper.setIntegerProperty(label, "rotation", 270);
-			JavaScriptObjectHelper.setStringProperty(label, "verticalAlign", "middle");
-			JavaScriptObjectHelper.setStringProperty(label, "textAlign", "right");
-			// JavaScriptObjectHelper.setIntegerProperty(label, "y", 50);
+			JavaScriptObjectHelper.setStringProperty(label, "verticalAlign", "bottom");
+			JavaScriptObjectHelper.setStringProperty(label, "textAlign", "left");
+			JavaScriptObjectHelper.setIntegerProperty(label, "y", -20);
 			JavaScriptObjectHelper.setIntegerProperty(label, "x", 12);
 			JavaScriptObject labelStyle = JavaScriptObject.createObject();
 			JavaScriptObjectHelper.setStringProperty(labelStyle, "color", ColorHelper.getLightGrey1());
-			JavaScriptObjectHelper.setStringProperty(labelStyle, "fontSize", "11px");
+			JavaScriptObjectHelper.setStringProperty(labelStyle, "fontSize", "12px");
 			JavaScriptObjectHelper.setStringProperty(labelStyle, "fontFamily", "\"Lato\", sans-serif");
 			JavaScriptObjectHelper.setStringProperty(labelStyle, "fontWeight", "bold");
 			JavaScriptObjectHelper.setStringProperty(labelStyle, "letterSpacing", "0.15em");
