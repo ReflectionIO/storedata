@@ -352,17 +352,21 @@ var SubmitButtonWithFeedback = function() {
 			setTimeout(function(){
 				$loadingText.text("Loading app details...");
 				setTimeout(function(){
-					$loadingText.text("Done!");
-					$loadingBar.addClass('is-complete');
-					setTimeout(function(){
-						$loadingBar.addClass("is-closing");
-						setTimeout(function(){
-							$loadingBar.remove();
-						}, 1000);
-					}, 500);
+					$loadingText.text("Oh dear! Something went wrong. Please try again.");
+					$loadingBar.addClass('is-complete--error');
 				}, 3000);
 			}, 2000);
 		}, 1000);
+
+		$("html, body").on("click", function(){
+			var loadingBar = $(".page-loading.is-complete--error");
+			if(loadingBar.length) {
+				loadingBar.addClass("is-closing");
+				setTimeout(function(){
+					loadingBar.remove();
+				}, 1000);
+			}
+		});	
 	}
 
 	LoadingPage.prototype.mockLoadingDeterminate = function($loadingBar, $loadingText, $progressBar) {
@@ -389,7 +393,7 @@ var SubmitButtonWithFeedback = function() {
 									setTimeout(function(){
 										$loadingBar.remove();
 									}, 1000);
-								}, 500);
+								}, 1000);
 							}, 400);
 						}, 1500);
 					}, 500);

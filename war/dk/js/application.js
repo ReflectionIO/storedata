@@ -345,6 +345,18 @@
 			$this.attr('value', 'Email is on the way').addClass('ref-button--success');
 			$('.panel-right').addClass('reset-password-is-submitted').find('.form-submitted-success').addClass('is-showing');
 		});
+
+		$('.panel-right .js-link-to-login').on("click", function(e){
+			e.preventDefault();
+			$('.panel-right').removeClass('show-reset-password-form').removeClass('reset-password-is-submitted').find('.form-submitted-success').removeClass('is-showing')
+			$('.panel-right .form--login').css({"visibility":"visible","position":"relative"});
+			$('.panel-right .form--password-reset').css({"visibility":"hidden","position":"absolute"});
+			$('.panel-right .js-mock-send-reset-password').removeClass('ref-button--success').attr('value', 'Send password reset email');
+			if($('.ie8').length > 0) {
+				$('.panel-right .form--login').css("display","block");
+				$('.panel-right .form--password-reset').css("display","none");
+			}
+		});
 	}
 
 	var AccountContainer = function() {
@@ -1412,6 +1424,68 @@
 				}
 			});
 		});
+	}
+
+	var reflectionMap = function() {
+		console.log("reflectionMap");
+		var isDraggable = $('html.touch').length == 0;
+		var mapStyles = [{
+	      featureType: "poi",
+	      elementType: "labels",
+	      stylers: [
+          { visibility: "off" }
+	      ]
+	    }];
+	  var zoomValue = 17;
+	  if($(window).innerWidth() < 720) {
+	  	zoomValue = 16;
+	  }
+		this.myLatlng = new google.maps.LatLng(51.518680, -0.136578);
+		this.mapOptions = {
+		  zoom: zoomValue,
+		  zoomControl: true,
+		  center: this.myLatlng,
+		  disableDefaultUI: true,
+		  scrollwheel: false,
+		  streetViewControl: true,
+		  draggable: isDraggable,
+		  styles: mapStyles
+		}
+		this.markerImage = {
+	    url: 'images/map-marker.png',
+	    size: new google.maps.Size(34, 49),
+	    scaledSize: new google.maps.Size(34, 49),
+	    anchor: new google.maps.Point(0, 53)
+	  };
+		this.map = new google.maps.Map(document.getElementById("js-map--contact"), this.mapOptions);	
+
+		var marker = this.marker = new google.maps.Marker({
+	    position: this.myLatlng,
+	    map: this.map,
+	    title: "40-44 Newman Street",
+	    icon: this.markerImage,
+	    // animation: google.maps.Animation.DROP
+		});
+
+		// We get the map's default panorama and set up some defaults.
+	  // Note that we don't yet set it visible.
+	  this.panorama = this.map.getStreetView();
+	  this.panorama.setPosition(new google.maps.LatLng(51.518660, -0.136540));
+	  this.panorama.setPov(/** @type {google.maps.StreetViewPov} */({
+	    heading: 40,
+	    pitch: 0
+	  }));
+
+	  this.toggleStreetView = function() {
+		  var toggle = this.panorama.getVisible();
+			  if (toggle == false) {
+			    this.panorama.setVisible(true);
+			  } else {
+			    this.panorama.setVisible(false);
+			  }
+		}
+
+		return this;
 	}
 /* END COMPONENT OBJECTS */
 
