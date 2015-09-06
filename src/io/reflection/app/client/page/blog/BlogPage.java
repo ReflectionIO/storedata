@@ -189,9 +189,9 @@ public class BlogPage extends Page implements NavigationEventHandler, GetPostsEv
 			// } else {
 			// simplePager.setVisible(false);
 			// }
-			loadingBar.hide();
+			loadingBar.hide(true);
 		} else {
-
+			loadingBar.hide(false);
 		}
 	}
 
@@ -203,7 +203,7 @@ public class BlogPage extends Page implements NavigationEventHandler, GetPostsEv
 	 */
 	@Override
 	public void getPostsFailure(GetPostsRequest input, Throwable caught) {
-		// preloader.hide();
+		loadingBar.hide(false);
 	}
 
 	@UiHandler("viewAllBtn")

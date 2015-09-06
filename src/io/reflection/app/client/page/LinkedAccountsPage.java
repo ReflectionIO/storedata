@@ -22,6 +22,7 @@ import io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler;
 import io.reflection.app.api.core.shared.call.event.UpdateLinkedAccountEventHandler;
 import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.client.DefaultEventBus;
+import io.reflection.app.client.component.LoadingBar;
 import io.reflection.app.client.component.LoadingButton;
 import io.reflection.app.client.component.PopupDialog;
 import io.reflection.app.client.controller.LinkedAccountController;
@@ -37,7 +38,6 @@ import io.reflection.app.client.part.linkaccount.IosMacLinkAccountForm;
 import io.reflection.app.client.part.linkaccount.LinkedAccountChangeEvent.EVENT_TYPE;
 import io.reflection.app.client.part.linkaccount.LinkedAccountChangeEvent.LinkedAccountChangeEventHandler;
 import io.reflection.app.client.part.linkaccount.LinkedAccountsEmptyTable;
-import io.reflection.app.client.res.Images;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.client.res.Styles.ReflectionMainStyles;
 import io.reflection.app.datatypes.shared.DataAccount;
@@ -80,7 +80,6 @@ import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -139,6 +138,8 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 	private User user = SessionController.get().getLoggedInUser();
 
+	private LoadingBar loadingBar = new LoadingBar(false);
+
 	public LinkedAccountsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
@@ -163,8 +164,11 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		linkedAccountsTable.setEmptyTableWidget(linkedAccountsEmptyTable);
 
 		LinkedAccountController.get().addDataDisplay(linkedAccountsTable);
+		if (!LinkedAccountController.get().linkedAccountsFetched()) {
+			loadingBar.show("Getting linked accounts ..");
+		}
 
-		linkedAccountsTable.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
+		linkedAccountsTable.setLoadingIndicator(AnimationHelper.getLinkedAccountsIndicator(1));
 
 		if (!SessionController.get().isLoggedInUserAdmin()) {
 			usersText.setInnerHTML("Users <span class=\"text-small\">coming soon</span>");
@@ -362,6 +366,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formSubmittedLoading());
 		addLinkedAccountDialog.hide();
 		deleteLinkedAccountDialog.hide();
+		loadingBar.reset();
 	}
 
 	/**
@@ -669,12 +674,10 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	public void getLinkedAccountsSuccess(GetLinkedAccountsRequest input, GetLinkedAccountsResponse output) {
 		// preloaderTable.hide();
 		if (output.status == StatusType.StatusTypeSuccess) {
-			// if (LinkedAccountController.get().getLinkedAccountsCount() > output.pager.count) {
-			// simplePager.setVisible(true);
-			// } else {
-			// simplePager.setVisible(false);
-			// }
+			loadingBar.hide(true);
 			updateViewFromLinkedAccountCount();
+		} else {
+			loadingBar.hide(false);
 		}
 	}
 
@@ -686,7 +689,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	 */
 	@Override
 	public void getLinkedAccountsFailure(GetLinkedAccountsRequest input, Throwable caught) {
-		// preloaderTable.hide();
+		loadingBar.hide(false);
 	}
 
 }

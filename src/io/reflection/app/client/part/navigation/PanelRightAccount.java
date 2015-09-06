@@ -44,7 +44,9 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
@@ -71,6 +73,7 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 	@UiField LoginForm loginForm;
 	@UiField ForgotPasswordForm forgotPasswordForm;
 	@UiField DivElement formSubmittedSuccessPanel;
+	@UiField Anchor backToLogin;
 
 	@UiField DivElement quotePanel;
 	@UiField DivElement panelOverlay;
@@ -104,7 +107,7 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 				event.preventDefault();
 				forgotPasswordForm.setEmail(loginForm.getEmail());
 				panelRight.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().showResetPasswordForm());
-				loginForm.getElement().getParentElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().willShow());
+				panelRight.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().willShow());
 
 				Timer t = new Timer() {
 
@@ -114,11 +117,20 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 						loginForm.getElement().getStyle().setPosition(Position.ABSOLUTE);
 						forgotPasswordForm.getElement().getStyle().setVisibility(Visibility.VISIBLE);
 						forgotPasswordForm.getElement().getStyle().setPosition(Position.RELATIVE);
-						loginForm.getElement().getParentElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().willShow());
+						panelRight.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().willShow());
 					}
 				};
 				t.schedule(150);
 
+			}
+		});
+
+		forgotPasswordForm.getBackToLoginLink().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				event.preventDefault();
+				resetToLoginStatus();
 			}
 		});
 
@@ -129,6 +141,7 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 			loginForm.getElement().removeFromParent();
 			forgotPasswordForm.getElement().removeFromParent();
 			formSubmittedSuccessPanel.removeFromParent();
+			resetToLoginStatus();
 			quotePanel.removeFromParent();
 			if (!accessPanelContainer.isOrHasChild(userDetailsPanel)) {
 				accessPanelContainer.appendChild(userDetailsPanel);
@@ -206,6 +219,24 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 		return panelOverlay;
 	}
 
+	private void resetToLoginStatus() {
+		panelRight.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().showResetPasswordForm());
+		panelRight.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().resetPasswordIsSubmitted());
+		formSubmittedSuccessPanel.removeClassName(IS_SHOWING);
+		loginForm.getElement().getStyle().setVisibility(Visibility.VISIBLE);
+		loginForm.getElement().getStyle().setPosition(Position.RELATIVE);
+		forgotPasswordForm.getElement().getStyle().setVisibility(Visibility.HIDDEN);
+		forgotPasswordForm.getElement().getStyle().setPosition(Position.ABSOLUTE);
+		forgotPasswordForm.resetForm();
+	}
+
+	@UiHandler("backToLogin")
+	void onBackToLoginClicked(ClickEvent event) {
+		event.preventDefault();
+
+		resetToLoginStatus();
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -219,22 +250,6 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 		DefaultEventBus.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this);
 		DefaultEventBus.get().addHandlerToSource(ChangeUserDetailsEventHandler.TYPE, SessionController.get(), this);
 		DefaultEventBus.get().addHandlerToSource(ForgotPasswordEventHandler.TYPE, SessionController.get(), this);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.Composite#onDetach()
-	 */
-	@Override
-	protected void onDetach() {
-		super.onDetach();
-
-		loginForm.getElement().getParentElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().tabs__contentIsSubmitted());
-		formSubmittedSuccessPanel.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
-		loginForm.getElement().getParentElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().showResetPasswordForm());
-		loginForm.getElement().removeAttribute("style");
-		forgotPasswordForm.getElement().removeAttribute("style");
 	}
 
 	/*
@@ -348,14 +363,14 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 				forgotPasswordForm.getElement().getStyle().setVisibility(Visibility.HIDDEN); // TODO add in CSS
 
 				forgotPasswordForm.setStatusSuccess();
-				formSubmittedSuccessPanel.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
-				loginForm.getElement().getParentElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().tabs__contentIsSubmitted());
+				formSubmittedSuccessPanel.addClassName(IS_SHOWING);
+				panelRight.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().resetPasswordIsSubmitted());
 			} else if (output.status == StatusType.StatusTypeFailure && output.error != null && output.error.code == ApiError.UserNotFound.getCode()) {
 				forgotPasswordForm.setStatusError("Invalid email address");
 			} else {
 				forgotPasswordForm.setStatusError();
-				loginForm.getElement().getParentElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().tabs__contentIsSubmitted());
-				formSubmittedSuccessPanel.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
+				formSubmittedSuccessPanel.removeClassName(IS_SHOWING);
+				panelRight.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().resetPasswordIsSubmitted());
 			}
 		}
 	}
@@ -371,8 +386,8 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 	public void forgotPasswordFailure(ForgotPasswordRequest input, Throwable caught) {
 		if (forgotPasswordForm.isStatusLoading()) {
 			forgotPasswordForm.setStatusError();
-			loginForm.getElement().getParentElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().tabs__contentIsSubmitted());
-			formSubmittedSuccessPanel.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
+			formSubmittedSuccessPanel.removeClassName(IS_SHOWING);
+			panelRight.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().resetPasswordIsSubmitted());
 		}
 	}
 

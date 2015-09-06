@@ -19,6 +19,7 @@ import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -35,6 +36,7 @@ public class ForgotPasswordForm extends Composite {
 	@UiField TextField email;
 	private String emailError = null;
 	@UiField LoadingButton submit;
+	@UiField Anchor backToLogin;
 
 	public ForgotPasswordForm() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -98,7 +100,7 @@ public class ForgotPasswordForm extends Composite {
 		email.setEnabled(enabled);
 	}
 
-	private void resetForm() {
+	public void resetForm() {
 		email.setText("");
 		email.hideNote();
 		submit.resetStatus();
@@ -125,6 +127,10 @@ public class ForgotPasswordForm extends Composite {
 
 	public boolean isStatusLoading() {
 		return submit.isStatusLoading();
+	}
+
+	public Anchor getBackToLoginLink() {
+		return backToLogin;
 	}
 
 }

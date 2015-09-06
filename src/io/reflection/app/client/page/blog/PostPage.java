@@ -234,7 +234,7 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 
 		facebookShareLink.setHref("#" + NavigationController.get().getStack().toString() + "#f");
 
-		loadingBar.hide();
+		loadingBar.hide(true);
 	}
 
 	private void setLoading(LoadingType value) {
@@ -274,6 +274,7 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 		if (output.status == StatusType.StatusTypeSuccess && output.post != null) {
 			show(output.post);
 		} else {
+			loadingBar.hide(false);
 			PageType.BlogPostsPageType.show();
 		}
 	}
@@ -285,7 +286,9 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 	 * java.lang.Throwable)
 	 */
 	@Override
-	public void getPostFailure(GetPostRequest input, Throwable caught) {}
+	public void getPostFailure(GetPostRequest input, Throwable caught) {
+		loadingBar.hide(false);
+	}
 
 	/**
 	 * @param postId
