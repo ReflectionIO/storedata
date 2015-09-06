@@ -46,6 +46,7 @@ import io.reflection.app.client.helper.ResponsiveDesignHelper;
 import io.reflection.app.client.helper.TooltipHelper;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.LoadingIndicator;
+import io.reflection.app.client.part.NoDataPanel;
 import io.reflection.app.client.part.datatypes.RanksGroup;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.client.res.Styles.ReflectionMainStyles;
@@ -62,7 +63,6 @@ import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Display;
-import com.google.gwt.dom.client.Style.TextAlign;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -71,7 +71,6 @@ import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.logical.shared.ShowRangeEvent;
 import com.google.gwt.event.logical.shared.ShowRangeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
@@ -105,14 +104,6 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	private static RanksPageUiBinder uiBinder = GWT.create(RanksPageUiBinder.class);
 
 	interface RanksPageUiBinder extends UiBinder<Widget, RanksPage> {}
-
-	interface RanksPageStyle extends CssResource {
-
-		String emptyTableContainer();
-
-		String emptyTableHeading();
-
-	}
 
 	public static final int SELECTED_TAB_PARAMETER_INDEX = 0;
 	public static final int VIEW_ALL_LENGTH_VALUE = Integer.MAX_VALUE;
@@ -264,11 +255,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			}
 		});
 
-		HTMLPanel emptyTableWidget = new HTMLPanel("<h6>No ranking data for filter!</h6>");
-		emptyTableWidget.getElement().getStyle().setTextAlign(TextAlign.CENTER);
-		emptyTableWidget.getElement().getStyle().setHeight(100.0, Unit.PX);
-		emptyTableWidget.getElement().getStyle().setPaddingTop(35.0, Unit.PX);
-		leaderboardTable.setEmptyTableWidget(emptyTableWidget);
+		leaderboardTable.setEmptyTableWidget(new NoDataPanel());
 		leaderboardTable.setLoadingIndicator(loadingIndicatorAll);
 		leaderboardTable.getTableLoadingSection().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().tableBodyLoading());
 

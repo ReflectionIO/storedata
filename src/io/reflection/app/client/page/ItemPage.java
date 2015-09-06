@@ -52,6 +52,7 @@ import io.reflection.app.client.highcharts.ChartHelper.XDataType;
 import io.reflection.app.client.highcharts.ChartHelper.YAxisPosition;
 import io.reflection.app.client.highcharts.ChartHelper.YDataType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
+import io.reflection.app.client.part.OutOfRankPanel;
 import io.reflection.app.client.part.datatypes.AppRevenue;
 import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.client.part.navigation.Header.PanelType;
@@ -197,7 +198,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField ButtonElement dnwBtn;
 	@UiField ButtonElement dnwBtnMobile;
 	@UiField DivElement sincePanel;
-	@UiField HTMLPanel appOutOfTop200Panel;
+	@UiField OutOfRankPanel appOutOfTop200Panel;
 	@UiField DivElement appDetailsPanel;
 
 	private LoadingBar loadingBar;
