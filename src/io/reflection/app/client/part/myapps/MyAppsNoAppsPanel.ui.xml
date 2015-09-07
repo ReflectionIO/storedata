@@ -1,9 +1,9 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
-    <ui:style gss="true">
-    
-    </ui:style>
+	<ui:style>
+	
+	</ui:style>
 	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.grid__row} {STYLES_INSTANCE.reflectionMainStyle.fullPageMessage}">
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFiveColumns}">
 			<svg x="0px" y="0px" viewBox="0 0 176.3 100.6" enable-background="new 0 0 176.3 100.6" xml:space="preserve"><g id="Building"><path fill="#9F9FA9"
@@ -80,9 +80,9 @@
 					l6.8,11.5L20.2,70.3L20.2,70.3z M26.1,62.4v3.5c0,0.4,0.4,0.8,0.8,0.8c0.4,0,0.8-0.4,0.8-0.8v-3.5c0-0.4-0.4-0.8-0.8-0.8
 					C26.5,61.6,26.1,62,26.1,62.4z M27,67.4c-0.3,0-0.5,0.1-0.7,0.3c-0.2,0.2-0.3,0.4-0.3,0.7c0,0.3,0.1,0.5,0.3,0.7
 					c0.2,0.2,0.4,0.3,0.7,0.3c0.3,0,0.5-0.1,0.7-0.3c0.2-0.2,0.3-0.4,0.3-0.7c0-0.3-0.1-0.5-0.3-0.7C27.5,67.5,27.2,67.4,27,67.4z" /></svg>
-			<h2 ui:field="title" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}"></h2>
-			<p ui:field="body"></p>
-			<g:Button ui:field="button" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth}"></g:Button>
+			<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">This Account is App-less</h2>
+			<p>You don't currently have any apps in this linked account.</p>
+			<g:Button ui:field="button" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth}" text="Link another Account"></g:Button>
 		</div>
-    </g:HTMLPanel>
+	</g:HTMLPanel>
 </ui:UiBinder> 

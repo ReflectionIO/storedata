@@ -119,6 +119,7 @@ import io.reflection.app.shared.util.PagerHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -129,6 +130,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeComparator;
 import org.joda.time.DateTimeZone;
 
 import com.willshex.gson.json.service.server.ActionHandler;
@@ -563,7 +565,7 @@ public final class Core extends ActionHandler {
 						input.pager);
 			}
 
-			// Identify out of leaderboard dates
+			// // Identify out of leaderboard dates
 			// List<Date> itemRanksDates = new ArrayList<Date>(); // Dates retrieved from the query
 			// for (Rank r : output.ranks) {
 			// itemRanksDates.add(r.date);
@@ -1654,21 +1656,53 @@ public final class Core extends ActionHandler {
 
 			if (input.end == null) {
 				input.end = DateTime.now(DateTimeZone.UTC).toDate();
+			} else {
+				input.end = (new DateTime(input.end.getTime(), DateTimeZone.UTC)).toDate();
 			}
 
 			if (input.start == null) {
-				input.start = (new DateTime(input.end.getTime(), DateTimeZone.UTC)).minusDays(30).toDate();
+				input.start = (new DateTime(input.start.getTime(), DateTimeZone.UTC)).minusDays(30).toDate();
+			} else {
+				input.start = (new DateTime(input.start.getTime(), DateTimeZone.UTC)).toDate();
 			}
 
 			FormType form = null;
 			Modeller modeller = ModellerFactory.getModellerForStore(DataTypeHelper.IOS_STORE_A3);
 			form = modeller.getForm(input.listType);
 
+			output.item = input.item;
+
 			output.ranks = RankServiceProvider.provide().getSaleSummaryAndRankForItemAndFormType(input.item.internalId, input.country, input.category.id, form,
 					input.start, input.end, input.pager);
 
-			output.item = input.item;
-			// output.linkedAccount = linkedAccount;
+			// TODO temp solution: show zero downloads and revenues if the dataaccountfetch that day isn't with status ingested
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(input.start);
+			cal.set(Calendar.HOUR_OF_DAY, 0);
+			cal.set(Calendar.MINUTE, 0);
+			cal.set(Calendar.SECOND, 0);
+			cal.set(Calendar.MILLISECOND, 0);
+			DateTime progressiveDate = new DateTime(cal, DateTimeZone.UTC);
+			List<Rank> emptyRange = new ArrayList<Rank>();
+			while (DateTimeComparator.getDateOnlyInstance().compare(progressiveDate, input.end) <= 0) {
+				Rank emptyRank = new Rank();
+				emptyRank.date = new Date(progressiveDate.getMillis());
+				emptyRank.downloads = new Integer(0);
+				emptyRank.revenue = new Float(0);				
+				emptyRange.add(emptyRank);
+				progressiveDate = progressiveDate.plusDays(1);
+			}
+			if (!output.ranks.isEmpty()) {
+				for (Rank rank : output.ranks) {
+					for (int i = 0; i < emptyRange.size(); i++) {
+						if (DateTimeComparator.getDateOnlyInstance().compare(rank.date, emptyRange.get(i).date) == 0) {
+							emptyRange.set(i, rank);
+							break;
+						}
+					}
+				}
+			}
+			output.ranks = new ArrayList<Rank>(emptyRange);
 
 			output.pager = input.pager;
 			updatePager(output.pager, output.ranks);

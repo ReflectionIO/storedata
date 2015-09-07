@@ -1,6 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
-	xmlns:cell="urn:import:com.google.gwt.user.cellview.client" xmlns:c="urn:import:io.reflection.app.client.component">
+	xmlns:cell="urn:import:com.google.gwt.user.cellview.client" xmlns:c="urn:import:io.reflection.app.client.component" xmlns:m="urn:import:io.reflection.app.client.part.myapps">
 
 	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 
@@ -39,9 +39,14 @@
 				<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.scrollable}">
 					<cell:CellTable ui:field="myAppsTable"
 						styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData} {STYLES_INSTANCE.reflectionMainStyle.tableMyApps} {STYLES_INSTANCE.reflectionMainStyle.responsive}" />
+
 				</g:HTMLPanel>
 			</g:HTMLPanel>
-			<!-- <p:SimplePager ui:field="simplePager" visible="false" /> -->
+			<p:ErrorPanel ui:field="errorPanel" visible="false"></p:ErrorPanel>
+			<!-- <m:MyAppsNoAppsPanel ui:field="noAppsPanel" visible="false"></m:MyAppsNoAppsPanel> -->
+			<m:MyAppsNoLinkedAccountsPanel ui:field="noLinkedAccountsPanel" visible="false"></m:MyAppsNoLinkedAccountsPanel>
+			<m:MyAppsComingSoon ui:field="comingSoonPanel" visible="false"></m:MyAppsComingSoon>
+
 		</g:HTMLPanel>
 
 		<g:Button ui:field="viewAllBtn" visible="false" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall}">

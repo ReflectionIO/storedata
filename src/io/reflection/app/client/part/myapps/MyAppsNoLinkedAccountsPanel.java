@@ -1,14 +1,13 @@
 //
-//  MyAppsEmptyTable.java
+//  MyAppsNoLinkedAccountsPanel.java
 //  storedata
 //
-//  Created by Stefano Capuzzi (stefanocapuzzi) on 22 Jul 2014.
-//  Copyright © 2014 Reflection.io Ltd. All rights reserved.
+//  Created by Stefano Capuzzi (capuzzistefano) on 4 Sep 2015.
+//  Copyright © 2015 Reflection.io Ltd. All rights reserved.
 //
 package io.reflection.app.client.part.myapps;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -20,20 +19,18 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
- * @author Stefano Capuzzi (stefanocapuzzi)
- * 
+ * @author Stefano Capuzzi (capuzzistefano)
+ *
  */
-public class MyAppsEmptyTable extends Composite implements HasClickHandlers {
+public class MyAppsNoLinkedAccountsPanel extends Composite implements HasClickHandlers {
 
-	private static MyAppsEmptyTableUiBinder uiBinder = GWT.create(MyAppsEmptyTableUiBinder.class);
+	private static MyAppsNoLinkedAccountsPanelUiBinder uiBinder = GWT.create(MyAppsNoLinkedAccountsPanelUiBinder.class);
 
-	interface MyAppsEmptyTableUiBinder extends UiBinder<Widget, MyAppsEmptyTable> {}
+	interface MyAppsNoLinkedAccountsPanelUiBinder extends UiBinder<Widget, MyAppsNoLinkedAccountsPanel> {}
 
-	@UiField Element title;
-	@UiField Element body;
 	@UiField Button button;
 
-	public MyAppsEmptyTable() {
+	public MyAppsNoLinkedAccountsPanel() {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		button.addClickHandler(new ClickHandler() {
@@ -43,13 +40,6 @@ public class MyAppsEmptyTable extends Composite implements HasClickHandlers {
 				fireEvent(event);
 			}
 		});
-	}
-
-	public void setNoDataAccounts(boolean noDataAccounts) {
-		title.setInnerText(noDataAccounts ? "Where Are My Apps?" : "This Account is App-less");
-		body.setInnerText(noDataAccounts ? "You first need to link an app store account before your apps can be displayed."
-				: "You don't currently have any apps in this linked account.");
-		button.setText(noDataAccounts ? "Link an Account" : "Link another Account");
 	}
 
 	/*

@@ -52,6 +52,9 @@ import io.reflection.app.client.highcharts.ChartHelper.XDataType;
 import io.reflection.app.client.highcharts.ChartHelper.YAxisPosition;
 import io.reflection.app.client.highcharts.ChartHelper.YDataType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
+import io.reflection.app.client.part.ErrorPanel;
+import io.reflection.app.client.part.NoDataPanel;
+import io.reflection.app.client.part.OutOfRankPanel;
 import io.reflection.app.client.part.datatypes.AppRevenue;
 import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.client.part.navigation.Header.PanelType;
@@ -192,12 +195,13 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	private static final String SERIES_ID_DOWNLOAD_CUMULATIVE_SECONDARY = "downloadCumulativeSecondary";
 
 	@UiField AnchorElement revealContentFilter;
-	// @UiField AnchorElement revealContentStore;
 
 	@UiField ButtonElement dnwBtn;
 	@UiField ButtonElement dnwBtnMobile;
 	@UiField DivElement sincePanel;
-	@UiField HTMLPanel appOutOfTop200Panel;
+	@UiField ErrorPanel errorPanel;
+	@UiField NoDataPanel noDataPanel;
+	@UiField OutOfRankPanel appOutOfTop200Panel;
 	@UiField DivElement appDetailsPanel;
 
 	private LoadingBar loadingBar;
@@ -324,18 +328,11 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		if (item.largeImage != null) {
 			displayingApp.largeImage = item.largeImage;
 		}
-		if (item.currency != null && item.price != null) {
-			displayingApp.currency = item.currency;
-			displayingApp.price = item.price;
-		}
 
 		title.setInnerText(displayingApp.name);
 		creatorName.setInnerText("By " + displayingApp.creatorName);
 		image.setUrl(displayingApp.mediumImage != null ? displayingApp.mediumImage : "");
 		imageTable.setUrl(displayingApp.smallImage != null ? displayingApp.smallImage : "");
-		if (displayingApp.currency != null && displayingApp.price != null) { // Restore the price if showing the previous visible App
-			price.setInnerText(FormattingHelper.asPriceString(displayingApp.currency, displayingApp.price.floatValue()) + iapDescription);
-		}
 		Store store = StoreController.get().getStore(displayingApp.source);
 		storeName
 				.setInnerText("View in " + (store == null || store.name == null || store.name.length() == 0 ? displayingApp.source.toUpperCase() : store.name));
@@ -348,6 +345,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			displayingApp.currency = rank.currency;
 			displayingApp.price = rank.price;
 			price.setInnerText(FormattingHelper.asPriceString(displayingApp.currency, displayingApp.price.floatValue()) + iapDescription);
+		} else {
+			price.setInnerSafeHtml(SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
 		}
 	}
 
@@ -367,6 +366,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		infoTotalRevenue.setInnerSafeHtml(SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
 		revenueTable.setRowCount(0, true);
 		loadingBar.hide(false);
+		chartContainer.setVisible(false);
+		errorPanel.setVisible(true);
 		graphLoadingIndicator.removeClassName(style.isLoadingSuccess());
 		graphContainer.removeClassName(style.isLoading());
 	}
@@ -738,7 +739,10 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				displayingApp.currency = null;
 				displayingApp.price = null;
 				price.setInnerSafeHtml(AnimationHelper.getLoaderInlineSafeHTML());
+				errorPanel.setVisible(false);
+				noDataPanel.setVisible(false);
 				appOutOfTop200Panel.setVisible(false);
+				chartContainer.setVisible(true);
 				graphContainer.addClassName(style.isLoading());
 				chartRevenue.setLoading(true);
 				chartDownloads.setLoading(true);
@@ -986,15 +990,24 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	public void getItemRanksSuccess(GetItemRanksRequest input, GetItemRanksResponse output) {
 		if (output != null && output.item != null && output.status == StatusType.StatusTypeSuccess) {
 			if (output.outOfLeaderboardDates != null && output.outOfLeaderboardDates.size() == FilterController.get().getDateRange().getDays()) {
+				chartContainer.setVisible(false);
 				appOutOfTop200Panel.setVisible(true);
 				setChartGraphsVisible(false);
 			}
 			if (output.ranks != null && output.ranks.size() > 0) {
 				setAppDetails(output.item);
-				setAppPriceFromRank(output.ranks.get(0));
+				Rank rankPrice = null;
+				for (Rank r : output.ranks) {
+					if (r.price != null && r.currency != null) {
+						rankPrice = r;
+						break;
+					}
+				}
+				setAppPriceFromRank(rankPrice);
 				drawData(output.ranks, output.outOfLeaderboardDates);
 			} else {
-				setError();
+				chartContainer.setVisible(false);
+				noDataPanel.setVisible(true);
 			}
 			TooltipHelper.updateHelperTooltip();
 			loadingBar.hide(true);
@@ -1027,7 +1040,14 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		if (output != null && output.item != null && output.status == StatusType.StatusTypeSuccess) {
 			if (output.ranks != null && output.ranks.size() > 0) {
 				setAppDetails(output.item);
-				setAppPriceFromRank(output.ranks.get(0));
+				Rank rankPrice = null;
+				for (Rank r : output.ranks) {
+					if (r.price != null && r.currency != null) {
+						rankPrice = r;
+						break;
+					}
+				}
+				setAppPriceFromRank(rankPrice);
 				drawData(output.ranks, null);
 			} else {
 				setError();
