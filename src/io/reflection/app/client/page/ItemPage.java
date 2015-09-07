@@ -52,6 +52,8 @@ import io.reflection.app.client.highcharts.ChartHelper.XDataType;
 import io.reflection.app.client.highcharts.ChartHelper.YAxisPosition;
 import io.reflection.app.client.highcharts.ChartHelper.YDataType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
+import io.reflection.app.client.part.ErrorPanel;
+import io.reflection.app.client.part.NoDataPanel;
 import io.reflection.app.client.part.OutOfRankPanel;
 import io.reflection.app.client.part.datatypes.AppRevenue;
 import io.reflection.app.client.part.datatypes.DateRange;
@@ -193,11 +195,12 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	private static final String SERIES_ID_DOWNLOAD_CUMULATIVE_SECONDARY = "downloadCumulativeSecondary";
 
 	@UiField AnchorElement revealContentFilter;
-	// @UiField AnchorElement revealContentStore;
 
 	@UiField ButtonElement dnwBtn;
 	@UiField ButtonElement dnwBtnMobile;
 	@UiField DivElement sincePanel;
+	@UiField ErrorPanel errorPanel;
+	@UiField NoDataPanel noDataPanel;
 	@UiField OutOfRankPanel appOutOfTop200Panel;
 	@UiField DivElement appDetailsPanel;
 
@@ -368,6 +371,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		infoTotalRevenue.setInnerSafeHtml(SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
 		revenueTable.setRowCount(0, true);
 		loadingBar.hide(false);
+		chartContainer.setVisible(false);
+		errorPanel.setVisible(true);
 		graphLoadingIndicator.removeClassName(style.isLoadingSuccess());
 		graphContainer.removeClassName(style.isLoading());
 	}
@@ -739,7 +744,10 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				displayingApp.currency = null;
 				displayingApp.price = null;
 				price.setInnerSafeHtml(AnimationHelper.getLoaderInlineSafeHTML());
+				errorPanel.setVisible(false);
+				noDataPanel.setVisible(false);
 				appOutOfTop200Panel.setVisible(false);
+				chartContainer.setVisible(true);
 				graphContainer.addClassName(style.isLoading());
 				chartRevenue.setLoading(true);
 				chartDownloads.setLoading(true);
@@ -987,6 +995,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	public void getItemRanksSuccess(GetItemRanksRequest input, GetItemRanksResponse output) {
 		if (output != null && output.item != null && output.status == StatusType.StatusTypeSuccess) {
 			if (output.outOfLeaderboardDates != null && output.outOfLeaderboardDates.size() == FilterController.get().getDateRange().getDays()) {
+				chartContainer.setVisible(false);
 				appOutOfTop200Panel.setVisible(true);
 				setChartGraphsVisible(false);
 			}

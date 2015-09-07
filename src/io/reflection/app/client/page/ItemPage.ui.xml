@@ -183,9 +183,11 @@
 			</g:HTMLPanel>
 			<div ui:field="graphLoadingIndicator" class="{STYLES_INSTANCE.reflectionMainStyle.graphLoadingIndicator}"></div>
 
+			<p:ErrorPanel ui:field="errorPanel" visible="false"></p:ErrorPanel>
+			<p:NoDataPanel ui:field="noDataPanel" visible="false"></p:NoDataPanel>
+			<p:OutOfRankPanel ui:field="appOutOfTop200Panel" visible="false"></p:OutOfRankPanel>
 		</div>
 
-		<p:OutOfRankPanel ui:field="appOutOfTop200Panel" visible="false"></p:OutOfRankPanel>
 
 		<section ui:field="tablePanel" class="{STYLES_INSTANCE.reflectionMainStyle.dataDisplayContainer}">
 			<header class="{STYLES_INSTANCE.reflectionMainStyle.dataDisplayHeader}">
