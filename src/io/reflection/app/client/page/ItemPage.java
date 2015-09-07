@@ -328,18 +328,11 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		if (item.largeImage != null) {
 			displayingApp.largeImage = item.largeImage;
 		}
-		if (item.currency != null && item.price != null) {
-			displayingApp.currency = item.currency;
-			displayingApp.price = item.price;
-		}
 
 		title.setInnerText(displayingApp.name);
 		creatorName.setInnerText("By " + displayingApp.creatorName);
 		image.setUrl(displayingApp.mediumImage != null ? displayingApp.mediumImage : "");
 		imageTable.setUrl(displayingApp.smallImage != null ? displayingApp.smallImage : "");
-		if (displayingApp.currency != null && displayingApp.price != null) { // Restore the price if showing the previous visible App
-			price.setInnerText(FormattingHelper.asPriceString(displayingApp.currency, displayingApp.price.floatValue()) + iapDescription);
-		}
 		Store store = StoreController.get().getStore(displayingApp.source);
 		storeName
 				.setInnerText("View in " + (store == null || store.name == null || store.name.length() == 0 ? displayingApp.source.toUpperCase() : store.name));
@@ -352,6 +345,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			displayingApp.currency = rank.currency;
 			displayingApp.price = rank.price;
 			price.setInnerText(FormattingHelper.asPriceString(displayingApp.currency, displayingApp.price.floatValue()) + iapDescription);
+		} else {
+			price.setInnerSafeHtml(SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
 		}
 	}
 
@@ -1001,10 +996,18 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			}
 			if (output.ranks != null && output.ranks.size() > 0) {
 				setAppDetails(output.item);
-				setAppPriceFromRank(output.ranks.get(0));
+				Rank rankPrice = null;
+				for (Rank r : output.ranks) {
+					if (r.price != null && r.currency != null) {
+						rankPrice = r;
+						break;
+					}
+				}
+				setAppPriceFromRank(rankPrice);
 				drawData(output.ranks, output.outOfLeaderboardDates);
 			} else {
-				setError();
+				chartContainer.setVisible(false);
+				noDataPanel.setVisible(true);
 			}
 			TooltipHelper.updateHelperTooltip();
 			loadingBar.hide(true);
@@ -1037,7 +1040,14 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		if (output != null && output.item != null && output.status == StatusType.StatusTypeSuccess) {
 			if (output.ranks != null && output.ranks.size() > 0) {
 				setAppDetails(output.item);
-				setAppPriceFromRank(output.ranks.get(0));
+				Rank rankPrice = null;
+				for (Rank r : output.ranks) {
+					if (r.price != null && r.currency != null) {
+						rankPrice = r;
+						break;
+					}
+				}
+				setAppPriceFromRank(rankPrice);
 				drawData(output.ranks, null);
 			} else {
 				setError();
