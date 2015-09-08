@@ -5,17 +5,14 @@
 	</ui:style>
 
 	<g:HTMLPanel>
-		<div class="container">
-			<h2>Upgrade Your Account</h2>
+		<h2>Upgrade Your Account</h2>
 
-			<p>We are currently not charging for the service and it is only open to users who have been invited to take part in our closed Beta</p>
-			<p>
-				To request an invite please
-				<a ui:field="requestInvite">click here</a>
-				.
-			</p>
-			<p>Thank you for your interest.</p>
-			<p>The Reflection team</p>
-		</div>
+		<p>We are currently not charging for the service and it is only open to users who have been invited to take part in our closed Beta</p>
+		<p>
+			To request an invite please
+			<a ui:field="requestInvite">click here</a>
+		</p>
+		<p>Thank you for your interest.</p>
+		<p>The Reflection team</p>
 	</g:HTMLPanel>
 </ui:UiBinder> 

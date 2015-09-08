@@ -57,6 +57,7 @@ public enum PageType {
 	CalibrationSummaryPageType("calibrationsummary", DataTypeHelper.PERMISSION_MANAGE_FEED_FETCHES_CODE),
 	CategoriesPageType("categories", DataTypeHelper.PERMISSION_MANAGE_CATEGORIES_CODE),
 	ChangeDetailsPageType("changedetails", true),
+	ContactPageType("contact", false),
 	DataAccountFetchesPageType("dataaccountfetches", DataTypeHelper.PERMISSION_MANAGE_DATA_ACCOUNT_FETCHES_CODE),
 	DataAccountsPageType("dataaccounts", DataTypeHelper.PERMISSION_MANAGE_DATA_ACCOUNTS_CODE),
 	EditEventSubscriptionPageType("editeventsubscription", DataTypeHelper.PERMISSION_MANAGE_EVENT_SUBSCRIPTIONS_CODE),
@@ -68,7 +69,7 @@ public enum PageType {
 	ForumThreadPageType("forumthread", false),
 	ForumTopicPageType("forumtopic", false),
 	HomePageType("home", false),
-	ItemPageType("item", true),
+	ItemPageType("item", false),
 	ItemsPageType("items", DataTypeHelper.PERMISSION_MANAGE_ITEMS_CODE),
 	LoginPageType("login", false),
 	LinkedAccountsPageType("linkedaccounts", true),
@@ -77,7 +78,7 @@ public enum PageType {
 	NotificationsPageType("notifications", true),
 	NotPermittedPageType("notpermitted", false),
 	PermissionsPageType("permissions", DataTypeHelper.PERMISSION_MANAGE_PERMISSIONS_CODE),
-	RanksPageType("ranks", DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE),
+	RanksPageType("ranks", false),
 	RegisterPageType("register", false),
 	ResetPasswordPageType("resetpassword", false),
 	RolesPageType("roles", DataTypeHelper.PERMISSION_MANAGE_ROLES_CODE),
@@ -85,7 +86,7 @@ public enum PageType {
 	SearchPageType("search", true),
 	SimpleModelRunPageType("simplemodelrun", DataTypeHelper.PERMISSION_MANAGE_SIMPLE_MODEL_RUN_CODE),
 	TermsPageType("terms", false),
-	UpgradePageType("upgrade", true),
+	// UpgradePageType("upgrade", false),
 	UsersPageType("users", DataTypeHelper.PERMISSION_MANAGE_USERS_CODE),
 	WidgetTestPage("test", false),
 
@@ -216,6 +217,9 @@ public enum PageType {
 		case CategoriesPageType:
 			page = new CategoriesPage();
 			break;
+		case ContactPageType:
+			page = new ContactPage();
+			break;
 		case RanksPageType:
 			page = new RanksPage();
 			break;
@@ -240,9 +244,9 @@ public enum PageType {
 		case ChangeDetailsPageType:
 			page = new ChangeDetailsPage();
 			break;
-		case UpgradePageType:
-			page = new UpgradePage();
-			break;
+		// case UpgradePageType:
+		// page = new UpgradePage();
+		// break;
 		case LinkedAccountsPageType:
 			page = new LinkedAccountsPage();
 			break;
