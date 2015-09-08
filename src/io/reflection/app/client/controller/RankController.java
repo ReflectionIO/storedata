@@ -56,7 +56,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 	private static RankController mOne = null;
 
-	private List<RanksGroup> rows = new ArrayList<RanksGroup>();
+	private List<RanksGroup> rankGroupList = new ArrayList<RanksGroup>();
 	private Pager pager;
 	private Request currentTopItems;
 	private Request currentItemRanks;
@@ -74,7 +74,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 	}
 
 	public List<RanksGroup> getList() {
-		return rows;
+		return rankGroupList;
 	}
 
 	public void fetchTopItems() {
@@ -136,20 +136,20 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 					int count = 0;
 
 					if (output.freeRanks != null) {
-						count = output.freeRanks.size(); // Number of item rows in the rank
+						count = output.freeRanks.size(); // Number of item rankGroupList in the rank
 					}
 
 					RanksGroup r;
 					for (int i = 0; i < count; i++) {
-						rows.add(r = new RanksGroup());
+						rankGroupList.add(r = new RanksGroup());
 						r.free = output.freeRanks.get(i);
 						r.paid = output.paidRanks.get(i);
 						r.grossing = output.grossingRanks.get(i);
 					}
 
-					updateRowData(0, rows); // Inform the displays of the new data. @params Start index, data values
+					updateRowData(0, rankGroupList); // Inform the displays of the new data. @params Start index, data values
 				}
-				updateRowCount(rows.size(), true);
+				updateRowCount(rankGroupList.size(), true);
 
 				DefaultEventBus.get().fireEventFromSource(new GetAllTopItemsSuccess(input, output), RankController.this);
 			}
@@ -437,19 +437,19 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 		int start = r.getStart();
 		int end = start + r.getLength();
 
-		if (rows == null || pager == null || pager.totalCount == null || (end > rows.size() && rows.size() != pager.totalCount.intValue())) {
+		if (rankGroupList == null || pager == null || pager.totalCount == null || (end > rankGroupList.size() && rankGroupList.size() != pager.totalCount.intValue())) {
 			fetchTopItems();
 		} else {
-			updateRowData(start, rows.subList(start, Math.min(end, rows.size())));
+			updateRowData(start, rankGroupList.subList(start, Math.min(end, rankGroupList.size())));
 		}
 	}
 
 	public void reset() {
 
 		pager = null;
-		rows.clear();
+		rankGroupList.clear();
 
-		updateRowData(0, rows);
+		updateRowData(0, rankGroupList);
 		updateRowCount(0, false);
 
 	}
@@ -470,7 +470,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 	 * @param sortAscending
 	 */
 	public void sortByDownloads(final String selectedTab, final boolean sortAscending) {
-		Collections.sort(rows, new Comparator<RanksGroup>() {
+		Collections.sort(rankGroupList, new Comparator<RanksGroup>() {
 
 			@Override
 			public int compare(RanksGroup o1, RanksGroup o2) {
@@ -505,7 +505,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 	 * @param sortAscending
 	 */
 	public void sortByRevenue(final String selectedTab, final boolean sortAscending) {
-		Collections.sort(rows, new Comparator<RanksGroup>() {
+		Collections.sort(rankGroupList, new Comparator<RanksGroup>() {
 
 			@Override
 			public int compare(RanksGroup o1, RanksGroup o2) {
@@ -540,7 +540,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 	 * @param b
 	 */
 	public void sortByRank(final String selectedTab, final boolean sortAscending) {
-		Collections.sort(rows, new Comparator<RanksGroup>() {
+		Collections.sort(rankGroupList, new Comparator<RanksGroup>() {
 
 			@Override
 			public int compare(RanksGroup o1, RanksGroup o2) {
