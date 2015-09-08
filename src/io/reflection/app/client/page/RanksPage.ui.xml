@@ -1,10 +1,7 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:cv="urn:import:com.google.gwt.user.cellview.client"
-	xmlns:c="urn:import:io.reflection.app.client.component">
-	<ui:import field="io.reflection.app.client.page.PageType.UpgradePageType" />
-
+	xmlns:c="urn:import:io.reflection.app.client.component" xmlns:p="urn:import:io.reflection.app.client.part">
 	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
-
 	<ui:style gss="true">
 	.badge {
 		min-width: 10px;
@@ -121,23 +118,23 @@
 			<form class="{STYLES_INSTANCE.reflectionMainStyle.formsMidTheme}">
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.filterGroup}">
 					<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.calendarContainer} {STYLES_INSTANCE.reflectionMainStyle.singleDateInput}">
-		
+
 						<div ui:field="dateSelectContainer" class="{STYLES_INSTANCE.reflectionMainStyle.dateSelectContainer}">
 							<div class="{STYLES_INSTANCE.reflectionMainStyle.formField} {STYLES_INSTANCE.reflectionMainStyle.formFieldDateSelect}">
 								<c:FormDateBox ui:field="dateBox"></c:FormDateBox>
 								<span></span>
 							</div>
 						</div>
-		
+
 					</g:HTMLPanel>
-		
+
 					<c:Selector ui:field="countrySelector" labelText="Country" overlay="true" dropdownTitle="Select a country" tooltip="Select a country" />
-		
+
 					<c:Selector ui:field="appStoreSelector" labelText="App Store" overlay="true" dropdownTitle="Select a store" tooltip="View data for iPhone or iPad" />
-		
+
 					<c:Selector ui:field="categorySelector" alignCenter="" labelText="Category" dropdownTitle="Select a category" tooltip="Select a category"
 						overlay="true" />
-		
+
 					<g:HTMLPanel ui:field="dailyDataContainer" styleName="{STYLES_INSTANCE.reflectionMainStyle.filterToggle}">
 						<c:ToggleRadioButton ui:field="toggleDownloads" value="true" labelClassName="{STYLES_INSTANCE.reflectionMainStyle.toggleDownloads}"
 							svgPath="M32,16.5c0,3.6-2.7,6.5-6.7,6.5v0h-6v-2h6.5
@@ -167,6 +164,8 @@
 								<cv:CellTable ui:field="leaderboardTable" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}  {STYLES_INSTANCE.reflectionMainStyle.responsive}" />
 							</g:HTMLPanel>
 						</g:HTMLPanel>
+						<p:ErrorPanel ui:field="errorPanel" visible="false"></p:ErrorPanel>
+						<p:NoDataPanel ui:field="noDataPanel" visible="false"></p:NoDataPanel>
 					</div>
 				</article>
 			</li>
@@ -175,9 +174,9 @@
 		<g:Button ui:field="viewAllBtn" visible="false" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall}">
 			<span ui:field="viewAllSpan">View all Apps</span>
 		</g:Button>
-		<g:InlineHyperlink ui:field="redirect" visible="false" targetHistoryToken="{UpgradePageType.asTargetHistoryToken}" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall}">
-			<span>View all Apps</span>
-		</g:InlineHyperlink>
+		<!-- <g:InlineHyperlink ui:field="redirect" visible="false" targetHistoryToken="{UpgradePageType.asTargetHistoryToken}" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall}"> -->
+		<!-- <span>View all Apps</span> -->
+		<!-- </g:InlineHyperlink> -->
 
 	</g:HTMLPanel>
 </ui:UiBinder> 

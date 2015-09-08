@@ -443,13 +443,10 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 		Item lookupItem = null;
 
 		if (item != null && item.internalId != null) {
-			if (ItemController.get().getUserItem(item.internalId) != null) {
-				lookupItem = ItemController.get().getUserItem(item.internalId);
-			}
-
-			if (lookupItem == null) {
+			if ((lookupItem = ItemController.get().getUserItem(item.internalId)) == null) {
 				fetchLinkedAccountItem(item.internalId);
 			}
+
 		}
 
 		return lookupItem;

@@ -12,12 +12,10 @@ import io.reflection.app.client.component.Selector;
 import io.reflection.app.client.controller.CountryController;
 import io.reflection.app.client.controller.ForumController;
 import io.reflection.app.client.controller.LinkedAccountController;
-import io.reflection.app.client.controller.StoreController;
 import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.Forum;
-import io.reflection.app.datatypes.shared.Store;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -80,14 +78,17 @@ public class FilterHelper {
 	 */
 	public static void addStores(Selector list, boolean isAdmin) {
 		list.clear();
-		// if (isAdmin) {
-		List<Store> stores = StoreController.get().getStores();
+		list.addItem("iPad Store", "ipa");
+		list.addItem("iPhone Store", "iph");
 
-		if (stores != null) {
-			for (Store store : stores) {
-				list.addItem(store.name, store.a3Code);
-			}
-		}
+		// if (isAdmin) {
+		// List<Store> stores = StoreController.get().getStores();
+		//
+		// if (stores != null) {
+		// for (Store store : stores) {
+		// list.addItem(store.name, store.a3Code);
+		// }
+		// }
 		// } else {
 		// list.addItem(DataTypeHelper.STORE_IPHONE_NAME, DataTypeHelper.STORE_IPHONE_A3_CODE);
 		// list.addItem(DataTypeHelper.STORE_IPAD_NAME, DataTypeHelper.STORE_IPAD_A3_CODE);
@@ -117,14 +118,10 @@ public class FilterHelper {
 				}
 			}
 		} else {
-			Country france = CountryController.get().getCountry("fr");
-			Country germany = CountryController.get().getCountry("de");
-			Country italy = CountryController.get().getCountry("it");
-			Country unitedKingdom = CountryController.get().getCountry("gb");
-			list.addItem(france.name, france.a2Code);
-			list.addItem(germany.name, germany.a2Code);
-			list.addItem(italy.name, italy.a2Code);
-			list.addItem(unitedKingdom.name, unitedKingdom.a2Code);
+			list.addItem("France", "fr");
+			list.addItem("Germany", "de");
+			list.addItem("Italy", "it");
+			list.addItem("United Kingdom", "gb");
 		}
 	}
 

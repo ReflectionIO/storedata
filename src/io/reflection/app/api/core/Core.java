@@ -361,32 +361,33 @@ public final class Core extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
-			boolean loggedIn = false;
+			boolean isLoggedIn = false;
+			boolean isAdmin = false;
 			boolean canSeeFullList = false;
 
 			if (input.session != null) {
 				output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-				if (input.session != null) {
-					loggedIn = true;
+				isLoggedIn = true;
 
-					List<Role> roles = UserServiceProvider.provide().getRoles(input.session.user);
+				isAdmin = UserServiceProvider.provide().hasRole(input.session.user, DataTypeHelper.adminRole());
 
-					List<Permission> permissions;
+				List<Role> roles = UserServiceProvider.provide().getRoles(input.session.user);
 
-					for (Role role : roles) {
-						permissions = RoleServiceProvider.provide().getPermissions(role);
+				List<Permission> permissions;
 
-						for (Permission permission : permissions) {
-							if (DataTypeHelper.PERMISSION_FULL_RANK_VIEW_CODE.equals(permission.code)) {
-								canSeeFullList = true;
-								break;
-							}
-						}
+				for (Role role : roles) {
+					permissions = RoleServiceProvider.provide().getPermissions(role);
 
-						if (canSeeFullList) {
+					for (Permission permission : permissions) {
+						if (DataTypeHelper.PERMISSION_FULL_RANK_VIEW_CODE.equals(permission.code)) {
+							canSeeFullList = true;
 							break;
 						}
+					}
+
+					if (canSeeFullList) {
+						break;
 					}
 				}
 			}
@@ -397,86 +398,88 @@ public final class Core extends ActionHandler {
 				input.pager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
 			}
 
-			boolean skip = false;
-			int maxLimit = !loggedIn ? SESSIONLESS_MAX_ITEMS : (!canSeeFullList ? PERMISSIONLESS_MAX_ITEMS : -1);
+			// boolean skip = false;
+			// int maxLimit = !isLoggedIn ? SESSIONLESS_MAX_ITEMS : (!canSeeFullList ? PERMISSIONLESS_MAX_ITEMS : -1);
 
-			if (!loggedIn || !canSeeFullList) {
-				if (input.pager.start.longValue() > maxLimit) {
-					skip = true;
-				} else if (input.pager.count.longValue() + input.pager.start.longValue() > maxLimit) {
-					input.pager.count = Long.valueOf(maxLimit - input.pager.start.longValue());
+			// if (!loggedIn || !canSeeFullList) {
+			// if (input.pager.start.longValue() > maxLimit) {
+			// skip = true;
+			// } else if (input.pager.count.longValue() + input.pager.start.longValue() > maxLimit) {
+			// input.pager.count = Long.valueOf(maxLimit - input.pager.start.longValue());
+			// }
+			// }
+			//
+			// if (!skip) {
+
+			if (!isAdmin) {
+				if (!(Arrays.asList("fr", "de", "gb", "it").contains(input.country.a2Code))) {
+					input.country = new Country();
+					input.country.a2Code = "gb";
+				}
+				input.store = new Store();
+				input.store.a3Code = DataTypeHelper.IOS_STORE_A3;
+				input.category = new Category();
+				input.category.id = 15L;
+			}
+			input.country = ValidationHelper.validateCountry(input.country, "input");
+
+			if (input.listType == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("String: input.listType"));
+
+			if (input.on == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("Date: input.on"));
+
+			input.store = ValidationHelper.validateStore(input.store, "input");
+
+			if (input.store == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("Store: input.store"));
+
+			if (input.category == null) {
+				input.category = CategoryServiceProvider.provide().getAllCategory(input.store);
+			} else {
+				input.category = ValidationHelper.validateCategory(input.category, "input.category");
+
+				if (!input.store.a3Code.equals(input.category.store))
+					throw new InputValidationException(ApiError.CategoryStoreMismatch.getCode(), ApiError.CategoryStoreMismatch.getMessage("input.category"));
+			}
+
+			Set<String> itemIds = new HashSet<String>();
+			List<String> listTypes = ApiHelper.getAllListTypes(input.store, input.listType);
+			Collector collector = CollectorFactory.getCollectorForStore(input.store.a3Code);
+
+			List<Rank> ranks;
+			for (String listType : listTypes) {
+				// get all the ranks for the list type (we are using an infinite pager with no sorting to allow us to generate a deletion key during
+				// prediction)
+				ranks = RankServiceProvider.provide().getRanks(input.country, input.category, listType, input.on);
+
+				if (!isLoggedIn && ranks.size() >= 10) {
+					ranks = ranks.subList(0, 10);
+				}
+
+				for (Rank rank : ranks) {
+					itemIds.add(rank.itemId);
+				}
+
+				if (collector.isFree(listType)) {
+					output.freeRanks = ranks;
+				} else if (collector.isPaid(listType)) {
+					output.paidRanks = ranks;
+				} else if (collector.isGrossing(listType)) {
+					output.grossingRanks = ranks;
 				}
 			}
 
-			if (!skip) {
-				boolean isAdmin = UserServiceProvider.provide().hasRole(input.session.user, DataTypeHelper.adminRole());
+			output.items = ItemServiceProvider.provide().getInternalIdItemBatch(itemIds);
 
-				if (!isAdmin) {
-					if (!(Arrays.asList("fr", "de", "gb", "it").contains(input.country.a2Code))) {
-						input.country = new Country();
-						input.country.a2Code = "gb";
-					}
-					input.store = new Store();
-					input.store.a3Code = DataTypeHelper.IOS_STORE_A3;
-					input.category = new Category();
-					input.category.id = 15L;
-				}
-				input.country = ValidationHelper.validateCountry(input.country, "input");
+			output.pager = input.pager;
 
-				if (input.listType == null)
-					throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("String: input.listType"));
-
-				if (input.on == null)
-					throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("Date: input.on"));
-
-				input.store = ValidationHelper.validateStore(input.store, "input");
-
-				if (input.store == null)
-					throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("Store: input.store"));
-
-				if (input.category == null) {
-					input.category = CategoryServiceProvider.provide().getAllCategory(input.store);
-				} else {
-					input.category = ValidationHelper.validateCategory(input.category, "input.category");
-
-					if (!input.store.a3Code.equals(input.category.store))
-						throw new InputValidationException(ApiError.CategoryStoreMismatch.getCode(),
-								ApiError.CategoryStoreMismatch.getMessage("input.category"));
-				}
-
-				Set<String> itemIds = new HashSet<String>();
-				List<String> listTypes = ApiHelper.getAllListTypes(input.store, input.listType);
-				Collector collector = CollectorFactory.getCollectorForStore(input.store.a3Code);
-
-				List<Rank> ranks;
-				for (String listType : listTypes) {
-					// get all the ranks for the list type (we are using an infinite pager with no sorting to allow us to generate a deletion key during
-					// prediction)
-					ranks = RankServiceProvider.provide().getRanks(input.country, input.category, listType, input.on);
-
-					for (Rank rank : ranks) {
-						itemIds.add(rank.itemId);
-					}
-
-					if (collector.isFree(listType)) {
-						output.freeRanks = ranks;
-					} else if (collector.isPaid(listType)) {
-						output.paidRanks = ranks;
-					} else if (collector.isGrossing(listType)) {
-						output.grossingRanks = ranks;
-					}
-				}
-
-				output.items = ItemServiceProvider.provide().getInternalIdItemBatch(itemIds);
-
-				output.pager = input.pager;
-
-				if (input.pager.totalCount == null && input.pager.boundless != Boolean.TRUE) {
-					input.pager.totalCount = Long.valueOf(output.freeRanks.size());
-				}
-
-				updatePager(output.pager, output.freeRanks, input.pager.totalCount);
+			if (input.pager.totalCount == null && input.pager.boundless != Boolean.TRUE) {
+				input.pager.totalCount = Long.valueOf(output.freeRanks.size());
 			}
+
+			updatePager(output.pager, output.freeRanks, input.pager.totalCount);
+			// }
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -495,6 +498,15 @@ public final class Core extends ActionHandler {
 				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("GetItemRanksRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			// boolean isLoggedIn = false;
+			boolean isAdmin = false;
+
+			if (input.session != null) {
+				output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+				// isLoggedIn = true;
+				isAdmin = UserServiceProvider.provide().hasRole(input.session.user, DataTypeHelper.adminRole());
+			}
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
@@ -560,9 +572,18 @@ public final class Core extends ActionHandler {
 			// }
 			// }
 
-			if (output.ranks == null) {
-				output.ranks = RankServiceProvider.provide().getItemRanks(input.country, input.category, input.listType, input.item, input.start, input.end,
-						input.pager);
+			if (input.pager.start.intValue() == 0) {
+				output.item = input.item;
+			}
+
+			output.ranks = RankServiceProvider.provide().getItemRanks(input.country, input.category, input.listType, input.item, input.start, input.end,
+					input.pager);
+
+			if (!isAdmin) {
+				for (Rank r : output.ranks) {
+					r.downloads = null;
+					r.revenue = null;
+				}
 			}
 
 			// // Identify out of leaderboard dates
@@ -587,10 +608,6 @@ public final class Core extends ActionHandler {
 			// output.outOfLeaderboardDates = RankServiceProvider.provide().getOutOfLeaderboardDates(missingDates, input.country, input.category,
 			// input.listType);
 			// }
-
-			if (input.pager.start.intValue() == 0) {
-				output.item = input.item;
-			}
 
 			output.pager = input.pager;
 			updatePager(output.pager, output.ranks);
@@ -1688,7 +1705,7 @@ public final class Core extends ActionHandler {
 				Rank emptyRank = new Rank();
 				emptyRank.date = new Date(progressiveDate.getMillis());
 				emptyRank.downloads = new Integer(0);
-				emptyRank.revenue = new Float(0);				
+				emptyRank.revenue = new Float(0);
 				emptyRange.add(emptyRank);
 				progressiveDate = progressiveDate.plusDays(1);
 			}
@@ -1726,22 +1743,25 @@ public final class Core extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
-			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+			if (input.session != null) {
 
-			input.item = ValidationHelper.validateItem(input.item, "input.item");
+				output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			DataAccount linkedAccount = SaleServiceProvider.provide().getDataAccount(input.item.internalId);
+				input.item = ValidationHelper.validateItem(input.item, "input.item");
 
-			if (linkedAccount != null) {
-				boolean hasLinkedAccount = UserServiceProvider.provide().hasDataAccount(input.session.user, linkedAccount);
+				DataAccount linkedAccount = SaleServiceProvider.provide().getDataAccount(input.item.internalId);
 
-				if (hasLinkedAccount) {
-					output.item = input.item;
-					output.dataSource = linkedAccount.source;
-					output.linkedAccount = linkedAccount;
+				if (linkedAccount != null) {
+					boolean hasLinkedAccount = UserServiceProvider.provide().hasDataAccount(input.session.user, linkedAccount);
 
-					output.linkedAccount.source = new DataSource();
-					output.linkedAccount.source.id = output.dataSource.id;
+					if (hasLinkedAccount) {
+						output.item = input.item;
+						output.dataSource = linkedAccount.source;
+						output.linkedAccount = linkedAccount;
+
+						output.linkedAccount.source = new DataSource();
+						output.linkedAccount.source.id = output.dataSource.id;
+					}
 				}
 			}
 

@@ -144,19 +144,19 @@ public class RankService implements IRankService {
 
 		String updateQuery = "UPDATE rank2 set position=?, itemid=?, price=?, currency=?, revenue_universal=?, downloads_universal=? where id=?";
 
-		//		final String updateRankQuery = String
-		//				.format("UPDATE `rank` SET `position`=%d,`grossingposition`=%d,`itemid`='%s',`type`='%s',`country`='%s',`date`=FROM_UNIXTIME(%d),`source`='%s',`price`=%d,`currency`='%s',`categoryid`=%d,`code2`=%d,`revenue`=%s,`downloads`=%s WHERE `id`=%d;",
-		//						rank.position.longValue(), rank.grossingPosition.longValue(), addslashes(rank.itemId), addslashes(rank.type), addslashes(rank.country),
-		//						rank.date.getTime() / 1000, addslashes(rank.source), (int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency),
-		//						rank.category.id.longValue(), rank.code.longValue(),
-		//						rank.revenue == null || rank.revenue.isInfinite() ? "NULL" : Integer.toString((int) (rank.revenue.floatValue() * 100.0f)),
-		//						rank.downloads == null || rank.downloads.intValue() == Integer.MAX_VALUE ? "NULL" : rank.downloads.intValue(), rank.id.longValue());
+		// final String updateRankQuery = String
+		// .format("UPDATE `rank` SET `position`=%d,`grossingposition`=%d,`itemid`='%s',`type`='%s',`country`='%s',`date`=FROM_UNIXTIME(%d),`source`='%s',`price`=%d,`currency`='%s',`categoryid`=%d,`code2`=%d,`revenue`=%s,`downloads`=%s WHERE `id`=%d;",
+		// rank.position.longValue(), rank.grossingPosition.longValue(), addslashes(rank.itemId), addslashes(rank.type), addslashes(rank.country),
+		// rank.date.getTime() / 1000, addslashes(rank.source), (int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency),
+		// rank.category.id.longValue(), rank.code.longValue(),
+		// rank.revenue == null || rank.revenue.isInfinite() ? "NULL" : Integer.toString((int) (rank.revenue.floatValue() * 100.0f)),
+		// rank.downloads == null || rank.downloads.intValue() == Integer.MAX_VALUE ? "NULL" : rank.downloads.intValue(), rank.id.longValue());
 
 		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
 		try (PreparedStatement pstat = rankConnection.getRealConnection().prepareStatement(updateQuery, Statement.NO_GENERATED_KEYS)) {
 			rankConnection.connect();
-			//			rankConnection.executeQuery(updateRankQuery);
+			// rankConnection.executeQuery(updateRankQuery);
 
 			if (rankConnection.getAffectedRowCount() > 0) {
 				updatedRank = getRank(rank.id);
@@ -203,13 +203,13 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.rank.IRankService#getItemRanks(io.reflection.app.datatypes.Country, java.lang.String, io.reflection.app.datatypes.Item,
 	 * java.util.Date, java.util.Date, io.reflection.app.api.datatypes.Pager)
 	 */
 	@Override
 	public List<Rank> getItemRanks(Country country, Category category, String listType, Item item, Date after, Date before, Pager pager)
-			throws DataAccessException {
+			throws DataAccessException, SQLException {
 		final List<Rank> ranks = new ArrayList<Rank>();
 
 		final String selectQuery = "SELECT r.*, rf.group_fetch_code, rf.fetch_date, rf.country, rf.category, rf.type, rf.platform "
@@ -255,6 +255,7 @@ public class RankService implements IRankService {
 			}
 		} catch (SQLException e) {
 			LOG.log(Level.SEVERE, "Exception occured while trying to gather code ranks", e);
+			throw e;
 		} finally {
 			if (rankConnection != null) {
 				rankConnection.disconnect();
@@ -266,16 +267,16 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.rank.IRankService#getItemHasGrossingRank(io.reflection.app.datatypes.Item)
 	 */
 	@Override
 	public Boolean getItemHasGrossingRank(Item item) throws DataAccessException {
 		Boolean hasGrossingRank = Boolean.FALSE;
 
-		final String getItemHasGrossingRankQuery = String.format(
-				"select rank_fetch_id from rank_fetch where rank_fetch_id in ( select rank_fetch_id from rank2 where itemid='%s' ) and type='GROSSING' limit 1",
-				addslashes(item.internalId));
+		final String getItemHasGrossingRankQuery = String
+				.format("select rank_fetch_id from rank_fetch where rank_fetch_id in ( select rank_fetch_id from rank2 where itemid='%s' ) and type='GROSSING' limit 1",
+						addslashes(item.internalId));
 
 		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
@@ -297,7 +298,7 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.rank.IRankService#addRanksBatch(java.util.Collection)
 	 */
 	@Override
@@ -377,7 +378,7 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.rank.IRankService#updateRanksBatch(java.util.Collection)
 	 */
 	@Override
@@ -442,7 +443,7 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.rank.IRankService#getGatherCodeRanks(io.reflection.app.shared.datatypes.Country, io.reflection.app.shared.datatypes.Store,
 	 * io.reflection.app.shared.datatypes.Category java.lang.String, java.lang.Long, io.reflection.app.api.shared.datatypes.Pager, java.lang.Boolean)
 	 */
@@ -453,7 +454,7 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.rank.IRankService#getGatherCodeRanks(io.reflection.app.shared.datatypes.Country, io.reflection.app.shared.datatypes.Store,
 	 * io.reflection.app.shared.datatypes.Category java.lang.String, java.lang.Long, io.reflection.app.api.shared.datatypes.Pager, java.lang.Boolean)
 	 */
@@ -533,7 +534,7 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.rank.IRankService#getRankIds(io.reflection.app.datatypes.shared.Country, io.reflection.app.datatypes.shared.Store,
 	 * io.reflection.app.datatypes.shared.Category, java.util.Date, java.util.Date)
 	 */
@@ -541,8 +542,7 @@ public class RankService implements IRankService {
 	public List<Long> getRankIds(Country country, Store store, Category category, Date start, Date end) throws DataAccessException {
 		final List<Long> rankIds = new ArrayList<Long>();
 
-		final String selectQuery = "SELECT r.id "
-				+ " FROM rank_fetch rf inner join rank2 r on (r.rank_fetch_id = rf.rank_fetch_id) WHERE "
+		final String selectQuery = "SELECT r.id FROM rank_fetch rf inner join rank2 r on (r.rank_fetch_id = rf.rank_fetch_id) WHERE "
 				+ " rf.country=? AND rf.category=? AND rf.fetch_date BETWEEN ? AND ? and rf.fetch_time > '21:00'";
 
 		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
@@ -574,15 +574,14 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.rank.IRankService#getRankIds(io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
 	public List<Long> getRankIds(Pager pager) throws DataAccessException {
 		final List<Long> rankIds = new ArrayList<Long>();
 
-		final String selectQuery = "SELECT r.id "
-				+ " FROM rank_fetch rf inner join rank2 r on (r.rank_fetch_id = rf.rank_fetch_id) WHERE "
+		final String selectQuery = "SELECT r.id FROM rank_fetch rf inner join rank2 r on (r.rank_fetch_id = rf.rank_fetch_id) WHERE "
 				+ " rf.fetch_time > '21:00' limit ?, ?";
 
 		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
@@ -612,7 +611,7 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.rank.IRankService#getSaleSummaryAndRankForItemAndFormType(java.lang.String, io.reflection.app.datatypes.shared.Country,
 	 * io.reflection.app.datatypes.shared.FormType, java.util.Date, java.util.Date)
 	 */
@@ -680,7 +679,7 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.rank.IRankService#getSaleSummaryAndRankForDataAccountAndFormType(java.lang.Long,
 	 * io.reflection.app.datatypes.shared.Country, io.reflection.app.datatypes.shared.FormType, java.util.Date, java.util.Date,
 	 * io.reflection.app.api.shared.datatypes.Pager)
@@ -833,7 +832,7 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.rank.IRankService#getOutOfLeaderboardDates(java.util.List, io.reflection.app.datatypes.shared.Country,
 	 * io.reflection.app.datatypes.shared.Category, java.lang.String)
 	 */

@@ -98,7 +98,6 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 	public PanelLeftMenu() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		leaderboardItem.removeFromParent();
 		myAppsItem.removeFromParent();
 		adminItem.removeFromParent();
 		createItemList();
@@ -110,13 +109,9 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 		if (user != null) {
 			if (SessionController.get().isLoggedInUserAdmin() || SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE)) {
 				if (!itemList.isOrHasChild(myAppsItem)) {
-					itemList.insertFirst(myAppsItem);
-				}
-				if (!itemList.isOrHasChild(leaderboardItem)) {
-					itemList.insertFirst(leaderboardItem);
+					itemList.insertAfter(myAppsItem, leaderboardItem);
 				}
 			} else {
-				leaderboardItem.removeFromParent();
 				myAppsItem.removeFromParent();
 			}
 			if (SessionController.get().isLoggedInUserAdmin()) {
@@ -356,7 +351,6 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 	 */
 	@Override
 	public void userLoggedOut() {
-		leaderboardItem.removeFromParent();
 		myAppsItem.removeFromParent();
 		adminItem.removeFromParent();
 	}
