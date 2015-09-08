@@ -212,7 +212,7 @@ input::-ms-clear {
 .panel-left-open .l-main {
   width: 100%;
   overflow: visible;
-  width: calc(100% - 220px);
+  width: calc(100% - 200px);
   -webkit-transition: width 0.15s ease-out;
           transition: width 0.15s ease-out;
 }
@@ -498,8 +498,8 @@ input::-ms-clear {
 
 /* Global */
 /* line 1, sass/ui/_icons.scss */
-.ref-icon-before, .page-logged-in-landing .accordion-switch, .page-logged-in-landing .accordion .list-item-complete, .ref-icon-after, .home-welcome__text .home-welcome__call-to-action, .read-only-date span, .panel-link .panel-link__link > span span, .accordion-switch, .form-field .form-field-help,
-.search-field-no-label .form-field-help, .form-field.form-field--date-select span, .main-navigation > ul ul li.has-child, .whats-this-tooltip-icon,
+.ref-icon-before, .page-logged-in-landing .accordion-switch, .page-logged-in-landing .accordion .list-item-complete, .main-navigation > ul ul li.has-child, .ref-icon-after, .home-welcome__text .home-welcome__call-to-action, .read-only-date span, .panel-link .panel-link__link > span span, .accordion-switch, .form-field .form-field-help,
+.search-field-no-label .form-field-help, .form-field.form-field--date-select span, .whats-this-tooltip-icon,
 .whats-this-tooltip-icon-static, .date-select-to-indicator, .datePickerPreviousButton,
 .datePickerNextButton {
   padding: 0;
@@ -509,14 +509,14 @@ input::-ms-clear {
 
 /* Reflection Icons */
 /* line 10, sass/ui/_icons.scss */
-.ref-icon-before:before, .page-logged-in-landing .accordion-switch:before, .page-logged-in-landing .accordion .list-item-complete:before {
+.ref-icon-before:before, .page-logged-in-landing .accordion-switch:before, .page-logged-in-landing .accordion .list-item-complete:before, .main-navigation > ul ul li.has-child:before {
   font-size: 22px;
   position: relative;
 }
 
 /* line 18, sass/ui/_icons.scss */
 .ref-icon-after:after, .home-welcome__text .home-welcome__call-to-action:after, .read-only-date span:after, .panel-link .panel-link__link > span span:after, .accordion-switch:after, .form-field .form-field-help:after,
-.search-field-no-label .form-field-help:after, .form-field.form-field--date-select span:after, .main-navigation > ul ul li.has-child:after, .whats-this-tooltip-icon:after,
+.search-field-no-label .form-field-help:after, .form-field.form-field--date-select span:after, .whats-this-tooltip-icon:after,
 .whats-this-tooltip-icon-static:after {
   font-size: 22px;
   position: relative;
@@ -563,8 +563,8 @@ input::-ms-clear {
 }
 /* Typography placeholders */
 /* line 22, sass/ui/_typography.scss */
-.ref-icon-before:before, .page-logged-in-landing .accordion-switch:before, .page-logged-in-landing .accordion .list-item-complete:before, .ref-icon-after:after, .home-welcome__text .home-welcome__call-to-action:after, .read-only-date span:after, .panel-link .panel-link__link > span span:after, .accordion-switch:after, .form-field .form-field-help:after,
-.search-field-no-label .form-field-help:after, .form-field.form-field--date-select span:after, .main-navigation > ul ul li.has-child:after, .whats-this-tooltip-icon:after,
+.ref-icon-before:before, .page-logged-in-landing .accordion-switch:before, .page-logged-in-landing .accordion .list-item-complete:before, .main-navigation > ul ul li.has-child:before, .ref-icon-after:after, .home-welcome__text .home-welcome__call-to-action:after, .read-only-date span:after, .panel-link .panel-link__link > span span:after, .accordion-switch:after, .form-field .form-field-help:after,
+.search-field-no-label .form-field-help:after, .form-field.form-field--date-select span:after, .whats-this-tooltip-icon:after,
 .whats-this-tooltip-icon-static:after, .reflection-select.reflection-select--filter .close-popup,
 .reflection-select.reflection-select--filter .remove-form-field,
 .form-field--country-select .close-popup,
@@ -752,65 +752,70 @@ ol.content-list--minor li:before {
 }
 
 /* line 140, sass/ui/_typography.scss */
-.ref-icon-after--dot:after, .main-navigation > ul ul li.has-child:after {
+.ref-icon-after--dot:after {
   content: "r";
 }
 
 /* line 143, sass/ui/_typography.scss */
+.ref-icon-before--dot:before, .main-navigation > ul ul li.has-child:before {
+  content: "r";
+}
+
+/* line 146, sass/ui/_typography.scss */
 .ref-icon-before--check:before {
   content: "t";
 }
 
-/* line 146, sass/ui/_typography.scss */
+/* line 149, sass/ui/_typography.scss */
 .ref-icon-after--check:after {
   content: "t";
 }
 
-/* line 149, sass/ui/_typography.scss */
+/* line 152, sass/ui/_typography.scss */
 .ref-icon-after--calendar:after {
   content: "u";
 }
 
-/* line 152, sass/ui/_typography.scss */
+/* line 155, sass/ui/_typography.scss */
 .ref-icon-after--question:after, .form-field .form-field-help:after,
 .search-field-no-label .form-field-help:after, .whats-this-tooltip-icon:after,
 .whats-this-tooltip-icon-static:after {
   content: "F";
 }
 
-/* line 155, sass/ui/_typography.scss */
+/* line 158, sass/ui/_typography.scss */
 .ref-icon-after--close:after {
   content: "K";
 }
 
-/* line 158, sass/ui/_typography.scss */
+/* line 161, sass/ui/_typography.scss */
 .ref-icon-before--location:before {
   content: "Q";
 }
 
-/* line 161, sass/ui/_typography.scss */
+/* line 164, sass/ui/_typography.scss */
 .ref-icon-before--mail:before {
   content: "P";
 }
 
 /* Base typography */
-/* line 168, sass/ui/_typography.scss */
+/* line 171, sass/ui/_typography.scss */
 h1:last-child, h2:last-child, h3:last-child, h4:last-child, h5:last-child, h6:last-child, p:last-child, li:last-child, a:last-child, blockquote:last-child, time:last-child, span:last-child, cite:last-child {
   margin-bottom: 0;
 }
 
-/* line 172, sass/ui/_typography.scss */
+/* line 175, sass/ui/_typography.scss */
 h1, h2, h3, h4, h5, h6, .heading-style, h1, .heading-style--heading-one, h2, .heading-style--heading-two, h3, .heading-style--heading-three, h4, .heading-style--heading-four, h5, .heading-style--heading-five, h6, .heading-style--heading-six {
   overflow: visible;
   line-height: 1;
   color: #29292c;
 }
-/* line 177, sass/ui/_typography.scss */
+/* line 180, sass/ui/_typography.scss */
 h1:first-child, h2:first-child, h3:first-child, h4:first-child, h5:first-child, h6:first-child, .heading-style:first-child, h1:first-child, .heading-style--heading-one:first-child, h2:first-child, .heading-style--heading-two:first-child, h3:first-child, .heading-style--heading-three:first-child, h4:first-child, .heading-style--heading-four:first-child, h5:first-child, .heading-style--heading-five:first-child, h6:first-child, .heading-style--heading-six:first-child {
   margin-top: 0;
 }
 
-/* line 181, sass/ui/_typography.scss */
+/* line 184, sass/ui/_typography.scss */
 h1 + h2, h1 + h3, h1 + h4, h1 + h5, h1 + h6,
 h2 + h3, h2 + h4, h2 + h5, h2 + h6,
 h3 + h4, h3 + h5, h3 + h6,
@@ -864,79 +869,79 @@ h5 + .heading-style--heading-six,
   margin-top: 0;
 }
 
-/* line 234, sass/ui/_typography.scss */
+/* line 237, sass/ui/_typography.scss */
 h1, .heading-style--heading-one {
   margin-top: 3rem;
   margin-bottom: 0.65em;
   font-size: 2.7rem;
   line-height: 1.2em;
 }
-/* line 240, sass/ui/_typography.scss */
+/* line 243, sass/ui/_typography.scss */
 h1:first-child:last-child, .heading-style--heading-one:first-child:last-child {
   margin-bottom: 0.68em;
 }
 
-/* line 253, sass/ui/_typography.scss */
+/* line 256, sass/ui/_typography.scss */
 h2, .heading-style--heading-two {
   margin-top: 3rem;
   margin-bottom: 0.6em;
   font-size: 2.5rem;
   line-height: 1.3em;
 }
-/* line 259, sass/ui/_typography.scss */
+/* line 262, sass/ui/_typography.scss */
 h2:first-child:last-child, .heading-style--heading-two:first-child:last-child {
   margin-bottom: 0.68em;
 }
 
-/* line 272, sass/ui/_typography.scss */
+/* line 275, sass/ui/_typography.scss */
 h3, .heading-style--heading-three {
   margin-top: 3rem;
   margin-bottom: 0.68em;
   font-size: 2.3rem;
   line-height: 1.3em;
 }
-/* line 282, sass/ui/_typography.scss */
+/* line 285, sass/ui/_typography.scss */
 h3:first-child:last-child, .heading-style--heading-three:first-child:last-child {
   margin-bottom: 0.68em;
 }
 
-/* line 286, sass/ui/_typography.scss */
+/* line 289, sass/ui/_typography.scss */
 h4, .heading-style--heading-four {
   margin-top: 3rem;
   margin-bottom: 0.8em;
   font-size: 2.1rem;
   line-height: 1.4em;
 }
-/* line 296, sass/ui/_typography.scss */
+/* line 299, sass/ui/_typography.scss */
 h4:first-child:last-child, .heading-style--heading-four:first-child:last-child {
   margin-bottom: 0.8em;
 }
 
-/* line 300, sass/ui/_typography.scss */
+/* line 303, sass/ui/_typography.scss */
 h5, .heading-style--heading-five {
   margin-top: 3rem;
   margin-bottom: 0.7em;
   font-size: 1.9rem;
   line-height: 1.35em;
 }
-/* line 310, sass/ui/_typography.scss */
+/* line 313, sass/ui/_typography.scss */
 h5:first-child:last-child, .heading-style--heading-five:first-child:last-child {
   margin-bottom: 0.7em;
 }
 
-/* line 314, sass/ui/_typography.scss */
+/* line 317, sass/ui/_typography.scss */
 h6, .heading-style--heading-six {
   margin-top: 3rem;
   margin-bottom: 0.7em;
   font-size: 1.7rem;
   line-height: 1.35em;
 }
-/* line 324, sass/ui/_typography.scss */
+/* line 327, sass/ui/_typography.scss */
 h6:first-child:last-child, .heading-style--heading-six:first-child:last-child {
   margin-bottom: 0.7em;
 }
 
-/* line 328, sass/ui/_typography.scss */
+/* line 331, sass/ui/_typography.scss */
 p {
   max-width: 650px;
   margin-bottom: 1.2em;
@@ -944,104 +949,104 @@ p {
   line-height: 1.5625em;
   color: #5b5b68;
 }
-/* line 340, sass/ui/_typography.scss */
+/* line 343, sass/ui/_typography.scss */
 p a {
   text-decoration: none;
   color: #6d69c5;
 }
-/* line 343, sass/ui/_typography.scss */
+/* line 346, sass/ui/_typography.scss */
 p a:hover {
   color: #4b46b5;
 }
-/* line 346, sass/ui/_typography.scss */
+/* line 349, sass/ui/_typography.scss */
 p a:active {
   position: relative;
   top: 2px;
 }
 
-/* line 352, sass/ui/_typography.scss */
+/* line 355, sass/ui/_typography.scss */
 .text-link, .filters-group-graph-options .show-hide-link {
   text-decoration: none;
   color: #6d69c5;
 }
-/* line 355, sass/ui/_typography.scss */
+/* line 358, sass/ui/_typography.scss */
 .text-link:hover, .filters-group-graph-options .show-hide-link:hover {
   color: #4b46b5;
 }
-/* line 358, sass/ui/_typography.scss */
+/* line 361, sass/ui/_typography.scss */
 .text-link:active, .filters-group-graph-options .show-hide-link:active {
   position: relative;
   top: 2px;
 }
 
-/* line 363, sass/ui/_typography.scss */
+/* line 366, sass/ui/_typography.scss */
 .p-style--minor {
   margin-bottom: 1.5em;
   font-size: 1.4em;
   line-height: 1.64285714285714em;
 }
-/* line 367, sass/ui/_typography.scss */
+/* line 370, sass/ui/_typography.scss */
 .p-style--minor:last-child {
   margin-bottom: 0;
 }
 
-/* line 371, sass/ui/_typography.scss */
+/* line 374, sass/ui/_typography.scss */
 .p-style--featured {
   margin-bottom: 1.5em;
   font-size: 1.8em;
   line-height: 1.55555555555556em;
 }
-/* line 375, sass/ui/_typography.scss */
+/* line 378, sass/ui/_typography.scss */
 .p-style--featured:last-child {
   margin-bottom: 0;
 }
 
-/* line 379, sass/ui/_typography.scss */
+/* line 382, sass/ui/_typography.scss */
 .content-list {
   margin-top: 1.8em;
   margin-bottom: 1.875em;
   font-size: 1.6em;
   line-height: 1.375em;
 }
-/* line 384, sass/ui/_typography.scss */
+/* line 387, sass/ui/_typography.scss */
 .content-list:last-child {
   margin-bottom: 0;
 }
-/* line 387, sass/ui/_typography.scss */
+/* line 390, sass/ui/_typography.scss */
 .content-list li {
   max-width: 650px;
   margin-bottom: 0.62em;
   padding-left: 31px;
 }
-/* line 394, sass/ui/_typography.scss */
+/* line 397, sass/ui/_typography.scss */
 .content-list li:last-child {
   margin-bottom: 0;
 }
-/* line 397, sass/ui/_typography.scss */
+/* line 400, sass/ui/_typography.scss */
 .content-list li a {
   text-decoration: none;
   color: #6d69c5;
 }
-/* line 400, sass/ui/_typography.scss */
+/* line 403, sass/ui/_typography.scss */
 .content-list li a:hover {
   color: #4b46b5;
 }
-/* line 403, sass/ui/_typography.scss */
+/* line 406, sass/ui/_typography.scss */
 .content-list li a:active {
   position: relative;
   top: 2px;
 }
-/* line 410, sass/ui/_typography.scss */
+/* line 413, sass/ui/_typography.scss */
 .content-list.content-list--no-bullets li {
   padding-left: 0;
   background: none;
 }
-/* line 413, sass/ui/_typography.scss */
+/* line 416, sass/ui/_typography.scss */
 .content-list.content-list--no-bullets li:before {
   display: none;
 }
 
-/* line 419, sass/ui/_typography.scss */
+/* line 422, sass/ui/_typography.scss */
 h1 + .content-list,
 h2 + .content-list,
 h3 + .content-list,
@@ -1051,45 +1056,45 @@ h6 + .content-list {
   margin-top: 0;
 }
 
-/* line 427, sass/ui/_typography.scss */
+/* line 430, sass/ui/_typography.scss */
 .content-list--featured {
   margin-bottom: 1.5em;
   font-size: 2rem;
   line-height: 1.3em;
 }
-/* line 431, sass/ui/_typography.scss */
+/* line 434, sass/ui/_typography.scss */
 .content-list--featured:last-child {
   margin-bottom: 0;
 }
-/* line 434, sass/ui/_typography.scss */
+/* line 437, sass/ui/_typography.scss */
 .content-list--featured li {
   margin-bottom: 0.5em;
   padding-left: 31px;
 }
 
-/* line 439, sass/ui/_typography.scss */
+/* line 442, sass/ui/_typography.scss */
 .content-list--minor {
   margin-bottom: 2.14285714285714em;
   font-size: 1.4rem;
   line-height: 1.42857142857143em;
 }
-/* line 443, sass/ui/_typography.scss */
+/* line 446, sass/ui/_typography.scss */
 .content-list--minor:last-child {
   margin-bottom: 0;
 }
-/* line 446, sass/ui/_typography.scss */
+/* line 449, sass/ui/_typography.scss */
 .content-list--minor li {
   margin-bottom: 0.44em;
   padding-left: 26px;
 }
 
-/* line 451, sass/ui/_typography.scss */
+/* line 454, sass/ui/_typography.scss */
 ol.content-list,
 ol.content-list--minor,
 ol.content-list--featured {
   counter-reset: ordered-counter;
 }
-/* line 455, sass/ui/_typography.scss */
+/* line 458, sass/ui/_typography.scss */
 ol.content-list li,
 ol.content-list--minor li,
 ol.content-list--featured li {
@@ -1097,7 +1102,7 @@ ol.content-list--featured li {
   padding-left: 5rem;
   color: #5b5b68;
 }
-/* line 462, sass/ui/_typography.scss */
+/* line 465, sass/ui/_typography.scss */
 ol.content-list li:before,
 ol.content-list--minor li:before,
 ol.content-list--featured li:before {
@@ -1110,19 +1115,19 @@ ol.content-list--featured li:before {
   content: counter(ordered-counter);
   counter-increment: ordered-counter;
 }
-/* line 471, sass/ui/_typography.scss */
+/* line 474, sass/ui/_typography.scss */
 .page-terms ol.content-list li:before, .page-terms
 ol.content-list--minor li:before, .page-terms
 ol.content-list--featured li:before {
   content: counter(ordered-counter) ".0";
 }
-/* line 475, sass/ui/_typography.scss */
+/* line 478, sass/ui/_typography.scss */
 ol.content-list li ol,
 ol.content-list--minor li ol,
 ol.content-list--featured li ol {
   counter-reset: ordered-sub-counter;
 }
-/* line 477, sass/ui/_typography.scss */
+/* line 480, sass/ui/_typography.scss */
 ol.content-list li ol li:before,
 ol.content-list--minor li ol li:before,
 ol.content-list--featured li ol li:before {
@@ -1131,31 +1136,31 @@ ol.content-list--featured li ol li:before {
   content: counter(ordered-counter) "." counter(ordered-sub-counter);
   counter-increment: ordered-sub-counter;
 }
-/* line 482, sass/ui/_typography.scss */
+/* line 485, sass/ui/_typography.scss */
 .page-terms ol.content-list li ol li:before, .page-terms
 ol.content-list--minor li ol li:before, .page-terms
 ol.content-list--featured li ol li:before {
   content: counter(ordered-counter) "." counter(ordered-sub-counter);
 }
-/* line 488, sass/ui/_typography.scss */
+/* line 491, sass/ui/_typography.scss */
 ol.content-list p,
 ol.content-list--minor p,
 ol.content-list--featured p {
   color: #5b5b68;
 }
 
-/* line 499, sass/ui/_typography.scss */
+/* line 502, sass/ui/_typography.scss */
 ol.content-list--featured li:before {
   font-size: 1.9rem;
 }
 
-/* line 507, sass/ui/_typography.scss */
+/* line 510, sass/ui/_typography.scss */
 ul.content-list li,
 ul.content-list--featured li,
 ul.content-list--minor li {
   position: relative;
 }
-/* line 509, sass/ui/_typography.scss */
+/* line 512, sass/ui/_typography.scss */
 ul.content-list li:before,
 ul.content-list--featured li:before,
 ul.content-list--minor li:before {
@@ -1167,7 +1172,7 @@ ul.content-list--minor li:before {
   color: #6d69c5;
 }
 
-/* line 519, sass/ui/_typography.scss */
+/* line 522, sass/ui/_typography.scss */
 blockquote {
   position: relative;
   padding-top: 38px;
@@ -1177,7 +1182,7 @@ blockquote {
   margin-bottom: 3em;
   margin-top: 3rem;
 }
-/* line 528, sass/ui/_typography.scss */
+/* line 531, sass/ui/_typography.scss */
 blockquote:before {
   position: absolute;
   top: 20px;
@@ -1189,7 +1194,7 @@ blockquote:before {
   font-size: 80px;
   color: #e8e7f1;
 }
-/* line 539, sass/ui/_typography.scss */
+/* line 542, sass/ui/_typography.scss */
 blockquote p {
   margin-bottom: 1em;
   font-family: "Source Sans Pro", sans-serif;
@@ -1198,14 +1203,14 @@ blockquote p {
   font-size: 1.6em;
   color: #5b5b68;
 }
-/* line 547, sass/ui/_typography.scss */
+/* line 550, sass/ui/_typography.scss */
 blockquote cite {
   font-family: "Lato", sans-serif;
   font-weight: 400;
   font-size: 1.2rem;
   line-height: 1.5;
 }
-/* line 552, sass/ui/_typography.scss */
+/* line 555, sass/ui/_typography.scss */
 blockquote cite span {
   margin-bottom: 4px;
   display: block;
@@ -1214,30 +1219,30 @@ blockquote cite span {
   font-weight: 600;
   color: #29292c;
 }
-/* line 562, sass/ui/_typography.scss */
+/* line 565, sass/ui/_typography.scss */
 blockquote.blockquote--on-purple:before {
   color: #5f5bb4;
 }
-/* line 565, sass/ui/_typography.scss */
+/* line 568, sass/ui/_typography.scss */
 blockquote.blockquote--on-purple p {
   color: #fff;
 }
-/* line 568, sass/ui/_typography.scss */
+/* line 571, sass/ui/_typography.scss */
 blockquote.blockquote--on-purple cite {
   color: #c3c6f6;
 }
-/* line 570, sass/ui/_typography.scss */
+/* line 573, sass/ui/_typography.scss */
 blockquote.blockquote--on-purple cite span {
   color: #fefefe;
 }
 
-/* line 576, sass/ui/_typography.scss */
+/* line 579, sass/ui/_typography.scss */
 strong {
   font-weight: 700;
   color: #29292c;
 }
 
-/* line 580, sass/ui/_typography.scss */
+/* line 583, sass/ui/_typography.scss */
 .blockquote--large {
   padding-top: 0;
   padding-left: 65px;
@@ -1245,27 +1250,27 @@ strong {
   margin-bottom: 3.5rem;
   font-size: 1.1em;
 }
-/* line 586, sass/ui/_typography.scss */
+/* line 589, sass/ui/_typography.scss */
 .blockquote--large p {
   margin-bottom: 1.2em;
   font-size: 1.6em;
 }
-/* line 590, sass/ui/_typography.scss */
+/* line 593, sass/ui/_typography.scss */
 .blockquote--large:before {
   top: 32px;
   left: 0;
   font-size: 100px;
 }
-/* line 595, sass/ui/_typography.scss */
+/* line 598, sass/ui/_typography.scss */
 .blockquote--large cite {
   font-size: 1.4rem;
 }
-/* line 597, sass/ui/_typography.scss */
+/* line 600, sass/ui/_typography.scss */
 .blockquote--large cite span {
   font-size: 1.8rem;
 }
 
-/* line 602, sass/ui/_typography.scss */
+/* line 605, sass/ui/_typography.scss */
 figcaption {
   margin-top: 1.2rem;
   margin-bottom: 1.9em;
@@ -1276,17 +1281,17 @@ figcaption {
   color: #81869e;
 }
 
-/* line 611, sass/ui/_typography.scss */
+/* line 614, sass/ui/_typography.scss */
 .warning-text {
   color: #ff496a !important;
 }
 
-/* line 614, sass/ui/_typography.scss */
+/* line 617, sass/ui/_typography.scss */
 a.warning-text:hover {
   color: #d23753 !important;
 }
 
-/* line 617, sass/ui/_typography.scss */
+/* line 620, sass/ui/_typography.scss */
 img.image-full-width {
   width: 100%;
 }
@@ -4929,7 +4934,7 @@ table.table-linked-accounts .linked-account-store div {
   overflow: visible;
 }
 /* line 84, sass/templates/_linked-accounts.scss */
-table.table-linked-accounts .linked-account-store .ref-icon-before:before, table.table-linked-accounts .linked-account-store .page-logged-in-landing .accordion-switch:before, .page-logged-in-landing table.table-linked-accounts .linked-account-store .accordion-switch:before, table.table-linked-accounts .linked-account-store .page-logged-in-landing .accordion .list-item-complete:before, .page-logged-in-landing .accordion table.table-linked-accounts .linked-account-store .list-item-complete:before {
+table.table-linked-accounts .linked-account-store .ref-icon-before:before, table.table-linked-accounts .linked-account-store .page-logged-in-landing .accordion-switch:before, .page-logged-in-landing table.table-linked-accounts .linked-account-store .accordion-switch:before, table.table-linked-accounts .linked-account-store .page-logged-in-landing .accordion .list-item-complete:before, .page-logged-in-landing .accordion table.table-linked-accounts .linked-account-store .list-item-complete:before, table.table-linked-accounts .linked-account-store .main-navigation > ul ul li.has-child:before, .main-navigation > ul ul table.table-linked-accounts .linked-account-store li.has-child:before {
   display: none;
   top: -0.3rem;
   padding-right: 1.2rem;
@@ -4987,7 +4992,7 @@ table.table-linked-accounts .linked-account-delete a {
 /* line 139, sass/templates/_linked-accounts.scss */
 table.table-linked-accounts .linked-account-delete .ref-icon-after:after, table.table-linked-accounts .linked-account-delete .home-welcome__text .home-welcome__call-to-action:after, .home-welcome__text table.table-linked-accounts .linked-account-delete .home-welcome__call-to-action:after, table.table-linked-accounts .linked-account-delete .read-only-date span:after, .read-only-date table.table-linked-accounts .linked-account-delete span:after, table.table-linked-accounts .linked-account-delete .panel-link .panel-link__link > span span:after, .panel-link .panel-link__link > span table.table-linked-accounts .linked-account-delete span:after, table.table-linked-accounts .linked-account-delete .accordion-switch:after, table.table-linked-accounts .linked-account-delete .form-field .form-field-help:after, .form-field table.table-linked-accounts .linked-account-delete .form-field-help:after,
 table.table-linked-accounts .linked-account-delete .search-field-no-label .form-field-help:after,
-.search-field-no-label table.table-linked-accounts .linked-account-delete .form-field-help:after, table.table-linked-accounts .linked-account-delete .form-field.form-field--date-select span:after, .form-field.form-field--date-select table.table-linked-accounts .linked-account-delete span:after, table.table-linked-accounts .linked-account-delete .main-navigation > ul ul li.has-child:after, .main-navigation > ul ul table.table-linked-accounts .linked-account-delete li.has-child:after, table.table-linked-accounts .linked-account-delete .whats-this-tooltip-icon:after,
+.search-field-no-label table.table-linked-accounts .linked-account-delete .form-field-help:after, table.table-linked-accounts .linked-account-delete .form-field.form-field--date-select span:after, .form-field.form-field--date-select table.table-linked-accounts .linked-account-delete span:after, table.table-linked-accounts .linked-account-delete .whats-this-tooltip-icon:after,
 table.table-linked-accounts .linked-account-delete .whats-this-tooltip-icon-static:after {
   position: relative;
   top: 3px;
@@ -4999,7 +5004,7 @@ table.table-linked-accounts .linked-account-delete .whats-this-tooltip-icon-stat
 /* line 147, sass/templates/_linked-accounts.scss */
 table.table-linked-accounts .linked-account-delete .ref-icon-after:hover:after, table.table-linked-accounts .linked-account-delete .home-welcome__text .home-welcome__call-to-action:hover:after, .home-welcome__text table.table-linked-accounts .linked-account-delete .home-welcome__call-to-action:hover:after, table.table-linked-accounts .linked-account-delete .read-only-date span:hover:after, .read-only-date table.table-linked-accounts .linked-account-delete span:hover:after, table.table-linked-accounts .linked-account-delete .panel-link .panel-link__link > span span:hover:after, .panel-link .panel-link__link > span table.table-linked-accounts .linked-account-delete span:hover:after, table.table-linked-accounts .linked-account-delete .accordion-switch:hover:after, table.table-linked-accounts .linked-account-delete .form-field .form-field-help:hover:after, .form-field table.table-linked-accounts .linked-account-delete .form-field-help:hover:after,
 table.table-linked-accounts .linked-account-delete .search-field-no-label .form-field-help:hover:after,
-.search-field-no-label table.table-linked-accounts .linked-account-delete .form-field-help:hover:after, table.table-linked-accounts .linked-account-delete .form-field.form-field--date-select span:hover:after, .form-field.form-field--date-select table.table-linked-accounts .linked-account-delete span:hover:after, table.table-linked-accounts .linked-account-delete .main-navigation > ul ul li.has-child:hover:after, .main-navigation > ul ul table.table-linked-accounts .linked-account-delete li.has-child:hover:after, table.table-linked-accounts .linked-account-delete .whats-this-tooltip-icon:hover:after,
+.search-field-no-label table.table-linked-accounts .linked-account-delete .form-field-help:hover:after, table.table-linked-accounts .linked-account-delete .form-field.form-field--date-select span:hover:after, .form-field.form-field--date-select table.table-linked-accounts .linked-account-delete span:hover:after, table.table-linked-accounts .linked-account-delete .whats-this-tooltip-icon:hover:after,
 table.table-linked-accounts .linked-account-delete .whats-this-tooltip-icon-static:hover:after {
   color: #b0b4c0;
   -webkit-transition: color 0.2s;
@@ -5008,7 +5013,7 @@ table.table-linked-accounts .linked-account-delete .whats-this-tooltip-icon-stat
 /* line 153, sass/templates/_linked-accounts.scss */
 table.table-linked-accounts .linked-account-delete .ref-icon-after:active:after, table.table-linked-accounts .linked-account-delete .home-welcome__text .home-welcome__call-to-action:active:after, .home-welcome__text table.table-linked-accounts .linked-account-delete .home-welcome__call-to-action:active:after, table.table-linked-accounts .linked-account-delete .read-only-date span:active:after, .read-only-date table.table-linked-accounts .linked-account-delete span:active:after, table.table-linked-accounts .linked-account-delete .panel-link .panel-link__link > span span:active:after, .panel-link .panel-link__link > span table.table-linked-accounts .linked-account-delete span:active:after, table.table-linked-accounts .linked-account-delete .accordion-switch:active:after, table.table-linked-accounts .linked-account-delete .form-field .form-field-help:active:after, .form-field table.table-linked-accounts .linked-account-delete .form-field-help:active:after,
 table.table-linked-accounts .linked-account-delete .search-field-no-label .form-field-help:active:after,
-.search-field-no-label table.table-linked-accounts .linked-account-delete .form-field-help:active:after, table.table-linked-accounts .linked-account-delete .form-field.form-field--date-select span:active:after, .form-field.form-field--date-select table.table-linked-accounts .linked-account-delete span:active:after, table.table-linked-accounts .linked-account-delete .main-navigation > ul ul li.has-child:active:after, .main-navigation > ul ul table.table-linked-accounts .linked-account-delete li.has-child:active:after, table.table-linked-accounts .linked-account-delete .whats-this-tooltip-icon:active:after,
+.search-field-no-label table.table-linked-accounts .linked-account-delete .form-field-help:active:after, table.table-linked-accounts .linked-account-delete .form-field.form-field--date-select span:active:after, .form-field.form-field--date-select table.table-linked-accounts .linked-account-delete span:active:after, table.table-linked-accounts .linked-account-delete .whats-this-tooltip-icon:active:after,
 table.table-linked-accounts .linked-account-delete .whats-this-tooltip-icon-static:active:after {
   top: 5px;
 }
@@ -6168,7 +6173,6 @@ table.table-data.table-linked-accounts--disabled thead {
 .main-navigation.main-navigation--account {
   padding-top: 0;
   padding-bottom: 26px;
-  border-bottom: 1px solid #000;
 }
 
 /* line 2, sass/components/_add-this.scss */
@@ -10016,44 +10020,51 @@ svg.loading-ellipsis .dot-3 {
 
 /* line 3, sass/components/_main-footer-links.scss */
 .main-footer-links {
-  margin-top: 31px;
-  margin-bottom: 50px;
+  margin-bottom: 30px;
 }
-/* line 6, sass/components/_main-footer-links.scss */
+/* line 5, sass/components/_main-footer-links.scss */
 .main-footer-links li {
   display: block;
 }
-/* line 8, sass/components/_main-footer-links.scss */
+/* line 7, sass/components/_main-footer-links.scss */
 .main-footer-links li a {
-  padding: 5px 0px 6px 30px;
+  padding: 5.3px 0px 6px 30px;
   display: block;
   font-size: 1.3em;
   line-height: 1.5;
-  color: #767683;
+  color: #727686;
 }
-/* line 14, sass/components/_main-footer-links.scss */
+/* line 13, sass/components/_main-footer-links.scss */
 .is-animating-out .main-footer-links li a {
   text-shadow: 4px 0px 1px rgba(118, 118, 131, 0.5);
 }
-/* line 17, sass/components/_main-footer-links.scss */
+/* line 16, sass/components/_main-footer-links.scss */
 .is-animating-in .main-footer-links li a {
   text-shadow: -4px 0px 1px rgba(118, 118, 131, 0.5);
 }
-/* line 20, sass/components/_main-footer-links.scss */
+/* line 19, sass/components/_main-footer-links.scss */
 .main-footer-links li a:hover {
   color: #bec2d2;
+}
+/* line 24, sass/components/_main-footer-links.scss */
+.main-footer-links li.is-selected a {
+  color: #fcfdfd;
+}
+/* line 26, sass/components/_main-footer-links.scss */
+.main-footer-links li.is-selected a:hover {
+  color: #fcfdfd;
 }
 
 /* line 5, sass/components/_main-navigation.scss */
 .main-navigation {
   width: 100%;
-  padding: 27px 0 23px;
+  padding: 0 0 20px;
   background-color: #29292c;
 }
 /* line 9, sass/components/_main-navigation.scss */
 .main-navigation a {
-  -webkit-transition: all 0.2s, text-shadow 0.3s;
-          transition: all 0.2s, text-shadow 0.3s;
+  -webkit-transition: background-color 0.2s, color 0.2s, text-shadow 0.3s;
+          transition: background-color 0.2s, color 0.2s, text-shadow 0.3s;
 }
 /* line 11, sass/components/_main-navigation.scss */
 .main-navigation a svg {
@@ -10062,7 +10073,7 @@ svg.loading-ellipsis .dot-3 {
   vertical-align: middle;
 }
 /* line 15, sass/components/_main-navigation.scss */
-.main-navigation a svg path {
+.main-navigation a svg path, .main-navigation a svg polygon {
   fill: #5b5b68;
   -webkit-transition: fill 0.2s;
           transition: fill 0.2s;
@@ -10076,38 +10087,38 @@ svg.loading-ellipsis .dot-3 {
 .main-navigation a span {
   display: inline-block;
   vertical-align: middle;
-  padding-left: 20px;
+  padding-left: 12px;
 }
 /* line 32, sass/components/_main-navigation.scss */
-.main-navigation a:hover svg path {
-  fill: #ffffff;
+.main-navigation a:hover svg path, .main-navigation a:hover svg polygon {
+  fill: #c4c7d0;
   -webkit-transition: fill 0.3s;
           transition: fill 0.3s;
 }
 /* line 37, sass/components/_main-navigation.scss */
 .main-navigation a:hover svg.icon--my-apps path {
   fill: none;
-  stroke: #ffffff;
+  stroke: #c4c7d0;
   -webkit-transition: stroke 0.3s;
           transition: stroke 0.3s;
 }
-/* line 45, sass/components/_main-navigation.scss */
-.main-navigation li.is-selected a svg path {
-  fill: #ffffff;
+/* line 46, sass/components/_main-navigation.scss */
+.main-navigation li.is-selected a svg path, .main-navigation li.is-selected a svg polygon {
+  fill: #fcfdfd;
 }
-/* line 49, sass/components/_main-navigation.scss */
+/* line 51, sass/components/_main-navigation.scss */
 .main-navigation li.is-selected a svg.icon--my-apps path {
   fill: none;
-  stroke: #ffffff;
+  stroke: #fcfdfd;
 }
-/* line 55, sass/components/_main-navigation.scss */
+/* line 57, sass/components/_main-navigation.scss */
 .main-navigation > ul > li {
-  margin-bottom: 4px;
   font-size: 1.2em;
   line-height: 1.5;
   font-weight: 700;
+  border-bottom: 1px solid #161617;
 }
-/* line 60, sass/components/_main-navigation.scss */
+/* line 62, sass/components/_main-navigation.scss */
 .main-navigation > ul > li > a {
   float: left;
   width: 100%;
@@ -10116,34 +10127,43 @@ svg.loading-ellipsis .dot-3 {
   background-color: #29292c;
 }
 /* line 68, sass/components/_main-navigation.scss */
+.main-navigation > ul > li > a:hover {
+  background-color: #252527;
+}
+/* line 71, sass/components/_main-navigation.scss */
+.main-navigation > ul > li > a:active {
+  padding-bottom: 12px;
+  border-top: 2px solid #1e1e1f;
+}
+/* line 77, sass/components/_main-navigation.scss */
 .main-navigation > ul > li.is-selected > a {
   color: #fcfdfd;
   background-color: #6d69c5;
 }
-/* line 71, sass/components/_main-navigation.scss */
+/* line 80, sass/components/_main-navigation.scss */
 .is-animating-out .main-navigation > ul > li.is-selected > a {
   text-shadow: 4px 0px 1px rgba(252, 253, 253, 0.5);
 }
-/* line 74, sass/components/_main-navigation.scss */
+/* line 83, sass/components/_main-navigation.scss */
 .is-animating-in .main-navigation > ul > li.is-selected > a {
   text-shadow: -4px 0px 1px rgba(252, 253, 253, 0.5);
 }
-/* line 77, sass/components/_main-navigation.scss */
+/* line 86, sass/components/_main-navigation.scss */
 .main-navigation > ul > li.is-selected > a:hover {
   color: #fcfdfd;
 }
-/* line 82, sass/components/_main-navigation.scss */
+/* line 91, sass/components/_main-navigation.scss */
 .main-navigation > ul > li > ul {
   display: block;
   z-index: 0;
   -webkit-transition: margin-top 0.16s ease-in;
           transition: margin-top 0.16s ease-in;
 }
-/* line 87, sass/components/_main-navigation.scss */
+/* line 96, sass/components/_main-navigation.scss */
 .main-navigation > ul > li.is-open {
   background-color: #363a47;
 }
-/* line 89, sass/components/_main-navigation.scss */
+/* line 98, sass/components/_main-navigation.scss */
 .main-navigation > ul > li.is-open > ul {
   position: relative;
   margin-top: 0;
@@ -10151,109 +10171,132 @@ svg.loading-ellipsis .dot-3 {
   -webkit-transition: margin-top 0.2s ease-out;
           transition: margin-top 0.2s ease-out;
 }
-/* line 98, sass/components/_main-navigation.scss */
+/* line 107, sass/components/_main-navigation.scss */
 .main-navigation > ul ul {
   width: 100%;
   display: none;
   float: left;
   background-color: #363a47;
 }
-/* line 103, sass/components/_main-navigation.scss */
+/* line 112, sass/components/_main-navigation.scss */
 .main-navigation > ul ul li {
   position: relative;
   z-index: 1;
   font-size: 13px;
 }
-/* line 108, sass/components/_main-navigation.scss */
+/* line 117, sass/components/_main-navigation.scss */
 .main-navigation > ul ul li.is-selected > a {
   color: #fcfdfd;
 }
-/* line 110, sass/components/_main-navigation.scss */
+/* line 119, sass/components/_main-navigation.scss */
 .is-animating-out .main-navigation > ul ul li.is-selected > a {
   text-shadow: 4px 0px 1px rgba(252, 253, 253, 0.5);
 }
-/* line 113, sass/components/_main-navigation.scss */
+/* line 122, sass/components/_main-navigation.scss */
 .is-animating-in .main-navigation > ul ul li.is-selected > a {
   text-shadow: -4px 0px 1px rgba(252, 253, 253, 0.5);
 }
-/* line 116, sass/components/_main-navigation.scss */
+/* line 125, sass/components/_main-navigation.scss */
 .main-navigation > ul ul li.is-selected > a:hover {
   color: #fcfdfd;
 }
-/* line 121, sass/components/_main-navigation.scss */
+/* line 130, sass/components/_main-navigation.scss */
 .main-navigation > ul ul li.has-child {
   line-height: 1.5;
 }
-/* line 125, sass/components/_main-navigation.scss */
-.main-navigation > ul ul li.has-child:after {
+/* line 134, sass/components/_main-navigation.scss */
+.main-navigation > ul ul li.has-child:before {
   position: absolute;
-  right: 9px;
-  top: 5px;
-  z-index: 10;
+  top: 4px;
+  left: 9px;
   font-size: 12px;
+  z-index: 100;
   color: #53586c;
   -webkit-transition: color 0.2s;
           transition: color 0.2s;
 }
-/* line 135, sass/components/_main-navigation.scss */
-.main-navigation > ul ul li.has-child.is-open:after {
+/* line 144, sass/components/_main-navigation.scss */
+.main-navigation > ul ul li.has-child.is-open a {
+  color: #81879d;
+}
+/* line 147, sass/components/_main-navigation.scss */
+.main-navigation > ul ul li.has-child.is-open:before {
   color: #7e79e2;
   -webkit-transition: color 0.33s;
           transition: color 0.33s;
 }
-/* line 138, sass/components/_main-navigation.scss */
-.is-animating-out .main-navigation > ul ul li.has-child.is-open:after {
+/* line 150, sass/components/_main-navigation.scss */
+.is-animating-out .main-navigation > ul ul li.has-child.is-open:before {
   text-shadow: 4px 0px 1px rgba(109, 105, 197, 0.5);
 }
-/* line 141, sass/components/_main-navigation.scss */
-.is-animating-in .main-navigation > ul ul li.has-child.is-open:after {
+/* line 153, sass/components/_main-navigation.scss */
+.is-animating-in .main-navigation > ul ul li.has-child.is-open:before {
   text-shadow: -4px 0px 1px rgba(109, 105, 197, 0.5);
 }
-/* line 147, sass/components/_main-navigation.scss */
+/* line 158, sass/components/_main-navigation.scss */
+.main-navigation > ul ul li.has-child.is-open.is-selected a {
+  color: #e1e5e8;
+}
+/* line 164, sass/components/_main-navigation.scss */
 .main-navigation > ul ul li a {
   padding: 0 38px 15px 29px;
   color: #81879d;
+  font-weight: 400;
 }
-/* line 150, sass/components/_main-navigation.scss */
+/* line 168, sass/components/_main-navigation.scss */
 .is-animating-out .main-navigation > ul ul li a {
   text-shadow: 4px 0px 1px rgba(129, 135, 157, 0.5);
 }
-/* line 153, sass/components/_main-navigation.scss */
+/* line 171, sass/components/_main-navigation.scss */
 .is-animating-in .main-navigation > ul ul li a {
   text-shadow: -4px 0px 1px rgba(129, 135, 157, 0.5);
 }
-/* line 156, sass/components/_main-navigation.scss */
+/* line 174, sass/components/_main-navigation.scss */
 .main-navigation > ul ul li a:hover {
   color: #bec2d2;
 }
-/* line 160, sass/components/_main-navigation.scss */
+/* line 178, sass/components/_main-navigation.scss */
 .main-navigation > ul ul li ul {
   background-color: #2e313b;
   display: block;
   -webkit-transition: margin-top 0.16s ease-in;
           transition: margin-top 0.16s ease-in;
 }
-/* line 164, sass/components/_main-navigation.scss */
-.main-navigation > ul ul li ul a {
-  padding-left: 38px;
+/* line 183, sass/components/_main-navigation.scss */
+.main-navigation > ul ul li ul li.is-selected a {
+  color: #e1e5e8;
 }
-/* line 171, sass/components/_main-navigation.scss */
+/* line 187, sass/components/_main-navigation.scss */
+.main-navigation > ul ul li ul li a {
+  padding-left: 35px;
+  padding-bottom: 15px;
+}
+/* line 191, sass/components/_main-navigation.scss */
+.main-navigation > ul ul li ul li:last-child a {
+  padding-bottom: 20px;
+}
+/* line 198, sass/components/_main-navigation.scss */
 .main-navigation > ul > li > ul > li > a {
   background-color: #363a47;
 }
-/* line 174, sass/components/_main-navigation.scss */
+/* line 201, sass/components/_main-navigation.scss */
 .main-navigation > ul > li > ul > li:first-child {
   margin-top: 22px;
 }
-/* line 177, sass/components/_main-navigation.scss */
-.main-navigation > ul > li > ul > li:last-child a {
+/* line 204, sass/components/_main-navigation.scss */
+.main-navigation > ul > li > ul > li:last-child a,
+.main-navigation > ul > li > ul > li:last-child li a {
+  padding-bottom: 15px;
+}
+/* line 208, sass/components/_main-navigation.scss */
+.main-navigation > ul > li > ul > li:last-child li:last-child a {
   padding-bottom: 20px;
 }
-/* line 181, sass/components/_main-navigation.scss */
+/* line 212, sass/components/_main-navigation.scss */
 .main-navigation > ul > li > ul li.is-open + li {
   margin-top: 22px;
 }
-/* line 184, sass/components/_main-navigation.scss */
+/* line 215, sass/components/_main-navigation.scss */
 .main-navigation > ul > li > ul li.is-open ul {
   position: relative;
   margin-top: 0;
@@ -10263,152 +10306,147 @@ svg.loading-ellipsis .dot-3 {
   -webkit-transition: margin-top 0.2s ease-out;
           transition: margin-top 0.2s ease-out;
 }
-/* line 192, sass/components/_main-navigation.scss */
+/* line 223, sass/components/_main-navigation.scss */
 .main-navigation > ul > li > ul li.is-open > a {
   color: #e1e5e8;
 }
-/* line 194, sass/components/_main-navigation.scss */
+/* line 225, sass/components/_main-navigation.scss */
 .is-animating-out .main-navigation > ul > li > ul li.is-open > a {
   text-shadow: 4px 0px 1px rgba(225, 229, 232, 0.5);
 }
-/* line 197, sass/components/_main-navigation.scss */
+/* line 228, sass/components/_main-navigation.scss */
 .is-animating-in .main-navigation > ul > li > ul li.is-open > a {
   text-shadow: -4px 0px 1px rgba(225, 229, 232, 0.5);
 }
-/* line 200, sass/components/_main-navigation.scss */
+/* line 231, sass/components/_main-navigation.scss */
 .main-navigation > ul > li > ul li.is-open > a:hover {
   color: #e1e5e8;
 }
-/* line 207, sass/components/_main-navigation.scss */
+/* line 238, sass/components/_main-navigation.scss */
 .main-navigation ul ul ul li:first-child {
   margin-top: 8px;
 }
-/* line 210, sass/components/_main-navigation.scss */
+/* line 241, sass/components/_main-navigation.scss */
 .main-navigation ul ul ul li:last-child a {
   padding-bottom: 24px;
 }
-/* line 214, sass/components/_main-navigation.scss */
+/* line 245, sass/components/_main-navigation.scss */
 .main-navigation ul ul ul li.is-selected > a {
   color: #e1e5e8;
 }
-/* line 216, sass/components/_main-navigation.scss */
+/* line 247, sass/components/_main-navigation.scss */
 .is-animating-out .main-navigation ul ul ul li.is-selected > a {
   text-shadow: 4px 0px 1px rgba(225, 229, 232, 0.5);
 }
-/* line 219, sass/components/_main-navigation.scss */
+/* line 250, sass/components/_main-navigation.scss */
 .is-animating-in .main-navigation ul ul ul li.is-selected > a {
   text-shadow: -4px 0px 1px rgba(225, 229, 232, 0.5);
 }
-/* line 222, sass/components/_main-navigation.scss */
+/* line 253, sass/components/_main-navigation.scss */
 .main-navigation ul ul ul li.is-selected > a:hover {
   color: #e1e5e8;
 }
-/* line 228, sass/components/_main-navigation.scss */
+/* line 259, sass/components/_main-navigation.scss */
 .main-navigation a {
   position: relative;
-  padding: 14px 0px 14px 29px;
+  padding: 15px 0px 14px 29px;
+  letter-spacing: 0.4px;
   display: block;
   z-index: 10;
-  color: #767683;
+  color: #727686;
   box-sizing: border-box;
 }
-/* line 235, sass/components/_main-navigation.scss */
+/* line 267, sass/components/_main-navigation.scss */
 .is-animating-out .main-navigation a {
   text-shadow: 4px 0px 1px rgba(118, 118, 131, 0.5);
 }
-/* line 238, sass/components/_main-navigation.scss */
+/* line 270, sass/components/_main-navigation.scss */
 .is-animating-in .main-navigation a {
   text-shadow: -4px 0px 1px rgba(118, 118, 131, 0.5);
 }
-/* line 241, sass/components/_main-navigation.scss */
+/* line 273, sass/components/_main-navigation.scss */
 .main-navigation a:hover {
-  color: #c6c6d4;
-}
-/* line 245, sass/components/_main-navigation.scss */
-.main-navigation .ref-icon-before:before, .main-navigation .page-logged-in-landing .accordion-switch:before, .page-logged-in-landing .main-navigation .accordion-switch:before, .main-navigation .page-logged-in-landing .accordion .list-item-complete:before, .page-logged-in-landing .accordion .main-navigation .list-item-complete:before {
-  position: absolute;
-  left: 30px;
-  top: 15px;
-  font-size: 18px;
+  color: #c4c7d0;
 }
 
 /* line 7, sass/components/_main-social-links.scss */
 .main-social-links {
   width: 100%;
-  margin: 0 0 22px;
-  height: 65px;
+  margin: 0;
+  height: 50px;
   padding: 0;
   overflow: hidden;
   font-size: 0;
   border-top: 1px solid #161617;
   border-bottom: 1px solid #161617;
+  box-sizing: border-box;
   background-color: #29292c;
 }
-/* line 17, sass/components/_main-social-links.scss */
+/* line 18, sass/components/_main-social-links.scss */
 .main-social-links li {
-  width: 33.3%;
-  height: 64px;
+  width: 50%;
+  height: 50px;
   display: inline-block;
   box-sizing: border-box;
   border-left: 1px solid #161617;
 }
-/* line 23, sass/components/_main-social-links.scss */
+/* line 24, sass/components/_main-social-links.scss */
 .main-social-links li:first-child {
   border-left: 0;
 }
-/* line 26, sass/components/_main-social-links.scss */
+/* line 27, sass/components/_main-social-links.scss */
 .main-social-links li a {
   position: relative;
   width: 100%;
-  height: 64px;
+  height: 50px;
   margin: 0;
   display: block;
   text-align: center;
 }
-/* line 33, sass/components/_main-social-links.scss */
+/* line 34, sass/components/_main-social-links.scss */
 .main-social-links li a.ref-icon-before:before, .main-social-links li .page-logged-in-landing a.accordion-switch:before, .page-logged-in-landing .main-social-links li a.accordion-switch:before, .main-social-links li .page-logged-in-landing .accordion a.list-item-complete:before, .page-logged-in-landing .accordion .main-social-links li a.list-item-complete:before {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   display: block;
-  line-height: 64px;
+  line-height: 50px;
   color: #767683;
   text-align: center;
   -webkit-transition: color 0.2s;
           transition: color 0.2s;
 }
-/* line 43, sass/components/_main-social-links.scss */
+/* line 44, sass/components/_main-social-links.scss */
 .is-animating-out .main-social-links li a.ref-icon-before:before, .is-animating-out .main-social-links li .page-logged-in-landing a.accordion-switch:before, .page-logged-in-landing .is-animating-out .main-social-links li a.accordion-switch:before, .is-animating-out .main-social-links li .page-logged-in-landing .accordion a.list-item-complete:before, .page-logged-in-landing .accordion .is-animating-out .main-social-links li a.list-item-complete:before {
   text-shadow: 4px 0px 1px rgba(118, 118, 131, 0.5);
 }
-/* line 46, sass/components/_main-social-links.scss */
+/* line 47, sass/components/_main-social-links.scss */
 .is-animating-in .main-social-links li a.ref-icon-before:before, .is-animating-in .main-social-links li .page-logged-in-landing a.accordion-switch:before, .page-logged-in-landing .is-animating-in .main-social-links li a.accordion-switch:before, .is-animating-in .main-social-links li .page-logged-in-landing .accordion a.list-item-complete:before, .page-logged-in-landing .accordion .is-animating-in .main-social-links li a.list-item-complete:before {
   text-shadow: -4px 0px 1px rgba(118, 118, 131, 0.5);
 }
-/* line 50, sass/components/_main-social-links.scss */
+/* line 51, sass/components/_main-social-links.scss */
 .main-social-links li a:hover {
   background-color: #252527;
 }
-/* line 52, sass/components/_main-social-links.scss */
+/* line 53, sass/components/_main-social-links.scss */
 .main-social-links li a:hover:before {
   color: #55acee;
   -webkit-transition: color 0.3s;
           transition: color 0.3s;
 }
-/* line 56, sass/components/_main-social-links.scss */
+/* line 57, sass/components/_main-social-links.scss */
 .main-social-links li a:hover.ref-icon-before--facebook:before {
   color: #3b5998;
 }
-/* line 59, sass/components/_main-social-links.scss */
+/* line 60, sass/components/_main-social-links.scss */
 .main-social-links li a:hover.ref-icon-before--linkedin:before {
   color: #0976b4;
 }
-/* line 64, sass/components/_main-social-links.scss */
+/* line 65, sass/components/_main-social-links.scss */
 .main-social-links li a:active:before {
   border-top: 2px solid #1e1e1f;
 }
-/* line 68, sass/components/_main-social-links.scss */
+/* line 69, sass/components/_main-social-links.scss */
 .main-social-links li a span {
   position: absolute;
   text-align: left;
@@ -10691,10 +10729,10 @@ svg.loading-ellipsis .dot-3 {
 .panel-left {
   position: fixed;
   top: 0;
-  width: 220px;
+  width: 200px;
   height: 100vh;
   padding-top: 42px;
-  left: -220px;
+  left: -200px;
   display: inline-block;
   z-index: 10;
   float: left;
