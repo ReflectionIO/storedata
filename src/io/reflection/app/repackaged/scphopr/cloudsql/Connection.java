@@ -448,7 +448,7 @@ public final class Connection {
 		}
 	}
 
-	public void executePreparedStatement(PreparedStatement pstat) {
+	public void executePreparedStatement(PreparedStatement pstat) throws SQLException {
 		try {
 			if (LOG.isLoggable(GaeLevel.DEBUG)) {
 				LOG.log(GaeLevel.DEBUG, String.format("Executing prepared statement: %s", pstat.toString()));
@@ -456,6 +456,7 @@ public final class Connection {
 			queryResult = pstat.executeQuery();
 		} catch (SQLException e) {
 			LOG.log(Level.SEVERE, "Exception occured while trying to execute a statement", e);
+			throw e;
 		}
 	}
 }
