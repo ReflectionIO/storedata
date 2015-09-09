@@ -192,12 +192,6 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 
 		TooltipHelper.updateHelperTooltip();
 
-		loadingBar.show();
-		if (LinkedAccountController.get().linkedAccountsFetched()) {
-			loadingBar.setText("Getting apps...");
-		} else {
-			loadingBar.setText("Getting linked accounts...");
-		}
 	}
 
 	/*
@@ -478,9 +472,10 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 			userItemProvider.reset();
 			setFiltersEnabled(false);
 			viewAllBtn.setVisible(false);
+			RankController.get().cancelRequestSalesRanks();
 			ItemController.get().fetchLinkedAccountItems();
-			loadingBar.setProgressiveStatus("Getting apps...", 33);
-			loadingBar.show("Getting apps...");
+			loadingBar.show(LinkedAccountController.get().linkedAccountsFetched() ? "Getting apps..." : "Getting linked accounts...");
+			loadingBar.setProgressiveStatus(33);
 			errorPanel.setVisible(false);
 			// noAppsPanel.setVisible(false);
 			noLinkedAccountsPanel.setVisible(false);
@@ -508,9 +503,10 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 			userItemProvider.reset();
 			setFiltersEnabled(false);
 			viewAllBtn.setVisible(false);
+			RankController.get().cancelRequestSalesRanks();
 			ItemController.get().fetchLinkedAccountItems();
-			loadingBar.setProgressiveStatus("Getting apps...", 33);
-			loadingBar.show("Getting apps...");
+			loadingBar.show(LinkedAccountController.get().linkedAccountsFetched() ? "Getting apps..." : "Getting linked accounts...");
+			loadingBar.setProgressiveStatus(33);
 			errorPanel.setVisible(false);
 			// noAppsPanel.setVisible(false);
 			noLinkedAccountsPanel.setVisible(false);

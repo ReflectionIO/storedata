@@ -51,16 +51,17 @@ public class UserItemProvider extends AsyncDataProvider<MyApp> implements GetLin
 	 */
 	@Override
 	protected void onRangeChanged(HasData<MyApp> display) {
-		if (LinkedAccountController.get().linkedAccountsFetched()) {
-			if (myAppList.isEmpty()) {
-				ItemController.get().fetchLinkedAccountItems();
-			} else {
-				int end = (display.getVisibleRange().getLength() > myAppList.size() ? myAppList.size() : display.getVisibleRange().getLength());
-				updateRowData(0, myAppList.subList(0, end));
-			}
-		} else {
+		if (!LinkedAccountController.get().linkedAccountsFetched()) {
 			LinkedAccountController.get().fetchLinkedAccounts(); // After refresh or the user didn't visit the linked accounts page
 		}
+		// if (LinkedAccountController.get().linkedAccountsFetched()) {
+		// if (!myAppList.isEmpty()) {
+		// int end = (display.getVisibleRange().getLength() > myAppList.size() ? myAppList.size() : display.getVisibleRange().getLength());
+		// updateRowData(0, myAppList.subList(0, end));
+		// }
+		// } else {
+		// LinkedAccountController.get().fetchLinkedAccounts(); // After refresh or the user didn't visit the linked accounts page
+		// }
 	}
 
 	public void reset() {

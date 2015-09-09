@@ -98,8 +98,8 @@ public class SuperAlertBox implements JsonServiceCallEventHandler, CloseHandler<
 		AlertBoxHelper.configureAlert(alertBox, AlertBoxType.InfoAlertBoxType, true, callName, endPoint, true);
 		HandlerRegistration registration = alertBox.addCloseHandler(this);
 		registrations.add(registration);
-		
-		closeAfter(alertBox, 30);
+
+		closeAfter(alertBox, 100);
 	}
 
 	public void callSuccess(String callName, final Request request, Response response) {
