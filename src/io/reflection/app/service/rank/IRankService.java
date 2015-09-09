@@ -16,6 +16,7 @@ import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
 
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -46,7 +47,7 @@ public interface IRankService extends IService {
 	 * @return
 	 */
 	public List<Rank> getItemRanks(Country country, Category category, String listType, Item item, Date after, Date before, Pager pager)
-			throws DataAccessException;
+			throws DataAccessException, SQLException;
 
 	/**
 	 *
