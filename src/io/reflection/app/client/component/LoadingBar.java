@@ -42,7 +42,6 @@ public class LoadingBar extends Composite {
 
 	private Element container; // Loading bar wrapper
 	private boolean isProgressive;
-	private boolean isLoading; // Check if the loader is currently active
 
 	private final ReflectionMainStyles style = Styles.STYLES_INSTANCE.reflectionMainStyle();
 
@@ -98,21 +97,27 @@ public class LoadingBar extends Composite {
 		this.show("Loading...");
 	}
 
-	public void show(String text) {
-		if (!isLoading) {
+	public void show(final String text) {
+		if (container.isOrHasChild(bar.getElement())) {
 			reset();
-			isLoading = true;
-			setText(text);
-			container.appendChild(bar.getElement());
-			bar.getElement().addClassName(style.isOpening());
-			Timer timer = new Timer() {
-				@Override
-				public void run() {
-					bar.getElement().removeClassName(style.isOpening());
-				}
-			};
-			timer.schedule(100);
 		}
+		Timer resetTimer = new Timer() {
+
+			@Override
+			public void run() {
+				setText(text);
+				container.appendChild(bar.getElement());
+				bar.getElement().addClassName(style.isOpening());
+				Timer timer = new Timer() {
+					@Override
+					public void run() {
+						bar.getElement().removeClassName(style.isOpening());
+					}
+				};
+				timer.schedule(150);
+			}
+		};
+		resetTimer.schedule(150);
 	}
 
 	public void hide(boolean isSuccess) {
@@ -139,7 +144,6 @@ public class LoadingBar extends Composite {
 	private void close(String closingMessage, boolean isSuccess) {
 		textElem.setInnerText(closingMessage);
 		bar.getElement().addClassName((isSuccess ? style.isComplete() : style.isCompleteError()));
-		isLoading = false;
 		if (isSuccess) {
 			Timer timerDone = new Timer() {
 				@Override
@@ -181,7 +185,6 @@ public class LoadingBar extends Composite {
 		bar.getElement().removeClassName(style.isCompleteError());
 		bar.getElement().removeClassName(style.isClosing());
 		bar.getElement().removeFromParent();
-		isLoading = false;
 	}
 
 }
