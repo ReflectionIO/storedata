@@ -45,6 +45,7 @@ import io.reflection.app.client.helper.FormattingHelper;
 import io.reflection.app.client.helper.ResponsiveDesignHelper;
 import io.reflection.app.client.helper.TooltipHelper;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
+import io.reflection.app.client.part.ErrorPanel;
 import io.reflection.app.client.part.LoadingIndicator;
 import io.reflection.app.client.part.NoDataPanel;
 import io.reflection.app.client.part.datatypes.RanksGroup;
@@ -150,7 +151,9 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 	@UiField Button viewAllBtn;
 	@UiField SpanElement viewAllSpan;
-	@UiField InlineHyperlink redirect;
+	// @UiField InlineHyperlink redirect;
+	@UiField ErrorPanel errorPanel;
+	@UiField NoDataPanel noDataPanel;
 
 	private Column<RanksGroup, SafeHtml> rankColumn;
 	private Column<RanksGroup, Rank> grossingColumn;
@@ -255,7 +258,6 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			}
 		});
 
-		leaderboardTable.setEmptyTableWidget(new NoDataPanel());
 		leaderboardTable.setLoadingIndicator(loadingIndicatorAll);
 		leaderboardTable.getTableLoadingSection().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().tableBodyLoading());
 
@@ -481,11 +483,14 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 					loadingBar.show();
 					RankController.get().reset();
 					RankController.get().fetchTopItems();
-					setViewMoreVisible(false);
+					viewAllBtn.setVisible(false);
 				}
 
 				PageType.RanksPageType.show("view", selectedTab, FilterController.get().asRankFilterString());
 			}
+			errorPanel.setVisible(false);
+			noDataPanel.setVisible(false);
+			leaderboardTable.setVisible(true);
 		}
 		downloadsHeader.setHeaderStyleNames(style.canBeSorted());
 		revenueHeader.setHeaderStyleNames(style.canBeSorted());
@@ -511,11 +516,14 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 					loadingBar.show();
 					RankController.get().reset();
 					RankController.get().fetchTopItems();
-					setViewMoreVisible(false);
+					viewAllBtn.setVisible(false);
 				}
 
 				PageType.RanksPageType.show("view", selectedTab, FilterController.get().asRankFilterString());
 			}
+			errorPanel.setVisible(false);
+			noDataPanel.setVisible(false);
+			leaderboardTable.setVisible(true);
 		}
 		downloadsHeader.setHeaderStyleNames(style.canBeSorted());
 		revenueHeader.setHeaderStyleNames(style.canBeSorted());
@@ -740,18 +748,18 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		if (PageType.RanksPageType.equals(current.getPage())) {
 
 			if (leaderboardTable.getVisibleItemCount() > 0) {
-				setViewMoreVisible(true);
+				viewAllBtn.setVisible(true);
 			}
 
-			boolean hasPermission = SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_FULL_RANK_VIEW_CODE);
+			// boolean hasPermission = SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_FULL_RANK_VIEW_CODE);
 
-			if (hasPermission) {
-				redirect.removeFromParent();
-				viewAllBtn.getParent().getElement().appendChild(viewAllBtn.getElement());
-			} else {
-				viewAllBtn.removeFromParent();
-				redirect.getParent().getElement().appendChild(redirect.getElement());
-			}
+			// if (hasPermission) {
+			// redirect.removeFromParent();
+			// viewAllBtn.getParent().getElement().appendChild(viewAllBtn.getElement());
+			// } else {
+			// viewAllBtn.removeFromParent();
+			// redirect.getParent().getElement().appendChild(redirect.getElement());
+			// }
 
 			if (current.getAction() == null || !NavigationController.VIEW_ACTION_PARAMETER_VALUE.equals(current.getAction())) {
 				PageType.RanksPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, OVERALL_LIST_TYPE, FilterController.get().asRankFilterString());
@@ -806,15 +814,15 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	// }
 	// }
 
-	private void setViewMoreVisible(boolean visible) {
-		if (viewAllBtn.isAttached()) {
-			viewAllBtn.setVisible(visible);
-		}
-		if (redirect.isAttached()) {
-			redirect.setVisible(visible);
-		}
-
-	}
+	// private void setViewMoreVisible(boolean visible) {
+	// if (viewAllBtn.isAttached()) {
+	//
+	// }
+	// if (redirect.isAttached()) {
+	// redirect.setVisible(visible);
+	// }
+	//
+	// }
 
 	// private void checkPermissions() {
 	// List<Permission> permissions = new ArrayList<Permission>();
@@ -871,7 +879,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	public void getAllTopItemsSuccess(GetAllTopItemsRequest input, GetAllTopItemsResponse output) {
 		if (output.status.equals(StatusType.StatusTypeSuccess)) {
 			if (output.freeRanks != null) {
-				setViewMoreVisible(true);
+				viewAllBtn.setVisible(true);
 
 				if (SessionController.get().isLoggedInUserAdmin()) {
 					if (output.freeRanks != null && output.freeRanks.size() > 0 && output.freeRanks.get(0).code != null) {
@@ -885,12 +893,16 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 					}
 				}
 			} else {
-				setViewMoreVisible(false);
+				leaderboardTable.setVisible(false);
+				noDataPanel.setVisible(true);
+				viewAllBtn.setVisible(false);
 			}
 			loadingBar.hide(true);
 		} else {
-			setViewMoreVisible(false);
 			loadingBar.hide(false);
+			viewAllBtn.setVisible(false);
+			leaderboardTable.setVisible(false);
+			errorPanel.setVisible(true);
 		}
 
 		TooltipHelper.updateHelperTooltip();
@@ -906,6 +918,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	@Override
 	public void getAllTopItemsFailure(GetAllTopItemsRequest input, Throwable caught) {
 		loadingBar.hide(false);
-		setViewMoreVisible(false);
+		viewAllBtn.setVisible(false);
+		leaderboardTable.setVisible(false);
+		errorPanel.setVisible(true);
 	}
 }

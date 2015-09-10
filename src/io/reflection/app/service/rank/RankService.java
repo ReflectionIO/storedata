@@ -209,7 +209,7 @@ public class RankService implements IRankService {
 	 */
 	@Override
 	public List<Rank> getItemRanks(Country country, Category category, String listType, Item item, Date after, Date before, Pager pager)
-			throws DataAccessException {
+			throws DataAccessException, SQLException {
 		final List<Rank> ranks = new ArrayList<Rank>();
 
 		final String selectQuery = "SELECT r.*, rf.group_fetch_code, rf.fetch_date, rf.country, rf.category, rf.type, rf.platform "
@@ -255,6 +255,7 @@ public class RankService implements IRankService {
 			}
 		} catch (SQLException e) {
 			LOG.log(Level.SEVERE, "Exception occured while trying to gather code ranks", e);
+			throw e;
 		} finally {
 			if (rankConnection != null) {
 				rankConnection.disconnect();
@@ -273,8 +274,8 @@ public class RankService implements IRankService {
 	public Boolean getItemHasGrossingRank(Item item) throws DataAccessException {
 		Boolean hasGrossingRank = Boolean.FALSE;
 
-		final String getItemHasGrossingRankQuery = String.format(
-				"select rank_fetch_id from rank_fetch where rank_fetch_id in ( select rank_fetch_id from rank2 where itemid='%s' ) and type='GROSSING' limit 1",
+		final String getItemHasGrossingRankQuery = String
+				.format("select rank_fetch_id from rank_fetch where rank_fetch_id in ( select rank_fetch_id from rank2 where itemid='%s' ) and type='GROSSING' limit 1",
 				addslashes(item.internalId));
 
 		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
@@ -541,8 +542,7 @@ public class RankService implements IRankService {
 	public List<Long> getRankIds(Country country, Store store, Category category, Date start, Date end) throws DataAccessException {
 		final List<Long> rankIds = new ArrayList<Long>();
 
-		final String selectQuery = "SELECT r.id "
-				+ " FROM rank_fetch rf inner join rank2 r on (r.rank_fetch_id = rf.rank_fetch_id) WHERE "
+		final String selectQuery = "SELECT r.id FROM rank_fetch rf inner join rank2 r on (r.rank_fetch_id = rf.rank_fetch_id) WHERE "
 				+ " rf.country=? AND rf.category=? AND rf.fetch_date BETWEEN ? AND ? and rf.fetch_time > '21:00'";
 
 		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
@@ -581,8 +581,7 @@ public class RankService implements IRankService {
 	public List<Long> getRankIds(Pager pager) throws DataAccessException {
 		final List<Long> rankIds = new ArrayList<Long>();
 
-		final String selectQuery = "SELECT r.id "
-				+ " FROM rank_fetch rf inner join rank2 r on (r.rank_fetch_id = rf.rank_fetch_id) WHERE "
+		final String selectQuery = "SELECT r.id FROM rank_fetch rf inner join rank2 r on (r.rank_fetch_id = rf.rank_fetch_id) WHERE "
 				+ " rf.fetch_time > '21:00' limit ?, ?";
 
 		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());

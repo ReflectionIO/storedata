@@ -23,7 +23,6 @@ import io.reflection.app.api.core.shared.call.event.GetLinkedAccountItemEventHan
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.component.DateSelector;
 import io.reflection.app.client.component.FilterSwitch;
-import io.reflection.app.client.component.LoadingBar;
 import io.reflection.app.client.component.Selector;
 import io.reflection.app.client.component.ToggleRadioButton;
 import io.reflection.app.client.controller.FilterController;
@@ -62,7 +61,6 @@ import io.reflection.app.client.res.Styles;
 import io.reflection.app.client.res.Styles.ReflectionMainStyles;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
-import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
@@ -204,7 +202,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField OutOfRankPanel appOutOfTop200Panel;
 	@UiField DivElement appDetailsPanel;
 
-	private LoadingBar loadingBar;
+	// private LoadingBar loadingBar;
 
 	@UiField Element tablePanel;
 	@UiField Element togglePanel;
@@ -306,8 +304,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		});
 
 		resetAppProperties();
-		loadingBar = new LoadingBar(false);
-		loadingBar.show();
+
+		// loadingBar.show();
 
 		TooltipHelper.updateHelperTooltip();
 	}
@@ -330,13 +328,9 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		}
 
 		title.setInnerText(displayingApp.name);
-		creatorName.setInnerText("By " + displayingApp.creatorName);
+		creatorName.setInnerText(displayingApp.creatorName != null ? "By " + displayingApp.creatorName : "");
 		image.setUrl(displayingApp.mediumImage != null ? displayingApp.mediumImage : "");
 		imageTable.setUrl(displayingApp.smallImage != null ? displayingApp.smallImage : "");
-		Store store = StoreController.get().getStore(displayingApp.source);
-		storeName
-				.setInnerText("View in " + (store == null || store.name == null || store.name.length() == 0 ? displayingApp.source.toUpperCase() : store.name));
-		viewInStore.setHref(StoreController.get().getExternalUri(displayingApp));
 		iapDescription = DataTypeHelper.itemIapState(displayingApp, " + In App Purchases", "", "");
 	}
 
@@ -362,10 +356,10 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	private void setError() {
 		displayingApp.currency = null;
 		displayingApp.price = null;
-		price.setInnerSafeHtml(SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
+		setAppPriceFromRank(null);
 		infoTotalRevenue.setInnerSafeHtml(SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
 		revenueTable.setRowCount(0, true);
-		loadingBar.hide(false);
+		// loadingBar.hide(false);
 		chartContainer.setVisible(false);
 		errorPanel.setVisible(true);
 		graphLoadingIndicator.removeClassName(style.isLoadingSuccess());
@@ -643,7 +637,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		super.onDetach();
 
 		resetAppProperties();
-		loadingBar.reset();
+		// loadingBar.reset();
 	}
 
 	/*
@@ -668,14 +662,17 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				displayingAppId = newInternalId;
 
 				if ((displayingApp = ItemController.get().lookupItem(displayingAppId)) != null) { // App details already retrieved
-					displayingApp.source = StoreController.get().getStore(FilterController.get().getFilter().getStoreA3Code()).a3Code;
 					setAppDetails(displayingApp);
 				} else {
 					// Coming from a refresh page
 					displayingApp = new Item();
 					displayingApp.internalId = displayingAppId;
-					displayingApp.source = StoreController.get().getStore(FilterController.get().getFilter().getStoreA3Code()).a3Code;
 				}
+				displayingApp.source = DataTypeHelper.IOS_STORE_A3;
+
+				storeName.setInnerText("View in Appstore");
+				viewInStore.setHref(StoreController.get().getExternalUri(displayingApp));
+
 			} else {
 				setAppDetails(displayingApp);
 			}
@@ -753,7 +750,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				dateHeader.setHeaderStyleNames(style.canBeSorted());
 				revenueHeader.setHeaderStyleNames(style.canBeSorted());
 				revenueForPeriodHeader.setHeaderStyleNames(style.canBeSorted());
-				loadingBar.show();
+				// loadingBar.show();
 				getChartData();
 			}
 
@@ -989,12 +986,12 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public void getItemRanksSuccess(GetItemRanksRequest input, GetItemRanksResponse output) {
 		if (output != null && output.item != null && output.status == StatusType.StatusTypeSuccess) {
+			if (output.ranks != null) { // if == null the list is empty
 			if (output.outOfLeaderboardDates != null && output.outOfLeaderboardDates.size() == FilterController.get().getDateRange().getDays()) {
 				chartContainer.setVisible(false);
 				appOutOfTop200Panel.setVisible(true);
 				setChartGraphsVisible(false);
 			}
-			if (output.ranks != null && output.ranks.size() > 0) {
 				setAppDetails(output.item);
 				Rank rankPrice = null;
 				for (Rank r : output.ranks) {
@@ -1006,11 +1003,14 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				setAppPriceFromRank(rankPrice);
 				drawData(output.ranks, output.outOfLeaderboardDates);
 			} else {
+				setAppPriceFromRank(null);
+				infoTotalRevenue.setInnerSafeHtml(SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
+				revenueTable.setRowCount(0, true);
 				chartContainer.setVisible(false);
 				noDataPanel.setVisible(true);
 			}
 			TooltipHelper.updateHelperTooltip();
-			loadingBar.hide(true);
+			// loadingBar.hide(true);
 		} else {
 			setError();
 		}
@@ -1038,7 +1038,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public void getItemSalesRanksSuccess(GetItemSalesRanksRequest input, GetItemSalesRanksResponse output) {
 		if (output != null && output.item != null && output.status == StatusType.StatusTypeSuccess) {
-			if (output.ranks != null && output.ranks.size() > 0) {
+			if (output.ranks != null) {
 				setAppDetails(output.item);
 				Rank rankPrice = null;
 				for (Rank r : output.ranks) {
@@ -1049,11 +1049,15 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				}
 				setAppPriceFromRank(rankPrice);
 				drawData(output.ranks, null);
+				TooltipHelper.updateHelperTooltip();
+				// loadingBar.hide(true);
 			} else {
-				setError();
+				setAppPriceFromRank(null);
+				infoTotalRevenue.setInnerSafeHtml(SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
+				revenueTable.setRowCount(0, true);
+				chartContainer.setVisible(false);
+				noDataPanel.setVisible(true);
 			}
-			TooltipHelper.updateHelperTooltip();
-			loadingBar.hide(true);
 		} else {
 			setError();
 		}
