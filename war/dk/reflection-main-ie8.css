@@ -168,7 +168,7 @@ input::-ms-clear {
   display: none;
 }
 
-/* line 12, sass/layout/_layout.scss */
+/* line 13, sass/layout/_layout.scss */
 .l-page-container {
   position: relative;
   width: 100%;
@@ -178,25 +178,25 @@ input::-ms-clear {
   -webkit-transition: -webkit-filter 0.18s, filter 0.18s;
           transition: filter 0.18s;
 }
-/* line 19, sass/layout/_layout.scss */
+/* line 20, sass/layout/_layout.scss */
 .touch .no-scroll .l-page-container {
   overflow: hidden;
   height: 100vh;
 }
-/* line 23, sass/layout/_layout.scss */
+/* line 24, sass/layout/_layout.scss */
 .l-page-container.is-blurred-heavy {
   -webkit-filter: blur(0.8px);
           filter: blur(0.8px);
   -webkit-transition: -webkit-filter 0.5s, filter 0.5s;
           transition: filter 0.5s;
 }
-/* line 26, sass/layout/_layout.scss */
+/* line 27, sass/layout/_layout.scss */
 .ie8 .l-page-container.is-blurred-heavy, .ie9 .l-page-container.is-blurred-heavy {
   -webkit-filter: none;
           filter: none;
 }
 
-/* line 31, sass/layout/_layout.scss */
+/* line 32, sass/layout/_layout.scss */
 .l-main {
   width: 100%;
   padding-top: 42px;
@@ -208,16 +208,16 @@ input::-ms-clear {
           transition: width 0.15s ease-in;
   padding-top: 62px;
 }
-/* line 42, sass/layout/_layout.scss */
+/* line 43, sass/layout/_layout.scss */
 .panel-left-open .l-main {
   width: 100%;
   overflow: visible;
-  width: calc(100% - 220px);
+  width: calc(100% - 200px);
   -webkit-transition: width 0.15s ease-out;
           transition: width 0.15s ease-out;
 }
 
-/* line 53, sass/layout/_layout.scss */
+/* line 54, sass/layout/_layout.scss */
 .is-chrome .l-main,
 .is-chrome .panel-left-open .l-main,
 .is-opera .l-main,
@@ -226,41 +226,41 @@ input::-ms-clear {
           transition: none;
 }
 
-/* line 58, sass/layout/_layout.scss */
+/* line 59, sass/layout/_layout.scss */
 .l-full-screen-section {
   height: calc(100vh - 42px);
   background-color: #6d69c5;
   height: calc(100vh - 62px);
 }
 
-/* line 65, sass/layout/_layout.scss */
+/* line 66, sass/layout/_layout.scss */
 .components-row-with-border {
   padding-bottom: 2rem;
   margin-bottom: 4rem;
   border-bottom: 1px solid #e1e5e8;
 }
 
-/* line 70, sass/layout/_layout.scss */
+/* line 71, sass/layout/_layout.scss */
 .article-list--article {
   padding-bottom: 2.5rem;
   margin-bottom: 2rem;
   border-bottom: 1px solid #e1e1e1;
 }
 
-/* line 78, sass/layout/_layout.scss */
+/* line 79, sass/layout/_layout.scss */
 .page-section {
   width: 100%;
   margin-bottom: 3rem;
 }
-/* line 81, sass/layout/_layout.scss */
+/* line 82, sass/layout/_layout.scss */
 .page-section > .grid__column {
   padding-bottom: 4rem;
 }
-/* line 84, sass/layout/_layout.scss */
+/* line 85, sass/layout/_layout.scss */
 .page-section.page-section--with-border {
   border-bottom: 1px solid #e1e5e8;
 }
-/* line 87, sass/layout/_layout.scss */
+/* line 88, sass/layout/_layout.scss */
 .page-section:first-child {
   margin-top: 3rem;
 }
@@ -498,8 +498,8 @@ input::-ms-clear {
 
 /* Global */
 /* line 1, sass/ui/_icons.scss */
-.ref-icon-before, .page-logged-in-landing .accordion-switch, .page-logged-in-landing .accordion .list-item-complete, .ref-icon-after, .home-welcome__text .home-welcome__call-to-action, .read-only-date span, .panel-link .panel-link__link > span span, .accordion-switch, .form-field .form-field-help,
-.search-field-no-label .form-field-help, .form-field.form-field--date-select span, .main-navigation > ul ul li.has-child, .whats-this-tooltip-icon,
+.ref-icon-before, .page-logged-in-landing .accordion-switch, .page-logged-in-landing .accordion .list-item-complete, .main-navigation > ul ul li.has-child, .ref-icon-after, .home-welcome__text .home-welcome__call-to-action, .read-only-date span, .panel-link .panel-link__link > span span, .accordion-switch, .form-field .form-field-help,
+.search-field-no-label .form-field-help, .form-field.form-field--date-select span, .whats-this-tooltip-icon,
 .whats-this-tooltip-icon-static, .date-select-to-indicator, .datePickerPreviousButton,
 .datePickerNextButton {
   padding: 0;
@@ -509,14 +509,14 @@ input::-ms-clear {
 
 /* Reflection Icons */
 /* line 10, sass/ui/_icons.scss */
-.ref-icon-before:before, .page-logged-in-landing .accordion-switch:before, .page-logged-in-landing .accordion .list-item-complete:before {
+.ref-icon-before:before, .page-logged-in-landing .accordion-switch:before, .page-logged-in-landing .accordion .list-item-complete:before, .main-navigation > ul ul li.has-child:before {
   font-size: 22px;
   position: relative;
 }
 
 /* line 18, sass/ui/_icons.scss */
 .ref-icon-after:after, .home-welcome__text .home-welcome__call-to-action:after, .read-only-date span:after, .panel-link .panel-link__link > span span:after, .accordion-switch:after, .form-field .form-field-help:after,
-.search-field-no-label .form-field-help:after, .form-field.form-field--date-select span:after, .main-navigation > ul ul li.has-child:after, .whats-this-tooltip-icon:after,
+.search-field-no-label .form-field-help:after, .form-field.form-field--date-select span:after, .whats-this-tooltip-icon:after,
 .whats-this-tooltip-icon-static:after {
   font-size: 22px;
   position: relative;
@@ -563,8 +563,8 @@ input::-ms-clear {
 }
 /* Typography placeholders */
 /* line 22, sass/ui/_typography.scss */
-.ref-icon-before:before, .page-logged-in-landing .accordion-switch:before, .page-logged-in-landing .accordion .list-item-complete:before, .ref-icon-after:after, .home-welcome__text .home-welcome__call-to-action:after, .read-only-date span:after, .panel-link .panel-link__link > span span:after, .accordion-switch:after, .form-field .form-field-help:after,
-.search-field-no-label .form-field-help:after, .form-field.form-field--date-select span:after, .main-navigation > ul ul li.has-child:after, .whats-this-tooltip-icon:after,
+.ref-icon-before:before, .page-logged-in-landing .accordion-switch:before, .page-logged-in-landing .accordion .list-item-complete:before, .main-navigation > ul ul li.has-child:before, .ref-icon-after:after, .home-welcome__text .home-welcome__call-to-action:after, .read-only-date span:after, .panel-link .panel-link__link > span span:after, .accordion-switch:after, .form-field .form-field-help:after,
+.search-field-no-label .form-field-help:after, .form-field.form-field--date-select span:after, .whats-this-tooltip-icon:after,
 .whats-this-tooltip-icon-static:after, .reflection-select.reflection-select--filter .close-popup,
 .reflection-select.reflection-select--filter .remove-form-field,
 .form-field--country-select .close-popup,
@@ -752,65 +752,70 @@ ol.content-list--minor li:before {
 }
 
 /* line 140, sass/ui/_typography.scss */
-.ref-icon-after--dot:after, .main-navigation > ul ul li.has-child:after {
+.ref-icon-after--dot:after {
   content: "r";
 }
 
 /* line 143, sass/ui/_typography.scss */
+.ref-icon-before--dot:before, .main-navigation > ul ul li.has-child:before {
+  content: "r";
+}
+
+/* line 146, sass/ui/_typography.scss */
 .ref-icon-before--check:before {
   content: "t";
 }
 
-/* line 146, sass/ui/_typography.scss */
+/* line 149, sass/ui/_typography.scss */
 .ref-icon-after--check:after {
   content: "t";
 }
 
-/* line 149, sass/ui/_typography.scss */
+/* line 152, sass/ui/_typography.scss */
 .ref-icon-after--calendar:after {
   content: "u";
 }
 
-/* line 152, sass/ui/_typography.scss */
+/* line 155, sass/ui/_typography.scss */
 .ref-icon-after--question:after, .form-field .form-field-help:after,
 .search-field-no-label .form-field-help:after, .whats-this-tooltip-icon:after,
 .whats-this-tooltip-icon-static:after {
   content: "F";
 }
 
-/* line 155, sass/ui/_typography.scss */
+/* line 158, sass/ui/_typography.scss */
 .ref-icon-after--close:after {
   content: "K";
 }
 
-/* line 158, sass/ui/_typography.scss */
+/* line 161, sass/ui/_typography.scss */
 .ref-icon-before--location:before {
   content: "Q";
 }
 
-/* line 161, sass/ui/_typography.scss */
+/* line 164, sass/ui/_typography.scss */
 .ref-icon-before--mail:before {
   content: "P";
 }
 
 /* Base typography */
-/* line 168, sass/ui/_typography.scss */
+/* line 171, sass/ui/_typography.scss */
 h1:last-child, h2:last-child, h3:last-child, h4:last-child, h5:last-child, h6:last-child, p:last-child, li:last-child, a:last-child, blockquote:last-child, time:last-child, span:last-child, cite:last-child {
   margin-bottom: 0;
 }
 
-/* line 172, sass/ui/_typography.scss */
+/* line 175, sass/ui/_typography.scss */
 h1, h2, h3, h4, h5, h6, .heading-style, h1, .heading-style--heading-one, h2, .heading-style--heading-two, h3, .heading-style--heading-three, h4, .heading-style--heading-four, h5, .heading-style--heading-five, h6, .heading-style--heading-six {
   overflow: visible;
   line-height: 1;
   color: #29292c;
 }
-/* line 177, sass/ui/_typography.scss */
+/* line 180, sass/ui/_typography.scss */
 h1:first-child, h2:first-child, h3:first-child, h4:first-child, h5:first-child, h6:first-child, .heading-style:first-child, h1:first-child, .heading-style--heading-one:first-child, h2:first-child, .heading-style--heading-two:first-child, h3:first-child, .heading-style--heading-three:first-child, h4:first-child, .heading-style--heading-four:first-child, h5:first-child, .heading-style--heading-five:first-child, h6:first-child, .heading-style--heading-six:first-child {
   margin-top: 0;
 }
 
-/* line 181, sass/ui/_typography.scss */
+/* line 184, sass/ui/_typography.scss */
 h1 + h2, h1 + h3, h1 + h4, h1 + h5, h1 + h6,
 h2 + h3, h2 + h4, h2 + h5, h2 + h6,
 h3 + h4, h3 + h5, h3 + h6,
@@ -864,79 +869,79 @@ h5 + .heading-style--heading-six,
   margin-top: 0;
 }
 
-/* line 234, sass/ui/_typography.scss */
+/* line 237, sass/ui/_typography.scss */
 h1, .heading-style--heading-one {
   margin-top: 3rem;
   margin-bottom: 0.65em;
   font-size: 2.7rem;
   line-height: 1.2em;
 }
-/* line 240, sass/ui/_typography.scss */
+/* line 243, sass/ui/_typography.scss */
 h1:first-child:last-child, .heading-style--heading-one:first-child:last-child {
   margin-bottom: 0.68em;
 }
 
-/* line 253, sass/ui/_typography.scss */
+/* line 256, sass/ui/_typography.scss */
 h2, .heading-style--heading-two {
   margin-top: 3rem;
   margin-bottom: 0.6em;
   font-size: 2.5rem;
   line-height: 1.3em;
 }
-/* line 259, sass/ui/_typography.scss */
+/* line 262, sass/ui/_typography.scss */
 h2:first-child:last-child, .heading-style--heading-two:first-child:last-child {
   margin-bottom: 0.68em;
 }
 
-/* line 272, sass/ui/_typography.scss */
+/* line 275, sass/ui/_typography.scss */
 h3, .heading-style--heading-three {
   margin-top: 3rem;
   margin-bottom: 0.68em;
   font-size: 2.3rem;
   line-height: 1.3em;
 }
-/* line 282, sass/ui/_typography.scss */
+/* line 285, sass/ui/_typography.scss */
 h3:first-child:last-child, .heading-style--heading-three:first-child:last-child {
   margin-bottom: 0.68em;
 }
 
-/* line 286, sass/ui/_typography.scss */
+/* line 289, sass/ui/_typography.scss */
 h4, .heading-style--heading-four {
   margin-top: 3rem;
   margin-bottom: 0.8em;
   font-size: 2.1rem;
   line-height: 1.4em;
 }
-/* line 296, sass/ui/_typography.scss */
+/* line 299, sass/ui/_typography.scss */
 h4:first-child:last-child, .heading-style--heading-four:first-child:last-child {
   margin-bottom: 0.8em;
 }
 
-/* line 300, sass/ui/_typography.scss */
+/* line 303, sass/ui/_typography.scss */
 h5, .heading-style--heading-five {
   margin-top: 3rem;
   margin-bottom: 0.7em;
   font-size: 1.9rem;
   line-height: 1.35em;
 }
-/* line 310, sass/ui/_typography.scss */
+/* line 313, sass/ui/_typography.scss */
 h5:first-child:last-child, .heading-style--heading-five:first-child:last-child {
   margin-bottom: 0.7em;
 }
 
-/* line 314, sass/ui/_typography.scss */
+/* line 317, sass/ui/_typography.scss */
 h6, .heading-style--heading-six {
   margin-top: 3rem;
   margin-bottom: 0.7em;
   font-size: 1.7rem;
   line-height: 1.35em;
 }
-/* line 324, sass/ui/_typography.scss */
+/* line 327, sass/ui/_typography.scss */
 h6:first-child:last-child, .heading-style--heading-six:first-child:last-child {
   margin-bottom: 0.7em;
 }
 
-/* line 328, sass/ui/_typography.scss */
+/* line 331, sass/ui/_typography.scss */
 p {
   max-width: 650px;
   margin-bottom: 1.2em;
@@ -944,104 +949,104 @@ p {
   line-height: 1.5625em;
   color: #5b5b68;
 }
-/* line 340, sass/ui/_typography.scss */
+/* line 343, sass/ui/_typography.scss */
 p a {
   text-decoration: none;
   color: #6d69c5;
 }
-/* line 343, sass/ui/_typography.scss */
+/* line 346, sass/ui/_typography.scss */
 p a:hover {
   color: #4b46b5;
 }
-/* line 346, sass/ui/_typography.scss */
+/* line 349, sass/ui/_typography.scss */
 p a:active {
   position: relative;
   top: 2px;
 }
 
-/* line 352, sass/ui/_typography.scss */
+/* line 355, sass/ui/_typography.scss */
 .text-link, .filters-group-graph-options .show-hide-link {
   text-decoration: none;
   color: #6d69c5;
 }
-/* line 355, sass/ui/_typography.scss */
+/* line 358, sass/ui/_typography.scss */
 .text-link:hover, .filters-group-graph-options .show-hide-link:hover {
   color: #4b46b5;
 }
-/* line 358, sass/ui/_typography.scss */
+/* line 361, sass/ui/_typography.scss */
 .text-link:active, .filters-group-graph-options .show-hide-link:active {
   position: relative;
   top: 2px;
 }
 
-/* line 363, sass/ui/_typography.scss */
+/* line 366, sass/ui/_typography.scss */
 .p-style--minor {
   margin-bottom: 1.5em;
   font-size: 1.4em;
   line-height: 1.64285714285714em;
 }
-/* line 367, sass/ui/_typography.scss */
+/* line 370, sass/ui/_typography.scss */
 .p-style--minor:last-child {
   margin-bottom: 0;
 }
 
-/* line 371, sass/ui/_typography.scss */
+/* line 374, sass/ui/_typography.scss */
 .p-style--featured {
   margin-bottom: 1.5em;
   font-size: 1.8em;
   line-height: 1.55555555555556em;
 }
-/* line 375, sass/ui/_typography.scss */
+/* line 378, sass/ui/_typography.scss */
 .p-style--featured:last-child {
   margin-bottom: 0;
 }
 
-/* line 379, sass/ui/_typography.scss */
+/* line 382, sass/ui/_typography.scss */
 .content-list {
   margin-top: 1.8em;
   margin-bottom: 1.875em;
   font-size: 1.6em;
   line-height: 1.375em;
 }
-/* line 384, sass/ui/_typography.scss */
+/* line 387, sass/ui/_typography.scss */
 .content-list:last-child {
   margin-bottom: 0;
 }
-/* line 387, sass/ui/_typography.scss */
+/* line 390, sass/ui/_typography.scss */
 .content-list li {
   max-width: 650px;
   margin-bottom: 0.62em;
   padding-left: 31px;
 }
-/* line 394, sass/ui/_typography.scss */
+/* line 397, sass/ui/_typography.scss */
 .content-list li:last-child {
   margin-bottom: 0;
 }
-/* line 397, sass/ui/_typography.scss */
+/* line 400, sass/ui/_typography.scss */
 .content-list li a {
   text-decoration: none;
   color: #6d69c5;
 }
-/* line 400, sass/ui/_typography.scss */
+/* line 403, sass/ui/_typography.scss */
 .content-list li a:hover {
   color: #4b46b5;
 }
-/* line 403, sass/ui/_typography.scss */
+/* line 406, sass/ui/_typography.scss */
 .content-list li a:active {
   position: relative;
   top: 2px;
 }
-/* line 410, sass/ui/_typography.scss */
+/* line 413, sass/ui/_typography.scss */
 .content-list.content-list--no-bullets li {
   padding-left: 0;
   background: none;
 }
-/* line 413, sass/ui/_typography.scss */
+/* line 416, sass/ui/_typography.scss */
 .content-list.content-list--no-bullets li:before {
   display: none;
 }
 
-/* line 419, sass/ui/_typography.scss */
+/* line 422, sass/ui/_typography.scss */
 h1 + .content-list,
 h2 + .content-list,
 h3 + .content-list,
@@ -1051,45 +1056,45 @@ h6 + .content-list {
   margin-top: 0;
 }
 
-/* line 427, sass/ui/_typography.scss */
+/* line 430, sass/ui/_typography.scss */
 .content-list--featured {
   margin-bottom: 1.5em;
   font-size: 2rem;
   line-height: 1.3em;
 }
-/* line 431, sass/ui/_typography.scss */
+/* line 434, sass/ui/_typography.scss */
 .content-list--featured:last-child {
   margin-bottom: 0;
 }
-/* line 434, sass/ui/_typography.scss */
+/* line 437, sass/ui/_typography.scss */
 .content-list--featured li {
   margin-bottom: 0.5em;
   padding-left: 31px;
 }
 
-/* line 439, sass/ui/_typography.scss */
+/* line 442, sass/ui/_typography.scss */
 .content-list--minor {
   margin-bottom: 2.14285714285714em;
   font-size: 1.4rem;
   line-height: 1.42857142857143em;
 }
-/* line 443, sass/ui/_typography.scss */
+/* line 446, sass/ui/_typography.scss */
 .content-list--minor:last-child {
   margin-bottom: 0;
 }
-/* line 446, sass/ui/_typography.scss */
+/* line 449, sass/ui/_typography.scss */
 .content-list--minor li {
   margin-bottom: 0.44em;
   padding-left: 26px;
 }
 
-/* line 451, sass/ui/_typography.scss */
+/* line 454, sass/ui/_typography.scss */
 ol.content-list,
 ol.content-list--minor,
 ol.content-list--featured {
   counter-reset: ordered-counter;
 }
-/* line 455, sass/ui/_typography.scss */
+/* line 458, sass/ui/_typography.scss */
 ol.content-list li,
 ol.content-list--minor li,
 ol.content-list--featured li {
@@ -1097,7 +1102,7 @@ ol.content-list--featured li {
   padding-left: 5rem;
   color: #5b5b68;
 }
-/* line 462, sass/ui/_typography.scss */
+/* line 465, sass/ui/_typography.scss */
 ol.content-list li:before,
 ol.content-list--minor li:before,
 ol.content-list--featured li:before {
@@ -1110,19 +1115,19 @@ ol.content-list--featured li:before {
   content: counter(ordered-counter);
   counter-increment: ordered-counter;
 }
-/* line 471, sass/ui/_typography.scss */
+/* line 474, sass/ui/_typography.scss */
 .page-terms ol.content-list li:before, .page-terms
 ol.content-list--minor li:before, .page-terms
 ol.content-list--featured li:before {
   content: counter(ordered-counter) ".0";
 }
-/* line 475, sass/ui/_typography.scss */
+/* line 478, sass/ui/_typography.scss */
 ol.content-list li ol,
 ol.content-list--minor li ol,
 ol.content-list--featured li ol {
   counter-reset: ordered-sub-counter;
 }
-/* line 477, sass/ui/_typography.scss */
+/* line 480, sass/ui/_typography.scss */
 ol.content-list li ol li:before,
 ol.content-list--minor li ol li:before,
 ol.content-list--featured li ol li:before {
@@ -1131,31 +1136,31 @@ ol.content-list--featured li ol li:before {
   content: counter(ordered-counter) "." counter(ordered-sub-counter);
   counter-increment: ordered-sub-counter;
 }
-/* line 482, sass/ui/_typography.scss */
+/* line 485, sass/ui/_typography.scss */
 .page-terms ol.content-list li ol li:before, .page-terms
 ol.content-list--minor li ol li:before, .page-terms
 ol.content-list--featured li ol li:before {
   content: counter(ordered-counter) "." counter(ordered-sub-counter);
 }
-/* line 488, sass/ui/_typography.scss */
+/* line 491, sass/ui/_typography.scss */
 ol.content-list p,
 ol.content-list--minor p,
 ol.content-list--featured p {
   color: #5b5b68;
 }
 
-/* line 499, sass/ui/_typography.scss */
+/* line 502, sass/ui/_typography.scss */
 ol.content-list--featured li:before {
   font-size: 1.9rem;
 }
 
-/* line 507, sass/ui/_typography.scss */
+/* line 510, sass/ui/_typography.scss */
 ul.content-list li,
 ul.content-list--featured li,
 ul.content-list--minor li {
   position: relative;
 }
-/* line 509, sass/ui/_typography.scss */
+/* line 512, sass/ui/_typography.scss */
 ul.content-list li:before,
 ul.content-list--featured li:before,
 ul.content-list--minor li:before {
@@ -1167,7 +1172,7 @@ ul.content-list--minor li:before {
   color: #6d69c5;
 }
 
-/* line 519, sass/ui/_typography.scss */
+/* line 522, sass/ui/_typography.scss */
 blockquote {
   position: relative;
   padding-top: 38px;
@@ -1177,7 +1182,7 @@ blockquote {
   margin-bottom: 3em;
   margin-top: 3rem;
 }
-/* line 528, sass/ui/_typography.scss */
+/* line 531, sass/ui/_typography.scss */
 blockquote:before {
   position: absolute;
   top: 20px;
@@ -1189,7 +1194,7 @@ blockquote:before {
   font-size: 80px;
   color: #e8e7f1;
 }
-/* line 539, sass/ui/_typography.scss */
+/* line 542, sass/ui/_typography.scss */
 blockquote p {
   margin-bottom: 1em;
   font-family: "Source Sans Pro", sans-serif;
@@ -1198,14 +1203,14 @@ blockquote p {
   font-size: 1.6em;
   color: #5b5b68;
 }
-/* line 547, sass/ui/_typography.scss */
+/* line 550, sass/ui/_typography.scss */
 blockquote cite {
   font-family: "Lato", sans-serif;
   font-weight: 400;
   font-size: 1.2rem;
   line-height: 1.5;
 }
-/* line 552, sass/ui/_typography.scss */
+/* line 555, sass/ui/_typography.scss */
 blockquote cite span {
   margin-bottom: 4px;
   display: block;
@@ -1214,30 +1219,30 @@ blockquote cite span {
   font-weight: 600;
   color: #29292c;
 }
-/* line 562, sass/ui/_typography.scss */
+/* line 565, sass/ui/_typography.scss */
 blockquote.blockquote--on-purple:before {
   color: #5f5bb4;
 }
-/* line 565, sass/ui/_typography.scss */
+/* line 568, sass/ui/_typography.scss */
 blockquote.blockquote--on-purple p {
   color: #fff;
 }
-/* line 568, sass/ui/_typography.scss */
+/* line 571, sass/ui/_typography.scss */
 blockquote.blockquote--on-purple cite {
   color: #c3c6f6;
 }
-/* line 570, sass/ui/_typography.scss */
+/* line 573, sass/ui/_typography.scss */
 blockquote.blockquote--on-purple cite span {
   color: #fefefe;
 }
 
-/* line 576, sass/ui/_typography.scss */
+/* line 579, sass/ui/_typography.scss */
 strong {
   font-weight: 700;
   color: #29292c;
 }
 
-/* line 580, sass/ui/_typography.scss */
+/* line 583, sass/ui/_typography.scss */
 .blockquote--large {
   padding-top: 0;
   padding-left: 65px;
@@ -1245,27 +1250,27 @@ strong {
   margin-bottom: 3.5rem;
   font-size: 1.1em;
 }
-/* line 586, sass/ui/_typography.scss */
+/* line 589, sass/ui/_typography.scss */
 .blockquote--large p {
   margin-bottom: 1.2em;
   font-size: 1.6em;
 }
-/* line 590, sass/ui/_typography.scss */
+/* line 593, sass/ui/_typography.scss */
 .blockquote--large:before {
   top: 32px;
   left: 0;
   font-size: 100px;
 }
-/* line 595, sass/ui/_typography.scss */
+/* line 598, sass/ui/_typography.scss */
 .blockquote--large cite {
   font-size: 1.4rem;
 }
-/* line 597, sass/ui/_typography.scss */
+/* line 600, sass/ui/_typography.scss */
 .blockquote--large cite span {
   font-size: 1.8rem;
 }
 
-/* line 602, sass/ui/_typography.scss */
+/* line 605, sass/ui/_typography.scss */
 figcaption {
   margin-top: 1.2rem;
   margin-bottom: 1.9em;
@@ -1276,17 +1281,17 @@ figcaption {
   color: #81869e;
 }
 
-/* line 611, sass/ui/_typography.scss */
+/* line 614, sass/ui/_typography.scss */
 .warning-text {
   color: #ff496a !important;
 }
 
-/* line 614, sass/ui/_typography.scss */
+/* line 617, sass/ui/_typography.scss */
 a.warning-text:hover {
   color: #d23753 !important;
 }
 
-/* line 617, sass/ui/_typography.scss */
+/* line 620, sass/ui/_typography.scss */
 img.image-full-width {
   width: 100%;
 }
@@ -1413,6 +1418,85 @@ textarea, .global-header .link-open-search, html, body {
 .ref-button:hover, .ref-button--cta-small:hover, .ref-button--cta-small--wide:hover, .ref-button--cta-large:hover, .ref-button--cta-large--wide:hover, .ref-button--full-width:hover, .ref-button--function-small:hover, .ref-button--function-small--wide:hover, .ref-button--function-large:hover, .ref-button--function-large--wide:hover {
   -webkit-transition: background-color 0.3s, color 0.3s, border-color 0.3s;
           transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+/* line 2, sass/templates/_about.scss */
+.page-about .tabs-container {
+  margin: 0 auto;
+}
+/* line 5, sass/templates/_about.scss */
+.page-about .tabs__content-container {
+  margin-bottom: 3rem;
+  padding-bottom: 0;
+  float: left;
+  overflow: visible;
+}
+/* line 15, sass/templates/_about.scss */
+.page-about .tabs__content-container * {
+  overflow: visible;
+}
+/* line 18, sass/templates/_about.scss */
+.page-about .tabs__content-container > li {
+  position: relative;
+  width: 100%;
+  float: left;
+  z-index: 10;
+  border-bottom: 1px solid #e1e5e8;
+}
+/* line 35, sass/templates/_about.scss */
+.page-about .collapsible-trigger {
+  background-color: transparent;
+}
+/* line 38, sass/templates/_about.scss */
+.page-about .reveal-content {
+  width: 100%;
+  float: left;
+  background-color: #f2f2f5;
+}
+/* line 46, sass/templates/_about.scss */
+.page-about .svg-bubble {
+  max-width: 23px;
+}
+/* line 49, sass/templates/_about.scss */
+.page-about .svg-cog {
+  max-width: 24px;
+}
+
+/* line 53, sass/templates/_about.scss */
+.page-about--title {
+  text-align: center;
+}
+
+/* line 56, sass/templates/_about.scss */
+.page-about--intro {
+  width: 100%;
+  padding-left: 2%;
+  padding-right: 2%;
+  margin-bottom: 2rem;
+}
+/* line 65, sass/templates/_about.scss */
+.page-about--intro .two-columns {
+  max-width: 1225px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* line 79, sass/templates/_about.scss */
+.page-about-foot-content__svg-container {
+  margin-bottom: 3rem;
+}
+/* line 84, sass/templates/_about.scss */
+.page-about-foot-content__svg-container svg {
+  max-width: 220px;
+  margin-right: 16%;
+  float: right;
+}
+
+/* line 90, sass/templates/_about.scss */
+.page-about-foot-content__text {
+  max-width: 800px;
+  margin-bottom: 8rem;
+  padding-right: 6%;
 }
 
 @-webkit-keyframes mail-send {
@@ -3816,47 +3900,51 @@ textarea, .global-header .link-open-search, html, body {
 @media screen and (min-width: 720px) and (max-height: 800px) {
   /* line 5, sass/templates/_contact.scss */
   .contact__text-content {
-    padding-top: 40px;
+    padding-top: 60px;
+  }
+  /* line 27, sass/templates/_contact.scss */
+  .contact__text-content .contact__image {
+    display: none;
   }
 }
 @media screen and (max-height: 900px) {
-  /* line 29, sass/templates/_contact.scss */
+  /* line 32, sass/templates/_contact.scss */
   .contact__text-content > div {
     top: 0;
   }
 }
-/* line 33, sass/templates/_contact.scss */
+/* line 36, sass/templates/_contact.scss */
 .contact__text-content h1 {
   margin-bottom: 0.5em;
   font-size: 27px;
 }
-/* line 40, sass/templates/_contact.scss */
+/* line 46, sass/templates/_contact.scss */
 .contact__text-content h1, .contact__text-content p, .contact__text-content dl {
   margin-top: 0;
   color: #fcfdfd;
 }
-/* line 44, sass/templates/_contact.scss */
+/* line 50, sass/templates/_contact.scss */
 .contact__text-content p, .contact__text-content dl, .contact__text-content a {
   font-size: 16px;
   color: #c3c6f6;
   text-align: left;
 }
-/* line 49, sass/templates/_contact.scss */
+/* line 55, sass/templates/_contact.scss */
 .contact__text-content dd, .contact__text-content a {
   font-size: 14px;
 }
-/* line 55, sass/templates/_contact.scss */
+/* line 61, sass/templates/_contact.scss */
 .contact__text-content p {
   margin-bottom: 3rem;
 }
-/* line 61, sass/templates/_contact.scss */
+/* line 67, sass/templates/_contact.scss */
 .contact__text-content dt, .contact__text-content dd {
   padding-bottom: 0.8rem;
   display: inline-block;
   vertical-align: top;
   line-height: 1.5;
 }
-/* line 67, sass/templates/_contact.scss */
+/* line 73, sass/templates/_contact.scss */
 .contact__text-content dt {
   width: 141px;
   padding-right: 10px;
@@ -3868,26 +3956,26 @@ textarea, .global-header .link-open-search, html, body {
   font-size: 15px;
   color: #fcfdfd;
 }
-/* line 81, sass/templates/_contact.scss */
+/* line 87, sass/templates/_contact.scss */
 .contact__text-content dd {
   padding-bottom: 0.8rem;
 }
-/* line 84, sass/templates/_contact.scss */
+/* line 90, sass/templates/_contact.scss */
 .contact__text-content a {
   text-decoration: underline;
 }
-/* line 87, sass/templates/_contact.scss */
+/* line 93, sass/templates/_contact.scss */
 .contact__text-content a:hover {
   color: white;
 }
 
-/* line 91, sass/templates/_contact.scss */
+/* line 97, sass/templates/_contact.scss */
 .contact__image {
   width: 190px;
   margin-bottom: 1.5rem;
 }
 
-/* line 99, sass/templates/_contact.scss */
+/* line 105, sass/templates/_contact.scss */
 .contact__map-container {
   position: relative;
   width: 100%;
@@ -3896,19 +3984,13 @@ textarea, .global-header .link-open-search, html, body {
   float: left;
   background-color: #fcfdfd;
 }
-@media screen and (min-width: 720px) and (max-height: 800px) {
-  /* line 99, sass/templates/_contact.scss */
-  .contact__map-container {
-    min-height: 800px;
-  }
-}
 
-/* line 114, sass/templates/_contact.scss */
+/* line 117, sass/templates/_contact.scss */
 .map--contact {
   width: 100%;
   height: 100%;
 }
-/* line 117, sass/templates/_contact.scss */
+/* line 120, sass/templates/_contact.scss */
 .map--contact div {
   overflow: visible;
 }
@@ -4817,7 +4899,7 @@ table.table-linked-accounts .linked-account-store div {
   overflow: visible;
 }
 /* line 84, sass/templates/_linked-accounts.scss */
-table.table-linked-accounts .linked-account-store .ref-icon-before:before, table.table-linked-accounts .linked-account-store .page-logged-in-landing .accordion-switch:before, .page-logged-in-landing table.table-linked-accounts .linked-account-store .accordion-switch:before, table.table-linked-accounts .linked-account-store .page-logged-in-landing .accordion .list-item-complete:before, .page-logged-in-landing .accordion table.table-linked-accounts .linked-account-store .list-item-complete:before {
+table.table-linked-accounts .linked-account-store .ref-icon-before:before, table.table-linked-accounts .linked-account-store .page-logged-in-landing .accordion-switch:before, .page-logged-in-landing table.table-linked-accounts .linked-account-store .accordion-switch:before, table.table-linked-accounts .linked-account-store .page-logged-in-landing .accordion .list-item-complete:before, .page-logged-in-landing .accordion table.table-linked-accounts .linked-account-store .list-item-complete:before, table.table-linked-accounts .linked-account-store .main-navigation > ul ul li.has-child:before, .main-navigation > ul ul table.table-linked-accounts .linked-account-store li.has-child:before {
   display: none;
   top: -0.3rem;
   padding-right: 1.2rem;
@@ -4875,7 +4957,7 @@ table.table-linked-accounts .linked-account-delete a {
 /* line 139, sass/templates/_linked-accounts.scss */
 table.table-linked-accounts .linked-account-delete .ref-icon-after:after, table.table-linked-accounts .linked-account-delete .home-welcome__text .home-welcome__call-to-action:after, .home-welcome__text table.table-linked-accounts .linked-account-delete .home-welcome__call-to-action:after, table.table-linked-accounts .linked-account-delete .read-only-date span:after, .read-only-date table.table-linked-accounts .linked-account-delete span:after, table.table-linked-accounts .linked-account-delete .panel-link .panel-link__link > span span:after, .panel-link .panel-link__link > span table.table-linked-accounts .linked-account-delete span:after, table.table-linked-accounts .linked-account-delete .accordion-switch:after, table.table-linked-accounts .linked-account-delete .form-field .form-field-help:after, .form-field table.table-linked-accounts .linked-account-delete .form-field-help:after,
 table.table-linked-accounts .linked-account-delete .search-field-no-label .form-field-help:after,
-.search-field-no-label table.table-linked-accounts .linked-account-delete .form-field-help:after, table.table-linked-accounts .linked-account-delete .form-field.form-field--date-select span:after, .form-field.form-field--date-select table.table-linked-accounts .linked-account-delete span:after, table.table-linked-accounts .linked-account-delete .main-navigation > ul ul li.has-child:after, .main-navigation > ul ul table.table-linked-accounts .linked-account-delete li.has-child:after, table.table-linked-accounts .linked-account-delete .whats-this-tooltip-icon:after,
+.search-field-no-label table.table-linked-accounts .linked-account-delete .form-field-help:after, table.table-linked-accounts .linked-account-delete .form-field.form-field--date-select span:after, .form-field.form-field--date-select table.table-linked-accounts .linked-account-delete span:after, table.table-linked-accounts .linked-account-delete .whats-this-tooltip-icon:after,
 table.table-linked-accounts .linked-account-delete .whats-this-tooltip-icon-static:after {
   position: relative;
   top: 3px;
@@ -4887,7 +4969,7 @@ table.table-linked-accounts .linked-account-delete .whats-this-tooltip-icon-stat
 /* line 147, sass/templates/_linked-accounts.scss */
 table.table-linked-accounts .linked-account-delete .ref-icon-after:hover:after, table.table-linked-accounts .linked-account-delete .home-welcome__text .home-welcome__call-to-action:hover:after, .home-welcome__text table.table-linked-accounts .linked-account-delete .home-welcome__call-to-action:hover:after, table.table-linked-accounts .linked-account-delete .read-only-date span:hover:after, .read-only-date table.table-linked-accounts .linked-account-delete span:hover:after, table.table-linked-accounts .linked-account-delete .panel-link .panel-link__link > span span:hover:after, .panel-link .panel-link__link > span table.table-linked-accounts .linked-account-delete span:hover:after, table.table-linked-accounts .linked-account-delete .accordion-switch:hover:after, table.table-linked-accounts .linked-account-delete .form-field .form-field-help:hover:after, .form-field table.table-linked-accounts .linked-account-delete .form-field-help:hover:after,
 table.table-linked-accounts .linked-account-delete .search-field-no-label .form-field-help:hover:after,
-.search-field-no-label table.table-linked-accounts .linked-account-delete .form-field-help:hover:after, table.table-linked-accounts .linked-account-delete .form-field.form-field--date-select span:hover:after, .form-field.form-field--date-select table.table-linked-accounts .linked-account-delete span:hover:after, table.table-linked-accounts .linked-account-delete .main-navigation > ul ul li.has-child:hover:after, .main-navigation > ul ul table.table-linked-accounts .linked-account-delete li.has-child:hover:after, table.table-linked-accounts .linked-account-delete .whats-this-tooltip-icon:hover:after,
+.search-field-no-label table.table-linked-accounts .linked-account-delete .form-field-help:hover:after, table.table-linked-accounts .linked-account-delete .form-field.form-field--date-select span:hover:after, .form-field.form-field--date-select table.table-linked-accounts .linked-account-delete span:hover:after, table.table-linked-accounts .linked-account-delete .whats-this-tooltip-icon:hover:after,
 table.table-linked-accounts .linked-account-delete .whats-this-tooltip-icon-static:hover:after {
   color: #b0b4c0;
   -webkit-transition: color 0.2s;
@@ -4896,7 +4978,7 @@ table.table-linked-accounts .linked-account-delete .whats-this-tooltip-icon-stat
 /* line 153, sass/templates/_linked-accounts.scss */
 table.table-linked-accounts .linked-account-delete .ref-icon-after:active:after, table.table-linked-accounts .linked-account-delete .home-welcome__text .home-welcome__call-to-action:active:after, .home-welcome__text table.table-linked-accounts .linked-account-delete .home-welcome__call-to-action:active:after, table.table-linked-accounts .linked-account-delete .read-only-date span:active:after, .read-only-date table.table-linked-accounts .linked-account-delete span:active:after, table.table-linked-accounts .linked-account-delete .panel-link .panel-link__link > span span:active:after, .panel-link .panel-link__link > span table.table-linked-accounts .linked-account-delete span:active:after, table.table-linked-accounts .linked-account-delete .accordion-switch:active:after, table.table-linked-accounts .linked-account-delete .form-field .form-field-help:active:after, .form-field table.table-linked-accounts .linked-account-delete .form-field-help:active:after,
 table.table-linked-accounts .linked-account-delete .search-field-no-label .form-field-help:active:after,
-.search-field-no-label table.table-linked-accounts .linked-account-delete .form-field-help:active:after, table.table-linked-accounts .linked-account-delete .form-field.form-field--date-select span:active:after, .form-field.form-field--date-select table.table-linked-accounts .linked-account-delete span:active:after, table.table-linked-accounts .linked-account-delete .main-navigation > ul ul li.has-child:active:after, .main-navigation > ul ul table.table-linked-accounts .linked-account-delete li.has-child:active:after, table.table-linked-accounts .linked-account-delete .whats-this-tooltip-icon:active:after,
+.search-field-no-label table.table-linked-accounts .linked-account-delete .form-field-help:active:after, table.table-linked-accounts .linked-account-delete .form-field.form-field--date-select span:active:after, .form-field.form-field--date-select table.table-linked-accounts .linked-account-delete span:active:after, table.table-linked-accounts .linked-account-delete .whats-this-tooltip-icon:active:after,
 table.table-linked-accounts .linked-account-delete .whats-this-tooltip-icon-static:active:after {
   top: 5px;
 }
@@ -5876,6 +5958,120 @@ table.table-data.table-linked-accounts--disabled thead {
     height: 70px;
   }
 }
+/* line 2, sass/templates/_product.scss */
+.page-product .page-banner {
+  margin-bottom: 0;
+}
+/* line 4, sass/templates/_product.scss */
+.page-product .page-banner h2 {
+  font-size: 2.2rem;
+  max-width: 670px;
+}
+/* line 19, sass/templates/_product.scss */
+.page-product .product-section {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+/* line 26, sass/templates/_product.scss */
+.page-product .product-section:nth-child(even) {
+  background-color: #f2f2f5;
+}
+/* line 29, sass/templates/_product.scss */
+.page-product .product-section.product-section--featured {
+  background-color: #6d69c5;
+}
+/* line 31, sass/templates/_product.scss */
+.page-product .product-section.product-section--featured h2 {
+  color: #fcfdfd;
+}
+/* line 34, sass/templates/_product.scss */
+.page-product .product-section.product-section--featured p {
+  color: #c3c6f6;
+}
+/* line 36, sass/templates/_product.scss */
+.page-product .product-section.product-section--featured p a {
+  color: #fff;
+}
+/* line 42, sass/templates/_product.scss */
+.page-product .product-section--content {
+  max-width: 1400px;
+  margin: 0px auto;
+}
+/* line 46, sass/templates/_product.scss */
+.page-product .product-image-container--left,
+.page-product .product-image-container--right,
+.page-product .product-text-content--left,
+.page-product .product-text-content--right {
+  display: inline-block;
+  float: left;
+  vertical-align: top;
+}
+/* line 54, sass/templates/_product.scss */
+.page-product .product-text-content--left,
+.page-product .product-text-content--right {
+  width: 100%;
+  padding: 30px 5% 0;
+}
+/* line 58, sass/templates/_product.scss */
+.page-product .product-text-content--left .content-list,
+.page-product .product-text-content--right .content-list {
+  color: #5b5d61;
+}
+/* line 72, sass/templates/_product.scss */
+.page-product .product-image-container--left {
+  width: 100%;
+}
+/* line 74, sass/templates/_product.scss */
+.page-product .product-image-container--left img {
+  max-width: 430px;
+  margin-right: 5%;
+  float: right;
+}
+/* line 96, sass/templates/_product.scss */
+.page-product .product-image-container--right {
+  width: 100%;
+}
+/* line 98, sass/templates/_product.scss */
+.page-product .product-image-container--right img {
+  max-width: 430px;
+  margin-left: 5%;
+}
+
+/* line 119, sass/templates/_product.scss */
+.product-page--partners {
+  padding-top: 4rem;
+  padding-bottom: 6.6rem;
+  text-align: center;
+}
+/* line 126, sass/templates/_product.scss */
+.product-page--partners h2 {
+  margin-bottom: 4rem;
+  text-align: center;
+}
+/* line 130, sass/templates/_product.scss */
+.product-page--partners .cta-button {
+  margin-top: 1rem;
+}
+/* line 133, sass/templates/_product.scss */
+.product-page--partners ul {
+  width: 100%;
+  margin: 0 auto;
+  max-width: 1400px;
+}
+/* line 151, sass/templates/_product.scss */
+.product-page--partners li {
+  width: 48%;
+  margin-bottom: 4rem;
+  display: inline-block;
+  vertical-align: middle;
+  text-align: center;
+}
+/* line 157, sass/templates/_product.scss */
+.product-page--partners li svg {
+  width: 100%;
+  max-width: 170px;
+}
+
 /* line 3, sass/templates/_tabs.scss */
 .tabs-template .tabs__content {
   padding: 4% 5% 5%;
@@ -6056,7 +6252,6 @@ table.table-data.table-linked-accounts--disabled thead {
 .main-navigation.main-navigation--account {
   padding-top: 0;
   padding-bottom: 26px;
-  border-bottom: 1px solid #000;
 }
 
 /* line 2, sass/components/_add-this.scss */
@@ -6122,6 +6317,42 @@ table.table-data.table-linked-accounts--disabled thead {
 /* line 62, sass/components/_add-this.scss */
 .sharing-container a:hover .ref-icon-before--google-plus:before {
   color: #c23321;
+}
+
+/* line 1, sass/components/_banner.scss */
+.page-banner {
+  width: 100%;
+  height: 325px;
+  margin-bottom: 3.9rem;
+  text-align: center;
+  background-image: url(images/banner-img-about.jpg);
+  background-size: cover;
+}
+/* line 14, sass/components/_banner.scss */
+.page-banner > div {
+  position: relative;
+  top: -5px;
+}
+/* line 21, sass/components/_banner.scss */
+.page-banner h1 {
+  margin-bottom: 1.4rem;
+  display: block;
+  font-family: "Lato", sans-serif;
+  font-size: 1.3rem;
+  letter-spacing: 0.06rem;
+  text-transform: uppercase;
+  color: #c3c6f6;
+}
+/* line 30, sass/components/_banner.scss */
+.page-banner h2 {
+  max-width: 525px;
+  margin: 0 auto;
+  padding: 0 10%;
+  display: block;
+  font-size: 2.5rem;
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 700;
+  color: #fcfdfd;
 }
 
 /* line 1, sass/components/_breadcrumb.scss */
@@ -9904,44 +10135,51 @@ svg.loading-ellipsis .dot-3 {
 
 /* line 3, sass/components/_main-footer-links.scss */
 .main-footer-links {
-  margin-top: 31px;
-  margin-bottom: 50px;
+  margin-bottom: 30px;
 }
-/* line 6, sass/components/_main-footer-links.scss */
+/* line 5, sass/components/_main-footer-links.scss */
 .main-footer-links li {
   display: block;
 }
-/* line 8, sass/components/_main-footer-links.scss */
+/* line 7, sass/components/_main-footer-links.scss */
 .main-footer-links li a {
-  padding: 5px 0px 6px 30px;
+  padding: 5.3px 0px 6px 30px;
   display: block;
   font-size: 1.3em;
   line-height: 1.5;
-  color: #767683;
+  color: #727686;
 }
-/* line 14, sass/components/_main-footer-links.scss */
+/* line 13, sass/components/_main-footer-links.scss */
 .is-animating-out .main-footer-links li a {
   text-shadow: 4px 0px 1px rgba(118, 118, 131, 0.5);
 }
-/* line 17, sass/components/_main-footer-links.scss */
+/* line 16, sass/components/_main-footer-links.scss */
 .is-animating-in .main-footer-links li a {
   text-shadow: -4px 0px 1px rgba(118, 118, 131, 0.5);
 }
-/* line 20, sass/components/_main-footer-links.scss */
+/* line 19, sass/components/_main-footer-links.scss */
 .main-footer-links li a:hover {
   color: #bec2d2;
+}
+/* line 24, sass/components/_main-footer-links.scss */
+.main-footer-links li.is-selected a {
+  color: #fcfdfd;
+}
+/* line 26, sass/components/_main-footer-links.scss */
+.main-footer-links li.is-selected a:hover {
+  color: #fcfdfd;
 }
 
 /* line 5, sass/components/_main-navigation.scss */
 .main-navigation {
   width: 100%;
-  padding: 27px 0 23px;
+  padding: 0 0 20px;
   background-color: #29292c;
 }
 /* line 9, sass/components/_main-navigation.scss */
 .main-navigation a {
-  -webkit-transition: all 0.2s, text-shadow 0.3s;
-          transition: all 0.2s, text-shadow 0.3s;
+  -webkit-transition: background-color 0.2s, color 0.2s, text-shadow 0.3s;
+          transition: background-color 0.2s, color 0.2s, text-shadow 0.3s;
 }
 /* line 11, sass/components/_main-navigation.scss */
 .main-navigation a svg {
@@ -9950,7 +10188,7 @@ svg.loading-ellipsis .dot-3 {
   vertical-align: middle;
 }
 /* line 15, sass/components/_main-navigation.scss */
-.main-navigation a svg path {
+.main-navigation a svg path, .main-navigation a svg polygon {
   fill: #5b5b68;
   -webkit-transition: fill 0.2s;
           transition: fill 0.2s;
@@ -9964,38 +10202,38 @@ svg.loading-ellipsis .dot-3 {
 .main-navigation a span {
   display: inline-block;
   vertical-align: middle;
-  padding-left: 20px;
+  padding-left: 12px;
 }
 /* line 32, sass/components/_main-navigation.scss */
-.main-navigation a:hover svg path {
-  fill: #ffffff;
+.main-navigation a:hover svg path, .main-navigation a:hover svg polygon {
+  fill: #c4c7d0;
   -webkit-transition: fill 0.3s;
           transition: fill 0.3s;
 }
 /* line 37, sass/components/_main-navigation.scss */
 .main-navigation a:hover svg.icon--my-apps path {
   fill: none;
-  stroke: #ffffff;
+  stroke: #c4c7d0;
   -webkit-transition: stroke 0.3s;
           transition: stroke 0.3s;
 }
-/* line 45, sass/components/_main-navigation.scss */
-.main-navigation li.is-selected a svg path {
-  fill: #ffffff;
+/* line 46, sass/components/_main-navigation.scss */
+.main-navigation li.is-selected a svg path, .main-navigation li.is-selected a svg polygon {
+  fill: #fcfdfd;
 }
-/* line 49, sass/components/_main-navigation.scss */
+/* line 51, sass/components/_main-navigation.scss */
 .main-navigation li.is-selected a svg.icon--my-apps path {
   fill: none;
-  stroke: #ffffff;
+  stroke: #fcfdfd;
 }
-/* line 55, sass/components/_main-navigation.scss */
+/* line 57, sass/components/_main-navigation.scss */
 .main-navigation > ul > li {
-  margin-bottom: 4px;
   font-size: 1.2em;
   line-height: 1.5;
   font-weight: 700;
+  border-bottom: 1px solid #161617;
 }
-/* line 60, sass/components/_main-navigation.scss */
+/* line 62, sass/components/_main-navigation.scss */
 .main-navigation > ul > li > a {
   float: left;
   width: 100%;
@@ -10004,34 +10242,43 @@ svg.loading-ellipsis .dot-3 {
   background-color: #29292c;
 }
 /* line 68, sass/components/_main-navigation.scss */
+.main-navigation > ul > li > a:hover {
+  background-color: #252527;
+}
+/* line 71, sass/components/_main-navigation.scss */
+.main-navigation > ul > li > a:active {
+  padding-bottom: 12px;
+  border-top: 2px solid #1e1e1f;
+}
+/* line 77, sass/components/_main-navigation.scss */
 .main-navigation > ul > li.is-selected > a {
   color: #fcfdfd;
   background-color: #6d69c5;
 }
-/* line 71, sass/components/_main-navigation.scss */
+/* line 80, sass/components/_main-navigation.scss */
 .is-animating-out .main-navigation > ul > li.is-selected > a {
   text-shadow: 4px 0px 1px rgba(252, 253, 253, 0.5);
 }
-/* line 74, sass/components/_main-navigation.scss */
+/* line 83, sass/components/_main-navigation.scss */
 .is-animating-in .main-navigation > ul > li.is-selected > a {
   text-shadow: -4px 0px 1px rgba(252, 253, 253, 0.5);
 }
-/* line 77, sass/components/_main-navigation.scss */
+/* line 86, sass/components/_main-navigation.scss */
 .main-navigation > ul > li.is-selected > a:hover {
   color: #fcfdfd;
 }
-/* line 82, sass/components/_main-navigation.scss */
+/* line 91, sass/components/_main-navigation.scss */
 .main-navigation > ul > li > ul {
   display: block;
   z-index: 0;
   -webkit-transition: margin-top 0.16s ease-in;
           transition: margin-top 0.16s ease-in;
 }
-/* line 87, sass/components/_main-navigation.scss */
+/* line 96, sass/components/_main-navigation.scss */
 .main-navigation > ul > li.is-open {
   background-color: #363a47;
 }
-/* line 89, sass/components/_main-navigation.scss */
+/* line 98, sass/components/_main-navigation.scss */
 .main-navigation > ul > li.is-open > ul {
   position: relative;
   margin-top: 0;
@@ -10039,109 +10286,132 @@ svg.loading-ellipsis .dot-3 {
   -webkit-transition: margin-top 0.2s ease-out;
           transition: margin-top 0.2s ease-out;
 }
-/* line 98, sass/components/_main-navigation.scss */
+/* line 107, sass/components/_main-navigation.scss */
 .main-navigation > ul ul {
   width: 100%;
   display: none;
   float: left;
   background-color: #363a47;
 }
-/* line 103, sass/components/_main-navigation.scss */
+/* line 112, sass/components/_main-navigation.scss */
 .main-navigation > ul ul li {
   position: relative;
   z-index: 1;
   font-size: 13px;
 }
-/* line 108, sass/components/_main-navigation.scss */
+/* line 117, sass/components/_main-navigation.scss */
 .main-navigation > ul ul li.is-selected > a {
   color: #fcfdfd;
 }
-/* line 110, sass/components/_main-navigation.scss */
+/* line 119, sass/components/_main-navigation.scss */
 .is-animating-out .main-navigation > ul ul li.is-selected > a {
   text-shadow: 4px 0px 1px rgba(252, 253, 253, 0.5);
 }
-/* line 113, sass/components/_main-navigation.scss */
+/* line 122, sass/components/_main-navigation.scss */
 .is-animating-in .main-navigation > ul ul li.is-selected > a {
   text-shadow: -4px 0px 1px rgba(252, 253, 253, 0.5);
 }
-/* line 116, sass/components/_main-navigation.scss */
+/* line 125, sass/components/_main-navigation.scss */
 .main-navigation > ul ul li.is-selected > a:hover {
   color: #fcfdfd;
 }
-/* line 121, sass/components/_main-navigation.scss */
+/* line 130, sass/components/_main-navigation.scss */
 .main-navigation > ul ul li.has-child {
   line-height: 1.5;
 }
-/* line 125, sass/components/_main-navigation.scss */
-.main-navigation > ul ul li.has-child:after {
+/* line 134, sass/components/_main-navigation.scss */
+.main-navigation > ul ul li.has-child:before {
   position: absolute;
-  right: 9px;
-  top: 5px;
-  z-index: 10;
+  top: 4px;
+  left: 9px;
   font-size: 12px;
+  z-index: 100;
   color: #53586c;
   -webkit-transition: color 0.2s;
           transition: color 0.2s;
 }
-/* line 135, sass/components/_main-navigation.scss */
-.main-navigation > ul ul li.has-child.is-open:after {
+/* line 144, sass/components/_main-navigation.scss */
+.main-navigation > ul ul li.has-child.is-open a {
+  color: #81879d;
+}
+/* line 147, sass/components/_main-navigation.scss */
+.main-navigation > ul ul li.has-child.is-open:before {
   color: #7e79e2;
   -webkit-transition: color 0.33s;
           transition: color 0.33s;
 }
-/* line 138, sass/components/_main-navigation.scss */
-.is-animating-out .main-navigation > ul ul li.has-child.is-open:after {
+/* line 150, sass/components/_main-navigation.scss */
+.is-animating-out .main-navigation > ul ul li.has-child.is-open:before {
   text-shadow: 4px 0px 1px rgba(109, 105, 197, 0.5);
 }
-/* line 141, sass/components/_main-navigation.scss */
-.is-animating-in .main-navigation > ul ul li.has-child.is-open:after {
+/* line 153, sass/components/_main-navigation.scss */
+.is-animating-in .main-navigation > ul ul li.has-child.is-open:before {
   text-shadow: -4px 0px 1px rgba(109, 105, 197, 0.5);
 }
-/* line 147, sass/components/_main-navigation.scss */
+/* line 158, sass/components/_main-navigation.scss */
+.main-navigation > ul ul li.has-child.is-open.is-selected a {
+  color: #e1e5e8;
+}
+/* line 164, sass/components/_main-navigation.scss */
 .main-navigation > ul ul li a {
   padding: 0 38px 15px 29px;
   color: #81879d;
+  font-weight: 400;
 }
-/* line 150, sass/components/_main-navigation.scss */
+/* line 168, sass/components/_main-navigation.scss */
 .is-animating-out .main-navigation > ul ul li a {
   text-shadow: 4px 0px 1px rgba(129, 135, 157, 0.5);
 }
-/* line 153, sass/components/_main-navigation.scss */
+/* line 171, sass/components/_main-navigation.scss */
 .is-animating-in .main-navigation > ul ul li a {
   text-shadow: -4px 0px 1px rgba(129, 135, 157, 0.5);
 }
-/* line 156, sass/components/_main-navigation.scss */
+/* line 174, sass/components/_main-navigation.scss */
 .main-navigation > ul ul li a:hover {
   color: #bec2d2;
 }
-/* line 160, sass/components/_main-navigation.scss */
+/* line 178, sass/components/_main-navigation.scss */
 .main-navigation > ul ul li ul {
   background-color: #2e313b;
   display: block;
   -webkit-transition: margin-top 0.16s ease-in;
           transition: margin-top 0.16s ease-in;
 }
-/* line 164, sass/components/_main-navigation.scss */
-.main-navigation > ul ul li ul a {
-  padding-left: 38px;
+/* line 183, sass/components/_main-navigation.scss */
+.main-navigation > ul ul li ul li.is-selected a {
+  color: #e1e5e8;
 }
-/* line 171, sass/components/_main-navigation.scss */
+/* line 187, sass/components/_main-navigation.scss */
+.main-navigation > ul ul li ul li a {
+  padding-left: 35px;
+  padding-bottom: 15px;
+}
+/* line 191, sass/components/_main-navigation.scss */
+.main-navigation > ul ul li ul li:last-child a {
+  padding-bottom: 20px;
+}
+/* line 198, sass/components/_main-navigation.scss */
 .main-navigation > ul > li > ul > li > a {
   background-color: #363a47;
 }
-/* line 174, sass/components/_main-navigation.scss */
+/* line 201, sass/components/_main-navigation.scss */
 .main-navigation > ul > li > ul > li:first-child {
   margin-top: 22px;
 }
-/* line 177, sass/components/_main-navigation.scss */
-.main-navigation > ul > li > ul > li:last-child a {
+/* line 204, sass/components/_main-navigation.scss */
+.main-navigation > ul > li > ul > li:last-child a,
+.main-navigation > ul > li > ul > li:last-child li a {
+  padding-bottom: 15px;
+}
+/* line 208, sass/components/_main-navigation.scss */
+.main-navigation > ul > li > ul > li:last-child li:last-child a {
   padding-bottom: 20px;
 }
-/* line 181, sass/components/_main-navigation.scss */
+/* line 212, sass/components/_main-navigation.scss */
 .main-navigation > ul > li > ul li.is-open + li {
   margin-top: 22px;
 }
-/* line 184, sass/components/_main-navigation.scss */
+/* line 215, sass/components/_main-navigation.scss */
 .main-navigation > ul > li > ul li.is-open ul {
   position: relative;
   margin-top: 0;
@@ -10151,152 +10421,147 @@ svg.loading-ellipsis .dot-3 {
   -webkit-transition: margin-top 0.2s ease-out;
           transition: margin-top 0.2s ease-out;
 }
-/* line 192, sass/components/_main-navigation.scss */
+/* line 223, sass/components/_main-navigation.scss */
 .main-navigation > ul > li > ul li.is-open > a {
   color: #e1e5e8;
 }
-/* line 194, sass/components/_main-navigation.scss */
+/* line 225, sass/components/_main-navigation.scss */
 .is-animating-out .main-navigation > ul > li > ul li.is-open > a {
   text-shadow: 4px 0px 1px rgba(225, 229, 232, 0.5);
 }
-/* line 197, sass/components/_main-navigation.scss */
+/* line 228, sass/components/_main-navigation.scss */
 .is-animating-in .main-navigation > ul > li > ul li.is-open > a {
   text-shadow: -4px 0px 1px rgba(225, 229, 232, 0.5);
 }
-/* line 200, sass/components/_main-navigation.scss */
+/* line 231, sass/components/_main-navigation.scss */
 .main-navigation > ul > li > ul li.is-open > a:hover {
   color: #e1e5e8;
 }
-/* line 207, sass/components/_main-navigation.scss */
+/* line 238, sass/components/_main-navigation.scss */
 .main-navigation ul ul ul li:first-child {
   margin-top: 8px;
 }
-/* line 210, sass/components/_main-navigation.scss */
+/* line 241, sass/components/_main-navigation.scss */
 .main-navigation ul ul ul li:last-child a {
   padding-bottom: 24px;
 }
-/* line 214, sass/components/_main-navigation.scss */
+/* line 245, sass/components/_main-navigation.scss */
 .main-navigation ul ul ul li.is-selected > a {
   color: #e1e5e8;
 }
-/* line 216, sass/components/_main-navigation.scss */
+/* line 247, sass/components/_main-navigation.scss */
 .is-animating-out .main-navigation ul ul ul li.is-selected > a {
   text-shadow: 4px 0px 1px rgba(225, 229, 232, 0.5);
 }
-/* line 219, sass/components/_main-navigation.scss */
+/* line 250, sass/components/_main-navigation.scss */
 .is-animating-in .main-navigation ul ul ul li.is-selected > a {
   text-shadow: -4px 0px 1px rgba(225, 229, 232, 0.5);
 }
-/* line 222, sass/components/_main-navigation.scss */
+/* line 253, sass/components/_main-navigation.scss */
 .main-navigation ul ul ul li.is-selected > a:hover {
   color: #e1e5e8;
 }
-/* line 228, sass/components/_main-navigation.scss */
+/* line 259, sass/components/_main-navigation.scss */
 .main-navigation a {
   position: relative;
-  padding: 14px 0px 14px 29px;
+  padding: 15px 0px 14px 29px;
+  letter-spacing: 0.4px;
   display: block;
   z-index: 10;
-  color: #767683;
+  color: #727686;
   box-sizing: border-box;
 }
-/* line 235, sass/components/_main-navigation.scss */
+/* line 267, sass/components/_main-navigation.scss */
 .is-animating-out .main-navigation a {
   text-shadow: 4px 0px 1px rgba(118, 118, 131, 0.5);
 }
-/* line 238, sass/components/_main-navigation.scss */
+/* line 270, sass/components/_main-navigation.scss */
 .is-animating-in .main-navigation a {
   text-shadow: -4px 0px 1px rgba(118, 118, 131, 0.5);
 }
-/* line 241, sass/components/_main-navigation.scss */
+/* line 273, sass/components/_main-navigation.scss */
 .main-navigation a:hover {
-  color: #c6c6d4;
-}
-/* line 245, sass/components/_main-navigation.scss */
-.main-navigation .ref-icon-before:before, .main-navigation .page-logged-in-landing .accordion-switch:before, .page-logged-in-landing .main-navigation .accordion-switch:before, .main-navigation .page-logged-in-landing .accordion .list-item-complete:before, .page-logged-in-landing .accordion .main-navigation .list-item-complete:before {
-  position: absolute;
-  left: 30px;
-  top: 15px;
-  font-size: 18px;
+  color: #c4c7d0;
 }
 
 /* line 7, sass/components/_main-social-links.scss */
 .main-social-links {
   width: 100%;
-  margin: 0 0 22px;
-  height: 65px;
+  margin: 0;
+  height: 50px;
   padding: 0;
   overflow: hidden;
   font-size: 0;
   border-top: 1px solid #161617;
   border-bottom: 1px solid #161617;
+  box-sizing: border-box;
   background-color: #29292c;
 }
-/* line 17, sass/components/_main-social-links.scss */
+/* line 18, sass/components/_main-social-links.scss */
 .main-social-links li {
-  width: 33.3%;
-  height: 64px;
+  width: 50%;
+  height: 50px;
   display: inline-block;
   box-sizing: border-box;
   border-left: 1px solid #161617;
 }
-/* line 23, sass/components/_main-social-links.scss */
+/* line 24, sass/components/_main-social-links.scss */
 .main-social-links li:first-child {
   border-left: 0;
 }
-/* line 26, sass/components/_main-social-links.scss */
+/* line 27, sass/components/_main-social-links.scss */
 .main-social-links li a {
   position: relative;
   width: 100%;
-  height: 64px;
+  height: 50px;
   margin: 0;
   display: block;
   text-align: center;
 }
-/* line 33, sass/components/_main-social-links.scss */
+/* line 34, sass/components/_main-social-links.scss */
 .main-social-links li a.ref-icon-before:before, .main-social-links li .page-logged-in-landing a.accordion-switch:before, .page-logged-in-landing .main-social-links li a.accordion-switch:before, .main-social-links li .page-logged-in-landing .accordion a.list-item-complete:before, .page-logged-in-landing .accordion .main-social-links li a.list-item-complete:before {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   display: block;
-  line-height: 64px;
+  line-height: 50px;
   color: #767683;
   text-align: center;
   -webkit-transition: color 0.2s;
           transition: color 0.2s;
 }
-/* line 43, sass/components/_main-social-links.scss */
+/* line 44, sass/components/_main-social-links.scss */
 .is-animating-out .main-social-links li a.ref-icon-before:before, .is-animating-out .main-social-links li .page-logged-in-landing a.accordion-switch:before, .page-logged-in-landing .is-animating-out .main-social-links li a.accordion-switch:before, .is-animating-out .main-social-links li .page-logged-in-landing .accordion a.list-item-complete:before, .page-logged-in-landing .accordion .is-animating-out .main-social-links li a.list-item-complete:before {
   text-shadow: 4px 0px 1px rgba(118, 118, 131, 0.5);
 }
-/* line 46, sass/components/_main-social-links.scss */
+/* line 47, sass/components/_main-social-links.scss */
 .is-animating-in .main-social-links li a.ref-icon-before:before, .is-animating-in .main-social-links li .page-logged-in-landing a.accordion-switch:before, .page-logged-in-landing .is-animating-in .main-social-links li a.accordion-switch:before, .is-animating-in .main-social-links li .page-logged-in-landing .accordion a.list-item-complete:before, .page-logged-in-landing .accordion .is-animating-in .main-social-links li a.list-item-complete:before {
   text-shadow: -4px 0px 1px rgba(118, 118, 131, 0.5);
 }
-/* line 50, sass/components/_main-social-links.scss */
+/* line 51, sass/components/_main-social-links.scss */
 .main-social-links li a:hover {
   background-color: #252527;
 }
-/* line 52, sass/components/_main-social-links.scss */
+/* line 53, sass/components/_main-social-links.scss */
 .main-social-links li a:hover:before {
   color: #55acee;
   -webkit-transition: color 0.3s;
           transition: color 0.3s;
 }
-/* line 56, sass/components/_main-social-links.scss */
+/* line 57, sass/components/_main-social-links.scss */
 .main-social-links li a:hover.ref-icon-before--facebook:before {
   color: #3b5998;
 }
-/* line 59, sass/components/_main-social-links.scss */
+/* line 60, sass/components/_main-social-links.scss */
 .main-social-links li a:hover.ref-icon-before--linkedin:before {
   color: #0976b4;
 }
-/* line 64, sass/components/_main-social-links.scss */
+/* line 65, sass/components/_main-social-links.scss */
 .main-social-links li a:active:before {
   border-top: 2px solid #1e1e1f;
 }
-/* line 68, sass/components/_main-social-links.scss */
+/* line 69, sass/components/_main-social-links.scss */
 .main-social-links li a span {
   position: absolute;
   text-align: left;
@@ -10579,10 +10844,10 @@ svg.loading-ellipsis .dot-3 {
 .panel-left {
   position: fixed;
   top: 0;
-  width: 220px;
+  width: 200px;
   height: 100vh;
   padding-top: 42px;
-  left: -220px;
+  left: -200px;
   display: inline-block;
   z-index: 10;
   float: left;
@@ -11326,6 +11591,358 @@ svg.loading-ellipsis .dot-3 {
   height: 38px;
 }
 
+/* line 2, sass/components/_press.scss */
+.page-press .page-banner {
+  margin-bottom: 0;
+}
+/* line 5, sass/components/_press.scss */
+.page-press .grid-container {
+  padding-top: 3rem;
+}
+/* line 12, sass/components/_press.scss */
+.page-press .grid__row-container.grid__column--two-thirds > div {
+  display: inline;
+  float: left;
+  width: 100%;
+  padding: 0 2%;
+}
+@media screen and (max-width: 959px) {
+  /* line 19, sass/components/_press.scss */
+  .page-press .grid__row-container.grid__column--one-third {
+    width: 100%;
+  }
+}
+/* line 23, sass/components/_press.scss */
+.page-press .grid__row-container.grid__column--one-third > div {
+  display: inline;
+  float: left;
+  width: 100%;
+  padding: 0 2%;
+}
+@media screen and (max-width: 959px) {
+  /* line 30, sass/components/_press.scss */
+  .page-press .grid__row-container.grid__column--two-thirds {
+    width: 100%;
+  }
+}
+/* line 35, sass/components/_press.scss */
+.page-press .grid__row-container.grid__column--two-thirds > div.grid__column > div {
+  padding-bottom: 3rem;
+  margin-bottom: 3rem;
+  border-bottom: 1px solid #e1e5e8;
+}
+/* line 50, sass/components/_press.scss */
+.page-press .grid__row-container.grid__column--one-third > div.grid__column {
+  padding-bottom: 3rem;
+  margin-bottom: 3rem;
+  border-bottom: 1px solid #e1e5e8;
+}
+/* line 54, sass/components/_press.scss */
+.page-press .grid__row-container.grid__column--one-third > div.grid__column:last-child {
+  border-bottom: none;
+}
+/* line 59, sass/components/_press.scss */
+.page-press .grid__row-container {
+  display: inline-block;
+  vertical-align: top;
+}
+/* line 64, sass/components/_press.scss */
+.page-press .table-data th {
+  padding: 0 10px 11px 0;
+  font-size: 1.4rem;
+}
+/* line 67, sass/components/_press.scss */
+.page-press .table-data th:first-child {
+  padding-left: 3.19489%;
+}
+/* line 70, sass/components/_press.scss */
+.page-press .table-data th:active {
+  position: relative;
+  top: 0;
+  margin-top: 3px;
+  padding-bottom: 8px;
+}
+/* line 81, sass/components/_press.scss */
+.page-press .table-data td {
+  padding: 14px 10px 16px 0;
+  font-size: 1.3rem;
+}
+/* line 84, sass/components/_press.scss */
+.page-press .table-data td:first-child {
+  padding-left: 3.19489%;
+}
+/* line 102, sass/components/_press.scss */
+.page-press dl {
+  font-size: 0px;
+}
+/* line 104, sass/components/_press.scss */
+.page-press dl a {
+  color: #6d69c5;
+}
+/* line 106, sass/components/_press.scss */
+.page-press dl a:hover {
+  color: #4b46b5;
+}
+/* line 111, sass/components/_press.scss */
+.page-press dt {
+  width: 150px;
+  padding-right: 10px;
+  margin-bottom: 0.2rem;
+  display: inline-block;
+  vertical-align: top;
+  clear: both;
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: 1.4rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: #29292c;
+  box-sizing: border-box;
+}
+/* line 124, sass/components/_press.scss */
+.page-press dt:last-child {
+  margin-bottom: 0;
+}
+/* line 140, sass/components/_press.scss */
+.page-press dd {
+  width: calc(100% - 150px);
+  margin-bottom: 1rem;
+  display: inline-block;
+  vertical-align: top;
+  font-family: "Lato", sans-serif;
+  font-size: 1.4rem;
+  line-height: 1.4;
+  color: #727686;
+  box-sizing: border-box;
+}
+/* line 150, sass/components/_press.scss */
+.page-press dd:last-child {
+  margin-bottom: 0;
+}
+
+/* line 167, sass/components/_press.scss */
+.press-table-col--date {
+  width: 25%;
+}
+
+/* line 173, sass/components/_press.scss */
+.press-table-col--title {
+  width: 45%;
+}
+
+/* line 179, sass/components/_press.scss */
+.press-table-col--source {
+  width: 30%;
+}
+
+/* line 185, sass/components/_press.scss */
+.press-area--featured-list {
+  padding: 3rem 0 0;
+  background-color: #f2f2f5;
+}
+/* line 192, sass/components/_press.scss */
+.press-area--featured-list h2 {
+  margin-bottom: 0;
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 12px;
+  font-family: "Lato", sans-serif;
+  text-transform: uppercase;
+  text-align: center;
+  color: #9d9ea6;
+}
+/* line 205, sass/components/_press.scss */
+.press-area--featured-list ul {
+  width: 100%;
+  margin: 0 auto;
+  max-width: 1400px;
+}
+/* line 222, sass/components/_press.scss */
+.press-area--featured-list li {
+  width: 48%;
+  margin-bottom: 4rem;
+  display: inline-block;
+  vertical-align: middle;
+  text-align: center;
+}
+/* line 228, sass/components/_press.scss */
+.press-area--featured-list li img, .press-area--featured-list li svg {
+  width: 70%;
+  max-width: 110px;
+}
+/* line 252, sass/components/_press.scss */
+.press-area--featured-list .list-heading-container {
+  display: none;
+}
+
+/* line 259, sass/components/_press.scss */
+.img-brand-assets {
+  width: 100%;
+  max-width: 200px;
+  margin-right: 6.38978%;
+  margin-bottom: 2rem;
+  display: inline-block;
+  vertical-align: top;
+}
+
+/* line 272, sass/components/_press.scss */
+.brand-assets-container {
+  text-align: center;
+}
+/* line 277, sass/components/_press.scss */
+.brand-assets-container .brand-assets-content {
+  width: 100%;
+  text-align: left;
+}
+
+/* line 1, sass/components/_profile-list.scss */
+.profile-list {
+  width: 100%;
+  padding-bottom: 4rem;
+  float: left;
+}
+/* line 9, sass/components/_profile-list.scss */
+.profile-list li {
+  position: relative;
+  width: 100%;
+  padding-top: 3rem;
+  padding-bottom: 0.6rem;
+  float: left;
+  text-align: center;
+}
+/* line 22, sass/components/_profile-list.scss */
+.profile-list li img {
+  max-width: 120px;
+  margin-bottom: 1.1rem;
+}
+/* line 32, sass/components/_profile-list.scss */
+.profile-list li h2 {
+  margin: 0 0 0.2rem;
+  font-size: 2.2rem;
+}
+/* line 35, sass/components/_profile-list.scss */
+.profile-list li h2 a {
+  color: #6d69c5;
+}
+/* line 37, sass/components/_profile-list.scss */
+.profile-list li h2 a:hover {
+  color: #4b46b5;
+}
+/* line 42, sass/components/_profile-list.scss */
+.profile-list li h3 {
+  font-size: 1.6rem;
+  color: #727686;
+}
+/* line 46, sass/components/_profile-list.scss */
+.profile-list li .profile-text {
+  position: absolute;
+  top: 0px;
+  width: 100%;
+  padding: 0.8rem 8% 1.9rem 10%;
+  opacity: 0;
+  background-color: #f2f2f5;
+}
+/* line 53, sass/components/_profile-list.scss */
+.profile-list li .profile-text p {
+  margin-bottom: 1em;
+  font-size: 14px;
+  text-align: left;
+  color: #5b5d61;
+}
+/* line 59, sass/components/_profile-list.scss */
+.profile-list li .profile-text a {
+  font-size: 14px;
+  color: #6d69c5;
+}
+/* line 62, sass/components/_profile-list.scss */
+.profile-list li .profile-text a:hover {
+  color: #4b46b5;
+}
+/* line 67, sass/components/_profile-list.scss */
+.profile-list li .profile-title {
+  position: relative;
+  z-index: 2;
+  background-color: #f2f2f5;
+}
+/* line 90, sass/components/_profile-list.scss */
+.profile-list li.is-active {
+  position: relative;
+  z-index: 100;
+  overflow: visible;
+}
+/* line 94, sass/components/_profile-list.scss */
+.profile-list li.is-active h2 a {
+  color: #29292c;
+}
+/* line 97, sass/components/_profile-list.scss */
+.profile-list li.is-active .profile-text {
+  top: 100%;
+  opacity: 1;
+  -webkit-transition: top 0.2s, opacity 0.15s;
+          transition: top 0.2s, opacity 0.15s;
+}
+/* line 103, sass/components/_profile-list.scss */
+.profile-list li.is-closing {
+  z-index: 90;
+}
+/* line 105, sass/components/_profile-list.scss */
+.profile-list li.is-closing .profile-text {
+  opacity: 0;
+  -webkit-transition: opacity 0.15s;
+          transition: opacity 0.15s;
+}
+
+/* line 112, sass/components/_profile-list.scss */
+.profile-list__mobile-heading {
+  padding: 1.5rem 2% 1.5rem;
+  margin-bottom: 0px;
+  clear: both;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-size: 13px;
+  color: #6d69c5;
+  letter-spacing: 0.6px;
+  font-family: "Lato", sans-serif;
+  background-color: #fcfdfd;
+}
+/* line 123, sass/components/_profile-list.scss */
+.profile-list__mobile-heading svg, .profile-list__mobile-heading span {
+  display: inline-block;
+  vertical-align: middle;
+}
+/* line 127, sass/components/_profile-list.scss */
+.profile-list__mobile-heading svg {
+  margin-right: 10px;
+  max-width: 20px;
+}
+/* line 130, sass/components/_profile-list.scss */
+.profile-list__mobile-heading svg path {
+  fill: #6d69c5;
+}
+/* line 134, sass/components/_profile-list.scss */
+.profile-list__mobile-heading:hover {
+  color: #4b46b5;
+}
+/* line 136, sass/components/_profile-list.scss */
+.profile-list__mobile-heading:hover svg path {
+  fill: #4b46b5;
+}
+/* line 143, sass/components/_profile-list.scss */
+.profile-list__mobile-heading.is-open {
+  color: #363a47;
+}
+/* line 145, sass/components/_profile-list.scss */
+.profile-list__mobile-heading.is-open svg path {
+  fill: #363a47;
+}
+/* line 148, sass/components/_profile-list.scss */
+.profile-list__mobile-heading.is-open:hover {
+  color: #363a47;
+}
+/* line 150, sass/components/_profile-list.scss */
+.profile-list__mobile-heading.is-open:hover svg path {
+  fill: #363a47;
+}
+
 /* Foundation v2.1.4 http://foundation.zurb.com */
 /* Artfully masterminded by ZURB  */
 /* -------------------------------------------------- 
@@ -11413,12 +12030,17 @@ svg.loading-ellipsis .dot-3 {
 }
 
 /* line 38, sass/components/_search-global.scss */
+.panel-right .search-button {
+  width: 100%;
+}
+
+/* line 41, sass/components/_search-global.scss */
 .search__results-container {
   width: 100%;
   overflow: visible;
 }
 
-/* line 42, sass/components/_search-global.scss */
+/* line 45, sass/components/_search-global.scss */
 .search__results-section {
   position: relative;
   min-height: 18px;
@@ -11426,19 +12048,19 @@ svg.loading-ellipsis .dot-3 {
   overflow: auto;
   text-align: left;
 }
-/* line 48, sass/components/_search-global.scss */
+/* line 51, sass/components/_search-global.scss */
 .search__results-section h2 {
   width: 100px;
   margin-bottom: 1.3rem;
   font-size: 14px;
   color: #fcfdfd;
 }
-/* line 54, sass/components/_search-global.scss */
+/* line 57, sass/components/_search-global.scss */
 .search__results-section ul {
   max-height: 156px;
   overflow: auto;
 }
-/* line 60, sass/components/_search-global.scss */
+/* line 63, sass/components/_search-global.scss */
 .search__results-section ul a {
   position: relative;
   display: block;
@@ -11448,21 +12070,21 @@ svg.loading-ellipsis .dot-3 {
   color: #81879d;
   cursor: pointer;
 }
-/* line 68, sass/components/_search-global.scss */
+/* line 71, sass/components/_search-global.scss */
 .search__results-section ul a:hover {
   color: #fff;
 }
-/* line 73, sass/components/_search-global.scss */
+/* line 76, sass/components/_search-global.scss */
 .search__results-section li {
   margin-bottom: 7px;
   display: block;
   overflow: visible;
 }
-/* line 77, sass/components/_search-global.scss */
+/* line 80, sass/components/_search-global.scss */
 .no-touch .search__results-section li {
   margin-bottom: 1px;
 }
-/* line 80, sass/components/_search-global.scss */
+/* line 83, sass/components/_search-global.scss */
 .search__results-section li img {
   position: absolute;
   top: 2px;
@@ -11471,7 +12093,7 @@ svg.loading-ellipsis .dot-3 {
   margin-right: 16px;
   vertical-align: top;
 }
-/* line 88, sass/components/_search-global.scss */
+/* line 91, sass/components/_search-global.scss */
 .search__results-section li span {
   position: relative;
   top: 0;
@@ -11484,12 +12106,12 @@ svg.loading-ellipsis .dot-3 {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-/* line 100, sass/components/_search-global.scss */
+/* line 103, sass/components/_search-global.scss */
 .search__results-section.search__results-section--developers span {
   padding-left: 0;
 }
 
-/* line 105, sass/components/_search-global.scss */
+/* line 108, sass/components/_search-global.scss */
 .search-results-none-container {
   margin-top: -9px;
   display: none;
@@ -11497,7 +12119,7 @@ svg.loading-ellipsis .dot-3 {
   font-family: "Source Sans Pro", sans-serif;
   color: #5b5b68;
 }
-/* line 111, sass/components/_search-global.scss */
+/* line 114, sass/components/_search-global.scss */
 .search-results-none-container .svg-unhappy {
   width: 23px;
   height: 23px;
@@ -11505,11 +12127,11 @@ svg.loading-ellipsis .dot-3 {
   display: inline-block;
   vertical-align: middle;
 }
-/* line 117, sass/components/_search-global.scss */
+/* line 120, sass/components/_search-global.scss */
 .search-results-none-container .svg-unhappy path {
   fill: #44444d;
 }
-/* line 121, sass/components/_search-global.scss */
+/* line 124, sass/components/_search-global.scss */
 .search-results-none-container span {
   padding-top: 1px;
   vertical-align: middle;
@@ -11961,7 +12583,7 @@ table.table-data.sticky-table-head tbody {
 }
 
 /* line 20, sass/components/_tabs.scss */
-.default-tabs-transition .tabs-container {
+.default-tabs-transition.tabs-container {
   display: none;
   display: block;
 }
