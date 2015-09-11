@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="utf-8" />
+	<title>Reflection, Careers</title>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">	
+	<!--[if (gte IE 9)|(IEMobile)|(!IE)]><!-->
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main.css" />
+	<!--<![endif]-->
+	<!--[if (lt IE 9)]>
+		<script src="js/vendor/html5shiv.min.js"></script>
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main-ie8.css" />
+	<![endif]-->
+ 	<!--[if !lt IE 9]><!-->
+		<script src="js/vendor/picturefill.2.3.1.min.js" async></script>
+	<!-- <![endif]-->
+	<link rel="stylesheet" href="js/vendor/jquery.mCustomScrollbar.css" />
+	<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
+	<script>
+	  WebFont.load({
+	    google: {
+	      families: ['Open Sans:400,600,700,400italic,600italic', 'Source Sans Pro:400,600,700', 'Lato:400,700,400italic']
+	    }
+	  });
+	</script>
+</head>
+<body class="panel-left-open">
+	<!--[if (lt IE 9)]>
+      <div class="window-warning">
+  			<p>Uh oh... Reflection doesn't work in this browser. &nbsp; &nbsp;<a href="http://outdatedbrowser.com/en" target="_blank">Download a compatible browser</a></p>
+  		</div>
+  <![endif]-->
+
+  <header id="js-component-import--global-header" class="global-header"></header>
+  
+	<div id="js-component-import--panel-left" class="panel-left js-custom-scrollbar" data-mcs-theme="minimal-dark"></div>
+
+	<div class="l-page-container">
+		<div id="main" class="l-main" role="main">
+			<div class="page-careers">
+				<div class="page-banner vertical-centre-content">
+					<div>
+						<h1>Working With Us</h1>
+						<h2>We're on the lookout for like-minded individuals who can help us shape for the future of the app industry</h2>
+					</div>
+				</div>
+				<div class="grid-container">
+					<article class="grid__column grid__column--two-thirds site-article-full">
+						<h2>Life at Reflection</h2>
+						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+						<img src="images/office-photo.jpg" alt="The Reflection office" class="image-full-width" />
+						<figcaption>
+							The development of new features being undertaken furiously at our London office.
+						</figcaption>
+						<h3>Perks of the Job</h3>
+						<ul class="content-list">
+							<li>Stock options plan</li>
+							<li>Hardware of your choice at work</li>
+							<li>Central London location just off Oxford Street</li>
+							<li>Opportunities to learn all there is to know about the mobile and app markets</li>
+							<li>Friendly and collaborative culture</li>
+							<li>All the espresso you can drink</li>
+						</ul>
+					</article>
+					<aside class="grid__column grid__column--one-third">
+						<h2 class="heading-style--heading-three">Current Openings</h2>
+						<ul class="content-list content-list--no-bullets">
+							<li>
+								<a href="#">Financial Controller</a>
+							</li>
+							<li>
+								<a href="#">Senior Engineer</a>
+							</li>
+							<li>
+								<a href="#">Junior Front-End Developer</a>
+							</li>
+							<li><a href="#">Executive Assistant</a></li>
+							<li><a href="#">HR Manager</a></lI>
+							<li><a href="#">Junior Digital Product Designer</a></li>
+							<li><a href="#">Design Intern</a></li>
+							<li><a href="#">Development Intern</a></li>
+						</ul>
+						<h2 class="heading-style--heading-four">Introduce Yourself</h2>
+						<p class="minor-text">Are you an honest and talented individual that likes to get things done? We’d like to hear from you. Email us with your details and experience and let’s see if we can work together.</p>
+						<p><a href="mailto:careers@reflection.io">careers@reflection.io</a></p>
+					</aside>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="js-component-import--account-container" class="panel-right-container js-account-container"></div>
+	<div id="js-component-import--search-container" class="panel-right-container js-search-container"></div>
+
+ 	<script src="js/vendor/jquery-1.11.1.min.js"></script>
+ 	<script src="js/vendor/jquery-ui.custom.min.js"></script>
+ 	<script src="js/vendor/handlebars-v2.0.0.js"></script>
+ 	<script src="js/templates/templates.js"></script>
+	<script src="js/vendor/modernizr.2.8.3.custom.min.js"></script>
+	<!--[if IE 9]>
+		<script src="js/vendor/jquery.mCustomScrollbar.concat.min.js"></script>
+	<![endif]-->
+
+	<div id="js-appendScriptsContainer"></div>
+
+	<script src="js/application-global-modules-logged-in.js"></script>
+  <script src="js/application.js"></script>
+  <script>
+  	$(window).on("load", function(){
+		  new Page();
+		  new Tabs();
+
+		  $('.profile-list li').each(function(){
+		  	new profileList($(this));
+		  });
+
+		  $('.profile-list').each(function(){
+		  	new profileListContainer($(this));
+		  });
+		  // Custom tabs for profile list
+		  if($(window).innerWidth() < 720) {
+		  	$('.tabs__content:not(.tabs__content--is-showing) .js-reveal').each(function(){
+		  		$(this).next('.reveal-content').slideUp();
+		  	});
+		  	$('.js-reveal').on("click", function(e){
+					e.preventDefault();
+					$(this).toggleClass("is-open")
+								 .next('.reveal-content').slideToggle(300);
+				});
+		  }		  
+  	});
+  </script>
+</body>

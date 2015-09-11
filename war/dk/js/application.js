@@ -560,7 +560,6 @@
 	  			if($this.parents('.tabs__content--is-showing').length) {
 	  				$this.parents('.tabs__content--is-showing').removeClass('tabs__content--is-showing');
 	  				contentHeight = $this.next('.collapsible-content').height();
-	  				console.log("contentHeight = " + contentHeight);
 	  				$this.next('.collapsible-content').css('margin-top', -contentHeight);
 	  			} else {
 	  				$this.parents('.tabs__content-container').find('.tabs__content--is-showing').removeClass('tabs__content--is-showing');
@@ -1131,6 +1130,23 @@
 		});
 	};
 
+	var BackToTopInlineLink = function($link) {
+		if($link) {
+			$link.on("click", function(){
+				var linkAnchor = $link.attr("href");
+				if(linkAnchor) {
+					var pageTopBarHeight = $('.global-header').innerHeight(),
+							anchorId = $link.attr("href"),
+							scrollTopOfTheAnchor = $(anchorId).offset().top;
+					$('html, body').animate({ scrollTop: scrollTopOfTheAnchor - pageTopBarHeight - 20}, 300, 'swing');
+					
+				} else {
+					$('html, body').animate({ scrollTop: 0 }, 300, 'swing');
+				}
+			});
+		}
+	}
+
 
 	var Accordion = function() {
 		that = this;
@@ -1520,6 +1536,39 @@
 			setTimeout(function(){
 				$this.removeClass("is-active is-closing");
 			}, 150);
+		});
+	}
+
+	var FAQSet = function($faqContainer) {
+		$faqContainer.find('li a').each(function(){
+			var $thisLink = $(this);
+			$thisLink.on("click", function(e){
+				e.preventDefault();
+				$faqContainer.find('li a').removeClass("is-active");
+				$thisLink.addClass("is-active");
+				var pageTopBarHeight = $('.global-header').innerHeight(),
+						anchorId = $(this).attr("href"),
+						scrollTopOfTheAnchor = $(anchorId).offset().top;
+				$('html, body').animate({ scrollTop: scrollTopOfTheAnchor - pageTopBarHeight - 20}, 300, 'swing');
+			});
+		});
+		
+		var pageTopBarHeight = $('.global-header').innerHeight();
+		var faqContainerTopPosition = $faqContainer.offset().top - pageTopBarHeight;
+
+		$(window).on("scroll", function(){
+			if($(window).innerWidth() > 719) {
+
+				if($(window).scrollTop() >= faqContainerTopPosition) {
+					if(!$faqContainer.hasClass("faqs-list-container--fixed")) {
+						$faqContainer.addClass("faqs-list-container--fixed");
+					}
+				} else {					
+					if($faqContainer.hasClass("faqs-list-container--fixed")) {
+						$faqContainer.removeClass("faqs-list-container--fixed");
+					}
+				}
+			}
 		});
 	}
 /* END COMPONENT OBJECTS */
