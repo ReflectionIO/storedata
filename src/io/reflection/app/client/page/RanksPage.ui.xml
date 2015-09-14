@@ -119,23 +119,27 @@
 			<form class="{STYLES_INSTANCE.reflectionMainStyle.formsMidTheme}">
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.filterGroup}">
 					<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.calendarContainer} {STYLES_INSTANCE.reflectionMainStyle.singleDateInput}">
-		
+
 						<div ui:field="dateSelectContainer" class="{STYLES_INSTANCE.reflectionMainStyle.dateSelectContainer}">
 							<div class="{STYLES_INSTANCE.reflectionMainStyle.formField} {STYLES_INSTANCE.reflectionMainStyle.formFieldDateSelect}">
 								<c:FormDateBox ui:field="dateBox"></c:FormDateBox>
 								<span></span>
 							</div>
 						</div>
-		
+
 					</g:HTMLPanel>
-		
+
 					<c:Selector ui:field="countrySelector" labelText="Country" overlay="true" dropdownTitle="Select a country" tooltip="Select a country" />
-		
+
 					<c:Selector ui:field="appStoreSelector" labelText="App Store" overlay="true" dropdownTitle="Select a store" tooltip="View data for iPhone or iPad" />
-		
+
 					<c:Selector ui:field="categorySelector" alignCenter="" labelText="Category" dropdownTitle="Select a category" tooltip="Select a category"
 						overlay="true" />
-		
+
+					<g:Button ui:field="applyFilters" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaSmall} {STYLES_INSTANCE.reflectionMainStyle.refreshButton}">
+						<span class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeRefresh}"></span>
+					</g:Button>
+
 					<g:HTMLPanel ui:field="dailyDataContainer" styleName="{STYLES_INSTANCE.reflectionMainStyle.filterToggle}">
 						<c:ToggleRadioButton ui:field="toggleDownloads" value="true" labelClassName="{STYLES_INSTANCE.reflectionMainStyle.toggleDownloads}"
 							svgPath="M32,16.5c0,3.6-2.7,6.5-6.7,6.5v0h-6v-2h6.5

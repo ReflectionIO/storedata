@@ -20,8 +20,7 @@
 				</div>
 			</div>
 		</div>
-		<g:Button ui:field="applyDateRange"
-			styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaSmall} {STYLES_INSTANCE.reflectionMainStyle.refreshButton} {STYLES_INSTANCE.reflectionMainStyle.refreshButton}">
+		<g:Button ui:field="applyDateRange" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaSmall} {STYLES_INSTANCE.reflectionMainStyle.refreshButton}">
 			<span class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeRefresh}">Refresh</span>
 		</g:Button>
 		<span class="{STYLES_INSTANCE.reflectionMainStyle.orText}">or</span>

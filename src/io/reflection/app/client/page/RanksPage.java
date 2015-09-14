@@ -7,17 +7,11 @@
 //
 package io.reflection.app.client.page;
 
-import static io.reflection.app.client.controller.FilterController.CATEGORY_KEY;
-import static io.reflection.app.client.controller.FilterController.COUNTRY_KEY;
-import static io.reflection.app.client.controller.FilterController.DAILY_DATA_KEY;
-import static io.reflection.app.client.controller.FilterController.DOWNLOADS_DAILY_DATA_TYPE;
-import static io.reflection.app.client.controller.FilterController.END_DATE_KEY;
 import static io.reflection.app.client.controller.FilterController.FREE_LIST_TYPE;
 import static io.reflection.app.client.controller.FilterController.GROSSING_LIST_TYPE;
 import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
 import static io.reflection.app.client.controller.FilterController.PAID_LIST_TYPE;
 import static io.reflection.app.client.controller.FilterController.REVENUE_DAILY_DATA_TYPE;
-import static io.reflection.app.client.controller.FilterController.STORE_KEY;
 import static io.reflection.app.client.helper.FormattingHelper.WHOLE_NUMBER_FORMATTER;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
@@ -29,14 +23,12 @@ import io.reflection.app.client.component.LoadingBar;
 import io.reflection.app.client.component.Selector;
 import io.reflection.app.client.component.ToggleRadioButton;
 import io.reflection.app.client.controller.FilterController;
-import io.reflection.app.client.controller.FilterController.Filter;
 import io.reflection.app.client.controller.ItemController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.RankController;
 import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.controller.SessionController;
-import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.AnimationHelper;
 import io.reflection.app.client.helper.FilterHelper;
@@ -65,13 +57,11 @@ import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.logical.shared.ShowRangeEvent;
 import com.google.gwt.event.logical.shared.ShowRangeHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
@@ -99,8 +89,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class RanksPage extends Page implements FilterEventHandler, // SessionEventHandler, IsAuthorisedEventHandler,
-		NavigationEventHandler, GetAllTopItemsEventHandler {
+public class RanksPage extends Page implements NavigationEventHandler, GetAllTopItemsEventHandler {
 
 	private static RanksPageUiBinder uiBinder = GWT.create(RanksPageUiBinder.class);
 
@@ -127,7 +116,6 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 	@UiField DivElement dateSelectContainer;
 	@UiField FormDateBox dateBox;
-	Date currentDate = FilterHelper.getToday();
 	@UiField Selector appStoreSelector;
 	// @UiField ListBox mListType;
 	@UiField Selector countrySelector;
@@ -135,6 +123,7 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	@UiField(provided = true) ToggleRadioButton toggleRevenue = new ToggleRadioButton("dailydatatoggle");
 	@UiField(provided = true) ToggleRadioButton toggleDownloads = new ToggleRadioButton("dailydatatoggle");
 	@UiField HTMLPanel dailyDataContainer;
+	@UiField Button applyFilters;
 
 	@UiField InlineHyperlink allLink;
 	@UiField SpanElement overviewAllText;
@@ -283,6 +272,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 				}
 			}
 		});
+
+		updateFiltersFromURL();
 
 	}
 
@@ -464,124 +455,53 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		return rank;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.FilterEventHandler#filterParamChanged(java.lang.String, java.lang.Object, java.lang.Object)
-	 */
-	@Override
-	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
+	@UiHandler("applyFilters")
+	void onApplyFiltersClicked(ClickEvent event) {
+		event.preventDefault();
 		if (NavigationController.get().getCurrentPage() == PageType.RanksPageType) {
-			boolean foundDailyData = false;
-			if (name != null
-					&& (COUNTRY_KEY.equals(name) || STORE_KEY.equals(name) || CATEGORY_KEY.equals(name) || END_DATE_KEY.equals(name) || (foundDailyData = DAILY_DATA_KEY
-							.equals(name)))) {
-
-				if (foundDailyData) {
-					leaderboardTable.redraw();
-				} else {
-					loadingBar.show();
-					RankController.get().reset();
-					RankController.get().fetchTopItems();
-					viewAllBtn.setVisible(false);
-				}
-
+			boolean updateData = false;
+			if (updateData = updateData || !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())) {
+				FilterController.get().setCountry(countrySelector.getSelectedValue());
+			}
+			if (updateData = updateData || !FilterController.get().getFilter().getStoreA3Code().equals(appStoreSelector.getSelectedValue())) {
+				FilterController.get().setStore(appStoreSelector.getSelectedValue());
+			}
+			if (updateData = updateData || !FilterController.get().getFilter().getCategoryId().toString().equals(categorySelector.getSelectedValue())) {
+				FilterController.get().setCategory(Long.valueOf(categorySelector.getSelectedValue()));
+			}
+			if (updateData = updateData || !FilterController.get().getFilter().getCategoryId().toString().equals(categorySelector.getSelectedValue())) {
+				FilterController.get().setCategory(Long.valueOf(categorySelector.getSelectedValue()));
+			}
+			if (updateData = updateData || !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateBox.getValue())) {
+				FilterController.get().setEndDate(dateBox.getValue());
+				Date startDate = new Date(FilterController.get().getFilter().getEndTime());
+				CalendarUtil.addDaysToDate(startDate, -30);
+				FilterController.get().getFilter().setStartTime(startDate.getTime());
+			}
+			if (updateData) {
+				loadingBar.show();
+				RankController.get().reset();
+				RankController.get().fetchTopItems();
+				viewAllBtn.setVisible(false);
+				errorPanel.setVisible(false);
+				noDataPanel.setVisible(false);
+				leaderboardTable.setVisible(true);
+				downloadsHeader.setHeaderStyleNames(style.canBeSorted());
+				revenueHeader.setHeaderStyleNames(style.canBeSorted());
 				PageType.RanksPageType.show("view", selectedTab, FilterController.get().asRankFilterString());
 			}
-			errorPanel.setVisible(false);
-			noDataPanel.setVisible(false);
-			leaderboardTable.setVisible(true);
 		}
-		downloadsHeader.setHeaderStyleNames(style.canBeSorted());
-		revenueHeader.setHeaderStyleNames(style.canBeSorted());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.FilterEventHandler#filterParamsChanged(io.reflection.app.client.controller.FilterController.Filter, java.util.Map)
+	/**
+	 * Update selectors from URL if coming from a page refresh
 	 */
-	@Override
-	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {
-		if (NavigationController.get().getCurrentPage() == PageType.RanksPageType) {
-
-			boolean foundDailyData = false;
-
-			if (previousValues.get(COUNTRY_KEY) != null || previousValues.get(STORE_KEY) != null || previousValues.get(CATEGORY_KEY) != null
-					|| previousValues.get(END_DATE_KEY) != null || (foundDailyData = (previousValues.get(DAILY_DATA_KEY) != null))) {
-
-				if (foundDailyData) {
-					leaderboardTable.redraw();
-				} else {
-					loadingBar.show();
-					RankController.get().reset();
-					RankController.get().fetchTopItems();
-					viewAllBtn.setVisible(false);
-				}
-
-				PageType.RanksPageType.show("view", selectedTab, FilterController.get().asRankFilterString());
-			}
-			errorPanel.setVisible(false);
-			noDataPanel.setVisible(false);
-			leaderboardTable.setVisible(true);
-		}
-		downloadsHeader.setHeaderStyleNames(style.canBeSorted());
-		revenueHeader.setHeaderStyleNames(style.canBeSorted());
-	}
-
-	@UiHandler("appStoreSelector")
-	void onAppStoreValueChanged(ChangeEvent event) {
-		FilterController.get().setStore(appStoreSelector.getSelectedValue());
-	}
-
-	// @UiHandler("mListType")
-	// void onListTypeValueChanged(ChangeEvent event) {
-	// FilterController.get().setListType(mListType.getValue(mListType.getSelectedIndex()));
-	// }
-
-	@UiHandler("countrySelector")
-	void onCountryValueChanged(ChangeEvent event) {
-		FilterController.get().setCountry(countrySelector.getSelectedValue());
-	}
-
-	@UiHandler("dateBox")
-	void onDateValueChanged(ValueChangeEvent<Date> event) {
-		if (event.getValue().after(FilterHelper.getToday())) { // Restore previously selected date
-			dateBox.setValue(currentDate);
-		} else {
-			currentDate.setTime(dateBox.getValue().getTime());
-			FilterController fc = FilterController.get();
-			fc.start();
-			fc.setEndDate(event.getValue());
-			Date startDate = fc.getEndDate();
-			CalendarUtil.addDaysToDate(startDate, -30);
-			fc.setStartDate(startDate);
-			fc.commit();
-		}
-	}
-
-	@UiHandler("categorySelector")
-	void onCategoryListBoxValueChanged(ChangeEvent event) {
-		FilterController.get().setCategory(Long.valueOf(categorySelector.getSelectedValue()));
-	}
-
-	@UiHandler("toggleRevenue")
-	void onDailyDataRevenueValueChanged(ValueChangeEvent<Boolean> event) {
-		FilterController.get().setDailyData(REVENUE_DAILY_DATA_TYPE);
-	}
-
-	@UiHandler("toggleDownloads")
-	void onDailyDataDownloadsValueChanged(ValueChangeEvent<Boolean> event) {
-		FilterController.get().setDailyData(DOWNLOADS_DAILY_DATA_TYPE);
-	}
-
-	private void updateFromFilter() {
+	private void updateFiltersFromURL() {
 		FilterController fc = FilterController.get();
 
 		long endTime = fc.getFilter().getEndTime().longValue();
 		Date endDate = new Date(endTime);
-		dateBox.setValue(endDate);
-		currentDate.setTime(endDate.getTime());
+		dateBox.setValue(endDate, false);
 		if (SessionController.get().isLoggedInUserAdmin()) {
 			categorySelector.setSelectedIndex(FormHelper.getItemIndex(categorySelector, fc.getFilter().getCategoryId().toString()));
 		} else {
@@ -791,7 +711,6 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 				// }
 				// }
 
-				updateFromFilter();
 			}
 
 			if (Window.getClientWidth() <= 719) {
@@ -806,37 +725,6 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 	}
 
-	// private void setDataFilterVisible(boolean visible) {
-	// if (visible) {
-	// dailyDataContainer.setVisible(true);
-	// } else {
-	// dailyDataContainer.setVisible(false);
-	// }
-	// }
-
-	// private void setViewMoreVisible(boolean visible) {
-	// if (viewAllBtn.isAttached()) {
-	//
-	// }
-	// if (redirect.isAttached()) {
-	// redirect.setVisible(visible);
-	// }
-	//
-	// }
-
-	// private void checkPermissions() {
-	// List<Permission> permissions = new ArrayList<Permission>();
-	//
-	// Permission p = new Permission();
-	// // p.code = "FRV";
-	// p.id = Long.valueOf(1);
-	// permissions.add(p);
-	//
-	// SessionController.get().fetchAuthorisation(null, permissions);
-	//
-	// redirect.setTargetHistoryToken(PageType.UpgradePageType.toString());
-	// }
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -846,13 +734,8 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 	protected void onAttach() {
 		super.onAttach();
 
-		register(DefaultEventBus.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
-		// register(EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this));
-		// register(EventController.get().addHandlerToSource(IsAuthorisedEventHandler.TYPE, SessionController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(GetAllTopItemsEventHandler.TYPE, RankController.get(), this));
-
-		updateFromFilter();
 
 	}
 
