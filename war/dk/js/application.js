@@ -541,8 +541,8 @@
   		$(contentId).parents('.tabs__content-container').find('.tabs__content--is-showing').removeClass('tabs__content--is-showing');
   		$(contentId).addClass('tabs__content--is-showing');
   		if(!isIE8 && $(contentId).parents('.tabs__content-container').hasClass('default-tabs-transition')) {
-	  		$(contentId + ' *').css("opacity", 0);
-	  		$(contentId + ' *').animate({opacity: 1}, 200);
+	  		$(contentId + ' > div').css("opacity", 0);
+	  		$(contentId + ' > div').animate({opacity: 1}, 200);
 	  	}
   	});
 
@@ -560,6 +560,7 @@
 	  			if($this.parents('.tabs__content--is-showing').length) {
 	  				$this.parents('.tabs__content--is-showing').removeClass('tabs__content--is-showing');
 	  				contentHeight = $this.next('.collapsible-content').height();
+	  				console.log("contentHeight = " + contentHeight);
 	  				$this.next('.collapsible-content').css('margin-top', -contentHeight);
 	  			} else {
 	  				$this.parents('.tabs__content-container').find('.tabs__content--is-showing').removeClass('tabs__content--is-showing');
@@ -1426,8 +1427,7 @@
 		});
 	}
 
-	var reflectionMap = function() {
-		console.log("reflectionMap");
+	var reflectionMap = function() {	
 		var isDraggable = $('html.touch').length == 0;
 		var mapStyles = [{
 	      featureType: "poi",
@@ -1486,6 +1486,41 @@
 		}
 
 		return this;
+	}
+
+	var profileListContainer = function($profileListContainer) {
+		var $this = $profileListContainer;
+		$profileListContainer.find('.js-open-profile').on("click", function(){
+			var openProfile = $this.find("li.is-active").addClass("is-closing");
+			setTimeout(function(){
+				openProfile.removeClass("is-active is-closing");
+			}, 200);
+		});
+	}
+
+	var profileList = function($profileContainer) {
+		var $this = $profileContainer;	
+
+		$this.find('.js-open-profile').on("click", function(e){
+			e.preventDefault();
+			if($this.hasClass("is-active")) {
+				$this.addClass("is-closing");
+				setTimeout(function(){
+					$this.removeClass("is-active is-closing");
+				}, 200);
+			} else {
+				setTimeout(function(){
+					$this.addClass("is-active");
+				}, 10);
+			}		
+		});
+		$this.find('.js-close-profile').on("click", function(e){
+			e.preventDefault();
+			$this.addClass("is-closing");
+			setTimeout(function(){
+				$this.removeClass("is-active is-closing");
+			}, 150);
+		});
 	}
 /* END COMPONENT OBJECTS */
 

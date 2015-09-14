@@ -88,10 +88,8 @@
 			class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.horizontalCentreContent} {STYLES_INSTANCE.reflectionMainStyle.accountAccessContent}">
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.fullScreenIntro}">
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.createPasswordMainContent}">
-					<h1>Welcome to Reflection Jan!</h1>
-					<p class="{STYLES_INSTANCE.reflectionMainStyle.pStyleFeatured}">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eius tempor incididunt ut labore et dolore lorem magna aliqua.
-						Ut enim ad minim
-						veniam, quis nostrud exercitat ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in</p>
+					<h1>Welcome to Reflection!</h1>
+					<p class="{STYLES_INSTANCE.reflectionMainStyle.pStyleFeatured}">Congratulations on becoming part of our private beta. Our goal is to provide the most insightful and accurate app intelligence and you can help us achieve this.</p>
 					<div class="{STYLES_INSTANCE.reflectionMainStyle.listPartners}">
 						<h2>Some of the partners you're joining</h2>
 						<ul>

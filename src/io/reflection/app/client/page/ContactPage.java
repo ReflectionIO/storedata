@@ -8,7 +8,9 @@
 package io.reflection.app.client.page;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.ScriptInjector;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -21,23 +23,31 @@ public class ContactPage extends Page {
 	private static ContactPageUiBinder uiBinder = GWT.create(ContactPageUiBinder.class);
 
 	interface ContactPageUiBinder extends UiBinder<Widget, ContactPage> {}
-	
+
 	private boolean mapScriptInjected;
 
 	public ContactPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		 nativeInitMap();
+		nativeInitMap();
+
+		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+
+			@Override
+			public void execute() {
+				ScriptInjector.fromUrl("https://maps.googleapis.com/maps/api/js?callback=generateMapContact").setWindow(ScriptInjector.TOP_WINDOW).inject();
+			}
+		});
 	}
 
 	native void nativeInitMap() /*-{
 
 		$wnd.refMap; // global map object
-		$wnd.generateMap = function() {
+		$wnd.generateMapContact = function() {
 			$wnd.refMap = new $wnd.reflectionMap();
 			mapTop = $wnd.$('.contact__map-container').offset().top;
 			dropped = false;
-
+			
 			if ($wnd.$('.no-touch').length > 0
 					&& $wnd.$($wnd).scrollTop() < (mapTop - ($wnd.$($wnd)
 							.height() / 2))) {
@@ -142,10 +152,10 @@ public class ContactPage extends Page {
 	protected void onAttach() {
 		super.onAttach();
 
-		if (!mapScriptInjected) {
-			ScriptInjector.fromUrl("https://maps.googleapis.com/maps/api/js?key=AIzaSyD7mXBIrN4EgMflWKxUOK6C9rfoDMa5zyo&callback=generateMap")
-					.setWindow(ScriptInjector.TOP_WINDOW).inject();
-			mapScriptInjected = true;
-		}
+//		if (!mapScriptInjected) {
+//			ScriptInjector.fromUrl("https://maps.googleapis.com/maps/api/js?key=AIzaSyD7mXBIrN4EgMflWKxUOK6C9rfoDMa5zyo&callback=generateMap")
+//					.setWindow(ScriptInjector.TOP_WINDOW).inject();
+//			mapScriptInjected = true;
+//		}
 	}
 }

@@ -141,9 +141,6 @@ import com.willshex.gson.json.service.shared.StatusType;
 public final class Core extends ActionHandler {
 	private static final Logger LOG = Logger.getLogger(Core.class.getName());
 
-	private final static int SESSIONLESS_MAX_ITEMS = 10;
-	private final static int PERMISSIONLESS_MAX_ITEMS = 25;
-
 	public GetCountriesResponse getCountries(GetCountriesRequest input) {
 		LOG.finer("Entering getCountries");
 		GetCountriesResponse output = new GetCountriesResponse();

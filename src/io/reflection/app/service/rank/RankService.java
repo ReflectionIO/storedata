@@ -276,7 +276,7 @@ public class RankService implements IRankService {
 
 		final String getItemHasGrossingRankQuery = String
 				.format("select rank_fetch_id from rank_fetch where rank_fetch_id in ( select rank_fetch_id from rank2 where itemid='%s' ) and type='GROSSING' limit 1",
-						addslashes(item.internalId));
+				addslashes(item.internalId));
 
 		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
