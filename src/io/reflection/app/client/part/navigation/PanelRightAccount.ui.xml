@@ -2,7 +2,7 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:l="urn:import:io.reflection.app.client.part.login">
 	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 	<ui:style>
-	
+
 	</ui:style>
 	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.panelRightContainer}">
 		<div ui:field="panelOverlay" class="{STYLES_INSTANCE.reflectionMainStyle.panelRight__overlay}"></div>
@@ -51,12 +51,11 @@
 
 				<div ui:field="quotePanel" class="{STYLES_INSTANCE.reflectionMainStyle.blockquoteContainer}">
 					<blockquote>
-						<p>We see our customers as invited guests to a party, and we are the hosts. It's our job every day to make every important aspect of the customer
-							experience a little bit better.</p>
+						<p>Reflection’s approach to let developers have input on feature development is unique and refreshing. A great addition to the app intelligence space.</p>
 						<footer>
 							<cite>
-								<span>Jeff Bezos</span>
-								Founder, Amazon
+								<span>Saad Choudri</span>
+								Chief Commercial Officer, Miniclip
 							</cite>
 						</footer>
 					</blockquote>
@@ -128,4 +127,4 @@
 		</div>
 
 	</g:HTMLPanel>
-</ui:UiBinder> 
+</ui:UiBinder>
