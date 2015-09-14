@@ -13,6 +13,11 @@
 	<ui:import field="io.reflection.app.client.page.PageType.EventSubscriptionsPageType" />
 	<ui:import field="io.reflection.app.client.page.PageType.SendNotificationPageType" />
 	<ui:import field="io.reflection.app.client.page.PageType.BlogAdminPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.AboutPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.CareersPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.PressPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.PricingPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.ProductPageType" />
 	<ui:import field="io.reflection.app.client.page.PageType.TermsPageType" />
 
 
@@ -161,7 +166,22 @@
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.mainFooterLinks}">
 			<ul>
 				<li>
+					<g:InlineHyperlink targetHistoryToken="{ProductPageType.asTargetHistoryToken}">Product</g:InlineHyperlink>
+				</li>
+				<li>
+					<g:InlineHyperlink targetHistoryToken="{PricingPageType.asTargetHistoryToken}">Pricing</g:InlineHyperlink>
+				</li>
+				<li>
+					<g:InlineHyperlink targetHistoryToken="{AboutPageType.asTargetHistoryToken}">About Us</g:InlineHyperlink>
+				</li>
+				<li>
+					<g:InlineHyperlink targetHistoryToken="{PressPageType.asTargetHistoryToken}">Press</g:InlineHyperlink>
+				</li>
+				<li>
 					<a href="mailto:info@reflection.io">Contact Us</a>
+				</li>
+				<li>
+					<g:InlineHyperlink targetHistoryToken="{CareersPageType.asTargetHistoryToken}">Careers</g:InlineHyperlink>
 				</li>
 				<li>
 					<g:InlineHyperlink targetHistoryToken="{TermsPageType.asTargetHistoryToken}">Terms &amp; Conditions</g:InlineHyperlink>
