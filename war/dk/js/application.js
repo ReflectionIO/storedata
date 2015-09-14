@@ -949,7 +949,7 @@
 			optionsList.css('margin-top', -optionsList.height());
 			pInstance.populateSelectedValues(listItems, selectedOptionsContainer);
 
-			if($this.parent('.form-field--select-disabled').length == 0) {
+			if($this.parent('.form-field--select-disabled').length == 0 && $this.parent('.form-field--select-restricted').length == 0) {
 				selectedOptionsContainer.on('click', function() {
 					if($this.hasClass('is-open')) {
 						$this.removeClass('is-open');
@@ -1026,7 +1026,7 @@
 					optionsList.css('margin-top', -listHeight);
 				}				
 
-				if(selectInput.parent('.form-field--select-disabled').length == 0) {
+				if(selectInput.parent('.form-field--select-disabled').length == 0 && selectInput.parent('.form-field--select-restricted').length == 0) {
 					optionsList.find('li').on('click', function() {
 						if(!$(this).hasClass('pre-selected')) {
 							listItem = $(this);
@@ -1288,7 +1288,12 @@
 				var tooltip;
 				$this.on("mouseenter", function(){
 					var tooltipText = $(this).data("tooltip");
-					tooltip = $('<div>').addClass("tooltip").text(tooltipText);			
+					tooltip = $('<div>').addClass("tooltip").append($('<div>').addClass("tooltip-text").text(tooltipText));
+					if($this.find('.icon-member--standard').length > 0) {
+						tooltip.prepend($('<span>').addClass("tooltip-feature tooltip-feature--standard").text("MEMBER FEATURE"));
+					} else if($this.find('.icon-member--pro').length > 0) {
+						tooltip.prepend($('<span>').addClass("tooltip-feature tooltip-feature--pro").text("PREMIUM FEATURE"));
+					}
 					$('body').append(tooltip);
 					var topPosition = $this.offset().top;
 					var leftPosition = $this.offset().left;
@@ -1586,6 +1591,7 @@
 		new BackToTop();
 		new StickyTableHead();
 		new MockFormSelectMultipleWithSearch();
+		new ToolTip();
 
 		$('.js-tab-select').on("mouseup", function(e){
 			new StickyTableHead();
