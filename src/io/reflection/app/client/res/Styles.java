@@ -87,6 +87,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("account-user-details")
 		String accountUserDetails();
 
+		@ClassName("account-user-details--name")
+		String accountUserDetailsName();
+
 		@ClassName("actions-group")
 		String actionsGroup();
 
@@ -190,6 +193,12 @@ public interface Styles extends ClientBundle {
 		@ClassName("blog-tags")
 		String blogTags();
 
+		@ClassName("brand-assets-container")
+		String brandAssetsContainer();
+
+		@ClassName("brand-assets-content")
+		String brandAssetsContent();
+
 		String breadcrumb();
 
 		@ClassName("breadcrumb-container")
@@ -214,6 +223,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("button-example-container--full-width")
 		String buttonExampleContainerFullWidth();
+
+		@ClassName("button-style")
+		String buttonStyle();
 
 		@ClassName("buttons-container")
 		String buttonsContainer();
@@ -260,6 +272,8 @@ public interface Styles extends ClientBundle {
 		String checkboxLabelVisible();
 
 		String checkboxLabelVisibleDisabled();
+
+		String checklist();
 
 		@ClassName("clear-both")
 		String clearBoth();
@@ -388,6 +402,15 @@ public interface Styles extends ClientBundle {
 		@ClassName("create-password-main-content")
 		String createPasswordMainContent();
 
+		@ClassName("cta-button")
+		String ctaButton();
+
+		@ClassName("curtain-left")
+		String curtainLeft();
+
+		@ClassName("curtain-right")
+		String curtainRight();
+
 		@ClassName("custom--tablet-one-half")
 		String customTabletOneHalf();
 
@@ -506,6 +529,12 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("email-success-handle")
 		String emailSuccessHandle();
+
+		@ClassName("faqs-list-container")
+		String faqsListContainer();
+
+		@ClassName("faqs-list-container--fixed")
+		String faqsListContainerFixed();
 
 		@ClassName("feature-complete")
 		String featureComplete();
@@ -826,6 +855,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("icon-dollar")
 		String iconDollar();
 
+		@ClassName("icon-member")
+		String iconMember();
+
 		String ie10();
 
 		String ie11();
@@ -839,6 +871,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("image-full-width")
 		String imageFullWidth();
+
+		@ClassName("img-brand-assets")
+		String imgBrandAssets();
 
 		@ClassName("img-reset")
 		String imgReset();
@@ -863,6 +898,15 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("interactions-page")
 		String interactionsPage();
+
+		@ClassName("intro-banner")
+		String introBanner();
+
+		@ClassName("intro-banner__graphic")
+		String introBanner__graphic();
+
+		@ClassName("intro-banner__intro")
+		String introBanner__intro();
 
 		@ClassName("is-activated")
 		String isActivated();
@@ -966,6 +1010,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("is-strong")
 		String isStrong();
 
+		@ClassName("is-submitted-success")
+		String isSubmittedSuccess();
+
 		@ClassName("js-fade-content")
 		String jsFadeContent();
 
@@ -1004,6 +1051,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("lato-bold")
 		String latoBold();
 
+		@ClassName("link-back-to-top")
+		String linkBackToTop();
+
 		@ClassName("link-log-in")
 		String linkLogIn();
 
@@ -1033,6 +1083,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("list-container")
 		String listContainer();
+
+		@ClassName("list-heading-container")
+		String listHeadingContainer();
 
 		@ClassName("list-item-complete")
 		String listItemComplete();
@@ -1103,6 +1156,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("map--contact")
 		String mapContact();
 
+		@ClassName("minor-text")
+		String minorText();
+
 		@ClassName("mobile-width")
 		String mobileWidth();
 
@@ -1166,6 +1222,21 @@ public interface Styles extends ClientBundle {
 		@ClassName("p-style--minor")
 		String pStyleMinor();
 
+		@ClassName("page-about")
+		String pageAbout();
+
+		@ClassName("page-about--intro")
+		String pageAboutIntro();
+
+		@ClassName("page-about--title")
+		String pageAboutTitle();
+
+		@ClassName("page-about-foot-content__svg-container")
+		String pageAboutFootContent__svgContainer();
+
+		@ClassName("page-about-foot-content__text")
+		String pageAboutFootContent__text();
+
 		@ClassName("page-admin")
 		String pageAdmin();
 
@@ -1175,11 +1246,20 @@ public interface Styles extends ClientBundle {
 		@ClassName("page-app__header")
 		String pageApp__header();
 
+		@ClassName("page-banner")
+		String pageBanner();
+
 		@ClassName("page-blog")
 		String pageBlog();
 
+		@ClassName("page-careers")
+		String pageCareers();
+
 		@ClassName("page-contact")
 		String pageContact();
+
+		@ClassName("page-faqs")
+		String pageFaqs();
 
 		@ClassName("page-functions")
 		String pageFunctions();
@@ -1223,8 +1303,20 @@ public interface Styles extends ClientBundle {
 		@ClassName("page-overlay--download")
 		String pageOverlayDownload();
 
+		@ClassName("page-overlay--premium")
+		String pageOverlayPremium();
+
+		@ClassName("page-overlay--standard")
+		String pageOverlayStandard();
+
 		@ClassName("page-popup")
 		String pagePopup();
+
+		@ClassName("page-press")
+		String pagePress();
+
+		@ClassName("page-product")
+		String pageProduct();
 
 		@ClassName("page-reset-password")
 		String pageResetPassword();
@@ -1325,6 +1417,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("popup-content--link-account")
 		String popupContentLinkAccount();
 
+		@ClassName("popup-header-image")
+		String popupHeaderImage();
+
 		@ClassName("popup-toast")
 		String popupToast();
 
@@ -1352,8 +1447,62 @@ public interface Styles extends ClientBundle {
 		@ClassName("pre-selected")
 		String preSelected();
 
+		@ClassName("premium-days")
+		String premiumDays();
+
+		@ClassName("premium-icon")
+		String premiumIcon();
+
+		@ClassName("press-area--featured-list")
+		String pressAreaFeaturedList();
+
+		@ClassName("press-table-col--date")
+		String pressTableColDate();
+
+		@ClassName("press-table-col--source")
+		String pressTableColSource();
+
+		@ClassName("press-table-col--title")
+		String pressTableColTitle();
+
 		@ClassName("price-column")
 		String priceColumn();
+
+		@ClassName("product-image-container--left")
+		String productImageContainerLeft();
+
+		@ClassName("product-image-container--right")
+		String productImageContainerRight();
+
+		@ClassName("product-page--partners")
+		String productPagePartners();
+
+		@ClassName("product-section")
+		String productSection();
+
+		@ClassName("product-section--content")
+		String productSectionContent();
+
+		@ClassName("product-section--featured")
+		String productSectionFeatured();
+
+		@ClassName("product-text-content--left")
+		String productTextContentLeft();
+
+		@ClassName("product-text-content--right")
+		String productTextContentRight();
+
+		@ClassName("profile-list")
+		String profileList();
+
+		@ClassName("profile-list__mobile-heading")
+		String profileList__mobileHeading();
+
+		@ClassName("profile-text")
+		String profileText();
+
+		@ClassName("profile-title")
+		String profileTitle();
 
 		String radioButtonLabel();
 
@@ -1486,6 +1635,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("ref-icon-before--cog")
 		String refIconBeforeCog();
 
+		@ClassName("ref-icon-before--dot")
+		String refIconBeforeDot();
+
 		@ClassName("ref-icon-before--facebook")
 		String refIconBeforeFacebook();
 
@@ -1569,6 +1721,9 @@ public interface Styles extends ClientBundle {
 
 		String responsive();
 
+		@ClassName("reveal-content")
+		String revealContent();
+
 		@ClassName("reveal-element")
 		String revealElement();
 
@@ -1588,6 +1743,9 @@ public interface Styles extends ClientBundle {
 		String revenueValue();
 
 		String scrollable();
+
+		@ClassName("search-button")
+		String searchButton();
 
 		@ClassName("search-button-mobile")
 		String searchButtonMobile();
@@ -1657,6 +1815,12 @@ public interface Styles extends ClientBundle {
 		@ClassName("sort-svg")
 		String sortSvg();
 
+		@ClassName("start-trial-confirmation")
+		String startTrialConfirmation();
+
+		@ClassName("start-trial-intro")
+		String startTrialIntro();
+
 		@ClassName("sticky-table-head")
 		String stickyTableHead();
 
@@ -1669,8 +1833,20 @@ public interface Styles extends ClientBundle {
 		@ClassName("suggested-results-container")
 		String suggestedResultsContainer();
 
+		@ClassName("svg-bubble")
+		String svgBubble();
+
+		@ClassName("svg-cog")
+		String svgCog();
+
+		@ClassName("svg-container")
+		String svgContainer();
+
 		@ClassName("svg-create-password")
 		String svgCreatePassword();
+
+		@ClassName("svg-refresh")
+		String svgRefresh();
 
 		@ClassName("svg-unhappy")
 		String svgUnhappy();
@@ -1810,13 +1986,25 @@ public interface Styles extends ClientBundle {
 
 		String tooltip();
 
+		@ClassName("tooltip-feature")
+		String tooltipFeature();
+
+		@ClassName("tooltip-feature--pro")
+		String tooltipFeaturePro();
+
 		@ClassName("tooltip-right")
 		String tooltipRight();
+
+		@ClassName("tooltip-text")
+		String tooltipText();
 
 		@ClassName("total-revenue-title")
 		String totalRevenueTitle();
 
 		String touch();
+
+		@ClassName("two-columns")
+		String twoColumns();
 
 		@ClassName("update-linked-accounts-container")
 		String updateLinkedAccountsContainer();
