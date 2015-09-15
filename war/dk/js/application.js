@@ -560,7 +560,6 @@
 	  			if($this.parents('.tabs__content--is-showing').length) {
 	  				$this.parents('.tabs__content--is-showing').removeClass('tabs__content--is-showing');
 	  				contentHeight = $this.next('.collapsible-content').height();
-	  				console.log("contentHeight = " + contentHeight);
 	  				$this.next('.collapsible-content').css('margin-top', -contentHeight);
 	  			} else {
 	  				$this.parents('.tabs__content-container').find('.tabs__content--is-showing').removeClass('tabs__content--is-showing');
@@ -950,7 +949,7 @@
 			optionsList.css('margin-top', -optionsList.height());
 			pInstance.populateSelectedValues(listItems, selectedOptionsContainer);
 
-			if($this.parent('.form-field--select-disabled').length == 0) {
+			if($this.parent('.form-field--select-disabled').length == 0 && $this.parent('.form-field--select-restricted').length == 0) {
 				selectedOptionsContainer.on('click', function() {
 					if($this.hasClass('is-open')) {
 						$this.removeClass('is-open');
@@ -1027,7 +1026,7 @@
 					optionsList.css('margin-top', -listHeight);
 				}				
 
-				if(selectInput.parent('.form-field--select-disabled').length == 0) {
+				if(selectInput.parent('.form-field--select-disabled').length == 0 && selectInput.parent('.form-field--select-restricted').length == 0) {
 					optionsList.find('li').on('click', function() {
 						if(!$(this).hasClass('pre-selected')) {
 							listItem = $(this);
@@ -1130,6 +1129,23 @@
 			}
 		});
 	};
+
+	var BackToTopInlineLink = function($link) {
+		if($link) {
+			$link.on("click", function(){
+				var linkAnchor = $link.attr("href");
+				if(linkAnchor) {
+					var pageTopBarHeight = $('.global-header').innerHeight(),
+							anchorId = $link.attr("href"),
+							scrollTopOfTheAnchor = $(anchorId).offset().top;
+					$('html, body').animate({ scrollTop: scrollTopOfTheAnchor - pageTopBarHeight - 20}, 300, 'swing');
+					
+				} else {
+					$('html, body').animate({ scrollTop: 0 }, 300, 'swing');
+				}
+			});
+		}
+	}
 
 
 	var Accordion = function() {
@@ -1272,7 +1288,12 @@
 				var tooltip;
 				$this.on("mouseenter", function(){
 					var tooltipText = $(this).data("tooltip");
-					tooltip = $('<div>').addClass("tooltip").text(tooltipText);			
+					tooltip = $('<div>').addClass("tooltip").append($('<div>').addClass("tooltip-text").text(tooltipText));
+					if($this.find('.icon-member--standard').length > 0) {
+						tooltip.prepend($('<span>').addClass("tooltip-feature tooltip-feature--standard").text("MEMBER FEATURE"));
+					} else if($this.find('.icon-member--pro').length > 0) {
+						tooltip.prepend($('<span>').addClass("tooltip-feature tooltip-feature--pro").text("PREMIUM FEATURE"));
+					}
 					$('body').append(tooltip);
 					var topPosition = $this.offset().top;
 					var leftPosition = $this.offset().left;
@@ -1522,6 +1543,39 @@
 			}, 150);
 		});
 	}
+
+	var FAQSet = function($faqContainer) {
+		$faqContainer.find('li a').each(function(){
+			var $thisLink = $(this);
+			$thisLink.on("click", function(e){
+				e.preventDefault();
+				$faqContainer.find('li a').removeClass("is-active");
+				$thisLink.addClass("is-active");
+				var pageTopBarHeight = $('.global-header').innerHeight(),
+						anchorId = $(this).attr("href"),
+						scrollTopOfTheAnchor = $(anchorId).offset().top;
+				$('html, body').animate({ scrollTop: scrollTopOfTheAnchor - pageTopBarHeight - 20}, 300, 'swing');
+			});
+		});
+		
+		var pageTopBarHeight = $('.global-header').innerHeight();
+		var faqContainerTopPosition = $faqContainer.offset().top - pageTopBarHeight;
+
+		$(window).on("scroll", function(){
+			if($(window).innerWidth() > 719) {
+
+				if($(window).scrollTop() >= faqContainerTopPosition) {
+					if(!$faqContainer.hasClass("faqs-list-container--fixed")) {
+						$faqContainer.addClass("faqs-list-container--fixed");
+					}
+				} else {					
+					if($faqContainer.hasClass("faqs-list-container--fixed")) {
+						$faqContainer.removeClass("faqs-list-container--fixed");
+					}
+				}
+			}
+		});
+	}
 /* END COMPONENT OBJECTS */
 
 /* PAGE OBJECTS FOR TEMPLATES */
@@ -1537,6 +1591,7 @@
 		new BackToTop();
 		new StickyTableHead();
 		new MockFormSelectMultipleWithSearch();
+		new ToolTip();
 
 		$('.js-tab-select').on("mouseup", function(e){
 			new StickyTableHead();
