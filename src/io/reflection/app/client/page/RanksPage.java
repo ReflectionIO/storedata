@@ -124,6 +124,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	@UiField(provided = true) ToggleRadioButton toggleDownloads = new ToggleRadioButton("dailydatatoggle");
 	@UiField HTMLPanel dailyDataContainer;
 	@UiField Button applyFilters;
+	@UiField Button resetFilters;
 
 	@UiField InlineHyperlink allLink;
 	@UiField SpanElement overviewAllText;
@@ -168,6 +169,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"In App Purchases\">IAP</span>"));
 
 	private String selectedTab = OVERALL_LIST_TYPE;
+	private String previousFilter;
 	private LoadingBar loadingBar = new LoadingBar(false);
 	private ReflectionMainStyles style = Styles.STYLES_INSTANCE.reflectionMainStyle();
 
@@ -273,7 +275,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			}
 		});
 
-		updateFiltersFromURL();
+		updateSelectorsFromFilter();
 
 	}
 
@@ -469,9 +471,6 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			if (updateData = updateData || !FilterController.get().getFilter().getCategoryId().toString().equals(categorySelector.getSelectedValue())) {
 				FilterController.get().setCategory(Long.valueOf(categorySelector.getSelectedValue()));
 			}
-			if (updateData = updateData || !FilterController.get().getFilter().getCategoryId().toString().equals(categorySelector.getSelectedValue())) {
-				FilterController.get().setCategory(Long.valueOf(categorySelector.getSelectedValue()));
-			}
 			if (updateData = updateData || !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateBox.getValue())) {
 				FilterController.get().setEndDate(dateBox.getValue());
 				Date startDate = new Date(FilterController.get().getFilter().getEndTime());
@@ -479,24 +478,25 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 				FilterController.get().getFilter().setStartTime(startDate.getTime());
 			}
 			if (updateData) {
-				loadingBar.show();
-				RankController.get().reset();
-				RankController.get().fetchTopItems();
-				viewAllBtn.setVisible(false);
-				errorPanel.setVisible(false);
-				noDataPanel.setVisible(false);
-				leaderboardTable.setVisible(true);
-				downloadsHeader.setHeaderStyleNames(style.canBeSorted());
-				revenueHeader.setHeaderStyleNames(style.canBeSorted());
 				PageType.RanksPageType.show("view", selectedTab, FilterController.get().asRankFilterString());
 			}
 		}
 	}
 
+	@UiHandler("resetFilters")
+	void onResetFiltersClicked(ClickEvent event) {
+		event.preventDefault();
+		// TODO will use user preferences
+		countrySelector.setSelectedIndex(FormHelper.getItemIndex(countrySelector, "gb"));
+		appStoreSelector.setSelectedIndex(FormHelper.getItemIndex(appStoreSelector, "iph"));
+		categorySelector.setSelectedIndex(FormHelper.getItemIndex(categorySelector, "15"));
+		dateBox.setValue(FilterHelper.getDaysAgo(2));
+	}
+
 	/**
 	 * Update selectors from URL if coming from a page refresh
 	 */
-	private void updateFiltersFromURL() {
+	private void updateSelectorsFromFilter() {
 		FilterController fc = FilterController.get();
 
 		long endTime = fc.getFilter().getEndTime().longValue();
@@ -516,9 +516,10 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		} else {
 			toggleDownloads.setValue(true);
 		}
+
 	}
 
-	private void refreshRanks() {
+	private void appendTableColumns() {
 
 		leaderboardTable.setStyleName(style.tableOverall(), OVERALL_LIST_TYPE.equals(selectedTab));
 		leaderboardTable.setStyleName(style.tableAppGroup(),
@@ -664,54 +665,51 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	 */
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
+		// FilterController.get().asRankFilterString() == current.getParameter(1)
 
-		if (PageType.RanksPageType.equals(current.getPage())) {
+		if (PageType.RanksPageType.equals(current.getPage()) && current.getAction() != null
+				&& NavigationController.VIEW_ACTION_PARAMETER_VALUE.equals(current.getAction()) && current.getParameter(1) != null) {
 
 			if (leaderboardTable.getVisibleItemCount() > 0) {
 				viewAllBtn.setVisible(true);
 			}
 
-			// boolean hasPermission = SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_FULL_RANK_VIEW_CODE);
-
-			// if (hasPermission) {
-			// redirect.removeFromParent();
-			// viewAllBtn.getParent().getElement().appendChild(viewAllBtn.getElement());
-			// } else {
-			// viewAllBtn.removeFromParent();
-			// redirect.getParent().getElement().appendChild(redirect.getElement());
-			// }
-
-			if (current.getAction() == null || !NavigationController.VIEW_ACTION_PARAMETER_VALUE.equals(current.getAction())) {
-				PageType.RanksPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, OVERALL_LIST_TYPE, FilterController.get().asRankFilterString());
-			} else {
-				String currentFilter = FilterController.get().asRankFilterString();
-
-				if (currentFilter != null && currentFilter.length() > 0) {
-					allLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
-							OVERALL_LIST_TYPE, currentFilter));
-					freeLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
-							FREE_LIST_TYPE, currentFilter));
-					paidLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
-							PAID_LIST_TYPE, currentFilter));
-					grossingLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
-							GROSSING_LIST_TYPE, currentFilter));
-				}
-
-				selectedTab = current.getParameter(SELECTED_TAB_PARAMETER_INDEX);
-
-				refreshTabs();
-				refreshRanks();
-
-				// if (SessionController.get().isLoggedInUserAdmin()) {
-				// if (FREE_LIST_TYPE.equals(selectedTab) || PAID_LIST_TYPE.equals(selectedTab) || GROSSING_LIST_TYPE.equals(selectedTab)) {
-				// setDataFilterVisible(false);
-				// } else {
-				// setDataFilterVisible(true);
-				// selectedTab = OVERALL_LIST_TYPE;
-				// }
-				// }
-
+			if (previousFilter == null) {
+				previousFilter = FilterController.get().asRankFilterString();
 			}
+
+			// Check if the filter is changed
+			if (!previousFilter.equals(FilterController.get().asRankFilterString())) {
+				updateSelectorsFromFilter();
+				loadingBar.show();
+				RankController.get().reset();
+				RankController.get().fetchTopItems();
+				viewAllBtn.setVisible(false);
+				errorPanel.setVisible(false);
+				noDataPanel.setVisible(false);
+				leaderboardTable.setVisible(true);
+				downloadsHeader.setHeaderStyleNames(style.canBeSorted());
+				revenueHeader.setHeaderStyleNames(style.canBeSorted());
+				previousFilter = FilterController.get().asRankFilterString();
+			}
+
+			String currentFilter = FilterController.get().asRankFilterString();
+
+			if (currentFilter != null && currentFilter.length() > 0) {
+				allLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, OVERALL_LIST_TYPE,
+						currentFilter));
+				freeLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, FREE_LIST_TYPE,
+						currentFilter));
+				paidLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, PAID_LIST_TYPE,
+						currentFilter));
+				grossingLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
+						GROSSING_LIST_TYPE, currentFilter));
+			}
+
+			selectedTab = current.getParameter(SELECTED_TAB_PARAMETER_INDEX);
+
+			refreshTabs();
+			appendTableColumns();
 
 			if (Window.getClientWidth() <= 719) {
 				if (tabs.get(OVERALL_LIST_TYPE).hasClassName(style.isActive())) {
@@ -721,6 +719,9 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			} else {
 				allItem.getStyle().setDisplay(Display.BLOCK);
 			}
+
+		} else {
+			PageType.RanksPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, OVERALL_LIST_TYPE, FilterController.get().asRankFilterString());
 		}
 
 	}
