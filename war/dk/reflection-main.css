@@ -713,7 +713,7 @@ input::-ms-clear {
 
 /* Global */
 /* line 1, sass/ui/_icons.scss */
-.ref-icon-before, .page-logged-in-landing .accordion-switch, .page-logged-in-landing .accordion .list-item-complete, .main-navigation > ul ul li.has-child, .ref-icon-after, .home-welcome__text .home-welcome__call-to-action, .read-only-date span, .panel-link .panel-link__link > span span, .accordion-switch, .form-field .form-field-help,
+.ref-icon-before, .page-logged-in-landing .accordion-switch, .page-logged-in-landing .accordion .list-item-complete, .main-navigation > ul ul li.has-child, .ref-icon-after, .home-welcome__text .home-welcome__call-to-action, .read-only-date span, .panel-link .panel-link__link > span span, .accordion-switch, .checklist li, .form-field .form-field-help,
 .search-field-no-label .form-field-help, .form-field.form-field--date-select span, .whats-this-tooltip-icon,
 .whats-this-tooltip-icon-static, .date-select-to-indicator, .datePickerPreviousButton,
 .datePickerNextButton {
@@ -730,7 +730,7 @@ input::-ms-clear {
 }
 
 /* line 18, sass/ui/_icons.scss */
-.ref-icon-after:after, .home-welcome__text .home-welcome__call-to-action:after, .read-only-date span:after, .panel-link .panel-link__link > span span:after, .accordion-switch:after, .form-field .form-field-help:after,
+.ref-icon-after:after, .home-welcome__text .home-welcome__call-to-action:after, .read-only-date span:after, .panel-link .panel-link__link > span span:after, .accordion-switch:after, .checklist li:after, .form-field .form-field-help:after,
 .search-field-no-label .form-field-help:after, .form-field.form-field--date-select span:after, .whats-this-tooltip-icon:after,
 .whats-this-tooltip-icon-static:after {
   font-size: 22px;
@@ -778,7 +778,7 @@ input::-ms-clear {
 }
 /* Typography placeholders */
 /* line 22, sass/ui/_typography.scss */
-.ref-icon-before:before, .page-logged-in-landing .accordion-switch:before, .page-logged-in-landing .accordion .list-item-complete:before, .main-navigation > ul ul li.has-child:before, .ref-icon-after:after, .home-welcome__text .home-welcome__call-to-action:after, .read-only-date span:after, .panel-link .panel-link__link > span span:after, .accordion-switch:after, .form-field .form-field-help:after,
+.ref-icon-before:before, .page-logged-in-landing .accordion-switch:before, .page-logged-in-landing .accordion .list-item-complete:before, .main-navigation > ul ul li.has-child:before, .ref-icon-after:after, .home-welcome__text .home-welcome__call-to-action:after, .read-only-date span:after, .panel-link .panel-link__link > span span:after, .accordion-switch:after, .checklist li:after, .form-field .form-field-help:after,
 .search-field-no-label .form-field-help:after, .form-field.form-field--date-select span:after, .whats-this-tooltip-icon:after,
 .whats-this-tooltip-icon-static:after, .reflection-select.reflection-select--filter .close-popup,
 .reflection-select.reflection-select--filter .remove-form-field,
@@ -1298,6 +1298,7 @@ p a:active {
   max-width: 650px;
   margin-bottom: 0.62em;
   padding-left: 31px;
+  color: #5b5b68;
 }
 @media (min-width: 1280px) {
   /* line 390, sass/ui/_typography.scss */
@@ -1305,35 +1306,35 @@ p a:active {
     max-width: 850px;
   }
 }
-/* line 397, sass/ui/_typography.scss */
+/* line 398, sass/ui/_typography.scss */
 .content-list li:last-child {
   margin-bottom: 0;
 }
-/* line 400, sass/ui/_typography.scss */
+/* line 401, sass/ui/_typography.scss */
 .content-list li a {
   text-decoration: none;
   color: #6d69c5;
 }
-/* line 403, sass/ui/_typography.scss */
+/* line 404, sass/ui/_typography.scss */
 .content-list li a:hover {
   color: #4b46b5;
 }
-/* line 406, sass/ui/_typography.scss */
+/* line 407, sass/ui/_typography.scss */
 .content-list li a:active {
   position: relative;
   top: 2px;
 }
-/* line 413, sass/ui/_typography.scss */
+/* line 414, sass/ui/_typography.scss */
 .content-list.content-list--no-bullets li {
   padding-left: 0;
   background: none;
 }
-/* line 416, sass/ui/_typography.scss */
+/* line 417, sass/ui/_typography.scss */
 .content-list.content-list--no-bullets li:before {
   display: none;
 }
 
-/* line 422, sass/ui/_typography.scss */
+/* line 423, sass/ui/_typography.scss */
 h1 + .content-list,
 h2 + .content-list,
 h3 + .content-list,
@@ -1343,54 +1344,53 @@ h6 + .content-list {
   margin-top: 0;
 }
 
-/* line 430, sass/ui/_typography.scss */
+/* line 431, sass/ui/_typography.scss */
 .content-list--featured {
   margin-bottom: 1.5em;
   font-size: 2rem;
   line-height: 1.3em;
 }
-/* line 434, sass/ui/_typography.scss */
+/* line 435, sass/ui/_typography.scss */
 .content-list--featured:last-child {
   margin-bottom: 0;
 }
-/* line 437, sass/ui/_typography.scss */
+/* line 438, sass/ui/_typography.scss */
 .content-list--featured li {
   margin-bottom: 0.5em;
   padding-left: 31px;
 }
 
-/* line 442, sass/ui/_typography.scss */
+/* line 443, sass/ui/_typography.scss */
 .content-list--minor {
   margin-bottom: 2.14285714285714em;
   font-size: 1.4rem;
   line-height: 1.42857142857143em;
 }
-/* line 446, sass/ui/_typography.scss */
+/* line 447, sass/ui/_typography.scss */
 .content-list--minor:last-child {
   margin-bottom: 0;
 }
-/* line 449, sass/ui/_typography.scss */
+/* line 450, sass/ui/_typography.scss */
 .content-list--minor li {
   margin-bottom: 0.44em;
   padding-left: 26px;
 }
 
-/* line 454, sass/ui/_typography.scss */
+/* line 455, sass/ui/_typography.scss */
 ol.content-list,
 ol.content-list--minor,
 ol.content-list--featured {
   counter-reset: ordered-counter;
 }
-/* line 458, sass/ui/_typography.scss */
+/* line 459, sass/ui/_typography.scss */
 ol.content-list li,
 ol.content-list--minor li,
 ol.content-list--featured li {
   position: relative;
   padding-left: 5rem;
-  color: #5b5b68;
 }
 @media (min-width: 720px) {
-  /* line 458, sass/ui/_typography.scss */
+  /* line 459, sass/ui/_typography.scss */
   ol.content-list li,
   ol.content-list--minor li,
   ol.content-list--featured li {
@@ -4551,6 +4551,86 @@ textarea, .global-header .link-open-search, html, body {
           transition: color 0.3s, background-color 0.3s;
 }
 
+/* line 1, sass/templates/_careers.scss */
+.page-careers {
+  padding-bottom: 4rem;
+}
+@media (min-width: 720px) {
+  /* line 1, sass/templates/_careers.scss */
+  .page-careers {
+    padding-bottom: 0;
+    background-color: #fcfdfd;
+    *zoom: 1;
+    filter: progid:DXImageTransform.Microsoft.gradient(gradientType=1, startColorstr='#FFFCFDFD', endColorstr='#FFF2F2F5');
+    background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuMCIgeTE9IjAuNSIgeDI9IjEuMCIgeTI9IjAuNSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZjZmRmZCIvPjxzdG9wIG9mZnNldD0iNjcuNjQxNTElIiBzdG9wLWNvbG9yPSIjZmNmZGZkIi8+PHN0b3Agb2Zmc2V0PSI2Ny42NDE1MSUiIHN0b3AtY29sb3I9IiNmMmYyZjUiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmMmYyZjUiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyYWQpIiAvPjwvc3ZnPiA=');
+    background-size: 100%;
+    background-image: -webkit-gradient(linear, 0% 50%, 100% 50%, color-stop(0%, #fcfdfd), color-stop(67.64151%, #fcfdfd), color-stop(67.64151%, #f2f2f5), color-stop(100%, #f2f2f5));
+    background-image: -webkit-linear-gradient(left, #fcfdfd 0%, #fcfdfd 67.64151%, #f2f2f5 67.64151%, #f2f2f5 100%);
+    background-image: linear-gradient(to right, #fcfdfd 0%, #fcfdfd 67.64151%, #f2f2f5 67.64151%, #f2f2f5 100%);
+  }
+  /* line 8, sass/templates/_careers.scss */
+  .page-careers .site-article-full {
+    border-bottom: none;
+  }
+  /* line 11, sass/templates/_careers.scss */
+  .page-careers .grid__column--one-third {
+    padding-left: 5.2%;
+  }
+  /* line 13, sass/templates/_careers.scss */
+  .page-careers .grid__column--one-third h2 {
+    font-size: 2.2rem;
+  }
+  /* line 16, sass/templates/_careers.scss */
+  .page-careers .grid__column--one-third .content-list {
+    font-size: 1.4rem;
+  }
+}
+@media (min-width: 960px) {
+  /* line 23, sass/templates/_careers.scss */
+  .panel-left-open .page-careers .grid__column--one-third {
+    padding-left: 5.2%;
+  }
+  /* line 25, sass/templates/_careers.scss */
+  .panel-left-open .page-careers .grid__column--one-third h2 {
+    font-size: 2.2rem;
+  }
+  /* line 28, sass/templates/_careers.scss */
+  .panel-left-open .page-careers .grid__column--one-third .content-list {
+    font-size: 1.4rem;
+  }
+  /* line 33, sass/templates/_careers.scss */
+  .page-careers .grid__column--one-third {
+    padding-left: 5.2%;
+  }
+  /* line 35, sass/templates/_careers.scss */
+  .page-careers .grid__column--one-third h2 {
+    font-size: 2.7rem;
+  }
+  /* line 38, sass/templates/_careers.scss */
+  .page-careers .grid__column--one-third .content-list {
+    font-size: 1.6em;
+  }
+}
+@media (min-width: 1150px) {
+  /* line 45, sass/templates/_careers.scss */
+  .panel-left-open .page-careers .grid__column--one-third {
+    padding-left: 5.2%;
+  }
+  /* line 47, sass/templates/_careers.scss */
+  .panel-left-open .page-careers .grid__column--one-third h2 {
+    font-size: 2.7rem;
+  }
+  /* line 50, sass/templates/_careers.scss */
+  .panel-left-open .page-careers .grid__column--one-third .content-list {
+    font-size: 1.6em;
+  }
+}
+
+/* line 57, sass/templates/_careers.scss */
+.minor-text {
+  font-size: 1.4rem;
+}
+
 /* line 3, sass/templates/_colours.scss */
 .colour-palette-container {
   margin-bottom: 4rem;
@@ -5252,6 +5332,58 @@ textarea, .global-header .link-open-search, html, body {
 /* line 120, sass/templates/_contact.scss */
 .map--contact div {
   overflow: visible;
+}
+
+/* line 1, sass/templates/_faqs.scss */
+.page-faqs {
+  padding-bottom: 20rem;
+}
+/* line 3, sass/templates/_faqs.scss */
+.page-faqs .faqs-list-container {
+  padding-bottom: 3rem;
+  margin-bottom: 3rem;
+  border-bottom: 1px solid #E1E5E8;
+}
+@media (min-width: 720px) {
+  /* line 1, sass/templates/_faqs.scss */
+  .page-faqs {
+    padding-bottom: 30rem;
+  }
+  /* line 10, sass/templates/_faqs.scss */
+  .page-faqs .grid-container {
+    max-width: 1250px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  /* line 15, sass/templates/_faqs.scss */
+  .page-faqs .faqs-list-container--fixed {
+    position: fixed;
+    top: 80px;
+    width: 28%;
+  }
+  /* line 19, sass/templates/_faqs.scss */
+  .panel-left-open .page-faqs .faqs-list-container--fixed {
+    width: 22%;
+  }
+  /* line 23, sass/templates/_faqs.scss */
+  .page-faqs .grid__column--two-thirds {
+    float: right;
+  }
+  /* line 26, sass/templates/_faqs.scss */
+  .page-faqs .faqs-list-container {
+    padding-bottom: 0;
+    margin-bottom: 0;
+    border-bottom: none;
+  }
+  /* line 30, sass/templates/_faqs.scss */
+  .page-faqs .faqs-list-container .is-active {
+    color: #81879d;
+  }
+  /* line 34, sass/templates/_faqs.scss */
+  .page-faqs .link-back-to-top {
+    text-align: right;
+    display: none;
+  }
 }
 
 /* line 1, sass/templates/_forms.scss */
@@ -6000,47 +6132,71 @@ textarea, .global-header .link-open-search, html, body {
   margin-bottom: 0;
 }
 /* line 21, sass/templates/_leaderboard.scss */
+.page-leaderboard .refresh-button {
+  margin: 0 1% 0 0;
+}
+/* line 23, sass/templates/_leaderboard.scss */
+.is-firefox .page-leaderboard .refresh-button {
+  padding: 1rem 1rem 0.7rem;
+}
+/* line 25, sass/templates/_leaderboard.scss */
+.is-firefox .page-leaderboard .refresh-button:disabled:active {
+  padding-bottom: 0.7rem;
+}
+/* line 28, sass/templates/_leaderboard.scss */
+.is-firefox .page-leaderboard .refresh-button:active {
+  padding-bottom: calc(0.7rem - 2px);
+}
+/* line 33, sass/templates/_leaderboard.scss */
+.ie11 .page-leaderboard .refresh-button:disabled:active {
+  padding-bottom: 0.8rem;
+}
+/* line 36, sass/templates/_leaderboard.scss */
+.ie11 .page-leaderboard .refresh-button:active {
+  padding-bottom: 0.7rem;
+}
+/* line 41, sass/templates/_leaderboard.scss */
 .page-leaderboard .filters-container {
-  padding: 0.9rem 3% 0.4rem;
+  padding: 0.9rem 3% 0.7rem;
   margin-bottom: 0;
 }
 @media (min-width: 720px) {
-  /* line 21, sass/templates/_leaderboard.scss */
+  /* line 41, sass/templates/_leaderboard.scss */
   .page-leaderboard .filters-container {
     padding: 1.4rem 2% 0.4rem;
   }
 }
-/* line 27, sass/templates/_leaderboard.scss */
+/* line 47, sass/templates/_leaderboard.scss */
 .page-leaderboard .filters-container .ref-button--function-small, .page-leaderboard .filters-container .ref-button--function-small--wide, .page-leaderboard .filters-container .ref-button--function-large, .page-leaderboard .filters-container .ref-button--function-large--wide {
   padding: 10px 14px 10px 14px;
   line-height: 1.1;
 }
-/* line 30, sass/templates/_leaderboard.scss */
+/* line 50, sass/templates/_leaderboard.scss */
 .page-leaderboard .filters-container .ref-button--function-small:active, .page-leaderboard .filters-container .ref-button--function-small--wide:active, .page-leaderboard .filters-container .ref-button--function-large:active, .page-leaderboard .filters-container .ref-button--function-large--wide:active {
   padding-bottom: 8px;
 }
-/* line 33, sass/templates/_leaderboard.scss */
+/* line 53, sass/templates/_leaderboard.scss */
 .is-chrome .page-leaderboard .filters-container .ref-button--function-small, .is-chrome .page-leaderboard .filters-container .ref-button--function-small--wide, .is-chrome .page-leaderboard .filters-container .ref-button--function-large, .is-chrome .page-leaderboard .filters-container .ref-button--function-large--wide {
   padding: 11px 14px 11px 14px;
 }
-/* line 35, sass/templates/_leaderboard.scss */
+/* line 55, sass/templates/_leaderboard.scss */
 .is-chrome .page-leaderboard .filters-container .ref-button--function-small:active, .is-chrome .page-leaderboard .filters-container .ref-button--function-small--wide:active, .is-chrome .page-leaderboard .filters-container .ref-button--function-large:active, .is-chrome .page-leaderboard .filters-container .ref-button--function-large--wide:active {
   padding-bottom: 9px;
 }
 @media (min-width: 720px) {
-  /* line 27, sass/templates/_leaderboard.scss */
+  /* line 47, sass/templates/_leaderboard.scss */
   .page-leaderboard .filters-container .ref-button--function-small, .page-leaderboard .filters-container .ref-button--function-small--wide, .page-leaderboard .filters-container .ref-button--function-large, .page-leaderboard .filters-container .ref-button--function-large--wide {
     margin-right: 10px;
   }
 }
-/* line 43, sass/templates/_leaderboard.scss */
+/* line 63, sass/templates/_leaderboard.scss */
 .page-leaderboard .filters-container .form-field:not(.form-field--date-select),
 .page-leaderboard .filters-container .calendar-container {
   width: 48%;
   margin-bottom: 1rem;
 }
 @media (min-width: 720px) {
-  /* line 43, sass/templates/_leaderboard.scss */
+  /* line 63, sass/templates/_leaderboard.scss */
   .page-leaderboard .filters-container .form-field:not(.form-field--date-select),
   .page-leaderboard .filters-container .calendar-container {
     width: auto;
@@ -6048,39 +6204,39 @@ textarea, .global-header .link-open-search, html, body {
   }
 }
 @media (min-width: 1280px) {
-  /* line 43, sass/templates/_leaderboard.scss */
+  /* line 63, sass/templates/_leaderboard.scss */
   .page-leaderboard .filters-container .form-field:not(.form-field--date-select),
   .page-leaderboard .filters-container .calendar-container {
     width: auto;
   }
 }
-/* line 55, sass/templates/_leaderboard.scss */
+/* line 75, sass/templates/_leaderboard.scss */
 .page-leaderboard .filters-container .form-field--country-select .form-field {
   width: 100%;
 }
-/* line 58, sass/templates/_leaderboard.scss */
+/* line 78, sass/templates/_leaderboard.scss */
 .page-leaderboard .filters-container .filter-group {
   width: 100%;
   display: inline-block;
   float: left;
   overflow: visible;
 }
-/* line 64, sass/templates/_leaderboard.scss */
+/* line 84, sass/templates/_leaderboard.scss */
 .page-leaderboard .filters-container .filter-group > *:nth-child(even) {
   float: right;
   text-align: left;
 }
 @media (min-width: 720px) {
-  /* line 64, sass/templates/_leaderboard.scss */
+  /* line 84, sass/templates/_leaderboard.scss */
   .page-leaderboard .filters-container .filter-group > *:nth-child(even) {
     float: none;
   }
 }
-/* line 71, sass/templates/_leaderboard.scss */
+/* line 91, sass/templates/_leaderboard.scss */
 .page-leaderboard .filters-container .filter-group > *:nth-child(2) {
   margin-bottom: 0;
 }
-/* line 75, sass/templates/_leaderboard.scss */
+/* line 95, sass/templates/_leaderboard.scss */
 .page-leaderboard .filters-container .filter-group .btn-reset-filters {
   margin-bottom: 1rem;
   padding: 10px 10px;
@@ -6090,64 +6246,64 @@ textarea, .global-header .link-open-search, html, body {
   font-size: 13px;
   font-weight: 400;
 }
-/* line 83, sass/templates/_leaderboard.scss */
+/* line 103, sass/templates/_leaderboard.scss */
 .is-chrome .page-leaderboard .filters-container .filter-group .btn-reset-filters {
   padding: 11px 10px;
 }
-/* line 85, sass/templates/_leaderboard.scss */
+/* line 105, sass/templates/_leaderboard.scss */
 .is-chrome .page-leaderboard .filters-container .filter-group .btn-reset-filters:active {
   padding-bottom: 9px;
 }
 @media (min-width: 1600px) {
-  /* line 75, sass/templates/_leaderboard.scss */
+  /* line 95, sass/templates/_leaderboard.scss */
   .page-leaderboard .filters-container .filter-group .btn-reset-filters {
     font-size: 14px;
   }
 }
-/* line 93, sass/templates/_leaderboard.scss */
+/* line 113, sass/templates/_leaderboard.scss */
 .page-leaderboard .filters-container .filter-group.is-open {
   height: auto;
   -webkit-transition: height 0.2s;
           transition: height 0.2s;
 }
 @media (min-width: 720px) {
-  /* line 58, sass/templates/_leaderboard.scss */
+  /* line 78, sass/templates/_leaderboard.scss */
   .page-leaderboard .filters-container .filter-group {
     width: calc(100% - 100px);
   }
 }
-/* line 101, sass/templates/_leaderboard.scss */
+/* line 121, sass/templates/_leaderboard.scss */
 .page-leaderboard .filters-container .filter-toggles {
   width: 100px;
   display: inline-block;
   float: right;
 }
-/* line 105, sass/templates/_leaderboard.scss */
+/* line 125, sass/templates/_leaderboard.scss */
 .page-leaderboard .filters-container .filter-toggles button {
   margin-right: 1rem;
   float: right;
 }
-/* line 111, sass/templates/_leaderboard.scss */
+/* line 131, sass/templates/_leaderboard.scss */
 .page-leaderboard .filter-toggle {
   float: right;
   margin-bottom: 1rem;
 }
-/* line 115, sass/templates/_leaderboard.scss */
+/* line 135, sass/templates/_leaderboard.scss */
 .page-leaderboard .cellTableLoading tr {
   height: 74px;
 }
-/* line 120, sass/templates/_leaderboard.scss */
+/* line 140, sass/templates/_leaderboard.scss */
 .page-leaderboard table.table-data .MHXTE6C-r-a a {
   width: 72%;
   font-size: 15px;
 }
 @media (min-width: 1600px) {
-  /* line 120, sass/templates/_leaderboard.scss */
+  /* line 140, sass/templates/_leaderboard.scss */
   .page-leaderboard table.table-data .MHXTE6C-r-a a {
     width: 100%;
   }
 }
-/* line 128, sass/templates/_leaderboard.scss */
+/* line 148, sass/templates/_leaderboard.scss */
 .page-leaderboard table.table-data .text-muted {
   width: 100%;
   margin-bottom: 5px;
@@ -6155,24 +6311,24 @@ textarea, .global-header .link-open-search, html, body {
   vertical-align: top;
 }
 @media (min-width: 960px) {
-  /* line 128, sass/templates/_leaderboard.scss */
+  /* line 148, sass/templates/_leaderboard.scss */
   .page-leaderboard table.table-data .text-muted {
     width: 50%;
     display: inline-block;
   }
-  /* line 136, sass/templates/_leaderboard.scss */
+  /* line 156, sass/templates/_leaderboard.scss */
   .panel-left-open .page-leaderboard table.table-data .text-muted {
     width: 100%;
   }
 }
 @media (min-width: 1280px) {
-  /* line 141, sass/templates/_leaderboard.scss */
+  /* line 161, sass/templates/_leaderboard.scss */
   .panel-left-open .page-leaderboard table.table-data .text-muted {
     width: 50%;
     display: inline-block;
   }
 }
-/* line 146, sass/templates/_leaderboard.scss */
+/* line 166, sass/templates/_leaderboard.scss */
 .page-leaderboard table.table-data .text-muted + span {
   width: 100%;
   margin-bottom: 0px;
@@ -6180,14 +6336,14 @@ textarea, .global-header .link-open-search, html, body {
   vertical-align: top;
 }
 @media (min-width: 960px) {
-  /* line 146, sass/templates/_leaderboard.scss */
+  /* line 166, sass/templates/_leaderboard.scss */
   .page-leaderboard table.table-data .text-muted + span {
     width: 45%;
     margin-top: -1px;
     display: inline-block;
     text-align: right;
   }
-  /* line 156, sass/templates/_leaderboard.scss */
+  /* line 176, sass/templates/_leaderboard.scss */
   .panel-left-open .page-leaderboard table.table-data .text-muted + span {
     width: 100%;
     margin-bottom: 0px;
@@ -6196,7 +6352,7 @@ textarea, .global-header .link-open-search, html, body {
   }
 }
 @media (min-width: 1280px) {
-  /* line 164, sass/templates/_leaderboard.scss */
+  /* line 184, sass/templates/_leaderboard.scss */
   .panel-left-open .page-leaderboard table.table-data .text-muted + span {
     width: 45%;
     margin-top: -1px;
@@ -6205,7 +6361,7 @@ textarea, .global-header .link-open-search, html, body {
   }
 }
 @media screen and (min-width: 720px) {
-  /* line 175, sass/templates/_leaderboard.scss */
+  /* line 195, sass/templates/_leaderboard.scss */
   .page-leaderboard .page-title,
   .page-leaderboard .page-title:last-child {
     padding-top: 0;
@@ -6214,17 +6370,17 @@ textarea, .global-header .link-open-search, html, body {
   }
 }
 
-/* line 183, sass/templates/_leaderboard.scss */
+/* line 203, sass/templates/_leaderboard.scss */
 .page-leaderboard.compact-view {
   -webkit-transition: 0.3s all;
           transition: 0.3s all;
 }
-/* line 186, sass/templates/_leaderboard.scss */
+/* line 206, sass/templates/_leaderboard.scss */
 .page-leaderboard.compact-view table.table-data .MHXTE6C-i-d,
 .page-leaderboard.compact-view table.table-data .table-data-first {
   font-size: 14px;
 }
-/* line 190, sass/templates/_leaderboard.scss */
+/* line 210, sass/templates/_leaderboard.scss */
 .page-leaderboard.compact-view table.table-data .MHXTE6C-r-a,
 .page-leaderboard.compact-view table.table-data .MHXTE6C-I-a,
 .page-leaderboard.compact-view table.table-data .app-details {
@@ -6233,14 +6389,14 @@ textarea, .global-header .link-open-search, html, body {
   max-width: 600px;
 }
 @media (min-width: 960px) {
-  /* line 190, sass/templates/_leaderboard.scss */
+  /* line 210, sass/templates/_leaderboard.scss */
   .page-leaderboard.compact-view table.table-data .MHXTE6C-r-a,
   .page-leaderboard.compact-view table.table-data .MHXTE6C-I-a,
   .page-leaderboard.compact-view table.table-data .app-details {
     width: calc(100% - 30px);
   }
 }
-/* line 200, sass/templates/_leaderboard.scss */
+/* line 220, sass/templates/_leaderboard.scss */
 .page-leaderboard.compact-view table.table-data .img-rounded {
   display: none;
   width: 20px;
@@ -6248,12 +6404,12 @@ textarea, .global-header .link-open-search, html, body {
   margin-top: 10px;
   border-radius: 4px;
 }
-/* line 207, sass/templates/_leaderboard.scss */
+/* line 227, sass/templates/_leaderboard.scss */
 .page-leaderboard.compact-view table.table-data .ref-icon-before--revenue,
 .page-leaderboard.compact-view table.table-data .ref-icon-before--cloud {
   top: -1px;
 }
-/* line 212, sass/templates/_leaderboard.scss */
+/* line 232, sass/templates/_leaderboard.scss */
 .page-leaderboard.compact-view table.table-data.table-app-group .MHXTE6C-r-a,
 .page-leaderboard.compact-view table.table-data.table-app-group .MHXTE6C-I-a,
 .page-leaderboard.compact-view table.table-data.table-app-group .app-details {
@@ -6261,7 +6417,7 @@ textarea, .global-header .link-open-search, html, body {
   padding-bottom: 2px;
 }
 @media (min-width: 720px) {
-  /* line 212, sass/templates/_leaderboard.scss */
+  /* line 232, sass/templates/_leaderboard.scss */
   .page-leaderboard.compact-view table.table-data.table-app-group .MHXTE6C-r-a,
   .page-leaderboard.compact-view table.table-data.table-app-group .MHXTE6C-I-a,
   .page-leaderboard.compact-view table.table-data.table-app-group .app-details {
@@ -6269,7 +6425,7 @@ textarea, .global-header .link-open-search, html, body {
     padding-bottom: 5px;
   }
 }
-/* line 221, sass/templates/_leaderboard.scss */
+/* line 241, sass/templates/_leaderboard.scss */
 .page-leaderboard.compact-view table.table-data.table-app-group .MHXTE6C-r-a a,
 .page-leaderboard.compact-view table.table-data.table-app-group .MHXTE6C-I-a a,
 .page-leaderboard.compact-view table.table-data.table-app-group .app-details a {
@@ -6280,14 +6436,14 @@ textarea, .global-header .link-open-search, html, body {
   vertical-align: middle;
 }
 @media (min-width: 720px) {
-  /* line 221, sass/templates/_leaderboard.scss */
+  /* line 241, sass/templates/_leaderboard.scss */
   .page-leaderboard.compact-view table.table-data.table-app-group .MHXTE6C-r-a a,
   .page-leaderboard.compact-view table.table-data.table-app-group .MHXTE6C-I-a a,
   .page-leaderboard.compact-view table.table-data.table-app-group .app-details a {
     width: 56%;
   }
 }
-/* line 231, sass/templates/_leaderboard.scss */
+/* line 251, sass/templates/_leaderboard.scss */
 .page-leaderboard.compact-view table.table-data.table-app-group .MHXTE6C-r-a .text-muted,
 .page-leaderboard.compact-view table.table-data.table-app-group .MHXTE6C-I-a .text-muted,
 .page-leaderboard.compact-view table.table-data.table-app-group .app-details .text-muted {
@@ -6296,132 +6452,132 @@ textarea, .global-header .link-open-search, html, body {
   vertical-align: middle;
 }
 @media (min-width: 720px) {
-  /* line 231, sass/templates/_leaderboard.scss */
+  /* line 251, sass/templates/_leaderboard.scss */
   .page-leaderboard.compact-view table.table-data.table-app-group .MHXTE6C-r-a .text-muted,
   .page-leaderboard.compact-view table.table-data.table-app-group .MHXTE6C-I-a .text-muted,
   .page-leaderboard.compact-view table.table-data.table-app-group .app-details .text-muted {
     width: 40%;
   }
 }
-/* line 240, sass/templates/_leaderboard.scss */
+/* line 260, sass/templates/_leaderboard.scss */
 .page-leaderboard.compact-view table.table-data.table-app-group .MHXTE6C-i-a,
 .page-leaderboard.compact-view table.table-data.table-app-group .table-data {
   font-size: 13px;
 }
 @media (min-width: 1280px) {
-  /* line 240, sass/templates/_leaderboard.scss */
+  /* line 260, sass/templates/_leaderboard.scss */
   .page-leaderboard.compact-view table.table-data.table-app-group .MHXTE6C-i-a,
   .page-leaderboard.compact-view table.table-data.table-app-group .table-data {
     font-size: 15px;
   }
 }
-/* line 249, sass/templates/_leaderboard.scss */
+/* line 269, sass/templates/_leaderboard.scss */
 .page-leaderboard.compact-view table.table-data .text-muted + span {
   margin-top: 0px;
 }
 
-/* line 255, sass/templates/_leaderboard.scss */
+/* line 275, sass/templates/_leaderboard.scss */
 .table-overall.table-data .MHXTE6C-i-a {
   padding-top: 1px;
   padding-bottom: 4px;
 }
 
-/* line 259, sass/templates/_leaderboard.scss */
+/* line 279, sass/templates/_leaderboard.scss */
 .table-overall {
   width: 100%;
 }
-/* line 261, sass/templates/_leaderboard.scss */
+/* line 281, sass/templates/_leaderboard.scss */
 .is-safari .table-overall {
   table-layout: auto;
   width: auto;
 }
-/* line 265, sass/templates/_leaderboard.scss */
+/* line 285, sass/templates/_leaderboard.scss */
 .table-overall.table-data th {
   padding-left: 10px;
   padding-right: 10px;
 }
 @media (min-width: 960px) {
-  /* line 265, sass/templates/_leaderboard.scss */
+  /* line 285, sass/templates/_leaderboard.scss */
   .table-overall.table-data th {
     padding-left: 0;
     padding-right: 0;
   }
 }
-/* line 272, sass/templates/_leaderboard.scss */
+/* line 292, sass/templates/_leaderboard.scss */
 .is-safari .table-overall.table-data th {
   padding-left: 10px;
   padding-right: 10px;
 }
-/* line 278, sass/templates/_leaderboard.scss */
+/* line 298, sass/templates/_leaderboard.scss */
 .table-overall.table-data td {
   padding-left: 10px;
   padding-right: 10px;
   vertical-align: top;
 }
 @media (min-width: 960px) {
-  /* line 278, sass/templates/_leaderboard.scss */
+  /* line 298, sass/templates/_leaderboard.scss */
   .table-overall.table-data td {
     padding-left: 0;
     padding-right: 0;
   }
 }
-/* line 286, sass/templates/_leaderboard.scss */
+/* line 306, sass/templates/_leaderboard.scss */
 .is-safari .table-overall.table-data td {
   width: 30%;
   padding-left: 10px;
   padding-right: 10px;
 }
-/* line 292, sass/templates/_leaderboard.scss */
+/* line 312, sass/templates/_leaderboard.scss */
 .table-overall.table-data .MHXTE6C-i-a,
 .table-overall.table-data .table-data {
   vertical-align: top;
 }
-/* line 296, sass/templates/_leaderboard.scss */
+/* line 316, sass/templates/_leaderboard.scss */
 .table-overall.table-data .MHXTE6C-i-d,
 .table-overall.table-data .table-data-first {
   vertical-align: middle;
 }
 @media (min-width: 720px) {
-  /* line 299, sass/templates/_leaderboard.scss */
+  /* line 319, sass/templates/_leaderboard.scss */
   .is-safari .table-overall.table-data .MHXTE6C-i-d, .is-safari
   .table-overall.table-data .table-data-first {
     width: 80px;
   }
 }
 
-/* line 307, sass/templates/_leaderboard.scss */
+/* line 327, sass/templates/_leaderboard.scss */
 .table-app-group {
   width: 100%;
 }
-/* line 309, sass/templates/_leaderboard.scss */
+/* line 329, sass/templates/_leaderboard.scss */
 .table-app-group.table-data th {
   padding-left: 7px;
   padding-right: 7px;
 }
 @media (min-width: 960px) {
-  /* line 309, sass/templates/_leaderboard.scss */
+  /* line 329, sass/templates/_leaderboard.scss */
   .table-app-group.table-data th {
     padding-left: 0;
     padding-right: 0;
   }
 }
-/* line 317, sass/templates/_leaderboard.scss */
+/* line 337, sass/templates/_leaderboard.scss */
 .table-app-group.table-data td {
   padding-left: 7px;
   padding-right: 7px;
 }
 @media (min-width: 960px) {
-  /* line 317, sass/templates/_leaderboard.scss */
+  /* line 337, sass/templates/_leaderboard.scss */
   .table-app-group.table-data td {
     padding-left: 0;
     padding-right: 0;
   }
 }
-/* line 324, sass/templates/_leaderboard.scss */
+/* line 344, sass/templates/_leaderboard.scss */
 .table-app-group.table-data td.table-data-first {
   width: 80px;
 }
-/* line 328, sass/templates/_leaderboard.scss */
+/* line 348, sass/templates/_leaderboard.scss */
 .table-app-group .MHXTE6C-i-a,
 .table-app-group .table-data {
   padding-top: 0.9rem;
@@ -6429,21 +6585,21 @@ textarea, .global-header .link-open-search, html, body {
 }
 
 @media screen and (max-width: 720px) {
-  /* line 336, sass/templates/_leaderboard.scss */
+  /* line 356, sass/templates/_leaderboard.scss */
   .page-leaderboard .scrollable .table-data .MHXTE6C-i-a:nth-child(2),
   .page-leaderboard .scrollable .table-data .table-data:nth-child(2),
   .page-leaderboard .scrollable table.responsive th:nth-child(2) {
     padding-left: 3%;
   }
-  /* line 341, sass/templates/_leaderboard.scss */
+  /* line 361, sass/templates/_leaderboard.scss */
   .page-leaderboard .scrollable .table-overall tbody tr {
     height: 82px;
   }
-  /* line 344, sass/templates/_leaderboard.scss */
+  /* line 364, sass/templates/_leaderboard.scss */
   .page-leaderboard .scrollable .table-app-group tbody tr {
     height: 65px;
   }
-  /* line 348, sass/templates/_leaderboard.scss */
+  /* line 368, sass/templates/_leaderboard.scss */
   .page-leaderboard.compact-view .scrollable .table-app-group tbody tr {
     height: auto;
   }
@@ -6629,7 +6785,7 @@ table.table-linked-accounts .linked-account-delete a {
   }
 }
 /* line 139, sass/templates/_linked-accounts.scss */
-table.table-linked-accounts .linked-account-delete .ref-icon-after:after, table.table-linked-accounts .linked-account-delete .home-welcome__text .home-welcome__call-to-action:after, .home-welcome__text table.table-linked-accounts .linked-account-delete .home-welcome__call-to-action:after, table.table-linked-accounts .linked-account-delete .read-only-date span:after, .read-only-date table.table-linked-accounts .linked-account-delete span:after, table.table-linked-accounts .linked-account-delete .panel-link .panel-link__link > span span:after, .panel-link .panel-link__link > span table.table-linked-accounts .linked-account-delete span:after, table.table-linked-accounts .linked-account-delete .accordion-switch:after, table.table-linked-accounts .linked-account-delete .form-field .form-field-help:after, .form-field table.table-linked-accounts .linked-account-delete .form-field-help:after,
+table.table-linked-accounts .linked-account-delete .ref-icon-after:after, table.table-linked-accounts .linked-account-delete .home-welcome__text .home-welcome__call-to-action:after, .home-welcome__text table.table-linked-accounts .linked-account-delete .home-welcome__call-to-action:after, table.table-linked-accounts .linked-account-delete .read-only-date span:after, .read-only-date table.table-linked-accounts .linked-account-delete span:after, table.table-linked-accounts .linked-account-delete .panel-link .panel-link__link > span span:after, .panel-link .panel-link__link > span table.table-linked-accounts .linked-account-delete span:after, table.table-linked-accounts .linked-account-delete .accordion-switch:after, table.table-linked-accounts .linked-account-delete .checklist li:after, .checklist table.table-linked-accounts .linked-account-delete li:after, table.table-linked-accounts .linked-account-delete .form-field .form-field-help:after, .form-field table.table-linked-accounts .linked-account-delete .form-field-help:after,
 table.table-linked-accounts .linked-account-delete .search-field-no-label .form-field-help:after,
 .search-field-no-label table.table-linked-accounts .linked-account-delete .form-field-help:after, table.table-linked-accounts .linked-account-delete .form-field.form-field--date-select span:after, .form-field.form-field--date-select table.table-linked-accounts .linked-account-delete span:after, table.table-linked-accounts .linked-account-delete .whats-this-tooltip-icon:after,
 table.table-linked-accounts .linked-account-delete .whats-this-tooltip-icon-static:after {
@@ -6641,7 +6797,7 @@ table.table-linked-accounts .linked-account-delete .whats-this-tooltip-icon-stat
           transition: color 0.1s;
 }
 /* line 147, sass/templates/_linked-accounts.scss */
-table.table-linked-accounts .linked-account-delete .ref-icon-after:hover:after, table.table-linked-accounts .linked-account-delete .home-welcome__text .home-welcome__call-to-action:hover:after, .home-welcome__text table.table-linked-accounts .linked-account-delete .home-welcome__call-to-action:hover:after, table.table-linked-accounts .linked-account-delete .read-only-date span:hover:after, .read-only-date table.table-linked-accounts .linked-account-delete span:hover:after, table.table-linked-accounts .linked-account-delete .panel-link .panel-link__link > span span:hover:after, .panel-link .panel-link__link > span table.table-linked-accounts .linked-account-delete span:hover:after, table.table-linked-accounts .linked-account-delete .accordion-switch:hover:after, table.table-linked-accounts .linked-account-delete .form-field .form-field-help:hover:after, .form-field table.table-linked-accounts .linked-account-delete .form-field-help:hover:after,
+table.table-linked-accounts .linked-account-delete .ref-icon-after:hover:after, table.table-linked-accounts .linked-account-delete .home-welcome__text .home-welcome__call-to-action:hover:after, .home-welcome__text table.table-linked-accounts .linked-account-delete .home-welcome__call-to-action:hover:after, table.table-linked-accounts .linked-account-delete .read-only-date span:hover:after, .read-only-date table.table-linked-accounts .linked-account-delete span:hover:after, table.table-linked-accounts .linked-account-delete .panel-link .panel-link__link > span span:hover:after, .panel-link .panel-link__link > span table.table-linked-accounts .linked-account-delete span:hover:after, table.table-linked-accounts .linked-account-delete .accordion-switch:hover:after, table.table-linked-accounts .linked-account-delete .checklist li:hover:after, .checklist table.table-linked-accounts .linked-account-delete li:hover:after, table.table-linked-accounts .linked-account-delete .form-field .form-field-help:hover:after, .form-field table.table-linked-accounts .linked-account-delete .form-field-help:hover:after,
 table.table-linked-accounts .linked-account-delete .search-field-no-label .form-field-help:hover:after,
 .search-field-no-label table.table-linked-accounts .linked-account-delete .form-field-help:hover:after, table.table-linked-accounts .linked-account-delete .form-field.form-field--date-select span:hover:after, .form-field.form-field--date-select table.table-linked-accounts .linked-account-delete span:hover:after, table.table-linked-accounts .linked-account-delete .whats-this-tooltip-icon:hover:after,
 table.table-linked-accounts .linked-account-delete .whats-this-tooltip-icon-static:hover:after {
@@ -6650,7 +6806,7 @@ table.table-linked-accounts .linked-account-delete .whats-this-tooltip-icon-stat
           transition: color 0.2s;
 }
 /* line 153, sass/templates/_linked-accounts.scss */
-table.table-linked-accounts .linked-account-delete .ref-icon-after:active:after, table.table-linked-accounts .linked-account-delete .home-welcome__text .home-welcome__call-to-action:active:after, .home-welcome__text table.table-linked-accounts .linked-account-delete .home-welcome__call-to-action:active:after, table.table-linked-accounts .linked-account-delete .read-only-date span:active:after, .read-only-date table.table-linked-accounts .linked-account-delete span:active:after, table.table-linked-accounts .linked-account-delete .panel-link .panel-link__link > span span:active:after, .panel-link .panel-link__link > span table.table-linked-accounts .linked-account-delete span:active:after, table.table-linked-accounts .linked-account-delete .accordion-switch:active:after, table.table-linked-accounts .linked-account-delete .form-field .form-field-help:active:after, .form-field table.table-linked-accounts .linked-account-delete .form-field-help:active:after,
+table.table-linked-accounts .linked-account-delete .ref-icon-after:active:after, table.table-linked-accounts .linked-account-delete .home-welcome__text .home-welcome__call-to-action:active:after, .home-welcome__text table.table-linked-accounts .linked-account-delete .home-welcome__call-to-action:active:after, table.table-linked-accounts .linked-account-delete .read-only-date span:active:after, .read-only-date table.table-linked-accounts .linked-account-delete span:active:after, table.table-linked-accounts .linked-account-delete .panel-link .panel-link__link > span span:active:after, .panel-link .panel-link__link > span table.table-linked-accounts .linked-account-delete span:active:after, table.table-linked-accounts .linked-account-delete .accordion-switch:active:after, table.table-linked-accounts .linked-account-delete .checklist li:active:after, .checklist table.table-linked-accounts .linked-account-delete li:active:after, table.table-linked-accounts .linked-account-delete .form-field .form-field-help:active:after, .form-field table.table-linked-accounts .linked-account-delete .form-field-help:active:after,
 table.table-linked-accounts .linked-account-delete .search-field-no-label .form-field-help:active:after,
 .search-field-no-label table.table-linked-accounts .linked-account-delete .form-field-help:active:after, table.table-linked-accounts .linked-account-delete .form-field.form-field--date-select span:active:after, .form-field.form-field--date-select table.table-linked-accounts .linked-account-delete span:active:after, table.table-linked-accounts .linked-account-delete .whats-this-tooltip-icon:active:after,
 table.table-linked-accounts .linked-account-delete .whats-this-tooltip-icon-static:active:after {
@@ -7497,20 +7653,23 @@ table.table-data.table-linked-accounts--disabled thead {
 /* line 40, sass/templates/_my-apps-and-app.scss */
 .filters-container.filter-container--my-apps .refresh-button,
 .filters-container.filter-container--app .refresh-button {
-  padding: 7px 7px;
-  margin: 0 1% 0 0;
+  margin: 0 1% 1rem 0;
   display: none;
-  vertical-align: top;
+}
+/* line 43, sass/templates/_my-apps-and-app.scss */
+.is-firefox .filters-container.filter-container--my-apps .refresh-button, .is-firefox
+.filters-container.filter-container--app .refresh-button {
+  padding: 1rem 1rem 0.7rem;
 }
 /* line 45, sass/templates/_my-apps-and-app.scss */
-.ie11 .filters-container.filter-container--my-apps .refresh-button, .ie11
-.filters-container.filter-container--app .refresh-button {
-  padding: 12px 10px 6px;
+.is-firefox .filters-container.filter-container--my-apps .refresh-button:disabled:active, .is-firefox
+.filters-container.filter-container--app .refresh-button:disabled:active {
+  padding-bottom: 0.7rem;
 }
 /* line 48, sass/templates/_my-apps-and-app.scss */
-.ie10 .filters-container.filter-container--my-apps .refresh-button, .ie10
-.filters-container.filter-container--app .refresh-button {
-  padding: 12px 10px 6px;
+.is-firefox .filters-container.filter-container--my-apps .refresh-button:active, .is-firefox
+.filters-container.filter-container--app .refresh-button:active {
+  padding-bottom: calc(0.7rem - 2px);
 }
 @media (min-width: 960px) {
   /* line 40, sass/templates/_my-apps-and-app.scss */
@@ -7520,36 +7679,28 @@ table.table-data.table-linked-accounts--disabled thead {
   }
 }
 @media screen and (min-width: 960px) and (max-width: 1280px) {
-  /* line 55, sass/templates/_my-apps-and-app.scss */
+  /* line 56, sass/templates/_my-apps-and-app.scss */
   .panel-left-open .filters-container.filter-container--my-apps .refresh-button, .panel-left-open
   .filters-container.filter-container--app .refresh-button {
     margin-right: 0.7%;
   }
 }
-/* line 59, sass/templates/_my-apps-and-app.scss */
-.filters-container.filter-container--my-apps .refresh-button:disabled:active,
-.filters-container.filter-container--app .refresh-button:disabled:active {
-  padding-bottom: 7px;
+/* line 60, sass/templates/_my-apps-and-app.scss */
+.ie11 .filters-container.filter-container--my-apps .refresh-button, .ie11
+.filters-container.filter-container--app .refresh-button {
+  padding: 1rem 1rem 0.9rem;
 }
 /* line 62, sass/templates/_my-apps-and-app.scss */
-.filters-container.filter-container--my-apps .refresh-button span,
-.filters-container.filter-container--app .refresh-button span {
-  font-size: 0;
+.ie11 .filters-container.filter-container--my-apps .refresh-button:disabled:active, .ie11
+.filters-container.filter-container--app .refresh-button:disabled:active {
+  padding-bottom: 0.9rem;
 }
-/* line 64, sass/templates/_my-apps-and-app.scss */
-.filters-container.filter-container--my-apps .refresh-button span:before,
-.filters-container.filter-container--app .refresh-button span:before {
-  margin: 0;
-  font-size: 1.85rem;
-  line-height: 1;
-  color: #fff;
-}
-/* line 71, sass/templates/_my-apps-and-app.scss */
-.filters-container.filter-container--my-apps .refresh-button:active,
+/* line 65, sass/templates/_my-apps-and-app.scss */
+.ie11 .filters-container.filter-container--my-apps .refresh-button:active, .ie11
 .filters-container.filter-container--app .refresh-button:active {
-  padding-bottom: 5px;
+  padding-bottom: 0.8rem;
 }
-/* line 75, sass/templates/_my-apps-and-app.scss */
+/* line 70, sass/templates/_my-apps-and-app.scss */
 .filters-container.filter-container--my-apps .or-text,
 .filters-container.filter-container--app .or-text {
   margin-right: 1%;
@@ -7561,51 +7712,51 @@ table.table-data.table-linked-accounts--disabled thead {
   vertical-align: top;
 }
 @media (min-width: 960px) {
-  /* line 75, sass/templates/_my-apps-and-app.scss */
+  /* line 70, sass/templates/_my-apps-and-app.scss */
   .filters-container.filter-container--my-apps .or-text,
   .filters-container.filter-container--app .or-text {
     display: inline-block;
   }
 }
 @media screen and (min-width: 960px) and (max-width: 1280px) {
-  /* line 87, sass/templates/_my-apps-and-app.scss */
+  /* line 82, sass/templates/_my-apps-and-app.scss */
   .panel-left-open .filters-container.filter-container--my-apps .or-text, .panel-left-open
   .filters-container.filter-container--app .or-text {
     margin-right: 0.7%;
   }
 }
-/* line 92, sass/templates/_my-apps-and-app.scss */
+/* line 87, sass/templates/_my-apps-and-app.scss */
 .filters-container.filter-container--my-apps .text--disabled,
 .filters-container.filter-container--app .text--disabled {
   color: #C4C7D0;
 }
-/* line 94, sass/templates/_my-apps-and-app.scss */
+/* line 89, sass/templates/_my-apps-and-app.scss */
 .filters-container.filter-container--my-apps .text--disabled:after, .filters-container.filter-container--my-apps .text--disabled:before,
 .filters-container.filter-container--app .text--disabled:after,
 .filters-container.filter-container--app .text--disabled:before {
   color: #C4C7D0;
 }
-/* line 98, sass/templates/_my-apps-and-app.scss */
+/* line 93, sass/templates/_my-apps-and-app.scss */
 .filters-container.filter-container--my-apps .or-text + .form-field,
 .filters-container.filter-container--app .or-text + .form-field {
   width: 100%;
   margin-right: 1%;
 }
 @media (min-width: 720px) {
-  /* line 98, sass/templates/_my-apps-and-app.scss */
+  /* line 93, sass/templates/_my-apps-and-app.scss */
   .filters-container.filter-container--my-apps .or-text + .form-field,
   .filters-container.filter-container--app .or-text + .form-field {
     width: auto;
   }
 }
-/* line 105, sass/templates/_my-apps-and-app.scss */
+/* line 100, sass/templates/_my-apps-and-app.scss */
 .filters-container.filter-container--my-apps .form-field,
 .filters-container.filter-container--app .form-field {
   width: 48%;
   text-align: left;
 }
 @media (min-width: 720px) {
-  /* line 105, sass/templates/_my-apps-and-app.scss */
+  /* line 100, sass/templates/_my-apps-and-app.scss */
   .filters-container.filter-container--my-apps .form-field,
   .filters-container.filter-container--app .form-field {
     width: auto;
@@ -7613,7 +7764,7 @@ table.table-data.table-linked-accounts--disabled thead {
   }
 }
 @media (min-width: 960px) {
-  /* line 112, sass/templates/_my-apps-and-app.scss */
+  /* line 107, sass/templates/_my-apps-and-app.scss */
   .filters-container.filter-container--my-apps .form-field.store-select, .filters-container.filter-container--my-apps .form-field.category-select, .filters-container.filter-container--my-apps .form-field.country-select,
   .filters-container.filter-container--app .form-field.store-select,
   .filters-container.filter-container--app .form-field.category-select,
@@ -7622,27 +7773,27 @@ table.table-data.table-linked-accounts--disabled thead {
   }
 }
 @media (min-width: 960px) {
-  /* line 120, sass/templates/_my-apps-and-app.scss */
+  /* line 115, sass/templates/_my-apps-and-app.scss */
   .filters-container.filter-container--my-apps .category-select,
   .filters-container.filter-container--app .category-select {
     margin-right: 0;
   }
 }
-/* line 125, sass/templates/_my-apps-and-app.scss */
+/* line 120, sass/templates/_my-apps-and-app.scss */
 .filters-container.filter-container--my-apps .filter-toggle,
 .filters-container.filter-container--app .filter-toggle {
   float: right;
 }
 
 @media screen and (max-width: 720px) {
-  /* line 130, sass/templates/_my-apps-and-app.scss */
+  /* line 125, sass/templates/_my-apps-and-app.scss */
   .time-period-select,
   .store-select {
     float: left;
     text-align: left;
   }
 
-  /* line 135, sass/templates/_my-apps-and-app.scss */
+  /* line 130, sass/templates/_my-apps-and-app.scss */
   .category-select,
   .country-select {
     float: right;
@@ -8230,6 +8381,245 @@ table.table-data.table-linked-accounts--disabled thead {
   }
 }
 
+/* line 3, sass/templates/_sign-up-journey.scss */
+.page-overlay--premium .popup-content,
+.page-overlay--standard .popup-content {
+  width: 100%;
+  text-align: center;
+  padding: 22px 30px 30px;
+  background-color: #F2F2F5;
+}
+/* line 9, sass/templates/_sign-up-journey.scss */
+.page-overlay--premium h2,
+.page-overlay--standard h2 {
+  margin-top: 0.9rem;
+  margin-bottom: 1.1rem;
+}
+/* line 13, sass/templates/_sign-up-journey.scss */
+.page-overlay--premium h3,
+.page-overlay--standard h3 {
+  margin-top: 1.9rem;
+  margin-bottom: 0.9rem;
+  text-align: left;
+}
+/* line 18, sass/templates/_sign-up-journey.scss */
+.page-overlay--premium p,
+.page-overlay--standard p {
+  font-size: 1.4rem;
+  line-height: 1.7;
+}
+/* line 22, sass/templates/_sign-up-journey.scss */
+.page-overlay--premium .buttons-container,
+.page-overlay--standard .buttons-container {
+  text-align: center;
+}
+/* line 25, sass/templates/_sign-up-journey.scss */
+.page-overlay--premium .ref-button--cta-large, .page-overlay--premium .ref-button--cta-large--wide,
+.page-overlay--standard .ref-button--cta-large,
+.page-overlay--standard .ref-button--cta-large--wide {
+  padding-left: 1.4em;
+  padding-right: 1.4em;
+}
+/* line 29, sass/templates/_sign-up-journey.scss */
+.page-overlay--premium .ref-button--function-large, .page-overlay--premium .ref-button--function-large--wide,
+.page-overlay--standard .ref-button--function-large,
+.page-overlay--standard .ref-button--function-large--wide {
+  padding-left: 1em;
+  padding-right: 1em;
+}
+/* line 33, sass/templates/_sign-up-journey.scss */
+.page-overlay--premium .popup-header-image,
+.page-overlay--standard .popup-header-image {
+  max-width: 41px;
+  margin: 0 auto;
+}
+
+/* line 38, sass/templates/_sign-up-journey.scss */
+.start-trial-intro {
+  opacity: 1;
+}
+/* line 40, sass/templates/_sign-up-journey.scss */
+.is-submitted-success .start-trial-intro {
+  opacity: 0;
+  -webkit-transition: opacity 0.2s;
+          transition: opacity 0.2s;
+}
+
+/* line 45, sass/templates/_sign-up-journey.scss */
+.start-trial-confirmation {
+  position: absolute;
+  top: 0px;
+  left: 0;
+  padding: 85px 30px 30px;
+  opacity: 0;
+}
+/* line 51, sass/templates/_sign-up-journey.scss */
+.start-trial-confirmation .ref-button--link-large {
+  font-size: 1.6rem;
+}
+/* line 54, sass/templates/_sign-up-journey.scss */
+.is-submitted-success .start-trial-confirmation {
+  opacity: 1;
+  -webkit-transition: opacity 0.2s 0.2s;
+          transition: opacity 0.2s 0.2s;
+}
+@media (min-width: 720px) {
+  /* line 59, sass/templates/_sign-up-journey.scss */
+  .start-trial-confirmation h2 {
+    padding-left: 50px;
+    padding-right: 50px;
+    margin-bottom: 1.7rem;
+    line-height: 1.5;
+  }
+}
+
+@-webkit-keyframes cordpull {
+  0% {
+    -webkit-transform: translateY(-60px);
+            transform: translateY(-60px);
+  }
+  10% {
+    -webkit-transform: translateY(-65px);
+            transform: translateY(-65px);
+  }
+  90% {
+    -webkit-transform: translateY(-5px);
+            transform: translateY(-5px);
+  }
+  100% {
+    -webkit-transform: translateY(0px);
+            transform: translateY(0px);
+  }
+}
+
+@keyframes cordpull {
+  0% {
+    -webkit-transform: translateY(-60px);
+            transform: translateY(-60px);
+  }
+  10% {
+    -webkit-transform: translateY(-65px);
+            transform: translateY(-65px);
+  }
+  90% {
+    -webkit-transform: translateY(-5px);
+            transform: translateY(-5px);
+  }
+  100% {
+    -webkit-transform: translateY(0px);
+            transform: translateY(0px);
+  }
+}
+@-webkit-keyframes curtainpullleft {
+  0% {
+    -webkit-transform: translateX(0px);
+            transform: translateX(0px);
+  }
+  100% {
+    -webkit-transform: translateX(-47px);
+            transform: translateX(-47px);
+  }
+}
+@keyframes curtainpullleft {
+  0% {
+    -webkit-transform: translateX(0px);
+            transform: translateX(0px);
+  }
+  100% {
+    -webkit-transform: translateX(-47px);
+            transform: translateX(-47px);
+  }
+}
+@-webkit-keyframes curtainpullright {
+  0% {
+    -webkit-transform: translateX(0px);
+            transform: translateX(0px);
+  }
+  100% {
+    -webkit-transform: translateX(51px);
+            transform: translateX(51px);
+  }
+}
+@keyframes curtainpullright {
+  0% {
+    -webkit-transform: translateX(0px);
+            transform: translateX(0px);
+  }
+  100% {
+    -webkit-transform: translateX(51px);
+            transform: translateX(51px);
+  }
+}
+/* line 82, sass/templates/_sign-up-journey.scss */
+.page-overlay--premium .svg-container {
+  width: 122px;
+  height: 106px;
+  margin-bottom: 0.8rem;
+  display: inline-block;
+  overflow: hidden;
+}
+/* line 88, sass/templates/_sign-up-journey.scss */
+.page-overlay--premium .svg-container svg {
+  width: 125px;
+  height: 103px;
+}
+/* line 93, sass/templates/_sign-up-journey.scss */
+.page-overlay--premium .cord {
+  -webkit-transform: translateY(-60px);
+      -ms-transform: translateY(-60px);
+          transform: translateY(-60px);
+}
+/* line 97, sass/templates/_sign-up-journey.scss */
+.page-overlay--premium.is-submitted-success .cord {
+  -webkit-animation: cordpull 0.6s 1s ease-in forwards;
+          animation: cordpull 0.6s 1s ease-in forwards;
+}
+/* line 100, sass/templates/_sign-up-journey.scss */
+.page-overlay--premium.is-submitted-success .curtain-left {
+  -webkit-animation: curtainpullleft 0.8s 1s cubic-bezier(0.57, -0.2, 0.32, 1.41) forwards;
+          animation: curtainpullleft 0.8s 1s cubic-bezier(0.57, -0.2, 0.32, 1.41) forwards;
+}
+/* line 103, sass/templates/_sign-up-journey.scss */
+.page-overlay--premium.is-submitted-success .curtain-right {
+  -webkit-animation: curtainpullright 0.8s 1s cubic-bezier(0.57, -0.2, 0.32, 1.41) forwards;
+          animation: curtainpullright 0.8s 1s cubic-bezier(0.57, -0.2, 0.32, 1.41) forwards;
+}
+
+/* line 109, sass/templates/_sign-up-journey.scss */
+.page-overlay--standard .popup-content {
+  padding-top: 33px;
+  padding-bottom: 20px;
+}
+/* line 113, sass/templates/_sign-up-journey.scss */
+.page-overlay--standard .buttons-container {
+  padding-bottom: 2.9rem;
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid #e1e5e8;
+}
+/* line 117, sass/templates/_sign-up-journey.scss */
+.page-overlay--standard .buttons-container button:first-child {
+  margin-top: 0.8rem;
+}
+/* line 121, sass/templates/_sign-up-journey.scss */
+.page-overlay--standard h3 {
+  text-align: center;
+}
+
+/* line 1, sass/templates/_subscription.scss */
+.icon-member {
+  position: absolute;
+  top: 0;
+  right: 0;
+  overflow: visible;
+}
+/* line 6, sass/templates/_subscription.scss */
+.icon-member img {
+  position: relative;
+  top: -4px;
+  left: 4px;
+  max-width: 14px;
+}
+
 @media (min-width: 720px) {
   /* line 3, sass/templates/_tabs.scss */
   .tabs-template .tabs__content {
@@ -8414,13 +8804,32 @@ table.table-data.table-linked-accounts--disabled thead {
 }
 /* line 3, sass/components/_account-panel.scss */
 .account-user-details .user-name {
+  margin-right: 7px;
   margin-bottom: 6px;
-  font-size: 15px;
+  font-size: 17px;
   font-weight: 600;
   color: #fcfdfd;
 }
-/* line 9, sass/components/_account-panel.scss */
+/* line 11, sass/components/_account-panel.scss */
+.account-user-details .account-user-details--name .user-name, .account-user-details .account-user-details--name .premium-icon, .account-user-details .account-user-details--name .premium-days {
+  display: inline-block;
+  vertical-align: top;
+}
+/* line 15, sass/components/_account-panel.scss */
+.account-user-details .account-user-details--name .premium-icon {
+  width: 17px;
+  margin-right: 7px;
+  margin-bottom: 6px;
+}
+/* line 20, sass/components/_account-panel.scss */
+.account-user-details .account-user-details--name .premium-days {
+  padding-top: 4px;
+  font-size: 14px;
+  color: #6d69c5;
+}
+/* line 26, sass/components/_account-panel.scss */
 .account-user-details .user-company {
+  margin-top: 0.1rem;
   margin-bottom: 0;
   font-size: 14px;
   font-weight: 400;
@@ -8428,7 +8837,7 @@ table.table-data.table-linked-accounts--disabled thead {
   color: #727686;
 }
 
-/* line 17, sass/components/_account-panel.scss */
+/* line 35, sass/components/_account-panel.scss */
 .main-navigation.main-navigation--account {
   padding-top: 0;
   padding-bottom: 26px;
@@ -8919,6 +9328,27 @@ table.table-data.table-linked-accounts--disabled thead {
   font-size: 2.2rem;
 }
 
+/* line 272, sass/components/_button.scss */
+.refresh-button {
+  padding: 1.1rem 1rem 0.8rem;
+  display: inline-block;
+  vertical-align: top;
+}
+/* line 276, sass/components/_button.scss */
+.refresh-button:disabled:active {
+  padding-bottom: 0.8rem;
+}
+/* line 279, sass/components/_button.scss */
+.refresh-button:active {
+  padding-bottom: 0.6rem;
+}
+/* line 282, sass/components/_button.scss */
+.refresh-button .svg-refresh {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+}
+
 @-webkit-keyframes backgroundMove {
   0% {
     background-position: 0 0;
@@ -8936,7 +9366,7 @@ table.table-data.table-linked-accounts--disabled thead {
     background-position: 470px 0;
   }
 }
-/* line 278, sass/components/_button.scss */
+/* line 294, sass/components/_button.scss */
 .ref-button--is-loading {
   background-color: #ff4969;
   /* @alternate */
@@ -8947,13 +9377,13 @@ table.table-data.table-linked-accounts--disabled thead {
           animation: backgroundMove 5s linear infinite;
   cursor: default;
 }
-/* line 291, sass/components/_button.scss */
+/* line 307, sass/components/_button.scss */
 .ref-button--is-loading:active {
   top: 0;
   border: none;
 }
 
-/* line 296, sass/components/_button.scss */
+/* line 312, sass/components/_button.scss */
 .ref-button--success,
 .ref-button--success:disabled {
   color: #29292c;
@@ -8962,7 +9392,7 @@ table.table-data.table-linked-accounts--disabled thead {
   -webkit-transition: background-color 0s;
           transition: background-color 0s;
 }
-/* line 302, sass/components/_button.scss */
+/* line 318, sass/components/_button.scss */
 .ref-button--success:active, .ref-button--success:hover,
 .ref-button--success:disabled:active,
 .ref-button--success:disabled:hover {
@@ -8971,18 +9401,42 @@ table.table-data.table-linked-accounts--disabled thead {
   background-color: transparent;
 }
 
-/* line 308, sass/components/_button.scss */
+/* line 324, sass/components/_button.scss */
 .ref-button--error {
   background-color: #e37f26;
   cursor: default;
   -webkit-transition: background-color 0s;
           transition: background-color 0s;
 }
-/* line 312, sass/components/_button.scss */
+/* line 328, sass/components/_button.scss */
 .ref-button--error:active, .ref-button--error:hover {
   top: 0;
   border: none;
   background-color: #e37f26;
+}
+
+/* line 1, sass/components/_checklist.scss */
+.checklist {
+  padding-bottom: 1.6rem;
+  text-align: left;
+}
+/* line 4, sass/components/_checklist.scss */
+.checklist li {
+  position: relative;
+  padding: 0.9rem 30px 1rem 0;
+  display: block;
+  font-size: 1.4rem;
+  color: #5b5b68;
+  border-bottom: 1px solid #e1e5e8;
+}
+/* line 12, sass/components/_checklist.scss */
+.checklist li:after {
+  content: "t";
+  position: absolute;
+  top: 0.5rem;
+  right: 0;
+  font-size: 24px;
+  color: #1bc79f;
 }
 
 /* line 1, sass/components/_filter.scss */
@@ -12216,6 +12670,180 @@ form .gwt-DatePicker * {
   z-index: 100;
 }
 
+/* line 1, sass/components/_intro-banner.scss */
+.intro-banner {
+  width: 100%;
+  margin-bottom: 50px;
+  padding-bottom: 60px;
+  background: #6d69c5;
+}
+@media (min-width: 480px) {
+  /* line 1, sass/components/_intro-banner.scss */
+  .intro-banner {
+    padding-bottom: 80px;
+  }
+}
+@media (min-width: 720px) {
+  /* line 1, sass/components/_intro-banner.scss */
+  .intro-banner {
+    height: 414px;
+    padding-bottom: 0;
+  }
+}
+@media (min-width: 1600px) {
+  /* line 1, sass/components/_intro-banner.scss */
+  .intro-banner {
+    height: 480px;
+  }
+}
+/* line 16, sass/components/_intro-banner.scss */
+.intro-banner > div {
+  display: block;
+  text-align: center;
+}
+@media (min-width: 720px) {
+  /* line 16, sass/components/_intro-banner.scss */
+  .intro-banner > div {
+    height: 100%;
+  }
+  /* line 11, sass/helpers/_mixins.scss */
+  .intro-banner > div:before {
+    content: '';
+    display: inline-block;
+    width: 0;
+    height: 100%;
+    vertical-align: middle;
+    margin-right: -0.35em
+    /* Adjusts for spacing */
+  }
+  /* line 19, sass/helpers/_mixins.scss */
+  .intro-banner > div > * {
+    display: inline-block;
+    vertical-align: middle;
+  }
+}
+@media (min-width: 1600px) {
+  /* line 1, sass/components/_intro-banner.scss */
+  .intro-banner {
+    height: 560px;
+    font-size: 12px;
+  }
+}
+
+/* line 28, sass/components/_intro-banner.scss */
+.intro-banner__graphic {
+  width: 100%;
+  margin-top: 30px;
+  margin-bottom: 20px;
+}
+@media (min-width: 720px) {
+  /* line 28, sass/components/_intro-banner.scss */
+  .intro-banner__graphic {
+    width: 150px;
+    margin-top: -24px;
+  }
+}
+@media (min-width: 960px) {
+  /* line 28, sass/components/_intro-banner.scss */
+  .intro-banner__graphic {
+    margin-left: -10px;
+  }
+}
+@media (min-width: 1280px) {
+  /* line 28, sass/components/_intro-banner.scss */
+  .intro-banner__graphic {
+    width: 200px;
+  }
+}
+@media (min-width: 1600px) {
+  /* line 28, sass/components/_intro-banner.scss */
+  .intro-banner__graphic {
+    width: 220px;
+  }
+}
+/* line 45, sass/components/_intro-banner.scss */
+.intro-banner__graphic img {
+  width: 80px;
+}
+@media (min-width: 720px) {
+  /* line 45, sass/components/_intro-banner.scss */
+  .intro-banner__graphic img {
+    width: 100%;
+  }
+}
+
+/* line 52, sass/components/_intro-banner.scss */
+.intro-banner__intro {
+  width: 100%;
+  padding: 0 5%;
+}
+@media (min-width: 720px) {
+  /* line 52, sass/components/_intro-banner.scss */
+  .intro-banner__intro {
+    width: 500px;
+    margin-top: -17px;
+    margin-left: 35px;
+    padding: 0;
+    text-align: left;
+  }
+}
+@media (min-width: 960px) {
+  /* line 52, sass/components/_intro-banner.scss */
+  .intro-banner__intro {
+    width: 500px;
+  }
+}
+@media (min-width: 1280px) {
+  /* line 52, sass/components/_intro-banner.scss */
+  .intro-banner__intro {
+    width: 600px;
+  }
+}
+@media (min-width: 1600px) {
+  /* line 52, sass/components/_intro-banner.scss */
+  .intro-banner__intro {
+    width: 684px;
+    margin-left: 55px;
+  }
+}
+/* line 72, sass/components/_intro-banner.scss */
+.intro-banner__intro h1 {
+  margin-bottom: 22px;
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: 4.4em;
+  font-weight: 600;
+  color: white;
+  letter-spacing: -0.01em;
+  line-height: 1.1em;
+  overflow: visible;
+}
+@media (min-width: 480px) {
+  /* line 72, sass/components/_intro-banner.scss */
+  .intro-banner__intro h1 {
+    font-size: 5.1em;
+  }
+}
+/* line 85, sass/components/_intro-banner.scss */
+.intro-banner__intro p {
+  font-size: 1.5em;
+  color: #c3c6f6;
+  letter-spacing: 0.007em;
+}
+@media (min-width: 480px) {
+  /* line 85, sass/components/_intro-banner.scss */
+  .intro-banner__intro p {
+    font-size: 1.7em;
+  }
+}
+@media (min-width: 720px) {
+  /* line 85, sass/components/_intro-banner.scss */
+  .intro-banner__intro p {
+    padding: 0;
+    font-size: 1.8em;
+    line-height: 1.55555555555556em;
+  }
+}
+
 /* line 1, sass/components/_line-graph.scss */
 .graph-loading-line {
   position: absolute;
@@ -12889,40 +13517,41 @@ svg.loading-ellipsis .dot-3 {
 }
 /* line 26, sass/components/_main-navigation.scss */
 .main-navigation a span {
+  position: relative;
   display: inline-block;
   vertical-align: middle;
   padding-left: 12px;
 }
-/* line 32, sass/components/_main-navigation.scss */
+/* line 33, sass/components/_main-navigation.scss */
 .main-navigation a:hover svg path, .main-navigation a:hover svg polygon {
   fill: #c4c7d0;
   -webkit-transition: fill 0.3s;
           transition: fill 0.3s;
 }
-/* line 37, sass/components/_main-navigation.scss */
+/* line 38, sass/components/_main-navigation.scss */
 .main-navigation a:hover svg.icon--my-apps path {
   fill: none;
   stroke: #c4c7d0;
   -webkit-transition: stroke 0.3s;
           transition: stroke 0.3s;
 }
-/* line 46, sass/components/_main-navigation.scss */
+/* line 47, sass/components/_main-navigation.scss */
 .main-navigation li.is-selected a svg path, .main-navigation li.is-selected a svg polygon {
   fill: #fcfdfd;
 }
-/* line 51, sass/components/_main-navigation.scss */
+/* line 52, sass/components/_main-navigation.scss */
 .main-navigation li.is-selected a svg.icon--my-apps path {
   fill: none;
   stroke: #fcfdfd;
 }
-/* line 57, sass/components/_main-navigation.scss */
+/* line 58, sass/components/_main-navigation.scss */
 .main-navigation > ul > li {
   font-size: 1.2em;
   line-height: 1.5;
   font-weight: 700;
   border-bottom: 1px solid #161617;
 }
-/* line 62, sass/components/_main-navigation.scss */
+/* line 63, sass/components/_main-navigation.scss */
 .main-navigation > ul > li > a {
   float: left;
   width: 100%;
@@ -12930,44 +13559,44 @@ svg.loading-ellipsis .dot-3 {
   text-transform: uppercase;
   background-color: #29292c;
 }
-/* line 68, sass/components/_main-navigation.scss */
+/* line 69, sass/components/_main-navigation.scss */
 .main-navigation > ul > li > a:hover {
   background-color: #252527;
 }
-/* line 71, sass/components/_main-navigation.scss */
+/* line 72, sass/components/_main-navigation.scss */
 .main-navigation > ul > li > a:active {
   padding-bottom: 12px;
   border-top: 2px solid #1e1e1f;
 }
-/* line 77, sass/components/_main-navigation.scss */
+/* line 78, sass/components/_main-navigation.scss */
 .main-navigation > ul > li.is-selected > a {
   color: #fcfdfd;
   background-color: #6d69c5;
 }
-/* line 80, sass/components/_main-navigation.scss */
+/* line 81, sass/components/_main-navigation.scss */
 .is-animating-out .main-navigation > ul > li.is-selected > a {
   text-shadow: 4px 0px 1px rgba(252, 253, 253, 0.5);
 }
-/* line 83, sass/components/_main-navigation.scss */
+/* line 84, sass/components/_main-navigation.scss */
 .is-animating-in .main-navigation > ul > li.is-selected > a {
   text-shadow: -4px 0px 1px rgba(252, 253, 253, 0.5);
 }
-/* line 86, sass/components/_main-navigation.scss */
+/* line 87, sass/components/_main-navigation.scss */
 .main-navigation > ul > li.is-selected > a:hover {
   color: #fcfdfd;
 }
-/* line 91, sass/components/_main-navigation.scss */
+/* line 92, sass/components/_main-navigation.scss */
 .main-navigation > ul > li > ul {
   display: block;
   z-index: 0;
   -webkit-transition: margin-top 0.16s ease-in;
           transition: margin-top 0.16s ease-in;
 }
-/* line 96, sass/components/_main-navigation.scss */
+/* line 97, sass/components/_main-navigation.scss */
 .main-navigation > ul > li.is-open {
   background-color: #363a47;
 }
-/* line 98, sass/components/_main-navigation.scss */
+/* line 99, sass/components/_main-navigation.scss */
 .main-navigation > ul > li.is-open > ul {
   position: relative;
   margin-top: 0;
@@ -12975,40 +13604,44 @@ svg.loading-ellipsis .dot-3 {
   -webkit-transition: margin-top 0.2s ease-out;
           transition: margin-top 0.2s ease-out;
 }
-/* line 107, sass/components/_main-navigation.scss */
+/* line 109, sass/components/_main-navigation.scss */
+.main-navigation.main-navigation--account ul li:first-child {
+  border-top: 1px solid #161617;
+}
+/* line 113, sass/components/_main-navigation.scss */
 .main-navigation > ul ul {
   width: 100%;
   display: none;
   float: left;
   background-color: #363a47;
 }
-/* line 112, sass/components/_main-navigation.scss */
+/* line 118, sass/components/_main-navigation.scss */
 .main-navigation > ul ul li {
   position: relative;
   z-index: 1;
   font-size: 13px;
 }
-/* line 117, sass/components/_main-navigation.scss */
+/* line 123, sass/components/_main-navigation.scss */
 .main-navigation > ul ul li.is-selected > a {
   color: #fcfdfd;
 }
-/* line 119, sass/components/_main-navigation.scss */
+/* line 125, sass/components/_main-navigation.scss */
 .is-animating-out .main-navigation > ul ul li.is-selected > a {
   text-shadow: 4px 0px 1px rgba(252, 253, 253, 0.5);
 }
-/* line 122, sass/components/_main-navigation.scss */
+/* line 128, sass/components/_main-navigation.scss */
 .is-animating-in .main-navigation > ul ul li.is-selected > a {
   text-shadow: -4px 0px 1px rgba(252, 253, 253, 0.5);
 }
-/* line 125, sass/components/_main-navigation.scss */
+/* line 131, sass/components/_main-navigation.scss */
 .main-navigation > ul ul li.is-selected > a:hover {
   color: #fcfdfd;
 }
-/* line 130, sass/components/_main-navigation.scss */
+/* line 136, sass/components/_main-navigation.scss */
 .main-navigation > ul ul li.has-child {
   line-height: 1.5;
 }
-/* line 134, sass/components/_main-navigation.scss */
+/* line 140, sass/components/_main-navigation.scss */
 .main-navigation > ul ul li.has-child:before {
   position: absolute;
   top: 4px;
@@ -13019,88 +13652,88 @@ svg.loading-ellipsis .dot-3 {
   -webkit-transition: color 0.2s;
           transition: color 0.2s;
 }
-/* line 144, sass/components/_main-navigation.scss */
+/* line 150, sass/components/_main-navigation.scss */
 .main-navigation > ul ul li.has-child.is-open a {
   color: #81879d;
 }
-/* line 147, sass/components/_main-navigation.scss */
+/* line 153, sass/components/_main-navigation.scss */
 .main-navigation > ul ul li.has-child.is-open:before {
   color: #7e79e2;
   -webkit-transition: color 0.33s;
           transition: color 0.33s;
 }
-/* line 150, sass/components/_main-navigation.scss */
+/* line 156, sass/components/_main-navigation.scss */
 .is-animating-out .main-navigation > ul ul li.has-child.is-open:before {
   text-shadow: 4px 0px 1px rgba(109, 105, 197, 0.5);
 }
-/* line 153, sass/components/_main-navigation.scss */
+/* line 159, sass/components/_main-navigation.scss */
 .is-animating-in .main-navigation > ul ul li.has-child.is-open:before {
   text-shadow: -4px 0px 1px rgba(109, 105, 197, 0.5);
 }
-/* line 158, sass/components/_main-navigation.scss */
+/* line 164, sass/components/_main-navigation.scss */
 .main-navigation > ul ul li.has-child.is-open.is-selected a {
   color: #e1e5e8;
 }
-/* line 164, sass/components/_main-navigation.scss */
+/* line 170, sass/components/_main-navigation.scss */
 .main-navigation > ul ul li a {
   padding: 0 38px 15px 29px;
   color: #81879d;
   font-weight: 400;
 }
-/* line 168, sass/components/_main-navigation.scss */
+/* line 174, sass/components/_main-navigation.scss */
 .is-animating-out .main-navigation > ul ul li a {
   text-shadow: 4px 0px 1px rgba(129, 135, 157, 0.5);
 }
-/* line 171, sass/components/_main-navigation.scss */
+/* line 177, sass/components/_main-navigation.scss */
 .is-animating-in .main-navigation > ul ul li a {
   text-shadow: -4px 0px 1px rgba(129, 135, 157, 0.5);
 }
-/* line 174, sass/components/_main-navigation.scss */
+/* line 180, sass/components/_main-navigation.scss */
 .main-navigation > ul ul li a:hover {
   color: #bec2d2;
 }
-/* line 178, sass/components/_main-navigation.scss */
+/* line 184, sass/components/_main-navigation.scss */
 .main-navigation > ul ul li ul {
   background-color: #2e313b;
   display: block;
   -webkit-transition: margin-top 0.16s ease-in;
           transition: margin-top 0.16s ease-in;
 }
-/* line 183, sass/components/_main-navigation.scss */
+/* line 189, sass/components/_main-navigation.scss */
 .main-navigation > ul ul li ul li.is-selected a {
   color: #e1e5e8;
 }
-/* line 187, sass/components/_main-navigation.scss */
+/* line 193, sass/components/_main-navigation.scss */
 .main-navigation > ul ul li ul li a {
   padding-left: 35px;
   padding-bottom: 15px;
 }
-/* line 191, sass/components/_main-navigation.scss */
+/* line 197, sass/components/_main-navigation.scss */
 .main-navigation > ul ul li ul li:last-child a {
   padding-bottom: 20px;
 }
-/* line 198, sass/components/_main-navigation.scss */
+/* line 204, sass/components/_main-navigation.scss */
 .main-navigation > ul > li > ul > li > a {
   background-color: #363a47;
 }
-/* line 201, sass/components/_main-navigation.scss */
+/* line 207, sass/components/_main-navigation.scss */
 .main-navigation > ul > li > ul > li:first-child {
   margin-top: 22px;
 }
-/* line 204, sass/components/_main-navigation.scss */
+/* line 210, sass/components/_main-navigation.scss */
 .main-navigation > ul > li > ul > li:last-child a,
 .main-navigation > ul > li > ul > li:last-child li a {
   padding-bottom: 15px;
 }
-/* line 208, sass/components/_main-navigation.scss */
+/* line 214, sass/components/_main-navigation.scss */
 .main-navigation > ul > li > ul > li:last-child li:last-child a {
   padding-bottom: 20px;
 }
-/* line 212, sass/components/_main-navigation.scss */
+/* line 218, sass/components/_main-navigation.scss */
 .main-navigation > ul > li > ul li.is-open + li {
   margin-top: 22px;
 }
-/* line 215, sass/components/_main-navigation.scss */
+/* line 221, sass/components/_main-navigation.scss */
 .main-navigation > ul > li > ul li.is-open ul {
   position: relative;
   margin-top: 0;
@@ -13110,47 +13743,47 @@ svg.loading-ellipsis .dot-3 {
   -webkit-transition: margin-top 0.2s ease-out;
           transition: margin-top 0.2s ease-out;
 }
-/* line 223, sass/components/_main-navigation.scss */
+/* line 229, sass/components/_main-navigation.scss */
 .main-navigation > ul > li > ul li.is-open > a {
   color: #e1e5e8;
 }
-/* line 225, sass/components/_main-navigation.scss */
+/* line 231, sass/components/_main-navigation.scss */
 .is-animating-out .main-navigation > ul > li > ul li.is-open > a {
   text-shadow: 4px 0px 1px rgba(225, 229, 232, 0.5);
 }
-/* line 228, sass/components/_main-navigation.scss */
+/* line 234, sass/components/_main-navigation.scss */
 .is-animating-in .main-navigation > ul > li > ul li.is-open > a {
   text-shadow: -4px 0px 1px rgba(225, 229, 232, 0.5);
 }
-/* line 231, sass/components/_main-navigation.scss */
+/* line 237, sass/components/_main-navigation.scss */
 .main-navigation > ul > li > ul li.is-open > a:hover {
   color: #e1e5e8;
 }
-/* line 238, sass/components/_main-navigation.scss */
+/* line 244, sass/components/_main-navigation.scss */
 .main-navigation ul ul ul li:first-child {
   margin-top: 8px;
 }
-/* line 241, sass/components/_main-navigation.scss */
+/* line 247, sass/components/_main-navigation.scss */
 .main-navigation ul ul ul li:last-child a {
   padding-bottom: 24px;
 }
-/* line 245, sass/components/_main-navigation.scss */
+/* line 251, sass/components/_main-navigation.scss */
 .main-navigation ul ul ul li.is-selected > a {
   color: #e1e5e8;
 }
-/* line 247, sass/components/_main-navigation.scss */
+/* line 253, sass/components/_main-navigation.scss */
 .is-animating-out .main-navigation ul ul ul li.is-selected > a {
   text-shadow: 4px 0px 1px rgba(225, 229, 232, 0.5);
 }
-/* line 250, sass/components/_main-navigation.scss */
+/* line 256, sass/components/_main-navigation.scss */
 .is-animating-in .main-navigation ul ul ul li.is-selected > a {
   text-shadow: -4px 0px 1px rgba(225, 229, 232, 0.5);
 }
-/* line 253, sass/components/_main-navigation.scss */
+/* line 259, sass/components/_main-navigation.scss */
 .main-navigation ul ul ul li.is-selected > a:hover {
   color: #e1e5e8;
 }
-/* line 259, sass/components/_main-navigation.scss */
+/* line 265, sass/components/_main-navigation.scss */
 .main-navigation a {
   position: relative;
   padding: 15px 0px 14px 29px;
@@ -13160,15 +13793,15 @@ svg.loading-ellipsis .dot-3 {
   color: #727686;
   box-sizing: border-box;
 }
-/* line 267, sass/components/_main-navigation.scss */
+/* line 273, sass/components/_main-navigation.scss */
 .is-animating-out .main-navigation a {
   text-shadow: 4px 0px 1px rgba(118, 118, 131, 0.5);
 }
-/* line 270, sass/components/_main-navigation.scss */
+/* line 276, sass/components/_main-navigation.scss */
 .is-animating-in .main-navigation a {
   text-shadow: -4px 0px 1px rgba(118, 118, 131, 0.5);
 }
-/* line 273, sass/components/_main-navigation.scss */
+/* line 279, sass/components/_main-navigation.scss */
 .main-navigation a:hover {
   color: #c4c7d0;
 }
@@ -13320,7 +13953,7 @@ svg.loading-ellipsis .dot-3 {
   text-align: left;
 }
 /* line 37, sass/components/_page-popup.scss */
-.popup-content button, .popup-content input[type=submit] {
+.popup-content button, .popup-content input[type=submit], .popup-content .button-style {
   margin: 1.6rem auto 0;
   text-align: center;
 }
@@ -13966,16 +14599,10 @@ svg.loading-ellipsis .dot-3 {
 .tooltip {
   position: absolute;
   max-width: 163px;
-  padding: 7px 15px 9px;
   display: inline-block;
   overflow: visible;
   z-index: 1000;
   background-color: #81879d;
-  font-family: "Lato", sans-serif;
-  font-weight: 400;
-  font-size: 13px;
-  line-height: 1.4;
-  color: #fcfdfd;
 }
 @media (min-width: 960px) {
   /* line 2, sass/components/_popup.scss */
@@ -13989,7 +14616,7 @@ svg.loading-ellipsis .dot-3 {
     max-width: 263px;
   }
 }
-/* line 21, sass/components/_popup.scss */
+/* line 15, sass/components/_popup.scss */
 .tooltip:after {
   content: ' ';
   position: absolute;
@@ -14001,16 +14628,41 @@ svg.loading-ellipsis .dot-3 {
   border-right: 10px solid transparent;
   border-top: 10px solid #81879d;
 }
-/* line 32, sass/components/_popup.scss */
+/* line 26, sass/components/_popup.scss */
 .tooltip.tooltip-right {
   text-align: center;
 }
-/* line 34, sass/components/_popup.scss */
+/* line 28, sass/components/_popup.scss */
 .tooltip.tooltip-right:after {
   left: calc(100% - 29px);
 }
+/* line 32, sass/components/_popup.scss */
+.tooltip .tooltip-text {
+  padding: 7px 15px 9px;
+  display: block;
+  font-family: "Lato", sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 1.4;
+  color: #fcfdfd;
+}
+/* line 41, sass/components/_popup.scss */
+.tooltip .tooltip-feature {
+  display: block;
+  font-size: 9px;
+  font-weight: bold;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  text-align: center;
+  color: #fcfdfd;
+  background-color: #1bc79f;
+}
+/* line 51, sass/components/_popup.scss */
+.tooltip .tooltip-feature--pro {
+  background-color: #6d69c5;
+}
 
-/* line 39, sass/components/_popup.scss */
+/* line 55, sass/components/_popup.scss */
 .whats-this-tooltip-popup {
   -webkit-perspective: 1300px;
   perspective: 1300px;
@@ -14021,18 +14673,18 @@ svg.loading-ellipsis .dot-3 {
   overflow: visible;
 }
 
-/* line 48, sass/components/_popup.scss */
+/* line 64, sass/components/_popup.scss */
 .whats-this-tooltip-icon,
 .whats-this-tooltip-icon-static {
   display: inline-block;
   vertical-align: middle;
 }
-/* line 55, sass/components/_popup.scss */
+/* line 71, sass/components/_popup.scss */
 .whats-this-tooltip-icon.is-open:after,
 .whats-this-tooltip-icon-static.is-open:after {
   color: #1bc79f;
 }
-/* line 59, sass/components/_popup.scss */
+/* line 75, sass/components/_popup.scss */
 .whats-this-tooltip-icon:after,
 .whats-this-tooltip-icon-static:after {
   position: relative;
@@ -14042,14 +14694,14 @@ svg.loading-ellipsis .dot-3 {
   -webkit-transition: color 0.2s;
           transition: color 0.2s;
 }
-/* line 67, sass/components/_popup.scss */
+/* line 83, sass/components/_popup.scss */
 .whats-this-tooltip-icon:hover:after,
 .whats-this-tooltip-icon-static:hover:after {
   color: #1bc79f;
   -webkit-transition: color 0.2s;
           transition: color 0.2s;
 }
-/* line 72, sass/components/_popup.scss */
+/* line 88, sass/components/_popup.scss */
 .whats-this-tooltip-icon span,
 .whats-this-tooltip-icon-static span {
   width: 0;
@@ -14058,16 +14710,16 @@ svg.loading-ellipsis .dot-3 {
   text-indent: -999em;
 }
 
-/* line 80, sass/components/_popup.scss */
+/* line 96, sass/components/_popup.scss */
 .whats-this-tooltip-icon-static:after {
   color: #c4c7d0;
 }
-/* line 84, sass/components/_popup.scss */
+/* line 100, sass/components/_popup.scss */
 .whats-this-tooltip-icon-static:hover:after {
   color: #c4c7d0;
 }
 
-/* line 89, sass/components/_popup.scss */
+/* line 105, sass/components/_popup.scss */
 .whats-this-tooltip,
 .popup-toast,
 .loading-message-box {
@@ -14079,7 +14731,7 @@ svg.loading-ellipsis .dot-3 {
   color: #e1e5e8;
   background-color: #81879d;
 }
-/* line 99, sass/components/_popup.scss */
+/* line 115, sass/components/_popup.scss */
 .whats-this-tooltip h2,
 .popup-toast h2,
 .loading-message-box h2 {
@@ -14087,7 +14739,7 @@ svg.loading-ellipsis .dot-3 {
   font-size: 18px;
   color: #fcfdfd;
 }
-/* line 104, sass/components/_popup.scss */
+/* line 120, sass/components/_popup.scss */
 .whats-this-tooltip p,
 .popup-toast p,
 .loading-message-box p {
@@ -14095,20 +14747,20 @@ svg.loading-ellipsis .dot-3 {
   line-height: 1.7;
   color: #e1e5e8;
 }
-/* line 108, sass/components/_popup.scss */
+/* line 124, sass/components/_popup.scss */
 .whats-this-tooltip p a,
 .popup-toast p a,
 .loading-message-box p a {
   font-weight: 700;
   color: #fff;
 }
-/* line 111, sass/components/_popup.scss */
+/* line 127, sass/components/_popup.scss */
 .whats-this-tooltip p a:hover,
 .popup-toast p a:hover,
 .loading-message-box p a:hover {
   color: #e6e6e6;
 }
-/* line 116, sass/components/_popup.scss */
+/* line 132, sass/components/_popup.scss */
 .whats-this-tooltip img,
 .popup-toast img,
 .loading-message-box img {
@@ -14119,7 +14771,7 @@ svg.loading-ellipsis .dot-3 {
   height: 53px;
 }
 
-/* line 124, sass/components/_popup.scss */
+/* line 140, sass/components/_popup.scss */
 .whats-this-tooltip {
   position: relative;
   top: 0;
@@ -14131,7 +14783,7 @@ svg.loading-ellipsis .dot-3 {
   -webkit-transform-origin: center top;
   transform-origin: center top;
 }
-/* line 134, sass/components/_popup.scss */
+/* line 150, sass/components/_popup.scss */
 .whats-this-tooltip.is-open {
   -ms-transform-origin: center top;
   -webkit-transform-origin: center top;
@@ -14143,7 +14795,7 @@ svg.loading-ellipsis .dot-3 {
           transition: transform 0.18s ease-out;
 }
 @media (min-width: 720px) {
-  /* line 143, sass/components/_popup.scss */
+  /* line 159, sass/components/_popup.scss */
   .whats-this-tooltip:after {
     content: ' ';
     position: absolute;
@@ -14156,7 +14808,7 @@ svg.loading-ellipsis .dot-3 {
     border-bottom: 10px solid #81879d;
   }
 }
-/* line 156, sass/components/_popup.scss */
+/* line 172, sass/components/_popup.scss */
 .whats-this-tooltip.position-tooltip-left {
   -ms-transform-origin: right center;
   -webkit-transform-origin: right center;
@@ -14165,7 +14817,7 @@ svg.loading-ellipsis .dot-3 {
   -webkit-transform: rotateX(0deg) rotateY(-96deg);
   transform: rotateX(0deg) rotateY(-96deg);
 }
-/* line 163, sass/components/_popup.scss */
+/* line 179, sass/components/_popup.scss */
 .whats-this-tooltip.position-tooltip-left.is-open {
   -ms-transform-origin: right center;
   -webkit-transform-origin: right center;
@@ -14177,7 +14829,7 @@ svg.loading-ellipsis .dot-3 {
           transition: transform 0.18s ease-out;
 }
 @media (min-width: 720px) {
-  /* line 172, sass/components/_popup.scss */
+  /* line 188, sass/components/_popup.scss */
   .whats-this-tooltip.position-tooltip-left:after {
     top: calc(50% - 10px);
     right: -20px;
@@ -14187,7 +14839,7 @@ svg.loading-ellipsis .dot-3 {
     border-bottom: 10px solid transparent;
   }
 }
-/* line 183, sass/components/_popup.scss */
+/* line 199, sass/components/_popup.scss */
 .whats-this-tooltip.position-tooltip-right {
   -ms-transform-origin: left center;
   -webkit-transform-origin: left center;
@@ -14196,7 +14848,7 @@ svg.loading-ellipsis .dot-3 {
   -webkit-transform: rotateX(0deg) rotateY(96deg);
   transform: rotateX(0deg) rotateY(96deg);
 }
-/* line 190, sass/components/_popup.scss */
+/* line 206, sass/components/_popup.scss */
 .whats-this-tooltip.position-tooltip-right.is-open {
   -ms-transform-origin: left center;
   -webkit-transform-origin: left center;
@@ -14208,7 +14860,7 @@ svg.loading-ellipsis .dot-3 {
           transition: transform 0.18s ease-out;
 }
 @media (min-width: 720px) {
-  /* line 199, sass/components/_popup.scss */
+  /* line 215, sass/components/_popup.scss */
   .whats-this-tooltip.position-tooltip-right:after {
     top: calc(50% - 10px);
     left: -20px;
@@ -14216,12 +14868,12 @@ svg.loading-ellipsis .dot-3 {
     border-top: 10px solid transparent;
     border-bottom: 10px solid transparent;
   }
-  /* line 206, sass/components/_popup.scss */
+  /* line 222, sass/components/_popup.scss */
   .whats-this-tooltip--dark .whats-this-tooltip.position-tooltip-right:after {
     border-right: 10px solid #5854AE;
   }
 }
-/* line 212, sass/components/_popup.scss */
+/* line 228, sass/components/_popup.scss */
 .whats-this-tooltip.position-tooltip-top {
   -ms-transform-origin: center bottom;
   -webkit-transform-origin: center bottom;
@@ -14230,7 +14882,7 @@ svg.loading-ellipsis .dot-3 {
   -webkit-transform: rotateX(-86deg);
   transform: rotateX(-86deg);
 }
-/* line 219, sass/components/_popup.scss */
+/* line 235, sass/components/_popup.scss */
 .whats-this-tooltip.position-tooltip-top.is-open {
   -ms-transform-origin: center bottom;
   -webkit-transform-origin: center bottom;
@@ -14242,7 +14894,7 @@ svg.loading-ellipsis .dot-3 {
           transition: transform 0.18s ease-out;
 }
 @media (min-width: 720px) {
-  /* line 228, sass/components/_popup.scss */
+  /* line 244, sass/components/_popup.scss */
   .whats-this-tooltip.position-tooltip-top:after {
     top: auto;
     bottom: -10px;
@@ -14253,7 +14905,7 @@ svg.loading-ellipsis .dot-3 {
   }
 }
 
-/* line 240, sass/components/_popup.scss */
+/* line 256, sass/components/_popup.scss */
 .popup-toast-container,
 .loading-message-box-container {
   -webkit-perspective: 1300px;
@@ -14270,7 +14922,7 @@ svg.loading-ellipsis .dot-3 {
           transition: top 0.3s;
 }
 @media (min-width: 720px) {
-  /* line 240, sass/components/_popup.scss */
+  /* line 256, sass/components/_popup.scss */
   .popup-toast-container,
   .loading-message-box-container {
     right: 30px;
@@ -14278,7 +14930,7 @@ svg.loading-ellipsis .dot-3 {
   }
 }
 
-/* line 258, sass/components/_popup.scss */
+/* line 274, sass/components/_popup.scss */
 .loading-message-box-container {
   top: auto;
   bottom: 59px;
@@ -14286,7 +14938,7 @@ svg.loading-ellipsis .dot-3 {
   left: auto;
   width: 279px;
 }
-/* line 264, sass/components/_popup.scss */
+/* line 280, sass/components/_popup.scss */
 .loading-message-box-container .loading-message-box {
   cursor: pointer;
   -ms-transform-origin: right center;
@@ -14298,7 +14950,7 @@ svg.loading-ellipsis .dot-3 {
   -webkit-transition: -webkit-transform 0.3s ease-in;
   transition: transform 0.3s ease-in;
 }
-/* line 274, sass/components/_popup.scss */
+/* line 290, sass/components/_popup.scss */
 .loading-message-box-container .loading-message-box.is-open {
   -ms-transform-origin: right center;
   -webkit-transform-origin: right center;
@@ -14310,7 +14962,7 @@ svg.loading-ellipsis .dot-3 {
   transition: transform 0.3s ease-out;
 }
 
-/* line 286, sass/components/_popup.scss */
+/* line 302, sass/components/_popup.scss */
 .popup-toast,
 .loading-message-box {
   position: relative;
@@ -14318,7 +14970,7 @@ svg.loading-ellipsis .dot-3 {
   -webkit-transform: rotateX(0deg);
           transform: rotateX(0deg);
 }
-/* line 291, sass/components/_popup.scss */
+/* line 307, sass/components/_popup.scss */
 .popup-toast.is-read,
 .loading-message-box.is-read {
   -ms-transform-origin: center bottom;
@@ -14330,38 +14982,38 @@ svg.loading-ellipsis .dot-3 {
   -webkit-transition: -webkit-transform 0.35s ease-in;
           transition: transform 0.35s ease-in;
 }
-/* line 300, sass/components/_popup.scss */
+/* line 316, sass/components/_popup.scss */
 .popup-toast a,
 .loading-message-box a {
   font-weight: 700;
   color: #c3c6f6;
 }
-/* line 303, sass/components/_popup.scss */
+/* line 319, sass/components/_popup.scss */
 .popup-toast a:hover,
 .loading-message-box a:hover {
   color: #eff0fd;
 }
-/* line 307, sass/components/_popup.scss */
+/* line 323, sass/components/_popup.scss */
 .popup-toast.popup-toast--alert,
 .loading-message-box.popup-toast--alert {
   background-color: #ff496a;
 }
-/* line 309, sass/components/_popup.scss */
+/* line 325, sass/components/_popup.scss */
 .popup-toast.popup-toast--alert p,
 .loading-message-box.popup-toast--alert p {
   color: #ffe3e8;
 }
-/* line 312, sass/components/_popup.scss */
+/* line 328, sass/components/_popup.scss */
 .popup-toast.popup-toast--alert a,
 .loading-message-box.popup-toast--alert a {
   color: #ffe3e8;
 }
-/* line 314, sass/components/_popup.scss */
+/* line 330, sass/components/_popup.scss */
 .popup-toast.popup-toast--alert a:hover,
 .loading-message-box.popup-toast--alert a:hover {
   color: #ffb0be;
 }
-/* line 318, sass/components/_popup.scss */
+/* line 334, sass/components/_popup.scss */
 .popup-toast.popup-toast--alert img,
 .loading-message-box.popup-toast--alert img {
   width: 45px;

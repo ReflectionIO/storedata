@@ -48,7 +48,7 @@ public class TooltipHelper {
 													tooltip = $wnd
 															.$('<div>')
 															.addClass("tooltip")
-															.text(tooltipText);
+															.append($wnd.$('<div>').addClass("tooltip-text").text(tooltipText));
 													$wnd.$('body').append(
 															tooltip);
 													var topPosition = $this

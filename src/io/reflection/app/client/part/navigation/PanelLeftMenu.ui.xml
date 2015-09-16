@@ -15,6 +15,7 @@
 	<ui:import field="io.reflection.app.client.page.PageType.BlogAdminPageType" />
 	<ui:import field="io.reflection.app.client.page.PageType.AboutPageType" />
 	<ui:import field="io.reflection.app.client.page.PageType.CareersPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.ContactPageType" />
 	<ui:import field="io.reflection.app.client.page.PageType.PressPageType" />
 	<ui:import field="io.reflection.app.client.page.PageType.PricingPageType" />
 	<ui:import field="io.reflection.app.client.page.PageType.ProductPageType" />
@@ -143,28 +144,14 @@
 				</li>
 			</ul>
 		</nav>
-		<ul class="{STYLES_INSTANCE.reflectionMainStyle.mainSocialLinks}">
-			<li>
-				<a href="https://www.facebook.com/reflection.io" class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeFacebook}"
-					target="_blank">
-					<span>Facebook</span>
-				</a>
-			</li>
-			<li>
-				<a href="https://twitter.com/reflectionio" class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeTwitter}"
-					target="_blank">
-					<span>Twitter</span>
-				</a>
-			</li>
-			<li>
-				<a href="https://www.linkedin.com/company/reflection-io-ltd" class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeLinkedin}"
-					target="_blank">
-					<span>LinkedIn</span>
-				</a>
-			</li>
-		</ul>
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.mainFooterLinks}">
 			<ul>
+				<li>
+					<g:InlineHyperlink targetHistoryToken="{ContactPageType.asTargetHistoryToken}">Contact Us</g:InlineHyperlink>
+				</li>
+				<li>
+					<g:InlineHyperlink targetHistoryToken="{TermsPageType.asTargetHistoryToken}">Terms &amp; Conditions</g:InlineHyperlink>
+				</li>
 				<li>
 					<g:InlineHyperlink targetHistoryToken="{ProductPageType.asTargetHistoryToken}">Product</g:InlineHyperlink>
 				</li>
@@ -178,17 +165,24 @@
 					<g:InlineHyperlink targetHistoryToken="{PressPageType.asTargetHistoryToken}">Press</g:InlineHyperlink>
 				</li>
 				<li>
-					<a href="mailto:info@reflection.io">Contact Us</a>
-				</li>
-				<li>
 					<g:InlineHyperlink targetHistoryToken="{CareersPageType.asTargetHistoryToken}">Careers</g:InlineHyperlink>
-				</li>
-				<li>
-					<g:InlineHyperlink targetHistoryToken="{TermsPageType.asTargetHistoryToken}">Terms &amp; Conditions</g:InlineHyperlink>
 				</li>
 			</ul>
 		</div>
-
+		<ul class="{STYLES_INSTANCE.reflectionMainStyle.mainSocialLinks}">
+			<li>
+				<a href="https://twitter.com/reflectionio" class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeTwitter}"
+					target="_blank">
+					<span>Twitter</span>
+				</a>
+			</li>
+			<li>
+				<a href="https://www.linkedin.com/company/reflection-io-ltd" class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeLinkedin}"
+					target="_blank">
+					<span>LinkedIn</span>
+				</a>
+			</li>
+		</ul>
 
 	</g:HTMLPanel>
 
