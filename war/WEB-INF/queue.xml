@@ -42,9 +42,9 @@
     </queue>
     <queue>
         <name>ingest</name>
-        <rate>1/s</rate>
+        <rate>10/s</rate>
         <bucket-size>10</bucket-size>
-        <max-concurrent-requests>2</max-concurrent-requests>
+        <max-concurrent-requests>5</max-concurrent-requests>
         <retry-parameters>
             <task-retry-limit>10</task-retry-limit>
         </retry-parameters>
@@ -89,7 +89,7 @@
         <name>predict</name>
         <rate>100/s</rate>
         <bucket-size>100</bucket-size>
-        <max-concurrent-requests>2</max-concurrent-requests>
+        <max-concurrent-requests>10</max-concurrent-requests>
         <retry-parameters>
             <task-retry-limit>5</task-retry-limit>
         </retry-parameters>
@@ -106,8 +106,8 @@
     <queue>
         <name>itempropertylookup</name>
         <rate>10/s</rate>
-        <max-concurrent-requests>1</max-concurrent-requests>
-        <bucket-size>1</bucket-size>
+        <max-concurrent-requests>2</max-concurrent-requests>
+        <bucket-size>2</bucket-size>
         <retry-parameters>
             <task-retry-limit>5</task-retry-limit>
         </retry-parameters>
