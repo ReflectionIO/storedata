@@ -63,7 +63,6 @@ public class ContactPage extends Page {
 							}
 						});
 			} else {
-				$wnd.refMap.addMarker();
 				dropped = true;
 			}
 		}
@@ -77,9 +76,14 @@ public class ContactPage extends Page {
 					visibility : "off"
 				} ]
 			} ];
+			var zoomValue = 17;
+			if ($wnd.$($wnd).innerWidth() < 720) {
+				zoomValue = 16;
+			}
 			this.myLatlng = new $wnd.google.maps.LatLng(51.518680, -0.136578);
 			this.mapOptions = {
-				zoom : 17,
+				zoom : zoomValue,
+				zoomControl : true,
 				center : this.myLatlng,
 				disableDefaultUI : true,
 				scrollwheel : false,
@@ -88,38 +92,21 @@ public class ContactPage extends Page {
 				styles : mapStyles
 			}
 			this.markerImage = {
-				url : 'images/contact/Map_Pin@2x.png',
-				size : new $wnd.google.maps.Size(30, 43),
-				scaledSize : new $wnd.google.maps.Size(30, 43),
-				anchor : new $wnd.google.maps.Point(30, 43)
+				url : 'images/map-marker.png',
+				size : new $wnd.google.maps.Size(34, 49),
+				scaledSize : new $wnd.google.maps.Size(34, 49),
+				anchor : new $wnd.google.maps.Point(0, 53)
 			};
 			this.map = new $wnd.google.maps.Map($doc
 					.getElementById("js-map--contact"), this.mapOptions);
 
-			this.addMarker = function() {
-				var marker = this.marker = new $wnd.google.maps.Marker({
-					position : this.myLatlng,
-					map : this.map,
-					title : "40-44 Newman Street",
-					icon : this.markerImage,
-					animation : $wnd.google.maps.Animation.DROP
-				});
-
-				var contentString = '<div class="map__info-box">'
-						+ '<h1>Reflection</h1>'
-						+ '<div class="map__text-content">'
-						+ '<p>40-44 Newman Street<br />London<br />W1T 1QD</p>'
-						+ '<p onclick="window.refMap.toggleStreetView();" class="map__street-view-link">Streetview</p>'
-						+ '<p><a href="https://www.google.co.uk/maps/place/44+Newman+St,+Marylebone,+London+W1T+1QD/@51.5187779,-0.1364135,17z/data=!4m7!1m4!3m3!1s0x48761b2b95192b1b:0xc2fcb9753b8ff12b!2s44+Newman+St,+Marylebone,+London+W1T+1QD!3b1!3m1!1s0x48761b2b95192b1b:0xc2fcb9753b8ff12b" target="_blank">Open in Google Maps</a></p></div></div><div class="map__info-box__down-arrow"></div>';
-
-				var infowindow = new $wnd.google.maps.InfoWindow({
-					content : contentString
-				});
-
-				$wnd.google.maps.event.addListener(marker, 'click', function() {
-					infowindow.open(this.map, marker);
-				});
-			}
+			var marker = this.marker = new $wnd.google.maps.Marker({
+				position : this.myLatlng,
+				map : this.map,
+				title : "40-44 Newman Street",
+				icon : this.markerImage,
+			// animation: google.maps.Animation.DROP
+			});
 
 			this.panorama = this.map.getStreetView();
 			this.panorama.setPosition(new $wnd.google.maps.LatLng(51.518660,
