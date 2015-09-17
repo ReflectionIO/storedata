@@ -65,6 +65,7 @@ public enum PageType {
 	EditEventSubscriptionPageType("editeventsubscription", DataTypeHelper.PERMISSION_MANAGE_EVENT_SUBSCRIPTIONS_CODE),
 	EventsPageType("events", DataTypeHelper.PERMISSION_MANAGE_EVENTS_CODE),
 	EventSubscriptionsPageType("eventsubscriptions", DataTypeHelper.PERMISSION_MANAGE_EVENT_SUBSCRIPTIONS_CODE),
+	FaqsPageType("faqs", false),
 	FeedBrowserPageType("feedbrowser", DataTypeHelper.PERMISSION_MANAGE_FEED_FETCHES_CODE),
 	ForumEditTopicPageType("forumtopicedit", false),
 	ForumPageType("forum", false),
@@ -245,6 +246,9 @@ public enum PageType {
 			break;
 		case EventsPageType:
 			page = new EventPage();
+			break;
+		case FaqsPageType:
+			page = new FaqsPage();
 			break;
 		case FeedBrowserPageType:
 			page = new FeedBrowserPage();
