@@ -19,34 +19,43 @@ import com.google.gwt.user.datepicker.client.CalendarUtil;
  */
 public class DateRange {
 
-	private Date mFromDate;
-	private Date mToDate;
+	private Date fromDate;
+	private Date toDate;
+
+	public DateRange() {
+
+	}
+
+	public DateRange(Date from, Date to) {
+		this.fromDate = from;
+		this.toDate = to;
+	}
 
 	public void setFrom(Date value) {
-		mFromDate = value;
+		fromDate = value;
 	}
 
 	public void setTo(Date value) {
-		mToDate = value;
+		toDate = value;
 	}
 
 	public Date getFrom() {
-		return CalendarUtil.copyDate(mFromDate);
+		return CalendarUtil.copyDate(fromDate);
 	}
 
 	public Date getTo() {
-		return CalendarUtil.copyDate(mToDate);
+		return CalendarUtil.copyDate(toDate);
 	}
 
 	public int getDaysBetween() {
-		return Math.abs(CalendarUtil.getDaysBetween(mFromDate, mToDate));
+		return Math.abs(CalendarUtil.getDaysBetween(fromDate, toDate));
 	}
 
 	public List<Date> getDatesBetween() {
 		List<Date> dates = new ArrayList<Date>();
-		Date date = CalendarUtil.copyDate(mFromDate);
+		Date date = CalendarUtil.copyDate(fromDate);
 		CalendarUtil.addDaysToDate(date, 1);
-		while (date.before(mToDate)) {
+		while (date.before(toDate)) {
 			dates.add(CalendarUtil.copyDate(date));
 			CalendarUtil.addDaysToDate(date, 1);
 		}
@@ -55,8 +64,8 @@ public class DateRange {
 
 	public int getDays() {
 		int days = 0;
-		Date date = CalendarUtil.copyDate(mFromDate);
-		while (date.before(mToDate) || CalendarUtil.isSameDate(date, mToDate)) {
+		Date date = CalendarUtil.copyDate(fromDate);
+		while (date.before(toDate) || CalendarUtil.isSameDate(date, toDate)) {
 			days++;
 			CalendarUtil.addDaysToDate(date, 1);
 		}
@@ -65,8 +74,8 @@ public class DateRange {
 
 	public List<Date> getDates() {
 		List<Date> dates = new ArrayList<Date>();
-		Date date = CalendarUtil.copyDate(mFromDate);
-		while (date.before(mToDate) || CalendarUtil.isSameDate(date, mToDate)) {
+		Date date = CalendarUtil.copyDate(fromDate);
+		while (date.before(toDate) || CalendarUtil.isSameDate(date, toDate)) {
 			dates.add(CalendarUtil.copyDate(date));
 			CalendarUtil.addDaysToDate(date, 1);
 		}

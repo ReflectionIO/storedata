@@ -23,7 +23,6 @@ import io.reflection.app.client.component.DateSelector;
 import io.reflection.app.client.component.LoadingBar;
 import io.reflection.app.client.component.Selector;
 import io.reflection.app.client.controller.FilterController;
-import io.reflection.app.client.controller.FilterController.Filter;
 import io.reflection.app.client.controller.ItemController;
 import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.NavigationController;
@@ -32,7 +31,6 @@ import io.reflection.app.client.controller.RankController;
 import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.dataprovider.UserItemProvider;
-import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.AnimationHelper;
 import io.reflection.app.client.helper.FilterHelper;
@@ -50,7 +48,7 @@ import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.shared.util.DataTypeHelper;
 
-import java.util.Map;
+import java.util.Date;
 
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
@@ -58,7 +56,6 @@ import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -74,13 +71,14 @@ import com.google.gwt.user.cellview.client.SafeHtmlHeader;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.datepicker.client.CalendarUtil;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author stefanocapuzzi
  * 
  */
-public class MyAppsPage extends Page implements FilterEventHandler, NavigationEventHandler, GetLinkedAccountsEventHandler, GetLinkedAccountItemsEventHandler,
+public class MyAppsPage extends Page implements NavigationEventHandler, GetLinkedAccountsEventHandler, GetLinkedAccountItemsEventHandler,
 		GetSalesRanksEventHandler {
 
 	private static MyAppsPageUiBinder uiBinder = GWT.create(MyAppsPageUiBinder.class);
@@ -105,6 +103,8 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	@UiField Selector appStore;
 	@UiField Selector country;
 	@UiField DateSelector dateSelector;
+	@UiField Button applyFilters;
+
 	@UiField HTMLPanel waitingForDataPanel;
 	@UiField Button viewAllBtn;
 	@UiField SpanElement viewAllSpan;
@@ -115,7 +115,7 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	@UiField MyAppsComingSoon comingSoonPanel;
 
 	public static final String COMING_FROM_PARAMETER = "myapps";
-
+	private String previousFilter;
 	private User user;
 
 	long linkedAccountsCount = -1;
@@ -173,6 +173,9 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		myAppsTable.getTableLoadingSection().addClassName(style.tableBodyLoading());
 
 		userItemProvider.addDataDisplay(myAppsTable);
+		if (!LinkedAccountController.get().linkedAccountsFetched()) { // After refresh or the user didn't visit the linked accounts page
+			loadingBar.show("Getting linked accounts...");
+		}
 
 		// simplePager.setDisplay(appsTableDesktop);
 		// simplePager.setDisplay(appsTableMobile);
@@ -190,6 +193,8 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 			}
 		});
 
+		updateSelectorsFromFilter();
+
 		TooltipHelper.updateHelperTooltip();
 
 	}
@@ -204,7 +209,6 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		super.onAttach();
 
 		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
-		register(DefaultEventBus.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(GetLinkedAccountsEventHandler.TYPE, LinkedAccountController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(GetLinkedAccountItemsEventHandler.TYPE, ItemController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(GetLinkedAccountItemsEventHandler.TYPE, ItemController.get(), userItemProvider));
@@ -385,47 +389,16 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 
 	}
 
-	@UiHandler("accountName")
-	void onAccountNameChanged(ChangeEvent event) {
-		FilterController.get().setLinkedAccount(Long.valueOf(accountName.getSelectedValue()));
-	}
-
-	@UiHandler("appStore")
-	void onAppStoreValueChanged(ChangeEvent event) {
-		FilterController.get().setStore(appStore.getSelectedValue());
-	}
-
-	@UiHandler("country")
-	void onCountryValueChanged(ChangeEvent event) {
-		FilterController.get().setCountry(country.getSelectedValue());
-	}
-
-	private void updateFromFilter() {
-		FilterController fc = FilterController.get();
-
-		appStore.setSelectedIndex(FormHelper.getItemIndex(appStore, fc.getFilter().getStoreA3Code()));
-		DateRange range = new DateRange();
-
-		range.setFrom(fc.getStartDate());
-		range.setTo(fc.getEndDate());
-		dateSelector.setValue(range);
-
-		country.setSelectedIndex(FormHelper.getItemIndex(country, fc.getFilter().getCountryA2Code()));
-
-		if (fc.getFilter().getLinkedAccountId() > 0) {
-			accountName.setSelectedIndex(FormHelper.getItemIndex(accountName, fc.getFilter().getLinkedAccountId().toString()));
-		}
-
-	}
-
-	@UiHandler("dateSelector")
-	void onDateRangeValueChanged(ValueChangeEvent<DateRange> event) {
-		FilterController fc = FilterController.get();
-
-		fc.start();
-		fc.setEndDate(event.getValue().getTo());
-		fc.setStartDate(event.getValue().getFrom());
-		fc.commit();
+	/**
+	 * Excluded linked account filter
+	 * 
+	 * @param enabled
+	 */
+	private void setFiltersEnabled(boolean enabled) {
+		country.setEnabled(enabled);
+		appStore.setEnabled(enabled);
+		dateSelector.setEnabled(enabled);
+		applyFilters.setEnabled(enabled);
 	}
 
 	public void fillAccountNameList() {
@@ -433,6 +406,120 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 			accountName.clear();
 		}
 		FilterHelper.addLinkedAccounts(accountName);
+	}
+
+	@UiHandler("accountName")
+	void onAccountNameChanged(ChangeEvent event) {
+		FilterController.get().getFilter().setLinkedAccountId(Long.valueOf(accountName.getSelectedValue()));
+		if (LinkedAccountController.get().hasLinkedAccounts()) {
+			PageType.UsersPageType.show(PageType.MyAppsPageType.toString(), user.id.toString(), FilterController.get().asMyAppsFilterString());
+		}
+	}
+
+	@UiHandler("applyFilters")
+	void onApplyFiltersClicked(ClickEvent event) {
+		event.preventDefault();
+		boolean updateData = false;
+		if (updateData = updateData || !FilterController.get().getFilter().getCountryA2Code().equals(country.getSelectedValue())) {
+			FilterController.get().setCountry(country.getSelectedValue());
+		}
+		if (updateData = updateData || !FilterController.get().getFilter().getStoreA3Code().equals(appStore.getSelectedValue())) {
+			FilterController.get().setStore(appStore.getSelectedValue());
+		}
+		if (updateData = updateData
+				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateSelector.getDateBoxToValue())
+				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getStartTime().longValue()), dateSelector.getDateBoxFromValue())) {
+			FilterController.get().getFilter().setEndTime(dateSelector.getDateBoxToValue().getTime());
+			FilterController.get().getFilter().setStartTime(dateSelector.getDateBoxFromValue().getTime());
+			dateSelector.setValue(new DateRange(dateSelector.getDateBoxFromValue(), dateSelector.getDateBoxToValue()), false);
+		}
+		if (updateData && LinkedAccountController.get().hasLinkedAccounts()) {
+			PageType.UsersPageType.show(PageType.MyAppsPageType.toString(), user.id.toString(), FilterController.get().asMyAppsFilterString());
+		}
+	}
+
+	private void updateSelectorsFromFilter() {
+		FilterController fc = FilterController.get();
+		// if (fc.getFilter().getLinkedAccountId() > 0) {
+		accountName.setSelectedIndex(FormHelper.getItemIndex(accountName, fc.getFilter().getLinkedAccountId().toString()));
+		// }
+		appStore.setSelectedIndex(FormHelper.getItemIndex(appStore, fc.getFilter().getStoreA3Code()));
+		DateRange range = new DateRange();
+		range.setFrom(fc.getStartDate());
+		range.setTo(fc.getEndDate());
+		dateSelector.setValue(range);
+		country.setSelectedIndex(FormHelper.getItemIndex(country, fc.getFilter().getCountryA2Code()));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
+	 * io.reflection.app.client.controller.NavigationController.Stack)
+	 */
+	@Override
+	public void navigationChanged(Stack previous, Stack current) {
+
+		user = SessionController.get().getLoggedInUser();
+
+		// Linked accounts retrieved in LinkedAccountPage but not here, or Check if Added or deleted a linked account
+		if ((linkedAccountsCount == -1 && LinkedAccountController.get().linkedAccountsFetched())
+				|| linkedAccountsCount != LinkedAccountController.get().getLinkedAccountsCount()) {
+			linkedAccountsCount = LinkedAccountController.get().getLinkedAccountsCount();
+			if (linkedAccountsCount > 0) {
+				fillAccountNameList();
+				FilterController.get().setLinkedAccount(LinkedAccountController.get().getAllLinkedAccounts().get(0).id);
+				accountName.setEnabled(true);
+				accountName.setSelectedIndex(FormHelper.getItemIndex(accountName, FilterController.get().getFilter().getLinkedAccountId().toString()));
+				RankController.get().cancelRequestSalesRanks();
+				ItemController.get().fetchLinkedAccountItems();
+				loadingBar.show("Getting apps...");
+				loadingBar.setProgressiveStatus(33);
+				previousFilter = FilterController.get().asMyAppsFilterString();
+			} else {
+				userItemProvider.reset();
+				userItemProvider.updateRowCount(0, true);
+			}
+		}
+
+		if (previousFilter == null) {
+			previousFilter = FilterController.get().asMyAppsFilterString();
+		}
+
+		if (linkedAccountsCount > 0) {
+			accountName.setEnabled(true);
+			if (!previousFilter.equals(FilterController.get().asMyAppsFilterString())) {
+				updateSelectorsFromFilter();
+				// simplePager.setPageStart(0);
+				userItemProvider.reset();
+				setFiltersEnabled(false);
+				viewAllBtn.setVisible(false);
+				RankController.get().cancelRequestSalesRanks();
+				ItemController.get().fetchLinkedAccountItems();
+				if (loadingBar.getText().equals("Getting linked accounts...")) {
+					loadingBar.setText("Getting apps...");
+				} else {
+					loadingBar.show("Getting apps...");
+				}
+				loadingBar.setProgressiveStatus(33);
+				errorPanel.setVisible(false);
+				// noAppsPanel.setVisible(false);
+				noLinkedAccountsPanel.setVisible(false);
+				comingSoonPanel.setVisible(false);
+				myAppsTable.setVisible(true);
+				rankHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.mhxte6cIF());
+				appDetailsHeader.setHeaderStyleNames(style.canBeSorted());
+				priceHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.columnHiddenMobile());
+				downloadsHeader.setHeaderStyleNames(style.canBeSorted());
+				revenueHeader.setHeaderStyleNames(style.canBeSorted());
+				// myAccountSidePanel.setUser(user);
+				previousFilter = FilterController.get().asMyAppsFilterString();
+			}
+		} else {
+			accountName.setEnabled(false);
+			setFiltersEnabled(false);
+		}
+
 	}
 
 	@UiHandler("viewAllBtn")
@@ -449,120 +536,6 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 		}
 	}
 
-	/**
-	 * Excluded linked account filter
-	 * 
-	 * @param enabled
-	 */
-	private void setFiltersEnabled(boolean enabled) {
-		country.setEnabled(enabled);
-		appStore.setEnabled(enabled);
-		dateSelector.setEnabled(enabled);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.FilterEventHandler#filterParamChanged(java.lang.String, java.lang.Object, java.lang.Object)
-	 */
-	@Override
-	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
-		if (LinkedAccountController.get().hasLinkedAccounts()) { // There are linked accounts
-			// simplePager.setPageStart(0);
-			userItemProvider.reset();
-			setFiltersEnabled(false);
-			viewAllBtn.setVisible(false);
-			RankController.get().cancelRequestSalesRanks();
-			ItemController.get().fetchLinkedAccountItems();
-			loadingBar.show(LinkedAccountController.get().linkedAccountsFetched() ? "Getting apps..." : "Getting linked accounts...");
-			loadingBar.setProgressiveStatus(33);
-			errorPanel.setVisible(false);
-			// noAppsPanel.setVisible(false);
-			noLinkedAccountsPanel.setVisible(false);
-			comingSoonPanel.setVisible(false);
-			myAppsTable.setVisible(true);
-			rankHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.mhxte6cIF());
-			appDetailsHeader.setHeaderStyleNames(style.canBeSorted());
-			priceHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.columnHiddenMobile());
-			downloadsHeader.setHeaderStyleNames(style.canBeSorted());
-			revenueHeader.setHeaderStyleNames(style.canBeSorted());
-		}
-		// myAccountSidePanel.setUser(user);
-		PageType.UsersPageType.show(PageType.MyAppsPageType.toString(), user.id.toString(), FilterController.get().asMyAppsFilterString());
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.FilterEventHandler#filterParamsChanged(io.reflection.app.client.controller.FilterController.Filter, java.util.Map)
-	 */
-	@Override
-	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {
-		if (LinkedAccountController.get().hasLinkedAccounts()) { // There are linked accounts
-			// simplePager.setPageStart(0);
-			userItemProvider.reset();
-			setFiltersEnabled(false);
-			viewAllBtn.setVisible(false);
-			RankController.get().cancelRequestSalesRanks();
-			ItemController.get().fetchLinkedAccountItems();
-			loadingBar.show(LinkedAccountController.get().linkedAccountsFetched() ? "Getting apps..." : "Getting linked accounts...");
-			loadingBar.setProgressiveStatus(33);
-			errorPanel.setVisible(false);
-			// noAppsPanel.setVisible(false);
-			noLinkedAccountsPanel.setVisible(false);
-			comingSoonPanel.setVisible(false);
-			myAppsTable.setVisible(true);
-			rankHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.mhxte6cIF());
-			appDetailsHeader.setHeaderStyleNames(style.canBeSorted());
-			priceHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.columnHiddenMobile());
-			downloadsHeader.setHeaderStyleNames(style.canBeSorted());
-			revenueHeader.setHeaderStyleNames(style.canBeSorted());
-		}
-		// myAccountSidePanel.setUser(user);
-		PageType.UsersPageType.show(PageType.MyAppsPageType.toString(), user.id.toString(), FilterController.get().asMyAppsFilterString());
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
-	 * io.reflection.app.client.controller.NavigationController.Stack)
-	 */
-	@Override
-	public void navigationChanged(Stack previous, Stack current) {
-
-		// myAccountSidePanel.setActive(getPageType());
-		//
-		user = SessionController.get().getLoggedInUser();
-		//
-		// if (user != null) {
-		// myAccountSidePanel.setUser(user);
-		// }
-
-		// Linked accounts retrieved in LinkedAccountPage but not here, or Check if Added or deleted a linked account
-		if ((linkedAccountsCount == -1 && LinkedAccountController.get().linkedAccountsFetched())
-				|| linkedAccountsCount != LinkedAccountController.get().getLinkedAccountsCount()) {
-			fillAccountNameList();
-			linkedAccountsCount = LinkedAccountController.get().getLinkedAccountsCount();
-			if (LinkedAccountController.get().getLinkedAccountsCount() > 0) {
-				FilterController.get().setLinkedAccount(LinkedAccountController.get().getAllLinkedAccounts().get(0).id);
-			} else {
-				userItemProvider.reset();
-				userItemProvider.updateRowCount(0, true);
-			}
-		}
-
-		if (linkedAccountsCount > 0) {
-			accountName.setEnabled(true);
-		} else {
-			accountName.setEnabled(false);
-			setFiltersEnabled(false);
-		}
-
-		updateFromFilter();
-
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -572,23 +545,21 @@ public class MyAppsPage extends Page implements FilterEventHandler, NavigationEv
 	@Override
 	public void getLinkedAccountsSuccess(GetLinkedAccountsRequest input, GetLinkedAccountsResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			if (LinkedAccountController.get().linkedAccountsFetched()) {
-				if (accountName.getItemCount() == 0) {
-					fillAccountNameList();
-				}
-				linkedAccountsCount = LinkedAccountController.get().getLinkedAccountsCount();
-				if (linkedAccountsCount > 0) {
-					FilterController.get().setLinkedAccount(LinkedAccountController.get().getAllLinkedAccounts().get(0).id);
-					accountName.setEnabled(true);
-				} else {
-					userItemProvider.reset();
-					userItemProvider.updateRowCount(0, true);
-					accountName.setEnabled(false);
-					myAppsTable.setVisible(false);
-					noLinkedAccountsPanel.setVisible(true);
-				}
-			} else { // No linked accounts associated with this user
-				userItemProvider.reset(); // TODO check
+			if (accountName.getItemCount() == 0) {
+				fillAccountNameList();
+			}
+			linkedAccountsCount = LinkedAccountController.get().getLinkedAccountsCount();
+			if (linkedAccountsCount > 0) {
+				FilterController.get().getFilter().setLinkedAccountId(LinkedAccountController.get().getAllLinkedAccounts().get(0).id);
+				accountName.setEnabled(true);
+				accountName.setSelectedIndex(FormHelper.getItemIndex(accountName, FilterController.get().getFilter().getLinkedAccountId().toString()));
+				PageType.UsersPageType.show(PageType.MyAppsPageType.toString(), user.id.toString(), FilterController.get().asMyAppsFilterString());
+			} else {
+				userItemProvider.reset();
+				userItemProvider.updateRowCount(0, true);
+				accountName.setEnabled(false);
+				myAppsTable.setVisible(false);
+				noLinkedAccountsPanel.setVisible(true);
 			}
 		} else {
 			loadingBar.hide(false);
