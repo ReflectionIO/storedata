@@ -1645,4 +1645,5 @@
 		// Components
 		new Tabs();
 		new TabsToMobileDropDown();
+		new ToolTip();
 	}
