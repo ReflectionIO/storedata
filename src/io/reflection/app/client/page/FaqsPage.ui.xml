@@ -5,7 +5,7 @@
 	
 	</ui:style>
 	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.pageFaqs}">
-		<div class="{STYLES_INSTANCE.reflectionMainStyle.introBanner} js-page-banner">
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.introBanner}">
 			<div>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.introBanner__graphic}">
 					<img src="images/intro-banner--speech@2x.png" alt="Speech bubbles" />
@@ -19,9 +19,9 @@
 		</div>
 		<div ui:field="faqsTop" class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer}">
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird}">
-				<div class="{STYLES_INSTANCE.reflectionMainStyle.faqsListContainer} js-faqs-list-container">
+				<div ui:field="faqContainer" class="{STYLES_INSTANCE.reflectionMainStyle.faqsListContainer}">
 					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Questions</h2>
-					<ul class="{STYLES_INSTANCE.reflectionMainStyle.contentList} {STYLES_INSTANCE.reflectionMainStyle.contentListNoBullets} js-faq-list">
+					<ul class="{STYLES_INSTANCE.reflectionMainStyle.contentList} {STYLES_INSTANCE.reflectionMainStyle.contentListNoBullets}">
 						<li>
 							<g:Anchor styleName="" ui:field="linkFaq1" href="#">What do you do with my data?</g:Anchor>
 						</li>
@@ -54,7 +54,7 @@
 				<ul>
 					<li class="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}">
 						<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
-							<h2 id="faq--data" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">What do you want to do with my data?</h2>
+							<h2 ui:field="faqContent1" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">What do you want to do with my data?</h2>
 							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
 								quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
 								dolore eu fugiat nulla pariatur.</p>
@@ -65,7 +65,7 @@
 					</li>
 					<li class="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}">
 						<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
-							<h2 id="faq--cost" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">How much does Reflection cost?</h2>
+							<h2 ui:field="faqContent2" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">How much does Reflection cost?</h2>
 							<p>Integer ut varius purus. Duis quis tellus eu lacus aliquam dictum. In vel dignissim orci. Aliquam rhoncus ipsum tempus nunc interdum sodales. Proin
 								sapien purus, volutpat sit amet orci sit amet, adipiscing suscipit metus. Duis non mauris auctor, vehicula massa eget, placerat massa.</p>
 							<p>Etiam egestas nibh vitae orci pharetra semper. Sed et hendrerit elit, ac convallis nibh. Morbi a blandit velit. Nulla et vulputate eros. Nam vehicula
@@ -78,7 +78,7 @@
 					</li>
 					<li class="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}">
 						<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
-							<h2 id="faq--link" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">How do I link my account?</h2>
+							<h2 ui:field="faqContent3" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">How do I link my account?</h2>
 							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam varius nulla pellentesque bibendum semper. Pellentesque ullamcorper dictum dictum. Sed
 								tincidunt ut nulla in pharetra. Curabitur id neque id urna viverra tempus. Aliquam nec sapien purus. Aenean sodales semper suscipit. Nunc vitae felis
 								tincidunt, tincidunt felis nec, laoreet sem. Nullam urna ante, varius nec dui et, tempus molestie justo. Duis tempor turpis a risus euismod convallis
@@ -90,7 +90,7 @@
 					</li>
 					<li class="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}">
 						<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
-							<h2 id="faq--share" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Do you share my data with anyone?</h2>
+							<h2 ui:field="faqContent4" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Do you share my data with anyone?</h2>
 							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam varius nulla pellentesque bibendum semper. Pellentesque ullamcorper dictum dictum. Sed
 								tincidunt ut nulla in pharetra. Curabitur id neque id urna viverra tempus. Aliquam nec sapien purus. Aenean sodales semper suscipit. Nunc vitae felis
 								tincidunt, tincidunt felis nec, laoreet sem. Nullam urna ante, varius nec dui et, tempus molestie justo. Duis tempor turpis a risus euismod convallis
@@ -102,7 +102,7 @@
 					</li>
 					<li class="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}">
 						<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
-							<h2 id="faq--data-example" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">What do you want to do with my data?</h2>
+							<h2 ui:field="faqContent5" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">What do you want to do with my data?</h2>
 							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
 								quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
 								dolore eu fugiat nulla pariatur.</p>
@@ -113,7 +113,7 @@
 					</li>
 					<li class="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}">
 						<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
-							<h2 id="faq--cost-example" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">How much does Reflection cost?</h2>
+							<h2 ui:field="faqContent6" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">How much does Reflection cost?</h2>
 							<p>Integer ut varius purus. Duis quis tellus eu lacus aliquam dictum. In vel dignissim orci. Aliquam rhoncus ipsum tempus nunc interdum sodales. Proin
 								sapien purus, volutpat sit amet orci sit amet, adipiscing suscipit metus. Duis non mauris auctor, vehicula massa eget, placerat massa.</p>
 							<p>Etiam egestas nibh vitae orci pharetra semper. Sed et hendrerit elit, ac convallis nibh. Morbi a blandit velit. Nulla et vulputate eros. Nam vehicula
@@ -126,7 +126,7 @@
 					</li>
 					<li class="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}">
 						<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
-							<h2 id="faq--link-example" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">How do I link my account?</h2>
+							<h2 ui:field="faqContent7" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">How do I link my account?</h2>
 							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam varius nulla pellentesque bibendum semper. Pellentesque ullamcorper dictum dictum. Sed
 								tincidunt ut nulla in pharetra. Curabitur id neque id urna viverra tempus. Aliquam nec sapien purus. Aenean sodales semper suscipit. Nunc vitae felis
 								tincidunt, tincidunt felis nec, laoreet sem. Nullam urna ante, varius nec dui et, tempus molestie justo. Duis tempor turpis a risus euismod convallis
@@ -138,7 +138,7 @@
 					</li>
 					<li class="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}">
 						<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
-							<h2 id="faq--share-example" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Do you share my data with anyone?</h2>
+							<h2 ui:field="faqContent8" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Do you share my data with anyone?</h2>
 							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam varius nulla pellentesque bibendum semper. Pellentesque ullamcorper dictum dictum. Sed
 								tincidunt ut nulla in pharetra. Curabitur id neque id urna viverra tempus. Aliquam nec sapien purus. Aenean sodales semper suscipit. Nunc vitae felis
 								tincidunt, tincidunt felis nec, laoreet sem. Nullam urna ante, varius nec dui et, tempus molestie justo. Duis tempor turpis a risus euismod convallis
