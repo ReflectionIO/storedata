@@ -93,6 +93,10 @@ public class LoadingBar extends Composite {
 		textElem.setInnerText(text);
 	}
 
+	public String getText() {
+		return textElem.getInnerText();
+	}
+
 	public void show() {
 		this.show("Loading...");
 	}
