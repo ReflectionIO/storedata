@@ -6508,31 +6508,20 @@ table.table-data.table-linked-accounts--disabled thead {
   padding-bottom: 4rem;
 }
 /* line 26, sass/templates/_product.scss */
-.page-product .product-section:nth-child(even) {
+.page-product .product-section:nth-child(odd) {
   background-color: #f2f2f5;
 }
 /* line 29, sass/templates/_product.scss */
-.page-product .product-section.product-section--featured {
-  background-color: #6d69c5;
+.page-product .product-section.product-section--message {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
 }
-/* line 31, sass/templates/_product.scss */
-.page-product .product-section.product-section--featured h2 {
-  color: #fcfdfd;
-}
-/* line 34, sass/templates/_product.scss */
-.page-product .product-section.product-section--featured p {
-  color: #c3c6f6;
-}
-/* line 36, sass/templates/_product.scss */
-.page-product .product-section.product-section--featured p a {
-  color: #fff;
-}
-/* line 42, sass/templates/_product.scss */
+/* line 38, sass/templates/_product.scss */
 .page-product .product-section--content {
   max-width: 1400px;
   margin: 0px auto;
 }
-/* line 46, sass/templates/_product.scss */
+/* line 42, sass/templates/_product.scss */
 .page-product .product-image-container--left,
 .page-product .product-image-container--right,
 .page-product .product-text-content--left,
@@ -6541,59 +6530,75 @@ table.table-data.table-linked-accounts--disabled thead {
   float: left;
   vertical-align: top;
 }
-/* line 54, sass/templates/_product.scss */
+/* line 50, sass/templates/_product.scss */
 .page-product .product-text-content--left,
 .page-product .product-text-content--right {
   width: 100%;
   padding: 30px 5% 0;
 }
-/* line 58, sass/templates/_product.scss */
+/* line 54, sass/templates/_product.scss */
 .page-product .product-text-content--left .content-list,
 .page-product .product-text-content--right .content-list {
   color: #5b5d61;
 }
-/* line 72, sass/templates/_product.scss */
+/* line 68, sass/templates/_product.scss */
 .page-product .product-image-container--left {
   width: 100%;
 }
-/* line 74, sass/templates/_product.scss */
+/* line 70, sass/templates/_product.scss */
 .page-product .product-image-container--left img {
   max-width: 430px;
   margin-right: 5%;
   float: right;
 }
-/* line 96, sass/templates/_product.scss */
+/* line 92, sass/templates/_product.scss */
 .page-product .product-image-container--right {
   width: 100%;
 }
-/* line 98, sass/templates/_product.scss */
+/* line 94, sass/templates/_product.scss */
 .page-product .product-image-container--right img {
   max-width: 430px;
   margin-left: 5%;
 }
+/* line 98, sass/templates/_product.scss */
+.page-product .product-image-container--right svg {
+  width: 70%;
+  max-width: 325px;
+  margin: 0 auto 0 15%;
+}
 
-/* line 119, sass/templates/_product.scss */
+/* line 132, sass/templates/_product.scss */
 .product-page--partners {
   padding-top: 4rem;
   padding-bottom: 6.6rem;
   text-align: center;
 }
-/* line 126, sass/templates/_product.scss */
+/* line 136, sass/templates/_product.scss */
 .product-page--partners h2 {
-  margin-bottom: 4rem;
+  max-width: 500px;
+  margin: 0 auto 4rem;
+  font-size: 1.8rem;
   text-align: center;
 }
-/* line 130, sass/templates/_product.scss */
+/* line 145, sass/templates/_product.scss */
+.product-page--partners h2 a {
+  color: #6d69c5;
+}
+/* line 147, sass/templates/_product.scss */
+.product-page--partners h2 a:hover {
+  color: #4b46b5;
+}
+/* line 152, sass/templates/_product.scss */
 .product-page--partners .cta-button {
   margin-top: 1rem;
 }
-/* line 133, sass/templates/_product.scss */
+/* line 155, sass/templates/_product.scss */
 .product-page--partners ul {
   width: 100%;
   margin: 0 auto;
   max-width: 1400px;
 }
-/* line 151, sass/templates/_product.scss */
+/* line 173, sass/templates/_product.scss */
 .product-page--partners li {
   width: 48%;
   margin-bottom: 4rem;
@@ -6601,10 +6606,55 @@ table.table-data.table-linked-accounts--disabled thead {
   vertical-align: middle;
   text-align: center;
 }
-/* line 157, sass/templates/_product.scss */
+/* line 179, sass/templates/_product.scss */
 .product-page--partners li svg {
-  width: 100%;
+  width: 89%;
   max-width: 170px;
+}
+
+/* line 199, sass/templates/_product.scss */
+.product-page__quotes {
+  height: auto;
+  padding-top: 43px;
+  padding-bottom: 30px;
+  background-image: url(images/product-quotes-background.jpg);
+  background-size: cover;
+}
+/* line 209, sass/templates/_product.scss */
+.product-page__quotes .grid__column {
+  margin-bottom: 20px;
+  text-align: center;
+}
+/* line 216, sass/templates/_product.scss */
+.product-page__quotes blockquote {
+  padding-top: 0;
+  margin-top: 4px;
+  text-align: left;
+}
+/* line 220, sass/templates/_product.scss */
+.product-page__quotes blockquote:before {
+  display: none;
+}
+/* line 223, sass/templates/_product.scss */
+.product-page__quotes blockquote p {
+  font-size: 16px;
+  color: #fcfdfd;
+}
+/* line 230, sass/templates/_product.scss */
+.product-page__quotes blockquote cite {
+  font-size: 14px;
+  color: #969cb2;
+}
+/* line 236, sass/templates/_product.scss */
+.product-page__quotes blockquote cite span {
+  font-size: 16px;
+  color: #ffffff;
+}
+
+/* line 246, sass/templates/_product.scss */
+.product-page__quotes__logo-container {
+  height: 70px;
+  overflow: hidden;
 }
 
 /* line 4, sass/templates/_sign-up-journey.scss */
@@ -7194,7 +7244,7 @@ table.table-data.table-linked-accounts--disabled thead {
   height: 325px;
   margin-bottom: 3.9rem;
   text-align: center;
-  background-image: url(images/banner-img-about.jpg);
+  background-image: url(images/placeholder-banner.jpg);
   background-size: cover;
 }
 /* line 14, sass/components/_banner.scss */
@@ -7210,7 +7260,7 @@ table.table-data.table-linked-accounts--disabled thead {
   font-size: 1.3rem;
   letter-spacing: 0.06rem;
   text-transform: uppercase;
-  color: #c3c6f6;
+  color: #c4c7d0;
 }
 /* line 30, sass/components/_banner.scss */
 .page-banner h2 {
