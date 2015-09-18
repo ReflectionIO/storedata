@@ -34,7 +34,6 @@ import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.RankController;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.StoreController;
-import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.handler.TogglePanelEventHandler;
 import io.reflection.app.client.helper.AnimationHelper;
@@ -81,7 +80,7 @@ import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
@@ -97,6 +96,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
@@ -104,7 +104,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
 import com.willshex.gson.json.service.shared.StatusType;
 
-public class ItemPage extends Page implements NavigationEventHandler, GetItemRanksEventHandler, GetItemSalesRanksEventHandler, FilterEventHandler,
+public class ItemPage extends Page implements NavigationEventHandler, GetItemRanksEventHandler, GetItemSalesRanksEventHandler,
 		GetLinkedAccountItemEventHandler, TogglePanelEventHandler {
 
 	private static ItemPageUiBinder uiBinder = GWT.create(ItemPageUiBinder.class);
@@ -120,6 +120,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField Image imageTable;
 	@UiField SpanElement creatorName;
 	@UiField SpanElement storeName;
+	@UiField Button applyFilters;
 	@UiField AnchorElement viewInStore;
 	@UiField SpanElement price;
 	private String iapDescription;
@@ -128,7 +129,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	// @UiField FormSwitch followSwitch;
 	@UiField DateSelector dateSelector;
 	@UiField Element filtersForm;
-	@UiField Selector storeSelector;
+	@UiField Selector appStoreSelector;
 	@UiField Selector countrySelector;
 	@UiField HTMLPanel filtersGroupGraphOptions;
 	@UiField(provided = true) FilterSwitch accuracySwitch = new FilterSwitch(true);
@@ -170,7 +171,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	private Item displayingApp;
 	private Map<String, LIElement> tabs = new HashMap<String, LIElement>();
 	private String selectedTab;
-	private String filterContents;
+	private String previousFilter;
 	private AppRevenue appRevenuePlaceholder = new AppRevenue();
 	private List<AppRevenue> tablePlaceholder = new ArrayList<AppRevenue>();
 	@UiField SpanElement infoDateRange;
@@ -256,10 +257,9 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		tablePlaceholder.add(appRevenuePlaceholder);
 
 		FilterHelper.addCountries(countrySelector, SessionController.get().isLoggedInUserAdmin());
-		FilterHelper.addStores(storeSelector, true);
+		FilterHelper.addStores(appStoreSelector, true);
 
 		dateSelector.addFixedRanges(FilterHelper.getDefaultDateRanges());
-		updateFromFilter();
 
 		// Add click event to LI element so the event is fired when clicking on the whole tab
 		Event.sinkEvents(revenueItem, Event.ONCLICK);
@@ -304,6 +304,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		});
 
 		resetAppProperties();
+
+		updateSelectorsFromFilter();
 
 		// loadingBar.show();
 
@@ -522,26 +524,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		revenueTable.setColumnWidth(revenueForPeriodColumn, 50, Unit.PCT);
 	}
 
-	@UiHandler("storeSelector")
-	void onAppStoreValueChanged(ChangeEvent event) {
-		FilterController.get().setStore(storeSelector.getSelectedValue());
-	}
-
-	@UiHandler("countrySelector")
-	void onCountryValueChanged(ChangeEvent event) {
-		FilterController.get().setCountry(countrySelector.getSelectedValue());
-	}
-
-	@UiHandler("dateSelector")
-	void onDateRangeValueChanged(ValueChangeEvent<DateRange> event) {
-		FilterController fc = FilterController.get();
-
-		fc.start();
-		fc.setEndDate(event.getValue().getTo());
-		fc.setStartDate(event.getValue().getFrom());
-		fc.commit();
-	}
-
 	@UiHandler("accuracySwitch")
 	void onAccuracySwitchValueChanged(ValueChangeEvent<Boolean> event) {
 
@@ -592,7 +574,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		setChartGraphsVisible(false);
 	}
 
-	private void updateFromFilter() {
+	private void updateSelectorsFromFilter() {
 		FilterController fc = FilterController.get();
 
 		DateRange dateRange = new DateRange();
@@ -603,9 +585,34 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		infoDateRange.setInnerText(FormattingHelper.DATE_FORMATTER_DD_MMM_YYYY.format(dateRange.getFrom()) + " - "
 				+ FormattingHelper.DATE_FORMATTER_DD_MMM_YYYY.format(dateRange.getTo()));
 
-		storeSelector.setSelectedIndex(FormHelper.getItemIndex(storeSelector, fc.getFilter().getStoreA3Code()));
+		appStoreSelector.setSelectedIndex(FormHelper.getItemIndex(appStoreSelector, fc.getFilter().getStoreA3Code()));
 		countrySelector.setSelectedIndex(FormHelper.getItemIndex(countrySelector, fc.getFilter().getCountryA2Code()));
 
+	}
+
+	@UiHandler("applyFilters")
+	void onApplyFiltersClicked(ClickEvent event) {
+		event.preventDefault();
+		if (NavigationController.get().getCurrentPage() == PageType.ItemPageType) {
+			boolean updateData = false;
+			if (updateData = updateData || !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())) {
+				FilterController.get().setCountry(countrySelector.getSelectedValue());
+			}
+			if (updateData = updateData || !FilterController.get().getFilter().getStoreA3Code().equals(appStoreSelector.getSelectedValue())) {
+				FilterController.get().setStore(appStoreSelector.getSelectedValue());
+			}
+			if (updateData = updateData
+					|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateSelector.getDateBoxToValue())
+					|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getStartTime().longValue()), dateSelector.getDateBoxFromValue())) {
+				FilterController.get().getFilter().setEndTime(dateSelector.getDateBoxToValue().getTime());
+				FilterController.get().getFilter().setStartTime(dateSelector.getDateBoxFromValue().getTime());
+				dateSelector.setValue(new DateRange(dateSelector.getDateBoxFromValue(), dateSelector.getDateBoxToValue()), false);
+			}
+			if (updateData) {
+				PageType.ItemPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, displayingAppId, selectedTab, comingPage, FilterController.get()
+						.asItemFilterString());
+			}
+		}
 	}
 
 	/*
@@ -619,7 +626,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		// register(EventController.get().addHandlerToSource(SearchForItemEventHandler.TYPE, ItemController.get(), this));
-		register(DefaultEventBus.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(GetItemRanksEventHandler.TYPE, RankController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(GetItemSalesRanksEventHandler.TYPE, RankController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(GetLinkedAccountItemEventHandler.TYPE, LinkedAccountController.get(), this));
@@ -677,17 +683,20 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				setAppDetails(displayingApp);
 			}
 
+			if (previousFilter == null) {
+				previousFilter = FilterController.get().asRankFilterString();
+			}
+
 			Filter newFilter = FilterController.get().getFilter();
-			String newFilterContents = newFilter.asItemFilterString();
 
-			if (filterContents == null || !filterContents.equals(newFilterContents)) {
-				filterContents = newFilterContents;
-
+			if (!previousFilter.equals(newFilter.asItemFilterString())) {
+				isNewDataRequired = true;
+				updateSelectorsFromFilter();
 				RankType newRankType = RankType.fromString(newFilter.getListType());
 				if (rankType == null || rankType != newRankType) {
 					rankType = newRankType;
 				}
-				isNewDataRequired = true;
+				previousFilter = newFilter.asItemFilterString();
 			}
 
 			switch (newFilter.getListType()) {
@@ -706,11 +715,11 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			}
 
 			revenueLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, displayingAppId,
-					REVENUE_CHART_TYPE, comingPage, filterContents));
+					REVENUE_CHART_TYPE, comingPage, previousFilter));
 			downloadsLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, displayingAppId,
-					DOWNLOADS_CHART_TYPE, comingPage, filterContents));
+					DOWNLOADS_CHART_TYPE, comingPage, previousFilter));
 			rankingLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, displayingAppId,
-					RANKING_CHART_TYPE, comingPage, filterContents));
+					RANKING_CHART_TYPE, comingPage, previousFilter));
 
 			if (SessionController.get().isLoggedInUserAdmin() || MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage)) {
 				setRevenueDownloadTabsEnabled(true);
@@ -724,7 +733,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				setRankTabEnabled(true);
 			}
 
-			updateFromFilter();
 			String newSelectedTab = current.getParameter(SELECTED_TAB_PARAMETER_INDEX);
 			if (selectedTab == null || !selectedTab.equals(newSelectedTab)) {
 				selectedTab = newSelectedTab;
@@ -878,32 +886,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			}
 		} else {
 			// item == null
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.FilterEventHandler#filterParamChanged(java.lang.String, java.lang.Object, java.lang.Object)
-	 */
-	@Override
-	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
-		if (NavigationController.get().getCurrentPage() == PageType.ItemPageType) {
-			PageType.ItemPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, displayingAppId, selectedTab, comingPage, FilterController.get()
-					.asItemFilterString());
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.FilterEventHandler#filterParamsChanged(io.reflection.app.client.controller.FilterController.Filter, java.util.Map)
-	 */
-	@Override
-	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {
-		if (NavigationController.get().getCurrentPage() == PageType.ItemPageType) {
-			PageType.ItemPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, displayingAppId, selectedTab, comingPage, FilterController.get()
-					.asItemFilterString());
 		}
 	}
 

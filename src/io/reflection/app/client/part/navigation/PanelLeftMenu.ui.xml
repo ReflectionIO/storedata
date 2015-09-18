@@ -137,14 +137,18 @@
 					</ul>
 				</li>
 			</ul>
-		</nav>
+		</nav>		
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.mainFooterLinks}">
+			<ul>
+				<li>
+					<a href="mailto:info@reflection.io">Contact Us</a>
+				</li>
+				<li>
+					<g:InlineHyperlink targetHistoryToken="{TermsPageType.asTargetHistoryToken}">Terms &amp; Conditions</g:InlineHyperlink>
+				</li>
+			</ul>
+		</div>
 		<ul class="{STYLES_INSTANCE.reflectionMainStyle.mainSocialLinks}">
-			<li>
-				<a href="https://www.facebook.com/reflection.io" class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeFacebook}"
-					target="_blank">
-					<span>Facebook</span>
-				</a>
-			</li>
 			<li>
 				<a href="https://twitter.com/reflectionio" class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeTwitter}"
 					target="_blank">
@@ -158,17 +162,6 @@
 				</a>
 			</li>
 		</ul>
-		<div class="{STYLES_INSTANCE.reflectionMainStyle.mainFooterLinks}">
-			<ul>
-				<li>
-					<a href="mailto:info@reflection.io">Contact Us</a>
-				</li>
-				<li>
-					<g:InlineHyperlink targetHistoryToken="{TermsPageType.asTargetHistoryToken}">Terms &amp; Conditions</g:InlineHyperlink>
-				</li>
-			</ul>
-		</div>
-
 
 	</g:HTMLPanel>
 

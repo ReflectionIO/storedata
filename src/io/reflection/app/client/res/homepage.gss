@@ -527,7 +527,7 @@ blockquote cite span {
 @media screen and (min-width: 960px) {
   /* line 13, ../sass/components/_landing-section-main.scss */
   .landing-page.panel-left-open .l-main {
-    width: calc(100% - 220px);
+    width: calc(100% - 200px);
     float: right;
     -webkit-transition: width 0.15s ease-out;
             transition: width 0.15s ease-out;
@@ -1133,7 +1133,7 @@ blockquote cite span {
     position: absolute;
     left: 0;
     bottom: 10px;
-    width: calc(100% - 220px);
+    width: calc(100% - 200px);
     max-width: auto;
     margin-left: 0;
     margin-top: 0;
