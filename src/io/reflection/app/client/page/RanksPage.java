@@ -23,6 +23,7 @@ import io.reflection.app.client.component.LoadingBar;
 import io.reflection.app.client.component.Selector;
 import io.reflection.app.client.component.ToggleRadioButton;
 import io.reflection.app.client.controller.FilterController;
+import io.reflection.app.client.controller.FilterController.Filter;
 import io.reflection.app.client.controller.ItemController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
@@ -114,6 +115,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	private LoadingIndicator loadingIndicatorFreeList = AnimationHelper.getLeaderboardListLoadingIndicator(25, true);
 	private LoadingIndicator loadingIndicatorPaidGrossingList = AnimationHelper.getLeaderboardListLoadingIndicator(25, false);
 
+	@UiField Button downloadLeaderboard;
 	@UiField DivElement dateSelectContainer;
 	@UiField FormDateBox dateBox;
 	@UiField Selector appStoreSelector;
@@ -639,6 +641,63 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		// downloadsHeader.setHeaderStyleNames(style.canBeSorted());
 		// revenueHeader.setHeaderStyleNames(style.canBeSorted());
 		// RankController.get().sortByRank(selectedTab, false);
+	}
+
+	@UiHandler("downloadLeaderboard")
+	void onDownloadLeaderboardClicked(ClickEvent event) {
+		event.preventDefault();
+		Filter filter = FilterController.get().getFilter();
+		String listType;
+		if (filter.getStoreA3Code().equals("iph")) {
+			switch (selectedTab) {
+			case (PAID_LIST_TYPE):
+				listType = "toppaidapplications";
+				break;
+			case (FREE_LIST_TYPE):
+				listType = "topfreeapplications";
+				break;
+			case (GROSSING_LIST_TYPE):
+				listType = "topgrossingapplications";
+				break;
+			default:
+				listType = "alliph";
+				break;
+			}
+		} else {
+			switch (selectedTab) {
+			case (PAID_LIST_TYPE):
+				listType = "toppaidipadapplications";
+				break;
+			case (FREE_LIST_TYPE):
+				listType = "topfreeipadapplications";
+				break;
+			case (GROSSING_LIST_TYPE):
+				listType = "topgrossingipadapplications";
+				break;
+			default:
+				listType = "allipa";
+				break;
+			}
+		}
+		String country = filter.getCountryA2Code();
+		String category = filter.getCategoryId().toString();
+		String date = String.valueOf(filter.getEndTime().longValue());
+		Window.open("/downloadleaderboard?listType=" + listType + "&country=" + country + "&category=" + category + "&date=" + date, "_blank", null);
+		// TODO make download button disabled when there are no data
+		// RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, "/downloadleaderboard");
+		// builder.setHeader("Content-type", "application/x-www-form-urlencoded");
+		//
+		// try {
+		// builder.sendRequest("country=" + URL.encodeComponent(country) + "&store=" + URL.encodeComponent(appStore) + "&date=" + URL.encodeComponent(date),
+		// new RequestCallback() {
+		//
+		// public void onError(Request request, Throwable exception) {}
+		//
+		// public void onResponseReceived(Request request, Response response) {
+		//
+		// }
+		// });
+		// } catch (RequestException e) {}
 	}
 
 	@UiHandler("viewAllBtn")
