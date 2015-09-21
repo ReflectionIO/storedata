@@ -110,9 +110,9 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 	@UiField(provided = true) CellTable<RanksGroup> leaderboardTable = new CellTable<RanksGroup>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 
-	private LoadingIndicator loadingIndicatorAll = AnimationHelper.getLeaderboardAllLoadingIndicator(10);
-	private LoadingIndicator loadingIndicatorFreeList = AnimationHelper.getLeaderboardListLoadingIndicator(10, true);
-	private LoadingIndicator loadingIndicatorPaidGrossingList = AnimationHelper.getLeaderboardListLoadingIndicator(10, false);
+	private LoadingIndicator loadingIndicatorAll = AnimationHelper.getLeaderboardAllLoadingIndicator(25);
+	private LoadingIndicator loadingIndicatorFreeList = AnimationHelper.getLeaderboardListLoadingIndicator(25, true);
+	private LoadingIndicator loadingIndicatorPaidGrossingList = AnimationHelper.getLeaderboardListLoadingIndicator(25, false);
 
 	@UiField DivElement dateSelectContainer;
 	@UiField FormDateBox dateBox;
@@ -644,19 +644,15 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	@UiHandler("viewAllBtn")
 	void onViewAllButtonClicked(ClickEvent event) {
 		if (((Button) event.getSource()).isEnabled()) {
-			if (SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_FULL_RANK_VIEW_CODE)) {
-				if (leaderboardTable.getVisibleItemCount() == ServiceConstants.STEP_VALUE) {
-					leaderboardTable.setVisibleRange(0, VIEW_ALL_LENGTH_VALUE);
-					viewAllSpan.setInnerText("View Less Apps");
+			if (leaderboardTable.getVisibleItemCount() == ServiceConstants.STEP_VALUE) {
+				leaderboardTable.setVisibleRange(0, VIEW_ALL_LENGTH_VALUE);
+				viewAllSpan.setInnerText("View Less Apps");
 
-					TooltipHelper.updateHelperTooltip();
+				TooltipHelper.updateHelperTooltip();
 
-				} else {
-					leaderboardTable.setVisibleRange(0, ServiceConstants.STEP_VALUE);
-					viewAllSpan.setInnerText("View All Apps");
-				}
 			} else {
-				PageType.RegisterPageType.show();
+				leaderboardTable.setVisibleRange(0, ServiceConstants.STEP_VALUE);
+				viewAllSpan.setInnerText("View All Apps");
 			}
 		}
 	}
