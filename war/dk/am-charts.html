@@ -70,7 +70,7 @@
 			<div class="grid-container dk-components-container">
 				<div class="grid__row dk-component-row">
 					<h2 class="heading-style--heading-four">App, Overlay Other Apps</h2>
-					<div id="container-app-overlay" style="width:100%; height:500px;"></div>
+					<div id="container-app-overlay" style="width:100%; height:300px;"></div>
 				</div>
 				<div class="grid__row dk-component-row">
 					<h2 class="heading-style--heading-four">App Revenue for selected Country</h2>
@@ -220,7 +220,7 @@
           $this.siblings('.amcharts-graph-line').find('.amcharts-graph-stroke').animate({'opacity': 0.3}, 300).attr("stroke-width", "2");
           $this.siblings('.amcharts-graph-line').find('.amcharts-graph-fill').animate({'opacity': 0}, 300).css("pointer-events", "none");
         });
-      }      
+      }
       var chartApps;
 
       AmCharts.ready(function () {
@@ -303,7 +303,7 @@
           graph.bulletBorderThickness = 8
           graph.maxBulletSize = 7
           graph.cursorBulletAlpha = 0
-          graph.lineColor = "#1bc79f";
+          graph.lineColor = "#6d69c5";
           graph.lineThickness = 2;
           graph.fillAlphas = 1;
           graph.balloonFunction = function(g) {
@@ -341,9 +341,10 @@
           graphTwo.bulletBorderThickness = 8
           graphTwo.maxBulletSize = 7
           graphTwo.cursorBulletAlpha = 0
-          graphTwo.lineColor = "#ffb449";
+          graphTwo.lineColor = "#1bc79f";
           graphTwo.lineThickness = 2;
           graphTwo.fillAlphas = 1;
+          graphTwo.dashLength = 8;
           graphTwo.balloonFunction = function(g) {
             var currentIndex = g.index;
             var outputString = "", breakdownString = "", titleString = "";
@@ -382,6 +383,7 @@
           graph.lineColor = "#ff496a";
           graph.lineThickness = 2;
           graph.fillAlphas = 1;
+          graph.dashLength = 8;
           graph.balloonFunction = function(g) {
             var currentIndex = g.index;
             var outputString = "", breakdownString = "", titleString = "";
