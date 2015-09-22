@@ -54,14 +54,14 @@ public class AppRankCell extends AbstractCell<Rank> {
 	private static AppRankCellRenderer RENDERER = GWT.create(AppRankCellRenderer.class);
 
 	@Override
-	public void render(Context context, Rank value, SafeHtmlBuilder builder) {
+	public void render(Context context, Rank rank, SafeHtmlBuilder builder) {
 
-		Item item = ItemController.get().lookupItem(value.itemId);
+		Item item = ItemController.get().lookupItem(rank.itemId);
 
 		if (item == null) {
 			item = new Item();
-			item.internalId = value.itemId;
-			item.name = value.itemId + "???";
+			item.internalId = rank.itemId;
+			item.name = rank.itemId + "???";
 			item.creatorName = "???";
 			item.smallImage = "";
 		}
@@ -106,9 +106,9 @@ public class AppRankCell extends AbstractCell<Rank> {
 				filter.setListType(FilterController.PAID_LIST_TYPE);
 				display = SafeStylesUtils.fromTrustedString("");
 				// if (!SessionController.get().isLoggedInUserAdmin()) {
-				if (value.downloads != null) {
-					if (!SessionController.get().isLoggedInUserAdmin() && !SessionController.get().isLoggedInUserAdmin() && value.position != null
-							&& value.position.intValue() > 0 && value.position.intValue() <= 5) {
+				if (rank.downloads != null) {
+					if (!SessionController.get().isLoggedInUserAdmin() && rank.position != null && rank.position.intValue() > 0
+							&& rank.position.intValue() <= 5) {
 						dailyData = SafeHtmlUtils.fromSafeConstant("<span class=\"" + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
 								+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud() + "\">&nbsp;</span><span class=\"js-tooltip "
 								+ Styles.STYLES_INSTANCE.reflectionMainStyle().whatsThisTooltipIconStatic()
@@ -116,8 +116,10 @@ public class AppRankCell extends AbstractCell<Rank> {
 					} else {
 						dailyData = DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
 								+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
-								WHOLE_NUMBER_FORMATTER.format(value.downloads.doubleValue()));
+								WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue()));
 					}
+				} else if (!SessionController.get().isValidSession() && rank.position.intValue() > 10) {
+					dailyData = SafeHtmlUtils.EMPTY_SAFE_HTML;
 				}
 				// }
 				break;
@@ -125,9 +127,9 @@ public class AppRankCell extends AbstractCell<Rank> {
 				filter = Filter.parse(filter.asItemFilterString());
 				filter.setListType(FilterController.FREE_LIST_TYPE);
 				display = SafeStylesUtils.fromTrustedString("");
-				if (value.downloads != null) {
-					if (!SessionController.get().isLoggedInUserAdmin() && value.position != null && value.position.intValue() > 0
-							&& value.position.intValue() <= 5) {
+				if (rank.downloads != null) {
+					if (!SessionController.get().isLoggedInUserAdmin() && rank.position != null && rank.position.intValue() > 0
+							&& rank.position.intValue() <= 5) {
 						dailyData = SafeHtmlUtils.fromSafeConstant("<span class=\"" + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
 								+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud() + "\">&nbsp;</span><span class=\"js-tooltip "
 								+ Styles.STYLES_INSTANCE.reflectionMainStyle().whatsThisTooltipIconStatic()
@@ -135,8 +137,10 @@ public class AppRankCell extends AbstractCell<Rank> {
 					} else {
 						dailyData = DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
 								+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
-								WHOLE_NUMBER_FORMATTER.format(value.downloads.doubleValue()));
+								WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue()));
 					}
+				} else if (!SessionController.get().isValidSession() && rank.position.intValue() > 10) {
+					dailyData = SafeHtmlUtils.EMPTY_SAFE_HTML;
 				}
 				break;
 			case 3:
@@ -144,9 +148,9 @@ public class AppRankCell extends AbstractCell<Rank> {
 				filter.setListType(FilterController.GROSSING_LIST_TYPE);
 				display = SafeStylesUtils.fromTrustedString("");
 				// if (!SessionController.get().isLoggedInUserAdmin()) {
-				if (value.currency != null && value.revenue != null) {
-					if (!SessionController.get().isLoggedInUserAdmin() && value.grossingPosition != null && value.grossingPosition.intValue() > 0
-							&& value.grossingPosition.intValue() <= 5) {
+				if (rank.currency != null && rank.revenue != null) {
+					if (!SessionController.get().isLoggedInUserAdmin() && rank.grossingPosition != null && rank.grossingPosition.intValue() > 0
+							&& rank.grossingPosition.intValue() <= 5) {
 						dailyData = SafeHtmlUtils.fromSafeConstant("<span class=\"" + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
 								+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue() + "\">&nbsp;</span><span class=\"js-tooltip "
 								+ Styles.STYLES_INSTANCE.reflectionMainStyle().whatsThisTooltipIconStatic()
@@ -154,8 +158,10 @@ public class AppRankCell extends AbstractCell<Rank> {
 					} else {
 						dailyData = DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
 								+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue(), "",
-								FormattingHelper.asWholeMoneyString(value.currency, value.revenue.floatValue()));
+								FormattingHelper.asWholeMoneyString(rank.currency, rank.revenue.floatValue()));
 					}
+				} else if (!SessionController.get().isValidSession() && rank.grossingPosition.intValue() > 10) {
+					dailyData = SafeHtmlUtils.EMPTY_SAFE_HTML;
 				}
 				// }
 				break;
