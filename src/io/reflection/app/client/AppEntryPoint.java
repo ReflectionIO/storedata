@@ -7,18 +7,15 @@
 //
 package io.reflection.app.client;
 
-import com.google.gwt.dom.client.Document;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 
 import io.reflection.app.client.controller.NavigationController;
-import io.reflection.app.client.helper.DOMHelper;
-import io.reflection.app.client.helper.ResponsiveDesignHelper;
 import io.reflection.app.client.helper.TooltipHelper;
 import io.reflection.app.client.helper.UserAgentHelper;
-import io.reflection.app.client.part.BackToTop;
 import io.reflection.app.client.part.SuperAlertBox;
+import io.reflection.app.client.part.navigation.SiteMaintenance;
 import io.reflection.app.client.res.Styles;
 
 /**
@@ -63,18 +60,20 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 	}
 
 	private void makeContainer() {
-		// PAGE MAINTENANCE RootPanel.get().add(new SiteMaintenance());
+		// PAGE MAINTENANCE
 
-		lPageContainer.getElement().setClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().lPageContainer());
-		RootPanel.get().add(NavigationController.get().getHeader());
-		RootPanel.get().add(NavigationController.get().getPanelLeftMenu());
-		RootPanel.get().add(lPageContainer);
-		lPageContainer.add(NavigationController.get().getMainPanel());
-		RootPanel.get().add(NavigationController.get().getPanelRightAccount());
-		RootPanel.get().add(NavigationController.get().getPanelRightSearch());
-		RootPanel.get().add(new BackToTop());
-		UserAgentHelper.initCustomScrollbars();
-		Document.get().getHead().appendChild(DOMHelper.getJSScriptFromUrl("js/vendor/picturefillFirefox.js"));
-		ResponsiveDesignHelper.initTabsResponsive();
+		RootPanel.get().add(new SiteMaintenance());
+
+		// lPageContainer.getElement().setClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().lPageContainer());
+		// RootPanel.get().add(NavigationController.get().getHeader());
+		// RootPanel.get().add(NavigationController.get().getPanelLeftMenu());
+		// RootPanel.get().add(lPageContainer);
+		// lPageContainer.add(NavigationController.get().getMainPanel());
+		// RootPanel.get().add(NavigationController.get().getPanelRightAccount());
+		// RootPanel.get().add(NavigationController.get().getPanelRightSearch());
+		// RootPanel.get().add(new BackToTop());
+		// UserAgentHelper.initCustomScrollbars();
+		// Document.get().getHead().appendChild(DOMHelper.getJSScriptFromUrl("js/vendor/picturefillFirefox.js"));
+		// ResponsiveDesignHelper.initTabsResponsive();
 	}
 }
