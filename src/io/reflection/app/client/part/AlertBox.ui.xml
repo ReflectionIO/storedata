@@ -1,14 +1,23 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
     <ui:style gss="true">
-    .text {
-    	font-weight: bolder;
+	.container {
+		padding: 15px;
+		margin-bottom: 20px;
+		margin-left: 20px;
+		z-index: 1200;
+		border-radius: 5px;
+		border: 1px solid transparent;
+		background-color: #ffffff;
     }
     </ui:style>
-    <g:HTMLPanel styleName="alert">
-        <g:Button ui:field="mClose" styleName="close" />
-        <g:Image ui:field="mSpinner" visible="false" />
-        <span ui:field="mText" class="{style.text}" />
-        <span ui:field="mDetail" />
+	<g:HTMLPanel styleName="{style.container}">
+		<g:Button ui:field="mClose" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonLinkLarge}">
+			<span ui:field="mText" class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCancel}"></span>
+			<span ui:field="mDetail"></span>
+		</g:Button>
+		<g:Image ui:field="mSpinner" styleName="" visible="false" />
     </g:HTMLPanel>
 </ui:UiBinder> 

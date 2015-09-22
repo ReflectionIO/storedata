@@ -1,0 +1,19 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
+	<ui:style>
+	
+	</ui:style>
+	<g:HTMLPanel
+		styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.fullPageMessage} {STYLES_INSTANCE.reflectionMainStyle.pageMessageOnly}">
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFiveColumns}">
+			<img src="images/404.png" alt="404 error sign post" class="{STYLES_INSTANCE.reflectionMainStyle.imgSignpost}" />
+			<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Oops</h2>
+			<p>
+				You've taken a wrong turn or done something unexpected. Try looking elsewhere or
+				<a href="mailto:info@reflection.io">email us</a>
+				if there's a problem.
+			</p>
+		</div>
+	</g:HTMLPanel>
+</ui:UiBinder> 

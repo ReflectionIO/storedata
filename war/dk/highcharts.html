@@ -1,0 +1,1896 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="utf-8" />
+	<title>Reflection Design Kit - Graphs</title>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link rel="stylesheet" media="screen, projection" type="text/css" href="designkit.css" />
+	<!--[if (lt IE 9)]>
+		<script src="js/vendor/html5shiv.min.js"></script>
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main-ie8.css" />
+	<![endif]-->
+ 	<!--[if !lt IE 9]><!-->
+		<script src="js/vendor/picturefill.2.3.1.min.js" async></script>
+	<!-- <![endif]-->
+	<link rel="stylesheet" href="js/vendor/jquery.mCustomScrollbar.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
+<script src="js/vendor/snap.svg.js"></script>
+<script>
+  WebFont.load({
+    google: {
+      families: ['Open Sans:400,600,700,400italic,600italic', 'Source Sans Pro:400,600,700', 'Lato:400,700,400italic']
+    }
+  });
+</script></head>
+<body class="panel-left-open">
+	<!--[if (lt IE 9)]>
+      <div class="window-warning">
+  			<p>Uh oh... Reflection doesn't work in this browser. &nbsp; &nbsp;<a href="http://outdatedbrowser.com/en" target="_blank">Download a compatible browser</a></p>
+  		</div>
+  <![endif]-->
+  <header id="js-component-import--global-header" class="global-header"></header>
+
+  <div id="js-component-import--panel-left" class="panel-left js-custom-scrollbar" data-mcs-theme="minimal-dark"></div>
+
+	<div class="l-page-container">
+
+		<div id="main" class="l-main" role="main">
+			
+			<div id="js-component-import--design-kit-banner" class="banner banner--component"></div>
+
+			<div class="grid-container dk-components-container">
+				<div class="grid__row dk-component-row" style="position: relative;">
+          <img src="images/chart-watermark.png" class="chart-watermark" />
+					<h2 class="heading-style--heading-four">App, Overlay Other Apps</h2>
+					<div id="container" style="width:100%; height:500px;" class="highcharts-container">            
+          </div>
+				</div>
+				<div class="grid__row dk-component-row">
+					<h2 class="heading-style--heading-four">App Revenue for selected Country</h2>
+					<div id="container-revenue" style="width:100%; height:500px;"></div>
+				</div>
+				<div class="grid__row dk-component-row">
+					<h2 class="heading-style--heading-four">App Revenue, Revenue Sources</h2>
+					<div id="container-revenue-split" style="width:100%; height:500px;"></div>
+				</div>
+				<div class="grid__row dk-component-row">
+					<h2 class="heading-style--heading-four">App Revenue, overlay downloads</h2>
+					<div class="grid__column grid__column--full-width filters-container filter-container--app">
+						<div class="filters-group-graph-options">
+							<a href="#" class="show-hide-link ref-icon-after ref-icon-after--angle-down">Show / Hide Options</a>
+							<div class="reveal-element">
+								<div class="filter-switch filter-switch--small">
+									<span>Overlay Downloads</span>
+									<div class="can-toggle can-toggle--size-small">
+									  <input id="js-overlay-downloads" type="checkbox">
+									  <label for="js-overlay-downloads">
+									    <div class="can-toggle__switch" data-checked="Y" data-unchecked="N"></div>
+									  </label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="container-revenue-overlay-downloads" style="width:100%; height:500px;"></div>
+				</div>
+        <div class="grid__row dk-component-row">
+          <h2 class="heading-style--heading-four">App Data, Categories and Countries Overlay</h2>
+          <div id="container-countries-categories" style="width:100%; height:500px;"></div>
+        </div>
+			</div>
+		</div>
+	</div>
+
+	<div id="js-component-import--account-container" class="panel-right-container js-account-container"></div>
+	<div id="js-component-import--search-container" class="panel-right-container js-search-container"></div>
+	
+ 	<script src="js/vendor/jquery-1.11.1.min.js"></script>
+ 	<script src="js/vendor/jquery-ui.custom.min.js"></script>
+ 	<script src="js/vendor/handlebars-v2.0.0.js"></script>
+ 	<script src="js/templates/templates.js"></script>
+	<script src="js/vendor/modernizr.2.8.3.custom.min.js"></script>
+	<!--[if IE 9]>
+		<script src="js/vendor/jquery.mCustomScrollbar.concat.min.js"></script>
+	<![endif]-->
+
+	<div id="js-appendScriptsContainer"></div>
+
+	<script src="js/designkit-global-templates.js"></script>
+  <script src="js/application.js"></script>
+  <script src="js/designkit-app.js"></script>
+  <script src="js/vendor/highcharts-custom.js"></script>
+  <script>
+
+  	function initScripts() {
+  		new ChartsPage();
+
+      // Use for extending
+      (function (H) {
+         var localVar,         // local variable
+            Series = H.Series; // shortcut to Highcharts prototype
+      }(Highcharts));
+
+      Highcharts.setOptions({
+          colors: ['#1bc79f', '#ffb449', '#ff496a', '#6d69c5', '#e98fec', '#64E572', '#FF9655', '#FFF263', '#6AF9C4']
+      });
+
+  		// Generate Demo Chart
+			var chart = new Highcharts.Chart({
+				chart: {
+          renderTo: 'container',
+					marginLeft: 0,
+					marginRight: 0,
+					marginBottom: 45,
+					marginTop: 0,
+					backgroundColor: '#fcfdfd',
+					plotBackgroundColor: '#f1f1f6',
+		   		type: 'area',          
+		   		style: {
+            fontFamily: 'Lato, sans-serif'
+          },
+          events: {
+            load: function() {
+                var countIndex = 0;
+                $('#container .highcharts-series path:nth-child(1)').each(function() {
+                  if (countIndex > -1) { // testing
+                    $(this).css("opacity", 0);
+                  } else {
+                    $(this).css("opacity", "0.2");
+                  }
+                  countIndex++;
+                });
+                var counter = 0,
+                    pathCoords = [];
+                $('#container .highcharts-series path:nth-child(2)').each(function(){
+                    $(this).attr("id", "series" + counter);
+                    pathCoords.push($(this).attr("d"));
+
+                    var el = Snap('#series' + counter);
+                    var numberOfItems = el.node.pathSegList.numberOfItems; // handy for loops
+                    var firstCoordinate = el.node.pathSegList.getItem(0);
+                    for(var x=0; x < numberOfItems; x++) {
+                      el.node.pathSegList[x].y = 454;
+                    }
+
+                  counter++;
+                });
+
+                setTimeout(function(){
+                  var i = 0;
+                  $('#container .highcharts-series path:nth-child(2)').each(function(){
+                    console.log(i);
+                    var el = Snap('#series' + i);                    
+                    el.animate({ d: pathCoords[i] }, 500, mina.easeinout);
+                    i++;
+                  });
+                }, 900);
+            }
+          }
+			  },
+			  legend: {
+			  	enabled: false
+			  },
+			  title: {
+            text: ''
+        },
+        yAxis: {
+          offset: -30,
+          showFirstLabel: false,
+          showLastLabel: false,
+          gridLineColor: '#e1e5e8',
+          labels: {
+          	align: 'left',
+          	style: {
+          		color: '#81879d',
+          		fontSize: "13px"
+          	}
+          },
+          title: {
+          	text: null
+          }            
+        },
+        xAxis: {
+        	startOnTick: false,
+        	endOnTick: false,
+        	showFirstLabel: false,
+          maxPadding: 0,
+          minPadding: 0,
+          type: 'datetime',
+          dateTimeLabelFormats: {
+              day: '%e %b'
+          },
+          tickmarkPlacement: 'on',
+          tickPixelInterval: 30,
+          tickColor: '#e1e5e8',
+          tickLength: 10,
+          lineColor: '#e1e5e8',
+          lineWidth: 1,            
+          labels: {
+          	align: 'center',
+            x: 0,
+            y: 30,
+            step: 4,
+            style: {
+              color: '#81879d',
+              fontSize: "13px"
+            }
+          }
+        },
+        plotOptions: {
+        	area: {
+            trackByArea: false,
+        		tooltip: {
+        			followPointer: false
+        		},
+        		states: {
+        			hover: {
+        				halo: {
+        					fill: 'rgba(27,199,159,0.18)',
+        					size: 13
+        				},
+        				lineWidthPlus: 1
+        			}
+        		}
+        	},
+          series: {
+            events: {
+              click: function (event) {
+                
+              }              
+            },
+            cursor: 'pointer'
+          }
+      	},
+        series:          
+           [{
+            id: 'monument',
+            name: "Monument Valley",
+            data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 116.4, 194.1, 95.6, 54.4, 29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 144.0, 176.0, 135.6, 106.4, 129.2, 144.0, 148.5, 116.4],
+            events: {
+              click: function() {
+                var that = this;
+
+                for(var i = 0; i < this.chart.series.length; i++) {
+                  if(i !== that.index) {
+                    var count = 0;
+                    var isCurrentlyHighlighted = false;
+                    $('#container .highcharts-series').each(function(){
+                      if(count == i) {
+                        var thisFillPath = $(this).find('path:nth-child(2)');                        
+                        if(thisFillPath.attr("stroke-width") == 2.1) {
+                          isCurrentlyHighlighted = true
+                          that.chart.series[i].update({
+                            lineWidth: 2
+                          });                      
+                          var counterTwo = 0;
+                          $('#container .highcharts-series').each(function(){
+                            if(counterTwo == count) {
+                              thisFillPath = thisFillPath = $(this).find('path:nth-child(2)');
+                            }
+                            counterTwo++;
+                          });                          
+                          thisFillPath.css("opacity", "1");
+                          thisFillPath.animate({ "opacity": 0.2 }, 250);
+                          thisFillPath.siblings("path").css("opacity", "0.2");
+                          thisFillPath.siblings("path").animate({ "opacity": 0 }, 250);
+                        }
+                      }
+                      count++;
+                    });
+                  }
+                };
+
+                this.update({
+                  lineWidth: 2.1
+                });
+
+                $('#container .highcharts-series path:nth-child(2)').each(function(){
+                  if($(this).attr("stroke-width") == 2.1) {
+                    $(this).css("opacity", "1");
+                    $(this).siblings("path").css("opacity", "0");
+                    $(this).siblings("path").animate({ "opacity": 0.2 }, 250);
+                  }
+                });
+              },
+              mouseOver: function () {
+                setTimeout(function(){
+                  $('#container .highcharts-series path:nth-child(2)').each(function(){
+                    if($(this).attr("stroke-width") == 3) {
+                      $(this).css("opacity", 1);
+                    }
+                  });
+                },10);
+              },
+              mouseOut: function () {
+                setTimeout(function(){
+                  $('#container .highcharts-series path:nth-child(2)').each(function(){
+                    if($(this).attr("stroke-width") == 2) {
+                      $(this).css("opacity", 0.2);
+                    }
+                  });
+                },10);
+              }
+            },
+            pointStart: Date.UTC(2015, 2, 1),
+            pointInterval: 24 * 3600 * 1000, // one day
+            color: '#1bc79f',
+						lineWidth: 2,
+						lineColor: '#1bc79f',
+						marker: {
+          		enabled: false,
+          		states: {
+          			hover: {
+          				enabled: true,
+          				fillColor: '#1bc79f',
+                  lineWidth: 0,
+                  lineWidthPlus: 0,
+                  radius: 4,
+                  radiusPlus: 0,
+          			}
+          		}
+          	}
+	        },
+	        {
+            id: 'candy',
+            name: "Candy Crush Saga",
+            data: [19.9, 21.5, 36.4, 50.2, 100.0, 220.0, 225.6, 250.5, 220.4, 170.1, 150.6, 100.4, 80.9, 71.5, 85.4, 90.2, 45.0, 10.0, 22.0, 30.0, 41.5, 35.4, 40.2, 45.0, 30.0, 22.0],
+            events: {
+              click: function() {
+                var that = this;
+
+                for(var i = 0; i < this.chart.series.length; i++) {
+                  if(i !== that.index) {
+                    var count = 0;
+                    var isCurrentlyHighlighted = false;
+                    $('#container .highcharts-series').each(function(){
+                      if(count == i) {
+                        var thisFillPath = $(this).find('path:nth-child(2)');                        
+                        if(thisFillPath.attr("stroke-width") == 2.1) {
+                          isCurrentlyHighlighted = true
+                          that.chart.series[i].update({
+                            lineWidth: 2
+                          });                      
+                          var counterTwo = 0;
+                          $('#container .highcharts-series').each(function(){
+                            if(counterTwo == count) {
+                              thisFillPath = thisFillPath = $(this).find('path:nth-child(2)');
+                            }
+                            counterTwo++;
+                          });                          
+                          thisFillPath.css("opacity", "1");
+                          thisFillPath.animate({ "opacity": 0.2 }, 250);
+                          thisFillPath.siblings("path").css("opacity", "0.2");
+                          thisFillPath.siblings("path").animate({ "opacity": 0 }, 250);
+                        }
+                      }
+                      count++;
+                    });
+                  }
+                };
+
+                this.update({
+                  lineWidth: 2.1
+                });
+
+                $('#container .highcharts-series path:nth-child(2)').each(function(){
+                  if($(this).attr("stroke-width") == 2.1) {
+                    $(this).css("opacity", "1");
+                    $(this).siblings("path").css("opacity", "0");
+                    $(this).siblings("path").animate({ "opacity": 0.2 }, 250);
+                  }
+                });
+              },
+              mouseOver: function () {
+                setTimeout(function(){
+                  $('#container .highcharts-series path:nth-child(2)').each(function(){
+                  if($(this).attr("stroke-width") == 3) {
+                    $(this).css("opacity", 1);
+                  }
+                });
+                },10);
+              },
+              mouseOut: function () {
+                setTimeout(function(){
+                  $('#container .highcharts-series path:nth-child(2)').each(function(){
+                    if($(this).attr("stroke-width") == 2) {
+                      $(this).css("opacity", 0.2);
+                    }
+                  });
+                },10);
+              }
+            },
+            pointStart: Date.UTC(2015, 2, 1),
+            pointInterval: 24 * 3600 * 1000, // one day
+						color: '#ffb449',
+						lineWidth: 2,
+						lineColor: '#ffb449',
+            marker: {
+          		enabled: false,
+          		states: {
+          			hover: {
+          				enabled: true,
+          				fillColor: '#ffb449',
+                  lineWidth: 0,
+                  lineWidthPlus: 0,
+                  radius: 4,
+                  radiusPlus: 0,
+          			}
+          		}
+          	}
+        	},
+          {
+            id: 'zookeeper',
+            name: "Zoo Keeper Ken",
+            data: [39.9, 41.5, 56.4, 75.2, 130.0, 180.0, 175.6, 170.5, 160.4, 150.1, 120.6, 90.4, 80.9, 71.5, 35.4, 20.2, 45.0, 20.0, 22.0, 30.0, 81.5, 95.4, 60.2, 45.0, 30.0, 22.0],
+            events: {
+              click: function() {
+                var that = this;
+
+                for(var i = 0; i < this.chart.series.length; i++) {
+                  if(i !== that.index) {
+                    var count = 0;
+                    var isCurrentlyHighlighted = false;
+                    $('#container .highcharts-series').each(function(){
+                      if(count == i) {
+                        var thisFillPath = $(this).find('path:nth-child(2)');                        
+                        if(thisFillPath.attr("stroke-width") == 2.1) {
+                          isCurrentlyHighlighted = true
+                          that.chart.series[i].update({
+                            lineWidth: 2
+                          });                      
+                          var counterTwo = 0;
+                          $('#container .highcharts-series').each(function(){
+                            if(counterTwo == count) {
+                              thisFillPath = thisFillPath = $(this).find('path:nth-child(2)');
+                            }
+                            counterTwo++;
+                          });                          
+                          thisFillPath.css("opacity", "1");
+                          thisFillPath.animate({ "opacity": 0.2 }, 250);
+                          thisFillPath.siblings("path").css("opacity", "0.2");
+                          thisFillPath.siblings("path").animate({ "opacity": 0 }, 250);
+                        }
+                      }
+                      count++;
+                    });
+                  }
+                };
+
+                this.update({
+                  lineWidth: 2.1
+                });
+
+                $('#container .highcharts-series path:nth-child(2)').each(function(){
+                  if($(this).attr("stroke-width") == 2.1) {
+                    $(this).css("opacity", "1");
+                    $(this).siblings("path").css("opacity", "0");
+                    $(this).siblings("path").animate({ "opacity": 0.2 }, 250);
+                  }
+                });
+              },
+              mouseOver: function () {
+                setTimeout(function(){
+                  $('#container .highcharts-series path:nth-child(2)').each(function(){
+                  if($(this).attr("stroke-width") == 3) {
+                    $(this).css("opacity", 1);
+                  }
+                });
+                },10);
+              },
+              mouseOut: function () {
+                setTimeout(function(){
+                  $('#container .highcharts-series path:nth-child(2)').each(function(){
+                    if($(this).attr("stroke-width") == 2) {
+                      $(this).css("opacity", 0.2);
+                    }
+                  });
+                },10);
+              }
+            },
+            pointStart: Date.UTC(2015, 2, 1),
+            pointInterval: 24 * 3600 * 1000, // one day
+            color: '#ff496a',
+            lineWidth: 2,
+            lineColor: '#ff496a',
+            marker: {
+              enabled: false,
+              states: {
+                hover: {
+                  enabled: true,
+                  fillColor: '#ff496a',
+                  lineWidth: 0,
+                  lineWidthPlus: 0,
+                  radius: 4,
+                  radiusPlus: 0,
+                }
+              }
+            }
+          },
+        ],
+        tooltip: {
+        	useHTML: true,
+        	shared: false,
+          formatter: function() {
+            var s = "<h2 style=color:" + this.point.color + ">" + this.y + ' ' + this.series.name + "</h2>", pointIndex = this.series.xData.indexOf(this.x);
+            $.each(this.series.chart.series, function () {
+                s += '<div><span style=color:' + this.color + '>' + this.data[pointIndex].y + '</span>: ' +
+                    this.name + '</div>';
+            });
+            return s;
+          },
+        	backgroundColor: '#fcfdfd',
+          borderWidth: 1,
+          borderColor: '#dae3ed',
+			    crosshairs: [{
+            width: 1,
+            color: '#ff496a'
+          }],
+          positioner: function (labelWidth, labelHeight, point) {
+          		//console.log(labelWidth, labelHeight);
+              return { x: point.plotX + 40, y: point.plotY};
+          },
+          shadow: {
+            color: 'rgba(0,0,0,0.24)',
+            width: 7,
+            offsetX: 1,
+            offsetY: 1
+        	}
+        }
+	    });
+
+// -------------------------------------
+
+			// App Revenue with selected country
+			$('#container-revenue').highcharts({
+				chart: {
+					marginLeft: 0,
+					marginRight: 0,
+					marginBottom: 45,
+					marginTop: 0,
+					backgroundColor: '#fcfdfd',
+					plotBackgroundColor: '#f1f1f6',
+		   		type: 'area',
+		   		style: {
+            fontFamily: 'Lato, sans-serif'
+          }
+			  },
+			  legend: {
+			  	enabled: false
+			  },
+			  title: {
+            text: ''
+        },
+        yAxis: {
+          offset: -30,
+          showFirstLabel: false,
+          showLastLabel: false,
+          gridLineColor: '#e1e5e8',
+          labels: {
+          	align: 'left',
+          	style: {
+          		color: '#81879d',
+          		fontSize: "13px"
+          	}
+          },
+          title: {
+          	text: null
+          }            
+        },
+        xAxis: {
+        	startOnTick: false,
+        	endOnTick: false,
+        	showFirstLabel: false,
+          maxPadding: 0,
+          minPadding: 0,
+          type: 'datetime',
+          dateTimeLabelFormats: {
+              day: '%e %b'
+          },
+          tickmarkPlacement: 'on',
+          tickPixelInterval: 30,
+          tickColor: '#e1e5e8',
+          tickLength: 10,
+          lineColor: '#e1e5e8',
+          lineWidth: 1,            
+          labels: {
+          	align: 'center',
+            x: 0,
+            y: 30,
+            step: 4,
+            style: {
+              color: '#81879d',
+              fontSize: "13px"
+            }
+          }
+        },
+        plotOptions: {
+        	area: {
+        		tooltip: {
+        			followPointer: false
+        		},
+        		states: {
+        			hover: {
+        				halo: {
+        					fill: 'rgba(27,199,159,0.18)',
+        					size: 13
+        				},
+        				lineWidthPlus: 0
+        			}
+        		},
+        		point: {
+        			events: {
+        			}
+        		},
+            events: {
+              click: function() {
+                console.log("click");
+              }
+            }
+        	},
+        	series: {
+        		states: {
+        			hover : {
+        				marker: {
+        					lineColor: 'red',
+        				}
+        			}
+        		}
+        	}
+      	},
+        series: [{
+        		name: "United Kingdom",
+            data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4, 29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 144.0, 176.0, 135.6, 106.4, 129.2, 144.0, 148.5, 216.4],
+            pointStart: Date.UTC(2015, 2, 1),
+            pointInterval: 24 * 3600 * 1000, // one day
+            fillColor: {
+            	linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
+					    stops: [
+				        [0, 'rgba(109,105,197,0.14)'],
+				        [1, 'rgba(27,199,159,0.14)']
+					    ]
+            },
+            color: '#6d69c5',
+						lineWidth: 3,
+						lineWidthPlus: 0,
+						lineColor: '#6d69c5',
+						marker: {
+          		enabled: false,
+          		states: {
+          			hover: {
+          				enabled: true,
+          				fillColor: '#6d69c5',
+                  lineWidth: 0,
+                  lineWidthPlus: 0,
+                  radius: 4,
+                  radiusPlus: 0,
+          			}
+          		}
+          	},
+            stickyTracking: false
+	        },
+        ],
+        tooltip: {
+        	useHTML: true,
+        	shared: true,
+          headerFormat: '<h2>United Kingdom</h2><h3>{point.key}</h3>',
+          pointFormat: '<div><h4><b style="color: {series.color}">£{point.y}</b>: <span style="color: {series.color}">{series.name}</span></h4></div><div class="top-five-section"><h5>Top 5 Countries</h5><div><b>£330,000</b>: <span>USA</span></div><div><b style="color: #1bc79f">£{point.y}</b>: <span style="color: #1bc79f">{series.name}</span></div></div><div><b>£120,000</b>: <span>Germany</span></div><div><b>£87,000</b>: <span>Italy</span></div><div><b>£48,000</b>: <span>China</span></div>',
+        	backgroundColor: '#fcfdfd',
+          borderWidth: 1,
+          borderColor: '#dae3ed',
+			    crosshairs: [{
+              width: 1,
+              color: '#ff496a'
+          }],
+          positioner: function (labelWidth, labelHeight, point) {
+          		//console.log(labelWidth, labelHeight);
+              return { x: point.plotX + 40, y: point.plotY - 100};
+          },
+          shadow: {
+            color: 'rgba(0,0,0,0.24)',
+            width: 7,
+            offsetX: 1,
+            offsetY: 1
+        	}
+        }
+	    });
+
+
+// -------------------------------------
+			// App Revenue with selected country
+      function setChart(name, categories, data, color, type) {
+          var len = revenueChart.series.length;
+          //chart.xAxis[0].setCategories(categories);
+          for(var i = 0; i < len; i++){
+              revenueChart.series[0].remove();
+          }
+          if(data.series){
+            for(var i = 0; i < data.series.length; i ++ ){
+              revenueChart.addSeries({
+                name: data.series[i].name,
+                data: data.series[i].data,
+                type: data.series[i].type,
+                color: data.series[i].color || 'white',
+                stacking: 'normal'
+              });
+            }
+          } else {
+            revenueChart.addSeries({
+              name: name,
+              data: data,
+              type: type,
+              color: color || 'white',
+              stacking: 'normal'
+            });
+          }
+      }
+
+			revenueChart = new Highcharts.Chart({
+				chart: {
+          renderTo: 'container-revenue-split',
+          type: 'area',
+					marginLeft: 0,
+					marginRight: 0,
+					marginBottom: 45,
+					marginTop: 0,
+					backgroundColor: '#fcfdfd',
+					plotBackgroundColor: '#f1f1f6',
+		   		style: {
+            fontFamily: 'Lato, sans-serif'
+          }
+			  },
+			  legend: {
+			  	enabled: false
+			  },
+			  title: {
+            text: ''
+        },
+        yAxis: {
+          offset: -30,
+          showFirstLabel: false,
+          showLastLabel: false,
+          gridLineColor: '#e1e5e8',
+          labels: {
+          	align: 'left',
+          	style: {
+          		color: '#81879d',
+          		fontSize: "13px"
+          	}
+          },
+          title: {
+          	text: null
+          }            
+        },
+        xAxis: {
+        	startOnTick: false,
+        	endOnTick: false,
+        	showFirstLabel: false,
+          maxPadding: 0,
+          minPadding: 0,
+          type: 'datetime',
+          dateTimeLabelFormats: {
+              day: '%e %b'
+          },
+          tickmarkPlacement: 'on',
+          tickPixelInterval: 30,
+          tickColor: '#e1e5e8',
+          tickLength: 10,
+          lineColor: '#e1e5e8',
+          lineWidth: 1,            
+          labels: {
+          	align: 'center',
+            x: 0,
+            y: 30,
+            step: 4,
+            style: {
+              color: '#81879d',
+              fontSize: "13px"
+            }
+          }
+        },
+        plotOptions: {
+        	area: {
+        		stacking: 'normal',
+            trackByArea: true,
+        		tooltip: {
+        			followPointer: false
+        		},
+        		states: {
+        			hover: {
+        				halo: {
+        					fill: 'rgba(27,199,159,0.18)',
+        					size: 13
+        				},
+        				lineWidthPlus: 1
+        			}
+        		},
+        		point: {
+                events: {
+                }
+            }
+        	},
+        	series: {
+        		stickyTracking: false,        		
+        		states: {
+        			hover : {
+        				marker: {
+        					lineColor: 'red',
+        				}
+        			}
+        		},
+            cursor: 'pointer',
+            events: {
+                click: function() {
+                  var ind = this.index;
+                  var drilldown = chart.addSeriesAsDrilldown.prototype.drilldowns[ind];
+                  if (drilldown.type !== null) { // drill down
+                      setChart(null, drilldown.categories, drilldown, drilldown.type);
+                  } else { // restore
+                      setChart(name, categories, data, drilldown.type);
+                  }
+                }
+            }
+        	}
+      	},
+        series: [{
+            name: 'Paid',
+            data: [60000, 70000, 80000, 102000, 200000, 220000, 245000, 260000, 250000, 230000, 190000, 195000, 180000, 150000, 100000, 80000, 90000, 100000, 120000, 102000, 120000, 130000, 145000, 160000, 150000, 140000, 90000, 95000, 80000, 50000, 60000, 70000],
+            pointStart: Date.UTC(2015, 2, 1),
+            pointInterval: 24 * 3600 * 1000, // one day
+            fillColor: {
+            	linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
+					    stops: [
+				        [0, 'rgba(109,105,197,0.14)'],
+				        [1, 'rgba(27,199,159,0.14)']
+					    ]
+            },
+            color: '#6d69c5',
+						lineWidth: 2,
+						lineWidthPlus: 1,
+						lineColor: '#6d69c5',
+						marker: {
+          		enabled: false,
+          		states: {
+          			hover: {
+          				enabled: true,
+          				fillColor: '#6d69c5',
+                  lineWidth: 0,
+                  lineWidthPlus: 0,
+                  radius: 4,
+                  radiusPlus: 0,
+          			}
+          		}
+          	}
+        }, {
+            name: 'IAP - Remove Ads',
+            data: [40000, 50000, 40000, 60000, 70000, 90000, 140000, 150000, 130000, 100000, 70000, 40000, 30000, 35000, 33000, 50000, 53000, 60000, 65000, 55000, 70000, 90000, 140000, 100000, 80000, 50000, 40000, 30000, 20000, 15000, 13000, 10000],
+            pointStart: Date.UTC(2015, 2, 1),
+            pointInterval: 24 * 3600 * 1000, // one day
+            fillColor: {
+            	linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
+					    stops: [
+				        [0, 'rgba(255,180,73,0.14)'],
+				        [1, 'rgba(245,167,30,0.14)']
+					    ]
+            },
+            color: '#ffb449',
+						lineWidth: 2,
+						lineWidthPlus: 1,
+						lineColor: '#ffb449',
+						marker: {
+          		enabled: false,
+          		states: {
+          			hover: {
+          				enabled: true,
+          				fillColor: '#ffb449',
+                  lineWidth: 0,
+                  lineWidthPlus: 0,
+                  radius: 4,
+                  radiusPlus: 0,
+          			}
+          		}
+          	}
+        }, {
+            name: 'IAP - Other',
+            data: [20000, 30000, 40000, 44000, 50000, 56000, 80000, 90000, 93000, 80000, 60000, 56000, 45000, 43000, 44000, 47000, 53000, 60000, 70000, 85000, 78000, 100000, 120000, 90000, 66000, 60000, 50000, 54000, 57000, 48000, 38000, 20000],
+            pointStart: Date.UTC(2015, 2, 1),
+            pointInterval: 24 * 3600 * 1000, // one day
+            fillColor: {
+            	linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
+					    stops: [
+				        [0, 'rgba(255,180,73,0.14)'],
+				        [1, 'rgba(245,167,30,0.14)']
+					    ]
+            },
+            color: '#ffb449',
+						lineWidth: 2,
+						lineWidthPlus: 1,
+						lineColor: '#ffb449',
+						marker: {
+          		enabled: false,
+          		states: {
+          			hover: {
+          				enabled: true,
+          				fillColor: '#ffb449',
+                  lineWidth: 0,
+                  lineWidthPlus: 0,
+                  radius: 4,
+                  radiusPlus: 0,
+          			}
+          		}
+          	}
+        },
+        {
+            name: 'Advertising',
+            data: [50000, 60000, 45000, 48000, 66000, 70000, 80000, 90000, 100000, 120000, 80000, 70000, 65000, 40000, 20000, 23000, 50000, 43000, 45000, 60000, 80000, 90000, 90000, 85000, 90000, 100000, 40000, 40000, 35000, 40000, 50000, 80000],
+            pointStart: Date.UTC(2015, 2, 1),
+            pointInterval: 24 * 3600 * 1000, // one day
+            fillColor: {
+            	linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
+					    stops: [
+				        [0, 'rgba(241,112,233,0.14)'],
+				        [1, 'rgba(255,153,247,0.14)']
+					    ]
+            },
+            color: '#e98fec',
+						lineWidth: 2,
+						lineWidthPlus: 1,
+						lineColor: '#e98fec',
+						marker: {
+          		enabled: false,
+          		states: {
+          			hover: {
+          				enabled: true,
+          				fillColor: '#e98fec',
+                  lineWidth: 0,
+                  lineWidthPlus: 0,
+                  radius: 4,
+                  radiusPlus: 0,
+          			}
+          		}
+          	}
+        }],
+        tooltip: {
+        	useHTML: true,
+        	shared: true,
+          headerFormat: '<h2>United Kingdom</h2><h3>{point.key}</h3><div><h4>£305,000 Total</h4></div><div class="top-five-section">',
+          pointFormat: '<div><b style="color: {series.color}">{point.y}</b> <span>{series.name}</span></div>',
+          footerFormat: '</div>',
+        	backgroundColor: '#fcfdfd',
+          borderWidth: 1,
+          borderColor: '#dae3ed',
+			    crosshairs: [{
+              width: 1,
+              color: '#ff496a'
+          }],
+          positioner: function (labelWidth, labelHeight, point) {
+          		//console.log(labelWidth, labelHeight);
+              return { x: point.plotX + 30, y: point.plotY - 100};
+          },
+          shadow: {
+            color: 'rgba(0,0,0,0.24)',
+            width: 7,
+            offsetX: 1,
+            offsetY: 1
+        	}
+        }
+	    });
+
+      revenueChart.addSeriesAsDrilldown.prototype.drilldowns = [{type: null,},{
+        series: [{
+                type: 'area',
+                name: 'IAP - Remove Ads',
+                data: [40000, 50000, 40000, 60000, 70000, 90000, 140000, 150000, 130000, 100000, 70000, 40000, 30000, 35000, 33000, 50000, 53000, 60000, 65000, 55000, 70000, 90000, 140000, 100000, 80000, 50000, 40000, 30000, 20000, 15000, 13000, 10000],
+                pointStart: Date.UTC(2015, 2, 1),
+                pointInterval: 24 * 3600 * 1000, // one day
+                fillColor: {
+                  linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
+                  stops: [
+                    [0, 'rgba(255,180,73,0.14)'],
+                    [1, 'rgba(245,167,30,0.14)']
+                  ]
+                },
+                color: '#ffb449',
+                lineWidth: 2,
+                lineWidthPlus: 1,
+                lineColor: '#ffb449',
+                marker: {
+                  enabled: false,
+                  states: {
+                    hover: {
+                      enabled: true,
+                      fillColor: '#ffb449',
+                      lineWidth: 0,
+                      lineWidthPlus: 0,
+                      radius: 4,
+                      radiusPlus: 0,
+                    }
+                  }
+                }
+            },{
+                type: 'area',
+                name: 'IAP - Other',
+                data: [20000, 30000, 40000, 44000, 50000, 56000, 80000, 90000, 93000, 80000, 60000, 56000, 45000, 43000, 44000, 47000, 53000, 60000, 70000, 85000, 78000, 100000, 120000, 90000, 66000, 60000, 50000, 54000, 57000, 48000, 38000, 20000],
+                pointStart: Date.UTC(2015, 2, 1),
+                pointInterval: 24 * 3600 * 1000, // one day
+                fillColor: {
+                  linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
+                  stops: [
+                    [0, 'rgba(255,180,73,0.14)'],
+                    [1, 'rgba(245,167,30,0.14)']
+                  ]
+                },
+                color: '#ffb449',
+                lineWidth: 2,
+                lineWidthPlus: 1,
+                lineColor: '#ffb449',
+                marker: {
+                  enabled: false,
+                  states: {
+                    hover: {
+                      enabled: true,
+                      fillColor: '#ffb449',
+                      lineWidth: 0,
+                      lineWidthPlus: 0,
+                      radius: 4,
+                      radiusPlus: 0,
+                    }
+                  }
+                }
+            }]
+        }, {
+        series: [{
+                type: 'area',
+                name: 'IAP - Remove Ads',
+                data: [40000, 50000, 40000, 60000, 70000, 90000, 140000, 150000, 130000, 100000, 70000, 40000, 30000, 35000, 33000, 50000, 53000, 60000, 65000, 55000, 70000, 90000, 140000, 100000, 80000, 50000, 40000, 30000, 20000, 15000, 13000, 10000],
+                pointStart: Date.UTC(2015, 2, 1),
+                pointInterval: 24 * 3600 * 1000, // one day
+                fillColor: {
+                  linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
+                  stops: [
+                    [0, 'rgba(255,180,73,0.14)'],
+                    [1, 'rgba(245,167,30,0.14)']
+                  ]
+                },
+                color: '#ffb449',
+                lineWidth: 2,
+                lineWidthPlus: 1,
+                lineColor: '#ffb449',
+                marker: {
+                  enabled: false,
+                  states: {
+                    hover: {
+                      enabled: true,
+                      fillColor: '#ffb449',
+                      lineWidth: 0,
+                      lineWidthPlus: 0,
+                      radius: 4,
+                      radiusPlus: 0,
+                    }
+                  }
+                }
+            },{
+                type: 'area',
+                name: 'IAP - Other',
+                data: [20000, 30000, 40000, 44000, 50000, 56000, 80000, 90000, 93000, 80000, 60000, 56000, 45000, 43000, 44000, 47000, 53000, 60000, 70000, 85000, 78000, 100000, 120000, 90000, 66000, 60000, 50000, 54000, 57000, 48000, 38000, 20000],
+                pointStart: Date.UTC(2015, 2, 1),
+                pointInterval: 24 * 3600 * 1000, // one day
+                fillColor: {
+                  linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
+                  stops: [
+                    [0, 'rgba(255,180,73,0.14)'],
+                    [1, 'rgba(245,167,30,0.14)']
+                  ]
+                },
+                color: '#ffb449',
+                lineWidth: 2,
+                lineWidthPlus: 1,
+                lineColor: '#ffb449',
+                marker: {
+                  enabled: false,
+                  states: {
+                    hover: {
+                      enabled: true,
+                      fillColor: '#ffb449',
+                      lineWidth: 0,
+                      lineWidthPlus: 0,
+                      radius: 4,
+                      radiusPlus: 0,
+                    }
+                  }
+                }
+            }]
+        }];
+
+
+// -------------------------------------
+
+			// App Revenue with selected country
+			$('#container-revenue-overlay-downloads').highcharts({
+				chart: {
+					marginLeft: 0,
+					marginRight: 0,
+					marginBottom: 45,
+					marginTop: 0,
+					backgroundColor: '#fcfdfd',
+					plotBackgroundColor: '#f1f1f6',
+		   		type: 'area',
+		   		style: {
+            fontFamily: 'Lato, sans-serif'
+          },
+          exporting: { enabled: false }
+			  },
+			  legend: {
+			  	enabled: false
+			  },
+			  title: {
+            text: ''
+        },
+        yAxis: [{
+        	name: 'Revenue',
+          offset: -30,
+          showFirstLabel: false,
+          showLastLabel: false,
+          gridLineColor: '#e1e5e8',
+          labels: {
+          	align: 'left',
+          	style: {
+          		color: '#81879d',
+          		fontSize: "13px"
+          	}
+          },
+          title: {
+          	text: null
+          }            
+        }, {
+          offset: -30,
+          showFirstLabel: false,
+          showLastLabel: false,
+          gridLineColor: '#e1e5e8',
+          labels: {
+          	align: 'right',
+          	style: {
+          		color: '#ff496a',
+          		fontSize: "13px"
+          	}
+          },
+          title: {
+          	text: null
+          },
+          opposite: true
+        }],
+        xAxis: {
+        	startOnTick: false,
+        	endOnTick: false,
+        	showFirstLabel: false,
+          maxPadding: 0,
+          minPadding: 0,
+          type: 'datetime',
+          dateTimeLabelFormats: {
+              day: '%e %b'
+          },
+          tickmarkPlacement: 'on',
+          tickPixelInterval: 30,
+          tickColor: '#e1e5e8',
+          tickLength: 10,
+          lineColor: '#e1e5e8',
+          lineWidth: 1,            
+          labels: {
+          	align: 'center',
+            x: 0,
+            y: 30,
+            step: 4,
+            style: {
+              color: '#81879d',
+              fontSize: "13px"
+            }
+          }
+        },
+        plotOptions: {
+        	area: {
+        		tooltip: {
+        			followPointer: false
+        		},
+        		states: {
+        			hover: {
+        				halo: {
+        					fill: 'rgba(27,199,159,0.18)',
+        					size: 13
+        				},
+        				lineWidthPlus: 0
+        			}
+        		},
+        		point: {
+        			events: {
+        			}
+        		}
+        	},
+        	series: {
+        		states: {
+        			hover : {
+        				marker: {
+        					lineColor: 'red',
+        				}
+        			}
+        		}
+        	}
+      	},
+        series: [{
+        		yAxis: 0,
+        		name: "Revenue",
+        		id : 'dataseries',
+            data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4, 29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 144.0, 176.0, 135.6, 106.4, 129.2, 144.0, 148.5, 216.4],
+            pointStart: Date.UTC(2015, 2, 1),
+            pointInterval: 24 * 3600 * 1000, // one day
+            fillColor: {
+            	linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
+					    stops: [
+				        [0, 'rgba(109,105,197,0.14)'],
+				        [1, 'rgba(27,199,159,0.14)']
+					    ]
+            },
+            color: '#6d69c5',
+						lineWidth: 3,
+						lineWidthPlus: 0,
+						lineColor: '#6d69c5',
+						marker: {
+          		enabled: false,
+          		states: {
+          			hover: {
+          				enabled: true,
+          				fillColor: '#6d69c5',
+                  lineWidth: 0,
+                  lineWidthPlus: 0,
+                  radius: 4,
+                  radiusPlus: 0,
+          			}
+          		}
+          	}
+	        }
+        ],
+        tooltip: {
+        	useHTML: true,
+        	shared: true,
+          headerFormat: '<h2>United Kingdom</h2><h3>{point.key}</h3>',
+          pointFormat: '<div><span style="color: {series.color}">{series.name}</span>: <b>{point.y}</b></div>',
+        	backgroundColor: '#fcfdfd',
+          borderWidth: 1,
+          borderColor: '#dae3ed',
+			    crosshairs: [{
+              width: 1,
+              color: '#ff496a'
+          }],
+          positioner: function (labelWidth, labelHeight, point) {
+          		//console.log(labelWidth, labelHeight);
+              return { x: point.plotX + 30, y: point.plotY - 100};
+          },
+          shadow: {
+            color: 'rgba(0,0,0,0.24)',
+            width: 7,
+            offsetX: 1,
+            offsetY: 1
+        	}
+        }
+	    }, function (chart) {
+	        var launchPoint = chart.series[0].data[2],
+	        	featuredPoint = chart.series[0].data[6],
+	        	flagPoint = chart.series[0].data[16];
+	        //     text = chart.renderer.text(
+	        //         'Label',
+	        //         point.plotX + chart.plotLeft + 10,
+	        //         point.plotY + chart.plotTop - 10
+	        //     ).attr({
+	        //         zIndex: 5
+	        //     }).add(),
+	        //     box = text.getBBox();
+
+	        // chart.renderer.rect(box.x - 5, box.y - 5, box.width + 10, box.height + 10, 3)
+	        //     .attr({
+	        //         fill: '#FFFFEF',
+	        //         stroke: 'gray',
+	        //         'stroke-width': 1,
+	        //         zIndex: 4
+	        //     })
+	        //     .add();
+
+	        chart.renderer.image('images/icon-launch.png', launchPoint.plotX - 12, chart.chartHeight - 80, 23, 57)
+	        	.attr({
+	        		zIndex: 10
+	        	})
+	        	.add();
+
+	        chart.renderer.image('images/icon-star.png', featuredPoint.plotX - 9, chart.chartHeight - 54, 17, 31)
+	        	.attr({
+	        		zIndex: 10
+	        	})
+	        	.add();
+
+	        chart.renderer.image('images/icon-flag.png', flagPoint.plotX - 1, chart.chartHeight - 56, 19, 27)
+	        	.attr({
+	        		zIndex: 10
+	        	})
+	        	.add();
+
+	        chart.renderer.path(['M', launchPoint.plotX, chart.chartHeight - 45, 'L', launchPoint.plotX, 0])
+            .attr({
+                'stroke-width': 0.5,
+                stroke: '#6d69c5'
+            })
+            .add();
+
+          chart.renderer.path(['M', featuredPoint.plotX, chart.chartHeight - 45, 'L', featuredPoint.plotX, 0])
+            .attr({
+                'stroke-width': 0.5,
+                stroke: '#deb03f'
+            })
+            .add();
+
+          chart.renderer.path(['M', flagPoint.plotX, chart.chartHeight - 45, 'L', flagPoint.plotX, 0])
+            .attr({
+                'stroke-width': 0.5,
+                stroke: '#ff496a'
+            })
+            .addClass("line-class")
+            .add();
+    	});	
+
+			// Overlay downloads
+			// the button handler
+	    $('#js-overlay-downloads').on("focus", function () {
+	        var chart = $('#container-revenue-overlay-downloads').highcharts();
+	        if (chart.series.length === 1) {
+	            chart.addSeries({
+		        		yAxis: 1,
+		        		name: "Downloads",
+		            data: [10000, 13000, 16000, 18000, 22000, 29000, 26000, 27250, 38000, 34000, 22200, 15000, 8000, 15000, 16000, 19000, 24400, 33500, 32000, 31000, 32200, 28000, 35000, 42000, 43000, 44000],
+		            pointStart: Date.UTC(2015, 2, 1),
+		            pointInterval: 24 * 3600 * 1000, // one day
+		         		fillColor: {
+		            	linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
+							    stops: [
+						        [0, 'rgba(109,105,197,0)'],
+						        [1, 'rgba(27,199,159,0)']
+							    ]
+		            },
+		            color: '#ff496a',
+								lineWidth: 3,
+								lineWidthPlus: 0,
+								lineColor: '#ff496a',
+								marker: {
+		          		enabled: false,
+		          		states: {
+		          			hover: {
+		          				enabled: true,
+		          				fillColor: '#ff496a',
+		                  lineWidth: 0,
+		                  lineWidthPlus: 0,
+		                  radius: 4,
+		                  radiusPlus: 0,
+		          			}
+		          		}
+		          	}
+	            });
+	        } else {
+	        	if (chart.series[1].visible) {
+		            chart.series[1].hide();
+		        } else {
+		            chart.series[1].show();
+		        }
+		      }
+	    });
+
+
+// Countries and Categories Demo Chart
+      var numberOfCategories = 5
+      var countiresChart = new Highcharts.Chart({
+        chart: {
+          renderTo: 'container-countries-categories',
+          marginLeft: 0,
+          marginRight: 0,
+          marginBottom: 45,
+          marginTop: 0,
+          backgroundColor: '#fcfdfd',
+          plotBackgroundColor: '#f1f1f6',
+          type: 'area',          
+          style: {
+            fontFamily: 'Lato, sans-serif'
+          }
+        },
+        legend: {
+          enabled: false
+        },
+        title: {
+            text: ''
+        },
+        yAxis: {
+          offset: -30,
+          showFirstLabel: false,
+          showLastLabel: false,
+          gridLineColor: '#e1e5e8',
+          labels: {
+            align: 'left',
+            style: {
+              color: '#81879d',
+              fontSize: "13px"
+            }
+          },
+          title: {
+            text: null
+          }            
+        },
+        xAxis: {
+          startOnTick: false,
+          endOnTick: false,
+          showFirstLabel: false,
+          maxPadding: 0,
+          minPadding: 0,
+          type: 'datetime',
+          dateTimeLabelFormats: {
+              day: '%e %b'
+          },
+          tickmarkPlacement: 'on',
+          tickPixelInterval: 30,
+          tickColor: '#e1e5e8',
+          tickLength: 10,
+          lineColor: '#e1e5e8',
+          lineWidth: 1,            
+          labels: {
+            align: 'center',
+            x: 0,
+            y: 30,
+            step: 4,
+            style: {
+              color: '#81879d',
+              fontSize: "13px"
+            }
+          }
+        },
+        plotOptions: {
+          area: {
+            tooltip: {
+              followPointer: false
+            },
+            states: {
+              hover: {
+                halo: {
+                  fill: 'rgba(27,199,159,0.18)',
+                  size: 13
+                },
+                lineWidthPlus: 0
+              }
+            }
+          }
+        },
+        series:          
+           [{
+            name: "GBR, Overall",
+            data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4, 29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 144.0, 176.0, 135.6, 106.4, 129.2, 144.0, 148.5, 216.4],
+            pointStart: Date.UTC(2015, 2, 1),
+            pointInterval: 24 * 3600 * 1000, // one day
+            fillColor: {
+              linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
+              stops: [
+                [0, 'rgba(109,105,197,0.14)'],
+                [1, 'rgba(27,199,159,0.14)']
+              ]
+            },
+            color: '#1bc79f',
+            lineWidth: 3,
+            lineWidthPlus: 0,
+            lineColor: '#1bc79f',
+            marker: {
+              enabled: false,
+              states: {
+                hover: {
+                  enabled: true,
+                  fillColor: '#1bc79f',
+                  lineWidth: 0,
+                  lineWidthPlus: 0,
+                  radius: 4,
+                  radiusPlus: 0,
+                }
+              }
+            }
+          },
+          {
+            name: "GBR, Category 1",
+            data: [19.9, 21.5, 36.4, 50.2, 100.0, 220.0, 225.6, 250.5, 220.4, 170.1, 150.6, 100.4, 80.9, 71.5, 85.4, 90.2, 45.0, 10.0, 22.0, 30.0, 41.5, 35.4, 40.2, 45.0, 30.0, 22.0],
+            events: {
+              mouseOver: function (e) {
+                this.update({
+                    lineColor: 'rgba(255,180,73,1)',
+                    zIndex: 10
+                });
+              },
+              mouseOut: function () {
+                this.update({
+                  lineColor: 'rgba(255,180,73,0.2)',
+                  zIndex: 1
+                });
+              }
+            },
+            pointStart: Date.UTC(2015, 2, 1),
+            pointInterval: 24 * 3600 * 1000, // one day
+            color: '#ffb449',
+            lineWidth: 3,
+            lineWidthPlus: 0,
+            lineColor: 'rgba(255,180,73,0.2)',
+            fillColor: 'rgba(255,180,73,0)',
+            marker: {
+              enabled: false,
+              states: {
+                hover: {
+                  enabled: true,
+                  fillColor: '#ffb449',
+                  lineWidth: 0,
+                  lineWidthPlus: 0,
+                  radius: 4,
+                  radiusPlus: 0,
+                }
+              }
+            }
+          },
+          {
+            name: "GBR, Category 2",
+            data: [29.9, 25.5, 26.4, 34.2, 60.0, 70.0, 125.6, 150.5, 140.4, 130.1, 100.6, 70.4, 50.9, 41.5, 55.4, 60.2, 55.0, 60.0, 72.0, 80.0, 91.5, 135.4, 140.2, 145.0, 130.0, 122.0],
+            events: {
+              mouseOver: function (e) {
+                this.update({
+                    lineColor: 'rgba(233,143,236,1)',
+                    zIndex: 10
+                });
+              },
+              mouseOut: function () {
+                this.update({
+                  lineColor: 'rgba(233,143,236,0.2)',
+                  zIndex: 1
+                });
+              }
+            },
+            pointStart: Date.UTC(2015, 2, 1),
+            pointInterval: 24 * 3600 * 1000, // one day
+            color: '#e98fec',
+            lineWidth: 3,
+            lineWidthPlus: 0,
+            lineColor: 'rgba(233,143,236,0.2)',
+            fillColor: 'rgba(233,143,236,0)',
+            marker: {
+              enabled: false,
+              states: {
+                hover: {
+                  enabled: true,
+                  fillColor: '#e98fec',
+                  lineWidth: 0,
+                  lineWidthPlus: 0,
+                  radius: 4,
+                  radiusPlus: 0,
+                }
+              }
+            }
+          },
+          {
+            name: "GBR, Category 3",
+            data: [59.9, 45.5, 46.4, 44.2, 50.0, 90.0, 150.6, 180.5, 170.4, 160.1, 150.6, 120.4, 80.9, 61.5, 85.4, 90.2, 95.0, 100.0, 120.0, 100.0, 121.5, 165.4, 190.2, 245.0, 230.0, 222.0],
+            events: {
+              mouseOver: function (e) {
+                this.update({
+                    lineColor: 'rgba(84,190,229,1)',
+                    zIndex: 10
+                });
+              },
+              mouseOut: function () {
+                this.update({
+                  lineColor: 'rgba(84,190,229,0.2)',
+                  zIndex: 1
+                });
+              }
+            },
+            pointStart: Date.UTC(2015, 2, 1),
+            pointInterval: 24 * 3600 * 1000, // one day
+            color: '#54bee5',
+            lineWidth: 3,
+            lineWidthPlus: 0,
+            lineColor: 'rgba(84,190,229,0.2)',
+            fillColor: 'rgba(84,190,229,0)',
+            marker: {
+              enabled: false,
+              states: {
+                hover: {
+                  enabled: true,
+                  fillColor: '#54bee5',
+                  lineWidth: 0,
+                  lineWidthPlus: 0,
+                  radius: 4,
+                  radiusPlus: 0,
+                }
+              }
+            }
+          },
+          {
+            name: "GBR, Category 4",
+            data: [159.9, 145.5, 146.4, 144.2, 150.0, 190.0, 150.6, 130.5, 120.4, 100.1, 90.6, 80.4, 102.9, 130.5, 125.4, 110.2, 105.0, 90.0, 40.0, 30.0, 31.5, 35.4, 20.2, 25.0, 29.0, 25.0],
+            events: {
+              mouseOver: function (e) {
+                this.update({
+                    lineColor: 'rgba(183,183,183,1)',
+                    zIndex: 10
+                });
+              },
+              mouseOut: function () {
+                this.update({
+                  lineColor: 'rgba(183,183,183,0.2)',
+                  zIndex: 1
+                });
+              }
+            },
+            pointStart: Date.UTC(2015, 2, 1),
+            pointInterval: 24 * 3600 * 1000, // one day
+            color: '#B7B7B7',
+            lineWidth: 3,
+            lineWidthPlus: 0,
+            lineColor: 'rgba(183,183,183,0.2)',
+            fillColor: 'rgba(183,183,183,0)',
+            marker: {
+              enabled: false,
+              states: {
+                hover: {
+                  enabled: true,
+                  fillColor: '#B7B7B7',
+                  lineWidth: 0,
+                  lineWidthPlus: 0,
+                  radius: 4,
+                  radiusPlus: 0,
+                }
+              }
+            }
+          },
+          {
+            name: "FRA, Overall",
+            data: [216.4, 194.1, 129.2, 144.0, 129.2, 144.0, 176.0, 144.0, 176.0, 144.0, 135.6,  95.6, 54.4, 29.9, 71.5, 106.4, 129.2,  176.0, 135.6, 106.4, 148.5, 116.4, 129.9, 71.5, 106.4, 148.5,],
+            pointStart: Date.UTC(2015, 2, 1),
+            pointInterval: 24 * 3600 * 1000, // one day
+            events: {
+              mouseOver: function (e) {
+                this.update({
+                    lineColor: 'rgba(27,199,159,1)',
+                    zIndex: 10
+                });
+              },
+              mouseOut: function () {
+                this.update({
+                  lineColor: 'rgba(27,199,159,0.2)',
+                  zIndex: 1
+                });
+              }
+            },
+            color: '#1bc79f',
+            lineWidth: 3,
+            lineWidthPlus: 0,
+            lineColor: '#1bc79f',
+            fillColor: 'rgba(27,199,159,0)',
+            marker: {
+              enabled: false,
+              states: {
+                hover: {
+                  enabled: true,
+                  fillColor: '#1bc79f',
+                  lineWidth: 0,
+                  lineWidthPlus: 0,
+                  radius: 4,
+                  radiusPlus: 0,
+                }
+              }
+            }
+          },
+          {
+            name: "FRA, Category 1",
+            data: [ 50.2, 100.0, 220.0, 19.9, 21.5, 36.4, 80.9, 71.5, 22.0, 30.0, 85.4, 90.2, 170.1, 150.6, 100.4,  45.0, 10.0, 41.5, 35.4, 40.2, 45.0, 30.0, 22.0, 225.6, 250.5, 220.4],
+            events: {
+              mouseOver: function (e) {
+                this.update({
+                    lineColor: 'rgba(255,180,73,1)',
+                    zIndex: 10
+                });
+              },
+              mouseOut: function () {
+                this.update({
+                  lineColor: 'rgba(255,180,73,0.2)',
+                  zIndex: 1
+                });
+              }
+            },
+            pointStart: Date.UTC(2015, 2, 1),
+            pointInterval: 24 * 3600 * 1000, // one day
+            color: '#ffb449',
+            lineWidth: 3,
+            lineWidthPlus: 0,
+            lineColor: 'rgba(255,180,73,0.2)',
+            fillColor: 'rgba(255,180,73,0)',
+            marker: {
+              enabled: false,
+              states: {
+                hover: {
+                  enabled: true,
+                  fillColor: '#ffb449',
+                  lineWidth: 0,
+                  lineWidthPlus: 0,
+                  radius: 4,
+                  radiusPlus: 0,
+                }
+              }
+            }
+          },
+          {
+            name: "FRA, Category 2",
+            data: [29.9, 25.5,  125.6, 150.5, 140.4, 130.1, 100.6, 70.4, 26.4, 34.2, 60.0, 70.0, 50.9, 41.5, 55.4, 80.0, 91.5, 135.4, 140.2, 145.0, 130.0, 60.2, 55.0, 60.0, 72.0,  122.0],
+            events: {
+              mouseOver: function (e) {
+                this.update({
+                    lineColor: 'rgba(233,143,236,1)',
+                    zIndex: 10
+                });
+              },
+              mouseOut: function () {
+                this.update({
+                  lineColor: 'rgba(233,143,236,0.2)',
+                  zIndex: 1
+                });
+              }
+            },
+            pointStart: Date.UTC(2015, 2, 1),
+            pointInterval: 24 * 3600 * 1000, // one day
+            color: '#e98fec',
+            lineWidth: 3,
+            lineWidthPlus: 0,
+            lineColor: 'rgba(233,143,236,0.2)',
+            fillColor: 'rgba(233,143,236,0)',
+            marker: {
+              enabled: false,
+              states: {
+                hover: {
+                  enabled: true,
+                  fillColor: '#e98fec',
+                  lineWidth: 0,
+                  lineWidthPlus: 0,
+                  radius: 4,
+                  radiusPlus: 0,
+                }
+              }
+            }
+          },
+          {
+            name: "FRA, Category 3",
+            data: [150.6, 180.5, 170.4, 160.1, 50.0, 90.0,  85.4, 90.2, 95.0, 100.0, 120.0, 150.6, 120.4, 80.9, 61.5,100.0, 121.5, 165.4, 190.2, 145.0, 59.9, 45.5, 46.4, 44.2, 230.0, 222.0],
+            events: {
+              mouseOver: function (e) {
+                this.update({
+                    lineColor: 'rgba(84,190,229,1)',
+                    zIndex: 10
+                });
+              },
+              mouseOut: function () {
+                this.update({
+                  lineColor: 'rgba(84,190,229,0.2)',
+                  zIndex: 1
+                });
+              }
+            },
+            pointStart: Date.UTC(2015, 2, 1),
+            pointInterval: 24 * 3600 * 1000, // one day
+            color: '#54bee5',
+            lineWidth: 3,
+            lineWidthPlus: 0,
+            lineColor: 'rgba(84,190,229,0.2)',
+            fillColor: 'rgba(84,190,229,0)',
+            marker: {
+              enabled: false,
+              states: {
+                hover: {
+                  enabled: true,
+                  fillColor: '#54bee5',
+                  lineWidth: 0,
+                  lineWidthPlus: 0,
+                  radius: 4,
+                  radiusPlus: 0,
+                }
+              }
+            }
+          },
+          {
+            name: "FRA, Category 4",
+            data: [144.2, 150.0, 190.0, 150.6, 159.9, 145.5, 146.4, 35.4, 20.2, 25.0, 29.0, 25.0, 130.5, 102.9, 130.5, 105.0, 120.4, 100.1, 90.6, 80.4, 90.0, 40.0, 30.0, 31.5, 125.4, 110.2],
+            events: {
+              mouseOver: function (e) {
+                this.update({
+                    lineColor: 'rgba(183,183,183,1)',
+                    zIndex: 10
+                });
+              },
+              mouseOut: function () {
+                this.update({
+                  lineColor: 'rgba(183,183,183,0.2)',
+                  zIndex: 1
+                });
+              }
+            },
+            pointStart: Date.UTC(2015, 2, 1),
+            pointInterval: 24 * 3600 * 1000, // one day
+            color: '#B7B7B7',
+            lineWidth: 3,
+            lineWidthPlus: 0,
+            lineColor: 'rgba(183,183,183,0.2)',
+            fillColor: 'rgba(183,183,183,0)',
+            marker: {
+              enabled: false,
+              states: {
+                hover: {
+                  enabled: true,
+                  fillColor: '#B7B7B7',
+                  lineWidth: 0,
+                  lineWidthPlus: 0,
+                  radius: 4,
+                  radiusPlus: 0,
+                }
+              }
+            }
+          },
+        ],
+        tooltip: {
+          useHTML: true,
+          shared: false,
+          formatter: function() {
+            var numberOfCountries = this.series.chart.series.length/numberOfCategories,
+            pointIndex = this.series.xData.indexOf(this.x),
+            seriesArray = this.series.chart.series,
+            s = "<h2>";
+
+            // get countries for heading
+            var currentCategoryIndex = 0;
+            for (c = 0; c < numberOfCountries; c++) {
+              var categoryNameSplit = seriesArray[currentCategoryIndex].name.split(',');
+              s += categoryNameSplit[0] + " &nbsp; ";
+              currentCategoryIndex += numberOfCategories;
+            }
+            s += "</h2>";
+
+            // output data by category for each country
+            s += "<h3>" + Date(this.key * 1000) + "</h3><h4 style='font-size: 20px; color:" + this.series.color + "'>" + this.y + " " + this.series.name + "<br /></h4>";
+            for (i = 0; i < numberOfCategories; i++) {
+              var currentCategoryIndex = i,
+                  categoryName = seriesArray[currentCategoryIndex].name.split(',');
+              s += "<div>" + categoryName[1] + ": ";
+                for (z = 0; z < numberOfCountries; z++) {
+                  var categoryNameSplit = seriesArray[currentCategoryIndex].name.split(',');
+                  s+= "<span style=color:" + seriesArray[currentCategoryIndex].color + ">" + categoryNameSplit[0] + "</span> " + seriesArray[currentCategoryIndex].data[pointIndex].y + " &nbsp; ";
+                  currentCategoryIndex += numberOfCategories;
+                }
+              s += "</div>";
+            }
+
+            return s;
+          },
+          backgroundColor: '#fcfdfd',
+          borderWidth: 1,
+          borderColor: '#dae3ed',
+          crosshairs: [{
+            width: 1,
+            color: '#ff496a'
+          }],
+          positioner: function (labelWidth, labelHeight, point) {
+              //console.log(labelWidth, labelHeight);
+              return { x: point.plotX + 40, y: point.plotY};
+          },
+          shadow: {
+            color: 'rgba(0,0,0,0.24)',
+            width: 7,
+            offsetX: 1,
+            offsetY: 1
+          }
+        }
+      });
+
+		}    
+
+  	window.onready = initScripts();
+  </script>
+</body>

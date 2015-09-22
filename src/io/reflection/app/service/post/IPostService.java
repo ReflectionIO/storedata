@@ -87,10 +87,10 @@ public interface IPostService extends IService {
 
 	/**
 	 * 
-	 * @param title
+	 * @param code
 	 * @return
 	 * @throws DataAccessException
 	 */
-	public Post getTitlePost(String title) throws DataAccessException;
+	public Post getCodePost(String code) throws DataAccessException;
 
 }

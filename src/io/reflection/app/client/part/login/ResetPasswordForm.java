@@ -7,78 +7,60 @@
 //
 package io.reflection.app.client.part.login;
 
-import io.reflection.app.api.core.shared.call.ChangePasswordRequest;
-import io.reflection.app.api.core.shared.call.ChangePasswordResponse;
-import io.reflection.app.api.core.shared.call.event.ChangePasswordEventHandler;
+import io.reflection.app.client.component.LoadingButton;
+import io.reflection.app.client.component.PasswordField;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.helper.FormHelper;
-import io.reflection.app.client.part.Preloader;
-import io.reflection.app.client.res.Images;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.PasswordTextBox;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author billy1380
  * 
  */
-public class ResetPasswordForm extends Composite implements ChangePasswordEventHandler {
+public class ResetPasswordForm extends Composite {
 
 	private static ResetPasswordFormUiBinder uiBinder = GWT.create(ResetPasswordFormUiBinder.class);
 
 	interface ResetPasswordFormUiBinder extends UiBinder<Widget, ResetPasswordForm> {}
 
-	@UiField FormPanel form;
+	private String resetCode;
 
-	@UiField TextBox resetCode;
-	@UiField HTMLPanel resetCodeGroup;
-
-	@UiField PasswordTextBox newPassword;
-	@UiField PasswordTextBox confirmPassword;
-	@UiField HTMLPanel newPasswordGroup;
-	@UiField HTMLPanel newPasswordNote;
-	private Preloader preloaderRef;
+	@UiField(provided = true) PasswordField newPassword = new PasswordField(true);
+	@UiField PasswordField confirmPassword;
 
 	private String newPasswordError = null;
 
-	@UiField Button submit;
-
-	final String imageButtonLink = "<img style=\"vertical-align: 1px;\" src=\"" + Images.INSTANCE.buttonArrowWhite().getSafeUri().asString() + "\"/>";
+	@UiField LoadingButton submit;
 
 	public ResetPasswordForm() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		resetCode.getElement().setAttribute("placeholder", "Code");
-
-		newPassword.getElement().setAttribute("placeholder", "New Password");
-		confirmPassword.getElement().setAttribute("placeholder", "Confirm Password");
-
-		submit.setHTML(submit.getText() + "&nbsp;&nbsp;" + imageButtonLink);
 	}
 
 	@UiHandler("submit")
 	void onSubmitClick(ClickEvent event) {
 		if (validate()) {
-			FormHelper.hideNote(newPasswordGroup, newPasswordNote);
-			preloaderRef.show();
-			SessionController.get().resetPassword(resetCode.getText(), newPassword.getText());
+			newPassword.hideNote();
+			confirmPassword.hideNote();
+			setEnabled(false);
+			submit.setStatusLoading("Sending");
+			SessionController.get().resetPassword(resetCode, newPassword.getText());
 		} else {
 			if (newPasswordError != null) {
-				FormHelper.showNote(true, newPasswordGroup, newPasswordNote, newPasswordError);
+				newPassword.showNote(newPasswordError, true);
+				confirmPassword.showNote(newPasswordError, true);
 			} else {
-				FormHelper.hideNote(newPasswordGroup, newPasswordNote);
+				newPassword.hideNote();
+				confirmPassword.hideNote();
 			}
 		}
 	}
@@ -93,21 +75,10 @@ public class ResetPasswordForm extends Composite implements ChangePasswordEventH
 		super.onAttach();
 
 		resetForm();
-
-		newPassword.setFocus(true);
-	}
-
-	/**
-	 * Set preloader object from Reset Password Page
-	 * 
-	 * @param p
-	 */
-	public void setPreloader(Preloader p) {
-		preloaderRef = p;
 	}
 
 	@UiHandler({ "newPassword", "confirmPassword" })
-	void onEnterKeyPressResetPassword(KeyPressEvent event) {
+	void onEnterKeyDownResetPassword(KeyDownEvent event) {
 		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
 			submit.click();
 		}
@@ -122,16 +93,16 @@ public class ResetPasswordForm extends Composite implements ChangePasswordEventH
 
 		// Check password constraints for normal user
 		if (newPasswordValue == null || newPasswordValue.length() == 0) {
-			newPasswordError = "Cannot be empty";
+			newPasswordError = FormHelper.ERROR_PASSWORD_CREATE_EMPTY;
 			validated = false;
 		} else if (newPasswordValue.length() < 6) {
-			newPasswordError = "Too short (minimum 6 characters)";
+			newPasswordError = FormHelper.ERROR_PASSWORD_CREATE_SHORT;
 			validated = false;
 		} else if (newPasswordValue.length() > 64) {
 			newPasswordError = "Too long (maximum 64 characters)";
 			validated = false;
 		} else if (!newPasswordValue.equals(confirmPasswordValue)) {
-			newPasswordError = "Password and confirmation should match";
+			newPasswordError = FormHelper.ERROR_PASSWORD_CREATE_CONFIRMATION_MATCH;
 			validated = false;
 		} else {
 			newPasswordError = null;
@@ -142,11 +113,13 @@ public class ResetPasswordForm extends Composite implements ChangePasswordEventH
 	}
 
 	private void resetForm() {
-		resetCode.setText("");
-		newPassword.setText("");
-		confirmPassword.setText("");
+		resetCode = "";
+		newPassword.clear();
+		confirmPassword.clear();
+		newPassword.hideNote();
+		confirmPassword.hideNote();
+		submit.resetStatus();
 		setEnabled(true);
-		FormHelper.hideNote(newPasswordGroup, newPasswordNote);
 	}
 
 	private void setEnabled(boolean value) {
@@ -156,31 +129,51 @@ public class ResetPasswordForm extends Composite implements ChangePasswordEventH
 	}
 
 	public void setResetCode(String code) {
-		resetCode.setText(code);
+		resetCode = code;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * io.reflection.app.api.core.shared.call.event.ChangePasswordEventHandler#changePasswordSuccess(io.reflection.app.api.core.shared.call.ChangePasswordRequest
-	 * , io.reflection.app.api.core.shared.call.ChangePasswordResponse)
-	 */
-	@Override
-	public void changePasswordSuccess(ChangePasswordRequest input, ChangePasswordResponse output) {
-		preloaderRef.hide();
+	public void setStatusSuccess() {
+		submit.setStatusSuccess("Your Password's Been Changed", 0);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
 	 * 
-	 * @see
-	 * io.reflection.app.api.core.shared.call.event.ChangePasswordEventHandler#changePasswordFailure(io.reflection.app.api.core.shared.call.ChangePasswordRequest
-	 * , java.lang.Throwable)
 	 */
-	@Override
-	public void changePasswordFailure(ChangePasswordRequest input, Throwable caught) {
-		preloaderRef.hide();
+	public void setStatusError() {
+		submit.setStatusError();
+		newPassword.clear();
+		confirmPassword.clear();
+		setEnabled(true);
 	}
+
+	// /*
+	// * (non-Javadoc)
+	// *
+	// * @see
+	// *
+	// io.reflection.app.api.core.shared.call.event.ChangePasswordEventHandler#changePasswordSuccess(io.reflection.app.api.core.shared.call.ChangePasswordRequest
+	// * , io.reflection.app.api.core.shared.call.ChangePasswordResponse)
+	// */
+	// @Override
+	// public void changePasswordSuccess(ChangePasswordRequest input, ChangePasswordResponse output) {
+	// if (output.status == StatusType.StatusTypeSuccess) {
+	//
+	// } else {
+	//
+	// }
+	// }
+	//
+	// /*
+	// * (non-Javadoc)
+	// *
+	// * @see
+	// *
+	// io.reflection.app.api.core.shared.call.event.ChangePasswordEventHandler#changePasswordFailure(io.reflection.app.api.core.shared.call.ChangePasswordRequest
+	// * , java.lang.Throwable)
+	// */
+	// @Override
+	// public void changePasswordFailure(ChangePasswordRequest input, Throwable caught) {
+	// // preloaderRef.hide();
+	// }
 
 }

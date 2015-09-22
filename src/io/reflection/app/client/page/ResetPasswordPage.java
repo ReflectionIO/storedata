@@ -15,10 +15,13 @@ import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.NavigationEventHandler;
-import io.reflection.app.client.part.Preloader;
 import io.reflection.app.client.part.login.ResetPasswordForm;
+import io.reflection.app.client.res.Styles;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.AnchorElement;
+import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
@@ -34,14 +37,14 @@ public class ResetPasswordPage extends Page implements NavigationEventHandler, C
 
 	interface ResetPasswordPageUiBinder extends UiBinder<Widget, ResetPasswordPage> {}
 
-	// @UiField HTMLPanel reminder;
 	@UiField ResetPasswordForm form;
-	@UiField Preloader preloader;
+	@UiField DivElement formSubmittedSuccessPanel;
+	@UiField AnchorElement continueToSiteLink;
 
 	public ResetPasswordPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		form.setPreloader(preloader); // Assign the preloader reference to the Forgot Password Form
+		continueToSiteLink.setHref(PageType.LoginPageType.asHref("requestinvite"));
 	}
 
 	/*
@@ -53,11 +56,28 @@ public class ResetPasswordPage extends Page implements NavigationEventHandler, C
 	protected void onAttach() {
 		super.onAttach();
 
-		form.setVisible(true);
+		Document.get().getBody().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().accountAccessPage());
+		Document.get().getBody().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().connectAccountIsShowing());
 
 		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(ChangePasswordEventHandler.TYPE, SessionController.get(), this));
-		register(DefaultEventBus.get().addHandlerToSource(ChangePasswordEventHandler.TYPE, SessionController.get(), form));
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.page.Page#onDetach()
+	 */
+	@Override
+	protected void onDetach() {
+		super.onDetach();
+
+		Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().accountAccessPage());
+		Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().connectAccountIsShowing());
+		Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formSubmittedSuccessComplete());
+		formSubmittedSuccessPanel.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
+
 	}
 
 	/*
@@ -86,7 +106,11 @@ public class ResetPasswordPage extends Page implements NavigationEventHandler, C
 	@Override
 	public void changePasswordSuccess(ChangePasswordRequest input, ChangePasswordResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			PageType.LoginPageType.show();
+			Document.get().getBody().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formSubmittedSuccessComplete());
+			form.setStatusSuccess();
+			formSubmittedSuccessPanel.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
+		} else {
+			form.setStatusError();
 		}
 	}
 
@@ -98,6 +122,8 @@ public class ResetPasswordPage extends Page implements NavigationEventHandler, C
 	 * , java.lang.Throwable)
 	 */
 	@Override
-	public void changePasswordFailure(ChangePasswordRequest input, Throwable caught) {}
+	public void changePasswordFailure(ChangePasswordRequest input, Throwable caught) {
+		form.setStatusError();
+	}
 
 }

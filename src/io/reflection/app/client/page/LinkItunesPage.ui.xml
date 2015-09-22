@@ -1,102 +1,145 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
 	xmlns:l="urn:import:io.reflection.app.client.part.linkaccount">
-	<ui:with field='images' type='io.reflection.app.client.res.Images' />
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 	<ui:style gss="true">
-	.spaceFiller {
-	    height: 100px;
-	}
 	
-	.mainPanel {
-	    margin-top: 20px;
-	}
-	
-	.marginTopForm {
-	    padding: 0px;
-	    margin-top: 20px;
-	}
-	
-	.marginTop20 {
-	    margin-top: 20px;
-	}
-	
-	.inviteRegisterTab {
-	    background-color: #fafafa;
-	    font-weight: 600;
-	    height: 65px;
-	    font-size: 18px;
-	    padding-top: 35px;
-	    border-radius: 0px;
-	    border: 0px;
-	    outline: 0;
-	    text-align: center;
-	    color: #0e0e1f;
-	}
-	
-	.formLinkAcc {
-	    padding: 0px;
-	}
 	</ui:style>
-	<g:HTMLPanel styleName="container"> <!-- Override container-fluid assigned in NavigationController -->
-
-		<g:HTMLPanel ui:field="mPanel" styleName="row">
-			<div class="hidden-xs hidden-sm col-md-12 {style.spaceFiller}"></div>
-
-			<div class="col-md-6 text-center {style.mainPanel}">
-
-				<g:Image resource="{images.linkAccount}" />
-				<h1 style="margin-top: 40px;  margin-bottom: 70px; margin-left:50px; margin-right: 50px;">Please link your iTunes Connect account</h1>
-
-				<g:Image resource="{images.linkAccountProgress}" />
-
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.accountSetupContentWrapper}">
+		<div ui:field="accountConnectAnimation" class="{STYLES_INSTANCE.reflectionMainStyle.accountConnectAnimation}">
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.cord}">
 				<div>
-					<div class="col-md-4">
-						<h3 style="margin-top: 30px;">
-							Step 1
-						</h3>
-						<p class="p-small" style="margin-top: 20px; padding-left: 5px; padding-right: 5px;">Create password and register to get started</p>
-					</div>
-					<div class="col-md-4">
-						<h3 style="color: #6D69C5;  margin-top: 30px;">
-							Step 2
-						</h3>
-						<p class="p-small" style="margin-top: 20px; padding-left: 10px; padding-right: 10px;">Link your iTunes Connect account</p>
-					</div>
-					<div class="col-md-4">
-						<h3 style=" margin-top: 30px;">
-							Step 3
-						</h3>
-						<p class="p-small" style="margin-top: 20px; padding-left: 10px; padding-right: 10px;">Done. Welcome to the private beta</p>
+				</div>
+			</div>
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.plugs}">
+				<svg version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 563.4 92.5" enable-background="new 0 0 563.4 92.5" xml:space="preserve"
+					class="{STYLES_INSTANCE.reflectionMainStyle.plugLeft}"><g><path fill="#484492"
+					d="M519.9,92.5h-7.8c-3.5,0-6.3-2.8-6.3-6.3v-3.4h-24.4c-8,0-13.2-5.7-17.3-10.2c-2.4-2.7-4.9-5.4-6.8-5.4
+							c-8.2,0-16.9-1.6-16.9-20.6v-0.7c0-19,8.7-20.6,16.9-20.6c1.9,0,4.4-2.7,6.8-5.4c4.2-4.5,9.3-10.2,17.3-10.2h24.4V6.3
+							c0-3.5,2.8-6.3,6.3-6.3h7.8c3.5,0,6.3,2.8,6.3,6.3v79.9C526.2,89.7,523.4,92.5,519.9,92.5z M481.4,15.7c-5.4,0-9.2,4.2-12.9,8.2
+							c-3.5,3.8-6.7,7.3-11.2,7.3c-5.8,0-10.9,0-10.9,14.6v0.7c0,14.6,5,14.6,10.9,14.6c4.5,0,7.8,3.6,11.2,7.3c3.7,4.1,7.5,8.2,12.9,8.2
+							h30.4v9.4c0,0.2,0.1,0.3,0.3,0.3h7.8c0.2,0,0.3-0.1,0.3-0.3V6.3c0-0.2-0.1-0.3-0.3-0.3h-7.8c-0.2,0-0.3,0.1-0.3,0.3v9.4H481.4z"></path><path
+					fill="#484492" d="M554.5,35.9h-29.6v-4.5h29.6c3.3,0,4.4-2.2,4.4-4c0-1.9-1.2-4-4.4-4h-29.6v-4.5h29.6c5.9,0,8.9,4.3,8.9,8.5
+							C563.4,31.6,560.4,35.9,554.5,35.9z"></path><path
+					fill="#484492" d="M554.5,72.7h-29.6v-4.5h29.6c3.3,0,4.4-2.2,4.4-4c0-1.9-1.2-4-4.4-4h-29.6v-4.5h29.6c5.9,0,8.9,4.3,8.9,8.5
+							C563.4,68.5,560.4,72.7,554.5,72.7z"></path><rect
+					y="42.3" fill="#484492" width="443.1" height="6"></rect><path
+					fill="#484492" d="M436.7,56c-1.1,0-2-0.9-2-2V36.5c0-1.1,0.9-2,2-2s2,0.9,2,2V54C438.7,55.1,437.8,56,436.7,56z"></path><path
+					fill="#484492" d="M430.9,54.8c-1.1,0-2-0.9-2-2V37.7c0-1.1,0.9-2,2-2s2,0.9,2,2v15.1C432.9,53.9,432,54.8,430.9,54.8z"></path><path
+					fill="#484492" d="M425.1,53.7c-1.1,0-2-0.9-2-2V38.9c0-1.1,0.9-2,2-2s2,0.9,2,2v12.8C427.1,52.8,426.2,53.7,425.1,53.7z"></path><path
+					fill="#484492" d="M419.3,52.5c-1.1,0-2-0.9-2-2V40c0-1.1,0.9-2,2-2s2,0.9,2,2v10.5C421.3,51.6,420.4,52.5,419.3,52.5z"></path><rect
+					x="508.8" y="14" fill="#484492" width="3" height="63.8"></rect></g></svg>
+				<svg version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 187.4 92.5" enable-background="new 0 0 187.4 92.5" xml:space="preserve"
+					class="{STYLES_INSTANCE.reflectionMainStyle.plugRight}"><g id="Plug2"><g><path fill="#6D69C5"
+					d="M17.4,80c0,0,50.6,0,62.3,0s11.7-8,11.7-11.7c0-3.6,0-21.9,0-21.9v-0.2c0,0,0-17.1,0-21.9
+								s-3.1-11.7-11.7-11.7s-62.3,0-62.3,0V6.3c0-1.8-1.5-3.3-3.3-3.3H6.3C4.5,3,3,4.5,3,6.3v79.9c0,1.8,1.5,3.3,3.3,3.3h7.8
+								c1.8,0,3.3-1.5,3.3-3.3V80z"></path><path
+					fill="#484492"
+					d="M14.1,92.5H6.3c-3.5,0-6.3-2.8-6.3-6.3V6.3C0,2.8,2.8,0,6.3,0h7.8c3.5,0,6.3,2.8,6.3,6.3v3.4h59.3
+								c6,0,9.5,2.8,11.4,5.2c2.1,2.6,3.3,6.1,3.3,9.5v44c0,9.7-4.9,14.7-14.7,14.7H20.4v3.2C20.4,89.7,17.5,92.5,14.1,92.5z M6.3,6
+								C6.1,6,6,6.1,6,6.3v79.9c0,0.2,0.1,0.3,0.3,0.3h7.8c0.2,0,0.3-0.1,0.3-0.3V77h65.3c8,0,8.7-3.9,8.7-8.7v-44c0-3-1.8-8.7-8.7-8.7
+								H14.4V6.3c0-0.2-0.1-0.3-0.3-0.3H6.3z"></path></g><rect
+					x="91" y="43.3" fill="#484492" width="96.4" height="6"></rect><path
+					fill="#484492" d="M99,57c-1.1,0-2-0.9-2-2V37.5c0-1.1,0.9-2,2-2s2,0.9,2,2V55C101,56.1,100.1,57,99,57z"></path><path
+					fill="#484492" d="M104.8,55.8c-1.1,0-2-0.9-2-2V38.7c0-1.1,0.9-2,2-2s2,0.9,2,2v15.1C106.8,54.9,105.9,55.8,104.8,55.8z"></path><path
+					fill="#484492" d="M110.6,54.6c-1.1,0-2-0.9-2-2V39.9c0-1.1,0.9-2,2-2s2,0.9,2,2v12.8C112.6,53.7,111.7,54.6,110.6,54.6z"></path><path
+					fill="#484492" d="M116.5,53.5c-1.1,0-2-0.9-2-2V41c0-1.1,0.9-2,2-2s2,0.9,2,2v10.5C118.5,52.6,117.6,53.5,116.5,53.5z"></path><rect
+					x="14.4" y="14" fill="#484492" width="3" height="63.8"></rect></g><g
+					ui:field="plugLogoContainer" class="{STYLES_INSTANCE.reflectionMainStyle.plugLogoContainer}"><g class="{STYLES_INSTANCE.reflectionMainStyle.plugLogo}"><path fill-rule="evenodd" clip-rule="evenodd" fill="#484492"
+					d="M36.1,31.8h17.3c0.7,0,1.3,0.6,1.3,1.3v0.2c0,0.7-0.6,1.3-1.3,1.3
+								H36.1c-0.7,0-1.3-0.6-1.3-1.3v-0.2C34.8,32.4,35.4,31.8,36.1,31.8z"></path><path
+					fill-rule="evenodd" clip-rule="evenodd" fill="#484492"
+					d="M36.1,36.5h21c0.7,0,1.3,0.6,1.3,1.3v0.2c0,0.7-0.6,1.3-1.3,1.3
+								h-21c-0.7,0-1.3-0.6-1.3-1.3v-0.2C34.8,37.1,35.4,36.5,36.1,36.5z"></path><path
+					fill-rule="evenodd" clip-rule="evenodd" fill="#484492"
+					d="M36.1,46h13.5c0.7,0,1.3,0.6,1.3,1.3v0.2c0,0.7-0.6,1.3-1.3,1.3
+								H36.1c-0.7,0-1.3-0.6-1.3-1.3v-0.2C34.8,46.6,35.4,46,36.1,46z"></path><path
+					fill-rule="evenodd" clip-rule="evenodd" fill="#484492"
+					d="M36.1,50.7h17.3c0.7,0,1.3,0.6,1.3,1.3v0.2c0,0.7-0.6,1.3-1.3,1.3
+								H36.1c-0.7,0-1.3-0.6-1.3-1.3V52C34.8,51.3,35.4,50.7,36.1,50.7z"></path><path
+					fill-rule="evenodd" clip-rule="evenodd" fill="#484492"
+					d="M36.1,41.3h17.3c0.7,0,1.3,0.6,1.3,1.3v0.2c0,0.7-0.6,1.3-1.3,1.3
+								H36.1c-0.7,0-1.3-0.6-1.3-1.3v-0.2C34.8,41.9,35.4,41.3,36.1,41.3z"></path><path
+					fill-rule="evenodd" clip-rule="evenodd" fill="#484492"
+					d="M36.1,55.5h21c0.7,0,1.3,0.6,1.3,1.3V57c0,0.7-0.6,1.3-1.3,1.3
+								h-21c-0.7,0-1.3-0.6-1.3-1.3v-0.2C34.8,56,35.4,55.5,36.1,55.5z"></path></g><g
+					class="{STYLES_INSTANCE.reflectionMainStyle.plugLogoGlow}"><g><path fill-rule="evenodd" clip-rule="evenodd" fill="#FCFDFD"
+					d="M36.1,31.8h17.3c0.7,0,1.3,0.6,1.3,1.3v0.2
+									c0,0.7-0.6,1.3-1.3,1.3H36.1c-0.7,0-1.3-0.6-1.3-1.3v-0.2C34.8,32.4,35.4,31.8,36.1,31.8z"></path><path
+					fill-rule="evenodd" clip-rule="evenodd" fill="#FCFDFD"
+					d="M36.1,36.5h21c0.7,0,1.3,0.6,1.3,1.3v0.2c0,0.7-0.6,1.3-1.3,1.3
+									h-21c-0.7,0-1.3-0.6-1.3-1.3v-0.2C34.8,37.1,35.4,36.5,36.1,36.5z"></path><path
+					fill-rule="evenodd" clip-rule="evenodd" fill="#FCFDFD"
+					d="M36.1,46h13.5c0.7,0,1.3,0.6,1.3,1.3v0.2c0,0.7-0.6,1.3-1.3,1.3
+									H36.1c-0.7,0-1.3-0.6-1.3-1.3v-0.2C34.8,46.6,35.4,46,36.1,46z"></path><path
+					fill-rule="evenodd" clip-rule="evenodd" fill="#FCFDFD"
+					d="M36.1,50.7h17.3c0.7,0,1.3,0.6,1.3,1.3v0.2
+									c0,0.7-0.6,1.3-1.3,1.3H36.1c-0.7,0-1.3-0.6-1.3-1.3V52C34.8,51.3,35.4,50.7,36.1,50.7z"></path><path
+					fill-rule="evenodd" clip-rule="evenodd" fill="#FCFDFD"
+					d="M36.1,41.3h17.3c0.7,0,1.3,0.6,1.3,1.3v0.2
+									c0,0.7-0.6,1.3-1.3,1.3H36.1c-0.7,0-1.3-0.6-1.3-1.3v-0.2C34.8,41.9,35.4,41.3,36.1,41.3z"></path><path
+					fill-rule="evenodd" clip-rule="evenodd" fill="#FCFDFD"
+					d="M36.1,55.5h21c0.7,0,1.3,0.6,1.3,1.3V57c0,0.7-0.6,1.3-1.3,1.3
+									h-21c-0.7,0-1.3-0.6-1.3-1.3v-0.2C34.8,56,35.4,55.5,36.1,55.5z"></path></g></g></g>
+					</svg>
+			</div>
+		</div>
+		<section
+			class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.horizontalCentreContent} {STYLES_INSTANCE.reflectionMainStyle.accountAccessContent}">
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.fullScreenIntro}">
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.createPasswordMainContent}">
+					<h1>Welcome to Reflection Jan!</h1>
+					<p class="{STYLES_INSTANCE.reflectionMainStyle.pStyleFeatured}">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eius tempor incididunt ut labore et dolore lorem magna aliqua.
+						Ut enim ad minim
+						veniam, quis nostrud exercitat ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in</p>
+					<div class="{STYLES_INSTANCE.reflectionMainStyle.listPartners}">
+						<h2>Some of the partners you're joining</h2>
+						<ul>
+							<li>
+								<img src="images/Partner_Soundcloud@2x.ea554de6daac13e9327b.png" alt="Soundcloud logo" />
+							</li>
+							<li>
+								<img src="images/Partner_Sega@2x.75250c27e36c0e325b55.png" alt="Sega logo" />
+							</li>
+							<li>
+								<img src="images/Partner_Wooga@2x.95ceca5f61bc74a6ac9d.png" alt="Wooga logo" />
+							</li>
+							<li>
+								<img src="images/Partner_TocaBoca@2x.a5c0880048489fada02a.png" alt="Toca Boca logo" />
+							</li>
+						</ul>
 					</div>
 				</div>
-
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.connectAccountMainContent}">
+					<h1>Your New Source of Free App Intelligence</h1>
+					<p class="{STYLES_INSTANCE.reflectionMainStyle.pStyleFeatured}">All you need to do now is link your iTunes Connect account(s) so that Reflection can import your all-important data.</p>
+				</div>
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.connectAccountSubmitted}">
+					<h1>Thanks For Linking</h1>
+					<p class="{STYLES_INSTANCE.reflectionMainStyle.pStyleFeatured}">We're currently fetching your app data and will send you an email as soon as we're done. It wil only take a moment.</p>
+				</div>
 			</div>
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.accountFormContainer}">
 
-			<g:HTMLPanel styleName="col-md-5 col-md-offset-1 {style.marginTopForm}">
+				<l:IosMacLinkAccountForm ui:field="iosMacForm" titleText="Link Your iTunes Connect Account"
+					titleStyleName="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFive} {STYLES_INSTANCE.reflectionMainStyle.accountFormHeading} {STYLES_INSTANCE.reflectionMainStyle.maintainAfterSubmit} {STYLES_INSTANCE.reflectionMainStyle.jsFadeContent}"
+					styleName="{STYLES_INSTANCE.reflectionMainStyle.formsMidTheme}" />
 
-				<p:Preloader ui:field="preloader">
-					<g:HTMLPanel styleName="well {style.formLinkAcc}">
-						<g:HTMLPanel>
-							<ul class="nav nav-tabs nav-justified register">
-								<li class="{style.inviteRegisterTab}">
-									Link Your iTunes Connect Account
-								</li>
-							</ul>
-						</g:HTMLPanel>
-						<g:FormPanel ui:field="form" styleName="form">
-							<g:HTMLPanel>
-								<l:IosMacLinkAccountForm ui:field="mIosMacForm" />
-								<g:Button ui:field="mLinkAccount" styleName="btn btn-lg btn-primary btn-block">
-									Link Account
-								</g:Button>
-							</g:HTMLPanel>
-						</g:FormPanel>
-					</g:HTMLPanel>
-				</p:Preloader>
-
-			</g:HTMLPanel>
-			<g:HTMLPanel styleName="filler-bottom col-md-12 hidden-xs hidden-sm" />
-		</g:HTMLPanel>
+				<div ui:field="panelSuccess" class="{STYLES_INSTANCE.reflectionMainStyle.formSubmittedSuccess}">
+					<svg version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 61 54" enable-background="new 0 0 61 54" xml:space="preserve" class="success-tick">
+									<path fill="#1BC79F"
+						d="M60.6,7.4l-8.1-7.1C52.2,0.1,51.9,0,51.6,0c-0.3,0-0.6,0.2-0.9,0.4L21.3,33.8L10.9,20
+									c-0.2-0.3-0.5-0.4-0.8-0.5c-0.3,0-0.7,0-0.9,0.2l-8.6,6.5c-0.6,0.4-0.7,1.2-0.2,1.7l19.4,25.5c0.2,0.3,0.6,0.5,1,0.5c0,0,0,0,0,0
+									c0.4,0,0.7-0.2,0.9-0.4L60.7,9.2C61.2,8.7,61.1,7.9,60.6,7.4z"></path>
+								</svg>
+					<h2>Account Linked!</h2>
+					<p>
+						<g:Anchor href="#" ui:field="linkAnotherAccount">Link Another Account</g:Anchor>
+						<g:InlineHyperlink ui:field="continueToLeaderboard">Continue to Leaderboard</g:InlineHyperlink>
+					</p>
+				</div>
+			</div>
+		</section>
 
 	</g:HTMLPanel>
 </ui:UiBinder> 

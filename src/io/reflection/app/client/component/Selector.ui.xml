@@ -1,0 +1,27 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
+	<ui:style>
+	
+	</ui:style>
+
+	<g:HTMLPanel ui:field="formField" styleName="{STYLES_INSTANCE.reflectionMainStyle.formField} {STYLES_INSTANCE.reflectionMainStyle.formFieldSelect}">
+		<div ui:field="overlayPanel" class="{STYLES_INSTANCE.reflectionMainStyle.pageOverlay}"></div>
+		<select ui:field="selectElem" class="{STYLES_INSTANCE.reflectionMainStyle.jsFieldSelect}">
+			<option value="" disabled="" selected="">
+			</option>
+		</select>
+		<g:HTMLPanel ui:field="selectContainer" styleName="{STYLES_INSTANCE.reflectionMainStyle.reflectionSelect} {STYLES_INSTANCE.reflectionMainStyle.reflectionSelectFilter}">
+			<span ui:field="spanSelectLabel" class="{STYLES_INSTANCE.reflectionMainStyle.refIconAfter} {STYLES_INSTANCE.reflectionMainStyle.refIconAfterAngleDown}">
+			</span>
+			<ul ui:field="uListElem">
+				<g:Anchor ui:field="closeLink" styleName="{STYLES_INSTANCE.reflectionMainStyle.closePopup}">K</g:Anchor>
+				<span ui:field="spanOptionLabel">
+				</span>
+				<div ui:field="listContainer" class="{STYLES_INSTANCE.reflectionMainStyle.listContainer}">
+				</div>
+			</ul>
+		</g:HTMLPanel>
+	</g:HTMLPanel>
+</ui:UiBinder> 

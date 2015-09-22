@@ -1,0 +1,15 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
+	<ui:style>
+	
+	</ui:style>
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.formField} {STYLES_INSTANCE.reflectionMainStyle.isClosed}">
+		<g:TextBox ui:field="textBox" styleName="" />
+		<label ui:field="label"></label>
+		<g:Anchor ui:field="tooltipLink" href="#" target="_blank"
+			styleName="{STYLES_INSTANCE.reflectionMainStyle.formFieldHelp} {STYLES_INSTANCE.reflectionMainStyle.positionTooltipLeft} js-whats-this-tooltip">
+			<span>What's this?</span>
+		</g:Anchor>
+	</g:HTMLPanel>
+</ui:UiBinder> 

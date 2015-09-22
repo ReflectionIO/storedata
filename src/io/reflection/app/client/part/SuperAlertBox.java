@@ -57,12 +57,12 @@ public class SuperAlertBox implements JsonServiceCallEventHandler, CloseHandler<
 
 	private void addContainer() {
 		container = new HTMLPanel("<!-- super alert box -->");
-		container.setStyleName("col-md-4");
 
 		Style s = container.getElement().getStyle();
 		s.setZIndex(99);
-		s.setPosition(Position.ABSOLUTE);
-		s.setTop(80.0, Unit.PX);
+		s.setPosition(Position.FIXED);
+		s.setBottom(20.0, Unit.PX);
+		s.setRight(20, Unit.PT);
 
 		RootPanel.get().add(container);
 	}

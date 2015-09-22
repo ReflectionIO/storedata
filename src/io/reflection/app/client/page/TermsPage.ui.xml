@@ -1,712 +1,250 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 	<ui:style gss="true">
-	.title {
-		margin-top: 76px;
-		margin-bottom: 0px;
-	}
 	
-	.subtitle {
-		margin-top: 26px;
-		margin-bottom: 0px;
-	}
-	
-	.paragraph {
-		margin-top: 56px;
-		margin-bottom: 0px;
-	}
-	
-	.subparagraph {
-		margin-top: 26px;
-		margin-bottom: 0px;
-	}
-	
-	.subsubparagraph {
-		margin-top: 16px;
-		margin-bottom: 0px;
-	}
-	
-	.xsDivider {
-		height: 30px;
-	}
 	</ui:style>
-	<g:HTMLPanel styleName="container">
-		<h2 class="{style.title}">Reflection App Intelligence Service</h2>
-		<h3 class="{style.subtitle}">Beta phase Terms and Conditions</h3>
-		<ol>
-			<li>
-				<h4 class="{style.paragraph}">Introduction</h4>
-			</li>
-			<ol>
-				<li>
-					<p class="{style.subparagraph}">
-						The Reflection
-						Service (the
-						<b>&quot;Service&quot;</b>
-						is a market intelligence service that enables users to access
-						data-driven insight into the global app market.
-						The Reflection
-						Service is
-						provided by
-
-						Reflection.io
-						Limited
-						(
-						<b>&quot;Reflection&quot;</b>
-						,
-						<b>&quot;we&quot;</b>
-						,
-						<b>&quot;us&quot;</b>
-						and
-						<b>&quot;our&quot;</b>
-						),
-
-						a company registered in England and Wales, company number 08044310, whose place of business is at
-						40-44 Newman Street, London W1T 1QD,
-						United
-						Kingdom.
-					</p>
-				</li>
-				<li>
-					<p class="{style.subparagraph}">
-						Please read these
-						Terms and Conditions (
-						<b>&quot;Terms&quot;</b>
-						)
-						carefully. By clicking to accept these Terms, you are creating a
-						binding contract between Reflection and
-						either you
-						personally (if
-						you are
-						using the
-						Reflection Service as an individual consumer or
-						sole trader) or the company you
-						work for (if you are
-						using the
-						Reflection Service
-						on behalf of the company you
-						work for) (
-						<b>&quot;you&quot;</b>
-						,
-						and
-						<b>&quot;your&quot;</b>
-						).
-					</p>
-				</li>
-				<li>
-					<p class="{style.subparagraph}">If you do not accept
-						these Terms, you may not use any features of the Reflection
-						Service.</p>
-				</li>
-			</ol>
-
-			<li>
-				<h4 class="{style.paragraph}">Definitions Used in these Terms</h4>
-			</li>
-
-			<div class="row">
-				<div class="visible-xs {style.xsDivider}"></div>
-				<b class="col-sm-3 {style.subparagraph}">&quot;App Intelligence&quot;</b>
-				<p class="col-sm-9 {style.subparagraph}">means analytical information
-					(whether in data, text, graphic or other form) which we create and
-					give you access to via the Reflection
-					Service
-					based
-					on
-					algorithm-driven analysis of User Input Data and other data gathered
-					from the Sources.</p>
-			</div>
-			<div class="row">
-				<div class="visible-xs {style.xsDivider}"></div>
-				<b class="col-sm-3 {style.subparagraph}">&quot;App Platform Account&quot; </b>
-				<p class="col-sm-9 {style.subparagraph}">means the account you use for
-					development of your apps, for example your iTunes Connect or Google
-					Play account.</p>
-			</div>
-			<div class="row">
-				<div class="visible-xs {style.xsDivider}"></div>
-				<b class="col-sm-3 {style.subparagraph}">&quot;User Input Data&quot; </b>
-				<p class="col-sm-9 {style.subparagraph}">means data that you send us or
-					that we collect from your App Platform Account when you link it to
-					the Reflection Service for the
-					purpose of analysis
-					using our
-					algorithmic statistic generation model, to compile App Intelligence
-					and make it available to Users (but User
-					Input Data excludes data
-					that is
-					publically available via the Sources without access to your
-					App Platform Account).</p>
-			</div>
-			<div class="row">
-				<div class="visible-xs {style.xsDivider}"></div>
-				<b class="col-sm-3 {style.subparagraph}">&quot;User Account Information&quot;</b>
-				<p class="col-sm-9 {style.subparagraph}">means your user login
-					and password details for access to your data from a specific Source,
-					for example, your App Platform Account user
-					name and
-					password.</p>
-			</div>
-			<div class="row">
-				<div class="visible-xs {style.xsDivider}"></div>
-				<b class="col-sm-3 {style.subparagraph}">&quot;Reflection Service&quot;</b>
-				<p class="col-sm-9 {style.subparagraph}">
-					means service accessible via
-					the web url
-
-					<a href="/">http://reflection.io</a>
-
-					including any pages of that website and any other services made
-					available to you by us under these Terms.
-				</p>
-			</div>
-			<div class="row">
-				<div class="visible-xs {style.xsDivider}"></div>
-				<b class="col-sm-3 {style.subparagraph}">&quot;Sources&quot;</b>
-				<p class="col-sm-9 {style.subparagraph}">means online third-party data sources,
-					including websites, the App Platform Account and various digital
-					distribution, analytics,
-					advertising and
-					monetisation platforms.</p>
-			</div>
-			<li>
-				<h4 class="{style.paragraph}">Eligibility and warranty</h4>
-			</li>
-			<p class="{style.subparagraph}">You warrant and
-				represent that you are over 18 (or over 13 with parental consent) and
-				you have capacity to enter into these
-				Terms. If you are using
-				the
-				Reflection Service on behalf of a business, you warrant and represent
-				that you have all necessary authority from that
-				business entity (i.e.
-				company or other
-				body) to enter into a binding contract with
-				Reflection to use the Reflection Service.
-			</p>
-			<li>
-				<h4 class="{style.paragraph}">Changes</h4>
-			</li>
-			<p class="{style.subparagraph}">We may occasionally make changes to the Reflection Service or these Terms.
-				If we do, the new Terms will be effective as soon as they
-				are posted
-				on
-				the
-				Reflection Service. You agree to review the Terms periodically
-				so that you are aware of any modifications. By continuing to use
-				the
-				Reflection
-				Service after
-				we
-				post an update of these Terms on the
-				Reflection Service, you express acceptance of the changes.
-			</p>
-			<li>
-				<h4 class="{style.paragraph}">Your Data, Privacy and Security</h4>
-			</li>
-			<ol>
-				<li>
-					<p class="{style.subparagraph}">
-						By using the Reflection
-						Service, you continue to own all data we collect from you or your
-						App Platform Account,
-						including any personal data,
-						User
-						Input Data
-						and User Account Information which you own at the time we collect
-						it.</p>
-				</li>
-				<li>
-					<p class="{style.subparagraph}">Your
-						User Input
-						Data (such as iTunes Sale Reports) informs our App Intelligence but
-						remains private to you. We do
-						not share your User Input Data
-						with
-						other users of
-						the Reflection Service. You can view and analyse
-						your own User Input Data
-						in the &quot;My Apps&quot; section of the
-						Reflection Service, but this data is
-						<b>not</b>
-						visible to Reflection Users outside of your organisation.
-					</p>
-				</li>
-				<li>
-					<p class="{style.subparagraph}">We will immediately
-						cease collection of your User Input Data if you delete your
-						Reflection account, but any
-						of your previously collected
-						User Input
-						Data that
-						is already included in the pool of data used to compile
-						our App Intelligence
-						will not be deleted.
-					</p>
-				</li>
-				<li>
-					<p class="{style.subparagraph}">
-						We retain information you provide us (
-						<b>except</b>
-						your User Input Data and User Account Information) for as long as
-						is necessary to comply with our legal
-						obligations or resolve
-						disputes.
-					</p>
-				</li>
-				<li>
-					<p class="{style.subparagraph}">We use cookies. When
-						you use the Reflection Service, we may collect, process and use
-						information
-						about you which may not personally identify
-						you but
-						which
-						may be helpful for improving the operation of the Site.
-						Such
-						information may be collected through “traffic data” and may
-						entail the use of cookies, IP
-						Addresses or other
-						numeric codes used
-						to identify your device and compile information about your use of
-						the
-						Reflection Service to help us
-						improve it. Some
-						cookies we use
-						are set by third party analytics service (currently Google
-						Analytics and
-						Mixpanel).
-						You can delete cookies or configure your
-						device to reject
-						them, although this may disable the ability of the
-						Reflection Service
-						to manage individual sessions.
-					</p>
-				</li>
-				<li>
-					<p class="{style.subparagraph}">We will never sell or
-						share your data with any third parties, or use it in any way that
-						is not
-						necessary for the purpose of compiling and
-						analysing
-						our App
-						Intelligence, without your prior consent.</p>
-				</li>
-				<li>
-					<p class="{style.subparagraph}">
-						<b>We take the
-							security of your data very seriously.</b>
-						The data host we currently use is Google Cloud Platform, whose
-						<a href="http://www.google.co.uk/intl/en/policies/terms/regional.html">Terms
-							of Service</a>
-						<span lang="en"> and </span>
-						<a href="http://www.google.co.uk/intl/en/policies/privacy/">Privacy
-							Policy</a>
-						can be read for further information on
-						the data privacy and security measures taken to
-						protect your data.
-						All data hosted on the Google
-						Cloud Platform
-						solution is protected
-						with state of the
-						art SSL encryption.
-					</p>
-				</li>
-			</ol>
-			<li>
-				<h4 class="{style.paragraph}">Your
-					Use of the Reflection Service
-				</h4>
-			</li>
-			<ol type="a">
-				<li>
-					<p class="{style.subparagraph}">You agree:</p>
-					<ol>
-						<li>
-							<p class="{style.subsubparagraph}">not to use the
-								Reflection Service for any unlawful purpose or in any way that
-								interrupts, damages or
-								impairs the Reflection Service;
-							</p>
-						</li>
-						<li>
-							<p class="{style.subsubparagraph}">not to access or
-								attempt to access the accounts of other users;</p>
-						</li>
-						<li>
-							<p class="{style.subsubparagraph}">to indemnify (i.e.
-								compensate) and defend us fully against any claims or legal
-								proceedings
-								brought against us by any person as a
-								result of your
-								breach of
-								these Terms; and</p>
-						</li>
-						<li>
-							<p class="{style.subsubparagraph}">to keep your account
-								username and password secure at all times and not to disclose
-								your
-								account username and/or password to any
-								other person.</p>
-						</li>
-					</ol>
-				</li>
-				<li>
-					<p class="{style.subparagraph}">You must not:</p>
-					<ol type="a">
-						<li>
-							<p class="{style.subsubparagraph}">infringe any law,
-								regulation or any order of a court;</p>
-						</li>
-						<li>
-							<p class="{style.subsubparagraph}">infringe the rights
-								of any person or entity, whether us or a fellow user of the
-								Reflection
-								Service or not including but not limited
-								to their
-								intellectual
-								property, privacy, publicity or contractual
-								rights;
-							</p>
-						</li>
-						<li>
-							<p class="{style.subsubparagraph}">use automated scripts
-								to collect information or otherwise interact with the Reflection
-								Service or the Site;</p>
-						</li>
-						<li>
-							<p class="{style.subsubparagraph}">upload or use
-								fraudulent, inaccurate or misleading, or is otherwise
-								objectionable
-								content of any kind in connection with the
-								Reflection Service;
-								or</p>
-						</li>
-						<li>
-							<p class="{style.subsubparagraph}">claim or represent
-								that we endorse your business, apps or other products or
-								service
-								without our prior express written approval.</p>
-						</li>
-					</ol>
-				</li>
-			</ol>
-			<li>
-
-				<h4 class="{style.paragraph}">Termination</h4>
-			</li>
-			<ol>
-				<li>
-					<p class="{style.subparagraph}">We may terminate these
-						Terms and close your account any time without notice if we cease to
-						provide the
-						Reflection Service in your country.
-						You may
-						terminate
-						your agreement with us without any liability at any time by written
-						notice to the contact details listed in Clause 11
-						below.
-					</p>
-				</li>
-				<li>
-					<p class="{style.subparagraph}">Without limiting any
-						other rights we may have, we reserve the right to suspend, restrict
-						or terminate
-						your access to the Reflection Service
-						at any
-						time
-						without notice if we have reasonable grounds to believe you have
-						breached any of these Terms.
-					</p>
-				</li>
-			</ol>
-			<li>
-				<h4 class="{style.paragraph}">Licensing
-					and Promotional Materials</h4>
-			</li>
-			<ol>
-				<li>
-					<p class="{style.subparagraph}">
-						The Reflection Service, all App Intelligence and any content
-						provided through the Reflection Service (including text,
-						logos,
-						trademarks,
-						domain
-						names,
-						graphics and other content) are the
-						property of Reflection or its licensors. Subject to
-						Clause Error: Reference source not
-						found
-						below, we grant you a
-						non-exclusive,non-transferable, limited,
-						revocable licence
-						to use the Reflection Service and to view and
-						access
-						the App Intelligence and other content that we
-						make
-						available through
-						the Reflection Service for the purpose of your
-						business.
-					</p>
-				</li>
-				<li>
-					<p class="{style.subparagraph}">We may refer to your
-						organisation's use of the Reflection Service in promotional
-						materials and
-						publications. For this purpose only, you
-						grant us a
-						limited
-						licence to use and copy (but not modify, except minor
-						resizing as required for the relevant publication) the name and
-						logos of your organisation and
-						its
-						products.
-					</p>
-				</li>
-				<li>
-					<p class="{style.subparagraph}">For the avoidance of
-						doubt, unless we expressly permit you to do so in writing, you may
-						not
-						extract any App Intelligence, other data or code
-						from
-						the
-						Reflection Service nor use any such App Intelligence,
-						data or code
-						for the purpose of another app intelligence service.
-					</p>
-				</li>
-			</ol>
-			<li>
-				<h4 class="{style.paragraph}">Our
-					Legal Obligations
-				</h4>
-			</li>
-			<ol>
-				<li>
-					<p class="{style.subparagraph}">Nothing in these Terms
-						excludes or limits our liability for death or personal injury
-						caused by our
-						negligence or fraud and your liability
-						for death
-						or
-						personal injury caused by your negligence or fraud.</p>
-				</li>
-				<li>
-					<p class="{style.subparagraph}">We are not responsible
-						for:
-					</p>
-
-					<ol type="a">
-						<li>
-							<p class="{style.subsubparagraph}">Losses, damage,
-								costs or expenses not caused by our breach of these terms;</p>
-						</li>
-						<li>
-							<p class="{style.subsubparagraph}">the actions or
-								omissions of other users of the Reflection Service;
-							</p>
-						</li>
-						<li>
-							<p class="{style.subsubparagraph}">any indirect or
-								consequential loss or damage which means a loss suffered by you
-								which is a side
-								effect of the main loss or damage
-								and where we
-								could not
-								have anticipated that type of loss arising when you
-								agreed to these terms;
-							</p>
-						</li>
-						<li>
-							<p class="{style.subsubparagraph}">any decisions or
-								losses you may incur as a result of the accuracy or inaccuracy
-								of any App
-								Intelligence; or</p>
-						</li>
-						<li>
-							<p class="{style.subsubparagraph}">any harm, loss or
-								damage suffered by you or anyone else if the Reflection Service
-								is
-								interrupted, suspended or otherwise not
-								provided to you
-								(whether for
-								reasons beyond our control or
-								otherwise), but if
-								you have a paid subscription, you may be liable to a
-								partial
-								refund if we do not
-								provide the
-								service to you
-								at all for a
-								significant period of time).</p>
-						</li>
-					</ol>
-				</li>
-				<li>
-					<p class="{style.subparagraph}">For any loss or
-						damage suffered by you or anyone else that may arise from use of
-						the Reflection Service and which is not
-						otherwise excluded
-						under
-						this
-						clause, our liability is limited to GBP &pound; 100 (one hundred
-						pounds sterling).</p>
-				</li>
-			</ol>
-			<li>
-				<h4 class="{style.paragraph}">Disclaimer and Technical Limitations</h4>
-			</li>
-			<ol>
-				<li>
-					<p class="{style.subparagraph}">We do not endorse or
-						take any responsibility for statements, advertisements or any
-						content whatsoever transmitted
-						through, or linked to
-						from, the
-						Reflection
-						Service by users or third party service providers. We
-						are not responsible for any
-						transaction you may enter with a
-						third
-						party as a result of your
-						interpretation of the App Intelligence,
-						and it is up to you to decide
-						whether it is prudent to do so.
-					</p>
-				</li>
-				<li>
-					<p class="{style.subparagraph}">The App Intelligence
-						and other information or forecasts on the Reflection Service are
-						algorithm-driven and
-						therefore not intended to be
-						representative of
-						a
-						specific business' performance or 100% accurate. The quality and
-						availability of
-						the Reflection Service is also
-						dependent on your
-						device's
-						connectivity. We do
-						our best to provide a useful service
-						to you, but the
-						Reflection Service is provided without
-						express or
-						implied warranty or condition of any
-						kind, on an
-						&quot;as-is&quot;
-						basis (unless
-						the law in country makes certain implied terms
-						mandatory).
-					</p>
-				</li>
-			</ol>
-			<li>
-				<h4 class="{style.paragraph}">Contacting Us</h4>
-			</li>
-			<p class="{style.subparagraph}">
-				If you
-				need to contact us, please email us at
-				<a href="mailto:info@reflection.io">info@reflection.io</a>
-				or write to us at 40-44 Newman Street, London, W1T 1QD. Please note that we
-				are only responsible for the Reflection
-				Service and do not represent any
-				other user
-				from whom we gather User Input Data.
-			</p>
-			<li>
-				<h4 class="{style.paragraph}">Disputes</h4>
-			</li>
-			<p class="{style.subparagraph}">Unless
-				otherwise required by mandatory law in your country, any disputes in
-				connection with these Terms will be
-				governed by and interpreted in
-				accordance with
-				the laws of England and Wales. If either of us brings
-				a claim in connection with these Terms, we agree
-				to only do so in the
-				courts
-				of
-				England.
-			</p>
-			<li>
-				<h4 class="{style.paragraph}">Other Important Legal Terms</h4>
-			</li>
-			<ol>
-				<li>
-					<p class="{style.subparagraph}">We can assign,
-						sub-contract and/or otherwise transfer any or all of our rights
-						and/or obligations under these Terms
-						to any company, firm or
-						person.
-						We will
-						only do this if it does not affect your rights
-						under these Terms. Please note that you may
-						terminate your
-						agreement with us
-						at any time. You may not
-						transfer
-						your rights or
-						obligations under these Terms to anyone else without
-						our prior
-						written consent (which we
-						will not unreasonably withhold or delay),
-						unless the
-						transfer is to a company within the same
-						group structure
-						as yours (in which case you
-						will not need to get our prior written
-						consent).
-					</p>
-				</li>
-				<li>
-					<p class="{style.subparagraph}">If either of us
-						breaches these Terms and the other party takes no action against
-						the breaching party, that other
-						party will still be
-						entitled to
-						enforce its
-						rights and remedies against the breaching party in
-						relation to that breach and to use
-						its rights and remedies in
-						any
-						other situation where the
-						breaching party
-						breaches these Terms.</p>
-				</li>
-				<li>
-					<p class="{style.subparagraph}">If any part of these
-						Terms is disallowed or found to be ineffective by any court or
-						regulator, the remainder
-						of the Terms will continue to
-						govern
-						each
-						of our
-						respective obligations.</p>
-				</li>
-				<li>
-					<p class="{style.subparagraph}">These Terms are not
-						intended to give rights to anyone except you and us.</p>
-				</li>
-				<li>
-					<p class="{style.subparagraph}">Except as otherwise
-						expressly stated, these Terms contain the entire agreement between
-						us and you
-						relating to use of the Reflection Service
-						and
-						supersede
-						any previous agreements, arrangements, undertakings or
-						proposals,
-						written or oral, between us and you relating to use of the
-						Reflection Service.
-					</p>
-				</li>
-			</ol>
-		</ol>
-
-		<p class="{style.paragraph}">These terms
-			were last updated on 17th February 2015
-		</p>
-
-		<g:HTMLPanel styleName="filler-bottom col-md-12 hidden-xs hidden-sm" />
-
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.pageGeneralContent} {STYLES_INSTANCE.reflectionMainStyle.pageTerms}">
+		<div
+			class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnTwoThirds} {STYLES_INSTANCE.reflectionMainStyle.blogContentContainer}">
+			<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticleFull}">				
+				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Reflection App Intelligence Service</h2>
+				<h1>Beta Phase Terms and Conditions</h1> 
+						<ol class="{STYLES_INSTANCE.reflectionMainStyle.contentList}">
+							<li>
+								<h3>Introduction</h3>
+								<ol>
+									<li>
+										The Reflection Service (the <strong>"Service"</strong>) is a market intelligence service 
+										that enables users to access data-driven insight into the global app market. 
+										The Reflection Service is provided by Reflection.io Limited 
+										(<strong>"Reflection"</strong>, <strong>"we"</strong>, <strong>"us"</strong> and <strong>"our"</strong>), 
+										a company registered in England and Wales, company number 08044310, whose place of business 
+										is at 40-44 Newman Street, London W1T 1QD, United Kingdom
+									</li>
+									<li>
+										Please read these Terms and Conditions (<strong>"Terms"</strong>) carefully. 
+										By clicking to accept these Terms, you are creating a binding contract between 
+										Reflection and either you personally (if you are using the Reflection 
+										Service as an individual consumer or sole trader) or the company you work for 
+										(if you are using the Reflection Service on behalf of the company you work for) 
+										(<strong>"you"</strong>, and <strong>"your"</strong>).
+									</li>
+									<li>
+										If you do not accept these Terms, you may not use any features of the Reflection Service.
+									</li>
+								</ol>
+							</li>
+							<li>
+								<h3>Definitions Used in these Terms</h3>
+								<h4 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFive}">"App Intelligence"</h4>
+								<p>Means analytical information (whether in data, text, graphic or other form) 
+								which we create and give you access to via the Reflection Service based on 
+								algorithm-driven analysis of User Input Data and other data gathered 
+								from the Sources.</p>
+								<h4 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFive}">"App Platform Account"</h4>
+								<p>Means the account you use for development of your apps, for example your iTunes Connect or Google Play account.</p>
+								<h4 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFive}">"User Input Data"</h4>
+								<p>Means data that you send us or that we collect from your App Platform 
+								Account when you link it to the Reflection Service for the purpose of 
+								analysis using our algorithmic statistic generation model, to compile 
+								App Intelligence and make it available to Users (but User Input Data excludes data
+								 that is publically available via the Sources without access to your App Platform Account).</p>
+								 <h4 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFive}">"User Account Information"</h4>
+								 <p>Means your user login and password details for access to your data from a specific Source, for example, your App Platform Account user name and password.</p>
+								 <h4 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFive}">"Reflection Service"</h4>
+								 <p>Means service accessible via the web url <a href="http://www.reflection.io">http://www.reflection.io</a> including any pages 
+								 of that website and any other services made available to you by us under these Terms.</p>
+								 <h4 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFive}">"Sources"</h4>
+								 <p>Means online third-party data sources, including websites, 
+								 the App Platform Account and various digital distribution, 
+								 analytics, advertising and monetisation platforms.</p>
+							</li>
+							<li>
+								<h3>Eligibility and warranty</h3>
+								<p>You warrant and represent that you are over 18 (or over 13 with parental consent) and you have capacity to enter into these Terms.  If you are using the Reflection Service on behalf of a business, you warrant and represent that you have all necessary authority from that business entity (i.e. company or other body) to enter into a binding contract with Reflection to use the Reflection Service.</p>
+							</li>
+							<li>
+								<h3>Changes</h3>
+								<p>We may occasionally make changes to the Reflection Service or these Terms. If we do, the new Terms will be effective as soon as they are posted on the Reflection Service. You agree to review the Terms periodically so that you are aware of any modifications. By continuing to use the Reflection Service after we post an update of these Terms on the Reflection Service, you express acceptance of the changes.</p>
+							</li>
+							<li>
+								<h3>Your Data, Privacy and Security</h3>
+								<ol>
+									<li>
+										By using the Reflection Service, you continue to own all data we collect from you 
+										or your App Platform Account, including any personal data, User Input Data and 
+										User Account Information which you own at the time we collect it.
+									</li>
+									<li>
+										Your User Input Data (such as iTunes Sale Reports) informs our App Intelligence 
+										but remains private to you. We do not share your User Input Data with other users of 
+										the Reflection Service. You can view and analyse your own User Input Data in the 
+										"My Apps" section of the Reflection Service, but this data is not visible to 
+										Reflection Users outside of your organisation.
+									</li>
+									<li>
+										We will immediately cease collection of your User Input Data if you delete your Reflection account, but any of your previously collected User Input Data that is already included in the pool of data used to compile our App Intelligence will not be deleted.
+									</li>
+									<li>
+										We retain information you provide us (<strong>except</strong> your User Input Data and User Account Information) for as long as is necessary to comply with our legal obligations or resolve disputes.
+									</li>
+									<li>
+										We use cookies. When you use the Reflection Service, we may collect, process and use information about you which may not personally identify you but which may be helpful for improving the operation of the Site. Such information may be collected through “traffic data” and may entail the use of cookies, IP Addresses or other numeric codes used to identify your device and compile information about your use of the Reflection Service to help us improve it. Some cookies we use are set by third party analytics service (currently Google Analytics and Qbit). You can delete cookies or configure your device to reject them, although this may disable the ability of the Reflection Service to manage individual sessions.
+									</li>
+									<li>
+										We will never sell or share your data with any third parties, or use it in any way that is not necessary for the purpose of compiling and analysing our App Intelligence, without your prior consent.
+									</li>
+									<li>
+										<strong>We take the security of your data very seriously</strong>. The data host we currently use is Google Cloud Platform, whose Terms of Service and Privacy Policy can be read for further information on the data privacy and security measures taken to protect your data. All data hosted on the Google Cloud Platform solution is protected with state of the art SSL encryption.
+									</li>
+								</ol>
+							</li>
+							<li>
+								<h3>Your Use of the Reflection Service</h3>
+								<ol>
+									<li>
+										<strong>You agree:</strong>
+										<ol>
+											<li>
+												not to use the Reflection Service for any unlawful purpose or in any way that interrupts, damages or impairs the Reflection Service;
+											</li>
+											<li>
+												not to access or attempt to access the accounts of other users;
+											</li>
+											<li>
+												to indemnify (i.e. compensate) and defend us fully against any claims or legal proceedings brought against us by any person as a result of your breach of these 
+		Terms; and
+											</li>
+											<li>
+												to keep your account username and password secure at all times and not to disclose your account username and/or password to any other person.
+											</li>
+										</ol>
+									</li>
+									<li>
+										<strong>You must not:</strong>
+										<ol>
+											<li>
+												infringe any law, regulation or any order of a court;
+											</li>
+											<li>
+												infringe the rights of any person or entity, whether us or a fellow user of the Reflection Service or not including but not limited to their intellectual property, privacy, publicity or contractual rights;
+											</li>
+											<li>
+												use automated scripts to collect information or otherwise interact with the Reflection Service or the Site;
+											</li>
+											<li>
+												upload or use  fraudulent, inaccurate or misleading, or is otherwise objectionable
+		content of any kind in connection with the Reflection Service; or
+											</li>
+											<li>
+												claim or represent that we endorse your business, apps or other products or service
+		without our prior express written approval.
+											</li>
+										</ol>
+									</li>
+								</ol>
+							</li>
+							<li>
+								<h3>Termination</h3>
+								<ol>
+									<li>
+										We may terminate these Terms and close your account any time without notice if we cease to provide the Reflection Service in your country. You may terminate your agreement with us without any liability at any time by written notice to the contact details listed in Clause 12 below.
+									</li>
+									<li>
+										Without limiting any other rights we may have, we reserve the right to suspend, restrict or terminate your access to the Reflection Service at any time without notice if we have reasonable grounds to believe you have breached any of these Terms.
+									</li>
+								</ol>
+							</li>
+							<li>
+								<h3>Licensing and Promotional Materials</h3>
+								<ol>
+									<li>
+										The Reflection Service, all App Intelligence and any content provided through the Reflection Service (including text, logos, trademarks, domain names, graphics and other content) are the property of Reflection or its licensors. Subject to Clause 8.3 below, we grant you a non-exclusive,non-transferable, limited, revocable licence to use the Reflection Service and to view and access the App Intelligence and other content that we make available through the Reflection Service for the purpose of your business.
+									</li>
+									<li>
+										We may refer to your organisation's use of the Reflection Service in promotional materials and publications. For this purpose only, you grant us a limited licence to use and copy (but not modify, except minor resizing as required for the relevant publication) the name and logos of your organisation and its products.
+									</li>
+									<li>
+										For the avoidance of doubt, unless we expressly permit you to do so in writing, you may not extract any App Intelligence, other data or code from the Reflection Service nor use any such App Intelligence, data or code for the purpose of another app intelligence service.
+									</li>
+								</ol>
+							</li>
+							<li>
+								<h3>Our Legal Obligations</h3>
+								<ol>
+									<li>
+										Nothing in these Terms excludes or limits our liability for death or personal injury caused by our negligence or fraud and your liability for death or personal injury caused by your negligence or fraud.
+									</li>
+									<li>
+										<strong>We are not responsible for:</strong>
+										<ol>
+											<li>
+												Losses, damage, costs or expenses not caused by our breach of these terms;
+											</li>
+											<li>
+												the actions or omissions of other users of the Reflection Service;
+											</li>
+											<li>
+												any indirect or consequential loss or damage which means a loss suffered by you which is a side effect of the main loss or damage and where we could not have anticipated that type of loss arising when you agreed to these terms;
+											</li>
+											<li>
+												any decisions or losses you may incur as a result of the accuracy or inaccuracy of any
+App Intelligence; or
+											</li>
+											<li>
+												any harm, loss or damage suffered by you or anyone else if the Reflection Service is
+interrupted, suspended or otherwise not provided to you (whether for reasons beyond our control or otherwise), but if you have a paid subscription, you may be liable to a partial refund if we do not provide the service to you at all for a significant period of time).
+											</li>
+										</ol>
+									</li>
+								</ol>
+							</li>
+							<li>
+								<h3>Disclaimer and Technical Limitations</h3>
+								<ol>
+									<li>
+										We do not endorse or take any responsibility for statements, advertisements or any contentwhatsoever transmitted through, or linked to from, the Reflection Service by users or third party service providers. We are not responsible for any transaction you may enter with a third party as a result of your interpretation of the App Intelligence, and it is up to you to decide whether it is prudent to do so.
+									</li>
+									<li>
+										The App Intelligence and other information or forecasts on the Reflection Service are algorithm-driven and therefore not intended to be representative of a specific business' performance or 100% accurate. The quality and availability of the Reflection Service is also dependent on your device's connectivity. We do our best to provide a useful service to you, but the Reflection Service is provided without express or implied warranty or condition of any kind, on an "as-is" basis (unless the law in country makes certain implied terms mandatory).
+									</li>
+								</ol>
+							</li>
+							<li>
+								<h3>Contacting Us</h3>
+								<p>If you need to contact us, please email us at <a href="mailto:info@reflection.io">info@reflection.io</a> or 
+								write to us at 40 - 44 Newman Street, London W1T 1QD. Please note that we are only responsible 
+								for the Reflection Service and do not represent any other user from whom we gather User Input Data.</p>
+							</li>
+							<li>
+								<h3>Disputes</h3>
+								<p>Unless otherwise required by mandatory law in your country, any disputes in connection with these Terms will be governed by and interpreted in accordance with the laws of England and Wales. If either of us brings a claim in connection with these Terms, we agree to only do so in the courts of England.</p>
+							</li>
+							<li>
+								<h3>Disclaimer and Technical Limitations</h3>
+								<ol>
+									<li>
+										We can assign, sub-contract and/or otherwise transfer any or all of our rights and/or obligations under these Terms to any company, firm or person.  We will only do this if it does not affect your rights under these Terms. Please note that you may terminate your agreement with us at any time. You may not transfer your rights or obligations under these Terms to anyone else without our prior written consent (which we will not unreasonably withhold or delay), unless the transfer is to a company within the same group structure as yours (in which case you will not need to get our prior written consent).
+									</li>
+									<li>
+										If either of us breaches these Terms and the other party takes no action against the breaching party, that other party will still be entitled to enforce its rights and remedies against the breaching party in relation to that breach and to use its rights and remedies in any other situation where the breaching party breaches these Terms.
+									</li>
+									<li>
+										If any part of these Terms is disallowed or found to be ineffective by any court or regulator, the remainder of the Terms will continue to govern each of our respective obligations.
+									</li>
+									<li>
+										These Terms are not intended to give rights to anyone except you and us.
+									</li>
+									<li>
+										Except as otherwise expressly stated, these Terms contain the entire agreement between us and you relating to use of the Reflection Service and supersede any previous agreements, arrangements, undertakings or proposals, written or oral, between us and you relating to use of the Reflection Service.
+									</li>
+								</ol>
+							</li>
+						</ol>
+				
+				<p><strong>These terms were last updated on 23 May 2014</strong></p>
+			</article>
+		</div>
 	</g:HTMLPanel>
 </ui:UiBinder>

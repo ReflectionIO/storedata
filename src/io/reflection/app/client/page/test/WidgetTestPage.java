@@ -7,12 +7,12 @@
 //
 package io.reflection.app.client.page.test;
 
+import io.reflection.app.client.component.DateSelector;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.part.DateRangeBox;
 import io.reflection.app.client.part.DateRangePicker;
 import io.reflection.app.client.part.DateRangePicker.FixedDateRange;
-import io.reflection.app.client.part.DateSelector;
 import io.reflection.app.client.part.datatypes.DateRange;
 
 import java.util.ArrayList;
@@ -37,6 +37,8 @@ public class WidgetTestPage extends Page {
 	@UiField DateSelector dateSelector;
 	@UiField DateRangePicker picker1;
 	@UiField DateRangeBox dateRange;
+
+	// private Chart chart;
 
 	public WidgetTestPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -107,4 +109,38 @@ public class WidgetTestPage extends Page {
 		dateRange.getDateRangePicker().addFixedRanges(ranges);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.page.Page#onAttach()
+	 */
+	@Override
+	protected void onAttach() {
+		super.onAttach();
+		
+		// if (chart == null) {
+		// chart = ChartHelper.createAndInjectChart(a);
+		// }
+		//
+		// JavaScriptObject s1 = JavaScriptObject.createObject();
+		// JsArrayNumber data = JavaScriptObject.createArray().cast();
+		//
+		// data.push(3);
+		// data.push(54);
+		// data.push(34);
+		// data.push(65);
+		// data.push(47);
+		// data.push(5);
+		// data.push(90);
+		// data.push(76);
+		// data.push(45);
+		// data.push(65);
+		// data.push(35);
+		// JavaScriptObjectHelper.setObjectProperty(s1, "data", data);
+		// JavaScriptObjectHelper.setDoubleProperty(s1, "pointStart", new Date(2010 - 1900, 4, 5).getTime());
+		// JavaScriptObjectHelper.setIntegerProperty(s1, "pointInterval", 86400000); // one day
+		//
+		// chart.addSeries(s1);
+
+	}
 }

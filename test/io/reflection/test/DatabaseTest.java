@@ -18,7 +18,7 @@ public class DatabaseTest {
 	protected void setupLiveDatabaseConnectionSystemProperties() {
 		System.setProperty("connection.native", "true");
 		System.setProperty(IDatabaseService.DATABASE_SERVER_KEY, "173.194.104.108");
-		System.setProperty(IDatabaseService.DATABASE_CATALOGURE_KEY, "rio");
+		System.setProperty(IDatabaseService.DATABASE_CATALOGUE_KEY, "rio");
 		System.setProperty(IDatabaseService.DATABASE_USERNAME_KEY, "rio_app_user");
 		System.setProperty(IDatabaseService.DATABASE_PASSWORD_KEY, "sooth28@duns");
 	}
@@ -26,7 +26,7 @@ public class DatabaseTest {
 	protected void setupLocalDatabaseConnectionSystemProperties() {
 		System.setProperty("connection.native", "true");
 		System.setProperty(IDatabaseService.DATABASE_SERVER_KEY, "127.0.0.1");
-		System.setProperty(IDatabaseService.DATABASE_CATALOGURE_KEY, "rio");
+		System.setProperty(IDatabaseService.DATABASE_CATALOGUE_KEY, "rio");
 		System.setProperty(IDatabaseService.DATABASE_USERNAME_KEY, "rio_app_user");
 		System.setProperty(IDatabaseService.DATABASE_PASSWORD_KEY, "");
 	}

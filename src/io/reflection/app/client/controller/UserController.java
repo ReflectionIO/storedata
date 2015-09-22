@@ -654,7 +654,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 	 * 
 	 * @param username
 	 * @param password
-	 * @param forename
+	 * @param forenameFormField
 	 * @param surname
 	 * @param company
 	 */

@@ -12,6 +12,7 @@ import io.reflection.app.api.blog.shared.call.GetPostsResponse;
 import io.reflection.app.api.blog.shared.call.event.GetPostsEventHandler;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.StyledButtonCell;
+import io.reflection.app.client.component.LoadingBar;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.PostController;
@@ -27,6 +28,7 @@ import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Post;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.shared.util.FormattingHelper;
+import io.reflection.app.shared.util.LookupHelper;
 
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.SafeHtmlCell;
@@ -57,16 +59,17 @@ public class PostAdminPage extends Page implements GetPostsEventHandler, Navigat
 	@UiField(provided = true) CellTable<Post> posts = new CellTable<Post>(ServiceConstants.SHORT_STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) SimplePager simplePager = new SimplePager(false, false);
 
+	private LoadingBar loadingBar = new LoadingBar(false);
+
 	public PostAdminPage() {
 		initWidget(uiBinder.createAndBindUi(this));
-
-		Styles.INSTANCE.blog().ensureInjected();
 
 		createColumns();
 
 		posts.setLoadingIndicator(new Image(Images.INSTANCE.preloader()));
 		PostController.get().addDataDisplay(posts);
 		simplePager.setDisplay(posts);
+		loadingBar.show();
 	}
 
 	/*
@@ -80,6 +83,18 @@ public class PostAdminPage extends Page implements GetPostsEventHandler, Navigat
 
 		register(DefaultEventBus.get().addHandlerToSource(GetPostsEventHandler.TYPE, PostController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.page.Page#onDetach()
+	 */
+	@Override
+	protected void onDetach() {
+		super.onDetach();
+
+		loadingBar.reset();
 	}
 
 	private void createColumns() {
@@ -141,10 +156,8 @@ public class PostAdminPage extends Page implements GetPostsEventHandler, Navigat
 
 			@Override
 			public SafeHtml getValue(Post object) {
-				String s = object.id.toString();
-
-				return SafeHtmlUtils.fromTrustedString("<a href=\"" + PageType.BlogEditPostPageType.asHref("change", s).asString()
-						+ "\" class=\"btn btn-xs btn-default\">Edit</a>");
+				return SafeHtmlUtils.fromTrustedString("<a href=\"" + PageType.BlogEditPostPageType.asHref("change", LookupHelper.reference(object)).asString()
+						+ "\" class=\"" + Styles.STYLES_INSTANCE.reflectionMainStyle().refButtonFunctionSmall() + "\">Edit</a>");
 			}
 		};
 
@@ -152,16 +165,14 @@ public class PostAdminPage extends Page implements GetPostsEventHandler, Navigat
 
 			@Override
 			public SafeHtml getValue(Post object) {
-				String s = object.id.toString();
-
 				return SafeHtmlUtils.fromTrustedString("<a href=\""
-						+ PageType.BlogPostPageType.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE, s).asString()
-						+ "\" class=\"btn btn-xs btn-default\">View</a>");
+						+ PageType.BlogPostPageType.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE, LookupHelper.reference(object)).asString()
+						+ "\" class=\"" + Styles.STYLES_INSTANCE.reflectionMainStyle().refButtonFunctionSmall() + "\">View</a>");
 			}
 		};
 
-		StyledButtonCell prototype1 = new StyledButtonCell("btn", "btn-xs", "btn-danger");
-		Column<Post, String> deleteColumn = new Column<Post, String>(prototype1) {
+		Column<Post, String> deleteColumn = new Column<Post, String>(new StyledButtonCell(Styles.STYLES_INSTANCE.reflectionMainStyle().refButtonLink() + " "
+				+ Styles.STYLES_INSTANCE.reflectionMainStyle().warningText())) {
 
 			@Override
 			public String getValue(Post object) {
@@ -172,7 +183,7 @@ public class PostAdminPage extends Page implements GetPostsEventHandler, Navigat
 
 			@Override
 			public void update(int index, Post object, String value) {
-				PostController.get().deletePost(object.id);
+				PostController.get().deletePost(LookupHelper.reference(object));
 			}
 		});
 
@@ -201,6 +212,9 @@ public class PostAdminPage extends Page implements GetPostsEventHandler, Navigat
 			} else {
 				simplePager.setVisible(false);
 			}
+			loadingBar.hide();
+		} else {
+
 		}
 	}
 

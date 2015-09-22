@@ -1,44 +1,26 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
-	xmlns:c="urn:import:com.google.gwt.user.cellview.client">
-	<ui:style gss="true" type="io.reflection.app.client.page.admin.ItemsPage.ItemsPageStyle">
-	.toolbar {
-		padding-top: 10px;
-		padding-bottom: 10px;
-	}
+	xmlns:cv="urn:import:com.google.gwt.user.cellview.client" xmlns:c="urn:import:io.reflection.app.client.component">
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
+	<ui:style gss="true">
 	
-	.toolbarItem {
-		display: inline-block;
-		padding-right: 30px;
-	}
-	
-	.green {
-		color: green;
-	}
-	
-	.silver {
-		color: silver;
-	}
 	</ui:style>
-	<g:HTMLPanel styleName="row">
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.pageAdmin}">
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneHalf}">
+			<h1 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Apps</h1>
+		</div>
 
-		<g:HTMLPanel styleName="col-sm-10 col-sm-offset-1">
-			<h2>Items</h2>
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.pageFunctions}">
+			<form class="{STYLES_INSTANCE.reflectionMainStyle.inlineSearchForm}">
+				<c:TextField ui:field="searchField" labelText="Search App" styleName="{STYLES_INSTANCE.reflectionMainStyle.searchFieldNoLabel}">
+				</c:TextField>
+			</form>
+		</div>
 
-			<g:HTMLPanel styleName="form-inline {style.toolbar}">
-
-				<g:HTMLPanel styleName="{style.toolbarItem}">
-					<g:TextBox ui:field="queryTextBox" styleName="form-control" />
-				</g:HTMLPanel>
-
-			</g:HTMLPanel>
-
-			<c:CellTable ui:field="items" styleName="table table-hover table-striped" />
-
-			<p:SimplePager styleName="text-center" ui:field="simplePager" />
-
-			<g:HTMLPanel styleName="filler-bottom col-md-12 hidden-xs hidden-sm" />
-		</g:HTMLPanel>
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__row}">
+			<cv:CellTable ui:field="items" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}" />
+			<p:SimplePager ui:field="simplePager" />
+		</div>
 
 	</g:HTMLPanel>
 </ui:UiBinder> 

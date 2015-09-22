@@ -1,59 +1,33 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-    xmlns:g="urn:import:com.google.gwt.user.client.ui">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:io.reflection.app.client.component">
 
-    <ui:import
-        field="io.reflection.app.client.page.PageType.ForgotPasswordPageType" />
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 
-    <ui:style gss="true">
-    .passwordLink {
-        font-weight: 400;
-        font-size: 14px;
-        font-family: 'Lato', sans-serif;
-        line-height: 22px;
-    }
-    </ui:style>
-    <g:HTMLPanel>
-        <g:FormPanel ui:field="mForm" styleName="form">
+	<ui:style gss="true">
+	
+	</ui:style>
+	<g:HTMLPanel tag="form">
 
-            <g:HTMLPanel>
+		<c:TextField ui:field="emailTextField" labelText="Email" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
 
-                <g:HTMLPanel ui:field="mEmailGroup" styleName="form-group">
-                    <label>Email Address</label>
-                    <g:TextBox styleName="form-control" ui:field="mEmail" />
-                    <g:HTMLPanel styleName="noteDetail" ui:field="mEmailNote"
-                        visible="false" />
-                </g:HTMLPanel>
+		<c:PasswordField ui:field="passwordField" labelText="Password" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
 
-                <g:HTMLPanel ui:field="mPasswordGroup" styleName="form-group">
-                    <label>Password</label>
-                    <g:PasswordTextBox styleName="form-control"
-                        ui:field="mPassword" />
-                    <g:HTMLPanel styleName="noteDetail" ui:field="mPasswordNote"
-                        visible="false" />
-                </g:HTMLPanel>
+		<g:Anchor ui:field="resetPasswordLink" href="#" styleName="{STYLES_INSTANCE.reflectionMainStyle.formLink} {STYLES_INSTANCE.reflectionMainStyle.jsFadeContent}">I've misplaced my password</g:Anchor>
 
-                <g:HTMLPanel>
-                    <g:CheckBox ui:field="mRememberMe">
-                        Remember me
-                    </g:CheckBox>
-                </g:HTMLPanel>
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.formFieldCheckboxList} {STYLES_INSTANCE.reflectionMainStyle.jsFadeContent}">
+			<ul>
+				<li>
+					<c:FormCheckbox ui:field="rememberMe" label="Keep me signed in" />
+				</li>
+			</ul>
+		</div>
 
-                <g:Button ui:field="mLogin" styleName="btn btn-lg btn-primary btn-block">
-                    Log In
-                    <span class="icon-login" />
-                </g:Button>
+		<c:LoadingButton ui:field="loginBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth} {STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}"
+			text="Log in" />
 
-                <p class="text-center p-small">
-                    I've forgotten my
-                    <g:InlineHyperlink ui:field="mForgotPassword"
-                        targetHistoryToken="{ForgotPasswordPageType.asTargetHistoryToken}">
-                        <span class="p-small">Password</span>
-                    </g:InlineHyperlink>
-                </p>
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.generalErrorMessage}">
+			<p ui:field="generalErrorParagraph"></p>
+		</div>
 
-            </g:HTMLPanel>
-        </g:FormPanel>
-
-    </g:HTMLPanel>
-</ui:UiBinder> 
+	</g:HTMLPanel>
+</ui:UiBinder>

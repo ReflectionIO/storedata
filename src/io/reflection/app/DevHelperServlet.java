@@ -1,38 +1,17 @@
 /**
- * 
+ *
  */
 package io.reflection.app;
 
-import static io.reflection.app.objectify.PersistenceService.ofy;
-import io.reflection.app.api.exception.DataAccessException;
-import io.reflection.app.api.shared.datatypes.Pager;
-import io.reflection.app.archivers.ArchiverFactory;
-import io.reflection.app.archivers.ItemRankArchiver;
-import io.reflection.app.archivers.ItemSaleArchiver;
-import io.reflection.app.collectors.CollectorIOS;
-import io.reflection.app.datatypes.shared.Category;
-import io.reflection.app.datatypes.shared.Country;
-import io.reflection.app.datatypes.shared.DataAccount;
-import io.reflection.app.datatypes.shared.FeedFetch;
-import io.reflection.app.datatypes.shared.ItemRankSummary;
-import io.reflection.app.datatypes.shared.Rank;
-import io.reflection.app.datatypes.shared.Store;
-import io.reflection.app.ingestors.Ingestor;
-import io.reflection.app.ingestors.IngestorFactory;
-import io.reflection.app.logging.GaeLevel;
-import io.reflection.app.service.application.ApplicationServiceProvider;
-import io.reflection.app.service.category.CategoryServiceProvider;
-import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
-import io.reflection.app.service.rank.RankServiceProvider;
-import io.reflection.app.service.sale.SaleServiceProvider;
-import io.reflection.app.service.store.StoreServiceProvider;
-import io.reflection.app.setup.CountriesInstaller;
-import io.reflection.app.setup.StoresInstaller;
-import io.reflection.app.shared.util.DataTypeHelper;
+import static io.reflection.app.objectify.PersistenceService.*;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -60,14 +39,58 @@ import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.taskqueue.TaskOptions.Builder;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
 import com.googlecode.objectify.cmd.Query;
+import com.spacehopperstudios.utility.StringUtils;
+import com.willshex.gson.json.service.server.ServiceException;
+
+import co.spchopr.persistentmap.PersistentMap;
+import co.spchopr.persistentmap.PersistentMapFactory;
+import io.reflection.app.accountdatacollectors.DataAccountCollectorFactory;
+import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.archivers.ArchiverFactory;
+import io.reflection.app.archivers.ItemRankArchiver;
+import io.reflection.app.archivers.ItemSaleArchiver;
+import io.reflection.app.collectors.CollectorIOS;
+import io.reflection.app.datatypes.shared.Category;
+import io.reflection.app.datatypes.shared.Country;
+import io.reflection.app.datatypes.shared.DataAccount;
+import io.reflection.app.datatypes.shared.DataAccountFetch;
+import io.reflection.app.datatypes.shared.DataAccountFetchStatusType;
+import io.reflection.app.datatypes.shared.FeedFetch;
+import io.reflection.app.datatypes.shared.ItemRankSummary;
+import io.reflection.app.datatypes.shared.Rank;
+import io.reflection.app.datatypes.shared.Store;
+import io.reflection.app.helpers.QueueHelper;
+import io.reflection.app.ingestors.Ingestor;
+import io.reflection.app.ingestors.IngestorFactory;
+import io.reflection.app.logging.GaeLevel;
+import io.reflection.app.modellers.Modeller;
+import io.reflection.app.modellers.ModellerFactory;
+import io.reflection.app.service.ServiceType;
+import io.reflection.app.service.application.ApplicationServiceProvider;
+import io.reflection.app.service.category.CategoryServiceProvider;
+import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
+import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
+import io.reflection.app.service.dataaccountfetch.IDataAccountFetchService;
+import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
+import io.reflection.app.service.rank.RankServiceProvider;
+import io.reflection.app.service.sale.ISaleService;
+import io.reflection.app.service.sale.SaleServiceProvider;
+import io.reflection.app.service.store.StoreServiceProvider;
+import io.reflection.app.setup.CountriesInstaller;
+import io.reflection.app.setup.StoresInstaller;
+import io.reflection.app.shared.util.DataTypeHelper;
+import io.reflection.app.shared.util.PagerHelper;
 
 /**
  * @author William Shakour
- * 
+ *
  */
 @SuppressWarnings("serial")
 public class DevHelperServlet extends HttpServlet {
 	private static final Logger LOG = Logger.getLogger(DevHelperServlet.class.getName());
+	private final PersistentMap cache = PersistentMapFactory.createObjectify();
 
 	private static final String RANK_END_200_PLUS = "200+";
 
@@ -75,7 +98,7 @@ public class DevHelperServlet extends HttpServlet {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
 	@Override
@@ -86,38 +109,29 @@ public class DevHelperServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-		String appEngineQueue = req.getHeader("X-AppEngine-QueueName");
-		boolean isNotQueue = (appEngineQueue == null || !"deferred".toLowerCase().equals(appEngineQueue.toLowerCase()));
-
-		// if (true) {
-		// com.google.appengine.api.datastore.Query query = new com.google.appengine.api.datastore.Query("__GsFileInfo__");
-		// PreparedQuery p = DatastoreServiceFactory.getDatastoreService().prepare(query);
-		// for (Entity e : p.asIterable()) {
-		// String name = e.getKey().getName();
-		// String destname = (String) e.getProperty("filename");
-		//
-		// System.out.println(name + " " + destname);
-		// }
-		//
-		//
-		// return;
-		// }
+		final String appEngineQueue = req.getHeader("X-AppEngine-QueueName");
+		final boolean isNotQueue = appEngineQueue == null || !"deferred".toLowerCase().equals(appEngineQueue.toLowerCase());
 
 		if (isNotQueue && (req.getParameter("defer") == null || req.getParameter("defer").equals("yes"))) {
-			Queue deferredQueue = QueueFactory.getQueue("deferred");
+			final Queue deferredQueue = QueueFactory.getQueue("deferred");
 
 			if (req.getParameter("cron") == null) {
-				String query = req.getQueryString();
+				final String query = req.getQueryString();
 
 				if (query != null) {
-					deferredQueue.add(TaskOptions.Builder.withUrl("/dev/devhelper?" + query).method(Method.GET));
+					final String dest = req.getParameter("dest");
+					if (dest != null && dest.trim().length() > 0) {
+						deferredQueue.add(TaskOptions.Builder.withUrl("/" + dest + "?" + query).method(Method.GET));
+					} else {
+						deferredQueue.add(TaskOptions.Builder.withUrl("/dev/devhelper?" + query).method(Method.GET));
+					}
 				} else {
-					TaskOptions options = Builder.withUrl("/dev/devhelper");
+					final TaskOptions options = Builder.withUrl("/dev/devhelper");
 
 					@SuppressWarnings("rawtypes")
-					Map params = req.getParameterMap();
+					final Map params = req.getParameterMap();
 
-					for (Object param : params.keySet()) {
+					for (final Object param : params.keySet()) {
 						options.param((String) param, req.getParameter((String) param));
 					}
 
@@ -136,17 +150,18 @@ public class DevHelperServlet extends HttpServlet {
 			return;
 		}
 
-		String action = req.getParameter("action");
-		String object = req.getParameter("object");
-		String start = req.getParameter("start");
-		String count = req.getParameter("count");
-		String all = req.getParameter("all");
-		String rankStart = req.getParameter("rankstart");
-		String rankEnd = req.getParameter("rankend");
-		String feedType = req.getParameter("feedtype");
-		String itemId = req.getParameter("itemid");
-		String date = req.getParameter("date");
-		String ids = req.getParameter("ids");
+		final String action = req.getParameter("action");
+		final String object = req.getParameter("object");
+		final String start = req.getParameter("start");
+		final String end = req.getParameter("end");
+		final String count = req.getParameter("count");
+		final String all = req.getParameter("all");
+		final String rankStart = req.getParameter("rankstart");
+		final String rankEnd = req.getParameter("rankend");
+		final String feedType = req.getParameter("feedtype");
+		final String itemId = req.getParameter("itemid");
+		final String date = req.getParameter("date");
+		final String ids = req.getParameter("ids");
 
 		boolean success = false;
 
@@ -154,80 +169,230 @@ public class DevHelperServlet extends HttpServlet {
 		String csv = null;
 
 		if (action != null) {
-			if ("addingested".equalsIgnoreCase(action)) {
+			if ("modelByDates".equalsIgnoreCase(action)) {
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-				// int i = 0;
-				// for (FeedFetch entity : ofy().load().type(FeedFetch.class).offset(Integer.parseInt(start)).limit(Integer.parseInt(count)).iterable()) {
-				// entity.ingested = Boolean.FALSE;
-				//
-				// ofy().save().entity(entity).now();
-				//
-				// if (LOG.isLoggable(GaeLevel.TRACE)) {
-				// LOG.log(GaeLevel.TRACE, String.format("Set entity [%d] ingested to false", entity.id.longValue()));
-				// }
-				//
-				// i++;
-				// }
-				//
-				// if (LOG.isLoggable(GaeLevel.DEBUG)) {
-				// LOG.log(GaeLevel.DEBUG, String.format("Processed [%d] entities", i));
-				// }
+				List<Long> feedIds = null;
+
+				try {
+					Date startDate = sdf.parse(start);
+					Date endDate = sdf.parse(end);
+
+					feedIds = FeedFetchServiceProvider.provide().getFeedFetchIdsBetweenDates(startDate, endDate);
+				} catch (Exception e) {
+					LOG.log(Level.SEVERE, "Exception occured while trying to get rank_fetches between start and end date: " + start + ", " + end, e);
+					success = false;
+				}
+
+				final Modeller modeller = ModellerFactory.getModellerForStore(DataTypeHelper.IOS_STORE_A3);
+				if (feedIds != null) {
+					for (Long fetchId : feedIds) {
+						modeller.enqueueFetchId(fetchId);
+						if (LOG.isLoggable(GaeLevel.DEBUG)) {
+							LOG.log(GaeLevel.DEBUG, String.format("Enqueued fetch with id %d for modelling", fetchId));
+						}
+					}
+					success = true;
+				}
+			} else if ("modelByCode".equalsIgnoreCase(action)) {
+				String codeStr = req.getParameter("code");
+
+				if (codeStr == null || codeStr.trim().length() == 0) return;
+
+				try {
+					List<Long> feedIds = null;
+
+					try {
+						feedIds = FeedFetchServiceProvider.provide().getFeedFetchIdsByCode(Long.valueOf(codeStr));
+					} catch (Exception e) {
+						LOG.log(Level.SEVERE, "Exception occured while trying to get rank_fetches for code: " + codeStr, e);
+						success = false;
+					}
+
+					final Modeller modeller = ModellerFactory.getModellerForStore(DataTypeHelper.IOS_STORE_A3);
+					if (feedIds != null) {
+						for (Long fetchId : feedIds) {
+							modeller.enqueueFetchId(fetchId);
+							if (LOG.isLoggable(GaeLevel.DEBUG)) {
+								LOG.log(GaeLevel.DEBUG, String.format("Enqueued fetch with id %d for modelling", fetchId));
+							}
+						}
+						success = true;
+					}
+				} catch (Exception e) {
+					if (LOG.isLoggable(GaeLevel.DEBUG)) {
+						LOG.log(GaeLevel.DEBUG, "Error occured when trying to process a model request via devhelper", e);
+					}
+					success = false;
+				}
+			} else if ("model".equalsIgnoreCase(action)) {
+				String feedfetchidStr = req.getParameter("feedfetchid");
+
+				if (feedfetchidStr == null || feedfetchidStr.trim().length() == 0) return;
+
+				try {
+					Long feedFetchId = Long.valueOf(feedfetchidStr);
+
+					final FeedFetch fetch = FeedFetchServiceProvider.provide().getFeedFetch(feedFetchId);
+
+					// this is just a sanity check. we expect that the query for getting the IDs only gave us feed fetches that exist and
+					// have the ingested status.
+					if (fetch != null) {
+						String countries = System.getProperty("ingest.ios.countries");
+						if (countries != null && !countries.contains(fetch.country)) {
+							if (LOG.isLoggable(GaeLevel.DEBUG)) {
+								LOG.log(GaeLevel.DEBUG, String.format("Feed fetch id %d not being modelled as the country is filtered out. Country: %s, category: %s, type: %s", feedFetchId,
+										fetch.country, fetch.category.id, fetch.type));
+							}
+							return;
+						}
+						if (LOG.isLoggable(GaeLevel.DEBUG)) {
+							LOG.log(GaeLevel.DEBUG, String.format("Enquing feed fetch id %d for modelling. Country: %s, category: %s, type: %s", feedFetchId,
+									fetch.country, fetch.category.id, fetch.type));
+						}
+
+						final Modeller modeller = ModellerFactory.getModellerForStore(DataTypeHelper.IOS_STORE_A3);
+
+						// once the feed fetch status is updated model the list
+						modeller.enqueue(fetch);
+						if (LOG.isLoggable(GaeLevel.DEBUG)) {
+							LOG.log(GaeLevel.DEBUG, String.format("Enqueued fetch with id %d for modelling", fetch.id));
+						}
+					}
+					success = true;
+				} catch (Exception e) {
+					if (LOG.isLoggable(GaeLevel.DEBUG)) {
+						LOG.log(GaeLevel.DEBUG, "Error occured when trying to process a model request via devhelper", e);
+					}
+					success = false;
+				}
+			} else if ("modelmulti".equalsIgnoreCase(action)) {
+				String countries = System.getProperty("ingest.ios.countries");
+
+				try {
+					final String[] feedIdsArray = ids.split(",");
+
+					for (final String feedId : feedIdsArray) {
+						Long feedFetchId = Long.valueOf(feedId);
+
+						final FeedFetch fetch = FeedFetchServiceProvider.provide().getFeedFetch(feedFetchId);
+
+						if (countries != null && !countries.contains(fetch.country)) {
+							continue;
+						}
+
+						// this is just a sanity check. we expect that the query for getting the IDs only gave us feed fetches that exist and
+						// have the ingested status.
+						if (fetch != null) {
+							if (LOG.isLoggable(GaeLevel.DEBUG)) {
+								LOG.log(GaeLevel.DEBUG, String.format("Enquing feed fetch id %d for modelling. Country: %s, category: %s, type: %s",
+										feedFetchId, fetch.country, fetch.category.id, fetch.type));
+							}
+
+							final Modeller modeller = ModellerFactory.getModellerForStore(DataTypeHelper.IOS_STORE_A3);
+
+							// once the feed fetch status is updated model the list
+							modeller.enqueue(fetch);
+							if (LOG.isLoggable(GaeLevel.DEBUG)) {
+								LOG.log(GaeLevel.DEBUG, String.format("Enqueued fetch with id %d for modelling", fetch.id));
+							}
+						}
+					}
+					success = true;
+				} catch (Exception e) {
+					if (LOG.isLoggable(GaeLevel.DEBUG)) {
+						LOG.log(GaeLevel.DEBUG, "Error occured when trying to process a model request via devhelper", e);
+					}
+					success = false;
+				}
+			} else if ("gatherSales".equalsIgnoreCase(action)) {
+				String dataAccountId = req.getParameter("dataaccountid");
+				String dateFromStr = req.getParameter("from");
+				String dateToStr = req.getParameter("to");
+
+				regatherSales(dataAccountId, dateFromStr, dateToStr);
+			} else if ("splitDataForItem".equalsIgnoreCase(action)) {
+				String dataAccountId = req.getParameter("dataaccountid");
+				String itemid = req.getParameter("itemid");
+				String country = req.getParameter("country");
+				String dateFromStr = req.getParameter("from");
+				String dateToStr = req.getParameter("to");
+
+				splitDataForItem(dataAccountId, itemid, country, dateFromStr, dateToStr);
 
 				success = true;
-			} else if ("uningest".equalsIgnoreCase(action)) {
+			} else if ("splitDataForAccount".equalsIgnoreCase(action)) {
+				String dataAccountId = req.getParameter("dataaccountid");
+				String country = req.getParameter("country");
+				String dateFromStr = req.getParameter("from");
+				String dateToStr = req.getParameter("to");
 
-				// int i = 0;
-				// for (FeedFetch entity : ofy().load().type(FeedFetch.class).offset(Integer.parseInt(start)).limit(Integer.parseInt(count)).iterable()) {
-				// entity.ingested = false;
-				//
-				// ofy().save().entity(entity).now();
-				//
-				// if (LOG.isLoggable(GaeLevel.TRACE)) {
-				// LOG.log(GaeLevel.TRACE, String.format("Set entity [%d] ingested to false", entity.id.longValue()));
-				// }
-				//
-				// i++;
-				// }
-				//
-				// if (LOG.isLoggable(GaeLevel.DEBUG)) {
-				// LOG.log(GaeLevel.DEBUG, String.format("Processed [%d] entities", i));
-				// }
+				success = splitDataForAccount(dataAccountId, country, dateFromStr, dateToStr);
+			} else if ("splitDataForDates".equalsIgnoreCase(action)) {
+				String country = req.getParameter("country");
+				String dateFromStr = req.getParameter("from");
+				String dateToStr = req.getParameter("to");
+
+				success = splitDataForDates(country, dateFromStr, dateToStr);
+			} else if ("ingestByCode".equalsIgnoreCase(action)) {
+				List<Long> feedIds = null;
+
+				String codeStr = req.getParameter("code");
+				try {
+					feedIds = FeedFetchServiceProvider.provide().getFeedFetchIdsByCode(Long.valueOf(codeStr));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				if (feedIds == null) {
+					if (LOG.isLoggable(GaeLevel.DEBUG)) {
+						LOG.log(GaeLevel.DEBUG, "Could not find any fetches for code: " + codeStr);
+					}
+				} else {
+					final Ingestor ingestor = IngestorFactory.getIngestorForStore(DataTypeHelper.IOS_STORE_A3);
+
+					for (Long fetchId : feedIds) {
+						ingestor.enqueue(Arrays.asList(Long.valueOf(fetchId)));
+					}
+
+					if (LOG.isLoggable(GaeLevel.DEBUG)) {
+						LOG.log(GaeLevel.DEBUG, String.format("Enqueued %d fetches for ingesting", feedIds.size()));
+					}
+				}
 
 				success = true;
 			} else if ("ingest".equalsIgnoreCase(action)) {
 
-				Ingestor i = IngestorFactory.getIngestorForStore(DataTypeHelper.IOS_STORE_A3);
+				final Ingestor i = IngestorFactory.getIngestorForStore(DataTypeHelper.IOS_STORE_A3);
 				i.enqueue(Arrays.asList(Long.valueOf(itemId)));
 
 				success = true;
+			} else if ("ingestMulti".equalsIgnoreCase(action)) {
 
-			} else if ("refreshproperties".equalsIgnoreCase(action)) {
-				CronServlet.enqueueItemForPropertiesRefresh(Long.valueOf(itemId));
+				final Ingestor i = IngestorFactory.getIngestorForStore(DataTypeHelper.IOS_STORE_A3);
 
-				success = true;
-			} else if ("ingestmulti".equalsIgnoreCase(action)) {
+				final String[] feedIdsArray = ids.split(",");
 
-				Ingestor i = IngestorFactory.getIngestorForStore(DataTypeHelper.IOS_STORE_A3);
-
-				String[] feedIdsArray = ids.split(",");
-
-				for (String feedId : feedIdsArray) {
+				for (final String feedId : feedIdsArray) {
 					i.enqueue(Arrays.asList(Long.valueOf(feedId)));
 				}
+
+				success = true;
+			} else if ("refreshproperties".equalsIgnoreCase(action)) {
+				CronServlet.enqueueItemForPropertiesRefresh(Long.valueOf(itemId));
 
 				success = true;
 			} else if ("addcode".equalsIgnoreCase(action)) {
 
 				Date startDate = null, endDate = null;
 				startDate = DateTime.parse(date, DateTimeFormat.forPattern("yyyy-MM-dd-HH").withZoneUTC()).toDate();
-				endDate = (new DateTime(startDate.getTime(), DateTimeZone.UTC)).plusHours(2).toDate();
+				endDate = new DateTime(startDate.getTime(), DateTimeZone.UTC).plusHours(2).toDate();
 
 				if (startDate != null) {
 					int i = 0;
 
 					try {
-						Long code = FeedFetchServiceProvider.provide().getCode();
-						for (FeedFetch feed : ofy().load().type(FeedFetch.class).filter("date >=", startDate).filter("date <", endDate)
+						final Long code = FeedFetchServiceProvider.provide().getCode();
+						for (final FeedFetch feed : ofy().load().type(FeedFetch.class).filter("date >=", startDate).filter("date <", endDate)
 								.offset(Integer.parseInt(start)).limit(Integer.parseInt(count)).iterable()) {
 
 							if (feed.code == null) {
@@ -247,8 +412,8 @@ public class DevHelperServlet extends HttpServlet {
 							}
 
 						}
-					} catch (DataAccessException dae) {
-						LOG.log(GaeLevel.SEVERE, "A database error occured attempting to to get an id code for gather enqueing", dae);
+					} catch (final DataAccessException dae) {
+						LOG.log(Level.SEVERE, "A database error occured attempting to to get an id code for gather enqueing", dae);
 					}
 
 					if (LOG.isLoggable(GaeLevel.DEBUG)) {
@@ -259,13 +424,14 @@ public class DevHelperServlet extends HttpServlet {
 				}
 			} else if ("remove".equalsIgnoreCase(action)) {
 				if (object != null) {
-					DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
+					final DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
 
-					com.google.appengine.api.datastore.Query query = new com.google.appengine.api.datastore.Query(object);
-					PreparedQuery preparedQuery = datastoreService.prepare(query);
+					final com.google.appengine.api.datastore.Query query = new com.google.appengine.api.datastore.Query(object);
+					final PreparedQuery preparedQuery = datastoreService.prepare(query);
 
 					int i = 0;
-					for (Entity entity : preparedQuery.asIterable(FetchOptions.Builder.withOffset(Integer.parseInt(start)).limit(Integer.parseInt(count)))) {
+					for (final Entity entity : preparedQuery
+							.asIterable(FetchOptions.Builder.withOffset(Integer.parseInt(start)).limit(Integer.parseInt(count)))) {
 						datastoreService.delete(entity.getKey());
 
 						if (LOG.isLoggable(GaeLevel.TRACE)) {
@@ -281,100 +447,11 @@ public class DevHelperServlet extends HttpServlet {
 
 					success = true;
 				}
-			} else if ("countitemrank".equalsIgnoreCase(action)) {
-				// int i = 0;
-				// Query<Rank> queryRank = ofy().cache(false).load().type(Rank.class).filter("counted =", Boolean.FALSE).offset(Integer.parseInt(start))
-				// .limit(Integer.parseInt(count));
-				//
-				// // Query<Rank> queryRank = ofy().load().type(Rank.class).filter("id =", Long.valueOf(19816));
-				//
-				// for (Rank rank : queryRank.iterable()) {
-				// // get the item rank summary
-				// Query<ItemRankSummary> querySummary = PersistenceService.ofy().load().type(ItemRankSummary.class).filter("itemId =", rank.itemId)
-				// .filter("type =", rank.type).filter("source =", rank.source);
-				//
-				// ItemRankSummary itemRankSummary = null;
-				//
-				// if (querySummary.count() > 0) {
-				// // we already have an item for this
-				// itemRankSummary = querySummary.list().get(0);
-				// } else {
-				// itemRankSummary = new ItemRankSummary();
-				// itemRankSummary.itemId = rank.itemId;
-				// itemRankSummary.type = rank.type;
-				// itemRankSummary.source = rank.source;
-				// }
-				//
-				// itemRankSummary.numberOfTimesRanked = Integer.valueOf(itemRankSummary.numberOfTimesRanked.intValue() + 1);
-				//
-				// if (rank.position.intValue() <= 10) {
-				// itemRankSummary.numberOfTimesRankedTop10 = Integer.valueOf(itemRankSummary.numberOfTimesRankedTop10 + 1);
-				// }
-				//
-				// if (rank.position.intValue() <= 25) {
-				// itemRankSummary.numberOfTimesRankedTop25 = Integer.valueOf(itemRankSummary.numberOfTimesRankedTop25 + 1);
-				// }
-				//
-				// if (rank.position.intValue() <= 50) {
-				// itemRankSummary.numberOfTimesRankedTop50 = Integer.valueOf(itemRankSummary.numberOfTimesRankedTop50 + 1);
-				// }
-				//
-				// if (rank.position.intValue() <= 100) {
-				// itemRankSummary.numberOfTimesRankedTop100 = Integer.valueOf(itemRankSummary.numberOfTimesRankedTop100 + 1);
-				// }
-				//
-				// if (rank.position.intValue() <= 200) {
-				// itemRankSummary.numberOfTimesRankedTop200 = Integer.valueOf(itemRankSummary.numberOfTimesRankedTop200 + 1);
-				// }
-				//
-				// ofy().save().entity(itemRankSummary).now();
-				//
-				// if (LOG.isLoggable(GaeLevel.TRACE)) {
-				// LOG.log(GaeLevel.TRACE,
-				// String.format("Updated item item summary for [%s:%s:%s]", itemRankSummary.source, itemRankSummary.type, itemRankSummary.itemId));
-				// }
-				//
-				// rank.counted = true;
-				//
-				// ofy().save().entity(rank).now();
-				//
-				// if (LOG.isLoggable(GaeLevel.TRACE)) {
-				// LOG.log(GaeLevel.TRACE, String.format("Updated rank counted for %d", rank.id.longValue()));
-				// }
-				//
-				// i++;
-				// }
-				//
-				// if (LOG.isLoggable(GaeLevel.DEBUG)) {
-				// LOG.log(GaeLevel.DEBUG, String.format("Processed [%d] entities", i));
-				// }
-
-				success = true;
-
-			} else if ("uncountranks".equalsIgnoreCase(action)) {
-				// int i = 0;
-				// for (Rank rank : ofy().load().type(Rank.class).offset(Integer.parseInt(start)).limit(Integer.parseInt(count)).iterable()) {
-				// rank.counted = false;
-				//
-				// ofy().save().entity(rank);
-				//
-				// if (LOG.isLoggable(GaeLevel.TRACE)) {
-				// LOG.log(GaeLevel.TRACE, String.format("Uncounted rank [%d]", rank.id.longValue()));
-				// }
-				//
-				// i++;
-				// }
-				//
-				// if (LOG.isLoggable(GaeLevel.DEBUG)) {
-				// LOG.log(GaeLevel.DEBUG, String.format("Processed [%d] entities", i));
-				// }
-
-				success = true;
 			} else if ("appswithrank".equalsIgnoreCase(action)) {
-				int rankStartValue = Integer.parseInt(rankStart);
-				int rankEndValue = RANK_END_200_PLUS.equals(rankEnd) ? Integer.MAX_VALUE : Integer.parseInt(rankEnd);
+				final int rankStartValue = Integer.parseInt(rankStart);
+				final int rankEndValue = RANK_END_200_PLUS.equals(rankEnd) ? Integer.MAX_VALUE : Integer.parseInt(rankEnd);
 
-				StringBuffer buffer = new StringBuffer();
+				final StringBuffer buffer = new StringBuffer();
 
 				buffer.append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">");
 
@@ -429,7 +506,7 @@ public class DevHelperServlet extends HttpServlet {
 				query = query.offset(Integer.parseInt(start)).limit(Integer.parseInt(count));
 
 				int i = 0;
-				for (ItemRankSummary itemRankSummary : query.iterable()) {
+				for (final ItemRankSummary itemRankSummary : query.iterable()) {
 					buffer.append("<tr><td>");
 					buffer.append(itemRankSummary.itemId);
 					buffer.append("</td><td>");
@@ -465,7 +542,7 @@ public class DevHelperServlet extends HttpServlet {
 
 				success = true;
 			} else if ("ranksforapp".equalsIgnoreCase(action)) {
-				StringBuffer buffer = new StringBuffer();
+				final StringBuffer buffer = new StringBuffer();
 
 				buffer.append("# data for item ");
 				buffer.append(itemId);
@@ -474,16 +551,16 @@ public class DevHelperServlet extends HttpServlet {
 				buffer.append("#item id,date,paid position,grossing position,price");
 				buffer.append("\n");
 
-				Map<Long, Rank> paid = new HashMap<Long, Rank>();
-				Map<Long, Rank> grossing = new HashMap<Long, Rank>();
+				final Map<Long, Rank> paid = new HashMap<Long, Rank>();
+				final Map<Long, Rank> grossing = new HashMap<Long, Rank>();
 
-				List<Long> codes = new ArrayList<Long>();
+				final List<Long> codes = new ArrayList<Long>();
 
 				Query<Rank> query = ofy().load().type(Rank.class).filter("source =", DataTypeHelper.IOS_STORE_A3).filter("type =", CollectorIOS.TOP_PAID_APPS)
 						.filter("date >", new DateTime().minusDays(30).toDate()).filter("itemId = ", itemId).offset(Integer.parseInt(start))
 						.limit(Integer.parseInt(count));
 
-				for (Rank rank : query.iterable()) {
+				for (final Rank rank : query.iterable()) {
 					paid.put(rank.code, rank);
 
 					if (!codes.contains(rank.code)) {
@@ -494,7 +571,7 @@ public class DevHelperServlet extends HttpServlet {
 				query = ofy().load().type(Rank.class).filter("source =", DataTypeHelper.IOS_STORE_A3).filter("type =", CollectorIOS.TOP_GROSSING_APPS)
 						.filter("date >", DateTime.now().toDate()).filter("itemId = ", itemId).offset(Integer.parseInt(start)).limit(Integer.parseInt(count));
 
-				for (Rank rank : query.iterable()) {
+				for (final Rank rank : query.iterable()) {
 					grossing.put(rank.code, rank);
 
 					if (!codes.contains(rank.code)) {
@@ -504,7 +581,7 @@ public class DevHelperServlet extends HttpServlet {
 
 				Rank grossingItem, paidItem;
 				Rank masterItem;
-				for (Long code : codes) {
+				for (final Long code : codes) {
 					grossingItem = grossing.get(code);
 					paidItem = paid.get(code);
 
@@ -536,41 +613,17 @@ public class DevHelperServlet extends HttpServlet {
 				csv = buffer.toString();
 
 				success = true;
-			} else if ("convertdatatoblobs".equalsIgnoreCase(action)) {
-				// will not support this
-			} else if ("countitemrankmr".equalsIgnoreCase(action)) {
-
-				// int rankStartValue = Integer.parseInt(rankStart);
-				// int rankEndValue = RANK_END_200_PLUS.equals(rankEnd) ? Integer.MAX_VALUE : Integer.parseInt(rankEnd);
-				//
-				// redirectToPipelineStatus(req, resp, startStatsJob(5, 2, DataTypeHelper.IOS_STORE_A3, "us", feedType, rankStartValue, rankEndValue));
-				//
-				success = true;
-			} else if ("countranksmr".equalsIgnoreCase(action)) {
-				// redirectToPipelineStatus(req, resp, startRankCountJob(5, 2, DataTypeHelper.IOS_STORE_A3, "us", feedType));
-
-				success = true;
-			} else if ("createcsvofpaidranks".equalsIgnoreCase(action)) {
-				// redirectToPipelineStatus(req, resp,
-				// startCreateCsvBlobRank(5, 1, CollectorIOS.TOP_PAID_APPS, CollectorIOS.TOP_GROSSING_APPS, DataTypeHelper.IOS_STORE_A3, "us", feedType));
-
-				success = true;
-			} else if ("createcsvoffreeranks".equalsIgnoreCase(action)) {
-				// redirectToPipelineStatus(req, resp,
-				// startCreateCsvBlobRank(5, 1, CollectorIOS.TOP_FREE_APPS, CollectorIOS.TOP_GROSSING_APPS, DataTypeHelper.IOS_STORE_A3, "us", feedType));
-
-				success = true;
 			} else if ("addcountries".equalsIgnoreCase(action)) {
 				try {
 					CountriesInstaller.install();
-				} catch (DataAccessException e) {
+				} catch (final DataAccessException e) {
 					throw new RuntimeException(e);
 				}
 				success = true;
 			} else if ("addstores".equalsIgnoreCase(action)) {
 				try {
 					StoresInstaller.install();
-				} catch (DataAccessException e) {
+				} catch (final DataAccessException e) {
 					throw new RuntimeException(e);
 				}
 				success = true;
@@ -579,52 +632,52 @@ public class DevHelperServlet extends HttpServlet {
 				Store store;
 				try {
 					store = StoreServiceProvider.provide().getA3CodeStore(DataTypeHelper.IOS_STORE_A3);
-				} catch (DataAccessException e) {
+				} catch (final DataAccessException e) {
 					throw new RuntimeException(e);
 				}
 				List<String> itemIds;
 				try {
 					itemIds = ApplicationServiceProvider.provide().getStoreIapNaApplicationIds(store);
-				} catch (DataAccessException e) {
+				} catch (final DataAccessException e) {
 					throw new RuntimeException(e);
 				}
 
-				for (String id : itemIds) {
-					Queue itemPropertyLookupQueue = QueueFactory.getQueue("itempropertylookup");
+				for (final String id : itemIds) {
+					final Queue itemPropertyLookupQueue = QueueFactory.getQueue("itempropertylookup");
 					itemPropertyLookupQueue.add(TaskOptions.Builder.withUrl(String.format("/itempropertylookup?item=%s", id)).method(Method.GET));
 				}
 
 				success = true;
 
 			} else if ("cacheranks".equalsIgnoreCase(action)) {
-				cacheRanks();
+				cacheRanks(req.getParameter("code2"), req.getParameter("country"), req.getParameter("category"), req.getParameter("type"));
 
 				success = true;
 			} else if ("archive".equalsIgnoreCase(action)) {
 				if ("rank".equalsIgnoreCase(object)) {
 					if (start == null && count == null) {
 						try {
-							Store store = new Store();
+							final Store store = new Store();
 							store.a3Code = DataTypeHelper.IOS_STORE_A3;
 
-							Country country = new Country();
+							final Country country = new Country();
 							country.a2Code = "us";
 
-							Category allCategory = CategoryServiceProvider.provide().getAllCategory(store);
+							final Category allCategory = CategoryServiceProvider.provide().getAllCategory(store);
 
-							ItemRankArchiver ar = ArchiverFactory.getItemRankArchiver();
+							final ItemRankArchiver ar = ArchiverFactory.getItemRankArchiver();
 
-							List<Long> foundRankIds = RankServiceProvider.provide().getRankIds(country, store, allCategory, new Date(0L), new Date());
+							final List<Long> foundRankIds = RankServiceProvider.provide().getRankIds(country, store, allCategory, new Date(0L), new Date());
 
-							for (Long rankId : foundRankIds) {
+							for (final Long rankId : foundRankIds) {
 								ar.enqueueIdRank(rankId);
 							}
-						} catch (DataAccessException e) {
+						} catch (final DataAccessException e) {
 							throw new RuntimeException(e);
 						}
 					} else {
-						ItemRankArchiver ar = ArchiverFactory.getItemRankArchiver();
-						Pager p = new Pager();
+						final ItemRankArchiver ar = ArchiverFactory.getItemRankArchiver();
+						final Pager p = new Pager();
 						p.start = start == null ? Pager.DEFAULT_START : Long.valueOf(start);
 						p.count = count == null ? Pager.DEFAULT_COUNT : Long.valueOf(count);
 						ar.enqueuePagerRanks(p, all == null ? Boolean.FALSE : Boolean.valueOf(all));
@@ -632,24 +685,25 @@ public class DevHelperServlet extends HttpServlet {
 				} else if ("sale".equalsIgnoreCase(object)) {
 					if (start == null && count == null) {
 						try {
-							DataAccount linkedAccount = DataTypeHelper.createDataAccount(1L);
+							final DataAccount linkedAccount = DataTypeHelper.createDataAccount(1L);
 
-							Country country = new Country();
+							final Country country = new Country();
 							country.a2Code = "us";
 
-							ItemSaleArchiver ar = ArchiverFactory.getItemSaleArchiver();
+							final ItemSaleArchiver ar = ArchiverFactory.getItemSaleArchiver();
 
-							List<Long> foundSaleIds = SaleServiceProvider.provide().getSaleIds(country, linkedAccount, new Date(0L), DateTime.now().toDate());
+							final List<Long> foundSaleIds = SaleServiceProvider.provide().getSaleIds(country, linkedAccount, new Date(0L),
+									DateTime.now().toDate());
 
-							for (Long saleId : foundSaleIds) {
+							for (final Long saleId : foundSaleIds) {
 								ar.enqueueIdSale(saleId);
 							}
-						} catch (DataAccessException e) {
+						} catch (final DataAccessException e) {
 							throw new RuntimeException(e);
 						}
 					} else {
-						ItemSaleArchiver ar = ArchiverFactory.getItemSaleArchiver();
-						Pager p = new Pager();
+						final ItemSaleArchiver ar = ArchiverFactory.getItemSaleArchiver();
+						final Pager p = new Pager();
 						p.start = start == null ? Pager.DEFAULT_START : Long.valueOf(start);
 						p.count = count == null ? Pager.DEFAULT_COUNT : Long.valueOf(count);
 						ar.enqueuePagerSales(p, all == null ? Boolean.FALSE : Boolean.valueOf(all));
@@ -659,41 +713,43 @@ public class DevHelperServlet extends HttpServlet {
 				success = true;
 			} else if ("archivemulti".equalsIgnoreCase(action)) {
 				if ("rank".equalsIgnoreCase(object)) {
-					ItemRankArchiver ar = ArchiverFactory.getItemRankArchiver();
+					final ItemRankArchiver ar = ArchiverFactory.getItemRankArchiver();
 
-					String[] rankIdsArray = ids.split(",");
+					final String[] rankIdsArray = ids.split(",");
 
-					for (String rankId : rankIdsArray) {
+					for (final String rankId : rankIdsArray) {
 						LOG.finer("Enqueueing rank [" + rankId + "]");
 						ar.enqueueIdRank(Long.valueOf(rankId));
 					}
 				} else if ("feedfetchrank".equalsIgnoreCase(object)) {
 					ArchiverFactory.getItemRankArchiver().enqueueIdFeedFetch(Long.valueOf(ids));
 				} else if ("sale".equalsIgnoreCase(object)) {
-					ItemSaleArchiver ar = ArchiverFactory.getItemSaleArchiver();
+					final ItemSaleArchiver ar = ArchiverFactory.getItemSaleArchiver();
 
-					String[] saleIdsArray = ids.split(",");
+					final String[] saleIdsArray = ids.split(",");
 
-					for (String saleId : saleIdsArray) {
+					for (final String saleId : saleIdsArray) {
 						LOG.finer("Enqueueing sale [" + saleId + "]");
 						ar.enqueueIdSale(Long.valueOf(saleId));
 					}
 				} else if ("dataaccountfetchsale".equalsIgnoreCase(object)) {
-					String[] dataAccountFetchIdsArray = ids.split(",");
+					final String[] dataAccountFetchIdsArray = ids.split(",");
 
-					for (String id : dataAccountFetchIdsArray) {
+					for (final String id : dataAccountFetchIdsArray) {
 						ArchiverFactory.getItemSaleArchiver().enqueueIdDataAccountFetch(Long.valueOf(id));
 					}
 				}
 
 				success = true;
 			} else if ("predict".equalsIgnoreCase(action)) {
-				Queue predictQueue = QueueFactory.getQueue("predict");
+				final Queue predictQueue = QueueFactory.getQueue("predict");
 				predictQueue.add(TaskOptions.Builder.withUrl("/predict?" + req.getQueryString()).method(Method.GET));
 
 				success = true;
 			} else if ("enqueuegetallranks".equalsIgnoreCase(action)) {
-				CallServiceMethodServlet.enqueueGetAllRanks("us", "ios", Long.valueOf(24), "topfreeapplications", Long.valueOf(33));
+				CallServiceMethodServlet.enqueueGetAllRanks("gb", "ios", Long.valueOf(24), "topfreeapplications", Long.valueOf(33));
+				CallServiceMethodServlet.enqueueGetAllRanks("gb", "ios", Long.valueOf(24), "toppaidapplications", Long.valueOf(33));
+				CallServiceMethodServlet.enqueueGetAllRanks("gb", "ios", Long.valueOf(24), "topgrossingapplications", Long.valueOf(33));
 				success = true;
 			} else {
 				if (LOG.isLoggable(Level.INFO)) {
@@ -718,6 +774,225 @@ public class DevHelperServlet extends HttpServlet {
 
 	}
 
+	/**
+	 * @param dataAccountId
+	 * @param dateFromStr
+	 * @param dateToStr
+	 *
+	 *          We have built in protection to this call. We will re-gather sales from date to ( to date or 31 days after from date which ever comes first)
+	 */
+	private void regatherSales(String dataAccountId, String dateFromStr, String dateToStr) {
+		try {
+			if(dataAccountId==null || dateFromStr==null || dateToStr==null) return;
+
+			DataAccount dataAccount = DataAccountServiceProvider.provide().getDataAccount(Long.valueOf(dataAccountId));
+
+			if (dataAccount == null) return;
+
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date from = sdf.parse(dateFromStr);
+			Date to = sdf.parse(dateToStr);
+
+			LOG.log(GaeLevel.DEBUG, String.format("Regathing sales for account: %s, from: %s, to: %s", dataAccountId, dateFromStr, dateToStr));
+
+			if (from.after(to)) {
+				Date t = from;
+				from = to;
+				to = t;
+			}
+
+			LOG.log(GaeLevel.DEBUG, String.format("Sorted the dates. Now from: %s, to: %s", dateFromStr, dateToStr));
+
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(from);
+			int loopCount = 0;
+
+			while (!cal.getTime().after(to) && loopCount < 31) { // the ! is to make sure the date to is inclusive
+				regatherSales(dataAccount, cal.getTime());
+				cal.add(Calendar.DATE, 1);
+				loopCount++;
+			}
+		} catch (NumberFormatException | DataAccessException | ParseException e) {
+			LOG.log(Level.SEVERE, "Exception occured while trying to regather sales data for dates", e);
+		}
+	}
+
+	/**
+	 * @param dataAccount
+	 * @param date
+	 */
+	private void regatherSales(DataAccount dataAccount, Date date) {
+		/*
+		 * check if a data account fetch already exists.
+		 * If it does,
+		 * clean out sales for that day and re-ingest
+		 * else
+		 * re-gather the sale and then ingest
+		 */
+
+		if (dataAccount == null || date == null) {
+			LOG.log(GaeLevel.DEBUG, String.format("Data account or date is null. Returning - account: %s on date: %s.", dataAccount, date));
+			return;
+		}
+
+		try {
+			IDataAccountFetchService fetchServiceProvider = DataAccountFetchServiceProvider.provide();
+			DataAccountFetch dataAccountFetch = fetchServiceProvider.getDateDataAccountFetch(dataAccount, date);
+			if (dataAccountFetch == null
+					|| (dataAccountFetch.status != DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered
+					&& dataAccountFetch.status != DataAccountFetchStatusType.DataAccountFetchStatusTypeIngested)) {
+				boolean collected = DataAccountCollectorFactory.getCollectorForSource("itc").collect(dataAccount, date);
+				if (collected) {
+					dataAccountFetch = fetchServiceProvider.getDateDataAccountFetch(dataAccount, date);
+				}
+			}
+
+			if (dataAccountFetch == null) {
+				LOG.log(GaeLevel.DEBUG, String.format("Could not gather the sales report for account: %s on date: %s.", dataAccount, date));
+				return;
+			}
+
+			reingestDataAccountFetch(dataAccountFetch);
+
+		} catch (ServiceException e) {
+			LOG.log(Level.SEVERE, String.format("Exception occured while trying to regather sales data for account: %s, on the date: %s", dataAccount, date), e);
+		}
+	}
+
+	/**
+	 * @param dataAccountFetch
+	 */
+	private void reingestDataAccountFetch(DataAccountFetch dataAccountFetch) {
+		if (dataAccountFetch == null) {
+			LOG.log(GaeLevel.DEBUG, "Data account fetch is null. Returning");
+			return;
+		}
+
+		if (dataAccountFetch.status == DataAccountFetchStatusType.DataAccountFetchStatusTypeIngested) {
+			dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered;
+			try {
+				DataAccountFetchServiceProvider.provide().updateDataAccountFetch(dataAccountFetch);
+			} catch (DataAccessException e) {
+				LOG.log(Level.SEVERE, String.format("Could not update the status of dataaccountfetch: %s", dataAccountFetch), e);
+			}
+		}
+
+		ISaleService salesService = SaleServiceProvider.provide();
+		salesService.deleteSales(dataAccountFetch.linkedAccount.id, dataAccountFetch.date);
+
+		try {
+			DataAccountFetchServiceProvider.provide().triggerDataAccountFetchIngest(dataAccountFetch);
+		} catch (DataAccessException e) {
+			LOG.log(Level.SEVERE, String.format("Exception occured while trying to reingest dataaccountfetch: %s", dataAccountFetch), e);
+		}
+	}
+
+	/**
+	 * @param country
+	 * @param dateFromStr
+	 * @param dateToStr
+	 * @return
+	 */
+	private boolean splitDataForDates(String country, String dateFromStr, String dateToStr) {
+		try {
+			List<DataAccount> activeDataAccounts = DataAccountServiceProvider.provide().getActiveDataAccounts(PagerHelper.createInfinitePager());
+
+			for (DataAccount account : activeDataAccounts) {
+				splitDataForAccount(account.id.toString(), country, dateFromStr, dateToStr);
+			}
+			return true;
+		} catch (DataAccessException e) {
+			LOG.log(Level.SEVERE, "Exception occured while trying to split data for dates", e);
+		}
+		return false;
+	}
+
+	private boolean splitDataForAccount(String dataAccountId, String country, String dateFromStr, String dateToStr) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		LOG.log(GaeLevel.DEBUG, String.format("Splitdata for data account: %s, country: %s, dateFrom: %s, dateTo: %s", dataAccountId, country, dateFromStr, dateToStr));
+		try {
+			Date gatherFrom = sdf.parse(dateFromStr);
+			Date gatherTo = sdf.parse(dateToStr);
+
+			List<SimpleEntry<String, String>> mainItemIdAndCountries = SaleServiceProvider.provide().getSoldItemIdsForAccountInDateRange(Long.valueOf(dataAccountId), gatherFrom, gatherTo);
+			if (mainItemIdAndCountries == null) {
+				LOG.log(Level.SEVERE, "There are no sales in any countries for that item in the given date range.");
+				return false;
+			}
+
+			LOG.log(GaeLevel.DEBUG, String.format("Found %d main items and the countries they sold in for this data account", mainItemIdAndCountries.size()));
+			int missed = 0;
+			int processed = 0;
+			for (SimpleEntry<String, String> entry : mainItemIdAndCountries) {
+				String mainItemId = entry.getKey();
+				String itemsCountry = entry.getValue();
+
+				if (!country.equalsIgnoreCase(itemsCountry)) {
+					missed++;
+					continue;
+				}
+
+				processed++;
+
+				splitDataForItem(dataAccountId, mainItemId, country, dateFromStr, dateToStr);
+			}
+
+			LOG.log(Level.INFO, String.format("Processed %d items and missed %d items as they were in the wrong country", processed, missed));
+			return true;
+		} catch (Exception e) {
+			LOG.log(Level.WARNING, "Error occured when trying to process a split data request via devhelper", e);
+		}
+		return false;
+	}
+
+	private void splitDataForItem(String dataAccountId, String itemid, String country, String dateFromStr, String dateToStr) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		LOG.log(GaeLevel.DEBUG, String.format("Splitdata for data account: %s, itemId: %s, country: %s, dateFrom: %s, dateTo: %s", dataAccountId, itemid, country, dateFromStr, dateToStr));
+		try {
+			LOG.log(GaeLevel.DEBUG, "Getting IAP entries for that item");
+
+			String iapItemIds = getIapItemIdsForParentItemBetweenDates(dataAccountId, itemid, sdf.parse(dateFromStr), sdf.parse(dateToStr));
+			LOG.log(GaeLevel.DEBUG, "Got IAPs: " + iapItemIds + ". Enqueuing for gather");
+
+			enqueueSplitDataGather(dataAccountId, itemid, iapItemIds, country, dateFromStr, dateToStr);
+		} catch (Exception e) {
+			LOG.log(Level.WARNING, "Error occured when trying to process a split data request via devhelper", e);
+		}
+	}
+
+	private void enqueueSplitDataGather(String dataAccountId, String itemid, String iapItemIds, String country, String dateFromStr, String dateToStr) {
+		LOG.log(GaeLevel.DEBUG, String.format("data account: %s, itemId: %s, country: %s, dateFrom: %s, dateTo: %s, iaps: %s", dataAccountId, itemid, country, dateFromStr, dateToStr, iapItemIds));
+
+		QueueHelper.enqueue("gathersplitsaledata", Method.PULL,
+				new SimpleEntry<String, String>("dataAccountId", String.valueOf(dataAccountId)),
+				new SimpleEntry<String, String>("gatherFrom", dateFromStr),
+				new SimpleEntry<String, String>("gatherTo", dateToStr),
+				new SimpleEntry<String, String>("mainItemId", itemid),
+				new SimpleEntry<String, String>("countryCode", country),
+				new SimpleEntry<String, String>("iapItemIds", iapItemIds),
+				new SimpleEntry<String, String>("taskName", String.format("%s_%s_%s_%s_%s_%s", dataAccountId, itemid, dateFromStr, dateToStr, country, System.currentTimeMillis())));
+	}
+
+	/**
+	 * @param dataAccountId
+	 * @param itemid
+	 * @param dateFrom
+	 * @param dateTo
+	 * @return
+	 */
+	private String getIapItemIdsForParentItemBetweenDates(String dataAccountId, String itemid, Date dateFrom, Date dateTo) {
+		List<String> iapItemIdList = null;
+		try {
+			iapItemIdList = SaleServiceProvider.provide().getIapItemIdsForParentItemBetweenDates(Long.valueOf(dataAccountId), itemid, dateFrom, dateTo);
+		} catch (DataAccessException e) {
+			LOG.log(Level.WARNING, "Error occured when trying to get iap item ids", e);
+		}
+
+		if (iapItemIdList != null && iapItemIdList.size() > 0) return StringUtils.join(iapItemIdList);
+
+		return "";
+	}
+
 	// private String startCreateCsvBlobRank(int mapShardCount, int reduceSharedCount, String topType, String grossingType, String source, String country,
 	// String type) {
 	// DateFormat format = new SimpleDateFormat("yyyy-MM-dd-HHmmss");
@@ -728,29 +1003,93 @@ public class DevHelperServlet extends HttpServlet {
 	// }
 
 	/**
-	 * 
+	 *
 	 */
-	private void cacheRanks() {
+	private void cacheRanks(String code2, String country, String category, String type) {
+		if (LOG.isLoggable(GaeLevel.DEBUG)) {
+			LOG.log(GaeLevel.DEBUG, String.format("Recaching the ranks for code2: %s, country:%s, category: %s, type: %s", code2, country, category, type));
+		}
 
-		DateTime dt = DateTime.now(DateTimeZone.UTC).minusHours(12);
-		Date end = dt.toDate();
-		Date start = dt.minusDays(1).toDate();
-
-		Store s = new Store();
+		final Store s = new Store();
 		s.a3Code = DataTypeHelper.IOS_STORE_A3;
 
-		Country c = new Country();
-		c.a2Code = "us";
+		if (country == null) {
+			country = "gb";
+		}
+
+		Long categoryid = null;
+
+		if (category == null) {
+			categoryid = Long.valueOf(24);
+		} else {
+			try {
+				categoryid = Long.valueOf(category);
+			} catch (Exception e) {
+				categoryid = Long.valueOf(24);
+			}
+		}
+
+		Category categoryObj = new Category();
+		categoryObj.id = categoryid;
+
+		if (type == null) {
+			type = CollectorIOS.TOP_GROSSING_APPS;
+		}
+
+		final Country c = new Country();
+		c.a2Code = country;
 
 		Long code = null;
-		try {
-			code = FeedFetchServiceProvider.provide().getGatherCode(c, s, start, end);
-		} catch (DataAccessException e) {
-			throw new RuntimeException(e);
+
+		if (code2 == null) {
+			final DateTime dt = DateTime.now(DateTimeZone.UTC).minusHours(12);
+			final Date end = dt.toDate();
+			final Date start = dt.minusDays(1).toDate();
+
+			try {
+				code = FeedFetchServiceProvider.provide().getGatherCode(c, s, start, end);
+			} catch (final DataAccessException e) {
+				throw new RuntimeException(e);
+			}
+		} else {
+			code = Long.valueOf(code2);
 		}
 
 		if (code != null) {
-			CallServiceMethodServlet.enqueueGetAllRanks("us", DataTypeHelper.IOS_STORE_A3, Long.valueOf(24), CollectorIOS.TOP_GROSSING_APPS, code);
+			try {
+
+				Pager pager = PagerHelper.createInfinitePager();
+				if (type.contains("grossing")) {
+					pager.sortBy = "grossingposition";
+				} else {
+					pager.sortBy = "position";
+				}
+
+				if (pager.sortDirection == null) {
+					pager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
+				}
+
+				final String memcacheKey = ServiceType.ServiceTypeRank.toString() + ".gathercoderanks." + code2 + "." + country + "." + s.a3Code + "."
+						+ category + ".toppaidapplications.topfreeapplications.topgrossingapplications.0.9223372036854775807." + pager.sortDirection + "."
+						+ pager.sortBy;
+
+				if (LOG.isLoggable(GaeLevel.DEBUG)) {
+					LOG.log(GaeLevel.DEBUG, "Check if memcache has the key :" + memcacheKey);
+				}
+				if (cache.contains(memcacheKey)) {
+					if (LOG.isLoggable(GaeLevel.DEBUG)) {
+						LOG.log(GaeLevel.DEBUG, "Key is present. deleting...");
+					}
+					cache.delete(memcacheKey);
+				}
+
+				if (LOG.isLoggable(GaeLevel.DEBUG)) {
+					LOG.log(GaeLevel.DEBUG, "Getting the ranks again and caching them via RankService.getGatherCodeRanks");
+				}
+				List<Rank> ranks = RankServiceProvider.provide().getGatherCodeRanks(c, categoryObj, type, code);
+			} catch (DataAccessException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

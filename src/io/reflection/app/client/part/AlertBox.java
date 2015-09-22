@@ -52,18 +52,11 @@ public class AlertBox extends Composite implements HasCloseHandlers<AlertBox> {
 	public AlertBox() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		mClose.getElement().setInnerHTML("&times;");
 		mSpinner.setResource(Images.INSTANCE.spinnerInfo());
 	}
 
 	public void setCanDismiss(boolean value) {
 		mClose.setVisible(value);
-
-		if (value) {
-			addStyleName("alert-dismissable");
-		} else {
-			removeStyleName("alert-dismissable");
-		}
 	}
 
 	public boolean getCanDismiss() {
@@ -75,28 +68,16 @@ public class AlertBox extends Composite implements HasCloseHandlers<AlertBox> {
 
 		switch (mType) {
 		case DangerAlertBoxType:
-			removeStyleName("alert-success");
-			addStyleName("alert-danger");
-			removeStyleName("alert-warning");
-			removeStyleName("alert-info");
+			getElement().getStyle().setBackgroundColor("#d9534f");
 			break;
 		case InfoAlertBoxType:
-			removeStyleName("alert-success");
-			removeStyleName("alert-danger");
-			removeStyleName("alert-warning");
-			addStyleName("alert-info");
+			getElement().getStyle().setBackgroundColor("#d9edf7");
 			break;
 		case SuccessAlertBoxType:
-			addStyleName("alert-success");
-			removeStyleName("alert-danger");
-			removeStyleName("alert-warning");
-			removeStyleName("alert-info");
+			getElement().getStyle().setBackgroundColor("#dff0d8");
 			break;
 		case WarningAlertBoxType:
-			removeStyleName("alert-success");
-			removeStyleName("alert-danger");
-			addStyleName("alert-warning");
-			removeStyleName("alert-info");
+			getElement().getStyle().setBackgroundColor("#f0ad4e");
 			break;
 		}
 	}

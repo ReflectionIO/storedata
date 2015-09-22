@@ -10,11 +10,6 @@ package io.reflection.app.api.core;
 import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPAD_IOS;
 import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS;
 import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_UNIVERSAL_IOS;
-import static io.reflection.app.service.sale.ISaleService.INAPP_PURCHASE_PURCHASE_IOS;
-import static io.reflection.app.service.sale.ISaleService.INAPP_PURCHASE_SUBSCRIPTION_IOS;
-import static io.reflection.app.service.sale.ISaleService.UPDATE_IPAD_IOS;
-import static io.reflection.app.service.sale.ISaleService.UPDATE_IPHONE_AND_IPOD_TOUCH_IOS;
-import static io.reflection.app.service.sale.ISaleService.UPDATE_UNIVERSAL_IOS;
 import static io.reflection.app.shared.util.PagerHelper.updatePager;
 import io.reflection.app.accountdatacollectors.DataAccountCollectorFactory;
 import io.reflection.app.api.ValidationHelper;
@@ -83,11 +78,8 @@ import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
-import io.reflection.app.archivers.ArchiverFactory;
-import io.reflection.app.archivers.ItemRankArchiver;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
-import io.reflection.app.collectors.CollectorIOS;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
@@ -104,7 +96,6 @@ import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.helpers.ApiHelper;
 import io.reflection.app.helpers.NotificationHelper;
-import io.reflection.app.helpers.SliceHelper;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.modellers.Modeller;
 import io.reflection.app.modellers.ModellerFactory;
@@ -112,7 +103,6 @@ import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.country.CountryServiceProvider;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.datasource.DataSourceServiceProvider;
-import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.notification.NotificationServiceProvider;
 import io.reflection.app.service.permission.PermissionServiceProvider;
@@ -127,7 +117,6 @@ import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
 import io.reflection.app.shared.util.PagerHelper;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -274,6 +263,7 @@ public final class Core extends ActionHandler {
 		return output;
 	}
 
+	// Nothing on the client app call this.
 	public GetTopItemsResponse getTopItems(GetTopItemsRequest input) {
 		LOG.finer("Entering getTopItems");
 		GetTopItemsResponse output = new GetTopItemsResponse();
@@ -327,7 +317,7 @@ public final class Core extends ActionHandler {
 				start = date.minusHours(24).toDate();
 			}
 
-			List<Rank> ranks = RankServiceProvider.provide().getRanks(input.country, input.store, input.category, input.listType, start, end, input.pager);
+			List<Rank> ranks = RankServiceProvider.provide().getRanks(input.country, input.category, input.listType, input.on);
 
 			if (ranks != null && ranks.size() != 0) {
 				List<String> itemIds = new ArrayList<String>();
@@ -344,11 +334,9 @@ public final class Core extends ActionHandler {
 				output.items = ItemServiceProvider.provide().getInternalIdItemBatch(itemIds);
 
 				output.pager = input.pager;
-				updatePager(
-						output.pager,
-						output.ranks,
-						input.pager.totalCount == null ? RankServiceProvider.provide().getRanksCount(input.country, input.store, input.category,
-								input.listType, start, end) : input.pager.totalCount);
+				updatePager(output.pager, output.ranks,
+						input.pager.totalCount == null ? RankServiceProvider.provide().getRanksCount(input.country, input.category, input.listType, start)
+								: input.pager.totalCount);
 			}
 
 			output.status = StatusType.StatusTypeSuccess;
@@ -451,28 +439,7 @@ public final class Core extends ActionHandler {
 								ApiError.CategoryStoreMismatch.getMessage("input.category"));
 				}
 
-				DateTime date = new DateTime(input.on.getTime(), DateTimeZone.UTC);
-				int secondOfMinute = date.getSecondOfMinute();
-				int millisOfSeconds = date.getMillisOfSecond();
-
-				Date end;
-				Date start;
-
-				boolean isPastDate = (secondOfMinute == 0) && (millisOfSeconds == 0);
-
-				if (isPastDate) { // a date in the past
-					end = date.plusHours(24).toDate();
-					start = date.toDate();
-				} else { // today
-					end = date.minusHours(12).toDate();
-					start = date.minusHours(24).toDate();
-				}
-
 				Set<String> itemIds = new HashSet<String>();
-				// final Map<String, Rank> lookup = new HashMap<String, Rank>();
-
-				Long code = FeedFetchServiceProvider.provide().getGatherCode(input.country, input.store, start, end);
-
 				List<String> listTypes = ApiHelper.getAllListTypes(input.store, input.listType);
 				Collector collector = CollectorFactory.getCollectorForStore(input.store.a3Code);
 
@@ -480,18 +447,10 @@ public final class Core extends ActionHandler {
 				for (String listType : listTypes) {
 					// get all the ranks for the list type (we are using an infinite pager with no sorting to allow us to generate a deletion key during
 					// prediction)
-					ranks = RankServiceProvider.provide().getGatherCodeRanks(input.country, input.store, input.category, listType, code,
-							PagerHelper.createInfinitePager(), Boolean.TRUE);
+					ranks = RankServiceProvider.provide().getRanks(input.country, input.category, listType, input.on);
 
 					for (Rank rank : ranks) {
 						itemIds.add(rank.itemId);
-					}
-
-					if (!isAdmin && !CollectorIOS.TOP_FREE_APPS.equals(listType)) {
-						for (Rank rank : ranks) {
-							rank.downloads = null;
-							rank.revenue = null;
-						}
 					}
 
 					if (collector.isFree(listType)) {
@@ -502,38 +461,6 @@ public final class Core extends ActionHandler {
 						output.grossingRanks = ranks;
 					}
 				}
-
-				// List<Rank> ranks = RankServiceProvider.provide().getAllRanks(input.country, input.store, input.category,
-				// getGrossingListName(input.store, input.listType), start, end);
-				//
-				// if (ranks != null && ranks.size() != 0) {
-				// SparseArray<Rank> free = new SparseArray<Rank>();
-				// SparseArray<Rank> paid = new SparseArray<Rank>();
-				// SparseArray<Rank> grossing = new SparseArray<Rank>();
-				//
-				// for (Rank rank : ranks) {
-				// if (!lookup.containsKey(rank.itemId)) {
-				// itemIds.add(rank.itemId);
-				// lookup.put(rank.itemId, rank);
-				// }
-				//
-				// if (rank.price.floatValue() == 0 && rank.position.intValue() > 0) {
-				// free.append(rank.position.intValue(), rank);
-				// }
-				//
-				// if (rank.price.floatValue() != 0 && rank.position.intValue() > 0) {
-				// paid.append(rank.position.intValue(), rank);
-				// }
-				//
-				// if (rank.grossingPosition.intValue() != 0) {
-				// grossing.append(rank.grossingPosition.intValue(), rank);
-				// }
-				// }
-				//
-				// output.freeRanks = free.toList();
-				// output.paidRanks = paid.toList();
-				// output.grossingRanks = grossing.toList();
-				// }
 
 				output.items = ItemServiceProvider.provide().getInternalIdItemBatch(itemIds);
 
@@ -595,39 +522,66 @@ public final class Core extends ActionHandler {
 
 			if (input.end == null) {
 				input.end = DateTime.now(DateTimeZone.UTC).toDate();
+			} else {
+				input.end = (new DateTime(input.end.getTime(), DateTimeZone.UTC)).toDate();
 			}
 
 			if (input.start == null) {
 				input.start = (new DateTime(input.end.getTime(), DateTimeZone.UTC)).minusDays(30).toDate();
+			} else {
+				input.start = (new DateTime(input.start.getTime(), DateTimeZone.UTC)).toDate();
 			}
 
 			input.listType = ValidationHelper.validateListType(input.listType, store);
 
-			FormType form = ModellerFactory.getModellerForStore(store.a3Code).getForm(input.listType);
-
-			ItemRankArchiver archiver = ArchiverFactory.getItemRankArchiver();
-			long[] slices = SliceHelper.offsets(input.start, input.end);
-
-			String key;
-			List<Rank> ranks;
-			for (long slice : slices) {
-				key = archiver.createKey(slice, input.item, form, store, input.country, input.category);
-
-				ranks = archiver.getRanks(key);
-
-				if (ranks != null) {
-					if (output.ranks == null) {
-						output.ranks = new ArrayList<Rank>();
-					}
-
-					output.ranks.addAll(ranks);
-				}
-			}
+			// FormType form = ModellerFactory.getModellerForStore(store.a3Code).getForm(input.listType);
+			//
+			// ItemRankArchiver archiver = ArchiverFactory.getItemRankArchiver();
+			// long[] slices = SliceHelper.offsets(input.start, input.end);
+			//
+			// String key;
+			// List<Rank> ranks;
+			// for (long slice : slices) {
+			// key = archiver.createKey(slice, input.item, form, store, input.country, input.category);
+			//
+			// ranks = archiver.getRanks(key);
+			//
+			// if (ranks != null) {
+			// if (output.ranks == null) {
+			// output.ranks = new ArrayList<Rank>();
+			// }
+			//
+			// output.ranks.addAll(ranks);
+			// }
+			// }
 
 			if (output.ranks == null) {
-				output.ranks = RankServiceProvider.provide()
-						.getItemRanks(input.country, store, input.listType, input.item, input.start, input.end, input.pager);
+				output.ranks = RankServiceProvider.provide().getItemRanks(input.country, input.category, input.listType, input.item, input.start, input.end,
+						input.pager);
 			}
+
+			// Identify out of leaderboard dates
+			// List<Date> itemRanksDates = new ArrayList<Date>(); // Dates retrieved from the query
+			// for (Rank r : output.ranks) {
+			// itemRanksDates.add(r.date);
+			// }
+			// Calendar cal = Calendar.getInstance();
+			// cal.setTime(input.start);
+			// cal.set(Calendar.HOUR_OF_DAY, 0);
+			// cal.set(Calendar.MINUTE, 0);
+			// cal.set(Calendar.SECOND, 0);
+			// cal.set(Calendar.MILLISECOND, 0);
+			// List<Date> missingDates = new ArrayList<Date>(); // Dates missed from the query
+			// while (DateTimeComparator.getDateOnlyInstance().compare(cal.getTime(), input.end) <= 0) {
+			// if (!itemRanksDates.contains(cal.getTime())) { // No data retrieved in this date
+			// missingDates.add(cal.getTime());
+			// }
+			// cal.add(Calendar.DAY_OF_MONTH, 1);
+			// }
+			// if (missingDates.size() > 0) { // Identify which dates are missing because the App was out of the rank that day
+			// output.outOfLeaderboardDates = RankServiceProvider.provide().getOutOfLeaderboardDates(missingDates, input.country, input.category,
+			// input.listType);
+			// }
 
 			if (input.pager.start.intValue() == 0) {
 				output.item = input.item;
@@ -1632,8 +1586,6 @@ public final class Core extends ActionHandler {
 				input.linkedAccount.source = DataSourceServiceProvider.provide().getDataSource(input.linkedAccount.source.id);
 			}
 
-			List<Store> stores = StoreServiceProvider.provide().getDataSourceStores(input.linkedAccount.source);
-
 			if (input.listType == null)
 				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("String: input.listType"));
 
@@ -1646,143 +1598,19 @@ public final class Core extends ActionHandler {
 			}
 
 			FormType form = null;
-			Store formStore = null;
-			for (Store store : stores) {
-				Modeller modeller = ModellerFactory.getModellerForStore(store.a3Code);
-				form = modeller.getForm(input.listType);
+			Modeller modeller = ModellerFactory.getModellerForStore(DataTypeHelper.IOS_STORE_A3);
+			form = modeller.getForm(input.listType);
 
-				if (form != null) {
-					formStore = store;
-					break;
+			output.ranks = RankServiceProvider.provide().getSaleSummaryAndRankForDataAccountAndFormType(input.linkedAccount.id, input.country, form,
+					input.start, input.end, input.pager);
+
+			if (output.ranks != null && output.ranks.size() > 0) {
+				String[] itemIds = new String[output.ranks.size()];
+
+				for (int i = 0; i < output.ranks.size(); i++) {
+					itemIds[i] = output.ranks.get(i).itemId;
 				}
 			}
-
-			// ItemSaleArchiver archiver = ArchiverFactory.getItemSaleArchiver();
-			// long[] slices = SliceHelper.offsets(input.start, input.end);
-			//
-			// String key;
-			// List<Rank> ranks = null;
-			// for (long slice : slices) {
-			// key = archiver.createRanksKey(slice, input.linkedAccount, input.country, form);
-			//
-			// ranks = archiver.getRanks(key);
-			//
-			// if (ranks != null) {
-			// if (output.ranks == null) {
-			// output.ranks = new ArrayList<Rank>();
-			// }
-			//
-			// output.ranks.addAll(ranks);
-			// }
-			// }
-
-			if (output.ranks == null || output.ranks.size() == 0) {
-				// Get Items sales based on the filters
-				List<Sale> sales = SaleServiceProvider.provide().getSales(input.country, null, input.linkedAccount, input.start, input.end,
-						PagerHelper.createInfinitePager());
-
-				if (sales.size() > 0) {
-					// group sales by date
-					Map<Date, List<Sale>> salesGroupByDate = new HashMap<Date, List<Sale>>();
-					Date dateKey;
-					SimpleDateFormat keyFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-					Map<String, String> parentIdItemIdLookup = new HashMap<String, String>();
-					for (Sale sale : sales) {
-						// only add Sales that are consistent with the device type
-						if (FREE_OR_PAID_APP_UNIVERSAL_IOS.equals(sale.typeIdentifier) // 1F
-								|| UPDATE_UNIVERSAL_IOS.equals(sale.typeIdentifier) // 7F
-								|| (form == FormType.FormTypeOther && (FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS.equals(sale.typeIdentifier))) // 1
-								|| (form == FormType.FormTypeOther && (UPDATE_IPHONE_AND_IPOD_TOUCH_IOS.equals(sale.typeIdentifier))) // 7
-								|| (form == FormType.FormTypeTablet && (FREE_OR_PAID_APP_IPAD_IOS.equals(sale.typeIdentifier))) // 1T
-								|| (form == FormType.FormTypeTablet && (UPDATE_IPAD_IOS.equals(sale.typeIdentifier))) // 7T
-								|| INAPP_PURCHASE_PURCHASE_IOS.equals(sale.typeIdentifier) // IA1
-								|| INAPP_PURCHASE_SUBSCRIPTION_IOS.equals(sale.typeIdentifier) // IA9
-								) {
-							// If type identifier != IA1 or IA9, add parent identifiers into the Map
-							if (!sale.typeIdentifier.equals(INAPP_PURCHASE_PURCHASE_IOS) && !sale.typeIdentifier.equals(INAPP_PURCHASE_SUBSCRIPTION_IOS)) {
-								parentIdItemIdLookup.put(sale.sku, sale.item.internalId);
-							}
-
-							dateKey = keyFormat.parse(keyFormat.format(sale.begin));
-
-							// Link list of item IDs with every day of the range
-							if (salesGroupByDate.get(dateKey) == null) {
-								salesGroupByDate.put(dateKey, new ArrayList<Sale>());
-							}
-
-							salesGroupByDate.get(dateKey).add(sale);
-						}
-					}
-
-					// add the numbers up to create ranks and then predict the position and the grossing position
-					Rank rank;
-					if (output.ranks == null) {
-						// Create a dummy rank for every Item, every day of the date range
-						output.ranks = new ArrayList<Rank>();
-					}
-
-					// Keep track of the rank for a specific Item this day
-					Map<String, Rank> itemIDsRankLookup;
-
-					// Get range of dates
-					Set<Date> dates = salesGroupByDate.keySet();
-
-					for (Date salesGroupDate : dates) {
-						itemIDsRankLookup = new HashMap<String, Rank>();
-
-						List<Sale> salesGroup = salesGroupByDate.get(salesGroupDate);
-
-						String itemId;
-						for (Sale sale : salesGroup) {
-							// Assign item id of the parent to IAP and Subscriptions
-							if (sale.typeIdentifier.equals(INAPP_PURCHASE_PURCHASE_IOS) || sale.typeIdentifier.equals(INAPP_PURCHASE_SUBSCRIPTION_IOS)) {
-								itemId = parentIdItemIdLookup.get(sale.parentIdentifier);
-							} else {
-								itemId = sale.item.internalId;
-							}
-
-							if (itemIDsRankLookup.get(itemId) == null) {
-								rank = new Rank();
-								rank.downloads = 0;
-								rank.revenue = (float) 0;
-
-								// Add common values
-
-								// rank.category = category;
-								rank.country = input.country.a2Code;
-								rank.currency = sale.customerCurrency;
-								rank.date = salesGroupDate;
-								rank.created = salesGroupDate;
-								rank.source = formStore.a3Code;
-								rank.type = input.listType;
-
-								output.ranks.add(rank);
-								itemIDsRankLookup.put(itemId, rank);
-							} else {
-								rank = itemIDsRankLookup.get(itemId);
-							}
-
-							rank.itemId = itemId;
-
-							// If units and customer prices are negatives (refunds), subtract the value setting units positive
-							rank.revenue += Math.abs(sale.units.floatValue()) * sale.customerPrice.floatValue();
-
-							// Take into account price and downloads only from main Apps
-							if (sale.typeIdentifier.equals(FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS)
-									|| sale.typeIdentifier.equals(FREE_OR_PAID_APP_UNIVERSAL_IOS) || sale.typeIdentifier.equals(FREE_OR_PAID_APP_IPAD_IOS)) {
-								rank.downloads += sale.units.intValue();
-								// Ignore price if the Sale is a refund or a promotion
-								if (rank.price == null && sale.units.intValue() > 0 && sale.promoCode.equals(" ")) {
-									rank.price = sale.customerPrice;
-								}
-							}
-						} // end 1 day sales loop
-					} // end date range loop
-				} // if sale.size > 0
-			}
-
-			DataTypeHelper.sortRanksByDate(output.ranks);
 
 			output.pager = input.pager;
 			updatePager(output.pager, output.ranks);
@@ -1807,7 +1635,7 @@ public final class Core extends ActionHandler {
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
 			if (input.pager.sortBy == null) {
-				input.pager.sortBy = "date";
+				input.pager.sortBy = "s.date";
 			}
 
 			if (input.pager.sortDirection == null) {
@@ -1817,15 +1645,6 @@ public final class Core extends ActionHandler {
 			input.country = ValidationHelper.validateCountry(input.country, "input");
 
 			input.item = ValidationHelper.validateItem(input.item, "input.item");
-
-			DataAccount linkedAccount = SaleServiceProvider.provide().getDataAccount(input.item.internalId);
-
-			// if we only have a partial data source get look it up - because it is required for getting the stores
-			if (linkedAccount.source.stores == null) {
-				linkedAccount.source = DataSourceServiceProvider.provide().getDataSource(linkedAccount.source.id);
-			}
-
-			List<Store> stores = StoreServiceProvider.provide().getDataSourceStores(linkedAccount.source);
 
 			if (input.listType == null)
 				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("String: input.listType"));
@@ -1839,126 +1658,14 @@ public final class Core extends ActionHandler {
 			}
 
 			FormType form = null;
-			Store formStore = null;
-			for (Store store : stores) {
-				Modeller modeller = ModellerFactory.getModellerForStore(store.a3Code);
-				form = modeller.getForm(input.listType);
+			Modeller modeller = ModellerFactory.getModellerForStore(DataTypeHelper.IOS_STORE_A3);
+			form = modeller.getForm(input.listType);
 
-				if (form != null) {
-					formStore = store;
-					break;
-				}
-			}
-
-			// ItemSaleArchiver archiver = ArchiverFactory.getItemSaleArchiver();
-			// long[] slices = SliceHelper.offsets(input.start, input.end);
-			//
-			// String key;
-			// List<Rank> ranks = null;
-			// for (long slice : slices) {
-			// key = archiver.createItemRanksKey(slice, input.item, input.country, form);
-			//
-			// ranks = archiver.getRanks(key);
-			//
-			// if (ranks != null) {
-			// if (output.ranks == null) {
-			// output.ranks = new ArrayList<Rank>();
-			// }
-			//
-			// output.ranks.addAll(ranks);
-			// }
-			// }
-
-			if (output.ranks == null || output.ranks.size() == 0) {
-				// Get Items sales based on the filters
-				List<Sale> sales = SaleServiceProvider.provide().getItemSales(input.item, input.country, null, linkedAccount, input.start, input.end,
-						PagerHelper.createInfinitePager());
-				if (sales.size() > 0) {
-					// group sales by date
-					Map<Date, List<Sale>> salesGroupByDate = new HashMap<Date, List<Sale>>();
-					Date dateKey;
-					SimpleDateFormat keyFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-					for (Sale sale : sales) {
-						// only add Sales that are consistent with the device type
-						if (FREE_OR_PAID_APP_UNIVERSAL_IOS.equals(sale.typeIdentifier) // 1F
-								|| UPDATE_UNIVERSAL_IOS.equals(sale.typeIdentifier) // 7F
-								|| (form == FormType.FormTypeOther && (FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS.equals(sale.typeIdentifier))) // 1
-								|| (form == FormType.FormTypeOther && (UPDATE_IPHONE_AND_IPOD_TOUCH_IOS.equals(sale.typeIdentifier))) // 7
-								|| (form == FormType.FormTypeTablet && (FREE_OR_PAID_APP_IPAD_IOS.equals(sale.typeIdentifier))) // 1T
-								|| (form == FormType.FormTypeTablet && (UPDATE_IPAD_IOS.equals(sale.typeIdentifier))) // 7T
-								|| INAPP_PURCHASE_PURCHASE_IOS.equals(sale.typeIdentifier) // IA1
-								|| INAPP_PURCHASE_SUBSCRIPTION_IOS.equals(sale.typeIdentifier) // IA9
-								) {
-							dateKey = keyFormat.parse(keyFormat.format(sale.begin));
-
-							// Link list of item IDs with every day of the range
-							if (salesGroupByDate.get(dateKey) == null) {
-								salesGroupByDate.put(dateKey, new ArrayList<Sale>());
-							}
-
-							salesGroupByDate.get(dateKey).add(sale);
-						}
-					}
-
-					// add the numbers up to create ranks and then predict the position and the grossing position
-					Rank rank = null;
-
-					// Create a dummy rank for the Item, every day of the date range
-					output.ranks = new ArrayList<Rank>();
-
-					// Get range of dates
-					Set<Date> dates = salesGroupByDate.keySet();
-
-					boolean created;
-					for (Date salesGroupDate : dates) {
-						created = false;
-
-						List<Sale> salesGroup = salesGroupByDate.get(salesGroupDate);
-
-						for (Sale sale : salesGroup) {
-							if (!created) {
-								rank = new Rank();
-								rank.downloads = 0;
-								rank.revenue = (float) 0;
-
-								// Add common values
-
-								// rank.category = category;
-								rank.country = input.country.a2Code;
-								rank.currency = sale.customerCurrency;
-								rank.date = salesGroupDate;
-								rank.created = salesGroupDate;
-								rank.source = formStore.a3Code;
-								rank.type = input.listType;
-								rank.itemId = input.item.internalId;
-
-								output.ranks.add(rank);
-
-								created = true;
-							}
-
-							// If units and customer prices are negatives (refunds), subtract the value setting units positive
-							rank.revenue += Math.abs(sale.units.floatValue()) * sale.customerPrice.floatValue();
-
-							// Take into account price and downloads only from main Apps
-							if (sale.typeIdentifier.equals(FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS)
-									|| sale.typeIdentifier.equals(FREE_OR_PAID_APP_UNIVERSAL_IOS) || sale.typeIdentifier.equals(FREE_OR_PAID_APP_IPAD_IOS)) {
-								rank.downloads += sale.units.intValue();
-								// Ignore price if the Sale is a refund or a promotion
-								if (rank.price == null && sale.units.intValue() > 0 && sale.promoCode.equals(" ")) {
-									rank.price = sale.customerPrice;
-								}
-							}
-						} // end 1 day sales loop
-					} // end date range loop
-				} // if sale.size > 0
-			}
-
-			DataTypeHelper.sortRanksByDate(output.ranks);
+			output.ranks = RankServiceProvider.provide().getSaleSummaryAndRankForItemAndFormType(input.item.internalId, input.country, input.category.id, form,
+					input.start, input.end, input.pager);
 
 			output.item = input.item;
-			output.linkedAccount = linkedAccount;
+			// output.linkedAccount = linkedAccount;
 
 			output.pager = input.pager;
 			updatePager(output.pager, output.ranks);

@@ -101,11 +101,25 @@ public interface IDataAccountService extends IService {
 	public List<DataAccount> getDataAccounts(Pager pager) throws DataAccessException;
 
 	/**
+	 * @param pager
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<DataAccount> getActiveDataAccounts(Pager pager) throws DataAccessException;
+
+	/**
 	 * 
 	 * @return
 	 * @throws DataAccessException
 	 */
 	public Long getDataAccountsCount() throws DataAccessException;
+
+	/**
+	 * 
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public Long getActiveDataAccountsCount() throws DataAccessException;
 
 	/**
 	 * 

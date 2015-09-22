@@ -1,0 +1,918 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="utf-8" />
+	<title>Reflection Design Kit - Form Elements</title>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link rel="stylesheet" media="screen, projection" type="text/css" href="designkit.css" />
+	<!--[if (lt IE 9)]>
+		<script src="js/vendor/html5shiv.min.js"></script>
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main-ie8.css" />
+	<![endif]-->
+ 	<!--[if !lt IE 9]><!-->
+		<script src="js/vendor/picturefill.2.3.1.min.js" async></script>
+	<!-- <![endif]-->
+	<link rel="stylesheet" href="js/vendor/jquery.mCustomScrollbar.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
+<script>
+  WebFont.load({
+    google: {
+      families: ['Open Sans:400,600,700,400italic,600italic', 'Source Sans Pro:400,600,700', 'Lato:400,700,400italic']
+    }
+  });
+</script></head>
+<body class="panel-left-open">
+	<!--[if (lt IE 9)]>
+      <div class="window-warning">
+  			<p>Uh oh... Reflection doesn't work in this browser. &nbsp; &nbsp;<a href="http://outdatedbrowser.com/en" target="_blank">Download a compatible browser</a></p>
+  		</div>
+  <![endif]-->
+
+  <header id="js-component-import--global-header" class="global-header"></header>
+  
+	<div id="js-component-import--panel-left" class="panel-left js-custom-scrollbar" data-mcs-theme="minimal-dark"></div>
+
+	<div class="l-page-container">
+
+		<div id="main" class="l-main" role="main">
+			
+			<div id="js-component-import--design-kit-banner" class="banner banner--component"></div>
+
+			<div class="grid-container dk-components-container">
+				<div class="grid__column grid__column--full-width">
+					<h2 class="heading-style--heading-three">Text input</h2>
+				</div>
+				<div class="grid__row dk-component-row">
+					<div class="grid__column grid__column--one-third">
+						<h3 class="heading-style--heading-six">Disabled</h3>
+						<div class="form-field form-field--disabled">						
+							<input type="text" name="text" id="text" autocomplete="off" disabled/>
+							<label for="text">Hint Label Text</label>
+						</div>
+						<h3 class="heading-style--heading-six">Active</h3>
+						<div class="form-field">						
+							<input type="email" name="email" id="emailtest" autocomplete="off" />
+							<label for="emailtest">Hint Label Text</label>
+						</div>
+						<h3 class="heading-style--heading-six">Inline Error</h3>
+						<div class="form-field form-field--error js-inline-form-field-error-demo">
+							<input type="email" name="emailtest2" id="emailtest2" autocomplete="off" />
+							<label for="emailtest2">Hint Label Text <span>Error message example <a href="#">with a link</a></span></label>
+						</div>
+						<h3 class="heading-style--heading-six">Hint inputs (focus to view)</h3>
+						<div class="form-field">
+							<input type="email" name="emailtest3" id="emailtest3" autocomplete="off" />
+							<label for="emailtest3">Hint Label Text <span class="input-hint">Caps Lock is on, just so you know</span></label>
+						</div>
+						<h3 class="heading-style--heading-six">Input information</h3>
+						<div class="form-field">
+							<input type="email" name="emailtest4" id="emailtest4" autocomplete="off" />
+							<label for="emailtest4">Hint Label Text</label>
+							<a href="#" target="_blank" class="form-field-help ref-icon-after ref-icon-after--question"><span>What's this?</span></a>
+						</div>
+					</div>
+					<div class="grid__column grid__column--two-thirds">
+						<div class="code-box">
+							<pre><code class="language-markup">
+								/* Disabled */
+								&lt;div class="form-field form-field--disabled"&gt;
+								&nbsp;&lt;input type="text" name="text" id="text" autocomplete="off" disabled/&gt;
+								&nbsp;&lt;label for="email">Hint Label Text&lt;/label&gt;
+								&lt;/div>
+
+								/* Active */
+								&lt;div class="form-field"&gt;
+								&nbsp;&lt;input type="email" name="email" id="email" autocomplete="off" /&gt;
+								&nbsp;&lt;label for="email">Hint Label Text&lt;/label&gt;
+								&lt;/div&gt;
+
+								/* Inline Error */
+								&lt;div class="form-field form-field--error"&gt;
+								&nbsp;&lt;input type="email" name="email2" id="email2" autocomplete="off" /&gt;
+								&nbsp;&lt;label for="email2">Hint Label Text:&lt;/label&gt;
+								&lt;/div&gt;
+
+								/* Hint inputs */
+								&lt;div class="form-field"&gt;
+								&nbsp;&lt;input type="email" name="emailtest3" id="emailtest3" autocomplete="off" /&gt;<br />
+								&nbsp;&lt;label for="emailtest3">Hint Label Text &lt;span class="input-hint"&gt;Caps Lock is on, just so you know&lt;/span&gt;&lt;/label&gt;
+								&lt;/div&gt;
+
+								/* Input information */
+								&lt;div class="form-field"&gt;
+								&nbsp;&lt;input type="email" name="emailtest4" id="emailtest4" autocomplete="off" /&gt;
+								&nbsp;&lt;label for="emailtest4">Hint Label Text &lt;span class="input-hint"&gt;Caps Lock is on, just so you know&lt;/span&gt;&lt;/label&gt;
+								&nbsp;&lt;a href="#" target="_blank" class="form-field-help ref-icon-after ref-icon-after--question"&gt;&lt;span&gt;What's this?&lt;/span&gt;&lt;/a&gt;
+								&lt;/div&gt;
+							</code></pre>
+						</div>
+						<h3 class="heading-style--heading-four">The Code</h3>
+						<p>Form inputs should be enclosed inside an element with class "form-field" for styled inputs. Omit the "form-field" containing element for a default input with no styling.</p>
+						<p>Inline error styling is achieved with the addition of the class "form-field--error" to the element with class "form-field" and by adding the error message content to the form label.</p>
+					</div>
+				</div>
+				<div class="grid__column grid__column--full-width">
+					<h2 class="heading-style--heading-three">Drop Down Default</h2>
+				</div>
+				<div class="grid__row dk-component-row">
+					<div class="grid__column grid__column--one-third">
+						<h3 class="heading-style--heading-six">Disabled</h3>
+						<div class="form-field form-field--select form-field--select-disabled">
+							<select class="js-field--select" disabled>
+							    <option value="" disabled selected>Choose your option</option>
+							    <option value="s1">Option 1</option>
+							    <option value="s2">Option 2</option>
+							    <option value="s3">Option 3</option>
+							</select>
+						</div>
+						<h3 class="heading-style--heading-six">Active</h3>
+						<div class="form-field form-field--select">						
+							<select class="js-field--select">
+							    <option value="" disabled selected>Choose your option</option>
+							    <option value="a1">Option 1</option>
+							    <option value="a2">Option 2</option>
+							    <option value="a3">Option 3</option>
+							</select>
+						</div>
+					</div>
+					<div class="grid__column grid__column--two-thirds">
+						<div class="code-box">
+							<pre><code class="language-markup">
+								/* Disabled */
+								&lt;div class="form-field form-field--select form-field--select-disabled"&gt;
+								&nbsp;&lt;select class="js-field--select" disabled&gt;
+								&nbsp;&nbsp;&lt;option value="" disabled selected>Choose your option&lt;/option&gt;
+								&nbsp;&nbsp;&lt;option value="s1">Option 1&lt;/option&gt;
+								&nbsp;&nbsp;&lt;option value="s2">Option 2&lt;/option&gt;
+								&nbsp;&nbsp;&lt;option value="s3">Option 3&lt;/option&gt;
+								&nbsp;&lt;/select&gt;
+								&lt;/div&gt;
+
+								/* Active */
+								&lt;div class="form-field form-field--select"&gt;	
+								&nbsp;&lt;select class="js-field--select"&gt;
+								&nbsp;&nbsp;&lt;option value="" disabled selected>Choose your option&lt;/option&gt;
+								&nbsp;&nbsp;&lt;option value="a1">Option 1&lt;/option&gt;
+								&nbsp;&nbsp;&lt;option value="a2">Option 2&lt;/option&gt;
+								&nbsp;&nbsp;&lt;option value="a3">Option 3&lt;/option&gt;
+								&nbsp;&lt;/select&gt;
+								&lt;/div&gt;
+							</code></pre>
+						</div>
+					</div>
+				</div>
+
+
+				<div class="grid__column grid__column--full-width">
+					<h2 class="heading-style--heading-three">Drop Down Multiple Selections</h2>
+				</div>
+				<div class="grid__row dk-component-row">
+					<div class="grid__column grid__column--one-third">
+						<h3 class="heading-style--heading-six">Disabled</h3>
+						<div class="form-field form-field--select form-field--select-disabled">
+					    <div class="reflection-select">
+		            <span class="ref-icon-after ref-icon-after--angle-down js-selected-values">Select your options</span>
+		            <div class="form-field--checkbox-list">
+									<ul>
+										<li>
+											<input type="checkbox" name="checkboxMultipleOneDisabled" id="checkboxMultipleOneDisabled" disabled />
+											<label for="checkboxMultipleOneDisabled" class="checkboxLabel">Option 1</label>
+											<label for="checkboxMultipleOneDisabled" class="checkboxLabelVisible">Option 1</label>
+										</li>
+										<li>
+											<input type="checkbox" name="checkboxMultipleTwoDisabled" id="checkboxMultipleTwoDisabled" disabled />
+											<label for="checkboxMultipleTwoDisabled" class="checkboxLabel">Option 2</label>
+											<label for="checkboxMultipleTwoDisabled" class="checkboxLabelVisible">Option 2</label>
+										</li>
+										<li>
+											<input type="checkbox" name="checkboxMultipleThreeDisabled" id="checkboxMultipleThreeDisabled" disabled />
+											<label for="checkboxMultipleThreeDisabled" class="checkboxLabel">Option 3</label>
+											<label for="checkboxMultipleThreeDisabled" class="checkboxLabelVisible">Option 3</label>
+										</li>
+									</ul>
+								</div>
+					    </div>
+						</div>
+						<h3 class="heading-style--heading-six">Active</h3>			
+						<div class="form-field form-field--select">
+					    <div class="reflection-select">
+		            <span class="ref-icon-after ref-icon-after--angle-down js-selected-values">Select your options</span>
+		            <div class="form-field--checkbox-list">
+									<ul>
+										<li>
+											<input type="checkbox" name="checkboxMultipleOne" id="checkboxMultipleOne" />
+											<label for="checkboxMultipleOne" class="checkboxLabel">Option 1</label>
+											<label for="checkboxMultipleOne" class="checkboxLabelVisible">Option 1</label>
+										</li>
+										<li>
+											<input type="checkbox" name="checkboxMultipleTwo" id="checkboxMultipleTwo" />
+											<label for="checkboxMultipleTwo" class="checkboxLabel">Option 2</label>
+											<label for="checkboxMultipleTwo" class="checkboxLabelVisible">Option 2</label>
+										</li>
+										<li>
+											<input type="checkbox" name="checkboxMultipleThree" id="checkboxMultipleThree" />
+											<label for="checkboxMultipleThree" class="checkboxLabel">Option 3</label>
+											<label for="checkboxMultipleThree" class="checkboxLabelVisible">Option 3</label>
+										</li>
+									</ul>
+								</div>
+					    </div>
+						</div>
+					</div>
+					<div class="grid__column grid__column--two-thirds">
+						<div class="code-box">
+							<pre><code class="language-markup">
+								/* Disabled */
+								&lt;div class="form-field form-field--select form-field--select-disabled"&gt;	
+								&nbsp;&lt;select class="js-field--select" disabled&gt;
+								&nbsp;&nbsp;&lt;option value="" disabled selected>Choose your option&lt;/option&gt;
+								&nbsp;&nbsp;&lt;option value="s1">Option 1&lt;/option&gt;
+								&nbsp;&nbsp;&lt;option value="s2">Option 2&lt;/option&gt;
+								&nbsp;&nbsp;&lt;option value="s3">Option 3&lt;/option&gt;
+								&nbsp;&lt;/select&gt;
+								&lt;/div&gt;
+
+								/* Active */
+								&lt;div class="form-field form-field--select"&gt;
+								&nbsp;&lt;select class="js-field--select"&gt;
+								&nbsp;&nbsp;&lt;option value="" disabled selected>Choose your option&lt;/option&gt;
+								&nbsp;&nbsp;&lt;option value="a1">Option 1&lt;/option&gt;
+								&nbsp;&nbsp;&lt;option value="a2">Option 2&lt;/option&gt;
+								&nbsp;&nbsp;&lt;option value="a3">Option 3&lt;/option&gt;
+								&nbsp;&lt;/select&gt;
+								&lt;/div&gt;
+							</code></pre>
+						</div>
+					</div>
+				</div>
+
+				<div class="grid__column grid__column--full-width">
+					<h2 class="heading-style--heading-three">Drop Down Pre Selected</h2>
+				</div>
+				<div class="grid__row dk-component-row">
+					<div class="grid__column grid__column--one-third">
+						<h3 class="heading-style--heading-six">Disabled</h3>
+						<div class="form-field form-field--select form-field--select-disabled">						
+							<select class="js-field--select" disabled>
+							    <option value="" disabled selected>Choose your option</option>
+							    <option value="s1p">Option 1</option>
+							    <option value="s2p">Option 2</option>
+							    <option value="s3p">Option 3</option>
+							</select>
+						</div>
+						<h3 class="heading-style--heading-six">Active</h3>
+						<div class="form-field form-field--select">						
+							<select class="js-field--select">
+							    <option value="" disabled selected>Select an account</option>
+							    <option value="a1p" data-previous="true" data-selectedtext="Linked">Account 1</option>
+							    <option value="a2p">Account 2</option>
+							    <option value="a3p">Account 3</option>
+							</select>
+						</div>
+					</div>
+					<div class="grid__column grid__column--two-thirds">
+						<div class="code-box">
+							<pre><code class="language-markup">
+								/* Disabled */
+								&lt;div class="form-field form-field--select form-field--select-disabled"&gt;
+								&nbsp;&lt;select class="js-field--select" disabled&gt;
+								&nbsp;&nbsp;&lt;option value="" disabled selected>Choose your option&lt;/option&gt;
+								&nbsp;&nbsp;&lt;option value="s1">Option 1&lt;/option&gt;
+								&nbsp;&nbsp;&lt;option value="s2">Option 2&lt;/option&gt;
+								&nbsp;&nbsp;&lt;option value="s3">Option 3&lt;/option&gt;
+								&nbsp;&lt;/select&gt;
+								&lt;/div&gt;
+
+								/* Active */
+								&lt;div class="form-field form-field--select"&gt;
+								&nbsp;&lt;select class="js-field--select"&gt;
+								&nbsp;&nbsp;&lt;option value="" disabled selected>Choose your option&lt;/option&gt;
+								&nbsp;&nbsp;&lt;option value="a1">Option 1&lt;/option&gt;
+								&nbsp;&nbsp;&lt;option value="a2">Option 2&lt;/option&gt;
+								&nbsp;&nbsp;&lt;option value="a3">Option 3&lt;/option&gt;
+								&nbsp;&lt;/select&gt;
+								&lt;/div&gt;
+							</code></pre>
+						</div>
+					</div>
+				</div>
+
+				<div class="grid__column grid__column--full-width">
+					<h2 class="heading-style--heading-three">Check Box</h2>
+				</div>
+				<div class="grid__row dk-component-row">
+					<div class="grid__column grid__column--one-third">
+						<h3 class="heading-style--heading-six">Disabled</h3>
+						<div class="form-field--checkbox-list">
+							<ul>
+								<li>
+									<input type="checkbox" name="checkboxOneDisabled" id="checkboxOneDisabled" disabled />
+									<label for="checkboxOneDisabled" class="checkboxLabel checkboxLabelDisabled">Check box option disabled</label>
+									<label for="checkboxOneDisabled" class="checkboxLabelVisible checkboxLabelVisibleDisabled">Check box option disabled</label>
+								</li>
+								<li>
+									<input type="checkbox" name="checkboxOneDisabled" id="checkboxOneDisabled" disabled checked />
+									<label for="checkboxOneDisabled" class="checkboxLabel checkboxLabelDisabled">Check box option disabled</label>
+									<label for="checkboxOneDisabled" class="checkboxLabelVisible checkboxLabelVisibleDisabled">Check box option disabled</label>
+								</li>
+							</ul>
+						</div>
+						<h3 class="heading-style--heading-six">Active</h3>
+						<div class="form-field--checkbox-list">
+							<ul>
+								<li>
+									<input type="checkbox" name="checkboxOne" id="checkboxOne" checked/>
+									<label for="checkboxOne" class="checkboxLabel">Option 1</label>
+									<label for="checkboxOne" class="checkboxLabelVisible">Option 1</label>
+								</li>
+								<li>
+									<input type="checkbox" name="checkboxTwo" id="checkboxTwo" />
+									<label for="checkboxTwo" class="checkboxLabel">Option 2</label>
+									<label for="checkboxTwo" class="checkboxLabelVisible">Option 2</label>
+								</li>
+								<li>
+									<input type="checkbox" name="checkboxThree" id="checkboxThree" />
+									<label for="checkboxThree" class="checkboxLabel">Option 3</label>
+									<label for="checkboxThree" class="checkboxLabelVisible">Option 3</label>
+								</li>
+							</ul>
+						</div>
+						<h3 class="heading-style--heading-six">Error</h3>
+						<div class="form-field--checkbox-list form-field--error">
+							<p class="form-field--list__error-message">You still need to select from the options below</p>
+							<ul>
+								<li>
+									<input type="checkbox" name="checkboxOneError" id="checkboxOneError" />
+									<label for="checkboxOneError" class="checkboxLabel">Option 1</label>
+									<label for="checkboxOneError" class="checkboxLabelVisible">Option 1</label>
+								</li>
+								<li>
+									<input type="checkbox" name="checkboxTwoError" id="checkboxTwoError" />
+									<label for="checkboxTwoError" class="checkboxLabel">Option 2</label>
+									<label for="checkboxTwoError" class="checkboxLabelVisible">Option 2</label>
+								</li>
+								<li>
+									<input type="checkbox" name="checkboxThreeError" id="checkboxThreeError" />
+									<label for="checkboxThreeError" class="checkboxLabel">Option 3</label>
+									<label for="checkboxThreeError" class="checkboxLabelVisible">Option 3</label>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="grid__column grid__column--two-thirds">
+						<div class="code-box">
+							<pre><code class="language-markup">
+								/* Disabled */
+								&lt;div class="form-field--checkbox-list"&gt;
+									&nbsp;&lt;ul&gt;
+										&nbsp;&nbsp;&lt;li&gt;
+											&nbsp;&nbsp;&nbsp;&lt;input type="checkbox" name="checkboxOneDisabled" id="checkboxOneDisabled" disabled /&gt;
+											&nbsp;&nbsp;&nbsp;&lt;label for="checkboxOneDisabled" class="checkboxLabel checkboxLabelDisabled">Option 1&lt;/label&gt;
+											&nbsp;&nbsp;&nbsp;&lt;label for="checkboxOneDisabled" class="checkboxLabelVisible checkboxLabelVisibleDisabled">Option 1&lt;/label&gt;
+										&nbsp;&nbsp;&lt;/li&gt;
+									&nbsp;&lt;/ul&gt;
+								&lt;/div&gt;
+
+								/* Active - within the structure above */
+								&lt;input type="checkbox" name="checkboxOne" id="checkboxOne" /&gt;
+								&lt;label for="checkboxOne" class="checkboxLabel">Option 1&lt;/label&gt;
+								&lt;label for="checkboxOne" class="checkboxLabelVisible">Option 1&lt;/label&gt;
+							</code></pre>
+						</div>
+					</div>
+				</div>
+
+				<div class="grid__column grid__column--full-width">
+					<h2 class="heading-style--heading-three">Radio Buttons</h2>
+				</div>
+
+				<div class="grid__row dk-component-row">
+					<div class="grid__column grid__column--one-third">
+						<h3 class="heading-style--heading-six">Disabled</h3>
+						<div class="form-field--radio-list form-field--radio-list--inline">
+							<ul>
+								<li>
+									<input type="radio" name="radioButtonsDisabled" id="radioButtonOneDisabled" disabled />
+									<label for="radioButtonOneDisabled" class="radioButtonLabel radioButtonLabelDisabled">Yes</label>
+									<label for="radioButtonOneDisabled" class="radioButtonLabelVisibleDisabled">Yes</label>
+								</li>
+								<li>
+									<input type="radio" name="radioButtonsDisabled" id="radioButtonYesDisabled" disabled />
+									<label for="radioButtonYesDisabled" class="radioButtonLabel radioButtonLabelDisabled">No</label>
+									<label for="radioButtonYesDisabled" class="radioButtonLabelVisibleDisabled">No</label>
+								</li>
+							</ul>
+						</div>
+						<h3 class="heading-style--heading-six">Active</h3>
+						<div class="form-field--radio-list">
+							<ul>
+								<li>
+									<input type="radio" name="radioButtons" id="radioButtonOne" />
+									<label for="radioButtonOne" class="radioButtonLabel">Option 1</label>
+									<label for="radioButtonOne" class="radioButtonLabelVisible">Option 1</label>
+								</li>
+								<li>
+									<input type="radio" name="radioButtons" id="radioButtonTwo" />
+									<label for="radioButtonTwo" class="radioButtonLabel">Option 2</label>
+									<label for="radioButtonTwo" class="radioButtonLabelVisible">Option 2</label>
+								</li>
+								<li>
+									<input type="radio" name="radioButtons" id="radioButtonThree" />
+									<label for="radioButtonThree" class="radioButtonLabel">Option 3</label>
+									<label for="radioButtonThree" class="radioButtonLabelVisible">Option 3</label>
+								</li>
+							</ul>
+						</div>
+						<h3 class="heading-style--heading-six">Error</h3>
+						<div class="form-field--radio-list form-field--error">
+							<p class="form-field--list__error-message">You still need to select an option below</p>
+							<ul>
+								<li>
+									<input type="radio" name="radioButtons" id="radioButtonOneError" />
+									<label for="radioButtonOneError" class="radioButtonLabel">Option 1</label>
+									<label for="radioButtonOneError" class="radioButtonLabelVisible">Option 1</label>
+								</li>
+								<li>
+									<input type="radio" name="radioButtons" id="radioButtonTwoError" />
+									<label for="radioButtonTwoError" class="radioButtonLabel">Option 2</label>
+									<label for="radioButtonTwoError" class="radioButtonLabelVisible">Option 2</label>
+								</li>
+								<li>
+									<input type="radio" name="radioButtons" id="radioButtonThreeError" />
+									<label for="radioButtonThreeError" class="radioButtonLabel">Option 3</label>
+									<label for="radioButtonThreeError" class="radioButtonLabelVisible">Option 3</label>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="grid__column grid__column--two-thirds">
+						<div class="code-box">
+							<pre><code class="language-markup">
+								/* Disabled and Inline */
+								&lt;div class="form-field--radio-list form-field--radio-list--inline"&gt;
+								&nbsp;&lt;ul&gt;
+								&nbsp;&nbsp;&lt;li&gt;
+								&nbsp;&nbsp;&nbsp;&lt;input type="radio" name="radioButtonsDisabled" id="radioButtonOneDisabled" disabled /&gt;
+								&nbsp;&nbsp;&nbsp;&lt;label for="radioButtonOneDisabled" class="radioButtonLabelDisabled">Lorem ipsum dolor amet elict&lt;/label&gt;
+								&nbsp;&nbsp;&nbsp;&lt;label for="radioButtonOneDisabled" class="radioButtonLabelVisibleDisabled"&gt;Lorem ipsum dolor amet elict&lt;/label&gt;
+								&nbsp;&nbsp;&lt;/li&gt;
+								&nbsp;&lt;/ul&gt;
+								&lt;/div&gt;
+
+								/* Active - within the structure above */
+								&lt;input type="radio" name="radioButtons" id="radioButtonOne" /&gt;
+								&lt;label for="radioButtonOne" class="radioButtonLabel">Lorem ipsum dolor amet elict&lt;/label&gt;
+								&lt;label for="radioButtonOne" class="radioButtonLabelVisible"&gt;Lorem ipsum dolor amet elict&lt;/label&gt;
+							</code></pre>
+						</div>
+					</div>
+				</div>
+
+				<div class="grid__column grid__column--full-width">
+					<h2 class="heading-style--heading-three">Date Picker</h2>
+				</div>
+				<div class="grid__row dk-component-row dk-component-row--with-divider overflow-visible">
+					<div class="grid__column grid__column--one-third overflow-visible">
+						<form class="overflow-visible">
+							<div class="calendar-container">
+								<div class="date-select-container">
+									<div class="form-field form-field--date-select">
+										<input type="text" name="date-single" id="date-single" value="From Date" readonly="true" />
+										<span></span>
+									</div>
+								</div>
+								<div class="date-select-to-indicator"></div>
+								<div class="date-select-container">
+									<div class="form-field form-field--date-select">
+										<input type="text" name="date-single-to" id="date-single-to" value="To Date" readonly="true" />
+										<span></span>
+									</div>
+								</div>
+
+								<div class="dateBoxPopup has-single-option" style="overflow: visible;"><div class="popupContent"><table class="gwt-DatePicker" cellpadding="0" cellspacing="0"><tbody><tr><td style="vertical-align: top;" align="left"><table class="datePickerMonthSelector"><colgroup><col></colgroup><tbody><tr><td width="1"><div aria-pressed="false" role="button" class="datePickerPreviousButton datePickerPreviousButton-up" tabindex="0"><input style="opacity: 0; height: 1px; width: 1px; z-index: -1; overflow: hidden; position: absolute;" role="presentation" tabindex="-1" type="text"><div class="html-face">‹</div></div></td><td class="datePickerMonth" width="100%">2015 Jan</td><td width="1"><div aria-pressed="false" role="button" class="datePickerNextButton datePickerNextButton-up" tabindex="0"><input style="opacity: 0; height: 1px; width: 1px; z-index: -1; overflow: hidden; position: absolute;" role="presentation" tabindex="-1" type="text"><div class="html-face">›</div></div></td></tr>
+							<tr>
+								<td></td>
+								<td class="single-date-selector-container">
+									<div class="form-field--checkbox-list">
+										<ul>
+											<li>
+												<input type="checkbox" name="checkboxSingleDayEx" id="checkboxSingleDay" />
+												<label for="checkboxSingleDay" class="checkboxLabel">Single date selector</label>
+												<label for="checkboxSingleDay" class="checkboxLabelVisible">Single date selector</label>
+											</li>
+										</ul>
+									</div>
+								</td>
+								<td></td>
+								</tr>
+							</tbody></table></td></tr><tr><td style="vertical-align: top;" align="left"><table class="datePickerDays" border="0" cellpadding="0" cellspacing="0"><colgroup><col><col><col><col><col><col><col></colgroup><tbody><tr><td class="datePickerWeekdayLabel">M</td><td class="datePickerWeekdayLabel">T</td><td class="datePickerWeekdayLabel">W</td><td class="datePickerWeekdayLabel">T</td><td class="datePickerWeekdayLabel">F</td><td class="datePickerWeekendLabel">S</td><td class="datePickerWeekendLabel">S</td></tr><tr><td><div class="datePickerDay datePickerDayIsFiller datePickerDayIsFiller" aria-selected="false" tabindex="-1">29</div></td><td><div class="datePickerDay datePickerDayIsFiller" aria-selected="false" tabindex="-1">30</div></td><td><div class="datePickerDay datePickerDayIsFiller " aria-selected="false" tabindex="-1">31</div></td><td><div class="datePickerDay " aria-selected="false" tabindex="0">1</div></td><td><div class="datePickerDay " aria-selected="false" tabindex="0">2</div></td><td><div class="datePickerDay datePickerDayIsWeekend " aria-selected="false" tabindex="0">3</div></td><td><div class="datePickerDay datePickerDayIsWeekend " aria-selected="false" tabindex="0">4</div></td></tr><tr><td><div class="datePickerDay " aria-selected="false" tabindex="0">5</div></td><td><div class="datePickerDay datePickerDayIsValue" aria-selected="false" tabindex="0">6</div></td><td><div class="datePickerDay " aria-selected="false" tabindex="0">7</div></td><td><div class="datePickerDay " aria-selected="false" tabindex="0">8</div></td><td><div class="datePickerDay " aria-selected="false" tabindex="0">9</div></td><td><div class="datePickerDay datePickerDayIsWeekend " aria-selected="false" tabindex="0">10</div></td><td><div class="datePickerDay datePickerDayIsWeekend " aria-selected="false" tabindex="0">11</div></td></tr><tr><td><div class="datePickerDay " aria-selected="false" tabindex="0">12</div></td><td><div class="datePickerDay " aria-selected="false" tabindex="0">13</div></td><td><div class="datePickerDay " aria-selected="false" tabindex="0">14</div></td><td><div class="datePickerDay " aria-selected="false" tabindex="0">15</div></td><td><div class="datePickerDay datePickerDayIsToday" aria-selected="false" tabindex="0">16</div></td><td><div class="datePickerDay datePickerDayIsWeekend " aria-selected="false" tabindex="0">17</div></td><td><div class="datePickerDay datePickerDayIsWeekend " aria-selected="false" tabindex="0">18</div></td></tr><tr><td><div class="datePickerDay " aria-selected="false" tabindex="0">19</div></td><td><div class="datePickerDay " aria-selected="false" tabindex="0">20</div></td><td><div class="datePickerDay" aria-selected="false" tabindex="0">21</div></td><td><div class="datePickerDay  datePickerDayIsDisabled" aria-selected="false" tabindex="0">22</div></td><td><div class="datePickerDay  datePickerDayIsDisabled" aria-selected="false" tabindex="0">23</div></td><td><div class="datePickerDay datePickerDayIsWeekend  datePickerDayIsDisabled" aria-selected="false" tabindex="0">24</div></td><td><div class="datePickerDay datePickerDayIsWeekend  datePickerDayIsDisabled" aria-selected="false" tabindex="0">25</div></td></tr><tr><td><div class="datePickerDay  datePickerDayIsDisabled" aria-selected="false" tabindex="0">26</div></td><td><div class="datePickerDay  datePickerDayIsDisabled" aria-selected="false" tabindex="0">27</div></td><td><div class="datePickerDay  datePickerDayIsDisabled" aria-selected="false" tabindex="0">28</div></td><td><div class="datePickerDay  datePickerDayIsDisabled" aria-selected="false" tabindex="0">29</div></td><td><div class="datePickerDay  datePickerDayIsDisabled" aria-selected="false" tabindex="0">30</div></td><td><div class="datePickerDay datePickerDayIsWeekend  datePickerDayIsDisabled" aria-selected="false" tabindex="0">31</div></td><td><div class="datePickerDay datePickerDayIsWeekend datePickerDayIsFiller  datePickerDayIsDisabled" aria-selected="false" tabindex="-1">1</div></td></tr><tr><td><div class="datePickerDay datePickerDayIsFiller  datePickerDayIsDisabled" aria-selected="false" tabindex="-1">2</div></td><td><div class="datePickerDay datePickerDayIsFiller  datePickerDayIsDisabled" aria-selected="false" tabindex="-1">3</div></td><td><div class="datePickerDay datePickerDayIsFiller  datePickerDayIsDisabled" aria-selected="false" tabindex="-1">4</div></td><td><div class="datePickerDay datePickerDayIsFiller  datePickerDayIsDisabled" aria-selected="false" tabindex="-1">5</div></td><td><div class="datePickerDay datePickerDayIsFiller  datePickerDayIsDisabled" aria-selected="false" tabindex="-1">6</div></td><td><div class="datePickerDay datePickerDayIsWeekend datePickerDayIsFiller  datePickerDayIsDisabled" aria-selected="false" tabindex="-1">7</div></td><td><div class="datePickerDay datePickerDayIsWeekend datePickerDayIsFiller  datePickerDayIsDisabled" aria-selected="false" tabindex="-1">8</div></td></tr></tbody></table></td></tr></tbody></table></div></div>
+							</div>
+						</form>
+					</div>
+
+					<div class="grid__column grid__column--two-thirds">
+						<div class="code-box">
+							<pre><code class="language-markup">
+								&lt;form class="overflow-visible"&gt;
+								&nbsp;&lt;div class="calendar-container"&gt;
+								&nbsp;&nbsp;&lt;div class="date-select-container"&gt;
+								&nbsp;&nbsp;&nbsp;&lt;div class="form-field form-field--date-select"&gt;
+								&nbsp;&nbsp;&nbsp;&nbsp;&lt;input type="text" name="date-single" id="date-single" value="From Date" /&gt;
+								&nbsp;&nbsp;&nbsp;&nbsp;&lt;span>&lt;/span&gt;
+								&nbsp;&nbsp;&nbsp;&lt;/div&gt;
+								&nbsp;&nbsp;&lt;/div&gt;
+								&nbsp;&nbsp;&lt;div class="date-select-to-indicator">&lt;/div&gt;
+								&nbsp;&nbsp;&lt;div class="date-select-container"&gt;
+								&nbsp;&nbsp;&nbsp;&lt;div class="form-field form-field--date-select"&gt;
+								&nbsp;&nbsp;&nbsp;&nbsp;&lt;input type="text" name="date-single-to" id="date-single-to" value="To Date" /&gt;
+								&nbsp;&nbsp;&nbsp;&nbsp;&lt;span>&lt;/span&gt;
+								&nbsp;&nbsp;&nbsp;&lt;/div&gt;
+								&nbsp;&nbsp;&lt;/div&gt;
+
+								// date popup widget from GWT here
+								&lt;div class="dateBoxPopup" ... etc
+								&lt;/form&gt;
+							</code></pre>
+						</div>
+					</div>
+				</div>
+
+				<div class="grid__column grid__column--full-width">
+					<h2 class="heading-style--heading-three">Example form colours</h2>
+				</div>
+				<div class="grid__column form-demo overflow-visible">
+					<form class="overflow-visible">
+						<h3 class="heading-style--heading-six">Light background</h3>
+						<div class="form-field form-field--disabled">						
+							<input type="text" name="text" id="text" autocomplete="off" disabled/>
+							<label for="text">Deactivated</label>
+						</div>
+						<div class="form-field">						
+							<input type="text" name="firstname" id="firstname" autocomplete="off" />
+							<label for="firstname">
+								First Name
+								<span class="input-hint">Caps Lock is on, just so you know</span>
+							</label>
+							<a href="#" target="_blank" class="form-field-help ref-icon-after ref-icon-after--question"><span>What's this?</span></a>
+						</div>
+						<div class="form-field">						
+							<input type="password" name="password" id="password" autocomplete="off" class="js-mock-password-entry" />
+							<label for="password">
+								Password
+								<div class="password-strength-indicator-container">
+									<span class="password-strength-description">Strength</span>
+									<div class="password-strength-indicator"><span></span></div>
+								</div>
+							</label>
+						</div>
+						<div class="form-field form-field--select">						
+							<select class="js-field--select">
+							    <option value="" disabled selected>App Store Account</option>
+							    <option value="itunesconnect" data-previous="true" data-selectedtext="Linked">iTunes Connect</option>
+							    <option value="googleplay">Google Play</option>
+							</select>
+						</div>
+						<div class="form-field form-field--select form-field--select-disabled">						
+							<select class="js-field--select" disabled>
+						    <option value="" disabled selected>Disabled Select</option>
+						    <option value="ds1">Option 1</option>
+						    <option value="ds2">Option 2</option>
+						    <option value="ds3">Option 3</option>
+							</select>
+						</div>
+						<div class="form-field--radio-list form-field--radio-list--inline">
+							<ul>
+								<li>
+									<input type="radio" name="radioButtonsBool" id="radioButtonYes" checked />
+									<label for="radioButtonYes" class="radioButtonLabel">Yes</label>
+									<label for="radioButtonYes" class="radioButtonLabelVisible">Yes</label>
+								</li>
+								<li>
+									<input type="radio" name="radioButtonsBool" id="radioButtonNo" />
+									<label for="radioButtonNo" class="radioButtonLabel">No</label>
+									<label for="radioButtonNo" class="radioButtonLabelVisible">No</label>
+								</li>
+								<li>
+									<input type="radio" name="radioButtonDisabledExampleB" id="radioButtonDisabledExampleB" disabled />
+									<label for="radioButtonDisabledExampleB" class="radioButtonLabel radioButtonLabelDisabled">Disabled</label>
+									<label for="radioButtonDisabledExampleB" class="radioButtonLabelVisible radioButtonLabelVisibleDisabled">Disabled</label>
+								</li>
+								<li>
+									<input type="radio" name="radioButtonDisabledExampleB" id="radioButtonDisabledExampleB" disabled checked/>
+									<label for="radioButtonDisabledExampleB" class="radioButtonLabel radioButtonLabelDisabled">Disabled checked</label>
+									<label for="radioButtonDisabledExampleB" class="radioButtonLabelVisible radioButtonLabelVisibleDisabled">Disabled checked</label>
+								</li>
+							</ul>
+						</div>
+						<div class="calendar-container">
+							<div class="date-select-container">
+								<div class="form-field form-field--date-select">
+									<input type="text" name="date-singleEx" id="date-singleEx" value="From Date" />
+									<span></span>
+								</div>
+							</div>
+							<div class="date-select-to-indicator"></div>
+							<div class="date-select-container">
+								<div class="form-field form-field--date-select">
+									<input type="text" name="date-single-toEx" id="date-single-toEx" value="To Date" />
+									<span></span>
+								</div>
+							</div>
+
+							<div class="dateBoxPopup" style="overflow: visible;"><div class="popupContent"><table class="gwt-DatePicker" cellpadding="0" cellspacing="0"><tbody><tr><td style="vertical-align: top;" align="left"><table class="datePickerMonthSelector"><colgroup><col></colgroup><tbody><tr><td width="1"><div aria-pressed="false" role="button" class="datePickerPreviousButton datePickerPreviousButton-up" tabindex="0"><input style="opacity: 0; height: 1px; width: 1px; z-index: -1; overflow: hidden; position: absolute;" role="presentation" tabindex="-1" type="text"><div class="html-face">‹</div></div></td><td class="datePickerMonth" width="100%">2015 Jan</td><td width="1"><div aria-pressed="false" role="button" class="datePickerNextButton datePickerNextButton-up" tabindex="0"><input style="opacity: 0; height: 1px; width: 1px; z-index: -1; overflow: hidden; position: absolute;" role="presentation" tabindex="-1" type="text"><div class="html-face">›</div></div></td></tr>
+							</tbody></table></td></tr><tr><td style="vertical-align: top;" align="left"><table class="datePickerDays" border="0" cellpadding="0" cellspacing="0"><colgroup><col><col><col><col><col><col><col></colgroup><tbody><tr><td class="datePickerWeekdayLabel">M</td><td class="datePickerWeekdayLabel">T</td><td class="datePickerWeekdayLabel">W</td><td class="datePickerWeekdayLabel">T</td><td class="datePickerWeekdayLabel">F</td><td class="datePickerWeekendLabel">S</td><td class="datePickerWeekendLabel">S</td></tr><tr><td><div class="datePickerDay datePickerDayIsFiller datePickerDayIsFiller" aria-selected="false" tabindex="-1">29</div></td><td><div class="datePickerDay datePickerDayIsFiller" aria-selected="false" tabindex="-1">30</div></td><td><div class="datePickerDay datePickerDayIsFiller " aria-selected="false" tabindex="-1">31</div></td><td><div class="datePickerDay " aria-selected="false" tabindex="0">1</div></td><td><div class="datePickerDay " aria-selected="false" tabindex="0">2</div></td><td><div class="datePickerDay datePickerDayIsWeekend " aria-selected="false" tabindex="0">3</div></td><td><div class="datePickerDay datePickerDayIsWeekend " aria-selected="false" tabindex="0">4</div></td></tr><tr><td><div class="datePickerDay " aria-selected="false" tabindex="0">5</div></td><td><div class="datePickerDay datePickerDayIsValue" aria-selected="false" tabindex="0">6</div></td><td><div class="datePickerDay " aria-selected="false" tabindex="0">7</div></td><td><div class="datePickerDay " aria-selected="false" tabindex="0">8</div></td><td><div class="datePickerDay " aria-selected="false" tabindex="0">9</div></td><td><div class="datePickerDay datePickerDayIsWeekend " aria-selected="false" tabindex="0">10</div></td><td><div class="datePickerDay datePickerDayIsWeekend " aria-selected="false" tabindex="0">11</div></td></tr><tr><td><div class="datePickerDay " aria-selected="false" tabindex="0">12</div></td><td><div class="datePickerDay " aria-selected="false" tabindex="0">13</div></td><td><div class="datePickerDay " aria-selected="false" tabindex="0">14</div></td><td><div class="datePickerDay " aria-selected="false" tabindex="0">15</div></td><td><div class="datePickerDay datePickerDayIsToday" aria-selected="false" tabindex="0">16</div></td><td><div class="datePickerDay datePickerDayIsWeekend " aria-selected="false" tabindex="0">17</div></td><td><div class="datePickerDay datePickerDayIsWeekend " aria-selected="false" tabindex="0">18</div></td></tr><tr><td><div class="datePickerDay " aria-selected="false" tabindex="0">19</div></td><td><div class="datePickerDay " aria-selected="false" tabindex="0">20</div></td><td><div class="datePickerDay" aria-selected="false" tabindex="0">21</div></td><td><div class="datePickerDay  datePickerDayIsDisabled" aria-selected="false" tabindex="0">22</div></td><td><div class="datePickerDay  datePickerDayIsDisabled" aria-selected="false" tabindex="0">23</div></td><td><div class="datePickerDay datePickerDayIsWeekend  datePickerDayIsDisabled" aria-selected="false" tabindex="0">24</div></td><td><div class="datePickerDay datePickerDayIsWeekend  datePickerDayIsDisabled" aria-selected="false" tabindex="0">25</div></td></tr><tr><td><div class="datePickerDay  datePickerDayIsDisabled" aria-selected="false" tabindex="0">26</div></td><td><div class="datePickerDay  datePickerDayIsDisabled" aria-selected="false" tabindex="0">27</div></td><td><div class="datePickerDay  datePickerDayIsDisabled" aria-selected="false" tabindex="0">28</div></td><td><div class="datePickerDay  datePickerDayIsDisabled" aria-selected="false" tabindex="0">29</div></td><td><div class="datePickerDay  datePickerDayIsDisabled" aria-selected="false" tabindex="0">30</div></td><td><div class="datePickerDay datePickerDayIsWeekend  datePickerDayIsDisabled" aria-selected="false" tabindex="0">31</div></td><td><div class="datePickerDay datePickerDayIsWeekend datePickerDayIsFiller  datePickerDayIsDisabled" aria-selected="false" tabindex="-1">1</div></td></tr><tr><td><div class="datePickerDay datePickerDayIsFiller  datePickerDayIsDisabled" aria-selected="false" tabindex="-1">2</div></td><td><div class="datePickerDay datePickerDayIsFiller  datePickerDayIsDisabled" aria-selected="false" tabindex="-1">3</div></td><td><div class="datePickerDay datePickerDayIsFiller  datePickerDayIsDisabled" aria-selected="false" tabindex="-1">4</div></td><td><div class="datePickerDay datePickerDayIsFiller  datePickerDayIsDisabled" aria-selected="false" tabindex="-1">5</div></td><td><div class="datePickerDay datePickerDayIsFiller  datePickerDayIsDisabled" aria-selected="false" tabindex="-1">6</div></td><td><div class="datePickerDay datePickerDayIsWeekend datePickerDayIsFiller  datePickerDayIsDisabled" aria-selected="false" tabindex="-1">7</div></td><td><div class="datePickerDay datePickerDayIsWeekend datePickerDayIsFiller  datePickerDayIsDisabled" aria-selected="false" tabindex="-1">8</div></td></tr></tbody></table></td></tr></tbody></table></div></div>
+						</div>
+						<div class="form-field--checkbox-list">
+							<ul>
+								<li class="is-error-message-showing">
+									<input type="checkbox" name="checkboxTerms" id="checkboxTerms" />
+									<label for="checkboxTerms" class="checkboxLabel">Lorem ipsum dolor amet elict</label>
+									<label for="checkboxTerms" class="checkboxLabelVisible"><span class="block-error-message">Error message lorem ipsum dolor amet elict</span> I agree with the <a href="#">terms and conditions</a></label>
+								</li>
+								<li>
+									<input type="checkbox" name="checkboxDefaultDisabled" id="checkboxDefaultDisabled" disabled />
+									<label for="checkboxDefaultDisabled" class="checkboxLabel checkboxLabelDisabled">Check box option disabled</label>
+									<label for="checkboxDefaultDisabled" class="checkboxLabelVisible checkboxLabelVisibleDisabled">Check box option disabled</label>
+								</li>
+								<li>
+									<input type="checkbox" name="checkboxDefaultDisabled" id="checkboxDefaultDisabled" disabled checked/>
+									<label for="checkboxDefaultDisabled" class="checkboxLabel checkboxLabelDisabled">Check box option disabled checked</label>
+									<label for="checkboxDefaultDisabled" class="checkboxLabelVisible checkboxLabelVisibleDisabled">Check box option disabled checked</label>
+								</li>
+							</ul>
+						</div>
+						<input type="submit" class="ref-button--full-width" value="Apply Now" />
+					</form>
+				</div>
+
+				<div class="grid__column form-demo grid__column--push-one forms--mid-theme overflow-visible">
+					<form class="overflow-visible">
+						<h3 class="heading-style--heading-six">Mid background</h3>
+						<div class="form-field form-field--disabled">
+							<input type="text" name="text" id="textmid" autocomplete="off" disabled/>
+							<label for="textmid">Deactivated</label>
+						</div>
+						<div class="form-field">						
+							<input type="text" name="firstname" id="firstnamemid" autocomplete="off" />
+							<label for="firstnamemid">First Name<span class="input-hint">Caps Lock is on, just so you know</span></label>
+							<a href="#" target="_blank" class="form-field-help ref-icon-after ref-icon-after--question"><span>What's this?</span></a>
+						</div>
+						<div class="form-field">						
+							<input type="password" name="passwordmid" id="passwordmid" autocomplete="off" class="js-mock-password-entry" />
+							<label for="passwordmid">
+								Password
+								<div class="password-strength-indicator-container">
+									<span class="password-strength-description">Strength</span>
+									<div class="password-strength-indicator"><span></span></div>
+								</div>
+							</label>							
+						</div>
+						<div class="form-field form-field--select">						
+							<select class="js-field--select">
+							    <option value="" disabled selected>App Store Account</option>
+							    <option value="itunesconnectmid" data-previous="true" data-selectedtext="Linked">iTunes Connect</option>
+							    <option value="googleplaymid">Google Play</option>
+							</select>
+						</div>
+						<div class="form-field form-field--select form-field--select-disabled">						
+							<select class="js-field--select" disabled>
+						    <option value="" disabled selected>Disabled Select</option>
+						    <option value="ds11">Option 1</option>
+						    <option value="ds12">Option 2</option>
+						    <option value="ds13">Option 3</option>
+							</select>
+						</div>
+						<div class="form-field--radio-list form-field--radio-list--inline">
+							<ul>
+								<li>
+									<input type="radio" name="radioButtonsBoolMid" id="radioButtonYesMid" checked />
+									<label for="radioButtonYesMid" class="radioButtonLabel">Yes</label>
+									<label for="radioButtonYesMid" class="radioButtonLabelVisible">Yes</label>
+								</li>
+								<li class="is-error-message-showing">
+									<input type="radio" name="radioButtonsBoolMid" id="radioButtonNoMid" />
+									<label for="radioButtonNoMid" class="radioButtonLabel">No</label>
+									<label for="radioButtonNoMid" class="radioButtonLabelVisible">
+										<span class="block-error-message">Error message lorem ipsum dolor amet elict</span>
+										No</label>
+								</li>
+								<li>
+									<input type="radio" name="radioButtonDisabledExampleBMid" id="radioButtonDisabledExampleBMid" disabled />
+									<label for="radioButtonDisabledExampleBMid" class="radioButtonLabel radioButtonLabelDisabled">Disabled</label>
+									<label for="radioButtonDisabledExampleBMid" class="radioButtonLabelVisible radioButtonLabelVisibleDisabled">Disabled</label>
+								</li>
+								<li>
+									<input type="radio" name="radioButtonDisabledExampleBMid" id="radioButtonDisabledExampleBMid" disabled checked/>
+									<label for="radioButtonDisabledExampleBMid" class="radioButtonLabel radioButtonLabelDisabled">Disabled checked</label>
+									<label for="radioButtonDisabledExampleBMid" class="radioButtonLabelVisible radioButtonLabelVisibleDisabled">Disabled checked</label>
+								</li>
+							</ul>
+						</div>
+						<div class="calendar-container">
+							<div class="date-select-container">
+								<div class="form-field form-field--date-select">
+									<input type="text" name="date-singleEx" id="date-singleEx" value="From Date" />
+									<span></span>
+								</div>
+							</div>
+							<div class="date-select-to-indicator"></div>
+							<div class="date-select-container">
+								<div class="form-field form-field--date-select">
+									<input type="text" name="date-single-toExMid" id="date-single-toExMid" value="To Date" />
+									<span></span>
+								</div>
+							</div>
+
+							<div class="dateBoxPopup" style="overflow: visible;"><div class="popupContent"><table class="gwt-DatePicker" cellpadding="0" cellspacing="0"><tbody><tr><td style="vertical-align: top;" align="left"><table class="datePickerMonthSelector"><colgroup><col></colgroup><tbody><tr><td width="1"><div aria-pressed="false" role="button" class="datePickerPreviousButton datePickerPreviousButton-up" tabindex="0"><input style="opacity: 0; height: 1px; width: 1px; z-index: -1; overflow: hidden; position: absolute;" role="presentation" tabindex="-1" type="text"><div class="html-face">‹</div></div></td><td class="datePickerMonth" width="100%">2015 Jan</td><td width="1"><div aria-pressed="false" role="button" class="datePickerNextButton datePickerNextButton-up" tabindex="0"><input style="opacity: 0; height: 1px; width: 1px; z-index: -1; overflow: hidden; position: absolute;" role="presentation" tabindex="-1" type="text"><div class="html-face">›</div></div></td></tr>
+							</tbody></table></td></tr><tr><td style="vertical-align: top;" align="left"><table class="datePickerDays" border="0" cellpadding="0" cellspacing="0"><colgroup><col><col><col><col><col><col><col></colgroup><tbody><tr><td class="datePickerWeekdayLabel">M</td><td class="datePickerWeekdayLabel">T</td><td class="datePickerWeekdayLabel">W</td><td class="datePickerWeekdayLabel">T</td><td class="datePickerWeekdayLabel">F</td><td class="datePickerWeekendLabel">S</td><td class="datePickerWeekendLabel">S</td></tr><tr><td><div class="datePickerDay datePickerDayIsFiller datePickerDayIsFiller" aria-selected="false" tabindex="-1">29</div></td><td><div class="datePickerDay datePickerDayIsFiller" aria-selected="false" tabindex="-1">30</div></td><td><div class="datePickerDay datePickerDayIsFiller " aria-selected="false" tabindex="-1">31</div></td><td><div class="datePickerDay " aria-selected="false" tabindex="0">1</div></td><td><div class="datePickerDay " aria-selected="false" tabindex="0">2</div></td><td><div class="datePickerDay datePickerDayIsWeekend " aria-selected="false" tabindex="0">3</div></td><td><div class="datePickerDay datePickerDayIsWeekend " aria-selected="false" tabindex="0">4</div></td></tr><tr><td><div class="datePickerDay " aria-selected="false" tabindex="0">5</div></td><td><div class="datePickerDay datePickerDayIsValue" aria-selected="false" tabindex="0">6</div></td><td><div class="datePickerDay " aria-selected="false" tabindex="0">7</div></td><td><div class="datePickerDay " aria-selected="false" tabindex="0">8</div></td><td><div class="datePickerDay " aria-selected="false" tabindex="0">9</div></td><td><div class="datePickerDay datePickerDayIsWeekend " aria-selected="false" tabindex="0">10</div></td><td><div class="datePickerDay datePickerDayIsWeekend " aria-selected="false" tabindex="0">11</div></td></tr><tr><td><div class="datePickerDay " aria-selected="false" tabindex="0">12</div></td><td><div class="datePickerDay " aria-selected="false" tabindex="0">13</div></td><td><div class="datePickerDay " aria-selected="false" tabindex="0">14</div></td><td><div class="datePickerDay " aria-selected="false" tabindex="0">15</div></td><td><div class="datePickerDay datePickerDayIsToday" aria-selected="false" tabindex="0">16</div></td><td><div class="datePickerDay datePickerDayIsWeekend " aria-selected="false" tabindex="0">17</div></td><td><div class="datePickerDay datePickerDayIsWeekend " aria-selected="false" tabindex="0">18</div></td></tr><tr><td><div class="datePickerDay " aria-selected="false" tabindex="0">19</div></td><td><div class="datePickerDay " aria-selected="false" tabindex="0">20</div></td><td><div class="datePickerDay" aria-selected="false" tabindex="0">21</div></td><td><div class="datePickerDay  datePickerDayIsDisabled" aria-selected="false" tabindex="0">22</div></td><td><div class="datePickerDay  datePickerDayIsDisabled" aria-selected="false" tabindex="0">23</div></td><td><div class="datePickerDay datePickerDayIsWeekend  datePickerDayIsDisabled" aria-selected="false" tabindex="0">24</div></td><td><div class="datePickerDay datePickerDayIsWeekend  datePickerDayIsDisabled" aria-selected="false" tabindex="0">25</div></td></tr><tr><td><div class="datePickerDay  datePickerDayIsDisabled" aria-selected="false" tabindex="0">26</div></td><td><div class="datePickerDay  datePickerDayIsDisabled" aria-selected="false" tabindex="0">27</div></td><td><div class="datePickerDay  datePickerDayIsDisabled" aria-selected="false" tabindex="0">28</div></td><td><div class="datePickerDay  datePickerDayIsDisabled" aria-selected="false" tabindex="0">29</div></td><td><div class="datePickerDay  datePickerDayIsDisabled" aria-selected="false" tabindex="0">30</div></td><td><div class="datePickerDay datePickerDayIsWeekend  datePickerDayIsDisabled" aria-selected="false" tabindex="0">31</div></td><td><div class="datePickerDay datePickerDayIsWeekend datePickerDayIsFiller  datePickerDayIsDisabled" aria-selected="false" tabindex="-1">1</div></td></tr><tr><td><div class="datePickerDay datePickerDayIsFiller  datePickerDayIsDisabled" aria-selected="false" tabindex="-1">2</div></td><td><div class="datePickerDay datePickerDayIsFiller  datePickerDayIsDisabled" aria-selected="false" tabindex="-1">3</div></td><td><div class="datePickerDay datePickerDayIsFiller  datePickerDayIsDisabled" aria-selected="false" tabindex="-1">4</div></td><td><div class="datePickerDay datePickerDayIsFiller  datePickerDayIsDisabled" aria-selected="false" tabindex="-1">5</div></td><td><div class="datePickerDay datePickerDayIsFiller  datePickerDayIsDisabled" aria-selected="false" tabindex="-1">6</div></td><td><div class="datePickerDay datePickerDayIsWeekend datePickerDayIsFiller  datePickerDayIsDisabled" aria-selected="false" tabindex="-1">7</div></td><td><div class="datePickerDay datePickerDayIsWeekend datePickerDayIsFiller  datePickerDayIsDisabled" aria-selected="false" tabindex="-1">8</div></td></tr></tbody></table></td></tr></tbody></table></div></div>
+						</div>
+						<div class="form-field--checkbox-list">
+							<ul>
+								<li>
+									<input type="checkbox" name="checkboxTermsMid" id="checkboxTermsMid" />
+									<label for="checkboxTermsMid" class="checkboxLabel">Lorem ipsum dolor amet elict</label>
+									<label for="checkboxTermsMid" class="checkboxLabelVisible">I agree with the <a href="#">terms and conditions</a></label>
+								</li>
+								<li>
+									<input type="checkbox" name="checkboxMidDisabled" id="checkboxMidDisabled" disabled />
+									<label for="checkboxMidDisabled" class="checkboxLabel checkboxLabelDisabled">Check box option disabled</label>
+									<label for="checkboxMidDisabled" class="checkboxLabelVisible checkboxLabelVisibleDisabled">Check box option disabled</label>
+								</li>
+								<li>
+									<input type="checkbox" name="checkboxMidDisabled" id="checkboxMidDisabled" disabled checked/>
+									<label for="checkboxMidDisabled" class="checkboxLabel checkboxLabelDisabled">Check box option disabled checked</label>
+									<label for="checkboxMidDisabled" class="checkboxLabelVisible checkboxLabelVisibleDisabled">Check box option disabled checked</label>
+								</li>
+							</ul>
+						</div>
+						<input type="submit" class="ref-button--full-width" value="Apply Now" />
+					</form>
+				</div>
+
+				<div class="grid__column form-demo forms--dark-theme overflow-visible clear-both">
+					<form class="overflow-visible">
+						<h3 class="heading-style--heading-six">Dark background</h3>
+						<div class="form-field form-field--disabled">						
+							<input type="text" name="text" id="textdark" autocomplete="off" disabled/>
+							<label for="textdark">Deactivated</label>
+						</div>
+						<div class="form-field">						
+							<input type="text" name="firstname" id="firstnamedark" autocomplete="off" />
+							<label for="firstnamedark">First Name<span class="input-hint">Caps Lock is on, just so you know</span></label>
+							<a href="#" target="_blank" class="form-field-help ref-icon-after ref-icon-after--question"><span>What's this?</span></a>
+						</div>
+						<div class="form-field">						
+							<input type="password" name="passwordmid" id="passworddark" autocomplete="off" class="js-mock-password-entry" />
+							<label for="passworddark">
+								Password
+								<div class="password-strength-indicator-container">
+									<span class="password-strength-description">Strength</span>
+									<div class="password-strength-indicator"><span></span></div>
+								</div>
+							</label>
+						</div>
+						<div class="form-field form-field--select">						
+							<select class="js-field--select">
+							    <option value="" disabled selected>App Store Account</option>
+							    <option value="itunesconnectdark" data-previous="true" data-selectedtext="Linked">iTunes Connect</option>
+							    <option value="googleplaydark">Google Play</option>
+							</select>
+						</div>
+						<div class="form-field form-field--select form-field--select-disabled">						
+							<select class="js-field--select" disabled>
+						    <option value="" disabled selected>Disabled Select</option>
+						    <option value="ds21">Option 1</option>
+						    <option value="ds22">Option 2</option>
+						    <option value="ds23">Option 3</option>
+							</select>
+						</div>					
+						<div class="form-field--radio-list">
+							<ul>
+								<li class="is-error-message-showing">
+									<input type="radio" name="radioButtonsBoolDark" id="radioButtonYesDark"/>
+									<label for="radioButtonYesDark" class="radioButtonLabel">Yes</label>
+									<label for="radioButtonYesDark" class="radioButtonLabelVisible"><span class="block-error-message">Error message lorem ipsum dolor amet elict</span> Yes</label>
+								</li>
+								<li>
+									<input type="radio" name="radioButtonsBoolDark" id="radioButtonNoDark"/>
+									<label for="radioButtonNoDark" class="radioButtonLabel">No</label>
+									<label for="radioButtonNoDark" class="radioButtonLabelVisible">No</label>
+								</li>
+								<li>
+									<input type="radio" name="radioButtonDisabledExampleBDark" id="radioButtonDisabledExampleBDark" disabled/>
+									<label for="radioButtonDisabledExampleBDark" class="radioButtonLabel radioButtonLabelDisabled">Disabled</label>
+									<label for="radioButtonDisabledExampleBDark" class="radioButtonLabelVisible radioButtonLabelVisibleDisabled">Disabled</label>
+								</li>
+								<li>
+									<input type="radio" name="radioButtonDisabledExampleBDark2" id="radioButtonDisabledExampleBDark2" disabled checked/>
+									<label for="radioButtonDisabledExampleBDark2" class="radioButtonLabel radioButtonLabelDisabled">Disabled Checked</label>
+									<label for="radioButtonDisabledExampleBDark2" class="radioButtonLabelVisible radioButtonLabelVisibleDisabled">Disabled Checked</label>
+								</li>
+							</ul>
+						</div>
+						<div class="calendar-container">
+							<div class="date-select-container">
+								<div class="form-field form-field--date-select">
+									<input type="text" name="date-singleEx" id="date-singleEx" value="From Date" />
+									<span></span>
+								</div>
+							</div>
+							<div class="date-select-to-indicator"></div>
+							<div class="date-select-container">
+								<div class="form-field form-field--date-select">
+									<input type="text" name="date-single-toExDark" id="date-single-toExDark" value="To Date" />
+									<span></span>
+								</div>
+							</div>
+
+							<div class="dateBoxPopup" style="overflow: visible;"><div class="popupContent"><table class="gwt-DatePicker" cellpadding="0" cellspacing="0"><tbody><tr><td style="vertical-align: top;" align="left"><table class="datePickerMonthSelector"><colgroup><col></colgroup><tbody><tr><td width="1"><div aria-pressed="false" role="button" class="datePickerPreviousButton datePickerPreviousButton-up" tabindex="0"><input style="opacity: 0; height: 1px; width: 1px; z-index: -1; overflow: hidden; position: absolute;" role="presentation" tabindex="-1" type="text"><div class="html-face">‹</div></div></td><td class="datePickerMonth" width="100%">2015 Jan</td><td width="1"><div aria-pressed="false" role="button" class="datePickerNextButton datePickerNextButton-up" tabindex="0"><input style="opacity: 0; height: 1px; width: 1px; z-index: -1; overflow: hidden; position: absolute;" role="presentation" tabindex="-1" type="text"><div class="html-face">›</div></div></td></tr>
+							</tbody></table></td></tr><tr><td style="vertical-align: top;" align="left"><table class="datePickerDays" border="0" cellpadding="0" cellspacing="0"><colgroup><col><col><col><col><col><col><col></colgroup><tbody><tr><td class="datePickerWeekdayLabel">M</td><td class="datePickerWeekdayLabel">T</td><td class="datePickerWeekdayLabel">W</td><td class="datePickerWeekdayLabel">T</td><td class="datePickerWeekdayLabel">F</td><td class="datePickerWeekendLabel">S</td><td class="datePickerWeekendLabel">S</td></tr><tr><td><div class="datePickerDay datePickerDayIsFiller datePickerDayIsFiller" aria-selected="false" tabindex="-1">29</div></td><td><div class="datePickerDay datePickerDayIsFiller" aria-selected="false" tabindex="-1">30</div></td><td><div class="datePickerDay datePickerDayIsFiller " aria-selected="false" tabindex="-1">31</div></td><td><div class="datePickerDay " aria-selected="false" tabindex="0">1</div></td><td><div class="datePickerDay " aria-selected="false" tabindex="0">2</div></td><td><div class="datePickerDay datePickerDayIsWeekend " aria-selected="false" tabindex="0">3</div></td><td><div class="datePickerDay datePickerDayIsWeekend " aria-selected="false" tabindex="0">4</div></td></tr><tr><td><div class="datePickerDay " aria-selected="false" tabindex="0">5</div></td><td><div class="datePickerDay datePickerDayIsValue" aria-selected="false" tabindex="0">6</div></td><td><div class="datePickerDay " aria-selected="false" tabindex="0">7</div></td><td><div class="datePickerDay " aria-selected="false" tabindex="0">8</div></td><td><div class="datePickerDay " aria-selected="false" tabindex="0">9</div></td><td><div class="datePickerDay datePickerDayIsWeekend " aria-selected="false" tabindex="0">10</div></td><td><div class="datePickerDay datePickerDayIsWeekend " aria-selected="false" tabindex="0">11</div></td></tr><tr><td><div class="datePickerDay " aria-selected="false" tabindex="0">12</div></td><td><div class="datePickerDay " aria-selected="false" tabindex="0">13</div></td><td><div class="datePickerDay " aria-selected="false" tabindex="0">14</div></td><td><div class="datePickerDay " aria-selected="false" tabindex="0">15</div></td><td><div class="datePickerDay datePickerDayIsToday" aria-selected="false" tabindex="0">16</div></td><td><div class="datePickerDay datePickerDayIsWeekend " aria-selected="false" tabindex="0">17</div></td><td><div class="datePickerDay datePickerDayIsWeekend " aria-selected="false" tabindex="0">18</div></td></tr><tr><td><div class="datePickerDay " aria-selected="false" tabindex="0">19</div></td><td><div class="datePickerDay " aria-selected="false" tabindex="0">20</div></td><td><div class="datePickerDay" aria-selected="false" tabindex="0">21</div></td><td><div class="datePickerDay  datePickerDayIsDisabled" aria-selected="false" tabindex="0">22</div></td><td><div class="datePickerDay  datePickerDayIsDisabled" aria-selected="false" tabindex="0">23</div></td><td><div class="datePickerDay datePickerDayIsWeekend  datePickerDayIsDisabled" aria-selected="false" tabindex="0">24</div></td><td><div class="datePickerDay datePickerDayIsWeekend  datePickerDayIsDisabled" aria-selected="false" tabindex="0">25</div></td></tr><tr><td><div class="datePickerDay  datePickerDayIsDisabled" aria-selected="false" tabindex="0">26</div></td><td><div class="datePickerDay  datePickerDayIsDisabled" aria-selected="false" tabindex="0">27</div></td><td><div class="datePickerDay  datePickerDayIsDisabled" aria-selected="false" tabindex="0">28</div></td><td><div class="datePickerDay  datePickerDayIsDisabled" aria-selected="false" tabindex="0">29</div></td><td><div class="datePickerDay  datePickerDayIsDisabled" aria-selected="false" tabindex="0">30</div></td><td><div class="datePickerDay datePickerDayIsWeekend  datePickerDayIsDisabled" aria-selected="false" tabindex="0">31</div></td><td><div class="datePickerDay datePickerDayIsWeekend datePickerDayIsFiller  datePickerDayIsDisabled" aria-selected="false" tabindex="-1">1</div></td></tr><tr><td><div class="datePickerDay datePickerDayIsFiller  datePickerDayIsDisabled" aria-selected="false" tabindex="-1">2</div></td><td><div class="datePickerDay datePickerDayIsFiller  datePickerDayIsDisabled" aria-selected="false" tabindex="-1">3</div></td><td><div class="datePickerDay datePickerDayIsFiller  datePickerDayIsDisabled" aria-selected="false" tabindex="-1">4</div></td><td><div class="datePickerDay datePickerDayIsFiller  datePickerDayIsDisabled" aria-selected="false" tabindex="-1">5</div></td><td><div class="datePickerDay datePickerDayIsFiller  datePickerDayIsDisabled" aria-selected="false" tabindex="-1">6</div></td><td><div class="datePickerDay datePickerDayIsWeekend datePickerDayIsFiller  datePickerDayIsDisabled" aria-selected="false" tabindex="-1">7</div></td><td><div class="datePickerDay datePickerDayIsWeekend datePickerDayIsFiller  datePickerDayIsDisabled" aria-selected="false" tabindex="-1">8</div></td></tr></tbody></table></td></tr></tbody></table></div></div>
+						</div>
+						<div class="form-field--checkbox-list">
+							<ul>
+								<li>
+									<input type="checkbox" name="checkboxTermsDark" id="checkboxTermsDark" />
+									<label for="checkboxTermsDark" class="checkboxLabel">Lorem ipsum dolor amet elict</label>
+									<label for="checkboxTermsDark" class="checkboxLabelVisible">I agree with the <a href="#">terms and conditions</a></label>
+								</li>
+								<li>
+									<input type="checkbox" name="checkboxDarkDisabled" id="checkboxDarkDisabled" disabled/>
+									<label for="checkboxDarkDisabled" class="checkboxLabel checkboxLabelDisabled">Check box option disabled</label>
+									<label for="checkboxDarkDisabled" class="checkboxLabelVisible checkboxLabelVisibleDisabled">Check box option disabled</label>
+								</li>
+								<li>
+									<input type="checkbox" name="checkboxDarkDisabled" id="checkboxDarkDisabled" disabled checked/>
+									<label for="checkboxDarkDisabled" class="checkboxLabel checkboxLabelDisabled">Check box option disabled checked</label>
+									<label for="checkboxDarkDisabled" class="checkboxLabelVisible checkboxLabelVisibleDisabled">Check box option disabled checked</label>
+								</li>
+							</ul>
+						</div>
+						<input type="submit" class="ref-button--full-width" value="Apply Now" />
+					</form>
+				</div>
+				<div class="grid__column grid__column--push-one form-demo forms--dark-theme">
+					<form>
+						<h3 class="heading-style--heading-six">Field specific error</h3>
+						<div class="form-field form-field--disabled">						
+							<input type="text" name="text" id="textdark" autocomplete="off" disabled/>
+							<label for="textdark">Deactivated</label>
+						</div>
+						<div class="form-field form-field--error">						
+							<input type="text" name="firstname" id="firstnamedark" autocomplete="off" />
+							<label for="firstnamedark">First Name <span>Error message lorem ipsum dolor</span></label>
+						</div>
+						<h3 class="heading-style--heading-six">General form error</h3>
+						<input type="submit" class="ref-button--full-width ref-button--error" value="Oops, there's an error..." />
+						<div class="general-error-message">
+							<p>Error message lorem ipsum dolor amet elict</p>
+						</div>
+					</form>
+				</div>
+				<div class="grid__column grid__column--push-one form-demo forms--mid-theme">
+					<form>
+						<h3 class="heading-style--heading-six">Field specific error</h3>
+						<div class="form-field form-field--disabled">						
+							<input type="text" name="text" id="textdark" autocomplete="off" disabled/>
+							<label for="textdark">Deactivated</label>
+						</div>
+						<div class="form-field form-field--error">						
+							<input type="text" name="firstname" id="firstnamedark" autocomplete="off" />
+							<label for="firstnamedark">First Name <span>Error message lorem ipsum dolor</span></label>
+						</div>
+						<h3 class="heading-style--heading-six">General form error</h3>
+						<input type="submit" class="ref-button--full-width ref-button--error" value="Oops, there's an error..." />
+						<div class="general-error-message">
+							<p>Error message lorem ipsum dolor amet elict</p>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="js-component-import--account-container" class="panel-right-container js-account-container"></div>
+	<div id="js-component-import--search-container" class="panel-right-container js-search-container"></div>
+
+ 	<script src="js/vendor/jquery-1.11.1.min.js"></script>
+ 	<script src="js/vendor/jquery-ui.custom.min.js"></script>
+ 	<script src="js/vendor/handlebars-v2.0.0.js"></script>
+ 	<script src="js/templates/templates.js"></script>
+	<script src="js/vendor/modernizr.2.8.3.custom.min.js"></script>
+	<!--[if IE 9]>
+		<script src="js/vendor/jquery.mCustomScrollbar.concat.min.js"></script>
+	<![endif]-->
+
+	<div id="js-appendScriptsContainer"></div>
+
+	<script src="js/designkit-global-templates.js"></script>
+  <script src="js/application.js"></script>
+  <script src="js/designkit-app.js"></script>
+  <script>
+  	function initScripts() {
+  		new FormsPage();
+  	}
+
+  	window.onready = initScripts();
+  </script>
+</body>

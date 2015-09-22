@@ -249,6 +249,15 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
   </auth-constraint>
 </security-constraint>
 
+<security-constraint>
+  <web-resource-collection>
+    <url-pattern>/dk/*</url-pattern>
+  </web-resource-collection>
+  <auth-constraint>
+    <role-name>admin</role-name>
+  </auth-constraint>
+</security-constraint>
+
 <!-- <security-constraint>
   <web-resource-collection>
     <url-pattern>/internal/*</url-pattern>
@@ -264,6 +273,15 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	</filter>
 	<filter-mapping>
 		<filter-name>ObjectifyFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<filter>
+		<filter-name>DBConnectionPoolingFilter</filter-name>
+		<filter-class>io.reflection.app.DBConnectionPoolingFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>DBConnectionPoolingFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 	

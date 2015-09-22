@@ -16,43 +16,43 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 public class GetPostRequest extends Request {
+	public String code;
 	public Long id;
-	public String title;
 
 	@Override
 	public JsonObject toJson() {
 		JsonObject object = super.toJson();
+		JsonElement jsonCode = code == null ? JsonNull.INSTANCE : new JsonPrimitive(code);
+		object.add("code", jsonCode);
 		JsonElement jsonId = id == null ? JsonNull.INSTANCE : new JsonPrimitive(id);
 		object.add("id", jsonId);
-		JsonElement jsonTitle = title == null ? JsonNull.INSTANCE : new JsonPrimitive(title);
-		object.add("title", jsonTitle);
 		return object;
 	}
 
 	@Override
 	public void fromJson(JsonObject jsonObject) {
 		super.fromJson(jsonObject);
+		if (jsonObject.has("code")) {
+			JsonElement jsonCode = jsonObject.get("code");
+			if (jsonCode != null) {
+				code = jsonCode.getAsString();
+			}
+		}
 		if (jsonObject.has("id")) {
 			JsonElement jsonId = jsonObject.get("id");
 			if (jsonId != null) {
 				id = Long.valueOf(jsonId.getAsLong());
 			}
 		}
-		if (jsonObject.has("title")) {
-			JsonElement jsonTitle = jsonObject.get("title");
-			if (jsonTitle != null) {
-				title = jsonTitle.getAsString();
-			}
-		}
 	}
 
-	public GetPostRequest id(long id) {
-		this.id = id;
+	public GetPostRequest code(String code) {
+		this.code = code;
 		return this;
 	}
 
-	public GetPostRequest title(String title) {
-		this.title = title;
+	public GetPostRequest id(Long id) {
+		this.id = id;
 		return this;
 	}
 }

@@ -7,24 +7,8 @@
 //
 package io.reflection.app.apple;
 
-import static com.willshex.gson.json.shared.Convert.fromJsonObject;
-import static com.willshex.gson.json.shared.Convert.toJsonObject;
-import static io.reflection.app.helpers.ItemPropertyWrapper.PROPERTY_IAP;
-import static io.reflection.app.helpers.ItemPropertyWrapper.PROPERTY_IAP_ON;
-import io.reflection.app.api.exception.DataAccessException;
-import io.reflection.app.api.lookup.shared.datatypes.LookupDetailType;
-import io.reflection.app.collectors.HttpExternalGetter;
-import io.reflection.app.datatypes.shared.Application;
-import io.reflection.app.datatypes.shared.Item;
-import io.reflection.app.helpers.ApiHelper;
-//import io.reflection.app.collectors.HttpExternalGetter;
-import io.reflection.app.logging.GaeLevel;
-import io.reflection.app.service.application.ApplicationServiceProvider;
-import io.reflection.app.service.item.IItemService;
-//import io.reflection.app.service.item.IItemService;
-import io.reflection.app.service.item.ItemServiceProvider;
-import io.reflection.app.service.rank.RankServiceProvider;
-import io.reflection.app.shared.util.DataTypeHelper;
+import static com.willshex.gson.json.shared.Convert.*;
+import static io.reflection.app.helpers.ItemPropertyWrapper.*;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -54,9 +38,24 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.api.lookup.shared.datatypes.LookupDetailType;
+import io.reflection.app.collectors.HttpExternalGetter;
+import io.reflection.app.datatypes.shared.Application;
+import io.reflection.app.datatypes.shared.Item;
+import io.reflection.app.helpers.ApiHelper;
+//import io.reflection.app.collectors.HttpExternalGetter;
+import io.reflection.app.logging.GaeLevel;
+import io.reflection.app.service.application.ApplicationServiceProvider;
+import io.reflection.app.service.item.IItemService;
+//import io.reflection.app.service.item.IItemService;
+import io.reflection.app.service.item.ItemServiceProvider;
+import io.reflection.app.service.rank.RankServiceProvider;
+import io.reflection.app.shared.util.DataTypeHelper;
+
 /**
  * @author William Shakour
- * 
+ *
  */
 @SuppressWarnings("serial")
 public class ItemPropertyLookupServlet extends HttpServlet {
@@ -69,7 +68,7 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
 	@Override
@@ -79,7 +78,7 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest , javax.servlet.http.HttpServletResponse)
 	 */
 	@Override
@@ -344,7 +343,7 @@ public class ItemPropertyLookupServlet extends HttpServlet {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param items
 	 * @return
 	 */

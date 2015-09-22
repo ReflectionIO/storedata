@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="utf-8" />
+	<title>Reflection Design Kit - Buttons</title>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link rel="stylesheet" media="screen, projection" type="text/css" href="designkit.css" />
+	<!--[if (lt IE 9)]>
+		<script src="js/vendor/html5shiv.min.js"></script>
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main-ie8.css" />
+	<![endif]-->
+ 	<!--[if !lt IE 9]><!-->
+		<script src="js/vendor/picturefill.2.3.1.min.js" async></script>
+	<!-- <![endif]-->
+	<link rel="stylesheet" href="js/vendor/jquery.mCustomScrollbar.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
+<script>
+  WebFont.load({
+    google: {
+      families: ['Open Sans:400,600,700,400italic,600italic', 'Source Sans Pro:400,600,700', 'Lato:400,700,400italic']
+    }
+  });
+</script></head>
+<body class="panel-left-open">
+	<!--[if (lt IE 9)]>
+      <div class="window-warning">
+  			<p>Uh oh... Reflection doesn't work in this browser. &nbsp; &nbsp;<a href="http://outdatedbrowser.com/en" target="_blank">Download a compatible browser</a></p>
+  		</div>
+  <![endif]-->
+  <header id="js-component-import--global-header" class="global-header"></header>
+
+  <div id="js-component-import--panel-left" class="panel-left js-custom-scrollbar" data-mcs-theme="minimal-dark"></div>
+
+	<div class="l-page-container">
+
+		<div id="main" class="l-main" role="main">
+			
+			<div id="js-component-import--design-kit-banner" class="banner banner--component"></div>
+
+			<div class="grid-container dk-components-container">
+				<div class="grid__row dk-component-row">
+					<div class="grid__column grid__column--one-third">
+						<h2 class="heading-style--heading-three">Primary Button Small</h2>
+						<p>Small purple buttons are used for primary calls to action which require prominence but where space is limited (for example the ‘Apply’ button at in the top menu bar).</p>
+						<p>There are two types of padding as shown on the right: 20px and 30px on either side of the internal text label. The 30px padding is used for buttons with short text labels to ensure the button is still large enough to press.</p>
+					</div>
+					<div class="grid__row-container grid__column grid__column--two-thirds">
+						<div class="button-example-container">
+							<h2 class="heading-style--heading-six">Disabled</h2>
+							<button class="ref-button--cta-small" disabled>Lorem</button>
+							<button class="ref-button--cta-small--wide" disabled>Lorem</button>
+						</div>
+						<div class="button-example-container">
+							<h2 class="heading-style--heading-six">Active</h2>
+							<button class="ref-button--cta-small">Lorem</button>
+							<button class="ref-button--cta-small--wide">Lorem</button>
+						</div>
+						<div class="grid__column button-example-code-container">
+							<div class="code-box">
+								<pre><code class="language-markup">
+									// Disabled
+									&lt;button class="ref-button--cta-small" disabled&gt;Lorem&lt;/button&gt;
+									&lt;button class="ref-button--cta-small--wide" disabled&gt;Lorem&lt;/button&gt;
+
+									// Active
+									&lt;button class="ref-button--cta-small"&gt;Lorem&lt;/button&gt;
+									&lt;button class="ref-button--cta-small--wide"&gt;Lorem&lt;/button&gt;
+								</code></pre>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="grid__row dk-component-row">
+					<div class="grid__column grid__column--one-third">
+						<h2 class="heading-style--heading-three">Secondary Button Small</h2>
+						<p>Small grey buttons are used for secondary calls to actions or links which still require some prominence.</p>
+						<p>There are two types of padding as shown on the right: 20px and 30px on either side of the internal text label. The 30px padding is used for buttons with short text labels to ensure the button is still large enough to press.</p>
+					</div>
+					<div class="grid__row-container grid__column grid__column--two-thirds">
+						<div class="button-example-container">
+							<h2 class="heading-style--heading-six">Disabled</h2>
+							<button class="ref-button--function-small" disabled>Lorem ipsum dolor</button>
+							<button class="ref-button--function-small--wide" disabled>Lorem ipsum dolor</button>
+						</div>
+						<div class="button-example-container">
+							<h2 class="heading-style--heading-six">Active</h2>
+							<button class="ref-button--function-small">Lorem ipsum dolor</button>
+							<button class="ref-button--function-small--wide">Lorem ipsum dolor</button>
+						</div>
+						<div class="grid__column button-example-code-container">
+							<div class="code-box">
+								<pre><code class="language-markup">
+									// Disabled
+									&lt;button class="ref-button--function-small" disabled&gt;Lorem&lt;/button&gt;
+									&lt;button class="ref-button--function-small--wide" disabled&gt;Lorem&lt;/button&gt;
+
+									// Active
+									&lt;button class="ref-button--function-small"&gt;Lorem&lt;/button&gt;
+									&lt;button class="ref-button--function-small--wide"&gt;Lorem&lt;/button&gt;
+								</code></pre>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="grid__row dk-component-row">
+					<div class="grid__column grid__column--one-third">
+						<h2 class="heading-style--heading-three">Secondary Button With Icon</h2>
+						<p></p>
+					</div>
+					<div class="grid__row-container grid__column grid__column--two-thirds">
+						<div class="button-example-container">
+							<h2 class="heading-style--heading-six">Disabled</h2>
+							<button class="ref-button--function-small ref-button--function-small--with-icon" disabled><span class="ref-icon-before ref-icon-before--cloud">Download</span></button>
+							<button class="ref-button--function-small ref-button--function-small--with-icon" disabled><span class="ref-icon-before ref-icon-before--my-apps">View all Apps</span></button>
+						</div>
+						<div class="button-example-container">
+							<h2 class="heading-style--heading-six">Active</h2>
+							<button class="ref-button--function-small ref-button--function-small--with-icon"><span class="ref-icon-before ref-icon-before--cloud">Download</span></button>
+							<button class="ref-button--function-small ref-button--function-small--with-icon"><span class="ref-icon-before ref-icon-before--my-apps">View all Apps</span></button>
+						</div>
+						<div class="grid__column button-example-code-container">
+							<div class="code-box">
+								<pre><code class="language-markup">
+									// Disabled
+									&lt;button class="ref-button--function-small ref-button--function-small--with-icon" disabled&gt;
+									  &lt;span class="ref-icon-before ref-icon-before--cloud"&gt;Download&lt;/span&gt;
+									&lt;/button&gt;
+
+									// Active
+									&lt;button class="ref-button--function-small ref-button--function-small--with-icon"&gt;
+									  &lt;span class="ref-icon-before ref-icon-before--cloud"&gt;Download&lt;/span&gt;
+									&lt;/button&gt;
+								</code></pre>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="grid__row dk-component-row">
+					<div class="grid__column grid__column grid__column--one-third">
+						<h2 class="heading-style--heading-three">Primary Button Large</h2>
+						<p>Large purple buttons are used for primary calls to action which require the most prominence (for example Submit or Apply buttons).</p>
+						<p>There are two types of padding as shown on the right: 30px and 40px on either side of the internal text label. The 40px padding is used for buttons with short text labels to ensure the button is still large enough to press.</p>
+					</div>
+					<div class="grid__row-container grid__column grid__column--two-thirds">
+						<div class="button-example-container">
+							<h2 class="heading-style--heading-six">Disabled</h2>
+							<button class="ref-button--cta-large" disabled>Lorem</button>
+							<button class="ref-button--cta-large--wide" disabled>Lorem</button>
+						</div>
+						<div class="button-example-container">
+							<h2 class="heading-style--heading-six">Active</h2>
+							<button class="ref-button--cta-large">Lorem</button>
+							<button class="ref-button--cta-large--wide">Lorem</button>
+						</div>
+						<div class="grid__column button-example-code-container">
+							<div class="code-box">
+								<pre><code class="language-markup">
+									// Disabled
+									&lt;button class="ref-button--cta-large" disabled&gt;Lorem&lt;/button&gt;
+									&lt;button class="ref-button--cta-large--wide" disabled&gt;Lorem&lt;/button&gt;
+
+									// Active
+									&lt;button class="ref-button--cta-large"&gt;Lorem&lt;/button&gt;
+									&lt;button class="ref-button--cta-large--wide"&gt;Lorem&lt;/button&gt;
+								</code></pre>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="grid__row dk-component-row">
+					<div class="grid__column grid__column--one-third">
+						<h2 class="heading-style--heading-three">Secondary Button Large</h2>
+						<p>Large grey buttons are used for secondary calls to actions or links which still require significant prominence.</p>
+						<p>There are two types of padding as shown on the right: 30px and 40px on either side of the internal text label. The 40px padding is used for buttons with short text labels to ensure the button is still large enough to press.</p>
+					</div>
+					<div class="grid__row-container grid__column grid__column--two-thirds">
+						<div class="button-example-container">
+							<h2 class="heading-style--heading-six">Disabled</h2>
+							<button class="ref-button--function-large" disabled>Lorem ipsum dolor</button>
+							<button class="ref-button--function-large--wide" disabled>Lorem ipsum dolor</button>
+						</div>
+						<div class="button-example-container">
+							<h2 class="heading-style--heading-six">Active</h2>
+							<button class="ref-button--function-large">Lorem ipsum dolor</button>
+							<button class="ref-button--function-large--wide">Lorem ipsum dolor</button>
+						</div>
+						<div class="grid__column button-example-code-container">
+							<div class="code-box">
+								<pre><code class="language-markup">
+									// Disabled
+									&lt;button class="ref-button--function-large" disabled&gt;Lorem&lt;/button&gt;
+									&lt;button class="ref-button--function-large--wide" disabled&gt;Lorem&lt;/button&gt;
+
+									// Active
+									&lt;button class="ref-button--function-large"&gt;Lorem&lt;/button&gt;
+									&lt;button class="ref-button--function-large--wide"&gt;Lorem&lt;/button&gt;
+								</code></pre>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="grid__row dk-component-row">
+					<div class="grid__column grid__column--one-third">
+						<h2 class="heading-style--heading-three">Fluid Width Button</h2>
+						<p>Fluid width buttons are used in forms and dialogue boxes where the button width is determined by the width of the preceeding form elements or the button’s container.</p>
+					</div>
+					<div class="grid__row-container grid__column grid__column--two-thirds">
+						<div class="button-example-container--full-width">
+							<div>
+								<input type="submit" class="ref-button--full-width js-submit-with-feedback js-submit-success" value="Submit" />
+							</div>
+							<h2 class="heading-style--heading-six">Successful Submission Demo</h2>
+						</div>
+						<div class="button-example-container--full-width">
+							<div>
+								<input type="submit" class="ref-button--full-width js-submit-with-feedback js-submit-error" value="Submit" />
+							</div>
+							<h2 class="heading-style--heading-six">Unsuccessful Submission Demo</h2>
+						</div>
+						<div class="button-example-container--full-width">
+							<div>
+								<button class="ref-button--full-width ref-button--full-width--with-icon"><span class="ref-icon-before ref-icon-before--leaderboard">Lorem</span></button>
+							</div>
+							<h2 class="heading-style--heading-six">Button with Icon</h2>
+						</div>
+						<div class="button-example-container--full-width">
+							<div>
+								<input type="submit" class="ref-button--full-width ref-button--is-loading" value="Loading..." disabled />
+							</div>
+							<h2 class="heading-style--heading-six">Loading State</h2>
+						</div>
+						<div class="button-example-container--full-width">
+							<div>
+								<input type="submit" class="ref-button--full-width ref-button--success" value="Success!" disabled />
+							</div>
+							<h2 class="heading-style--heading-six">Success State</h2>
+						</div>
+						<div class="button-example-container--full-width">
+							<div>
+								<input type="submit" class="ref-button--full-width ref-button--error" value="Oops, something went wrong" disabled />
+							</div>
+							<h2 class="heading-style--heading-six">Error State</h2>
+						</div>
+						<div class="grid__column button-example-code-container">
+							<div class="code-box">
+								<pre><code class="language-markup">
+									/* All input[type=submit] elements can be replaced with &lt;button&gt; 
+									elements using the same CSS classes below */
+
+									// Submit Button
+									&lt;input type="submit" class="ref-button--full-width" value="Submit" /&gt;
+
+									// Loading State
+									&lt;input type="submit" class="ref-button--full-width ref-button--is-loading" value="Loading..." /&gt;
+
+									// Success State
+									&lt;input type="submit" class="ref-button--full-width ref-button--success" value="Success!" /&gt;
+
+									// Error State
+									&lt;input type="submit" class="ref-button--full-width ref-button--error" value="Oops, something went wrong" /&gt;
+
+									// Button with Icon
+									&lt;button class="ref-button--full-width ref-button--full-width--with-icon"&gt;<br />
+									&nbsp;&lt;span class="ref-icon-before ref-icon-before--leaderboard"&gt;Lorem&lt;/span&gt;<br />
+									&lt;/button&gt;
+								</code></pre>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="grid__row dk-component-row">
+					<div class="grid__column grid__column--one-third">
+						<h2 class="heading-style--heading-three">Tertiary Buttons</h2>
+						<p>Used for links or minor calls to action which require the least prominence.</p>
+						<p>There are two different sizes: 14px and 16px (see right) and space available or prominence required detemines which is to be used.</p>
+					</div>
+					<div class="grid__row-container grid__column grid__column--two-thirds">
+						<div class="button-example-container">
+							<h2 class="heading-style--heading-six">Disabled</h2>
+							<button class="ref-button--link" disabled>Lorem ipsum dolor</button><br />
+							<button class="ref-button--link-large" disabled>Lorem ipsum dolor</button><br />
+							<button class="ref-button--link" disabled><span class="ref-icon-before ref-icon-before--leaderboard">Lorem ipsum dolor</span></button><br />
+							<button class="ref-button--link-large" disabled><span class="ref-icon-before ref-icon-before--leaderboard">Lorem ipsum dolor</span></button>
+						</div>
+						<div class="button-example-container">
+							<h2 class="heading-style--heading-six">Active</h2>
+							<button class="ref-button--link">Lorem ipsum dolor</button><br />
+							<button class="ref-button--link-large">Lorem ipsum dolor</button><br />
+							<button class="ref-button--link"><span class="ref-icon-before ref-icon-before--leaderboard">Lorem ipsum dolor</span></button><br />
+							<button class="ref-button--link-large"><span class="ref-icon-before ref-icon-before--leaderboard">Lorem ipsum dolor</span></button>
+						</div>
+						<div class="grid__column button-example-code-container">
+							<div class="code-box">
+								<pre><code class="language-markup">
+									// Disabled
+									&lt;button class="ref-button--link" disabled&gt;Lorem ipsum dolor&lt;/button&gt;
+
+									&lt;button class="ref-button--link-large" disabled&gt;Lorem ipsum dolor&lt;/button&gt;
+									&lt;button class="ref-button--link" disabled&gt;
+									  &lt;span class="ref-icon-before ref-icon-before--leaderboard"&gt;Lorem ipsum dolor&lt;/span&gt;
+									&lt;/button&gt;
+
+									&lt;button class="ref-button--link-large" disabled&gt;
+									  &lt;span class="ref-icon-before ref-icon-before--leaderboard"&gt;Lorem ipsum dolor&lt;/span&gt;
+									&lt;/button&gt;
+
+									// Active
+									&lt;button class="ref-button--link"&gt;Lorem ipsum dolor&lt;/button&gt;
+
+									&lt;button class="ref-button--link-large"&gt;Lorem ipsum dolor&lt;/button&gt;
+
+									&lt;button class="ref-button--link"&gt;
+									  &lt;span class="ref-icon-before ref-icon-before--leaderboard"&gt;Lorem ipsum dolor&lt;/span&gt;
+									&lt;/button&gt;
+
+									&lt;button class="ref-button--link-large"&gt;
+									  &lt;span class="ref-icon-before ref-icon-before--leaderboard"&gt;Lorem ipsum dolor&lt;/span&gt;
+									&lt;/button&gt;
+								</code></pre>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="js-component-import--account-container" class="panel-right-container js-account-container"></div>
+	<div id="js-component-import--search-container" class="panel-right-container js-search-container"></div>
+	
+ 	<script src="js/vendor/jquery-1.11.1.min.js"></script>
+ 	<script src="js/vendor/jquery-ui.custom.min.js"></script>
+ 	<script src="js/vendor/handlebars-v2.0.0.js"></script>
+ 	<script src="js/templates/templates.js"></script>
+	<script src="js/vendor/modernizr.2.8.3.custom.min.js"></script>
+	<!--[if IE 9]>
+		<script src="js/vendor/jquery.mCustomScrollbar.concat.min.js"></script>
+	<![endif]-->
+
+	<div id="js-appendScriptsContainer"></div>
+
+	<script src="js/designkit-global-templates.js"></script>
+  <script src="js/application.js"></script>
+  <script src="js/designkit-app.js"></script>
+  <script>
+  	function initScripts() {
+  		new ButtonsPage();
+  	}
+
+  	window.onready = initScripts();
+  </script>
+</body>

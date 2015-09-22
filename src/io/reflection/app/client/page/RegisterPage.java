@@ -23,15 +23,17 @@ import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.handler.user.SessionEventHandler;
 import io.reflection.app.client.handler.user.UserRegisteredEventHandler;
 import io.reflection.app.client.helper.FormHelper;
-import io.reflection.app.client.page.part.InviteRegisterPanel;
-import io.reflection.app.client.page.part.LoginRegisterPanel;
-import io.reflection.app.client.part.Preloader;
 import io.reflection.app.client.part.register.RegisterForm;
-import io.reflection.app.client.part.register.ThankYouRegisterPanel;
+import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.User;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.dom.client.Style.Display;
+import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -45,258 +47,269 @@ import com.willshex.gson.json.service.shared.StatusType;
  * 
  */
 public class RegisterPage extends Page implements UserRegisteredEventHandler, RegisterUserEventHandler, NavigationEventHandler, GetUserDetailsEventHandler,
-        SessionEventHandler {
+		SessionEventHandler {
 
-    public interface Style extends CssResource {
-        String mainPanel();
-    }
+	private static RegisterPageUiBinder uiBinder = GWT.create(RegisterPageUiBinder.class);
 
-    private static RegisterPageUiBinder uiBinder = GWT.create(RegisterPageUiBinder.class);
+	interface RegisterPageUiBinder extends UiBinder<Widget, RegisterPage> {}
 
-    interface RegisterPageUiBinder extends UiBinder<Widget, RegisterPage> {}
+	@UiField SpanElement welcomeName;
+	@UiField DivElement applyPanel;
+	@UiField HTMLPanel createPasswordPanel;
+	@UiField DivElement accountFormContainer;
+	@UiField InlineHyperlink login;
+	@UiField InlineHyperlink register;
+	@UiField RegisterForm registerForm;
 
-    @UiField LoginRegisterPanel loginRegisterPanel;
-    @UiField InviteRegisterPanel inviteRegisterPanel;
+	@UiField LIElement tabContentRegister;
+	@UiField DivElement submittedSuccessPanel;
+	// @UiField InlineHyperlink continueToLeaderboard;
+	@UiField UListElement tabsContainer;
 
-    @UiField HTMLPanel loginRegisterTabs;
-    @UiField HTMLPanel inviteRegisterTabs;
+	private String username;
 
-    @UiField InlineHyperlink login;
+	public RegisterPage() {
+		initWidget(uiBinder.createAndBindUi(this));
 
-    @UiField InlineHyperlink register;
-    @UiField RegisterForm mRegisterForm;
+		// continueToLeaderboard.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
+		// OVERALL_LIST_TYPE, FilterController.get().asRankFilterString()));
+		setRequestInvite(true);
+	}
 
-    @UiField ThankYouRegisterPanel mThankYouRegisterPanel;
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
+	 */
+	@Override
+	protected void onAttach() {
+		createPasswordPanel.setVisible(false);
+		Document.get().getBody().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().accountAccessPage());
 
-    @UiField Style style;
-    @UiField Preloader preloader;
+		super.onAttach();
 
-    private String username;
+		register(DefaultEventBus.get().addHandlerToSource(UserRegisteredEventHandler.TYPE, UserController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(GetUserDetailsEventHandler.TYPE, UserController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(RegisterUserEventHandler.TYPE, UserController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this));
 
-    public RegisterPage() {
-        initWidget(uiBinder.createAndBindUi(this));
+	}
 
-        mRegisterForm.setPreloader(preloader); // Assign the preloader reference to the Register Form
-        // String mediaQueries = " @media (max-width: 768px) {." + style.mainPanel() + " {margin-top:20px;}}";
-        // StyleInjector.injectAtEnd(mediaQueries);
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.page.Page#onDetach()
+	 */
+	@Override
+	protected void onDetach() {
+		super.onDetach();
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.google.gwt.user.client.ui.Composite#onAttach()
-     */
-    @Override
-    protected void onAttach() {
-        super.onAttach();
+		Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().accountAccessPage());
+		Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().applyFormIsShowing());
+		Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().createPasswordFormIsShowing());
+	}
 
-        register(DefaultEventBus.get().addHandlerToSource(UserRegisteredEventHandler.TYPE, UserController.get(), this));
-        register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
-        register(DefaultEventBus.get().addHandlerToSource(GetUserDetailsEventHandler.TYPE, UserController.get(), this));
-        register(DefaultEventBus.get().addHandlerToSource(RegisterUserEventHandler.TYPE, UserController.get(), this));
-        register(DefaultEventBus.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this));
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.user.UserRegisteredEventHandler#userRegistered(java.lang.String)
+	 */
+	@Override
+	public void userRegistered(String email) {
+		// final String username = email;
 
-    }
+		if (SessionController.get().isLoggedInUserAdmin()) {
+			PageType.UsersPageType.show();
+		} else {
+			// show mail animation
+			tabContentRegister.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().tabs__contentIsSubmitted());
+			submittedSuccessPanel.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
+		}
+		registerForm.setButtonSuccess("Application Sent", 0);
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see io.reflection.app.client.handler.user.UserRegisteredEventHandler#userRegistered(java.lang.String)
-     */
-    @Override
-    public void userRegistered(String email) {
-        // final String username = email;
-        if (SessionController.get().isLoggedInUserAdmin()) {
-            PageType.UsersPageType.show();
-        } else {
-            mRegisterForm.setVisible(false);
-            mThankYouRegisterPanel.setVisible(true);
-        }
-        preloader.hide();
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.user.UserRegisteredEventHandler#userRegistrationFailed(com.willshex.gson.json.service.shared.Error)
+	 */
+	@Override
+	public void userRegistrationFailed(Error error) {
+		registerForm.setEnabled(true);
+		registerForm.setButtonError();
+		if (error.code == 400000) { // Database error, the user already exists 
+			registerForm.setEmailError(FormHelper.ERROR_EMAIL_DUPLICATE);
+		}
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see io.reflection.app.client.handler.user.UserRegisteredEventHandler#userRegistrationFailed(com.willshex.gson.json.service.shared.Error)
-     */
-    @Override
-    public void userRegistrationFailed(Error error) {
-        mRegisterForm.clearPasswordValue();
-        mRegisterForm.setTermAndCond(Boolean.FALSE);
-        // mRegisterForm.setEnabled(true);
-        mRegisterForm.focusFirstActiveField();
-        preloader.hide();
-        // TODO User already asked for request invite
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
+	 * io.reflection.app.client.controller.NavigationController.Stack)
+	 */
+	@Override
+	public void navigationChanged(Stack previous, Stack current) {
 
-    }
+		welcomeName.setInnerText("");
+		// remove mail animation
+		tabContentRegister.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().tabs__contentIsSubmitted());
+		submittedSuccessPanel.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
-     * io.reflection.app.client.controller.NavigationController.Stack)
-     */
-    @Override
-    public void navigationChanged(Stack previous, Stack current) {
+		String actionCode = null;
 
-        mRegisterForm.setVisible(true);
-        mThankYouRegisterPanel.setVisible(false);
+		if (current.getAction() != null && FormHelper.REQUEST_INVITE_ACTION_NAME.equals(current.getAction())) { // Request invite form
+			username = null;
+			setRequestInvite(true);
+		} else { // Register form
+			if (current.getAction() != null && FormHelper.COMPLETE_ACTION_NAME.equals(current.getAction())
+					&& (actionCode = current.getParameter(FormHelper.CODE_PARAMETER_INDEX)) != null) { // Register after request invite
+				setRequestInvite(false);
+				UserController.get().fetchUser(actionCode);
+				registerForm.setButtonLoading("Getting details ..");
+			} else if (SessionController.get().isLoggedInUserAdmin() && current.getAction() == null) { // Admin - normal registration
+				setRequestInvite(false);
+				registerForm.resetForm();
+				registerForm.focusFirstActiveField();
+			} else { // Default action - Show request invite form
+				username = null;
+				setRequestInvite(true);
+			}
+		}
 
-        String actionCode = null;
+		login.setTargetHistoryToken(PageType.LoginPageType.asTargetHistoryToken(FormHelper.REQUEST_INVITE_ACTION_NAME));
+		register.setTargetHistoryToken(current.toString());
+	}
 
-        login.setTargetHistoryToken(PageType.LoginPageType.asTargetHistoryToken(FormHelper.REQUEST_INVITE_ACTION_NAME));
-        register.setTargetHistoryToken(current.toString());
+	private void setRequestInvite(boolean requestInvite) {
+		registerForm.setRequestInvite(requestInvite);
+		tabsContainer.getStyle().setDisplay(requestInvite ? Display.BLOCK : Display.NONE);
+		setApply(requestInvite);
+	}
 
-        if (current.getAction() != null && FormHelper.REQUEST_INVITE_ACTION_NAME.equals(current.getAction())) { // Request invite form
-            username = null;
-            setRequestInvite(Boolean.TRUE);
-        } else { // Register form
-            if (current.getAction() != null && FormHelper.COMPLETE_ACTION_NAME.equals(current.getAction())
-                    && (actionCode = current.getParameter(FormHelper.CODE_PARAMETER_INDEX)) != null) { // Register after request invite
-                setRequestInvite(Boolean.FALSE);
-                // mRegisterForm.setEnabled(false);
-                preloader.show();
-                UserController.get().fetchUser(actionCode);
-            } else if (SessionController.get().isLoggedInUserAdmin() && current.getAction() == null) { // Admin - normal registration
-                setRequestInvite(Boolean.FALSE);
-                mRegisterForm.resetForm();
-                mRegisterForm.focusFirstActiveField();
-            } else { // Default action - Show request invite form
-                username = null;
-                setRequestInvite(Boolean.TRUE);
-            }
-        }
-    }
+	private void setApply(boolean apply) {
+		if (apply) {
+			Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().createPasswordFormIsShowing());
+			Document.get().getBody().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().applyFormIsShowing());
+			accountFormContainer.removeAttribute("style");
+		} else {
+			Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().applyFormIsShowing());
+			Document.get().getBody().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().createPasswordFormIsShowing());
+			accountFormContainer.setAttribute("style", "padding: 0px");
+		}
+	}
 
-    private void setRequestInvite(boolean requestInvite) {
-        mRegisterForm.setRequestInvite(requestInvite);
-        inviteRegisterPanel.setVisible(!requestInvite);
-        inviteRegisterTabs.setVisible(!requestInvite);
-        loginRegisterPanel.setVisible(requestInvite);
-        loginRegisterTabs.setVisible(requestInvite);
-        if (requestInvite) {
-            register.setText("Request invite");
-        } else {
-            register.setText("Register");
-        }
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.reflection.app.api.core.shared.call.event.GetUserDetailsEventHandler#getUserDetailsSuccess(io.reflection.app.api.core.shared.call.GetUserDetailsRequest
+	 * , io.reflection.app.api.core.shared.call.GetUserDetailsResponse)
+	 */
+	@Override
+	public void getUserDetailsSuccess(GetUserDetailsRequest input, GetUserDetailsResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess) {
+			if (output.user != null) {
+				welcomeName.setInnerText(output.user.forename + "!");
+				registerForm.resetForm();
+				registerForm.setEmail(username = output.user.username);
+				createPasswordPanel.setVisible(true);
+				registerForm.setForename(output.user.forename);
+				registerForm.setSurname(output.user.surname);
+				registerForm.setCompany(output.user.company);
+				registerForm.setActionCode(input.actionCode);
+				registerForm.focusFirstActiveField();
+			} else {
+				registerForm.setButtonError();
+			}
+		} else {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * io.reflection.app.api.core.shared.call.event.GetUserDetailsEventHandler#getUserDetailsSuccess(io.reflection.app.api.core.shared.call.GetUserDetailsRequest
-     * , io.reflection.app.api.core.shared.call.GetUserDetailsResponse)
-     */
-    @Override
-    public void getUserDetailsSuccess(GetUserDetailsRequest input, GetUserDetailsResponse output) {
-        if (output.status == StatusType.StatusTypeSuccess) {
-            if (output.user != null) {
-                mRegisterForm.resetForm();
-                mRegisterForm.setUsername(username = output.user.username);
-                mRegisterForm.setForename(output.user.forename);
-                mRegisterForm.setSurname(output.user.surname);
-                mRegisterForm.setCompany(output.user.company);
-                mRegisterForm.setActionCode(input.actionCode);
-                mRegisterForm.focusFirstActiveField();
-            }
-        } else {
+			username = null;
 
-            // mRegisterForm.focusFirstActiveField();
-            if (output.error.code == 100055) {
-                // User already registered after invitation request
-            }
+			PageType.RegisterPageType.show(FormHelper.REQUEST_INVITE_ACTION_NAME);
+			if (output.error.code == 100055) {
+				// registerForm.setButtonError("User already registered!");
+			} else {
+				// registerForm.setButtonError();
+			}
+		}
+	}
 
-            username = null;
-            register.setText("Request invite");
-            setRequestInvite(Boolean.TRUE);
-            mRegisterForm.resetForm();
-            PageType.RegisterPageType.show(FormHelper.REQUEST_INVITE_ACTION_NAME);
-        }
-        preloader.hide();
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.reflection.app.api.core.shared.call.event.GetUserDetailsEventHandler#getUserDetailsFailure(io.reflection.app.api.core.shared.call.GetUserDetailsRequest
+	 * , java.lang.Throwable)
+	 */
+	@Override
+	public void getUserDetailsFailure(GetUserDetailsRequest input, Throwable caught) {
+		PageType.RegisterPageType.show(FormHelper.REQUEST_INVITE_ACTION_NAME);
+		setRequestInvite(true);
+		// registerForm.setButtonError();
+		username = null;
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * io.reflection.app.api.core.shared.call.event.GetUserDetailsEventHandler#getUserDetailsFailure(io.reflection.app.api.core.shared.call.GetUserDetailsRequest
-     * , java.lang.Throwable)
-     */
-    @Override
-    public void getUserDetailsFailure(GetUserDetailsRequest input, Throwable caught) {
-        // mRegisterForm.resetForm();
-        // mRegisterForm.focusFirstActiveField();
-        username = null;
-        register.setText("Request invite");
-        setRequestInvite(Boolean.TRUE);
-        mRegisterForm.resetForm();
-        PageType.RegisterPageType.show(FormHelper.REQUEST_INVITE_ACTION_NAME);
-        preloader.hide();
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.reflection.app.api.core.shared.call.event.RegisterUserEventHandler#registerUserSuccess(io.reflection.app.api.core.shared.call.RegisterUserRequest,
+	 * io.reflection.app.api.core.shared.call.RegisterUserResponse)
+	 */
+	@Override
+	public void registerUserSuccess(RegisterUserRequest input, RegisterUserResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess) {
+			PageType.LinkItunesPageType.show();
+			SessionController.get().login(username, input.user.password, true);
+		} else {
+			registerForm.resetButtonStatus();
+		}
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * io.reflection.app.api.core.shared.call.event.RegisterUserEventHandler#registerUserSuccess(io.reflection.app.api.core.shared.call.RegisterUserRequest,
-     * io.reflection.app.api.core.shared.call.RegisterUserResponse)
-     */
-    @Override
-    public void registerUserSuccess(RegisterUserRequest input, RegisterUserResponse output) {
-        if (output.status == StatusType.StatusTypeSuccess) {
-            SessionController.get().login(username, input.user.password, true);
-        } else {
-            preloader.hide();
-        }
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.reflection.app.api.core.shared.call.event.RegisterUserEventHandler#registerUserFailure(io.reflection.app.api.core.shared.call.RegisterUserRequest,
+	 * java.lang.Throwable)
+	 */
+	@Override
+	public void registerUserFailure(RegisterUserRequest input, Throwable caught) {
+		registerForm.setButtonError();
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * io.reflection.app.api.core.shared.call.event.RegisterUserEventHandler#registerUserFailure(io.reflection.app.api.core.shared.call.RegisterUserRequest,
-     * java.lang.Throwable)
-     */
-    @Override
-    public void registerUserFailure(RegisterUserRequest input, Throwable caught) {
-        preloader.hide();
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoggedIn(io.reflection.app.datatypes.shared.User,
+	 * io.reflection.app.api.shared.datatypes.Session)
+	 */
+	@Override
+	public void userLoggedIn(User user, Session session) {
+		registerForm.resetButtonStatus();
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoggedIn(io.reflection.app.datatypes.shared.User,
-     * io.reflection.app.api.shared.datatypes.Session)
-     */
-    @Override
-    public void userLoggedIn(User user, Session session) {
-        if (user != null && session != null) {
-            PageType.LinkItunesPageType.show();
-        }
-        preloader.hide();
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoggedOut()
+	 */
+	@Override
+	public void userLoggedOut() {
+		registerForm.resetButtonStatus();
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoggedOut()
-     */
-    @Override
-    public void userLoggedOut() {
-        preloader.hide();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoginFailed(com.willshex.gson.json.service.shared.Error)
-     */
-    @Override
-    public void userLoginFailed(Error error) {
-        // TODO: check the error code and if it is a permissions issue redirect to the closed beta page
-        preloader.hide();
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoginFailed(com.willshex.gson.json.service.shared.Error)
+	 */
+	@Override
+	public void userLoginFailed(Error error) {
+		// TODO: check the error code and if it is a permissions issue redirect to the closed beta page
+		registerForm.setButtonError();
+	}
 
 }

@@ -154,6 +154,8 @@ public class NotificationHelper {
 
 	private static Object getPropertyValue(Object object, String propertyName) {
 		Object value = null;
+
+		if (object != null) {
 		List<Field>fields = new ArrayList<Field>();
 		Class<? extends Object> type = object.getClass();
 		
@@ -172,6 +174,7 @@ public class NotificationHelper {
 					LOG.log(GaeLevel.SEVERE, String.format("Error accessing field [%s]", field.getName()), e);
 				}
 			}
+		}
 		}
 
 		return value;

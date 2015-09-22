@@ -12,6 +12,7 @@ import java.util.List;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 
 /**
@@ -22,6 +23,7 @@ public class Page extends Composite {
 
 	private List<HandlerRegistration> handlers = new ArrayList<HandlerRegistration>();
 	private PageType pageType = null;
+	private int toTop = 0;
 
 	protected void register(HandlerRegistration registration) {
 		handlers.add(registration);
@@ -36,6 +38,7 @@ public class Page extends Composite {
 	protected void onAttach() {
 		super.onAttach();
 
+		Window.scrollTo(0, toTop);
 		Document.get().setTitle(getTitle());
 	}
 
@@ -51,6 +54,8 @@ public class Page extends Composite {
 		for (HandlerRegistration handler : handlers) {
 			handler.removeHandler();
 		}
+
+		toTop = Window.getScrollTop();
 	}
 
 	public String getTitle() {

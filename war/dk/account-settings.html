@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="utf-8" />
+	<title>Reflection, Account Settings</title>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">	
+	<!--[if (gte IE 9)|(IEMobile)|(!IE)]><!-->
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main.css" />
+	<!--<![endif]-->
+	<!--[if (lt IE 9)]>
+		<script src="js/vendor/html5shiv.min.js"></script>
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main-ie8.css" />
+	<![endif]-->
+ 	<!--[if !lt IE 9]><!-->
+		<script src="js/vendor/picturefill.2.3.1.min.js" async></script>
+	<!-- <![endif]-->
+	<link rel="stylesheet" href="js/vendor/jquery.mCustomScrollbar.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
+<script>
+  WebFont.load({
+    google: {
+      families: ['Open Sans:400,600,700,400italic,600italic', 'Source Sans Pro:400,600,700', 'Lato:400,700,400italic']
+    }
+  });
+</script></head>
+<body class="panel-left-open">
+	<!--[if (lt IE 9)]>
+      <div class="window-warning">
+  			<p>Uh oh... Reflection doesn't work in this browser. &nbsp; &nbsp;<a href="http://outdatedbrowser.com/en" target="_blank">Download a compatible browser</a></p>
+  		</div>
+  <![endif]-->
+
+  <header id="js-component-import--global-header" class="global-header"></header>
+  
+	<div id="js-component-import--panel-left" class="panel-left js-custom-scrollbar" data-mcs-theme="minimal-dark"></div>
+
+	<div class="l-page-container">
+		<div id="main" class="l-main" role="main">
+			<div class="grid-container page-my-account">
+				<div class="grid__column grid__column--one-half">
+					<h1 class="heading-style--heading-three page-title">My Account</h1>
+				</div>
+				<div class="tabs">
+					<ul class="tabs-container default-tabs-transition tabs-to-dropdown">
+						<li class="grid__column grid__column--one-quarter tabs__tab is-active js-tab-select">
+							<div class="tab-animate-active"></div>
+							<a data-content="#tab-content-settings" class="tabs__link">
+								<span>
+									<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path fill=#5A5A68 d="M28.9,16c0-2,1.2-3.6,3.1-4.7c-0.3-1.1-0.8-2.2-1.3-3.2c-2.1,0.5-3.8-0.3-5.2-1.7
+		c-1.4-1.4-1.8-3.1-1.3-5.2c-1-0.5-2.1-1-3.2-1.3c-1.1,1.8-3,3.1-5,3.1c-2,0-4-1.2-5-3.1C9.9,0.3,8.8,0.8,7.8,1.3
+		c0.5,2.1,0.1,3.8-1.3,5.2C5.1,7.9,3.4,8.7,1.3,8.2c-0.5,1-1,2.1-1.3,3.2C1.8,12.4,3.1,14,3.1,16c0,2-1.2,4-3.1,5
+		c0.3,1.1,0.8,2.2,1.3,3.2c2.1-0.5,3.8-0.1,5.2,1.3c1.4,1.4,1.8,3.1,1.3,5.2c1,0.5,2.1,1,3.2,1.3c1.1-1.8,3-3.1,5-3.1
+		c2,0,4,1.2,5,3.1c1.1-0.3,2.2-0.8,3.2-1.3c-0.5-2.1-0.1-3.8,1.3-5.2c1.4-1.4,3.1-2.2,5.2-1.7c0.5-1,1-2.1,1.3-3.2
+		C30.2,19.6,28.9,18,28.9,16z M16,27C9.9,27,5,22.1,5,16S9.9,5,16,5s11,4.9,11,11S22.1,27,16,27z M16,11c-2.8,0-5,2.2-5,5
+		c0,2.8,2.2,5,5,5s5-2.2,5-5C21,13.2,18.8,11,16,11z M16,19c-1.7,0-3-1.3-3-3c0-1.7,1.3-3,3-3s3,1.3,3,3C19,17.7,17.7,19,16,19z"/></svg>
+		 							<span>Account Settings</span>
+		 						</span>
+							</a>
+						</li>
+						<li class="grid__column grid__column--one-quarter tabs__tab js-tab-select">
+							<div class="tab-animate-active"></div>
+							<a data-content="#tab-content-linked-accounts" class="tabs__link">
+								<span>
+									<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path fill=#5A5A68 d="M18,12c-0.3-0.2-0.6-0.2-1-0.2c-0.3,0.1-0.6,0.3-0.8,0.6C16,12.7,16,13,16,13.3
+		c0.1,0.3,0.3,0.6,0.6,0.8c1.2,0.8,1.9,2.1,1.9,3.6c0,1.1-0.4,2.2-1.2,3l-5.1,5.1c-0.8,0.8-1.9,1.2-3,1.2C6.9,27,5,25.1,5,22.8
+		c0-1.1,0.4-2.2,1.2-3l2.4-2.4C8.9,17.1,9,16.8,9,16.4c0-0.3-0.1-0.6-0.4-0.9c-0.2-0.2-0.6-0.4-0.9-0.4c-0.3,0-0.6,0.1-0.9,0.4
+		L4.5,18c-1.3,1.3-2,3-2,4.8c0,3.7,3,6.8,6.8,6.8c1.8,0,3.5-0.7,4.8-2l5.1-5.1c1.3-1.3,2-3,2-4.8C21.1,15.4,19.9,13.3,18,12z
+		 M22.8,2.5c-1.8,0-3.5,0.7-4.8,2l-5.1,5.1c-1.3,1.3-2,3-2,4.8c0,2.3,1.2,4.4,3.1,5.7c0.3,0.2,0.6,0.2,1,0.2c0.3-0.1,0.6-0.3,0.8-0.6
+		c0.2-0.3,0.2-0.6,0.2-1c-0.1-0.3-0.3-0.6-0.6-0.8c-1.2-0.8-1.9-2.1-1.9-3.6c0-1.1,0.4-2.2,1.2-3l5.1-5.1c0.8-0.8,1.9-1.2,3-1.2
+		C25.1,5,27,6.9,27,9.2c0,1.1-0.4,2.2-1.2,3l-2.4,2.4c-0.3,0.3-0.4,0.6-0.4,0.9c0,0.3,0.1,0.6,0.4,0.9c0.2,0.2,0.6,0.4,0.9,0.4
+		c0.3,0,0.6-0.1,0.9-0.4l2.4-2.4c1.3-1.3,2-3,2-4.8C29.5,5.5,26.5,2.5,22.8,2.5z"/></svg>
+									<span>Linked Accounts</span></span>
+							</a>
+						</li>
+						<li class="grid__column grid__column--one-quarter tabs__tab is-disabled">
+							<div class="tab-animate-active"></div>
+							<a data-content="#tab-content-users" class="tabs__link">
+								<span>
+									<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path fill=#3B3735 d="M16,2c2.6,0,5.2,0.7,5.2,6.2c0,3.4-2.3,6.2-5.2,6.2s-5.2-2.8-5.2-6.2
+		C10.8,2.7,13.5,2,16,2 M16,0c-4,0-7.2,1.9-7.2,8.2c0,4.5,3.2,8.2,7.2,8.2c4,0,7.2-3.7,7.2-8.2C23.2,1.9,20,0,16,0L16,0z M10.3,19.1
+		c1.7,1.1,3.7,1.6,5.7,1.6c2,0,4-0.6,5.7-1.6l4.7,2.4l3.6,7.8c0,0.1,0,0.3,0,0.4c-0.1,0.1-0.2,0.3-0.2,0.3H2.3
+		c-0.1,0-0.1-0.2-0.2-0.3c0-0.1,0-0.3,0-0.4l3.6-7.8L10.3,19.1 M10.4,16.8c-0.1,0-0.1,0-0.2,0l-5.6,2.9c-0.4,0.2-0.7,0.5-0.8,0.9
+		l-3.6,8c-0.2,0.6-0.2,1.7,0.1,2.2C0.7,31.2,1.2,32,1.8,32h28.3c0.6,0,1.2-0.8,1.5-1.3c0.3-0.5,0.4-1.6,0.1-2.2l-3.6-8
+		c-0.2-0.4-0.5-0.7-0.8-0.9l-5.6-2.9c-0.1,0-0.1,0-0.2,0c-0.1,0-0.2,0-0.2,0.1c-1.6,1.2-3.5,1.8-5.4,1.8c-1.9,0-3.8-0.6-5.4-1.8
+		C10.5,16.8,10.5,16.8,10.4,16.8L10.4,16.8z"/></svg>
+									<span>Users <span class="text-small">coming soon</span></span></span>
+							</a>
+						</li>
+						<li class="grid__column grid__column--one-quarter tabs__tab is-disabled">
+							<div class="tab-animate-active"></div>
+							<a data-content="#tab-content-notifications" class="tabs__link">
+								<span>
+									<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path fill=#5A5A68 d="M12.1,29h7.8c-0.4,1.1-2,3-3.9,3S12.5,30.1,12.1,29z M30,24v3H2v-3l3-2v-9
+		c0-5.7,3.7-9.3,8-10.4c0,0,0-0.1,0-0.1C13,1.1,14.3,0,16,0s3,1.1,3,2.5c0,0,0,0.1,0,0.1c1.7,0.4,3.3,1.2,4.6,2.3
+		c2.3,2,3.5,4.7,3.5,8.1v9v0L30,24z M7,13v11h18V13c0-2.7-1-5-2.8-6.5C20.6,5,18.4,4.3,16,4.3C11.7,4.3,7,7,7,13z"/></svg>
+									<span>Notifications <span class="text-small">coming soon</span></span></span>
+							</a>
+						</li>
+					</ul>
+				</div>
+				<div class="grid__column grid__column--full-width filters-container">
+					<p>You currently have <strong>4</strong> app store accounts linked with Reflection.</p>
+					<button class="ref-button--function-small js-demo-popup">Link Another Account</button>
+				</div>
+				<ul class="tabs__content-container default-tabs-transition tabs-to-dropdown--content">
+					<li id="tab-content-settings" class="tabs__content tabs__content--is-showing">
+						<article class="tabs__content-area">
+							<div class="grid__column grid__column--full-width">
+									
+								<div class="page-section page-section--with-border account-settings-section">
+									<div class="grid__column grid__column--one-third">
+										<h2 class="heading-style--heading-four">Personal Details</h2>
+										<form>
+											<div class="form-field">						
+												<input type="text" name="firstname" id="firstname" autocomplete="off" />
+												<label for="firstname">First Name</label>
+											</div>
+											<div class="form-field">						
+												<input type="text" name="lastname" id="lastname" autocomplete="off" />
+												<label for="lastname">Last Name</label>
+											</div>
+											<div class="form-field">						
+												<input type="text" name="company" id="company" autocomplete="off" />
+												<label for="company">Company</label>
+											</div>
+											<div class="form-field">						
+												<input type="email" name="email" id="email" autocomplete="off" />
+												<label for="email">Email</label>
+											</div>
+											<input type="submit" class="ref-button--full-width" value="Save Changes" />
+										</form>
+									</div>
+									<div class="grid__column grid__column--one-third">
+										<h2 class="heading-style--heading-four">Change Password</h2>
+										<form>
+											<div class="form-field">						
+												<input type="password" name="create-password" id="create-password" autocomplete="off" class="js-mock-password-entry" />
+												<label for="create-password">Enter a New Password
+													<div class="password-strength-indicator-container">
+														<span class="password-strength-description">Strength</span>
+														<div class="password-strength-indicator"><span></span></div>
+													</div>
+												</label>
+											</div>
+											<div class="form-field">
+												<input type="password" name="confirm-password" id="confirm-password" autocomplete="off" />
+												<label for="confirm-password">Confirm New Password</label>
+											</div>
+											<input type="submit" class="ref-button--full-width" value="Save New Password" />
+										</form>
+									</div>
+								</div>
+				
+								<div class="page-section page-section--with-border account-settings-section">
+									<h2 class="heading-style--heading-three">User Access</h2>
+									<div class="grid__column grid__column--one-third">
+										<h3 class="heading-style--heading-four">Roles</h3>
+										<table class="table-data" __gwtcellbasedwidgetimpldispatchingblur="true" __gwtcellbasedwidgetimpldispatchingfocus="true" cellspacing="0"><thead aria-hidden="true" style="display: none;"></thead><colgroup><col><col></colgroup><tbody style=""><tr __gwt_row="0" __gwt_subrow="0" class="HJF4TJC-m-b HJF4TJC-m-i"><td class="HJF4TJC-m-a HJF4TJC-m-c HJF4TJC-m-d HJF4TJC-m-j"><div style="outline-style:none;" __gwt_cell="cell-gwt-uid-207">ADM - admin</div></td><td class="HJF4TJC-m-a HJF4TJC-m-c HJF4TJC-m-n HJF4TJC-m-j"><div tabindex="0" style="outline-style:none;" __gwt_cell="cell-gwt-uid-208"><button class="ref-button--link">Revoke role</button></div></td></tr><tr __gwt_row="1" __gwt_subrow="0" class="HJF4TJC-m-r"><td class="HJF4TJC-m-a HJF4TJC-m-s HJF4TJC-m-d"><div style="outline-style:none;" __gwt_cell="cell-gwt-uid-207">JM1 - jamie1</div></td><td class="HJF4TJC-m-a HJF4TJC-m-s HJF4TJC-m-n"><div style="outline-style:none;" __gwt_cell="cell-gwt-uid-208"><button class="ref-button--link">Revoke role</button></div></td></tr><tr __gwt_row="2" __gwt_subrow="0" class="HJF4TJC-m-b"><td class="HJF4TJC-m-a HJF4TJC-m-c HJF4TJC-m-d"><div style="outline-style:none;" __gwt_cell="cell-gwt-uid-207">JM2 - jamie2</div></td><td class="HJF4TJC-m-a HJF4TJC-m-c HJF4TJC-m-n"><div style="outline-style:none;" __gwt_cell="cell-gwt-uid-208"><button class="ref-button--link">Revoke role</button></div></td></tr></tbody><tbody style="display: none;"><tr><td colspan="2" align="center"><div><div aria-hidden="true" style="width: 100%; height: 100%; padding: 0px; margin: 0px; display: none;"><div aria-hidden="true" style="width: 100%; height: 100%; display: none;"><div>NO ROLES</div></div></div><div style="width: 100%; height: 100%; padding: 0px; margin: 0px;"><div class="HJF4TJC-m-q" style="width: 100%; height: 100%;"><img class="gwt-Image" src="data:image/gif;base64,R0lGODlhJAAoAKIHAJGO0XJvx62r3f7+/vHx9Ojo6G1pxf///yH/C05FVFNDQVBFMi4wAwEAAAAh/wtYTVAgRGF0YVhNUDw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDIxIDc5LjE1NDkxMSwgMjAxMy8xMC8yOS0xMTo0NzoxNiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDowYzdmNTdmNC03ZTM4LTRjOGYtOGYwZi01ZjA5ZGRiNjM5MGEiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6Q0JEQUY0NUNGOUFBMTFFM0FENzU4RjRERkQwMjM2NUQiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6Q0JEQUY0NUJGOUFBMTFFM0FENzU4RjRERkQwMjM2NUQiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChNYWNpbnRvc2gpIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6ZTYzOTMzYWYtMTgyYS00YTY1LWE0ODUtMzQ1Nzc4OTRhODJjIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjBjN2Y1N2Y0LTdlMzgtNGM4Zi04ZjBmLTVmMDlkZGI2MzkwYSIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8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" height="40" width="36"></div></div></div></td></tr></tbody><tfoot aria-hidden="true" style="display: none;"></tfoot></table>
+										<form>
+											<div class="form-field">						
+												<input type="text" name="userrole" id="userrole" autocomplete="off" />
+												<label for="userrole">User Role</label>
+											</div>
+											<input type="submit" class="ref-button--full-width" value="Add Role" />
+										</form>
+									</div>
+									<div class="grid__column grid__column--one-third">
+										<h3 class="heading-style--heading-four">Permissions</h3>
+										<table class="table-data" __gwtcellbasedwidgetimpldispatchingblur="true" __gwtcellbasedwidgetimpldispatchingfocus="true" cellspacing="0"><thead aria-hidden="true" style="display: none;"></thead><colgroup><col><col></colgroup><tbody style=""><tr __gwt_row="0" __gwt_subrow="0" class="HJF4TJC-m-b HJF4TJC-m-i"><td class="HJF4TJC-m-a HJF4TJC-m-c HJF4TJC-m-d HJF4TJC-m-j"><div style="outline-style:none;" __gwt_cell="cell-gwt-uid-207">ADM - admin</div></td><td class="HJF4TJC-m-a HJF4TJC-m-c HJF4TJC-m-n HJF4TJC-m-j"><div tabindex="0" style="outline-style:none;" __gwt_cell="cell-gwt-uid-208"><button class="ref-button--link">Revoke permission</button></div></td></tr><tr __gwt_row="1" __gwt_subrow="0" class="HJF4TJC-m-r"><td class="HJF4TJC-m-a HJF4TJC-m-s HJF4TJC-m-d"><div style="outline-style:none;" __gwt_cell="cell-gwt-uid-207">JM1 - jamie1</div></td><td class="HJF4TJC-m-a HJF4TJC-m-s HJF4TJC-m-n"><div style="outline-style:none;" __gwt_cell="cell-gwt-uid-208"><button class="ref-button--link">Revoke permission</button></div></td></tr><tr __gwt_row="2" __gwt_subrow="0" class="HJF4TJC-m-b"><td class="HJF4TJC-m-a HJF4TJC-m-c HJF4TJC-m-d"><div style="outline-style:none;" __gwt_cell="cell-gwt-uid-207">JM2 - jamie2</div></td><td class="HJF4TJC-m-a HJF4TJC-m-c HJF4TJC-m-n"><div style="outline-style:none;" __gwt_cell="cell-gwt-uid-208"><button class="ref-button--link">Revoke permission</button></div></td></tr></tbody><tbody style="display: none;"><tr><td colspan="2" align="center"><div><div aria-hidden="true" style="width: 100%; height: 100%; padding: 0px; margin: 0px; display: none;"><div aria-hidden="true" style="width: 100%; height: 100%; display: none;"><div>NO ROLES</div></div></div><div style="width: 100%; height: 100%; padding: 0px; margin: 0px;"><div class="HJF4TJC-m-q" style="width: 100%; height: 100%;"><img class="gwt-Image" src="data:image/gif;base64,R0lGODlhJAAoAKIHAJGO0XJvx62r3f7+/vHx9Ojo6G1pxf///yH/C05FVFNDQVBFMi4wAwEAAAAh/wtYTVAgRGF0YVhNUDw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuNS1jMDIxIDc5LjE1NDkxMSwgMjAxMy8xMC8yOS0xMTo0NzoxNiAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDowYzdmNTdmNC03ZTM4LTRjOGYtOGYwZi01ZjA5ZGRiNjM5MGEiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6Q0JEQUY0NUNGOUFBMTFFM0FENzU4RjRERkQwMjM2NUQiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6Q0JEQUY0NUJGOUFBMTFFM0FENzU4RjRERkQwMjM2NUQiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENDIChNYWNpbnRvc2gpIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6ZTYzOTMzYWYtMTgyYS00YTY1LWE0ODUtMzQ1Nzc4OTRhODJjIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjBjN2Y1N2Y0LTdlMzgtNGM4Zi04ZjBmLTVmMDlkZGI2MzkwYSIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8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" height="40" width="36"></div></div></div></td></tr></tbody><tfoot aria-hidden="true" style="display: none;"></tfoot></table>
+										<form>
+											<div class="form-field">						
+												<input type="text" name="userpermission" id="userpermission" autocomplete="off" />
+												<label for="userpermission">User Permission</label>
+											</div>
+											<input type="submit" class="ref-button--full-width" value="Add Permission" />
+										</form>
+									</div>
+								</div>
+							</div>
+						</article>
+					</li>
+					<li id="tab-content-linked-accounts" class="tabs__content">
+						<article class="tabs__content-area">
+							<div class="grid__row">
+
+								<table class="table-data table-linked-accounts" __gwtcellbasedwidgetimpldispatchingblur="true" __gwtcellbasedwidgetimpldispatchingfocus="true" cellspacing="0">
+									<thead>
+										<tr __gwt_header_row="0">
+											<th colspan="1" class="HJF4TJC-m-h HJF4TJC-m-f can-be-sorted is-ascending" __gwt_column="column-gwt-uid-299" __gwt_header="header-gwt-uid-300">Account Name <svg version=1.1 x=0px y=0px viewBox="0 0 7 10" enable-background="new 0 0 7 10" xml:space=preserve class="sort-svg"><path class=ascending d="M0.4,4.1h6.1c0.1,0,0.2,0,0.3-0.1C7,3.9,7,3.8,7,3.7c0-0.1,0-0.2-0.1-0.3L3.8,0.1
+	C3.7,0,3.6,0,3.5,0C3.4,0,3.3,0,3.2,0.1L0.1,3.3C0,3.4,0,3.5,0,3.7C0,3.8,0,3.9,0.1,4C0.2,4.1,0.3,4.1,0.4,4.1z"/><path class=descending d="M6.6,5.9H0.4c-0.1,0-0.2,0-0.3,0.1C0,6.1,0,6.2,0,6.3c0,0.1,0,0.2,0.1,0.3l3.1,3.2
+	C3.3,10,3.4,10,3.5,10c0.1,0,0.2,0,0.3-0.1l3.1-3.2C7,6.6,7,6.5,7,6.3C7,6.2,7,6.1,6.9,6C6.8,5.9,6.7,5.9,6.6,5.9z"/></svg></th>
+											<th colspan="1" class="HJF4TJC-m-h can-be-sorted" __gwt_column="column-gwt-uid-301" __gwt_header="header-gwt-uid-302">Store <svg version=1.1 x=0px y=0px viewBox="0 0 7 10" enable-background="new 0 0 7 10" xml:space=preserve class="sort-svg"><path class=ascending d="M0.4,4.1h6.1c0.1,0,0.2,0,0.3-0.1C7,3.9,7,3.8,7,3.7c0-0.1,0-0.2-0.1-0.3L3.8,0.1
+	C3.7,0,3.6,0,3.5,0C3.4,0,3.3,0,3.2,0.1L0.1,3.3C0,3.4,0,3.5,0,3.7C0,3.8,0,3.9,0.1,4C0.2,4.1,0.3,4.1,0.4,4.1z"/><path class=descending d="M6.6,5.9H0.4c-0.1,0-0.2,0-0.3,0.1C0,6.1,0,6.2,0,6.3c0,0.1,0,0.2,0.1,0.3l3.1,3.2
+	C3.3,10,3.4,10,3.5,10c0.1,0,0.2,0,0.3-0.1l3.1-3.2C7,6.6,7,6.5,7,6.3C7,6.2,7,6.1,6.9,6C6.8,5.9,6.7,5.9,6.6,5.9z"/></svg></th>
+											<th colspan="1" class="HJF4TJC-m-h can-be-sorted table-heading--date-added" __gwt_column="column-gwt-uid-303" __gwt_header="header-gwt-uid-304">Date Added <svg version=1.1 x=0px y=0px viewBox="0 0 7 10" enable-background="new 0 0 7 10" xml:space=preserve class="sort-svg"><path class=ascending d="M0.4,4.1h6.1c0.1,0,0.2,0,0.3-0.1C7,3.9,7,3.8,7,3.7c0-0.1,0-0.2-0.1-0.3L3.8,0.1
+	C3.7,0,3.6,0,3.5,0C3.4,0,3.3,0,3.2,0.1L0.1,3.3C0,3.4,0,3.5,0,3.7C0,3.8,0,3.9,0.1,4C0.2,4.1,0.3,4.1,0.4,4.1z"/><path class=descending d="M6.6,5.9H0.4c-0.1,0-0.2,0-0.3,0.1C0,6.1,0,6.2,0,6.3c0,0.1,0,0.2,0.1,0.3l3.1,3.2
+	C3.3,10,3.4,10,3.5,10c0.1,0,0.2,0,0.3-0.1l3.1-3.2C7,6.6,7,6.5,7,6.3C7,6.2,7,6.1,6.9,6C6.8,5.9,6.7,5.9,6.6,5.9z"/></svg></th>
+											<th colspan="2" class="HJF4TJC-m-h HJF4TJC-m-p" __gwt_column="column-gwt-uid-305"></th>
+										</tr>
+									</thead>
+									<colgroup>
+										<col class="table-column--account-name"></col>
+										<col class="table-column--store"></col>
+										<col class="table-column--date-added"></col>
+										<col class="table-column--edit-account"></col>
+										<col class="table-column--delete-account"></col>
+									</colgroup>
+									<tbody style="">
+										<tr __gwt_row="0" __gwt_subrow="0" class="HJF4TJC-m-b HJF4TJC-m-i">
+											<td class="HJF4TJC-m-a HJF4TJC-m-c HJF4TJC-m-d HJF4TJC-m-j linked-account-name">
+												<div tabindex="0" style="outline-style:none;" __gwt_cell="cell-gwt-uid-306">Account Name</div>
+											</td>
+											<td class="HJF4TJC-m-a HJF4TJC-m-c HJF4TJC-m-j linked-account-store">
+												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-307"><span class="ref-icon-before ref-icon-before--apple">iTunes Connect</div>
+											</td>
+											<td class="HJF4TJC-m-a HJF4TJC-m-c HJF4TJC-m-j linked-account-date">
+												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-308">30 Jan 2015</div>
+											</td>
+											<td class="HJF4TJC-m-a HJF4TJC-m-c HJF4TJC-m-j linked-account-edit">
+												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-309">
+													<a href="#!users/linkedaccounts/38/edit/120" class="ref-button--function-small">Edit</a>
+												</div>
+											</td>
+											<td class="HJF4TJC-m-a HJF4TJC-m-c HJF4TJC-m-n HJF4TJC-m-j linked-account-delete">
+												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-310">
+													<a href="#!users/linkedaccounts/38/delete/120" class="js-demo-popup--confirm ref-button--link warning-text">Delete</a>
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<td class="update-linked-accounts-container" colspan="5">
+												<h2 class="heading-style--heading-five">Edit Details</h2>
+												<form class="forms--mid-theme">
+													<div class="form-field">						
+														<input type="text" name="accountname" id="accountname" autocomplete="off" value="janmolby@electronicarts.com" />
+														<label for="accountname">Account Name</label>
+													</div>
+													<div class="form-field">						
+														<input type="password" name="itunesconnectpassword" id="itunesconnectpassword" autocomplete="off" value="password" />
+														<label for="itunesconnectpassword">iTunes Connect Password</label>
+													</div>
+													<div class="form-field">						
+														<input type="text" name="vendorid" id="vendorid" autocomplete="off" value="83928392" />
+														<label for="vendorid">Vendor ID</label>
+														<a href="#" target="_blank" class="form-field-help ref-icon-after ref-icon-after--question"><span>What's this?</span></a>
+													</div>
+													<input type="submit" class="ref-button--full-width" value="Save Changes" />
+													<button class="ref-button--link">Delete this account</button>
+												</form>
+											</td>
+										</tr>
+										<tr __gwt_row="1" __gwt_subrow="0" class="HJF4TJC-m-r">
+											<td class="HJF4TJC-m-a HJF4TJC-m-s HJF4TJC-m-d linked-account-name">
+												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-306">martinollivere@gmail.com</div>
+											</td>
+											<td class="HJF4TJC-m-a HJF4TJC-m-s linked-account-store">
+												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-307"><span class="ref-icon-before ref-icon-before--apple">iTunes Connect</span></div>
+											</td>
+											<td class="HJF4TJC-m-a HJF4TJC-m-s linked-account-date">
+												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-308">17 Sep 2014</div>
+											</td>
+											<td class="HJF4TJC-m-a HJF4TJC-m-s linked-account-edit">
+												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-309">
+													<a href="#!users/linkedaccounts/38/edit/4" class="ref-button--function-small">Edit</a>
+												</div>
+											</td>
+											<td class="HJF4TJC-m-a HJF4TJC-m-s HJF4TJC-m-n linked-account-delete">
+												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-310">
+													<a href="#!users/linkedaccounts/38/delete/4" class="js-demo-popup--confirm ref-button--link warning-text">Delete</a>
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<td class="update-linked-accounts-container" colspan="5">
+												<h2 class="heading-style--heading-five">Edit Details</h2>
+												<form>
+													<div class="form-field">						
+														<input type="text" name="accountname2" id="accountname2" autocomplete="off" value="janmolby@electronicarts.com" />
+														<label for="accountname2">Account Name</label>
+													</div>
+													<div class="form-field">						
+														<input type="password" name="itunesconnectpassword2" id="itunesconnectpassword2" autocomplete="off" value="password" />
+														<label for="itunesconnectpassword2">iTunes Connect Password</label>
+													</div>
+													<div class="form-field">						
+														<input type="text" name="vendorid2" id="vendorid2" autocomplete="off" value="83928392" />
+														<label for="vendorid2">Vendor ID</label>
+														<a href="#" target="_blank" class="form-field-help ref-icon-after ref-icon-after--question"><span>What's this?</span></a>
+													</div>
+													<input type="submit" class="ref-button--full-width" value="Save Changes" />
+													<button class="ref-button--link">Delete this account</button>
+												</form>
+											</td>
+										</tr>
+										<tr __gwt_row="0" __gwt_subrow="0" class="HJF4TJC-m-b HJF4TJC-m-i">
+											<td class="HJF4TJC-m-a HJF4TJC-m-c HJF4TJC-m-d HJF4TJC-m-j linked-account-name">
+												<div tabindex="0" style="outline-style:none;" __gwt_cell="cell-gwt-uid-306">Account Name</div>
+											</td>
+											<td class="HJF4TJC-m-a HJF4TJC-m-c HJF4TJC-m-j linked-account-store">
+												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-307"><span class="ref-icon-before ref-icon-before--apple">iTunes Connect</span></div>
+											</td>
+											<td class="HJF4TJC-m-a HJF4TJC-m-c HJF4TJC-m-j linked-account-date">
+												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-308">30 Jan 2015</div>
+											</td>
+											<td class="HJF4TJC-m-a HJF4TJC-m-c HJF4TJC-m-j linked-account-edit">
+												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-309">
+													<a href="#!users/linkedaccounts/38/edit/120" class="ref-button--function-small">Edit</a>
+												</div>
+											</td>
+											<td class="HJF4TJC-m-a HJF4TJC-m-c HJF4TJC-m-n HJF4TJC-m-j linked-account-delete">
+												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-310">
+													<a href="#!users/linkedaccounts/38/delete/120" class="js-demo-popup--confirm ref-button--link warning-text">Delete</a>
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<td class="update-linked-accounts-container" colspan="5">
+												<h2 class="heading-style--heading-five">Edit Details</h2>
+												<form class="forms--mid-theme">
+													<div class="form-field">						
+														<input type="text" name="accountname3" id="accountname3" autocomplete="off" value="janmolby@electronicarts.com" />
+														<label for="accountname3">Account Name</label>
+													</div>
+													<div class="form-field">						
+														<input type="password" name="itunesconnectpassword3" id="itunesconnectpassword3" autocomplete="off" value="password" />
+														<label for="itunesconnectpassword3">iTunes Connect Password</label>
+													</div>
+													<div class="form-field">						
+														<input type="text" name="vendorid3" id="vendorid3" autocomplete="off" value="83928392" />
+														<label for="vendorid3">Vendor ID</label>
+														<a href="#" target="_blank" class="form-field-help ref-icon-after ref-icon-after--question"><span>What's this?</span></a>
+													</div>
+													<input type="submit" class="ref-button--full-width" value="Save Changes" />
+													<button class="ref-button--link">Delete this account</button>
+												</form>
+											</td>
+										</tr>
+										<tr __gwt_row="1" __gwt_subrow="0" class="HJF4TJC-m-r">
+											<td class="HJF4TJC-m-a HJF4TJC-m-s HJF4TJC-m-d linked-account-name">
+												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-306">martinollivere@gmail.com</div>
+											</td>
+											<td class="HJF4TJC-m-a HJF4TJC-m-s linked-account-store">
+												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-307"><span class="ref-icon-before ref-icon-before--apple">iTunes Connect</span></div>
+											</td>
+											<td class="HJF4TJC-m-a HJF4TJC-m-s linked-account-date">
+												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-308">17 Sep 2014</div>
+											</td>
+											<td class="HJF4TJC-m-a HJF4TJC-m-s linked-account-edit">
+												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-309">
+													<a href="#!users/linkedaccounts/38/edit/4" class="ref-button--function-small">Edit</a>
+												</div>
+											</td>
+											<td class="HJF4TJC-m-a HJF4TJC-m-s HJF4TJC-m-n linked-account-delete">
+												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-310">
+													<a href="#!users/linkedaccounts/38/delete/4" class="js-demo-popup--confirm ref-button--link warning-text">Delete</a>
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<td class="update-linked-accounts-container" colspan="5">
+												<h2 class="heading-style--heading-five">Edit Details</h2>
+												<form>
+													<div class="form-field">						
+														<input type="text" name="accountname4" id="accountname4" autocomplete="off" value="janmolby@electronicarts.com" />
+														<label for="accountname4">Account Name</label>
+													</div>
+													<div class="form-field">						
+														<input type="password" name="itunesconnectpassword4" id="itunesconnectpassword4" autocomplete="off" value="password" />
+														<label for="itunesconnectpassword4">iTunes Connect Password</label>
+													</div>
+													<div class="form-field">						
+														<input type="text" name="vendorid4" id="vendorid4" autocomplete="off" value="83928392" />
+														<label for="vendorid4">Vendor ID</label>
+														<a href="#" target="_blank" class="form-field-help ref-icon-after ref-icon-after--question"><span>What's this?</span></a>
+													</div>
+													<input type="submit" class="ref-button--full-width" value="Save Changes" />
+													<button class="ref-button--link">Delete this account</button>
+												</form>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</article>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div id="js-component-import--account-container" class="panel-right-container js-account-container"></div>
+	<div id="js-component-import--search-container" class="panel-right-container js-search-container"></div>
+
+	<div class="page-overlay">
+		<div class="page-popup">
+			<div class="popup-content popup-content--link-account forms--mid-theme">
+				<div>	
+				<form>
+					<fieldset class="connect-account-content" style="position: relative">
+						<h2 class="heading-style--heading-five popup-content--account__heading">Link Another Account</h2>
+						<div class="linked-account-loading-state">
+							<div class="hamster-wheel">
+								<img src="images/hamster-wheel.png" alt="hamster wheel" />
+							</div>
+							<div class="animation-hamster">
+							</div>
+							<p>Linking may take up to 5 minutes but most likely less, we’ll send you an email as soon as it's done.</p>
+						</div>
+						<div class="form-field js-rotate-content">						
+							<input type="text" name="accountnamep" id="accountnamep" autocomplete="off"/>
+							<label for="accountnamep">Account Name</label>
+						</div>
+						<div class="form-field js-rotate-content">						
+							<input type="password" name="itunesconnectpasswordp" id="itunesconnectpasswordp" autocomplete="off"/>
+							<label for="itunesconnectpasswordp">Account Password</label>
+						</div>
+						<div class="form-field js-rotate-content">						
+							<input type="text" name="vendoridp" id="vendoridp" autocomplete="off"/>
+							<label for="vendoridp">Vendor ID</label>
+							<a href="#" target="_blank" class="form-field-help ref-icon-after ref-icon-after--question"><span>What's this?</span></a>
+						</div>
+						<input type="submit" class="ref-button--full-width js-mock-submit-link-account js-rotate-content" value="Link This Account" />
+					</fieldset>
+				</form>
+				</div>
+				<a href="#" class="popup-close"><span class="ref-icon-after ref-icon-after--close">Close</span></a>
+			</div>
+		</div>
+	</div>
+
+	<div class="page-overlay--confirm"> 
+		<div class="page-popup">
+			<div class="popup-content popup-content--delete-account">
+				<h2 class="heading-style--heading-five popup-content--account__heading">Are you sure you want to delete this account?</h2>
+				<div class="buttons-container">
+					<button class="ref-button--function-small">No, keep it linked</button>
+					<button class="ref-button--cta-small ref-button--warning">Yes, delete account</button>
+				</div>
+				<a href="#" class="popup-close"><span class="ref-icon-after ref-icon-after--close">Close</span></a>
+			</div>
+		</div>
+	</div>
+
+ 	<script src="js/vendor/jquery-1.11.1.min.js"></script>
+ 	<script src="js/vendor/jquery-ui.custom.min.js"></script>
+ 	<script src="js/vendor/handlebars-v2.0.0.js"></script>
+ 	<script src="js/templates/templates.js"></script>
+	<script src="js/vendor/modernizr.2.8.3.custom.min.js"></script>
+	<!--[if IE 9]>
+		<script src="js/vendor/jquery.mCustomScrollbar.concat.min.js"></script>
+	<![endif]-->
+
+	<div id="js-appendScriptsContainer"></div>
+
+	<script src="js/application-global-modules-logged-in.js"></script>
+  <script src="js/application.js"></script>
+  <script>
+  	function initScripts() {
+  		new AccountSettingsPage();
+
+			// DEMO ONLY, NOT FOR INTEGRATION
+			$('.js-demo-popup').on("click", function(){
+					$('.page-overlay').fadeIn(200);
+					setTimeout(function(){
+						$('.page-overlay .popup-content').addClass("is-showing");
+					}, 100);
+			});
+
+			$('.page-overlay .popup-close').on("click", function(){
+					$('.page-overlay').fadeOut(100);
+					$('.page-overlay .popup-content').removeClass("is-showing");
+			});
+
+			$('.page-overlay .js-mock-submit-link-account').on("click", function(e){
+				e.preventDefault();
+				var $this = $(this);
+				if(!$this.hasClass("ref-button--is-loading") && !$this.hasClass("ref-button--success")) {
+					$('body').addClass("form-submitted-loading");
+					$this.addClass("ref-button--is-loading").attr("value", "Linking");
+					setTimeout(function(){					
+						$this.addClass('ref-button--success').attr("value", "Success!").removeClass('ref-button--is-loading');					
+						setTimeout(function(){
+							$('.page-overlay .popup-close').trigger("click");
+							$('body').removeClass("form-submitted-loading");
+							$this.removeClass('ref-button--success').attr("value", "Link This Account");
+						}, 1000);
+					}, 5000);
+				}
+			});
+ 
+			$('.linked-account-edit').each(function(){
+				var $this = $(this),
+						nextRow = $this.parent('tr').next('tr').hide(),
+						nextRowForm = $this.parent('tr').next('tr').find('form').hide(),
+						nextRowHeading = $this.parent('tr').next('tr').find('h2').hide(),
+						thisName = $this.parents('tr').find('.linked-account-name');
+				$this.on("click", function(){
+					$this.find('.ref-button--function-small').toggleClass('is-pressed');
+					nextRow.slideToggle(200);
+					nextRowForm.slideToggle(200);
+					nextRowHeading.slideToggle(200);
+					$(thisName).toggleClass('is-open');
+				});				
+
+				$('.js-demo-popup--confirm').on("click", function(){
+					$('.page-overlay--confirm').fadeIn(200);
+					setTimeout(function(){
+						$('.page-overlay--confirm .popup-content').addClass("is-showing");
+					}, 100);
+				});
+				$('.page-overlay--confirm .popup-close, .page-overlay--confirm .ref-button--function-small').on("click", function(){
+					$('.page-overlay--confirm').fadeOut(100);
+					$('.page-overlay--confirm .popup-content').removeClass("is-showing");
+				});
+			});
+  	}
+
+  	window.onready = initScripts();
+  </script>
+</body>

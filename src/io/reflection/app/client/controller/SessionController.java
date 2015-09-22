@@ -78,9 +78,12 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	private Map<String, Permission> mPermissionCache; // Permission.code : Permission
 
 	private static final String COOKIE_KEY_TOKEN = SessionController.class.getName() + ".token";
+	private static final String COOKIE_KEY_LAST_USER = SessionController.class.getName() + ".lastUser";
 
 	private User mLoggedInUser = null;
 	private Session mSession = null;
+
+	private boolean isSessionRestored;
 
 	private SessionController() {
 		DefaultEventBus.get().addHandler(JsonServiceCallEventHandler.TYPE, this);
@@ -166,6 +169,9 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 
 		if (mSession != null) {
 			Cookies.setCookie(COOKIE_KEY_TOKEN, mSession.token, mSession.expires);
+			if (mSession.user != null && mSession.user.username != null) {
+				Cookies.setCookie(COOKIE_KEY_LAST_USER, mSession.user.username);
+			}
 		} else {
 			Cookies.removeCookie(COOKIE_KEY_TOKEN);
 		}
@@ -223,6 +229,8 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 								}
 							}
 
+							resetPublicPagesAfterLogin();
+
 							DefaultEventBus.get().fireEventFromSource(new GotUserPowers(mLoggedInUser, mLoggedInUser.roles, mLoggedInUser.permissions),
 									SessionController.this);
 						}
@@ -244,10 +252,16 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 		return attemptPrefetch;
 	}
 
+	private void resetPublicPagesAfterLogin() {
+		PostController.get().reset();
+		NavigationController.get().resetBlogPage();
+	}
+
 	/**
 	 * Release the session and clear user data
 	 */
 	public void logout() {
+
 		CoreService service = ServiceCreator.createCoreService();
 
 		final LogoutRequest input = new LogoutRequest();
@@ -285,6 +299,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	}
 
 	public void makeSessionInvalid() {
+		isSessionRestored = false;
 		setLoggedInUser(null, null);
 		// ItemController.get().clearItemCache();
 		clearRolePermissionCache();
@@ -581,12 +596,20 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 		});
 	}
 
+	public boolean isSessionRestored() {
+		return isSessionRestored;
+	}
+
 	public boolean restoreSession() {
+
 		boolean attemptRestore;
 
 		String token = Cookies.getCookie(COOKIE_KEY_TOKEN);
 
 		if (attemptRestore = (token != null && getSession() == null)) {
+
+			isSessionRestored = true;
+
 			CoreService core = ServiceCreator.createCoreService();
 
 			final LoginRequest input = new LoginRequest();
@@ -805,6 +828,10 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 		}
 
 		return authorised;
+	}
+
+	public String getLastUsername() {
+		return Cookies.getCookie(COOKIE_KEY_LAST_USER);
 	}
 
 }

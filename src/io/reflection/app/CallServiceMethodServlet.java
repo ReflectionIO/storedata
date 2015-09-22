@@ -18,7 +18,6 @@ import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
-import io.reflection.app.helpers.ApiHelper;
 import io.reflection.app.helpers.ItemPropertyWrapper;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.ServiceType;
@@ -30,7 +29,6 @@ import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
 import io.reflection.app.service.store.StoreServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
-import io.reflection.app.shared.util.PagerHelper;
 
 import java.io.IOException;
 import java.util.Date;
@@ -58,7 +56,7 @@ import com.google.appengine.api.taskqueue.TransientFailureException;
 
 /**
  * @author billy1380
- * 
+ *
  */
 @SuppressWarnings("serial")
 public class CallServiceMethodServlet extends HttpServlet {
@@ -74,7 +72,8 @@ public class CallServiceMethodServlet extends HttpServlet {
 		boolean isNotQueue = false;
 
 		// bail out if we have not been called by app engine cron
-		if ((isNotQueue = (appEngineQueue == null || !"callservicemethod".toLowerCase().equals(appEngineQueue.toLowerCase())))) {
+		if ((isNotQueue = (appEngineQueue == null || (!"deferred".toLowerCase().equals(appEngineQueue.toLowerCase()) && !"callservicemethod".toLowerCase()
+				.equals(appEngineQueue.toLowerCase()))))) {
 			resp.setStatus(401);
 			resp.getOutputStream().print("failure");
 			LOG.warning("Attempt to run script directly, this is not permitted");
@@ -121,26 +120,22 @@ public class CallServiceMethodServlet extends HttpServlet {
 						code = FeedFetchServiceProvider.provide().getGatherCode(country, store, start, end);
 					}
 
-					List<String> listTypes = ApiHelper.getAllListTypes(store, listTypeParameter);
 					Set<String> itemIds = new HashSet<String>();
 					List<Rank> ranks;
 					List<Rank> grossingRanks = null;
 					Collector collector = CollectorFactory.getCollectorForStore(a3StoreCodeParameter);
 
-					for (String listType : listTypes) {
-						// get all the ranks for the list type (we are using an infinite pager with no sorting to allow us to generate a deletion key during
-						// prediction)
-						ranks = RankServiceProvider.provide().getGatherCodeRanks(country, store, category, listType, code, PagerHelper.createInfinitePager(),
-								Boolean.TRUE);
+					// get all the ranks for the list type (we are using an infinite pager with no sorting to allow us to generate a deletion key during
+					// prediction)
+					ranks = RankServiceProvider.provide().getGatherCodeRanks(country, category, listTypeParameter, code);
 
-						// if the ranks are for a grossing list check that none are free and don't have iaps
-						if (collector != null && collector.isGrossing(listType)) {
-							grossingRanks = ranks;
-						}
+					// if the ranks are for a grossing list check that none are free and don't have iaps
+					if (collector != null && collector.isGrossing(listTypeParameter)) {
+						grossingRanks = ranks;
+					}
 
-						for (Rank rank : ranks) {
-							itemIds.add(rank.itemId);
-						}
+					for (Rank rank : ranks) {
+						itemIds.add(rank.itemId);
 					}
 
 					IItemService itemService = ItemServiceProvider.provide();
@@ -179,7 +174,7 @@ public class CallServiceMethodServlet extends HttpServlet {
 						}
 					}
 				} catch (DataAccessException | NullPointerException ex) {
-					LOG.log(GaeLevel.SEVERE, "Error while trying to call service method " + GETALLRANKS_SUPPORTED_METHOD, ex);
+					LOG.log(Level.SEVERE, "Error while trying to call service method " + GETALLRANKS_SUPPORTED_METHOD, ex);
 				}
 			}
 		}
@@ -188,7 +183,7 @@ public class CallServiceMethodServlet extends HttpServlet {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param country
 	 * @param store
 	 * @param categoryId
@@ -202,7 +197,6 @@ public class CallServiceMethodServlet extends HttpServlet {
 		TaskOptions options = TaskOptions.Builder.withUrl("/callservicemethod");
 		options.param("service", ServiceType.ServiceTypeRank.toString());
 		options.param("method", GETALLRANKS_SUPPORTED_METHOD);
-		// options.param("date", Long.toString(date.getTime()));
 		options.param("code", code.toString());
 		options.param("country", country);
 		options.param("store", store);

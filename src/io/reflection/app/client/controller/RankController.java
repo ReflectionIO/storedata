@@ -7,6 +7,8 @@
 //
 package io.reflection.app.client.controller;
 
+import static io.reflection.app.client.controller.FilterController.GROSSING_LIST_TYPE;
+import static io.reflection.app.client.controller.FilterController.PAID_LIST_TYPE;
 import io.reflection.app.api.core.client.CoreService;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
@@ -26,7 +28,7 @@ import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.helper.ApiCallHelper;
-import io.reflection.app.client.helper.FilterHelper;
+import io.reflection.app.client.part.datatypes.AppRevenue;
 import io.reflection.app.client.part.datatypes.ItemRevenue;
 import io.reflection.app.client.part.datatypes.RanksGroup;
 import io.reflection.app.datatypes.shared.Item;
@@ -34,12 +36,12 @@ import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import com.google.gwt.http.client.Request;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.datepicker.client.CalendarUtil;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
 import com.google.gwt.view.client.ListDataProvider;
@@ -48,7 +50,7 @@ import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author billy1380
- * 
+ *
  */
 public class RankController extends AsyncDataProvider<RanksGroup> implements ServiceConstants {
 
@@ -61,6 +63,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 	private Request currentItemSalesRanks;
 
 	private ListDataProvider<ItemRevenue> itemRevenueData = new ListDataProvider<ItemRevenue>();
+	private ListDataProvider<AppRevenue> appRevenueDataProvider = new ListDataProvider<AppRevenue>();
 
 	public static RankController get() {
 		if (mOne == null) {
@@ -68,6 +71,10 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 		}
 
 		return mOne;
+	}
+
+	public List<RanksGroup> getList() {
+		return rows;
 	}
 
 	public void fetchTopItems() {
@@ -91,11 +98,6 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 		input.on = FilterController.get().getEndDate(); // Get start date from filter
 
-		Date today = FilterHelper.getToday();
-		if (CalendarUtil.isSameDate(input.on, today)) {
-			input.on = today;
-		}
-		
 		input.category = FilterController.get().getCategory();
 
 		if (pager == null) {
@@ -164,8 +166,8 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 	}
 
 	/**
-     * 
-     */
+	 *
+	 */
 	public void fetchSalesRanks() {
 		CoreService service = ServiceCreator.createCoreService();
 
@@ -197,7 +199,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 	/**
 	 * Retrieve real data
-	 * 
+	 *
 	 * @param item
 	 */
 	public void fetchItemSalesRanks(final Item item) {
@@ -216,7 +218,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 		input.category = FilterController.get().getCategory();
 
-		input.listType = FilterController.get().getListTypes().get(0);
+		input.listType = DataTypeHelper.STORE_IPAD_A3_CODE.equals(FilterController.get().getFilter().getStoreA3Code()) ? "ipad" : "";
 
 		input.item = new Item();
 		input.item.internalId = item.internalId;
@@ -238,6 +240,8 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 					float paid = 0, iap = 0;
 					ItemRevenue itemRevenue = null;
+					appRevenueDataProvider.getList().clear();
+					AppRevenue appRanking = null;
 
 					if (itemRevenueData.getList().size() == 0) {
 						itemRevenue = new ItemRevenue();
@@ -251,7 +255,11 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 					if (output.ranks != null && output.ranks.size() > 0 && output.item.price != null) {
 						for (Rank rank : output.ranks) {
 							if (rank.downloads != null && rank.revenue != null) {
-								paid += (rankPaid = (float) rank.downloads.intValue() * output.item.price.floatValue());
+								appRanking = new AppRevenue();
+								appRanking.date = rank.date;
+								appRanking.revenue = rank.revenue;
+								appRevenueDataProvider.getList().add(appRanking);
+								paid += (rankPaid = rank.downloads.intValue() * output.item.price.floatValue());
 								iap += (rank.revenue.floatValue() - rankPaid);
 							}
 						}
@@ -273,7 +281,14 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 					itemRevenue.percentage = Float.valueOf(100.0f);
 					itemRevenue.total = Float.valueOf(iap + paid);
 
+					for (AppRevenue ar : appRevenueDataProvider.getList()) {
+						ar.currency = itemRevenue.currency;
+						ar.total = Float.valueOf(iap + paid);
+						ar.revenuePercentForPeriod = (ar.total.floatValue() > 0 ? ar.revenue.floatValue() / ar.total.floatValue() : 0);
+					}
+
 					itemRevenueData.refresh();
+					appRevenueDataProvider.refresh();
 				}
 
 				DefaultEventBus.get().fireEventFromSource(new GetItemSalesRanksSuccess(input, output), RankController.this);
@@ -289,7 +304,7 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 	/**
 	 * Retrieve predictions
-	 * 
+	 *
 	 * @param item
 	 */
 	public void fetchItemRanks(final Item item) {
@@ -332,6 +347,8 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 					float paid = 0, iap = 0;
 					ItemRevenue itemRevenue = null;
+					appRevenueDataProvider.getList().clear();
+					AppRevenue appRanking = null;
 
 					if (itemRevenueData.getList().size() == 0) {
 						itemRevenue = new ItemRevenue();
@@ -345,7 +362,11 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 					if (output.ranks != null) {
 						for (Rank rank : output.ranks) {
 							if (rank.downloads != null && rank.revenue != null) {
-								paid += (rankPaid = (float) rank.downloads.intValue() * rank.price.floatValue());
+								appRanking = new AppRevenue();
+								appRanking.date = rank.date;
+								appRanking.revenue = rank.revenue;
+								appRevenueDataProvider.getList().add(appRanking);
+								paid += (rankPaid = rank.downloads.intValue() * rank.price.floatValue());
 								iap += (rank.revenue.floatValue() - rankPaid);
 							}
 						}
@@ -367,7 +388,14 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 					itemRevenue.percentage = Float.valueOf(100.0f);
 					itemRevenue.total = Float.valueOf(iap + paid);
 
+					for (AppRevenue ar : appRevenueDataProvider.getList()) {
+						ar.currency = itemRevenue.currency;
+						ar.total = Float.valueOf(iap + paid);
+						ar.revenuePercentForPeriod = (ar.total.floatValue() > 0 ? ar.revenue.floatValue() / ar.total.floatValue() : 0);
+					}
+
 					itemRevenueData.refresh();
+					appRevenueDataProvider.refresh();
 				}
 
 				DefaultEventBus.get().fireEventFromSource(new GetItemRanksEventHandler.GetItemRanksSuccess(input, output), RankController.this);
@@ -433,4 +461,105 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 		return itemRevenueData;
 	}
 
+	public ListDataProvider<AppRevenue> getRevenueDataProvider() {
+		return appRevenueDataProvider;
+	}
+
+	/**
+	 * @param selectedTab
+	 * @param sortAscending
+	 */
+	public void sortByDownloads(final String selectedTab, final boolean sortAscending) {
+		Collections.sort(rows, new Comparator<RanksGroup>() {
+
+			@Override
+			public int compare(RanksGroup o1, RanksGroup o2) {
+				Rank r1 = o1.free;
+				Rank r2 = o2.free;
+				if (selectedTab.equals(PAID_LIST_TYPE)) {
+					r1 = o1.paid;
+					r2 = o2.paid;
+				} else if (selectedTab.equals(GROSSING_LIST_TYPE)) {
+					r1 = o1.grossing;
+					r2 = o2.grossing;
+				}
+				int res = 0;
+				if (r1.downloads != null && r2.downloads != null) {
+					if (r1.downloads == null) {
+						res = 1;
+					} else if (r2.downloads == null) {
+						res = -1;
+					} else if (r1.downloads.intValue() == r2.downloads.intValue()) {
+						res = 0;
+					} else {
+						res = (r1.downloads.intValue() < r2.downloads.intValue() ? 1 : -1);
+					}
+				}
+				return (sortAscending ? res : -res);
+			}
+		});
+	}
+
+	/**
+	 * @param selectedTab
+	 * @param sortAscending
+	 */
+	public void sortByRevenue(final String selectedTab, final boolean sortAscending) {
+		Collections.sort(rows, new Comparator<RanksGroup>() {
+
+			@Override
+			public int compare(RanksGroup o1, RanksGroup o2) {
+				Rank r1 = o1.free;
+				Rank r2 = o2.free;
+				if (selectedTab.equals(PAID_LIST_TYPE)) {
+					r1 = o1.paid;
+					r2 = o2.paid;
+				} else if (selectedTab.equals(GROSSING_LIST_TYPE)) {
+					r1 = o1.grossing;
+					r2 = o2.grossing;
+				}
+				int res = 0;
+				if (r1.revenue != null && r2.revenue != null) {
+					if (r1.revenue == null) {
+						res = 1;
+					} else if (r2.revenue == null) {
+						res = -1;
+					} else if (r1.revenue.floatValue() == r2.revenue.floatValue()) {
+						res = 0;
+					} else {
+						res = (r1.revenue.floatValue() < r2.revenue.floatValue() ? 1 : -1);
+					}
+				}
+				return (sortAscending ? res : -res);
+			}
+		});
+	}
+
+	/**
+	 * @param selectedTab
+	 * @param b
+	 */
+	public void sortByRank(final String selectedTab, final boolean sortAscending) {
+		Collections.sort(rows, new Comparator<RanksGroup>() {
+
+			@Override
+			public int compare(RanksGroup o1, RanksGroup o2) {
+				Rank r1 = o1.free;
+				Rank r2 = o2.free;
+				int res = 0;
+				if (r1.position != null && r2.position != null) {
+					if (r1.position == null) {
+						res = 1;
+					} else if (r2.position == null) {
+						res = -1;
+					} else if (r1.position.intValue() == r2.position.intValue()) {
+						res = 0;
+					} else {
+						res = (r1.position.intValue() < r2.position.intValue() ? 1 : -1);
+					}
+				}
+				return (sortAscending ? res : -res);
+			}
+		});
+	}
 }

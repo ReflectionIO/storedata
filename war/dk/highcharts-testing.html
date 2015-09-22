@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="utf-8" />
+	<title>Reflection Design Kit - Graphs</title>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link rel="stylesheet" media="screen, projection" type="text/css" href="designkit.css" />
+	<!--[if (lt IE 9)]>
+		<script src="js/vendor/html5shiv.min.js"></script>
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main-ie8.css" />
+	<![endif]-->
+ 	<!--[if !lt IE 9]><!-->
+		<script src="js/vendor/picturefill.2.3.1.min.js" async></script>
+	<!-- <![endif]-->
+	<link rel="stylesheet" href="js/vendor/jquery.mCustomScrollbar.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
+<script>
+  WebFont.load({
+    google: {
+      families: ['Open Sans:400,600,700,400italic,600italic', 'Source Sans Pro:400,600,700', 'Lato:400,700,400italic']
+    }
+  });
+</script></head>
+<body class="panel-left-open">
+	<!--[if (lt IE 9)]>
+      <div class="window-warning">
+  			<p>Uh oh... Reflection doesn't work in this browser. &nbsp; &nbsp;<a href="http://outdatedbrowser.com/en" target="_blank">Download a compatible browser</a></p>
+  		</div>
+  <![endif]-->
+  <header id="js-component-import--global-header" class="global-header"></header>
+
+  <div id="js-component-import--panel-left" class="panel-left js-custom-scrollbar" data-mcs-theme="minimal-dark"></div>
+
+	<div class="l-page-container">
+
+		<div id="main" class="l-main" role="main">
+			
+			<div id="js-component-import--design-kit-banner" class="banner banner--component"></div>
+
+			<div class="grid-container dk-components-container">
+				<div class="grid__row dk-component-row">
+					<h2 class="heading-style--heading-four">Styling Demo</h2>
+					<div id="container" style="width:100%; height:500px;"></div>					
+				</div>
+				<div class="grid__row dk-component-row">
+					<h2 class="heading-style--heading-four">App Revenue, Revenue Sources</h2>
+					<div id="container-revenue-split" style="width:100%; height:500px;"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="js-component-import--account-container" class="panel-right-container js-account-container"></div>
+	<div id="js-component-import--search-container" class="panel-right-container js-search-container"></div>
+	
+ 	<script src="js/vendor/jquery-1.11.1.min.js"></script>
+ 	<script src="js/vendor/jquery-ui.custom.min.js"></script>
+ 	<script src="js/vendor/handlebars-v2.0.0.js"></script>
+ 	<script src="js/templates/templates.js"></script>
+	<script src="js/vendor/modernizr.2.8.3.custom.min.js"></script>
+	<!--[if IE 9]>
+		<script src="js/vendor/jquery.mCustomScrollbar.concat.min.js"></script>
+	<![endif]-->
+
+	<div id="js-appendScriptsContainer"></div>
+
+	<script src="js/designkit-global-templates.js"></script>
+  <script src="js/application.js"></script>
+  <script src="js/designkit-app.js"></script>
+  <script src="js/vendor/highcharts-custom.js"></script>
+  <script>
+  	function initScripts() {
+  		new ChartsPage();
+
+  		// Generate Demo Chart
+			x = null;
+
+var chart = new Highcharts.Chart({
+
+    chart: {
+        renderTo: 'container',
+        type: 'area'
+    },
+
+    xAxis: {
+        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May']
+    },
+    yAxis: {
+        title: {
+            text: 'Rank'
+        },
+        allowDecimals: false,
+        reversed: true,
+        min: 0.5,
+        startOnTick: false,
+        endOnTick: false,
+        max: 3.5
+    },
+
+    plotOptions: {
+        series: {
+            dataLabels: {
+                enabled: true,
+                align: 'left',
+                x: 5,
+                y: 4,
+                formatter: function () {
+                    if (this.point.x == this.series.data.length - 1) {
+                        return this.series.name;
+                    } else {
+                        return null;
+                    }
+                }
+            }
+        }
+    },
+
+    series: [{
+        data: [1, 1, 2, 1, 1],
+        name: 'Ada',
+        events: {
+            mouseOver: function () {
+                this.update({
+                    color: '#0000FF'
+                });                
+            },
+            mouseOut: function () {
+                this.update({
+                    color: '#C0C0C0'
+                }); 
+            }
+        },
+        color: '#C0C0C0'
+    }, {
+        data: [2, 3, 1, 2, 3],
+        name: 'Bob',
+        color: '#FF0000'
+    }, {
+        data: [3, 2, 3, 3, 2],
+        name: 'Caesar',
+        events: {
+            mouseOver: function () {
+                this.update({
+                    color: '#0000FF'
+                });                
+            },
+            mouseOut: function () {
+                this.update({
+                    color: '#C0C0C0'
+                }); 
+            }
+        },
+        color: '#C0C0C0'
+    }],
+    tooltip: {
+          useHTML: true,
+          shared: false,
+          headerFormat: '<h2>United Kingdom</h2><h3>{point.key}</h3>',
+          pointFormat: '<div><span style="color: {series.color}">{series.name}</span>: <b>{point.y}</b></div>',
+          backgroundColor: '#fcfdfd',
+          borderWidth: 1,
+          borderColor: '#dae3ed',
+          crosshairs: [{
+              width: 1,
+              color: '#ff496a'
+          }],
+          positioner: function (labelWidth, labelHeight, point) {
+              //console.log(labelWidth, labelHeight);
+              return { x: point.plotX + 40, y: point.plotY};
+          },
+          shadow: {
+            color: 'rgba(0,0,0,0.24)',
+            width: 7,
+            offsetX: 1,
+            offsetY: 1
+          }
+        }
+
+});
+
+		}
+
+  	window.onready = initScripts();
+
+
+    $(function () {
+    
+    var chart;
+    $(document).ready(function() {
+    
+        var colors = Highcharts.getOptions().colors,
+            name = ['Browser brands'],
+            data = [40,40,50,60,40],
+            data2 = [10,20,30,70,40];
+    
+        function setChart(name, categories, data, color, type) {
+            var len = chart.series.length;
+            //chart.xAxis[0].setCategories(categories);
+            for(var i = 0; i < len; i++){
+                chart.series[0].remove();
+            }
+            if(data.series){
+                for(var i = 0; i < data.series.length; i ++ ){
+                    chart.addSeries({
+                        name: data.series[i].name,
+                        data: data.series[i].data,
+                        type: data.series[i].type,
+                        color: data.series[i].color || 'white',
+                        stacking: 'normal'
+                    });
+                }
+            } else {
+                    chart.addSeries({
+                        name: name,
+                        data: data,
+                        type: type,
+                        color: color || 'white',
+                        stacking: 'normal'
+                    });
+            }
+        }
+    
+        chart = new Highcharts.Chart({
+            chart: {
+                renderTo: 'container-revenue-split',
+                type: 'area'
+            },
+            title: {
+                text: 'Browser market share, April, 2011'
+            },
+            subtitle: {
+                text: 'Click the columns to view versions. Click again to view brands.'
+            },
+            xAxis: {
+                type: 'datetime',
+                  dateTimeLabelFormats: {
+                      day: '%e %b'
+                  },
+            },
+            plotOptions: {
+              area: {
+                stacking: 'normal',
+                }
+            },
+            yAxis: {
+                title: {
+                    text: 'Total percent market share'
+                }
+            },
+            plotOptions: {
+                area: {
+                    cursor: 'pointer',
+                    point: {
+                        events: {
+                            click: function() {
+                                var ind = this.series.index;
+                                var drilldown = chart.addSeriesAsDrilldown.prototype.drilldowns[ind];
+                                if (drilldown) { // drill down
+                                    setChart(null, drilldown.categories, drilldown, drilldown.type);
+                                } else { // restore
+                                    setChart(name, categories, data, drilldown.type);
+                                }
+                            }
+                        }
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        color: colors[0],
+                        style: {
+                            fontWeight: 'bold'
+                        },
+                        formatter: function() {
+                            return this.y +'%';
+                        }
+                    }
+                },
+                spline: {
+                    cursor: 'pointer',
+                    point: {
+                        events: {
+                            click: function() {
+                                setChart(name, categories, data, 'column');
+                            }
+                        }
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        color: colors[0],
+                        style: {
+                            fontWeight: 'bold'
+                        },
+                        formatter: function() {
+                            return this.y + '%';
+                        }
+                    }
+                }
+            },
+            tooltip: {
+              useHTML: true,
+              shared: false,
+              formatter: function() {
+                var pointIndex = this.point.index,
+                    seriesIndex = this.series.index;
+                var s = "<h2 style=color:" + this.point.color + ">" + this.y + ' ' + this.series.name + "</h2>", pointIndex = this.series.xData.indexOf(this.x);
+                $.each(this.series.chart.series, function () {
+                    s += '<div><span style=color:' + this.color + '>' + this.data[pointIndex].y + '</span>: ' +
+                        this.name + '</div>';
+                    $.each(chart.addSeriesAsDrilldown.prototype.drilldowns[this.index].series, function() {
+                      s += '<div>' + this.name + ': ' + this.data[pointIndex];
+                    });
+                });
+                return s;
+              },
+              backgroundColor: '#fcfdfd',
+              borderWidth: 1,
+              borderColor: '#dae3ed',
+              crosshairs: [{
+                width: 1,
+                color: '#ff496a'
+              }],
+              positioner: function (labelWidth, labelHeight, point) {
+                  //console.log(labelWidth, labelHeight);
+                  return { x: point.plotX + 100, y: point.plotY};
+              },
+              shadow: {
+                color: 'rgba(0,0,0,0.24)',
+                width: 7,
+                offsetX: 1,
+                offsetY: 1
+              },
+            },
+            series: [{
+                name: name,
+                data: data,
+                color: 'green',
+                stacking: 'normal',
+                pointStart: Date.UTC(2015, 2, 1),
+                pointInterval: 24 * 3600 * 1000, // one day,
+                drilldown: 'yes'
+            },
+            {
+                name: 'test',
+                data: data2,
+                color: 'red',
+                stacking: 'normal',
+                pointStart: Date.UTC(2015, 2, 1),
+                pointInterval: 24 * 3600 * 1000, // one day,
+                drilldown: 'no'
+            }],
+            exporting: {
+                enabled: false
+            }
+        });
+
+        chart.addSeriesAsDrilldown.prototype.drilldowns = [{
+                                  series: [{
+                                          type: 'area',
+                                          name: 'MSIE versions 2000',
+                                          data: [1, 2, 3, 4, 5],
+                                          color: 'red',
+                                          stacking: 'normal'
+                                      },{
+                                          type: 'area',
+                                          name: 'MSIE versions 2010',
+                                          data: [1, 2, 3, 4, 5],
+                                          color: 'green',
+                                          stacking: 'normal'
+                                      }]
+                                  }, {
+                                  series: [{
+                                        type: 'area',
+                                        name: 'IAP 1',
+                                        data: [5, 4, 3, 2, 1],
+                                        color: 'blue',
+                                        stacking: 'normal'
+                                    },{
+                                        type: 'area',
+                                        name: 'IAP 2',
+                                        data: [5, 4, 3, 2, 1],
+                                        color: 'yellow',
+                                        stacking: 'normal'
+                                    }]
+                                  }];
+
+        //console.log(chart.addSeriesAsDrilldown.prototype.drilldowns[0]);
+    });
+    
+});
+  </script>
+</body>

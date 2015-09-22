@@ -7,22 +7,23 @@
 //
 package io.reflection.app.client.helper;
 
+import io.reflection.app.client.component.DateSelector.PresetDateRange;
+import io.reflection.app.client.component.Selector;
 import io.reflection.app.client.controller.CountryController;
 import io.reflection.app.client.controller.ForumController;
 import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.StoreController;
-import io.reflection.app.client.part.DateSelector.PresetDateRange;
 import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.Forum;
 import io.reflection.app.datatypes.shared.Store;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
 import com.google.gwt.user.datepicker.client.DatePicker;
 
@@ -59,7 +60,8 @@ public class FilterHelper {
 		return getMonthsAgo(value * 12);
 	}
 
-	public static void addLinkedAccounts(ListBox list) {
+	public static void addLinkedAccounts(Selector list) {
+		list.clear();
 		List<DataAccount> linkedAccounts = LinkedAccountController.get().getAllLinkedAccounts();
 
 		if (linkedAccounts != null) {
@@ -70,14 +72,15 @@ public class FilterHelper {
 	}
 
 	/**
-	 * Add list of stores to ListBox
+	 * Add list of stores to FormFieldSelect
 	 * 
 	 * @param list
-	 *            , ListBox
+	 *            , FormFieldSelect
 	 * @param isAdmin
 	 *            , if false add only iPhone store
 	 */
-	public static void addStores(ListBox list, boolean isAdmin) {
+	public static void addStores(Selector list, boolean isAdmin) {
+		list.clear();
 		if (isAdmin) {
 			List<Store> stores = StoreController.get().getStores();
 
@@ -87,24 +90,25 @@ public class FilterHelper {
 				}
 			}
 		} else {
-			list.addItem("iPhone Store", "iph");
-			list.setEnabled(false);
+			list.addItem(DataTypeHelper.STORE_IPHONE_NAME, DataTypeHelper.STORE_IPHONE_A3_CODE);
 		}
+		list.setEnabled(isAdmin);
 	}
 
-	public static void addStores(ListBox list) {
+	public static void addStores(Selector list) {
 		addStores(list, false);
 	}
 
 	/**
-	 * Add list of countries to ListBox
+	 * Add list of countries to FormFieldSelect
 	 * 
 	 * @param list
-	 *            , ListBox
+	 *            , FormFieldSelect
 	 * @param isAdmin
 	 *            , if false add only USA
 	 */
-	public static void addCountries(ListBox list, boolean isAdmin) {
+	public static void addCountries(Selector list, boolean isAdmin) {
+		list.clear();
 		if (isAdmin) {
 			List<Country> countries = CountryController.get().getCountries();
 
@@ -120,19 +124,20 @@ public class FilterHelper {
 		}
 	}
 
-	public static void addCountries(ListBox list) {
+	public static void addCountries(Selector list) {
 		addCountries(list, false);
 	}
 
 	/**
-	 * Add list of categories to ListBox
+	 * Add list of categories to FormFieldSelect
 	 * 
 	 * @param list
-	 *            , ListBox
+	 *            , FormFieldSelect
 	 * @param isAdmin
 	 *            , if false add only All categories
 	 */
-	public static void addCategories(ListBox list, boolean isAdmin) {
+	public static void addCategories(Selector list, boolean isAdmin) {
+		list.clear();
 		if (isAdmin) {
 			list.addItem("All", "24");
 			list.addItem("Book", "19");
@@ -164,11 +169,52 @@ public class FilterHelper {
 		}
 	}
 
-	public static void addCategories(ListBox list) {
+	public static void addCategories(Selector list) {
 		addCategories(list, false);
 	}
 
-	public static void addForums(ListBox list) {
+	public static void addListType(Selector list, boolean isAdmin) {
+		list.clear();
+		// if (isAdmin) {
+		list.addItem("All", "all");
+		list.addItem("Paid", "paid");
+		list.addItem("Free", "free");
+		list.addItem("Grossing", "grossing");
+		// } else {}
+	}
+
+	public static void addListType(Selector list) {
+		addListType(list, false);
+	}
+
+	public static void addBlogCategories(Selector list, boolean isAdmin) {
+		list.clear();
+		// if (isAdmin) {
+		list.addItem("All", "all");
+		list.addItem("Statistics", "statistics");
+		list.addItem("App Developers", "developers");
+		list.addItem("Design", "design");
+		// } else {}
+	}
+
+	public static void addBlogCategories(Selector list) {
+		addBlogCategories(list, false);
+	}
+
+	public static void addBlogSortBy(Selector list, boolean isAdmin) {
+		list.clear();
+		// if (isAdmin) {
+		list.addItem("Most Recent", "recent");
+		list.addItem("Most Commented", "commented");
+		list.addItem("Most Shared", "shared");
+		// } else {}
+	}
+
+	public static void addBlogSortBy(Selector list) {
+		addBlogSortBy(list, false);
+	}
+
+	public static void addForums(Selector list) {
 		List<Forum> forums = ForumController.get().getForums();
 
 		if (forums != null) {
@@ -292,7 +338,7 @@ public class FilterHelper {
 
 				@Override
 				public String getName() {
-					return "1 wk";
+					return "Last 7 days";
 				}
 
 				@Override
@@ -305,7 +351,7 @@ public class FilterHelper {
 
 				@Override
 				public String getName() {
-					return "2 wks";
+					return "Last 14 days";
 				}
 
 				@Override
@@ -318,12 +364,12 @@ public class FilterHelper {
 
 				@Override
 				public String getName() {
-					return "4 wks";
+					return "Last 30 days";
 				}
 
 				@Override
 				public DateRange getDateRange() {
-					return FilterHelper.createRange(FilterHelper.getWeeksAgo(4), FilterHelper.getToday());
+					return FilterHelper.createRange(FilterHelper.getDaysAgo(30), FilterHelper.getToday());
 				}
 			});
 
@@ -331,12 +377,12 @@ public class FilterHelper {
 
 				@Override
 				public String getName() {
-					return "6 wks";
+					return "Last 60 days";
 				}
 
 				@Override
 				public DateRange getDateRange() {
-					return FilterHelper.createRange(FilterHelper.getWeeksAgo(6), FilterHelper.getToday());
+					return FilterHelper.createRange(FilterHelper.getDaysAgo(60), FilterHelper.getToday());
 				}
 			});
 
@@ -344,12 +390,12 @@ public class FilterHelper {
 
 				@Override
 				public String getName() {
-					return "8 wks";
+					return "Last 3 months";
 				}
 
 				@Override
 				public DateRange getDateRange() {
-					return FilterHelper.createRange(FilterHelper.getWeeksAgo(8), FilterHelper.getToday());
+					return FilterHelper.createRange(FilterHelper.getMonthsAgo(3), FilterHelper.getToday());
 				}
 			});
 		}
@@ -366,7 +412,7 @@ public class FilterHelper {
 
 				@Override
 				public String getName() {
-					return "1 day";
+					return "1 Day";
 				}
 
 				@Override
@@ -380,7 +426,7 @@ public class FilterHelper {
 				@Override
 				public String getName() {
 
-					return "1 wk";
+					return "1 Week";
 				}
 
 				@Override
@@ -393,7 +439,7 @@ public class FilterHelper {
 
 				@Override
 				public String getName() {
-					return "2 wks";
+					return "2 Weeks";
 				}
 
 				@Override
@@ -406,7 +452,7 @@ public class FilterHelper {
 
 				@Override
 				public String getName() {
-					return "30 days";
+					return "30 Days";
 				}
 
 				@Override
@@ -421,6 +467,8 @@ public class FilterHelper {
 	}
 
 	/**
+	 * Use CalendarUtils instead
+	 * 
 	 * @param value
 	 * @param date
 	 * @return
@@ -431,6 +479,37 @@ public class FilterHelper {
 				|| (rhs != null && lhs != null && (rhs.getDate() == lhs.getDate()) && (rhs.getMonth() == lhs.getMonth()) && (rhs.getYear() == lhs.getYear()));
 	}
 
-	// TODO before / after method at day level
+	@SuppressWarnings("deprecation")
+	public static boolean beforeDate(Date rhs, Date lhs) {
+		Date d1 = new Date(rhs.getYear(), rhs.getMonth(), rhs.getDate());
+		Date d2 = new Date(lhs.getYear(), lhs.getMonth(), lhs.getDate());
+		return d1.before(d2);
+	}
+
+	@SuppressWarnings("deprecation")
+	public static boolean afterDate(Date rhs, Date lhs) {
+		Date d1 = new Date(rhs.getYear(), rhs.getMonth(), rhs.getDate());
+		Date d2 = new Date(lhs.getYear(), lhs.getMonth(), lhs.getDate());
+		return d1.after(d2);
+	}
+
+	@SuppressWarnings("deprecation")
+	public static boolean beforeOrSameDate(Date rhs, Date lhs) {
+		Date d1 = new Date(rhs.getYear(), rhs.getMonth(), rhs.getDate());
+		Date d2 = new Date(lhs.getYear(), lhs.getMonth(), lhs.getDate());
+		return d1.equals(d2) || d1.before(d2);
+	}
+
+	@SuppressWarnings("deprecation")
+	public static boolean afterOrSameDate(Date rhs, Date lhs) {
+		Date d1 = new Date(rhs.getYear(), rhs.getMonth(), rhs.getDate());
+		Date d2 = new Date(lhs.getYear(), lhs.getMonth(), lhs.getDate());
+		return d1.equals(d2) || d1.after(d2);
+	}
+
+	@SuppressWarnings("deprecation")
+	public static Date normalizeDateUTC(Date date) {
+		return ApiCallHelper.getUTCDate(date.getYear() + 1900, date.getMonth() + 1, date.getDate());
+	}
 
 }

@@ -48,8 +48,6 @@ import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.helpers.GoogleCloudClientHelper;
 import io.reflection.app.logging.GaeLevel;
-import io.reflection.app.modellers.Modeller;
-import io.reflection.app.modellers.ModellerFactory;
 import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
@@ -59,7 +57,6 @@ import io.reflection.app.shared.util.DataTypeHelper;
  * @author billy1380
  *
  */
-@SuppressWarnings("deprecation")
 public class IngestorIOS extends StoreCollector implements Ingestor {
 
 	private static final Logger LOG = Logger.getLogger(IngestorIOS.class.getName());
@@ -76,6 +73,18 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 
 		try {
 			stored = get(itemIds);
+			if (stored == null || stored.isEmpty()) {
+				LOG.log(GaeLevel.DEBUG, "Nothing to ingest");
+				return;
+			}
+
+			LOG.log(GaeLevel.DEBUG, "Filtering feedfetch");
+			stored = filter(stored);
+			if (stored == null || stored.isEmpty()) {
+				LOG.log(GaeLevel.DEBUG, "All feedfetches filtered. Nothing to ingest.");
+				return;
+			}
+
 			grouped = groupDataByDate(stored);
 			combined = combineDataParts(grouped);
 			extractItemRanks(stored, grouped, combined);
@@ -89,14 +98,32 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 
 	}
 
+	/**
+	 * @param stored
+	 * @return
+	 */
+	private List<FeedFetch> filter(List<FeedFetch> stored) {
+		final String countries = System.getProperty("ingest.ios.countries");
+
+		ArrayList<FeedFetch> filtered = new ArrayList<FeedFetch>(stored.size());
+
+		for (FeedFetch fetch : stored) {
+			if (countries != null && countries.contains(fetch.country)) {
+				filtered.add(fetch);
+			}
+		}
+
+		return filtered;
+	}
+
 	@SuppressWarnings("unused")
 	private void blobify(List<FeedFetch> stored, Map<Date, Map<Integer, FeedFetch>> grouped, Map<Date, String> combined) throws DataAccessException {
-		for (Date date : grouped.keySet()) {
-			Map<Integer, FeedFetch> group = grouped.get(date);
+		for (final Date date : grouped.keySet()) {
+			final Map<Integer, FeedFetch> group = grouped.get(date);
 			boolean first = true;
 
-			for (Integer keyInteger : group.keySet()) {
-				FeedFetch feedFetch = group.get(keyInteger);
+			for (final Integer keyInteger : group.keySet()) {
+				final FeedFetch feedFetch = group.get(keyInteger);
 				if (feedFetch.totalParts == 1 && (feedFetch.data.startsWith("/blobstore/writable:") || feedFetch.data.startsWith("/gs/"))) {
 					continue;
 				}
@@ -126,7 +153,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 			LOG.log(GaeLevel.DEBUG, "Extracting item ranks");
 		}
 
-		Collector c = CollectorFactory.getCollectorForStore(DataTypeHelper.IOS_STORE_A3);
+		final Collector c = CollectorFactory.getCollectorForStore(DataTypeHelper.IOS_STORE_A3);
 
 		boolean isGrossing;
 		for (final Date key : combined.keySet()) {
@@ -135,34 +162,34 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 				LOG.log(GaeLevel.DEBUG, String.format("Parsing [%s]", key.toString()));
 			}
 
-			Map<Integer, FeedFetch> group = grouped.get(key);
-			Iterator<FeedFetch> iterator = group.values().iterator();
-			FeedFetch firstFeedFetch = iterator.next();
+			final Map<Integer, FeedFetch> group = grouped.get(key);
+			final Iterator<FeedFetch> iterator = group.values().iterator();
+			final FeedFetch firstFeedFetch = iterator.next();
 
-			List<Item> items = (new ParserIOS()).parse(firstFeedFetch.country, firstFeedFetch.category.id, combined.get(key));
+			final List<Item> items = new ParserIOS().parse(firstFeedFetch.country, firstFeedFetch.category.id, combined.get(key));
 
-			List<Rank> addRanks = new ArrayList<Rank>();
-			List<Rank> updateRanks = new ArrayList<Rank>();
+			final List<Rank> addRanks = new ArrayList<Rank>();
+			final List<Rank> updateRanks = new ArrayList<Rank>();
 
-			List<Item> addItems = new ArrayList<Item>();
+			final List<Item> addItems = new ArrayList<Item>();
 
 			isGrossing = c.isGrossing(firstFeedFetch.type);
 
-			Country country = new Country();
+			final Country country = new Country();
 			country.a2Code = firstFeedFetch.country;
 
-			Store store = new Store();
+			final Store store = new Store();
 			store.a3Code = firstFeedFetch.store;
 
-			Pager pager = new Pager();
+			final Pager pager = new Pager();
 			pager.start = Long.valueOf(0);
 			pager.count = new Long(Long.MAX_VALUE);
 
-			List<Rank> foundRanks = RankServiceProvider.provide().getGatherCodeRanks(country, store, firstFeedFetch.category, firstFeedFetch.type,
-					firstFeedFetch.code, pager, Boolean.TRUE);
+			final List<Rank> foundRanks = RankServiceProvider.provide().getGatherCodeRanks(country, firstFeedFetch.category, firstFeedFetch.type,
+					firstFeedFetch.code, false);
 
-			Map<String, Rank> lookup = indexRanks(foundRanks);
-			List<String> itemIds = new ArrayList<String>();
+			final Map<String, Rank> lookup = indexRanks(foundRanks);
+			final List<String> itemIds = new ArrayList<String>();
 
 			Rank rank, existing;
 			Item item;
@@ -209,7 +236,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 			}
 
 			if (addRanks.size() > 0) {
-				RankServiceProvider.provide().addRanksBatch(addRanks);
+				RankServiceProvider.provide().addRanksBatch(firstFeedFetch.id, addRanks);
 			}
 
 			if (updateRanks.size() > 0) {
@@ -221,20 +248,20 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 			// ItemServiceProvider.provide().updateItemsBatch(updateItems);
 			// }
 
-			List<Item> foundItems = ItemServiceProvider.provide().getInternalIdItemBatch(itemIds);
-			List<Item> newItems = new ArrayList<Item>();
-			List<Item> updateItems = new ArrayList<Item>();
+			final List<Item> foundItems = ItemServiceProvider.provide().getInternalIdItemBatch(itemIds);
+			final List<Item> newItems = new ArrayList<Item>();
+			final List<Item> updateItems = new ArrayList<Item>();
 
 			boolean found = false;
 			boolean update = false;
 
-			Date date30DaysAgo = DateTime.now(DateTimeZone.UTC).minusDays(30).toDate();
+			final Date date30DaysAgo = DateTime.now(DateTimeZone.UTC).minusDays(30).toDate();
 
-			for (Item addItem : addItems) {
+			for (final Item addItem : addItems) {
 				found = false;
 				update = false;
 
-				for (Item foundItem : foundItems) {
+				for (final Item foundItem : foundItems) {
 					if (foundItem.internalId.equals(addItem.internalId)) {
 						if (foundItem.added.before(date30DaysAgo)) {
 							// if we find the item, give it the id and properties of the existing item to avoid data loss
@@ -262,7 +289,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 				ItemServiceProvider.provide().addItemsBatch(newItems);
 			}
 
-			for (Item updateItem : updateItems) {
+			for (final Item updateItem : updateItems) {
 				ItemServiceProvider.provide().updateItem(updateItem);
 			}
 
@@ -294,8 +321,6 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 			//
 			// });
 
-			Modeller modeller = ModellerFactory.getModellerForStore(DataTypeHelper.IOS_STORE_A3);
-
 			FeedFetch fetch;
 			for (int i = 0; i < group.size(); i++) {
 				fetch = group.get(Integer.valueOf(i));
@@ -305,8 +330,11 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 
 				ArchiverFactory.getItemRankArchiver().enqueueIdFeedFetch(fetch.id);
 
+				// This code below has been disabled as we don't want to model on ingestion of rank data but rather on the ingestion of sales data
+
+				// Modeller modeller = ModellerFactory.getModellerForStore(DataTypeHelper.IOS_STORE_A3);
 				// once the feed fetch status is updated model the list
-				modeller.enqueue(fetch);
+				// modeller.enqueue(fetch);
 			}
 
 			// Store s = DataTypeHelper.getIosStore();
@@ -331,9 +359,9 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 	 * @return
 	 */
 	private Map<String, Rank> indexRanks(List<Rank> ranks) {
-		Map<String, Rank> indexed = new HashMap<String, Rank>();
+		final Map<String, Rank> indexed = new HashMap<String, Rank>();
 
-		for (Rank rank : ranks) {
+		for (final Rank rank : ranks) {
 			indexed.put(constructKey(rank), rank);
 		}
 
@@ -349,20 +377,20 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 	}
 
 	private Map<Date, Map<Integer, FeedFetch>> groupDataByDate(List<FeedFetch> entities) {
-		Map<Date, Map<Integer, FeedFetch>> map = new HashMap<Date, Map<Integer, FeedFetch>>();
-		Map<Date, Integer> sizeMap = new HashMap<Date, Integer>();
+		final Map<Date, Map<Integer, FeedFetch>> map = new HashMap<Date, Map<Integer, FeedFetch>>();
+		final Map<Date, Integer> sizeMap = new HashMap<Date, Integer>();
 
 		if (LOG.isLoggable(GaeLevel.DEBUG)) {
 			LOG.log(GaeLevel.DEBUG, "Grouping entites by date");
 		}
 
-		for (FeedFetch entity : entities) {
-			Date date = entity.date;
+		for (final FeedFetch entity : entities) {
+			final Date date = entity.date;
 			Map<Integer, FeedFetch> dataChunks = null;
 			// String data = ((Text) entity.getProperty(DataStoreDataCollector.ENTITY_COLUMN_DATA)).getValue();
 
-			int chunkIndex = entity.part;
-			int totalChunks = entity.totalParts;
+			final int chunkIndex = entity.part;
+			final int totalChunks = entity.totalParts;
 
 			if ((dataChunks = map.get(date)) == null) {
 				dataChunks = new HashMap<Integer, FeedFetch>(totalChunks);
@@ -373,7 +401,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 			dataChunks.put(Integer.valueOf(chunkIndex), entity);
 		}
 
-		List<Date> remove = new ArrayList<Date>();
+		final List<Date> remove = new ArrayList<Date>();
 
 		if (LOG.isLoggable(GaeLevel.DEBUG)) {
 			LOG.log(GaeLevel.DEBUG, "Creating list of incomplete feeds");
@@ -381,8 +409,8 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 
 		// remove any items with incomplete sets
 		int i = 0;
-		for (Date key : map.keySet()) {
-			Map<Integer, FeedFetch> part = map.get(key);
+		for (final Date key : map.keySet()) {
+			final Map<Integer, FeedFetch> part = map.get(key);
 			if (part.size() < sizeMap.get(key).intValue()) {
 				remove.add(key);
 				i++;
@@ -398,7 +426,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 		}
 
 		i = 0;
-		for (Date date : remove) {
+		for (final Date date : remove) {
 			map.remove(date);
 
 			if (LOG.isLoggable(GaeLevel.TRACE)) {
@@ -417,10 +445,10 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 
 	private Map<Date, String> combineDataParts(Map<Date, Map<Integer, FeedFetch>> grouped) {
 
-		Map<Date, String> combined = new HashMap<Date, String>(grouped.size());
+		final Map<Date, String> combined = new HashMap<Date, String>(grouped.size());
 
-		for (Date date : grouped.keySet()) {
-			Map<Integer, FeedFetch> group = grouped.get(date);
+		for (final Date date : grouped.keySet()) {
+			final Map<Integer, FeedFetch> group = grouped.get(date);
 			String data = null;
 			boolean blob = false;
 
@@ -431,7 +459,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 				}
 			}
 
-			StringBuffer buffer = new StringBuffer();
+			final StringBuffer buffer = new StringBuffer();
 
 			if (blob) {
 				GcsService gcsService = GcsServiceFactory.createGcsService();
@@ -445,7 +473,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 					readChannel = gcsService.openReadChannel(filename, 0); // fileService.openReadChannel(file, false);
 					reader = new BufferedReader(Channels.newReader(readChannel, "UTF8"));
 					int length;
-					char[] bytes = new char[1024];
+					final char[] bytes = new char[1024];
 					while ((length = reader.read(bytes)) > 0) {
 						buffer.append(bytes, 0, length);
 					}
@@ -455,7 +483,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 					if (reader != null) {
 						try {
 							reader.close();
-						} catch (IOException e) {
+						} catch (final IOException e) {
 							LOG.log(Level.SEVERE, "Error closing reader", e);
 						}
 					}
@@ -467,7 +495,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 
 			} else {
 				for (int i = 0; i < group.size(); i++) {
-					FeedFetch part = group.get(Integer.valueOf(i + 1));
+					final FeedFetch part = group.get(Integer.valueOf(i + 1));
 					data = part.data;
 					buffer.append(data);
 				}
@@ -485,14 +513,15 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 			LOG.info(String.format("Fetching [%d] items", itemIds == null ? 0 : itemIds.size()));
 		}
 
-		List<FeedFetch> stored = new ArrayList<FeedFetch>();
+		final List<FeedFetch> stored = new ArrayList<FeedFetch>();
 
 		// for now ingest so that we don't kill the band width
 
 		int i = 0;
 		FeedFetch row = null;
-		for (Long itemId : itemIds) {
+		for (final Long itemId : itemIds) {
 			row = FeedFetchServiceProvider.provide().getFeedFetch(itemId);
+
 			stored.add(row);
 			i++;
 		}
@@ -506,8 +535,8 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 
 	private void enqueue(Queue queue, List<Long> itemIds) {
 
-		StringBuffer buffer = new StringBuffer();
-		for (Long id : itemIds) {
+		final StringBuffer buffer = new StringBuffer();
+		for (final Long id : itemIds) {
 			if (buffer.length() != 0) {
 				buffer.append(",");
 			}
@@ -515,11 +544,11 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 			buffer.append(id.toString());
 		}
 
-		String store = DataTypeHelper.IOS_STORE_A3, ids = buffer.toString();
+		final String store = DataTypeHelper.IOS_STORE_A3, ids = buffer.toString();
 
 		try {
 			queue.add(TaskOptions.Builder.withUrl(String.format(ENQUEUE_INGEST_FORMAT, store, ids)).method(Method.GET));
-		} catch (TransientFailureException ex) {
+		} catch (final TransientFailureException ex) {
 
 			if (LOG.isLoggable(Level.WARNING)) {
 				LOG.warning(String.format("Could not queue a message because of [%s] - will retry it once", ex.toString()));
@@ -528,7 +557,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 			// retry once
 			try {
 				queue.add(TaskOptions.Builder.withUrl(String.format(ENQUEUE_INGEST_FORMAT, store, ids)).method(Method.GET));
-			} catch (TransientFailureException reEx) {
+			} catch (final TransientFailureException reEx) {
 				if (LOG.isLoggable(Level.SEVERE)) {
 					LOG.log(Level.SEVERE,
 							String.format("Retry of with parameters store [%s] ids [%s] failed while adding to queue [%s] twice", store, ids,
@@ -545,7 +574,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 		}
 
 		try {
-			Queue queue = QueueFactory.getQueue("ingest");
+			final Queue queue = QueueFactory.getQueue("ingest");
 
 			if (queue != null) {
 				enqueue(queue, itemIds);

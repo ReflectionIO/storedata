@@ -39,7 +39,7 @@ public class DateRange {
 	}
 
 	public int getDaysBetween() {
-		return CalendarUtil.getDaysBetween(mFromDate, mToDate);
+		return Math.abs(CalendarUtil.getDaysBetween(mFromDate, mToDate));
 	}
 
 	public List<Date> getDatesBetween() {
@@ -51,6 +51,16 @@ public class DateRange {
 			CalendarUtil.addDaysToDate(date, 1);
 		}
 		return dates;
+	}
+
+	public int getDays() {
+		int days = 0;
+		Date date = CalendarUtil.copyDate(mFromDate);
+		while (date.before(mToDate) || CalendarUtil.isSameDate(date, mToDate)) {
+			days++;
+			CalendarUtil.addDaysToDate(date, 1);
+		}
+		return days;
 	}
 
 	public List<Date> getDates() {
@@ -74,7 +84,8 @@ public class DateRange {
 		if (obj != null && obj instanceof DateRange) {
 			DateRange dateRangeObj = (DateRange) obj;
 
-			return this.getFrom().equals(dateRangeObj.getFrom()) && this.getTo().equals(dateRangeObj.getTo());
+			return CalendarUtil.isSameDate(this.getFrom(), dateRangeObj.getFrom()) && CalendarUtil.isSameDate(this.getTo(), dateRangeObj.getTo());
+
 		}
 
 		return super.equals(obj);

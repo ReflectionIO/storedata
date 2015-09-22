@@ -7,12 +7,14 @@
 //
 package io.reflection.app.client.page.admin;
 
+import io.reflection.app.client.component.TextField;
 import io.reflection.app.client.controller.ItemController;
 import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.res.Images;
+import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.shared.util.DataTypeHelper;
 
@@ -20,7 +22,6 @@ import com.google.gwt.cell.client.ImageCell;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -32,7 +33,6 @@ import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -45,19 +45,10 @@ public class ItemsPage extends Page {
 
 	interface ItemsPageUiBinder extends UiBinder<Widget, ItemsPage> {}
 
-	interface ItemsPageStyle extends CssResource {
-
-		String green();
-
-		String silver();
-	}
-
-	@UiField ItemsPageStyle style;
-
 	@UiField(provided = true) CellTable<Item> items = new CellTable<Item>(ServiceConstants.SHORT_STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) SimplePager simplePager = new SimplePager(false, false);
 
-	@UiField TextBox queryTextBox;
+	@UiField TextField searchField;
 	private String query = "";
 
 	public ItemsPage() {
@@ -68,7 +59,7 @@ public class ItemsPage extends Page {
 		items.setEmptyTableWidget(new HTMLPanel("No Items found!"));
 		ItemController.get().addDataDisplay(items);
 		simplePager.setDisplay(items);
-		queryTextBox.getElement().setAttribute("placeholder", "Find an item");
+
 	}
 
 	private void addColumns() {
@@ -81,9 +72,7 @@ public class ItemsPage extends Page {
 
 		};
 
-		TextHeader idHeader = new TextHeader("Id");
-		idHeader.setHeaderStyleNames("col-md-1");
-		items.addColumn(id, idHeader);
+		items.addColumn(id, new TextHeader("Id"));
 
 		TextColumn<Item> name = new TextColumn<Item>() {
 
@@ -94,8 +83,7 @@ public class ItemsPage extends Page {
 
 		};
 
-		TextHeader nameHeader = new TextHeader("Name");
-		items.addColumn(name, nameHeader);
+		items.addColumn(name, new TextHeader("Name"));
 
 		TextColumn<Item> creator = new TextColumn<Item>() {
 
@@ -106,8 +94,7 @@ public class ItemsPage extends Page {
 
 		};
 
-		TextHeader creatorHeader = new TextHeader("Creator");
-		items.addColumn(creator, creatorHeader);
+		items.addColumn(creator, new TextHeader("Creator"));
 
 		Column<Item, String> small = new Column<Item, String>(new ImageCell()) {
 
@@ -117,8 +104,7 @@ public class ItemsPage extends Page {
 			}
 		};
 
-		TextHeader smallHeader = new TextHeader("S");
-		items.addColumn(small, smallHeader);
+		items.addColumn(small, new TextHeader("S"));
 
 		Column<Item, String> medium = new Column<Item, String>(new ImageCell()) {
 
@@ -128,8 +114,7 @@ public class ItemsPage extends Page {
 			}
 		};
 
-		TextHeader mediumHeader = new TextHeader("M");
-		items.addColumn(medium, mediumHeader);
+		items.addColumn(medium, new TextHeader("M"));
 
 		Column<Item, String> large = new Column<Item, String>(new ImageCell()) {
 
@@ -139,13 +124,14 @@ public class ItemsPage extends Page {
 			}
 		};
 
-		TextHeader largeHeader = new TextHeader("L");
-		items.addColumn(large, largeHeader);
+		items.addColumn(large, new TextHeader("L"));
 
 		Column<Item, SafeHtml> columnIap = new Column<Item, SafeHtml>(new SafeHtmlCell()) {
 
-			private final String IAP_DONT_KNOW_HTML = "<span class=\"icon-help " + style.silver() + "\"></span>";
-			private final String IAP_YES_HTML = "<span class=\"icon-ok " + style.green() + "\"></span>";
+			private final String IAP_DONT_KNOW_HTML = "<span class=\"" + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
+					+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeMinus() + "\"></span>";
+			private final String IAP_YES_HTML = "<span class=\"" + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
+					+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCheck() + "\"></span>";
 			private final String IAP_NO_HTML = "<span></span>";
 
 			@Override
@@ -158,10 +144,10 @@ public class ItemsPage extends Page {
 		items.addColumn(columnIap, "IAP");
 	}
 
-	@UiHandler("queryTextBox")
+	@UiHandler("searchField")
 	void onKeyPressed(KeyUpEvent event) {
-		if (!queryTextBox.getText().equals(query)) {
-			query = queryTextBox.getText();
+		if (!searchField.getText().equals(query)) {
+			query = searchField.getText();
 			simplePager.setPageStart(0);
 			ItemController.get().reset();
 			ItemController.get().fetchItems(query);

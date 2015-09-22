@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="utf-8" />
+	<title>Reflection Design Kit - Tabs</title>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link rel="stylesheet" media="screen, projection" type="text/css" href="designkit.css" />
+	<!--[if (lt IE 9)]>
+		<script src="js/vendor/html5shiv.min.js"></script>
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main-ie8.css" />
+	<![endif]-->
+ 	<!--[if !lt IE 9]><!-->
+		<script src="js/vendor/picturefill.2.3.1.min.js" async></script>
+	<!-- <![endif]-->
+	<link rel="stylesheet" href="js/vendor/jquery.mCustomScrollbar.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
+<script>
+  WebFont.load({
+    google: {
+      families: ['Open Sans:400,600,700,400italic,600italic', 'Source Sans Pro:400,600,700', 'Lato:400,700,400italic']
+    }
+  });
+</script></head>
+<body class="panel-left-open tabs-template">
+	<!--[if (lt IE 9)]>
+      <div class="window-warning">
+  			<p>Uh oh... Reflection doesn't work in this browser. &nbsp; &nbsp;<a href="http://outdatedbrowser.com/en" target="_blank">Download a compatible browser</a></p>
+  		</div>
+  <![endif]-->
+
+  <header id="js-component-import--global-header" class="global-header"></header>
+  
+	<div id="js-component-import--panel-left" class="panel-left js-custom-scrollbar" data-mcs-theme="minimal-dark"></div>
+
+	<div class="l-page-container">
+
+		<div id="main" class="l-main" role="main">
+			
+			<div id="js-component-import--design-kit-banner" class="banner banner--component"></div>
+
+			<div class="grid-container dk-components-container">
+				<div class="grid__row dk-component-row">
+					<div class="grid__column grid__column--full-width">
+						<h2>Content Item Divider Tabs</h2>
+						<p>These tabs split an item on a page into sections. The title should be very short (1-3 words) and have an accompanying icon if relevant and space allows. The font is <strong>Lato Bold, 1.4rem</strong> and always uppercase. See below for the interactive states. The containing box resizes to accommodate the contents.
+						</p>
+					</div>
+					<ul class="tabs-container default-tabs-transition">
+						<li class="grid__column grid__column--one-quarter tabs__tab is-active js-tab-select">
+							<div class="tab-animate-active"></div>
+							<a data-content="#tab-content-one" class="tabs__link">
+								<span>
+									<svg version=1.1 xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path id=Overview fill=#6D69C5 d="M22.6,19.2c-2.6,0-5.1-1.7-6.4-4.2c-1.8-3.6-0.8-7.8,2.3-9.4C19.4,5.2,20.2,5,21.1,5
+		c2.6,0,5.1,1.7,6.4,4.2c1.8,3.6,0.8,7.8-2.3,9.4C24.4,19,23.5,19.2,22.6,19.2z M21.1,6c-0.7,0-1.4,0.2-2.1,0.5
+		c-2.6,1.3-3.5,4.9-1.9,8c1.1,2.2,3.3,3.7,5.5,3.7c0.7,0,1.4-0.2,2.1-0.5c2.6-1.3,3.5-4.9,1.9-8C25.5,7.5,23.3,6,21.1,6z M30.4,7.8
+		c-1.9-3.8-5.7-6.2-9.6-6.2c-1.4,0-2.8,0.3-4.1,1c-1.6,0.8-2.8,2-3.7,3.5L2.5,16.8c-2.2,1.8-2.8,4.5-1.4,6.8c0.9,1.6,2.7,2.9,4.7,2.9
+		c0.5,0,1-0.1,1.6-0.3l15.1-3.3c0.1,0,0.1,0,0.2,0c1.4,0,2.8-0.3,4.1-1C31.4,19.5,33.1,13.1,30.4,7.8z M6.8,24.2l-0.1,0
+		c-1.6,0.6-3.2-0.4-3.9-1.7c-0.3-0.6-1.2-2.5,1-4.4l2-2C5.5,18,6,19.7,6.8,21c0.6,1.1,1.6,2,2.8,2.7L6.8,24.2z M11.3,23.3
+		c-1.6-0.4-2.9-1.6-3.7-2.8c-1-1.6-1.4-3.9-0.1-6l4.1-4.2c-0.2,2.1,0.2,4.3,1.2,6.4c1.2,2.3,3,4,5.1,5.1L11.3,23.3z M25.7,20.1
+		c-1,0.5-2,0.8-3.2,0.8c-3.1,0-6.2-2-7.8-5.1c-2.2-4.4-0.9-9.5,2.9-11.4c1-0.5,2-0.8,3.2-0.8c3.1,0,6.2,2,7.8,5.1
+		C30.8,13.1,29.5,18.2,25.7,20.1z"/></svg>
+		 							<span>Overview / All</span>
+		 						</span>
+							</a>
+						</li>
+						<li class="grid__column grid__column--one-quarter tabs__tab js-tab-select">
+							<div class="tab-animate-active"></div>
+							<a data-content="#tab-content-two" class="tabs__link">
+								<span>
+									<svg version=1.1 xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path id=Free fill=#6D69C5 d="M9.8,30.2L0.3,13.8L22.4,1L32,6.4v11L9.8,30.2z M3,14.5l7.5,13L30,16.3V7.6l-7.6-4.3L3,14.5z
+		 M24.5,14c-1.2,0-2.2-0.6-2.8-1.6c-0.4-0.8-0.5-1.6-0.3-2.5c0.2-0.8,0.8-1.5,1.5-2c0.5-0.3,1.1-0.4,1.6-0.4c1.2,0,2.2,0.6,2.8,1.6
+		c0.9,1.6,0.4,3.5-1.2,4.4C25.6,13.9,25.1,14,24.5,14z M24.5,9c-0.3,0-0.6,0.1-0.9,0.2c-0.4,0.2-0.7,0.6-0.8,1.1
+		c-0.1,0.5-0.1,0.9,0.2,1.3c0.5,0.8,1.6,1.1,2.4,0.6c0.8-0.5,1.1-1.6,0.6-2.4C25.7,9.4,25.1,9,24.5,9z"/></svg>
+									<span>Top Free</span></span>
+							</a>
+						</li>
+						<li class="grid__column grid__column--one-quarter tabs__tab js-tab-select">
+							<div class="tab-animate-active"></div>
+							<a data-content="#tab-content-three" class="tabs__link">
+								<span>
+									<svg version=1.1 xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path id=Paid fill=#6D69C5 d="M9.8,30.2L0.3,13.8L22.4,1L32,6.4v11L9.8,30.2z M3,14.5l7.5,13L30,16.3V7.6l-7.6-4.3L3,14.5z
+		 M24.5,14c-1.2,0-2.2-0.6-2.8-1.6c-0.9-1.6-0.4-3.5,1.2-4.4c0.5-0.3,1.1-0.4,1.6-0.4c1.2,0,2.2,0.6,2.8,1.6c0.4,0.8,0.5,1.6,0.3,2.5
+		c-0.2,0.8-0.8,1.5-1.5,2C25.6,13.9,25.1,14,24.5,14z M24.5,9c-0.3,0-0.6,0.1-0.9,0.2c-0.8,0.5-1.1,1.6-0.6,2.4
+		c0.5,0.8,1.6,1.1,2.4,0.6c0.4-0.2,0.7-0.6,0.8-1.1c0.1-0.5,0.1-0.9-0.2-1.3C25.7,9.4,25.1,9,24.5,9z M14.7,23.9l-1.2-2.1
+		c-0.5,0.2-0.9,0.2-1.3,0.2c-0.4-0.1-0.7-0.2-1-0.4L10.5,22l-0.7-1.1l1.6-1l0,0.1l0,0c0.2,0.4,0.5,0.6,0.8,0.6c0.4,0,0.8-0.1,1.2-0.3
+		c0.4-0.3,0.7-0.5,0.9-0.9s0.1-0.6,0-1c-0.1-0.2-0.2-0.3-0.4-0.3c-0.1-0.1-0.3-0.1-0.5-0.1c-0.2,0-0.3,0-0.5,0.1s-0.4,0.1-0.5,0.1
+		l-1.3,0.4c-0.3,0.1-0.6,0.1-0.8,0.1s-0.5,0-0.8-0.1s-0.5-0.2-0.7-0.4c-0.2-0.2-0.4-0.4-0.6-0.7c-0.1-0.3-0.2-0.5-0.3-0.8
+		s0-0.5,0.1-0.8c0.1-0.3,0.2-0.5,0.4-0.8C8.8,15,9,14.7,9.3,14.5L8,12.3l1.3-0.7l1.3,2.3c0.4-0.1,0.8-0.2,1.2-0.2s0.7,0.1,1,0.2
+		l0.7-0.4l0.7,1.1l-1.4,0.8l-0.1,0.1l0,0l0,0l-0.1-0.1c-0.2-0.3-0.5-0.4-0.8-0.4c-0.3,0-0.7,0.1-1.1,0.3c-0.5,0.3-0.8,0.6-1,0.9
+		s-0.2,0.6,0,0.9c0.1,0.2,0.2,0.3,0.4,0.4s0.3,0.1,0.5,0.1c0.2,0,0.3,0,0.5-0.1s0.3-0.1,0.5-0.1l1.3-0.3c0.3-0.1,0.7-0.1,0.9-0.1
+		c0.3,0,0.6,0,0.8,0.1c0.2,0.1,0.5,0.2,0.7,0.3c0.2,0.2,0.4,0.4,0.5,0.6c0.2,0.3,0.3,0.6,0.3,0.8s0,0.6-0.1,0.9s-0.2,0.6-0.4,0.9
+		s-0.4,0.5-0.7,0.8l1.2,2.1L14.7,23.9z"/></svg>
+									<span>Top Paid</span></span>
+							</a>
+						</li>
+						<li class="grid__column grid__column--one-quarter tabs__tab js-tab-select">
+							<div class="tab-animate-active"></div>
+							<a data-content="#tab-content-four" class="tabs__link">
+								<span>
+									<svg version=1.1 id=Layer_1 xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path id=Top_Grossing fill=#6D69C5 d="M24,11.1l-4,0.8V2.4l-7.9-2.3L0,2.3V23l8.7,3.7l3.3-1.2V28l8.7,3.7L32,27.6V13.2L24,11.1z
+		 M2,3.9l9.9-1.8L18,3.9v0.1L8.8,6.4L2,4.3V3.9z M2,5.4l6.7,2.1L18,5v2L8.8,9.4L2,7.3V5.4z M2,8.4l6.7,2.1L18,8v2l-9.2,2.5L2,10.3
+		V8.4z M2,11.4l6.7,2.1L18,11v1.3l-6,1.2v1.1l-3.2,0.9L2,13.3V11.4z M2,14.4l6.7,2.1l3.3-0.9v2l-3.2,1L2,16.3V14.4z M2,17.3l6.7,2.4
+		l3.3-1v2.1l-3.2,1.1L2,19.2V17.3z M8.8,24.5L2,21.7v-1.3L8.7,23l3.3-1.1v1.6L8.8,24.5z M30,26.2l-9.2,3.4L14,26.7v-1.3l6.7,2.6
+		l9.3-3.2V26.2z M30,23.6l-9.2,3.2L14,24.2v-1.9l6.7,2.4l9.3-2.9V23.6z M30,20.7l-9.2,2.9L14,21.3v-1.9l6.7,2.1L30,19V20.7z M30,17.9
+		l-9.2,2.5L14,18.3v-2l6.7,2.1L30,16V17.9z M30,14.9l-9.2,2.5L14,15.3v-0.2l10-2l6,1.6V14.9z"/></svg>
+									<span>Top Grossing</span></span>
+							</a>
+						</li>
+					</ul>
+					<ul class="tabs__content-container default-tabs-transition">
+						<li id="tab-content-one" class="tabs__content tabs__content--is-showing">
+							<article class="tabs__content-area">
+								<div class="grid__column grid__column--full-width">
+									<h2 class="collapsible-trigger ref-icon-before ref-icon-before--cog"><span>Revenue</span></h2>
+									<div class="collapsible-content">
+										<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras finibus lacinia justo quis fermentum. Nam dictum et mi nec hendrerit. Donec imperdiet sem at posuere pulvinar. Nam tristique tellus eu ipsum imperdiet, suscipit sodales nisl ornare. Sed vehicula, mauris nec suscipit sagittis, dui lorem pretium est, ac feugiat nibh nisl id ligula. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec vitae mi nec justo ultrices hendrerit. Fusce eu lorem sit amet risus blandit tempor a ac massa. Nulla sit amet vestibulum libero, et condimentum quam. Maecenas lobortis id purus nec rutrum. Pellentesque luctus fermentum bibendum. </p>
+									</div>
+								</div>
+							</article>
+						</li>
+						<li id="tab-content-two" class="tabs__content">
+							<article class="tabs__content-area">
+								<div class="grid__column grid__column--full-width">
+									<h2 class="collapsible-trigger ref-icon-before ref-icon-before--leaderboard"><span>Downloads</span></h2>
+									<div class="collapsible-content">
+										<p>Curabitur volutpat vulputate est, congue condimentum mauris. Mauris imperdiet dolor risus, vel lobortis lorem scelerisque convallis. Etiam cursus diam turpis, eu feugiat massa ultrices id. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Quisque condimentum commodo nibh et sollicitudin. Ut tempus sed nisl ut vulputate. Duis dapibus sit amet enim vitae molestie. Mauris vel magna fermentum, pretium nulla id, tincidunt mi.</p>
+									</div>
+								</div>
+							</article>
+						</li>
+						<li id="tab-content-three" class="tabs__content">
+							<article class="tabs__content-area">
+								<div class="grid__column grid__column--full-width">
+									<h2 class="collapsible-trigger ref-icon-before ref-icon-before--my-data"><span>Rank</span></h2>
+									<div class="collapsible-content">
+										<p>In hac habitasse platea dictumst. Cras ultricies aliquet felis vitae faucibus. Sed eget orci dapibus, congue mi eu, mattis tellus. Cras enim diam, tempus at pretium vitae, cursus at massa. Fusce maximus blandit ipsum vel luctus. Donec sagittis consectetur arcu, quis faucibus lacus porttitor eu. Maecenas nisi odio, dignissim sit amet efficitur in, congue vitae elit. Nullam sed augue nec urna suscipit ultrices quis quis arcu. Phasellus vitae convallis urna, et congue sem. Maecenas consectetur a lorem sit amet sollicitudin.</p>
+									</div>
+								</div>
+							</article>
+						</li>
+						<li id="tab-content-four" class="tabs__content">
+							<article class="tabs__content-area">
+								<div class="grid__column grid__column--full-width">
+									<h2 class="collapsible-trigger ref-icon-before ref-icon-before--info"><span>App Details</span></h2>
+									<div class="collapsible-content">
+										<p>Suspendisse ullamcorper eros at neque consequat, id egestas sem varius. Suspendisse tristique ante libero, ut eleifend lectus ultricies vel. Cras euismod ullamcorper elit ut lobortis. Cras quis nisl a odio varius tempor eget id urna. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam nisi sapien, euismod in dui sit amet, dapibus iaculis erat. Cras hendrerit tempus varius. Sed iaculis odio nulla, at vulputate justo blandit at.</p>
+									</div>
+								</div>
+							</article>
+						</li>
+					</ul>
+					<div class="grid__column grid__column--one-half">
+						<h3>Structure and classes</h3>
+						<p>Wrap tabs in a container with class "tabs-container". Each tab requires the class "tabs__tab" and set the default tab to also have class "is-active".</p>
+						<p>The &lt;a&gt; tag should have an href of the id of the container of the content the tab link opens (href="#tab-content-one", for instance). The &lt;a&gt; tag should also have the classes "tabs__link" and "js-tab-select" for styling and JavaScript functionality.</p>
+						<p>The container of the content that the tabs link to should be within an element with class "tabs__content-container". This should contain a list of items with class "tabs__content", the default content also having the class "tabs__content--is-showing". These items should have the id's that the tabs link to (id="tab-content-one", for example).</p>
+					</div>
+					<div class="grid__column grid__column--one-half">
+						<div class="code-box code-box-tall">
+							<pre><code class="language-markup">
+								/* Tabs structure */
+								&lt;ul class="tabs-container"&gt;
+									&nbsp;&lt;li class="grid__column grid__column--one-quarter tabs__tab is-active js-tab-select"&gt;
+										&nbsp;&nbsp;&lt;div class="tab-animate-active"&gt;&lt;/div&gt;
+										&nbsp;&nbsp;&lt;a href="#tab-content-one" class="tabs__link"&gt;
+											&nbsp;&nbsp;&nbsp;&lt;span class="ref-icon-before ref-icon-before--cog"&gt;&lt;span>Revenue&lt;/span&gt;&lt;/span&gt;
+										&nbsp;&nbsp;&lt;a&gt;
+									&nbsp;&lt;/li&gt;
+									&nbsp;... etc
+								&lt;/ul&gt;
+
+								/* Tabs content structure */
+								&lt;ul class="tabs__content-container"&gt;
+									&nbsp;&lt;li id="tab-content-one" class="tabs__content tabs__content--is-showing"&gt;
+										&nbsp;&nbsp;&lt;article&gt;
+											&nbsp;&nbsp;&nbsp;&lt;div class="grid__column grid__column--full-width"&gt;
+												&nbsp;&nbsp;&nbsp;&nbsp;&lt;h2 class="collapsible-trigger ref-icon-before ref-icon-before--cog"&gt;&lt;span&gt;Revenue&lt;/span&gt;&lt;/h2&gt;
+												&nbsp;&nbsp;&nbsp;&nbsp;&lt;div class="collapsible-content"&gt;
+													&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+													&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cras finibus lacinia justo quis fermentum. 
+													&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pellentesque luctus fermentum bibendum.&lt;/p&gt;
+												&nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;
+											&nbsp;&nbsp;&nbsp;&lt;/div&gt;
+										&nbsp;&nbsp;&lt;/article&gt;
+									&nbsp;&lt;/li&gt;
+									&nbsp;//... etc
+								&lt;/ul&gt;
+							</code></pre>
+						</div>
+					</div>
+				</div>
+
+				<div class="grid__row dk-component-row">
+					<div class="grid__column grid__column--full-width">
+						<h2>Page Divider Tabs</h2>
+						<p>These tabs split the entire page into sections. The font is Lato Bold, 16px and always uppercase. See below for the interactive states.</p>
+					</div>
+					<ul class="tabs-container tabs-container--large-tabs default-tabs-transition">
+						<li class="grid__column grid__column--one-half tabs__tab is-active js-tab-select">
+							<div class="tab-border"><span></span></div>
+							<a href="#tab-content-page-one" class="tabs__link">
+								<span class="ref-icon-before ref-icon-before--cog">
+									<span>Activity overview <b>Monitor how all your apps are doing in global app stores</b></span>
+								</span>
+							</a>
+						</li>
+						<li class="grid__column grid__column--one-half tabs__tab js-tab-select">
+							<div class="tab-border"><span></span></div>
+							<a href="#tab-content-page-two" class="tabs__link">
+								<span class="ref-icon-before ref-icon-before--my-data">
+									<span>Apps (26) <b>Access to every one of your apps to view their individual performance</b></span>
+								</span>
+							</a>
+						</li>
+					</ul>
+					<ul class="tabs__content-container tabs__content-container--large-tabs default-tabs-transition">
+						<li id="tab-content-page-one" class="tabs__content tabs__content--is-showing">
+							<article>
+								<div class="grid__column grid__column--full-width">
+									<h2 class="collapsible-trigger ref-icon-before ref-icon-before--cog"><span>Activity overview <b>Monitor how all your apps are doing in global app stores</b></span></h2>
+									<div class="collapsible-content">
+										<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras finibus lacinia justo quis fermentum. Nam dictum et mi nec hendrerit. Donec imperdiet sem at posuere pulvinar. Nam tristique tellus eu ipsum imperdiet, suscipit sodales nisl ornare. Sed vehicula, mauris nec suscipit sagittis, dui lorem pretium est, ac feugiat nibh nisl id ligula. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec vitae mi nec justo ultrices hendrerit. Fusce eu lorem sit amet risus blandit tempor a ac massa. Nulla sit amet vestibulum libero, et condimentum quam. Maecenas lobortis id purus nec rutrum. Pellentesque luctus fermentum bibendum.</p>
+									</div>
+								</div>
+							</article>
+						</li>
+						<li id="tab-content-page-two" class="tabs__content">
+							<article>
+								<div class="grid__column grid__column--full-width">
+									<h2 class="collapsible-trigger ref-icon-before ref-icon-before--my-data"><span>Apps (26) <b>Access to every one of your apps to view their individual performance</b></span></h2>
+									<div class="collapsible-content">
+										<p>Curabitur volutpat vulputate est, congue condimentum mauris. Mauris imperdiet dolor risus, vel lobortis lorem scelerisque convallis. Etiam cursus diam turpis, eu feugiat massa ultrices id. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Quisque condimentum commodo nibh et sollicitudin. Ut tempus sed nisl ut vulputate. Duis dapibus sit amet enim vitae molestie. Mauris vel magna fermentum, pretium nulla id, tincidunt mi.</p>
+									</div>
+								</div>
+							</article>
+						</li>
+					</ul>
+					<div class="grid__column grid__column--one-half">
+						<h3>Structure and classes</h3>
+						<p>Page divider tabs use the same structure and classes as content item divider tabs but with an additional class of "tabs-container--large-tabs" on the tabs container, and the extra markup for the tab description, as per the code box.</p>
+					</div>
+					<div class="grid__column grid__column--one-half">
+						<div class="code-box code-box-tall">
+							<pre><code class="language-markup">
+								/* Tabs structure */
+								&lt;ul class="tabs-container tabs-container--large-tabs"&gt;
+								&nbsp;&lt;li class="grid__column grid__column--one-half tabs__tab is-active js-tab-select"&gt;
+								&nbsp;&nbsp;&lt;div class="tab-border"&gt;&lt;span&gt;&lt;/span&gt;&lt;/div&gt;
+								&nbsp;&nbsp;&lt;a href="#tab-content-page-one" class="tabs__link"&gt;
+								&nbsp;&nbsp;&nbsp;&lt;span class="ref-icon-before ref-icon-before--cog"&gt;
+								&nbsp;&nbsp;&nbsp;&nbsp;&lt;span&gt;Activity overview &lt;b>Monitor how all your apps are doing in global app stores&lt;/b&gt;&lt;/span&gt;
+								&nbsp;&nbsp;&nbsp;&lt;/span&gt;
+								&nbsp;&nbsp;&lt;/a&gt;
+								&nbsp;&lt;/li&gt;
+								...etc
+
+								/* Tabs content structure */
+								&lt;ul class="tabs__content-container tabs__content-container--large-tabs"&gt;
+								&nbsp;&lt;li id="tab-content-page-one" class="tabs__content tabs__content--is-showing"&gt;
+								&nbsp;&nbsp;&lt;article&gt;
+								&nbsp;&nbsp;&nbsp;&lt;div class="grid__column grid__column--full-width"&gt;
+								&nbsp;&nbsp;&nbsp;&nbsp;&lt;h2 class="collapsible-trigger ref-icon-before ref-icon-before--cog"&gt;
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;span&gt;Activity overview &lt;b&gt;Monitor how all your apps are doing in global app stores&lt;/b&gt;&lt;/span&gt;
+								&nbsp;&nbsp;&nbsp;&nbsp;&lt;/h2&gt;
+								&nbsp;&nbsp;&nbsp;&nbsp;&lt;div class="collapsible-content"&gt;
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;p&gt;Tab content here&lt;/p&gt;
+								&nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;
+								&nbsp;&nbsp;&nbsp;&lt;/div&gt;
+								&nbsp;&nbsp;&lt;/article&gt;
+								&nbsp;&lt;/li&gt;
+								...etc
+							</code></pre>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div id="js-component-import--account-container" class="panel-right-container js-account-container"></div>
+	<div id="js-component-import--search-container" class="panel-right-container js-search-container"></div>
+
+ 	<script src="js/vendor/jquery-1.11.1.min.js"></script>
+ 	<script src="js/vendor/jquery-ui.custom.min.js"></script>
+ 	<script src="js/vendor/handlebars-v2.0.0.js"></script>
+ 	<script src="js/templates/templates.js"></script>
+	<script src="js/vendor/modernizr.2.8.3.custom.min.js"></script>
+	<!--[if IE 9]>
+		<script src="js/vendor/jquery.mCustomScrollbar.concat.min.js"></script>
+	<![endif]-->
+
+	<div id="js-appendScriptsContainer"></div>
+
+	<script src="js/designkit-global-templates.js"></script>
+  <script src="js/application.js"></script>
+  <script src="js/designkit-app.js"></script>
+  <script>
+  	function initScripts() {
+  		new TabsPage();
+  	}
+
+  	window.onready = initScripts();
+  </script>
+</body>

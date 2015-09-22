@@ -1,0 +1,19 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
+	<ui:style>
+	
+	</ui:style>
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.popupToastContainer}">
+		<div ui:field="childPanel" class="{STYLES_INSTANCE.reflectionMainStyle.popupToast}">
+			<h2 ui:field="titleElem">
+			</h2>
+			<p ui:field="descriptionElem">
+			</p>
+			<p>
+				<a ui:field="readMoreLink" href="#">Read more</a>
+			</p>
+			<img ui:field="image" alt="Bulb icon"></img>
+		</div>
+	</g:HTMLPanel>
+</ui:UiBinder> 

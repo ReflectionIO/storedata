@@ -13,6 +13,7 @@ import static io.reflection.app.client.controller.FilterController.LIST_TYPE_KEY
 import static io.reflection.app.client.controller.FilterController.STORE_KEY;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.StyledButtonCell;
+import io.reflection.app.client.component.Selector;
 import io.reflection.app.client.controller.FeedFetchController;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.FilterController.Filter;
@@ -29,14 +30,18 @@ import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.Breadcrumbs;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.res.Images;
+import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.FeedFetch;
 
 import java.util.Map;
 
 import com.google.gwt.cell.client.FieldUpdater;
+import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.i18n.shared.DateTimeFormat;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -45,7 +50,6 @@ import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -61,11 +65,10 @@ public class FeedBrowserPage extends Page implements FilterEventHandler, Navigat
 	@UiField(provided = true) CellTable<FeedFetch> mFeeds = new CellTable<FeedFetch>(ServiceConstants.SHORT_STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) SimplePager mPager = new SimplePager(false, false);
 
-	@UiField ListBox mAppStore;
-	@UiField ListBox mCountry;
-	@UiField ListBox category;
-
-	@UiField ListBox mListType;
+	@UiField Selector mAppStore;
+	@UiField Selector mCountry;
+	@UiField Selector category;
+	@UiField Selector mListType;
 
 	@UiField Breadcrumbs mBreadcrumbs;
 
@@ -77,6 +80,7 @@ public class FeedBrowserPage extends Page implements FilterEventHandler, Navigat
 		FilterHelper.addStores(mAppStore, true);
 		FilterHelper.addCountries(mCountry, true);
 		FilterHelper.addCategories(category, true);
+		FilterHelper.addListType(mListType, true);
 
 		// final SingleSelectionModel<FeedFetch> s = new SingleSelectionModel<FeedFetch>();
 		// s.addSelectionChangeHandler(new Handler() {
@@ -156,11 +160,13 @@ public class FeedBrowserPage extends Page implements FilterEventHandler, Navigat
 			}
 		}, "Date");
 
-		mFeeds.addColumn(new TextColumn<FeedFetch>() {
+		mFeeds.addColumn(new Column<FeedFetch, SafeHtml>(new SafeHtmlCell()) {
 
 			@Override
-			public String getValue(FeedFetch object) {
-				return object.type;
+			public SafeHtml getValue(FeedFetch object) {
+				return SafeHtmlUtils.fromTrustedString("<a href=\""
+						+ PageType.CalibrationSummaryPageType.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE, object.id.toString()).asString() + "\">"
+						+ object.type + "</a>");
 			}
 		}, "Type");
 
@@ -190,7 +196,7 @@ public class FeedBrowserPage extends Page implements FilterEventHandler, Navigat
 			}
 		};
 
-		StyledButtonCell prototype = new StyledButtonCell("btn", "btn-xs", "btn-default");
+		StyledButtonCell prototype = new StyledButtonCell(Styles.STYLES_INSTANCE.reflectionMainStyle().refButtonFunctionSmall());
 
 		Column<FeedFetch, String> ingest = new Column<FeedFetch, String>(prototype) {
 
@@ -232,22 +238,22 @@ public class FeedBrowserPage extends Page implements FilterEventHandler, Navigat
 
 	@UiHandler("mAppStore")
 	void onAppStoreValueChanged(ChangeEvent event) {
-		FilterController.get().setStore(mAppStore.getValue(mAppStore.getSelectedIndex()));
+		FilterController.get().setStore(mAppStore.getSelectedValue());
 	}
 
 	@UiHandler("mListType")
 	void onListTypeValueChanged(ChangeEvent event) {
-		FilterController.get().setListType(mListType.getValue(mListType.getSelectedIndex()));
+		FilterController.get().setListType(mListType.getSelectedValue());
 	}
 
 	@UiHandler("mCountry")
 	void onCountryValueChanged(ChangeEvent event) {
-		FilterController.get().setCountry(mCountry.getValue(mCountry.getSelectedIndex()));
+		FilterController.get().setCountry(mCountry.getSelectedValue());
 	}
 
 	@UiHandler("category")
 	void onCategoryValueChanged(ChangeEvent event) {
-		FilterController.get().setCategory(Long.valueOf(category.getValue(category.getSelectedIndex())));
+		FilterController.get().setCategory(Long.valueOf(category.getSelectedValue()));
 	}
 
 	/*

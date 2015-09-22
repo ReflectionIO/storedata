@@ -4,18 +4,13 @@
     <ui:import field="io.reflection.app.client.page.PageType.RegisterPageType" />
 
     <ui:style gss="true">
-    .link {
-    	margin-right: 10px;
-    }
-    .smaller {
-		font-size: 8pt;
-	}
+	
     </ui:style>
     <g:HTMLPanel>
-        <g:InlineHyperlink ui:field="link" styleName="{style.link}">
-            <span class="glyphicon glyphicon glyphicon-tag {style.smaller}"></span>
+		<g:InlineHyperlink ui:field="link">
+			<span class="glyphicon glyphicon glyphicon-tag"></span>
             <span ui:field="name">Name</span>
         </g:InlineHyperlink>
-        <g:Button ui:field="close" styleName="close" visible="false" />
+		<g:Button ui:field="close" visible="false" />
     </g:HTMLPanel>
 </ui:UiBinder> 

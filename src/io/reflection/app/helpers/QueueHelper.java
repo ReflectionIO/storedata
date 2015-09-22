@@ -7,8 +7,6 @@
 //
 package io.reflection.app.helpers;
 
-import io.reflection.app.logging.GaeLevel;
-
 import java.util.AbstractMap.SimpleEntry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,9 +17,11 @@ import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
 import com.google.appengine.api.taskqueue.TransientFailureException;
 
+import io.reflection.app.logging.GaeLevel;
+
 /**
  * @author William Shakour (billy1380)
- * 
+ *
  */
 public class QueueHelper {
 
@@ -43,7 +43,12 @@ public class QueueHelper {
 			}
 
 			for (SimpleEntry<String, String> param : params) {
-				options.param(param.getKey(), param.getValue());
+				String key = param.getKey();
+				options.param(key, param.getValue());
+
+				if ("taskName".equals(key)) {
+					options.taskName(param.getValue());
+				}
 			}
 
 			try {

@@ -1,0 +1,31 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:io.reflection.app.client.component">
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
+	<ui:style gss="true">
+	
+	</ui:style>
+	<g:HTMLPanel addStyleNames="{STYLES_INSTANCE.reflectionMainStyle.dateSelectionFilterContainer}">
+		<div ui:field="calendarContainer" class="{STYLES_INSTANCE.reflectionMainStyle.calendarContainer}">
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.dateSelectContainer}">
+				<div
+					class="{STYLES_INSTANCE.reflectionMainStyle.formField} {STYLES_INSTANCE.reflectionMainStyle.formFieldDateSelect} {STYLES_INSTANCE.reflectionMainStyle.formFieldDateSelectNoIcon}">
+					<c:FormDateBox ui:field="dateBoxFrom"></c:FormDateBox>
+				</div>
+			</div>
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.dateSelectToIndicator}"></div>
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.dateSelectContainer}">
+				<div
+					class="{STYLES_INSTANCE.reflectionMainStyle.formField} {STYLES_INSTANCE.reflectionMainStyle.formFieldDateSelect} {STYLES_INSTANCE.reflectionMainStyle.formFieldDateSelectNoIcon}">
+					<c:FormDateBox ui:field="dateBoxTo"></c:FormDateBox>
+				</div>
+			</div>
+		</div>
+		<g:Button ui:field="applyDateRange"
+			styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaSmall} {STYLES_INSTANCE.reflectionMainStyle.refreshButton} {STYLES_INSTANCE.reflectionMainStyle.refreshButton}">
+			<span class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeRefresh}">Refresh</span>
+		</g:Button>
+		<span class="{STYLES_INSTANCE.reflectionMainStyle.orText}">or</span>
+		<c:Selector ui:field="selectFixedRange" overlay="true" labelText="Time Period" styleName="{STYLES_INSTANCE.reflectionMainStyle.timePeriodSelect}" />
+
+	</g:HTMLPanel>
+</ui:UiBinder> 
