@@ -63,6 +63,12 @@ import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.logical.shared.ShowRangeEvent;
 import com.google.gwt.event.logical.shared.ShowRangeHandler;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
@@ -682,22 +688,38 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		String country = filter.getCountryA2Code();
 		String category = filter.getCategoryId().toString();
 		String date = String.valueOf(filter.getEndTime().longValue());
-		Window.open("/downloadleaderboard?listType=" + listType + "&country=" + country + "&category=" + category + "&date=" + date, "_blank", null);
-		// TODO make download button disabled when there are no data
-		// RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, "/downloadleaderboard");
-		// builder.setHeader("Content-type", "application/x-www-form-urlencoded");
-		//
-		// try {
-		// builder.sendRequest("country=" + URL.encodeComponent(country) + "&store=" + URL.encodeComponent(appStore) + "&date=" + URL.encodeComponent(date),
-		// new RequestCallback() {
-		//
-		// public void onError(Request request, Throwable exception) {}
-		//
-		// public void onResponseReceived(Request request, Response response) {
-		//
-		// }
-		// });
-		// } catch (RequestException e) {}
+		if (SessionController.get().isValidSession()) {
+			downloadLeaderboard.setEnabled(false);
+			downloadLeaderboard.getElement().getFirstChildElement().setInnerText("Downloading ...");
+
+			String session = SessionController.get().getSessionForApiCall().toString();
+
+			// TODO make download button disabled when there are no data
+
+			String requestData = "listType=" + listType + "&country=" + country + "&category=" + category + "&date=" + date + "&session=" + session;
+
+			RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, URL.encode(Window.Location.getProtocol() + "//" + Window.Location.getHost()
+					+ "/downloadleaderboard"));
+
+			builder.setHeader("Content-Type", "application/x-www-form-urlencoded");
+
+			try {
+				builder.sendRequest(requestData, new RequestCallback() {
+
+					public void onError(Request request, Throwable exception) {
+						downloadLeaderboard.getElement().getFirstChildElement().setInnerText("Download");
+						downloadLeaderboard.setEnabled(true);
+					}
+
+					public void onResponseReceived(Request request, Response response) {
+						String csvContent = "data:text/csv;charset=utf-8," + response.getText();
+						Window.open(URL.encode(csvContent), "_blank", "");
+						downloadLeaderboard.getElement().getFirstChildElement().setInnerText("Download");
+						downloadLeaderboard.setEnabled(true);
+					}
+				});
+			} catch (RequestException e) {}
+		}
 	}
 
 	@UiHandler("viewAllBtn")
