@@ -385,7 +385,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 					return SafeHtmlUtils
 							.fromSafeConstant("<span style=\"color: #81879d; font-size: 13px\">Coming Soon</span><span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding "
 									+ Styles.STYLES_INSTANCE.reflectionMainStyle().whatsThisTooltipIconStatic()
-									+ "\" data-tooltip=\"We are working on a new model to improve accuracy for the top 5, it will be implemented soon\" style=\"padding: 0px 0px 5px 7px\"></span>");
+									+ "\" data-tooltip=\"We are upgrading our model to improve accuracy for the Top 5. It will be implemented soon.\" style=\"padding: 0px 0px 5px 7px\"></span>");
 				} else {
 					return (rank.downloads != null) ? SafeHtmlUtils.fromSafeConstant(WHOLE_NUMBER_FORMATTER.format(rank.downloads)) : SafeHtmlUtils
 							.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
@@ -407,7 +407,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 					return SafeHtmlUtils
 							.fromSafeConstant("<span style=\"color: #81879d; font-size: 13px\">Coming Soon</span><span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding "
 									+ Styles.STYLES_INSTANCE.reflectionMainStyle().whatsThisTooltipIconStatic()
-									+ "\" data-tooltip=\"We are working on a new model to improve accuracy for the top 5, it will be implemented soon\" style=\"padding: 0px 0px 5px 7px\"></span>");
+									+ "\" data-tooltip=\"We are upgrading our model to improve accuracy for the Top 5. It will be implemented soon.\" style=\"padding: 0px 0px 5px 7px\"></span>");
 				} else {
 					return (rank.currency != null && rank.revenue != null) ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.asWholeMoneyString(rank.currency,
 							rank.revenue.floatValue())) : SafeHtmlUtils
