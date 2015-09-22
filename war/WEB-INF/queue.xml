@@ -25,7 +25,7 @@
         <name>deferred</name>
         <rate>100/s</rate>
         <bucket-size>100</bucket-size>
-        <max-concurrent-requests>1</max-concurrent-requests>
+        <max-concurrent-requests>2</max-concurrent-requests>
         <retry-parameters>
             <task-retry-limit>2</task-retry-limit>
         </retry-parameters>
