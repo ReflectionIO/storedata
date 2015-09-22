@@ -450,6 +450,17 @@ public final class Core extends ActionHandler {
 				// prediction)
 				ranks = RankServiceProvider.provide().getRanks(input.country, input.category, listType, input.on);
 
+				// Remove out of 10 downloads and revenues for non logged in users
+				if (!isLoggedIn) {
+					for (Rank r : ranks) {
+						int ranking = (collector.isGrossing(listType) ? r.grossingPosition.intValue() : r.position.intValue());
+						if (ranking > 10) {
+							r.downloads = null;
+							r.revenue = null;
+						}
+					}
+				}
+
 				for (Rank rank : ranks) {
 					itemIds.add(rank.itemId);
 				}
