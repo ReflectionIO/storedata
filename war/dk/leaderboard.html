@@ -442,7 +442,9 @@
 				$('.page-overlay--standard .popup-content').removeClass("is-showing");
 			});
 
-
+			// mock menu select
+			var thisPageLink = $('#js-component-import--panel-left').find('a[href="leaderboard.html"]');
+		  thisPageLink.parent("li").addClass("is-selected").parents("li").addClass("is-selected");
   	}
 
   	window.onready = initScripts();

@@ -190,6 +190,10 @@
 			$('.date-select-container input').on("focus", function(){
   			$('.refresh-button').removeAttr("disabled");
   		});
+
+			// mock menu select
+  		var thisPageLink = $('#js-component-import--panel-left').find('a[href="my-apps.html"]');
+		  thisPageLink.parent("li").addClass("is-selected").parents("li").addClass("is-selected");
   	}
 
   	window.onready = initScripts();
