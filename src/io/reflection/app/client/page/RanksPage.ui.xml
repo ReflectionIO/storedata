@@ -2,7 +2,6 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:cv="urn:import:com.google.gwt.user.cellview.client"
 	xmlns:c="urn:import:io.reflection.app.client.component" xmlns:p="urn:import:io.reflection.app.client.part">
 	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
-
 	<ui:style gss="true">
 	.badge {
 		min-width: 10px;

@@ -454,7 +454,8 @@ public final class Core extends ActionHandler {
 
 					for (Rank rank : ranks) {
 						itemIds.add(rank.itemId);
-						if (!isAdmin && (collector.isGrossing(listType) ? rank.grossingPosition.intValue() : rank.position.intValue()) <= 5) {
+						int ranking = (collector.isGrossing(listType) ? rank.grossingPosition.intValue() : rank.position.intValue());
+						if ((!isAdmin && ranking <= 5) || (!isLoggedIn && ranking > 10)) {
 							rank.downloads = null;
 							rank.revenue = null;
 						}
