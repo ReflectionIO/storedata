@@ -8,25 +8,6 @@
 //
 package io.reflection.app.ingestors;
 
-import io.reflection.app.api.exception.DataAccessException;
-import io.reflection.app.api.shared.datatypes.Pager;
-import io.reflection.app.archivers.ArchiverFactory;
-import io.reflection.app.collectors.Collector;
-import io.reflection.app.collectors.CollectorFactory;
-import io.reflection.app.collectors.StoreCollector;
-import io.reflection.app.datatypes.shared.Country;
-import io.reflection.app.datatypes.shared.FeedFetch;
-import io.reflection.app.datatypes.shared.FeedFetchStatusType;
-import io.reflection.app.datatypes.shared.Item;
-import io.reflection.app.datatypes.shared.Rank;
-import io.reflection.app.datatypes.shared.Store;
-import io.reflection.app.helpers.GoogleCloudClientHelper;
-import io.reflection.app.logging.GaeLevel;
-import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
-import io.reflection.app.service.item.ItemServiceProvider;
-import io.reflection.app.service.rank.RankServiceProvider;
-import io.reflection.app.shared.util.DataTypeHelper;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.channels.Channels;
@@ -53,6 +34,25 @@ import com.google.appengine.tools.cloudstorage.GcsInputChannel;
 import com.google.appengine.tools.cloudstorage.GcsService;
 import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
 
+import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.archivers.ArchiverFactory;
+import io.reflection.app.collectors.Collector;
+import io.reflection.app.collectors.CollectorFactory;
+import io.reflection.app.collectors.StoreCollector;
+import io.reflection.app.datatypes.shared.Country;
+import io.reflection.app.datatypes.shared.FeedFetch;
+import io.reflection.app.datatypes.shared.FeedFetchStatusType;
+import io.reflection.app.datatypes.shared.Item;
+import io.reflection.app.datatypes.shared.Rank;
+import io.reflection.app.datatypes.shared.Store;
+import io.reflection.app.helpers.GoogleCloudClientHelper;
+import io.reflection.app.logging.GaeLevel;
+import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
+import io.reflection.app.service.item.ItemServiceProvider;
+import io.reflection.app.service.rank.RankServiceProvider;
+import io.reflection.app.shared.util.DataTypeHelper;
+
 /**
  * @author billy1380
  *
@@ -73,6 +73,18 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 
 		try {
 			stored = get(itemIds);
+			if (stored == null || stored.isEmpty()) {
+				LOG.log(GaeLevel.DEBUG, "Nothing to ingest");
+				return;
+			}
+
+			LOG.log(GaeLevel.DEBUG, "Filtering feedfetch");
+			stored = filter(stored);
+			if (stored == null || stored.isEmpty()) {
+				LOG.log(GaeLevel.DEBUG, "All feedfetches filtered. Nothing to ingest.");
+				return;
+			}
+
 			grouped = groupDataByDate(stored);
 			combined = combineDataParts(grouped);
 			extractItemRanks(stored, grouped, combined);
@@ -84,6 +96,24 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 			}
 		}
 
+	}
+
+	/**
+	 * @param stored
+	 * @return
+	 */
+	private List<FeedFetch> filter(List<FeedFetch> stored) {
+		final String countries = System.getProperty("ingest.ios.countries");
+
+		ArrayList<FeedFetch> filtered = new ArrayList<FeedFetch>(stored.size());
+
+		for (FeedFetch fetch : stored) {
+			if (countries != null && countries.contains(fetch.country)) {
+				filtered.add(fetch);
+			}
+		}
+
+		return filtered;
 	}
 
 	@SuppressWarnings("unused")
@@ -491,6 +521,7 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 		FeedFetch row = null;
 		for (final Long itemId : itemIds) {
 			row = FeedFetchServiceProvider.provide().getFeedFetch(itemId);
+
 			stored.add(row);
 			i++;
 		}
