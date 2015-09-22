@@ -6,7 +6,7 @@
 	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 
 	<ui:style gss="true">
-	
+
 	</ui:style>
 	<g:HTMLPanel tag="section"
 		styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.horizontalCentreContent} {STYLES_INSTANCE.reflectionMainStyle.accountAccessContent}">

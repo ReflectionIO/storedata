@@ -238,6 +238,14 @@ public class DevHelperServlet extends HttpServlet {
 					// this is just a sanity check. we expect that the query for getting the IDs only gave us feed fetches that exist and
 					// have the ingested status.
 					if (fetch != null) {
+						String countries = System.getProperty("ingest.ios.countries");
+						if (countries != null && !countries.contains(fetch.country)) {
+							if (LOG.isLoggable(GaeLevel.DEBUG)) {
+								LOG.log(GaeLevel.DEBUG, String.format("Feed fetch id %d not being modelled as the country is filtered out. Country: %s, category: %s, type: %s", feedFetchId,
+										fetch.country, fetch.category.id, fetch.type));
+							}
+							return;
+						}
 						if (LOG.isLoggable(GaeLevel.DEBUG)) {
 							LOG.log(GaeLevel.DEBUG, String.format("Enquing feed fetch id %d for modelling. Country: %s, category: %s, type: %s", feedFetchId,
 									fetch.country, fetch.category.id, fetch.type));
@@ -259,6 +267,8 @@ public class DevHelperServlet extends HttpServlet {
 					success = false;
 				}
 			} else if ("modelmulti".equalsIgnoreCase(action)) {
+				String countries = System.getProperty("ingest.ios.countries");
+
 				try {
 					final String[] feedIdsArray = ids.split(",");
 
@@ -266,6 +276,10 @@ public class DevHelperServlet extends HttpServlet {
 						Long feedFetchId = Long.valueOf(feedId);
 
 						final FeedFetch fetch = FeedFetchServiceProvider.provide().getFeedFetch(feedFetchId);
+
+						if (countries != null && !countries.contains(fetch.country)) {
+							continue;
+						}
 
 						// this is just a sanity check. we expect that the query for getting the IDs only gave us feed fetches that exist and
 						// have the ingested status.

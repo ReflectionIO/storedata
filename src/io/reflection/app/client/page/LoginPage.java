@@ -7,17 +7,6 @@
 //
 package io.reflection.app.client.page;
 
-import io.reflection.app.api.core.shared.call.ForgotPasswordRequest;
-import io.reflection.app.api.core.shared.call.ForgotPasswordResponse;
-import io.reflection.app.api.core.shared.call.event.ForgotPasswordEventHandler;
-import io.reflection.app.api.shared.ApiError;
-import io.reflection.app.client.DefaultEventBus;
-import io.reflection.app.client.controller.SessionController;
-import io.reflection.app.client.helper.FormHelper;
-import io.reflection.app.client.part.login.ForgotPasswordForm;
-import io.reflection.app.client.part.login.LoginForm;
-import io.reflection.app.client.res.Styles;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
@@ -32,6 +21,17 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
+
+import io.reflection.app.api.core.shared.call.ForgotPasswordRequest;
+import io.reflection.app.api.core.shared.call.ForgotPasswordResponse;
+import io.reflection.app.api.core.shared.call.event.ForgotPasswordEventHandler;
+import io.reflection.app.api.shared.ApiError;
+import io.reflection.app.client.DefaultEventBus;
+import io.reflection.app.client.controller.SessionController;
+import io.reflection.app.client.helper.FormHelper;
+import io.reflection.app.client.part.login.ForgotPasswordForm;
+import io.reflection.app.client.part.login.LoginForm;
+import io.reflection.app.client.res.Styles;
 
 /**
  * @author billy1380
