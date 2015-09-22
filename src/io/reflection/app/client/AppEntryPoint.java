@@ -7,6 +7,11 @@
 //
 package io.reflection.app.client;
 
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.RootPanel;
+
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.helper.DOMHelper;
 import io.reflection.app.client.helper.ResponsiveDesignHelper;
@@ -16,14 +21,9 @@ import io.reflection.app.client.part.BackToTop;
 import io.reflection.app.client.part.SuperAlertBox;
 import io.reflection.app.client.res.Styles;
 
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.RootPanel;
-
 /**
  * @author billy1380
- * 
+ *
  */
 public class AppEntryPoint extends ErrorHandlingEntryPoint {
 
@@ -31,7 +31,7 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.google.gwt.core.client.EntryPoint#onModuleLoad()
 	 */
 	@Override
@@ -76,6 +76,5 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 		UserAgentHelper.initCustomScrollbars();
 		Document.get().getHead().appendChild(DOMHelper.getJSScriptFromUrl("js/vendor/picturefillFirefox.js"));
 		ResponsiveDesignHelper.initTabsResponsive();
-
 	}
 }

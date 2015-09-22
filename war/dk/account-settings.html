@@ -38,70 +38,46 @@
 	<div class="l-page-container">
 		<div id="main" class="l-main" role="main">
 			<div class="grid-container page-my-account">
-				<div class="grid__column grid__column--one-half">
-					<h1 class="heading-style--heading-three page-title">My Account</h1>
-				</div>
 				<div class="tabs">
 					<ul class="tabs-container default-tabs-transition tabs-to-dropdown">
 						<li class="grid__column grid__column--one-quarter tabs__tab is-active js-tab-select">
 							<div class="tab-animate-active"></div>
 							<a data-content="#tab-content-settings" class="tabs__link">
-								<span>
-									<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path fill=#5A5A68 d="M28.9,16c0-2,1.2-3.6,3.1-4.7c-0.3-1.1-0.8-2.2-1.3-3.2c-2.1,0.5-3.8-0.3-5.2-1.7
-		c-1.4-1.4-1.8-3.1-1.3-5.2c-1-0.5-2.1-1-3.2-1.3c-1.1,1.8-3,3.1-5,3.1c-2,0-4-1.2-5-3.1C9.9,0.3,8.8,0.8,7.8,1.3
-		c0.5,2.1,0.1,3.8-1.3,5.2C5.1,7.9,3.4,8.7,1.3,8.2c-0.5,1-1,2.1-1.3,3.2C1.8,12.4,3.1,14,3.1,16c0,2-1.2,4-3.1,5
-		c0.3,1.1,0.8,2.2,1.3,3.2c2.1-0.5,3.8-0.1,5.2,1.3c1.4,1.4,1.8,3.1,1.3,5.2c1,0.5,2.1,1,3.2,1.3c1.1-1.8,3-3.1,5-3.1
-		c2,0,4,1.2,5,3.1c1.1-0.3,2.2-0.8,3.2-1.3c-0.5-2.1-0.1-3.8,1.3-5.2c1.4-1.4,3.1-2.2,5.2-1.7c0.5-1,1-2.1,1.3-3.2
-		C30.2,19.6,28.9,18,28.9,16z M16,27C9.9,27,5,22.1,5,16S9.9,5,16,5s11,4.9,11,11S22.1,27,16,27z M16,11c-2.8,0-5,2.2-5,5
-		c0,2.8,2.2,5,5,5s5-2.2,5-5C21,13.2,18.8,11,16,11z M16,19c-1.7,0-3-1.3-3-3c0-1.7,1.3-3,3-3s3,1.3,3,3C19,17.7,17.7,19,16,19z"/></svg>
-		 							<span>Account Settings</span>
-		 						</span>
+		 						<span>Account Details</span>
 							</a>
 						</li>
 						<li class="grid__column grid__column--one-quarter tabs__tab js-tab-select">
 							<div class="tab-animate-active"></div>
+							<a data-content="#tab-content-subscription" class="tabs__link">								
+								<span>Manage Subscription</span>
+							</a>
+						</li>
+						<li class="grid__column grid__column--one-quarter tabs__tab is-disabled">
+							<div class="tab-animate-active"></div>
 							<a data-content="#tab-content-linked-accounts" class="tabs__link">
 								<span>
-									<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path fill=#5A5A68 d="M18,12c-0.3-0.2-0.6-0.2-1-0.2c-0.3,0.1-0.6,0.3-0.8,0.6C16,12.7,16,13,16,13.3
-		c0.1,0.3,0.3,0.6,0.6,0.8c1.2,0.8,1.9,2.1,1.9,3.6c0,1.1-0.4,2.2-1.2,3l-5.1,5.1c-0.8,0.8-1.9,1.2-3,1.2C6.9,27,5,25.1,5,22.8
-		c0-1.1,0.4-2.2,1.2-3l2.4-2.4C8.9,17.1,9,16.8,9,16.4c0-0.3-0.1-0.6-0.4-0.9c-0.2-0.2-0.6-0.4-0.9-0.4c-0.3,0-0.6,0.1-0.9,0.4
-		L4.5,18c-1.3,1.3-2,3-2,4.8c0,3.7,3,6.8,6.8,6.8c1.8,0,3.5-0.7,4.8-2l5.1-5.1c1.3-1.3,2-3,2-4.8C21.1,15.4,19.9,13.3,18,12z
-		 M22.8,2.5c-1.8,0-3.5,0.7-4.8,2l-5.1,5.1c-1.3,1.3-2,3-2,4.8c0,2.3,1.2,4.4,3.1,5.7c0.3,0.2,0.6,0.2,1,0.2c0.3-0.1,0.6-0.3,0.8-0.6
-		c0.2-0.3,0.2-0.6,0.2-1c-0.1-0.3-0.3-0.6-0.6-0.8c-1.2-0.8-1.9-2.1-1.9-3.6c0-1.1,0.4-2.2,1.2-3l5.1-5.1c0.8-0.8,1.9-1.2,3-1.2
-		C25.1,5,27,6.9,27,9.2c0,1.1-0.4,2.2-1.2,3l-2.4,2.4c-0.3,0.3-0.4,0.6-0.4,0.9c0,0.3,0.1,0.6,0.4,0.9c0.2,0.2,0.6,0.4,0.9,0.4
-		c0.3,0,0.6-0.1,0.9-0.4l2.4-2.4c1.3-1.3,2-3,2-4.8C29.5,5.5,26.5,2.5,22.8,2.5z"/></svg>
-									<span>Linked Accounts</span></span>
+									<span>Manage Notifications <span class="text-small">coming soon</span></span>
+								</span>
 							</a>
 						</li>
 						<li class="grid__column grid__column--one-quarter tabs__tab is-disabled">
 							<div class="tab-animate-active"></div>
 							<a data-content="#tab-content-users" class="tabs__link">
 								<span>
-									<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path fill=#3B3735 d="M16,2c2.6,0,5.2,0.7,5.2,6.2c0,3.4-2.3,6.2-5.2,6.2s-5.2-2.8-5.2-6.2
-		C10.8,2.7,13.5,2,16,2 M16,0c-4,0-7.2,1.9-7.2,8.2c0,4.5,3.2,8.2,7.2,8.2c4,0,7.2-3.7,7.2-8.2C23.2,1.9,20,0,16,0L16,0z M10.3,19.1
-		c1.7,1.1,3.7,1.6,5.7,1.6c2,0,4-0.6,5.7-1.6l4.7,2.4l3.6,7.8c0,0.1,0,0.3,0,0.4c-0.1,0.1-0.2,0.3-0.2,0.3H2.3
-		c-0.1,0-0.1-0.2-0.2-0.3c0-0.1,0-0.3,0-0.4l3.6-7.8L10.3,19.1 M10.4,16.8c-0.1,0-0.1,0-0.2,0l-5.6,2.9c-0.4,0.2-0.7,0.5-0.8,0.9
-		l-3.6,8c-0.2,0.6-0.2,1.7,0.1,2.2C0.7,31.2,1.2,32,1.8,32h28.3c0.6,0,1.2-0.8,1.5-1.3c0.3-0.5,0.4-1.6,0.1-2.2l-3.6-8
-		c-0.2-0.4-0.5-0.7-0.8-0.9l-5.6-2.9c-0.1,0-0.1,0-0.2,0c-0.1,0-0.2,0-0.2,0.1c-1.6,1.2-3.5,1.8-5.4,1.8c-1.9,0-3.8-0.6-5.4-1.8
-		C10.5,16.8,10.5,16.8,10.4,16.8L10.4,16.8z"/></svg>
-									<span>Users <span class="text-small">coming soon</span></span></span>
+									<span>Users <span class="text-small">coming soon</span></span>
+								</span>
 							</a>
-						</li>
-						<li class="grid__column grid__column--one-quarter tabs__tab is-disabled">
-							<div class="tab-animate-active"></div>
-							<a data-content="#tab-content-notifications" class="tabs__link">
-								<span>
-									<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path fill=#5A5A68 d="M12.1,29h7.8c-0.4,1.1-2,3-3.9,3S12.5,30.1,12.1,29z M30,24v3H2v-3l3-2v-9
-		c0-5.7,3.7-9.3,8-10.4c0,0,0-0.1,0-0.1C13,1.1,14.3,0,16,0s3,1.1,3,2.5c0,0,0,0.1,0,0.1c1.7,0.4,3.3,1.2,4.6,2.3
-		c2.3,2,3.5,4.7,3.5,8.1v9v0L30,24z M7,13v11h18V13c0-2.7-1-5-2.8-6.5C20.6,5,18.4,4.3,16,4.3C11.7,4.3,7,7,7,13z"/></svg>
-									<span>Notifications <span class="text-small">coming soon</span></span></span>
-							</a>
-						</li>
+						</li>						
 					</ul>
 				</div>
 				<div class="grid__column grid__column--full-width filters-container">
-					<p>You currently have <strong>4</strong> app store accounts linked with Reflection.</p>
-					<button class="ref-button--function-small js-demo-popup">Link Another Account</button>
+					<p class="manage-subscription-message">
+						<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path fill=#727686 d="M17.1,0.6L0,5.5v18.2L14.9,32L32,25.7V7.7L17.1,0.6z M29.3,8.6l-5.8,2L10.7,4.6l6.3-1.8
+	L29.3,8.6z M9.2,5l12.9,6.1L15,13.6L2,7.2V7L9.2,5z M2,8.3l12.5,6.1v15.1L2,22.6V8.3z M15.5,29.7V14.5L30,9.4v14.9L15.5,29.7z"/></svg>
+						<span>Manage and upgrade your account subscription</span>
+						<a href="#">Cancel Subscription :(</a> 
+						<a href="#">Edit payment details</a>
+					</p>
 				</div>
 				<ul class="tabs__content-container default-tabs-transition tabs-to-dropdown--content">
 					<li id="tab-content-settings" class="tabs__content tabs__content--is-showing">
@@ -180,207 +156,85 @@
 							</div>
 						</article>
 					</li>
-					<li id="tab-content-linked-accounts" class="tabs__content">
-						<article class="tabs__content-area">
+					<li id="tab-content-subscription" class="tabs__content">
+						<article class="tabs__content-area pricing-options">
+							<div class="grid__column grid__column--one-third">
+								<section class="pricing-option pricing-option--standard pricing-option--current">
+									<header class="pricing-option--header">
+										<h2 class="pricing-name">Developer Standard</h2>
+										<div class="pricing-price-container">
+											<sup class="pricing-sup">&pound;</sup>
+											<span class="pricing-price">0</span>
+										</div>
+										<span class="per-month">per month</span>
+										<p>Link your app store account and get free access to store data &amp; analytics</p>
+									</header>
+									<ul class="pricing-details">
+										<li>Live Daily Top 200 Global Rank, Download &amp; Grossing Data</li>
+										<li>Analytics for Your Own Apps</li>
+										<li>Live Industry News</li>
+									</ul>
+									<button class="ref-button--full-width pricing-sign-up-button ref-button--positive">Current Subscription</button>
+								</section>
+							</div>
+							<div class="grid__column grid__column--one-third">
+								<section class="pricing-option pricing-option--premium">
+									<header class="pricing-option--header">
+										<h2 class="pricing-name">Developer Premium</h2>
+										<div class="pricing-price-container">
+											<sup class="pricing-sup">&pound;</sup>
+											<span class="pricing-price">99</span>
+											<sup class="pricing-sup">.99</sup>
+										</div>
+										<span class="per-month">per month</span>
+										<p>Additional powerful reporting tools and expanded features</p>
+									</header>
+									<ul class="pricing-details">
+										<li>Historic Revenue &amp; Download Data</li>
+										<li>Competitive &amp; Market Benchmarking Tools</li>
+										<li>Store and Market Trends</li>
+										<li>Business Planning Tools</li>
+										<li class="pricing-details-with-info">
+											<span>Marketing Planning Tools</span>
+											<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding whats-this-tooltip-icon-static" data-tooltip="Coming soon"><span>What's this?</span></a>
+										</li>
+									</ul>
+									<button class="ref-button--full-width pricing-sign-up-button js-demo-popup--premium">Upgrade Now</button>
+								</section>
+								<div class="pricing-access-info pricing-access-info--highlighted">
+									<div class="vertical-centre-content">
+										<p>Upgrade now and get a FREE 1 month trial of Developer Premium</p>
+									</div>
+								</div>
+							</div>
+							<div class="grid__column grid__column--one-third">
+								<section class="pricing-option pricing-option--business">
+									<header class="pricing-option--header">
+										<h2 class="pricing-name">Business</h2>
+										<div class="pricing-price-container">
+											<sup class="pricing-sup">&pound;</sup>
+											<span class="pricing-price">699</span>
+											<sup class="pricing-sup">.99</sup>
+										</div>
+										<span class="per-month">per month</span>
+										<p>No app store account? No problem. Investors, Advertisers, Marketers</p>
+									</header>
+									<ul class="pricing-details">
+										<li>Identify and Act on Market and Consumer Trends</li>
+										<li>Discover Investment Targets and Market Partners</li>
+									</ul>
+									<button class="ref-button--link pricing-sign-up-button js-demo-popup--register">Register Your Interest</button>
+								</section>
+								<div class="pricing-access-info">
+									<div class="vertical-centre-content">
+										<p>Coming soon, register your interest now to get access on a first-come, first-served basis</p>
+									</div>
+								</div>
+							</div>
 							<div class="grid__row">
-
-								<table class="table-data table-linked-accounts" __gwtcellbasedwidgetimpldispatchingblur="true" __gwtcellbasedwidgetimpldispatchingfocus="true" cellspacing="0">
-									<thead>
-										<tr __gwt_header_row="0">
-											<th colspan="1" class="HJF4TJC-m-h HJF4TJC-m-f can-be-sorted is-ascending" __gwt_column="column-gwt-uid-299" __gwt_header="header-gwt-uid-300">Account Name <svg version=1.1 x=0px y=0px viewBox="0 0 7 10" enable-background="new 0 0 7 10" xml:space=preserve class="sort-svg"><path class=ascending d="M0.4,4.1h6.1c0.1,0,0.2,0,0.3-0.1C7,3.9,7,3.8,7,3.7c0-0.1,0-0.2-0.1-0.3L3.8,0.1
-	C3.7,0,3.6,0,3.5,0C3.4,0,3.3,0,3.2,0.1L0.1,3.3C0,3.4,0,3.5,0,3.7C0,3.8,0,3.9,0.1,4C0.2,4.1,0.3,4.1,0.4,4.1z"/><path class=descending d="M6.6,5.9H0.4c-0.1,0-0.2,0-0.3,0.1C0,6.1,0,6.2,0,6.3c0,0.1,0,0.2,0.1,0.3l3.1,3.2
-	C3.3,10,3.4,10,3.5,10c0.1,0,0.2,0,0.3-0.1l3.1-3.2C7,6.6,7,6.5,7,6.3C7,6.2,7,6.1,6.9,6C6.8,5.9,6.7,5.9,6.6,5.9z"/></svg></th>
-											<th colspan="1" class="HJF4TJC-m-h can-be-sorted" __gwt_column="column-gwt-uid-301" __gwt_header="header-gwt-uid-302">Store <svg version=1.1 x=0px y=0px viewBox="0 0 7 10" enable-background="new 0 0 7 10" xml:space=preserve class="sort-svg"><path class=ascending d="M0.4,4.1h6.1c0.1,0,0.2,0,0.3-0.1C7,3.9,7,3.8,7,3.7c0-0.1,0-0.2-0.1-0.3L3.8,0.1
-	C3.7,0,3.6,0,3.5,0C3.4,0,3.3,0,3.2,0.1L0.1,3.3C0,3.4,0,3.5,0,3.7C0,3.8,0,3.9,0.1,4C0.2,4.1,0.3,4.1,0.4,4.1z"/><path class=descending d="M6.6,5.9H0.4c-0.1,0-0.2,0-0.3,0.1C0,6.1,0,6.2,0,6.3c0,0.1,0,0.2,0.1,0.3l3.1,3.2
-	C3.3,10,3.4,10,3.5,10c0.1,0,0.2,0,0.3-0.1l3.1-3.2C7,6.6,7,6.5,7,6.3C7,6.2,7,6.1,6.9,6C6.8,5.9,6.7,5.9,6.6,5.9z"/></svg></th>
-											<th colspan="1" class="HJF4TJC-m-h can-be-sorted table-heading--date-added" __gwt_column="column-gwt-uid-303" __gwt_header="header-gwt-uid-304">Date Added <svg version=1.1 x=0px y=0px viewBox="0 0 7 10" enable-background="new 0 0 7 10" xml:space=preserve class="sort-svg"><path class=ascending d="M0.4,4.1h6.1c0.1,0,0.2,0,0.3-0.1C7,3.9,7,3.8,7,3.7c0-0.1,0-0.2-0.1-0.3L3.8,0.1
-	C3.7,0,3.6,0,3.5,0C3.4,0,3.3,0,3.2,0.1L0.1,3.3C0,3.4,0,3.5,0,3.7C0,3.8,0,3.9,0.1,4C0.2,4.1,0.3,4.1,0.4,4.1z"/><path class=descending d="M6.6,5.9H0.4c-0.1,0-0.2,0-0.3,0.1C0,6.1,0,6.2,0,6.3c0,0.1,0,0.2,0.1,0.3l3.1,3.2
-	C3.3,10,3.4,10,3.5,10c0.1,0,0.2,0,0.3-0.1l3.1-3.2C7,6.6,7,6.5,7,6.3C7,6.2,7,6.1,6.9,6C6.8,5.9,6.7,5.9,6.6,5.9z"/></svg></th>
-											<th colspan="2" class="HJF4TJC-m-h HJF4TJC-m-p" __gwt_column="column-gwt-uid-305"></th>
-										</tr>
-									</thead>
-									<colgroup>
-										<col class="table-column--account-name"></col>
-										<col class="table-column--store"></col>
-										<col class="table-column--date-added"></col>
-										<col class="table-column--edit-account"></col>
-										<col class="table-column--delete-account"></col>
-									</colgroup>
-									<tbody style="">
-										<tr __gwt_row="0" __gwt_subrow="0" class="HJF4TJC-m-b HJF4TJC-m-i">
-											<td class="HJF4TJC-m-a HJF4TJC-m-c HJF4TJC-m-d HJF4TJC-m-j linked-account-name">
-												<div tabindex="0" style="outline-style:none;" __gwt_cell="cell-gwt-uid-306">Account Name</div>
-											</td>
-											<td class="HJF4TJC-m-a HJF4TJC-m-c HJF4TJC-m-j linked-account-store">
-												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-307"><span class="ref-icon-before ref-icon-before--apple">iTunes Connect</div>
-											</td>
-											<td class="HJF4TJC-m-a HJF4TJC-m-c HJF4TJC-m-j linked-account-date">
-												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-308">30 Jan 2015</div>
-											</td>
-											<td class="HJF4TJC-m-a HJF4TJC-m-c HJF4TJC-m-j linked-account-edit">
-												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-309">
-													<a href="#!users/linkedaccounts/38/edit/120" class="ref-button--function-small">Edit</a>
-												</div>
-											</td>
-											<td class="HJF4TJC-m-a HJF4TJC-m-c HJF4TJC-m-n HJF4TJC-m-j linked-account-delete">
-												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-310">
-													<a href="#!users/linkedaccounts/38/delete/120" class="js-demo-popup--confirm ref-button--link warning-text">Delete</a>
-												</div>
-											</td>
-										</tr>
-										<tr>
-											<td class="update-linked-accounts-container" colspan="5">
-												<h2 class="heading-style--heading-five">Edit Details</h2>
-												<form class="forms--mid-theme">
-													<div class="form-field">						
-														<input type="text" name="accountname" id="accountname" autocomplete="off" value="janmolby@electronicarts.com" />
-														<label for="accountname">Account Name</label>
-													</div>
-													<div class="form-field">						
-														<input type="password" name="itunesconnectpassword" id="itunesconnectpassword" autocomplete="off" value="password" />
-														<label for="itunesconnectpassword">iTunes Connect Password</label>
-													</div>
-													<div class="form-field">						
-														<input type="text" name="vendorid" id="vendorid" autocomplete="off" value="83928392" />
-														<label for="vendorid">Vendor ID</label>
-														<a href="#" target="_blank" class="form-field-help ref-icon-after ref-icon-after--question"><span>What's this?</span></a>
-													</div>
-													<input type="submit" class="ref-button--full-width" value="Save Changes" />
-													<button class="ref-button--link">Delete this account</button>
-												</form>
-											</td>
-										</tr>
-										<tr __gwt_row="1" __gwt_subrow="0" class="HJF4TJC-m-r">
-											<td class="HJF4TJC-m-a HJF4TJC-m-s HJF4TJC-m-d linked-account-name">
-												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-306">martinollivere@gmail.com</div>
-											</td>
-											<td class="HJF4TJC-m-a HJF4TJC-m-s linked-account-store">
-												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-307"><span class="ref-icon-before ref-icon-before--apple">iTunes Connect</span></div>
-											</td>
-											<td class="HJF4TJC-m-a HJF4TJC-m-s linked-account-date">
-												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-308">17 Sep 2014</div>
-											</td>
-											<td class="HJF4TJC-m-a HJF4TJC-m-s linked-account-edit">
-												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-309">
-													<a href="#!users/linkedaccounts/38/edit/4" class="ref-button--function-small">Edit</a>
-												</div>
-											</td>
-											<td class="HJF4TJC-m-a HJF4TJC-m-s HJF4TJC-m-n linked-account-delete">
-												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-310">
-													<a href="#!users/linkedaccounts/38/delete/4" class="js-demo-popup--confirm ref-button--link warning-text">Delete</a>
-												</div>
-											</td>
-										</tr>
-										<tr>
-											<td class="update-linked-accounts-container" colspan="5">
-												<h2 class="heading-style--heading-five">Edit Details</h2>
-												<form>
-													<div class="form-field">						
-														<input type="text" name="accountname2" id="accountname2" autocomplete="off" value="janmolby@electronicarts.com" />
-														<label for="accountname2">Account Name</label>
-													</div>
-													<div class="form-field">						
-														<input type="password" name="itunesconnectpassword2" id="itunesconnectpassword2" autocomplete="off" value="password" />
-														<label for="itunesconnectpassword2">iTunes Connect Password</label>
-													</div>
-													<div class="form-field">						
-														<input type="text" name="vendorid2" id="vendorid2" autocomplete="off" value="83928392" />
-														<label for="vendorid2">Vendor ID</label>
-														<a href="#" target="_blank" class="form-field-help ref-icon-after ref-icon-after--question"><span>What's this?</span></a>
-													</div>
-													<input type="submit" class="ref-button--full-width" value="Save Changes" />
-													<button class="ref-button--link">Delete this account</button>
-												</form>
-											</td>
-										</tr>
-										<tr __gwt_row="0" __gwt_subrow="0" class="HJF4TJC-m-b HJF4TJC-m-i">
-											<td class="HJF4TJC-m-a HJF4TJC-m-c HJF4TJC-m-d HJF4TJC-m-j linked-account-name">
-												<div tabindex="0" style="outline-style:none;" __gwt_cell="cell-gwt-uid-306">Account Name</div>
-											</td>
-											<td class="HJF4TJC-m-a HJF4TJC-m-c HJF4TJC-m-j linked-account-store">
-												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-307"><span class="ref-icon-before ref-icon-before--apple">iTunes Connect</span></div>
-											</td>
-											<td class="HJF4TJC-m-a HJF4TJC-m-c HJF4TJC-m-j linked-account-date">
-												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-308">30 Jan 2015</div>
-											</td>
-											<td class="HJF4TJC-m-a HJF4TJC-m-c HJF4TJC-m-j linked-account-edit">
-												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-309">
-													<a href="#!users/linkedaccounts/38/edit/120" class="ref-button--function-small">Edit</a>
-												</div>
-											</td>
-											<td class="HJF4TJC-m-a HJF4TJC-m-c HJF4TJC-m-n HJF4TJC-m-j linked-account-delete">
-												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-310">
-													<a href="#!users/linkedaccounts/38/delete/120" class="js-demo-popup--confirm ref-button--link warning-text">Delete</a>
-												</div>
-											</td>
-										</tr>
-										<tr>
-											<td class="update-linked-accounts-container" colspan="5">
-												<h2 class="heading-style--heading-five">Edit Details</h2>
-												<form class="forms--mid-theme">
-													<div class="form-field">						
-														<input type="text" name="accountname3" id="accountname3" autocomplete="off" value="janmolby@electronicarts.com" />
-														<label for="accountname3">Account Name</label>
-													</div>
-													<div class="form-field">						
-														<input type="password" name="itunesconnectpassword3" id="itunesconnectpassword3" autocomplete="off" value="password" />
-														<label for="itunesconnectpassword3">iTunes Connect Password</label>
-													</div>
-													<div class="form-field">						
-														<input type="text" name="vendorid3" id="vendorid3" autocomplete="off" value="83928392" />
-														<label for="vendorid3">Vendor ID</label>
-														<a href="#" target="_blank" class="form-field-help ref-icon-after ref-icon-after--question"><span>What's this?</span></a>
-													</div>
-													<input type="submit" class="ref-button--full-width" value="Save Changes" />
-													<button class="ref-button--link">Delete this account</button>
-												</form>
-											</td>
-										</tr>
-										<tr __gwt_row="1" __gwt_subrow="0" class="HJF4TJC-m-r">
-											<td class="HJF4TJC-m-a HJF4TJC-m-s HJF4TJC-m-d linked-account-name">
-												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-306">martinollivere@gmail.com</div>
-											</td>
-											<td class="HJF4TJC-m-a HJF4TJC-m-s linked-account-store">
-												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-307"><span class="ref-icon-before ref-icon-before--apple">iTunes Connect</span></div>
-											</td>
-											<td class="HJF4TJC-m-a HJF4TJC-m-s linked-account-date">
-												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-308">17 Sep 2014</div>
-											</td>
-											<td class="HJF4TJC-m-a HJF4TJC-m-s linked-account-edit">
-												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-309">
-													<a href="#!users/linkedaccounts/38/edit/4" class="ref-button--function-small">Edit</a>
-												</div>
-											</td>
-											<td class="HJF4TJC-m-a HJF4TJC-m-s HJF4TJC-m-n linked-account-delete">
-												<div style="outline-style:none;" __gwt_cell="cell-gwt-uid-310">
-													<a href="#!users/linkedaccounts/38/delete/4" class="js-demo-popup--confirm ref-button--link warning-text">Delete</a>
-												</div>
-											</td>
-										</tr>
-										<tr>
-											<td class="update-linked-accounts-container" colspan="5">
-												<h2 class="heading-style--heading-five">Edit Details</h2>
-												<form>
-													<div class="form-field">						
-														<input type="text" name="accountname4" id="accountname4" autocomplete="off" value="janmolby@electronicarts.com" />
-														<label for="accountname4">Account Name</label>
-													</div>
-													<div class="form-field">						
-														<input type="password" name="itunesconnectpassword4" id="itunesconnectpassword4" autocomplete="off" value="password" />
-														<label for="itunesconnectpassword4">iTunes Connect Password</label>
-													</div>
-													<div class="form-field">						
-														<input type="text" name="vendorid4" id="vendorid4" autocomplete="off" value="83928392" />
-														<label for="vendorid4">Vendor ID</label>
-														<a href="#" target="_blank" class="form-field-help ref-icon-after ref-icon-after--question"><span>What's this?</span></a>
-													</div>
-													<input type="submit" class="ref-button--full-width" value="Save Changes" />
-													<button class="ref-button--link">Delete this account</button>
-												</form>
-											</td>
-										</tr>
-									</tbody>
-								</table>
+								<footer class="grid__column grid__column--full-width subscriptions-footer-container">
+									<p>Want to chat about upgrading? <a href="contact.html">Contact us</a></p>
+								</footer>
 							</div>
 						</article>
 					</li>
@@ -441,6 +295,125 @@
 		</div>
 	</div>
 
+	<div class="page-overlay page-overlay--register">
+		<div class="page-popup">
+			<div class="popup-content">
+				<div class="form-submitted-success">
+					<div class="illustration-container">
+						<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 71 43.6" enable-background="new 0 0 71 43.6" xml:space="preserve" class="email-post-animation"><g><polygon fill="#D2D2DB" points="31.6,28.6 31.6,26 41.6,22.2 41.6,24.8 	"></polygon><g><polygon fill="#F2F2F5" points="31.2,27.7 31.2,41.6 42,37.5 42,23.3 39.4,24.2 39.4,24.9 		"></polygon><polygon fill="#A0A0A9" points="43,22.2 41,22.8 41,36.9 31.2,40.6 31.2,42.8 43,38.3 		"></polygon><polygon fill="#A0A0A9" points="40.6,23.8 39.4,24.2 39.4,24.9 31.3,27.7 31.3,29 40.6,25.8 		"></polygon></g></g><path fill="none" d="M36.4,17c-3.1,0-6.4,2.6-6.4,7.5c0,4.2,0,13.1,0,16.6l1.6-0.6V28.9l-1.2,0.4v-3.9L40.6,22v2l0.4-0.1v-1.3
+								C41,18.4,38.6,17,36.4,17z"></path><polyline fill="none" points="39.4,24.4 39.4,23.7 31.6,26.2 31.6,27 "></polyline><g class="email-success-envelope"><g><polygon fill="#F2F2F5" points="62.1,37.7 50.6,33.8 58,31.1 69.2,34.3 		"></polygon><path fill="#A0A0A9" d="M62.1,38.4l-13.5-4.6l9.4-3.4L71,34.1L62.1,38.4z M52.6,33.8L62,37l5.3-2.6L58,31.8L52.6,33.8z"></path></g><polygon fill="#A0A0A9" points="69.2,34.7 58.1,34.1 57.6,31.1 58.4,31 58.8,33.3 69.2,33.8 	"></polygon></g><g><path fill="#F2F2F5" d="M39.5,24.2l2.4-0.9l0-2.1c0,0-0.1-4.2-4-5.9c-2.5-1-25.8-6.8-27.7-7.2C4.5,7,1.2,12.8,1,15.1
+									c-0.2,2.4-0.2,17.8-0.2,17.8L29,42.6l2.6-1L31.5,27l0-0.9l8-2.7L39.5,24.2z"></path><path fill-rule="evenodd" clip-rule="evenodd" fill="#A0A0A9" d="M11.6,20.8c0,0.3-0.2,0.5-0.5,0.4l-5.7-1.5
+									c-0.3-0.1-0.5-0.4-0.5-0.6l0,0c0-0.3,0.2-0.5,0.5-0.4l5.7,1.5C11.3,20.3,11.6,20.5,11.6,20.8L11.6,20.8z"></path><path fill-rule="evenodd" clip-rule="evenodd" fill="#A0A0A9" d="M13.3,23c0,0.3-0.2,0.5-0.5,0.4l-7.5-1.9
+									c-0.3-0.1-0.5-0.4-0.5-0.6l0,0c0-0.3,0.2-0.5,0.5-0.4l7.5,1.9C13.1,22.4,13.3,22.7,13.3,23L13.3,23z"></path><path fill-rule="evenodd" clip-rule="evenodd" fill="#A0A0A9" d="M9.8,25.8c0,0.3-0.2,0.5-0.5,0.4l-4-1.1C5,25,4.7,24.7,4.7,24.5
+									l0,0C4.7,24.2,5,24,5.3,24l4,1.1C9.5,25.2,9.8,25.5,9.8,25.8L9.8,25.8z"></path><path fill-rule="evenodd" clip-rule="evenodd" fill="#A0A0A9" d="M11.6,28c0,0.3-0.2,0.5-0.5,0.4l-5.7-1.5
+									c-0.3-0.1-0.5-0.4-0.5-0.6l0,0c0-0.3,0.2-0.5,0.5-0.4l5.7,1.5C11.3,27.4,11.6,27.7,11.6,28L11.6,28z"></path><path fill-rule="evenodd" clip-rule="evenodd" fill="#A0A0A9" d="M11.6,24.4c0,0.3-0.2,0.5-0.5,0.4l-5.7-1.5
+									C5,23.3,4.7,23,4.7,22.7l0,0c0-0.3,0.2-0.5,0.5-0.4l5.7,1.5C11.3,23.8,11.6,24.1,11.6,24.4L11.6,24.4z"></path><path fill-rule="evenodd" clip-rule="evenodd" fill="#A0A0A9" d="M13.3,30.2c0,0.3-0.2,0.5-0.5,0.4l-7.5-1.9
+									C5,28.6,4.7,28.3,4.7,28l0,0c0-0.3,0.2-0.5,0.5-0.4l7.5,1.9C13.1,29.6,13.3,29.9,13.3,30.2L13.3,30.2z"></path><path fill="none" d="M34.7,15.2C29.4,13.9,12,9.5,11.8,9.5C10.9,9.3,10,9.2,9.2,9.2C2.5,9.2,2,15.8,2,15.8v16.4l26,8.9
+									c0-3.4,0-12.4,0-16.6C28,19.4,31.2,16,34.7,15.2z"></path><path fill="#A0A0A9" d="M30,41.1c0-3.5,0-12.3,0-16.6c0-4.9,3.3-7.5,6.4-7.5c2.2,0,4.6,1.4,4.6,5.5v1.3l2-0.7v-0.7
+									c0-6.7-3.2-8-6.7-9c-3.3-0.9-23.8-6-24.1-6c-1-0.2-2-0.3-3-0.3C1.6,7.2,0,14.1,0,15.8v17.8l29.1,9.9l2.5-1v-2.1L30,41.1z M28,41.1
+									L2,32.2V15.8c0-0.1,0.5-6.6,7.2-6.6c0.8,0,1.7,0.1,2.5,0.3c0.2,0,17.7,4.4,22.9,5.7C31.2,16,28,19.4,28,24.5
+									C28,28.8,28,37.7,28,41.1z"></path></g><polygon fill="#A0A0A9" points="31.6,27 31.6,26.2 39.4,23.7 39.4,24.4 40.6,24 40.6,22 30.4,25.4 30.4,29.3 31.6,28.9 31.6,27.6 
+								"></polygon><g><g class="email-success-handle"><path fill="#F2F2F5" d="M21.9,21.3L21.7,6.1c0,0-2.7-0.7-4.1-1c-1.4-0.3-1.6-3.2-0.3-3.4C18.7,1.5,24,0.8,24,0.8l0.3,23.1"></path><path fill="#A0A0A9" d="M23.5,23.9L23.2,1.7l-5.8,0.7c-0.1,0-0.2,0.2-0.2,0.6c0,0.6,0.2,1.2,0.6,1.3c1.4,0.3,4.1,1,4.2,1l0.5,0.1
+											l0.2,15.8l-1.5,0L21,6.7c-0.9-0.2-2.5-0.7-3.5-0.9c-1.2-0.3-1.8-1.6-1.8-2.8c0.1-1.1,0.7-2,1.6-2.1L24.7,0L25,23.9L23.5,23.9z"></path><path fill="#A0A0A9" d="M21.9,28.7c-1.7,0-3.2-1.4-3.6-3.2c-0.2-1-0.1-2,0.4-2.9c0.5-0.9,1.3-1.5,2.2-1.7c1.8-0.4,3.8,1.1,4.2,3.2
+											c0.2,1,0.1,2-0.4,2.9c-0.5,0.9-1.3,1.5-2.2,1.7C22.3,28.7,22.1,28.7,21.9,28.7z M21.5,22.3c-0.1,0-0.2,0-0.3,0
+											c-0.5,0.1-0.9,0.4-1.2,0.9c-0.3,0.5-0.4,1.2-0.2,1.9c0.3,1.3,1.4,2.2,2.4,2c0.5-0.1,0.9-0.4,1.2-0.9c0.3-0.5,0.4-1.2,0.2-1.9
+											C23.4,23.2,22.5,22.3,21.5,22.3z"></path></g></g></svg>
+					</div>
+					<h2 class="heading-style--heading-five">We've Received Your Request!</h2>
+					<p>You're now on the growing waiting list. We'll be in touch as soon as we have an update about the availability of the Business Account.</p>
+					<button class="ref-button--link-large js-close">Continue Browsing</button>
+				</div>
+				<div class="register-form-container">
+					<h2 class="heading-style--heading-five js-fade-content">Don't Miss Out, Register Now</h2>
+					<p class="js-fade-content">Non Developer accounts are coming soon and will be distributed on a first come, first served basis.
+					Get your name on the waiting list to enure you don’t miss out and we’ll notify you when they’re ready.</p>
+					<form class="forms--mid-theme">
+						<div class="form-field js-rotate-content">						
+							<input type="text" name="firstName" id="firstName" autocomplete="off"/>
+							<label for="firstName">First Name</label>
+						</div>
+						<div class="form-field js-rotate-content">						
+							<input type="text" name="lastName" id="lastName" autocomplete="off"/>
+							<label for="lastName">Last Name</label>
+						</div>
+						<div class="form-field js-rotate-content">						
+							<input type="text" name="company" id="company" autocomplete="off"/>
+							<label for="company">Company</label>
+						</div>
+						<div class="form-field js-rotate-content">						
+							<input type="email" name="email" id="email" autocomplete="off"/>
+							<label for="email">Email</label>
+						</div>
+						<button class="ref-button--full-width js-submit js-rotate-content">Submit</button>
+					</form>
+					<a href="#" class="popup-close"><span class="ref-icon-after ref-icon-after--close">Close</span></a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="page-overlay page-overlay--premium"> 
+		<div class="page-popup">
+			<div class="popup-content">
+				<div class="start-trial-intro">
+					<h2 class="heading-style--heading-five">Have a Month free on Us</h2>
+					<p>No extra details required, just confirm below and we’ll instantly upgrade your account to Developer Premium for a month absolutely free.</p>
+					<h3 class="heading-style--heading-six">The Benefits</h3>
+					<ul class="checklist">
+						<li>Historic Revenue &amp; Download Data</li>
+						<li>Competitive &amp; Market Benchmarking Tools</li>
+						<li>Store and Market Trends</li>
+						<li>Business Planning Tools</li>
+					</ul>
+					<div class="buttons-container">
+						<button class="ref-button--full-width js-submit">Start Free Trial</button>
+						<button class="ref-button--link js-close">Not Right Now</button>
+					</div>
+				</div>
+				<div class="start-trial-confirmation">
+					<div class="svg-container">
+						<svg version=1.1 x=0px y=0px viewBox="0 0 148.5 121.8" enable-background="new 0 0 148.5 121.8" xml:space=preserve><path class=shield fill=#81879D d="M73.5,106.4l-0.4-0.1c-4.1-0.9-12-8.2-14.2-10.6C46.1,82.1,40.5,65.8,40.6,43.1l0-0.7L73,29.3
+	l32.6,13.1l0,0.7c0.4,23.5-5.5,39.3-20.3,54.9c-2.1,2.2-4.8,3.9-7.5,5.6c-1.3,0.8-2.7,1.7-4,2.6L73.5,106.4z M42.6,43.7
+	C42.6,65.6,48,81.2,60.3,94.4c2.3,2.5,9.2,8.8,12.8,9.9c1.2-0.9,2.5-1.7,3.7-2.4c2.5-1.6,5.1-3.3,7.1-5.3
+	c14.3-14.9,20-30.3,19.8-52.8L73,31.4L42.6,43.7z M72.9,102.6l-0.3-0.1c-2.9-1.5-8.4-6.1-11.2-9.1C49.6,80.7,44.3,65.8,44.1,45.1
+	l0-0.3l0.3-0.1L73,33l29.2,11.7v0.3c0,21.4-5.6,36-19.4,50.4c-1.8,1.9-4.2,3.4-6.8,5.1c-1,0.6-1.9,1.2-2.9,1.9L72.9,102.6z
+	 M45.1,45.4c0.2,20.3,5.5,34.9,17,47.2c2.7,2.9,7.8,7.2,10.7,8.8c0.9-0.6,1.8-1.1,2.6-1.7c2.5-1.6,4.9-3.1,6.6-4.9
+	c13.5-14.1,19-28.4,19.1-49.4L73,34.1L45.1,45.4z M70.3,85h-8V46.7h13.1c2.1,0,4,0.2,5.8,0.6c1.8,0.4,3.4,1.1,4.7,2
+	c1.3,1,2.4,2.2,3.2,3.8c0.8,1.5,1.1,3.5,1.1,5.7c0,2.1-0.4,4-1.1,5.6c-0.8,1.6-1.8,3-3.2,4c-1.3,1.1-2.9,1.8-4.7,2.3
+	c-1.8,0.5-3.7,0.7-5.7,0.7h-5.1V85z M63.7,83.5h5V70h6.6c1.9,0,3.7-0.2,5.4-0.7c1.6-0.4,3-1.1,4.2-2.1c1.2-0.9,2.1-2.1,2.7-3.5
+	c0.7-1.4,1-3.1,1-5c0-2-0.3-3.7-1-5c-0.7-1.3-1.6-2.4-2.7-3.2c-1.1-0.8-2.5-1.4-4.1-1.8c-1.7-0.4-3.5-0.5-5.4-0.5H63.7V83.5z
+	 M74.9,66.3h-6.1V51.9h6.1c2.9,0,5,0.5,6.5,1.4c1.6,1,2.4,2.9,2.4,5.4C83.7,62.2,82.2,66.3,74.9,66.3z M70.3,64.8h4.6
+	c5,0,7.4-1.9,7.4-6c0-2.1-0.6-3.4-1.7-4.2c-1.2-0.8-3.1-1.2-5.7-1.2h-4.6V64.8z"/><g class=curtain-left><path fill-rule=evenodd clip-rule=evenodd fill=#EAEAEA d="M70.7,20.2v90.2c-6.7,0-9.7-0.7-14.8-0.7s-6.7,4.4-11,2.4
+		c-4.3-2-4.5-3.2-7.6-3.1c-2.5,0-8.2,2.3-13.8,2.2c-5.6-0.1-12.3-3.4-12.3-3.4V20.2H70.7z"/><path fill=#81879D d="M10.1,19v89.6l0.6,0.3c0.3,0.1,7,3.4,12.7,3.5c3.6,0.1,7.1-0.8,10-1.5c1.6-0.4,3-0.7,3.8-0.7
+		c1.6,0,2.2,0.3,3.5,1.1c0.8,0.5,1.9,1.1,3.5,1.9c1,0.4,1.8,0.6,2.6,0.6c1.6,0,2.9-0.7,4.1-1.4c1.4-0.7,2.8-1.5,4.8-1.5
+		c2.4,0,4.3,0.2,6.3,0.3c2.4,0.2,4.9,0.4,8.5,0.4h1.2V19H10.1z M69.6,109.3c-2.9,0-5.1-0.2-7.2-0.4c-2.1-0.2-4-0.3-6.5-0.3
+		c-0.2,0-0.4,0-0.6,0l-1.8-29.2l-0.5,0l0.9,29.3c-1.5,0.3-2.8,1-3.8,1.6c-1.7,0.9-2.8,1.5-4.7,0.7c-1.5-0.7-2.5-1.3-3.3-1.8
+		c-1.4-0.8-2.4-1.5-4.6-1.5c-0.1,0-0.1,0-0.2,0c-0.3,0-0.6,0-0.9,0.1c0-2.5,0.1-11.5,0.3-20.4c0.1-5.3,0.1-10.6,0.1-14.5
+		c0-2,0-3.6,0-4.8c0-0.6,0-1,0-1.3c0-0.3,0-0.5,0-0.5l-0.5,0c0,0,0,0.2,0,0.5c0,0.3,0,0.8,0,1.3c0,1.1-0.1,2.8-0.1,4.8
+		c-0.1,4-0.4,9.2-0.6,14.5c-0.5,9.6-1,19.2-1,20.8c-0.4,0.1-0.9,0.2-1.4,0.3c-2.7,0.7-6.1,1.5-9.4,1.4c-4.3-0.1-9.3-2.2-11.1-2.9
+		V21.4h13.8L26.9,37h0.4L28,21.4h23l-0.4,0.1c0,0,0.1,0.5,0.1,1.2c0,0.8,0.1,1.9,0.2,3.2c0.1,2.7,0.3,6.3,0.5,9.9
+		C51.7,43,52,50.2,52,50.2l0.5,0c0,0-0.1-7.2-0.3-14.4c-0.1-3.6-0.1-7.2-0.2-9.9c0-1.4-0.1-2.5-0.1-3.3c0-0.6,0-1-0.1-1.1h17.6
+		V109.3z"/></g><g class=curtain-right><path fill-rule=evenodd clip-rule=evenodd fill=#EAEAEA d="M129.9,20.2v90.2c-6.7,0-6.8-0.7-11.9-0.7s-13.5,3-17.8,1.1
+		s-6-1.1-9.1-1.1c-2.5,0-3.8,3-9.4,2.9c-5.6-0.1-11.3-2.2-11.3-2.2V20.2H129.9z"/><path fill=#81879D d="M69.3,19v92.2l0.8,0.3c0.2,0.1,5.9,2.2,11.6,2.3c0.1,0,0.2,0,0.3,0c3.5,0,5.5-1.2,7-2
+		c0.9-0.5,1.5-0.9,2.2-0.9c0.8,0,1.4-0.1,2-0.1c2-0.2,3.5-0.3,6.5,1.1c3.1,1.4,7.5,0.6,11.9-0.2c2.4-0.4,4.6-0.8,6.4-0.8
+		c2.3,0,3.6,0.2,5,0.3c1.6,0.2,3.3,0.4,7,0.4h1.2V19H69.3z M128.7,109.3c-2.7,0-4.2-0.2-5.5-0.4c-1.4-0.2-2.8-0.3-5.2-0.3
+		c-0.9,0-1.8,0.1-2.8,0.2l-0.6-20.3H114l-0.6,20.6c-0.7,0.1-1.5,0.2-2.2,0.4c-3.8,0.7-8.1,1.4-10.5,0.3c-3.6-1.6-5.6-1.5-7.7-1.3
+		c-0.6,0.1-1.2,0.1-1.9,0.1c-1.3,0-2.3,0.6-3.3,1.2c-0.2,0.1-0.4,0.2-0.6,0.4l1.1-55.3l-0.4,0l-2.4,56.1c-1,0.4-2.2,0.6-3.8,0.6
+		c-4.1-0.1-8.4-1.3-10.1-1.9V21.4h35.1c0,0.2,0,0.4,0,0.7c0,1.2,0.1,2.8,0.2,4.8c0.1,4,0.3,9.3,0.4,14.6c0.3,10.6,0.6,21.3,0.6,21.3
+		l0.4,0c0,0,0.1-10.6,0.1-21.3c0-5.3,0.1-10.6,0.1-14.6c0-2,0-3.7,0-4.8c0-0.2,0-0.4,0-0.6h10.1l0.5,16.4h0.4l0.5-16.4h8.7V109.3z"/></g><g class=side-frame-bars><rect x=5 y=20.7 fill-rule=evenodd clip-rule=evenodd fill=#F2F2F5 stroke=#81879D stroke-width=2 stroke-miterlimit=10 width=10.3 height="93.5"/><rect x=129.9 y=20.7 fill-rule=evenodd clip-rule=evenodd fill=#F2F2F5 stroke=#81879D stroke-width=2 stroke-miterlimit=10 width=9.8 height="93.5"/></g><path fill-rule=evenodd clip-rule=evenodd fill=none stroke=#81879D stroke-width=2 stroke-miterlimit=10 d="
+	M148.5,58.3"/><path class=patches fill=#F2F2F5 d="M144.7,115.2h-4V21.7h4V115.2z M4,21.7H0v93.5h4V21.7z"/><g class=cord><circle fill-rule=evenodd clip-rule=evenodd fill=#F2F2F5 cx=136.6 cy=115.8 r="5.1"/><path fill=#81879D d="M137.3,109.8V21.3h-2v88.5c-2.7,0.6-4.8,3-4.8,5.9c0,3.3,2.7,6.1,6.1,6.1s6.1-2.7,6.1-6.1
+		C142.7,112.7,140.3,110.1,137.3,109.8z M136.6,119.8c-2.2,0-4.1-1.8-4.1-4.1c0-2.2,1.8-4.1,4.1-4.1s4.1,1.8,4.1,4.1
+		C140.7,118,138.9,119.8,136.6,119.8z"/></g><rect class=top-frame-bar x=1 y=1 fill-rule=evenodd clip-rule=evenodd fill=#F2F2F5 stroke=#81879D stroke-width=2 stroke-miterlimit=10 width=142.8 height="19.7"/></svg>
+					</div>
+					<h2 class="heading-style--heading-five">Congratulations! You're now a Developer Premium Member</h2>
+					<p>We'll let you know before your trial period ends but if you have any questions or feature requests in he meantime please <a href="contact.html">let us know</a></p>
+					<button class="ref-button--link-large js-close">Continue Browsing</button>
+				</div>
+				<a href="#" class="popup-close"><span class="ref-icon-after ref-icon-after--close">Close</span></a>
+			</div>
+		</div>
+	</div>
+
  	<script src="js/vendor/jquery-1.11.1.min.js"></script>
  	<script src="js/vendor/jquery-ui.custom.min.js"></script>
  	<script src="js/vendor/handlebars-v2.0.0.js"></script>
@@ -457,61 +430,55 @@
   <script>
   	function initScripts() {
   		new AccountSettingsPage();
+			
+			// mock popup register
+			var popupRegister = $('.page-overlay--register');
 
-			// DEMO ONLY, NOT FOR INTEGRATION
-			$('.js-demo-popup').on("click", function(){
-					$('.page-overlay').fadeIn(200);
-					setTimeout(function(){
-						$('.page-overlay .popup-content').addClass("is-showing");
-					}, 100);
+			$('.js-demo-popup--register').on("click", function(){				
+				popupRegister.fadeIn(200);
+				setTimeout(function(){
+					$('.page-overlay--register .popup-content').addClass("is-showing");
+				}, 100);
+			});
+			$('.page-overlay--register .popup-close, .page-overlay--register .js-close').on("click", function(){
+				popupRegister.fadeOut(100);
+				$('.page-overlay--register .popup-content').removeClass("is-showing");
 			});
 
-			$('.page-overlay .popup-close').on("click", function(){
-					$('.page-overlay').fadeOut(100);
-					$('.page-overlay .popup-content').removeClass("is-showing");
-			});
-
-			$('.page-overlay .js-mock-submit-link-account').on("click", function(e){
+			// mock register submit
+			$('.page-overlay--register .js-submit').on("click", function(e){
 				e.preventDefault();
-				var $this = $(this);
-				if(!$this.hasClass("ref-button--is-loading") && !$this.hasClass("ref-button--success")) {
-					$('body').addClass("form-submitted-loading");
-					$this.addClass("ref-button--is-loading").attr("value", "Linking");
-					setTimeout(function(){					
-						$this.addClass('ref-button--success').attr("value", "Success!").removeClass('ref-button--is-loading');					
-						setTimeout(function(){
-							$('.page-overlay .popup-close').trigger("click");
-							$('body').removeClass("form-submitted-loading");
-							$this.removeClass('ref-button--success').attr("value", "Link This Account");
-						}, 1000);
-					}, 5000);
-				}
+				$(this).addClass("ref-button--is-loading").text("Loading");
+				setTimeout(function(){
+					popupRegister.addClass("is-submitted");
+				}, 3000);
 			});
- 
-			$('.linked-account-edit').each(function(){
-				var $this = $(this),
-						nextRow = $this.parent('tr').next('tr').hide(),
-						nextRowForm = $this.parent('tr').next('tr').find('form').hide(),
-						nextRowHeading = $this.parent('tr').next('tr').find('h2').hide(),
-						thisName = $this.parents('tr').find('.linked-account-name');
-				$this.on("click", function(){
-					$this.find('.ref-button--function-small').toggleClass('is-pressed');
-					nextRow.slideToggle(200);
-					nextRowForm.slideToggle(200);
-					nextRowHeading.slideToggle(200);
-					$(thisName).toggleClass('is-open');
-				});				
 
-				$('.js-demo-popup--confirm').on("click", function(){
-					$('.page-overlay--confirm').fadeIn(200);
-					setTimeout(function(){
-						$('.page-overlay--confirm .popup-content').addClass("is-showing");
-					}, 100);
-				});
-				$('.page-overlay--confirm .popup-close, .page-overlay--confirm .ref-button--function-small').on("click", function(){
-					$('.page-overlay--confirm').fadeOut(100);
-					$('.page-overlay--confirm .popup-content').removeClass("is-showing");
-				});
+			// mock popup Premium
+  		var popupPremium = $('.page-overlay--premium');			
+			$('.js-demo-popup--premium').on("click", function(){				
+				popupPremium.fadeIn(200);
+				setTimeout(function(){
+					$('.page-overlay--premium .popup-content').addClass("is-showing");
+				}, 100);
+			});
+			$('.page-overlay--premium .popup-close, .page-overlay--premium .js-close').on("click", function(){
+				popupPremium.fadeOut(100);
+				$('.page-overlay--premium .popup-content').removeClass("is-showing");
+			});
+
+			// mock start free trial click
+			$('.page-overlay--premium .js-submit').on("click", function(){
+				$(this).addClass("ref-button--is-loading");
+				setTimeout(function(){
+					popupPremium.addClass("is-submitted-success");
+					$('.pricing-option--current').removeClass("pricing-option--current");
+					$('.pricing-option .ref-button--positive').remove();
+					var pricingOptionPremium = $('.pricing-option--premium');
+					pricingOptionPremium.addClass("pricing-option--current");
+					pricingOptionPremium.find('.pricing-sign-up-button').addClass("ref-button--positive").text("Curent Subscription");
+					pricingOptionPremium.siblings(".pricing-access-info").remove();
+				}, 3000);
 			});
   	}
 

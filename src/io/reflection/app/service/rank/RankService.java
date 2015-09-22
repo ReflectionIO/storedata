@@ -212,9 +212,29 @@ public class RankService implements IRankService {
 			throws DataAccessException, SQLException {
 		final List<Rank> ranks = new ArrayList<Rank>();
 
-		final String selectQuery = "SELECT r.*, rf.group_fetch_code, rf.fetch_date, rf.country, rf.category, rf.type, rf.platform "
-				+ " FROM rank_fetch rf inner join rank2 r on (r.rank_fetch_id = rf.rank_fetch_id and r.itemid=?) WHERE "
-				+ " rf.country=? AND rf.category=? AND rf.type=? AND rf.platform=? AND rf.fetch_date BETWEEN ? AND ? and rf.fetch_time > '21:00'";
+		final String selectQuery = "SELECT  " +
+				"    r.*, " +
+				"    rf.group_fetch_code, " +
+				"    rf.fetch_date, " +
+				"    rf.country, " +
+				"    rf.category, " +
+				"    rf.type, " +
+				"    rf.platform " +
+				"FROM " +
+				"    rank2 r  " +
+				"        INNER JOIN " +
+				"    rank_fetch rf FORCE INDEX (idx_rank_fetch_search_id) ON (rf.rank_fetch_id = r.rank_fetch_id " +
+				"		AND rf.country = ? AND rf.category = ? " +
+				"        AND rf.type = ? " +
+				"        AND rf.platform = ? " +
+				"        AND rf.fetch_date BETWEEN ? AND ? " +
+				"        AND rf.fetch_time > '21:00') " +
+				"WHERE " +
+				"	r.itemid=? " +
+				"ORDER BY rf.fetch_date";
+		// final String selectQuery = "SELECT r.*, rf.group_fetch_code, rf.fetch_date, rf.country, rf.category, rf.type, rf.platform "
+		// + " FROM rank_fetch rf inner join rank2 r on (r.rank_fetch_id = rf.rank_fetch_id and r.itemid=?) WHERE "
+		// + " rf.country=? AND rf.category=? AND rf.type=? AND rf.platform=? AND rf.fetch_date BETWEEN ? AND ? and rf.fetch_time > '21:00'";
 
 		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
@@ -239,13 +259,13 @@ public class RankService implements IRankService {
 			rankConnection.connect();
 
 			int paramCount = 1;
-			pstat.setString(paramCount++, item.internalId);
 			pstat.setString(paramCount++, country.a2Code);
 			pstat.setLong(paramCount++, category.id);
 			pstat.setString(paramCount++, FeedFetchService.getDBTypeForFeedFetchType(listType));
 			pstat.setString(paramCount++, FeedFetchService.getDBPlatformForFeedFetchType(listType));
 			pstat.setDate(paramCount++, afterParam);
 			pstat.setDate(paramCount++, beforeParam);
+			pstat.setString(paramCount++, item.internalId);
 
 			rankConnection.executePreparedStatement(pstat);
 

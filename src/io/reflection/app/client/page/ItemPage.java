@@ -331,8 +331,20 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 		title.setInnerText(displayingApp.name);
 		creatorName.setInnerText(displayingApp.creatorName != null ? "By " + displayingApp.creatorName : "");
-		image.setUrl(displayingApp.mediumImage != null ? displayingApp.mediumImage : "");
-		imageTable.setUrl(displayingApp.smallImage != null ? displayingApp.smallImage : "");
+		if (displayingApp.mediumImage != null) {
+			image.setUrl(displayingApp.mediumImage);
+			image.setVisible(true);
+		} else {
+			image.setVisible(false);
+			image.setUrl("");
+		}
+		if (displayingApp.smallImage != null) {
+			imageTable.setUrl(displayingApp.smallImage);
+			imageTable.setVisible(true);
+		} else {
+			imageTable.setVisible(false);
+			imageTable.setUrl("");
+		}
 		iapDescription = DataTypeHelper.itemIapState(displayingApp, " + In App Purchases", "", "");
 	}
 
@@ -349,7 +361,9 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	private void resetAppProperties() {
 		title.setInnerText("");
 		creatorName.setInnerText("");
+		image.setVisible(false);
 		image.setUrl("");
+		imageTable.setVisible(false);
 		imageTable.setUrl("");
 		storeName.setInnerSafeHtml(AnimationHelper.getLoaderInlineSafeHTML());
 		price.setInnerSafeHtml(AnimationHelper.getLoaderInlineSafeHTML());

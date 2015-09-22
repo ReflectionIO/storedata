@@ -197,6 +197,10 @@
   		$('.pagination a').on("click", function(e) {
   			e.preventDefault();
   		});
+
+  		// mock menu select
+			var thisPageLink = $('#js-component-import--panel-left').find('a[href="blog.html"]');
+		  thisPageLink.parent("li").addClass("is-selected").parents("li").addClass("is-selected");
   	}
 
   	window.onready = initScripts();

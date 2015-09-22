@@ -45,7 +45,7 @@
 				</div>
 				<div class="grid__column page-functions overflow-visible">
 					<form class="overflow-visible">
-						<div class="form-field form-field--select form-field--select-disabled">
+						<div class="form-field form-field--select form-field--select-disabled form-field--select--filter">
 							<div class="page-overlay"></div>		
 							<select class="js-field--select reflection-select--filter reflection-select--right" disabled>
 						    <option value="" disabled selected>Account Name</option>
@@ -76,7 +76,7 @@
 							</div>
 							<button class="ref-button--cta-small refresh-button" disabled><span class="ref-icon-before ref-icon-before--refresh">Refresh</span></button>
 							<span class="or-text text--disabled">or</span>
-							<div class="form-field form-field--select time-period-select form-field--select-disabled">
+							<div class="form-field form-field--select time-period-select form-field--select-disabled form-field--select--filter">
 								<div class="page-overlay"></div>		
 								<select class="js-field--select reflection-select--filter" disabled>
 							    <option value="" disabled selected>Time Period</option>
@@ -88,14 +88,14 @@
 								</select>
 							</div>
 						</div>
-						<div class="form-field form-field--select category-select form-field--select-disabled">
+						<div class="form-field form-field--select category-select form-field--select-disabled form-field--select--filter">
 							<div class="page-overlay"></div>
 							<select class="js-field--select reflection-select--filter reflection-select--right" disabled>
 						    <option value="" disabled selected>Category</option>
 						    <option value="24">All Categories</option><option value="19">Book</option><option value="1">Business</option><option value="22">Catalogs</option><option value="18">Education</option><option value="17">Entertainment</option><option value="16">Finance</option><option value="23">Food &amp; Drink</option><option value="15">Games</option><option value="14">Health &amp; Fitness</option><option value="13">Lifestyle</option><option value="20">Medical</option><option value="12">Music</option><option value="11">Navigation</option><option value="10">News</option><option value="21">Newsstand</option><option value="9">Photo &amp; Video</option><option value="8">Productivity</option><option value="7">Reference</option><option value="6">Social Networking</option><option value="5">Sports</option><option value="4">Travel</option><option value="3">Utilities</option><option value="2">Weather</option>
 							</select>
 						</div>
-						<div class="form-field form-field--select store-select form-field--select-disabled">
+						<div class="form-field form-field--select store-select form-field--select-disabled form-field--select--filter">
 							<div class="page-overlay"></div>
 							<select class="js-field--select reflection-select--filter reflection-select--center" disabled>
 						    <option value="" disabled selected>App Store</option>
@@ -104,7 +104,7 @@
 						    <option value="b2">iPhone Store</option>
 							</select>
 						</div>
-						<div class="form-field form-field--select country-select form-field--select-disabled">
+						<div class="form-field form-field--select country-select form-field--select-disabled form-field--select--filter">
 							<div class="page-overlay"></div>
 							<select class="js-field--select reflection-select--filter" disabled>
 						    <option value="" disabled selected>Country</option>
@@ -204,6 +204,10 @@
 			$('.date-select-container input').on("focus", function(){
   			$('.refresh-button').removeAttr("disabled");
   		});
+
+  		// mock menu select
+  		var thisPageLink = $('#js-component-import--panel-left').find('a[href="my-apps.html"]');
+		  thisPageLink.parent("li").addClass("is-selected").parents("li").addClass("is-selected");
   	}
 
   	window.onready = initScripts();
