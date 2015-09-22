@@ -1,0 +1,155 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
+	<ui:style>
+	
+	</ui:style>
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.pageFaqs}">
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.introBanner}">
+			<div>
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.introBanner__graphic}">
+					<img src="images/intro-banner--speech@2x.png" alt="Speech bubbles" />
+				</div>
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.introBanner__intro}">
+					<h1>FAQs</h1>
+					<p>Get the answers to the most commonly asked questions about Reflection and our platform here. If you need further assitance please get in touch via our
+						Contact Us page.</p>
+				</div>
+			</div>
+		</div>
+		<div ui:field="faqsTop" class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer}">
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird}">
+				<div ui:field="faqContainer" class="{STYLES_INSTANCE.reflectionMainStyle.faqsListContainer}">
+					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Questions</h2>
+					<ul class="{STYLES_INSTANCE.reflectionMainStyle.contentList} {STYLES_INSTANCE.reflectionMainStyle.contentListNoBullets}">
+						<li>
+							<g:Anchor styleName="" ui:field="linkFaq1" href="#">What do you do with my data?</g:Anchor>
+						</li>
+						<li>
+							<g:Anchor styleName="" ui:field="linkFaq2" href="#">How much does Reflection cost?</g:Anchor>
+						</li>
+						<li>
+							<g:Anchor styleName="" ui:field="linkFaq3" href="#">How do I link my account?</g:Anchor>
+						</li>
+						<li>
+							<g:Anchor styleName="" ui:field="linkFaq4" href="#">Do you share my data with anyone?</g:Anchor>
+						</li>
+						<li>
+							<g:Anchor styleName="" ui:field="linkFaq5" href="#">What do you do with my data?</g:Anchor>
+						</li>
+						<li>
+							<g:Anchor styleName="" ui:field="linkFaq6" href="#">How much does Reflection cost?</g:Anchor>
+						</li>
+						<li>
+							<g:Anchor styleName="" ui:field="linkFaq7" href="#">How do I link my account?</g:Anchor>
+						</li>
+						<li>
+							<g:Anchor styleName="" ui:field="linkFaq8" href="#">Do you share my data with anyone?</g:Anchor>
+						</li>
+
+					</ul>
+				</div>
+			</div>
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnTwoThirds}">
+				<ul>
+					<li class="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}">
+						<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
+							<h2 ui:field="faqContent1" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">What do you want to do with my data?</h2>
+							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+								quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+								dolore eu fugiat nulla pariatur.</p>
+							<p class="{STYLES_INSTANCE.reflectionMainStyle.linkBackToTop}">
+								<g:Anchor styleName="" ui:field="linkBackToTop1" href="#">Back to top</g:Anchor>
+							</p>
+						</article>
+					</li>
+					<li class="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}">
+						<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
+							<h2 ui:field="faqContent2" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">How much does Reflection cost?</h2>
+							<p>Integer ut varius purus. Duis quis tellus eu lacus aliquam dictum. In vel dignissim orci. Aliquam rhoncus ipsum tempus nunc interdum sodales. Proin
+								sapien purus, volutpat sit amet orci sit amet, adipiscing suscipit metus. Duis non mauris auctor, vehicula massa eget, placerat massa.</p>
+							<p>Etiam egestas nibh vitae orci pharetra semper. Sed et hendrerit elit, ac convallis nibh. Morbi a blandit velit. Nulla et vulputate eros. Nam vehicula
+								nisl sit amet justo commodo imperdiet. Nullam cursus velit id felis pretium vulputate. Nulla mattis accumsan placerat. Nam feugiat turpis tellus, eget
+								venenatis dolor vulputate et. Sed risus tellus, semper et mollis at, congue vitae massa.</p>
+							<p class="{STYLES_INSTANCE.reflectionMainStyle.linkBackToTop}">
+								<g:Anchor styleName="" ui:field="linkBackToTop2" href="#">Back to top</g:Anchor>
+							</p>
+						</article>
+					</li>
+					<li class="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}">
+						<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
+							<h2 ui:field="faqContent3" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">How do I link my account?</h2>
+							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam varius nulla pellentesque bibendum semper. Pellentesque ullamcorper dictum dictum. Sed
+								tincidunt ut nulla in pharetra. Curabitur id neque id urna viverra tempus. Aliquam nec sapien purus. Aenean sodales semper suscipit. Nunc vitae felis
+								tincidunt, tincidunt felis nec, laoreet sem. Nullam urna ante, varius nec dui et, tempus molestie justo. Duis tempor turpis a risus euismod convallis
+								vel sit amet magna. Fusce ultricies cursus nulla ut bibendum.</p>
+							<p class="{STYLES_INSTANCE.reflectionMainStyle.linkBackToTop}">
+								<g:Anchor styleName="" ui:field="linkBackToTop3" href="#">Back to top</g:Anchor>
+							</p>
+						</article>
+					</li>
+					<li class="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}">
+						<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
+							<h2 ui:field="faqContent4" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Do you share my data with anyone?</h2>
+							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam varius nulla pellentesque bibendum semper. Pellentesque ullamcorper dictum dictum. Sed
+								tincidunt ut nulla in pharetra. Curabitur id neque id urna viverra tempus. Aliquam nec sapien purus. Aenean sodales semper suscipit. Nunc vitae felis
+								tincidunt, tincidunt felis nec, laoreet sem. Nullam urna ante, varius nec dui et, tempus molestie justo. Duis tempor turpis a risus euismod convallis
+								vel sit amet magna. Fusce ultricies cursus nulla ut bibendum.</p>
+							<p class="{STYLES_INSTANCE.reflectionMainStyle.linkBackToTop}">
+								<g:Anchor styleName="" ui:field="linkBackToTop4" href="#">Back to top</g:Anchor>
+							</p>
+						</article>
+					</li>
+					<li class="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}">
+						<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
+							<h2 ui:field="faqContent5" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">What do you want to do with my data?</h2>
+							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+								quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+								dolore eu fugiat nulla pariatur.</p>
+							<p class="{STYLES_INSTANCE.reflectionMainStyle.linkBackToTop}">
+								<g:Anchor styleName="" ui:field="linkBackToTop5" href="#">Back to top</g:Anchor>
+							</p>
+						</article>
+					</li>
+					<li class="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}">
+						<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
+							<h2 ui:field="faqContent6" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">How much does Reflection cost?</h2>
+							<p>Integer ut varius purus. Duis quis tellus eu lacus aliquam dictum. In vel dignissim orci. Aliquam rhoncus ipsum tempus nunc interdum sodales. Proin
+								sapien purus, volutpat sit amet orci sit amet, adipiscing suscipit metus. Duis non mauris auctor, vehicula massa eget, placerat massa.</p>
+							<p>Etiam egestas nibh vitae orci pharetra semper. Sed et hendrerit elit, ac convallis nibh. Morbi a blandit velit. Nulla et vulputate eros. Nam vehicula
+								nisl sit amet justo commodo imperdiet. Nullam cursus velit id felis pretium vulputate. Nulla mattis accumsan placerat. Nam feugiat turpis tellus, eget
+								venenatis dolor vulputate et. Sed risus tellus, semper et mollis at, congue vitae massa.</p>
+							<p class="{STYLES_INSTANCE.reflectionMainStyle.linkBackToTop}">
+								<g:Anchor styleName="" ui:field="linkBackToTop6" href="#">Back to top</g:Anchor>
+							</p>
+						</article>
+					</li>
+					<li class="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}">
+						<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
+							<h2 ui:field="faqContent7" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">How do I link my account?</h2>
+							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam varius nulla pellentesque bibendum semper. Pellentesque ullamcorper dictum dictum. Sed
+								tincidunt ut nulla in pharetra. Curabitur id neque id urna viverra tempus. Aliquam nec sapien purus. Aenean sodales semper suscipit. Nunc vitae felis
+								tincidunt, tincidunt felis nec, laoreet sem. Nullam urna ante, varius nec dui et, tempus molestie justo. Duis tempor turpis a risus euismod convallis
+								vel sit amet magna. Fusce ultricies cursus nulla ut bibendum.</p>
+							<p class="{STYLES_INSTANCE.reflectionMainStyle.linkBackToTop}">
+								<g:Anchor styleName="" ui:field="linkBackToTop7" href="#">Back to top</g:Anchor>
+							</p>
+						</article>
+					</li>
+					<li class="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}">
+						<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
+							<h2 ui:field="faqContent8" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Do you share my data with anyone?</h2>
+							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam varius nulla pellentesque bibendum semper. Pellentesque ullamcorper dictum dictum. Sed
+								tincidunt ut nulla in pharetra. Curabitur id neque id urna viverra tempus. Aliquam nec sapien purus. Aenean sodales semper suscipit. Nunc vitae felis
+								tincidunt, tincidunt felis nec, laoreet sem. Nullam urna ante, varius nec dui et, tempus molestie justo. Duis tempor turpis a risus euismod convallis
+								vel sit amet magna. Fusce ultricies cursus nulla ut bibendum.</p>
+							<p class="{STYLES_INSTANCE.reflectionMainStyle.linkBackToTop}">
+								<g:Anchor styleName="" ui:field="linkBackToTop8" href="#">Back to top</g:Anchor>
+							</p>
+						</article>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</g:HTMLPanel>
+</ui:UiBinder> 
