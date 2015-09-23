@@ -11,16 +11,18 @@ import static io.reflection.app.client.controller.FilterController.FREE_LIST_TYP
 import static io.reflection.app.client.controller.FilterController.GROSSING_LIST_TYPE;
 import static io.reflection.app.client.controller.FilterController.PAID_LIST_TYPE;
 import static io.reflection.app.client.helper.FormattingHelper.WHOLE_NUMBER_FORMATTER;
+import io.reflection.app.api.core.client.CoreService;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
 import io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler;
+import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.AppRankCell;
 import io.reflection.app.client.component.Selector;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.ItemController;
-import io.reflection.app.client.controller.RankController;
 import io.reflection.app.client.controller.ServiceConstants;
+import io.reflection.app.client.controller.ServiceCreator;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.helper.AnimationHelper;
 import io.reflection.app.client.helper.FilterHelper;
@@ -36,6 +38,9 @@ import io.reflection.app.client.res.Styles.ReflectionMainStyles;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.shared.util.DataTypeHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.LIElement;
@@ -43,6 +48,7 @@ import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.http.client.Request;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -54,8 +60,12 @@ import com.google.gwt.user.cellview.client.SafeHtmlHeader;
 import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.view.client.AsyncDataProvider;
+import com.google.gwt.view.client.HasData;
 import com.willshex.gson.json.service.shared.StatusType;
 
 /**
@@ -73,7 +83,9 @@ public class HomePage extends Page implements GetAllTopItemsEventHandler {
 	@UiField LIElement grossingItem;
 	@UiField SpanElement dateFixed;
 	@UiField Selector countrySelector;
+	private String selectedCountry = "gb";
 	@UiField Selector appStoreSelector;
+	private String selectedAppStore = "iph";
 	@UiField Button applyFilters;
 	@UiField ErrorPanel errorPanel;
 	@UiField(provided = true) CellTable<RanksGroup> leaderboardHomeTable = new CellTable<RanksGroup>(ServiceConstants.SHORT_STEP_VALUE,
@@ -93,6 +105,7 @@ public class HomePage extends Page implements GetAllTopItemsEventHandler {
 	private LoadingIndicator loadingIndicatorFreeList = AnimationHelper.getLeaderboardListLoadingIndicator(ServiceConstants.SHORT_STEP_VALUE, true);
 	private LoadingIndicator loadingIndicatorPaidGrossingList = AnimationHelper.getLeaderboardListLoadingIndicator(ServiceConstants.SHORT_STEP_VALUE, false);
 
+	private HomeRankProvider homeRankProvider = new HomeRankProvider();
 	private String selectedTab = PAID_LIST_TYPE;
 	private ReflectionMainStyles style = Styles.STYLES_INSTANCE.reflectionMainStyle();
 
@@ -100,16 +113,13 @@ public class HomePage extends Page implements GetAllTopItemsEventHandler {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		dateFixed.setInnerText(FormattingHelper.DATE_FORMATTER_DD_MMM_YYYY.format(FilterHelper.getDaysAgo(2)));
-		FilterController.get().setEndDate(FilterHelper.getDaysAgo(2));
-		FilterController.get().setCountry("gb");
-		FilterController.get().setStore("iph");
 		FilterHelper.addCountries(countrySelector, false);
 		FilterHelper.addStores(appStoreSelector, false);
 		countrySelector.setSelectedIndex(3);
 		appStoreSelector.setSelectedIndex(1);
 
 		leaderboardHomeTable.getTableLoadingSection().addClassName(style.tableBodyLoading());
-		RankController.get().addDataDisplay(leaderboardHomeTable);
+		homeRankProvider.addDataDisplay(leaderboardHomeTable);
 
 		Event.sinkEvents(paidItem, Event.ONCLICK);
 		Event.sinkEvents(freeItem, Event.ONCLICK);
@@ -380,34 +390,27 @@ public class HomePage extends Page implements GetAllTopItemsEventHandler {
 		}
 	}
 
-	@UiHandler("countrySelector")
-	void onCountryChanged(ChangeEvent event) {
-		applyFilters.setEnabled(!FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
-				|| !FilterController.get().getFilter().getStoreA3Code().equals(appStoreSelector.getSelectedValue()));
-	}
-
-	@UiHandler("appStoreSelector")
-	void onAppStoreChanged(ChangeEvent event) {
-		applyFilters.setEnabled(!FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
-				|| !FilterController.get().getFilter().getStoreA3Code().equals(appStoreSelector.getSelectedValue()));
+	@UiHandler({ "countrySelector", "appStoreSelector" })
+	void onFiltersChanged(ChangeEvent event) {
+		applyFilters.setEnabled(!selectedCountry.equals(countrySelector.getSelectedValue()) || !selectedAppStore.equals(appStoreSelector.getSelectedValue()));
 	}
 
 	@UiHandler("applyFilters")
 	void onApplyFiltersClicked(ClickEvent event) {
 		event.preventDefault();
 		boolean updateData = false;// TODO check with previous value
-		if (updateData = updateData || !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())) {
-			FilterController.get().setCountry(countrySelector.getSelectedValue());
+		if (updateData = updateData || !selectedCountry.equals(countrySelector.getSelectedValue())) {
+			selectedCountry = countrySelector.getSelectedValue();
 		}
-		if (updateData = updateData || !FilterController.get().getFilter().getStoreA3Code().equals(appStoreSelector.getSelectedValue())) {
-			FilterController.get().setStore(appStoreSelector.getSelectedValue());
+		if (updateData = updateData || !selectedAppStore.equals(appStoreSelector.getSelectedValue())) {
+			selectedAppStore = appStoreSelector.getSelectedValue();
 		}
 		if (updateData) {
 			applyFilters.setEnabled(false);
 			errorPanel.setVisible(false);
 			leaderboardHomeTable.setVisible(true);
-			RankController.get().reset();
-			RankController.get().fetchTopItems();
+			homeRankProvider.reset();
+			homeRankProvider.fetchHomeTopItems();
 		}
 	}
 
@@ -422,7 +425,7 @@ public class HomePage extends Page implements GetAllTopItemsEventHandler {
 
 		ResponsiveDesignHelper.makeTabsResponsive();
 
-		register(DefaultEventBus.get().addHandlerToSource(GetAllTopItemsEventHandler.TYPE, RankController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(GetAllTopItemsEventHandler.TYPE, homeRankProvider, this));
 	}
 
 	/*
@@ -455,6 +458,115 @@ public class HomePage extends Page implements GetAllTopItemsEventHandler {
 	public void getAllTopItemsFailure(GetAllTopItemsRequest input, Throwable caught) {
 		leaderboardHomeTable.setVisible(false);
 		errorPanel.setVisible(true);
+	}
+
+	private class HomeRankProvider extends AsyncDataProvider<RanksGroup> implements ServiceConstants {
+
+		private Request currentTopItems;
+		private Timer timerFetchTopItems = new Timer() {
+
+			@Override
+			public void run() {
+				currentTopItems.cancel();
+				currentTopItems = null;
+				updateRowCount(0, true);
+				DefaultEventBus.get().fireEventFromSource(new GetAllTopItemsFailure(new GetAllTopItemsRequest(), new Exception()), this);
+			}
+		};
+
+		private List<RanksGroup> rankHomeGroupList = new ArrayList<RanksGroup>();
+
+		// public List<RanksGroup> getList() {
+		// return rankHomeGroupList;
+		// }
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see com.google.gwt.view.client.AbstractDataProvider#onRangeChanged(com.google.gwt.view.client.HasData)
+		 */
+		@Override
+		protected void onRangeChanged(HasData<RanksGroup> display) {
+			fetchHomeTopItems();
+		}
+
+		public void fetchHomeTopItems() {
+			timerFetchTopItems.cancel();
+
+			if (currentTopItems != null) {
+				currentTopItems.cancel();
+				currentTopItems = null;
+			}
+
+			CoreService service = ServiceCreator.createCoreService();
+
+			final GetAllTopItemsRequest input = new GetAllTopItemsRequest(); // JSON Item request, containing the fields used to query the Item table on the DB
+			input.accessCode = ACCESS_CODE;
+
+			input.dailyData = FilterController.REVENUE_DAILY_DATA_TYPE;
+
+			input.session = null; // public call
+
+			input.on = FilterHelper.getDaysAgo(2);
+			input.country = DataTypeHelper.createCountry(countrySelector.getSelectedValue());
+			input.store = DataTypeHelper.createStore(appStoreSelector.getSelectedValue());
+
+			input.listType = (appStoreSelector.getSelectedValue().equals(DataTypeHelper.STORE_IPHONE_A3_CODE) ? "topallapplications" : "topallipadapplications");
+
+			input.category = DataTypeHelper.createCategory(15L);
+
+			Pager pager = new Pager();
+			pager.count = 10L;
+			pager.start = Long.valueOf(0);
+			// pager.boundless = Boolean.FALSE;
+
+			input.pager = pager; // Set pager used to retrieve and format the wished items (start, number of elements, sorting order)
+
+			// Call to retrieve top items from DB. The response contains List<Rank> for the 3 rank types (free, paid, grossing) , a List<Item> and a Pager
+			currentTopItems = service.getAllTopItems(input, new AsyncCallback<GetAllTopItemsResponse>() {
+
+				@Override
+				public void onSuccess(GetAllTopItemsResponse output) {
+					timerFetchTopItems.cancel();
+					currentTopItems = null;
+					if (output.status == StatusType.StatusTypeSuccess) {
+
+						// Caching retrieved items
+						ItemController.get().addItemsToCache(output.items); // caching items
+
+						RanksGroup r;
+						for (int i = 0; i < output.paidRanks.size(); i++) {
+							rankHomeGroupList.add(r = new RanksGroup());
+							r.free = output.freeRanks.get(i);
+							r.paid = output.paidRanks.get(i);
+							r.grossing = output.grossingRanks.get(i);
+						}
+
+						updateRowData(0, rankHomeGroupList); // Inform the displays of the new data. @params Start index, data values
+					}
+					updateRowCount(rankHomeGroupList.size(), true);
+
+					DefaultEventBus.get().fireEventFromSource(new GetAllTopItemsSuccess(input, output), this);
+				}
+
+				@Override
+				public void onFailure(Throwable caught) {
+					timerFetchTopItems.cancel();
+					currentTopItems = null;
+					updateRowCount(0, true);
+					DefaultEventBus.get().fireEventFromSource(new GetAllTopItemsFailure(input, caught), this);
+				}
+			});
+
+			timerFetchTopItems.schedule(12000);
+		}
+
+		public void reset() {
+			rankHomeGroupList.clear();
+			updateRowData(0, rankHomeGroupList);
+			updateRowCount(0, false);
+		}
+
 	}
 
 }

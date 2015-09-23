@@ -59,11 +59,13 @@ import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.logical.shared.ShowRangeEvent;
 import com.google.gwt.event.logical.shared.ShowRangeHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -501,9 +503,26 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 				FilterController.get().getFilter().setStartTime(startDate.getTime());
 			}
 			if (updateData) {
+				applyFilters.setEnabled(false);
 				PageType.RanksPageType.show("view", selectedTab, FilterController.get().asRankFilterString());
 			}
 		}
+	}
+
+	@UiHandler({ "countrySelector", "appStoreSelector", "categorySelector" })
+	void onFiltersChanged(ChangeEvent event) {
+		applyFilters.setEnabled(!FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
+				|| !FilterController.get().getFilter().getStoreA3Code().equals(appStoreSelector.getSelectedValue())
+				|| !FilterController.get().getFilter().getCategoryId().toString().equals(categorySelector.getSelectedValue())
+				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateBox.getValue()));
+	}
+
+	@UiHandler("dateBox")
+	void onDateChanged(ValueChangeEvent<Date> event) {
+		applyFilters.setEnabled(!FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
+				|| !FilterController.get().getFilter().getStoreA3Code().equals(appStoreSelector.getSelectedValue())
+				|| !FilterController.get().getFilter().getCategoryId().toString().equals(categorySelector.getSelectedValue())
+				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateBox.getValue()));
 	}
 
 	@UiHandler("resetFilters")
@@ -514,6 +533,10 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		appStoreSelector.setSelectedIndex(FormHelper.getItemIndex(appStoreSelector, "iph"));
 		categorySelector.setSelectedIndex(FormHelper.getItemIndex(categorySelector, "15"));
 		dateBox.setValue(FilterHelper.getDaysAgo(2));
+		applyFilters.setEnabled(!FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
+				|| !FilterController.get().getFilter().getStoreA3Code().equals(appStoreSelector.getSelectedValue())
+				|| !FilterController.get().getFilter().getCategoryId().toString().equals(categorySelector.getSelectedValue())
+				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateBox.getValue()));
 	}
 
 	/**

@@ -112,12 +112,14 @@ public class DownloadLeaderboard extends HttpServlet {
 					String iapGrossing = DataTypeHelper.jsonPropertiesIapState(itemLookup.get(rankGrossing.itemId).properties, "yes", "no", "");
 					// Print Csv line
 					resp.getWriter().println(
-							position + "," + FormattingHelper.escapeCsv(appNamePaid) + "," + FormattingHelper.escapeCsv(developerNamePaid) + ","
-									+ FormattingHelper.escapeCsv(pricePaid) + "," + FormattingHelper.escapeCsv(downloadsPaid) + "," + iapPaid + ","
+							FormattingHelper.escapeCsv(position) + "," + FormattingHelper.escapeCsv(appNamePaid) + ","
+									+ FormattingHelper.escapeCsv(developerNamePaid) + "," + FormattingHelper.escapeCsv(pricePaid) + ","
+									+ FormattingHelper.escapeCsv(downloadsPaid) + "," + FormattingHelper.escapeCsv(iapPaid) + ","
 									+ FormattingHelper.escapeCsv(appNameFree) + "," + FormattingHelper.escapeCsv(developerNameFree) + ","
-									+ FormattingHelper.escapeCsv(priceFree) + "," + FormattingHelper.escapeCsv(downloadsFree) + "," + iapFree + ","
-									+ FormattingHelper.escapeCsv(appNameGrossing) + "," + FormattingHelper.escapeCsv(developerNameGrossing) + ","
-									+ FormattingHelper.escapeCsv(priceGrossing) + "," + FormattingHelper.escapeCsv(revenueGrossing) + "," + iapGrossing);
+									+ FormattingHelper.escapeCsv(priceFree) + "," + FormattingHelper.escapeCsv(downloadsFree) + ","
+									+ FormattingHelper.escapeCsv(iapFree) + "," + FormattingHelper.escapeCsv(appNameGrossing) + ","
+									+ FormattingHelper.escapeCsv(developerNameGrossing) + "," + FormattingHelper.escapeCsv(priceGrossing) + ","
+									+ FormattingHelper.escapeCsv(revenueGrossing) + "," + FormattingHelper.escapeCsv(iapGrossing));
 				}
 			} else if (collector.isPaid(getAllTopItemsRequest.listType)) {
 				if (!getAllTopItemsResponse.paidRanks.isEmpty()) {
@@ -134,8 +136,9 @@ public class DownloadLeaderboard extends HttpServlet {
 						String downloads = (rank.downloads != null ? new DecimalFormat(",###").format(rank.downloads) : "");
 						String iap = DataTypeHelper.jsonPropertiesIapState(itemLookup.get(rank.itemId).properties, "yes", "no", "");
 						resp.getWriter().println(
-								position + "," + FormattingHelper.escapeCsv(appName) + "," + FormattingHelper.escapeCsv(developerName) + ","
-										+ FormattingHelper.escapeCsv(price) + "," + FormattingHelper.escapeCsv(downloads) + "," + iap);
+								FormattingHelper.escapeCsv(position) + "," + FormattingHelper.escapeCsv(appName) + ","
+										+ FormattingHelper.escapeCsv(developerName) + "," + FormattingHelper.escapeCsv(price) + ","
+										+ FormattingHelper.escapeCsv(downloads) + "," + FormattingHelper.escapeCsv(iap));
 					}
 				}
 			} else if (collector.isFree(getAllTopItemsRequest.listType)) {
@@ -153,8 +156,9 @@ public class DownloadLeaderboard extends HttpServlet {
 						String downloads = (rank.downloads != null ? new DecimalFormat(",###").format(rank.downloads) : "");
 						String iap = DataTypeHelper.jsonPropertiesIapState(itemLookup.get(rank.itemId).properties, "yes", "no", "");
 						resp.getWriter().println(
-								position + "," + FormattingHelper.escapeCsv(appName) + "," + FormattingHelper.escapeCsv(developerName) + ","
-										+ FormattingHelper.escapeCsv(price) + "," + FormattingHelper.escapeCsv(downloads) + "," + iap);
+								FormattingHelper.escapeCsv(position) + "," + FormattingHelper.escapeCsv(appName) + ","
+										+ FormattingHelper.escapeCsv(developerName) + "," + FormattingHelper.escapeCsv(price) + ","
+										+ FormattingHelper.escapeCsv(downloads) + "," + FormattingHelper.escapeCsv(iap));
 					}
 				}
 			} else if (collector.isGrossing(getAllTopItemsRequest.listType)) {
@@ -173,8 +177,9 @@ public class DownloadLeaderboard extends HttpServlet {
 								+ new DecimalFormat(",###").format(rank.revenue.floatValue()) : "");
 						String iap = DataTypeHelper.jsonPropertiesIapState(itemLookup.get(rank.itemId).properties, "yes", "no", "");
 						resp.getWriter().println(
-								position + "," + FormattingHelper.escapeCsv(appName) + "," + FormattingHelper.escapeCsv(developerName) + ","
-										+ FormattingHelper.escapeCsv(price) + "," + FormattingHelper.escapeCsv(revenue) + "," + iap);
+								FormattingHelper.escapeCsv(position) + "," + FormattingHelper.escapeCsv(appName) + ","
+										+ FormattingHelper.escapeCsv(developerName) + "," + FormattingHelper.escapeCsv(price) + ","
+										+ FormattingHelper.escapeCsv(revenue) + "," + FormattingHelper.escapeCsv(iap));
 					}
 				}
 			}

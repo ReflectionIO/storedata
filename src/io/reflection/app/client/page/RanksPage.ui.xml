@@ -136,7 +136,8 @@
 					<c:Selector ui:field="categorySelector" alignCenter="" labelText="Category" dropdownTitle="Select a category" tooltip="Select a category"
 						overlay="true" />
 
-					<g:Button ui:field="applyFilters" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaSmall} {STYLES_INSTANCE.reflectionMainStyle.refreshButton}">
+					<g:Button ui:field="applyFilters" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaSmall} {STYLES_INSTANCE.reflectionMainStyle.refreshButton}"
+						enabled="false">
 						<svg class="{STYLES_INSTANCE.reflectionMainStyle.svgRefresh}" version="1.1" x="0px" y="0px" viewBox="0 0 16 16" enable-background="new 0 0 16 16"
 							xml:space="preserve">
 									<path fill="#FCFDFD"

@@ -81,10 +81,8 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 	@UiField Element accountMenu;
 	@UiField HeadingElement userName;
 	@UiField HeadingElement userCompany;
-	@UiField LIElement linkedAccountsItem;
 	@UiField LIElement accountSettingsItem;
 	@UiField LIElement notificationItem;
-	@UiField InlineHyperlink linkedAccountsLink;
 	@UiField InlineHyperlink accountSettingsLink;
 	@UiField InlineHyperlink notificationLink;
 
@@ -170,7 +168,6 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 	private void createItemList() {
 		if (items == null) {
 			items = new ArrayList<LIElement>();
-			items.add(linkedAccountsItem);
 			items.add(accountSettingsItem);
 			items.add(notificationItem);
 		}
@@ -181,8 +178,6 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 			userName.setInnerText(user.forename + " " + user.surname);
 			userCompany.setInnerText(user.company);
 
-			linkedAccountsLink
-					.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.LinkedAccountsPageType.toString(), user.id.toString()));
 			accountSettingsLink
 					.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.ChangeDetailsPageType.toString(), user.id.toString()));
 			notificationLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.NotificationsPageType.toString(), user.id.toString()));
@@ -262,10 +257,7 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 	public void navigationChanged(Stack previous, Stack current) {
 
 		// Highlight selected items
-		if (PageType.UsersPageType.equals(current.getPage()) && current.getAction() != null && PageType.LinkedAccountsPageType.equals(current.getAction())) {
-			highlight(linkedAccountsItem);
-		} else if (PageType.UsersPageType.equals(current.getPage()) && current.getAction() != null
-				&& PageType.ChangeDetailsPageType.equals(current.getAction())) {
+		if (PageType.UsersPageType.equals(current.getPage()) && current.getAction() != null && PageType.ChangeDetailsPageType.equals(current.getAction())) {
 			highlight(accountSettingsItem);
 		} else if (PageType.UsersPageType.equals(current.getPage()) && current.getAction() != null
 				&& PageType.NotificationsPageType.equals(current.getAction())) {
