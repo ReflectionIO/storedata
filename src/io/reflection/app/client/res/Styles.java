@@ -453,8 +453,6 @@ public interface Styles extends ClientBundle {
 
 		String datePickerDayIsFiller();
 
-		String datePickerDayIsToday();
-
 		String datePickerDayIsValue();
 
 		String datePickerDays();
@@ -823,20 +821,14 @@ public interface Styles extends ClientBundle {
 		@ClassName("hiring-title")
 		String hiringTitle();
 
-		@ClassName("home-title-container")
-		String homeTitleContainer();
+		@ClassName("home-leaderboard-button-container")
+		String homeLeaderboardButtonContainer();
 
-		@ClassName("home-welcome-container")
-		String homeWelcomeContainer();
+		@ClassName("home-leaderboard-title-container")
+		String homeLeaderboardTitleContainer();
 
-		@ClassName("home-welcome__call-to-action")
-		String homeWelcome__callToAction();
-
-		@ClassName("home-welcome__image")
-		String homeWelcome__image();
-
-		@ClassName("home-welcome__text")
-		String homeWelcome__text();
+		@ClassName("home-wide-container")
+		String homeWideContainer();
 
 		String hook();
 
@@ -1010,6 +1002,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("is-strong")
 		String isStrong();
 
+		@ClassName("is-submitted")
+		String isSubmitted();
+
 		@ClassName("is-submitted-success")
 		String isSubmittedSuccess();
 
@@ -1152,6 +1147,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("make-comment-button")
 		String makeCommentButton();
+
+		@ClassName("manage-subscription-message")
+		String manageSubscriptionMessage();
 
 		@ClassName("map--contact")
 		String mapContact();
@@ -1306,6 +1304,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("page-overlay--premium")
 		String pageOverlayPremium();
 
+		@ClassName("page-overlay--register")
+		String pageOverlayRegister();
+
 		@ClassName("page-overlay--standard")
 		String pageOverlayStandard();
 
@@ -1314,6 +1315,12 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("page-press")
 		String pagePress();
+
+		@ClassName("page-pricing")
+		String pagePricing();
+
+		@ClassName("page-pricing__head")
+		String pagePricing__head();
 
 		@ClassName("page-product")
 		String pageProduct();
@@ -1344,18 +1351,6 @@ public interface Styles extends ClientBundle {
 		@ClassName("panel-left-open")
 		String panelLeftOpen();
 
-		@ClassName("panel-link")
-		String panelLink();
-
-		@ClassName("panel-link__description")
-		String panelLink__description();
-
-		@ClassName("panel-link__link")
-		String panelLink__link();
-
-		@ClassName("panel-links")
-		String panelLinks();
-
 		@ClassName("panel-right")
 		String panelRight();
 
@@ -1373,6 +1368,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("password-strength-indicator-container")
 		String passwordStrengthIndicatorContainer();
+
+		@ClassName("per-month")
+		String perMonth();
 
 		@ClassName("phablet-width")
 		String phabletWidth();
@@ -1468,6 +1466,54 @@ public interface Styles extends ClientBundle {
 		@ClassName("price-column")
 		String priceColumn();
 
+		@ClassName("pricing-access-info")
+		String pricingAccessInfo();
+
+		@ClassName("pricing-access-info--highlighted")
+		String pricingAccessInfoHighlighted();
+
+		@ClassName("pricing-details")
+		String pricingDetails();
+
+		@ClassName("pricing-details-with-info")
+		String pricingDetailsWithInfo();
+
+		@ClassName("pricing-name")
+		String pricingName();
+
+		@ClassName("pricing-option")
+		String pricingOption();
+
+		@ClassName("pricing-option--business")
+		String pricingOptionBusiness();
+
+		@ClassName("pricing-option--current")
+		String pricingOptionCurrent();
+
+		@ClassName("pricing-option--header")
+		String pricingOptionHeader();
+
+		@ClassName("pricing-option--premium")
+		String pricingOptionPremium();
+
+		@ClassName("pricing-option--standard")
+		String pricingOptionStandard();
+
+		@ClassName("pricing-options")
+		String pricingOptions();
+
+		@ClassName("pricing-price")
+		String pricingPrice();
+
+		@ClassName("pricing-price-container")
+		String pricingPriceContainer();
+
+		@ClassName("pricing-sign-up-button")
+		String pricingSignUpButton();
+
+		@ClassName("pricing-sup")
+		String pricingSup();
+
 		@ClassName("product-image-container--left")
 		String productImageContainerLeft();
 
@@ -1477,14 +1523,20 @@ public interface Styles extends ClientBundle {
 		@ClassName("product-page--partners")
 		String productPagePartners();
 
+		@ClassName("product-page__quotes")
+		String productPage__quotes();
+
+		@ClassName("product-page__quotes__logo-container")
+		String productPage__quotes__logoContainer();
+
 		@ClassName("product-section")
 		String productSection();
 
 		@ClassName("product-section--content")
 		String productSectionContent();
 
-		@ClassName("product-section--featured")
-		String productSectionFeatured();
+		@ClassName("product-section--message")
+		String productSectionMessage();
 
 		@ClassName("product-text-content--left")
 		String productTextContentLeft();
@@ -1568,6 +1620,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("ref-button--loading-determinate")
 		String refButtonLoadingDeterminate();
+
+		@ClassName("ref-button--positive")
+		String refButtonPositive();
 
 		@ClassName("ref-button--success")
 		String refButtonSuccess();
@@ -1710,6 +1765,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("refresh-button")
 		String refreshButton();
 
+		@ClassName("register-form-container")
+		String registerFormContainer();
+
 		@ClassName("remove-form-field")
 		String removeFormField();
 
@@ -1826,6 +1884,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("store-select")
 		String storeSelect();
+
+		@ClassName("subscriptions-footer-container")
+		String subscriptionsFooterContainer();
 
 		@ClassName("success-tick")
 		String successTick();
@@ -2003,6 +2064,9 @@ public interface Styles extends ClientBundle {
 
 		String touch();
 
+		@ClassName("trial-label")
+		String trialLabel();
+
 		@ClassName("two-columns")
 		String twoColumns();
 
@@ -2042,6 +2106,30 @@ public interface Styles extends ClientBundle {
 		@ClassName("whats-this-tooltip-popup")
 		String whatsThisTooltipPopup();
 
+		@ClassName("why-reflection-button-container")
+		String whyReflectionButtonContainer();
+
+		@ClassName("why-reflection-container")
+		String whyReflectionContainer();
+
+		@ClassName("why-reflection-graphic")
+		String whyReflectionGraphic();
+
+		@ClassName("why-reflection-item")
+		String whyReflectionItem();
+
+		@ClassName("why-reflection-item__illustration-container")
+		String whyReflectionItem__illustrationContainer();
+
+		@ClassName("why-reflection-item__illustration-container--help")
+		String whyReflectionItem__illustrationContainerHelp();
+
+		@ClassName("why-reflection-item__illustration-container--price")
+		String whyReflectionItem__illustrationContainerPrice();
+
+		@ClassName("why-reflection-item__illustration-container--use")
+		String whyReflectionItem__illustrationContainerUse();
+
 		@ClassName("will-show")
 		String willShow();
 
@@ -2050,237 +2138,11 @@ public interface Styles extends ClientBundle {
 
 	}
 
-	public interface HomePageStyles extends CssResource {
-		@ClassName("actions-container")
-		String actionsContainer();
-
-		@ClassName("blockquote-container")
-		String blockquoteContainer();
-
-		@ClassName("border-radius-point")
-		String borderRadiusPoint();
-
-		String browserupgrade();
-
-		@ClassName("centre-content-container")
-		String centreContentContainer();
-
-		@ClassName("content-list")
-		String contentList();
-
-		@ClassName("gm-style")
-		String gmStyle();
-
-		@ClassName("gm-style-iw")
-		String gmStyleIw();
-
-		String header();
-
-		String header__actions();
-
-		@ClassName("hidden-text")
-		String hiddenText();
-
-		@ClassName("icon-angle-right")
-		String iconAngleRight();
-
-		@ClassName("img-width-landing-column-thin")
-		String imgWidthLandingColumnThin();
-
-		@ClassName("img-width-landing-column-wide")
-		String imgWidthLandingColumnWide();
-
-		@ClassName("is-chrome")
-		String isChrome();
-
-		@ClassName("is-opera")
-		String isOpera();
-
-		@ClassName("l-main")
-		String lMain();
-
-		@ClassName("landing-column-thin")
-		String landingColumnThin();
-
-		@ClassName("landing-column-thin__content")
-		String landingColumnThin__content();
-
-		@ClassName("landing-column-wide")
-		String landingColumnWide();
-
-		@ClassName("landing-column-wide__content")
-		String landingColumnWide__content();
-
-		@ClassName("landing-footer")
-		String landingFooter();
-
-		@ClassName("landing-footer__copyright")
-		String landingFooter__copyright();
-
-		@ClassName("landing-footer__inline-link")
-		String landingFooter__inlineLink();
-
-		@ClassName("landing-footer__social-links")
-		String landingFooter__socialLinks();
-
-		@ClassName("landing-page")
-		String landingPage();
-
-		@ClassName("landing-section-analyse")
-		String landingSectionAnalyse();
-
-		@ClassName("landing-section-analyse__column_two")
-		String landingSectionAnalyse__column_two();
-
-		@ClassName("landing-section-careers")
-		String landingSectionCareers();
-
-		@ClassName("landing-section-contact")
-		String landingSectionContact();
-
-		@ClassName("landing-section-contact__address")
-		String landingSectionContact__address();
-
-		@ClassName("landing-section-contact__email")
-		String landingSectionContact__email();
-
-		@ClassName("landing-section-contact__tel")
-		String landingSectionContact__tel();
-
-		@ClassName("landing-section-insights")
-		String landingSectionInsights();
-
-		@ClassName("landing-section-insights__column_one")
-		String landingSectionInsights__column_one();
-
-		@ClassName("landing-section-main")
-		String landingSectionMain();
-
-		@ClassName("landing-section-main-scroll-effect-container")
-		String landingSectionMainScrollEffectContainer();
-
-		@ClassName("landing-section-main__column-one")
-		String landingSectionMain__columnOne();
-
-		@ClassName("landing-section-main__column-two")
-		String landingSectionMain__columnTwo();
-
-		@ClassName("landing-section-main__content")
-		String landingSectionMain__content();
-
-		@ClassName("landing-section-map")
-		String landingSectionMap();
-
-		@ClassName("landing-section-story")
-		String landingSectionStory();
-
-		@ClassName("link-facebook")
-		String linkFacebook();
-
-		@ClassName("link-leaderboard")
-		String linkLeaderboard();
-
-		@ClassName("link-linkedin")
-		String linkLinkedin();
-
-		@ClassName("link-log-in")
-		String linkLogIn();
-
-		@ClassName("link-to-page-top__text")
-		String linkToPageTop__text();
-
-		@ClassName("link-twitter")
-		String linkTwitter();
-
-		@ClassName("list-partners")
-		String listPartners();
-
-		@ClassName("logo-reflection-footer")
-		String logoReflectionFooter();
-
-		@ClassName("map__info-box")
-		String map__infoBox();
-
-		@ClassName("map__info-box__down-arrow")
-		String map__infoBox__downArrow();
-
-		@ClassName("map__street-view-link")
-		String map__streetViewLink();
-
-		@ClassName("map__text-content")
-		String map__textContent();
-
-		@ClassName("no-flexbox")
-		String noFlexbox();
-
-		@ClassName("no-opacity")
-		String noOpacity();
-
-		@ClassName("no-scroll")
-		String noScroll();
-
-		@ClassName("no-touch")
-		String noTouch();
-
-		@ClassName("panel-left-open")
-		String panelLeftOpen();
-
-		@ClassName("panel-right")
-		String panelRight();
-
-		@ClassName("ref-button")
-		String refButton();
-
-		@ClassName("ref-button-apply")
-		String refButtonApply();
-
-		@ClassName("ref-button-cta-large")
-		String refButtonCtaLarge();
-
-		@ClassName("ref-icon-after")
-		String refIconAfter();
-
-		@ClassName("ref-icon-before")
-		String refIconBefore();
-
-		@ClassName("section-size-shadow-layer")
-		String sectionSizeShadowLayer();
-
-		@ClassName("site-logo")
-		String siteLogo();
-
-		@ClassName("small-text")
-		String smallText();
-
-		String touch();
-
-		@ClassName("vertical-center")
-		String verticalCenter();
-
-		@ClassName("window-height-scroll-effect-container")
-		String windowHeightScrollEffectContainer();
-	}
-
 	public static final Styles STYLES_INSTANCE = GWT.create(Styles.class);
 
 	@Source("preloader.gif")
 	@ImageOptions(repeatStyle = RepeatStyle.None)
 	ImageResource cellTableLoading();
-
-	@Source("footersprite.png")
-	@ImageOptions(repeatStyle = RepeatStyle.None)
-	ImageResource footerSprite();
-
-	@Source("unknownsprite.png")
-	@ImageOptions(repeatStyle = RepeatStyle.None)
-	ImageResource unknownSprite();
-
-	@Source("linkedaccountssprite.png")
-	@ImageOptions(repeatStyle = RepeatStyle.None)
-	ImageResource linkedAccountSprite();
-
-	@Source("homepage.gss")
-	HomePageStyles homePageStyle();
 
 	@Source("reflectionMain.gss")
 	ReflectionMainStyles reflectionMainStyle();
