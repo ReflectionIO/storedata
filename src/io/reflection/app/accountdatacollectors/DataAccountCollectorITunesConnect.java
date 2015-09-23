@@ -8,13 +8,6 @@
 //
 package io.reflection.app.accountdatacollectors;
 
-import io.reflection.app.api.shared.ApiError;
-import io.reflection.app.datatypes.shared.DataAccount;
-import io.reflection.app.datatypes.shared.DataAccountFetch;
-import io.reflection.app.datatypes.shared.DataAccountFetchStatusType;
-import io.reflection.app.helpers.ApiHelper;
-import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
-
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,6 +19,13 @@ import com.google.gson.JsonParseException;
 import com.willshex.gson.json.service.server.InputValidationException;
 import com.willshex.gson.json.service.server.ServiceException;
 import com.willshex.gson.json.shared.Convert;
+
+import io.reflection.app.api.shared.ApiError;
+import io.reflection.app.datatypes.shared.DataAccount;
+import io.reflection.app.datatypes.shared.DataAccountFetch;
+import io.reflection.app.datatypes.shared.DataAccountFetchStatusType;
+import io.reflection.app.helpers.ApiHelper;
+import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
 
 /**
  * @author billy1380
@@ -130,8 +130,8 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 				dataAccountFetch.data = cloudFileName;
 				success = true;
 			} else {
-				dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeEmpty;
-				dataAccountFetch.data = "Internal: The report was empty but there was no error from itunes connect";
+				dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeError;
+				dataAccountFetch.data = "Apple didn't throw an error but there was no sales summary file to download";
 				success = true;
 			}
 
