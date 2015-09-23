@@ -507,11 +507,11 @@ public final class Core extends ActionHandler {
 
 			output.pager = input.pager;
 
-			if (input.pager.totalCount == null && input.pager.boundless != Boolean.TRUE) {
-				input.pager.totalCount = Long.valueOf(output.freeRanks.size());
-			}
+			// if (input.pager.totalCount == null && input.pager.boundless != Boolean.TRUE) {
+			input.pager.totalCount = 200L;
+			// }
 
-			updatePager(output.pager, output.freeRanks, input.pager.totalCount);
+			// updatePager(output.pager, output.freeRanks, input.pager.totalCount);
 			// }
 
 			output.status = StatusType.StatusTypeSuccess;

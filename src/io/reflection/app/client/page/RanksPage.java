@@ -32,6 +32,7 @@ import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.AnimationHelper;
+import io.reflection.app.client.helper.ApiCallHelper;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.helper.FormattingHelper;
@@ -701,14 +702,12 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		}
 		String country = filter.getCountryA2Code();
 		String category = filter.getCategoryId().toString();
-		String date = String.valueOf(filter.getEndTime().longValue());
+		String date = String.valueOf(ApiCallHelper.getUTCDate(FilterController.get().getEndDate()).getTime());
 		if (SessionController.get().isValidSession()) {
 			downloadLeaderboard.setEnabled(false);
 			downloadLeaderboard.getElement().getFirstChildElement().setInnerText("Downloading ...");
 
 			String session = SessionController.get().getSessionForApiCall().toString();
-
-			// TODO make download button disabled when there are no data
 
 			String requestData = "listType=" + listType + "&country=" + country + "&category=" + category + "&date=" + date + "&session=" + session;
 
