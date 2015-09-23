@@ -983,11 +983,13 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	public void getItemRanksSuccess(GetItemRanksRequest input, GetItemRanksResponse output) {
 		if (output != null && output.item != null && output.status == StatusType.StatusTypeSuccess) {
 			if (output.ranks != null) { // if == null the list is empty
+
 				if (output.outOfLeaderboardDates != null && output.outOfLeaderboardDates.size() == FilterController.get().getDateRange().getDays()) {
 					chartContainer.setVisible(false);
 					appOutOfTop200Panel.setVisible(true);
 					setChartGraphsVisible(false);
 				}
+
 				setAppDetails(output.item);
 				Rank rankPrice = null;
 				for (Rank r : output.ranks) {

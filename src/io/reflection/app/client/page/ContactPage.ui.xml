@@ -98,7 +98,7 @@
 				</dl>
 			</div>
 		</section>
-		<div class="contact__map-container">
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.contact__mapContainer}">
 			<div id="js-map--contact" class="{STYLES_INSTANCE.reflectionMainStyle.mapContact}"></div>
 		</div>
 	</g:HTMLPanel>

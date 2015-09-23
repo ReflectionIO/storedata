@@ -576,8 +576,13 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 	/**
 	 * 
 	 */
-	public void resetBlogPage() {
+	public void resetSemiPublicPages() {
+		PostController.get().reset();
 		pages.put(PageType.BlogPostsPageType.toString(), null);
+		RankController.get().reset();
+		pages.put(PageType.RanksPageType.toString(), null);
+		ItemController.get().reset();
+		pages.put(PageType.ItemPageType.toString(), null);
 	}
 
 }
