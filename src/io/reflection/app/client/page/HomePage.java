@@ -28,6 +28,7 @@ import io.reflection.app.client.helper.FormattingHelper;
 import io.reflection.app.client.helper.ResponsiveDesignHelper;
 import io.reflection.app.client.helper.TooltipHelper;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
+import io.reflection.app.client.part.ErrorPanel;
 import io.reflection.app.client.part.LoadingIndicator;
 import io.reflection.app.client.part.datatypes.RanksGroup;
 import io.reflection.app.client.res.Styles;
@@ -55,6 +56,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author billy1380
@@ -73,7 +75,7 @@ public class HomePage extends Page implements GetAllTopItemsEventHandler {
 	@UiField Selector countrySelector;
 	@UiField Selector appStoreSelector;
 	@UiField Button applyFilters;
-
+	@UiField ErrorPanel errorPanel;
 	@UiField(provided = true) CellTable<RanksGroup> leaderboardHomeTable = new CellTable<RanksGroup>(ServiceConstants.SHORT_STEP_VALUE,
 			BootstrapGwtCellTable.INSTANCE);
 	private TextHeader rankHeader = new TextHeader("Rank");
@@ -402,6 +404,8 @@ public class HomePage extends Page implements GetAllTopItemsEventHandler {
 		}
 		if (updateData) {
 			applyFilters.setEnabled(false);
+			errorPanel.setVisible(false);
+			leaderboardHomeTable.setVisible(true);
 			RankController.get().reset();
 			RankController.get().fetchTopItems();
 		}
@@ -431,6 +435,13 @@ public class HomePage extends Page implements GetAllTopItemsEventHandler {
 	@Override
 	public void getAllTopItemsSuccess(GetAllTopItemsRequest input, GetAllTopItemsResponse output) {
 		TooltipHelper.updateHelperTooltip();
+		if (output.status.equals(StatusType.StatusTypeSuccess)) {
+
+		} else {
+			leaderboardHomeTable.setVisible(false);
+			errorPanel.setVisible(true);
+		}
+
 	}
 
 	/*
@@ -441,6 +452,9 @@ public class HomePage extends Page implements GetAllTopItemsEventHandler {
 	 * , java.lang.Throwable)
 	 */
 	@Override
-	public void getAllTopItemsFailure(GetAllTopItemsRequest input, Throwable caught) {}
+	public void getAllTopItemsFailure(GetAllTopItemsRequest input, Throwable caught) {
+		leaderboardHomeTable.setVisible(false);
+		errorPanel.setVisible(true);
+	}
 
 }

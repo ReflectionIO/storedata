@@ -1,6 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:cv="urn:import:com.google.gwt.user.cellview.client"
-	xmlns:c="urn:import:io.reflection.app.client.component">
+	xmlns:c="urn:import:io.reflection.app.client.component" xmlns:p="urn:import:io.reflection.app.client.part">
 
 	<ui:import field="io.reflection.app.client.page.PageType.RegisterPageType" />
 	<ui:import field="io.reflection.app.client.page.PageType.AboutPageType" />
@@ -118,6 +118,7 @@
 
 									</div>
 								</div>
+								<p:ErrorPanel ui:field="errorPanel" visible="false"></p:ErrorPanel>
 							</div>
 						</article>
 					</li>

@@ -68,6 +68,8 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 	@UiField UListElement itemList;
 	@UiField LIElement leaderboardItem;
 	@UiField LIElement myAppsItem;
+	@UiField LIElement productItem;
+	@UiField LIElement pricingItem;
 	@UiField LIElement blogItem;
 	@UiField LIElement forumItem;
 	@UiField LIElement adminItem;
