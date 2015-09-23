@@ -395,18 +395,9 @@ public final class Core extends ActionHandler {
 				input.pager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
 			}
 
-			// boolean skip = false;
-			// int maxLimit = !isLoggedIn ? SESSIONLESS_MAX_ITEMS : (!canSeeFullList ? PERMISSIONLESS_MAX_ITEMS : -1);
-
-			// if (!loggedIn || !canSeeFullList) {
-			// if (input.pager.start.longValue() > maxLimit) {
-			// skip = true;
-			// } else if (input.pager.count.longValue() + input.pager.start.longValue() > maxLimit) {
-			// input.pager.count = Long.valueOf(maxLimit - input.pager.start.longValue());
+			// if (!isLoggedIn) { // Force date to 2 days ago if is public call
+			// input.on = new DateTime(DateTimeZone.UTC).minusDays(2).toDate();
 			// }
-			// }
-			//
-			// if (!skip) {
 
 			if (!isAdmin) {
 				if (!(Arrays.asList("fr", "de", "gb", "it").contains(input.country.a2Code))) {
