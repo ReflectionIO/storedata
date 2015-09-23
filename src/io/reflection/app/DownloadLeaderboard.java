@@ -87,7 +87,7 @@ public class DownloadLeaderboard extends HttpServlet {
 						pricePaid = (DataTypeHelper.isZero(rankPaid.price.floatValue()) ? "free" : FormattingHelper.getCurrencySymbol(rankPaid.currency)
 								+ rankPaid.price.floatValue());
 					}
-					String downloadsPaid = (rankPaid.downloads != null ? rankPaid.downloads.toString() : "");
+					String downloadsPaid = (rankPaid.downloads != null ? new DecimalFormat(",###").format(rankPaid.downloads) : "");
 					String iapPaid = DataTypeHelper.jsonPropertiesIapState(itemLookup.get(rankPaid.itemId).properties, "yes", "no", "");
 					// Free app
 					String appNameFree = itemLookup.get(rankFree.itemId).name;
@@ -97,7 +97,7 @@ public class DownloadLeaderboard extends HttpServlet {
 						priceFree = (DataTypeHelper.isZero(rankFree.price.floatValue()) ? "free" : FormattingHelper.getCurrencySymbol(rankFree.currency)
 								+ rankFree.price.floatValue());
 					}
-					String downloadsFree = (rankFree.downloads != null ? rankFree.downloads.toString() : "");
+					String downloadsFree = (rankFree.downloads != null ? new DecimalFormat(",###").format(rankFree.downloads) : "");
 					String iapFree = DataTypeHelper.jsonPropertiesIapState(itemLookup.get(rankFree.itemId).properties, "yes", "no", "");
 					// Grossing app
 					String appNameGrossing = itemLookup.get(rankGrossing.itemId).name;
@@ -113,9 +113,9 @@ public class DownloadLeaderboard extends HttpServlet {
 					// Print Csv line
 					resp.getWriter().println(
 							position + "," + FormattingHelper.escapeCsv(appNamePaid) + "," + FormattingHelper.escapeCsv(developerNamePaid) + ","
-									+ FormattingHelper.escapeCsv(pricePaid) + "," + downloadsPaid + "," + iapPaid + ","
+									+ FormattingHelper.escapeCsv(pricePaid) + "," + FormattingHelper.escapeCsv(downloadsPaid) + "," + iapPaid + ","
 									+ FormattingHelper.escapeCsv(appNameFree) + "," + FormattingHelper.escapeCsv(developerNameFree) + ","
-									+ FormattingHelper.escapeCsv(priceFree) + "," + downloadsFree + "," + iapFree + ","
+									+ FormattingHelper.escapeCsv(priceFree) + "," + FormattingHelper.escapeCsv(downloadsFree) + "," + iapFree + ","
 									+ FormattingHelper.escapeCsv(appNameGrossing) + "," + FormattingHelper.escapeCsv(developerNameGrossing) + ","
 									+ FormattingHelper.escapeCsv(priceGrossing) + "," + FormattingHelper.escapeCsv(revenueGrossing) + "," + iapGrossing);
 				}
@@ -131,11 +131,11 @@ public class DownloadLeaderboard extends HttpServlet {
 							price = (DataTypeHelper.isZero(rank.price.floatValue()) ? "free" : FormattingHelper.getCurrencySymbol(rank.currency)
 									+ rank.price.floatValue());
 						}
-						String downloads = (rank.downloads != null ? rank.downloads.toString() : "");
+						String downloads = (rank.downloads != null ? new DecimalFormat(",###").format(rank.downloads) : "");
 						String iap = DataTypeHelper.jsonPropertiesIapState(itemLookup.get(rank.itemId).properties, "yes", "no", "");
 						resp.getWriter().println(
 								position + "," + FormattingHelper.escapeCsv(appName) + "," + FormattingHelper.escapeCsv(developerName) + ","
-										+ FormattingHelper.escapeCsv(price) + "," + downloads + "," + iap);
+										+ FormattingHelper.escapeCsv(price) + "," + FormattingHelper.escapeCsv(downloads) + "," + iap);
 					}
 				}
 			} else if (collector.isFree(getAllTopItemsRequest.listType)) {
@@ -150,11 +150,11 @@ public class DownloadLeaderboard extends HttpServlet {
 							price = (DataTypeHelper.isZero(rank.price.floatValue()) ? "free" : FormattingHelper.getCurrencySymbol(rank.currency)
 									+ rank.price.floatValue());
 						}
-						String downloads = (rank.downloads != null ? rank.downloads.toString() : "");
+						String downloads = (rank.downloads != null ? new DecimalFormat(",###").format(rank.downloads) : "");
 						String iap = DataTypeHelper.jsonPropertiesIapState(itemLookup.get(rank.itemId).properties, "yes", "no", "");
 						resp.getWriter().println(
 								position + "," + FormattingHelper.escapeCsv(appName) + "," + FormattingHelper.escapeCsv(developerName) + ","
-										+ FormattingHelper.escapeCsv(price) + "," + downloads + "," + iap);
+										+ FormattingHelper.escapeCsv(price) + "," + FormattingHelper.escapeCsv(downloads) + "," + iap);
 					}
 				}
 			} else if (collector.isGrossing(getAllTopItemsRequest.listType)) {
