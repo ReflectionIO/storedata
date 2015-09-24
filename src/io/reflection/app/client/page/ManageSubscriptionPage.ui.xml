@@ -1,0 +1,63 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
+	<ui:style>
+	
+	</ui:style>
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.pageMyAccount}">
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.tabs}">
+			<ul
+				class="{STYLES_INSTANCE.reflectionMainStyle.tabsContainer} {STYLES_INSTANCE.reflectionMainStyle.defaultTabsTransition} {STYLES_INSTANCE.reflectionMainStyle.tabsToDropdown}">
+				<li ui:field="accountSettingsItem"
+					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab}">
+					<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
+					<g:InlineHyperlink ui:field="accountSettingsLink" targetHistoryToken="#tab-content" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
+						<span>
+							<span>Account Details</span>
+						</span>
+					</g:InlineHyperlink>
+				</li>
+				<li ui:field="manageSubscriptionItem"
+					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab} {STYLES_INSTANCE.reflectionMainStyle.isActive}">
+					<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
+					<g:InlineHyperlink ui:field="manageSubscriptionLink" targetHistoryToken="#tab-content" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
+						<span>
+							<span>Manage Subscription</span>
+						</span>
+					</g:InlineHyperlink>
+				</li>
+				<li ui:field="notificationsItem"
+					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab}">
+
+					<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
+					<g:InlineHyperlink ui:field="notificationsLink" targetHistoryToken="#tab-content" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
+						<span>
+							<span ui:field="notifText">Manage Notifications</span>
+						</span>
+					</g:InlineHyperlink>
+				</li>
+				<li ui:field="usersItem"
+					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab}">
+
+					<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
+					<g:InlineHyperlink ui:field="usersLink" targetHistoryToken="#tab-content" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
+						<span>
+							<span ui:field="usersText">Users</span>
+						</span>
+					</g:InlineHyperlink>
+				</li>
+			</ul>
+		</div>
+		<div
+			class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth} {STYLES_INSTANCE.reflectionMainStyle.filtersContainer}">
+			<p class="{STYLES_INSTANCE.reflectionMainStyle.manageSubscriptionMessage}">
+				<svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve"><path fill="#727686"
+					d="M17.1,0.6L0,5.5v18.2L14.9,32L32,25.7V7.7L17.1,0.6z M29.3,8.6l-5.8,2L10.7,4.6l6.3-1.8
+	L29.3,8.6z M9.2,5l12.9,6.1L15,13.6L2,7.2V7L9.2,5z M2,8.3l12.5,6.1v15.1L2,22.6V8.3z M15.5,29.7V14.5L30,9.4v14.9L15.5,29.7z"></path></svg>
+				<span>Manage and upgrade your account subscription</span>
+				<!-- <a href="#">Cancel Subscription :(</a> -->
+				<!-- <a href="#">Edit payment details</a> -->
+			</p>
+		</div>
+	</g:HTMLPanel>
+</ui:UiBinder> 

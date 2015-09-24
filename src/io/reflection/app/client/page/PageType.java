@@ -73,6 +73,7 @@ public enum PageType {
 	LoginPageType("login", false),
 	LinkedAccountsPageType("linkedaccounts", true),
 	LinkItunesPageType("linkitunes", true),
+	ManageSubscriptionPageType("subscription", true),
 	MyAppsPageType("myapps", true),
 	NotificationsPageType("notifications", true),
 	NotPermittedPageType("notpermitted", false),
@@ -251,6 +252,9 @@ public enum PageType {
 			break;
 		case LoginPageType:
 			page = new LoginPage();
+			break;
+		case ManageSubscriptionPageType:
+			page = new ManageSubscriptionPage();
 			break;
 		case PressPageType:
 			page = new PressPage();

@@ -81,9 +81,11 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 	@UiField Element accountMenu;
 	@UiField HeadingElement userName;
 	@UiField HeadingElement userCompany;
-	@UiField LIElement accountSettingsItem;
+	@UiField LIElement accountDetailsItem;
+	@UiField LIElement manageSubscriptionItem;
 	@UiField LIElement notificationItem;
-	@UiField InlineHyperlink accountSettingsLink;
+	@UiField InlineHyperlink accountDetailsLink;
+	@UiField InlineHyperlink manageSubscriptionLink;
 	@UiField InlineHyperlink notificationLink;
 
 	private List<LIElement> items;
@@ -168,7 +170,8 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 	private void createItemList() {
 		if (items == null) {
 			items = new ArrayList<LIElement>();
-			items.add(accountSettingsItem);
+			items.add(accountDetailsItem);
+			items.add(manageSubscriptionItem);
 			items.add(notificationItem);
 		}
 	}
@@ -178,8 +181,10 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 			userName.setInnerText(user.forename + " " + user.surname);
 			userCompany.setInnerText(user.company);
 
-			accountSettingsLink
+			accountDetailsLink
 					.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.ChangeDetailsPageType.toString(), user.id.toString()));
+			manageSubscriptionLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.ManageSubscriptionPageType.toString(),
+					user.id.toString()));
 			notificationLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.NotificationsPageType.toString(), user.id.toString()));
 		}
 	}
@@ -258,7 +263,10 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 
 		// Highlight selected items
 		if (PageType.UsersPageType.equals(current.getPage()) && current.getAction() != null && PageType.ChangeDetailsPageType.equals(current.getAction())) {
-			highlight(accountSettingsItem);
+			highlight(accountDetailsItem);
+		} else if (PageType.UsersPageType.equals(current.getPage()) && current.getAction() != null
+				&& PageType.ManageSubscriptionPageType.equals(current.getAction())) {
+			highlight(manageSubscriptionItem);
 		} else if (PageType.UsersPageType.equals(current.getPage()) && current.getAction() != null
 				&& PageType.NotificationsPageType.equals(current.getAction())) {
 			highlight(notificationItem);

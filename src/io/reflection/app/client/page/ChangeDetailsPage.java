@@ -100,14 +100,14 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	@UiField(provided = true) CellTable<Permission> permissionsTable = new CellTable<Permission>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
 
 	@UiField LIElement accountSettingsItem;
-	@UiField LIElement linkedAccountsItem;
+	@UiField LIElement manageSubscriptionItem;
 	@UiField LIElement usersItem;
 	@UiField LIElement notificationsItem;
 	@UiField SpanElement usersText;
 	@UiField SpanElement notifText;
 
 	@UiField InlineHyperlink accountSettingsLink;
-	@UiField InlineHyperlink linkedAccountsLink;
+	@UiField InlineHyperlink manageSubscriptionLink;
 	@UiField InlineHyperlink usersLink;
 	@UiField InlineHyperlink notificationsLink;
 
@@ -171,7 +171,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 			usersText.setInnerHTML("Users <span class=\"text-small\">coming soon</span>");
 			usersItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
 			usersItem.getStyle().setCursor(Cursor.DEFAULT);
-			notifText.setInnerHTML("Notifications <span class=\"text-small\">coming soon</span>");
+			notifText.setInnerHTML("Manage Notifications <span class=\"text-small\">coming soon</span>");
 			notificationsItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
 			notificationsItem.getStyle().setCursor(Cursor.DEFAULT);
 			usersLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
@@ -184,8 +184,8 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		}
 
 		if (user != null) {
-			linkedAccountsLink
-					.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.LinkedAccountsPageType.toString(), user.id.toString()));
+			manageSubscriptionLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.ManageSubscriptionPageType.toString(),
+					user.id.toString()));
 		}
 
 		addRoleColumns(SessionController.get().isLoggedInUserAdmin());
@@ -202,9 +202,9 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 
 		// Add click event to LI element so the event is fired when clicking on the whole tab
 		Event.sinkEvents(accountSettingsItem, Event.ONCLICK);
-		Event.sinkEvents(linkedAccountsItem, Event.ONCLICK);
-		Event.sinkEvents(usersItem, Event.ONCLICK);
+		Event.sinkEvents(manageSubscriptionItem, Event.ONCLICK);
 		Event.sinkEvents(notificationsItem, Event.ONCLICK);
+		Event.sinkEvents(usersItem, Event.ONCLICK);
 		Event.setEventListener(accountSettingsItem, new EventListener() {
 
 			@Override
@@ -214,21 +214,12 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 				}
 			}
 		});
-		Event.setEventListener(linkedAccountsItem, new EventListener() {
+		Event.setEventListener(manageSubscriptionItem, new EventListener() {
 
 			@Override
 			public void onBrowserEvent(Event event) {
 				if (Event.ONCLICK == event.getTypeInt()) {
-					History.newItem(linkedAccountsLink.getTargetHistoryToken());
-				}
-			}
-		});
-		Event.setEventListener(usersItem, new EventListener() {
-
-			@Override
-			public void onBrowserEvent(Event event) {
-				if (Event.ONCLICK == event.getTypeInt()) {
-					History.newItem(usersLink.getTargetHistoryToken());
+					History.newItem(manageSubscriptionLink.getTargetHistoryToken());
 				}
 			}
 		});
@@ -238,6 +229,15 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 			public void onBrowserEvent(Event event) {
 				if (Event.ONCLICK == event.getTypeInt()) {
 					History.newItem(notificationsLink.getTargetHistoryToken());
+				}
+			}
+		});
+		Event.setEventListener(usersItem, new EventListener() {
+
+			@Override
+			public void onBrowserEvent(Event event) {
+				if (Event.ONCLICK == event.getTypeInt()) {
+					History.newItem(usersLink.getTargetHistoryToken());
 				}
 			}
 		});
