@@ -444,7 +444,7 @@ public final class Core extends ActionHandler {
 			List<String> listTypes = ApiHelper.getAllListTypes(input.store, input.listType);
 			Collector collector = CollectorFactory.getCollectorForStore(input.store.a3Code);
 
-			List<Rank> ranks;
+			List<Rank> ranks = new ArrayList<Rank>();
 			for (String listType : listTypes) {
 				// get all the ranks for the list type (we are using an infinite pager with no sorting to allow us to generate a deletion key during
 				// prediction)
@@ -458,9 +458,16 @@ public final class Core extends ActionHandler {
 					output.freeRanks = ranks;
 				} else if (collector.isPaid(listType)) {
 					output.paidRanks = ranks;
+					if (!isAdmin && !input.country.a2Code.equals("gb")) {// Remove paid ranks is not UK
+						for (Rank paidRank : output.paidRanks) {
+							paidRank.downloads = null;
+							paidRank.revenue = null;
+						}
+					}
 				} else if (collector.isGrossing(listType)) {
 					output.grossingRanks = ranks;
 				}
+
 			}
 
 			output.items = ItemServiceProvider.provide().getInternalIdItemBatch(itemIds);
