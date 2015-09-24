@@ -18,14 +18,12 @@ import java.util.Map;
  * 
  */
 public class FormattingHelper {
-
 	public static final String DATE_FORMAT_EEE_DD_MMM_YYYY = "EEE dd MMM yyyy";
 	public static final String DATE_FORMAT_EEE_DD_MM_YY = "EEE dd/MM/yy";
 	public static final String DATE_FORMAT_DD_MMM_YYYY = "dd MMM yyyy";
 	public static final String DATE_FORMAT_DD_MM_YYYY = "dd-MM-yyyy";
 	// public static final String DATE_FORMAT_YYYY_MM_DD = "yyyy-MM-dd";
 	public static final String DATE_FORMAT_DD_MMM_YYYY_HH_MM = "dd MMM yyyy - HH:mm";
-
 	public static final String TWO_DECIMALS_FORMAT = "#,##0.00";
 	public static final String WHOLE_NUMBER_FORMAT = ",###";
 
@@ -167,5 +165,15 @@ public class FormattingHelper {
 
 	public static String wordEmail(String address) {
 		return address == null ? "empty" : address.replace(".", " dot ").replace("@", " at ");
+	}
+
+	/**
+	 * Escape CSV as per rfc4180
+	 * 
+	 * @param csv
+	 * @return
+	 */
+	public static String escapeCsv(String csv) {
+		return "\"" + csv.replace("\"", "\"\"") + "\"";
 	}
 }

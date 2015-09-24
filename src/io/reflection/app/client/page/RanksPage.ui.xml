@@ -16,8 +16,8 @@
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneHalf}">
 			<h1 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree} {STYLES_INSTANCE.reflectionMainStyle.pageTitle}">App Leaderboard</h1>
 		</div>
-		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.pageFunctions}">
-			<form class="{STYLES_INSTANCE.reflectionMainStyle.inlineSearchForm}">
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.pageFunctions}" style="display: block">
+			<form class="{STYLES_INSTANCE.reflectionMainStyle.inlineSearchForm}" style="display: none">
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.searchFieldNoLabel}">
 					<input type="text" autocomplete="off" name="search" placeholder="Find an app" />
 					<input
@@ -25,9 +25,10 @@
 						type="submit" value="a" />
 				</div>
 			</form>
-			<button class="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall} {STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmallWithIcon}">
+			<g:Button ui:field="downloadLeaderboard"
+				styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall} {STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmallWithIcon}">
 				<span class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCloud}">Download</span>
-			</button>
+			</g:Button>
 		</div>
 
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.tabs}">
@@ -135,7 +136,8 @@
 					<c:Selector ui:field="categorySelector" alignCenter="" labelText="Category" dropdownTitle="Select a category" tooltip="Select a category"
 						overlay="true" />
 
-					<g:Button ui:field="applyFilters" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaSmall} {STYLES_INSTANCE.reflectionMainStyle.refreshButton}">
+					<g:Button ui:field="applyFilters" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaSmall} {STYLES_INSTANCE.reflectionMainStyle.refreshButton}"
+						enabled="false">
 						<svg class="{STYLES_INSTANCE.reflectionMainStyle.svgRefresh}" version="1.1" x="0px" y="0px" viewBox="0 0 16 16" enable-background="new 0 0 16 16"
 							xml:space="preserve">
 									<path fill="#FCFDFD"

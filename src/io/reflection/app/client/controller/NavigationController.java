@@ -72,7 +72,6 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 
 	private boolean loaded = false;
 
-	private HomePage homePage = null;
 	private LoggedInHomePage loggedInHomePage = null;
 
 	public static class Stack {
@@ -234,8 +233,7 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 	}
 
 	private NavigationController() {
-		homePage = new HomePage();
-		pages.put(PageType.HomePageType.toString(), homePage);
+		pages.put(PageType.HomePageType.toString(), new HomePage());
 		MixPanelApi.get().init("400e244ec1aab9ad548fe51024506310");
 	}
 
@@ -507,7 +505,7 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 	 */
 	public void purgeAllPages() {
 		pages.clear();
-		pages.put(PageType.HomePageType.toString(), homePage);
+		pages.put(PageType.HomePageType.toString(), new HomePage());
 	}
 
 	/*
@@ -531,7 +529,7 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 
 		// homePage init in the constructor
 
-		pages.put(PageType.HomePageType.toString(), homePage);
+		pages.put(PageType.HomePageType.toString(), new HomePage());
 
 	}
 

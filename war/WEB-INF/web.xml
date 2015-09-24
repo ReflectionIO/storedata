@@ -1,108 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
-http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-	version="2.5">
+http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	<servlet>
 		<servlet-name>Cron Tasks</servlet-name>
 		<servlet-class>io.reflection.app.CronServlet</servlet-class>
 	</servlet>
-	
+
 	<servlet>
 		<servlet-name>Collector Tasks</servlet-name>
 		<servlet-class>io.reflection.app.CollectorServlet</servlet-class>
 	</servlet>
-	
+
 	<servlet>
 		<servlet-name>Ingestor Tasks</servlet-name>
 		<servlet-class>io.reflection.app.IngestorServlet</servlet-class>
 	</servlet>
-    
-    <!-- <servlet>
-        <servlet-name>Modeller Tasks</servlet-name>
-        <servlet-class>io.reflection.app.ModellerServlet</servlet-class>
-    </servlet>
+
+	<!-- <servlet> <servlet-name>Modeller Tasks</servlet-name> <servlet-class>io.reflection.app.ModellerServlet</servlet-class> </servlet> <servlet> <servlet-name>Persist 
+		Tasks</servlet-name> <servlet-class>io.reflection.app.PersistServlet</servlet-class> </servlet> -->
 
 	<servlet>
-		<servlet-name>Persist Tasks</servlet-name>
-		<servlet-class>io.reflection.app.PersistServlet</servlet-class>
-	</servlet> -->
-    
-    <servlet>
-        <servlet-name>Predictor Tasks</servlet-name>
-        <servlet-class>io.reflection.app.PredictorServlet</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>Call Service Method Tasks</servlet-name>
-        <servlet-class>io.reflection.app.CallServiceMethodServlet</servlet-class>
-    </servlet>
-	
+		<servlet-name>Predictor Tasks</servlet-name>
+		<servlet-class>io.reflection.app.PredictorServlet</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>Call Service Method Tasks</servlet-name>
+		<servlet-class>io.reflection.app.CallServiceMethodServlet</servlet-class>
+	</servlet>
+
 	<servlet>
 		<servlet-name>Dev Helper</servlet-name>
 		<servlet-class>io.reflection.app.DevHelperServlet</servlet-class>
 	</servlet>
-	
-	<servlet>
-	    <servlet-name>Core api</servlet-name>
-	    <servlet-class>io.reflection.app.api.core.CoreJsonServlet</servlet-class>
-	</servlet>
-	
-	<servlet>
-	    <servlet-name>Lookup api</servlet-name>
-	    <servlet-class>io.reflection.app.api.lookup.LookupJsonServlet</servlet-class>
-	</servlet>
-    
-    <servlet>
-        <servlet-name>Blog api</servlet-name>
-        <servlet-class>io.reflection.app.api.blog.BlogJsonServlet</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>Forum api</servlet-name>
-        <servlet-class>io.reflection.app.api.forum.ForumJsonServlet</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>Admin api</servlet-name>
-        <servlet-class>io.reflection.app.api.admin.AdminJsonServlet</servlet-class>
-    </servlet>
-	
-	<servlet>
-	    <servlet-name>Item Property Lookup</servlet-name>
-	    <servlet-class>io.reflection.app.apple.ItemPropertyLookupServlet</servlet-class>
-	</servlet>
-    
-    <servlet>
-        <servlet-name>Send Mail</servlet-name>
-        <servlet-class>io.reflection.app.EmailServlet</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>Data Account Gather</servlet-name>
-        <servlet-class>io.reflection.app.DataAccountGatherServlet</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>Data Account Ingest</servlet-name>
-        <servlet-class>io.reflection.app.DataAccountIngestServlet</servlet-class>
-    </servlet>
-    
-        <servlet>
-        <servlet-name>Go To</servlet-name>
-        <servlet-class>io.reflection.app.GoToServlet</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>Rss</servlet-name>
-        <servlet-class>io.reflection.app.RssServlet</servlet-class>
-    </servlet>
 
-    <servlet>
-        <servlet-name>Archive</servlet-name>
-        <servlet-class>io.reflection.app.ArchiveServlet</servlet-class>
-    </servlet>
+	<servlet>
+		<servlet-name>Core api</servlet-name>
+		<servlet-class>io.reflection.app.api.core.CoreJsonServlet</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>Lookup api</servlet-name>
+		<servlet-class>io.reflection.app.api.lookup.LookupJsonServlet</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>Blog api</servlet-name>
+		<servlet-class>io.reflection.app.api.blog.BlogJsonServlet</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>Forum api</servlet-name>
+		<servlet-class>io.reflection.app.api.forum.ForumJsonServlet</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>Admin api</servlet-name>
+		<servlet-class>io.reflection.app.api.admin.AdminJsonServlet</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>Item Property Lookup</servlet-name>
+		<servlet-class>io.reflection.app.apple.ItemPropertyLookupServlet</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>Send Mail</servlet-name>
+		<servlet-class>io.reflection.app.EmailServlet</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>Data Account Gather</servlet-name>
+		<servlet-class>io.reflection.app.DataAccountGatherServlet</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>Data Account Ingest</servlet-name>
+		<servlet-class>io.reflection.app.DataAccountIngestServlet</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>Go To</servlet-name>
+		<servlet-class>io.reflection.app.GoToServlet</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>Rss</servlet-name>
+		<servlet-class>io.reflection.app.RssServlet</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>Archive</servlet-name>
+		<servlet-class>io.reflection.app.ArchiveServlet</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>Download Leaderboard</servlet-name>
+		<servlet-class>io.reflection.app.DownloadLeaderboard</servlet-class>
+	</servlet>
 
 	<servlet-mapping>
 		<servlet-name>Cron Tasks</servlet-name>
@@ -116,87 +112,81 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<servlet-name>Ingestor Tasks</servlet-name>
 		<url-pattern>/ingest</url-pattern>
 	</servlet-mapping>
-    <!-- <servlet-mapping>
-        <servlet-name>Modeller Tasks</servlet-name>
-        <url-pattern>/model</url-pattern>
-    </servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>Persist Tasks</servlet-name>
-		<url-pattern>/persist</url-pattern>
-	</servlet-mapping> -->
+	<!-- <servlet-mapping> <servlet-name>Modeller Tasks</servlet-name> <url-pattern>/model</url-pattern> </servlet-mapping> <servlet-mapping> <servlet-name>Persist 
+		Tasks</servlet-name> <url-pattern>/persist</url-pattern> </servlet-mapping> -->
 	<servlet-mapping>
 		<servlet-name>Dev Helper</servlet-name>
 		<url-pattern>/dev/devhelper</url-pattern>
 	</servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>Predictor Tasks</servlet-name>
-        <url-pattern>/predict</url-pattern>
-    </servlet-mapping>
-    
-    <servlet-mapping>
-        <servlet-name>Call Service Method Tasks</servlet-name>
-        <url-pattern>/callservicemethod</url-pattern>
-    </servlet-mapping>
-    
 	<servlet-mapping>
-	    <servlet-name>Core api</servlet-name>
-	    <url-pattern>/api/core</url-pattern>
+		<servlet-name>Predictor Tasks</servlet-name>
+		<url-pattern>/predict</url-pattern>
 	</servlet-mapping>
-	
+
 	<servlet-mapping>
-	    <servlet-name>Lookup api</servlet-name>
-	    <url-pattern>/api/lookup</url-pattern>
+		<servlet-name>Call Service Method Tasks</servlet-name>
+		<url-pattern>/callservicemethod</url-pattern>
 	</servlet-mapping>
-    
-    <servlet-mapping>
-        <servlet-name>Admin api</servlet-name>
-        <url-pattern>/api/admin</url-pattern>
-    </servlet-mapping>
-    
-    <servlet-mapping>
-        <servlet-name>Blog api</servlet-name>
-        <url-pattern>/api/blog</url-pattern>
-    </servlet-mapping>
-    
-    <servlet-mapping>
-        <servlet-name>Forum api</servlet-name>
-        <url-pattern>/api/forum</url-pattern>
-    </servlet-mapping>
-	
+
 	<servlet-mapping>
-	    <servlet-name>Item Property Lookup</servlet-name>
-	    <url-pattern>/itempropertylookup</url-pattern>
+		<servlet-name>Core api</servlet-name>
+		<url-pattern>/api/core</url-pattern>
 	</servlet-mapping>
-    
-    <servlet-mapping>
-        <servlet-name>Send Mail</servlet-name>
-        <url-pattern>/sendmail</url-pattern>
-    </servlet-mapping>
-    
-    <servlet-mapping>
-        <servlet-name>Data Account Gather</servlet-name>
-        <url-pattern>/dataaccountgather</url-pattern>
-    </servlet-mapping>
-    
-    <servlet-mapping>
-        <servlet-name>Data Account Ingest</servlet-name>
-        <url-pattern>/dataaccountingest</url-pattern>
-    </servlet-mapping>
-    
-    <servlet-mapping>
-        <servlet-name>Go To</servlet-name>
-        <url-pattern>/goto</url-pattern>
-    </servlet-mapping>
-    
-    <servlet-mapping>
-        <servlet-name>Rss</servlet-name>
-        <url-pattern>/rss</url-pattern>
-    </servlet-mapping>
-    
-    <servlet-mapping>
-        <servlet-name>Archive</servlet-name>
-        <url-pattern>/archive</url-pattern>
-    </servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>Lookup api</servlet-name>
+		<url-pattern>/api/lookup</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>Admin api</servlet-name>
+		<url-pattern>/api/admin</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>Blog api</servlet-name>
+		<url-pattern>/api/blog</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>Forum api</servlet-name>
+		<url-pattern>/api/forum</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>Item Property Lookup</servlet-name>
+		<url-pattern>/itempropertylookup</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>Send Mail</servlet-name>
+		<url-pattern>/sendmail</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>Data Account Gather</servlet-name>
+		<url-pattern>/dataaccountgather</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>Data Account Ingest</servlet-name>
+		<url-pattern>/dataaccountingest</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>Go To</servlet-name>
+		<url-pattern>/goto</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>Rss</servlet-name>
+		<url-pattern>/rss</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>Archive</servlet-name>
+		<url-pattern>/archive</url-pattern>
+	</servlet-mapping>
 
 	<servlet>
 		<display-name>Remote API Servlet</display-name>
@@ -209,63 +199,37 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<url-pattern>/remote_api</url-pattern>
 	</servlet-mapping>
 
-	<!-- <servlet>
-    <servlet-name>mapreduce</servlet-name>
-    <servlet-class>
-      com.google.appengine.tools.mapreduce.MapReduceServlet
-    </servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>mapreduce</servlet-name>
-    <url-pattern>/mapreduce/*</url-pattern>
-  </servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Download Leaderboard</servlet-name>
+		<url-pattern>/downloadleaderboard</url-pattern>
+	</servlet-mapping>
 
-  <servlet>
-    <servlet-name>pipeline</servlet-name>
-    <servlet-class>
-      com.google.appengine.tools.pipeline.impl.servlets.PipelineServlet
-    </servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>pipeline</servlet-name>
-    <url-pattern>/_ah/pipeline/*</url-pattern>
-  </servlet-mapping>
-	
-<security-constraint>
-  <web-resource-collection>
-    <url-pattern>/mapreduce/*</url-pattern>
-  </web-resource-collection>
-  <auth-constraint>
-    <role-name>admin</role-name>
-  </auth-constraint>
-</security-constraint> -->
+	<!-- <servlet> <servlet-name>mapreduce</servlet-name> <servlet-class> com.google.appengine.tools.mapreduce.MapReduceServlet </servlet-class> </servlet> <servlet-mapping> 
+		<servlet-name>mapreduce</servlet-name> <url-pattern>/mapreduce/*</url-pattern> </servlet-mapping> <servlet> <servlet-name>pipeline</servlet-name> <servlet-class> 
+		com.google.appengine.tools.pipeline.impl.servlets.PipelineServlet </servlet-class> </servlet> <servlet-mapping> <servlet-name>pipeline</servlet-name> <url-pattern>/_ah/pipeline/*</url-pattern> 
+		</servlet-mapping> <security-constraint> <web-resource-collection> <url-pattern>/mapreduce/*</url-pattern> </web-resource-collection> <auth-constraint> <role-name>admin</role-name> 
+		</auth-constraint> </security-constraint> -->
 
-<security-constraint>
-  <web-resource-collection>
-    <url-pattern>/dev/*</url-pattern>
-  </web-resource-collection>
-  <auth-constraint>
-    <role-name>admin</role-name>
-  </auth-constraint>
-</security-constraint>
+	<security-constraint>
+		<web-resource-collection>
+			<url-pattern>/dev/*</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>admin</role-name>
+		</auth-constraint>
+	</security-constraint>
 
-<security-constraint>
-  <web-resource-collection>
-    <url-pattern>/dk/*</url-pattern>
-  </web-resource-collection>
-  <auth-constraint>
-    <role-name>admin</role-name>
-  </auth-constraint>
-</security-constraint>
+	<security-constraint>
+		<web-resource-collection>
+			<url-pattern>/dk/*</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>admin</role-name>
+		</auth-constraint>
+	</security-constraint>
 
-<!-- <security-constraint>
-  <web-resource-collection>
-    <url-pattern>/internal/*</url-pattern>
-  </web-resource-collection>
-  <auth-constraint>
-    <role-name>admin</role-name>
-  </auth-constraint>
-</security-constraint> -->
+	<!-- <security-constraint> <web-resource-collection> <url-pattern>/internal/*</url-pattern> </web-resource-collection> <auth-constraint> <role-name>admin</role-name> 
+		</auth-constraint> </security-constraint> -->
 
 	<filter>
 		<filter-name>ObjectifyFilter</filter-name>
@@ -284,7 +248,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<filter-name>DBConnectionPoolingFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-	
+
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>

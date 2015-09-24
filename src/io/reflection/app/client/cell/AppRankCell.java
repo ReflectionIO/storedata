@@ -94,93 +94,92 @@ public class AppRankCell extends AbstractCell<Rank> {
 		// }
 		// }
 
-		Stack s = NavigationController.get().getStack();
-		if (s != null) {
-			listType = s.getParameter(RanksPage.SELECTED_TAB_PARAMETER_INDEX);
+		Stack stack = NavigationController.get().getStack();
+		if (stack != null) {
+			listType = stack.getParameter(RanksPage.SELECTED_TAB_PARAMETER_INDEX);
 		}
 
-		if (FilterController.OVERALL_LIST_TYPE.equals(listType)) {
-			switch (context.getColumn()) {
-			case 1:
-				filter = Filter.parse(filter.asItemFilterString());
-				filter.setListType(FilterController.PAID_LIST_TYPE);
-				display = SafeStylesUtils.fromTrustedString("");
-				// if (!SessionController.get().isLoggedInUserAdmin()) {
-				if (rank.downloads != null) {
+		if (PageType.HomePageType.equals(stack.getPage())) {
+			display = SafeStylesUtils.forDisplay(Display.NONE);
+			dailyData = SafeHtmlUtils.fromSafeConstant("");
+		} else {
+
+			if (FilterController.OVERALL_LIST_TYPE.equals(listType)) {
+				switch (context.getColumn()) {
+				case 1:
+					filter = Filter.parse(filter.asItemFilterString());
+					filter.setListType(FilterController.PAID_LIST_TYPE);
+					display = SafeStylesUtils.fromTrustedString("");
 					if (!SessionController.get().isLoggedInUserAdmin() && rank.position != null && rank.position.intValue() > 0
 							&& rank.position.intValue() <= 5) {
 						dailyData = SafeHtmlUtils.fromSafeConstant("<span class=\"" + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
 								+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud() + "\">&nbsp;</span><span class=\"js-tooltip "
 								+ Styles.STYLES_INSTANCE.reflectionMainStyle().whatsThisTooltipIconStatic()
 								+ "\" data-tooltip=\"We are upgrading our model to improve accuracy for the Top 5. It will be implemented soon.\"></span>");
-					} else {
+					} else if (rank.downloads != null) {
 						dailyData = DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
 								+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
 								WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue()));
+					} else if (!SessionController.get().isValidSession() && rank.position.intValue() > 10) {
+						dailyData = SafeHtmlUtils.EMPTY_SAFE_HTML;
 					}
-				} else if (!SessionController.get().isValidSession() && rank.position.intValue() > 10) {
-					dailyData = SafeHtmlUtils.EMPTY_SAFE_HTML;
-				}
-				// }
-				break;
-			case 2:
-				filter = Filter.parse(filter.asItemFilterString());
-				filter.setListType(FilterController.FREE_LIST_TYPE);
-				display = SafeStylesUtils.fromTrustedString("");
-				if (rank.downloads != null) {
+					break;
+				case 2:
+					filter = Filter.parse(filter.asItemFilterString());
+					filter.setListType(FilterController.FREE_LIST_TYPE);
+					display = SafeStylesUtils.fromTrustedString("");
 					if (!SessionController.get().isLoggedInUserAdmin() && rank.position != null && rank.position.intValue() > 0
 							&& rank.position.intValue() <= 5) {
 						dailyData = SafeHtmlUtils.fromSafeConstant("<span class=\"" + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
 								+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud() + "\">&nbsp;</span><span class=\"js-tooltip "
 								+ Styles.STYLES_INSTANCE.reflectionMainStyle().whatsThisTooltipIconStatic()
 								+ "\" data-tooltip=\"We are upgrading our model to improve accuracy for the Top 5. It will be implemented soon.\"></span>");
-					} else {
+					} else if (rank.downloads != null) {
 						dailyData = DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
 								+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
 								WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue()));
+					} else if (!SessionController.get().isValidSession() && rank.position.intValue() > 10) {
+						dailyData = SafeHtmlUtils.EMPTY_SAFE_HTML;
 					}
-				} else if (!SessionController.get().isValidSession() && rank.position.intValue() > 10) {
-					dailyData = SafeHtmlUtils.EMPTY_SAFE_HTML;
-				}
-				break;
-			case 3:
-				filter = Filter.parse(filter.asItemFilterString());
-				filter.setListType(FilterController.GROSSING_LIST_TYPE);
-				display = SafeStylesUtils.fromTrustedString("");
-				// if (!SessionController.get().isLoggedInUserAdmin()) {
-				if (rank.currency != null && rank.revenue != null) {
+					break;
+				case 3:
+					filter = Filter.parse(filter.asItemFilterString());
+					filter.setListType(FilterController.GROSSING_LIST_TYPE);
+					display = SafeStylesUtils.fromTrustedString("");
+					// if (!SessionController.get().isLoggedInUserAdmin()) {
 					if (!SessionController.get().isLoggedInUserAdmin() && rank.grossingPosition != null && rank.grossingPosition.intValue() > 0
 							&& rank.grossingPosition.intValue() <= 5) {
 						dailyData = SafeHtmlUtils.fromSafeConstant("<span class=\"" + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
 								+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue() + "\">&nbsp;</span><span class=\"js-tooltip "
 								+ Styles.STYLES_INSTANCE.reflectionMainStyle().whatsThisTooltipIconStatic()
 								+ "\" data-tooltip=\"We are upgrading our model to improve accuracy for the Top 5. It will be implemented soon.\"></span>");
-					} else {
+					} else if (rank.currency != null && rank.revenue != null) {
 						dailyData = DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
 								+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue(), "",
 								FormattingHelper.asWholeMoneyString(rank.currency, rank.revenue.floatValue()));
+					} else if (!SessionController.get().isValidSession() && rank.grossingPosition.intValue() > 10) {
+						dailyData = SafeHtmlUtils.EMPTY_SAFE_HTML;
 					}
-				} else if (!SessionController.get().isValidSession() && rank.grossingPosition.intValue() > 10) {
-					dailyData = SafeHtmlUtils.EMPTY_SAFE_HTML;
+					// }
+					break;
 				}
-				// }
-				break;
+			} else if (FilterController.FREE_LIST_TYPE.equals(listType)) {
+				filter = Filter.parse(filter.asItemFilterString());
+				filter.setListType(FilterController.FREE_LIST_TYPE);
+				display = SafeStylesUtils.forDisplay(Display.NONE);
+				dailyData = SafeHtmlUtils.fromSafeConstant("");
+			} else if (FilterController.PAID_LIST_TYPE.equals(listType)) {
+				filter = Filter.parse(filter.asItemFilterString());
+				filter.setListType(FilterController.PAID_LIST_TYPE);
+				display = SafeStylesUtils.forDisplay(Display.NONE);
+				dailyData = SafeHtmlUtils.fromSafeConstant("");
+			} else if (FilterController.GROSSING_LIST_TYPE.equals(listType)) {
+				filter = Filter.parse(filter.asItemFilterString());
+				filter.setListType(FilterController.GROSSING_LIST_TYPE);
+				display = SafeStylesUtils.forDisplay(Display.NONE);
+				dailyData = SafeHtmlUtils.fromSafeConstant("");
 			}
-		} else if (FilterController.FREE_LIST_TYPE.equals(listType)) {
-			filter = Filter.parse(filter.asItemFilterString());
-			filter.setListType(FilterController.FREE_LIST_TYPE);
-			display = SafeStylesUtils.forDisplay(Display.NONE);
-			dailyData = SafeHtmlUtils.fromSafeConstant("");
-		} else if (FilterController.PAID_LIST_TYPE.equals(listType)) {
-			filter = Filter.parse(filter.asItemFilterString());
-			filter.setListType(FilterController.PAID_LIST_TYPE);
-			display = SafeStylesUtils.forDisplay(Display.NONE);
-			dailyData = SafeHtmlUtils.fromSafeConstant("");
-		} else if (FilterController.GROSSING_LIST_TYPE.equals(listType)) {
-			filter = Filter.parse(filter.asItemFilterString());
-			filter.setListType(FilterController.GROSSING_LIST_TYPE);
-			display = SafeStylesUtils.forDisplay(Display.NONE);
-			dailyData = SafeHtmlUtils.fromSafeConstant("");
+
 		}
 
 		SafeUri link = PageType.ItemPageType.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE, item.internalId, FilterController.RANKING_CHART_TYPE,

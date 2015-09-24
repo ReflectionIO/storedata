@@ -2,278 +2,417 @@
 //  HomePage.java
 //  storedata
 //
-//  Created by William Shakour (billy1380) on 13 Jan 2014.
-//  Copyright © 2014 Reflection.io Ltd. All rights reserved.
+//  Created by Stefano Capuzzi on 23 Sep 2015.
+//  Copyright © 2015 Reflection.io Ltd. All rights reserved.
 //
 package io.reflection.app.client.page;
 
+import static io.reflection.app.client.controller.FilterController.FREE_LIST_TYPE;
+import static io.reflection.app.client.controller.FilterController.GROSSING_LIST_TYPE;
+import static io.reflection.app.client.controller.FilterController.PAID_LIST_TYPE;
+import static io.reflection.app.client.helper.FormattingHelper.WHOLE_NUMBER_FORMATTER;
+import io.reflection.app.api.core.client.CoreService;
+import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
+import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
+import io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler;
+import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.client.DefaultEventBus;
+import io.reflection.app.client.cell.AppRankCell;
+import io.reflection.app.client.component.Selector;
+import io.reflection.app.client.controller.FilterController;
+import io.reflection.app.client.controller.ItemController;
+import io.reflection.app.client.controller.ServiceConstants;
+import io.reflection.app.client.controller.ServiceCreator;
+import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.helper.AnimationHelper;
-import io.reflection.app.client.helper.DOMHelper;
-import io.reflection.app.client.helper.UserAgentHelper;
+import io.reflection.app.client.helper.FilterHelper;
+import io.reflection.app.client.helper.FormattingHelper;
+import io.reflection.app.client.helper.ResponsiveDesignHelper;
+import io.reflection.app.client.helper.TooltipHelper;
+import io.reflection.app.client.part.BootstrapGwtCellTable;
+import io.reflection.app.client.part.ErrorPanel;
+import io.reflection.app.client.part.LoadingIndicator;
+import io.reflection.app.client.part.datatypes.RanksGroup;
 import io.reflection.app.client.res.Styles;
+import io.reflection.app.client.res.Styles.ReflectionMainStyles;
+import io.reflection.app.datatypes.shared.Rank;
+import io.reflection.app.shared.util.DataTypeHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.ScriptInjector;
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.StyleInjector;
-import com.google.gwt.dom.client.VideoElement;
+import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.Window.ScrollEvent;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.InlineHyperlink;
+import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.cellview.client.SafeHtmlHeader;
+import com.google.gwt.user.cellview.client.TextHeader;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.EventListener;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.view.client.AsyncDataProvider;
+import com.google.gwt.view.client.HasData;
+import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author billy1380
  * 
  */
-public class HomePage extends Page {
+public class HomePage extends Page implements GetAllTopItemsEventHandler {
 
 	private static HomePageUiBinder uiBinder = GWT.create(HomePageUiBinder.class);
 
 	interface HomePageUiBinder extends UiBinder<Widget, HomePage> {}
 
-	@UiField InlineHyperlink applyNowBtn;
-	@UiField Anchor linkScrollToAnchor;
-	@UiField Element sectionMain;
-	@UiField Element sectionSizeShadowLayer;
-	@UiField Element sectionHowIntelHelps;
-	// @UiField InlineHyperlink homeBtn;
-	@UiField HTMLPanel leaderBoardScreenshot;
-	@UiField HTMLPanel analysisScreenshot;
+	@UiField LIElement paidItem;
+	@UiField LIElement freeItem;
+	@UiField LIElement grossingItem;
+	@UiField SpanElement dateFixed;
+	@UiField Selector countrySelector;
+	private String selectedCountry = "gb";
+	@UiField Selector appStoreSelector;
+	private String selectedAppStore = "iph";
+	@UiField Button applyFilters;
+	@UiField ErrorPanel errorPanel;
+	@UiField(provided = true) CellTable<RanksGroup> leaderboardHomeTable = new CellTable<RanksGroup>(ServiceConstants.SHORT_STEP_VALUE,
+			BootstrapGwtCellTable.INSTANCE);
+	private TextHeader rankHeader = new TextHeader("Rank");
+	private TextHeader priceHeader = new TextHeader("Price");
+	private SafeHtmlHeader iapHeader = new SafeHtmlHeader(
+			SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"In App Purchases\">IAP</span>"));
+	private Column<RanksGroup, SafeHtml> rankColumn;
+	private Column<RanksGroup, Rank> paidColumn;
+	private Column<RanksGroup, Rank> freeColumn;
+	private Column<RanksGroup, Rank> grossingColumn;
+	private Column<RanksGroup, SafeHtml> priceColumn;
+	private Column<RanksGroup, SafeHtml> downloadsColumn;
+	private Column<RanksGroup, SafeHtml> revenueColumn;
+	private Column<RanksGroup, SafeHtml> iapColumn;
+	private LoadingIndicator loadingIndicatorFreeList = AnimationHelper.getLeaderboardListLoadingIndicator(ServiceConstants.SHORT_STEP_VALUE, true);
+	private LoadingIndicator loadingIndicatorPaidGrossingList = AnimationHelper.getLeaderboardListLoadingIndicator(ServiceConstants.SHORT_STEP_VALUE, false);
 
-	// elements for IE consitionals
-	private Element picture1, source1, source2;
-	private Element picture2, source3, source4;
-	private Element picture3, source5, source6;
-	private boolean mapScriptInjected;
+	private HomeRankProvider homeRankProvider = new HomeRankProvider();
+	private String selectedTab = PAID_LIST_TYPE;
+	private ReflectionMainStyles style = Styles.STYLES_INSTANCE.reflectionMainStyle();
 
 	public HomePage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		addHomeBtnPicture();
-		addLeaderboardScreenshotPicture();
-		addAnalysisScreenshotPicture();
+		dateFixed.setInnerText(FormattingHelper.DATE_FORMATTER_DD_MMM_YYYY.format(FilterHelper.getDaysAgo(2)));
+		FilterHelper.addCountries(countrySelector, false);
+		FilterHelper.addStores(appStoreSelector, false);
+		countrySelector.setSelectedIndex(3);
+		appStoreSelector.setSelectedIndex(1);
 
-		StyleInjector.injectAtStart(Styles.STYLES_INSTANCE.homePageStyle().getText());
+		leaderboardHomeTable.getTableLoadingSection().addClassName(style.tableBodyLoading());
+		homeRankProvider.addDataDisplay(leaderboardHomeTable);
 
-		applyNowBtn.setTargetHistoryToken(PageType.RegisterPageType.asTargetHistoryToken("requestinvite"));
+		Event.sinkEvents(paidItem, Event.ONCLICK);
+		Event.sinkEvents(freeItem, Event.ONCLICK);
+		Event.sinkEvents(grossingItem, Event.ONCLICK);
+		Event.setEventListener(paidItem, new EventListener() {
 
-		appendConditionalTags();
+			@Override
+			public void onBrowserEvent(Event event) {
+				if (Event.ONCLICK == event.getTypeInt()) {
+					freeItem.removeClassName(style.isActive());
+					grossingItem.removeClassName(style.isActive());
+					paidItem.addClassName(style.isActive());
+					removeAllColumns();
+					leaderboardHomeTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+					leaderboardHomeTable.setColumnWidth(paidColumn, 30.0, Unit.PCT);
+					leaderboardHomeTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
+					leaderboardHomeTable.setColumnWidth(downloadsColumn, 19.0, Unit.PCT);
+					leaderboardHomeTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
+					leaderboardHomeTable.addColumn(rankColumn, rankHeader);
+					leaderboardHomeTable.addColumn(paidColumn, "App Name");
+					leaderboardHomeTable.addColumn(priceColumn, priceHeader);
+					leaderboardHomeTable.addColumn(downloadsColumn, "Downloads");
+					leaderboardHomeTable.addColumn(iapColumn, iapHeader);
+					leaderboardHomeTable.addColumnStyleName(4, style.columnHiddenMobile());
+					iapHeader.setHeaderStyleNames(style.columnHiddenMobile());
+					iapColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
+					ResponsiveDesignHelper.makeTabsResponsive();
+					leaderboardHomeTable.setLoadingIndicator(loadingIndicatorPaidGrossingList);
+					TooltipHelper.updateHelperTooltip();
+					selectedTab = PAID_LIST_TYPE;
+				}
+			}
+		});
+		Event.setEventListener(freeItem, new EventListener() {
 
-		initScrollEffect();
+			@Override
+			public void onBrowserEvent(Event event) {
+				if (Event.ONCLICK == event.getTypeInt()) {
+					paidItem.removeClassName(style.isActive());
+					grossingItem.removeClassName(style.isActive());
+					freeItem.addClassName(style.isActive());
+					removeAllColumns();
+					leaderboardHomeTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+					leaderboardHomeTable.setColumnWidth(freeColumn, 30.0, Unit.PCT);
+					leaderboardHomeTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
+					leaderboardHomeTable.setColumnWidth(downloadsColumn, 19.0, Unit.PCT);
+					leaderboardHomeTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
+					leaderboardHomeTable.addColumn(rankColumn, rankHeader);
+					leaderboardHomeTable.addColumn(freeColumn, "App Name");
+					leaderboardHomeTable.addColumn(priceColumn, priceHeader);
+					leaderboardHomeTable.addColumn(downloadsColumn, "Downloads");
+					leaderboardHomeTable.addColumn(iapColumn, iapHeader);
+					priceHeader.setHeaderStyleNames(style.columnHiddenMobile());
+					priceColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
+					leaderboardHomeTable.addColumnStyleName(2, style.columnHiddenMobile());
+					leaderboardHomeTable.setLoadingIndicator(loadingIndicatorFreeList);
+					ResponsiveDesignHelper.makeTabsResponsive();
+					TooltipHelper.updateHelperTooltip();
+					selectedTab = FREE_LIST_TYPE;
+				}
+			}
+		});
+		Event.setEventListener(grossingItem, new EventListener() {
 
-		nativeInitMap();
+			@Override
+			public void onBrowserEvent(Event event) {
+				if (Event.ONCLICK == event.getTypeInt()) {
+					paidItem.removeClassName(style.isActive());
+					freeItem.removeClassName(style.isActive());
+					grossingItem.addClassName(style.isActive());
+					removeAllColumns();
+					leaderboardHomeTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+					leaderboardHomeTable.setColumnWidth(grossingColumn, 30.0, Unit.PCT);
+					leaderboardHomeTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
+					leaderboardHomeTable.setColumnWidth(revenueColumn, 19.0, Unit.PCT);
+					leaderboardHomeTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
+					leaderboardHomeTable.addColumn(rankColumn, rankHeader);
+					leaderboardHomeTable.addColumn(grossingColumn, "App Name");
+					leaderboardHomeTable.addColumn(priceColumn, priceHeader);
+					leaderboardHomeTable.addColumn(revenueColumn, "Revenue");
+					leaderboardHomeTable.addColumn(iapColumn, iapHeader);
+					iapHeader.setHeaderStyleNames(style.columnHiddenMobile());
+					iapColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
+					leaderboardHomeTable.addColumnStyleName(4, style.columnHiddenMobile());
+					leaderboardHomeTable.setLoadingIndicator(loadingIndicatorPaidGrossingList);
+					ResponsiveDesignHelper.makeTabsResponsive();
+					TooltipHelper.updateHelperTooltip();
+					selectedTab = GROSSING_LIST_TYPE;
+				}
+			}
+		});
 
+		createColumns();
+		leaderboardHomeTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+		leaderboardHomeTable.setColumnWidth(paidColumn, 30.0, Unit.PCT);
+		leaderboardHomeTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
+		leaderboardHomeTable.setColumnWidth(downloadsColumn, 19.0, Unit.PCT);
+		leaderboardHomeTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
+		leaderboardHomeTable.addColumn(rankColumn, rankHeader);
+		leaderboardHomeTable.addColumn(paidColumn, "App Name");
+		leaderboardHomeTable.addColumn(priceColumn, priceHeader);
+		leaderboardHomeTable.addColumn(downloadsColumn, "Downloads");
+		leaderboardHomeTable.addColumn(iapColumn, iapHeader);
+		leaderboardHomeTable.addColumnStyleName(4, style.columnHiddenMobile());
+		iapHeader.setHeaderStyleNames(style.columnHiddenMobile());
+		iapColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
+		TooltipHelper.updateHelperTooltip();
+		leaderboardHomeTable.setLoadingIndicator(loadingIndicatorPaidGrossingList);
 	}
 
-	private void addHomeBtnPicture() {
-		// picture1 = DOM.createElement("picture");
-		//
-		// source1 = DOM.createElement("source");
-		// source1.setAttribute("srcset", Images.INSTANCE.reflectionLogoBeta().getSafeUri().asString());
-		// source1.setAttribute("media", "(min-width: 480px)");
-		//
-		// source2 = DOM.createElement("source");
-		// source2.setAttribute("srcset", Images.INSTANCE.mobileReflectionLogoBeta().getSafeUri().asString());
-		//
-		// Image img = new Image(Images.INSTANCE.reflectionLogoBeta());
-		// img.setAltText("Reflection logo");
-		//
-		// picture1.appendChild(source1);
-		// picture1.appendChild(source2);
-		// picture1.appendChild(img.getElement());
-		//
-		// homeBtn.getElement().appendChild(picture1);
-	}
+	private void createColumns() {
+		rankColumn = new Column<RanksGroup, SafeHtml>(new SafeHtmlCell()) {
 
-	private void addLeaderboardScreenshotPicture() {
-		picture2 = DOM.createElement("picture");
+			@Override
+			public SafeHtml getValue(RanksGroup object) {
+				return (object.free.position != null) ? SafeHtmlUtils.fromTrustedString(object.free.position.toString()) : SafeHtmlUtils
+						.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
+			}
 
-		source3 = DOM.createElement("source");
-		source3.setAttribute("srcset", "images/screenshots/Leaderboard_Revenue.png");
-		source3.setAttribute("media", "(min-width: 720px)");
+		};
+		rankColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.mhxte6cID());
+		rankHeader.setHeaderStyleNames(style.mhxte6cIF());
 
-		source4 = DOM.createElement("source");
-		source4.setAttribute("srcset", "images/screenshots/Leaderboard_Revenue_Mobile.png");
+		AppRankCell appRankCell = new AppRankCell();
 
-		Image img = new Image("images/screenshots/Leaderboard_Revenue.png");
-		img.setAltText("Leaderboard screenshot");
+		paidColumn = new Column<RanksGroup, Rank>(appRankCell) {
 
-		picture2.appendChild(source3);
-		picture2.appendChild(source4);
-		picture2.appendChild(img.getElement());
+			@Override
+			public Rank getValue(RanksGroup object) {
+				return object.paid;
+			}
+		};
+		paidColumn.setCellStyleNames(style.mhxte6ciA());
 
-		leaderBoardScreenshot.getElement().appendChild(picture2);
-	}
+		freeColumn = new Column<RanksGroup, Rank>(appRankCell) {
 
-	private void addAnalysisScreenshotPicture() {
-		picture3 = DOM.createElement("picture");
+			@Override
+			public Rank getValue(RanksGroup object) {
+				return object.free;
+			}
 
-		source5 = DOM.createElement("source");
-		source5.setAttribute("srcset", "images/screenshots/App_Page-v2.png");
-		source5.setAttribute("media", "(min-width: 720px)");
+		};
+		freeColumn.setCellStyleNames(style.mhxte6ciA());
 
-		source6 = DOM.createElement("source");
-		source6.setAttribute("srcset", "images/screenshots/App_Page_Mobile.png");
+		grossingColumn = new Column<RanksGroup, Rank>(appRankCell) {
 
-		Image img = new Image("images/screenshots/App_Page-v2.png");
-		img.setAltText("Analysis screenshot");
+			@Override
+			public Rank getValue(RanksGroup object) {
+				return object.grossing;
+			}
+		};
+		grossingColumn.setCellStyleNames(style.mhxte6ciA());
 
-		picture3.appendChild(source5);
-		picture3.appendChild(source6);
-		picture3.appendChild(img.getElement());
+		priceColumn = new Column<RanksGroup, SafeHtml>(new SafeHtmlCell()) {
 
-		analysisScreenshot.getElement().appendChild(picture3);
-	}
+			@Override
+			public SafeHtml getValue(RanksGroup object) {
+				Rank rank = rankForListType(object);
+				return (rank.currency != null && rank.price != null) ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.asPriceString(rank.currency,
+						rank.price.floatValue())) : SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
+			}
+		};
+		priceColumn.setCellStyleNames(style.mhxte6ciA());
 
-	@UiHandler("linkScrollToAnchor")
-	void onLinkScrollToAnchorClicked(ClickEvent event) {
-		event.preventDefault();
-		// String href = linkScrollToAnchor.getElement().getAttribute("href");
-		int navHeight = 60;
-		int targetTop = sectionHowIntelHelps.getOffsetTop();
-		AnimationHelper.nativeScrollTop(targetTop - navHeight, 455, "swing");
-	}
+		downloadsColumn = new Column<RanksGroup, SafeHtml>(new SafeHtmlCell()) {
 
-	private void initScrollEffect() {
-		if (DOMHelper.getHtmlElement().hasClassName("csstransforms") && DOMHelper.getHtmlElement().hasClassName("no-touch")) {
-			final int breakpointVertical = 710;
-			final int breakpointHorizontal = 980;
-			Window.addWindowScrollHandler(new Window.ScrollHandler() {
-				@Override
-				public void onWindowScroll(ScrollEvent event) {
-					int windowHeight = Window.getClientHeight();
-					int windowWidth = Window.getClientWidth();
-					int scrollTop = Window.getScrollTop();
-					if (windowHeight >= breakpointVertical && windowWidth >= breakpointHorizontal) {
-						double scrollAsPercentageOfWindowHeight = ((double) scrollTop / windowHeight) * 50.0;
-						double scale = 1 - (scrollAsPercentageOfWindowHeight / 100.0);
-						double opacityScale = 1 - ((scrollAsPercentageOfWindowHeight * 2.5) / 100.0);
-						double opacityScaleShadowLayer = 0 + ((scrollAsPercentageOfWindowHeight * 2.0) / 85.0);
-						sectionMain.setAttribute("style", "-ms-transform: scale(" + scale + "); -webkit-transform : scale(" + scale + "); transform : scale("
-								+ scale + "); top: " + -(double) scrollTop / 4.3 + "px; opacity: " + opacityScale);
-						sectionSizeShadowLayer.getStyle().setOpacity(opacityScaleShadowLayer);
+			@Override
+			public SafeHtml getValue(RanksGroup object) {
+				SafeHtml value;
+				Rank rank = rankForListType(object);
+				int position = (rank.position.intValue() > 0 ? rank.position.intValue() : rank.grossingPosition.intValue());
+				if (!SessionController.get().isLoggedInUserAdmin() && position <= 5 && position > 0) {
+					value = SafeHtmlUtils
+							.fromSafeConstant("<span style=\"color: #81879d; font-size: 13px\">Coming Soon</span><span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding "
+									+ style.whatsThisTooltipIconStatic()
+									+ "\" data-tooltip=\"We are upgrading our model to improve accuracy for the Top 5. It will be implemented soon.\" style=\"padding: 0px 0px 5px 7px\"></span>");
+				} else {
+					if (rank.downloads != null) {
+						value = SafeHtmlUtils.fromSafeConstant(WHOLE_NUMBER_FORMATTER.format(rank.downloads));
 					} else {
-						sectionMain.setAttribute("style", "-ms-transform: scale(1); -webkit-transform : scale(1); transform : scale(1); top: 0px; opacity: 1");
-						sectionSizeShadowLayer.getStyle().setOpacity(0);
+						value = (SessionController.get().isValidSession() || position <= 10 ? SafeHtmlUtils
+								.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>") : SafeHtmlUtils.EMPTY_SAFE_HTML);
 					}
 				}
-			});
+				return value;
+			}
+		};
+		downloadsColumn.setCellStyleNames(style.mhxte6ciA());
 
+		revenueColumn = new Column<RanksGroup, SafeHtml>(new SafeHtmlCell()) {
+
+			@Override
+			public SafeHtml getValue(RanksGroup object) {
+				SafeHtml value;
+				Rank rank = rankForListType(object);
+				int position = (rank.position.intValue() > 0 ? rank.position.intValue() : rank.grossingPosition.intValue());
+				if (!SessionController.get().isLoggedInUserAdmin() && position <= 5 && position > 0) {
+					value = SafeHtmlUtils
+							.fromSafeConstant("<span style=\"color: #81879d; font-size: 13px\">Coming Soon</span><span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding "
+									+ style.whatsThisTooltipIconStatic()
+									+ "\" data-tooltip=\"We are upgrading our model to improve accuracy for the Top 5. It will be implemented soon.\" style=\"padding: 0px 0px 5px 7px\"></span>");
+				} else {
+					if (rank.currency != null && rank.revenue != null) {
+						value = SafeHtmlUtils.fromSafeConstant(FormattingHelper.asWholeMoneyString(rank.currency, rank.revenue.floatValue()));
+					} else {
+						value = (SessionController.get().isValidSession() || position <= 10 ? SafeHtmlUtils
+								.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>") : SafeHtmlUtils.EMPTY_SAFE_HTML);
+					}
+				}
+				return value;
+			}
+		};
+		revenueColumn.setCellStyleNames(style.mhxte6ciA());
+
+		iapColumn = new Column<RanksGroup, SafeHtml>(new SafeHtmlCell()) {
+
+			private final String IAP_YES_HTML = "<span class=\"" + style.refIconBefore() + " " + style.refIconBeforeCheck() + "\"></span>";
+			private final String IAP_NO_HTML = "<span></span>";
+
+			@Override
+			public SafeHtml getValue(RanksGroup object) {
+				return SafeHtmlUtils.fromSafeConstant(DataTypeHelper.itemIapState(ItemController.get().lookupItem(rankForListType(object).itemId),
+						IAP_YES_HTML, IAP_NO_HTML,
+						"<span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding " + style.whatsThisTooltipIconStatic()
+								+ "\" data-tooltip=\"No data available\"></span>"));
+			}
+		};
+		iapColumn.setCellStyleNames(style.mhxte6ciA());
+	}
+
+	/**
+	 * @param object
+	 * @return
+	 */
+	protected Rank rankForListType(RanksGroup object) {
+		Rank rank = object.grossing;
+
+		if (FREE_LIST_TYPE.equals(selectedTab)) {
+			rank = object.free;
+		} else if (PAID_LIST_TYPE.equals(selectedTab)) {
+			rank = object.paid;
+		}
+
+		return rank;
+	}
+
+	protected void removeAllColumns() {
+		priceHeader.setHeaderStyleNames("");
+		priceColumn.setCellStyleNames(style.mhxte6ciA());
+		iapHeader.setHeaderStyleNames("");
+		iapColumn.setCellStyleNames(style.mhxte6ciA());
+		for (int i = 0; i < leaderboardHomeTable.getColumnCount(); i++) {
+			leaderboardHomeTable.removeColumnStyleName(i, style.columnHiddenMobile());
+		}
+		removeColumn(rankColumn);
+		removeColumn(paidColumn);
+		removeColumn(freeColumn);
+		removeColumn(grossingColumn);
+		removeColumn(priceColumn);
+		removeColumn(downloadsColumn);
+		removeColumn(revenueColumn);
+		removeColumn(iapColumn);
+	}
+
+	private void removeColumn(Column<RanksGroup, ?> column) {
+		if (leaderboardHomeTable.getColumnIndex(column) != -1) {
+			leaderboardHomeTable.removeColumn(column);
 		}
 	}
 
-	native void nativeInitMap() /*-{
+	@UiHandler({ "countrySelector", "appStoreSelector" })
+	void onFiltersChanged(ChangeEvent event) {
+		applyFilters.setEnabled(!selectedCountry.equals(countrySelector.getSelectedValue()) || !selectedAppStore.equals(appStoreSelector.getSelectedValue()));
+	}
 
-		$wnd.refMap; // global map object
-		$wnd.generateMap = function() {
-			$wnd.refMap = new $wnd.reflectionMap();
-			mapTop = $wnd.$('.landing-section-map').offset().top;
-			dropped = false;
-
-			if ($wnd.$('.no-touch').length > 0
-					&& $wnd.$($wnd).scrollTop() < (mapTop - ($wnd.$($wnd)
-							.height() / 2))) {
-				$wnd.$($wnd).on(
-						"scroll",
-						function() {
-							if (!dropped) {
-								if ($wnd.$($wnd).scrollTop() > (mapTop - ($wnd
-										.$($wnd).height() / 2))) {
-									$wnd.refMap.addMarker();
-									dropped = true;
-								}
-							}
-						});
-			} else {
-				$wnd.refMap.addMarker();
-				dropped = true;
-			}
+	@UiHandler("applyFilters")
+	void onApplyFiltersClicked(ClickEvent event) {
+		event.preventDefault();
+		boolean updateData = false;// TODO check with previous value
+		if (updateData = updateData || !selectedCountry.equals(countrySelector.getSelectedValue())) {
+			selectedCountry = countrySelector.getSelectedValue();
 		}
-
-		$wnd.reflectionMap = function() {
-			var isDraggable = $wnd.$('html.touch').length == 0;
-			var mapStyles = [ {
-				featureType : "poi",
-				elementType : "labels",
-				stylers : [ {
-					visibility : "off"
-				} ]
-			} ];
-			this.myLatlng = new $wnd.google.maps.LatLng(51.518680, -0.136578);
-			this.mapOptions = {
-				zoom : 17,
-				center : this.myLatlng,
-				disableDefaultUI : true,
-				scrollwheel : false,
-				streetViewControl : true,
-				draggable : isDraggable,
-				styles : mapStyles
-			}
-			this.markerImage = {
-				url : 'images/contact/Map_Pin@2x.png',
-				size : new $wnd.google.maps.Size(30, 43),
-				scaledSize : new $wnd.google.maps.Size(30, 43),
-				anchor : new $wnd.google.maps.Point(30, 43)
-			};
-			this.map = new $wnd.google.maps.Map($doc
-					.getElementById("js-map-location"), this.mapOptions);
-
-			this.addMarker = function() {
-				var marker = this.marker = new $wnd.google.maps.Marker({
-					position : this.myLatlng,
-					map : this.map,
-					title : "40-44 Newman Street",
-					icon : this.markerImage,
-					animation : $wnd.google.maps.Animation.DROP
-				});
-
-				var contentString = '<div class="map__info-box">'
-						+ '<h1>Reflection</h1>'
-						+ '<div class="map__text-content">'
-						+ '<p>40-44 Newman Street<br />London<br />W1T 1QD</p>'
-						+ '<p onclick="window.refMap.toggleStreetView();" class="map__street-view-link">Streetview</p>'
-						+ '<p><a href="https://www.google.co.uk/maps/place/44+Newman+St,+Marylebone,+London+W1T+1QD/@51.5187779,-0.1364135,17z/data=!4m7!1m4!3m3!1s0x48761b2b95192b1b:0xc2fcb9753b8ff12b!2s44+Newman+St,+Marylebone,+London+W1T+1QD!3b1!3m1!1s0x48761b2b95192b1b:0xc2fcb9753b8ff12b" target="_blank">Open in Google Maps</a></p></div></div><div class="map__info-box__down-arrow"></div>';
-
-				var infowindow = new $wnd.google.maps.InfoWindow({
-					content : contentString
-				});
-
-				$wnd.google.maps.event.addListener(marker, 'click', function() {
-					infowindow.open(this.map, marker);
-				});
-			}
-
-			this.panorama = this.map.getStreetView();
-			this.panorama.setPosition(new $wnd.google.maps.LatLng(51.518660,
-					-0.136540));
-			this.panorama.setPov(({
-				heading : 40,
-				pitch : 0
-			}));
-
-			this.toggleStreetView = function() {
-				var toggle = this.panorama.getVisible();
-				if (toggle == false) {
-					this.panorama.setVisible(true);
-				} else {
-					this.panorama.setVisible(false);
-				}
-			}
-
-			return this;
+		if (updateData = updateData || !selectedAppStore.equals(appStoreSelector.getSelectedValue())) {
+			selectedAppStore = appStoreSelector.getSelectedValue();
 		}
-
-	}-*/;
+		if (updateData) {
+			applyFilters.setEnabled(false);
+			errorPanel.setVisible(false);
+			leaderboardHomeTable.setVisible(true);
+			homeRankProvider.reset();
+			homeRankProvider.fetchHomeTopItems();
+		}
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -284,55 +423,150 @@ public class HomePage extends Page {
 	protected void onAttach() {
 		super.onAttach();
 
-		if (!mapScriptInjected) {
-			ScriptInjector.fromUrl("https://maps.googleapis.com/maps/api/js?key=AIzaSyD7mXBIrN4EgMflWKxUOK6C9rfoDMa5zyo&callback=generateMap")
-					.setWindow(ScriptInjector.TOP_WINDOW).inject();
-			mapScriptInjected = true;
-		}
+		ResponsiveDesignHelper.makeTabsResponsive();
 
-		Document.get().getBody().addClassName(Styles.STYLES_INSTANCE.homePageStyle().landingPage());
-		DOMHelper.getHtmlElement().addClassName(Styles.STYLES_INSTANCE.homePageStyle().landingPage());
+		register(DefaultEventBus.get().addHandlerToSource(GetAllTopItemsEventHandler.TYPE, homeRankProvider, this));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler#getAllTopItemsSuccess(io.reflection.app.api.core.shared.call.GetAllTopItemsRequest
+	 * , io.reflection.app.api.core.shared.call.GetAllTopItemsResponse)
+	 */
+	@Override
+	public void getAllTopItemsSuccess(GetAllTopItemsRequest input, GetAllTopItemsResponse output) {
+		TooltipHelper.updateHelperTooltip();
+		if (output.status.equals(StatusType.StatusTypeSuccess)) {
+
+		} else {
+			leaderboardHomeTable.setVisible(false);
+			errorPanel.setVisible(true);
+		}
 
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.client.page.Page#onDetach()
+	 * @see
+	 * io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler#getAllTopItemsFailure(io.reflection.app.api.core.shared.call.GetAllTopItemsRequest
+	 * , java.lang.Throwable)
 	 */
 	@Override
-	protected void onDetach() {
-		super.onDetach();
-
-		Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.homePageStyle().landingPage());
-		DOMHelper.getHtmlElement().removeClassName(Styles.STYLES_INSTANCE.homePageStyle().landingPage());
-
+	public void getAllTopItemsFailure(GetAllTopItemsRequest input, Throwable caught) {
+		leaderboardHomeTable.setVisible(false);
+		errorPanel.setVisible(true);
 	}
 
-	private void appendConditionalTags() {
-		if (UserAgentHelper.isIE() && UserAgentHelper.getIEVersion() == 9) {
-			// picture1.removeChild(source1);
-			// picture1.removeChild(source2);
-			picture2.removeChild(source3);
-			picture2.removeChild(source4);
-			picture3.removeChild(source5);
-			picture3.removeChild(source6);
-			// VideoElement video1 = Document.get().createVideoElement();
-			// video1.setAttribute("style", "display: none;");
-			VideoElement video2 = Document.get().createVideoElement();
-			video2.setAttribute("style", "display: none;");
-			VideoElement video3 = Document.get().createVideoElement();
-			video3.setAttribute("style", "display: none;");
-			// picture1.insertFirst(video1);
-			picture2.insertFirst(video2);
-			picture3.insertFirst(video3);
-			// video1.appendChild(source1);
-			// video1.appendChild(source2);
-			video2.appendChild(source3);
-			video2.appendChild(source4);
-			video3.appendChild(source5);
-			video3.appendChild(source6);
+	private class HomeRankProvider extends AsyncDataProvider<RanksGroup> implements ServiceConstants {
+
+		private Request currentTopItems;
+		private Timer timerFetchTopItems = new Timer() {
+
+			@Override
+			public void run() {
+				currentTopItems.cancel();
+				currentTopItems = null;
+				updateRowCount(0, true);
+				DefaultEventBus.get().fireEventFromSource(new GetAllTopItemsFailure(new GetAllTopItemsRequest(), new Exception()), this);
+			}
+		};
+
+		private List<RanksGroup> rankHomeGroupList = new ArrayList<RanksGroup>();
+
+		// public List<RanksGroup> getList() {
+		// return rankHomeGroupList;
+		// }
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see com.google.gwt.view.client.AbstractDataProvider#onRangeChanged(com.google.gwt.view.client.HasData)
+		 */
+		@Override
+		protected void onRangeChanged(HasData<RanksGroup> display) {
+			fetchHomeTopItems();
 		}
+
+		public void fetchHomeTopItems() {
+			timerFetchTopItems.cancel();
+
+			if (currentTopItems != null) {
+				currentTopItems.cancel();
+				currentTopItems = null;
+			}
+
+			CoreService service = ServiceCreator.createCoreService();
+
+			final GetAllTopItemsRequest input = new GetAllTopItemsRequest(); // JSON Item request, containing the fields used to query the Item table on the DB
+			input.accessCode = ACCESS_CODE;
+
+			input.dailyData = FilterController.REVENUE_DAILY_DATA_TYPE;
+
+			input.session = null; // public call
+
+			input.on = FilterHelper.getDaysAgo(2);
+			input.country = DataTypeHelper.createCountry(countrySelector.getSelectedValue());
+			input.store = DataTypeHelper.createStore(appStoreSelector.getSelectedValue());
+
+			input.listType = (appStoreSelector.getSelectedValue().equals(DataTypeHelper.STORE_IPHONE_A3_CODE) ? "topallapplications" : "topallipadapplications");
+
+			input.category = DataTypeHelper.createCategory(15L);
+
+			Pager pager = new Pager();
+			pager.count = 10L;
+			pager.start = Long.valueOf(0);
+			// pager.boundless = Boolean.FALSE;
+
+			input.pager = pager; // Set pager used to retrieve and format the wished items (start, number of elements, sorting order)
+
+			// Call to retrieve top items from DB. The response contains List<Rank> for the 3 rank types (free, paid, grossing) , a List<Item> and a Pager
+			currentTopItems = service.getAllTopItems(input, new AsyncCallback<GetAllTopItemsResponse>() {
+
+				@Override
+				public void onSuccess(GetAllTopItemsResponse output) {
+					timerFetchTopItems.cancel();
+					currentTopItems = null;
+					if (output.status == StatusType.StatusTypeSuccess) {
+
+						// Caching retrieved items
+						ItemController.get().addItemsToCache(output.items); // caching items
+
+						RanksGroup r;
+						for (int i = 0; i < output.paidRanks.size(); i++) {
+							rankHomeGroupList.add(r = new RanksGroup());
+							r.free = output.freeRanks.get(i);
+							r.paid = output.paidRanks.get(i);
+							r.grossing = output.grossingRanks.get(i);
+						}
+
+						updateRowData(0, rankHomeGroupList); // Inform the displays of the new data. @params Start index, data values
+					}
+					updateRowCount(rankHomeGroupList.size(), true);
+
+					DefaultEventBus.get().fireEventFromSource(new GetAllTopItemsSuccess(input, output), this);
+				}
+
+				@Override
+				public void onFailure(Throwable caught) {
+					timerFetchTopItems.cancel();
+					currentTopItems = null;
+					updateRowCount(0, true);
+					DefaultEventBus.get().fireEventFromSource(new GetAllTopItemsFailure(input, caught), this);
+				}
+			});
+
+			timerFetchTopItems.schedule(12000);
+		}
+
+		public void reset() {
+			rankHomeGroupList.clear();
+			updateRowData(0, rankHomeGroupList);
+			updateRowCount(0, false);
+		}
+
 	}
 
 }
