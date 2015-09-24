@@ -31,6 +31,7 @@ import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.AnimationHelper;
+import io.reflection.app.client.helper.ApiCallHelper;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.helper.FormattingHelper;
@@ -188,8 +189,9 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 			@Override
 			public void onShowRange(ShowRangeEvent<Date> event) {
-				FilterHelper.disableOutOfRangeDates(dateBox.getDatePicker(), null, (SessionController.get().isLoggedInUserAdmin() ? FilterHelper.getToday()
-						: FilterHelper.getDaysAgo(2)));
+				FilterHelper.disableOutOfRangeDates(dateBox.getDatePicker(),
+						(SessionController.get().isLoggedInUserAdmin() ? null : ApiCallHelper.getUTCDate(2015, 4, 30)), (SessionController.get()
+								.isLoggedInUserAdmin() ? FilterHelper.getToday() : FilterHelper.getDaysAgo(2)));
 			}
 		});
 
