@@ -434,7 +434,7 @@ public final class Core extends ActionHandler {
 			Collector collector = CollectorFactory.getCollectorForStore(input.store.a3Code);
 
 			Set<String> itemIds = new HashSet<String>();
-			List<Rank> ranks;
+			List<Rank> ranks = new ArrayList<Rank>();
 
 			if (input.listType.contains("all")) {
 				List<String> listTypes = ApiHelper.getAllListTypes(input.store, input.listType);
@@ -456,6 +456,12 @@ public final class Core extends ActionHandler {
 						output.freeRanks = ranks;
 					} else if (collector.isPaid(listType)) {
 						output.paidRanks = ranks;
+					if (!isAdmin && !input.country.a2Code.equals("gb")) {// Remove paid ranks is not UK
+						for (Rank paidRank : output.paidRanks) {
+							paidRank.downloads = null;
+							paidRank.revenue = null;
+						}
+					}
 					} else if (collector.isGrossing(listType)) {
 						output.grossingRanks = ranks;
 					}
