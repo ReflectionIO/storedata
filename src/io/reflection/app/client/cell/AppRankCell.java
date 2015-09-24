@@ -7,19 +7,7 @@
 //
 package io.reflection.app.client.cell;
 
-import static io.reflection.app.client.helper.FormattingHelper.WHOLE_NUMBER_FORMATTER;
-import io.reflection.app.client.controller.FilterController;
-import io.reflection.app.client.controller.FilterController.Filter;
-import io.reflection.app.client.controller.ItemController;
-import io.reflection.app.client.controller.NavigationController;
-import io.reflection.app.client.controller.NavigationController.Stack;
-import io.reflection.app.client.controller.SessionController;
-import io.reflection.app.client.helper.FormattingHelper;
-import io.reflection.app.client.page.PageType;
-import io.reflection.app.client.page.RanksPage;
-import io.reflection.app.client.res.Styles;
-import io.reflection.app.datatypes.shared.Item;
-import io.reflection.app.datatypes.shared.Rank;
+import static io.reflection.app.client.helper.FormattingHelper.*;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.core.client.GWT;
@@ -36,9 +24,22 @@ import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiRenderer;
 
+import io.reflection.app.client.controller.FilterController;
+import io.reflection.app.client.controller.FilterController.Filter;
+import io.reflection.app.client.controller.ItemController;
+import io.reflection.app.client.controller.NavigationController;
+import io.reflection.app.client.controller.NavigationController.Stack;
+import io.reflection.app.client.controller.SessionController;
+import io.reflection.app.client.helper.FormattingHelper;
+import io.reflection.app.client.page.PageType;
+import io.reflection.app.client.page.RanksPage;
+import io.reflection.app.client.res.Styles;
+import io.reflection.app.datatypes.shared.Item;
+import io.reflection.app.datatypes.shared.Rank;
+
 /**
  * @author billy1380
- * 
+ *
  */
 public class AppRankCell extends AbstractCell<Rank> {
 
@@ -114,7 +115,7 @@ public class AppRankCell extends AbstractCell<Rank> {
 		}
 
 		if (PageType.HomePageType.equals(stack.getPage())) {
-			display = SafeStylesUtils.forDisplay(Display.NONE);
+			displayDailyData = SafeStylesUtils.forDisplay(Display.NONE);
 			dailyData = SafeHtmlUtils.fromSafeConstant("");
 		} else {
 
@@ -123,7 +124,7 @@ public class AppRankCell extends AbstractCell<Rank> {
 				case 1:
 					filter = Filter.parse(filter.asItemFilterString());
 					filter.setListType(FilterController.PAID_LIST_TYPE);
-				displayDailyData = SafeStylesUtils.fromTrustedString("");
+					displayDailyData = SafeStylesUtils.fromTrustedString("");
 					if (!SessionController.get().isLoggedInUserAdmin() && rank.position != null && rank.position.intValue() > 0
 							&& rank.position.intValue() <= 5) {
 						dailyData = SafeHtmlUtils.fromSafeConstant("<span class=\"" + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
@@ -141,7 +142,7 @@ public class AppRankCell extends AbstractCell<Rank> {
 				case 2:
 					filter = Filter.parse(filter.asItemFilterString());
 					filter.setListType(FilterController.FREE_LIST_TYPE);
-				displayDailyData = SafeStylesUtils.fromTrustedString("");
+					displayDailyData = SafeStylesUtils.fromTrustedString("");
 					if (!SessionController.get().isLoggedInUserAdmin() && rank.position != null && rank.position.intValue() > 0
 							&& rank.position.intValue() <= 5) {
 						dailyData = SafeHtmlUtils.fromSafeConstant("<span class=\"" + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
@@ -159,7 +160,7 @@ public class AppRankCell extends AbstractCell<Rank> {
 				case 3:
 					filter = Filter.parse(filter.asItemFilterString());
 					filter.setListType(FilterController.GROSSING_LIST_TYPE);
-				displayDailyData = SafeStylesUtils.fromTrustedString("");
+					displayDailyData = SafeStylesUtils.fromTrustedString("");
 					// if (!SessionController.get().isLoggedInUserAdmin()) {
 					if (!SessionController.get().isLoggedInUserAdmin() && rank.grossingPosition != null && rank.grossingPosition.intValue() > 0
 							&& rank.grossingPosition.intValue() <= 5) {
@@ -180,17 +181,17 @@ public class AppRankCell extends AbstractCell<Rank> {
 			} else if (FilterController.FREE_LIST_TYPE.equals(listType)) {
 				filter = Filter.parse(filter.asItemFilterString());
 				filter.setListType(FilterController.FREE_LIST_TYPE);
-			displayDailyData = SafeStylesUtils.forDisplay(Display.NONE);
+				displayDailyData = SafeStylesUtils.forDisplay(Display.NONE);
 				dailyData = SafeHtmlUtils.fromSafeConstant("");
 			} else if (FilterController.PAID_LIST_TYPE.equals(listType)) {
 				filter = Filter.parse(filter.asItemFilterString());
 				filter.setListType(FilterController.PAID_LIST_TYPE);
-			displayDailyData = SafeStylesUtils.forDisplay(Display.NONE);
+				displayDailyData = SafeStylesUtils.forDisplay(Display.NONE);
 				dailyData = SafeHtmlUtils.fromSafeConstant("");
 			} else if (FilterController.GROSSING_LIST_TYPE.equals(listType)) {
 				filter = Filter.parse(filter.asItemFilterString());
 				filter.setListType(FilterController.GROSSING_LIST_TYPE);
-			displayDailyData = SafeStylesUtils.forDisplay(Display.NONE);
+				displayDailyData = SafeStylesUtils.forDisplay(Display.NONE);
 				dailyData = SafeHtmlUtils.fromSafeConstant("");
 			}
 
