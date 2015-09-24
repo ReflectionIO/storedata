@@ -33,6 +33,7 @@ import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.dataprovider.UserItemProvider;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.AnimationHelper;
+import io.reflection.app.client.helper.ApiCallHelper;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.helper.TooltipHelper;
@@ -138,6 +139,9 @@ public class MyAppsPage extends Page implements NavigationEventHandler, GetLinke
 		FilterHelper.addStores(appStore, true);
 		FilterHelper.addCountries(country, SessionController.get().isLoggedInUserAdmin());
 
+		if (!SessionController.get().isLoggedInUserAdmin()) {
+			dateSelector.disableBefore(ApiCallHelper.getUTCDate(2015, 4, 30));
+		}
 		dateSelector.addFixedRanges(FilterHelper.getDefaultDateRanges());
 
 		// Reset linked account id in filter, to avoid problems after refreshing the page
