@@ -507,6 +507,20 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 				applyFilters.setEnabled(false);
 				PageType.RanksPageType.show("view", selectedTab, FilterController.get().asRankFilterString());
 			}
+			if (errorPanel.isVisible()) {
+				applyFilters.setEnabled(false);
+				updateSelectorsFromFilter();
+				loadingBar.show();
+				RankController.get().reset();
+				RankController.get().fetchTopItems();
+				viewAllBtn.setVisible(false);
+				errorPanel.setVisible(false);
+				noDataPanel.setVisible(false);
+				leaderboardTable.setVisible(true);
+				downloadsHeader.setHeaderStyleNames(style.canBeSorted());
+				revenueHeader.setHeaderStyleNames(style.canBeSorted());
+				previousFilter = FilterController.get().asRankFilterString();
+			}
 		}
 	}
 
@@ -905,6 +919,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			viewAllBtn.setVisible(false);
 			leaderboardTable.setVisible(false);
 			errorPanel.setVisible(true);
+			applyFilters.setEnabled(true);
 		}
 
 		TooltipHelper.updateHelperTooltip();
@@ -923,5 +938,6 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		viewAllBtn.setVisible(false);
 		leaderboardTable.setVisible(false);
 		errorPanel.setVisible(true);
+		applyFilters.setEnabled(true);
 	}
 }

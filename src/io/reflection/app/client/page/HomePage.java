@@ -14,9 +14,7 @@ import static io.reflection.app.client.helper.FormattingHelper.WHOLE_NUMBER_FORM
 import io.reflection.app.api.core.client.CoreService;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
-import io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler;
 import io.reflection.app.api.shared.datatypes.Pager;
-import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.AppRankCell;
 import io.reflection.app.client.component.Selector;
 import io.reflection.app.client.controller.FilterController;
@@ -72,7 +70,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author billy1380
  * 
  */
-public class HomePage extends Page implements GetAllTopItemsEventHandler {
+public class HomePage extends Page {
 
 	private static HomePageUiBinder uiBinder = GWT.create(HomePageUiBinder.class);
 
@@ -405,7 +403,7 @@ public class HomePage extends Page implements GetAllTopItemsEventHandler {
 		if (updateData = updateData || !selectedAppStore.equals(appStoreSelector.getSelectedValue())) {
 			selectedAppStore = appStoreSelector.getSelectedValue();
 		}
-		if (updateData) {
+		if (updateData || errorPanel.isVisible()) {
 			applyFilters.setEnabled(false);
 			errorPanel.setVisible(false);
 			leaderboardHomeTable.setVisible(true);
@@ -424,40 +422,6 @@ public class HomePage extends Page implements GetAllTopItemsEventHandler {
 		super.onAttach();
 
 		ResponsiveDesignHelper.makeTabsResponsive();
-
-		register(DefaultEventBus.get().addHandlerToSource(GetAllTopItemsEventHandler.TYPE, homeRankProvider, this));
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler#getAllTopItemsSuccess(io.reflection.app.api.core.shared.call.GetAllTopItemsRequest
-	 * , io.reflection.app.api.core.shared.call.GetAllTopItemsResponse)
-	 */
-	@Override
-	public void getAllTopItemsSuccess(GetAllTopItemsRequest input, GetAllTopItemsResponse output) {
-		TooltipHelper.updateHelperTooltip();
-		if (output.status.equals(StatusType.StatusTypeSuccess)) {
-
-		} else {
-			leaderboardHomeTable.setVisible(false);
-			errorPanel.setVisible(true);
-		}
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler#getAllTopItemsFailure(io.reflection.app.api.core.shared.call.GetAllTopItemsRequest
-	 * , java.lang.Throwable)
-	 */
-	@Override
-	public void getAllTopItemsFailure(GetAllTopItemsRequest input, Throwable caught) {
-		leaderboardHomeTable.setVisible(false);
-		errorPanel.setVisible(true);
 	}
 
 	private class HomeRankProvider extends AsyncDataProvider<RanksGroup> implements ServiceConstants {
@@ -470,7 +434,9 @@ public class HomePage extends Page implements GetAllTopItemsEventHandler {
 				currentTopItems.cancel();
 				currentTopItems = null;
 				updateRowCount(0, true);
-				DefaultEventBus.get().fireEventFromSource(new GetAllTopItemsFailure(new GetAllTopItemsRequest(), new Exception()), this);
+				leaderboardHomeTable.setVisible(false);
+				errorPanel.setVisible(true);
+				applyFilters.setEnabled(true);
 			}
 		};
 
@@ -546,7 +512,7 @@ public class HomePage extends Page implements GetAllTopItemsEventHandler {
 					}
 					updateRowCount(rankHomeGroupList.size(), true);
 
-					DefaultEventBus.get().fireEventFromSource(new GetAllTopItemsSuccess(input, output), this);
+					TooltipHelper.updateHelperTooltip();
 				}
 
 				@Override
@@ -554,7 +520,9 @@ public class HomePage extends Page implements GetAllTopItemsEventHandler {
 					timerFetchTopItems.cancel();
 					currentTopItems = null;
 					updateRowCount(0, true);
-					DefaultEventBus.get().fireEventFromSource(new GetAllTopItemsFailure(input, caught), this);
+					leaderboardHomeTable.setVisible(false);
+					errorPanel.setVisible(true);
+					applyFilters.setEnabled(true);
 				}
 			});
 
