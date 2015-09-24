@@ -115,40 +115,62 @@
 				</div>
 				<div class="grid__column grid__column--full-width filters-container filter-container--app">
 					<form class="forms--mid-theme">
-						<div class="date-selection-filter-container">
-							<div class="calendar-container">
-									<div class="date-select-container">
-										<div class="form-field form-field--date-select form-field--date-select--no-icon">
-											<input type="text" name="date-single" id="date-single" value="01 Jan 2015" />
-										</div>
+						<div class="calendar-container">
+								<div class="date-select-container">
+									<div class="form-field form-field--date-select form-field--date-select--no-icon">
+										<input type="text" name="date-single" id="date-single" value="01 Jan 2015" />
 									</div>
-									<div class="date-select-to-indicator"></div>
-									<div class="date-select-container">
-										<div class="form-field form-field--date-select form-field--date-select--no-icon">
-											<input type="text" name="date-single-to" id="date-single-to" value="26 Feb 2015" />
-										</div>
+								</div>
+								<div class="date-select-to-indicator"></div>
+								<div class="date-select-container">
+									<div class="form-field form-field--date-select form-field--date-select--no-icon">
+										<input type="text" name="date-single-to" id="date-single-to" value="26 Feb 2015" />
 									</div>
-							</div>						
-							<button class="ref-button--cta-small refresh-button">
-								<svg class="svg-refresh" version="1.1" x="0px" y="0px" viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
-									<path fill="#FCFDFD" d="M2.1,9h-2H0v5l1.5-1.4C2.9,14.7,5.3,16,8,16c4.1,0,7.4-3.1,7.9-7h-2c-0.5,2.8-2.9,5-5.9,5
-	c-2.1,0-4-1.1-5-2.7L5.4,9H2.1z M14.6,3.4L16,2v5h-0.1h-2H13h-2l2.1-2.1C12.1,3.2,10.2,2,8,2C5,2,2.6,4.2,2.1,7h-2
-	C0.6,3.1,3.9,0,8,0C10.7,0,13.1,1.4,14.6,3.4z"/>
-								</svg>
-							</button>
-							<span class="or-text">or</span>
-							<div class="form-field form-field--select time-period-select form-field--select--filter">
-								<div class="page-overlay"></div>				
-								<select class="js-field--select reflection-select--filter">
-							    <option value="" disabled selected>Time Period</option>
-							    <option value="time1">1 Week</option>
-							    <option value="time2">2 Weeks</option>
-							    <option value="time3">4 Weeks</option>
-							    <option value="time4">6 Weeks</option>
-							    <option value="time5">8 Weeks</option>
-								</select>
-							</div>
+								</div>
+						</div>												
+						<span class="or-text">or</span>
+						<div class="form-field form-field--select time-period-select form-field--select--filter">
+							<div class="page-overlay"></div>				
+							<select class="js-field--select reflection-select--filter">
+						    <option value="" disabled selected>Time Period</option>
+						    <option value="time1">1 Week</option>
+						    <option value="time2">2 Weeks</option>
+						    <option value="time3">4 Weeks</option>
+						    <option value="time4">6 Weeks</option>
+						    <option value="time5">8 Weeks</option>
+							</select>
+						</div>						
+
+						<div class="form-field form-field--select store-select form-field--select--filter">
+							<div class="page-overlay"></div>
+							<select class="js-field--select reflection-select--filter reflection-select--right">
+						    <option value="" disabled selected>App Store</option>
+						    <option value="b0">All Stores</option>
+						    <option value="b1">iPad Store</option>
+						    <option value="b2">iPhone Store</option>
+							</select>
 						</div>
+						<div class="form-field form-field--select country-select form-field--select--filter">
+							<div class="page-overlay"></div>			
+							<select class="js-field--select reflection-select--filter">
+						    <option value="" disabled selected>Country</option>
+						    <option value="a0">All Countries</option>
+						    <option value="a1">Japan</option>
+						    <option value="a2">United States</option>
+						    <option value="a3">China</option>
+						    <option value="a4">Germany</option>
+						    <option value="a5">France</option>
+						    <option value="a6">United Kingdom</option>
+						    <option value="a7">Italy</option>
+							</select>
+						</div>
+						<button class="ref-button--cta-small refresh-button">
+							<svg class="svg-refresh" version="1.1" x="0px" y="0px" viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+								<path fill="#FCFDFD" d="M2.1,9h-2H0v5l1.5-1.4C2.9,14.7,5.3,16,8,16c4.1,0,7.4-3.1,7.9-7h-2c-0.5,2.8-2.9,5-5.9,5
+c-2.1,0-4-1.1-5-2.7L5.4,9H2.1z M14.6,3.4L16,2v5h-0.1h-2H13h-2l2.1-2.1C12.1,3.2,10.2,2,8,2C5,2,2.6,4.2,2.1,7h-2
+C0.6,3.1,3.9,0,8,0C10.7,0,13.1,1.4,14.6,3.4z"/>
+							</svg>
+						</button>
 
 						<div class="filter-toggle">
 							<div class="toggle">
@@ -196,30 +218,6 @@ c-2.2,1.4-4.9,2.3-7.8,2.3C8,30.5,1.5,24,1.5,16z"/></svg>
 									<img src="images/blank-image.png" alt="" />
 								</label>
 							</div>
-						</div>
-
-						<div class="form-field form-field--select store-select form-field--select--filter">
-							<div class="page-overlay"></div>
-							<select class="js-field--select reflection-select--filter reflection-select--right">
-						    <option value="" disabled selected>App Store</option>
-						    <option value="b0">All Stores</option>
-						    <option value="b1">iPad Store</option>
-						    <option value="b2">iPhone Store</option>
-							</select>
-						</div>
-						<div class="form-field form-field--select country-select form-field--select--filter">
-							<div class="page-overlay"></div>			
-							<select class="js-field--select reflection-select--filter">
-						    <option value="" disabled selected>Country</option>
-						    <option value="a0">All Countries</option>
-						    <option value="a1">Japan</option>
-						    <option value="a2">United States</option>
-						    <option value="a3">China</option>
-						    <option value="a4">Germany</option>
-						    <option value="a5">France</option>
-						    <option value="a6">United Kingdom</option>
-						    <option value="a7">Italy</option>
-							</select>
 						</div>
 						
 						<div class="filters-group-graph-options">

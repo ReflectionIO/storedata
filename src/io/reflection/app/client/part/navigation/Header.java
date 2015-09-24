@@ -89,7 +89,7 @@ public class Header extends Composite implements NavigationEventHandler, Session
 
 	private void setLoggedIn(boolean loggedIn) {
 		applyBtn.setVisible(!loggedIn);
-		linkLogin.setText(loggedIn ? "My Account" : "Log In");
+		linkLogin.setText(loggedIn ? "Settings" : "Log In");
 	}
 
 	private void initPanelLeftMenu() {
