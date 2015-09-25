@@ -51,39 +51,33 @@
 				<ul>
 					<li class="article-list--article">
 						<article class="site-article">
-							<h2>A message from the CEO - Welcome aboard!</h2>
+							<h2>Welcome Aboard!</h2>
 							<p class="site-article--info">
 								<strong>Posted by</strong>
-								<span class="posted-by">Gustaf Leksell Founder &amp; CEO</span>
-								<span>July 14th 2015</span>
+								<span class="posted-by">Gustaf Leksell, Founder &amp; CEO</span>
+								<span>September 27th 2015</span>
 							</p>
-							<p>Everyone here at Reflection is very excited that you have decided to join us. Our mission is to deliver a highly accurate and reliable app
-								intelligence platform with features and tools to help you make smarter and faster decisions.</p>
+							<p>Everyone here at Reflection is very excited that you have decided to join us. Our mission is to help you make smarter and faster decisions by using our market data and tools that we are building from your feedback.</p>
 							<img src="images/office-photo.jpg" alt="The Reflection office" class="image-full-width" />
 							<figcaption>
 								The development of new features being undertaken furiously at our London office.
 							</figcaption>
 							<p>
-								You'll start to see our rollout of requested features as our beta progresses. On this page, you can also keep track of what country and category
-								intelligence is coming next.
+								You'll start to see our rollout of features and tools as our beta progresses. You can also keep track of what country and category intelligence will be available next.
 							</p>
 							<p>
-								As one of our partners, you can help us accelerate our progress by spreading the word. If you know a developer or publisher who will benefit from
-								joining us, please introduce them to me at 
-								<a href="mailto:gustaf@reflection.io">gustaf@reflection.io</a>
-								.
+								As one of our partners, you can help us accelerate our progress by spreading the word. 
+								If you know a developer or publisher who would be interested in joining us, 
+								please introduce them to me at <a href="mailto:gustaf@reflection.io">gustaf@reflection.io</a>.
 							</p>
 							<p>
-								It would also be great to get your feedback as we approach launch. Please send any negative and positive comments as well as any feature feedback to
-								<a href="mailto:beta@reflection.io">beta@reflection.io</a>
-								.
+								Your feedback is really important to us. We look forward to hearing from you at <a href="mailto:beta@reflection.io">beta@reflection.io</a> 
+								for any feedback including usability improvement, feature requests, and any positive or negative comments.
 							</p>
-							<p>And finally, please remember that we are still in beta so we might be slow or you may find bugs as we tune our system.</p>
+							<p>Finally, please remember that we are still in beta so we might be slow or you may find bugs or inaccuracies as we tune our system.</p>
 							<p>Thank you,</p>
 							<p>
-								Gustaf Leksell
-								<br />Founder
-								&amp; CEO
+								Gustaf
 							</p>
 						</article>
 					</li>
@@ -121,8 +115,12 @@
 			</div>
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFiveColumns}">
 				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Beta Roadmap</h2>
-				<p>This is our roadmap for data and upcoming features. We also continuously work to improve accuracy across all countries and categories as we expand our
-					dataset.</p>
+				<p>This is our roadmap for data and upcoming features. We are also continuously improving accuracy 
+				across all countries and categories as we expand our dataset.</p>
+				<p>In this update, we are making the Game Category in the UK, Germany, France and Italy available. 
+				We have separated out the list for iPhone and iPad, and are currently working on building accuracies 
+				for Top 5 predictions and paid list for some countries.</p>
+				<p>We've disabled our graphs for this update, but we will enable them shortly so stay tuned for upcoming updates.</p>
 				<p>Reflection's features are free for all partners during our private beta.</p>
 				<p>
 					For any suggestions or feedback, please e-mail us at
@@ -133,9 +131,9 @@
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.accordion}">
 					<ul>
 						<c:AccordionSwitch ui:field="accordionSwitchUK" featureComplete="true" titleText="United Kingdom" />
-						<c:AccordionSwitch ui:field="accordionSwitchDE" titleText="Germany" />
-						<c:AccordionSwitch ui:field="accordionSwitchFR" titleText="France" />
-						<c:AccordionSwitch ui:field="accordionSwitchIT" titleText="Italy" />
+						<c:AccordionSwitch ui:field="accordionSwitchDE" featureComplete="true" titleText="Germany" />
+						<c:AccordionSwitch ui:field="accordionSwitchFR" featureComplete="true" titleText="France" />
+						<c:AccordionSwitch ui:field="accordionSwitchIT" featureComplete="true" titleText="Italy" />
 						<c:AccordionSwitch ui:field="accordionSwitchUS" titleText="USA" />
 						<c:AccordionSwitch ui:field="accordionSwitchCA" titleText="Canada" />
 						<c:AccordionSwitch ui:field="accordionSwitchES" titleText="Spain" />
@@ -148,13 +146,13 @@
 				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Feature roadmap</h2>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.accordion} {STYLES_INSTANCE.reflectionMainStyle.accordionBottomWithDivider}">
 					<ul>
-						<c:AccordionSwitch empty="true" featureComplete="true" titleText="Fully Responsive Site" />
-						<c:AccordionSwitch empty="true" titleText="Historic Download Data" />
-						<c:AccordionSwitch empty="true" titleText="Historic Revenue Data" />
-						<c:AccordionSwitch empty="true" titleText="Revenue and Download Graph Overlays" />
-						<c:AccordionSwitch empty="true" titleText="Download CSV files" />
-						<c:AccordionSwitch empty="true" titleText="Follow and Track Apps" />
-						<c:AccordionSwitch empty="true" titleText="Developer Leaderboard" />
+						<c:AccordionSwitch empty="true" titleText="Top 5 App Prediction for Each List" />
+						<c:AccordionSwitch empty="true" titleText="App Download History" />
+						<c:AccordionSwitch empty="true" titleText="App Revenue History" />
+						<c:AccordionSwitch empty="true" titleText="App Revenue and Download Graph Overlays" />
+						<c:AccordionSwitch empty="true" titleText="Download CSV files for any data" />
+						<c:AccordionSwitch empty="true" titleText="Follow and Track Apps &amp; Developers" />
+						<c:AccordionSwitch empty="true" titleText="Developer Leaderboards" />
 						<c:AccordionSwitch empty="true" titleText="Google Play (Early 2016)" />
 						<c:AccordionSwitch empty="true" titleText="Your feature? More to come..." subtitleText="Let Us Know"
 							subtitleLinkHref="mailto:beta@reflection.io?subject=New feature suggestion" highlighted="true" />

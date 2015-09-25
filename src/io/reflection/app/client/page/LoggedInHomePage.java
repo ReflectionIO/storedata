@@ -54,21 +54,24 @@ public class LoggedInHomePage extends Page {
 		accordionSwitchUK.addItemIncomplete("Education", "");
 		accordionSwitchUK.addItemIncomplete("Music", "");
 		accordionSwitchUK.setSubtitleHtml("(1<span>Category</span>)");
-
-		accordionSwitchDE.addItemIncomplete("Overall", "");
-		accordionSwitchDE.addItemIncomplete("Games", "");
+		
+		accordionSwitchDE.addItemComplete("Games");
+		accordionSwitchDE.addItemIncomplete("Overall", "");		
 		accordionSwitchDE.addItemIncomplete("Education", "");
 		accordionSwitchDE.addItemIncomplete("Music", "");
-
-		accordionSwitchFR.addItemIncomplete("Overall", "");
-		accordionSwitchFR.addItemIncomplete("Games", "");
+		accordionSwitchDE.setSubtitleHtml("(1<span>Category</span>)");
+		
+		accordionSwitchFR.addItemComplete("Games");
+		accordionSwitchFR.addItemIncomplete("Overall", "");		
 		accordionSwitchFR.addItemIncomplete("Education", "");
 		accordionSwitchFR.addItemIncomplete("Music", "");
-
-		accordionSwitchIT.addItemIncomplete("Overall", "");
-		accordionSwitchIT.addItemIncomplete("Games", "");
+		accordionSwitchFR.setSubtitleHtml("(1<span>Category</span>)");
+		
+		accordionSwitchIT.addItemComplete("Games");
+		accordionSwitchIT.addItemIncomplete("Overall", "");		
 		accordionSwitchIT.addItemIncomplete("Education", "");
 		accordionSwitchIT.addItemIncomplete("Music", "");
+		accordionSwitchIT.setSubtitleHtml("(1<span>Category</span>)");
 
 		accordionSwitchES.addItemIncomplete("Overall", "");
 		accordionSwitchES.addItemIncomplete("Games", "");

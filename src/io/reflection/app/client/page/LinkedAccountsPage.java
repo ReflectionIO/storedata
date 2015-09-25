@@ -295,8 +295,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 				return (object.source != null) ? object.username : "-";
 			}
 		};
-		SafeHtmlHeader accountNameHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Account Name " + AnimationHelper.getSorterSvg()));
-		accountNameHeader.setHeaderStyleNames(style.canBeSorted());
+		SafeHtmlHeader accountNameHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Account Name"));
 		columnAccountName.setCellStyleNames(style.linkedAccountName());
 		linkedAccountsTable.addColumn(columnAccountName, accountNameHeader);
 
@@ -309,8 +308,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 			}
 
 		};
-		SafeHtmlHeader storeHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Store " + AnimationHelper.getSorterSvg()));
-		storeHeader.setHeaderStyleNames(style.canBeSorted());
+		SafeHtmlHeader storeHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Store"));
 		columnStore.setCellStyleNames(style.linkedAccountStore());
 		linkedAccountsTable.addColumn(columnStore, storeHeader);
 
@@ -320,8 +318,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 				return (object.source.created != null) ? DATE_FORMATTER_DD_MMM_YYYY.format(object.created, null) : "-";
 			}
 		};
-		SafeHtmlHeader dateAddedHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Date Added " + AnimationHelper.getSorterSvg()));
-		dateAddedHeader.setHeaderStyleNames(style.canBeSorted());
+		SafeHtmlHeader dateAddedHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Date Added"));
 		dateAddedHeader.setHeaderStyleNames(style.tableHeadingDateAdded());
 		columnDateAdded.setCellStyleNames(style.linkedAccountDate());
 		linkedAccountsTable.addColumn(columnDateAdded, dateAddedHeader);
@@ -371,8 +368,9 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 			@Override
 			public SafeHtml render(String object) {
-				return SafeHtmlUtils.fromSafeConstant("<a class=\"" + style.refButtonLink() + " " + style.warningText()
-						+ "\" style=\"cursor: pointer\">Delete</a>");
+				return SafeHtmlUtils.fromSafeConstant("<a class=\""
+						+ style.deleteAccountLink()
+						+ "\" style=\"cursor: pointer\"><svg version=\"1.1\" x=\"0px\" y=\"0px\" width=\"24.1px\" height=\"32px\" viewBox=\"0 0 24.1 32\" enable-background=\"new 0 0 24.1 32\" xml:space=\"preserve\"><defs></defs><g><defs><rect id=\"SVGID_1_\" x=\"0\" y=\"0\" width=\"24.1\" height=\"32\"></rect></defs><clipPath id=\"SVGID_2_\"><use xlink:href=\"#SVGID_1_\" overflow=\"visible\"></use></clipPath><path clip-path=\"url(#SVGID_2_)\" fill=\"#81879d\" d=\"M22.4,5H12H1.7C-0.2,5,0,8.7,0,8.7h12h12C24.1,8.7,24.3,5,22.4,5\"></path><path clip-path=\"url(#SVGID_2_)\" fill=\"#81879d\" d=\"M12,9.7H1v19.1C1,31.1,2.9,32,4.7,32H12h7.3c1.8,0,3.6-0.8,3.6-3.2V9.7H12zM6,28.5c0,0.4-0.4,0.8-0.9,0.8s-0.9-0.4-0.9-0.8V13.2c0-0.4,0.4-0.8,0.9-0.8S6,12.7,6,13.2V28.5z M10.6,28.5c0,0.4-0.4,0.8-0.9,0.8c-0.5,0-0.9-0.4-0.9-0.8V13.2c0-0.4,0.4-0.8,0.9-0.8c0.5,0,0.9,0.4,0.9,0.8V28.5z M15.3,28.5c0,0.4-0.4,0.8-0.9,0.8c-0.5,0-0.9-0.4-0.9-0.8V13.2c0-0.4,0.4-0.8,0.9-0.8c0.5,0,0.9,0.4,0.9,0.8V28.5z M20,28.5c0,0.4-0.4,0.8-0.9,0.8s-0.9-0.4-0.9-0.8V13.2c0-0.4,0.4-0.8,0.9-0.8s0.9,0.4,0.9,0.8V28.5z\"></path><path clip-path=\"url(#SVGID_2_)\" fill=\"#81879d\" d=\"M12,0C6.9,0,5.9,4.3,5.9,4.3h1.5c0,0,0.8-3.1,4.7-3.1c3.9,0,4.7,3.1,4.7,3.1h1.5C18.2,4.3,17.2,0,12,0\"></path></g></svg></a>");
 			}
 		})) {
 			@Override
