@@ -7,6 +7,16 @@
 //
 package io.reflection.app.client.page;
 
+import io.reflection.app.api.core.shared.call.ForgotPasswordRequest;
+import io.reflection.app.api.core.shared.call.ForgotPasswordResponse;
+import io.reflection.app.api.core.shared.call.event.ForgotPasswordEventHandler;
+import io.reflection.app.api.shared.ApiError;
+import io.reflection.app.client.DefaultEventBus;
+import io.reflection.app.client.controller.SessionController;
+import io.reflection.app.client.part.login.ForgotPasswordForm;
+import io.reflection.app.client.part.login.LoginForm;
+import io.reflection.app.client.res.Styles;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
@@ -18,20 +28,8 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
-
-import io.reflection.app.api.core.shared.call.ForgotPasswordRequest;
-import io.reflection.app.api.core.shared.call.ForgotPasswordResponse;
-import io.reflection.app.api.core.shared.call.event.ForgotPasswordEventHandler;
-import io.reflection.app.api.shared.ApiError;
-import io.reflection.app.client.DefaultEventBus;
-import io.reflection.app.client.controller.SessionController;
-import io.reflection.app.client.helper.FormHelper;
-import io.reflection.app.client.part.login.ForgotPasswordForm;
-import io.reflection.app.client.part.login.LoginForm;
-import io.reflection.app.client.res.Styles;
 
 /**
  * @author billy1380
@@ -43,17 +41,12 @@ public class LoginPage extends Page implements ForgotPasswordEventHandler {
 
 	interface LoginPageUiBinder extends UiBinder<Widget, LoginPage> {}
 
-	@UiField InlineHyperlink register;
-	@UiField InlineHyperlink login;
 	@UiField LoginForm loginForm;
 	@UiField ForgotPasswordForm forgotPasswordForm;
 	@UiField DivElement formSubmittedSuccessPanel;
 
 	public LoginPage() {
 		initWidget(uiBinder.createAndBindUi(this));
-
-		login.setTargetHistoryToken(PageType.LoginPageType.asTargetHistoryToken(FormHelper.REQUEST_INVITE_ACTION_NAME));
-		register.setTargetHistoryToken(PageType.RegisterPageType.asTargetHistoryToken(FormHelper.REQUEST_INVITE_ACTION_NAME));
 
 		loginForm.getResetPasswordLink().addClickHandler(new ClickHandler() {
 

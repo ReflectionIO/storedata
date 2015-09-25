@@ -87,34 +87,19 @@
 		<section
 			class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.horizontalCentreContent} {STYLES_INSTANCE.reflectionMainStyle.accountAccessContent}">
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.fullScreenIntro}">
-				<div class="{STYLES_INSTANCE.reflectionMainStyle.createPasswordMainContent}">
-					<h1>Welcome to Reflection!</h1>
-					<p class="{STYLES_INSTANCE.reflectionMainStyle.pStyleFeatured}">Congratulations on becoming part of our private beta. Our goal is to provide the most insightful and accurate app intelligence and you can help us achieve this.</p>
-					<div class="{STYLES_INSTANCE.reflectionMainStyle.listPartners}">
-						<h2>Some of the partners you're joining</h2>
-						<ul>
-							<li>
-								<img src="images/Partner_Soundcloud@2x.ea554de6daac13e9327b.png" alt="Soundcloud logo" />
-							</li>
-							<li>
-								<img src="images/Partner_Sega@2x.75250c27e36c0e325b55.png" alt="Sega logo" />
-							</li>
-							<li>
-								<img src="images/Partner_Wooga@2x.95ceca5f61bc74a6ac9d.png" alt="Wooga logo" />
-							</li>
-							<li>
-								<img src="images/Partner_TocaBoca@2x.a5c0880048489fada02a.png" alt="Toca Boca logo" />
-							</li>
-						</ul>
-					</div>
-				</div>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.connectAccountMainContent}">
-					<h1>Your New Source of Free App Intelligence</h1>
-					<p class="{STYLES_INSTANCE.reflectionMainStyle.pStyleFeatured}">All you need to do now is link your iTunes Connect account(s) so that Reflection can import your all-important data.</p>
+					<h1>You're Mere Moments Away</h1>
+					<p class="{STYLES_INSTANCE.reflectionMainStyle.pStyleFeatured}">Simply link your iTunes Connect account(s) here and then you're ready to get started with Reflection</p>
 				</div>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.connectAccountSubmitted}">
-					<h1>Thanks For Linking</h1>
-					<p class="{STYLES_INSTANCE.reflectionMainStyle.pStyleFeatured}">We're currently fetching your app data and will send you an email as soon as we're done. It wil only take a moment.</p>
+					<h1>You're Ready to Go!</h1>
+					<p class="{STYLES_INSTANCE.reflectionMainStyle.pStyleFeatured}">
+						Your Reflection account is now ready to use. You can view your own apps in the
+						<g:InlineHyperlink ui:field="myDataPanelLink">My Data</g:InlineHyperlink>
+						section or browse and compare others in the
+						<g:InlineHyperlink ui:field="leaderboardPanelLink">Leaderboard</g:InlineHyperlink>. If you have any questions or issues please contact us at
+						<a href="mailto:support@reflection.io">support@reflection.io</a>, we’re here to help
+					</p>
 				</div>
 			</div>
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.accountFormContainer}">

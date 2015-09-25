@@ -595,7 +595,8 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 		input.user.username = username;
 		input.user.password = password;
 
-		final String email = username;
+		final String emailValue = username;
+		final String passwordValue = password;
 
 		final Map<String, Object> params = new HashMap<String, Object>();
 		params.put("username", username);
@@ -621,7 +622,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 					params.put("status", "success");
 					MixPanelApiHelper.track("registerUser", params);
 
-					DefaultEventBus.get().fireEventFromSource(new UserRegistered(email), UserController.this);
+					DefaultEventBus.get().fireEventFromSource(new UserRegistered(emailValue, passwordValue), UserController.this);
 				} else {
 					params.put("status", "failure");
 					if (output.error != null && output.error.message != null) {

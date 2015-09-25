@@ -764,7 +764,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 					public void onResponseReceived(Request request, Response response) {
 						String csvContent = "data:text/csv;charset=utf-8," + response.getText();
-						Window.open(URL.encode(csvContent), "_blank", "");
+						Window.open(URL.encode(csvContent), "_self", "");
 						downloadLeaderboard.getElement().getFirstChildElement().setInnerText("Download");
 						downloadLeaderboard.setEnabled(true);
 					}
