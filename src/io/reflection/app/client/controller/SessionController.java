@@ -290,7 +290,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 		// Remove all the pages from the Navigation Controller
 		NavigationController.get().purgeAllPages();
 
-		PageType.LoginPageType.show("requestinvite");
+		PageType.LoginPageType.show();
 	}
 
 	public void makeSessionInvalid() {

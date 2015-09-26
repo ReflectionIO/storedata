@@ -9,6 +9,7 @@ package io.reflection.app.client.component;
 
 import io.reflection.app.client.helper.DOMHelper;
 import io.reflection.app.client.res.Styles;
+import io.reflection.app.client.res.Styles.ReflectionMainStyles;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.OptionElement;
 import com.google.gwt.dom.client.SelectElement;
@@ -63,6 +65,9 @@ public class Selector extends Composite implements HasChangeHandlers {
 	private List<LIElement> itemList = new ArrayList<LIElement>(); // List of items excluded the placeholder
 	private int selectedIndex = -1; // Simulates a SELECT OPTION where there is no placegolder
 	private boolean isFilter;
+	private boolean isReadOnly;
+	private String featureType = "public";
+	private ReflectionMainStyles style = Styles.STYLES_INSTANCE.reflectionMainStyle();
 
 	public Selector(final boolean isFilter) {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -105,7 +110,7 @@ public class Selector extends Composite implements HasChangeHandlers {
 		if (!isFilter) {
 			closeLink.removeFromParent();
 			spanOptionLabel.removeFromParent();
-			selectContainer.getElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().reflectionSelectFilter());
+			selectContainer.getElement().removeClassName(style.reflectionSelectFilter());
 		}
 
 	}
@@ -115,9 +120,9 @@ public class Selector extends Composite implements HasChangeHandlers {
 	}
 
 	private void open() {
-		if (!selectElem.getPropertyBoolean("disabled")) {
-			formField.getElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isOpen());
-			selectContainer.getElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isOpen());
+		if (!selectElem.getPropertyBoolean("disabled") && !isReadOnly) {
+			formField.getElement().addClassName(style.isOpen());
+			selectContainer.getElement().addClassName(style.isOpen());
 			uListElem.getStyle().setMarginTop(9, Unit.PX);
 			if (Window.getClientWidth() < 720 && isFilter) {
 				DOMHelper.setScrollEnabled(false);
@@ -126,8 +131,8 @@ public class Selector extends Composite implements HasChangeHandlers {
 	}
 
 	private void close() {
-		formField.getElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isOpen());
-		selectContainer.getElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isOpen());
+		formField.getElement().removeClassName(style.isOpen());
+		selectContainer.getElement().removeClassName(style.isOpen());
 		uListElem.getStyle().setMarginTop(-(uListElem.getClientHeight()), Unit.PX);
 		if (Window.getClientWidth() < 720 && isFilter) {
 			DOMHelper.setScrollEnabled(true);
@@ -189,13 +194,13 @@ public class Selector extends Composite implements HasChangeHandlers {
 	private void selectOption(final LIElement listElem, boolean fireEvents) {
 		selectedIndex = itemList.indexOf(listElem);
 		spanSelectLabel.setInnerText(listElem.getInnerText());
-		spanSelectLabel.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isActivated());
+		spanSelectLabel.addClassName(style.isActivated());
 
 		for (LIElement le : itemList) {
-			le.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isSelected());
+			le.removeClassName(style.isSelected());
 		}
 
-		listElem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isSelected());
+		listElem.addClassName(style.isSelected());
 
 		for (int i = 0; i < selectElem.getOptions().getLength(); i++) {
 			if (i == selectedIndex + 1) {
@@ -215,9 +220,9 @@ public class Selector extends Composite implements HasChangeHandlers {
 
 	public void selectDefault() {
 		spanSelectLabel.setInnerText(selectElem.getFirstChildElement().getInnerText());
-		spanSelectLabel.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isActivated());
+		spanSelectLabel.removeClassName(style.isActivated());
 		for (LIElement le : itemList) {
-			le.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isSelected());
+			le.removeClassName(style.isSelected());
 		}
 		for (int i = 0; i < selectElem.getOptions().getLength(); i++) {
 			if (i == 0) {
@@ -273,7 +278,7 @@ public class Selector extends Composite implements HasChangeHandlers {
 	}
 
 	public void clear() {
-		spanSelectLabel.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isActivated());
+		spanSelectLabel.removeClassName(style.isActivated());
 		for (int i = 1; i < selectElem.getOptions().getLength(); i++) {
 			selectElem.remove(i);
 		}
@@ -286,9 +291,9 @@ public class Selector extends Composite implements HasChangeHandlers {
 
 	public void setEnabled(boolean enabled) {
 		if (enabled) {
-			formField.getElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formFieldSelectDisabled());
+			formField.getElement().removeClassName(style.formFieldSelectDisabled());
 		} else {
-			formField.getElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formFieldSelectDisabled());
+			formField.getElement().addClassName(style.formFieldSelectDisabled());
 		}
 		selectElem.setPropertyBoolean("disabled", !enabled);
 	}
@@ -302,29 +307,62 @@ public class Selector extends Composite implements HasChangeHandlers {
 	}
 
 	public void setAlignLeft(String s) {
-		selectElem.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().reflectionSelectCenter());
-		selectContainer.getElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().reflectionSelectCenter());
-		selectElem.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().reflectionSelectRight());
-		selectContainer.getElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().reflectionSelectRight());
+		selectElem.removeClassName(style.reflectionSelectCenter());
+		selectContainer.getElement().removeClassName(style.reflectionSelectCenter());
+		selectElem.removeClassName(style.reflectionSelectRight());
+		selectContainer.getElement().removeClassName(style.reflectionSelectRight());
 	}
 
 	public void setAlignCenter(String s) {
-		selectElem.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().reflectionSelectRight());
-		selectContainer.getElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().reflectionSelectRight());
-		selectElem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().reflectionSelectCenter());
-		selectContainer.getElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().reflectionSelectCenter());
+		selectElem.removeClassName(style.reflectionSelectRight());
+		selectContainer.getElement().removeClassName(style.reflectionSelectRight());
+		selectElem.addClassName(style.reflectionSelectCenter());
+		selectContainer.getElement().addClassName(style.reflectionSelectCenter());
 	}
 
 	public void setAlignRight(String s) {
-		selectElem.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().reflectionSelectCenter());
-		selectContainer.getElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().reflectionSelectCenter());
-		selectElem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().reflectionSelectRight());
-		selectContainer.getElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().reflectionSelectRight());
+		selectElem.removeClassName(style.reflectionSelectCenter());
+		selectContainer.getElement().removeClassName(style.reflectionSelectCenter());
+		selectElem.addClassName(style.reflectionSelectRight());
+		selectContainer.getElement().addClassName(style.reflectionSelectRight());
 	}
 
 	public void setTooltip(String text) {
 		getElement().addClassName("js-tooltip");
 		getElement().setAttribute("data-tooltip", text);
+	}
+
+	public void setFeatureType(String feature) {
+		if (featureType != "public") {
+			getElement().getFirstChildElement().removeFromParent();
+		}
+		switch (feature) {
+		case "standard":
+			DivElement iconMemberStandard = Document.get().createDivElement();
+			iconMemberStandard.addClassName(style.iconMember());
+			ImageElement imgMemberStandard = Document.get().createImageElement();
+			imgMemberStandard.setSrc("images/icon-member@2x.png");
+			imgMemberStandard.setAlt("Subscription icon");
+			iconMemberStandard.appendChild(imgMemberStandard);
+			getElement().insertFirst(iconMemberStandard);
+			break;
+		case "premium":
+			DivElement iconMemberPremium = Document.get().createDivElement();
+			iconMemberPremium.addClassName(style.iconMember());
+			ImageElement imgMemberPremium = Document.get().createImageElement();
+			imgMemberPremium.setSrc("images/icon-pro@2x.png");
+			imgMemberPremium.setAlt("Pro member icon");
+			iconMemberPremium.appendChild(imgMemberPremium);
+			getElement().insertFirst(iconMemberPremium);
+			break;
+		default:
+			break;
+		}
+		featureType = feature;
+	}
+
+	public void setReadOnly(boolean readOnly) {
+		isReadOnly = readOnly;
 	}
 
 	@Override

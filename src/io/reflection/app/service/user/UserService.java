@@ -624,7 +624,7 @@ final class UserService implements IUserService {
 					LOG.info(String.format("Role with roleid [%d] was added to user with userid [%d]", role.id.longValue(), user.id.longValue()));
 				}
 
-				if ("BT1".equals(role.code)) {
+				if (DataTypeHelper.ROLE_FIRST_CLOSED_BETA_CODE.equals(role.code)) {
 					markForEmailAction(user, "register/complete", DataTypeHelper.SELECTED_USER_EVENT_CODE);
 				}
 			} else {

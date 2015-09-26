@@ -439,7 +439,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 			clearAddRoleErrors();
 			addRoleBtn.setStatusLoading("Adding role ..");
 			userRolesProvider.updateRowCount(0, false);
-			UserController.get().assignUserRoleId(editingUserId, addRole.getText().toUpperCase());
+			UserController.get().assignUserRoleCode(editingUserId, addRole.getText().toUpperCase());
 
 		} else {
 			if (addRoleError != null) {
@@ -459,7 +459,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 			clearAddPermissionErrors();;
 			addPermissionBtn.setStatusLoading("Adding permission ..");
 			userPermissionsProvider.updateRowCount(0, false);
-			UserController.get().assignUserPermissionId(editingUserId, addPermission.getText().toUpperCase());
+			UserController.get().assignUserPermissionCode(editingUserId, addPermission.getText().toUpperCase());
 
 		} else {
 			if (addPermissionError != null) {
