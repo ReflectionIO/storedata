@@ -378,7 +378,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 		});
 	}
 
-	public void assignUserRoleId(Long userId, String roleCode) {
+	public void assignUserRoleCode(Long userId, String roleCode) {
 		Role role = new Role();
 		role.code = roleCode;
 		assignUserRole(userId, role);
@@ -414,7 +414,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 		});
 	}
 
-	public void assignUserPermissionId(Long userId, String permissionCode) {
+	public void assignUserPermissionCode(Long userId, String permissionCode) {
 		Permission permission = new Permission();
 		permission.code = permissionCode;
 		assignUserPermission(userId, permission);
@@ -601,10 +601,6 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 		final Map<String, Object> params = new HashMap<String, Object>();
 		params.put("username", username);
 		params.put("company", company);
-
-		if (password == null || password.length() == 0) {
-			params.put("requestInvite", Boolean.TRUE);
-		}
 
 		service.registerUser(input, new AsyncCallback<RegisterUserResponse>() {
 

@@ -56,6 +56,27 @@ public class TooltipHelper {
 																					"tooltip-text")
 																			.text(
 																					tooltipText));
+													if ($this
+															.find('.icon-member--standard').length > 0) {
+														tooltip
+																.prepend($wnd
+																		.$(
+																				'<span>')
+																		.addClass(
+																				"tooltip-feature tooltip-feature--standard")
+																		.text(
+																				"MEMBER FEATURE"));
+													} else if ($this
+															.find('.icon-member--pro').length > 0) {
+														tooltip
+																.prepend($wnd
+																		.$(
+																				'<span>')
+																		.addClass(
+																				"tooltip-feature tooltip-feature--pro")
+																		.text(
+																				"PREMIUM FEATURE"));
+													}
 													$wnd.$('body').append(
 															tooltip);
 													var topPosition = $this

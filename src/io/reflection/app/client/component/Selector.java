@@ -339,7 +339,7 @@ public class Selector extends Composite implements HasChangeHandlers {
 		switch (feature) {
 		case "standard":
 			DivElement iconMemberStandard = Document.get().createDivElement();
-			iconMemberStandard.addClassName(style.iconMember());
+			iconMemberStandard.addClassName(style.iconMember() + " icon-member--standard");
 			ImageElement imgMemberStandard = Document.get().createImageElement();
 			imgMemberStandard.setSrc("images/icon-member@2x.png");
 			imgMemberStandard.setAlt("Subscription icon");
@@ -348,7 +348,7 @@ public class Selector extends Composite implements HasChangeHandlers {
 			break;
 		case "premium":
 			DivElement iconMemberPremium = Document.get().createDivElement();
-			iconMemberPremium.addClassName(style.iconMember());
+			iconMemberPremium.addClassName(style.iconMember() + " icon-member--pro");
 			ImageElement imgMemberPremium = Document.get().createImageElement();
 			imgMemberPremium.setSrc("images/icon-pro@2x.png");
 			imgMemberPremium.setAlt("Pro member icon");
