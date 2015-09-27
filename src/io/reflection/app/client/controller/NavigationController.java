@@ -307,10 +307,11 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 			boolean doAttach = false;
 
 			if (SessionController.get().isValidSession()) {
-				// If beta user with no linked accounts, always redirect to linkitunes page (show only post because of the 'waths this' link in the form)
+				// If DEV user with no linked accounts, always redirect to linkitunes page
 				if (!SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE)
-						&& SessionController.get().loggedInUserIs(DataTypeHelper.ROLE_FIRST_CLOSED_BETA_CODE) && stackPage != PageType.BlogPostPageType
-						&& stackPage != PageType.BlogPostsPageType && stackPage != PageType.BlogEditPostPageType && stackPage != PageType.BlogTagPageType) {
+						&& !SessionController.get().loggedInUserIs(DataTypeHelper.ROLE_ADMIN_CODE)
+						&& !SessionController.get().loggedInUserIs(DataTypeHelper.ROLE_PREMIUM_CODE)
+						&& !SessionController.get().loggedInUserIs(DataTypeHelper.ROLE_TEST_CODE) && stackPage.requiresLogin()) {
 					stackPage = PageType.LinkItunesPageType;
 					value = new Stack(stackPage.toString());
 					doAttach = true;

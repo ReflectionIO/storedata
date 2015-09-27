@@ -17,8 +17,8 @@ import io.reflection.app.api.admin.shared.call.event.DeleteUsersEventHandler;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.StyledButtonCell;
 import io.reflection.app.client.component.LoadingButton;
-import io.reflection.app.client.component.TextField;
 import io.reflection.app.client.component.PopupDialog;
+import io.reflection.app.client.component.TextField;
 import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.controller.UserController;
 import io.reflection.app.client.page.Page;
@@ -28,6 +28,7 @@ import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.User;
+import io.reflection.app.shared.util.DataTypeHelper;
 import io.reflection.app.shared.util.FormattingHelper;
 
 import com.google.gwt.cell.client.FieldUpdater;
@@ -180,10 +181,10 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 			public void update(int index, final User object, String value) {
 				switch (value) {
 				case "Make test":
-					UserController.get().assignUserRoleCode(object.id, "TST");
+					UserController.get().assignUserRoleCode(object.id, DataTypeHelper.ROLE_TEST_CODE);
 					break;
 				case "Add to beta":
-					UserController.get().assignUserRoleCode(object.id, "BT1");
+					UserController.get().assignUserRoleCode(object.id, DataTypeHelper.ROLE_FIRST_CLOSED_BETA_CODE);
 					break;
 				case "Delete":
 					deleteUserDialog.setParameter(object.id);

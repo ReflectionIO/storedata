@@ -31,7 +31,6 @@ import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
-import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,15 +114,11 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 		productItem.removeFromParent();
 		pricingItem.removeFromParent();
 		if (user != null) {
-			if (SessionController.get().isLoggedInUserAdmin() || SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE)) {
-				if (!itemList.isOrHasChild(myDataItem)) {
-					itemList.insertFirst(myDataItem);
-				}
-				UListElement ulMyDataElem = myDataItem.getElementsByTagName("ul").getItem(0).cast(); // Close admin menu
-				ulMyDataElem.getStyle().setMarginTop(-(ulMyDataElem.getClientHeight()), Unit.PX);
-			} else {
-				myDataItem.removeFromParent();
+			if (!itemList.isOrHasChild(myDataItem)) {
+				itemList.insertFirst(myDataItem);
 			}
+			UListElement ulMyDataElem = myDataItem.getElementsByTagName("ul").getItem(0).cast(); // Close admin menu
+			ulMyDataElem.getStyle().setMarginTop(-(ulMyDataElem.getClientHeight()), Unit.PX);
 			if (SessionController.get().isLoggedInUserAdmin()) {
 				itemList.appendChild(adminItem);
 				UListElement ulAdminElem = adminItem.getElementsByTagName("ul").getItem(0).cast(); // Close admin menu

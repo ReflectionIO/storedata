@@ -94,7 +94,6 @@ public class RegisterForm extends Composite {
 		}
 
 		resetForm();
-		focusFirstActiveField();
 	}
 
 	@UiHandler({ "forename", "surname", "company", "email", "password", "confirmPassword" })
@@ -342,12 +341,7 @@ public class RegisterForm extends Composite {
 		actionCode = null;
 		registerBtn.resetStatus();
 		setEnabled(true);
-		forename.setFocus(false);
-		surname.setFocus(false);
-		company.setFocus(false);
-		email.setFocus(false);
-		password.setFocus(false);
-		confirmPassword.setFocus(false);
+		forename.setFocus(true);
 	}
 
 	/**
@@ -375,14 +369,6 @@ public class RegisterForm extends Composite {
 		confirmPassword.hideNote();
 		termAndCond.hideError();
 		generalErrorParagraph.setInnerText("");
-	}
-
-	public void focusFirstActiveField() {
-		if (forename.isEnabled()) {
-			forename.setFocus(true);
-		} else {
-			password.setFocus(true);
-		}
 	}
 
 	public void setButtonLoading(String loadingText) {

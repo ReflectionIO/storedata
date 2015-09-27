@@ -57,10 +57,10 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Se
 	 */
 	@Override
 	protected void onAttach() {
+		super.onAttach();
+
 		Document.get().getBody().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().accountAccessPage());
 		Document.get().getBody().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().applyFormIsShowing());
-
-		super.onAttach();
 
 		register(DefaultEventBus.get().addHandlerToSource(UserRegisteredEventHandler.TYPE, UserController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this));
@@ -95,6 +95,7 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Se
 		} else {
 			SessionController.get().login(email, password, true);
 			registerForm.setButtonLoading("Logging In ..");
+			PageType.LinkItunesPageType.show();
 		}
 	}
 
