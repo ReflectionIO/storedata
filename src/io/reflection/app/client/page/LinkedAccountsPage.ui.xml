@@ -1,6 +1,6 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:io.reflection.app.client.component"
-	xmlns:l="urn:import:io.reflection.app.client.part.linkaccount" xmlns:cv="urn:import:com.google.gwt.user.cellview.client">
+	xmlns:cv="urn:import:com.google.gwt.user.cellview.client">
 	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 	<ui:style gss="true">
 	
@@ -28,30 +28,6 @@
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__row}">
 			<g:Button ui:field="addAnotherLinkedAccount" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall}" enabled="false">Link Another Account</g:Button>
 		</div>
-
-		<c:PopupDialog ui:field="addLinkedAccountDialog"
-			styleName="{STYLES_INSTANCE.reflectionMainStyle.popupContent} {STYLES_INSTANCE.reflectionMainStyle.popupContentLinkAccount} {STYLES_INSTANCE.reflectionMainStyle.formsMidTheme}">
-			<g:HTMLPanel>
-				<l:IosMacLinkAccountForm ui:field="iosMacAddForm" titleText="Link Another Account"
-					titleStyleName="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFive} {STYLES_INSTANCE.reflectionMainStyle.popupContentAccount__heading}" />
-				<g:Anchor ui:field="closeAddDialog" href="#" styleName="{STYLES_INSTANCE.reflectionMainStyle.popupClose}">
-					<span class="{STYLES_INSTANCE.reflectionMainStyle.refIconAfter} {STYLES_INSTANCE.reflectionMainStyle.refIconAfterClose}">Close</span>
-				</g:Anchor>
-			</g:HTMLPanel>
-		</c:PopupDialog>
-
-		<c:PopupDialog ui:field="deleteLinkedAccountDialog" styleName="{STYLES_INSTANCE.reflectionMainStyle.popupContent} {STYLES_INSTANCE.reflectionMainStyle.popupContentDeleteAccount}">
-			<g:HTMLPanel>
-				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFive} {STYLES_INSTANCE.reflectionMainStyle.popupContentAccount__heading}">Delete this account?</h2>
-				<div class="{STYLES_INSTANCE.reflectionMainStyle.buttonsContainer}">
-					<c:LoadingButton ui:field="confirmDelete" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaLarge}">Yes, Delete</c:LoadingButton>
-					<g:Button ui:field="cancelDelete" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionLarge}">No, Keep</g:Button>
-				</div>
-				<g:Anchor ui:field="closeDeleteDialog" href="#" styleName="{STYLES_INSTANCE.reflectionMainStyle.popupClose}">
-					<span class="{STYLES_INSTANCE.reflectionMainStyle.refIconAfter} {STYLES_INSTANCE.reflectionMainStyle.refIconAfterClose}">Close</span>
-				</g:Anchor>
-			</g:HTMLPanel>
-		</c:PopupDialog>
 
 	</g:HTMLPanel>
 
