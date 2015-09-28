@@ -31,6 +31,7 @@ import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.ErrorPanel;
 import io.reflection.app.client.part.LoadingIndicator;
 import io.reflection.app.client.part.datatypes.RanksGroup;
+import io.reflection.app.client.popup.SignUpPopup;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.client.res.Styles.ReflectionMainStyles;
 import io.reflection.app.datatypes.shared.Rank;
@@ -60,6 +61,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.AsyncDataProvider;
@@ -85,6 +87,7 @@ public class HomePage extends Page {
 	@UiField Selector appStoreSelector;
 	private String selectedAppStore = "iph";
 	@UiField Button applyFilters;
+	@UiField Anchor viewMoreApps;
 	@UiField ErrorPanel errorPanel;
 	@UiField(provided = true) CellTable<RanksGroup> leaderboardHomeTable = new CellTable<RanksGroup>(ServiceConstants.SHORT_STEP_VALUE,
 			BootstrapGwtCellTable.INSTANCE);
@@ -106,6 +109,7 @@ public class HomePage extends Page {
 	private HomeRankProvider homeRankProvider = new HomeRankProvider();
 	private String selectedTab = PAID_LIST_TYPE;
 	private ReflectionMainStyles style = Styles.STYLES_INSTANCE.reflectionMainStyle();
+	private SignUpPopup signUpPopup = new SignUpPopup();
 
 	public HomePage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -410,6 +414,12 @@ public class HomePage extends Page {
 			homeRankProvider.reset();
 			homeRankProvider.fetchHomeTopItems();
 		}
+	}
+
+	@UiHandler("viewMoreApps")
+	void onViewMoreAppsClicked(ClickEvent event) {
+		event.preventDefault();
+		signUpPopup.show();
 	}
 
 	/*

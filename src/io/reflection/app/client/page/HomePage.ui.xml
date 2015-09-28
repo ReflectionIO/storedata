@@ -127,7 +127,7 @@
 		</g:HTMLPanel>
 
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__row} {STYLES_INSTANCE.reflectionMainStyle.homeLeaderboardButtonContainer}">
-			<a class="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionLarge}">View More Apps</a>
+			<g:Anchor ui:field="viewMoreApps" href="#" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionLarge}">View More Apps</g:Anchor>
 		</div>
 		<aside class="{STYLES_INSTANCE.reflectionMainStyle.pressAreaFeaturedList}">
 			<ul>
