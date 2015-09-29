@@ -57,24 +57,32 @@
 								<span class="posted-by">Gustaf Leksell, Founder &amp; CEO</span>
 								<span>September 27th 2015</span>
 							</p>
-							<p>Everyone here at Reflection is very excited that you have decided to join us. Our mission is to help you make smarter and faster decisions by using our market data and tools that we are building from your feedback.</p>
+							<p>
+								Everyone here at Reflection is very excited that you have decided to join us. 
+								Our mission is to help you make smarter, faster decisions by using our accurate market 
+								data and reporting tools that we are building using your feedback.
+							</p>
 							<img src="images/office-photo.jpg" alt="The Reflection office" class="image-full-width" />
 							<figcaption>
 								The development of new features being undertaken furiously at our London office.
 							</figcaption>
 							<p>
-								You'll start to see our rollout of features and tools as our beta progresses. You can also keep track of what country and category intelligence will be available next.
+								You'll start to see the rollout of new features and tools as our beta progresses. 
+								Also you can keep track of what country and category will be available next here on the homepage.
 							</p>
 							<p>
-								As one of our partners, you can help us accelerate our progress by spreading the word. 
-								If you know a developer or publisher who would be interested in joining us, 
-								please introduce them to me at <a href="mailto:gustaf@reflection.io">gustaf@reflection.io</a>.
+								As one of our partners, you can help accelerate our progress by spreading the word. 
+								If you know a developer who would be interested in joining us, please introduce them to me at <a href="mailto:gustaf@reflection.io">gustaf@reflection.io</a>.
 							</p>
 							<p>
-								Your feedback is really important to us. We look forward to hearing from you at <a href="mailto:beta@reflection.io">beta@reflection.io</a> 
-								for any feedback including usability improvement, feature requests, and any positive or negative comments.
+								Your feedback is essential as it helps us to shape the features that developers actually want. 
+								Please get in touch if you have any feature requests, recommendations or if 
+								you just want to share your thoughts, positive or negative. 
+								We look forward to hearing from you at <a href="mailto:beta@reflection.io">beta@reflection.io</a>
 							</p>
-							<p>Finally, please remember that we are still in beta so we might be slow or you may find bugs or inaccuracies as we tune our system.</p>
+							<p>
+								Finally, please remember that as we are still in beta you may occasionally encounter bugs, 
+								inaccuracies or slow performance as we fine-tune our system.</p>
 							<p>Thank you,</p>
 							<p>
 								Gustaf
@@ -115,17 +123,24 @@
 			</div>
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFiveColumns}">
 				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Beta Roadmap</h2>
-				<p>This is our roadmap for data and upcoming features. We are also continuously improving accuracy 
-				across all countries and categories as we expand our dataset.</p>
-				<p>In this update, we are making the Game Category in the UK, Germany, France and Italy available. 
-				We have separated out the list for iPhone and iPad, and are currently working on building accuracies 
-				for Top 5 predictions and paid list for some countries.</p>
-				<p>We've disabled our graphs for this update, but we will enable them shortly so stay tuned for upcoming updates.</p>
-				<p>Reflection's features are free for all partners during our private beta.</p>
 				<p>
-					For any suggestions or feedback, please e-mail us at
-					<a href="mailto:beta@reflection.io">beta@reflection.io</a>
-					.
+					You can keep tabs on upcoming features in this section and also monitor the expansion of our dataset. 
+					We are constantly working behind the scenes to integrate new data in order to improve accuracy.
+				</p>
+				<p>
+					In our latest update, we are opening up the Game category for the UK, Germany, France and Italy. 
+					We also have split data for iPhone and iPad, 
+					and are currently implementing a new model that accurately predicts numbers for the for top 5 apps.
+				</p> 
+				<p>
+					We're currently working on our new graphs, which will be available in a future update so stay tuned.
+				</p>
+				<p>
+					Remember, as a partner you have free, unlimited access to all of Reflection's features for the duration of the private beta.
+				</p>
+				<p>
+					If you have any questions or suggestions for a feature you need please e-mail us at 
+					<a href="mailto:beta@reflection.io">beta@reflection.io</a>.
 				</p>
 				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Data Roadmap</h2>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.accordion}">
@@ -143,7 +158,7 @@
 						<c:AccordionSwitch empty="true" ui:field="accordionSwitchMore" titleText="More countries after launch" />
 					</ul>
 				</div>
-				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Feature roadmap</h2>
+				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Coming Up</h2>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.accordion} {STYLES_INSTANCE.reflectionMainStyle.accordionBottomWithDivider}">
 					<ul>
 						<c:AccordionSwitch empty="true" titleText="Top 5 App Prediction for Each List" />
