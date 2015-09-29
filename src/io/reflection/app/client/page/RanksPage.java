@@ -12,12 +12,13 @@ import static io.reflection.app.client.controller.FilterController.GROSSING_LIST
 import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
 import static io.reflection.app.client.controller.FilterController.PAID_LIST_TYPE;
 import static io.reflection.app.client.controller.FilterController.REVENUE_DAILY_DATA_TYPE;
-import static io.reflection.app.client.helper.FormattingHelper.WHOLE_NUMBER_FORMATTER;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
 import io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.AppRankCell;
+import io.reflection.app.client.cell.LeaderboardDownloadsCell;
+import io.reflection.app.client.cell.LeaderboardRevenueCell;
 import io.reflection.app.client.component.FormDateBox;
 import io.reflection.app.client.component.LoadingBar;
 import io.reflection.app.client.component.Selector;
@@ -43,6 +44,8 @@ import io.reflection.app.client.part.ErrorPanel;
 import io.reflection.app.client.part.LoadingIndicator;
 import io.reflection.app.client.part.NoDataPanel;
 import io.reflection.app.client.part.datatypes.RanksGroup;
+import io.reflection.app.client.popup.PremiumPopup;
+import io.reflection.app.client.popup.SignUpPopup;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.client.res.Styles.ReflectionMainStyles;
 import io.reflection.app.datatypes.shared.Rank;
@@ -52,6 +55,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
@@ -161,8 +165,8 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	private Column<RanksGroup, Rank> freeColumn;
 	private Column<RanksGroup, Rank> paidColumn;
 	private Column<RanksGroup, SafeHtml> priceColumn;
-	private Column<RanksGroup, SafeHtml> downloadsColumn;
-	private Column<RanksGroup, SafeHtml> revenueColumn;
+	private Column<RanksGroup, Rank> downloadsColumn;
+	private Column<RanksGroup, Rank> revenueColumn;
 	private Column<RanksGroup, SafeHtml> iapColumn;
 
 	@SuppressWarnings("rawtypes") private Column lastOrderedColumn = rankColumn;
@@ -183,19 +187,16 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	private String previousFilter;
 	private LoadingBar loadingBar = new LoadingBar(false);
 	private ReflectionMainStyles style = Styles.STYLES_INSTANCE.reflectionMainStyle();
+	private SignUpPopup signUpPopup = new SignUpPopup();
+	private PremiumPopup premiumPopup = new PremiumPopup();
 
 	public RanksPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		// if (!SessionController.get().isLoggedInUserAdmin()) {
 		dailyDataContainer.removeFromParent();
 
-		if (!SessionController.get().isLoggedInUserAdmin()) {
+		if (!SessionController.get().isAdmin()) {
 			categorySelector.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
-		}
-
-		if (!SessionController.get().isValidSession()) {
-			downloadLeaderboard.removeFromParent();
 		}
 
 		dateBox.getDatePicker().addShowRangeHandler(new ShowRangeHandler<Date>() {
@@ -203,14 +204,14 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			@Override
 			public void onShowRange(ShowRangeEvent<Date> event) {
 				FilterHelper.disableOutOfRangeDates(dateBox.getDatePicker(),
-						(SessionController.get().isLoggedInUserAdmin() ? null : ApiCallHelper.getUTCDate(2015, 4, 30)), (SessionController.get()
-								.isLoggedInUserAdmin() ? FilterHelper.getToday() : FilterHelper.getDaysAgo(2)));
+						(SessionController.get().isAdmin() ? null : ApiCallHelper.getUTCDate(2015, 4, 30)),
+						(SessionController.get().isAdmin() ? FilterHelper.getToday() : FilterHelper.getDaysAgo(2)));
 			}
 		});
 
-		FilterHelper.addStores(appStoreSelector, SessionController.get().isLoggedInUserAdmin());
-		FilterHelper.addCountries(countrySelector, SessionController.get().isLoggedInUserAdmin());
-		FilterHelper.addCategories(categorySelector, SessionController.get().isLoggedInUserAdmin());
+		FilterHelper.addStores(appStoreSelector, SessionController.get().isAdmin());
+		FilterHelper.addCountries(countrySelector, SessionController.get().isAdmin());
+		FilterHelper.addCategories(categorySelector, SessionController.get().isAdmin());
 
 		// set the overall tab title (this is because it is modified for admins to contain the gather code)
 		overviewAllText.setInnerText(ALL_TEXT);
@@ -358,6 +359,17 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 				return object.paid;
 			}
 		};
+		paidColumn.setFieldUpdater(new FieldUpdater<RanksGroup, Rank>() {
+
+			@Override
+			public void update(int index, RanksGroup object, Rank value) {
+				if (SessionController.get().isValidSession() && !SessionController.get().hasLinkedAccount()) {
+					Window.alert("Link Account Popup");
+				} else {
+					signUpPopup.show();
+				}
+			}
+		});
 		paidColumn.setCellStyleNames(style.mhxte6ciA());
 
 		freeColumn = new Column<RanksGroup, Rank>(appRankCell) {
@@ -368,6 +380,17 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			}
 
 		};
+		freeColumn.setFieldUpdater(new FieldUpdater<RanksGroup, Rank>() {
+
+			@Override
+			public void update(int index, RanksGroup object, Rank value) {
+				if (SessionController.get().isValidSession() && !SessionController.get().hasLinkedAccount()) {
+					Window.alert("Link Account Popup");
+				} else {
+					signUpPopup.show();
+				}
+			}
+		});
 		freeColumn.setCellStyleNames(style.mhxte6ciA());
 
 		grossingColumn = new Column<RanksGroup, Rank>(appRankCell) {
@@ -377,6 +400,17 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 				return object.grossing;
 			}
 		};
+		grossingColumn.setFieldUpdater(new FieldUpdater<RanksGroup, Rank>() {
+
+			@Override
+			public void update(int index, RanksGroup object, Rank value) {
+				if (SessionController.get().isValidSession() && !SessionController.get().hasLinkedAccount()) {
+					Window.alert("Link Account Popup");
+				} else {
+					signUpPopup.show();
+				}
+			}
+		});
 		grossingColumn.setCellStyleNames(style.mhxte6ciA());
 
 		priceColumn = new Column<RanksGroup, SafeHtml>(new SafeHtmlCell()) {
@@ -390,58 +424,48 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		};
 		priceColumn.setCellStyleNames(style.mhxte6ciA());
 
-		downloadsColumn = new Column<RanksGroup, SafeHtml>(new SafeHtmlCell()) {
+		downloadsColumn = new Column<RanksGroup, Rank>(new LeaderboardDownloadsCell()) {
 
 			@Override
-			public SafeHtml getValue(RanksGroup object) {
-				SafeHtml value;
-				Rank rank = rankForListType(object);
-				int position = (rank.position.intValue() > 0 ? rank.position.intValue() : rank.grossingPosition.intValue());
-				if (!SessionController.get().isLoggedInUserAdmin() && position <= 5 && position > 0) {
-					value = SafeHtmlUtils
-							.fromSafeConstant("<span style=\"color: #81879d; font-size: 13px\">Coming Soon</span><span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding "
-									+ Styles.STYLES_INSTANCE.reflectionMainStyle().whatsThisTooltipIconStatic()
-									+ "\" data-tooltip=\"We are upgrading our model to improve accuracy for the Top 5. It will be implemented soon.\" style=\"padding: 0px 0px 5px 7px\"></span>");
-				} else {
-					if (rank.downloads != null) {
-						value = SafeHtmlUtils.fromSafeConstant(WHOLE_NUMBER_FORMATTER.format(rank.downloads));
-					} else {
-						value = (SessionController.get().isValidSession() || position <= 10 ? SafeHtmlUtils
-								.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>") : SafeHtmlUtils.EMPTY_SAFE_HTML);
-					}
-				}
-				return value;
+			public Rank getValue(RanksGroup object) {
+				return rankForListType(object);
 			}
 
 		};
+		downloadsColumn.setFieldUpdater(new FieldUpdater<RanksGroup, Rank>() {
+
+			@Override
+			public void update(int index, RanksGroup object, Rank value) {
+				if (SessionController.get().isValidSession() && !SessionController.get().hasLinkedAccount()) {
+					Window.alert("Link Account Popup");
+				} else {
+					signUpPopup.show();
+				}
+			}
+		});
 		downloadsColumn.setCellStyleNames(style.mhxte6ciA());
 		downloadsColumn.setSortable(true);
 		downloadsHeader.setHeaderStyleNames(style.canBeSorted());
 
-		revenueColumn = new Column<RanksGroup, SafeHtml>(new SafeHtmlCell()) {
+		revenueColumn = new Column<RanksGroup, Rank>(new LeaderboardRevenueCell()) {
 
 			@Override
-			public SafeHtml getValue(RanksGroup object) {
-				SafeHtml value;
-				Rank rank = rankForListType(object);
-				int position = (rank.position.intValue() > 0 ? rank.position.intValue() : rank.grossingPosition.intValue());
-				if (!SessionController.get().isLoggedInUserAdmin() && position <= 5 && position > 0) {
-					value = SafeHtmlUtils
-							.fromSafeConstant("<span style=\"color: #81879d; font-size: 13px\">Coming Soon</span><span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding "
-									+ Styles.STYLES_INSTANCE.reflectionMainStyle().whatsThisTooltipIconStatic()
-									+ "\" data-tooltip=\"We are upgrading our model to improve accuracy for the Top 5. It will be implemented soon.\" style=\"padding: 0px 0px 5px 7px\"></span>");
-				} else {
-					if (rank.currency != null && rank.revenue != null) {
-						value = SafeHtmlUtils.fromSafeConstant(FormattingHelper.asWholeMoneyString(rank.currency, rank.revenue.floatValue()));
-					} else {
-						value = (SessionController.get().isValidSession() || position <= 10 ? SafeHtmlUtils
-								.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>") : SafeHtmlUtils.EMPTY_SAFE_HTML);
-					}
-				}
-				return value;
+			public Rank getValue(RanksGroup object) {
+				return rankForListType(object);
 			}
 
 		};
+		revenueColumn.setFieldUpdater(new FieldUpdater<RanksGroup, Rank>() {
+
+			@Override
+			public void update(int index, RanksGroup object, Rank value) {
+				if (SessionController.get().isValidSession() && !SessionController.get().hasLinkedAccount()) {
+					Window.alert("Link Account Popup");
+				} else {
+					signUpPopup.show();
+				}
+			}
+		});
 		revenueColumn.setCellStyleNames(style.mhxte6ciA());
 		revenueColumn.setSortable(true);
 		revenueHeader.setHeaderStyleNames(style.canBeSorted());
@@ -563,7 +587,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		long endTime = fc.getFilter().getEndTime().longValue();
 		Date endDate = new Date(endTime);
 		dateBox.setValue(endDate, false);
-		if (SessionController.get().isLoggedInUserAdmin()) {
+		if (SessionController.get().isAdmin()) {
 			categorySelector.setSelectedIndex(FormHelper.getItemIndex(categorySelector, fc.getFilter().getCategoryId().toString()));
 		} else {
 			categorySelector.setSelectedIndex(0);
@@ -705,43 +729,43 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	@UiHandler("downloadLeaderboard")
 	void onDownloadLeaderboardClicked(ClickEvent event) {
 		event.preventDefault();
-		Filter filter = FilterController.get().getFilter();
-		String listType;
-		if (filter.getStoreA3Code().equals("iph")) {
-			switch (selectedTab) {
-			case (PAID_LIST_TYPE):
-				listType = "toppaidapplications";
-				break;
-			case (FREE_LIST_TYPE):
-				listType = "topfreeapplications";
-				break;
-			case (GROSSING_LIST_TYPE):
-				listType = "topgrossingapplications";
-				break;
-			default:
-				listType = "topallapplications";
-				break;
+		if (SessionController.get().isPremiumDeveloper() || SessionController.get().isAdmin()) {
+			Filter filter = FilterController.get().getFilter();
+			String listType;
+			if (filter.getStoreA3Code().equals("iph")) {
+				switch (selectedTab) {
+				case (PAID_LIST_TYPE):
+					listType = "toppaidapplications";
+					break;
+				case (FREE_LIST_TYPE):
+					listType = "topfreeapplications";
+					break;
+				case (GROSSING_LIST_TYPE):
+					listType = "topgrossingapplications";
+					break;
+				default:
+					listType = "topallapplications";
+					break;
+				}
+			} else {
+				switch (selectedTab) {
+				case (PAID_LIST_TYPE):
+					listType = "toppaidipadapplications";
+					break;
+				case (FREE_LIST_TYPE):
+					listType = "topfreeipadapplications";
+					break;
+				case (GROSSING_LIST_TYPE):
+					listType = "topgrossingipadapplications";
+					break;
+				default:
+					listType = "topallipadapplications";
+					break;
+				}
 			}
-		} else {
-			switch (selectedTab) {
-			case (PAID_LIST_TYPE):
-				listType = "toppaidipadapplications";
-				break;
-			case (FREE_LIST_TYPE):
-				listType = "topfreeipadapplications";
-				break;
-			case (GROSSING_LIST_TYPE):
-				listType = "topgrossingipadapplications";
-				break;
-			default:
-				listType = "topallipadapplications";
-				break;
-			}
-		}
-		String country = filter.getCountryA2Code();
-		String category = filter.getCategoryId().toString();
-		String date = String.valueOf(ApiCallHelper.getUTCDate(FilterController.get().getEndDate()).getTime());
-		if (SessionController.get().isValidSession()) {
+			String country = filter.getCountryA2Code();
+			String category = filter.getCategoryId().toString();
+			String date = String.valueOf(ApiCallHelper.getUTCDate(FilterController.get().getEndDate()).getTime());
 			downloadLeaderboard.setEnabled(false);
 			downloadLeaderboard.getElement().getFirstChildElement().setInnerText("Downloading ...");
 
@@ -770,6 +794,10 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 					}
 				});
 			} catch (RequestException e) {}
+		} else if (SessionController.get().isValidSession()) {
+			premiumPopup.show();
+		} else {
+			signUpPopup.show();
 		}
 	}
 
@@ -897,7 +925,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			if (output.freeRanks != null) {
 				viewAllBtn.setVisible(true);
 
-				if (SessionController.get().isLoggedInUserAdmin()) {
+				if (SessionController.get().isAdmin()) {
 					if (output.freeRanks != null && output.freeRanks.size() > 0 && output.freeRanks.get(0).code != null) {
 						overviewAllText.setInnerSafeHtml(AllAdminCodeTemplate.INSTANCE.code(output.freeRanks.get(0).code));
 					} else if (output.paidRanks != null && output.paidRanks.size() > 0 && output.paidRanks.get(0).code != null) {

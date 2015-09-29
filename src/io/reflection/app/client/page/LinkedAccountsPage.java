@@ -22,6 +22,8 @@ import io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler;
 import io.reflection.app.api.core.shared.call.event.UpdateLinkedAccountEventHandler;
 import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.client.DefaultEventBus;
+import io.reflection.app.client.cell.DeleteLinkedAccountCell;
+import io.reflection.app.client.cell.EditLinkedAccountCell;
 import io.reflection.app.client.component.LoadingBar;
 import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.NavigationController;
@@ -41,7 +43,6 @@ import io.reflection.app.client.res.Styles;
 import io.reflection.app.client.res.Styles.ReflectionMainStyles;
 import io.reflection.app.datatypes.shared.DataAccount;
 
-import com.google.gwt.cell.client.ClickableTextCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
@@ -56,9 +57,7 @@ import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
-import com.google.gwt.text.shared.SafeHtmlRenderer;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -296,22 +295,13 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		columnDateAdded.setCellStyleNames(style.linkedAccountDate());
 		linkedAccountsTable.addColumn(columnDateAdded, dateAddedHeader);
 
-		columnEdit = new Column<DataAccount, String>(new ClickableTextCell(new SafeHtmlRenderer<String>() {
+		columnEdit = new Column<DataAccount, String>(new EditLinkedAccountCell()) {
 
-			@Override
-			public void render(String object, SafeHtmlBuilder builder) {
-				builder.appendHtmlConstant(object);
-			}
-
-			@Override
-			public SafeHtml render(String object) {
-				return SafeHtmlUtils.fromSafeConstant("<a class=\"" + style.refButtonFunctionSmall() + "\" style=\"cursor: pointer\">Edit</a>");
-			}
-		})) {
 			@Override
 			public String getValue(DataAccount object) {
-				return "";
+				return object.id.toString();
 			}
+
 		};
 		columnEdit.setCellStyleNames(style.linkedAccountEdit());
 		linkedAccountsTable.addColumn(columnEdit);
@@ -332,25 +322,14 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 			}
 		});
 
-		columnDelete = new Column<DataAccount, String>(new ClickableTextCell(new SafeHtmlRenderer<String>() {
+		columnDelete = new Column<DataAccount, String>(new DeleteLinkedAccountCell()) {
 
-			@Override
-			public void render(String object, SafeHtmlBuilder builder) {
-				builder.appendHtmlConstant(object);
-			}
-
-			@Override
-			public SafeHtml render(String object) {
-				return SafeHtmlUtils.fromSafeConstant("<a class=\""
-						+ style.deleteAccountLink()
-						+ "\" style=\"cursor: pointer\"><svg version=\"1.1\" x=\"0px\" y=\"0px\" width=\"24.1px\" height=\"32px\" viewBox=\"0 0 24.1 32\" enable-background=\"new 0 0 24.1 32\" xml:space=\"preserve\"><defs></defs><g><defs><rect id=\"SVGID_1_\" x=\"0\" y=\"0\" width=\"24.1\" height=\"32\"></rect></defs><clipPath id=\"SVGID_2_\"><use xlink:href=\"#SVGID_1_\" overflow=\"visible\"></use></clipPath><path clip-path=\"url(#SVGID_2_)\" fill=\"#81879d\" d=\"M22.4,5H12H1.7C-0.2,5,0,8.7,0,8.7h12h12C24.1,8.7,24.3,5,22.4,5\"></path><path clip-path=\"url(#SVGID_2_)\" fill=\"#81879d\" d=\"M12,9.7H1v19.1C1,31.1,2.9,32,4.7,32H12h7.3c1.8,0,3.6-0.8,3.6-3.2V9.7H12zM6,28.5c0,0.4-0.4,0.8-0.9,0.8s-0.9-0.4-0.9-0.8V13.2c0-0.4,0.4-0.8,0.9-0.8S6,12.7,6,13.2V28.5z M10.6,28.5c0,0.4-0.4,0.8-0.9,0.8c-0.5,0-0.9-0.4-0.9-0.8V13.2c0-0.4,0.4-0.8,0.9-0.8c0.5,0,0.9,0.4,0.9,0.8V28.5z M15.3,28.5c0,0.4-0.4,0.8-0.9,0.8c-0.5,0-0.9-0.4-0.9-0.8V13.2c0-0.4,0.4-0.8,0.9-0.8c0.5,0,0.9,0.4,0.9,0.8V28.5z M20,28.5c0,0.4-0.4,0.8-0.9,0.8s-0.9-0.4-0.9-0.8V13.2c0-0.4,0.4-0.8,0.9-0.8s0.9,0.4,0.9,0.8V28.5z\"></path><path clip-path=\"url(#SVGID_2_)\" fill=\"#81879d\" d=\"M12,0C6.9,0,5.9,4.3,5.9,4.3h1.5c0,0,0.8-3.1,4.7-3.1c3.9,0,4.7,3.1,4.7,3.1h1.5C18.2,4.3,17.2,0,12,0\"></path></g></svg></a>");
-			}
-		})) {
 			@Override
 			public String getValue(DataAccount object) {
-				return "";
+				return object.id.toString();
 			}
 		};
+
 		columnDelete.setCellStyleNames(style.linkedAccountDelete());
 		linkedAccountsTable.addColumn(columnDelete);
 		columnDelete.setFieldUpdater(new FieldUpdater<DataAccount, String>() {

@@ -119,7 +119,7 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 			}
 			UListElement ulMyDataElem = myDataItem.getElementsByTagName("ul").getItem(0).cast(); // Close admin menu
 			ulMyDataElem.getStyle().setMarginTop(-(ulMyDataElem.getClientHeight()), Unit.PX);
-			if (SessionController.get().isLoggedInUserAdmin()) {
+			if (SessionController.get().isAdmin()) {
 				itemList.appendChild(adminItem);
 				UListElement ulAdminElem = adminItem.getElementsByTagName("ul").getItem(0).cast(); // Close admin menu
 				ulAdminElem.getStyle().setMarginTop(-(ulAdminElem.getClientHeight()), Unit.PX);

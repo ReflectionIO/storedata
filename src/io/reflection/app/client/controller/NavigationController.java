@@ -26,7 +26,6 @@ import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
-import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -66,7 +65,7 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 	private PanelRightSearch panelRightSearch = null;
 	private HTMLPanel lMain = null;
 
-	private Stack mStack;
+	private Stack stack;
 
 	private String intended = null;
 
@@ -307,34 +306,21 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 			boolean doAttach = false;
 
 			if (SessionController.get().isValidSession()) {
-				// If DEV user with no linked accounts, always redirect to linkitunes page
-				if (!SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE)
-						&& !SessionController.get().loggedInUserIs(DataTypeHelper.ROLE_ADMIN_CODE)
-						&& !SessionController.get().loggedInUserIs(DataTypeHelper.ROLE_PREMIUM_CODE)
-						&& !SessionController.get().loggedInUserIs(DataTypeHelper.ROLE_TEST_CODE) && stackPage.requiresLogin()) {
-					stackPage = PageType.LinkItunesPageType;
+				if (loaded) {
+					if (!stackPage.requiresLogin() || SessionController.get().isAdmin()
+							|| SessionController.get().isAuthorised(stackPage.getRequiredPermissions())) {
+						doAttach = true;
+					} else {
+						if (!PageType.NotPermittedPageType.equals(stack.getPage())) {
+							PageType.NotPermittedPageType.show(value.asParameter(), stack.asPreviousParameter());
+						}
+					}
+				} else {
+					setLastIntendedPage(value);
+					stackPage = PageType.LoadingPageType;
 					value = new Stack(stackPage.toString());
 					doAttach = true;
 					loaded = true;
-					PageType.LinkItunesPageType.show();
-				} else {
-					if (loaded) {
-						if (!stackPage.requiresLogin() || SessionController.get().isLoggedInUserAdmin()
-								|| SessionController.get().isAuthorised(stackPage.getRequiredPermissions())) {
-							doAttach = true;
-
-						} else {
-							if (!PageType.NotPermittedPageType.equals(mStack.getPage())) {
-								PageType.NotPermittedPageType.show(value.asParameter(), mStack.asPreviousParameter());
-							}
-						}
-					} else {
-						setLastIntendedPage(value);
-						stackPage = PageType.LoadingPageType;
-						value = new Stack(stackPage.toString());
-						doAttach = true;
-						loaded = true;
-					}
 				}
 			} else {
 				if (stackPage.requiresLogin()) {
@@ -356,8 +342,8 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 			}
 
 			if (doAttach) {
-				final Stack previous = mStack;
-				mStack = value;
+				final Stack previous = stack;
+				stack = value;
 
 				final PageType currentPage = stackPage;
 
@@ -383,7 +369,7 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 						Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 							@Override
 							public void execute() {
-								DefaultEventBus.get().fireEventFromSource(new NavigationEventHandler.ChangedEvent(previous, mStack), NavigationController.this);
+								DefaultEventBus.get().fireEventFromSource(new NavigationEventHandler.ChangedEvent(previous, stack), NavigationController.this);
 							}
 						});
 					}
@@ -424,14 +410,14 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 
 	public PageType getCurrentPage() {
 		PageType p = null;
-		if (mStack != null) {
-			p = PageType.fromString(mStack.getPage());
+		if (stack != null) {
+			p = PageType.fromString(stack.getPage());
 		}
 		return p;
 	}
 
 	public Stack getStack() {
-		return mStack;
+		return stack;
 	}
 
 	/*
@@ -457,8 +443,8 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 	}
 
 	public void showNext() {
-		if (mStack.hasNext()) {
-			PageType.fromString(mStack.getNext().getPage()).show(mStack.getNext().toString(1));
+		if (stack.hasNext()) {
+			PageType.fromString(stack.getNext().getPage()).show(stack.getNext().toString(1));
 		} else {
 			if (PageType.HomePageType.equals(NavigationController.get().getCurrentPage())) {
 				History.fireCurrentHistoryState();
@@ -470,8 +456,8 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 	}
 
 	public void showPrevious() {
-		if (mStack.hasPrevious()) {
-			PageType.fromString(mStack.getPrevious().getPage()).show(mStack.getPrevious().toString(1));
+		if (stack.hasPrevious()) {
+			PageType.fromString(stack.getPrevious().getPage()).show(stack.getPrevious().toString(1));
 		} else {
 			PageType.HomePageType.show();
 		}

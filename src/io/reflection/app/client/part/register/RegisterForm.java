@@ -87,7 +87,7 @@ public class RegisterForm extends Composite {
 	@Override
 	protected void onAttach() {
 		super.onAttach();
-		if (SessionController.get().isLoggedInUserAdmin()) {
+		if (SessionController.get().isAdmin()) {
 			termAndCond.setVisible(Boolean.FALSE);
 		} else {
 			termAndCond.setVisible(Boolean.TRUE);
@@ -279,7 +279,7 @@ public class RegisterForm extends Composite {
 			validated = validated && true;
 		}
 
-		if (!SessionController.get().isLoggedInUserAdmin()) {
+		if (!SessionController.get().isAdmin()) {
 			if (termAndCond.getValue() == Boolean.FALSE) {
 				termAndCondError = "Just checking you agree with our very reasonable terms before we continue";
 				generalErrorNote = FormHelper.ERROR_FORM_EMPTY_FIELDS;

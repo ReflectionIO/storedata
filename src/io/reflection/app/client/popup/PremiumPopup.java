@@ -17,7 +17,6 @@ import io.reflection.app.client.controller.UserController;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.User;
-import io.reflection.app.shared.util.DataTypeHelper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -58,7 +57,7 @@ public class PremiumPopup extends Composite implements AssignRoleEventHandler {
 			RootPanel.get().add(this);
 			DefaultEventBus.get().addHandlerToSource(AssignRoleEventHandler.TYPE, UserController.get(), this);
 		}
-		if (SessionController.get().loggedInUserHas(DataTypeHelper.ROLE_PREMIUM_CODE)) {
+		if (SessionController.get().isPremiumDeveloper()) {
 			popup.setStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().isSubmittedSuccess(), true);
 		}
 		popup.show();

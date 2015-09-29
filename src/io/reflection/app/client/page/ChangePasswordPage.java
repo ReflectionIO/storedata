@@ -104,7 +104,7 @@ public class ChangePasswordPage extends Page implements NavigationEventHandler, 
 			AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.InfoAlertBoxType, true, "Please wait", " - changing user password...", false)
 					.setVisible(true);
 
-			if (SessionController.get().isLoggedInUserAdmin()) {
+			if (SessionController.get().isAdmin()) {
 				mUserId = Long.valueOf(NavigationController.get().getStack().getParameter(0));
 
 				UserController.get().setPassword(mUserId, mNewPassword.getText());
@@ -144,7 +144,7 @@ public class ChangePasswordPage extends Page implements NavigationEventHandler, 
 
 	@UiHandler({ "mPassword", "mNewPassword", "mConfirmPassword" })
 	void onFieldsModified(KeyUpEvent event) {
-		if (!SessionController.get().isLoggedInUserAdmin()) {
+		if (!SessionController.get().isAdmin()) {
 			if (!mPassword.getText().isEmpty() && !mNewPassword.getText().isEmpty() && !mConfirmPassword.getText().isEmpty()) {
 				mChangePassword.setEnabled(true);
 			} else {
@@ -191,7 +191,7 @@ public class ChangePasswordPage extends Page implements NavigationEventHandler, 
 			validated = validated && true;
 		}
 		// Check password constraints for not admin user
-		if (!SessionController.get().isLoggedInUserAdmin()) {
+		if (!SessionController.get().isAdmin()) {
 			if (password == null || password.length() == 0) {
 				mPasswordError = "Cannot be empty";
 				validated = false;
@@ -224,13 +224,13 @@ public class ChangePasswordPage extends Page implements NavigationEventHandler, 
 		final String userIdString = userId.toString();
 
 		AlertBoxHelper.configureAlert(mAlertBox, AlertBoxType.SuccessAlertBoxType, false, "Password changed",
-				" - " + (SessionController.get().isLoggedInUserAdmin() ? "user with id " + userIdString : "you") + " can now login with new password.", false)
+				" - " + (SessionController.get().isAdmin() ? "user with id " + userIdString : "you") + " can now login with new password.", false)
 				.setVisible(true);
 
 		mChangePassword.setEnabled(false);
 		resetForm();
 
-		if (SessionController.get().isLoggedInUserAdmin()) {
+		if (SessionController.get().isAdmin()) {
 			Timer t = new Timer() {
 
 				@Override
@@ -267,7 +267,7 @@ public class ChangePasswordPage extends Page implements NavigationEventHandler, 
 		mNewPassword.setText("");
 		mConfirmPassword.setText("");
 
-		mPasswordGroup.setVisible(!SessionController.get().isLoggedInUserAdmin());
+		mPasswordGroup.setVisible(!SessionController.get().isAdmin());
 
 		FormHelper.hideNote(mNewPasswordGroup, mNewPasswordNote);
 		FormHelper.hideNote(mPasswordGroup, mPasswordNote);
@@ -277,7 +277,7 @@ public class ChangePasswordPage extends Page implements NavigationEventHandler, 
 		// mForm.setVisible(true);
 		preloader.hide();
 
-		if (SessionController.get().isLoggedInUserAdmin()) {
+		if (SessionController.get().isAdmin()) {
 			mNewPassword.setFocus(true);
 		} else {
 			mPassword.setFocus(true);

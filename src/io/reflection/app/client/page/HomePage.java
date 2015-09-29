@@ -10,12 +10,13 @@ package io.reflection.app.client.page;
 import static io.reflection.app.client.controller.FilterController.FREE_LIST_TYPE;
 import static io.reflection.app.client.controller.FilterController.GROSSING_LIST_TYPE;
 import static io.reflection.app.client.controller.FilterController.PAID_LIST_TYPE;
-import static io.reflection.app.client.helper.FormattingHelper.WHOLE_NUMBER_FORMATTER;
 import io.reflection.app.api.core.client.CoreService;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.client.cell.AppRankCell;
+import io.reflection.app.client.cell.LeaderboardDownloadsCell;
+import io.reflection.app.client.cell.LeaderboardRevenueCell;
 import io.reflection.app.client.component.Selector;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.ItemController;
@@ -40,6 +41,7 @@ import io.reflection.app.shared.util.DataTypeHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.LIElement;
@@ -60,6 +62,7 @@ import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
@@ -100,8 +103,8 @@ public class HomePage extends Page {
 	private Column<RanksGroup, Rank> freeColumn;
 	private Column<RanksGroup, Rank> grossingColumn;
 	private Column<RanksGroup, SafeHtml> priceColumn;
-	private Column<RanksGroup, SafeHtml> downloadsColumn;
-	private Column<RanksGroup, SafeHtml> revenueColumn;
+	private Column<RanksGroup, Rank> downloadsColumn;
+	private Column<RanksGroup, Rank> revenueColumn;
 	private Column<RanksGroup, SafeHtml> iapColumn;
 	private LoadingIndicator loadingIndicatorFreeList = AnimationHelper.getLeaderboardListLoadingIndicator(ServiceConstants.SHORT_STEP_VALUE, true);
 	private LoadingIndicator loadingIndicatorPaidGrossingList = AnimationHelper.getLeaderboardListLoadingIndicator(ServiceConstants.SHORT_STEP_VALUE, false);
@@ -286,54 +289,44 @@ public class HomePage extends Page {
 		};
 		priceColumn.setCellStyleNames(style.mhxte6ciA());
 
-		downloadsColumn = new Column<RanksGroup, SafeHtml>(new SafeHtmlCell()) {
+		downloadsColumn = new Column<RanksGroup, Rank>(new LeaderboardDownloadsCell()) {
 
 			@Override
-			public SafeHtml getValue(RanksGroup object) {
-				SafeHtml value;
-				Rank rank = rankForListType(object);
-				int position = (rank.position.intValue() > 0 ? rank.position.intValue() : rank.grossingPosition.intValue());
-				if (!SessionController.get().isLoggedInUserAdmin() && position <= 5 && position > 0) {
-					value = SafeHtmlUtils
-							.fromSafeConstant("<span style=\"color: #81879d; font-size: 13px\">Coming Soon</span><span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding "
-									+ style.whatsThisTooltipIconStatic()
-									+ "\" data-tooltip=\"We are upgrading our model to improve accuracy for the Top 5. It will be implemented soon.\" style=\"padding: 0px 0px 5px 7px\"></span>");
-				} else {
-					if (rank.downloads != null) {
-						value = SafeHtmlUtils.fromSafeConstant(WHOLE_NUMBER_FORMATTER.format(rank.downloads));
-					} else {
-						value = (SessionController.get().isValidSession() || position <= 10 ? SafeHtmlUtils
-								.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>") : SafeHtmlUtils.EMPTY_SAFE_HTML);
-					}
-				}
-				return value;
+			public Rank getValue(RanksGroup object) {
+				return rankForListType(object);
 			}
 		};
+		downloadsColumn.setFieldUpdater(new FieldUpdater<RanksGroup, Rank>() {
+
+			@Override
+			public void update(int index, RanksGroup object, Rank value) {
+				if (SessionController.get().isValidSession() && !SessionController.get().hasLinkedAccount()) {
+					Window.alert("Link Account Popup");
+				} else {
+					signUpPopup.show();
+				}
+			}
+		});
 		downloadsColumn.setCellStyleNames(style.mhxte6ciA());
 
-		revenueColumn = new Column<RanksGroup, SafeHtml>(new SafeHtmlCell()) {
+		revenueColumn = new Column<RanksGroup, Rank>(new LeaderboardRevenueCell()) {
 
 			@Override
-			public SafeHtml getValue(RanksGroup object) {
-				SafeHtml value;
-				Rank rank = rankForListType(object);
-				int position = (rank.position.intValue() > 0 ? rank.position.intValue() : rank.grossingPosition.intValue());
-				if (!SessionController.get().isLoggedInUserAdmin() && position <= 5 && position > 0) {
-					value = SafeHtmlUtils
-							.fromSafeConstant("<span style=\"color: #81879d; font-size: 13px\">Coming Soon</span><span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding "
-									+ style.whatsThisTooltipIconStatic()
-									+ "\" data-tooltip=\"We are upgrading our model to improve accuracy for the Top 5. It will be implemented soon.\" style=\"padding: 0px 0px 5px 7px\"></span>");
-				} else {
-					if (rank.currency != null && rank.revenue != null) {
-						value = SafeHtmlUtils.fromSafeConstant(FormattingHelper.asWholeMoneyString(rank.currency, rank.revenue.floatValue()));
-					} else {
-						value = (SessionController.get().isValidSession() || position <= 10 ? SafeHtmlUtils
-								.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>") : SafeHtmlUtils.EMPTY_SAFE_HTML);
-					}
-				}
-				return value;
+			public Rank getValue(RanksGroup object) {
+				return rankForListType(object);
 			}
 		};
+		revenueColumn.setFieldUpdater(new FieldUpdater<RanksGroup, Rank>() {
+
+			@Override
+			public void update(int index, RanksGroup object, Rank value) {
+				if (SessionController.get().isValidSession() && !SessionController.get().hasLinkedAccount()) {
+					Window.alert("Link Account Popup");
+				} else {
+					signUpPopup.show();
+				}
+			}
+		});
 		revenueColumn.setCellStyleNames(style.mhxte6ciA());
 
 		iapColumn = new Column<RanksGroup, SafeHtml>(new SafeHtmlCell()) {
