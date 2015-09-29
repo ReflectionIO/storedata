@@ -49,28 +49,25 @@ public class LoggedInHomePage extends Page {
 	}
 
 	private void populateAccordionSwitches() {
-		accordionSwitchUK.addItemComplete("Games");
-		accordionSwitchUK.addItemIncomplete("Overall", "");
-		accordionSwitchUK.addItemIncomplete("Education", "");
-		accordionSwitchUK.addItemIncomplete("Music", "");
+		accordionSwitchUK.addItemComplete("Games Category");
+		accordionSwitchUK.addItemComplete("Free – iPhone & iPad");
+		accordionSwitchUK.addItemComplete("Paid – iPhone");
+		accordionSwitchUK.addItemComplete("Grossing – iPhone & iPad");
 		accordionSwitchUK.setSubtitleHtml("(1<span>Category</span>)");
 		
-		accordionSwitchDE.addItemComplete("Games");
-		accordionSwitchDE.addItemIncomplete("Overall", "");		
-		accordionSwitchDE.addItemIncomplete("Education", "");
-		accordionSwitchDE.addItemIncomplete("Music", "");
+		accordionSwitchDE.addItemComplete("Games Category");
+		accordionSwitchDE.addItemComplete("Free – iPhone & iPad");		
+		accordionSwitchDE.addItemComplete("Grossing – iPhone & iPad");
 		accordionSwitchDE.setSubtitleHtml("(1<span>Category</span>)");
 		
-		accordionSwitchFR.addItemComplete("Games");
-		accordionSwitchFR.addItemIncomplete("Overall", "");		
-		accordionSwitchFR.addItemIncomplete("Education", "");
-		accordionSwitchFR.addItemIncomplete("Music", "");
+		accordionSwitchFR.addItemComplete("Games Category");
+		accordionSwitchFR.addItemComplete("Free – iPhone & iPad");		
+		accordionSwitchFR.addItemComplete("Grossing – iPhone & iPad");
 		accordionSwitchFR.setSubtitleHtml("(1<span>Category</span>)");
 		
-		accordionSwitchIT.addItemComplete("Games");
-		accordionSwitchIT.addItemIncomplete("Overall", "");		
-		accordionSwitchIT.addItemIncomplete("Education", "");
-		accordionSwitchIT.addItemIncomplete("Music", "");
+		accordionSwitchIT.addItemComplete("Games Category");
+		accordionSwitchIT.addItemComplete("Free – iPhone & iPad");		
+		accordionSwitchIT.addItemComplete("Grossing – iPhone & iPad");
 		accordionSwitchIT.setSubtitleHtml("(1<span>Category</span>)");
 
 		accordionSwitchES.addItemIncomplete("Overall", "");
