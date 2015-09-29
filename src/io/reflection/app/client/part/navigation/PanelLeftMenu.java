@@ -66,10 +66,15 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 	public static final String IS_SELECTED = Styles.STYLES_INSTANCE.reflectionMainStyle().isSelected();
 
 	@UiField UListElement itemList;
-	@UiField LIElement leaderboardItem;
+	@UiField Anchor myDataLink;
+	@UiField LIElement myDataItem;
 	@UiField LIElement myAppsItem;
+	@UiField LIElement linkedAccountsItem;
+	@UiField LIElement leaderboardItem;
+	@UiField LIElement productItem;
+	@UiField LIElement pricingItem;
 	@UiField LIElement blogItem;
-	@UiField LIElement forumItem;
+	// @UiField LIElement forumItem;
 	@UiField LIElement adminItem;
 	@UiField LIElement adminFeedBrowserItem;
 	@UiField LIElement adminSimpleModelRunItem;
@@ -85,8 +90,9 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 	@UiField LIElement adminSendNotificationItem;
 	@UiField LIElement adminBlogItem;
 	@UiField Anchor adminLink;
-	@UiField InlineHyperlink leaderboardLink;
 	@UiField InlineHyperlink myAppsLink;
+	@UiField InlineHyperlink linkedAccountsLink;
+	@UiField InlineHyperlink leaderboardLink;
 	@UiField InlineHyperlink adminFeedBrowserLink;
 	@UiField InlineHyperlink adminSimpleModelRunLink;
 	@UiField InlineHyperlink adminDataAccountFetchesLink;
@@ -98,21 +104,25 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 	public PanelLeftMenu() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		myAppsItem.removeFromParent();
+		myDataItem.removeFromParent();
 		adminItem.removeFromParent();
 		createItemList();
 
-		forumItem.removeFromParent();
+		// forumItem.removeFromParent();
 	}
 
 	private void attachUserLinks(User user) {
+		productItem.removeFromParent();
+		pricingItem.removeFromParent();
 		if (user != null) {
 			if (SessionController.get().isLoggedInUserAdmin() || SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE)) {
-				if (!itemList.isOrHasChild(myAppsItem)) {
-					itemList.insertAfter(myAppsItem, leaderboardItem);
+				if (!itemList.isOrHasChild(myDataItem)) {
+					itemList.insertFirst(myDataItem);
 				}
+				UListElement ulMyDataElem = myDataItem.getElementsByTagName("ul").getItem(0).cast(); // Close admin menu
+				ulMyDataElem.getStyle().setMarginTop(-(ulMyDataElem.getClientHeight()), Unit.PX);
 			} else {
-				myAppsItem.removeFromParent();
+				myDataItem.removeFromParent();
 			}
 			if (SessionController.get().isLoggedInUserAdmin()) {
 				itemList.appendChild(adminItem);
@@ -128,10 +138,14 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 	private void createItemList() {
 		if (items == null) {
 			items = new ArrayList<LIElement>();
-			items.add(leaderboardItem);
+			items.add(myDataItem);
 			items.add(myAppsItem);
+			items.add(linkedAccountsItem);
+			items.add(leaderboardItem);
+			items.add(productItem);
+			items.add(pricingItem);
 			items.add(blogItem);
-			items.add(forumItem);
+			// items.add(forumItem);
 			items.add(adminItem);
 			items.add(adminFeedBrowserItem);
 			items.add(adminSimpleModelRunItem);
@@ -206,6 +220,8 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 		if (user != null) {
 			myAppsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(),
 					FilterController.get().asMyAppsFilterString()));
+			linkedAccountsLink
+					.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.LinkedAccountsPageType.toString(), user.id.toString()));
 		}
 		adminFeedBrowserLink.setTargetHistoryToken(PageType.FeedBrowserPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
 				FilterController.get().asFeedFilterString()));
@@ -214,59 +230,90 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 				.asDataAccountFetchFilterString()));
 
 		// Highlight selected items
-		if (PageType.RanksPageType.equals(current.getPage())) {
-			highlight(leaderboardItem);
+		if (PageType.UsersPageType.equals(current.getPage()) && current.getAction() != null && PageType.MyAppsPageType.equals(current.getAction())) {
+			highlight(myDataItem, myAppsItem);
 			closeDropDownItem(adminItem);
-		} else if (PageType.UsersPageType.equals(current.getPage()) && current.getAction() != null && PageType.MyAppsPageType.equals(current.getAction())) {
-			highlight(myAppsItem);
+			openDropDownItem(myDataItem);
+		} else if (PageType.UsersPageType.equals(current.getPage()) && current.getAction() != null
+				&& PageType.LinkedAccountsPageType.equals(current.getAction())) {
+			highlight(myDataItem, linkedAccountsItem);
+			closeDropDownItem(adminItem);
+			openDropDownItem(myDataItem);
+		} else if (PageType.RanksPageType.equals(current.getPage())) {
+			highlight(leaderboardItem);
+			closeDropDownItem(myDataItem);
+			closeDropDownItem(adminItem);
+		} else if (PageType.ProductPageType.equals(current.getPage())) {
+			highlight(productItem);
+			closeDropDownItem(myDataItem);
+			closeDropDownItem(adminItem);
+		} else if (PageType.PricingPageType.equals(current.getPage())) {
+			highlight(pricingItem);
+			closeDropDownItem(myDataItem);
+			closeDropDownItem(adminItem);
 		} else if (PageType.BlogPostsPageType.equals(current.getPage()) || PageType.BlogPostPageType.equals(current.getPage())) {
 			highlight(blogItem);
+			closeDropDownItem(myDataItem);
 			closeDropDownItem(adminItem);
-		} else if (PageType.ForumPageType.equals(current.getPage()) || PageType.ForumThreadPageType.equals(current.getPage())
-				|| PageType.ForumTopicPageType.equals(current.getPage())) {
-			highlight(forumItem);
-			closeDropDownItem(adminItem);
+			// } else if (PageType.ForumPageType.equals(current.getPage()) || PageType.ForumThreadPageType.equals(current.getPage())
+			// || PageType.ForumTopicPageType.equals(current.getPage())) {
+			// highlight(forumItem);
+			// closeDropDownItem(adminItem);
 		} else if (PageType.FeedBrowserPageType.equals(current.getPage())) {
 			highlight(adminItem, adminFeedBrowserItem);
+			closeDropDownItem(myDataItem);
 			openDropDownItem(adminItem);
 		} else if (PageType.SimpleModelRunPageType.equals(current.getPage())) {
 			highlight(adminItem, adminSimpleModelRunItem);
+			closeDropDownItem(myDataItem);
 			openDropDownItem(adminItem);
 		} else if (PageType.ItemsPageType.equals(current.getPage())) {
 			highlight(adminItem, adminItemsItem);
+			closeDropDownItem(myDataItem);
 			openDropDownItem(adminItem);
 		} else if (PageType.CategoriesPageType.equals(current.getPage())) {
 			highlight(adminItem, adminCategoriesItem);
+			closeDropDownItem(myDataItem);
 			openDropDownItem(adminItem);
 		} else if (PageType.UsersPageType.equals(current.getPage()) && current.getAction() == null) {
 			highlight(adminItem, adminUsersItem);
+			closeDropDownItem(myDataItem);
 			openDropDownItem(adminItem);
 		} else if (PageType.RolesPageType.equals(current.getPage())) {
 			highlight(adminItem, adminRolesItem);
+			closeDropDownItem(myDataItem);
 			openDropDownItem(adminItem);
 		} else if (PageType.PermissionsPageType.equals(current.getPage())) {
 			highlight(adminItem, adminPermissionsItem);
+			closeDropDownItem(myDataItem);
 			openDropDownItem(adminItem);
 		} else if (PageType.DataAccountsPageType.equals(current.getPage())) {
 			highlight(adminItem, adminDataAccountsItem);
+			closeDropDownItem(myDataItem);
 			openDropDownItem(adminItem);
 		} else if (PageType.DataAccountFetchesPageType.equals(current.getPage())) {
 			highlight(adminItem, adminDataAccountFetchesItem);
+			closeDropDownItem(myDataItem);
 			openDropDownItem(adminItem);
 		} else if (PageType.EventsPageType.equals(current.getPage())) {
 			highlight(adminItem, adminEventsItem);
+			closeDropDownItem(myDataItem);
 			openDropDownItem(adminItem);
 		} else if (PageType.EventSubscriptionsPageType.equals(current.getPage())) {
 			highlight(adminItem, adminEventSubscriptionsItem);
+			closeDropDownItem(myDataItem);
 			openDropDownItem(adminItem);
 		} else if (PageType.SendNotificationPageType.equals(current.getPage())) {
 			highlight(adminItem, adminSendNotificationItem);
+			closeDropDownItem(myDataItem);
 			openDropDownItem(adminItem);
 		} else if (PageType.BlogAdminPageType.equals(current.getPage()) || PageType.BlogEditPostPageType.equals(current.getPage())) {
 			highlight(adminItem, adminBlogItem);
+			closeDropDownItem(myDataItem);
 			openDropDownItem(adminItem);
 		} else {
 			highlight();
+			closeDropDownItem(myDataItem);
 			closeDropDownItem(adminItem);
 		}
 
@@ -282,10 +329,12 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 			ulElem.getStyle().setMarginTop(0, Unit.PX);
 			liElem.addClassName(IS_OPEN);
 			liElem.addClassName(IS_SELECTED);
-			leaderboardItem.removeClassName(IS_SELECTED);
-			myAppsItem.removeClassName(IS_SELECTED);
-			blogItem.removeClassName(IS_SELECTED);
-			forumItem.removeClassName(IS_SELECTED);
+			// leaderboardItem.removeClassName(IS_SELECTED);
+			// myAppsItem.removeClassName(IS_SELECTED);
+			// productItem.removeClassName(IS_SELECTED);
+			// pricingItem.removeClassName(IS_SELECTED);
+			// blogItem.removeClassName(IS_SELECTED);
+			// forumItem.removeClassName(IS_SELECTED);
 		}
 	}
 
@@ -295,10 +344,12 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 			ulElem.getStyle().setMarginTop(0, Unit.PX);
 			liElem.addClassName(IS_OPEN);
 			// liElem.addClassName(IS_SELECTED);
-			myAppsItem.removeClassName(IS_SELECTED);
-			leaderboardItem.removeClassName(IS_SELECTED);
-			blogItem.removeClassName(IS_SELECTED);
-			forumItem.removeClassName(IS_SELECTED);
+			// myAppsItem.removeClassName(IS_SELECTED);
+			// leaderboardItem.removeClassName(IS_SELECTED);
+			// productItem.removeClassName(IS_SELECTED);
+			// pricingItem.removeClassName(IS_SELECTED);
+			// blogItem.removeClassName(IS_SELECTED);
+			// forumItem.removeClassName(IS_SELECTED);
 		}
 	}
 
@@ -309,6 +360,12 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 			liElem.removeClassName(IS_OPEN);
 			liElem.removeClassName(IS_SELECTED);
 		}
+	}
+
+	@UiHandler("myDataLink")
+	void onMyDataLinkClicked(ClickEvent event) {
+		event.preventDefault();
+		toggleDropDownItem(myDataItem);
 	}
 
 	@UiHandler("adminLink")
@@ -351,8 +408,10 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 	 */
 	@Override
 	public void userLoggedOut() {
-		myAppsItem.removeFromParent();
+		myDataItem.removeFromParent();
 		adminItem.removeFromParent();
+		itemList.insertBefore(productItem, blogItem);
+		itemList.insertBefore(pricingItem, blogItem);
 	}
 
 	/*

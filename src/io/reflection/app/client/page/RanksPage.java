@@ -23,6 +23,7 @@ import io.reflection.app.client.component.LoadingBar;
 import io.reflection.app.client.component.Selector;
 import io.reflection.app.client.component.ToggleRadioButton;
 import io.reflection.app.client.controller.FilterController;
+import io.reflection.app.client.controller.FilterController.Filter;
 import io.reflection.app.client.controller.ItemController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
@@ -31,6 +32,7 @@ import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.AnimationHelper;
+import io.reflection.app.client.helper.ApiCallHelper;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.helper.FormattingHelper;
@@ -57,11 +59,19 @@ import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.logical.shared.ShowRangeEvent;
 import com.google.gwt.event.logical.shared.ShowRangeHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
@@ -114,6 +124,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	private LoadingIndicator loadingIndicatorFreeList = AnimationHelper.getLeaderboardListLoadingIndicator(25, true);
 	private LoadingIndicator loadingIndicatorPaidGrossingList = AnimationHelper.getLeaderboardListLoadingIndicator(25, false);
 
+	@UiField Button downloadLeaderboard;
 	@UiField DivElement dateSelectContainer;
 	@UiField FormDateBox dateBox;
 	@UiField Selector appStoreSelector;
@@ -178,18 +189,22 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 		// if (!SessionController.get().isLoggedInUserAdmin()) {
 		dailyDataContainer.removeFromParent();
-		// }
 
 		if (!SessionController.get().isLoggedInUserAdmin()) {
 			categorySelector.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
+		}
+
+		if (!SessionController.get().isValidSession()) {
+			downloadLeaderboard.removeFromParent();
 		}
 
 		dateBox.getDatePicker().addShowRangeHandler(new ShowRangeHandler<Date>() {
 
 			@Override
 			public void onShowRange(ShowRangeEvent<Date> event) {
-				FilterHelper.disableOutOfRangeDates(dateBox.getDatePicker(), null, (SessionController.get().isLoggedInUserAdmin() ? FilterHelper.getToday()
-						: FilterHelper.getDaysAgo(2)));
+				FilterHelper.disableOutOfRangeDates(dateBox.getDatePicker(),
+						(SessionController.get().isLoggedInUserAdmin() ? null : ApiCallHelper.getUTCDate(2015, 4, 30)), (SessionController.get()
+								.isLoggedInUserAdmin() ? FilterHelper.getToday() : FilterHelper.getDaysAgo(2)));
 			}
 		});
 
@@ -382,7 +397,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 				SafeHtml value;
 				Rank rank = rankForListType(object);
 				int position = (rank.position.intValue() > 0 ? rank.position.intValue() : rank.grossingPosition.intValue());
-				if (!SessionController.get().isLoggedInUserAdmin() && rank.downloads != null && position <= 5 && position > 0) {
+				if (!SessionController.get().isLoggedInUserAdmin() && position <= 5 && position > 0) {
 					value = SafeHtmlUtils
 							.fromSafeConstant("<span style=\"color: #81879d; font-size: 13px\">Coming Soon</span><span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding "
 									+ Styles.STYLES_INSTANCE.reflectionMainStyle().whatsThisTooltipIconStatic()
@@ -410,7 +425,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 				SafeHtml value;
 				Rank rank = rankForListType(object);
 				int position = (rank.position.intValue() > 0 ? rank.position.intValue() : rank.grossingPosition.intValue());
-				if (!SessionController.get().isLoggedInUserAdmin() && rank.revenue != null && position <= 5 && position > 0) {
+				if (!SessionController.get().isLoggedInUserAdmin() && position <= 5 && position > 0) {
 					value = SafeHtmlUtils
 							.fromSafeConstant("<span style=\"color: #81879d; font-size: 13px\">Coming Soon</span><span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding "
 									+ Styles.STYLES_INSTANCE.reflectionMainStyle().whatsThisTooltipIconStatic()
@@ -489,9 +504,26 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 				FilterController.get().getFilter().setStartTime(startDate.getTime());
 			}
 			if (updateData) {
+				applyFilters.setEnabled(false);
 				PageType.RanksPageType.show("view", selectedTab, FilterController.get().asRankFilterString());
 			}
 		}
+	}
+
+	@UiHandler({ "countrySelector", "appStoreSelector", "categorySelector" })
+	void onFiltersChanged(ChangeEvent event) {
+		applyFilters.setEnabled(!FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
+				|| !FilterController.get().getFilter().getStoreA3Code().equals(appStoreSelector.getSelectedValue())
+				|| !FilterController.get().getFilter().getCategoryId().toString().equals(categorySelector.getSelectedValue())
+				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateBox.getValue()));
+	}
+
+	@UiHandler("dateBox")
+	void onDateChanged(ValueChangeEvent<Date> event) {
+		applyFilters.setEnabled(!FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
+				|| !FilterController.get().getFilter().getStoreA3Code().equals(appStoreSelector.getSelectedValue())
+				|| !FilterController.get().getFilter().getCategoryId().toString().equals(categorySelector.getSelectedValue())
+				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateBox.getValue()));
 	}
 
 	@UiHandler("resetFilters")
@@ -502,6 +534,10 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		appStoreSelector.setSelectedIndex(FormHelper.getItemIndex(appStoreSelector, "iph"));
 		categorySelector.setSelectedIndex(FormHelper.getItemIndex(categorySelector, "15"));
 		dateBox.setValue(FilterHelper.getDaysAgo(2));
+		applyFilters.setEnabled(!FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
+				|| !FilterController.get().getFilter().getStoreA3Code().equals(appStoreSelector.getSelectedValue())
+				|| !FilterController.get().getFilter().getCategoryId().toString().equals(categorySelector.getSelectedValue())
+				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateBox.getValue()));
 	}
 
 	/**
@@ -650,6 +686,77 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		// downloadsHeader.setHeaderStyleNames(style.canBeSorted());
 		// revenueHeader.setHeaderStyleNames(style.canBeSorted());
 		// RankController.get().sortByRank(selectedTab, false);
+	}
+
+	@UiHandler("downloadLeaderboard")
+	void onDownloadLeaderboardClicked(ClickEvent event) {
+		event.preventDefault();
+		Filter filter = FilterController.get().getFilter();
+		String listType;
+		if (filter.getStoreA3Code().equals("iph")) {
+			switch (selectedTab) {
+			case (PAID_LIST_TYPE):
+				listType = "toppaidapplications";
+				break;
+			case (FREE_LIST_TYPE):
+				listType = "topfreeapplications";
+				break;
+			case (GROSSING_LIST_TYPE):
+				listType = "topgrossingapplications";
+				break;
+			default:
+				listType = "topallapplications";
+				break;
+			}
+		} else {
+			switch (selectedTab) {
+			case (PAID_LIST_TYPE):
+				listType = "toppaidipadapplications";
+				break;
+			case (FREE_LIST_TYPE):
+				listType = "topfreeipadapplications";
+				break;
+			case (GROSSING_LIST_TYPE):
+				listType = "topgrossingipadapplications";
+				break;
+			default:
+				listType = "topallipadapplications";
+				break;
+			}
+		}
+		String country = filter.getCountryA2Code();
+		String category = filter.getCategoryId().toString();
+		String date = String.valueOf(ApiCallHelper.getUTCDate(FilterController.get().getEndDate()).getTime());
+		if (SessionController.get().isValidSession()) {
+			downloadLeaderboard.setEnabled(false);
+			downloadLeaderboard.getElement().getFirstChildElement().setInnerText("Downloading ...");
+
+			String session = SessionController.get().getSessionForApiCall().toString();
+
+			String requestData = "listType=" + listType + "&country=" + country + "&category=" + category + "&date=" + date + "&session=" + session;
+
+			RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, URL.encode(Window.Location.getProtocol() + "//" + Window.Location.getHost()
+					+ "/downloadleaderboard"));
+
+			builder.setHeader("Content-Type", "application/x-www-form-urlencoded");
+
+			try {
+				builder.sendRequest(requestData, new RequestCallback() {
+
+					public void onError(Request request, Throwable exception) {
+						downloadLeaderboard.getElement().getFirstChildElement().setInnerText("Download");
+						downloadLeaderboard.setEnabled(true);
+					}
+
+					public void onResponseReceived(Request request, Response response) {
+						String csvContent = "data:text/csv;charset=utf-8," + response.getText();
+						Window.open(URL.encode(csvContent), "_blank", "");
+						downloadLeaderboard.getElement().getFirstChildElement().setInnerText("Download");
+						downloadLeaderboard.setEnabled(true);
+					}
+				});
+			} catch (RequestException e) {}
+		}
 	}
 
 	@UiHandler("viewAllBtn")

@@ -61,7 +61,7 @@
 				</div>
 			</div>
 		</section>
-		<section class="{STYLES_INSTANCE.reflectionMainStyle.productSection} {STYLES_INSTANCE.reflectionMainStyle.productSectionFeatured}">
+		<section class="{STYLES_INSTANCE.reflectionMainStyle.productSection}">
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.productSectionContent}">
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.productImageContainerRight}">
 					<img src="images/product-image-one.png" alt="Reflection app screenshot" />

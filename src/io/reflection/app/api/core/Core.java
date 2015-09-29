@@ -395,18 +395,9 @@ public final class Core extends ActionHandler {
 				input.pager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
 			}
 
-			// boolean skip = false;
-			// int maxLimit = !isLoggedIn ? SESSIONLESS_MAX_ITEMS : (!canSeeFullList ? PERMISSIONLESS_MAX_ITEMS : -1);
-
-			// if (!loggedIn || !canSeeFullList) {
-			// if (input.pager.start.longValue() > maxLimit) {
-			// skip = true;
-			// } else if (input.pager.count.longValue() + input.pager.start.longValue() > maxLimit) {
-			// input.pager.count = Long.valueOf(maxLimit - input.pager.start.longValue());
+			// if (!isLoggedIn) { // Force date to 2 days ago if is public call
+			// input.on = new DateTime(DateTimeZone.UTC).minusDays(2).toDate();
 			// }
-			// }
-			//
-			// if (!skip) {
 
 			if (!isAdmin) {
 				if (!(Arrays.asList("fr", "de", "gb", "it").contains(input.country.a2Code))) {
@@ -440,49 +431,84 @@ public final class Core extends ActionHandler {
 					throw new InputValidationException(ApiError.CategoryStoreMismatch.getCode(), ApiError.CategoryStoreMismatch.getMessage("input.category"));
 			}
 
-			Set<String> itemIds = new HashSet<String>();
-			List<String> listTypes = ApiHelper.getAllListTypes(input.store, input.listType);
 			Collector collector = CollectorFactory.getCollectorForStore(input.store.a3Code);
 
-			List<Rank> ranks;
-			for (String listType : listTypes) {
-				// get all the ranks for the list type (we are using an infinite pager with no sorting to allow us to generate a deletion key during
-				// prediction)
-				ranks = RankServiceProvider.provide().getRanks(input.country, input.category, listType, input.on);
+			Set<String> itemIds = new HashSet<String>();
+			List<Rank> ranks = new ArrayList<Rank>();
 
-				// Remove out of 10 downloads and revenues for non logged in users
-				if (!isLoggedIn) {
-					for (Rank r : ranks) {
-						int ranking = (collector.isGrossing(listType) ? r.grossingPosition.intValue() : r.position.intValue());
-						if (ranking > 10) {
-							r.downloads = null;
-							r.revenue = null;
+			if (input.listType.contains("all")) {
+				List<String> listTypes = ApiHelper.getAllListTypes(input.store, input.listType);
+				for (String listType : listTypes) {
+					// get all the ranks for the list type (we are using an infinite pager with no sorting to allow us to generate a deletion key during
+					// prediction)
+					ranks = RankServiceProvider.provide().getRanks(input.country, input.category, listType, input.on);
+
+					for (Rank rank : ranks) {
+						itemIds.add(rank.itemId);
+						int ranking = (collector.isGrossing(listType) ? rank.grossingPosition.intValue() : rank.position.intValue());
+						if ((!isAdmin && ranking <= 5) || (!isLoggedIn && ranking > 10)) {
+							rank.downloads = null;
+							rank.revenue = null;
 						}
 					}
-				}
 
+					if (collector.isFree(listType)) {
+						output.freeRanks = ranks;
+					} else if (collector.isPaid(listType)) {
+						output.paidRanks = ranks;
+					if (!isAdmin && !input.country.a2Code.equals("gb")) {// Remove paid ranks is not UK
+						for (Rank paidRank : output.paidRanks) {
+							paidRank.downloads = null;
+							paidRank.revenue = null;
+						}
+					}
+					} else if (collector.isGrossing(listType)) {
+						output.grossingRanks = ranks;
+					}
+				}
+			} else if (collector.isFree(input.listType)) {
+				ranks = RankServiceProvider.provide().getRanks(input.country, input.category, input.listType, input.on);
 				for (Rank rank : ranks) {
 					itemIds.add(rank.itemId);
+					if (!isAdmin && rank.position.intValue() <= 5) {
+						rank.downloads = null;
+						rank.revenue = null;
+					}
 				}
+				output.freeRanks = ranks;
 
-				if (collector.isFree(listType)) {
-					output.freeRanks = ranks;
-				} else if (collector.isPaid(listType)) {
-					output.paidRanks = ranks;
-				} else if (collector.isGrossing(listType)) {
-					output.grossingRanks = ranks;
+			} else if (collector.isPaid(input.listType)) {
+				ranks = RankServiceProvider.provide().getRanks(input.country, input.category, input.listType, input.on);
+				for (Rank rank : ranks) {
+					itemIds.add(rank.itemId);
+					if (!isAdmin && rank.position.intValue() <= 5) {
+						rank.downloads = null;
+						rank.revenue = null;
+					}
 				}
+				output.paidRanks = ranks;
+
+			} else if (collector.isGrossing(input.listType)) {
+				ranks = RankServiceProvider.provide().getRanks(input.country, input.category, input.listType, input.on);
+				for (Rank rank : ranks) {
+					itemIds.add(rank.itemId);
+					if (!isAdmin && rank.grossingPosition.intValue() <= 5) {
+						rank.downloads = null;
+						rank.revenue = null;
+					}
+				}
+				output.grossingRanks = ranks;
 			}
 
 			output.items = ItemServiceProvider.provide().getInternalIdItemBatch(itemIds);
 
 			output.pager = input.pager;
 
-			if (input.pager.totalCount == null && input.pager.boundless != Boolean.TRUE) {
-				input.pager.totalCount = Long.valueOf(output.freeRanks.size());
-			}
+			// if (input.pager.totalCount == null && input.pager.boundless != Boolean.TRUE) {
+			input.pager.totalCount = 200L;
+			// }
 
-			updatePager(output.pager, output.freeRanks, input.pager.totalCount);
+			// updatePager(output.pager, output.freeRanks, input.pager.totalCount);
 			// }
 
 			output.status = StatusType.StatusTypeSuccess;

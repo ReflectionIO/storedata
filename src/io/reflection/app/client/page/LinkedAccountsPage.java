@@ -28,7 +28,6 @@ import io.reflection.app.client.component.PopupDialog;
 import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
-import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.AnimationHelper;
 import io.reflection.app.client.helper.DOMHelper;
@@ -41,7 +40,6 @@ import io.reflection.app.client.part.linkaccount.LinkedAccountsEmptyTable;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.client.res.Styles.ReflectionMainStyles;
 import io.reflection.app.datatypes.shared.DataAccount;
-import io.reflection.app.datatypes.shared.User;
 
 import com.google.gwt.cell.client.ClickableTextCell;
 import com.google.gwt.cell.client.FieldUpdater;
@@ -54,9 +52,6 @@ import com.google.gwt.dom.builder.shared.TableRowBuilder;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.FormElement;
-import com.google.gwt.dom.client.LIElement;
-import com.google.gwt.dom.client.SpanElement;
-import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -74,13 +69,9 @@ import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSe
 import com.google.gwt.user.cellview.client.SafeHtmlHeader;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.EventListener;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -103,18 +94,6 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 	@UiField(provided = true) CellTable<DataAccount> linkedAccountsTable = new CellTable<DataAccount>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
 
-	@UiField InlineHyperlink accountSettingsLink;
-	@UiField InlineHyperlink linkedAccountsLink;
-	@UiField InlineHyperlink usersLink;
-	@UiField InlineHyperlink notificationsLink;
-
-	@UiField LIElement accountSettingsItem;
-	@UiField LIElement linkedAccountsItem;
-	@UiField LIElement usersItem;
-	@UiField LIElement notificationsItem;
-	@UiField SpanElement usersText;
-	@UiField SpanElement notifText;
-
 	@UiField Element linkedAccountsCount;
 
 	@UiField PopupDialog deleteLinkedAccountDialog;
@@ -135,8 +114,6 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	@UiField Button addAnotherLinkedAccount;
 
 	private IosMacLinkAccountForm updatingLinkedAccountForm = null;
-
-	private User user = SessionController.get().getLoggedInUser();
 
 	private LoadingBar loadingBar = new LoadingBar(false);
 
@@ -170,27 +147,6 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 		linkedAccountsTable.setLoadingIndicator(AnimationHelper.getLinkedAccountsIndicator(1));
 
-		if (!SessionController.get().isLoggedInUserAdmin()) {
-			usersText.setInnerHTML("Users <span class=\"text-small\">coming soon</span>");
-			usersItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
-			usersItem.getStyle().setCursor(Cursor.DEFAULT);
-			notifText.setInnerHTML("Notifications <span class=\"text-small\">coming soon</span>");
-			notificationsItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
-			notificationsItem.getStyle().setCursor(Cursor.DEFAULT);
-			usersLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
-			notificationsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
-		} else {
-			if (user != null) {
-				notificationsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.NotificationsPageType.toString(),
-						user.id.toString()));
-			}
-		}
-		if (user != null) {
-			accountSettingsLink
-					.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.ChangeDetailsPageType.toString(), user.id.toString()));
-
-		}
-
 		iosMacAddForm.addLinkedAccountChangeEventHander(new LinkedAccountChangeEventHandler() {
 
 			@Override
@@ -205,47 +161,6 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 		linkedAccountsCount.setInnerSafeHtml(AnimationHelper.getLoaderInlineSafeHTML());
 
-		// Add click event to LI element so the event is fired when clicking on the whole tab
-		Event.sinkEvents(accountSettingsItem, Event.ONCLICK);
-		Event.sinkEvents(linkedAccountsItem, Event.ONCLICK);
-		Event.sinkEvents(usersItem, Event.ONCLICK);
-		Event.sinkEvents(notificationsItem, Event.ONCLICK);
-		Event.setEventListener(accountSettingsItem, new EventListener() {
-
-			@Override
-			public void onBrowserEvent(Event event) {
-				if (Event.ONCLICK == event.getTypeInt()) {
-					History.newItem(accountSettingsLink.getTargetHistoryToken());
-				}
-			}
-		});
-		Event.setEventListener(linkedAccountsItem, new EventListener() {
-
-			@Override
-			public void onBrowserEvent(Event event) {
-				if (Event.ONCLICK == event.getTypeInt()) {
-					History.newItem(linkedAccountsLink.getTargetHistoryToken());
-				}
-			}
-		});
-		Event.setEventListener(usersItem, new EventListener() {
-
-			@Override
-			public void onBrowserEvent(Event event) {
-				if (Event.ONCLICK == event.getTypeInt()) {
-					History.newItem(usersLink.getTargetHistoryToken());
-				}
-			}
-		});
-		Event.setEventListener(notificationsItem, new EventListener() {
-
-			@Override
-			public void onBrowserEvent(Event event) {
-				if (Event.ONCLICK == event.getTypeInt()) {
-					History.newItem(notificationsLink.getTargetHistoryToken());
-				}
-			}
-		});
 	}
 
 	private class CustomTableBuilder extends DefaultCellTableBuilder<DataAccount> {
@@ -542,8 +457,6 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
 		updateViewFromLinkedAccountCount();
-		linkedAccountsLink.setTargetHistoryToken(current.toString());
-
 	}
 
 	/*
