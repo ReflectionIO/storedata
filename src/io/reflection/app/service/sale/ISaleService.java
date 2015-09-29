@@ -9,6 +9,7 @@
 package io.reflection.app.service.sale;
 
 import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -24,6 +25,7 @@ import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Sale;
+import io.reflection.app.helpers.SaleSummaryHelper.SALE_SOURCE;
 
 public interface ISaleService extends IService {
 
@@ -267,5 +269,29 @@ public interface ISaleService extends IService {
 	 * @param date
 	 */
 	public void deleteSales(Long dataAccountId, Date date);
+
+	/**
+	 * @param dataaccountid
+	 * @param sales
+	 * @param sale_source
+	 * @throws DataAccessException
+	 */
+	public void summariseSales(Long dataaccountid, List<Sale> sales, SALE_SOURCE saleSource) throws DataAccessException;
+
+	/**
+	 * @param dataAccountId
+	 * @param date
+	 * @return
+	 * @throws DataAccessException
+	 */
+	ArrayList<Sale> getSalesForDataAccountOnDate(Long dataAccountId, Date date) throws DataAccessException;
+
+	/**
+	 * @param dateFrom
+	 * @param dateTo
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<Long> getDataAccountsWithSalesBetweenDates(Date dateFrom, Date dateTo) throws DataAccessException;
 
 }

@@ -7,9 +7,6 @@
 //
 package io.reflection.app.repackaged.scphopr.cloudsql;
 
-import io.reflection.app.api.exception.DataAccessException;
-import io.reflection.app.logging.GaeLevel;
-
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,25 +20,28 @@ import java.util.logging.Logger;
 import com.google.appengine.api.rdbms.AppEngineDriver;
 import com.google.appengine.api.utils.SystemProperty;
 
+import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.logging.GaeLevel;
+
 public final class Connection {
 
 	public static final String CONNECTION_NATIVE_KEY = "connection.native";
 
-	private final String server;
-	private final String database;
-	private java.sql.Connection connection;
-	private final String username;
-	private final String password;
-	private ResultSet queryResult;
-	private Statement statement;
-	private long affectedRowCount;
-	private long insertedId;
-	private boolean isTransactionMode;
-	private boolean isNative = false;
-	private final String encoding = "utf8mb4";
+	private final String				server;
+	private final String				database;
+	private java.sql.Connection	connection;
+	private final String				username;
+	private final String				password;
+	private ResultSet						queryResult;
+	private Statement						statement;
+	private long								affectedRowCount;
+	private long								insertedId;
+	private boolean							isTransactionMode;
+	private boolean							isNative	= false;
+	private final String				encoding	= "utf8mb4";
 
-	private static final Logger LOG = Logger.getLogger(Connection.class.getName());
-	private static boolean classLoaded = false;
+	private static final Logger	LOG					= Logger.getLogger(Connection.class.getName());
+	private static boolean			classLoaded	= false;
 
 	public Connection(String server, String database, String username, String password) throws DataAccessException {
 		this(server, database, username, password, false);
@@ -109,7 +109,8 @@ public final class Connection {
 
 	private String getDatabaseDriverName() {
 		if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Production) return "com.mysql.jdbc.GoogleDriver";
-		else return "com.mysql.jdbc.Driver";
+		else
+			return "com.mysql.jdbc.Driver";
 	}
 
 	public void connect() throws DataAccessException {
@@ -365,6 +366,20 @@ public final class Connection {
 		// if (LOG.isLoggable(GaeLevel.DEBUG)) {
 		// LOG.log(GaeLevel.DEBUG, "DB Connection ------- Fake disconnect");
 		// }
+
+		try {
+			if (queryResult != null && !queryResult.isClosed()) {
+				queryResult.close();
+			}
+		} catch (SQLException e) {
+		}
+
+		try {
+			if (statement != null && !statement.isClosed()) {
+				statement.close();
+			}
+		} catch (SQLException e) {
+		}
 
 		queryResult = null;
 		statement = null;

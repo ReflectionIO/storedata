@@ -41,6 +41,7 @@ import io.reflection.app.datatypes.shared.DataAccountFetchStatusType;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Sale;
 import io.reflection.app.helpers.QueueHelper;
+import io.reflection.app.helpers.SaleSummaryHelper;
 import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
 import io.reflection.app.service.sale.ISaleService;
 import io.reflection.app.service.sale.SaleServiceProvider;
@@ -98,7 +99,7 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 
 					// ArchiverFactory.getItemSaleArchiver().enqueueIdDataAccountFetch(fetch.id);
 
-					SaleServiceProvider.provide().summariseSalesForDataAccountOnDate(fetch.linkedAccount.id, fetch.date);
+					SaleServiceProvider.provide().summariseSales(fetch.linkedAccount.id, sales, SaleSummaryHelper.SALE_SOURCE.INGEST);
 					enqueueDataAccountItemsToGatherSplitData(fetch.linkedAccount.id, fetch.date);
 				}
 			} catch (DataAccessException e) {

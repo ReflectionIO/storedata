@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import com.spacehopperstudios.utility.StringUtils;
 
@@ -30,7 +31,9 @@ import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Sale;
+import io.reflection.app.helpers.SaleSummaryHelper;
 import io.reflection.app.helpers.SqlQueryHelper;
+import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
@@ -41,6 +44,8 @@ import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvide
 import io.reflection.app.service.item.ItemServiceProvider;
 
 final class SaleService implements ISaleService {
+	private transient static final Logger LOG = Logger.getLogger(SaleService.class.getName());
+
 	@Override
 	public String getName() {
 		return ServiceType.ServiceTypeSale.toString();
@@ -127,7 +132,8 @@ final class SaleService implements ISaleService {
 		// TODO: sort out nullable values
 
 		final String addSaleQuery = String
-				.format("INSERT INTO `sale` (`dataaccountid`,`itemid`,`country`,`sku`,`developer`,`title`,`version`,`typeidentifier`,`units`,`proceeds`,`currency`,`begin`,`end`,`customercurrency`,`customerprice`,`promocode`,`parentidentifier`,`subscription`,`period`,`category`) VALUES (%d,%d,'%s','%s','%s','%s','%s','%s',%d,%d,'%s',FROM_UNIXTIME(%d),FROM_UNIXTIME(%d),'%s',%d,'%s','%s','%s','%s','%s')",
+				.format(
+						"INSERT INTO `sale` (`dataaccountid`,`itemid`,`country`,`sku`,`developer`,`title`,`version`,`typeidentifier`,`units`,`proceeds`,`currency`,`begin`,`end`,`customercurrency`,`customerprice`,`promocode`,`parentidentifier`,`subscription`,`period`,`category`) VALUES (%d,%d,'%s','%s','%s','%s','%s','%s',%d,%d,'%s',FROM_UNIXTIME(%d),FROM_UNIXTIME(%d),'%s',%d,'%s','%s','%s','%s','%s')",
 						sale.account.id.longValue(), sale.item.id.longValue(), addslashes(sale.country), addslashes(sale.sku), addslashes(sale.developer),
 						addslashes(sale.title), addslashes(sale.version), addslashes(sale.typeIdentifier), sale.units.intValue(),
 						(int) (sale.proceeds.floatValue() * 100.0f), addslashes(sale.currency), sale.begin.getTime() / 1000, sale.end.getTime() / 1000,
@@ -315,7 +321,8 @@ final class SaleService implements ISaleService {
 		StringBuffer addSalesBatchQuery = new StringBuffer();
 
 		addSalesBatchQuery
-		.append("INSERT INTO `sale` (`dataaccountid`,`itemid`,`country`,`sku`,`developer`,`title`,`version`,`typeidentifier`,`units`,`proceeds`,`currency`,`begin`,`end`,`customercurrency`,`customerprice`,`promocode`,`parentidentifier`,`subscription`,`period`,`category`) VALUES");
+		.append(
+				"INSERT INTO `sale` (`dataaccountid`,`itemid`,`country`,`sku`,`developer`,`title`,`version`,`typeidentifier`,`units`,`proceeds`,`currency`,`begin`,`end`,`customercurrency`,`customerprice`,`promocode`,`parentidentifier`,`subscription`,`period`,`category`) VALUES");
 
 		for (Sale sale : sales) {
 			if (addSalesBatchQuery.charAt(addSalesBatchQuery.length() - 1) != 'S') {
@@ -352,8 +359,11 @@ final class SaleService implements ISaleService {
 	 *
 	 * @see io.reflection.app.service.sale.ISaleService#getSales(io.reflection.app.datatypes.shared.Country, io.reflection.app.datatypes.shared.Category,
 	 * io.reflection.app.datatypes.shared.DataAccount, java.util.Date, java.util.Date, io.reflection.app.api.shared.datatypes.Pager)
+	 *
+	 * The service which calls this method does not seem to be used anymore.
 	 */
 	@Override
+	@Deprecated
 	public List<Sale> getSales(Country country, Category category, DataAccount linkedAccount, Date start, Date end, Pager pager) throws DataAccessException {
 		List<Sale> sales = new ArrayList<Sale>();
 
@@ -465,7 +475,8 @@ final class SaleService implements ISaleService {
 		// (category relates to store by a3code)
 		// we are using end for date but we could equally use begin
 		String getSalesQuery = String
-				.format("SELECT * FROM `sale` WHERE `country`='%s' AND (%d=%d OR `category`='%s') AND `dataaccountid`=%d AND %s AND (`itemid`='%7$s' OR parentidentifier = (SELECT `sku` FROM `sale` WHERE `itemid`='%7$s' LIMIT 1)) AND `deleted`='n'",
+				.format(
+						"SELECT * FROM `sale` WHERE `country`='%s' AND (%d=%d OR `category`='%s') AND `dataaccountid`=%d AND %s AND (`itemid`='%7$s' OR parentidentifier = (SELECT `sku` FROM `sale` WHERE `itemid`='%7$s' LIMIT 1)) AND `deleted`='n'",
 						country.a2Code, 24, category == null ? 24 : category.id.longValue(), category == null ? "" : category.name,
 								linkedAccount.id.longValue(), SqlQueryHelper.beforeAfterQuery(end, start, "end"), item.internalId);
 
@@ -860,20 +871,60 @@ final class SaleService implements ISaleService {
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see io.reflection.app.service.sale.ISaleService#getSalesForDataAccountOnDate(java.lang.Long, java.util.Date)
+	 */
+	@Override
+	public ArrayList<Sale> getSalesForDataAccountOnDate(Long dataAccountId, Date date) throws DataAccessException {
+		LOG.log(GaeLevel.DEBUG, String.format("Getting sales for data account %d on %s", dataAccountId, date));
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
+		try {
+			saleConnection.connect();
+			String query = String.format("select * from sale where dataaccountid=%d and begin='%s'", dataAccountId, sdf.format(date));
+			saleConnection.executeQuery(query);
+
+			ArrayList<Sale> sales = new ArrayList<Sale>();
+
+			LOG.log(GaeLevel.DEBUG, String.format("Request executed. Loading rows..."));
+
+			while (saleConnection.fetchNextRow()) {
+				sales.add(toSale(saleConnection));
+			}
+
+			LOG.log(GaeLevel.DEBUG, String.format("Returning %d rows", sales.size()));
+			return sales;
+		} finally {
+			if (saleConnection != null) {
+				saleConnection.disconnect();
+			}
+		}
+	}
+
 	/*
 	 * (non-Javadoc)
 	 *
 	 * @see io.reflection.app.service.sale.ISaleService#summariseSalesForDataAccountOnDate(java.lang.Long, java.util.Date)
 	 */
 	@Override
-	public void summariseSalesForDataAccountOnDate(Long id, Date date) throws DataAccessException {
+	public void summariseSalesForDataAccountOnDate(Long dataAccountId, Date date) throws DataAccessException {
+		ArrayList<Sale> sales = getSalesForDataAccountOnDate(dataAccountId, date);
+
+		summariseSales(dataAccountId, sales, SaleSummaryHelper.SALE_SOURCE.DB);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see io.reflection.app.service.sale.ISaleService#summariseSales(java.util.List)
+	 */
+	@Override
+	public void summariseSales(Long dataaccountid, List<Sale> sales, SaleSummaryHelper.SALE_SOURCE saleSource) throws DataAccessException {
 		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
 		try {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
 			saleConnection.connect();
-			String query = String.format("CALL repopulate_sale_summary_for_dataaccount_on_date(%d, '%s')", id, sdf.format(date));
-			saleConnection.executeQuery(query);
+			SaleSummaryHelper.INSTANCE.summariseSales(dataaccountid, sales, saleSource, saleConnection);
 		} finally {
 			if (saleConnection != null) {
 				saleConnection.disconnect();
@@ -997,6 +1048,41 @@ final class SaleService implements ISaleService {
 			Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
 			saleConnection.executeQuery(String.format("delete from sale where dataaccountid=%d and begin='%s'", dataAccountId, sdf.format(date)));
 		} catch (Exception e) {
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.service.sale.ISaleService#getDataAccountsWithSalesBetweenDates(java.util.Date, java.util.Date)
+	 */
+	@Override
+	public List<Long> getDataAccountsWithSalesBetweenDates(Date dateFrom, Date dateTo) throws DataAccessException {
+		LOG.log(GaeLevel.DEBUG, String.format("Getting data account with sales between %s and %s", dateFrom, dateTo));
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+		String getDataAccountsWithSalesBetweenDatesQuery = String.format("select distinct(dataaccountid) dataaccountid from sale where `begin` BETWEEN '%s' and '%s'",
+				sdf.format(dateFrom), sdf.format(dateTo));
+
+		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
+
+		try {
+			saleConnection.connect();
+			saleConnection.executeQuery(getDataAccountsWithSalesBetweenDatesQuery);
+
+			ArrayList<Long> list = new ArrayList<Long>();
+			LOG.log(GaeLevel.DEBUG, String.format("Executed the request. Loading rows..."));
+
+			while (saleConnection.fetchNextRow()) {
+				Long entry = saleConnection.getCurrentRowLong("dataaccountid");
+				list.add(entry);
+			}
+
+			LOG.log(GaeLevel.DEBUG, String.format("Returning %d rows", list.size()));
+			return list;
+		} finally {
+			if (saleConnection != null) {
+				saleConnection.disconnect();
+			}
 		}
 	}
 }
