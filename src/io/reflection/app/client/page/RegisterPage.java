@@ -87,15 +87,10 @@ public class RegisterPage extends Page implements UserRegisteredEventHandler, Se
 	 */
 	@Override
 	public void userRegistered(String email, String password) {
-		// final String username = email;
-
-		if (SessionController.get().isLoggedInUserAdmin()) {
+		if (SessionController.get().isAdmin()) {
 			PageType.UsersPageType.show();
-			registerForm.resetForm();
 		} else {
 			SessionController.get().login(email, password, true);
-			registerForm.setButtonLoading("Logging In ..");
-			PageType.LinkItunesPageType.show();
 		}
 	}
 

@@ -76,6 +76,8 @@ public class DataTypeHelper {
 	public static final String NEW_USER_EVENT_CODE = "WEL";
 	public static final String SELECTED_USER_EVENT_CODE = "SEL";
 	public static final String THANK_YOU_EVENT_CODE = "TRQ";
+	public static final String REGISTERED_NOW_LINK_EVENT_CODE = "LNK";
+	public static final String CONFIRMATION_ACCOUNT_LINKED_EVENT_CODE = "CON";
 	public static final String SALES_GATHER_CREDENTIAL_ERROR_EVENT_CODE = "SCE";
 	public static final String SALES_GATHER_GENERIC_ERROR_EVENT_CODE = "SGE";
 

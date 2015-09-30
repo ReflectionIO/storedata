@@ -234,7 +234,11 @@ public class LoadingPage extends Page implements NavigationEventHandler, LoginEv
 			(new Timer() {
 				@Override
 				public void run() {
-					NavigationController.get().showIntendedPage();
+					if (!SessionController.get().canSeePredictions() && !SessionController.get().isSessionRestored()) {
+						PageType.LinkItunesPageType.show();
+					} else {
+						NavigationController.get().showIntendedPage();
+					}
 				}
 			}).schedule(600);
 

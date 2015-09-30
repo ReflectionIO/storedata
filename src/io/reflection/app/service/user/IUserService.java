@@ -137,6 +137,12 @@ public interface IUserService extends IService {
 	/**
 	 * @param user
 	 * @param role
+	 */
+	public void assignExpiringRole(User user, Role role, int expiringDays) throws DataAccessException;
+
+	/**
+	 * @param user
+	 * @param role
 	 * @return
 	 */
 	public Boolean hasRole(User user, Role role) throws DataAccessException;
