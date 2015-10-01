@@ -119,6 +119,9 @@ public class TooltipHelper {
 								$this.on("mouseleave", function() {
 									tooltip.remove();
 								});
+								$this.on("click", function(){
+									tooltip.remove();
+								});
 								$this.removeClass("js-tooltip");
 							});
 		}
