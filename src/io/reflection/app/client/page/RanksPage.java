@@ -7,7 +7,50 @@
 //
 package io.reflection.app.client.page;
 
-import static io.reflection.app.client.controller.FilterController.*;
+import static io.reflection.app.client.controller.FilterController.FREE_LIST_TYPE;
+import static io.reflection.app.client.controller.FilterController.GROSSING_LIST_TYPE;
+import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
+import static io.reflection.app.client.controller.FilterController.PAID_LIST_TYPE;
+import static io.reflection.app.client.controller.FilterController.REVENUE_DAILY_DATA_TYPE;
+import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
+import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
+import io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler;
+import io.reflection.app.client.DefaultEventBus;
+import io.reflection.app.client.cell.LeaderboardAppDetailsCell;
+import io.reflection.app.client.cell.LeaderboardDownloadsCell;
+import io.reflection.app.client.cell.LeaderboardRevenueCell;
+import io.reflection.app.client.component.FormDateBox;
+import io.reflection.app.client.component.LoadingBar;
+import io.reflection.app.client.component.LoadingButton;
+import io.reflection.app.client.component.Selector;
+import io.reflection.app.client.component.ToggleRadioButton;
+import io.reflection.app.client.controller.FilterController;
+import io.reflection.app.client.controller.FilterController.Filter;
+import io.reflection.app.client.controller.ItemController;
+import io.reflection.app.client.controller.NavigationController;
+import io.reflection.app.client.controller.NavigationController.Stack;
+import io.reflection.app.client.controller.RankController;
+import io.reflection.app.client.controller.ServiceConstants;
+import io.reflection.app.client.controller.SessionController;
+import io.reflection.app.client.handler.NavigationEventHandler;
+import io.reflection.app.client.helper.AnimationHelper;
+import io.reflection.app.client.helper.ApiCallHelper;
+import io.reflection.app.client.helper.FilterHelper;
+import io.reflection.app.client.helper.FormHelper;
+import io.reflection.app.client.helper.FormattingHelper;
+import io.reflection.app.client.helper.ResponsiveDesignHelper;
+import io.reflection.app.client.helper.TooltipHelper;
+import io.reflection.app.client.part.BootstrapGwtCellTable;
+import io.reflection.app.client.part.ErrorPanel;
+import io.reflection.app.client.part.LoadingIndicator;
+import io.reflection.app.client.part.NoDataPanel;
+import io.reflection.app.client.part.datatypes.RanksGroup;
+import io.reflection.app.client.popup.PremiumPopup;
+import io.reflection.app.client.popup.SignUpPopup;
+import io.reflection.app.client.res.Styles;
+import io.reflection.app.client.res.Styles.ReflectionMainStyles;
+import io.reflection.app.datatypes.shared.Rank;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -57,45 +100,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
 import com.willshex.gson.json.service.shared.StatusType;
 
-import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
-import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
-import io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler;
-import io.reflection.app.client.DefaultEventBus;
-import io.reflection.app.client.cell.LeaderboardAppDetailsCell;
-import io.reflection.app.client.cell.LeaderboardDownloadsCell;
-import io.reflection.app.client.cell.LeaderboardRevenueCell;
-import io.reflection.app.client.component.FormDateBox;
-import io.reflection.app.client.component.LoadingBar;
-import io.reflection.app.client.component.Selector;
-import io.reflection.app.client.component.ToggleRadioButton;
-import io.reflection.app.client.controller.FilterController;
-import io.reflection.app.client.controller.FilterController.Filter;
-import io.reflection.app.client.controller.ItemController;
-import io.reflection.app.client.controller.NavigationController;
-import io.reflection.app.client.controller.NavigationController.Stack;
-import io.reflection.app.client.controller.RankController;
-import io.reflection.app.client.controller.ServiceConstants;
-import io.reflection.app.client.controller.SessionController;
-import io.reflection.app.client.handler.NavigationEventHandler;
-import io.reflection.app.client.helper.AnimationHelper;
-import io.reflection.app.client.helper.ApiCallHelper;
-import io.reflection.app.client.helper.FilterHelper;
-import io.reflection.app.client.helper.FormHelper;
-import io.reflection.app.client.helper.FormattingHelper;
-import io.reflection.app.client.helper.ResponsiveDesignHelper;
-import io.reflection.app.client.helper.TooltipHelper;
-import io.reflection.app.client.part.BootstrapGwtCellTable;
-import io.reflection.app.client.part.ErrorPanel;
-import io.reflection.app.client.part.LoadingIndicator;
-import io.reflection.app.client.part.NoDataPanel;
-import io.reflection.app.client.part.datatypes.RanksGroup;
-import io.reflection.app.client.popup.PremiumPopup;
-import io.reflection.app.client.popup.SignUpPopup;
-import io.reflection.app.client.res.Styles;
-import io.reflection.app.client.res.Styles.ReflectionMainStyles;
-import io.reflection.app.datatypes.shared.Rank;
-import io.reflection.app.shared.util.DataTypeHelper;
-
 /**
  * @author billy1380
  *
@@ -125,7 +129,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	private LoadingIndicator loadingIndicatorFreeList = AnimationHelper.getLeaderboardListLoadingIndicator(25, true);
 	private LoadingIndicator loadingIndicatorPaidGrossingList = AnimationHelper.getLeaderboardListLoadingIndicator(25, false);
 
-	@UiField Button downloadLeaderboard;
+	@UiField LoadingButton downloadLeaderboard;
 	@UiField DivElement dateSelectContainer;
 	@UiField FormDateBox dateBox;
 	@UiField Selector appStoreSelector;
@@ -347,9 +351,9 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		};
 		rankColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.mhxte6cID());
 
-		LeaderboardAppDetailsCell appRankCell = new LeaderboardAppDetailsCell();
+		LeaderboardAppDetailsCell appDetailsCell = new LeaderboardAppDetailsCell();
 
-		paidColumn = new Column<RanksGroup, Rank>(appRankCell) {
+		paidColumn = new Column<RanksGroup, Rank>(appDetailsCell) {
 
 			@Override
 			public Rank getValue(RanksGroup object) {
@@ -369,7 +373,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		});
 		paidColumn.setCellStyleNames(style.mhxte6ciA());
 
-		freeColumn = new Column<RanksGroup, Rank>(appRankCell) {
+		freeColumn = new Column<RanksGroup, Rank>(appDetailsCell) {
 
 			@Override
 			public Rank getValue(RanksGroup object) {
@@ -390,7 +394,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		});
 		freeColumn.setCellStyleNames(style.mhxte6ciA());
 
-		grossingColumn = new Column<RanksGroup, Rank>(appRankCell) {
+		grossingColumn = new Column<RanksGroup, Rank>(appDetailsCell) {
 
 			@Override
 			public Rank getValue(RanksGroup object) {
@@ -727,6 +731,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	void onDownloadLeaderboardClicked(ClickEvent event) {
 		event.preventDefault();
 		if (SessionController.get().isPremiumDeveloper() || SessionController.get().isAdmin()) {
+			downloadLeaderboard.setStatusLoading("Downloading");
 			Filter filter = FilterController.get().getFilter();
 			String listType;
 			if (filter.getStoreA3Code().equals("iph")) {
@@ -763,8 +768,6 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			String country = filter.getCountryA2Code();
 			String category = filter.getCategoryId().toString();
 			String date = String.valueOf(ApiCallHelper.getUTCDate(FilterController.get().getEndDate()).getTime());
-			downloadLeaderboard.setEnabled(false);
-			downloadLeaderboard.getElement().getFirstChildElement().setInnerText("Downloading ...");
 
 			String session = SessionController.get().getSessionForApiCall().toString();
 
@@ -780,19 +783,19 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 					@Override
 					public void onError(Request request, Throwable exception) {
-						downloadLeaderboard.getElement().getFirstChildElement().setInnerText("Download");
-						downloadLeaderboard.setEnabled(true);
+						downloadLeaderboard.setStatusError();
 					}
 
 					@Override
 					public void onResponseReceived(Request request, Response response) {
 						String csvContent = "data:text/csv;charset=utf-8," + response.getText();
 						Window.open(URL.encode(csvContent), "_self", "");
-						downloadLeaderboard.getElement().getFirstChildElement().setInnerText("Download");
-						downloadLeaderboard.setEnabled(true);
+						downloadLeaderboard.setStatusSuccess();
 					}
 				});
-			} catch (RequestException e) {}
+			} catch (RequestException e) {
+				downloadLeaderboard.setStatusError();
+			}
 		} else if (SessionController.get().isValidSession()) {
 			premiumPopup.show();
 		} else {

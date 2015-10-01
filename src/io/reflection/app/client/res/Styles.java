@@ -218,6 +218,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("btn-reset-filters")
 		String btnResetFilters();
 
+		@ClassName("button-container")
+		String buttonContainer();
+
 		@ClassName("button-example-code-container")
 		String buttonExampleCodeContainer();
 
@@ -1186,6 +1189,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("multiple-select__remove-all-selected")
 		String multipleSelect__removeAllSelected();
+
+		@ClassName("news-container")
+		String newsContainer();
 
 		@ClassName("no-accordion-content")
 		String noAccordionContent();

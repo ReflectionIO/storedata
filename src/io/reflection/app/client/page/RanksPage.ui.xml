@@ -16,19 +16,18 @@
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneHalf}">
 			<h1 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree} {STYLES_INSTANCE.reflectionMainStyle.pageTitle}">App Leaderboard</h1>
 		</div>
-		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.pageFunctions}" style="display: block">
-			<form class="{STYLES_INSTANCE.reflectionMainStyle.inlineSearchForm}" style="display: none">
-				<div class="{STYLES_INSTANCE.reflectionMainStyle.searchFieldNoLabel}">
-					<input type="text" autocomplete="off" name="search" placeholder="Find an app" />
-					<input
-						class="{STYLES_INSTANCE.reflectionMainStyle.refButton} {STYLES_INSTANCE.reflectionMainStyle.searchButtonMobile} {STYLES_INSTANCE.reflectionMainStyle.isHighlighted}"
-						type="submit" value="a" />
-				</div>
-			</form>
-			<g:Button ui:field="downloadLeaderboard"
-				styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall} {STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmallWithIcon}">
-				<span class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCloud}">Download</span>
-			</g:Button>
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.pageFunctions}">
+			<!-- <form class="{STYLES_INSTANCE.reflectionMainStyle.inlineSearchForm}"> -->
+			<!-- <div class="{STYLES_INSTANCE.reflectionMainStyle.searchFieldNoLabel}"> -->
+			<!-- <input type="text" autocomplete="off" name="search" placeholder="Find an app" /> -->
+			<!-- <input -->
+			<!-- class="{STYLES_INSTANCE.reflectionMainStyle.refButton} {STYLES_INSTANCE.reflectionMainStyle.searchButtonMobile} {STYLES_INSTANCE.reflectionMainStyle.isHighlighted}" -->
+			<!-- type="submit" value="a" /> -->
+			<!-- </div> -->
+			<!-- </form> -->
+
+			<c:LoadingButton ui:field="downloadLeaderboard" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall}">Download CSV</c:LoadingButton>
+
 		</div>
 
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.tabs}">
