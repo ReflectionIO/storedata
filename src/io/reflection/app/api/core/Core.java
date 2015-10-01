@@ -459,7 +459,7 @@ public final class Core extends ActionHandler {
 					for (Rank rank : ranks) {
 						itemIds.add(rank.itemId);
 						int ranking = (collector.isGrossing(listType) ? rank.grossingPosition.intValue() : rank.position.intValue());
-						if ((!isAdmin && ranking <= 5) || (!canSeePredictions && ranking > 10)
+						if ((!canSeePredictions && ranking > 10)
 								|| (!canSeePredictions && DateTimeComparator.getDateOnlyInstance().compare(input.on, new DateTime().minusDays(2)) != 0)) {
 							rank.downloads = null;
 							rank.revenue = null;
