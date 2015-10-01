@@ -408,7 +408,7 @@ public class RegisterForm extends Composite {
 			email.setVisible(true);
 			passwordGroup.setVisible(false);
 			termAndCondGroup.setVisible(false);
-			registerBtn.setText("Apply Now");
+			registerBtn.setText("Sign Up");
 			registerTitle.removeFromParent();
 		} else {
 			if (!SessionController.get().isLoggedInUserAdmin()) {

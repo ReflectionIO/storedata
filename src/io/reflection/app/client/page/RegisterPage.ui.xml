@@ -146,7 +146,7 @@
 					<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
 					<g:InlineHyperlink ui:field="register"
 						styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
-						<span>Apply now</span>
+						<span>Sign Up</span>
 					</g:InlineHyperlink>
 				</li>
 				<li

@@ -28,7 +28,7 @@
 
 		<c:LoadingButton ui:field="registerBtn"
 			styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth} {STYLES_INSTANCE.reflectionMainStyle.maintainAfterSubmit} {STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}">
-			Apply Now
+			Sign Up
 		</c:LoadingButton>
 
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.generalErrorMessage}">
