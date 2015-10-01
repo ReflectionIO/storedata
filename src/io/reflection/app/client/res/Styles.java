@@ -163,6 +163,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("back-link-text--form")
 		String backLinkTextForm();
 
+		@ClassName("banner-key-message")
+		String bannerKeyMessage();
+
 		@ClassName("block-error-message")
 		String blockErrorMessage();
 
@@ -404,6 +407,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("custom--tablet-one-half")
 		String customTabletOneHalf();
+
+		@ClassName("custom-tooltip")
+		String customTooltip();
 
 		@ClassName("data-bar")
 		String dataBar();
@@ -755,6 +761,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("has-child")
 		String hasChild();
 
+		@ClassName("has-content")
+		String hasContent();
+
 		@ClassName("has-single-option")
 		String hasSingleOption();
 
@@ -790,6 +799,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("hidden-text")
 		String hiddenText();
+
+		@ClassName("highcharts-axis-label")
+		String highchartsAxisLabel();
 
 		@ClassName("highcharts-axis-labels")
 		String highchartsAxisLabels();
@@ -838,8 +850,17 @@ public interface Styles extends ClientBundle {
 		@ClassName("icon-dollar")
 		String iconDollar();
 
+		@ClassName("icon-downloads")
+		String iconDownloads();
+
 		@ClassName("icon-member")
 		String iconMember();
+
+		@ClassName("icon-rank")
+		String iconRank();
+
+		@ClassName("icon-revenue")
+		String iconRevenue();
 
 		String ie10();
 
@@ -1241,6 +1262,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("page-banner")
 		String pageBanner();
 
+		@ClassName("page-banner--larger")
+		String pageBannerLarger();
+
 		@ClassName("page-blog")
 		String pageBlog();
 
@@ -1511,9 +1535,6 @@ public interface Styles extends ClientBundle {
 		@ClassName("pricing-sup")
 		String pricingSup();
 
-		@ClassName("product-image-container--left")
-		String productImageContainerLeft();
-
 		@ClassName("product-image-container--right")
 		String productImageContainerRight();
 
@@ -1526,15 +1547,6 @@ public interface Styles extends ClientBundle {
 		@ClassName("product-page__quotes__logo-container")
 		String productPage__quotes__logoContainer();
 
-		@ClassName("product-page__quotes__logo-container--mag")
-		String productPage__quotes__logoContainerMag();
-
-		@ClassName("product-page__quotes__logo-container--miniclip")
-		String productPage__quotes__logoContainerMiniclip();
-
-		@ClassName("product-page__quotes__logo-container--nordeus")
-		String productPage__quotes__logoContainerNordeus();
-
 		@ClassName("product-section")
 		String productSection();
 
@@ -1546,9 +1558,6 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("product-text-content--left")
 		String productTextContentLeft();
-
-		@ClassName("product-text-content--right")
-		String productTextContentRight();
 
 		@ClassName("profile-list")
 		String profileList();
@@ -2141,7 +2150,6 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("window-warning")
 		String windowWarning();
-
 	}
 
 	public static final Styles STYLES_INSTANCE = GWT.create(Styles.class);
