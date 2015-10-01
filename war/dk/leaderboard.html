@@ -65,7 +65,12 @@
 							</label>
 						</div>
 					</div>
-					<button class="ref-button--function-small js-download-csv">Download CSV</button>
+					<div class="button-container">
+						<button class="ref-button--function-small js-download-csv">
+							Download CSV
+						</button>
+						<div class="icon-member icon-member--pro"><img src="images/icon-pro@2x.png" alt="Pro member icon"></div>
+					</div>
 				</div>
 				<div class="tabs">
 					<ul class="tabs-container default-tabs-transition tabs-to-dropdown">
@@ -453,13 +458,10 @@
 		  // mock download CSV
 		  $('.js-download-csv').on("click", function(){
 		  	var $this = $(this);
-		  	if(!$this.hasClass("ref-button--is-loading") && !$this.hasClass("ref-button--positive")) {
-		  		$this.addClass("ref-button--is-loading").text("Downloading");
+		  	if(!$this.hasClass("ref-button--is-loading")) {
+		  		$this.addClass("ref-button--is-loading").text("Downloading").attr("disabled", "disabled");
 			  	setTimeout(function(){
-			  		$this.addClass("ref-button--positive").removeClass("ref-button--is-loading").text("Success");
-			  		setTimeout(function(){
-				  		$this.removeClass("ref-button--positive").text("Download CSV");
-				  	}, 2000);
+			  		$this.removeClass("ref-button--is-loading").text("Download CSV").removeAttr("disabled");
 			  	}, 3000);
 		  	}		  	
 		  });

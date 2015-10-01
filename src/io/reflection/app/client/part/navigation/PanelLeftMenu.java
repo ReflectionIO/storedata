@@ -95,9 +95,12 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 	@UiField InlineHyperlink adminFeedBrowserLink;
 	@UiField InlineHyperlink adminSimpleModelRunLink;
 	@UiField InlineHyperlink adminDataAccountFetchesLink;
+	@UiField LIElement productSecondaryItem;
+	@UiField LIElement pricingSecondaryItem;
+	@UiField UListElement secondaryFooterList;
 	@UiField SpanElement usersCount;
 
-	private List<LIElement> items;
+	// private List<LIElement> items;
 	private List<LIElement> highlightedItems = new ArrayList<LIElement>();
 
 	public PanelLeftMenu() {
@@ -105,14 +108,16 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 
 		myDataItem.removeFromParent();
 		adminItem.removeFromParent();
-		createItemList();
+		productSecondaryItem.removeFromParent();
+		pricingSecondaryItem.removeFromParent();
 
-		// forumItem.removeFromParent();
 	}
 
 	private void attachUserLinks(User user) {
 		productItem.removeFromParent();
 		pricingItem.removeFromParent();
+		secondaryFooterList.insertFirst(pricingSecondaryItem);
+		secondaryFooterList.insertFirst(productSecondaryItem);
 		if (user != null) {
 			if (!itemList.isOrHasChild(myDataItem)) {
 				itemList.insertFirst(myDataItem);
@@ -127,35 +132,6 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 			} else {
 				adminItem.removeFromParent();
 			}
-		}
-	}
-
-	private void createItemList() {
-		if (items == null) {
-			items = new ArrayList<LIElement>();
-			items.add(myDataItem);
-			items.add(myAppsItem);
-			items.add(linkedAccountsItem);
-			items.add(leaderboardItem);
-			items.add(productItem);
-			items.add(pricingItem);
-			items.add(blogItem);
-			// items.add(forumItem);
-			items.add(adminItem);
-			items.add(adminFeedBrowserItem);
-			items.add(adminSimpleModelRunItem);
-			items.add(adminItemsItem);
-			items.add(adminCategoriesItem);
-			items.add(adminUsersItem);
-			items.add(adminRolesItem);
-			items.add(adminPermissionsItem);
-			items.add(adminDataAccountsItem);
-			items.add(adminDataAccountFetchesItem);
-			items.add(adminEventsItem);
-			items.add(adminEventSubscriptionsItem);
-			items.add(adminEventSubscriptionsItem);
-			items.add(adminSendNotificationItem);
-			items.add(adminBlogItem);
 		}
 	}
 
@@ -405,6 +381,8 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 	public void userLoggedOut() {
 		myDataItem.removeFromParent();
 		adminItem.removeFromParent();
+		productSecondaryItem.removeFromParent();
+		pricingSecondaryItem.removeFromParent();
 		itemList.insertBefore(productItem, blogItem);
 		itemList.insertBefore(pricingItem, blogItem);
 	}
