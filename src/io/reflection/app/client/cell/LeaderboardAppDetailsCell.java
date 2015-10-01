@@ -64,7 +64,7 @@ public class LeaderboardAppDetailsCell extends AbstractCell<Rank> {
 		// Handle the click event.
 		if ("click".equals(event.getType())) {
 			Element clickedElem = Element.as(event.getEventTarget());
-			if (clickedElem.getTagName().equalsIgnoreCase("A")) {
+			if (clickedElem.getTagName().equalsIgnoreCase("A") && !clickedElem.getAttribute("href").startsWith("#!item/view/")) {
 				valueUpdater.update(value);
 			}
 		}
