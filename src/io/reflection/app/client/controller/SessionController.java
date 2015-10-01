@@ -52,9 +52,7 @@ import io.reflection.app.shared.util.DataTypeHelper;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.google.gwt.i18n.client.TimeZone;
 import com.google.gwt.user.client.Cookies;
@@ -74,14 +72,12 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	private static SessionController mOne;
 
 	// Cache roles and permissions meanwhile user is logged in
-	private Map<String, Role> mRoleCache; // Role.id : Role
-	private Map<String, Permission> mPermissionCache; // Permission.code : Permission
 
 	private static final String COOKIE_KEY_TOKEN = SessionController.class.getName() + ".token";
 	private static final String COOKIE_KEY_LAST_USER = SessionController.class.getName() + ".lastUser";
 
-	private User mLoggedInUser = null;
-	private Session mSession = null;
+	private User loggedInUser = null;
+	private Session userSession = null;
 
 	private boolean isSessionRestored;
 
@@ -98,11 +94,11 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	}
 
 	public User getLoggedInUser() {
-		return mLoggedInUser;
+		return loggedInUser;
 	}
 
 	public Session getSession() {
-		return mSession;
+		return userSession;
 	}
 
 	/**
@@ -147,10 +143,10 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 
 	@SuppressWarnings("deprecation")
 	private void updateSessionExpiryWithTimezone() {
-		if (mSession != null && mSession.expires != null) {
-			long time = mSession.expires.getTime();
-			time += TimeZone.createTimeZone(mSession.expires.getTimezoneOffset()).getDaylightAdjustment(mSession.expires) * 60 * 1000;
-			mSession.expires = new Date(time);
+		if (userSession != null && userSession.expires != null) {
+			long time = userSession.expires.getTime();
+			time += TimeZone.createTimeZone(userSession.expires.getTimezoneOffset()).getDaylightAdjustment(userSession.expires) * 60 * 1000;
+			userSession.expires = new Date(time);
 		}
 	}
 
@@ -162,29 +158,29 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	 */
 	private void setLoggedInUser(User user, Session session) {
 
-		if (mSession != session) {
-			mSession = session;
+		if (userSession != session) {
+			userSession = session;
 			updateSessionExpiryWithTimezone();
 		}
 
-		if (mSession != null) {
-			Cookies.setCookie(COOKIE_KEY_TOKEN, mSession.token, mSession.expires);
-			if (mSession.user != null && mSession.user.username != null) {
-				Cookies.setCookie(COOKIE_KEY_LAST_USER, mSession.user.username);
+		if (userSession != null) {
+			Cookies.setCookie(COOKIE_KEY_TOKEN, userSession.token, userSession.expires);
+			if (userSession.user != null && userSession.user.username != null) {
+				Cookies.setCookie(COOKIE_KEY_LAST_USER, userSession.user.username);
 			}
 		} else {
 			Cookies.removeCookie(COOKIE_KEY_TOKEN);
 		}
 
-		if (mLoggedInUser != user) {
-			mLoggedInUser = user; // used if changed person
+		if (loggedInUser != user) {
+			loggedInUser = user; // used if changed person
 
-			MixPanelApiHelper.trackLoginUser(mLoggedInUser);
+			MixPanelApiHelper.trackLoginUser(loggedInUser);
 
-			if (mLoggedInUser == null) { // used if previous logged out
+			if (loggedInUser == null) { // used if previous logged out
 				DefaultEventBus.get().fireEventFromSource(new UserLoggedOut(), SessionController.this);
 			} else {
-				DefaultEventBus.get().fireEventFromSource(new UserLoggedIn(mLoggedInUser, mSession), SessionController.this); // Fire user logged in event
+				DefaultEventBus.get().fireEventFromSource(new UserLoggedIn(loggedInUser, userSession), SessionController.this); // Fire user logged in event
 			}
 		}
 
@@ -213,25 +209,26 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 				@Override
 				public void onSuccess(GetRolesAndPermissionsResponse output) {
 					if (output.status == StatusType.StatusTypeSuccess) {
-						if (mSession != null && mSession.token != null && input.session != null && input.session.token != null
-								&& mSession.token.equals(input.session.token)) {
+						if (userSession != null && userSession.token != null && input.session != null && input.session.token != null
+								&& userSession.token.equals(input.session.token)) {
 
 							// Add retrieved roles and permissions into caches
-							if (output.roles != null) {
-								for (Role role : output.roles) {
-									addRoleToLookup(role);
-								}
+							if (loggedInUser.roles == null) {
+								loggedInUser.roles = new ArrayList<Role>();
+							}
+							for (Role role : output.roles) {
+								loggedInUser.roles.add(role);
 							}
 
 							if (output.permissions != null) {
 								for (Permission permission : output.permissions) {
-									addPermissionToLookup(permission);
+									setUserPermission(permission);
 								}
 							}
 
 							NavigationController.get().resetSemiPublicPages();
 
-							DefaultEventBus.get().fireEventFromSource(new GotUserPowers(mLoggedInUser, mLoggedInUser.roles, mLoggedInUser.permissions),
+							DefaultEventBus.get().fireEventFromSource(new GotUserPowers(loggedInUser, loggedInUser.roles, loggedInUser.permissions),
 									SessionController.this);
 						}
 					} else {
@@ -290,14 +287,13 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 		// Remove all the pages from the Navigation Controller
 		NavigationController.get().purgeAllPages();
 
-		PageType.LoginPageType.show("requestinvite");
+		PageType.LoginPageType.show();
 	}
 
 	public void makeSessionInvalid() {
 		isSessionRestored = false;
 		setLoggedInUser(null, null);
 		// ItemController.get().clearItemCache();
-		clearRolePermissionCache();
 		NavigationController.get().setNotLoaded();
 	}
 
@@ -306,8 +302,25 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	 * 
 	 * @return
 	 */
-	public boolean isLoggedInUserAdmin() {
-		return hasRole(mLoggedInUser, DataTypeHelper.ROLE_ADMIN_CODE);
+	public boolean isAdmin() {
+		return loggedInUserIs(DataTypeHelper.ROLE_ADMIN_CODE);
+	}
+
+	public boolean isStandardDeveloper() {
+		return loggedInUserIs(DataTypeHelper.ROLE_DEVELOPER_CODE);
+	}
+
+	public boolean isPremiumDeveloper() {
+		return loggedInUserIs(DataTypeHelper.ROLE_PREMIUM_CODE);
+	}
+
+	public boolean hasLinkedAccount() {
+		return loggedInUserHas(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE);
+	}
+
+	public boolean canSeePredictions() {
+		return isAdmin()
+				|| (hasLinkedAccount() && (isPremiumDeveloper() || isStandardDeveloper() || loggedInUserIs(DataTypeHelper.ROLE_FIRST_CLOSED_BETA_CODE)));
 	}
 
 	/**
@@ -318,7 +331,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	 * @return
 	 */
 	public boolean loggedInUserIs(String code) {
-		return hasRole(mLoggedInUser, code);
+		return hasRole(loggedInUser, code);
 	}
 
 	/**
@@ -329,7 +342,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	 * @return
 	 */
 	public boolean loggedInUserHas(String code) {
-		return hasPermission(mLoggedInUser, code);
+		return hasPermission(loggedInUser, code);
 	}
 
 	/**
@@ -355,7 +368,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	}
 
 	public boolean hasPermission(User user, String code) {
-		boolean hasPermission = hasRole(user, DataTypeHelper.ROLE_ADMIN_CODE);
+		boolean hasPermission = isAdmin();
 
 		if (!hasPermission && user != null) {
 			if (user.roles != null) {
@@ -389,69 +402,15 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	}
 
 	/**
-	 * Retrieve a role from the cache
-	 * 
-	 * @param Code
-	 *            code of the role to retrieve
-	 * @return the role
-	 */
-	public Role lookupRole(String code) {
-		Role role = null;
-
-		if (mRoleCache != null) {
-			role = mRoleCache.get(code);
-		}
-
-		return role;
-	}
-
-	/**
 	 * Add a permission to the cache
 	 * 
 	 * @param p
 	 */
-	public void addPermissionToLookup(Permission p) {
-		if (mPermissionCache == null) {
-			mPermissionCache = new HashMap<String, Permission>();
+	public void setUserPermission(Permission p) {
+		if (loggedInUser.permissions == null) {
+			loggedInUser.permissions = new ArrayList<Permission>();
 		}
-		mPermissionCache.put(p.code, p);
-		if (mLoggedInUser.permissions == null) {
-			mLoggedInUser.permissions = new ArrayList<Permission>();
-		}
-		mLoggedInUser.permissions.add(p);
-	}
-
-	/**
-	 * Add a role to the cache
-	 * 
-	 * @param p
-	 */
-	public void addRoleToLookup(Role r) {
-		if (mRoleCache == null) {
-			mRoleCache = new HashMap<String, Role>();
-		}
-		mRoleCache.put(r.code, r);
-		if (mLoggedInUser.roles == null) {
-			mLoggedInUser.roles = new ArrayList<Role>();
-		}
-		mLoggedInUser.roles.add(r);
-	}
-
-	/**
-	 * Retrieve a permission from the cache
-	 * 
-	 * @param Code
-	 *            code of the permission to retrieve
-	 * @return the permission
-	 */
-	public Permission lookupPermission(String code) {
-		Permission permission = null;
-
-		if (mPermissionCache != null) {
-			permission = mPermissionCache.get(code);
-		}
-
-		return permission;
+		loggedInUser.permissions.add(p);
 	}
 
 	/**
@@ -459,11 +418,10 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	 * 
 	 * @param p
 	 */
-	public void deletePermissionLookup(Permission p) {
-		mPermissionCache.remove(p.code);
-		for (Permission userPermission : mLoggedInUser.permissions) {
+	public void deleteUserPermission(Permission p) {
+		for (Permission userPermission : loggedInUser.permissions) {
 			if (userPermission.code.equals(p.code)) {
-				mLoggedInUser.permissions.remove(userPermission);
+				loggedInUser.permissions.remove(userPermission);
 				break;
 			}
 		}
@@ -482,7 +440,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 		input.accessCode = ACCESS_CODE;
 
 		input.session = new Session();
-		input.session.token = mSession.token;
+		input.session.token = userSession.token;
 
 		input.password = password;
 		input.newPassword = newPassword;
@@ -502,7 +460,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 			@Override
 			public void onSuccess(ChangePasswordResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {
-					DefaultEventBus.get().fireEventFromSource(new UserPasswordChanged(mLoggedInUser.id), SessionController.this);
+					DefaultEventBus.get().fireEventFromSource(new UserPasswordChanged(loggedInUser.id), SessionController.this);
 				} else {
 					DefaultEventBus.get().fireEventFromSource(new UserPasswordChangeFailed(output.error), SessionController.this);
 				}
@@ -523,7 +481,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 		input.accessCode = ACCESS_CODE;
 
 		// input.session = new Session();
-		// input.session.user = mSession.token;
+		// input.session.user = userSession.token;
 
 		input.resetCode = code;
 		input.newPassword = newPassword;
@@ -559,7 +517,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 
 		input.user = new User();
 
-		input.user.id = mSession.user.id;
+		input.user.id = userSession.user.id;
 
 		input.user.company = company;
 		input.user.forename = forename;
@@ -571,14 +529,14 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 			@Override
 			public void onSuccess(ChangeUserDetailsResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {
-					mSession.user.username = input.user.username;
-					mSession.user.forename = input.user.forename;
-					mSession.user.surname = input.user.surname;
-					mSession.user.company = input.user.company;
-					mLoggedInUser.forename = mSession.user.forename;
-					mLoggedInUser.surname = mSession.user.surname;
-					mLoggedInUser.company = mSession.user.company;
-					mLoggedInUser.username = mSession.user.username;
+					userSession.user.username = input.user.username;
+					userSession.user.forename = input.user.forename;
+					userSession.user.surname = input.user.surname;
+					userSession.user.company = input.user.company;
+					loggedInUser.forename = userSession.user.forename;
+					loggedInUser.surname = userSession.user.surname;
+					loggedInUser.company = userSession.user.company;
+					loggedInUser.username = userSession.user.username;
 				}
 
 				DefaultEventBus.get().fireEventFromSource(new ChangeUserDetailsEventHandler.ChangeUserDetailsSuccess(input, output), SessionController.this);
@@ -646,9 +604,9 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	 */
 	public Session getSessionForApiCall() {
 		Session session = null;
-		if (mSession != null && mSession.token != null) {
+		if (userSession != null && userSession.token != null) {
 			session = new Session();
-			session.token = mSession.token;
+			session.token = userSession.token;
 		} else {
 			String token = Cookies.getCookie(COOKIE_KEY_TOKEN);
 
@@ -668,14 +626,14 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	 * @param permissions
 	 */
 	public void fetchAuthorisation(List<Role> roles, List<Permission> permissions) {
-		if (mSession != null && mLoggedInUser != null) {
+		if (userSession != null && loggedInUser != null) {
 			CoreService service = ServiceCreator.createCoreService();
 
 			final IsAuthorisedRequest input = new IsAuthorisedRequest();
 			input.accessCode = ACCESS_CODE;
 
 			input.session = new Session();
-			input.session.token = mSession.token;
+			input.session.token = userSession.token;
 
 			input.roles = roles;
 			input.permissions = permissions;
@@ -696,23 +654,8 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 
 	}
 
-	/**
-	 * Clear Roles and Permissions cache when user logs out
-	 */
-	public void clearRolePermissionCache() {
-		if (mRoleCache != null) {
-			// mRoleCache.clear();
-			mRoleCache = null;
-		}
-
-		if (mPermissionCache != null) {
-			// mPermissionCache.clear();
-			mRoleCache = null;
-		}
-	}
-
 	public void forgotPassword(String username) {
-		if (mSession == null && mLoggedInUser == null) {
+		if (userSession == null && loggedInUser == null) {
 			CoreService service = ServiceCreator.createCoreService();
 
 			final ForgotPasswordRequest input = new ForgotPasswordRequest();
@@ -757,7 +700,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 				io.reflection.app.api.shared.datatypes.Response sessionOutput = (io.reflection.app.api.shared.datatypes.Response) output;
 
 				if (sessionOutput.session != null) {
-					setLoggedInUser(mLoggedInUser, sessionOutput.session);
+					setLoggedInUser(loggedInUser, sessionOutput.session);
 				}
 			}
 		} else {
@@ -768,8 +711,8 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 				String loginParams = "timeout";
 				Stack s = NavigationController.get().getStack();
 
-				if (mLoggedInUser != null && mLoggedInUser.username != null) {
-					loginParams += "/" + mLoggedInUser.username;
+				if (loggedInUser != null && loggedInUser.username != null) {
+					loginParams += "/" + loggedInUser.username;
 				}
 
 				if (s != null) {
@@ -799,7 +742,8 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	 * @return
 	 */
 	public boolean isValidSession() {
-		return getSessionForApiCall() != null && (mSession == null || (mSession.expires != null && mSession.expires.getTime() > (new Date()).getTime()));
+		return getSessionForApiCall() != null
+				&& (userSession == null || (userSession.expires != null && userSession.expires.getTime() > (new Date()).getTime()));
 	}
 
 	/**
@@ -809,12 +753,12 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	public boolean isAuthorised(Collection<Permission> requiredPermissions) {
 		boolean authorised = false;
 
-		if (isValidSession() && mPermissionCache != null) {
-			if (requiredPermissions == null || requiredPermissions.size() == 0) {
+		if (isValidSession()) {
+			if (requiredPermissions == null || requiredPermissions.isEmpty()) {
 				authorised = true;
-			} else {
+			} else if (loggedInUser.permissions != null) {
 				for (Permission permission : requiredPermissions) {
-					if (permission.code != null && mPermissionCache.get(permission.code) != null) {
+					if (permission.code != null && loggedInUserHas(permission.code)) {
 						authorised = true;
 						break;
 					}

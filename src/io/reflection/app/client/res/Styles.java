@@ -393,15 +393,6 @@ public interface Styles extends ClientBundle {
 		@ClassName("county-select--container")
 		String countySelectContainer();
 
-		@ClassName("create-password-content")
-		String createPasswordContent();
-
-		@ClassName("create-password-form-is-showing")
-		String createPasswordFormIsShowing();
-
-		@ClassName("create-password-main-content")
-		String createPasswordMainContent();
-
 		@ClassName("cta-button")
 		String ctaButton();
 
@@ -441,9 +432,6 @@ public interface Styles extends ClientBundle {
 		@ClassName("date-select-to-indicator")
 		String dateSelectToIndicator();
 
-		@ClassName("date-selection-filter-container")
-		String dateSelectionFilterContainer();
-
 		@ClassName("date-value")
 		String dateValue();
 
@@ -471,6 +459,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("default-tabs-transition")
 		String defaultTabsTransition();
+
+		@ClassName("delete-account-link")
+		String deleteAccountLink();
 
 		String descending();
 
@@ -1067,6 +1058,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("linked-account-edit")
 		String linkedAccountEdit();
 
+		@ClassName("linked-account-intro-container")
+		String linkedAccountIntroContainer();
+
 		@ClassName("linked-account-loading-state")
 		String linkedAccountLoadingState();
 
@@ -1270,6 +1264,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("page-leaderboard")
 		String pageLeaderboard();
+
+		@ClassName("page-linked-accounts")
+		String pageLinkedAccounts();
 
 		@ClassName("page-loading")
 		String pageLoading();
@@ -1528,6 +1525,15 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("product-page__quotes__logo-container")
 		String productPage__quotes__logoContainer();
+
+		@ClassName("product-page__quotes__logo-container--mag")
+		String productPage__quotes__logoContainerMag();
+
+		@ClassName("product-page__quotes__logo-container--miniclip")
+		String productPage__quotes__logoContainerMiniclip();
+
+		@ClassName("product-page__quotes__logo-container--nordeus")
+		String productPage__quotes__logoContainerNordeus();
 
 		@ClassName("product-section")
 		String productSection();
@@ -1849,6 +1855,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("show-reset-password-form")
 		String showResetPasswordForm();
 
+		@ClassName("sign-up-link")
+		String signUpLink();
+
 		@ClassName("single-date-input")
 		String singleDateInput();
 
@@ -1902,9 +1911,6 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("svg-container")
 		String svgContainer();
-
-		@ClassName("svg-create-password")
-		String svgCreatePassword();
 
 		@ClassName("svg-refresh")
 		String svgRefresh();

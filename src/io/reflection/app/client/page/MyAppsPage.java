@@ -137,9 +137,9 @@ public class MyAppsPage extends Page implements NavigationEventHandler, GetLinke
 		initWidget(uiBinder.createAndBindUi(this));
 
 		FilterHelper.addStores(appStore, true);
-		FilterHelper.addCountries(country, SessionController.get().isLoggedInUserAdmin());
+		FilterHelper.addCountries(country, SessionController.get().isAdmin());
 
-		if (!SessionController.get().isLoggedInUserAdmin()) {
+		if (!SessionController.get().isAdmin()) {
 			dateSelector.disableBefore(ApiCallHelper.getUTCDate(2015, 4, 30));
 		}
 		dateSelector.addFixedRanges(FilterHelper.getDefaultDateRanges());

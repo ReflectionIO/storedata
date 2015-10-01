@@ -58,6 +58,7 @@ import java.util.List;
 
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.dom.client.SpanElement;
@@ -140,6 +141,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	private String passwordError = null;
 	private String newPasswordError = null;
 
+	@UiField DivElement userCredentialsPanel;
 	// User Roles
 	@UiField TextField addRole;
 	private String addRoleError;
@@ -165,9 +167,8 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 
 		User user = SessionController.get().getLoggedInUser();
 
-		if (!SessionController.get().isLoggedInUserAdmin()) {
-			addRolePanel.removeFromParent();
-			addPermissionPanel.removeFromParent();
+		if (!SessionController.get().isAdmin()) {
+			userCredentialsPanel.removeFromParent();
 			usersText.setInnerHTML("Users <span class=\"text-small\">coming soon</span>");
 			usersItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
 			usersItem.getStyle().setCursor(Cursor.DEFAULT);
@@ -188,8 +189,8 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 					user.id.toString()));
 		}
 
-		addRoleColumns(SessionController.get().isLoggedInUserAdmin());
-		addPermissionColumns(SessionController.get().isLoggedInUserAdmin());
+		addRoleColumns(SessionController.get().isAdmin());
+		addPermissionColumns(SessionController.get().isAdmin());
 
 		HTMLPanel emptyRowRoles = new HTMLPanel("-");
 		HTMLPanel emptyRowPermissions = new HTMLPanel("-");
@@ -407,7 +408,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 			clearPasswordErrors();
 			changePasswordBtn.setStatusLoading("Changing password");
 			setChangePasswordFormEnabled(false);
-			if (SessionController.get().isLoggedInUserAdmin()) {
+			if (SessionController.get().isAdmin()) {
 				UserController.get().setPassword(editingUserId, newPassword.getText());
 			} else {
 				SessionController.get().changePassword(password.getText(), newPassword.getText());
@@ -439,7 +440,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 			clearAddRoleErrors();
 			addRoleBtn.setStatusLoading("Adding role ..");
 			userRolesProvider.updateRowCount(0, false);
-			UserController.get().assignUserRoleId(editingUserId, addRole.getText().toUpperCase());
+			UserController.get().assignUserRoleCode(editingUserId, addRole.getText().toUpperCase());
 
 		} else {
 			if (addRoleError != null) {
@@ -459,7 +460,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 			clearAddPermissionErrors();;
 			addPermissionBtn.setStatusLoading("Adding permission ..");
 			userPermissionsProvider.updateRowCount(0, false);
-			UserController.get().assignUserPermissionId(editingUserId, addPermission.getText().toUpperCase());
+			UserController.get().assignUserPermissionCode(editingUserId, addPermission.getText().toUpperCase());
 
 		} else {
 			if (addPermissionError != null) {
@@ -533,7 +534,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	@UiHandler({ "password", "newPassword", "confirmPassword" })
 	void onPasswordFieldsModified(KeyUpEvent event) {
 		if (changePasswordBtn.isStatusDefault()) {
-			if (!SessionController.get().isLoggedInUserAdmin()) {
+			if (!SessionController.get().isAdmin()) {
 				if (!password.getText().isEmpty() && !newPassword.getText().isEmpty() && !confirmPassword.getText().isEmpty()) {
 					changePasswordBtn.setEnabled(true);
 				} else {
@@ -578,7 +579,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		newPassword.clear();
 		confirmPassword.clear();
 
-		password.setVisible(!SessionController.get().isLoggedInUserAdmin());
+		password.setVisible(!SessionController.get().isAdmin());
 
 		// preloaderPassword.hide();
 
@@ -727,7 +728,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 			validated = validated && true;
 		}
 		// Check password constraints for not admin user
-		if (!SessionController.get().isLoggedInUserAdmin()) {
+		if (!SessionController.get().isAdmin()) {
 			if (passwordText == null || passwordText.length() == 0) {
 				passwordError = FormHelper.ERROR_PASSWORD_LOGIN_EMPTY;
 				changePasswordGeneralErrorNote = FormHelper.ERROR_FORM_EMPTY_FIELDS;
@@ -834,7 +835,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 				userRolesProvider.updateRowCount(0, false);
 				userPermissionsProvider.updateRowCount(0, false);
 
-				if (SessionController.get().isLoggedInUserAdmin()) {
+				if (SessionController.get().isAdmin()) {
 					UserController.get().fetchUserRolesAndPermissions(dummyEditingUser);
 					loadingBar.show("Getting credentials ..");
 				} else {
@@ -857,7 +858,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 				if (currentUser.id.toString().equals(editingUserId.toString())) { // Current user is the same as in the stack parameter
 					editingUser = currentUser;
 					fillDetailsForm(editingUser);
-				} else if (SessionController.get().isLoggedInUserAdmin()) {
+				} else if (SessionController.get().isAdmin()) {
 					UserController.get().fetchUser(editingUserId);
 				} else { // No access to this user
 					userRolesProvider.updateRowCount(0, true);
@@ -875,7 +876,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	private boolean isValidStack(Stack current) {
 		return (current != null && PageType.UsersPageType.equals(current.getPage()) && current.getAction() != null
 				&& PageType.ChangeDetailsPageType.equals(current.getAction()) && current.getParameter(0) != null && (current.getParameter(0).equals(
-				currentUser.id.toString()) || SessionController.get().isLoggedInUserAdmin()));
+				currentUser.id.toString()) || SessionController.get().isAdmin()));
 	}
 
 	/*
@@ -946,7 +947,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 			@Override
 			public void onResetStatus() {
 				changePasswordBtn.setEnabled(false);
-				if (SessionController.get().isLoggedInUserAdmin()) {
+				if (SessionController.get().isAdmin()) {
 					PageType.UsersPageType.show();
 				}
 			}

@@ -25,6 +25,14 @@
 			class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth} {STYLES_INSTANCE.reflectionMainStyle.filtersContainer} {STYLES_INSTANCE.reflectionMainStyle.filterContainerMyApps}">
 			<form class="{STYLES_INSTANCE.reflectionMainStyle.formsMidTheme}">
 
+				<c:DateSelector ui:field="dateSelector" tooltip="Select a date range" />
+
+				<c:Selector ui:field="appStore" overlay="true" alignRight="" labelText="App Store" dropdownTitle="Select a store"
+					styleName="{STYLES_INSTANCE.reflectionMainStyle.storeSelect}" tooltip="View data for iPhone or iPad" />
+
+				<c:Selector ui:field="country" overlay="true" alignCenter="" labelText="Country" dropdownTitle="Select a country"
+					styleName="{STYLES_INSTANCE.reflectionMainStyle.countrySelect}" tooltip="Select a country" />
+
 				<g:Button ui:field="applyFilters" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaSmall} {STYLES_INSTANCE.reflectionMainStyle.refreshButton}">
 					<svg class="{STYLES_INSTANCE.reflectionMainStyle.svgRefresh}" version="1.1" x="0px" y="0px" viewBox="0 0 16 16" enable-background="new 0 0 16 16"
 						xml:space="preserve">
@@ -34,14 +42,6 @@
 	C0.6,3.1,3.9,0,8,0C10.7,0,13.1,1.4,14.6,3.4z"></path>
 								</svg>
 				</g:Button>
-
-				<c:DateSelector ui:field="dateSelector" tooltip="Select a date range" />
-
-				<c:Selector ui:field="appStore" overlay="true" alignRight="" labelText="App Store" dropdownTitle="Select a store"
-					styleName="{STYLES_INSTANCE.reflectionMainStyle.storeSelect}" tooltip="View data for iPhone or iPad" />
-
-				<c:Selector ui:field="country" overlay="true" alignCenter="" labelText="Country" dropdownTitle="Select a country"
-					styleName="{STYLES_INSTANCE.reflectionMainStyle.countrySelect}" tooltip="Select a country" />
 
 			</form>
 		</div>

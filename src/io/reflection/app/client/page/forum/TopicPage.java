@@ -437,7 +437,7 @@ public class TopicPage extends Page implements NavigationEventHandler, GetTopicE
 		if (output.status == StatusType.StatusTypeSuccess) {
 
 			if (TopicPage.this.topic == null) {
-				if (SessionController.get().isLoggedInUserAdmin()) {
+				if (SessionController.get().isAdmin()) {
 					addAdminButtons();
 				} else {
 					adminButtons.removeFromParent();
