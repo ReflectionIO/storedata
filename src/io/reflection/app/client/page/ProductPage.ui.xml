@@ -16,10 +16,10 @@
 		</div>
 		<section class="{STYLES_INSTANCE.reflectionMainStyle.productSection}">
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.productSectionContent}">
-				<div class="{STYLES_INSTANCE.reflectionMainStyle.productImageContainerLeft}">
+				<div>
 					<img src="images/product-image-one.png" alt="Reflection app screenshot" />
 				</div>
-				<div class="{STYLES_INSTANCE.reflectionMainStyle.productTextContentRight}">
+				<div>
 					<h2>Benchmark Competitors</h2>
 					<p>Reflection makes it easy to analyse revenue, rank and download data for apps and markets. This enables you to make better development, marketing and
 						investment decisions.</p>
@@ -46,10 +46,10 @@
 		</section>
 		<section class="{STYLES_INSTANCE.reflectionMainStyle.productSection}">
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.productSectionContent}">
-				<div class="{STYLES_INSTANCE.reflectionMainStyle.productImageContainerLeft}">
+				<div>
 					<img src="images/product-image-one.png" alt="Reflection app screenshot" />
 				</div>
-				<div class="{STYLES_INSTANCE.reflectionMainStyle.productTextContentRight}">
+				<div>
 					<h2>Plan Your Marketing</h2>
 					<p>Reflection makes it easy to analyse revenue, rank and download data for apps and markets. This enables you to make better development, marketing and
 						investment decisions.

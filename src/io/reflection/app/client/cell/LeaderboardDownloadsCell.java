@@ -13,7 +13,6 @@ import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.page.PageType;
-import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Rank;
 
 import com.google.gwt.cell.client.AbstractCell;
@@ -66,24 +65,13 @@ public class LeaderboardDownloadsCell extends AbstractCell<Rank> {
 			value = (rank.downloads != null ? SafeHtmlUtils.fromSafeConstant(WHOLE_NUMBER_FORMATTER.format(rank.downloads)) : SafeHtmlUtils
 					.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
 		} else if (SessionController.get().canSeePredictions()) {
-			if (position <= 5) {
-				value = SafeHtmlUtils
-						.fromSafeConstant("<span style=\"color: #81879d; font-size: 13px\">Coming Soon</span><span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding "
-								+ Styles.STYLES_INSTANCE.reflectionMainStyle().whatsThisTooltipIconStatic()
-								+ "\" data-tooltip=\"We are upgrading our model to improve accuracy for the Top 5. It will be implemented soon.\" style=\"padding: 0px 0px 5px 7px\"></span>");
-			} else {
-				value = (rank.downloads != null ? SafeHtmlUtils.fromSafeConstant(WHOLE_NUMBER_FORMATTER.format(rank.downloads)) : SafeHtmlUtils
-						.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
-			}
+
+			value = (rank.downloads != null ? SafeHtmlUtils.fromSafeConstant(WHOLE_NUMBER_FORMATTER.format(rank.downloads)) : SafeHtmlUtils
+					.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
 		} else {
 			if (CalendarUtil.isSameDate(FilterHelper.getDaysAgo(2), FilterController.get().getEndDate())
 					|| NavigationController.get().getCurrentPage().equals(PageType.HomePageType)) {
-				if (position <= 5) {
-					value = SafeHtmlUtils
-							.fromSafeConstant("<span style=\"color: #81879d; font-size: 13px\">Coming Soon</span><span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding "
-									+ Styles.STYLES_INSTANCE.reflectionMainStyle().whatsThisTooltipIconStatic()
-									+ "\" data-tooltip=\"We are upgrading our model to improve accuracy for the Top 5. It will be implemented soon.\" style=\"padding: 0px 0px 5px 7px\"></span>");
-				} else if (position > 10) {
+				if (position > 10) {
 					value = SafeHtmlUtils.fromSafeConstant("<a style=\"cursor: pointer\" class=\"sign-up-link\">"
 							+ (SessionController.get().isValidSession() ? "Link Account" : "Sign Up") + "</a>");
 				} else {

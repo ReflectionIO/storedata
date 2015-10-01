@@ -32,7 +32,6 @@ import io.reflection.app.service.ServiceType;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.event.EventServiceProvider;
 import io.reflection.app.service.notification.NotificationServiceProvider;
-import io.reflection.app.service.role.RoleServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
@@ -53,11 +52,6 @@ final class UserService implements IUserService {
 
 	public String getName() {
 		return ServiceType.ServiceTypeUser.toString();
-	}
-
-	private boolean isValidTestUser(User user) {
-		String TEST_EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*\\+test__[0-9]*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-		return (user.username != null) ? user.username.matches(TEST_EMAIL_PATTERN) : false;
 	}
 
 	/*
@@ -154,11 +148,6 @@ final class UserService implements IUserService {
 				addedUser = this.getUser(user.id);
 				addedUser.password = null;
 
-				if (isValidTestUser(user)) {
-					Role testRole = RoleServiceProvider.provide().getCodeRole(DataTypeHelper.ROLE_TEST_CODE);
-					assignRole(user, testRole);
-				}
-				
 			}
 		} finally {
 

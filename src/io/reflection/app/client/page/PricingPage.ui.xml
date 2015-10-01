@@ -1,10 +1,126 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:import field="io.reflection.app.client.page.PageType.ContactPageType" />
 	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 	<ui:style>
 	
 	</ui:style>
-	<g:HTMLPanel>
-
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.pagePricing}">
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer}">
+			<div
+				class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth} {STYLES_INSTANCE.reflectionMainStyle.pagePricing__head}">
+				<h1 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingTwo} {STYLES_INSTANCE.reflectionMainStyle.pageTitle}">Pricing Options</h1>
+				<p>
+					More questions or want to chat?
+					<g:InlineHyperlink targetHistoryToken="{ContactPageType.asTargetHistoryToken}">Contact us</g:InlineHyperlink>
+				</p>
+			</div>
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__row} {STYLES_INSTANCE.reflectionMainStyle.pricingOptions}">
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird}">
+					<section class="{STYLES_INSTANCE.reflectionMainStyle.pricingOption} {STYLES_INSTANCE.reflectionMainStyle.pricingOptionStandard}">
+						<header class="{STYLES_INSTANCE.reflectionMainStyle.pricingOptionHeader}">
+							<h2 class="{STYLES_INSTANCE.reflectionMainStyle.pricingName}">Developer Standard</h2>
+							<div class="{STYLES_INSTANCE.reflectionMainStyle.pricingPriceContainer}">
+								<sup class="{STYLES_INSTANCE.reflectionMainStyle.pricingSup}">&pound;</sup>
+								<span class="{STYLES_INSTANCE.reflectionMainStyle.pricingPrice}">0</span>
+							</div>
+							<span class="{STYLES_INSTANCE.reflectionMainStyle.perMonth}">per month</span>
+							<p>Link your app store account and get free access to store data &amp; analytics</p>
+						</header>
+						<ul class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetails}">
+							<li>Live Daily Top 200 Global Rank, Download &amp; Grossing Data</li>
+							<li>Analytics for Your Own Apps</li>
+							<li>Live Industry News</li>
+						</ul>
+						<g:Button ui:field="signUpBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth} {STYLES_INSTANCE.reflectionMainStyle.pricingSignUpButton}">Sign Up
+							for Free Now</g:Button>
+					</section>
+				</div>
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird}">
+					<section class="{STYLES_INSTANCE.reflectionMainStyle.pricingOption} {STYLES_INSTANCE.reflectionMainStyle.pricingOptionPremium}">
+						<header class="{STYLES_INSTANCE.reflectionMainStyle.pricingOptionHeader}">
+							<h2 class="{STYLES_INSTANCE.reflectionMainStyle.pricingName}">Developer Premium</h2>
+							<div class="{STYLES_INSTANCE.reflectionMainStyle.pricingPriceContainer}">
+								<sup class="{STYLES_INSTANCE.reflectionMainStyle.pricingSup}">&pound;</sup>
+								<span class="{STYLES_INSTANCE.reflectionMainStyle.pricingPrice}">99</span>
+								<sup class="{STYLES_INSTANCE.reflectionMainStyle.pricingSup}">.99</sup>
+							</div>
+							<span class="{STYLES_INSTANCE.reflectionMainStyle.perMonth}">per month</span>
+							<p>Additional powerful reporting tools and expanded features</p>
+						</header>
+						<ul class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetails}">
+							<li>Historic Revenue &amp; Download Data</li>
+							<li>Competitive &amp; Market Benchmarking Tools</li>
+							<li>Store and Market Trends</li>
+							<li>Business Planning Tools</li>
+							<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailsWithInfo}">
+								<span>Marketing Planning Tools</span>
+								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding whats-this-tooltip-icon-static" data-tooltip="Coming soon">
+									<span>What's this?</span>
+								</a>
+							</li>
+						</ul>
+						<span class="{STYLES_INSTANCE.reflectionMainStyle.trialLabel}">
+							<svg enable-background="new 0 0 32 32" version="1.1" viewBox="0 0 32 32" x="0px" xml:space="preserve" y="0px"><path
+								d="M9.8,30.2L0.3,13.8L22.4,1L32,6.4v11L9.8,30.2z M3,14.5l7.5,13L30,16.3V7.6l-7.6-4.3L3,14.5z M24.5,14c-1.2,0-2.2-0.6-2.8-1.6c-0.4-0.8-0.5-1.6-0.3-2.5c0.2-0.8,0.8-1.5,1.5-2c0.5-0.3,1.1-0.4,1.6-0.4c1.2,0,2.2,0.6,2.8,1.6 c0.9,1.6,0.4,3.5-1.2,4.4C25.6,13.9,25.1,14,24.5,14z M24.5,9c-0.3,0-0.6,0.1-0.9,0.2c-0.4,0.2-0.7,0.6-0.8,1.1 c-0.1,0.5-0.1,0.9,0.2,1.3c0.5,0.8,1.6,1.1,2.4,0.6c0.8-0.5,1.1-1.6,0.6-2.4C25.7,9.4,25.1,9,24.5,9z"
+								fill="#ff496a" id="Free"></path></svg>
+							Free 1 Month Trial
+						</span>
+					</section>
+					<div class="{STYLES_INSTANCE.reflectionMainStyle.pricingAccessInfo}">
+						<div class="{STYLES_INSTANCE.reflectionMainStyle.verticalCentreContent}">
+							<p>Get a month free on us when you sign up with a Developer Standard account</p>
+						</div>
+					</div>
+				</div>
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird}">
+					<section class="{STYLES_INSTANCE.reflectionMainStyle.pricingOption} {STYLES_INSTANCE.reflectionMainStyle.pricingOptionBusiness}">
+						<header class="{STYLES_INSTANCE.reflectionMainStyle.pricingOptionHeader}">
+							<h2 class="{STYLES_INSTANCE.reflectionMainStyle.pricingName}">Business</h2>
+							<div class="{STYLES_INSTANCE.reflectionMainStyle.pricingPriceContainer}">
+								<sup class="{STYLES_INSTANCE.reflectionMainStyle.pricingSup}">&pound;</sup>
+								<span class="{STYLES_INSTANCE.reflectionMainStyle.pricingPrice}">699</span>
+								<sup class="{STYLES_INSTANCE.reflectionMainStyle.pricingSup}">.99</sup>
+							</div>
+							<span class="{STYLES_INSTANCE.reflectionMainStyle.perMonth}">per month</span>
+							<p>No app store account? No problem. Investors, Advertisers, Marketers</p>
+						</header>
+						<ul class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetails}">
+							<li>Identify and Act on Market and Consumer Trends</li>
+							<li>Discover Investment Targets and Market Partners</li>
+						</ul>
+						<button class="{STYLES_INSTANCE.reflectionMainStyle.refButtonLink} {STYLES_INSTANCE.reflectionMainStyle.pricingSignUpButton}">Register Your Interest</button>
+					</section>
+					<div class="{STYLES_INSTANCE.reflectionMainStyle.pricingAccessInfo}">
+						<div class="{STYLES_INSTANCE.reflectionMainStyle.verticalCentreContent}">
+							<p>Coming soon, register your interest now to get access on a first-come, first-served basis</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__row}">
+				<section
+					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth} {STYLES_INSTANCE.reflectionMainStyle.twoColumns}">
+					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Lorem ipsum dolor amet consectetur?</h2>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam varius nulla pellentesque bibendum semper. Pellentesque ullamcorper dictum dictum. Sed
+						tincidunt ut nulla in pharetra.</p>
+					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Sed tincidunt nulla phareta?</h2>
+					<p>Pellentesque ullamcorper dictum dictum. Sed tincidunt ut nulla in pharetra. Curabitur id neque id urna viverra tempus.</p>
+					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Lorem ipsum dolor amet consectetur?</h2>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam varius nulla pellentesque bibendum semper. Pellentesque ullamcorper dictum dictum. Sed
+						tincidunt ut nulla in pharetra.</p>
+					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Sed tincidunt nulla phareta?</h2>
+					<p>Pellentesque ullamcorper dictum dictum. Sed tincidunt ut nulla in pharetra. Curabitur id neque id urna viverra tempus.</p>
+					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Consectetur pellentesque varius?</h2>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam varius nulla pellentesque bibendum semper.</p>
+					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Lorem ipsum dolor amet consectetur?</h2>
+					<p>Pellentesque ullamcorper dictum dictum. Sed tincidunt ut nulla in pharetra. Curabitur id neque id urna viverra tempus.</p>
+					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Consectetur pellentesque varius?</h2>
+					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam varius nulla pellentesque bibendum semper.</p>
+					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Lorem ipsum dolor amet consectetur?</h2>
+					<p>Pellentesque ullamcorper dictum dictum. Sed tincidunt ut nulla in pharetra. Curabitur id neque id urna viverra tempus.</p>
+				</section>
+			</div>
+		</div>
 	</g:HTMLPanel>
 </ui:UiBinder> 

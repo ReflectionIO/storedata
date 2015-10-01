@@ -45,11 +45,11 @@ import com.google.gwt.user.datepicker.client.CalendarUtil;
  * @author billy1380
  *
  */
-public class AppRankCell extends AbstractCell<Rank> {
+public class LeaderboardAppDetailsCell extends AbstractCell<Rank> {
 
 	@UiField AnchorElement appLink;
 
-	public AppRankCell() {
+	public LeaderboardAppDetailsCell() {
 		super("click");
 	}
 
@@ -64,7 +64,7 @@ public class AppRankCell extends AbstractCell<Rank> {
 		// Handle the click event.
 		if ("click".equals(event.getType())) {
 			Element clickedElem = Element.as(event.getEventTarget());
-			if (clickedElem.getTagName().equalsIgnoreCase("A")) {
+			if (clickedElem.getTagName().equalsIgnoreCase("A") && !clickedElem.getAttribute("href").startsWith("#!item/view/")) {
 				valueUpdater.update(value);
 			}
 		}
@@ -163,30 +163,14 @@ public class AppRankCell extends AbstractCell<Rank> {
 								WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : SafeHtmlUtils
 								.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
 					} else if (SessionController.get().canSeePredictions()) {
-						if (rank.position.intValue() <= 5) {
-							dailyData = SafeHtmlUtils.fromSafeConstant("<span class=\"" + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
-									+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud() + "\">&nbsp;</span><span class=\"js-tooltip "
-									+ Styles.STYLES_INSTANCE.reflectionMainStyle().whatsThisTooltipIconStatic()
-									+ "\" data-tooltip=\"We are upgrading our model to improve accuracy for the Top 5. It will be implemented soon.\"></span>");
-						} else {
-							dailyData = (rank.downloads != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle()
-									.refIconBefore() + " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
-									WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : SafeHtmlUtils
-									.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
-						}
+						dailyData = (rank.downloads != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore()
+								+ " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
+								WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : SafeHtmlUtils
+								.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
 					} else {
 						if (CalendarUtil.isSameDate(FilterHelper.getDaysAgo(2), FilterController.get().getEndDate())
 								|| NavigationController.get().getCurrentPage().equals(PageType.HomePageType)) {
-							if (rank.position.intValue() <= 5) {
-								dailyData = SafeHtmlUtils
-										.fromSafeConstant("<span class=\""
-												+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore()
-												+ " "
-												+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud()
-												+ "\">&nbsp;</span><span class=\"js-tooltip "
-												+ Styles.STYLES_INSTANCE.reflectionMainStyle().whatsThisTooltipIconStatic()
-												+ "\" data-tooltip=\"We are upgrading our model to improve accuracy for the Top 5. It will be implemented soon.\"></span>");
-							} else if (rank.position.intValue() > 10) {
+							if (rank.position.intValue() > 10) {
 								dailyData = DailyDataTemplateHtml.INSTANCE.dailyData(
 										Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
 												+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(),
@@ -219,30 +203,14 @@ public class AppRankCell extends AbstractCell<Rank> {
 								WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : SafeHtmlUtils
 								.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
 					} else if (SessionController.get().canSeePredictions()) {
-						if (rank.position.intValue() <= 5) {
-							dailyData = SafeHtmlUtils.fromSafeConstant("<span class=\"" + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
-									+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud() + "\">&nbsp;</span><span class=\"js-tooltip "
-									+ Styles.STYLES_INSTANCE.reflectionMainStyle().whatsThisTooltipIconStatic()
-									+ "\" data-tooltip=\"We are upgrading our model to improve accuracy for the Top 5. It will be implemented soon.\"></span>");
-						} else {
-							dailyData = (rank.downloads != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle()
-									.refIconBefore() + " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
-									WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : SafeHtmlUtils
-									.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
-						}
+						dailyData = (rank.downloads != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore()
+								+ " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
+								WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : SafeHtmlUtils
+								.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
 					} else {
 						if (CalendarUtil.isSameDate(FilterHelper.getDaysAgo(2), FilterController.get().getEndDate())
 								|| NavigationController.get().getCurrentPage().equals(PageType.HomePageType)) {
-							if (rank.position.intValue() <= 5) {
-								dailyData = SafeHtmlUtils
-										.fromSafeConstant("<span class=\""
-												+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore()
-												+ " "
-												+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud()
-												+ "\">&nbsp;</span><span class=\"js-tooltip "
-												+ Styles.STYLES_INSTANCE.reflectionMainStyle().whatsThisTooltipIconStatic()
-												+ "\" data-tooltip=\"We are upgrading our model to improve accuracy for the Top 5. It will be implemented soon.\"></span>");
-							} else if (rank.position.intValue() > 10) {
+							if (rank.position.intValue() > 10) {
 								dailyData = DailyDataTemplateHtml.INSTANCE.dailyData(
 										Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
 												+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(),
@@ -275,30 +243,14 @@ public class AppRankCell extends AbstractCell<Rank> {
 								FormattingHelper.asWholeMoneyString(rank.currency, rank.revenue.floatValue())) : SafeHtmlUtils
 								.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
 					} else if (SessionController.get().canSeePredictions()) {
-						if (rank.grossingPosition.intValue() <= 5) {
-							dailyData = SafeHtmlUtils.fromSafeConstant("<span class=\"" + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
-									+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue() + "\">&nbsp;</span><span class=\"js-tooltip "
-									+ Styles.STYLES_INSTANCE.reflectionMainStyle().whatsThisTooltipIconStatic()
-									+ "\" data-tooltip=\"We are upgrading our model to improve accuracy for the Top 5. It will be implemented soon.\"></span>");
-						} else {
-							dailyData = (rank.currency != null && rank.revenue != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE
-									.reflectionMainStyle().refIconBefore() + " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue(), "",
-									FormattingHelper.asWholeMoneyString(rank.currency, rank.revenue.floatValue())) : SafeHtmlUtils
-									.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
-						}
+						dailyData = (rank.currency != null && rank.revenue != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE
+								.reflectionMainStyle().refIconBefore() + " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue(), "",
+								FormattingHelper.asWholeMoneyString(rank.currency, rank.revenue.floatValue())) : SafeHtmlUtils
+								.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
 					} else {
 						if (CalendarUtil.isSameDate(FilterHelper.getDaysAgo(2), FilterController.get().getEndDate())
 								|| NavigationController.get().getCurrentPage().equals(PageType.HomePageType)) {
-							if (rank.grossingPosition.intValue() <= 5) {
-								dailyData = SafeHtmlUtils
-										.fromSafeConstant("<span class=\""
-												+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore()
-												+ " "
-												+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue()
-												+ "\">&nbsp;</span><span class=\"js-tooltip "
-												+ Styles.STYLES_INSTANCE.reflectionMainStyle().whatsThisTooltipIconStatic()
-												+ "\" data-tooltip=\"We are upgrading our model to improve accuracy for the Top 5. It will be implemented soon.\"></span>");
-							} else if (rank.grossingPosition.intValue() > 10) {
+							if (rank.grossingPosition.intValue() > 10) {
 								dailyData = DailyDataTemplateHtml.INSTANCE.dailyData(
 										Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
 												+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue(),

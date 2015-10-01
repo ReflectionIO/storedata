@@ -14,7 +14,7 @@ import io.reflection.app.api.core.client.CoreService;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
 import io.reflection.app.api.shared.datatypes.Pager;
-import io.reflection.app.client.cell.AppRankCell;
+import io.reflection.app.client.cell.LeaderboardAppDetailsCell;
 import io.reflection.app.client.cell.LeaderboardDownloadsCell;
 import io.reflection.app.client.cell.LeaderboardRevenueCell;
 import io.reflection.app.client.component.Selector;
@@ -248,7 +248,7 @@ public class HomePage extends Page {
 		rankColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.mhxte6cID());
 		rankHeader.setHeaderStyleNames(style.mhxte6cIF());
 
-		AppRankCell appRankCell = new AppRankCell();
+		LeaderboardAppDetailsCell appRankCell = new LeaderboardAppDetailsCell();
 
 		paidColumn = new Column<RanksGroup, Rank>(appRankCell) {
 

@@ -160,7 +160,13 @@
 			</ul>
 		</nav>
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.mainFooterLinks}">
-			<ul>
+			<ul ui:field="secondaryFooterList">
+				<li ui:field="productSecondaryItem">
+					<g:InlineHyperlink targetHistoryToken="{ProductPageType.asTargetHistoryToken}">Product</g:InlineHyperlink>
+				</li>
+				<li ui:field="pricingSecondaryItem">
+					<g:InlineHyperlink targetHistoryToken="{PricingPageType.asTargetHistoryToken}">Pricing</g:InlineHyperlink>
+				</li>
 				<li>
 					<g:InlineHyperlink targetHistoryToken="{AboutPageType.asTargetHistoryToken}">About Us</g:InlineHyperlink>
 				</li>

@@ -459,7 +459,7 @@ public final class Core extends ActionHandler {
 					for (Rank rank : ranks) {
 						itemIds.add(rank.itemId);
 						int ranking = (collector.isGrossing(listType) ? rank.grossingPosition.intValue() : rank.position.intValue());
-						if ((!isAdmin && ranking <= 5) || (!canSeePredictions && ranking > 10)
+						if ((!canSeePredictions && ranking > 10)
 								|| (!canSeePredictions && DateTimeComparator.getDateOnlyInstance().compare(input.on, new DateTime().minusDays(2)) != 0)) {
 							rank.downloads = null;
 							rank.revenue = null;
@@ -710,12 +710,15 @@ public final class Core extends ActionHandler {
 					Map<String, Object> values = new HashMap<String, Object>();
 					values.put("user", addedUser);
 					Event event = EventServiceProvider.provide().getCodeEvent(DataTypeHelper.REGISTERED_NOW_LINK_EVENT_CODE);
-					String body = NotificationHelper.inflate(values, event.longBody);
-					Notification notification = (new Notification()).from("hello@reflection.io").user(addedUser).event(event).body(body).subject(event.subject);
-					Notification added = NotificationServiceProvider.provide().addNotification(notification);
-					if (added.type != NotificationTypeType.NotificationTypeTypeInternal) {
-						notification.type = NotificationTypeType.NotificationTypeTypeInternal;
-						NotificationServiceProvider.provide().addNotification(notification);
+					if (event != null) {
+						String body = NotificationHelper.inflate(values, event.longBody);
+						Notification notification = (new Notification()).from("hello@reflection.io").user(addedUser).event(event).body(body)
+								.subject(event.subject);
+						Notification added = NotificationServiceProvider.provide().addNotification(notification);
+						if (added.type != NotificationTypeType.NotificationTypeTypeInternal) {
+							notification.type = NotificationTypeType.NotificationTypeTypeInternal;
+							NotificationServiceProvider.provide().addNotification(notification);
+						}
 					}
 				}
 
@@ -1296,15 +1299,15 @@ public final class Core extends ActionHandler {
 					values.put("dataaccount", output.account);
 
 					Event event = EventServiceProvider.provide().getCodeEvent(DataTypeHelper.CONFIRMATION_ACCOUNT_LINKED_EVENT_CODE);
-					String body = NotificationHelper.inflate(values, event.longBody);
-
-					Notification notification = (new Notification()).from("hello@reflection.io").user(input.session.user).event(event).body(body)
-							.subject(event.subject);
-					Notification added = NotificationServiceProvider.provide().addNotification(notification);
-
-					if (added.type != NotificationTypeType.NotificationTypeTypeInternal) {
-						notification.type = NotificationTypeType.NotificationTypeTypeInternal;
-						NotificationServiceProvider.provide().addNotification(notification);
+					if (event != null) {
+						String body = NotificationHelper.inflate(values, event.longBody);
+						Notification notification = (new Notification()).from("hello@reflection.io").user(input.session.user).event(event).body(body)
+								.subject(event.subject);
+						Notification added = NotificationServiceProvider.provide().addNotification(notification);
+						if (added.type != NotificationTypeType.NotificationTypeTypeInternal) {
+							notification.type = NotificationTypeType.NotificationTypeTypeInternal;
+							NotificationServiceProvider.provide().addNotification(notification);
+						}
 					}
 				}
 
