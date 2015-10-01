@@ -31,7 +31,6 @@ import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
 import io.reflection.app.datatypes.shared.Item;
-import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
@@ -175,10 +174,8 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 					// pager.totalCount = Long.valueOf(pager.totalCount.longValue() + 1);
 					// Load HLA Permission
 					linkedAccountsCount = rows.size();
-					if (!SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE)) {
-						Permission hlaPermission = DataTypeHelper.createPermission(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE);
-						hlaPermission.code = DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE;
-						SessionController.get().addPermissionToLookup(hlaPermission);
+					if (!SessionController.get().hasLinkedAccount()) {
+						SessionController.get().setUserPermission(DataTypeHelper.createPermission(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE));
 					}
 					updateRowCount(linkedAccountsCount, true);
 					updateRowData(0, rows);
@@ -267,9 +264,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 					// Delete HLA Permission if there are no more Linked Accounts
 					linkedAccountsCount = rows.size();
 					if (linkedAccountsFetched() && linkedAccountsCount == 0) {
-						Permission hlaPermission = DataTypeHelper.createPermission(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE);
-						hlaPermission.code = DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE;
-						SessionController.get().deletePermissionLookup(hlaPermission);
+						SessionController.get().deleteUserPermission(DataTypeHelper.createPermission(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE));
 					}
 					updateRowCount(linkedAccountsCount, true);
 					updateRowData(0, rows);

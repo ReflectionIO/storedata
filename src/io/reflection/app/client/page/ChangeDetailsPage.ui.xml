@@ -97,7 +97,7 @@
 							</div>
 						</div>
 
-						<div
+						<div ui:field="userCredentialsPanel"
 							class="{STYLES_INSTANCE.reflectionMainStyle.pageSection} {STYLES_INSTANCE.reflectionMainStyle.pageSectionWithBorder} {STYLES_INSTANCE.reflectionMainStyle.accountSettingsSection}">
 							<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">User Access</h2>
 							<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird}">

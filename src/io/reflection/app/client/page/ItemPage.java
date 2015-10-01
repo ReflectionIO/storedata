@@ -225,7 +225,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 		appDetailsItem.getStyle().setCursor(Cursor.DEFAULT);
 
-		if (!SessionController.get().isLoggedInUserAdmin()) {
+		if (!SessionController.get().isAdmin()) {
 			tablePanel.removeFromParent();
 			revenueTable.removeFromParent();
 			// followSwitch.removeFromParent();
@@ -258,7 +258,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 		tablePlaceholder.add(appRevenuePlaceholder);
 
-		FilterHelper.addCountries(countrySelector, SessionController.get().isLoggedInUserAdmin());
+		FilterHelper.addCountries(countrySelector, SessionController.get().isAdmin());
 		FilterHelper.addStores(appStoreSelector, true);
 
 		dateSelector.addFixedRanges(FilterHelper.getDefaultDateRanges());
@@ -555,7 +555,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		chartDownloads.setSeriesVisible(SERIES_ID_REVENUE_SECONDARY, event.getValue().booleanValue() && !cumulativeChartSwitch.getValue().booleanValue());
 		chartDownloads.setSeriesVisible(SERIES_ID_REVENUE_CUMULATIVE_SECONDARY, event.getValue().booleanValue()
 				&& cumulativeChartSwitch.getValue().booleanValue());
-		chartRank.setSeriesVisible(SERIES_ID_REVENUE_SECONDARY, SessionController.get().isLoggedInUserAdmin() && event.getValue().booleanValue());
+		chartRank.setSeriesVisible(SERIES_ID_REVENUE_SECONDARY, SessionController.get().isAdmin() && event.getValue().booleanValue());
 	}
 
 	@UiHandler("overlayDownloadsSwitch")
@@ -563,7 +563,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		chartRevenue.setSeriesVisible(SERIES_ID_DOWNLOAD_SECONDARY, event.getValue().booleanValue() && !cumulativeChartSwitch.getValue().booleanValue());
 		chartRevenue.setSeriesVisible(SERIES_ID_DOWNLOAD_CUMULATIVE_SECONDARY, event.getValue().booleanValue()
 				&& cumulativeChartSwitch.getValue().booleanValue());
-		chartRank.setSeriesVisible(SERIES_ID_DOWNLOAD_SECONDARY, SessionController.get().isLoggedInUserAdmin() && event.getValue().booleanValue());
+		chartRank.setSeriesVisible(SERIES_ID_DOWNLOAD_SECONDARY, SessionController.get().isAdmin() && event.getValue().booleanValue());
 	}
 
 	@UiHandler("cumulativeChartSwitch")
@@ -737,13 +737,13 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			rankingLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, displayingAppId,
 					RANKING_CHART_TYPE, comingPage, previousFilter));
 
-			if (SessionController.get().isLoggedInUserAdmin() || MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage)) {
+			if (SessionController.get().isAdmin() || MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage)) {
 				setRevenueDownloadTabsEnabled(true);
 			} else {
 				setRevenueDownloadTabsEnabled(false);
 			}
 
-			if (!SessionController.get().isLoggedInUserAdmin() && MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage)) {
+			if (!SessionController.get().isAdmin() && MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage)) {
 				setRankTabEnabled(false);
 			} else {
 				setRankTabEnabled(true);
@@ -796,7 +796,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				overlayRevenuesSwitch.setVisible(false);
 				overlayDownloadsSwitch.setVisible(true);
 				cumulativeChartSwitch.setVisible(true);
-				filtersGroupGraphOptions.setVisible(SessionController.get().isLoggedInUserAdmin() || MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage));
+				filtersGroupGraphOptions.setVisible(SessionController.get().isAdmin() || MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage));
 				chartRevenue.setVisible(true);
 				chartDownloads.setVisible(false);
 				chartRank.setVisible(false);
@@ -805,7 +805,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				overlayDownloadsSwitch.setVisible(false);
 				overlayRevenuesSwitch.setVisible(true);
 				cumulativeChartSwitch.setVisible(true);
-				filtersGroupGraphOptions.setVisible(SessionController.get().isLoggedInUserAdmin() || MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage));
+				filtersGroupGraphOptions.setVisible(SessionController.get().isAdmin() || MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage));
 				chartDownloads.setVisible(true);
 				chartRevenue.setVisible(false);
 				chartRank.setVisible(false);
@@ -814,7 +814,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				overlayRevenuesSwitch.setVisible(true);
 				overlayDownloadsSwitch.setVisible(true);
 				cumulativeChartSwitch.setVisible(false);
-				filtersGroupGraphOptions.setVisible(SessionController.get().isLoggedInUserAdmin());
+				filtersGroupGraphOptions.setVisible(SessionController.get().isAdmin());
 				chartRank.setVisible(true);
 				chartRevenue.setVisible(false);
 				chartDownloads.setVisible(false);
@@ -824,7 +824,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			chartRevenue.setVisible(false);
 			chartDownloads.setVisible(false);
 			chartRank.setVisible(false);
-			filtersGroupGraphOptions.setVisible(SessionController.get().isLoggedInUserAdmin());
+			filtersGroupGraphOptions.setVisible(SessionController.get().isAdmin());
 			// TODO show map
 		}
 	}
@@ -940,7 +940,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				chartRank.drawSeries(rankingRanksWithOutOfLeaderboardValues, YAxisPosition.PRIMARY, YDataType.RankingYAxisDataType, SERIES_ID_RANK,
 						LineType.LINE, ColorHelper.getReflectionGreen(), false, false);
 
-				if (MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage) || SessionController.get().isLoggedInUserAdmin()) {
+				if (MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage) || SessionController.get().isAdmin()) {
 					chartRank.drawSeries(ranks, YAxisPosition.SECONDARY, YDataType.RevenueYAxisDataType, SERIES_ID_REVENUE_SECONDARY, LineType.LINE,
 							ColorHelper.getReflectionPurple(), false, !overlayRevenuesSwitch.getValue().booleanValue());
 					chartRank.drawSeries(ranks, YAxisPosition.TERTIARY, YDataType.DownloadsYAxisDataType, SERIES_ID_DOWNLOAD_SECONDARY, LineType.LINE,

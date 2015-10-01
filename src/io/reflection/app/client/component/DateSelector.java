@@ -77,7 +77,7 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 			@Override
 			public void onShowRange(ShowRangeEvent<Date> event) {
 				FilterHelper.disableOutOfRangeDates(dateBoxTo.getDatePicker(), dateBoxFrom.getValue(),
-						(SessionController.get().isLoggedInUserAdmin() ? FilterHelper.getToday() : FilterHelper.getDaysAgo(2)));
+						(SessionController.get().isAdmin() ? FilterHelper.getToday() : FilterHelper.getDaysAgo(2)));
 			}
 		});
 	}

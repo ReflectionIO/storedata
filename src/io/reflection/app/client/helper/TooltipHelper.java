@@ -48,7 +48,35 @@ public class TooltipHelper {
 													tooltip = $wnd
 															.$('<div>')
 															.addClass("tooltip")
-															.append($wnd.$('<div>').addClass("tooltip-text").text(tooltipText));
+															.append(
+																	$wnd
+																			.$(
+																					'<div>')
+																			.addClass(
+																					"tooltip-text")
+																			.text(
+																					tooltipText));
+													if ($this
+															.find('.icon-member--standard').length > 0) {
+														tooltip
+																.prepend($wnd
+																		.$(
+																				'<span>')
+																		.addClass(
+																				"tooltip-feature tooltip-feature--standard")
+																		.text(
+																				"MEMBER FEATURE"));
+													} else if ($this
+															.find('.icon-member--pro').length > 0) {
+														tooltip
+																.prepend($wnd
+																		.$(
+																				'<span>')
+																		.addClass(
+																				"tooltip-feature tooltip-feature--pro")
+																		.text(
+																				"PREMIUM FEATURE"));
+													}
 													$wnd.$('body').append(
 															tooltip);
 													var topPosition = $this
@@ -96,7 +124,17 @@ public class TooltipHelper {
 		}
 	}-*/;
 
-	public static native void nativeUpdateWhatsThisTooltip()/*-{
+	public static void updateWhatsThisTooltip() {
+		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+
+			@Override
+			public void execute() {
+				TooltipHelper.nativeUpdateWhatsThisTooltip();
+			}
+		});
+	}
+
+	private static native void nativeUpdateWhatsThisTooltip()/*-{
 
 		$wnd
 				.$('.js-whats-this-tooltip')

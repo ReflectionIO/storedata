@@ -1,0 +1,17 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:pop="urn:import:io.reflection.app.client.popup"
+	xmlns:c="urn:import:io.reflection.app.client.component">
+
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
+	<ui:style>
+	
+	</ui:style>
+	<pop:PopupBase ui:field="popup">
+		<g:HTMLPanel tag="h2"
+			styleName="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFive} {STYLES_INSTANCE.reflectionMainStyle.popupContentAccount__heading}">Delete this account?</g:HTMLPanel>
+		<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.buttonsContainer}">
+			<c:LoadingButton ui:field="confirmDelete" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaLarge}">Yes, Delete</c:LoadingButton>
+			<g:Button ui:field="cancelDelete" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionLarge}">No, Keep</g:Button>
+		</g:HTMLPanel>
+	</pop:PopupBase>
+</ui:UiBinder> 
