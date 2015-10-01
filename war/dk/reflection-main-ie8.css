@@ -4175,68 +4175,81 @@ textarea, .global-header .link-open-search, html, body {
 .why-reflection-container {
   /* padding-top: 2rem; */
   padding-top: 4rem;
-  padding-bottom: 3rem;
+  padding-bottom: 1rem;
   text-align: center;
   background-color: #f2f2f5;
 }
 /* line 127, sass/templates/_home.scss */
 .why-reflection-container p {
+  margin: 0 auto;
   text-align: left;
 }
 
-/* line 131, sass/templates/_home.scss */
+/* line 132, sass/templates/_home.scss */
 .why-reflection-graphic {
   width: 100%;
   float: left;
   background-color: #f2f2f5;
 }
-/* line 135, sass/templates/_home.scss */
-.why-reflection-graphic img {
+/* line 136, sass/templates/_home.scss */
+.why-reflection-graphic img, .why-reflection-graphic svg {
   width: 100%;
   float: left;
 }
-
 /* line 140, sass/templates/_home.scss */
+.why-reflection-graphic img {
+  display: none;
+}
+/* line 144, sass/templates/_home.scss */
+.is-ie .why-reflection-graphic img {
+  display: block;
+}
+/* line 147, sass/templates/_home.scss */
+.is-ie .why-reflection-graphic svg {
+  display: none;
+}
+
+/* line 152, sass/templates/_home.scss */
 .why-reflection-item {
   margin-bottom: 3rem;
 }
-/* line 148, sass/templates/_home.scss */
+/* line 160, sass/templates/_home.scss */
 .why-reflection-item h2 {
   margin-top: 2rem;
   text-align: center;
 }
 
-/* line 153, sass/templates/_home.scss */
+/* line 165, sass/templates/_home.scss */
 .why-reflection-item__illustration-container {
   position: relative;
   height: 119px;
   text-align: center;
 }
-/* line 157, sass/templates/_home.scss */
+/* line 169, sass/templates/_home.scss */
 .why-reflection-item__illustration-container svg {
   position: absolute;
   bottom: 0;
 }
 
-/* line 166, sass/templates/_home.scss */
+/* line 178, sass/templates/_home.scss */
 .why-reflection-item__illustration-container--price svg {
   left: calc(50% - 58px);
   width: 116px;
 }
 
-/* line 172, sass/templates/_home.scss */
+/* line 184, sass/templates/_home.scss */
 .why-reflection-item__illustration-container--help svg {
   left: calc(50% - 94px);
   width: 188px;
 }
 
-/* line 178, sass/templates/_home.scss */
+/* line 190, sass/templates/_home.scss */
 .why-reflection-item__illustration-container--use svg {
   left: calc(50% - 72px);
   width: 145px;
 }
 
-/* line 183, sass/templates/_home.scss */
+/* line 195, sass/templates/_home.scss */
 .why-reflection-button-container {
   margin-top: 1rem;
   margin-bottom: 5rem;
@@ -4387,7 +4400,7 @@ textarea, .global-header .link-open-search, html, body {
 /* line 6, sass/templates/_leaderboard.scss */
 .page-leaderboard .page-functions {
   margin-top: -5rem;
-  display: none;
+  display: inline-block;
 }
 /* line 16, sass/templates/_leaderboard.scss */
 .page-leaderboard .page-functions .filter-toggle {
@@ -4543,8 +4556,8 @@ textarea, .global-header .link-open-search, html, body {
   /* line 201, sass/templates/_leaderboard.scss */
   .page-leaderboard .page-title,
   .page-leaderboard .page-title:last-child {
-    padding-top: 0;
-    margin-bottom: 0.78em;
+    padding-top: 4px;
+    margin-bottom: 0;
     font-size: 2.1rem;
   }
 }
@@ -5663,46 +5676,52 @@ table.table-data.table-linked-accounts--disabled thead {
 /* line 9, sass/templates/_my-apps-and-leaderboard.scss */
 .page-functions button {
   margin-right: 3%;
+  padding: 1.05rem 0.923077em 1.15rem;
+  line-height: 12px;
   float: right;
 }
-/* line 13, sass/templates/_my-apps-and-leaderboard.scss */
+/* line 14, sass/templates/_my-apps-and-leaderboard.scss */
+.is-chrome .page-functions button {
+  line-height: 14px;
+}
+/* line 18, sass/templates/_my-apps-and-leaderboard.scss */
 .page-functions .inline-search-form {
   width: 45%;
   float: right;
   display: inline-block;
   vertical-align: top;
 }
-/* line 24, sass/templates/_my-apps-and-leaderboard.scss */
+/* line 29, sass/templates/_my-apps-and-leaderboard.scss */
 .page-functions .inline-search-form .search-field-no-label {
   margin-bottom: 0;
 }
-/* line 32, sass/templates/_my-apps-and-leaderboard.scss */
+/* line 37, sass/templates/_my-apps-and-leaderboard.scss */
 .page-functions .search-field-no-label input[type=text] {
   max-width: calc(100% - 17px);
   font-size: 1.5rem;
 }
-/* line 35, sass/templates/_my-apps-and-leaderboard.scss */
+/* line 40, sass/templates/_my-apps-and-leaderboard.scss */
 .page-functions .search-field-no-label input[type=text]:active + input[type=submit] {
   color: #6d69c5;
 }
-/* line 39, sass/templates/_my-apps-and-leaderboard.scss */
+/* line 44, sass/templates/_my-apps-and-leaderboard.scss */
 .page-functions .search-field-no-label input[type=submit] {
   font-size: 1.75rem;
   color: #81879d;
 }
 
-/* line 48, sass/templates/_my-apps-and-leaderboard.scss */
+/* line 53, sass/templates/_my-apps-and-leaderboard.scss */
 .page-my-apps .table-wrapper,
 .page-leaderboard .table-wrapper {
   border-right: 0;
 }
 @media only screen and (max-width: 719px) {
-  /* line 53, sass/templates/_my-apps-and-leaderboard.scss */
+  /* line 58, sass/templates/_my-apps-and-leaderboard.scss */
   .page-my-apps .table-data th:first-child,
   .page-leaderboard .table-data th:first-child {
     font-size: 0;
   }
-  /* line 56, sass/templates/_my-apps-and-leaderboard.scss */
+  /* line 61, sass/templates/_my-apps-and-leaderboard.scss */
   .page-my-apps .table-data td:first-child,
   .page-leaderboard .table-data td:first-child {
     padding-right: 3px;
@@ -5711,14 +5730,14 @@ table.table-data.table-linked-accounts--disabled thead {
     font-size: 12px;
   }
 }
-/* line 73, sass/templates/_my-apps-and-leaderboard.scss */
+/* line 78, sass/templates/_my-apps-and-leaderboard.scss */
 .page-my-apps .scrollable .table-data .MHXTE6C-i-a,
 .page-my-apps .scrollable .table-data .table-data,
 .page-leaderboard .scrollable .table-data .MHXTE6C-i-a,
 .page-leaderboard .scrollable .table-data .table-data {
   max-width: 110px;
 }
-/* line 78, sass/templates/_my-apps-and-leaderboard.scss */
+/* line 83, sass/templates/_my-apps-and-leaderboard.scss */
 .page-my-apps table.table-data .img-rounded,
 .page-leaderboard table.table-data .img-rounded {
   display: none;
@@ -7345,7 +7364,7 @@ table.table-data.table-linked-accounts--disabled thead {
 
 /* line 81, sass/components/_button.scss */
 .ref-button--function-small, .ref-button--function-small--wide, .ref-button--function-large, .ref-button--function-large--wide {
-  padding: 0.75em 0.92307692307692em 0.85em 0.92307692307692em;
+  padding: 0.65em 0.92307692307692em 0.65em 0.92307692307692em;
   font-family: "Source Sans Pro", sans-serif;
   font-weight: 600;
   color: #6d69c5;
@@ -7361,7 +7380,7 @@ table.table-data.table-linked-accounts--disabled thead {
 /* line 94, sass/components/_button.scss */
 .ref-button--function-small:active, .ref-button--function-small--wide:active, .ref-button--function-large:active, .ref-button--function-large--wide:active, .ref-button--function-small.is-pressed, .is-pressed.ref-button--function-small--wide, .is-pressed.ref-button--function-large, .is-pressed.ref-button--function-large--wide {
   border-top: 3px solid #d9d9dc;
-  padding-bottom: calc(0.85em - 2px);
+  padding-bottom: calc(0.65em - 2px);
   -webkit-transition: border 0s;
           transition: border 0s;
 }
@@ -7379,17 +7398,36 @@ table.table-data.table-linked-accounts--disabled thead {
 /* line 108, sass/components/_button.scss */
 .ref-button--function-small:disabled:active, .ref-button--function-small--wide:disabled:active, .ref-button--function-large:disabled:active, .ref-button--function-large--wide:disabled:active {
   border-top: 1px solid #dadee1;
-  padding-bottom: 0.85em;
+  padding-bottom: 0.65em;
 }
 /* line 113, sass/components/_button.scss */
+.ref-button--function-small.ref-button--is-loading, .ref-button--is-loading.ref-button--function-small--wide, .ref-button--is-loading.ref-button--function-large, .ref-button--is-loading.ref-button--function-large--wide, .ref-button--function-small.ref-button--positive, .ref-button--positive.ref-button--function-small--wide, .ref-button--positive.ref-button--function-large, .ref-button--positive.ref-button--function-large--wide {
+  color: #fcfdfd;
+}
+/* line 115, sass/components/_button.scss */
+.ref-button--function-small.ref-button--is-loading:hover, .ref-button--is-loading.ref-button--function-small--wide:hover, .ref-button--is-loading.ref-button--function-large:hover, .ref-button--is-loading.ref-button--function-large--wide:hover, .ref-button--function-small.ref-button--is-loading:active, .ref-button--is-loading.ref-button--function-small--wide:active, .ref-button--is-loading.ref-button--function-large:active, .ref-button--is-loading.ref-button--function-large--wide:active, .ref-button--function-small.ref-button--positive:hover, .ref-button--positive.ref-button--function-small--wide:hover, .ref-button--positive.ref-button--function-large:hover, .ref-button--positive.ref-button--function-large--wide:hover, .ref-button--function-small.ref-button--positive:active, .ref-button--positive.ref-button--function-small--wide:active, .ref-button--positive.ref-button--function-large:active, .ref-button--positive.ref-button--function-large--wide:active {
+  color: #fcfdfd;
+}
+/* line 119, sass/components/_button.scss */
+.ref-button--function-small.ref-button--is-loading:active, .ref-button--is-loading.ref-button--function-small--wide:active, .ref-button--is-loading.ref-button--function-large:active, .ref-button--is-loading.ref-button--function-large--wide:active, .ref-button--function-small.ref-button--is-loading.is-pressed, .ref-button--is-loading.is-pressed.ref-button--function-small--wide, .ref-button--is-loading.is-pressed.ref-button--function-large, .ref-button--is-loading.is-pressed.ref-button--function-large--wide, .ref-button--function-small.ref-button--positive:active, .ref-button--positive.ref-button--function-small--wide:active, .ref-button--positive.ref-button--function-large:active, .ref-button--positive.ref-button--function-large--wide:active, .ref-button--function-small.ref-button--positive.is-pressed, .ref-button--positive.is-pressed.ref-button--function-small--wide, .ref-button--positive.is-pressed.ref-button--function-large, .ref-button--positive.is-pressed.ref-button--function-large--wide {
+  padding-bottom: 0.65em;
+}
+/* line 123, sass/components/_button.scss */
+.ref-button--function-small.ref-button--is-loading:hover, .ref-button--is-loading.ref-button--function-small--wide:hover, .ref-button--is-loading.ref-button--function-large:hover, .ref-button--is-loading.ref-button--function-large--wide:hover, .ref-button--function-small.ref-button--is-loading:active, .ref-button--is-loading.ref-button--function-small--wide:active, .ref-button--is-loading.ref-button--function-large:active, .ref-button--is-loading.ref-button--function-large--wide:active, .ref-button--function-small.ref-button--is-loading:active, .ref-button--is-loading.ref-button--function-small--wide:active, .ref-button--is-loading.ref-button--function-large:active, .ref-button--is-loading.ref-button--function-large--wide:active, .ref-button--function-small.ref-button--is-loading.is-pressed, .ref-button--is-loading.is-pressed.ref-button--function-small--wide, .ref-button--is-loading.is-pressed.ref-button--function-large, .ref-button--is-loading.is-pressed.ref-button--function-large--wide, .ref-button--function-small.ref-button--positive:hover, .ref-button--positive.ref-button--function-small--wide:hover, .ref-button--positive.ref-button--function-large:hover, .ref-button--positive.ref-button--function-large--wide:hover, .ref-button--function-small.ref-button--positive:active, .ref-button--positive.ref-button--function-small--wide:active, .ref-button--positive.ref-button--function-large:active, .ref-button--positive.ref-button--function-large--wide:active, .ref-button--function-small.ref-button--positive:active, .ref-button--positive.ref-button--function-small--wide:active, .ref-button--positive.ref-button--function-large:active, .ref-button--positive.ref-button--function-large--wide:active, .ref-button--function-small.ref-button--positive.is-pressed, .ref-button--positive.is-pressed.ref-button--function-small--wide, .ref-button--positive.is-pressed.ref-button--function-large, .ref-button--positive.is-pressed.ref-button--function-large--wide {
+  -webkit-transition: none;
+          transition: none;
+  border: 1px solid #dadee1;
+  border-radius: 0.30769230769231em;
+}
+/* line 132, sass/components/_button.scss */
 .ref-button--function-small.ref-button--function-small--with-icon, .ref-button--function-small--with-icon.ref-button--function-small--wide, .ref-button--function-small--with-icon.ref-button--function-large, .ref-button--function-small--with-icon.ref-button--function-large--wide {
   padding: 0.75em 0.923077em 0.55em;
 }
-/* line 115, sass/components/_button.scss */
+/* line 134, sass/components/_button.scss */
 .ref-button--function-small.ref-button--function-small--with-icon:active, .ref-button--function-small--with-icon.ref-button--function-small--wide:active, .ref-button--function-small--with-icon.ref-button--function-large:active, .ref-button--function-small--with-icon.ref-button--function-large--wide:active {
   padding-bottom: calc(0.55em - 2px);
 }
-/* line 118, sass/components/_button.scss */
+/* line 137, sass/components/_button.scss */
 .ref-button--function-small.ref-button--function-small--with-icon span:before, .ref-button--function-small--with-icon.ref-button--function-small--wide span:before, .ref-button--function-small--with-icon.ref-button--function-large span:before, .ref-button--function-small--with-icon.ref-button--function-large--wide span:before {
   position: relative;
   top: -1px;
@@ -7399,27 +7437,27 @@ table.table-data.table-linked-accounts--disabled thead {
   font-size: 2rem;
   color: #81879D;
 }
-/* line 128, sass/components/_button.scss */
+/* line 147, sass/components/_button.scss */
 .ref-button--function-small.ref-button--function-small--with-icon:disabled span:before, .ref-button--function-small--with-icon.ref-button--function-small--wide:disabled span:before, .ref-button--function-small--with-icon.ref-button--function-large:disabled span:before, .ref-button--function-small--with-icon.ref-button--function-large--wide:disabled span:before {
   color: #C4C7D0;
 }
-/* line 131, sass/components/_button.scss */
+/* line 150, sass/components/_button.scss */
 .ref-button--function-small.ref-button--function-small--with-icon:disabled:active, .ref-button--function-small--with-icon.ref-button--function-small--wide:disabled:active, .ref-button--function-small--with-icon.ref-button--function-large:disabled:active, .ref-button--function-small--with-icon.ref-button--function-large--wide:disabled:active {
   padding-bottom: 0.55em;
 }
 
-/* line 137, sass/components/_button.scss */
+/* line 156, sass/components/_button.scss */
 .ref-button--function-small--wide {
-  padding: 0.75em 2.3em 0.85em 2.25em;
+  padding: 0.65em 2.3em 0.65em 2.25em;
 }
 
-/* line 157, sass/components/_button.scss */
+/* line 176, sass/components/_button.scss */
 .ref-button--function-large--wide {
   padding-left: 2.45em;
   padding-right: 2.55em;
 }
 
-/* line 165, sass/components/_button.scss */
+/* line 184, sass/components/_button.scss */
 .ref-button--full-width {
   width: 100%;
   max-width: 300px;
@@ -7427,32 +7465,32 @@ table.table-data.table-linked-accounts--disabled thead {
   padding: 0.95em 0.5em 1em;
   font-size: 18px;
 }
-/* line 172, sass/components/_button.scss */
+/* line 191, sass/components/_button.scss */
 .ref-button--full-width:active {
   border-top: 3px solid #b2334a;
   padding-bottom: calc(1em - 3px);
 }
-/* line 176, sass/components/_button.scss */
+/* line 195, sass/components/_button.scss */
 .ref-button--full-width:disabled {
   cursor: default;
 }
-/* line 178, sass/components/_button.scss */
+/* line 197, sass/components/_button.scss */
 .ref-button--full-width:disabled:active {
   border-top: 0;
   padding-bottom: 1em;
 }
-/* line 187, sass/components/_button.scss */
+/* line 206, sass/components/_button.scss */
 .ref-button--full-width.ref-button--success:active, .ref-button--full-width.ref-button--error:active, .ref-button--full-width.ref-button--is-loading:active, .ref-button--full-width.ref-button--positive:active {
   padding-bottom: 1em;
 }
 
-/* line 193, sass/components/_button.scss */
+/* line 212, sass/components/_button.scss */
 .ref-button--full-width--with-icon span {
   position: relative;
   top: -0.1em;
   padding-left: 3.1rem;
 }
-/* line 197, sass/components/_button.scss */
+/* line 216, sass/components/_button.scss */
 .ref-button--full-width--with-icon span.ref-icon-before:before, .ref-button--full-width--with-icon .page-logged-in-landing span.accordion-switch:before, .page-logged-in-landing .ref-button--full-width--with-icon span.accordion-switch:before, .ref-button--full-width--with-icon .page-logged-in-landing .accordion span.list-item-complete:before, .page-logged-in-landing .accordion .ref-button--full-width--with-icon span.list-item-complete:before {
   position: absolute;
   top: 1px;
@@ -7460,20 +7498,20 @@ table.table-data.table-linked-accounts--disabled thead {
   font-size: 2rem;
 }
 
-/* line 205, sass/components/_button.scss */
+/* line 224, sass/components/_button.scss */
 .ref-button--warning {
   background-color: #ff496a;
 }
-/* line 207, sass/components/_button.scss */
+/* line 226, sass/components/_button.scss */
 .ref-button--warning:hover {
   background-color: #e37f26;
 }
-/* line 210, sass/components/_button.scss */
+/* line 229, sass/components/_button.scss */
 .ref-button--warning:active {
   border-top-color: #be6618;
 }
 
-/* line 214, sass/components/_button.scss */
+/* line 233, sass/components/_button.scss */
 .ref-button--link, .ref-button--link-large {
   padding: 0;
   margin: 0;
@@ -7489,7 +7527,7 @@ table.table-data.table-linked-accounts--disabled thead {
   -webkit-transition: color 0.2s;
           transition: color 0.2s;
 }
-/* line 228, sass/components/_button.scss */
+/* line 247, sass/components/_button.scss */
 .ref-button--link span, .ref-button--link-large span {
   position: relative;
   padding-left: 3.5rem;
@@ -7497,66 +7535,66 @@ table.table-data.table-linked-accounts--disabled thead {
   line-height: 1.3;
   text-align: left;
 }
-/* line 234, sass/components/_button.scss */
+/* line 253, sass/components/_button.scss */
 .ref-button--link span:before, .ref-button--link-large span:before {
   position: absolute;
   top: 0.1rem;
   left: 0px;
   font-size: 1.9rem;
 }
-/* line 241, sass/components/_button.scss */
+/* line 260, sass/components/_button.scss */
 .ref-button--link:hover, .ref-button--link-large:hover {
   color: #46438b;
   -webkit-transition: color 0.3s;
           transition: color 0.3s;
 }
-/* line 245, sass/components/_button.scss */
+/* line 264, sass/components/_button.scss */
 .ref-button--link:active, .ref-button--link-large:active {
   position: relative;
   top: 2px;
   outline: none;
 }
-/* line 250, sass/components/_button.scss */
+/* line 269, sass/components/_button.scss */
 .ref-button--link:disabled, .ref-button--link-large:disabled {
   color: #c4c7d0;
   cursor: default;
 }
-/* line 253, sass/components/_button.scss */
+/* line 272, sass/components/_button.scss */
 .ref-button--link:disabled:hover, .ref-button--link-large:disabled:hover, .ref-button--link:disabled:active, .ref-button--link-large:disabled:active {
   top: 0;
   color: #c4c7d0;
 }
-/* line 257, sass/components/_button.scss */
+/* line 276, sass/components/_button.scss */
 .ref-button--link:disabled span:before, .ref-button--link-large:disabled span:before {
   color: #c4c7d0;
 }
 
-/* line 262, sass/components/_button.scss */
+/* line 281, sass/components/_button.scss */
 .ref-button--link-large {
   font-size: 1.8em;
 }
-/* line 266, sass/components/_button.scss */
+/* line 285, sass/components/_button.scss */
 .ref-button--link-large span:before {
   position: absolute;
   top: 0.1rem;
   font-size: 2.2rem;
 }
 
-/* line 273, sass/components/_button.scss */
+/* line 292, sass/components/_button.scss */
 .refresh-button {
   padding: 1.1rem 1rem 0.8rem;
   display: inline-block;
   vertical-align: top;
 }
-/* line 277, sass/components/_button.scss */
+/* line 296, sass/components/_button.scss */
 .refresh-button:disabled:active {
   padding-bottom: 0.8rem;
 }
-/* line 280, sass/components/_button.scss */
+/* line 299, sass/components/_button.scss */
 .refresh-button:active {
   padding-bottom: 0.6rem;
 }
-/* line 283, sass/components/_button.scss */
+/* line 302, sass/components/_button.scss */
 .refresh-button .svg-refresh {
   width: 16px;
   height: 16px;
@@ -7580,7 +7618,7 @@ table.table-data.table-linked-accounts--disabled thead {
     background-position: 470px 0;
   }
 }
-/* line 295, sass/components/_button.scss */
+/* line 314, sass/components/_button.scss */
 .ref-button--is-loading {
   background-color: #ff4969;
   /* @alternate */
@@ -7591,13 +7629,13 @@ table.table-data.table-linked-accounts--disabled thead {
           animation: backgroundMove 5s linear infinite;
   cursor: default;
 }
-/* line 308, sass/components/_button.scss */
+/* line 327, sass/components/_button.scss */
 .ref-button--is-loading:active {
   top: 0;
   border: none;
 }
 
-/* line 313, sass/components/_button.scss */
+/* line 332, sass/components/_button.scss */
 .ref-button--success,
 .ref-button--success:disabled {
   color: #29292c;
@@ -7606,7 +7644,7 @@ table.table-data.table-linked-accounts--disabled thead {
   -webkit-transition: background-color 0s;
           transition: background-color 0s;
 }
-/* line 319, sass/components/_button.scss */
+/* line 338, sass/components/_button.scss */
 .ref-button--success:active, .ref-button--success:hover,
 .ref-button--success:disabled:active,
 .ref-button--success:disabled:hover {
@@ -7615,7 +7653,7 @@ table.table-data.table-linked-accounts--disabled thead {
   background-color: transparent;
 }
 
-/* line 325, sass/components/_button.scss */
+/* line 344, sass/components/_button.scss */
 .ref-button--positive,
 .ref-button--positive:disabled {
   background-color: #1bc79f;
@@ -7623,7 +7661,7 @@ table.table-data.table-linked-accounts--disabled thead {
   -webkit-transition: background-color 0s;
           transition: background-color 0s;
 }
-/* line 330, sass/components/_button.scss */
+/* line 349, sass/components/_button.scss */
 .ref-button--positive:active, .ref-button--positive:hover,
 .ref-button--positive:disabled:active,
 .ref-button--positive:disabled:hover {
@@ -7632,14 +7670,14 @@ table.table-data.table-linked-accounts--disabled thead {
   background-color: #1bc79f;
 }
 
-/* line 336, sass/components/_button.scss */
+/* line 355, sass/components/_button.scss */
 .ref-button--error {
   background-color: #e37f26;
   cursor: default;
   -webkit-transition: background-color 0s;
           transition: background-color 0s;
 }
-/* line 340, sass/components/_button.scss */
+/* line 359, sass/components/_button.scss */
 .ref-button--error:active, .ref-button--error:hover {
   top: 0;
   border: none;
@@ -10640,6 +10678,55 @@ form .gwt-DatePicker * {
   z-index: 100;
 }
 
+/* line 60, sass/components/_highcharts.scss */
+.custom-tooltip {
+  position: relative;
+  padding: 5px 10px 5px 33px;
+  margin-bottom: 5px;
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fcfdfd;
+  border-radius: 3px;
+  opacity: 0.8;
+}
+/* line 70, sass/components/_highcharts.scss */
+.custom-tooltip img {
+  position: absolute;
+  top: 7px;
+  left: 7px;
+}
+/* line 75, sass/components/_highcharts.scss */
+.custom-tooltip .icon-revenue {
+  top: 10px;
+  width: 19px;
+  height: 11px;
+}
+/* line 80, sass/components/_highcharts.scss */
+.custom-tooltip .icon-downloads {
+  width: 17px;
+  height: 17px;
+}
+/* line 84, sass/components/_highcharts.scss */
+.custom-tooltip .icon-rank {
+  top: 8px;
+  width: 17px;
+  height: 13px;
+}
+
+/* line 91, sass/components/_highcharts.scss */
+.highcharts-axis-label:after {
+  content: ' ';
+  position: absolute;
+  top: -10px;
+  left: calc(50% - 10px);
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid #81879d;
+}
+
 /* line 1, sass/components/_intro-banner.scss */
 .intro-banner {
   width: 100%;
@@ -11122,7 +11209,7 @@ svg.loading-ellipsis .dot-3 {
 .graph-loading-indicator {
   position: absolute;
   top: 40%;
-  left: calc(50% - 50px);
+  left: calc(50% - 29px);
   width: 58px;
   height: 58px;
   display: inline-block;
