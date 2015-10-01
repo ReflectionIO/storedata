@@ -7,49 +7,7 @@
 //
 package io.reflection.app.client.page;
 
-import static io.reflection.app.client.controller.FilterController.FREE_LIST_TYPE;
-import static io.reflection.app.client.controller.FilterController.GROSSING_LIST_TYPE;
-import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
-import static io.reflection.app.client.controller.FilterController.PAID_LIST_TYPE;
-import static io.reflection.app.client.controller.FilterController.REVENUE_DAILY_DATA_TYPE;
-import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
-import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
-import io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler;
-import io.reflection.app.client.DefaultEventBus;
-import io.reflection.app.client.cell.AppRankCell;
-import io.reflection.app.client.cell.LeaderboardDownloadsCell;
-import io.reflection.app.client.cell.LeaderboardRevenueCell;
-import io.reflection.app.client.component.FormDateBox;
-import io.reflection.app.client.component.LoadingBar;
-import io.reflection.app.client.component.Selector;
-import io.reflection.app.client.component.ToggleRadioButton;
-import io.reflection.app.client.controller.FilterController;
-import io.reflection.app.client.controller.FilterController.Filter;
-import io.reflection.app.client.controller.ItemController;
-import io.reflection.app.client.controller.NavigationController;
-import io.reflection.app.client.controller.NavigationController.Stack;
-import io.reflection.app.client.controller.RankController;
-import io.reflection.app.client.controller.ServiceConstants;
-import io.reflection.app.client.controller.SessionController;
-import io.reflection.app.client.handler.NavigationEventHandler;
-import io.reflection.app.client.helper.AnimationHelper;
-import io.reflection.app.client.helper.ApiCallHelper;
-import io.reflection.app.client.helper.FilterHelper;
-import io.reflection.app.client.helper.FormHelper;
-import io.reflection.app.client.helper.FormattingHelper;
-import io.reflection.app.client.helper.ResponsiveDesignHelper;
-import io.reflection.app.client.helper.TooltipHelper;
-import io.reflection.app.client.part.BootstrapGwtCellTable;
-import io.reflection.app.client.part.ErrorPanel;
-import io.reflection.app.client.part.LoadingIndicator;
-import io.reflection.app.client.part.NoDataPanel;
-import io.reflection.app.client.part.datatypes.RanksGroup;
-import io.reflection.app.client.popup.PremiumPopup;
-import io.reflection.app.client.popup.SignUpPopup;
-import io.reflection.app.client.res.Styles;
-import io.reflection.app.client.res.Styles.ReflectionMainStyles;
-import io.reflection.app.datatypes.shared.Rank;
-import io.reflection.app.shared.util.DataTypeHelper;
+import static io.reflection.app.client.controller.FilterController.*;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -99,9 +57,48 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
 import com.willshex.gson.json.service.shared.StatusType;
 
+import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
+import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
+import io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler;
+import io.reflection.app.client.DefaultEventBus;
+import io.reflection.app.client.cell.LeaderboardAppDetailsCell;
+import io.reflection.app.client.cell.LeaderboardDownloadsCell;
+import io.reflection.app.client.cell.LeaderboardRevenueCell;
+import io.reflection.app.client.component.FormDateBox;
+import io.reflection.app.client.component.LoadingBar;
+import io.reflection.app.client.component.Selector;
+import io.reflection.app.client.component.ToggleRadioButton;
+import io.reflection.app.client.controller.FilterController;
+import io.reflection.app.client.controller.FilterController.Filter;
+import io.reflection.app.client.controller.ItemController;
+import io.reflection.app.client.controller.NavigationController;
+import io.reflection.app.client.controller.NavigationController.Stack;
+import io.reflection.app.client.controller.RankController;
+import io.reflection.app.client.controller.ServiceConstants;
+import io.reflection.app.client.controller.SessionController;
+import io.reflection.app.client.handler.NavigationEventHandler;
+import io.reflection.app.client.helper.AnimationHelper;
+import io.reflection.app.client.helper.ApiCallHelper;
+import io.reflection.app.client.helper.FilterHelper;
+import io.reflection.app.client.helper.FormHelper;
+import io.reflection.app.client.helper.FormattingHelper;
+import io.reflection.app.client.helper.ResponsiveDesignHelper;
+import io.reflection.app.client.helper.TooltipHelper;
+import io.reflection.app.client.part.BootstrapGwtCellTable;
+import io.reflection.app.client.part.ErrorPanel;
+import io.reflection.app.client.part.LoadingIndicator;
+import io.reflection.app.client.part.NoDataPanel;
+import io.reflection.app.client.part.datatypes.RanksGroup;
+import io.reflection.app.client.popup.PremiumPopup;
+import io.reflection.app.client.popup.SignUpPopup;
+import io.reflection.app.client.res.Styles;
+import io.reflection.app.client.res.Styles.ReflectionMainStyles;
+import io.reflection.app.datatypes.shared.Rank;
+import io.reflection.app.shared.util.DataTypeHelper;
+
 /**
  * @author billy1380
- * 
+ *
  */
 public class RanksPage extends Page implements NavigationEventHandler, GetAllTopItemsEventHandler {
 
@@ -299,7 +296,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		ListHandler<RanksGroup> columnSortHandler = new ListHandler<RanksGroup>(RankController.get().getList()) {
 			/*
 			 * (non-Javadoc)
-			 * 
+			 *
 			 * @see com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler#onColumnSort(com.google.gwt.user.cellview.client.ColumnSortEvent)
 			 */
 			@Override
@@ -350,7 +347,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		};
 		rankColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.mhxte6cID());
 
-		AppRankCell appRankCell = new AppRankCell();
+		LeaderboardAppDetailsCell appRankCell = new LeaderboardAppDetailsCell();
 
 		paidColumn = new Column<RanksGroup, Rank>(appRankCell) {
 
@@ -480,7 +477,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 				return SafeHtmlUtils.fromSafeConstant(DataTypeHelper.itemIapState(ItemController.get().lookupItem(rankForListType(object).itemId),
 						IAP_YES_HTML, IAP_NO_HTML,
 						"<span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding " + style.whatsThisTooltipIconStatic()
-								+ "\" data-tooltip=\"No data available\"></span>"));
+						+ "\" data-tooltip=\"No data available\"></span>"));
 			}
 
 		};
@@ -736,13 +733,13 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 				switch (selectedTab) {
 				case (PAID_LIST_TYPE):
 					listType = "toppaidapplications";
-					break;
+				break;
 				case (FREE_LIST_TYPE):
 					listType = "topfreeapplications";
-					break;
+				break;
 				case (GROSSING_LIST_TYPE):
 					listType = "topgrossingapplications";
-					break;
+				break;
 				default:
 					listType = "topallapplications";
 					break;
@@ -751,13 +748,13 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 				switch (selectedTab) {
 				case (PAID_LIST_TYPE):
 					listType = "toppaidipadapplications";
-					break;
+				break;
 				case (FREE_LIST_TYPE):
 					listType = "topfreeipadapplications";
-					break;
+				break;
 				case (GROSSING_LIST_TYPE):
 					listType = "topgrossingipadapplications";
-					break;
+				break;
 				default:
 					listType = "topallipadapplications";
 					break;
@@ -774,18 +771,20 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			String requestData = "listType=" + listType + "&country=" + country + "&category=" + category + "&date=" + date + "&session=" + session;
 
 			RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, URL.encode(Window.Location.getProtocol() + "//" + Window.Location.getHost()
-					+ "/downloadleaderboard"));
+			+ "/downloadleaderboard"));
 
 			builder.setHeader("Content-Type", "application/x-www-form-urlencoded");
 
 			try {
 				builder.sendRequest(requestData, new RequestCallback() {
 
+					@Override
 					public void onError(Request request, Throwable exception) {
 						downloadLeaderboard.getElement().getFirstChildElement().setInnerText("Download");
 						downloadLeaderboard.setEnabled(true);
 					}
 
+					@Override
 					public void onResponseReceived(Request request, Response response) {
 						String csvContent = "data:text/csv;charset=utf-8," + response.getText();
 						Window.open(URL.encode(csvContent), "_self", "");
@@ -819,7 +818,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
 	 * io.reflection.app.client.controller.NavigationController.Stack)
 	 */
@@ -888,7 +887,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
 	 */
 	@Override
@@ -902,7 +901,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.client.page.Page#onDetach()
 	 */
 	@Override
@@ -914,7 +913,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler#getAllTopItemsSuccess(io.reflection.app.api.core.shared.call.GetAllTopItemsRequest
 	 * , io.reflection.app.api.core.shared.call.GetAllTopItemsResponse)
@@ -955,7 +954,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler#getAllTopItemsFailure(io.reflection.app.api.core.shared.call.GetAllTopItemsRequest
 	 * , java.lang.Throwable)
