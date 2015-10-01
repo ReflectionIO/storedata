@@ -20,7 +20,6 @@ import io.reflection.app.api.core.shared.call.event.DeleteLinkedAccountEventHand
 import io.reflection.app.api.core.shared.call.event.GetLinkedAccountsEventHandler;
 import io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler;
 import io.reflection.app.api.core.shared.call.event.UpdateLinkedAccountEventHandler;
-import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.DeleteLinkedAccountCell;
 import io.reflection.app.client.cell.EditLinkedAccountCell;
@@ -121,7 +120,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 			@Override
 			public void onClick(ClickEvent event) {
-				addLinkedAccountPopup.show(true);
+				addLinkedAccountPopup.show("Link an Account", null);
 			}
 		});
 		linkedAccountsTable.setEmptyTableWidget(linkedAccountsEmptyTable);
@@ -363,7 +362,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 	@UiHandler("addAnotherLinkedAccount")
 	void onAddLinkedAccountClicked(ClickEvent event) {
-		addLinkedAccountPopup.show(false);
+		addLinkedAccountPopup.show("Link Another Account", null);
 	}
 
 	/*
@@ -387,17 +386,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	public void linkAccountSuccess(LinkAccountRequest input, LinkAccountResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
 			updateViewFromLinkedAccountCount();
-			addLinkedAccountPopup.setStatusSuccess();
-		} else if (output.error != null) {
-			if (output.error.code == ApiError.InvalidDataAccountCredentials.getCode()) {
-				addLinkedAccountPopup.setStatusErrorInvalidCredentials();
-			} else if (output.error.code == ApiError.InvalidDataAccountVendor.getCode()) {
-				addLinkedAccountPopup.setStatusErrorInvalidVendor();
-			} else { // TODO NULL POINTER EXCEPTION DUE TO DUPLICATE LINKED ACCOUNT
-				addLinkedAccountPopup.setStatusError();
-			}
 		}
-
 	}
 
 	/*
@@ -407,9 +396,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	 * java.lang.Throwable)
 	 */
 	@Override
-	public void linkAccountFailure(LinkAccountRequest input, Throwable caught) {
-		addLinkedAccountPopup.setStatusError();
-	}
+	public void linkAccountFailure(LinkAccountRequest input, Throwable caught) {}
 
 	/*
 	 * (non-Javadoc)

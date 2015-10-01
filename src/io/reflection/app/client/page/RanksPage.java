@@ -45,6 +45,7 @@ import io.reflection.app.client.part.ErrorPanel;
 import io.reflection.app.client.part.LoadingIndicator;
 import io.reflection.app.client.part.NoDataPanel;
 import io.reflection.app.client.part.datatypes.RanksGroup;
+import io.reflection.app.client.popup.AddLinkedAccountPopup;
 import io.reflection.app.client.popup.PremiumPopup;
 import io.reflection.app.client.popup.SignUpPopup;
 import io.reflection.app.client.res.Styles;
@@ -190,6 +191,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	private ReflectionMainStyles style = Styles.STYLES_INSTANCE.reflectionMainStyle();
 	private SignUpPopup signUpPopup = new SignUpPopup();
 	private PremiumPopup premiumPopup = new PremiumPopup();
+	private AddLinkedAccountPopup addLinkedAccountPopup = new AddLinkedAccountPopup();
 
 	public RanksPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -300,7 +302,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		ListHandler<RanksGroup> columnSortHandler = new ListHandler<RanksGroup>(RankController.get().getList()) {
 			/*
 			 * (non-Javadoc)
-			 *
+			 * 
 			 * @see com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler#onColumnSort(com.google.gwt.user.cellview.client.ColumnSortEvent)
 			 */
 			@Override
@@ -365,7 +367,8 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			@Override
 			public void update(int index, RanksGroup object, Rank value) {
 				if (SessionController.get().isValidSession() && !SessionController.get().hasLinkedAccount()) {
-					Window.alert("Link Account Popup");
+					addLinkedAccountPopup.show("Link Your Appstore Account",
+							"You need to link your iTunes Connect account to use this feature, it only takes a moment");
 				} else {
 					signUpPopup.show();
 				}
@@ -386,7 +389,8 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			@Override
 			public void update(int index, RanksGroup object, Rank value) {
 				if (SessionController.get().isValidSession() && !SessionController.get().hasLinkedAccount()) {
-					Window.alert("Link Account Popup");
+					addLinkedAccountPopup.show("Link Your Appstore Account",
+							"You need to link your iTunes Connect account to use this feature, it only takes a moment");
 				} else {
 					signUpPopup.show();
 				}
@@ -406,7 +410,8 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			@Override
 			public void update(int index, RanksGroup object, Rank value) {
 				if (SessionController.get().isValidSession() && !SessionController.get().hasLinkedAccount()) {
-					Window.alert("Link Account Popup");
+					addLinkedAccountPopup.show("Link Your Appstore Account",
+							"You need to link your iTunes Connect account to use this feature, it only takes a moment");
 				} else {
 					signUpPopup.show();
 				}
@@ -438,7 +443,8 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			@Override
 			public void update(int index, RanksGroup object, Rank value) {
 				if (SessionController.get().isValidSession() && !SessionController.get().hasLinkedAccount()) {
-					Window.alert("Link Account Popup");
+					addLinkedAccountPopup.show("Link Your Appstore Account",
+							"You need to link your iTunes Connect account to use this feature, it only takes a moment");
 				} else {
 					signUpPopup.show();
 				}
@@ -461,7 +467,8 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			@Override
 			public void update(int index, RanksGroup object, Rank value) {
 				if (SessionController.get().isValidSession() && !SessionController.get().hasLinkedAccount()) {
-					Window.alert("Link Account Popup");
+					addLinkedAccountPopup.show("Link Your Appstore Account",
+							"You need to link your iTunes Connect account to use this feature, it only takes a moment");
 				} else {
 					signUpPopup.show();
 				}
@@ -481,7 +488,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 				return SafeHtmlUtils.fromSafeConstant(DataTypeHelper.itemIapState(ItemController.get().lookupItem(rankForListType(object).itemId),
 						IAP_YES_HTML, IAP_NO_HTML,
 						"<span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding " + style.whatsThisTooltipIconStatic()
-						+ "\" data-tooltip=\"No data available\"></span>"));
+								+ "\" data-tooltip=\"No data available\"></span>"));
 			}
 
 		};
@@ -738,13 +745,13 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 				switch (selectedTab) {
 				case (PAID_LIST_TYPE):
 					listType = "toppaidapplications";
-				break;
+					break;
 				case (FREE_LIST_TYPE):
 					listType = "topfreeapplications";
-				break;
+					break;
 				case (GROSSING_LIST_TYPE):
 					listType = "topgrossingapplications";
-				break;
+					break;
 				default:
 					listType = "topallapplications";
 					break;
@@ -753,13 +760,13 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 				switch (selectedTab) {
 				case (PAID_LIST_TYPE):
 					listType = "toppaidipadapplications";
-				break;
+					break;
 				case (FREE_LIST_TYPE):
 					listType = "topfreeipadapplications";
-				break;
+					break;
 				case (GROSSING_LIST_TYPE):
 					listType = "topgrossingipadapplications";
-				break;
+					break;
 				default:
 					listType = "topallipadapplications";
 					break;
@@ -774,7 +781,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			String requestData = "listType=" + listType + "&country=" + country + "&category=" + category + "&date=" + date + "&session=" + session;
 
 			RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, URL.encode(Window.Location.getProtocol() + "//" + Window.Location.getHost()
-			+ "/downloadleaderboard"));
+					+ "/downloadleaderboard"));
 
 			builder.setHeader("Content-Type", "application/x-www-form-urlencoded");
 
@@ -821,7 +828,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
 	 * io.reflection.app.client.controller.NavigationController.Stack)
 	 */
@@ -890,7 +897,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
 	 */
 	@Override
@@ -904,7 +911,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.client.page.Page#onDetach()
 	 */
 	@Override
@@ -912,11 +919,14 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		super.onDetach();
 
 		loadingBar.reset();
+		signUpPopup.hide();
+		premiumPopup.hide();
+		addLinkedAccountPopup.hide();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler#getAllTopItemsSuccess(io.reflection.app.api.core.shared.call.GetAllTopItemsRequest
 	 * , io.reflection.app.api.core.shared.call.GetAllTopItemsResponse)
@@ -957,7 +967,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler#getAllTopItemsFailure(io.reflection.app.api.core.shared.call.GetAllTopItemsRequest
 	 * , java.lang.Throwable)
