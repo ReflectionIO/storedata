@@ -1,0 +1,28 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:pop="urn:import:io.reflection.app.client.popup">
+	<ui:import field="io.reflection.app.client.page.PageType.RegisterPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.LoginPageType" />
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
+	<ui:style>
+	
+	</ui:style>
+	<pop:PopupBase ui:field="popup" styleName="{STYLES_INSTANCE.reflectionMainStyle.pageOverlayStandard}">
+
+		<g:HTMLPanel tag="h2" styleName="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFive}">Sign Up for Free to Use This Feature</g:HTMLPanel>
+		<g:HTMLPanel tag="p">You need to link your app store account to use this feature, it's free and takes mere moments.</g:HTMLPanel>
+		<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.buttonsContainer}">
+			<g:InlineHyperlink ui:field="signUpLink" targetHistoryToken="{RegisterPageType.asTargetHistoryToken}" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth}">Sign Me Up</g:InlineHyperlink>
+			<g:InlineHyperlink ui:field="logInLink" targetHistoryToken="{LoginPageType.asTargetHistoryToken}"
+				styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonLink} {STYLES_INSTANCE.reflectionMainStyle.buttonStyle}">
+				Already a member? Login
+			</g:InlineHyperlink>
+		</g:HTMLPanel>
+		<g:HTMLPanel tag="h3" styleName="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingSix}">Don't Have an App Store Account?</g:HTMLPanel>
+		<g:HTMLPanel tag="p">
+			No problem, we will soon be releasing a package designed specifically for investors, marketers and advertisers.
+			<a href="#">Put your name on the waiting list</a>
+			now and we'll let you know when it's ready.
+		</g:HTMLPanel>
+
+	</pop:PopupBase>
+</ui:UiBinder> 

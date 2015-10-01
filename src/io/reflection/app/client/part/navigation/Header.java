@@ -79,7 +79,7 @@ public class Header extends Composite implements NavigationEventHandler, Session
 
 		setLoggedIn(false);
 
-		applyBtn.setTargetHistoryToken(PageType.RegisterPageType.asTargetHistoryToken("requestinvite"));
+		applyBtn.setTargetHistoryToken(PageType.RegisterPageType.asTargetHistoryToken());
 
 		initPanelLeftMenu();
 		initPanelsRight();

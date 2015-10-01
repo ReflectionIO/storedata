@@ -84,6 +84,7 @@ import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
+import io.reflection.app.datatypes.shared.Event;
 import io.reflection.app.datatypes.shared.EventPriorityType;
 import io.reflection.app.datatypes.shared.FormType;
 import io.reflection.app.datatypes.shared.Notification;
@@ -103,6 +104,7 @@ import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.country.CountryServiceProvider;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.datasource.DataSourceServiceProvider;
+import io.reflection.app.service.event.EventServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.service.notification.NotificationServiceProvider;
 import io.reflection.app.service.permission.PermissionServiceProvider;
@@ -358,34 +360,45 @@ public final class Core extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
-			boolean isLoggedIn = false;
 			boolean isAdmin = false;
-			boolean canSeeFullList = false;
+			boolean isPremium = false;
+			boolean isStandardDeveloper = false;
+			boolean canSeePredictions = false;
+			boolean isLoggedIn = false;
 
 			if (input.session != null) {
 				output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 				isLoggedIn = true;
 
-				isAdmin = UserServiceProvider.provide().hasRole(input.session.user, DataTypeHelper.adminRole());
-
 				List<Role> roles = UserServiceProvider.provide().getRoles(input.session.user);
-
+				RoleServiceProvider.provide().inflateRoles(roles);
 				List<Permission> permissions;
-
 				for (Role role : roles) {
-					permissions = RoleServiceProvider.provide().getPermissions(role);
+					if (DataTypeHelper.ROLE_ADMIN_CODE.equals(role.code)) {
+						isAdmin = true;
+						canSeePredictions = true;
+					} else if (DataTypeHelper.ROLE_PREMIUM_CODE.equals(role.code)) {
+						isPremium = true;
+					} else if (DataTypeHelper.ROLE_DEVELOPER_CODE.equals(role.code)) {
+						isStandardDeveloper = true;
+					}
 
+					permissions = RoleServiceProvider.provide().getPermissions(role); // Role permissions
+					permissions.addAll(UserServiceProvider.provide().getPermissions(input.session.user)); // Add permissions of the user
+					PermissionServiceProvider.provide().inflatePermissions(permissions);
 					for (Permission permission : permissions) {
-						if (DataTypeHelper.PERMISSION_FULL_RANK_VIEW_CODE.equals(permission.code)) {
-							canSeeFullList = true;
+						if (isPremium || isStandardDeveloper || DataTypeHelper.ROLE_FIRST_CLOSED_BETA_CODE.equals(role.code)) {
+							if (DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE.equals(permission.code)) {
+								canSeePredictions = true;
+								break;
+							}
+						}
+						if (canSeePredictions) {
 							break;
 						}
 					}
 
-					if (canSeeFullList) {
-						break;
-					}
 				}
 			}
 
@@ -446,7 +459,8 @@ public final class Core extends ActionHandler {
 					for (Rank rank : ranks) {
 						itemIds.add(rank.itemId);
 						int ranking = (collector.isGrossing(listType) ? rank.grossingPosition.intValue() : rank.position.intValue());
-						if ((!isAdmin && ranking <= 5) || (!isLoggedIn && ranking > 10)) {
+						if ((!isAdmin && ranking <= 5) || (!canSeePredictions && ranking > 10)
+								|| (!canSeePredictions && DateTimeComparator.getDateOnlyInstance().compare(input.on, new DateTime().minusDays(2)) != 0)) {
 							rank.downloads = null;
 							rank.revenue = null;
 						}
@@ -456,21 +470,21 @@ public final class Core extends ActionHandler {
 						output.freeRanks = ranks;
 					} else if (collector.isPaid(listType)) {
 						output.paidRanks = ranks;
-					if (!isAdmin && !input.country.a2Code.equals("gb")) {// Remove paid ranks is not UK
-						for (Rank paidRank : output.paidRanks) {
-							paidRank.downloads = null;
-							paidRank.revenue = null;
+						if (!isAdmin && !input.country.a2Code.equals("gb")) {// Remove paid ranks if not UK
+							for (Rank paidRank : output.paidRanks) {
+								paidRank.downloads = null;
+								paidRank.revenue = null;
+							}
 						}
-					}
 					} else if (collector.isGrossing(listType)) {
 						output.grossingRanks = ranks;
 					}
 				}
-			} else if (collector.isFree(input.listType)) {
+			} else if (collector.isFree(input.listType)) { // used only for download
 				ranks = RankServiceProvider.provide().getRanks(input.country, input.category, input.listType, input.on);
 				for (Rank rank : ranks) {
 					itemIds.add(rank.itemId);
-					if (!isAdmin && rank.position.intValue() <= 5) {
+					if (!isAdmin || !isPremium) {
 						rank.downloads = null;
 						rank.revenue = null;
 					}
@@ -481,7 +495,7 @@ public final class Core extends ActionHandler {
 				ranks = RankServiceProvider.provide().getRanks(input.country, input.category, input.listType, input.on);
 				for (Rank rank : ranks) {
 					itemIds.add(rank.itemId);
-					if (!isAdmin && rank.position.intValue() <= 5) {
+					if (!isAdmin || !isPremium) { // used only for download
 						rank.downloads = null;
 						rank.revenue = null;
 					}
@@ -492,7 +506,7 @@ public final class Core extends ActionHandler {
 				ranks = RankServiceProvider.provide().getRanks(input.country, input.category, input.listType, input.on);
 				for (Rank rank : ranks) {
 					itemIds.add(rank.itemId);
-					if (!isAdmin && rank.grossingPosition.intValue() <= 5) {
+					if (!isAdmin || !isPremium) { // used only for download
 						rank.downloads = null;
 						rank.revenue = null;
 					}
@@ -662,33 +676,49 @@ public final class Core extends ActionHandler {
 
 			boolean isAction = input.actionCode != null;
 
-			if (input.accessCode.equalsIgnoreCase("b72b4e32-1062-4cc7-bc6b-52498ee10f09") || input.user.password == null || input.user.password.length() == 0) {
-				// Alpha user or Request invite
+			if (input.accessCode.equalsIgnoreCase("b72b4e32-1062-4cc7-bc6b-52498ee10f09")) { // Alpha user
 				input.user = ValidationHelper.validateAlphaUser(input.user, "input.user");
 			} else {
-				if (isAction) {
+				if (isAction) { // Update password
 					input.user.password = ValidationHelper.validatePassword(input.user.password, "input.user.password");
-				} else {
+				} else { // Registration
 					input.user = ValidationHelper.validateRegisteringUser(input.user, "input.user");
 				}
 			}
 
-			User user = null;
+			User addedUser = null;
 
 			if (isAction) {
-				user = UserServiceProvider.provide().getActionCodeUser(input.actionCode);
+				addedUser = UserServiceProvider.provide().getActionCodeUser(input.actionCode);
 
-				if (user == null)
+				if (addedUser == null)
 					throw new InputValidationException(ApiError.InvalidActionCode.getCode(), ApiError.InvalidActionCode.getMessage("input.actionCode"));
 
-				UserServiceProvider.provide().updateUserPassword(user, input.user.password, Boolean.FALSE);
+				UserServiceProvider.provide().updateUserPassword(addedUser, input.user.password, Boolean.FALSE);
 
-				LOG.info(String.format("Completed user registeration for user [%s %s] and email [%s] and action code [%s]", user.forename, user.surname,
-						user.username, input.actionCode));
+				LOG.info(String.format("Completed user registeration for user [%s %s] and email [%s] and action code [%s]", addedUser.forename,
+						addedUser.surname, addedUser.username, input.actionCode));
 			} else {
-				user = UserServiceProvider.provide().addUser(input.user);
+				addedUser = UserServiceProvider.provide().addUser(input.user);
+				LOG.info(String.format("Added user with name [%s %s] and email [%s],", addedUser.forename, addedUser.surname, addedUser.username));
 
-				LOG.info(String.format("Added user with name [%s %s] and email [%s],", user.forename, user.surname, user.username));
+				if (addedUser != null) {
+					// Add standard developer role
+					Role devRole = ValidationHelper.validateRole(DataTypeHelper.createRole(DataTypeHelper.ROLE_DEVELOPER_CODE), "input.role");
+					UserServiceProvider.provide().assignRole(input.user, devRole);
+					// Notify the registered user
+					Map<String, Object> values = new HashMap<String, Object>();
+					values.put("user", addedUser);
+					Event event = EventServiceProvider.provide().getCodeEvent(DataTypeHelper.REGISTERED_NOW_LINK_EVENT_CODE);
+					String body = NotificationHelper.inflate(values, event.longBody);
+					Notification notification = (new Notification()).from("hello@reflection.io").user(addedUser).event(event).body(body).subject(event.subject);
+					Notification added = NotificationServiceProvider.provide().addNotification(notification);
+					if (added.type != NotificationTypeType.NotificationTypeTypeInternal) {
+						notification.type = NotificationTypeType.NotificationTypeTypeInternal;
+						NotificationServiceProvider.provide().addNotification(notification);
+					}
+				}
+
 			}
 
 			output.status = StatusType.StatusTypeSuccess;
@@ -1021,7 +1051,7 @@ public final class Core extends ActionHandler {
 			if (input.permissionsOnly != Boolean.TRUE) {
 				output.roles = UserServiceProvider.provide().getRoles(input.session.user);
 
-				if (output.roles != null) {
+				if (output.roles != null && !output.roles.isEmpty()) {
 					if (input.idsOnly == Boolean.FALSE) {
 						RoleServiceProvider.provide().inflateRoles(output.roles);
 					}
@@ -1033,6 +1063,8 @@ public final class Core extends ActionHandler {
 							PermissionServiceProvider.provide().inflatePermissions(role.permissions);
 						}
 					}
+				} else {
+					throw new Exception(); // User must have a role
 				}
 			}
 
@@ -1246,9 +1278,9 @@ public final class Core extends ActionHandler {
 			boolean isAdmin = UserServiceProvider.provide().hasRole(input.session.user, DataTypeHelper.adminRole());
 
 			Permission hlaPermission = PermissionServiceProvider.provide().getCodePermission(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE);
-			boolean hasPermission = UserServiceProvider.provide().hasPermission(input.session.user, hlaPermission);
+			boolean hasHlaPermission = UserServiceProvider.provide().hasPermission(input.session.user, hlaPermission);
 
-			if (!hasPermission && !isAdmin) {
+			if (!hasHlaPermission && !isAdmin) {
 				UserServiceProvider.provide().assignPermission(input.session.user, hlaPermission);
 			}
 
@@ -1257,6 +1289,26 @@ public final class Core extends ActionHandler {
 					input.session.user = UserServiceProvider.provide().getUser(input.session.user.id);
 				}
 
+				// If the first linked account, send an email to the user
+				if (!hasHlaPermission) {
+					Map<String, Object> values = new HashMap<String, Object>();
+					values.put("user", input.session.user);
+					values.put("dataaccount", output.account);
+
+					Event event = EventServiceProvider.provide().getCodeEvent(DataTypeHelper.CONFIRMATION_ACCOUNT_LINKED_EVENT_CODE);
+					String body = NotificationHelper.inflate(values, event.longBody);
+
+					Notification notification = (new Notification()).from("hello@reflection.io").user(input.session.user).event(event).body(body)
+							.subject(event.subject);
+					Notification added = NotificationServiceProvider.provide().addNotification(notification);
+
+					if (added.type != NotificationTypeType.NotificationTypeTypeInternal) {
+						notification.type = NotificationTypeType.NotificationTypeTypeInternal;
+						NotificationServiceProvider.provide().addNotification(notification);
+					}
+				}
+
+				// Inform the admin of the linked account
 				User listeningUser = UserServiceProvider.provide().getUsernameUser("chi@reflection.io");
 
 				Map<String, Object> parameters = new HashMap<String, Object>();

@@ -73,14 +73,14 @@ public class BlogPage extends Page implements NavigationEventHandler, GetPostsEv
 		initWidget(uiBinder.createAndBindUi(this));
 
 		// TODO remove unused components if not admin
-		if (!SessionController.get().isLoggedInUserAdmin()) {
+		if (!SessionController.get().isAdmin()) {
 			blogCategories.removeFromParent();
 			blogSortBy.removeFromParent();
 			searchPanel.removeFromParent();
 		}
 
-		FilterHelper.addBlogCategories(blogCategories, SessionController.get().isLoggedInUserAdmin());
-		FilterHelper.addBlogSortBy(blogSortBy, SessionController.get().isLoggedInUserAdmin());
+		FilterHelper.addBlogCategories(blogCategories, SessionController.get().isAdmin());
+		FilterHelper.addBlogSortBy(blogSortBy, SessionController.get().isAdmin());
 
 		NodeList<Element> nodes = Document.get().getElementsByTagName("head");
 		if (nodes != null && nodes.getLength() > 0) {

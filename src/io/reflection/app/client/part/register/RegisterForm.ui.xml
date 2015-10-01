@@ -11,13 +11,8 @@
 		<c:TextField ui:field="surname" labelText="Last Name" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
 		<c:TextField ui:field="company" labelText="Your Company" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
 		<c:TextField ui:field="email" labelText="Email" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
-
-		<g:HTMLPanel ui:field="passwordGroup">
-			<c:PasswordField ui:field="password" labelText="Password" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
-			<c:PasswordField ui:field="confirmPassword" labelText="Confirm Password" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
-		</g:HTMLPanel>
-
-
+		<c:PasswordField ui:field="password" labelText="Create Password" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
+		<c:PasswordField ui:field="confirmPassword" labelText="Confirm Password" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
 		<g:HTMLPanel ui:field="termAndCondGroup" styleName="{STYLES_INSTANCE.reflectionMainStyle.formFieldCheckboxList} {STYLES_INSTANCE.reflectionMainStyle.jsFadeContent}">
 			<ul>
 				<li>
@@ -25,17 +20,13 @@
 				</li>
 			</ul>
 		</g:HTMLPanel>
-
 		<c:LoadingButton ui:field="registerBtn"
 			styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth} {STYLES_INSTANCE.reflectionMainStyle.maintainAfterSubmit} {STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}">
 			Sign Up
 		</c:LoadingButton>
-
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.generalErrorMessage}">
 			<p ui:field="generalErrorParagraph"></p>
 		</div>
-
 	</g:HTMLPanel>
-
 
 </ui:UiBinder> 

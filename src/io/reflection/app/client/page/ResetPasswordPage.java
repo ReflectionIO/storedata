@@ -19,7 +19,6 @@ import io.reflection.app.client.part.login.ResetPasswordForm;
 import io.reflection.app.client.res.Styles;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -39,12 +38,10 @@ public class ResetPasswordPage extends Page implements NavigationEventHandler, C
 
 	@UiField ResetPasswordForm form;
 	@UiField DivElement formSubmittedSuccessPanel;
-	@UiField AnchorElement continueToSiteLink;
 
 	public ResetPasswordPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		continueToSiteLink.setHref(PageType.LoginPageType.asHref("requestinvite"));
 	}
 
 	/*

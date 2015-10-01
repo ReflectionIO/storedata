@@ -56,7 +56,7 @@ public class ManageSubscriptionPage extends Page implements NavigationEventHandl
 
 		User user = SessionController.get().getLoggedInUser();
 
-		if (!SessionController.get().isLoggedInUserAdmin()) {
+		if (!SessionController.get().isAdmin()) {
 			usersText.setInnerHTML("Users <span class=\"text-small\">coming soon</span>");
 			usersItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
 			usersItem.getStyle().setCursor(Cursor.DEFAULT);
@@ -123,7 +123,7 @@ public class ManageSubscriptionPage extends Page implements NavigationEventHandl
 	private boolean isValidStack(Stack current) {
 		return (current != null && PageType.UsersPageType.equals(current.getPage()) && current.getAction() != null
 				&& PageType.ManageSubscriptionPageType.equals(current.getAction()) && current.getParameter(0) != null && (current.getParameter(0).equals(
-				currentUser.id.toString()) || SessionController.get().isLoggedInUserAdmin()));
+				currentUser.id.toString()) || SessionController.get().isAdmin()));
 	}
 
 	/*

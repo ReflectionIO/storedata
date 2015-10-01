@@ -2,11 +2,13 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
 	xmlns:l="urn:import:io.reflection.app.client.part.login" xmlns:pp="urn:import:io.reflection.app.client.page.part">
 
+	<ui:import field="io.reflection.app.client.page.PageType.RegisterPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.LoginPageType" />
+
 	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 
-
 	<ui:style gss="true">
-
+	
 	</ui:style>
 
 	<g:HTMLPanel tag="section"
@@ -41,15 +43,15 @@
 				<li
 					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneHalf} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab}">
 					<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
-					<g:InlineHyperlink ui:field="register" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
-						<span>Sign Up</span>
+					<g:InlineHyperlink targetHistoryToken="{RegisterPageType.asTargetHistoryToken}" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
+						<span>Apply now</span>
 					</g:InlineHyperlink>
 				</li>
 				<li
 					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneHalf} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab} {STYLES_INSTANCE.reflectionMainStyle.isActive}">
 					<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
-					<g:InlineHyperlink ui:field="login" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
-						<span>Log In</span>
+					<g:InlineHyperlink targetHistoryToken="{LoginPageType.asTargetHistoryToken}" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
+						<span>Login</span>
 					</g:InlineHyperlink>
 				</li>
 			</ul>

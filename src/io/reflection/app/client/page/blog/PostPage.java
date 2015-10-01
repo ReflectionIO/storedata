@@ -88,14 +88,14 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 		initWidget(uiBinder.createAndBindUi(this));
 
 		// TODO remove unused components if not admin
-		if (!SessionController.get().isLoggedInUserAdmin()) {
+		if (!SessionController.get().isAdmin()) {
 			blogCategories.removeFromParent();
 			breadcrumbPanel.removeFromParent();
 			searchPanel.removeFromParent();
 			comments.removeFromParent();
 		}
 
-		FilterHelper.addBlogCategories(blogCategories, SessionController.get().isLoggedInUserAdmin());
+		FilterHelper.addBlogCategories(blogCategories, SessionController.get().isAdmin());
 
 		notPublished.setInnerText("NOT PUBLISHED");
 		notPublished.getStyle().setColor(ColorHelper.getReflectionRed());

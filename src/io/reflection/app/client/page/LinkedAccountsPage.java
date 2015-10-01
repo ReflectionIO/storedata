@@ -22,9 +22,9 @@ import io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler;
 import io.reflection.app.api.core.shared.call.event.UpdateLinkedAccountEventHandler;
 import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.client.DefaultEventBus;
+import io.reflection.app.client.cell.DeleteLinkedAccountCell;
+import io.reflection.app.client.cell.EditLinkedAccountCell;
 import io.reflection.app.client.component.LoadingBar;
-import io.reflection.app.client.component.LoadingButton;
-import io.reflection.app.client.component.PopupDialog;
 import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
@@ -37,11 +37,12 @@ import io.reflection.app.client.part.linkaccount.IosMacLinkAccountForm;
 import io.reflection.app.client.part.linkaccount.LinkedAccountChangeEvent.EVENT_TYPE;
 import io.reflection.app.client.part.linkaccount.LinkedAccountChangeEvent.LinkedAccountChangeEventHandler;
 import io.reflection.app.client.part.linkaccount.LinkedAccountsEmptyTable;
+import io.reflection.app.client.popup.AddLinkedAccountPopup;
+import io.reflection.app.client.popup.DeleteLinkedAccountPopup;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.client.res.Styles.ReflectionMainStyles;
 import io.reflection.app.datatypes.shared.DataAccount;
 
-import com.google.gwt.cell.client.ClickableTextCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
@@ -56,9 +57,7 @@ import com.google.gwt.dom.client.TableRowElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
-import com.google.gwt.text.shared.SafeHtmlRenderer;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -69,8 +68,6 @@ import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSe
 import com.google.gwt.user.cellview.client.SafeHtmlHeader;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -96,32 +93,22 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 	@UiField Element linkedAccountsCount;
 
-	@UiField PopupDialog deleteLinkedAccountDialog;
-	@UiField Anchor closeDeleteDialog;
-	@UiField Button cancelDelete;
-	@UiField LoadingButton confirmDelete;
-
-	@UiField PopupDialog addLinkedAccountDialog;
-	@UiField Anchor closeAddDialog;
-
 	private TextColumn<DataAccount> columnAccountName;
 	private Column<DataAccount, SafeHtml> columnStore;
 	private TextColumn<DataAccount> columnDateAdded;
 	private Column<DataAccount, String> columnEdit;
 	private Column<DataAccount, String> columnDelete;
 
-	@UiField IosMacLinkAccountForm iosMacAddForm;
 	@UiField Button addAnotherLinkedAccount;
 
 	private IosMacLinkAccountForm updatingLinkedAccountForm = null;
 
 	private LoadingBar loadingBar = new LoadingBar(false);
+	private AddLinkedAccountPopup addLinkedAccountPopup = new AddLinkedAccountPopup();
+	private DeleteLinkedAccountPopup deleteLinkedAccountPopup = new DeleteLinkedAccountPopup();
 
 	public LinkedAccountsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
-
-		deleteLinkedAccountDialog.removeFromParent();
-		addLinkedAccountDialog.removeFromParent();
 
 		createColumns();
 		linkedAccountsTable.setTableBuilder(new CustomTableBuilder(linkedAccountsTable));
@@ -134,8 +121,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 			@Override
 			public void onClick(ClickEvent event) {
-				addLinkedAccountDialog.center();
-				iosMacAddForm.resetForm();
+				addLinkedAccountPopup.show(true);
 			}
 		});
 		linkedAccountsTable.setEmptyTableWidget(linkedAccountsEmptyTable);
@@ -146,18 +132,6 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		}
 
 		linkedAccountsTable.setLoadingIndicator(AnimationHelper.getLinkedAccountsIndicator(1));
-
-		iosMacAddForm.addLinkedAccountChangeEventHander(new LinkedAccountChangeEventHandler() {
-
-			@Override
-			public void onChange(DataAccount dataAccount, EVENT_TYPE eventType) {
-				iosMacAddForm.setEnabled(false);
-				iosMacAddForm.setStatusLoading("Loading");
-				Document.get().getBody().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formSubmittedLoading());
-				LinkedAccountController.get().linkAccount(iosMacAddForm.getAccountSourceId(), iosMacAddForm.getUsername(), iosMacAddForm.getPassword(),
-						iosMacAddForm.getProperties());
-			}
-		});
 
 		linkedAccountsCount.setInnerSafeHtml(AnimationHelper.getLoaderInlineSafeHTML());
 
@@ -222,8 +196,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 				@Override
 				public void onClick(ClickEvent event) {
-					deleteLinkedAccountDialog.setParameter(rowValue.id);
-					deleteLinkedAccountDialog.center();
+					deleteLinkedAccountPopup.show(rowValue.id);
 				}
 			});
 
@@ -278,9 +251,8 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	protected void onDetach() {
 		super.onDetach();
 
-		Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formSubmittedLoading());
-		addLinkedAccountDialog.hide();
-		deleteLinkedAccountDialog.hide();
+		addLinkedAccountPopup.hide();
+		deleteLinkedAccountPopup.hide();
 		loadingBar.reset();
 	}
 
@@ -295,8 +267,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 				return (object.source != null) ? object.username : "-";
 			}
 		};
-		SafeHtmlHeader accountNameHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Account Name " + AnimationHelper.getSorterSvg()));
-		accountNameHeader.setHeaderStyleNames(style.canBeSorted());
+		SafeHtmlHeader accountNameHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Account Name"));
 		columnAccountName.setCellStyleNames(style.linkedAccountName());
 		linkedAccountsTable.addColumn(columnAccountName, accountNameHeader);
 
@@ -309,8 +280,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 			}
 
 		};
-		SafeHtmlHeader storeHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Store " + AnimationHelper.getSorterSvg()));
-		storeHeader.setHeaderStyleNames(style.canBeSorted());
+		SafeHtmlHeader storeHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Store"));
 		columnStore.setCellStyleNames(style.linkedAccountStore());
 		linkedAccountsTable.addColumn(columnStore, storeHeader);
 
@@ -320,28 +290,18 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 				return (object.source.created != null) ? DATE_FORMATTER_DD_MMM_YYYY.format(object.created, null) : "-";
 			}
 		};
-		SafeHtmlHeader dateAddedHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Date Added " + AnimationHelper.getSorterSvg()));
-		dateAddedHeader.setHeaderStyleNames(style.canBeSorted());
+		SafeHtmlHeader dateAddedHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Date Added"));
 		dateAddedHeader.setHeaderStyleNames(style.tableHeadingDateAdded());
 		columnDateAdded.setCellStyleNames(style.linkedAccountDate());
 		linkedAccountsTable.addColumn(columnDateAdded, dateAddedHeader);
 
-		columnEdit = new Column<DataAccount, String>(new ClickableTextCell(new SafeHtmlRenderer<String>() {
+		columnEdit = new Column<DataAccount, String>(new EditLinkedAccountCell()) {
 
-			@Override
-			public void render(String object, SafeHtmlBuilder builder) {
-				builder.appendHtmlConstant(object);
-			}
-
-			@Override
-			public SafeHtml render(String object) {
-				return SafeHtmlUtils.fromSafeConstant("<a class=\"" + style.refButtonFunctionSmall() + "\" style=\"cursor: pointer\">Edit</a>");
-			}
-		})) {
 			@Override
 			public String getValue(DataAccount object) {
-				return "";
+				return object.id.toString();
 			}
+
 		};
 		columnEdit.setCellStyleNames(style.linkedAccountEdit());
 		linkedAccountsTable.addColumn(columnEdit);
@@ -362,33 +322,21 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 			}
 		});
 
-		columnDelete = new Column<DataAccount, String>(new ClickableTextCell(new SafeHtmlRenderer<String>() {
+		columnDelete = new Column<DataAccount, String>(new DeleteLinkedAccountCell()) {
 
-			@Override
-			public void render(String object, SafeHtmlBuilder builder) {
-				builder.appendHtmlConstant(object);
-			}
-
-			@Override
-			public SafeHtml render(String object) {
-				return SafeHtmlUtils.fromSafeConstant("<a class=\"" + style.refButtonLink() + " " + style.warningText()
-						+ "\" style=\"cursor: pointer\">Delete</a>");
-			}
-		})) {
 			@Override
 			public String getValue(DataAccount object) {
-				return "";
+				return object.id.toString();
 			}
 		};
+
 		columnDelete.setCellStyleNames(style.linkedAccountDelete());
 		linkedAccountsTable.addColumn(columnDelete);
 		columnDelete.setFieldUpdater(new FieldUpdater<DataAccount, String>() {
 
 			@Override
 			public void update(int index, DataAccount object, String value) {
-				deleteLinkedAccountDialog.setParameter(Long.valueOf(object.id.intValue()));
-				deleteLinkedAccountDialog.center();
-				// new FadeInAnimation(deleteAccountOverlay).run(200);
+				deleteLinkedAccountPopup.show(Long.valueOf(object.id.intValue()));
 			}
 		});
 
@@ -415,37 +363,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 	@UiHandler("addAnotherLinkedAccount")
 	void onAddLinkedAccountClicked(ClickEvent event) {
-		addLinkedAccountDialog.center();
-		// if (typeParameter == null) {
-		// mIosMacLink.setTargetHistoryToken(current.toString("iosmac"));
-		// }
-		// if ("iosmac".equals(typeParameter)) {
-		iosMacAddForm.resetForm();
-
-	}
-
-	@UiHandler("cancelDelete")
-	void onCancelDeleteClicked(ClickEvent event) {
-		deleteLinkedAccountDialog.hide();
-	}
-
-	@UiHandler("confirmDelete")
-	void onConfirmDeleteClicked(ClickEvent event) {
-		LinkedAccountController.get().deleteLinkedAccount(LinkedAccountController.get().getLinkedAccount(deleteLinkedAccountDialog.getParameter()));
-		confirmDelete.setStatusLoading("Deleting");
-		// deleteAccountOverlay.setVisible(false);
-	}
-
-	@UiHandler("closeAddDialog")
-	void onCloseAddDialogClicked(ClickEvent event) {
-		event.preventDefault();
-		addLinkedAccountDialog.hide();
-	}
-
-	@UiHandler("closeDeleteDialog")
-	void onCloseDeleteDialogClicked(ClickEvent event) {
-		event.preventDefault();
-		deleteLinkedAccountDialog.hide();
+		addLinkedAccountPopup.show(false);
 	}
 
 	/*
@@ -469,32 +387,15 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	public void linkAccountSuccess(LinkAccountRequest input, LinkAccountResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
 			updateViewFromLinkedAccountCount();
-			iosMacAddForm.setStatusSuccess("Success!");
-			Timer t = new Timer() {
-
-				@Override
-				public void run() {
-					Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formSubmittedLoading());
-					addLinkedAccountDialog.hide();
-					iosMacAddForm.resetForm();
-				}
-			};
-			t.schedule(1000);
+			addLinkedAccountPopup.setStatusSuccess();
 		} else if (output.error != null) {
-			Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formSubmittedLoading());
 			if (output.error.code == ApiError.InvalidDataAccountCredentials.getCode()) {
-				iosMacAddForm.setStatusError("Invalid credentials!");
-				iosMacAddForm.setUsernameError("iTunes Connect username or password entered incorrectly");
-				iosMacAddForm.setPasswordError("iTunes Connect username or password entered incorrectly");
-				iosMacAddForm.setFormErrors();
+				addLinkedAccountPopup.setStatusErrorInvalidCredentials();
 			} else if (output.error.code == ApiError.InvalidDataAccountVendor.getCode()) {
-				iosMacAddForm.setStatusError("Invalid vendor ID!");
-				iosMacAddForm.setVendorError("iTunes Connect vendor number entered incorrectly");
-				iosMacAddForm.setFormErrors();
+				addLinkedAccountPopup.setStatusErrorInvalidVendor();
 			} else { // TODO NULL POINTER EXCEPTION DUE TO DUPLICATE LINKED ACCOUNT
-				iosMacAddForm.setStatusError();
+				addLinkedAccountPopup.setStatusError();
 			}
-			iosMacAddForm.setEnabled(true);
 		}
 
 	}
@@ -507,9 +408,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	 */
 	@Override
 	public void linkAccountFailure(LinkAccountRequest input, Throwable caught) {
-		Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formSubmittedLoading());
-		iosMacAddForm.resetForm();
-		iosMacAddForm.setStatusError();
+		addLinkedAccountPopup.setStatusError();
 	}
 
 	/*
@@ -521,11 +420,10 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	@Override
 	public void deleteLinkedAccountSuccess(DeleteLinkedAccountRequest input, DeleteLinkedAccountResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			confirmDelete.resetStatus();
-			deleteLinkedAccountDialog.hide();
 			updateViewFromLinkedAccountCount();
+			deleteLinkedAccountPopup.setStatusSuccess();
 		} else {
-			confirmDelete.setStatusError();
+			deleteLinkedAccountPopup.setStatusError();
 		}
 
 	}
@@ -538,7 +436,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	 */
 	@Override
 	public void deleteLinkedAccountFailure(DeleteLinkedAccountRequest input, Throwable caught) {
-		confirmDelete.setStatusError();
+		deleteLinkedAccountPopup.setStatusError();
 	}
 
 	/*
