@@ -710,12 +710,15 @@ public final class Core extends ActionHandler {
 					Map<String, Object> values = new HashMap<String, Object>();
 					values.put("user", addedUser);
 					Event event = EventServiceProvider.provide().getCodeEvent(DataTypeHelper.REGISTERED_NOW_LINK_EVENT_CODE);
-					String body = NotificationHelper.inflate(values, event.longBody);
-					Notification notification = (new Notification()).from("hello@reflection.io").user(addedUser).event(event).body(body).subject(event.subject);
-					Notification added = NotificationServiceProvider.provide().addNotification(notification);
-					if (added.type != NotificationTypeType.NotificationTypeTypeInternal) {
-						notification.type = NotificationTypeType.NotificationTypeTypeInternal;
-						NotificationServiceProvider.provide().addNotification(notification);
+					if (event != null) {
+						String body = NotificationHelper.inflate(values, event.longBody);
+						Notification notification = (new Notification()).from("hello@reflection.io").user(addedUser).event(event).body(body)
+								.subject(event.subject);
+						Notification added = NotificationServiceProvider.provide().addNotification(notification);
+						if (added.type != NotificationTypeType.NotificationTypeTypeInternal) {
+							notification.type = NotificationTypeType.NotificationTypeTypeInternal;
+							NotificationServiceProvider.provide().addNotification(notification);
+						}
 					}
 				}
 
@@ -1296,15 +1299,15 @@ public final class Core extends ActionHandler {
 					values.put("dataaccount", output.account);
 
 					Event event = EventServiceProvider.provide().getCodeEvent(DataTypeHelper.CONFIRMATION_ACCOUNT_LINKED_EVENT_CODE);
-					String body = NotificationHelper.inflate(values, event.longBody);
-
-					Notification notification = (new Notification()).from("hello@reflection.io").user(input.session.user).event(event).body(body)
-							.subject(event.subject);
-					Notification added = NotificationServiceProvider.provide().addNotification(notification);
-
-					if (added.type != NotificationTypeType.NotificationTypeTypeInternal) {
-						notification.type = NotificationTypeType.NotificationTypeTypeInternal;
-						NotificationServiceProvider.provide().addNotification(notification);
+					if (event != null) {
+						String body = NotificationHelper.inflate(values, event.longBody);
+						Notification notification = (new Notification()).from("hello@reflection.io").user(input.session.user).event(event).body(body)
+								.subject(event.subject);
+						Notification added = NotificationServiceProvider.provide().addNotification(notification);
+						if (added.type != NotificationTypeType.NotificationTypeTypeInternal) {
+							notification.type = NotificationTypeType.NotificationTypeTypeInternal;
+							NotificationServiceProvider.provide().addNotification(notification);
+						}
 					}
 				}
 
