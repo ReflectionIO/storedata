@@ -125,8 +125,73 @@
 
       // Use for extending
       (function (H) {
-         var localVar,         // local variable
-            Series = H.Series; // shortcut to Highcharts prototype
+
+        var customIconRect;
+        H.wrap(H.Tooltip.prototype, 'refresh', function (proceed) {
+
+          // Now apply the original function with the original arguments, 
+          // which are sliced off this function's arguments
+          proceed.apply(this, Array.prototype.slice.call(arguments, 1));
+
+          var monthNames = [
+            "Jan", "Feb", "Mar",
+            "Apr", "May", "Jun", "Jul",
+            "Aug", "Sep", "Oct",
+            "Nov", "Dec"
+          ];
+
+          // remove previuosly rendered x-axis label rect
+          if(customIconRect !== undefined) {
+            customIconRect.destroy();
+          }
+
+          // Add some code after the original function
+          var $axisLabel = $(this.chart.container).find('.highcharts-axis-label'),
+              leftOffset = 29,
+              axisLabelYPos = arguments[1][0].series.chart.containerHeight - arguments[1][0].series.xAxis.bottom,
+              axisLabelXPos = arguments[1][0].plotX - leftOffset,
+              timeStampString = arguments[1][0].x + "",
+              timeStampString = timeStampString.substring(0,10),
+              xAxisDate = new Date(timeStampString*1000),
+              formattedDate = xAxisDate.getDate() + " " + monthNames[xAxisDate.getMonth()];
+
+          if($axisLabel.length > 0) {            
+
+            var labelYPos = axisLabelYPos + 28,
+                labelXPos = axisLabelXPos + 5;
+
+            $axisLabel.attr("transform", "translate(" + labelXPos + "," + labelYPos + ")");
+            $axisLabel.find("text").html(formattedDate);
+
+          } else {
+            this.chart.renderer.label(formattedDate, axisLabelXPos+5, axisLabelYPos + 28, 'callout', 0, 0, false, true, "axis-label")
+            .css({
+              color: '#fcfdfd',
+              fontSize: '13px',
+              fontFamily: 'Lato',
+              fontWeight: 600
+            })
+            .attr({
+              zIndex: 100
+            })
+            .add();
+          }
+
+          customIconRect = chart.renderer.image('images/axisLabelBackground.png', axisLabelXPos - 5, axisLabelYPos, 67, 34)
+          .attr({
+            zIndex: 99
+          })
+          .add();
+
+          // customIconRect = this.chart.renderer.rect(axisLabelXPos, axisLabelYPos, 57, 21, 10)
+          //   .attr({
+          //       'stroke-width': 0,
+          //       fill: "#1bc79f",
+          //       zIndex: 99
+          //   })
+          //   .add();
+
+        });
       }(Highcharts));
 
       Highcharts.setOptions({
@@ -143,118 +208,118 @@
 					marginTop: 0,
 					backgroundColor: '#fcfdfd',
 					plotBackgroundColor: '#f1f1f6',
-		   		type: 'area',          
+		   		type: 'area',        
 		   		style: {
             fontFamily: 'Lato, sans-serif'
           },
           events: {
-            load: function() {
-                var countIndex = 0;
-                $('#container .highcharts-series path:nth-child(1)').each(function() {
-                  if (countIndex > -1) { // testing
-                    $(this).css("opacity", "0.2");
-                  } else {
-                    $(this).css("opacity", "0.2");
-                  }
-                  countIndex++;
-                });
+            // load: function() { // ANIMATE LINE IN USING SNAP.JS
+            //     var countIndex = 0;
+            //     $('#container .highcharts-series path:nth-child(1)').each(function() {
+            //       if (countIndex > -1) { // testing
+            //         $(this).css("opacity", "0.2");
+            //       } else {
+            //         $(this).css("opacity", "0.2");
+            //       }
+            //       countIndex++;
+            //     });
 
-                var counter = 0,
-                    pathCoords = [],
-                    initialCoordinates = [],
-                    initialFillCoordinates = [];
+            //     var counter = 0,
+            //         pathCoords = [],
+            //         initialCoordinates = [],
+            //         initialFillCoordinates = [];
 
-                $('#container .highcharts-series path:nth-child(2)').each(function(){
-                    $(this).attr("id", "series" + counter);
-                    pathCoords.push($(this).attr("d"));
+            //     $('#container .highcharts-series path:nth-child(2)').each(function(){
+            //         $(this).attr("id", "series" + counter);
+            //         pathCoords.push($(this).attr("d"));
 
-                    var el = Snap('#series' + counter);
-                    var numberOfItems = el.node.pathSegList.numberOfItems;
-                    for(var x=0; x < numberOfItems; x++) {
-                      initialCoordinates.push({
-                        pathSegTypeAsLetter: el.node.pathSegList[x].pathSegTypeAsLetter,
-                        x: el.node.pathSegList[x].x,
-                        y: el.node.pathSegList[x].y
-                      })
-                      el.node.pathSegList[x].y = 454;
-                    }
+            //         var el = Snap('#series' + counter);
+            //         var numberOfItems = el.node.pathSegList.numberOfItems;
+            //         for(var x=0; x < numberOfItems; x++) {
+            //           initialCoordinates.push({
+            //             pathSegTypeAsLetter: el.node.pathSegList[x].pathSegTypeAsLetter,
+            //             x: el.node.pathSegList[x].x,
+            //             y: el.node.pathSegList[x].y
+            //           })
+            //           el.node.pathSegList[x].y = 454;
+            //         }
 
-                    var fillSvg = $(this).parent('.highcharts-series').find('path:first-child').attr("id", "seriesfill" + counter);
-                    var fillEl = Snap("#seriesfill" + counter);
-                    var numberOfItems = fillEl.node.pathSegList.numberOfItems;
-                    for(var x=0; x < numberOfItems; x++) {
-                      initialFillCoordinates.push({
-                        pathSegTypeAsLetter: fillEl.node.pathSegList[x].pathSegTypeAsLetter,
-                        x: fillEl.node.pathSegList[x].x,
-                        y: fillEl.node.pathSegList[x].y
-                      })
-                      fillEl.node.pathSegList[x].y = 454;
-                    }
+            //         var fillSvg = $(this).parent('.highcharts-series').find('path:first-child').attr("id", "seriesfill" + counter);
+            //         var fillEl = Snap("#seriesfill" + counter);
+            //         var numberOfItems = fillEl.node.pathSegList.numberOfItems;
+            //         for(var x=0; x < numberOfItems; x++) {
+            //           initialFillCoordinates.push({
+            //             pathSegTypeAsLetter: fillEl.node.pathSegList[x].pathSegTypeAsLetter,
+            //             x: fillEl.node.pathSegList[x].x,
+            //             y: fillEl.node.pathSegList[x].y
+            //           })
+            //           fillEl.node.pathSegList[x].y = 454;
+            //         }
 
-                  counter++;
-                });
+            //       counter++;
+            //     });
 
-                setTimeout(function(){
-                  var i = 0;
-                  $('#container .highcharts-series path:nth-child(2)').each(function(){
+            //     setTimeout(function(){
+            //       var i = 0;
+            //       $('#container .highcharts-series path:nth-child(2)').each(function(){
                     
-                    var el = Snap('#series' + i);
-                    var numberOfItems = el.node.pathSegList.numberOfItems;
-                    setPoint(0);
+            //         var el = Snap('#series' + i);
+            //         var numberOfItems = el.node.pathSegList.numberOfItems;
+            //         setPoint(0);
 
-                    function setPoint(pointIndex) {
-                      var newPath = "";                      
-                      if(pointIndex < numberOfItems) {
-                        for(var x=0; x < numberOfItems; x++) {
-                          if(x <= pointIndex) {
-                            newPath += initialCoordinates[x].pathSegTypeAsLetter + " " + initialCoordinates[x].x + " " + initialCoordinates[x].y + " ";
-                          } else {
-                            newPath += initialCoordinates[x].pathSegTypeAsLetter + " " + initialCoordinates[x].x + " 454 ";
-                          }                        
-                        }
+            //         function setPoint(pointIndex) {
+            //           var newPath = "";                      
+            //           if(pointIndex < numberOfItems) {
+            //             for(var x=0; x < numberOfItems; x++) {
+            //               if(x <= pointIndex) {
+            //                 newPath += initialCoordinates[x].pathSegTypeAsLetter + " " + initialCoordinates[x].x + " " + initialCoordinates[x].y + " ";
+            //               } else {
+            //                 newPath += initialCoordinates[x].pathSegTypeAsLetter + " " + initialCoordinates[x].x + " 454 ";
+            //               }                        
+            //             }
                         
-                        el.animate({ d: newPath }, 90, mina.easein);
-                        var nextPoint = pointIndex + 1;
-                        setTimeout(function(){
-                          setPoint(nextPoint);
-                        }, 20);
-                      }
-                    }
+            //             el.animate({ d: newPath }, 90, mina.easein);
+            //             var nextPoint = pointIndex + 1;
+            //             setTimeout(function(){
+            //               setPoint(nextPoint);
+            //             }, 20);
+            //           }
+            //         }
 
-                    i++;
-                  });
+            //         i++;
+            //       });
 
-                  var f = 0;
-                  $('#container .highcharts-series path:nth-child(1)').each(function(){
+            //       var f = 0;
+            //       $('#container .highcharts-series path:nth-child(1)').each(function(){
                     
-                    var fillEl = Snap('#seriesfill' + f);
-                    var numberOfItems = fillEl.node.pathSegList.numberOfItems;
-                    setFillPoint(0);
+            //         var fillEl = Snap('#seriesfill' + f);
+            //         var numberOfItems = fillEl.node.pathSegList.numberOfItems;
+            //         setFillPoint(0);
 
-                    function setFillPoint(pointIndex) {
-                      var newPath = "";                      
-                      if(pointIndex < numberOfItems) {
-                        for(var x=0; x < numberOfItems; x++) {
-                          if(x <= pointIndex) {
-                            newPath += initialFillCoordinates[x].pathSegTypeAsLetter + " " + initialFillCoordinates[x].x + " " + initialFillCoordinates[x].y + " ";
-                          } else {
-                            newPath += initialFillCoordinates[x].pathSegTypeAsLetter + " " + initialFillCoordinates[x].x + " 454 ";
-                          }                        
-                        }
+            //         function setFillPoint(pointIndex) {
+            //           var newPath = "";                      
+            //           if(pointIndex < numberOfItems) {
+            //             for(var x=0; x < numberOfItems; x++) {
+            //               if(x <= pointIndex) {
+            //                 newPath += initialFillCoordinates[x].pathSegTypeAsLetter + " " + initialFillCoordinates[x].x + " " + initialFillCoordinates[x].y + " ";
+            //               } else {
+            //                 newPath += initialFillCoordinates[x].pathSegTypeAsLetter + " " + initialFillCoordinates[x].x + " 454 ";
+            //               }                        
+            //             }
                         
-                        fillEl.animate({ d: newPath }, 90, mina.easein);
-                        var nextPoint = pointIndex + 1;
-                        setTimeout(function(){
-                          setFillPoint(nextPoint);
-                        }, 20);
-                      }
-                    }
+            //             fillEl.animate({ d: newPath }, 90, mina.easein);
+            //             var nextPoint = pointIndex + 1;
+            //             setTimeout(function(){
+            //               setFillPoint(nextPoint);
+            //             }, 20);
+            //           }
+            //         }
 
-                    f++;
-                  });
-                }, 4500);
+            //         f++;
+            //       });
+            //     }, 4500);
 
-            }
+            // }
           }
 			  },
 			  legend: {
@@ -263,7 +328,7 @@
 			  title: {
             text: ''
         },
-        yAxis: {
+        yAxis: [{
           offset: -30,
           showFirstLabel: false,
           showLastLabel: false,
@@ -278,7 +343,23 @@
           title: {
           	text: null
           }            
-        },
+        }, {
+          offset: -30,
+          showFirstLabel: false,
+          showLastLabel: false,
+          gridLineColor: '#e1e5e8',
+          labels: {
+            align: 'right',
+            style: {
+              color: '#ff496a',
+              fontSize: "13px"
+            }
+          },
+          title: {
+            text: null
+          },
+          opposite: true
+        }],
         xAxis: {
         	startOnTick: false,
         	endOnTick: false,
@@ -298,7 +379,7 @@
           labels: {
           	align: 'center',
             x: 0,
-            y: 30,
+            y: 28,
             step: 4,
             style: {
               color: '#81879d',
@@ -333,85 +414,93 @@
       	},
         series:          
            [{
-            id: 'monument',
-            name: "Monument Valley",
+            yAxis: 0,
+            id: 'revenue',
+            name: "Revenue",
             data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 116.4, 194.1, 95.6, 54.4, 29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 144.0, 176.0, 135.6, 106.4, 129.2, 144.0, 148.5, 116.4],
             events: {
-              click: function() {
-                var that = this;
+              // click: function() {
+              //   var that = this;
 
-                for(var i = 0; i < this.chart.series.length; i++) {
-                  if(i !== that.index) {
-                    var count = 0;
-                    var isCurrentlyHighlighted = false;
-                    $('#container .highcharts-series').each(function(){
-                      if(count == i) {
-                        var thisFillPath = $(this).find('path:nth-child(2)');                        
-                        if(thisFillPath.attr("stroke-width") == 2.1) {
-                          isCurrentlyHighlighted = true
-                          that.chart.series[i].update({
-                            lineWidth: 2
-                          });                      
-                          var counterTwo = 0;
-                          $('#container .highcharts-series').each(function(){
-                            if(counterTwo == count) {
-                              thisFillPath = thisFillPath = $(this).find('path:nth-child(2)');
-                            }
-                            counterTwo++;
-                          });                          
-                          thisFillPath.css("opacity", "1");
-                          thisFillPath.animate({ "opacity": 0.2 }, 250);
-                          thisFillPath.siblings("path").css("opacity", "0.2");
-                          thisFillPath.siblings("path").animate({ "opacity": 0 }, 250);
-                        }
-                      }
-                      count++;
-                    });
-                  }
-                };
+              //   for(var i = 0; i < this.chart.series.length; i++) {
+              //     if(i !== that.index) {
+              //       var count = 0;
+              //       var isCurrentlyHighlighted = false;
+              //       $('#container .highcharts-series').each(function(){
+              //         if(count == i) {
+              //           var thisFillPath = $(this).find('path:nth-child(2)');                        
+              //           if(thisFillPath.attr("stroke-width") == 2.1) {
+              //             isCurrentlyHighlighted = true
+              //             that.chart.series[i].update({
+              //               lineWidth: 2
+              //             });                      
+              //             var counterTwo = 0;
+              //             $('#container .highcharts-series').each(function(){
+              //               if(counterTwo == count) {
+              //                 thisFillPath = thisFillPath = $(this).find('path:nth-child(2)');
+              //               }
+              //               counterTwo++;
+              //             });                          
+              //             thisFillPath.css("opacity", "1");
+              //             thisFillPath.animate({ "opacity": 0.2 }, 250);
+              //             thisFillPath.siblings("path").css("opacity", "0.2");
+              //             thisFillPath.siblings("path").animate({ "opacity": 0 }, 250);
+              //           }
+              //         }
+              //         count++;
+              //       });
+              //     }
+              //   };
 
-                this.update({
-                  lineWidth: 2.1
-                });
+              //   this.update({
+              //     lineWidth: 2.1
+              //   });
 
-                $('#container .highcharts-series path:nth-child(2)').each(function(){
-                  if($(this).attr("stroke-width") == 2.1) {
-                    $(this).css("opacity", "1");
-                    $(this).siblings("path").css("opacity", "0");
-                    $(this).siblings("path").animate({ "opacity": 0.2 }, 250);
-                  }
-                });
-              },
-              mouseOver: function () {
-                setTimeout(function(){
-                  $('#container .highcharts-series path:nth-child(2)').each(function(){
-                    if($(this).attr("stroke-width") == 3) {
-                      $(this).css("opacity", 1);
-                    }
-                  });
-                },10);
-              },
-              mouseOut: function () {
-                setTimeout(function(){
-                  $('#container .highcharts-series path:nth-child(2)').each(function(){
-                    if($(this).attr("stroke-width") == 2) {
-                      $(this).css("opacity", 0.2);
-                    }
-                  });
-                },10);
-              }
+              //   $('#container .highcharts-series path:nth-child(2)').each(function(){
+              //     if($(this).attr("stroke-width") == 2.1) {
+              //       $(this).css("opacity", "1");
+              //       $(this).siblings("path").css("opacity", "0");
+              //       $(this).siblings("path").animate({ "opacity": 0.2 }, 250);
+              //     }
+              //   });
+              // },
+              // mouseOver: function () {
+              //   setTimeout(function(){
+              //     $('#container .highcharts-series path:nth-child(2)').each(function(){
+              //       if($(this).attr("stroke-width") == 3) {
+              //         $(this).css("opacity", 1);
+              //       }
+              //     });
+              //   },10);
+              // },
+              // mouseOut: function () {
+              //   setTimeout(function(){
+              //     $('#container .highcharts-series path:nth-child(2)').each(function(){
+              //       if($(this).attr("stroke-width") == 2) {
+              //         $(this).css("opacity", 0.2);
+              //       }
+              //     });
+              //   },10);
+              // }
             },
             pointStart: Date.UTC(2015, 2, 1),
             pointInterval: 24 * 3600 * 1000, // one day
-            color: '#1bc79f',
+            color: '#6d69c5',
 						lineWidth: 2,
-						lineColor: '#1bc79f',
+						lineColor: '#6d69c5',
+            fillColor: {
+              linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
+              stops: [
+                [0, 'rgba(109,105,197,0.14)'],
+                [1, 'rgba(27,199,159,0.14)']
+              ]
+            },            
 						marker: {
           		enabled: false,
           		states: {
           			hover: {
           				enabled: true,
-          				fillColor: '#1bc79f',
+          				fillColor: '#6d69c5',
                   lineWidth: 0,
                   lineWidthPlus: 0,
                   radius: 4,
@@ -419,209 +508,95 @@
           			}
           		}
           	}
-	     //    },
-	     //    {
-      //       id: 'candy',
-      //       name: "Candy Crush Saga",
-      //       data: [19.9, 21.5, 36.4, 50.2, 100.0, 220.0, 225.6, 250.5, 220.4, 170.1, 150.6, 100.4, 80.9, 71.5, 85.4, 90.2, 45.0, 10.0, 22.0, 30.0, 41.5, 35.4, 40.2, 45.0, 30.0, 22.0],
-      //       events: {
-      //         click: function() {
-      //           var that = this;
-
-      //           for(var i = 0; i < this.chart.series.length; i++) {
-      //             if(i !== that.index) {
-      //               var count = 0;
-      //               var isCurrentlyHighlighted = false;
-      //               $('#container .highcharts-series').each(function(){
-      //                 if(count == i) {
-      //                   var thisFillPath = $(this).find('path:nth-child(2)');                        
-      //                   if(thisFillPath.attr("stroke-width") == 2.1) {
-      //                     isCurrentlyHighlighted = true
-      //                     that.chart.series[i].update({
-      //                       lineWidth: 2
-      //                     });                      
-      //                     var counterTwo = 0;
-      //                     $('#container .highcharts-series').each(function(){
-      //                       if(counterTwo == count) {
-      //                         thisFillPath = thisFillPath = $(this).find('path:nth-child(2)');
-      //                       }
-      //                       counterTwo++;
-      //                     });                          
-      //                     thisFillPath.css("opacity", "1");
-      //                     thisFillPath.animate({ "opacity": 0.2 }, 250);
-      //                     thisFillPath.siblings("path").css("opacity", "0.2");
-      //                     thisFillPath.siblings("path").animate({ "opacity": 0 }, 250);
-      //                   }
-      //                 }
-      //                 count++;
-      //               });
-      //             }
-      //           };
-
-      //           this.update({
-      //             lineWidth: 2.1
-      //           });
-
-      //           $('#container .highcharts-series path:nth-child(2)').each(function(){
-      //             if($(this).attr("stroke-width") == 2.1) {
-      //               $(this).css("opacity", "1");
-      //               $(this).siblings("path").css("opacity", "0");
-      //               $(this).siblings("path").animate({ "opacity": 0.2 }, 250);
-      //             }
-      //           });
-      //         },
-      //         mouseOver: function () {
-      //           setTimeout(function(){
-      //             $('#container .highcharts-series path:nth-child(2)').each(function(){
-      //             if($(this).attr("stroke-width") == 3) {
-      //               $(this).css("opacity", 1);
-      //             }
-      //           });
-      //           },10);
-      //         },
-      //         mouseOut: function () {
-      //           setTimeout(function(){
-      //             $('#container .highcharts-series path:nth-child(2)').each(function(){
-      //               if($(this).attr("stroke-width") == 2) {
-      //                 $(this).css("opacity", 0.2);
-      //               }
-      //             });
-      //           },10);
-      //         }
-      //       },
-      //       pointStart: Date.UTC(2015, 2, 1),
-      //       pointInterval: 24 * 3600 * 1000, // one day
-						// color: '#ffb449',
-						// lineWidth: 2,
-						// lineColor: '#ffb449',
-      //       marker: {
-      //     		enabled: false,
-      //     		states: {
-      //     			hover: {
-      //     				enabled: true,
-      //     				fillColor: '#ffb449',
-      //             lineWidth: 0,
-      //             lineWidthPlus: 0,
-      //             radius: 4,
-      //             radiusPlus: 0,
-      //     			}
-      //     		}
-      //     	}
-      //   	},
-      //     {
-      //       id: 'zookeeper',
-      //       name: "Zoo Keeper Ken",
-      //       data: [39.9, 41.5, 56.4, 75.2, 130.0, 180.0, 175.6, 170.5, 160.4, 150.1, 120.6, 90.4, 80.9, 71.5, 35.4, 20.2, 45.0, 20.0, 22.0, 30.0, 81.5, 95.4, 60.2, 45.0, 30.0, 22.0],
-      //       events: {
-      //         click: function() {
-      //           var that = this;
-
-      //           for(var i = 0; i < this.chart.series.length; i++) {
-      //             if(i !== that.index) {
-      //               var count = 0;
-      //               var isCurrentlyHighlighted = false;
-      //               $('#container .highcharts-series').each(function(){
-      //                 if(count == i) {
-      //                   var thisFillPath = $(this).find('path:nth-child(2)');                        
-      //                   if(thisFillPath.attr("stroke-width") == 2.1) {
-      //                     isCurrentlyHighlighted = true
-      //                     that.chart.series[i].update({
-      //                       lineWidth: 2
-      //                     });                      
-      //                     var counterTwo = 0;
-      //                     $('#container .highcharts-series').each(function(){
-      //                       if(counterTwo == count) {
-      //                         thisFillPath = thisFillPath = $(this).find('path:nth-child(2)');
-      //                       }
-      //                       counterTwo++;
-      //                     });                          
-      //                     thisFillPath.css("opacity", "1");
-      //                     thisFillPath.animate({ "opacity": 0.2 }, 250);
-      //                     thisFillPath.siblings("path").css("opacity", "0.2");
-      //                     thisFillPath.siblings("path").animate({ "opacity": 0 }, 250);
-      //                   }
-      //                 }
-      //                 count++;
-      //               });
-      //             }
-      //           };
-
-      //           this.update({
-      //             lineWidth: 2.1
-      //           });
-
-      //           $('#container .highcharts-series path:nth-child(2)').each(function(){
-      //             if($(this).attr("stroke-width") == 2.1) {
-      //               $(this).css("opacity", "1");
-      //               $(this).siblings("path").css("opacity", "0");
-      //               $(this).siblings("path").animate({ "opacity": 0.2 }, 250);
-      //             }
-      //           });
-      //         },
-      //         mouseOver: function () {
-      //           setTimeout(function(){
-      //             $('#container .highcharts-series path:nth-child(2)').each(function(){
-      //             if($(this).attr("stroke-width") == 3) {
-      //               $(this).css("opacity", 1);
-      //             }
-      //           });
-      //           },10);
-      //         },
-      //         mouseOut: function () {
-      //           setTimeout(function(){
-      //             $('#container .highcharts-series path:nth-child(2)').each(function(){
-      //               if($(this).attr("stroke-width") == 2) {
-      //                 $(this).css("opacity", 0.2);
-      //               }
-      //             });
-      //           },10);
-      //         }
-      //       },
-      //       pointStart: Date.UTC(2015, 2, 1),
-      //       pointInterval: 24 * 3600 * 1000, // one day
-      //       color: '#ff496a',
-      //       lineWidth: 2,
-      //       lineColor: '#ff496a',
-      //       marker: {
-      //         enabled: false,
-      //         states: {
-      //           hover: {
-      //             enabled: true,
-      //             fillColor: '#ff496a',
-      //             lineWidth: 0,
-      //             lineWidthPlus: 0,
-      //             radius: 4,
-      //             radiusPlus: 0,
-      //           }
-      //         }
-      //       }
           },
+          {
+            yAxis: 1,
+            name: "Rank",
+            id : 'rank',
+            data: [29.9, 31.5, 61.4, 77.2, 80.0, 90.0, 100.6, 90.5, 80.4, 75.1, 70.6, 60.4, 40.9, 30.5, 20.4, 10.2, 65.0, 80.0, 90.0, 100.0, 75.6, 100.4, 110.2, 120.0, 105.5, 90.4],
+            pointStart: Date.UTC(2015, 2, 1),
+            pointInterval: 24 * 3600 * 1000, // one day
+            fillOpacity: 0,
+            color: '#2ecaa7',
+            lineWidth: 2,
+            lineWidthPlus: 0,
+            lineColor: '#2ecaa7',
+            dashStyle: 'dash',
+            marker: {
+              enabled: false,
+              states: {
+                hover: {
+                  enabled: true,
+                  fillColor: '#2ecaa7',
+                  lineWidth: 0,
+                  lineWidthPlus: 0,
+                  radius: 4,
+                  radiusPlus: 0,
+                }
+              }
+            }
+          },
+          {
+            yAxis: 1,
+            name: "Downloads",
+            id : 'downloads',
+            data: [19.9, 41.5, 51.4, 57.2, 70.0, 60.0, 62.6, 55.5, 40.4, 45.1, 40.6, 30.4, 12.9, 10.5, 40.4, 50.2, 45.0, 60.0, 70.0, 60.0, 65.6, 80.4, 90.2, 80.0, 75.5, 70.4],
+            pointStart: Date.UTC(2015, 2, 1),
+            pointInterval: 24 * 3600 * 1000, // one day
+            fillOpacity: 0,
+            color: '#ff496a',
+            lineWidth: 2,
+            lineWidthPlus: 0,
+            lineColor: '#ff496a',
+            dashStyle: 'dash',
+            marker: {
+              enabled: false,
+              states: {
+                hover: {
+                  enabled: true,
+                  fillColor: '#ff496a',
+                  lineWidth: 0,
+                  lineWidthPlus: 0,
+                  radius: 4,
+                  radiusPlus: 0,
+                }
+              }
+            }
+          }
         ],
         tooltip: {
         	useHTML: true,
-        	shared: false,
+        	shared: true,
           formatter: function() {
-            var s = "<h2 style=color:" + this.point.color + ">" + this.y + ' ' + this.series.name + "</h2>", pointIndex = this.series.xData.indexOf(this.x);
-            $.each(this.series.chart.series, function () {
-                s += '<div><span style=color:' + this.color + '>' + this.data[pointIndex].y + '</span>: ' +
-                    this.name + '</div>';
+            var s = "";
+            $.each(this.points, function (index, value) {                
+                var chartSeries = value.series.chart.series[index];
+                var imgString = "";                
+                if(chartSeries.name == "Revenue") {
+                  imgString = "<img src=images/icon-chart-revenue.png alt='Revenue icon' class=icon-revenue /> &pound;";
+                } else if (chartSeries.name == "Downloads") {
+                  imgString = "<img src=images/icon-chart-downloads.png alt='Downloads icon' class=icon-downloads />";
+                } else if (chartSeries.name == "Rank") {
+                  imgString = "<img src=images/icon-chart-rank.png alt='Rank icon' class=icon-rank />";
+                }
+                s += '<div class="custom-tooltip ' + chartSeries.name + '" style="background-color: ' + chartSeries.color + '">' + imgString + value.y + '</div>';
             });
             return s;
           },
-        	backgroundColor: '#fcfdfd',
-          borderWidth: 1,
+        	backgroundColor: 'transparent',
+          borderWidth: 0,
           borderColor: '#dae3ed',
 			    crosshairs: [{
             width: 1,
-            color: '#ff496a'
+            color: '#81879d'
           }],
-          positioner: function (labelWidth, labelHeight, point) {
-          		//console.log(labelWidth, labelHeight);
-              return { x: point.plotX + 40, y: point.plotY};
-          },
+          // positioner: function (labelWidth, labelHeight, point) {
+          // 		//console.log(labelWidth, labelHeight);
+          //     return { x: point.plotX + 40, y: point.plotY};
+          // },
           shadow: {
             color: 'rgba(0,0,0,0.24)',
-            width: 7,
+            width: 0,
             offsetX: 1,
             offsetY: 1
         	}

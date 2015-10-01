@@ -18,12 +18,11 @@
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.loginContent}">
 				<blockquote
 					class="{STYLES_INSTANCE.reflectionMainStyle.blockquoteLarge} {STYLES_INSTANCE.reflectionMainStyle.blockquoteOnPurple} {STYLES_INSTANCE.reflectionMainStyle.blockquoteLogin}">
-					<p>We see our customers as invited guests to a party, and we are the hosts. It's our job every day to make every important aspect of the customer
-						experience a little bit better.</p>
+					<p>Reflection’s approach to let developers have input on feature development is unique and refreshing. A great addition to the app intelligence space.</p>
 					<footer>
 						<cite>
-							<span>Jeff Bezos</span>
-							Founder, Amazon
+							<span>Saad Choudri</span>
+							Chief Commercial Officer, Miniclip
 						</cite>
 					</footer>
 				</blockquote>
@@ -45,7 +44,7 @@
 					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneHalf} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab}">
 					<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
 					<g:InlineHyperlink targetHistoryToken="{RegisterPageType.asTargetHistoryToken}" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
-						<span>Apply now</span>
+						<span>Sign Up</span>
 					</g:InlineHyperlink>
 				</li>
 				<li
