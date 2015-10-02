@@ -178,7 +178,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	private TextHeader grossingHeader = new TextHeader("Grossing");
 	private TextHeader priceHeader = new TextHeader("Price");
 	private SafeHtmlHeader iapHeader = new SafeHtmlHeader(
-			SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"In App Purchases\">IAP</span>"));
+			SafeHtmlUtils.fromTrustedString("<span>IAP</span><span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding whats-this-tooltip-icon-static\" data-tooltip=\"In App Purchases\"></span>"));
 
 	private String selectedTab = OVERALL_LIST_TYPE;
 	private String previousFilter;
