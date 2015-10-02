@@ -7,6 +7,23 @@
 //
 package io.reflection.app.client.controller;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.Widget;
+import com.googlecode.gwt.crypto.bouncycastle.util.encoders.Base64;
+import com.spacehopperstudios.utility.StringUtils;
+import com.willshex.gson.json.service.shared.Error;
+
 import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.handler.NavigationEventHandler;
@@ -27,26 +44,9 @@ import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.Widget;
-import com.googlecode.gwt.crypto.bouncycastle.util.encoders.Base64;
-import com.spacehopperstudios.utility.StringUtils;
-import com.willshex.gson.json.service.shared.Error;
-
 /**
  * @author billy1380
- * 
+ *
  */
 public class NavigationController implements ValueChangeHandler<String>, SessionEventHandler, UserPowersEventHandler {
 
@@ -233,7 +233,10 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 
 	private NavigationController() {
 		pages.put(PageType.HomePageType.toString(), new HomePage());
-		MixPanelApi.get().init("400e244ec1aab9ad548fe51024506310");
+		// Live
+		// MixPanelApi.get().init("69afe8ba753ea33015dbd4cdbf11d1c8");
+		// Dev
+		MixPanelApi.get().init("de7297c03772ca384bba5483b63f5e45");
 	}
 
 	/**
@@ -422,7 +425,7 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.google.gwt.event.logical.shared.ValueChangeHandler#onValueChange( com.google.gwt.event.logical.shared.ValueChangeEvent)
 	 */
 	@Override
@@ -464,7 +467,7 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void setNotLoaded() {
 		loaded = false;
@@ -497,7 +500,7 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoggedIn(io.reflection.app.datatypes.shared.User,
 	 * io.reflection.app.api.shared.datatypes.Session)
 	 */
@@ -506,13 +509,13 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoggedOut()
 	 */
 	@Override
 	public void userLoggedOut() {
 		Page currentHomePage = pages.get(PageType.HomePageType);
-		if (currentHomePage instanceof HomePage) { return; }
+		if (currentHomePage instanceof HomePage) return;
 
 		// homePage init in the constructor
 
@@ -522,7 +525,7 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoginFailed(com.willshex.gson.json.service.shared.Error)
 	 */
 	@Override
@@ -532,13 +535,13 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.client.handler.user.UserPowersEventHandler#gotUserPowers(io.reflection.app.datatypes.shared.User, java.util.List, java.util.List)
 	 */
 	@Override
 	public void gotUserPowers(User user, List<Role> roles, List<Permission> permissions) {
 		Page currentHomePage = pages.get(PageType.HomePageType);
-		if (currentHomePage instanceof LoggedInHomePage) { return; }
+		if (currentHomePage instanceof LoggedInHomePage) return;
 
 		if (loggedInHomePage == null) {
 			loggedInHomePage = new LoggedInHomePage();
@@ -550,7 +553,7 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.client.handler.user.UserPowersEventHandler#getGetUserPowersFailed(com.willshex.gson.json.service.shared.Error)
 	 */
 	@Override
@@ -559,7 +562,7 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void resetSemiPublicPages() {
 		PostController.get().reset();
