@@ -72,13 +72,12 @@ public class AddLinkedAccountPopup extends Composite implements LinkAccountEvent
 			RootPanel.get().add(this);
 			DefaultEventBus.get().addHandlerToSource(LinkAccountEventHandler.TYPE, LinkedAccountController.get(), this);
 		}
-		popup.show();
-
 		iosMacAddForm.resetForm();
 		iosMacAddForm.setTitleText(title);
 		if (subtitle != null) {
 			iosMacAddForm.setSubtitleText(subtitle);
 		}
+		popup.show();
 	}
 
 	public void hide() {
