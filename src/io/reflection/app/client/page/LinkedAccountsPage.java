@@ -357,7 +357,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		if (count >= 0) {
 			linkedAccountsCount.setInnerText(Long.toString(count));
 		}
-		setTableEmpty(count == 0);
+		setTableEmpty(count <= 0);
 	}
 
 	@UiHandler("addAnotherLinkedAccount")
