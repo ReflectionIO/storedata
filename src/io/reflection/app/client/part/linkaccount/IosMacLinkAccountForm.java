@@ -364,7 +364,6 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 		password.clear();
 		vendorId.setText("");
 		vendorId.hideNote();
-		linkAccountBtn.resetStatus();
 		setEnabled(true);
 	}
 

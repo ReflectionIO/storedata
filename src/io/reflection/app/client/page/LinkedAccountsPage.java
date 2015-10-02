@@ -98,7 +98,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	private Column<DataAccount, String> columnEdit;
 	private Column<DataAccount, String> columnDelete;
 
-	@UiField Button addAnotherLinkedAccount;
+	@UiField Button addAnotherLinkedAccountBtn;
 
 	private IosMacLinkAccountForm updatingLinkedAccountForm = null;
 
@@ -348,7 +348,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	}
 
 	private void setTableEmpty(boolean empty) {
-		addAnotherLinkedAccount.setEnabled(!empty);
+		addAnotherLinkedAccountBtn.setEnabled(!empty);
 		linkedAccountsTable.setStyleName(style.tableLinkedAccountsDisabled(), empty);
 	}
 
@@ -360,7 +360,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		setTableEmpty(count <= 0);
 	}
 
-	@UiHandler("addAnotherLinkedAccount")
+	@UiHandler("addAnotherLinkedAccountBtn")
 	void onAddLinkedAccountClicked(ClickEvent event) {
 		addLinkedAccountPopup.show("Link Another Account", null);
 	}

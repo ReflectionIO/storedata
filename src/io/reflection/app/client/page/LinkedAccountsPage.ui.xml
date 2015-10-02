@@ -26,7 +26,7 @@
 			<cv:CellTable ui:field="linkedAccountsTable" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData} {STYLES_INSTANCE.reflectionMainStyle.tableLinkedAccounts}" />
 		</div>
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__row}">
-			<g:Button ui:field="addAnotherLinkedAccount" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall}" enabled="false">Link Another Account</g:Button>
+			<g:Button ui:field="addAnotherLinkedAccountBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall}" enabled="false">Link Another Account</g:Button>
 		</div>
 
 	</g:HTMLPanel>
