@@ -25,6 +25,7 @@ import com.google.gson.JsonPrimitive;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.FieldSetElement;
 import com.google.gwt.dom.client.HeadingElement;
+import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
@@ -50,6 +51,7 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	@UiField FieldSetElement fieldset;
 
 	@UiField HeadingElement title;
+	@UiField ParagraphElement subtitle;
 
 	@UiField TextField accountUsername;
 	private String accountUsernameError;
@@ -67,7 +69,7 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	public IosMacLinkAccountForm() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		title.removeFromParent();
+		subtitle.removeFromParent();
 
 		vendorId.setTooltip("Your Vendor ID is an 8 digit number beginning with 8. See this <a target=\"_blank\" href=\""
 				+ PageType.BlogPostPageType.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE, "finding_your_vendor_id_on_itunesconnect").asString()
@@ -93,10 +95,14 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	}
 
 	public void setTitleText(String text) {
-		if (!fieldset.isOrHasChild(title)) {
-			fieldset.insertFirst(title);
-		}
 		title.setInnerText(text);
+	}
+
+	public void setSubtitleText(String text) {
+		if (!fieldset.isOrHasChild(subtitle)) {
+			fieldset.insertAfter(subtitle, title);
+		}
+		subtitle.setInnerText(text);
 	}
 
 	public void setTitleStyleName(String style) {
@@ -358,7 +364,6 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 		password.clear();
 		vendorId.setText("");
 		vendorId.hideNote();
-		linkAccountBtn.resetStatus();
 		setEnabled(true);
 	}
 

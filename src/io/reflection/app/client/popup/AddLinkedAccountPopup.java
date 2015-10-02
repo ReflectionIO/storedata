@@ -7,6 +7,11 @@
 //
 package io.reflection.app.client.popup;
 
+import io.reflection.app.api.core.shared.call.LinkAccountRequest;
+import io.reflection.app.api.core.shared.call.LinkAccountResponse;
+import io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler;
+import io.reflection.app.api.shared.ApiError;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.part.linkaccount.IosMacLinkAccountForm;
 import io.reflection.app.client.part.linkaccount.LinkedAccountChangeEvent.EVENT_TYPE;
@@ -24,12 +29,13 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.willshex.gson.json.service.shared.StatusType;
 
 /**
  * @author Stefano Capuzzi (capuzzistefano)
  *
  */
-public class AddLinkedAccountPopup extends Composite {
+public class AddLinkedAccountPopup extends Composite implements LinkAccountEventHandler {
 
 	private static AddLinkedAccountPopupUiBinder uiBinder = GWT.create(AddLinkedAccountPopupUiBinder.class);
 
@@ -61,14 +67,17 @@ public class AddLinkedAccountPopup extends Composite {
 		});
 	}
 
-	public void show(boolean isFirstLinkedAccount) {
+	public void show(String title, String subtitle) {
 		if (!this.asWidget().isAttached()) {
 			RootPanel.get().add(this);
+			DefaultEventBus.get().addHandlerToSource(LinkAccountEventHandler.TYPE, LinkedAccountController.get(), this);
+		}
+		iosMacAddForm.resetForm();
+		iosMacAddForm.setTitleText(title);
+		if (subtitle != null) {
+			iosMacAddForm.setSubtitleText(subtitle);
 		}
 		popup.show();
-
-		iosMacAddForm.setTitleText(isFirstLinkedAccount ? "Link an Account" : "Link Another Account");
-		iosMacAddForm.resetForm();
 	}
 
 	public void hide() {
@@ -118,6 +127,38 @@ public class AddLinkedAccountPopup extends Composite {
 		iosMacAddForm.setFormErrors();
 		iosMacAddForm.setEnabled(true);
 		Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formSubmittedLoading());
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler#linkAccountSuccess(io.reflection.app.api.core.shared.call.LinkAccountRequest,
+	 * io.reflection.app.api.core.shared.call.LinkAccountResponse)
+	 */
+	@Override
+	public void linkAccountSuccess(LinkAccountRequest input, LinkAccountResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess) {
+			setStatusSuccess();
+		} else if (output.error != null) {
+			if (output.error.code == ApiError.InvalidDataAccountCredentials.getCode()) {
+				setStatusErrorInvalidCredentials();
+			} else if (output.error.code == ApiError.InvalidDataAccountVendor.getCode()) {
+				setStatusErrorInvalidVendor();
+			} else { // TODO NULL POINTER EXCEPTION DUE TO DUPLICATE LINKED ACCOUNT
+				setStatusError();
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler#linkAccountFailure(io.reflection.app.api.core.shared.call.LinkAccountRequest,
+	 * java.lang.Throwable)
+	 */
+	@Override
+	public void linkAccountFailure(LinkAccountRequest input, Throwable caught) {
+		setStatusError();
 	}
 
 }

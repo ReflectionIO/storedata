@@ -63,6 +63,10 @@ public class PremiumPopup extends Composite implements AssignRoleEventHandler {
 		popup.show();
 	}
 
+	public void hide() {
+		popup.closePopup();
+	}
+
 	@UiHandler("popup")
 	void onPopupClosed(CloseEvent<PopupBase> event) {
 		RootPanel.get().remove(this.asWidget());

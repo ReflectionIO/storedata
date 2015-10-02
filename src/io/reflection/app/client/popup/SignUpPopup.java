@@ -44,6 +44,10 @@ public class SignUpPopup extends Composite {
 		popup.show();
 	}
 
+	public void hide() {
+		popup.closePopup();
+	}
+
 	@UiHandler("popup")
 	void onPopupClosed(CloseEvent<PopupBase> event) {
 		RootPanel.get().remove(this.asWidget());

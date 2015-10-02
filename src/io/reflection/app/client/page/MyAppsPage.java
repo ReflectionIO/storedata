@@ -43,6 +43,7 @@ import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.client.part.datatypes.MyApp;
 import io.reflection.app.client.part.myapps.MyAppsComingSoon;
 import io.reflection.app.client.part.myapps.MyAppsNoLinkedAccountsPanel;
+import io.reflection.app.client.popup.AddLinkedAccountPopup;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.client.res.Styles.ReflectionMainStyles;
 import io.reflection.app.datatypes.shared.Item;
@@ -70,7 +71,6 @@ import com.google.gwt.user.cellview.client.LoadingStateChangeEvent;
 import com.google.gwt.user.cellview.client.LoadingStateChangeEvent.LoadingState;
 import com.google.gwt.user.cellview.client.SafeHtmlHeader;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -106,7 +106,6 @@ public class MyAppsPage extends Page implements NavigationEventHandler, GetLinke
 	@UiField DateSelector dateSelector;
 	@UiField Button applyFilters;
 
-	@UiField HTMLPanel waitingForDataPanel;
 	@UiField Button viewAllBtn;
 	@UiField SpanElement viewAllSpan;
 
@@ -130,8 +129,8 @@ public class MyAppsPage extends Page implements NavigationEventHandler, GetLinke
 	private Column<MyApp, SafeHtml> columnIap;
 
 	private ReflectionMainStyles style = Styles.STYLES_INSTANCE.reflectionMainStyle();
-
 	private LoadingBar loadingBar = new LoadingBar(true);
+	private AddLinkedAccountPopup addLinkedAccountPopup = new AddLinkedAccountPopup();
 
 	public MyAppsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -168,7 +167,7 @@ public class MyAppsPage extends Page implements NavigationEventHandler, GetLinke
 			public void onClick(ClickEvent event) {
 				User user = SessionController.get().getLoggedInUser();
 				if (user != null) {
-					PageType.UsersPageType.show(PageType.LinkedAccountsPageType.toString(), user.id.toString());
+					addLinkedAccountPopup.show("Link an Account", null);
 				}
 			}
 		});
@@ -182,7 +181,6 @@ public class MyAppsPage extends Page implements NavigationEventHandler, GetLinke
 		}
 
 		// simplePager.setDisplay(appsTableDesktop);
-		// simplePager.setDisplay(appsTableMobile);
 
 		setFiltersEnabled(false);
 		accountName.setEnabled(false);
@@ -507,8 +505,6 @@ public class MyAppsPage extends Page implements NavigationEventHandler, GetLinke
 				}
 				loadingBar.setProgressiveStatus(33);
 				errorPanel.setVisible(false);
-				// noAppsPanel.setVisible(false);
-				noLinkedAccountsPanel.setVisible(false);
 				comingSoonPanel.setVisible(false);
 				myAppsTable.setVisible(true);
 				rankHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.mhxte6cIF());
@@ -523,6 +519,7 @@ public class MyAppsPage extends Page implements NavigationEventHandler, GetLinke
 			accountName.setEnabled(false);
 			setFiltersEnabled(false);
 		}
+		noLinkedAccountsPanel.setVisible(linkedAccountsCount == 0);
 
 	}
 
@@ -559,6 +556,7 @@ public class MyAppsPage extends Page implements NavigationEventHandler, GetLinke
 				accountName.setSelectedIndex(FormHelper.getItemIndex(accountName, FilterController.get().getFilter().getLinkedAccountId().toString()));
 				PageType.UsersPageType.show(PageType.MyAppsPageType.toString(), user.id.toString(), FilterController.get().asMyAppsFilterString());
 			} else {
+				loadingBar.hide(true);
 				userItemProvider.reset();
 				userItemProvider.updateRowCount(0, true);
 				accountName.setEnabled(false);
