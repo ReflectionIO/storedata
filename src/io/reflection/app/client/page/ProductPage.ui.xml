@@ -77,7 +77,7 @@
 		</section>
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer}">
 			<div
-				class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth} {STYLES_INSTANCE.reflectionMainStyle.productPagePartners}">
+				class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth} {STYLES_INSTANCE.reflectionMainStyle.partnersGrid}">
 				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Join the Best in the Industry</h2>
 				<ul>
 					<li>
