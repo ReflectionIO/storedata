@@ -97,6 +97,10 @@ public class Tooltip extends Option<Tooltip> {
 		return setOption("shadow", shadow);
 	}
 
+	public Tooltip setShadow(JavaScriptObject shadow) {
+		return setOption("shadow", shadow);
+	}
+
 	public Tooltip setShape(String shape) {
 		return setOption("shape", shape);
 	}
