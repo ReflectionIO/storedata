@@ -161,13 +161,12 @@
 							<div class="grid__column grid__column--one-third">
 								<section class="pricing-option pricing-option--standard pricing-option--current">
 									<header class="pricing-option--header">
-										<h2 class="pricing-name">Developer Standard</h2>
+										<h2 class="pricing-name">Developer</h2>
 										<div class="pricing-price-container">
-											<sup class="pricing-sup">&pound;</sup>
-											<span class="pricing-price">0</span>
+											<span class="pricing-price">FREE</span>
 										</div>
-										<span class="per-month">per month</span>
-										<p>Link your app store account and get free access to store data &amp; analytics</p>
+										<span class="package-for">For anyone who makes apps</span>
+										<p class="ref-icon-before ref-icon-before--check">App Store Account Required</p>
 									</header>
 									<ul class="pricing-details">
 										<li>Live Daily Top 200 Global Rank, Download &amp; Grossing Data</li>
@@ -187,7 +186,7 @@
 											<sup class="pricing-sup">.99</sup>
 										</div>
 										<span class="per-month">per month</span>
-										<p>Additional powerful reporting tools and expanded features</p>
+										<p class="ref-icon-before ref-icon-before--check">App Store Account Required</p>
 									</header>
 									<ul class="pricing-details">
 										<li>Historic Revenue &amp; Download Data</li>
@@ -212,12 +211,10 @@
 									<header class="pricing-option--header">
 										<h2 class="pricing-name">Business</h2>
 										<div class="pricing-price-container">
-											<sup class="pricing-sup">&pound;</sup>
-											<span class="pricing-price">699</span>
-											<sup class="pricing-sup">.99</sup>
+											<span class="pricing-price">COMING SOON</span>
 										</div>
-										<span class="per-month">per month</span>
-										<p>No app store account? No problem. Investors, Advertisers, Marketers</p>
+										<span class="package-for">Investors, Advertisers, Marketers</span>
+										<p class="ref-icon-before ref-icon-before--cancel">No App Store Account Required</p>
 									</header>
 									<ul class="pricing-details">
 										<li>Identify and Act on Market and Consumer Trends</li>
@@ -476,7 +473,7 @@
 					$('.pricing-option .ref-button--positive').remove();
 					var pricingOptionPremium = $('.pricing-option--premium');
 					pricingOptionPremium.addClass("pricing-option--current");
-					pricingOptionPremium.find('.pricing-sign-up-button').addClass("ref-button--positive").text("Curent Subscription");
+					pricingOptionPremium.find('.pricing-sign-up-button').addClass("ref-button--positive").text("Current Subscription");
 					pricingOptionPremium.siblings(".pricing-access-info").remove();
 				}, 3000);
 			});

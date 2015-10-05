@@ -450,6 +450,8 @@ public interface Styles extends ClientBundle {
 
 		String datePickerDayIsFiller();
 
+		String datePickerDayIsToday();
+
 		String datePickerDayIsValue();
 
 		String datePickerDays();
@@ -1190,9 +1192,6 @@ public interface Styles extends ClientBundle {
 		@ClassName("multiple-select__remove-all-selected")
 		String multipleSelect__removeAllSelected();
 
-		@ClassName("news-container")
-		String newsContainer();
-
 		@ClassName("no-accordion-content")
 		String noAccordionContent();
 
@@ -1240,6 +1239,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("p-style--minor")
 		String pStyleMinor();
+
+		@ClassName("package-for")
+		String packageFor();
 
 		@ClassName("page-about")
 		String pageAbout();
@@ -1753,6 +1755,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("ref-icon-before--my-data")
 		String refIconBeforeMyData();
 
+		@ClassName("ref-icon-before--plus")
+		String refIconBeforePlus();
+
 		@ClassName("ref-icon-before--refresh")
 		String refIconBeforeRefresh();
 
@@ -1788,6 +1793,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("register-form-container")
 		String registerFormContainer();
+
+		@ClassName("register-is-second-step")
+		String registerIsSecondStep();
 
 		@ClassName("remove-form-field")
 		String removeFormField();
@@ -1869,6 +1877,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("show-reset-password-form")
 		String showResetPasswordForm();
+
+		@ClassName("sign-up-info-content")
+		String signUpInfoContent();
 
 		@ClassName("sign-up-link")
 		String signUpLink();
