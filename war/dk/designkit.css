@@ -9010,30 +9010,30 @@ table.table-data.table-linked-accounts--disabled thead {
   }
 }
 /* line 26, sass/templates/_product.scss */
-.page-product .product-section:nth-child(odd) {
+.page-product .product-section.product-section--second-section {
   background-color: #363a47;
 }
 @media (min-width: 720px) {
   /* line 26, sass/templates/_product.scss */
-  .page-product .product-section:nth-child(odd) {
+  .page-product .product-section.product-section--second-section {
     padding-bottom: 4rem;
   }
 }
 /* line 31, sass/templates/_product.scss */
-.page-product .product-section:nth-child(odd) h2 {
+.page-product .product-section.product-section--second-section h2 {
   color: #fcfdfd;
 }
 /* line 34, sass/templates/_product.scss */
-.page-product .product-section:nth-child(odd) p {
+.page-product .product-section.product-section--second-section p {
   color: #81879d;
 }
 @media (min-width: 720px) {
   /* line 26, sass/templates/_product.scss */
-  .page-product .product-section:nth-child(odd) {
+  .page-product .product-section.product-section--second-section {
     padding-top: 3.5rem;
   }
   /* line 39, sass/templates/_product.scss */
-  .page-product .product-section:nth-child(odd) .product-text-content--left {
+  .page-product .product-section.product-section--second-section .product-text-content--left {
     padding-top: 65px;
   }
 }
