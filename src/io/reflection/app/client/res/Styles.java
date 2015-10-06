@@ -450,6 +450,8 @@ public interface Styles extends ClientBundle {
 
 		String datePickerDayIsFiller();
 
+		String datePickerDayIsToday();
+
 		String datePickerDayIsValue();
 
 		String datePickerDays();
@@ -827,11 +829,20 @@ public interface Styles extends ClientBundle {
 		@ClassName("hiring-title")
 		String hiringTitle();
 
+		@ClassName("home-apply-button")
+		String homeApplyButton();
+
 		@ClassName("home-leaderboard-button-container")
 		String homeLeaderboardButtonContainer();
 
 		@ClassName("home-leaderboard-title-container")
 		String homeLeaderboardTitleContainer();
+
+		@ClassName("home-partners-grid-container")
+		String homePartnersGridContainer();
+
+		@ClassName("home-partners-heading")
+		String homePartnersHeading();
 
 		@ClassName("home-wide-container")
 		String homeWideContainer();
@@ -1190,9 +1201,6 @@ public interface Styles extends ClientBundle {
 		@ClassName("multiple-select__remove-all-selected")
 		String multipleSelect__removeAllSelected();
 
-		@ClassName("news-container")
-		String newsContainer();
-
 		@ClassName("no-accordion-content")
 		String noAccordionContent();
 
@@ -1240,6 +1248,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("p-style--minor")
 		String pStyleMinor();
+
+		@ClassName("package-for")
+		String packageFor();
 
 		@ClassName("page-about")
 		String pageAbout();
@@ -1386,6 +1397,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("panel-right__overlay")
 		String panelRight__overlay();
+
+		@ClassName("partners-grid")
+		String partnersGrid();
 
 		@ClassName("password-strength-description")
 		String passwordStrengthDescription();
@@ -1543,9 +1557,6 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("product-image-container--right")
 		String productImageContainerRight();
-
-		@ClassName("product-page--partners")
-		String productPagePartners();
 
 		@ClassName("product-page__quotes")
 		String productPage__quotes();
@@ -1753,6 +1764,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("ref-icon-before--my-data")
 		String refIconBeforeMyData();
 
+		@ClassName("ref-icon-before--plus")
+		String refIconBeforePlus();
+
 		@ClassName("ref-icon-before--refresh")
 		String refIconBeforeRefresh();
 
@@ -1788,6 +1802,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("register-form-container")
 		String registerFormContainer();
+
+		@ClassName("register-is-second-step")
+		String registerIsSecondStep();
 
 		@ClassName("remove-form-field")
 		String removeFormField();
@@ -1869,6 +1886,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("show-reset-password-form")
 		String showResetPasswordForm();
+
+		@ClassName("sign-up-info-content")
+		String signUpInfoContent();
 
 		@ClassName("sign-up-link")
 		String signUpLink();
