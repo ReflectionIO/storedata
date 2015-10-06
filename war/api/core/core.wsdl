@@ -95,6 +95,9 @@
 			<xsd:element name="UpdateNotificationsInput" type="sdc:UpdateNotificationsRequest" />
 			<xsd:element name="UpdateNotificationsOutput" type="sdc:UpdateNotificationsResponse" />
 
+			<xsd:element name="UpgradeAccountInput" type="sdc:UpgradeAccountRequest" />
+			<xsd:element name="UpgradeAccountOutput" type="sdc:UpgradeAccountResponse" />
+
 			<xsd:complexType name="GetCountriesRequest">
 				<xsd:complexContent>
 					<xsd:extension base="sd:Request">
@@ -734,6 +737,25 @@
 				</xsd:complexContent>
 			</xsd:complexType>
 
+			<xsd:complexType name="UpgradeAccountRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="role" type="sd:Role" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="UpgradeAccountResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
 		</xsd:schema>
 	</wsdl:types>
 
@@ -945,6 +967,13 @@
     <wsdl:message name="UpdateNotificationsResponse">
         <wsdl:part name="output" element="sdc:UpdateNotificationsOutput" />
     </wsdl:message>
+
+    <wsdl:message name="UpgradeAccountRequest">
+        <wsdl:part name="input" element="sdc:UpgradeAccountInput" />
+    </wsdl:message>
+    <wsdl:message name="UpgradeAccountResponse">
+        <wsdl:part name="output" element="sdc:UpgradeAccountOutput" />
+    </wsdl:message>
     
 
 	<wsdl:portType name="core">
@@ -1096,6 +1125,11 @@
 		<wsdl:operation name="UpdateNotifications">
 			<wsdl:input message="sdc:UpdateNotificationsRequest" />
 			<wsdl:output message="sdc:UpdateNotificationsResponse" />
+		</wsdl:operation>
+
+		<wsdl:operation name="UpgradeAccount">
+			<wsdl:input message="sdc:UpgradeAccountRequest" />
+			<wsdl:output message="sdc:UpgradeAccountResponse" />
 		</wsdl:operation>
 
 	</wsdl:portType>
@@ -1392,6 +1426,16 @@
         
         <wsdl:operation name="UpdateNotifications">
             <soap:operation soapAction="http://app.reflection.io/core/UpdateNotifications" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="UpgradeAccount">
+            <soap:operation soapAction="http://app.reflection.io/core/UpgradeAccount" />
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>

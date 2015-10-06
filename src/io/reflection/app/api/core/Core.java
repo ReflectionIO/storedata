@@ -73,6 +73,8 @@ import io.reflection.app.api.core.shared.call.UpdateLinkedAccountRequest;
 import io.reflection.app.api.core.shared.call.UpdateLinkedAccountResponse;
 import io.reflection.app.api.core.shared.call.UpdateNotificationsRequest;
 import io.reflection.app.api.core.shared.call.UpdateNotificationsResponse;
+import io.reflection.app.api.core.shared.call.UpgradeAccountRequest;
+import io.reflection.app.api.core.shared.call.UpgradeAccountResponse;
 import io.reflection.app.api.exception.AuthenticationException;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.ApiError;
@@ -1976,6 +1978,25 @@ public final class Core extends ActionHandler {
 			output.error = convertToErrorAndLog(LOG, e);
 		}
 		LOG.finer("Exiting updateNotifications");
+		return output;
+	}
+
+	public UpgradeAccountResponse upgradeAccount(UpgradeAccountRequest input) {
+		LOG.finer("Entering upgradeAccount");
+		UpgradeAccountResponse output = new UpgradeAccountResponse();
+		try {
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+			// TODO
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting upgradeAccount");
 		return output;
 	}
 }
