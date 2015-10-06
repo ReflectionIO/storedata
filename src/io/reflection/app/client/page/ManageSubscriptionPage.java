@@ -16,6 +16,7 @@ import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.User;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Cursor;
@@ -24,6 +25,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -36,6 +38,11 @@ public class ManageSubscriptionPage extends Page implements NavigationEventHandl
 	private static ManageSubscriptionPageUiBinder uiBinder = GWT.create(ManageSubscriptionPageUiBinder.class);
 
 	interface ManageSubscriptionPageUiBinder extends UiBinder<Widget, ManageSubscriptionPage> {}
+
+	@UiField Element currentStandard;
+	@UiField Element currentPremium;
+	@UiField Button signUpBtn;
+	@UiField Button signUpPremium;
 
 	@UiField LIElement accountSettingsItem;
 	@UiField LIElement manageSubscriptionItem;
@@ -137,7 +144,21 @@ public class ManageSubscriptionPage extends Page implements NavigationEventHandl
 		currentUser = SessionController.get().getLoggedInUser(); // Update user using the system
 		if (isValidStack(current)) {
 			manageSubscriptionLink.setTargetHistoryToken(current.toString());
+
+			if (SessionController.get().isPremiumDeveloper()) {
+				currentPremium.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().pricingOptionCurrent());
+			} else { // Standard developer
+				currentStandard.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().pricingOptionCurrent());
+				signUpBtn.getElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().refButtonPositive());
+			}
 		}
+	}
+
+	private void reset() {
+		currentStandard.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().pricingOptionCurrent());
+		signUpBtn.getElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().refButtonPositive());
+		signUpBtn.setText("Sign Up for Free Now");
+		currentPremium.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().pricingOptionCurrent());
 	}
 
 	/*
@@ -151,4 +172,17 @@ public class ManageSubscriptionPage extends Page implements NavigationEventHandl
 
 		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.page.Page#onDetach()
+	 */
+	@Override
+	protected void onDetach() {
+		super.onDetach();
+
+		reset();
+	}
+
 }
