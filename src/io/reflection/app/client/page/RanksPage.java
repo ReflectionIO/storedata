@@ -130,6 +130,8 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	private LoadingIndicator loadingIndicatorFreeList = AnimationHelper.getLeaderboardListLoadingIndicator(25, true);
 	private LoadingIndicator loadingIndicatorPaidGrossingList = AnimationHelper.getLeaderboardListLoadingIndicator(25, false);
 
+	@UiField(provided = true) ToggleRadioButton toggleListView = new ToggleRadioButton("viewtype", "0 0 20 20");
+	@UiField(provided = true) ToggleRadioButton toggleCompactView = new ToggleRadioButton("viewtype", "0 0 20 20");
 	@UiField LoadingButton downloadLeaderboard;
 	@UiField DivElement dateSelectContainer;
 	@UiField FormDateBox dateBox;
@@ -137,8 +139,8 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	// @UiField ListBox mListType;
 	@UiField Selector countrySelector;
 	@UiField Selector categorySelector;
-	@UiField(provided = true) ToggleRadioButton toggleRevenue = new ToggleRadioButton("dailydatatoggle");
-	@UiField(provided = true) ToggleRadioButton toggleDownloads = new ToggleRadioButton("dailydatatoggle");
+	@UiField(provided = true) ToggleRadioButton toggleRevenue = new ToggleRadioButton("dailydatatoggle", "0 0 32 32");
+	@UiField(provided = true) ToggleRadioButton toggleDownloads = new ToggleRadioButton("dailydatatoggle", "0 0 32 32");
 	@UiField HTMLPanel dailyDataContainer;
 	@UiField Button applyFilters;
 	@UiField Button resetFilters;
@@ -734,6 +736,18 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		// RankController.get().sortByRank(selectedTab, false);
 	}
 
+	@UiHandler("toggleListView")
+	void onToggleViewListSelected(ValueChangeEvent<Boolean> event) {
+		getElement().removeClassName(style.compactView());
+		// getElement().removeClassName(style.list);
+	}
+
+	@UiHandler("toggleCompactView")
+	void onToggleViewCompactSelected(ValueChangeEvent<Boolean> event) {
+		// getElement().removeClassName(style.listview);
+		getElement().addClassName(style.compactView());
+	}
+
 	@UiHandler("downloadLeaderboard")
 	void onDownloadLeaderboardClicked(ClickEvent event) {
 		event.preventDefault();
@@ -797,7 +811,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 					public void onResponseReceived(Request request, Response response) {
 						String csvContent = "data:text/csv;charset=utf-8," + response.getText();
 						Window.open(URL.encode(csvContent), "_self", "");
-						downloadLeaderboard.setStatusSuccess();
+						downloadLeaderboard.resetStatus();
 					}
 				});
 			} catch (RequestException e) {
