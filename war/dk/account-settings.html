@@ -52,22 +52,6 @@
 								<span>Manage Subscription</span>
 							</a>
 						</li>
-						<li class="grid__column grid__column--one-quarter tabs__tab is-disabled">
-							<div class="tab-animate-active"></div>
-							<a data-content="#tab-content-linked-accounts" class="tabs__link">
-								<span>
-									<span>Manage Notifications <span class="text-small">coming soon</span></span>
-								</span>
-							</a>
-						</li>
-						<li class="grid__column grid__column--one-quarter tabs__tab is-disabled">
-							<div class="tab-animate-active"></div>
-							<a data-content="#tab-content-users" class="tabs__link">
-								<span>
-									<span>Users <span class="text-small">coming soon</span></span>
-								</span>
-							</a>
-						</li>						
 					</ul>
 				</div>
 				<div class="grid__column grid__column--full-width filters-container">
@@ -159,7 +143,7 @@
 					<li id="tab-content-subscription" class="tabs__content">
 						<article class="tabs__content-area pricing-options">
 							<div class="grid__column grid__column--one-third">
-								<section class="pricing-option pricing-option--standard pricing-option--current">
+								<section class="pricing-option pricing-option--standard">
 									<header class="pricing-option--header">
 										<h2 class="pricing-name">Developer</h2>
 										<div class="pricing-price-container">
@@ -173,7 +157,7 @@
 										<li>Analytics for Your Own Apps</li>
 										<li>Live Industry News</li>
 									</ul>
-									<button class="ref-button--full-width pricing-sign-up-button ref-button--positive">Current Subscription</button>
+									<p class="ref-icon-before ref-icon-before--check current-subscription-text">Current Subscription</p>
 								</section>
 							</div>
 							<div class="grid__column grid__column--one-third">
@@ -469,12 +453,9 @@
 				$(this).addClass("ref-button--is-loading");
 				setTimeout(function(){
 					popupPremium.addClass("is-submitted-success");
-					$('.pricing-option--current').removeClass("pricing-option--current");
-					$('.pricing-option .ref-button--positive').remove();
 					var pricingOptionPremium = $('.pricing-option--premium');
-					pricingOptionPremium.addClass("pricing-option--current");
-					pricingOptionPremium.find('.pricing-sign-up-button').addClass("ref-button--positive").text("Current Subscription");
-					pricingOptionPremium.siblings(".pricing-access-info").remove();
+					pricingOptionPremium.find('.pricing-sign-up-button').remove();
+					$('.current-subscription-text').insertAfter($('.pricing-option--premium .pricing-details'));
 				}, 3000);
 			});
   	}
