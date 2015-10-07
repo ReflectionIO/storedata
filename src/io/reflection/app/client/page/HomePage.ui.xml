@@ -494,7 +494,7 @@ C64.7,26.1,62.2,22.8,54.7,22.8L54.7,22.8z M76.6,37.5V22.5h-5.3v14.9H76.6L76.6,37
 		</aside>
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer}">
 			<div
-				class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth} {STYLES_INSTANCE.reflectionMainStyle.productPagePartners}">
+				class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth} {STYLES_INSTANCE.reflectionMainStyle.partnersGrid}">
 				<ul>
 					<li>
 						<svg version="1.1" x="0px" y="0px" viewBox="0 0 160 60" enable-background="new 0 0 160 60" xml:space="preserve"><path fill="#9C9DA5"
