@@ -5,47 +5,12 @@
 	
 	</ui:style>
 	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.pageLoggedInLanding}">
-		<section class="{STYLES_INSTANCE.reflectionMainStyle.loggedInSectionMain}">
-			<div class="{STYLES_INSTANCE.reflectionMainStyle.loggedInSectionMain__columnOne}">
-				<img src="images/logged-in-main-screenshot.jpg" alt="Reflection app screenshot" />
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.pageBanner} {STYLES_INSTANCE.reflectionMainStyle.pageBannerLarger} {STYLES_INSTANCE.reflectionMainStyle.verticalCentreContent}">
+			<div>
+				<h2>Welcome Back <span ui:field="userName"></span></h2>
+				<p>Keep up to date with what's been happening here at Reflection as we work to build features and tools to help you succeed in the app market</p>
 			</div>
-			<div class="{STYLES_INSTANCE.reflectionMainStyle.loggedInSectionMain__columnTwo}">
-				<h1 class="{STYLES_INSTANCE.reflectionMainStyle.pageTitle}">
-					Welcome
-					<span ui:field="userName"></span>
-				</h1>
-				<p>Our team is hard at work improving accuracy and building features from your feedback. Keep up to date with our progress here.</p>
-			</div>
-			<div class="{STYLES_INSTANCE.reflectionMainStyle.listPartners}">
-				<ul>
-					<li>
-						<img src="images/Partner_Soundcloud@2x.png" alt="Soundcloud logo" />
-					</li>
-					<li>
-						<img src="images/Partner_Wooga@2x.png" alt="Wooga logo" />
-					</li>
-					<li>
-						<img src="images/BBC_Worldwide@2x.png" alt="BBC Worldwide logo" />
-					</li>
-					<li>
-						<img src="images/Partner_TocaBoca@2x-v2.png" alt="Toca Boca logo" />
-					</li>
-					<li>
-						<img src="images/SwiftKey_Logo@2x.png" alt="SwiftKey logo" />
-					</li>
-					<li>
-						<img src="images/Partner_Miniclip@2x.png" alt="Miniclip logo" />
-					</li>
-					<li>
-						<img src="images/Nordeus_Logo@2x.png" alt="Nordeus logo" />
-					</li>
-					<li>
-						<img src="images/Endemol_Logo@2x.png" alt="Endemol logo" />
-					</li>
-				</ul>
-				<h2>A few of our current partners</h2>
-			</div>
-		</section>
+		</div>
 		<section class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.loggedInSectionContent}">
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnSevenColumns}">
 				<ul>
@@ -183,27 +148,6 @@
 					</li>
 				</ul>
 			</div>
-		</section>
-		<section class="{STYLES_INSTANCE.reflectionMainStyle.landingSectionContact}">
-			<div class="{STYLES_INSTANCE.reflectionMainStyle.logoContainer}">
-				<img src="images/logo-reflection-footer.png" alt="Reflection logo" class="{STYLES_INSTANCE.reflectionMainStyle.logoReflectionFooter}" />
-			</div>
-			<a href="mailto:info@reflection.io" class="{STYLES_INSTANCE.reflectionMainStyle.landingSectionContact__email}">
-				<span class="icon-mail {STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeMail}">info@reflection.io</span>
-			</a>
-			<a
-				href="https://www.google.co.uk/maps/place/44+Newman+St,+Marylebone,+London+W1T+1QD/@51.5187779,-0.1364135,17z/data=!4m7!1m4!3m3!1s0x48761b2b95192b1b:0xc2fcb9753b8ff12b!2s44+Newman+St,+Marylebone,+London+W1T+1QD!3b1!3m1!1s0x48761b2b95192b1b:0xc2fcb9753b8ff12b"
-				class="{STYLES_INSTANCE.reflectionMainStyle.landingSectionContact__address}" target="_blank">
-				<p class="icon-location {STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeLocation}">
-					<b>
-						40-44 Newman St
-						<br />
-						London
-						<br />
-						W1T 1QD
-					</b>
-				</p>
-			</a>
 		</section>
 	</g:HTMLPanel>
 </ui:UiBinder> 
