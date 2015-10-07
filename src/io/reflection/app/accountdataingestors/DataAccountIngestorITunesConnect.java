@@ -15,9 +15,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -31,8 +28,8 @@ import com.google.appengine.tools.cloudstorage.GcsFilename;
 import com.google.appengine.tools.cloudstorage.GcsInputChannel;
 import com.google.appengine.tools.cloudstorage.GcsService;
 import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
-import com.spacehopperstudios.utility.StringUtils;
 
+import io.reflection.app.DevUtilServlet;
 import io.reflection.app.accountdatacollectors.DataAccountCollector;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.apple.ItemPropertyLookupServlet;
@@ -41,9 +38,8 @@ import io.reflection.app.datatypes.shared.DataAccountFetchStatusType;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Sale;
 import io.reflection.app.helpers.QueueHelper;
-import io.reflection.app.helpers.SaleSummaryHelper;
+import io.reflection.app.helpers.SqlQueryHelper;
 import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
-import io.reflection.app.service.sale.ISaleService;
 import io.reflection.app.service.sale.SaleServiceProvider;
 
 /**
@@ -99,8 +95,9 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 
 					// ArchiverFactory.getItemSaleArchiver().enqueueIdDataAccountFetch(fetch.id);
 
-					SaleServiceProvider.provide().summariseSales(fetch.linkedAccount.id, sales, SaleSummaryHelper.SALE_SOURCE.INGEST);
-					enqueueDataAccountItemsToGatherSplitData(fetch.linkedAccount.id, fetch.date);
+					QueueHelper.enqueue(DevUtilServlet.QUEUE_SUMMARISE, DevUtilServlet.URL_SUMMARISE, Method.GET,
+							new SimpleEntry<String, String>("dataaccountid", fetch.linkedAccount.id.toString()),
+							new SimpleEntry<String, String>("date", SqlQueryHelper.getSqlDateFormat().format(fetch.date)));
 				}
 			} catch (DataAccessException e) {
 				LOG.log(Level.SEVERE, String.format("Exception occured while ingesting file for data account fetch [%d]", fetch.id.longValue()), e);
@@ -110,70 +107,6 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 		} else {
 			LOG.log(Level.WARNING,
 					String.format("Could not ingest data account fetch [%d] because it has status [%s]", fetch.id.longValue(), fetch.status.toString()));
-		}
-	}
-
-	/**
-	 * @param dataAccountId
-	 * @param date
-	 */
-	public void enqueueDataAccountItemsToGatherSplitData(Long dataAccountId, Date date) {
-		/*
-		 * Get all sale summary rows for this dataaccount for this date. For each
-		 * item id, get its iap ids and then for each country the main item is in,
-		 * enqueue the item for gathering the splits
-		 */
-
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(date);
-		cal.set(Calendar.DAY_OF_MONTH, 1);
-
-		Date gatherFrom = cal.getTime();
-		Date gatherTo = date;
-
-		SimpleDateFormat sdf = new SimpleDateFormat("yyy-MM-dd");
-
-		String gatherFromStr = sdf.format(gatherFrom);
-		String gatherToStr = sdf.format(gatherTo);
-		try {
-			ISaleService saleService = SaleServiceProvider.provide();
-			List<SimpleEntry<String, String>> mainItemIdsAndCountries = saleService.getSoldItemIdsForAccountInDateRange(dataAccountId,
-					gatherFrom, gatherTo);
-
-			HashMap<String, String> iapItemsMapByParentItem = new HashMap<String, String>(mainItemIdsAndCountries.size());
-
-			for (SimpleEntry<String, String> entry : mainItemIdsAndCountries) {
-				String mainItemId = entry.getKey();
-				List<String> iapItemIds = saleService.getIapItemIdsForParentItemOnDate(dataAccountId, mainItemId, date);
-
-				String iapItemIdsString = StringUtils.join(iapItemIds);
-
-				iapItemsMapByParentItem.put(mainItemId, iapItemIdsString);
-			}
-
-			String countriesToIngest = System.getProperty("ingest.ios.countries");
-
-			for (SimpleEntry<String, String> entry : mainItemIdsAndCountries) {
-				String country = entry.getValue();
-
-				if (countriesToIngest != null && !countriesToIngest.contains(country)) {
-					continue;
-				}
-
-				String mainItemId = entry.getKey();
-				String iapItemIds = iapItemsMapByParentItem.get(mainItemId);
-
-				QueueHelper.enqueue("gathersplitsaledata", Method.PULL,
-						new SimpleEntry<String, String>("dataAccountId", String.valueOf(dataAccountId)),
-						new SimpleEntry<String, String>("gatherFrom", gatherFromStr),
-						new SimpleEntry<String, String>("gatherTo", gatherToStr),
-						new SimpleEntry<String, String>("mainItemId", mainItemId),
-						new SimpleEntry<String, String>("countryCode", country),
-						new SimpleEntry<String, String>("iapItemIds", iapItemIds));
-			}
-		} catch (DataAccessException e) {
-			LOG.log(Level.SEVERE, String.format("Exception occured while retrieving main item id for data account [%d] between [%s] and [%s]", dataAccountId,
-					gatherFromStr, gatherToStr), e);
 		}
 	}
 

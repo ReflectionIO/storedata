@@ -42,7 +42,7 @@ public class DevUtilServlet extends HttpServlet {
 
 	public static final String QUEUE_SUMMARISE = "summarise";
 
-	private static final String URL_SUMMARISE = "/summarise";
+	public static final String URL_SUMMARISE = "/summarise";
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -127,13 +127,13 @@ public class DevUtilServlet extends HttpServlet {
 		}
 
 		switch (action) {
-			case ACTION_SUMMARISE:
-				writeResponse(resp, summarise(req, resp));
-				break;
-			case ACTION_SPLIT_DATA:
-				break;
-			case ACTION_MODEL:
-				break;
+		case ACTION_SUMMARISE:
+			writeResponse(resp, summarise(req, resp));
+			break;
+		case ACTION_SPLIT_DATA:
+			break;
+		case ACTION_MODEL:
+			break;
 		}
 	}
 
