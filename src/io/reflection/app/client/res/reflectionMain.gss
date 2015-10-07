@@ -9015,7 +9015,7 @@ table.table-data.table-linked-accounts--disabled thead {
 @media (min-width: 720px) {
   /* line 26, sass/templates/_product.scss */
   .page-product .product-section.product-section--second-section {
-    padding-bottom: 4rem;
+    padding-bottom: 0;
   }
 }
 /* line 31, sass/templates/_product.scss */
@@ -9040,36 +9040,37 @@ table.table-data.table-linked-accounts--disabled thead {
 .page-product .product-section--content {
   max-width: 1400px;
   margin: 0px auto;
+  overflow: visible;
 }
-/* line 49, sass/templates/_product.scss */
+/* line 50, sass/templates/_product.scss */
 .page-product .product-image-container--right,
 .page-product .product-text-content--left {
   display: inline-block;
   float: left;
 }
-/* line 54, sass/templates/_product.scss */
+/* line 55, sass/templates/_product.scss */
 .page-product .product-text-content--left {
   width: 100%;
   padding: 30px 5% 0;
 }
-/* line 57, sass/templates/_product.scss */
+/* line 58, sass/templates/_product.scss */
 .page-product .product-text-content--left .content-list {
   color: #5b5d61;
 }
-/* line 60, sass/templates/_product.scss */
+/* line 61, sass/templates/_product.scss */
 .page-product .product-text-content--left svg {
   width: 100%;
   max-width: 167px;
   margin: 0 auto;
 }
 @media (min-width: 480px) {
-  /* line 66, sass/templates/_product.scss */
+  /* line 67, sass/templates/_product.scss */
   .page-product .product-text-content--left svg {
     margin-left: auto;
   }
 }
 @media (min-width: 720px) {
-  /* line 54, sass/templates/_product.scss */
+  /* line 55, sass/templates/_product.scss */
   .page-product .product-text-content--left {
     width: 43.39623%;
     padding-top: 45px;
@@ -9079,100 +9080,97 @@ table.table-data.table-linked-accounts--disabled thead {
   }
 }
 @media (min-width: 1150px) {
-  /* line 54, sass/templates/_product.scss */
+  /* line 55, sass/templates/_product.scss */
   .page-product .product-text-content--left {
     padding-right: 12rem;
   }
 }
 @media (min-width: 1600px) {
-  /* line 81, sass/templates/_product.scss */
+  /* line 82, sass/templates/_product.scss */
   .page-product .product-text-content--left svg {
     max-width: 300px;
   }
 }
-/* line 86, sass/templates/_product.scss */
+/* line 87, sass/templates/_product.scss */
 .page-product .product-image-container--right {
   width: 100%;
+  overflow: visible;
 }
-/* line 88, sass/templates/_product.scss */
+/* line 90, sass/templates/_product.scss */
 .page-product .product-image-container--right img {
   max-width: 430px;
   margin-left: 5%;
+  float: left;
 }
 @media (min-width: 480px) {
-  /* line 86, sass/templates/_product.scss */
+  /* line 87, sass/templates/_product.scss */
   .page-product .product-image-container--right {
     margin: 0 auto;
   }
-  /* line 94, sass/templates/_product.scss */
+  /* line 97, sass/templates/_product.scss */
   .page-product .product-image-container--right img {
-    margin: 0;
+    margin: 0 auto;
     float: none;
   }
 }
 @media (min-width: 720px) {
-  /* line 86, sass/templates/_product.scss */
+  /* line 87, sass/templates/_product.scss */
   .page-product .product-image-container--right {
     width: 50%;
     float: right;
   }
-  /* line 102, sass/templates/_product.scss */
+  /* line 105, sass/templates/_product.scss */
   .page-product .product-image-container--right img {
     max-width: inherit;
+    float: left;
   }
 }
-/* line 106, sass/templates/_product.scss */
+/* line 110, sass/templates/_product.scss */
 .page-product .product-image-container--right.has-content {
   padding-top: 1.5rem;
-  padding-left: 5%;
   padding-right: 0;
+  padding-left: 0;
 }
-@media (min-width: 720px) {
-  /* line 106, sass/templates/_product.scss */
-  .page-product .product-image-container--right.has-content {
-    padding-left: 0;
-  }
-}
-/* line 113, sass/templates/_product.scss */
+/* line 114, sass/templates/_product.scss */
 .page-product .product-image-container--right.has-content h2 {
   margin-top: 2rem;
   margin-bottom: 1em;
 }
 
-/* line 120, sass/templates/_product.scss */
+/* line 121, sass/templates/_product.scss */
 .product-section.product-section--message {
   padding-top: 0;
   padding-bottom: 4rem;
 }
 @media (min-width: 720px) {
-  /* line 120, sass/templates/_product.scss */
+  /* line 121, sass/templates/_product.scss */
   .product-section.product-section--message {
     padding-top: 5rem;
     padding-bottom: 9.4rem;
     display: block;
   }
-  /* line 127, sass/templates/_product.scss */
+  /* line 128, sass/templates/_product.scss */
   .product-section.product-section--message .product-text-content--left {
     width: 44%;
     padding-right: 5.5rem;
   }
 }
 
-/* line 133, sass/templates/_product.scss */
+/* line 134, sass/templates/_product.scss */
 .product-text-content--left.help-us-help-you {
   padding-top: 0;
   text-align: center;
 }
-/* line 136, sass/templates/_product.scss */
+/* line 137, sass/templates/_product.scss */
 .product-text-content--left.help-us-help-you h2 {
   margin-top: 1.6rem;
 }
-/* line 139, sass/templates/_product.scss */
+/* line 140, sass/templates/_product.scss */
 .product-text-content--left.help-us-help-you p {
   text-align: left;
 }
 
-/* line 143, sass/templates/_product.scss */
+/* line 144, sass/templates/_product.scss */
 .product-page__quotes {
   height: auto;
   padding-top: 34px;
@@ -9182,13 +9180,13 @@ table.table-data.table-linked-accounts--disabled thead {
   background-size: cover;
 }
 @media (min-width: 720px) {
-  /* line 143, sass/templates/_product.scss */
+  /* line 144, sass/templates/_product.scss */
   .product-page__quotes {
     height: 350px;
     padding-bottom: 0;
   }
 }
-/* line 154, sass/templates/_product.scss */
+/* line 155, sass/templates/_product.scss */
 .product-page__quotes .grid__column {
   padding: 0;
   margin: 0 auto 20px;
@@ -9197,12 +9195,12 @@ table.table-data.table-linked-accounts--disabled thead {
   text-align: center;
 }
 @media (min-width: 720px) {
-  /* line 154, sass/templates/_product.scss */
+  /* line 155, sass/templates/_product.scss */
   .product-page__quotes .grid__column {
     margin-bottom: 0;
   }
 }
-/* line 164, sass/templates/_product.scss */
+/* line 165, sass/templates/_product.scss */
 .product-page__quotes blockquote {
   max-width: 700px;
   padding-top: 0;
@@ -9211,51 +9209,51 @@ table.table-data.table-linked-accounts--disabled thead {
   margin-top: 4px;
   text-align: left;
 }
-/* line 171, sass/templates/_product.scss */
+/* line 172, sass/templates/_product.scss */
 .product-page__quotes blockquote:before {
   display: none;
 }
-/* line 174, sass/templates/_product.scss */
+/* line 175, sass/templates/_product.scss */
 .product-page__quotes blockquote p {
   margin-bottom: 1.3em;
   font-size: 16px;
   color: #fcfdfd;
 }
 @media (min-width: 1150px) {
-  /* line 174, sass/templates/_product.scss */
+  /* line 175, sass/templates/_product.scss */
   .product-page__quotes blockquote p {
     font-size: 22px;
   }
 }
-/* line 182, sass/templates/_product.scss */
+/* line 183, sass/templates/_product.scss */
 .product-page__quotes blockquote cite {
   font-size: 14px;
   color: #969cb2;
 }
 @media (min-width: 1150px) {
-  /* line 182, sass/templates/_product.scss */
+  /* line 183, sass/templates/_product.scss */
   .product-page__quotes blockquote cite {
     font-size: 16px;
   }
 }
-/* line 188, sass/templates/_product.scss */
+/* line 189, sass/templates/_product.scss */
 .product-page__quotes blockquote cite span {
   font-size: 16px;
   line-height: 1.3;
   color: #ffffff;
 }
 @media (min-width: 1150px) {
-  /* line 188, sass/templates/_product.scss */
+  /* line 189, sass/templates/_product.scss */
   .product-page__quotes blockquote cite span {
     font-size: 18px;
   }
 }
-/* line 198, sass/templates/_product.scss */
+/* line 199, sass/templates/_product.scss */
 .product-page__quotes svg {
   width: 242px;
 }
 
-/* line 202, sass/templates/_product.scss */
+/* line 203, sass/templates/_product.scss */
 .product-page__quotes__logo-container {
   height: 73px;
   overflow: hidden;

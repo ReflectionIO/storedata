@@ -17,7 +17,7 @@
 		<section class="{STYLES_INSTANCE.reflectionMainStyle.productSection}">
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.productSectionContent} {STYLES_INSTANCE.reflectionMainStyle.verticalCentreContent}">
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.productImageContainerRight}">
-					<img src="images/product-image-one.png" alt="Reflection app screenshot" />
+					<img src="images/product-image-static-leaderboard.jpg" alt="Reflection leaderboard screenshot" />
 				</div>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.productTextContentLeft}">
 					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Track Your Competitors in the Mobile Market</h2>
@@ -32,7 +32,7 @@
 		<section class="{STYLES_INSTANCE.reflectionMainStyle.productSection} {STYLES_INSTANCE.reflectionMainStyle.productSectionSecondSection}">
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.productSectionContent}">
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.productImageContainerRight}">
-					<img src="images/product-image-one.png" alt="Reflection app screenshot" />
+					<img src="images/product-image-static-graph.jpg" alt="Reflection graph screenshot" />
 				</div>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.productTextContentLeft}">
 					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Accurately Plan Your Marketing</h2>
