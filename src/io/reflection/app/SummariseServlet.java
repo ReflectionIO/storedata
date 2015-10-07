@@ -82,7 +82,7 @@ public class SummariseServlet extends HttpServlet {
 
 				LOG.log(GaeLevel.DEBUG, String.format("Summarisation complete. Queuing up this summary for splitting sales data"));
 
-				enqueueDataAccountItemsToGatherSplitData(dataAccountId, date);
+				enqueueToGatherSplitData(dataAccountId, date);
 
 			} catch (NumberFormatException | DataAccessException e) {
 				LOG.log(Level.SEVERE, String.format("Unable to execute summarisation for dataAccountId: %s on %s", dataAccountId, date), e);
@@ -96,7 +96,7 @@ public class SummariseServlet extends HttpServlet {
 	 * @param dataAccountId
 	 * @param date
 	 */
-	public void enqueueDataAccountItemsToGatherSplitData(Long dataAccountId, Date date) {
+	public void enqueueToGatherSplitData(Long dataAccountId, Date date) {
 		/*
 		 * Get all sale summary rows for this dataaccount for this date. For each item id, get its iap ids and then for each country the main item is in,
 		 * enqueue the item for gathering the splits
@@ -129,36 +129,46 @@ public class SummariseServlet extends HttpServlet {
 		String gatherFromStr = sdf.format(gatherFrom);
 		String gatherToStr = sdf.format(gatherTo);
 		try {
-			ISaleService saleService = SaleServiceProvider.provide();
-
-			List<SimpleEntry<String, String>> mainItemIdsAndCountries = saleService.getSoldItemIdsForAccountInDateRange(dataAccountId, gatherFrom, gatherTo);
-			LOG.log(GaeLevel.DEBUG, String.format("Got %d combinations of main item id and country", mainItemIdsAndCountries.size()));
-
 			LookupItemService lookupService = LookupItemService.INSTANCE;
 
 			List<LookupItem> lookupItemsForAccount = lookupService.getLookupItemsForAccount(dataAccountId);
 			HashMap<String, String> parentItemsByIaps = lookupService.mapItemsByParentId(lookupItemsForAccount);
 
+			ISaleService saleService = SaleServiceProvider.provide();
+
+			List<SimpleEntry<String, String>> mainItemIdsAndCountries = saleService.getSoldItemIdsForAccountInDateRange(dataAccountId, gatherFrom, gatherTo);
+			LOG.log(GaeLevel.DEBUG, String.format("Got %d combinations of main item id and country", mainItemIdsAndCountries.size()));
+
 			String countriesToIngest = System.getProperty("ingest.ios.countries");
+			countriesToIngest = countriesToIngest == null ? null : countriesToIngest.toLowerCase();
+
+			LOG.log(GaeLevel.DEBUG, String.format("Countries to ingest are %s. Processing %d main item id / country combinations", countriesToIngest, mainItemIdsAndCountries.size()));
 
 			for (SimpleEntry<String, String> entry : mainItemIdsAndCountries) {
-				String country = entry.getValue();
+				try {
+					String country = entry.getValue();
 
-				if (countriesToIngest != null && !countriesToIngest.contains(country)) {
-					continue;
+					if (countriesToIngest != null && !countriesToIngest.contains(country.toLowerCase())) {
+						continue;
+					}
+
+					String mainItemId = entry.getKey();
+					String iapItemIds = parentItemsByIaps.get(mainItemId);
+
+					if (iapItemIds == null) {
+						iapItemIds = "";
+					}
+
+					LOG.log(GaeLevel.DEBUG, String.format("Queuing spit data gather task for data account %d, main item id %s in %s with iaps %s", dataAccountId, mainItemId, country, iapItemIds));
+
+					QueueHelper.enqueue("gathersplitsaledata", Method.PULL, new SimpleEntry<String, String>("dataAccountId", String.valueOf(dataAccountId)),
+							new SimpleEntry<String, String>("gatherFrom", gatherFromStr), new SimpleEntry<String, String>("gatherTo", gatherToStr),
+							new SimpleEntry<String, String>("mainItemId", mainItemId), new SimpleEntry<String, String>("countryCode", country),
+							new SimpleEntry<String, String>("iapItemIds", iapItemIds));
+
+				} catch (Exception e) {
+					LOG.log(Level.WARNING, String.format("Exception thrown while looping to enqueue items for split data gather: %s", entry), e);
 				}
-
-				String mainItemId = entry.getKey();
-				String iapItemIds = parentItemsByIaps.get(mainItemId);
-
-				if (iapItemIds == null) {
-					iapItemIds = "";
-				}
-
-				QueueHelper.enqueue("gathersplitsaledata", Method.PULL, new SimpleEntry<String, String>("dataAccountId", String.valueOf(dataAccountId)),
-						new SimpleEntry<String, String>("gatherFrom", gatherFromStr), new SimpleEntry<String, String>("gatherTo", gatherToStr),
-						new SimpleEntry<String, String>("mainItemId", mainItemId), new SimpleEntry<String, String>("countryCode", country),
-						new SimpleEntry<String, String>("iapItemIds", iapItemIds));
 			}
 		} catch (DataAccessException e) {
 			LOG.log(Level.SEVERE, String.format("Exception occured while retrieving main item id for data account [%d] between [%s] and [%s]", dataAccountId,
