@@ -8,8 +8,13 @@
 package io.reflection.app;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,8 +30,11 @@ import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.taskqueue.TaskOptions.Builder;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
 
+import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.helpers.QueueHelper;
+import io.reflection.app.helpers.SqlQueryHelper;
 import io.reflection.app.logging.GaeLevel;
+import io.reflection.app.service.sale.SaleServiceProvider;
 
 @SuppressWarnings("serial")
 public class DevUtilServlet extends HttpServlet {
@@ -92,11 +100,32 @@ public class DevUtilServlet extends HttpServlet {
 	private String summarise(HttpServletRequest req, HttpServletResponse resp) {
 		StringBuilder webResponse = new StringBuilder();
 
-		ArrayList<Integer> dataAccountIds = getIntParameters(req, PARAM_DATA_ACCOUNT_IDS);
 		ArrayList<String> dates = getStringParameters(req, PARAM_DATES);
 
+		if (dates.isEmpty()) {
+			dates.add(SqlQueryHelper.getSqlDateFormat().format(new Date()));
+		}
+
+		ArrayList<Date> sortedDates = getSortedDatesFromStrings(dates);
+		List<Long> dataAccountIds = getLongParameters(req, PARAM_DATA_ACCOUNT_IDS);
+
+		if (dataAccountIds.isEmpty()) {
+			try {
+				dataAccountIds = SaleServiceProvider.provide().getDataAccountsWithSalesBetweenDates(sortedDates.get(0), sortedDates.get(sortedDates.size() - 1));
+			} catch (DataAccessException e) {
+				e.printStackTrace();
+			}
+		}
+
+		if (dataAccountIds == null || dataAccountIds.isEmpty()) {
+			String msg = String.format("There are no data accounts to process. Doing nothing.");
+
+			LOG.log(GaeLevel.DEBUG, msg);
+			return msg;
+		}
+
 		for (String date : dates) {
-			for (Integer dataAccountId : dataAccountIds) {
+			for (Long dataAccountId : dataAccountIds) {
 
 				QueueHelper.enqueue(QUEUE_SUMMARISE, URL_SUMMARISE, Method.GET,
 						new SimpleEntry<String, String>("taskName", "summarise_" + dataAccountId + "_" + date + "-" + System.currentTimeMillis()),
@@ -128,14 +157,34 @@ public class DevUtilServlet extends HttpServlet {
 		}
 
 		switch (action) {
-		case ACTION_SUMMARISE:
-			writeResponse(resp, summarise(req, resp));
-			break;
-		case ACTION_SPLIT_DATA:
-			break;
-		case ACTION_MODEL:
-			break;
+			case ACTION_SUMMARISE:
+				writeResponse(resp, summarise(req, resp));
+				break;
+			case ACTION_SPLIT_DATA:
+				break;
+			case ACTION_MODEL:
+				break;
 		}
+	}
+
+	/**
+	 * @param dates
+	 * @return
+	 */
+	private ArrayList<Date> getSortedDatesFromStrings(ArrayList<String> dates) {
+		SimpleDateFormat sdf = SqlQueryHelper.getSqlDateFormat();
+
+		ArrayList<Date> sortedDates = new ArrayList<Date>(dates.size());
+		for (String date : dates) {
+			try {
+				sortedDates.add(sdf.parse(date));
+			} catch (ParseException e) {
+				LOG.log(GaeLevel.DEBUG, String.format("Invalid date in date list %s", date));
+			}
+		}
+
+		Collections.sort(sortedDates);
+		return sortedDates;
 	}
 
 	/**
@@ -174,6 +223,28 @@ public class DevUtilServlet extends HttpServlet {
 		for (String value : values) {
 			try {
 				list.add(Integer.parseInt(value));
+			} catch (NumberFormatException e) {
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * @param req
+	 * @param paramName
+	 * @return
+	 */
+	private List<Long> getLongParameters(HttpServletRequest req, String paramName) {
+		String[] values = req.getParameterValues(paramName);
+
+		ArrayList<Long> list = new ArrayList<Long>(values.length);
+
+		if (values == null || values.length == 0) return list;
+
+		for (String value : values) {
+			try {
+				list.add(Long.parseLong(value));
 			} catch (NumberFormatException e) {
 			}
 		}
