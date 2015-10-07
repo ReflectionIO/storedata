@@ -21,6 +21,7 @@ import io.reflection.app.datatypes.shared.Sale;
 import io.reflection.app.datatypes.shared.SaleSummary;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
+import io.reflection.app.service.lookupitem.LookupItemService;
 
 /**
  * @author mamin
@@ -36,7 +37,16 @@ public class SaleSummaryHelper {
 	}
 
 	public void summariseSales(Long dataaccountid, List<Sale> sales, SALE_SOURCE saleSource, Connection saleConnection) throws DataAccessException {
-		if (dataaccountid == null) return;
+		if (dataaccountid == null) {
+			LOG.log(GaeLevel.DEBUG, String.format("Data account id is null. Returning without doing anything."));
+			return;
+		}
+		if (sales == null || sales.size() == 0) {
+			LOG.log(GaeLevel.DEBUG, String.format("Sales is %s. Returning without doing anything.", sales == null ? "NULL" : "an empty array"));
+			return;
+		}
+
+		LOG.log(GaeLevel.DEBUG, String.format("Summarising data account id %s", dataaccountid));
 
 		/*
 		 * Over all logic for this process is:
@@ -56,12 +66,15 @@ public class SaleSummaryHelper {
 		 * 		4.2 The sale summaries are then updated / inserted (via mysql upsert) as well
 		 */
 
-		HashMap<Integer, HashMap<String, LookupItem>> itemByCountryMap = new HashMap<Integer, HashMap<String, LookupItem>>();
-		HashMap<String, Integer> skuByItemMap = new HashMap<String, Integer>();
 		ArrayList<LookupItem> newlyFoundItems = new ArrayList<LookupItem>();
 		ArrayList<LookupItem> updatedLookupItems = new ArrayList<LookupItem>();
 
-		loadLookupItems(dataaccountid, saleConnection, itemByCountryMap, skuByItemMap);
+		LookupItemService lookupService = LookupItemService.INSTANCE;
+
+		List<LookupItem> lookupItemsForAccount = lookupService.getLookupItemsForAccount(dataaccountid);
+
+		HashMap<Integer, HashMap<String, LookupItem>> itemByCountryMap = lookupService.mapItemsByCountry(lookupItemsForAccount);
+		HashMap<String, Integer> skuByItemMap = lookupService.mapItemsBySku(lookupItemsForAccount);
 
 		// we will store all items->countries->actual_sale_summary in this map of a map
 		HashMap<Integer, HashMap<String, SaleSummary>> summaries = new HashMap<Integer, HashMap<String, SaleSummary>>();
@@ -69,6 +82,7 @@ public class SaleSummaryHelper {
 		// this will hold all sale items that we don't know the main item for
 		ArrayList<Sale> iapItemsMissingParents = new ArrayList<Sale>();
 
+		LOG.log(GaeLevel.DEBUG, String.format("Processing %d sales", sales.size()));
 		for (Sale sale : sales) {
 			LookupItem mainLookupItemForSummary = findOrCreateMainLookupItem(dataaccountid, sale, itemByCountryMap, skuByItemMap, newlyFoundItems, saleSource);
 
@@ -76,7 +90,6 @@ public class SaleSummaryHelper {
 				// We have never seen a parent item with this sku before.
 				// We may find its parent later in the sale array so lets park this item for processing later.
 				// NOTE THIS IS THE ONLY CASE IN WHICH WE SKIP PROCESSING A SALE ITEM.
-
 				iapItemsMissingParents.add(sale);
 
 				continue;
@@ -85,6 +98,7 @@ public class SaleSummaryHelper {
 			// WE HAVE LOOKED UP THE MAIN ITEM FOR THIS SALE
 			processSummaryForSale(dataaccountid, summaries, sale, mainLookupItemForSummary, updatedLookupItems, saleSource);
 		}   // end of for each sale
+		LOG.log(GaeLevel.DEBUG, String.format("Finished the first pass of processing sales"));
 
 		// Having processed all the sales at least once, lets go over the IAP items that we didn't know the parents of
 		for (Sale sale : iapItemsMissingParents) {
@@ -100,6 +114,7 @@ public class SaleSummaryHelper {
 			// WE HAVE LOOKED UP THE MAIN ITEM FOR THIS SALE
 			processSummaryForSale(dataaccountid, summaries, sale, mainLookupItemForSummary, updatedLookupItems, saleSource);
 		}
+		LOG.log(GaeLevel.DEBUG, String.format("Finished the second pass of processing sales"));
 
 		// Lets update the DB with all the summaries and newly found items
 		// 4.1 upsert all lookup items in
@@ -108,48 +123,6 @@ public class SaleSummaryHelper {
 		// 4.2 upsert all the sales summaries
 		upsertSaleSummaries(summaries, dataaccountid, saleConnection);
 
-	}
-
-	public void loadLookupItems(Long dataaccountid, Connection saleConnection, HashMap<Integer, HashMap<String, LookupItem>> itemByCountryMap,
-			HashMap<String, Integer> skuByItemMap) throws DataAccessException {
-		String selectLookupItems = "SELECT * FROM lkp_items where dataaccountid=" + dataaccountid;
-
-		// First we load up all the items and iap items for this data account and map them so we can find a parent (and title / price) for an iap quickly
-		try {
-			saleConnection.executeQuery(selectLookupItems);
-			while (saleConnection.fetchNextRow()) {
-				// create the item from the resultset
-				LookupItem item = new LookupItem()
-						.dataaccountid(dataaccountid.intValue())
-						.itemid(saleConnection.getCurrentRowInteger("itemid"))
-						.parentid(saleConnection.getCurrentRowInteger("parentid"))
-						.title(saleConnection.getCurrentRowString("title"))
-						.country(saleConnection.getCurrentRowString("country"))
-						.currency(saleConnection.getCurrentRowString("currency"))
-						.price(saleConnection.getCurrentRowInteger("price"))
-						.sku(saleConnection.getCurrentRowString("sku"))
-						.parentsku(saleConnection.getCurrentRowString("parentsku"));
-
-				// look up the item from the map
-				HashMap<String, LookupItem> itemCountriesMap = itemByCountryMap.get(item.itemid);
-				if (itemCountriesMap == null) {
-					// if this is the first time it is encountered, create the countries hashmap
-					itemCountriesMap = new HashMap<String, LookupItem>();
-					itemByCountryMap.put(item.itemid, itemCountriesMap);
-				}
-
-				// add this item as the lookup item for this country
-				itemCountriesMap.put(item.country, item);
-
-				if (!skuByItemMap.containsKey(item.parentsku)) {
-					skuByItemMap.put(item.sku, item.itemid);
-				}
-			}
-		} finally {
-			if (saleConnection != null) {
-				saleConnection.disconnect();
-			}
-		}
 	}
 
 	/**
@@ -440,6 +413,8 @@ public class SaleSummaryHelper {
 		String updateQuery = "INSERT INTO lkp_items (dataaccountid, itemid, country, title, sku, parentsku, currency, price, parentid) "
 				+ "VALUES(?, ?, ?,   ?, ?, ?,   ?, ?, ?) ON DUPLICATE KEY UPDATE title=?, sku=?, parentsku=?, currency=?, price=?, parentid=?";
 
+		LOG.log(GaeLevel.DEBUG, String.format("Upserting %d lookup items", updatedLookupItems.size()));
+
 		try {
 			PreparedStatement pstat = saleConnection.getRealConnection().prepareStatement(updateQuery);
 
@@ -468,8 +443,9 @@ public class SaleSummaryHelper {
 				pstat.addBatch();
 			}
 
+			LOG.log(GaeLevel.DEBUG, String.format("Executing batch update of lookup items"));
 			pstat.executeBatch();
-
+			LOG.log(GaeLevel.DEBUG, String.format("Lookup item upsert complete"));
 			try {
 				pstat.close();
 			} catch (Exception ex) {
@@ -510,8 +486,11 @@ public class SaleSummaryHelper {
 				+ " total_download_and_updates=?, "
 				+ "free_subs_count=?, paid_subs_count=?, total_subs_count=?, subs_revenue=?";
 
+		LOG.log(GaeLevel.DEBUG, String.format("Upserting sale summaries"));
 		try {
 			PreparedStatement pstat = saleConnection.getRealConnection().prepareStatement(updateQuery);
+
+			int totalUpsertCount = 0;
 
 			for (HashMap<String, SaleSummary> itemCountryMap : summaries.values()) {
 				for (SaleSummary summary : itemCountryMap.values()) {
@@ -579,11 +558,14 @@ public class SaleSummaryHelper {
 					pstat.setObject(paramCount++, summary.subs_revenue);
 
 					pstat.addBatch();
-
+					totalUpsertCount++;
 				}
 			}
 
+			LOG.log(GaeLevel.DEBUG, String.format("Executing batch update for %d sales upserts", totalUpsertCount));
 			pstat.executeBatch();
+			LOG.log(GaeLevel.DEBUG, String.format("Upsert complete"));
+
 			try {
 				pstat.close();
 			} catch (Exception ex) {

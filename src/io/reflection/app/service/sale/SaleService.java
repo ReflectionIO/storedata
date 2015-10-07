@@ -386,11 +386,11 @@ final class SaleService implements ISaleService {
 
 			if (pager.sortDirection != null) {
 				switch (pager.sortDirection) {
-					case SortDirectionTypeAscending:
-						sortDirectionQuery = "ASC";
-						break;
-					default:
-						break;
+				case SortDirectionTypeAscending:
+					sortDirectionQuery = "ASC";
+					break;
+				default:
+					break;
 				}
 			}
 
@@ -491,11 +491,11 @@ final class SaleService implements ISaleService {
 
 			if (pager.sortDirection != null) {
 				switch (pager.sortDirection) {
-					case SortDirectionTypeAscending:
-						sortDirectionQuery = "ASC";
-						break;
-					default:
-						break;
+				case SortDirectionTypeAscending:
+					sortDirectionQuery = "ASC";
+					break;
+				default:
+					break;
 				}
 			}
 
@@ -910,6 +910,8 @@ final class SaleService implements ISaleService {
 	@Override
 	public void summariseSalesForDataAccountOnDate(Long dataAccountId, Date date) throws DataAccessException {
 		ArrayList<Sale> sales = getSalesForDataAccountOnDate(dataAccountId, date);
+
+		LOG.log(GaeLevel.DEBUG, String.format("Loaded %s sales for summarisation", sales == null ? "NULL" : sales.size()));
 
 		summariseSales(dataAccountId, sales, SaleSummaryHelper.SALE_SOURCE.DB);
 	}

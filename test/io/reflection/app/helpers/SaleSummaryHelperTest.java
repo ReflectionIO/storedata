@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -19,6 +20,7 @@ import io.reflection.app.datatypes.shared.Sale;
 import io.reflection.app.datatypes.shared.SaleSummary;
 import io.reflection.app.helpers.SaleSummaryHelper.SALE_SOURCE;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
+import io.reflection.app.service.lookupitem.LookupItemService;
 import io.reflection.app.service.sale.SaleServiceProvider;
 
 public class SaleSummaryHelperTest {
@@ -76,10 +78,11 @@ public class SaleSummaryHelperTest {
 
 	@Test
 	public void testLoadLookupItems() throws DataAccessException {
-		HashMap<Integer, HashMap<String, LookupItem>> itemByCountryMap = new HashMap<Integer, HashMap<String, LookupItem>>();
-		HashMap<String, Integer> parentskuByParentMap = new HashMap<String, Integer>();
+		LookupItemService lookupService = LookupItemService.INSTANCE;
 
-		summaryHelper.loadLookupItems(dataAccountIdToTest, dbCon, itemByCountryMap, parentskuByParentMap);
+		List<LookupItem> lookupItemsForAccount = lookupService.getLookupItemsForAccount(dataAccountIdToTest);
+
+		HashMap<Integer, HashMap<String, LookupItem>> itemByCountryMap = lookupService.mapItemsByCountry(lookupItemsForAccount);
 
 		int totalItems = 0;
 
@@ -97,14 +100,16 @@ public class SaleSummaryHelperTest {
 
 	@Test
 	public void testFindOrCreateMainLookupItem() throws DataAccessException {
-		HashMap<Integer, HashMap<String, LookupItem>> itemByCountryMap = new HashMap<Integer, HashMap<String, LookupItem>>();
-		HashMap<String, Integer> parentskuByParentMap = new HashMap<String, Integer>();
+		LookupItemService lookupService = LookupItemService.INSTANCE;
 
-		summaryHelper.loadLookupItems(dataAccountIdToTest, dbCon, itemByCountryMap, parentskuByParentMap);
+		List<LookupItem> lookupItemsForAccount = lookupService.getLookupItemsForAccount(dataAccountIdToTest);
+
+		HashMap<Integer, HashMap<String, LookupItem>> itemByCountryMap = lookupService.mapItemsByCountry(lookupItemsForAccount);
+		HashMap<String, Integer> skyByItemId = lookupService.mapItemsBySku(lookupItemsForAccount);
 
 		ArrayList<LookupItem> updatedLookupItems = new ArrayList<LookupItem>();
 
-		LookupItem lookupItem = summaryHelper.findOrCreateMainLookupItem(dataAccountIdToTest, testSubscriptionSaleEntry, itemByCountryMap, parentskuByParentMap, updatedLookupItems, SALE_SOURCE.DB);
+		LookupItem lookupItem = summaryHelper.findOrCreateMainLookupItem(dataAccountIdToTest, testSubscriptionSaleEntry, itemByCountryMap, skyByItemId, updatedLookupItems, SALE_SOURCE.DB);
 
 		Assert.assertNotNull(lookupItem);
 		Assert.assertNull(lookupItem.parentid);
@@ -114,13 +119,15 @@ public class SaleSummaryHelperTest {
 
 	@Test
 	public void testProcessSummaryForSale() throws DataAccessException {
-		HashMap<Integer, HashMap<String, LookupItem>> itemByCountryMap = new HashMap<Integer, HashMap<String, LookupItem>>();
-		HashMap<String, Integer> parentskuByParentMap = new HashMap<String, Integer>();
+		LookupItemService lookupService = LookupItemService.INSTANCE;
 
-		summaryHelper.loadLookupItems(dataAccountIdToTest, dbCon, itemByCountryMap, parentskuByParentMap);
+		List<LookupItem> lookupItemsForAccount = lookupService.getLookupItemsForAccount(dataAccountIdToTest);
+
+		HashMap<Integer, HashMap<String, LookupItem>> itemByCountryMap = lookupService.mapItemsByCountry(lookupItemsForAccount);
+		HashMap<String, Integer> skyByItemId = lookupService.mapItemsBySku(lookupItemsForAccount);
 
 		ArrayList<LookupItem> updatedLookupItems = new ArrayList<LookupItem>();
-		LookupItem mainLookupItem = summaryHelper.findOrCreateMainLookupItem(dataAccountIdToTest, testSubscriptionSaleEntry, itemByCountryMap, parentskuByParentMap, updatedLookupItems, SALE_SOURCE.DB);
+		LookupItem mainLookupItem = summaryHelper.findOrCreateMainLookupItem(dataAccountIdToTest, testSubscriptionSaleEntry, itemByCountryMap, skyByItemId, updatedLookupItems, SALE_SOURCE.DB);
 
 		HashMap<Integer, HashMap<String, SaleSummary>> summaries = new HashMap<Integer, HashMap<String, SaleSummary>>();
 		summaryHelper.processSummaryForSale(dataAccountIdToTest, summaries, testSubscriptionSaleEntry, mainLookupItem, updatedLookupItems, SALE_SOURCE.DB);

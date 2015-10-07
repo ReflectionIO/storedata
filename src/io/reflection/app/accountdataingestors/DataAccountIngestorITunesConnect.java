@@ -95,9 +95,12 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 
 					// ArchiverFactory.getItemSaleArchiver().enqueueIdDataAccountFetch(fetch.id);
 
+					String date = SqlQueryHelper.getSqlDateFormat().format(fetch.date);
+
 					QueueHelper.enqueue(DevUtilServlet.QUEUE_SUMMARISE, DevUtilServlet.URL_SUMMARISE, Method.GET,
+							new SimpleEntry<String, String>("taskName", "summarise_" + fetch.linkedAccount.id + "_" + date + "-" + System.currentTimeMillis()),
 							new SimpleEntry<String, String>("dataaccountid", fetch.linkedAccount.id.toString()),
-							new SimpleEntry<String, String>("date", SqlQueryHelper.getSqlDateFormat().format(fetch.date)));
+							new SimpleEntry<String, String>("date", date));
 				}
 			} catch (DataAccessException e) {
 				LOG.log(Level.SEVERE, String.format("Exception occured while ingesting file for data account fetch [%d]", fetch.id.longValue()), e);

@@ -99,6 +99,7 @@ public class DevUtilServlet extends HttpServlet {
 			for (Integer dataAccountId : dataAccountIds) {
 
 				QueueHelper.enqueue(QUEUE_SUMMARISE, URL_SUMMARISE, Method.GET,
+						new SimpleEntry<String, String>("taskName", "summarise_" + dataAccountId + "_" + date + "-" + System.currentTimeMillis()),
 						new SimpleEntry<String, String>("dataaccountid", dataAccountId.toString()),
 						new SimpleEntry<String, String>("date", date));
 

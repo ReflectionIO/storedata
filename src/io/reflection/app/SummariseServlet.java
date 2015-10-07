@@ -17,12 +17,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
-import com.spacehopperstudios.utility.StringUtils;
 
 import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.datatypes.shared.LookupItem;
 import io.reflection.app.helpers.QueueHelper;
 import io.reflection.app.helpers.SqlQueryHelper;
 import io.reflection.app.logging.GaeLevel;
+import io.reflection.app.service.lookupitem.LookupItemService;
 import io.reflection.app.service.sale.ISaleService;
 import io.reflection.app.service.sale.SaleServiceProvider;
 
@@ -46,47 +47,48 @@ public class SummariseServlet extends HttpServlet {
 			return;
 		}
 
-		resp.setHeader("Cache-Control", "no-cache");
-
 		if (LOG.isLoggable(GaeLevel.DEBUG)) {
 			if (!isNotQueue) {
 				LOG.log(GaeLevel.DEBUG, String.format("Servlet is being called from [%s] queue", appEngineQueue));
 			}
 		}
 
-		final String dataAccountIdStr = req.getParameter("dataaccountid");
-		final String dateStr = req.getParameter("date");
+		try{
+			final String dataAccountIdStr = req.getParameter("dataaccountid");
+			final String dateStr = req.getParameter("date");
 
-		Long dataAccountId = Long.parseLong(dataAccountIdStr);
-		if (dataAccountId == null || dataAccountId == 0L) {
-			LOG.log(GaeLevel.DEBUG, String.format("Invalid data account id %s", dataAccountIdStr));
-			return;
-		}
+			Long dataAccountId = Long.parseLong(dataAccountIdStr);
+			if (dataAccountId == null || dataAccountId == 0L) {
+				LOG.log(GaeLevel.DEBUG, String.format("Invalid data account id %s", dataAccountIdStr));
+				return;
+			}
 
-		Date date = null;
-		try {
-			date = SqlQueryHelper.getSqlDateFormat().parse(dateStr);
-		} catch (ParseException e1) {
-			LOG.log(GaeLevel.DEBUG, String.format("Invalid date %s", dateStr), e1);
-		}
+			Date date = null;
+			try {
+				date = SqlQueryHelper.getSqlDateFormat().parse(dateStr);
+			} catch (ParseException e1) {
+				LOG.log(GaeLevel.DEBUG, String.format("Invalid date %s", dateStr), e1);
+			}
 
-		if (date == null) {
-			LOG.log(GaeLevel.DEBUG, String.format("Invalid date %s", dateStr));
-			return;
-		}
+			if (date == null) {
+				LOG.log(GaeLevel.DEBUG, String.format("Invalid date %s", dateStr));
+				return;
+			}
 
-		try {
+			try {
+				LOG.log(GaeLevel.DEBUG, String.format("Summarising dataAccountId %d on %s", dataAccountId, dateStr));
 
-			LOG.log(GaeLevel.DEBUG, String.format("Summarising dataAccountId %d on %s", dataAccountId, dateStr));
+				SaleServiceProvider.provide().summariseSalesForDataAccountOnDate(dataAccountId, date);
 
-			SaleServiceProvider.provide().summariseSalesForDataAccountOnDate(dataAccountId, date);
+				LOG.log(GaeLevel.DEBUG, String.format("Summarisation complete. Queuing up this summary for splitting sales data"));
 
-			LOG.log(GaeLevel.DEBUG, String.format("Summarisation complete. Queuing up this summary for splitting sales data"));
+				enqueueDataAccountItemsToGatherSplitData(dataAccountId, date);
 
-			enqueueDataAccountItemsToGatherSplitData(dataAccountId, date);
-
-		} catch (NumberFormatException | DataAccessException e) {
-			LOG.log(Level.SEVERE, String.format("Unable to execute summarisation for dataAccountId: %s on %s", dataAccountId, date), e);
+			} catch (NumberFormatException | DataAccessException e) {
+				LOG.log(Level.SEVERE, String.format("Unable to execute summarisation for dataAccountId: %s on %s", dataAccountId, date), e);
+			}
+		}finally{
+			resp.setHeader("Cache-Control", "no-cache");
 		}
 	}
 
@@ -99,6 +101,8 @@ public class SummariseServlet extends HttpServlet {
 		 * Get all sale summary rows for this dataaccount for this date. For each item id, get its iap ids and then for each country the main item is in,
 		 * enqueue the item for gathering the splits
 		 */
+
+		LOG.log(GaeLevel.DEBUG, String.format("Enqueuing split data gathers for data account id %d on %s", dataAccountId, date));
 
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
@@ -115,8 +119,10 @@ public class SummariseServlet extends HttpServlet {
 		if (lastDayOfMonth.before(new Date())) {
 			// the last day of that month is before today so we can fetch the whole month that month
 			gatherTo = lastDayOfMonth;
+			LOG.log(GaeLevel.DEBUG, String.format("The last date of the given month is before today for so gathering split data for the full month"));
 		}
 
+		LOG.log(GaeLevel.DEBUG, String.format("Gathering for period from %s to %s", gatherFrom, gatherTo));
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyy-MM-dd");
 
@@ -124,18 +130,14 @@ public class SummariseServlet extends HttpServlet {
 		String gatherToStr = sdf.format(gatherTo);
 		try {
 			ISaleService saleService = SaleServiceProvider.provide();
+
 			List<SimpleEntry<String, String>> mainItemIdsAndCountries = saleService.getSoldItemIdsForAccountInDateRange(dataAccountId, gatherFrom, gatherTo);
+			LOG.log(GaeLevel.DEBUG, String.format("Got %d combinations of main item id and country", mainItemIdsAndCountries.size()));
 
-			HashMap<String, String> iapItemsMapByParentItem = new HashMap<String, String>(mainItemIdsAndCountries.size());
+			LookupItemService lookupService = LookupItemService.INSTANCE;
 
-			for (SimpleEntry<String, String> entry : mainItemIdsAndCountries) {
-				String mainItemId = entry.getKey();
-				List<String> iapItemIds = saleService.getIapItemIdsForParentItemOnDate(dataAccountId, mainItemId, date);
-
-				String iapItemIdsString = StringUtils.join(iapItemIds);
-
-				iapItemsMapByParentItem.put(mainItemId, iapItemIdsString);
-			}
+			List<LookupItem> lookupItemsForAccount = lookupService.getLookupItemsForAccount(dataAccountId);
+			HashMap<String, String> parentItemsByIaps = lookupService.mapItemsByParentId(lookupItemsForAccount);
 
 			String countriesToIngest = System.getProperty("ingest.ios.countries");
 
@@ -147,7 +149,11 @@ public class SummariseServlet extends HttpServlet {
 				}
 
 				String mainItemId = entry.getKey();
-				String iapItemIds = iapItemsMapByParentItem.get(mainItemId);
+				String iapItemIds = parentItemsByIaps.get(mainItemId);
+
+				if (iapItemIds == null) {
+					iapItemIds = "";
+				}
 
 				QueueHelper.enqueue("gathersplitsaledata", Method.PULL, new SimpleEntry<String, String>("dataAccountId", String.valueOf(dataAccountId)),
 						new SimpleEntry<String, String>("gatherFrom", gatherFromStr), new SimpleEntry<String, String>("gatherTo", gatherToStr),
