@@ -82,6 +82,7 @@ import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -141,13 +142,13 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField(provided = true) FilterSwitch cumulativeChartSwitch = new FilterSwitch(true);
 	@UiField(provided = true) FilterSwitch oneMMovingAverageSwitch = new FilterSwitch(true);
 	@UiField(provided = true) FilterSwitch overlayAppsSwitch = new FilterSwitch(true);
-	@UiField(provided = true) ToggleRadioButton toggleChartDate = new ToggleRadioButton("charttype");
-	@UiField(provided = true) ToggleRadioButton toggleChartCountry = new ToggleRadioButton("charttype");
+	@UiField(provided = true) ToggleRadioButton toggleChartDate = new ToggleRadioButton("charttype", "0 0 32 32");
+	@UiField(provided = true) ToggleRadioButton toggleChartCountry = new ToggleRadioButton("charttype", "0 0 32 32");
 
 	@UiField InlineHyperlink revenueLink;
-	@UiField SpanElement revenueText;
+	@UiField Element premiumIconRevenue;
 	@UiField InlineHyperlink downloadsLink;
-	@UiField SpanElement downloadsText;
+	@UiField Element premiumIconDownload;
 	@UiField InlineHyperlink rankingLink;
 	@UiField SpanElement rankingText;
 	@UiField InlineHyperlink appDetailsLink;
@@ -661,6 +662,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 		resetAppProperties();
 		// loadingBar.reset();
+		premiumIconRevenue.getStyle().setVisibility(Visibility.HIDDEN);
+		premiumIconDownload.getStyle().setVisibility(Visibility.HIDDEN);
 	}
 
 	/*
@@ -674,6 +677,9 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		if (isValidStack(current)) {
 
 			comingPage = current.getParameter(2);
+
+			premiumIconRevenue.getStyle().setVisibility(RanksPage.COMING_FROM_PARAMETER.equals(comingPage) ? Visibility.VISIBLE : Visibility.HIDDEN);
+			premiumIconDownload.getStyle().setVisibility(RanksPage.COMING_FROM_PARAMETER.equals(comingPage) ? Visibility.VISIBLE : Visibility.HIDDEN);
 
 			String newInternalId = current.getParameter(0);
 			boolean isNewDataRequired = false;
@@ -844,19 +850,15 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 	private void setRevenueDownloadTabsEnabled(boolean enable) {
 		if (enable) {
-			revenueText.setInnerText("Revenue");
 			revenueItem.removeClassName(style.isDisabled());
 			revenueItem.getStyle().setCursor(Cursor.POINTER);
-			downloadsText.setInnerText("Downloads");
 			downloadsItem.removeClassName(style.isDisabled());
 			downloadsItem.getStyle().setCursor(Cursor.POINTER);
 			appDetailsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 		} else {
-			revenueText.setInnerHTML("Revenue <span class=\"text-small\">coming soon</span>");
 			revenueItem.addClassName(style.isDisabled());
 			revenueItem.getStyle().setCursor(Cursor.DEFAULT);
 			revenueLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
-			downloadsText.setInnerHTML("Downloads <span class=\"text-small\">coming soon</span>");
 			downloadsItem.addClassName(style.isDisabled());
 			downloadsItem.getStyle().setCursor(Cursor.DEFAULT);
 			downloadsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());

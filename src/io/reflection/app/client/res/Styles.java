@@ -1557,6 +1557,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("pricing-option--standard")
 		String pricingOptionStandard();
 
+		@ClassName("pricing-option--with-footer")
+		String pricingOptionWithFooter();
+
 		@ClassName("pricing-options")
 		String pricingOptions();
 
