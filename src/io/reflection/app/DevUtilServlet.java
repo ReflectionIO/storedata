@@ -195,7 +195,7 @@ public class DevUtilServlet extends HttpServlet {
 	private ArrayList<String> getStringParameters(HttpServletRequest req, String paramName) {
 		String[] values = req.getParameterValues(paramName);
 
-		ArrayList<String> list = new ArrayList<String>(values.length);
+		ArrayList<String> list = new ArrayList<String>(values == null ? 10 : values.length);
 
 		if (values == null || values.length == 0) return list;
 
@@ -216,7 +216,7 @@ public class DevUtilServlet extends HttpServlet {
 	private ArrayList<Integer> getIntParameters(HttpServletRequest req, String paramName) {
 		String[] values = req.getParameterValues(paramName);
 
-		ArrayList<Integer> list = new ArrayList<Integer>(values.length);
+		ArrayList<Integer> list = new ArrayList<Integer>(values == null ? 10 : values.length);
 
 		if (values == null || values.length == 0) return list;
 
@@ -238,7 +238,7 @@ public class DevUtilServlet extends HttpServlet {
 	private List<Long> getLongParameters(HttpServletRequest req, String paramName) {
 		String[] values = req.getParameterValues(paramName);
 
-		ArrayList<Long> list = new ArrayList<Long>(values.length);
+		ArrayList<Long> list = new ArrayList<Long>(values == null ? 10 : values.length);
 
 		if (values == null || values.length == 0) return list;
 

@@ -238,7 +238,7 @@ public class SaleSummaryHelper {
 
 			HashMap<String, LookupItem> lookupItemCountriesMap = itemByCountryMap.get(parentId);
 
-			mainLookupItemForSummary = lookupItemCountriesMap.get(sale.country);
+			mainLookupItemForSummary = lookupItemCountriesMap == null ? null : lookupItemCountriesMap.get(sale.country);
 			if (mainLookupItemForSummary == null) {
 				// we have seen this parent item before but never for this country. Need to add it to the DB.
 
