@@ -403,7 +403,7 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 	 * @see io.reflection.app.client.handler.user.UserPowersEventHandler#gotUserPowers(io.reflection.app.datatypes.shared.User, java.util.List, java.util.List)
 	 */
 	@Override
-	public void gotUserPowers(User user, List<Role> roles, List<Permission> permissions) {
+	public void gotUserPowers(User user, List<Role> roles, List<Permission> permissions, Integer daysSinceRoleAssigned) {
 		attachUserLinks(user);
 	}
 

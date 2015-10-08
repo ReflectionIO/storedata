@@ -201,8 +201,6 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 
 			input.session = session;
 
-			input.idsOnly = Boolean.FALSE; // Retrieve the whole permission
-
 			// Ask roles and permissions for the user
 			service.getRolesAndPermissions(input, new AsyncCallback<GetRolesAndPermissionsResponse>() {
 
@@ -212,29 +210,19 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 						if (userSession != null && userSession.token != null && input.session != null && input.session.token != null
 								&& userSession.token.equals(input.session.token)) {
 
-							// Add retrieved roles and permissions into caches
-							if (loggedInUser.roles == null) {
-								loggedInUser.roles = new ArrayList<Role>();
-							}
-							for (Role role : output.roles) {
-								loggedInUser.roles.add(role);
-							}
+							setUserRole(output.roles.get(0));
 
-							if (output.permissions != null) {
-								for (Permission permission : output.permissions) {
-									setUserPermission(permission);
-								}
-							}
+							setUserPermissions(output.permissions);
 
 							NavigationController.get().resetSemiPublicPages();
 
-							DefaultEventBus.get().fireEventFromSource(new GotUserPowers(loggedInUser, loggedInUser.roles, loggedInUser.permissions),
+							DefaultEventBus.get().fireEventFromSource(
+									new GotUserPowers(loggedInUser, loggedInUser.roles, loggedInUser.permissions, output.daysSinceRoleAssigned),
 									SessionController.this);
 						}
 					} else {
 						DefaultEventBus.get().fireEventFromSource(new GetUserPowersFailed(output.error), SessionController.this);
 					}
-
 					DefaultEventBus.get().fireEventFromSource(new GetRolesAndPermissionsSuccess(input, output), SessionController.this);
 				}
 
@@ -247,6 +235,46 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 		}
 
 		return attemptPrefetch;
+	}
+
+	public void fetchRolesAndPermissions() {
+
+		CoreService service = ServiceCreator.createCoreService();
+
+		final GetRolesAndPermissionsRequest input = new GetRolesAndPermissionsRequest();
+		input.accessCode = ACCESS_CODE;
+
+		input.session = SessionController.get().getSessionForApiCall();
+
+		service.getRolesAndPermissions(input, new AsyncCallback<GetRolesAndPermissionsResponse>() {
+
+			@Override
+			public void onSuccess(GetRolesAndPermissionsResponse output) {
+				if (output.status == StatusType.StatusTypeSuccess) {
+					if (userSession != null && userSession.token != null && input.session != null && input.session.token != null
+							&& userSession.token.equals(input.session.token)) {
+
+						setUserRole(output.roles.get(0));
+
+						setUserPermissions(output.permissions);
+
+						DefaultEventBus.get().fireEventFromSource(
+								new GotUserPowers(loggedInUser, loggedInUser.roles, loggedInUser.permissions, output.daysSinceRoleAssigned),
+								SessionController.this);
+					}
+				} else {
+					DefaultEventBus.get().fireEventFromSource(new GetUserPowersFailed(output.error), SessionController.this);
+				}
+				DefaultEventBus.get().fireEventFromSource(new GetRolesAndPermissionsSuccess(input, output), SessionController.this);
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				DefaultEventBus.get().fireEventFromSource(new GetUserPowersFailed(FormHelper.convertToError(caught)), SessionController.this);
+				DefaultEventBus.get().fireEventFromSource(new GetRolesAndPermissionsFailure(input, caught), SessionController.this);
+			}
+
+		});
 	}
 
 	/**
@@ -402,11 +430,30 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	}
 
 	/**
+	 * Set user role deleting the current one (if exists)
+	 * 
+	 * @param p
+	 */
+	public void setUserRole(Role r) {
+		loggedInUser.roles = new ArrayList<Role>(1);
+		loggedInUser.roles.add(r);
+	}
+
+	public void setUserPermissions(List<Permission> permissions) {
+		loggedInUser.permissions = new ArrayList<Permission>();
+		if (permissions != null) {
+			for (Permission p : permissions) {
+				loggedInUser.permissions.add(p);
+			}
+		}
+	}
+
+	/**
 	 * Add a permission to the cache
 	 * 
 	 * @param p
 	 */
-	public void setUserPermission(Permission p) {
+	public void addUserPermission(Permission p) {
 		if (loggedInUser.permissions == null) {
 			loggedInUser.permissions = new ArrayList<Permission>();
 		}

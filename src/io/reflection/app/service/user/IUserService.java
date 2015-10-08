@@ -171,7 +171,16 @@ public interface IUserService extends IService {
 	 * @param user
 	 * @return
 	 */
-	public List<Role> getRoles(User user) throws DataAccessException;
+	public List<Role> getUserRoles(User user) throws DataAccessException;
+
+	/**
+	 * 
+	 * @param user
+	 * @param includeExpired
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<Role> getUserRoles(User user, boolean includeExpired) throws DataAccessException;
 
 	/**
 	 * @param user
@@ -207,6 +216,13 @@ public interface IUserService extends IService {
 	 * @throws DataAccessException
 	 */
 	public void revokeRole(User user, Role role) throws DataAccessException;
+
+	/**
+	 * 
+	 * @param user
+	 * @throws DataAccessException
+	 */
+	public void setUserRoleAsExpired(User user, Role role) throws DataAccessException;
 
 	/**
 	 * 

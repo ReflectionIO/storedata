@@ -42,8 +42,11 @@ import io.reflection.app.api.core.shared.call.GetUserDetailsRequest;
 import io.reflection.app.api.core.shared.call.GetUserDetailsResponse;
 import io.reflection.app.api.core.shared.call.RegisterUserRequest;
 import io.reflection.app.api.core.shared.call.RegisterUserResponse;
+import io.reflection.app.api.core.shared.call.UpgradeAccountRequest;
+import io.reflection.app.api.core.shared.call.UpgradeAccountResponse;
 import io.reflection.app.api.core.shared.call.event.GetUserDetailsEventHandler;
 import io.reflection.app.api.core.shared.call.event.RegisterUserEventHandler;
+import io.reflection.app.api.core.shared.call.event.UpgradeAccountEventHandler;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.client.DefaultEventBus;
@@ -706,15 +709,29 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 		});
 	}
 
-	// private void addToLookup(List<User> users) {
-	// for (User user : users) {
-	// userLookup.put(user.id, user);
-	// }
-	// }
+	public void upgradeAccount(final String roleCode) {
+		CoreService service = ServiceCreator.createCoreService();
+		final UpgradeAccountRequest input = new UpgradeAccountRequest();
+		input.accessCode = ACCESS_CODE;
+		input.session = SessionController.get().getSessionForApiCall();
+		input.role = DataTypeHelper.createRole(roleCode);
 
-	// public User getUser(Long id) {
-	// return userLookup.get(id);
-	// }
+		service.upgradeAccount(input, new AsyncCallback<UpgradeAccountResponse>() {
+
+			@Override
+			public void onSuccess(UpgradeAccountResponse output) {
+				if (output.status == StatusType.StatusTypeSuccess) {
+					SessionController.get().fetchRolesAndPermissions();
+				}
+				DefaultEventBus.get().fireEventFromSource(new UpgradeAccountEventHandler.UpgradeAccountSuccess(input, output), UserController.this);
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				DefaultEventBus.get().fireEventFromSource(new UpgradeAccountEventHandler.UpgradeAccountFailure(input, caught), UserController.this);
+			}
+		});
+	}
 
 	/**
 	 * Fetches user details from the server. Details of fetched user (if the call is successful) will be broadcast on the event bus.
@@ -789,17 +806,13 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 	 * 
 	 * @param user
 	 */
-	public void fetchUserRolesAndPermissions(User user) {
+	public void fetchAdminRolesAndPermissions(User user) {
 
 		AdminService service = ServiceCreator.createAdminService();
 
 		final GetRolesAndPermissionsRequest input = new GetRolesAndPermissionsRequest();
 		input.accessCode = ACCESS_CODE;
-
 		input.session = SessionController.get().getSessionForApiCall();
-
-		input.idsOnly = Boolean.FALSE; // Retrieve the whole permission
-
 		input.user = user;
 
 		service.getRolesAndPermissions(input, new AsyncCallback<GetRolesAndPermissionsResponse>() {

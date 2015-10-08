@@ -71,7 +71,12 @@
 				<!-- Logged in panel -->
 
 				<div ui:field="userDetailsPanel" class="{STYLES_INSTANCE.reflectionMainStyle.accountUserDetails}">
-					<h2 ui:field="userName" class="{STYLES_INSTANCE.reflectionMainStyle.userName}">Jan Molby</h2>
+					<div ui:field="accountDetailsName" class="{STYLES_INSTANCE.reflectionMainStyle.accountUserDetailsName}">
+						<h2 ui:field="userName" class="{STYLES_INSTANCE.reflectionMainStyle.userName}"></h2>
+						<img ui:field="premiumImg" src="images/icon-pro@2x.png" alt="Pro member icon" class="{STYLES_INSTANCE.reflectionMainStyle.premiumIcon}" />
+						<span ui:field="premiumDays" class="{STYLES_INSTANCE.reflectionMainStyle.premiumDays}"></span>
+					</div>
+
 					<h3 ui:field="userCompany" class="{STYLES_INSTANCE.reflectionMainStyle.userCompany}">Electronic Arts</h3>
 				</div>
 

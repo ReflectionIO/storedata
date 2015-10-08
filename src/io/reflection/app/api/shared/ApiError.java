@@ -118,6 +118,8 @@ public enum ApiError {
 	MissingRoles(100501, "User does not have required role"),
 	MissingRolesAndOrPermissions(100502, "User does not have required roles and/or permissions"),
 
+	PremiumRoleExpired(100503, "The Premium role is expired"),
+
 	DataAccountUserMissmatch(100601, "User does not own data account"),
 
 	NotificationNull(100067, "Invalid value null for Notification: {0}"),

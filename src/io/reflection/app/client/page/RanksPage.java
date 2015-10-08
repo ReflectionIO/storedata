@@ -75,7 +75,6 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
@@ -185,7 +184,8 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	private TextHeader grossingHeader = new TextHeader("Grossing");
 	private TextHeader priceHeader = new TextHeader("Price");
 	private SafeHtmlHeader iapHeader = new SafeHtmlHeader(
-			SafeHtmlUtils.fromTrustedString("<span>IAP</span><span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding whats-this-tooltip-icon-static\" data-tooltip=\"In App Purchases\"></span>"));
+			SafeHtmlUtils
+					.fromTrustedString("<span>IAP</span><span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding whats-this-tooltip-icon-static\" data-tooltip=\"In App Purchases\"></span>"));
 
 	private String selectedTab = OVERALL_LIST_TYPE;
 	private String previousFilter;
@@ -790,9 +790,9 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			String category = filter.getCategoryId().toString();
 			String date = String.valueOf(ApiCallHelper.getUTCDate(FilterController.get().getEndDate()).getTime());
 
-			String session = SessionController.get().getSessionForApiCall().toString();
+			String sessionParam = SessionController.get().getSession().toString();
 
-			String requestData = "listType=" + listType + "&country=" + country + "&category=" + category + "&date=" + date + "&session=" + session;
+			String requestData = "listType=" + listType + "&country=" + country + "&category=" + category + "&date=" + date + "&session=" + sessionParam;
 
 			RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, URL.encode(Window.Location.getProtocol() + "//" + Window.Location.getHost()
 					+ "/downloadleaderboard"));
@@ -809,12 +809,16 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 					@Override
 					public void onResponseReceived(Request request, Response response) {
-						String csvContent = "data:text/csv;charset=utf-8," + response.getText();
-						Window.open(URL.encode(csvContent), "_self", "");
-						downloadLeaderboard.resetStatus();
+						if (response.getStatusCode() == Response.SC_FORBIDDEN) { // User doesn't have the required role
+							downloadLeaderboard.setStatusError();
+						} else {
+							String csvContent = "data:text/csv;charset=utf-8," + response.getText();
+							Window.open(URL.encode(csvContent), "_self", "");
+							downloadLeaderboard.resetStatus();
+						}
 					}
 				});
-			} catch (RequestException e) {
+			} catch (Exception e) {
 				downloadLeaderboard.setStatusError();
 			}
 		} else if (SessionController.get().isValidSession()) {

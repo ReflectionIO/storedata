@@ -539,7 +539,7 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 	 * @see io.reflection.app.client.handler.user.UserPowersEventHandler#gotUserPowers(io.reflection.app.datatypes.shared.User, java.util.List, java.util.List)
 	 */
 	@Override
-	public void gotUserPowers(User user, List<Role> roles, List<Permission> permissions) {
+	public void gotUserPowers(User user, List<Role> roles, List<Permission> permissions, Integer daysSinceRoleAssigned) {
 		Page currentHomePage = pages.get(PageType.HomePageType);
 		if (currentHomePage instanceof LoggedInHomePage) return;
 
