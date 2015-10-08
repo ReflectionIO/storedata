@@ -65,13 +65,12 @@
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird}">
 				<section ui:field="currentStandard" class="{STYLES_INSTANCE.reflectionMainStyle.pricingOption} {STYLES_INSTANCE.reflectionMainStyle.pricingOptionStandard}">
 					<header class="{STYLES_INSTANCE.reflectionMainStyle.pricingOptionHeader}">
-						<h2 class="{STYLES_INSTANCE.reflectionMainStyle.pricingName}">Developer Standard</h2>
+						<h2 class="{STYLES_INSTANCE.reflectionMainStyle.pricingName}">Developer</h2>
 						<div class="{STYLES_INSTANCE.reflectionMainStyle.pricingPriceContainer}">
-							<sup class="{STYLES_INSTANCE.reflectionMainStyle.pricingSup}">&pound;</sup>
-							<span class="{STYLES_INSTANCE.reflectionMainStyle.pricingPrice}">0</span>
+							<span class="{STYLES_INSTANCE.reflectionMainStyle.pricingPrice}">FREE</span>
 						</div>
-						<span class="{STYLES_INSTANCE.reflectionMainStyle.perMonth}">per month</span>
-						<p>Link your app store account and get free access to store data &amp; analytics</p>
+						<span class="{STYLES_INSTANCE.reflectionMainStyle.packageFor}">For App Developers</span>
+						<p class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCheck}">App Store Account Required</p>
 					</header>
 					<ul class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetails}">
 						<li>Live Daily Top 200 Global Rank, Download &amp; Grossing Data</li>
@@ -82,7 +81,7 @@
 				</section>
 			</div>
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird}">
-				<section ui:field="currentPremium" class="{STYLES_INSTANCE.reflectionMainStyle.pricingOption} {STYLES_INSTANCE.reflectionMainStyle.pricingOptionPremium}">
+				<section ui:field="currentPremium" class="{STYLES_INSTANCE.reflectionMainStyle.pricingOption} {STYLES_INSTANCE.reflectionMainStyle.pricingOptionPremium} {STYLES_INSTANCE.reflectionMainStyle.pricingOptionWithFooter}">
 					<header class="{STYLES_INSTANCE.reflectionMainStyle.pricingOptionHeader}">
 						<h2 class="{STYLES_INSTANCE.reflectionMainStyle.pricingName}">Developer Premium</h2>
 						<div class="{STYLES_INSTANCE.reflectionMainStyle.pricingPriceContainer}">
@@ -91,7 +90,8 @@
 							<sup class="{STYLES_INSTANCE.reflectionMainStyle.pricingSup}">.99</sup>
 						</div>
 						<span class="{STYLES_INSTANCE.reflectionMainStyle.perMonth}">per month</span>
-						<p>Additional powerful reporting tools and expanded features</p>
+						<span class="{STYLES_INSTANCE.reflectionMainStyle.packageFor}">For App Developers</span>
+						<p class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCheck}">App Store Account Required</p>
 					</header>
 					<ul class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetails}">
 						<li>Historic Revenue &amp; Download Data</li>
@@ -114,16 +114,14 @@
 				</div>
 			</div>
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird}">
-				<section class="{STYLES_INSTANCE.reflectionMainStyle.pricingOption} {STYLES_INSTANCE.reflectionMainStyle.pricingOptionBusiness}">
+				<section class="{STYLES_INSTANCE.reflectionMainStyle.pricingOption} {STYLES_INSTANCE.reflectionMainStyle.pricingOptionBusiness} {STYLES_INSTANCE.reflectionMainStyle.pricingOptionWithFooter}">
 					<header class="{STYLES_INSTANCE.reflectionMainStyle.pricingOptionHeader}">
 						<h2 class="{STYLES_INSTANCE.reflectionMainStyle.pricingName}">Business</h2>
 						<div class="{STYLES_INSTANCE.reflectionMainStyle.pricingPriceContainer}">
-							<sup class="{STYLES_INSTANCE.reflectionMainStyle.pricingSup}">&pound;</sup>
-							<span class="{STYLES_INSTANCE.reflectionMainStyle.pricingPrice}">699</span>
-							<sup class="{STYLES_INSTANCE.reflectionMainStyle.pricingSup}">.99</sup>
+							<span class="{STYLES_INSTANCE.reflectionMainStyle.pricingPrice}">COMING SOON</span>
 						</div>
-						<span class="{STYLES_INSTANCE.reflectionMainStyle.perMonth}">per month</span>
-						<p>No app store account? No problem. Investors, Advertisers, Marketers</p>
+						<span class="{STYLES_INSTANCE.reflectionMainStyle.packageFor}">Investors, Advertisers, Marketers</span>
+						<p class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCancel}">No App Store Account Required</p>
 					</header>
 					<ul class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetails}">
 						<li>Identify and Act on Market and Consumer Trends</li>

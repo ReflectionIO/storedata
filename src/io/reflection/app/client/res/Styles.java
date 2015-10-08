@@ -1557,6 +1557,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("pricing-option--standard")
 		String pricingOptionStandard();
 
+		@ClassName("pricing-option--with-footer")
+		String pricingOptionWithFooter();
+
 		@ClassName("pricing-options")
 		String pricingOptions();
 
@@ -2199,7 +2202,6 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("window-warning")
 		String windowWarning();
-
 	}
 
 	public static final Styles STYLES_INSTANCE = GWT.create(Styles.class);
