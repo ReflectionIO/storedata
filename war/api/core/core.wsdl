@@ -354,7 +354,6 @@
 			<xsd:complexType name="GetRolesAndPermissionsRequest">
 				<xsd:complexContent>
 					<xsd:extension base="sd:Request">
-						<xsd:attribute name="idsOnly" type="xsd:boolean" default="true" />
 						<xsd:attribute name="expandRoles" type="xsd:boolean" default="false" />
 						<xsd:attribute name="rolesOnly" type="xsd:boolean" default="false" />
 						<xsd:attribute name="permissionsOnly" type="xsd:boolean" default="false" />
@@ -367,6 +366,7 @@
 						<xsd:sequence>
 							<xsd:element name="roles" type="sd:Role" minOccurs="0" maxOccurs="unbounded" />
 							<xsd:element name="permissions" type="sd:Permission" minOccurs="0" maxOccurs="unbounded" />
+							<xsd:attribute name="daysSinceRoleAssigned" type="xsd:integer" />
 						</xsd:sequence>
 					</xsd:extension>
 				</xsd:complexContent>

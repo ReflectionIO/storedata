@@ -7,9 +7,9 @@
 //
 package io.reflection.app.client.popup;
 
-import io.reflection.app.api.admin.shared.call.AssignRoleRequest;
-import io.reflection.app.api.admin.shared.call.AssignRoleResponse;
-import io.reflection.app.api.admin.shared.call.event.AssignRoleEventHandler;
+import io.reflection.app.api.core.shared.call.UpgradeAccountRequest;
+import io.reflection.app.api.core.shared.call.UpgradeAccountResponse;
+import io.reflection.app.api.core.shared.call.event.UpgradeAccountEventHandler;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.component.LoadingButton;
 import io.reflection.app.client.controller.SessionController;
@@ -17,6 +17,7 @@ import io.reflection.app.client.controller.UserController;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.User;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -35,7 +36,7 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author Stefano Capuzzi (capuzzistefano)
  *
  */
-public class PremiumPopup extends Composite implements AssignRoleEventHandler {
+public class PremiumPopup extends Composite implements UpgradeAccountEventHandler {
 
 	private static PremiumPopupUiBinder uiBinder = GWT.create(PremiumPopupUiBinder.class);
 
@@ -54,8 +55,9 @@ public class PremiumPopup extends Composite implements AssignRoleEventHandler {
 
 	public void show() {
 		if (!this.asWidget().isAttached()) {
+			popup.setStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().isSubmittedSuccess(), SessionController.get().isPremiumDeveloper());
 			RootPanel.get().add(this);
-			DefaultEventBus.get().addHandlerToSource(AssignRoleEventHandler.TYPE, UserController.get(), this);
+			DefaultEventBus.get().addHandlerToSource(UpgradeAccountEventHandler.TYPE, UserController.get(), this);
 		}
 		if (SessionController.get().isPremiumDeveloper()) {
 			popup.setStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().isSubmittedSuccess(), true);
@@ -85,7 +87,7 @@ public class PremiumPopup extends Composite implements AssignRoleEventHandler {
 		User user = SessionController.get().getLoggedInUser();
 		if (user != null && user.id != null) {
 			startFreeTrial.setStatusLoading(startFreeTrial.getText());
-			// UserController.get().assignUserRoleCode(user.id, DataTypeHelper.ROLE_PREMIUM_CODE); // TODO add trial boolean
+			UserController.get().upgradeAccount(DataTypeHelper.ROLE_PREMIUM_CODE);
 		} else {
 			popup.closePopup();
 			PageType.LoginPageType.show();
@@ -95,13 +97,15 @@ public class PremiumPopup extends Composite implements AssignRoleEventHandler {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.api.admin.shared.call.event.AssignRoleEventHandler#assignRoleSuccess(io.reflection.app.api.admin.shared.call.AssignRoleRequest,
-	 * io.reflection.app.api.admin.shared.call.AssignRoleResponse)
+	 * @see
+	 * io.reflection.app.api.core.shared.call.event.UpgradeAccountEventHandler#upgradeAccountSuccess(io.reflection.app.api.core.shared.call.UpgradeAccountRequest
+	 * , io.reflection.app.api.core.shared.call.UpgradeAccountResponse)
 	 */
 	@Override
-	public void assignRoleSuccess(AssignRoleRequest input, AssignRoleResponse output) {
+	public void upgradeAccountSuccess(UpgradeAccountRequest input, UpgradeAccountResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
 			popup.setStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().isSubmittedSuccess(), true);
+			startFreeTrial.setStatusSuccess();
 		} else {
 			startFreeTrial.setStatusError();
 		}
@@ -110,11 +114,12 @@ public class PremiumPopup extends Composite implements AssignRoleEventHandler {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.api.admin.shared.call.event.AssignRoleEventHandler#assignRoleFailure(io.reflection.app.api.admin.shared.call.AssignRoleRequest,
-	 * java.lang.Throwable)
+	 * @see
+	 * io.reflection.app.api.core.shared.call.event.UpgradeAccountEventHandler#upgradeAccountFailure(io.reflection.app.api.core.shared.call.UpgradeAccountRequest
+	 * , java.lang.Throwable)
 	 */
 	@Override
-	public void assignRoleFailure(AssignRoleRequest input, Throwable caught) {
+	public void upgradeAccountFailure(UpgradeAccountRequest input, Throwable caught) {
 		startFreeTrial.setStatusError();
 	}
 

@@ -175,7 +175,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 					// Load HLA Permission
 					linkedAccountsCount = rows.size();
 					if (!SessionController.get().hasLinkedAccount()) {
-						SessionController.get().setUserPermission(DataTypeHelper.createPermission(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE));
+						SessionController.get().addUserPermission(DataTypeHelper.createPermission(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE));
 					}
 					updateRowCount(linkedAccountsCount, true);
 					updateRowData(0, rows);

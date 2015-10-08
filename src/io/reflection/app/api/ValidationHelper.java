@@ -541,9 +541,14 @@ public class ValidationHelper {
 	}
 
 	public static void validateAuthorised(User user, Role... roles) throws ServiceException {
+		boolean isAuthorized = false;
 		for (Role role : roles) {
-			if (!UserServiceProvider.provide().hasRole(user, role)) throw new AuthorisationException(user, roles);
+			if (UserServiceProvider.provide().hasRole(user, role)) {
+				isAuthorized = true;
+				break;
+			}
 		}
+		if (!isAuthorized) throw new AuthorisationException(user, roles);
 	}
 
 	public static void validateAuthorised(User user, Permission... permissions) throws ServiceException {

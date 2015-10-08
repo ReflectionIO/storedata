@@ -893,17 +893,15 @@ public final class Admin extends ActionHandler {
 			input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
 
 			if (input.permissionsOnly != Boolean.TRUE) {
-				output.roles = UserServiceProvider.provide().getRoles(input.user);
+				output.roles = UserServiceProvider.provide().getUserRoles(input.user);
 
 				if (output.roles != null) {
-					if (input.idsOnly == Boolean.FALSE) {
 						RoleServiceProvider.provide().inflateRoles(output.roles);
-					}
 
 					for (Role role : output.roles) {
 						role.permissions = RoleServiceProvider.provide().getPermissions(role);
 
-						if (role.permissions != null && input.idsOnly == Boolean.FALSE) {
+						if (role.permissions != null) {
 							PermissionServiceProvider.provide().inflatePermissions(role.permissions);
 						}
 					}
@@ -913,7 +911,7 @@ public final class Admin extends ActionHandler {
 			if (input.rolesOnly != Boolean.TRUE) {
 				output.permissions = UserServiceProvider.provide().getPermissions(input.user);
 
-				if (output.permissions != null && input.idsOnly == Boolean.FALSE) {
+				if (output.permissions != null) {
 					PermissionServiceProvider.provide().inflatePermissions(output.permissions);
 				}
 			}

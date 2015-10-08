@@ -836,7 +836,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 				userPermissionsProvider.updateRowCount(0, false);
 
 				if (SessionController.get().isAdmin()) {
-					UserController.get().fetchUserRolesAndPermissions(dummyEditingUser);
+					UserController.get().fetchAdminRolesAndPermissions(dummyEditingUser);
 					loadingBar.show("Getting credentials ..");
 				} else {
 					// If non admin, can retrieve only his own powers, so get from SessionController
@@ -992,7 +992,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	 */
 	@Override
 	public void assignRoleSuccess(AssignRoleRequest input, AssignRoleResponse output) {
-		UserController.get().fetchUserRolesAndPermissions(input.user);
+		UserController.get().fetchAdminRolesAndPermissions(input.user);
 		loadingBar.show("Getting credentials ..");
 		if (output.status == StatusType.StatusTypeSuccess) {
 			addRoleBtn.setStatusSuccess("Role added!");
@@ -1009,7 +1009,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	 */
 	@Override
 	public void assignRoleFailure(AssignRoleRequest input, Throwable caught) {
-		UserController.get().fetchUserRolesAndPermissions(input.user);
+		UserController.get().fetchAdminRolesAndPermissions(input.user);
 		loadingBar.show("Getting credentials ..");
 		addRoleBtn.setStatusError();
 	}
@@ -1022,7 +1022,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	 */
 	@Override
 	public void assignPermissionSuccess(AssignPermissionRequest input, AssignPermissionResponse output) {
-		UserController.get().fetchUserRolesAndPermissions(input.user);
+		UserController.get().fetchAdminRolesAndPermissions(input.user);
 		loadingBar.show("Getting credentials ..");
 		if (output.status == StatusType.StatusTypeSuccess) {
 			addPermissionBtn.setStatusSuccess("Permission added!");
@@ -1039,7 +1039,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	 */
 	@Override
 	public void assignPermissionFailure(AssignPermissionRequest input, Throwable caught) {
-		UserController.get().fetchUserRolesAndPermissions(input.user);
+		UserController.get().fetchAdminRolesAndPermissions(input.user);
 		loadingBar.show("Getting credentials ..");
 		addPermissionBtn.setStatusError();
 	}
@@ -1096,7 +1096,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	@Override
 	public void revokePermissionSuccess(RevokePermissionRequest input, RevokePermissionResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			UserController.get().fetchUserRolesAndPermissions(input.user);
+			UserController.get().fetchAdminRolesAndPermissions(input.user);
 			loadingBar.show("Getting credentials ..");
 		} else {
 			List<Permission> currentUserPermissions = SessionController.get().getLoggedInUser().permissions;
@@ -1133,7 +1133,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	@Override
 	public void revokeRoleSuccess(RevokeRoleRequest input, RevokeRoleResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			UserController.get().fetchUserRolesAndPermissions(input.user);
+			UserController.get().fetchAdminRolesAndPermissions(input.user);
 			loadingBar.show("Getting credentials ..");
 		} else {
 			List<Role> currentUserRoles = SessionController.get().getLoggedInUser().roles;

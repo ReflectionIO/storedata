@@ -669,8 +669,8 @@ final class UserService implements IUserService {
 			roleConnection.executeQuery(hasUserRoleQuery);
 
 			if (roleConnection.fetchNextRow()) {
-				hasUserRole = Boolean.TRUE;
-			}
+					hasUserRole = Boolean.TRUE;
+				}
 		} finally {
 			if (roleConnection != null) {
 				roleConnection.disconnect();
@@ -762,15 +762,25 @@ final class UserService implements IUserService {
 	 * @see io.reflection.app.service.user.IUserService#getRoles(io.reflection.app.shared.datatypes.User)
 	 */
 	@Override
-	public List<Role> getRoles(User user) throws DataAccessException {
+	public List<Role> getUserRoles(User user) throws DataAccessException {
+		return getUserRoles(user, false);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.user.IUserService#getRoles(io.reflection.app.datatypes.shared.User, boolean)
+	 */
+	@Override
+	public List<Role> getUserRoles(User user, boolean includeExpired) throws DataAccessException {
 		List<Role> roles = new ArrayList<Role>();
 
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection userConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
-		String getRoleIdsQuery = String.format(
-				"SELECT DISTINCT `roleid` FROM `userrole` WHERE `userid`=%d AND `deleted`='n' AND (`expires` > NOW() OR `expires` IS NULL)",
-				user.id.longValue());
+		String expiredPart = includeExpired ? "" : " AND (`expires` > NOW() OR `expires` IS NULL) ORDER BY `expires` DESC";
+
+		String getRoleIdsQuery = String.format("SELECT DISTINCT * FROM `userrole` WHERE `userid`=%d AND `deleted`='n'" + expiredPart, user.id.longValue());
 
 		try {
 			userConnection.connect();
@@ -780,6 +790,7 @@ final class UserService implements IUserService {
 				Role role = new Role();
 
 				role.id = userConnection.getCurrentRowLong("roleid");
+				role.created = userConnection.getCurrentRowDateTime("created"); // Get created date of user role
 
 				roles.add(role);
 			}
@@ -1507,6 +1518,32 @@ final class UserService implements IUserService {
 		try {
 			userConnection.connect();
 			userConnection.executeQuery(deleteRoleQuery);
+
+			if (userConnection.getAffectedRowCount() > 0) {
+				// log something
+			}
+		} finally {
+			if (userConnection != null) {
+				userConnection.disconnect();
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.user.IUserService#setRoleAsExpired(io.reflection.app.datatypes.shared.User, io.reflection.app.datatypes.shared.Role)
+	 */
+	@Override
+	public void setUserRoleAsExpired(User user, Role role) throws DataAccessException {
+		String setRoleExpiredQuery = String.format("UPDATE `userrole` SET `expires`=NOW() WHERE `roleid`=%d AND `userid`=%d AND `deleted`='n'",
+				role.id.longValue(), user.id.longValue());
+
+		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
+
+		try {
+			userConnection.connect();
+			userConnection.executeQuery(setRoleExpiredQuery);
 
 			if (userConnection.getAffectedRowCount() > 0) {
 				// log something

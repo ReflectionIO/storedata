@@ -29,6 +29,7 @@ import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +39,7 @@ import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -79,7 +81,10 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 	@UiField DivElement panelOverlay;
 	@UiField DivElement userDetailsPanel;
 	@UiField Element accountMenu;
+	@UiField DivElement accountDetailsName;
+	@UiField Element premiumImg;
 	@UiField HeadingElement userName;
+	@UiField SpanElement premiumDays;
 	@UiField HeadingElement userCompany;
 	@UiField LIElement accountDetailsItem;
 	@UiField LIElement manageSubscriptionItem;
@@ -134,6 +139,9 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 			}
 		});
 
+		premiumImg.removeFromParent();
+		premiumDays.removeFromParent();
+
 	}
 
 	public void setLoggedIn(boolean loggedIn) {
@@ -150,6 +158,8 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 				accessPanelContainer.appendChild(accountMenu);
 			}
 		} else {
+			premiumImg.removeFromParent();
+			premiumDays.removeFromParent();
 			userDetailsPanel.removeFromParent();
 			accountMenu.removeFromParent();
 			if (!accessPanelContainer.isOrHasChild(loginForm.getElement())) {
@@ -282,8 +292,15 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 	 * @see io.reflection.app.client.handler.user.UserPowersEventHandler#gotUserPowers(io.reflection.app.datatypes.shared.User, java.util.List, java.util.List)
 	 */
 	@Override
-	public void gotUserPowers(User user, List<Role> roles, List<Permission> permissions) {
+	public void gotUserPowers(User user, List<Role> roles, List<Permission> permissions, Integer daysSinceRoleAssigned) {
 		attachUserLinks(user);
+		if (DataTypeHelper.ROLE_PREMIUM_CODE.equals(roles.get(0).code)) { // Premium developer
+			accountDetailsName.appendChild(premiumImg);
+			accountDetailsName.appendChild(premiumDays);
+			premiumDays.setInnerText("Day " + (daysSinceRoleAssigned.intValue() + 1) + " of 30");
+		}
+		SessionController.get().setUserRole(roles.get(0));
+		SessionController.get().setUserPermissions(permissions);
 		setLoggedIn(true);
 	}
 

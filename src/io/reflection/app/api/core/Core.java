@@ -136,6 +136,7 @@ import java.util.logging.Logger;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeComparator;
 import org.joda.time.DateTimeZone;
+import org.joda.time.Days;
 
 import com.willshex.gson.json.service.server.ActionHandler;
 import com.willshex.gson.json.service.server.InputValidationException;
@@ -373,7 +374,7 @@ public final class Core extends ActionHandler {
 
 				isLoggedIn = true;
 
-				List<Role> roles = UserServiceProvider.provide().getRoles(input.session.user);
+				List<Role> roles = UserServiceProvider.provide().getUserRoles(input.session.user);
 				RoleServiceProvider.provide().inflateRoles(roles);
 				List<Permission> permissions;
 				for (Role role : roles) {
@@ -1054,29 +1055,46 @@ public final class Core extends ActionHandler {
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			if (input.permissionsOnly != Boolean.TRUE) {
-				output.roles = UserServiceProvider.provide().getRoles(input.session.user);
+				Date userRoleCreated = null;
+				output.roles = UserServiceProvider.provide().getUserRoles(input.session.user);
 
-				if (output.roles != null && !output.roles.isEmpty()) {
-					if (input.idsOnly == Boolean.FALSE) {
-						RoleServiceProvider.provide().inflateRoles(output.roles);
+				if (output.roles == null || output.roles.isEmpty()) {
+					List<Role> expiredRoles = UserServiceProvider.provide().getUserRoles(input.session.user, true);
+					// Premium role just expired
+					if (expiredRoles != null && !expiredRoles.isEmpty() && expiredRoles.get(0).id == 3) { // TODO use code instead
+						UserServiceProvider.provide().assignRole(input.session.user,
+								RoleServiceProvider.provide().getCodeRole(DataTypeHelper.ROLE_DEVELOPER_CODE));
+						// TODO Renew?? Check if already used the trial? (might be based on a date, e.g. if dev userrole created < date, already used the trial)
+					} else {
+						UserServiceProvider.provide().assignRole(input.session.user,
+								RoleServiceProvider.provide().getCodeRole(DataTypeHelper.ROLE_DEVELOPER_CODE));
 					}
+					output.roles = UserServiceProvider.provide().getUserRoles(input.session.user);
+				}
+				userRoleCreated = output.roles.get(0).created;
 
-					for (Role role : output.roles) {
-						role.permissions = RoleServiceProvider.provide().getPermissions(role);
+				RoleServiceProvider.provide().inflateRoles(output.roles); // Convert from UserRole to Role
+				output.roles.get(0).created = userRoleCreated;
 
-						if (role.permissions != null && input.idsOnly == Boolean.FALSE) {
-							PermissionServiceProvider.provide().inflatePermissions(role.permissions);
-						}
+				for (Role role : output.roles) {
+					role.permissions = RoleServiceProvider.provide().getPermissions(role);
+
+					if (role.permissions != null) {
+						PermissionServiceProvider.provide().inflatePermissions(role.permissions);
 					}
-				} else {
-					throw new Exception(); // User must have a role
+				}
+
+				// Notify the frontend if the last role expired was premium
+				// TODO if renewed throw new ServiceException(ApiError.PremiumRoleExpired.getCode(), ApiError.PremiumRoleExpired.getMessage());
+				if (userRoleCreated != null) {
+					output.daysSinceRoleAssigned = Days.daysBetween(new DateTime(userRoleCreated, DateTimeZone.UTC), DateTime.now(DateTimeZone.UTC)).getDays();
 				}
 			}
 
 			if (input.rolesOnly != Boolean.TRUE) {
 				output.permissions = UserServiceProvider.provide().getPermissions(input.session.user);
 
-				if (output.permissions != null && input.idsOnly == Boolean.FALSE) {
+				if (output.permissions != null) {
 					PermissionServiceProvider.provide().inflatePermissions(output.permissions);
 				}
 			}
@@ -1362,7 +1380,7 @@ public final class Core extends ActionHandler {
 
 			// input.permissions = ValidationHelper.validatePermissions(input.permissions, "input.permissions");
 
-			List<Role> roles = UserServiceProvider.provide().getRoles(input.session.user);
+			List<Role> roles = UserServiceProvider.provide().getUserRoles(input.session.user);
 
 			// check the roles
 			if (input.roles != null) {
@@ -1989,7 +2007,16 @@ public final class Core extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			// TODO
+			input.role = ValidationHelper.validateRole(input.role, "input.role");
+
+			Role devRole = RoleServiceProvider.provide().getCodeRole(DataTypeHelper.ROLE_DEVELOPER_CODE);
+
+			if (!UserServiceProvider.provide().hasRole(input.session.user, devRole).booleanValue())
+				throw new InputValidationException(ApiError.RoleNotFound.getCode(), ApiError.RoleNotFound.getMessage("UpgradeAccountRequest: input"));
+
+			UserServiceProvider.provide().setUserRoleAsExpired(input.session.user, devRole);
+
+			UserServiceProvider.provide().assignExpiringRole(input.session.user, input.role, 30);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
