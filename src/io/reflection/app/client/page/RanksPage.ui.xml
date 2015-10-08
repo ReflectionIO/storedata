@@ -26,7 +26,22 @@
 			<!-- </div> -->
 			<!-- </form> -->
 
-			<c:LoadingButton ui:field="downloadLeaderboard" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall}">Download CSV</c:LoadingButton>
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.filterToggle}">
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.toggle}">
+					<c:ToggleRadioButton ui:field="toggleListView" value="true"
+						svgPath="M5,4H2V2h3V4z M18,2H7v2h11V2z M5,9H2v2h3V9z M18,9H7v2h11V9z M5,16H2v2h3V16z M18,16H7v2h11V16z" />
+				</div>
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.toggle}">
+					<c:ToggleRadioButton ui:field="toggleCompactView" svgPath="M5,7H2V5h3V7z M18,5H7v2h11V5z M5,9H2v2h3V9z M18,9H7v2h11V9z M5,13H2v2h3V13z M18,13H7v2h11V13z" />
+				</div>
+			</div>
+
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.buttonContainer}">
+				<c:LoadingButton ui:field="downloadLeaderboard" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall}">Download CSV</c:LoadingButton>
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.iconMember}">
+					<img src="images/icon-pro@2x.png" alt="Pro member icon" />
+				</div>
+			</div>
 
 		</div>
 

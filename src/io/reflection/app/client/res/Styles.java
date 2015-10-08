@@ -402,6 +402,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("cta-button")
 		String ctaButton();
 
+		@ClassName("current-subscription-text")
+		String currentSubscriptionText();
+
 		@ClassName("curtain-left")
 		String curtainLeft();
 
@@ -538,6 +541,12 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("feature-complete")
 		String featureComplete();
+
+		@ClassName("features-and-tools")
+		String featuresAndTools();
+
+		@ClassName("features-key")
+		String featuresKey();
 
 		@ClassName("filter-container--app")
 		String filterContainerApp();
@@ -799,6 +808,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("heading-style--heading-two")
 		String headingStyleHeadingTwo();
 
+		@ClassName("help-us-help-you")
+		String helpUsHelpYou();
+
 		@ClassName("hidden-for-mobile")
 		String hiddenForMobile();
 
@@ -826,14 +838,22 @@ public interface Styles extends ClientBundle {
 		@ClassName("highcharts-yaxis-labels")
 		String highchartsYaxisLabels();
 
+		String hiring();
+
 		@ClassName("hiring-title")
 		String hiringTitle();
+
+		@ClassName("home-apply-button")
+		String homeApplyButton();
 
 		@ClassName("home-leaderboard-button-container")
 		String homeLeaderboardButtonContainer();
 
 		@ClassName("home-leaderboard-title-container")
 		String homeLeaderboardTitleContainer();
+
+		@ClassName("home-partners-heading")
+		String homePartnersHeading();
 
 		@ClassName("home-wide-container")
 		String homeWideContainer();
@@ -1058,6 +1078,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("landing-section-contact__tel")
 		String landingSectionContact__tel();
 
+		@ClassName("latest-system-stats")
+		String latestSystemStats();
+
 		String lato();
 
 		@ClassName("lato-bold")
@@ -1132,12 +1155,6 @@ public interface Styles extends ClientBundle {
 		@ClassName("logged-in-section-main")
 		String loggedInSectionMain();
 
-		@ClassName("logged-in-section-main__column-one")
-		String loggedInSectionMain__columnOne();
-
-		@ClassName("logged-in-section-main__column-two")
-		String loggedInSectionMain__columnTwo();
-
 		@ClassName("login-content")
 		String loginContent();
 
@@ -1174,6 +1191,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("map--contact")
 		String mapContact();
 
+		@ClassName("members-list")
+		String membersList();
+
 		@ClassName("minor-text")
 		String minorText();
 
@@ -1191,6 +1211,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("multiple-select__remove-all-selected")
 		String multipleSelect__removeAllSelected();
+
+		@ClassName("new-members")
+		String newMembers();
 
 		@ClassName("no-accordion-content")
 		String noAccordionContent();
@@ -1389,6 +1412,12 @@ public interface Styles extends ClientBundle {
 		@ClassName("panel-right__overlay")
 		String panelRight__overlay();
 
+		@ClassName("partners-grid")
+		String partnersGrid();
+
+		@ClassName("partners-grid-container")
+		String partnersGridContainer();
+
 		@ClassName("password-strength-description")
 		String passwordStrengthDescription();
 
@@ -1528,6 +1557,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("pricing-option--standard")
 		String pricingOptionStandard();
 
+		@ClassName("pricing-option--with-footer")
+		String pricingOptionWithFooter();
+
 		@ClassName("pricing-options")
 		String pricingOptions();
 
@@ -1546,9 +1578,6 @@ public interface Styles extends ClientBundle {
 		@ClassName("product-image-container--right")
 		String productImageContainerRight();
 
-		@ClassName("product-page--partners")
-		String productPagePartners();
-
 		@ClassName("product-page__quotes")
 		String productPage__quotes();
 
@@ -1563,6 +1592,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("product-section--message")
 		String productSectionMessage();
+
+		@ClassName("product-section--second-section")
+		String productSectionSecondSection();
 
 		@ClassName("product-text-content--left")
 		String productTextContentLeft();
@@ -1769,6 +1801,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("ref-icon-before--twitter")
 		String refIconBeforeTwitter();
+
+		@ClassName("ref-icon-before--wrench")
+		String refIconBeforeWrench();
 
 		@ClassName("ref-icon-hidden-text")
 		String refIconHiddenText();
