@@ -362,7 +362,7 @@ C64.7,26.1,62.2,22.8,54.7,22.8L54.7,22.8z M76.6,37.5V22.5h-5.3v14.9H76.6L76.6,37
 				</div>
 			</div>
 		</aside>
-		<div class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.homePartnersGridContainer}">
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.partnersGridContainer}">
 			<div
 				class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth} {STYLES_INSTANCE.reflectionMainStyle.partnersGrid}">
 				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour} {STYLES_INSTANCE.reflectionMainStyle.homePartnersHeading}">
