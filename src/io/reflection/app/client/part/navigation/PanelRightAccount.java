@@ -298,6 +298,9 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 			accountDetailsName.appendChild(premiumImg);
 			accountDetailsName.appendChild(premiumDays);
 			premiumDays.setInnerText("Day " + (daysSinceRoleAssigned.intValue() + 1) + " of 30");
+		} else {
+			premiumImg.removeFromParent();
+			premiumDays.removeFromParent();
 		}
 		SessionController.get().setUserRole(roles.get(0));
 		SessionController.get().setUserPermissions(permissions);

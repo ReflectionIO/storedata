@@ -809,8 +809,10 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 					@Override
 					public void onResponseReceived(Request request, Response response) {
-						if (response.getStatusCode() == Response.SC_FORBIDDEN) { // User doesn't have the required role
+						if (response.getStatusCode() == Response.SC_FORBIDDEN) { // User doesn't have the required role, probably premium role is expired
 							downloadLeaderboard.setStatusError();
+							// Refresh credentials
+							SessionController.get().fetchRolesAndPermissions();
 						} else {
 							String csvContent = "data:text/csv;charset=utf-8," + response.getText();
 							Window.open(URL.encode(csvContent), "_self", "");
@@ -822,7 +824,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 				downloadLeaderboard.setStatusError();
 			}
 		} else if (SessionController.get().isValidSession()) {
-			premiumPopup.show();
+			premiumPopup.show(true);
 		} else {
 			signUpPopup.show();
 		}
