@@ -4,20 +4,18 @@
 	<ui:style gss="true">
 	
 	</ui:style>
-	<g:HTMLPanel>
-		<div ui:field="calendarContainer" class="{STYLES_INSTANCE.reflectionMainStyle.calendarContainer}">
-			<div class="{STYLES_INSTANCE.reflectionMainStyle.dateSelectContainer}">
-				<div
-					class="{STYLES_INSTANCE.reflectionMainStyle.formField} {STYLES_INSTANCE.reflectionMainStyle.formFieldDateSelect} {STYLES_INSTANCE.reflectionMainStyle.formFieldDateSelectNoIcon}">
-					<c:FormDateBox ui:field="dateBoxFrom"></c:FormDateBox>
-				</div>
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.calendarContainer}">
+		<div ui:field="calendarContainer" class="{STYLES_INSTANCE.reflectionMainStyle.dateSelectContainer}">
+			<div
+				class="{STYLES_INSTANCE.reflectionMainStyle.formField} {STYLES_INSTANCE.reflectionMainStyle.formFieldDateSelect} {STYLES_INSTANCE.reflectionMainStyle.formFieldDateSelectNoIcon}">
+				<c:FormDateBox ui:field="dateBoxFrom"></c:FormDateBox>
 			</div>
-			<div class="{STYLES_INSTANCE.reflectionMainStyle.dateSelectToIndicator}"></div>
-			<div class="{STYLES_INSTANCE.reflectionMainStyle.dateSelectContainer}">
-				<div
-					class="{STYLES_INSTANCE.reflectionMainStyle.formField} {STYLES_INSTANCE.reflectionMainStyle.formFieldDateSelect} {STYLES_INSTANCE.reflectionMainStyle.formFieldDateSelectNoIcon}">
-					<c:FormDateBox ui:field="dateBoxTo"></c:FormDateBox>
-				</div>
+		</div>
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.dateSelectToIndicator}"></div>
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.dateSelectContainer}">
+			<div
+				class="{STYLES_INSTANCE.reflectionMainStyle.formField} {STYLES_INSTANCE.reflectionMainStyle.formFieldDateSelect} {STYLES_INSTANCE.reflectionMainStyle.formFieldDateSelectNoIcon}">
+				<c:FormDateBox ui:field="dateBoxTo"></c:FormDateBox>
 			</div>
 		</div>
 		<!-- <g:Button ui:field="applyDateRange" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaSmall} {STYLES_INSTANCE.reflectionMainStyle.refreshButton}"> -->
