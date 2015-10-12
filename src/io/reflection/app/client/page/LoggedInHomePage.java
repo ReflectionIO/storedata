@@ -12,8 +12,12 @@ import io.reflection.app.datatypes.shared.User;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Widget;
 
 /**
@@ -27,9 +31,16 @@ public class LoggedInHomePage extends Page {
 	interface LoggedInHomePageUiBinder extends UiBinder<Widget, LoggedInHomePage> {}
 
 	@UiField SpanElement userName;
+	@UiField Button suggestFeatureBtn;
 
 	public LoggedInHomePage() {
 		initWidget(uiBinder.createAndBindUi(this));
+	}
+
+	@UiHandler("suggestFeatureBtn")
+	void onSuggestFeatureClick(ClickEvent event) {
+		event.preventDefault();
+		Window.open("mailto:beta@reflection.io?subject=New feature suggestion", "_self", "");
 	}
 
 	/*

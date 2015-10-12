@@ -143,7 +143,7 @@ c0,0.4,0,0.6,0,1c0,0.2,0,0.4-0.1,0.6c-0.1,0.4-0.1,0.9,0,1.3C28.5,26.9,31.7,21.8,
 						<li class="{STYLES_INSTANCE.reflectionMainStyle.refIconBeforeWrench}">Google Play (Early 2016)</li>
 						<li class="{STYLES_INSTANCE.reflectionMainStyle.refIconBeforeWrench}">Your feature? More to come...</li>
 					</ul>
-					<button class="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaSmallWide}">Suggest a Feature</button>
+					<g:Button ui:field="suggestFeatureBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaSmallWide}">Suggest a Feature</g:Button>
 				</aside>
 				<aside class="{STYLES_INSTANCE.reflectionMainStyle.newMembers}">
 					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">New Members</h2>
