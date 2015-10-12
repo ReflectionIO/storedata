@@ -11,7 +11,7 @@
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.pageBanner} {STYLES_INSTANCE.reflectionMainStyle.verticalCentreContent}">
 			<div>
 				<h1>What is Reflection</h1>
-				<h2>Reflection Helps You Make More Informed Business Decisions with Free app market data and Genuinely Affordable Reporting Tools</h2>
+				<h2>We provide accurate market intelligence and easy-to use tools to help you succeed in the app market</h2>
 			</div>
 		</div>
 		<section class="{STYLES_INSTANCE.reflectionMainStyle.productSection}">
@@ -20,11 +20,8 @@
 					<img src="images/product-image-static-leaderboard.jpg" alt="Reflection leaderboard screenshot" />
 				</div>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.productTextContentLeft}">
-					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Track Your Competitors in the Mobile Market</h2>
-					<p>Do you know how many downloads and what revenue your competitors are generating from their apps? 
-					Ever been surprised with an app that came out of nowhere and dominated your category?<br />
-					Reflection's easy to use leaderboards enable you to track accurate download and revenue data 
-					to see who is performing best in your category. 
+					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Track the Performance of Other Apps &amp; Developers</h2>
+					<p>Reflection’s leaderboards enable you to track accurate download and revenue data to identify who performs best in your category. 
 					Know exactly what is going on in the market to plan your next move.</p>
 				</div>
 			</div>
@@ -35,39 +32,31 @@
 					<img src="images/product-image-static-graph.jpg" alt="Reflection graph screenshot" />
 				</div>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.productTextContentLeft}">
-					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Accurately Plan Your Marketing</h2>
-					<p>Do you know how many downloads it takes to reach the top of the charts? 
-					How do you find out what countries perform best in your category and the downloads 
-					you need for your app to gain traction there?<br />
-					Reflection currently offers market data for 10 countries for iPhone and iPad. 
-					Additional countries, categories, and platforms will be added every month so 
-					you can identify what apps will do well in which country and prioritise your 
-					localisation and marketing plans.</p>
-					<p>Link your store account with Reflection and get free access to our data 
-					with market-leading accuracy for the Top 200 apps in all available countries, 
-					stores and categories.</p>
+					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Identify What to Make &amp; Where to Market</h2>
+					<p>Use Reflection to validate your app idea or business model and discover where to launch for the best performance. 
+					Analyse comparable apps to identify your app's revenue and download potential.</p>
+					<p>Understand how many downloads you need to reach your target rank in the charts. 
+					Identify which countries generate the most downloads in your category and determine how to gain traction there.</p>
 				</div>
 			</div>
 		</section>
 		<section class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.productSection} {STYLES_INSTANCE.reflectionMainStyle.productSectionMessage}">
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.productSectionContent}">
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.productImageContainerRight} {STYLES_INSTANCE.reflectionMainStyle.hasContent}">
-					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Most Wanted Upcoming Features</h2>
+					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Here are a few of the most popular upcoming features:</h2>
 					<div class="accordion accordion-static">
 						<ul>
 							<li class="{STYLES_INSTANCE.reflectionMainStyle.featureComplete} {STYLES_INSTANCE.reflectionMainStyle.isClosed}">
-								<h2 class="{STYLES_INSTANCE.reflectionMainStyle.accordionSwitch} {STYLES_INSTANCE.reflectionMainStyle.noAccordionContent}"><em>Follow apps and developers</em> to curate your own intelligence</h2>
+								<h2 class="{STYLES_INSTANCE.reflectionMainStyle.accordionSwitch} {STYLES_INSTANCE.reflectionMainStyle.noAccordionContent}">Curate your own leaderboards by following apps and developers of your choice. Receive notifications on their activities such as soft launches and price changes.</h2>
 							</li>
 							<li class="{STYLES_INSTANCE.reflectionMainStyle.featureComplete} {STYLES_INSTANCE.reflectionMainStyle.isClosed}">
-								<h2 class="{STYLES_INSTANCE.reflectionMainStyle.accordionSwitch} {STYLES_INSTANCE.reflectionMainStyle.noAccordionContent}"><em>Leaderboard of Developers</em> for each country and category; know your competition</h2>
+								<h2 class="{STYLES_INSTANCE.reflectionMainStyle.accordionSwitch} {STYLES_INSTANCE.reflectionMainStyle.noAccordionContent}">Developer Leaderboards let you see how developers and publishers are performing against each other</h2>
 							</li>
 							<li class="{STYLES_INSTANCE.reflectionMainStyle.featureComplete} {STYLES_INSTANCE.reflectionMainStyle.isClosed}">
-								<h2 class="{STYLES_INSTANCE.reflectionMainStyle.accordionSwitch} {STYLES_INSTANCE.reflectionMainStyle.noAccordionContent}"><em>Notification system</em> for any market, developer or app event. We'll let you know what's going on so you can focus on building apps</h2>
-							</li>
-							<li class="{STYLES_INSTANCE.reflectionMainStyle.featureComplete} {STYLES_INSTANCE.reflectionMainStyle.isClosed}">
-								<h2 class="{STYLES_INSTANCE.reflectionMainStyle.accordionSwitch} {STYLES_INSTANCE.reflectionMainStyle.noAccordionContent}"><em>Google Play</em> and other store integration</h2>
+								<h2 class="{STYLES_INSTANCE.reflectionMainStyle.accordionSwitch} {STYLES_INSTANCE.reflectionMainStyle.noAccordionContent}">Google Play and other stores</h2>
 							</li>
 						</ul>
+						<p>Let us know what you need to make your app successful. Help us build the only app market intelligence platform you'll ever need.</p>
 					</div>
 				</div>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.productTextContentLeft} {STYLES_INSTANCE.reflectionMainStyle.helpUsHelpYou}">
@@ -124,11 +113,11 @@
 			l4.9,2.7V75.4z M24,75.4h-4.9v-6.7l4.9-5.2V75.4z M29.4,75.4h-4.9V62.9l0.3-0.3l4.6,3.6V75.4z M34.8,75.4h-4.9v-9.2l4.9-1.8V75.4z
 			 M40.2,75.4h-4.9V64.3l0,0l4.9-5.3V75.4z M45.4,75.4h-4.7V58.6l4.7,2.3V75.4z M45.4,59.8l-5-2.5l-5.6,6.1l-5,1.8l-5-3.9L24,62h0v0
 			l-5.3,5.6l-5.4-3l-4.9,4V53.4h36.9V59.8z"></path></svg>
-					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Help Us to Help You</h2>
-					<p>We are building the most wanted paid-for tools with detailed feedback from our developer community. 
-					These will help perform deeper analysis on our market data saving you time, effort and resources.</p>
-					<p>Is there a feature or tool you've been longing for? Then please <a href="mailto:beta@reflection.io">let us know</a>. 
-					Help us build the only intelligence service you'll ever need.</p>
+					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Help Us Help You</h2>
+					<p>Reflection's features and tools are built with feedback from our developer community.
+					These tools will help you understand the app market, saving you time, effort and resources.</p>
+					<p>Join our beta and get free access to accurate daily data for the Top 200 Apps in all available countries, 
+					stores and categories. All you need to do is link your app store account.</p>
 				</div>
 			</div>
 		</section>
