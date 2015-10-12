@@ -297,7 +297,7 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 		if (DataTypeHelper.ROLE_PREMIUM_CODE.equals(roles.get(0).code)) { // Premium developer
 			accountDetailsName.appendChild(premiumImg);
 			accountDetailsName.appendChild(premiumDays);
-			premiumDays.setInnerText("Day " + (daysSinceRoleAssigned.intValue() + 1) + " of 30");
+//			premiumDays.setInnerText("Day " + (daysSinceRoleAssigned.intValue() + 1) + " of 30");
 		} else {
 			premiumImg.removeFromParent();
 			premiumDays.removeFromParent();
