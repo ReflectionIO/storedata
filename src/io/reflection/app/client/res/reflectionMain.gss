@@ -7349,12 +7349,34 @@ table.table-data.table-linked-accounts--disabled thead {
   /* line 4, sass/templates/_my-apps-and-app.scss */
   .filters-container.filter-container--my-apps.filters-container .calendar-container,
   .filters-container.filter-container--app.filters-container .calendar-container {
-    width: 26%;
+    width: 62%;
     margin-right: 0;
     display: inline-block;
   }
 }
 /* line 13, sass/templates/_my-apps-and-app.scss */
+.filters-container.filter-container--my-apps .time-period-select-component,
+.filters-container.filter-container--app .time-period-select-component {
+  width: 100%;
+}
+@media (min-width: 720px) {
+  /* line 13, sass/templates/_my-apps-and-app.scss */
+  .filters-container.filter-container--my-apps .time-period-select-component,
+  .filters-container.filter-container--app .time-period-select-component {
+    width: auto;
+    margin-right: 0.8%;
+    display: inline-block;
+  }
+}
+@media (min-width: 960px) {
+  /* line 13, sass/templates/_my-apps-and-app.scss */
+  .filters-container.filter-container--my-apps .time-period-select-component,
+  .filters-container.filter-container--app .time-period-select-component {
+    width: 40.5%;
+    margin-right: 0;
+  }
+}
+/* line 25, sass/templates/_my-apps-and-app.scss */
 .filters-container.filter-container--my-apps .date-select-container,
 .filters-container.filter-container--app .date-select-container {
   position: relative;
@@ -7363,7 +7385,7 @@ table.table-data.table-linked-accounts--disabled thead {
   overflow: visible;
   vertical-align: middle;
 }
-/* line 20, sass/templates/_my-apps-and-app.scss */
+/* line 32, sass/templates/_my-apps-and-app.scss */
 .filters-container.filter-container--my-apps .date-select-to-indicator,
 .filters-container.filter-container--app .date-select-to-indicator {
   position: relative;
@@ -7373,126 +7395,128 @@ table.table-data.table-linked-accounts--disabled thead {
   vertical-align: middle;
   text-align: center;
 }
-/* line 27, sass/templates/_my-apps-and-app.scss */
+/* line 39, sass/templates/_my-apps-and-app.scss */
 .filters-container.filter-container--my-apps .date-select-to-indicator:after,
 .filters-container.filter-container--app .date-select-to-indicator:after {
   content: "l";
 }
-/* line 31, sass/templates/_my-apps-and-app.scss */
+/* line 43, sass/templates/_my-apps-and-app.scss */
 .filters-container.filter-container--my-apps .form-field--select,
 .filters-container.filter-container--app .form-field--select {
   width: 25%;
 }
-/* line 34, sass/templates/_my-apps-and-app.scss */
+/* line 46, sass/templates/_my-apps-and-app.scss */
 .filters-container.filter-container--my-apps .form-field.form-field--date-select,
 .filters-container.filter-container--app .form-field.form-field--date-select {
   width: 100%;
 }
-/* line 36, sass/templates/_my-apps-and-app.scss */
+/* line 48, sass/templates/_my-apps-and-app.scss */
 .panel-left-open .filters-container.filter-container--my-apps .form-field.form-field--date-select, .panel-left-open
 .filters-container.filter-container--app .form-field.form-field--date-select {
   width: 100%;
 }
-/* line 40, sass/templates/_my-apps-and-app.scss */
+/* line 52, sass/templates/_my-apps-and-app.scss */
 .filters-container.filter-container--my-apps .refresh-button,
 .filters-container.filter-container--app .refresh-button {
   margin: 0 1% 0 0;
   display: inline-block;
 }
-/* line 43, sass/templates/_my-apps-and-app.scss */
+/* line 55, sass/templates/_my-apps-and-app.scss */
 .is-firefox .filters-container.filter-container--my-apps .refresh-button, .is-firefox
 .filters-container.filter-container--app .refresh-button {
   padding: 1rem 1rem 0.7rem;
 }
-/* line 45, sass/templates/_my-apps-and-app.scss */
+/* line 57, sass/templates/_my-apps-and-app.scss */
 .is-firefox .filters-container.filter-container--my-apps .refresh-button:disabled:active, .is-firefox
 .filters-container.filter-container--app .refresh-button:disabled:active {
   padding-bottom: 0.7rem;
 }
-/* line 48, sass/templates/_my-apps-and-app.scss */
+/* line 60, sass/templates/_my-apps-and-app.scss */
 .is-firefox .filters-container.filter-container--my-apps .refresh-button:active, .is-firefox
 .filters-container.filter-container--app .refresh-button:active {
   padding-bottom: calc(0.7rem - 2px);
 }
 @media screen and (min-width: 960px) and (max-width: 1280px) {
-  /* line 53, sass/templates/_my-apps-and-app.scss */
+  /* line 65, sass/templates/_my-apps-and-app.scss */
   .panel-left-open .filters-container.filter-container--my-apps .refresh-button, .panel-left-open
   .filters-container.filter-container--app .refresh-button {
     margin-right: 0.7%;
   }
 }
-/* line 57, sass/templates/_my-apps-and-app.scss */
+/* line 69, sass/templates/_my-apps-and-app.scss */
 .ie11 .filters-container.filter-container--my-apps .refresh-button, .ie11
 .filters-container.filter-container--app .refresh-button {
   padding: 1rem 1rem 0.9rem;
 }
-/* line 59, sass/templates/_my-apps-and-app.scss */
+/* line 71, sass/templates/_my-apps-and-app.scss */
 .ie11 .filters-container.filter-container--my-apps .refresh-button:disabled:active, .ie11
 .filters-container.filter-container--app .refresh-button:disabled:active {
   padding-bottom: 0.9rem;
 }
-/* line 62, sass/templates/_my-apps-and-app.scss */
+/* line 74, sass/templates/_my-apps-and-app.scss */
 .ie11 .filters-container.filter-container--my-apps .refresh-button:active, .ie11
 .filters-container.filter-container--app .refresh-button:active {
   padding-bottom: 0.8rem;
 }
-/* line 67, sass/templates/_my-apps-and-app.scss */
+/* line 79, sass/templates/_my-apps-and-app.scss */
 .filters-container.filter-container--my-apps .or-text,
 .filters-container.filter-container--app .or-text {
-  margin-right: 1%;
+  width: 3.8%;
+  margin-right: 1.4%;
   padding-top: 11px;
   display: none;
   font-size: 1.4rem;
   font-family: "Source Sans Pro", sans-serif;
   color: #727686;
+  text-align: center;
   vertical-align: top;
 }
 @media (min-width: 960px) {
-  /* line 67, sass/templates/_my-apps-and-app.scss */
+  /* line 79, sass/templates/_my-apps-and-app.scss */
   .filters-container.filter-container--my-apps .or-text,
   .filters-container.filter-container--app .or-text {
     display: inline-block;
   }
 }
-@media screen and (min-width: 960px) and (max-width: 1280px) {
-  /* line 79, sass/templates/_my-apps-and-app.scss */
-  .panel-left-open .filters-container.filter-container--my-apps .or-text, .panel-left-open
-  .filters-container.filter-container--app .or-text {
-    margin-right: 0.7%;
-  }
-}
-/* line 84, sass/templates/_my-apps-and-app.scss */
+/* line 93, sass/templates/_my-apps-and-app.scss */
 .filters-container.filter-container--my-apps .text--disabled,
 .filters-container.filter-container--app .text--disabled {
   color: #C4C7D0;
 }
-/* line 86, sass/templates/_my-apps-and-app.scss */
+/* line 95, sass/templates/_my-apps-and-app.scss */
 .filters-container.filter-container--my-apps .text--disabled:after, .filters-container.filter-container--my-apps .text--disabled:before,
 .filters-container.filter-container--app .text--disabled:after,
 .filters-container.filter-container--app .text--disabled:before {
   color: #C4C7D0;
 }
-/* line 90, sass/templates/_my-apps-and-app.scss */
+/* line 99, sass/templates/_my-apps-and-app.scss */
 .filters-container.filter-container--my-apps .or-text + .form-field,
 .filters-container.filter-container--app .or-text + .form-field {
   width: 100%;
 }
 @media (min-width: 720px) {
-  /* line 90, sass/templates/_my-apps-and-app.scss */
+  /* line 99, sass/templates/_my-apps-and-app.scss */
   .filters-container.filter-container--my-apps .or-text + .form-field,
   .filters-container.filter-container--app .or-text + .form-field {
     width: auto;
+  }
+}
+@media (min-width: 960px) {
+  /* line 99, sass/templates/_my-apps-and-app.scss */
+  .filters-container.filter-container--my-apps .or-text + .form-field,
+  .filters-container.filter-container--app .or-text + .form-field {
+    width: 29%;
     margin-right: 1%;
   }
 }
-/* line 97, sass/templates/_my-apps-and-app.scss */
+/* line 109, sass/templates/_my-apps-and-app.scss */
 .filters-container.filter-container--my-apps .form-field,
 .filters-container.filter-container--app .form-field {
   width: 48%;
   text-align: left;
 }
 @media (min-width: 720px) {
-  /* line 97, sass/templates/_my-apps-and-app.scss */
+  /* line 109, sass/templates/_my-apps-and-app.scss */
   .filters-container.filter-container--my-apps .form-field,
   .filters-container.filter-container--app .form-field {
     width: auto;
@@ -7500,27 +7524,27 @@ table.table-data.table-linked-accounts--disabled thead {
   }
 }
 @media (min-width: 960px) {
-  /* line 105, sass/templates/_my-apps-and-app.scss */
+  /* line 117, sass/templates/_my-apps-and-app.scss */
   .filters-container.filter-container--my-apps .category-select,
   .filters-container.filter-container--app .category-select {
     margin-right: 0;
   }
 }
-/* line 110, sass/templates/_my-apps-and-app.scss */
+/* line 122, sass/templates/_my-apps-and-app.scss */
 .filters-container.filter-container--my-apps .filter-toggle,
 .filters-container.filter-container--app .filter-toggle {
   float: right;
 }
 
 @media screen and (max-width: 720px) {
-  /* line 115, sass/templates/_my-apps-and-app.scss */
+  /* line 127, sass/templates/_my-apps-and-app.scss */
   .time-period-select,
   .store-select {
     float: left;
     text-align: left;
   }
 
-  /* line 120, sass/templates/_my-apps-and-app.scss */
+  /* line 132, sass/templates/_my-apps-and-app.scss */
   .category-select,
   .country-select {
     float: right;
