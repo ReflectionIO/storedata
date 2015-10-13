@@ -20,22 +20,26 @@ public class SaleSummary extends DataType {
 	public String itemid;
 	public String title;
 	public String country;
-	public Float iphone_app_revenue;
-	public Float ipad_app_revenue;
-	public Float universal_app_revenue;
-	public Float total_app_revenue;
-	public Float iap_revenue;
-	public Float total_revenue;
-	public Integer iphone_downloads;
-	public Integer universal_downloads;
-	public Integer ipad_downloads;
-	public Integer total_downloads;
-	public Integer iphone_updates;
-	public Integer universal_updates;
-	public Integer ipad_updates;
-	public Integer total_updates;
-	public Integer total_download_and_updates;
-
+	public String currency;
+	public Integer price;
+	public Integer	iphone_app_revenue					= 0;
+	public Integer	ipad_app_revenue						= 0;
+	public Integer	universal_app_revenue				= 0;
+	public Integer	total_app_revenue						= 0;
+	public Integer	iap_revenue									= 0;
+	public Integer	total_revenue								= 0;
+	public Integer iphone_downloads = 0;
+	public Integer universal_downloads = 0;
+	public Integer ipad_downloads = 0;
+	public Integer total_downloads = 0;
+	public Integer iphone_updates = 0;
+	public Integer universal_updates = 0;
+	public Integer ipad_updates = 0;
+	public Integer total_updates = 0;
+	public Integer total_download_and_updates = 0;
+	public Integer free_subs_count = 0;
+	public Integer paid_subs_count = 0;
+	public Integer subs_revenue = 0;
 	@Override
 	public JsonObject toJson() {
 		JsonObject object = super.toJson();
@@ -49,6 +53,10 @@ public class SaleSummary extends DataType {
 		object.add("title", jsonTitle);
 		JsonElement jsonCountry = country == null ? JsonNull.INSTANCE : new JsonPrimitive(country);
 		object.add("country", jsonCountry);
+		JsonElement jsonCurrency = currency == null ? JsonNull.INSTANCE : new JsonPrimitive(currency);
+		object.add("currency", jsonCurrency);
+		JsonElement jsonPrice = price == null ? JsonNull.INSTANCE : new JsonPrimitive(price);
+		object.add("price", jsonPrice);
 		JsonElement jsonIphone_app_revenue = iphone_app_revenue == null ? JsonNull.INSTANCE : new JsonPrimitive(iphone_app_revenue);
 		object.add("iphone_app_revenue", jsonIphone_app_revenue);
 		JsonElement jsonIpad_app_revenue = ipad_app_revenue == null ? JsonNull.INSTANCE : new JsonPrimitive(ipad_app_revenue);
@@ -79,6 +87,12 @@ public class SaleSummary extends DataType {
 		object.add("total_updates", jsonTotal_updates);
 		JsonElement jsonTotal_download_and_updates = total_download_and_updates == null ? JsonNull.INSTANCE : new JsonPrimitive(total_download_and_updates);
 		object.add("total_download_and_updates", jsonTotal_download_and_updates);
+		JsonElement jsonfree_subs_count = free_subs_count == null ? JsonNull.INSTANCE : new JsonPrimitive(free_subs_count);
+		object.add("free_subs_count", jsonfree_subs_count);
+		JsonElement jsonpaid_subs_count = paid_subs_count == null ? JsonNull.INSTANCE : new JsonPrimitive(paid_subs_count);
+		object.add("paid_subs_count", jsonpaid_subs_count);
+		JsonElement jsonsubs_revenue = subs_revenue == null ? JsonNull.INSTANCE : new JsonPrimitive(subs_revenue);
+		object.add("subs_revenue", jsonsubs_revenue);
 		return object;
 	}
 
@@ -115,40 +129,52 @@ public class SaleSummary extends DataType {
 				country = jsonCountry.getAsString();
 			}
 		}
+		if (jsonObject.has("currency")) {
+			JsonElement jsonCurrency = jsonObject.get("currency");
+			if (jsonCurrency != null) {
+				currency = jsonCurrency.getAsString();
+			}
+		}
+		if (jsonObject.has("price")) {
+			JsonElement jsonPrice = jsonObject.get("price");
+			if (jsonPrice != null) {
+				price = Integer.valueOf(jsonPrice.getAsInt());
+			}
+		}
 		if (jsonObject.has("iphone_app_revenue")) {
 			JsonElement jsonIphone_app_revenue = jsonObject.get("iphone_app_revenue");
 			if (jsonIphone_app_revenue != null) {
-				iphone_app_revenue = Float.valueOf(jsonIphone_app_revenue.getAsFloat());
+				iphone_app_revenue = Integer.valueOf(jsonIphone_app_revenue.getAsInt());
 			}
 		}
 		if (jsonObject.has("ipad_app_revenue")) {
 			JsonElement jsonIpad_app_revenue = jsonObject.get("ipad_app_revenue");
 			if (jsonIpad_app_revenue != null) {
-				ipad_app_revenue = Float.valueOf(jsonIpad_app_revenue.getAsFloat());
+				ipad_app_revenue = Integer.valueOf(jsonIpad_app_revenue.getAsInt());
 			}
 		}
 		if (jsonObject.has("universal_app_revenue")) {
 			JsonElement jsonUniversal_app_revenue = jsonObject.get("universal_app_revenue");
 			if (jsonUniversal_app_revenue != null) {
-				universal_app_revenue = Float.valueOf(jsonUniversal_app_revenue.getAsFloat());
+				universal_app_revenue = Integer.valueOf(jsonUniversal_app_revenue.getAsInt());
 			}
 		}
 		if (jsonObject.has("total_app_revenue")) {
 			JsonElement jsonTotal_app_revenue = jsonObject.get("total_app_revenue");
 			if (jsonTotal_app_revenue != null) {
-				total_app_revenue = Float.valueOf(jsonTotal_app_revenue.getAsFloat());
+				total_app_revenue = Integer.valueOf(jsonTotal_app_revenue.getAsInt());
 			}
 		}
 		if (jsonObject.has("iap_revenue")) {
 			JsonElement jsonIap_revenue = jsonObject.get("iap_revenue");
 			if (jsonIap_revenue != null) {
-				iap_revenue = Float.valueOf(jsonIap_revenue.getAsFloat());
+				iap_revenue = Integer.valueOf(jsonIap_revenue.getAsInt());
 			}
 		}
 		if (jsonObject.has("total_revenue")) {
 			JsonElement jsonTotal_revenue = jsonObject.get("total_revenue");
 			if (jsonTotal_revenue != null) {
-				total_revenue = Float.valueOf(jsonTotal_revenue.getAsFloat());
+				total_revenue = Integer.valueOf(jsonTotal_revenue.getAsInt());
 			}
 		}
 		if (jsonObject.has("iphone_downloads")) {
@@ -205,6 +231,24 @@ public class SaleSummary extends DataType {
 				total_download_and_updates = Integer.valueOf(jsonTotal_download_and_updates.getAsInt());
 			}
 		}
+		if (jsonObject.has("free_subs_count")) {
+			JsonElement jsonfree_subs_count = jsonObject.get("free_subs_count");
+			if (jsonfree_subs_count != null) {
+				free_subs_count = Integer.valueOf(jsonfree_subs_count.getAsInt());
+			}
+		}
+		if (jsonObject.has("paid_subs_count")) {
+			JsonElement jsonpaid_subs_count = jsonObject.get("paid_subs_count");
+			if (jsonpaid_subs_count != null) {
+				paid_subs_count = Integer.valueOf(jsonpaid_subs_count.getAsInt());
+			}
+		}
+		if (jsonObject.has("subs_revenue")) {
+			JsonElement jsonsubs_revenue = jsonObject.get("subs_revenue");
+			if (jsonsubs_revenue != null) {
+				subs_revenue = Integer.valueOf(jsonsubs_revenue.getAsInt());
+			}
+		}
 	}
 
 	public SaleSummary dataaccountid(int dataaccountid) {
@@ -232,32 +276,42 @@ public class SaleSummary extends DataType {
 		return this;
 	}
 
-	public SaleSummary iphone_app_revenue(float iphone_app_revenue) {
+	public SaleSummary currency(String currency) {
+		this.currency = currency;
+		return this;
+	}
+
+	public SaleSummary price(int price) {
+		this.price = price;
+		return this;
+	}
+
+	public SaleSummary iphone_app_revenue(int iphone_app_revenue) {
 		this.iphone_app_revenue = iphone_app_revenue;
 		return this;
 	}
 
-	public SaleSummary ipad_app_revenue(float ipad_app_revenue) {
+	public SaleSummary ipad_app_revenue(int ipad_app_revenue) {
 		this.ipad_app_revenue = ipad_app_revenue;
 		return this;
 	}
 
-	public SaleSummary universal_app_revenue(float universal_app_revenue) {
+	public SaleSummary universal_app_revenue(int universal_app_revenue) {
 		this.universal_app_revenue = universal_app_revenue;
 		return this;
 	}
 
-	public SaleSummary total_app_revenue(float total_app_revenue) {
+	public SaleSummary total_app_revenue(int total_app_revenue) {
 		this.total_app_revenue = total_app_revenue;
 		return this;
 	}
 
-	public SaleSummary iap_revenue(float iap_revenue) {
+	public SaleSummary iap_revenue(int iap_revenue) {
 		this.iap_revenue = iap_revenue;
 		return this;
 	}
 
-	public SaleSummary total_revenue(float total_revenue) {
+	public SaleSummary total_revenue(int total_revenue) {
 		this.total_revenue = total_revenue;
 		return this;
 	}
@@ -304,6 +358,21 @@ public class SaleSummary extends DataType {
 
 	public SaleSummary total_download_and_updates(int total_download_and_updates) {
 		this.total_download_and_updates = total_download_and_updates;
+		return this;
+	}
+
+	public SaleSummary free_subs_count(int free_subs_count) {
+		this.free_subs_count = free_subs_count;
+		return this;
+	}
+
+	public SaleSummary paid_subs_count(int paid_subs_count) {
+		this.paid_subs_count = paid_subs_count;
+		return this;
+	}
+
+	public SaleSummary subs_revenue(int subs_revenue) {
+		this.subs_revenue = subs_revenue;
 		return this;
 	}
 }

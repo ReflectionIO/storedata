@@ -7,16 +7,17 @@
 //
 package io.reflection.app.helpers;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
  * @author billy1380
- * 
+ *
  */
 public class SqlQueryHelper {
 
 	/**
-	 * 
+	 *
 	 * @param before
 	 * @param after
 	 * @param dateName
@@ -44,7 +45,7 @@ public class SqlQueryHelper {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param before
 	 * @param after
 	 * @return
@@ -53,4 +54,7 @@ public class SqlQueryHelper {
 		return beforeAfterQuery(before, after, "date");
 	}
 
+	public static SimpleDateFormat getSqlDateFormat() {
+		return new SimpleDateFormat("yyyy-MM-dd");
+	}
 }
