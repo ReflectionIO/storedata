@@ -2,7 +2,6 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
 	<ui:import field="io.reflection.app.client.page.PageType.ContactPageType" />
-	<ui:import field="io.reflection.app.client.page.PageType.PressPageType" />
 
 	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 	<ui:style>
@@ -10,27 +9,27 @@
 	</ui:style>
 	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.pageAbout}">
 		<div
-			class="{STYLES_INSTANCE.reflectionMainStyle.pageBanner} {STYLES_INSTANCE.reflectionMainStyle.pageBannerLarger} {STYLES_INSTANCE.reflectionMainStyle.verticalCentreContent}">
+			class="{STYLES_INSTANCE.reflectionMainStyle.pageBanner} {STYLES_INSTANCE.reflectionMainStyle.verticalCentreContent}">
 			<div>
-				<h1>Our Mission</h1>
-				<h2>Our mission is to make app market intelligence accessible and easy to understand for everyone in the app industry</h2>
+			<h1>Our Mission</h1>
+				<h2>Reflection makes app market intelligence accessible and easy to understand for everyone in the app industry</h2>
 			</div>
 		</div>
-		<div class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer}">
-			<h2 class="{STYLES_INSTANCE.reflectionMainStyle.pageAboutTitle}">Mission</h2>
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.aboutMainContent}">			
 			<div
-				class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnPushOne} {STYLES_INSTANCE.reflectionMainStyle.pageAboutIntro}">
-				<p class="{STYLES_INSTANCE.reflectionMainStyle.twoColumns}">
+				class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnThreeQuarters} {STYLES_INSTANCE.reflectionMainStyle.pageAboutIntro}">
+				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.pageAboutTitle}">Our Story</h2>
+				<p>
 					Accurate app market intelligence is important to everyone who makes apps. 
 					It allows you to track the performance of other apps &amp; developers 
-					and identify what type of apps and business models achieve the best results.<br /><br />
-					Affordable app market intelligence is hard to come by and it takes time to 
-					analyse data to make the right decisions.<br /><br />
+					and identify what type of apps and business models achieve the best results.</p>
+				<p>Affordable app market intelligence is hard to come by and it takes time to 
+					analyse data to make the right decisions.</p>
+				<p>
 					Reflection was founded by app developers who saw an opportunity 
 					to make accurate app market intelligence available for free. 
 					We aim to build premium features and tools that help developers 
-					understand the app market better, saving them time, effort and resources.<br /><br />
-					Our goal is to build the only app market intelligence platform you will ever need.
+					understand the app market better, saving them time, effort and resources.
 				</p>
 			</div>
 		</div>
@@ -95,10 +94,8 @@
 				class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneHalf} {STYLES_INSTANCE.reflectionMainStyle.pageAboutFootContent__text}">
 				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">More Info</h2>
 				<p>
-				If you’d like to know more about what we do and why we do it please get in touch via our 
-				<g:InlineHyperlink targetHistoryToken="{ContactPageType.asTargetHistoryToken}">contacts page</g:InlineHyperlink>. 
-				For press information please visit our 
-				<g:InlineHyperlink targetHistoryToken="{PressPageType.asTargetHistoryToken}">press area</g:InlineHyperlink>.
+				If you'd like to know more about what we do and why we do it please get in touch via our 
+				<g:InlineHyperlink targetHistoryToken="{ContactPageType.asTargetHistoryToken}">contacts page</g:InlineHyperlink>.
 				</p>
 			</div>
 		</div>

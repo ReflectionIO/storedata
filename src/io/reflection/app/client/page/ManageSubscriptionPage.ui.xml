@@ -79,9 +79,9 @@
 								<span>What's this?</span>
 							</a>
 						</li>
-						<li>
-							<span>Leaderboard Rank History</span>
-							<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding whats-this-tooltip-icon-static" data-tooltip="View Top 200 rank history for any day in the Leaderboards">
+						<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
+							<span>Follow Apps and Developers</span>
+							<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding whats-this-tooltip-icon-static" data-tooltip="Coming soon. Curate your own leaderboards by following the apps and developers of your choice. Receive notification of activities such as soft launches and price changes.">
 								<span>What's this?</span>
 							</a>
 						</li>
@@ -110,12 +110,6 @@
 							</a>
 						</li>
 						<li>
-							<span>Leaderboard Rank History</span>
-							<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding whats-this-tooltip-icon-static" data-tooltip="View Top 200 rank history for any day in the Leaderboards">
-								<span>What's this?</span>
-							</a>
-						</li>
-						<li>
 							<span>Leaderboard Revenue &amp; Download History</span>
 							<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding whats-this-tooltip-icon-static" data-tooltip="View Revenue and Download data for any day in the Leaderboards">
 								<span>What's this?</span>
@@ -127,25 +121,25 @@
 								<span>What's this?</span>
 							</a>
 						</li>
-						<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailsWithInfo}">
+						<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
 							<span>App Revenue, Download &amp; Rank History</span>
 							<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding whats-this-tooltip-icon-static" data-tooltip="Coming soon. View rank, revenue and download history for any app in the leaderboards. Download CSV files for any graph you are looking at">
 								<span>What's this?</span>
 							</a>
 						</li>
-						<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailsWithInfo}">
+						<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
 							<span>Follow Apps and Developers</span>
 							<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding whats-this-tooltip-icon-static" data-tooltip="Coming soon. Curate your own leaderboards by following the apps and developers of your choice. Receive notification of activities such as soft launches and price changes.">
 								<span>What's this?</span>
 							</a>
 						</li>
-						<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailsWithInfo}">
+						<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
 							<span>Developer Leaderboard</span>
 							<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding whats-this-tooltip-icon-static" data-tooltip="Coming soon. See how developers and publishers are performing against each other.">
 								<span>What's this?</span>
 							</a>
 						</li>
-						<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailsWithInfo}">
+						<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
 							<span>More to come...</span>
 							<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding whats-this-tooltip-icon-static" data-tooltip="Coming soon. Refection build features based on feedback from our developer community. Contact us to let us know what you need.">
 								<span>What's this?</span>
@@ -178,12 +172,6 @@
 							</a>
 						</li>
 						<li>
-							<span>Leaderboard Rank History</span>
-							<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding whats-this-tooltip-icon-static" data-tooltip="View Top 200 rank history for any day in the Leaderboards">
-								<span>What's this?</span>
-							</a>
-						</li>
-						<li>
 							<span>Leaderboard Revenue &amp; Download History</span>
 							<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding whats-this-tooltip-icon-static" data-tooltip="View Revenue and Download data for any day in the Leaderboards">
 								<span>What's this?</span>
@@ -195,25 +183,25 @@
 								<span>What's this?</span>
 							</a>
 						</li>
-						<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailsWithInfo}">
+						<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
 							<span>App Revenue, Download &amp; Rank History</span>
 							<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding whats-this-tooltip-icon-static" data-tooltip="Coming soon. View rank, revenue and download history for any app in the leaderboards. Download CSV files for any graph you are looking at">
 								<span>What's this?</span>
 							</a>
 						</li>
-						<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailsWithInfo}">
+						<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
 							<span>Follow Apps and Developers</span>
 							<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding whats-this-tooltip-icon-static" data-tooltip="Coming soon. Curate your own leaderboards by following the apps and developers of your choice. Receive notification of activities such as soft launches and price changes.">
 								<span>What's this?</span>
 							</a>
 						</li>
-						<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailsWithInfo}">
+						<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
 							<span>Developer Leaderboard</span>
 							<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding whats-this-tooltip-icon-static" data-tooltip="Coming soon. See how developers and publishers are performing against each other.">
 								<span>What's this?</span>
 							</a>
 						</li>
-						<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailsWithInfo}">
+						<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
 							<span>More to come...</span>
 							<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding whats-this-tooltip-icon-static" data-tooltip="Coming soon. Refection build features based on feedback from our developer community. Contact us to let us know what you need.">
 								<span>What's this?</span>

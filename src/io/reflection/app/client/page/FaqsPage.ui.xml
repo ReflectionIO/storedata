@@ -1,20 +1,18 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
+	<ui:import field="io.reflection.app.client.page.PageType.ContactPageType" />
 	<ui:style>
 	
 	</ui:style>
 	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.pageFaqs}">
-		<div class="{STYLES_INSTANCE.reflectionMainStyle.introBanner}">
+		<div
+			class="{STYLES_INSTANCE.reflectionMainStyle.pageBanner} {STYLES_INSTANCE.reflectionMainStyle.verticalCentreContent}">
 			<div>
-				<div class="{STYLES_INSTANCE.reflectionMainStyle.introBanner__graphic}">
-					<img src="images/intro-banner--speech@2x.png" alt="Speech bubbles" />
-				</div>
-				<div class="{STYLES_INSTANCE.reflectionMainStyle.introBanner__intro}">
-					<h1>FAQs</h1>
-					<p>Get the answers to the most commonly asked questions about Reflection and our platform here. If you need further assitance please get in touch via our
-						Contact Us page.</p>
-				</div>
+				<h1>FAQs</h1>
+				<h2>
+					Get answers to the most commonly asked questions about Reflection.
+				 If you need any further assistance please <g:InlineHyperlink targetHistoryToken="{ContactPageType.asTargetHistoryToken}">contact us</g:InlineHyperlink></h2>
 			</div>
 		</div>
 		<div ui:field="faqsTop" class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer}">
