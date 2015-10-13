@@ -112,7 +112,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 	public static final int SELECTED_TAB_PARAMETER_INDEX = 0;
 	public static final int VIEW_ALL_LENGTH_VALUE = Integer.MAX_VALUE;
-	public static final String ALL_TEXT = "Overview / All";
+	public static final String ALL_TEXT = "Overview";
 	public static final String COMING_FROM_PARAMETER = "leaderboard";
 
 	interface AllAdminCodeTemplate extends SafeHtmlTemplates {
