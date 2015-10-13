@@ -1,4 +1,4 @@
-//  
+//
 //  DatabaseType.java
 //  repackagables
 //
@@ -38,11 +38,13 @@ public enum DatabaseType {
 	DatabaseTypeSimpleModelRun("simplemodelrun"),
 	DatabaseTypeEvent("event"),
 	DatabaseTypeEventSubscription("eventsubscription"),
-	DatabaseTypeNotification("notification"), ;
+	DatabaseTypeNotification("notification"), 
+	DatabaseTypeLookupItem("lookupitem");
 
 	private String value;
 	private static Map<String, DatabaseType> valueLookup = null;
 
+	@Override
 	public String toString() {
 		return value;
 	}
