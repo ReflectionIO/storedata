@@ -2101,6 +2101,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("time-period-select")
 		String timePeriodSelect();
 
+		@ClassName("time-period-select-component")
+		String timePeriodSelectComponent();
+
 		String toggle();
 
 		@ClassName("toggle-calendar")
@@ -2202,6 +2205,7 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("window-warning")
 		String windowWarning();
+
 	}
 
 	public static final Styles STYLES_INSTANCE = GWT.create(Styles.class);

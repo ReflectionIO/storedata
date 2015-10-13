@@ -104,6 +104,7 @@ public class SignUpPopup extends Composite implements RegisterInterestBusinessEv
 		event.preventDefault();
 		popup.getElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().registerIsSecondStep());
 		registerFormContainer.getElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
+		firstNameTextField.setFocus(true);
 	}
 
 	// Register interest

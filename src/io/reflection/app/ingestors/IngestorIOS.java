@@ -103,12 +103,13 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 	 * @return
 	 */
 	private List<FeedFetch> filter(List<FeedFetch> stored) {
-		final String countries = System.getProperty("ingest.ios.countries");
+		String countries = System.getProperty("ingest.ios.countries");
+		countries = countries == null ? null : countries.toLowerCase();
 
 		ArrayList<FeedFetch> filtered = new ArrayList<FeedFetch>(stored.size());
 
 		for (FeedFetch fetch : stored) {
-			if (countries != null && countries.contains(fetch.country)) {
+			if (countries != null && countries.contains(fetch.country.toLowerCase())) {
 				filtered.add(fetch);
 			}
 		}
