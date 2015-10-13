@@ -13,8 +13,7 @@
 			class="{STYLES_INSTANCE.reflectionMainStyle.pageBanner} {STYLES_INSTANCE.reflectionMainStyle.pageBannerLarger} {STYLES_INSTANCE.reflectionMainStyle.verticalCentreContent}">
 			<div>
 				<h1>Our Mission</h1>
-				<h2>Reflection provides accessible and easy to understand app market intelligence to everyone who needs it</h2>
-				<p>Accurate market intelligence and decision making tools to help you succeed in the app market</p>
+				<h2>Our mission is to make app market intelligence accessible and easy to understand for everyone in the app industry</h2>
 			</div>
 		</div>
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer}">
