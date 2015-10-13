@@ -148,6 +148,15 @@ public interface IUserService extends IService {
 	public Boolean hasRole(User user, Role role) throws DataAccessException;
 
 	/**
+	 * 
+	 * @param user
+	 * @param role
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public Boolean hasRole(User user, Role role, boolean includeExpired) throws DataAccessException;
+
+	/**
 	 * @param user
 	 * @param permission
 	 */
