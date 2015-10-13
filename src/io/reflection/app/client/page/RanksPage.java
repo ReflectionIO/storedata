@@ -751,7 +751,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	@UiHandler("downloadLeaderboard")
 	void onDownloadLeaderboardClicked(ClickEvent event) {
 		event.preventDefault();
-		if (SessionController.get().isPremiumDeveloper() || SessionController.get().isAdmin()) {
+		if ((SessionController.get().isPremiumDeveloper() && SessionController.get().hasLinkedAccount()) || SessionController.get().isAdmin()) {
 			downloadLeaderboard.setStatusLoading("Downloading");
 			Filter filter = FilterController.get().getFilter();
 			String listType;
@@ -823,6 +823,9 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			} catch (Exception e) {
 				downloadLeaderboard.setStatusError();
 			}
+		} else if (!SessionController.get().canSeePredictions()) {
+			addLinkedAccountPopup
+					.show("Link Your Appstore Account", "You need to link your iTunes Connect account to use this feature, it only takes a moment");
 		} else if (SessionController.get().isValidSession()) {
 			premiumPopup.show(true);
 		} else {

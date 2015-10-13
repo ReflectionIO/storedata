@@ -62,7 +62,6 @@ import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.dom.client.SpanElement;
-import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
@@ -166,22 +165,23 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		initWidget(uiBinder.createAndBindUi(this));
 
 		User user = SessionController.get().getLoggedInUser();
-
+		usersItem.removeFromParent();
+		notificationsItem.removeFromParent();
 		if (!SessionController.get().isAdmin()) {
 			userCredentialsPanel.removeFromParent();
-			usersText.setInnerHTML("Users <span class=\"text-small\">coming soon</span>");
-			usersItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
-			usersItem.getStyle().setCursor(Cursor.DEFAULT);
-			notifText.setInnerHTML("Manage Notifications <span class=\"text-small\">coming soon</span>");
-			notificationsItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
-			notificationsItem.getStyle().setCursor(Cursor.DEFAULT);
-			usersLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
-			notificationsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
+			// usersText.setInnerHTML("Users <span class=\"text-small\">coming soon</span>");
+			// usersItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
+			// usersItem.getStyle().setCursor(Cursor.DEFAULT);
+			// notifText.setInnerHTML("Manage Notifications <span class=\"text-small\">coming soon</span>");
+			// notificationsItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
+			// notificationsItem.getStyle().setCursor(Cursor.DEFAULT);
+			// usersLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
+			// notificationsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 		} else {
-			if (user != null) {
-				notificationsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.NotificationsPageType.toString(),
-						user.id.toString()));
-			}
+			// if (user != null) {
+			// notificationsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.NotificationsPageType.toString(),
+			// user.id.toString()));
+			// }
 		}
 
 		if (user != null) {
@@ -204,8 +204,8 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		// Add click event to LI element so the event is fired when clicking on the whole tab
 		Event.sinkEvents(accountSettingsItem, Event.ONCLICK);
 		Event.sinkEvents(manageSubscriptionItem, Event.ONCLICK);
-		Event.sinkEvents(notificationsItem, Event.ONCLICK);
-		Event.sinkEvents(usersItem, Event.ONCLICK);
+		// Event.sinkEvents(notificationsItem, Event.ONCLICK);
+		// Event.sinkEvents(usersItem, Event.ONCLICK);
 		Event.setEventListener(accountSettingsItem, new EventListener() {
 
 			@Override
@@ -224,24 +224,24 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 				}
 			}
 		});
-		Event.setEventListener(notificationsItem, new EventListener() {
-
-			@Override
-			public void onBrowserEvent(Event event) {
-				if (Event.ONCLICK == event.getTypeInt()) {
-					History.newItem(notificationsLink.getTargetHistoryToken());
-				}
-			}
-		});
-		Event.setEventListener(usersItem, new EventListener() {
-
-			@Override
-			public void onBrowserEvent(Event event) {
-				if (Event.ONCLICK == event.getTypeInt()) {
-					History.newItem(usersLink.getTargetHistoryToken());
-				}
-			}
-		});
+		// Event.setEventListener(notificationsItem, new EventListener() {
+		//
+		// @Override
+		// public void onBrowserEvent(Event event) {
+		// if (Event.ONCLICK == event.getTypeInt()) {
+		// History.newItem(notificationsLink.getTargetHistoryToken());
+		// }
+		// }
+		// });
+		// Event.setEventListener(usersItem, new EventListener() {
+		//
+		// @Override
+		// public void onBrowserEvent(Event event) {
+		// if (Event.ONCLICK == event.getTypeInt()) {
+		// History.newItem(usersLink.getTargetHistoryToken());
+		// }
+		// }
+		// });
 	}
 
 	private void addRoleColumns(boolean isAdmin) {
