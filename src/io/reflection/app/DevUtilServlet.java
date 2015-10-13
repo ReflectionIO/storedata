@@ -201,7 +201,12 @@ public class DevUtilServlet extends HttpServlet {
 
 		for (String value : values) {
 			if (value != null && value.trim().length() > 0) {
-				list.add(value.trim());
+				String[] parts = value.split(",");
+				for (String part : parts) {
+					if (part != null && part.trim().length() > 0) {
+						list.add(part.trim());
+					}
+				}
 			}
 		}
 
