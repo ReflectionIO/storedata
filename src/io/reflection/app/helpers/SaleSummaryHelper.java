@@ -66,7 +66,6 @@ public class SaleSummaryHelper {
 		 * 		4.2 The sale summaries are then updated / inserted (via mysql upsert) as well
 		 */
 
-		ArrayList<LookupItem> newlyFoundItems = new ArrayList<LookupItem>();
 		ArrayList<LookupItem> updatedLookupItems = new ArrayList<LookupItem>();
 
 		LookupItemService lookupService = LookupItemService.INSTANCE;
@@ -84,7 +83,7 @@ public class SaleSummaryHelper {
 
 		LOG.log(GaeLevel.DEBUG, String.format("Processing %d sales", sales.size()));
 		for (Sale sale : sales) {
-			LookupItem mainLookupItemForSummary = findOrCreateMainLookupItem(dataaccountid, sale, itemByCountryMap, skuByItemMap, newlyFoundItems, saleSource);
+			LookupItem mainLookupItemForSummary = findOrCreateMainLookupItem(dataaccountid, sale, itemByCountryMap, skuByItemMap, updatedLookupItems, saleSource);
 
 			if (mainLookupItemForSummary == null) {
 				// We have never seen a parent item with this sku before.
@@ -146,6 +145,7 @@ public class SaleSummaryHelper {
 			HashMap<String, LookupItem> lookupItemCountriesMap = itemByCountryMap.get(itemId);
 
 			if (lookupItemCountriesMap == null) {
+				// LOG.log(GaeLevel.DEBUG, String.format("Could not find this main item %s in the lkp_items table ", itemId));
 				// This is the first time we have come across this item. We need to add it to the lookup items table
 				lookupItemCountriesMap = new HashMap<String, LookupItem>();
 				itemByCountryMap.put(itemId, lookupItemCountriesMap);
@@ -160,10 +160,11 @@ public class SaleSummaryHelper {
 
 				lookupItemCountriesMap.put(sale.country, mainLookupItemForSummary);
 
-				updatedLookupItems.add(mainLookupItemForSummary);
+				lookupItemUpdated(updatedLookupItems, mainLookupItemForSummary);
 			} else {
 				mainLookupItemForSummary = lookupItemCountriesMap.get(sale.country);
 				if (mainLookupItemForSummary == null) {
+					// LOG.log(GaeLevel.DEBUG, String.format("Could not find this main item %s in %s in the lkp_items table ", itemId, sale.country));
 					// we have seen this item before but never for this country. Need to add it to the DB.
 
 					mainLookupItemForSummary = new LookupItem();
@@ -176,7 +177,7 @@ public class SaleSummaryHelper {
 
 					lookupItemCountriesMap.put(sale.country, mainLookupItemForSummary);
 
-					updatedLookupItems.add(mainLookupItemForSummary);
+					lookupItemUpdated(updatedLookupItems, mainLookupItemForSummary);
 				}
 			}
 
@@ -188,6 +189,8 @@ public class SaleSummaryHelper {
 			LookupItem iapLookupItem = null;
 
 			if (iapLookupItemCountriesMap == null) {
+				// LOG.log(GaeLevel.DEBUG, String.format("Could not find this IAP item %s in the lkp_items table ", itemId));
+
 				// This is the first time we have come across this item. We need to add it to the lookup items table
 				iapLookupItemCountriesMap = new HashMap<String, LookupItem>();
 				itemByCountryMap.put(itemId, iapLookupItemCountriesMap);
@@ -202,11 +205,12 @@ public class SaleSummaryHelper {
 
 				iapLookupItemCountriesMap.put(sale.country, iapLookupItem);
 
-				updatedLookupItems.add(iapLookupItem);
+				lookupItemUpdated(updatedLookupItems, iapLookupItem);
 			} else {
 				iapLookupItem = iapLookupItemCountriesMap.get(sale.country);
 
 				if (iapLookupItem == null) {
+					// LOG.log(GaeLevel.DEBUG, String.format("Could not find this IAP item %s in %s in the lkp_items table but it does exist in at least 1 other country", itemId, sale.country));
 					// we have seen this item before but never for this country. Need to add it to the DB.
 
 					iapLookupItem = new LookupItem();
@@ -218,25 +222,32 @@ public class SaleSummaryHelper {
 
 					iapLookupItemCountriesMap.put(sale.country, iapLookupItem);
 
-					updatedLookupItems.add(iapLookupItem);
+					lookupItemUpdated(updatedLookupItems, iapLookupItem);
 				}
 			}
 
 			Integer parentId = iapLookupItem.parentid;
 			if (parentId == null) {
+				// TODO
+				// LOG.log(GaeLevel.DEBUG, String.format("This sale is an IAP but the lookup item does not have a parent id. Trying to look it up via the sku"));
+
 				parentId = skuByItemMap.get((sale.parentIdentifier == null ? "" : sale.parentIdentifier).trim());
 				if (parentId == null)    // We have never seen a parent item with this sku before.
 					return null;
 
 				iapLookupItem.parentid = parentId;
+				// LOG.log(GaeLevel.DEBUG, String.format("Found a parent child relationship. itemid:%d is a child of %d", itemId, parentId));
 
-				if (!updatedLookupItems.contains(iapLookupItem)) {
-					updatedLookupItems.add(iapLookupItem);
-				}
+				lookupItemUpdated(updatedLookupItems, iapLookupItem);
 			}
 
 
 			HashMap<String, LookupItem> lookupItemCountriesMap = itemByCountryMap.get(parentId);
+			if (lookupItemCountriesMap == null) {
+				// TODO if lookupItemCountriesMap may be null (exceptions), so we need to create it and then also the mainlookupitemforsummary
+
+				LOG.log(GaeLevel.DEBUG, String.format("Could not find an entry in the lookup items for %d which is supposed to be the parent of %d", parentId, itemId));
+			}
 
 			mainLookupItemForSummary = lookupItemCountriesMap == null ? null : lookupItemCountriesMap.get(sale.country);
 			if (mainLookupItemForSummary == null) {
@@ -252,12 +263,19 @@ public class SaleSummaryHelper {
 
 				lookupItemCountriesMap.put(sale.country, mainLookupItemForSummary);
 
-				updatedLookupItems.add(mainLookupItemForSummary);
+				lookupItemUpdated(updatedLookupItems, mainLookupItemForSummary);
 			}
 			// END OF LOOKUP FOR IAP
 		}
 
 		return mainLookupItemForSummary;
+	}
+
+	private void lookupItemUpdated(ArrayList<LookupItem> updatedLookupItems, LookupItem lookupItem) {
+		if (!updatedLookupItems.contains(lookupItem)) {
+			// LOG.log(GaeLevel.DEBUG, String.format("Lookup item updated %s", lookupItem));
+			updatedLookupItems.add(lookupItem);
+		}
 	}
 
 	/**
@@ -320,25 +338,22 @@ public class SaleSummaryHelper {
 					currentSummary.iphone_downloads += units;
 
 					// NOTE for 1, 1T, 1F (purchases / downloads), we update the titles, currency and prices in case they have been updated.
-					currentSummary.currency = sale.currency;
-					currentSummary.price = (currentSummary.price == null || currentSummary.price < saleCustomerPrice) ? saleCustomerPrice : currentSummary.price;
-					currentSummary.title = sale.title;
+					updateCurrentSummaryTitlePriceAndCurrency(currentSummary, mainLookupItemForSummary, sale, saleCustomerPrice, updatedLookupItems);
+
 					break;
 				case "1T":
 					currentSummary.ipad_app_revenue += absUnits * saleCustomerPrice;
 					currentSummary.ipad_downloads += units;
 
-					currentSummary.currency = sale.currency;
-					currentSummary.price = (currentSummary.price == null || currentSummary.price < saleCustomerPrice) ? saleCustomerPrice : currentSummary.price;
-					currentSummary.title = sale.title;
+					// NOTE for 1, 1T, 1F (purchases / downloads), we update the titles, currency and prices in case they have been updated.
+					updateCurrentSummaryTitlePriceAndCurrency(currentSummary, mainLookupItemForSummary, sale, saleCustomerPrice, updatedLookupItems);
 					break;
 				case "1F":
 					currentSummary.universal_app_revenue += absUnits * saleCustomerPrice;
 					currentSummary.universal_downloads += units;
 
-					currentSummary.currency = sale.currency;
-					currentSummary.price = (currentSummary.price == null || currentSummary.price < saleCustomerPrice) ? saleCustomerPrice : currentSummary.price;
-					currentSummary.title = sale.title;
+					// NOTE for 1, 1T, 1F (purchases / downloads), we update the titles, currency and prices in case they have been updated.
+					updateCurrentSummaryTitlePriceAndCurrency(currentSummary, mainLookupItemForSummary, sale, saleCustomerPrice, updatedLookupItems);
 					break;
 				case "7":
 					currentSummary.iphone_updates += units;
@@ -350,6 +365,7 @@ public class SaleSummaryHelper {
 					currentSummary.universal_updates += units;
 					break;
 			}
+
 
 			boolean lookupItemUpdated = false;
 
@@ -367,9 +383,7 @@ public class SaleSummaryHelper {
 			}
 
 			if (lookupItemUpdated) {
-				if (!updatedLookupItems.contains(mainLookupItemForSummary)) {
-					updatedLookupItems.add(mainLookupItemForSummary);
-				}
+				lookupItemUpdated(updatedLookupItems, mainLookupItemForSummary);
 			}
 
 			// END IF MAIN ITEM
@@ -389,6 +403,24 @@ public class SaleSummaryHelper {
 					break;
 			}
 			// END OF IAP
+		}
+	}
+
+	/**
+	 * @param currentSummary
+	 * @param mainLookupItemForSummary
+	 * @param sale
+	 * @param saleCustomerPrice
+	 * @param updatedLookupItems
+	 */
+	private void updateCurrentSummaryTitlePriceAndCurrency(SaleSummary currentSummary, LookupItem mainLookupItemForSummary, Sale sale, int saleCustomerPrice, ArrayList<LookupItem> updatedLookupItems) {
+		currentSummary.currency = sale.currency;
+		currentSummary.price = Math.abs((currentSummary.price == null || currentSummary.price < saleCustomerPrice) ? saleCustomerPrice : currentSummary.price);
+		currentSummary.title = sale.title;
+
+		if (!currentSummary.price.equals(mainLookupItemForSummary.price)) {
+			mainLookupItemForSummary.price = currentSummary.price;
+			lookupItemUpdated(updatedLookupItems, mainLookupItemForSummary);
 		}
 	}
 

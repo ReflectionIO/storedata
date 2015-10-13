@@ -7,8 +7,8 @@ import com.google.gson.JsonPrimitive;
 
 public class LookupItem extends DataType {
 	public Integer dataaccountid;
-	public Integer itemid = 0;
-	public Integer parentid = 0;
+	public Integer	itemid;
+	public Integer	parentid;
 
 	public String title;
 	public String country;
@@ -178,4 +178,9 @@ public class LookupItem extends DataType {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "LookupItem [dataaccountid=" + dataaccountid + ", itemid=" + itemid + ", parentid=" + parentid + ", title=" + title + ", country=" + country + ", currency=" + currency + ", price=" + price
+				+ ", sku=" + sku + ", parentsku=" + parentsku + "]";
+	}
 }
