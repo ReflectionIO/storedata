@@ -8,64 +8,41 @@
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.pageBanner} {STYLES_INSTANCE.reflectionMainStyle.verticalCentreContent}">
 			<div>
 				<h1>Working With Us</h1>
-				<h2>We're on the lookout for like-minded individuals who can help us shape for the future of the app industry</h2>
+				<h2>We're on the lookout for like-minded individuals who can help us shape the future of the app industry</h2>
 			</div>
 		</div>
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer}">
 			<article
 				class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnTwoThirds} {STYLES_INSTANCE.reflectionMainStyle.siteArticleFull}">
-				<h2>Life at Reflection</h2>
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-					quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-					dolore eu fugiat nulla pariatur.</p>
-				<img src="images/office-photo.jpg" alt="The Reflection office" class="{STYLES_INSTANCE.reflectionMainStyle.imageFullWidth}" />
-				<figcaption>
-					The development of new features being undertaken furiously at our London office.
-				</figcaption>
-				<h3>Perks of the Job</h3>
+				<h2>Work With Us</h2>
+				<p>Reflection is always looking for talented individuals to join our growing team in the heart of London. 
+				If you're a self-starter, would love to be part of a growing company and have what 
+				it takes to get things done, we’d like to hear from you.</p>
+				<img src="images/Careers_Inset.jpg" alt="The Reflection office" class="{STYLES_INSTANCE.reflectionMainStyle.imageFullWidth}" />
+				<h3>Job Perks</h3>
 				<ul class="{STYLES_INSTANCE.reflectionMainStyle.contentList}">
 					<li>Stock options plan</li>
 					<li>Hardware of your choice at work</li>
 					<li>Central London location just off Oxford Street</li>
-					<li>Opportunities to learn all there is to know about the mobile and app markets</li>
+					<li>Opportunities to learn all there is to know about the mobile and app market</li>
 					<li>Friendly and collaborative culture</li>
-					<li>All the espresso you can drink</li>
+					<li>All the espresso you can drink</li>					
 				</ul>
 			</article>
 			<aside class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird}">
 				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Current Openings</h2>
 				<ul class="{STYLES_INSTANCE.reflectionMainStyle.contentList} {STYLES_INSTANCE.reflectionMainStyle.contentListNoBullets}">
 					<li>
-						<a href="#">Financial Controller</a>
+						<a href="http://reflection.workable.com/jobs/84956" target="_blank">Java Engineer</a>
 					</li>
 					<li>
-						<a href="#">Senior Engineer</a>
-					</li>
-					<li>
-						<a href="#">Junior Front-End Developer</a>
-					</li>
-					<li>
-						<a href="#">Executive Assistant</a>
-					</li>
-					<li>
-						<a href="#">HR Manager</a>
-					</li>
-					<li>
-						<a href="#">Junior Digital Product Designer</a>
-					</li>
-					<li>
-						<a href="#">Design Intern</a>
-					</li>
-					<li>
-						<a href="#">Development Intern</a>
+						<a href="http://reflection.workable.com/jobs/40810" target="_blank">Data Scientist</a>
 					</li>
 				</ul>
-				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Introduce Yourself</h2>
-				<p class="{STYLES_INSTANCE.reflectionMainStyle.minorText}">Are you an honest and talented individual that likes to get things done? We’d like to hear from you. Email us with your details and experience
-					and let’s see if we can work together.</p>
-				<p>
-					<a href="mailto:careers@reflection.io">careers@reflection.io</a>
-				</p>
+				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Come And Introduce Yourself</h2>
+				<p class="{STYLES_INSTANCE.reflectionMainStyle.minorText}">If there are no roles listed here that fit your profile 
+				but you have something to offer, we would love to hear from you. Get in touch with us at 
+				<a href="mailto:careers@reflection.io">careers@reflection.io</a></p>
 			</aside>
 		</div>
 	</g:HTMLPanel>

@@ -41,138 +41,14 @@
 		</div>
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer}">
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__rowContainer} {STYLES_INSTANCE.reflectionMainStyle.grid__columnTwoThirds}">
-				<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column}">
-					<div>
-						<h2>A Bit About Us</h2>
-						<p>All app developers would benefit from reliable market intelligence but the barriers to it are high. Reflection is the first intelligence provider that
-							is built by developers, for developers with free access to app market data and affordable reporting tools that help make more informed business
-							decisions.</p>
-						<p>Unlike App Annie, Think Gaming, Priori Data and Sensor Tower, Reflection is not only affordable but has a delightful, well designed user experience,
-							transparency on costs and data accuracy as well as a super simple automated sign up process.</p>
-						<p>If you want to know more please visit our about page or contact us.</p>
-					</div>
-				</div>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.brandAssetsContainer}">
 					<div>
 						<img src="images/img-brand-assets@2x.png" alt="Folder, graph, photo icons" class="{STYLES_INSTANCE.reflectionMainStyle.imgBrandAssets}" />
 						<div class="{STYLES_INSTANCE.reflectionMainStyle.brandAssetsContent}">
 							<h3>Reflection Brand Assets</h3>
-							<p>Logos, team photos, brand imagery and more</p>
-							<button class="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall} {STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmallWithIcon}">
-								<span class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCloud}">Download Brand Assets</span>
-							</button>
+							<p>Logos, founder photos &amp; brand imagery</p>
+							<p>Reflection Brand Assets: Please email <a href="mailto:press@reflection.io">press@reflection.io</a></p>
 						</div>
-					</div>
-				</div>
-				<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column}">
-					<div>
-						<h3>In The News</h3>
-						<table class="{STYLES_INSTANCE.reflectionMainStyle.tableData}">
-							<thead>
-								<tr>
-									<th class="{STYLES_INSTANCE.reflectionMainStyle.canBeSorted} {STYLES_INSTANCE.reflectionMainStyle.isAscending}">
-										Date
-										<svg version="1.1" x="0px" y="0px" viewBox="0 0 7 10" enable-background="new 0 0 7 10" xml:space="preserve" class="{STYLES_INSTANCE.reflectionMainStyle.sortSvg}"><path
-											class="{STYLES_INSTANCE.reflectionMainStyle.ascending}"
-											d="M0.4,4.1h6.1c0.1,0,0.2,0,0.3-0.1C7,3.9,7,3.8,7,3.7c0-0.1,0-0.2-0.1-0.3L3.8,0.1
-		C3.7,0,3.6,0,3.5,0C3.4,0,3.3,0,3.2,0.1L0.1,3.3C0,3.4,0,3.5,0,3.7C0,3.8,0,3.9,0.1,4C0.2,4.1,0.3,4.1,0.4,4.1z"></path><path
-											class="{STYLES_INSTANCE.reflectionMainStyle.descending}"
-											d="M6.6,5.9H0.4c-0.1,0-0.2,0-0.3,0.1C0,6.1,0,6.2,0,6.3c0,0.1,0,0.2,0.1,0.3l3.1,3.2
-		C3.3,10,3.4,10,3.5,10c0.1,0,0.2,0,0.3-0.1l3.1-3.2C7,6.6,7,6.5,7,6.3C7,6.2,7,6.1,6.9,6C6.8,5.9,6.7,5.9,6.6,5.9z"></path></svg>
-									</th>
-									<th class="{STYLES_INSTANCE.reflectionMainStyle.canBeSorted}">
-										Title
-										<svg version="1.1" x="0px" y="0px" viewBox="0 0 7 10" enable-background="new 0 0 7 10" xml:space="preserve" class="{STYLES_INSTANCE.reflectionMainStyle.sortSvg}"><path
-											class="{STYLES_INSTANCE.reflectionMainStyle.ascending}"
-											d="M0.4,4.1h6.1c0.1,0,0.2,0,0.3-0.1C7,3.9,7,3.8,7,3.7c0-0.1,0-0.2-0.1-0.3L3.8,0.1
-		C3.7,0,3.6,0,3.5,0C3.4,0,3.3,0,3.2,0.1L0.1,3.3C0,3.4,0,3.5,0,3.7C0,3.8,0,3.9,0.1,4C0.2,4.1,0.3,4.1,0.4,4.1z"></path><path
-											class="{STYLES_INSTANCE.reflectionMainStyle.descending}"
-											d="M6.6,5.9H0.4c-0.1,0-0.2,0-0.3,0.1C0,6.1,0,6.2,0,6.3c0,0.1,0,0.2,0.1,0.3l3.1,3.2
-		C3.3,10,3.4,10,3.5,10c0.1,0,0.2,0,0.3-0.1l3.1-3.2C7,6.6,7,6.5,7,6.3C7,6.2,7,6.1,6.9,6C6.8,5.9,6.7,5.9,6.6,5.9z"></path></svg>
-									</th>
-									<th class="{STYLES_INSTANCE.reflectionMainStyle.canBeSorted}">
-										Source
-										<svg version="1.1" x="0px" y="0px" viewBox="0 0 7 10" enable-background="new 0 0 7 10" xml:space="preserve" class="{STYLES_INSTANCE.reflectionMainStyle.sortSvg}"><path
-											class="{STYLES_INSTANCE.reflectionMainStyle.ascending}"
-											d="M0.4,4.1h6.1c0.1,0,0.2,0,0.3-0.1C7,3.9,7,3.8,7,3.7c0-0.1,0-0.2-0.1-0.3L3.8,0.1
-		C3.7,0,3.6,0,3.5,0C3.4,0,3.3,0,3.2,0.1L0.1,3.3C0,3.4,0,3.5,0,3.7C0,3.8,0,3.9,0.1,4C0.2,4.1,0.3,4.1,0.4,4.1z"></path><path
-											class="{STYLES_INSTANCE.reflectionMainStyle.descending}"
-											d="M6.6,5.9H0.4c-0.1,0-0.2,0-0.3,0.1C0,6.1,0,6.2,0,6.3c0,0.1,0,0.2,0.1,0.3l3.1,3.2
-		C3.3,10,3.4,10,3.5,10c0.1,0,0.2,0,0.3-0.1l3.1-3.2C7,6.6,7,6.5,7,6.3C7,6.2,7,6.1,6.9,6C6.8,5.9,6.7,5.9,6.6,5.9z"></path></svg>
-									</th>
-								</tr>
-							</thead>
-							<colgroup>
-								<col class="{STYLES_INSTANCE.reflectionMainStyle.pressTableColDate}"></col>
-								<col class="{STYLES_INSTANCE.reflectionMainStyle.pressTableColTitle}"></col>
-								<col class="{STYLES_INSTANCE.reflectionMainStyle.pressTableColSource}"></col>
-							</colgroup>
-							<tbody>
-								<tr>
-									<td>31/10/15</td>
-									<td>
-										<a href="#">New Standard in App Intelligence</a>
-									</td>
-									<td>Techcrunch</td>
-								</tr>
-								<tr>
-									<td>01/11/15</td>
-									<td>
-										<a href="#">Free App Intelligence is Here</a>
-									</td>
-									<td>Business Insider</td>
-								</tr>
-								<tr>
-									<td>02/11/15</td>
-									<td>
-										<a href="#">State of the Mobile Gaming Market 2015</a>
-									</td>
-									<td>Mashable</td>
-								</tr>
-								<tr>
-									<td>31/10/15</td>
-									<td>
-										<a href="#">New Standard in App Intelligence</a>
-									</td>
-									<td>Techcrunch</td>
-								</tr>
-								<tr>
-									<td>01/11/15</td>
-									<td>
-										<a href="#">Free App Intelligence is Here</a>
-									</td>
-									<td>Business Insider</td>
-								</tr>
-								<tr>
-									<td>02/11/15</td>
-									<td>
-										<a href="#">State of the Mobile Gaming Market 2015</a>
-									</td>
-									<td>Mashable</td>
-								</tr>
-								<tr>
-									<td>31/10/15</td>
-									<td>
-										<a href="#">New Standard in App Intelligence</a>
-									</td>
-									<td>Techcrunch</td>
-								</tr>
-								<tr>
-									<td>01/11/15</td>
-									<td>
-										<a href="#">Free App Intelligence is Here</a>
-									</td>
-									<td>Business Insider</td>
-								</tr>
-								<tr>
-									<td>02/11/15</td>
-									<td>
-										<a href="#">State of the Mobile Gaming Market 2015</a>
-									</td>
-									<td>Mashable</td>
-								</tr>
-							</tbody>
-						</table>
 					</div>
 				</div>
 			</div>
@@ -180,22 +56,14 @@
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column}">
 					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Quick Stats</h2>
 					<dl>
-						<dt>Date Founded</dt>
-						<dd>01/01/2013</dd>
 						<dt>Headquarters</dt>
-						<dd>London</dd>
+						<dd>London, UK</dd>
 						<dt>Founders</dt>
 						<dd>
-							<g:InlineHyperlink targetHistoryToken="{AboutPageType.asTargetHistoryToken}">Gustaf Leksell</g:InlineHyperlink>
-							<br />
-							<g:InlineHyperlink targetHistoryToken="{AboutPageType.asTargetHistoryToken}">Chi Dire</g:InlineHyperlink>
+							Gustaf Leksell,<br />Chi Dire
 						</dd>
-						<dt>Staff</dt>
-						<dd>8</dd>
-						<dt>Raised Capital</dt>
-						<dd>£1.4M</dd>
-						<dt>Registered Users</dt>
-						<dd>200,000</dd>
+						<dt>Office Address:</dt>
+						<dd>40-44 Newman Street, London, United Kingdom, W1T 1QD</dd>
 					</dl>
 				</div>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column}">

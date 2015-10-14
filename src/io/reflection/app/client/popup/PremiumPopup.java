@@ -63,11 +63,11 @@ public class PremiumPopup extends Composite implements UpgradeAccountEventHandle
 			if (isFeature) {
 				badge.getStyle().setDisplay(Display.INLINE);
 				title.setInnerText("This is a Premium Feature");
-				subtitle.setInnerText("To use it simple click 'Start Trial' below and we'll instantly upgrade your account to Developer Premium for one month, absolutely free.");
+				subtitle.setInnerText("To use this feature click 'Start Free Trial' below and we'll upgrade your account to Developer Premium for free for the duration of the beta.");
 			} else {
 				badge.getStyle().setDisplay(Display.NONE);
-				title.setInnerText("Have a Month free on Us");
-				subtitle.setInnerText("No extra details required, just confirm below and we’ll instantly upgrade your account to Developer Premium for a month absolutely free.");
+				title.setInnerText("Upgrade For Free");
+				subtitle.setInnerText("No extra details required, just confirm below and we’ll instantly upgrade your account to Developer Premium for the duration of the beta absolutely free.");
 			}
 			popup.setStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().isSubmittedSuccess(), SessionController.get().isPremiumDeveloper());
 			RootPanel.get().add(this);
