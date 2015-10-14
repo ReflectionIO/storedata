@@ -9,15 +9,16 @@
 	<pop:PopupBase ui:field="popup" styleName="{STYLES_INSTANCE.reflectionMainStyle.pageOverlayPremium}">
 
 		<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.startTrialIntro}">
+			
 			<img ui:field="badge" src="images/badge-premium@2x.png" alt="Premium Badge" class="{STYLES_INSTANCE.reflectionMainStyle.popupHeaderImage}" />
 			<h2 ui:field="title" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFive}"></h2>
 			<p ui:field="subtitle"></p>
-			<h3 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingSix}">The Benefits</h3>
+			<h3 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingSix}">Benefits of Premium</h3>
 			<ul class="{STYLES_INSTANCE.reflectionMainStyle.checklist}">
-				<li>Historic Revenue &amp; Download Data</li>
-				<li>Competitive &amp; Market Benchmarking Tools</li>
-				<li>Store and Market Trends</li>
-				<li>Business Planning Tools</li>
+				<li>Leaderboard Revenue &amp; Download History</li>
+				<li>Download CSV files</li>
+				<li>Coming Soon: App Revenue &amp; Download History</li>
+				<li>Coming Soon: Google Play Store Intelligence</li>
 			</ul>
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.buttonsContainer}">
 				<c:LoadingButton ui:field="startFreeTrial" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth}">Start Free Trial</c:LoadingButton>
@@ -78,7 +79,7 @@
 			</div>
 			<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFive}">Congratulations! You're now a Developer Premium Member</h2>
 			<p>
-				We'll let you know before your trial period ends but if you have any questions or feature requests in he meantime please
+				We'll let you know before your trial period ends but if you have any questions or feature suggestions in he meantime please
 				<g:InlineHyperlink ui:field="letUsKnow" targetHistoryToken="{ContactPageType.asTargetHistoryToken}">let us know</g:InlineHyperlink>
 			</p>
 			<g:Button ui:field="continueBrowsing" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonLinkLarge}">Continue Browsing</g:Button>

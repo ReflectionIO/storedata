@@ -57,13 +57,10 @@
 	l-4.4,2.1v6.4l4.4-1.5V36.8z M99.8,43.1l-2.4,0.8v-4.4l2.4-1.1V43.1z M108.5,44.4l-5.6,1.7v7.2l5.6-0.9V44.4z M107.5,51.5l-3.6,0.6
 	v-5.3l3.6-1.1V51.5z M94.9,30.9l-3.5,2.3V39l3.5-1.9V30.9z M93.9,36.5l-1.5,0.8v-3.5l1.5-1V36.5z"></path></svg>
 				<h1>Contact Us</h1>
-				<p>We're on hand if you need any assistance or have any feedback regarding our platform. Reflection is built by developers for developers and your
-					suggestions help shape our tools &amp; features.</p>
+				<p>
+					Your feedback is what drives our future product development. 
+					We always welcome your comments and suggestions.</p>
 				<dl>
-					<div>
-						<dt>Call Us</dt>
-						<dd>+44(0)20 123 4567</dd>
-					</div>
 					<div>
 						<dt>Email Us</dt>
 						<dd>
@@ -77,7 +74,7 @@
 						</dd>
 					</div>
 					<div>
-						<dt>Press Enquiries</dt>
+						<dt>Press Enquiries &amp; Brand Assets</dt>
 						<dd>
 							<a href="mailto:press@reflection.io">press@reflection.io</a>
 						</dd>

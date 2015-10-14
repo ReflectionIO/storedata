@@ -15,9 +15,11 @@
 
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.fullScreenIntro}">
 			<div ui:field="applyPanel" class="{STYLES_INSTANCE.reflectionMainStyle.applyContent}">
-				<h1>We're Building the Only Mobile Intelligence Tool You'll Ever Need</h1>
-				<p class="{STYLES_INSTANCE.reflectionMainStyle.pStyleFeatured}">Join the Reflection developer community and help shape our platform into exactly what you need it to be. Our tools and features are designed with
-					your input meaning ours is the only service built by developers, for developers.</p>
+				<h1>We’re building the Only App Market Intelligence Platform You’ll Ever Need</h1>
+				<p class="{STYLES_INSTANCE.reflectionMainStyle.pStyleFeatured}">
+				Join Reflection's developer community and gain free access to our accurate daily 
+				data for the Top 200 apps in all available countries, 
+				stores and categories. Link your app store account to gain access to our beta.</p>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.listPartners}">
 					<h2>A few of our current partners</h2>
 					<ul>
