@@ -312,6 +312,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		updateSelectorsFromFilter();
 
 		// loadingBar.show();
+		AnimationHelper.nativeImgErrorPlaceholder(image.getElement());
+		AnimationHelper.nativeImgErrorPlaceholder(imageTable.getElement());
 
 		TooltipHelper.updateHelperTooltip();
 	}
