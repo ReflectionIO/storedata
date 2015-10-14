@@ -29,13 +29,13 @@
 						<ul class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetails}">
 							<li>
 								<span>Daily Top 200 App Revenue, Download and Rank Data</span>
-								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding whats-this-tooltip-icon-static" data-tooltip="View the latest revenue and download data for the games category in the UK, Germany, France &amp; Italy. More countries and categories will be available as the beta progresses">
+								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="View the latest revenue and download data for the games category in the UK, Germany, France &amp; Italy. More countries and categories will be available as the beta progresses">
 									<span>What's this?</span>
 								</a>
 							</li>
 							<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
 								<span>Follow Apps and Developers</span>
-								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding whats-this-tooltip-icon-static" data-tooltip="Coming soon. Curate your own leaderboards by following the apps and developers of your choice. Receive notification of activities such as soft launches and price changes.">
+								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="Coming soon. Curate your own leaderboards by following the apps and developers of your choice. Receive notification of activities such as soft launches and price changes.">
 									<span>What's this?</span>
 								</a>
 							</li>
@@ -61,37 +61,37 @@
 						<ul class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetails}">
 							<li>
 								<span>Daily Top 200 App Revenue, Download and Rank Data</span>
-								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding whats-this-tooltip-icon-static" data-tooltip="View the latest revenue and download data for the games category for the UK, Germany, France &amp; Italy. More data will be available as the beta progresses">
+								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="View the latest revenue and download data for the games category for the UK, Germany, France &amp; Italy. More data will be available as the beta progresses">
 									<span>What's this?</span>
 								</a>
 							</li>
 							<li>
 								<span>Leaderboard Revenue &amp; Download History</span>
-								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding whats-this-tooltip-icon-static" data-tooltip="View Revenue and Download data for any day in the Leaderboards">
+								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="View Revenue and Download data for any day in the Leaderboards">
 									<span>What's this?</span>
 								</a>
 							</li>
 							<li>
 								<span>Download CSV files</span>
-								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding whats-this-tooltip-icon-static" data-tooltip="Download data from the Leaderboards as a CSV file for your own analysis">
+								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="Download data from the Leaderboards as a CSV file for your own analysis">
 									<span>What's this?</span>
 								</a>
 							</li>
 							<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
 								<span>App Revenue, Download &amp; Rank History</span>
-								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding whats-this-tooltip-icon-static" data-tooltip="Coming soon. View rank, revenue and download history for any app in the leaderboards. Download CSV files for any graph you are looking at">
+								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="Coming soon. View rank, revenue and download history for any app in the leaderboards. Download CSV files for any graph you are looking at">
 									<span>What's this?</span>
 								</a>
 							</li>
 							<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
 								<span>Follow Apps and Developers</span>
-								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding whats-this-tooltip-icon-static" data-tooltip="Coming soon. Curate your own leaderboards by following the apps and developers of your choice. Receive notification of activities such as soft launches and price changes.">
+								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="Coming soon. Curate your own leaderboards by following the apps and developers of your choice. Receive notification of activities such as soft launches and price changes.">
 									<span>What's this?</span>
 								</a>
 							</li>
 							<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
 								<span>Developer Leaderboard</span>
-								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding whats-this-tooltip-icon-static" data-tooltip="Coming soon. See how developers and publishers are performing against each other.">
+								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="Coming soon. See how developers and publishers are performing against each other.">
 									<span>What's this?</span>
 								</a>
 							</li>
@@ -129,43 +129,43 @@
 						<ul class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetails}">
 							<li>
 								<span>Daily Top 200 App Revenue, Download and Rank Data</span>
-								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding whats-this-tooltip-icon-static" data-tooltip="View the latest revenue and download data for the games category for the UK, Germany, France &amp; Italy. More data will be available as the beta progresses">
+								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="View the latest revenue and download data for the games category for the UK, Germany, France &amp; Italy. More data will be available as the beta progresses">
 									<span>What's this?</span>
 								</a>
 							</li>
 							<li>
 								<span>Leaderboard Revenue &amp; Download History</span>
-								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding whats-this-tooltip-icon-static" data-tooltip="View Revenue and Download data for any day in the Leaderboards">
+								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="View Revenue and Download data for any day in the Leaderboards">
 									<span>What's this?</span>
 								</a>
 							</li>
 							<li>
 								<span>Download CSV files</span>
-								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding whats-this-tooltip-icon-static" data-tooltip="Download data from the Leaderboards as a CSV file for your own analysis">
+								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="Download data from the Leaderboards as a CSV file for your own analysis">
 									<span>What's this?</span>
 								</a>
 							</li>
 							<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
 								<span>App Revenue, Download &amp; Rank History</span>
-								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding whats-this-tooltip-icon-static" data-tooltip="Coming soon. View rank, revenue and download history for any app in the leaderboards. Download CSV files for any graph you are looking at">
+								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="Coming soon. View rank, revenue and download history for any app in the leaderboards. Download CSV files for any graph you are looking at">
 									<span>What's this?</span>
 								</a>
 							</li>
 							<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
 								<span>Follow Apps and Developers</span>
-								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding whats-this-tooltip-icon-static" data-tooltip="Coming soon. Curate your own leaderboards by following the apps and developers of your choice. Receive notification of activities such as soft launches and price changes.">
+								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="Coming soon. Curate your own leaderboards by following the apps and developers of your choice. Receive notification of activities such as soft launches and price changes.">
 									<span>What's this?</span>
 								</a>
 							</li>
 							<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
 								<span>Developer Leaderboard</span>
-								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding whats-this-tooltip-icon-static" data-tooltip="Coming soon. See how developers and publishers are performing against each other.">
+								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="Coming soon. See how developers and publishers are performing against each other.">
 									<span>What's this?</span>
 								</a>
 							</li>
 							<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
 								<span>More to come...</span>
-								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding whats-this-tooltip-icon-static" data-tooltip="Coming soon. Refection build features based on feedback from our developer community. Contact us to let us know what you need.">
+								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="Coming soon. Refection build features based on feedback from our developer community. Contact us to let us know what you need.">
 									<span>What's this?</span>
 								</a>
 							</li>
