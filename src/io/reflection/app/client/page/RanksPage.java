@@ -444,7 +444,9 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 			@Override
 			public void update(int index, RanksGroup object, Rank value) {
-				if (SessionController.get().isValidSession() && !SessionController.get().hasLinkedAccount()) {
+				if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
+					premiumPopup.show(true);
+				} else if (SessionController.get().isValidSession()) {
 					addLinkedAccountPopup.show("Link Your Appstore Account",
 							"You need to link your iTunes Connect account to use this feature, it only takes a moment");
 				} else {
