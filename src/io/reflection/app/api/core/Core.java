@@ -2028,7 +2028,8 @@ public final class Core extends ActionHandler {
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
-
+			input.session.user = UserServiceProvider.provide().getUser(input.session.user.id); // Inflate user
+			
 			input.role = ValidationHelper.validateRole(input.role, "input.role");
 
 			Role devRole = RoleServiceProvider.provide().getCodeRole(DataTypeHelper.ROLE_DEVELOPER_CODE);
