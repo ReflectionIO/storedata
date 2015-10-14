@@ -170,9 +170,9 @@
 				<li>
 					<g:InlineHyperlink targetHistoryToken="{AboutPageType.asTargetHistoryToken}">About Us</g:InlineHyperlink>
 				</li>
-				<li>
-					<g:InlineHyperlink targetHistoryToken="{PressPageType.asTargetHistoryToken}">Press</g:InlineHyperlink>
-				</li>
+				<!-- <li> -->
+				<!-- <g:InlineHyperlink targetHistoryToken="{PressPageType.asTargetHistoryToken}">Press</g:InlineHyperlink> -->
+				<!-- </li> -->
 				<li>
 					<g:InlineHyperlink targetHistoryToken="{ContactPageType.asTargetHistoryToken}">Contact Us</g:InlineHyperlink>
 				</li>
