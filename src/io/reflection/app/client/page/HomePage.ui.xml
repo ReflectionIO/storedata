@@ -22,15 +22,31 @@
 				</div>
 			</div>
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.pageLeaderboard}">
-				<div
-					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter} {STYLES_INSTANCE.reflectionMainStyle.homeLeaderboardTitleContainer}">
-					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree} {STYLES_INSTANCE.reflectionMainStyle.pageTitle}">Top 10 Apps</h2>
-				</div>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.tabs}">
 					<ul
 						class="{STYLES_INSTANCE.reflectionMainStyle.tabsContainer} {STYLES_INSTANCE.reflectionMainStyle.defaultTabsTransition} {STYLES_INSTANCE.reflectionMainStyle.tabsToDropdown}">
-						<li ui:field="paidItem"
+						<li ui:field="allItem"
 							class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab} {STYLES_INSTANCE.reflectionMainStyle.isActive}">
+							<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
+							<a class="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
+								<span>
+									<svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 
+							32 32" xml:space="preserve"><path id="Overview" fill="#6D69C5"
+										d="M22.6,19.2c-2.6,0-5.1-1.7-6.4-4.2c-1.8-3.6-0.8-7.8,2.3-9.4C19.4,5.2,20.2,5,21.1,5
+						c2.6,0,5.1,1.7,6.4,4.2c1.8,3.6,0.8,7.8-2.3,9.4C24.4,19,23.5,19.2,22.6,19.2z M21.1,6c-0.7,0-1.4,0.2-2.1,0.5
+						c-2.6,1.3-3.5,4.9-1.9,8c1.1,2.2,3.3,3.7,5.5,3.7c0.7,0,1.4-0.2,2.1-0.5c2.6-1.3,3.5-4.9,1.9-8C25.5,7.5,23.3,6,21.1,6z M30.4,7.8
+						c-1.9-3.8-5.7-6.2-9.6-6.2c-1.4,0-2.8,0.3-4.1,1c-1.6,0.8-2.8,2-3.7,3.5L2.5,16.8c-2.2,1.8-2.8,4.5-1.4,6.8c0.9,1.6,2.7,2.9,4.7,2.9
+						c0.5,0,1-0.1,1.6-0.3l15.1-3.3c0.1,0,0.1,0,0.2,0c1.4,0,2.8-0.3,4.1-1C31.4,19.5,33.1,13.1,30.4,7.8z M6.8,24.2l-0.1,0
+						c-1.6,0.6-3.2-0.4-3.9-1.7c-0.3-0.6-1.2-2.5,1-4.4l2-2C5.5,18,6,19.7,6.8,21c0.6,1.1,1.6,2,2.8,2.7L6.8,24.2z M11.3,23.3
+						c-1.6-0.4-2.9-1.6-3.7-2.8c-1-1.6-1.4-3.9-0.1-6l4.1-4.2c-0.2,2.1,0.2,4.3,1.2,6.4c1.2,2.3,3,4,5.1,5.1L11.3,23.3z M25.7,20.1
+						c-1,0.5-2,0.8-3.2,0.8c-3.1,0-6.2-2-7.8-5.1c-2.2-4.4-0.9-9.5,2.9-11.4c1-0.5,2-0.8,3.2-0.8c3.1,0,6.2,2,7.8,5.1
+						C30.8,13.1,29.5,18.2,25.7,20.1z" /></svg>
+									<span>Overview / All</span>
+								</span>
+							</a>
+						</li>
+						<li ui:field="paidItem"
+							class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab}">
 							<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
 							<a class="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
 								<span>
@@ -120,6 +136,7 @@
 									</div>
 								</div>
 								<p:ErrorPanel ui:field="errorPanel" visible="false"></p:ErrorPanel>
+								<p:NoDataPanel ui:field="noDataPanel" visible="false"></p:NoDataPanel>
 							</div>
 						</article>
 					</li>
@@ -159,7 +176,8 @@
 			<div
 				class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnTwoThirds} {STYLES_INSTANCE.reflectionMainStyle.grid__columnPushTwo}">
 				<h2>Why Reflection</h2>
-				<p>Reflection offers free and accurate app market intelligence to everyone making apps. We build features and tools that help you understand the app market, saving you time, effort and resources.</p>
+				<p>Reflection offers free and accurate app market intelligence to everyone making apps. We build features and tools that help you understand the app market,
+					saving you time, effort and resources.</p>
 			</div>
 		</section>
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__row} {STYLES_INSTANCE.reflectionMainStyle.whyReflectionGraphic}">
@@ -222,8 +240,9 @@
 	c0.1,0,0.1,0,0.2,0c0.4-0.1,0.6-0.5,0.5-0.9L58.3,60z"></path></svg>
 				</div>
 				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Free Intelligence</h2>
-				<p>Get free access to daily download and revenue data for the Top 200 apps when you link your store account. 
-				Reflection's statistical algorithms offer reliable and accurate data.</p>
+				<p>Get free access to daily download and revenue data for the Top 200 apps when you link your store account.
+					Reflection's statistical algorithms offer
+					reliable and accurate data.</p>
 			</div>
 			<div
 				class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird} {STYLES_INSTANCE.reflectionMainStyle.whyReflectionItem}">
@@ -284,8 +303,8 @@
 		l-5.3,5.6l-5.4-3l-4.9,4V53.4h36.9V59.8z"></path></svg>
 				</div>
 				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Help Us Help You</h2>
-				<p>We build features &amp; tools that are most requested by our developer community. 
-				These easy-to-use tools will help you better understand the app market.</p>
+				<p>We build features &amp; tools that are most requested by our developer community.
+					These easy-to-use tools will help you better understand the app market.</p>
 			</div>
 			<div
 				class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird} {STYLES_INSTANCE.reflectionMainStyle.whyReflectionItem}">
@@ -336,8 +355,8 @@
 	l1.3,0.8L58.9,18.4z"></path></svg>
 				</div>
 				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Easy to Use</h2>
-				<p>We listen to our developers to make complex data easy to understand. 
-				Our goal is to create the best user experience in the market.</p>
+				<p>We listen to our developers to make complex data easy to understand.
+					Our goal is to create the best user experience in the market.</p>
 			</div>
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__row} {STYLES_INSTANCE.reflectionMainStyle.whyReflectionButtonContainer}">
 				<g:InlineHyperlink targetHistoryToken="{AboutPageType.asTargetHistoryToken}" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionLarge}">Learn More About Reflection</g:InlineHyperlink>

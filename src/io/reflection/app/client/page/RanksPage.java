@@ -551,7 +551,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 				applyFilters.setEnabled(false);
 				PageType.RanksPageType.show("view", selectedTab, FilterController.get().asRankFilterString());
 			}
-			if (errorPanel.isVisible()) {
+			if (errorPanel.isVisible() || noDataPanel.isVisible()) {
 				applyFilters.setEnabled(false);
 				updateSelectorsFromFilter();
 				loadingBar.show();
@@ -985,6 +985,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 				leaderboardTable.setVisible(false);
 				noDataPanel.setVisible(true);
 				viewAllBtn.setVisible(false);
+				applyFilters.setEnabled(true);
 			}
 			loadingBar.hide(true);
 		} else {
