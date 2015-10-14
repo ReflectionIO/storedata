@@ -33,6 +33,7 @@ import io.reflection.app.api.core.shared.call.IsAuthorisedRequest;
 import io.reflection.app.api.core.shared.call.LinkAccountRequest;
 import io.reflection.app.api.core.shared.call.LoginRequest;
 import io.reflection.app.api.core.shared.call.LogoutRequest;
+import io.reflection.app.api.core.shared.call.RegisterInterestBusinessRequest;
 import io.reflection.app.api.core.shared.call.RegisterUserRequest;
 import io.reflection.app.api.core.shared.call.SearchForItemRequest;
 import io.reflection.app.api.core.shared.call.UpdateLinkedAccountRequest;
@@ -173,6 +174,10 @@ public final class CoreJsonServlet extends JsonServlet {
 			UpgradeAccountRequest input = new UpgradeAccountRequest();
 			input.fromJson(request);
 			output = service.upgradeAccount(input).toString();
+		} else if ("RegisterInterestBusiness".equals(action)) {
+			RegisterInterestBusinessRequest input = new RegisterInterestBusinessRequest();
+			input.fromJson(request);
+			output = service.registerInterestBusiness(input).toString();
 		}
 		return output;
 	}

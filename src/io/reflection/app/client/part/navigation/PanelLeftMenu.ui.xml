@@ -165,14 +165,14 @@
 					<g:InlineHyperlink targetHistoryToken="{ProductPageType.asTargetHistoryToken}">Product</g:InlineHyperlink>
 				</li>
 				<li ui:field="pricingSecondaryItem">
-					<g:InlineHyperlink targetHistoryToken="{PricingPageType.asTargetHistoryToken}">Pricing</g:InlineHyperlink>
+					<g:InlineHyperlink ui:field="pricingSecondaryLink">Pricing</g:InlineHyperlink>
 				</li>
 				<li>
 					<g:InlineHyperlink targetHistoryToken="{AboutPageType.asTargetHistoryToken}">About Us</g:InlineHyperlink>
 				</li>
-				<li>
-					<g:InlineHyperlink targetHistoryToken="{PressPageType.asTargetHistoryToken}">Press</g:InlineHyperlink>
-				</li>
+				<!-- <li> -->
+				<!-- <g:InlineHyperlink targetHistoryToken="{PressPageType.asTargetHistoryToken}">Press</g:InlineHyperlink> -->
+				<!-- </li> -->
 				<li>
 					<g:InlineHyperlink targetHistoryToken="{ContactPageType.asTargetHistoryToken}">Contact Us</g:InlineHyperlink>
 				</li>

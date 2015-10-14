@@ -20,6 +20,8 @@ import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.shared.util.DataTypeHelper;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -43,6 +45,9 @@ public class PremiumPopup extends Composite implements UpgradeAccountEventHandle
 	interface PremiumPopupUiBinder extends UiBinder<Widget, PremiumPopup> {}
 
 	@UiField PopupBase popup;
+	@UiField Element badge;
+	@UiField Element title;
+	@UiField Element subtitle;
 	@UiField LoadingButton startFreeTrial;
 	@UiField Button notRightNow;
 	@UiField InlineHyperlink letUsKnow;
@@ -53,8 +58,17 @@ public class PremiumPopup extends Composite implements UpgradeAccountEventHandle
 
 	}
 
-	public void show() {
+	public void show(boolean isFeature) {
 		if (!this.asWidget().isAttached()) {
+			if (isFeature) {
+				badge.getStyle().setDisplay(Display.INLINE);
+				title.setInnerText("This is a Premium Feature");
+				subtitle.setInnerText("To use it simple click 'Start Trial' below and we'll instantly upgrade your account to Developer Premium for one month, absolutely free.");
+			} else {
+				badge.getStyle().setDisplay(Display.NONE);
+				title.setInnerText("Have a Month free on Us");
+				subtitle.setInnerText("No extra details required, just confirm below and we’ll instantly upgrade your account to Developer Premium for a month absolutely free.");
+			}
 			popup.setStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().isSubmittedSuccess(), SessionController.get().isPremiumDeveloper());
 			RootPanel.get().add(this);
 			DefaultEventBus.get().addHandlerToSource(UpgradeAccountEventHandler.TYPE, UserController.get(), this);

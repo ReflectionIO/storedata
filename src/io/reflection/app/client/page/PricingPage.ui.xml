@@ -45,7 +45,8 @@
 					</section>
 				</div>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird}">
-					<section class="{STYLES_INSTANCE.reflectionMainStyle.pricingOption} {STYLES_INSTANCE.reflectionMainStyle.pricingOptionPremium} {STYLES_INSTANCE.reflectionMainStyle.pricingOptionWithFooter}">
+					<section
+						class="{STYLES_INSTANCE.reflectionMainStyle.pricingOption} {STYLES_INSTANCE.reflectionMainStyle.pricingOptionPremium} {STYLES_INSTANCE.reflectionMainStyle.pricingOptionWithFooter}">
 						<header class="{STYLES_INSTANCE.reflectionMainStyle.pricingOptionHeader}">
 							<h2 class="{STYLES_INSTANCE.reflectionMainStyle.pricingName}">Developer Premium</h2>
 							<div class="{STYLES_INSTANCE.reflectionMainStyle.pricingPriceContainer}">
@@ -96,7 +97,7 @@
 							</li>
 							<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
 								<span>More to come...</span>
-								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding whats-this-tooltip-icon-static" data-tooltip="Coming soon. Refection build features based on feedback from our developer community. Contact us to let us know what you need.">
+								<a href="#" ui:field="comingSoon" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="Coming soon. Refection build features based on feedback from our developer community. Contact us to let us know what you need.">
 									<span>What's this?</span>
 								</a>
 							</li>
@@ -115,7 +116,8 @@
 					</div>
 				</div>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird}">
-					<section class="{STYLES_INSTANCE.reflectionMainStyle.pricingOption} {STYLES_INSTANCE.reflectionMainStyle.pricingOptionBusiness} {STYLES_INSTANCE.reflectionMainStyle.pricingOptionWithFooter}">
+					<section
+						class="{STYLES_INSTANCE.reflectionMainStyle.pricingOption} {STYLES_INSTANCE.reflectionMainStyle.pricingOptionBusiness} {STYLES_INSTANCE.reflectionMainStyle.pricingOptionWithFooter}">
 						<header class="{STYLES_INSTANCE.reflectionMainStyle.pricingOptionHeader}">
 							<h2 class="{STYLES_INSTANCE.reflectionMainStyle.pricingName}">Business</h2>
 							<div class="{STYLES_INSTANCE.reflectionMainStyle.pricingPriceContainer}">
@@ -168,7 +170,7 @@
 								</a>
 							</li>
 						</ul>
-						<button class="{STYLES_INSTANCE.reflectionMainStyle.refButtonLink} {STYLES_INSTANCE.reflectionMainStyle.pricingSignUpButton}">Register Your Interest</button>
+						<g:Button ui:field="registerInterest" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonLink} {STYLES_INSTANCE.reflectionMainStyle.pricingSignUpButton}">Register Your Interest</g:Button>
 					</section>
 					<div class="{STYLES_INSTANCE.reflectionMainStyle.pricingAccessInfo}">
 						<div class="{STYLES_INSTANCE.reflectionMainStyle.verticalCentreContent}">
