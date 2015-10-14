@@ -22,7 +22,7 @@
 			<a ui:field="appLink" href="{link}" style="{displayLink}">
 				<ui:text from="{name}" />
 			</a>
-			<span ui:field="appText" style="{displayLinkText}">
+			<span ui:field="appText" style="{displayLinkText}" class=""> <!-- {STYLES_INSTANCE.reflectionMainStyle.leaderboardAppName} -->
 				<ui:text from="{name}" />
 			</span>
 			<span class="{STYLES_INSTANCE.reflectionMainStyle.textMuted}">
