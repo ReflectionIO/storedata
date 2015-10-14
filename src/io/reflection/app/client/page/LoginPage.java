@@ -26,8 +26,10 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
 
@@ -44,6 +46,7 @@ public class LoginPage extends Page implements ForgotPasswordEventHandler {
 	@UiField LoginForm loginForm;
 	@UiField ForgotPasswordForm forgotPasswordForm;
 	@UiField DivElement formSubmittedSuccessPanel;
+	@UiField Anchor backToLogin;
 
 	public LoginPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -77,6 +80,36 @@ public class LoginPage extends Page implements ForgotPasswordEventHandler {
 
 			}
 		});
+
+		forgotPasswordForm.getBackToLoginLink().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				event.preventDefault();
+				Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().resetPasswordFormIsShowing());
+				loginForm.getElement().getParentElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().tabs__contentIsSubmitted());
+				formSubmittedSuccessPanel.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
+				loginForm.getElement().getParentElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().showResetPasswordForm());
+				loginForm.getElement().removeAttribute("style");
+				forgotPasswordForm.getElement().removeAttribute("style");
+				forgotPasswordForm.resetForm();
+				Document.get().getBody().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().loginFormIsShowing());
+			}
+		});
+	}
+
+	@UiHandler("backToLogin")
+	void onBackToLoginClicked(ClickEvent event) {
+		event.preventDefault();
+
+		Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().resetPasswordFormIsShowing());
+		loginForm.getElement().getParentElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().tabs__contentIsSubmitted());
+		formSubmittedSuccessPanel.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
+		loginForm.getElement().getParentElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().showResetPasswordForm());
+		loginForm.getElement().removeAttribute("style");
+		forgotPasswordForm.getElement().removeAttribute("style");
+		forgotPasswordForm.resetForm();
+		Document.get().getBody().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().loginFormIsShowing());
 	}
 
 	/*

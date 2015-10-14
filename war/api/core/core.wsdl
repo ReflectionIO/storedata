@@ -97,6 +97,9 @@
 
 			<xsd:element name="UpgradeAccountInput" type="sdc:UpgradeAccountRequest" />
 			<xsd:element name="UpgradeAccountOutput" type="sdc:UpgradeAccountResponse" />
+			
+			<xsd:element name="RegisterInterestBusinessInput" type="sdc:RegisterInterestBusinessRequest" />
+			<xsd:element name="RegisterInterestBusinessOutput" type="sdc:RegisterInterestBusinessResponse" />
 
 			<xsd:complexType name="GetCountriesRequest">
 				<xsd:complexContent>
@@ -755,6 +758,22 @@
 					</xsd:extension>
 				</xsd:complexContent>
 			</xsd:complexType>
+			
+			<xsd:complexType name="RegisterInterestBusinessRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="user" type="sd:User" maxOccurs="1" />
+						</xsd:sequence>
+						<xsd:attribute name="actionCode" type="xsd:string" use="optional" />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+			<xsd:complexType name="RegisterInterestBusinessResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response" />
+				</xsd:complexContent>
+			</xsd:complexType>
 
 		</xsd:schema>
 	</wsdl:types>
@@ -975,6 +994,13 @@
         <wsdl:part name="output" element="sdc:UpgradeAccountOutput" />
     </wsdl:message>
     
+	<wsdl:message name="RegisterInterestBusinessRequest">
+		<wsdl:part name="input" element="sdc:RegisterInterestBusinessInput" />
+	</wsdl:message>
+	<wsdl:message name="RegisterInterestBusinessResponse">
+		<wsdl:part name="output" element="sdc:RegisterInterestBusinessOutput" />
+	</wsdl:message>
+    
 
 	<wsdl:portType name="core">
 		<wsdl:operation name="GetCountries">
@@ -1130,6 +1156,11 @@
 		<wsdl:operation name="UpgradeAccount">
 			<wsdl:input message="sdc:UpgradeAccountRequest" />
 			<wsdl:output message="sdc:UpgradeAccountResponse" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="RegisterInterestBusiness">
+			<wsdl:input message="sdc:RegisterInterestBusinessRequest" />
+			<wsdl:output message="sdc:RegisterInterestBusinessResponse" />
 		</wsdl:operation>
 
 	</wsdl:portType>
@@ -1443,6 +1474,16 @@
                 <soap:body use="literal" />
             </wsdl:output>
         </wsdl:operation>
+        
+        <wsdl:operation name="RegisterInterestBusiness">
+			<soap:operation soapAction="http://app.reflection.io/core/RegisterInterestBusiness" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
 
 	</wsdl:binding>
 	<wsdl:service name="core">

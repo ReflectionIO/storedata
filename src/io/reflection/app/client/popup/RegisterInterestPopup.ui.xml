@@ -1,32 +1,12 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:pop="urn:import:io.reflection.app.client.popup"
 	xmlns:c="urn:import:io.reflection.app.client.component">
-	<ui:import field="io.reflection.app.client.page.PageType.RegisterPageType" />
-	<ui:import field="io.reflection.app.client.page.PageType.LoginPageType" />
 	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 	<ui:style>
 	
 	</ui:style>
-	<pop:PopupBase ui:field="popup" styleName="{STYLES_INSTANCE.reflectionMainStyle.pageOverlayStandard} {STYLES_INSTANCE.reflectionMainStyle.registerIsSecondStep}">
-		<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.signUpInfoContent}">
-			<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFive}">Sign Up for Free to Use This Feature</h2>
-			<p>You need to link your app store account to use this feature, it's free and takes mere moments.</p>
-			<div class="{STYLES_INSTANCE.reflectionMainStyle.buttonsContainer}">
-				<g:Button ui:field="signUpBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth}">Sign Me Up</g:Button>
-				<g:InlineHyperlink ui:field="logInLink" targetHistoryToken="{LoginPageType.asTargetHistoryToken}"
-					styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonLink} {STYLES_INSTANCE.reflectionMainStyle.buttonStyle}">
-					Already a member? Login
-				</g:InlineHyperlink>
-			</div>
-			<h3 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingSix}">Don't Have an App Store Account?</h3>
-			<p>
-				No problem, we will soon be releasing a package designed specifically for investors, marketers and advertisers.
-				<g:Anchor ui:field="regiterInterestLink" href="#">Put your name on the waiting list</g:Anchor>
-				now and we'll let you know when it's ready.
-			</p>
-		</g:HTMLPanel>
+	<pop:PopupBase ui:field="popup">
 
-		<!-- Register interest -->
 		<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.formSubmittedSuccess}">
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.illustrationContainer}">
 				<svg version="1.1" x="0px" y="0px" viewBox="0 0 71 43.6" enable-background="new 0 0 71 43.6" xml:space="preserve"
@@ -83,7 +63,7 @@
 			<g:Button ui:field="continueBrowsing" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonLinkLarge}" text="Continue Browsing" />
 		</g:HTMLPanel>
 
-		<g:HTMLPanel ui:field="registerFormContainer" styleName="{STYLES_INSTANCE.reflectionMainStyle.registerFormContainer}">
+		<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.registerFormContainer}">
 			<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFive} {STYLES_INSTANCE.reflectionMainStyle.jsFadeContent}">Don't Miss Out, Register Now</h2>
 			<p class="{STYLES_INSTANCE.reflectionMainStyle.jsFadeContent}">Business Accounts will be available on a first-come, first-served basis when our beta ends. Register your interest today to ensure you don’t miss
 				out and we’ll notify you when it's ready.</p>
@@ -98,5 +78,6 @@
 				<c:LoadingButton ui:field="registerInterest" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth} {STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}">Submit</c:LoadingButton>
 			</form>
 		</g:HTMLPanel>
+
 	</pop:PopupBase>
 </ui:UiBinder> 

@@ -255,7 +255,6 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 							&& userSession.token.equals(input.session.token)) {
 
 						setUserRole(output.roles.get(0));
-
 						setUserPermissions(output.permissions);
 
 						DefaultEventBus.get().fireEventFromSource(

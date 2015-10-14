@@ -1,8 +1,8 @@
 //
-//  SignUpPopup.java
+//  RegisterInterestPopup.java
 //  storedata
 //
-//  Created by Stefano Capuzzi (capuzzistefano) on 25 Sep 2015.
+//  Created by Stefano Capuzzi (capuzzistefano) on 9 Oct 2015.
 //  Copyright © 2015 Reflection.io Ltd. All rights reserved.
 //
 package io.reflection.app.client.popup;
@@ -15,7 +15,6 @@ import io.reflection.app.client.component.LoadingButton;
 import io.reflection.app.client.component.TextField;
 import io.reflection.app.client.controller.UserController;
 import io.reflection.app.client.helper.FormHelper;
-import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.res.Styles;
 
 import com.google.gwt.core.client.GWT;
@@ -27,11 +26,8 @@ import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
@@ -40,18 +36,13 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author Stefano Capuzzi (capuzzistefano)
  *
  */
-public class SignUpPopup extends Composite implements RegisterInterestBusinessEventHandler {
+public class RegisterInterestPopup extends Composite implements RegisterInterestBusinessEventHandler {
 
-	private static SignUpPopupUiBinder uiBinder = GWT.create(SignUpPopupUiBinder.class);
+	private static RegisterInterestPopupUiBinder uiBinder = GWT.create(RegisterInterestPopupUiBinder.class);
 
-	interface SignUpPopupUiBinder extends UiBinder<Widget, SignUpPopup> {}
+	interface RegisterInterestPopupUiBinder extends UiBinder<Widget, RegisterInterestPopup> {}
 
 	@UiField PopupBase popup;
-	@UiField Button signUpBtn;
-	@UiField InlineHyperlink logInLink;
-	@UiField Anchor regiterInterestLink;
-
-	// Register interest
 	@UiField Button continueBrowsing;
 	@UiField TextField firstNameTextField;
 	private String firstNameError;
@@ -65,10 +56,10 @@ public class SignUpPopup extends Composite implements RegisterInterestBusinessEv
 	private String generalErrorNote = "";
 	@UiField LoadingButton registerInterest;
 
-	@UiField HTMLPanel registerFormContainer;
-
-	public SignUpPopup() {
+	public RegisterInterestPopup() { // TODO error already registered
 		initWidget(uiBinder.createAndBindUi(this));
+
+		popup.addStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().pageOverlayRegister());
 	}
 
 	public void show() {
@@ -76,6 +67,7 @@ public class SignUpPopup extends Composite implements RegisterInterestBusinessEv
 			RootPanel.get().add(this);
 		}
 		popup.show();
+		firstNameTextField.setFocus(true);
 	}
 
 	public void hide() {
@@ -87,27 +79,6 @@ public class SignUpPopup extends Composite implements RegisterInterestBusinessEv
 		RootPanel.get().remove(this.asWidget());
 	}
 
-	@UiHandler({ "signUpBtn", "logInLink" })
-	void onCloseLinksClicked(ClickEvent event) {
-		event.preventDefault();
-		popup.closePopup();
-	}
-
-	@UiHandler("signUpBtn")
-	void onSignUpClicked(ClickEvent event) {
-		event.preventDefault();
-		PageType.RegisterPageType.show();
-	}
-
-	@UiHandler("regiterInterestLink")
-	void onRegisterInterestLinkClicked(ClickEvent event) {
-		event.preventDefault();
-		popup.getElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().registerIsSecondStep());
-		registerFormContainer.getElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
-		firstNameTextField.setFocus(true);
-	}
-
-	// Register interest
 	@UiHandler({ "firstNameTextField", "lastNameTextField", "companyTextField", "emailTextField" })
 	void onEnterKeyDownRegisterFields(KeyDownEvent event) {
 		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
@@ -296,9 +267,6 @@ public class SignUpPopup extends Composite implements RegisterInterestBusinessEv
 		registerInterest.resetStatus();
 		setFieldsEnabled(true);
 		popup.getElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isSubmitted());
-
-		popup.getElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().registerIsSecondStep());
-		registerFormContainer.getElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
 	}
 
 	/*
@@ -331,5 +299,4 @@ public class SignUpPopup extends Composite implements RegisterInterestBusinessEv
 		registerInterest.setStatusError();
 		setFieldsEnabled(true);
 	}
-
 }

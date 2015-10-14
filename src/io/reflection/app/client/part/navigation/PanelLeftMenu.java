@@ -97,6 +97,7 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 	@UiField InlineHyperlink adminDataAccountFetchesLink;
 	@UiField LIElement productSecondaryItem;
 	@UiField LIElement pricingSecondaryItem;
+	@UiField InlineHyperlink pricingSecondaryLink;
 	@UiField UListElement secondaryFooterList;
 	@UiField SpanElement usersCount;
 
@@ -119,6 +120,8 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 		secondaryFooterList.insertFirst(pricingSecondaryItem);
 		secondaryFooterList.insertFirst(productSecondaryItem);
 		if (user != null) {
+			pricingSecondaryLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.ManageSubscriptionPageType.toString(),
+					user.id.toString()));
 			if (!itemList.isOrHasChild(myDataItem)) {
 				itemList.insertFirst(myDataItem);
 			}

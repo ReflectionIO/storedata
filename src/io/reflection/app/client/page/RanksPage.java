@@ -751,7 +751,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	@UiHandler("downloadLeaderboard")
 	void onDownloadLeaderboardClicked(ClickEvent event) {
 		event.preventDefault();
-		if (SessionController.get().isPremiumDeveloper() || SessionController.get().isAdmin()) {
+		if ((SessionController.get().isPremiumDeveloper() && SessionController.get().hasLinkedAccount()) || SessionController.get().isAdmin()) {
 			downloadLeaderboard.setStatusLoading("Downloading");
 			Filter filter = FilterController.get().getFilter();
 			String listType;
@@ -809,8 +809,10 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 					@Override
 					public void onResponseReceived(Request request, Response response) {
-						if (response.getStatusCode() == Response.SC_FORBIDDEN) { // User doesn't have the required role
+						if (response.getStatusCode() == Response.SC_FORBIDDEN) { // User doesn't have the required role, probably premium role is expired
 							downloadLeaderboard.setStatusError();
+							// Refresh credentials
+							SessionController.get().fetchRolesAndPermissions();
 						} else {
 							String csvContent = "data:text/csv;charset=utf-8," + response.getText();
 							Window.open(URL.encode(csvContent), "_self", "");
@@ -821,8 +823,11 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			} catch (Exception e) {
 				downloadLeaderboard.setStatusError();
 			}
+		} else if (!SessionController.get().canSeePredictions()) {
+			addLinkedAccountPopup
+					.show("Link Your Appstore Account", "You need to link your iTunes Connect account to use this feature, it only takes a moment");
 		} else if (SessionController.get().isValidSession()) {
-			premiumPopup.show();
+			premiumPopup.show(true);
 		} else {
 			signUpPopup.show();
 		}

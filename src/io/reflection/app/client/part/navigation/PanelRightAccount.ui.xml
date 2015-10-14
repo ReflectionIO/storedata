@@ -49,7 +49,7 @@
 					<p>We've sent the email, click on the link contained therein to reset your password once it arrives</p>
 
 					<p class="{STYLES_INSTANCE.reflectionMainStyle.backLinkText}">
-						<g:Anchor ui:field="backToLogin" href="#">Back to Login</g:Anchor>
+						<g:Anchor ui:field="backToLogin" styleName="" href="#">Back to Login</g:Anchor>
 					</p>
 
 				</div>

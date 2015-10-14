@@ -13,7 +13,7 @@
 	</ui:style>
 
 	<div>
-		<img class="{STYLES_INSTANCE.reflectionMainStyle.imgRounded}" src="{smallImage}" />
+		<img class="{STYLES_INSTANCE.reflectionMainStyle.imgRounded}" src="{smallImage}" onError="this.onerror=null;this.src='/images/placeholder_app_icon_2x.png';" />
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.mhxte6cRA}">
 			<a href="{link}">
 				<ui:text from="{name}" />

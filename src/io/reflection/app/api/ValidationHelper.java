@@ -84,7 +84,7 @@ public class ValidationHelper {
 		return accessCode;
 	}
 
-	public static User validateAlphaUser(User user, String parent) throws ServiceException {
+	public static User validateUserWithoutPassword(User user, String parent) throws ServiceException {
 		if (user == null) throw new InputValidationException(ApiError.UserNull.getCode(), ApiError.UserNull.getMessage(parent));
 
 		if (user.forename == null || (user.forename = user.forename.trim()).length() == 0)
