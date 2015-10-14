@@ -70,17 +70,24 @@ public class LeaderboardRevenueCell extends AbstractCell<Rank> {
 		} else {
 			if (CalendarUtil.isSameDate(FilterHelper.getDaysAgo(2), FilterController.get().getEndDate())
 					|| NavigationController.get().getCurrentPage().equals(PageType.HomePageType)) {
-				if (position > 10) {
+				if (position > 10 && !(SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount())) {
 					value = SafeHtmlUtils.fromSafeConstant("<a style=\"cursor: pointer\" class=\"sign-up-link\">"
-							+ (SessionController.get().isValidSession() ? "Link Account" : "Sign Up") + "</a>");
+							+ (SessionController.get().isLoggedIn() ? "Link Account" : "Sign Up") + "</a>");
 				} else {
 					value = (rank.currency != null && rank.revenue != null ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.asWholeMoneyString(rank.currency,
 							rank.revenue.floatValue())) : SafeHtmlUtils
 							.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
 				}
 			} else {
-				String text = (SessionController.get().isValidSession() ? "Link Account" : "Sign Up");
-				value = SafeHtmlUtils.fromSafeConstant("<a style=\"cursor: pointer\" class=\"sign-up-link\">" + text + "</a>");
+				String textValue = "";
+				if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
+					textValue = "Upgrade";
+				} else if (SessionController.get().isLoggedIn()) {
+					textValue = "Link Account";
+				} else {
+					textValue = "Sign Up";
+				}
+				value = SafeHtmlUtils.fromSafeConstant("<a style=\"cursor: pointer\" class=\"sign-up-link\">" + textValue + "</a>");
 			}
 		}
 		if (value != null) {

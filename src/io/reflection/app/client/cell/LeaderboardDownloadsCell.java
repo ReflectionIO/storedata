@@ -72,7 +72,7 @@ public class LeaderboardDownloadsCell extends AbstractCell<Rank> {
 					|| NavigationController.get().getCurrentPage().equals(PageType.HomePageType)) {
 				if (position > 10 && !(SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount())) {
 					value = SafeHtmlUtils.fromSafeConstant("<a style=\"cursor: pointer\" class=\"sign-up-link\">"
-							+ (SessionController.get().isValidSession() ? "Link Account" : "Sign Up") + "</a>");
+							+ (SessionController.get().isLoggedIn() ? "Link Account" : "Sign Up") + "</a>");
 				} else {
 					value = (rank.downloads != null ? SafeHtmlUtils.fromSafeConstant(WHOLE_NUMBER_FORMATTER.format(rank.downloads)) : SafeHtmlUtils
 							.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
@@ -81,7 +81,7 @@ public class LeaderboardDownloadsCell extends AbstractCell<Rank> {
 				String textValue = "";
 				if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
 					textValue = "Upgrade";
-				} else if (SessionController.get().isValidSession()) {
+				} else if (SessionController.get().isLoggedIn()) {
 					textValue = "Link Account";
 				} else {
 					textValue = "Sign Up";

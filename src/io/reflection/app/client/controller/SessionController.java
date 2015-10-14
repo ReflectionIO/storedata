@@ -786,7 +786,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	/**
 	 * @return
 	 */
-	public boolean isValidSession() {
+	public boolean isLoggedIn() {
 		return getSessionForApiCall() != null
 				&& (userSession == null || (userSession.expires != null && userSession.expires.getTime() > (new Date()).getTime()));
 	}
@@ -798,7 +798,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	public boolean isAuthorised(Collection<Permission> requiredPermissions) {
 		boolean authorised = false;
 
-		if (isValidSession()) {
+		if (isLoggedIn()) {
 			if (requiredPermissions == null || requiredPermissions.isEmpty()) {
 				authorised = true;
 			} else if (loggedInUser.permissions != null) {

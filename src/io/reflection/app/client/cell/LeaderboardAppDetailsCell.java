@@ -170,13 +170,13 @@ public class LeaderboardAppDetailsCell extends AbstractCell<Rank> {
 					} else {
 						if (CalendarUtil.isSameDate(FilterHelper.getDaysAgo(2), FilterController.get().getEndDate())
 								|| NavigationController.get().getCurrentPage().equals(PageType.HomePageType)) {
-							if (rank.position.intValue() > 10) {
+							if (rank.position.intValue() > 10 && !(SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount())) {
 								dailyData = DailyDataTemplateHtml.INSTANCE.dailyData(
 										Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
 												+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(),
 										"",
 										SafeHtmlUtils.fromTrustedString("<a style=\"cursor: pointer\" class=\"sign-up-link\">"
-												+ (SessionController.get().isValidSession() ? "Link Account" : "Sign Up") + "</a>"));
+												+ (SessionController.get().isLoggedIn() ? "Link Account" : "Sign Up") + "</a>"));
 							} else {
 								dailyData = (rank.downloads != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle()
 										.refIconBefore() + " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
@@ -184,12 +184,17 @@ public class LeaderboardAppDetailsCell extends AbstractCell<Rank> {
 										.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
 							}
 						} else {
-							dailyData = DailyDataTemplateHtml.INSTANCE.dailyData(
-									Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
-											+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(),
-									"",
-									SafeHtmlUtils.fromTrustedString("<a style=\"cursor: pointer\" class=\"sign-up-link\">"
-											+ (SessionController.get().isValidSession() ? "Link Account" : "Sign Up") + "</a>"));
+							String textValue = "";
+							if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
+								textValue = "Upgrade";
+							} else if (SessionController.get().isLoggedIn()) {
+								textValue = "Link Account";
+							} else {
+								textValue = "Sign Up";
+							}
+							dailyData = DailyDataTemplateHtml.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
+									+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
+									SafeHtmlUtils.fromTrustedString("<a style=\"cursor: pointer\" class=\"sign-up-link\">" + textValue + "</a>"));
 						}
 					}
 					break;
@@ -210,13 +215,13 @@ public class LeaderboardAppDetailsCell extends AbstractCell<Rank> {
 					} else {
 						if (CalendarUtil.isSameDate(FilterHelper.getDaysAgo(2), FilterController.get().getEndDate())
 								|| NavigationController.get().getCurrentPage().equals(PageType.HomePageType)) {
-							if (rank.position.intValue() > 10) {
+							if (rank.position.intValue() > 10 && !(SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount())) {
 								dailyData = DailyDataTemplateHtml.INSTANCE.dailyData(
 										Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
 												+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(),
 										"",
 										SafeHtmlUtils.fromTrustedString("<a style=\"cursor: pointer\" class=\"sign-up-link\">"
-												+ (SessionController.get().isValidSession() ? "Link Account" : "Sign Up") + "</a>"));
+												+ (SessionController.get().isLoggedIn() ? "Link Account" : "Sign Up") + "</a>"));
 							} else {
 								dailyData = (rank.downloads != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle()
 										.refIconBefore() + " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
@@ -224,12 +229,17 @@ public class LeaderboardAppDetailsCell extends AbstractCell<Rank> {
 										.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
 							}
 						} else {
-							dailyData = DailyDataTemplateHtml.INSTANCE.dailyData(
-									Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
-											+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(),
-									"",
-									SafeHtmlUtils.fromTrustedString("<a style=\"cursor: pointer\" class=\"sign-up-link\">"
-											+ (SessionController.get().isValidSession() ? "Link Account" : "Sign Up") + "</a>"));
+							String textValue = "";
+							if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
+								textValue = "Upgrade";
+							} else if (SessionController.get().isLoggedIn()) {
+								textValue = "Link Account";
+							} else {
+								textValue = "Sign Up";
+							}
+							dailyData = DailyDataTemplateHtml.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
+									+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
+									SafeHtmlUtils.fromTrustedString("<a style=\"cursor: pointer\" class=\"sign-up-link\">" + textValue + "</a>"));
 						}
 					}
 					break;
@@ -250,13 +260,14 @@ public class LeaderboardAppDetailsCell extends AbstractCell<Rank> {
 					} else {
 						if (CalendarUtil.isSameDate(FilterHelper.getDaysAgo(2), FilterController.get().getEndDate())
 								|| NavigationController.get().getCurrentPage().equals(PageType.HomePageType)) {
-							if (rank.grossingPosition.intValue() > 10) {
+							if (rank.grossingPosition.intValue() > 10
+									&& !(SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount())) {
 								dailyData = DailyDataTemplateHtml.INSTANCE.dailyData(
 										Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
 												+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue(),
 										"",
 										SafeHtmlUtils.fromSafeConstant("<a style=\"cursor: pointer\" class=\"sign-up-link\">"
-												+ (SessionController.get().isValidSession() ? "Link Account" : "Sign Up") + "</a>"));
+												+ (SessionController.get().isLoggedIn() ? "Link Account" : "Sign Up") + "</a>"));
 							} else {
 								dailyData = (rank.currency != null && rank.revenue != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE
 										.reflectionMainStyle().refIconBefore() + " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue(), "",
@@ -264,12 +275,17 @@ public class LeaderboardAppDetailsCell extends AbstractCell<Rank> {
 										.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
 							}
 						} else {
-							dailyData = DailyDataTemplateHtml.INSTANCE.dailyData(
-									Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
-											+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue(),
-									"",
-									SafeHtmlUtils.fromSafeConstant("<a style=\"cursor: pointer\" class=\"sign-up-link\">"
-											+ (SessionController.get().isValidSession() ? "Link Account" : "Sign Up") + "</a>"));
+							String textValue = "";
+							if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
+								textValue = "Upgrade";
+							} else if (SessionController.get().isLoggedIn()) {
+								textValue = "Link Account";
+							} else {
+								textValue = "Sign Up";
+							}
+							dailyData = DailyDataTemplateHtml.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
+									+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue(), "",
+									SafeHtmlUtils.fromSafeConstant("<a style=\"cursor: pointer\" class=\"sign-up-link\">" + textValue + "</a>"));
 						}
 					}
 					break;

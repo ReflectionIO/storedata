@@ -41,7 +41,6 @@ import io.reflection.app.shared.util.DataTypeHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.LIElement;
@@ -62,7 +61,6 @@ import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
@@ -118,11 +116,11 @@ public class HomePage extends Page {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		dateFixed.setInnerText(FormattingHelper.DATE_FORMATTER_DD_MMM_YYYY.format(FilterHelper.getDaysAgo(2)));
-		FilterHelper.addCountries(countrySelector, false);
-		FilterHelper.addStores(appStoreSelector, false);
+		FilterHelper.addCountries(countrySelector, SessionController.get().isAdmin());
+		FilterHelper.addStores(appStoreSelector);
 		countrySelector.setSelectedIndex(3);
 		appStoreSelector.setSelectedIndex(1);
-
+		
 		leaderboardHomeTable.getTableLoadingSection().addClassName(style.tableBodyLoading());
 		homeRankProvider.addDataDisplay(leaderboardHomeTable);
 
@@ -296,17 +294,20 @@ public class HomePage extends Page {
 				return rankForListType(object);
 			}
 		};
-		downloadsColumn.setFieldUpdater(new FieldUpdater<RanksGroup, Rank>() {
-
-			@Override
-			public void update(int index, RanksGroup object, Rank value) {
-				if (SessionController.get().isValidSession() && !SessionController.get().hasLinkedAccount()) {
-					Window.alert("Link Account Popup");
-				} else {
-					signUpPopup.show();
-				}
-			}
-		});
+		// downloadsColumn.setFieldUpdater(new FieldUpdater<RanksGroup, Rank>() {
+		//
+		// @Override
+		// public void update(int index, RanksGroup object, Rank value) {
+		// if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
+		// new PremiumPopup().show(true);
+		// } else if (SessionController.get().isValidSession()) {
+		// new AddLinkedAccountPopup().show("Link Your Appstore Account",
+		// "You need to link your iTunes Connect account to use this feature, it only takes a moment");
+		// } else {
+		// signUpPopup.show();
+		// }
+		// }
+		// });
 		downloadsColumn.setCellStyleNames(style.mhxte6ciA());
 
 		revenueColumn = new Column<RanksGroup, Rank>(new LeaderboardRevenueCell()) {
@@ -316,17 +317,20 @@ public class HomePage extends Page {
 				return rankForListType(object);
 			}
 		};
-		revenueColumn.setFieldUpdater(new FieldUpdater<RanksGroup, Rank>() {
-
-			@Override
-			public void update(int index, RanksGroup object, Rank value) {
-				if (SessionController.get().isValidSession() && !SessionController.get().hasLinkedAccount()) {
-					Window.alert("Link Account Popup");
-				} else {
-					signUpPopup.show();
-				}
-			}
-		});
+		// revenueColumn.setFieldUpdater(new FieldUpdater<RanksGroup, Rank>() {
+		//
+		// @Override
+		// public void update(int index, RanksGroup object, Rank value) {
+		// if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
+		// new PremiumPopup().show(true);
+		// } else if (SessionController.get().isValidSession()) {
+		// new AddLinkedAccountPopup().show("Link Your Appstore Account",
+		// "You need to link your iTunes Connect account to use this feature, it only takes a moment");
+		// } else {
+		// signUpPopup.show();
+		// }
+		// }
+		// });
 		revenueColumn.setCellStyleNames(style.mhxte6ciA());
 
 		iapColumn = new Column<RanksGroup, SafeHtml>(new SafeHtmlCell()) {
