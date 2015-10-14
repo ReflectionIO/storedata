@@ -145,31 +145,6 @@ c0,0.4,0,0.6,0,1c0,0.2,0,0.4-0.1,0.6c-0.1,0.4-0.1,0.9,0,1.3C28.5,26.9,31.7,21.8,
 					</ul>
 					<g:Button ui:field="suggestFeatureBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaSmallWide}">Suggest a Feature</g:Button>
 				</aside>
-				<aside class="{STYLES_INSTANCE.reflectionMainStyle.newMembers}">
-					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">New Members</h2>
-					<div class="{STYLES_INSTANCE.reflectionMainStyle.membersList}">
-						<ul>
-							<li>
-								<img src="images/logo-fox.png" alt="Fox logo" />
-							</li>
-							<li>
-								<img src="images/logo-bossa.png" alt="Bossa logo" />
-							</li>
-							<li>
-								<img src="images/logo-miniclip.png" alt="Miniclip logo" />
-							</li>
-							<li>
-								<img src="images/logo-wooga.png" alt="Wooga logo" />
-							</li>
-							<li>
-								<img src="images/logo-nordeus.png" alt="Nordeus logo" />
-							</li>
-							<li>
-								<img src="images/logo-endomol.png" alt="Endomol logo" />
-							</li>
-						</ul>
-					</div>
-				</aside>
 				<aside class="{STYLES_INSTANCE.reflectionMainStyle.hiring}">
 					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">We're Hiring</h2>
 					<ul class="{STYLES_INSTANCE.reflectionMainStyle.contentList} {STYLES_INSTANCE.reflectionMainStyle.contentListNoBullets}">

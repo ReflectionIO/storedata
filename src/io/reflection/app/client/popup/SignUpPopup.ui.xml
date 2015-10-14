@@ -9,8 +9,8 @@
 	</ui:style>
 	<pop:PopupBase ui:field="popup" styleName="{STYLES_INSTANCE.reflectionMainStyle.pageOverlayStandard} {STYLES_INSTANCE.reflectionMainStyle.registerIsSecondStep}">
 		<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.signUpInfoContent}">
-			<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFive}">Sign Up for Free to Use This Feature</h2>
-			<p>You need to link your app store account to use this feature, it's free and takes mere moments.</p>
+			<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFive}">Are you a developer? Sign up for Free</h2>
+			<p>You need to link your app store account to use this feature, it's free and it takes no time to connect.</p>
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.buttonsContainer}">
 				<g:Button ui:field="signUpBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth}">Sign Me Up</g:Button>
 				<g:InlineHyperlink ui:field="logInLink" targetHistoryToken="{LoginPageType.asTargetHistoryToken}"
@@ -18,11 +18,11 @@
 					Already a member? Login
 				</g:InlineHyperlink>
 			</div>
-			<h3 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingSix}">Don't Have an App Store Account?</h3>
+			<h3 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingSix}">Don’t have an app store account?</h3>
 			<p>
-				No problem, we will soon be releasing a package designed specifically for investors, marketers and advertisers.
-				<g:Anchor ui:field="regiterInterestLink" href="#">Put your name on the waiting list</g:Anchor>
-				now and we'll let you know when it's ready.
+				No Problem, we will make our Business Account available when our beta ends. 
+				This is aimed at investors, advertisers and other stakeholders in the app industry. 
+				<g:Anchor ui:field="regiterInterestLink" href="#">Put your name on the waiting list</g:Anchor> and we’ll let you once it’s ready.
 			</p>
 		</g:HTMLPanel>
 

@@ -1,20 +1,18 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
+	<ui:import field="io.reflection.app.client.page.PageType.ContactPageType" />
 	<ui:style>
 	
 	</ui:style>
 	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.pageFaqs}">
-		<div class="{STYLES_INSTANCE.reflectionMainStyle.introBanner}">
+		<div
+			class="{STYLES_INSTANCE.reflectionMainStyle.pageBanner} {STYLES_INSTANCE.reflectionMainStyle.verticalCentreContent}">
 			<div>
-				<div class="{STYLES_INSTANCE.reflectionMainStyle.introBanner__graphic}">
-					<img src="images/intro-banner--speech@2x.png" alt="Speech bubbles" />
-				</div>
-				<div class="{STYLES_INSTANCE.reflectionMainStyle.introBanner__intro}">
-					<h1>FAQs</h1>
-					<p>Get the answers to the most commonly asked questions about Reflection and our platform here. If you need further assitance please get in touch via our
-						Contact Us page.</p>
-				</div>
+				<h1>FAQs</h1>
+				<h2>
+					Get answers to the most commonly asked questions about Reflection.
+				 If you need any further assistance please <g:InlineHyperlink targetHistoryToken="{ContactPageType.asTargetHistoryToken}">contact us</g:InlineHyperlink></h2>
 			</div>
 		</div>
 		<div ui:field="faqsTop" class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer}">
@@ -23,30 +21,47 @@
 					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Questions</h2>
 					<ul class="{STYLES_INSTANCE.reflectionMainStyle.contentList} {STYLES_INSTANCE.reflectionMainStyle.contentListNoBullets}">
 						<li>
-							<g:Anchor styleName="" ui:field="linkFaq1" href="#">What do you do with my data?</g:Anchor>
+							<g:Anchor styleName="" ui:field="linkFaq1" href="#">What is Reflection?</g:Anchor>
 						</li>
 						<li>
-							<g:Anchor styleName="" ui:field="linkFaq2" href="#">How much does Reflection cost?</g:Anchor>
+							<g:Anchor styleName="" ui:field="linkFaq2" href="#">What is app market intelligence?</g:Anchor>
 						</li>
 						<li>
-							<g:Anchor styleName="" ui:field="linkFaq3" href="#">How do I link my account?</g:Anchor>
+							<g:Anchor styleName="" ui:field="linkFaq3" href="#">How do you estimate app revenue and download data?</g:Anchor>
 						</li>
 						<li>
-							<g:Anchor styleName="" ui:field="linkFaq4" href="#">Do you share my data with anyone?</g:Anchor>
+							<g:Anchor styleName="" ui:field="linkFaq4" href="#">How do you use my app store data?</g:Anchor>
 						</li>
 						<li>
-							<g:Anchor styleName="" ui:field="linkFaq5" href="#">What do you do with my data?</g:Anchor>
+							<g:Anchor styleName="" ui:field="linkFaq5" href="#">Which app stores do you support?</g:Anchor>
 						</li>
 						<li>
-							<g:Anchor styleName="" ui:field="linkFaq6" href="#">How much does Reflection cost?</g:Anchor>
+							<g:Anchor styleName="" ui:field="linkFaq6" href="#">Which Countries do you support?</g:Anchor>
 						</li>
 						<li>
-							<g:Anchor styleName="" ui:field="linkFaq7" href="#">How do I link my account?</g:Anchor>
+							<g:Anchor styleName="" ui:field="linkFaq7" href="#">What Categories do you support?</g:Anchor>
 						</li>
 						<li>
-							<g:Anchor styleName="" ui:field="linkFaq8" href="#">Do you share my data with anyone?</g:Anchor>
+							<g:Anchor styleName="" ui:field="linkFaq8" href="#">How far back does your data go?</g:Anchor>
 						</li>
-
+						<li>
+							<g:Anchor styleName="" ui:field="linkFaq9" href="#">When will the Business Account be available?</g:Anchor>
+						</li>
+						<li>
+							<g:Anchor styleName="" ui:field="linkFaq10" href="#">How accurate is Reflection's data?</g:Anchor>
+						</li>
+						<li>
+							<g:Anchor styleName="" ui:field="linkFaq11" href="#">Can I see more than the top 200 apps?</g:Anchor>
+						</li>
+						<li>
+							<g:Anchor styleName="" ui:field="linkFaq12" href="#">Do I need to install an SDK?</g:Anchor>
+						</li>
+						<li>
+							<g:Anchor styleName="" ui:field="linkFaq13" href="#">How can I delete my account?</g:Anchor>
+						</li>
+						<li>
+							<g:Anchor styleName="" ui:field="linkFaq14" href="#">How can I access your intelligence if I don't have an app store account?</g:Anchor>
+						</li>
 					</ul>
 				</div>
 			</div>
@@ -54,10 +69,8 @@
 				<ul>
 					<li class="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}">
 						<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
-							<h2 ui:field="faqContent1" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">What do you want to do with my data?</h2>
-							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-								quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-								dolore eu fugiat nulla pariatur.</p>
+							<h2 ui:field="faqContent1" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">What is Reflection?</h2>
+							<p>Reflection is an app market intelligence company. We offer accurate market intelligence and easy to use tools to help you succeed in the app market.</p>
 							<p class="{STYLES_INSTANCE.reflectionMainStyle.linkBackToTop}">
 								<g:Anchor styleName="" ui:field="linkBackToTop1" href="#">Back to top</g:Anchor>
 							</p>
@@ -65,12 +78,8 @@
 					</li>
 					<li class="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}">
 						<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
-							<h2 ui:field="faqContent2" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">How much does Reflection cost?</h2>
-							<p>Integer ut varius purus. Duis quis tellus eu lacus aliquam dictum. In vel dignissim orci. Aliquam rhoncus ipsum tempus nunc interdum sodales. Proin
-								sapien purus, volutpat sit amet orci sit amet, adipiscing suscipit metus. Duis non mauris auctor, vehicula massa eget, placerat massa.</p>
-							<p>Etiam egestas nibh vitae orci pharetra semper. Sed et hendrerit elit, ac convallis nibh. Morbi a blandit velit. Nulla et vulputate eros. Nam vehicula
-								nisl sit amet justo commodo imperdiet. Nullam cursus velit id felis pretium vulputate. Nulla mattis accumsan placerat. Nam feugiat turpis tellus, eget
-								venenatis dolor vulputate et. Sed risus tellus, semper et mollis at, congue vitae massa.</p>
+							<h2 ui:field="faqContent2" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">What is app market intelligence?</h2>
+							<p>App market intelligence lets you track transactional revenue and download data for apps in across each category, country and store.</p>
 							<p class="{STYLES_INSTANCE.reflectionMainStyle.linkBackToTop}">
 								<g:Anchor styleName="" ui:field="linkBackToTop2" href="#">Back to top</g:Anchor>
 							</p>
@@ -78,11 +87,9 @@
 					</li>
 					<li class="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}">
 						<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
-							<h2 ui:field="faqContent3" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">How do I link my account?</h2>
-							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam varius nulla pellentesque bibendum semper. Pellentesque ullamcorper dictum dictum. Sed
-								tincidunt ut nulla in pharetra. Curabitur id neque id urna viverra tempus. Aliquam nec sapien purus. Aenean sodales semper suscipit. Nunc vitae felis
-								tincidunt, tincidunt felis nec, laoreet sem. Nullam urna ante, varius nec dui et, tempus molestie justo. Duis tempor turpis a risus euismod convallis
-								vel sit amet magna. Fusce ultricies cursus nulla ut bibendum.</p>
+							<h2 ui:field="faqContent3" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">How do you estimate app revenue and download data?</h2>
+							<p>Reflection has developed statistical algorithms that accurately predict revenue and download figures from a combination of datasets that includes publicly available data such as app ranking, 
+							and transactional sales data shared by publishers and developers that use Reflection.</p>
 							<p class="{STYLES_INSTANCE.reflectionMainStyle.linkBackToTop}">
 								<g:Anchor styleName="" ui:field="linkBackToTop3" href="#">Back to top</g:Anchor>
 							</p>
@@ -90,11 +97,9 @@
 					</li>
 					<li class="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}">
 						<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
-							<h2 ui:field="faqContent4" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Do you share my data with anyone?</h2>
-							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam varius nulla pellentesque bibendum semper. Pellentesque ullamcorper dictum dictum. Sed
-								tincidunt ut nulla in pharetra. Curabitur id neque id urna viverra tempus. Aliquam nec sapien purus. Aenean sodales semper suscipit. Nunc vitae felis
-								tincidunt, tincidunt felis nec, laoreet sem. Nullam urna ante, varius nec dui et, tempus molestie justo. Duis tempor turpis a risus euismod convallis
-								vel sit amet magna. Fusce ultricies cursus nulla ut bibendum.</p>
+							<h2 ui:field="faqContent4" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">How do you use my app store data?</h2>
+							<p>We only use your store data for our statistical forecasting to estimates the market. It will NEVER be shared with anyone. Reflection's growing network of developers helps us 
+							expand our country and platform intelligence while maintaining market-leading revenue and download accuracy.</p>
 							<p class="{STYLES_INSTANCE.reflectionMainStyle.linkBackToTop}">
 								<g:Anchor styleName="" ui:field="linkBackToTop4" href="#">Back to top</g:Anchor>
 							</p>
@@ -102,10 +107,8 @@
 					</li>
 					<li class="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}">
 						<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
-							<h2 ui:field="faqContent5" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">What do you want to do with my data?</h2>
-							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-								quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-								dolore eu fugiat nulla pariatur.</p>
+							<h2 ui:field="faqContent5" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Which app stores do you support?</h2>
+							<p>We currently support iPhone and iPad. We are planning to add Google Play and other major platforms early 2016.</p>
 							<p class="{STYLES_INSTANCE.reflectionMainStyle.linkBackToTop}">
 								<g:Anchor styleName="" ui:field="linkBackToTop5" href="#">Back to top</g:Anchor>
 							</p>
@@ -113,12 +116,9 @@
 					</li>
 					<li class="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}">
 						<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
-							<h2 ui:field="faqContent6" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">How much does Reflection cost?</h2>
-							<p>Integer ut varius purus. Duis quis tellus eu lacus aliquam dictum. In vel dignissim orci. Aliquam rhoncus ipsum tempus nunc interdum sodales. Proin
-								sapien purus, volutpat sit amet orci sit amet, adipiscing suscipit metus. Duis non mauris auctor, vehicula massa eget, placerat massa.</p>
-							<p>Etiam egestas nibh vitae orci pharetra semper. Sed et hendrerit elit, ac convallis nibh. Morbi a blandit velit. Nulla et vulputate eros. Nam vehicula
-								nisl sit amet justo commodo imperdiet. Nullam cursus velit id felis pretium vulputate. Nulla mattis accumsan placerat. Nam feugiat turpis tellus, eget
-								venenatis dolor vulputate et. Sed risus tellus, semper et mollis at, congue vitae massa.</p>
+							<h2 ui:field="faqContent6" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Which Countries do you support?</h2>
+							<p>Reflection currently offers market data for 4 countries. We will offer intelligence for additional countries as we progress during our beta.</p>
+							<p>Countries currently supported: United Kingdom, Germany, France and Italy</p>
 							<p class="{STYLES_INSTANCE.reflectionMainStyle.linkBackToTop}">
 								<g:Anchor styleName="" ui:field="linkBackToTop6" href="#">Back to top</g:Anchor>
 							</p>
@@ -126,11 +126,8 @@
 					</li>
 					<li class="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}">
 						<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
-							<h2 ui:field="faqContent7" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">How do I link my account?</h2>
-							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam varius nulla pellentesque bibendum semper. Pellentesque ullamcorper dictum dictum. Sed
-								tincidunt ut nulla in pharetra. Curabitur id neque id urna viverra tempus. Aliquam nec sapien purus. Aenean sodales semper suscipit. Nunc vitae felis
-								tincidunt, tincidunt felis nec, laoreet sem. Nullam urna ante, varius nec dui et, tempus molestie justo. Duis tempor turpis a risus euismod convallis
-								vel sit amet magna. Fusce ultricies cursus nulla ut bibendum.</p>
+							<h2 ui:field="faqContent7" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">What Categories do you support?</h2>
+							<p>We currently support the Games category. We will add more categories once we are satisfied with their accuracy. Other categories including subcategories will be added as we progress with our beta.</p>
 							<p class="{STYLES_INSTANCE.reflectionMainStyle.linkBackToTop}">
 								<g:Anchor styleName="" ui:field="linkBackToTop7" href="#">Back to top</g:Anchor>
 							</p>
@@ -138,13 +135,64 @@
 					</li>
 					<li class="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}">
 						<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
-							<h2 ui:field="faqContent8" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Do you share my data with anyone?</h2>
-							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam varius nulla pellentesque bibendum semper. Pellentesque ullamcorper dictum dictum. Sed
-								tincidunt ut nulla in pharetra. Curabitur id neque id urna viverra tempus. Aliquam nec sapien purus. Aenean sodales semper suscipit. Nunc vitae felis
-								tincidunt, tincidunt felis nec, laoreet sem. Nullam urna ante, varius nec dui et, tempus molestie justo. Duis tempor turpis a risus euismod convallis
-								vel sit amet magna. Fusce ultricies cursus nulla ut bibendum.</p>
+							<h2 ui:field="faqContent8" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">How far back does your data go?</h2>
+							<p>We provide rank, revenue and download data for iPhone and iPad from July 2014.</p>
 							<p class="{STYLES_INSTANCE.reflectionMainStyle.linkBackToTop}">
 								<g:Anchor styleName="" ui:field="linkBackToTop8" href="#">Back to top</g:Anchor>
+							</p>
+						</article>
+					</li>
+					<li class="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}">
+						<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
+							<h2 ui:field="faqContent9" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">When will the Business Account be available?</h2>
+							<p>We are planning to introduce our business account after the end of our open beta Register your interest and we'll let you know once it is ready.</p>
+							<p class="{STYLES_INSTANCE.reflectionMainStyle.linkBackToTop}">
+								<g:Anchor styleName="" ui:field="linkBackToTop9" href="#">Back to top</g:Anchor>
+							</p>
+						</article>
+					</li>
+					<li class="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}">
+						<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
+							<h2 ui:field="faqContent10" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">How accurate is Reflection's data?</h2>
+							<p>At Reflection, we take data reliability and accuracy seriously. We only disclose store, country or category intelligence if we know our accuracy is market leading.</p>
+							<p class="{STYLES_INSTANCE.reflectionMainStyle.linkBackToTop}">
+								<g:Anchor styleName="" ui:field="linkBackToTop10" href="#">Back to top</g:Anchor>
+							</p>
+						</article>
+					</li>
+					<li class="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}">
+						<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
+							<h2 ui:field="faqContent11" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Can I see more than the top 200 apps?</h2>
+							<p>We are planning to expand our intelligence to top 1000 apps in the future.</p>
+							<p class="{STYLES_INSTANCE.reflectionMainStyle.linkBackToTop}">
+								<g:Anchor styleName="" ui:field="linkBackToTop11" href="#">Back to top</g:Anchor>
+							</p>
+						</article>
+					</li>
+					<li class="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}">
+						<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
+							<h2 ui:field="faqContent12" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Do I need to install an SDK?</h2>
+							<p>All we need is the link to your app store account. SDK is not required.</p>
+							<p class="{STYLES_INSTANCE.reflectionMainStyle.linkBackToTop}">
+								<g:Anchor styleName="" ui:field="linkBackToTop12" href="#">Back to top</g:Anchor>
+							</p>
+						</article>
+					</li>
+					<li class="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}">
+						<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
+							<h2 ui:field="faqContent13" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">How can I delete my account?</h2>
+							<p>Please email us at <a href="mailto:support@reflection">support@reflection</a> if you want to delete your account.</p>
+							<p class="{STYLES_INSTANCE.reflectionMainStyle.linkBackToTop}">
+								<g:Anchor styleName="" ui:field="linkBackToTop13" href="#">Back to top</g:Anchor>
+							</p>
+						</article>
+					</li>
+					<li class="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}">
+						<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
+							<h2 ui:field="faqContent14" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">How can I access your intelligence if I don't have an app store account?</h2>
+							<p>You can’t at the moment. We will make our Business Account available once our beta ends.</p>
+							<p class="{STYLES_INSTANCE.reflectionMainStyle.linkBackToTop}">
+								<g:Anchor styleName="" ui:field="linkBackToTop14" href="#">Back to top</g:Anchor>
 							</p>
 						</article>
 					</li>
@@ -152,4 +200,4 @@
 			</div>
 		</div>
 	</g:HTMLPanel>
-</ui:UiBinder> 
+</ui:UiBinder>
