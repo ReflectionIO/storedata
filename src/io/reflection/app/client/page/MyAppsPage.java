@@ -285,7 +285,7 @@ public class MyAppsPage extends Page
 				if (object.overallPosition != null) {
 					if (object.overallPosition.equals(MyApp.UNKNOWN_VALUE)) {
 						return SafeHtmlUtils.fromTrustedString(
-								"<span class=\"js-tooltip js-tooltip--right whats-this-tooltip-icon-static\" data-tooltip=\"No data available\">-</span>");
+								"<span class=\"js-tooltip whats-this-tooltip-icon-static\" data-tooltip=\"No data available\">-</span>");
 					} else {
 						return SafeHtmlUtils.fromSafeConstant(object.overallPosition);
 					}
