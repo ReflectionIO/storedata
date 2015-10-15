@@ -79,8 +79,8 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author stefanocapuzzi
  * 
  */
-public class MyAppsPage extends Page implements NavigationEventHandler, GetLinkedAccountsEventHandler, GetLinkedAccountItemsEventHandler,
-		GetSalesRanksEventHandler {
+public class MyAppsPage extends Page
+		implements NavigationEventHandler, GetLinkedAccountsEventHandler, GetLinkedAccountItemsEventHandler, GetSalesRanksEventHandler {
 
 	private static MyAppsPageUiBinder uiBinder = GWT.create(MyAppsPageUiBinder.class);
 
@@ -284,7 +284,8 @@ public class MyAppsPage extends Page implements NavigationEventHandler, GetLinke
 			public SafeHtml getValue(MyApp object) {
 				if (object.overallPosition != null) {
 					if (object.overallPosition.equals(MyApp.UNKNOWN_VALUE)) {
-						return SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
+						return SafeHtmlUtils.fromTrustedString(
+								"<span class=\"js-tooltip whats-this-tooltip-icon-static\" data-tooltip=\"No data available\">-</span>");
 					} else {
 						return SafeHtmlUtils.fromSafeConstant(object.overallPosition);
 					}

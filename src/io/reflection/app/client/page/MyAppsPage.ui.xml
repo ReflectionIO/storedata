@@ -50,7 +50,7 @@
 			<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.tableWrapper}">
 				<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.scrollable}">
 					<cell:CellTable ui:field="myAppsTable"
-						styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData} {STYLES_INSTANCE.reflectionMainStyle.tableMyApps} {STYLES_INSTANCE.reflectionMainStyle.responsive}" />
+	styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData} {STYLES_INSTANCE.reflectionMainStyle.tableMyApps} {STYLES_INSTANCE.reflectionMainStyle.responsive}" />
 
 				</g:HTMLPanel>
 			</g:HTMLPanel>
