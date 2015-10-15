@@ -458,7 +458,6 @@ public class ChartHelper {
 									$axisLabel.find("text").html(formattedDate);
 
 								} else {
-									console.log(arguments[1][0].series.xAxis.bottom);
 									this.chart.renderer.label(formattedDate,
 											axisLabelXPos + 5,
 											axisLabelYPos + 28, 'callout', 0,
