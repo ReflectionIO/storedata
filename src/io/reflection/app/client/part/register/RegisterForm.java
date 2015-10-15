@@ -108,7 +108,7 @@ public class RegisterForm extends Composite {
 		if (validate()) {
 			clearErrors();
 			setEnabled(false);
-			registerBtn.setStatusLoading("Sending ..");
+			registerBtn.setStatusLoading("Sending");
 			if (actionCode == null) { // Create new user
 				UserController.get().registerUser(email.getText(), password.getText(), forename.getText(), surname.getText(), company.getText());
 			} else { // Update user

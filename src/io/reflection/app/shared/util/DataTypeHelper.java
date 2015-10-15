@@ -76,6 +76,8 @@ public class DataTypeHelper {
 	public static final String NEW_USER_EVENT_CODE = "WEL";
 	public static final String SELECTED_USER_EVENT_CODE = "SEL";
 	public static final String THANK_YOU_EVENT_CODE = "TRQ";
+	public static final String UPGRADED_TO_PREMIUM_EVENT_CODE = "PRM";
+	public static final String REGISTER_BUSINESS_INTEREST_EVENT_CODE = "BUS";
 	public static final String REGISTERED_NOW_LINK_EVENT_CODE = "LNK";
 	public static final String CONFIRMATION_ACCOUNT_LINKED_EVENT_CODE = "CON";
 	public static final String SALES_GATHER_CREDENTIAL_ERROR_EVENT_CODE = "SCE";
@@ -88,6 +90,7 @@ public class DataTypeHelper {
 	public static final String ROLE_ALPHA_CODE = "ALF";
 	public static final String ROLE_FIRST_CLOSED_BETA_CODE = "BT1";
 	public static final String ROLE_TEST_CODE = "TST";
+	public static final String ROLE_REGISTER_BUSINESS_INTEREST = "RBI";
 
 	public static final String STORE_IPHONE_A3_CODE = "iph";
 	public static final String STORE_IPAD_A3_CODE = "ipa";

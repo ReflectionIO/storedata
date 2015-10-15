@@ -656,10 +656,21 @@ final class UserService implements IUserService {
 	 */
 	@Override
 	public Boolean hasRole(User user, Role role) throws DataAccessException {
+		return hasRole(user, role, false);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.user.IUserService#hasRole(io.reflection.app.datatypes.shared.User, io.reflection.app.datatypes.shared.Role, boolean)
+	 */
+	@Override
+	public Boolean hasRole(User user, Role role, boolean includeExpired) throws DataAccessException {
 		Boolean hasUserRole = Boolean.FALSE;
 
-		String hasUserRoleQuery = String.format(
-				"SELECT `id` FROM `userrole` WHERE `userid`=%d AND `roleid`=%d AND `deleted`='n' AND (`expires` > NOW() OR `expires` IS NULL) LIMIT 1",
+		String expiredPart = includeExpired ? "" : " AND (`expires` > NOW() OR `expires` IS NULL)";
+
+		String hasUserRoleQuery = String.format("SELECT `id` FROM `userrole` WHERE `userid`=%d AND `roleid`=%d AND `deleted`='n'" + expiredPart + " LIMIT 1",
 				user.id.longValue(), role.id.longValue());
 
 		Connection roleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRole.toString());
@@ -669,8 +680,8 @@ final class UserService implements IUserService {
 			roleConnection.executeQuery(hasUserRoleQuery);
 
 			if (roleConnection.fetchNextRow()) {
-					hasUserRole = Boolean.TRUE;
-				}
+				hasUserRole = Boolean.TRUE;
+			}
 		} finally {
 			if (roleConnection != null) {
 				roleConnection.disconnect();

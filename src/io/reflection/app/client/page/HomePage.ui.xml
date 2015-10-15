@@ -12,24 +12,41 @@
 	</ui:style>
 	<g:HTMLPanel>
 		<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.pageHome}">
-			<div class="{STYLES_INSTANCE.reflectionMainStyle.pageBanner} {STYLES_INSTANCE.reflectionMainStyle.pageBannerLarger} {STYLES_INSTANCE.reflectionMainStyle.verticalCentreContent}">
+			<div
+				class="{STYLES_INSTANCE.reflectionMainStyle.pageBanner} {STYLES_INSTANCE.reflectionMainStyle.pageBannerLarger} {STYLES_INSTANCE.reflectionMainStyle.verticalCentreContent}">
 				<div>
 					<h1>Reflection</h1>
-					<h2>Mobile Market Intelligence for Developers by Developers</h2>
-					<p>Accurate market intelligence and easy to use reporting tools to help you succeed in the mobile market</p>
+					<h2>Intelligence To Succeed In the App Market</h2>
+					<p>Reflection provides free and accurate revenue and download data to anyone making apps. Join our beta today.</p>
 					<g:InlineHyperlink targetHistoryToken="{RegisterPageType.asTargetHistoryToken}" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaLarge}">Get Started for Free</g:InlineHyperlink>
 				</div>
 			</div>
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.pageLeaderboard}">
-				<div
-					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter} {STYLES_INSTANCE.reflectionMainStyle.homeLeaderboardTitleContainer}">
-					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree} {STYLES_INSTANCE.reflectionMainStyle.pageTitle}">Top 10 Apps</h2>
-				</div>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.tabs}">
 					<ul
 						class="{STYLES_INSTANCE.reflectionMainStyle.tabsContainer} {STYLES_INSTANCE.reflectionMainStyle.defaultTabsTransition} {STYLES_INSTANCE.reflectionMainStyle.tabsToDropdown}">
-						<li ui:field="paidItem"
+						<li ui:field="allItem"
 							class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab} {STYLES_INSTANCE.reflectionMainStyle.isActive}">
+							<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
+							<a class="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
+								<span>
+									<svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 
+							32 32" xml:space="preserve"><path id="Overview" fill="#6D69C5"
+										d="M22.6,19.2c-2.6,0-5.1-1.7-6.4-4.2c-1.8-3.6-0.8-7.8,2.3-9.4C19.4,5.2,20.2,5,21.1,5
+						c2.6,0,5.1,1.7,6.4,4.2c1.8,3.6,0.8,7.8-2.3,9.4C24.4,19,23.5,19.2,22.6,19.2z M21.1,6c-0.7,0-1.4,0.2-2.1,0.5
+						c-2.6,1.3-3.5,4.9-1.9,8c1.1,2.2,3.3,3.7,5.5,3.7c0.7,0,1.4-0.2,2.1-0.5c2.6-1.3,3.5-4.9,1.9-8C25.5,7.5,23.3,6,21.1,6z M30.4,7.8
+						c-1.9-3.8-5.7-6.2-9.6-6.2c-1.4,0-2.8,0.3-4.1,1c-1.6,0.8-2.8,2-3.7,3.5L2.5,16.8c-2.2,1.8-2.8,4.5-1.4,6.8c0.9,1.6,2.7,2.9,4.7,2.9
+						c0.5,0,1-0.1,1.6-0.3l15.1-3.3c0.1,0,0.1,0,0.2,0c1.4,0,2.8-0.3,4.1-1C31.4,19.5,33.1,13.1,30.4,7.8z M6.8,24.2l-0.1,0
+						c-1.6,0.6-3.2-0.4-3.9-1.7c-0.3-0.6-1.2-2.5,1-4.4l2-2C5.5,18,6,19.7,6.8,21c0.6,1.1,1.6,2,2.8,2.7L6.8,24.2z M11.3,23.3
+						c-1.6-0.4-2.9-1.6-3.7-2.8c-1-1.6-1.4-3.9-0.1-6l4.1-4.2c-0.2,2.1,0.2,4.3,1.2,6.4c1.2,2.3,3,4,5.1,5.1L11.3,23.3z M25.7,20.1
+						c-1,0.5-2,0.8-3.2,0.8c-3.1,0-6.2-2-7.8-5.1c-2.2-4.4-0.9-9.5,2.9-11.4c1-0.5,2-0.8,3.2-0.8c3.1,0,6.2,2,7.8,5.1
+						C30.8,13.1,29.5,18.2,25.7,20.1z" /></svg>
+									<span>Overview / All</span>
+								</span>
+							</a>
+						</li>
+						<li ui:field="paidItem"
+							class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab}">
 							<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
 							<a class="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
 								<span>
@@ -119,6 +136,7 @@
 									</div>
 								</div>
 								<p:ErrorPanel ui:field="errorPanel" visible="false"></p:ErrorPanel>
+								<p:NoDataPanel ui:field="noDataPanel" visible="false"></p:NoDataPanel>
 							</div>
 						</article>
 					</li>
@@ -158,13 +176,12 @@
 			<div
 				class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnTwoThirds} {STYLES_INSTANCE.reflectionMainStyle.grid__columnPushTwo}">
 				<h2>Why Reflection</h2>
-				<p>Market intelligence will help you track your competitors, plan your marketing and identify what apps and business models are performing best. Reflection
-					gives you access to this data through easy-to-use reporting and data visualisation tools built with feedback from the developers who use them every day.</p>
+				<p>Reflection offers free and accurate app market intelligence to everyone making apps. We build features and tools that help you understand the app market,
+					saving you time, effort and resources.</p>
 			</div>
 		</section>
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__row} {STYLES_INSTANCE.reflectionMainStyle.whyReflectionGraphic}">
-			<svg version="1.1" x="0px" y="0px"
-		 viewBox="0 0 1300 220" enable-background="new 0 0 1003.9 161.9" xml:space="preserve">
+			<svg version="1.1" x="0px" y="0px" viewBox="0 0 1300 220" enable-background="new 0 0 1003.9 161.9" xml:space="preserve">
 		 		<defs>
 		 			<linearGradient y2="100%" x2="0%" y1="0%" x1="0%" id="sample">
 			 			<stop stop-color="rgba(109,105,197,0.14)" offset="0%"></stop>
@@ -175,22 +192,28 @@
 		 			<g></g>
 		 			<g></g>
 		 			<g clip-path="url(#rchartEl-266)">
-		 				<path id="linezero" data-path-index="0" class="rchart-graph-stroke" stroke="#6d69c5" stroke-opacity="1" stroke-width="2" fill="none" d="M0.5,96.5 L133.5,48.5 L267.5,143.5 L400.5,119.5 L534.5,72.5 L667.5,119.5 L800.5,48.5 L934.5,24.5 L1067.5,119.5 L1201.5,96.5 L1334.5,119.5" cs="100,100"></path>
-		 				<path id="lineone" data-path-index="1" class="rchart-graph-stroke rchart-graph-fill" stroke-opacity="0" stroke-width="1" fill-opacity="1" stroke="#000" fill="#6d69c5" d="M0.5,96.5 L133.5,48.5 L267.5,143.5 L400.5,119.5 L534.5,72.5 L667.5,119.5 L800.5,48.5 L934.5,24.5 L1067.5,119.5 L1201.5,96.5 L1334.5,119.5 L1334.5,191.5 L0.5,191.5 L0.5,96.5 Z" cs="100,100" style="fill: url('#sample') none;"></path>
+		 				<path id="linezero" data-path-index="0" class="rchart-graph-stroke" stroke="#6d69c5" stroke-opacity="1" stroke-width="2" fill="none"
+				d="M0.5,96.5 L133.5,48.5 L267.5,143.5 L400.5,119.5 L534.5,72.5 L667.5,119.5 L800.5,48.5 L934.5,24.5 L1067.5,119.5 L1201.5,96.5 L1334.5,119.5" cs="100,100"></path>
+		 				<path id="lineone" data-path-index="1" class="rchart-graph-stroke rchart-graph-fill" stroke-opacity="0" stroke-width="1" fill-opacity="1" stroke="#000"
+				fill="#6d69c5"
+				d="M0.5,96.5 L133.5,48.5 L267.5,143.5 L400.5,119.5 L534.5,72.5 L667.5,119.5 L800.5,48.5 L934.5,24.5 L1067.5,119.5 L1201.5,96.5 L1334.5,119.5 L1334.5,191.5 L0.5,191.5 L0.5,96.5 Z"
+				cs="100,100" style="fill: url('#sample') none;"></path>
 		 			</g>
 	 			</g>
 	 			<g style="" class="rchart-graph-line rchart-graph-graphAuto1_1443459240749" transform="translate(0,20)">
 	 				<g></g>
 	 				<g></g>
 	 				<g clip-path="url(#rchartEl-267)">
-	 					<path id="linetwo" data-path-index="2" class="rchart-graph-stroke" stroke="#1bc79f" stroke-opacity="1" stroke-dasharray="8" stroke-width="2" fill="none" d="M0.5,72.5 L133.5,143.5 L267.5,119.5 L400.5,96.5 L534.5,167.5 L667.5,143.5 L800.5,143.5 L934.5,167.5 L1067.5,72.5 L1201.5,119.5 L1334.5,143.5" cs="100,100"></path>
+	 					<path id="linetwo" data-path-index="2" class="rchart-graph-stroke" stroke="#1bc79f" stroke-opacity="1" stroke-dasharray="8" stroke-width="2" fill="none"
+				d="M0.5,72.5 L133.5,143.5 L267.5,119.5 L400.5,96.5 L534.5,167.5 L667.5,143.5 L800.5,143.5 L934.5,167.5 L1067.5,72.5 L1201.5,119.5 L1334.5,143.5" cs="100,100"></path>
 	 				</g>
 				</g>
 				<g style="" class="rchart-graph-line rchart-graph-graphAuto2_1443459240749" transform="translate(0,20)">
 					<g></g>
 					<g></g>
 					<g clip-path="url(#rchartEl-268)">
-						<path id="linethree" data-path-index="3" class="rchart-graph-stroke" stroke="#ff496a" stroke-opacity="1" stroke-dasharray="8" stroke-width="2" fill="none" d="M0.5,119.5 L133.5,96.5 L267.5,24.5 L400.5,72.5 L534.5,143.5 L667.5,167.5 L800.5,119.5 L934.5,72.5 L1067.5,143.5 L1201.5,48.5 L1334.5,96.5" cs="100,100"></path>
+						<path id="linethree" data-path-index="3" class="rchart-graph-stroke" stroke="#ff496a" stroke-opacity="1" stroke-dasharray="8" stroke-width="2" fill="none"
+				d="M0.5,119.5 L133.5,96.5 L267.5,24.5 L400.5,72.5 L534.5,143.5 L667.5,167.5 L800.5,119.5 L934.5,72.5 L1067.5,143.5 L1201.5,48.5 L1334.5,96.5" cs="100,100"></path>
 					</g>
 				</g>
 				</svg>
@@ -216,9 +239,10 @@
 	C94.8,25.1,94.9,24.4,94.7,24.2z M58.3,60c-0.1-0.4-0.5-0.6-0.9-0.5c-0.4,0.1-0.6,0.5-0.5,0.9l1.4,5.4c0.1,0.3,0.4,0.6,0.7,0.6
 	c0.1,0,0.1,0,0.2,0c0.4-0.1,0.6-0.5,0.5-0.9L58.3,60z"></path></svg>
 				</div>
-				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Free Intelligence for All Developers</h2>
-				<p>Get free access to daily download and revenue data for the Top 200 apps when you link your store account. Reflection’s statistical algorithms offer
-					industry-leading data accuracy.</p>
+				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Free Intelligence</h2>
+				<p>Get free access to daily download and revenue data for the Top 200 apps when you link your store account.
+					Reflection's statistical algorithms offer
+					reliable and accurate data.</p>
 			</div>
 			<div
 				class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird} {STYLES_INSTANCE.reflectionMainStyle.whyReflectionItem}">
@@ -279,8 +303,8 @@
 		l-5.3,5.6l-5.4-3l-4.9,4V53.4h36.9V59.8z"></path></svg>
 				</div>
 				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Help Us Help You</h2>
-				<p>Everyone in the developer community has an opportunity to help shape Reflection's features and tools. Tell us what you want and we will build the only
-					market intelligence product you'll ever need.</p>
+				<p>We build features &amp; tools that are most requested by our developer community.
+					These easy-to-use tools will help you better understand the app market.</p>
 			</div>
 			<div
 				class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird} {STYLES_INSTANCE.reflectionMainStyle.whyReflectionItem}">
@@ -331,24 +355,26 @@
 	l1.3,0.8L58.9,18.4z"></path></svg>
 				</div>
 				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Easy to Use</h2>
-				<p>Our approach to interface design makes complex data easy to understand and easy to work with. Our goal is to create the best user experience on the
-					market.</p>
+				<p>We listen to our developers to make complex data easy to understand.
+					Our goal is to create the best user experience in the market.</p>
 			</div>
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__row} {STYLES_INSTANCE.reflectionMainStyle.whyReflectionButtonContainer}">
 				<g:InlineHyperlink targetHistoryToken="{AboutPageType.asTargetHistoryToken}" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionLarge}">Learn More About Reflection</g:InlineHyperlink>
 			</div>
-		</aside>		
+		</aside>
 		<aside class="{STYLES_INSTANCE.reflectionMainStyle.grid__row} {STYLES_INSTANCE.reflectionMainStyle.productPage__quotes}">
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.homeWideContainer}">
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneHalf}">
 					<div class="{STYLES_INSTANCE.reflectionMainStyle.productPage__quotes__logoContainer} {STYLES_INSTANCE.reflectionMainStyle.verticalCentreContent}">
 						<svg version="1.1" x="0px" y="0px" viewBox="0 0 160 60" enable-background="new 0 0 160 60">
-						<path fill="#969cb2" d="M33.8,22.8l3.5,4.7l3.6-4.7h5.3v14.7h-5v-4.7l-3.9,4.7l-3.7-4.6v4.6h-5V27.1h-1.7v-4.3H33.8
+							<path fill="#969cb2"
+								d="M33.8,22.8l3.5,4.7l3.6-4.7h5.3v14.7h-5v-4.7l-3.9,4.7l-3.7-4.6v4.6h-5V27.1h-1.7v-4.3H33.8
 L33.8,22.8z M52.9,37.5V22.5h-5v14.9H52.9L52.9,37.5z M132.9,27.6c0,4-4.2,5-4.2,5h-5.8v4.8h-5.1V22.5h10.9
 C128.7,22.5,132.9,23.6,132.9,27.6z M127.7,27.5c0-1.2-0.7-1.1-0.7-1.1h-4.3l0,2.2h4.3C127,28.6,127.7,28.8,127.7,27.5z M99.4,32.5
 v-10h-5.5v10v5h5.5h9.8v-5H99.4L99.4,32.5z M92.1,27.5v-4.8h-7.5c0,0-6.5,0.8-6.5,7.2c0,6.4,6.5,7.6,6.5,7.6h7.5v-4.8H85
 c0,0-1.8-0.4-1.8-2.8c0-2.4,1.7-2.4,1.7-2.4H92.1L92.1,27.5z M54.7,22.8v14.7h4.7v-7.6c0,0,5.1,0.1,5.1,7.6h4.8V22.8h-4.7v3.3
-C64.7,26.1,62.2,22.8,54.7,22.8L54.7,22.8z M76.6,37.5V22.5h-5.3v14.9H76.6L76.6,37.5z M116,37.5V22.5h-5v14.9H116L116,37.5z"/></svg>
+C64.7,26.1,62.2,22.8,54.7,22.8L54.7,22.8z M76.6,37.5V22.5h-5.3v14.9H76.6L76.6,37.5z M116,37.5V22.5h-5v14.9H116L116,37.5z" />
+						</svg>
 					</div>
 					<blockquote>
 						<p>Reflection's approach to let developers have input on feature development is unique and refreshing. A great addition to the app intelligence space.</p>
@@ -676,8 +702,9 @@ C68.8,5.6,66.9,7.9,66.9,10.7z M116.2,15.7c-4.4,0-5.7,3.9-5.7,3.9c-1.7,3.9-4.7,11
 c0,0-1-0.3-3.1-0.3c-4.8,0-6.9,2.5-6.9,2.5L75,29.3l7.5,12.2c1.3,2,3,3.4,6.1,3.4c2.7,0,4.8-1,4.8-1L84.1,30c1.8-2,3.8-4.1,6.7-6.8
 c1.2,1.4,8,12.2,10.8,16.7l-6.5,13.9c0,0,0.8,0.6,3.7,0.6c4,0,5.2-3,5.2-3l15.7-35.2C119.9,16.3,118.6,15.7,116.2,15.7z"></path></svg>
 					</li>
-				</ul>				
-				<button class="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaLargeWide} {STYLES_INSTANCE.reflectionMainStyle.homeApplyButton}">Sign Up</button>
+				</ul>
+				<g:InlineHyperlink targetHistoryToken="{RegisterPageType.asTargetHistoryToken}"
+					styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaLargeWide} {STYLES_INSTANCE.reflectionMainStyle.homeApplyButton}">Sign Up</g:InlineHyperlink>
 			</div>
 		</div>
 

@@ -254,8 +254,7 @@ public class Header extends Composite implements NavigationEventHandler, Session
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
 		PageType currentPage = NavigationController.get().getCurrentPage();
-		if (Window.getClientWidth() > 960 && !panelLeftWasClosed && !PageType.LoadingPageType.equals(currentPage)
-				&& (!PageType.HomePageType.equals(currentPage) || (PageType.HomePageType.equals(currentPage) && SessionController.get().isValidSession()))) {
+		if (Window.getClientWidth() > 960 && !panelLeftWasClosed && !PageType.LoadingPageType.equals(currentPage)) {
 			Document.get().getBody().addClassName(style.panelLeftOpen());
 			hamburgerBtn.getElement().addClassName(style.isSelected());
 		} else {
@@ -266,7 +265,6 @@ public class Header extends Composite implements NavigationEventHandler, Session
 				new TogglePanelEventHandler.ChangedEvent(PanelType.PanelLeftMenuType, !panelLeftWasClosed, isPanelLeftMenuOpen()), this);
 
 		closePanelRightAccount();
-
 	}
 
 	/*

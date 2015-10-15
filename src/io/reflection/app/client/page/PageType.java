@@ -89,7 +89,6 @@ public enum PageType {
 	SearchPageType("search", true),
 	SimpleModelRunPageType("simplemodelrun", DataTypeHelper.PERMISSION_MANAGE_SIMPLE_MODEL_RUN_CODE),
 	TermsPageType("terms", false),
-	// UpgradePageType("upgrade", false),
 	UsersPageType("users", DataTypeHelper.PERMISSION_MANAGE_USERS_CODE),
 	WidgetTestPage("test", false),
 
@@ -256,9 +255,9 @@ public enum PageType {
 		case ManageSubscriptionPageType:
 			page = new ManageSubscriptionPage();
 			break;
-		case PressPageType:
-			page = new PressPage();
-			break;
+		// case PressPageType:
+		// page = new PressPage();
+		// break;
 		case PricingPageType:
 			page = new PricingPage();
 			break;
@@ -274,9 +273,6 @@ public enum PageType {
 		case ChangeDetailsPageType:
 			page = new ChangeDetailsPage();
 			break;
-		// case UpgradePageType:
-		// page = new UpgradePage();
-		// break;
 		case ItemPageType:
 			page = new ItemPage();
 			break;

@@ -46,6 +46,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("MHXTE6C-r-a")
 		String mhxte6cRA();
 
+		@ClassName("about-main-content")
+		String aboutMainContent();
+
 		String accordion();
 
 		@ClassName("accordion-bottom-with-divider")
@@ -928,15 +931,6 @@ public interface Styles extends ClientBundle {
 		@ClassName("interactions-page")
 		String interactionsPage();
 
-		@ClassName("intro-banner")
-		String introBanner();
-
-		@ClassName("intro-banner__graphic")
-		String introBanner__graphic();
-
-		@ClassName("intro-banner__intro")
-		String introBanner__intro();
-
 		@ClassName("is-activated")
 		String isActivated();
 
@@ -1085,6 +1079,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("lato-bold")
 		String latoBold();
+
+		@ClassName("leaderboard-app-name")
+		String leaderboardAppName();
 
 		@ClassName("link-back-to-top")
 		String linkBackToTop();
@@ -1530,11 +1527,11 @@ public interface Styles extends ClientBundle {
 		@ClassName("pricing-access-info--highlighted")
 		String pricingAccessInfoHighlighted();
 
+		@ClassName("pricing-detail-coming-soon")
+		String pricingDetailComingSoon();
+
 		@ClassName("pricing-details")
 		String pricingDetails();
-
-		@ClassName("pricing-details-with-info")
-		String pricingDetailsWithInfo();
 
 		@ClassName("pricing-name")
 		String pricingName();
@@ -2205,7 +2202,6 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("window-warning")
 		String windowWarning();
-
 	}
 
 	public static final Styles STYLES_INSTANCE = GWT.create(Styles.class);

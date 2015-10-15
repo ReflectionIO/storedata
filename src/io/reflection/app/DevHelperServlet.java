@@ -239,7 +239,8 @@ public class DevHelperServlet extends HttpServlet {
 					// have the ingested status.
 					if (fetch != null) {
 						String countries = System.getProperty("ingest.ios.countries");
-						if (countries != null && !countries.contains(fetch.country)) {
+						countries = countries == null ? null : countries.toLowerCase();
+						if (countries != null && !countries.contains(fetch.country.toLowerCase())) {
 							if (LOG.isLoggable(GaeLevel.DEBUG)) {
 								LOG.log(GaeLevel.DEBUG, String.format("Feed fetch id %d not being modelled as the country is filtered out. Country: %s, category: %s, type: %s", feedFetchId,
 										fetch.country, fetch.category.id, fetch.type));
@@ -268,6 +269,7 @@ public class DevHelperServlet extends HttpServlet {
 				}
 			} else if ("modelmulti".equalsIgnoreCase(action)) {
 				String countries = System.getProperty("ingest.ios.countries");
+				countries = countries == null ? null : countries.toLowerCase();
 
 				try {
 					final String[] feedIdsArray = ids.split(",");
@@ -277,7 +279,7 @@ public class DevHelperServlet extends HttpServlet {
 
 						final FeedFetch fetch = FeedFetchServiceProvider.provide().getFeedFetch(feedFetchId);
 
-						if (countries != null && !countries.contains(fetch.country)) {
+						if (countries != null && !countries.contains(fetch.country.toLowerCase())) {
 							continue;
 						}
 

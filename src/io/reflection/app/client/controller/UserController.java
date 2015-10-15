@@ -40,11 +40,14 @@ import io.reflection.app.api.admin.shared.call.event.RevokeRoleEventHandler;
 import io.reflection.app.api.core.client.CoreService;
 import io.reflection.app.api.core.shared.call.GetUserDetailsRequest;
 import io.reflection.app.api.core.shared.call.GetUserDetailsResponse;
+import io.reflection.app.api.core.shared.call.RegisterInterestBusinessRequest;
+import io.reflection.app.api.core.shared.call.RegisterInterestBusinessResponse;
 import io.reflection.app.api.core.shared.call.RegisterUserRequest;
 import io.reflection.app.api.core.shared.call.RegisterUserResponse;
 import io.reflection.app.api.core.shared.call.UpgradeAccountRequest;
 import io.reflection.app.api.core.shared.call.UpgradeAccountResponse;
 import io.reflection.app.api.core.shared.call.event.GetUserDetailsEventHandler;
+import io.reflection.app.api.core.shared.call.event.RegisterInterestBusinessEventHandler;
 import io.reflection.app.api.core.shared.call.event.RegisterUserEventHandler;
 import io.reflection.app.api.core.shared.call.event.UpgradeAccountEventHandler;
 import io.reflection.app.api.shared.datatypes.Pager;
@@ -577,6 +580,52 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 		});
 	}
 
+	public void registerInterestBusiness(String firstname, String lastname, String company, String email) {
+		CoreService service = ServiceCreator.createCoreService();
+		final RegisterInterestBusinessRequest input = new RegisterInterestBusinessRequest();
+		input.accessCode = ACCESS_CODE;
+		input.user = new User();
+		input.user.forename = firstname;
+		input.user.surname = lastname;
+		input.user.company = company;
+		input.user.username = email;
+
+		final Map<String, Object> params = new HashMap<String, Object>();
+		params.put("username", email);
+		params.put("company", company);
+
+		service.registerInterestBusiness(input, new AsyncCallback<RegisterInterestBusinessResponse>() {
+
+			@Override
+			public void onSuccess(RegisterInterestBusinessResponse output) {
+				if (output.status == StatusType.StatusTypeSuccess) {
+					params.put("status", "success");
+					MixPanelApiHelper.track("registerInterestBusiness", params);
+				} else {
+					params.put("status", "failure");
+					if (output.error != null && output.error.message != null) {
+						params.put("error", output.error.message);
+					}
+					MixPanelApiHelper.track("registerInterestBusiness", params);
+				}
+				DefaultEventBus.get().fireEventFromSource(new RegisterInterestBusinessEventHandler.RegisterInterestBusinessSuccess(input, output),
+						UserController.this);
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				params.put("status", "failure");
+				params.put("error", caught.getMessage());
+				MixPanelApiHelper.track("registerInterestBusiness", params);
+
+				DefaultEventBus.get().fireEventFromSource(new RegisterInterestBusinessEventHandler.RegisterInterestBusinessFailure(input, caught),
+						UserController.this);
+			}
+
+		});
+
+	}
+
 	/**
 	 * 
 	 * @param username
@@ -652,11 +701,8 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 
 	/**
 	 * 
-	 * @param username
+	 * @param actionCode
 	 * @param password
-	 * @param forenameFormField
-	 * @param surname
-	 * @param company
 	 */
 	public void registerUser(String actionCode, String password) {
 		CoreService service = ServiceCreator.createCoreService();

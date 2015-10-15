@@ -31,6 +31,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	</servlet>
 
 	<servlet>
+		<servlet-name>Dev_Utility</servlet-name>
+		<servlet-class>io.reflection.app.DevUtilServlet</servlet-class>
+	</servlet>
+
+	<servlet>
 		<servlet-name>Dev Helper</servlet-name>
 		<servlet-class>io.reflection.app.DevHelperServlet</servlet-class>
 	</servlet>
@@ -100,6 +105,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-class>io.reflection.app.DownloadLeaderboard</servlet-class>
 	</servlet>
 
+	<servlet>
+		<servlet-name>Summarise_Sales</servlet-name>
+		<servlet-class>io.reflection.app.SummariseServlet</servlet-class>
+	</servlet>
+
 	<servlet-mapping>
 		<servlet-name>Cron Tasks</servlet-name>
 		<url-pattern>/cron</url-pattern>
@@ -117,6 +127,10 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	<servlet-mapping>
 		<servlet-name>Dev Helper</servlet-name>
 		<url-pattern>/dev/devhelper</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Dev_Utility</servlet-name>
+		<url-pattern>/dev/devutil</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>Predictor Tasks</servlet-name>
@@ -202,6 +216,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	<servlet-mapping>
 		<servlet-name>Download Leaderboard</servlet-name>
 		<url-pattern>/downloadleaderboard</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>Summarise_Sales</servlet-name>
+		<url-pattern>/summarise</url-pattern>
 	</servlet-mapping>
 
 	<!-- <servlet> <servlet-name>mapreduce</servlet-name> <servlet-class> com.google.appengine.tools.mapreduce.MapReduceServlet </servlet-class> </servlet> <servlet-mapping> 

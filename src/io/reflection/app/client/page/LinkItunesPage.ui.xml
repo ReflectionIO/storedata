@@ -88,8 +88,11 @@
 			class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.horizontalCentreContent} {STYLES_INSTANCE.reflectionMainStyle.accountAccessContent}">
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.fullScreenIntro}">
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.connectAccountMainContent}">
-					<h1>You're Mere Moments Away</h1>
-					<p class="{STYLES_INSTANCE.reflectionMainStyle.pStyleFeatured}">Simply link your iTunes Connect account(s) here and then you're ready to get started with Reflection</p>
+					<h1>You Are Just a Moment Away</h1>
+					<p class="{STYLES_INSTANCE.reflectionMainStyle.pStyleFeatured}">
+					Link your iTunes Connect account here for Reflection's free app market data. 
+					We only use your store data for our statistical forecasting that estimates 
+					the market. It will never be shared with anyone.</p>
 				</div>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.connectAccountSubmitted}">
 					<h1>You're Ready to Go!</h1>
@@ -97,7 +100,7 @@
 						Your Reflection account is now ready to use. You can view your own apps in the
 						<g:InlineHyperlink ui:field="myDataPanelLink">My Data</g:InlineHyperlink>
 						section or browse and compare others in the
-						<g:InlineHyperlink ui:field="leaderboardPanelLink">Leaderboard</g:InlineHyperlink>. If you have any questions or issues please contact us at
+						<g:InlineHyperlink ui:field="leaderboardPanelLink">Leaderboards</g:InlineHyperlink>. If you have any questions or issues please email us at
 						<a href="mailto:support@reflection.io">support@reflection.io</a>, we’re here to help
 					</p>
 				</div>

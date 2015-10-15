@@ -255,7 +255,6 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 							&& userSession.token.equals(input.session.token)) {
 
 						setUserRole(output.roles.get(0));
-
 						setUserPermissions(output.permissions);
 
 						DefaultEventBus.get().fireEventFromSource(
@@ -347,8 +346,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	}
 
 	public boolean canSeePredictions() {
-		return isAdmin()
-				|| (hasLinkedAccount() && (isPremiumDeveloper() || isStandardDeveloper() || loggedInUserIs(DataTypeHelper.ROLE_FIRST_CLOSED_BETA_CODE)));
+		return isAdmin() || (hasLinkedAccount() && (isPremiumDeveloper() || loggedInUserIs(DataTypeHelper.ROLE_FIRST_CLOSED_BETA_CODE)));
 	}
 
 	/**
@@ -788,7 +786,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	/**
 	 * @return
 	 */
-	public boolean isValidSession() {
+	public boolean isLoggedIn() {
 		return getSessionForApiCall() != null
 				&& (userSession == null || (userSession.expires != null && userSession.expires.getTime() > (new Date()).getTime()));
 	}
@@ -800,7 +798,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	public boolean isAuthorised(Collection<Permission> requiredPermissions) {
 		boolean authorised = false;
 
-		if (isValidSession()) {
+		if (isLoggedIn()) {
 			if (requiredPermissions == null || requiredPermissions.isEmpty()) {
 				authorised = true;
 			} else if (loggedInUser.permissions != null) {

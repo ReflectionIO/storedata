@@ -63,7 +63,7 @@
 
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__row} {STYLES_INSTANCE.reflectionMainStyle.pricingOptions}">
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird}">
-				<section ui:field="currentStandard" class="{STYLES_INSTANCE.reflectionMainStyle.pricingOption} {STYLES_INSTANCE.reflectionMainStyle.pricingOptionStandard}">
+				<section ui:field="standardPanel" class="{STYLES_INSTANCE.reflectionMainStyle.pricingOption} {STYLES_INSTANCE.reflectionMainStyle.pricingOptionStandard}">
 					<header class="{STYLES_INSTANCE.reflectionMainStyle.pricingOptionHeader}">
 						<h2 class="{STYLES_INSTANCE.reflectionMainStyle.pricingName}">Developer</h2>
 						<div class="{STYLES_INSTANCE.reflectionMainStyle.pricingPriceContainer}">
@@ -73,20 +73,37 @@
 						<p class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCheck}">App Store Account Required</p>
 					</header>
 					<ul class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetails}">
-						<li>Live Daily Top 200 Global Rank, Download &amp; Grossing Data</li>
-						<li>Analytics for Your Own Apps</li>
-						<li>Live Industry News</li>
+						<li>
+							<span>Daily Top 200 App Revenue, Download and Rank Data</span>
+							<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="View the latest revenue and download data for the games category in the UK, Germany, France &amp; Italy. More countries and categories will be available as the beta progresses">
+								<span>What's this?</span>
+							</a>
+						</li>
+						<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
+							<span>Follow Apps and Developers</span>
+							<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="Coming soon. Curate your own leaderboards by following the apps and developers of your choice. Receive notification of activities such as soft launches and price changes.">
+								<span>What's this?</span>
+							</a>
+						</li>
 					</ul>
-					<g:Button ui:field="signUpBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth} {STYLES_INSTANCE.reflectionMainStyle.pricingSignUpButton}">Current Subscription</g:Button>
+					<g:Button ui:field="linkAccountBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth} {STYLES_INSTANCE.reflectionMainStyle.pricingSignUpButton}">Link App Store Account</g:Button>
+					<g:HTMLPanel tag="p" ui:field="currentSubscriptionStandard"
+						styleName="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCheck} {STYLES_INSTANCE.reflectionMainStyle.currentSubscriptionText}">Current Subscription</g:HTMLPanel>
 				</section>
+				<g:HTMLPanel ui:field="standardInfo" styleName="{STYLES_INSTANCE.reflectionMainStyle.pricingAccessInfo}">
+					<div class="{STYLES_INSTANCE.reflectionMainStyle.verticalCentreContent}">
+						<p>Simply link your app store account to access these features</p>
+					</div>
+				</g:HTMLPanel>
 			</div>
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird}">
-				<section ui:field="currentPremium" class="{STYLES_INSTANCE.reflectionMainStyle.pricingOption} {STYLES_INSTANCE.reflectionMainStyle.pricingOptionPremium} {STYLES_INSTANCE.reflectionMainStyle.pricingOptionWithFooter}">
+				<section ui:field="premiumPanel"
+					class="{STYLES_INSTANCE.reflectionMainStyle.pricingOption} {STYLES_INSTANCE.reflectionMainStyle.pricingOptionPremium} {STYLES_INSTANCE.reflectionMainStyle.pricingOptionWithFooter}">
 					<header class="{STYLES_INSTANCE.reflectionMainStyle.pricingOptionHeader}">
 						<h2 class="{STYLES_INSTANCE.reflectionMainStyle.pricingName}">Developer Premium</h2>
 						<div class="{STYLES_INSTANCE.reflectionMainStyle.pricingPriceContainer}">
-							<sup class="{STYLES_INSTANCE.reflectionMainStyle.pricingSup}">&pound;</sup>
-							<span class="{STYLES_INSTANCE.reflectionMainStyle.pricingPrice}">99</span>
+							<sup class="{STYLES_INSTANCE.reflectionMainStyle.pricingSup}">$</sup>
+							<span class="{STYLES_INSTANCE.reflectionMainStyle.pricingPrice}">149</span>
 							<sup class="{STYLES_INSTANCE.reflectionMainStyle.pricingSup}">.99</sup>
 						</div>
 						<span class="{STYLES_INSTANCE.reflectionMainStyle.perMonth}">per month</span>
@@ -94,27 +111,77 @@
 						<p class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCheck}">App Store Account Required</p>
 					</header>
 					<ul class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetails}">
-						<li>Historic Revenue &amp; Download Data</li>
-						<li>Competitive &amp; Market Benchmarking Tools</li>
-						<li>Store and Market Trends</li>
-						<li>Business Planning Tools</li>
-						<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailsWithInfo}">
-							<span>Marketing Planning Tools</span>
-							<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding whats-this-tooltip-icon-static" data-tooltip="Coming soon">
+						<li>
+							<span>Daily Top 200 App Revenue, Download and Rank Data</span>
+							<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="View the latest revenue and download data for the games category for the UK, Germany, France &amp; Italy. More data will be available as the beta progresses">
+								<span>What's this?</span>
+							</a>
+						</li>
+						<li>
+							<span>Leaderboard Revenue &amp; Download History</span>
+							<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="View Revenue and Download data for any day in the Leaderboards">
+								<span>What's this?</span>
+							</a>
+						</li>
+						<li>
+							<span>Download CSV files</span>
+							<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="Download data from the Leaderboards as a CSV file for your own analysis">
+								<span>What's this?</span>
+							</a>
+						</li>
+						<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
+							<span>App Revenue, Download &amp; Rank History</span>
+							<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="Coming soon. View rank, revenue and download history for any app in the leaderboards. Download CSV files for any graph you are looking at">
+								<span>What's this?</span>
+							</a>
+						</li>
+						<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
+							<span>Follow Apps and Developers</span>
+							<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="Coming soon. Curate your own leaderboards by following the apps and developers of your choice. Receive notification of activities such as soft launches and price changes.">
+								<span>What's this?</span>
+							</a>
+						</li>
+						<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
+							<span>Developer Leaderboard</span>
+							<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="Coming soon. See how developers and publishers are performing against each other.">
+								<span>What's this?</span>
+							</a>
+						</li>
+						<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
+							<span>More to come...</span>
+							<a ui:field="comingSoon" href="#"
+								class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}"
+								data-tooltip="Coming soon. Refection build features based on feedback from our developer community. Contact us to let us know what you need.">
 								<span>What's this?</span>
 							</a>
 						</li>
 					</ul>
 					<g:Button ui:field="signUpPremium" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth} {STYLES_INSTANCE.reflectionMainStyle.pricingSignUpButton}">Upgrade Now</g:Button>
+					<g:HTMLPanel tag="p" ui:field="currentSubscriptionPremium"
+						styleName="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCheck} {STYLES_INSTANCE.reflectionMainStyle.currentSubscriptionText}">Current Subscription</g:HTMLPanel>
+					<g:HTMLPanel ui:field="premiumTrialLabel" tag="span" styleName="{STYLES_INSTANCE.reflectionMainStyle.trialLabel}">
+						<svg enable-background="new 0 0 32 32" version="1.1" viewBox="0 0 32 32" x="0px" xml:space="preserve" y="0px"><path
+							d="M9.8,30.2L0.3,13.8L22.4,1L32,6.4v11L9.8,30.2z M3,14.5l7.5,13L30,16.3V7.6l-7.6-4.3L3,14.5z M24.5,14c-1.2,0-2.2-0.6-2.8-1.6c-0.4-0.8-0.5-1.6-0.3-2.5c0.2-0.8,0.8-1.5,1.5-2c0.5-0.3,1.1-0.4,1.6-0.4c1.2,0,2.2,0.6,2.8,1.6 c0.9,1.6,0.4,3.5-1.2,4.4C25.6,13.9,25.1,14,24.5,14z M24.5,9c-0.3,0-0.6,0.1-0.9,0.2c-0.4,0.2-0.7,0.6-0.8,1.1 c-0.1,0.5-0.1,0.9,0.2,1.3c0.5,0.8,1.6,1.1,2.4,0.6c0.8-0.5,1.1-1.6,0.6-2.4C25.7,9.4,25.1,9,24.5,9z"
+							fill="#ff496a" id="Free"></path></svg>
+						1 Month of Developer Premium for
+						<em>FREE</em>
+					</g:HTMLPanel>
 				</section>
-				<div class="{STYLES_INSTANCE.reflectionMainStyle.pricingAccessInfo} {STYLES_INSTANCE.reflectionMainStyle.pricingAccessInfoHighlighted}">
+				<g:HTMLPanel ui:field="premiumInfoUpgrade"
+					styleName="{STYLES_INSTANCE.reflectionMainStyle.pricingAccessInfo} {STYLES_INSTANCE.reflectionMainStyle.pricingAccessInfoHighlighted}">
 					<div class="{STYLES_INSTANCE.reflectionMainStyle.verticalCentreContent}">
-						<p>Upgrade now and get a FREE 1 month trial of Developer Premium</p>
+						<p>Upgrade now and get FREE Developer Premium for the duration of the Beta</p>
 					</div>
-				</div>
+				</g:HTMLPanel>
+				<g:HTMLPanel ui:field="premiumInfoPlain" styleName="{STYLES_INSTANCE.reflectionMainStyle.pricingAccessInfo}">
+					<div class="{STYLES_INSTANCE.reflectionMainStyle.verticalCentreContent}">
+						<p>Get a month free on us when you sign up with a Developer Standard account</p>
+					</div>
+				</g:HTMLPanel>
 			</div>
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird}">
-				<section class="{STYLES_INSTANCE.reflectionMainStyle.pricingOption} {STYLES_INSTANCE.reflectionMainStyle.pricingOptionBusiness} {STYLES_INSTANCE.reflectionMainStyle.pricingOptionWithFooter}">
+				<section
+					class="{STYLES_INSTANCE.reflectionMainStyle.pricingOption} {STYLES_INSTANCE.reflectionMainStyle.pricingOptionBusiness} {STYLES_INSTANCE.reflectionMainStyle.pricingOptionWithFooter}">
 					<header class="{STYLES_INSTANCE.reflectionMainStyle.pricingOptionHeader}">
 						<h2 class="{STYLES_INSTANCE.reflectionMainStyle.pricingName}">Business</h2>
 						<div class="{STYLES_INSTANCE.reflectionMainStyle.pricingPriceContainer}">
@@ -124,10 +191,50 @@
 						<p class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCancel}">No App Store Account Required</p>
 					</header>
 					<ul class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetails}">
-						<li>Identify and Act on Market and Consumer Trends</li>
-						<li>Discover Investment Targets and Market Partners</li>
+						<li>
+							<span>Daily Top 200 App Revenue, Download and Rank Data</span>
+							<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="View the latest revenue and download data for the games category for the UK, Germany, France &amp; Italy. More data will be available as the beta progresses">
+								<span>What's this?</span>
+							</a>
+						</li>
+						<li>
+							<span>Leaderboard Revenue &amp; Download History</span>
+							<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="View Revenue and Download data for any day in the Leaderboards">
+								<span>What's this?</span>
+							</a>
+						</li>
+						<li>
+							<span>Download CSV files</span>
+							<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="Download data from the Leaderboards as a CSV file for your own analysis">
+								<span>What's this?</span>
+							</a>
+						</li>
+						<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
+							<span>App Revenue, Download &amp; Rank History</span>
+							<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="Coming soon. View rank, revenue and download history for any app in the leaderboards. Download CSV files for any graph you are looking at">
+								<span>What's this?</span>
+							</a>
+						</li>
+						<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
+							<span>Follow Apps and Developers</span>
+							<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="Coming soon. Curate your own leaderboards by following the apps and developers of your choice. Receive notification of activities such as soft launches and price changes.">
+								<span>What's this?</span>
+							</a>
+						</li>
+						<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
+							<span>Developer Leaderboard</span>
+							<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="Coming soon. See how developers and publishers are performing against each other.">
+								<span>What's this?</span>
+							</a>
+						</li>
+						<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
+							<span>More to come...</span>
+							<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="Coming soon. Refection build features based on feedback from our developer community. Contact us to let us know what you need.">
+								<span>What's this?</span>
+							</a>
+						</li>
 					</ul>
-					<button class="{STYLES_INSTANCE.reflectionMainStyle.refButtonLink} {STYLES_INSTANCE.reflectionMainStyle.pricingSignUpButton}">Register Your Interest</button>
+					<g:Button ui:field="registerInterest" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonLink} {STYLES_INSTANCE.reflectionMainStyle.pricingSignUpButton}">Register Your Interest</g:Button>
 				</section>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.pricingAccessInfo}">
 					<div class="{STYLES_INSTANCE.reflectionMainStyle.verticalCentreContent}">

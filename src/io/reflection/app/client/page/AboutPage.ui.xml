@@ -2,7 +2,6 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
 	<ui:import field="io.reflection.app.client.page.PageType.ContactPageType" />
-	<ui:import field="io.reflection.app.client.page.PageType.PressPageType" />
 
 	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 	<ui:style>
@@ -10,27 +9,27 @@
 	</ui:style>
 	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.pageAbout}">
 		<div
-			class="{STYLES_INSTANCE.reflectionMainStyle.pageBanner} {STYLES_INSTANCE.reflectionMainStyle.pageBannerLarger} {STYLES_INSTANCE.reflectionMainStyle.verticalCentreContent}">
+			class="{STYLES_INSTANCE.reflectionMainStyle.pageBanner} {STYLES_INSTANCE.reflectionMainStyle.verticalCentreContent}">
 			<div>
-				<h1>Our Mission</h1>
-				<h2>Reflection Exists to Help Developers Make More Successful Apps</h2>
-				<p>We do this by providing them with the market information they need to make better decisions</p>
+			<h1>Our Mission</h1>
+				<h2>Reflection makes app market intelligence accessible and easy to understand for everyone in the app industry</h2>
 			</div>
 		</div>
-		<div class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer}">
-			<h2 class="{STYLES_INSTANCE.reflectionMainStyle.pageAboutTitle}">Our Story</h2>
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.aboutMainContent}">			
 			<div
-				class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnPushOne} {STYLES_INSTANCE.reflectionMainStyle.pageAboutIntro}">
-				<p class="{STYLES_INSTANCE.reflectionMainStyle.twoColumns}">
-					Market data is a precious commodity for all app developers. It allows you to see how other apps are performing, identify what type of apps and business
-					models achieve the best results and plan marketing strategy accordingly.
-					<br />
-					Until now this kind of market intelligence has only been available to those developers with the deepest of pockets and is difficult to decipher for the
-					uninitiated. With a team founded by app developers who encountered this frustration first-hand Reflection is focused on changing this industry status quo.
-					<br />
-					Our goal is to build the only mobile market intelligence platform developers will ever need. With your feedback we are building the user-friendly tools and
-					features you need at a price you can afford. Reflection’s expanding network of developers also feeds our data accuracy algorithm maintaining it’s
-					industry-leading standard.
+				class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnThreeQuarters} {STYLES_INSTANCE.reflectionMainStyle.pageAboutIntro}">
+				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.pageAboutTitle}">Our Story</h2>
+				<p>
+					Accurate app market intelligence is important to everyone who makes apps. 
+					It allows you to track the performance of other apps &amp; developers 
+					and identify what type of apps and business models achieve the best results.</p>
+				<p>Affordable app market intelligence is hard to come by and it takes time to 
+					analyse data to make the right decisions.</p>
+				<p>
+					Reflection was founded by app developers who saw an opportunity 
+					to make accurate app market intelligence available for free. 
+					We aim to build premium features and tools that help developers 
+					understand the app market better, saving them time, effort and resources.
 				</p>
 			</div>
 		</div>
@@ -95,11 +94,8 @@
 				class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneHalf} {STYLES_INSTANCE.reflectionMainStyle.pageAboutFootContent__text}">
 				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">More Info</h2>
 				<p>
-					If you'd like to know more about what we do and why we do it please get in touch via our
-					<g:InlineHyperlink targetHistoryToken="{ContactPageType.asTargetHistoryToken}">contact page</g:InlineHyperlink>
-					. For press information and also to download our brand assets and logos please visit the
-					<g:InlineHyperlink targetHistoryToken="{PressPageType.asTargetHistoryToken}">press area</g:InlineHyperlink>
-					.
+				If you'd like to know more about what we do and why we do it please get in touch via our 
+				<g:InlineHyperlink targetHistoryToken="{ContactPageType.asTargetHistoryToken}">contacts page</g:InlineHyperlink>.
 				</p>
 			</div>
 		</div>
