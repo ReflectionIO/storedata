@@ -33,6 +33,12 @@ public class LeaderboardDownloadsCell extends AbstractCell<Rank> {
 
 	private SafeHtml noDataQuestionMark = SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding "
 			+ Styles.STYLES_INSTANCE.reflectionMainStyle().whatsThisTooltipIconStatic() + "\" data-tooltip=\"No data available\"></span>");
+	private SafeHtml signUpLink = SafeHtmlUtils
+			.fromTrustedString("<a style=\"cursor: pointer\" class=\"sign-up-link js-tooltip js-tooltip--right\" data-tooltip=\"Sign up and link your app store account to see this data\">Sign Up</a>");
+	private SafeHtml linkAccountLink = SafeHtmlUtils
+			.fromTrustedString("<a style=\"cursor: pointer\" class=\"sign-up-link js-tooltip js-tooltip--right\" data-tooltip=\"Link your app store account to see this data\">Link Account</a>");
+	private SafeHtml upgradeLink = SafeHtmlUtils
+			.fromTrustedString("<a style=\"cursor: pointer\" class=\"sign-up-link js-tooltip js-tooltip--right\" data-tooltip=\"Upgrade to Developer Premium to see historical data\">Upgrade</a>");
 
 	public LeaderboardDownloadsCell() {
 		super("click");
@@ -73,21 +79,18 @@ public class LeaderboardDownloadsCell extends AbstractCell<Rank> {
 			if (CalendarUtil.isSameDate(FilterHelper.getDaysAgo(2), FilterController.get().getEndDate())
 					|| NavigationController.get().getCurrentPage().equals(PageType.HomePageType)) {
 				if (position > 10 && !(SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount())) {
-					value = SafeHtmlUtils.fromSafeConstant("<a style=\"cursor: pointer\" class=\"sign-up-link\">"
-							+ (SessionController.get().isLoggedIn() ? "Link Account" : "Sign Up") + "</a>");
+					value = SessionController.get().isLoggedIn() ? linkAccountLink : signUpLink;
 				} else {
 					value = (rank.downloads != null ? SafeHtmlUtils.fromSafeConstant(WHOLE_NUMBER_FORMATTER.format(rank.downloads)) : noDataQuestionMark);
 				}
 			} else {
-				String textValue = "";
 				if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
-					textValue = "Upgrade";
+					value = upgradeLink;
 				} else if (SessionController.get().isLoggedIn()) {
-					textValue = "Link Account";
+					value = linkAccountLink;
 				} else {
-					textValue = "Sign Up";
+					value = signUpLink;
 				}
-				value = SafeHtmlUtils.fromSafeConstant("<a style=\"cursor: pointer\" class=\"sign-up-link\">" + textValue + "</a>");
 			}
 		}
 		if (value != null) {
