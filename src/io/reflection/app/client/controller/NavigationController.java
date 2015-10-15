@@ -234,9 +234,9 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 	private NavigationController() {
 		pages.put(PageType.HomePageType.toString(), new HomePage());
 		// Live
-		// MixPanelApi.get().init("69afe8ba753ea33015dbd4cdbf11d1c8");
+		MixPanelApi.get().init("69afe8ba753ea33015dbd4cdbf11d1c8");
 		// Dev
-		MixPanelApi.get().init("de7297c03772ca384bba5483b63f5e45");
+		// MixPanelApi.get().init("de7297c03772ca384bba5483b63f5e45");
 	}
 
 	/**
