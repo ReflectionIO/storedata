@@ -13,6 +13,7 @@ import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormattingHelper;
 import io.reflection.app.client.page.PageType;
+import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Rank;
 
 import com.google.gwt.cell.client.AbstractCell;
@@ -29,6 +30,9 @@ import com.google.gwt.user.datepicker.client.CalendarUtil;
  *
  */
 public class LeaderboardRevenueCell extends AbstractCell<Rank> {
+
+	private SafeHtml noDataQuestionMark = SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding "
+			+ Styles.STYLES_INSTANCE.reflectionMainStyle().whatsThisTooltipIconStatic() + "\" data-tooltip=\"No data available\"></span>");
 
 	public LeaderboardRevenueCell() {
 		super("click");
@@ -63,10 +67,10 @@ public class LeaderboardRevenueCell extends AbstractCell<Rank> {
 		int position = (rank.position.intValue() > 0 ? rank.position.intValue() : rank.grossingPosition.intValue());
 		if (SessionController.get().isAdmin()) {
 			value = (rank.currency != null && rank.revenue != null ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.asWholeMoneyString(rank.currency,
-					rank.revenue.floatValue())) : SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
+					rank.revenue.floatValue())) : noDataQuestionMark);
 		} else if (SessionController.get().canSeePredictions()) {
 			value = (rank.currency != null && rank.revenue != null ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.asWholeMoneyString(rank.currency,
-					rank.revenue.floatValue())) : SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
+					rank.revenue.floatValue())) : noDataQuestionMark);
 		} else {
 			if (CalendarUtil.isSameDate(FilterHelper.getDaysAgo(2), FilterController.get().getEndDate())
 					|| NavigationController.get().getCurrentPage().equals(PageType.HomePageType)) {
@@ -75,8 +79,7 @@ public class LeaderboardRevenueCell extends AbstractCell<Rank> {
 							+ (SessionController.get().isLoggedIn() ? "Link Account" : "Sign Up") + "</a>");
 				} else {
 					value = (rank.currency != null && rank.revenue != null ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.asWholeMoneyString(rank.currency,
-							rank.revenue.floatValue())) : SafeHtmlUtils
-							.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
+							rank.revenue.floatValue())) : noDataQuestionMark);
 				}
 			} else {
 				String textValue = "";

@@ -13,6 +13,7 @@ import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.page.PageType;
+import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Rank;
 
 import com.google.gwt.cell.client.AbstractCell;
@@ -29,6 +30,9 @@ import com.google.gwt.user.datepicker.client.CalendarUtil;
  *
  */
 public class LeaderboardDownloadsCell extends AbstractCell<Rank> {
+
+	private SafeHtml noDataQuestionMark = SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding "
+			+ Styles.STYLES_INSTANCE.reflectionMainStyle().whatsThisTooltipIconStatic() + "\" data-tooltip=\"No data available\"></span>");
 
 	public LeaderboardDownloadsCell() {
 		super("click");
@@ -62,11 +66,9 @@ public class LeaderboardDownloadsCell extends AbstractCell<Rank> {
 		SafeHtml value;
 		int position = (rank.position.intValue() > 0 ? rank.position.intValue() : rank.grossingPosition.intValue());
 		if (SessionController.get().isAdmin()) {
-			value = (rank.downloads != null ? SafeHtmlUtils.fromSafeConstant(WHOLE_NUMBER_FORMATTER.format(rank.downloads)) : SafeHtmlUtils
-					.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
+			value = (rank.downloads != null ? SafeHtmlUtils.fromSafeConstant(WHOLE_NUMBER_FORMATTER.format(rank.downloads)) : noDataQuestionMark);
 		} else if (SessionController.get().canSeePredictions()) {
-			value = (rank.downloads != null ? SafeHtmlUtils.fromSafeConstant(WHOLE_NUMBER_FORMATTER.format(rank.downloads)) : SafeHtmlUtils
-					.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
+			value = (rank.downloads != null ? SafeHtmlUtils.fromSafeConstant(WHOLE_NUMBER_FORMATTER.format(rank.downloads)) : noDataQuestionMark);
 		} else {
 			if (CalendarUtil.isSameDate(FilterHelper.getDaysAgo(2), FilterController.get().getEndDate())
 					|| NavigationController.get().getCurrentPage().equals(PageType.HomePageType)) {
@@ -74,8 +76,7 @@ public class LeaderboardDownloadsCell extends AbstractCell<Rank> {
 					value = SafeHtmlUtils.fromSafeConstant("<a style=\"cursor: pointer\" class=\"sign-up-link\">"
 							+ (SessionController.get().isLoggedIn() ? "Link Account" : "Sign Up") + "</a>");
 				} else {
-					value = (rank.downloads != null ? SafeHtmlUtils.fromSafeConstant(WHOLE_NUMBER_FORMATTER.format(rank.downloads)) : SafeHtmlUtils
-							.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
+					value = (rank.downloads != null ? SafeHtmlUtils.fromSafeConstant(WHOLE_NUMBER_FORMATTER.format(rank.downloads)) : noDataQuestionMark);
 				}
 			} else {
 				String textValue = "";

@@ -25,7 +25,6 @@ import io.reflection.app.datatypes.shared.Rank;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style.Display;
@@ -37,7 +36,6 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.safehtml.shared.UriUtils;
-import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiRenderer;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
 
@@ -47,7 +45,8 @@ import com.google.gwt.user.datepicker.client.CalendarUtil;
  */
 public class AppDetailsAndPredictionCell extends AbstractCell<Rank> {
 
-	@UiField AnchorElement appLink;
+	private SafeHtml noDataQuestionMark = SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding "
+			+ Styles.STYLES_INSTANCE.reflectionMainStyle().whatsThisTooltipIconStatic() + "\" data-tooltip=\"No data available\"></span>");
 
 	public AppDetailsAndPredictionCell() {
 		super("click");
@@ -115,7 +114,7 @@ public class AppDetailsAndPredictionCell extends AbstractCell<Rank> {
 
 		Filter filter = FilterController.get().getFilter();
 
-		SafeHtml dailyData = SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
+		SafeHtml dailyData = noDataQuestionMark;
 		SafeStyles displayDailyData = SafeStylesUtils.fromTrustedString("");
 
 		// String dailyDataType = filter.getDailyData();
@@ -158,13 +157,11 @@ public class AppDetailsAndPredictionCell extends AbstractCell<Rank> {
 				if (SessionController.get().isAdmin()) {
 					dailyData = (rank.downloads != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore()
 							+ " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
-							WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : SafeHtmlUtils
-							.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
+							WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : noDataQuestionMark);
 				} else if (SessionController.get().canSeePredictions()) {
 					dailyData = (rank.downloads != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore()
 							+ " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
-							WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : SafeHtmlUtils
-							.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
+							WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : noDataQuestionMark);
 				} else {
 					if (CalendarUtil.isSameDate(FilterHelper.getDaysAgo(2), FilterController.get().getEndDate())
 							|| NavigationController.get().getCurrentPage().equals(PageType.HomePageType)) {
@@ -178,8 +175,7 @@ public class AppDetailsAndPredictionCell extends AbstractCell<Rank> {
 						} else {
 							dailyData = (rank.downloads != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle()
 									.refIconBefore() + " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
-									WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : SafeHtmlUtils
-									.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
+									WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : noDataQuestionMark);
 						}
 					} else {
 						String textValue = "";
@@ -203,13 +199,11 @@ public class AppDetailsAndPredictionCell extends AbstractCell<Rank> {
 				if (SessionController.get().isAdmin()) {
 					dailyData = (rank.downloads != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore()
 							+ " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
-							WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : SafeHtmlUtils
-							.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
+							WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : noDataQuestionMark);
 				} else if (SessionController.get().canSeePredictions()) {
 					dailyData = (rank.downloads != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore()
 							+ " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
-							WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : SafeHtmlUtils
-							.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
+							WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : noDataQuestionMark);
 				} else {
 					if (CalendarUtil.isSameDate(FilterHelper.getDaysAgo(2), FilterController.get().getEndDate())
 							|| NavigationController.get().getCurrentPage().equals(PageType.HomePageType)) {
@@ -223,8 +217,7 @@ public class AppDetailsAndPredictionCell extends AbstractCell<Rank> {
 						} else {
 							dailyData = (rank.downloads != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle()
 									.refIconBefore() + " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
-									WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : SafeHtmlUtils
-									.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
+									WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : noDataQuestionMark);
 						}
 					} else {
 						String textValue = "";
@@ -248,13 +241,11 @@ public class AppDetailsAndPredictionCell extends AbstractCell<Rank> {
 				if (SessionController.get().isAdmin()) {
 					dailyData = (rank.currency != null && rank.revenue != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE
 							.reflectionMainStyle().refIconBefore() + " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue(), "",
-							FormattingHelper.asWholeMoneyString(rank.currency, rank.revenue.floatValue())) : SafeHtmlUtils
-							.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
+							FormattingHelper.asWholeMoneyString(rank.currency, rank.revenue.floatValue())) : noDataQuestionMark);
 				} else if (SessionController.get().canSeePredictions()) {
 					dailyData = (rank.currency != null && rank.revenue != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE
 							.reflectionMainStyle().refIconBefore() + " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue(), "",
-							FormattingHelper.asWholeMoneyString(rank.currency, rank.revenue.floatValue())) : SafeHtmlUtils
-							.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
+							FormattingHelper.asWholeMoneyString(rank.currency, rank.revenue.floatValue())) : noDataQuestionMark);
 				} else {
 					if (CalendarUtil.isSameDate(FilterHelper.getDaysAgo(2), FilterController.get().getEndDate())
 							|| NavigationController.get().getCurrentPage().equals(PageType.HomePageType)) {
@@ -269,8 +260,7 @@ public class AppDetailsAndPredictionCell extends AbstractCell<Rank> {
 						} else {
 							dailyData = (rank.currency != null && rank.revenue != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE
 									.reflectionMainStyle().refIconBefore() + " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue(), "",
-									FormattingHelper.asWholeMoneyString(rank.currency, rank.revenue.floatValue())) : SafeHtmlUtils
-									.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
+									FormattingHelper.asWholeMoneyString(rank.currency, rank.revenue.floatValue())) : noDataQuestionMark);
 						}
 					} else {
 						String textValue = "";
