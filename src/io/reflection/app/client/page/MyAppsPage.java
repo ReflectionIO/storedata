@@ -374,7 +374,7 @@ public class MyAppsPage extends Page implements NavigationEventHandler, GetLinke
 			@Override
 			public SafeHtml getValue(MyApp object) {
 				return (object.item != null) ? SafeHtmlUtils.fromSafeConstant(DataTypeHelper.itemIapState(object.item, IAP_YES_HTML, IAP_NO_HTML,
-						"<span class=\"js-tooltip " + style.whatsThisTooltipIcon() + "\" data-tooltip=\"No data available\"></span>")) : loaderInline;
+						"<span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding " + style.whatsThisTooltipIcon() + "\" data-tooltip=\"No data available\"></span>")) : loaderInline;
 			}
 
 		};

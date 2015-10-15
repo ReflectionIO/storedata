@@ -1080,6 +1080,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("lato-bold")
 		String latoBold();
 
+		@ClassName("leaderboard-app-name")
+		String leaderboardAppName();
+
 		@ClassName("link-back-to-top")
 		String linkBackToTop();
 

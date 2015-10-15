@@ -20,10 +20,10 @@
 				stroke-miterlimit="10" d="M62.5,41.7" /><path fill="none" stroke="#ACB0C6" stroke-width="0.4209" stroke-miterlimit="10" d="M8,41.7" /></g><path
 				fill="#9F9FA9"
 				d="M47.3,28L36.4,9.6C36.2,9.2,35.8,9,35.4,9c-0.4,0-0.7,0.2-0.9,0.5l-11,18.5c-0.2,0.3-0.2,0.7,0,1.1c0.2,0.3,0.6,0.5,0.9,0.5h21.9c0.6,0,1.1-0.5,1.1-1.1C47.5,28.4,47.4,28.2,47.3,28z M26.3,27.6l9.1-15.4l9.1,15.4L26.3,27.6L26.3,27.6z M34.3,16.9v4.7c0,0.6,0.5,1.1,1.1,1.1c0.6,0,1.1-0.5,1.1-1.1v-4.7c0-0.6-0.5-1.1-1.1-1.1C34.8,15.9,34.3,16.3,34.3,16.9z M35.4,23.6c-0.4,0-0.7,0.1-1,0.4c-0.3,0.2-0.4,0.6-0.4,0.9c0,0.3,0.1,0.7,0.4,0.9c0.3,0.2,0.6,0.4,1,0.4c0.4,0,0.7-0.1,1-0.4c0.3-0.2,0.4-0.6,0.4-0.9c0-0.3-0.1-0.7-0.4-0.9C36.1,23.8,35.8,23.6,35.4,23.6z" /></svg>
-			<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Nothing to see here..</h2>
-			<p>There's no data to show for the filters you have selected,</p>
+			<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Nothing to see here</h2>
+			<p>There's no data to show for the filters you have selected.</p>
 			<p>
-				please adjust them and try again
+				Please adjust them and try again.
 			</p>
 		</div>
 	</g:HTMLPanel>
