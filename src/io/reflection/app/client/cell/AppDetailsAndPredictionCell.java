@@ -12,10 +12,10 @@ import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.FilterController.Filter;
 import io.reflection.app.client.controller.ItemController;
 import io.reflection.app.client.controller.NavigationController;
-import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormattingHelper;
+import io.reflection.app.client.page.HomePage;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.page.RanksPage;
 import io.reflection.app.client.res.Styles;
@@ -141,172 +141,168 @@ public class AppDetailsAndPredictionCell extends AbstractCell<Rank> {
 		// }
 		// }
 
-		Stack stack = NavigationController.get().getStack();
-		if (stack != null) {
-			listType = stack.getParameter(RanksPage.SELECTED_TAB_PARAMETER_INDEX);
+		if (NavigationController.get().getCurrentPage() == null || NavigationController.get().getCurrentPage() == PageType.HomePageType) {
+			listType = HomePage.getSelectedTab(); // Home page leaderboard
+		} else {
+			if (NavigationController.get().getStack() != null) {
+				listType = NavigationController.get().getStack().getParameter(RanksPage.SELECTED_TAB_PARAMETER_INDEX);
+			}
 		}
 
-		if (PageType.HomePageType.equals(stack.getPage())) {
-			displayDailyData = SafeStylesUtils.forDisplay(Display.NONE);
-			dailyData = SafeHtmlUtils.fromSafeConstant("");
-		} else {
-
-			if (FilterController.OVERALL_LIST_TYPE.equals(listType)) {
-				switch (context.getColumn()) {
-				case 1:
-					filter = Filter.parse(filter.asItemFilterString());
-					filter.setListType(FilterController.PAID_LIST_TYPE);
-					displayDailyData = SafeStylesUtils.fromTrustedString("");
-					if (SessionController.get().isAdmin()) {
-						dailyData = (rank.downloads != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore()
-								+ " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
-								WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : SafeHtmlUtils
-								.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
-					} else if (SessionController.get().canSeePredictions()) {
-						dailyData = (rank.downloads != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore()
-								+ " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
-								WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : SafeHtmlUtils
-								.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
-					} else {
-						if (CalendarUtil.isSameDate(FilterHelper.getDaysAgo(2), FilterController.get().getEndDate())
-								|| NavigationController.get().getCurrentPage().equals(PageType.HomePageType)) {
-							if (rank.position.intValue() > 10 && !(SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount())) {
-								dailyData = DailyDataTemplateHtml.INSTANCE.dailyData(
-										Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
-												+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(),
-										"",
-										SafeHtmlUtils.fromTrustedString("<a style=\"cursor: pointer\" class=\"sign-up-link\">"
-												+ (SessionController.get().isLoggedIn() ? "Link Account" : "Sign Up") + "</a>"));
-							} else {
-								dailyData = (rank.downloads != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle()
-										.refIconBefore() + " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
-										WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : SafeHtmlUtils
-										.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
-							}
-						} else {
-							String textValue = "";
-							if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
-								textValue = "Upgrade";
-							} else if (SessionController.get().isLoggedIn()) {
-								textValue = "Link Account";
-							} else {
-								textValue = "Sign Up";
-							}
-							dailyData = DailyDataTemplateHtml.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
-									+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
-									SafeHtmlUtils.fromTrustedString("<a style=\"cursor: pointer\" class=\"sign-up-link\">" + textValue + "</a>"));
-						}
-					}
-					break;
-				case 2:
-					filter = Filter.parse(filter.asItemFilterString());
-					filter.setListType(FilterController.FREE_LIST_TYPE);
-					displayDailyData = SafeStylesUtils.fromTrustedString("");
-					if (SessionController.get().isAdmin()) {
-						dailyData = (rank.downloads != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore()
-								+ " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
-								WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : SafeHtmlUtils
-								.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
-					} else if (SessionController.get().canSeePredictions()) {
-						dailyData = (rank.downloads != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore()
-								+ " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
-								WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : SafeHtmlUtils
-								.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
-					} else {
-						if (CalendarUtil.isSameDate(FilterHelper.getDaysAgo(2), FilterController.get().getEndDate())
-								|| NavigationController.get().getCurrentPage().equals(PageType.HomePageType)) {
-							if (rank.position.intValue() > 10 && !(SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount())) {
-								dailyData = DailyDataTemplateHtml.INSTANCE.dailyData(
-										Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
-												+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(),
-										"",
-										SafeHtmlUtils.fromTrustedString("<a style=\"cursor: pointer\" class=\"sign-up-link\">"
-												+ (SessionController.get().isLoggedIn() ? "Link Account" : "Sign Up") + "</a>"));
-							} else {
-								dailyData = (rank.downloads != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle()
-										.refIconBefore() + " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
-										WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : SafeHtmlUtils
-										.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
-							}
-						} else {
-							String textValue = "";
-							if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
-								textValue = "Upgrade";
-							} else if (SessionController.get().isLoggedIn()) {
-								textValue = "Link Account";
-							} else {
-								textValue = "Sign Up";
-							}
-							dailyData = DailyDataTemplateHtml.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
-									+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
-									SafeHtmlUtils.fromTrustedString("<a style=\"cursor: pointer\" class=\"sign-up-link\">" + textValue + "</a>"));
-						}
-					}
-					break;
-				case 3:
-					filter = Filter.parse(filter.asItemFilterString());
-					filter.setListType(FilterController.GROSSING_LIST_TYPE);
-					displayDailyData = SafeStylesUtils.fromTrustedString("");
-					if (SessionController.get().isAdmin()) {
-						dailyData = (rank.currency != null && rank.revenue != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE
-								.reflectionMainStyle().refIconBefore() + " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue(), "",
-								FormattingHelper.asWholeMoneyString(rank.currency, rank.revenue.floatValue())) : SafeHtmlUtils
-								.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
-					} else if (SessionController.get().canSeePredictions()) {
-						dailyData = (rank.currency != null && rank.revenue != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE
-								.reflectionMainStyle().refIconBefore() + " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue(), "",
-								FormattingHelper.asWholeMoneyString(rank.currency, rank.revenue.floatValue())) : SafeHtmlUtils
-								.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
-					} else {
-						if (CalendarUtil.isSameDate(FilterHelper.getDaysAgo(2), FilterController.get().getEndDate())
-								|| NavigationController.get().getCurrentPage().equals(PageType.HomePageType)) {
-							if (rank.grossingPosition.intValue() > 10
-									&& !(SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount())) {
-								dailyData = DailyDataTemplateHtml.INSTANCE.dailyData(
-										Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
-												+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue(),
-										"",
-										SafeHtmlUtils.fromSafeConstant("<a style=\"cursor: pointer\" class=\"sign-up-link\">"
-												+ (SessionController.get().isLoggedIn() ? "Link Account" : "Sign Up") + "</a>"));
-							} else {
-								dailyData = (rank.currency != null && rank.revenue != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE
-										.reflectionMainStyle().refIconBefore() + " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue(), "",
-										FormattingHelper.asWholeMoneyString(rank.currency, rank.revenue.floatValue())) : SafeHtmlUtils
-										.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
-							}
-						} else {
-							String textValue = "";
-							if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
-								textValue = "Upgrade";
-							} else if (SessionController.get().isLoggedIn()) {
-								textValue = "Link Account";
-							} else {
-								textValue = "Sign Up";
-							}
-							dailyData = DailyDataTemplateHtml.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
-									+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue(), "",
-									SafeHtmlUtils.fromSafeConstant("<a style=\"cursor: pointer\" class=\"sign-up-link\">" + textValue + "</a>"));
-						}
-					}
-					break;
-				}
-			} else if (FilterController.FREE_LIST_TYPE.equals(listType)) {
-				filter = Filter.parse(filter.asItemFilterString());
-				filter.setListType(FilterController.FREE_LIST_TYPE);
-				displayDailyData = SafeStylesUtils.forDisplay(Display.NONE);
-				dailyData = SafeHtmlUtils.fromSafeConstant("");
-			} else if (FilterController.PAID_LIST_TYPE.equals(listType)) {
+		if (FilterController.OVERALL_LIST_TYPE.equals(listType)) {
+			switch (context.getColumn()) {
+			case 1:
 				filter = Filter.parse(filter.asItemFilterString());
 				filter.setListType(FilterController.PAID_LIST_TYPE);
-				displayDailyData = SafeStylesUtils.forDisplay(Display.NONE);
-				dailyData = SafeHtmlUtils.fromSafeConstant("");
-			} else if (FilterController.GROSSING_LIST_TYPE.equals(listType)) {
+				displayDailyData = SafeStylesUtils.fromTrustedString("");
+				if (SessionController.get().isAdmin()) {
+					dailyData = (rank.downloads != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore()
+							+ " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
+							WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : SafeHtmlUtils
+							.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
+				} else if (SessionController.get().canSeePredictions()) {
+					dailyData = (rank.downloads != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore()
+							+ " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
+							WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : SafeHtmlUtils
+							.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
+				} else {
+					if (CalendarUtil.isSameDate(FilterHelper.getDaysAgo(2), FilterController.get().getEndDate())
+							|| NavigationController.get().getCurrentPage().equals(PageType.HomePageType)) {
+						if (rank.position.intValue() > 10 && !(SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount())) {
+							dailyData = DailyDataTemplateHtml.INSTANCE.dailyData(
+									Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
+											+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(),
+									"",
+									SafeHtmlUtils.fromTrustedString("<a style=\"cursor: pointer\" class=\"sign-up-link\">"
+											+ (SessionController.get().isLoggedIn() ? "Link Account" : "Sign Up") + "</a>"));
+						} else {
+							dailyData = (rank.downloads != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle()
+									.refIconBefore() + " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
+									WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : SafeHtmlUtils
+									.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
+						}
+					} else {
+						String textValue = "";
+						if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
+							textValue = "Upgrade";
+						} else if (SessionController.get().isLoggedIn()) {
+							textValue = "Link Account";
+						} else {
+							textValue = "Sign Up";
+						}
+						dailyData = DailyDataTemplateHtml.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
+								+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
+								SafeHtmlUtils.fromTrustedString("<a style=\"cursor: pointer\" class=\"sign-up-link\">" + textValue + "</a>"));
+					}
+				}
+				break;
+			case 2:
+				filter = Filter.parse(filter.asItemFilterString());
+				filter.setListType(FilterController.FREE_LIST_TYPE);
+				displayDailyData = SafeStylesUtils.fromTrustedString("");
+				if (SessionController.get().isAdmin()) {
+					dailyData = (rank.downloads != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore()
+							+ " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
+							WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : SafeHtmlUtils
+							.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
+				} else if (SessionController.get().canSeePredictions()) {
+					dailyData = (rank.downloads != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore()
+							+ " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
+							WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : SafeHtmlUtils
+							.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
+				} else {
+					if (CalendarUtil.isSameDate(FilterHelper.getDaysAgo(2), FilterController.get().getEndDate())
+							|| NavigationController.get().getCurrentPage().equals(PageType.HomePageType)) {
+						if (rank.position.intValue() > 10 && !(SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount())) {
+							dailyData = DailyDataTemplateHtml.INSTANCE.dailyData(
+									Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
+											+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(),
+									"",
+									SafeHtmlUtils.fromTrustedString("<a style=\"cursor: pointer\" class=\"sign-up-link\">"
+											+ (SessionController.get().isLoggedIn() ? "Link Account" : "Sign Up") + "</a>"));
+						} else {
+							dailyData = (rank.downloads != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle()
+									.refIconBefore() + " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
+									WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : SafeHtmlUtils
+									.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
+						}
+					} else {
+						String textValue = "";
+						if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
+							textValue = "Upgrade";
+						} else if (SessionController.get().isLoggedIn()) {
+							textValue = "Link Account";
+						} else {
+							textValue = "Sign Up";
+						}
+						dailyData = DailyDataTemplateHtml.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
+								+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
+								SafeHtmlUtils.fromTrustedString("<a style=\"cursor: pointer\" class=\"sign-up-link\">" + textValue + "</a>"));
+					}
+				}
+				break;
+			case 3:
 				filter = Filter.parse(filter.asItemFilterString());
 				filter.setListType(FilterController.GROSSING_LIST_TYPE);
-				displayDailyData = SafeStylesUtils.forDisplay(Display.NONE);
-				dailyData = SafeHtmlUtils.fromSafeConstant("");
+				displayDailyData = SafeStylesUtils.fromTrustedString("");
+				if (SessionController.get().isAdmin()) {
+					dailyData = (rank.currency != null && rank.revenue != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE
+							.reflectionMainStyle().refIconBefore() + " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue(), "",
+							FormattingHelper.asWholeMoneyString(rank.currency, rank.revenue.floatValue())) : SafeHtmlUtils
+							.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
+				} else if (SessionController.get().canSeePredictions()) {
+					dailyData = (rank.currency != null && rank.revenue != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE
+							.reflectionMainStyle().refIconBefore() + " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue(), "",
+							FormattingHelper.asWholeMoneyString(rank.currency, rank.revenue.floatValue())) : SafeHtmlUtils
+							.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
+				} else {
+					if (CalendarUtil.isSameDate(FilterHelper.getDaysAgo(2), FilterController.get().getEndDate())
+							|| NavigationController.get().getCurrentPage().equals(PageType.HomePageType)) {
+						if (rank.grossingPosition.intValue() > 10
+								&& !(SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount())) {
+							dailyData = DailyDataTemplateHtml.INSTANCE.dailyData(
+									Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
+											+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue(),
+									"",
+									SafeHtmlUtils.fromSafeConstant("<a style=\"cursor: pointer\" class=\"sign-up-link\">"
+											+ (SessionController.get().isLoggedIn() ? "Link Account" : "Sign Up") + "</a>"));
+						} else {
+							dailyData = (rank.currency != null && rank.revenue != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE
+									.reflectionMainStyle().refIconBefore() + " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue(), "",
+									FormattingHelper.asWholeMoneyString(rank.currency, rank.revenue.floatValue())) : SafeHtmlUtils
+									.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
+						}
+					} else {
+						String textValue = "";
+						if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
+							textValue = "Upgrade";
+						} else if (SessionController.get().isLoggedIn()) {
+							textValue = "Link Account";
+						} else {
+							textValue = "Sign Up";
+						}
+						dailyData = DailyDataTemplateHtml.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
+								+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue(), "",
+								SafeHtmlUtils.fromSafeConstant("<a style=\"cursor: pointer\" class=\"sign-up-link\">" + textValue + "</a>"));
+					}
+				}
+				break;
 			}
-
+		} else if (FilterController.FREE_LIST_TYPE.equals(listType)) {
+			filter = Filter.parse(filter.asItemFilterString());
+			filter.setListType(FilterController.FREE_LIST_TYPE);
+			displayDailyData = SafeStylesUtils.forDisplay(Display.NONE);
+			dailyData = SafeHtmlUtils.fromSafeConstant("");
+		} else if (FilterController.PAID_LIST_TYPE.equals(listType)) {
+			filter = Filter.parse(filter.asItemFilterString());
+			filter.setListType(FilterController.PAID_LIST_TYPE);
+			displayDailyData = SafeStylesUtils.forDisplay(Display.NONE);
+			dailyData = SafeHtmlUtils.fromSafeConstant("");
+		} else if (FilterController.GROSSING_LIST_TYPE.equals(listType)) {
+			filter = Filter.parse(filter.asItemFilterString());
+			filter.setListType(FilterController.GROSSING_LIST_TYPE);
+			displayDailyData = SafeStylesUtils.forDisplay(Display.NONE);
+			dailyData = SafeHtmlUtils.fromSafeConstant("");
 		}
 
 		SafeUri link = (SessionController.get().isAdmin() ? PageType.ItemPageType.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE, item.internalId,

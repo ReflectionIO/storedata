@@ -113,7 +113,7 @@ public class HomePage extends Page {
 	private LoadingIndicator loadingIndicatorPaidGrossingList = AnimationHelper.getLeaderboardListLoadingIndicator(ServiceConstants.SHORT_STEP_VALUE, false);
 
 	private HomeRankProvider homeRankProvider = new HomeRankProvider();
-	private String selectedTab = PAID_LIST_TYPE;
+	private static String selectedTab = OVERALL_LIST_TYPE;
 	private ReflectionMainStyles style = Styles.STYLES_INSTANCE.reflectionMainStyle();
 	private SignUpPopup signUpPopup = new SignUpPopup();
 
@@ -416,6 +416,10 @@ public class HomePage extends Page {
 		if (leaderboardHomeTable.getColumnIndex(column) != -1) {
 			leaderboardHomeTable.removeColumn(column);
 		}
+	}
+
+	public static String getSelectedTab() {
+		return selectedTab;
 	}
 
 	@UiHandler({ "countrySelector", "appStoreSelector" })
