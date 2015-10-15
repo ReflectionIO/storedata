@@ -16,7 +16,7 @@ import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
 import io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler;
 import io.reflection.app.client.DefaultEventBus;
-import io.reflection.app.client.cell.LeaderboardAppDetailsCell;
+import io.reflection.app.client.cell.AppDetailsAndPredictionCell;
 import io.reflection.app.client.cell.LeaderboardDownloadsCell;
 import io.reflection.app.client.cell.LeaderboardRevenueCell;
 import io.reflection.app.client.component.FormDateBox;
@@ -358,7 +358,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		};
 		rankColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.mhxte6cID());
 
-		LeaderboardAppDetailsCell appDetailsCell = new LeaderboardAppDetailsCell();
+		AppDetailsAndPredictionCell appDetailsCell = new AppDetailsAndPredictionCell();
 
 		paidColumn = new Column<RanksGroup, Rank>(appDetailsCell) {
 

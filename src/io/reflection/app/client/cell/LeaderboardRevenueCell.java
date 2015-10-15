@@ -13,6 +13,7 @@ import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormattingHelper;
 import io.reflection.app.client.page.PageType;
+import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Rank;
 
 import com.google.gwt.cell.client.AbstractCell;
@@ -29,6 +30,15 @@ import com.google.gwt.user.datepicker.client.CalendarUtil;
  *
  */
 public class LeaderboardRevenueCell extends AbstractCell<Rank> {
+
+	private SafeHtml noDataQuestionMark = SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding "
+			+ Styles.STYLES_INSTANCE.reflectionMainStyle().whatsThisTooltipIconStatic() + "\" data-tooltip=\"No data available\"></span>");
+	private SafeHtml signUpLink = SafeHtmlUtils
+			.fromTrustedString("<a style=\"cursor: pointer\" class=\"sign-up-link js-tooltip js-tooltip--right\" data-tooltip=\"Sign up and link your app store account to see this data\">Sign Up</a>");
+	private SafeHtml linkAccountLink = SafeHtmlUtils
+			.fromTrustedString("<a style=\"cursor: pointer\" class=\"sign-up-link js-tooltip js-tooltip--right\" data-tooltip=\"Link your app store account to see this data\">Link Account</a>");
+	private SafeHtml upgradeLink = SafeHtmlUtils
+			.fromTrustedString("<a style=\"cursor: pointer\" class=\"sign-up-link js-tooltip js-tooltip--right\" data-tooltip=\"Upgrade to Developer Premium to see historical data\">Upgrade</a>");
 
 	public LeaderboardRevenueCell() {
 		super("click");
@@ -63,31 +73,27 @@ public class LeaderboardRevenueCell extends AbstractCell<Rank> {
 		int position = (rank.position.intValue() > 0 ? rank.position.intValue() : rank.grossingPosition.intValue());
 		if (SessionController.get().isAdmin()) {
 			value = (rank.currency != null && rank.revenue != null ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.asWholeMoneyString(rank.currency,
-					rank.revenue.floatValue())) : SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
+					rank.revenue.floatValue())) : noDataQuestionMark);
 		} else if (SessionController.get().canSeePredictions()) {
 			value = (rank.currency != null && rank.revenue != null ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.asWholeMoneyString(rank.currency,
-					rank.revenue.floatValue())) : SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
+					rank.revenue.floatValue())) : noDataQuestionMark);
 		} else {
 			if (CalendarUtil.isSameDate(FilterHelper.getDaysAgo(2), FilterController.get().getEndDate())
 					|| NavigationController.get().getCurrentPage().equals(PageType.HomePageType)) {
 				if (position > 10 && !(SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount())) {
-					value = SafeHtmlUtils.fromSafeConstant("<a style=\"cursor: pointer\" class=\"sign-up-link\">"
-							+ (SessionController.get().isLoggedIn() ? "Link Account" : "Sign Up") + "</a>");
+					value = SessionController.get().isLoggedIn() ? linkAccountLink : signUpLink;
 				} else {
 					value = (rank.currency != null && rank.revenue != null ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.asWholeMoneyString(rank.currency,
-							rank.revenue.floatValue())) : SafeHtmlUtils
-							.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
+							rank.revenue.floatValue())) : noDataQuestionMark);
 				}
 			} else {
-				String textValue = "";
 				if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
-					textValue = "Upgrade";
+					value = upgradeLink;
 				} else if (SessionController.get().isLoggedIn()) {
-					textValue = "Link Account";
+					value = linkAccountLink;
 				} else {
-					textValue = "Sign Up";
+					value = signUpLink;
 				}
-				value = SafeHtmlUtils.fromSafeConstant("<a style=\"cursor: pointer\" class=\"sign-up-link\">" + textValue + "</a>");
 			}
 		}
 		if (value != null) {

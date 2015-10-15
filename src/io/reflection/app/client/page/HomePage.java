@@ -15,7 +15,7 @@ import io.reflection.app.api.core.client.CoreService;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
 import io.reflection.app.api.shared.datatypes.Pager;
-import io.reflection.app.client.cell.LeaderboardAppDetailsCell;
+import io.reflection.app.client.cell.AppDetailsAndPredictionCell;
 import io.reflection.app.client.cell.LeaderboardDownloadsCell;
 import io.reflection.app.client.cell.LeaderboardRevenueCell;
 import io.reflection.app.client.component.Selector;
@@ -90,6 +90,8 @@ public class HomePage extends Page {
 	private String selectedCountry = "gb";
 	@UiField Selector appStoreSelector;
 	private String selectedAppStore = "iph";
+	@UiField Selector categorySelector;
+	private String selectedCategory = "15"; // games
 	@UiField Button applyFilters;
 	@UiField Anchor viewMoreApps;
 	@UiField ErrorPanel errorPanel;
@@ -113,18 +115,23 @@ public class HomePage extends Page {
 	private LoadingIndicator loadingIndicatorPaidGrossingList = AnimationHelper.getLeaderboardListLoadingIndicator(ServiceConstants.SHORT_STEP_VALUE, false);
 
 	private HomeRankProvider homeRankProvider = new HomeRankProvider();
-	private String selectedTab = PAID_LIST_TYPE;
+	private static String selectedTab = OVERALL_LIST_TYPE;
 	private ReflectionMainStyles style = Styles.STYLES_INSTANCE.reflectionMainStyle();
 	private SignUpPopup signUpPopup = new SignUpPopup();
 
 	public HomePage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
+		if (!SessionController.get().isAdmin()) {
+			categorySelector.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
+		}
 		dateFixed.setInnerText(FormattingHelper.DATE_FORMATTER_DD_MMM_YYYY.format(FilterHelper.getDaysAgo(2)));
 		FilterHelper.addCountries(countrySelector, SessionController.get().isAdmin());
 		FilterHelper.addStores(appStoreSelector);
+		FilterHelper.addCategories(categorySelector, SessionController.get().isAdmin());
 		countrySelector.setSelectedIndex(3);
 		appStoreSelector.setSelectedIndex(1);
+		categorySelector.setSelectedIndex(0);
 
 		leaderboardHomeTable.getTableLoadingSection().addClassName(style.tableBodyLoading());
 		homeRankProvider.addDataDisplay(leaderboardHomeTable);
@@ -275,9 +282,9 @@ public class HomePage extends Page {
 		rankColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.mhxte6cID());
 		rankHeader.setHeaderStyleNames(style.mhxte6cIF());
 
-		LeaderboardAppDetailsCell appRankCell = new LeaderboardAppDetailsCell();
+		AppDetailsAndPredictionCell appDetailsCell = new AppDetailsAndPredictionCell();
 
-		paidColumn = new Column<RanksGroup, Rank>(appRankCell) {
+		paidColumn = new Column<RanksGroup, Rank>(appDetailsCell) {
 
 			@Override
 			public Rank getValue(RanksGroup object) {
@@ -286,7 +293,7 @@ public class HomePage extends Page {
 		};
 		paidColumn.setCellStyleNames(style.mhxte6ciA());
 
-		freeColumn = new Column<RanksGroup, Rank>(appRankCell) {
+		freeColumn = new Column<RanksGroup, Rank>(appDetailsCell) {
 
 			@Override
 			public Rank getValue(RanksGroup object) {
@@ -296,7 +303,7 @@ public class HomePage extends Page {
 		};
 		freeColumn.setCellStyleNames(style.mhxte6ciA());
 
-		grossingColumn = new Column<RanksGroup, Rank>(appRankCell) {
+		grossingColumn = new Column<RanksGroup, Rank>(appDetailsCell) {
 
 			@Override
 			public Rank getValue(RanksGroup object) {
@@ -418,9 +425,15 @@ public class HomePage extends Page {
 		}
 	}
 
+	public static String getSelectedTab() {
+		return selectedTab;
+	}
+
 	@UiHandler({ "countrySelector", "appStoreSelector" })
+	// "categorySelector"
 	void onFiltersChanged(ChangeEvent event) {
 		applyFilters.setEnabled(!selectedCountry.equals(countrySelector.getSelectedValue()) || !selectedAppStore.equals(appStoreSelector.getSelectedValue()));
+		// || !selectedCategory.equals(categorySelector.getSelectedValue())
 	}
 
 	@UiHandler("applyFilters")
@@ -433,6 +446,9 @@ public class HomePage extends Page {
 		if (updateData = updateData || !selectedAppStore.equals(appStoreSelector.getSelectedValue())) {
 			selectedAppStore = appStoreSelector.getSelectedValue();
 		}
+		// if (updateData = updateData || !selectedCategory.equals(categorySelector.getSelectedValue())) {
+		// selectedCategory = categorySelector.getSelectedValue();
+		// }
 		if (updateData || errorPanel.isVisible() || noDataPanel.isVisible()) {
 			applyFilters.setEnabled(false);
 			errorPanel.setVisible(false);
@@ -514,11 +530,10 @@ public class HomePage extends Page {
 			input.store = DataTypeHelper.createStore("ios");
 			input.country = DataTypeHelper.createCountry(selectedCountry);
 			input.listType = (selectedAppStore.equals(DataTypeHelper.STORE_IPHONE_A3_CODE) ? "topallapplications" : "topallipadapplications");
-
-			input.category = DataTypeHelper.createCategory(15L);
+			input.category = DataTypeHelper.createCategory(Long.valueOf(selectedCategory));
 
 			Pager pager = new Pager();
-			pager.count = 10L;
+			pager.count = Long.valueOf(10);
 			pager.start = Long.valueOf(0);
 			// pager.boundless = Boolean.FALSE;
 
