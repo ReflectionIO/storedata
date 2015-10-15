@@ -179,9 +179,12 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	private SafeHtmlHeader downloadsHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Downloads " + AnimationHelper.getSorterSvg()));
 	private SafeHtmlHeader revenueHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Revenue " + AnimationHelper.getSorterSvg()));
 	private TextHeader rankHeader = new TextHeader("Rank");
-	private TextHeader paidHeader = new TextHeader("Paid");
-	private TextHeader freeHeader = new TextHeader("Free");
-	private TextHeader grossingHeader = new TextHeader("Grossing");
+	private TextHeader paidHeader = new TextHeader("App Name");
+	private TextHeader paidHeaderAll = new TextHeader("Paid");
+	private TextHeader freeHeader = new TextHeader("App Name");
+	private TextHeader freeHeaderAll = new TextHeader("Free");
+	private TextHeader grossingHeader = new TextHeader("App Name");
+	private TextHeader grossingHeaderAll = new TextHeader("Grossing");
 	private TextHeader priceHeader = new TextHeader("Price");
 	private SafeHtmlHeader iapHeader = new SafeHtmlHeader(
 			SafeHtmlUtils
@@ -368,7 +371,9 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 			@Override
 			public void update(int index, RanksGroup object, Rank value) {
-				if (SessionController.get().isValidSession() && !SessionController.get().hasLinkedAccount()) {
+				if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
+					premiumPopup.show(true);
+				} else if (SessionController.get().isLoggedIn()) {
 					addLinkedAccountPopup.show("Link Your Appstore Account",
 							"You need to link your iTunes Connect account to use this feature, it only takes a moment");
 				} else {
@@ -390,7 +395,9 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 			@Override
 			public void update(int index, RanksGroup object, Rank value) {
-				if (SessionController.get().isValidSession() && !SessionController.get().hasLinkedAccount()) {
+				if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
+					premiumPopup.show(true);
+				} else if (SessionController.get().isLoggedIn()) {
 					addLinkedAccountPopup.show("Link Your Appstore Account",
 							"You need to link your iTunes Connect account to use this feature, it only takes a moment");
 				} else {
@@ -411,7 +418,9 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 			@Override
 			public void update(int index, RanksGroup object, Rank value) {
-				if (SessionController.get().isValidSession() && !SessionController.get().hasLinkedAccount()) {
+				if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
+					premiumPopup.show(true);
+				} else if (SessionController.get().isLoggedIn()) {
 					addLinkedAccountPopup.show("Link Your Appstore Account",
 							"You need to link your iTunes Connect account to use this feature, it only takes a moment");
 				} else {
@@ -444,7 +453,9 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 			@Override
 			public void update(int index, RanksGroup object, Rank value) {
-				if (SessionController.get().isValidSession() && !SessionController.get().hasLinkedAccount()) {
+				if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
+					premiumPopup.show(true);
+				} else if (SessionController.get().isLoggedIn()) {
 					addLinkedAccountPopup.show("Link Your Appstore Account",
 							"You need to link your iTunes Connect account to use this feature, it only takes a moment");
 				} else {
@@ -468,7 +479,9 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 			@Override
 			public void update(int index, RanksGroup object, Rank value) {
-				if (SessionController.get().isValidSession() && !SessionController.get().hasLinkedAccount()) {
+				if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
+					premiumPopup.show(true);
+				} else if (SessionController.get().isLoggedIn()) {
 					addLinkedAccountPopup.show("Link Your Appstore Account",
 							"You need to link your iTunes Connect account to use this feature, it only takes a moment");
 				} else {
@@ -541,7 +554,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 				applyFilters.setEnabled(false);
 				PageType.RanksPageType.show("view", selectedTab, FilterController.get().asRankFilterString());
 			}
-			if (errorPanel.isVisible()) {
+			if (errorPanel.isVisible() || noDataPanel.isVisible()) {
 				applyFilters.setEnabled(false);
 				updateSelectorsFromFilter();
 				loadingBar.show();
@@ -628,9 +641,9 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			leaderboardTable.setColumnWidth(freeColumn, 30.0, Unit.PCT);
 			leaderboardTable.setColumnWidth(grossingColumn, 30.0, Unit.PCT);
 			leaderboardTable.addColumn(rankColumn, rankHeader);
-			leaderboardTable.addColumn(paidColumn, paidHeader);
-			leaderboardTable.addColumn(freeColumn, freeHeader);
-			leaderboardTable.addColumn(grossingColumn, grossingHeader);
+			leaderboardTable.addColumn(paidColumn, paidHeaderAll);
+			leaderboardTable.addColumn(freeColumn, freeHeaderAll);
+			leaderboardTable.addColumn(grossingColumn, grossingHeaderAll);
 			leaderboardTable.setLoadingIndicator(loadingIndicatorAll);
 			break;
 		case PAID_LIST_TYPE:
@@ -823,10 +836,10 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			} catch (Exception e) {
 				downloadLeaderboard.setStatusError();
 			}
-		} else if (!SessionController.get().canSeePredictions()) {
+		} else if (SessionController.get().isLoggedIn() && !SessionController.get().hasLinkedAccount()) {
 			addLinkedAccountPopup
 					.show("Link Your Appstore Account", "You need to link your iTunes Connect account to use this feature, it only takes a moment");
-		} else if (SessionController.get().isValidSession()) {
+		} else if (SessionController.get().isLoggedIn()) {
 			premiumPopup.show(true);
 		} else {
 			signUpPopup.show();
@@ -975,6 +988,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 				leaderboardTable.setVisible(false);
 				noDataPanel.setVisible(true);
 				viewAllBtn.setVisible(false);
+				applyFilters.setEnabled(true);
 			}
 			loadingBar.hide(true);
 		} else {

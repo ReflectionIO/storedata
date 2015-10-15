@@ -365,70 +365,6 @@ public final class Core extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
-			boolean isAdmin = false;
-			boolean isPremium = false;
-			boolean isStandardDeveloper = false;
-			boolean canSeePredictions = false;
-			boolean isLoggedIn = false;
-
-			if (input.session != null) {
-				output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
-
-				isLoggedIn = true;
-
-				List<Role> roles = UserServiceProvider.provide().getUserRoles(input.session.user);
-				RoleServiceProvider.provide().inflateRoles(roles);
-				List<Permission> permissions;
-				for (Role role : roles) {
-					if (DataTypeHelper.ROLE_ADMIN_CODE.equals(role.code)) {
-						isAdmin = true;
-						canSeePredictions = true;
-					} else if (DataTypeHelper.ROLE_PREMIUM_CODE.equals(role.code)) {
-						isPremium = true;
-					} else if (DataTypeHelper.ROLE_DEVELOPER_CODE.equals(role.code)) {
-						isStandardDeveloper = true;
-					}
-
-					permissions = RoleServiceProvider.provide().getPermissions(role); // Role permissions
-					permissions.addAll(UserServiceProvider.provide().getPermissions(input.session.user)); // Add permissions of the user
-					PermissionServiceProvider.provide().inflatePermissions(permissions);
-					for (Permission permission : permissions) {
-						if (isPremium || isStandardDeveloper || DataTypeHelper.ROLE_FIRST_CLOSED_BETA_CODE.equals(role.code)) {
-							if (DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE.equals(permission.code)) {
-								canSeePredictions = true;
-								break;
-							}
-						}
-						if (canSeePredictions) {
-							break;
-						}
-					}
-
-				}
-			}
-
-			input.pager = ValidationHelper.validatePager(input.pager, "input");
-
-			if (input.pager.sortDirection == null) {
-				input.pager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
-			}
-
-			// if (!isLoggedIn) { // Force date to 2 days ago if is public call
-			// input.on = new DateTime(DateTimeZone.UTC).minusDays(2).toDate();
-			// }
-
-			if (!isAdmin) {
-				if (!(Arrays.asList("fr", "de", "gb", "it").contains(input.country.a2Code))) {
-					input.country = new Country();
-					input.country.a2Code = "gb";
-				}
-				input.store = new Store();
-				input.store.a3Code = DataTypeHelper.IOS_STORE_A3;
-				input.category = new Category();
-				input.category.id = 15L;
-			}
-			input.country = ValidationHelper.validateCountry(input.country, "input");
-
 			if (input.listType == null)
 				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("String: input.listType"));
 
@@ -449,6 +385,67 @@ public final class Core extends ActionHandler {
 					throw new InputValidationException(ApiError.CategoryStoreMismatch.getCode(), ApiError.CategoryStoreMismatch.getMessage("input.category"));
 			}
 
+			input.pager = ValidationHelper.validatePager(input.pager, "input");
+			if (input.pager.sortDirection == null) {
+				input.pager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
+			}
+
+			boolean isAdmin = false;
+			boolean isPremium = false;
+			boolean isStandardDeveloper = false;
+			boolean canSeePredictions = (DateTimeComparator.getDateOnlyInstance().compare(input.on, new DateTime().minusDays(2)) == 0);
+			boolean isLoggedIn = false;
+
+			if (input.session != null) {
+				output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+				isLoggedIn = true;
+
+				List<Role> roles = UserServiceProvider.provide().getUserRoles(input.session.user);
+				RoleServiceProvider.provide().inflateRoles(roles);
+				List<Permission> permissions;
+				for (Role role : roles) {
+					if (DataTypeHelper.ROLE_ADMIN_CODE.equals(role.code)) {
+						isAdmin = true;
+						canSeePredictions = true;
+						break;
+					} else if (DataTypeHelper.ROLE_PREMIUM_CODE.equals(role.code)) {
+						isPremium = true;
+					} else if (DataTypeHelper.ROLE_DEVELOPER_CODE.equals(role.code)) {
+						isStandardDeveloper = true;
+					}
+
+					permissions = RoleServiceProvider.provide().getPermissions(role); // Role permissions
+					permissions.addAll(UserServiceProvider.provide().getPermissions(input.session.user)); // Add permissions of the user
+					PermissionServiceProvider.provide().inflatePermissions(permissions);
+					for (Permission permission : permissions) {
+						if (isPremium || DataTypeHelper.ROLE_FIRST_CLOSED_BETA_CODE.equals(role.code)) {
+							if (DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE.equals(permission.code)) {
+								canSeePredictions = true;
+								break;
+							}
+						}
+					}
+
+				}
+			}
+
+			// if (!isLoggedIn) { // Force date to 2 days ago if is public call
+			// input.on = new DateTime(DateTimeZone.UTC).minusDays(2).toDate();
+			// }
+
+			if (!isAdmin) {
+				if (!(Arrays.asList("fr", "de", "gb", "it").contains(input.country.a2Code))) {
+					input.country = new Country();
+					input.country.a2Code = "gb";
+				}
+				input.store = new Store();
+				input.store.a3Code = DataTypeHelper.IOS_STORE_A3;
+				input.category = new Category();
+				input.category.id = 15L;
+			}
+			input.country = ValidationHelper.validateCountry(input.country, "input");
+
 			Collector collector = CollectorFactory.getCollectorForStore(input.store.a3Code);
 
 			Set<String> itemIds = new HashSet<String>();
@@ -464,8 +461,7 @@ public final class Core extends ActionHandler {
 					for (Rank rank : ranks) {
 						itemIds.add(rank.itemId);
 						int ranking = (collector.isGrossing(listType) ? rank.grossingPosition.intValue() : rank.position.intValue());
-						if ((!canSeePredictions && ranking > 10)
-								|| (!canSeePredictions && DateTimeComparator.getDateOnlyInstance().compare(input.on, new DateTime().minusDays(2)) != 0)) {
+						if (!canSeePredictions || (!isLoggedIn && ranking > 10)) {
 							rank.downloads = null;
 							rank.revenue = null;
 						}
@@ -485,11 +481,11 @@ public final class Core extends ActionHandler {
 						output.grossingRanks = ranks;
 					}
 				}
-			} else if (collector.isFree(input.listType)) { // used only for download
+			} else if (collector.isFree(input.listType)) {
 				ranks = RankServiceProvider.provide().getRanks(input.country, input.category, input.listType, input.on);
 				for (Rank rank : ranks) {
 					itemIds.add(rank.itemId);
-					if (!isAdmin || !isPremium) {
+					if (!canSeePredictions || (!isLoggedIn && rank.position.intValue() > 10)) {
 						rank.downloads = null;
 						rank.revenue = null;
 					}
@@ -500,9 +496,15 @@ public final class Core extends ActionHandler {
 				ranks = RankServiceProvider.provide().getRanks(input.country, input.category, input.listType, input.on);
 				for (Rank rank : ranks) {
 					itemIds.add(rank.itemId);
-					if (!isAdmin || !isPremium) { // used only for download
+					if (!canSeePredictions || (!isLoggedIn && rank.position.intValue() > 10)) {
 						rank.downloads = null;
 						rank.revenue = null;
+					}
+					if (!isAdmin && !input.country.a2Code.equals("gb")) {// Remove paid ranks if not UK
+						for (Rank paidRank : output.paidRanks) {
+							paidRank.downloads = null;
+							paidRank.revenue = null;
+						}
 					}
 				}
 				output.paidRanks = ranks;
@@ -511,7 +513,7 @@ public final class Core extends ActionHandler {
 				ranks = RankServiceProvider.provide().getRanks(input.country, input.category, input.listType, input.on);
 				for (Rank rank : ranks) {
 					itemIds.add(rank.itemId);
-					if (!isAdmin || !isPremium) { // used only for download
+					if (!canSeePredictions || (!isLoggedIn && rank.grossingPosition.intValue() > 10)) {
 						rank.downloads = null;
 						rank.revenue = null;
 					}
@@ -2026,7 +2028,8 @@ public final class Core extends ActionHandler {
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
-
+			input.session.user = UserServiceProvider.provide().getUser(input.session.user.id); // Inflate user
+			
 			input.role = ValidationHelper.validateRole(input.role, "input.role");
 
 			Role devRole = RoleServiceProvider.provide().getCodeRole(DataTypeHelper.ROLE_DEVELOPER_CODE);
