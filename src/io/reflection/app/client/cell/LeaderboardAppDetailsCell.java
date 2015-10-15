@@ -95,7 +95,7 @@ public class LeaderboardAppDetailsCell extends AbstractCell<Rank> {
 	public void render(Context context, Rank rank, SafeHtmlBuilder builder) {
 
 		String displayLink = "";
-		String displayLinkText = "margin-bottom: 6px;display: block;font-weight: 700;line-height: 1.2;color: #363A45;text-overflow: ellipsis;overflow: hidden;";
+		String displayLinkText = "";
 
 		if (SessionController.get().isAdmin()) {
 			displayLinkText = "display:none";
