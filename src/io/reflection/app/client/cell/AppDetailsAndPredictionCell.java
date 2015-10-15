@@ -45,11 +45,11 @@ import com.google.gwt.user.datepicker.client.CalendarUtil;
  * @author billy1380
  *
  */
-public class LeaderboardAppDetailsCell extends AbstractCell<Rank> {
+public class AppDetailsAndPredictionCell extends AbstractCell<Rank> {
 
 	@UiField AnchorElement appLink;
 
-	public LeaderboardAppDetailsCell() {
+	public AppDetailsAndPredictionCell() {
 		super("click");
 	}
 

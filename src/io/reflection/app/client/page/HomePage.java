@@ -15,7 +15,7 @@ import io.reflection.app.api.core.client.CoreService;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
 import io.reflection.app.api.shared.datatypes.Pager;
-import io.reflection.app.client.cell.LeaderboardAppDetailsCell;
+import io.reflection.app.client.cell.AppDetailsAndPredictionCell;
 import io.reflection.app.client.cell.LeaderboardDownloadsCell;
 import io.reflection.app.client.cell.LeaderboardRevenueCell;
 import io.reflection.app.client.component.Selector;
@@ -275,9 +275,9 @@ public class HomePage extends Page {
 		rankColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.mhxte6cID());
 		rankHeader.setHeaderStyleNames(style.mhxte6cIF());
 
-		LeaderboardAppDetailsCell appRankCell = new LeaderboardAppDetailsCell();
+		AppDetailsAndPredictionCell appDetailsCell = new AppDetailsAndPredictionCell();
 
-		paidColumn = new Column<RanksGroup, Rank>(appRankCell) {
+		paidColumn = new Column<RanksGroup, Rank>(appDetailsCell) {
 
 			@Override
 			public Rank getValue(RanksGroup object) {
@@ -286,7 +286,7 @@ public class HomePage extends Page {
 		};
 		paidColumn.setCellStyleNames(style.mhxte6ciA());
 
-		freeColumn = new Column<RanksGroup, Rank>(appRankCell) {
+		freeColumn = new Column<RanksGroup, Rank>(appDetailsCell) {
 
 			@Override
 			public Rank getValue(RanksGroup object) {
@@ -296,7 +296,7 @@ public class HomePage extends Page {
 		};
 		freeColumn.setCellStyleNames(style.mhxte6ciA());
 
-		grossingColumn = new Column<RanksGroup, Rank>(appRankCell) {
+		grossingColumn = new Column<RanksGroup, Rank>(appDetailsCell) {
 
 			@Override
 			public Rank getValue(RanksGroup object) {
