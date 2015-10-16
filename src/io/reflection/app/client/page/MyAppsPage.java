@@ -135,6 +135,7 @@ public class MyAppsPage extends Page
 	public MyAppsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
+		applyFilters.getElement().setAttribute("data-tooltip", "Update results");
 		FilterHelper.addStores(appStore, true);
 		FilterHelper.addCountries(country, SessionController.get().isAdmin());
 
@@ -285,7 +286,7 @@ public class MyAppsPage extends Page
 				if (object.overallPosition != null) {
 					if (object.overallPosition.equals(MyApp.UNKNOWN_VALUE)) {
 						return SafeHtmlUtils.fromTrustedString(
-								"<span class=\"js-tooltip whats-this-tooltip-icon-static\" data-tooltip=\"No data available\">-</span>");
+								"<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
 					} else {
 						return SafeHtmlUtils.fromSafeConstant(object.overallPosition);
 					}

@@ -202,6 +202,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		initWidget(uiBinder.createAndBindUi(this));
 
 		dailyDataContainer.removeFromParent();
+		applyFilters.getElement().setAttribute("data-tooltip", "Update results");
 
 		if (!SessionController.get().isAdmin()) {
 			categorySelector.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
@@ -280,7 +281,6 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 		dateSelectContainer.addClassName("js-tooltip");
 		dateSelectContainer.setAttribute("data-tooltip", "Select a date");
-		TooltipHelper.updateHelperTooltip();
 
 		loadingBar.show();
 
@@ -300,6 +300,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		});
 
 		updateSelectorsFromFilter();
+		TooltipHelper.updateHelperTooltip();
 
 	}
 

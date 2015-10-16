@@ -219,6 +219,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	public ItemPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
+		applyFilters.getElement().setAttribute("data-tooltip", "Update results");
 		chartContainer.getElement().getStyle().setPosition(Position.RELATIVE);
 
 		tabs.put(REVENUE_CHART_TYPE, revenueItem);

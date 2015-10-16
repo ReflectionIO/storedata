@@ -122,6 +122,7 @@ public class HomePage extends Page {
 	public HomePage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
+		applyFilters.getElement().setAttribute("data-tooltip", "Update results");
 		if (!SessionController.get().isAdmin()) {
 			categorySelector.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
 		}
