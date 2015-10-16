@@ -10,6 +10,8 @@ package io.reflection.app.service.sale;
 
 import static com.spacehopperstudios.utility.StringUtils.*;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
@@ -123,44 +125,6 @@ final class SaleService implements ISaleService {
 		sale.category = stripslashes(connection.getCurrentRowString("category"));
 
 		return sale;
-	}
-
-	@Override
-	public Sale addSale(Sale sale) throws DataAccessException {
-		Sale addedSale = null;
-
-		// TODO: sort out nullable values
-
-		final String addSaleQuery = String
-				.format(
-						"INSERT INTO `sale` (`dataaccountid`,`itemid`,`country`,`sku`,`developer`,`title`,`version`,`typeidentifier`,`units`,`proceeds`,`currency`,`begin`,`end`,`customercurrency`,`customerprice`,`promocode`,`parentidentifier`,`subscription`,`period`,`category`) VALUES (%d,%d,'%s','%s','%s','%s','%s','%s',%d,%d,'%s',FROM_UNIXTIME(%d),FROM_UNIXTIME(%d),'%s',%d,'%s','%s','%s','%s','%s')",
-						sale.account.id.longValue(), sale.item.id.longValue(), addslashes(sale.country), addslashes(sale.sku), addslashes(sale.developer),
-						addslashes(sale.title), addslashes(sale.version), addslashes(sale.typeIdentifier), sale.units.intValue(),
-						(int) (sale.proceeds.floatValue() * 100.0f), addslashes(sale.currency), sale.begin.getTime() / 1000, sale.end.getTime() / 1000,
-						addslashes(sale.customerCurrency), (int) (sale.customerPrice.floatValue() * 100.0f), addslashes(sale.promoCode),
-						addslashes(sale.parentIdentifier), addslashes(sale.subscription), addslashes(sale.period), addslashes(sale.category));
-
-		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
-
-		try {
-			saleConnection.connect();
-			saleConnection.executeQuery(addSaleQuery);
-
-			if (saleConnection.getAffectedRowCount() > 0) {
-				addedSale = getSale(Long.valueOf(saleConnection.getInsertedId()));
-
-				if (addedSale == null) {
-					addedSale = sale;
-					addedSale.id = Long.valueOf(saleConnection.getInsertedId());
-				}
-			}
-		} finally {
-			if (saleConnection != null) {
-				saleConnection.disconnect();
-			}
-		}
-
-		return addedSale;
 	}
 
 	@Override
@@ -314,37 +278,63 @@ final class SaleService implements ISaleService {
 	 */
 	@Override
 	public Long addSalesBatch(Collection<Sale> sales) throws DataAccessException {
+		String insertSql = "INSERT INTO `sale` ("
+				+ " `dataaccountid`,`itemid`,`country`,"
+				+ " `sku`,`parentidentifier`,"
+				+ " `developer`,`title`,`version`,"
+				+ " `typeidentifier`,`units`,`proceeds`,`customerprice`,"
+				+ " `currency`,`customercurrency`,"
+				+ " `begin`,`end`,"
+				+ " `promocode`,`subscription`,`period`,`category`) "
+				+ " VALUES ("
+				+ " ?, ?, ?,"
+				+ " ?, ?,"
+				+ " ?, ?, ?,"
+				+ " ?, ?, ?, ?,"
+				+ " ?, ?,"
+				+ " ?, ?,"
+				+ " ?, ?, ?, ?)";
+
 		Long addedSalesBatchCount = Long.valueOf(0);
-
-		// TODO: sort out nullable values
-
-		StringBuffer addSalesBatchQuery = new StringBuffer();
-
-		addSalesBatchQuery
-		.append(
-				"INSERT INTO `sale` (`dataaccountid`,`itemid`,`country`,`sku`,`developer`,`title`,`version`,`typeidentifier`,`units`,`proceeds`,`currency`,`begin`,`end`,`customercurrency`,`customerprice`,`promocode`,`parentidentifier`,`subscription`,`period`,`category`) VALUES");
-
-		for (Sale sale : sales) {
-			if (addSalesBatchQuery.charAt(addSalesBatchQuery.length() - 1) != 'S') {
-				addSalesBatchQuery.append(",");
-			}
-
-			addSalesBatchQuery.append(String.format(
-					"(%d,%s,'%s','%s','%s','%s','%s','%s',%d,%d,'%s',FROM_UNIXTIME(%d),FROM_UNIXTIME(%d),'%s',%d,'%s','%s','%s','%s','%s')",
-					sale.account.id.longValue(), sale.item.internalId == null ? "NULL" : "'" + sale.item.internalId + "'", addslashes(sale.country),
-							addslashes(sale.sku), addslashes(sale.developer), addslashes(sale.title), addslashes(sale.version), addslashes(sale.typeIdentifier),
-							sale.units.intValue(), (int) (sale.proceeds.floatValue() * 100.0f), addslashes(sale.currency), sale.begin.getTime() / 1000,
-							sale.end.getTime() / 1000, addslashes(sale.customerCurrency), (int) (sale.customerPrice.floatValue() * 100.0f), addslashes(sale.promoCode),
-							addslashes(sale.parentIdentifier), addslashes(sale.subscription), addslashes(sale.period), addslashes(sale.category)));
-		}
-
 		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
 
 		try {
 			saleConnection.connect();
-			saleConnection.executeQuery(addSalesBatchQuery.toString());
+			PreparedStatement pstat = saleConnection.getRealConnection().prepareStatement(insertSql);
 
-			addedSalesBatchCount = Long.valueOf(saleConnection.getAffectedRowCount());
+			for (Sale sale : sales) {
+				int paramCount = 1;
+
+				pstat.setLong(paramCount++, sale.account.id);
+				pstat.setString(paramCount++, sale.item.internalId);
+				pstat.setString(paramCount++, sale.country);
+				pstat.setString(paramCount++, sale.sku);
+				pstat.setString(paramCount++, sale.parentIdentifier);
+				pstat.setString(paramCount++, sale.developer);
+				pstat.setString(paramCount++, sale.title);
+				pstat.setString(paramCount++, sale.version);
+				pstat.setString(paramCount++, sale.typeIdentifier);
+				pstat.setInt(paramCount++, sale.units);
+				pstat.setInt(paramCount++, (int) (sale.proceeds * 100f));
+				pstat.setInt(paramCount++, (int) (sale.customerPrice * 100f));
+				pstat.setString(paramCount++, sale.currency);
+				pstat.setString(paramCount++, sale.customerCurrency);
+				pstat.setDate(paramCount++, new java.sql.Date(sale.begin.getTime()));
+				pstat.setDate(paramCount++, new java.sql.Date(sale.end.getTime()));
+				pstat.setString(paramCount++, sale.promoCode);
+				pstat.setString(paramCount++, sale.subscription);
+				pstat.setString(paramCount++, sale.period);
+				pstat.setString(paramCount++, sale.category);
+
+				pstat.addBatch();
+				addedSalesBatchCount++;
+
+				if (addedSalesBatchCount % 500 == 0 || addedSalesBatchCount == sales.size()) {
+					pstat.executeBatch();
+				}
+			}
+		} catch (SQLException e) {
+			throw new DataAccessException(e);
 		} finally {
 			if (saleConnection != null) {
 				saleConnection.disconnect();
@@ -386,11 +376,11 @@ final class SaleService implements ISaleService {
 
 			if (pager.sortDirection != null) {
 				switch (pager.sortDirection) {
-				case SortDirectionTypeAscending:
-					sortDirectionQuery = "ASC";
-					break;
-				default:
-					break;
+					case SortDirectionTypeAscending:
+						sortDirectionQuery = "ASC";
+						break;
+					default:
+						break;
 				}
 			}
 
@@ -491,11 +481,11 @@ final class SaleService implements ISaleService {
 
 			if (pager.sortDirection != null) {
 				switch (pager.sortDirection) {
-				case SortDirectionTypeAscending:
-					sortDirectionQuery = "ASC";
-					break;
-				default:
-					break;
+					case SortDirectionTypeAscending:
+						sortDirectionQuery = "ASC";
+						break;
+					default:
+						break;
 				}
 			}
 

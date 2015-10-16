@@ -66,11 +66,6 @@ public interface ISaleService extends IService {
 	 */
 	public Sale getSale(Long id) throws DataAccessException;
 
-	/**
-	 * @param sale
-	 * @return
-	 */
-	public Sale addSale(Sale sale) throws DataAccessException;
 
 	/**
 	 * @param sale
