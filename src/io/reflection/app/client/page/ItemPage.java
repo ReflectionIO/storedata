@@ -634,8 +634,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				applyFilters.setEnabled(false);
 				PageType.ItemPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, displayingAppId, selectedTab, comingPage, FilterController.get()
 						.asItemFilterString());
-			}
-			if (errorPanel.isVisible() || noDataPanel.isVisible()) {
+			} else if (errorPanel.isVisible() || noDataPanel.isVisible()) {
 				applyFilters.setEnabled(false);
 				updateSelectorsFromFilter();
 				infoTotalRevenue.setInnerSafeHtml(AnimationHelper.getLoaderInlineSafeHTML());

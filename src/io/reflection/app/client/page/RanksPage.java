@@ -554,8 +554,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			if (updateData) {
 				applyFilters.setEnabled(false);
 				PageType.RanksPageType.show("view", selectedTab, FilterController.get().asRankFilterString());
-			}
-			if (errorPanel.isVisible() || noDataPanel.isVisible()) {
+			} else if (errorPanel.isVisible() || noDataPanel.isVisible()) {
 				applyFilters.setEnabled(false);
 				updateSelectorsFromFilter();
 				loadingBar.show();

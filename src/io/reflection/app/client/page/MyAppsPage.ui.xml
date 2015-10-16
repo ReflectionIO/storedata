@@ -16,7 +16,7 @@
 			class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.pageFunctions} {STYLES_INSTANCE.reflectionMainStyle.overflowVisible}">
 			<form class="{STYLES_INSTANCE.reflectionMainStyle.overflowVisible}">
 
-				<c:Selector ui:field="accountName" overlay="true" alignRight="" labelText="Account Name" dropdownTitle="Select an account" />
+				<c:Selector ui:field="accountNameSelector" overlay="true" alignRight="" labelText="Account Name" dropdownTitle="Select an account" />
 
 			</form>
 		</div>
@@ -27,10 +27,10 @@
 
 				<c:DateSelector ui:field="dateSelector" tooltip="Select a date range" />
 
-				<c:Selector ui:field="appStore" overlay="true" alignRight="" labelText="App Store" dropdownTitle="Select a store"
+				<c:Selector ui:field="appStoreSelector" overlay="true" alignRight="" labelText="App Store" dropdownTitle="Select a store"
 					styleName="{STYLES_INSTANCE.reflectionMainStyle.storeSelect}" tooltip="View data for iPhone or iPad" />
 
-				<c:Selector ui:field="country" overlay="true" alignCenter="" labelText="Country" dropdownTitle="Select a country"
+				<c:Selector ui:field="countrySelector" overlay="true" alignCenter="" labelText="Country" dropdownTitle="Select a country"
 					styleName="{STYLES_INSTANCE.reflectionMainStyle.countrySelect}" tooltip="Select a country" />
 
 				<g:Button ui:field="applyFilters" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaSmall} {STYLES_INSTANCE.reflectionMainStyle.refreshButton} js-tooltip js-tooltip--right">
