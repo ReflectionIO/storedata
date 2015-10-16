@@ -83,6 +83,7 @@ import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Style.Visibility;
+import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -626,13 +627,54 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 					|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getStartTime().longValue()), dateSelector.getDateBoxFromValue())) {
 				FilterController.get().getFilter().setEndTime(dateSelector.getDateBoxToValue().getTime());
 				FilterController.get().getFilter().setStartTime(dateSelector.getDateBoxFromValue().getTime());
-				dateSelector.setValue(new DateRange(dateSelector.getDateBoxFromValue(), dateSelector.getDateBoxToValue()), false);
+				dateSelector.setValue(new DateRange(dateSelector.getDateBoxFromValue(), dateSelector.getDateBoxToValue()), true);
 			}
 			if (updateData) {
+				applyFilters.setEnabled(false);
 				PageType.ItemPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, displayingAppId, selectedTab, comingPage, FilterController.get()
 						.asItemFilterString());
 			}
+			if (errorPanel.isVisible() || noDataPanel.isVisible()) {
+				applyFilters.setEnabled(false);
+				updateSelectorsFromFilter();
+				infoTotalRevenue.setInnerSafeHtml(AnimationHelper.getLoaderInlineSafeHTML());
+				displayingApp.currency = null;
+				displayingApp.price = null;
+				price.setInnerSafeHtml(AnimationHelper.getLoaderInlineSafeHTML());
+				errorPanel.setVisible(false);
+				noDataPanel.setVisible(false);
+				chartContainer.setVisible(true);
+				graphContainer.addClassName(style.isLoading());
+				chartRevenue.setLoading(true);
+				chartDownloads.setLoading(true);
+				chartRank.setLoading(true);
+				revenueTable.setLoadingIndicator(AnimationHelper.getAppRevenueLoadingIndicator(CalendarUtil.getDaysBetween(dateSelector.getValue().getFrom(),
+						dateSelector.getValue().getTo()) + 1));
+				revenueTable.setRowCount(0, false);
+				dateHeader.setHeaderStyleNames(style.canBeSorted());
+				revenueHeader.setHeaderStyleNames(style.canBeSorted());
+				revenueForPeriodHeader.setHeaderStyleNames(style.canBeSorted());
+				// loadingBar.show();
+				getChartData();
+				previousFilter = FilterController.get().asItemFilterString();
+			}
 		}
+	}
+
+	@UiHandler({ "countrySelector", "appStoreSelector" })
+	void onFiltersChanged(ChangeEvent event) {
+		applyFilters.setEnabled(!FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
+				|| !FilterController.get().getFilter().getStoreA3Code().equals(appStoreSelector.getSelectedValue())
+				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateSelector.getDateBoxToValue())
+				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getStartTime().longValue()), dateSelector.getDateBoxFromValue()));
+	}
+
+	@UiHandler("dateSelector")
+	void onDateSelectorChanged(ValueChangeEvent<DateRange> event) {
+		applyFilters.setEnabled(!FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
+				|| !FilterController.get().getFilter().getStoreA3Code().equals(appStoreSelector.getSelectedValue())
+				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateSelector.getDateBoxToValue())
+				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getStartTime().longValue()), dateSelector.getDateBoxFromValue()));
 	}
 
 	/*
@@ -1012,11 +1054,13 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				revenueTable.setRowCount(0, true);
 				chartContainer.setVisible(false);
 				noDataPanel.setVisible(true);
+				applyFilters.setEnabled(true);
 			}
 			TooltipHelper.updateHelperTooltip();
 			// loadingBar.hide(true);
 		} else {
 			setError();
+			applyFilters.setEnabled(true);
 		}
 	}
 
@@ -1030,7 +1074,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public void getItemRanksFailure(GetItemRanksRequest input, Throwable caught) {
 		setError();
-
+		applyFilters.setEnabled(true);
 	}
 
 	/*
@@ -1061,9 +1105,11 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				revenueTable.setRowCount(0, true);
 				chartContainer.setVisible(false);
 				noDataPanel.setVisible(true);
+				applyFilters.setEnabled(true);
 			}
 		} else {
 			setError();
+			applyFilters.setEnabled(true);
 		}
 	}
 
@@ -1076,6 +1122,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public void getItemSalesRanksFailure(GetItemSalesRanksRequest input, Throwable caught) {
 		setError();
+		applyFilters.setEnabled(true);
 	}
 
 	/*
@@ -1099,6 +1146,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			}
 		} else {
 			setError();
+			applyFilters.setEnabled(true);
 		}
 	}
 
@@ -1111,6 +1159,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public void getLinkedAccountItemFailure(GetLinkedAccountItemRequest input, Throwable caught) {
 		setError();
+		applyFilters.setEnabled(true);
 	}
 
 	/*

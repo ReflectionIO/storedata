@@ -64,8 +64,10 @@ public class DownloadLeaderboard extends HttpServlet {
 			getAllTopItemsRequest.on = new Date(Long.valueOf(req.getParameter("date")).longValue());
 			getAllTopItemsRequest.store = new Store();
 			getAllTopItemsRequest.store.a3Code = DataTypeHelper.IOS_STORE_A3;
+			
 			ValidationHelper.validateAuthorised(getAllTopItemsRequest.session.user, RoleServiceProvider.provide().getRole(3L), RoleServiceProvider.provide()
 					.getRole(DataTypeHelper.ROLE_ADMIN_ID));
+			// TODO check hla permission if not admin
 			// String fileName = "\"" + getAllTopItemsRequest.country.a2Code + "_" + getAllTopItemsRequest.store.a3Code + "_" +
 			// getAllTopItemsRequest.on.toString()
 			// + ".csv\"";
