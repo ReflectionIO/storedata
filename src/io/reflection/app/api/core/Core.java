@@ -419,11 +419,9 @@ public final class Core extends ActionHandler {
 					permissions.addAll(UserServiceProvider.provide().getPermissions(input.session.user)); // Add permissions of the user
 					PermissionServiceProvider.provide().inflatePermissions(permissions);
 					for (Permission permission : permissions) {
-						if (isPremium || DataTypeHelper.ROLE_FIRST_CLOSED_BETA_CODE.equals(role.code)) {
-							if (DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE.equals(permission.code)) {
-								canSeePredictions = true;
-								break;
-							}
+						if (isPremium && DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE.equals(permission.code)) {
+							canSeePredictions = true;
+							break;
 						}
 					}
 
@@ -2029,7 +2027,7 @@ public final class Core extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 			input.session.user = UserServiceProvider.provide().getUser(input.session.user.id); // Inflate user
-			
+
 			input.role = ValidationHelper.validateRole(input.role, "input.role");
 
 			Role devRole = RoleServiceProvider.provide().getCodeRole(DataTypeHelper.ROLE_DEVELOPER_CODE);

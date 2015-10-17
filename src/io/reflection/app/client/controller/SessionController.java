@@ -346,7 +346,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	}
 
 	public boolean canSeePredictions() {
-		return isAdmin() || (hasLinkedAccount() && (isPremiumDeveloper() || loggedInUserIs(DataTypeHelper.ROLE_FIRST_CLOSED_BETA_CODE)));
+		return isAdmin() || (hasLinkedAccount() && isPremiumDeveloper());
 	}
 
 	/**
