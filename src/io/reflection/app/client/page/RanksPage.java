@@ -764,7 +764,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	@UiHandler("downloadLeaderboard")
 	void onDownloadLeaderboardClicked(ClickEvent event) {
 		event.preventDefault();
-		if ((SessionController.get().isPremiumDeveloper() && SessionController.get().hasLinkedAccount()) || SessionController.get().isAdmin()) {
+		if (SessionController.get().canSeePredictions()) {
 			downloadLeaderboard.setStatusLoading("Downloading");
 			Filter filter = FilterController.get().getFilter();
 			String listType;
