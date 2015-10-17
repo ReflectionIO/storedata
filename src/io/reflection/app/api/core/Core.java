@@ -1282,8 +1282,8 @@ public final class Core extends ActionHandler {
 
 			DataAccountCollectorFactory.getCollectorForSource(input.source.a3Code).validateProperties(input.properties);
 
-			// If not a test user, check if is a valid Apple linked account
-			Role testRole = RoleServiceProvider.provide().getCodeRole(DataTypeHelper.ROLE_TEST_CODE);
+			// If not an Admin, check if is a valid Apple linked account
+			Role testRole = RoleServiceProvider.provide().getCodeRole(DataTypeHelper.ROLE_ADMIN_CODE);
 			if (!UserServiceProvider.provide().hasRole(input.session.user, testRole)) {
 				DataAccount dataAccountToTest = new DataAccount();
 
