@@ -60,6 +60,7 @@ public class Selector extends Composite implements HasChangeHandlers {
 	@UiField UListElement uListElem;
 	@UiField Anchor closeLink;
 	@UiField SpanElement spanSelectLabel;
+	private String spanSelectLabelDefault;
 	@UiField SpanElement spanOptionLabel;
 	@UiField DivElement listContainer;
 	private List<LIElement> itemList = new ArrayList<LIElement>(); // List of items excluded the placeholder
@@ -147,6 +148,7 @@ public class Selector extends Composite implements HasChangeHandlers {
 	}
 
 	public void setLabelText(String text) {
+		spanSelectLabelDefault = text;
 		selectElem.getFirstChildElement().setInnerText(text);
 		spanSelectLabel.setInnerText(text);
 		if ("".equals(selectElem.getAttribute("data-title"))) {
@@ -279,6 +281,7 @@ public class Selector extends Composite implements HasChangeHandlers {
 
 	public void clear() {
 		spanSelectLabel.removeClassName(style.isActivated());
+		spanSelectLabel.setInnerText(spanSelectLabelDefault);
 		for (int i = 1; i < selectElem.getOptions().getLength(); i++) {
 			selectElem.remove(i);
 		}
