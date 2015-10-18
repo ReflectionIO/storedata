@@ -1315,7 +1315,7 @@ final class UserService implements IUserService {
 	 * io.reflection.app.datatypes.shared.DataAccount)
 	 */
 	@Override
-	public void deleteDataAccount(User user, DataAccount dataAccount) throws DataAccessException {
+	public void deleteUserDataAccount(User user, DataAccount dataAccount) throws DataAccessException {
 
 		String deleteDataAccountQuery = String.format("UPDATE `userdataaccount` SET `deleted`='y' WHERE `dataaccountid`=%d AND `userid`=%d AND `deleted`='n'",
 				dataAccount.id.longValue(), user.id.longValue());

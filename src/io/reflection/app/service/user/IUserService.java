@@ -338,7 +338,7 @@ public interface IUserService extends IService {
 	 * @param dataAccount
 	 * @throws DataAccessException
 	 */
-	public void deleteDataAccount(User user, DataAccount dataAccount) throws DataAccessException;
+	public void deleteUserDataAccount(User user, DataAccount dataAccount) throws DataAccessException;
 
 	/**
 	 * 
