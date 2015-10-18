@@ -368,6 +368,14 @@ public class Selector extends Composite implements HasChangeHandlers {
 		isReadOnly = readOnly;
 	}
 
+	public List<String> getAllValues() {
+		List<String> values = new ArrayList<String>();
+		for (int i = 0; i < getItemCount(); i++) {
+			values.add(getValue(i));
+		}
+		return values;
+	}
+
 	@Override
 	public void setStyleName(String style) {
 		setStyleName(style, true);
