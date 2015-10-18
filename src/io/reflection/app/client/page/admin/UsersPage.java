@@ -28,7 +28,6 @@ import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.User;
-import io.reflection.app.shared.util.DataTypeHelper;
 import io.reflection.app.shared.util.FormattingHelper;
 
 import com.google.gwt.cell.client.FieldUpdater;
@@ -44,6 +43,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -180,13 +180,15 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 			@Override
 			public void update(int index, final User object, String value) {
 				switch (value) {
-				case "Make test":
-					UserController.get().assignUserRoleCode(object.id, DataTypeHelper.ROLE_TEST_CODE);
+				case "Revoke PREMIUM":
+					// UserController.get().revokeUserRoleCode(object.id, DataTypeHelper.ROLE_PREMIUM_CODE);
+					Window.alert("TODO");
 					break;
-				case "Add to beta":
-					UserController.get().assignUserRoleCode(object.id, DataTypeHelper.ROLE_FIRST_CLOSED_BETA_CODE);
+				case "Add to expired beta":
+					// UserController.get().assignUserRoleCode(object.id, DataTypeHelper.ROLE_FIRST_CLOSED_BETA_CODE);
+					Window.alert("TODO");
 					break;
-				case "Delete":
+				case "DELETE":
 					deleteUserDialog.setParameter(object.id);
 					deleteUserDialog.center();
 					break;

@@ -458,7 +458,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 
 	}
 
-	public void revokeUserRoleId(Long userId, String roleCode) {
+	public void revokeUserRoleCode(Long userId, String roleCode) {
 		Role role = new Role();
 		role.code = roleCode;
 		revokeUserRole(userId, role);

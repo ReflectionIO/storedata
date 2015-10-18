@@ -1002,7 +1002,7 @@ public final class Core extends ActionHandler {
 								input.session.user.id.longValue()));
 					}
 				} else {
-					UserServiceProvider.provide().deleteDataAccount(input.session.user, input.linkedAccount);
+					UserServiceProvider.provide().deleteUserDataAccount(input.session.user, input.linkedAccount);
 
 					if (LOG.isLoggable(GaeLevel.DEBUG)) {
 						LOG.finer(String.format("Linked account with id [%d] removed from user account [%d]", input.linkedAccount.id.longValue(),
