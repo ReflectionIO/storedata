@@ -13674,21 +13674,21 @@ form .gwt-DatePicker * {
 }
 /* line 11, sass/components/_global-header.scss */
 .global-header .site-logo {
-  width: 19px;
-  margin-top: 9px;
+  width: 58px;
+  margin-top: 8px;
   margin-left: 16px;
   vertical-align: top;
 }
 @media (min-width: 480px) {
   /* line 11, sass/components/_global-header.scss */
   .global-header .site-logo {
-    margin-top: 20px;
+    margin-top: 18px;
   }
 }
 @media (min-width: 720px) {
   /* line 11, sass/components/_global-header.scss */
   .global-header .site-logo {
-    width: 122px;
+    width: 152px;
     margin-top: 17px;
     margin-left: 31px;
   }
