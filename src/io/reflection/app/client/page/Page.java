@@ -17,7 +17,7 @@ import com.google.gwt.user.client.ui.Composite;
 
 /**
  * @author billy1380
- * 
+ *
  */
 public class Page extends Composite {
 
@@ -31,7 +31,7 @@ public class Page extends Composite {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
 	 */
 	@Override
@@ -44,7 +44,7 @@ public class Page extends Composite {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.google.gwt.user.client.ui.Composite#onDetach()
 	 */
 	@Override
@@ -58,8 +58,9 @@ public class Page extends Composite {
 		toTop = Window.getScrollTop();
 	}
 
+	@Override
 	public String getTitle() {
-		return "Reflection.io";
+		return "Reflection - Intelligence To Succeed In the App Market";
 	}
 
 	protected PageType getPageType() {
