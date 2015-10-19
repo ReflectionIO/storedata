@@ -2035,7 +2035,7 @@ public final class Core extends ActionHandler {
 			if (!UserServiceProvider.provide().hasRole(input.session.user, devRole).booleanValue())
 				throw new InputValidationException(ApiError.RoleNotFound.getCode(), ApiError.RoleNotFound.getMessage("UpgradeAccountRequest: input"));
 
-			UserServiceProvider.provide().setUserRoleAsExpired(input.session.user, devRole);
+			UserServiceProvider.provide().revokeRole(input.session.user, devRole);
 
 			// UserServiceProvider.provide().assignExpiringRole(input.session.user, input.role, 30);
 			UserServiceProvider.provide().assignRole(input.session.user, input.role);

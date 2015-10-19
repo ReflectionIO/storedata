@@ -231,13 +231,6 @@ public interface IUserService extends IService {
 	 * @param user
 	 * @throws DataAccessException
 	 */
-	public void setUserRoleAsExpired(User user, Role role) throws DataAccessException;
-
-	/**
-	 * 
-	 * @param user
-	 * @throws DataAccessException
-	 */
 	public void revokeAllRoles(User user) throws DataAccessException;
 
 	/**
