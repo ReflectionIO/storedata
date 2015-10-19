@@ -278,6 +278,13 @@ final class SaleService implements ISaleService {
 	 */
 	@Override
 	public Long addSalesBatch(Collection<Sale> sales) throws DataAccessException {
+		if (sales == null || sales.isEmpty()) {
+			LOG.log(GaeLevel.DEBUG, String.format("The sales is null or empty"));
+			return 0L;
+		}
+
+		LOG.log(GaeLevel.DEBUG, String.format("Persisting %d sales", sales.size()));
+
 		String insertSql = "INSERT INTO `sale` ("
 				+ " `dataaccountid`,`itemid`,`country`,"
 				+ " `sku`,`parentidentifier`,"
@@ -340,6 +347,8 @@ final class SaleService implements ISaleService {
 				saleConnection.disconnect();
 			}
 		}
+
+		LOG.log(GaeLevel.DEBUG, String.format("Sales persisted to DB"));
 
 		return addedSalesBatchCount;
 	}
