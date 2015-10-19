@@ -878,7 +878,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 		});
 	}
 
-	private void deleteUsers(List<User> users, boolean allTestUsers) {
+	public void deleteUsers(List<User> users) {
 		AdminService service = ServiceCreator.createAdminService();
 
 		final DeleteUsersRequest input = new DeleteUsersRequest();
@@ -887,7 +887,6 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 		input.session = SessionController.get().getSessionForApiCall();
 
 		input.users = users;
-		input.allTestUsers = allTestUsers;
 
 		service.deleteUsers(input, new AsyncCallback<DeleteUsersResponse>() {
 
@@ -909,14 +908,6 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 			}
 
 		});
-	}
-
-	public void deleteTestUsers() {
-		deleteUsers(null, true);
-	}
-
-	public void deleteUsers(List<User> users) {
-		deleteUsers(users, false);
 	}
 
 	/**

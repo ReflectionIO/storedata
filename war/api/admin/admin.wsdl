@@ -504,7 +504,6 @@
 						<xsd:sequence>
 							<xsd:element name="users" type="sd:User" maxOccurs="unbounded" />
 						</xsd:sequence>
-						<xsd:attribute name="allTestUsers" type="xsd:boolean" default="false" />
 					</xsd:extension>
 				</xsd:complexContent>
 			</xsd:complexType>

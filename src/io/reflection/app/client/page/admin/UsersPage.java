@@ -69,7 +69,6 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 	@UiField Anchor closeDeleteDialog;
 	@UiField LoadingButton confirmDelete;
 
-	@UiField Button deleteTestUsers;
 	@UiField TextField queryTextBox;
 	private String query = "";
 
@@ -227,7 +226,7 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 		delete.setFieldUpdater(action);
 
 		usersTable.addColumn(changeDetails);
-		usersTable.addColumn(makeTest);
+		// usersTable.addColumn(makeTest);
 		usersTable.addColumn(addToBeta);
 		usersTable.addColumn(delete);
 	}
@@ -247,11 +246,6 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 	void onCloseDeleteDialogClicked(ClickEvent event) {
 		event.preventDefault();
 		deleteUserDialog.hide();
-	}
-
-	@UiHandler("deleteTestUsers")
-	void onDeleteTestUsersClick(ClickEvent event) {
-		UserController.get().deleteTestUsers();
 	}
 
 	@UiHandler("queryTextBox")

@@ -836,11 +836,6 @@ public final class Admin extends ActionHandler {
 
 			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
-			if (input.allTestUsers) {
-				Role testRole = RoleServiceProvider.provide().getCodeRole(DataTypeHelper.ROLE_TEST_CODE);
-				input.users = UserServiceProvider.provide().getRoleUsers(testRole);
-			}
-
 			if (input.users != null && input.users.size() > 0) {
 
 				List<DataAccount> linkedAccounts = UserServiceProvider.provide().getUsersDataAccounts(input.users, PagerHelper.createInfinitePager());
@@ -896,7 +891,7 @@ public final class Admin extends ActionHandler {
 				output.roles = UserServiceProvider.provide().getUserRoles(input.user);
 
 				if (output.roles != null) {
-						RoleServiceProvider.provide().inflateRoles(output.roles);
+					RoleServiceProvider.provide().inflateRoles(output.roles);
 
 					for (Role role : output.roles) {
 						role.permissions = RoleServiceProvider.provide().getPermissions(role);
