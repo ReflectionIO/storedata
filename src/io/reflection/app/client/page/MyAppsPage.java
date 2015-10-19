@@ -14,9 +14,12 @@ import io.reflection.app.api.core.shared.call.GetLinkedAccountsRequest;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountsResponse;
 import io.reflection.app.api.core.shared.call.GetSalesRanksRequest;
 import io.reflection.app.api.core.shared.call.GetSalesRanksResponse;
+import io.reflection.app.api.core.shared.call.LinkAccountRequest;
+import io.reflection.app.api.core.shared.call.LinkAccountResponse;
 import io.reflection.app.api.core.shared.call.event.GetLinkedAccountItemsEventHandler;
 import io.reflection.app.api.core.shared.call.event.GetLinkedAccountsEventHandler;
 import io.reflection.app.api.core.shared.call.event.GetSalesRanksEventHandler;
+import io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.MiniAppCell;
 import io.reflection.app.client.component.DateSelector;
@@ -80,8 +83,8 @@ import com.willshex.gson.json.service.shared.StatusType;
  * @author stefanocapuzzi
  * 
  */
-public class MyAppsPage extends Page implements NavigationEventHandler, GetLinkedAccountsEventHandler, GetLinkedAccountItemsEventHandler,
-		GetSalesRanksEventHandler {
+public class MyAppsPage extends Page implements NavigationEventHandler, LinkAccountEventHandler, GetLinkedAccountsEventHandler,
+		GetLinkedAccountItemsEventHandler, GetSalesRanksEventHandler {
 
 	private static MyAppsPageUiBinder uiBinder = GWT.create(MyAppsPageUiBinder.class);
 
@@ -213,6 +216,7 @@ public class MyAppsPage extends Page implements NavigationEventHandler, GetLinke
 		super.onAttach();
 
 		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(LinkAccountEventHandler.TYPE, LinkedAccountController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(GetLinkedAccountsEventHandler.TYPE, LinkedAccountController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(GetLinkedAccountItemsEventHandler.TYPE, ItemController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(GetLinkedAccountItemsEventHandler.TYPE, ItemController.get(), userItemProvider));
@@ -470,7 +474,7 @@ public class MyAppsPage extends Page implements NavigationEventHandler, GetLinke
 
 	@UiHandler({ "countrySelector", "appStoreSelector" })
 	void onFiltersChanged(ChangeEvent event) {
-		applyFilters.setEnabled(!FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
+		applyFilters.setEnabled(isStatusError || !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
 				|| !FilterController.get().getFilter().getStoreA3Code().equals(appStoreSelector.getSelectedValue())
 				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateSelector.getDateBoxToValue())
 				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getStartTime().longValue()), dateSelector.getDateBoxFromValue()));
@@ -478,7 +482,7 @@ public class MyAppsPage extends Page implements NavigationEventHandler, GetLinke
 
 	@UiHandler("dateSelector")
 	void onDateSelectorChanged(ValueChangeEvent<DateRange> event) {
-		applyFilters.setEnabled(!FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
+		applyFilters.setEnabled(isStatusError || !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
 				|| !FilterController.get().getFilter().getStoreA3Code().equals(appStoreSelector.getSelectedValue())
 				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateSelector.getDateBoxToValue())
 				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getStartTime().longValue()), dateSelector.getDateBoxFromValue()));
@@ -509,10 +513,10 @@ public class MyAppsPage extends Page implements NavigationEventHandler, GetLinke
 		user = SessionController.get().getLoggedInUser();
 
 		// Linked accounts retrieved in LinkedAccountPage but not here, or Check if Added or deleted a linked account
-		if ((linkedAccountsCount == -1 && LinkedAccountController.get().linkedAccountsFetched())
-				|| linkedAccountsCount != LinkedAccountController.get().getLinkedAccountsCount()) {
+		if (!(accountNameSelector.getItemCount() == LinkedAccountController.get().getLinkedAccountsCount() && accountNameSelector.getAllValues().containsAll(
+				LinkedAccountController.get().getAllLinkedAccountIds()))) {
 			linkedAccountsCount = LinkedAccountController.get().getLinkedAccountsCount();
-			if (linkedAccountsCount > 0) {
+			if (linkedAccountsCount > 0) { // Added or removed linked account
 				fillAccountNameList();
 				FilterController.get().setLinkedAccount(LinkedAccountController.get().getAllLinkedAccounts().get(0).id);
 				isStatusError = false;
@@ -524,9 +528,12 @@ public class MyAppsPage extends Page implements NavigationEventHandler, GetLinke
 				loadingBar.show("Getting apps...");
 				loadingBar.setProgressiveStatus(33);
 				previousFilter = FilterController.get().asMyAppsFilterString();
-			} else {
+			} else if (linkedAccountsCount == 0) { // Removed all linked accounts
 				userItemProvider.reset();
 				userItemProvider.updateRowCount(0, true);
+				accountNameSelector.clear();
+				errorPanel.setVisible(false);
+				comingSoonPanel.setVisible(false);
 			}
 		}
 
@@ -571,7 +578,7 @@ public class MyAppsPage extends Page implements NavigationEventHandler, GetLinke
 	@UiHandler("viewAllBtn")
 	void onViewAllButtonClicked(ClickEvent event) {
 		if (((Button) event.getSource()).isEnabled()) {
-			if (myAppsTable.getVisibleItemCount() == ServiceConstants.STEP_VALUE) {
+			if (myAppsTable.getRowCount() > ServiceConstants.STEP_VALUE) {
 				myAppsTable.setVisibleRange(0, Integer.MAX_VALUE);
 				viewAllSpan.setInnerText("View Less Apps");
 				TooltipHelper.updateHelperTooltip();
@@ -714,5 +721,27 @@ public class MyAppsPage extends Page implements NavigationEventHandler, GetLinke
 		applyFilters.setEnabled(true);
 		isStatusError = true;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler#linkAccountSuccess(io.reflection.app.api.core.shared.call.LinkAccountRequest,
+	 * io.reflection.app.api.core.shared.call.LinkAccountResponse)
+	 */
+	@Override
+	public void linkAccountSuccess(LinkAccountRequest input, LinkAccountResponse output) {
+		if (LinkedAccountController.get().getLinkedAccountsCount() == 1) {
+			PageType.UsersPageType.show(PageType.MyAppsPageType.toString(), user.id.toString(), FilterController.get().asMyAppsFilterString());
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler#linkAccountFailure(io.reflection.app.api.core.shared.call.LinkAccountRequest,
+	 * java.lang.Throwable)
+	 */
+	@Override
+	public void linkAccountFailure(LinkAccountRequest input, Throwable caught) {}
 
 }

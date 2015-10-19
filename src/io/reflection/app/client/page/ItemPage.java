@@ -216,6 +216,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	private Column<AppRevenue, SafeHtml> revenueColumn;
 	private Column<AppRevenue, SafeHtml> revenueForPeriodColumn;
 
+	private boolean isStatusError;
+
 	public ItemPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
@@ -386,8 +388,10 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		// loadingBar.hide(false);
 		chartContainer.setVisible(false);
 		errorPanel.setVisible(true);
+		isStatusError = true;
 		graphLoadingIndicator.removeClassName(style.isLoadingSuccess());
 		graphContainer.removeClassName(style.isLoading());
+		applyFilters.setEnabled(true);
 	}
 
 	private void createColumns() {
@@ -634,13 +638,14 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				applyFilters.setEnabled(false);
 				PageType.ItemPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, displayingAppId, selectedTab, comingPage, FilterController.get()
 						.asItemFilterString());
-			} else if (errorPanel.isVisible() || noDataPanel.isVisible()) {
+			} else if (isStatusError) {
 				applyFilters.setEnabled(false);
 				updateSelectorsFromFilter();
 				infoTotalRevenue.setInnerSafeHtml(AnimationHelper.getLoaderInlineSafeHTML());
 				displayingApp.currency = null;
 				displayingApp.price = null;
 				price.setInnerSafeHtml(AnimationHelper.getLoaderInlineSafeHTML());
+				isStatusError = false;
 				errorPanel.setVisible(false);
 				noDataPanel.setVisible(false);
 				chartContainer.setVisible(true);
@@ -663,7 +668,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 	@UiHandler({ "countrySelector", "appStoreSelector" })
 	void onFiltersChanged(ChangeEvent event) {
-		applyFilters.setEnabled(!FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
+		applyFilters.setEnabled(isStatusError || !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
 				|| !FilterController.get().getFilter().getStoreA3Code().equals(appStoreSelector.getSelectedValue())
 				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateSelector.getDateBoxToValue())
 				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getStartTime().longValue()), dateSelector.getDateBoxFromValue()));
@@ -671,7 +676,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 	@UiHandler("dateSelector")
 	void onDateSelectorChanged(ValueChangeEvent<DateRange> event) {
-		applyFilters.setEnabled(!FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
+		applyFilters.setEnabled(isStatusError || !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
 				|| !FilterController.get().getFilter().getStoreA3Code().equals(appStoreSelector.getSelectedValue())
 				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateSelector.getDateBoxToValue())
 				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getStartTime().longValue()), dateSelector.getDateBoxFromValue()));
@@ -807,11 +812,12 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			}
 
 			if (isNewDataRequired) {
+				errorPanel.setVisible(false);
+				isStatusError = false;
 				infoTotalRevenue.setInnerSafeHtml(AnimationHelper.getLoaderInlineSafeHTML());
 				displayingApp.currency = null;
 				displayingApp.price = null;
 				price.setInnerSafeHtml(AnimationHelper.getLoaderInlineSafeHTML());
-				errorPanel.setVisible(false);
 				noDataPanel.setVisible(false);
 				appOutOfTop200Panel.setVisible(false);
 				chartContainer.setVisible(true);
@@ -1054,13 +1060,11 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				revenueTable.setRowCount(0, true);
 				chartContainer.setVisible(false);
 				noDataPanel.setVisible(true);
-				applyFilters.setEnabled(true);
 			}
 			TooltipHelper.updateHelperTooltip();
 			// loadingBar.hide(true);
 		} else {
 			setError();
-			applyFilters.setEnabled(true);
 		}
 	}
 
@@ -1074,7 +1078,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public void getItemRanksFailure(GetItemRanksRequest input, Throwable caught) {
 		setError();
-		applyFilters.setEnabled(true);
 	}
 
 	/*
@@ -1105,11 +1108,9 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				revenueTable.setRowCount(0, true);
 				chartContainer.setVisible(false);
 				noDataPanel.setVisible(true);
-				applyFilters.setEnabled(true);
 			}
 		} else {
 			setError();
-			applyFilters.setEnabled(true);
 		}
 	}
 
@@ -1122,7 +1123,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public void getItemSalesRanksFailure(GetItemSalesRanksRequest input, Throwable caught) {
 		setError();
-		applyFilters.setEnabled(true);
 	}
 
 	/*
@@ -1146,7 +1146,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			}
 		} else {
 			setError();
-			applyFilters.setEnabled(true);
 		}
 	}
 
@@ -1159,7 +1158,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public void getLinkedAccountItemFailure(GetLinkedAccountItemRequest input, Throwable caught) {
 		setError();
-		applyFilters.setEnabled(true);
 	}
 
 	/*
