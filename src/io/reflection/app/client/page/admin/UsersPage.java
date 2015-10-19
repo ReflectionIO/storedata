@@ -16,8 +16,6 @@ import io.reflection.app.api.admin.shared.call.event.DeleteUserEventHandler;
 import io.reflection.app.api.admin.shared.call.event.DeleteUsersEventHandler;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.StyledButtonCell;
-import io.reflection.app.client.component.LoadingButton;
-import io.reflection.app.client.component.PopupDialog;
 import io.reflection.app.client.component.TextField;
 import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.controller.UserController;
@@ -25,6 +23,7 @@ import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.SimplePager;
+import io.reflection.app.client.popup.DeleteUserPopup;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.User;
@@ -33,7 +32,6 @@ import io.reflection.app.shared.util.FormattingHelper;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
@@ -44,8 +42,6 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
@@ -64,18 +60,13 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 	@UiField(provided = true) CellTable<User> usersTable = new CellTable<User>(ServiceConstants.SHORT_STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) SimplePager simplePager = new SimplePager(false, false);
 
-	@UiField PopupDialog deleteUserDialog;
-	@UiField Button cancelDelete;
-	@UiField Anchor closeDeleteDialog;
-	@UiField LoadingButton confirmDelete;
+	private DeleteUserPopup deleteUserPopup = new DeleteUserPopup();
 
 	@UiField TextField queryTextBox;
 	private String query = "";
 
 	public UsersPage() {
 		initWidget(uiBinder.createAndBindUi(this));
-
-		deleteUserDialog.removeFromParent();
 
 		createColumns();
 
@@ -183,13 +174,12 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 					// UserController.get().revokeUserRoleCode(object.id, DataTypeHelper.ROLE_PREMIUM_CODE);
 					Window.alert("TODO");
 					break;
-				case "Add to expired beta":
+				case "Add to beta":
 					// UserController.get().assignUserRoleCode(object.id, DataTypeHelper.ROLE_FIRST_CLOSED_BETA_CODE);
 					Window.alert("TODO");
 					break;
 				case "DELETE":
-					deleteUserDialog.setParameter(object.id);
-					deleteUserDialog.center();
+					deleteUserPopup.show(object.id);
 					break;
 				}
 			}
@@ -197,14 +187,14 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 
 		StyledButtonCell prototypeTestAndBeta = new StyledButtonCell(Styles.STYLES_INSTANCE.reflectionMainStyle().refButtonFunctionSmall());
 
-		Column<User, String> makeTest = new Column<User, String>(prototypeTestAndBeta) {
+		Column<User, String> revokePremium = new Column<User, String>(prototypeTestAndBeta) {
 
 			@Override
 			public String getValue(User object) {
-				return "Make test";
+				return "Revoke PREMIUM";
 			}
 		};
-		makeTest.setFieldUpdater(action);
+		revokePremium.setFieldUpdater(action);
 
 		Column<User, String> addToBeta = new Column<User, String>(prototypeTestAndBeta) {
 
@@ -220,7 +210,7 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 
 			@Override
 			public String getValue(User object) {
-				return "Delete";
+				return "DELETE";
 			}
 		};
 		delete.setFieldUpdater(action);
@@ -229,23 +219,6 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 		// usersTable.addColumn(makeTest);
 		usersTable.addColumn(addToBeta);
 		usersTable.addColumn(delete);
-	}
-
-	@UiHandler("confirmDelete")
-	void onConfirmDeleteClicked(ClickEvent event) {
-		UserController.get().deleteUser(deleteUserDialog.getParameter());
-		confirmDelete.setStatusLoading("Deleting");
-	}
-
-	@UiHandler("cancelDelete")
-	void onCancelDeleteClicked(ClickEvent event) {
-		deleteUserDialog.hide();
-	}
-
-	@UiHandler("closeDeleteDialog")
-	void onCloseDeleteDialogClicked(ClickEvent event) {
-		event.preventDefault();
-		deleteUserDialog.hide();
 	}
 
 	@UiHandler("queryTextBox")
@@ -267,12 +240,11 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 	@Override
 	public void deleteUserSuccess(DeleteUserRequest input, DeleteUserResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
+			deleteUserPopup.setStatusSuccess();
 			queryTextBox.setText("");
 			simplePager.setPageStart(0);
-			confirmDelete.resetStatus();
-			deleteUserDialog.hide();
 		} else {
-			confirmDelete.setStatusError();
+			deleteUserPopup.setStatusError();
 		}
 	}
 
@@ -284,8 +256,7 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 	 */
 	@Override
 	public void deleteUserFailure(DeleteUserRequest input, Throwable caught) {
-		confirmDelete.setStatusError();
-
+		deleteUserPopup.setStatusError();
 	}
 
 	/*
