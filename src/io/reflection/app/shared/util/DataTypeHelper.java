@@ -89,7 +89,6 @@ public class DataTypeHelper {
 	public static final String ROLE_PREMIUM_CODE = "PRE";
 	public static final String ROLE_ALPHA_CODE = "ALF";
 	public static final String ROLE_FIRST_CLOSED_BETA_CODE = "BT1";
-	public static final String ROLE_TEST_CODE = "TST";
 	public static final String ROLE_REGISTER_BUSINESS_INTEREST = "RBI";
 
 	public static final String STORE_IPHONE_A3_CODE = "iph";

@@ -197,11 +197,13 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	private SignUpPopup signUpPopup = new SignUpPopup();
 	private PremiumPopup premiumPopup = new PremiumPopup();
 	private AddLinkedAccountPopup addLinkedAccountPopup = new AddLinkedAccountPopup();
+	private boolean isStatusError;
 
 	public RanksPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		dailyDataContainer.removeFromParent();
+		applyFilters.getElement().setAttribute("data-tooltip", "Update results");
 
 		if (!SessionController.get().isAdmin()) {
 			categorySelector.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
@@ -280,7 +282,6 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 		dateSelectContainer.addClassName("js-tooltip");
 		dateSelectContainer.setAttribute("data-tooltip", "Select a date");
-		TooltipHelper.updateHelperTooltip();
 
 		loadingBar.show();
 
@@ -300,6 +301,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		});
 
 		updateSelectorsFromFilter();
+		TooltipHelper.updateHelperTooltip();
 
 	}
 
@@ -553,15 +555,15 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			if (updateData) {
 				applyFilters.setEnabled(false);
 				PageType.RanksPageType.show("view", selectedTab, FilterController.get().asRankFilterString());
-			}
-			if (errorPanel.isVisible() || noDataPanel.isVisible()) {
+			} else if (isStatusError) {
+				isStatusError = false;
+				errorPanel.setVisible(false);
 				applyFilters.setEnabled(false);
 				updateSelectorsFromFilter();
 				loadingBar.show();
 				RankController.get().reset();
 				RankController.get().fetchTopItems();
 				viewAllBtn.setVisible(false);
-				errorPanel.setVisible(false);
 				noDataPanel.setVisible(false);
 				leaderboardTable.setVisible(true);
 				downloadsHeader.setHeaderStyleNames(style.canBeSorted());
@@ -573,7 +575,8 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 	@UiHandler({ "countrySelector", "appStoreSelector", "categorySelector" })
 	void onFiltersChanged(ChangeEvent event) {
-		applyFilters.setEnabled(!FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
+		applyFilters.setEnabled(isStatusError
+				|| !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
 				|| !FilterController.get().getFilter().getStoreA3Code().equals(appStoreSelector.getSelectedValue())
 				|| !FilterController.get().getFilter().getCategoryId().toString().equals(categorySelector.getSelectedValue())
 				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateBox.getValue()));
@@ -581,7 +584,8 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 	@UiHandler("dateBox")
 	void onDateChanged(ValueChangeEvent<Date> event) {
-		applyFilters.setEnabled(!FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
+		applyFilters.setEnabled(isStatusError
+				|| !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
 				|| !FilterController.get().getFilter().getStoreA3Code().equals(appStoreSelector.getSelectedValue())
 				|| !FilterController.get().getFilter().getCategoryId().toString().equals(categorySelector.getSelectedValue())
 				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateBox.getValue()));
@@ -595,7 +599,8 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		appStoreSelector.setSelectedIndex(FormHelper.getItemIndex(appStoreSelector, "iph"));
 		categorySelector.setSelectedIndex(FormHelper.getItemIndex(categorySelector, "15"));
 		dateBox.setValue(FilterHelper.getDaysAgo(2));
-		applyFilters.setEnabled(!FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
+		applyFilters.setEnabled(isStatusError
+				|| !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
 				|| !FilterController.get().getFilter().getStoreA3Code().equals(appStoreSelector.getSelectedValue())
 				|| !FilterController.get().getFilter().getCategoryId().toString().equals(categorySelector.getSelectedValue())
 				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateBox.getValue()));
@@ -764,7 +769,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	@UiHandler("downloadLeaderboard")
 	void onDownloadLeaderboardClicked(ClickEvent event) {
 		event.preventDefault();
-		if ((SessionController.get().isPremiumDeveloper() && SessionController.get().hasLinkedAccount()) || SessionController.get().isAdmin()) {
+		if (SessionController.get().canSeePredictions()) {
 			downloadLeaderboard.setStatusLoading("Downloading");
 			Filter filter = FilterController.get().getFilter();
 			String listType;
@@ -891,6 +896,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 				RankController.get().fetchTopItems();
 				viewAllBtn.setVisible(false);
 				errorPanel.setVisible(false);
+				isStatusError = false;
 				noDataPanel.setVisible(false);
 				leaderboardTable.setVisible(true);
 				downloadsHeader.setHeaderStyleNames(style.canBeSorted());
@@ -988,7 +994,6 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 				leaderboardTable.setVisible(false);
 				noDataPanel.setVisible(true);
 				viewAllBtn.setVisible(false);
-				applyFilters.setEnabled(true);
 			}
 			loadingBar.hide(true);
 		} else {
@@ -996,6 +1001,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			viewAllBtn.setVisible(false);
 			leaderboardTable.setVisible(false);
 			errorPanel.setVisible(true);
+			isStatusError = true;
 			applyFilters.setEnabled(true);
 		}
 
@@ -1015,6 +1021,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		viewAllBtn.setVisible(false);
 		leaderboardTable.setVisible(false);
 		errorPanel.setVisible(true);
+		isStatusError = true;
 		applyFilters.setEnabled(true);
 	}
 }

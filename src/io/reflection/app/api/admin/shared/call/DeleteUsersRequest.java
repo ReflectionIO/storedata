@@ -18,11 +18,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 
 public class DeleteUsersRequest extends Request {
 	public List<User> users;
-	public Boolean allTestUsers;
 
 	@Override
 	public JsonObject toJson() {
@@ -36,8 +34,6 @@ public class DeleteUsersRequest extends Request {
 			}
 		}
 		object.add("users", jsonUsers);
-		JsonElement jsonAllTestUsers = allTestUsers == null ? JsonNull.INSTANCE : new JsonPrimitive(allTestUsers);
-		object.add("allTestUsers", jsonAllTestUsers);
 		return object;
 	}
 
@@ -57,13 +53,6 @@ public class DeleteUsersRequest extends Request {
 				}
 			}
 		}
-
-		if (jsonObject.has("allTestUsers")) {
-			JsonElement jsonAllTestUsers = jsonObject.get("allTestUsers");
-			if (jsonAllTestUsers != null) {
-				allTestUsers = Boolean.valueOf(jsonAllTestUsers.getAsBoolean());
-			}
-		}
 	}
 
 	public DeleteUsersRequest users(List<User> users) {
@@ -71,8 +60,4 @@ public class DeleteUsersRequest extends Request {
 		return this;
 	}
 
-	public DeleteUsersRequest allTestUsers(Boolean allTestUsers) {
-		this.allTestUsers = allTestUsers;
-		return this;
-	}
 }

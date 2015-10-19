@@ -419,11 +419,9 @@ public final class Core extends ActionHandler {
 					permissions.addAll(UserServiceProvider.provide().getPermissions(input.session.user)); // Add permissions of the user
 					PermissionServiceProvider.provide().inflatePermissions(permissions);
 					for (Permission permission : permissions) {
-						if (isPremium || DataTypeHelper.ROLE_FIRST_CLOSED_BETA_CODE.equals(role.code)) {
-							if (DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE.equals(permission.code)) {
-								canSeePredictions = true;
-								break;
-							}
+						if (isPremium && DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE.equals(permission.code)) {
+							canSeePredictions = true;
+							break;
 						}
 					}
 
@@ -1004,7 +1002,7 @@ public final class Core extends ActionHandler {
 								input.session.user.id.longValue()));
 					}
 				} else {
-					UserServiceProvider.provide().deleteDataAccount(input.session.user, input.linkedAccount);
+					UserServiceProvider.provide().deleteUserDataAccount(input.session.user, input.linkedAccount);
 
 					if (LOG.isLoggable(GaeLevel.DEBUG)) {
 						LOG.finer(String.format("Linked account with id [%d] removed from user account [%d]", input.linkedAccount.id.longValue(),
@@ -1284,8 +1282,8 @@ public final class Core extends ActionHandler {
 
 			DataAccountCollectorFactory.getCollectorForSource(input.source.a3Code).validateProperties(input.properties);
 
-			// If not a test user, check if is a valid Apple linked account
-			Role testRole = RoleServiceProvider.provide().getCodeRole(DataTypeHelper.ROLE_TEST_CODE);
+			// If not an Admin, check if is a valid Apple linked account
+			Role testRole = RoleServiceProvider.provide().getCodeRole(DataTypeHelper.ROLE_ADMIN_CODE);
 			if (!UserServiceProvider.provide().hasRole(input.session.user, testRole)) {
 				DataAccount dataAccountToTest = new DataAccount();
 
@@ -2029,7 +2027,7 @@ public final class Core extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 			input.session.user = UserServiceProvider.provide().getUser(input.session.user.id); // Inflate user
-			
+
 			input.role = ValidationHelper.validateRole(input.role, "input.role");
 
 			Role devRole = RoleServiceProvider.provide().getCodeRole(DataTypeHelper.ROLE_DEVELOPER_CODE);
@@ -2037,7 +2035,7 @@ public final class Core extends ActionHandler {
 			if (!UserServiceProvider.provide().hasRole(input.session.user, devRole).booleanValue())
 				throw new InputValidationException(ApiError.RoleNotFound.getCode(), ApiError.RoleNotFound.getMessage("UpgradeAccountRequest: input"));
 
-			UserServiceProvider.provide().setUserRoleAsExpired(input.session.user, devRole);
+			UserServiceProvider.provide().revokeRole(input.session.user, devRole);
 
 			// UserServiceProvider.provide().assignExpiringRole(input.session.user, input.role, 30);
 			UserServiceProvider.provide().assignRole(input.session.user, input.role);
