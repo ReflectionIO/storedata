@@ -8,13 +8,19 @@
 package io.reflection.app.helpers;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import com.spacehopperstudios.utility.StringUtils;
 
 /**
  * @author billy1380
  *
  */
 public class SqlQueryHelper {
+	private transient static final Logger LOG = Logger.getLogger(SqlQueryHelper.class.getName());
 
 	/**
 	 *
@@ -56,5 +62,33 @@ public class SqlQueryHelper {
 
 	public static SimpleDateFormat getSqlDateFormat() {
 		return new SimpleDateFormat("yyyy-MM-dd");
+	}
+
+	/**
+	 * @param dateFieldName
+	 * @param dateRange
+	 * @return
+	 */
+	public static String getDateRangeCondition(String dateFieldName, String... dateRange) {
+		if (dateRange == null || dateRange.length != 2) {
+			LOG.log(Level.WARNING, String.format("Date range is empty or does not have exactly 2 elements %s", (Object) (dateRange)));
+			return null;
+		}
+
+		return String.format("%s between '%s' and '%s'", dateFieldName, dateRange[0], dateRange[1]);
+	}
+
+	/**
+	 * @param dateFieldName
+	 * @param dates
+	 * @return
+	 */
+	public static String getDateListCondition(String dateFieldName, String... dates) {
+		if (dates == null || dates.length == 0) {
+			LOG.log(Level.WARNING, String.format("Dates is empty or or null %s", (Object) (dates)));
+			return null;
+		}
+
+		return String.format("%s in ('%s')", dateFieldName, StringUtils.join(Arrays.asList(dates), "' ,'"));
 	}
 }
