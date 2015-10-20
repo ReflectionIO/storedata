@@ -564,19 +564,57 @@ final class DataAccountService implements IDataAccountService {
 	@Override
 	public void verifyDataAccount(DataAccount dataAccount, Date date) throws DataAccessException {
 		switch (dataAccount.source.a3Code) {
-		case "itc":
-			try {
-				ITunesConnectDownloadHelper.getITunesSalesFile(dataAccount.username, dataAccount.password,
-						ITunesConnectDownloadHelper.getVendorId(dataAccount.properties), ITunesConnectDownloadHelper.DATE_FORMATTER.format(date), null, null);
-			} catch (final Exception e) {
-				if (LOG.isLoggable(Level.WARNING)) {
-					LOG.log(Level.WARNING, String.format("Trying to verify a data account for date %s, which threw an exception", date.toString()), e);
+			case "itc":
+				try {
+					ITunesConnectDownloadHelper.getITunesSalesFile(dataAccount.username, dataAccount.password,
+							ITunesConnectDownloadHelper.getVendorId(dataAccount.properties), ITunesConnectDownloadHelper.DATE_FORMATTER.format(date), null, null);
+				} catch (final Exception e) {
+					if (LOG.isLoggable(Level.WARNING)) {
+						LOG.log(Level.WARNING, String.format("Trying to verify a data account for date %s, which threw an exception", date.toString()), e);
+					}
+					throw new DataAccessException(e);
 				}
-				throw new DataAccessException(e);
-			}
 
-			break;
+				break;
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getActiveDataAccountIDs()
+	 */
+	@Override
+	public List<Long> getActiveDataAccountIDs() throws DataAccessException {
+		return getDataAccountIds(false);
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getAllDataAccountIDs()
+	 */
+	@Override
+	public List<Long> getAllDataAccountIDs() throws DataAccessException {
+		return getDataAccountIds(false);
+	}
+
+	private List<Long> getDataAccountIds(boolean includeInActive) throws DataAccessException {
+		final List<Long> dataAccounts = new ArrayList<Long>();
+
+		final String getDataAccountsQuery = String.format("SELECT id FROM `dataaccount` WHERE %s `deleted`='n'", includeInActive ? "active='y' and " : "");
+
+		final Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
+
+		try {
+			dataAccountConnection.connect();
+			dataAccountConnection.executeQuery(getDataAccountsQuery);
+
+			while (dataAccountConnection.fetchNextRow()) {
+				dataAccounts.add(dataAccountConnection.getCurrentRowLong("id"));
+			}
+		} finally {
+			if (dataAccountConnection != null) {
+				dataAccountConnection.disconnect();
+			}
+		}
+
+		return dataAccounts;
+	}
 }
