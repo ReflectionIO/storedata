@@ -907,12 +907,12 @@ final class SaleService implements ISaleService {
 	 * @see io.reflection.app.service.sale.ISaleService#summariseSalesForDataAccountOnDate(java.lang.Long, java.util.Date)
 	 */
 	@Override
-	public void summariseSalesForDataAccountOnDate(Long dataAccountId, Date date) throws DataAccessException {
+	public boolean summariseSalesForDataAccountOnDate(Long dataAccountId, Date date) throws DataAccessException {
 		ArrayList<Sale> sales = getSalesForDataAccountOnDate(dataAccountId, date);
 
 		LOG.log(GaeLevel.DEBUG, String.format("Loaded %s sales for summarisation", sales == null ? "NULL" : sales.size()));
 
-		summariseSales(dataAccountId, sales, SaleSummaryHelper.SALE_SOURCE.DB);
+		return summariseSales(dataAccountId, sales, SaleSummaryHelper.SALE_SOURCE.DB);
 	}
 
 	/*
@@ -921,11 +921,11 @@ final class SaleService implements ISaleService {
 	 * @see io.reflection.app.service.sale.ISaleService#summariseSales(java.util.List)
 	 */
 	@Override
-	public void summariseSales(Long dataaccountid, List<Sale> sales, SaleSummaryHelper.SALE_SOURCE saleSource) throws DataAccessException {
+	public boolean summariseSales(Long dataaccountid, List<Sale> sales, SaleSummaryHelper.SALE_SOURCE saleSource) throws DataAccessException {
 		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
 		try {
 			saleConnection.connect();
-			SaleSummaryHelper.INSTANCE.summariseSales(dataaccountid, sales, saleSource, saleConnection);
+			return SaleSummaryHelper.INSTANCE.summariseSales(dataaccountid, sales, saleSource, saleConnection);
 		} finally {
 			if (saleConnection != null) {
 				saleConnection.disconnect();
@@ -1062,6 +1062,41 @@ final class SaleService implements ISaleService {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 		String getDataAccountsWithSalesBetweenDatesQuery = String.format("select distinct(dataaccountid) dataaccountid from sale where `begin` BETWEEN '%s' and '%s'",
+				sdf.format(dateFrom), sdf.format(dateTo));
+
+		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
+
+		try {
+			saleConnection.connect();
+			saleConnection.executeQuery(getDataAccountsWithSalesBetweenDatesQuery);
+
+			ArrayList<Long> list = new ArrayList<Long>();
+			LOG.log(GaeLevel.DEBUG, String.format("Executed the request. Loading rows..."));
+
+			while (saleConnection.fetchNextRow()) {
+				Long entry = saleConnection.getCurrentRowLong("dataaccountid");
+				list.add(entry);
+			}
+
+			LOG.log(GaeLevel.DEBUG, String.format("Returning %d rows", list.size()));
+			return list;
+		} finally {
+			if (saleConnection != null) {
+				saleConnection.disconnect();
+			}
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.service.sale.ISaleService#getDataAccountIdsWithSaleSummariesBetweenDates(java.util.Date, java.util.Date)
+	 */
+	@Override
+	public List<Long> getDataAccountIdsWithSaleSummariesBetweenDates(Date dateFrom, Date dateTo) throws DataAccessException {
+		LOG.log(GaeLevel.DEBUG, String.format("Getting data account with sales between %s and %s", dateFrom, dateTo));
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+		String getDataAccountsWithSalesBetweenDatesQuery = String.format("select distinct(dataaccountid) dataaccountid from sale_summary where `date` BETWEEN '%s' and '%s'",
 				sdf.format(dateFrom), sdf.format(dateTo));
 
 		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
