@@ -12,12 +12,17 @@ import io.reflection.app.api.admin.shared.call.DeleteUserRequest;
 import io.reflection.app.api.admin.shared.call.DeleteUserResponse;
 import io.reflection.app.api.admin.shared.call.DeleteUsersRequest;
 import io.reflection.app.api.admin.shared.call.DeleteUsersResponse;
+import io.reflection.app.api.admin.shared.call.RevokeRoleRequest;
+import io.reflection.app.api.admin.shared.call.RevokeRoleResponse;
 import io.reflection.app.api.admin.shared.call.event.DeleteUserEventHandler;
 import io.reflection.app.api.admin.shared.call.event.DeleteUsersEventHandler;
+import io.reflection.app.api.admin.shared.call.event.RevokeRoleEventHandler;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.StyledButtonCell;
+import io.reflection.app.client.component.LoadingBar;
 import io.reflection.app.client.component.TextField;
 import io.reflection.app.client.controller.ServiceConstants;
+import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.UserController;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
@@ -27,13 +32,16 @@ import io.reflection.app.client.popup.DeleteUserPopup;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.User;
+import io.reflection.app.shared.util.DataTypeHelper;
 import io.reflection.app.shared.util.FormattingHelper;
 
+import com.google.gwt.cell.client.Cell.Context;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -41,17 +49,12 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
 
-/**
- * @author billy1380
- * 
- */
-public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUsersEventHandler {
+public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUsersEventHandler, RevokeRoleEventHandler {
 
 	private static UsersPageUiBinder uiBinder = GWT.create(UsersPageUiBinder.class);
 
@@ -59,11 +62,10 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 
 	@UiField(provided = true) CellTable<User> usersTable = new CellTable<User>(ServiceConstants.SHORT_STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) SimplePager simplePager = new SimplePager(false, false);
-
 	private DeleteUserPopup deleteUserPopup = new DeleteUserPopup();
-
 	@UiField TextField queryTextBox;
 	private String query = "";
+	private LoadingBar loadingBar = new LoadingBar(false);
 
 	public UsersPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -74,6 +76,7 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 		usersTable.setEmptyTableWidget(new HTMLPanel("No Users found!"));
 		simplePager.setDisplay(usersTable);
 
+		UserController.get().addDataDisplay(usersTable);
 	}
 
 	/*
@@ -86,10 +89,13 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 		super.onAttach();
 
 		queryTextBox.setText(UserController.get().getQuery());
-		UserController.get().addDataDisplay(usersTable);
+
+		UserController.get().reset();
+		UserController.get().fetchUsers();
 
 		register(DefaultEventBus.get().addHandlerToSource(DeleteUserEventHandler.TYPE, UserController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(DeleteUsersEventHandler.TYPE, UserController.get(), this));
+		register(DefaultEventBus.get().addHandlerToSource(RevokeRoleEventHandler.TYPE, UserController.get(), this));
 	}
 
 	/*
@@ -99,8 +105,9 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 	 */
 	@Override
 	protected void onDetach() {
-		UserController.get().removeDataDisplay(usersTable);
 		super.onDetach();
+
+		loadingBar.reset();
 	}
 
 	private void createColumns() {
@@ -156,7 +163,7 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 		};
 		usersTable.addColumn(lastLoginColumn, "Last login");
 
-		Column<User, SafeHtml> changeDetails = new Column<User, SafeHtml>(new SafeHtmlCell()) {
+		Column<User, SafeHtml> changeDetailsCol = new Column<User, SafeHtml>(new SafeHtmlCell()) {
 
 			@Override
 			public SafeHtml getValue(User object) {
@@ -165,47 +172,47 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 			}
 		};
 
-		FieldUpdater<User, String> action = new FieldUpdater<User, String>() {
+		Column<User, String> revokePremiumCol = new Column<User, String>(new StyledButtonCell(Styles.STYLES_INSTANCE.reflectionMainStyle()
+				.refButtonFunctionSmall())) {
 
 			@Override
-			public void update(int index, final User object, String value) {
-				switch (value) {
-				case "Revoke PREMIUM":
-					// UserController.get().revokeUserRoleCode(object.id, DataTypeHelper.ROLE_PREMIUM_CODE);
-					Window.alert("TODO");
-					break;
-				case "Add to beta":
-					// UserController.get().assignUserRoleCode(object.id, DataTypeHelper.ROLE_FIRST_CLOSED_BETA_CODE);
-					Window.alert("TODO");
-					break;
-				case "DELETE":
-					deleteUserPopup.show(object.id);
-					break;
+			public String getValue(User object) {
+				return "Revoke Premium";
+			}
+
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see com.google.gwt.user.cellview.client.Column#render(com.google.gwt.cell.client.Cell.Context, java.lang.Object,
+			 * com.google.gwt.safehtml.shared.SafeHtmlBuilder)
+			 */
+			@Override
+			public void render(Context context, User object, SafeHtmlBuilder sb) {
+				if (SessionController.get().hasRole(object, DataTypeHelper.ROLE_PREMIUM_CODE)) {
+					super.render(context, object, sb);
 				}
 			}
+
 		};
-
-		StyledButtonCell prototypeTestAndBeta = new StyledButtonCell(Styles.STYLES_INSTANCE.reflectionMainStyle().refButtonFunctionSmall());
-
-		Column<User, String> revokePremium = new Column<User, String>(prototypeTestAndBeta) {
+		revokePremiumCol.setFieldUpdater(new FieldUpdater<User, String>() {
 
 			@Override
-			public String getValue(User object) {
-				return "Revoke PREMIUM";
+			public void update(int index, User object, String value) {
+				loadingBar.show();
+				UserController.get().revokeUserRoleCode(object.id, DataTypeHelper.ROLE_PREMIUM_CODE);
 			}
-		};
-		revokePremium.setFieldUpdater(action);
+		});
 
-		Column<User, String> addToBeta = new Column<User, String>(prototypeTestAndBeta) {
+		// Column<User, String> addToBeta = new Column<User, String>(prototypeTestAndBeta) {
+		//
+		// @Override
+		// public String getValue(User object) {
+		// return "Add to beta";
+		// }
+		// };
+		// addToBeta.setFieldUpdater(action);
 
-			@Override
-			public String getValue(User object) {
-				return "Add to beta";
-			}
-		};
-		addToBeta.setFieldUpdater(action);
-
-		Column<User, String> delete = new Column<User, String>(new StyledButtonCell(Styles.STYLES_INSTANCE.reflectionMainStyle().refButtonLink() + " "
+		Column<User, String> deleteUserCol = new Column<User, String>(new StyledButtonCell(Styles.STYLES_INSTANCE.reflectionMainStyle().refButtonLink() + " "
 				+ Styles.STYLES_INSTANCE.reflectionMainStyle().warningText())) {
 
 			@Override
@@ -213,12 +220,18 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 				return "DELETE";
 			}
 		};
-		delete.setFieldUpdater(action);
+		deleteUserCol.setFieldUpdater(new FieldUpdater<User, String>() {
 
-		usersTable.addColumn(changeDetails);
+			@Override
+			public void update(int index, User object, String value) {
+				deleteUserPopup.show(object.id);
+			}
+		});
+
+		usersTable.addColumn(changeDetailsCol);
 		// usersTable.addColumn(makeTest);
-		usersTable.addColumn(addToBeta);
-		usersTable.addColumn(delete);
+		usersTable.addColumn(revokePremiumCol);
+		usersTable.addColumn(deleteUserCol);
 	}
 
 	@UiHandler("queryTextBox")
@@ -281,5 +294,33 @@ public class UsersPage extends Page implements DeleteUserEventHandler, DeleteUse
 	 */
 	@Override
 	public void deleteUsersFailure(DeleteUsersRequest input, Throwable caught) {}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.admin.shared.call.event.RevokeRoleEventHandler#revokeRoleSuccess(io.reflection.app.api.admin.shared.call.RevokeRoleRequest,
+	 * io.reflection.app.api.admin.shared.call.RevokeRoleResponse)
+	 */
+	@Override
+	public void revokeRoleSuccess(RevokeRoleRequest input, RevokeRoleResponse output) {
+		if (output.status == StatusType.StatusTypeSuccess) {
+			UserController.get().reset();
+			UserController.get().fetchUsers();
+			loadingBar.hide(true);
+		} else {
+			loadingBar.hide(false);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.api.admin.shared.call.event.RevokeRoleEventHandler#revokeRoleFailure(io.reflection.app.api.admin.shared.call.RevokeRoleRequest,
+	 * java.lang.Throwable)
+	 */
+	@Override
+	public void revokeRoleFailure(RevokeRoleRequest input, Throwable caught) {
+		loadingBar.hide(false);
+	}
 
 }
