@@ -20,7 +20,6 @@ import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.part.linkaccount.IosMacLinkAccountForm;
-import io.reflection.app.client.part.linkaccount.LinkableAccountFields;
 import io.reflection.app.client.part.linkaccount.LinkedAccountChangeEvent.EVENT_TYPE;
 import io.reflection.app.client.part.linkaccount.LinkedAccountChangeEvent.LinkedAccountChangeEventHandler;
 import io.reflection.app.client.res.Styles;
@@ -59,7 +58,7 @@ public class LinkItunesPage extends Page implements NavigationEventHandler, Link
 	@UiField InlineHyperlink myDataPanelLink;
 	@UiField Element plugLogoContainer;
 
-	private LinkableAccountFields linkableAccount;
+	// private LinkableAccountFields linkableAccount;
 
 	public LinkItunesPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -71,8 +70,8 @@ public class LinkItunesPage extends Page implements NavigationEventHandler, Link
 				iosMacForm.setEnabled(false);
 				iosMacForm.setStatusLoading("Loading");
 				Document.get().getBody().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formSubmittedLoading());
-				LinkedAccountController.get().linkAccount(linkableAccount.getAccountSourceId(), linkableAccount.getUsername(), linkableAccount.getPassword(),
-						linkableAccount.getProperties()); // Link account
+				LinkedAccountController.get().linkAccount(iosMacForm.getAccountSourceId(), iosMacForm.getUsername(), iosMacForm.getPassword(),
+						iosMacForm.getProperties()); // Link account
 			}
 		});
 
@@ -126,7 +125,8 @@ public class LinkItunesPage extends Page implements NavigationEventHandler, Link
 		Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().connectAccountIsShowing());
 
 		// Reset form status
-		linkableAccount.resetForm();
+		iosMacForm.resetForm();
+		iosMacForm.resetButtonStatus();
 		panelSuccess.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
 		accountConnectAnimation.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().plugsConnected());
 		Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formSubmittedLoading());
@@ -150,13 +150,13 @@ public class LinkItunesPage extends Page implements NavigationEventHandler, Link
 		} else if (output.error != null) {
 			if (output.error.code.intValue() == ApiError.InvalidDataAccountCredentials.getCode()) {
 				iosMacForm.setStatusError("Invalid credentials!");
-				linkableAccount.setUsernameError("iTunes Connect username or password entered incorrectly");
-				linkableAccount.setPasswordError("iTunes Connect username or password entered incorrectly");
-				linkableAccount.setFormErrors();
+				iosMacForm.setUsernameError("iTunes Connect username or password entered incorrectly");
+				iosMacForm.setPasswordError("iTunes Connect username or password entered incorrectly");
+				iosMacForm.setFormErrors();
 			} else if (output.error.code.intValue() == ApiError.InvalidDataAccountVendor.getCode()) {
 				iosMacForm.setStatusError("Invalid vendor ID!");
 				iosMacForm.setVendorError("iTunes Connect vendor number entered incorrectly");
-				linkableAccount.setFormErrors();
+				iosMacForm.setFormErrors();
 			} else { // TODO NULL POINTER EXCEPTION DUE TO DUPLICATE LINKED ACCOUNT
 				iosMacForm.setStatusError();
 			}
@@ -179,11 +179,11 @@ public class LinkItunesPage extends Page implements NavigationEventHandler, Link
 	@UiHandler("linkAnotherAccount")
 	void onLinkAnotherAccountClicked(ClickEvent event) {
 		event.preventDefault();
-		linkableAccount.resetForm();
+		iosMacForm.resetForm();
+		iosMacForm.resetButtonStatus();
 		panelSuccess.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
 		accountConnectAnimation.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().plugsConnected());
 		Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formSubmittedSuccessComplete());
-		// linkAccountBtn.resetStatus(); // TODO CHECK
 	}
 
 	/*
@@ -194,10 +194,8 @@ public class LinkItunesPage extends Page implements NavigationEventHandler, Link
 	 */
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
-		linkableAccount = iosMacForm;
-		// mLinkableAccount.resetForm();
 		iosMacForm.setVisible(true);
-		linkableAccount.getFirstToFocus().setFocus(true);
+		iosMacForm.getFirstToFocus().setFocus(true);
 	}
 
 }
