@@ -499,10 +499,8 @@ public final class Core extends ActionHandler {
 						rank.revenue = null;
 					}
 					if (!isAdmin && !input.country.a2Code.equals("gb")) {// Remove paid ranks if not UK
-						for (Rank paidRank : output.paidRanks) {
-							paidRank.downloads = null;
-							paidRank.revenue = null;
-						}
+						rank.downloads = null;
+						rank.revenue = null;
 					}
 				}
 				output.paidRanks = ranks;
