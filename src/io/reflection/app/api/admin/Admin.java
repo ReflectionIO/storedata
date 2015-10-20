@@ -154,6 +154,13 @@ public final class Admin extends ActionHandler {
 			} else {
 				updatePager(output.pager, output.users, input.pager.totalCount == null ? UserServiceProvider.provide().getUsersCount() : null);
 			}
+			// Get roles
+			for (User user : output.users) {
+				user.roles = UserServiceProvider.provide().getUserRoles(user);
+				if (user.roles != null) {
+					RoleServiceProvider.provide().inflateRoles(user.roles);
+				}
+			}
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {

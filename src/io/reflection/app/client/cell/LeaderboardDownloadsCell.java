@@ -18,6 +18,7 @@ import io.reflection.app.datatypes.shared.Rank;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.ValueUpdater;
+import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -53,7 +54,7 @@ public class LeaderboardDownloadsCell extends AbstractCell<Rank> {
 	@Override
 	public void onBrowserEvent(com.google.gwt.cell.client.Cell.Context context, Element parent, Rank value, NativeEvent event, ValueUpdater<Rank> valueUpdater) {
 		// Handle the click event.
-		if ("click".equals(event.getType())) {
+		if (BrowserEvents.CLICK.equals(event.getType())) {
 			Element clickedElem = Element.as(event.getEventTarget());
 			if (parent.getFirstChildElement().isOrHasChild(clickedElem) && clickedElem.getTagName().equalsIgnoreCase("A")) {
 				valueUpdater.update(value);
