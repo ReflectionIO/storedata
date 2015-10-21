@@ -9,6 +9,7 @@ package io.reflection.app.client.page;
 
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.helper.AnimationHelper;
+import io.reflection.app.client.helper.DOMHelper;
 import io.reflection.app.client.res.Styles;
 
 import java.util.HashMap;
@@ -108,7 +109,7 @@ public class FaqsPage extends Page {
 
 			@Override
 			public void onWindowScroll(ScrollEvent event) {
-				if (Window.getClientWidth() > 719) {
+				if (Window.getClientWidth() > 719 && Window.getClientHeight() > 799 && DOMHelper.getHtmlElement().hasClassName("no-touch")) {
 					if (Window.getScrollTop() >= faqContainerTopPosition) {
 						if (!faqContainer.hasClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().faqsListContainerFixed())) {
 							faqContainer.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().faqsListContainerFixed());
@@ -137,9 +138,12 @@ public class FaqsPage extends Page {
 	 * @see io.reflection.app.client.page.Page#onAttach()
 	 */
 	@Override
-	protected void onAttach() {
-
+	protected void onAttach() {		
 		super.onAttach();
+		
+		if (faqContainer.hasClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().faqsListContainerFixed())) {
+			faqContainer.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().faqsListContainerFixed());
+		}
 	}
 
 	@UiHandler({ "linkFaq1", "linkFaq2", "linkFaq3", "linkFaq4", "linkFaq5", "linkFaq6", "linkFaq7", "linkFaq8", "linkFaq9", "linkFaq10", "linkFaq11", "linkFaq12", "linkFaq13", "linkFaq14" })

@@ -54,7 +54,7 @@ public class LinkItunesPage extends Page implements NavigationEventHandler, Link
 	@UiField IosMacLinkAccountForm iosMacForm;
 	@UiField DivElement panelSuccess;
 	@UiField Anchor linkAnotherAccount;
-	@UiField InlineHyperlink continueToLeaderboard;
+	@UiField InlineHyperlink continueToLoggedInHome;
 	@UiField InlineHyperlink leaderboardPanelLink;
 	@UiField InlineHyperlink myDataPanelLink;
 	@UiField Element plugLogoContainer;
@@ -76,8 +76,7 @@ public class LinkItunesPage extends Page implements NavigationEventHandler, Link
 			}
 		});
 
-		continueToLeaderboard.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
-				OVERALL_LIST_TYPE, FilterController.get().asRankFilterString()));
+		continueToLoggedInHome.setTargetHistoryToken(PageType.HomePageType.asTargetHistoryToken());
 		leaderboardPanelLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
 				OVERALL_LIST_TYPE, FilterController.get().asRankFilterString()));
 

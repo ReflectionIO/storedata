@@ -45,13 +45,13 @@
 					<div class="accordion accordion-static">
 						<ul>
 							<li class="{STYLES_INSTANCE.reflectionMainStyle.featureComplete} {STYLES_INSTANCE.reflectionMainStyle.isClosed}">
-								<h2 class="{STYLES_INSTANCE.reflectionMainStyle.accordionSwitch} {STYLES_INSTANCE.reflectionMainStyle.noAccordionContent}">Curate your own leaderboards by following apps and developers of your choice. Receive notifications on their activities such as soft launches and price changes.</h2>
+								<h2 class="{STYLES_INSTANCE.reflectionMainStyle.accordionSwitch} {STYLES_INSTANCE.reflectionMainStyle.noAccordionContent}"><em>Curate your own leaderboards</em> by following apps and developers of your choice. Receive notifications on their activities such as soft launches and price changes.</h2>
 							</li>
 							<li class="{STYLES_INSTANCE.reflectionMainStyle.featureComplete} {STYLES_INSTANCE.reflectionMainStyle.isClosed}">
-								<h2 class="{STYLES_INSTANCE.reflectionMainStyle.accordionSwitch} {STYLES_INSTANCE.reflectionMainStyle.noAccordionContent}">Developer Leaderboards let you see how developers and publishers are performing against each other</h2>
+								<h2 class="{STYLES_INSTANCE.reflectionMainStyle.accordionSwitch} {STYLES_INSTANCE.reflectionMainStyle.noAccordionContent}"><em>Developer Leaderboards</em> let you see how developers and publishers are performing against each other</h2>
 							</li>
 							<li class="{STYLES_INSTANCE.reflectionMainStyle.featureComplete} {STYLES_INSTANCE.reflectionMainStyle.isClosed}">
-								<h2 class="{STYLES_INSTANCE.reflectionMainStyle.accordionSwitch} {STYLES_INSTANCE.reflectionMainStyle.noAccordionContent}">Google Play and other stores</h2>
+								<h2 class="{STYLES_INSTANCE.reflectionMainStyle.accordionSwitch} {STYLES_INSTANCE.reflectionMainStyle.noAccordionContent}"><em>Google Play</em> and other stores</h2>
 							</li>
 						</ul>
 						<p>Let us know what you need to make your app successful. Help us build the only app market intelligence platform you'll ever need.</p>
