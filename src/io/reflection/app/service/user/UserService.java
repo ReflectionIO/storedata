@@ -132,11 +132,20 @@ final class UserService implements IUserService {
 		Connection userConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
 		// NOTE: salt is added then the password is sha1-ed
-		String addUserQuery = String.format(
-				"INSERT INTO `user` (`forename`, `surname`, `username`, `password`, `avatar`, `company`) VALUES ('%s', '%s', '%s', '%s', %s, '%s')",
-				addslashes(user.forename), addslashes(user.surname), addslashes(user.username), sha1Hash(SALT + user.password), user.avatar == null ? "'"
-						+ addslashes(StringUtils.md5Hash(user.username.trim().toLowerCase())) + "'" : "'" + addslashes(user.avatar) + "'",
-				addslashes(user.company));
+		String addUserQuery;
+		if (user.password != null) {
+			addUserQuery = String.format(
+					"INSERT INTO `user` (`forename`, `surname`, `username`, `password`, `avatar`, `company`) VALUES ('%s', '%s', '%s', '%s', %s, '%s')",
+					addslashes(user.forename), addslashes(user.surname), addslashes(user.username), sha1Hash(SALT + user.password), user.avatar == null ? "'"
+							+ addslashes(StringUtils.md5Hash(user.username.trim().toLowerCase())) + "'" : "'" + addslashes(user.avatar) + "'",
+					addslashes(user.company));
+		} else {
+			addUserQuery = String
+					.format("INSERT INTO `user` (`forename`, `surname`, `username`, `avatar`, `company`) VALUES ('%s', '%s', '%s', %s, '%s')",
+							addslashes(user.forename), addslashes(user.surname), addslashes(user.username),
+							user.avatar == null ? "'" + addslashes(StringUtils.md5Hash(user.username.trim().toLowerCase())) + "'" : "'"
+									+ addslashes(user.avatar) + "'", addslashes(user.company));
+		}
 		try {
 			userConnection.connect();
 			userConnection.executeQuery(addUserQuery);
