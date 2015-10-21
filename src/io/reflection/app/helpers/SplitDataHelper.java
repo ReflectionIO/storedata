@@ -66,7 +66,7 @@ public class SplitDataHelper {
 		Date lastDayOfMonth = cal.getTime();
 
 		Calendar lastSalesDataDate = Calendar.getInstance();
-		lastSalesDataDate.add(Calendar.DATE, lastSalesDataDate.get(Calendar.HOUR_OF_DAY) > 11 ? -2 : -3); // go back 2 days from today if right now if 12pm or more else go back 3 days
+		lastSalesDataDate.add(Calendar.DATE, lastSalesDataDate.get(Calendar.HOUR_OF_DAY) > 12 ? -1 : -2); // go back 1 day from today if right now if 12pm or more else go back 2 days
 		lastSalesDataDate.set(Calendar.HOUR_OF_DAY, 0);
 		lastSalesDataDate.set(Calendar.MINUTE, 0);
 		lastSalesDataDate.set(Calendar.SECOND, 0);
