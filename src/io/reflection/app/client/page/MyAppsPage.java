@@ -145,7 +145,7 @@ public class MyAppsPage extends Page implements NavigationEventHandler, LinkAcco
 		FilterHelper.addCountries(countrySelector, SessionController.get().isAdmin());
 
 		if (!SessionController.get().isAdmin()) {
-			dateSelector.disableBefore(ApiCallHelper.getUTCDate(2015, 4, 30));
+			dateSelector.disableBefore(ApiCallHelper.getUTCDate(2015, 8, 31));
 		}
 		dateSelector.addFixedRanges(FilterHelper.getDefaultDateRanges());
 

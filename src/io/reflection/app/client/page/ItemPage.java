@@ -243,7 +243,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			sincePanel.removeFromParent();
 			dnwBtn.removeFromParent();
 			dnwBtnMobile.removeFromParent();
-			dateSelector.disableBefore(ApiCallHelper.getUTCDate(2015, 4, 30));
+			dateSelector.disableBefore(ApiCallHelper.getUTCDate(2015, 8, 31));
 		} else {
 			createColumns();
 			// RankController.get().getItemRevenueDataProvider().addDataDisplay(revenueTable);

@@ -53,7 +53,7 @@
 								 <h4 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFive}">"User Account Information"</h4>
 								 <p>Means your user login and password details for access to your data from a specific Source, for example, your App Platform Account user name and password.</p>
 								 <h4 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFive}">"Reflection Service"</h4>
-								 <p>Means service accessible via the web url <a href="http://www.reflection.io">http://www.reflection.io</a> including any pages 
+								 <p>Means service accessible via the web url <a href="http://www.reflection.io" target="_blank">http://www.reflection.io</a> including any pages 
 								 of that website and any other services made available to you by us under these Terms.</p>
 								 <h4 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFive}">"Sources"</h4>
 								 <p>Means online third-party data sources, including websites, 
@@ -96,7 +96,7 @@
 										We will never sell or share your data with any third parties, or use it in any way that is not necessary for the purpose of compiling and analysing our App Intelligence, without your prior consent.
 									</li>
 									<li>
-										<strong>We take the security of your data very seriously</strong>. The data host we currently use is Google Cloud Platform, whose Terms of Service and Privacy Policy can be read for further information on the data privacy and security measures taken to protect your data.<br/><br/><a href="https://cloud.google.com/terms/">https://cloud.google.com/terms/</a><br/><br/>Reflection uses SSL encryption for data transfer between your browser and our secure servers within the Google Cloud Infrastructure.
+										<strong>We take the security of your data very seriously</strong>. The data host we currently use is Google Cloud Platform, whose Terms of Service and Privacy Policy can be read for further information on the data privacy and security measures taken to protect your data.<br/><br/><a href="https://cloud.google.com/security/" target="_blank">https://cloud.google.com/security/</a><br/><br/>Reflection uses SSL encryption for data transfer between your browser and our secure servers within the Google Cloud Infrastructure.
 									</li>
 								</ol>
 							</li>
