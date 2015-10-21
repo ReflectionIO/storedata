@@ -479,4 +479,10 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 			}
 		});
 	}
+
+	public List<String> getAllLinkedAccountIds() {
+		List<String> ids = new ArrayList<String>();
+		ids.addAll(myDataAccountLookup.keySet());
+		return ids;
+	}
 }

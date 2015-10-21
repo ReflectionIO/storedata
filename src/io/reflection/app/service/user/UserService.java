@@ -1315,7 +1315,7 @@ final class UserService implements IUserService {
 	 * io.reflection.app.datatypes.shared.DataAccount)
 	 */
 	@Override
-	public void deleteDataAccount(User user, DataAccount dataAccount) throws DataAccessException {
+	public void deleteUserDataAccount(User user, DataAccount dataAccount) throws DataAccessException {
 
 		String deleteDataAccountQuery = String.format("UPDATE `userdataaccount` SET `deleted`='y' WHERE `dataaccountid`=%d AND `userid`=%d AND `deleted`='n'",
 				dataAccount.id.longValue(), user.id.longValue());
@@ -1521,8 +1521,8 @@ final class UserService implements IUserService {
 	 */
 	@Override
 	public void revokeRole(User user, Role role) throws DataAccessException {
-		String deleteRoleQuery = String.format("UPDATE `userrole` SET `deleted`='y' WHERE `roleid`=%d AND `userid`=%d AND `deleted`='n'", role.id.longValue(),
-				user.id.longValue());
+		String deleteRoleQuery = String.format("UPDATE `userrole` SET `expires`=NOW() WHERE `roleid`=%d AND `userid`=%d AND `deleted`='n'",
+				role.id.longValue(), user.id.longValue());
 
 		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
@@ -1543,37 +1543,11 @@ final class UserService implements IUserService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.service.user.IUserService#setRoleAsExpired(io.reflection.app.datatypes.shared.User, io.reflection.app.datatypes.shared.Role)
-	 */
-	@Override
-	public void setUserRoleAsExpired(User user, Role role) throws DataAccessException {
-		String setRoleExpiredQuery = String.format("UPDATE `userrole` SET `expires`=NOW() WHERE `roleid`=%d AND `userid`=%d AND `deleted`='n'",
-				role.id.longValue(), user.id.longValue());
-
-		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
-
-		try {
-			userConnection.connect();
-			userConnection.executeQuery(setRoleExpiredQuery);
-
-			if (userConnection.getAffectedRowCount() > 0) {
-				// log something
-			}
-		} finally {
-			if (userConnection != null) {
-				userConnection.disconnect();
-			}
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see io.reflection.app.service.user.IUserService#revokeAllRoles(io.reflection.app.datatypes.shared.User)
 	 */
 	@Override
 	public void revokeAllRoles(User user) throws DataAccessException {
-		String deleteRoleQuery = String.format("UPDATE `userrole` SET `deleted`='y' WHERE `userid`=%d AND `deleted`='n'", user.id.longValue());
+		String deleteRoleQuery = String.format("UPDATE `userrole` SET `expires`=NOW() WHERE `userid`=%d AND `deleted`='n'", user.id.longValue());
 
 		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
@@ -1615,7 +1589,7 @@ final class UserService implements IUserService {
 
 			Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
-			String deleteRoleQuery = String.format("UPDATE `userrole` SET `deleted`='y' WHERE `userid` IN ('%s') AND `deleted`='n'", commaDelimitedUserIds);
+			String deleteRoleQuery = String.format("UPDATE `userrole` SET `expires`=NOW() WHERE `userid` IN ('%s') AND `deleted`='n'", commaDelimitedUserIds);
 			try {
 				userConnection.connect();
 				userConnection.executeQuery(deleteRoleQuery);

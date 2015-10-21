@@ -118,10 +118,12 @@ public class HomePage extends Page {
 	private static String selectedTab = OVERALL_LIST_TYPE;
 	private ReflectionMainStyles style = Styles.STYLES_INSTANCE.reflectionMainStyle();
 	private SignUpPopup signUpPopup = new SignUpPopup();
+	private boolean isStatusError;
 
 	public HomePage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
+		applyFilters.getElement().setAttribute("data-tooltip", "Update results");
 		if (!SessionController.get().isAdmin()) {
 			categorySelector.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
 		}
@@ -432,7 +434,8 @@ public class HomePage extends Page {
 	@UiHandler({ "countrySelector", "appStoreSelector" })
 	// "categorySelector"
 	void onFiltersChanged(ChangeEvent event) {
-		applyFilters.setEnabled(!selectedCountry.equals(countrySelector.getSelectedValue()) || !selectedAppStore.equals(appStoreSelector.getSelectedValue()));
+		applyFilters.setEnabled(isStatusError || !selectedCountry.equals(countrySelector.getSelectedValue())
+				|| !selectedAppStore.equals(appStoreSelector.getSelectedValue()));
 		// || !selectedCategory.equals(categorySelector.getSelectedValue())
 	}
 
@@ -449,7 +452,8 @@ public class HomePage extends Page {
 		// if (updateData = updateData || !selectedCategory.equals(categorySelector.getSelectedValue())) {
 		// selectedCategory = categorySelector.getSelectedValue();
 		// }
-		if (updateData || errorPanel.isVisible() || noDataPanel.isVisible()) {
+		if (updateData || isStatusError) {
+			isStatusError = false;
 			applyFilters.setEnabled(false);
 			errorPanel.setVisible(false);
 			noDataPanel.setVisible(false);
@@ -489,6 +493,7 @@ public class HomePage extends Page {
 				updateRowCount(0, true);
 				leaderboardHomeTable.setVisible(false);
 				errorPanel.setVisible(true);
+				isStatusError = true;
 				applyFilters.setEnabled(true);
 			}
 		};
@@ -563,12 +568,12 @@ public class HomePage extends Page {
 						} else {
 							leaderboardHomeTable.setVisible(false);
 							noDataPanel.setVisible(true);
-							applyFilters.setEnabled(true);
 						}
 						updateRowData(0, rankHomeGroupList); // Inform the displays of the new data. @params Start index, data values
 					} else {
 						leaderboardHomeTable.setVisible(false);
 						errorPanel.setVisible(true);
+						isStatusError = true;
 						applyFilters.setEnabled(true);
 					}
 					updateRowCount(rankHomeGroupList.size(), true);
@@ -583,6 +588,7 @@ public class HomePage extends Page {
 					updateRowCount(0, true);
 					leaderboardHomeTable.setVisible(false);
 					errorPanel.setVisible(true);
+					isStatusError = true;
 					applyFilters.setEnabled(true);
 				}
 			});

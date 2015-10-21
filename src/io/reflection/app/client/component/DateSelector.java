@@ -220,6 +220,7 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 				// || !CalendarUtil.isSameDate(dateBoxTo.getValue(), dateRange.getTo()));
 			}
 		}
+		setValue(new DateRange(dateBoxFrom.getValue(), dateBoxTo.getValue()), true);
 	}
 
 	/**
@@ -235,6 +236,7 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 			// applyDateRange.setEnabled(!CalendarUtil.isSameDate(dateBoxFrom.getValue(), dateRange.getFrom())
 			// || !CalendarUtil.isSameDate(dateBoxTo.getValue(), dateRange.getTo()));
 		}
+		setValue(new DateRange(dateBoxFrom.getValue(), dateBoxTo.getValue()), true);
 	}
 
 	/**

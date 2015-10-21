@@ -17,7 +17,6 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.google.appengine.api.rdbms.AppEngineDriver;
 import com.google.appengine.api.utils.SystemProperty;
 
 import io.reflection.app.api.exception.DataAccessException;
@@ -74,36 +73,30 @@ public final class Connection {
 		this.username = username;
 		this.password = password;
 
+		makeSureDriverClassLoaded();
+	}
+
+	private void makeSureDriverClassLoaded() throws DataAccessException {
 		if (classLoaded) return;
 
 		classLoaded = true;
 
-		if (isNative) {
-			final String databaseDriver = getDatabaseDriverName();
+		final String databaseDriver = getDatabaseDriverName();
 
-			try {
-				Class.forName(databaseDriver).newInstance();
-			} catch (final InstantiationException ex) {
-				LOG.log(Level.SEVERE, "Error registering driver", ex);
+		try {
+			Class.forName(databaseDriver).newInstance();
+		} catch (final InstantiationException ex) {
+			LOG.log(Level.SEVERE, "Error registering driver", ex);
 
-				throw new DataAccessException(ex);
-			} catch (final IllegalAccessException ex) {
-				LOG.log(Level.SEVERE, "Error registering driver", ex);
+			throw new DataAccessException(ex);
+		} catch (final IllegalAccessException ex) {
+			LOG.log(Level.SEVERE, "Error registering driver", ex);
 
-				throw new DataAccessException(ex);
-			} catch (final ClassNotFoundException ex) {
-				LOG.log(Level.SEVERE, "Error registering driver", ex);
+			throw new DataAccessException(ex);
+		} catch (final ClassNotFoundException ex) {
+			LOG.log(Level.SEVERE, "Error registering driver", ex);
 
-				throw new DataAccessException(ex);
-			}
-		} else {
-			try {
-				DriverManager.registerDriver(new AppEngineDriver());
-			} catch (final SQLException ex) {
-				LOG.log(Level.SEVERE, "Error registering driver", ex);
-
-				throw new DataAccessException(ex);
-			}
+			throw new DataAccessException(ex);
 		}
 	}
 
@@ -125,14 +118,12 @@ public final class Connection {
 			// LOG.log(GaeLevel.DEBUG, "DB Connection ------- Really connecting");
 			// }
 
-			if (isNative) {
-				if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Production) {
-					url = "jdbc:google:mysql://" + server + "/" + database;
-				} else {
-					url = "jdbc:mysql://" + server + "/" + database;
-				}
+			makeSureDriverClassLoaded();
+
+			if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Production) {
+				url = "jdbc:google:mysql://" + server + "/" + database;
 			} else {
-				url = "jdbc:google:rdbms://" + server + "/" + database;
+				url = "jdbc:mysql://" + server + "/" + database;
 			}
 
 			connection = DriverManager.getConnection(url, username, password);

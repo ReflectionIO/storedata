@@ -14,14 +14,14 @@
 	<queue>
 		<name>summarise</name>
 		<rate>50/s</rate>
-		<bucket-size>10</bucket-size>
+		<bucket-size>4</bucket-size>
 		<retry-parameters>
 			<task-retry-limit>5</task-retry-limit>
 			<task-age-limit>3d</task-age-limit>
 			<min-backoff-seconds>60</min-backoff-seconds>
 			<max-backoff-seconds>1200</max-backoff-seconds>
 		</retry-parameters>
-		<max-concurrent-requests>10</max-concurrent-requests>
+		<max-concurrent-requests>4</max-concurrent-requests>
 	</queue>
 
 	<queue>

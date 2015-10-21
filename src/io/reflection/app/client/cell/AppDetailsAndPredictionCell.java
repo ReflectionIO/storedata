@@ -25,6 +25,7 @@ import io.reflection.app.datatypes.shared.Rank;
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.BrowserEvents;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.Style.Display;
@@ -67,7 +68,7 @@ public class AppDetailsAndPredictionCell extends AbstractCell<Rank> {
 	@Override
 	public void onBrowserEvent(com.google.gwt.cell.client.Cell.Context context, Element parent, Rank value, NativeEvent event, ValueUpdater<Rank> valueUpdater) {
 		// Handle the click event.
-		if ("click".equals(event.getType())) {
+		if (BrowserEvents.CLICK.equals(event.getType())) {
 			Element clickedElem = Element.as(event.getEventTarget());
 			if (clickedElem.getTagName().equalsIgnoreCase("A") && !clickedElem.getAttribute("href").startsWith("#!item/view/")) {
 				valueUpdater.update(value);
