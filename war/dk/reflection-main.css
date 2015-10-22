@@ -6987,7 +6987,7 @@ textarea, .global-header .link-open-search {
 }
 /* line 47, sass/templates/_leaderboard.scss */
 .ie11 .page-leaderboard .refresh-button:active {
-  padding-bottom: 0.7rem;
+  padding-bottom: calc(0.8rem - 2px);
 }
 /* line 52, sass/templates/_leaderboard.scss */
 .page-leaderboard .filters-container {
@@ -10353,30 +10353,18 @@ table.table-data.table-linked-accounts--disabled thead {
 .page-overlay--premium .popup-content,
 .page-overlay--standard .popup-content,
 .page-overlay--register .popup-content {
-  width: 100%;
-  max-height: 100vh;
-  overflow: auto;
   text-align: center;
   padding: 22px 30px 30px;
   background-color: #F2F2F5;
 }
-@media (min-width: 720px) {
-  /* line 4, sass/templates/_sign-up-journey.scss */
-  .page-overlay--premium .popup-content,
-  .page-overlay--standard .popup-content,
-  .page-overlay--register .popup-content {
-    max-height: inherit;
-    overflow: hidden;
-  }
-}
-/* line 16, sass/templates/_sign-up-journey.scss */
+/* line 9, sass/templates/_sign-up-journey.scss */
 .page-overlay--premium h2,
 .page-overlay--standard h2,
 .page-overlay--register h2 {
   margin-top: 0.9rem;
   margin-bottom: 1.1rem;
 }
-/* line 20, sass/templates/_sign-up-journey.scss */
+/* line 13, sass/templates/_sign-up-journey.scss */
 .page-overlay--premium h3,
 .page-overlay--standard h3,
 .page-overlay--register h3 {
@@ -10384,20 +10372,20 @@ table.table-data.table-linked-accounts--disabled thead {
   margin-bottom: 0.9rem;
   text-align: left;
 }
-/* line 25, sass/templates/_sign-up-journey.scss */
+/* line 18, sass/templates/_sign-up-journey.scss */
 .page-overlay--premium p,
 .page-overlay--standard p,
 .page-overlay--register p {
   font-size: 1.4rem;
   line-height: 1.7;
 }
-/* line 29, sass/templates/_sign-up-journey.scss */
+/* line 22, sass/templates/_sign-up-journey.scss */
 .page-overlay--premium .buttons-container,
 .page-overlay--standard .buttons-container,
 .page-overlay--register .buttons-container {
   text-align: center;
 }
-/* line 32, sass/templates/_sign-up-journey.scss */
+/* line 25, sass/templates/_sign-up-journey.scss */
 .page-overlay--premium .ref-button--cta-large, .page-overlay--premium .ref-button--cta-large--wide,
 .page-overlay--standard .ref-button--cta-large,
 .page-overlay--standard .ref-button--cta-large--wide,
@@ -10406,7 +10394,7 @@ table.table-data.table-linked-accounts--disabled thead {
   padding-left: 1.4em;
   padding-right: 1.4em;
 }
-/* line 36, sass/templates/_sign-up-journey.scss */
+/* line 29, sass/templates/_sign-up-journey.scss */
 .page-overlay--premium .ref-button--function-large, .page-overlay--premium .ref-button--function-large--wide,
 .page-overlay--standard .ref-button--function-large,
 .page-overlay--standard .ref-button--function-large--wide,
@@ -10415,7 +10403,7 @@ table.table-data.table-linked-accounts--disabled thead {
   padding-left: 1em;
   padding-right: 1em;
 }
-/* line 40, sass/templates/_sign-up-journey.scss */
+/* line 33, sass/templates/_sign-up-journey.scss */
 .page-overlay--premium .popup-header-image,
 .page-overlay--standard .popup-header-image,
 .page-overlay--register .popup-header-image {
@@ -10423,25 +10411,25 @@ table.table-data.table-linked-accounts--disabled thead {
   margin: 0 auto;
 }
 
-/* line 45, sass/templates/_sign-up-journey.scss */
+/* line 38, sass/templates/_sign-up-journey.scss */
 .start-trial-intro {
   position: relative;
   z-index: 2;
   opacity: 1;
 }
-/* line 49, sass/templates/_sign-up-journey.scss */
+/* line 42, sass/templates/_sign-up-journey.scss */
 .is-submitted-success .start-trial-intro {
   opacity: 0;
   z-index: 0;
   -webkit-transition: opacity 0.2s;
           transition: opacity 0.2s;
 }
-/* line 53, sass/templates/_sign-up-journey.scss */
+/* line 46, sass/templates/_sign-up-journey.scss */
 .is-submitted-success .start-trial-intro button {
   visibility: hidden;
 }
 
-/* line 58, sass/templates/_sign-up-journey.scss */
+/* line 51, sass/templates/_sign-up-journey.scss */
 .start-trial-confirmation {
   position: absolute;
   top: 0px;
@@ -10449,18 +10437,18 @@ table.table-data.table-linked-accounts--disabled thead {
   padding: 85px 30px 30px;
   opacity: 0;
 }
-/* line 64, sass/templates/_sign-up-journey.scss */
+/* line 57, sass/templates/_sign-up-journey.scss */
 .start-trial-confirmation .ref-button--link-large {
   font-size: 1.6rem;
 }
-/* line 67, sass/templates/_sign-up-journey.scss */
+/* line 60, sass/templates/_sign-up-journey.scss */
 .is-submitted-success .start-trial-confirmation {
   opacity: 1;
   -webkit-transition: opacity 0.2s 0.2s;
           transition: opacity 0.2s 0.2s;
 }
 @media (min-width: 720px) {
-  /* line 72, sass/templates/_sign-up-journey.scss */
+  /* line 65, sass/templates/_sign-up-journey.scss */
   .start-trial-confirmation h2 {
     padding-left: 50px;
     padding-right: 50px;
@@ -10546,17 +10534,17 @@ table.table-data.table-linked-accounts--disabled thead {
             transform: translateX(51px);
   }
 }
-/* line 95, sass/templates/_sign-up-journey.scss */
+/* line 88, sass/templates/_sign-up-journey.scss */
 .page-overlay--premium .buttons-container {
   padding-bottom: 3rem;
 }
 @media (min-width: 720px) {
-  /* line 95, sass/templates/_sign-up-journey.scss */
+  /* line 88, sass/templates/_sign-up-journey.scss */
   .page-overlay--premium .buttons-container {
     padding-bottom: 0;
   }
 }
-/* line 101, sass/templates/_sign-up-journey.scss */
+/* line 94, sass/templates/_sign-up-journey.scss */
 .page-overlay--premium .svg-container {
   width: 122px;
   height: 106px;
@@ -10564,67 +10552,67 @@ table.table-data.table-linked-accounts--disabled thead {
   display: inline-block;
   overflow: hidden;
 }
-/* line 107, sass/templates/_sign-up-journey.scss */
+/* line 100, sass/templates/_sign-up-journey.scss */
 .ie11 .page-overlay--premium .svg-container, .ie10 .page-overlay--premium .svg-container, .ie9 .page-overlay--premium .svg-container {
   width: 126px;
 }
-/* line 112, sass/templates/_sign-up-journey.scss */
+/* line 105, sass/templates/_sign-up-journey.scss */
 .page-overlay--premium .svg-container svg {
   width: 125px;
   height: 103px;
 }
-/* line 115, sass/templates/_sign-up-journey.scss */
+/* line 108, sass/templates/_sign-up-journey.scss */
 .ie11 .page-overlay--premium .svg-container svg, .ie10 .page-overlay--premium .svg-container svg, .ie9 .page-overlay--premium .svg-container svg {
   display: none;
 }
-/* line 121, sass/templates/_sign-up-journey.scss */
+/* line 114, sass/templates/_sign-up-journey.scss */
 .ie11 .page-overlay--premium .svg-container, .ie10 .page-overlay--premium .svg-container, .ie9 .page-overlay--premium .svg-container {
   background: url(images/premium-success@2x.png);
   background-size: 126px 106px;
 }
-/* line 128, sass/templates/_sign-up-journey.scss */
+/* line 121, sass/templates/_sign-up-journey.scss */
 .page-overlay--premium .cord {
   -webkit-transform: translateY(-60px);
       -ms-transform: translateY(-60px);
           transform: translateY(-60px);
 }
-/* line 132, sass/templates/_sign-up-journey.scss */
+/* line 125, sass/templates/_sign-up-journey.scss */
 .page-overlay--premium.is-submitted-success .cord {
   -webkit-animation: cordpull 0.6s 1s ease-in forwards;
           animation: cordpull 0.6s 1s ease-in forwards;
 }
-/* line 135, sass/templates/_sign-up-journey.scss */
+/* line 128, sass/templates/_sign-up-journey.scss */
 .page-overlay--premium.is-submitted-success .curtain-left {
   -webkit-animation: curtainpullleft 0.8s 1s cubic-bezier(0.57, -0.2, 0.32, 1.41) forwards;
           animation: curtainpullleft 0.8s 1s cubic-bezier(0.57, -0.2, 0.32, 1.41) forwards;
 }
-/* line 138, sass/templates/_sign-up-journey.scss */
+/* line 131, sass/templates/_sign-up-journey.scss */
 .page-overlay--premium.is-submitted-success .curtain-right {
   -webkit-animation: curtainpullright 0.8s 1s cubic-bezier(0.57, -0.2, 0.32, 1.41) forwards;
           animation: curtainpullright 0.8s 1s cubic-bezier(0.57, -0.2, 0.32, 1.41) forwards;
 }
 
-/* line 144, sass/templates/_sign-up-journey.scss */
+/* line 137, sass/templates/_sign-up-journey.scss */
 .page-overlay--standard .popup-content {
   padding-top: 33px;
   padding-bottom: 40px;
 }
-/* line 148, sass/templates/_sign-up-journey.scss */
+/* line 141, sass/templates/_sign-up-journey.scss */
 .page-overlay--standard .buttons-container {
   padding-bottom: 2.9rem;
   margin-bottom: 2.5rem;
   border-bottom: 1px solid #e1e5e8;
 }
-/* line 152, sass/templates/_sign-up-journey.scss */
+/* line 145, sass/templates/_sign-up-journey.scss */
 .page-overlay--standard .buttons-container button:first-child {
   margin-top: 0.8rem;
 }
-/* line 156, sass/templates/_sign-up-journey.scss */
+/* line 149, sass/templates/_sign-up-journey.scss */
 .page-overlay--standard h3 {
   text-align: center;
 }
 
-/* line 163, sass/templates/_sign-up-journey.scss */
+/* line 156, sass/templates/_sign-up-journey.scss */
 .page-overlay--standard.is-submitted .popup-content,
 .page-overlay--register.is-submitted .popup-content {
   height: 500px;
@@ -10632,12 +10620,12 @@ table.table-data.table-linked-accounts--disabled thead {
           transition: height 0.3s 0.3s;
 }
 
-/* line 169, sass/templates/_sign-up-journey.scss */
+/* line 162, sass/templates/_sign-up-journey.scss */
 .sign-up-info-content {
   position: absolute;
   opacity: 0;
 }
-/* line 172, sass/templates/_sign-up-journey.scss */
+/* line 165, sass/templates/_sign-up-journey.scss */
 .register-is-second-step .sign-up-info-content {
   position: relative;
   z-index: 10;
@@ -11739,7 +11727,7 @@ table.table-data.table-linked-accounts--disabled thead {
 }
 /* line 299, sass/components/_button.scss */
 .refresh-button:active {
-  padding-bottom: 0.6rem;
+  padding-bottom: calc(0.8rem - 2px);
 }
 /* line 302, sass/components/_button.scss */
 .refresh-button .svg-refresh {
@@ -16231,7 +16219,9 @@ svg.loading-ellipsis .dot-3 {
   position: relative;
   padding: 3.2rem 3rem 3rem;
   width: 100%;
+  max-height: 100vh;
   max-width: 40rem;
+  overflow: auto;
   opacity: 0;
   text-align: center;
   border-radius: 6px;
@@ -16240,7 +16230,7 @@ svg.loading-ellipsis .dot-3 {
       -ms-transform: scale(0.8);
           transform: scale(0.8);
 }
-/* line 32, sass/components/_page-popup.scss */
+/* line 34, sass/components/_page-popup.scss */
 .popup-content.is-showing {
   opacity: 1;
   -webkit-transform: scale(1);
@@ -16249,17 +16239,17 @@ svg.loading-ellipsis .dot-3 {
   -webkit-transition: -webkit-transform 0.15s, opacity 0.15s;
           transition: transform 0.15s, opacity 0.15s;
 }
-/* line 37, sass/components/_page-popup.scss */
+/* line 39, sass/components/_page-popup.scss */
 .popup-content input, .popup-content label {
   text-align: left;
 }
-/* line 40, sass/components/_page-popup.scss */
+/* line 42, sass/components/_page-popup.scss */
 .popup-content button, .popup-content input[type=submit], .popup-content .button-style {
   margin: 1.6rem auto 0;
   text-align: center;
 }
 
-/* line 45, sass/components/_page-popup.scss */
+/* line 47, sass/components/_page-popup.scss */
 .popup-close {
   position: absolute;
   top: 12px;
@@ -16267,20 +16257,20 @@ svg.loading-ellipsis .dot-3 {
   z-index: 10;
   font-size: 0;
 }
-/* line 52, sass/components/_page-popup.scss */
+/* line 54, sass/components/_page-popup.scss */
 .popup-close span:after {
   font-size: 1.8rem;
   color: #c4c7d0;
   -webkit-transition: color 0.1s;
           transition: color 0.1s;
 }
-/* line 58, sass/components/_page-popup.scss */
+/* line 60, sass/components/_page-popup.scss */
 .popup-close span:hover:after {
   color: #b0b4c0;
   -webkit-transition: color 0.2s;
           transition: color 0.2s;
 }
-/* line 64, sass/components/_page-popup.scss */
+/* line 66, sass/components/_page-popup.scss */
 .popup-close span:active:after {
   top: 2px;
 }
@@ -18548,56 +18538,68 @@ table.table-data.sticky-table-head tbody {
   -webkit-transition: color 0.3s;
           transition: color 0.3s;
 }
-/* line 81, sass/components/_tabs.scss */
-.tabs__link:hover span,
+/* line 82, sass/components/_tabs.scss */
+.no-touch .tabs__link:hover span, .no-touch
 .tabs-to-dropdown-container:hover span {
   color: #3c3890;
   -webkit-transition: color 0.3s;
           transition: color 0.3s;
 }
-/* line 85, sass/components/_tabs.scss */
-.tabs__link:hover path,
+/* line 86, sass/components/_tabs.scss */
+.no-touch .tabs__link:hover path, .no-touch
 .tabs-to-dropdown-container:hover path {
   fill: #4b46b5;
   -webkit-transition: fill 0.3s;
           transition: fill 0.3s;
 }
-/* line 88, sass/components/_tabs.scss */
-.is-disabled .tabs__link:hover path, .is-disabled
+/* line 89, sass/components/_tabs.scss */
+.is-disabled .no-touch .tabs__link:hover path, .is-disabled .no-touch
 .tabs-to-dropdown-container:hover path {
   fill: #c4c7d0;
 }
-/* line 93, sass/components/_tabs.scss */
-.is-disabled .tabs__link:hover span, .is-disabled
+/* line 94, sass/components/_tabs.scss */
+.is-disabled .no-touch .tabs__link:hover span, .is-disabled .no-touch
 .tabs-to-dropdown-container:hover span {
   color: #c4c7d0;
 }
-/* line 99, sass/components/_tabs.scss */
-.tabs__tab:active .tabs__link > span, .tabs__tab:active
+/* line 103, sass/components/_tabs.scss */
+.no-touch .is-active .tabs__link:hover span, .touch .is-active .tabs__link:hover span, .no-touch .is-active
+.tabs-to-dropdown-container:hover span, .touch .is-active
+.tabs-to-dropdown-container:hover span {
+  color: #363a47;
+}
+/* line 106, sass/components/_tabs.scss */
+.no-touch .is-active .tabs__link:hover svg path, .touch .is-active .tabs__link:hover svg path, .no-touch .is-active
+.tabs-to-dropdown-container:hover svg path, .touch .is-active
+.tabs-to-dropdown-container:hover svg path {
+  fill: #5b5b68;
+}
+/* line 112, sass/components/_tabs.scss */
+.no-touch .tabs__tab:active .tabs__link > span, .no-touch .tabs__tab:active
 .tabs-to-dropdown-container > span {
   margin-top: 6px;
 }
-/* line 103, sass/components/_tabs.scss */
-.tabs__tab.is-disabled:active .tabs__link, .tabs__tab.is-disabled:active
+/* line 116, sass/components/_tabs.scss */
+.no-touch .tabs__tab.is-disabled:active .tabs__link, .no-touch .tabs__tab.is-disabled:active
 .tabs-to-dropdown-container {
   cursor: default;
 }
-/* line 105, sass/components/_tabs.scss */
-.tabs__tab.is-disabled:active .tabs__link > span, .tabs__tab.is-disabled:active
+/* line 118, sass/components/_tabs.scss */
+.no-touch .tabs__tab.is-disabled:active .tabs__link > span, .no-touch .tabs__tab.is-disabled:active
 .tabs-to-dropdown-container > span {
   margin-top: 0;
 }
-/* line 109, sass/components/_tabs.scss */
+/* line 122, sass/components/_tabs.scss */
 .tabs__tab.is-disabled .tabs__link, .tabs__tab.is-disabled
 .tabs-to-dropdown-container {
   cursor: default;
 }
-/* line 111, sass/components/_tabs.scss */
+/* line 124, sass/components/_tabs.scss */
 .tabs__tab.is-disabled .tabs__link > span, .tabs__tab.is-disabled
 .tabs-to-dropdown-container > span {
   color: #c4c7d0;
 }
-/* line 114, sass/components/_tabs.scss */
+/* line 127, sass/components/_tabs.scss */
 .tabs__tab.is-disabled .tabs__link .text-small, .tabs__tab.is-disabled
 .tabs-to-dropdown-container .text-small {
   padding-top: 0;
@@ -18608,19 +18610,19 @@ table.table-data.sticky-table-head tbody {
   font-size: 1.2rem;
   letter-spacing: 0.3px;
 }
-/* line 125, sass/components/_tabs.scss */
+/* line 138, sass/components/_tabs.scss */
 .is-active .tabs__link span, .is-active
 .tabs-to-dropdown-container span {
   color: #363a47;
   -webkit-transition: color 0.3s;
           transition: color 0.3s;
 }
-/* line 128, sass/components/_tabs.scss */
+/* line 141, sass/components/_tabs.scss */
 .is-active .tabs__link span:hover, .is-active
 .tabs-to-dropdown-container span:hover {
   color: #363a47;
 }
-/* line 133, sass/components/_tabs.scss */
+/* line 146, sass/components/_tabs.scss */
 .tabs__link > span,
 .tabs-to-dropdown-container > span {
   width: 100%;
@@ -18629,13 +18631,13 @@ table.table-data.sticky-table-head tbody {
   -webkit-transition: margin-top 0.1s;
           transition: margin-top 0.1s;
 }
-/* line 139, sass/components/_tabs.scss */
+/* line 152, sass/components/_tabs.scss */
 .tabs__link span span, .tabs__link span:before,
 .tabs-to-dropdown-container span span,
 .tabs-to-dropdown-container span:before {
   vertical-align: middle;
 }
-/* line 142, sass/components/_tabs.scss */
+/* line 155, sass/components/_tabs.scss */
 .tabs__link span > span,
 .tabs-to-dropdown-container span > span {
   width: 75%;
@@ -18646,13 +18648,13 @@ table.table-data.sticky-table-head tbody {
   white-space: no-wrap;
 }
 @media (min-width: 720px) {
-  /* line 142, sass/components/_tabs.scss */
+  /* line 155, sass/components/_tabs.scss */
   .tabs__link span > span,
   .tabs-to-dropdown-container span > span {
     width: auto;
   }
 }
-/* line 152, sass/components/_tabs.scss */
+/* line 165, sass/components/_tabs.scss */
 .tabs-container--large-tabs .tabs__link span > span, .tabs-container--large-tabs
 .tabs-to-dropdown-container span > span {
   width: 80%;
@@ -18660,34 +18662,34 @@ table.table-data.sticky-table-head tbody {
   margin-bottom: 10px;
 }
 @media (min-width: 720px) {
-  /* line 152, sass/components/_tabs.scss */
+  /* line 165, sass/components/_tabs.scss */
   .tabs-container--large-tabs .tabs__link span > span, .tabs-container--large-tabs
   .tabs-to-dropdown-container span > span {
     width: auto;
     max-width: 80%;
   }
 }
-/* line 162, sass/components/_tabs.scss */
+/* line 175, sass/components/_tabs.scss */
 .tabs__link span b,
 .tabs-to-dropdown-container span b {
   padding-top: 10px;
   display: inline-block;
   line-height: 1.6;
 }
-/* line 166, sass/components/_tabs.scss */
+/* line 179, sass/components/_tabs.scss */
 .tabs-container--large-tabs .tabs__link span b, .tabs-container--large-tabs
 .tabs-to-dropdown-container span b {
   font-size: 1.4rem;
   text-transform: none;
   font-weight: 400;
 }
-/* line 172, sass/components/_tabs.scss */
+/* line 185, sass/components/_tabs.scss */
 .tabs__link span:before,
 .tabs-to-dropdown-container span:before {
   margin-right: 0.6em;
   font-size: 2.2rem;
 }
-/* line 175, sass/components/_tabs.scss */
+/* line 188, sass/components/_tabs.scss */
 .tabs-container--large-tabs .tabs__link span:before, .tabs-container--large-tabs
 .tabs-to-dropdown-container span:before {
   font-size: 2.9rem;
@@ -18695,20 +18697,20 @@ table.table-data.sticky-table-head tbody {
   vertical-align: top;
 }
 @media (min-width: 720px) {
-  /* line 175, sass/components/_tabs.scss */
+  /* line 188, sass/components/_tabs.scss */
   .tabs-container--large-tabs .tabs__link span:before, .tabs-container--large-tabs
   .tabs-to-dropdown-container span:before {
     font-size: 3.2rem;
   }
 }
 @media (min-width: 960px) {
-  /* line 175, sass/components/_tabs.scss */
+  /* line 188, sass/components/_tabs.scss */
   .tabs-container--large-tabs .tabs__link span:before, .tabs-container--large-tabs
   .tabs-to-dropdown-container span:before {
     font-size: 3.8rem;
   }
 }
-/* line 187, sass/components/_tabs.scss */
+/* line 200, sass/components/_tabs.scss */
 .tabs__link span svg,
 .tabs-to-dropdown-container span svg {
   width: 15%;
@@ -18719,37 +18721,37 @@ table.table-data.sticky-table-head tbody {
   vertical-align: middle;
 }
 @media (min-width: 720px) {
-  /* line 187, sass/components/_tabs.scss */
+  /* line 200, sass/components/_tabs.scss */
   .tabs__link span svg,
   .tabs-to-dropdown-container span svg {
     margin-right: 7%;
   }
 }
-/* line 197, sass/components/_tabs.scss */
+/* line 210, sass/components/_tabs.scss */
 .tabs__link span svg path,
 .tabs-to-dropdown-container span svg path {
   fill: #6d69c5;
   -webkit-transition: fill 0.2s;
           transition: fill 0.2s;
 }
-/* line 200, sass/components/_tabs.scss */
+/* line 213, sass/components/_tabs.scss */
 .is-active .tabs__link span svg path, .is-active
 .tabs-to-dropdown-container span svg path {
   fill: #5b5b68;
   -webkit-transition: fill 0.3s;
           transition: fill 0.3s;
 }
-/* line 204, sass/components/_tabs.scss */
+/* line 217, sass/components/_tabs.scss */
 .is-disabled .tabs__link span svg path, .is-disabled
 .tabs-to-dropdown-container span svg path {
   fill: #c4c7d0;
 }
 
-/* line 210, sass/components/_tabs.scss */
+/* line 223, sass/components/_tabs.scss */
 .tabs-to-dropdown-container {
   padding: 0;
 }
-/* line 212, sass/components/_tabs.scss */
+/* line 225, sass/components/_tabs.scss */
 .tabs-to-dropdown-container > span {
   padding: 12px 6% 13px;
   display: block;
@@ -18759,14 +18761,14 @@ table.table-data.sticky-table-head tbody {
   background-color: #f2f2f5;
   cursor: pointer;
 }
-/* line 220, sass/components/_tabs.scss */
+/* line 233, sass/components/_tabs.scss */
 .tabs-to-dropdown-container > span:after {
   position: absolute;
   right: 4%;
   -webkit-transition: -webkit-transform 0.2s;
           transition: transform 0.2s;
 }
-/* line 226, sass/components/_tabs.scss */
+/* line 239, sass/components/_tabs.scss */
 .tabs-to-dropdown-container > span.is-open:after {
   -webkit-transform: rotate(179.5deg);
       -ms-transform: rotate(179.5deg);
@@ -18774,64 +18776,60 @@ table.table-data.sticky-table-head tbody {
   -webkit-transition: -webkit-transform 0.3s;
           transition: transform 0.3s;
 }
-/* line 231, sass/components/_tabs.scss */
+/* line 244, sass/components/_tabs.scss */
 .tabs-to-dropdown-container > span svg path {
   fill: #363a47;
 }
-/* line 235, sass/components/_tabs.scss */
-.tabs-to-dropdown-container > span:hover svg path {
-  fill: #363a47;
-}
-/* line 240, sass/components/_tabs.scss */
+/* line 248, sass/components/_tabs.scss */
 .tabs-to-dropdown-container .tabs__link > span {
   text-align: left;
 }
-/* line 243, sass/components/_tabs.scss */
+/* line 251, sass/components/_tabs.scss */
 .tabs-to-dropdown-container .tabs-to-dropdown {
   width: 100%;
 }
-/* line 246, sass/components/_tabs.scss */
+/* line 254, sass/components/_tabs.scss */
 .tabs-to-dropdown-container li.is-active {
   display: none;
 }
-/* line 249, sass/components/_tabs.scss */
+/* line 257, sass/components/_tabs.scss */
 .tabs-to-dropdown-container .tabs__tab {
   height: 5.2rem;
 }
-/* line 252, sass/components/_tabs.scss */
+/* line 260, sass/components/_tabs.scss */
 .tabs-to-dropdown-container .tabs__link {
   padding-left: 6%;
   padding-right: 2%;
 }
 @media (min-width: 720px) {
-  /* line 252, sass/components/_tabs.scss */
+  /* line 260, sass/components/_tabs.scss */
   .tabs-to-dropdown-container .tabs__link {
     padding-left: 2%;
     padding-right: 2%;
   }
 }
-/* line 260, sass/components/_tabs.scss */
+/* line 268, sass/components/_tabs.scss */
 .tabs-to-dropdown-container span svg {
   width: 24px;
   height: 24px;
 }
 
-/* line 266, sass/components/_tabs.scss */
-.is-ie .tabs__link:active {
+/* line 274, sass/components/_tabs.scss */
+.no-touch .is-ie .tabs__link:active {
   position: relative;
   top: 4px;
 }
-/* line 270, sass/components/_tabs.scss */
-.is-ie .tabs__link span, .is-ie .tabs__link span:before, .is-ie .tabs__link:before {
+/* line 278, sass/components/_tabs.scss */
+.no-touch .is-ie .tabs__link span, .no-touch .is-ie .tabs__link span:before, .no-touch .is-ie .tabs__link:before {
   pointer-events: none;
 }
 
-/* line 274, sass/components/_tabs.scss */
+/* line 282, sass/components/_tabs.scss */
 .tab-border {
   width: 100%;
   height: 3px;
 }
-/* line 277, sass/components/_tabs.scss */
+/* line 285, sass/components/_tabs.scss */
 .tab-border span {
   width: 0%;
   height: 3px;
@@ -18840,54 +18838,54 @@ table.table-data.sticky-table-head tbody {
   -webkit-transition: width 0.2s ease-out;
           transition: width 0.2s ease-out;
 }
-/* line 285, sass/components/_tabs.scss */
-.is-active .tab-border span {
+/* line 293, sass/components/_tabs.scss */
+.no-touch .is-active .tab-border span {
   width: 100%;
   -webkit-transition: width 0.2s 0.2s ease-in;
           transition: width 0.2s 0.2s ease-in;
 }
-/* line 291, sass/components/_tabs.scss */
+/* line 299, sass/components/_tabs.scss */
 .tabs__tab:first-child .tab-border span {
   float: right;
 }
 
-/* line 296, sass/components/_tabs.scss */
+/* line 304, sass/components/_tabs.scss */
 .tabs__content-container {
   width: 100%;
   margin-bottom: 4rem;
 }
 
-/* line 300, sass/components/_tabs.scss */
+/* line 308, sass/components/_tabs.scss */
 .tabs__content {
   display: block;
   padding: 0;
   background-color: #f2f2f5;
 }
 @media (min-width: 720px) {
-  /* line 300, sass/components/_tabs.scss */
+  /* line 308, sass/components/_tabs.scss */
   .tabs__content {
     display: none;
   }
-  /* line 306, sass/components/_tabs.scss */
+  /* line 314, sass/components/_tabs.scss */
   .no-js .tabs__content {
     filter: progid:DXImageTransform.Microsoft.Alpha(enabled=false);
     opacity: 1;
   }
 }
 
-/* line 311, sass/components/_tabs.scss */
+/* line 319, sass/components/_tabs.scss */
 .default-tabs-transition .tabs__content {
   background-color: transparent;
 }
 @media (min-width: 720px) {
-  /* line 311, sass/components/_tabs.scss */
+  /* line 319, sass/components/_tabs.scss */
   .default-tabs-transition .tabs__content {
     background-color: #f2f2f5;
   }
 }
 
 @media screen and (max-width: 720px) {
-  /* line 318, sass/components/_tabs.scss */
+  /* line 326, sass/components/_tabs.scss */
   .collapsible-trigger {
     position: relative;
     width: 100%;
@@ -18904,7 +18902,7 @@ table.table-data.sticky-table-head tbody {
     -webkit-transition: color 0.3s;
             transition: color 0.3s;
   }
-  /* line 332, sass/components/_tabs.scss */
+  /* line 340, sass/components/_tabs.scss */
   .collapsible-trigger b {
     line-height: 1.6;
     text-transform: none;
@@ -18914,46 +18912,31 @@ table.table-data.sticky-table-head tbody {
     font-size: 1.3rem;
     padding-top: 4px;
   }
-  /* line 341, sass/components/_tabs.scss */
+  /* line 349, sass/components/_tabs.scss */
   .tabs__content--is-showing .collapsible-trigger {
     color: #29292c;
   }
-  /* line 343, sass/components/_tabs.scss */
+  /* line 351, sass/components/_tabs.scss */
   .tabs__content--is-showing .collapsible-trigger:before {
     color: #29292c;
   }
-  /* line 346, sass/components/_tabs.scss */
-  .tabs__content--is-showing .collapsible-trigger:hover {
-    color: #29292c;
-  }
-  /* line 350, sass/components/_tabs.scss */
-  .collapsible-trigger:hover {
-    color: #4b46b5;
-    -webkit-transition: color 0.3s;
-            transition: color 0.3s;
-  }
   /* line 355, sass/components/_tabs.scss */
-  .collapsible-trigger:active span, .collapsible-trigger:active:before {
-    position: relative;
-    top: 4px;
-  }
-  /* line 360, sass/components/_tabs.scss */
   .collapsible-trigger:before, .collapsible-trigger span {
     vertical-align: middle;
   }
-  /* line 363, sass/components/_tabs.scss */
+  /* line 358, sass/components/_tabs.scss */
   .collapsible-trigger span {
     padding-left: 10px;
   }
 
-  /* line 367, sass/components/_tabs.scss */
+  /* line 362, sass/components/_tabs.scss */
   .collapsible-content {
     margin-top: 0;
     padding-bottom: 3rem;
     -webkit-transition: margin-top 0.3s;
             transition: margin-top 0.3s;
   }
-  /* line 371, sass/components/_tabs.scss */
+  /* line 366, sass/components/_tabs.scss */
   .tabs__content--is-showing .collapsible-content {
     margin-top: 0;
     -webkit-transition: margin-top 0.3s;
@@ -18961,38 +18944,38 @@ table.table-data.sticky-table-head tbody {
   }
 }
 @media (min-width: 720px) {
-  /* line 378, sass/components/_tabs.scss */
+  /* line 373, sass/components/_tabs.scss */
   .collapsible-trigger {
     display: none;
   }
 }
-/* line 382, sass/components/_tabs.scss */
+/* line 377, sass/components/_tabs.scss */
 .tabs__content.tabs__content--is-showing {
   display: block;
 }
 
-/* line 388, sass/components/_tabs.scss */
+/* line 383, sass/components/_tabs.scss */
 .tabs-to-dropdown-container .selected-tab {
   display: inline-block;
 }
-/* line 392, sass/components/_tabs.scss */
+/* line 387, sass/components/_tabs.scss */
 .tabs-to-dropdown-container .tabs-to-dropdown li {
   padding: 0px;
 }
-/* line 395, sass/components/_tabs.scss */
+/* line 390, sass/components/_tabs.scss */
 .tabs-to-dropdown-container .tabs-to-dropdown span {
   color: #6d69c5;
 }
-/* line 399, sass/components/_tabs.scss */
+/* line 394, sass/components/_tabs.scss */
 .tabs-to-dropdown-container .tabs-to-dropdown .is-disabled span {
   color: #c4c7d0;
 }
 
-/* line 406, sass/components/_tabs.scss */
+/* line 401, sass/components/_tabs.scss */
 .tabs-to-dropdown--content .tabs__content {
   display: none;
 }
-/* line 408, sass/components/_tabs.scss */
+/* line 403, sass/components/_tabs.scss */
 .tabs-to-dropdown--content .tabs__content.tabs__content--is-showing {
   display: block;
 }
