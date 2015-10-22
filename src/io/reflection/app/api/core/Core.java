@@ -702,23 +702,18 @@ public final class Core extends ActionHandler {
 				LOG.info(String.format("Completed user registeration for user [%s %s] and email [%s] and action code [%s]", addedUser.forename,
 						addedUser.surname, addedUser.username, input.actionCode));
 			} else {
-				boolean registerInterestUser = false; // User that has registered the business interest but never signed up
+				// User that has registered the business interest OR requested to be part of the private beta but never completed the sign up process
+				boolean notRegisteredUser = false;
 				User u = UserServiceProvider.provide().getUsernameUser(input.user.username);
-				if (u != null) {
-					List<Role> r = UserServiceProvider.provide().getUserRoles(u, true);
-					if (r.size() == 1) {
-						RoleServiceProvider.provide().inflateRoles(r);
-						if (DataTypeHelper.ROLE_REGISTER_BUSINESS_INTEREST.equals(r.get(0).code)) {
-							registerInterestUser = true;
-							input.user.id = u.id;
-							// Update previous inserted user
-							addedUser = UserServiceProvider.provide().updateUser(input.user);
-							UserServiceProvider.provide().updateUserPassword(addedUser, input.user.password, Boolean.FALSE);
-						}
-					}
+				if (u != null && u.lastLoggedIn == null) {
+					notRegisteredUser = true;
+					input.user.id = u.id;
+					// Update previously inserted user
+					addedUser = UserServiceProvider.provide().updateUser(input.user);
+					UserServiceProvider.provide().updateUserPassword(addedUser, input.user.password, Boolean.FALSE);
 				}
 
-				if (!registerInterestUser) {
+				if (!notRegisteredUser) {
 					addedUser = UserServiceProvider.provide().addUser(input.user);
 					LOG.info(String.format("Added user with name [%s %s] and email [%s],", addedUser.forename, addedUser.surname, addedUser.username));
 				}

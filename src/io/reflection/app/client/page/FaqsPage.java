@@ -138,15 +138,14 @@ public class FaqsPage extends Page {
 	 * @see io.reflection.app.client.page.Page#onAttach()
 	 */
 	@Override
-	protected void onAttach() {		
+	protected void onAttach() {
 		super.onAttach();
-		
-		if (faqContainer.hasClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().faqsListContainerFixed())) {
-			faqContainer.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().faqsListContainerFixed());
-		}
+
+		faqContainer.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().faqsListContainerFixed());
 	}
 
-	@UiHandler({ "linkFaq1", "linkFaq2", "linkFaq3", "linkFaq4", "linkFaq5", "linkFaq6", "linkFaq7", "linkFaq8", "linkFaq9", "linkFaq10", "linkFaq11", "linkFaq12", "linkFaq13", "linkFaq14" })
+	@UiHandler({ "linkFaq1", "linkFaq2", "linkFaq3", "linkFaq4", "linkFaq5", "linkFaq6", "linkFaq7", "linkFaq8", "linkFaq9", "linkFaq10", "linkFaq11",
+			"linkFaq12", "linkFaq13", "linkFaq14" })
 	void onLinkFaqClicked(ClickEvent event) {
 		event.preventDefault();
 		for (Anchor link : linkFaqToAnchorMap.keySet()) {
@@ -158,7 +157,8 @@ public class FaqsPage extends Page {
 		AnimationHelper.nativeScrollTop(scrollTopOfTheAnchor - pageTopBarHeight - 20, 300, "swing");
 	}
 
-	@UiHandler({ "linkBackToTop1", "linkBackToTop2", "linkBackToTop3", "linkBackToTop4", "linkBackToTop5", "linkBackToTop6", "linkBackToTop7", "linkBackToTop8", "linkBackToTop9", "linkBackToTop10", "linkBackToTop11", "linkBackToTop12", "linkBackToTop13", "linkBackToTop14" })
+	@UiHandler({ "linkBackToTop1", "linkBackToTop2", "linkBackToTop3", "linkBackToTop4", "linkBackToTop5", "linkBackToTop6", "linkBackToTop7",
+			"linkBackToTop8", "linkBackToTop9", "linkBackToTop10", "linkBackToTop11", "linkBackToTop12", "linkBackToTop13", "linkBackToTop14" })
 	void onBackToTopClicked(ClickEvent event) {
 		event.preventDefault();
 		int scrollTopOfTheAnchor = faqsTop.getAbsoluteTop();

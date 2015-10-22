@@ -214,7 +214,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			@Override
 			public void onShowRange(ShowRangeEvent<Date> event) {
 				FilterHelper.disableOutOfRangeDates(dateBox.getDatePicker(),
-						(SessionController.get().isAdmin() ? null : ApiCallHelper.getUTCDate(2015, 4, 30)),
+						(SessionController.get().isAdmin() ? null : ApiCallHelper.getUTCDate(2015, 8, 31)),
 						(SessionController.get().isAdmin() ? FilterHelper.getToday() : FilterHelper.getDaysAgo(2)));
 			}
 		});
