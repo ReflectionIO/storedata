@@ -113,8 +113,8 @@ public class TooltipHelper {
 														"left" : leftPosition
 													});
 													setTimeout(function() {
-														tooltip.fadeIn(200);
-													}, 800);
+														tooltip.fadeIn(100);
+													}, 400);
 												});
 								$this.on("mouseleave", function() {
 									tooltip.remove();

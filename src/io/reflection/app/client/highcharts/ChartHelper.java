@@ -186,7 +186,7 @@ public class ChartHelper {
 	public static void setDefaultOptions(BaseChart chart) {
 		chart.getChartOption().setAnimation(false).setBackgroundColor(ColorHelper.getLinearGradientColor(0, 1, 0, 0, "#ffffff", ColorHelper.getPanelGrey()))
 				.setPlotBackgroundColor(ColorHelper.getPanelGrey()).setPlotBorderColor(ColorHelper.getPanelGrey()).setPlotBorderWidth(1)
-				.setSpacing(createMarginsArray(40, 1, 1, 1));
+				.setSpacing(createMarginsArray(40, 1, 10, 1));
 		chart.getPlotOption().setCursor(Cursor.DEFAULT.getCssName()).setMarkerEnabled(false).setMarkerRadius(4).setMarkerHoverRadius(4)
 				.setMarkerHoverRadiusPlus(0).setMarkerHoverLineWidthPlus(0).setMarkerLineWidth(0).setHoverHaloOpacity(0.2).setHoverHaloSize(12)
 				.setHoverLineWidthPlus(0).setMarkerSymbol("circle");
@@ -199,9 +199,9 @@ public class ChartHelper {
 		chart.getLegendOption().setEnabled(false); // Disable legend
 		chart.getTitleOption().setText(null); // Disable title
 		chart.getTooltipOption().setUseHTML(true).setShared(true).setBackgroundColor("transparent").setBorderColor("#dae3ed").setBorderWidth(0)
-				.setValueDecimals(0).setShadow(getTooltipShadowStyle()).setCrosshairs(getCrosshairStyle())
+				.setFollowPointer(true).setFollowTouchMove(true).setValueDecimals(0).setShadow(getTooltipShadowStyle()).setCrosshairs(getCrosshairStyle())
 				.setDateTimeLabelFormats(getDefaultTooltipDateTimeLabelFormat()).setFormatter(getNativeTooltipFormatter()); // TODO shadow
-		chart.getXAxis().setId("xAxis").setTickWidth(1).setTickLength(10).setTickColor("#e7e7e7").setLabelsStyle(getXAxisLabelsStyle()).setLabelsY(30)
+		chart.getXAxis().setId("xAxis").setTickWidth(1).setTickLength(10).setTickColor("#e7e7e7").setLabelsStyle(getXAxisLabelsStyle()).setLabelsY(28)
 				.setStartOnTick(true).setEndOnTick(true).setMinPadding(0).setMaxPadding(0).setLineColor("#e5e5e5").setLabelsMaxStaggerLines(1)
 				.setLabelsPadding(30).setLabelsUseHTML(false).setLabelsAlign("center");
 		chart.getPrimaryAxis().setId(YAxisPosition.PRIMARY.toString()).setAllowDecimals(false).setTitleText(null).setOffset(-30).setLabelsY(5)
@@ -437,8 +437,9 @@ public class ChartHelper {
 
 								// Add some code after the original function
 								var $axisLabel = $wnd.$(this.chart.container)
-										.find('.highcharts-axis-label'), leftOffset = 29, axisLabelYPos = arguments[1][0].series.chart.containerHeight
-										- arguments[1][0].series.xAxis.bottom, axisLabelXPos = arguments[1][0].plotX
+										.find('.highcharts-axis-label'), leftOffset = 29, 
+										axisLabelYPos = $wnd.$("#" + arguments[1][0].series.chart.container.id + "").height() - arguments[1][0].series.xAxis.bottom, 
+									 	axisLabelXPos = arguments[1][0].plotX
 										- leftOffset, timeStampString = arguments[1][0].x
 										+ "", timeStampString = timeStampString
 										.substring(0, 10), xAxisDate = new Date(
@@ -472,7 +473,7 @@ public class ChartHelper {
 
 								customIconRect = this.chart.renderer.image(
 										'images/axisLabelBackground.png',
-										axisLabelXPos - 5, axisLabelYPos, 67,
+										axisLabelXPos - 4, axisLabelYPos, 67,
 										34).attr({
 									zIndex : 99
 								}).add();

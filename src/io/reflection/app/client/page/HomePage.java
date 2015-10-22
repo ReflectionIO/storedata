@@ -9,12 +9,13 @@ package io.reflection.app.client.page;
 
 import static io.reflection.app.client.controller.FilterController.FREE_LIST_TYPE;
 import static io.reflection.app.client.controller.FilterController.GROSSING_LIST_TYPE;
+import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
 import static io.reflection.app.client.controller.FilterController.PAID_LIST_TYPE;
 import io.reflection.app.api.core.client.CoreService;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
 import io.reflection.app.api.shared.datatypes.Pager;
-import io.reflection.app.client.cell.LeaderboardAppDetailsCell;
+import io.reflection.app.client.cell.AppDetailsAndPredictionCell;
 import io.reflection.app.client.cell.LeaderboardDownloadsCell;
 import io.reflection.app.client.cell.LeaderboardRevenueCell;
 import io.reflection.app.client.component.Selector;
@@ -31,6 +32,7 @@ import io.reflection.app.client.helper.TooltipHelper;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.ErrorPanel;
 import io.reflection.app.client.part.LoadingIndicator;
+import io.reflection.app.client.part.NoDataPanel;
 import io.reflection.app.client.part.datatypes.RanksGroup;
 import io.reflection.app.client.popup.SignUpPopup;
 import io.reflection.app.client.res.Styles;
@@ -41,7 +43,6 @@ import io.reflection.app.shared.util.DataTypeHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.LIElement;
@@ -62,7 +63,6 @@ import com.google.gwt.user.cellview.client.TextHeader;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
@@ -81,6 +81,7 @@ public class HomePage extends Page {
 
 	interface HomePageUiBinder extends UiBinder<Widget, HomePage> {}
 
+	@UiField LIElement allItem;
 	@UiField LIElement paidItem;
 	@UiField LIElement freeItem;
 	@UiField LIElement grossingItem;
@@ -89,9 +90,12 @@ public class HomePage extends Page {
 	private String selectedCountry = "gb";
 	@UiField Selector appStoreSelector;
 	private String selectedAppStore = "iph";
+	@UiField Selector categorySelector;
+	private String selectedCategory = "15"; // games
 	@UiField Button applyFilters;
 	@UiField Anchor viewMoreApps;
 	@UiField ErrorPanel errorPanel;
+	@UiField NoDataPanel noDataPanel;
 	@UiField(provided = true) CellTable<RanksGroup> leaderboardHomeTable = new CellTable<RanksGroup>(ServiceConstants.SHORT_STEP_VALUE,
 			BootstrapGwtCellTable.INSTANCE);
 	private TextHeader rankHeader = new TextHeader("Rank");
@@ -106,40 +110,75 @@ public class HomePage extends Page {
 	private Column<RanksGroup, Rank> downloadsColumn;
 	private Column<RanksGroup, Rank> revenueColumn;
 	private Column<RanksGroup, SafeHtml> iapColumn;
+	private LoadingIndicator loadingIndicatorAll = AnimationHelper.getLeaderboardAllLoadingIndicator(ServiceConstants.SHORT_STEP_VALUE);
 	private LoadingIndicator loadingIndicatorFreeList = AnimationHelper.getLeaderboardListLoadingIndicator(ServiceConstants.SHORT_STEP_VALUE, true);
 	private LoadingIndicator loadingIndicatorPaidGrossingList = AnimationHelper.getLeaderboardListLoadingIndicator(ServiceConstants.SHORT_STEP_VALUE, false);
 
 	private HomeRankProvider homeRankProvider = new HomeRankProvider();
-	private String selectedTab = PAID_LIST_TYPE;
+	private static String selectedTab = OVERALL_LIST_TYPE;
 	private ReflectionMainStyles style = Styles.STYLES_INSTANCE.reflectionMainStyle();
 	private SignUpPopup signUpPopup = new SignUpPopup();
+	private boolean isStatusError;
 
 	public HomePage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
+		applyFilters.getElement().setAttribute("data-tooltip", "Update results");
+		if (!SessionController.get().isAdmin()) {
+			categorySelector.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
+		}
 		dateFixed.setInnerText(FormattingHelper.DATE_FORMATTER_DD_MMM_YYYY.format(FilterHelper.getDaysAgo(2)));
-		FilterHelper.addCountries(countrySelector, false);
-		FilterHelper.addStores(appStoreSelector, false);
+		FilterHelper.addCountries(countrySelector, SessionController.get().isAdmin());
+		FilterHelper.addStores(appStoreSelector);
+		FilterHelper.addCategories(categorySelector, SessionController.get().isAdmin());
 		countrySelector.setSelectedIndex(3);
 		appStoreSelector.setSelectedIndex(1);
+		categorySelector.setSelectedIndex(0);
 
 		leaderboardHomeTable.getTableLoadingSection().addClassName(style.tableBodyLoading());
 		homeRankProvider.addDataDisplay(leaderboardHomeTable);
 
+		Event.sinkEvents(allItem, Event.ONCLICK);
 		Event.sinkEvents(paidItem, Event.ONCLICK);
 		Event.sinkEvents(freeItem, Event.ONCLICK);
 		Event.sinkEvents(grossingItem, Event.ONCLICK);
+		Event.setEventListener(allItem, new EventListener() {
+
+			@Override
+			public void onBrowserEvent(Event event) {
+				if (Event.ONCLICK == event.getTypeInt()) {
+					paidItem.removeClassName(style.isActive());
+					freeItem.removeClassName(style.isActive());
+					grossingItem.removeClassName(style.isActive());
+					allItem.addClassName(style.isActive());
+					removeAllColumns();
+					leaderboardHomeTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+					leaderboardHomeTable.setColumnWidth(paidColumn, 30.0, Unit.PCT);
+					leaderboardHomeTable.setColumnWidth(freeColumn, 30.0, Unit.PCT);
+					leaderboardHomeTable.setColumnWidth(grossingColumn, 30.0, Unit.PCT);
+					leaderboardHomeTable.addColumn(rankColumn, rankHeader);
+					leaderboardHomeTable.addColumn(paidColumn, "Paid");
+					leaderboardHomeTable.addColumn(freeColumn, "Free");
+					leaderboardHomeTable.addColumn(grossingColumn, "Grossing");
+					ResponsiveDesignHelper.makeTabsResponsive();
+					leaderboardHomeTable.setLoadingIndicator(loadingIndicatorAll);
+					TooltipHelper.updateHelperTooltip();
+					selectedTab = OVERALL_LIST_TYPE;
+				}
+			}
+		});
 		Event.setEventListener(paidItem, new EventListener() {
 
 			@Override
 			public void onBrowserEvent(Event event) {
 				if (Event.ONCLICK == event.getTypeInt()) {
+					allItem.removeClassName(style.isActive());
 					freeItem.removeClassName(style.isActive());
 					grossingItem.removeClassName(style.isActive());
 					paidItem.addClassName(style.isActive());
 					removeAllColumns();
 					leaderboardHomeTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-					leaderboardHomeTable.setColumnWidth(paidColumn, 30.0, Unit.PCT);
+					leaderboardHomeTable.setColumnWidth(paidColumn, 42.0, Unit.PCT);
 					leaderboardHomeTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
 					leaderboardHomeTable.setColumnWidth(downloadsColumn, 19.0, Unit.PCT);
 					leaderboardHomeTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
@@ -163,12 +202,13 @@ public class HomePage extends Page {
 			@Override
 			public void onBrowserEvent(Event event) {
 				if (Event.ONCLICK == event.getTypeInt()) {
+					allItem.removeClassName(style.isActive());
 					paidItem.removeClassName(style.isActive());
 					grossingItem.removeClassName(style.isActive());
 					freeItem.addClassName(style.isActive());
 					removeAllColumns();
 					leaderboardHomeTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-					leaderboardHomeTable.setColumnWidth(freeColumn, 30.0, Unit.PCT);
+					leaderboardHomeTable.setColumnWidth(freeColumn, 42.0, Unit.PCT);
 					leaderboardHomeTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
 					leaderboardHomeTable.setColumnWidth(downloadsColumn, 19.0, Unit.PCT);
 					leaderboardHomeTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
@@ -192,12 +232,13 @@ public class HomePage extends Page {
 			@Override
 			public void onBrowserEvent(Event event) {
 				if (Event.ONCLICK == event.getTypeInt()) {
+					allItem.removeClassName(style.isActive());
 					paidItem.removeClassName(style.isActive());
 					freeItem.removeClassName(style.isActive());
 					grossingItem.addClassName(style.isActive());
 					removeAllColumns();
 					leaderboardHomeTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-					leaderboardHomeTable.setColumnWidth(grossingColumn, 30.0, Unit.PCT);
+					leaderboardHomeTable.setColumnWidth(grossingColumn, 42.0, Unit.PCT);
 					leaderboardHomeTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
 					leaderboardHomeTable.setColumnWidth(revenueColumn, 19.0, Unit.PCT);
 					leaderboardHomeTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
@@ -220,19 +261,14 @@ public class HomePage extends Page {
 		createColumns();
 		leaderboardHomeTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
 		leaderboardHomeTable.setColumnWidth(paidColumn, 30.0, Unit.PCT);
-		leaderboardHomeTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
-		leaderboardHomeTable.setColumnWidth(downloadsColumn, 19.0, Unit.PCT);
-		leaderboardHomeTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
+		leaderboardHomeTable.setColumnWidth(freeColumn, 30.0, Unit.PCT);
+		leaderboardHomeTable.setColumnWidth(grossingColumn, 30.0, Unit.PCT);
 		leaderboardHomeTable.addColumn(rankColumn, rankHeader);
-		leaderboardHomeTable.addColumn(paidColumn, "App Name");
-		leaderboardHomeTable.addColumn(priceColumn, priceHeader);
-		leaderboardHomeTable.addColumn(downloadsColumn, "Downloads");
-		leaderboardHomeTable.addColumn(iapColumn, iapHeader);
-		leaderboardHomeTable.addColumnStyleName(4, style.columnHiddenMobile());
-		iapHeader.setHeaderStyleNames(style.columnHiddenMobile());
-		iapColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
+		leaderboardHomeTable.addColumn(paidColumn, "Paid");
+		leaderboardHomeTable.addColumn(freeColumn, "Free");
+		leaderboardHomeTable.addColumn(grossingColumn, "Grossing");
+		leaderboardHomeTable.setLoadingIndicator(loadingIndicatorAll);
 		TooltipHelper.updateHelperTooltip();
-		leaderboardHomeTable.setLoadingIndicator(loadingIndicatorPaidGrossingList);
 	}
 
 	private void createColumns() {
@@ -248,9 +284,9 @@ public class HomePage extends Page {
 		rankColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.mhxte6cID());
 		rankHeader.setHeaderStyleNames(style.mhxte6cIF());
 
-		LeaderboardAppDetailsCell appRankCell = new LeaderboardAppDetailsCell();
+		AppDetailsAndPredictionCell appDetailsCell = new AppDetailsAndPredictionCell();
 
-		paidColumn = new Column<RanksGroup, Rank>(appRankCell) {
+		paidColumn = new Column<RanksGroup, Rank>(appDetailsCell) {
 
 			@Override
 			public Rank getValue(RanksGroup object) {
@@ -259,7 +295,7 @@ public class HomePage extends Page {
 		};
 		paidColumn.setCellStyleNames(style.mhxte6ciA());
 
-		freeColumn = new Column<RanksGroup, Rank>(appRankCell) {
+		freeColumn = new Column<RanksGroup, Rank>(appDetailsCell) {
 
 			@Override
 			public Rank getValue(RanksGroup object) {
@@ -269,7 +305,7 @@ public class HomePage extends Page {
 		};
 		freeColumn.setCellStyleNames(style.mhxte6ciA());
 
-		grossingColumn = new Column<RanksGroup, Rank>(appRankCell) {
+		grossingColumn = new Column<RanksGroup, Rank>(appDetailsCell) {
 
 			@Override
 			public Rank getValue(RanksGroup object) {
@@ -296,17 +332,20 @@ public class HomePage extends Page {
 				return rankForListType(object);
 			}
 		};
-		downloadsColumn.setFieldUpdater(new FieldUpdater<RanksGroup, Rank>() {
-
-			@Override
-			public void update(int index, RanksGroup object, Rank value) {
-				if (SessionController.get().isValidSession() && !SessionController.get().hasLinkedAccount()) {
-					Window.alert("Link Account Popup");
-				} else {
-					signUpPopup.show();
-				}
-			}
-		});
+		// downloadsColumn.setFieldUpdater(new FieldUpdater<RanksGroup, Rank>() {
+		//
+		// @Override
+		// public void update(int index, RanksGroup object, Rank value) {
+		// if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
+		// new PremiumPopup().show(true);
+		// } else if (SessionController.get().isValidSession()) {
+		// new AddLinkedAccountPopup().show("Link Your Appstore Account",
+		// "You need to link your iTunes Connect account to use this feature, it only takes a moment");
+		// } else {
+		// signUpPopup.show();
+		// }
+		// }
+		// });
 		downloadsColumn.setCellStyleNames(style.mhxte6ciA());
 
 		revenueColumn = new Column<RanksGroup, Rank>(new LeaderboardRevenueCell()) {
@@ -316,17 +355,20 @@ public class HomePage extends Page {
 				return rankForListType(object);
 			}
 		};
-		revenueColumn.setFieldUpdater(new FieldUpdater<RanksGroup, Rank>() {
-
-			@Override
-			public void update(int index, RanksGroup object, Rank value) {
-				if (SessionController.get().isValidSession() && !SessionController.get().hasLinkedAccount()) {
-					Window.alert("Link Account Popup");
-				} else {
-					signUpPopup.show();
-				}
-			}
-		});
+		// revenueColumn.setFieldUpdater(new FieldUpdater<RanksGroup, Rank>() {
+		//
+		// @Override
+		// public void update(int index, RanksGroup object, Rank value) {
+		// if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
+		// new PremiumPopup().show(true);
+		// } else if (SessionController.get().isValidSession()) {
+		// new AddLinkedAccountPopup().show("Link Your Appstore Account",
+		// "You need to link your iTunes Connect account to use this feature, it only takes a moment");
+		// } else {
+		// signUpPopup.show();
+		// }
+		// }
+		// });
 		revenueColumn.setCellStyleNames(style.mhxte6ciA());
 
 		iapColumn = new Column<RanksGroup, SafeHtml>(new SafeHtmlCell()) {
@@ -385,9 +427,16 @@ public class HomePage extends Page {
 		}
 	}
 
+	public static String getSelectedTab() {
+		return selectedTab;
+	}
+
 	@UiHandler({ "countrySelector", "appStoreSelector" })
+	// "categorySelector"
 	void onFiltersChanged(ChangeEvent event) {
-		applyFilters.setEnabled(!selectedCountry.equals(countrySelector.getSelectedValue()) || !selectedAppStore.equals(appStoreSelector.getSelectedValue()));
+		applyFilters.setEnabled(isStatusError || !selectedCountry.equals(countrySelector.getSelectedValue())
+				|| !selectedAppStore.equals(appStoreSelector.getSelectedValue()));
+		// || !selectedCategory.equals(categorySelector.getSelectedValue())
 	}
 
 	@UiHandler("applyFilters")
@@ -400,9 +449,14 @@ public class HomePage extends Page {
 		if (updateData = updateData || !selectedAppStore.equals(appStoreSelector.getSelectedValue())) {
 			selectedAppStore = appStoreSelector.getSelectedValue();
 		}
-		if (updateData || errorPanel.isVisible()) {
+		// if (updateData = updateData || !selectedCategory.equals(categorySelector.getSelectedValue())) {
+		// selectedCategory = categorySelector.getSelectedValue();
+		// }
+		if (updateData || isStatusError) {
+			isStatusError = false;
 			applyFilters.setEnabled(false);
 			errorPanel.setVisible(false);
+			noDataPanel.setVisible(false);
 			leaderboardHomeTable.setVisible(true);
 			homeRankProvider.reset();
 			homeRankProvider.fetchHomeTopItems();
@@ -439,6 +493,7 @@ public class HomePage extends Page {
 				updateRowCount(0, true);
 				leaderboardHomeTable.setVisible(false);
 				errorPanel.setVisible(true);
+				isStatusError = true;
 				applyFilters.setEnabled(true);
 			}
 		};
@@ -477,15 +532,13 @@ public class HomePage extends Page {
 			input.session = null; // public call
 
 			input.on = FilterHelper.getDaysAgo(2);
-			input.country = DataTypeHelper.createCountry(countrySelector.getSelectedValue());
-			input.store = DataTypeHelper.createStore(appStoreSelector.getSelectedValue());
-
-			input.listType = (appStoreSelector.getSelectedValue().equals(DataTypeHelper.STORE_IPHONE_A3_CODE) ? "topallapplications" : "topallipadapplications");
-
-			input.category = DataTypeHelper.createCategory(15L);
+			input.store = DataTypeHelper.createStore("ios");
+			input.country = DataTypeHelper.createCountry(selectedCountry);
+			input.listType = (selectedAppStore.equals(DataTypeHelper.STORE_IPHONE_A3_CODE) ? "topallapplications" : "topallipadapplications");
+			input.category = DataTypeHelper.createCategory(Long.valueOf(selectedCategory));
 
 			Pager pager = new Pager();
-			pager.count = 10L;
+			pager.count = Long.valueOf(10);
 			pager.start = Long.valueOf(0);
 			// pager.boundless = Boolean.FALSE;
 
@@ -499,19 +552,29 @@ public class HomePage extends Page {
 					timerFetchTopItems.cancel();
 					currentTopItems = null;
 					if (output.status == StatusType.StatusTypeSuccess) {
+						if (output.freeRanks != null) {
+							// Caching retrieved items
+							ItemController.get().addItemsToCache(output.items); // caching items
 
-						// Caching retrieved items
-						ItemController.get().addItemsToCache(output.items); // caching items
-
-						RanksGroup r;
-						for (int i = 0; i < output.paidRanks.size(); i++) {
-							rankHomeGroupList.add(r = new RanksGroup());
-							r.free = output.freeRanks.get(i);
-							r.paid = output.paidRanks.get(i);
-							r.grossing = output.grossingRanks.get(i);
+							if (output.freeRanks != null) {
+								RanksGroup r;
+								for (int i = 0; i < 200; i++) {
+									rankHomeGroupList.add(r = new RanksGroup());
+									r.free = output.freeRanks.get(i);
+									r.paid = output.paidRanks.get(i);
+									r.grossing = output.grossingRanks.get(i);
+								}
+							}
+						} else {
+							leaderboardHomeTable.setVisible(false);
+							noDataPanel.setVisible(true);
 						}
-
 						updateRowData(0, rankHomeGroupList); // Inform the displays of the new data. @params Start index, data values
+					} else {
+						leaderboardHomeTable.setVisible(false);
+						errorPanel.setVisible(true);
+						isStatusError = true;
+						applyFilters.setEnabled(true);
 					}
 					updateRowCount(rankHomeGroupList.size(), true);
 
@@ -525,6 +588,7 @@ public class HomePage extends Page {
 					updateRowCount(0, true);
 					leaderboardHomeTable.setVisible(false);
 					errorPanel.setVisible(true);
+					isStatusError = true;
 					applyFilters.setEnabled(true);
 				}
 			});

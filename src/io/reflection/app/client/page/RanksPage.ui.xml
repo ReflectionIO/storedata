@@ -27,13 +27,9 @@
 			<!-- </form> -->
 
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.filterToggle}">
-				<div class="{STYLES_INSTANCE.reflectionMainStyle.toggle}">
-					<c:ToggleRadioButton ui:field="toggleListView" value="true"
-						svgPath="M5,4H2V2h3V4z M18,2H7v2h11V2z M5,9H2v2h3V9z M18,9H7v2h11V9z M5,16H2v2h3V16z M18,16H7v2h11V16z" />
-				</div>
-				<div class="{STYLES_INSTANCE.reflectionMainStyle.toggle}">
-					<c:ToggleRadioButton ui:field="toggleCompactView" svgPath="M5,7H2V5h3V7z M18,5H7v2h11V5z M5,9H2v2h3V9z M18,9H7v2h11V9z M5,13H2v2h3V13z M18,13H7v2h11V13z" />
-				</div>
+				<c:ToggleRadioButton ui:field="toggleListView" value="true"
+					svgPath="M5,4H2V2h3V4z M18,2H7v2h11V2z M5,9H2v2h3V9z M18,9H7v2h11V9z M5,16H2v2h3V16z M18,16H7v2h11V16z" />
+				<c:ToggleRadioButton ui:field="toggleCompactView" svgPath="M5,7H2V5h3V7z M18,5H7v2h11V5z M5,9H2v2h3V9z M18,9H7v2h11V9z M5,13H2v2h3V13z M18,13H7v2h11V13z" />
 			</div>
 
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.buttonContainer}">
@@ -150,7 +146,8 @@
 					<c:Selector ui:field="categorySelector" alignCenter="" labelText="Category" dropdownTitle="Select a category" tooltip="Select a category"
 						overlay="true" />
 
-					<g:Button ui:field="applyFilters" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaSmall} {STYLES_INSTANCE.reflectionMainStyle.refreshButton}"
+					<g:Button ui:field="applyFilters"
+						styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaSmall} {STYLES_INSTANCE.reflectionMainStyle.refreshButton} js-tooltip js-tooltip--right"
 						enabled="false">
 						<svg class="{STYLES_INSTANCE.reflectionMainStyle.svgRefresh}" version="1.1" x="0px" y="0px" viewBox="0 0 16 16" enable-background="new 0 0 16 16"
 							xml:space="preserve">

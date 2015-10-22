@@ -46,13 +46,6 @@ public class BackToTop extends Composite {
 				}
 			}
 		});
-
-		setTooltip("Back to top");
-	}
-
-	private void setTooltip(String text) {
-		getElement().addClassName("js-tooltip");
-		getElement().setAttribute("data-tooltip", text);
 	}
 
 	@UiHandler("link")

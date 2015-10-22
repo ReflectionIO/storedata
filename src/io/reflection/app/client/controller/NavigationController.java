@@ -308,7 +308,7 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 
 			boolean doAttach = false;
 
-			if (SessionController.get().isValidSession()) {
+			if (SessionController.get().isLoggedIn()) {
 				if (loaded) {
 					if (!stackPage.requiresLogin() || SessionController.get().isAdmin()
 							|| SessionController.get().isAuthorised(stackPage.getRequiredPermissions())) {

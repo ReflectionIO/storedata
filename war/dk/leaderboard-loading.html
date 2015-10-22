@@ -2,7 +2,7 @@
 <html lang="en" class="no-js">
 <head>
 	<meta charset="utf-8" />
-	<title>Reflection, Leaderboard</title>
+	<title>Reflection, Leaderboard loading</title>
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">	
 	<!--[if (gte IE 9)|(IEMobile)|(!IE)]><!-->
@@ -43,13 +43,34 @@
 					<h1 class="heading-style--heading-three page-title">App Leaderboard</h1>
 				</div>
 				<div class="grid__column page-functions">
-					<form class="inline-search-form">
-						<div class="search-field-no-label">
-		        	<input type="text" autocomplete="off" name="search" placeholder="Find an app" />
-			      	<input class="ref-button search-button-mobile is-highlighted" type="submit" value="a" />
-				    </div>
-					</form>
-					<button class="ref-button--function-small ref-button--function-small--with-icon"><span class="ref-icon-before ref-icon-before--cloud">Download</span></button>
+					<div class="filter-toggle toggle-view-state">
+						<div class="toggle">
+							<input type="radio" id="list-view" name="viewstatetoggle" checked="checked" />
+							<label for="list-view">
+								<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+									 viewBox="0 0 20 20" enable-background="new 0 0 20 20" xml:space="preserve">
+									<path fill="#5A5A68" d="M5,4H2V2h3V4z M18,2H7v2h11V2z M5,9H2v2h3V9z M18,9H7v2h11V9z M5,16H2v2h3V16z M18,16H7v2h11V16z"/>
+								</svg>
+								<img src="images/blank-image.png" alt="" />
+							</label>
+						</div>
+						<div class="toggle">
+							<input type="radio" id="compact-view" name="viewstatetoggle" />
+							<label for="compact-view">
+								<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+									 viewBox="0 0 20 20" enable-background="new 0 0 20 20" xml:space="preserve">
+								<path fill="#5A5A68" d="M5,7H2V5h3V7z M18,5H7v2h11V5z M5,9H2v2h3V9z M18,9H7v2h11V9z M5,13H2v2h3V13z M18,13H7v2h11V13z"/>
+								</svg>
+								<img src="images/blank-image.png" alt="" />
+							</label>
+						</div>
+					</div>
+					<div class="button-container">
+						<button class="ref-button--function-small js-download-csv">
+							Download CSV
+						</button>
+						<div class="icon-member icon-member--pro"><img src="images/icon-pro@2x.png" alt="Pro member icon"></div>
+					</div>
 				</div>
 				<div class="tabs">
 					<ul class="tabs-container default-tabs-transition tabs-to-dropdown">
@@ -117,68 +138,97 @@
 				</div>
 				<div class="grid__column grid__column--full-width filters-container">
 					<form class="forms--mid-theme">
-						<div class="calendar-container single-date-input">
-							<div class="date-select-container">
-								<div class="form-field form-field--date-select">
-									<input type="text" name="date-single" id="date-single" value="26 Mar 2015" />
-									<span></span>
+						<div class="filter-group">
+							<div class="calendar-container single-date-input">
+								<div class="date-select-container">
+									<div class="form-field form-field--date-select">
+										<input type="text" name="date-single" id="date-single" value="26 Mar 2015" />
+										<span></span>
+									</div>
 								</div>
 							</div>
-						</div>
-
-						<div class="form-field form-field--select">
-							<div class="page-overlay"></div>
-							<select class="js-field--select reflection-select--filter" data-title="Select a Country">
-						    <option value="" disabled selected>Country</option>
-						    <option value="a0">All Countries</option>
-						    <option value="a1">Japan</option>
-						    <option value="a2">United States</option>
-						    <option value="a3">China</option>
-						    <option value="a4">Germany</option>
-						    <option value="a5">France</option>
-						    <option value="a6">United Kingdom</option>
-						    <option value="a7">Italy</option>
-							</select>
-						</div>
-						<div class="form-field form-field--select">
-							<div class="page-overlay"></div>		
-							<select class="js-field--select reflection-select--filter" data-title="Select a Store">
-						    <option value="" disabled selected>App Store</option>
-						    <option value="b0">All Stores</option>
-						    <option value="b1">iPad Store</option>
-						    <option value="b2">iPhone Store</option>
-							</select>
-						</div>
-						<div class="form-field form-field--select">		
-							<div class="page-overlay"></div>				
-							<select class="js-field--select reflection-select--filter reflection-select--center">
-						    <option value="" disabled selected>Category</option>
-						    <option value="24">All Categories</option><option value="19">Book</option><option value="1">Business</option><option value="22">Catalogs</option><option value="18">Education</option><option value="17">Entertainment</option><option value="16">Finance</option><option value="23">Food &amp; Drink</option><option value="15">Games</option><option value="14">Health &amp; Fitness</option><option value="13">Lifestyle</option><option value="20">Medical</option><option value="12">Music</option><option value="11">Navigation</option><option value="10">News</option><option value="21">Newsstand</option><option value="9">Photo &amp; Video</option><option value="8">Productivity</option><option value="7">Reference</option><option value="6">Social Networking</option><option value="5">Sports</option><option value="4">Travel</option><option value="3">Utilities</option><option value="2">Weather</option>
-							</select>
-						</div>
-
-						<div class="filter-toggle">
-							<div class="toggle">
-								<input type="radio" id="downloads" name="radiogroupname" checked />
-								<label for="downloads" class="toggle-downloads">
-									<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path fill-rule=evenodd clip-rule=evenodd fill=#3B3735 d="M32,16.5c0,3.6-2.7,6.5-6.7,6.5v0h-6v-2h6.5
-	c2.5,0,4.5-2,4.5-4.5c0-1.6-0.8-3-2.3-3.9c-1.4-0.8-1.5-0.9-0.9-2.4c0.1-0.3,0.1-0.5,0.1-0.8c0-1.4-1.1-2.5-2.5-2.5
-	c0,0-0.7,0-1.4,0.2c-1.1,0.5-1.3,0-1.8-1.2C20.4,3.6,17.9,2,15.2,2c-3.6,0-6.6,2.7-7,6.3c-0.1,1.4-0.2,1.4-1.7,1.8
-	C4,10.6,2,12.9,2,15.5c0,3,2.3,5.5,5.3,5.5v0h6v2h-6v0c-4,0-7.2-3.4-7.2-7.5c0-3.7,2.7-6.7,6.2-7.4c0.4-4.6,4.4-8.1,9-8.1
-	c3.6,0,6.7,2.1,8.1,5.2C23.8,5.1,24.2,5,24.7,5c2.5,0,4.5,2,4.5,4.5c0,0.5-0.2,1-0.3,1.4C30.8,12,32,14.1,32,16.5z M19,25.8
-	l-1.8,1.8V14.3c0-0.6-0.4-1.1-1-1.1c-0.6,0-1,0.5-1,1.1v13.3l-1.9-1.8c-0.4-0.4-1.2-0.4-1.6,0c-0.4,0.4-0.5,1.1,0,1.6l3.1,3.1
-	c0.4,0.4,0.8,0.5,1.3,0.5c0.5,0,0.9-0.2,1.3-0.5l3.1-3.1c0.4-0.4,0.4-1.1,0-1.6C20.2,25.4,19.5,25.4,19,25.8z"/></svg>
-									<img src="images/blank-image.png" alt="" />
-								</label>
+							<div class="form-field form-field--country-select js-field--country-select js-tooltip" data-tooltip="Select a country">								
+								<div class="page-overlay"></div>								
+								<span class="selected-value" data-selected-ids="">United Kingdom</span>
+								<div class="country-select--popup">
+									<a class="close-popup">K</a>
+									<span>Select up to 5 countries</span>
+									<div class="county-select--container js-country-select--container">
+										<div class="form-field js-has-accepted-value js-country-search-form-field" data-id="2">
+											<input type="text" name="country1" id="country1" autocomplete="off" value="United Kingdom">
+											<label for="country1">Country</label>
+											<a class="remove-form-field">K</a>
+											<svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve"><g id="UK"><circle id="Flag_Mask_4_" fill="#FFFFFF" cx="16" cy="16" r="9"></circle><path fill="#D10D24" d="M13.4,18.3c-1.7,0.8-3.3,1.7-5,2.5C8.3,20.6,8.1,20.3,8,20c1.2-0.6,2.3-1.2,3.5-1.8c0,0,0.1,0,0.1,0 C12.2,18.2,12.8,18.2,13.4,18.3C13.4,18.2,13.5,18.2,13.4,18.3C13.5,18.2,13.5,18.3,13.4,18.3C13.5,18.3,13.4,18.3,13.4,18.3z M21.9,18.3c0,0-0.1,0-0.1,0c-0.6,0-1.3,0-1.9,0c0,0,0,0-0.1,0c0,0,0,0,0.1,0c1.3,0.7,2.7,1.4,4,2c0.1-0.3,0.3-0.5,0.4-0.8 C23.5,19.1,22.7,18.7,21.9,18.3z M10.2,13.6c0,0,0.1,0,0.1,0c0.6,0,1.3,0,1.9,0c0,0,0,0,0.1,0c0,0,0,0-0.1,0c-1.3-0.7-2.7-1.4-4-2 c-0.1,0.3-0.3,0.5-0.4,0.8C8.6,12.8,9.4,13.2,10.2,13.6z M18.5,13.7C18.5,13.7,18.5,13.7,18.5,13.7C18.5,13.7,18.6,13.7,18.5,13.7 c0.7,0,1.3,0,1.9,0c0,0,0.1,0,0.1,0c1.2-0.6,2.3-1.2,3.4-1.8c-0.1-0.3-0.3-0.5-0.5-0.8C21.9,11.9,20.2,12.8,18.5,13.7 C18.6,13.6,18.5,13.7,18.5,13.7z M7.1,17.3c2.5,0,5,0,7.5,0c0,0,0,0,0.1,0c0,0,0,0,0,0.1c0,1.1,0,4.6,0,7.5C15.1,25,15.5,25,16,25 s0.9,0,1.3-0.1c0-2.9,0-6.4,0-7.5c0,0,0,0,0-0.1c0,0,0,0,0.1,0c2.5,0,5,0,7.5,0C25,16.9,25,16.5,25,16c0-0.5,0-0.9-0.1-1.4 c-2.5,0-5,0-7.5,0c0,0,0,0-0.1,0c0,0,0,0,0-0.1c0-1.2,0-4.7,0-7.4C16.9,7,16.5,7,16,7s-0.9,0-1.3,0.1c0,2.7,0,6.2,0,7.4 c0,0,0,0,0,0.1c0,0,0,0-0.1,0c-2.5,0-5,0-7.5,0C7,15.1,7,15.5,7,16C7,16.5,7,16.9,7.1,17.3z"></path><path fill="#00207F" d="M18.2,24.7c0-2.5,0-5.2,0-6c0,0,0,0,0-0.1c0,0,0,0,0.1,0c1.7,0.9,3.4,1.7,5,2.6 C22.1,22.9,20.3,24.2,18.2,24.7z M9.2,13.7C9.2,13.7,9.2,13.7,9.2,13.7C9.2,13.7,9.2,13.7,9.2,13.7c-0.5-0.3-1-0.6-1.6-0.8 c-0.1,0.3-0.2,0.6-0.3,0.8C7.9,13.7,8.5,13.7,9.2,13.7z M22.9,18.2C22.9,18.3,22.9,18.3,22.9,18.2c0.6,0.3,1.1,0.6,1.6,0.8 c0.1-0.3,0.2-0.5,0.3-0.8C24.1,18.2,23.5,18.2,22.9,18.2C22.9,18.2,22.9,18.2,22.9,18.2z M13.8,18.6C13.7,18.6,13.7,18.7,13.8,18.6 c-1.7,0.9-3.4,1.7-5.1,2.6c1.2,1.7,3,3,5.1,3.5C13.8,22.2,13.8,19.5,13.8,18.6C13.8,18.7,13.8,18.7,13.8,18.6z M9.2,18.2 C9.2,18.2,9.2,18.2,9.2,18.2c-0.7,0-1.3,0-1.9,0c0.1,0.3,0.2,0.6,0.3,0.9C8.1,18.8,8.6,18.6,9.2,18.2C9.2,18.3,9.2,18.3,9.2,18.2 C9.2,18.2,9.2,18.2,9.2,18.2z M22.8,13.7C22.8,13.7,22.8,13.7,22.8,13.7C22.8,13.7,22.8,13.7,22.8,13.7c0.7,0,1.3,0,1.9,0 c-0.1-0.3-0.2-0.6-0.3-0.8C23.9,13.1,23.4,13.4,22.8,13.7C22.8,13.7,22.8,13.7,22.8,13.7z M8.7,10.7c1.7,0.8,3.3,1.7,5,2.5 c0,0,0,0,0.1,0c0,0,0-0.1,0-0.1c0-0.8,0-3.6,0-5.9C11.7,7.8,9.9,9.1,8.7,10.7z M18.2,13.3C18.3,13.3,18.3,13.3,18.2,13.3 c1.7-0.9,3.4-1.7,5-2.6c-1.2-1.7-3-2.9-5-3.4C18.2,9.6,18.2,12.4,18.2,13.3C18.2,13.2,18.2,13.3,18.2,13.3z"></path></g></svg>
+										</div>
+										<div class="suggested-results-container js-suggested-results-container">
+											<ul>
+											</ul>										
+										</div>
+										<div class="no-results-container js-no-results">
+											<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path fill=#5A5A68 d="M13,11c0,1.7-0.9,3-2,3s-2-1.3-2-3s0.9-3,2-3S13,9.3,13,11z M21,8c-1.1,0-2,1.3-2,3s0.9,3,2,3s2-1.3,2-3
+		S22.1,8,21,8z M16,19C16,19,16,19,16,19c2.3,0,4.4,1.3,6.2,3.5l1.5-1.3C21.6,18.5,18.9,17,16,17c0,0,0,0,0,0c-2.9,0-5.6,1.6-7.8,4.2
+		l1.5,1.2C11.6,20.3,13.8,19,16,19z M16,2C8.3,2,2,8.3,2,16s6.3,14,14,14s14-6.3,14-14S23.7,2,16,2 M16,0c8.8,0,16,7.2,16,16
+		s-7.2,16-16,16S0,24.8,0,16S7.2,0,16,0L16,0z"/></svg>
+											<span>Country not available</span>
+										</div>
+									</div>
+									<button class="btn-add-another-country js-btn-add-another-country">Add Another Country</button>
+									<span class="multiple-select__number-selected js-multiple-select__number-selected"></span>
+									<a class="multiple-select__remove-all-selected js-multiple-select__remove-all-selected">Remove All</a>
+									<button class="ref-button--cta-small btn-apply js-multiple-select-apply" disabled>Apply</button>
+								</div>
 							</div>
-							<div class="toggle">
-								<input type="radio" id="revenue" name="radiogroupname" />
-								<label for="revenue" class="toggle-revenue">
-									<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path d="M19.5,4.7L0,6.9v13.9l13.9,4.9L32,20.2V6.4L19.5,4.7z M30,15.1l-16.1,4.6L2,15.9v-3l11.9,3.4
-	L30,12.2V15.1z M13.9,12L30,8.4v2.8l-16.1,4.2L2,11.9v-3L13.9,12z M27.7,7.9l-13.8,3.1L4.2,8.4l15.3-1.7L27.7,7.9z M13.9,23.6
-	L2,19.4V17l11.9,3.8L30,16.2v2.6L13.9,23.6z"/></svg>
-									<img src="images/blank-image.png" alt="" />
-								</label>
+							<div class="form-field form-field--select form-field--select--filter form-field--select-restricted js-tooltip js-demo-popup--standard" data-tooltip="Select a Store">
+								<div class="icon-member icon-member--standard"><img src="images/icon-member@2x.png" alt="Subscription icon" /></div>
+								<div class="page-overlay"></div>		
+								<select class="js-field--select reflection-select--filter" data-title="Select a Store">
+							    <option value="" disabled selected>App Store</option>
+							    <option value="b0">All Stores</option>
+							    <option value="b1">iPad Store</option>
+							    <option value="b2">iPhone Store</option>
+								</select>
+							</div>
+							<div class="form-field form-field--select form-field--select--filter form-field--select-restricted js-tooltip js-demo-popup--premium" data-tooltip="Select a Category">
+								<div class="icon-member icon-member--pro"><img src="images/icon-pro@2x.png" alt="Pro member icon" /></div>
+								<div class="page-overlay"></div>
+								<select class="js-field--select reflection-select--filter reflection-select--center">
+							    <option value="" disabled selected>Category</option>
+							    <option value="24">All Categories</option><option value="19">Book</option><option value="1">Business</option><option value="22">Catalogs</option><option value="18">Education</option><option value="17">Entertainment</option><option value="16">Finance</option><option value="23">Food &amp; Drink</option><option value="15">Games</option><option value="14">Health &amp; Fitness</option><option value="13">Lifestyle</option><option value="20">Medical</option><option value="12">Music</option><option value="11">Navigation</option><option value="10">News</option><option value="21">Newsstand</option><option value="9">Photo &amp; Video</option><option value="8">Productivity</option><option value="7">Reference</option><option value="6">Social Networking</option><option value="5">Sports</option><option value="4">Travel</option><option value="3">Utilities</option><option value="2">Weather</option>
+								</select>
+							</div>
+							<button class="ref-button--cta-small refresh-button js-tooltip js-tooltip--right" data-tooltip="Update results">
+								<svg class="svg-refresh" version="1.1" x="0px" y="0px" viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+									<path fill="#FCFDFD" d="M2.1,9h-2H0v5l1.5-1.4C2.9,14.7,5.3,16,8,16c4.1,0,7.4-3.1,7.9-7h-2c-0.5,2.8-2.9,5-5.9,5
+	c-2.1,0-4-1.1-5-2.7L5.4,9H2.1z M14.6,3.4L16,2v5h-0.1h-2H13h-2l2.1-2.1C12.1,3.2,10.2,2,8,2C5,2,2.6,4.2,2.1,7h-2
+	C0.6,3.1,3.9,0,8,0C10.7,0,13.1,1.4,14.6,3.4z"/>
+								</svg>
+							</button>
+							<button value="Reset" class="ref-button--link btn-reset-filters js-reset-filters">Reset Filters</button>
+						</div>
+						<div class="filter-toggles">							
+							<div class="filter-toggle">
+								<div class="toggle">
+									<input type="radio" id="downloads" name="radiogroupname" checked />
+									<label for="downloads" class="toggle-downloads">
+										<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path fill-rule=evenodd clip-rule=evenodd fill=#3B3735 d="M32,16.5c0,3.6-2.7,6.5-6.7,6.5v0h-6v-2h6.5
+		c2.5,0,4.5-2,4.5-4.5c0-1.6-0.8-3-2.3-3.9c-1.4-0.8-1.5-0.9-0.9-2.4c0.1-0.3,0.1-0.5,0.1-0.8c0-1.4-1.1-2.5-2.5-2.5
+		c0,0-0.7,0-1.4,0.2c-1.1,0.5-1.3,0-1.8-1.2C20.4,3.6,17.9,2,15.2,2c-3.6,0-6.6,2.7-7,6.3c-0.1,1.4-0.2,1.4-1.7,1.8
+		C4,10.6,2,12.9,2,15.5c0,3,2.3,5.5,5.3,5.5v0h6v2h-6v0c-4,0-7.2-3.4-7.2-7.5c0-3.7,2.7-6.7,6.2-7.4c0.4-4.6,4.4-8.1,9-8.1
+		c3.6,0,6.7,2.1,8.1,5.2C23.8,5.1,24.2,5,24.7,5c2.5,0,4.5,2,4.5,4.5c0,0.5-0.2,1-0.3,1.4C30.8,12,32,14.1,32,16.5z M19,25.8
+		l-1.8,1.8V14.3c0-0.6-0.4-1.1-1-1.1c-0.6,0-1,0.5-1,1.1v13.3l-1.9-1.8c-0.4-0.4-1.2-0.4-1.6,0c-0.4,0.4-0.5,1.1,0,1.6l3.1,3.1
+		c0.4,0.4,0.8,0.5,1.3,0.5c0.5,0,0.9-0.2,1.3-0.5l3.1-3.1c0.4-0.4,0.4-1.1,0-1.6C20.2,25.4,19.5,25.4,19,25.8z"/></svg>
+										<img src="images/blank-image.png" alt="" />
+									</label>
+								</div>
+								<div class="toggle">
+									<input type="radio" id="revenue" name="radiogroupname" />
+									<label for="revenue" class="toggle-revenue">
+										<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path d="M19.5,4.7L0,6.9v13.9l13.9,4.9L32,20.2V6.4L19.5,4.7z M30,15.1l-16.1,4.6L2,15.9v-3l11.9,3.4
+		L30,12.2V15.1z M13.9,12L30,8.4v2.8l-16.1,4.2L2,11.9v-3L13.9,12z M27.7,7.9l-13.8,3.1L4.2,8.4l15.3-1.7L27.7,7.9z M13.9,23.6
+		L2,19.4V17l11.9,3.8L30,16.2v2.6L13.9,23.6z"/></svg>
+										<img src="images/blank-image.png" alt="" />
+									</label>
+								</div>
 							</div>
 						</div>
 					</form>

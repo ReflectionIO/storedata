@@ -7,25 +7,31 @@
 //
 package io.reflection.app;
 
-import io.reflection.app.api.ValidationHelper;
 import io.reflection.app.api.core.Core;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
+import io.reflection.app.api.exception.AuthorisationException;
 import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.datatypes.shared.Item;
+import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Rank;
+import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.Store;
+import io.reflection.app.service.permission.PermissionServiceProvider;
 import io.reflection.app.service.role.RoleServiceProvider;
+import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
 import io.reflection.app.shared.util.FormattingHelper;
 
 import java.io.IOException;
 import java.sql.Date;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -64,8 +70,26 @@ public class DownloadLeaderboard extends HttpServlet {
 			getAllTopItemsRequest.on = new Date(Long.valueOf(req.getParameter("date")).longValue());
 			getAllTopItemsRequest.store = new Store();
 			getAllTopItemsRequest.store.a3Code = DataTypeHelper.IOS_STORE_A3;
-			ValidationHelper.validateAuthorised(getAllTopItemsRequest.session.user, RoleServiceProvider.provide().getRole(3L), RoleServiceProvider.provide()
-					.getRole(DataTypeHelper.ROLE_ADMIN_ID));
+			// ValidationHelper.validateAuthorised(getAllTopItemsRequest.session.user, RoleServiceProvider.provide().getRole(3L), RoleServiceProvider.provide()
+			// .getRole(DataTypeHelper.ROLE_ADMIN_ID));
+			boolean canDownloadData = false;
+			List<Role> roles = UserServiceProvider.provide().getUserRoles(getAllTopItemsRequest.session.user);
+			RoleServiceProvider.provide().inflateRoles(roles);
+			List<Permission> permissions = new ArrayList<Permission>();
+			if (DataTypeHelper.ROLE_ADMIN_CODE.equals(roles.get(0).code)) {
+				canDownloadData = true;
+			} else if (DataTypeHelper.ROLE_PREMIUM_CODE.equals(roles.get(0).code)) {
+				permissions.addAll(UserServiceProvider.provide().getPermissions(getAllTopItemsRequest.session.user)); // Add permissions of the user
+				PermissionServiceProvider.provide().inflatePermissions(permissions);
+				for (Permission permission : permissions) {
+					if (DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE.equals(permission.code)) {
+						canDownloadData = true;
+						break;
+					}
+				}
+			}
+			if (!canDownloadData) throw new AuthorisationException(getAllTopItemsRequest.session.user, roles, permissions);
+
 			// String fileName = "\"" + getAllTopItemsRequest.country.a2Code + "_" + getAllTopItemsRequest.store.a3Code + "_" +
 			// getAllTopItemsRequest.on.toString()
 			// + ".csv\"";

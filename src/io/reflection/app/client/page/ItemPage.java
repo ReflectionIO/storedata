@@ -83,6 +83,7 @@ import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.dom.client.Style.Visibility;
+import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -215,9 +216,12 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	private Column<AppRevenue, SafeHtml> revenueColumn;
 	private Column<AppRevenue, SafeHtml> revenueForPeriodColumn;
 
+	private boolean isStatusError;
+
 	public ItemPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
+		applyFilters.getElement().setAttribute("data-tooltip", "Update results");
 		chartContainer.getElement().getStyle().setPosition(Position.RELATIVE);
 
 		tabs.put(REVENUE_CHART_TYPE, revenueItem);
@@ -239,7 +243,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			sincePanel.removeFromParent();
 			dnwBtn.removeFromParent();
 			dnwBtnMobile.removeFromParent();
-			dateSelector.disableBefore(ApiCallHelper.getUTCDate(2015, 4, 30));
+			dateSelector.disableBefore(ApiCallHelper.getUTCDate(2015, 8, 31));
 		} else {
 			createColumns();
 			// RankController.get().getItemRevenueDataProvider().addDataDisplay(revenueTable);
@@ -312,6 +316,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		updateSelectorsFromFilter();
 
 		// loadingBar.show();
+		AnimationHelper.nativeImgErrorPlaceholder(image.getElement());
+		AnimationHelper.nativeImgErrorPlaceholder(imageTable.getElement());
 
 		TooltipHelper.updateHelperTooltip();
 	}
@@ -382,8 +388,10 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		// loadingBar.hide(false);
 		chartContainer.setVisible(false);
 		errorPanel.setVisible(true);
+		isStatusError = true;
 		graphLoadingIndicator.removeClassName(style.isLoadingSuccess());
 		graphContainer.removeClassName(style.isLoading());
+		applyFilters.setEnabled(true);
 	}
 
 	private void createColumns() {
@@ -624,13 +632,54 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 					|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getStartTime().longValue()), dateSelector.getDateBoxFromValue())) {
 				FilterController.get().getFilter().setEndTime(dateSelector.getDateBoxToValue().getTime());
 				FilterController.get().getFilter().setStartTime(dateSelector.getDateBoxFromValue().getTime());
-				dateSelector.setValue(new DateRange(dateSelector.getDateBoxFromValue(), dateSelector.getDateBoxToValue()), false);
+				dateSelector.setValue(new DateRange(dateSelector.getDateBoxFromValue(), dateSelector.getDateBoxToValue()), true);
 			}
 			if (updateData) {
+				applyFilters.setEnabled(false);
 				PageType.ItemPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, displayingAppId, selectedTab, comingPage, FilterController.get()
 						.asItemFilterString());
+			} else if (isStatusError) {
+				applyFilters.setEnabled(false);
+				updateSelectorsFromFilter();
+				infoTotalRevenue.setInnerSafeHtml(AnimationHelper.getLoaderInlineSafeHTML());
+				displayingApp.currency = null;
+				displayingApp.price = null;
+				price.setInnerSafeHtml(AnimationHelper.getLoaderInlineSafeHTML());
+				isStatusError = false;
+				errorPanel.setVisible(false);
+				noDataPanel.setVisible(false);
+				chartContainer.setVisible(true);
+				graphContainer.addClassName(style.isLoading());
+				chartRevenue.setLoading(true);
+				chartDownloads.setLoading(true);
+				chartRank.setLoading(true);
+				revenueTable.setLoadingIndicator(AnimationHelper.getAppRevenueLoadingIndicator(CalendarUtil.getDaysBetween(dateSelector.getValue().getFrom(),
+						dateSelector.getValue().getTo()) + 1));
+				revenueTable.setRowCount(0, false);
+				dateHeader.setHeaderStyleNames(style.canBeSorted());
+				revenueHeader.setHeaderStyleNames(style.canBeSorted());
+				revenueForPeriodHeader.setHeaderStyleNames(style.canBeSorted());
+				// loadingBar.show();
+				getChartData();
+				previousFilter = FilterController.get().asItemFilterString();
 			}
 		}
+	}
+
+	@UiHandler({ "countrySelector", "appStoreSelector" })
+	void onFiltersChanged(ChangeEvent event) {
+		applyFilters.setEnabled(isStatusError || !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
+				|| !FilterController.get().getFilter().getStoreA3Code().equals(appStoreSelector.getSelectedValue())
+				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateSelector.getDateBoxToValue())
+				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getStartTime().longValue()), dateSelector.getDateBoxFromValue()));
+	}
+
+	@UiHandler("dateSelector")
+	void onDateSelectorChanged(ValueChangeEvent<DateRange> event) {
+		applyFilters.setEnabled(isStatusError || !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
+				|| !FilterController.get().getFilter().getStoreA3Code().equals(appStoreSelector.getSelectedValue())
+				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateSelector.getDateBoxToValue())
+				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getStartTime().longValue()), dateSelector.getDateBoxFromValue()));
 	}
 
 	/*
@@ -763,11 +812,12 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			}
 
 			if (isNewDataRequired) {
+				errorPanel.setVisible(false);
+				isStatusError = false;
 				infoTotalRevenue.setInnerSafeHtml(AnimationHelper.getLoaderInlineSafeHTML());
 				displayingApp.currency = null;
 				displayingApp.price = null;
 				price.setInnerSafeHtml(AnimationHelper.getLoaderInlineSafeHTML());
-				errorPanel.setVisible(false);
 				noDataPanel.setVisible(false);
 				appOutOfTop200Panel.setVisible(false);
 				chartContainer.setVisible(true);
@@ -1028,7 +1078,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public void getItemRanksFailure(GetItemRanksRequest input, Throwable caught) {
 		setError();
-
 	}
 
 	/*

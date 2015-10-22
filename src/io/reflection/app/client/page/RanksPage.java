@@ -16,7 +16,7 @@ import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
 import io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler;
 import io.reflection.app.client.DefaultEventBus;
-import io.reflection.app.client.cell.LeaderboardAppDetailsCell;
+import io.reflection.app.client.cell.AppDetailsAndPredictionCell;
 import io.reflection.app.client.cell.LeaderboardDownloadsCell;
 import io.reflection.app.client.cell.LeaderboardRevenueCell;
 import io.reflection.app.client.component.FormDateBox;
@@ -179,9 +179,12 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	private SafeHtmlHeader downloadsHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Downloads " + AnimationHelper.getSorterSvg()));
 	private SafeHtmlHeader revenueHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Revenue " + AnimationHelper.getSorterSvg()));
 	private TextHeader rankHeader = new TextHeader("Rank");
-	private TextHeader paidHeader = new TextHeader("Paid");
-	private TextHeader freeHeader = new TextHeader("Free");
-	private TextHeader grossingHeader = new TextHeader("Grossing");
+	private TextHeader paidHeader = new TextHeader("App Name");
+	private TextHeader paidHeaderAll = new TextHeader("Paid");
+	private TextHeader freeHeader = new TextHeader("App Name");
+	private TextHeader freeHeaderAll = new TextHeader("Free");
+	private TextHeader grossingHeader = new TextHeader("App Name");
+	private TextHeader grossingHeaderAll = new TextHeader("Grossing");
 	private TextHeader priceHeader = new TextHeader("Price");
 	private SafeHtmlHeader iapHeader = new SafeHtmlHeader(
 			SafeHtmlUtils
@@ -194,11 +197,13 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	private SignUpPopup signUpPopup = new SignUpPopup();
 	private PremiumPopup premiumPopup = new PremiumPopup();
 	private AddLinkedAccountPopup addLinkedAccountPopup = new AddLinkedAccountPopup();
+	private boolean isStatusError;
 
 	public RanksPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		dailyDataContainer.removeFromParent();
+		applyFilters.getElement().setAttribute("data-tooltip", "Update results");
 
 		if (!SessionController.get().isAdmin()) {
 			categorySelector.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
@@ -209,7 +214,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			@Override
 			public void onShowRange(ShowRangeEvent<Date> event) {
 				FilterHelper.disableOutOfRangeDates(dateBox.getDatePicker(),
-						(SessionController.get().isAdmin() ? null : ApiCallHelper.getUTCDate(2015, 4, 30)),
+						(SessionController.get().isAdmin() ? null : ApiCallHelper.getUTCDate(2015, 8, 31)),
 						(SessionController.get().isAdmin() ? FilterHelper.getToday() : FilterHelper.getDaysAgo(2)));
 			}
 		});
@@ -277,7 +282,6 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 		dateSelectContainer.addClassName("js-tooltip");
 		dateSelectContainer.setAttribute("data-tooltip", "Select a date");
-		TooltipHelper.updateHelperTooltip();
 
 		loadingBar.show();
 
@@ -297,6 +301,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		});
 
 		updateSelectorsFromFilter();
+		TooltipHelper.updateHelperTooltip();
 
 	}
 
@@ -355,7 +360,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		};
 		rankColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.mhxte6cID());
 
-		LeaderboardAppDetailsCell appDetailsCell = new LeaderboardAppDetailsCell();
+		AppDetailsAndPredictionCell appDetailsCell = new AppDetailsAndPredictionCell();
 
 		paidColumn = new Column<RanksGroup, Rank>(appDetailsCell) {
 
@@ -368,7 +373,9 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 			@Override
 			public void update(int index, RanksGroup object, Rank value) {
-				if (SessionController.get().isValidSession() && !SessionController.get().hasLinkedAccount()) {
+				if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
+					premiumPopup.show(true);
+				} else if (SessionController.get().isLoggedIn()) {
 					addLinkedAccountPopup.show("Link Your Appstore Account",
 							"You need to link your iTunes Connect account to use this feature, it only takes a moment");
 				} else {
@@ -390,7 +397,9 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 			@Override
 			public void update(int index, RanksGroup object, Rank value) {
-				if (SessionController.get().isValidSession() && !SessionController.get().hasLinkedAccount()) {
+				if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
+					premiumPopup.show(true);
+				} else if (SessionController.get().isLoggedIn()) {
 					addLinkedAccountPopup.show("Link Your Appstore Account",
 							"You need to link your iTunes Connect account to use this feature, it only takes a moment");
 				} else {
@@ -411,7 +420,9 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 			@Override
 			public void update(int index, RanksGroup object, Rank value) {
-				if (SessionController.get().isValidSession() && !SessionController.get().hasLinkedAccount()) {
+				if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
+					premiumPopup.show(true);
+				} else if (SessionController.get().isLoggedIn()) {
 					addLinkedAccountPopup.show("Link Your Appstore Account",
 							"You need to link your iTunes Connect account to use this feature, it only takes a moment");
 				} else {
@@ -444,7 +455,9 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 			@Override
 			public void update(int index, RanksGroup object, Rank value) {
-				if (SessionController.get().isValidSession() && !SessionController.get().hasLinkedAccount()) {
+				if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
+					premiumPopup.show(true);
+				} else if (SessionController.get().isLoggedIn()) {
 					addLinkedAccountPopup.show("Link Your Appstore Account",
 							"You need to link your iTunes Connect account to use this feature, it only takes a moment");
 				} else {
@@ -468,7 +481,9 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 			@Override
 			public void update(int index, RanksGroup object, Rank value) {
-				if (SessionController.get().isValidSession() && !SessionController.get().hasLinkedAccount()) {
+				if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
+					premiumPopup.show(true);
+				} else if (SessionController.get().isLoggedIn()) {
 					addLinkedAccountPopup.show("Link Your Appstore Account",
 							"You need to link your iTunes Connect account to use this feature, it only takes a moment");
 				} else {
@@ -540,15 +555,15 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			if (updateData) {
 				applyFilters.setEnabled(false);
 				PageType.RanksPageType.show("view", selectedTab, FilterController.get().asRankFilterString());
-			}
-			if (errorPanel.isVisible()) {
+			} else if (isStatusError) {
+				isStatusError = false;
+				errorPanel.setVisible(false);
 				applyFilters.setEnabled(false);
 				updateSelectorsFromFilter();
 				loadingBar.show();
 				RankController.get().reset();
 				RankController.get().fetchTopItems();
 				viewAllBtn.setVisible(false);
-				errorPanel.setVisible(false);
 				noDataPanel.setVisible(false);
 				leaderboardTable.setVisible(true);
 				downloadsHeader.setHeaderStyleNames(style.canBeSorted());
@@ -560,7 +575,8 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 	@UiHandler({ "countrySelector", "appStoreSelector", "categorySelector" })
 	void onFiltersChanged(ChangeEvent event) {
-		applyFilters.setEnabled(!FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
+		applyFilters.setEnabled(isStatusError
+				|| !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
 				|| !FilterController.get().getFilter().getStoreA3Code().equals(appStoreSelector.getSelectedValue())
 				|| !FilterController.get().getFilter().getCategoryId().toString().equals(categorySelector.getSelectedValue())
 				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateBox.getValue()));
@@ -568,7 +584,8 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 	@UiHandler("dateBox")
 	void onDateChanged(ValueChangeEvent<Date> event) {
-		applyFilters.setEnabled(!FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
+		applyFilters.setEnabled(isStatusError
+				|| !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
 				|| !FilterController.get().getFilter().getStoreA3Code().equals(appStoreSelector.getSelectedValue())
 				|| !FilterController.get().getFilter().getCategoryId().toString().equals(categorySelector.getSelectedValue())
 				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateBox.getValue()));
@@ -582,7 +599,8 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		appStoreSelector.setSelectedIndex(FormHelper.getItemIndex(appStoreSelector, "iph"));
 		categorySelector.setSelectedIndex(FormHelper.getItemIndex(categorySelector, "15"));
 		dateBox.setValue(FilterHelper.getDaysAgo(2));
-		applyFilters.setEnabled(!FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
+		applyFilters.setEnabled(isStatusError
+				|| !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
 				|| !FilterController.get().getFilter().getStoreA3Code().equals(appStoreSelector.getSelectedValue())
 				|| !FilterController.get().getFilter().getCategoryId().toString().equals(categorySelector.getSelectedValue())
 				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateBox.getValue()));
@@ -628,9 +646,9 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			leaderboardTable.setColumnWidth(freeColumn, 30.0, Unit.PCT);
 			leaderboardTable.setColumnWidth(grossingColumn, 30.0, Unit.PCT);
 			leaderboardTable.addColumn(rankColumn, rankHeader);
-			leaderboardTable.addColumn(paidColumn, paidHeader);
-			leaderboardTable.addColumn(freeColumn, freeHeader);
-			leaderboardTable.addColumn(grossingColumn, grossingHeader);
+			leaderboardTable.addColumn(paidColumn, paidHeaderAll);
+			leaderboardTable.addColumn(freeColumn, freeHeaderAll);
+			leaderboardTable.addColumn(grossingColumn, grossingHeaderAll);
 			leaderboardTable.setLoadingIndicator(loadingIndicatorAll);
 			break;
 		case PAID_LIST_TYPE:
@@ -751,7 +769,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	@UiHandler("downloadLeaderboard")
 	void onDownloadLeaderboardClicked(ClickEvent event) {
 		event.preventDefault();
-		if ((SessionController.get().isPremiumDeveloper() && SessionController.get().hasLinkedAccount()) || SessionController.get().isAdmin()) {
+		if (SessionController.get().canSeePredictions()) {
 			downloadLeaderboard.setStatusLoading("Downloading");
 			Filter filter = FilterController.get().getFilter();
 			String listType;
@@ -823,10 +841,10 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			} catch (Exception e) {
 				downloadLeaderboard.setStatusError();
 			}
-		} else if (!SessionController.get().canSeePredictions()) {
+		} else if (SessionController.get().isLoggedIn() && !SessionController.get().hasLinkedAccount()) {
 			addLinkedAccountPopup
 					.show("Link Your Appstore Account", "You need to link your iTunes Connect account to use this feature, it only takes a moment");
-		} else if (SessionController.get().isValidSession()) {
+		} else if (SessionController.get().isLoggedIn()) {
 			premiumPopup.show(true);
 		} else {
 			signUpPopup.show();
@@ -878,6 +896,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 				RankController.get().fetchTopItems();
 				viewAllBtn.setVisible(false);
 				errorPanel.setVisible(false);
+				isStatusError = false;
 				noDataPanel.setVisible(false);
 				leaderboardTable.setVisible(true);
 				downloadsHeader.setHeaderStyleNames(style.canBeSorted());
@@ -982,6 +1001,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			viewAllBtn.setVisible(false);
 			leaderboardTable.setVisible(false);
 			errorPanel.setVisible(true);
+			isStatusError = true;
 			applyFilters.setEnabled(true);
 		}
 
@@ -1001,6 +1021,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		viewAllBtn.setVisible(false);
 		leaderboardTable.setVisible(false);
 		errorPanel.setVisible(true);
+		isStatusError = true;
 		applyFilters.setEnabled(true);
 	}
 }

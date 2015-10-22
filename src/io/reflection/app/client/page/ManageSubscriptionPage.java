@@ -210,7 +210,7 @@ public class ManageSubscriptionPage extends Page implements NavigationEventHandl
 	}
 
 	private void setPricingOption() {
-		if (!SessionController.get().canSeePredictions()) { // NO LINKED ACCOUNT STATE
+		if (!SessionController.get().isAdmin() && !SessionController.get().hasLinkedAccount()) { // NO LINKED ACCOUNT STATE
 			setWithLinkedAccount(false);
 			currentSubscriptionStandard.setVisible(false);
 			premiumInfoPlain.setVisible(true);

@@ -36,14 +36,18 @@ public class SaleSummaryHelper {
 		DB, INGEST;
 	}
 
-	public void summariseSales(Long dataaccountid, List<Sale> sales, SALE_SOURCE saleSource, Connection saleConnection) throws DataAccessException {
+	private SaleSummaryHelper() {
+
+	}
+
+	public boolean summariseSales(Long dataaccountid, List<Sale> sales, SALE_SOURCE saleSource, Connection saleConnection) throws DataAccessException {
 		if (dataaccountid == null) {
 			LOG.log(GaeLevel.DEBUG, String.format("Data account id is null. Returning without doing anything."));
-			return;
+			return false;
 		}
 		if (sales == null || sales.size() == 0) {
 			LOG.log(GaeLevel.DEBUG, String.format("Sales is %s. Returning without doing anything.", sales == null ? "NULL" : "an empty array"));
-			return;
+			return false;
 		}
 
 		LOG.log(GaeLevel.DEBUG, String.format("Summarising data account id %s", dataaccountid));
@@ -122,6 +126,7 @@ public class SaleSummaryHelper {
 		// 4.2 upsert all the sales summaries
 		upsertSaleSummaries(summaries, dataaccountid, saleConnection);
 
+		return true;
 	}
 
 	/**

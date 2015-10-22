@@ -86,9 +86,8 @@
 					<ul>
 						<li ui:field="accountDetailsItem">
 							<g:InlineHyperlink ui:field="accountDetailsLink">
-								<svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">
-								<path fill="#5A5A68" d="M0,10h6V6H0V10z M10,6v4h22V6H10z M0,18h6v-4H0V18z M10,18h22v-4H10V18z M0,26h6v-4H0V26z
-	 M10,26h22v-4H10V26z"/></svg>
+								<svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve"><path fill="#5A5A68" d="M5,10H1V7h4V10z M31,8H9v2h22V8z M5,14H1v3h4V14z M31,15H9v2h22V15z M5,21H1v3h4V21z
+	 M31,22H9v2h22V22z"/></svg>
 								<span>Account Details</span>
 							</g:InlineHyperlink>
 						</li>

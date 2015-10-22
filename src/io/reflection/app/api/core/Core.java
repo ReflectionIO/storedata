@@ -365,70 +365,6 @@ public final class Core extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
-			boolean isAdmin = false;
-			boolean isPremium = false;
-			boolean isStandardDeveloper = false;
-			boolean canSeePredictions = false;
-			boolean isLoggedIn = false;
-
-			if (input.session != null) {
-				output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
-
-				isLoggedIn = true;
-
-				List<Role> roles = UserServiceProvider.provide().getUserRoles(input.session.user);
-				RoleServiceProvider.provide().inflateRoles(roles);
-				List<Permission> permissions;
-				for (Role role : roles) {
-					if (DataTypeHelper.ROLE_ADMIN_CODE.equals(role.code)) {
-						isAdmin = true;
-						canSeePredictions = true;
-					} else if (DataTypeHelper.ROLE_PREMIUM_CODE.equals(role.code)) {
-						isPremium = true;
-					} else if (DataTypeHelper.ROLE_DEVELOPER_CODE.equals(role.code)) {
-						isStandardDeveloper = true;
-					}
-
-					permissions = RoleServiceProvider.provide().getPermissions(role); // Role permissions
-					permissions.addAll(UserServiceProvider.provide().getPermissions(input.session.user)); // Add permissions of the user
-					PermissionServiceProvider.provide().inflatePermissions(permissions);
-					for (Permission permission : permissions) {
-						if (isPremium || isStandardDeveloper || DataTypeHelper.ROLE_FIRST_CLOSED_BETA_CODE.equals(role.code)) {
-							if (DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE.equals(permission.code)) {
-								canSeePredictions = true;
-								break;
-							}
-						}
-						if (canSeePredictions) {
-							break;
-						}
-					}
-
-				}
-			}
-
-			input.pager = ValidationHelper.validatePager(input.pager, "input");
-
-			if (input.pager.sortDirection == null) {
-				input.pager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
-			}
-
-			// if (!isLoggedIn) { // Force date to 2 days ago if is public call
-			// input.on = new DateTime(DateTimeZone.UTC).minusDays(2).toDate();
-			// }
-
-			if (!isAdmin) {
-				if (!(Arrays.asList("fr", "de", "gb", "it").contains(input.country.a2Code))) {
-					input.country = new Country();
-					input.country.a2Code = "gb";
-				}
-				input.store = new Store();
-				input.store.a3Code = DataTypeHelper.IOS_STORE_A3;
-				input.category = new Category();
-				input.category.id = 15L;
-			}
-			input.country = ValidationHelper.validateCountry(input.country, "input");
-
 			if (input.listType == null)
 				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("String: input.listType"));
 
@@ -449,6 +385,65 @@ public final class Core extends ActionHandler {
 					throw new InputValidationException(ApiError.CategoryStoreMismatch.getCode(), ApiError.CategoryStoreMismatch.getMessage("input.category"));
 			}
 
+			input.pager = ValidationHelper.validatePager(input.pager, "input");
+			if (input.pager.sortDirection == null) {
+				input.pager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
+			}
+
+			boolean isAdmin = false;
+			boolean isPremium = false;
+			boolean isStandardDeveloper = false;
+			boolean canSeePredictions = (DateTimeComparator.getDateOnlyInstance().compare(input.on, new DateTime().minusDays(2)) == 0);
+			boolean isLoggedIn = false;
+
+			if (input.session != null) {
+				output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+				isLoggedIn = true;
+
+				List<Role> roles = UserServiceProvider.provide().getUserRoles(input.session.user);
+				RoleServiceProvider.provide().inflateRoles(roles);
+				List<Permission> permissions;
+				for (Role role : roles) {
+					if (DataTypeHelper.ROLE_ADMIN_CODE.equals(role.code)) {
+						isAdmin = true;
+						canSeePredictions = true;
+						break;
+					} else if (DataTypeHelper.ROLE_PREMIUM_CODE.equals(role.code)) {
+						isPremium = true;
+					} else if (DataTypeHelper.ROLE_DEVELOPER_CODE.equals(role.code)) {
+						isStandardDeveloper = true;
+					}
+
+					permissions = RoleServiceProvider.provide().getPermissions(role); // Role permissions
+					permissions.addAll(UserServiceProvider.provide().getPermissions(input.session.user)); // Add permissions of the user
+					PermissionServiceProvider.provide().inflatePermissions(permissions);
+					for (Permission permission : permissions) {
+						if (isPremium && DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE.equals(permission.code)) {
+							canSeePredictions = true;
+							break;
+						}
+					}
+
+				}
+			}
+
+			// if (!isLoggedIn) { // Force date to 2 days ago if is public call
+			// input.on = new DateTime(DateTimeZone.UTC).minusDays(2).toDate();
+			// }
+
+			if (!isAdmin) {
+				if (!(Arrays.asList("fr", "de", "gb", "it").contains(input.country.a2Code))) {
+					input.country = new Country();
+					input.country.a2Code = "gb";
+				}
+				input.store = new Store();
+				input.store.a3Code = DataTypeHelper.IOS_STORE_A3;
+				input.category = new Category();
+				input.category.id = 15L;
+			}
+			input.country = ValidationHelper.validateCountry(input.country, "input");
+
 			Collector collector = CollectorFactory.getCollectorForStore(input.store.a3Code);
 
 			Set<String> itemIds = new HashSet<String>();
@@ -464,8 +459,7 @@ public final class Core extends ActionHandler {
 					for (Rank rank : ranks) {
 						itemIds.add(rank.itemId);
 						int ranking = (collector.isGrossing(listType) ? rank.grossingPosition.intValue() : rank.position.intValue());
-						if ((!canSeePredictions && ranking > 10)
-								|| (!canSeePredictions && DateTimeComparator.getDateOnlyInstance().compare(input.on, new DateTime().minusDays(2)) != 0)) {
+						if (!canSeePredictions || (!isLoggedIn && ranking > 10)) {
 							rank.downloads = null;
 							rank.revenue = null;
 						}
@@ -485,11 +479,11 @@ public final class Core extends ActionHandler {
 						output.grossingRanks = ranks;
 					}
 				}
-			} else if (collector.isFree(input.listType)) { // used only for download
+			} else if (collector.isFree(input.listType)) {
 				ranks = RankServiceProvider.provide().getRanks(input.country, input.category, input.listType, input.on);
 				for (Rank rank : ranks) {
 					itemIds.add(rank.itemId);
-					if (!isAdmin || !isPremium) {
+					if (!canSeePredictions || (!isLoggedIn && rank.position.intValue() > 10)) {
 						rank.downloads = null;
 						rank.revenue = null;
 					}
@@ -500,7 +494,11 @@ public final class Core extends ActionHandler {
 				ranks = RankServiceProvider.provide().getRanks(input.country, input.category, input.listType, input.on);
 				for (Rank rank : ranks) {
 					itemIds.add(rank.itemId);
-					if (!isAdmin || !isPremium) { // used only for download
+					if (!canSeePredictions || (!isLoggedIn && rank.position.intValue() > 10)) {
+						rank.downloads = null;
+						rank.revenue = null;
+					}
+					if (!isAdmin && !input.country.a2Code.equals("gb")) {// Remove paid ranks if not UK
 						rank.downloads = null;
 						rank.revenue = null;
 					}
@@ -511,7 +509,7 @@ public final class Core extends ActionHandler {
 				ranks = RankServiceProvider.provide().getRanks(input.country, input.category, input.listType, input.on);
 				for (Rank rank : ranks) {
 					itemIds.add(rank.itemId);
-					if (!isAdmin || !isPremium) { // used only for download
+					if (!canSeePredictions || (!isLoggedIn && rank.grossingPosition.intValue() > 10)) {
 						rank.downloads = null;
 						rank.revenue = null;
 					}
@@ -704,23 +702,18 @@ public final class Core extends ActionHandler {
 				LOG.info(String.format("Completed user registeration for user [%s %s] and email [%s] and action code [%s]", addedUser.forename,
 						addedUser.surname, addedUser.username, input.actionCode));
 			} else {
-				boolean registerInterestUser = false; // User that has registered the business interest but never signed up
+				// User that has registered the business interest OR requested to be part of the private beta but never completed the sign up process
+				boolean notRegisteredUser = false;
 				User u = UserServiceProvider.provide().getUsernameUser(input.user.username);
-				if (u != null) {
-					List<Role> r = UserServiceProvider.provide().getUserRoles(u, true);
-					if (r.size() == 1) {
-						RoleServiceProvider.provide().inflateRoles(r);
-						if (DataTypeHelper.ROLE_REGISTER_BUSINESS_INTEREST.equals(r.get(0).code)) {
-							registerInterestUser = true;
-							input.user.id = u.id;
-							// Update previous inserted user
-							addedUser = UserServiceProvider.provide().updateUser(input.user);
-							UserServiceProvider.provide().updateUserPassword(addedUser, input.user.password, Boolean.FALSE);
-						}
-					}
+				if (u != null && u.lastLoggedIn == null) {
+					notRegisteredUser = true;
+					input.user.id = u.id;
+					// Update previously inserted user
+					addedUser = UserServiceProvider.provide().updateUser(input.user);
+					UserServiceProvider.provide().updateUserPassword(addedUser, input.user.password, Boolean.FALSE);
 				}
 
-				if (!registerInterestUser) {
+				if (!notRegisteredUser) {
 					addedUser = UserServiceProvider.provide().addUser(input.user);
 					LOG.info(String.format("Added user with name [%s %s] and email [%s],", addedUser.forename, addedUser.surname, addedUser.username));
 				}
@@ -1002,7 +995,7 @@ public final class Core extends ActionHandler {
 								input.session.user.id.longValue()));
 					}
 				} else {
-					UserServiceProvider.provide().deleteDataAccount(input.session.user, input.linkedAccount);
+					UserServiceProvider.provide().deleteUserDataAccount(input.session.user, input.linkedAccount);
 
 					if (LOG.isLoggable(GaeLevel.DEBUG)) {
 						LOG.finer(String.format("Linked account with id [%d] removed from user account [%d]", input.linkedAccount.id.longValue(),
@@ -1282,8 +1275,8 @@ public final class Core extends ActionHandler {
 
 			DataAccountCollectorFactory.getCollectorForSource(input.source.a3Code).validateProperties(input.properties);
 
-			// If not a test user, check if is a valid Apple linked account
-			Role testRole = RoleServiceProvider.provide().getCodeRole(DataTypeHelper.ROLE_TEST_CODE);
+			// If not an Admin, check if is a valid Apple linked account
+			Role testRole = RoleServiceProvider.provide().getCodeRole(DataTypeHelper.ROLE_ADMIN_CODE);
 			if (!UserServiceProvider.provide().hasRole(input.session.user, testRole)) {
 				DataAccount dataAccountToTest = new DataAccount();
 
@@ -2026,6 +2019,7 @@ public final class Core extends ActionHandler {
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+			input.session.user = UserServiceProvider.provide().getUser(input.session.user.id); // Inflate user
 
 			input.role = ValidationHelper.validateRole(input.role, "input.role");
 
@@ -2034,7 +2028,7 @@ public final class Core extends ActionHandler {
 			if (!UserServiceProvider.provide().hasRole(input.session.user, devRole).booleanValue())
 				throw new InputValidationException(ApiError.RoleNotFound.getCode(), ApiError.RoleNotFound.getMessage("UpgradeAccountRequest: input"));
 
-			UserServiceProvider.provide().setUserRoleAsExpired(input.session.user, devRole);
+			UserServiceProvider.provide().revokeRole(input.session.user, devRole);
 
 			// UserServiceProvider.provide().assignExpiringRole(input.session.user, input.role, 30);
 			UserServiceProvider.provide().assignRole(input.session.user, input.role);
