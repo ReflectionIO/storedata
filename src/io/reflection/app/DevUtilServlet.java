@@ -58,6 +58,7 @@ public class DevUtilServlet extends HttpServlet {
 	public static final String	PARAM_LIST_TYPES				= "types";
 	public static final String	PARAM_CATEGORIES				= "categories";
 	public static final String	PARAM_COUNTRIES					= "countries";
+	public static final String	PARAM_TIME							= "time";
 
 	public static final String	ACTION_SUMMARISE	= "summarise";
 	public static final String	ACTION_SPLIT_DATA	= "split";
@@ -66,7 +67,6 @@ public class DevUtilServlet extends HttpServlet {
 	public static final String QUEUE_SUMMARISE = "summarise";
 
 	public static final String URL_SUMMARISE = "/summarise";
-
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -211,6 +211,7 @@ public class DevUtilServlet extends HttpServlet {
 		ArrayList<String> typeList = getStringParameters(req, PARAM_LIST_TYPES);
 		ArrayList<String> categoryList = getStringParameters(req, PARAM_CATEGORIES);
 		ArrayList<String> countryList = getStringParameters(req, PARAM_COUNTRIES);
+		String time = req.getParameter(PARAM_TIME);
 
 		if (platformList.isEmpty()) {
 			platformList.add("TABLET");
@@ -276,12 +277,16 @@ public class DevUtilServlet extends HttpServlet {
 			return msg;
 		}
 
-		String selectQuery = String.format("SELECT rank_fetch_id from rank_fetch where %s AND country in ('%s') AND category in (%s) and type in ('%s') and platform in ('%s') ",
+		// if there is no time param or it is = all then ignore time else if it is am then do am else do pm.
+		String timeCondition = time == null ? "" : time.trim().equalsIgnoreCase("all") ? "" : time.trim().equalsIgnoreCase("am") ? " AND fetch_time<'13:00'" : " AND fetch_time>'21:00'";
+
+		String selectQuery = String.format("SELECT rank_fetch_id from rank_fetch where %s AND country in ('%s') AND category in (%s) and type in ('%s') and platform in ('%s') %s",
 				dateCondition,
 				StringUtils.join(countryList, "', '"),
 				StringUtils.join(categoryList, ", "),
 				StringUtils.join(typeList, "', '"),
-				StringUtils.join(platformList, "', '"));
+				StringUtils.join(platformList, "', '"),
+				timeCondition);
 
 		String msg = "Running select query: " + selectQuery;
 		webResponse.append(msg).append('\n');
