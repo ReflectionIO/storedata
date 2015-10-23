@@ -252,8 +252,7 @@
 				class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird} {STYLES_INSTANCE.reflectionMainStyle.whyReflectionItem}">
 				<div
 					class="{STYLES_INSTANCE.reflectionMainStyle.whyReflectionItem__illustrationContainer} {STYLES_INSTANCE.reflectionMainStyle.whyReflectionItem__illustrationContainerHelp}">
-					<svg version="1.1" x="0px" y="0px" viewBox="0 0 159.3 100.6" enable-background="new 0 0 159.3 100.6" xml:space="preserve"><path fill="#A0A0A9"
-						d="M146.7,25.2l-6.1-1.8V31l6.1,1.4V25.2z M145.7,31.1l-4.1-0.9v-5.4l4.1,1.2V31.1z M154.3,27.5l-5.3-1.6v7
+					<svg version="1.1" x="0px" y="0px" viewBox="0 0 159.3 100.6" enable-background="new 0 0 159.3 100.6" xml:space="preserve"><path fill="#81879D" d="M146.7,25.2l-6.1-1.8V31l6.1,1.4V25.2z M145.7,31.1l-4.1-0.9v-5.4l4.1,1.2V31.1z M154.3,27.5l-5.3-1.6v7
 		l5.3,1.2V27.5z M153.3,32.9l-3.3-0.8v-4.9l3.3,1V32.9z M154.3,74.6l-5.3,0.9v7l5.3-1.2V74.6z M153.3,80.5l-3.3,0.7v-4.9l3.3-0.5
 		V80.5z M154.3,65.2l-5.3,0.4v7l5.3-0.7V65.2z M153.3,71l-3.3,0.4v-4.9l3.3-0.2V71z M154.3,55.8l-5.3-0.1v7l5.3-0.2V55.8z
 		 M153.3,61.5l-3.3,0.1v-4.9l3.3,0.1V61.5z M154.3,46.3l-5.3-0.6v7l5.3,0.2V46.3z M153.3,52l-3.3-0.2v-4.9l3.3,0.4V52z M154.3,36.9
@@ -304,7 +303,7 @@
 		 M157.3,90.6l-30.6,7.7V13.5l30.6,10.1V90.6z M46.4,52.4H7.5v24h38.9V52.4z M13.2,75.4H8.5v-5.5l4.7-3.9V75.4z M18.6,75.4h-4.9v-9.5
 		l4.9,2.7V75.4z M24,75.4h-4.9v-6.7l4.9-5.2V75.4z M29.4,75.4h-4.9V62.9l0.3-0.3l4.6,3.6V75.4z M34.8,75.4h-4.9v-9.2l4.9-1.8V75.4z
 		 M40.2,75.4h-4.9V64.3l0,0l4.9-5.3V75.4z M45.4,75.4h-4.7V58.6l4.7,2.3V75.4z M45.4,59.8l-5-2.5l-5.6,6.1l-5,1.8l-5-3.9L24,62h0v0
-		l-5.3,5.6l-5.4-3l-4.9,4V53.4h36.9V59.8z"></path></svg>
+		l-5.3,5.6l-5.4-3l-4.9,4V53.4h36.9V59.8z"/></svg>
 				</div>
 				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Help Us Help You</h2>
 				<p>We build features &amp; tools that are most requested by our developer community.

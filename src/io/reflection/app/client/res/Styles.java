@@ -405,6 +405,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("cta-button")
 		String ctaButton();
 
+		@ClassName("current-openings")
+		String currentOpenings();
+
 		@ClassName("current-subscription-text")
 		String currentSubscriptionText();
 
@@ -1937,6 +1940,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("site-logo")
 		String siteLogo();
 
+		@ClassName("small-text")
+		String smallText();
+
 		@ClassName("sort-svg")
 		String sortSvg();
 
@@ -2202,6 +2208,7 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("window-warning")
 		String windowWarning();
+
 	}
 
 	public static final Styles STYLES_INSTANCE = GWT.create(Styles.class);
