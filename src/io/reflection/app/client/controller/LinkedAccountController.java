@@ -167,15 +167,16 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 			@Override
 			public void onSuccess(LinkAccountResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {
-					rows.add(output.account);
-					addLinkedAccountsToLookup(Arrays.asList(output.account));
-					addDataSourceToLookup(Arrays.asList(output.account.source));
-					// pager.totalCount = Long.valueOf(pager.totalCount.longValue() + 1);
-					// Load HLA Permission
-					linkedAccountsCount = rows.size();
-					updateRowCount(linkedAccountsCount, true);
-					updateRowData(0, rows);
-					SessionController.get().fetchRolesAndPermissions();
+					if (!getAllLinkedAccountIds().contains(output.account.id.toString())) { // Avoid to add duplicated
+						rows.add(output.account);
+						addLinkedAccountsToLookup(Arrays.asList(output.account));
+						addDataSourceToLookup(Arrays.asList(output.account.source));
+						// pager.totalCount = Long.valueOf(pager.totalCount.longValue() + 1);
+						linkedAccountsCount = rows.size();
+						updateRowCount(linkedAccountsCount, true);
+						updateRowData(0, rows);
+						SessionController.get().fetchRolesAndPermissions(); // Load HLA Permission
+					}
 				}
 				DefaultEventBus.get().fireEventFromSource(new LinkAccountSuccess(input, output), LinkedAccountController.this);
 			}
