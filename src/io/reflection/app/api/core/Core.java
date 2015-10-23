@@ -12,6 +12,7 @@ import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPHON
 import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_UNIVERSAL_IOS;
 import static io.reflection.app.shared.util.PagerHelper.updatePager;
 import io.reflection.app.accountdatacollectors.DataAccountCollectorFactory;
+import io.reflection.app.accountdatacollectors.ITunesConnectDownloadHelper;
 import io.reflection.app.api.ValidationHelper;
 import io.reflection.app.api.core.shared.call.ChangePasswordRequest;
 import io.reflection.app.api.core.shared.call.ChangePasswordResponse;
@@ -719,6 +720,7 @@ public final class Core extends ActionHandler {
 				}
 
 				if (addedUser != null) {
+					output.registeredUser = addedUser;
 					// Add standard developer role
 					Role devRole = ValidationHelper.validateRole(DataTypeHelper.createRole(DataTypeHelper.ROLE_DEVELOPER_CODE), "input.role");
 					UserServiceProvider.provide().assignRole(input.user, devRole);
@@ -976,15 +978,11 @@ public final class Core extends ActionHandler {
 			boolean isAdmin = UserServiceProvider.provide().hasRole(input.session.user, DataTypeHelper.adminRole());
 
 			if (hasDataAccount || isAdmin) {
-				User user = UserServiceProvider.provide().getDataAccountOwner(input.linkedAccount);
-
-				if (user != null && user.id.longValue() == input.session.user.id.longValue()) {
+				User linkedAccountOwner = UserServiceProvider.provide().getDataAccountOwner(input.linkedAccount);
+				// If the owner, remove all other users from this linked account (except test linked account)
+				if (linkedAccountOwner != null && linkedAccountOwner.id.longValue() == input.session.user.id.longValue()
+						&& input.linkedAccount.id.longValue() != 357) {
 					UserServiceProvider.provide().deleteAllUsersDataAccount(input.linkedAccount);
-
-					if (!UserServiceProvider.provide().hasDataAccounts(user) && !isAdmin) {
-						Permission hlaPermission = PermissionServiceProvider.provide().getCodePermission(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE);
-						UserServiceProvider.provide().revokePermission(user, hlaPermission);
-					}
 
 					// Set linked account as inactive
 					input.linkedAccount.active = DataTypeHelper.INACTIVE_VALUE;
@@ -1001,6 +999,11 @@ public final class Core extends ActionHandler {
 						LOG.finer(String.format("Linked account with id [%d] removed from user account [%d]", input.linkedAccount.id.longValue(),
 								input.session.user.id.longValue()));
 					}
+				}
+				// Revoke HLA permission
+				if (!UserServiceProvider.provide().hasDataAccounts(input.session.user) && !isAdmin) {
+					Permission hlaPermission = PermissionServiceProvider.provide().getCodePermission(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE);
+					UserServiceProvider.provide().revokePermission(input.session.user, hlaPermission);
 				}
 
 			} else throw new InputValidationException(ApiError.DataAccountUserMissmatch.getCode(), ApiError.DataAccountUserMissmatch.getMessage());
@@ -1260,7 +1263,7 @@ public final class Core extends ActionHandler {
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
-
+			
 			input.source = ValidationHelper.validateDataSource(input.source, "input.source");
 
 			if (input.username == null)
@@ -1275,9 +1278,9 @@ public final class Core extends ActionHandler {
 
 			DataAccountCollectorFactory.getCollectorForSource(input.source.a3Code).validateProperties(input.properties);
 
-			// If not an Admin, check if is a valid Apple linked account
-			Role testRole = RoleServiceProvider.provide().getCodeRole(DataTypeHelper.ROLE_ADMIN_CODE);
-			if (!UserServiceProvider.provide().hasRole(input.session.user, testRole)) {
+			// If not a test linked account, check if is a valid Apple linked account
+			if (!"THETESTACCOUNT".equals(input.username) || !"thegrange".equals(input.password)
+					|| !"81234567".equals(ITunesConnectDownloadHelper.getVendorId(input.properties))) {
 				DataAccount dataAccountToTest = new DataAccount();
 
 				dataAccountToTest.username = input.username;
@@ -1305,9 +1308,12 @@ public final class Core extends ActionHandler {
 						}
 					}
 				}
+				output.account = UserServiceProvider.provide().addDataAccount(input.session.user, input.source, input.username, input.password,
+						input.properties);
+			} else {
+				output.account = DataAccountServiceProvider.provide().getDataAccount(357L); // Retrieve test linked account
+				UserServiceProvider.provide().addOrRestoreUserDataAccount(input.session.user, output.account);
 			}
-
-			output.account = UserServiceProvider.provide().addDataAccount(input.session.user, input.source, input.username, input.password, input.properties);
 
 			output.account.source = input.source;
 
