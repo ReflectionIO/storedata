@@ -239,7 +239,9 @@
 			</xsd:complexType>
 			<xsd:complexType name="RegisterUserResponse">
 				<xsd:complexContent>
-					<xsd:extension base="sd:Response" />
+					<xsd:extension base="sd:Response">
+						<xsd:element name="registeredUser" type="sd:User" maxOccurs="1" />
+					</xsd:extension>
 				</xsd:complexContent>
 			</xsd:complexType>
 
