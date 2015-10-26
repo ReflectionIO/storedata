@@ -8,18 +8,38 @@
 //
 package io.reflection.app.api.core.shared.call;
 
-import com.google.gson.JsonObject;
 import io.reflection.app.api.shared.datatypes.Response;
+import io.reflection.app.datatypes.shared.User;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
 
 public class RegisterUserResponse extends Response {
+	public User registeredUser;
+
 	@Override
 	public JsonObject toJson() {
 		JsonObject object = super.toJson();
+		JsonElement jsonRegisteredUser = registeredUser == null ? JsonNull.INSTANCE : registeredUser.toJson();
+		object.add("registeredUser", jsonRegisteredUser);
 		return object;
 	}
 
 	@Override
 	public void fromJson(JsonObject jsonObject) {
 		super.fromJson(jsonObject);
+		if (jsonObject.has("registeredUser")) {
+			JsonElement jsonRegisteredUser = jsonObject.get("registeredUser");
+			if (jsonRegisteredUser != null) {
+				registeredUser = new User();
+				registeredUser.fromJson(jsonRegisteredUser.getAsJsonObject());
+			}
+		}
+	}
+
+	public RegisterUserResponse user(User user) {
+		this.registeredUser = user;
+		return this;
 	}
 }
