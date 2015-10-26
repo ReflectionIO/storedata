@@ -94,6 +94,10 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 		linkAccountBtn.setText(text);
 	}
 
+	public void resetButtonStatus() {
+		linkAccountBtn.resetStatus();
+	}
+
 	public void setTitleText(String text) {
 		title.setInnerText(text);
 	}

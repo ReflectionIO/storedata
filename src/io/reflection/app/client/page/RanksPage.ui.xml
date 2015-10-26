@@ -3,13 +3,13 @@
 	xmlns:c="urn:import:io.reflection.app.client.component" xmlns:p="urn:import:io.reflection.app.client.part">
 	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 	<ui:style gss="true">
-		.badge {
-			min-width: 10px;
-			padding: 3px 7px;
-			font-size: 12px;
-			white-space: nowrap;
-			border-radius: 10px;
-		}
+	.badge {
+		min-width: 10px;
+		padding: 3px 7px;
+		font-size: 12px;
+		white-space: nowrap;
+		border-radius: 10px;
+	}
 	</ui:style>
 	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.pageLeaderboard}">
 
@@ -146,7 +146,8 @@
 					<c:Selector ui:field="categorySelector" alignCenter="" labelText="Category" dropdownTitle="Select a category" tooltip="Select a category"
 						overlay="true" />
 
-					<g:Button ui:field="applyFilters" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaSmall} {STYLES_INSTANCE.reflectionMainStyle.refreshButton}"
+					<g:Button ui:field="applyFilters"
+						styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaSmall} {STYLES_INSTANCE.reflectionMainStyle.refreshButton} js-tooltip js-tooltip--right"
 						enabled="false">
 						<svg class="{STYLES_INSTANCE.reflectionMainStyle.svgRefresh}" version="1.1" x="0px" y="0px" viewBox="0 0 16 16" enable-background="new 0 0 16 16"
 							xml:space="preserve">

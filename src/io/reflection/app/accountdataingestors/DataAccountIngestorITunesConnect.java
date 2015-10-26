@@ -39,6 +39,7 @@ import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Sale;
 import io.reflection.app.helpers.QueueHelper;
 import io.reflection.app.helpers.SqlQueryHelper;
+import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
 import io.reflection.app.service.sale.SaleServiceProvider;
 
@@ -86,19 +87,24 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 			try {
 				List<Sale> sales = convertFetchToSales(fetch);
 
+				LOG.log(GaeLevel.DEBUG, String.format("Saving %d sales", sales.size()));
 				Long count = SaleServiceProvider.provide().addSalesBatch(sales);
 
 				if (count != null && count.longValue() > 0) {
 					fetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeIngested;
 
+					LOG.log(GaeLevel.DEBUG, String.format("Updating Data Account Fetch"));
 					fetch = DataAccountFetchServiceProvider.provide().updateDataAccountFetch(fetch);
 
 					// ArchiverFactory.getItemSaleArchiver().enqueueIdDataAccountFetch(fetch.id);
 
 					String date = SqlQueryHelper.getSqlDateFormat().format(fetch.date);
 
+					String taskName = "summarise_" + fetch.linkedAccount.id + "_" + date + "-" + System.currentTimeMillis();
+					LOG.log(GaeLevel.DEBUG, String.format("Queueing up summarise task by name %s", taskName));
+
 					QueueHelper.enqueue(DevUtilServlet.QUEUE_SUMMARISE, DevUtilServlet.URL_SUMMARISE, Method.GET,
-							new SimpleEntry<String, String>("taskName", "summarise_" + fetch.linkedAccount.id + "_" + date + "-" + System.currentTimeMillis()),
+							new SimpleEntry<String, String>("taskName", taskName),
 							new SimpleEntry<String, String>("dataaccountid", fetch.linkedAccount.id.toString()),
 							new SimpleEntry<String, String>("date", date));
 				}

@@ -66,11 +66,6 @@ public interface ISaleService extends IService {
 	 */
 	public Sale getSale(Long id) throws DataAccessException;
 
-	/**
-	 * @param sale
-	 * @return
-	 */
-	public Sale addSale(Sale sale) throws DataAccessException;
 
 	/**
 	 * @param sale
@@ -232,9 +227,10 @@ public interface ISaleService extends IService {
 	/**
 	 * @param id
 	 * @param date
+	 * @return
 	 * @throws DataAccessException
 	 */
-	public void summariseSalesForDataAccountOnDate(Long id, Date date) throws DataAccessException;
+	public boolean summariseSalesForDataAccountOnDate(Long id, Date date) throws DataAccessException;
 
 	/**
 	 * @param dataAccountId
@@ -274,9 +270,10 @@ public interface ISaleService extends IService {
 	 * @param dataaccountid
 	 * @param sales
 	 * @param sale_source
+	 * @return
 	 * @throws DataAccessException
 	 */
-	public void summariseSales(Long dataaccountid, List<Sale> sales, SALE_SOURCE saleSource) throws DataAccessException;
+	public boolean summariseSales(Long dataaccountid, List<Sale> sales, SALE_SOURCE saleSource) throws DataAccessException;
 
 	/**
 	 * @param dataAccountId
@@ -293,5 +290,13 @@ public interface ISaleService extends IService {
 	 * @throws DataAccessException
 	 */
 	public List<Long> getDataAccountsWithSalesBetweenDates(Date dateFrom, Date dateTo) throws DataAccessException;
+
+	/**
+	 * @param from
+	 * @param to
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<Long> getDataAccountIdsWithSaleSummariesBetweenDates(Date from, Date to) throws DataAccessException;
 
 }

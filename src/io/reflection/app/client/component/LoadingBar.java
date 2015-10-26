@@ -42,6 +42,7 @@ public class LoadingBar extends Composite {
 
 	private Element container; // Loading bar wrapper
 	private boolean isProgressive;
+	private boolean isOpening;
 
 	private final ReflectionMainStyles style = Styles.STYLES_INSTANCE.reflectionMainStyle();
 
@@ -102,6 +103,7 @@ public class LoadingBar extends Composite {
 	}
 
 	public void show(final String text) {
+		isOpening = true;
 		if (container.isOrHasChild(bar.getElement())) {
 			reset();
 		}
@@ -116,6 +118,7 @@ public class LoadingBar extends Composite {
 					@Override
 					public void run() {
 						bar.getElement().removeClassName(style.isOpening());
+						isOpening = false;
 					}
 				};
 				timer.schedule(150);
@@ -129,20 +132,26 @@ public class LoadingBar extends Composite {
 	}
 
 	public void hide(final String closingMessage, final boolean isSuccess) {
-		if (container.isOrHasChild(this.getElement())) {
-			if (isProgressive) {
-				setProgressiveStatus(100.0);
-				Timer timerClose = new Timer() {
-					@Override
-					public void run() {
+		Timer waitToHideTimer = new Timer() {
+			@Override
+			public void run() {
+				if (container.isOrHasChild(bar.getElement())) {
+					if (isProgressive) {
+						setProgressiveStatus(100.0);
+						Timer timerClose = new Timer() {
+							@Override
+							public void run() {
+								close(closingMessage, isSuccess);
+							}
+						};
+						timerClose.schedule(400);
+					} else {
 						close(closingMessage, isSuccess);
 					}
-				};
-				timerClose.schedule(400);
-			} else {
-				close(closingMessage, isSuccess);
+				}
 			}
-		}
+		};
+		waitToHideTimer.schedule(isOpening ? 370 : 0);
 	}
 
 	private void close(String closingMessage, boolean isSuccess) {

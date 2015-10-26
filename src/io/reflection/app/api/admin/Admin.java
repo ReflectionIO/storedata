@@ -154,6 +154,13 @@ public final class Admin extends ActionHandler {
 			} else {
 				updatePager(output.pager, output.users, input.pager.totalCount == null ? UserServiceProvider.provide().getUsersCount() : null);
 			}
+			// Get roles
+			for (User user : output.users) {
+				user.roles = UserServiceProvider.provide().getUserRoles(user);
+				if (user.roles != null) {
+					RoleServiceProvider.provide().inflateRoles(user.roles);
+				}
+			}
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -836,11 +843,6 @@ public final class Admin extends ActionHandler {
 
 			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
-			if (input.allTestUsers) {
-				Role testRole = RoleServiceProvider.provide().getCodeRole(DataTypeHelper.ROLE_TEST_CODE);
-				input.users = UserServiceProvider.provide().getRoleUsers(testRole);
-			}
-
 			if (input.users != null && input.users.size() > 0) {
 
 				List<DataAccount> linkedAccounts = UserServiceProvider.provide().getUsersDataAccounts(input.users, PagerHelper.createInfinitePager());
@@ -896,7 +898,7 @@ public final class Admin extends ActionHandler {
 				output.roles = UserServiceProvider.provide().getUserRoles(input.user);
 
 				if (output.roles != null) {
-						RoleServiceProvider.provide().inflateRoles(output.roles);
+					RoleServiceProvider.provide().inflateRoles(output.roles);
 
 					for (Role role : output.roles) {
 						role.permissions = RoleServiceProvider.provide().getPermissions(role);

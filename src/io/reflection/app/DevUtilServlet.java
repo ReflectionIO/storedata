@@ -12,6 +12,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -29,12 +30,21 @@ import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.taskqueue.TaskOptions.Builder;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
+import com.spacehopperstudios.utility.StringUtils;
 
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.helpers.QueueHelper;
+import io.reflection.app.helpers.SplitDataHelper;
 import io.reflection.app.helpers.SqlQueryHelper;
 import io.reflection.app.logging.GaeLevel;
+import io.reflection.app.modellers.Modeller;
+import io.reflection.app.modellers.ModellerFactory;
+import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
+import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
+import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
+import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.sale.SaleServiceProvider;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 @SuppressWarnings("serial")
 public class DevUtilServlet extends HttpServlet {
@@ -43,6 +53,12 @@ public class DevUtilServlet extends HttpServlet {
 	public static final String	PARAM_ACTION						= "action";
 	public static final String	PARAM_DATA_ACCOUNT_IDS	= "dataaccountids";
 	public static final String	PARAM_DATES							= "dates";
+	public static final String	PARAM_DATE_RANGE				= "daterange";
+	public static final String	PARAM_PLATFORMS					= "platforms";
+	public static final String	PARAM_LIST_TYPES				= "types";
+	public static final String	PARAM_CATEGORIES				= "categories";
+	public static final String	PARAM_COUNTRIES					= "countries";
+	public static final String	PARAM_TIME							= "time";
 
 	public static final String	ACTION_SUMMARISE	= "summarise";
 	public static final String	ACTION_SPLIT_DATA	= "split";
@@ -97,23 +113,55 @@ public class DevUtilServlet extends HttpServlet {
 	 * @param req
 	 * @param resp
 	 */
-	private String summarise(HttpServletRequest req, HttpServletResponse resp) {
-		StringBuilder webResponse = new StringBuilder();
-
-		ArrayList<String> dates = getStringParameters(req, PARAM_DATES);
-
-		if (dates.isEmpty()) {
-			dates.add(SqlQueryHelper.getSqlDateFormat().format(new Date()));
+	private void execute(HttpServletRequest req, HttpServletResponse resp) {
+		String action = req.getParameter("action");
+		if (action == null) {
+			String msg = "No action provided.";
+			writeResponse(resp, msg);
+			return;
+		} else {
+			action = action.toLowerCase();
 		}
 
-		ArrayList<Date> sortedDates = getSortedDatesFromStrings(dates);
-		List<Long> dataAccountIds = getLongParameters(req, PARAM_DATA_ACCOUNT_IDS);
+		String msg = null;
+		switch (action) {
+			case ACTION_SUMMARISE:
+				msg = summarise(req, resp);
+				break;
+			case ACTION_SPLIT_DATA:
+				msg = splitData(req, resp);
+				break;
+			case ACTION_MODEL:
+				msg = model(req, resp);
+				break;
+		}
 
+		resp.setContentType("text/plain");
+		writeResponse(resp, msg);
+	}
+
+	/**
+	 * @param req
+	 * @param resp
+	 */
+	private String summarise(HttpServletRequest req, HttpServletResponse resp) {
+		ArrayList<Date> datesToProcess = getDatesToProcess(req);
+		if (datesToProcess.isEmpty()) {
+			String msg = "There are no dates to process. Returning without doing anything.";
+
+			LOG.log(GaeLevel.DEBUG, msg);
+			return msg;
+		}
+
+		List<Long> dataAccountIds = getLongParameters(req, PARAM_DATA_ACCOUNT_IDS);
 		if (dataAccountIds.isEmpty()) {
 			try {
-				dataAccountIds = SaleServiceProvider.provide().getDataAccountsWithSalesBetweenDates(sortedDates.get(0), sortedDates.get(sortedDates.size() - 1));
+				dataAccountIds = DataAccountServiceProvider.provide().getAllDataAccountIDs();
 			} catch (DataAccessException e) {
-				e.printStackTrace();
+				String msg = "Exception occured while trying to get data account ids with sales between dates. Check the logs.";
+
+				LOG.log(Level.WARNING, msg, e);
+				return msg;
 			}
 		}
 
@@ -124,16 +172,21 @@ public class DevUtilServlet extends HttpServlet {
 			return msg;
 		}
 
-		for (String date : dates) {
+		StringBuilder webResponse = new StringBuilder();
+		SimpleDateFormat sqlDateFormat = SqlQueryHelper.getSqlDateFormat();
+		for (Date date : datesToProcess) {
 			for (Long dataAccountId : dataAccountIds) {
+				String sqlDate = sqlDateFormat.format(date);
+
+				String taskName = "summarise_" + dataAccountId + "_" + sqlDate + "-" + System.currentTimeMillis();
 
 				QueueHelper.enqueue(QUEUE_SUMMARISE, URL_SUMMARISE, Method.GET,
-						new SimpleEntry<String, String>("taskName", "summarise_" + dataAccountId + "_" + date + "-" + System.currentTimeMillis()),
+						new SimpleEntry<String, String>("taskName", taskName),
 						new SimpleEntry<String, String>("dataaccountid", dataAccountId.toString()),
-						new SimpleEntry<String, String>("date", date));
+						new SimpleEntry<String, String>("date", sqlDate));
 
-				String logMsg = String.format("Enqueued summarisation for data account %d on %s", dataAccountId, date);
 
+				String logMsg = String.format("Enqueued summarisation for data account %d on %s with taskName %s", dataAccountId, sqlDate, taskName);
 				LOG.log(GaeLevel.DEBUG, logMsg);
 				webResponse.append(logMsg).append('\n');
 			}
@@ -145,26 +198,223 @@ public class DevUtilServlet extends HttpServlet {
 	/**
 	 * @param req
 	 * @param resp
+	 * @return
 	 */
-	private void execute(HttpServletRequest req, HttpServletResponse resp) {
-		String action = req.getParameter("action");
-		if (action == null) {
-			String msg = "No action provided.";
-			writeResponse(resp, msg);
-			return;
-		} else {
-			action = action.toLowerCase();
+	private String model(HttpServletRequest req, HttpServletResponse resp) {
+		// get platforms
+		// get countries
+		// get date range
+		// get types
+		StringBuilder webResponse = new StringBuilder();
+
+		ArrayList<String> platformList = getStringParameters(req, PARAM_PLATFORMS);
+		ArrayList<String> typeList = getStringParameters(req, PARAM_LIST_TYPES);
+		ArrayList<String> categoryList = getStringParameters(req, PARAM_CATEGORIES);
+		ArrayList<String> countryList = getStringParameters(req, PARAM_COUNTRIES);
+		String time = req.getParameter(PARAM_TIME);
+
+		if (platformList.isEmpty()) {
+			platformList.add("TABLET");
+			platformList.add("PHONE");
+
+			String msg = "Platforms not specified. Including both phones and tables.";
+			webResponse.append(msg).append('\n');
+			LOG.log(GaeLevel.DEBUG, msg);
 		}
 
-		switch (action) {
-			case ACTION_SUMMARISE:
-				writeResponse(resp, summarise(req, resp));
-				break;
-			case ACTION_SPLIT_DATA:
-				break;
-			case ACTION_MODEL:
-				break;
+		if (typeList.isEmpty()) {
+			typeList.add("FREE");
+			typeList.add("PAID");
+			typeList.add("GROSSING");
+
+			String msg = "List types not specified. Including Free, Paid and Grossing.";
+			webResponse.append(msg).append('\n');
+			LOG.log(GaeLevel.DEBUG, msg);
 		}
+
+		if (categoryList.isEmpty()) {
+			categoryList.add("15");
+			categoryList.add("24");
+
+			String msg = "Categories not specified. Including Games (15) and Overall (24)";
+			webResponse.append(msg).append('\n');
+			LOG.log(GaeLevel.DEBUG, msg);
+		}
+
+		if (countryList.isEmpty()) {
+			String validCountries = System.getProperty("ingest.ios.countries");
+			validCountries = validCountries == null ? "" : validCountries.toLowerCase();
+
+			String msg = "Countries not specified. Including " + validCountries;
+			webResponse.append(msg).append('\n');
+			LOG.log(GaeLevel.DEBUG, msg);
+
+			for (String validCountry : validCountries.split(",")) {
+				String country = validCountry.trim();
+				countryList.add(country);
+			}
+		}
+
+		boolean usingDateRange = true;
+		String dateRange = req.getParameter(PARAM_DATE_RANGE);
+		String dates = req.getParameter(PARAM_DATES);
+
+		if(dateRange==null || dateRange.trim().length()==0){
+			if(dates==null || dates.trim().length()==0){
+				String msg = "There are no dates to process. Returning without doing anything.";
+
+				LOG.log(GaeLevel.DEBUG, msg);
+				return msg;
+			}
+			usingDateRange = false;
+		}
+
+		String dateCondition = usingDateRange?SqlQueryHelper.getDateRangeCondition("fetch_date", dateRange.split(",")):SqlQueryHelper.getDateListCondition("fetch_date", dates.split(","));
+		if(dateCondition==null || dateCondition.length()==0){
+			String msg = "Could not generate a date condition based on the input params. Using date range: "+usingDateRange+", "+PARAM_DATE_RANGE+" = "+dateRange+", "+PARAM_DATES+" = "+dates;
+
+			LOG.log(GaeLevel.DEBUG, msg);
+			return msg;
+		}
+
+		// if there is no time param or it is = all then ignore time else if it is am then do am else do pm.
+		String timeCondition = time == null ? "" : time.trim().equalsIgnoreCase("all") ? "" : time.trim().equalsIgnoreCase("am") ? " AND fetch_time<'13:00'" : " AND fetch_time>'21:00'";
+
+		String selectQuery = String.format("SELECT rank_fetch_id from rank_fetch where %s AND country in ('%s') AND category in (%s) and type in ('%s') and platform in ('%s') %s",
+				dateCondition,
+				StringUtils.join(countryList, "', '"),
+				StringUtils.join(categoryList, ", "),
+				StringUtils.join(typeList, "', '"),
+				StringUtils.join(platformList, "', '"),
+				timeCondition);
+
+		String msg = "Running select query: " + selectQuery;
+		webResponse.append(msg).append('\n');
+		LOG.log(GaeLevel.DEBUG, msg);
+
+		ArrayList<Long> rankFetchIds = new ArrayList<Long>();
+		try {
+			final Connection con = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
+			con.connect();
+			con.executeQuery(selectQuery);
+
+			while (con.fetchNextRow()) {
+				rankFetchIds.add(con.getCurrentRowLong("rank_fetch_id"));
+			}
+
+			con.disconnect();
+		} catch (NullPointerException | DataAccessException e) {
+			LOG.log(Level.WARNING, "DB Exception", e);
+			webResponse.append(String.format("An exception occured while running the statement: %s", e.getMessage())).append('\n');
+			return webResponse.toString();
+		}
+
+		LOG.log(GaeLevel.DEBUG, String.format("Got %d rank fetch ids. Processing...", rankFetchIds.size()));
+
+		final Modeller modeller = ModellerFactory.getModellerForStore(DataTypeHelper.IOS_STORE_A3);
+		for (Long rankFetchId : rankFetchIds) {
+			modeller.enqueueFetchId(rankFetchId);
+			webResponse.append("Modelling rank fetch id ").append(rankFetchId).append('\n');
+		}
+
+		return webResponse.toString();
+	}
+
+	/**
+	 * @param req
+	 * @param resp
+	 * @return
+	 */
+	private String splitData(HttpServletRequest req, HttpServletResponse resp) {
+		ArrayList<Date> datesToProcess = getDatesToProcess(req);
+		if (datesToProcess.isEmpty()) {
+			String msg = "There are no dates to process. Returning without doing anything.";
+
+			LOG.log(GaeLevel.DEBUG, msg);
+			return msg;
+		}
+
+		List<Long> dataAccountIds = getLongParameters(req, PARAM_DATA_ACCOUNT_IDS);
+		if (dataAccountIds.isEmpty()) {
+			try {
+				dataAccountIds = SaleServiceProvider.provide().getDataAccountIdsWithSaleSummariesBetweenDates(datesToProcess.get(0), datesToProcess.get(datesToProcess.size() - 1));
+			} catch (DataAccessException e) {
+				String msg = "Exception occured while trying to get data account ids with sales between dates. Check the logs.";
+
+				LOG.log(Level.WARNING, msg, e);
+				return msg;
+			}
+		}
+
+		if (dataAccountIds == null || dataAccountIds.isEmpty()) {
+			String msg = String.format("There are no data accounts to process. Doing nothing.");
+
+			LOG.log(GaeLevel.DEBUG, msg);
+			return msg;
+		}
+
+		StringBuilder webResponse = new StringBuilder();
+		for (Date date : datesToProcess) {
+			for (Long dataAccountId : dataAccountIds) {
+				String msg = String.format("Requesting split data for %d on %s", dataAccountId, date);
+				LOG.log(GaeLevel.DEBUG, msg);
+				webResponse.append(msg).append('\n');
+				SplitDataHelper.INSTANCE.enqueueToGatherSplitData(dataAccountId, date);
+			}
+		}
+
+		return webResponse.toString();
+	}
+
+
+	/**
+	 * @param req
+	 * @return
+	 */
+	private ArrayList<Date> getDatesToProcess(HttpServletRequest req) {
+		SimpleDateFormat sqlDateFormat = SqlQueryHelper.getSqlDateFormat();
+
+		ArrayList<Date> datesToProcess = new ArrayList<Date>();
+		ArrayList<String> dateRangeStr = getStringParameters(req, PARAM_DATE_RANGE);
+
+		if (!dateRangeStr.isEmpty()) {
+			if (dateRangeStr.size() == 1) {
+				dateRangeStr.add(sqlDateFormat.format(new Date()));
+			}
+
+			LOG.log(GaeLevel.DEBUG, String.format("Got a date range with %d elements", dateRangeStr.size()));
+
+			ArrayList<Date> sortedDates = getSortedDatesFromStrings(dateRangeStr);
+
+
+			Date from = sortedDates.get(0);
+			Date to = sortedDates.get(1);
+			Calendar toCal = Calendar.getInstance();
+			toCal.setTime(to);
+
+			LOG.log(GaeLevel.DEBUG, String.format("Range is %s to %s", from, to));
+
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(from);
+			while (cal.before(toCal)) {
+				datesToProcess.add(cal.getTime());
+				cal.add(Calendar.DATE, 1);
+			}
+
+			LOG.log(GaeLevel.DEBUG, String.format("Added %d dates to be processed", datesToProcess.size()));
+		} else {
+			ArrayList<String> datesStr = getStringParameters(req, PARAM_DATES);
+			if (datesStr.isEmpty()) {
+				LOG.log(GaeLevel.DEBUG, String.format("We didn't get any dates or date ranges"));
+				return datesToProcess; // empty
+			} else {
+				LOG.log(GaeLevel.DEBUG, String.format("Date range not given but we have %d dates", datesStr.size()));
+			}
+
+			datesToProcess = getSortedDatesFromStrings(datesStr);
+		}
+
+		return datesToProcess;
 	}
 
 	/**
@@ -193,42 +443,18 @@ public class DevUtilServlet extends HttpServlet {
 	 * @return
 	 */
 	private ArrayList<String> getStringParameters(HttpServletRequest req, String paramName) {
-		String[] values = req.getParameterValues(paramName);
+		String parameterValue = req.getParameter(paramName);
+		if (parameterValue == null || parameterValue.trim().length() == 0) return new ArrayList<String>(0);
 
-		ArrayList<String> list = new ArrayList<String>(values == null ? 10 : values.length);
+		String[] values = parameterValue.split(",");
+
+		ArrayList<String> list = new ArrayList<String>(values == null ? 0 : values.length);
 
 		if (values == null || values.length == 0) return list;
 
 		for (String value : values) {
 			if (value != null && value.trim().length() > 0) {
-				String[] parts = value.split(",");
-				for (String part : parts) {
-					if (part != null && part.trim().length() > 0) {
-						list.add(part.trim());
-					}
-				}
-			}
-		}
-
-		return list;
-	}
-
-	/**
-	 * @param req
-	 * @param paramName
-	 * @return
-	 */
-	private ArrayList<Integer> getIntParameters(HttpServletRequest req, String paramName) {
-		String[] values = req.getParameterValues(paramName);
-
-		ArrayList<Integer> list = new ArrayList<Integer>(values == null ? 10 : values.length);
-
-		if (values == null || values.length == 0) return list;
-
-		for (String value : values) {
-			try {
-				list.add(Integer.parseInt(value));
-			} catch (NumberFormatException e) {
+				list.add(value.trim());
 			}
 		}
 
@@ -241,16 +467,21 @@ public class DevUtilServlet extends HttpServlet {
 	 * @return
 	 */
 	private List<Long> getLongParameters(HttpServletRequest req, String paramName) {
-		String[] values = req.getParameterValues(paramName);
+		String parameterValue = req.getParameter(paramName);
+		if (parameterValue == null || parameterValue.trim().length() == 0) return new ArrayList<Long>(0);
 
-		ArrayList<Long> list = new ArrayList<Long>(values == null ? 10 : values.length);
+		String[] values = parameterValue.split(",");
+
+		ArrayList<Long> list = new ArrayList<Long>(values == null ? 0 : values.length);
 
 		if (values == null || values.length == 0) return list;
 
 		for (String value : values) {
-			try {
-				list.add(Long.parseLong(value));
-			} catch (NumberFormatException e) {
+			if (value != null && value.trim().length() > 0) {
+				try {
+					list.add(Long.parseLong(value));
+				} catch (NumberFormatException e) {
+				}
 			}
 		}
 
@@ -262,7 +493,6 @@ public class DevUtilServlet extends HttpServlet {
 	 * @param msg
 	 */
 	private void writeResponse(HttpServletResponse resp, String msg) {
-		LOG.log(GaeLevel.DEBUG, msg);
 		try {
 			resp.getWriter().println(msg);
 		} catch (IOException e) {
