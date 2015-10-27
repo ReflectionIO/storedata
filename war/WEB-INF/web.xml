@@ -17,7 +17,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-class>io.reflection.app.IngestorServlet</servlet-class>
 	</servlet>
 
-	<!-- <servlet> <servlet-name>Modeller Tasks</servlet-name> <servlet-class>io.reflection.app.ModellerServlet</servlet-class> </servlet> <servlet> <servlet-name>Persist 
+	<!-- <servlet> <servlet-name>Modeller Tasks</servlet-name> <servlet-class>io.reflection.app.ModellerServlet</servlet-class> </servlet> <servlet> <servlet-name>Persist
 		Tasks</servlet-name> <servlet-class>io.reflection.app.PersistServlet</servlet-class> </servlet> -->
 
 	<servlet>
@@ -127,7 +127,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>Ingestor Tasks</servlet-name>
 		<url-pattern>/ingest</url-pattern>
 	</servlet-mapping>
-	<!-- <servlet-mapping> <servlet-name>Modeller Tasks</servlet-name> <url-pattern>/model</url-pattern> </servlet-mapping> <servlet-mapping> <servlet-name>Persist 
+	<!-- <servlet-mapping> <servlet-name>Modeller Tasks</servlet-name> <url-pattern>/model</url-pattern> </servlet-mapping> <servlet-mapping> <servlet-name>Persist
 		Tasks</servlet-name> <url-pattern>/persist</url-pattern> </servlet-mapping> -->
 	<servlet-mapping>
 		<servlet-name>Dev Helper</servlet-name>
@@ -232,10 +232,10 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<url-pattern>/summarise</url-pattern>
 	</servlet-mapping>
 
-	<!-- <servlet> <servlet-name>mapreduce</servlet-name> <servlet-class> com.google.appengine.tools.mapreduce.MapReduceServlet </servlet-class> </servlet> <servlet-mapping> 
-		<servlet-name>mapreduce</servlet-name> <url-pattern>/mapreduce/*</url-pattern> </servlet-mapping> <servlet> <servlet-name>pipeline</servlet-name> <servlet-class> 
-		com.google.appengine.tools.pipeline.impl.servlets.PipelineServlet </servlet-class> </servlet> <servlet-mapping> <servlet-name>pipeline</servlet-name> <url-pattern>/_ah/pipeline/*</url-pattern> 
-		</servlet-mapping> <security-constraint> <web-resource-collection> <url-pattern>/mapreduce/*</url-pattern> </web-resource-collection> <auth-constraint> <role-name>admin</role-name> 
+	<!-- <servlet> <servlet-name>mapreduce</servlet-name> <servlet-class> com.google.appengine.tools.mapreduce.MapReduceServlet </servlet-class> </servlet> <servlet-mapping>
+		<servlet-name>mapreduce</servlet-name> <url-pattern>/mapreduce/*</url-pattern> </servlet-mapping> <servlet> <servlet-name>pipeline</servlet-name> <servlet-class>
+		com.google.appengine.tools.pipeline.impl.servlets.PipelineServlet </servlet-class> </servlet> <servlet-mapping> <servlet-name>pipeline</servlet-name> <url-pattern>/_ah/pipeline/*</url-pattern>
+		</servlet-mapping> <security-constraint> <web-resource-collection> <url-pattern>/mapreduce/*</url-pattern> </web-resource-collection> <auth-constraint> <role-name>admin</role-name>
 		</auth-constraint> </security-constraint> -->
 
 	<security-constraint>
@@ -256,7 +256,17 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		</auth-constraint>
 	</security-constraint>
 
-	<!-- <security-constraint> <web-resource-collection> <url-pattern>/internal/*</url-pattern> </web-resource-collection> <auth-constraint> <role-name>admin</role-name> 
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>profile</web-resource-name>
+			<url-pattern>/*</url-pattern>
+		</web-resource-collection>
+		<user-data-constraint>
+			<transport-guarantee>CONFIDENTIAL</transport-guarantee>
+		</user-data-constraint>
+	</security-constraint>
+
+	<!-- <security-constraint> <web-resource-collection> <url-pattern>/internal/*</url-pattern> </web-resource-collection> <auth-constraint> <role-name>admin</role-name>
 		</auth-constraint> </security-constraint> -->
 
 	<filter>
