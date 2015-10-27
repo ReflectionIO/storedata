@@ -1575,8 +1575,35 @@ public interface Styles extends ClientBundle {
 		@ClassName("pricing-sup")
 		String pricingSup();
 
+		@ClassName("product-animation-container-leaderboard")
+		String productAnimationContainerLeaderboard();
+
+		@ClassName("product-animation__filters")
+		String productAnimation__filters();
+
+		@ClassName("product-animation__headings-one")
+		String productAnimation__headingsOne();
+
+		@ClassName("product-animation__headings-two")
+		String productAnimation__headingsTwo();
+
+		@ClassName("product-animation__screenshot-one")
+		String productAnimation__screenshotOne();
+
+		@ClassName("product-animation__screenshot-two")
+		String productAnimation__screenshotTwo();
+
+		@ClassName("product-animation__tabs")
+		String productAnimation__tabs();
+
 		@ClassName("product-image-container--right")
 		String productImageContainerRight();
+
+		@ClassName("product-image-gif-graph")
+		String productImageGifGraph();
+
+		@ClassName("product-leaderboard-static")
+		String productLeaderboardStatic();
 
 		@ClassName("product-page__quotes")
 		String productPage__quotes();
@@ -2208,7 +2235,6 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("window-warning")
 		String windowWarning();
-
 	}
 
 	public static final Styles STYLES_INSTANCE = GWT.create(Styles.class);
