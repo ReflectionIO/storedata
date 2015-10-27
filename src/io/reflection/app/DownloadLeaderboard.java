@@ -97,7 +97,7 @@ public class DownloadLeaderboard extends HttpServlet {
 			// resp.setHeader("Cache-Control", "must-revalidate, post-check=0, pre-check=0");
 			// resp.setHeader("Cache-Control", "private");
 			resp.setHeader("Content-Transfer-Encoding", "binary");
-			String listName = "all";
+			String listName = "anyList";
 			if (collector.isPaid(getAllTopItemsRequest.listType)) {
 				listName = "paid";
 			} else if (collector.isFree(getAllTopItemsRequest.listType)) {
@@ -105,8 +105,16 @@ public class DownloadLeaderboard extends HttpServlet {
 			} else if (collector.isGrossing(getAllTopItemsRequest.listType)) {
 				listName = "grossing";
 			}
-			String fileName = "\"Leaderboard_" + listName + "_" + getAllTopItemsRequest.country.a2Code + "_" + getAllTopItemsRequest.store.a3Code + "_"
-					+ getAllTopItemsRequest.on.toString() + ".csv\""; // TODO add category
+			String platform = (getAllTopItemsRequest.listType.contains("ipad") ? "iPad" : "iPhone");
+			String categoryName = String.valueOf(getAllTopItemsRequest.category.id.longValue());
+			if (getAllTopItemsRequest.category.id.longValue() == 24) {
+				categoryName = "anyCategory";
+			} else if (getAllTopItemsRequest.category.id.longValue() == 15) {
+				categoryName = "games";
+			}
+
+			String fileName = "\"Leaderboard" + "_" + getAllTopItemsRequest.on.toString() + "_" + getAllTopItemsRequest.country.a2Code + "_" + listName + "_"
+					+ platform + "_" + categoryName + ".csv\""; // TODO add category
 			resp.setHeader("Content-Disposition", "attachment; filename=" + fileName);
 			Cookie cookieFeedback = new Cookie("fileDownloaded", "success");
 			resp.addCookie(cookieFeedback); // ! THE HEADER WON'T BE UPDATED AFTER getWriter() IS CALLED !
