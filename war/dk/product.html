@@ -52,20 +52,19 @@
 				<section class="product-section">
 					<div class="product-section--content vertical-centre-content">
 						<div class="product-image-container--right">
-							<!-- <div class="product-animation-container">
-							  <div class="filters"><img src="images/product-animation-filters.jpg" width="906" height="115" alt=""/></div> 
-							  <div class="tabs"><img src="images/product-animation-tabs.gif" width="454" height="56" alt=""/></div>
-							  <div class="headings1"><img src="images/product-animation-headings-one.jpg" width="906" height="42" alt=""/></div>
-							  <div class="headings2"><img src="images/product-animation-headings-two.jpg" width="906" height="42" alt=""/></div>
-							  <div class="screenshot1"><img src="images/product-animation-screenshot-one.jpg" width="906" height="914" alt=""/></div>
-							  <div class="screenshot2"><img src="images/product-animation-screenshot-two.jpg" width="906" height="914" alt=""/></div>
-							</div>  -->
-							<img src="images/product-image-static-leaderboard.jpg" alt="Reflection leaderboard screenshot" />
-						</div>
+							<div class="product-animation-container-leaderboard">
+							  <div class="product-animation__filters"><img src="images/product-animation-filters.jpg" width="906" height="115" alt=""/></div> 
+							  <div class="product-animation__tabs"><img src="images/product-animation-tabs.gif" width="454" height="56" alt=""/></div>
+							  <div class="product-animation__headings-one"><img src="images/product-animation-headings-one.jpg" width="906" height="42" alt=""/></div>
+							  <div class="product-animation__headings-two"><img src="images/product-animation-headings-two.jpg" width="906" height="42" alt=""/></div>
+							  <div class="product-animation__screenshot-one"><img src="images/product-animation-screenshot-one.jpg" width="906" height="914" alt=""/></div>
+							  <div class="product-animation__screenshot-two"><img src="images/product-animation-screenshot-two.jpg" width="906" height="914" alt=""/></div>
+							</div>
+							<img src="images/product-image-static-leaderboard.jpg" alt="Reflection leaderboard screenshot" class="product-leaderboard-static" />
+						</div>						
 						<div class="product-text-content--left">
 							<h2 class="heading-style--heading-three">Track Your Competitors in the Mobile Market</h2>
-							<p>Reflection's leaderboards enable you to track accurate download and revenue data to identify who performs best in your category. 
-					Know exactly what is going on in the market to plan your next move.</p>
+							<p>Reflection's leaderboards enable you to track accurate download and revenue data to identify who performs best in your category. Know exactly what is going on in the market to plan your next move.</p>
 						</div>
 					</div>
 				</section>
@@ -73,14 +72,15 @@
 					<div class="product-section--content">
 						<div class="product-image-container--right">
 							<img src="images/product-image-static-graph.jpg" alt="Reflection graph screenshot" />
+							<img src="images/product-image-gif-graph.gif" alt="Reflection graph gif" class="product-image-gif-graph" />
 						</div>
 						<div class="product-text-content--left">
 							<h2 class="heading-style--heading-three">Accurately Plan Your Marketing</h2>
 							<p>Use Reflection to validate your app idea or business model and discover where to launch for the best performance. 
-					Analyse comparable apps to identify your app's revenue and download potential.</p>
-					<p>Understand how many downloads you need to reach your target rank in the charts. 
-					Identify which countries generate the most downloads in your category and determine how to gain traction there.</p>
-					<p class="small-text">*Screen mock up shown, not real data</p>
+							Analyse comparable apps to identify your app's revenue and download potential.</p>
+							<p>Understand how many downloads you need to reach your target rank in the charts. 
+							Identify which countries generate the most downloads in your category and determine how to gain traction there.</p>
+							<p class="small-text">*Screen mock up shown, not real data</p>
 						</div>
 					</div>
 				</section>
@@ -524,7 +524,25 @@
 					$(this).toggleClass("is-open")
 								 .next('.reveal-content').slideToggle(300);
 				});
-		  }		  
+		  }
+
+		  var leaderboardIllustrationHasAnimated = false;
+		  function checkScrollForProductLeaderboardAnimation() {
+				var leaderboardAnimationContainer = $('.product-leaderboard-static'), thisWindow = $(window);
+				console.log(leaderboardAnimationContainer.offset())
+  			if(thisWindow.scrollTop() > leaderboardAnimationContainer.offset().top - ($(window).height()/2.5)) {
+  				$('.product-animation-container-leaderboard').addClass("is-showing");
+  				leaderboardIllustrationHasAnimated = true;
+  			}
+			}
+
+	  	$(window).on("scroll", function(){
+	  		if(!leaderboardIllustrationHasAnimated) {
+	  			checkScrollForProductLeaderboardAnimation();
+	  		}
+	  	});
+
+	  	checkScrollForProductLeaderboardAnimation();  
   	});
   </script>
 </body>
