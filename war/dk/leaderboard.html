@@ -5,9 +5,13 @@
 	<title>Reflection, Leaderboard</title>
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">	
-	<!--[if (gte IE 9)|(IEMobile)|(!IE)]><!-->
+	<!--[if (gt IE 9)|(IEMobile)|(!IE)]><!-->
 		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main.css" />
 	<!--<![endif]-->
+	<!--[if IE 9]>
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="ie9-one.css" />
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="ie9-two.css" />
+	<![endif]-->	
 	<!--[if (lt IE 9)]>
 		<script src="js/vendor/html5shiv.min.js"></script>
 		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main-ie8.css" />
@@ -386,7 +390,7 @@
 					</ul>
 					<div class="buttons-container">
 						<button class="ref-button--full-width js-submit">Start Free Trial</button>
-						<button class="ref-button--link js-close">Not Right Now</button>
+						<p>No Credit Card Required</p>
 					</div>
 				</div>
 				<div class="start-trial-confirmation">
@@ -449,7 +453,7 @@
   <script src="js/application.js"></script>
   <script>
   	function initScripts() {
-  		new LeaderboardPage();  		
+  		new LeaderboardPage();
 
   		// mock calendar open - for template only, should be handled by GWT
   		$('.form-field--date-select input').on("click", function(){

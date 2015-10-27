@@ -7,7 +7,30 @@
 //
 package io.reflection.app;
 
-import static io.reflection.app.objectify.PersistenceService.ofy;
+import static io.reflection.app.objectify.PersistenceService.*;
+
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.google.appengine.api.taskqueue.Queue;
+import com.google.appengine.api.taskqueue.QueueFactory;
+import com.google.appengine.api.taskqueue.TaskOptions;
+import com.google.appengine.api.taskqueue.TaskOptions.Method;
+import com.google.appengine.api.taskqueue.TransientFailureException;
+import com.googlecode.objectify.cmd.QueryKeys;
+
 import io.reflection.app.accountdatacollectors.ITunesConnectDownloadHelper;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
@@ -33,28 +56,6 @@ import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
 import io.reflection.app.shared.util.PagerHelper;
-
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.google.appengine.api.taskqueue.Queue;
-import com.google.appengine.api.taskqueue.QueueFactory;
-import com.google.appengine.api.taskqueue.TaskOptions;
-import com.google.appengine.api.taskqueue.TaskOptions.Method;
-import com.google.appengine.api.taskqueue.TransientFailureException;
-import com.googlecode.objectify.cmd.QueryKeys;
 
 /**
  * @author William Shakour
@@ -279,6 +280,7 @@ public class CronServlet extends HttpServlet {
 
 					final String errorMessage = connection == null ? null : connection.getHeaderField("ERRORMSG");
 
+					// There is no report available to download, for the selected period
 					if (errorMessage != null && errorMessage.startsWith("Daily reports are available only for past 30 days")) {
 						if (LOG.isLoggable(GaeLevel.DEBUG)) {
 							LOG.log(GaeLevel.DEBUG,
@@ -302,7 +304,7 @@ public class CronServlet extends HttpServlet {
 					// get data accounts 100 at a time
 					for (pager.start = Long.valueOf(0); pager.start.longValue() < pager.totalCount.longValue(); pager.start = Long.valueOf(pager.start
 							.longValue() + pager.count.longValue())) {
-						final List<DataAccount> dataAccounts = dataAccountService.getDataAccounts(pager);
+						final List<DataAccount> dataAccounts = dataAccountService.getActiveDataAccounts(pager);
 
 						for (final DataAccount dataAccount : dataAccounts) {
 							// if the account has some errors then don't bother otherwise enqueue a message to do a gather for it

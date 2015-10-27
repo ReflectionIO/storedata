@@ -160,6 +160,7 @@ final class DataAccountService implements IDataAccountService {
 		dataAccount.password = stripslashes(connection.getCurrentRowString("clearpassword")); // column name is password but all select queries should return
 		// decrypted password as clearpassword
 		dataAccount.properties = stripslashes(connection.getCurrentRowString("properties"));
+		dataAccount.developerName = stripslashes(connection.getCurrentRowString("developer_name"));
 
 		return dataAccount;
 	}
@@ -608,6 +609,39 @@ final class DataAccountService implements IDataAccountService {
 
 			while (dataAccountConnection.fetchNextRow()) {
 				dataAccounts.add(dataAccountConnection.getCurrentRowLong("id"));
+			}
+		} finally {
+			if (dataAccountConnection != null) {
+				dataAccountConnection.disconnect();
+			}
+		}
+
+		return dataAccounts;
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getDataAccountForUser(java.lang.Long)
+	 */
+	@Override
+	public List<DataAccount> getDataAccountForUser(Long userId) throws DataAccessException {
+		final List<DataAccount> dataAccounts = new ArrayList<DataAccount>();
+
+		final String getDataAccountsQuery = String.format(
+				"SELECT *, convert(aes_decrypt(`password`,UNHEX('%s')), CHAR(1000)) AS `clearpassword` "
+						+ " FROM `dataaccount` "
+						+ " WHERE "
+						+ " `deleted`='n' AND "
+						+ " `id` in (select distinct dataaccountid from userdataaccount where deleted='n' and userid=%d)",
+						key(), userId);
+
+		final Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
+
+		try {
+			dataAccountConnection.connect();
+			dataAccountConnection.executeQuery(getDataAccountsQuery);
+
+			while (dataAccountConnection.fetchNextRow()) {
+				dataAccounts.add(toDataAccount(dataAccountConnection));
 			}
 		} finally {
 			if (dataAccountConnection != null) {

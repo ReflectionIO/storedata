@@ -413,7 +413,12 @@ public class ChartHelper {
 
 	public static native void extendHighcharts() /*-{
 		(function(H) {
-
+			
+			Date.prototype.addHours = function(h){
+		      this.setHours(this.getHours()+h);
+		      return this;
+		    }
+    
 			var customIconRect;
 			H
 					.wrap(
@@ -443,7 +448,7 @@ public class ChartHelper {
 										- leftOffset, timeStampString = arguments[1][0].x
 										+ "", timeStampString = timeStampString
 										.substring(0, 10), xAxisDate = new Date(
-										timeStampString * 1000), formattedDate = xAxisDate
+										timeStampString * 1000).addHours(12), formattedDate = xAxisDate
 										.getDate()
 										+ " "
 										+ monthNames[xAxisDate.getMonth()];
@@ -455,7 +460,7 @@ public class ChartHelper {
 											.attr("transform", "translate("
 													+ labelXPos + ","
 													+ labelYPos + ")");
-									$axisLabel.find("text").html(formattedDate);
+									$axisLabel.find("text").text(formattedDate);
 
 								} else {
 									this.chart.renderer.label(formattedDate,

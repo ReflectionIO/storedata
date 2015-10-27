@@ -208,7 +208,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		applyFilters.getElement().setAttribute("data-tooltip", "Update results");
 
 		if (!SessionController.get().isAdmin()) {
-			categorySelector.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
+			categorySelector.setTooltip("We're in beta. More categories and countries will be available soon.");
 		}
 
 		dateBox.getDatePicker().addShowRangeHandler(new ShowRangeHandler<Date>() {

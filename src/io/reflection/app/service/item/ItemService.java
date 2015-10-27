@@ -1,4 +1,4 @@
-//  
+//
 //  ItemService.java
 //  storedata
 //
@@ -8,17 +8,7 @@
 
 package io.reflection.app.service.item;
 
-import static com.spacehopperstudios.utility.StringUtils.addslashes;
-import static com.spacehopperstudios.utility.StringUtils.stripslashes;
-import io.reflection.app.api.exception.DataAccessException;
-import io.reflection.app.api.shared.datatypes.Pager;
-import io.reflection.app.api.shared.datatypes.SortDirectionType;
-import io.reflection.app.datatypes.shared.Item;
-import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
-import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
-import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
-import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
-import io.reflection.app.service.ServiceType;
+import static com.spacehopperstudios.utility.StringUtils.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,6 +22,17 @@ import com.google.appengine.api.memcache.ErrorHandlers;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.spacehopperstudios.utility.StringUtils;
+
+import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.datatypes.shared.Item;
+import io.reflection.app.helpers.UrlHelper;
+import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
+import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
+import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
+import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
+import io.reflection.app.service.ServiceType;
 
 final class ItemService implements IItemService {
 
@@ -49,6 +50,7 @@ final class ItemService implements IItemService {
 		asyncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.WARNING));
 	}
 
+	@Override
 	public String getName() {
 		return ServiceType.ServiceTypeItem.toString();
 	}
@@ -103,7 +105,7 @@ final class ItemService implements IItemService {
 
 	/**
 	 * To item
-	 * 
+	 *
 	 * @param connection
 	 * @return
 	 * @throws DataAccessException
@@ -128,9 +130,10 @@ final class ItemService implements IItemService {
 			item.price = Float.valueOf(price.floatValue() / 100.0f);
 		}
 
-		item.smallImage = stripslashes(connection.getCurrentRowString("smallimage"));
-		item.mediumImage = stripslashes(connection.getCurrentRowString("mediumimage"));
-		item.largeImage = stripslashes(connection.getCurrentRowString("largeimage"));
+
+		item.smallImage = UrlHelper.INSTANCE.wrapUrlInProxy(stripslashes(connection.getCurrentRowString("smallimage")));
+		item.mediumImage = UrlHelper.INSTANCE.wrapUrlInProxy(stripslashes(connection.getCurrentRowString("mediumimage")));
+		item.largeImage = UrlHelper.INSTANCE.wrapUrlInProxy(stripslashes(connection.getCurrentRowString("largeimage")));
 
 		item.properties = stripslashes(connection.getCurrentRowString("properties"));
 		item.source = stripslashes(connection.getCurrentRowString("source"));
@@ -239,7 +242,7 @@ final class ItemService implements IItemService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.item.IItemService#getExternalIdItem(java.lang.String)
 	 */
 	@Override
@@ -281,7 +284,7 @@ final class ItemService implements IItemService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.item.IItemService#getInternalIdItem(java.lang.String)
 	 */
 	@Override
@@ -324,7 +327,7 @@ final class ItemService implements IItemService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.item.IItemService#getExternalIdItemBatch(java.util.Collection)
 	 */
 	@Override
@@ -399,7 +402,7 @@ final class ItemService implements IItemService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.item.IItemService#addItemsBatch(java.util.Collection)
 	 */
 	@Override
@@ -409,7 +412,7 @@ final class ItemService implements IItemService {
 		StringBuffer addItemsBatchQuery = new StringBuffer();
 
 		addItemsBatchQuery
-				.append("INSERT INTO `item` (`externalid`,`internalid`,`name`,`creatorname`,`price`,`source`,`type`,`added`,`country`,`currency`,`smallimage`,`mediumimage`,`largeimage`,`properties`) VALUES ");
+		.append("INSERT INTO `item` (`externalid`,`internalid`,`name`,`creatorname`,`price`,`source`,`type`,`added`,`country`,`currency`,`smallimage`,`mediumimage`,`largeimage`,`properties`) VALUES ");
 
 		boolean addComma = false;
 		for (Item item : items) {
@@ -485,9 +488,9 @@ final class ItemService implements IItemService {
 		String getDataItemQuery = String
 				.format("SELECT * FROM `item` WHERE (`externalid` LIKE '%%%1$s%%' OR `name` LIKE '%%%1$s%%' OR `creatorname` LIKE '%%%1$s%%') AND `deleted`='n' ORDER BY `%2$s` %3$s LIMIT %4$d, %5$d",
 						query, pager.sortBy == null ? "id" : stripslashes(pager.sortBy),
-						pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
-						pager.start == null ? Pager.DEFAULT_START.longValue() : pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue()
-								: pager.count.longValue());
+								pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
+										pager.start == null ? Pager.DEFAULT_START.longValue() : pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue()
+												: pager.count.longValue());
 
 		Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
 
@@ -513,7 +516,7 @@ final class ItemService implements IItemService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.item.IItemService#getInternalIdItemBatch(java.util.Collection)
 	 */
 	@Override
@@ -552,7 +555,7 @@ final class ItemService implements IItemService {
 
 				if (commaDelimitedItemIds != null && commaDelimitedItemIds.length() != 0) {
 					String getInternalIdItemBatchQuery = String.format(
-							"SELECT * FROM `item` WHERE `internalid` IN ('%s') and `deleted`='n' GROUP BY `internalid`,`properties`", commaDelimitedItemIds);
+							"SELECT * FROM `item` WHERE `internalid` IN ('%s') and `deleted`='n' GROUP BY `internalid`", commaDelimitedItemIds);
 
 					Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
 
@@ -598,7 +601,7 @@ final class ItemService implements IItemService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.item.IItemService#getItems(io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
@@ -621,11 +624,11 @@ final class ItemService implements IItemService {
 
 			if (pager.sortDirection != null) {
 				switch (pager.sortDirection) {
-				case SortDirectionTypeAscending:
-					sortDirectionQuery = "ASC";
-					break;
-				default:
-					break;
+					case SortDirectionTypeAscending:
+						sortDirectionQuery = "ASC";
+						break;
+					default:
+						break;
 				}
 			}
 
@@ -643,7 +646,7 @@ final class ItemService implements IItemService {
 			itemConnection.executeQuery(getItemIdsQuery);
 
 			while (itemConnection.fetchNextRow()) {
-				Item item = this.toItem(itemConnection);
+				Item item = toItem(itemConnection);
 
 				if (item != null) {
 					items.add(item);
@@ -660,7 +663,7 @@ final class ItemService implements IItemService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.item.IItemService#getItemsCount()
 	 */
 	@Override
@@ -699,7 +702,7 @@ final class ItemService implements IItemService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.item.IItemService#getDuplicateItemsInternalId(io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
@@ -711,7 +714,7 @@ final class ItemService implements IItemService {
 				// "SELECT `internalid`, count(1) as `count` FROM `item` WHERE `deleted`='n' GROUP BY `internalid` HAVING `count` > 1 ORDER BY `%s` %s LIMIT %d,%d",
 				"SELECT `internalid`, count(1) as `count` FROM `item` GROUP BY `internalid` HAVING `count` > 1 ORDER BY `%s` %s LIMIT %d,%d",
 				pager.sortBy == null ? "id" : stripslashes(pager.sortBy),
-				pager.sortDirection == SortDirectionType.SortDirectionTypeDescending ? "DESC" : "ASC", pager.start, pager.count);
+						pager.sortDirection == SortDirectionType.SortDirectionTypeDescending ? "DESC" : "ASC", pager.start, pager.count);
 
 		Connection itemConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeItem.toString());
 
@@ -738,7 +741,7 @@ final class ItemService implements IItemService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.item.IItemService#getInternalIdItemAndDuplicates(java.lang.String)
 	 */
 	@Override
@@ -772,7 +775,7 @@ final class ItemService implements IItemService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.item.IItemService#getPropertylessItemsCount()
 	 */
 	@Override
@@ -801,7 +804,7 @@ final class ItemService implements IItemService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.item.IItemService#getPropertylessItems(io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
@@ -823,11 +826,11 @@ final class ItemService implements IItemService {
 
 			if (pager.sortDirection != null) {
 				switch (pager.sortDirection) {
-				case SortDirectionTypeAscending:
-					sortDirectionQuery = "ASC";
-					break;
-				default:
-					break;
+					case SortDirectionTypeAscending:
+						sortDirectionQuery = "ASC";
+						break;
+					default:
+						break;
 				}
 			}
 
@@ -862,7 +865,7 @@ final class ItemService implements IItemService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.item.IItemService#getPropertylessItemIds(io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
@@ -884,11 +887,11 @@ final class ItemService implements IItemService {
 
 			if (pager.sortDirection != null) {
 				switch (pager.sortDirection) {
-				case SortDirectionTypeAscending:
-					sortDirectionQuery = "ASC";
-					break;
-				default:
-					break;
+					case SortDirectionTypeAscending:
+						sortDirectionQuery = "ASC";
+						break;
+					default:
+						break;
 				}
 			}
 
