@@ -1,4 +1,4 @@
-//  
+//
 //  DataAccount.java
 //  reflection.io
 //
@@ -25,6 +25,7 @@ public class DataAccount extends DataType {
 	public String username;
 	public String password;
 	public String properties;
+	public String									developerName;
 	public String active;
 
 	@Override
@@ -58,6 +59,8 @@ public class DataAccount extends DataType {
 		object.add("password", jsonPassword);
 		JsonElement jsonProperties = properties == null ? JsonNull.INSTANCE : new JsonPrimitive(properties);
 		object.add("properties", jsonProperties);
+		JsonElement jsonDeveloperName = developerName == null ? JsonNull.INSTANCE : new JsonPrimitive(developerName);
+		object.add("developerName", jsonDeveloperName);
 		JsonElement jsonActive = active == null ? JsonNull.INSTANCE : new JsonPrimitive(active);
 		object.add("active", jsonActive);
 		return object;
@@ -124,6 +127,12 @@ public class DataAccount extends DataType {
 				properties = jsonProperties.getAsString();
 			}
 		}
+		if (jsonObject.has("developerName")) {
+			JsonElement jsonDeveloperName = jsonObject.get("developerName");
+			if (jsonDeveloperName != null) {
+				active = jsonDeveloperName.getAsString();
+			}
+		}
 		if (jsonObject.has("active")) {
 			JsonElement jsonActive = jsonObject.get("active");
 			if (jsonActive != null) {
@@ -154,6 +163,11 @@ public class DataAccount extends DataType {
 
 	public DataAccount properties(String properties) {
 		this.properties = properties;
+		return this;
+	}
+
+	public DataAccount developerName(String developerName) {
+		this.developerName = developerName;
 		return this;
 	}
 

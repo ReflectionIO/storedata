@@ -5,9 +5,13 @@
 	<title>Reflection, Product</title>
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">	
-	<!--[if (gte IE 9)|(IEMobile)|(!IE)]><!-->
+	<!--[if (gt IE 9)|(IEMobile)|(!IE)]><!-->
 		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main.css" />
 	<!--<![endif]-->
+	<!--[if IE 9]>
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="ie9-one.css" />
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="ie9-two.css" />
+	<![endif]-->	
 	<!--[if (lt IE 9)]>
 		<script src="js/vendor/html5shiv.min.js"></script>
 		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main-ie8.css" />
@@ -48,12 +52,19 @@
 				<section class="product-section">
 					<div class="product-section--content vertical-centre-content">
 						<div class="product-image-container--right">
-							<img src="images/product-image-static-leaderboard.jpg" alt="Reflection leaderboard screenshot" />
-						</div>
+							<div class="product-animation-container-leaderboard">
+							  <div class="product-animation__filters"><img src="images/product-animation-filters.jpg" width="906" height="115" alt=""/></div> 
+							  <div class="product-animation__tabs"><img src="images/product-animation-tabs.gif" width="454" height="56" alt=""/></div>
+							  <div class="product-animation__headings-one"><img src="images/product-animation-headings-one.jpg" width="906" height="42" alt=""/></div>
+							  <div class="product-animation__headings-two"><img src="images/product-animation-headings-two.jpg" width="906" height="42" alt=""/></div>
+							  <div class="product-animation__screenshot-one"><img src="images/product-animation-screenshot-one.jpg" width="906" height="914" alt=""/></div>
+							  <div class="product-animation__screenshot-two"><img src="images/product-animation-screenshot-two.jpg" width="906" height="914" alt=""/></div>
+							</div>
+							<img src="images/product-image-static-leaderboard.jpg" alt="Reflection leaderboard screenshot" class="product-leaderboard-static" />
+						</div>						
 						<div class="product-text-content--left">
 							<h2 class="heading-style--heading-three">Track Your Competitors in the Mobile Market</h2>
-							<p>Do you know how many downloads and what revenue your competitors are generating from their apps? Ever been surprised with an app that came out of nowhere and dominated your category?<br />
-							Reflection's easy to use leaderboards enable you to track accurate download and revenue data to see who is performing best in your category. Know exactly what is going on in the market to plan your next move.</p>
+							<p>Reflection's leaderboards enable you to track accurate download and revenue data to identify who performs best in your category. Know exactly what is going on in the market to plan your next move.</p>
 						</div>
 					</div>
 				</section>
@@ -61,15 +72,15 @@
 					<div class="product-section--content">
 						<div class="product-image-container--right">
 							<img src="images/product-image-static-graph.jpg" alt="Reflection graph screenshot" />
+							<img src="images/product-image-gif-graph.gif" alt="Reflection graph gif" class="product-image-gif-graph" />
 						</div>
 						<div class="product-text-content--left">
 							<h2 class="heading-style--heading-three">Accurately Plan Your Marketing</h2>
-							<p>
-								Do you know how many downloads it takes to reach the top of the charts? How do you find out what countries perform best in your category and the downloads you need for your app to gain traction there?<br />
-								Reflection currently offers market data for 10 countries for iPhone and iPad. Additional countries, categories, and platforms will be added every month so you can identify what apps will do well in which country and prioritise your localisation and marketing plans.</p>
-							<p>
-								Link your store account with Reflection and get free access to our data with market-leading accuracy for the Top 200 apps in all available countries, stores and categories.
-							</p>
+							<p>Use Reflection to validate your app idea or business model and discover where to launch for the best performance. 
+							Analyse comparable apps to identify your app's revenue and download potential.</p>
+							<p>Understand how many downloads you need to reach your target rank in the charts. 
+							Identify which countries generate the most downloads in your category and determine how to gain traction there.</p>
+							<p class="small-text">*Screen mock up shown, not real data</p>
 						</div>
 					</div>
 				</section>
@@ -513,7 +524,25 @@
 					$(this).toggleClass("is-open")
 								 .next('.reveal-content').slideToggle(300);
 				});
-		  }		  
+		  }
+
+		  var leaderboardIllustrationHasAnimated = false;
+		  function checkScrollForProductLeaderboardAnimation() {
+				var leaderboardAnimationContainer = $('.product-leaderboard-static'), thisWindow = $(window);
+				console.log(leaderboardAnimationContainer.offset())
+  			if(thisWindow.scrollTop() > leaderboardAnimationContainer.offset().top - ($(window).height()/2.5)) {
+  				$('.product-animation-container-leaderboard').addClass("is-showing");
+  				leaderboardIllustrationHasAnimated = true;
+  			}
+			}
+
+	  	$(window).on("scroll", function(){
+	  		if(!leaderboardIllustrationHasAnimated) {
+	  			checkScrollForProductLeaderboardAnimation();
+	  		}
+	  	});
+
+	  	checkScrollForProductLeaderboardAnimation();  
   	});
   </script>
 </body>

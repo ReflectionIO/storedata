@@ -8,6 +8,7 @@
 package io.reflection.app;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.AbstractMap.SimpleEntry;
@@ -51,15 +52,18 @@ public class DevUtilServlet extends HttpServlet {
 	private transient static final Logger LOG = Logger.getLogger(DevUtilServlet.class.getName());
 
 	public static final String	PARAM_ACTION						= "action";
+
 	public static final String	PARAM_DATA_ACCOUNT_IDS	= "dataaccountids";
 	public static final String	PARAM_DATES							= "dates";
 	public static final String	PARAM_DATE_RANGE				= "daterange";
+
+	public static final String	PARAM_COUNTRIES		= "countries";
+	public static final String	PARAM_CATEGORIES	= "categories";
+	public static final String	PARAM_LIST_TYPES	= "types";
 	public static final String	PARAM_PLATFORMS					= "platforms";
-	public static final String	PARAM_LIST_TYPES				= "types";
-	public static final String	PARAM_CATEGORIES				= "categories";
-	public static final String	PARAM_COUNTRIES					= "countries";
 	public static final String	PARAM_TIME							= "time";
 
+	public static final String	ACTION_GATHER			= "gather";
 	public static final String	ACTION_SUMMARISE	= "summarise";
 	public static final String	ACTION_SPLIT_DATA	= "split";
 	public static final String	ACTION_MODEL			= "model";
@@ -104,7 +108,7 @@ public class DevUtilServlet extends HttpServlet {
 			}
 
 			return;
-		}     // end of if not from deferred queue then re-route it to the deferred queue
+		}       // end of if not from deferred queue then re-route it to the deferred queue
 
 		execute(req, resp);
 	}
@@ -125,6 +129,9 @@ public class DevUtilServlet extends HttpServlet {
 
 		String msg = null;
 		switch (action) {
+			case ACTION_GATHER:
+				msg = gather(req, resp);
+				break;
 			case ACTION_SUMMARISE:
 				msg = summarise(req, resp);
 				break;
@@ -136,8 +143,45 @@ public class DevUtilServlet extends HttpServlet {
 				break;
 		}
 
-		resp.setContentType("text/plain");
 		writeResponse(resp, msg);
+	}
+
+	/**
+	 * @param req
+	 * @param resp
+	 * @return
+	 */
+	private String gather(HttpServletRequest req, HttpServletResponse resp) {
+		ArrayList<Date> datesToProcess = getDatesToProcess(req);
+		if (datesToProcess.isEmpty()) {
+			String msg = "There are no dates to process. Returning without doing anything.";
+
+			LOG.log(GaeLevel.DEBUG, msg);
+			return msg;
+		}
+
+		List<Long> dataAccountIds = getLongParameters(req, PARAM_DATA_ACCOUNT_IDS);
+		if (dataAccountIds.isEmpty()) {
+			try {
+				dataAccountIds = DataAccountServiceProvider.provide().getAllDataAccountIDs();
+			} catch (DataAccessException e) {
+				String msg = "Exception occured while trying to get data account ids with sales between dates. Check the logs.";
+
+				LOG.log(Level.WARNING, msg, e);
+				return msg;
+			}
+		}
+
+		if (dataAccountIds == null || dataAccountIds.isEmpty()) {
+			String msg = String.format("There are no data accounts to process. Doing nothing.");
+
+			LOG.log(GaeLevel.DEBUG, msg);
+			return msg;
+		}
+
+		StringBuilder webResponse = new StringBuilder();
+
+		return webResponse.toString();
 	}
 
 	/**
@@ -184,7 +228,6 @@ public class DevUtilServlet extends HttpServlet {
 						new SimpleEntry<String, String>("taskName", taskName),
 						new SimpleEntry<String, String>("dataaccountid", dataAccountId.toString()),
 						new SimpleEntry<String, String>("date", sqlDate));
-
 
 				String logMsg = String.format("Enqueued summarisation for data account %d on %s with taskName %s", dataAccountId, sqlDate, taskName);
 				LOG.log(GaeLevel.DEBUG, logMsg);
@@ -259,8 +302,8 @@ public class DevUtilServlet extends HttpServlet {
 		String dateRange = req.getParameter(PARAM_DATE_RANGE);
 		String dates = req.getParameter(PARAM_DATES);
 
-		if(dateRange==null || dateRange.trim().length()==0){
-			if(dates==null || dates.trim().length()==0){
+		if (dateRange == null || dateRange.trim().length() == 0) {
+			if (dates == null || dates.trim().length() == 0) {
 				String msg = "There are no dates to process. Returning without doing anything.";
 
 				LOG.log(GaeLevel.DEBUG, msg);
@@ -269,9 +312,10 @@ public class DevUtilServlet extends HttpServlet {
 			usingDateRange = false;
 		}
 
-		String dateCondition = usingDateRange?SqlQueryHelper.getDateRangeCondition("fetch_date", dateRange.split(",")):SqlQueryHelper.getDateListCondition("fetch_date", dates.split(","));
-		if(dateCondition==null || dateCondition.length()==0){
-			String msg = "Could not generate a date condition based on the input params. Using date range: "+usingDateRange+", "+PARAM_DATE_RANGE+" = "+dateRange+", "+PARAM_DATES+" = "+dates;
+		String dateCondition = usingDateRange ? SqlQueryHelper.getDateRangeCondition("fetch_date", dateRange.split(",")) : SqlQueryHelper.getDateListCondition("fetch_date", dates.split(","));
+		if (dateCondition == null || dateCondition.length() == 0) {
+			String msg = "Could not generate a date condition based on the input params. Using date range: " + usingDateRange + ", " + PARAM_DATE_RANGE + " = " + dateRange + ", " + PARAM_DATES + " = "
+					+ dates;
 
 			LOG.log(GaeLevel.DEBUG, msg);
 			return msg;
@@ -366,7 +410,6 @@ public class DevUtilServlet extends HttpServlet {
 		return webResponse.toString();
 	}
 
-
 	/**
 	 * @param req
 	 * @return
@@ -385,7 +428,6 @@ public class DevUtilServlet extends HttpServlet {
 			LOG.log(GaeLevel.DEBUG, String.format("Got a date range with %d elements", dateRangeStr.size()));
 
 			ArrayList<Date> sortedDates = getSortedDatesFromStrings(dateRangeStr);
-
 
 			Date from = sortedDates.get(0);
 			Date to = sortedDates.get(1);
@@ -494,7 +536,12 @@ public class DevUtilServlet extends HttpServlet {
 	 */
 	private void writeResponse(HttpServletResponse resp, String msg) {
 		try {
-			resp.getWriter().println(msg);
+			resp.setContentType("text/html");
+			PrintWriter writer = resp.getWriter();
+			writer.println("<html><body><pre>");
+			writer.println(msg);
+			writer.println("</pre></body></html>");
+			writer.flush();
 		} catch (IOException e) {
 			LOG.log(Level.WARNING, "Could not write to the servlet response stream", e);
 		}
