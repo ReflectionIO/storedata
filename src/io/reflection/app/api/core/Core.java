@@ -312,16 +312,16 @@ public final class Core extends ActionHandler {
 			int secondOfMinute = date.getSecondOfMinute();
 			int millisOfSeconds = date.getMillisOfSecond();
 
-			Date end;
+			// Date end;
 			Date start;
 
 			boolean isPastDate = (secondOfMinute == 0) && (millisOfSeconds == 0);
 
 			if (isPastDate) { // a date in the past
-				end = date.plusHours(24).toDate();
+				// end = date.plusHours(24).toDate();
 				start = date.toDate();
 			} else { // today
-				end = date.minusHours(12).toDate();
+				// end = date.minusHours(12).toDate();
 				start = date.minusHours(24).toDate();
 			}
 
@@ -1226,8 +1226,6 @@ public final class Core extends ActionHandler {
 			}
 
 			output.items = LookupItemService.INSTANCE.getDataAccountItems(input.linkedAccount);
-
-			output.items = SaleServiceProvider.provide().getDataAccountItems(input.linkedAccount, freeOrPaidApps, input.pager);
 
 			updatePager(output.pager, output.items,
 					input.pager.totalCount == null ? SaleServiceProvider.provide().getDataAccountItemsCount(input.linkedAccount, freeOrPaidApps) : null);

@@ -27,6 +27,7 @@ import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.datatypes.shared.Item;
+import io.reflection.app.helpers.UrlHelper;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
@@ -129,9 +130,10 @@ final class ItemService implements IItemService {
 			item.price = Float.valueOf(price.floatValue() / 100.0f);
 		}
 
-		item.smallImage = stripslashes(connection.getCurrentRowString("smallimage"));
-		item.mediumImage = stripslashes(connection.getCurrentRowString("mediumimage"));
-		item.largeImage = stripslashes(connection.getCurrentRowString("largeimage"));
+
+		item.smallImage = UrlHelper.INSTANCE.wrapUrlInProxy(stripslashes(connection.getCurrentRowString("smallimage")));
+		item.mediumImage = UrlHelper.INSTANCE.wrapUrlInProxy(stripslashes(connection.getCurrentRowString("mediumimage")));
+		item.largeImage = UrlHelper.INSTANCE.wrapUrlInProxy(stripslashes(connection.getCurrentRowString("largeimage")));
 
 		item.properties = stripslashes(connection.getCurrentRowString("properties"));
 		item.source = stripslashes(connection.getCurrentRowString("source"));
