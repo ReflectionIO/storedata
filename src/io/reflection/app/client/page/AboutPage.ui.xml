@@ -12,25 +12,26 @@
 			class="{STYLES_INSTANCE.reflectionMainStyle.pageBanner} {STYLES_INSTANCE.reflectionMainStyle.verticalCentreContent}">
 			<div>
 			<h1>Our Mission</h1>
-				<h2>Reflection makes app market intelligence accessible and easy to understand for everyone in the app industry</h2>
+				<h2>Our mission is to make app market intelligence accessible and easy to understand for everyone in the app industry</h2>
 			</div>
 		</div>
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.aboutMainContent}">			
 			<div
 				class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnThreeQuarters} {STYLES_INSTANCE.reflectionMainStyle.pageAboutIntro}">
 				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.pageAboutTitle}">Our Story</h2>
-				<p>
-					Accurate app market intelligence is important to everyone who makes apps. 
-					It allows you to track the performance of other apps &amp; developers 
-					and identify what type of apps and business models achieve the best results.</p>
-				<p>Affordable app market intelligence is hard to come by and it takes time to 
-					analyse data to make the right decisions.</p>
-				<p>
-					Reflection was founded by app developers who saw an opportunity 
-					to make accurate app market intelligence available for free. 
-					We aim to build premium features and tools that help developers 
-					understand the app market better, saving them time, effort and resources.
-				</p>
+				<p>Accurate market intelligence is vital to all of us who develop apps. 
+				With it we understand what to make, where to market, and identify 
+				the strategies and revenue models that achieve the best results.</p>
+ 				<p>Quality market intelligence has not been readily available to all 
+ 				developers, with high price tags and limited accessibility 
+ 				locking developers out from key information which is crucial 
+ 				to make their app business more successful.</p>
+ 				<p>Reflection was founded by app developers determined to make 
+ 				accurate market data available for free to those who make apps. 
+ 				Our focus is to build premium features and tools that help all 
+ 				of us gain insight from market data, saving every developer 
+ 				time and money so you can focus on the things that really matter - building your apps.</p>
+				<p>Our goal is to build the only market intelligence platform app developers will ever need.</p>
 			</div>
 		</div>
 		<aside class="{STYLES_INSTANCE.reflectionMainStyle.bannerKeyMessage} {STYLES_INSTANCE.reflectionMainStyle.verticalCentreContent}">

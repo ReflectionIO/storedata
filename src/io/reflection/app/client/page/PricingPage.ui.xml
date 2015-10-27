@@ -29,13 +29,13 @@
 						<ul class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetails}">
 							<li>
 								<span>Daily Top 200 App Revenue, Download and Rank Data</span>
-								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="View the latest revenue and download data for the games category in the UK, Germany, France &amp; Italy. More countries and categories will be available as the beta progresses">
+								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="View the latest revenue and download data for all available stores, countries and categories. More countries and categories will be available as the beta progresses.">
 									<span>What's this?</span>
 								</a>
 							</li>
 							<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
-								<span>Follow Apps and Developers</span>
-								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="Coming soon. Curate your own leaderboards by following the apps and developers of your choice. Receive notification of activities such as soft launches and price changes.">
+								<span>More to come..</span>
+								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="We build features with feedback from our developer community. What features would you like to see?">
 									<span>What's this?</span>
 								</a>
 							</li>
@@ -61,43 +61,16 @@
 						<ul class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetails}">
 							<li>
 								<span>Daily Top 200 App Revenue, Download and Rank Data</span>
-								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="View the latest revenue and download data for the games category for the UK, Germany, France &amp; Italy. More data will be available as the beta progresses">
-									<span>What's this?</span>
-								</a>
 							</li>
 							<li>
-								<span>Leaderboard Revenue &amp; Download History</span>
-								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="View Revenue and Download data for any day in the Leaderboards">
-									<span>What's this?</span>
-								</a>
+								<span>Historic Data</span>
 							</li>
 							<li>
 								<span>Download CSV files</span>
-								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="Download data from the Leaderboards as a CSV file for your own analysis">
-									<span>What's this?</span>
-								</a>
 							</li>
 							<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
-								<span>App Revenue, Download &amp; Rank History</span>
-								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="Coming soon. View rank, revenue and download history for any app in the leaderboards. Download CSV files for any graph you are looking at">
-									<span>What's this?</span>
-								</a>
-							</li>
-							<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
-								<span>Follow Apps and Developers</span>
-								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="Coming soon. Curate your own leaderboards by following the apps and developers of your choice. Receive notification of activities such as soft launches and price changes.">
-									<span>What's this?</span>
-								</a>
-							</li>
-							<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
-								<span>Developer Leaderboard</span>
-								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="Coming soon. See how developers and publishers are performing against each other.">
-									<span>What's this?</span>
-								</a>
-							</li>
-							<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
-								<span>More to come...</span>
-								<a href="#" ui:field="comingSoon" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="Coming soon. Refection build features based on feedback from our developer community. Contact us to let us know what you need.">
+								<span>More to come..</span>
+								<a href="#" ui:field="comingSoon" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="We build features with feedback from our developer community. What features would you like to see?">
 									<span>What's this?</span>
 								</a>
 							</li>
@@ -126,43 +99,16 @@
 						<ul class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetails}">
 							<li>
 								<span>Daily Top 200 App Revenue, Download and Rank Data</span>
-								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="View the latest revenue and download data for the games category for the UK, Germany, France &amp; Italy. More data will be available as the beta progresses">
-									<span>What's this?</span>
-								</a>
 							</li>
 							<li>
-								<span>Leaderboard Revenue &amp; Download History</span>
-								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="View Revenue and Download data for any day in the Leaderboards">
-									<span>What's this?</span>
-								</a>
+								<span>Historic Data</span>
 							</li>
 							<li>
 								<span>Download CSV files</span>
-								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="Download data from the Leaderboards as a CSV file for your own analysis">
-									<span>What's this?</span>
-								</a>
 							</li>
 							<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
-								<span>App Revenue, Download &amp; Rank History</span>
-								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="Coming soon. View rank, revenue and download history for any app in the leaderboards. Download CSV files for any graph you are looking at">
-									<span>What's this?</span>
-								</a>
-							</li>
-							<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
-								<span>Follow Apps and Developers</span>
-								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="Coming soon. Curate your own leaderboards by following the apps and developers of your choice. Receive notification of activities such as soft launches and price changes.">
-									<span>What's this?</span>
-								</a>
-							</li>
-							<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
-								<span>Developer Leaderboard</span>
-								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="Coming soon. See how developers and publishers are performing against each other.">
-									<span>What's this?</span>
-								</a>
-							</li>
-							<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
-								<span>More to come...</span>
-								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="Coming soon. Refection build features based on feedback from our developer community. Contact us to let us know what you need.">
+								<span>More to come..</span>
+								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="We build features with feedback from our developer community. What features would you like to see?">
 									<span>What's this?</span>
 								</a>
 							</li>
@@ -191,7 +137,7 @@
 					<p>We only support the Games category as of today. We will add more categories when we are satisfied with the reliability of our accuracy. 
 					We will offer intelligence for every category including subcategories as we progress during the beta.</p>
 					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">How far back does your data go?</h2>
-					<p>We provide rank, revenue and download data for iPhone and iPad from May 2015.</p>
+					<p>We provide rank, revenue and download data for iPhone and iPad from September 2015. We will support over a year's worth of historic data when our beta ends.</p>
 					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">When will the Business Account be available?</h2>
 					<p>We are planning to launch our business account when our beta ends. Register your interest and we'll let you know once it is ready.</p>
 					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">How accurate is Reflection’s data?</h2>

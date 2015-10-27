@@ -7,8 +7,8 @@
 	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.pageLoggedInLanding}">
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.pageBanner} {STYLES_INSTANCE.reflectionMainStyle.pageBannerLarger} {STYLES_INSTANCE.reflectionMainStyle.verticalCentreContent}">
 			<div>
-				<h2>Welcome Back <span ui:field="userName"></span></h2>
-				<p>Keep up to date with what's been happening here at Reflection as we work to build features and tools to help you succeed in the app market</p>
+				<h2>Welcome <span ui:field="userName"></span></h2>
+				<p>Keep up to date with what's been happening here at Reflection as we work to expand our intelligence and features</p>
 			</div>
 		</div>
 		<section class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.loggedInSectionContent} {STYLES_INSTANCE.reflectionMainStyle.pageSection}">
@@ -16,38 +16,38 @@
 				<ul>
 					<li class="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}">
 						<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
-							<h2>Welcome Aboard!</h2>
+							<h2>Welcome To Our Beta!</h2>
 							<p class="{STYLES_INSTANCE.reflectionMainStyle.siteArticleInfo}">
 								<strong>Posted by</strong>
 								<span class="{STYLES_INSTANCE.reflectionMainStyle.postedBy}">Gustaf Leksell, Founder &amp; CEO</span>
-								<span>September 27th 2015</span>
+								<span>October 20th 2015</span>
 							</p>
 							<p>
-								Everyone here at Reflection is very excited that you have decided to join us. 
-								Our mission is to help you make smarter, faster decisions by using our accurate market 
-								data and reporting tools that we are building using your feedback.
+								Everyone here at Reflection is excited that you have decided to join our beta. 
+								Our mission is to deliver free &amp; accurate market intelligence and 
+								premium tools to help you make smarter, faster decisions for your apps and business.
 							</p>
 							<img src="images/office-photo.jpg" alt="The Reflection office" class="image-full-width" />
 							<figcaption>
-								The development of new features being undertaken furiously at our London office.
+								Data expansion and development of new features being undertaken furiously at our London office.
 							</figcaption>
 							<p>
-								You'll start to see the rollout of new features and tools as our beta progresses. 
-								Also you can keep track of what country and category will be available next here on the homepage.
+								You'll start to see the rollout of data and features as our beta progresses. 
+								You can also keep track of what country and category intelligence will be available next here on the homepage.
 							</p>
 							<p>
-								As one of our partners, you can help accelerate our progress by spreading the word. 
-								If you know a developer who would be interested in joining us, please introduce them to me at <a href="mailto:gustaf@reflection.io">gustaf@reflection.io</a>.
+								As one of our beta members, you can help accelerate our progress by spreading the word. 
+								If you know a developer who would be interested in joining us, please point them towards <a href="http://www.reflection.io">www.reflection.io</a>.
 							</p>
 							<p>
-								Your feedback is essential as it helps us to shape the features that developers actually want. 
-								Please get in touch if you have any feature requests, recommendations or if 
-								you just want to share your thoughts, positive or negative. 
-								We look forward to hearing from you at <a href="mailto:beta@reflection.io">beta@reflection.io</a>
+								Your feedback is essential as it helps us to shape the features that developers actually want. 
+								Please get in touch if you have any feature requests, recommendations 
+								or if you just want to share your thoughts, positive or negative. 
+								We look forward to hearing from you at  <a href="mailto:beta@reflection.io">beta@reflection.io</a>.
 							</p>
 							<p>
-								Finally, please remember that as we are still in beta you may occasionally encounter bugs, 
-								inaccuracies or slow performance as we fine-tune our system.</p>
+								Finally, please remember that as we are still in beta you may occasionally 
+								encounter bugs, inaccuracies or slow performance as we fine-tune our system.</p>
 							<p>Thank you,</p>
 							<p>
 								Gustaf
@@ -128,18 +128,54 @@ c0,0.4,0,0.6,0,1c0,0.2,0,0.4-0.1,0.6c-0.1,0.4-0.1,0.9,0,1.3C28.5,26.9,31.7,21.8,
 						<li>France</li>
 						<li>Italy</li>
 					</ul>
+					<div>
+					<svg viewBox="0 0 32 32" enable-background="new 0 0 32 32">
+							<g>
+								<path fill="#81879d" d="M3.8,8.1c0.1,0.1,0.2,0,0.3,0.2c0,0.2,0,0.5,0,0.7c-0.2,0.9,0.4,1.8,1.2,1.9
+c0.1,0.5-0.2,0.6,0.3,1.3c0,0.1,0,0.3,0.1,0.4c0.1,0.1,0.3,0.2,0.5,0.3c0.5,0.3,0.4,0.9,0.2,1.4c-0.2,0.5-0.6,0.8-0.8,1.3
+c-0.3,0.8-0.3,1.8,0.3,2.4c0.2,0.3,0.5,0.9,0.8,1c0.3,0.1,0.4,0.3,0.5,0.6c0.1,0.5,0.3,0.8,0.3,1.3c0,0.4-0.2,1.1-0.2,1.5
+c0,0.4,0.2,0.3,0.1,0.5c0,0.2-0.1,0.1-0.2,0.4c-0.1,0.6,0,1.7,0.1,2.1c0.2,1.5,1.1,2.7,2,2.6c0.3-0.7-0.4-1.5-0.1-2.2
+c0.1-0.3,0.3-0.5,0.5-0.7c1-0.8,1.8-1.5,2.4-2.5c0.1-0.1,0.2-0.4,0.3-0.5c0.1-0.1,0.3-0.1,0.5-0.1c0.7-0.1,1.1-0.5,1.4-1.1
+c0.3-0.6,0.3-1.1,0.9-1.7c0.1-0.1,0.2-0.5,0.3-0.6c0.3-0.5-0.1-1.2-0.6-1.5c-0.5-0.3-1-0.4-1.4-0.7c-0.6-0.4-0.6-1-1-1.5
+c-0.4-0.5-1.1-0.9-1.7-1.2c-0.7-0.4-0.7-0.7-1.9-1.2c-0.1-0.1-0.5-0.1-0.6,0c-0.1,0-0.2,0.2-0.4,0.3c-0.4,0.4-1.3,0.2-1.5-0.4
+c-0.1-0.3,0-0.5,0-0.7c0-0.3-0.1-0.7-0.4-0.6c-0.1-0.4,0.6-0.1,0.6-0.7c0.1-0.5-0.3-0.1-0.8-0.4C5.4,9.8,5.4,9,5.6,8.7
+c0.2-0.6,0.3-0.3,0.6-0.5C6.6,7.8,7.4,7.5,8,7.8C8.4,8.1,8.4,9,8.6,9.1S9,9,9,8.8c0-0.2-0.1-0.6,0-0.8c0.1-0.1,0.2-0.2,0.3-0.3
+c1.1-0.8,2.4-1.3,3.7-1.4c0.1,0,0.4,0,0.5-0.1c0.2-0.2,0.1-0.5,0.4-0.5c0.2,0,0.4,0.3,0.7,0.3c0.3,0.1,0.6-0.4,0.6-0.7
+c0-0.3-0.1-0.7,0-1c0.1-0.1,0.1-0.3,0.1-0.4c0-0.1-0.1-0.1-0.2-0.1c-0.2-0.1-0.3-0.5-0.7-0.4c-0.4,0.2-0.7,0.2-1.1,0.4
+c-0.3,0.2-0.5,0.5-1,0.6c-0.2-0.4,0-0.9,0.3-1.2C13.1,3,13.5,3,13.9,3c0.2,0,0.4-0.1,0.6,0c0.1,0,0.3,0.2,0.4,0.2
+c0.3,0.2,0.6,0,0.8-0.3c0.2-0.2,0.4-0.5,0.2-0.8C16,1.9,16.2,2,16.3,2.2c0.1,0.2-0.1,0.4-0.2,0.6c-0.4,1,0.4,2,0.8,1.9
+c0.5-0.1,0.9-1.2,1.5-1.4c0.2-0.1,0.4-0.1,0.5-0.2c0.2-0.2,0.2-0.4,0.3-0.7c0.2-0.4,0.8-0.4,1-0.5c0.3-0.4,0.3-0.8,0.2-1.2
+c-1.5-0.5-3-0.7-4.7-0.7C11.1,0,6.9,2.1,4,5.4c0,0.1,0,0.2,0,0.3C4.1,6.4,3.4,7.5,3.8,8.1"/>
+<path fill="#81879d" d="M31.7,15.9c0-5.2-2.5-9.9-6.4-12.7c-1,0.5-1.4-0.1-1.4,0.3
+c0,0.3,0.1,0.4-0.2,0.4c-0.1,0-0.2,0-0.3,0c-0.7-0.1-0.9,0.5-0.7,1.2c0.2,0.5,0.6,0.8,1.1,1c0.2,0.1,0.6,0.1,0.7,0.3
+c0,0.1-0.1,0.3-0.1,0.3c0.1,0.5-0.1,0.8-0.5,1.1c-0.4,0.3-1.1,0.2-1.4,0.5c-0.3,0.3,0.2,1.2,0.6,1.5c0.4,0.4,1.2,0.3,1.5-0.1
+c0.2-0.3,0-0.6,0.1-0.8c0.6,0.1,0.9,0.3,1.1,0.8c0,0.1,0.2,0.1,0.3,0.1c0.3,0.1,0.4-0.3,0.5-0.1c0,0.2,0.1,0.3,0.2,0.4
+c0.2,0.1,0.2-0.1,0.4,0c0.2,0.1,0.3,0.5,0.6,0.5c0.3,0.1,0.6,0,0.8,0.2c0.1,0.2,0.2,0.4,0.1,0.6c-0.1,0.2-0.9,0.1-1.4-0.1
+c-0.5-0.2-0.6-0.5-1.1-0.8c-0.8-0.4-2.4-0.3-3.6,0c-0.9,0.3-1.1,0.6-1.7,1.3c-0.1,0.1-0.2,0.5-0.3,0.7c-0.1,0.2-0.1,0.4-0.1,0.6
+c-0.2,1-0.7,2.3-0.2,3.1c0.2,0.4,0.6,0.6,1,0.8c0.5,0.4,0.8,0.7,1.3,0.8c0.4,0.1,1,0,1.3,0c0.5,0,1,0.1,1.5,0.4
+c-0.3,0.7-0.4,1.9-0.3,2.3c0,0.3,0.2,0.4,0.2,0.7c0.2,1.1-1.6,1.8-1.2,2.9c0.1,0.2,0.2,0.5,0.2,0.8c0,0.9-0.7,1.3-0.8,2
+c0,0.4,0,0.6,0,1c0,0.2,0,0.4-0.1,0.6c-0.1,0.4-0.1,0.9,0,1.3C28.5,26.9,31.7,21.8,31.7,15.9"/>
+<path fill="#81879d" d="M16,1.5C24,1.5,30.5,8,30.5,16S24,30.5,16,30.5S1.5,24,1.5,16S8,1.5,16,1.5
+ M16,0C7.2,0,0,7.2,0,16s7.2,16,16,16s16-7.2,16-16S24.8,0,16,0"/></g>
+						</svg>
+						<span>1</span>
+						<span>Category Supported</span>
+					</div>
+					<ul class="{STYLES_INSTANCE.reflectionMainStyle.contentList} {STYLES_INSTANCE.reflectionMainStyle.contentListNoBullets}">
+						<li>Games</li>
+					</ul>
 				</aside>
 				<aside class="{STYLES_INSTANCE.reflectionMainStyle.featuresAndTools}">
-					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">New Features &amp; Tools</h2>
+					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">New Features &amp; Data</h2>
 					<p class="{STYLES_INSTANCE.reflectionMainStyle.featuresKey}"><span class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCheck}">Active</span> <span class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeWrench}">Under Construction</span></p>
 					<ul class="content-list--minor">
-						<li class="{STYLES_INSTANCE.reflectionMainStyle.refIconBeforeWrench}">Top 5 App Prediction for Each List</li>
-						<li class="{STYLES_INSTANCE.reflectionMainStyle.refIconBeforeWrench}">App Download History</li>
-						<li class="{STYLES_INSTANCE.reflectionMainStyle.refIconBeforeWrench}">App Revenue History</li>
-						<li class="{STYLES_INSTANCE.reflectionMainStyle.refIconBeforeWrench}">App Revenue and Download Graph Overlays</li>
-						<li class="{STYLES_INSTANCE.reflectionMainStyle.refIconBeforeWrench}">Download CSV files for any data</li>
-						<li class="{STYLES_INSTANCE.reflectionMainStyle.refIconBeforeWrench}">Follow and Track Apps &amp; Developers</li>
-						<li class="{STYLES_INSTANCE.reflectionMainStyle.refIconBeforeWrench}">Developer Leaderboards</li>
+						<li class="{STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCheck}">Download CSV files for any data</li>
+						<li class="{STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCheck}">Intelligence for United Kingdom</li>
+						<li class="{STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCheck}">Intelligence for Germany</li>
+						<li class="{STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCheck}">Intelligence for France</li>
+						<li class="{STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCheck}">Intelligence for Italy</li>
+						<li class="{STYLES_INSTANCE.reflectionMainStyle.refIconBeforeWrench}">Additional Category Intelligence</li>
+						<li class="{STYLES_INSTANCE.reflectionMainStyle.refIconBeforeWrench}">Additional Country Intelligence</li>
 						<li class="{STYLES_INSTANCE.reflectionMainStyle.refIconBeforeWrench}">Google Play (Early 2016)</li>
 						<li class="{STYLES_INSTANCE.reflectionMainStyle.refIconBeforeWrench}">Your feature? More to come...</li>
 					</ul>
