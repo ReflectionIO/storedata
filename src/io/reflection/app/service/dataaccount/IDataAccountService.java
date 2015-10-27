@@ -176,4 +176,11 @@ public interface IDataAccountService extends IService {
 	 */
 	public List<Long> getAllDataAccountIDs() throws DataAccessException;
 
+	/**
+	 * @param userId
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<DataAccount> getDataAccountForUser(Long userId) throws DataAccessException;
+
 }

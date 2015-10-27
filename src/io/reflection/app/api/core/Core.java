@@ -7,10 +7,31 @@
 //
 package io.reflection.app.api.core;
 
-import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPAD_IOS;
-import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS;
-import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_UNIVERSAL_IOS;
-import static io.reflection.app.shared.util.PagerHelper.updatePager;
+import static io.reflection.app.service.sale.ISaleService.*;
+import static io.reflection.app.shared.util.PagerHelper.*;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeComparator;
+import org.joda.time.DateTimeZone;
+import org.joda.time.Days;
+
+import com.willshex.gson.json.service.server.ActionHandler;
+import com.willshex.gson.json.service.server.InputValidationException;
+import com.willshex.gson.json.service.server.ServiceException;
+import com.willshex.gson.json.service.shared.StatusType;
+
 import io.reflection.app.accountdatacollectors.DataAccountCollectorFactory;
 import io.reflection.app.accountdatacollectors.ITunesConnectDownloadHelper;
 import io.reflection.app.api.ValidationHelper;
@@ -111,6 +132,7 @@ import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.datasource.DataSourceServiceProvider;
 import io.reflection.app.service.event.EventServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
+import io.reflection.app.service.lookupitem.LookupItemService;
 import io.reflection.app.service.notification.NotificationServiceProvider;
 import io.reflection.app.service.permission.PermissionServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
@@ -123,28 +145,6 @@ import io.reflection.app.service.user.IUserService;
 import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
 import io.reflection.app.shared.util.PagerHelper;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeComparator;
-import org.joda.time.DateTimeZone;
-import org.joda.time.Days;
-
-import com.willshex.gson.json.service.server.ActionHandler;
-import com.willshex.gson.json.service.server.InputValidationException;
-import com.willshex.gson.json.service.server.ServiceException;
-import com.willshex.gson.json.service.shared.StatusType;
 
 public final class Core extends ActionHandler {
 	private static final Logger LOG = Logger.getLogger(Core.class.getName());
@@ -1216,11 +1216,6 @@ public final class Core extends ActionHandler {
 
 			output.pager = input.pager;
 
-			// ItemSaleArchiver archiver = ArchiverFactory.getItemSaleArchiver();
-			// String key = archiver.createItemsKey(input.linkedAccount, form);
-			// List<Item> items = ItemServiceProvider.provide().getInternalIdItemBatch(archiver.getItemsIds(key));
-			//
-			// if (items == null || items.size() == 0) {
 			List<String> freeOrPaidApps = new ArrayList<String>();
 
 			freeOrPaidApps.add(FREE_OR_PAID_APP_UNIVERSAL_IOS);
@@ -1230,19 +1225,12 @@ public final class Core extends ActionHandler {
 				freeOrPaidApps.add(FREE_OR_PAID_APP_IPAD_IOS);
 			}
 
+			output.items = LookupItemService.INSTANCE.getDataAccountItems(input.linkedAccount);
+
 			output.items = SaleServiceProvider.provide().getDataAccountItems(input.linkedAccount, freeOrPaidApps, input.pager);
 
 			updatePager(output.pager, output.items,
 					input.pager.totalCount == null ? SaleServiceProvider.provide().getDataAccountItemsCount(input.linkedAccount, freeOrPaidApps) : null);
-			// } else {
-			// if (items.size() > (input.pager.start.longValue() + input.pager.count.longValue())) {
-			// output.items = items.subList(input.pager.start.intValue(), input.pager.count.intValue());
-			// } else {
-			// output.items = items;
-			// }
-			//
-			// output.pager.totalCount = Long.valueOf(items.size());
-			// }
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -1263,7 +1251,7 @@ public final class Core extends ActionHandler {
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
-			
+
 			input.source = ValidationHelper.validateDataSource(input.source, "input.source");
 
 			if (input.username == null)
