@@ -176,7 +176,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 						linkedAccountsCount = rows.size();
 						updateRowCount(linkedAccountsCount, true);
 						updateRowData(0, rows);
-						SessionController.get().fetchRolesAndPermissions(); // Load HLA Permission
+						SessionController.get().fetchRoleAndPermissions(); // Load HLA Permission
 					}
 					MixpanelHelper.track(MixpanelHelper.Event.LINK_ACCOUNT_SUCCESS);
 				} else {
@@ -276,7 +276,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 					linkedAccountsCount = rows.size();
 					updateRowCount(linkedAccountsCount, true);
 					updateRowData(0, rows);
-					SessionController.get().fetchRolesAndPermissions();
+					SessionController.get().fetchRoleAndPermissions();
 				}
 				DefaultEventBus.get().fireEventFromSource(new DeleteLinkedAccountSuccess(input, output), LinkedAccountController.this);
 			}

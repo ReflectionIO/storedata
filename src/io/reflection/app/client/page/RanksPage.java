@@ -835,7 +835,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 							downloadLeaderboard.resetStatus();
 						} else if (Cookies.getCookie("fileDownloaded").equals("error")) {
 							downloadLeaderboard.setStatusError();
-							SessionController.get().fetchRolesAndPermissions(); // Refresh credentials
+							SessionController.get().fetchRoleAndPermissions(); // Refresh credentials
 						} else {
 							downloadLeaderboard.resetStatus();
 						}
