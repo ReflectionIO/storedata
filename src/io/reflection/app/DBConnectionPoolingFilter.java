@@ -7,9 +7,6 @@
 //
 package io.reflection.app;
 
-import io.reflection.app.logging.GaeLevel;
-import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
-
 import java.io.IOException;
 import java.util.logging.Logger;
 
@@ -20,6 +17,9 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+
+import io.reflection.app.logging.GaeLevel;
+import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 
 /**
  * @author mamin
@@ -42,7 +42,9 @@ public class DBConnectionPoolingFilter implements Filter {
 	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException {
 		final String requestURI = ((HttpServletRequest) req).getRequestURI();
 
-		if (LOG.isLoggable(GaeLevel.DEBUG)) {
+		boolean logRequest = shouldRequestBeLogged(requestURI);
+
+		if (logRequest && LOG.isLoggable(GaeLevel.DEBUG)) {
 			LOG.log(GaeLevel.DEBUG, "DB Connection pooling filter running on chain for uri: " + requestURI);
 		}
 		try {
@@ -52,9 +54,17 @@ public class DBConnectionPoolingFilter implements Filter {
 		} finally {
 			DatabaseServiceProvider.provide().realDisconnect();
 		}
-		if (LOG.isLoggable(GaeLevel.DEBUG)) {
+		if (logRequest && LOG.isLoggable(GaeLevel.DEBUG)) {
 			LOG.log(GaeLevel.DEBUG, "DB Connection pooling exiting chain for uri: " + requestURI);
 		}
+	}
+
+	/**
+	 * @param requestURI
+	 * @return
+	 */
+	private boolean shouldRequestBeLogged(String requestURI) {
+		return !requestURI.equals("/ps");
 	}
 
 	/* (non-Javadoc)
