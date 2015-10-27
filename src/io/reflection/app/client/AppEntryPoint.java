@@ -12,6 +12,7 @@ import io.reflection.app.client.helper.DOMHelper;
 import io.reflection.app.client.helper.ResponsiveDesignHelper;
 import io.reflection.app.client.helper.TooltipHelper;
 import io.reflection.app.client.helper.UserAgentHelper;
+import io.reflection.app.client.mixpanel.MixpanelHelper;
 import io.reflection.app.client.part.BackToTop;
 import io.reflection.app.client.res.Styles;
 
@@ -48,6 +49,8 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 		if (UserAgentHelper.checkIECompatibility()) {
 
 			makeContainer();
+
+			MixpanelHelper.init(); // Run Mixpanel with proper token
 
 			// SuperAlertBox.start();
 

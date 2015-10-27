@@ -13,11 +13,15 @@ import io.reflection.app.client.component.TextField;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.helper.TooltipHelper;
+import io.reflection.app.client.mixpanel.MixpanelHelper;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.linkaccount.LinkedAccountChangeEvent.EVENT_TYPE;
 import io.reflection.app.client.part.linkaccount.LinkedAccountChangeEvent.HasLinkedAccountChangeEventHandlers;
 import io.reflection.app.client.part.linkaccount.LinkedAccountChangeEvent.LinkedAccountChangeEventHandler;
 import io.reflection.app.datatypes.shared.DataAccount;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -292,22 +296,28 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	 */
 	@Override
 	public void setFormErrors() {
+		Map<String, Object> properties = new HashMap<String, Object>();
 		if (accountUsernameError != null) {
 			accountUsername.showNote(accountUsernameError, true);
+			properties.put("error_form_account_name", accountUsernameError);
 		} else {
 			accountUsername.hideNote();
 		}
 		if (passwordError != null) {
 			password.showNote(passwordError, true);
+			properties.put("error_form_password", passwordError);
 		} else {
 			password.hideNote();
 		}
 		if (vendorIdError != null) {
 			vendorId.showNote(vendorIdError, true);
+			properties.put("error_form_vendor", vendorIdError);
 		} else {
 			vendorId.hideNote();
 		}
-
+		if (!properties.isEmpty()) {
+			MixpanelHelper.track(MixpanelHelper.Event.LINK_ACCOUNT_FAILURE, properties);
+		}
 	}
 
 	/*

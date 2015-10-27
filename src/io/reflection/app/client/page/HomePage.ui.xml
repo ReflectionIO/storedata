@@ -18,7 +18,7 @@
 					<h1>Reflection</h1>
 					<h2>Intelligence To Succeed In the App Market</h2>
 					<p>Reflection provides free and accurate revenue and download data to anyone making apps. Join our beta today.</p>
-					<g:InlineHyperlink targetHistoryToken="{RegisterPageType.asTargetHistoryToken}" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaLarge}">Get Started for Free</g:InlineHyperlink>
+					<g:InlineHyperlink ui:field="getStarted" targetHistoryToken="{RegisterPageType.asTargetHistoryToken}" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaLarge}">Get Started for Free</g:InlineHyperlink>
 				</div>
 			</div>
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.pageLeaderboard}">
@@ -707,7 +707,7 @@ c0,0-1-0.3-3.1-0.3c-4.8,0-6.9,2.5-6.9,2.5L75,29.3l7.5,12.2c1.3,2,3,3.4,6.1,3.4c2
 c1.2,1.4,8,12.2,10.8,16.7l-6.5,13.9c0,0,0.8,0.6,3.7,0.6c4,0,5.2-3,5.2-3l15.7-35.2C119.9,16.3,118.6,15.7,116.2,15.7z"></path></svg>
 					</li>
 				</ul>
-				<g:InlineHyperlink targetHistoryToken="{RegisterPageType.asTargetHistoryToken}"
+				<g:InlineHyperlink ui:field="signUp" targetHistoryToken="{RegisterPageType.asTargetHistoryToken}"
 					styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaLargeWide} {STYLES_INSTANCE.reflectionMainStyle.homeApplyButton}">Sign Up</g:InlineHyperlink>
 			</div>
 		</div>

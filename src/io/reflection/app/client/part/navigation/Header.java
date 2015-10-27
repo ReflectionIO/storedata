@@ -17,6 +17,7 @@ import io.reflection.app.client.handler.TogglePanelEventHandler;
 import io.reflection.app.client.handler.user.SessionEventHandler;
 import io.reflection.app.client.handler.user.UserPowersEventHandler;
 import io.reflection.app.client.helper.DOMHelper;
+import io.reflection.app.client.mixpanel.MixpanelHelper;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.client.res.Styles.ReflectionMainStyles;
@@ -213,6 +214,8 @@ public class Header extends Composite implements NavigationEventHandler, Session
 	void onApplyClicked(ClickEvent event) {
 		closePanelRightAccount();
 		closePanelRightSearch();
+		MixpanelHelper.trackClicked(MixpanelHelper.Event.GO_TO_SIGNUP, "header_button_signup");
+
 	}
 
 	@UiHandler("linkSearch")

@@ -31,6 +31,7 @@ import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.AnimationHelper;
 import io.reflection.app.client.helper.DOMHelper;
 import io.reflection.app.client.helper.ResponsiveDesignHelper;
+import io.reflection.app.client.mixpanel.MixpanelHelper;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.linkaccount.IosMacLinkAccountForm;
 import io.reflection.app.client.part.linkaccount.LinkedAccountChangeEvent.EVENT_TYPE;
@@ -120,6 +121,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 			@Override
 			public void onClick(ClickEvent event) {
+				MixpanelHelper.trackClicked(MixpanelHelper.Event.OPEN_LINK_ACCOUNT_POPUP, "linkedaccounts_linkFirstAccount");
 				addLinkedAccountPopup.show("Link an Account", null);
 			}
 		});
@@ -362,6 +364,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 	@UiHandler("addAnotherLinkedAccountBtn")
 	void onAddLinkedAccountClicked(ClickEvent event) {
+		MixpanelHelper.trackClicked(MixpanelHelper.Event.OPEN_LINK_ACCOUNT_POPUP, "linkedaccounts_linkAnotherAccount");
 		addLinkedAccountPopup.show("Link Another Account", null);
 	}
 

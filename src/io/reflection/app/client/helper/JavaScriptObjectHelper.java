@@ -71,8 +71,32 @@ public class JavaScriptObjectHelper {
 			} else if (value instanceof Double) {
 				setDoubleProperty(object, key, ((Double) value).doubleValue());
 			}
-
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public static JavaScriptObject getAsJSObject(Map<String, ?> map) {
+		JavaScriptObject jso = JavaScriptObject.createObject();
+		Object value;
+		for (String key : map.keySet()) {
+			value = map.get(key);
+			if (value instanceof Map) {
+				JavaScriptObject oo = JavaScriptObject.createObject();
+				copyToJavaScriptObject((Map<String, ?>) value, oo);
+				setObjectProperty(jso, key, oo);
+			} else if (value instanceof Boolean) {
+				setBooleanProperty(jso, key, ((Boolean) value).booleanValue());
+			} else if (value instanceof String) {
+				setStringProperty(jso, key, (String) value);
+			} else if (value instanceof Date) {
+				setDateProperty(jso, key, (Date) value);
+			} else if (value instanceof Integer) {
+				setIntegerProperty(jso, key, ((Integer) value).intValue());
+			} else if (value instanceof Double) {
+				setDoubleProperty(jso, key, ((Double) value).doubleValue());
+			}
+		}
+		return jso;
 	}
 
 	public static native void setObjectProperty(JavaScriptObject object, String propertyName, JavaScriptObject value) /*-{

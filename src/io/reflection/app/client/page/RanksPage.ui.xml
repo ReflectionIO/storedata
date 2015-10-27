@@ -203,5 +203,7 @@
 		<!-- <span>View all Apps</span> -->
 		<!-- </g:InlineHyperlink> -->
 
+		<iframe ui:field="iframe" style="display:none;visibility:hidden"></iframe>
+
 	</g:HTMLPanel>
 </ui:UiBinder> 

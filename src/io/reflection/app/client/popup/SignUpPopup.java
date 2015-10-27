@@ -15,6 +15,7 @@ import io.reflection.app.client.component.LoadingButton;
 import io.reflection.app.client.component.TextField;
 import io.reflection.app.client.controller.UserController;
 import io.reflection.app.client.helper.FormHelper;
+import io.reflection.app.client.mixpanel.MixpanelHelper;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.res.Styles;
 
@@ -96,6 +97,7 @@ public class SignUpPopup extends Composite implements RegisterInterestBusinessEv
 	@UiHandler("signUpBtn")
 	void onSignUpClicked(ClickEvent event) {
 		event.preventDefault();
+		MixpanelHelper.trackClicked(MixpanelHelper.Event.GO_TO_SIGNUP, "signup_popup_button");
 		PageType.RegisterPageType.show();
 	}
 
