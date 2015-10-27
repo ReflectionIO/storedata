@@ -1,5 +1,5 @@
 //
-//  MixPanelApi.java
+//  MixpanelApi.java
 //  storedata
 //
 //  Created by William Shakour (billy1380) on 28 Nov 2014.
@@ -11,23 +11,24 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayMixed;
 
 /**
- * @author William Shakour (billy1380)
+ * 
+ * @author Stefano Capuzzi (capuzzistefano)
  *
  */
-public class MixPanelApi {
+public class MixpanelApi {
 
-	private static MixPanelApi one = null;
+	private static MixpanelApi one = null;
 
-	public static MixPanelApi get() {
+	public static MixpanelApi get() {
 		if (one == null) {
 			inject();
-			one = new MixPanelApi();
+			one = new MixpanelApi();
 		}
 
 		return one;
 	}
 
-	private static native MixPanelApi inject() /*-{
+	private static native MixpanelApi inject() /*-{
 		(function(f, b) {
 		    if (!b.__SV) {
 		        var a, e, i, g;
@@ -96,8 +97,12 @@ public class MixPanelApi {
 		$wnd.mixpanel.track(eventName, properties);
 	}-*/;
 
-	public native void trackLinks(String query, String eventNname, JavaScriptObject properties) /*-{
-		$wnd.mixpanel.track_links(query, eventName, properties);
+	public native void trackLinks(String selector, String eventName, JavaScriptObject properties) /*-{
+		$wnd.mixpanel.track_links(selector, eventName, properties);
+	}-*/;
+
+	public native void trackLinks(String selector, String eventName) /*-{
+		$wnd.mixpanel.track_links(selector, eventName);
 	}-*/;
 
 	public native void trackForms(String query, String eventName, JavaScriptObject properties) /*-{
@@ -107,7 +112,7 @@ public class MixPanelApi {
 	public native void register(JavaScriptObject properties) /*-{
 		$wnd.mixpanel.register(properties);
 	}-*/;
-	
+
 	public native void register(JavaScriptObject properties, Number days) /*-{
 		$wnd.mixpanel.register(properties, days);
 	}-*/;
@@ -124,12 +129,29 @@ public class MixPanelApi {
 		$wnd.mixpanel.identify(uniqueId);
 	}-*/;
 
+	public native void resetUserIdentity() /*-{
+		function guid() {
+			function s4() {
+				return Math.floor((1 + Math.random()) * 0x10000).toString(16)
+						.substring(1);
+			}
+			return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-'
+					+ s4() + s4() + s4();
+		}
+		var uuid = guid();
+		$wnd.mixpanel.identify(uuid);
+	}-*/;
+
 	public native void getDistinctId() /*-{
 		$wnd.mixpanel.get_distinct_id();
 	}-*/;
 
 	public native void alias(String alias, String original) /*-{
 		$wnd.mixpanel.alias(alias, original);
+	}-*/;
+
+	public native void alias(String alias) /*-{
+		$wnd.mixpanel.alias(alias);
 	}-*/;
 
 	public native void setConfig(JavaScriptObject config) /*-{
@@ -144,8 +166,8 @@ public class MixPanelApi {
 		return $wnd.mixpanel.get_property(propertyName);
 	}-*/;
 
-	public native void peopleSet(String prop, JavaScriptObject to) /*-{
-		$wnd.mixpanel.people.set(prop, to);
+	public native void peopleSet(JavaScriptObject jso) /*-{
+		$wnd.mixpanel.people.set(jso);
 	}-*/;
 
 	public native void peopleSetOnce(String prop, JavaScriptObject to) /*-{

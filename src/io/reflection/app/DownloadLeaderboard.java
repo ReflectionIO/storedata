@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -54,10 +55,9 @@ public class DownloadLeaderboard extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		try {
-			// resp.setContentType("application/force-download");
-			resp.setContentType("text/csv");
-			resp.setCharacterEncoding("UTF-8");
-			// resp.setHeader("Content-Transfer-Encoding", "binary");
+			// resp.reset();
+			// resp.resetBuffer();
+			// resp.setContentType("text/csv");
 			GetAllTopItemsRequest getAllTopItemsRequest = new GetAllTopItemsRequest();
 			getAllTopItemsRequest.accessCode = "765ea1ba-177d-4a01-bbe9-a4e74d10e83c";
 			if (req.getParameter("session") != null) {
@@ -70,8 +70,7 @@ public class DownloadLeaderboard extends HttpServlet {
 			getAllTopItemsRequest.on = new Date(Long.valueOf(req.getParameter("date")).longValue());
 			getAllTopItemsRequest.store = new Store();
 			getAllTopItemsRequest.store.a3Code = DataTypeHelper.IOS_STORE_A3;
-			// ValidationHelper.validateAuthorised(getAllTopItemsRequest.session.user, RoleServiceProvider.provide().getRole(3L), RoleServiceProvider.provide()
-			// .getRole(DataTypeHelper.ROLE_ADMIN_ID));
+
 			boolean canDownloadData = false;
 			List<Role> roles = UserServiceProvider.provide().getUserRoles(getAllTopItemsRequest.session.user);
 			RoleServiceProvider.provide().inflateRoles(roles);
@@ -89,12 +88,29 @@ public class DownloadLeaderboard extends HttpServlet {
 				}
 			}
 			if (!canDownloadData) throw new AuthorisationException(getAllTopItemsRequest.session.user, roles, permissions);
-
-			// String fileName = "\"" + getAllTopItemsRequest.country.a2Code + "_" + getAllTopItemsRequest.store.a3Code + "_" +
-			// getAllTopItemsRequest.on.toString()
-			// + ".csv\"";
-			// resp.setHeader("Content-Disposition", "attachment; filename=" + fileName);
 			Collector collector = CollectorFactory.getCollectorForStore(getAllTopItemsRequest.store.a3Code);
+			// Set header
+			resp.setContentType("Content-type: application/x-unknown");
+			resp.setCharacterEncoding("UTF-8");
+			// resp.setHeader("Pragma", "no-cache");
+			// resp.setHeader("Expires", "0");
+			// resp.setHeader("Cache-Control", "must-revalidate, post-check=0, pre-check=0");
+			// resp.setHeader("Cache-Control", "private");
+			resp.setHeader("Content-Transfer-Encoding", "binary");
+			String listName = "all";
+			if (collector.isPaid(getAllTopItemsRequest.listType)) {
+				listName = "paid";
+			} else if (collector.isFree(getAllTopItemsRequest.listType)) {
+				listName = "free";
+			} else if (collector.isGrossing(getAllTopItemsRequest.listType)) {
+				listName = "grossing";
+			}
+			String fileName = "\"Leaderboard_" + listName + "_" + getAllTopItemsRequest.country.a2Code + "_" + getAllTopItemsRequest.store.a3Code + "_"
+					+ getAllTopItemsRequest.on.toString() + ".csv\""; // TODO add category
+			resp.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+			Cookie cookieFeedback = new Cookie("fileDownloaded", "success");
+			resp.addCookie(cookieFeedback); // ! THE HEADER WON'T BE UPDATED AFTER getWriter() IS CALLED !
+			// Write CSV
 			GetAllTopItemsResponse getAllTopItemsResponse = new Core().getAllTopItems(getAllTopItemsRequest);
 			Map<String, Item> itemLookup = new HashMap<String, Item>(); // Populate item details
 			if (getAllTopItemsResponse.items != null && !getAllTopItemsResponse.items.isEmpty()) {
@@ -219,8 +235,9 @@ public class DownloadLeaderboard extends HttpServlet {
 			} else {
 				resp.getWriter().print("There's no data to download for the filters you have selected - please adjust them and try again");
 			}
-			resp.flushBuffer();
 		} catch (Exception e) {
+			Cookie cookieFeedback = new Cookie("fileDownloaded", "error");
+			resp.addCookie(cookieFeedback);
 			resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
 		}
 	}
