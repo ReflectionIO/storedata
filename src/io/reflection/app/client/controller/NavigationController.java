@@ -7,6 +7,24 @@
 //
 package io.reflection.app.client.controller;
 
+import io.reflection.app.api.shared.datatypes.Session;
+import io.reflection.app.client.DefaultEventBus;
+import io.reflection.app.client.handler.NavigationEventHandler;
+import io.reflection.app.client.handler.user.SessionEventHandler;
+import io.reflection.app.client.handler.user.UserPowersEventHandler;
+import io.reflection.app.client.page.HomePage;
+import io.reflection.app.client.page.LoggedInHomePage;
+import io.reflection.app.client.page.Page;
+import io.reflection.app.client.page.PageType;
+import io.reflection.app.client.part.navigation.Header;
+import io.reflection.app.client.part.navigation.PanelLeftMenu;
+import io.reflection.app.client.part.navigation.PanelRightAccount;
+import io.reflection.app.client.part.navigation.PanelRightSearch;
+import io.reflection.app.client.res.Styles;
+import io.reflection.app.datatypes.shared.Permission;
+import io.reflection.app.datatypes.shared.Role;
+import io.reflection.app.datatypes.shared.User;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -23,26 +41,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.googlecode.gwt.crypto.bouncycastle.util.encoders.Base64;
 import com.spacehopperstudios.utility.StringUtils;
 import com.willshex.gson.json.service.shared.Error;
-
-import io.reflection.app.api.shared.datatypes.Session;
-import io.reflection.app.client.DefaultEventBus;
-import io.reflection.app.client.handler.NavigationEventHandler;
-import io.reflection.app.client.handler.user.SessionEventHandler;
-import io.reflection.app.client.handler.user.UserPowersEventHandler;
-import io.reflection.app.client.helper.MixPanelApiHelper;
-import io.reflection.app.client.mixpanel.MixPanelApi;
-import io.reflection.app.client.page.HomePage;
-import io.reflection.app.client.page.LoggedInHomePage;
-import io.reflection.app.client.page.Page;
-import io.reflection.app.client.page.PageType;
-import io.reflection.app.client.part.navigation.Header;
-import io.reflection.app.client.part.navigation.PanelLeftMenu;
-import io.reflection.app.client.part.navigation.PanelRightAccount;
-import io.reflection.app.client.part.navigation.PanelRightSearch;
-import io.reflection.app.client.res.Styles;
-import io.reflection.app.datatypes.shared.Permission;
-import io.reflection.app.datatypes.shared.Role;
-import io.reflection.app.datatypes.shared.User;
 
 /**
  * @author billy1380
@@ -233,10 +231,7 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 
 	private NavigationController() {
 		pages.put(PageType.HomePageType.toString(), new HomePage());
-		// Live
-		// MixPanelApi.get().init("69afe8ba753ea33015dbd4cdbf11d1c8");
-		// Dev
-		MixPanelApi.get().init("de7297c03772ca384bba5483b63f5e45");
+
 	}
 
 	/**
@@ -285,7 +280,7 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 	}
 
 	private void addStack(Stack value) {
-		MixPanelApiHelper.trackNavigation(value);
+		// MixpanelHelper.trackNavigation(value);
 
 		String page = value.getPage();
 
@@ -425,7 +420,7 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see com.google.gwt.event.logical.shared.ValueChangeHandler#onValueChange( com.google.gwt.event.logical.shared.ValueChangeEvent)
 	 */
 	@Override
@@ -500,7 +495,7 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoggedIn(io.reflection.app.datatypes.shared.User,
 	 * io.reflection.app.api.shared.datatypes.Session)
 	 */
@@ -509,7 +504,7 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoggedOut()
 	 */
 	@Override
@@ -525,7 +520,7 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoginFailed(com.willshex.gson.json.service.shared.Error)
 	 */
 	@Override
@@ -535,7 +530,7 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.client.handler.user.UserPowersEventHandler#gotUserPowers(io.reflection.app.datatypes.shared.User, java.util.List, java.util.List)
 	 */
 	@Override
@@ -553,7 +548,7 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.client.handler.user.UserPowersEventHandler#getGetUserPowersFailed(com.willshex.gson.json.service.shared.Error)
 	 */
 	@Override

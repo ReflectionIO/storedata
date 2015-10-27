@@ -29,6 +29,7 @@ import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormattingHelper;
 import io.reflection.app.client.helper.ResponsiveDesignHelper;
 import io.reflection.app.client.helper.TooltipHelper;
+import io.reflection.app.client.mixpanel.MixpanelHelper;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.ErrorPanel;
 import io.reflection.app.client.part.LoadingIndicator;
@@ -66,6 +67,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
@@ -94,6 +96,8 @@ public class HomePage extends Page {
 	private String selectedCategory = "15"; // games
 	@UiField Button applyFilters;
 	@UiField Anchor viewMoreApps;
+	@UiField InlineHyperlink getStarted;
+	@UiField InlineHyperlink signUp;
 	@UiField ErrorPanel errorPanel;
 	@UiField NoDataPanel noDataPanel;
 	@UiField(provided = true) CellTable<RanksGroup> leaderboardHomeTable = new CellTable<RanksGroup>(ServiceConstants.SHORT_STEP_VALUE,
@@ -269,6 +273,7 @@ public class HomePage extends Page {
 		leaderboardHomeTable.addColumn(grossingColumn, "Grossing");
 		leaderboardHomeTable.setLoadingIndicator(loadingIndicatorAll);
 		TooltipHelper.updateHelperTooltip();
+
 	}
 
 	private void createColumns() {
@@ -467,6 +472,18 @@ public class HomePage extends Page {
 	void onViewMoreAppsClicked(ClickEvent event) {
 		event.preventDefault();
 		signUpPopup.show();
+	}
+
+	@UiHandler("getStarted")
+	void onGetStartedClicked(ClickEvent event) {
+		event.preventDefault();
+		MixpanelHelper.trackClicked(MixpanelHelper.Event.GO_TO_SIGNUP, "home_button_getstarted");
+	}
+
+	@UiHandler("signUp")
+	void onSignUpClicked(ClickEvent event) {
+		event.preventDefault();
+		MixpanelHelper.trackClicked(MixpanelHelper.Event.GO_TO_SIGNUP, "home_button_signup");
 	}
 
 	/*

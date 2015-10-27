@@ -7,6 +7,8 @@
 //
 package io.reflection.app.client.page;
 
+import io.reflection.app.client.mixpanel.MixpanelHelper;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -34,6 +36,7 @@ public class ProductPage extends Page {
 	@UiHandler("signUpBtn")
 	void onSignUpClicked(ClickEvent event) {
 		event.preventDefault();
+		MixpanelHelper.trackClicked(MixpanelHelper.Event.GO_TO_SIGNUP, "product_button_signup");
 		PageType.RegisterPageType.show();
 	}
 
