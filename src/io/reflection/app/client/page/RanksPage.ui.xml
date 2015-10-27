@@ -139,7 +139,7 @@
 
 					</g:HTMLPanel>
 
-					<c:Selector ui:field="countrySelector" labelText="Country" overlay="true" dropdownTitle="Select a country" tooltip="Select a country" />
+					<c:Selector ui:field="countrySelector" labelText="Country" overlay="true" dropdownTitle="Country (more coming soon)" tooltip="Country (more coming soon)" />
 
 					<c:Selector ui:field="appStoreSelector" labelText="App Store" overlay="true" dropdownTitle="Select a store" tooltip="View data for iPhone or iPad" />
 

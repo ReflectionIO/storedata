@@ -88,11 +88,12 @@
 			class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.horizontalCentreContent} {STYLES_INSTANCE.reflectionMainStyle.accountAccessContent}">
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.fullScreenIntro}">
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.connectAccountMainContent}">
-					<h1>You Are Just a Moment Away</h1>
+					<h1>You're Nearly There</h1>
 					<p class="{STYLES_INSTANCE.reflectionMainStyle.pStyleFeatured}">
-					Link your iTunes Connect account here for Reflection's free app market data. 
-					We only use your store data for our statistical forecasting that estimates 
-					the market. It will never be shared with anyone.</p>
+					Link your iTunes Connect account to access Reflection's free app intelligence. 
+					Your data will never be shared with anyone. We only use your data for our statistical 
+					forecasting that estimates the market. 
+					If you have any questions please email <a href="mailto:support@reflection.io">support@reflection.io</a></p>
 				</div>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.connectAccountSubmitted}">
 					<h1>You're Ready to Go!</h1>

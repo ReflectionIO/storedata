@@ -125,7 +125,7 @@ public class HomePage extends Page {
 
 		applyFilters.getElement().setAttribute("data-tooltip", "Update results");
 		if (!SessionController.get().isAdmin()) {
-			categorySelector.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
+			categorySelector.setTooltip("We're in beta. More categories and countries will be available soon.");
 		}
 		dateFixed.setInnerText(FormattingHelper.DATE_FORMATTER_DD_MMM_YYYY.format(FilterHelper.getDaysAgo(2)));
 		FilterHelper.addCountries(countrySelector, SessionController.get().isAdmin());

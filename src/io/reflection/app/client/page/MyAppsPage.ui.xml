@@ -30,8 +30,8 @@
 				<c:Selector ui:field="appStoreSelector" overlay="true" alignRight="" labelText="App Store" dropdownTitle="Select a store"
 					styleName="{STYLES_INSTANCE.reflectionMainStyle.storeSelect}" tooltip="View data for iPhone or iPad" />
 
-				<c:Selector ui:field="countrySelector" overlay="true" alignCenter="" labelText="Country" dropdownTitle="Select a country"
-					styleName="{STYLES_INSTANCE.reflectionMainStyle.countrySelect}" tooltip="Select a country" />
+				<c:Selector ui:field="countrySelector" overlay="true" alignCenter="" labelText="Country" dropdownTitle="Country (more coming soon)"
+					styleName="{STYLES_INSTANCE.reflectionMainStyle.countrySelect}" tooltip="Country (more coming soon)" />
 
 				<g:Button ui:field="applyFilters" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaSmall} {STYLES_INSTANCE.reflectionMainStyle.refreshButton} js-tooltip js-tooltip--right">
 					<svg class="{STYLES_INSTANCE.reflectionMainStyle.svgRefresh}" version="1.1" x="0px" y="0px" viewBox="0 0 16 16" enable-background="new 0 0 16 16"

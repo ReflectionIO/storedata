@@ -79,7 +79,7 @@
 					<li class="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}">
 						<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
 							<h2 ui:field="faqContent2" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">What is app market intelligence?</h2>
-							<p>App market intelligence lets you track transactional revenue and download data for apps in across each category, country and store.</p>
+							<p>App market intelligence lets you track transactional revenue and download data for apps across each category, country and store.</p>
 							<p class="{STYLES_INSTANCE.reflectionMainStyle.linkBackToTop}">
 								<g:Anchor styleName="" ui:field="linkBackToTop2" href="#">Back to top</g:Anchor>
 							</p>
@@ -98,7 +98,7 @@
 					<li class="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}">
 						<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
 							<h2 ui:field="faqContent4" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">How do you use my app store data?</h2>
-							<p>We only use your store data for our statistical forecasting to estimates the market. It will NEVER be shared with anyone. Reflection's growing network of developers helps us 
+							<p>We only use your store data for our statistical forecasting to estimate the market. It will NEVER be shared with anyone. Reflection's growing network of developers helps us 
 							expand our country and platform intelligence while maintaining market-leading revenue and download accuracy.</p>
 							<p class="{STYLES_INSTANCE.reflectionMainStyle.linkBackToTop}">
 								<g:Anchor styleName="" ui:field="linkBackToTop4" href="#">Back to top</g:Anchor>
@@ -136,7 +136,7 @@
 					<li class="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}">
 						<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
 							<h2 ui:field="faqContent8" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">How far back does your data go?</h2>
-							<p>We provide rank, revenue and download data for iPhone and iPad from May 2015.</p>
+							<p>We provide rank, revenue and download data for iPhone and iPad from September 2015. We will support over a year's worth of historic data when our beta ends.</p>
 							<p class="{STYLES_INSTANCE.reflectionMainStyle.linkBackToTop}">
 								<g:Anchor styleName="" ui:field="linkBackToTop8" href="#">Back to top</g:Anchor>
 							</p>
