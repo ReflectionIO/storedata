@@ -72,7 +72,8 @@ public class DevUtilServlet extends HttpServlet {
 	public static final String	PARAM_GATHER_CONDITION_MISSING	= "missing";
 	public static final String	PARAM_GATHER_CONDITION_EMPTY		= "empty";
 	public static final String	PARAM_GATHER_CONDITION_ERROR		= "error";
-	public static final String	PARAM_GATHER_CONDITION_RETRY		= "retry";			// synonomous for error, empty and missing
+	public static final String	PARAM_GATHER_CONDITION_INGEST		= "ingest";
+	public static final String	PARAM_GATHER_CONDITION_RETRY		= "retry";					// synonomous for ingest, error, empty and missing
 	public static final String	PARAM_GATHER_CONDITION_REINGEST	= "reingest";
 	public static final String	PARAM_GATHER_CONDITION_ALL			= "all";
 
@@ -200,6 +201,7 @@ public class DevUtilServlet extends HttpServlet {
 		boolean gatherMissing = false;
 		boolean gatherEmpty = false;
 		boolean gatherError = false;
+		boolean ingest = false;
 		boolean reingest = false;
 
 		for(String condition: conditions){
@@ -214,18 +216,21 @@ public class DevUtilServlet extends HttpServlet {
 					gatherError = true;
 					break;
 				case PARAM_GATHER_CONDITION_RETRY:
-					gatherMissing = gatherEmpty = gatherError = true;
+					gatherMissing = gatherEmpty = gatherError = ingest = true;
+					break;
+				case PARAM_GATHER_CONDITION_INGEST:
+					ingest = true;
 					break;
 				case PARAM_GATHER_CONDITION_REINGEST:
 					reingest = true;
 					break;
 				case PARAM_GATHER_CONDITION_ALL:
-					gatherMissing=gatherEmpty=gatherError=reingest=true;
+					gatherMissing = gatherEmpty = gatherError = ingest = reingest = true;
 					break;
 			}
 		}
 
-		if (!(gatherMissing || gatherEmpty || gatherError || reingest)) {
+		if (!(gatherMissing || gatherEmpty || gatherError || ingest || reingest)) {
 			String msg = "No condition given. Nothing to do. Returning";
 			LOG.log(GaeLevel.DEBUG, msg);
 			return msg;
@@ -233,7 +238,8 @@ public class DevUtilServlet extends HttpServlet {
 
 		StringBuilder webResponse = new StringBuilder();
 
-		String msg = String.format("Gathing for %d accounts. Conditions: missing: %b, empty: %b, error: %b, reingest: %b", dataAccountIds.size(), gatherMissing, gatherEmpty, gatherError, reingest);
+		String msg = String.format("Gathing for %d accounts. Conditions: missing: %b, empty: %b, error: %b, ingest: %b, reingest: %b", dataAccountIds.size(), gatherMissing, gatherEmpty, gatherError,
+				ingest, reingest);
 		LOG.log(GaeLevel.DEBUG, msg);
 		webResponse.append(msg);
 
@@ -241,7 +247,7 @@ public class DevUtilServlet extends HttpServlet {
 			msg = String.format("Processing %s", date);
 
 			for (Long dataAccountId : dataAccountIds) {
-				webResponse.append(gatherForAccountOnDateWithConditions(dataAccountId, date, gatherMissing, gatherEmpty, gatherError, reingest)).append('\n');
+				webResponse.append(gatherForAccountOnDateWithConditions(dataAccountId, date, gatherMissing, gatherEmpty, gatherError, ingest, reingest)).append('\n');
 			}
 		}
 
@@ -258,7 +264,7 @@ public class DevUtilServlet extends HttpServlet {
 	 *
 	 * @return
 	 */
-	private String gatherForAccountOnDateWithConditions(Long dataAccountId, Date date, boolean gatherMissing, boolean gatherEmpty, boolean gatherError, boolean reingest) {
+	private String gatherForAccountOnDateWithConditions(Long dataAccountId, Date date, boolean gatherMissing, boolean gatherEmpty, boolean gatherError, boolean ingest, boolean reingest) {
 		StringBuilder builder = new StringBuilder();
 		try {
 			DataAccountFetch dataAccountFetch = DataAccountFetchServiceProvider.provide().getDataAccountFetch(dataAccountId, date);
@@ -296,14 +302,17 @@ public class DevUtilServlet extends HttpServlet {
 			// INGESTED
 			if (dataAccountFetch.status == DataAccountFetchStatusType.DataAccountFetchStatusTypeIngested && reingest) {
 				LOG.log(GaeLevel.DEBUG, appendAndReturn(String.format("The fetch was previously marked as ingested. Updating status to gathered"), builder));
+
 				dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered;
 				DataAccountFetchServiceProvider.provide().updateDataAccountFetch(dataAccountFetch);
+				DataAccountFetchServiceProvider.provide().triggerDataAccountFetchIngest(dataAccountFetch);
+
 			} else {
 				LOG.log(GaeLevel.DEBUG, appendAndReturn(String.format("Fetch status for %d on %s is error but condition for error not set. Skipping", dataAccountId, date), builder));
 			}
 
 			// GATHERED BUT NOT PREVIOUSLY INGESTED (OR SET TO GATHERED IN THE PREVIOUS BLOCK)
-			if (dataAccountFetch.status == DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered) {
+			if (dataAccountFetch.status == DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered && (ingest || reingest)) {
 				LOG.log(GaeLevel.DEBUG, appendAndReturn(String.format("The fetch marked as gathered. Enqueuing for ingest"), builder));
 				DataAccountFetchServiceProvider.provide().triggerDataAccountFetchIngest(dataAccountFetch);
 
