@@ -826,9 +826,10 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 				public void run() {
 					counter += 200L;
 					if (counter > 7000) {
-						cancel();
+						downloadLeaderboard.resetStatus();
 						Cookies.removeCookie("fileDownloaded");
-						Window.alert("timeout");
+						iframe.removeAttribute("src");
+						cancel();
 					}
 					if (Cookies.getCookie("fileDownloaded") != null) {
 						if (Cookies.getCookie("fileDownloaded").equals("success")) {
@@ -839,8 +840,9 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 						} else {
 							downloadLeaderboard.resetStatus();
 						}
-						cancel();
 						Cookies.removeCookie("fileDownloaded");
+						iframe.removeAttribute("src");
+						cancel();
 					}
 				}
 			};
@@ -997,6 +999,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		signUpPopup.hide();
 		premiumPopup.hide();
 		addLinkedAccountPopup.hide();
+		iframe.removeAttribute("src");
 	}
 
 	/*
