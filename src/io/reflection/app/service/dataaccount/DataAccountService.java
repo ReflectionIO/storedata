@@ -216,6 +216,10 @@ final class DataAccountService implements IDataAccountService {
 	}
 
 	private void enqueue(DataAccount dataAccount, Date date, boolean notify) {
+		enqueue(dataAccount.id, date, notify);
+	}
+
+	private void enqueue(Long dataAccountId, Date date, boolean notify) {
 		if (LOG.isLoggable(GaeLevel.TRACE)) {
 			LOG.log(GaeLevel.TRACE, "Entering...");
 		}
@@ -225,7 +229,7 @@ final class DataAccountService implements IDataAccountService {
 
 			final TaskOptions options = TaskOptions.Builder.withUrl("/dataaccountgather").method(Method.POST);
 
-			options.param("accountId", dataAccount.id.toString());
+			options.param("accountId", dataAccountId.toString());
 			options.param("date", Long.toString(date.getTime()));
 
 			if (notify) {
@@ -544,6 +548,17 @@ final class DataAccountService implements IDataAccountService {
 	@Override
 	public void triggerSingleDateDataAccountFetch(DataAccount dataAccount, Date date) throws DataAccessException {
 		enqueue(dataAccount, date, false);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see io.reflection.app.service.dataaccount.IDataAccountService#triggerSingleDateDataAccountFetch(io.reflection.app.datatypes.shared.DataAccount,
+	 * java.util.Date)
+	 */
+	@Override
+	public void triggerSingleDateDataAccountFetch(Long dataAccountId, Date date) throws DataAccessException {
+		enqueue(dataAccountId, date, false);
 	}
 
 	/*

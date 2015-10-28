@@ -34,6 +34,9 @@ import com.google.appengine.api.taskqueue.TaskOptions.Method;
 import com.spacehopperstudios.utility.StringUtils;
 
 import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.datatypes.shared.DataAccountFetch;
+import io.reflection.app.datatypes.shared.DataAccountFetchStatusType;
+import io.reflection.app.helpers.NotificationHelper;
 import io.reflection.app.helpers.QueueHelper;
 import io.reflection.app.helpers.SplitDataHelper;
 import io.reflection.app.helpers.SqlQueryHelper;
@@ -44,6 +47,7 @@ import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
+import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
 import io.reflection.app.service.sale.SaleServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
 
@@ -51,17 +55,26 @@ import io.reflection.app.shared.util.DataTypeHelper;
 public class DevUtilServlet extends HttpServlet {
 	private transient static final Logger LOG = Logger.getLogger(DevUtilServlet.class.getName());
 
-	public static final String	PARAM_ACTION						= "action";
+	public static final String PARAM_ACTION = "action";
 
 	public static final String	PARAM_DATA_ACCOUNT_IDS	= "dataaccountids";
+	public static final String	PARAM_DATA_ACCOUNT_ID		= "dataaccountid";
 	public static final String	PARAM_DATES							= "dates";
 	public static final String	PARAM_DATE_RANGE				= "daterange";
 
-	public static final String	PARAM_COUNTRIES		= "countries";
-	public static final String	PARAM_CATEGORIES	= "categories";
-	public static final String	PARAM_LIST_TYPES	= "types";
+	public static final String	PARAM_COUNTRIES					= "countries";
+	public static final String	PARAM_CATEGORIES				= "categories";
+	public static final String	PARAM_LIST_TYPES				= "types";
 	public static final String	PARAM_PLATFORMS					= "platforms";
 	public static final String	PARAM_TIME							= "time";
+	public static final String	PARAM_GATHER_CONDITIONS	= "conditions";
+
+	public static final String	PARAM_GATHER_CONDITION_MISSING	= "missing";
+	public static final String	PARAM_GATHER_CONDITION_EMPTY		= "empty";
+	public static final String	PARAM_GATHER_CONDITION_ERROR		= "error";
+	public static final String	PARAM_GATHER_CONDITION_RETRY		= "retry";			// synonomous for error, empty and missing
+	public static final String	PARAM_GATHER_CONDITION_REINGEST	= "reingest";
+	public static final String	PARAM_GATHER_CONDITION_ALL			= "all";
 
 	public static final String	ACTION_GATHER			= "gather";
 	public static final String	ACTION_SUMMARISE	= "summarise";
@@ -108,7 +121,7 @@ public class DevUtilServlet extends HttpServlet {
 			}
 
 			return;
-		}       // end of if not from deferred queue then re-route it to the deferred queue
+		}   // end of if not from deferred queue then re-route it to the deferred queue
 
 		execute(req, resp);
 	}
@@ -161,6 +174,10 @@ public class DevUtilServlet extends HttpServlet {
 		}
 
 		List<Long> dataAccountIds = getLongParameters(req, PARAM_DATA_ACCOUNT_IDS);
+		if(dataAccountIds==null){
+			dataAccountIds = getLongParameters(req, PARAM_DATA_ACCOUNT_ID);
+		}
+
 		if (dataAccountIds.isEmpty()) {
 			try {
 				dataAccountIds = DataAccountServiceProvider.provide().getAllDataAccountIDs();
@@ -179,9 +196,126 @@ public class DevUtilServlet extends HttpServlet {
 			return msg;
 		}
 
+		ArrayList<String> conditions = getStringParameters(req, PARAM_GATHER_CONDITIONS);
+		boolean gatherMissing = false;
+		boolean gatherEmpty = false;
+		boolean gatherError = false;
+		boolean reingest = false;
+
+		for(String condition: conditions){
+			switch(condition.toLowerCase()){
+				case PARAM_GATHER_CONDITION_MISSING:
+					gatherMissing = true;
+					break;
+				case PARAM_GATHER_CONDITION_EMPTY:
+					gatherEmpty = true;
+					break;
+				case PARAM_GATHER_CONDITION_ERROR:
+					gatherError = true;
+					break;
+				case PARAM_GATHER_CONDITION_RETRY:
+					gatherMissing = gatherEmpty = gatherError = true;
+					break;
+				case PARAM_GATHER_CONDITION_REINGEST:
+					reingest = true;
+					break;
+				case PARAM_GATHER_CONDITION_ALL:
+					gatherMissing=gatherEmpty=gatherError=reingest=true;
+					break;
+			}
+		}
+
+		if (!(gatherMissing || gatherEmpty || gatherError || reingest)) {
+			String msg = "No condition given. Nothing to do. Returning";
+			LOG.log(GaeLevel.DEBUG, msg);
+			return msg;
+		}
+
 		StringBuilder webResponse = new StringBuilder();
 
+		String msg = String.format("Gathing for %d accounts. Conditions: missing: %b, empty: %b, error: %b, reingest: %b", dataAccountIds.size(), gatherMissing, gatherEmpty, gatherError, reingest);
+		LOG.log(GaeLevel.DEBUG, msg);
+		webResponse.append(msg);
+
+		for (Date date : datesToProcess) {
+			msg = String.format("Processing %s", date);
+
+			for (Long dataAccountId : dataAccountIds) {
+				webResponse.append(gatherForAccountOnDateWithConditions(dataAccountId, date, gatherMissing, gatherEmpty, gatherError, reingest)).append('\n');
+			}
+		}
+
 		return webResponse.toString();
+	}
+
+	/**
+	 * @param dataAccountId
+	 * @param date
+	 * @param gatherMissing
+	 * @param gatherEmpty
+	 * @param gatherError
+	 * @param reingest
+	 *
+	 * @return
+	 */
+	private String gatherForAccountOnDateWithConditions(Long dataAccountId, Date date, boolean gatherMissing, boolean gatherEmpty, boolean gatherError, boolean reingest) {
+		StringBuilder builder = new StringBuilder();
+		try {
+			DataAccountFetch dataAccountFetch = DataAccountFetchServiceProvider.provide().getDataAccountFetch(dataAccountId, date);
+
+			// MISSING
+			if (dataAccountFetch == null && gatherMissing) {
+				LOG.log(GaeLevel.DEBUG, appendAndReturn(String.format("Fetch for %d on %s missing. Enqueuing for gather", dataAccountId, date), builder));
+				DataAccountServiceProvider.provide().triggerSingleDateDataAccountFetch(dataAccountId, date);
+
+				return builder.toString();
+			} else {
+				LOG.log(GaeLevel.DEBUG, appendAndReturn(String.format("Fetch status for %d on %s is missing but condition for missing not set. Skipping", dataAccountId, date), builder));
+			}
+
+			// EMPTY
+			if (dataAccountFetch.status == DataAccountFetchStatusType.DataAccountFetchStatusTypeEmpty && gatherEmpty) {
+				LOG.log(GaeLevel.DEBUG, appendAndReturn(String.format("The fetch was previously marked as empty. Enqueuing for gather"), builder));
+				DataAccountServiceProvider.provide().triggerSingleDateDataAccountFetch(dataAccountId, date);
+
+				return builder.toString();
+			} else {
+				LOG.log(GaeLevel.DEBUG, appendAndReturn(String.format("Fetch status for %d on %s is empty but condition for empty not set. Skipping", dataAccountId, date), builder));
+			}
+
+			// ERROR
+			if (dataAccountFetch.status == DataAccountFetchStatusType.DataAccountFetchStatusTypeError && gatherError) {
+				LOG.log(GaeLevel.DEBUG, appendAndReturn(String.format("The fetch was previously marked as error. Enqueuing for gather"), builder));
+				DataAccountServiceProvider.provide().triggerSingleDateDataAccountFetch(dataAccountId, date);
+
+				return builder.toString();
+			} else {
+				LOG.log(GaeLevel.DEBUG, appendAndReturn(String.format("Fetch status for %d on %s is error but condition for error not set. Skipping", dataAccountId, date), builder));
+			}
+
+			// INGESTED
+			if (dataAccountFetch.status == DataAccountFetchStatusType.DataAccountFetchStatusTypeIngested && reingest) {
+				LOG.log(GaeLevel.DEBUG, appendAndReturn(String.format("The fetch was previously marked as ingested. Updating status to gathered"), builder));
+				dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered;
+				DataAccountFetchServiceProvider.provide().updateDataAccountFetch(dataAccountFetch);
+			} else {
+				LOG.log(GaeLevel.DEBUG, appendAndReturn(String.format("Fetch status for %d on %s is error but condition for error not set. Skipping", dataAccountId, date), builder));
+			}
+
+			// GATHERED BUT NOT PREVIOUSLY INGESTED (OR SET TO GATHERED IN THE PREVIOUS BLOCK)
+			if (dataAccountFetch.status == DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered) {
+				LOG.log(GaeLevel.DEBUG, appendAndReturn(String.format("The fetch marked as gathered. Enqueuing for ingest"), builder));
+				DataAccountFetchServiceProvider.provide().triggerDataAccountFetchIngest(dataAccountFetch);
+
+				return builder.toString();
+			} else {
+				LOG.log(GaeLevel.DEBUG, appendAndReturn(String.format("Fetch status for %d on %s is error but condition for error not set. Skipping", dataAccountId, date), builder));
+			}
+
+		} catch (DataAccessException e) {
+			LOG.log(Level.WARNING, appendAndReturn(String.format("Exception while trying to gather for account id %d on a %s. %s", dataAccountId, date, e.getMessage()), builder), e);
+		}
+		return builder.toString();
 	}
 
 	/**
@@ -531,6 +665,16 @@ public class DevUtilServlet extends HttpServlet {
 	}
 
 	/**
+	 * @param msg
+	 * @param builder
+	 * @return
+	 */
+	private String appendAndReturn(String msg, StringBuilder builder) {
+		builder.append(msg).append('\n');
+		return msg;
+	}
+
+	/**
 	 * @param resp
 	 * @param msg
 	 */
@@ -545,6 +689,8 @@ public class DevUtilServlet extends HttpServlet {
 		} catch (IOException e) {
 			LOG.log(Level.WARNING, "Could not write to the servlet response stream", e);
 		}
+
+		NotificationHelper.sendEmail("<hello@reflection.io> Reflection.io", System.getProperty("devadmin.email"), System.getProperty("devadmin.name"), "DevUtil Servlet Log output", msg, false);
 	}
 
 	@Override
