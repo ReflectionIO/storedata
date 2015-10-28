@@ -214,7 +214,7 @@ public class Header extends Composite implements NavigationEventHandler, Session
 	void onApplyClicked(ClickEvent event) {
 		closePanelRightAccount();
 		closePanelRightSearch();
-		MixpanelHelper.trackClicked(MixpanelHelper.Event.GO_TO_SIGNUP, "header_button_signup");
+		MixpanelHelper.trackClicked(MixpanelHelper.Event.GO_TO_SIGNUP_PAGE, "header_button_signup");
 
 	}
 

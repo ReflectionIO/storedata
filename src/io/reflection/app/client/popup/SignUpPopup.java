@@ -97,7 +97,7 @@ public class SignUpPopup extends Composite implements RegisterInterestBusinessEv
 	@UiHandler("signUpBtn")
 	void onSignUpClicked(ClickEvent event) {
 		event.preventDefault();
-		MixpanelHelper.trackClicked(MixpanelHelper.Event.GO_TO_SIGNUP, "signup_popup_button");
+		MixpanelHelper.trackClicked(MixpanelHelper.Event.GO_TO_SIGNUP_PAGE, "signup_popup_button");
 		PageType.RegisterPageType.show();
 	}
 

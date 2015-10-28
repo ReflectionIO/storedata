@@ -74,7 +74,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle.MultiWordSuggestion;
@@ -347,9 +346,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 			}
 
 			@Override
-			public void onFailure(Throwable caught) {
-				Window.alert("Error");
-			}
+			public void onFailure(Throwable caught) {}
 		});
 	}
 
@@ -748,7 +745,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 			@Override
 			public void onSuccess(UpgradeAccountResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {
-					SessionController.get().fetchRolesAndPermissions();
+					SessionController.get().fetchRoleAndPermissions();
 				}
 				DefaultEventBus.get().fireEventFromSource(new UpgradeAccountEventHandler.UpgradeAccountSuccess(input, output), UserController.this);
 			}

@@ -477,13 +477,13 @@ public class HomePage extends Page {
 	@UiHandler("getStarted")
 	void onGetStartedClicked(ClickEvent event) {
 		event.preventDefault();
-		MixpanelHelper.trackClicked(MixpanelHelper.Event.GO_TO_SIGNUP, "home_button_getstarted");
+		MixpanelHelper.trackClicked(MixpanelHelper.Event.GO_TO_SIGNUP_PAGE, "home_button_getstarted");
 	}
 
 	@UiHandler("signUp")
 	void onSignUpClicked(ClickEvent event) {
 		event.preventDefault();
-		MixpanelHelper.trackClicked(MixpanelHelper.Event.GO_TO_SIGNUP, "home_button_signup");
+		MixpanelHelper.trackClicked(MixpanelHelper.Event.GO_TO_SIGNUP_PAGE, "home_button_signup");
 	}
 
 	/*
