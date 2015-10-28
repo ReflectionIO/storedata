@@ -8,19 +8,7 @@
 //
 package io.reflection.app.service.dataaccountfetch;
 
-import static com.spacehopperstudios.utility.StringUtils.addslashes;
-import static com.spacehopperstudios.utility.StringUtils.stripslashes;
-import io.reflection.app.api.exception.DataAccessException;
-import io.reflection.app.api.shared.datatypes.Pager;
-import io.reflection.app.datatypes.shared.DataAccount;
-import io.reflection.app.datatypes.shared.DataAccountFetch;
-import io.reflection.app.datatypes.shared.DataAccountFetchStatusType;
-import io.reflection.app.helpers.SqlQueryHelper;
-import io.reflection.app.logging.GaeLevel;
-import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
-import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
-import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
-import io.reflection.app.service.ServiceType;
+import static com.spacehopperstudios.utility.StringUtils.*;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,6 +23,18 @@ import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
 import com.google.appengine.api.taskqueue.TransientFailureException;
 import com.google.appengine.api.utils.SystemProperty;
+
+import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.datatypes.shared.DataAccount;
+import io.reflection.app.datatypes.shared.DataAccountFetch;
+import io.reflection.app.datatypes.shared.DataAccountFetchStatusType;
+import io.reflection.app.helpers.SqlQueryHelper;
+import io.reflection.app.logging.GaeLevel;
+import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
+import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
+import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
+import io.reflection.app.service.ServiceType;
 
 final class DataAccountFetchService implements IDataAccountFetchService {
 
@@ -106,8 +106,8 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 		final String addDataAccountFetchQuery = String.format(
 				"INSERT INTO `dataaccountfetch` (`data`,`date`,`status`,`linkedaccountid`) VALUES ('%s',FROM_UNIXTIME(%d),'%s',%d)", SystemProperty.environment
 				.value() == SystemProperty.Environment.Value.Development ? DEV_PREFIX + addslashes(dataAccountFetch.data)
-						: addslashes(dataAccountFetch.data), dataAccountFetch.date.getTime() / 1000, dataAccountFetch.status.toString(),
-						dataAccountFetch.linkedAccount.id.longValue());
+				: addslashes(dataAccountFetch.data), dataAccountFetch.date.getTime() / 1000, dataAccountFetch.status.toString(),
+				dataAccountFetch.linkedAccount.id.longValue());
 
 		final Connection dataAccountFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccountFetch.toString());
 
@@ -203,11 +203,11 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 
 			if (pager.sortDirection != null) {
 				switch (pager.sortDirection) {
-				case SortDirectionTypeAscending:
-					sortDirectionQuery = "ASC";
-					break;
-				default:
-					break;
+					case SortDirectionTypeAscending:
+						sortDirectionQuery = "ASC";
+						break;
+					default:
+						break;
 				}
 			}
 
@@ -279,26 +279,7 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 	 */
 	@Override
 	public DataAccountFetch getDateDataAccountFetch(DataAccount dataAccount, Date date) throws DataAccessException {
-		DataAccountFetch dataAccountFetch = null;
-
-		final Connection dataAccountFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccountFetch.toString());
-
-		final String getDateDataAccountFetchQuery = String.format(
-				"SELECT * FROM `dataaccountfetch` WHERE `linkedaccountid`=%d AND `date`=FROM_UNIXTIME(%d) AND `deleted`='n' LIMIT 1",
-				dataAccount.id.longValue(), date.getTime() / 1000);
-		try {
-			dataAccountFetchConnection.connect();
-			dataAccountFetchConnection.executeQuery(getDateDataAccountFetchQuery);
-
-			if (dataAccountFetchConnection.fetchNextRow()) {
-				dataAccountFetch = toDataAccountFetch(dataAccountFetchConnection);
-			}
-		} finally {
-			if (dataAccountFetchConnection != null) {
-				dataAccountFetchConnection.disconnect();
-			}
-		}
-		return dataAccountFetch;
+		return getDataAccountFetch(dataAccount.id.longValue(), date);
 	}
 
 	/*
@@ -332,11 +313,11 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 
 			if (pager.sortDirection != null) {
 				switch (pager.sortDirection) {
-				case SortDirectionTypeAscending:
-					sortDirectionQuery = "ASC";
-					break;
-				default:
-					break;
+					case SortDirectionTypeAscending:
+						sortDirectionQuery = "ASC";
+						break;
+					default:
+						break;
 				}
 			}
 
@@ -512,5 +493,33 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 				LOG.log(GaeLevel.TRACE, "Exiting...");
 			}
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.service.dataaccountfetch.IDataAccountFetchService#getDataAccountFetche(java.lang.Long, java.util.Date)
+	 */
+	@Override
+	public DataAccountFetch getDataAccountFetch(Long dataAccountId, Date date) throws DataAccessException {
+		DataAccountFetch dataAccountFetch = null;
+
+		final Connection dataAccountFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccountFetch.toString());
+
+		final String getDateDataAccountFetchQuery = String.format(
+				"SELECT * FROM `dataaccountfetch` WHERE `linkedaccountid`=%d AND `date`='%s' AND `deleted`='n' LIMIT 1",
+				dataAccountId, SqlQueryHelper.getSqlDateFormat().format(date));
+
+		try {
+			dataAccountFetchConnection.connect();
+			dataAccountFetchConnection.executeQuery(getDateDataAccountFetchQuery);
+
+			if (dataAccountFetchConnection.fetchNextRow()) {
+				dataAccountFetch = toDataAccountFetch(dataAccountFetchConnection);
+			}
+		} finally {
+			if (dataAccountFetchConnection != null) {
+				dataAccountFetchConnection.disconnect();
+			}
+		}
+		return dataAccountFetch;
 	}
 }
