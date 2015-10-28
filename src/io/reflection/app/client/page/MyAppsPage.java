@@ -40,6 +40,7 @@ import io.reflection.app.client.helper.ApiCallHelper;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.helper.TooltipHelper;
+import io.reflection.app.client.mixpanel.MixpanelHelper;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.ErrorPanel;
 import io.reflection.app.client.part.datatypes.DateRange;
@@ -173,6 +174,7 @@ public class MyAppsPage extends Page implements NavigationEventHandler, LinkAcco
 			public void onClick(ClickEvent event) {
 				User user = SessionController.get().getLoggedInUser();
 				if (user != null) {
+					MixpanelHelper.trackClicked(MixpanelHelper.Event.OPEN_LINK_ACCOUNT_POPUP, "myappspage");
 					addLinkedAccountPopup.show("Link an Account", null);
 				}
 			}

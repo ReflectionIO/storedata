@@ -42,7 +42,7 @@ import io.reflection.app.client.handler.user.UserPasswordChangedEventHandler.Use
 import io.reflection.app.client.handler.user.UserPowersEventHandler.GetUserPowersFailed;
 import io.reflection.app.client.handler.user.UserPowersEventHandler.GotUserPowers;
 import io.reflection.app.client.helper.FormHelper;
-import io.reflection.app.client.helper.MixPanelApiHelper;
+import io.reflection.app.client.mixpanel.MixpanelHelper;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
@@ -175,11 +175,11 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 		if (loggedInUser != user) {
 			loggedInUser = user; // used if changed person
 
-			MixPanelApiHelper.trackLoginUser(loggedInUser);
 
 			if (loggedInUser == null) { // used if previous logged out
 				DefaultEventBus.get().fireEventFromSource(new UserLoggedOut(), SessionController.this);
 			} else {
+				MixpanelHelper.trackLogin();
 				DefaultEventBus.get().fireEventFromSource(new UserLoggedIn(loggedInUser, userSession), SessionController.this); // Fire user logged in event
 			}
 		}
@@ -301,7 +301,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 			}
 		});
 
-		MixPanelApiHelper.trackLoggedOut();
+		MixpanelHelper.trackLogout();
 
 		makeSessionInvalid();
 
