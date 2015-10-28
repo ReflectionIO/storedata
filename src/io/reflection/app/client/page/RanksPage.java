@@ -40,6 +40,7 @@ import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.helper.FormattingHelper;
 import io.reflection.app.client.helper.ResponsiveDesignHelper;
 import io.reflection.app.client.helper.TooltipHelper;
+import io.reflection.app.client.mixpanel.MixpanelHelper;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.ErrorPanel;
 import io.reflection.app.client.part.LoadingIndicator;
@@ -61,6 +62,7 @@ import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Display;
@@ -72,10 +74,6 @@ import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.logical.shared.ShowRangeEvent;
 import com.google.gwt.event.logical.shared.ShowRangeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -89,9 +87,11 @@ import com.google.gwt.user.cellview.client.ColumnSortEvent;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.SafeHtmlHeader;
 import com.google.gwt.user.cellview.client.TextHeader;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -162,6 +162,8 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	// @UiField InlineHyperlink redirect;
 	@UiField ErrorPanel errorPanel;
 	@UiField NoDataPanel noDataPanel;
+
+	@UiField Element iframe;
 
 	private Column<RanksGroup, SafeHtml> rankColumn;
 	private Column<RanksGroup, Rank> grossingColumn;
@@ -376,6 +378,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 				if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
 					premiumPopup.show(true);
 				} else if (SessionController.get().isLoggedIn()) {
+					MixpanelHelper.trackClicked(MixpanelHelper.Event.OPEN_LINK_ACCOUNT_POPUP, "leaderboard_table_paid");
 					addLinkedAccountPopup.show("Link Your Appstore Account",
 							"You need to link your iTunes Connect account to use this feature, it only takes a moment");
 				} else {
@@ -400,6 +403,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 				if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
 					premiumPopup.show(true);
 				} else if (SessionController.get().isLoggedIn()) {
+					MixpanelHelper.trackClicked(MixpanelHelper.Event.OPEN_LINK_ACCOUNT_POPUP, "leaderboard_table_free");
 					addLinkedAccountPopup.show("Link Your Appstore Account",
 							"You need to link your iTunes Connect account to use this feature, it only takes a moment");
 				} else {
@@ -423,6 +427,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 				if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
 					premiumPopup.show(true);
 				} else if (SessionController.get().isLoggedIn()) {
+					MixpanelHelper.trackClicked(MixpanelHelper.Event.OPEN_LINK_ACCOUNT_POPUP, "leaderboard_table_grossing");
 					addLinkedAccountPopup.show("Link Your Appstore Account",
 							"You need to link your iTunes Connect account to use this feature, it only takes a moment");
 				} else {
@@ -458,6 +463,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 				if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
 					premiumPopup.show(true);
 				} else if (SessionController.get().isLoggedIn()) {
+					MixpanelHelper.trackClicked(MixpanelHelper.Event.OPEN_LINK_ACCOUNT_POPUP, "leaderboard_table_downloads_" + selectedTab);
 					addLinkedAccountPopup.show("Link Your Appstore Account",
 							"You need to link your iTunes Connect account to use this feature, it only takes a moment");
 				} else {
@@ -484,6 +490,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 				if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
 					premiumPopup.show(true);
 				} else if (SessionController.get().isLoggedIn()) {
+					MixpanelHelper.trackClicked(MixpanelHelper.Event.OPEN_LINK_ACCOUNT_POPUP, "leaderboard_table_revenue_" + selectedTab);
 					addLinkedAccountPopup.show("Link Your Appstore Account",
 							"You need to link your iTunes Connect account to use this feature, it only takes a moment");
 				} else {
@@ -575,8 +582,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 	@UiHandler({ "countrySelector", "appStoreSelector", "categorySelector" })
 	void onFiltersChanged(ChangeEvent event) {
-		applyFilters.setEnabled(isStatusError
-				|| !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
+		applyFilters.setEnabled(isStatusError || !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
 				|| !FilterController.get().getFilter().getStoreA3Code().equals(appStoreSelector.getSelectedValue())
 				|| !FilterController.get().getFilter().getCategoryId().toString().equals(categorySelector.getSelectedValue())
 				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateBox.getValue()));
@@ -584,8 +590,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 	@UiHandler("dateBox")
 	void onDateChanged(ValueChangeEvent<Date> event) {
-		applyFilters.setEnabled(isStatusError
-				|| !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
+		applyFilters.setEnabled(isStatusError || !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
 				|| !FilterController.get().getFilter().getStoreA3Code().equals(appStoreSelector.getSelectedValue())
 				|| !FilterController.get().getFilter().getCategoryId().toString().equals(categorySelector.getSelectedValue())
 				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateBox.getValue()));
@@ -599,8 +604,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		appStoreSelector.setSelectedIndex(FormHelper.getItemIndex(appStoreSelector, "iph"));
 		categorySelector.setSelectedIndex(FormHelper.getItemIndex(categorySelector, "15"));
 		dateBox.setValue(FilterHelper.getDaysAgo(2));
-		applyFilters.setEnabled(isStatusError
-				|| !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
+		applyFilters.setEnabled(isStatusError || !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
 				|| !FilterController.get().getFilter().getStoreA3Code().equals(appStoreSelector.getSelectedValue())
 				|| !FilterController.get().getFilter().getCategoryId().toString().equals(categorySelector.getSelectedValue())
 				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateBox.getValue()));
@@ -770,7 +774,10 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	void onDownloadLeaderboardClicked(ClickEvent event) {
 		event.preventDefault();
 		if (SessionController.get().canSeePredictions()) {
+
+			Cookies.removeCookie("fileDownloaded");
 			downloadLeaderboard.setStatusLoading("Downloading");
+
 			Filter filter = FilterController.get().getFilter();
 			String listType;
 			if (filter.getStoreA3Code().equals("iph")) {
@@ -807,41 +814,69 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			String country = filter.getCountryA2Code();
 			String category = filter.getCategoryId().toString();
 			String date = String.valueOf(ApiCallHelper.getUTCDate(FilterController.get().getEndDate()).getTime());
-
 			String sessionParam = SessionController.get().getSession().toString();
+			String requestParamenters = "listType=" + listType + "&country=" + country + "&category=" + category + "&date=" + date + "&session=" + sessionParam;
 
-			String requestData = "listType=" + listType + "&country=" + country + "&category=" + category + "&date=" + date + "&session=" + sessionParam;
+			iframe.setAttribute("src", URL.encode(GWT.getHostPageBaseURL() + "downloadleaderboard?" + requestParamenters));
 
-			RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, URL.encode(Window.Location.getProtocol() + "//" + Window.Location.getHost()
-					+ "/downloadleaderboard"));
+			final Timer feedbackTimer = new Timer() {
+				private long counter = 0; // Timeout
 
-			builder.setHeader("Content-Type", "application/x-www-form-urlencoded");
-
-			try {
-				builder.sendRequest(requestData, new RequestCallback() {
-
-					@Override
-					public void onError(Request request, Throwable exception) {
-						downloadLeaderboard.setStatusError();
+				@Override
+				public void run() {
+					counter += 200L;
+					if (counter > 7000) {
+						downloadLeaderboard.resetStatus();
+						Cookies.removeCookie("fileDownloaded");
+						iframe.removeAttribute("src");
+						cancel();
 					}
-
-					@Override
-					public void onResponseReceived(Request request, Response response) {
-						if (response.getStatusCode() == Response.SC_FORBIDDEN) { // User doesn't have the required role, probably premium role is expired
+					if (Cookies.getCookie("fileDownloaded") != null) {
+						if (Cookies.getCookie("fileDownloaded").equals("success")) {
+							downloadLeaderboard.resetStatus();
+						} else if (Cookies.getCookie("fileDownloaded").equals("error")) {
 							downloadLeaderboard.setStatusError();
-							// Refresh credentials
-							SessionController.get().fetchRolesAndPermissions();
+							SessionController.get().fetchRoleAndPermissions(); // Refresh credentials
 						} else {
-							String csvContent = "data:text/csv;charset=utf-8," + response.getText();
-							Window.open(URL.encode(csvContent), "_self", "");
 							downloadLeaderboard.resetStatus();
 						}
+						Cookies.removeCookie("fileDownloaded");
+						iframe.removeAttribute("src");
+						cancel();
 					}
-				});
-			} catch (Exception e) {
-				downloadLeaderboard.setStatusError();
-			}
+				}
+			};
+			feedbackTimer.scheduleRepeating(200);
+
+			// iframe.setUrl("");
+			// RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, URL.encode(GWT.getHostPageBaseURL() + "downloadleaderboard"));
+			// builder.setHeader("Content-Type", "application/x-www-form-urlencoded");
+			// try {
+			// builder.sendRequest(requestParamenters, new RequestCallback() {
+			//
+			// @Override
+			// public void onError(Request request, Throwable exception) {
+			// downloadLeaderboard.setStatusError();
+			// }
+			//
+			// @Override
+			// public void onResponseReceived(Request request, Response response) {
+			// if (response.getStatusCode() == Response.SC_FORBIDDEN) { // User doesn't have the required role, probably premium role is expired
+			// downloadLeaderboard.setStatusError();
+			// // Refresh credentials
+			// SessionController.get().fetchRolesAndPermissions();
+			// } else {
+			// String csvContent = "data:text/csv;charset=utf-8," + URL.encodeQueryString(response.getText());
+			// Window.open(csvContent, "_self", "");
+			// downloadLeaderboard.resetStatus();
+			// }
+			// }
+			// });
+			// } catch (Exception e) {
+			// downloadLeaderboard.setStatusError();
+			// }
 		} else if (SessionController.get().isLoggedIn() && !SessionController.get().hasLinkedAccount()) {
+			MixpanelHelper.trackClicked(MixpanelHelper.Event.OPEN_LINK_ACCOUNT_POPUP, "leaderboard_downloadCsv");
 			addLinkedAccountPopup
 					.show("Link Your Appstore Account", "You need to link your iTunes Connect account to use this feature, it only takes a moment");
 		} else if (SessionController.get().isLoggedIn()) {
@@ -964,6 +999,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		signUpPopup.hide();
 		premiumPopup.hide();
 		addLinkedAccountPopup.hide();
+		iframe.removeAttribute("src");
 	}
 
 	/*
