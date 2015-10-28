@@ -505,8 +505,9 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 		final Connection dataAccountFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccountFetch.toString());
 
 		final String getDateDataAccountFetchQuery = String.format(
-				"SELECT * FROM `dataaccountfetch` WHERE `linkedaccountid`=%d AND `date`=FROM_UNIXTIME(%d) AND `deleted`='n' LIMIT 1",
-				dataAccountId, date.getTime() / 1000);
+				"SELECT * FROM `dataaccountfetch` WHERE `linkedaccountid`=%d AND `date`='%s' AND `deleted`='n' LIMIT 1",
+				dataAccountId, SqlQueryHelper.getSqlDateFormat().format(date));
+
 		try {
 			dataAccountFetchConnection.connect();
 			dataAccountFetchConnection.executeQuery(getDateDataAccountFetchQuery);
