@@ -36,7 +36,7 @@ public class MixpanelHelper {
 		LOGIN("Login"),
 		LOGOUT("Logout"),
 		NAVIGATION("Navigation"),
-		GO_TO_SIGNUP("Go To Signup Page"), // source_clicked
+		GO_TO_SIGNUP_PAGE("Go To Signup Page"), // source_clicked
 		OPEN_LINK_ACCOUNT_POPUP("Open Link Account Popup"), // source_clicked
 		GO_TO_LINK_ACCOUNT_PROCESS("Go To Link Account Process Page"), // TODO tracked only when coming from registration process
 		LINK_ACCOUNT_SUCCESS("Link Account Success"),
@@ -107,7 +107,7 @@ public class MixpanelHelper {
 	 * @param signedUpUser
 	 */
 	public static void trackSignUpSuccess(User signedUpUser) {
-		MixpanelApi.get().alias(signedUpUser.username); // Bond previously anonymous user
+		MixpanelApi.get().alias(signedUpUser.id.toString()); // Bond previously anonymous user
 
 		JavaScriptObject peopleSetProp = JavaScriptObject.createObject();
 		JavaScriptObjectHelper.setStringProperty(peopleSetProp, "$username", signedUpUser.username);
@@ -125,7 +125,7 @@ public class MixpanelHelper {
 	public static void trackLogin() {
 		User user;
 		if ((user = SessionController.get().getLoggedInUser()) != null) {
-			MixpanelApi.get().identify(user.username); // Assign or identify user with a unique ID
+			MixpanelApi.get().identify(user.id.toString()); // Assign or identify user with a unique ID (the internal database ID)
 			// Remember user data after the login (and the logout)
 			JavaScriptObject registerProp = JavaScriptObject.createObject();
 			JavaScriptObjectHelper.setStringProperty(registerProp, "username", user.username);
