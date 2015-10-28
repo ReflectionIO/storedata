@@ -260,8 +260,8 @@ textarea, .global-header .link-open-search {
 /* Font declarations */
 @font-face {
   font-family: "reflection-icons";
-  src: url("fonts/fontastic/reflection-icons-1.eot");
-  src: url("fonts/fontastic/reflection-icons-1.eot?#iefix") format("embedded-opentype"), url("fonts/fontastic/reflection-icons-1.woff") format("woff"), url("fonts/fontastic/reflection-icons-1.ttf") format("truetype"), url("fonts/fontastic/reflection-icons-1.svg#reflection-icons") format("svg");
+  src: url("fonts/fontastic/reflection-icons.eot");
+  src: url("fonts/fontastic/reflection-icons.eot?#iefix") format("embedded-opentype"), url("fonts/fontastic/reflection-icons.woff") format("woff"), url("fonts/fontastic/reflection-icons.ttf") format("truetype"), url("fonts/fontastic/reflection-icons.svg#reflection-icons") format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -403,7 +403,7 @@ ol.content-list--minor li:before {
 
 /* line 107, sass/ui/_typography.scss */
 .ref-icon-before--cloud:before {
-  content: "J";
+  content: "f";
 }
 
 /* line 110, sass/ui/_typography.scss */
@@ -1791,8 +1791,8 @@ input::-ms-clear {
 /* Font declarations */
 @font-face {
   font-family: "reflection-icons";
-  src: url("fonts/fontastic/reflection-icons-1.eot");
-  src: url("fonts/fontastic/reflection-icons-1.eot?#iefix") format("embedded-opentype"), url("fonts/fontastic/reflection-icons-1.woff") format("woff"), url("fonts/fontastic/reflection-icons-1.ttf") format("truetype"), url("fonts/fontastic/reflection-icons-1.svg#reflection-icons") format("svg");
+  src: url("fonts/fontastic/reflection-icons.eot");
+  src: url("fonts/fontastic/reflection-icons.eot?#iefix") format("embedded-opentype"), url("fonts/fontastic/reflection-icons.woff") format("woff"), url("fonts/fontastic/reflection-icons.ttf") format("truetype"), url("fonts/fontastic/reflection-icons.svg#reflection-icons") format("svg");
   font-weight: normal;
   font-style: normal;
 }
@@ -1934,7 +1934,7 @@ ol.content-list--minor li:before {
 
 /* line 107, sass/ui/_typography.scss */
 .ref-icon-before--cloud:before {
-  content: "J";
+  content: "f";
 }
 
 /* line 110, sass/ui/_typography.scss */
@@ -18689,73 +18689,81 @@ table.table-data .ref-icon-before--cloud:before {
   font-size: 17px;
   vertical-align: middle;
 }
+/* line 176, sass/components/_table-data.scss */
+table.table-data .ref-icon-before--cloud {
+  padding-left: 23px;
+}
+/* line 178, sass/components/_table-data.scss */
+table.table-data .ref-icon-before--cloud:before {
+  top: -2px;
+}
 
-/* line 177, sass/components/_table-data.scss */
+/* line 183, sass/components/_table-data.scss */
 .cellTableLoading {
   gwt-sprite: 'cellTableLoading';
   padding: 0;
   background: none;
   text-align: center;
 }
-/* line 183, sass/components/_table-data.scss */
+/* line 189, sass/components/_table-data.scss */
 .is-safari .cellTableLoading table {
   table-layout: fixed;
 }
-/* line 188, sass/components/_table-data.scss */
+/* line 194, sass/components/_table-data.scss */
 .compact-view .cellTableLoading tr td {
   padding: 10px;
 }
 
 @media only screen and (max-width: 719px) {
-  /* line 193, sass/components/_table-data.scss */
+  /* line 199, sass/components/_table-data.scss */
   .column-hidden--mobile,
   svg.loading-ellipsis-hidden--mobile {
     display: none;
   }
 }
 
-/* line 199, sass/components/_table-data.scss */
+/* line 205, sass/components/_table-data.scss */
 table.table-data > tbody > tr:nth-child(odd),
 .cellTableLoading table > tbody > tr:nth-child(odd) {
   background-color: #F2F2F5;
 }
-/* line 202, sass/components/_table-data.scss */
+/* line 208, sass/components/_table-data.scss */
 table.table-data > tbody > tr:nth-child(odd) > td,
 .cellTableLoading table > tbody > tr:nth-child(odd) > td {
   background-color: #F2F2F5;
 }
 
-/* line 206, sass/components/_table-data.scss */
+/* line 212, sass/components/_table-data.scss */
 table.table-data > tbody > tr:nth-child(even),
 .cellTableLoading table > tbody > tr:nth-child(even) {
   background-color: #fcfdfd;
 }
-/* line 209, sass/components/_table-data.scss */
+/* line 215, sass/components/_table-data.scss */
 table.table-data > tbody > tr:nth-child(even) > td,
 .cellTableLoading table > tbody > tr:nth-child(even) > td {
   background-color: #fcfdfd;
 }
 
-/* line 214, sass/components/_table-data.scss */
+/* line 220, sass/components/_table-data.scss */
 .cellTableLoading td {
   vertical-align: middle !important;
 }
-/* line 216, sass/components/_table-data.scss */
+/* line 222, sass/components/_table-data.scss */
 .cellTableLoading td:first-child {
   padding-left: 2% !important;
 }
 
-/* line 221, sass/components/_table-data.scss */
+/* line 227, sass/components/_table-data.scss */
 table.table-data .cellTableLoading .img-rounded {
   vertical-align: middle;
 }
 
-/* line 225, sass/components/_table-data.scss */
+/* line 231, sass/components/_table-data.scss */
 .table-body--loading > tr > td {
   padding: 0 !important;
 }
 
-/* line 229, sass/components/_table-data.scss */
+/* line 235, sass/components/_table-data.scss */
 table.table-data.sticky-table-head {
   position: fixed;
   top: 42px;
@@ -18766,30 +18774,30 @@ table.table-data.sticky-table-head {
   -webkit-transition: width 0.15s ease-in;
           transition: width 0.15s ease-in;
 }
-/* line 237, sass/components/_table-data.scss */
+/* line 243, sass/components/_table-data.scss */
 table.table-data.sticky-table-head thead {
   background: #fcfdfd;
 }
-/* line 240, sass/components/_table-data.scss */
+/* line 246, sass/components/_table-data.scss */
 table.table-data.sticky-table-head tbody {
   visibility: hidden;
   opacity: 0;
 }
 @media (min-width: 480px) {
-  /* line 229, sass/components/_table-data.scss */
+  /* line 235, sass/components/_table-data.scss */
   table.table-data.sticky-table-head {
     top: 62px;
     width: calc(100% - 40px);
   }
 }
 @media (min-width: 720px) {
-  /* line 229, sass/components/_table-data.scss */
+  /* line 235, sass/components/_table-data.scss */
   table.table-data.sticky-table-head {
     width: calc(100% - 60px);
   }
 }
 @media (min-width: 960px) {
-  /* line 251, sass/components/_table-data.scss */
+  /* line 257, sass/components/_table-data.scss */
   .panel-left-open table.table-data.sticky-table-head {
     width: calc(100% - 260px);
     -webkit-transition: width 0.15s ease-out;
@@ -18797,7 +18805,7 @@ table.table-data.sticky-table-head tbody {
   }
 }
 
-/* line 260, sass/components/_table-data.scss */
+/* line 266, sass/components/_table-data.scss */
 .is-chrome table.table-data.sticky-table-head,
 .is-chrome .panel-left-open table.table-data.sticky-table-head,
 .is-opera table.table-data.sticky-table-head,
@@ -18807,20 +18815,20 @@ table.table-data.sticky-table-head tbody {
 }
 
 @media screen and (max-width: 719px) {
-  /* line 265, sass/components/_table-data.scss */
+  /* line 271, sass/components/_table-data.scss */
   .is-safari table.table-data.sticky-table-head {
     display: none;
   }
 }
 @media (min-width: 720px) {
-  /* line 265, sass/components/_table-data.scss */
+  /* line 271, sass/components/_table-data.scss */
   .is-safari table.table-data.sticky-table-head {
     width: calc(100% - 60px);
   }
 }
 
 @media (min-width: 960px) {
-  /* line 273, sass/components/_table-data.scss */
+  /* line 279, sass/components/_table-data.scss */
   .is-safari .panel-left-open table.table-data.sticky-table-head {
     width: calc(100% - 280px);
   }
