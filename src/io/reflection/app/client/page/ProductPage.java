@@ -36,7 +36,7 @@ public class ProductPage extends Page {
 	@UiHandler("signUpBtn")
 	void onSignUpClicked(ClickEvent event) {
 		event.preventDefault();
-		MixpanelHelper.trackClicked(MixpanelHelper.Event.GO_TO_SIGNUP, "product_button_signup");
+		MixpanelHelper.trackClicked(MixpanelHelper.Event.GO_TO_SIGNUP_PAGE, "product_button_signup");
 		PageType.RegisterPageType.show();
 	}
 
