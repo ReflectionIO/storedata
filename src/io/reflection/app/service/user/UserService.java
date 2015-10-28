@@ -867,8 +867,12 @@ final class UserService implements IUserService {
 	@Override
 	public DataAccount addDataAccount(User user, DataSource dataSource, String username, String password, String properties) throws DataAccessException {
 		DataAccount addedDataAccount = null;
-
-		addedDataAccount = DataAccountServiceProvider.provide().addDataAccount(dataSource, username, password, properties);
+		DataAccount dataAccount = new DataAccount();
+		dataAccount.source = dataSource;
+		dataAccount.username = username;
+		dataAccount.password = password;
+		dataAccount.properties = properties;		
+		addedDataAccount = DataAccountServiceProvider.provide().addDataAccount(dataAccount);
 
 		if (addedDataAccount != null) {
 			addOrRestoreUserDataAccount(user, addedDataAccount);

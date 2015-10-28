@@ -8,16 +8,15 @@
 //
 package io.reflection.app.service.dataaccount;
 
+import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.datatypes.shared.DataAccount;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 import com.spacehopperstudios.service.IService;
-
-import io.reflection.app.api.exception.DataAccessException;
-import io.reflection.app.api.shared.datatypes.Pager;
-import io.reflection.app.datatypes.shared.DataAccount;
-import io.reflection.app.datatypes.shared.DataSource;
 
 public interface IDataAccountService extends IService {
 	/**
@@ -61,16 +60,6 @@ public interface IDataAccountService extends IService {
 	 * @throws DataAccessException
 	 */
 	public DataAccount addDataAccount(DataAccount dataAccount) throws DataAccessException;
-
-	/**
-	 *
-	 * @param dataSource
-	 * @param username
-	 * @param password
-	 * @return
-	 * @throws DataAccessException
-	 */
-	public DataAccount addDataAccount(DataSource dataSource, String username, String password, String properties) throws DataAccessException;
 
 	/**
 	 * @param dataAccount

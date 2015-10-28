@@ -7,31 +7,10 @@
 //
 package io.reflection.app.api.core;
 
-import static io.reflection.app.service.sale.ISaleService.*;
-import static io.reflection.app.shared.util.PagerHelper.*;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeComparator;
-import org.joda.time.DateTimeZone;
-import org.joda.time.Days;
-
-import com.willshex.gson.json.service.server.ActionHandler;
-import com.willshex.gson.json.service.server.InputValidationException;
-import com.willshex.gson.json.service.server.ServiceException;
-import com.willshex.gson.json.service.shared.StatusType;
-
+import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPAD_IOS;
+import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS;
+import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_UNIVERSAL_IOS;
+import static io.reflection.app.shared.util.PagerHelper.updatePager;
 import io.reflection.app.accountdatacollectors.DataAccountCollectorFactory;
 import io.reflection.app.accountdatacollectors.ITunesConnectDownloadHelper;
 import io.reflection.app.api.ValidationHelper;
@@ -145,6 +124,28 @@ import io.reflection.app.service.user.IUserService;
 import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
 import io.reflection.app.shared.util.PagerHelper;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeComparator;
+import org.joda.time.DateTimeZone;
+import org.joda.time.Days;
+
+import com.willshex.gson.json.service.server.ActionHandler;
+import com.willshex.gson.json.service.server.InputValidationException;
+import com.willshex.gson.json.service.server.ServiceException;
+import com.willshex.gson.json.service.shared.StatusType;
 
 public final class Core extends ActionHandler {
 	private static final Logger LOG = Logger.getLogger(Core.class.getName());
@@ -932,17 +933,43 @@ public final class Core extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			String properties = input.linkedAccount.properties;
-			String password = ValidationHelper.validateStringLength(input.linkedAccount.password, "input.linkedAccount.password", 2, 1000);
+			String tempProperties = input.linkedAccount.properties;
+			String tempPassword = ValidationHelper.validateStringLength(input.linkedAccount.password, "input.linkedAccount.password", 2, 1000);
+
+			if (tempPassword == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("input.linkedAccount.password"));
 
 			input.linkedAccount = ValidationHelper.validateDataAccount(input.linkedAccount, "input.linkedAccount");
 
 			// DataAccountCollectorFactory.getCollectorForSource(input.linkedAccount.source.a3Code).validateProperties(input.linkedAccount.properties);
 
-			input.linkedAccount.properties = properties;
-			input.linkedAccount.password = password;
-			if (password == null)
-				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("input.linkedAccount.password"));
+			input.linkedAccount.properties = tempProperties;
+			input.linkedAccount.password = tempPassword;
+
+			input.linkedAccount.source = new DataSource(); // Add iTunes Connect data source
+			input.linkedAccount.source.a3Code = "itc";
+
+			// Verify linked account with Apple
+			try {
+				DataAccountServiceProvider.provide().verifyDataAccount(input.linkedAccount, DateTime.now(DateTimeZone.UTC).minusDays(45).toDate());
+			} catch (DataAccessException daEx) {
+				String error = daEx.getCause() == null ? null : daEx.getCause().getMessage();
+
+				if (error != null) {
+
+					if (error.equals("Please enter a valid vendor number."))
+						throw new InputValidationException(ApiError.InvalidDataAccountVendor.getCode(),
+								ApiError.InvalidDataAccountVendor.getMessage(input.linkedAccount.properties));
+
+					if (!error.equalsIgnoreCase("Daily reports are available only for past 30 days, please enter a date within past 30 days.")
+							&& !error.equalsIgnoreCase("There is no report available to download, for the selected period")) {
+						LOG.log(Level.WARNING, "There was an unexpected error when trying to link the account. Cause: ", daEx.getCause());
+
+						throw new InputValidationException(ApiError.InvalidDataAccountCredentials.getCode(),
+								ApiError.InvalidDataAccountCredentials.getMessage(input.linkedAccount.username));
+					}
+				}
+			}
 
 			DataAccount linkedAccount = DataAccountServiceProvider.provide().updateDataAccount(input.linkedAccount);
 
