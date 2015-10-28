@@ -230,14 +230,14 @@ final class DataAccountService implements IDataAccountService {
 			final TaskOptions options = TaskOptions.Builder.withUrl("/dataaccountgather").method(Method.POST);
 
 			options.param("accountId", dataAccountId.toString());
-			String dateAsLong = Long.toString(date.getTime());
-			options.param("date", dateAsLong);
+			String dateAsLongString = Long.toString(date.getTime());
+			options.param("date", dateAsLongString);
 
 			if (notify) {
 				options.param("notify", Boolean.toString(true));
 			}
 
-			LOG.log(GaeLevel.DEBUG, String.format("Enqueuing data account gather for account id %d on %s (%d)", dataAccountId, date, dateAsLong));
+			LOG.log(GaeLevel.DEBUG, String.format("Enqueuing data account gather for account id %s on %s (%s)", dataAccountId, date, dateAsLongString));
 
 			try {
 				queue.add(options);
