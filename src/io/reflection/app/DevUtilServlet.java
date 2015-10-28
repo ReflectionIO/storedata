@@ -246,11 +246,9 @@ public class DevUtilServlet extends HttpServlet {
 		String msg = String.format("Gathing for %d accounts. Conditions: missing: %b, empty: %b, error: %b, ingest: %b, reingest: %b", dataAccountIds.size(), gatherMissing, gatherEmpty, gatherError,
 				ingest, reingest);
 		LOG.log(GaeLevel.DEBUG, msg);
-		webResponse.append(msg);
+		webResponse.append(msg).append("\n\n");
 
 		for (Date date : datesToProcess) {
-			msg = String.format("Processing %s", date);
-
 			for (Long dataAccountId : dataAccountIds) {
 				webResponse.append(gatherForAccountOnDateWithConditions(dataAccountId, date, gatherMissing, gatherEmpty, gatherError, ingest, reingest)).append('\n');
 			}
@@ -280,7 +278,7 @@ public class DevUtilServlet extends HttpServlet {
 					LOG.log(GaeLevel.DEBUG, appendAndReturn(String.format("Fetch for %d on %s missing. Enqueuing for gather", dataAccountId, date), builder));
 					DataAccountServiceProvider.provide().triggerSingleDateDataAccountFetch(dataAccountId, date);
 				} else {
-					LOG.log(GaeLevel.DEBUG, appendAndReturn(String.format("Fetch status for %d on %s is missing but condition for missing not set. Skipping", dataAccountId, date), builder));
+					LOG.log(GaeLevel.DEBUG, String.format("Fetch status for %d on %s is missing but condition for missing not set. Skipping", dataAccountId, date), builder);
 				}
 
 				return builder.toString();
@@ -293,7 +291,7 @@ public class DevUtilServlet extends HttpServlet {
 					LOG.log(GaeLevel.DEBUG, appendAndReturn(String.format("The fetch was previously marked as empty. Enqueuing for gather"), builder));
 					DataAccountServiceProvider.provide().triggerSingleDateDataAccountFetch(dataAccountId, date);
 				} else {
-					LOG.log(GaeLevel.DEBUG, appendAndReturn(String.format("Fetch status for %d on %s is empty but condition for empty not set. Skipping", dataAccountId, date), builder));
+					LOG.log(GaeLevel.DEBUG, String.format("Fetch status for %d on %s is empty but condition for empty not set. Skipping", dataAccountId, date), builder);
 				}
 
 				return builder.toString();
@@ -306,7 +304,7 @@ public class DevUtilServlet extends HttpServlet {
 					DataAccountServiceProvider.provide().triggerSingleDateDataAccountFetch(dataAccountId, date);
 
 				} else {
-					LOG.log(GaeLevel.DEBUG, appendAndReturn(String.format("Fetch status for %d on %s is error but condition for error not set. Skipping", dataAccountId, date), builder));
+					LOG.log(GaeLevel.DEBUG, String.format("Fetch status for %d on %s is error but condition for error not set. Skipping", dataAccountId, date), builder);
 				}
 				return builder.toString();
 			}
@@ -321,7 +319,7 @@ public class DevUtilServlet extends HttpServlet {
 					DataAccountFetchServiceProvider.provide().triggerDataAccountFetchIngest(dataAccountFetch);
 
 				} else {
-					LOG.log(GaeLevel.DEBUG, appendAndReturn(String.format("Fetch status for %d on %s is ingested but condition for reingest not set. Skipping", dataAccountId, date), builder));
+					LOG.log(GaeLevel.DEBUG, String.format("Fetch status for %d on %s is ingested but condition for reingest not set. Skipping", dataAccountId, date), builder);
 					return builder.toString();
 				}
 			}
@@ -329,11 +327,11 @@ public class DevUtilServlet extends HttpServlet {
 			// GATHERED BUT NOT PREVIOUSLY INGESTED (OR SET TO GATHERED IN THE PREVIOUS BLOCK)
 			if (dataAccountFetch.status == DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered) {
 				if ((ingest || reingest)) {
-					LOG.log(GaeLevel.DEBUG, appendAndReturn(String.format("The fetch marked as gathered. Enqueuing for ingest"), builder));
+					LOG.log(GaeLevel.DEBUG, appendAndReturn(String.format("Fetch status for %d on %s is gathered. Enqueuing for ingest", dataAccountId, date), builder));
 					DataAccountFetchServiceProvider.provide().triggerDataAccountFetchIngest(dataAccountFetch);
 
 				} else {
-					LOG.log(GaeLevel.DEBUG, appendAndReturn(String.format("Fetch status for %d on %s is error but condition for error not set. Skipping", dataAccountId, date), builder));
+					LOG.log(GaeLevel.DEBUG, String.format("Fetch status for %d on %s is error but condition for error not set. Skipping", dataAccountId, date), builder);
 				}
 				return builder.toString();
 			}
