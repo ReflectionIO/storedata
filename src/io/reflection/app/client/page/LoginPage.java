@@ -13,6 +13,7 @@ import io.reflection.app.api.core.shared.call.event.ForgotPasswordEventHandler;
 import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.controller.SessionController;
+import io.reflection.app.client.mixpanel.MixpanelHelper;
 import io.reflection.app.client.part.login.ForgotPasswordForm;
 import io.reflection.app.client.part.login.LoginForm;
 import io.reflection.app.client.res.Styles;
@@ -30,6 +31,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
 
@@ -43,6 +45,7 @@ public class LoginPage extends Page implements ForgotPasswordEventHandler {
 
 	interface LoginPageUiBinder extends UiBinder<Widget, LoginPage> {}
 
+	@UiField InlineHyperlink signUpLink;
 	@UiField LoginForm loginForm;
 	@UiField ForgotPasswordForm forgotPasswordForm;
 	@UiField DivElement formSubmittedSuccessPanel;
@@ -96,6 +99,11 @@ public class LoginPage extends Page implements ForgotPasswordEventHandler {
 				Document.get().getBody().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().loginFormIsShowing());
 			}
 		});
+	}
+
+	@UiHandler("signUpLink")
+	void onSignUpClicked(ClickEvent event) {
+		MixpanelHelper.trackClicked(MixpanelHelper.Event.GO_TO_SIGNUP_PAGE, "loginPage_tabLoginForm_signup");
 	}
 
 	@UiHandler("backToLogin")

@@ -175,7 +175,6 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 		if (loggedInUser != user) {
 			loggedInUser = user; // used if changed person
 
-
 			if (loggedInUser == null) { // used if previous logged out
 				DefaultEventBus.get().fireEventFromSource(new UserLoggedOut(), SessionController.this);
 			} else {
@@ -211,8 +210,9 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 								&& userSession.token.equals(input.session.token)) {
 
 							setUserRole(output.roles.get(0));
-
 							setUserPermissions(output.permissions);
+
+							MixpanelHelper.registerRoleAndPermissions(output.roles.get(0), output.permissions);
 
 							NavigationController.get().resetSemiPublicPages();
 
@@ -237,7 +237,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 		return attemptPrefetch;
 	}
 
-	public void fetchRolesAndPermissions() {
+	public void fetchRoleAndPermissions() {
 
 		CoreService service = ServiceCreator.createCoreService();
 
@@ -257,6 +257,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 						setUserRole(output.roles.get(0));
 						setUserPermissions(output.permissions);
 
+						MixpanelHelper.registerRoleAndPermissions(output.roles.get(0), output.permissions);
 						DefaultEventBus.get().fireEventFromSource(
 								new GotUserPowers(loggedInUser, loggedInUser.roles, loggedInUser.permissions, output.daysSinceRoleAssigned),
 								SessionController.this);
