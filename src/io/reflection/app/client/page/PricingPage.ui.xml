@@ -29,13 +29,14 @@
 						<ul class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetails}">
 							<li>
 								<span>Daily Top 200 App Revenue, Download and Rank Data</span>
-								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="View the latest revenue and download data for all available stores, countries and categories. More countries and categories will be available as the beta progresses.">
+								<a href="#" class="{STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIcon} js-whats-this-tooltip"
+									data-whatsthis="View the latest revenue and download data for all available stores, countries and categories. More countries and categories will be available as the beta progresses.">
 									<span>What's this?</span>
 								</a>
 							</li>
 							<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
 								<span>More to come..</span>
-								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="We build features with feedback from our developer community. What features would you like to see?">
+								<a href="#" class="{STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIcon} js-whats-this-tooltip" data-whatsthis="We build features with feedback from our developer community. What features would you like to see?">
 									<span>What's this?</span>
 								</a>
 							</li>
@@ -70,7 +71,7 @@
 							</li>
 							<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
 								<span>More to come..</span>
-								<a href="#" ui:field="comingSoon" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="We build features with feedback from our developer community. What features would you like to see?">
+								<a href="#" ui:field="comingSoon" class="{STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIcon} js-whats-this-tooltip" data-whatsthis="We build features with feedback from our developer community. What features would you like to see?">
 									<span>What's this?</span>
 								</a>
 							</li>
@@ -108,7 +109,7 @@
 							</li>
 							<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
 								<span>More to come..</span>
-								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="We build features with feedback from our developer community. What features would you like to see?">
+								<a href="#" class="{STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIcon} js-whats-this-tooltip {STYLES_INSTANCE.reflectionMainStyle.positionTooltipLeft}" data-whatsthis="We build features with feedback from our developer community. What features would you like to see?">
 									<span>What's this?</span>
 								</a>
 							</li>
@@ -126,16 +127,16 @@
 				<section
 					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth} {STYLES_INSTANCE.reflectionMainStyle.twoColumns}">
 					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">How do you use my app store data?</h2>
-					<p>We only use your store data for our statistical forecasting that estimates the market. 
+					<p>We only use your store data for our statistical forecasting that estimates the market.
 					It will never be shared with anyone. Reflection's growing network of developers helps us 
-					expand our country and platform intelligence while maintaining market-leading revenue and download accuracy.</p>
+						expand our country and platform intelligence while maintaining market-leading revenue and download accuracy.</p>
 					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Which app stores do you support?</h2>
 					<p>We currently support iPhone and iPad. We are planning to add Google Play and other major platforms starting early 2016.</p>
 					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Which Countries do you support?</h2>
 					<p>Reflection currently offers market data for 4 countries. We will offer intelligence for more countries as we progress during our beta.</p>
 					<p>Countries supported: United Kingdom, Germany, France and Italy</p>
 					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">What Categories do you support?</h2>
-					<p>We only support the Games category as of today. We will add more categories when we are satisfied with the reliability of our accuracy. 
+					<p>We only support the Games category as of today. We will add more categories when we are satisfied with the reliability of our accuracy.
 					We will offer intelligence for every category including subcategories as we progress during the beta.</p>
 					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">How far back does your data go?</h2>
 					<p>We provide rank, revenue and download data for iPhone and iPad from September 2015. Our data will go back to 2014 when the beta ends.</p>
