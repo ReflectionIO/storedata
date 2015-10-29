@@ -970,6 +970,13 @@ public final class Core extends ActionHandler {
 					}
 				}
 			}
+			boolean isAdmin = UserServiceProvider.provide().hasRole(input.session.user, DataTypeHelper.adminRole());
+			String vendorId = ITunesConnectDownloadHelper.getVendorId(input.linkedAccount.properties);
+			if (!isAdmin) { // check if duplicate vendor Id exists and throw exception
+				if (!DataAccountServiceProvider.provide().getVendorDataAccounts(vendorId).isEmpty())
+					throw new InputValidationException(ApiError.DuplicateVendorId.getCode(),
+							ApiError.DuplicateVendorId.getMessage(input.linkedAccount.username));
+			}
 
 			DataAccount linkedAccount = DataAccountServiceProvider.provide().updateDataAccount(input.linkedAccount);
 
@@ -1291,11 +1298,14 @@ public final class Core extends ActionHandler {
 
 			DataAccountCollectorFactory.getCollectorForSource(input.source.a3Code).validateProperties(input.properties);
 
-			// If not a test linked account, check if is a valid Apple linked account
-			if (!"THETESTACCOUNT".equals(input.username) || !"thegrange".equals(input.password)
-					|| !"81234567".equals(ITunesConnectDownloadHelper.getVendorId(input.properties))) {
-				DataAccount dataAccountToTest = new DataAccount();
+			boolean isAdmin = UserServiceProvider.provide().hasRole(input.session.user, DataTypeHelper.adminRole());
+			Permission hlaPermission = PermissionServiceProvider.provide().getCodePermission(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE);
+			boolean hasHlaPermission = UserServiceProvider.provide().hasPermission(input.session.user, hlaPermission);
 
+			String vendorId = ITunesConnectDownloadHelper.getVendorId(input.properties);
+			// If not a test linked account, check if is a valid Apple linked account
+			if (!"THETESTACCOUNT".equals(input.username) || !"thegrange".equals(input.password) || !"81234567".equals(vendorId)) {
+				DataAccount dataAccountToTest = new DataAccount();
 				dataAccountToTest.username = input.username;
 				dataAccountToTest.password = input.password;
 				dataAccountToTest.properties = input.properties;
@@ -1321,6 +1331,12 @@ public final class Core extends ActionHandler {
 						}
 					}
 				}
+				// Only Admin for now can add linked account with duplicate vendor id
+				if (!isAdmin) { // check if duplicate vendor Id exists and throw exception
+					if (!DataAccountServiceProvider.provide().getVendorDataAccounts(vendorId).isEmpty())
+						throw new InputValidationException(ApiError.DuplicateVendorId.getCode(),
+								ApiError.DuplicateVendorId.getMessage(dataAccountToTest.username));
+				}
 				output.account = UserServiceProvider.provide().addDataAccount(input.session.user, input.source, input.username, input.password,
 						input.properties);
 			} else {
@@ -1330,18 +1346,13 @@ public final class Core extends ActionHandler {
 
 			output.account.source = input.source;
 
-			boolean isAdmin = UserServiceProvider.provide().hasRole(input.session.user, DataTypeHelper.adminRole());
-
-			Permission hlaPermission = PermissionServiceProvider.provide().getCodePermission(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE);
-			boolean hasHlaPermission = UserServiceProvider.provide().hasPermission(input.session.user, hlaPermission);
-
-			if (!hasHlaPermission && !isAdmin) {
-				UserServiceProvider.provide().assignPermission(input.session.user, hlaPermission);
-			}
-
 			if (output.account != null) {
 				if (input.session.user == null || input.session.user.forename == null) {
 					input.session.user = UserServiceProvider.provide().getUser(input.session.user.id);
+				}
+
+				if (!hasHlaPermission && !isAdmin) {
+					UserServiceProvider.provide().assignPermission(input.session.user, hlaPermission);
 				}
 
 				// If the first linked account, send an email to the user
@@ -1385,6 +1396,8 @@ public final class Core extends ActionHandler {
 					notification.type = NotificationTypeType.NotificationTypeTypeInternal;
 					NotificationServiceProvider.provide().addNotification(notification);
 				}
+			} else {
+				throw new Exception();
 			}
 
 			output.status = StatusType.StatusTypeSuccess;

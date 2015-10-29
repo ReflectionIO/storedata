@@ -512,6 +512,42 @@ final class DataAccountService implements IDataAccountService {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getVendorDataAccounts(java.lang.String)
+	 */
+	@Override
+	public List<DataAccount> getVendorDataAccounts(String vendorId) throws DataAccessException {
+		final List<DataAccount> dataAccounts = new ArrayList<DataAccount>();
+
+		final String getVendorDataAccountsQuery = String
+				.format("SELECT *, convert(aes_decrypt(`password`,UNHEX('%s')), CHAR(1000)) AS `clearpassword` FROM `dataaccount` WHERE `properties` LIKE '%%%s%%' AND `deleted`='n' ORDER BY `id`",
+						key(), vendorId);
+
+		final Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
+
+		try {
+			dataAccountConnection.connect();
+			dataAccountConnection.executeQuery(getVendorDataAccountsQuery);
+
+			while (dataAccountConnection.fetchNextRow()) {
+				final DataAccount dataAccount = toDataAccount(dataAccountConnection);
+
+				if (dataAccount != null) {
+					dataAccounts.add(dataAccount);
+				}
+			}
+
+		} finally {
+			if (dataAccountConnection != null) {
+				dataAccountConnection.disconnect();
+			}
+		}
+
+		return dataAccounts;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#triggerDataAccountFetch(io.reflection.app.datatypes.shared.DataAccount)
 	 */
 	@Override
@@ -638,4 +674,5 @@ final class DataAccountService implements IDataAccountService {
 
 		return dataAccounts;
 	}
+
 }

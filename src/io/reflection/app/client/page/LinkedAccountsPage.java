@@ -453,10 +453,15 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 					updatingLinkedAccountForm.setVendorError("iTunes Connect vendor number entered incorrectly");
 					updatingLinkedAccountForm.setFormErrors();
 					updatingLinkedAccountForm.clearPassword();
-				} else { // TODO NULL POINTER EXCEPTION DUE TO DUPLICATE LINKED ACCOUNT
+				} else if (output.error.code == ApiError.DuplicateVendorId.getCode()) {
+					updatingLinkedAccountForm.setStatusError("Account already linked!");
+					updatingLinkedAccountForm.setVendorError("The vendor ID you entered is already in use");
+					updatingLinkedAccountForm.setFormErrors();
+				} else {
 					updatingLinkedAccountForm.setStatusError();
 					updatingLinkedAccountForm.clearPassword();
 				}
+
 			}
 			updatingLinkedAccountForm.setEnabled(true);
 			updatingLinkedAccountForm = null;

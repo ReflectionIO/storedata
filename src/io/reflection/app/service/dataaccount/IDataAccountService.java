@@ -120,6 +120,14 @@ public interface IDataAccountService extends IService {
 	public List<DataAccount> getIdsDataAccounts(Collection<Long> ids, Pager pager) throws DataAccessException;
 
 	/**
+	 * 
+	 * @param vendorId
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<DataAccount> getVendorDataAccounts(String vendorId) throws DataAccessException;
+
+	/**
 	 *
 	 * @param dataAccount
 	 * @throws DataAccessException
