@@ -166,6 +166,8 @@ public class HomePage extends Page {
 					leaderboardHomeTable.addColumn(grossingColumn, "Grossing");
 					ResponsiveDesignHelper.makeTabsResponsive();
 					leaderboardHomeTable.setLoadingIndicator(loadingIndicatorAll);
+					leaderboardHomeTable.getElement().removeClassName(style.tableAppGroup());
+					leaderboardHomeTable.getElement().addClassName(style.tableOverall());
 					TooltipHelper.updateHelperTooltip();
 					selectedTab = OVERALL_LIST_TYPE;
 				}
@@ -196,6 +198,8 @@ public class HomePage extends Page {
 					iapColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
 					ResponsiveDesignHelper.makeTabsResponsive();
 					leaderboardHomeTable.setLoadingIndicator(loadingIndicatorPaidGrossingList);
+					leaderboardHomeTable.getElement().removeClassName(style.tableOverall());
+					leaderboardHomeTable.getElement().addClassName(style.tableAppGroup());
 					TooltipHelper.updateHelperTooltip();
 					selectedTab = PAID_LIST_TYPE;
 				}
@@ -225,6 +229,8 @@ public class HomePage extends Page {
 					priceColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
 					leaderboardHomeTable.addColumnStyleName(2, style.columnHiddenMobile());
 					leaderboardHomeTable.setLoadingIndicator(loadingIndicatorFreeList);
+					leaderboardHomeTable.getElement().removeClassName(style.tableOverall());
+					leaderboardHomeTable.getElement().addClassName(style.tableAppGroup());
 					ResponsiveDesignHelper.makeTabsResponsive();
 					TooltipHelper.updateHelperTooltip();
 					selectedTab = FREE_LIST_TYPE;
@@ -255,6 +261,8 @@ public class HomePage extends Page {
 					iapColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
 					leaderboardHomeTable.addColumnStyleName(4, style.columnHiddenMobile());
 					leaderboardHomeTable.setLoadingIndicator(loadingIndicatorPaidGrossingList);
+					leaderboardHomeTable.getElement().removeClassName(style.tableOverall());
+					leaderboardHomeTable.getElement().addClassName(style.tableAppGroup());
 					ResponsiveDesignHelper.makeTabsResponsive();
 					TooltipHelper.updateHelperTooltip();
 					selectedTab = GROSSING_LIST_TYPE;

@@ -1,5 +1,5 @@
 //
-//  MiniAppCell.java
+//  AppDetailsAndPredictionCell.java
 //  storedata
 //
 //  Created by William Shakour (billy1380) on 2 Oct 2013.
