@@ -41,6 +41,7 @@ import io.reflection.app.helpers.QueueHelper;
 import io.reflection.app.helpers.SqlQueryHelper;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
+import io.reflection.app.service.sale.ISaleService;
 import io.reflection.app.service.sale.SaleServiceProvider;
 
 /**
@@ -87,8 +88,12 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 			try {
 				List<Sale> sales = convertFetchToSales(fetch);
 
+				LOG.log(GaeLevel.DEBUG, String.format("Deleted any previous sales for accountid %d on %s to make sure we are not persisting duplicates.", fetch.linkedAccount.id, fetch.date));
+				ISaleService saleService = SaleServiceProvider.provide();
+				saleService.deleteSales(fetch.linkedAccount.id, fetch.date);
+
 				LOG.log(GaeLevel.DEBUG, String.format("Saving %d sales", sales.size()));
-				Long count = SaleServiceProvider.provide().addSalesBatch(sales);
+				Long count = saleService.addSalesBatch(sales);
 
 				if (count != null && count.longValue() > 0) {
 					fetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeIngested;

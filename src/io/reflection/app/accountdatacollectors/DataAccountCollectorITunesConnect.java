@@ -96,16 +96,6 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 					: dataAccount.id.toString(), dateParameter));
 		}
 
-		boolean success = false;
-		String cloudFileName = null, error = null;
-		try {
-			cloudFileName = ITunesConnectDownloadHelper.getITunesSalesFile(dataAccount.username, dataAccount.password,
-					ITunesConnectDownloadHelper.getVendorId(dataAccount.properties), dateParameter, System.getProperty(ACCOUNT_DATA_BUCKET_KEY),
-					dataAccount.id.toString());
-		} catch (final Exception ex) {
-			error = ex.getMessage();
-		}
-
 		DataAccountFetch dataAccountFetch = DataAccountFetchServiceProvider.provide().getDateDataAccountFetch(dataAccount, date);
 
 		if (dataAccountFetch == null) {
@@ -115,7 +105,18 @@ public class DataAccountCollectorITunesConnect implements DataAccountCollector {
 			dataAccountFetch.linkedAccount = dataAccount;
 		}
 
+		boolean success = false;
+
 		if (dataAccountFetch.status != DataAccountFetchStatusType.DataAccountFetchStatusTypeIngested) {
+			String cloudFileName = null, error = null;
+			try {
+				cloudFileName = ITunesConnectDownloadHelper.getITunesSalesFile(dataAccount.username, dataAccount.password,
+						ITunesConnectDownloadHelper.getVendorId(dataAccount.properties), dateParameter, System.getProperty(ACCOUNT_DATA_BUCKET_KEY),
+						dataAccount.id.toString());
+			} catch (final Exception ex) {
+				error = ex.getMessage();
+			}
+
 			if (error != null) {
 				if (error.startsWith("There are no reports") || error.startsWith("There is no report")) {
 					dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeEmpty;
