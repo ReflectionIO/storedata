@@ -15,7 +15,7 @@
 		<section class="{STYLES_INSTANCE.reflectionMainStyle.productSection}">
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.productSectionContent} {STYLES_INSTANCE.reflectionMainStyle.verticalCentreContent}">
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.productImageContainerRight}">
-					<div class="{STYLES_INSTANCE.reflectionMainStyle.productAnimationContainerLeaderboard}">
+					<div ui:field="productAnimationContainerLeaderboard" class="{STYLES_INSTANCE.reflectionMainStyle.productAnimationContainerLeaderboard}">
 						<div class="{STYLES_INSTANCE.reflectionMainStyle.productAnimation__filters}"><img src="images/product-animation-filters.jpg" width="906" height="115" alt=""/></div> 
 					  	<div class="{STYLES_INSTANCE.reflectionMainStyle.productAnimation__tabs}"><img src="images/product-animation-tabs.gif" width="454" height="56" alt=""/></div>
 					  	<div class="{STYLES_INSTANCE.reflectionMainStyle.productAnimation__headingsOne}"><img src="images/product-animation-headings-one.jpg" width="906" height="42" alt=""/></div>
@@ -23,7 +23,7 @@
 					  	<div class="{STYLES_INSTANCE.reflectionMainStyle.productAnimation__screenshotOne}"><img src="images/product-animation-screenshot-one.jpg" width="906" height="914" alt=""/></div>
 					  	<div class="{STYLES_INSTANCE.reflectionMainStyle.productAnimation__screenshotTwo}"><img src="images/product-animation-screenshot-two.jpg" width="906" height="914" alt=""/></div>
 					</div>
-					<img src="images/product-image-static-leaderboard.jpg" alt="Reflection leaderboard screenshot" class="{STYLES_INSTANCE.reflectionMainStyle.productLeaderboardStatic}" />
+					<img ui:field="leaderboardAnimationContainer" src="images/product-image-static-leaderboard.jpg" alt="Reflection leaderboard screenshot" class="{STYLES_INSTANCE.reflectionMainStyle.productLeaderboardStatic}" />
 				</div>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.productTextContentLeft}">
 					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Track the Performance of Other Apps &amp; Developers</h2>
