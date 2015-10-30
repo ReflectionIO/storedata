@@ -98,16 +98,16 @@ public class SplitDataHelper {
 			List<SimpleEntry<String, String>> mainItemIdsAndCountries = saleService.getSoldItemIdsForAccountInDateRange(dataAccountId, gatherFrom, gatherTo);
 			LOG.log(GaeLevel.DEBUG, String.format("Got %d combinations of main item id and country", mainItemIdsAndCountries.size()));
 
-			String countriesToIngest = System.getProperty("ingest.ios.countries");
-			countriesToIngest = countriesToIngest == null ? null : countriesToIngest.toLowerCase();
+			String countriesToSplit = System.getProperty("splitdata.countries");
+			countriesToSplit = countriesToSplit == null ? null : countriesToSplit.toLowerCase();
 
-			LOG.log(GaeLevel.DEBUG, String.format("Countries to ingest are %s. Processing %d main item id / country combinations", countriesToIngest, mainItemIdsAndCountries.size()));
+			LOG.log(GaeLevel.DEBUG, String.format("Countries to ingest are %s. Processing %d main item id / country combinations", countriesToSplit, mainItemIdsAndCountries.size()));
 
 			for (SimpleEntry<String, String> entry : mainItemIdsAndCountries) {
 				try {
 					String country = entry.getValue();
 
-					if (countriesToIngest != null && !countriesToIngest.contains(country.toLowerCase())) {
+					if (countriesToSplit != null && !countriesToSplit.contains(country.toLowerCase())) {
 						continue;
 					}
 
