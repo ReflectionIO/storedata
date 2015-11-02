@@ -1304,18 +1304,20 @@
 				});
 			} else if($('html.touch').length) {
 				$this.on("click", function(e){
-					if($this.attr("href") != undefined) {
-						e.preventDefault();
+					if(!$this.hasClass("form-field--select")) {
+						if($this.attr("href") != undefined) {
+							e.preventDefault();
+						}
+						if($this.hasClass("js-tooltip-generated")) {
+							tooltip.remove();
+							$this.removeClass("js-tooltip-generated");
+						} else {						
+							$this.addClass("js-tooltip-generated");
+							setTimeout(function() { 
+								tooltip = instance.generateTooltip($this, true);
+							}, 50); // delay to avoid all tooltip removal on body touch
+						}	
 					}
-					if($this.hasClass("js-tooltip-generated")) {
-						tooltip.remove();
-						$this.removeClass("js-tooltip-generated");
-					} else {						
-						$this.addClass("js-tooltip-generated");
-						setTimeout(function() { 
-							tooltip = instance.generateTooltip($this, true);
-						}, 50); // delay to avoid all tooltip removal on body touch
-					}					
 				});
 			}
 		});
@@ -1678,6 +1680,7 @@
 		new TabsToMobileDropDown();
 		new FormFieldSelect();
 		new RevealContent();
+		new ToolTip();
 	}
 
 	var AccountSettingsPage = function() {

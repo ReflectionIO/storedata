@@ -344,7 +344,7 @@ public class FilterHelper {
 
 				@Override
 				public DateRange getDateRange() {
-					return FilterHelper.createRange(FilterHelper.getDaysAgo(8), FilterHelper.getDaysAgo(2));
+					return FilterHelper.createRange(FilterHelper.getDaysAgo(9), FilterHelper.getDaysAgo(3));
 				}
 			});
 
@@ -357,7 +357,7 @@ public class FilterHelper {
 
 				@Override
 				public DateRange getDateRange() {
-					return FilterHelper.createRange(FilterHelper.getDaysAgo(15), FilterHelper.getDaysAgo(2));
+					return FilterHelper.createRange(FilterHelper.getDaysAgo(16), FilterHelper.getDaysAgo(3));
 				}
 			});
 
@@ -370,7 +370,7 @@ public class FilterHelper {
 
 				@Override
 				public DateRange getDateRange() {
-					return FilterHelper.createRange(FilterHelper.getDaysAgo(31), FilterHelper.getDaysAgo(2));
+					return FilterHelper.createRange(FilterHelper.getDaysAgo(32), FilterHelper.getDaysAgo(3));
 				}
 			});
 
@@ -383,7 +383,7 @@ public class FilterHelper {
 
 				@Override
 				public DateRange getDateRange() {
-					return FilterHelper.createRange(FilterHelper.getDaysAgo(61), FilterHelper.getDaysAgo(2));
+					return FilterHelper.createRange(FilterHelper.getDaysAgo(62), FilterHelper.getDaysAgo(3));
 				}
 			});
 
@@ -397,8 +397,8 @@ public class FilterHelper {
 				@Override
 				public DateRange getDateRange() {
 					Date d = FilterHelper.getMonthsAgo(3);
-					CalendarUtil.addDaysToDate(d, 1);
-					return FilterHelper.createRange(d, FilterHelper.getDaysAgo(2));
+					// CalendarUtil.addDaysToDate(d, 1);
+					return FilterHelper.createRange(d, FilterHelper.getDaysAgo(3));
 				}
 			});
 		}

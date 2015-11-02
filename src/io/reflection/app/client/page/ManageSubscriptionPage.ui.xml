@@ -75,13 +75,14 @@
 					<ul class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetails}">
 						<li>
 							<span>Daily Top 200 App Revenue, Download and Rank Data</span>
-							<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="View the latest revenue and download data for all available stores, countries and categories. More countries and categories will be available as the beta progresses.">
+							<a href="#" class="{STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIcon} js-whats-this-tooltip"
+								data-whatsthis="View the latest revenue and download data for all available stores, countries and categories. More countries and categories will be available as the beta progresses.">
 								<span>What's this?</span>
 							</a>
 						</li>
 						<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
 							<span>More to come..</span>
-							<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="We build features with feedback from our developer community. What features would you like to see?">
+							<a href="#" class="{STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIcon} js-whats-this-tooltip" data-whatsthis="We build features with feedback from our developer community. What features would you like to see?">
 								<span>What's this?</span>
 							</a>
 						</li>
@@ -122,7 +123,7 @@
 						</li>
 						<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
 							<span>More to come..</span>
-							<a href="#" ui:field="comingSoon" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="We build features with feedback from our developer community. What features would you like to see?">
+							<a href="#" ui:field="comingSoon" class="{STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIcon} js-whats-this-tooltip" data-whatsthis="We build features with feedback from our developer community. What features would you like to see?">
 								<span>What's this?</span>
 							</a>
 						</li>
@@ -169,7 +170,7 @@
 						</li>
 						<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
 							<span>More to come..</span>
-							<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding {STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIconStatic}" data-tooltip="We build features with feedback from our developer community. What features would you like to see?">
+							<a href="#" class="{STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIcon} js-whats-this-tooltip {STYLES_INSTANCE.reflectionMainStyle.positionTooltipLeft}" data-whatsthis="We build features with feedback from our developer community. What features would you like to see?">
 								<span>What's this?</span>
 							</a>
 						</li>

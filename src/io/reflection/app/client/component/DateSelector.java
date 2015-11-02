@@ -64,7 +64,7 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 	public DateSelector() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		setDateRange(FilterHelper.getDaysAgo(31), FilterHelper.getDaysAgo(2));
+		setDateRange(FilterHelper.getDaysAgo(32), FilterHelper.getDaysAgo(3));
 
 		// Disable out of range dates
 		dateBoxFrom.getDatePicker().addShowRangeHandler(new ShowRangeHandler<Date>() {
@@ -77,7 +77,7 @@ public class DateSelector extends Composite implements HasValue<DateRange> {
 			@Override
 			public void onShowRange(ShowRangeEvent<Date> event) {
 				FilterHelper.disableOutOfRangeDates(dateBoxTo.getDatePicker(), dateBoxFrom.getValue(),
-						(SessionController.get().isAdmin() ? FilterHelper.getToday() : FilterHelper.getDaysAgo(2)));
+						(SessionController.get().isAdmin() ? FilterHelper.getToday() : FilterHelper.getDaysAgo(3)));
 			}
 		});
 	}

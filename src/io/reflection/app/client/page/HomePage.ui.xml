@@ -134,7 +134,7 @@
 									<div class="{STYLES_INSTANCE.reflectionMainStyle.scrollable}">
 
 										<cv:CellTable ui:field="leaderboardHomeTable"
-											styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}  {STYLES_INSTANCE.reflectionMainStyle.responsive} {STYLES_INSTANCE.reflectionMainStyle.tableAppGroup}" />
+											styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}  {STYLES_INSTANCE.reflectionMainStyle.responsive} {STYLES_INSTANCE.reflectionMainStyle.tableOverall}" />
 
 									</div>
 								</div>
@@ -179,9 +179,9 @@
 			<div
 				class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnTwoThirds} {STYLES_INSTANCE.reflectionMainStyle.grid__columnPushTwo}">
 				<h2>Join Our Beta Today</h2>
-				<p>Reflection is currently in beta and offers free and accurate app market intelligence 
-				to anyone making apps. We aim to build premium features and tools that help developers 
-				understand the app market better, saving them time, effort and resources.</p>
+				<p>Reflection is currently in beta and offers free and accurate app market intelligence
+					to anyone making apps. We aim to build premium features and tools that help developers
+					understand the app market better, saving them time, effort and resources.</p>
 			</div>
 		</section>
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__row} {STYLES_INSTANCE.reflectionMainStyle.whyReflectionGraphic}">
@@ -302,7 +302,7 @@
 		 M157.3,90.6l-30.6,7.7V13.5l30.6,10.1V90.6z M46.4,52.4H7.5v24h38.9V52.4z M13.2,75.4H8.5v-5.5l4.7-3.9V75.4z M18.6,75.4h-4.9v-9.5
 		l4.9,2.7V75.4z M24,75.4h-4.9v-6.7l4.9-5.2V75.4z M29.4,75.4h-4.9V62.9l0.3-0.3l4.6,3.6V75.4z M34.8,75.4h-4.9v-9.2l4.9-1.8V75.4z
 		 M40.2,75.4h-4.9V64.3l0,0l4.9-5.3V75.4z M45.4,75.4h-4.7V58.6l4.7,2.3V75.4z M45.4,59.8l-5-2.5l-5.6,6.1l-5,1.8l-5-3.9L24,62h0v0
-		l-5.3,5.6l-5.4-3l-4.9,4V53.4h36.9V59.8z"/></svg>
+		l-5.3,5.6l-5.4-3l-4.9,4V53.4h36.9V59.8z" /></svg>
 				</div>
 				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Help Us Help You</h2>
 				<p>We build features &amp; tools with feedback from our developer community. These easy-to-use tools will help you better understand the app market.</p>
@@ -356,7 +356,7 @@
 	l1.3,0.8L58.9,18.4z"></path></svg>
 				</div>
 				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Easy to Use</h2>
-				<p>We aim to make complex data accessible and easy to understand. 
+				<p>We aim to make complex data accessible and easy to understand.
 					Our goal is to create the best user experience in the market.</p>
 			</div>
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__row} {STYLES_INSTANCE.reflectionMainStyle.whyReflectionButtonContainer}">

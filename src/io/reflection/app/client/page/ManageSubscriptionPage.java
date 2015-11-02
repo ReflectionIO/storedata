@@ -161,7 +161,7 @@ public class ManageSubscriptionPage extends Page implements NavigationEventHandl
 				event.preventDefault();
 			}
 		});
-		TooltipHelper.updateHelperTooltip();
+		TooltipHelper.updateWhatsThisTooltip();
 	}
 
 	private boolean isValidStack(Stack current) {

@@ -48,7 +48,7 @@ public class PricingPage extends Page {
 				event.preventDefault();
 			}
 		});
-		TooltipHelper.updateHelperTooltip();
+		TooltipHelper.updateWhatsThisTooltip();
 	}
 
 	@UiHandler("signUpBtn")

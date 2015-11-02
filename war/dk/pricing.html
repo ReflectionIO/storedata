@@ -240,12 +240,14 @@
 
 			$('.js-demo-popup--register').on("click", function(){				
 				popupRegister.fadeIn(200);
+				$('html').addClass("no-scroll");
 				setTimeout(function(){
 					$('.page-overlay--register .popup-content').addClass("is-showing");
 				}, 100);
 			});
 			$('.page-overlay--register .popup-close, .page-overlay--register .js-close').on("click", function(){
 				popupRegister.fadeOut(100);
+				$('html').removeClass("no-scroll");
 				$('.page-overlay--register .popup-content').removeClass("is-showing");
 			});
 
