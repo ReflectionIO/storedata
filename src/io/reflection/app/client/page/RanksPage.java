@@ -217,7 +217,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			public void onShowRange(ShowRangeEvent<Date> event) {
 				FilterHelper.disableOutOfRangeDates(dateBox.getDatePicker(),
 						(SessionController.get().isAdmin() ? null : ApiCallHelper.getUTCDate(2015, 8, 31)),
-						(SessionController.get().isAdmin() ? FilterHelper.getToday() : FilterHelper.getDaysAgo(2)));
+						(SessionController.get().isAdmin() ? FilterHelper.getToday() : FilterHelper.getDaysAgo(3)));
 			}
 		});
 
@@ -603,7 +603,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		countrySelector.setSelectedIndex(FormHelper.getItemIndex(countrySelector, "gb"));
 		appStoreSelector.setSelectedIndex(FormHelper.getItemIndex(appStoreSelector, "iph"));
 		categorySelector.setSelectedIndex(FormHelper.getItemIndex(categorySelector, "15"));
-		dateBox.setValue(FilterHelper.getDaysAgo(2));
+		dateBox.setValue(FilterHelper.getDaysAgo(3));
 		applyFilters.setEnabled(isStatusError || !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
 				|| !FilterController.get().getFilter().getStoreA3Code().equals(appStoreSelector.getSelectedValue())
 				|| !FilterController.get().getFilter().getCategoryId().toString().equals(categorySelector.getSelectedValue())
