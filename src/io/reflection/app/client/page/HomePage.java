@@ -131,7 +131,7 @@ public class HomePage extends Page {
 		if (!SessionController.get().isAdmin()) {
 			categorySelector.setTooltip("We're in beta. More categories and countries will be available soon.");
 		}
-		dateFixed.setInnerText(FormattingHelper.DATE_FORMATTER_DD_MMM_YYYY.format(FilterHelper.getDaysAgo(2)));
+		dateFixed.setInnerText(FormattingHelper.DATE_FORMATTER_DD_MMM_YYYY.format(FilterHelper.getDaysAgo(3)));
 		FilterHelper.addCountries(countrySelector, SessionController.get().isAdmin());
 		FilterHelper.addStores(appStoreSelector);
 		FilterHelper.addCategories(categorySelector, SessionController.get().isAdmin());
@@ -548,7 +548,7 @@ public class HomePage extends Page {
 
 			input.session = null; // public call
 
-			input.on = FilterHelper.getDaysAgo(2);
+			input.on = FilterHelper.getDaysAgo(3);
 			input.store = DataTypeHelper.createStore("ios");
 			input.country = DataTypeHelper.createCountry(selectedCountry);
 			input.listType = (selectedAppStore.equals(DataTypeHelper.STORE_IPHONE_A3_CODE) ? "topallapplications" : "topallipadapplications");

@@ -394,7 +394,7 @@ public final class Core extends ActionHandler {
 			boolean isAdmin = false;
 			boolean isPremium = false;
 			boolean isStandardDeveloper = false;
-			boolean canSeePredictions = (DateTimeComparator.getDateOnlyInstance().compare(input.on, new DateTime().minusDays(2)) == 0);
+			boolean canSeePredictions = (DateTimeComparator.getDateOnlyInstance().compare(input.on, new DateTime().minusDays(3)) == 0);
 			boolean isLoggedIn = false;
 
 			if (input.session != null) {
@@ -430,7 +430,7 @@ public final class Core extends ActionHandler {
 			}
 
 			// if (!isLoggedIn) { // Force date to 2 days ago if is public call
-			// input.on = new DateTime(DateTimeZone.UTC).minusDays(2).toDate();
+			// input.on = new DateTime(DateTimeZone.UTC).minusDays(3).toDate();
 			// }
 
 			if (!isAdmin) {
