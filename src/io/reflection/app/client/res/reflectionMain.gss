@@ -10202,14 +10202,20 @@ table.table-data.table-linked-accounts--disabled thead {
           transition: transform 0.2s 1.1s;
 }
 
-/* line 553, sass/templates/_pricing.scss */
+@media screen and (max-height: 700px) {
+  /* line 552, sass/templates/_pricing.scss */
+  .register-form-container {
+    margin-bottom: 2rem;
+  }
+}
+/* line 556, sass/templates/_pricing.scss */
 .register-form-container.is-showing {
   position: relative;
   opacity: 1;
   -webkit-transition: opacity 0.3s;
           transition: opacity 0.3s;
 }
-/* line 558, sass/templates/_pricing.scss */
+/* line 561, sass/templates/_pricing.scss */
 .register-is-second-step .register-form-container {
   position: absolute;
   top: 0;
@@ -10217,19 +10223,19 @@ table.table-data.table-linked-accounts--disabled thead {
   opacity: 0;
 }
 
-/* line 565, sass/templates/_pricing.scss */
+/* line 568, sass/templates/_pricing.scss */
 .current-subscription-text {
   padding-top: 2rem;
   font-weight: 700;
   color: #fcfdfd;
 }
 @media screen and (min-width: 960px) and (max-width: 1149px) {
-  /* line 570, sass/templates/_pricing.scss */
+  /* line 573, sass/templates/_pricing.scss */
   .panel-left-open .current-subscription-text {
     font-size: 1.4rem;
   }
 }
-/* line 574, sass/templates/_pricing.scss */
+/* line 577, sass/templates/_pricing.scss */
 .current-subscription-text:before {
   top: 6px;
   margin-right: 0.7rem;
