@@ -108,8 +108,6 @@ public class AddLinkedAccountPopup extends Composite implements LinkAccountEvent
 	public void setStatusError() {
 		iosMacAddForm.resetForm();
 		iosMacAddForm.setStatusError();
-		iosMacAddForm.setEnabled(true);
-		Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formSubmittedLoading());
 	}
 
 	public void setStatusErrorInvalidCredentials() {
@@ -117,16 +115,19 @@ public class AddLinkedAccountPopup extends Composite implements LinkAccountEvent
 		iosMacAddForm.setUsernameError("iTunes Connect username or password entered incorrectly");
 		iosMacAddForm.setPasswordError("iTunes Connect username or password entered incorrectly");
 		iosMacAddForm.setFormErrors();
-		iosMacAddForm.setEnabled(true);
-		Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formSubmittedLoading());
 	}
 
 	public void setStatusErrorInvalidVendor() {
 		iosMacAddForm.setStatusError("Invalid vendor ID!");
 		iosMacAddForm.setVendorError("iTunes Connect vendor number entered incorrectly");
 		iosMacAddForm.setFormErrors();
+	}
+
+	public void setStatusErrorDuplicateVendorId() {
+		iosMacAddForm.setStatusError("Account already linked!");
 		iosMacAddForm.setEnabled(true);
-		Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formSubmittedLoading());
+		iosMacAddForm.setVendorError("The vendor ID you entered is already in use");
+		iosMacAddForm.setFormErrors();
 	}
 
 	/*
@@ -144,9 +145,13 @@ public class AddLinkedAccountPopup extends Composite implements LinkAccountEvent
 				setStatusErrorInvalidCredentials();
 			} else if (output.error.code == ApiError.InvalidDataAccountVendor.getCode()) {
 				setStatusErrorInvalidVendor();
-			} else { // TODO NULL POINTER EXCEPTION DUE TO DUPLICATE LINKED ACCOUNT
+			} else if (output.error.code == ApiError.DuplicateVendorId.getCode()) {
+				setStatusErrorDuplicateVendorId();
+			} else {
 				setStatusError();
 			}
+			iosMacAddForm.setEnabled(true);
+			Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formSubmittedLoading());
 		}
 	}
 

@@ -8,18 +8,9 @@
 //
 package io.reflection.app.service.user;
 
-import static com.spacehopperstudios.utility.StringUtils.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import com.spacehopperstudios.utility.StringUtils;
-
+import static com.spacehopperstudios.utility.StringUtils.addslashes;
+import static com.spacehopperstudios.utility.StringUtils.sha1Hash;
+import static com.spacehopperstudios.utility.StringUtils.stripslashes;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
@@ -43,6 +34,16 @@ import io.reflection.app.service.event.EventServiceProvider;
 import io.reflection.app.service.notification.NotificationServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import com.spacehopperstudios.utility.StringUtils;
+
 final class UserService implements IUserService {
 
 	private static final String SALT = "salt.username.magic";
@@ -56,7 +57,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#getUser(java.lang.Long)
 	 */
 	@Override
@@ -86,7 +87,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#getRoleUserIds(io.reflection.app.datatypes.shared.Role)
 	 */
 	@Override
@@ -121,7 +122,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#addUser(io.reflection.app.shared.datatypes.User)
 	 */
 	@Override
@@ -138,7 +139,7 @@ final class UserService implements IUserService {
 					"INSERT INTO `user` (`forename`, `surname`, `username`, `password`, `avatar`, `company`) VALUES ('%s', '%s', '%s', '%s', %s, '%s')",
 					addslashes(user.forename), addslashes(user.surname), addslashes(user.username), sha1Hash(SALT + user.password), user.avatar == null ? "'"
 							+ addslashes(StringUtils.md5Hash(user.username.trim().toLowerCase())) + "'" : "'" + addslashes(user.avatar) + "'",
-							addslashes(user.company));
+					addslashes(user.company));
 		} else {
 			addUserQuery = String
 					.format("INSERT INTO `user` (`forename`, `surname`, `username`, `avatar`, `company`) VALUES ('%s', '%s', '%s', %s, '%s')",
@@ -170,7 +171,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#searchUsers(java.lang.String, io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
@@ -197,11 +198,11 @@ final class UserService implements IUserService {
 
 			if (pager.sortDirection != null) {
 				switch (pager.sortDirection) {
-					case SortDirectionTypeAscending:
-						sortDirectionQuery = "ASC";
-						break;
-					default:
-						break;
+				case SortDirectionTypeAscending:
+					sortDirectionQuery = "ASC";
+					break;
+				default:
+					break;
 				}
 			}
 
@@ -236,7 +237,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#SearchUsersCount(java.lang.String)
 	 */
 	@Override
@@ -268,7 +269,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#updateUserPassword(io.reflection.app.shared.datatypes.User, java.lang.String)
 	 */
 	@Override
@@ -278,7 +279,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#updateUser(io.reflection.app.shared.datatypes.User)
 	 */
 	@Override
@@ -291,7 +292,7 @@ final class UserService implements IUserService {
 		String updateUserQuery = String.format("UPDATE `user` SET `forename`='%s', `surname`='%s', `username`='%s', `avatar`=%s, `company`='%s' WHERE `id`=%d",
 				addslashes(user.forename), addslashes(user.surname), addslashes(user.username),
 				user.avatar == null ? "'" + addslashes(StringUtils.md5Hash(user.username.trim().toLowerCase())) + "'" : "'" + addslashes(user.avatar) + "'",
-						addslashes(user.company), user.id.longValue());
+				addslashes(user.company), user.id.longValue());
 		try {
 			userConnection.connect();
 			userConnection.executeQuery(updateUserQuery);
@@ -309,7 +310,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#deleteUser(io.reflection.app.shared.datatypes.User)
 	 */
 	@Override
@@ -329,7 +330,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#deleteUsers(java.util.Collection)
 	 */
 	@Override
@@ -365,7 +366,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#getLoginUser(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -398,7 +399,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#getUsers(io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
@@ -423,11 +424,11 @@ final class UserService implements IUserService {
 
 			if (pager.sortDirection != null) {
 				switch (pager.sortDirection) {
-					case SortDirectionTypeAscending:
-						sortDirectionQuery = "ASC";
-						break;
-					default:
-						break;
+				case SortDirectionTypeAscending:
+					sortDirectionQuery = "ASC";
+					break;
+				default:
+					break;
 				}
 			}
 
@@ -461,7 +462,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#getUsersCount()
 	 */
 	@Override
@@ -490,7 +491,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#updateLoginTime(io.reflection.app.shared.datatypes.User)
 	 */
 	@Override
@@ -563,7 +564,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#getUsernameUser(java.lang.String)
 	 */
 	@Override
@@ -593,7 +594,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#assignRole(io.reflection.app.shared.datatypes.User, io.reflection.app.shared.datatypes.Role)
 	 */
 	@Override
@@ -626,7 +627,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#assignRole(io.reflection.app.datatypes.shared.User, io.reflection.app.datatypes.shared.Role, int)
 	 */
 	@Override
@@ -660,7 +661,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#hasRole(io.reflection.app.shared.datatypes.User, io.reflection.app.shared.datatypes.Role)
 	 */
 	@Override
@@ -670,7 +671,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#hasRole(io.reflection.app.datatypes.shared.User, io.reflection.app.datatypes.shared.Role, boolean)
 	 */
 	@Override
@@ -702,7 +703,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#assignPermission(io.reflection.app.shared.datatypes.User, io.reflection.app.shared.datatypes.Permission)
 	 */
 	@Override
@@ -737,7 +738,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#hasPermission(io.reflection.app.shared.datatypes.User, io.reflection.app.shared.datatypes.Permission)
 	 */
 	@Override
@@ -747,7 +748,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#hasPermission(io.reflection.app.datatypes.shared.User, io.reflection.app.datatypes.shared.Permission,
 	 * java.lang.Boolean)
 	 */
@@ -778,7 +779,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#getRoles(io.reflection.app.shared.datatypes.User)
 	 */
 	@Override
@@ -788,7 +789,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#getRoles(io.reflection.app.datatypes.shared.User, boolean)
 	 */
 	@Override
@@ -825,7 +826,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#getPermissions(io.reflection.app.shared.datatypes.User)
 	 */
 	@Override
@@ -860,15 +861,22 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#addDataAccount(io.reflection.app.datatypes.shared.User, io.reflection.app.datatypes.shared.DataSource,
 	 * java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
 	public DataAccount addDataAccount(User user, DataSource dataSource, String username, String password, String properties) throws DataAccessException {
+
 		DataAccount addedDataAccount = null;
 
-		addedDataAccount = DataAccountServiceProvider.provide().addDataAccount(dataSource, username, password, properties);
+		DataAccount toAdd = new DataAccount();
+		toAdd.source = dataSource;
+		toAdd.username = username;
+		toAdd.password = password;
+		toAdd.properties = properties;
+
+		addedDataAccount = DataAccountServiceProvider.provide().addDataAccount(toAdd);
 
 		if (addedDataAccount != null) {
 			addOrRestoreUserDataAccount(user, addedDataAccount);
@@ -885,7 +893,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#getDataAccounts(io.reflection.app.datatypes.shared.User, io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
@@ -897,7 +905,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#getUsersDataAccounts(java.util.Collection)
 	 */
 	@Override
@@ -921,8 +929,8 @@ final class UserService implements IUserService {
 			String getDataAccountIdsQuery = String.format(
 					"SELECT `dataaccountid` FROM `userdataaccount` WHERE `deleted`='n' AND `userid` IN ('%s') ORDER BY `%s` %s LIMIT %d, %d",
 					commaDelimitedUserIds, pager.sortBy == null ? "id" : stripslashes(pager.sortBy),
-							pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start == null ? Pager.DEFAULT_START.longValue()
-									: pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue() : pager.count.longValue());
+					pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start == null ? Pager.DEFAULT_START.longValue()
+							: pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue() : pager.count.longValue());
 
 			Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
@@ -949,7 +957,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)/
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#getDataAccountsCount(io.reflection.app.datatypes.shared.User)
 	 */
 	@Override
@@ -979,7 +987,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#getDataAccountOwner(io.reflection.app.datatypes.shared.DataAccount)
 	 */
 	@Override
@@ -1011,7 +1019,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#getDataAccountOwnerBatch(java.util.Collection)
 	 */
 	@Override
@@ -1090,7 +1098,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#getActionCodeUser(java.lang.String)
 	 */
 	@Override
@@ -1120,7 +1128,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#markForReset(io.reflection.app.datatypes.shared.User)
 	 */
 	@Override
@@ -1177,7 +1185,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#updateUserPassword(io.reflection.app.datatypes.shared.User, java.lang.String, java.lang.Boolean)
 	 */
 	@Override
@@ -1216,7 +1224,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#hasDataAccount(io.reflection.app.datatypes.shared.User, io.reflection.app.datatypes.shared.DataAccount)
 	 */
 	@Override
@@ -1292,7 +1300,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#restoreUserDeletedDataAccount(io.reflection.app.datatypes.shared.User, java.lang.String)
 	 */
 	@Override
@@ -1320,7 +1328,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#deleteDataAccount(io.reflection.app.datatypes.shared.User,
 	 * io.reflection.app.datatypes.shared.DataAccount)
 	 */
@@ -1349,7 +1357,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#deleteAllUsersDataAccount(io.reflection.app.datatypes.shared.DataAccount)
 	 */
 	@Override
@@ -1372,7 +1380,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#deleteAllDataAccounts(io.reflection.app.datatypes.shared.User)
 	 */
 	@Override
@@ -1398,7 +1406,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#deleteUsersAllDataAccounts(java.util.Collection)
 	 */
 	@Override
@@ -1437,7 +1445,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#deletePermission(io.reflection.app.datatypes.shared.User, io.reflection.app.datatypes.shared.Permission)
 	 */
 	@Override
@@ -1463,7 +1471,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#revokeAllPermissions(io.reflection.app.datatypes.shared.User)
 	 */
 	@Override
@@ -1488,7 +1496,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#revokeUsersAllPermissions(java.util.Collection)
 	 */
 	@Override
@@ -1526,7 +1534,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#revokeRoles(io.reflection.app.datatypes.shared.User, io.reflection.app.datatypes.shared.Role)
 	 */
 	@Override
@@ -1552,7 +1560,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#revokeAllRoles(io.reflection.app.datatypes.shared.User)
 	 */
 	@Override
@@ -1577,7 +1585,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#revokeUsersAllRoles(java.util.Collection)
 	 */
 	@Override
@@ -1614,7 +1622,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#addOrRestoreUserDataAccount(io.reflection.app.datatypes.shared.User,
 	 * io.reflection.app.datatypes.shared.DataAccount)
 	 */
@@ -1645,7 +1653,7 @@ final class UserService implements IUserService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#getDataAccountsIds(io.reflection.app.datatypes.shared.User,
 	 * io.reflection.app.api.shared.datatypes.Pager)
 	 */
@@ -1656,7 +1664,7 @@ final class UserService implements IUserService {
 		String getDataAccountIdsQuery = String.format(
 				"SELECT `dataaccountid` FROM `userdataaccount` WHERE `deleted`='n' AND `userid`=%d ORDER BY `%s` %s LIMIT %d, %d", user.id.longValue(),
 				pager.sortBy == null ? "id" : stripslashes(pager.sortBy), pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
-						pager.start == null ? 0 : pager.start.longValue(), pager.count == null ? 25 : pager.count.longValue());
+				pager.start == null ? 0 : pager.start.longValue(), pager.count == null ? 25 : pager.count.longValue());
 
 		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 

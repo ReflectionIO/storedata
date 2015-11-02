@@ -156,7 +156,11 @@ public class LinkItunesPage extends Page implements NavigationEventHandler, Link
 				iosMacForm.setStatusError("Invalid vendor ID!");
 				iosMacForm.setVendorError("iTunes Connect vendor number entered incorrectly");
 				iosMacForm.setFormErrors();
-			} else { // TODO NULL POINTER EXCEPTION DUE TO DUPLICATE LINKED ACCOUNT
+			} else if (output.error.code == ApiError.DuplicateVendorId.getCode()) {
+				iosMacForm.setStatusError("Account already linked!");
+				iosMacForm.setVendorError("The vendor ID you entered is already in use");
+				iosMacForm.setFormErrors();
+			} else {
 				iosMacForm.setStatusError();
 			}
 			iosMacForm.setEnabled(true);
