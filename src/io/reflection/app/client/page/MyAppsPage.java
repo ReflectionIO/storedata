@@ -95,7 +95,7 @@ public class MyAppsPage extends Page implements NavigationEventHandler, LinkAcco
 
 	@UiField(provided = true) CellTable<MyApp> myAppsTable = new CellTable<MyApp>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 
-	private SafeHtmlHeader rankHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Rank " + AnimationHelper.getSorterSvg()));
+	// private SafeHtmlHeader rankHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Rank " + AnimationHelper.getSorterSvg()));
 	private SafeHtmlHeader appDetailsHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("App Details " + AnimationHelper.getSorterSvg()));
 	private SafeHtmlHeader priceHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Price " + AnimationHelper.getSorterSvg()));
 	private SafeHtmlHeader downloadsHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Downloads " + AnimationHelper.getSorterSvg()));
@@ -126,7 +126,7 @@ public class MyAppsPage extends Page implements NavigationEventHandler, LinkAcco
 	long linkedAccountsCount = -1;
 
 	// Columns
-	private Column<MyApp, SafeHtml> columnRank;
+	// private Column<MyApp, SafeHtml> columnRank;
 	private Column<MyApp, Item> columnAppDetails;
 	private Column<MyApp, SafeHtml> columnPrice;
 	private Column<MyApp, SafeHtml> columnDownloads;
@@ -255,17 +255,19 @@ public class MyAppsPage extends Page implements NavigationEventHandler, LinkAcco
 				if (!columnAppDetails.isDefaultSortAscending()) {
 					columnAppDetails.setDefaultSortAscending(true);
 				}
-				rankHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.mhxte6cIF());
-				appDetailsHeader.setHeaderStyleNames(style.canBeSorted());
+				// rankHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.mhxte6cIF());
+				appDetailsHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.mhxte6cIF());
 				priceHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.columnHiddenMobile());
 				downloadsHeader.setHeaderStyleNames(style.canBeSorted());
 				revenueHeader.setHeaderStyleNames(style.canBeSorted());
-				if (event.getColumn() == columnRank) {
-					userItemProvider.sortByRank(event.isSortAscending());
-					rankHeader.setHeaderStyleNames(style.canBeSorted() + " " + (event.isSortAscending() ? style.isAscending() : style.isDescending()));
-				} else if (event.getColumn() == columnAppDetails) {
+				// if (event.getColumn() == columnRank) {
+				// userItemProvider.sortByRank(event.isSortAscending());
+				// rankHeader.setHeaderStyleNames(style.canBeSorted() + " " + (event.isSortAscending() ? style.isAscending() : style.isDescending()));
+				// } else
+				if (event.getColumn() == columnAppDetails) {
 					userItemProvider.sortByAppDetails(event.isSortAscending());
-					appDetailsHeader.setHeaderStyleNames(style.canBeSorted() + " " + (event.isSortAscending() ? style.isAscending() : style.isDescending()));
+					appDetailsHeader.setHeaderStyleNames(style.canBeSorted() + " " + (event.isSortAscending() ? style.isAscending() : style.isDescending())
+							+ " " + style.mhxte6cIF());
 				} else if (event.getColumn() == columnPrice) {
 					userItemProvider.sortByPrice(event.isSortAscending());
 					priceHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.columnHiddenMobile() + " "
@@ -287,24 +289,24 @@ public class MyAppsPage extends Page implements NavigationEventHandler, LinkAcco
 
 		final SafeHtml loaderInline = AnimationHelper.getLoaderInlineSafeHTML();
 
-		columnRank = new Column<MyApp, SafeHtml>(new SafeHtmlCell()) {
-			@Override
-			public SafeHtml getValue(MyApp object) {
-				if (object.overallPosition != null) {
-					if (object.overallPosition.equals(MyApp.UNKNOWN_VALUE)) {
-						return SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
-					} else {
-						return SafeHtmlUtils.fromSafeConstant(object.overallPosition);
-					}
-				} else {
-					return loaderInline;
-				}
-			}
-		};
-		columnRank.setCellStyleNames(style.mhxte6ciA() + " " + style.mhxte6cID());
-		rankHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.mhxte6cIF());
-		myAppsTable.addColumn(columnRank, rankHeader);
-		columnRank.setSortable(true);
+		// columnRank = new Column<MyApp, SafeHtml>(new SafeHtmlCell()) {
+		// @Override
+		// public SafeHtml getValue(MyApp object) {
+		// if (object.overallPosition != null) {
+		// if (object.overallPosition.equals(MyApp.UNKNOWN_VALUE)) {
+		// return SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
+		// } else {
+		// return SafeHtmlUtils.fromSafeConstant(object.overallPosition);
+		// }
+		// } else {
+		// return loaderInline;
+		// }
+		// }
+		// };
+		// columnRank.setCellStyleNames(style.mhxte6ciA() + " " + style.mhxte6cID());
+		// rankHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.mhxte6cIF());
+		// myAppsTable.addColumn(columnRank, rankHeader);
+		// columnRank.setSortable(true);
 
 		columnAppDetails = new Column<MyApp, Item>(new MiniAppCell()) {
 			@Override
@@ -312,8 +314,8 @@ public class MyAppsPage extends Page implements NavigationEventHandler, LinkAcco
 				return object.item;
 			}
 		};
-		columnAppDetails.setCellStyleNames(style.mhxte6ciA());
-
+		columnAppDetails.setCellStyleNames(style.mhxte6ciA() + " " + style.mhxte6cID());
+		appDetailsHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.mhxte6cIF());
 		myAppsTable.addColumn(columnAppDetails, appDetailsHeader);
 		columnAppDetails.setSortable(true);
 
@@ -391,12 +393,12 @@ public class MyAppsPage extends Page implements NavigationEventHandler, LinkAcco
 		iapHeader.setHeaderStyleNames(style.columnHiddenMobile());
 		myAppsTable.addColumn(columnIap, iapHeader);
 
-		myAppsTable.addColumnStyleName(0, style.rankColumn());
-		myAppsTable.addColumnStyleName(1, style.appDetailsColumn());
-		myAppsTable.addColumnStyleName(2, style.priceColumn() + " " + style.columnHiddenMobile());
-		myAppsTable.addColumnStyleName(3, style.downloadsColumn());
-		myAppsTable.addColumnStyleName(4, style.revenueColumn());
-		myAppsTable.addColumnStyleName(5, style.iapColumn() + " " + style.columnHiddenMobile());
+		// myAppsTable.addColumnStyleName(0, style.rankColumn());
+		myAppsTable.addColumnStyleName(0, style.appDetailsColumn());
+		myAppsTable.addColumnStyleName(1, style.priceColumn() + " " + style.columnHiddenMobile());
+		myAppsTable.addColumnStyleName(2, style.downloadsColumn());
+		myAppsTable.addColumnStyleName(3, style.revenueColumn());
+		myAppsTable.addColumnStyleName(4, style.iapColumn() + " " + style.columnHiddenMobile());
 
 	}
 
@@ -464,8 +466,8 @@ public class MyAppsPage extends Page implements NavigationEventHandler, LinkAcco
 			errorPanel.setVisible(false);
 			comingSoonPanel.setVisible(false);
 			myAppsTable.setVisible(true);
-			rankHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.mhxte6cIF());
-			appDetailsHeader.setHeaderStyleNames(style.canBeSorted());
+			// rankHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.mhxte6cIF());
+			appDetailsHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.mhxte6cIF());
 			priceHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.columnHiddenMobile());
 			downloadsHeader.setHeaderStyleNames(style.canBeSorted());
 			revenueHeader.setHeaderStyleNames(style.canBeSorted());
@@ -562,8 +564,8 @@ public class MyAppsPage extends Page implements NavigationEventHandler, LinkAcco
 				errorPanel.setVisible(false);
 				comingSoonPanel.setVisible(false);
 				myAppsTable.setVisible(true);
-				rankHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.mhxte6cIF());
-				appDetailsHeader.setHeaderStyleNames(style.canBeSorted());
+				// rankHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.mhxte6cIF());
+				appDetailsHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.mhxte6cIF());
 				priceHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.columnHiddenMobile());
 				downloadsHeader.setHeaderStyleNames(style.canBeSorted());
 				revenueHeader.setHeaderStyleNames(style.canBeSorted());
@@ -654,7 +656,7 @@ public class MyAppsPage extends Page implements NavigationEventHandler, LinkAcco
 	public void getLinkedAccountItemsSuccess(GetLinkedAccountItemsRequest input, GetLinkedAccountItemsResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
 			if (output.items != null) {
-				appDetailsHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.isAscending());
+				appDetailsHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.isAscending() + " " + style.mhxte6cIF());
 				columnAppDetails.setDefaultSortAscending(false);
 				if (output.items.size() > ServiceConstants.STEP_VALUE) {
 					viewAllBtn.setVisible(true);
