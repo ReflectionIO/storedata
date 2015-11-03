@@ -46,8 +46,8 @@ import com.google.gwt.user.datepicker.client.CalendarUtil;
  */
 public class AppDetailsAndPredictionCell extends AbstractCell<Rank> {
 
-	private SafeHtml noDataQuestionMark = SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding "
-			+ Styles.STYLES_INSTANCE.reflectionMainStyle().whatsThisTooltipIconStatic() + "\" data-tooltip=\"No data available\"></span>");
+	private SafeHtml noDataQuestionMark = SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip js-tooltip--info js-tooltip--right js-tooltip--right--no-pointer-padding"
+			+ Styles.STYLES_INSTANCE.reflectionMainStyle().tooltipInfo() + "\" data-tooltip=\"No data available\"></span>");
 	private SafeHtml signUpLink = SafeHtmlUtils
 			.fromTrustedString("<a style=\"cursor: pointer\" class=\"sign-up-link js-tooltip js-tooltip--right\" data-tooltip=\"Sign up and link your app store account to see this data\">Sign Up</a>");
 	private SafeHtml linkAccountLink = SafeHtmlUtils

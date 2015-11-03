@@ -42,13 +42,22 @@ public class TooltipHelper {
 			var tooltip;
 			if ($wnd.$('html.no-touch').length) {
 				$this.on("mouseenter", function() {
-					tooltip = generateTooltip($this, false);
+					if ($this.hasClass("js-tooltip--info")) {
+						tooltip = generateTooltip($this, true);
+					} else {
+						tooltip = generateTooltip($this, false);
+					}
 				});
 				$this.on("mouseleave", function() {
 					tooltip.remove();
 				});
 				$this.on("click", function() {
-					tooltip.remove();
+					if($this.attr("href") == "#") {
+						e.preventDefault();
+					}
+					if (!$this.hasClass("js-tooltip--info")) {
+						tooltip.remove();
+					}
 				});
 			} else if ($wnd.$('html.touch').length) {
 				$this.on("click", function(e) {
@@ -70,7 +79,7 @@ public class TooltipHelper {
 			}
 		});
 
-		var generateTooltip = function($tooltipParent, isTouchTooltip) {
+		var generateTooltip = function($tooltipParent, isInstantTooltip) {
 			var $this = $tooltipParent, tooltipText = $tooltipParent
 					.data("tooltip");
 
@@ -105,12 +114,12 @@ public class TooltipHelper {
 				"top" : topPosition - tooltipHeight - 20,
 				"left" : leftPosition
 			});
-			if (isTouchTooltip) {
+			if (isInstantTooltip) {
 				tooltip.show();
 			} else {
 				setTimeout(function() {
 					tooltip.fadeIn(100);
-				}, 400);
+				}, 700);
 			}
 
 			return tooltip;
