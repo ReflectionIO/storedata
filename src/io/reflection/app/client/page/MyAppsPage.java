@@ -582,8 +582,8 @@ public class MyAppsPage extends Page implements NavigationEventHandler, LinkAcco
 	@UiHandler("viewAllBtn")
 	void onViewAllButtonClicked(ClickEvent event) {
 		if (((Button) event.getSource()).isEnabled()) {
-			if (myAppsTable.getRowCount() > ServiceConstants.STEP_VALUE) {
-				myAppsTable.setVisibleRange(0, Integer.MAX_VALUE);
+			if (myAppsTable.getVisibleItemCount() == ServiceConstants.STEP_VALUE && myAppsTable.getRowCount() > ServiceConstants.STEP_VALUE) {
+				myAppsTable.setVisibleRange(0, myAppsTable.getRowCount());
 				viewAllSpan.setInnerText("View Less Apps");
 				TooltipHelper.updateHelperTooltip();
 			} else {

@@ -53,15 +53,10 @@ public class UserItemProvider extends AsyncDataProvider<MyApp> implements GetLin
 	protected void onRangeChanged(HasData<MyApp> display) {
 		if (!LinkedAccountController.get().linkedAccountsFetched()) {
 			LinkedAccountController.get().fetchLinkedAccounts(); // After refresh or the user didn't visit the linked accounts page
+		} else if (!myAppList.isEmpty()) {
+			 int end = (display.getVisibleRange().getLength() > myAppList.size() ? myAppList.size() : display.getVisibleRange().getLength());
+			updateRowData(0, myAppList.subList(display.getVisibleRange().getStart(), end));
 		}
-		// if (LinkedAccountController.get().linkedAccountsFetched()) {
-		// if (!myAppList.isEmpty()) {
-		// int end = (display.getVisibleRange().getLength() > myAppList.size() ? myAppList.size() : display.getVisibleRange().getLength());
-		// updateRowData(0, myAppList.subList(0, end));
-		// }
-		// } else {
-		// LinkedAccountController.get().fetchLinkedAccounts(); // After refresh or the user didn't visit the linked accounts page
-		// }
 	}
 
 	public void reset() {
@@ -232,8 +227,8 @@ public class UserItemProvider extends AsyncDataProvider<MyApp> implements GetLin
 					} else if (o2.overallPrice.equalsIgnoreCase("free")) {
 						res = -1;
 					} else {
-						res = (Float.parseFloat(o1.overallPrice.replaceAll(",|\\.|$|€|¥|£", "").trim()) < Float.parseFloat(o2.overallPrice.replaceAll(
-								",|\\.|$|€|¥|£", "").trim()) ? 1 : -1);
+						res = (Float.parseFloat(o1.overallPrice.replaceAll(",|\\.|\\$|€|¥|£", "").trim()) < Float.parseFloat(o2.overallPrice.replaceAll(
+								",|\\.|\\$|€|¥|£", "").trim()) ? 1 : -1);
 					}
 				}
 				return (sortAscending ? res : -res);
@@ -280,8 +275,8 @@ public class UserItemProvider extends AsyncDataProvider<MyApp> implements GetLin
 					} else if (o2.overallRevenue.equals("-")) {
 						res = -1;
 					} else {
-						res = (Float.parseFloat(o1.overallRevenue.replaceAll(",|\\.|$|€|¥|£", "").trim()) < Float.parseFloat(o2.overallRevenue.replaceAll(
-								",|\\.|$|€|¥|£", "").trim()) ? 1 : -1);
+						res = (Float.parseFloat(o1.overallRevenue.replaceAll(",|\\.|\\$|€|¥|£", "").trim()) < Float.parseFloat(o2.overallRevenue.replaceAll(
+								",|\\.|\\$|€|¥|£", "").trim()) ? 1 : -1);
 					}
 				}
 				return (sortAscending ? res : -res);
