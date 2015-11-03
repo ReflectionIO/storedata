@@ -32,6 +32,7 @@ import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.AnimationHelper;
 import io.reflection.app.client.helper.DOMHelper;
 import io.reflection.app.client.helper.ResponsiveDesignHelper;
+import io.reflection.app.client.helper.TooltipHelper;
 import io.reflection.app.client.mixpanel.MixpanelHelper;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.linkaccount.IosMacLinkAccountForm;
@@ -111,8 +112,6 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	public LinkedAccountsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		createColumns();
-		linkedAccountsTable.setTableBuilder(new CustomTableBuilder(linkedAccountsTable));
 		linkedAccountsTable.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
 
 		// addSoonTag(mPlayLink);
@@ -136,6 +135,9 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		linkedAccountsTable.setLoadingIndicator(AnimationHelper.getLinkedAccountsIndicator(1));
 
 		linkedAccountsCount.setInnerSafeHtml(AnimationHelper.getLoaderInlineSafeHTML());
+
+		linkedAccountsTable.setTableBuilder(new CustomTableBuilder(linkedAccountsTable));
+		createColumns();
 
 	}
 
@@ -359,6 +361,8 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		long count = LinkedAccountController.get().getLinkedAccountsCount();
 		if (count >= 0) {
 			linkedAccountsCount.setInnerText(Long.toString(count));
+			linkedAccountsTable.redraw();
+			TooltipHelper.updateWhatsThisTooltip();
 		}
 		setTableEmpty(count <= 0);
 	}

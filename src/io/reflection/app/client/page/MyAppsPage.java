@@ -75,6 +75,7 @@ import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.LoadingStateChangeEvent;
 import com.google.gwt.user.cellview.client.LoadingStateChangeEvent.LoadingState;
 import com.google.gwt.user.cellview.client.SafeHtmlHeader;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
@@ -122,8 +123,6 @@ public class MyAppsPage extends Page implements NavigationEventHandler, LinkAcco
 	public static final String COMING_FROM_PARAMETER = "myapps";
 	private String previousFilter;
 	private User user;
-
-	long linkedAccountsCount = -1;
 
 	// Columns
 	private Column<MyApp, SafeHtml> columnRank;
@@ -203,6 +202,14 @@ public class MyAppsPage extends Page implements NavigationEventHandler, LinkAcco
 		});
 
 		updateSelectorsFromFilter();
+
+		if (LinkedAccountController.get().getLinkedAccountsCount() == 0) {
+			userItemProvider.reset();
+			userItemProvider.updateRowCount(0, true);
+			accountNameSelector.clear();
+			errorPanel.setVisible(false);
+			comingSoonPanel.setVisible(false);
+		}
 
 		TooltipHelper.updateHelperTooltip();
 
@@ -517,8 +524,7 @@ public class MyAppsPage extends Page implements NavigationEventHandler, LinkAcco
 		// Linked accounts retrieved in LinkedAccountPage but not here, or Check if Added or deleted a linked account
 		if (!(accountNameSelector.getItemCount() == LinkedAccountController.get().getLinkedAccountsCount() && accountNameSelector.getAllValues().containsAll(
 				LinkedAccountController.get().getAllLinkedAccountIds()))) {
-			linkedAccountsCount = LinkedAccountController.get().getLinkedAccountsCount();
-			if (linkedAccountsCount > 0) { // Added or removed linked account
+			if (LinkedAccountController.get().getLinkedAccountsCount() > 0) { // Added or removed linked account
 				fillAccountNameList();
 				FilterController.get().setLinkedAccount(LinkedAccountController.get().getAllLinkedAccounts().get(0).id);
 				isStatusError = false;
@@ -530,7 +536,7 @@ public class MyAppsPage extends Page implements NavigationEventHandler, LinkAcco
 				loadingBar.show("Getting apps...");
 				loadingBar.setProgressiveStatus(33);
 				previousFilter = FilterController.get().asMyAppsFilterString();
-			} else if (linkedAccountsCount == 0) { // Removed all linked accounts
+			} else if (LinkedAccountController.get().getLinkedAccountsCount() == 0) { // Removed all linked accounts
 				userItemProvider.reset();
 				userItemProvider.updateRowCount(0, true);
 				accountNameSelector.clear();
@@ -543,7 +549,7 @@ public class MyAppsPage extends Page implements NavigationEventHandler, LinkAcco
 			previousFilter = FilterController.get().asMyAppsFilterString();
 		}
 
-		if (linkedAccountsCount > 0) {
+		if (LinkedAccountController.get().getLinkedAccountsCount() > 0) {
 			setFiltersEnabled(true);
 			if (!previousFilter.equals(FilterController.get().asMyAppsFilterString())) {
 				isStatusError = false;
@@ -573,7 +579,7 @@ public class MyAppsPage extends Page implements NavigationEventHandler, LinkAcco
 		} else {
 			setFiltersEnabled(false);
 		}
-		noLinkedAccountsPanel.setVisible(linkedAccountsCount == 0);
+		noLinkedAccountsPanel.setVisible(LinkedAccountController.get().getLinkedAccountsCount() == 0);
 
 	}
 
@@ -603,8 +609,7 @@ public class MyAppsPage extends Page implements NavigationEventHandler, LinkAcco
 			if (accountNameSelector.getItemCount() == 0) {
 				fillAccountNameList();
 			}
-			linkedAccountsCount = LinkedAccountController.get().getLinkedAccountsCount();
-			if (linkedAccountsCount > 0) {
+			if (LinkedAccountController.get().getLinkedAccountsCount() > 0) {
 				FilterController.get().getFilter().setLinkedAccountId(LinkedAccountController.get().getAllLinkedAccounts().get(0).id);
 				accountNameSelector.setSelectedIndex(FormHelper.getItemIndex(accountNameSelector, FilterController.get().getFilter().getLinkedAccountId()
 						.toString()));
@@ -733,7 +738,12 @@ public class MyAppsPage extends Page implements NavigationEventHandler, LinkAcco
 	@Override
 	public void linkAccountSuccess(LinkAccountRequest input, LinkAccountResponse output) {
 		if (LinkedAccountController.get().getLinkedAccountsCount() == 1) {
-			PageType.UsersPageType.show(PageType.MyAppsPageType.toString(), user.id.toString(), FilterController.get().asMyAppsFilterString());
+			if (previousFilter.equals(FilterController.get().asMyAppsFilterString())) {
+				History.replaceItem(PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(), FilterController.get()
+						.asMyAppsFilterString()), true);
+			} else {
+				PageType.UsersPageType.show(PageType.MyAppsPageType.toString(), user.id.toString(), FilterController.get().asMyAppsFilterString());
+			}
 		}
 	}
 
