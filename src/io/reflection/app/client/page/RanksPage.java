@@ -54,6 +54,7 @@ import io.reflection.app.client.res.Styles.ReflectionMainStyles;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.shared.util.DataTypeHelper;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -67,6 +68,7 @@ import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -93,6 +95,8 @@ import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Window.ScrollEvent;
+import com.google.gwt.user.client.Window.ScrollHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineHyperlink;
@@ -123,6 +127,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		SafeHtml code(Long code);
 	}
 
+	@UiField(provided = true) CellTable<RanksGroup> stickyHeaderTable = new CellTable<RanksGroup>(1, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) CellTable<RanksGroup> leaderboardTable = new CellTable<RanksGroup>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 
 	private LoadingIndicator loadingIndicatorAll = AnimationHelper.getLeaderboardAllLoadingIndicator(25);
@@ -281,6 +286,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		leaderboardTable.getTableLoadingSection().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().tableBodyLoading());
 
 		RankController.get().addDataDisplay(leaderboardTable);
+		stickyHeaderTable.setRowData(Arrays.asList(RanksGroup.getPlaceholder()));
 
 		dateSelectContainer.addClassName("js-tooltip");
 		dateSelectContainer.setAttribute("data-tooltip", "Select a date");
@@ -304,7 +310,25 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 		updateSelectorsFromFilter();
 		TooltipHelper.updateHelperTooltip();
+		stickyTableHead();
+	}
 
+	private void stickyTableHead() {
+		Window.addWindowScrollHandler(new ScrollHandler() {
+
+			@Override
+			public void onWindowScroll(ScrollEvent event) {
+				int dataTableTopPosition = leaderboardTable.getElement().getAbsoluteTop()
+						- NavigationController.get().getHeader().getElement().getClientHeight();
+				if (event.getScrollTop() >= dataTableTopPosition && leaderboardTable.isVisible()) {
+					stickyHeaderTable.getElement().getStyle().setVisibility(Visibility.VISIBLE);
+					stickyHeaderTable.getElement().getStyle().setOpacity(1);
+				} else {
+					stickyHeaderTable.getElement().getStyle().setVisibility(Visibility.HIDDEN);
+					stickyHeaderTable.getElement().getStyle().setOpacity(0);
+				}
+			}
+		});
 	}
 
 	private void createColumns() {
@@ -355,7 +379,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 			@Override
 			public SafeHtml getValue(RanksGroup object) {
-				return (object.free.position != null) ? SafeHtmlUtils.fromTrustedString(object.free.position.toString()) : SafeHtmlUtils
+				return (object.free != null && object.free.position != null) ? SafeHtmlUtils.fromTrustedString(object.free.position.toString()) : SafeHtmlUtils
 						.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
 			}
 
@@ -641,6 +665,9 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		leaderboardTable.setStyleName(style.tableOverall(), OVERALL_LIST_TYPE.equals(selectedTab));
 		leaderboardTable.setStyleName(style.tableAppGroup(),
 				(FREE_LIST_TYPE.equals(selectedTab) || PAID_LIST_TYPE.equals(selectedTab) || GROSSING_LIST_TYPE.equals(selectedTab)));
+		stickyHeaderTable.setStyleName(style.tableOverall(), OVERALL_LIST_TYPE.equals(selectedTab));
+		stickyHeaderTable.setStyleName(style.tableAppGroup(),
+				(FREE_LIST_TYPE.equals(selectedTab) || PAID_LIST_TYPE.equals(selectedTab) || GROSSING_LIST_TYPE.equals(selectedTab)));
 
 		switch (selectedTab) {
 		case OVERALL_LIST_TYPE:
@@ -654,6 +681,14 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			leaderboardTable.addColumn(freeColumn, freeHeaderAll);
 			leaderboardTable.addColumn(grossingColumn, grossingHeaderAll);
 			leaderboardTable.setLoadingIndicator(loadingIndicatorAll);
+			stickyHeaderTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+			stickyHeaderTable.setColumnWidth(paidColumn, 30.0, Unit.PCT);
+			stickyHeaderTable.setColumnWidth(freeColumn, 30.0, Unit.PCT);
+			stickyHeaderTable.setColumnWidth(grossingColumn, 30.0, Unit.PCT);
+			stickyHeaderTable.addColumn(rankColumn, rankHeader);
+			stickyHeaderTable.addColumn(paidColumn, paidHeaderAll);
+			stickyHeaderTable.addColumn(freeColumn, freeHeaderAll);
+			stickyHeaderTable.addColumn(grossingColumn, grossingHeaderAll);
 			break;
 		case PAID_LIST_TYPE:
 			removeAllColumns();
@@ -671,6 +706,17 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			iapColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
 			leaderboardTable.addColumnStyleName(4, style.columnHiddenMobile());
 			leaderboardTable.setLoadingIndicator(loadingIndicatorPaidGrossingList);
+			stickyHeaderTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+			stickyHeaderTable.setColumnWidth(paidColumn, 42.0, Unit.PCT);
+			stickyHeaderTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
+			stickyHeaderTable.setColumnWidth(downloadsColumn, 19.0, Unit.PCT);
+			stickyHeaderTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
+			stickyHeaderTable.addColumn(rankColumn, rankHeader);
+			stickyHeaderTable.addColumn(paidColumn, paidHeader);
+			stickyHeaderTable.addColumn(priceColumn, priceHeader);
+			stickyHeaderTable.addColumn(downloadsColumn, "Downloads");
+			stickyHeaderTable.addColumn(iapColumn, iapHeader);
+			stickyHeaderTable.addColumnStyleName(4, style.columnHiddenMobile());
 			break;
 		case FREE_LIST_TYPE:
 			removeAllColumns();
@@ -688,6 +734,17 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			priceColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
 			leaderboardTable.addColumnStyleName(2, style.columnHiddenMobile());
 			leaderboardTable.setLoadingIndicator(loadingIndicatorFreeList);
+			stickyHeaderTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+			stickyHeaderTable.setColumnWidth(freeColumn, 42.0, Unit.PCT);
+			stickyHeaderTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
+			stickyHeaderTable.setColumnWidth(downloadsColumn, 19.0, Unit.PCT);
+			stickyHeaderTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
+			stickyHeaderTable.addColumn(rankColumn, rankHeader);
+			stickyHeaderTable.addColumn(freeColumn, freeHeader);
+			stickyHeaderTable.addColumn(priceColumn, priceHeader);
+			stickyHeaderTable.addColumn(downloadsColumn, "Downloads");
+			stickyHeaderTable.addColumn(iapColumn, iapHeader);
+			stickyHeaderTable.addColumnStyleName(2, style.columnHiddenMobile());
 			break;
 		case GROSSING_LIST_TYPE:
 			removeAllColumns();
@@ -705,6 +762,17 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			iapColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
 			leaderboardTable.addColumnStyleName(4, style.columnHiddenMobile());
 			leaderboardTable.setLoadingIndicator(loadingIndicatorPaidGrossingList);
+			stickyHeaderTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+			stickyHeaderTable.setColumnWidth(grossingColumn, 42.0, Unit.PCT);
+			stickyHeaderTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
+			stickyHeaderTable.setColumnWidth(revenueColumn, 19.0, Unit.PCT);
+			stickyHeaderTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
+			stickyHeaderTable.addColumn(rankColumn, rankHeader);
+			stickyHeaderTable.addColumn(grossingColumn, grossingHeader);
+			stickyHeaderTable.addColumn(priceColumn, priceHeader);
+			stickyHeaderTable.addColumn(revenueColumn, "Revenue");
+			stickyHeaderTable.addColumn(iapColumn, iapHeader);
+			stickyHeaderTable.addColumnStyleName(4, style.columnHiddenMobile());
 			break;
 		}
 
@@ -714,9 +782,9 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 	private void removeColumn(Column<RanksGroup, ?> column) {
 		int currentIndex = leaderboardTable.getColumnIndex(column);
-
 		if (currentIndex != -1) {
 			leaderboardTable.removeColumn(column);
+			stickyHeaderTable.removeColumn(column);
 		}
 	}
 
@@ -728,6 +796,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		iapColumn.setCellStyleNames(style.mhxte6ciA());
 		for (int i = 0; i < leaderboardTable.getColumnCount(); i++) {
 			leaderboardTable.removeColumnStyleName(i, style.columnHiddenMobile());
+			stickyHeaderTable.removeColumnStyleName(i, style.columnHiddenMobile());
 		}
 
 		removeColumn(rankColumn);
