@@ -291,13 +291,15 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		Window.addResizeHandler(new ResizeHandler() {
 			@Override
 			public void onResize(ResizeEvent event) {
-				if (event.getWidth() <= 719) {
-					if (tabs.get(OVERALL_LIST_TYPE).hasClassName(style.isActive())) {
-						History.replaceItem(grossingLink.getTargetHistoryToken());
+				if (PageType.RanksPageType == NavigationController.get().getCurrentPage()) {
+					if (event.getWidth() <= 719) {
+						if (tabs.get(OVERALL_LIST_TYPE).hasClassName(style.isActive())) {
+							History.replaceItem(grossingLink.getTargetHistoryToken());
+						}
+						allItem.getStyle().setDisplay(Display.NONE);
+					} else {
+						allItem.getStyle().setDisplay(Display.BLOCK);
 					}
-					allItem.getStyle().setDisplay(Display.NONE);
-				} else {
-					allItem.getStyle().setDisplay(Display.BLOCK);
 				}
 			}
 		});
