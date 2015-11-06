@@ -111,7 +111,6 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	interface RanksPageUiBinder extends UiBinder<Widget, RanksPage> {}
 
 	public static final int SELECTED_TAB_PARAMETER_INDEX = 0;
-	public static final int VIEW_ALL_LENGTH_VALUE = Integer.MAX_VALUE;
 	public static final String ALL_TEXT = "Overview";
 	public static final String COMING_FROM_PARAMETER = "leaderboard";
 
@@ -890,7 +889,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	void onViewAllButtonClicked(ClickEvent event) {
 		if (((Button) event.getSource()).isEnabled()) {
 			if (leaderboardTable.getVisibleItemCount() == ServiceConstants.STEP_VALUE) {
-				leaderboardTable.setVisibleRange(0, VIEW_ALL_LENGTH_VALUE);
+				leaderboardTable.setVisibleRange(0, Integer.MAX_VALUE);
 				viewAllSpan.setInnerText("View Less Apps");
 
 				TooltipHelper.updateHelperTooltip();
