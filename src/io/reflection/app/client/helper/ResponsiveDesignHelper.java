@@ -8,15 +8,12 @@
 package io.reflection.app.client.helper;
 
 import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.ScriptElement;
 
 /**
  * @author Stefano Capuzzi (capuzzistefano)
  *
  */
 public class ResponsiveDesignHelper {
-
-	public static final ScriptElement scriptResponsiveTable = DOMHelper.getJSScriptFromUrl("js/vendor/responsive-tables.js");
 
 	public static native void nativeRevealContent(Element elem)/*-{
 		$wnd.$(elem).on(
