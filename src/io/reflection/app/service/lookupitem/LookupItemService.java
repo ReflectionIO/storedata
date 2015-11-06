@@ -182,7 +182,8 @@ public class LookupItemService {
 		Map<String, Item> itemsFoundInSalesSummary = new HashMap<String, Item>();
 		List<String> itemIdsToLookForInRanks = new ArrayList<String>();
 
-		String getLookupItemsForDataAccountQuery = String.format("select itemid, max(title) as title from lkp_items where dataaccountid=%s and parentsku is null group by itemid", dataAccountId);
+		String getLookupItemsForDataAccountQuery = String.format("select itemid, max(title) as title from lkp_items where dataaccountid=%s and (parentsku is null or TRIM(parentsku)='') group by itemid",
+				dataAccountId);
 
 		Connection lkpConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeLookupItem.toString());
 
