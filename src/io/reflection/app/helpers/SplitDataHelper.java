@@ -98,6 +98,8 @@ public class SplitDataHelper {
 			List<SimpleEntry<String, String>> mainItemIdsAndCountries = saleService.getSoldItemIdsForAccountInDateRange(dataAccountId, gatherFrom, gatherTo);
 			LOG.log(GaeLevel.DEBUG, String.format("Got %d combinations of main item id and country", mainItemIdsAndCountries.size()));
 
+			HashMap<String, String> mainItemsGrouped = groupConcatValuesByKey(mainItemIdsAndCountries);
+
 			String countriesToIngest = System.getProperty("ingest.ios.countries");
 			countriesToIngest = countriesToIngest == null ? null : countriesToIngest.toLowerCase();
 
@@ -138,5 +140,19 @@ public class SplitDataHelper {
 			LOG.log(Level.SEVERE, String.format("Exception occured while retrieving main item id for data account [%d] between [%s] and [%s]", dataAccountId,
 					gatherFromStr, gatherToStr), e);
 		}
+	}
+
+	/**
+	 * @param entryList
+	 * @return
+	 */
+	private HashMap<String, String> groupConcatValuesByKey(List<SimpleEntry<String, String>> entryList) {
+		HashMap<String, String> result = new HashMap<String, String>();
+
+		for (SimpleEntry<String, String> entry : entryList) {
+
+		}
+
+		return result;
 	}
 }
