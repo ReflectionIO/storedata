@@ -45,10 +45,14 @@ public class TooltipHelper {
 					tooltip = generateTooltip($this, false);
 				});
 				$this.on("mouseleave", function() {
-					tooltip.remove();
+					if (tooltip.length){
+						tooltip.remove();
+					}
 				});
 				$this.on("click", function() {
-					tooltip.remove();
+					if (tooltip.length){
+						tooltip.remove();
+					}
 				});
 			} else if ($wnd.$('html.touch').length) {
 				$this.on("click", function(e) {
