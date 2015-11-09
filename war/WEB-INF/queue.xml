@@ -41,6 +41,8 @@
 		<max-concurrent-requests>20</max-concurrent-requests>
 		<retry-parameters>
 			<task-retry-limit>5</task-retry-limit>
+			<min-backoff-seconds>10</min-backoff-seconds>
+      <max-backoff-seconds>240</max-backoff-seconds>
 		</retry-parameters>
 	</queue>
 	<queue>
