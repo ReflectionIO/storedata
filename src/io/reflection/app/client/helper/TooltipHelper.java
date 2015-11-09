@@ -42,21 +42,21 @@ public class TooltipHelper {
 			var tooltip;
 			if ($wnd.$('html.no-touch').length) {
 				$this.on("mouseenter", function() {
-					if ($this.hasClass("js-tooltip--info")) {
-						tooltip = generateTooltip($this, true);
-					} else {
-						tooltip = generateTooltip($this, false);
-					}
+					tooltip = generateTooltip($this, false);
 				});
 				$this.on("mouseleave", function() {
-					tooltip.remove();
+					if (tooltip.length){
+						tooltip.remove();
+					}
 				});
 				$this.on("click", function() {
 					if($this.attr("href") == "#") {
 						e.preventDefault();
 					}
 					if (!$this.hasClass("js-tooltip--info")) {
-						tooltip.remove();
+						if (tooltip.length){
+							tooltip.remove();
+						}
 					}
 				});
 			} else if ($wnd.$('html.touch').length) {

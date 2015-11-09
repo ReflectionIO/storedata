@@ -78,28 +78,28 @@ public class AnimationHelper {
 	}
 
 	public static LoadingIndicator getMyAppsLoadingIndicator(int rowNumber) {
-		LoadingIndicator loadingIndicator = new LoadingIndicator(rowNumber, 6);
-		loadingIndicator.setColStyleName(0, Styles.STYLES_INSTANCE.reflectionMainStyle().rankColumn());
-		loadingIndicator.setColStyleName(1, Styles.STYLES_INSTANCE.reflectionMainStyle().appDetailsColumn());
-		loadingIndicator.setColStyleName(2, Styles.STYLES_INSTANCE.reflectionMainStyle().priceColumn() + " "
+		LoadingIndicator loadingIndicator = new LoadingIndicator(rowNumber, 5);
+		// loadingIndicator.setColStyleName(0, Styles.STYLES_INSTANCE.reflectionMainStyle().rankColumn());
+		loadingIndicator.setColStyleName(0, Styles.STYLES_INSTANCE.reflectionMainStyle().appDetailsColumn());
+		loadingIndicator.setColStyleName(1, Styles.STYLES_INSTANCE.reflectionMainStyle().priceColumn() + " "
 				+ Styles.STYLES_INSTANCE.reflectionMainStyle().columnHiddenMobile());
-		loadingIndicator.setColStyleName(3, Styles.STYLES_INSTANCE.reflectionMainStyle().downloadsColumn());
-		loadingIndicator.setColStyleName(4, Styles.STYLES_INSTANCE.reflectionMainStyle().revenueColumn());
-		loadingIndicator.setColStyleName(5, Styles.STYLES_INSTANCE.reflectionMainStyle().iapColumn() + " "
+		loadingIndicator.setColStyleName(2, Styles.STYLES_INSTANCE.reflectionMainStyle().downloadsColumn());
+		loadingIndicator.setColStyleName(3, Styles.STYLES_INSTANCE.reflectionMainStyle().revenueColumn());
+		loadingIndicator.setColStyleName(4, Styles.STYLES_INSTANCE.reflectionMainStyle().iapColumn() + " "
 				+ Styles.STYLES_INSTANCE.reflectionMainStyle().columnHiddenMobile());
 
-		loadingIndicator.setColumnCellsStyleName(2, Styles.STYLES_INSTANCE.reflectionMainStyle().columnHiddenMobile());
-		loadingIndicator.setColumnCellsStyleName(5, Styles.STYLES_INSTANCE.reflectionMainStyle().columnHiddenMobile());
+		loadingIndicator.setColumnCellsStyleName(1, Styles.STYLES_INSTANCE.reflectionMainStyle().columnHiddenMobile());
+		loadingIndicator.setColumnCellsStyleName(4, Styles.STYLES_INSTANCE.reflectionMainStyle().columnHiddenMobile());
 
-		loadingIndicator.setColumnCellsSafeHtml(0, getLoaderInlineSafeHTML());
+		// loadingIndicator.setColumnCellsSafeHtml(0, getLoaderInlineSafeHTML());
 		loadingIndicator.setColumnCellsSafeHtml(
-				1,
+				0,
 				SafeHtmlUtils.fromSafeConstant("<img class=\"img-rounded\" src=\"images/leaderboard-app-icon-placeholder.png\"> "
 						+ getLoaderInlineSafeHTML().asString()));
+		loadingIndicator.setColumnCellsSafeHtml(1, getLoaderInlineSafeHTML());
 		loadingIndicator.setColumnCellsSafeHtml(2, getLoaderInlineSafeHTML());
 		loadingIndicator.setColumnCellsSafeHtml(3, getLoaderInlineSafeHTML());
 		loadingIndicator.setColumnCellsSafeHtml(4, getLoaderInlineSafeHTML());
-		loadingIndicator.setColumnCellsSafeHtml(5, getLoaderInlineSafeHTML());
 
 		return loadingIndicator;
 	}

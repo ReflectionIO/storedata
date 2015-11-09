@@ -186,6 +186,8 @@
 					<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__row}">
 						<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.tableWrapper}">
 							<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.scrollable}">
+								<cv:CellTable ui:field="stickyHeaderTable"
+									styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}  {STYLES_INSTANCE.reflectionMainStyle.responsive} {STYLES_INSTANCE.reflectionMainStyle.stickyTableHead}" />
 								<cv:CellTable ui:field="leaderboardTable" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}  {STYLES_INSTANCE.reflectionMainStyle.responsive}" />
 							</g:HTMLPanel>
 						</g:HTMLPanel>

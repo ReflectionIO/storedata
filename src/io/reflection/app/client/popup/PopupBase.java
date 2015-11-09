@@ -8,6 +8,7 @@
 package io.reflection.app.client.popup;
 
 import io.reflection.app.client.helper.AnimationHelper;
+import io.reflection.app.client.helper.DOMHelper;
 import io.reflection.app.client.res.Styles;
 
 import java.util.Iterator;
@@ -47,6 +48,7 @@ public class PopupBase extends Composite implements HasWidgets, HasCloseHandlers
 
 	void show() {
 		AnimationHelper.nativeFadeIn(getElement(), 200);
+		DOMHelper.getHtmlElement().addClassName("no-scroll");
 		Timer t = new Timer() {
 
 			@Override
@@ -60,6 +62,7 @@ public class PopupBase extends Composite implements HasWidgets, HasCloseHandlers
 
 	void closePopup() {
 		AnimationHelper.nativeFadeOut(getElement(), 100);
+		DOMHelper.getHtmlElement().removeClassName("no-scroll");
 		popupContent.getElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
 		Timer t = new Timer() {
 

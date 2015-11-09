@@ -14,6 +14,7 @@ import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.component.LoadingButton;
 import io.reflection.app.client.component.TextField;
 import io.reflection.app.client.controller.UserController;
+import io.reflection.app.client.helper.DOMHelper;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.res.Styles;
 
@@ -66,6 +67,7 @@ public class RegisterInterestPopup extends Composite implements RegisterInterest
 		if (!this.asWidget().isAttached()) {
 			RootPanel.get().add(this);
 		}
+		DOMHelper.getHtmlElement().addClassName("no-scroll");
 		popup.show();
 		firstNameTextField.setFocus(true);
 	}
@@ -76,6 +78,7 @@ public class RegisterInterestPopup extends Composite implements RegisterInterest
 
 	@UiHandler("popup")
 	void onPopupClosed(CloseEvent<PopupBase> event) {
+		DOMHelper.getHtmlElement().removeClassName("no-scroll");
 		RootPanel.get().remove(this.asWidget());
 	}
 

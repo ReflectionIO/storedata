@@ -21,6 +21,7 @@ import io.reflection.app.client.cell.LeaderboardRevenueCell;
 import io.reflection.app.client.component.Selector;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.ItemController;
+import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.controller.ServiceCreator;
 import io.reflection.app.client.controller.SessionController;
@@ -289,34 +290,36 @@ public class HomePage extends Page {
 		Window.addResizeHandler(new ResizeHandler() {
 			@Override
 			public void onResize(ResizeEvent event) {
-				if (event.getWidth() <= 719) {
-					if (selectedTab.equals(OVERALL_LIST_TYPE)) {
-						allItem.removeClassName(style.isActive());
-						paidItem.removeClassName(style.isActive());
-						freeItem.removeClassName(style.isActive());
-						grossingItem.addClassName(style.isActive());
-						removeAllColumns();
-						leaderboardHomeTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-						leaderboardHomeTable.setColumnWidth(grossingColumn, 42.0, Unit.PCT);
-						leaderboardHomeTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
-						leaderboardHomeTable.setColumnWidth(revenueColumn, 19.0, Unit.PCT);
-						leaderboardHomeTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
-						leaderboardHomeTable.addColumn(rankColumn, rankHeader);
-						leaderboardHomeTable.addColumn(grossingColumn, "App Name");
-						leaderboardHomeTable.addColumn(priceColumn, priceHeader);
-						leaderboardHomeTable.addColumn(revenueColumn, "Revenue");
-						leaderboardHomeTable.addColumn(iapColumn, iapHeader);
-						iapHeader.setHeaderStyleNames(style.columnHiddenMobile());
-						iapColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
-						leaderboardHomeTable.addColumnStyleName(4, style.columnHiddenMobile());
-						leaderboardHomeTable.setLoadingIndicator(loadingIndicatorPaidGrossingList);
-						ResponsiveDesignHelper.makeTabsResponsive();
-						TooltipHelper.updateHelperTooltip();
-						selectedTab = GROSSING_LIST_TYPE;
+				if (PageType.HomePageType == NavigationController.get().getCurrentPage()) {
+					if (event.getWidth() <= 719) {
+						if (selectedTab.equals(OVERALL_LIST_TYPE)) {
+							allItem.removeClassName(style.isActive());
+							paidItem.removeClassName(style.isActive());
+							freeItem.removeClassName(style.isActive());
+							grossingItem.addClassName(style.isActive());
+							removeAllColumns();
+							leaderboardHomeTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+							leaderboardHomeTable.setColumnWidth(grossingColumn, 42.0, Unit.PCT);
+							leaderboardHomeTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
+							leaderboardHomeTable.setColumnWidth(revenueColumn, 19.0, Unit.PCT);
+							leaderboardHomeTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
+							leaderboardHomeTable.addColumn(rankColumn, rankHeader);
+							leaderboardHomeTable.addColumn(grossingColumn, "App Name");
+							leaderboardHomeTable.addColumn(priceColumn, priceHeader);
+							leaderboardHomeTable.addColumn(revenueColumn, "Revenue");
+							leaderboardHomeTable.addColumn(iapColumn, iapHeader);
+							iapHeader.setHeaderStyleNames(style.columnHiddenMobile());
+							iapColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
+							leaderboardHomeTable.addColumnStyleName(4, style.columnHiddenMobile());
+							leaderboardHomeTable.setLoadingIndicator(loadingIndicatorPaidGrossingList);
+							ResponsiveDesignHelper.makeTabsResponsive();
+							TooltipHelper.updateHelperTooltip();
+							selectedTab = GROSSING_LIST_TYPE;
+						}
+						allItem.getStyle().setDisplay(Display.NONE);
+					} else {
+						allItem.getStyle().setDisplay(Display.BLOCK);
 					}
-					allItem.getStyle().setDisplay(Display.NONE);
-				} else {
-					allItem.getStyle().setDisplay(Display.BLOCK);
 				}
 			}
 		});
