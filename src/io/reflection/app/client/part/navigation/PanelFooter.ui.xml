@@ -1,0 +1,208 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+
+	<ui:import field="io.reflection.app.client.page.PageType.BlogPostsPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.ForumPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.ItemsPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.CategoriesPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.UsersPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.RolesPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.PermissionsPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.DataAccountsPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.EventsPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.EventSubscriptionsPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.SendNotificationPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.BlogAdminPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.AboutPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.CareersPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.ContactPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.FaqsPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.PressPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.PricingPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.ProductPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.TermsPageType" />
+
+
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
+
+	<ui:style>
+	.usersCount {
+		vertical-align: baseline !important;
+		padding-left: 5px !important;
+		padding-right: 5px;
+		margin-left: 6px;
+		background-color: #474949;
+		color: #fff;
+	}
+	</ui:style>
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.panelLeft} js-custom-scrollbar">
+		<nav class="{STYLES_INSTANCE.reflectionMainStyle.mainNavigation}" role="navigation">
+			<ul ui:field="itemList">
+				<li ui:field="myDataItem" class="{STYLES_INSTANCE.reflectionMainStyle.hasChild}">
+					<g:Anchor ui:field="myDataLink" href="#">
+						<svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve"><path id="My_Data" fill="#3B3735"
+							d="M24.4,8.4l-6.8-3.1l-6,11l-5.9-2.7L0,22.3V32h32V0L24.4,8.4z M2,30v-7.1l4-6.2V30H2z M7,30
+	V16.4l5,2.3V30H7z M13,30V17.8l5-9.2V30H13z M19,30V8.1l5,2.3V30H19z M30,30h-5V10.6l5-5.5V30z"></path></svg>
+						<span>My Data</span>
+					</g:Anchor>
+					<ul>
+						<li ui:field="myAppsItem">
+							<g:InlineHyperlink ui:field="myAppsLink">My Apps</g:InlineHyperlink>
+						</li>
+						<li ui:field="linkedAccountsItem">
+							<g:InlineHyperlink ui:field="linkedAccountsLink">Linked Accounts</g:InlineHyperlink>
+						</li>
+					</ul>
+				</li>
+				<li ui:field="leaderboardItem">
+					<g:InlineHyperlink ui:field="leaderboardLink">
+						<svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">
+								<path id="Leaderboard" fill="#5B5B68" d="M0,2v28h32V2H0z M30,4v5h-8h-2h-8h-2H2V4H30z M20,28h-8V11h8V28z M2,11h8v17H2V11z M22,28
+								V11h8v17H22z"></path>
+								</svg>
+						<span>Leaderboards</span>
+					</g:InlineHyperlink>
+				</li>
+				<li ui:field="productItem">
+					<g:InlineHyperlink targetHistoryToken="{ProductPageType.asTargetHistoryToken}">
+						<svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve"><path fill="#5A5A68"
+							d="M17.1,0.6L0,5.5v18.2L14.9,32L32,25.7V7.7L17.1,0.6z M29.3,8.6l-5.8,2L10.7,4.6l6.3-1.8
+	L29.3,8.6z M9.2,5l12.9,6.1L15,13.6L2,7.2V7L9.2,5z M2,8.3l12.5,6.1v15.1L2,22.6V8.3z M15.5,29.7V14.5L30,9.4v14.9L15.5,29.7z"></path></svg>
+						<span>Product</span>
+					</g:InlineHyperlink>
+				</li>
+				<li ui:field="pricingItem">
+					<g:InlineHyperlink targetHistoryToken="{PricingPageType.asTargetHistoryToken}">
+						<svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve"><path id="Free" fill="#6D69C5"
+							d="M9.8,30.2L0.3,13.8L22.4,1L32,6.4v11L9.8,30.2z M3,14.5l7.5,13L30,16.3V7.6l-7.6-4.3L3,14.5z
+	 M24.5,14c-1.2,0-2.2-0.6-2.8-1.6c-0.4-0.8-0.5-1.6-0.3-2.5c0.2-0.8,0.8-1.5,1.5-2c0.5-0.3,1.1-0.4,1.6-0.4c1.2,0,2.2,0.6,2.8,1.6
+	c0.9,1.6,0.4,3.5-1.2,4.4C25.6,13.9,25.1,14,24.5,14z M24.5,9c-0.3,0-0.6,0.1-0.9,0.2c-0.4,0.2-0.7,0.6-0.8,1.1
+	c-0.1,0.5-0.1,0.9,0.2,1.3c0.5,0.8,1.6,1.1,2.4,0.6c0.8-0.5,1.1-1.6,0.6-2.4C25.7,9.4,25.1,9,24.5,9z"></path></svg>
+						<span>Pricing</span>
+					</g:InlineHyperlink>
+				</li>
+				<li ui:field="blogItem">
+					<g:InlineHyperlink targetHistoryToken="{BlogPostsPageType.asTargetHistoryToken}">
+						<svg version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve"><path id="Forum" fill="#3B3735"
+							d="M7,31.9V24H4c-2.2,0-4-1.8-4-4V4c0-2.2,1.8-4,4-4h24c2.2,0,4,1.8,4,4v16c0,2.2-1.8,4-4,4h-9.7
+	L7,31.9z M4,2C2.9,2,2,2.9,2,4v16c0,1.1,0.9,2,2,2h5v6.1l8.7-6.1H28c1.1,0,2-0.9,2-2V4c0-1.1-0.9-2-2-2H4z"></path></svg>
+						<span>Blog</span>
+					</g:InlineHyperlink>
+				</li>
+				<!-- <li ui:field="forumItem"> -->
+				<!-- <g:InlineHyperlink targetHistoryToken="{ForumPageType.asTargetHistoryToken}"> -->
+				<!-- <svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve"> -->
+				<!-- <path id="Forum" fill="#5B5B68" -->
+				<!-- d="M7,31.9V24H4c-2.2,0-4-1.8-4-4V4c0-2.2,1.8-4,4-4h24c2.2,0,4,1.8,4,4v16c0,2.2-1.8,4-4,4h-9.7 -->
+				<!-- L7,31.9z M4,2C2.9,2,2,2.9,2,4v16c0,1.1,0.9,2,2,2h5v6.1l8.7-6.1H28c1.1,0,2-0.9,2-2V4c0-1.1-0.9-2-2-2H4z"></path> -->
+				<!-- </svg> -->
+				<!-- <span>Forum</span> -->
+				<!-- </g:InlineHyperlink> -->
+				<!-- </li> -->
+				<li ui:field="adminItem" class="{STYLES_INSTANCE.reflectionMainStyle.hasChild}">
+					<g:Anchor ui:field="adminLink" href="#">
+						<svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve"><path id="Admin" fill-rule="evenodd"
+							clip-rule="evenodd" fill="#5A5A68"
+							d="M24.4,4.4c0,0.8-0.6,1.4-1.4,1.4H4.4
+	C3.6,5.8,3,5.2,3,4.4l0,0C3,3.6,3.6,3,4.4,3H23C23.7,3,24.4,3.6,24.4,4.4L24.4,4.4z M29,9c0,0.8-0.6,1.4-1.4,1.4H4.4
+	C3.6,10.4,3,9.8,3,9l0,0c0-0.8,0.6-1.4,1.4-1.4h23.2C28.4,7.6,29,8.3,29,9L29,9z M19.7,18.3c0,0.8-0.6,1.4-1.4,1.4H4.4
+	c-0.8,0-1.4-0.6-1.4-1.4l0,0c0-0.8,0.6-1.4,1.4-1.4h13.9C19.1,16.9,19.7,17.6,19.7,18.3L19.7,18.3z M24.4,23c0,0.8-0.6,1.4-1.4,1.4
+	H4.4C3.6,24.4,3,23.7,3,23l0,0c0-0.8,0.6-1.4,1.4-1.4H23C23.7,21.6,24.4,22.2,24.4,23L24.4,23z M24.4,13.7c0,0.8-0.6,1.4-1.4,1.4
+	H4.4c-0.8,0-1.4-0.6-1.4-1.4l0,0c0-0.8,0.6-1.4,1.4-1.4H23C23.7,12.3,24.4,12.9,24.4,13.7L24.4,13.7z M29,27.6
+	c0,0.8-0.6,1.4-1.4,1.4H4.4C3.6,29,3,28.4,3,27.6l0,0c0-0.8,0.6-1.4,1.4-1.4h23.2C28.4,26.2,29,26.8,29,27.6L29,27.6z"></path></svg>
+						<span>Admin</span>
+					</g:Anchor>
+					<ul>
+						<li ui:field="adminFeedBrowserItem">
+							<g:InlineHyperlink ui:field="adminFeedBrowserLink">Feed Browser</g:InlineHyperlink>
+						</li>
+						<li ui:field="adminSimpleModelRunItem">
+							<g:InlineHyperlink ui:field="adminSimpleModelRunLink">Simple Model Run</g:InlineHyperlink>
+						</li>
+						<li ui:field="adminItemsItem">
+							<g:InlineHyperlink targetHistoryToken="{ItemsPageType.asTargetHistoryToken}">Items</g:InlineHyperlink>
+						</li>
+						<li ui:field="adminCategoriesItem">
+							<g:InlineHyperlink targetHistoryToken="{CategoriesPageType.asTargetHistoryToken}">Categories</g:InlineHyperlink>
+						</li>
+						<li ui:field="adminUsersItem">
+							<g:InlineHyperlink targetHistoryToken="{UsersPageType.asTargetHistoryToken}">
+								Users
+								<span class="{style.usersCount}" ui:field="usersCount"></span>
+							</g:InlineHyperlink>
+						</li>
+						<li ui:field="adminRolesItem">
+							<g:InlineHyperlink targetHistoryToken="{RolesPageType.asTargetHistoryToken}">Roles</g:InlineHyperlink>
+						</li>
+						<li ui:field="adminPermissionsItem">
+							<g:InlineHyperlink targetHistoryToken="{PermissionsPageType.asTargetHistoryToken}">Permissions</g:InlineHyperlink>
+						</li>
+						<li ui:field="adminDataAccountsItem">
+							<g:InlineHyperlink targetHistoryToken="{DataAccountsPageType.asTargetHistoryToken}">Data accounts</g:InlineHyperlink>
+						</li>
+						<li ui:field="adminDataAccountFetchesItem">
+							<g:InlineHyperlink ui:field="adminDataAccountFetchesLink">Data account fetches</g:InlineHyperlink>
+						</li>
+						<li ui:field="adminEventsItem">
+							<g:InlineHyperlink targetHistoryToken="{EventsPageType.asTargetHistoryToken}">Events</g:InlineHyperlink>
+						</li>
+						<li ui:field="adminEventSubscriptionsItem">
+							<g:InlineHyperlink targetHistoryToken="{EventSubscriptionsPageType.asTargetHistoryToken}">Event Subscriptions</g:InlineHyperlink>
+						</li>
+						<li ui:field="adminSendNotificationItem">
+							<g:InlineHyperlink targetHistoryToken="{SendNotificationPageType.asTargetHistoryToken}">Send Notification</g:InlineHyperlink>
+						</li>
+						<li ui:field="adminBlogItem">
+							<g:InlineHyperlink targetHistoryToken="{BlogAdminPageType.asTargetHistoryToken}">Blog</g:InlineHyperlink>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</nav>
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.mainFooterLinks}">
+			<ul ui:field="secondaryFooterList">
+				<li ui:field="productSecondaryItem">
+					<g:InlineHyperlink targetHistoryToken="{ProductPageType.asTargetHistoryToken}">Product</g:InlineHyperlink>
+				</li>
+				<li ui:field="pricingSecondaryItem">
+					<g:InlineHyperlink ui:field="pricingSecondaryLink">Pricing</g:InlineHyperlink>
+				</li>
+				<li>
+					<g:InlineHyperlink targetHistoryToken="{AboutPageType.asTargetHistoryToken}">About Us</g:InlineHyperlink>
+				</li>
+				<!-- <li> -->
+				<!-- <g:InlineHyperlink targetHistoryToken="{PressPageType.asTargetHistoryToken}">Press</g:InlineHyperlink> -->
+				<!-- </li> -->
+				<li>
+					<g:InlineHyperlink targetHistoryToken="{ContactPageType.asTargetHistoryToken}">Contact Us</g:InlineHyperlink>
+				</li>
+				<li>
+					<g:InlineHyperlink targetHistoryToken="{CareersPageType.asTargetHistoryToken}">Careers</g:InlineHyperlink>
+				</li>
+				<li>
+					<g:InlineHyperlink targetHistoryToken="{FaqsPageType.asTargetHistoryToken}">FAQs</g:InlineHyperlink>
+				</li>
+				<li>
+					<g:InlineHyperlink targetHistoryToken="{TermsPageType.asTargetHistoryToken}">Terms &amp; Conditions</g:InlineHyperlink>
+				</li>
+			</ul>
+		</div>
+		<ul class="{STYLES_INSTANCE.reflectionMainStyle.mainSocialLinks}">
+			<li>
+				<a href="https://twitter.com/reflectionio" class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeTwitter}"
+					target="_blank">
+					<span>Twitter</span>
+				</a>
+			</li>
+			<li>
+				<a href="https://www.linkedin.com/company/reflection-io-ltd" class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeLinkedin}"
+					target="_blank">
+					<span>LinkedIn</span>
+				</a>
+			</li>
+		</ul>
+
+	</g:HTMLPanel>
+
+
+</ui:UiBinder> 
