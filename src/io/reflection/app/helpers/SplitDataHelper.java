@@ -98,31 +98,28 @@ public class SplitDataHelper {
 			List<SimpleEntry<String, String>> mainItemIdsAndCountries = saleService.getSoldItemIdsForAccountInDateRange(dataAccountId, gatherFrom, gatherTo);
 			LOG.log(GaeLevel.DEBUG, String.format("Got %d combinations of main item id and country", mainItemIdsAndCountries.size()));
 
-			HashMap<String, String> mainItemsGrouped = groupConcatValuesByKey(mainItemIdsAndCountries);
-
 			String countriesToIngest = System.getProperty("ingest.ios.countries");
 			countriesToIngest = countriesToIngest == null ? null : countriesToIngest.toLowerCase();
 
-			LOG.log(GaeLevel.DEBUG, String.format("Countries to ingest are %s. Processing %d main item id / country combinations", countriesToIngest, mainItemIdsAndCountries.size()));
+			LOG.log(GaeLevel.DEBUG, String.format("Countries to ingest are %s. Processing %d main item id / country combinations", countriesToIngest,
+					mainItemIdsAndCountries.size()));
 
-			for (SimpleEntry<String, String> entry : mainItemIdsAndCountries) {
+			HashMap<String, String> mainItemsGrouped = groupConcatAndFilterCountriesByItemId(mainItemIdsAndCountries, countriesToIngest);
+
+			for (String mainItemId : mainItemsGrouped.keySet()) {
 				try {
-					String country = entry.getValue();
-
-					if (countriesToIngest != null && !countriesToIngest.contains(country.toLowerCase())) {
-						continue;
-					}
-
-					String mainItemId = entry.getKey();
+					String countries = mainItemsGrouped.get(mainItemId);
 					String iapItemIds = parentItemsByIaps.get(mainItemId);
 
 					if (iapItemIds == null) {
 						iapItemIds = "";
 					}
 
-					String taskName = String.format("%d_%s_%s_%s_%s___%d", dataAccountId, mainItemId, country, gatherFromStr, gatherToStr, System.currentTimeMillis());
+					String taskName = String.format("%d_%s_%s_%s_%s___%d", dataAccountId, mainItemId, countries.replace(',', '_'), gatherFromStr, gatherToStr,
+							System.currentTimeMillis());
 
-					LOG.log(GaeLevel.DEBUG, String.format("Queueing spit data gather task for data account %d, main item id %s in %s with iaps %s", dataAccountId, mainItemId, country, iapItemIds));
+					LOG.log(GaeLevel.DEBUG, String.format("Queueing spit data gather task for data account %d, main item id %s in %s with iaps %s",
+							dataAccountId, mainItemId, countries, iapItemIds));
 
 					QueueHelper.enqueue("gathersplitsaledata", Method.PULL,
 							new SimpleEntry<String, String>("taskName", taskName),
@@ -130,10 +127,10 @@ public class SplitDataHelper {
 							new SimpleEntry<String, String>("gatherFrom", gatherFromStr),
 							new SimpleEntry<String, String>("gatherTo", gatherToStr),
 							new SimpleEntry<String, String>("mainItemId", mainItemId),
-							new SimpleEntry<String, String>("countryCode", country),
+							new SimpleEntry<String, String>("countryCodes", countries),
 							new SimpleEntry<String, String>("iapItemIds", iapItemIds));
 				} catch (Exception e) {
-					LOG.log(Level.WARNING, String.format("Exception thrown while looping to enqueue items for split data gather: %s", entry), e);
+					LOG.log(Level.WARNING, String.format("Exception thrown while looping to enqueue items for split data gather: %s", mainItemId), e);
 				}
 			}
 		} catch (DataAccessException e) {
@@ -143,14 +140,33 @@ public class SplitDataHelper {
 	}
 
 	/**
-	 * @param entryList
+	 * @param mainItemIdsAndCountries
+	 * @param countriesToIngest
 	 * @return
 	 */
-	private HashMap<String, String> groupConcatValuesByKey(List<SimpleEntry<String, String>> entryList) {
+	private HashMap<String, String> groupConcatAndFilterCountriesByItemId(List<SimpleEntry<String, String>> mainItemIdsAndCountries, String countriesToIngest) {
 		HashMap<String, String> result = new HashMap<String, String>();
 
-		for (SimpleEntry<String, String> entry : entryList) {
+		for (SimpleEntry<String, String> entry : mainItemIdsAndCountries) {
+			String mainItemId = entry.getKey();
+			String country = entry.getValue();
 
+			if (countriesToIngest != null && !countriesToIngest.contains(country.toLowerCase())) {
+				continue;
+			}
+
+			String groupedCountries = result.get(mainItemId);
+
+			if (groupedCountries == null) {
+				groupedCountries = country;
+			} else {
+				if (groupedCountries.length() > 0) {
+					groupedCountries += ",";
+				}
+				groupedCountries += country;
+			}
+
+			result.put(mainItemId, groupedCountries);
 		}
 
 		return result;
