@@ -680,6 +680,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("general-error-message")
 		String generalErrorMessage();
 
+		@ClassName("global-footer")
+		String globalFooter();
+
 		@ClassName("global-header")
 		String globalHeader();
 
@@ -854,9 +857,6 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("home-leaderboard-button-container")
 		String homeLeaderboardButtonContainer();
-
-		@ClassName("home-leaderboard-title-container")
-		String homeLeaderboardTitleContainer();
 
 		@ClassName("home-partners-heading")
 		String homePartnersHeading();
@@ -1167,17 +1167,11 @@ public interface Styles extends ClientBundle {
 		@ClassName("logo-reflection-footer")
 		String logoReflectionFooter();
 
-		@ClassName("main-footer-links")
-		String mainFooterLinks();
-
 		@ClassName("main-navigation")
 		String mainNavigation();
 
 		@ClassName("main-navigation--account")
 		String mainNavigationAccount();
-
-		@ClassName("main-social-links")
-		String mainSocialLinks();
 
 		@ClassName("maintain-after-submit")
 		String maintainAfterSubmit();
@@ -1742,6 +1736,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("ref-icon-after--dot")
 		String refIconAfterDot();
 
+		@ClassName("ref-icon-after--info")
+		String refIconAfterInfo();
+
 		@ClassName("ref-icon-after--question")
 		String refIconAfterQuestion();
 
@@ -1970,6 +1967,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("small-text")
 		String smallText();
 
+		@ClassName("social-link")
+		String socialLink();
+
 		@ClassName("sort-svg")
 		String sortSvg();
 
@@ -2147,6 +2147,9 @@ public interface Styles extends ClientBundle {
 
 		String tooltip();
 
+		@ClassName("tooltip--info")
+		String tooltipInfo();
+
 		@ClassName("tooltip-feature")
 		String tooltipFeature();
 
@@ -2200,9 +2203,6 @@ public interface Styles extends ClientBundle {
 		@ClassName("whats-this-tooltip-icon")
 		String whatsThisTooltipIcon();
 
-		@ClassName("whats-this-tooltip-icon-static")
-		String whatsThisTooltipIconStatic();
-
 		@ClassName("whats-this-tooltip-popup")
 		String whatsThisTooltipPopup();
 
@@ -2235,6 +2235,7 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("window-warning")
 		String windowWarning();
+
 	}
 
 	public static final Styles STYLES_INSTANCE = GWT.create(Styles.class);

@@ -17,6 +17,7 @@ import io.reflection.app.client.page.LoggedInHomePage;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.navigation.Header;
+import io.reflection.app.client.part.navigation.PanelFooter;
 import io.reflection.app.client.part.navigation.PanelLeftMenu;
 import io.reflection.app.client.part.navigation.PanelRightAccount;
 import io.reflection.app.client.part.navigation.PanelRightSearch;
@@ -61,6 +62,7 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 	private PanelLeftMenu panelLeftMenu = null;
 	private PanelRightAccount panelRightAccount = null;
 	private PanelRightSearch panelRightSearch = null;
+	private PanelFooter panelFooter = null;
 	private HTMLPanel lMain = null;
 
 	private Stack stack;
@@ -405,6 +407,14 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 		}
 		return panelRightSearch;
 	}
+	
+	public PanelFooter getPanelFooter() {
+		
+		if (panelFooter == null) {
+			panelFooter = new PanelFooter();
+		}
+		return panelFooter;
+	}
 
 	public PageType getCurrentPage() {
 		PageType p = null;
@@ -567,5 +577,4 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 		ItemController.get().reset();
 		pages.put(PageType.ItemPageType.toString(), null);
 	}
-
 }

@@ -437,7 +437,7 @@ public class HomePage extends Page {
 			public SafeHtml getValue(RanksGroup object) {
 				return SafeHtmlUtils.fromSafeConstant(DataTypeHelper.itemIapState(ItemController.get().lookupItem(rankForListType(object).itemId),
 						IAP_YES_HTML, IAP_NO_HTML,
-						"<span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding " + style.whatsThisTooltipIconStatic()
+						"<span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding " + style.whatsThisTooltipIcon()
 								+ "\" data-tooltip=\"No data available\"></span>"));
 			}
 		};
