@@ -8,16 +8,15 @@
 //
 package io.reflection.app.service.dataaccount;
 
+import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.datatypes.shared.DataAccount;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 import com.spacehopperstudios.service.IService;
-
-import io.reflection.app.api.exception.DataAccessException;
-import io.reflection.app.api.shared.datatypes.Pager;
-import io.reflection.app.datatypes.shared.DataAccount;
-import io.reflection.app.datatypes.shared.DataSource;
 
 public interface IDataAccountService extends IService {
 	/**
@@ -61,16 +60,6 @@ public interface IDataAccountService extends IService {
 	 * @throws DataAccessException
 	 */
 	public DataAccount addDataAccount(DataAccount dataAccount) throws DataAccessException;
-
-	/**
-	 *
-	 * @param dataSource
-	 * @param username
-	 * @param password
-	 * @return
-	 * @throws DataAccessException
-	 */
-	public DataAccount addDataAccount(DataSource dataSource, String username, String password, String properties) throws DataAccessException;
 
 	/**
 	 * @param dataAccount
@@ -131,6 +120,14 @@ public interface IDataAccountService extends IService {
 	public List<DataAccount> getIdsDataAccounts(Collection<Long> ids, Pager pager) throws DataAccessException;
 
 	/**
+	 * 
+	 * @param vendorId
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<DataAccount> getVendorDataAccounts(String vendorId) throws DataAccessException;
+
+	/**
 	 *
 	 * @param dataAccount
 	 * @throws DataAccessException
@@ -145,6 +142,13 @@ public interface IDataAccountService extends IService {
 	 * @throws DataAccessException
 	 */
 	public void triggerSingleDateDataAccountFetch(DataAccount dataAccount, Date date) throws DataAccessException;
+
+	/**
+	 * @param dataAccountId
+	 * @param date
+	 * @throws DataAccessException
+	 */
+	void triggerSingleDateDataAccountFetch(Long dataAccountId, Date date) throws DataAccessException;
 
 	/**
 	 * Trigger Multiple Date Data Account Fetch - dates are sequential and separated by a number of days
@@ -175,5 +179,12 @@ public interface IDataAccountService extends IService {
 	 * @throws DataAccessException
 	 */
 	public List<Long> getAllDataAccountIDs() throws DataAccessException;
+
+	/**
+	 * @param userId
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<DataAccount> getDataAccountForUser(Long userId) throws DataAccessException;
 
 }

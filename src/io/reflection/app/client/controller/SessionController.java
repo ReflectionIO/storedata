@@ -42,7 +42,7 @@ import io.reflection.app.client.handler.user.UserPasswordChangedEventHandler.Use
 import io.reflection.app.client.handler.user.UserPowersEventHandler.GetUserPowersFailed;
 import io.reflection.app.client.handler.user.UserPowersEventHandler.GotUserPowers;
 import io.reflection.app.client.helper.FormHelper;
-import io.reflection.app.client.helper.MixPanelApiHelper;
+import io.reflection.app.client.mixpanel.MixpanelHelper;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
@@ -175,11 +175,10 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 		if (loggedInUser != user) {
 			loggedInUser = user; // used if changed person
 
-			MixPanelApiHelper.trackLoginUser(loggedInUser);
-
 			if (loggedInUser == null) { // used if previous logged out
 				DefaultEventBus.get().fireEventFromSource(new UserLoggedOut(), SessionController.this);
 			} else {
+				MixpanelHelper.trackLogin();
 				DefaultEventBus.get().fireEventFromSource(new UserLoggedIn(loggedInUser, userSession), SessionController.this); // Fire user logged in event
 			}
 		}
@@ -211,8 +210,9 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 								&& userSession.token.equals(input.session.token)) {
 
 							setUserRole(output.roles.get(0));
-
 							setUserPermissions(output.permissions);
+
+							MixpanelHelper.registerRoleAndPermissions(output.roles.get(0), output.permissions);
 
 							NavigationController.get().resetSemiPublicPages();
 
@@ -237,7 +237,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 		return attemptPrefetch;
 	}
 
-	public void fetchRolesAndPermissions() {
+	public void fetchRoleAndPermissions() {
 
 		CoreService service = ServiceCreator.createCoreService();
 
@@ -257,6 +257,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 						setUserRole(output.roles.get(0));
 						setUserPermissions(output.permissions);
 
+						MixpanelHelper.registerRoleAndPermissions(output.roles.get(0), output.permissions);
 						DefaultEventBus.get().fireEventFromSource(
 								new GotUserPowers(loggedInUser, loggedInUser.roles, loggedInUser.permissions, output.daysSinceRoleAssigned),
 								SessionController.this);
@@ -301,7 +302,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 			}
 		});
 
-		MixPanelApiHelper.trackLoggedOut();
+		MixpanelHelper.trackLogout();
 
 		makeSessionInvalid();
 

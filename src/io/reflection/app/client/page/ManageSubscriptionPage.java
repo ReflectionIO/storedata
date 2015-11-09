@@ -14,6 +14,7 @@ import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.handler.user.UserPowersEventHandler;
 import io.reflection.app.client.helper.TooltipHelper;
+import io.reflection.app.client.mixpanel.MixpanelHelper;
 import io.reflection.app.client.popup.AddLinkedAccountPopup;
 import io.reflection.app.client.popup.PremiumPopup;
 import io.reflection.app.client.popup.RegisterInterestPopup;
@@ -160,7 +161,7 @@ public class ManageSubscriptionPage extends Page implements NavigationEventHandl
 				event.preventDefault();
 			}
 		});
-		TooltipHelper.updateHelperTooltip();
+		TooltipHelper.updateWhatsThisTooltip();
 	}
 
 	private boolean isValidStack(Stack current) {
@@ -172,6 +173,7 @@ public class ManageSubscriptionPage extends Page implements NavigationEventHandl
 	@UiHandler("linkAccountBtn")
 	void onAddLinkedAccountClicked(ClickEvent event) {
 		event.preventDefault();
+		MixpanelHelper.trackClicked(MixpanelHelper.Event.OPEN_LINK_ACCOUNT_POPUP, "manageSubscriptions");
 		addLinkedAccountPopup.show("Link Your Appstore Account", "You need to link your iTunes Connect account, it only takes a moment");
 	}
 

@@ -20,6 +20,7 @@ import io.reflection.app.api.core.shared.call.event.DeleteLinkedAccountEventHand
 import io.reflection.app.api.core.shared.call.event.GetLinkedAccountsEventHandler;
 import io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler;
 import io.reflection.app.api.core.shared.call.event.UpdateLinkedAccountEventHandler;
+import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.DeleteLinkedAccountCell;
 import io.reflection.app.client.cell.EditLinkedAccountCell;
@@ -31,6 +32,8 @@ import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.AnimationHelper;
 import io.reflection.app.client.helper.DOMHelper;
 import io.reflection.app.client.helper.ResponsiveDesignHelper;
+import io.reflection.app.client.helper.TooltipHelper;
+import io.reflection.app.client.mixpanel.MixpanelHelper;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.linkaccount.IosMacLinkAccountForm;
 import io.reflection.app.client.part.linkaccount.LinkedAccountChangeEvent.EVENT_TYPE;
@@ -109,8 +112,6 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	public LinkedAccountsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		createColumns();
-		linkedAccountsTable.setTableBuilder(new CustomTableBuilder(linkedAccountsTable));
 		linkedAccountsTable.setKeyboardSelectionPolicy(KeyboardSelectionPolicy.DISABLED);
 
 		// addSoonTag(mPlayLink);
@@ -120,6 +121,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 			@Override
 			public void onClick(ClickEvent event) {
+				MixpanelHelper.trackClicked(MixpanelHelper.Event.OPEN_LINK_ACCOUNT_POPUP, "linkedaccounts_linkFirstAccount");
 				addLinkedAccountPopup.show("Link an Account", null);
 			}
 		});
@@ -133,6 +135,9 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		linkedAccountsTable.setLoadingIndicator(AnimationHelper.getLinkedAccountsIndicator(1));
 
 		linkedAccountsCount.setInnerSafeHtml(AnimationHelper.getLoaderInlineSafeHTML());
+
+		linkedAccountsTable.setTableBuilder(new CustomTableBuilder(linkedAccountsTable));
+		createColumns();
 
 	}
 
@@ -356,12 +361,15 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		long count = LinkedAccountController.get().getLinkedAccountsCount();
 		if (count >= 0) {
 			linkedAccountsCount.setInnerText(Long.toString(count));
+			linkedAccountsTable.redraw();
+			TooltipHelper.updateWhatsThisTooltip();
 		}
 		setTableEmpty(count <= 0);
 	}
 
 	@UiHandler("addAnotherLinkedAccountBtn")
 	void onAddLinkedAccountClicked(ClickEvent event) {
+		MixpanelHelper.trackClicked(MixpanelHelper.Event.OPEN_LINK_ACCOUNT_POPUP, "linkedaccounts_linkAnotherAccount");
 		addLinkedAccountPopup.show("Link Another Account", null);
 	}
 
@@ -437,10 +445,28 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		if (updatingLinkedAccountForm != null) {
 			if (output.status == StatusType.StatusTypeSuccess) {
 				updatingLinkedAccountForm.setStatusSuccess("Updated!");
-			} else {
-				updatingLinkedAccountForm.setStatusError();
+				updatingLinkedAccountForm.clearPassword();
+			} else if (output.error != null) {
+				if (output.error.code == ApiError.InvalidDataAccountCredentials.getCode()) {
+					updatingLinkedAccountForm.setStatusError("Invalid credentials!");
+					// updatingLinkedAccountForm.setUsernameError("iTunes Connect username or password entered incorrectly");
+					updatingLinkedAccountForm.setPasswordError("iTunes Connect username or password entered incorrectly");
+					updatingLinkedAccountForm.setFormErrors();
+				} else if (output.error.code == ApiError.InvalidDataAccountVendor.getCode()) {
+					updatingLinkedAccountForm.setStatusError("Invalid vendor ID!");
+					updatingLinkedAccountForm.setVendorError("iTunes Connect vendor number entered incorrectly");
+					updatingLinkedAccountForm.setFormErrors();
+					updatingLinkedAccountForm.clearPassword();
+				} else if (output.error.code == ApiError.DuplicateVendorId.getCode()) {
+					updatingLinkedAccountForm.setStatusError("Account already linked!");
+					updatingLinkedAccountForm.setVendorError("The vendor ID you entered is already in use");
+					updatingLinkedAccountForm.setFormErrors();
+				} else {
+					updatingLinkedAccountForm.setStatusError();
+					updatingLinkedAccountForm.clearPassword();
+				}
+
 			}
-			updatingLinkedAccountForm.clearPassword();
 			updatingLinkedAccountForm.setEnabled(true);
 			updatingLinkedAccountForm = null;
 		}

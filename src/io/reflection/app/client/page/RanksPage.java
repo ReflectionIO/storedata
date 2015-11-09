@@ -40,6 +40,7 @@ import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.helper.FormattingHelper;
 import io.reflection.app.client.helper.ResponsiveDesignHelper;
 import io.reflection.app.client.helper.TooltipHelper;
+import io.reflection.app.client.mixpanel.MixpanelHelper;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.ErrorPanel;
 import io.reflection.app.client.part.LoadingIndicator;
@@ -53,6 +54,7 @@ import io.reflection.app.client.res.Styles.ReflectionMainStyles;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.shared.util.DataTypeHelper;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -61,10 +63,12 @@ import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -72,10 +76,6 @@ import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.logical.shared.ShowRangeEvent;
 import com.google.gwt.event.logical.shared.ShowRangeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
@@ -89,10 +89,14 @@ import com.google.gwt.user.cellview.client.ColumnSortEvent;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.SafeHtmlHeader;
 import com.google.gwt.user.cellview.client.TextHeader;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Window.ScrollEvent;
+import com.google.gwt.user.client.Window.ScrollHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineHyperlink;
@@ -111,7 +115,6 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	interface RanksPageUiBinder extends UiBinder<Widget, RanksPage> {}
 
 	public static final int SELECTED_TAB_PARAMETER_INDEX = 0;
-	public static final int VIEW_ALL_LENGTH_VALUE = Integer.MAX_VALUE;
 	public static final String ALL_TEXT = "Overview";
 	public static final String COMING_FROM_PARAMETER = "leaderboard";
 
@@ -123,6 +126,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		SafeHtml code(Long code);
 	}
 
+	@UiField(provided = true) CellTable<RanksGroup> stickyHeaderTable = new CellTable<RanksGroup>(1, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) CellTable<RanksGroup> leaderboardTable = new CellTable<RanksGroup>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 
 	private LoadingIndicator loadingIndicatorAll = AnimationHelper.getLeaderboardAllLoadingIndicator(25);
@@ -162,6 +166,8 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	// @UiField InlineHyperlink redirect;
 	@UiField ErrorPanel errorPanel;
 	@UiField NoDataPanel noDataPanel;
+
+	@UiField Element iframe;
 
 	private Column<RanksGroup, SafeHtml> rankColumn;
 	private Column<RanksGroup, Rank> grossingColumn;
@@ -206,7 +212,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		applyFilters.getElement().setAttribute("data-tooltip", "Update results");
 
 		if (!SessionController.get().isAdmin()) {
-			categorySelector.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
+			categorySelector.setTooltip("We're in beta. More categories and countries will be available soon.");
 		}
 
 		dateBox.getDatePicker().addShowRangeHandler(new ShowRangeHandler<Date>() {
@@ -215,7 +221,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			public void onShowRange(ShowRangeEvent<Date> event) {
 				FilterHelper.disableOutOfRangeDates(dateBox.getDatePicker(),
 						(SessionController.get().isAdmin() ? null : ApiCallHelper.getUTCDate(2015, 8, 31)),
-						(SessionController.get().isAdmin() ? FilterHelper.getToday() : FilterHelper.getDaysAgo(2)));
+						(SessionController.get().isAdmin() ? FilterHelper.getToday() : FilterHelper.getDaysAgo(3)));
 			}
 		});
 
@@ -279,6 +285,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		leaderboardTable.getTableLoadingSection().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().tableBodyLoading());
 
 		RankController.get().addDataDisplay(leaderboardTable);
+		stickyHeaderTable.setRowData(Arrays.asList(RanksGroup.getPlaceholder()));
 
 		dateSelectContainer.addClassName("js-tooltip");
 		dateSelectContainer.setAttribute("data-tooltip", "Select a date");
@@ -289,20 +296,40 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		Window.addResizeHandler(new ResizeHandler() {
 			@Override
 			public void onResize(ResizeEvent event) {
-				if (event.getWidth() <= 719) {
-					if (tabs.get(OVERALL_LIST_TYPE).hasClassName(style.isActive())) {
-						History.replaceItem(grossingLink.getTargetHistoryToken());
+				if (PageType.RanksPageType == NavigationController.get().getCurrentPage()) {
+					if (event.getWidth() <= 719) {
+						if (tabs.get(OVERALL_LIST_TYPE).hasClassName(style.isActive())) {
+							History.replaceItem(grossingLink.getTargetHistoryToken());
+						}
+						allItem.getStyle().setDisplay(Display.NONE);
+					} else {
+						allItem.getStyle().setDisplay(Display.BLOCK);
 					}
-					allItem.getStyle().setDisplay(Display.NONE);
-				} else {
-					allItem.getStyle().setDisplay(Display.BLOCK);
 				}
 			}
 		});
 
 		updateSelectorsFromFilter();
 		TooltipHelper.updateHelperTooltip();
+		stickyTableHead();
+	}
 
+	private void stickyTableHead() {
+		Window.addWindowScrollHandler(new ScrollHandler() {
+
+			@Override
+			public void onWindowScroll(ScrollEvent event) {
+				int dataTableTopPosition = leaderboardTable.getElement().getAbsoluteTop()
+						- NavigationController.get().getHeader().getElement().getClientHeight();
+				if (event.getScrollTop() >= dataTableTopPosition && leaderboardTable.isVisible()) {
+					stickyHeaderTable.getElement().getStyle().setVisibility(Visibility.VISIBLE);
+					stickyHeaderTable.getElement().getStyle().setOpacity(1);
+				} else {
+					stickyHeaderTable.getElement().getStyle().setVisibility(Visibility.HIDDEN);
+					stickyHeaderTable.getElement().getStyle().setOpacity(0);
+				}
+			}
+		});
 	}
 
 	private void createColumns() {
@@ -353,7 +380,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 			@Override
 			public SafeHtml getValue(RanksGroup object) {
-				return (object.free.position != null) ? SafeHtmlUtils.fromTrustedString(object.free.position.toString()) : SafeHtmlUtils
+				return (object.free != null && object.free.position != null) ? SafeHtmlUtils.fromTrustedString(object.free.position.toString()) : SafeHtmlUtils
 						.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
 			}
 
@@ -376,6 +403,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 				if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
 					premiumPopup.show(true);
 				} else if (SessionController.get().isLoggedIn()) {
+					MixpanelHelper.trackClicked(MixpanelHelper.Event.OPEN_LINK_ACCOUNT_POPUP, "leaderboard_table_paid");
 					addLinkedAccountPopup.show("Link Your Appstore Account",
 							"You need to link your iTunes Connect account to use this feature, it only takes a moment");
 				} else {
@@ -400,6 +428,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 				if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
 					premiumPopup.show(true);
 				} else if (SessionController.get().isLoggedIn()) {
+					MixpanelHelper.trackClicked(MixpanelHelper.Event.OPEN_LINK_ACCOUNT_POPUP, "leaderboard_table_free");
 					addLinkedAccountPopup.show("Link Your Appstore Account",
 							"You need to link your iTunes Connect account to use this feature, it only takes a moment");
 				} else {
@@ -423,6 +452,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 				if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
 					premiumPopup.show(true);
 				} else if (SessionController.get().isLoggedIn()) {
+					MixpanelHelper.trackClicked(MixpanelHelper.Event.OPEN_LINK_ACCOUNT_POPUP, "leaderboard_table_grossing");
 					addLinkedAccountPopup.show("Link Your Appstore Account",
 							"You need to link your iTunes Connect account to use this feature, it only takes a moment");
 				} else {
@@ -458,6 +488,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 				if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
 					premiumPopup.show(true);
 				} else if (SessionController.get().isLoggedIn()) {
+					MixpanelHelper.trackClicked(MixpanelHelper.Event.OPEN_LINK_ACCOUNT_POPUP, "leaderboard_table_downloads_" + selectedTab);
 					addLinkedAccountPopup.show("Link Your Appstore Account",
 							"You need to link your iTunes Connect account to use this feature, it only takes a moment");
 				} else {
@@ -484,6 +515,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 				if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
 					premiumPopup.show(true);
 				} else if (SessionController.get().isLoggedIn()) {
+					MixpanelHelper.trackClicked(MixpanelHelper.Event.OPEN_LINK_ACCOUNT_POPUP, "leaderboard_table_revenue_" + selectedTab);
 					addLinkedAccountPopup.show("Link Your Appstore Account",
 							"You need to link your iTunes Connect account to use this feature, it only takes a moment");
 				} else {
@@ -575,8 +607,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 	@UiHandler({ "countrySelector", "appStoreSelector", "categorySelector" })
 	void onFiltersChanged(ChangeEvent event) {
-		applyFilters.setEnabled(isStatusError
-				|| !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
+		applyFilters.setEnabled(isStatusError || !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
 				|| !FilterController.get().getFilter().getStoreA3Code().equals(appStoreSelector.getSelectedValue())
 				|| !FilterController.get().getFilter().getCategoryId().toString().equals(categorySelector.getSelectedValue())
 				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateBox.getValue()));
@@ -584,8 +615,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 	@UiHandler("dateBox")
 	void onDateChanged(ValueChangeEvent<Date> event) {
-		applyFilters.setEnabled(isStatusError
-				|| !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
+		applyFilters.setEnabled(isStatusError || !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
 				|| !FilterController.get().getFilter().getStoreA3Code().equals(appStoreSelector.getSelectedValue())
 				|| !FilterController.get().getFilter().getCategoryId().toString().equals(categorySelector.getSelectedValue())
 				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateBox.getValue()));
@@ -598,9 +628,8 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		countrySelector.setSelectedIndex(FormHelper.getItemIndex(countrySelector, "gb"));
 		appStoreSelector.setSelectedIndex(FormHelper.getItemIndex(appStoreSelector, "iph"));
 		categorySelector.setSelectedIndex(FormHelper.getItemIndex(categorySelector, "15"));
-		dateBox.setValue(FilterHelper.getDaysAgo(2));
-		applyFilters.setEnabled(isStatusError
-				|| !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
+		dateBox.setValue(FilterHelper.getDaysAgo(3));
+		applyFilters.setEnabled(isStatusError || !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
 				|| !FilterController.get().getFilter().getStoreA3Code().equals(appStoreSelector.getSelectedValue())
 				|| !FilterController.get().getFilter().getCategoryId().toString().equals(categorySelector.getSelectedValue())
 				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateBox.getValue()));
@@ -637,6 +666,9 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		leaderboardTable.setStyleName(style.tableOverall(), OVERALL_LIST_TYPE.equals(selectedTab));
 		leaderboardTable.setStyleName(style.tableAppGroup(),
 				(FREE_LIST_TYPE.equals(selectedTab) || PAID_LIST_TYPE.equals(selectedTab) || GROSSING_LIST_TYPE.equals(selectedTab)));
+		stickyHeaderTable.setStyleName(style.tableOverall(), OVERALL_LIST_TYPE.equals(selectedTab));
+		stickyHeaderTable.setStyleName(style.tableAppGroup(),
+				(FREE_LIST_TYPE.equals(selectedTab) || PAID_LIST_TYPE.equals(selectedTab) || GROSSING_LIST_TYPE.equals(selectedTab)));
 
 		switch (selectedTab) {
 		case OVERALL_LIST_TYPE:
@@ -650,6 +682,14 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			leaderboardTable.addColumn(freeColumn, freeHeaderAll);
 			leaderboardTable.addColumn(grossingColumn, grossingHeaderAll);
 			leaderboardTable.setLoadingIndicator(loadingIndicatorAll);
+			stickyHeaderTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+			stickyHeaderTable.setColumnWidth(paidColumn, 30.0, Unit.PCT);
+			stickyHeaderTable.setColumnWidth(freeColumn, 30.0, Unit.PCT);
+			stickyHeaderTable.setColumnWidth(grossingColumn, 30.0, Unit.PCT);
+			stickyHeaderTable.addColumn(rankColumn, rankHeader);
+			stickyHeaderTable.addColumn(paidColumn, paidHeaderAll);
+			stickyHeaderTable.addColumn(freeColumn, freeHeaderAll);
+			stickyHeaderTable.addColumn(grossingColumn, grossingHeaderAll);
 			break;
 		case PAID_LIST_TYPE:
 			removeAllColumns();
@@ -667,6 +707,17 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			iapColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
 			leaderboardTable.addColumnStyleName(4, style.columnHiddenMobile());
 			leaderboardTable.setLoadingIndicator(loadingIndicatorPaidGrossingList);
+			stickyHeaderTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+			stickyHeaderTable.setColumnWidth(paidColumn, 42.0, Unit.PCT);
+			stickyHeaderTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
+			stickyHeaderTable.setColumnWidth(downloadsColumn, 19.0, Unit.PCT);
+			stickyHeaderTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
+			stickyHeaderTable.addColumn(rankColumn, rankHeader);
+			stickyHeaderTable.addColumn(paidColumn, paidHeader);
+			stickyHeaderTable.addColumn(priceColumn, priceHeader);
+			stickyHeaderTable.addColumn(downloadsColumn, "Downloads");
+			stickyHeaderTable.addColumn(iapColumn, iapHeader);
+			stickyHeaderTable.addColumnStyleName(4, style.columnHiddenMobile());
 			break;
 		case FREE_LIST_TYPE:
 			removeAllColumns();
@@ -684,6 +735,17 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			priceColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
 			leaderboardTable.addColumnStyleName(2, style.columnHiddenMobile());
 			leaderboardTable.setLoadingIndicator(loadingIndicatorFreeList);
+			stickyHeaderTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+			stickyHeaderTable.setColumnWidth(freeColumn, 42.0, Unit.PCT);
+			stickyHeaderTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
+			stickyHeaderTable.setColumnWidth(downloadsColumn, 19.0, Unit.PCT);
+			stickyHeaderTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
+			stickyHeaderTable.addColumn(rankColumn, rankHeader);
+			stickyHeaderTable.addColumn(freeColumn, freeHeader);
+			stickyHeaderTable.addColumn(priceColumn, priceHeader);
+			stickyHeaderTable.addColumn(downloadsColumn, "Downloads");
+			stickyHeaderTable.addColumn(iapColumn, iapHeader);
+			stickyHeaderTable.addColumnStyleName(2, style.columnHiddenMobile());
 			break;
 		case GROSSING_LIST_TYPE:
 			removeAllColumns();
@@ -701,6 +763,17 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			iapColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
 			leaderboardTable.addColumnStyleName(4, style.columnHiddenMobile());
 			leaderboardTable.setLoadingIndicator(loadingIndicatorPaidGrossingList);
+			stickyHeaderTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+			stickyHeaderTable.setColumnWidth(grossingColumn, 42.0, Unit.PCT);
+			stickyHeaderTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
+			stickyHeaderTable.setColumnWidth(revenueColumn, 19.0, Unit.PCT);
+			stickyHeaderTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
+			stickyHeaderTable.addColumn(rankColumn, rankHeader);
+			stickyHeaderTable.addColumn(grossingColumn, grossingHeader);
+			stickyHeaderTable.addColumn(priceColumn, priceHeader);
+			stickyHeaderTable.addColumn(revenueColumn, "Revenue");
+			stickyHeaderTable.addColumn(iapColumn, iapHeader);
+			stickyHeaderTable.addColumnStyleName(4, style.columnHiddenMobile());
 			break;
 		}
 
@@ -710,9 +783,9 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 	private void removeColumn(Column<RanksGroup, ?> column) {
 		int currentIndex = leaderboardTable.getColumnIndex(column);
-
 		if (currentIndex != -1) {
 			leaderboardTable.removeColumn(column);
+			stickyHeaderTable.removeColumn(column);
 		}
 	}
 
@@ -724,6 +797,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		iapColumn.setCellStyleNames(style.mhxte6ciA());
 		for (int i = 0; i < leaderboardTable.getColumnCount(); i++) {
 			leaderboardTable.removeColumnStyleName(i, style.columnHiddenMobile());
+			stickyHeaderTable.removeColumnStyleName(i, style.columnHiddenMobile());
 		}
 
 		removeColumn(rankColumn);
@@ -770,7 +844,10 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	void onDownloadLeaderboardClicked(ClickEvent event) {
 		event.preventDefault();
 		if (SessionController.get().canSeePredictions()) {
+
+			Cookies.removeCookie("fileDownloaded");
 			downloadLeaderboard.setStatusLoading("Downloading");
+
 			Filter filter = FilterController.get().getFilter();
 			String listType;
 			if (filter.getStoreA3Code().equals("iph")) {
@@ -807,41 +884,69 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			String country = filter.getCountryA2Code();
 			String category = filter.getCategoryId().toString();
 			String date = String.valueOf(ApiCallHelper.getUTCDate(FilterController.get().getEndDate()).getTime());
-
 			String sessionParam = SessionController.get().getSession().toString();
+			String requestParamenters = "listType=" + listType + "&country=" + country + "&category=" + category + "&date=" + date + "&session=" + sessionParam;
 
-			String requestData = "listType=" + listType + "&country=" + country + "&category=" + category + "&date=" + date + "&session=" + sessionParam;
+			iframe.setAttribute("src", URL.encode(GWT.getHostPageBaseURL() + "downloadleaderboard?" + requestParamenters));
 
-			RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, URL.encode(Window.Location.getProtocol() + "//" + Window.Location.getHost()
-					+ "/downloadleaderboard"));
+			final Timer feedbackTimer = new Timer() {
+				private long counter = 0; // Timeout
 
-			builder.setHeader("Content-Type", "application/x-www-form-urlencoded");
-
-			try {
-				builder.sendRequest(requestData, new RequestCallback() {
-
-					@Override
-					public void onError(Request request, Throwable exception) {
-						downloadLeaderboard.setStatusError();
+				@Override
+				public void run() {
+					counter += 200L;
+					if (counter > 7000) {
+						downloadLeaderboard.resetStatus();
+						Cookies.removeCookie("fileDownloaded");
+						iframe.removeAttribute("src");
+						cancel();
 					}
-
-					@Override
-					public void onResponseReceived(Request request, Response response) {
-						if (response.getStatusCode() == Response.SC_FORBIDDEN) { // User doesn't have the required role, probably premium role is expired
+					if (Cookies.getCookie("fileDownloaded") != null) {
+						if (Cookies.getCookie("fileDownloaded").equals("success")) {
+							downloadLeaderboard.resetStatus();
+						} else if (Cookies.getCookie("fileDownloaded").equals("error")) {
 							downloadLeaderboard.setStatusError();
-							// Refresh credentials
-							SessionController.get().fetchRolesAndPermissions();
+							SessionController.get().fetchRoleAndPermissions(); // Refresh credentials
 						} else {
-							String csvContent = "data:text/csv;charset=utf-8," + response.getText();
-							Window.open(URL.encode(csvContent), "_self", "");
 							downloadLeaderboard.resetStatus();
 						}
+						Cookies.removeCookie("fileDownloaded");
+						iframe.removeAttribute("src");
+						cancel();
 					}
-				});
-			} catch (Exception e) {
-				downloadLeaderboard.setStatusError();
-			}
+				}
+			};
+			feedbackTimer.scheduleRepeating(200);
+
+			// iframe.setUrl("");
+			// RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, URL.encode(GWT.getHostPageBaseURL() + "downloadleaderboard"));
+			// builder.setHeader("Content-Type", "application/x-www-form-urlencoded");
+			// try {
+			// builder.sendRequest(requestParamenters, new RequestCallback() {
+			//
+			// @Override
+			// public void onError(Request request, Throwable exception) {
+			// downloadLeaderboard.setStatusError();
+			// }
+			//
+			// @Override
+			// public void onResponseReceived(Request request, Response response) {
+			// if (response.getStatusCode() == Response.SC_FORBIDDEN) { // User doesn't have the required role, probably premium role is expired
+			// downloadLeaderboard.setStatusError();
+			// // Refresh credentials
+			// SessionController.get().fetchRolesAndPermissions();
+			// } else {
+			// String csvContent = "data:text/csv;charset=utf-8," + URL.encodeQueryString(response.getText());
+			// Window.open(csvContent, "_self", "");
+			// downloadLeaderboard.resetStatus();
+			// }
+			// }
+			// });
+			// } catch (Exception e) {
+			// downloadLeaderboard.setStatusError();
+			// }
 		} else if (SessionController.get().isLoggedIn() && !SessionController.get().hasLinkedAccount()) {
+			MixpanelHelper.trackClicked(MixpanelHelper.Event.OPEN_LINK_ACCOUNT_POPUP, "leaderboard_downloadCsv");
 			addLinkedAccountPopup
 					.show("Link Your Appstore Account", "You need to link your iTunes Connect account to use this feature, it only takes a moment");
 		} else if (SessionController.get().isLoggedIn()) {
@@ -855,7 +960,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	void onViewAllButtonClicked(ClickEvent event) {
 		if (((Button) event.getSource()).isEnabled()) {
 			if (leaderboardTable.getVisibleItemCount() == ServiceConstants.STEP_VALUE) {
-				leaderboardTable.setVisibleRange(0, VIEW_ALL_LENGTH_VALUE);
+				leaderboardTable.setVisibleRange(0, Integer.MAX_VALUE);
 				viewAllSpan.setInnerText("View Less Apps");
 
 				TooltipHelper.updateHelperTooltip();
@@ -964,6 +1069,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		signUpPopup.hide();
 		premiumPopup.hide();
 		addLinkedAccountPopup.hide();
+		iframe.removeAttribute("src");
 	}
 
 	/*

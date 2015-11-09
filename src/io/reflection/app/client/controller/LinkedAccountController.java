@@ -28,6 +28,7 @@ import io.reflection.app.api.core.shared.call.event.UpdateLinkedAccountEventHand
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.client.DefaultEventBus;
+import io.reflection.app.client.mixpanel.MixpanelHelper;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
 import io.reflection.app.datatypes.shared.Item;
@@ -167,21 +168,34 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 			@Override
 			public void onSuccess(LinkAccountResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {
-					rows.add(output.account);
-					addLinkedAccountsToLookup(Arrays.asList(output.account));
-					addDataSourceToLookup(Arrays.asList(output.account.source));
-					// pager.totalCount = Long.valueOf(pager.totalCount.longValue() + 1);
-					// Load HLA Permission
-					linkedAccountsCount = rows.size();
-					updateRowCount(linkedAccountsCount, true);
-					updateRowData(0, rows);
-					SessionController.get().fetchRolesAndPermissions();
+					if (!getAllLinkedAccountIds().contains(output.account.id.toString())) { // Avoid to add duplicated
+						rows.add(output.account);
+						addLinkedAccountsToLookup(Arrays.asList(output.account));
+						addDataSourceToLookup(Arrays.asList(output.account.source));
+						// pager.totalCount = Long.valueOf(pager.totalCount.longValue() + 1);
+						linkedAccountsCount = rows.size();
+						updateRowCount(linkedAccountsCount, true);
+						updateRowData(0, rows);
+						SessionController.get().fetchRoleAndPermissions(); // Load HLA Permission
+					}
+					MixpanelHelper.track(MixpanelHelper.Event.LINK_ACCOUNT_SUCCESS);
+				} else {
+					Map<String, Object> properties = new HashMap<String, Object>();
+					if (output.error != null && output.error.message != null) {
+						properties.put("error_server", output.error.message);
+					} else {
+						properties.put("error_server", "generic error");
+					}
+					MixpanelHelper.track(MixpanelHelper.Event.LINK_ACCOUNT_FAILURE, properties);
 				}
 				DefaultEventBus.get().fireEventFromSource(new LinkAccountSuccess(input, output), LinkedAccountController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
+				Map<String, Object> properties = new HashMap<String, Object>();
+				properties.put("error_server", caught.getMessage());
+				MixpanelHelper.track(MixpanelHelper.Event.LINK_ACCOUNT_FAILURE, properties);
 				DefaultEventBus.get().fireEventFromSource(new LinkAccountFailure(input, caught), LinkedAccountController.this);
 			}
 		});
@@ -262,7 +276,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 					linkedAccountsCount = rows.size();
 					updateRowCount(linkedAccountsCount, true);
 					updateRowData(0, rows);
-					SessionController.get().fetchRolesAndPermissions();
+					SessionController.get().fetchRoleAndPermissions();
 				}
 				DefaultEventBus.get().fireEventFromSource(new DeleteLinkedAccountSuccess(input, output), LinkedAccountController.this);
 			}

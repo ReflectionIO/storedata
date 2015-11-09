@@ -10,14 +10,18 @@ package io.reflection.app.service.lookupitem;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.datatypes.shared.DataAccount;
+import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.LookupItem;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
+import io.reflection.app.service.item.ItemServiceProvider;
 
 /**
  * @author mamin
@@ -35,26 +39,26 @@ public class LookupItemService {
 
 		String getLookupItemsForDataAccountQuery = String.format("select * from lkp_items where dataaccountid=%s", dataAccountId);
 
-		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeLookupItem.toString());
+		Connection lkpConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeLookupItem.toString());
 
 		try {
-			saleConnection.connect();
+			lkpConnection.connect();
 			LOG.log(GaeLevel.DEBUG, String.format("Loading lookup items for data account id %s", dataAccountId));
-			saleConnection.executeQuery(getLookupItemsForDataAccountQuery);
+			lkpConnection.executeQuery(getLookupItemsForDataAccountQuery);
 
 			ArrayList<LookupItem> list = new ArrayList<LookupItem>();
-			while (saleConnection.fetchNextRow()) {
+			while (lkpConnection.fetchNextRow()) {
 				// create the item from the resultset
 				LookupItem item = new LookupItem()
-						.dataaccountid(saleConnection.getCurrentRowInteger("dataaccountid"))
-						.itemid(saleConnection.getCurrentRowInteger("itemid"))
-						.parentid(saleConnection.getCurrentRowInteger("parentid"))
-						.title(saleConnection.getCurrentRowString("title"))
-						.country(saleConnection.getCurrentRowString("country"))
-						.currency(saleConnection.getCurrentRowString("currency"))
-						.price(saleConnection.getCurrentRowInteger("price"))
-						.sku(saleConnection.getCurrentRowString("sku"))
-						.parentsku(saleConnection.getCurrentRowString("parentsku"));
+						.dataaccountid(lkpConnection.getCurrentRowInteger("dataaccountid"))
+						.itemid(lkpConnection.getCurrentRowInteger("itemid"))
+						.parentid(lkpConnection.getCurrentRowInteger("parentid"))
+						.title(lkpConnection.getCurrentRowString("title"))
+						.country(lkpConnection.getCurrentRowString("country"))
+						.currency(lkpConnection.getCurrentRowString("currency"))
+						.price(lkpConnection.getCurrentRowInteger("price"))
+						.sku(lkpConnection.getCurrentRowString("sku"))
+						.parentsku(lkpConnection.getCurrentRowString("parentsku"));
 
 				list.add(item);
 			}
@@ -63,8 +67,8 @@ public class LookupItemService {
 
 			return list;
 		} finally {
-			if (saleConnection != null) {
-				saleConnection.disconnect();
+			if (lkpConnection != null) {
+				lkpConnection.disconnect();
 			}
 		}
 	}
@@ -164,5 +168,58 @@ public class LookupItemService {
 		LOG.log(GaeLevel.DEBUG, String.format("Returning %d main items and their iap ids", parentIdByItemIds.size()));
 
 		return parentIdByItemIds;
+	}
+
+	/**
+	 * @param dataAccountId
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<Item> getDataAccountItems(DataAccount dataAccount) throws DataAccessException {
+		Long dataAccountId = dataAccount.id;
+
+		ArrayList<Item> items = new ArrayList<Item>();
+		Map<String, Item> itemsFoundInSalesSummary = new HashMap<String, Item>();
+		List<String> itemIdsToLookForInRanks = new ArrayList<String>();
+
+		String getLookupItemsForDataAccountQuery = String.format("select itemid, max(title) as title from lkp_items where dataaccountid=%s and (parentsku is null or TRIM(parentsku)='') group by itemid",
+				dataAccountId);
+
+		Connection lkpConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeLookupItem.toString());
+
+		try {
+			lkpConnection.connect();
+			LOG.log(GaeLevel.DEBUG, String.format("Loading parent items for data account id %s", dataAccountId));
+			lkpConnection.executeQuery(getLookupItemsForDataAccountQuery);
+
+			while (lkpConnection.fetchNextRow()) {
+
+				Item item = new Item();
+				item.internalId = lkpConnection.getCurrentRowString("itemid");
+				item.name = lkpConnection.getCurrentRowString("title");
+				item.creatorName = dataAccount.developerName;
+
+				itemsFoundInSalesSummary.put(item.internalId, item);
+
+				itemIdsToLookForInRanks.add(item.internalId);
+			}
+
+			// return only Items which were found in the item table (these will have icons. we found during rank gathers)
+			items.addAll(ItemServiceProvider.provide().getInternalIdItemBatch(itemIdsToLookForInRanks));
+			// remove all the items found from ranks (via item table) and
+			for (Item itemFromRanks : items) {
+				String internalId = itemFromRanks.internalId;
+
+				itemsFoundInSalesSummary.remove(internalId);
+			}
+
+			items.addAll(itemsFoundInSalesSummary.values());
+
+			return items;
+		} finally {
+			if (lkpConnection != null) {
+				lkpConnection.disconnect();
+			}
+		}
 	}
 }

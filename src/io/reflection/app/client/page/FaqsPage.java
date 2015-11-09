@@ -16,8 +16,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -109,6 +107,7 @@ public class FaqsPage extends Page {
 
 			@Override
 			public void onWindowScroll(ScrollEvent event) {
+				faqContainerTopPosition = faqsTop.getAbsoluteTop() - pageTopBarHeight;
 				if (Window.getClientWidth() > 719 && Window.getClientHeight() > 799 && DOMHelper.getHtmlElement().hasClassName("no-touch")) {
 					if (Window.getScrollTop() >= faqContainerTopPosition) {
 						if (!faqContainer.hasClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().faqsListContainerFixed())) {
@@ -120,14 +119,6 @@ public class FaqsPage extends Page {
 						}
 					}
 				}
-			}
-		});
-
-		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-
-			@Override
-			public void execute() {
-				faqContainerTopPosition = faqContainer.getAbsoluteTop() - pageTopBarHeight;
 			}
 		});
 	}

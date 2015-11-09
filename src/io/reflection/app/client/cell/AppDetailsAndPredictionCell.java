@@ -1,5 +1,5 @@
 //
-//  MiniAppCell.java
+//  AppDetailsAndPredictionCell.java
 //  storedata
 //
 //  Created by William Shakour (billy1380) on 2 Oct 2013.
@@ -170,7 +170,7 @@ public class AppDetailsAndPredictionCell extends AbstractCell<Rank> {
 							+ " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
 							WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : noDataQuestionMark);
 				} else {
-					if (CalendarUtil.isSameDate(FilterHelper.getDaysAgo(2), FilterController.get().getEndDate())
+					if (CalendarUtil.isSameDate(FilterHelper.getDaysAgo(3), FilterController.get().getEndDate())
 							|| NavigationController.get().getCurrentPage().equals(PageType.HomePageType)) {
 						if (rank.position.intValue() > 10 && !(SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount())) {
 							dailyData = DailyDataTemplateHtml.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
@@ -208,7 +208,7 @@ public class AppDetailsAndPredictionCell extends AbstractCell<Rank> {
 							+ " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
 							WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : noDataQuestionMark);
 				} else {
-					if (CalendarUtil.isSameDate(FilterHelper.getDaysAgo(2), FilterController.get().getEndDate())
+					if (CalendarUtil.isSameDate(FilterHelper.getDaysAgo(3), FilterController.get().getEndDate())
 							|| NavigationController.get().getCurrentPage().equals(PageType.HomePageType)) {
 						if (rank.position.intValue() > 10 && !(SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount())) {
 							dailyData = DailyDataTemplateHtml.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
@@ -246,7 +246,7 @@ public class AppDetailsAndPredictionCell extends AbstractCell<Rank> {
 							.reflectionMainStyle().refIconBefore() + " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue(), "",
 							FormattingHelper.asWholeMoneyString(rank.currency, rank.revenue.floatValue())) : noDataQuestionMark);
 				} else {
-					if (CalendarUtil.isSameDate(FilterHelper.getDaysAgo(2), FilterController.get().getEndDate())
+					if (CalendarUtil.isSameDate(FilterHelper.getDaysAgo(3), FilterController.get().getEndDate())
 							|| NavigationController.get().getCurrentPage().equals(PageType.HomePageType)) {
 						if (rank.grossingPosition.intValue() > 10
 								&& !(SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount())) {

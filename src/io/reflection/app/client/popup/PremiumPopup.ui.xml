@@ -15,14 +15,14 @@
 			<p ui:field="subtitle"></p>
 			<h3 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingSix}">Benefits of Premium</h3>
 			<ul class="{STYLES_INSTANCE.reflectionMainStyle.checklist}">
-				<li>Leaderboard Revenue &amp; Download History</li>
+				<li>Historic Data</li>
 				<li>Download CSV files</li>
-				<li>Coming Soon: App Revenue &amp; Download History</li>
-				<li>Coming Soon: Google Play Store Intelligence</li>
+				<li>Coming Soon: More countries and categories</li>
+				<li>Coming Soon: Advanced Graphs</li>
 			</ul>
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.buttonsContainer}">
 				<c:LoadingButton ui:field="startFreeTrial" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth}">Start Free Trial</c:LoadingButton>
-				<g:Button ui:field="notRightNow" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonLink}">Not Right Now</g:Button>
+				<p>No Credit Card Required</p>
 			</div>
 		</g:HTMLPanel>
 		<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.startTrialConfirmation}">

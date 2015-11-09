@@ -49,7 +49,6 @@ public class PremiumPopup extends Composite implements UpgradeAccountEventHandle
 	@UiField Element title;
 	@UiField Element subtitle;
 	@UiField LoadingButton startFreeTrial;
-	@UiField Button notRightNow;
 	@UiField InlineHyperlink letUsKnow;
 	@UiField Button continueBrowsing;
 
@@ -86,12 +85,6 @@ public class PremiumPopup extends Composite implements UpgradeAccountEventHandle
 	@UiHandler("popup")
 	void onPopupClosed(CloseEvent<PopupBase> event) {
 		RootPanel.get().remove(this.asWidget());
-	}
-
-	@UiHandler({ "notRightNow", "letUsKnow", "continueBrowsing" })
-	void onCloseLinksClicked(ClickEvent event) {
-		event.preventDefault();
-		popup.closePopup();
 	}
 
 	@UiHandler("startFreeTrial")

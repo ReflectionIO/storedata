@@ -90,4 +90,9 @@ public class DOMHelper {
 		}
 		return isEnabled;
 	}
+
+	public static native void nativeClick(Element elem)/*-{
+		$wnd.$(elem).click();
+	}-*/;
+
 }

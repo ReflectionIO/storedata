@@ -1,4 +1,4 @@
-//  
+//
 //  UserService.java
 //  storedata
 //
@@ -50,6 +50,7 @@ final class UserService implements IUserService {
 
 	private static final Logger LOG = Logger.getLogger(UserService.class.getName());
 
+	@Override
 	public String getName() {
 		return ServiceType.ServiceTypeUser.toString();
 	}
@@ -73,7 +74,7 @@ final class UserService implements IUserService {
 			userConnection.executeQuery(getUserByIdQuery);
 
 			if (userConnection.fetchNextRow()) {
-				user = this.toUser(userConnection);
+				user = toUser(userConnection);
 			}
 		} finally {
 			if (userConnection != null) {
@@ -154,7 +155,7 @@ final class UserService implements IUserService {
 				user.id = Long.valueOf(userConnection.getInsertedId());
 				user.password = null;
 
-				addedUser = this.getUser(user.id);
+				addedUser = getUser(user.id);
 				addedUser.password = null;
 
 			}
@@ -219,7 +220,7 @@ final class UserService implements IUserService {
 			userConnection.executeQuery(searchUsersQuery);
 
 			while (userConnection.fetchNextRow()) {
-				User user = this.toUser(userConnection);
+				User user = toUser(userConnection);
 
 				if (user != null) {
 					users.add(user);
@@ -302,7 +303,7 @@ final class UserService implements IUserService {
 			}
 		}
 
-		updatedUser = this.getUser(user.id);
+		updatedUser = getUser(user.id);
 
 		return updatedUser;
 	}
@@ -381,10 +382,10 @@ final class UserService implements IUserService {
 			userConnection.executeQuery(getUserByUsernameAndPasswordQuery);
 
 			if (userConnection.fetchNextRow()) {
-				user = this.toUser(userConnection);
+				user = toUser(userConnection);
 
 				if (user != null) {
-					this.updateLoginTime(user);
+					updateLoginTime(user);
 				}
 			}
 		} finally {
@@ -444,7 +445,7 @@ final class UserService implements IUserService {
 			userConnection.executeQuery(getUserIdsQuery);
 
 			while (userConnection.fetchNextRow()) {
-				User user = this.toUser(userConnection);
+				User user = toUser(userConnection);
 
 				if (user != null) {
 					users.add(user);
@@ -538,7 +539,7 @@ final class UserService implements IUserService {
 	// }
 
 	/**
-	 * 
+	 *
 	 * @param connction
 	 * @return
 	 */
@@ -580,7 +581,7 @@ final class UserService implements IUserService {
 			userConnection.executeQuery(getUserByUsernameQuery);
 
 			if (userConnection.fetchNextRow()) {
-				user = this.toUser(userConnection);
+				user = toUser(userConnection);
 			}
 		} finally {
 			if (userConnection != null) {
@@ -866,9 +867,16 @@ final class UserService implements IUserService {
 	 */
 	@Override
 	public DataAccount addDataAccount(User user, DataSource dataSource, String username, String password, String properties) throws DataAccessException {
+
 		DataAccount addedDataAccount = null;
 
-		addedDataAccount = DataAccountServiceProvider.provide().addDataAccount(dataSource, username, password, properties);
+		DataAccount toAdd = new DataAccount();
+		toAdd.source = dataSource;
+		toAdd.username = username;
+		toAdd.password = password;
+		toAdd.properties = properties;
+
+		addedDataAccount = DataAccountServiceProvider.provide().addDataAccount(toAdd);
 
 		if (addedDataAccount != null) {
 			addOrRestoreUserDataAccount(user, addedDataAccount);
@@ -890,9 +898,9 @@ final class UserService implements IUserService {
 	 */
 	@Override
 	public List<DataAccount> getDataAccounts(User user, Pager pager) throws DataAccessException {
-		List<Long> accountIds = getDataAccountsIds(user, pager);
-
-		return accountIds.size() == 0 ? new ArrayList<DataAccount>() : DataAccountServiceProvider.provide().getIdsDataAccounts(accountIds, pager);
+		List<DataAccount> usersAccounts = DataAccountServiceProvider.provide().getDataAccountForUser(user.id);
+		LOG.log(GaeLevel.DEBUG, String.format("%d Data accounts found for user", usersAccounts == null ? 0 : usersAccounts.size()));
+		return usersAccounts;
 	}
 
 	/*
@@ -1225,7 +1233,7 @@ final class UserService implements IUserService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param user
 	 * @param dataAccount
 	 * @param deleted
@@ -1260,11 +1268,12 @@ final class UserService implements IUserService {
 
 	/**
 	 * Return true if the user has at least one active linked account
-	 * 
+	 *
 	 * @param user
 	 * @return
 	 * @throws DataAccessException
 	 */
+	@Override
 	public Boolean hasDataAccounts(User user) throws DataAccessException {
 		Boolean hasDataAccounts = Boolean.FALSE;
 

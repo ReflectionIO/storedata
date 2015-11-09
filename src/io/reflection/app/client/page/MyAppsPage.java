@@ -40,6 +40,7 @@ import io.reflection.app.client.helper.ApiCallHelper;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.helper.TooltipHelper;
+import io.reflection.app.client.mixpanel.MixpanelHelper;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.part.ErrorPanel;
 import io.reflection.app.client.part.datatypes.DateRange;
@@ -74,6 +75,7 @@ import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.LoadingStateChangeEvent;
 import com.google.gwt.user.cellview.client.LoadingStateChangeEvent.LoadingState;
 import com.google.gwt.user.cellview.client.SafeHtmlHeader;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
@@ -94,7 +96,7 @@ public class MyAppsPage extends Page implements NavigationEventHandler, LinkAcco
 
 	@UiField(provided = true) CellTable<MyApp> myAppsTable = new CellTable<MyApp>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 
-	private SafeHtmlHeader rankHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Rank " + AnimationHelper.getSorterSvg()));
+	// private SafeHtmlHeader rankHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Rank " + AnimationHelper.getSorterSvg()));
 	private SafeHtmlHeader appDetailsHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("App Details " + AnimationHelper.getSorterSvg()));
 	private SafeHtmlHeader priceHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Price " + AnimationHelper.getSorterSvg()));
 	private SafeHtmlHeader downloadsHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Downloads " + AnimationHelper.getSorterSvg()));
@@ -122,10 +124,8 @@ public class MyAppsPage extends Page implements NavigationEventHandler, LinkAcco
 	private String previousFilter;
 	private User user;
 
-	long linkedAccountsCount = -1;
-
 	// Columns
-	private Column<MyApp, SafeHtml> columnRank;
+	// private Column<MyApp, SafeHtml> columnRank;
 	private Column<MyApp, Item> columnAppDetails;
 	private Column<MyApp, SafeHtml> columnPrice;
 	private Column<MyApp, SafeHtml> columnDownloads;
@@ -173,6 +173,7 @@ public class MyAppsPage extends Page implements NavigationEventHandler, LinkAcco
 			public void onClick(ClickEvent event) {
 				User user = SessionController.get().getLoggedInUser();
 				if (user != null) {
+					MixpanelHelper.trackClicked(MixpanelHelper.Event.OPEN_LINK_ACCOUNT_POPUP, "myappspage");
 					addLinkedAccountPopup.show("Link an Account", null);
 				}
 			}
@@ -201,6 +202,14 @@ public class MyAppsPage extends Page implements NavigationEventHandler, LinkAcco
 		});
 
 		updateSelectorsFromFilter();
+
+		if (LinkedAccountController.get().getLinkedAccountsCount() == 0) {
+			userItemProvider.reset();
+			userItemProvider.updateRowCount(0, true);
+			accountNameSelector.clear();
+			errorPanel.setVisible(false);
+			comingSoonPanel.setVisible(false);
+		}
 
 		TooltipHelper.updateHelperTooltip();
 
@@ -253,17 +262,19 @@ public class MyAppsPage extends Page implements NavigationEventHandler, LinkAcco
 				if (!columnAppDetails.isDefaultSortAscending()) {
 					columnAppDetails.setDefaultSortAscending(true);
 				}
-				rankHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.mhxte6cIF());
-				appDetailsHeader.setHeaderStyleNames(style.canBeSorted());
+				// rankHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.mhxte6cIF());
+				appDetailsHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.mhxte6cIF());
 				priceHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.columnHiddenMobile());
 				downloadsHeader.setHeaderStyleNames(style.canBeSorted());
 				revenueHeader.setHeaderStyleNames(style.canBeSorted());
-				if (event.getColumn() == columnRank) {
-					userItemProvider.sortByRank(event.isSortAscending());
-					rankHeader.setHeaderStyleNames(style.canBeSorted() + " " + (event.isSortAscending() ? style.isAscending() : style.isDescending()));
-				} else if (event.getColumn() == columnAppDetails) {
+				// if (event.getColumn() == columnRank) {
+				// userItemProvider.sortByRank(event.isSortAscending());
+				// rankHeader.setHeaderStyleNames(style.canBeSorted() + " " + (event.isSortAscending() ? style.isAscending() : style.isDescending()));
+				// } else
+				if (event.getColumn() == columnAppDetails) {
 					userItemProvider.sortByAppDetails(event.isSortAscending());
-					appDetailsHeader.setHeaderStyleNames(style.canBeSorted() + " " + (event.isSortAscending() ? style.isAscending() : style.isDescending()));
+					appDetailsHeader.setHeaderStyleNames(style.canBeSorted() + " " + (event.isSortAscending() ? style.isAscending() : style.isDescending())
+							+ " " + style.mhxte6cIF());
 				} else if (event.getColumn() == columnPrice) {
 					userItemProvider.sortByPrice(event.isSortAscending());
 					priceHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.columnHiddenMobile() + " "
@@ -285,24 +296,24 @@ public class MyAppsPage extends Page implements NavigationEventHandler, LinkAcco
 
 		final SafeHtml loaderInline = AnimationHelper.getLoaderInlineSafeHTML();
 
-		columnRank = new Column<MyApp, SafeHtml>(new SafeHtmlCell()) {
-			@Override
-			public SafeHtml getValue(MyApp object) {
-				if (object.overallPosition != null) {
-					if (object.overallPosition.equals(MyApp.UNKNOWN_VALUE)) {
-						return SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
-					} else {
-						return SafeHtmlUtils.fromSafeConstant(object.overallPosition);
-					}
-				} else {
-					return loaderInline;
-				}
-			}
-		};
-		columnRank.setCellStyleNames(style.mhxte6ciA() + " " + style.mhxte6cID());
-		rankHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.mhxte6cIF());
-		myAppsTable.addColumn(columnRank, rankHeader);
-		columnRank.setSortable(true);
+		// columnRank = new Column<MyApp, SafeHtml>(new SafeHtmlCell()) {
+		// @Override
+		// public SafeHtml getValue(MyApp object) {
+		// if (object.overallPosition != null) {
+		// if (object.overallPosition.equals(MyApp.UNKNOWN_VALUE)) {
+		// return SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
+		// } else {
+		// return SafeHtmlUtils.fromSafeConstant(object.overallPosition);
+		// }
+		// } else {
+		// return loaderInline;
+		// }
+		// }
+		// };
+		// columnRank.setCellStyleNames(style.mhxte6ciA() + " " + style.mhxte6cID());
+		// rankHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.mhxte6cIF());
+		// myAppsTable.addColumn(columnRank, rankHeader);
+		// columnRank.setSortable(true);
 
 		columnAppDetails = new Column<MyApp, Item>(new MiniAppCell()) {
 			@Override
@@ -310,8 +321,8 @@ public class MyAppsPage extends Page implements NavigationEventHandler, LinkAcco
 				return object.item;
 			}
 		};
-		columnAppDetails.setCellStyleNames(style.mhxte6ciA());
-
+		columnAppDetails.setCellStyleNames(style.mhxte6ciA() + " " + style.mhxte6cID());
+		appDetailsHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.mhxte6cIF());
 		myAppsTable.addColumn(columnAppDetails, appDetailsHeader);
 		columnAppDetails.setSortable(true);
 
@@ -380,7 +391,7 @@ public class MyAppsPage extends Page implements NavigationEventHandler, LinkAcco
 			@Override
 			public SafeHtml getValue(MyApp object) {
 				return (object.item != null) ? SafeHtmlUtils.fromSafeConstant(DataTypeHelper.itemIapState(object.item, IAP_YES_HTML, IAP_NO_HTML,
-						"<span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding " + style.whatsThisTooltipIcon()
+						"<span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding " + style.whatsThisTooltipIconStatic()
 								+ "\" data-tooltip=\"No data available\"></span>")) : loaderInline;
 			}
 
@@ -389,12 +400,12 @@ public class MyAppsPage extends Page implements NavigationEventHandler, LinkAcco
 		iapHeader.setHeaderStyleNames(style.columnHiddenMobile());
 		myAppsTable.addColumn(columnIap, iapHeader);
 
-		myAppsTable.addColumnStyleName(0, style.rankColumn());
-		myAppsTable.addColumnStyleName(1, style.appDetailsColumn());
-		myAppsTable.addColumnStyleName(2, style.priceColumn() + " " + style.columnHiddenMobile());
-		myAppsTable.addColumnStyleName(3, style.downloadsColumn());
-		myAppsTable.addColumnStyleName(4, style.revenueColumn());
-		myAppsTable.addColumnStyleName(5, style.iapColumn() + " " + style.columnHiddenMobile());
+		// myAppsTable.addColumnStyleName(0, style.rankColumn());
+		myAppsTable.addColumnStyleName(0, style.appDetailsColumn());
+		myAppsTable.addColumnStyleName(1, style.priceColumn() + " " + style.columnHiddenMobile());
+		myAppsTable.addColumnStyleName(2, style.downloadsColumn());
+		myAppsTable.addColumnStyleName(3, style.revenueColumn());
+		myAppsTable.addColumnStyleName(4, style.iapColumn() + " " + style.columnHiddenMobile());
 
 	}
 
@@ -462,8 +473,8 @@ public class MyAppsPage extends Page implements NavigationEventHandler, LinkAcco
 			errorPanel.setVisible(false);
 			comingSoonPanel.setVisible(false);
 			myAppsTable.setVisible(true);
-			rankHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.mhxte6cIF());
-			appDetailsHeader.setHeaderStyleNames(style.canBeSorted());
+			// rankHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.mhxte6cIF());
+			appDetailsHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.mhxte6cIF());
 			priceHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.columnHiddenMobile());
 			downloadsHeader.setHeaderStyleNames(style.canBeSorted());
 			revenueHeader.setHeaderStyleNames(style.canBeSorted());
@@ -515,8 +526,7 @@ public class MyAppsPage extends Page implements NavigationEventHandler, LinkAcco
 		// Linked accounts retrieved in LinkedAccountPage but not here, or Check if Added or deleted a linked account
 		if (!(accountNameSelector.getItemCount() == LinkedAccountController.get().getLinkedAccountsCount() && accountNameSelector.getAllValues().containsAll(
 				LinkedAccountController.get().getAllLinkedAccountIds()))) {
-			linkedAccountsCount = LinkedAccountController.get().getLinkedAccountsCount();
-			if (linkedAccountsCount > 0) { // Added or removed linked account
+			if (LinkedAccountController.get().getLinkedAccountsCount() > 0) { // Added or removed linked account
 				fillAccountNameList();
 				FilterController.get().setLinkedAccount(LinkedAccountController.get().getAllLinkedAccounts().get(0).id);
 				isStatusError = false;
@@ -528,7 +538,7 @@ public class MyAppsPage extends Page implements NavigationEventHandler, LinkAcco
 				loadingBar.show("Getting apps...");
 				loadingBar.setProgressiveStatus(33);
 				previousFilter = FilterController.get().asMyAppsFilterString();
-			} else if (linkedAccountsCount == 0) { // Removed all linked accounts
+			} else if (LinkedAccountController.get().getLinkedAccountsCount() == 0) { // Removed all linked accounts
 				userItemProvider.reset();
 				userItemProvider.updateRowCount(0, true);
 				accountNameSelector.clear();
@@ -541,7 +551,7 @@ public class MyAppsPage extends Page implements NavigationEventHandler, LinkAcco
 			previousFilter = FilterController.get().asMyAppsFilterString();
 		}
 
-		if (linkedAccountsCount > 0) {
+		if (LinkedAccountController.get().getLinkedAccountsCount() > 0) {
 			setFiltersEnabled(true);
 			if (!previousFilter.equals(FilterController.get().asMyAppsFilterString())) {
 				isStatusError = false;
@@ -560,8 +570,8 @@ public class MyAppsPage extends Page implements NavigationEventHandler, LinkAcco
 				errorPanel.setVisible(false);
 				comingSoonPanel.setVisible(false);
 				myAppsTable.setVisible(true);
-				rankHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.mhxte6cIF());
-				appDetailsHeader.setHeaderStyleNames(style.canBeSorted());
+				// rankHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.mhxte6cIF());
+				appDetailsHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.mhxte6cIF());
 				priceHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.columnHiddenMobile());
 				downloadsHeader.setHeaderStyleNames(style.canBeSorted());
 				revenueHeader.setHeaderStyleNames(style.canBeSorted());
@@ -571,15 +581,15 @@ public class MyAppsPage extends Page implements NavigationEventHandler, LinkAcco
 		} else {
 			setFiltersEnabled(false);
 		}
-		noLinkedAccountsPanel.setVisible(linkedAccountsCount == 0);
+		noLinkedAccountsPanel.setVisible(LinkedAccountController.get().getLinkedAccountsCount() == 0);
 
 	}
 
 	@UiHandler("viewAllBtn")
 	void onViewAllButtonClicked(ClickEvent event) {
 		if (((Button) event.getSource()).isEnabled()) {
-			if (myAppsTable.getRowCount() > ServiceConstants.STEP_VALUE) {
-				myAppsTable.setVisibleRange(0, Integer.MAX_VALUE);
+			if (myAppsTable.getVisibleItemCount() == ServiceConstants.STEP_VALUE && myAppsTable.getRowCount() > ServiceConstants.STEP_VALUE) {
+				myAppsTable.setVisibleRange(0, myAppsTable.getRowCount());
 				viewAllSpan.setInnerText("View Less Apps");
 				TooltipHelper.updateHelperTooltip();
 			} else {
@@ -601,8 +611,7 @@ public class MyAppsPage extends Page implements NavigationEventHandler, LinkAcco
 			if (accountNameSelector.getItemCount() == 0) {
 				fillAccountNameList();
 			}
-			linkedAccountsCount = LinkedAccountController.get().getLinkedAccountsCount();
-			if (linkedAccountsCount > 0) {
+			if (LinkedAccountController.get().getLinkedAccountsCount() > 0) {
 				FilterController.get().getFilter().setLinkedAccountId(LinkedAccountController.get().getAllLinkedAccounts().get(0).id);
 				accountNameSelector.setSelectedIndex(FormHelper.getItemIndex(accountNameSelector, FilterController.get().getFilter().getLinkedAccountId()
 						.toString()));
@@ -652,7 +661,7 @@ public class MyAppsPage extends Page implements NavigationEventHandler, LinkAcco
 	public void getLinkedAccountItemsSuccess(GetLinkedAccountItemsRequest input, GetLinkedAccountItemsResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
 			if (output.items != null) {
-				appDetailsHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.isAscending());
+				appDetailsHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.isAscending() + " " + style.mhxte6cIF());
 				columnAppDetails.setDefaultSortAscending(false);
 				if (output.items.size() > ServiceConstants.STEP_VALUE) {
 					viewAllBtn.setVisible(true);
@@ -731,7 +740,12 @@ public class MyAppsPage extends Page implements NavigationEventHandler, LinkAcco
 	@Override
 	public void linkAccountSuccess(LinkAccountRequest input, LinkAccountResponse output) {
 		if (LinkedAccountController.get().getLinkedAccountsCount() == 1) {
-			PageType.UsersPageType.show(PageType.MyAppsPageType.toString(), user.id.toString(), FilterController.get().asMyAppsFilterString());
+			if (previousFilter.equals(FilterController.get().asMyAppsFilterString())) {
+				History.replaceItem(PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(), FilterController.get()
+						.asMyAppsFilterString()), true);
+			} else {
+				PageType.UsersPageType.show(PageType.MyAppsPageType.toString(), user.id.toString(), FilterController.get().asMyAppsFilterString());
+			}
 		}
 	}
 

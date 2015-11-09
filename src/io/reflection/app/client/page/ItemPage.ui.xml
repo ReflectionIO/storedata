@@ -166,8 +166,8 @@
 				<c:Selector ui:field="appStoreSelector" overlay="true" labelText="App Store" styleName="{STYLES_INSTANCE.reflectionMainStyle.storeSelect}"
 					tooltip="View data for iPhone or iPad" />
 
-				<c:Selector ui:field="countrySelector" overlay="true" labelText="Country" styleName="{STYLES_INSTANCE.reflectionMainStyle.countrySelect}"
-					tooltip="Select a country" />
+				<c:Selector ui:field="countrySelector" overlay="true" labelText="Country (more coming soon)" styleName="{STYLES_INSTANCE.reflectionMainStyle.countrySelect}"
+					tooltip="Country (more coming soon)" />
 				<!-- tooltip="Select up to 5 countries" /> -->
 
 				<g:Button ui:field="applyFilters" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaSmall} {STYLES_INSTANCE.reflectionMainStyle.refreshButton} js-tooltip js-tooltip--right">

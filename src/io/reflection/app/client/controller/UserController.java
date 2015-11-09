@@ -48,7 +48,6 @@ import io.reflection.app.api.core.shared.call.UpgradeAccountRequest;
 import io.reflection.app.api.core.shared.call.UpgradeAccountResponse;
 import io.reflection.app.api.core.shared.call.event.GetUserDetailsEventHandler;
 import io.reflection.app.api.core.shared.call.event.RegisterInterestBusinessEventHandler;
-import io.reflection.app.api.core.shared.call.event.RegisterUserEventHandler;
 import io.reflection.app.api.core.shared.call.event.UpgradeAccountEventHandler;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
@@ -58,7 +57,7 @@ import io.reflection.app.client.handler.user.UserPasswordChangedEventHandler.Use
 import io.reflection.app.client.handler.user.UserRegisteredEventHandler.UserRegistered;
 import io.reflection.app.client.handler.user.UserRegisteredEventHandler.UserRegistrationFailed;
 import io.reflection.app.client.handler.user.UsersEventHandler.ReceivedCount;
-import io.reflection.app.client.helper.MixPanelApiHelper;
+import io.reflection.app.client.mixpanel.MixpanelHelper;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
@@ -75,7 +74,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle.MultiWordSuggestion;
@@ -348,9 +346,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 			}
 
 			@Override
-			public void onFailure(Throwable caught) {
-				Window.alert("Error");
-			}
+			public void onFailure(Throwable caught) {}
 		});
 	}
 
@@ -599,14 +595,11 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 			@Override
 			public void onSuccess(RegisterInterestBusinessResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {
-					params.put("status", "success");
-					MixPanelApiHelper.track("registerInterestBusiness", params);
+
 				} else {
-					params.put("status", "failure");
 					if (output.error != null && output.error.message != null) {
-						params.put("error", output.error.message);
+						// params.put("error", output.error.message);
 					}
-					MixPanelApiHelper.track("registerInterestBusiness", params);
 				}
 				DefaultEventBus.get().fireEventFromSource(new RegisterInterestBusinessEventHandler.RegisterInterestBusinessSuccess(input, output),
 						UserController.this);
@@ -616,7 +609,6 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 			public void onFailure(Throwable caught) {
 				params.put("status", "failure");
 				params.put("error", caught.getMessage());
-				MixPanelApiHelper.track("registerInterestBusiness", params);
 
 				DefaultEventBus.get().fireEventFromSource(new RegisterInterestBusinessEventHandler.RegisterInterestBusinessFailure(input, caught),
 						UserController.this);
@@ -650,15 +642,10 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 		final String emailValue = username;
 		final String passwordValue = password;
 
-		final Map<String, Object> params = new HashMap<String, Object>();
-		params.put("username", username);
-		params.put("company", company);
-
 		service.registerUser(input, new AsyncCallback<RegisterUserResponse>() {
 
 			@Override
 			public void onSuccess(RegisterUserResponse output) {
-
 				if (output.status == StatusType.StatusTypeSuccess) {
 					// only refresh the user list if the current user is an admin or has manage user permission
 					if (SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_MANAGE_USERS_CODE)) {
@@ -666,18 +653,16 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 
 						fetchUsers();
 					}
-
-					params.put("status", "success");
-					MixPanelApiHelper.track("registerUser", params);
-
+					MixpanelHelper.trackSignUpSuccess(output.registeredUser);
 					DefaultEventBus.get().fireEventFromSource(new UserRegistered(emailValue, passwordValue), UserController.this);
 				} else {
-					params.put("status", "failure");
+					Map<String, Object> properties = new HashMap<String, Object>();
 					if (output.error != null && output.error.message != null) {
-						params.put("error", output.error.message);
+						properties.put("error_server", output.error.message);
+					} else {
+						properties.put("error_server", "generic error");
 					}
-					MixPanelApiHelper.track("registerUser", params);
-
+					MixpanelHelper.track(MixpanelHelper.Event.SIGNUP_FAILURE, properties);
 					DefaultEventBus.get().fireEventFromSource(new UserRegistrationFailed(output.error), UserController.this);
 				}
 
@@ -686,13 +671,11 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 			@Override
 			public void onFailure(Throwable caught) {
 				Error e = new Error();
-
 				e.code = Integer.valueOf(-1);
 				e.message = caught.getMessage();
-
-				params.put("status", "failure");
-				params.put("error", caught.getMessage());
-				MixPanelApiHelper.track("registerUser", params);
+				Map<String, Object> properties = new HashMap<String, Object>();
+				properties.put("error_server", caught.getMessage());
+				MixpanelHelper.track(MixpanelHelper.Event.SIGNUP_FAILURE, properties);
 
 				DefaultEventBus.get().fireEventFromSource(new UserRegistrationFailed(e), UserController.this);
 			}
@@ -704,56 +687,51 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 	 * @param actionCode
 	 * @param password
 	 */
-	public void registerUser(String actionCode, String password) {
-		CoreService service = ServiceCreator.createCoreService();
-
-		final Map<String, Object> params = new HashMap<String, Object>();
-		params.put("actionCode", actionCode);
-
-		final RegisterUserRequest input = new RegisterUserRequest();
-		input.accessCode = ACCESS_CODE;
-
-		input.user = new User();
-		input.user.password = password;
-
-		input.actionCode = actionCode;
-
-		service.registerUser(input, new AsyncCallback<RegisterUserResponse>() {
-
-			@Override
-			public void onSuccess(RegisterUserResponse output) {
-				if (output != null && output.status == StatusType.StatusTypeSuccess) {
-					// only refresh the user list if the current user is an admin or has manage user permission
-					if (SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_MANAGE_USERS_CODE)) {
-						PagerHelper.moveBackward(pager);
-
-						fetchUsers();
-					}
-
-					params.put("status", "success");
-					MixPanelApiHelper.track("registerUser", params);
-				} else {
-					params.put("status", "failure");
-					if (output.error != null && output.error.message != null) {
-						params.put("error", output.error.message);
-					}
-
-					MixPanelApiHelper.track("registerUser", params);
-				}
-
-				DefaultEventBus.get().fireEventFromSource(new RegisterUserEventHandler.RegisterUserSuccess(input, output), UserController.this);
-			}
-
-			@Override
-			public void onFailure(Throwable caught) {
-				params.put("status", "failure");
-				params.put("error", caught.getMessage());
-				MixPanelApiHelper.track("registerUser", params);
-
-				DefaultEventBus.get().fireEvent(new RegisterUserEventHandler.RegisterUserFailure(input, caught));
-			}
-		});
-	}
+	// public void registerUser(String actionCode, String password) {
+	// CoreService service = ServiceCreator.createCoreService();
+	//
+	// final Map<String, Object> params = new HashMap<String, Object>();
+	// params.put("actionCode", actionCode);
+	//
+	// final RegisterUserRequest input = new RegisterUserRequest();
+	// input.accessCode = ACCESS_CODE;
+	//
+	// input.user = new User();
+	// input.user.password = password;
+	//
+	// input.actionCode = actionCode;
+	//
+	// service.registerUser(input, new AsyncCallback<RegisterUserResponse>() {
+	//
+	// @Override
+	// public void onSuccess(RegisterUserResponse output) {
+	// if (output != null && output.status == StatusType.StatusTypeSuccess) {
+	// // only refresh the user list if the current user is an admin or has manage user permission
+	// if (SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_MANAGE_USERS_CODE)) {
+	// PagerHelper.moveBackward(pager);
+	//
+	// fetchUsers();
+	// }
+	// } else {
+	// params.put("status", "failure");
+	// if (output.error != null && output.error.message != null) {
+	// params.put("error", output.error.message);
+	// }
+	//
+	// }
+	//
+	// DefaultEventBus.get().fireEventFromSource(new RegisterUserEventHandler.RegisterUserSuccess(input, output), UserController.this);
+	// }
+	//
+	// @Override
+	// public void onFailure(Throwable caught) {
+	// params.put("status", "failure");
+	// params.put("error", caught.getMessage());
+	//
+	// DefaultEventBus.get().fireEvent(new RegisterUserEventHandler.RegisterUserFailure(input, caught));
+	// }
+	// });
+	// }
 
 	public void upgradeAccount(final String roleCode) {
 		CoreService service = ServiceCreator.createCoreService();
@@ -767,7 +745,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 			@Override
 			public void onSuccess(UpgradeAccountResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {
-					SessionController.get().fetchRolesAndPermissions();
+					SessionController.get().fetchRoleAndPermissions();
 				}
 				DefaultEventBus.get().fireEventFromSource(new UpgradeAccountEventHandler.UpgradeAccountSuccess(input, output), UserController.this);
 			}

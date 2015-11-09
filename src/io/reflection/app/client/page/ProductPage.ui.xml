@@ -15,7 +15,15 @@
 		<section class="{STYLES_INSTANCE.reflectionMainStyle.productSection}">
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.productSectionContent} {STYLES_INSTANCE.reflectionMainStyle.verticalCentreContent}">
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.productImageContainerRight}">
-					<img src="images/product-image-static-leaderboard.jpg" alt="Reflection leaderboard screenshot" />
+					<div ui:field="productAnimationContainerLeaderboard" class="{STYLES_INSTANCE.reflectionMainStyle.productAnimationContainerLeaderboard}">
+						<div class="{STYLES_INSTANCE.reflectionMainStyle.productAnimation__filters}"><img src="images/product-animation-filters.jpg" width="906" height="115" alt=""/></div> 
+					  	<div class="{STYLES_INSTANCE.reflectionMainStyle.productAnimation__tabs}"><img src="images/product-animation-tabs.gif" width="454" height="56" alt=""/></div>
+					  	<div class="{STYLES_INSTANCE.reflectionMainStyle.productAnimation__headingsOne}"><img src="images/product-animation-headings-one.jpg" width="906" height="42" alt=""/></div>
+					  	<div class="{STYLES_INSTANCE.reflectionMainStyle.productAnimation__headingsTwo}"><img src="images/product-animation-headings-two.jpg" width="906" height="42" alt=""/></div>
+					  	<div class="{STYLES_INSTANCE.reflectionMainStyle.productAnimation__screenshotOne}"><img src="images/product-animation-screenshot-one.jpg" width="906" height="914" alt=""/></div>
+					  	<div class="{STYLES_INSTANCE.reflectionMainStyle.productAnimation__screenshotTwo}"><img src="images/product-animation-screenshot-two.jpg" width="906" height="914" alt=""/></div>
+					</div>
+					<img ui:field="leaderboardAnimationContainer" src="images/product-image-static-leaderboard.jpg" alt="Reflection leaderboard screenshot" class="{STYLES_INSTANCE.reflectionMainStyle.productLeaderboardStatic}" />
 				</div>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.productTextContentLeft}">
 					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Track the Performance of Other Apps &amp; Developers</h2>
@@ -28,36 +36,23 @@
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.productSectionContent}">
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.productImageContainerRight}">
 					<img src="images/product-image-static-graph.jpg" alt="Reflection graph screenshot" />
+					<img src="images/product-image-gif-graph.gif" alt="Reflection graph gif" class="{STYLES_INSTANCE.reflectionMainStyle.productImageGifGraph}" />
 				</div>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.productTextContentLeft}">
 					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Identify What to Make &amp; Where to Market</h2>
-					<p>Use Reflection to validate your app idea or business model and discover where to launch for the best performance. 
-					Analyse comparable apps to identify your app's revenue and download potential.</p>
-					<p>Understand how many downloads you need to reach your target rank in the charts. 
-					Identify which countries generate the most downloads in your category and determine how to gain traction there.</p>
+					<p>Use Reflection to validate your app idea or business model and discover where to launch to achieve the best performance.</p>
+					<ul class="{STYLES_INSTANCE.reflectionMainStyle.contentList}">
+						<li>Analyse comparable products to identify your app's revenue and download potential.</li>
+						<li>Understand how many downloads you need to reach your target rank in the charts.</li>
+						<li>Identify which countries generate the most downloads in your category and determine how to gain traction there.</li>
+					</ul>
+					<p class="{STYLES_INSTANCE.reflectionMainStyle.smallText}">*Screen mock up shown, not real data</p>
 				</div>
 			</div>
 		</section>
 		<section class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.productSection} {STYLES_INSTANCE.reflectionMainStyle.productSectionMessage}">
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.productSectionContent}">
-				<div class="{STYLES_INSTANCE.reflectionMainStyle.productImageContainerRight} {STYLES_INSTANCE.reflectionMainStyle.hasContent}">
-					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Here are a few of the most popular upcoming features:</h2>
-					<div class="accordion accordion-static">
-						<ul>
-							<li class="{STYLES_INSTANCE.reflectionMainStyle.featureComplete} {STYLES_INSTANCE.reflectionMainStyle.isClosed}">
-								<h2 class="{STYLES_INSTANCE.reflectionMainStyle.accordionSwitch} {STYLES_INSTANCE.reflectionMainStyle.noAccordionContent}"><em>Curate your own leaderboards</em> by following apps and developers of your choice. Receive notifications on their activities such as soft launches and price changes.</h2>
-							</li>
-							<li class="{STYLES_INSTANCE.reflectionMainStyle.featureComplete} {STYLES_INSTANCE.reflectionMainStyle.isClosed}">
-								<h2 class="{STYLES_INSTANCE.reflectionMainStyle.accordionSwitch} {STYLES_INSTANCE.reflectionMainStyle.noAccordionContent}"><em>Developer Leaderboards</em> let you see how developers and publishers are performing against each other</h2>
-							</li>
-							<li class="{STYLES_INSTANCE.reflectionMainStyle.featureComplete} {STYLES_INSTANCE.reflectionMainStyle.isClosed}">
-								<h2 class="{STYLES_INSTANCE.reflectionMainStyle.accordionSwitch} {STYLES_INSTANCE.reflectionMainStyle.noAccordionContent}"><em>Google Play</em> and other stores</h2>
-							</li>
-						</ul>
-						<p>Let us know what you need to make your app successful. Help us build the only app market intelligence platform you'll ever need.</p>
-					</div>
-				</div>
-				<div class="{STYLES_INSTANCE.reflectionMainStyle.productTextContentLeft} {STYLES_INSTANCE.reflectionMainStyle.helpUsHelpYou}">
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.helpUsHelpYou} {STYLES_INSTANCE.reflectionMainStyle.grid__columnTwoThirds}">
 					<svg version="1.1" x="0px" y="0px" viewBox="0 0 159.3 100.6" enable-background="new 0 0 159.3 100.6" xml:space="preserve">
 					<path fill="#81879D" d="M146.7,25.2l-6.1-1.8V31l6.1,1.4V25.2z M145.7,31.1l-4.1-0.9v-5.4l4.1,1.2V31.1z M154.3,27.5l-5.3-1.6v7
 			l5.3,1.2V27.5z M153.3,32.9l-3.3-0.8v-4.9l3.3,1V32.9z M154.3,74.6l-5.3,0.9v7l5.3-1.2V74.6z M153.3,80.5l-3.3,0.7v-4.9l3.3-0.5
@@ -111,11 +106,15 @@
 			l4.9,2.7V75.4z M24,75.4h-4.9v-6.7l4.9-5.2V75.4z M29.4,75.4h-4.9V62.9l0.3-0.3l4.6,3.6V75.4z M34.8,75.4h-4.9v-9.2l4.9-1.8V75.4z
 			 M40.2,75.4h-4.9V64.3l0,0l4.9-5.3V75.4z M45.4,75.4h-4.7V58.6l4.7,2.3V75.4z M45.4,59.8l-5-2.5l-5.6,6.1l-5,1.8l-5-3.9L24,62h0v0
 			l-5.3,5.6l-5.4-3l-4.9,4V53.4h36.9V59.8z"></path></svg>
-					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Help Us Help You</h2>
-					<p>Reflection's features and tools are built with feedback from our developer community.
-					These tools will help you understand the app market, saving you time, effort and resources.</p>
+					<h2>Help Us Help You</h2>
 					<p>Join our beta and get free access to accurate daily data for the Top 200 Apps in all available countries, 
-					stores and categories. All you need to do is link your app store account.</p>
+					stores and categories. All you need to do is link your app store account. The more developers 
+					join Reflection, the more we can expand our country and platform intelligence while 
+					maintaining market-leading revenue and download accuracy.</p>
+					<p>Reflection's features and tools are built with feedback from our developer community. 
+					These tools will help you understand the app market, saving you time, effort and resources. 
+					Let us know what you need to succeed in the market.</p>
+ 					<p>Our goal is to build the only app market intelligence platform you'll ever need.</p>
 				</div>
 			</div>
 		</section>

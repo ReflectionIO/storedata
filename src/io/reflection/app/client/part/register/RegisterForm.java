@@ -7,6 +7,9 @@
 //
 package io.reflection.app.client.part.register;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import io.reflection.app.client.component.FormCheckbox;
 import io.reflection.app.client.component.LoadingButton;
 import io.reflection.app.client.component.PasswordField;
@@ -14,6 +17,7 @@ import io.reflection.app.client.component.TextField;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.UserController;
 import io.reflection.app.client.helper.FormHelper;
+import io.reflection.app.client.mixpanel.MixpanelHelper;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.res.Styles;
 
@@ -73,7 +77,7 @@ public class RegisterForm extends Composite {
 	public RegisterForm() {
 		initWidget(uiBinder.createAndBindUi(this));
 		this.getElement().setAttribute("autocomplete", "off");
-		termAndCond.setHTML("I agree with the <a href='" + PageType.TermsPageType.asHref().asString() + "' target='_blank'>terms and conditions</a>");
+		termAndCond.setHTML("I agree with the <a href='" + PageType.TermsPageType.asHref().asString() + "' target='_blank'>Terms &amp; Conditions</a>");
 		registerTitle.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().headingStyleHeadingFive() + " "
 				+ Styles.STYLES_INSTANCE.reflectionMainStyle().accountFormHeading());
 		registerTitle.setInnerText("Create your password to get started");
@@ -111,34 +115,41 @@ public class RegisterForm extends Composite {
 			registerBtn.setStatusLoading("Sending");
 			if (actionCode == null) { // Create new user
 				UserController.get().registerUser(email.getText(), password.getText(), forename.getText(), surname.getText(), company.getText());
-			} else { // Update user
-				UserController.get().registerUser(actionCode, password.getText());
 			}
+			// else { // Update user
+			// UserController.get().registerUser(actionCode, password.getText());
+			// }
 
 		} else {
+			Map<String, Object> properties = new HashMap<String, Object>();
 			if (forenameNote != null) {
 				forename.showNote(forenameNote, true);
+				properties.put("error_form_first_name", forenameNote);
 			} else {
 				forename.hideNote();
 			}
 			if (surnameNote != null) {
 				surname.showNote(surnameNote, true);
+				properties.put("error_form_last_name", surnameNote);
 			} else {
 				surname.hideNote();
 			}
 			if (companyNote != null) {
 				company.showNote(companyNote, true);
+				properties.put("error_form_company", companyNote);
 			} else {
 				company.hideNote();
 			}
 			if (emailNote != null) {
 				email.showNote(emailNote, true);
+				properties.put("error_form_email", emailNote);
 			} else {
 				email.hideNote();
 			}
 			if (passwordError != null) {
 				password.showNote(passwordError, true);
 				confirmPassword.showNote(passwordError, true);
+				properties.put("error_form_password", passwordError);
 			} else {
 				password.hideNote();
 				confirmPassword.hideNote();
@@ -146,8 +157,12 @@ public class RegisterForm extends Composite {
 
 			if (termAndCondError != null) {
 				termAndCond.showError(termAndCondError);
+				properties.put("error_form_terms", termAndCondError);
 			} else {
 				termAndCond.hideError();
+			}
+			if (!properties.isEmpty()) {
+				MixpanelHelper.track(MixpanelHelper.Event.SIGNUP_FAILURE, properties);
 			}
 			generalErrorParagraph.setInnerText(generalErrorNote);
 			registerBtn.setStatusError(generalErrorNote.equals(FormHelper.ERROR_FORM_EMPTY_FIELDS) ? FormHelper.ERROR_BUTTON_INCOMPLETE

@@ -8,16 +8,16 @@
 //
 package io.reflection.app.service.dataaccountfetch;
 
+import java.util.Date;
+import java.util.List;
+
+import com.spacehopperstudios.service.IService;
+
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.DataAccountFetchStatusType;
-
-import java.util.Date;
-import java.util.List;
-
-import com.spacehopperstudios.service.IService;
 
 public interface IDataAccountFetchService extends IService {
 
@@ -129,5 +129,13 @@ public interface IDataAccountFetchService extends IService {
 	 */
 	public Long getDataAccountFetchesWithStatusCount(Date fetchForDate, DataAccountFetchStatusType statusType)
 			throws DataAccessException;
+
+	/**
+	 * @param dataAccountId
+	 * @param date
+	 * @return
+	 * @throws DataAccessException 
+	 */
+	public DataAccountFetch getDataAccountFetch(Long dataAccountId, Date date) throws DataAccessException;
 
 }

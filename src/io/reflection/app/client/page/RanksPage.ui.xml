@@ -139,7 +139,7 @@
 
 					</g:HTMLPanel>
 
-					<c:Selector ui:field="countrySelector" labelText="Country" overlay="true" dropdownTitle="Select a country" tooltip="Select a country" />
+					<c:Selector ui:field="countrySelector" labelText="Country" overlay="true" dropdownTitle="Country (more coming soon)" tooltip="Country (more coming soon)" />
 
 					<c:Selector ui:field="appStoreSelector" labelText="App Store" overlay="true" dropdownTitle="Select a store" tooltip="View data for iPhone or iPad" />
 
@@ -186,6 +186,8 @@
 					<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__row}">
 						<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.tableWrapper}">
 							<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.scrollable}">
+								<cv:CellTable ui:field="stickyHeaderTable"
+									styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}  {STYLES_INSTANCE.reflectionMainStyle.responsive} {STYLES_INSTANCE.reflectionMainStyle.stickyTableHead}" />
 								<cv:CellTable ui:field="leaderboardTable" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}  {STYLES_INSTANCE.reflectionMainStyle.responsive}" />
 							</g:HTMLPanel>
 						</g:HTMLPanel>
@@ -202,6 +204,8 @@
 		<!-- <g:InlineHyperlink ui:field="redirect" visible="false" targetHistoryToken="{UpgradePageType.asTargetHistoryToken}" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall}"> -->
 		<!-- <span>View all Apps</span> -->
 		<!-- </g:InlineHyperlink> -->
+
+		<iframe ui:field="iframe" style="display:none;visibility:hidden"></iframe>
 
 	</g:HTMLPanel>
 </ui:UiBinder> 
