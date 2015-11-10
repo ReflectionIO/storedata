@@ -173,7 +173,7 @@
 			collapsibleList.css("margin-top", -collapsibleList.height());
 		});
 
-		$('.js-main-nav > ul > li ul li.js-is-collapsible a').on("click", function(e){
+		$('.js-main-nav > ul > li ul li.js-is-collapsible > a').on("click", function(e){
 			e.preventDefault();
 			var collapsibleContainer = $(this).parent('.js-is-collapsible');
 			var collapsibleList = $(this).next('ul');
@@ -187,14 +187,16 @@
 			}
 		});
 
-		window.setTimeout(function() {
-			topLevelNavItems.each(function(){
-				if($(this).hasClass('is-selected')) {
-					$(this).children("a").trigger("click");
-					$(this).find("li.is-selected.js-is-collapsible > a").trigger("click");
-				}
-			});
-		}, 100);
+		if($(".touch").length > 0) {
+			window.setTimeout(function() {
+				topLevelNavItems.each(function(){
+					if($(this).hasClass('is-selected')) {
+						$(this).children("a").trigger("click");
+						$(this).find("li.is-selected.js-is-collapsible > a").trigger("click");
+					}
+				});
+			}, 100);
+		}
 
 		var topLevelNavItems = $('.js-main-nav > ul > li'),
 			siteNavTopLevelItems = $('.js-main-navigation > ul > li'),
@@ -204,13 +206,9 @@
 			$clickedItem = $(this);
 			if(!$(this).hasClass("js-is-collapsible")) {
 				if($clickedItem.parents('.js-main-navigation').length > 0) {
-					siteNavTopLevelItems.removeClass('is-selected');
-					$clickedItem.addClass('is-selected');
 					$('.js-main-navigation > ul > li.js-is-collapsible.is-open > a').trigger("click");
 				} else {
 					if($clickedItem.parents('.js-account-navigation').length > 0) {
-						accountNavTopLevelItems.removeClass('is-selected');
-						$clickedItem.addClass('is-selected');
 						$('.js-account-navigation > ul > li.js-is-collapsible.is-open > a').trigger("click");
 					}
 				}
@@ -224,23 +222,24 @@
 			if(collapsibleContainer.hasClass('is-open')) {
 				collapsibleList.css("margin-top", -collapsibleList.height());
 				collapsibleContainer.removeClass('is-open');
-				collapsibleContainer.removeClass('is-selected');
 			}
 			else {
 				collapsibleList.css("margin-top", 0);
 				collapsibleContainer.addClass('is-open');
-				collapsibleContainer.addClass('is-selected');
-				collapsibleContainer.siblings().removeClass('is-selected');
 			}
 		});
 
-		if($(window).width() <= 960) {
-			$('.js-hamburger-button').removeClass('is-selected');
-			$('body, html').removeClass('panel-left-open');
+		if($(".no-touch").length > 0 && $(window).width() >= 960) {
+			$(".js-panel-left").on("mouseleave", function(){
+				$('.js-is-collapsible.is-open > a').trigger("click");
+			});
+			$(".js-panel-left").on("mouseenter", function(){
+				$('.js-is-collapsible.is-selected > a').trigger("click");
+			});
 		}
 
 		// hide panel on content click/tap
-		if($('html.touch').length && $(window).width() < 940) {
+		if($('html.touch').length) {
 			$('.l-main').on("click", function() {
 				if($('.panel-left-open').length) {
 					$('.js-hamburger-button').trigger("click");
@@ -1294,13 +1293,22 @@
 			var tooltip;
 			if($('html.no-touch').length) {
 				$this.on("mouseenter", function(){
-					tooltip = instance.generateTooltip($this, false);
+					if($this.hasClass("js-tooltip--info")) {
+						tooltip = instance.generateTooltip($this, true);
+					} else {
+						tooltip = instance.generateTooltip($this, false);
+					}					
 				});
 				$this.on("mouseleave", function(){
 					tooltip.remove();
 				});
-				$this.on("click", function(){
-					tooltip.remove();
+				$this.on("click", function(e){
+					if($this.attr("href") == "#") {
+						e.preventDefault();
+					}
+					if(!$this.hasClass("js-tooltip--info")) {
+						tooltip.remove();
+					}					
 				});
 			} else if($('html.touch').length) {
 				$this.on("click", function(e){
@@ -1380,7 +1388,7 @@
 		});
 	}
 
-	ToolTip.prototype.generateTooltip = function($tooltipParent, isTouchTooltip) {
+	ToolTip.prototype.generateTooltip = function($tooltipParent, isInstantTooltip) {
 		var $this = $tooltipParent,
 				tooltipText = $tooltipParent.data("tooltip");
 
@@ -1407,12 +1415,12 @@
 			tooltip.addClass("tooltip-right");
 		}
 		tooltip.css({"top": topPosition - tooltipHeight - 20, "left": leftPosition});
-		if(isTouchTooltip) {
+		if(isInstantTooltip) {
 			tooltip.show();
 		} else {
 			setTimeout(function(){
 				tooltip.fadeIn(100);
-			}, 400);
+			}, 700);
 		}
 
 		return tooltip;

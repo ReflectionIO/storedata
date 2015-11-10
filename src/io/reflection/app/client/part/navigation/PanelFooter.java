@@ -49,10 +49,17 @@ public class PanelFooter extends Composite implements UsersEventHandler, Navigat
 	interface PanelFooterUiBinder extends UiBinder<Widget, PanelFooter> {}
 	
 	public static final String IS_SELECTED = Styles.STYLES_INSTANCE.reflectionMainStyle().isSelected();
-
+	
+	@UiField LIElement aboutItem;
+	@UiField LIElement blogItem;
+	@UiField LIElement careersItem;
+	@UiField LIElement contactItem;
+	@UiField LIElement faqsItem;
+	@UiField LIElement homeItem;
 	@UiField LIElement leaderboardItem;
 	@UiField LIElement productItem;
 	@UiField LIElement pricingItem;
+	@UiField LIElement termsItem;
 	
 	@UiField InlineHyperlink pricingSecondaryLink;
 	@UiField UListElement secondaryFooterList;
@@ -116,17 +123,37 @@ public class PanelFooter extends Composite implements UsersEventHandler, Navigat
 	public void navigationChanged(Stack previous, Stack current) {
 		leaderboardLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, OVERALL_LIST_TYPE,
 				FilterController.get().asRankFilterString()));
-		User user = SessionController.get().getLoggedInUser();
 
-		this.setVisible(!PageType.ContactPageType.equals(current.getPage()));
-
+		this.setVisible(!PageType.ContactPageType.equals(current.getPage()) && 
+						!PageType.RegisterPageType.equals(current.getPage()) && 
+						!PageType.LoginPageType.equals(current.getPage()) && 
+						!PageType.LinkItunesPageType.equals(current.getPage()) &&
+						!PageType.FaqsPageType.equals(current.getPage()));
+		
+		this.removeStyleName("no-border-top");
+		
 		// Highlight selected items
-		if (PageType.RanksPageType.equals(current.getPage())) {
+		if (PageType.AboutPageType.equals(current.getPage())) {
+			highlight(aboutItem);
+		} else if (PageType.BlogPostsPageType.equals(current.getPage())) {
+			highlight(blogItem);
+		} else if (PageType.CareersPageType.equals(current.getPage())) {
+			highlight(careersItem);
+		} else if (PageType.HomePageType.equals(current.getPage())) {
+			highlight(homeItem);
+			User user = SessionController.get().getLoggedInUser();
+			if (user == null) {
+				this.addStyleName("no-border-top");
+			}
+		} else if (PageType.RanksPageType.equals(current.getPage())) {
 			highlight(leaderboardItem);
 		} else if (PageType.ProductPageType.equals(current.getPage())) {
 			highlight(productItem);
-		} else if (PageType.PricingPageType.equals(current.getPage())) {
+			this.addStyleName("no-border-top");
+		} else if (PageType.PricingPageType.equals(current.getPage()) || PageType.ManageSubscriptionPageType.equals(current.getPage())) {
 			highlight(pricingItem);
+		} else if (PageType.TermsPageType.equals(current.getPage())) {
+			highlight(termsItem);
 		}
 	}
 
@@ -144,8 +171,7 @@ public class PanelFooter extends Composite implements UsersEventHandler, Navigat
 	 * @see io.reflection.app.client.handler.user.UsersEventHandler#receivedUsersCount(java.lang.Long)
 	 */
 	@Override
-	public void receivedUsersCount(Long count) {
-	}
+	public void receivedUsersCount(Long count) {}
 
 	/*
 	 * (non-Javadoc)
@@ -196,5 +222,4 @@ public class PanelFooter extends Composite implements UsersEventHandler, Navigat
 	@Override
 	public void getGetUserPowersFailed(Error error) {
 	}
-
 }

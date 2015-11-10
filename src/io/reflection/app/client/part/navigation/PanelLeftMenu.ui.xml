@@ -159,48 +159,6 @@
 				</li>
 			</ul>
 		</nav>
-		<div>
-			<ul ui:field="secondaryFooterList">
-				<li ui:field="productSecondaryItem">
-					<g:InlineHyperlink targetHistoryToken="{ProductPageType.asTargetHistoryToken}">Product</g:InlineHyperlink>
-				</li>
-				<li ui:field="pricingSecondaryItem">
-					<g:InlineHyperlink ui:field="pricingSecondaryLink">Pricing</g:InlineHyperlink>
-				</li>
-				<li>
-					<g:InlineHyperlink targetHistoryToken="{AboutPageType.asTargetHistoryToken}">About Us</g:InlineHyperlink>
-				</li>
-				<!-- <li> -->
-				<!-- <g:InlineHyperlink targetHistoryToken="{PressPageType.asTargetHistoryToken}">Press</g:InlineHyperlink> -->
-				<!-- </li> -->
-				<li>
-					<g:InlineHyperlink targetHistoryToken="{ContactPageType.asTargetHistoryToken}">Contact Us</g:InlineHyperlink>
-				</li>
-				<li>
-					<g:InlineHyperlink targetHistoryToken="{CareersPageType.asTargetHistoryToken}">Careers</g:InlineHyperlink>
-				</li>
-				<li>
-					<g:InlineHyperlink targetHistoryToken="{FaqsPageType.asTargetHistoryToken}">FAQs</g:InlineHyperlink>
-				</li>
-				<li>
-					<g:InlineHyperlink targetHistoryToken="{TermsPageType.asTargetHistoryToken}">Terms &amp; Conditions</g:InlineHyperlink>
-				</li>
-			</ul>
-		</div>
-		<ul>
-			<li>
-				<a href="https://twitter.com/reflectionio" class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeTwitter}"
-					target="_blank">
-					<span>Twitter</span>
-				</a>
-			</li>
-			<li>
-				<a href="https://www.linkedin.com/company/reflection-io-ltd" class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeLinkedin}"
-					target="_blank">
-					<span>LinkedIn</span>
-				</a>
-			</li>
-		</ul>
 
 	</g:HTMLPanel>
 

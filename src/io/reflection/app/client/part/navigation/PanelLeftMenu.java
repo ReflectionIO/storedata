@@ -65,7 +65,6 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 	@UiField LIElement productItem;
 	@UiField LIElement pricingItem;
 	@UiField LIElement blogItem;
-	// @UiField LIElement forumItem;
 	@UiField LIElement adminItem;
 	@UiField LIElement adminFeedBrowserItem;
 	@UiField LIElement adminSimpleModelRunItem;
@@ -87,10 +86,6 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 	@UiField InlineHyperlink adminFeedBrowserLink;
 	@UiField InlineHyperlink adminSimpleModelRunLink;
 	@UiField InlineHyperlink adminDataAccountFetchesLink;
-	@UiField LIElement productSecondaryItem;
-	@UiField LIElement pricingSecondaryItem;
-	@UiField InlineHyperlink pricingSecondaryLink;
-	@UiField UListElement secondaryFooterList;
 	@UiField SpanElement usersCount;
 
 	// private List<LIElement> items;
@@ -101,8 +96,6 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 
 		myDataItem.removeFromParent();
 		adminItem.removeFromParent();
-		productSecondaryItem.removeFromParent();
-		pricingSecondaryItem.removeFromParent();
 
 	}
 
@@ -353,8 +346,6 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 		myDataItem.removeFromParent();
 		closeDropDownItem(adminItem);
 		adminItem.removeFromParent();
-		productSecondaryItem.removeFromParent();
-		pricingSecondaryItem.removeFromParent();
 		itemList.insertBefore(productItem, blogItem);
 		itemList.insertBefore(pricingItem, blogItem);
 	}
@@ -379,11 +370,7 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 		// Since is attached once, close dropdowns when the panel is created
 		productItem.removeFromParent();
 		pricingItem.removeFromParent();
-		secondaryFooterList.insertFirst(pricingSecondaryItem);
-		secondaryFooterList.insertFirst(productSecondaryItem);
 		if (user != null) {
-			pricingSecondaryLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.ManageSubscriptionPageType.toString(),
-					user.id.toString()));
 			if (!itemList.isOrHasChild(myDataItem)) {
 				itemList.insertFirst(myDataItem);
 				UListElement ulElem = myDataItem.getElementsByTagName("ul").getItem(0).cast();
