@@ -9,6 +9,12 @@
 
 package io.reflection.app.service.feedfetch;
 
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+
+import com.spacehopperstudios.service.IService;
+
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.Category;
@@ -16,12 +22,6 @@ import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.FeedFetchStatusType;
 import io.reflection.app.datatypes.shared.Store;
-
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-
-import com.spacehopperstudios.service.IService;
 
 public interface IFeedFetchService extends IService {
 	/**
@@ -146,5 +146,12 @@ public interface IFeedFetchService extends IService {
 	 * @throws DataAccessException
 	 */
 	public List<Long> getFeedFetchIdsByCode(Long code) throws DataAccessException;
+
+	/**
+	 * @param date
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<FeedFetch> getDatesFeedFetches(Date date) throws DataAccessException;
 
 }

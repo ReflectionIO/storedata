@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -34,8 +35,11 @@ import com.google.appengine.api.taskqueue.TaskOptions.Method;
 import com.spacehopperstudios.utility.StringUtils;
 
 import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.collectors.CollectorIOS;
+import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.DataAccountFetchStatusType;
+import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.helpers.NotificationHelper;
 import io.reflection.app.helpers.QueueHelper;
 import io.reflection.app.helpers.SplitDataHelper;
@@ -46,10 +50,15 @@ import io.reflection.app.modellers.ModellerFactory;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
+import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
+import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
+import io.reflection.app.service.feedfetch.IFeedFetchService;
 import io.reflection.app.service.sale.SaleServiceProvider;
+import io.reflection.app.service.store.StoreServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
+import io.reflection.app.shared.util.PagerHelper;
 
 @SuppressWarnings("serial")
 public class DevUtilServlet extends HttpServlet {
@@ -74,14 +83,15 @@ public class DevUtilServlet extends HttpServlet {
 	public static final String	PARAM_GATHER_CONDITION_EMPTY		= "empty";
 	public static final String	PARAM_GATHER_CONDITION_ERROR		= "error";
 	public static final String	PARAM_GATHER_CONDITION_INGEST		= "ingest";
-	public static final String	PARAM_GATHER_CONDITION_RETRY		= "retry";									// synonomous for ingest, error, empty and missing
+	public static final String	PARAM_GATHER_CONDITION_RETRY		= "retry";				 // synonomous for ingest, error, empty and missing
 	public static final String	PARAM_GATHER_CONDITION_REINGEST	= "reingest";
 	public static final String	PARAM_GATHER_CONDITION_ALL			= "all";
 
-	public static final String	ACTION_GATHER			= "gather";
-	public static final String	ACTION_SUMMARISE	= "summarise";
-	public static final String	ACTION_SPLIT_DATA	= "split";
-	public static final String	ACTION_MODEL			= "model";
+	public static final String	ACTION_GATHER_SALES	= "sales";
+	public static final String	ACTION_GATHER_RANKS	= "ranks";
+	public static final String	ACTION_SUMMARISE		= "summarise";
+	public static final String	ACTION_SPLIT_DATA		= "split";
+	public static final String	ACTION_MODEL				= "model";
 
 	public static final String QUEUE_SUMMARISE = "summarise";
 
@@ -123,7 +133,7 @@ public class DevUtilServlet extends HttpServlet {
 			}
 
 			return;
-		}     // end of if not from deferred queue then re-route it to the deferred queue
+		}   // end of if not from deferred queue then re-route it to the deferred queue
 
 		execute(req, resp);
 	}
@@ -144,8 +154,11 @@ public class DevUtilServlet extends HttpServlet {
 
 		String msg = null;
 		switch (action) {
-			case ACTION_GATHER:
-				msg = gather(req, resp);
+			case ACTION_GATHER_RANKS:
+				msg = gatherRanks(req, resp);
+				break;
+			case ACTION_GATHER_SALES:
+				msg = gatherSales(req, resp);
 				break;
 			case ACTION_SUMMARISE:
 				msg = summarise(req, resp);
@@ -166,7 +179,149 @@ public class DevUtilServlet extends HttpServlet {
 	 * @param resp
 	 * @return
 	 */
-	private String gather(HttpServletRequest req, HttpServletResponse resp) {
+	private String gatherRanks(HttpServletRequest req, HttpServletResponse resp) {
+		/*
+		 * Load all the rank_fetch records for today. Then loop through all the countries and categories and gather the missing ones.
+		 */
+
+		IFeedFetchService feedFetchService = FeedFetchServiceProvider.provide();
+		List<FeedFetch> feedFetches = null;
+		try {
+			feedFetches = feedFetchService.getDatesFeedFetches(new Date());
+		} catch (DataAccessException e) {
+			String msg = String.format("Could not load rank fetches from DB. Exception thrown s", e.getMessage());
+			LOG.log(Level.WARNING, msg, e);
+			return msg;
+		}
+
+		HashMap<String, Long> rankFetchMap = new HashMap<String, Long>(feedFetches.size());
+
+		for (FeedFetch fetch : feedFetches) {
+			String key = fetch.country + "_" + fetch.category + "_" + fetch.type;
+			Long fetchId = fetch.id;
+
+			rankFetchMap.put(key, fetchId);
+		}
+
+		final String countriesToGather = System.getProperty("ingest.ios.countries");
+		if (LOG.isLoggable(GaeLevel.DEBUG)) {
+			LOG.log(GaeLevel.DEBUG, String.format("Found countries [%s].", countriesToGather));
+		}
+
+		final List<String> splitCountries = new ArrayList<String>();
+		Collections.addAll(splitCountries, countriesToGather.split(","));
+
+		if (LOG.isLoggable(GaeLevel.DEBUG)) {
+			LOG.log(GaeLevel.DEBUG, String.format("[%d] countries to fetch data for", splitCountries.size()));
+		}
+
+		final Queue queue = QueueFactory.getQueue("gather");
+		if (queue == null) {
+			String msg = String.format("Could not get the gather queue");
+			LOG.log(Level.WARNING, msg);
+			return msg;
+		}
+
+		Long code = null;
+		try {
+			code = FeedFetchServiceProvider.provide().getCode();
+			if (code == null) {
+				String msg = "Could not generate a gather code from the DB";
+				LOG.log(Level.WARNING, msg);
+				return msg;
+			} else {
+				LOG.log(GaeLevel.DEBUG, String.format("Got code [%d] from feed fetch service", code.longValue()));
+			}
+		} catch (DataAccessException e) {
+			String msg = "Exception while generating a gather code from the DB";
+			LOG.log(Level.WARNING, msg, e);
+			return msg;
+		}
+
+		String[] ALL_TYPE_PLATFORM_COMBINATIONS = new String[] {
+				CollectorIOS.TOP_FREE_APPS,
+				CollectorIOS.TOP_PAID_APPS,
+				CollectorIOS.TOP_GROSSING_APPS,
+				CollectorIOS.TOP_FREE_IPAD_APPS,
+				CollectorIOS.TOP_PAID_IPAD_APPS,
+				CollectorIOS.TOP_GROSSING_IPAD_APPS
+		};
+
+		Long overallCategoryId = getOverallCategoryId();
+		List<Category> categories = null;
+		try {
+			categories = CategoryServiceProvider.provide().getStoreCategories(StoreServiceProvider.provide().getA3CodeStore(DataTypeHelper.IOS_STORE_A3), PagerHelper.createInfinitePager());
+		} catch (DataAccessException e) {
+			LOG.log(GaeLevel.DEBUG, String.format("Exception while trying to queue up all the categories. %s", e.getMessage()), e);
+		}
+
+		CollectorIOS collector = new CollectorIOS();
+		StringBuilder builder = new StringBuilder();
+
+		int skipCount = 0;
+		int enqueuedCount = 0;
+
+		for (final String countryCode : splitCountries) {
+
+			// QUEUE UP THE OVERALL CATEGORIES IF WE DON'T ALREADY HAVE THEM
+			if (overallCategoryId == null) {
+				appendAndReturn("Could not get the overall category id. Skipping the overall lists.", builder);
+			} else {
+				for (String type : ALL_TYPE_PLATFORM_COMBINATIONS) {
+					String key = countryCode + "_" + overallCategoryId + "_" + type;
+
+					if (rankFetchMap.containsKey(key)) {
+						// we have already gathered this rank list.
+						skipCount++;
+						continue;
+					}
+
+					collector.enqueue(queue, countryCode, type, code);
+					enqueuedCount++;
+					if (LOG.isLoggable(GaeLevel.DEBUG)) {
+						LOG.log(GaeLevel.DEBUG, appendAndReturn(String.format("Enqueueing gather tasks for country [%s] overall type [%s]", countryCode, type), builder));
+					}
+				}
+			}
+
+			if (categories == null) {
+				continue;
+			}
+
+			// QUEUE UP ALL CHILD CATEGORIES NEXT.
+			for (Category category : categories) {
+				// skip the overall category
+				if (category.parent == null || category.parent.id == null) {
+					continue;
+				}
+
+				for (String type : ALL_TYPE_PLATFORM_COMBINATIONS) {
+					String key = countryCode + "_" + category.internalId + "_" + type;
+					if (rankFetchMap.containsKey(key)) {
+						// we have already gathered this rank list.
+						skipCount++;
+						continue;
+					}
+
+					collector.enqueue(queue, countryCode, type, category.internalId, code);
+					enqueuedCount++;
+					if (LOG.isLoggable(GaeLevel.DEBUG)) {
+						LOG.log(GaeLevel.DEBUG, appendAndReturn(String.format("Enqueueing gather tasks for country [%s] category [%s] type [%s] ", countryCode, category.name, type), builder));
+					}
+				}
+			}
+		}
+
+		LOG.log(GaeLevel.DEBUG, appendAndReturn(String.format("Rank gather completed. Enqueued: %d, Skipped: %d", enqueuedCount, skipCount), builder));
+		return builder.toString();
+	}
+
+	/**
+	 * @param req
+	 * @param resp
+	 * @return
+	 */
+	private String gatherSales(HttpServletRequest req, HttpServletResponse resp) {
 		ArrayList<Date> datesToProcess = getDatesToProcess(req);
 		if (datesToProcess.isEmpty()) {
 			String msg = "There are no dates to process. Returning without doing anything.";
@@ -243,14 +398,15 @@ public class DevUtilServlet extends HttpServlet {
 
 		StringBuilder webResponse = new StringBuilder();
 
-		String msg = String.format("Gathing for %d accounts. Conditions: missing: %b, empty: %b, error: %b, ingest: %b, reingest: %b", dataAccountIds.size(), gatherMissing, gatherEmpty, gatherError,
-				ingest, reingest);
+		String msg = String.format("Gathing for %d accounts. Conditions: missing: %b, empty: %b, error: %b, ingest: %b, reingest: %b", dataAccountIds.size(),
+				gatherMissing, gatherEmpty, gatherError, ingest, reingest);
 		LOG.log(GaeLevel.DEBUG, msg);
 		webResponse.append(msg).append("\n\n");
 
 		for (Date date : datesToProcess) {
 			for (Long dataAccountId : dataAccountIds) {
-				webResponse.append(gatherForAccountOnDateWithConditions(dataAccountId, date, gatherMissing, gatherEmpty, gatherError, ingest, reingest)).append('\n');
+				webResponse.append(gatherForAccountOnDateWithConditions(dataAccountId, date, gatherMissing, gatherEmpty, gatherError, ingest, reingest))
+				.append('\n');
 			}
 		}
 
@@ -267,7 +423,8 @@ public class DevUtilServlet extends HttpServlet {
 	 *
 	 * @return
 	 */
-	private String gatherForAccountOnDateWithConditions(Long dataAccountId, Date date, boolean gatherMissing, boolean gatherEmpty, boolean gatherError, boolean ingest, boolean reingest) {
+	private String gatherForAccountOnDateWithConditions(Long dataAccountId, Date date, boolean gatherMissing, boolean gatherEmpty, boolean gatherError,
+			boolean ingest, boolean reingest) {
 		StringBuilder builder = new StringBuilder();
 		try {
 			DataAccountFetch dataAccountFetch = DataAccountFetchServiceProvider.provide().getDataAccountFetch(dataAccountId, date);
@@ -278,7 +435,8 @@ public class DevUtilServlet extends HttpServlet {
 					LOG.log(GaeLevel.DEBUG, appendAndReturn(String.format("Fetch for %d on %s missing. Enqueuing for gather", dataAccountId, date), builder));
 					DataAccountServiceProvider.provide().triggerSingleDateDataAccountFetch(dataAccountId, date);
 				} else {
-					LOG.log(GaeLevel.DEBUG, String.format("Fetch status for %d on %s is missing but condition for missing not set. Skipping", dataAccountId, date), builder);
+					LOG.log(GaeLevel.DEBUG,
+							String.format("Fetch status for %d on %s is missing but condition for missing not set. Skipping", dataAccountId, date), builder);
 				}
 
 				return builder.toString();
@@ -291,7 +449,8 @@ public class DevUtilServlet extends HttpServlet {
 					LOG.log(GaeLevel.DEBUG, appendAndReturn(String.format("The fetch was previously marked as empty. Enqueuing for gather"), builder));
 					DataAccountServiceProvider.provide().triggerSingleDateDataAccountFetch(dataAccountId, date);
 				} else {
-					LOG.log(GaeLevel.DEBUG, String.format("Fetch status for %d on %s is empty but condition for empty not set. Skipping", dataAccountId, date), builder);
+					LOG.log(GaeLevel.DEBUG, String.format("Fetch status for %d on %s is empty but condition for empty not set. Skipping", dataAccountId, date),
+							builder);
 				}
 
 				return builder.toString();
@@ -304,7 +463,8 @@ public class DevUtilServlet extends HttpServlet {
 					DataAccountServiceProvider.provide().triggerSingleDateDataAccountFetch(dataAccountId, date);
 
 				} else {
-					LOG.log(GaeLevel.DEBUG, String.format("Fetch status for %d on %s is error but condition for error not set. Skipping", dataAccountId, date), builder);
+					LOG.log(GaeLevel.DEBUG, String.format("Fetch status for %d on %s is error but condition for error not set. Skipping", dataAccountId, date),
+							builder);
 				}
 				return builder.toString();
 			}
@@ -312,14 +472,16 @@ public class DevUtilServlet extends HttpServlet {
 			// INGESTED
 			if (dataAccountFetch.status == DataAccountFetchStatusType.DataAccountFetchStatusTypeIngested) {
 				if (reingest) {
-					LOG.log(GaeLevel.DEBUG, appendAndReturn(String.format("The fetch was previously marked as ingested. Updating status to gathered"), builder));
+					LOG.log(GaeLevel.DEBUG,
+							appendAndReturn(String.format("The fetch was previously marked as ingested. Updating status to gathered"), builder));
 
 					dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered;
 					DataAccountFetchServiceProvider.provide().updateDataAccountFetch(dataAccountFetch);
 					DataAccountFetchServiceProvider.provide().triggerDataAccountFetchIngest(dataAccountFetch);
 
 				} else {
-					LOG.log(GaeLevel.DEBUG, String.format("Fetch status for %d on %s is ingested but condition for reingest not set. Skipping", dataAccountId, date), builder);
+					LOG.log(GaeLevel.DEBUG,
+							String.format("Fetch status for %d on %s is ingested but condition for reingest not set. Skipping", dataAccountId, date), builder);
 					return builder.toString();
 				}
 			}
@@ -327,17 +489,20 @@ public class DevUtilServlet extends HttpServlet {
 			// GATHERED BUT NOT PREVIOUSLY INGESTED (OR SET TO GATHERED IN THE PREVIOUS BLOCK)
 			if (dataAccountFetch.status == DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered) {
 				if ((ingest || reingest)) {
-					LOG.log(GaeLevel.DEBUG, appendAndReturn(String.format("Fetch status for %d on %s is gathered. Enqueuing for ingest", dataAccountId, date), builder));
+					LOG.log(GaeLevel.DEBUG,
+							appendAndReturn(String.format("Fetch status for %d on %s is gathered. Enqueuing for ingest", dataAccountId, date), builder));
 					DataAccountFetchServiceProvider.provide().triggerDataAccountFetchIngest(dataAccountFetch);
 
 				} else {
-					LOG.log(GaeLevel.DEBUG, String.format("Fetch status for %d on %s is error but condition for error not set. Skipping", dataAccountId, date), builder);
+					LOG.log(GaeLevel.DEBUG, String.format("Fetch status for %d on %s is error but condition for error not set. Skipping", dataAccountId, date),
+							builder);
 				}
 				return builder.toString();
 			}
 
 		} catch (DataAccessException e) {
-			LOG.log(Level.WARNING, appendAndReturn(String.format("Exception while trying to gather for account id %d on a %s. %s", dataAccountId, date, e.getMessage()), builder), e);
+			LOG.log(Level.WARNING, appendAndReturn(
+					String.format("Exception while trying to gather for account id %d on a %s. %s", dataAccountId, date, e.getMessage()), builder), e);
 		}
 		return builder.toString();
 	}
@@ -382,10 +547,8 @@ public class DevUtilServlet extends HttpServlet {
 
 				String taskName = "summarise_" + dataAccountId + "_" + sqlDate + "-" + System.currentTimeMillis();
 
-				QueueHelper.enqueue(QUEUE_SUMMARISE, URL_SUMMARISE, Method.GET,
-						new SimpleEntry<String, String>("taskName", taskName),
-						new SimpleEntry<String, String>("dataaccountid", dataAccountId.toString()),
-						new SimpleEntry<String, String>("date", sqlDate));
+				QueueHelper.enqueue(QUEUE_SUMMARISE, URL_SUMMARISE, Method.GET, new SimpleEntry<String, String>("taskName", taskName),
+						new SimpleEntry<String, String>("dataaccountid", dataAccountId.toString()), new SimpleEntry<String, String>("date", sqlDate));
 
 				String logMsg = String.format("Enqueued summarisation for data account %d on %s with taskName %s", dataAccountId, sqlDate, taskName);
 				LOG.log(GaeLevel.DEBUG, logMsg);
@@ -470,25 +633,24 @@ public class DevUtilServlet extends HttpServlet {
 			usingDateRange = false;
 		}
 
-		String dateCondition = usingDateRange ? SqlQueryHelper.getDateRangeCondition("fetch_date", dateRange.split(",")) : SqlQueryHelper.getDateListCondition("fetch_date", dates.split(","));
+		String dateCondition = usingDateRange ? SqlQueryHelper.getDateRangeCondition("fetch_date", dateRange.split(","))
+				: SqlQueryHelper.getDateListCondition("fetch_date", dates.split(","));
 		if (dateCondition == null || dateCondition.length() == 0) {
-			String msg = "Could not generate a date condition based on the input params. Using date range: " + usingDateRange + ", " + PARAM_DATE_RANGE + " = " + dateRange + ", " + PARAM_DATES + " = "
-					+ dates;
+			String msg = "Could not generate a date condition based on the input params. Using date range: " + usingDateRange + ", " + PARAM_DATE_RANGE + " = "
+					+ dateRange + ", " + PARAM_DATES + " = " + dates;
 
 			LOG.log(GaeLevel.DEBUG, msg);
 			return msg;
 		}
 
 		// if there is no time param or it is = all then ignore time else if it is am then do am else do pm.
-		String timeCondition = time == null ? "" : time.trim().equalsIgnoreCase("all") ? "" : time.trim().equalsIgnoreCase("am") ? " AND fetch_time<'13:00'" : " AND fetch_time>'21:00'";
+		String timeCondition = time == null ? ""
+				: time.trim().equalsIgnoreCase("all") ? "" : time.trim().equalsIgnoreCase("am") ? " AND fetch_time<'13:00'" : " AND fetch_time>'21:00'";
 
-		String selectQuery = String.format("SELECT rank_fetch_id from rank_fetch where %s AND country in ('%s') AND category in (%s) and type in ('%s') and platform in ('%s') %s",
-				dateCondition,
-				StringUtils.join(countryList, "', '"),
-				StringUtils.join(categoryList, ", "),
-				StringUtils.join(typeList, "', '"),
-				StringUtils.join(platformList, "', '"),
-				timeCondition);
+		String selectQuery = String.format(
+				"SELECT rank_fetch_id from rank_fetch where %s AND country in ('%s') AND category in (%s) and type in ('%s') and platform in ('%s') %s",
+				dateCondition, StringUtils.join(countryList, "', '"), StringUtils.join(categoryList, ", "), StringUtils.join(typeList, "', '"),
+				StringUtils.join(platformList, "', '"), timeCondition);
 
 		String msg = "Running select query: " + selectQuery;
 		webResponse.append(msg).append('\n');
@@ -539,7 +701,8 @@ public class DevUtilServlet extends HttpServlet {
 		List<Long> dataAccountIds = getLongParameters(req, PARAM_DATA_ACCOUNT_IDS);
 		if (dataAccountIds.isEmpty()) {
 			try {
-				dataAccountIds = SaleServiceProvider.provide().getDataAccountIdsWithSaleSummariesBetweenDates(datesToProcess.get(0), datesToProcess.get(datesToProcess.size() - 1));
+				dataAccountIds = SaleServiceProvider.provide().getDataAccountIdsWithSaleSummariesBetweenDates(datesToProcess.get(0),
+						datesToProcess.get(datesToProcess.size() - 1));
 			} catch (DataAccessException e) {
 				String msg = "Exception occured while trying to get data account ids with sales between dates. Check the logs.";
 
@@ -566,6 +729,19 @@ public class DevUtilServlet extends HttpServlet {
 		}
 
 		return webResponse.toString();
+	}
+
+	/**
+	 * @return
+	 */
+	private Long getOverallCategoryId() {
+		try {
+			Category allCategory = CategoryServiceProvider.provide().getAllCategory(DataTypeHelper.getIosStore());
+			if (allCategory != null) return allCategory.internalId;
+		} catch (DataAccessException e) {
+			LOG.log(GaeLevel.DEBUG, String.format("Exception getting the overall category from DB %s", e.getMessage()), e);
+		}
+		return null;
 	}
 
 	/**
@@ -714,7 +890,8 @@ public class DevUtilServlet extends HttpServlet {
 			LOG.log(Level.WARNING, "Could not write to the servlet response stream", e);
 		}
 
-		NotificationHelper.sendEmail("hello@reflection.io (Reflection)", System.getProperty("devadmin.email"), System.getProperty("devadmin.name"), "DevUtil Servlet Log output", msg, false);
+		NotificationHelper.sendEmail("hello@reflection.io (Reflection)", System.getProperty("devadmin.email"), System.getProperty("devadmin.name"),
+				"DevUtil Servlet Log output", msg, false);
 	}
 
 	@Override

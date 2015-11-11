@@ -3,16 +3,6 @@
  */
 package io.reflection.app.collectors;
 
-import io.reflection.app.api.exception.DataAccessException;
-import io.reflection.app.api.shared.datatypes.Pager;
-import io.reflection.app.datatypes.shared.Category;
-import io.reflection.app.datatypes.shared.Store;
-import io.reflection.app.logging.GaeLevel;
-import io.reflection.app.service.category.CategoryServiceProvider;
-import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
-import io.reflection.app.service.store.StoreServiceProvider;
-import io.reflection.app.shared.util.DataTypeHelper;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -28,6 +18,16 @@ import com.google.appengine.api.taskqueue.TaskOptions.Method;
 import com.google.appengine.api.taskqueue.TransientFailureException;
 import com.google.gson.JsonObject;
 import com.willshex.gson.json.shared.Convert;
+
+import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.datatypes.shared.Category;
+import io.reflection.app.datatypes.shared.Store;
+import io.reflection.app.logging.GaeLevel;
+import io.reflection.app.service.category.CategoryServiceProvider;
+import io.reflection.app.service.feedfetch.FeedFetchServiceProvider;
+import io.reflection.app.service.store.StoreServiceProvider;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 /**
  * @author billy1380
@@ -264,11 +264,11 @@ public class CollectorIOS extends StoreCollector implements Collector {
 		return HttpExternalGetter.getData(endPoint);
 	}
 
-	private void enqueue(Queue queue, String country, String type, Long code) {
+	public void enqueue(Queue queue, String country, String type, Long code) {
 		enqueue(queue, country, type, null, code);
 	}
 
-	private void enqueue(Queue queue, String country, String type, Long categoryInternalId, Long code) {
+	public void enqueue(Queue queue, String country, String type, Long categoryInternalId, Long code) {
 		String url = null;
 
 		if (categoryInternalId == null) {
@@ -338,18 +338,18 @@ public class CollectorIOS extends StoreCollector implements Collector {
 	@Override
 	public List<String> getCounterpartTypes(String type) {
 		switch (type) {
-		case TOP_FREE_APPS:
-			return Arrays.asList(TOP_GROSSING_APPS);
-		case TOP_PAID_APPS:
-			return Arrays.asList(TOP_GROSSING_APPS);
-		case TOP_GROSSING_APPS:
-			return Arrays.asList(TOP_PAID_APPS, TOP_FREE_APPS);
-		case TOP_FREE_IPAD_APPS:
-			return Arrays.asList(TOP_GROSSING_IPAD_APPS);
-		case TOP_PAID_IPAD_APPS:
-			return Arrays.asList(TOP_GROSSING_IPAD_APPS);
-		case TOP_GROSSING_IPAD_APPS:
-			return Arrays.asList(TOP_PAID_IPAD_APPS, TOP_FREE_IPAD_APPS);
+			case TOP_FREE_APPS:
+				return Arrays.asList(TOP_GROSSING_APPS);
+			case TOP_PAID_APPS:
+				return Arrays.asList(TOP_GROSSING_APPS);
+			case TOP_GROSSING_APPS:
+				return Arrays.asList(TOP_PAID_APPS, TOP_FREE_APPS);
+			case TOP_FREE_IPAD_APPS:
+				return Arrays.asList(TOP_GROSSING_IPAD_APPS);
+			case TOP_PAID_IPAD_APPS:
+				return Arrays.asList(TOP_GROSSING_IPAD_APPS);
+			case TOP_GROSSING_IPAD_APPS:
+				return Arrays.asList(TOP_PAID_IPAD_APPS, TOP_FREE_IPAD_APPS);
 		}
 		return null;
 	}

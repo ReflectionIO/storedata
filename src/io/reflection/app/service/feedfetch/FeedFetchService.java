@@ -28,6 +28,7 @@ import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.FeedFetch;
 import io.reflection.app.datatypes.shared.FeedFetchStatusType;
 import io.reflection.app.datatypes.shared.Store;
+import io.reflection.app.helpers.SqlQueryHelper;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
@@ -53,7 +54,8 @@ public class FeedFetchService implements IFeedFetchService {
 		final Connection feedFetchConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
 
 		final String getFeedFetchQuery = String
-				.format("SELECT rank_fetch_id, group_fetch_code, CONCAT(fetch_date, ' ', fetch_time) as date, country, category, type, platform, url, data_format, status FROM `rank_fetch` WHERE `rank_fetch_id`=%d LIMIT 1",
+				.format(
+						"SELECT rank_fetch_id, group_fetch_code, CONCAT(fetch_date, ' ', fetch_time) as date, country, category, type, platform, url, data_format, status FROM `rank_fetch` WHERE `rank_fetch_id`=%d LIMIT 1",
 						id.longValue());
 		try {
 			feedFetchConnection.connect();
@@ -80,21 +82,20 @@ public class FeedFetchService implements IFeedFetchService {
 	private FeedFetch toFeedFetch(Connection connection) throws DataAccessException {
 		final FeedFetch feedFetch = new FeedFetch();
 
-		//		feedFetch.id = connection.getCurrentRowLong("id");
-		//		feedFetch.created = connection.getCurrentRowDateTime("created");
-		//		feedFetch.deleted = connection.getCurrentRowString("deleted");
+		// feedFetch.id = connection.getCurrentRowLong("id");
+		// feedFetch.created = connection.getCurrentRowDateTime("created");
+		// feedFetch.deleted = connection.getCurrentRowString("deleted");
 
-		//		feedFetch.code = connection.getCurrentRowLong("code2");
-		//		feedFetch.country = stripslashes(connection.getCurrentRowString("country"));
-		//		feedFetch.data = stripslashes(connection.getCurrentRowString("data"));
-		//		feedFetch.date = connection.getCurrentRowDateTime("date");
-		//		feedFetch.store = stripslashes(connection.getCurrentRowString("store"));
-		//		feedFetch.type = stripslashes(connection.getCurrentRowString("type"));
-		//		feedFetch.status = FeedFetchStatusType.fromString(connection.getCurrentRowString("status"));
+		// feedFetch.code = connection.getCurrentRowLong("code2");
+		// feedFetch.country = stripslashes(connection.getCurrentRowString("country"));
+		// feedFetch.data = stripslashes(connection.getCurrentRowString("data"));
+		// feedFetch.date = connection.getCurrentRowDateTime("date");
+		// feedFetch.store = stripslashes(connection.getCurrentRowString("store"));
+		// feedFetch.type = stripslashes(connection.getCurrentRowString("type"));
+		// feedFetch.status = FeedFetchStatusType.fromString(connection.getCurrentRowString("status"));
 
-		//		feedFetch.category = new Category();
-		//		feedFetch.category.id = connection.getCurrentRowLong("categoryid");
-
+		// feedFetch.category = new Category();
+		// feedFetch.category.id = connection.getCurrentRowLong("categoryid");
 
 		feedFetch.id = connection.getCurrentRowLong("rank_fetch_id");
 		feedFetch.created = connection.getCurrentRowDateTime("date");
@@ -105,7 +106,7 @@ public class FeedFetchService implements IFeedFetchService {
 
 		feedFetch.country = connection.getCurrentRowString("country");
 		feedFetch.data = connection.getCurrentRowString("url");
-		feedFetch.store="ios";
+		feedFetch.store = "ios";
 		feedFetch.type = getOldTypeFromDBType(connection.getCurrentRowString("type"), connection.getCurrentRowString("platform"));
 		feedFetch.status = FeedFetchStatusType.fromString(connection.getCurrentRowString("status"));
 		feedFetch.code = connection.getCurrentRowLong("group_fetch_code");
@@ -230,7 +231,8 @@ public class FeedFetchService implements IFeedFetchService {
 		}
 
 		String selectQuery = String
-				.format("SELECT rank_fetch_id, group_fetch_code, CONCAT(fetch_date, ' ', fetch_time) as date, country, category, type, platform, url, data_format, status FROM rank_fetch WHERE country=? AND category=? AND ( %s ) ORDER BY ? ? LIMIT ? ?",
+				.format(
+						"SELECT rank_fetch_id, group_fetch_code, CONCAT(fetch_date, ' ', fetch_time) as date, country, category, type, platform, url, data_format, status FROM rank_fetch WHERE country=? AND category=? AND ( %s ) ORDER BY ? ? LIMIT ? ?",
 						typeQueryParts);
 
 		final Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
@@ -431,7 +433,8 @@ public class FeedFetchService implements IFeedFetchService {
 		}
 
 		String selectQuery = String
-				.format("SELECT rank_fetch_id, group_fetch_code, CONCAT(fetch_date, ' ', fetch_time) as date, country, category, type, platform, url, data_format, status FROM rank_fetch WHERE group_fetch_code=? AND country=? AND ( %s )",
+				.format(
+						"SELECT rank_fetch_id, group_fetch_code, CONCAT(fetch_date, ' ', fetch_time) as date, country, category, type, platform, url, data_format, status FROM rank_fetch WHERE group_fetch_code=? AND country=? AND ( %s )",
 						typeQueryParts);
 
 		final Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
@@ -557,7 +560,8 @@ public class FeedFetchService implements IFeedFetchService {
 		}
 
 		String selectQuery = String
-				.format("SELECT rank_fetch_id, group_fetch_code, CONCAT(fetch_date, ' ', fetch_time) as date, country, category, type, platform, url, data_format, status FROM rank_fetch WHERE fetch_date BETWEEN ? AND ? AND country=? AND category=? AND ( %s )",
+				.format(
+						"SELECT rank_fetch_id, group_fetch_code, CONCAT(fetch_date, ' ', fetch_time) as date, country, category, type, platform, url, data_format, status FROM rank_fetch WHERE fetch_date BETWEEN ? AND ? AND country=? AND category=? AND ( %s )",
 						typeQueryParts);
 
 		final Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
@@ -601,31 +605,34 @@ public class FeedFetchService implements IFeedFetchService {
 		return feedFetches;
 	}
 
-
 	public static String getDBTypeForFeedFetchType(String type) {
 		if (type == null) return "FREE";
 
 		if (type.contains("free")) return "FREE";
 		else if (type.contains("paid")) return "PAID";
-		else return "GROSSING";
+		else
+			return "GROSSING";
 	}
 
 	public static String getDBPlatformForFeedFetchType(String type) {
 		if (type == null) return "PHONE";
 
 		if (type.contains("ipad")) return "TABLET";
-		else return "PHONE";
+		else
+			return "PHONE";
 	}
 
 	public static String getOldTypeFromDBType(String type, String platform) {
 		if ("PHONE".equalsIgnoreCase(platform)) {
 			if ("FREE".equalsIgnoreCase(type)) return "topfreeapplications";
 			else if ("PAID".equalsIgnoreCase(type)) return "toppaidapplications";
-			else return "topgrossingapplications";
+			else
+				return "topgrossingapplications";
 		} else {
 			if ("FREE".equalsIgnoreCase(type)) return "topfreeipadapplications";
 			else if ("PAID".equalsIgnoreCase(type)) return "toppaidipadapplications";
-			else return "topgrossingipadapplications";
+			else
+				return "topgrossingipadapplications";
 		}
 	}
 
@@ -697,6 +704,40 @@ public class FeedFetchService implements IFeedFetchService {
 		} finally {
 			if (feedFetchConnection != null) {
 				feedFetchConnection.closeStatement(pstat);
+				feedFetchConnection.disconnect();
+			}
+		}
+
+		return feedFetches;
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.service.feedfetch.IFeedFetchService#getDatesFeedFetches(java.util.Date)
+	 */
+	@Override
+	public List<FeedFetch> getDatesFeedFetches(Date date) throws DataAccessException {
+		final List<FeedFetch> feedFetches = new ArrayList<FeedFetch>();
+
+		String selectQuery = String
+				.format(
+						"SELECT rank_fetch_id, group_fetch_code, CONCAT(fetch_date, ' ', fetch_time) as date, country, category, type, platform, url, data_format, status FROM rank_fetch WHERE fetch_date='?' ",
+						SqlQueryHelper.getSqlDateFormat().format(date));
+
+		final Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
+
+		try {
+			feedFetchConnection.connect();
+			feedFetchConnection.executeQuery(selectQuery);
+
+			while (feedFetchConnection.fetchNextRow()) {
+				final FeedFetch feedFetch = toFeedFetch(feedFetchConnection);
+
+				if (feedFetch != null) {
+					feedFetches.add(feedFetch);
+				}
+			}
+		} finally {
+			if (feedFetchConnection != null) {
 				feedFetchConnection.disconnect();
 			}
 		}
