@@ -354,6 +354,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 	private void setTableEmpty(boolean empty) {
 		addAnotherLinkedAccountBtn.setEnabled(!empty);
+		addAnotherLinkedAccountBtn.setVisible(!empty);
 		linkedAccountsTable.setStyleName(style.tableLinkedAccountsDisabled(), empty);
 	}
 
