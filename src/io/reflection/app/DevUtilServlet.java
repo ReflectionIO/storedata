@@ -197,7 +197,7 @@ public class DevUtilServlet extends HttpServlet {
 		HashMap<String, Long> rankFetchMap = new HashMap<String, Long>(feedFetches.size());
 
 		for (FeedFetch fetch : feedFetches) {
-			String key = fetch.country + "_" + fetch.category + "_" + fetch.type;
+			String key = fetch.country + "_" + fetch.category.id + "_" + fetch.type;
 			Long fetchId = fetch.id;
 
 			rankFetchMap.put(key, fetchId);
@@ -296,7 +296,7 @@ public class DevUtilServlet extends HttpServlet {
 				}
 
 				for (String type : ALL_TYPE_PLATFORM_COMBINATIONS) {
-					String key = countryCode + "_" + category.internalId + "_" + type;
+					String key = countryCode + "_" + category.id + "_" + type;
 					if (rankFetchMap.containsKey(key)) {
 						// we have already gathered this rank list.
 						skipCount++;
@@ -737,7 +737,7 @@ public class DevUtilServlet extends HttpServlet {
 	private Long getOverallCategoryId() {
 		try {
 			Category allCategory = CategoryServiceProvider.provide().getAllCategory(DataTypeHelper.getIosStore());
-			if (allCategory != null) return allCategory.internalId;
+			if (allCategory != null) return allCategory.id;
 		} catch (DataAccessException e) {
 			LOG.log(GaeLevel.DEBUG, String.format("Exception getting the overall category from DB %s", e.getMessage()), e);
 		}

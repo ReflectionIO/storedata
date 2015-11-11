@@ -720,7 +720,7 @@ public class FeedFetchService implements IFeedFetchService {
 
 		String selectQuery = String
 				.format(
-						"SELECT rank_fetch_id, group_fetch_code, CONCAT(fetch_date, ' ', fetch_time) as date, country, category, type, platform, url, data_format, status FROM rank_fetch WHERE fetch_date='?' ",
+						"SELECT rank_fetch_id, group_fetch_code, CONCAT(fetch_date, ' ', fetch_time) as date, country, category, type, platform, url, data_format, status FROM rank_fetch WHERE fetch_date='%s' ",
 						SqlQueryHelper.getSqlDateFormat().format(date));
 
 		final Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
