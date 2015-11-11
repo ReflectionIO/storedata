@@ -36,13 +36,14 @@
 
 	<queue>
 		<name>gather</name>
-		<rate>10/s</rate>
+		<rate>20/s</rate>
 		<bucket-size>10</bucket-size>
 		<max-concurrent-requests>20</max-concurrent-requests>
 		<retry-parameters>
-			<task-retry-limit>5</task-retry-limit>
+			<task-retry-limit>25</task-retry-limit>
 			<min-backoff-seconds>10</min-backoff-seconds>
-      <max-backoff-seconds>240</max-backoff-seconds>
+      <max-backoff-seconds>600</max-backoff-seconds>
+      <max-doublings>2</max-doublings>
 		</retry-parameters>
 	</queue>
 	<queue>
