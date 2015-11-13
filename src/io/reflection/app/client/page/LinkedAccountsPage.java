@@ -450,16 +450,12 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 				if (output.error.code == ApiError.InvalidDataAccountCredentials.getCode()) {
 					updatingLinkedAccountForm.setStatusError("Invalid credentials!");
 					// updatingLinkedAccountForm.setUsernameError("iTunes Connect username or password entered incorrectly");
-					updatingLinkedAccountForm.setPasswordError("iTunes Connect username or password entered incorrectly");
+					updatingLinkedAccountForm.setPasswordError("iTunes Connect password entered incorrectly");
 					updatingLinkedAccountForm.setFormErrors();
-				} else if (output.error.code == ApiError.InvalidDataAccountVendor.getCode()) {
-					updatingLinkedAccountForm.setStatusError("Invalid vendor ID!");
-					updatingLinkedAccountForm.setVendorError("iTunes Connect vendor number entered incorrectly");
-					updatingLinkedAccountForm.setFormErrors();
-					updatingLinkedAccountForm.clearPassword();
 				} else if (output.error.code == ApiError.DuplicateVendorId.getCode()) {
 					updatingLinkedAccountForm.setStatusError("Account already linked!");
-					updatingLinkedAccountForm.setVendorError("The vendor ID you entered is already in use");
+					updatingLinkedAccountForm.setUsernameError("The vendor ID you entered is already in use");
+					updatingLinkedAccountForm.setPasswordError("The vendor ID you entered is already in use");
 					updatingLinkedAccountForm.setFormErrors();
 				} else {
 					updatingLinkedAccountForm.setStatusError();
