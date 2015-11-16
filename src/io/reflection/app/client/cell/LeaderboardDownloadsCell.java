@@ -77,7 +77,7 @@ public class LeaderboardDownloadsCell extends AbstractCell<Rank> {
 		} else if (SessionController.get().canSeePredictions()) {
 			value = (rank.downloads != null ? SafeHtmlUtils.fromSafeConstant(WHOLE_NUMBER_FORMATTER.format(rank.downloads)) : noDataQuestionMark);
 		} else {
-			if (CalendarUtil.isSameDate(FilterHelper.getDaysAgo(3), FilterController.get().getEndDate())
+			if (CalendarUtil.isSameDate(FilterHelper.getDaysAgo(FilterHelper.DEFAULT_LEADERBOARD_LAG_DAYS), FilterController.get().getEndDate())
 					|| NavigationController.get().getCurrentPage().equals(PageType.HomePageType)) {
 				if (position > 10 && !(SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount())) {
 					value = SessionController.get().isLoggedIn() ? linkAccountLink : signUpLink;

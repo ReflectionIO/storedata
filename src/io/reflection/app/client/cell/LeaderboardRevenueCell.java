@@ -79,7 +79,7 @@ public class LeaderboardRevenueCell extends AbstractCell<Rank> {
 			value = (rank.currency != null && rank.revenue != null ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.asWholeMoneyString(rank.currency,
 					rank.revenue.floatValue())) : noDataQuestionMark);
 		} else {
-			if (CalendarUtil.isSameDate(FilterHelper.getDaysAgo(3), FilterController.get().getEndDate())
+			if (CalendarUtil.isSameDate(FilterHelper.getDaysAgo(FilterHelper.DEFAULT_LEADERBOARD_LAG_DAYS), FilterController.get().getEndDate())
 					|| NavigationController.get().getCurrentPage().equals(PageType.HomePageType)) {
 				if (position > 10 && !(SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount())) {
 					value = SessionController.get().isLoggedIn() ? linkAccountLink : signUpLink;
