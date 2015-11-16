@@ -391,7 +391,7 @@ public class MyAppsPage extends Page implements NavigationEventHandler, LinkAcco
 			@Override
 			public SafeHtml getValue(MyApp object) {
 				return (object.item != null) ? SafeHtmlUtils.fromSafeConstant(DataTypeHelper.itemIapState(object.item, IAP_YES_HTML, IAP_NO_HTML,
-						"<span class=\"js-tooltip js-tooltip--info js-tooltip--right js-tooltip--right--no-pointer-padding " + style.tooltipInfo()
+						"<span class=\"js-tooltip js-tooltip--info tooltip--info js-tooltip--right js-tooltip--right--no-pointer-padding " + style.tooltipInfo()
 								+ "\" data-tooltip=\"No data available\"></span>")) : loaderInline;
 			}
 
