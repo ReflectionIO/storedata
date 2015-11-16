@@ -40,10 +40,12 @@ import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.DataAccountFetchStatusType;
 import io.reflection.app.datatypes.shared.FeedFetch;
+import io.reflection.app.datatypes.shared.FeedFetchStatusType;
 import io.reflection.app.helpers.NotificationHelper;
 import io.reflection.app.helpers.QueueHelper;
 import io.reflection.app.helpers.SplitDataHelper;
 import io.reflection.app.helpers.SqlQueryHelper;
+import io.reflection.app.ingestors.IngestorIOS;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.modellers.Modeller;
 import io.reflection.app.modellers.ModellerFactory;
@@ -89,6 +91,7 @@ public class DevUtilServlet extends HttpServlet {
 
 	public static final String	ACTION_GATHER_SALES	= "sales";
 	public static final String	ACTION_GATHER_RANKS	= "ranks";
+	public static final String	ACTION_INGEST_RANKS	= "rank_ingest";
 	public static final String	ACTION_SUMMARISE		= "summarise";
 	public static final String	ACTION_SPLIT_DATA		= "split";
 	public static final String	ACTION_MODEL				= "model";
@@ -157,6 +160,9 @@ public class DevUtilServlet extends HttpServlet {
 			case ACTION_GATHER_RANKS:
 				msg = gatherRanks(req, resp);
 				break;
+			case ACTION_INGEST_RANKS:
+				msg = ingestRanks(req, resp);
+				break;
 			case ACTION_GATHER_SALES:
 				msg = gatherSales(req, resp);
 				break;
@@ -170,12 +176,62 @@ public class DevUtilServlet extends HttpServlet {
 				msg = model(req, resp);
 				break;
 			default:
-				msg = String.format("I don't understand this action %s, please try one of the following: %s,%s,%s,%s,%s", action,
-						ACTION_GATHER_RANKS, ACTION_GATHER_SALES, ACTION_SUMMARISE, ACTION_SPLIT_DATA, ACTION_MODEL);
+				msg = String.format("I don't understand this action %s, please try one of the following: %s,%s,%s,%s,%s,%s", action,
+						ACTION_GATHER_RANKS, ACTION_INGEST_RANKS, ACTION_GATHER_SALES, ACTION_SUMMARISE, ACTION_SPLIT_DATA, ACTION_MODEL);
 				break;
 		}
 
 		writeResponse(resp, msg);
+	}
+
+	/**
+	 * @param req
+	 * @param resp
+	 * @return
+	 */
+	private String ingestRanks(HttpServletRequest req, HttpServletResponse resp) {
+		ArrayList<Date> datesToProcess = getDatesToProcess(req);
+		if (datesToProcess.isEmpty()) {
+			String msg = "There are no dates to process. Returning without doing anything.";
+
+			LOG.log(GaeLevel.DEBUG, msg);
+			return msg;
+		}
+
+		IngestorIOS ingestor = new IngestorIOS();
+
+		StringBuilder builder = new StringBuilder();
+		appendAndReturn("Starting rank ingests", builder);
+		for (Date date : datesToProcess) {
+			IFeedFetchService feedFetchService = FeedFetchServiceProvider.provide();
+			List<FeedFetch> feedFetches = null;
+			try {
+				feedFetches = feedFetchService.getDatesFeedFetches(new Date());
+			} catch (DataAccessException e) {
+				appendAndReturn(String.format("Could not load rank fetches from DB for date %s. Exception thrown %s", date.toString(), e.getMessage()), builder);
+			}
+
+			if (feedFetches == null || feedFetches.size() == 0) {
+				appendAndReturn(String.format("Didn't get any fetches for %s", date), builder);
+				continue;
+			}
+
+			int skipped = 0, queued = 0;
+
+			for (FeedFetch feedFetch : feedFetches) {
+				if (feedFetch.status != FeedFetchStatusType.FeedFetchStatusTypeGathered) {
+					skipped++;
+					continue;
+				}
+
+				queued++;
+				ingestor.enqueue(QueueFactory.getQueue("ingest"), feedFetch.id.toString());
+			}
+
+			appendAndReturn(String.format("Queued: %d, skipped: %d for %s", queued, skipped, date), builder);
+		}
+
+		return builder.toString();
 	}
 
 	/**
@@ -193,7 +249,7 @@ public class DevUtilServlet extends HttpServlet {
 		try {
 			feedFetches = feedFetchService.getDatesFeedFetches(new Date());
 		} catch (DataAccessException e) {
-			String msg = String.format("Could not load rank fetches from DB. Exception thrown s", e.getMessage());
+			String msg = String.format("Could not load rank fetches from DB. Exception thrown %s", e.getMessage());
 			LOG.log(Level.WARNING, msg, e);
 			return msg;
 		}
