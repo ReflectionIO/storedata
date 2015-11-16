@@ -169,6 +169,10 @@ public class DevUtilServlet extends HttpServlet {
 			case ACTION_MODEL:
 				msg = model(req, resp);
 				break;
+			default:
+				msg = String.format("I don't understand this action %s, please try one of the following: %s,%s,%s,%s,%s", action,
+						ACTION_GATHER_RANKS, ACTION_GATHER_SALES, ACTION_SUMMARISE, ACTION_SPLIT_DATA, ACTION_MODEL);
+				break;
 		}
 
 		writeResponse(resp, msg);
@@ -890,8 +894,14 @@ public class DevUtilServlet extends HttpServlet {
 			LOG.log(Level.WARNING, "Could not write to the servlet response stream", e);
 		}
 
-		NotificationHelper.sendEmail("hello@reflection.io (Reflection)", System.getProperty("devadmin.email"), System.getProperty("devadmin.name"),
-				"DevUtil Servlet Log output", msg, false);
+		if (msg == null) return;
+
+		try {
+			NotificationHelper.sendEmail("hello@reflection.io (Reflection)", System.getProperty("devadmin.email"), System.getProperty("devadmin.name"),
+					"DevUtil Servlet Log output", msg, false);
+		} catch (Exception e) {
+			LOG.log(Level.WARNING, String.format("Exception while trying to send the email with the msg: \n%s", msg), e);
+		}
 	}
 
 	@Override
