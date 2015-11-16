@@ -281,8 +281,10 @@ public class CollectorIOS extends StoreCollector implements Collector {
 			LOG.log(GaeLevel.DEBUG, String.format("Enqueueing gather tasks for url [%s]", url));
 		}
 
+		String taskName = String.format("rank_%s_%s_%s_%s_%s", country, type, categoryInternalId == null ? "overall" : categoryInternalId.toString(), code, System.currentTimeMillis());
+
 		try {
-			queue.add(TaskOptions.Builder.withUrl(url).method(Method.GET));
+			queue.add(TaskOptions.Builder.withUrl(url).method(Method.GET).taskName(taskName));
 		} catch (final TransientFailureException ex) {
 
 			if (LOG.isLoggable(Level.WARNING)) {
