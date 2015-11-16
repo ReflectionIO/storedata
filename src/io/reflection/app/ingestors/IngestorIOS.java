@@ -545,8 +545,13 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 			buffer.append(id.toString());
 		}
 
-		final String store = DataTypeHelper.IOS_STORE_A3, ids = buffer.toString();
+		String ids = buffer.toString();
 
+		enqueue(queue, ids);
+	}
+
+	public void enqueue(Queue queue, String ids) {
+		final String store = DataTypeHelper.IOS_STORE_A3;
 		try {
 			queue.add(TaskOptions.Builder.withUrl(String.format(ENQUEUE_INGEST_FORMAT, store, ids)).method(Method.GET));
 		} catch (final TransientFailureException ex) {
