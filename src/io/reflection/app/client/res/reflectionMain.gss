@@ -14476,7 +14476,7 @@ input[type="radio"]:disabled:checked + .radioButtonLabel:active {
   height: 18px;
   content: "t";
   speak: none;
-  font-family: "reflection-icons";
+  font-family: "reflection-icons-1";
   font-style: normal;
   font-weight: normal;
   font-variant: normal;
