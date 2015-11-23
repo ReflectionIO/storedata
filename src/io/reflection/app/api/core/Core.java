@@ -7,10 +7,31 @@
 //
 package io.reflection.app.api.core;
 
-import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPAD_IOS;
-import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS;
-import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_UNIVERSAL_IOS;
-import static io.reflection.app.shared.util.PagerHelper.updatePager;
+import static io.reflection.app.service.sale.ISaleService.*;
+import static io.reflection.app.shared.util.PagerHelper.*;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeComparator;
+import org.joda.time.DateTimeZone;
+import org.joda.time.Days;
+
+import com.willshex.gson.json.service.server.ActionHandler;
+import com.willshex.gson.json.service.server.InputValidationException;
+import com.willshex.gson.json.service.server.ServiceException;
+import com.willshex.gson.json.service.shared.StatusType;
+
 import io.reflection.app.accountdatacollectors.DataAccountCollectorFactory;
 import io.reflection.app.accountdatacollectors.ITunesConnectDownloadHelper;
 import io.reflection.app.api.ValidationHelper;
@@ -83,6 +104,7 @@ import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.datatypes.shared.Category;
@@ -124,28 +146,6 @@ import io.reflection.app.service.user.IUserService;
 import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
 import io.reflection.app.shared.util.PagerHelper;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeComparator;
-import org.joda.time.DateTimeZone;
-import org.joda.time.Days;
-
-import com.willshex.gson.json.service.server.ActionHandler;
-import com.willshex.gson.json.service.server.InputValidationException;
-import com.willshex.gson.json.service.server.ServiceException;
-import com.willshex.gson.json.service.shared.StatusType;
 
 public final class Core extends ActionHandler {
 	private static final Logger LOG = Logger.getLogger(Core.class.getName());
@@ -395,7 +395,7 @@ public final class Core extends ActionHandler {
 			boolean isAdmin = false;
 			boolean isPremium = false;
 			boolean isStandardDeveloper = false;
-			boolean canSeePredictions = (DateTimeComparator.getDateOnlyInstance().compare(input.on, new DateTime().minusDays(3)) == 0);
+			boolean canSeePredictions = (DateTimeComparator.getDateOnlyInstance().compare(input.on, new DateTime().minusDays(FilterHelper.DEFAULT_LEADERBOARD_LAG_DAYS)) == 0);
 			boolean isLoggedIn = false;
 
 			if (input.session != null) {
@@ -1396,9 +1396,8 @@ public final class Core extends ActionHandler {
 					notification.type = NotificationTypeType.NotificationTypeTypeInternal;
 					NotificationServiceProvider.provide().addNotification(notification);
 				}
-			} else {
+			} else
 				throw new Exception();
-			}
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
