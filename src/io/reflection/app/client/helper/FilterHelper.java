@@ -29,7 +29,7 @@ import io.reflection.app.datatypes.shared.Forum;
  *
  */
 public class FilterHelper {
-	public static final int DEFAULT_LEADERBOARD_LAG_DAYS = 7;
+	public static final int DEFAULT_LEADERBOARD_LAG_DAYS = 11;
 
 	private static List<PresetDateRange> defaultPreset = null;
 	private static List<PresetDateRange> adminPreset = null;
