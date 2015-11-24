@@ -5,7 +5,7 @@
 	<title>Reflection Design Kit - Popups</title>
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<link rel="stylesheet" media="screen, projection" type="text/css" href="designkit.css" /><link rel="stylesheet" media="print" type="text/css" href="reflection-main--print.css" />
+	<link rel="stylesheet" media="screen, projection" type="text/css" href="designkit.css" />
 	<!--[if (lt IE 9)]>
 		<script src="js/vendor/html5shiv.min.js"></script>
 		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main-ie8.css" />
@@ -21,8 +21,8 @@
       families: ['Open Sans:400,600,700,400italic,600italic', 'Source Sans Pro:400,600,700', 'Lato:400,700,400italic']
     }
   });
-</script></head>
-<body class="panel-left-open">
+</script> <script src="js/vendor/modernizr.2.8.3.custom.min.js"></script></head>
+<body>
 	<!--[if (lt IE 9)]>
       <div class="window-warning">
   			<p>Uh oh... Reflection doesn't work in this browser. &nbsp; &nbsp;<a href="http://outdatedbrowser.com/en" target="_blank">Download a compatible browser</a></p>
@@ -30,7 +30,7 @@
   <![endif]-->
   <header id="js-component-import--global-header" class="global-header"></header>
 
-  <div id="js-component-import--panel-left" class="panel-left js-custom-scrollbar" data-mcs-theme="minimal-dark"></div>
+  <div id="js-component-import--panel-left" class="panel-left js-panel-left js-custom-scrollbar" data-mcs-theme="minimal-dark"></div>
 
 	<div class="l-page-container">
 
@@ -44,6 +44,7 @@
 						<h2 class="heading-style--heading-three">Helper Tooltip</h2>
 						<p>These pop ups appear when a user hovers on an object (such as a filter tool) after a short delay and contain a brief description of the objects function. They act as a prompt to help the user identify certain important elements or features on a page.</p>
 						<p>The tooltip always appears above the item that the user interacts with. (see examples). They should contain as few words as possible, they serve as a prompt rather than an explanation.</p>
+						<p>Information "i" tooltips appear on hover but with no delay to provide small information quickly.</p>
 					</div>
 					<div class="grid__column grid__column--one-half overflow-visible helper-tooltip-demo-container">
 						<h3 class="heading-style--heading-six">Helper Tooltip Examples</h3>
@@ -88,6 +89,7 @@
 										</label>
 									</div>
 								</div>
+								<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding tooltip--info dk-info-tip" data-tooltip="Currently generating data, please come back soon!"><span>Information</span></a>
 							</form>
 						</div>
 						<div class="code-box">
@@ -95,6 +97,9 @@
 								/* Add the class js-tooltip on the tooltip element
 								Add the data attribute data-tooltip for the tooltip content */
 								&lt;div class="form-field form-field--select js-tooltip" data-tooltip="Select a Country"&gt;
+								
+								/* Instant information tooltip */
+								&lt;a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding tooltip--info dk-info-tip" data-tooltip="Currently generating data, please come back soon!"&gt;&lt;span&gt;Information&lt;/span&gt;&lt;/a&gt;
 							</code></pre>
 						</div>
 					</div>
@@ -124,9 +129,6 @@
 									<a href="#" class="whats-this-tooltip-icon js-whats-this-tooltip position-tooltip-right" data-whatsthis="As this is your own app you can view your actual sales data rather than the estimated data that everyone else sees."><span>What's this?</span></a>
 									<a href="#" class="whats-this-tooltip-icon js-whats-this-tooltip" data-whatsthis="As this is your own app you can view your actual sales data rather than the estimated data that everyone else sees."><span>What's this?</span></a>
 									<a href="#" class="whats-this-tooltip-icon whats-this-tooltip--dark js-whats-this-tooltip position-tooltip-top" data-whatsthis="As this is your own app you can view your actual sales data rather than the estimated data that everyone else sees."><span>What's this?</span></a>
-									<div class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding" data-tooltip="Select a Country" style="display: inline-block; vertical-align: middle;">
-										<span class="whats-this-tooltip-icon-static" data-whatsthis="A help icon with hover tooltip"><span>What's this?</span></span>
-									</div>
 								</div>
 							</form>
 						</div>
@@ -178,8 +180,7 @@
 					</div>
 				</div>
 			</div>
-		</div>
-	</div>
+			</div></div><div class="grid-container" id="js-component-import--global-footer"></div>
 
 	<div id="js-component-import--account-container" class="panel-right-container js-account-container"></div>
 	<div id="js-component-import--search-container" class="panel-right-container js-search-container"></div>
@@ -239,7 +240,7 @@
  	<script src="js/vendor/jquery-ui.custom.min.js"></script>
  	<script src="js/vendor/handlebars-v2.0.0.js"></script>
  	<script src="js/templates/templates.js"></script>
-	<script src="js/vendor/modernizr.2.8.3.custom.min.js"></script>
+	 
 	<!--[if IE 9]>
 		<script src="js/vendor/jquery.mCustomScrollbar.concat.min.js"></script>
 	<![endif]-->
