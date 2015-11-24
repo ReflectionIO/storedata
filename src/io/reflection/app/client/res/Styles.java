@@ -982,6 +982,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("is-firefox")
 		String isFirefox();
 
+		@ClassName("is-focus")
+		String isFocus();
+
 		@ClassName("is-focused")
 		String isFocused();
 
@@ -1115,6 +1118,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("linked-account-name")
 		String linkedAccountName();
+
+		@ClassName("linked-account-pending-container")
+		String linkedAccountPendingContainer();
 
 		@ClassName("linked-account-store")
 		String linkedAccountStore();
@@ -1742,9 +1748,6 @@ public interface Styles extends ClientBundle {
 		@ClassName("ref-icon-after--dot")
 		String refIconAfterDot();
 
-		@ClassName("ref-icon-after--info")
-		String refIconAfterInfo();
-
 		@ClassName("ref-icon-after--question")
 		String refIconAfterQuestion();
 
@@ -2150,9 +2153,6 @@ public interface Styles extends ClientBundle {
 
 		String tooltip();
 
-		@ClassName("tooltip--info")
-		String tooltipInfo();
-
 		@ClassName("tooltip-feature")
 		String tooltipFeature();
 
@@ -2206,6 +2206,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("whats-this-tooltip-icon")
 		String whatsThisTooltipIcon();
 
+		@ClassName("whats-this-tooltip-icon-static")
+		String whatsThisTooltipIconStatic();
+
 		@ClassName("whats-this-tooltip-popup")
 		String whatsThisTooltipPopup();
 
@@ -2238,7 +2241,6 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("window-warning")
 		String windowWarning();
-
 	}
 
 	public static final Styles STYLES_INSTANCE = GWT.create(Styles.class);
