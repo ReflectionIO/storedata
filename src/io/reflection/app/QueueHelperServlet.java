@@ -38,20 +38,20 @@ public class QueueHelperServlet extends HttpServlet {
 			return;
 		}
 
-		final Queue deferredQueue = QueueFactory.getQueue("deferred");
 		final String query = req.getParameter("queryString") != null ? URLDecoder.decode(req.getParameter("queryString"), "UTF-8") : "";
 
-		final String dest = req.getParameter("queueName");
+		final String destinationQueueName = req.getParameter("queueName");
 
-		if (dest == null || dest.trim().length() == 0) {
+		if (destinationQueueName == null || destinationQueueName.trim().length() == 0) {
 			LOG.warning("No destination provided for queue helper!");
 			return;
 		}
 
-		String url = "/" + dest + "?" + query;
+		final Queue queue = QueueFactory.getQueue(destinationQueueName);
+		String url = "/" + destinationQueueName + "?" + query;
 
-		deferredQueue.add(TaskOptions.Builder.withUrl(url).method(Method.GET));
-		LOG.log(GaeLevel.DEBUG, String.format("Added task to deferred queue with url: %s", url));
+		queue.add(TaskOptions.Builder.withUrl(url).method(Method.GET));
+		LOG.log(GaeLevel.DEBUG, String.format("Added task to %s queue with url: %s", destinationQueueName, url));
 		return;
 	}
 
