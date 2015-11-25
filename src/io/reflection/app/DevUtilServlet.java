@@ -669,6 +669,16 @@ public class DevUtilServlet extends HttpServlet {
 			LOG.log(GaeLevel.DEBUG, msg);
 		}
 
+		if (categoryList.size() == 1 && categoryList.get(0).equalsIgnoreCase("all")) {
+			categoryList.clear();
+			for (int i = 1; i < 25; i++) {
+				categoryList.add("" + i);
+			}
+			String msg = "Added all categories to be modelled";
+			webResponse.append(msg).append('\n');
+			LOG.log(GaeLevel.DEBUG, msg);
+		}
+
 		if (countryList.isEmpty()) {
 			String validCountries = System.getProperty("ingest.ios.countries");
 			validCountries = validCountries == null ? "" : validCountries.toLowerCase();
