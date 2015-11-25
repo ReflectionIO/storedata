@@ -155,6 +155,8 @@ public class DevUtilServlet extends HttpServlet {
 			action = action.toLowerCase();
 		}
 
+		LOG.log(GaeLevel.DEBUG, String.format("Performing action: %s", action));
+
 		String msg = null;
 		switch (action) {
 			case ACTION_GATHER_RANKS:
@@ -178,6 +180,8 @@ public class DevUtilServlet extends HttpServlet {
 			default:
 				msg = String.format("I don't understand this action %s, please try one of the following: %s,%s,%s,%s,%s,%s", action,
 						ACTION_GATHER_RANKS, ACTION_INGEST_RANKS, ACTION_GATHER_SALES, ACTION_SUMMARISE, ACTION_SPLIT_DATA, ACTION_MODEL);
+
+				LOG.log(GaeLevel.DEBUG, msg);
 				break;
 		}
 
@@ -206,7 +210,7 @@ public class DevUtilServlet extends HttpServlet {
 			IFeedFetchService feedFetchService = FeedFetchServiceProvider.provide();
 			List<FeedFetch> feedFetches = null;
 			try {
-				feedFetches = feedFetchService.getDatesFeedFetches(new Date());
+				feedFetches = feedFetchService.getDatesFeedFetches(date);
 			} catch (DataAccessException e) {
 				appendAndReturn(String.format("Could not load rank fetches from DB for date %s. Exception thrown %s", date.toString(), e.getMessage()), builder);
 			}
