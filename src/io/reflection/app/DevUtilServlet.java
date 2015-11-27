@@ -87,6 +87,7 @@ public class DevUtilServlet extends HttpServlet {
 	public static final String	PARAM_GATHER_CONDITION_INGEST		= "ingest";
 	public static final String	PARAM_GATHER_CONDITION_RETRY		= "retry";				 // synonomous for ingest, error, empty and missing
 	public static final String	PARAM_GATHER_CONDITION_REINGEST	= "reingest";
+	public static final String	PARAM_GATHER_CONDITION_REGATHER	= "regather";			// redo all ignoring existing gathers
 	public static final String	PARAM_GATHER_CONDITION_ALL			= "all";
 
 	public static final String	ACTION_GATHER_SALES	= "sales";
@@ -427,6 +428,7 @@ public class DevUtilServlet extends HttpServlet {
 		boolean gatherError = false;
 		boolean ingest = false;
 		boolean reingest = false;
+		boolean regather = false;
 
 		for (String condition : conditions) {
 			switch (condition.toLowerCase()) {
@@ -448,13 +450,16 @@ public class DevUtilServlet extends HttpServlet {
 				case PARAM_GATHER_CONDITION_REINGEST:
 					reingest = true;
 					break;
+				case PARAM_GATHER_CONDITION_REGATHER:
+					gatherMissing = gatherEmpty = gatherError = ingest = reingest = regather = true;
+					break;
 				case PARAM_GATHER_CONDITION_ALL:
 					gatherMissing = gatherEmpty = gatherError = ingest = reingest = true;
 					break;
 			}
 		}
 
-		if (!(gatherMissing || gatherEmpty || gatherError || ingest || reingest)) {
+		if (!(gatherMissing || gatherEmpty || gatherError || ingest || reingest || regather)) {
 			String msg = "No condition given. Nothing to do. Returning";
 			LOG.log(GaeLevel.DEBUG, msg);
 			return msg;
@@ -462,14 +467,14 @@ public class DevUtilServlet extends HttpServlet {
 
 		StringBuilder webResponse = new StringBuilder();
 
-		String msg = String.format("Gathing for %d accounts. Conditions: missing: %b, empty: %b, error: %b, ingest: %b, reingest: %b", dataAccountIds.size(),
-				gatherMissing, gatherEmpty, gatherError, ingest, reingest);
+		String msg = String.format("Gathing for %d accounts. Conditions: missing: %b, empty: %b, error: %b, ingest: %b, reingest: %b, regather: %b", dataAccountIds.size(),
+				gatherMissing, gatherEmpty, gatherError, ingest, reingest, regather);
 		LOG.log(GaeLevel.DEBUG, msg);
 		webResponse.append(msg).append("\n\n");
 
 		for (Date date : datesToProcess) {
 			for (Long dataAccountId : dataAccountIds) {
-				webResponse.append(gatherForAccountOnDateWithConditions(dataAccountId, date, gatherMissing, gatherEmpty, gatherError, ingest, reingest))
+				webResponse.append(gatherForAccountOnDateWithConditions(dataAccountId, date, gatherMissing, gatherEmpty, gatherError, ingest, reingest, regather))
 				.append('\n');
 			}
 		}
@@ -484,14 +489,29 @@ public class DevUtilServlet extends HttpServlet {
 	 * @param gatherEmpty
 	 * @param gatherError
 	 * @param reingest
+	 * @param regather
 	 *
 	 * @return
 	 */
 	private String gatherForAccountOnDateWithConditions(Long dataAccountId, Date date, boolean gatherMissing, boolean gatherEmpty, boolean gatherError,
-			boolean ingest, boolean reingest) {
+			boolean ingest, boolean reingest, boolean regather) {
 		StringBuilder builder = new StringBuilder();
 		try {
+
 			DataAccountFetch dataAccountFetch = DataAccountFetchServiceProvider.provide().getDataAccountFetch(dataAccountId, date);
+
+			if (regather) {
+				if (dataAccountFetch != null && dataAccountFetch.status == DataAccountFetchStatusType.DataAccountFetchStatusTypeIngested) {
+					LOG.log(GaeLevel.DEBUG, appendAndReturn(String.format("The fetch was previously marked as ingested so setting it as an error"), builder));
+					dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeError;
+					DataAccountFetchServiceProvider.provide().updateDataAccountFetch(dataAccountFetch);
+				}
+
+				LOG.log(GaeLevel.DEBUG, appendAndReturn(String.format("Triggering a gather for %d, on %s", dataAccountId, date), builder));
+				DataAccountServiceProvider.provide().triggerSingleDateDataAccountFetch(dataAccountId, date);
+
+				return builder.toString();
+			}
 
 			// MISSING
 			if (dataAccountFetch == null || dataAccountFetch.status == null) {
