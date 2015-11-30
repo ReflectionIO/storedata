@@ -6,7 +6,7 @@
 	
 	</ui:style>
 	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.pageOverlay}">
-		<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.pagePopup}">
+		<g:HTMLPanel ui:field="pagePopup" styleName="{STYLES_INSTANCE.reflectionMainStyle.pagePopup}">
 			<g:HTMLPanel ui:field="popupContent" styleName="{STYLES_INSTANCE.reflectionMainStyle.popupContent}">
 				<!-- popup content here -->
 				<g:Anchor ui:field="closeLink" href="#" styleName="{STYLES_INSTANCE.reflectionMainStyle.popupClose}">

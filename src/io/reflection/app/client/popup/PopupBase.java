@@ -14,7 +14,9 @@ import io.reflection.app.client.res.Styles;
 import java.util.Iterator;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.HasCloseHandlers;
@@ -22,6 +24,7 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
@@ -39,11 +42,23 @@ public class PopupBase extends Composite implements HasWidgets, HasCloseHandlers
 
 	interface PopupUiBinder extends UiBinder<Widget, PopupBase> {}
 
+	@UiField HTMLPanel pagePopup;
 	@UiField HTMLPanel popupContent;
 	@UiField Anchor closeLink;
 
 	public PopupBase() {
 		initWidget(uiBinder.createAndBindUi(this));
+
+		pagePopup.sinkEvents(Event.ONCLICK);
+		pagePopup.addHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				if (Element.as(event.getNativeEvent().getEventTarget()).getClassName().equals(Styles.STYLES_INSTANCE.reflectionMainStyle().pagePopup())) {
+					closePopup();
+				}
+			}
+		}, ClickEvent.getType());
 	}
 
 	void show() {
