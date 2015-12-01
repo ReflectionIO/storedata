@@ -989,12 +989,9 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 				viewAllBtn.setVisible(true);
 			}
 
-			if (previousFilter == null) {
-				previousFilter = FilterController.get().asRankFilterString();
-			}
-
 			// Check if the filter is changed
-			if (!previousFilter.equals(FilterController.get().asRankFilterString())) {
+			if (previousFilter == null || !previousFilter.equals(FilterController.get().asRankFilterString())) {
+				previousFilter = FilterController.get().asRankFilterString();
 				updateSelectorsFromFilter();
 				loadingBar.show();
 				RankController.get().reset();
@@ -1006,7 +1003,10 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 				leaderboardTable.setVisible(true);
 				downloadsHeader.setHeaderStyleNames(style.canBeSorted());
 				revenueHeader.setHeaderStyleNames(style.canBeSorted());
-				previousFilter = FilterController.get().asRankFilterString();
+				resetFilters.setEnabled(!FilterController.get().getFilter().getCountryA2Code().equals("gb")
+						|| !FilterController.get().getFilter().getStoreA3Code().equals("iph")
+						|| !FilterController.get().getFilter().getCategoryId().toString().equals("15")
+						|| !CalendarUtil.isSameDate(FilterHelper.getDaysAgo(3), new Date(FilterController.get().getFilter().getEndTime().longValue())));
 			}
 
 			String currentFilter = FilterController.get().asRankFilterString();

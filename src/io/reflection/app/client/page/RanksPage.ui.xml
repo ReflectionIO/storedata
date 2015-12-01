@@ -158,7 +158,8 @@
 								</svg>
 					</g:Button>
 
-					<g:Button ui:field="resetFilters" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonLink} {STYLES_INSTANCE.reflectionMainStyle.btnResetFilters}">Reset Filters</g:Button>
+					<g:Button ui:field="resetFilters" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonLink} {STYLES_INSTANCE.reflectionMainStyle.btnResetFilters}"
+						enabled="false">Reset Filters</g:Button>
 
 					<g:HTMLPanel ui:field="dailyDataContainer" styleName="{STYLES_INSTANCE.reflectionMainStyle.filterToggle}">
 						<c:ToggleRadioButton ui:field="toggleDownloads" value="true" labelClassName="{STYLES_INSTANCE.reflectionMainStyle.toggleDownloads}"
