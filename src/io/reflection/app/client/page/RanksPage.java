@@ -192,9 +192,8 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	private TextHeader grossingHeader = new TextHeader("App Name");
 	private TextHeader grossingHeaderAll = new TextHeader("Grossing");
 	private TextHeader priceHeader = new TextHeader("Price");
-	private SafeHtmlHeader iapHeader = new SafeHtmlHeader(
-			SafeHtmlUtils
-					.fromTrustedString("<span>IAP</span><span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding js-tooltip--info tooltip--info\" data-tooltip=\"In App Purchases\"></span>"));
+	private SafeHtmlHeader iapHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString(
+			"<span>IAP</span><span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding js-tooltip--info tooltip--info\" data-tooltip=\"In App Purchases\"></span>"));
 
 	private String selectedTab = OVERALL_LIST_TYPE;
 	private String previousFilter;
@@ -219,8 +218,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 			@Override
 			public void onShowRange(ShowRangeEvent<Date> event) {
-				FilterHelper.disableOutOfRangeDates(dateBox.getDatePicker(),
-						(SessionController.get().isAdmin() ? null : ApiCallHelper.getUTCDate(2015, 8, 31)),
+				FilterHelper.disableOutOfRangeDates(dateBox.getDatePicker(), (SessionController.get().isAdmin() ? null : ApiCallHelper.getUTCDate(2015, 8, 31)),
 						(SessionController.get().isAdmin() ? FilterHelper.getToday() : FilterHelper.getDaysAgo(3)));
 			}
 		});
@@ -380,8 +378,8 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 			@Override
 			public SafeHtml getValue(RanksGroup object) {
-				return (object.free != null && object.free.position != null) ? SafeHtmlUtils.fromTrustedString(object.free.position.toString()) : SafeHtmlUtils
-						.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
+				return (object.free != null && object.free.position != null) ? SafeHtmlUtils.fromTrustedString(object.free.position.toString())
+						: SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
 			}
 
 		};
@@ -467,8 +465,9 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			@Override
 			public SafeHtml getValue(RanksGroup object) {
 				Rank rank = rankForListType(object);
-				return (rank.currency != null && rank.price != null) ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.asPriceString(rank.currency,
-						rank.price.floatValue())) : SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
+				return (rank.currency != null && rank.price != null)
+						? SafeHtmlUtils.fromSafeConstant(FormattingHelper.asPriceString(rank.currency, rank.price.floatValue()))
+						: SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
 			}
 		};
 		priceColumn.setCellStyleNames(style.mhxte6ciA());
@@ -534,9 +533,13 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 			@Override
 			public SafeHtml getValue(RanksGroup object) {
-				return SafeHtmlUtils.fromSafeConstant(DataTypeHelper.itemIapState(ItemController.get().lookupItem(rankForListType(object).itemId),
-						IAP_YES_HTML, IAP_NO_HTML,
-						"<span class=\"js-tooltip js-tooltip--info tooltip--info js-tooltip--right js-tooltip--right--no-pointer-padding\" data-tooltip=\"No data available\"></span>"));
+				return SafeHtmlUtils
+						.fromSafeConstant(DataTypeHelper.itemIapState(
+								ItemController.get()
+										.lookupItem(rankForListType(
+												object).itemId),
+								IAP_YES_HTML, IAP_NO_HTML,
+								"<span class=\"js-tooltip js-tooltip--info tooltip--info js-tooltip--right js-tooltip--right--no-pointer-padding\" data-tooltip=\"No data available\"></span>"));
 			}
 
 		};
@@ -568,6 +571,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		event.preventDefault();
 		if (NavigationController.get().getCurrentPage() == PageType.RanksPageType) {
 			boolean updateData = false;
+			applyFilters.addStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().isLoading());
 			if (updateData = updateData || !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())) {
 				FilterController.get().setCountry(countrySelector.getSelectedValue());
 			}
@@ -585,11 +589,13 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			}
 			if (updateData) {
 				applyFilters.setEnabled(false);
+				applyFilters.removeStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().isLoading());
 				PageType.RanksPageType.show("view", selectedTab, FilterController.get().asRankFilterString());
 			} else if (isStatusError) {
 				isStatusError = false;
 				errorPanel.setVisible(false);
 				applyFilters.setEnabled(false);
+				applyFilters.removeStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().isLoading());
 				updateSelectorsFromFilter();
 				loadingBar.show();
 				RankController.get().reset();
@@ -946,8 +952,8 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			// }
 		} else if (SessionController.get().isLoggedIn() && !SessionController.get().hasLinkedAccount()) {
 			MixpanelHelper.trackClicked(MixpanelHelper.Event.OPEN_LINK_ACCOUNT_POPUP, "leaderboard_downloadCsv");
-			addLinkedAccountPopup
-					.show("Link Your Appstore Account", "You need to link your iTunes Connect account to use this feature, it only takes a moment");
+			addLinkedAccountPopup.show("Link Your Appstore Account",
+					"You need to link your iTunes Connect account to use this feature, it only takes a moment");
 		} else if (SessionController.get().isLoggedIn()) {
 			premiumPopup.show(true);
 		} else {
@@ -1011,14 +1017,14 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			String currentFilter = FilterController.get().asRankFilterString();
 
 			if (currentFilter != null && currentFilter.length() > 0) {
-				allLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, OVERALL_LIST_TYPE,
-						currentFilter));
-				freeLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, FREE_LIST_TYPE,
-						currentFilter));
-				paidLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, PAID_LIST_TYPE,
-						currentFilter));
-				grossingLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
-						GROSSING_LIST_TYPE, currentFilter));
+				allLink.setTargetHistoryToken(
+						PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, OVERALL_LIST_TYPE, currentFilter));
+				freeLink.setTargetHistoryToken(
+						PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, FREE_LIST_TYPE, currentFilter));
+				paidLink.setTargetHistoryToken(
+						PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, PAID_LIST_TYPE, currentFilter));
+				grossingLink.setTargetHistoryToken(
+						PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, GROSSING_LIST_TYPE, currentFilter));
 			}
 
 			selectedTab = current.getParameter(SELECTED_TAB_PARAMETER_INDEX);
@@ -1074,9 +1080,8 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler#getAllTopItemsSuccess(io.reflection.app.api.core.shared.call.GetAllTopItemsRequest
-	 * , io.reflection.app.api.core.shared.call.GetAllTopItemsResponse)
+	 * @see io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler#getAllTopItemsSuccess(io.reflection.app.api.core.shared.call.
+	 * GetAllTopItemsRequest , io.reflection.app.api.core.shared.call.GetAllTopItemsResponse)
 	 */
 	@Override
 	public void getAllTopItemsSuccess(GetAllTopItemsRequest input, GetAllTopItemsResponse output) {
@@ -1116,9 +1121,8 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler#getAllTopItemsFailure(io.reflection.app.api.core.shared.call.GetAllTopItemsRequest
-	 * , java.lang.Throwable)
+	 * @see io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler#getAllTopItemsFailure(io.reflection.app.api.core.shared.call.
+	 * GetAllTopItemsRequest , java.lang.Throwable)
 	 */
 	@Override
 	public void getAllTopItemsFailure(GetAllTopItemsRequest input, Throwable caught) {
