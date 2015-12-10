@@ -16,7 +16,7 @@
 	<inherits name="io.reflection.app.api.admin.Admin" />
 	<inherits name="io.reflection.app.api.blog.Blog" />
 	<inherits name="io.reflection.app.api.forum.Forum" />
-	<inherits name="org.Markdown4j" />
+	<inherits name="org.Markdown4j" />	
 
 	<!-- Inherit the default GWT style sheet. You can change -->
 	<!-- the theme of your GWT application by uncommenting -->

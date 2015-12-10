@@ -8,6 +8,36 @@
 package io.reflection.app.client.part.navigation;
 
 import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.dom.client.UListElement;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.HasMouseOutHandlers;
+import com.google.gwt.event.dom.client.HasMouseOverHandlers;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FocusPanel;
+import com.google.gwt.user.client.ui.HasHTML;
+import com.google.gwt.user.client.ui.InlineHyperlink;
+import com.google.gwt.user.client.ui.Widget;
+import com.willshex.gson.json.service.shared.Error;
+
 import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.controller.FilterController;
@@ -25,29 +55,12 @@ import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.LIElement;
-import com.google.gwt.dom.client.SpanElement;
-import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.dom.client.UListElement;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.InlineHyperlink;
-import com.google.gwt.user.client.ui.Widget;
-import com.willshex.gson.json.service.shared.Error;
-
 /**
  * @author Stefano Capuzzi
  *
  */
-public class PanelLeftMenu extends Composite implements UsersEventHandler, NavigationEventHandler, SessionEventHandler, UserPowersEventHandler {
+public class PanelLeftMenu extends Composite
+		implements UsersEventHandler, NavigationEventHandler, SessionEventHandler, UserPowersEventHandler, HasMouseOverHandlers, HasMouseOutHandlers, HasHTML {
 
 	private static PanelLeftMenuUiBinder uiBinder = GWT.create(PanelLeftMenuUiBinder.class);
 
@@ -87,6 +100,7 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 	@UiField InlineHyperlink adminSimpleModelRunLink;
 	@UiField InlineHyperlink adminDataAccountFetchesLink;
 	@UiField SpanElement usersCount;
+	@UiField FocusPanel leftPanel;
 
 	// private List<LIElement> items;
 	private List<LIElement> highlightedItems = new ArrayList<LIElement>();
@@ -95,8 +109,7 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 		initWidget(uiBinder.createAndBindUi(this));
 
 		myDataItem.removeFromParent();
-		adminItem.removeFromParent();
-
+		adminItem.removeFromParent();		
 	}
 
 	private void activate(LIElement item) {
@@ -137,7 +150,8 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 		DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this);
 		DefaultEventBus.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this);
 		DefaultEventBus.get().addHandlerToSource(UserPowersEventHandler.TYPE, SessionController.get(), this);
-
+		
+		this.addMouseEvents();
 	}
 
 	/*
@@ -160,8 +174,8 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 		adminFeedBrowserLink.setTargetHistoryToken(PageType.FeedBrowserPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
 				FilterController.get().asFeedFilterString()));
 		adminSimpleModelRunLink.setTargetHistoryToken(PageType.SimpleModelRunPageType.asTargetHistoryToken(FilterController.get().asFeedFilterString()));
-		adminDataAccountFetchesLink.setTargetHistoryToken(PageType.DataAccountFetchesPageType.asTargetHistoryToken(FilterController.get()
-				.asDataAccountFetchFilterString()));
+		adminDataAccountFetchesLink
+				.setTargetHistoryToken(PageType.DataAccountFetchesPageType.asTargetHistoryToken(FilterController.get().asDataAccountFetchFilterString()));
 
 		// Highlight selected items
 		if (PageType.UsersPageType.equals(current.getPage()) && current.getAction() != null && PageType.MyAppsPageType.equals(current.getAction())) {
@@ -258,17 +272,9 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 		if (liElem.hasClassName(IS_OPEN)) {
 			ulElem.getStyle().setMarginTop(-(ulElem.getClientHeight()), Unit.PX);
 			liElem.removeClassName(IS_OPEN);
-			liElem.removeClassName(IS_SELECTED);
 		} else {
 			ulElem.getStyle().setMarginTop(0, Unit.PX);
 			liElem.addClassName(IS_OPEN);
-			liElem.addClassName(IS_SELECTED);
-			// leaderboardItem.removeClassName(IS_SELECTED);
-			// myAppsItem.removeClassName(IS_SELECTED);
-			// productItem.removeClassName(IS_SELECTED);
-			// pricingItem.removeClassName(IS_SELECTED);
-			// blogItem.removeClassName(IS_SELECTED);
-			// forumItem.removeClassName(IS_SELECTED);
 		}
 	}
 
@@ -277,13 +283,14 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 			UListElement ulElem = liElem.getElementsByTagName("ul").getItem(0).cast();
 			ulElem.getStyle().setMarginTop(0, Unit.PX);
 			liElem.addClassName(IS_OPEN);
-			// liElem.addClassName(IS_SELECTED);
-			// myAppsItem.removeClassName(IS_SELECTED);
-			// leaderboardItem.removeClassName(IS_SELECTED);
-			// productItem.removeClassName(IS_SELECTED);
-			// pricingItem.removeClassName(IS_SELECTED);
-			// blogItem.removeClassName(IS_SELECTED);
-			// forumItem.removeClassName(IS_SELECTED);
+		}
+	}
+	
+	private void openSelectedDropDownItem(LIElement liElem) {
+		if (!liElem.hasClassName(IS_OPEN) && liElem.hasClassName(IS_SELECTED)) {
+			UListElement ulElem = liElem.getElementsByTagName("ul").getItem(0).cast();
+			ulElem.getStyle().setMarginTop(0, Unit.PX);
+			liElem.addClassName(IS_OPEN);
 		}
 	}
 
@@ -292,7 +299,31 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 			UListElement ulElem = liElem.getElementsByTagName("ul").getItem(0).cast();
 			ulElem.getStyle().setMarginTop(-(ulElem.getClientHeight()), Unit.PX);
 			liElem.removeClassName(IS_OPEN);
-			liElem.removeClassName(IS_SELECTED);
+		}
+	}
+	
+	private void addMouseEvents() {
+		if(DOM.getElementById("thehtml").getAttribute("class").indexOf("no-touch") > 0) { // No Touch Browser
+			leftPanel.addMouseOverHandler(new MouseOverHandler() {
+
+				@Override
+				public void onMouseOver(MouseOverEvent event) {
+					openSelectedDropDownItem(myDataItem);
+					openSelectedDropDownItem(adminItem);
+				}
+			});
+			
+			leftPanel.addMouseOutHandler(new MouseOutHandler() {
+
+				@Override
+				public void onMouseOut(MouseOutEvent event) {
+					closeDropDownItem(myDataItem);
+					closeDropDownItem(adminItem);
+				}
+			});
+		} else { // Touch Device
+			openSelectedDropDownItem(myDataItem);
+			openSelectedDropDownItem(adminItem);
 		}
 	}
 
@@ -397,4 +428,55 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 		adminItem.removeFromParent();
 	}
 
+	/* (non-Javadoc)
+	 * @see com.google.gwt.user.client.ui.HasText#getText()
+	 */
+	@Override
+	public String getText() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.google.gwt.user.client.ui.HasText#setText(java.lang.String)
+	 */
+	@Override
+	public void setText(String text) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see com.google.gwt.user.client.ui.HasHTML#getHTML()
+	 */
+	@Override
+	public String getHTML() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.google.gwt.user.client.ui.HasHTML#setHTML(java.lang.String)
+	 */
+	@Override
+	public void setHTML(String html) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see com.google.gwt.event.dom.client.HasMouseOutHandlers#addMouseOutHandler(com.google.gwt.event.dom.client.MouseOutHandler)
+	 */
+	@Override
+	public HandlerRegistration addMouseOutHandler(MouseOutHandler handler) {
+		return addDomHandler(handler, MouseOutEvent.getType());
+	}
+
+	/* (non-Javadoc)
+	 * @see com.google.gwt.event.dom.client.HasMouseOverHandlers#addMouseOverHandler(com.google.gwt.event.dom.client.MouseOverHandler)
+	 */
+	@Override
+	public HandlerRegistration addMouseOverHandler(MouseOverHandler handler) {
+		return addDomHandler(handler, MouseOverEvent.getType());
+	}
 }

@@ -110,6 +110,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("animated-line")
 		String animatedLine();
 
+		@ClassName("animation-complete")
+		String animationComplete();
+
 		@ClassName("animation-hamster")
 		String animationHamster();
 
@@ -539,6 +542,12 @@ public interface Styles extends ClientBundle {
 		@ClassName("email-success-handle")
 		String emailSuccessHandle();
 
+		@ClassName("event-icon--flag")
+		String eventIconFlag();
+
+		@ClassName("event-icon--launch")
+		String eventIconLaunch();
+
 		@ClassName("faqs-list-container")
 		String faqsListContainer();
 
@@ -692,6 +701,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("graph-container")
 		String graphContainer();
 
+		@ClassName("graph-container--with-events")
+		String graphContainerWithEvents();
+
 		@ClassName("graph-loading-indicator")
 		String graphLoadingIndicator();
 
@@ -835,6 +847,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("highcharts-container")
 		String highchartsContainer();
 
+		@ClassName("highcharts-grid")
+		String highchartsGrid();
+
 		@ClassName("highcharts-series")
 		String highchartsSeries();
 
@@ -940,6 +955,12 @@ public interface Styles extends ClientBundle {
 		@ClassName("is-active")
 		String isActive();
 
+		@ClassName("is-animated")
+		String isAnimated();
+
+		@ClassName("is-animating")
+		String isAnimating();
+
 		@ClassName("is-animating-in")
 		String isAnimatingIn();
 
@@ -1041,6 +1062,12 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("is-submitted-success")
 		String isSubmittedSuccess();
+
+		@ClassName("is-transparent")
+		String isTransparent();
+
+		@ClassName("is-transparent-fade")
+		String isTransparentFade();
 
 		@ClassName("js-fade-content")
 		String jsFadeContent();
@@ -1211,6 +1238,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("no-accordion-content")
 		String noAccordionContent();
+
+		@ClassName("no-border-top")
+		String noBorderTop();
 
 		@ClassName("no-csstransforms3d")
 		String noCsstransforms3d();
