@@ -569,9 +569,9 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	@UiHandler("applyFilters")
 	void onApplyFiltersClicked(ClickEvent event) {
 		event.preventDefault();
+		applyFilters.addStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().isLoading());
 		if (NavigationController.get().getCurrentPage() == PageType.RanksPageType) {
-			boolean updateData = false;
-			applyFilters.addStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().isLoading());
+			boolean updateData = false;			
 			if (updateData = updateData || !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())) {
 				FilterController.get().setCountry(countrySelector.getSelectedValue());
 			}
@@ -589,13 +589,11 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			}
 			if (updateData) {
 				applyFilters.setEnabled(false);
-				applyFilters.removeStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().isLoading());
 				PageType.RanksPageType.show("view", selectedTab, FilterController.get().asRankFilterString());
 			} else if (isStatusError) {
 				isStatusError = false;
 				errorPanel.setVisible(false);
 				applyFilters.setEnabled(false);
-				applyFilters.removeStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().isLoading());
 				updateSelectorsFromFilter();
 				loadingBar.show();
 				RankController.get().reset();
@@ -1114,7 +1112,8 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			isStatusError = true;
 			applyFilters.setEnabled(true);
 		}
-
+		
+		applyFilters.removeStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().isLoading());
 		TooltipHelper.updateHelperTooltip();
 	}
 
@@ -1132,5 +1131,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		errorPanel.setVisible(true);
 		isStatusError = true;
 		applyFilters.setEnabled(true);
+		
+		applyFilters.removeStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().isLoading());
 	}
 }
