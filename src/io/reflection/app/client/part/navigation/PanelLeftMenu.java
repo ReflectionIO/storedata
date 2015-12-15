@@ -28,12 +28,8 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FocusPanel;
-import com.google.gwt.user.client.ui.HasHTML;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.Error;
@@ -49,6 +45,7 @@ import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.handler.user.SessionEventHandler;
 import io.reflection.app.client.handler.user.UserPowersEventHandler;
 import io.reflection.app.client.handler.user.UsersEventHandler;
+import io.reflection.app.client.helper.DOMHelper;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Permission;
@@ -60,7 +57,7 @@ import io.reflection.app.datatypes.shared.User;
  *
  */
 public class PanelLeftMenu extends Composite
-		implements UsersEventHandler, NavigationEventHandler, SessionEventHandler, UserPowersEventHandler, HasMouseOverHandlers, HasMouseOutHandlers, HasHTML {
+		implements UsersEventHandler, NavigationEventHandler, SessionEventHandler, UserPowersEventHandler, HasMouseOverHandlers, HasMouseOutHandlers {
 
 	private static PanelLeftMenuUiBinder uiBinder = GWT.create(PanelLeftMenuUiBinder.class);
 
@@ -100,9 +97,7 @@ public class PanelLeftMenu extends Composite
 	@UiField InlineHyperlink adminSimpleModelRunLink;
 	@UiField InlineHyperlink adminDataAccountFetchesLink;
 	@UiField SpanElement usersCount;
-	@UiField FocusPanel leftPanel;
-
-	// private List<LIElement> items;
+	
 	private List<LIElement> highlightedItems = new ArrayList<LIElement>();
 
 	public PanelLeftMenu() {
@@ -302,9 +297,9 @@ public class PanelLeftMenu extends Composite
 		}
 	}
 	
-	private void addMouseEvents() {
-		if(DOM.getElementById("thehtml").getAttribute("class").indexOf("no-touch") > 0) { // No Touch Browser
-			leftPanel.addMouseOverHandler(new MouseOverHandler() {
+	private void addMouseEvents() {		
+		if(DOMHelper.getHtmlElement().hasClassName("no-touch")) { // No Touch Browser
+			this.addMouseOverHandler(new MouseOverHandler() {
 
 				@Override
 				public void onMouseOver(MouseOverEvent event) {
@@ -313,7 +308,7 @@ public class PanelLeftMenu extends Composite
 				}
 			});
 			
-			leftPanel.addMouseOutHandler(new MouseOutHandler() {
+			this.addMouseOutHandler(new MouseOutHandler() {
 
 				@Override
 				public void onMouseOut(MouseOutEvent event) {
@@ -426,42 +421,6 @@ public class PanelLeftMenu extends Composite
 	@Override
 	public void getGetUserPowersFailed(Error error) {
 		adminItem.removeFromParent();
-	}
-
-	/* (non-Javadoc)
-	 * @see com.google.gwt.user.client.ui.HasText#getText()
-	 */
-	@Override
-	public String getText() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.google.gwt.user.client.ui.HasText#setText(java.lang.String)
-	 */
-	@Override
-	public void setText(String text) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	/* (non-Javadoc)
-	 * @see com.google.gwt.user.client.ui.HasHTML#getHTML()
-	 */
-	@Override
-	public String getHTML() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.google.gwt.user.client.ui.HasHTML#setHTML(java.lang.String)
-	 */
-	@Override
-	public void setHTML(String html) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	/* (non-Javadoc)

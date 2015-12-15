@@ -35,8 +35,7 @@
 		color: #fff;
 	}
 	</ui:style>
-	<g:FocusPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.panelLeft} js-custom-scrollbar" ui:field="leftPanel">
-	<g:HTMLPanel>
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.panelLeft} js-custom-scrollbar">
 		<nav class="{STYLES_INSTANCE.reflectionMainStyle.mainNavigation}" role="navigation">
 			<ul ui:field="itemList">
 				<li ui:field="myDataItem" class="{STYLES_INSTANCE.reflectionMainStyle.hasChild}">
@@ -160,8 +159,5 @@
 				</li>
 			</ul>
 		</nav>
-</g:HTMLPanel>
-	</g:FocusPanel>
-
-
+	</g:HTMLPanel>
 </ui:UiBinder> 
