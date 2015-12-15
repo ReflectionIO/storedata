@@ -52,7 +52,7 @@ q, blockquote {
 /* line 103, ../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.1/stylesheets/compass/reset/_utilities.scss */
 q:before, q:after, blockquote:before, blockquote:after {
   content: "";
-  /* content: none; */
+  /* @alternate */ content: none;
 }
 
 /* line 32, ../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.1/stylesheets/compass/reset/_utilities.scss */
@@ -19486,3 +19486,224 @@ p.browserupgrade {
   font-size: 16px;
   font-weight: bold;
 }
+
+/* Print styles */
+@media print {
+  /* line 2, sass/print/_print.scss */
+  div:not(.highcharts-container),
+  h1, h2, h3, h4, h5, h6, p ul, li, article, section, aside, header, footer, blockquote, table {
+    height: auto !important;
+    min-height: none !important;
+    margin: 2px !important;
+    padding: 0px !important;
+    text-align: left !important;
+  }
+
+  /* line 10, sass/print/_print.scss */
+  img,
+  .panel-left,
+  .panel-right-container,
+  .global-header__actions,
+  button,
+  form,
+  .ref-button--function-large,
+  .ref-button--function-large--wide,
+  .press-area--featured-list,
+  .why-reflection-graphic,
+  .page-overlay,
+  .page-popup,
+  .page-functions,
+  table.sticky-table-head,
+  .app-user-functions-container,
+  .data-bar,
+  .account-form-container .tabs-container,
+  .account-connect-animation,
+  .connect-account-submitted,
+  .account-form-container,
+  .connect-account-main-content svg,
+  .js-tooltip {
+    display: none !important;
+  }
+
+  /* line 33, sass/print/_print.scss */
+  a {
+    color: #6d69c5 !important;
+    text-decoration: none !important;
+  }
+
+  /* line 37, sass/print/_print.scss */
+  svg {
+    width: 32px;
+  }
+
+  /* line 40, sass/print/_print.scss */
+  table svg {
+    display: none !important;
+  }
+
+  /* line 43, sass/print/_print.scss */
+  .tabs,
+  .tabs__content-container {
+    margin-bottom: 20px !important;
+  }
+
+  /* line 47, sass/print/_print.scss */
+  .tabs svg {
+    width: 10px !important;
+  }
+
+  /* line 50, sass/print/_print.scss */
+  .tabs li,
+  .tabs__content-container li,
+  .partners-grid-container li,
+  .list-partners li,
+  .article-list--article,
+  .members-list li {
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* line 60, sass/print/_print.scss */
+  .tabs__content-container table {
+    margin-bottom: 30px !important;
+  }
+
+  /* line 63, sass/print/_print.scss */
+  .why-reflection-item svg {
+    width: 60px !important;
+  }
+
+  /* line 66, sass/print/_print.scss */
+  .partners-grid-container li,
+  .list-partners li,
+  .members-list li {
+    display: inline-block !important;
+    margin-right: 30px !important;
+  }
+
+  /* line 72, sass/print/_print.scss */
+  .partners-grid-container li svg,
+  .list-partners svg,
+  .list-partners img,
+  .members-list li svg {
+    display: inline-block !important;
+    width: 60px !important;
+  }
+
+  /* line 79, sass/print/_print.scss */
+  .product-page__quotes__logo-container svg,
+  .help-us-help-you svg,
+  .page-about-foot-content__svg-container svg,
+  .contact__text-content svg {
+    width: 100px !important;
+  }
+
+  /* line 85, sass/print/_print.scss */
+  .home-wide-container {
+    margin-bottom: 40px !important;
+  }
+
+  /* line 88, sass/print/_print.scss */
+  .MHXTE6C-ob-a {
+    /* back to top */
+    display: none !important;
+  }
+
+  /* line 91, sass/print/_print.scss */
+  .highcharts-container,
+  .graph-container,
+  .graph-container * {
+    overflow: visible !important;
+  }
+
+  /* line 96, sass/print/_print.scss */
+  .highcharts-container,
+  .highcharts-container svg {
+    width: 100% !important;
+  }
+
+  /* line 100, sass/print/_print.scss */
+  .revenue-percentage {
+    padding-left: 30px !important;
+  }
+
+  /* line 103, sass/print/_print.scss */
+  .latest-system-stats svg {
+    width: 10px !important;
+  }
+
+  /* line 106, sass/print/_print.scss */
+  .table-data th,
+  .table-data td {
+    padding: 2px !important;
+    text-align: left !important;
+  }
+
+  /* line 111, sass/print/_print.scss */
+  .table-linked-accounts th,
+  .table-linked-accounts td,
+  .table-my-apps th,
+  .table-my-apps td {
+    padding: 10px !important;
+    text-align: left !important;
+  }
+
+  /* line 118, sass/print/_print.scss */
+  .ref-icon-before--cloud,
+  .ref-icon-before--revenue {
+    padding-left: 25px !important;
+  }
+
+  /* line 122, sass/print/_print.scss */
+  .page-banner > div {
+    top: 10px !important;
+  }
+
+  /* line 125, sass/print/_print.scss */
+  .content-list li {
+    padding-left: 20px !important;
+  }
+
+  /* line 128, sass/print/_print.scss */
+  .page-terms .content-list li {
+    padding-left: 40px !important;
+  }
+
+  /* line 131, sass/print/_print.scss */
+  .page-terms .content-list li p {
+    margin-left: 0 !important;
+  }
+
+  /* line 134, sass/print/_print.scss */
+  .page-terms .content-list li ol li:before {
+    position: relative;
+    left: 0px;
+    margin-right: 10px;
+  }
+
+  /* line 139, sass/print/_print.scss */
+  .pricing-options .pricing-price,
+  .pricing-options .pricing-sup {
+    font-size: 30px !important;
+    color: #333;
+    vertical-align: bottom;
+  }
+
+  /* line 145, sass/print/_print.scss */
+  .pricing-options .pricing-access-info:after {
+    display: none !important;
+  }
+
+  /* line 148, sass/print/_print.scss */
+  .pricing-options .pricing-option--header p {
+    position: relative !important;
+  }
+
+  /* line 151, sass/print/_print.scss */
+  .site-article-full .blockquote--large:before,
+  .site-article-full .blockquote:before {
+    display: none !important;
+  }
+}
+
