@@ -17,7 +17,8 @@
 			<form class="{STYLES_INSTANCE.reflectionMainStyle.overflowVisible}">
 
 				<c:Selector ui:field="accountNameSelector" overlay="true" alignRight="" labelText="Account Name" dropdownTitle="Select an account" />
-
+				<label>Account:</label>
+			
 			</form>
 		</div>
 

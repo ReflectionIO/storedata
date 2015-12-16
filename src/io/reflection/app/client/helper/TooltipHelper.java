@@ -42,7 +42,11 @@ public class TooltipHelper {
 			var tooltip;
 			if ($wnd.$('html.no-touch').length) {
 				$this.on("mouseenter", function() {
-					tooltip = generateTooltip($this, false);
+					if (!$this.hasClass("js-tooltip--info")) {
+						tooltip = generateTooltip($this, false);
+					} else {
+						tooltip = generateTooltip($this, true);
+					}					
 				});
 				$this.on("mouseleave", function() {
 					if (tooltip.length){

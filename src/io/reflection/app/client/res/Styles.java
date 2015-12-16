@@ -172,6 +172,8 @@ public interface Styles extends ClientBundle {
 		@ClassName("block-error-message")
 		String blockErrorMessage();
 
+		String blockquote();
+
 		@ClassName("blockquote--large")
 		String blockquoteLarge();
 
@@ -982,6 +984,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("is-firefox")
 		String isFirefox();
 
+		@ClassName("is-focus")
+		String isFocus();
+
 		@ClassName("is-focused")
 		String isFocused();
 
@@ -1051,6 +1056,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("js-rotate-content")
 		String jsRotateContent();
 
+		@ClassName("js-tooltip")
+		String jsTooltip();
+
 		@ClassName("l-full-screen-section")
 		String lFullScreenSection();
 
@@ -1115,6 +1123,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("linked-account-name")
 		String linkedAccountName();
+
+		@ClassName("linked-account-pending-container")
+		String linkedAccountPendingContainer();
 
 		@ClassName("linked-account-store")
 		String linkedAccountStore();

@@ -1294,22 +1294,13 @@
 			var tooltip;
 			if($('html.no-touch').length) {
 				$this.on("mouseenter", function(){
-					if($this.hasClass("js-tooltip--info")) {
-						tooltip = instance.generateTooltip($this, true);
-					} else {
-						tooltip = instance.generateTooltip($this, false);
-					}					
+					tooltip = instance.generateTooltip($this, false);
 				});
 				$this.on("mouseleave", function(){
 					tooltip.remove();
 				});
-				$this.on("click", function(e){
-					if($this.attr("href") == "#") {
-						e.preventDefault();
-					}
-					if(!$this.hasClass("js-tooltip--info")) {
-						tooltip.remove();
-					}					
+				$this.on("click", function(){
+					tooltip.remove();
 				});
 			} else if($('html.touch').length) {
 				$this.on("click", function(e){
@@ -1389,7 +1380,7 @@
 		});
 	}
 
-	ToolTip.prototype.generateTooltip = function($tooltipParent, isInstantTooltip) {
+	ToolTip.prototype.generateTooltip = function($tooltipParent, isTouchTooltip) {
 		var $this = $tooltipParent,
 				tooltipText = $tooltipParent.data("tooltip");
 
@@ -1416,12 +1407,12 @@
 			tooltip.addClass("tooltip-right");
 		}
 		tooltip.css({"top": topPosition - tooltipHeight - 20, "left": leftPosition});
-		if(isInstantTooltip) {
+		if(isTouchTooltip) {
 			tooltip.show();
 		} else {
 			setTimeout(function(){
 				tooltip.fadeIn(100);
-			}, 700);
+			}, 400);
 		}
 
 		return tooltip;
@@ -1603,6 +1594,8 @@
 				var pageTopBarHeight = $('.global-header').innerHeight(),
 						anchorId = $(this).attr("href"),
 						scrollTopOfTheAnchor = $(anchorId).offset().top;
+						$('.article-list--article .is-focus').removeClass("is-focus");
+						$(anchorId).addClass("is-focus");
 				$('html, body').animate({ scrollTop: scrollTopOfTheAnchor - pageTopBarHeight - 20}, 300, 'swing');
 			});
 		});
