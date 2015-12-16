@@ -373,7 +373,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 			clearDetailsErrors();
 			changeDetailsBtn.setStatusLoading("Changing details");
 			setUserDetailsFormEnabled(false);
-			SessionController.get().changeUserDetails(username.getText(), forename.getText(), surname.getText(), company.getText());
+			SessionController.get().changeUserDetails(editingUserId, username.getText(), forename.getText(), surname.getText(), company.getText());
 		} else {
 			if (usernameError != null) {
 				username.showNote(usernameError, true);
