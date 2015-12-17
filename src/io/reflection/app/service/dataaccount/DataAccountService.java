@@ -175,8 +175,8 @@ final class DataAccountService implements IDataAccountService {
 		DataAccount addedDataAccount = null;
 
 		final String addDataAccountQuery = String.format(
-				"INSERT INTO `dataaccount` (`sourceid`,`username`,`password`,`properties`) VALUES (%d,'%s',AES_ENCRYPT('%s',UNHEX('%s')),'%s')",
-				dataAccount.source.id, addslashes(dataAccount.username), addslashes(dataAccount.password), key(), addslashes(dataAccount.properties));
+				"INSERT INTO `dataaccount` (`sourceid`,`username`,`password`) VALUES (%d,'%s',AES_ENCRYPT('%s',UNHEX('%s')))", dataAccount.source.id,
+				addslashes(dataAccount.username), addslashes(dataAccount.password), key());
 
 		final Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
@@ -292,10 +292,17 @@ final class DataAccountService implements IDataAccountService {
 
 		DataAccount updatedDataAccount = null;
 
-		final String updateDataAccountQuery = String
-				.format("UPDATE `dataaccount` SET `username`='%s', `password`=AES_ENCRYPT('%s',UNHEX('%s')), `properties`='%s', `active`='%s' WHERE `id`=%d AND `deleted`='n'",
-						addslashes(dataAccount.username), addslashes(dataAccount.password), key(), addslashes(dataAccount.properties),
-						addslashes(dataAccount.active), dataAccount.id.longValue());
+		final String updateDataAccountQuery;
+		if (dataAccount.properties != null) {
+			updateDataAccountQuery = String
+					.format("UPDATE `dataaccount` SET `username`='%s', `password`=AES_ENCRYPT('%s',UNHEX('%s')), `properties`='%s', `active`='%s' WHERE `id`=%d AND `deleted`='n'",
+							addslashes(dataAccount.username), addslashes(dataAccount.password), key(), addslashes(dataAccount.properties),
+							addslashes(dataAccount.active), dataAccount.id.longValue());
+		} else {
+			updateDataAccountQuery = String.format(
+					"UPDATE `dataaccount` SET `username`='%s', `password`=AES_ENCRYPT('%s',UNHEX('%s')), `active`='%s' WHERE `id`=%d AND `deleted`='n'",
+					addslashes(dataAccount.username), addslashes(dataAccount.password), key(), addslashes(dataAccount.active), dataAccount.id.longValue());
+		}
 
 		final Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
@@ -324,9 +331,16 @@ final class DataAccountService implements IDataAccountService {
 
 		DataAccount restoredDataAccount = null;
 
-		final String restoreDataAccountQuery = String.format(
-				"UPDATE `dataaccount` SET `created`=NOW(), `password`=AES_ENCRYPT('%s',UNHEX('%s')), `properties`='%s', `deleted`='n' WHERE `username`='%s'",
-				addslashes(dataAccount.password), key(), addslashes(dataAccount.properties), addslashes(dataAccount.username));
+		final String restoreDataAccountQuery;
+		if (dataAccount.properties != null) {
+			restoreDataAccountQuery = String
+					.format("UPDATE `dataaccount` SET `created`=NOW(), `password`=AES_ENCRYPT('%s',UNHEX('%s')), `properties`='%s', `deleted`='n' WHERE `username`='%s'",
+							addslashes(dataAccount.password), key(), addslashes(dataAccount.properties), addslashes(dataAccount.username));
+		} else {
+			restoreDataAccountQuery = String.format(
+					"UPDATE `dataaccount` SET `created`=NOW(), `password`=AES_ENCRYPT('%s',UNHEX('%s')), `deleted`='n' WHERE `username`='%s'",
+					addslashes(dataAccount.password), key(), addslashes(dataAccount.username));
+		}
 
 		final Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
@@ -555,6 +569,32 @@ final class DataAccountService implements IDataAccountService {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see io.reflection.app.service.dataaccount.IDataAccountService#setDataAccountVendor(java.lang.Long, java.lang.String)
+	 */
+	@Override
+	public void setPropertiesDataAccount(Long id, String properties) throws DataAccessException {
+		final String setVendorQuery = String.format("UPDATE `dataaccount` SET `properties`='%s' WHERE `id`=%d AND `deleted`='n'", addslashes(properties), id.longValue());
+
+		final Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
+		try {
+			dataAccountConnection.connect();
+			dataAccountConnection.executeQuery(setVendorQuery);
+
+			if (dataAccountConnection.getAffectedRowCount() > 0) {
+				if (LOG.isLoggable(Level.INFO)) {
+					LOG.info(String.format("Set vendor [%s] to account with id [%d]", properties, id.longValue()));
+				}
+			}
+		} finally {
+			if (dataAccountConnection != null) {
+				dataAccountConnection.disconnect();
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#triggerDataAccountFetch(io.reflection.app.datatypes.shared.DataAccount)
 	 */
 	@Override
@@ -587,7 +627,7 @@ final class DataAccountService implements IDataAccountService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#triggerMultipleDateDataAccountFetch(io.reflection.app.datatypes.shared.DataAccount,
 	 * java.util.Date, java.lang.Integer)
 	 */
@@ -606,8 +646,8 @@ final class DataAccountService implements IDataAccountService {
 		switch (dataAccount.source.a3Code) {
 		case "itc":
 			try {
-				ITunesConnectDownloadHelper.getITunesSalesFile(dataAccount.username, dataAccount.password,
-						ITunesConnectDownloadHelper.getVendorId(dataAccount.properties), ITunesConnectDownloadHelper.DATE_FORMATTER.format(date), null, null);
+				ITunesConnectDownloadHelper.getITunesSalesFile(dataAccount.username, dataAccount.password, "00000000",
+						ITunesConnectDownloadHelper.DATE_FORMATTER.format(date), null, null);
 			} catch (final Exception e) {
 				if (LOG.isLoggable(Level.WARNING)) {
 					LOG.log(Level.WARNING, String.format("Trying to verify a data account for date %s, which threw an exception", date.toString()), e);

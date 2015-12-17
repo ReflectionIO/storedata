@@ -192,9 +192,8 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	private TextHeader grossingHeader = new TextHeader("App Name");
 	private TextHeader grossingHeaderAll = new TextHeader("Grossing");
 	private TextHeader priceHeader = new TextHeader("Price");
-	private SafeHtmlHeader iapHeader = new SafeHtmlHeader(
-			SafeHtmlUtils
-					.fromTrustedString("<span>IAP</span><span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding whats-this-tooltip-icon-static\" data-tooltip=\"In App Purchases\"></span>"));
+	private SafeHtmlHeader iapHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString(
+			"<span>IAP</span><span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding js-tooltip--info tooltip--info\" data-tooltip=\"In App Purchases\"></span>"));
 
 	private String selectedTab = OVERALL_LIST_TYPE;
 	private String previousFilter;
@@ -219,8 +218,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 			@Override
 			public void onShowRange(ShowRangeEvent<Date> event) {
-				FilterHelper.disableOutOfRangeDates(dateBox.getDatePicker(),
-						(SessionController.get().isAdmin() ? null : ApiCallHelper.getUTCDate(2015, 8, 31)),
+				FilterHelper.disableOutOfRangeDates(dateBox.getDatePicker(), (SessionController.get().isAdmin() ? null : ApiCallHelper.getUTCDate(2015, 8, 31)),
 						(SessionController.get().isAdmin() ? FilterHelper.getToday() : FilterHelper.getDaysAgo(3)));
 			}
 		});
@@ -380,8 +378,8 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 			@Override
 			public SafeHtml getValue(RanksGroup object) {
-				return (object.free != null && object.free.position != null) ? SafeHtmlUtils.fromTrustedString(object.free.position.toString()) : SafeHtmlUtils
-						.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
+				return (object.free != null && object.free.position != null) ? SafeHtmlUtils.fromTrustedString(object.free.position.toString())
+						: SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
 			}
 
 		};
@@ -467,8 +465,9 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			@Override
 			public SafeHtml getValue(RanksGroup object) {
 				Rank rank = rankForListType(object);
-				return (rank.currency != null && rank.price != null) ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.asPriceString(rank.currency,
-						rank.price.floatValue())) : SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
+				return (rank.currency != null && rank.price != null)
+						? SafeHtmlUtils.fromSafeConstant(FormattingHelper.asPriceString(rank.currency, rank.price.floatValue()))
+						: SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
 			}
 		};
 		priceColumn.setCellStyleNames(style.mhxte6ciA());
@@ -534,10 +533,13 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 			@Override
 			public SafeHtml getValue(RanksGroup object) {
-				return SafeHtmlUtils.fromSafeConstant(DataTypeHelper.itemIapState(ItemController.get().lookupItem(rankForListType(object).itemId),
-						IAP_YES_HTML, IAP_NO_HTML,
-						"<span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding " + style.whatsThisTooltipIcon()
-								+ "\" data-tooltip=\"No data available\"></span>"));
+				return SafeHtmlUtils
+						.fromSafeConstant(DataTypeHelper.itemIapState(
+								ItemController.get()
+										.lookupItem(rankForListType(
+												object).itemId),
+								IAP_YES_HTML, IAP_NO_HTML,
+								"<span class=\"js-tooltip js-tooltip--info tooltip--info js-tooltip--right js-tooltip--right--no-pointer-padding\" data-tooltip=\"No data available\"></span>"));
 			}
 
 		};
@@ -567,8 +569,9 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	@UiHandler("applyFilters")
 	void onApplyFiltersClicked(ClickEvent event) {
 		event.preventDefault();
+		applyFilters.addStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().isLoading());
 		if (NavigationController.get().getCurrentPage() == PageType.RanksPageType) {
-			boolean updateData = false;
+			boolean updateData = false;			
 			if (updateData = updateData || !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())) {
 				FilterController.get().setCountry(countrySelector.getSelectedValue());
 			}
@@ -947,8 +950,8 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			// }
 		} else if (SessionController.get().isLoggedIn() && !SessionController.get().hasLinkedAccount()) {
 			MixpanelHelper.trackClicked(MixpanelHelper.Event.OPEN_LINK_ACCOUNT_POPUP, "leaderboard_downloadCsv");
-			addLinkedAccountPopup
-					.show("Link Your Appstore Account", "You need to link your iTunes Connect account to use this feature, it only takes a moment");
+			addLinkedAccountPopup.show("Link Your Appstore Account",
+					"You need to link your iTunes Connect account to use this feature, it only takes a moment");
 		} else if (SessionController.get().isLoggedIn()) {
 			premiumPopup.show(true);
 		} else {
@@ -989,12 +992,9 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 				viewAllBtn.setVisible(true);
 			}
 
-			if (previousFilter == null) {
-				previousFilter = FilterController.get().asRankFilterString();
-			}
-
 			// Check if the filter is changed
-			if (!previousFilter.equals(FilterController.get().asRankFilterString())) {
+			if (previousFilter == null || !previousFilter.equals(FilterController.get().asRankFilterString())) {
+				previousFilter = FilterController.get().asRankFilterString();
 				updateSelectorsFromFilter();
 				loadingBar.show();
 				RankController.get().reset();
@@ -1006,20 +1006,23 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 				leaderboardTable.setVisible(true);
 				downloadsHeader.setHeaderStyleNames(style.canBeSorted());
 				revenueHeader.setHeaderStyleNames(style.canBeSorted());
-				previousFilter = FilterController.get().asRankFilterString();
+				resetFilters.setEnabled(!FilterController.get().getFilter().getCountryA2Code().equals("gb")
+						|| !FilterController.get().getFilter().getStoreA3Code().equals("iph")
+						|| !FilterController.get().getFilter().getCategoryId().toString().equals("15")
+						|| !CalendarUtil.isSameDate(FilterHelper.getDaysAgo(3), new Date(FilterController.get().getFilter().getEndTime().longValue())));
 			}
 
 			String currentFilter = FilterController.get().asRankFilterString();
 
 			if (currentFilter != null && currentFilter.length() > 0) {
-				allLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, OVERALL_LIST_TYPE,
-						currentFilter));
-				freeLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, FREE_LIST_TYPE,
-						currentFilter));
-				paidLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, PAID_LIST_TYPE,
-						currentFilter));
-				grossingLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
-						GROSSING_LIST_TYPE, currentFilter));
+				allLink.setTargetHistoryToken(
+						PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, OVERALL_LIST_TYPE, currentFilter));
+				freeLink.setTargetHistoryToken(
+						PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, FREE_LIST_TYPE, currentFilter));
+				paidLink.setTargetHistoryToken(
+						PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, PAID_LIST_TYPE, currentFilter));
+				grossingLink.setTargetHistoryToken(
+						PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, GROSSING_LIST_TYPE, currentFilter));
 			}
 
 			selectedTab = current.getParameter(SELECTED_TAB_PARAMETER_INDEX);
@@ -1075,9 +1078,8 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler#getAllTopItemsSuccess(io.reflection.app.api.core.shared.call.GetAllTopItemsRequest
-	 * , io.reflection.app.api.core.shared.call.GetAllTopItemsResponse)
+	 * @see io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler#getAllTopItemsSuccess(io.reflection.app.api.core.shared.call.
+	 * GetAllTopItemsRequest , io.reflection.app.api.core.shared.call.GetAllTopItemsResponse)
 	 */
 	@Override
 	public void getAllTopItemsSuccess(GetAllTopItemsRequest input, GetAllTopItemsResponse output) {
@@ -1110,16 +1112,16 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			isStatusError = true;
 			applyFilters.setEnabled(true);
 		}
-
+		
+		applyFilters.removeStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().isLoading());
 		TooltipHelper.updateHelperTooltip();
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler#getAllTopItemsFailure(io.reflection.app.api.core.shared.call.GetAllTopItemsRequest
-	 * , java.lang.Throwable)
+	 * @see io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler#getAllTopItemsFailure(io.reflection.app.api.core.shared.call.
+	 * GetAllTopItemsRequest , java.lang.Throwable)
 	 */
 	@Override
 	public void getAllTopItemsFailure(GetAllTopItemsRequest input, Throwable caught) {
@@ -1129,5 +1131,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		errorPanel.setVisible(true);
 		isStatusError = true;
 		applyFilters.setEnabled(true);
+		
+		applyFilters.removeStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().isLoading());
 	}
 }

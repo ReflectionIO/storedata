@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en" ng-app="reflectionApp">
+<head>
+	<meta charset="utf-8" />
+	<title>Reflection Data - Top 20</title>
+	<link href="css/ukie-online.css" type="text/css" rel="stylesheet" />
+	<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:600,400' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
+</head>
+<body id="body">
+	<header class="reflection-header">
+		<div class="reflection-header__logo-container">
+			<svg class="logo-reflection" version=1.1 x=0px y=0px viewBox="0 0 911.5 195.6" enable-background="new 0 0 911.5 195.6" xml:space=preserve><path fill-rule=evenodd clip-rule=evenodd fill=#6D69C5 d="M9.6,0h127.5c5.3,0,9.6,4.3,9.6,9.6v1.7c0,5.3-4.3,9.6-9.6,9.6H9.6
+	C4.3,21,0,16.7,0,11.4V9.6C0,4.3,4.3,0,9.6,0z"/><path fill-rule=evenodd clip-rule=evenodd fill=#6D69C5 d="M9.6,34.9H165c5.3,0,9.6,4.3,9.6,9.6v1.7c0,5.3-4.3,9.6-9.6,9.6
+	H9.6c-5.3,0-9.6-4.3-9.6-9.6v-1.7C0,39.2,4.3,34.9,9.6,34.9z"/><path fill-rule=evenodd clip-rule=evenodd fill=#6D69C5 d="M9.6,104.8h99.5c5.3,0,9.6,4.3,9.6,9.6v1.7c0,5.3-4.3,9.6-9.6,9.6
+	H9.6c-5.3,0-9.6-4.3-9.6-9.6v-1.7C0,109.1,4.3,104.8,9.6,104.8z"/><path fill-rule=evenodd clip-rule=evenodd fill=#6D69C5 d="M9.6,139.7h127.5c5.3,0,9.6,4.3,9.6,9.6v1.7c0,5.3-4.3,9.6-9.6,9.6
+	H9.6c-5.3,0-9.6-4.3-9.6-9.6v-1.7C0,144,4.3,139.7,9.6,139.7z"/><path fill-rule=evenodd clip-rule=evenodd fill=#6D69C5 d="M9.6,69.8h127.5c5.3,0,9.6,4.3,9.6,9.6v1.7c0,5.3-4.3,9.6-9.6,9.6
+	H9.6c-5.3,0-9.6-4.3-9.6-9.6v-1.7C0,74.1,4.3,69.8,9.6,69.8z"/><path fill-rule=evenodd clip-rule=evenodd fill=#6D69C5 d="M9.6,174.6H165c5.3,0,9.6,4.3,9.6,9.6v1.7c0,5.3-4.3,9.6-9.6,9.6
+	H9.6c-5.3,0-9.6-4.3-9.6-9.6v-1.7C0,178.9,4.3,174.6,9.6,174.6z"/><path fill=#FFFFFF d="M256.7,153.6h19.2v-47.1h15.3l25.8,47.1h23.9L311.2,104c7.9-1.8,14.1-5.2,18.6-10.3
+	c4.6-5.1,6.8-11.7,6.8-19.7c0-5.9-1.2-10.8-3.5-14.9c-2.3-4.1-5.4-7.5-9.2-10c-3.8-2.5-8.2-4.3-13.1-5.4c-4.9-1.1-10-1.7-15.2-1.7
+	h-39V153.6z M275.9,89.1V59.4h18.8c2.5,0,5.1,0.2,7.8,0.6c2.7,0.4,5.1,1.2,7.2,2.4c2.1,1.2,3.8,2.7,5.2,4.6c1.4,1.9,2,3.8,2,6.8
+	c0,3.4-0.7,5.2-2.2,7.3c-1.5,2.1-3.3,3.8-5.6,5c-2.3,1.2-4.8,1.9-7.6,2.4c-2.8,0.4-5.7,0.6-8.5,0.6H275.9z"/><path fill=#FFFFFF d="M361.3,108.2c0.4-5.3,2.6-9.9,6.5-13.3c3.9-3.4,8.7-5.1,14.4-5.1c3,0,5.7,0.5,7.9,1.5c2.3,1,4.1,2.3,5.6,4
+	c1.5,1.7,2.5,3.6,3.2,5.8c0.7,2.2,1,4.7,1,7.1H361.3z M416,98.7c-1.8-5.1-4.4-9.3-7.6-12.7c-3.2-3.4-7.1-6-11.6-7.7
+	c-4.5-1.7-9.3-2.6-14.5-2.6c-5.7,0-10.9,1-15.8,2.9c-4.9,1.9-9.1,4.7-12.7,8.2c-3.6,3.5-6.4,7.8-8.4,12.7c-2,5-3.1,10.5-3.1,16.6
+	c0,6.2,1,11.7,3.1,16.6c2,4.9,4.9,9,8.5,12.3c3.6,3.4,7.9,5.9,12.8,7.8c4.9,1.8,10.3,2.8,16.2,2.8c14.1,0,24.9-5,32.4-15.1
+	l-12.6-10.1c-2.1,3-4.8,5.4-8,7.2c-3.2,1.7-7.2,2.6-11.9,2.6c-2.7,0-5.3-0.5-7.9-1.4c-2.5-0.9-4.8-2.2-6.8-3.9
+	c-2-1.6-3.6-3.6-4.8-5.8c-1.2-2.3-1.9-4.1-2.1-6.9h57.4c0.1-0.8,0.2-1.7,0.2-2.5c0-0.8,0-1.7,0-2.5
+	C418.8,110.4,417.9,103.8,416,98.7z"/><path fill=#FFFFFF d="M434.9,153.7H454V92.6h17.4v-14H454V65.7c0-1.9,0.2-3.8,0.5-5.8c0.3-2,0.9-3.8,1.8-5.5
+	c0.9-1.7,2.2-3,3.9-4.1c1.7-1,3.9-1.6,6.6-1.6c1.4,0,2.6-0.2,3.9,0c1.2,0.2,3.3-0.1,4.3,0.2l0.1-15.6c-1.5-0.4-3.6-0.2-5-0.4
+	c-1.4-0.2-4-0.1-6.1-0.1c-5.9,0-9.2,0.7-13.1,2.5c-3.9,1.8-7,4.3-9.4,7.5c-2.4,3.1-4,6.8-5,10.9c-1,4.1-1.5,8.5-1.5,13v11.8h-14v14
+	h14V153.7z"/><path fill=#FFFFFF d="M478.5,153.7h19.2V33.2h-19.2V153.7z"/><path fill=#FFFFFF d="M529,108.2c0.4-5.3,2.3-9.9,6.2-13.3c3.9-3.4,8.7-5.1,14.4-5.1c3,0,5.7,0.5,7.9,1.5c2.3,1,4.1,2.3,5.6,4
+	c1.5,1.7,2.5,3.6,3.2,5.8c0.7,2.2,1.3,4.7,1.3,7.1H529z M583.5,98.7c-1.8-5.1-4.4-9.3-7.6-12.7c-3.2-3.4-7.1-6-11.6-7.7
+	c-4.5-1.7-9.3-2.6-14.5-2.6c-5.7,0-10.9,1-15.8,2.9c-4.9,1.9-9.1,4.7-12.7,8.2c-3.6,3.5-6.4,7.8-8.4,12.7c-2,5-3.1,10.5-3.1,16.6
+	c0,6.2,1,11.7,3.1,16.6c2,4.9,4.9,9,8.5,12.3c3.6,3.4,7.9,5.9,12.8,7.8c4.9,1.8,10.3,2.8,16.2,2.8c14.1,0,24.9-5,32.4-15.1
+	l-12.6-10.1c-2.1,3-4.8,5.4-8,7.2c-3.2,1.7-7.2,2.6-11.9,2.6c-2.7,0-5.3-0.5-7.9-1.4c-2.5-0.9-4.8-2.2-6.8-3.9
+	c-2-1.6-3.6-3.6-4.8-5.8c-1.2-2.3-1.9-4.1-2.1-6.9h57.4c0.1-0.8,0.2-2.3,0.2-3.1c0-0.8,0-1.7,0-2.5
+	C586.2,109.8,585.3,103.8,583.5,98.7z"/><path fill=#FFFFFF d="M662.5,87.5c-3-3.7-7.2-6.5-12.3-8.6c-5.2-2.1-10.6-3.1-16.1-3.1c-5.6,0-10.8,0.9-15.6,2.8
+	c-4.9,1.9-9.1,4.6-12.8,8c-3.7,3.5-6.6,7.6-8.7,12.6c-2.1,4.9-3.2,10.4-3.2,16.5c0,6.3,1.1,11.9,3.2,16.8c2.1,4.9,5.1,9.1,8.8,12.6
+	c3.7,3.5,8.1,6.1,13,7.9c5,1.8,10.2,2.7,15.8,2.7c5.7,0,10.9-0.9,15.8-2.8c4.9-1.8,8.9-4.4,12-7.8l-11.8-11.9
+	c-1.8,2.2-4.1,3.9-7.1,5c-2.9,1.2-5.9,1.7-8.8,1.7c-3.6,0-6.7-0.7-9.4-2.1c-2.7-1.4-4.9-3.3-6.7-5.6c-1.8-2.3-3.1-4.9-4-7.8
+	c-0.9-2.9-1.3-5.8-1.3-8.7c0-2.9,0.4-5.8,1.3-8.7c0.8-2.9,2.1-5.5,3.9-7.8c1.7-2.3,3.9-4.2,6.5-5.6c2.6-1.4,5.7-2.1,9.1-2.1
+	c3,0,6,0.7,9,2.1c2.9,1.4,5.1,3.2,6.6,5.3L662.5,87.5z"/><path fill=#FFFFFF d="M677.5,92.6v35.6c0,3.7,0.3,7.1,1,10.3c0.7,3.2,1.5,6,3.3,8.5c1.8,2.5,4.3,4.4,7.5,5.8
+	c3.1,1.4,7.2,2.1,12.3,2.1c2.1,0,4.3-0.2,6.6-0.6c2.3-0.4,4.3-0.9,6-1.5l0.1-13.8c-1.2,0.5-2-0.1-3.5,0.2c-1.5,0.3-2.8,0.4-4.1,0.4
+	c-4.2,0-6.9-1.1-8.1-3.3c-1.2-2.2-1.8-5-1.8-8.3V92.6h17.4V78.6h-17.4V55.8h-19.3v22.8h-13.9v13.9H677.5z"/><path fill=#FFFFFF d="M721.2,153.7h19.2V78.6h-19.2V153.7z M722.8,61.2c2.3,2.3,5.1,3.4,8.6,3.4c3.5,0,6.4-1.1,8.7-3.2
+	c2.4-2.1,3.5-4.8,3.5-8.1c0-3.2-1.2-5.9-3.5-8.1c-2.4-2.1-5.3-3.2-8.7-3.2c-3.5,0-6.3,1.1-8.6,3.4c-2.3,2.3-3.4,4.9-3.4,7.9
+	C719.4,56.3,720.5,59,722.8,61.2z"/><path fill=#FFFFFF d="M755.5,131.7c2.1,4.9,5.1,9.1,8.7,12.7c3.7,3.5,8,6.3,13,8.3c5,2,10.4,3,16,3c5.7,0,11-1,16-3
+	c5-2,9.4-4.7,13-8.3c3.7-3.5,6.6-7.7,8.7-12.7c2.1-4.9,3.2-10.4,3.2-16.3c0-6-1.1-11.4-3.2-16.3c-2.1-4.9-5.1-9-8.7-12.5
+	c-3.7-3.5-8-6.1-13-8c-5-1.9-10.4-2.8-16-2.8c-5.7,0-11,0.9-16,2.8c-5,1.9-9.4,4.6-13,8c-3.7,3.5-6.6,7.6-8.7,12.5
+	c-2.1,4.9-3.2,10.3-3.2,16.3C752.3,121.3,753.4,126.7,755.5,131.7z M772.8,106.6c0.9-2.9,2.2-5.5,4-7.8c1.8-2.3,4-4.2,6.8-5.6
+	c2.7-1.4,6-2.1,9.7-2.1s7,0.7,9.7,2.1c2.7,1.4,5,3.3,6.8,5.6c1.8,2.3,3.1,4.9,4,7.8c0.9,2.9,1.3,5.8,1.3,8.7c0,2.9-0.4,5.9-1.3,8.8
+	c-0.9,2.9-2.2,5.6-4,7.9c-1.8,2.3-4,4.2-6.8,5.7c-2.7,1.5-6,2.2-9.7,2.2s-7-0.7-9.7-2.2c-2.7-1.5-5-3.4-6.8-5.7
+	c-1.8-2.3-3.1-4.9-4-7.9c-0.9-2.9-1.3-5.9-1.3-8.8C771.5,112.4,771.9,109.5,772.8,106.6z"/><path fill=#FFFFFF d="M841.7,153.7h19.2v-41.8c0-2.5,0.4-5,1.1-7.5c0.7-2.5,1.7-4.6,3.1-6.5c1.4-1.9,3.2-3.4,5.4-4.6
+	c2.2-1.2,4.8-1.8,7.9-1.8c3,0,5.5,0.6,7.3,1.9c1.8,1.3,3.1,2.9,4.2,4.8c1,1.9,1.7,4.1,2,6.5c0.3,2.4,0.5,4.7,0.5,6.9v42.1h19.2
+	v-47.5c0-3.9-0.5-7.6-1.6-11.3c-1-3.7-2.8-6.9-5.1-9.7c-2.3-2.8-5.1-5.1-8.6-6.8c-3.5-1.7-7.7-2.6-12.7-2.6
+	c-5.7,0-10.6,1.4-14.7,4.3c-4.1,2.9-6,6.2-7.6,10h-0.3V78.6h-19.2V153.7z"/></svg>
+		<img src="images-ukie/logo-ukie.png" alt="UKIE logo" class="logo-ukie" />
+		</div>
+		<div class="reflection-header__heading-container">
+			<div>
+				<div class="heading-container__svg-container">
+					<svg version=1.1 x=0px y=0px viewBox="0 0 67.6 47.1" enable-background="new 0 0 67.6 47.1" xml:space=preserve><path fill=#474492 d="M9,33.8h49.5V3.4H9V33.8z M22.9,33h-6.1V20.6l6.1,3.4V33z M29.9,33h-6.1v-9l6.1-6.5V33z M36.8,33h-6.1V16.6
+		l0.3-0.3l5.8,4.5V33z M43.8,33h-6.1V20.9l6.1-2.2V33z M50.7,33h-6.1V18.3l6.1-6.7V33z M57.7,33h-6.1V11.2l6.1,3.1V33z M9.9,4.2h47.8
+		v8.6L51,9.5l-7.2,7.9l-6.5,2.3l-6.5-5L30,15.5h-0.1v0.1l-6.7,7.1l-6.9-3.8l-6.5,5.3V4.2z M9.9,25.9l6.1-5V33H9.9V25.9z"/><path fill=#474492 d="M5.9,35.8c0,0.1,0,0.2,0,0.3l-5.4,5.4L0,42v0.7v1.9v0.2l0.1,0.2c0.5,1.9,4.4,2.1,4.4,2.1h29.3H63
+		c0,0,3.9-0.2,4.4-2.1l0.1-0.2v-0.2v-1.9V42l-0.5-0.5l-5.3-5.3v-0.7h-0.1V3.6c0-2-1.6-3.6-3.6-3.6H33.8H9.5c-2,0-3.6,1.6-3.6,3.6
+		V35.8z M7.6,3.6c0-1,0.7-1.9,1.9-1.9c1,0,24.1,0,24.3,0c0,0,0,0,0,0c0.2,0,23.3,0,24.3,0c1.1,0,1.9,0.9,1.9,1.9c0,0.9,0,29,0,31.9
+		H7.6C7.6,32.6,7.6,4.5,7.6,3.6z M57.2,36.8l3.3,3.9H6.8l3.6-3.9H57.2z M65.9,44.6c-0.1,0.2-1.7,0.9-2.8,0.9c-0.7,0-28.7,0-29.3,0h0
+		c-0.2,0-28.6,0-29.3,0c-1.1,0-2.8-0.7-2.8-0.9c0-0.1,0-1.9,0-1.9l5.9-5.9h1.6l-4.3,4.8h57.4l-4-4.8h1.6l5.9,5.9
+		C65.9,42.7,65.9,44.5,65.9,44.6z"/></svg>
+				</div>
+				<div class="heading-container__headings">
+					<h1>Reflection Data</h1>
+					<h2>Top 20 iPad Store, Paid</h2>
+				</div>
+			</div>
+		</div>
+	</header>
+	<article class="reflection-article">
+		<header class="reflection-article__header">
+			<h2>UK Games Category</h2>
+			<h3>26 Oct to 01 Nov 2015, Week 44</h3>
+		</header>
+		<table class="reflection-table-data ng-scope" ng-controller="DataController as dataList">
+			<thead>
+				<tr>
+					<th>Last Period</th>
+					<th>This Period</th>
+					<th>Change</th>
+					<th>Title</th>
+					<th>Developer</th> 					
+				</tr>
+			</thead>
+			<colgroup>
+				<col style="width: 13%;">
+				<col style="width: 12%;">
+				<col style="width: 12%;">
+				<col style="width: 37%;">
+				<col style="width: 30%;">				
+			</colgroup>
+			<tbody>
+				<!-- ngRepeat: dataItem in dataList.data --><tr class="ng-scope" ng-repeat="dataItem in dataList.data">
+					<td class="ng-binding">1</td>
+					<td class="table-data__this-period ng-binding">
+						1
+					</td>
+					<td class="table-data__change"><span class="positive-movement">0</span></td>
+					<td class="table-data__app-title">
+						<img src="http://is4.mzstatic.com/image/thumb/Purple3/v4/66/72/28/667228d3-a044-886d-5303-a7f4ad140b93/source/100x100bb.jpg" alt="App logo">
+						<div class="title-container">
+							<span class="ng-binding">Minecraft: Story Mode</span>
+						</div>
+					</td>
+					<td class="table-data__app-developer"><div><span class="ng-binding">Telltale Inc</span></div></td>
+				</tr><!-- end ngRepeat: dataItem in dataList.data --><tr class="ng-scope" ng-repeat="dataItem in dataList.data">
+					<td class="ng-binding">2</td>
+					<td class="table-data__this-period ng-binding">
+						2
+					</td>
+					<td class="table-data__change"><span class="positive-movement">0</span></td>
+					<td class="table-data__app-title">
+						<img src="http://is3.mzstatic.com/image/thumb/Purple6/v4/a9/b0/33/a9b033b6-36e6-2090-b45e-1e66a0a34ba4/source/100x100bb.jpg" alt="App logo">
+						<div class="title-container">
+							<span class="ng-binding">Minecraft: Pocket Edition</span>
+						</div>
+					</td>
+					<td class="table-data__app-developer"><div><span class="ng-binding">Mojang</span></div></td>
+				</tr><!-- end ngRepeat: dataItem in dataList.data --><tr class="ng-scope" ng-repeat="dataItem in dataList.data">
+					<td class="ng-binding">4</td>
+					<td class="table-data__this-period ng-binding">
+						3
+					</td>
+					<td class="table-data__change"><span class="positive-movement">1</span></td>
+					<td class="table-data__app-title">
+						<img src="http://is5.mzstatic.com/image/thumb/Purple6/v4/b0/57/4a/b0574adf-cb40-9d1e-bb14-e3bd7b2ce30c/source/100x100bb.jpg" alt="App logo">
+						<div class="title-container">
+							<span class="ng-binding">Multiplayer Mods for Minecraft PE- PocketMine Servers</span>
+						</div>
+					</td>
+					<td class="table-data__app-developer"><div><span class="ng-binding">Riovox</span></div></td>
+				</tr><!-- end ngRepeat: dataItem in dataList.data --><tr class="ng-scope" ng-repeat="dataItem in dataList.data">
+					<td class="ng-binding"></td>
+					<td class="table-data__this-period ng-binding">
+						4
+					</td>
+					<td class="table-data__change"><span class=""></span></td>
+					<td class="table-data__app-title">
+						<img src="http://is2.mzstatic.com/image/thumb/Purple6/v4/76/3b/b1/763bb140-08cd-40f6-d33e-300dda5b7e42/source/100x100bb.jpg" alt="App logo">
+						<div class="title-container">
+							<span class="ng-binding">Mystery of the Ancients: Deadly Cold HD - A Hidden Object Adventure (Full)</span>
+						</div>
+					</td>
+					<td class="table-data__app-developer"><div><span class="ng-binding">Big Fish Games, Inc</span></div></td>
+				</tr><!-- end ngRepeat: dataItem in dataList.data --><tr class="ng-scope" ng-repeat="dataItem in dataList.data">
+					<td class="ng-binding"></td>
+					<td class="table-data__this-period ng-binding">
+						5
+					</td>
+					<td class="table-data__change"><span class=""></span></td>
+					<td class="table-data__app-title">
+						<img src="http://is5.mzstatic.com/image/thumb/Purple7/v4/ef/58/9d/ef589d3c-4681-e1fb-5fc8-2fc6a37f546f/source/100x100bb.jpg" alt="App logo">
+						<div class="title-container">
+							<span class="ng-binding">Aerofly 2 Flight Simulator</span>
+						</div>
+					</td>
+					<td class="table-data__app-developer"><div><span class="ng-binding">IPACS</span></div></td>
+				</tr><!-- end ngRepeat: dataItem in dataList.data --><tr class="ng-scope" ng-repeat="dataItem in dataList.data">
+					<td class="ng-binding">9</td>
+					<td class="table-data__this-period ng-binding">
+						6
+					</td>
+					<td class="table-data__change"><span class="positive-movement">3</span></td>
+					<td class="table-data__app-title">
+						<img src="http://is4.mzstatic.com/image/thumb/Purple49/v4/fa/4d/b6/fa4db68f-472c-129d-aeac-83db489b3350/source/100x100bb.jpg" alt="App logo">
+						<div class="title-container">
+							<span class="ng-binding">Terraria</span>
+						</div>
+					</td>
+					<td class="table-data__app-developer"><div><span class="ng-binding">505 Games (US), Inc.</span></div></td>
+				</tr><!-- end ngRepeat: dataItem in dataList.data --><tr class="ng-scope" ng-repeat="dataItem in dataList.data">
+					<td class="ng-binding">7</td>
+					<td class="table-data__this-period ng-binding">
+						7
+					</td>
+					<td class="table-data__change"><span class="positive-movement">0</span></td>
+					<td class="table-data__app-title">
+						<img src="http://is2.mzstatic.com/image/thumb/Purple6/v4/ea/26/e2/ea26e22f-0fc7-19cb-f464-78e180d180b7/source/100x100bb.jpg" alt="App logo">
+						<div class="title-container">
+							<span class="ng-binding">Geometry Dash</span>
+						</div>
+					</td>
+					<td class="table-data__app-developer"><div><span class="ng-binding">RobTop Games AB</span></div></td>
+				</tr><!-- end ngRepeat: dataItem in dataList.data --><tr class="ng-scope" ng-repeat="dataItem in dataList.data">
+					<td class="ng-binding">3</td>
+					<td class="table-data__this-period ng-binding">
+						8
+					</td>
+					<td class="table-data__change"><span class="negative-movement">5</span></td>
+					<td class="table-data__app-title">
+						<img src="http://is1.mzstatic.com/image/thumb/Purple5/v4/c6/ad/c1/c6adc1d5-c809-b9e3-7463-cd2183f39d9b/source/100x100bb.jpg" alt="App logo">
+						<div class="title-container">
+							<span class="ng-binding">Plague Inc.</span>
+						</div>
+					</td>
+					<td class="table-data__app-developer"><div><span class="ng-binding">Ndemic Creations</span></div></td>
+				</tr><!-- end ngRepeat: dataItem in dataList.data --><tr class="ng-scope" ng-repeat="dataItem in dataList.data">
+					<td class="ng-binding">6</td>
+					<td class="table-data__this-period ng-binding">
+						9
+					</td>
+					<td class="table-data__change"><span class="negative-movement">3</span></td>
+					<td class="table-data__app-title">
+						<img src="http://is1.mzstatic.com/image/thumb/Purple69/v4/d5/4b/13/d54b13a1-5edf-02fb-339e-647283443367/source/100x100bb.jpg" alt="App logo">
+						<div class="title-container">
+							<span class="ng-binding">Rugby Nations 16</span>
+						</div>
+					</td>
+					<td class="table-data__app-developer"><div><span class="ng-binding">Distinctive Games</span></div></td>
+				</tr><!-- end ngRepeat: dataItem in dataList.data --><tr class="ng-scope" ng-repeat="dataItem in dataList.data">
+					<td class="ng-binding">8</td>
+					<td class="table-data__this-period ng-binding">
+						10
+					</td>
+					<td class="table-data__change"><span class="negative-movement">2</span></td>
+					<td class="table-data__app-title">
+						<img src="http://is5.mzstatic.com/image/thumb/Purple69/v4/f2/79/3c/f2793c9d-8494-8024-4b7e-806b7ccf8955/source/100x100bb.jpg" alt="App logo">
+						<div class="title-container">
+							<span class="ng-binding">Brothers: A Tale of Two Sons</span>
+						</div>
+					</td>
+					<td class="table-data__app-developer"><div><span class="ng-binding">505 Games (US), Inc.</span></div></td>
+				</tr><!-- end ngRepeat: dataItem in dataList.data --><tr class="ng-scope" ng-repeat="dataItem in dataList.data">
+					<td class="ng-binding"></td>
+					<td class="table-data__this-period ng-binding">
+						11
+					</td>
+					<td class="table-data__change"><span class=""></span></td>
+					<td class="table-data__app-title">
+						<img src="http://is2.mzstatic.com/image/thumb/Purple69/v4/21/30/e8/2130e8db-b881-2c00-0936-7709534fe655/source/100x100bb.jpg" alt="App logo">
+						<div class="title-container">
+							<span class="ng-binding">Octodad: Dadliest Catch</span>
+						</div>
+					</td>
+					<td class="table-data__app-developer"><div><span class="ng-binding">Young Horses, Inc.</span></div></td>
+				</tr><!-- end ngRepeat: dataItem in dataList.data --><tr class="ng-scope" ng-repeat="dataItem in dataList.data">
+					<td class="ng-binding">11</td>
+					<td class="table-data__this-period ng-binding">
+						12
+					</td>
+					<td class="table-data__change"><span class="negative-movement">1</span></td>
+					<td class="table-data__app-title">
+						<img src="http://is5.mzstatic.com/image/thumb/Purple6/v4/60/41/61/604161fd-fef2-d8c9-3ec7-b8e7c5b50e32/source/100x100bb.jpg" alt="App logo">
+						<div class="title-container">
+							<span class="ng-binding">PewDiePie: Legend of the Brofist</span>
+						</div>
+					</td>
+					<td class="table-data__app-developer"><div><span class="ng-binding">Outerminds Inc.</span></div></td>
+				</tr><!-- end ngRepeat: dataItem in dataList.data --><tr class="ng-scope" ng-repeat="dataItem in dataList.data">
+					<td class="ng-binding"></td>
+					<td class="table-data__this-period ng-binding">
+						13
+					</td>
+					<td class="table-data__change"><span class=""></span></td>
+					<td class="table-data__app-title">
+						<img src="http://is2.mzstatic.com/image/thumb/Purple69/v4/c7/bf/88/c7bf88fe-4bb4-2e71-6665-92a78f546b20/source/100x100bb.jpg" alt="App logo">
+						<div class="title-container">
+							<span class="ng-binding">Lumino City</span>
+						</div>
+					</td>
+					<td class="table-data__app-developer"><div><span class="ng-binding">State of Play Games</span></div></td>
+				</tr><!-- end ngRepeat: dataItem in dataList.data --><tr class="ng-scope" ng-repeat="dataItem in dataList.data">
+					<td class="ng-binding">16</td>
+					<td class="table-data__this-period ng-binding">
+						14
+					</td>
+					<td class="table-data__change"><span class="positive-movement">2</span></td>
+					<td class="table-data__app-title">
+						<img src="http://is5.mzstatic.com/image/thumb/Purple3/v4/2c/29/c7/2c29c7e4-58d7-c6d4-ed43-420946289f34/source/100x100bb.jpg" alt="App logo">
+						<div class="title-container">
+							<span class="ng-binding">PRISON ESCAPISTS ( COPS &amp; ROBBERS Edition ) - Shooter Survival Block Mini Game with Multiplayer</span>
+						</div>
+					</td>
+					<td class="table-data__app-developer"><div><span class="ng-binding">Elizabeth Kalier</span></div></td>
+				</tr><!-- end ngRepeat: dataItem in dataList.data --><tr class="ng-scope" ng-repeat="dataItem in dataList.data">
+					<td class="ng-binding">14</td>
+					<td class="table-data__this-period ng-binding">
+						15
+					</td>
+					<td class="table-data__change"><span class="negative-movement">1</span></td>
+					<td class="table-data__app-title">
+						<img src="http://is2.mzstatic.com/image/thumb/Purple69/v4/54/71/77/54717753-e3fe-6369-2f5f-0f68db51de30/source/100x100bb.jpg" alt="App logo">
+						<div class="title-container">
+							<span class="ng-binding">Bloons TD 5 HD</span>
+						</div>
+					</td>
+					<td class="table-data__app-developer"><div><span class="ng-binding">Ninja Kiwi</span></div></td>
+				</tr><!-- end ngRepeat: dataItem in dataList.data --><tr class="ng-scope" ng-repeat="dataItem in dataList.data">
+					<td class="ng-binding"></td>
+					<td class="table-data__this-period ng-binding">
+						16
+					</td>
+					<td class="table-data__change"><span class=""></span></td>
+					<td class="table-data__app-title">
+						<img src="http://is1.mzstatic.com/image/thumb/Purple6/v4/f9/d1/20/f9d120f3-0972-4a13-1f8b-f8ccaa889ce0/source/100x100bb.jpg" alt="App logo">
+						<div class="title-container">
+							<span class="ng-binding">Witch Hunters: Full Moon Ceremony HD - A Mystery Hidden Object Story (Full)</span>
+						</div>
+					</td>
+					<td class="table-data__app-developer"><div><span class="ng-binding">Big Fish Games, Inc</span></div></td>
+				</tr><!-- end ngRepeat: dataItem in dataList.data --><tr class="ng-scope" ng-repeat="dataItem in dataList.data">
+					<td class="ng-binding"></td>
+					<td class="table-data__this-period ng-binding">
+						17
+					</td>
+					<td class="table-data__change"><span class=""></span></td>
+					<td class="table-data__app-title">
+						<img src="http://is1.mzstatic.com/image/thumb/Purple1/v4/28/57/37/2857371b-c11b-b39b-2e01-f1391bd15357/source/100x100bb.jpg" alt="App logo">
+						<div class="title-container">
+							<span class="ng-binding">Tipping Point</span>
+						</div>
+					</td>
+					<td class="table-data__app-developer"><div><span class="ng-binding">Barnstorm Games</span></div></td>
+				</tr><!-- end ngRepeat: dataItem in dataList.data --><tr class="ng-scope" ng-repeat="dataItem in dataList.data">
+					<td class="ng-binding">13</td>
+					<td class="table-data__this-period ng-binding">
+						18
+					</td>
+					<td class="table-data__change"><span class="negative-movement">5</span></td>
+					<td class="table-data__app-title">
+						<img src="http://is2.mzstatic.com/image/thumb/Purple7/v4/8d/6b/89/8d6b8980-6d15-ac58-7486-d6a1f45f28fa/source/100x100bb.jpg" alt="App logo">
+						<div class="title-container">
+							<span class="ng-binding">The Sims 3</span>
+						</div>
+					</td>
+					<td class="table-data__app-developer"><div><span class="ng-binding">Electronic Arts</span></div></td>
+				</tr><!-- end ngRepeat: dataItem in dataList.data --><tr class="ng-scope" ng-repeat="dataItem in dataList.data">
+					<td class="ng-binding"></td>
+					<td class="table-data__this-period ng-binding">
+						19
+					</td>
+					<td class="table-data__change"><span class=""></span></td>
+					<td class="table-data__app-title">
+						<img src="http://is1.mzstatic.com/image/thumb/Purple69/v4/82/40/8f/82408fec-e319-0abb-1d79-df369da8b8f0/source/100x100bb.jpg" alt="App logo">
+						<div class="title-container">
+							<span class="ng-binding">Heads Up!</span>
+						</div>
+					</td>
+					<td class="table-data__app-developer"><div><span class="ng-binding">Warner Bros.</span></div></td>
+				</tr><!-- end ngRepeat: dataItem in dataList.data --><tr class="ng-scope" ng-repeat="dataItem in dataList.data">
+					<td class="ng-binding"></td>
+					<td class="table-data__this-period ng-binding">
+						20
+					</td>
+					<td class="table-data__change"><span class=""></span></td>
+					<td class="table-data__app-title">
+						<img src="http://is1.mzstatic.com/image/thumb/Purple69/v4/b5/50/f1/b550f1e3-2c93-1e24-c5b7-8dd9f8560dc5/source/100x100bb.jpg" alt="App logo">
+						<div class="title-container">
+							<span class="ng-binding">Haunt the House: Terrortown</span>
+						</div>
+					</td>
+					<td class="table-data__app-developer"><div><span class="ng-binding">SFB Games</span></div></td>
+				</tr><!-- end ngRepeat: dataItem in dataList.data -->
+			</tbody>
+		</table>
+	</article>
+	<script>
+		var is_chrome = navigator.userAgent.indexOf('Chrome') > -1;
+    var is_explorer = navigator.userAgent.indexOf('MSIE') > -1;
+    var is_firefox = navigator.userAgent.indexOf('Firefox') > -1;
+    var is_safari = navigator.userAgent.indexOf("Safari") > -1;
+    var is_opera = navigator.userAgent.toLowerCase().indexOf("op") > -1;
+    if ((is_chrome)&&(is_safari)) {is_safari=false;}
+    if ((is_chrome)&&(is_opera)) {is_chrome=false;}
+
+    if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1) {
+    	document.getElementById('body').classList.add('is-safari');
+    }
+	</script>
+</body>
+</html>

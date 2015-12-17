@@ -11,8 +11,6 @@ import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPAD_
 import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS;
 import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_UNIVERSAL_IOS;
 import static io.reflection.app.shared.util.PagerHelper.updatePager;
-import io.reflection.app.accountdatacollectors.DataAccountCollectorFactory;
-import io.reflection.app.accountdatacollectors.ITunesConnectDownloadHelper;
 import io.reflection.app.api.ValidationHelper;
 import io.reflection.app.api.core.shared.call.ChangePasswordRequest;
 import io.reflection.app.api.core.shared.call.ChangePasswordResponse;
@@ -902,7 +900,9 @@ public final class Core extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			if (input.user.id.longValue() != input.session.user.id.longValue()) throw new ServiceException(-1, "User and session user do not match");
+			if (!UserServiceProvider.provide().hasRole(input.session.user, DataTypeHelper.adminRole())) {
+				if (input.user.id.longValue() != input.session.user.id.longValue()) throw new ServiceException(-1, "User and session user do not match");
+			}
 
 			ValidationHelper.validateExistingUser(input.user, "input.user");
 
@@ -933,7 +933,6 @@ public final class Core extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			String tempProperties = input.linkedAccount.properties;
 			String tempPassword = ValidationHelper.validateStringLength(input.linkedAccount.password, "input.linkedAccount.password", 2, 1000);
 
 			if (tempPassword == null)
@@ -943,7 +942,6 @@ public final class Core extends ActionHandler {
 
 			// DataAccountCollectorFactory.getCollectorForSource(input.linkedAccount.source.a3Code).validateProperties(input.linkedAccount.properties);
 
-			input.linkedAccount.properties = tempProperties;
 			input.linkedAccount.password = tempPassword;
 
 			input.linkedAccount.source = new DataSource(); // Add iTunes Connect data source
@@ -957,25 +955,15 @@ public final class Core extends ActionHandler {
 
 				if (error != null) {
 
-					if (error.equals("Please enter a valid vendor number."))
-						throw new InputValidationException(ApiError.InvalidDataAccountVendor.getCode(),
-								ApiError.InvalidDataAccountVendor.getMessage(input.linkedAccount.properties));
-
 					if (!error.equalsIgnoreCase("Daily reports are available only for past 30 days, please enter a date within past 30 days.")
-							&& !error.equalsIgnoreCase("There is no report available to download, for the selected period")) {
+							&& !error.equalsIgnoreCase("There is no report available to download, for the selected period")
+							&& !error.equals("Please enter a valid vendor number.")) {
 						LOG.log(Level.WARNING, "There was an unexpected error when trying to link the account. Cause: ", daEx.getCause());
 
 						throw new InputValidationException(ApiError.InvalidDataAccountCredentials.getCode(),
 								ApiError.InvalidDataAccountCredentials.getMessage(input.linkedAccount.username));
 					}
 				}
-			}
-			boolean isAdmin = UserServiceProvider.provide().hasRole(input.session.user, DataTypeHelper.adminRole());
-			String vendorId = ITunesConnectDownloadHelper.getVendorId(input.linkedAccount.properties);
-			if (!isAdmin) { // check if duplicate vendor Id exists and throw exception
-				if (!DataAccountServiceProvider.provide().getVendorDataAccounts(vendorId).isEmpty())
-					throw new InputValidationException(ApiError.DuplicateVendorId.getCode(),
-							ApiError.DuplicateVendorId.getMessage(input.linkedAccount.username));
 			}
 
 			DataAccount linkedAccount = DataAccountServiceProvider.provide().updateDataAccount(input.linkedAccount);
@@ -1296,19 +1284,15 @@ public final class Core extends ActionHandler {
 
 			input.password = ValidationHelper.validateStringLength(input.password, "input.password", 2, 1000);
 
-			DataAccountCollectorFactory.getCollectorForSource(input.source.a3Code).validateProperties(input.properties);
-
 			boolean isAdmin = UserServiceProvider.provide().hasRole(input.session.user, DataTypeHelper.adminRole());
 			Permission hlaPermission = PermissionServiceProvider.provide().getCodePermission(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE);
 			boolean hasHlaPermission = UserServiceProvider.provide().hasPermission(input.session.user, hlaPermission);
 
-			String vendorId = ITunesConnectDownloadHelper.getVendorId(input.properties);
 			// If not a test linked account, check if is a valid Apple linked account
-			if (!"THETESTACCOUNT".equals(input.username) || !"thegrange".equals(input.password) || !"81234567".equals(vendorId)) {
+			if (!"THETESTACCOUNT".equals(input.username) || !"thegrange".equals(input.password)) {
 				DataAccount dataAccountToTest = new DataAccount();
 				dataAccountToTest.username = input.username;
 				dataAccountToTest.password = input.password;
-				dataAccountToTest.properties = input.properties;
 				dataAccountToTest.source = input.source;
 
 				try {
@@ -1318,12 +1302,9 @@ public final class Core extends ActionHandler {
 
 					if (error != null) {
 
-						if (error.equals("Please enter a valid vendor number."))
-							throw new InputValidationException(ApiError.InvalidDataAccountVendor.getCode(),
-									ApiError.InvalidDataAccountVendor.getMessage(dataAccountToTest.properties));
-
 						if (!error.equalsIgnoreCase("Daily reports are available only for past 30 days, please enter a date within past 30 days.")
-								&& !error.equalsIgnoreCase("There is no report available to download, for the selected period")) {
+								&& !error.equalsIgnoreCase("There is no report available to download, for the selected period")
+								&& !error.equals("Please enter a valid vendor number.")) {
 							LOG.log(Level.WARNING, "There was an unexpected error when trying to link the account. Cause: ", daEx.getCause());
 
 							throw new InputValidationException(ApiError.InvalidDataAccountCredentials.getCode(),
@@ -1331,14 +1312,16 @@ public final class Core extends ActionHandler {
 						}
 					}
 				}
-				// Only Admin for now can add linked account with duplicate vendor id
-				if (!isAdmin) { // check if duplicate vendor Id exists and throw exception
-					if (!DataAccountServiceProvider.provide().getVendorDataAccounts(vendorId).isEmpty())
-						throw new InputValidationException(ApiError.DuplicateVendorId.getCode(),
-								ApiError.DuplicateVendorId.getMessage(dataAccountToTest.username));
-				}
-				output.account = UserServiceProvider.provide().addDataAccount(input.session.user, input.source, input.username, input.password,
-						input.properties);
+				// Only Admin for now can add linked account with duplicate vendor id TODO
+				// if (!isAdmin) { // check if duplicate vendor Id exists and throw exception
+				// if (!DataAccountServiceProvider.provide().getVendorDataAccounts(vendorId).isEmpty())
+				// throw new InputValidationException(ApiError.DuplicateVendorId.getCode(),
+				// ApiError.DuplicateVendorId.getMessage(dataAccountToTest.username));
+				// }
+				output.account = UserServiceProvider.provide().addDataAccount(input.session.user, input.source, input.username, input.password);
+				
+				// TODO ENQUEUE TO GET VENDOR ID USING output.account.id
+
 			} else {
 				output.account = DataAccountServiceProvider.provide().getDataAccount(357L); // Retrieve test linked account
 				UserServiceProvider.provide().addOrRestoreUserDataAccount(input.session.user, output.account);

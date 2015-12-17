@@ -128,6 +128,14 @@ public interface IDataAccountService extends IService {
 	public List<DataAccount> getVendorDataAccounts(String vendorId) throws DataAccessException;
 
 	/**
+	 * 
+	 * @param vendorId
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public void setPropertiesDataAccount(Long id, String properties) throws DataAccessException;
+
+	/**
 	 *
 	 * @param dataAccount
 	 * @throws DataAccessException

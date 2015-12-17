@@ -554,7 +554,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 	 * @param surname
 	 * @param company
 	 */
-	public void changeUserDetails(String username, String forename, String surname, String company) {
+	public void changeUserDetails(final Long userId, String username, String forename, String surname, String company) {
 		CoreService service = ServiceCreator.createCoreService();
 		final ChangeUserDetailsRequest input = new ChangeUserDetailsRequest();
 		input.accessCode = ACCESS_CODE;
@@ -563,7 +563,7 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 
 		input.user = new User();
 
-		input.user.id = userSession.user.id;
+		input.user.id = userId;
 
 		input.user.company = company;
 		input.user.forename = forename;
@@ -575,14 +575,16 @@ public class SessionController implements ServiceConstants, JsonServiceCallEvent
 			@Override
 			public void onSuccess(ChangeUserDetailsResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {
-					userSession.user.username = input.user.username;
-					userSession.user.forename = input.user.forename;
-					userSession.user.surname = input.user.surname;
-					userSession.user.company = input.user.company;
-					loggedInUser.forename = userSession.user.forename;
-					loggedInUser.surname = userSession.user.surname;
-					loggedInUser.company = userSession.user.company;
-					loggedInUser.username = userSession.user.username;
+					if (userId.longValue() == loggedInUser.id.longValue()) {
+						userSession.user.username = input.user.username;
+						userSession.user.forename = input.user.forename;
+						userSession.user.surname = input.user.surname;
+						userSession.user.company = input.user.company;
+						loggedInUser.forename = userSession.user.forename;
+						loggedInUser.surname = userSession.user.surname;
+						loggedInUser.company = userSession.user.company;
+						loggedInUser.username = userSession.user.username;
+					}
 				}
 
 				DefaultEventBus.get().fireEventFromSource(new ChangeUserDetailsEventHandler.ChangeUserDetailsSuccess(input, output), SessionController.this);

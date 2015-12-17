@@ -1,9 +1,7 @@
 /**
- * 
+ *
  */
 package io.reflection.app.collectors;
-
-import io.reflection.app.logging.GaeLevel;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -18,9 +16,11 @@ import com.google.appengine.api.urlfetch.HTTPResponse;
 import com.google.appengine.api.urlfetch.URLFetchService;
 import com.google.appengine.api.urlfetch.URLFetchServiceFactory;
 
+import io.reflection.app.logging.GaeLevel;
+
 /**
  * @author billy1380
- * 
+ *
  */
 public class HttpExternalGetter {
 
@@ -28,9 +28,9 @@ public class HttpExternalGetter {
 
 	/**
 	 * Gets data from a url using HTTP POST (although it looks like it could easily have been a GET)
-	 * 
+	 *
 	 * If the url is not stored or requires modifying then this method can be called directly
-	 * 
+	 *
 	 * @param key
 	 * @return
 	 */
@@ -67,6 +67,14 @@ public class HttpExternalGetter {
 				}
 			} else {
 				LOG.log(Level.SEVERE, String.format("Http error occured for request to [%s] with code [%d]", url.toString(), responseCode));
+				if (responseCode == 403) {
+					// We have hit Apple's rate limiting. Sleep for a minute to cool down.
+					try {
+						Thread.sleep(60000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
 			}
 		} catch (IOException e) {
 			if (LOG.isLoggable(Level.SEVERE)) {
@@ -79,7 +87,7 @@ public class HttpExternalGetter {
 
 	/**
 	 * If the url is stored in a system property, this method will fetch the property using the key and get the data based on the stored url
-	 * 
+	 *
 	 * @param key
 	 * @return
 	 */
@@ -101,7 +109,7 @@ public class HttpExternalGetter {
 
 		return data;
 	}
-	
+
 	public static String getData(String endpoint) {
 		return getData(endpoint, HTTPMethod.POST);
 	}

@@ -449,18 +449,7 @@
 		}
 	};
 
-	SearchContainer.prototype.initSearch = function() {
-		// get mock data from file - this will contain results when implemented so shouldn't need JS regex below
-		var data;
-		$.ajax({
-        url: "js/search-data.json",
-        async: true,
-        dataType: "json",
-        success: function (items){
-          data = items;
-        }
-    });
-		
+	function handleappsearch(data) {
 		var inputValue,
 				$appsContainer = $('.js-item-results--apps'),
 				$devListContainer = $('.js-item-results--developers'),
@@ -468,57 +457,66 @@
 				$appsList = $appsContainer.find('ul'),
 				$devList = $devListContainer.find('ul');
 
+		var searchResultsApps = [],
+				searchResultsDevs = [];
+
+		var inputValueCaseInsensitiveRegEx = new RegExp($('.js-get-items').val(), "i");
+
+		// if found add to result array
+		for(var i = 0; i < data.results.length; i++) {
+			if(data.results[i].trackCensoredName.search(inputValueCaseInsensitiveRegEx) > -1) {
+				searchResultsApps.push(data.results[i]);
+			}
+			// Search Developers
+			// if(data.results[i].creatorName.search(inputValueCaseInsensitiveRegEx) > -1) {
+			// 	searchResultsDevs.push(data.results[i]);
+			// }
+		}
+
+		// show and hide containers for nil results
+		if (searchResultsApps.length == 0) {			
+			$appsContainer.hide();
+		} else {
+			$appsContainer.show();
+			$noResultsContainer.hide();
+		}
+
+		if(searchResultsDevs.length == 0) { 
+			$devListContainer.hide();
+		} else {
+			$devListContainer.show();
+			$noResultsContainer.hide();
+		}
+
+		if(searchResultsApps.length == 0 && searchResultsDevs.length == 0) {
+			$noResultsContainer.show();
+		}
+		
+		// output results to screen
+		$appsList.empty();
+		for(var i = 0; i < searchResultsApps.length; i++) {
+			$appsList.append($('<li>').append($('<a>').attr("href", "app.html?id=" + searchResultsApps[i].trackId).append($('<img>').attr("src", "" + searchResultsApps[i].artworkUrl60 + "")).append($('<span>').text(searchResultsApps[i].trackCensoredName))));
+		}
+
+		$devList.empty();
+		for(var i = 0; i < searchResultsDevs.length; i++) {
+			$devList.append($('<li>').append($('<a>').append($('<span>').text(searchResultsDevs[i].creatorName))));
+		}
+	}
+
+	SearchContainer.prototype.initSearch = function() {
+		
 		// on key up loop through object and search - for implentation, amend to call service to return results in json and display
 		$('.js-get-items').keyup(function(){
-			searchResultsApps = [];
-			searchResultsDevs = [];
-			inputValueCaseInsensitiveRegEx = new RegExp($(this).val(), "i");
+			
+			$('#scriptsearch').remove();
+	    $('body').append($("<script>").attr("id", "scriptsearch").attr("src", "https://itunes.apple.com/search?term=" + $(this).val() + "&media=software&limit=10&callback=handleappsearch"));
 
 			var $searchButtonMobile = $('.panel-right .form-field .search-button-mobile');
 			if($(this).val().length > 0) {
 				$searchButtonMobile.addClass('is-highlighted');
 			} else {
 				$searchButtonMobile.removeClass('is-highlighted');
-			}
-
-			// if found add to result array
-			for(var i = 0; i < data.items.length; i++) {
-				if(data.items[i].name.search(inputValueCaseInsensitiveRegEx) > -1) {
-					searchResultsApps.push(data.items[i]);
-				}
-				if(data.items[i].creatorName.search(inputValueCaseInsensitiveRegEx) > -1) {
-					searchResultsDevs.push(data.items[i]);
-				}
-			}
-
-			// show and hide containers for nil results
-			if (searchResultsApps.length == 0) {			
-				$appsContainer.hide();
-			} else {
-				$appsContainer.show();
-				$noResultsContainer.hide();
-			}
-
-			if(searchResultsDevs.length == 0) { 
-				$devListContainer.hide();
-			} else {
-				$devListContainer.show();
-				$noResultsContainer.hide();
-			}
-
-			if(searchResultsApps.length == 0 && searchResultsDevs.length == 0) {
-				$noResultsContainer.show();
-			}
-			
-			// output results to screen
-			$appsList.empty();
-			for(var i = 0; i < searchResultsApps.length; i++) {
-				$appsList.append($('<li>').append($('<a>').append($('<img>').attr("src", "" + searchResultsApps[i].smallImage + "")).append($('<span>').text(searchResultsApps[i].name))));
-			}
-
-			$devList.empty();
-			for(var i = 0; i < searchResultsDevs.length; i++) {
-				$devList.append($('<li>').append($('<a>').append($('<span>').text(searchResultsDevs[i].creatorName))));
 			}
 		});
 	};
@@ -528,7 +526,7 @@
 		if(!isIE8) {
 			$('.default-tabs-transition .tabs__content-area').css("opacity", 1);
 		}
-
+		
 		$('.js-tab-select').unbind("mouseup");
 		$('.js-tab-select').on("mouseup", function(e){
   		e.preventDefault();
@@ -1010,6 +1008,9 @@
 							listContainer.append($('<li>').addClass(preSelectedClass).attr('data-value', $this.attr('value')).attr('data-selectedtext', selectedText).text($this.text()));
 						} else {
 							optionsList.append($('<li>').addClass(preSelectedClass).attr('data-value', $this.attr('value')).attr('data-selectedtext', selectedText).text($this.text()));
+						}
+						if($this.attr("selected")) {
+							refSelectDefault.text($this.text());
 						}						
 					}
 					else {
@@ -1023,7 +1024,7 @@
 				var listHeight = optionsList.innerHeight();
 				if(!selectInput.hasClass('reflection-select--filter')) {
 					optionsList.css('margin-top', -listHeight);
-				}				
+				}
 
 				if(selectInput.parent('.form-field--select-disabled').length == 0 && selectInput.parent('.form-field--select-restricted').length == 0) {
 					optionsList.find('li').on('click', function() {
@@ -1045,7 +1046,11 @@
 							if(selectInput.hasClass('reflection-select--filter')) {
 								$('.reflection-select').removeClass('is-open');
 							}
-							toggleDropDown(refSelectContainer, optionsList, listHeight);
+							if(isFilter) {
+								optionsList.find('.close-popup').trigger("click");
+							} else {
+								toggleDropDown(refSelectContainer, optionsList, listHeight);
+							}							
 						}
 					});
 					
@@ -1602,6 +1607,8 @@
 				var pageTopBarHeight = $('.global-header').innerHeight(),
 						anchorId = $(this).attr("href"),
 						scrollTopOfTheAnchor = $(anchorId).offset().top;
+						$('.article-list--article .is-focus').removeClass("is-focus");
+						$(anchorId).addClass("is-focus");
 				$('html, body').animate({ scrollTop: scrollTopOfTheAnchor - pageTopBarHeight - 20}, 300, 'swing');
 			});
 		});
@@ -1627,6 +1634,35 @@
 			});
 		}		
 	}
+
+	var datePopup = function($dateInput) {
+		$dateInput.on("click", function(){
+			$this = $(this);
+			$this.select();
+			$popup = $dateInput.parents('.date-select-container').siblings('.dateBoxPopup');
+			if($popup.hasClass('is-showing')) {
+				$popup.removeClass('is-showing');
+			}
+			else {
+				$popup.addClass('is-showing');
+			}
+		});
+
+		$('body').on("click", function(e){ // close date popup on click
+			if($(e.target).hasClass("js-apply-date") && !$(e.target).hasClass("datePickerDayIsDisabled") || $(e.target).hasClass("js-selected-date-trigger") || (!$(e.target).parents(".date-select-container").length > 0 && !$(e.target).parents(".dateBoxPopup").length > 0)) {
+				$('.dateBoxPopup').removeClass('is-showing');
+				$('.js-datepicker-range .hidden-calendar-container').css({"bottom": "0", "opacity": 0});
+			}
+		});
+
+		$('.js-datepicker-range .hidden-calendar-container').on("click", function(){
+			$('.js-apply-date').removeAttr("disabled");
+		});
+
+		$('.js-datepicker-range .form-field--date-select').on("click", function(){
+			$('.js-datepicker-range .hidden-calendar-container').animate({"bottom": "-110%", "opacity": 1}, 300);
+		});
+	}
 /* END COMPONENT OBJECTS */
 
 /* PAGE OBJECTS FOR TEMPLATES */
@@ -1643,6 +1679,9 @@
 		new StickyTableHead();
 		new MockFormSelectMultipleWithSearch();
 		new ToolTip();
+		$('.js-form-field--date-select').each(function(){
+			new datePopup($(this));
+		});
 
 		$('.js-tab-select').on("mouseup", function(e){
 			new StickyTableHead();

@@ -138,7 +138,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 	 * @param password
 	 * @param properties
 	 */
-	public void linkAccount(Long sourceId, String username, String password, String properties) {
+	public void linkAccount(Long sourceId, String username, String password) {
 		CoreService service = ServiceCreator.createCoreService();
 
 		final LinkAccountRequest input = new LinkAccountRequest();
@@ -148,7 +148,6 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 
 		input.username = username;
 		input.password = password;
-		input.properties = properties;
 
 		DataSource source = new DataSource();
 		source.id = sourceId;

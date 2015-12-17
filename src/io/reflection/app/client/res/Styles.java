@@ -128,6 +128,12 @@ public interface Styles extends ClientBundle {
 		@ClassName("app-details-column")
 		String appDetailsColumn();
 
+		@ClassName("app-details-content-container")
+		String appDetailsContentContainer();
+
+		@ClassName("app-details-link")
+		String appDetailsLink();
+
 		@ClassName("app-icon")
 		String appIcon();
 
@@ -139,6 +145,18 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("app-icon-small-container")
 		String appIconSmallContainer();
+
+		@ClassName("app-image-list")
+		String appImageList();
+
+		@ClassName("app-images")
+		String appImages();
+
+		@ClassName("app-images-container")
+		String appImagesContainer();
+
+		@ClassName("app-main-details")
+		String appMainDetails();
 
 		@ClassName("app-name")
 		String appName();
@@ -163,6 +181,12 @@ public interface Styles extends ClientBundle {
 
 		String ascending();
 
+		@ClassName("aside-definition-list")
+		String asideDefinitionList();
+
+		@ClassName("average-ratings-container")
+		String averageRatingsContainer();
+
 		@ClassName("back-link-text")
 		String backLinkText();
 
@@ -174,6 +198,8 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("block-error-message")
 		String blockErrorMessage();
+
+		String blockquote();
 
 		@ClassName("blockquote--large")
 		String blockquoteLarge();
@@ -402,6 +428,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("country-select--popup")
 		String countrySelectPopup();
 
+		@ClassName("country-selector")
+		String countrySelector();
+
 		@ClassName("county-select--container")
 		String countySelectContainer();
 
@@ -426,6 +455,18 @@ public interface Styles extends ClientBundle {
 		@ClassName("custom-tooltip")
 		String customTooltip();
 
+		@ClassName("customer-review")
+		String customerReview();
+
+		@ClassName("customer-review__content")
+		String customerReview__content();
+
+		@ClassName("customer-review__title")
+		String customerReview__title();
+
+		@ClassName("customer-reviews")
+		String customerReviews();
+
 		@ClassName("data-bar")
 		String dataBar();
 
@@ -447,6 +488,18 @@ public interface Styles extends ClientBundle {
 		@ClassName("data-summary-container-synced")
 		String dataSummaryContainerSynced();
 
+		@ClassName("date-month-selector")
+		String dateMonthSelector();
+
+		@ClassName("date-quarter-selector")
+		String dateQuarterSelector();
+
+		@ClassName("date-range-list")
+		String dateRangeList();
+
+		@ClassName("date-range-list__options")
+		String dateRangeList__options();
+
 		@ClassName("date-select-container")
 		String dateSelectContainer();
 
@@ -456,7 +509,12 @@ public interface Styles extends ClientBundle {
 		@ClassName("date-value")
 		String dateValue();
 
+		@ClassName("date-year-selector")
+		String dateYearSelector();
+
 		String dateBoxPopup();
+
+		String datePickerDay();
 
 		String datePickerDayIsDisabled();
 
@@ -479,6 +537,9 @@ public interface Styles extends ClientBundle {
 		String datePickerWeekdayLabel();
 
 		String datePickerWeekendLabel();
+
+		@ClassName("datebox-popup__content")
+		String dateboxPopup__content();
 
 		@ClassName("default-tabs-transition")
 		String defaultTabsTransition();
@@ -832,6 +893,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("help-us-help-you")
 		String helpUsHelpYou();
 
+		@ClassName("hidden-calendar-container")
+		String hiddenCalendarContainer();
+
 		@ClassName("hidden-for-mobile")
 		String hiddenForMobile();
 
@@ -922,6 +986,12 @@ public interface Styles extends ClientBundle {
 		@ClassName("image-full-width")
 		String imageFullWidth();
 
+		@ClassName("image-landscape")
+		String imageLandscape();
+
+		@ClassName("image-portrait")
+		String imagePortrait();
+
 		@ClassName("img-brand-assets")
 		String imgBrandAssets();
 
@@ -1003,6 +1073,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("is-firefox")
 		String isFirefox();
 
+		@ClassName("is-focus")
+		String isFocus();
+
 		@ClassName("is-focused")
 		String isFocused();
 
@@ -1078,6 +1151,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("js-rotate-content")
 		String jsRotateContent();
 
+		@ClassName("js-tooltip")
+		String jsTooltip();
+
 		@ClassName("l-full-screen-section")
 		String lFullScreenSection();
 
@@ -1142,6 +1218,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("linked-account-name")
 		String linkedAccountName();
+
+		@ClassName("linked-account-pending-container")
+		String linkedAccountPendingContainer();
 
 		@ClassName("linked-account-store")
 		String linkedAccountStore();
@@ -1221,11 +1300,20 @@ public interface Styles extends ClientBundle {
 		@ClassName("mobile-width")
 		String mobileWidth();
 
+		@ClassName("more-apps-listed")
+		String moreAppsListed();
+
+		@ClassName("more-by-this-developer")
+		String moreByThisDeveloper();
+
 		@ClassName("more-content")
 		String moreContent();
 
 		@ClassName("more-link")
 		String moreLink();
+
+		@ClassName("more-reviews-container")
+		String moreReviewsContainer();
 
 		@ClassName("multiple-select__number-selected")
 		String multipleSelect__numberSelected();
@@ -1673,6 +1761,12 @@ public interface Styles extends ClientBundle {
 		@ClassName("rank-column")
 		String rankColumn();
 
+		@ClassName("ratings-container")
+		String ratingsContainer();
+
+		@ClassName("ratings-full")
+		String ratingsFull();
+
 		@ClassName("read-only-date")
 		String readOnlyDate();
 
@@ -1886,6 +1980,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("register-is-second-step")
 		String registerIsSecondStep();
 
+		@ClassName("release-notes-container")
+		String releaseNotesContainer();
+
 		@ClassName("remove-form-field")
 		String removeFormField();
 
@@ -1917,6 +2014,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("revenue-value")
 		String revenueValue();
+
+		@ClassName("reviews-and-ratings")
+		String reviewsAndRatings();
 
 		String scrollable();
 
@@ -2023,6 +2123,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("suggested-results-container")
 		String suggestedResultsContainer();
+
+		@ClassName("supported-devices")
+		String supportedDevices();
 
 		@ClassName("svg-bubble")
 		String svgBubble();
@@ -2135,6 +2238,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("tabs__content--is-submitted")
 		String tabs__contentIsSubmitted();
+
+		@ClassName("tabs__content-area")
+		String tabs__contentArea();
 
 		@ClassName("tabs__content-container")
 		String tabs__contentContainer();
@@ -2265,7 +2371,6 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("window-warning")
 		String windowWarning();
-
 	}
 
 	public static final Styles STYLES_INSTANCE = GWT.create(Styles.class);

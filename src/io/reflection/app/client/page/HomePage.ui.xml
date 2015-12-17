@@ -185,6 +185,7 @@
 			</div>
 		</section>
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__row} {STYLES_INSTANCE.reflectionMainStyle.whyReflectionGraphic}">
+			<img src="images/home-chart.svg" />
 			<svg version="1.1" x="0px" y="0px" viewBox="0 0 1300 220" enable-background="new 0 0 1003.9 161.9" xml:space="preserve">
 		 		<defs>
 		 			<linearGradient y2="100%" x2="0%" y1="0%" x1="0%" id="sample">
@@ -196,10 +197,10 @@
 		 			<g></g>
 		 			<g></g>
 		 			<g clip-path="url(#rchartEl-266)">
-		 				<path id="linezero" data-path-index="0" class="rchart-graph-stroke" stroke="#6d69c5" stroke-opacity="1" stroke-width="2" fill="none"
+		 				<path id="linezero" data-path-index="0" class="js-rchart-graph-stroke" stroke="#6d69c5" stroke-opacity="1" stroke-width="2" fill="none"
 				d="M0.5,96.5 L133.5,48.5 L267.5,143.5 L400.5,119.5 L534.5,72.5 L667.5,119.5 L800.5,48.5 L934.5,24.5 L1067.5,119.5 L1201.5,96.5 L1334.5,119.5" cs="100,100"></path>
-		 				<path id="lineone" data-path-index="1" class="rchart-graph-stroke rchart-graph-fill" stroke-opacity="0" stroke-width="1" fill-opacity="1" stroke="#000"
-				fill="#6d69c5"
+		 				<path id="lineone" data-path-index="1" class="js-rchart-graph-stroke rchart-graph-fill" stroke-opacity="0" stroke-width="1" fill-opacity="1"
+				stroke="#000" fill="#6d69c5"
 				d="M0.5,96.5 L133.5,48.5 L267.5,143.5 L400.5,119.5 L534.5,72.5 L667.5,119.5 L800.5,48.5 L934.5,24.5 L1067.5,119.5 L1201.5,96.5 L1334.5,119.5 L1334.5,191.5 L0.5,191.5 L0.5,96.5 Z"
 				cs="100,100" style="fill: url('#sample') none;"></path>
 		 			</g>
@@ -208,20 +209,21 @@
 	 				<g></g>
 	 				<g></g>
 	 				<g clip-path="url(#rchartEl-267)">
-	 					<path id="linetwo" data-path-index="2" class="rchart-graph-stroke" stroke="#1bc79f" stroke-opacity="1" stroke-dasharray="8" stroke-width="2" fill="none"
-				d="M0.5,72.5 L133.5,143.5 L267.5,119.5 L400.5,96.5 L534.5,167.5 L667.5,143.5 L800.5,143.5 L934.5,167.5 L1067.5,72.5 L1201.5,119.5 L1334.5,143.5" cs="100,100"></path>
+	 					<path id="linetwo" data-path-index="2" class="js-rchart-graph-stroke" stroke="#1bc79f" stroke-opacity="1" stroke-dasharray="8" stroke-width="2"
+				fill="none" d="M0.5,72.5 L133.5,143.5 L267.5,119.5 L400.5,96.5 L534.5,167.5 L667.5,143.5 L800.5,143.5 L934.5,167.5 L1067.5,72.5 L1201.5,119.5 L1334.5,143.5"
+				cs="100,100"></path>
 	 				</g>
 				</g>
 				<g style="" class="rchart-graph-line rchart-graph-graphAuto2_1443459240749" transform="translate(0,20)">
 					<g></g>
 					<g></g>
 					<g clip-path="url(#rchartEl-268)">
-						<path id="linethree" data-path-index="3" class="rchart-graph-stroke" stroke="#ff496a" stroke-opacity="1" stroke-dasharray="8" stroke-width="2" fill="none"
-				d="M0.5,119.5 L133.5,96.5 L267.5,24.5 L400.5,72.5 L534.5,143.5 L667.5,167.5 L800.5,119.5 L934.5,72.5 L1067.5,143.5 L1201.5,48.5 L1334.5,96.5" cs="100,100"></path>
+						<path id="linethree" data-path-index="3" class="js-rchart-graph-stroke" stroke="#ff496a" stroke-opacity="1" stroke-dasharray="8" stroke-width="2"
+				fill="none" d="M0.5,119.5 L133.5,96.5 L267.5,24.5 L400.5,72.5 L534.5,143.5 L667.5,167.5 L800.5,119.5 L934.5,72.5 L1067.5,143.5 L1201.5,48.5 L1334.5,96.5"
+				cs="100,100"></path>
 					</g>
 				</g>
 				</svg>
-			<img src="images/home-chart.svg" />
 		</div>
 		<aside class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.homeWideContainer}">
 			<div
@@ -251,7 +253,8 @@
 				class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird} {STYLES_INSTANCE.reflectionMainStyle.whyReflectionItem}">
 				<div
 					class="{STYLES_INSTANCE.reflectionMainStyle.whyReflectionItem__illustrationContainer} {STYLES_INSTANCE.reflectionMainStyle.whyReflectionItem__illustrationContainerHelp}">
-					<svg version="1.1" x="0px" y="0px" viewBox="0 0 159.3 100.6" enable-background="new 0 0 159.3 100.6" xml:space="preserve"><path fill="#81879D" d="M146.7,25.2l-6.1-1.8V31l6.1,1.4V25.2z M145.7,31.1l-4.1-0.9v-5.4l4.1,1.2V31.1z M154.3,27.5l-5.3-1.6v7
+					<svg version="1.1" x="0px" y="0px" viewBox="0 0 159.3 100.6" enable-background="new 0 0 159.3 100.6" xml:space="preserve"><path fill="#81879D"
+						d="M146.7,25.2l-6.1-1.8V31l6.1,1.4V25.2z M145.7,31.1l-4.1-0.9v-5.4l4.1,1.2V31.1z M154.3,27.5l-5.3-1.6v7
 		l5.3,1.2V27.5z M153.3,32.9l-3.3-0.8v-4.9l3.3,1V32.9z M154.3,74.6l-5.3,0.9v7l5.3-1.2V74.6z M153.3,80.5l-3.3,0.7v-4.9l3.3-0.5
 		V80.5z M154.3,65.2l-5.3,0.4v7l5.3-0.7V65.2z M153.3,71l-3.3,0.4v-4.9l3.3-0.2V71z M154.3,55.8l-5.3-0.1v7l5.3-0.2V55.8z
 		 M153.3,61.5l-3.3,0.1v-4.9l3.3,0.1V61.5z M154.3,46.3l-5.3-0.6v7l5.3,0.2V46.3z M153.3,52l-3.3-0.2v-4.9l3.3,0.4V52z M154.3,36.9
