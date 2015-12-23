@@ -9,6 +9,7 @@ package io.reflection.app.helpers;
 
 import java.text.SimpleDateFormat;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -30,9 +31,9 @@ import io.reflection.app.service.sale.SaleServiceProvider;
  *
  */
 public class SplitDataHelper {
-	private static final Logger LOG = Logger.getLogger(SplitDataHelper.class.getName());
+	private static final Logger					LOG				= Logger.getLogger(SplitDataHelper.class.getName());
 
-	public static final SplitDataHelper INSTANCE = new SplitDataHelper();
+	public static final SplitDataHelper	INSTANCE	= new SplitDataHelper();
 
 	private SplitDataHelper() {
 	}
@@ -42,10 +43,68 @@ public class SplitDataHelper {
 	 * @param date
 	 */
 	public void enqueueToGatherSplitData(Long dataAccountId, Date date) {
+		enqueueToGatherSplitData(dataAccountId, date, null, null);
+	}
+
+	/**
+	 * @param mainItemIdsAndCountries
+	 * @param countriesToIngest
+	 * @return
+	 */
+	private HashMap<String, String> groupConcatAndFilterCountriesByItemId(List<SimpleEntry<String, String>> mainItemIdsAndCountries, String countriesToIngest) {
+		HashMap<String, String> result = new HashMap<String, String>();
+
+		for (SimpleEntry<String, String> entry : mainItemIdsAndCountries) {
+			String mainItemId = entry.getKey();
+			String country = entry.getValue();
+
+			if (countriesToIngest != null && !countriesToIngest.contains(country.toLowerCase())) {
+				continue;
+			}
+
+			String groupedCountries = result.get(mainItemId);
+
+			if (groupedCountries == null) {
+				groupedCountries = country;
+			} else {
+				if (groupedCountries.length() > 0) {
+					groupedCountries += ",";
+				}
+				groupedCountries += country;
+			}
+
+			result.put(mainItemId, groupedCountries);
+		}
+
+		return result;
+	}
+
+	/**
+	 * @param dataAccountId
+	 * @param date
+	 * @param countryList
+	 * @param itemIds
+	 */
+	public void enqueueToGatherSplitData(Long dataAccountId, Date date, ArrayList<String> countryList, List<Long> itemIds) {
 		/*
 		 * Get all sale summary rows for this dataaccount for this date. For each item id, get its iap ids and then for each country the main item is in,
 		 * enqueue the item for gathering the splits
 		 */
+
+		String countriesToIngest = System.getProperty("splitdata.countries");
+		if (countryList != null && countryList.size() >= 0) {
+			StringBuilder builder = new StringBuilder();
+
+			for (int i = 0; i < countryList.size(); i++) {
+				if (i > 0) {
+					builder.append(",");
+				}
+
+				builder.append(countryList.get(i));
+			}
+			countriesToIngest = builder.toString();
+		}
+		countriesToIngest = countriesToIngest == null ? null : countriesToIngest.toLowerCase();
 
 		LOG.log(GaeLevel.DEBUG, String.format("Enqueuing split data gathers for data account id %d on %s", dataAccountId, date));
 
@@ -91,15 +150,17 @@ public class SplitDataHelper {
 			LookupItemService lookupService = LookupItemService.INSTANCE;
 
 			List<LookupItem> lookupItemsForAccount = lookupService.getLookupItemsForAccount(dataAccountId);
+
+			if (itemIds != null && itemIds.size() > 0) {
+				lookupItemsForAccount = filterLookupItems(lookupItemsForAccount, itemIds);
+			}
+
 			HashMap<String, String> parentItemsByIaps = lookupService.mapItemsByParentId(lookupItemsForAccount);
 
 			ISaleService saleService = SaleServiceProvider.provide();
 
 			List<SimpleEntry<String, String>> mainItemIdsAndCountries = saleService.getSoldItemIdsForAccountInDateRange(dataAccountId, gatherFrom, gatherTo);
 			LOG.log(GaeLevel.DEBUG, String.format("Got %d combinations of main item id and country", mainItemIdsAndCountries.size()));
-
-			String countriesToIngest = System.getProperty("splitdata.countries");
-			countriesToIngest = countriesToIngest == null ? null : countriesToIngest.toLowerCase();
 
 			LOG.log(GaeLevel.DEBUG, String.format("Countries to ingest are %s. Processing %d main item id / country combinations", countriesToIngest,
 					mainItemIdsAndCountries.size()));
@@ -140,35 +201,19 @@ public class SplitDataHelper {
 	}
 
 	/**
-	 * @param mainItemIdsAndCountries
-	 * @param countriesToIngest
+	 * @param lookupItemsForAccount
+	 * @param itemIds
 	 * @return
 	 */
-	private HashMap<String, String> groupConcatAndFilterCountriesByItemId(List<SimpleEntry<String, String>> mainItemIdsAndCountries, String countriesToIngest) {
-		HashMap<String, String> result = new HashMap<String, String>();
+	private List<LookupItem> filterLookupItems(List<LookupItem> lookupItemsForAccount, List<Long> itemIds) {
+		if (lookupItemsForAccount == null || lookupItemsForAccount.size() == 0) return lookupItemsForAccount;
 
-		for (SimpleEntry<String, String> entry : mainItemIdsAndCountries) {
-			String mainItemId = entry.getKey();
-			String country = entry.getValue();
-
-			if (countriesToIngest != null && !countriesToIngest.contains(country.toLowerCase())) {
-				continue;
+		ArrayList<LookupItem> filteredItems = new ArrayList<LookupItem>(lookupItemsForAccount.size());
+		for (LookupItem item : lookupItemsForAccount) {
+			if (itemIds.contains(item.itemid.longValue())) {
+				filteredItems.add(item);
 			}
-
-			String groupedCountries = result.get(mainItemId);
-
-			if (groupedCountries == null) {
-				groupedCountries = country;
-			} else {
-				if (groupedCountries.length() > 0) {
-					groupedCountries += ",";
-				}
-				groupedCountries += country;
-			}
-
-			result.put(mainItemId, groupedCountries);
 		}
-
-		return result;
+		return filteredItems;
 	}
 }
