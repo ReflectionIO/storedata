@@ -31,6 +31,7 @@ import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.willshex.gson.json.shared.Convert;
 
 import io.reflection.app.logging.GaeLevel;
@@ -100,7 +101,6 @@ public class ITunesConnectDownloadHelper {
 			if (LOG.isLoggable(GaeLevel.DEBUG)) {
 				LOG.log(GaeLevel.DEBUG, String.format("The error message header is empty. Connection response code: %d", connection.getResponseCode()));
 
-
 				final Map<String, List<String>> headerFields = connection.getHeaderFields();
 				for (final String headerKey : headerFields.keySet()) {
 					LOG.log(GaeLevel.DEBUG, String.format("Connection Header %s = %s", headerKey, connection.getHeaderField(headerKey)));
@@ -141,8 +141,7 @@ public class ITunesConnectDownloadHelper {
 	 * @throws ProtocolException
 	 * @throws Exception
 	 */
-	public static HttpURLConnection connectToItunesConnect(String data)
-			throws IOException, ProtocolException, Exception {
+	public static HttpURLConnection connectToItunesConnect(String data) throws IOException, ProtocolException, Exception {
 		HttpURLConnection connection = null;
 
 		final URL url = new URL("https://reportingitc.apple.com/autoingestion.tft?");
@@ -153,7 +152,6 @@ public class ITunesConnectDownloadHelper {
 		connection.setDoOutput(true);
 
 		final OutputStreamWriter localOutputStreamWriter = new OutputStreamWriter(connection.getOutputStream());
-
 
 		localOutputStreamWriter.write(data);
 		localOutputStreamWriter.flush();
@@ -275,5 +273,15 @@ public class ITunesConnectDownloadHelper {
 		}
 
 		return vendorId;
+	}
+
+	public static String createProperties(String vendorId) {
+		JsonObject properties = new JsonObject();
+		JsonArray vendorsArray = new JsonArray();
+		JsonPrimitive vendor = new JsonPrimitive(vendorId);
+		vendorsArray.add(vendor);
+		properties.add("vendors", vendorsArray);
+
+		return Convert.fromJsonObject(properties);
 	}
 }

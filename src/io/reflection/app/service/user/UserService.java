@@ -866,23 +866,28 @@ final class UserService implements IUserService {
 	 * java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public DataAccount addDataAccount(User user, DataSource dataSource, String username, String password) throws DataAccessException {
+	public DataAccount addDataAccount(User user, DataSource dataSource, String username, String password, String properties) throws DataAccessException {
 
 		DataAccount addedDataAccount = null;
 
-		DataAccount toAdd = new DataAccount();
-		toAdd.source = dataSource;
-		toAdd.username = username;
-		toAdd.password = password;
-
-		addedDataAccount = DataAccountServiceProvider.provide().addDataAccount(toAdd);
+		if ((addedDataAccount = DataAccountServiceProvider.provide().getDataAccount(username, properties)) == null) { // appleId-vendor combo never created
+			DataAccount toAdd = new DataAccount();
+			toAdd.source = dataSource;
+			toAdd.username = username;
+			toAdd.password = password;
+			toAdd.properties = properties;
+			addedDataAccount = DataAccountServiceProvider.provide().addDataAccount(toAdd);
+		} else { // Restore deactivated Data Account
+			addedDataAccount.active = DataTypeHelper.ACTIVE_VALUE;
+			addedDataAccount = DataAccountServiceProvider.provide().updateDataAccount(addedDataAccount);
+		}
 
 		if (addedDataAccount != null) {
 			addOrRestoreUserDataAccount(user, addedDataAccount);
 		} else {
 			if (LOG.isLoggable(Level.WARNING)) {
-				LOG.warning(String.format("Data account could not be added with user [%d], data source [%d] and username [%s]", user.id.longValue(),
-						dataSource.id.longValue(), username));
+				LOG.warning(String.format("Data account could not be added with user [%d], data source [%d], username [%s] and properties [%s]",
+						user.id.longValue(), dataSource.id.longValue(), username, properties));
 			}
 			throw new DataAccessException();
 		}
