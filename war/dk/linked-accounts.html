@@ -6,7 +6,7 @@
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">	
 	<!--[if (gt IE 9)|(IEMobile)|(!IE)]><!-->
-		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main.css" /><link rel="stylesheet" media="print" type="text/css" href="reflection-main--print.css" />
+		<link rel="stylesheet" type="text/css" href="reflection-main.css" />
 	<!--<![endif]-->
 	<!--[if IE 9]>
 		<link rel="stylesheet" media="screen, projection" type="text/css" href="ie9-one.css" />
@@ -28,8 +28,8 @@
 	    }
 	  });
 	</script>
-</head>
-<body class="panel-left-open">
+ <script src="js/vendor/modernizr.2.8.3.custom.min.js"></script></head>
+<body>
 	<!--[if (lt IE 9)]>
       <div class="window-warning">
   			<p>Uh oh... Reflection doesn't work in this browser. &nbsp; &nbsp;<a href="http://outdatedbrowser.com/en" target="_blank">Download a compatible browser</a></p>
@@ -38,7 +38,7 @@
 
   <header id="js-component-import--global-header" class="global-header"></header>
   
-	<div id="js-component-import--panel-left" class="panel-left js-custom-scrollbar" data-mcs-theme="minimal-dark"></div>
+	<div id="js-component-import--panel-left" class="panel-left js-panel-left js-custom-scrollbar" data-mcs-theme="minimal-dark"></div>
 
 	<div class="l-page-container">
 		<div id="main" class="l-main" role="main">
@@ -280,8 +280,7 @@ C3.3,10,3.4,10,3.5,10c0.1,0,0.2,0,0.3-0.1l3.1-3.2C7,6.6,7,6.5,7,6.3C7,6.2,7,6.1,
 					<button class="ref-button--function-small js-demo-popup" type="button">Link Another Account</button>
 				</div>
 			</div>
-		</div>
-	</div>
+			</div></div><div class="grid-container" id="js-component-import--global-footer"></div>
 
 	<div class="page-overlay">
 		<div class="page-popup">
@@ -335,7 +334,7 @@ C3.3,10,3.4,10,3.5,10c0.1,0,0.2,0,0.3-0.1l3.1-3.2C7,6.6,7,6.5,7,6.3C7,6.2,7,6.1,
  	<script src="js/vendor/jquery-ui.custom.min.js"></script>
  	<script src="js/vendor/handlebars-v2.0.0.js"></script>
  	<script src="js/templates/templates.js"></script>
-	<script src="js/vendor/modernizr.2.8.3.custom.min.js"></script>
+	 
 	<!--[if IE 9]>
 		<script src="js/vendor/jquery.mCustomScrollbar.concat.min.js"></script>
 	<![endif]-->
@@ -416,21 +415,6 @@ C3.3,10,3.4,10,3.5,10c0.1,0,0.2,0,0.3-0.1l3.1-3.2C7,6.6,7,6.5,7,6.3C7,6.2,7,6.1,
 				$('.page-overlay--confirm').fadeOut(100);
 				$('.page-overlay--confirm .popup-content').removeClass("is-showing");
 				$('.js-confirm-delete').removeClass('js-confirm-delete');
-			});
-
-			// mock delete account
-			$('.js-mock-popup-delete').on("click", function() {				
-				$('.js-confirm-delete').addClass("fold-up");
-
-				var cellHeight = $('.js-confirm-delete').innerHeight();
-				$('.js-confirm-delete ~ tr').each(function(){					
-					var thisCurrentTopPos = $(this).css("top");
-					$(this).css("top", -(cellHeight + (thisCurrentTopPos.substr(0, thisCurrentTopPos.length - 2) * -1)));
-				});
-				$('.js-mock-popup-close').trigger("click");
-				setTimeout(function(){					
-					$('.fold-up').css("opacity", 0);
-				}, 500);
 			});
 
 			// mock menu select

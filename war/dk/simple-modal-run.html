@@ -6,7 +6,7 @@
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">	
 	<!--[if (gt IE 9)|(IEMobile)|(!IE)]><!-->
-		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main.css" /><link rel="stylesheet" media="print" type="text/css" href="reflection-main--print.css" />
+		<link rel="stylesheet" type="text/css" href="reflection-main.css" />
 	<!--<![endif]-->
 	<!--[if IE 9]>
 		<link rel="stylesheet" media="screen, projection" type="text/css" href="ie9-one.css" />
@@ -27,8 +27,8 @@
       families: ['Open Sans:400,600,700,400italic,600italic', 'Source Sans Pro:400,600,700', 'Lato:400,700,400italic']
     }
   });
-</script></head>
-<body class="panel-left-open">
+</script> <script src="js/vendor/modernizr.2.8.3.custom.min.js"></script></head>
+<body>
 	<!--[if (lt IE 9)]>
       <div class="window-warning">
   			<p>Uh oh... Reflection doesn't work in this browser. &nbsp; &nbsp;<a href="http://outdatedbrowser.com/en" target="_blank">Download a compatible browser</a></p>
@@ -37,7 +37,7 @@
 
   <header id="js-component-import--global-header" class="global-header"></header>
   
-	<div id="js-component-import--panel-left" class="panel-left js-custom-scrollbar" data-mcs-theme="minimal-dark"></div>
+	<div id="js-component-import--panel-left" class="panel-left js-panel-left js-custom-scrollbar" data-mcs-theme="minimal-dark"></div>
 
 	<div class="l-page-container">
 		<div id="main" class="l-main" role="main">
@@ -133,8 +133,7 @@
 					</div>
 				</div>
 			</div>
-		</div>
-	</div>
+			</div></div><div class="grid-container" id="js-component-import--global-footer"></div>
 
 	<div id="js-component-import--account-container" class="panel-right-container js-account-container"></div>
 	<div id="js-component-import--search-container" class="panel-right-container js-search-container"></div>
@@ -143,7 +142,7 @@
  	<script src="js/vendor/jquery-ui.custom.min.js"></script>
  	<script src="js/vendor/handlebars-v2.0.0.js"></script>
  	<script src="js/templates/templates.js"></script>
-	<script src="js/vendor/modernizr.2.8.3.custom.min.js"></script>
+	 
 	<!--[if IE 9]>
 		<script src="js/vendor/jquery.mCustomScrollbar.concat.min.js"></script>
 	<![endif]-->

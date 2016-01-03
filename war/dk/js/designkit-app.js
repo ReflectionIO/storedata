@@ -515,7 +515,9 @@ var SubmitButtonWithFeedback = function() {
 		new DesignKitPage(dkPageProperties);
 
 		// Components
-		
+		new FormFieldSelect();
+		new RevealContent();
+		new ToolTip();
 	};
 
 // ChartsPage object

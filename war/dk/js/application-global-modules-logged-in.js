@@ -13,3 +13,7 @@ $("#js-component-import--account-container").html(htmlPanelRight);
 var templateSearchContainer = Handlebars.templates['searchContainer'];
 var htmlPanelRight = templateSearchContainer({});
 $("#js-component-import--search-container").html(htmlPanelRight);
+
+var templateGlobalFooter = Handlebars.templates['globalFooter'];
+var htmlGlobalFooter = templateGlobalFooter({});
+$("#js-component-import--global-footer").html(htmlGlobalFooter);

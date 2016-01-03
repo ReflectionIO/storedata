@@ -6,7 +6,7 @@
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<!--[if (gt IE 9)|(IEMobile)|(!IE)]><!-->
-		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main.css" /><link rel="stylesheet" media="print" type="text/css" href="reflection-main--print.css" />
+		<link rel="stylesheet" type="text/css" href="reflection-main.css" />
 	<!--<![endif]-->
 	<!--[if IE 9]>
 		<link rel="stylesheet" media="screen, projection" type="text/css" href="ie9-one.css" />
@@ -28,8 +28,8 @@
 	    }
 	  });
 	</script>
-</head>
-<body class="account-access-page">
+ <script src="js/vendor/modernizr.2.8.3.custom.min.js"></script></head>
+<body class="account-access-page ">
 	<!--[if (lt IE 9)]>
 	  <div class="window-warning">
 			<p>Uh oh... Reflection doesn't work in this browser. &nbsp; &nbsp;<a href="http://outdatedbrowser.com/en" target="_blank">Download a compatible browser</a></p>
@@ -38,7 +38,7 @@
 	
   <header id="js-component-import--global-header" class="global-header"></header>
   
-  <div id="js-component-import--panel-left" class="panel-left js-custom-scrollbar" data-mcs-theme="minimal-dark"></div>
+  <div id="js-component-import--panel-left" class="panel-left js-panel-left js-custom-scrollbar" data-mcs-theme="minimal-dark"></div>
 
 	<div class="l-page-container">
 		<div id="main" class="l-main" role="main">
@@ -189,14 +189,13 @@
 					</ul>
 				</div>
 			</section>
-		</div>
-	</div>
+			</div></div><div class="grid-container" id="js-component-import--global-footer"></div>
 
  	<script src="js/vendor/jquery-1.11.1.min.js"></script>
  	<script src="js/vendor/jquery-ui.custom.min.js"></script>
  	<script src="js/vendor/handlebars-v2.0.0.js"></script>
  	<script src="js/templates/templates.js"></script>
-	<script src="js/vendor/modernizr.2.8.3.custom.min.js"></script>
+	 
 	<script src="js/application.js"></script>
 	<script src="js/account-access.js"></script>
 	<!--[if IE 9]>

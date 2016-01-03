@@ -6,7 +6,7 @@
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">	
 	<!--[if (gt IE 9)|(IEMobile)|(!IE)]><!-->
-		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main.css" /><link rel="stylesheet" media="print" type="text/css" href="reflection-main--print.css" />
+		<link rel="stylesheet" type="text/css" href="reflection-main.css" />
 	<!--<![endif]-->
 	<!--[if IE 9]>
 		<link rel="stylesheet" media="screen, projection" type="text/css" href="ie9-one.css" />
@@ -16,7 +16,7 @@
 		<script src="js/vendor/html5shiv.min.js"></script>
 		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main-ie8.css" />
 	<![endif]-->
- 	<!--[if !lt IE 9]><!-->
+ 	<!--[if !lt IE 9]><!--> 
 		<script src="js/vendor/picturefill.2.3.1.min.js" async></script>
 	<!-- <![endif]-->
 	<link rel="stylesheet" href="js/vendor/jquery.mCustomScrollbar.css" />
@@ -28,7 +28,7 @@
     }
   });
 </script></head>
-<body class="panel-left-open">
+<body>
 	<!--[if (lt IE 9)]>
       <div class="window-warning">
   			<p>Uh oh... Reflection doesn't work in this browser. &nbsp; &nbsp;<a href="http://outdatedbrowser.com/en" target="_blank">Download a compatible browser</a></p>
@@ -37,11 +37,12 @@
 
   <header id="js-component-import--global-header" class="global-header"></header>
   
-	<div id="js-component-import--panel-left" class="panel-left js-custom-scrollbar" data-mcs-theme="minimal-dark"></div>
+	<div id="js-component-import--panel-left" class="panel-left js-panel-left js-custom-scrollbar" data-mcs-theme="minimal-dark"></div>
 
 	<div class="l-page-container">
 		<div id="main" class="l-main" role="main">
-			<div class="grid-container page-app">
+			<div class="page-app">
+			<div class="grid-container">
 				<header class="page-app__header">
 					<div class="app-icon-container">
 						<img src="images/placeholder-app-icon.png" alt="Monument Valley app icon" class="app-icon" />
@@ -57,7 +58,7 @@
 				<div class="app-user-functions-container">
 					<a href="#" class="show-hide-link js-reveal-element" data-closed-text="Less..." data-open-text="More...">More...</a>
 					<form class="reveal-element">
-						<div class="filter-switch">							
+						<!-- <div class="filter-switch">
 							<span>Follow</span>
 							<div class="can-toggle can-toggle--size-large">
 							  <input id="e" type="checkbox">
@@ -65,235 +66,250 @@
 							    <div class="can-toggle__switch" data-checked="Y" data-unchecked="N"></div>
 							  </label>
 							</div>
-						</div>
+						</div> -->
 						<a href="#">View in Appstore</a>
 					</form>
 				</div>
-				<div class="tabs">
-					<ul class="tabs-container default-tabs-transition tabs-to-dropdown">
-						<li class="grid__column grid__column--one-quarter tabs__tab is-active js-tab-select">
-							<div class="tab-animate-active"></div>
-							<a href="#tab-content-overall" class="tabs__link">
+			</div>
+			<div class="tabs">
+				<ul class="tabs-container default-tabs-transition tabs-to-dropdown">
+					<li class="grid__column grid__column--one-quarter tabs__tab js-tab-select">
+						<div class="tab-animate-active"></div>
+						<a data-content="#tab-content-overall" class="tabs__link">
+							<span>
+								<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path d="M19.5,4.7L0,6.9v13.9l13.9,4.9L32,20.2V6.4L19.5,4.7z M30,15.1l-16.1,4.6L2,15.9v-3l11.9,3.4
+	L30,12.2V15.1z M13.9,12L30,8.4v2.8l-16.1,4.2L2,11.9v-3L13.9,12z M27.7,7.9l-13.8,3.1L4.2,8.4l15.3-1.7L27.7,7.9z M13.9,23.6
+	L2,19.4V17l11.9,3.8L30,16.2v2.6L13.9,23.6z"/></svg>
+	 							<span>
+	 								Revenue
+	 								<div class="icon-member icon-member--pro"><img src="images/icon-pro@2x.png" alt="Pro member icon"></div>
+	 							</span>
+	 						</span>
+						</a>
+					</li>
+					<li class="grid__column grid__column--one-quarter tabs__tab js-tab-select">
+						<div class="tab-animate-active"></div>
+						<a data-content="#tab-content-free" class="tabs__link">
+							<span>
+								<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path fill-rule=evenodd clip-rule=evenodd d="M32,16.5c0,3.6-2.7,6.5-6.7,6.5v0h-6v-2h6.5
+	c2.5,0,4.5-2,4.5-4.5c0-1.6-0.8-3-2.3-3.9c-1.4-0.8-1.5-0.9-0.9-2.4c0.1-0.3,0.1-0.5,0.1-0.8c0-1.4-1.1-2.5-2.5-2.5
+	c0,0-0.7,0-1.4,0.2c-1.1,0.5-1.3,0-1.8-1.2C20.4,3.6,17.9,2,15.2,2c-3.6,0-6.6,2.7-7,6.3c-0.1,1.4-0.2,1.4-1.7,1.8
+	C4,10.6,2,12.9,2,15.5c0,3,2.3,5.5,5.3,5.5v0h6v2h-6v0c-4,0-7.2-3.4-7.2-7.5c0-3.7,2.7-6.7,6.2-7.4c0.4-4.6,4.4-8.1,9-8.1
+	c3.6,0,6.7,2.1,8.1,5.2C23.8,5.1,24.2,5,24.7,5c2.5,0,4.5,2,4.5,4.5c0,0.5-0.2,1-0.3,1.4C30.8,12,32,14.1,32,16.5z M19,25.8
+	l-1.8,1.8V14.3c0-0.6-0.4-1.1-1-1.1c-0.6,0-1,0.5-1,1.1v13.3l-1.9-1.8c-0.4-0.4-1.2-0.4-1.6,0c-0.4,0.4-0.5,1.1,0,1.6l3.1,3.1
+	c0.4,0.4,0.8,0.5,1.3,0.5c0.5,0,0.9-0.2,1.3-0.5l3.1-3.1c0.4-0.4,0.4-1.1,0-1.6C20.2,25.4,19.5,25.4,19,25.8z"/></svg>
 								<span>
-									<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path d="M19.5,4.7L0,6.9v13.9l13.9,4.9L32,20.2V6.4L19.5,4.7z M30,15.1l-16.1,4.6L2,15.9v-3l11.9,3.4
-		L30,12.2V15.1z M13.9,12L30,8.4v2.8l-16.1,4.2L2,11.9v-3L13.9,12z M27.7,7.9l-13.8,3.1L4.2,8.4l15.3-1.7L27.7,7.9z M13.9,23.6
-		L2,19.4V17l11.9,3.8L30,16.2v2.6L13.9,23.6z"/></svg>
-		 							<span>
-		 								Revenue
-		 								<div class="icon-member icon-member--pro"><img src="images/icon-pro@2x.png" alt="Pro member icon"></div>
-		 							</span>
-		 						</span>
-							</a>
-						</li>
-						<li class="grid__column grid__column--one-quarter tabs__tab js-tab-select">
-							<div class="tab-animate-active"></div>
-							<a href="#tab-content-free" class="tabs__link">
-								<span>
-									<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path fill-rule=evenodd clip-rule=evenodd d="M32,16.5c0,3.6-2.7,6.5-6.7,6.5v0h-6v-2h6.5
-		c2.5,0,4.5-2,4.5-4.5c0-1.6-0.8-3-2.3-3.9c-1.4-0.8-1.5-0.9-0.9-2.4c0.1-0.3,0.1-0.5,0.1-0.8c0-1.4-1.1-2.5-2.5-2.5
-		c0,0-0.7,0-1.4,0.2c-1.1,0.5-1.3,0-1.8-1.2C20.4,3.6,17.9,2,15.2,2c-3.6,0-6.6,2.7-7,6.3c-0.1,1.4-0.2,1.4-1.7,1.8
-		C4,10.6,2,12.9,2,15.5c0,3,2.3,5.5,5.3,5.5v0h6v2h-6v0c-4,0-7.2-3.4-7.2-7.5c0-3.7,2.7-6.7,6.2-7.4c0.4-4.6,4.4-8.1,9-8.1
-		c3.6,0,6.7,2.1,8.1,5.2C23.8,5.1,24.2,5,24.7,5c2.5,0,4.5,2,4.5,4.5c0,0.5-0.2,1-0.3,1.4C30.8,12,32,14.1,32,16.5z M19,25.8
-		l-1.8,1.8V14.3c0-0.6-0.4-1.1-1-1.1c-0.6,0-1,0.5-1,1.1v13.3l-1.9-1.8c-0.4-0.4-1.2-0.4-1.6,0c-0.4,0.4-0.5,1.1,0,1.6l3.1,3.1
-		c0.4,0.4,0.8,0.5,1.3,0.5c0.5,0,0.9-0.2,1.3-0.5l3.1-3.1c0.4-0.4,0.4-1.1,0-1.6C20.2,25.4,19.5,25.4,19,25.8z"/></svg>
-									<span>
-										Downloads
-									<div class="icon-member icon-member--pro"><img src="images/icon-pro@2x.png" alt="Pro member icon"></div>
-									</span>
+									Downloads
+								<div class="icon-member icon-member--pro"><img src="images/icon-pro@2x.png" alt="Pro member icon"></div>
 								</span>
-							</a>
-						</li>
-						<li class="grid__column grid__column--one-quarter tabs__tab js-tab-select">
-							<div class="tab-animate-active"></div>
-							<a href="#tab-content-paid" class="tabs__link">
-								<span>
-									<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path d="M23,12V4H9v6H0v18h32V12H23z M11,6h10v7.3l0,0V26H11V12.3l0,0V6z M2,12h8v14H2V12z M30,26h-8V14h8
-		V26z"/></svg>
-									<span>Rank</span></span>
-							</a>
-						</li>
-						<li class="grid__column grid__column--one-quarter tabs__tab js-tab-select">
-							<div class="tab-animate-active"></div>
-							<a href="#tab-content-grossing" class="tabs__link">
-								<span>
-									<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path d="M4,10c0,1.1-0.9,2-2,2s-2-0.9-2-2s0.9-2,2-2S4,8.9,4,10z M32,9H7v2h25V9z M2,14
-		c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S3.1,14,2,14z M32,15H7v2h25V15z M2,20c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S3.1,20,2,20z
-		 M32,21H7v2h25V21z"/></svg>
-									<span>App Details</span></span>
-							</a>
-						</li>
-					</ul>
-				</div>
-				<div class="grid__column grid__column--full-width filters-container filter-container--app">
-					<form class="forms--mid-theme">
-						<div class="time-period-select-component">
-							<div class="calendar-container">
-									<div class="date-select-container">
-										<div class="form-field form-field--date-select form-field--date-select--no-icon">
-											<input type="text" name="date-single" id="date-single" value="01 Jan 2015" />
+							</span>
+						</a>
+					</li>
+					<li class="grid__column grid__column--one-quarter tabs__tab js-tab-select">
+						<div class="tab-animate-active"></div>
+						<a data-content="#tab-content-rank" class="tabs__link">
+							<span>
+								<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path d="M23,12V4H9v6H0v18h32V12H23z M11,6h10v7.3l0,0V26H11V12.3l0,0V6z M2,12h8v14H2V12z M30,26h-8V14h8
+	V26z"/></svg>
+								<span>Rank</span></span>
+						</a>
+					</li>
+					<li class="grid__column grid__column--one-quarter tabs__tab is-active js-tab-select">
+						<div class="tab-animate-active"></div>
+						<a data-content="#tab-content-details" class="tabs__link">
+							<span>
+								<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path d="M4,10c0,1.1-0.9,2-2,2s-2-0.9-2-2s0.9-2,2-2S4,8.9,4,10z M32,9H7v2h25V9z M2,14
+	c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S3.1,14,2,14z M32,15H7v2h25V15z M2,20c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S3.1,20,2,20z
+	 M32,21H7v2h25V21z"/></svg>
+								<span>App Details</span></span>
+						</a>
+					</li>
+				</ul>
+			</div>
+				<ul class="tabs__content-container default-tabs-transition tabs-to-dropdown--content">
+					<li id="tab-content-rank" class="tabs__content">
+						<div class="grid__column grid__column--full-width filters-container filter-container--app">
+							<form class="forms--mid-theme">
+								<div class="time-period-select-component">
+									<div class="calendar-container">
+											<div class="date-select-container">
+												<div class="form-field form-field--date-select form-field--date-select--no-icon">
+													<input type="text" name="date-single" id="date-single" value="01 Jan 2015" />
+												</div>
+											</div>
+											<div class="date-select-to-indicator"></div>
+											<div class="date-select-container">
+												<div class="form-field form-field--date-select form-field--date-select--no-icon">
+													<input type="text" name="date-single-to" id="date-single-to" value="26 Feb 2015" />
+												</div>
+											</div>
+									</div>
+									<span class="or-text">or</span>
+									<div class="form-field form-field--select time-period-select form-field--select--filter">
+										<div class="page-overlay"></div>		
+										<select class="js-field--select reflection-select--filter">
+									    <option value="" disabled selected>Time Period</option>
+									    <option value="time1">1 Week</option>
+									    <option value="time2">2 Weeks</option>
+									    <option value="time3">4 Weeks</option>
+									    <option value="time4">6 Weeks</option>
+									    <option value="time5">8 Weeks</option>
+										</select>
+									</div>
+								</div>
+
+								<div class="form-field form-field--select store-select form-field--select--filter js-tooltip" data-tooltip="Select a App Store">
+									<div class="page-overlay"></div>
+									<select class="js-field--select reflection-select--filter reflection-select--right">
+								    <option value="" disabled selected>App Store</option>
+								    <option value="b0">All Stores</option>
+								    <option value="b1">iPad Store</option>
+								    <option value="b2">iPhone Store</option>
+									</select>
+								</div>
+								<div class="form-field form-field--select country-select form-field--select--filter">
+									<div class="page-overlay"></div>			
+									<select class="js-field--select reflection-select--filter">
+								    <option value="" disabled selected>Country</option>
+								    <option value="a0">All Countries</option>
+								    <option value="a1">Japan</option>
+								    <option value="a2">United States</option>
+								    <option value="a3">China</option>
+								    <option value="a4">Germany</option>
+								    <option value="a5">France</option>
+								    <option value="a6">United Kingdom</option>
+								    <option value="a7">Italy</option>
+									</select>
+								</div>
+								<button class="ref-button--cta-small refresh-button">
+									<svg class="svg-refresh" version="1.1" x="0px" y="0px" viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+										<path fill="#FCFDFD" d="M2.1,9h-2H0v5l1.5-1.4C2.9,14.7,5.3,16,8,16c4.1,0,7.4-3.1,7.9-7h-2c-0.5,2.8-2.9,5-5.9,5
+			c-2.1,0-4-1.1-5-2.7L5.4,9H2.1z M14.6,3.4L16,2v5h-0.1h-2H13h-2l2.1-2.1C12.1,3.2,10.2,2,8,2C5,2,2.6,4.2,2.1,7h-2
+			C0.6,3.1,3.9,0,8,0C10.7,0,13.1,1.4,14.6,3.4z"/>
+									</svg>
+								</button>
+
+								<div class="filter-toggle">
+									<div class="toggle">
+										<input type="radio" id="calendar" name="radiogroupname" checked />
+										<label for="calendar" class="toggle-calendar">
+											<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path d="M30.3,5.2c-0.5-0.4-1-0.7-1.6-0.7h-2.3V2.8c0-0.8-0.3-1.4-0.8-2C25,0.3,24.3,0,23.5,0h-1.2
+			c-0.8,0-1.5,0.3-2,0.8c-0.6,0.6-0.8,1.2-0.8,2v1.7h-6.9V2.8c0-0.8-0.3-1.4-0.8-2C11.1,0.3,10.4,0,9.6,0H8.5C7.7,0,7,0.3,6.4,0.8
+			c-0.6,0.6-0.8,1.2-0.8,2v1.7H3.3c-0.6,0-1.2,0.2-1.6,0.7C1.2,5.7,1,6.2,1,6.8v22.6c0,0.6,0.2,1.1,0.7,1.6c0.5,0.4,1,0.7,1.6,0.7
+			h25.4c0.6,0,1.2-0.2,1.6-0.7c0.5-0.4,0.7-1,0.7-1.6V6.8C31,6.2,30.8,5.7,30.3,5.2z M8.5,29.4H3.3v-5.1h5.2V29.4z M8.5,23.2H3.3v-5.7
+			h5.2V23.2z M8.5,16.4H3.3v-5.1h5.2V16.4z M8.1,8.3C8,8.2,7.9,8.1,7.9,7.9V2.8c0-0.2,0.1-0.3,0.2-0.4c0.1-0.1,0.2-0.2,0.4-0.2h1.2
+			c0.2,0,0.3,0.1,0.4,0.2c0.1,0.1,0.2,0.2,0.2,0.4v5.1c0,0.2-0.1,0.3-0.2,0.4C9.9,8.4,9.8,8.5,9.6,8.5H8.5C8.3,8.5,8.2,8.4,8.1,8.3z
+			M15.4,29.4H9.6v-5.1h5.8V29.4z M15.4,23.2H9.6v-5.7h5.8V23.2z M15.4,16.4H9.6v-5.1h5.8V16.4z M22.4,29.4h-5.8v-5.1h5.8V29.4z
+			M22.4,23.2h-5.8v-5.7h5.8V23.2z M22.4,16.4h-5.8v-5.1h5.8V16.4z M21.9,8.3c-0.1-0.1-0.2-0.2-0.2-0.4V2.8c0-0.2,0.1-0.3,0.2-0.4
+			c0.1-0.1,0.2-0.2,0.4-0.2h1.2c0.2,0,0.3,0.1,0.4,0.2c0.1,0.1,0.2,0.2,0.2,0.4v5.1c0,0.2-0.1,0.3-0.2,0.4c-0.1,0.1-0.2,0.2-0.4,0.2
+			h-1.2C22.2,8.5,22.1,8.4,21.9,8.3z M28.7,29.4h-5.2v-5.1h5.2V29.4z M28.7,23.2h-5.2v-5.7h5.2V23.2z M28.7,16.4h-5.2v-5.1h5.2V16.4z"/></svg>
+											<img src="images/blank-image.png" alt="" />
+										</label>
+									</div>
+									<div class="toggle">
+										<input type="radio" id="map" name="radiogroupname" />
+										<label for="map">
+											<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path d="M16,0C7.2,0,0,7.2,0,16c0,8.8,7.2,16,16,16s16-7.2,16-16C32,7.2,24.8,0,16,0z M1.5,16
+			c0-2.9,0.9-5.6,2.3-7.8c0.1,0.1,0.2,0,0.3,0.1c0,0.2,0,0.5,0,0.7c-0.2,0.9,0.4,1.8,1.2,1.9c0.1,0.5-0.2,0.6,0.3,1.3
+			c0,0.1,0,0.3,0.1,0.4c0.1,0.1,0.3,0.2,0.5,0.3c0.5,0.3,0.4,0.9,0.2,1.4s-0.6,0.8-0.8,1.3c-0.3,0.8-0.3,1.8,0.3,2.4
+			c0.2,0.3,0.5,0.9,0.8,1s0.4,0.3,0.5,0.6c0.1,0.5,0.3,0.8,0.3,1.3c0,0.4-0.2,1.1-0.2,1.5c0,0.4,0.2,0.3,0.1,0.5
+			c0,0.2-0.1,0.1-0.2,0.4c-0.1,0.6,0,1.7,0.1,2.1c0.2,1.5,1.1,2.7,2,2.6c0.3-0.7-0.4-1.5-0.1-2.2c0.1-0.3,0.3-0.5,0.5-0.7
+			c1-0.8,1.8-1.5,2.4-2.5c0.1-0.1,0.2-0.4,0.3-0.5c0.1-0.1,0.3-0.1,0.5-0.1c0.7-0.1,1.1-0.5,1.4-1.1c0.3-0.6,0.3-1.1,0.9-1.7
+			c0.1-0.1,0.2-0.5,0.3-0.6c0.3-0.5-0.1-1.2-0.6-1.5c-0.5-0.3-1-0.4-1.4-0.7c-0.6-0.4-0.6-1-1-1.5c-0.4-0.5-1.1-0.9-1.7-1.2
+			c-0.7-0.4-0.7-0.7-1.9-1.2c-0.1-0.1-0.5-0.1-0.6,0c-0.1,0-0.2,0.2-0.4,0.3c-0.4,0.4-1.3,0.2-1.5-0.4c-0.1-0.3,0-0.5,0-0.7
+			c-0.1-0.3-0.1-0.7-0.4-0.6c-0.1-0.4,0.6-0.1,0.6-0.7c0.1-0.5-0.3-0.1-0.8-0.4C5.4,9.8,5.4,9,5.6,8.7c0.2-0.6,0.3-0.3,0.6-0.5
+			C6.6,7.8,7.4,7.5,8,7.8C8.4,8.1,8.4,9,8.6,9.1C8.8,9.3,9,9,9,8.8c0-0.2-0.1-0.6,0-0.8c0.1-0.1,0.2-0.2,0.3-0.3
+			c1.1-0.8,2.4-1.3,3.7-1.4c0.1,0,0.4,0,0.5-0.1c0.2-0.2,0.1-0.5,0.4-0.5c0.2,0,0.4,0.3,0.7,0.3c0.3,0.1,0.6-0.4,0.6-0.7
+			c0-0.3-0.1-0.7,0-1c0.1-0.1,0.1-0.3,0.1-0.4c0-0.1-0.1-0.1-0.2-0.1c-0.2-0.1-0.3-0.5-0.7-0.4c-0.4,0.2-0.7,0.2-1.1,0.4
+			c-0.3,0.2-0.5,0.5-1,0.6c-0.2-0.4,0-0.9,0.3-1.2C13.1,3,13.5,3,13.9,3c0.2,0,0.4-0.1,0.6,0c0.1,0,0.3,0.2,0.4,0.2
+			c0.3,0.2,0.6,0,0.8-0.3s0.4-0.5,0.2-0.8C16,1.9,16.2,2,16.3,2.2c0.1,0.2-0.1,0.4-0.2,0.6c-0.4,1,0.4,2,0.8,1.9
+			c0.5-0.1,0.9-1.2,1.5-1.4c0.2-0.1,0.4-0.1,0.5-0.2c0.2-0.2,0.2-0.4,0.3-0.7c0.1-0.2,0.4-0.3,0.7-0.4c1.4,0.4,2.6,1,3.8,1.7
+			c0,0,0,0,0,0c-0.1,0-0.2,0-0.3,0c-0.7-0.1-0.9,0.5-0.7,1.2c0.2,0.5,0.6,0.8,1.1,1c0.2,0.1,0.6,0.1,0.7,0.3c0,0.1-0.1,0.3-0.1,0.3
+			c0.1,0.5-0.1,0.8-0.5,1.1c-0.4,0.3-1.1,0.2-1.4,0.5c-0.3,0.3,0.2,1.2,0.6,1.5c0.4,0.4,1.2,0.3,1.5-0.1c0.2-0.3,0-0.6,0.1-0.8
+			c0.6,0.1,0.9,0.3,1.1,0.8c0,0.1,0.2,0.1,0.3,0.1c0.3,0.1,0.4-0.3,0.5-0.1c0,0.2,0.1,0.3,0.2,0.4c0.2,0.1,0.2-0.1,0.4,0
+			c0.2,0.1,0.3,0.5,0.6,0.5s0.6,0,0.8,0.2c0.1,0.2,0.2,0.4,0.1,0.6c-0.1,0.2-0.9,0.1-1.4-0.1s-0.6-0.5-1.1-0.8c-0.8-0.4-2.4-0.3-3.6,0
+			c-0.9,0.3-1.1,0.6-1.7,1.3c-0.1,0.1-0.2,0.5-0.3,0.7c-0.1,0.2-0.1,0.4-0.1,0.6c-0.2,1-0.7,2.3-0.2,3.1c0.2,0.4,0.6,0.6,1,0.8
+			c0.5,0.4,0.8,0.7,1.3,0.8c0.4,0.1,1,0,1.3,0c0.5,0,1,0.1,1.5,0.4c-0.3,0.7-0.4,1.9-0.3,2.3c0,0.3,0.2,0.4,0.2,0.7
+			c0.2,1.1-1.6,1.8-1.2,2.9c0.1,0.2,0.2,0.5,0.2,0.8c0,0.9-0.7,1.3-0.8,2c-0.1,0.4,0,0.6,0,1c0,0.2,0,0.3-0.1,0.5
+			c-2.2,1.4-4.9,2.3-7.8,2.3C8,30.5,1.5,24,1.5,16z"/></svg>
+											<img src="images/blank-image.png" alt="" />
+										</label>
+									</div>
+								</div>
+								
+								<div class="filters-group-graph-options">
+									<a href="#" class="show-hide-link ref-icon-after ref-icon-after--angle-down js-reveal-element">Show / Hide Options</a>
+									<div class="reveal-element">
+										<div class="filter-switch filter-switch--small">									
+											<div class="can-toggle can-toggle--size-small">
+											  <input id="checkbox--show-events" type="checkbox">
+											  <label for="checkbox--show-events">
+											    <div class="can-toggle__switch" data-checked="Y" data-unchecked="N"></div>
+											  </label>
+											</div>
+											<span>Events</span>
+										</div>
+										<div class="filter-switch filter-switch--small">									
+											<div class="can-toggle can-toggle--size-small">
+											  <input id="checkbox--overlay-downloads" type="checkbox">
+											  <label for="checkbox--overlay-downloads">
+											    <div class="can-toggle__switch" data-checked="Y" data-unchecked="N"></div>
+											  </label>
+											</div>
+											<span>Overlay Downloads</span>
+										</div>
+										<div class="filter-switch filter-switch--small">									
+											<div class="can-toggle can-toggle--size-small">
+											  <input id="checkbox--overlay-revenue" type="checkbox">
+											  <label for="checkbox--overlay-revenue">
+											    <div class="can-toggle__switch" data-checked="Y" data-unchecked="N"></div>
+											  </label>
+											</div>
+											<span>Overlay Revenue</span>
+										</div>
+										<div class="filter-switch filter-switch--small">									
+											<div class="can-toggle can-toggle--size-small">
+											  <input id="cumulative" type="checkbox">
+											  <label for="cumulative">
+											    <div class="can-toggle__switch" data-checked="Y" data-unchecked="N"></div>
+											  </label>
+											</div>
+											<span>Cumulative Chart</span>
+										</div>
+										<div class="filter-switch filter-switch--small">									
+											<div class="can-toggle can-toggle--size-small">
+											  <input id="average" type="checkbox">
+											  <label for="average">
+											    <div class="can-toggle__switch" data-checked="Y" data-unchecked="N"></div>
+											  </label>
+											</div>
+											<span>1M Moving Average</span>
+										</div>
+										<div class="filter-switch filter-switch--small">									
+											<div class="can-toggle can-toggle--size-small">
+											  <input id="checkbox--overlay-apps" type="checkbox">
+											  <label for="checkbox--overlay-apps">
+											    <div class="can-toggle__switch" data-checked="Y" data-unchecked="N"></div>
+											  </label>
+											</div>
+											<span>Overlay Apps (0/5)</span>
 										</div>
 									</div>
-									<div class="date-select-to-indicator"></div>
-									<div class="date-select-container">
-										<div class="form-field form-field--date-select form-field--date-select--no-icon">
-											<input type="text" name="date-single-to" id="date-single-to" value="26 Feb 2015" />
-										</div>
-									</div>
-							</div>
-							<span class="or-text">or</span>
-							<div class="form-field form-field--select time-period-select form-field--select--filter">
-								<div class="page-overlay"></div>		
-								<select class="js-field--select reflection-select--filter">
-							    <option value="" disabled selected>Time Period</option>
-							    <option value="time1">1 Week</option>
-							    <option value="time2">2 Weeks</option>
-							    <option value="time3">4 Weeks</option>
-							    <option value="time4">6 Weeks</option>
-							    <option value="time5">8 Weeks</option>
-								</select>
-							</div>
+								</div>
+							</form>
 						</div>
 
-						<div class="form-field form-field--select store-select form-field--select--filter js-tooltip" data-tooltip="Select a App Store">
-							<div class="page-overlay"></div>
-							<select class="js-field--select reflection-select--filter reflection-select--right">
-						    <option value="" disabled selected>App Store</option>
-						    <option value="b0">All Stores</option>
-						    <option value="b1">iPad Store</option>
-						    <option value="b2">iPhone Store</option>
-							</select>
+						<div class="graph-container graph-container--with-events">
+							<div id="container" style="width:100%; height:500px;" class="highcharts-container">
+			        </div>
+							<div class="graph-loading-indicator">
+			        </div>
+			        <div class="graph-loading-line">
+			        	<div class="animated-line"></div>
+			        </div>
 						</div>
-						<div class="form-field form-field--select country-select form-field--select--filter">
-							<div class="page-overlay"></div>			
-							<select class="js-field--select reflection-select--filter">
-						    <option value="" disabled selected>Country</option>
-						    <option value="a0">All Countries</option>
-						    <option value="a1">Japan</option>
-						    <option value="a2">United States</option>
-						    <option value="a3">China</option>
-						    <option value="a4">Germany</option>
-						    <option value="a5">France</option>
-						    <option value="a6">United Kingdom</option>
-						    <option value="a7">Italy</option>
-							</select>
-						</div>
-						<button class="ref-button--cta-small refresh-button">
-							<svg class="svg-refresh" version="1.1" x="0px" y="0px" viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
-								<path fill="#FCFDFD" d="M2.1,9h-2H0v5l1.5-1.4C2.9,14.7,5.3,16,8,16c4.1,0,7.4-3.1,7.9-7h-2c-0.5,2.8-2.9,5-5.9,5
-c-2.1,0-4-1.1-5-2.7L5.4,9H2.1z M14.6,3.4L16,2v5h-0.1h-2H13h-2l2.1-2.1C12.1,3.2,10.2,2,8,2C5,2,2.6,4.2,2.1,7h-2
-C0.6,3.1,3.9,0,8,0C10.7,0,13.1,1.4,14.6,3.4z"/>
-							</svg>
-						</button>
 
-						<div class="filter-toggle">
-							<div class="toggle">
-								<input type="radio" id="calendar" name="radiogroupname" checked />
-								<label for="calendar" class="toggle-calendar">
-									<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path d="M30.3,5.2c-0.5-0.4-1-0.7-1.6-0.7h-2.3V2.8c0-0.8-0.3-1.4-0.8-2C25,0.3,24.3,0,23.5,0h-1.2
-c-0.8,0-1.5,0.3-2,0.8c-0.6,0.6-0.8,1.2-0.8,2v1.7h-6.9V2.8c0-0.8-0.3-1.4-0.8-2C11.1,0.3,10.4,0,9.6,0H8.5C7.7,0,7,0.3,6.4,0.8
-c-0.6,0.6-0.8,1.2-0.8,2v1.7H3.3c-0.6,0-1.2,0.2-1.6,0.7C1.2,5.7,1,6.2,1,6.8v22.6c0,0.6,0.2,1.1,0.7,1.6c0.5,0.4,1,0.7,1.6,0.7
-h25.4c0.6,0,1.2-0.2,1.6-0.7c0.5-0.4,0.7-1,0.7-1.6V6.8C31,6.2,30.8,5.7,30.3,5.2z M8.5,29.4H3.3v-5.1h5.2V29.4z M8.5,23.2H3.3v-5.7
-h5.2V23.2z M8.5,16.4H3.3v-5.1h5.2V16.4z M8.1,8.3C8,8.2,7.9,8.1,7.9,7.9V2.8c0-0.2,0.1-0.3,0.2-0.4c0.1-0.1,0.2-0.2,0.4-0.2h1.2
-c0.2,0,0.3,0.1,0.4,0.2c0.1,0.1,0.2,0.2,0.2,0.4v5.1c0,0.2-0.1,0.3-0.2,0.4C9.9,8.4,9.8,8.5,9.6,8.5H8.5C8.3,8.5,8.2,8.4,8.1,8.3z
- M15.4,29.4H9.6v-5.1h5.8V29.4z M15.4,23.2H9.6v-5.7h5.8V23.2z M15.4,16.4H9.6v-5.1h5.8V16.4z M22.4,29.4h-5.8v-5.1h5.8V29.4z
- M22.4,23.2h-5.8v-5.7h5.8V23.2z M22.4,16.4h-5.8v-5.1h5.8V16.4z M21.9,8.3c-0.1-0.1-0.2-0.2-0.2-0.4V2.8c0-0.2,0.1-0.3,0.2-0.4
-c0.1-0.1,0.2-0.2,0.4-0.2h1.2c0.2,0,0.3,0.1,0.4,0.2c0.1,0.1,0.2,0.2,0.2,0.4v5.1c0,0.2-0.1,0.3-0.2,0.4c-0.1,0.1-0.2,0.2-0.4,0.2
-h-1.2C22.2,8.5,22.1,8.4,21.9,8.3z M28.7,29.4h-5.2v-5.1h5.2V29.4z M28.7,23.2h-5.2v-5.7h5.2V23.2z M28.7,16.4h-5.2v-5.1h5.2V16.4z"/></svg>
-									<img src="images/blank-image.png" alt="" />
-								</label>
-							</div>
-							<div class="toggle">
-								<input type="radio" id="map" name="radiogroupname" />
-								<label for="map">
-									<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path d="M16,0C7.2,0,0,7.2,0,16c0,8.8,7.2,16,16,16s16-7.2,16-16C32,7.2,24.8,0,16,0z M1.5,16
-c0-2.9,0.9-5.6,2.3-7.8c0.1,0.1,0.2,0,0.3,0.1c0,0.2,0,0.5,0,0.7c-0.2,0.9,0.4,1.8,1.2,1.9c0.1,0.5-0.2,0.6,0.3,1.3
-c0,0.1,0,0.3,0.1,0.4c0.1,0.1,0.3,0.2,0.5,0.3c0.5,0.3,0.4,0.9,0.2,1.4s-0.6,0.8-0.8,1.3c-0.3,0.8-0.3,1.8,0.3,2.4
-c0.2,0.3,0.5,0.9,0.8,1s0.4,0.3,0.5,0.6c0.1,0.5,0.3,0.8,0.3,1.3c0,0.4-0.2,1.1-0.2,1.5c0,0.4,0.2,0.3,0.1,0.5
-c0,0.2-0.1,0.1-0.2,0.4c-0.1,0.6,0,1.7,0.1,2.1c0.2,1.5,1.1,2.7,2,2.6c0.3-0.7-0.4-1.5-0.1-2.2c0.1-0.3,0.3-0.5,0.5-0.7
-c1-0.8,1.8-1.5,2.4-2.5c0.1-0.1,0.2-0.4,0.3-0.5c0.1-0.1,0.3-0.1,0.5-0.1c0.7-0.1,1.1-0.5,1.4-1.1c0.3-0.6,0.3-1.1,0.9-1.7
-c0.1-0.1,0.2-0.5,0.3-0.6c0.3-0.5-0.1-1.2-0.6-1.5c-0.5-0.3-1-0.4-1.4-0.7c-0.6-0.4-0.6-1-1-1.5c-0.4-0.5-1.1-0.9-1.7-1.2
-c-0.7-0.4-0.7-0.7-1.9-1.2c-0.1-0.1-0.5-0.1-0.6,0c-0.1,0-0.2,0.2-0.4,0.3c-0.4,0.4-1.3,0.2-1.5-0.4c-0.1-0.3,0-0.5,0-0.7
-c-0.1-0.3-0.1-0.7-0.4-0.6c-0.1-0.4,0.6-0.1,0.6-0.7c0.1-0.5-0.3-0.1-0.8-0.4C5.4,9.8,5.4,9,5.6,8.7c0.2-0.6,0.3-0.3,0.6-0.5
-C6.6,7.8,7.4,7.5,8,7.8C8.4,8.1,8.4,9,8.6,9.1C8.8,9.3,9,9,9,8.8c0-0.2-0.1-0.6,0-0.8c0.1-0.1,0.2-0.2,0.3-0.3
-c1.1-0.8,2.4-1.3,3.7-1.4c0.1,0,0.4,0,0.5-0.1c0.2-0.2,0.1-0.5,0.4-0.5c0.2,0,0.4,0.3,0.7,0.3c0.3,0.1,0.6-0.4,0.6-0.7
-c0-0.3-0.1-0.7,0-1c0.1-0.1,0.1-0.3,0.1-0.4c0-0.1-0.1-0.1-0.2-0.1c-0.2-0.1-0.3-0.5-0.7-0.4c-0.4,0.2-0.7,0.2-1.1,0.4
-c-0.3,0.2-0.5,0.5-1,0.6c-0.2-0.4,0-0.9,0.3-1.2C13.1,3,13.5,3,13.9,3c0.2,0,0.4-0.1,0.6,0c0.1,0,0.3,0.2,0.4,0.2
-c0.3,0.2,0.6,0,0.8-0.3s0.4-0.5,0.2-0.8C16,1.9,16.2,2,16.3,2.2c0.1,0.2-0.1,0.4-0.2,0.6c-0.4,1,0.4,2,0.8,1.9
-c0.5-0.1,0.9-1.2,1.5-1.4c0.2-0.1,0.4-0.1,0.5-0.2c0.2-0.2,0.2-0.4,0.3-0.7c0.1-0.2,0.4-0.3,0.7-0.4c1.4,0.4,2.6,1,3.8,1.7
-c0,0,0,0,0,0c-0.1,0-0.2,0-0.3,0c-0.7-0.1-0.9,0.5-0.7,1.2c0.2,0.5,0.6,0.8,1.1,1c0.2,0.1,0.6,0.1,0.7,0.3c0,0.1-0.1,0.3-0.1,0.3
-c0.1,0.5-0.1,0.8-0.5,1.1c-0.4,0.3-1.1,0.2-1.4,0.5c-0.3,0.3,0.2,1.2,0.6,1.5c0.4,0.4,1.2,0.3,1.5-0.1c0.2-0.3,0-0.6,0.1-0.8
-c0.6,0.1,0.9,0.3,1.1,0.8c0,0.1,0.2,0.1,0.3,0.1c0.3,0.1,0.4-0.3,0.5-0.1c0,0.2,0.1,0.3,0.2,0.4c0.2,0.1,0.2-0.1,0.4,0
-c0.2,0.1,0.3,0.5,0.6,0.5s0.6,0,0.8,0.2c0.1,0.2,0.2,0.4,0.1,0.6c-0.1,0.2-0.9,0.1-1.4-0.1s-0.6-0.5-1.1-0.8c-0.8-0.4-2.4-0.3-3.6,0
-c-0.9,0.3-1.1,0.6-1.7,1.3c-0.1,0.1-0.2,0.5-0.3,0.7c-0.1,0.2-0.1,0.4-0.1,0.6c-0.2,1-0.7,2.3-0.2,3.1c0.2,0.4,0.6,0.6,1,0.8
-c0.5,0.4,0.8,0.7,1.3,0.8c0.4,0.1,1,0,1.3,0c0.5,0,1,0.1,1.5,0.4c-0.3,0.7-0.4,1.9-0.3,2.3c0,0.3,0.2,0.4,0.2,0.7
-c0.2,1.1-1.6,1.8-1.2,2.9c0.1,0.2,0.2,0.5,0.2,0.8c0,0.9-0.7,1.3-0.8,2c-0.1,0.4,0,0.6,0,1c0,0.2,0,0.3-0.1,0.5
-c-2.2,1.4-4.9,2.3-7.8,2.3C8,30.5,1.5,24,1.5,16z"/></svg>
-									<img src="images/blank-image.png" alt="" />
-								</label>
-							</div>
-						</div>
-						
-						<div class="filters-group-graph-options">
-							<a href="#" class="show-hide-link ref-icon-after ref-icon-after--angle-down js-reveal-element">Show / Hide Options</a>
-							<div class="reveal-element">
-								<div class="filter-switch filter-switch--small">									
-									<div class="can-toggle can-toggle--size-small">
-									  <input id="events" type="checkbox">
-									  <label for="events">
-									    <div class="can-toggle__switch" data-checked="Y" data-unchecked="N"></div>
-									  </label>
-									</div>
-									<span>Events</span>
-								</div>
-								<div class="filter-switch filter-switch--small">									
-									<div class="can-toggle can-toggle--size-small">
-									  <input id="overlaydownloads" type="checkbox">
-									  <label for="overlaydownloads" class="js-overlay-downloads">
-									    <div class="can-toggle__switch" data-checked="Y" data-unchecked="N"></div>
-									  </label>
-									</div>
-									<span>Overlay Downloads</span>
-								</div>
-								<div class="filter-switch filter-switch--small">									
-									<div class="can-toggle can-toggle--size-small">
-									  <input id="cumulative" type="checkbox">
-									  <label for="cumulative">
-									    <div class="can-toggle__switch" data-checked="Y" data-unchecked="N"></div>
-									  </label>
-									</div>
-									<span>Cumulative Chart</span>
-								</div>
-								<div class="filter-switch filter-switch--small">									
-									<div class="can-toggle can-toggle--size-small">
-									  <input id="average" type="checkbox">
-									  <label for="average">
-									    <div class="can-toggle__switch" data-checked="Y" data-unchecked="N"></div>
-									  </label>
-									</div>
-									<span>1M Moving Average</span>
-								</div>
-								<div class="filter-switch filter-switch--small">									
-									<div class="can-toggle can-toggle--size-small">
-									  <input id="overlayapps" type="checkbox">
-									  <label for="overlayapps">
-									    <div class="can-toggle__switch" data-checked="Y" data-unchecked="N"></div>
-									  </label>
-									</div>
-									<span>Overlay Apps (0/5)</span>
-								</div>
-							</div>
-						</div>
-					</form>
-				</div>
-				<div class="graph-container">
-					<div id="container" style="width:100%; height:505px;" class="highcharts-container">
-          </div>
-					<div class="graph-loading-indicator">
-          </div>
-          <div class="graph-loading-line">
-          	<div class="animated-line"></div>
-          </div>
-				</div>
+				<div class="grid-container">
 				<section class="data-display-container">
 					<header class="data-display-header">
 						<div class="data-display-header--component total-revenue-title">
@@ -459,13 +475,105 @@ c-2.2,1.4-4.9,2.3-7.8,2.3C8,30.5,1.5,24,1.5,16z"/></svg>
 								<col style="width: 50%">
 							</colgroup>
 
-							<tbody><tr><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td></tr><tr><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td></tr><tr><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td></tr><tr><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td></tr><tr><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td></tr><tr><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td></tr><tr><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td></tr><tr><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td></tr><tr><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td></tr><tr><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td></tr><tr><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td></tr><tr><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td></tr><tr><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td></tr><tr><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td></tr><tr><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td></tr><tr><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td></tr><tr><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td></tr><tr><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td></tr><tr><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td></tr><tr><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td></tr><tr><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td></tr><tr><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td></tr><tr><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td></tr><tr><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td></tr><tr><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td></tr><tr><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td></tr><tr><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td></tr><tr><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td></tr><tr><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td></tr></tbody></table></div></div></div></div></td></tr></tbody>
+							<tbody><tr><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td></tr><tr><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td></tr><tr><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td><td><svg class="loading-ellipsis" version="1.1" x="0px" y="0px" viewBox="0 0 24.2 6.6" enable-background="new 0 0 24.2 6.6" xml:space="preserve"><circle class="dot-2" fill="#E7E7EA" cx="12.1" cy="3.4" r="3.2"></circle><circle class="dot-1" fill="#E7E7EA" cx="3.2" cy="3.2" r="3.2"></circle><circle class="dot-3" fill="#E7E7EA" cx="21" cy="3.2" r="3.2"></circle></svg></td></tr></tbody></table></div></div></div></div></td></tr></tbody>
 					</table>
 					<button class="ref-button--function-small ref-button--function-small--with-icon download-button--mobile"><span class="ref-icon-before ref-icon-before--cloud">Download</span></button>
 				</section>
 			</div>
+					</li>
+					<li id="tab-content-details" class="tabs__content tabs__content--is-showing">						
+						<div class="app-images-container">
+							<div class="app-images">
+								<ul class="app-image-list">
+								</ul>
+							</div>
+						</div>
+						<div class="grid-container app-details-content-container">
+							<div class="grid__column grid__column--two-thirds app-main-details">
+								<article class="site-article-full">
+									<h2 class="heading-style--heading-three">Description</h2>
+									<p class="js-app-description"><p>
+									<div class="release-notes-container js-release-notes-container">
+										<h3 class="heading-style--heading-four">What's New in Version <span class="js-dd-version"></span></h3>
+										<p><span class="js-release-notes"></span></p>
+									</div>
+								</article>
+								<aside class="reviews-and-ratings">								
+									<h2 class="heading-style--heading-three">Average Ratings</h2>
+									<div class="form-field form-field--select country-selector form-field--select--filter js-country-selector">
+										<div class="page-overlay"></div>
+										<select class="js-field--select reflection-select--filter reflection-select--right">
+									    <option value="" disabled>Filter by Country</option>
+									    <option value="gb" selected>United Kingdom</option>
+									    <option value="fr">France</option>
+									    <option value="de">Germany</option>
+									    <option value="it">Italy</option>
+									    <option value="ca">Canada</option>
+									    <option value="se">Sweden</option>
+									    <option value="us">USA</option>
+									    <option value="jp">Japan</option>
+									    <option value="pl">Poland</option>
+											<option value="kz">Kazakhstan</option>
+										</select>
+									</div>
+									<div class="average-ratings-container">
+										<h3>Current version</h3>
+										<div class="js-dd-rating-current"></div>
+									</div>
+									<div class="average-ratings-container">
+										<h3>All versions</h3>
+										<div class="js-dd-rating-all"></div>
+									</div>
+									<div class="customer-reviews js-customer-reviews">
+										<ul></ul>
+									</div>
+								</aside>
+								<aside class="more-by-this-developer js-more-by-this-developer">
+									<h2 class="heading-style--heading-three">Other Apps By This Developer</h2>
+									<ul></ul>
+									<p class="more-apps-listed js-more-apps-listed"></p>
+								</aside>
+							</div>
+							<aside class="grid__column grid__column--one-third aside-definition-list">
+								<h2 class="heading-style--heading-four">Details</h2>
+								<dl>
+									<dt>Price</dt>
+									<dd class="js-dd-price"></dd>
+									<dt>Category</dt>
+									<dd class="js-dd-category"></dd>
+									<dt>Size</dt>
+									<dd class="js-dd-size"></dd>
+									<dt>Languages</dt>
+									<dd class="js-dd-languages"></dd>
+									<dt>Stores</dt>
+									<dd>iPhone, iPad</dd>
+									<dt>Rated</dt>
+									<dd class="js-dd-rated"></dd>
+									<dt>Version</dt>
+									<dd class="js-dd-version"></dd>
+									<dt>Release Date</dt>
+									<dd class="js-dd-release-date"></dd>
+									<dt>Universal App</dt>
+									<dd class="js-dd-universal">No</dd>
+									<dt>Game Center</dt>
+									<dd class="js-dd-gc">No</dd>
+								</dl>
+								<p class="app-details-link js-developers-site"></p>
+								<p class="app-details-link js-view-app-store"></p>
+								<p class="app-details-link js-more-apps"></p>
+								<h2 class="heading-style--heading-four">Compatibility</h2>
+								<p class="supported-devices">Supported Devices: <span class="js-dd-devices"></span>
+								</p>
+							</aside>
+						</div>
+					</li>
+				</ul>
+			</div>
+			</div>
 		</div>
 	</div>
+
+	<div class="grid-container" id="js-component-import--global-footer"></div>
 
 	<div id="js-component-import--account-container" class="panel-right-container js-account-container"></div>
 	<div id="js-component-import--search-container" class="panel-right-container js-search-container"></div>
@@ -474,7 +582,7 @@ c-2.2,1.4-4.9,2.3-7.8,2.3C8,30.5,1.5,24,1.5,16z"/></svg>
  	<script src="js/vendor/jquery-ui.custom.min.js"></script>
  	<script src="js/vendor/handlebars-v2.0.0.js"></script>
  	<script src="js/templates/templates.js"></script>
-	<script src="js/vendor/modernizr.2.8.3.custom.min.js"></script>
+ 	<script src="js/vendor/modernizr.2.8.3.custom.min.js"></script>
 	<!--[if IE 9]>
 		<script src="js/vendor/jquery.mCustomScrollbar.concat.min.js"></script>
 	<![endif]-->
@@ -485,54 +593,289 @@ c-2.2,1.4-4.9,2.3-7.8,2.3C8,30.5,1.5,24,1.5,16z"/></svg>
   <script src="js/application.js"></script>
   <script src="js/vendor/snap.svg.js"></script>
   <script src="js/vendor/highcharts-custom.js"></script>
+  <script src="js/language-codes.js"></script>
 
   <script>
 
-  	function generateChart() {
+  	Date.prototype.addHours= function(h){
+      this.setHours(this.getHours()+h);
+      return this;
+    }
 
-  		Highcharts.setOptions({
-          colors: ['#1bc79f', '#ffb449', '#ff496a', '#6d69c5', '#e98fec', '#64E572', '#FF9655', '#FFF263', '#6AF9C4']
-      });
+    function initScripts() {
+  		new AppPage();
 
-  		var chartMarginBottom = 35;
-      var chartHeight = $('.highcharts-container').innerHeight() - chartMarginBottom - 1;
-      console.log(chartHeight);
+  		// Mock JS
+  		$('.can-be-sorted').on("click", function() {
+  			var $this = $(this), siblingSortCells = $this.siblings('.can-be-sorted');
+  			if($this.hasClass('is-descending')) {
+  				$this.toggleClass('is-descending is-ascending');
+  			}
+  			else if($this.hasClass('is-ascending')) {
+  					$this.removeClass('is-ascending');
+  			}
+  			else {
+  				$this.addClass('is-descending');
+  			}
+  			siblingSortCells.removeClass('is-ascending is-descending');
+  		});
 
-  		var chart = new Highcharts.Chart({
+  		$('.date-select-container input').on("focus", function(){
+  			$('.refresh-button').removeAttr("disabled");
+  		});  		
+
+	  	// Extending Highcharts
+	    (function (H) {
+
+	      var customIconRect;
+	      H.wrap(H.Tooltip.prototype, 'refresh', function (proceed) {
+
+	        proceed.apply(this, Array.prototype.slice.call(arguments, 1));
+
+	        var monthNames = [
+	          "Jan", "Feb", "Mar",
+	          "Apr", "May", "Jun", "Jul",
+	          "Aug", "Sep", "Oct",
+	          "Nov", "Dec"
+	        ];
+
+	        if(customIconRect !== undefined) {
+	          customIconRect.destroy();
+	        }
+
+	        var $axisLabel = $(this.chart.container).find('.highcharts-axis-label'),
+	            leftOffset = 29,
+	            axisLabelYPos = $("#" + arguments[1][0].series.chart.container.id + "").height() - arguments[1][0].series.xAxis.bottom,
+	            //axisLabelYPos = arguments[1][0].series.chart.containerHeight - arguments[1][0].series.xAxis.bottom,
+	            axisLabelXPos = arguments[1][0].plotX - leftOffset,
+	            timeStampString = arguments[1][0].x + "",
+	            timeStampString = timeStampString.substring(0,10),
+	            xAxisDate = new Date(timeStampString*1000).addHours(12),
+	            formattedDate = xAxisDate.getDate() + " " + monthNames[xAxisDate.getMonth()];
+
+	        if($axisLabel.length > 0) {       
+
+	          var labelYPos = axisLabelYPos + 28,
+	              labelXPos = axisLabelXPos + 5;
+
+	          $axisLabel.attr("transform", "translate(" + labelXPos + "," + labelYPos + ")");
+	          $axisLabel.find("text").text(formattedDate);
+
+	        } else {
+	          this.chart.renderer.label(formattedDate, axisLabelXPos+5, axisLabelYPos + 28, 'callout', 0, 0, false, true, "axis-label")
+	          .css({
+	            color: '#fcfdfd',
+	            fontSize: '13px',
+	            fontFamily: 'Lato',
+	            fontWeight: 600
+	          })
+	          .attr({
+	            zIndex: 100
+	          })
+	          .add();
+	        }
+
+	        customIconRect = this.chart.renderer.image('images/axisLabelBackground.png', axisLabelXPos - 5, axisLabelYPos, 67, 34)
+	        .attr({
+	          zIndex: 99
+	        })
+	        .add();
+
+
+	        // add event labels
+	        	// destroy any existing labels
+	        var thisPlotX = arguments[1][0].plotX,
+	        		eventTooltip;
+
+	        		if(this.chart.eventTooltips) {
+	        			for (var t = 0; t < this.chart.eventTooltips.length; t++) {
+	        				this.chart.eventTooltips[t].destroy();
+	        			}
+	        		}
+	        		this.chart.eventTooltips = [];
+
+	        	// remove existing animating CSS class for icons
+	        $(".event-icon--launch.is-animating").each(function() {
+	        	$(this).attr("class", "animation-complete event-icon--launch");
+	        });
+	        $(".event-icon--flag.is-animating").each(function() {
+	        	$(this).attr("class", "event-icon--flag");
+	        });
+	        
+	        	// create tooltip on event hover
+        	var eventsCounter = 0,
+	        			previousEventPlotX;
+	        			window.animatingFlags = false;	        			
+		      for (var e = 0; e < this.chart.events.length; e++) {
+		      	if(this.chart.events[e].plotX == thisPlotX) {
+		      		// check if previous event plotX = this plotX to calculate label spacing
+		      		if(previousEventPlotX) {
+		      			if(previousEventPlotX == this.chart.events[e].plotX) {
+		      				eventsCounter++;
+		      			} else {
+		      				eventsCounter = 0;
+		      			}
+		      		}
+		      		previousEventPlotX = this.chart.events[e].plotX;
+
+		      		var labelTopSpace = axisLabelYPos + 41 + (eventsCounter * 35);
+		      		var eventIcon = this.chart.events[e].icon.element;
+		        	eventTooltip = this.chart.renderer.label($(eventIcon).data("tooltip"), this.chart.series[0].data[$(eventIcon).data("datapoint")].plotX - 28, labelTopSpace, 'callout')
+		            .css({
+		                color: $(eventIcon).data("tooltipcolour")
+		            })
+		            .attr({
+		                fill: $(eventIcon).data("tooltipfill"),
+		                padding: 7,
+		                r: 5,
+		                zIndex: 6
+		            })
+		            .addClass("event-label")
+		            .add();
+
+		         	this.chart.eventTooltips.push(eventTooltip);
+
+		         	// add event icon animate CSS class - NOT COMPLETE
+		         	var currentCSSClass = $(this.chart.events[e].icon.element).attr("class");
+	      			$(this.chart.events[e].icon.element).attr("class", "is-animating " + currentCSSClass);
+	      			if(currentCSSClass.indexOf("event-icon--flag") > -1) {
+	      				this.chart.events[e].flag = null;
+	      				this.chart.events[e].flag = Snap(this.chart.events[e].icon.element);
+		      			var thisFlag = this.chart.events[e].flag;
+		      			window.animatingFlags = true;
+		      			animateSquash = function(flagToAnimate) {
+	      					flagToAnimate.animate({width: 15}, 100, function(){
+	      						flagToAnimate.animate({width: 18}, 100, function() {
+	      							if(window.animatingFlags) {
+	      								animateSquash(flagToAnimate);
+	      							}      							
+	      						});
+	      					});
+		      			}
+		      			animateSquash(Snap(this.chart.events[e].icon.element));
+	      			}
+		        }
+		      }
+	      });
+
+				H.wrap(H.Series.prototype, 'hide', function (proceed) {
+
+				  // Before the hide function
+				  var par = $(this.graph.element).parents('.highcharts-series').attr("class", "highcharts-series is-transparent-fade");
+				  var instance = this;
+				  // Now apply the original function with the original arguments, 
+				  // which are sliced off this function's arguments
+				  setTimeout(function() {
+				  	proceed.apply(instance, Array.prototype.slice.call(arguments, 1));
+				  	par.attr("class", "highcharts-series");
+				  }, 200);
+				});
+
+				H.wrap(H.Series.prototype, 'show', function (proceed) {
+
+				  // Before the show function
+				  var graphId = this.graph.element.id;
+				  // Now apply the original function with the original arguments, 
+				  // which are sliced off this function's arguments
+				  proceed.apply(this, Array.prototype.slice.call(arguments, 1));
+
+				  // after show()
+				  var currentPath = this.graph.d;
+				  var par = $(this.graph.element).parents('.highcharts-series').attr("class", "highcharts-series is-transparent");
+				  setTimeout(function() {
+				  	var el = Snap('#' + graphId);
+            var numberOfItems = el.node.pathSegList.numberOfItems;
+            for(var x=0; x < numberOfItems; x++) {
+              el.node.pathSegList[x].y = 454;
+            }            
+				  	par.attr("class", "highcharts-series");
+				  	setTimeout(function() {
+				  		el.animate({ d: currentPath }, 800, mina.elastic);
+				  	}, 400);
+
+				  	var elFill = Snap('#' + graphId + 'fill');
+				  	var currentPathFill = $('#' + graphId + 'fill').attr("d");
+            var numberOfItemsFill = elFill.node.pathSegList.numberOfItems;
+            for(var x=0; x < numberOfItemsFill; x++) {
+              elFill.node.pathSegList[x].y = 454;
+            }
+				  	setTimeout(function() {
+				  		elFill.animate({ d: currentPathFill }, 800, mina.elastic);
+				  	}, 400);
+				  }, 100);
+
+				});
+	    }(Highcharts));
+
+	    Highcharts.setOptions({
+	        colors: ['#1bc79f', '#ffb449', '#ff496a', '#6d69c5', '#e98fec', '#64E572', '#FF9655', '#FFF263', '#6AF9C4']
+	    });
+
+	    mockGraphLoading();
+
+	  }
+
+	  function mockGraphLoading() {
+      setTimeout(function(){
+        $('.graph-container').addClass('is-loading');
+        setTimeout(function(){
+          $('.graph-loading-indicator').addClass('is-loading-success');
+          $('.graph-container').addClass('is-animated');
+          setTimeout(function(){
+            $('.graph-container').removeClass('is-loading');            
+            $('.graph-container .graph-loading-line').hide(); // For graph line animation only, not related to graph loading
+            generateChart(); // create the Highchart
+          }, 200)
+        }, 2000);
+      }, 200);
+    }
+
+    function generateChart() {
+
+    	// Generate Demo Chart
+			var chart = new Highcharts.Chart({
 				chart: {
           renderTo: 'container',
 					marginLeft: 0,
 					marginRight: 0,
-					marginBottom: chartMarginBottom,
+					marginBottom: 45,
 					marginTop: 0,
 					backgroundColor: '#fcfdfd',
 					plotBackgroundColor: '#f1f1f6',
 		   		type: 'area',
-		   		spacingTop: 0,
+		   		animation: false,
 		   		style: {
             fontFamily: 'Lato, sans-serif'
           },
           events: {
-            load: function() {
+            load: function() { // ANIMATE LINE IN USING SNAP.JS
                 var countIndex = 0;
-                $(this.container).addClass('is-animated');
-                $('#container .highcharts-series:first-child path:nth-child(1)').each(function() {
-                  if (countIndex > -1) { // testing
-                    $(this).css("opacity", "0.2");
+                var graphPointAnimationDelay = 20;
+                $('#container .highcharts-series path:nth-child(1)').each(function() {
+                  if (countIndex > 0) {                  	
+                    $(this).attr("style", "opacity: 0.1");
+                  }
+                  countIndex++;
+                });
+
+                countIndex = 0;
+                $('#container .highcharts-series path:nth-child(2)').each(function() {
+                  if (countIndex > 0) {                  	
+                    $(this).attr("style", "opacity: 0.5");
                   } else {
-                    $(this).css("opacity", "0.2");
+                    $(this).attr("style", "opacity: 1");
                   }
                   countIndex++;
                 });
 
                 var counter = 0,
-                    pathCoords = [],
-                    initialCoordinates = [],
-                    initialFillCoordinates = [];
+                    allLines = [],
+                    allFills = [];
 
-                $('#container .highcharts-series:first-child path:nth-child(2)').each(function(){
+                $('#container .highcharts-series path:nth-child(2)').each(function(){
                     $(this).attr("id", "series" + counter);
-                    pathCoords.push($(this).attr("d"));
+                    var initialCoordinates = [],
+                        initialFillCoordinates = [];
 
                     var el = Snap('#series' + counter);
                     var numberOfItems = el.node.pathSegList.numberOfItems;
@@ -541,12 +884,15 @@ c-2.2,1.4-4.9,2.3-7.8,2.3C8,30.5,1.5,24,1.5,16z"/></svg>
                         pathSegTypeAsLetter: el.node.pathSegList[x].pathSegTypeAsLetter,
                         x: el.node.pathSegList[x].x,
                         y: el.node.pathSegList[x].y
-                      })
-                      el.node.pathSegList[x].y = chartHeight;
+                      });
+                      el.node.pathSegList[x].y = 454;
                     }
 
-                    var fillSvg = $(this).parent('.highcharts-series').find('path:first-child').attr("id", "seriesfill" + counter);
-                    var fillEl = Snap("#seriesfill" + counter);
+                    allLines.push(initialCoordinates);
+
+                    var fillSvg = $(this).parent('.highcharts-series').find('path:first-child').attr("id", "series" + counter + "fill");
+
+                    var fillEl = Snap("#series" + counter + "fill");
                     var numberOfItems = fillEl.node.pathSegList.numberOfItems;
                     for(var x=0; x < numberOfItems; x++) {
                       initialFillCoordinates.push({
@@ -554,71 +900,64 @@ c-2.2,1.4-4.9,2.3-7.8,2.3C8,30.5,1.5,24,1.5,16z"/></svg>
                         x: fillEl.node.pathSegList[x].x,
                         y: fillEl.node.pathSegList[x].y
                       })
-                      fillEl.node.pathSegList[x].y = chartHeight;
+                      fillEl.node.pathSegList[x].y = 454;
                     }
+
+                    allFills.push(initialFillCoordinates);
 
                   counter++;
                 });
+                
+                function animateGraph(i, pathType) {
+                  var el, pointsArray;
+                  
+                  if(pathType == "line") {
+                    pointsArray = allLines;
+                    el = Snap('#series' + i);
+                  } else {
+                    pointsArray = allFills;
+                    el = Snap('#series' + i + 'fill');
+                  }
 
-                setTimeout(function(){
-                  var i = 0;
-                  $('#container .highcharts-series:first-child path:nth-child(2)').each(function(){
-                    
-                    var el = Snap('#series' + i);
-                    var numberOfItems = el.node.pathSegList.numberOfItems;
-                    setPoint(0);
+                  var numberOfItems = el.node.pathSegList.numberOfItems;
 
-                    function setPoint(pointIndex) {
-                      var newPath = "";                      
-                      if(pointIndex < numberOfItems) {
-                        for(var x=0; x < numberOfItems; x++) {
-                          if(x <= pointIndex) {
-                            newPath += initialCoordinates[x].pathSegTypeAsLetter + " " + initialCoordinates[x].x + " " + initialCoordinates[x].y + " ";
-                          } else {
-                            newPath += initialCoordinates[x].pathSegTypeAsLetter + " " + initialCoordinates[x].x + " " + chartHeight+ " ";
-                          }                        
-                        }
-                        
-                        el.animate({ d: newPath }, 81, mina.easein);
-                        var nextPoint = pointIndex + 1;
-                        setTimeout(function(){
-                          setPoint(nextPoint);
-                        }, 18);
+                  setPoint(0);
+
+                  function setPoint(pointIndex) {
+                    var newPath = "";
+                    if(pointIndex < numberOfItems) {
+                      for(var x=0; x < numberOfItems; x++) {
+                        if(x <= pointIndex) {
+                          newPath += pointsArray[i][x].pathSegTypeAsLetter + " " + pointsArray[i][x].x + " " + pointsArray[i][x].y + " ";
+                        } else {
+                          newPath += pointsArray[i][x].pathSegTypeAsLetter + " " + pointsArray[i][x].x + " 454 ";
+                        }                        
                       }
+                      
+                      el.animate({ d: newPath }, 90, mina.easein);
+                      var nextPoint = pointIndex + 1;
+                      setTimeout(function(){
+                        setPoint(nextPoint);
+                      }, graphPointAnimationDelay);
                     }
+                  }
+                }
 
-                    i++;
-                  });
+                var i = 0;
+                var allGraphLinesLength = $('#container .highcharts-series path:nth-child(2)').length;
 
-                  var f = 0;
-                  $('#container .highcharts-series:first-child path:nth-child(1)').each(function(){
-                    
-                    var fillEl = Snap('#seriesfill' + f);
-                    var numberOfItems = fillEl.node.pathSegList.numberOfItems;
-                    setFillPoint(0);
+                for(var lineIndex=0; lineIndex < allGraphLinesLength; lineIndex++) {
+                  animateGraph(i, "line");
+                  i++;
+                }
 
-                    function setFillPoint(pointIndex) {
-                      var newPath = "";                      
-                      if(pointIndex < numberOfItems) {
-                        for(var x=0; x < numberOfItems; x++) {
-                          if(x <= pointIndex) {
-                            newPath += initialFillCoordinates[x].pathSegTypeAsLetter + " " + initialFillCoordinates[x].x + " " + initialFillCoordinates[x].y + " ";
-                          } else {
-                            newPath += initialFillCoordinates[x].pathSegTypeAsLetter + " " + initialFillCoordinates[x].x + " " + chartHeight + " ";
-                          }                        
-                        }
-                        
-                        fillEl.animate({ d: newPath }, 81, mina.easein);
-                        var nextPoint = pointIndex + 1;
-                        setTimeout(function(){
-                          setFillPoint(nextPoint);
-                        }, 18);
-                      }
-                    }
+                var f = 0;
+                var allGraphFillsLength = $('#container .highcharts-series path:nth-child(1)').length;
 
-                    f++;
-                  });
-                }, 100);
+                for(var fillIndex=0; fillIndex < allGraphFillsLength; fillIndex++) {
+                  animateGraph(f, "fill");
+                  f++;
+                }
             }
           }
 			  },
@@ -636,27 +975,43 @@ c-2.2,1.4-4.9,2.3-7.8,2.3C8,30.5,1.5,24,1.5,16z"/></svg>
           labels: {
           	align: 'left',
           	style: {
-          		color: '#81879d',
+          		color: '#2ecaa7',
           		fontSize: "13px"
           	}
           },
           title: {
           	text: null
           }            
-        },{
+        }, {
           offset: -30,
           showFirstLabel: false,
           showLastLabel: false,
           gridLineColor: '#e1e5e8',
           labels: {
-          	align: 'right',
-          	style: {
-          		color: '#ff496a',
-          		fontSize: "13px"
-          	}
+            align: 'right',
+            style: {
+            	color: '#6d69c5',              
+              fontSize: "13px"
+            }
           },
           title: {
-          	text: null
+            text: null
+          },
+          opposite: true
+        }, {
+          offset: -80,
+          showFirstLabel: false,
+          showLastLabel: false,
+          gridLineColor: '#e1e5e8',
+          labels: {
+            align: 'right',
+            style: {
+              color: '#ff496a',
+              fontSize: "13px"
+            }
+          },
+          title: {
+            text: null
           },
           opposite: true
         }],
@@ -679,7 +1034,7 @@ c-2.2,1.4-4.9,2.3-7.8,2.3C8,30.5,1.5,24,1.5,16z"/></svg>
           labels: {
           	align: 'center',
             x: 0,
-            y: 30,
+            y: 28,
             step: 4,
             style: {
               color: '#81879d',
@@ -688,11 +1043,10 @@ c-2.2,1.4-4.9,2.3-7.8,2.3C8,30.5,1.5,24,1.5,16z"/></svg>
           }
         },
         plotOptions: {
-        	area: {        		
+        	area: {
             trackByArea: false,
-            spacingTop: 0,
         		tooltip: {
-        			followPointer: false
+        			followPointer: true
         		},
         		states: {
         			hover: {
@@ -700,27 +1054,11 @@ c-2.2,1.4-4.9,2.3-7.8,2.3C8,30.5,1.5,24,1.5,16z"/></svg>
         					fill: 'rgba(27,199,159,0.18)',
         					size: 13
         				},
-        				lineWidthPlus: 1
+        				lineWidthPlus: 0
         			}
-        		}
+        		}        		
         	},
           series: {
-          	spacingTop: 0,
-          	animation: false,
-            events: {
-              click: function (event) {
-                
-              }              
-            },
-            cursor: 'pointer'
-          }
-      	},
-        series:          
-           [{
-            id: 'monument',
-            name: "Monument Valley",
-            data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4, 29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 144.0, 176.0, 135.6, 106.4, 129.2, 144.0, 148.5, 216.4],
-            pointStart: Date.UTC(2015, 2, 1),
             events: {
               click: function() {
                 var that = this;
@@ -736,18 +1074,18 @@ c-2.2,1.4-4.9,2.3-7.8,2.3C8,30.5,1.5,24,1.5,16z"/></svg>
                           isCurrentlyHighlighted = true
                           that.chart.series[i].update({
                             lineWidth: 2
-                          });                      
+                          });           
                           var counterTwo = 0;
                           $('#container .highcharts-series').each(function(){
                             if(counterTwo == count) {
-                              thisFillPath = thisFillPath = $(this).find('path:nth-child(2)');
+                              thisFillPath = $(this).find('path:nth-child(2)');
                             }
                             counterTwo++;
                           });                          
                           thisFillPath.css("opacity", "1");
-                          thisFillPath.animate({ "opacity": 0.2 }, 250);
-                          thisFillPath.siblings("path").css("opacity", "0.2");
-                          thisFillPath.siblings("path").animate({ "opacity": 0 }, 250);
+                          thisFillPath.animate({ "opacity": 0.4 }, 250);
+                          thisFillPath.siblings("path").css("opacity", "1");
+                          thisFillPath.siblings("path").animate({ "opacity": 0.1 }, 250);
                         }
                       }
                       count++;
@@ -762,186 +1100,614 @@ c-2.2,1.4-4.9,2.3-7.8,2.3C8,30.5,1.5,24,1.5,16z"/></svg>
                 $('#container .highcharts-series path:nth-child(2)').each(function(){
                   if($(this).attr("stroke-width") == 2.1) {
                     $(this).css("opacity", "1");
-                    $(this).siblings("path").css("opacity", "0");
-                    $(this).siblings("path").animate({ "opacity": 0.2 }, 250);
+                    $(this).siblings("path").css("opacity", "0.1");
+                    $(this).siblings("path").animate({ "opacity": 1 }, 250);
                   }
                 });
+
+                // read the graph line id's after this.udpate
+                var counter = 0;
+
+                $('#container .highcharts-series path:nth-child(2)').each(function(){
+                  $(this).attr("id", "series" + counter);
+                  $(this).parent('.highcharts-series').find('path:first-child').attr("id", "series" + counter + "fill");
+                  counter++;
+                });
               },
-              mouseOver: function () {
-                setTimeout(function(){
-                  $('#container .highcharts-series path:nth-child(2)').each(function(){
-                    if($(this).attr("stroke-width") == 3) {
-                      $(this).css("opacity", 1);
-                    }
-                  });
-                },10);
-              },
-              mouseOut: function () {
-                setTimeout(function(){
-                  $('#container .highcharts-series path:nth-child(2)').each(function(){
-                    if($(this).attr("stroke-width") == 2) {
-                      $(this).css("opacity", 0.2);
-                    }
-                  });
-                },10);
+              // mouseOver: function () {
+              //   setTimeout(function(){
+              //     $('#container .highcharts-series path:nth-child(2)').each(function(){
+              //       if($(this).attr("stroke-width") == 3) {
+              //         $(this).css("opacity", 1);
+              //       }
+              //     });
+              //   },10);
+              // },
+              // mouseOut: function () {
+              //   setTimeout(function(){
+              //     $('#container .highcharts-series path:nth-child(2)').each(function(){
+              //       if($(this).attr("stroke-width") == 2) {
+              //         $(this).css("opacity", 0.5);
+              //       }
+              //     });
+              //   },10);
+              // }
+            },
+            cursor: 'pointer',
+            animation: false
+          },
+      	},
+        series:          
+           [{
+           	yAxis: 0,
+            name: "Rank",
+            id : 'rank',
+            data: [29.9, 31.5, 61.4, 77.2, 80.0, 90.0, 100.6, 90.5, 80.4, 75.1, 70.6, 60.4, 40.9, 30.5, 20.4, 10.2, 65.0, 80.0, 90.0, 100.0, 75.6, 100.4, 110.2, 120.0, 105.5, 90.4],
+            pointStart: Date.UTC(2015, 2, 1),
+            pointInterval: 24 * 3600 * 1000, // one day
+            fillOpacity: 0,
+            color: '#2ecaa7',
+            lineWidth: 2.1, // set on load for current graph line to be active graph line for series click event
+            lineWidthPlus: 0,
+            lineColor: '#2ecaa7',
+            marker: {
+              enabled: false,
+              states: {
+                hover: {
+                  enabled: true,
+                  fillColor: '#2ecaa7',
+                  lineWidth: 0,
+                  lineWidthPlus: 0,
+                  radius: 4,
+                  radiusPlus: 0,
+                }
               }
+            }
+          },
+          {
+            yAxis: 1,
+            id: 'revenue',
+            name: "Revenue",
+            data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 116.4, 194.1, 95.6, 54.4, 29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 144.0, 176.0, 135.6, 106.4, 129.2, 144.0, 148.5, 116.4],
+            events: {
             },
             pointStart: Date.UTC(2015, 2, 1),
             pointInterval: 24 * 3600 * 1000, // one day
-            color: '#1bc79f',
-						lineWidth: 2.1,
-						lineColor: '#1bc79f',
+            color: '#6d69c5',
+						lineWidth: 2,
+						lineWidthPlus: 0,
+						lineColor: '#6d69c5',
+						fillOpacity: 1,
+            fillColor: {
+              linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
+              stops: [
+                [0, 'rgba(109,105,197,0.3)'],
+                [1, 'rgba(27,199,159,0.3)']
+              ]
+            },            
 						marker: {
           		enabled: false,
           		states: {
           			hover: {
           				enabled: true,
-          				fillColor: '#1bc79f',
+          				fillColor: '#6d69c5',
                   lineWidth: 0,
                   lineWidthPlus: 0,
                   radius: 4,
                   radiusPlus: 0,
           			}
           		}
-          	}
-          },{
-	        		yAxis: 1,
-	        		name: "Downloads",
-	            data: [10000, 13000, 16000, 18000, 22000, 29000, 26000, 27250, 38000, 34000, 22200, 15000, 8000, 15000, 16000, 19000, 24400, 33500, 32000, 31000, 32200, 28000, 35000, 42000, 43000, 55000],
-	            pointStart: Date.UTC(2015, 2, 1),
-	            pointInterval: 24 * 3600 * 1000, // one day
-	         		fillColor: {
-	            	linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
-						    stops: [
-					        [0, 'rgba(109,105,197,0)'],
-					        [1, 'rgba(27,199,159,0)']
-						    ]
-	            },
-	            visible: true,
-	            dashStyle: 'Dash',
-	            color: '#ff496a',
-							lineWidth: 2,
-							lineWidthPlus: 0,
-							lineColor: '#ff496a',
-							marker: {
-	          		enabled: false,
-	          		states: {
-	          			hover: {
-	          				enabled: true,
-	          				fillColor: '#ff496a',
-	                  lineWidth: 0,
-	                  lineWidthPlus: 0,
-	                  radius: 4,
-	                  radiusPlus: 0,
-	          			}
-	          		}
-	          	}
-            }
+          	},
+          	visible: ($('#checkbox--overlay-revenue:checked').length > 0),
+          }, {
+          	yAxis: 2,
+		        name: "Downloads",
+		        id : 'downloads',
+		        data: [19.9, 41.5, 51.4, 57.2, 70.0, 60.0, 62.6, 55.5, 40.4, 45.1, 40.6, 30.4, 12.9, 10.5, 40.4, 50.2, 45.0, 60.0, 70.0, 60.0, 65.6, 80.4, 90.2, 80.0, 75.5, 70.4],
+		        pointStart: Date.UTC(2015, 2, 1),
+		        pointInterval: 24 * 3600 * 1000, // one day
+		        fillOpacity: 0,
+		        color: '#ff496a',
+		        lineWidth: 2,
+		        lineWidthPlus: 0,
+		        lineColor: '#ff496a',
+		        dashStyle: 'dash',
+		        marker: {
+		          enabled: false,
+		          states: {
+		            hover: {
+		              enabled: true,
+		              fillColor: '#ff496a',
+		              lineWidth: 0,
+		              lineWidthPlus: 0,
+		              radius: 4,
+		              radiusPlus: 0,
+		            }
+		          }
+		     		},
+		     		visible: ($('#checkbox--overlay-downloads:checked').length > 0),
+          }
         ],
         tooltip: {
         	useHTML: true,
-        	shared: false,
+        	shared: true,
           formatter: function() {
-            var s = "<h2 style=color:" + this.point.color + ">" + this.y + ' ' + this.series.name + "</h2>", pointIndex = this.series.xData.indexOf(this.x);
-            $.each(this.series.chart.series, function () {
-                s += '<div><span style=color:' + this.color + '>' + this.data[pointIndex].y + '</span>: ' +
-                    this.name + '</div>';
+            var instance = this;
+            var s = "";            
+            $.each(instance.points, function (index, value) {
+                var chartSeries = value.series;
+                var imgString = "";
+                
+                if(chartSeries.name == "Revenue") {
+                  imgString = "<img src=images/icon-chart-revenue.png alt='Revenue icon' class=icon-revenue /> &pound;";
+                } else if (chartSeries.name == "Downloads") {
+                  imgString = "<img src=images/icon-chart-downloads.png alt='Downloads icon' class=icon-downloads />";
+                } else if (chartSeries.name == "Rank") {
+                  imgString = "<img src=images/icon-chart-rank.png alt='Rank icon' class=icon-rank />";
+                }
+                s += '<div class="custom-tooltip ' + chartSeries.name + '" style="background-color: ' + chartSeries.color + '">' + imgString + value.y + '</div>';
             });
             return s;
           },
-        	backgroundColor: '#fcfdfd',
-          borderWidth: 1,
+        	backgroundColor: 'transparent',
+          borderWidth: 0,
           borderColor: '#dae3ed',
 			    crosshairs: [{
             width: 1,
-            color: '#ff496a'
+            color: '#81879d'
           }],
-          positioner: function (labelWidth, labelHeight, point) {
-          		//console.log(labelWidth, labelHeight);
-              return { x: point.plotX + 40, y: point.plotY};
-          },
           shadow: {
             color: 'rgba(0,0,0,0.24)',
-            width: 7,
+            width: 0,
             offsetX: 1,
             offsetY: 1
         	}
         }
 	    });
-  	}
+			
+			// chart.events[] to hold the event objects, which consist of an icon, line and tooltip content and tooltip colour
+			chart.events = [];
 
-  	function mockOverlayDownloads() {
-  		$('.js-overlay-downloads').on("click", function () {
-  			console.log('.js-overlay-downloads');
-  			var chartMarginBottom = 35;
-  			var chartHeight = $('.highcharts-container').innerHeight() - chartMarginBottom - 1;
-        var chart = $('#container').highcharts();
-        var chartSeries = $('#container .highcharts-series-group .highcharts-series');
-      	
-      		var counter = chart.series[1].index,
-          pathCoords = [],
-          initialCoordinates = [];
+			if($('#checkbox--show-events:checked').length > 0) {
+				addEventsToGraph();
+			}
 
-          $(chartSeries[1]).find('path:nth-child(2)').attr("id", "series2");
-          pathCoords.push($(this).attr("d"));
+			$('#checkbox--show-events').change(function(){
+				if($(this).is(":checked")) {
+					if(chart.events.length == 0) {
+						addEventsToGraph();
+					} else {
+						for (var e = 0; e < chart.events.length; e++) {
+							$(chart.events[e].icon.element).show(200);
+							$(chart.events[e].line.element).show(200);
+							if(chart.events[e].area) {
+								$(chart.events[e].area.element).show(200);
+							}
+							if(chart.events[e].label) {
+								$(chart.events[e].label.element).show(200);
+							}
+						}
+					}
+				} else {
+					if(chart.events.length > 0) {
+						for (var e = 0; e < chart.events.length; e++) {
+							$(chart.events[e].icon.element).hide(200);
+							$(chart.events[e].line.element).hide(200);
+							if(chart.events[e].area) {
+								$(chart.events[e].area.element).hide(200);
+							}
+							if(chart.events[e].label) {
+								$(chart.events[e].label.element).hide(200);
+							}
+						}
+					}
+				}
+			});
 
-          var el = Snap('#series2');
-          var numberOfItems = el.node.pathSegList.numberOfItems;
-          for(var x=0; x < numberOfItems; x++) {
-            initialCoordinates.push({
-              pathSegTypeAsLetter: el.node.pathSegList[x].pathSegTypeAsLetter,
-              x: el.node.pathSegList[x].x,
-              y: el.node.pathSegList[x].y
-            })
-            el.node.pathSegList[x].y = chartHeight;
-          }
-          
-          // chart.series[1].show();
+			// Events - Fix for window width change
+			$(window).on("resize", function(){
+				if(chart.events.length > 0) {
+					// redraw events
+					for (var e = 0; e < chart.events.length; e++) {
+						chart.events[e].icon.destroy();
+						chart.events[e].line.destroy();
+						if(chart.events[e].area) {
+							chart.events[e].area.destroy();
+						}
+						if(chart.events[e].label.element) {
+							chart.events[e].label.destroy();
+						}
+					}
+					chart.events = [];
+					setTimeout(function(){
+						if(chart.events.length == 0) {
+							if($('#checkbox--show-events:checked').length > 0) {
+								addEventsToGraph();
+							}
+						}
+					}, 1500);
+				}
+			});
 
-          setTimeout(function(){
+			// Add events to the graph function
+			function addEventsToGraph() {
 
-              var el = Snap('#series2');
-              var numberOfItems = el.node.pathSegList.numberOfItems;
-              setPoint(0);
+				var numberOfChartItems = chart.series[0].data.length - 1;
+			  var chartWidth = $(chart.container).width();
 
-              function setPoint(pointIndex) {
-                var newPath = "";                      
-                if(pointIndex < numberOfItems) {
-                  for(var x=0; x < numberOfItems; x++) {
-                    if(x <= pointIndex) {
-                      newPath += initialCoordinates[x].pathSegTypeAsLetter + " " + initialCoordinates[x].x + " " + initialCoordinates[x].y + " ";
-                    } else {
-                      newPath += initialCoordinates[x].pathSegTypeAsLetter + " " + initialCoordinates[x].x + " " + chartHeight+ " ";
-                    }                        
-                  }
-                  
-                  el.animate({ d: newPath }, 81, mina.easein);
-                  var nextPoint = pointIndex + 1;
-                  setTimeout(function(){
-                    setPoint(nextPoint);
-                  }, 18);
+	      chart.events.push({
+	      	icon: chart.renderer.image('images/icon-launch.png', chart.series[0].data[2].plotX - 10, chart.chartHeight - 80, 20, 49)
+		            .attr({
+		              zIndex: 15
+		            })
+		            .addClass("event-icon--launch")
+		            .add(),
+		      line: chart.renderer.path(['M', chart.series[0].data[2].plotX, chart.chartHeight - 45, 'L', chart.series[0].data[2].plotX, 0])
+		            .attr({
+	                'stroke-width': 1,
+	                stroke: '#81879d',
+	                zIndex: 9
+		            })
+		            .add(),
+		      label: chart.renderer.text('<span>LAUNCHED</span>', chart.series[0].data[2].plotX + 18, 439)
+		            .attr({
+		            	rotation: -90,
+		            	zIndex: 9
+		            })
+		            .css({
+	                color: '#81879d',
+	                fontSize: '11px',
+	                fontFamily: 'Lato',
+      		        fontWeight: 'bold',
+      		        pointerEvents: 'none'
+		            })		      	
+		            .add(),
+		    	plotX: chart.series[0].data[2].plotX,
+	      },{
+	      	icon: chart.renderer.image('images/icon-flag-green.png', chart.series[0].data[20].plotX, chart.chartHeight - 57, 18, 12)
+		            .attr({
+		              zIndex: 9
+		            })
+		            .addClass("event-icon--flag")
+		            .add(),
+		      line: chart.renderer.path(['M', chart.series[0].data[20].plotX, chart.chartHeight - 45, 'L', chart.series[0].data[20].plotX, 00])
+		            .attr({
+	                'stroke-width': 1,
+	                stroke: '#81879d',
+	                zIndex: 10
+		            })
+		            .add(),
+		      label: chart.renderer.text('<span>VERSION UPDATE</span>', chart.series[0].data[20].plotX + 18, 439)
+		            .attr({
+		            	rotation: -90,
+		            	zIndex: 9
+		            })
+		            .css({
+	                color: '#81879d',
+	                fontSize: '11px',
+	                fontFamily: 'Lato',
+	                fontWeight: 'bold',
+	                pointerEvents: 'none'
+		            })
+		            .add(),
+					plotX: chart.series[0].data[20].plotX,
+	      },{
+	      	icon: chart.renderer.image('images/icon-flag-green.png', chart.series[0].data[8].plotX, chart.chartHeight - 57, 18, 12)
+		            .attr({
+		              zIndex: 9
+		            })
+		            .addClass("event-icon--flag")
+		            .add(),
+		      line: chart.renderer.path(['M', chart.series[0].data[8].plotX, chart.chartHeight - 45, 'L', chart.series[0].data[8].plotX, 00])
+		            .attr({
+	                'stroke-width': 1,
+	                stroke: '#81879d',
+	                zIndex: 10
+		            })
+		            .add(),
+		      label: chart.renderer.text('<span>VERSION UPDATE</span>', chart.series[0].data[8].plotX + 18, 439)
+		            .attr({
+		            	rotation: -90,
+		            	zIndex: 9
+		            })
+		            .css({
+	                color: '#81879d',
+	                fontSize: '11px',
+	                fontFamily: 'Lato',
+	                fontWeight: 'bold',
+	                pointerEvents: 'none'
+		            })
+		            .add(),
+		      area: chart.renderer.rect(chart.series[0].data[8].plotX, 0, ((chartWidth / numberOfChartItems) * 4), 455, 0)
+		            .attr({
+	                'stroke-width': 0,
+	                fill: 'rgba(129, 135, 157, 0.1)',
+	                zIndex: 5
+		            })
+		            .css({
+		            	pointerEvents: 'none'
+		            })
+		            .add(),
+					plotX: chart.series[0].data[8].plotX,
+		      },{
+		      	icon: chart.renderer.image('images/icon-flag-yellow.png', chart.series[0].data[8].plotX, chart.chartHeight - 57, 18, 12)
+			            .attr({
+			              zIndex: 9
+			            })
+			            .addClass("event-icon--flag")
+			            .add(),
+			      line: chart.renderer.path(['M', chart.series[0].data[8].plotX, chart.chartHeight - 45, 'L', chart.series[0].data[8].plotX, 00])
+			            .attr({
+		                'stroke-width': 1,
+		                stroke: '#81879d',
+		                zIndex: 10
+			            })
+			            .add(),
+			      label: chart.renderer.text('<span>APP UPDATE</span>', chart.series[0].data[8].plotX + 18, 439)
+			            .attr({
+			            	rotation: -90,
+			            	zIndex: 9
+			            })
+			            .css({
+		                color: '#81879d',
+		                fontSize: '11px',
+		                fontFamily: 'Lato',
+		                fontWeight: 'bold',
+		                pointerEvents: 'none'
+			            })
+			            .add(),
+						plotX: chart.series[0].data[8].plotX,
+				});
+
+				// Events - Add tooltip data
+				$(chart.events[0].icon.element).data("tooltip", "App Launch, 3 Mar 15");				
+				$(chart.events[0].icon.element).data("datapoint", 2);
+				$(chart.events[0].icon.element).data("tooltipcolour", "#FFFFFF");
+				$(chart.events[0].icon.element).data("tooltipfill", "rgba(109, 105, 197, 0.9)");
+
+				$(chart.events[1].icon.element).data("tooltip", "Version Update 1.2, 21 Mar 15");
+				$(chart.events[1].icon.element).data("datapoint", 20);
+				$(chart.events[1].icon.element).data("tooltipcolour", "#FFFFFF");
+				$(chart.events[1].icon.element).data("tooltipfill", "rgba(27,199,159, 0.9)");
+
+				$(chart.events[2].icon.element).data("tooltip", "Version Update 1.1, 9 Mar 15");
+				$(chart.events[2].icon.element).data("datapoint", 8);
+				$(chart.events[2].icon.element).data("tooltipcolour", "#FFFFFF");
+				$(chart.events[2].icon.element).data("tooltipfill", "rgba(27,199,159, 0.9)");
+
+				$(chart.events[3].icon.element).data("tooltip", "Featured Games, 9 Mar 15");
+				$(chart.events[3].icon.element).data("datapoint", 8);
+				$(chart.events[3].icon.element).data("tooltipcolour", "#444444");
+				$(chart.events[3].icon.element).data("tooltipfill", "rgba(255,180,73, 0.9)");
+
+				// position the launch event icons
+				// animation is by CSS
+				setTimeout(function(){ 
+	      	for (var e = 0; e < chart.events.length; e++) {	      		
+	      		var currentCSSClass = $(chart.events[e].icon.element).attr("class");
+	      		if(currentCSSClass == " event-icon--launch") {	      	
+	      			$(chart.events[e].icon.element).attr("class", "animation-complete " + currentCSSClass);      			
+	      		}
+	        }
+        }, 2000);
+
+				// position the flag event icons
+				// animation is by JS
+        setTimeout(function(){ 
+	      	for (var e = 0; e < chart.events.length; e++) {
+	      		var currentCSSClass = $(chart.events[e].icon.element).attr("class");
+	      		if(currentCSSClass == " event-icon--flag") {
+	      			var thisPlotX = chart.events[e].plotX, counter = 0;
+
+	      			// see if there are previos events on this date and add to counter if so
+	      			// this helps calculate the icon spacing
+		      		if(e > 0) {
+		      			for (var x = e-1; x > 0; x--) {
+		      				if(chart.events[x].plotX == thisPlotX) {
+		      					counter++;
+		      				}
+		      			}
+		      		}
+
+		      		// see if there is a launch event on this date
+		      		// because following flags will need extra top space
+		      		var thereIsALaunchEventsOnThisDate = false;
+		      		for (var a = 0; a < chart.events.length; a++) {
+		      			if(chart.events[a].plotX == thisPlotX && $(chart.events[a].icon.element).attr("class") == " event-icon--launch") {
+	      					thereIsALaunchEventsOnThisDate = true;
+	      				}
+		      		}
+		      		var extraSpacing = 0;
+		      		if(thereIsALaunchEventsOnThisDate) {
+		      			extraSpacing = 60;
+		      		}
+		      		var topPos = -443 + (17 * counter) + extraSpacing;
+
+		      		// position the event icon
+	      			$(chart.events[e].icon.element).attr("style", "transform: translateY(" + topPos+ "px)");
+	      		}
+	        }
+        }, 100);
+				
+
+	      // if there are more than one events on one date, fix the event label
+	      	// find which plotX has more than one event and add to plotXDuplicates[]
+	      var plotXDuplicates = [];
+	      for (var e = 0; e < chart.events.length; e++) {
+	      	var thisPlotX = chart.events[e].plotX;
+	      	for (var a = e+1; a < chart.events.length; a++) {
+	      		if(chart.events[a].plotX == thisPlotX) {
+	      			var alreadyExists = false;
+	      			if(plotXDuplicates.length > 0) {	      				
+		      			for (var x = 0; x < plotXDuplicates.length; x++) {
+		      				if(plotXDuplicates[x] == thisPlotX) {
+		      					alreadyExists = true;
+		      				}
+		      			}
+	      			}
+	      			if(!alreadyExists) {
+	      				plotXDuplicates.push(chart.events[a].plotX);
+	      			}	      			
+	      		}
+	      	}
+	      }
+
+	      	// iterate plotXDuplicates and remove labels
+	      var eventIndexesForDuplicateEventDate = [],
+	      	counterOfDuplicates = [];
+	      for(var p = 0; p < plotXDuplicates.length; p++) {
+	      	var counter = 0;
+	      	for (var e = 0; e < chart.events.length; e++) {
+		      	if(plotXDuplicates[p] == chart.events[e].plotX) {
+		      		chart.events[e].label.destroy();
+		      		eventIndexesForDuplicateEventDate.push(e);
+		      		counter++;
+		      	}
+		      }
+		      counterOfDuplicates.push(counter);
+	      }
+
+	      	// add new labels for plotXDuplicates
+	      for(var p = 0; p < plotXDuplicates.length; p++) {
+	      	// render new label and assign to the first event object with date duplicate
+	      	// this means it will still be destoyed on window change
+	      	chart.events[eventIndexesForDuplicateEventDate[p]].label = chart.renderer.text('<span>' + counterOfDuplicates[p] + ' EVENTS</span>', plotXDuplicates[p] + 18, 439)
+	          .attr({
+	          	rotation: -90,
+	          	zIndex: 9
+	          })
+	          .css({
+	            color: '#81879d',
+	            fontSize: '11px',
+	            fontFamily: 'Lato',
+	            fontWeight: 'bold',
+	            pointerEvents: 'none'
+	          })
+	          .add()
+	      }
+			}
+
+			// Overlay Revenue
+			$('#checkbox--overlay-revenue').change(function(){
+				if($(this).is(":checked")) {
+					chart.series[1].show();
+				} else {
+					if($('#series1').attr("stroke-width") == 2.1) {
+						handleHideGraphLine()
+					}
+					setTimeout(function(){
+						chart.series[1].hide();
+					}, 200);
+				}
+			});
+
+
+			// Overlay Downloads
+			$('#checkbox--overlay-downloads').change(function(){
+				if($(this).is(":checked")) {
+					chart.series[2].show();
+				} else {
+					if($('#series2').attr("stroke-width") == 2.1) {
+						handleHideGraphLine()
+					}
+					setTimeout(function(){
+						chart.series[2].hide();
+					}, 200);
+				}
+			});
+
+			function handleHideGraphLine() {
+				for(var i = 0; i < chart.series.length; i++) {
+          if(i !== 0) {
+            var count = 0;
+            var isCurrentlyHighlighted = false;
+            $('#container .highcharts-series').each(function(){
+              if(count == i) {
+                var thisFillPath = $(this).find('path:nth-child(2)');                        
+                if(thisFillPath.attr("stroke-width") == 2.1) {
+                  isCurrentlyHighlighted = true
+                  chart.series[i].update({
+                    lineWidth: 2
+                  });           
+                  var counterTwo = 0;
+                  $('#container .highcharts-series').each(function(){
+                    if(counterTwo == count) {
+                      thisFillPath = $(this).find('path:nth-child(2)');
+                    }
+                    counterTwo++;
+                  });                          
+                  thisFillPath.css("opacity", "1");
+                  thisFillPath.animate({ "opacity": 0.4 }, 250);
+                  thisFillPath.siblings("path").css("opacity", "1");
+                  thisFillPath.siblings("path").animate({ "opacity": 0.1 }, 250);
                 }
               }
-					}, 1000);
-	    });
-  	}
+              count++;
+            });
+          }
+        };
 
-  	function mockGraphLoading() {
-      setTimeout(function(){
-        $('.graph-container').addClass('is-loading');
-        setTimeout(function(){
-          $('.graph-loading-indicator').addClass('is-loading-success');
-          setTimeout(function(){
-            $('.graph-container').removeClass('is-loading');
-            generateChart(); // create the Highchart
-            $('.graph-container .graph-loading-line').hide(); // For graph line animation only, not related to graph loading
-          }, 200)
-        }, 2000);
-      }, 200);
-    }
+        chart.series[0].update({
+          lineWidth: 2.1
+        });
 
-  	function initScripts() {
-  		new AppPage();  		
+        $('#container .highcharts-series path:nth-child(2)').each(function(){
+          if($(this).attr("stroke-width") == 2.1) {
+            $(this).css("opacity", "1");
+            $(this).siblings("path").css("opacity", "0.1");
+            $(this).siblings("path").animate({ "opacity": 1 }, 250);
+          }
+        });
+
+        // read the graph line id's after this.udpate
+        var counter = 0;
+
+        $('#container .highcharts-series path:nth-child(2)').each(function(){
+          $(this).attr("id", "series" + counter);
+          $(this).parent('.highcharts-series').find('path:first-child').attr("id", "series" + counter + "fill");
+          counter++;
+        });
+			}
+
+			// Add another series
+	    var anotherSeries;
+	        
+	    if($('#checkbox--overlay-apps:checked').length > 0) {
+					addAnotherSeries();
+				}
+
+				$('#checkbox--overlay-apps').change(function(){
+					if($(this).is(":checked")) {
+						if(anotherSeries == undefined) {
+							addAnotherSeries();
+						} else {
+							chart.series[anotherSeries.index].show();
+						}
+					} else {
+						chart.series[anotherSeries.index].hide();
+					}
+	  	});
+
+			function addAnotherSeries() {
+				anotherSeries = chart.addSeries({
+	    		
+	      });
+			}
+
+
+			// --------------------------------------------------------------------------
+			// APP DETAILS
+			// Load data
+  		var searchString = window.location.search;
+  		if (searchString.length > 0) {
+  			var searchId = searchString.substr(searchString.indexOf("=") + 1, searchString.length);
+  			$('body').append($("<script>").attr("id", "get-app-details").attr("src", "https://itunes.apple.com/gb/lookup?id=" + searchId + "&callback=handledata"));
+  		} else {
+  			$('body').append($("<script>").attr("id", "get-app-details").attr("src", "https://itunes.apple.com/gb/lookup?id=728293409&callback=handledata"));
+  		}
+
+  		// test ids
+  		// Delta V 429903190 Arach 999971868 MValley 728293409 Pako 903183877 Smashy Road 1020119327
 
   		// Mock JS
   		$('.can-be-sorted').on("click", function() {
@@ -961,11 +1727,237 @@ c-2.2,1.4-4.9,2.3-7.8,2.3C8,30.5,1.5,24,1.5,16z"/></svg>
   		$('.date-select-container input').on("focus", function(){
   			$('.refresh-button').removeAttr("disabled");
   		});
-
-  		// Highcharts
-  		mockGraphLoading();
-  		mockOverlayDownloads();	
   	}
+
+  	function handlemoreappssearch(data) {
+  		var artistName = $('.js-app-developer').text();
+
+  		var refinedResults = [];
+  		for(var i = 0; i < data.results.length; i++) {
+				if(data.results[i].artistName.search(artistName) > -1) {
+					refinedResults.push(data.results[i]);
+				}
+			}
+			if(refinedResults.length > 0) {
+				var moreAppsListContainer = $('.js-more-by-this-developer ul');
+				for(var i = 0; i < refinedResults.length; i++) {
+					if(i != 16) { // don't show 17th result (if > 16 then link to developer in app store shown)
+						moreAppsListContainer.append($('<li>').append($('<a>').attr("href", "app.html?id=" + refinedResults[i].trackId).append($('<img>').attr("src", refinedResults[i].artworkUrl100))).append($('<a>').attr("href", "app.html?id=" + refinedResults[i].trackId).text(refinedResults[i].trackName)));
+					}
+				}
+				if(refinedResults.length > 16) { // if > 16 then link to developer in app store shown
+					$('.js-more-apps-listed').append($('<a>').attr("href", refinedResults[0].artistViewUrl).attr("target", "_blank").text("See all apps by this developer")).show();
+				}				
+				$('.js-more-by-this-developer').fadeIn(300);
+			}
+  	}
+
+  	function handleAverageRatings(data) {
+  		if(data.results[0].averageUserRatingForCurrentVersion) {
+				var ratingAsPercentage = (data.results[0].averageUserRatingForCurrentVersion / 5) * 100;
+				var htmlString = '<div class="ratings-container"><div class="ratings-full" style="width:' + ratingAsPercentage + '%"></div></div>';
+				$('.js-dd-rating-current').html("<span>" + data.results[0].userRatingCountForCurrentVersion + " Ratings</span>" + htmlString);
+			} else {
+				$('.js-dd-rating-current').html('<div class="ratings-container"></div><span>No ratings</span>');
+			}
+			if(data.results[0].averageUserRating) {
+				var ratingAsPercentage = (data.results[0].averageUserRating / 5) * 100;
+				var htmlString = '<div class="ratings-container"><div class="ratings-full" style="width:' + ratingAsPercentage + '%"></div></div>';
+				$('.js-dd-rating-all').html("<span>" + data.results[0].userRatingCount + " Ratings</span>" + htmlString);
+			} else {
+				$('.js-dd-rating-all').html('<div class="ratings-container"></div><span>No ratings</span>');
+			}
+  	}
+
+  	function handlereviews(data) {
+  		if(data.feed.entry) {
+  			if(data.feed.entry.length > 0) {
+	  			var customerReviewsListContainer = $('.js-customer-reviews ul');
+	  			customerReviewsListContainer.fadeOut(200, function(){
+	  				customerReviewsListContainer.empty();
+	  				for(var e = 1; e <= 11 && e < data.feed.entry.length; e++) { // first item is not a review
+
+		  				var ratingAsPercentage = (parseInt(data.feed.entry[e]["im:rating"].label) / 5) * 100;
+		  					var ratingsString = '<div class="ratings-container"><div class="ratings-full" style="width:' + ratingAsPercentage + '%"></div></div>';
+		  				if(e == 4) {
+		  					customerReviewsListContainer = $('<div>').addClass("more-reviews-container js-more-reviews-container");
+		  					$('.js-customer-reviews ul').append(customerReviewsListContainer);
+		  				}
+		  				customerReviewsListContainer.append($('<li>')
+		  																								.append($('<article>').addClass("customer-review")
+		  																														.append(ratingsString)
+		  																														.append($('<h3>').addClass("customer-review__title").text(data.feed.entry[e].title.label))
+		  																														.append($('<p>').addClass("customer-review__content").text(data.feed.entry[e].content.label))
+		  																						));
+		  			}
+		  			if(data.feed.entry.length > 3) {
+		  				$('.js-customer-reviews ul').append($('<button>')
+		  																							.addClass("ref-button--function-small")
+		  																							.text("View More")
+		  																							.on("click", function(){
+		  																								$('.js-more-reviews-container').fadeIn();
+		  																								$(this).remove();
+		  																							})
+		  																					);
+		  			}
+		  			$('.js-customer-reviews').fadeIn(300);
+	  			});
+	  			customerReviewsListContainer.fadeIn(300);
+	  		}
+  		} else {
+  			$('.js-customer-reviews ul').fadeOut(200);
+  		}
+  	}
+
+  	function htmlForTextWithEmbeddedNewlines(text) {
+	    var htmls = [];
+	    var lines = text.split(/\n/);
+
+	    var tmpDiv = jQuery(document.createElement('div'));
+	    for (var i = 0 ; i < lines.length ; i++) {
+	        htmls.push(tmpDiv.text(lines[i]).html());
+	    }
+	    return htmls.join("</span><span>");
+		}
+
+		function urlify(text) {
+    var urlRegex =/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+	    return text.replace(urlRegex, function(url) {
+	        return '<a href="' + url + '">' + url + '</a>';
+	    })
+	    // or alternatively
+	    // return text.replace(urlRegex, '<a href="$1">$1</a>')
+	}
+
+  	function handledata(data) {
+  		if(data.results && data.results.length > 0) {
+  			if(data.results[0].screenshotUrls) {
+
+  				// set app-image-list width
+  				var isLandscape = false, imageWidth = 340; // (320 + 20 margin)
+  				if($(window).width() < 720) {
+  					imageWidth = 180;
+  				}
+  				if(data.results[0].screenshotUrls[0].indexOf("320x320") > 0) {
+  					imageWidth = 588;
+  					isLandscape = true;
+  					if($(window).width() < 720) {
+	  					imageWidth = 340;
+	  				}
+  				}
+  				$('.app-image-list').width((data.results[0].screenshotUrls.length * imageWidth) - 20);
+
+  				for(var s = 0; s < data.results[0].screenshotUrls.length; s++) {
+  					//change the image size
+  					var srcString = data.results[0].screenshotUrls[s];
+  					var imageCSSClass = "image-portrait";
+  					if(isLandscape) {
+  						srcString = srcString.replace("320x320", "640x640");
+  						imageCSSClass = "image-landscape";
+  					}
+  					$('.app-image-list').append($('<li>').append($('<img>').attr("src", srcString).addClass(imageCSSClass)));
+  				}
+  			}
+
+  			var appDescription = htmlForTextWithEmbeddedNewlines(data.results[0].description);
+  			appDescription = urlify(appDescription);
+				$('.js-app-description').html(appDescription);
+
+				if(data.results[0].releaseNotes) {
+					var releaseNotesText = htmlForTextWithEmbeddedNewlines(data.results[0].releaseNotes);
+					$('.js-release-notes').html(releaseNotesText);
+					$('.js-release-notes-container').fadeIn(300);
+				}
+
+				$('.js-dd-price').text(data.results[0].formattedPrice);
+				var genres = "";
+				for(var g = 0; g < data.results[0].genres.length; g++) {
+					genres += data.results[0].genres[g] + ", ";
+				}
+				genres = genres.substr(0, genres.length - 2);
+				$('.js-dd-category').text(genres);
+
+				var languages = "";
+				for(var l = 0; l < data.results[0].languageCodesISO2A.length; l++) {
+					for(var c = 0; c < refLangCodes.length; c++) {
+						if(refLangCodes[c].alpha2 == data.results[0].languageCodesISO2A[l].toLowerCase()) {
+							languages += refLangCodes[c].English + ", ";
+						}
+					}
+				}
+				languages = languages.substr(0, languages.length - 2);
+				$('.js-dd-languages').text(languages);
+
+				$('.js-dd-size').text(parseInt(data.results[0].fileSizeBytes / 1000000) + " MB");
+				$('.js-dd-rated').text(data.results[0].contentAdvisoryRating);
+				$('.js-dd-version').text(data.results[0].version);
+
+				var dateString = "",
+						releaseDate = new Date(data.results[0].releaseDate);
+				dateString = releaseDate.getDate() + "/" + (releaseDate.getMonth()+1) + "/" + releaseDate.getFullYear();
+				$('.js-dd-release-date').text(dateString);				
+
+				var devices = "";
+				for(var d = 0; d < data.results[0].supportedDevices.length; d++) {
+					devices += data.results[0].supportedDevices[d] + ", ";
+				}
+				devices = devices.substr(0, devices.length - 2);
+				$('.js-dd-devices').text(devices);
+
+				if(data.results[0].features.length > 0) {
+					for(var f = 0; f < data.results[0].features.length; f++) {
+						if(data.results[0].features[f] == "iosUniversal") {
+							$('.js-dd-universal').text("Yes");
+						}
+						if(data.results[0].features[f] == "gameCenter") {
+							$('.js-dd-gc').text("Yes");
+						}
+					}
+				}
+
+				if(data.results[0].sellerUrl) {
+					$('.js-developers-site').append($('<a>').attr("href", data.results[0].sellerUrl).attr("target", "_blank").text("Developer's site"));
+				} else {
+					$('.js-developers-site').remove();
+				}
+
+				if(data.results[0].trackViewUrl) {
+					$('.js-view-app-store').append($('<a>').attr("href", data.results[0].trackViewUrl).attr("target", "_blank").text("View in the App Store"));
+				} else {
+					$('.js-view-app-store').remove();
+				}
+
+				if(data.results[0].artistViewUrl) {
+					$('.js-more-apps').append($('<a>').attr("href", data.results[0].artistViewUrl).attr("target", "_blank").text("More Apps by this Developer"));
+				} else {
+					$('.js-more-apps').remove();
+				}
+
+				// icon, title, developer
+				$('.js-app-icon').attr("src", data.results[0].artworkUrl100);
+				$('.js-app-title').text(data.results[0].trackName);
+				$('.js-app-developer').text(data.results[0].artistName);
+
+				// search more apps by this developer
+				$('body').append($("<script>").attr("id", "scriptsearch").attr("src", "https://itunes.apple.com/search?term=" + data.results[0].artistName + "&media=software&limit=17&callback=handlemoreappssearch"));
+
+				// get customer reviews for this app
+				$('body').append($("<script>").attr("id", "scriptreviews").attr("src", "http://itunes.apple.com/gb/rss/customerreviews/id=" + data.results[0].trackId + "/json?callback=handlereviews"));
+
+				// set country filter
+				$('.js-country-selector').data("appid", data.results[0].trackId);
+				$('.js-country-selector li').on("click", function(){
+					var val = $(this).data("value"), appid = $('.js-country-selector').data("appid");
+					$('#scriptreviews').remove();
+					$('body').append($("<script>").attr("id", "scriptreviews").attr("src", "http://itunes.apple.com/" + val + "/rss/customerreviews/id=" + appid + "/json?callback=handlereviews"));
+
+					$('#get-app-details').remove();
+					$('body').append($("<script>").attr("id", "get-app-details").attr("src", "https://itunes.apple.com/" + val + "/lookup?id=" + appid + "&callback=handleAverageRatings"));
+				});
+
+				handleAverageRatings(data);
+  		}
+    }
 
   	window.onready = initScripts();
   </script>
