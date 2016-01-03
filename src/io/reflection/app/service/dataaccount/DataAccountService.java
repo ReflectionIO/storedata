@@ -275,7 +275,7 @@ final class DataAccountService implements IDataAccountService {
 	}
 
 	@Override
-	public DataAccount updateDataAccount(DataAccount dataAccount) throws DataAccessException {
+	public DataAccount updateDataAccount(DataAccount dataAccount, boolean collect) throws DataAccessException {
 
 		DataAccount updatedDataAccount = null;
 
@@ -299,7 +299,7 @@ final class DataAccountService implements IDataAccountService {
 			}
 		}
 
-		if (updatedDataAccount != null) {
+		if (updatedDataAccount != null && collect) {
 			enqueue(updatedDataAccount, 30, false);
 		}
 

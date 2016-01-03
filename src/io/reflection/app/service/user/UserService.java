@@ -879,7 +879,7 @@ final class UserService implements IUserService {
 			addedDataAccount = DataAccountServiceProvider.provide().addDataAccount(toAdd);
 		} else { // Restore deactivated Data Account
 			addedDataAccount.active = DataTypeHelper.ACTIVE_VALUE;
-			addedDataAccount = DataAccountServiceProvider.provide().updateDataAccount(addedDataAccount);
+			addedDataAccount = DataAccountServiceProvider.provide().updateDataAccount(addedDataAccount, true);
 		}
 
 		if (addedDataAccount != null) {

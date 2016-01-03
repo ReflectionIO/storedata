@@ -963,7 +963,7 @@ public final class Core extends ActionHandler {
 
 			// TODO update vendors??
 
-			DataAccount linkedAccount = DataAccountServiceProvider.provide().updateDataAccount(input.linkedAccount);
+			DataAccount linkedAccount = DataAccountServiceProvider.provide().updateDataAccount(input.linkedAccount, true);
 
 			if (LOG.isLoggable(GaeLevel.DEBUG)) {
 				LOG.fine(String.format("Linked account with id [%d] details updated", linkedAccount.id.longValue()));
@@ -1005,7 +1005,7 @@ public final class Core extends ActionHandler {
 
 					// Set linked account as inactive
 					input.linkedAccount.active = DataTypeHelper.INACTIVE_VALUE;
-					DataAccountServiceProvider.provide().updateDataAccount(input.linkedAccount);
+					DataAccountServiceProvider.provide().updateDataAccount(input.linkedAccount, false);
 
 					if (LOG.isLoggable(GaeLevel.DEBUG)) {
 						LOG.finer(String.format("Linked account with id [%d] deleted by owner [%d]", input.linkedAccount.id.longValue(),

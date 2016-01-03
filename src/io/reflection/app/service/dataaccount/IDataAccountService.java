@@ -75,7 +75,7 @@ public interface IDataAccountService extends IService {
 	 * @return
 	 * @throws DataAccessException
 	 */
-	public DataAccount updateDataAccount(DataAccount dataAccount) throws DataAccessException;
+	public DataAccount updateDataAccount(DataAccount dataAccount, boolean collect) throws DataAccessException;
 
 	/**
 	 *
