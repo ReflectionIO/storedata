@@ -167,11 +167,15 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 			@Override
 			public void onSuccess(LinkAccountResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {
-					if (!getAllLinkedAccountIds().contains(output.account.id.toString())) { // Avoid to add duplicated
-						rows.add(output.account);
-						addLinkedAccountsToLookup(Arrays.asList(output.account));
-						addDataSourceToLookup(Arrays.asList(output.account.source));
-						// pager.totalCount = Long.valueOf(pager.totalCount.longValue() + 1);
+					if (output.linkedAccounts != null) {
+						for (DataAccount addedAccount : output.linkedAccounts) {
+							if (!getAllLinkedAccountIds().contains(addedAccount.id.toString())) { // Avoid to add duplicated
+								rows.add(addedAccount);
+								addLinkedAccountsToLookup(Arrays.asList(addedAccount));
+								addDataSourceToLookup(Arrays.asList(addedAccount.source));
+								// pager.totalCount = Long.valueOf(pager.totalCount.longValue() + 1);
+							}
+						}
 						linkedAccountsCount = rows.size();
 						updateRowCount(linkedAccountsCount, true);
 						updateRowData(0, rows);
@@ -208,7 +212,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 	 * @param password
 	 * @param vendorNumber
 	 */
-	public void updateLinkedAccont(Long linkedAccountId, String password, String properties) {
+	public void updateLinkedAccont(Long linkedAccountId, String username, String password) {
 		CoreService service = ServiceCreator.createCoreService();
 		final UpdateLinkedAccountRequest input = new UpdateLinkedAccountRequest();
 
@@ -217,12 +221,9 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 		input.session = SessionController.get().getSessionForApiCall();
 
 		input.linkedAccount = new DataAccount();
-
 		input.linkedAccount.id = linkedAccountId;
-
+		input.linkedAccount.username = username;
 		input.linkedAccount.password = password;
-
-		input.linkedAccount.properties = properties;
 
 		// input.linkedAccount.source = new DataSource();
 		// input.linkedAccount.source.a3Code = dataSourceLookup.get(dataAccountLookup.get(linkedAccountId.toString()).source.id.toString()).a3Code;
@@ -232,7 +233,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 			@Override
 			public void onSuccess(UpdateLinkedAccountResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {
-					updateLinkedAccountLookup(input.linkedAccount.id, input.linkedAccount.password, input.linkedAccount.properties);
+					updateLinkedAccountLookup(input.linkedAccount.id, input.linkedAccount.username, input.linkedAccount.password);
 				}
 
 				DefaultEventBus.get().fireEventFromSource(new UpdateLinkedAccountEventHandler.UpdateLinkedAccountSuccess(input, output),
@@ -377,11 +378,11 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 	 * @param password
 	 * @param properties
 	 */
-	private void updateLinkedAccountLookup(Long linkedAccountId, String password, String properties) {
+	private void updateLinkedAccountLookup(Long linkedAccountId, String username, String password) {
+		myDataAccounts.get(myDataAccounts.indexOf(myDataAccountLookup.get(linkedAccountId.toString()))).username = username;
 		myDataAccounts.get(myDataAccounts.indexOf(myDataAccountLookup.get(linkedAccountId.toString()))).password = password;
-		myDataAccounts.get(myDataAccounts.indexOf(myDataAccountLookup.get(linkedAccountId.toString()))).properties = properties;
+		myDataAccountLookup.get(linkedAccountId.toString()).username = username;
 		myDataAccountLookup.get(linkedAccountId.toString()).password = password;
-		myDataAccountLookup.get(linkedAccountId.toString()).properties = properties;
 	}
 
 	/**

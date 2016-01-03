@@ -10,7 +10,6 @@ package io.reflection.app.service.dataaccount;
 
 import static com.spacehopperstudios.utility.StringUtils.addslashes;
 import static com.spacehopperstudios.utility.StringUtils.stripslashes;
-import io.reflection.app.accountdatacollectors.ITunesConnectDownloadHelper;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
@@ -22,7 +21,6 @@ import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProv
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
 import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
 import io.reflection.app.service.ServiceType;
-import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,7 +37,6 @@ import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
 import com.google.appengine.api.taskqueue.TransientFailureException;
-import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 
 final class DataAccountService implements IDataAccountService {
 
@@ -175,8 +172,8 @@ final class DataAccountService implements IDataAccountService {
 		DataAccount addedDataAccount = null;
 
 		final String addDataAccountQuery = String.format(
-				"INSERT INTO `dataaccount` (`sourceid`,`username`,`password`) VALUES (%d,'%s',AES_ENCRYPT('%s',UNHEX('%s')))", dataAccount.source.id,
-				addslashes(dataAccount.username), addslashes(dataAccount.password), key());
+				"INSERT INTO `dataaccount` (`sourceid`,`username`,`password`,`properties`) VALUES (%d,'%s',AES_ENCRYPT('%s',UNHEX('%s')),'%s')",
+				dataAccount.source.id, addslashes(dataAccount.username), addslashes(dataAccount.password), key(), addslashes(dataAccount.properties));
 
 		final Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
@@ -192,17 +189,7 @@ final class DataAccountService implements IDataAccountService {
 					addedDataAccount.id = Long.valueOf(dataAccountConnection.getInsertedId());
 				}
 			}
-		} catch (final DataAccessException ex) {
-			if (ex.getCause() instanceof MySQLIntegrityConstraintViolationException) { // Data account already exists
-				// Restore deactivated Data Account
-				final Long restoredId = getDataAccount(dataAccount.username, dataAccount.source.id).id;
-				dataAccount.id = restoredId;
-				dataAccount.active = DataTypeHelper.ACTIVE_VALUE;
-				addedDataAccount = updateDataAccount(dataAccount);
-			} else throw ex;
-		}
-
-		finally {
+		} finally {
 			if (dataAccountConnection != null) {
 				dataAccountConnection.disconnect();
 			}
@@ -288,21 +275,14 @@ final class DataAccountService implements IDataAccountService {
 	}
 
 	@Override
-	public DataAccount updateDataAccount(DataAccount dataAccount) throws DataAccessException {
+	public DataAccount updateDataAccount(DataAccount dataAccount, boolean collect) throws DataAccessException {
 
 		DataAccount updatedDataAccount = null;
 
-		final String updateDataAccountQuery;
-		if (dataAccount.properties != null) {
-			updateDataAccountQuery = String
-					.format("UPDATE `dataaccount` SET `username`='%s', `password`=AES_ENCRYPT('%s',UNHEX('%s')), `properties`='%s', `active`='%s' WHERE `id`=%d AND `deleted`='n'",
-							addslashes(dataAccount.username), addslashes(dataAccount.password), key(), addslashes(dataAccount.properties),
-							addslashes(dataAccount.active), dataAccount.id.longValue());
-		} else {
-			updateDataAccountQuery = String.format(
-					"UPDATE `dataaccount` SET `username`='%s', `password`=AES_ENCRYPT('%s',UNHEX('%s')), `active`='%s' WHERE `id`=%d AND `deleted`='n'",
-					addslashes(dataAccount.username), addslashes(dataAccount.password), key(), addslashes(dataAccount.active), dataAccount.id.longValue());
-		}
+		final String updateDataAccountQuery = String
+				.format("UPDATE `dataaccount` SET `username`='%s', `password`=AES_ENCRYPT('%s',UNHEX('%s')), `properties`='%s', `active`='%s' WHERE `id`=%d AND `deleted`='n'",
+						addslashes(dataAccount.username), addslashes(dataAccount.password), key(), addslashes(dataAccount.properties),
+						addslashes(dataAccount.active), dataAccount.id.longValue());
 
 		final Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
@@ -319,7 +299,7 @@ final class DataAccountService implements IDataAccountService {
 			}
 		}
 
-		if (updatedDataAccount != null) {
+		if (updatedDataAccount != null && collect) {
 			enqueue(updatedDataAccount, 30, false);
 		}
 
@@ -331,16 +311,9 @@ final class DataAccountService implements IDataAccountService {
 
 		DataAccount restoredDataAccount = null;
 
-		final String restoreDataAccountQuery;
-		if (dataAccount.properties != null) {
-			restoreDataAccountQuery = String
-					.format("UPDATE `dataaccount` SET `created`=NOW(), `password`=AES_ENCRYPT('%s',UNHEX('%s')), `properties`='%s', `deleted`='n' WHERE `username`='%s'",
-							addslashes(dataAccount.password), key(), addslashes(dataAccount.properties), addslashes(dataAccount.username));
-		} else {
-			restoreDataAccountQuery = String.format(
-					"UPDATE `dataaccount` SET `created`=NOW(), `password`=AES_ENCRYPT('%s',UNHEX('%s')), `deleted`='n' WHERE `username`='%s'",
-					addslashes(dataAccount.password), key(), addslashes(dataAccount.username));
-		}
+		final String restoreDataAccountQuery = String.format(
+				"UPDATE `dataaccount` SET `created`=NOW(), `password`=AES_ENCRYPT('%s',UNHEX('%s')), `properties`='%s', `deleted`='n' WHERE `username`='%s'",
+				addslashes(dataAccount.password), key(), addslashes(dataAccount.properties), addslashes(dataAccount.username));
 
 		final Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
@@ -536,12 +509,12 @@ final class DataAccountService implements IDataAccountService {
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getVendorDataAccounts(java.lang.String)
 	 */
 	@Override
-	public List<DataAccount> getVendorDataAccounts(String vendorId) throws DataAccessException {
+	public List<DataAccount> getVendorDataAccounts(String vendorId, Boolean includeInactive) throws DataAccessException {
 		final List<DataAccount> dataAccounts = new ArrayList<DataAccount>();
 
 		final String getVendorDataAccountsQuery = String
-				.format("SELECT *, convert(aes_decrypt(`password`,UNHEX('%s')), CHAR(1000)) AS `clearpassword` FROM `dataaccount` WHERE `properties` LIKE '%%%s%%' AND `deleted`='n' ORDER BY `id`",
-						key(), vendorId);
+				.format("SELECT *, convert(aes_decrypt(`password`,UNHEX('%s')), CHAR(1000)) AS `clearpassword` FROM `dataaccount` WHERE `properties` LIKE '%%%s%%' %s AND `deleted`='n' ORDER BY `id`",
+						key(), vendorId, includeInactive == null || !includeInactive.booleanValue() ? "AND `active`='y'" : "");
 
 		final Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
@@ -564,32 +537,6 @@ final class DataAccountService implements IDataAccountService {
 		}
 
 		return dataAccounts;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.service.dataaccount.IDataAccountService#setDataAccountVendor(java.lang.Long, java.lang.String)
-	 */
-	@Override
-	public void setPropertiesDataAccount(Long id, String properties) throws DataAccessException {
-		final String setVendorQuery = String.format("UPDATE `dataaccount` SET `properties`='%s' WHERE `id`=%d AND `deleted`='n'", addslashes(properties), id.longValue());
-
-		final Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
-		try {
-			dataAccountConnection.connect();
-			dataAccountConnection.executeQuery(setVendorQuery);
-
-			if (dataAccountConnection.getAffectedRowCount() > 0) {
-				if (LOG.isLoggable(Level.INFO)) {
-					LOG.info(String.format("Set vendor [%s] to account with id [%d]", properties, id.longValue()));
-				}
-			}
-		} finally {
-			if (dataAccountConnection != null) {
-				dataAccountConnection.disconnect();
-			}
-		}
 	}
 
 	/*
@@ -639,34 +586,11 @@ final class DataAccountService implements IDataAccountService {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.service.dataaccount.IDataAccountService#verifyDataAccount(io.reflection.app.datatypes.shared.DataAccount, java.util.Date)
-	 */
-	@Override
-	public void verifyDataAccount(DataAccount dataAccount, Date date) throws DataAccessException {
-		switch (dataAccount.source.a3Code) {
-		case "itc":
-			try {
-				ITunesConnectDownloadHelper.getITunesSalesFile(dataAccount.username, dataAccount.password, "00000000",
-						ITunesConnectDownloadHelper.DATE_FORMATTER.format(date), null, null);
-			} catch (final Exception e) {
-				if (LOG.isLoggable(Level.WARNING)) {
-					LOG.log(Level.WARNING, String.format("Trying to verify a data account for date %s, which threw an exception", date.toString()), e);
-				}
-				throw new DataAccessException(e);
-			}
-
-			break;
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getActiveDataAccountIDs()
 	 */
 	@Override
 	public List<Long> getActiveDataAccountIDs() throws DataAccessException {
-		return getDataAccountIds(false);
+		return getDataAccountIds(Boolean.FALSE);
 	}
 
 	/*
@@ -676,13 +600,14 @@ final class DataAccountService implements IDataAccountService {
 	 */
 	@Override
 	public List<Long> getAllDataAccountIDs() throws DataAccessException {
-		return getDataAccountIds(false);
+		return getDataAccountIds(Boolean.TRUE);
 	}
 
-	private List<Long> getDataAccountIds(boolean includeInActive) throws DataAccessException {
+	private List<Long> getDataAccountIds(Boolean includeInactive) throws DataAccessException {
 		final List<Long> dataAccounts = new ArrayList<Long>();
 
-		final String getDataAccountsQuery = String.format("SELECT id FROM `dataaccount` WHERE %s `deleted`='n'", includeInActive ? "active='y' and " : "");
+		final String getDataAccountsQuery = String.format("SELECT id FROM `dataaccount` WHERE %s `deleted`='n'",
+				includeInactive == null || !includeInactive.booleanValue() ? "`active`='y' AND" : "");
 
 		final Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
@@ -731,6 +656,37 @@ final class DataAccountService implements IDataAccountService {
 		}
 
 		return dataAccounts;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getDataAccount(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public DataAccount getDataAccount(String username, String vendor) throws DataAccessException {
+		DataAccount dataAccount = null;
+
+		final IDatabaseService databaseService = DatabaseServiceProvider.provide();
+		final Connection dataAccountConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
+
+		final String getDataAccountQuery = String
+				.format("SELECT *, convert(aes_decrypt(`password`,UNHEX('%s')), CHAR(1000)) AS `clearpassword` FROM `dataaccount` WHERE `username`='%s' AND `properties` LIKE '%%%s%%' AND `deleted`='n' LIMIT 1",
+						key(), username, vendor);
+
+		try {
+			dataAccountConnection.connect();
+			dataAccountConnection.executeQuery(getDataAccountQuery);
+
+			if (dataAccountConnection.fetchNextRow()) {
+				dataAccount = toDataAccount(dataAccountConnection);
+			}
+		} finally {
+			if (dataAccountConnection != null) {
+				dataAccountConnection.disconnect();
+			}
+		}
+		return dataAccount;
 	}
 
 }

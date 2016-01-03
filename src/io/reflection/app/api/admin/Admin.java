@@ -809,7 +809,7 @@ public final class Admin extends ActionHandler {
 			for (DataAccount la : linkedAccounts) {
 				if (input.user.id.longValue() == UserServiceProvider.provide().getDataAccountOwner(la).id) { // User is the owner of the linked account
 					la.active = DataTypeHelper.INACTIVE_VALUE;
-					DataAccountServiceProvider.provide().updateDataAccount(la);
+					DataAccountServiceProvider.provide().updateDataAccount(la, false);
 				}
 			}
 
@@ -853,7 +853,7 @@ public final class Admin extends ActionHandler {
 				for (DataAccount la : linkedAccounts) {
 					if (userIds.contains(UserServiceProvider.provide().getDataAccountOwner(la).id)) { // One of the users to delete is the owner
 						la.active = DataTypeHelper.INACTIVE_VALUE;
-						DataAccountServiceProvider.provide().updateDataAccount(la);
+						DataAccountServiceProvider.provide().updateDataAccount(la, false);
 					}
 				}
 

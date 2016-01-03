@@ -21,8 +21,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.google.gson.JsonObject;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
 import com.google.gwt.user.datepicker.client.DatePicker;
+import com.willshex.gson.json.shared.Convert;
 
 /**
  * @author billy1380
@@ -63,7 +65,20 @@ public class FilterHelper {
 
 		if (linkedAccounts != null) {
 			for (DataAccount linkedAccount : linkedAccounts) {
-				list.addItem(linkedAccount.username, linkedAccount.id.toString());
+				int sameAppleIdInstances = 0;
+				for (DataAccount la : linkedAccounts) {
+					if (la.username.equals(linkedAccount.username)) {
+						sameAppleIdInstances++;
+					}
+				}
+				String item;
+				if (sameAppleIdInstances > 1) {
+					JsonObject propertiesJson = Convert.toJsonObject(linkedAccount.properties);
+					item = linkedAccount.username + " (" + propertiesJson.get("vendors").getAsString() + ")";
+				} else {
+					item = linkedAccount.username;
+				}
+				list.addItem(item, linkedAccount.id.toString());
 			}
 		}
 	}

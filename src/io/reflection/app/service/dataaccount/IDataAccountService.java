@@ -36,6 +36,15 @@ public interface IDataAccountService extends IService {
 	public DataAccount getDataAccount(Long id, Boolean deleted) throws DataAccessException;
 
 	/**
+	 * 
+	 * @param username
+	 * @param vendor
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public DataAccount getDataAccount(String username, String vendor) throws DataAccessException;
+
+	/**
 	 *
 	 * @param username
 	 * @param sourceid
@@ -66,7 +75,7 @@ public interface IDataAccountService extends IService {
 	 * @return
 	 * @throws DataAccessException
 	 */
-	public DataAccount updateDataAccount(DataAccount dataAccount) throws DataAccessException;
+	public DataAccount updateDataAccount(DataAccount dataAccount, boolean collect) throws DataAccessException;
 
 	/**
 	 *
@@ -125,15 +134,7 @@ public interface IDataAccountService extends IService {
 	 * @return
 	 * @throws DataAccessException
 	 */
-	public List<DataAccount> getVendorDataAccounts(String vendorId) throws DataAccessException;
-
-	/**
-	 * 
-	 * @param vendorId
-	 * @return
-	 * @throws DataAccessException
-	 */
-	public void setPropertiesDataAccount(Long id, String properties) throws DataAccessException;
+	public List<DataAccount> getVendorDataAccounts(String vendorId, Boolean includeInactive) throws DataAccessException;
 
 	/**
 	 *
@@ -167,14 +168,6 @@ public interface IDataAccountService extends IService {
 	 * @throws DataAccessException
 	 */
 	public void triggerMultipleDateDataAccountFetch(DataAccount dataAccount, Date date, Integer days) throws DataAccessException;
-
-	/**
-	 *
-	 * @param dataAccount
-	 * @param date
-	 * @throws DataAccessException
-	 */
-	public void verifyDataAccount(DataAccount dataAccount, Date date) throws DataAccessException;
 
 	/**
 	 * @return

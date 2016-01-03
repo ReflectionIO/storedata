@@ -45,6 +45,9 @@ import io.reflection.app.client.res.Styles;
 import io.reflection.app.client.res.Styles.ReflectionMainStyles;
 import io.reflection.app.datatypes.shared.DataAccount;
 
+import java.util.List;
+
+import com.google.gson.JsonObject;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
@@ -74,6 +77,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
+import com.willshex.gson.json.shared.Convert;
 
 /**
  * @author billy1380
@@ -187,7 +191,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 						updateLinkedAccountForm.setEnabled(false);
 						updateLinkedAccountForm.setStatusLoading("Updating ..");
 						updatingLinkedAccountForm = updateLinkedAccountForm;
-						LinkedAccountController.get().updateLinkedAccont(rowValue.id, dataAccount.password, dataAccount.properties);
+						LinkedAccountController.get().updateLinkedAccont(rowValue.id, dataAccount.username, dataAccount.password);
 					} else {
 						updateLinkedAccountForm.setFormErrors();
 					}
@@ -268,7 +272,23 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 		columnAccountName = new TextColumn<DataAccount>() {
 			@Override
 			public String getValue(DataAccount object) {
-				return (object.source != null) ? object.username : "-";
+				List<DataAccount> linkedAccounts = LinkedAccountController.get().getAllLinkedAccounts();
+				String item = object.username;
+				if (linkedAccounts != null) {
+					int sameAppleIdInstances = 0;
+					for (DataAccount linkedAccount : linkedAccounts) {
+						if (object.username.equals(linkedAccount.username)) {
+							sameAppleIdInstances++;
+						}
+					}
+					if (sameAppleIdInstances > 1) {
+						JsonObject propertiesJson = Convert.toJsonObject(object.properties);
+						item = object.username + " (" + propertiesJson.get("vendors").getAsString() + ")";
+					} else {
+						item = object.username;
+					}
+				}
+				return item;
 			}
 		};
 		SafeHtmlHeader accountNameHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Account Name"));

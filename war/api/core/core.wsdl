@@ -440,7 +440,7 @@
 				<xsd:complexContent>
 					<xsd:extension base="sd:Response">
 						<xsd:sequence>
-							<xsd:element name="account" type="sd:DataAccount" />
+							<xsd:element name="linkedAccounts" type="sd:DataAccount" maxOccurs="unbounded" />
 						</xsd:sequence>
 					</xsd:extension>
 				</xsd:complexContent>

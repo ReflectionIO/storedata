@@ -11,6 +11,7 @@ import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPAD_
 import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS;
 import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_UNIVERSAL_IOS;
 import static io.reflection.app.shared.util.PagerHelper.updatePager;
+import io.reflection.app.accountdatacollectors.ITunesConnectDownloadHelper;
 import io.reflection.app.api.ValidationHelper;
 import io.reflection.app.api.core.shared.call.ChangePasswordRequest;
 import io.reflection.app.api.core.shared.call.ChangePasswordResponse;
@@ -77,7 +78,6 @@ import io.reflection.app.api.core.shared.call.UpdateNotificationsResponse;
 import io.reflection.app.api.core.shared.call.UpgradeAccountRequest;
 import io.reflection.app.api.core.shared.call.UpgradeAccountResponse;
 import io.reflection.app.api.exception.AuthenticationException;
-import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
@@ -99,6 +99,7 @@ import io.reflection.app.datatypes.shared.Sale;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.helpers.ApiHelper;
+import io.reflection.app.helpers.AppleReporterHelper;
 import io.reflection.app.helpers.NotificationHelper;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.modellers.Modeller;
@@ -949,24 +950,20 @@ public final class Core extends ActionHandler {
 
 			// Verify linked account with Apple
 			try {
-				DataAccountServiceProvider.provide().verifyDataAccount(input.linkedAccount, DateTime.now(DateTimeZone.UTC).minusDays(45).toDate());
-			} catch (DataAccessException daEx) {
-				String error = daEx.getCause() == null ? null : daEx.getCause().getMessage();
+				AppleReporterHelper.getVendors(input.linkedAccount.username, input.linkedAccount.password);
+			} catch (InputValidationException e) {
 
-				if (error != null) {
-
-					if (!error.equalsIgnoreCase("Daily reports are available only for past 30 days, please enter a date within past 30 days.")
-							&& !error.equalsIgnoreCase("There is no report available to download, for the selected period")
-							&& !error.equals("Please enter a valid vendor number.")) {
-						LOG.log(Level.WARNING, "There was an unexpected error when trying to link the account. Cause: ", daEx.getCause());
-
-						throw new InputValidationException(ApiError.InvalidDataAccountCredentials.getCode(),
-								ApiError.InvalidDataAccountCredentials.getMessage(input.linkedAccount.username));
-					}
+				if (e.getCode() != 214 && e.getCode() != 215 && e.getCode() != 216) { // invalid credentials
+					throw new InputValidationException(ApiError.InvalidDataAccountCredentials.getCode(),
+							ApiError.InvalidDataAccountCredentials.getMessage(input.linkedAccount.username));
 				}
 			}
 
-			DataAccount linkedAccount = DataAccountServiceProvider.provide().updateDataAccount(input.linkedAccount);
+			// TODO IF THE APPLE ID CAN BE UPDATED, CHECK THE VENDOR DUPLICATED AS IT HAPPEN ON LINKING A NEW ACCOUNT
+
+			// TODO update vendors??
+
+			DataAccount linkedAccount = DataAccountServiceProvider.provide().updateDataAccount(input.linkedAccount, true);
 
 			if (LOG.isLoggable(GaeLevel.DEBUG)) {
 				LOG.fine(String.format("Linked account with id [%d] details updated", linkedAccount.id.longValue()));
@@ -1008,7 +1005,7 @@ public final class Core extends ActionHandler {
 
 					// Set linked account as inactive
 					input.linkedAccount.active = DataTypeHelper.INACTIVE_VALUE;
-					DataAccountServiceProvider.provide().updateDataAccount(input.linkedAccount);
+					DataAccountServiceProvider.provide().updateDataAccount(input.linkedAccount, false);
 
 					if (LOG.isLoggable(GaeLevel.DEBUG)) {
 						LOG.finer(String.format("Linked account with id [%d] deleted by owner [%d]", input.linkedAccount.id.longValue(),
@@ -1288,48 +1285,60 @@ public final class Core extends ActionHandler {
 			Permission hlaPermission = PermissionServiceProvider.provide().getCodePermission(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE);
 			boolean hasHlaPermission = UserServiceProvider.provide().hasPermission(input.session.user, hlaPermission);
 
-			// If not a test linked account, check if is a valid Apple linked account
-			if (!"THETESTACCOUNT".equals(input.username) || !"thegrange".equals(input.password)) {
-				DataAccount dataAccountToTest = new DataAccount();
-				dataAccountToTest.username = input.username;
-				dataAccountToTest.password = input.password;
-				dataAccountToTest.source = input.source;
+			output.linkedAccounts = new ArrayList<DataAccount>();
+			List<String> vendors = new ArrayList<String>();
 
+			if ("THETESTACCOUNT".equals(input.username) && "thegrange".equals(input.password)) { // TODO Redesign custom exceptions
+
+				DataAccount testAccount = DataAccountServiceProvider.provide().getDataAccount(357L);
+				output.linkedAccounts.add(testAccount);
+				UserServiceProvider.provide().addOrRestoreUserDataAccount(input.session.user, testAccount);
+
+			} else { // If not the test linked account, check if is a valid Apple linked account and retrieve the vendors
+
+				boolean accountNumberRequired = false;
 				try {
-					DataAccountServiceProvider.provide().verifyDataAccount(dataAccountToTest, DateTime.now(DateTimeZone.UTC).minusDays(45).toDate());
-				} catch (DataAccessException daEx) {
-					String error = daEx.getCause() == null ? null : daEx.getCause().getMessage();
+					vendors = AppleReporterHelper.getVendors(input.username, input.password);
+				} catch (InputValidationException e) {
 
-					if (error != null) {
-
-						if (!error.equalsIgnoreCase("Daily reports are available only for past 30 days, please enter a date within past 30 days.")
-								&& !error.equalsIgnoreCase("There is no report available to download, for the selected period")
-								&& !error.equals("Please enter a valid vendor number.")) {
-							LOG.log(Level.WARNING, "There was an unexpected error when trying to link the account. Cause: ", daEx.getCause());
-
-							throw new InputValidationException(ApiError.InvalidDataAccountCredentials.getCode(),
-									ApiError.InvalidDataAccountCredentials.getMessage(dataAccountToTest.username));
-						}
+					if (e.getCode() == 214 || e.getCode() == 215 || e.getCode() == 216) { // Required/wrong account number (but valid credentials)
+						accountNumberRequired = true;
+					} else if (e.getCode() == 108) { // Invalid Apple credentials
+						throw new InputValidationException(ApiError.InvalidDataAccountCredentials.getCode(),
+								ApiError.InvalidDataAccountCredentials.getMessage(input.username));
+					} else { // Generic error
+						throw e;
 					}
 				}
-				// Only Admin for now can add linked account with duplicate vendor id TODO
-				// if (!isAdmin) { // check if duplicate vendor Id exists and throw exception
-				// if (!DataAccountServiceProvider.provide().getVendorDataAccounts(vendorId).isEmpty())
-				// throw new InputValidationException(ApiError.DuplicateVendorId.getCode(),
-				// ApiError.DuplicateVendorId.getMessage(dataAccountToTest.username));
-				// }
-				output.account = UserServiceProvider.provide().addDataAccount(input.session.user, input.source, input.username, input.password);
-				
-				// TODO ENQUEUE TO GET VENDOR ID USING output.account.id
 
-			} else {
-				output.account = DataAccountServiceProvider.provide().getDataAccount(357L); // Retrieve test linked account
-				UserServiceProvider.provide().addOrRestoreUserDataAccount(input.session.user, output.account);
+				if (accountNumberRequired) {
+					Map<String, String> accounts = AppleReporterHelper.getAccounts(input.username, input.password);
+					for (String accountNumber : accounts.values()) { // For every account number, get the vendors
+						vendors.addAll(AppleReporterHelper.getVendors(input.username, input.password, accountNumber));
+					}
+				}
+
+				if (vendors.isEmpty()) throw new Exception("Vendor list is empty");
+
+				// Only Admin can add another Apple ID pointing to an existing linked account
+				if (!isAdmin) { // check if duplicate vendor Id exists and throw exception
+					for (String v : vendors) {
+						if (!DataAccountServiceProvider.provide().getVendorDataAccounts(v, Boolean.FALSE).isEmpty()) // At least 1 active account
+							throw new InputValidationException(ApiError.DuplicateVendorId.getCode(), ApiError.DuplicateVendorId.getMessage(input.username));
+					}
+				}
+
+				// Add a data account for every vendor
+				for (String v : vendors) {
+					DataAccount addedAccount = UserServiceProvider.provide().addDataAccount(input.session.user, input.source, input.username, input.password,
+							ITunesConnectDownloadHelper.createProperties(v));
+					addedAccount.source = input.source;
+					output.linkedAccounts.add(addedAccount);
+				}
+
 			}
 
-			output.account.source = input.source;
-
-			if (output.account != null) {
+			if (!output.linkedAccounts.isEmpty()) {
 				if (input.session.user == null || input.session.user.forename == null) {
 					input.session.user = UserServiceProvider.provide().getUser(input.session.user.id);
 				}
@@ -1342,7 +1351,7 @@ public final class Core extends ActionHandler {
 				if (!hasHlaPermission) {
 					Map<String, Object> values = new HashMap<String, Object>();
 					values.put("user", input.session.user);
-					values.put("dataaccount", output.account);
+					values.put("dataaccount", output.linkedAccounts.get(0));
 
 					Event event = EventServiceProvider.provide().getCodeEvent(DataTypeHelper.CONFIRMATION_ACCOUNT_LINKED_EVENT_CODE);
 					if (event != null) {
@@ -1363,7 +1372,7 @@ public final class Core extends ActionHandler {
 				Map<String, Object> parameters = new HashMap<String, Object>();
 				parameters.put("listener", listeningUser);
 				parameters.put("user", input.session.user);
-				parameters.put("account", output.account);
+				parameters.put("account", output.linkedAccounts.get(0));
 				parameters.put("source", input.source);
 
 				String body = NotificationHelper

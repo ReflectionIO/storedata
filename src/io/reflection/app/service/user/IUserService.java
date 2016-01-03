@@ -245,9 +245,10 @@ public interface IUserService extends IService {
 	 * @param source
 	 * @param username
 	 * @param password
+	 * @param properties
 	 * @return
 	 */
-	public DataAccount addDataAccount(User user, DataSource datasource, String username, String password) throws DataAccessException;
+	public DataAccount addDataAccount(User user, DataSource datasource, String username, String password, String properties) throws DataAccessException;
 
 	/**
 	 * @param pager
