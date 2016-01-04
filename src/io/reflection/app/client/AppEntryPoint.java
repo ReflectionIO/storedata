@@ -13,6 +13,7 @@ import io.reflection.app.client.helper.ResponsiveDesignHelper;
 import io.reflection.app.client.helper.TooltipHelper;
 import io.reflection.app.client.helper.UserAgentHelper;
 import io.reflection.app.client.mixpanel.MixpanelHelper;
+import io.reflection.app.client.page.AppDetails;
 import io.reflection.app.client.part.BackToTop;
 import io.reflection.app.client.res.Styles;
 
@@ -37,7 +38,8 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 	@Override
 	public void onModuleLoad() {
 		super.onModuleLoad();
-
+		AppDetails.exportAppDetailsResponseHandler();
+		
 		UserAgentHelper.detectBrowser();
 
 		// this registers the newly created singleton, so that
