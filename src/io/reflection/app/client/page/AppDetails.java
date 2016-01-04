@@ -28,6 +28,8 @@ import com.google.gwt.user.client.ui.Widget;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.ResponsiveDesignHelper;
+import io.reflection.app.client.res.Styles;
+import io.reflection.app.client.res.Styles.ReflectionMainStyles;
 import io.reflection.app.datatypes.shared.Item;
 
 public class AppDetails extends Page implements NavigationEventHandler {
@@ -37,6 +39,8 @@ public class AppDetails extends Page implements NavigationEventHandler {
 	interface AppDetailsUiBinder extends UiBinder<Widget, AppDetails> {}
 
 	private static AppDetails INSTANCE = null;
+	
+	ReflectionMainStyles style = Styles.STYLES_INSTANCE.reflectionMainStyle();
 
 	@UiField HeadingElement trackName;
 	@UiField Image image;
@@ -65,6 +69,9 @@ public class AppDetails extends Page implements NavigationEventHandler {
 	@UiField DivElement whatsNewContainer;
 	@UiField SpanElement releaseNotesText;
 	@UiField UListElement screenshotsList;
+	@UiField UListElement moreAppsList;
+	@UiField DivElement ratingCurrent;
+	@UiField DivElement ratingAll;
 	private String iapDescription;
 
 	@UiField InlineHyperlink revenueLink;
@@ -88,7 +95,7 @@ public class AppDetails extends Page implements NavigationEventHandler {
 		initWidget(uiBinder.createAndBindUi(this));
 		INSTANCE = this;
 		
-		getAppDetails("903183877");
+		getAppDetails("553834731");
 	}
 	
 	private String htmlForTextWithEmbeddedNewlines(String text) {
@@ -108,6 +115,72 @@ public class AppDetails extends Page implements NavigationEventHandler {
 	    }
 	    return htmlString.toString();
 	}
+	
+	private void populateMoreApps(JsonArray jarray) {
+		for(int a = 0; a < jarray.size(); a++) {
+			JsonObject jobject = jarray.get(a).getAsJsonObject();		
+			final LIElement listItem = Document.get().createLIElement();
+			this.moreAppsList.appendChild(listItem);
+			
+			AnchorElement aElement = Document.get().createAnchorElement();
+			AnchorElement aElementTitle = Document.get().createAnchorElement();
+			aElement.setHref("#!appdetails/" + String.valueOf(jobject.get("trackId"))); // requires update to add non-static appdetails path
+			ImageElement imgElement = Document.get().createImageElement();
+			imgElement.setSrc(jobject.get("artworkUrl100").toString().replace("\"", ""));
+			aElementTitle.setInnerText(jobject.get("trackName").toString().replace("\"", ""));
+			aElementTitle.setHref("#!appdetails/" + String.valueOf(jobject.get("trackId"))); // requires update to add non-static appdetails path
+			aElement.appendChild(imgElement);
+			listItem.appendChild(aElement);
+			listItem.appendChild(aElementTitle);
+			moreAppsList.appendChild(listItem);
+		}
+	}
+	
+	private void handleAverageRatings(JsonObject data) {
+		DivElement ratingsContainer = Document.get().createDivElement();
+		ratingsContainer.addClassName(style.ratingsContainer());
+		DivElement ratingsContainerAll = Document.get().createDivElement();
+		ratingsContainerAll.addClassName(style.ratingsContainer());
+		
+		SpanElement numberOfRatings = Document.get().createSpanElement();
+		SpanElement numberOfRatingsAll = Document.get().createSpanElement();
+		
+		if(data.get("averageUserRatingForCurrentVersion") != null) {
+			Float ratingAsPercentage = (data.get("averageUserRatingForCurrentVersion").getAsFloat() / 5) * 100;
+			DivElement ratingsFull = Document.get().createDivElement();
+			ratingsFull.addClassName(style.ratingsFull());
+			ratingsFull.getStyle().setProperty("width", ratingAsPercentage + "%");			
+			ratingsContainer.appendChild(ratingsFull);
+						
+			if(data.get("userRatingCountForCurrentVersion") != null) {
+				numberOfRatings.setInnerText(data.get("userRatingCountForCurrentVersion").toString() + " Ratings");
+				ratingCurrent.appendChild(numberOfRatings);
+			}
+			ratingCurrent.appendChild(ratingsContainer);
+		} else {
+			ratingCurrent.appendChild(ratingsContainer);
+			numberOfRatings.setInnerText("No Ratings"); // update so can be non-static multilingual term
+			ratingCurrent.appendChild(numberOfRatings);
+		}
+		
+		if(data.get("averageUserRating") != null) {
+			Float ratingAsPercentage = (data.get("averageUserRating").getAsFloat() / 5) * 100;
+			DivElement ratingsFull = Document.get().createDivElement();
+			ratingsFull.addClassName(style.ratingsFull());
+			ratingsFull.getStyle().setProperty("width", ratingAsPercentage + "%");			
+			ratingsContainerAll.appendChild(ratingsFull);
+						
+			if(data.get("userRatingCount") != null) {
+				numberOfRatingsAll.setInnerText(data.get("userRatingCount").toString() + " Ratings");
+				ratingAll.appendChild(numberOfRatingsAll);
+			}
+			ratingAll.appendChild(ratingsContainerAll);
+		} else {
+			ratingAll.appendChild(ratingsContainerAll);
+			numberOfRatingsAll.setInnerText("No Ratings"); // update so can be non-static multilingual term
+			ratingAll.appendChild(numberOfRatingsAll);
+		}
+  	}
 
 	private void setAppDetails(JsonObject data) {
 
@@ -141,10 +214,10 @@ public class AppDetails extends Page implements NavigationEventHandler {
 		if(screenshotsArray != null) {
 			for (int i = 0; i < screenshotsArray.size(); i++) {
 				String srcString = screenshotsArray.get(i).getAsString();
-				String imageCSSClass = "image-portrait";
+				String imageCSSClass = style.imagePortrait();
 				if(isLandscape) {
 					srcString = srcString.replace("320x320", "640x640");
-					imageCSSClass = "image-landscape";
+					imageCSSClass = style.imageLandscape();
 				}
 				final LIElement listItem = Document.get().createLIElement();
 				this.screenshotsList.appendChild(listItem);
@@ -280,6 +353,14 @@ public class AppDetails extends Page implements NavigationEventHandler {
 								+ "&callback=handleAppDetailsSearch"));
 	}-*/;
 
+	private native void searchMoreApps(String artistName) /*-{
+	$wnd.$('body').append(
+			$wnd.$("<script>").attr("id", "scriptsearch").attr(
+					"src",
+					"https://itunes.apple.com/search?term=" + artistName
+							+ "&media=software&limit=17&entity=software&attribute=softwareDeveloper&callback=handleMoreAppsSearch"));
+	}-*/;
+	
 	/**
 	 * @param response
 	 */
@@ -290,9 +371,26 @@ public class AppDetails extends Page implements NavigationEventHandler {
 		jobject = jarray.get(0).getAsJsonObject();
 
 		INSTANCE.setAppDetails(jobject);
+		INSTANCE.handleAverageRatings(jobject);
+		if (jobject.get("artistName") != null) {
+			INSTANCE.searchMoreApps(jobject.get("artistName").toString());
+		}
+	}
+	
+	public static void processMoreAppsSearchResponse(String response) {
+		JsonElement jelement = new JsonParser().parse(response);
+		JsonObject jobject = jelement.getAsJsonObject();
+		JsonArray jarray = jobject.getAsJsonArray("results");
+		if(jarray.size() > 0) {
+			INSTANCE.populateMoreApps(jarray);
+		}
 	}
 
 	public static native void exportAppDetailsResponseHandler() /*-{
 		$wnd.processAppSearchResponse = $entry(@io.reflection.app.client.page.AppDetails::processAppSearchResponse(Ljava/lang/String;));
+	}-*/;
+	
+	public static native void exportMoreAppDetailsResponseHandler() /*-{
+		$wnd.processMoreAppsSearchResponse = $entry(@io.reflection.app.client.page.AppDetails::processMoreAppsSearchResponse(Ljava/lang/String;));
 	}-*/;
 }

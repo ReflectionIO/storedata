@@ -149,11 +149,11 @@
 					<div class="{STYLES_INSTANCE.reflectionMainStyle.reflectionSelect} {STYLES_INSTANCE.reflectionMainStyle.reflectionSelectFilter} {STYLES_INSTANCE.reflectionMainStyle.reflectionSelectRight}"><span class="{STYLES_INSTANCE.reflectionMainStyle.selectedValue}">United Kingdom</span><ul><a class="{STYLES_INSTANCE.reflectionMainStyle.closePopup}">K</a><span>Filter by Country</span><div class="{STYLES_INSTANCE.reflectionMainStyle.listContainer}"><li data-selectedtext="" data-value="gb">United Kingdom</li><li data-selectedtext="" data-value="fr">France</li><li data-selectedtext="" data-value="de">Germany</li><li data-selectedtext="" data-value="it">Italy</li><li data-selectedtext="" data-value="ca">Canada</li><li data-selectedtext="" data-value="se">Sweden</li><li data-selectedtext="" data-value="us">USA</li><li data-selectedtext="" data-value="jp">Japan</li><li data-selectedtext="" data-value="pl">Poland</li><li data-selectedtext="" data-value="kz">Kazakhstan</li></div></ul></div></div>
 					<div class="{STYLES_INSTANCE.reflectionMainStyle.averageRatingsContainer}">
 						<h3>Current version</h3>
-						<div class="js-dd-rating-current"><span>428 Ratings</span><div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsContainer}"><div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsFull}" style="width:90%"></div></div></div>
+						<div ui:field="ratingCurrent"></div>
 					</div>
 					<div class="{STYLES_INSTANCE.reflectionMainStyle.averageRatingsContainer}">
 						<h3>All versions</h3>
-						<div class="js-dd-rating-all"><span>4633 Ratings</span><div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsContainer}"><div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsFull}" style="width:90%"></div></div></div>
+						<div ui:field="ratingAll"></div>
 					</div>
 					<div style="display: block;" class="{STYLES_INSTANCE.reflectionMainStyle.customerReviews} js-customer-reviews">
 						<ul style="display: block;">
@@ -239,103 +239,7 @@
 				</aside>
 				<aside style="display: block;" class="{STYLES_INSTANCE.reflectionMainStyle.moreByThisDeveloper} js-more-by-this-developer">
 					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Other Apps By This Developer</h2>
-					<ul>
-						<li>
-							<a href="app.html?id=728293409">
-								<img src="http://is5.mzstatic.com/image/thumb/Purple69/v4/0e/e5/ad/0ee5ad48-cf6c-91ea-1359-097bfeb9d975/source/100x100bb.jpg" />
-							</a>
-							<a href="app.html?id=728293409">Monument Valley</a>
-						</li>
-						<li>
-							<a href="app.html?id=450163154">
-								<img src="http://is5.mzstatic.com/image/thumb/Purple4/v4/e0/b5/7e/e0b57eab-4710-9830-159f-3b7aad61384d/source/100x100bb.jpg" />
-							</a>
-							<a href="app.html?id=450163154">Whale Trail</a>
-						</li>
-						<li>
-							<a href="app.html?id=991764216">
-								<img src="http://is1.mzstatic.com/image/thumb/Purple7/v4/4f/79/10/4f7910eb-4607-0566-d416-de408cf7eb8c/source/100x100bb.jpg" />
-							</a>
-							<a href="app.html?id=991764216">PAUSE - Relaxation at your fingertip</a>
-						</li>
-						<li>	
-							<a href="app.html?id=306588353">
-								<img src="http://is5.mzstatic.com/image/thumb/Purple/v4/66/8e/06/668e0690-7893-1f1c-9b09-16084f4cc04f/source/100x100bb.jpg" />
-							</a>
-							<a href="app.html?id=306588353">MouthOff™</a>
-						</li>
-						<li>
-							<a href="app.html?id=573116090">
-								<img src="http://is3.mzstatic.com/image/thumb/Purple69/v4/f1/26/7a/f1267a32-8bd5-29a3-0db3-61fcf63f4e5f/source/100x100bb.jpg" />
-							</a>
-							<a href="app.html?id=573116090">Afterlight</a>
-						</li>
-						<li>
-							<a href="app.html?id=569862218">
-								<img src="http://is3.mzstatic.com/image/thumb/Purple/v4/0a/13/6b/0a136bed-9b98-bd07-7bc6-d20e0385ef72/source/100x100bb.jpg" />
-							</a>
-							<a href="app.html?id=569862218">Whale Trail Junior</a>
-						</li>
-						<li>
-							<a href="app.html?id=423322533">
-								<img src="http://is3.mzstatic.com/image/thumb/Purple/v4/a2/d1/6f/a2d16f9b-6494-1798-ab32-83c412e57f80/source/100x100bb.jpg" />
-							</a>
-							<a href="app.html?id=423322533">Nursery Rhymes with StoryTime</a>
-						</li>
-						<li>
-							<a href="app.html?id=564053324">
-								<img src="http://is1.mzstatic.com/image/thumb/Purple6/v4/55/6a/06/556a0639-ce5a-8663-a216-355083207db3/source/100x100bb.jpg" />
-							</a>
-							<a href="app.html?id=564053324">Mouth Mover (Lite)</a>
-						</li>
-						<li>
-							<a href="app.html?id=601330882">
-								<img src="http://is5.mzstatic.com/image/thumb/Purple6/v4/9a/fa/f9/9afaf9fc-6ffc-b384-7a8f-6db16fafba8f/source/100x100bb.jpg" />
-							</a>
-							<a href="app.html?id=601330882">Blip Blup Free</a>
-						</li>
-						<li>
-							<a href="app.html?id=680366065">
-								<img src="http://is3.mzstatic.com/image/thumb/Purple6/v4/e7/eb/54/e7eb5478-9183-73ce-e707-cbdfc3ef3228/source/100x100bb.jpg" />
-							</a>
-							<a href="app.html?id=680366065">DEVICE 6</a>
-						</li>
-						<li>
-							<a href="app.html?id=830544402">
-								<img src="http://is2.mzstatic.com/image/thumb/Purple3/v4/37/20/13/372013be-0178-eb0e-80fc-30673508e0ea/source/100x100bb.jpg" />
-							</a>
-							<a href="app.html?id=830544402">Leo's Fortune</a>
-						</li>
-						<li>
-							<a href="app.html?id=663834265">
-								<img src="http://is5.mzstatic.com/image/thumb/Purple4/v4/2a/e2/cd/2ae2cd4d-99f5-efc6-d752-ab1b26f2882a/source/100x100bb.jpg" />
-							</a>
-							<a href="app.html?id=663834265">Oh Hai</a>
-						</li>
-						<li>
-							<a href="app.html?id=775888026">
-								<img src="http://is5.mzstatic.com/image/thumb/Purple7/v4/19/f8/2e/19f82e8f-3b54-d7ce-3731-6760c75484a9/source/100x100bb.jpg" />
-							</a>
-							<a href="app.html?id=775888026">Shadowmatic</a>
-						</li>
-						<li>
-							<a href="app.html?id=586558668">
-								<img src="http://is3.mzstatic.com/image/thumb/Purple6/v4/7e/c8/24/7ec8247c-6ea2-ce76-deae-b764a9b6f43f/source/100x100bb.jpg" />
-							</a>
-							<a href="app.html?id=586558668">Blip Blup</a>
-						</li>
-						<li>
-							<a href="app.html?id=794960248">
-								<img src="http://is2.mzstatic.com/image/thumb/Purple1/v4/2a/d6/98/2ad69887-7fe3-fd82-5102-ed25488d9212/source/100x100bb.jpg" />
-							</a>
-							<a href="app.html?id=794960248">Tengami</a>
-						</li>
-						<li>
-							<a href="app.html?id=985317990">
-								<img src="http://is3.mzstatic.com/image/thumb/Purple7/v4/26/b6/89/26b6898a-a067-6fd6-4e95-59ff06147836/source/100x100bb.jpg" />
-							</a>
-							<a href="app.html?id=985317990">Gero Time Management Companion</a>
-						</li>
+					<ul ui:field="moreAppsList">
 					</ul>
 					<p class="{STYLES_INSTANCE.reflectionMainStyle.moreAppsListed} js-more-apps-listed">
 						<a target="_blank" href="https://itunes.apple.com/us/developer/ustwo/id297468910?uo=4">See all apps by this developer</a>

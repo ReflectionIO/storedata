@@ -39,6 +39,7 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 	public void onModuleLoad() {
 		super.onModuleLoad();
 		AppDetails.exportAppDetailsResponseHandler();
+		AppDetails.exportMoreAppDetailsResponseHandler();
 		
 		UserAgentHelper.detectBrowser();
 
