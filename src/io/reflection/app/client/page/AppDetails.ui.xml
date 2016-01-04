@@ -1,0 +1,378 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:io.reflection.app.client.component">
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
+	<ui:style  gss="true">
+	</ui:style>
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.pageApp}">
+		<header class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.pageApp__header}">
+
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.appIconContainer}">
+				<g:Image ui:field="image" styleName="{STYLES_INSTANCE.reflectionMainStyle.appIcon}" />
+			</div>
+
+			<div ui:field="appDetailsPanel" class="{STYLES_INSTANCE.reflectionMainStyle.appDetails}">
+
+				<h1 ui:field="trackName" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree} {STYLES_INSTANCE.reflectionMainStyle.appTitle}"></h1>
+
+				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.appCreator}">
+					By <span ui:field="artistName"></span>
+				</h2>
+
+				<span ui:field="formattedPrice" class="{STYLES_INSTANCE.reflectionMainStyle.appPrice}"></span>
+
+			</div>
+		</header>
+		
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.appUserFunctionsContainer}">
+			<!-- <a ui:field="revealContentStore" href="#" class="{STYLES_INSTANCE.reflectionMainStyle.showHideLink}" data-closed-text="Less..." data-open-text="More...">More...</a> -->
+			<form>
+				<!-- <c:FormSwitch ui:field="followSwitch" label="Follow (10.3k)" /> -->
+
+				<a target="_blank" ui:field="viewInStore">
+					<span ui:field="storeName">
+					</span>
+				</a>
+			</form>
+		</div>
+
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.tabs}">
+			<ul
+				class="{STYLES_INSTANCE.reflectionMainStyle.tabsContainer} {STYLES_INSTANCE.reflectionMainStyle.defaultTabsTransition} {STYLES_INSTANCE.reflectionMainStyle.tabsToDropdown}">
+				<li ui:field="revenueItem"
+					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab}">
+					<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
+					<g:InlineHyperlink ui:field="revenueLink" targetHistoryToken="#tab-content" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
+						<span>
+							<svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">
+									<path
+								d="M19.5,4.7L0,6.9v13.9l13.9,4.9L32,20.2V6.4L19.5,4.7z M30,15.1l-16.1,4.6L2,15.9v-3l11.9,3.4
+	L30,12.2V15.1z M13.9,12L30,8.4v2.8l-16.1,4.2L2,11.9v-3L13.9,12z M27.7,7.9l-13.8,3.1L4.2,8.4l15.3-1.7L27.7,7.9z M13.9,23.6
+	L2,19.4V17l11.9,3.8L30,16.2v2.6L13.9,23.6z" /></svg>
+							<span>
+								Revenue
+								<div ui:field="premiumIconRevenue" class="{STYLES_INSTANCE.reflectionMainStyle.iconMember}">
+									<img src="images/icon-pro@2x.png" alt="Pro member icon" />
+								</div>
+							</span>
+						</span>
+					</g:InlineHyperlink>
+				</li>
+				<li ui:field="downloadsItem"
+					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab}">
+					<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
+					<g:InlineHyperlink ui:field="downloadsLink" targetHistoryToken="#tab-content" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
+						<span>
+							<svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">
+									<path fill-rule="evenodd" clip-rule="evenodd"
+								d="M32,16.5c0,3.6-2.7,6.5-6.7,6.5v0h-6v-2h6.5
+	c2.5,0,4.5-2,4.5-4.5c0-1.6-0.8-3-2.3-3.9c-1.4-0.8-1.5-0.9-0.9-2.4c0.1-0.3,0.1-0.5,0.1-0.8c0-1.4-1.1-2.5-2.5-2.5
+	c0,0-0.7,0-1.4,0.2c-1.1,0.5-1.3,0-1.8-1.2C20.4,3.6,17.9,2,15.2,2c-3.6,0-6.6,2.7-7,6.3c-0.1,1.4-0.2,1.4-1.7,1.8
+	C4,10.6,2,12.9,2,15.5c0,3,2.3,5.5,5.3,5.5v0h6v2h-6v0c-4,0-7.2-3.4-7.2-7.5c0-3.7,2.7-6.7,6.2-7.4c0.4-4.6,4.4-8.1,9-8.1
+	c3.6,0,6.7,2.1,8.1,5.2C23.8,5.1,24.2,5,24.7,5c2.5,0,4.5,2,4.5,4.5c0,0.5-0.2,1-0.3,1.4C30.8,12,32,14.1,32,16.5z M19,25.8
+	l-1.8,1.8V14.3c0-0.6-0.4-1.1-1-1.1c-0.6,0-1,0.5-1,1.1v13.3l-1.9-1.8c-0.4-0.4-1.2-0.4-1.6,0c-0.4,0.4-0.5,1.1,0,1.6l3.1,3.1
+	c0.4,0.4,0.8,0.5,1.3,0.5c0.5,0,0.9-0.2,1.3-0.5l3.1-3.1c0.4-0.4,0.4-1.1,0-1.6C20.2,25.4,19.5,25.4,19,25.8z" /></svg>
+							<span>
+								Downloads
+								<div ui:field="premiumIconDownload" class="{STYLES_INSTANCE.reflectionMainStyle.iconMember}">
+									<img src="images/icon-pro@2x.png" alt="Pro member icon" />
+								</div>
+							</span>
+						</span>
+					</g:InlineHyperlink>
+				</li>
+				<li ui:field="rankingItem"
+					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab}">
+					<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
+					<g:InlineHyperlink ui:field="rankingLink" targetHistoryToken="#tab-content" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
+						<span>
+							<svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">
+									<path d="M23,12V4H9v6H0v18h32V12H23z M11,6h10v7.3l0,0V26H11V12.3l0,0V6z M2,12h8v14H2V12z M30,26h-8V14h8
+	V26z" /></svg>
+							<span ui:field="rankingText">Rank</span>
+						</span>
+					</g:InlineHyperlink>
+				</li>
+				<li ui:field="appDetailsItem"
+					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab} {STYLES_INSTANCE.reflectionMainStyle.isActive}">
+					<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
+					<g:InlineHyperlink ui:field="appDetailsLink" targetHistoryToken="#tab-content" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
+						<span>
+							<svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">
+									<path
+								d="M4,10c0,1.1-0.9,2-2,2s-2-0.9-2-2s0.9-2,2-2S4,8.9,4,10z M32,9H7v2h25V9z M2,14
+	c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S3.1,14,2,14z M32,15H7v2h25V15z M2,20c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S3.1,20,2,20z
+	 M32,21H7v2h25V21z" /></svg>
+							<span ui:field="appDetailsText">
+								App Details
+							</span>
+						</span>
+					</g:InlineHyperlink>
+				</li>
+			</ul>
+		</div>
+		
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.appImagesContainer}">
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.appImages}">
+				<ul class="{STYLES_INSTANCE.reflectionMainStyle.appImageList}" ui:field="screenshotsList">
+				</ul>
+			</div>
+		</div>
+		
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.appDetailsContentContainer}">
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnTwoThirds} {STYLES_INSTANCE.reflectionMainStyle.appMainDetails}">
+				<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticleFull}">
+					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Description</h2>
+					<p ui:field="description"></p>
+					<div style="display: block;" class="{STYLES_INSTANCE.reflectionMainStyle.releaseNotesContainer}" ui:field="whatsNewContainer">
+						<h3 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}" ui:field="appVersionContainer">What's New in Version <span ui:field="appVersion"></span></h3>
+						<p><span ui:field="releaseNotesText"></span></p>
+					</div>
+				</article>
+				<aside class="{STYLES_INSTANCE.reflectionMainStyle.reviewsAndRatings}">								
+					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Average Ratings</h2>
+					<div class="{STYLES_INSTANCE.reflectionMainStyle.formField} {STYLES_INSTANCE.reflectionMainStyle.formFieldSelect} {STYLES_INSTANCE.reflectionMainStyle.countrySelector} {STYLES_INSTANCE.reflectionMainStyle.formFieldSelectFilter} js-country-selector">
+						<div class="{STYLES_INSTANCE.reflectionMainStyle.pageOverlay}"></div>
+						<select class="js-field--select {STYLES_INSTANCE.reflectionMainStyle.reflectionSelectFilter} {STYLES_INSTANCE.reflectionMainStyle.reflectionSelectRight}">
+					    <option value="" disabled="">Filter by Country</option>
+					    <option value="gb" selected="">United Kingdom</option>
+					    <option value="fr">France</option>
+					    <option value="de">Germany</option>
+					    <option value="it">Italy</option>
+					    <option value="ca">Canada</option>
+					    <option value="se">Sweden</option>
+					    <option value="us">USA</option>
+					    <option value="jp">Japan</option>
+					    <option value="pl">Poland</option>
+							<option value="kz">Kazakhstan</option>
+						</select>
+					<div class="{STYLES_INSTANCE.reflectionMainStyle.reflectionSelect} {STYLES_INSTANCE.reflectionMainStyle.reflectionSelectFilter} {STYLES_INSTANCE.reflectionMainStyle.reflectionSelectRight}"><span class="{STYLES_INSTANCE.reflectionMainStyle.selectedValue}">United Kingdom</span><ul><a class="{STYLES_INSTANCE.reflectionMainStyle.closePopup}">K</a><span>Filter by Country</span><div class="{STYLES_INSTANCE.reflectionMainStyle.listContainer}"><li data-selectedtext="" data-value="gb">United Kingdom</li><li data-selectedtext="" data-value="fr">France</li><li data-selectedtext="" data-value="de">Germany</li><li data-selectedtext="" data-value="it">Italy</li><li data-selectedtext="" data-value="ca">Canada</li><li data-selectedtext="" data-value="se">Sweden</li><li data-selectedtext="" data-value="us">USA</li><li data-selectedtext="" data-value="jp">Japan</li><li data-selectedtext="" data-value="pl">Poland</li><li data-selectedtext="" data-value="kz">Kazakhstan</li></div></ul></div></div>
+					<div class="{STYLES_INSTANCE.reflectionMainStyle.averageRatingsContainer}">
+						<h3>Current version</h3>
+						<div class="js-dd-rating-current"><span>428 Ratings</span><div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsContainer}"><div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsFull}" style="width:90%"></div></div></div>
+					</div>
+					<div class="{STYLES_INSTANCE.reflectionMainStyle.averageRatingsContainer}">
+						<h3>All versions</h3>
+						<div class="js-dd-rating-all"><span>4633 Ratings</span><div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsContainer}"><div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsFull}" style="width:90%"></div></div></div>
+					</div>
+					<div style="display: block;" class="{STYLES_INSTANCE.reflectionMainStyle.customerReviews} js-customer-reviews">
+						<ul style="display: block;">
+							<li>
+								<article class="{STYLES_INSTANCE.reflectionMainStyle.customerReview}">
+									<div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsContainer}">
+										<div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsFull}" style="width:100%"></div>
+									</div>
+									<h3 class="{STYLES_INSTANCE.reflectionMainStyle.customerReview__title}">Superb</h3>
+									<p class="{STYLES_INSTANCE.reflectionMainStyle.customerReview__content}">
+										Just found this after reading a review in the Swipe magazine. It's incredible and really holding. This will be something I play slot of over Xmas. Not normally a game fan but this has got me gripped. Definitely worth the payment. Love it.
+									</p>
+								</article>
+							</li>
+							<li>
+								<article class="{STYLES_INSTANCE.reflectionMainStyle.customerReview}">
+									<div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsContainer}">
+										<div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsFull}" style="width:100%"></div>
+									</div>
+									<h3 class="{STYLES_INSTANCE.reflectionMainStyle.customerReview__title}">Can't get enough of it</h3>
+									<p class="{STYLES_INSTANCE.reflectionMainStyle.customerReview__content}">This game is ridiculously amazing. The moment I started playing it I couldn't leave my phone anymore. 5 stars all the way</p>
+								</article>
+							</li>
+							<li>
+								<article class="{STYLES_INSTANCE.reflectionMainStyle.customerReview}">
+									<div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsContainer}">
+										<div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsFull}" style="width:100%"></div>
+									</div>
+									<h3 class="{STYLES_INSTANCE.reflectionMainStyle.customerReview__title}">Awesome!!! Worth every penny</h3>
+									<p class="{STYLES_INSTANCE.reflectionMainStyle.customerReview__content}">I rarely play games and downloaded it for my nephew. It's so beautifully designed and fun to play. I just wish there were more chapters.</p>
+								</article>
+							</li>
+							<div class="more-reviews-container js-more-reviews-container">
+								<li>
+								<article class="{STYLES_INSTANCE.reflectionMainStyle.customerReview}">
+									<div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsContainer}">
+										<div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsFull}" style="width:100%"></div>
+									</div>
+									<h3 class="{STYLES_INSTANCE.reflectionMainStyle.customerReview__title}">No clue why this is raved about</h3>
+										<p class="{STYLES_INSTANCE.reflectionMainStyle.customerReview__content}">Yes it is aesthetically pleasing in some ways but there is zero storyline, just some hipster nonsense about shapes from some ghost lady every so often; 10 levels of child-difficulty play; awkward controls to manipulate the levels; sounds are charming at first but get quite annoying.  So glad I got this for free and only lost time playing this.</p>
+									</article>
+								</li>
+								<li>
+									<article class="{STYLES_INSTANCE.reflectionMainStyle.customerReview}">
+									<div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsContainer}">
+										<div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsFull}" style="width:100%"></div>
+									</div>
+									<h3 class="{STYLES_INSTANCE.reflectionMainStyle.customerReview__title}">Best game ever!!</h3>
+										<p class="{STYLES_INSTANCE.reflectionMainStyle.customerReview__content}">Thank you for making monument valley its a wonderful game. I loved the designs, the characters, colors,  and the music. Every single details was so perfect. It's my favourite game ever! Thank you so much. I enjoyed playing it :)</p>
+									</article>
+								</li>
+								<li>
+									<article class="{STYLES_INSTANCE.reflectionMainStyle.customerReview}">
+									<div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsContainer}">
+										<div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsFull}" style="width:100%"></div>
+									</div>
+									<h3 class="{STYLES_INSTANCE.reflectionMainStyle.customerReview__title}">Good game but</h3>
+										<p class="{STYLES_INSTANCE.reflectionMainStyle.customerReview__content}">I paid £3 for the game and I competed it within an hour! It was a really great game and the graphics were amazing but there were only 10 levels which were fairly easy and if you want more levels your have to pay£1.50 more!!!!!!</p>
+									</article>
+								</li>
+								<li>
+									<article class="{STYLES_INSTANCE.reflectionMainStyle.customerReview}">
+										<div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsContainer}">
+											<div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsFull}" style="width:100%"></div>
+										</div>
+										<h3 class="{STYLES_INSTANCE.reflectionMainStyle.customerReview__title}">awesome game</h3>
+										<p class="{STYLES_INSTANCE.reflectionMainStyle.customerReview__content}">A lovely puzzler with beautiful mechanics and charming graphics. Much greater than the sum of the parts. One of my favourite iPhone games ever!</p>
+									</article>
+								</li>
+								<li>
+									<article class="{STYLES_INSTANCE.reflectionMainStyle.customerReview}">
+									<div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsContainer}">
+										<div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsFull}" style="width:100%"></div>
+									</div>
+									<h3 class="{STYLES_INSTANCE.reflectionMainStyle.customerReview__title}">AMAZING</h3>
+										<p class="{STYLES_INSTANCE.reflectionMainStyle.customerReview__content}">A visually stunning, mind opening game. Amazing</p>
+									</article>
+								</li>
+							</div>
+							<button class="ref-button--function-small">View More</button>
+						</ul>
+					</div>
+				</aside>
+				<aside style="display: block;" class="{STYLES_INSTANCE.reflectionMainStyle.moreByThisDeveloper} js-more-by-this-developer">
+					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Other Apps By This Developer</h2>
+					<ul>
+						<li>
+							<a href="app.html?id=728293409">
+								<img src="http://is5.mzstatic.com/image/thumb/Purple69/v4/0e/e5/ad/0ee5ad48-cf6c-91ea-1359-097bfeb9d975/source/100x100bb.jpg" />
+							</a>
+							<a href="app.html?id=728293409">Monument Valley</a>
+						</li>
+						<li>
+							<a href="app.html?id=450163154">
+								<img src="http://is5.mzstatic.com/image/thumb/Purple4/v4/e0/b5/7e/e0b57eab-4710-9830-159f-3b7aad61384d/source/100x100bb.jpg" />
+							</a>
+							<a href="app.html?id=450163154">Whale Trail</a>
+						</li>
+						<li>
+							<a href="app.html?id=991764216">
+								<img src="http://is1.mzstatic.com/image/thumb/Purple7/v4/4f/79/10/4f7910eb-4607-0566-d416-de408cf7eb8c/source/100x100bb.jpg" />
+							</a>
+							<a href="app.html?id=991764216">PAUSE - Relaxation at your fingertip</a>
+						</li>
+						<li>	
+							<a href="app.html?id=306588353">
+								<img src="http://is5.mzstatic.com/image/thumb/Purple/v4/66/8e/06/668e0690-7893-1f1c-9b09-16084f4cc04f/source/100x100bb.jpg" />
+							</a>
+							<a href="app.html?id=306588353">MouthOff™</a>
+						</li>
+						<li>
+							<a href="app.html?id=573116090">
+								<img src="http://is3.mzstatic.com/image/thumb/Purple69/v4/f1/26/7a/f1267a32-8bd5-29a3-0db3-61fcf63f4e5f/source/100x100bb.jpg" />
+							</a>
+							<a href="app.html?id=573116090">Afterlight</a>
+						</li>
+						<li>
+							<a href="app.html?id=569862218">
+								<img src="http://is3.mzstatic.com/image/thumb/Purple/v4/0a/13/6b/0a136bed-9b98-bd07-7bc6-d20e0385ef72/source/100x100bb.jpg" />
+							</a>
+							<a href="app.html?id=569862218">Whale Trail Junior</a>
+						</li>
+						<li>
+							<a href="app.html?id=423322533">
+								<img src="http://is3.mzstatic.com/image/thumb/Purple/v4/a2/d1/6f/a2d16f9b-6494-1798-ab32-83c412e57f80/source/100x100bb.jpg" />
+							</a>
+							<a href="app.html?id=423322533">Nursery Rhymes with StoryTime</a>
+						</li>
+						<li>
+							<a href="app.html?id=564053324">
+								<img src="http://is1.mzstatic.com/image/thumb/Purple6/v4/55/6a/06/556a0639-ce5a-8663-a216-355083207db3/source/100x100bb.jpg" />
+							</a>
+							<a href="app.html?id=564053324">Mouth Mover (Lite)</a>
+						</li>
+						<li>
+							<a href="app.html?id=601330882">
+								<img src="http://is5.mzstatic.com/image/thumb/Purple6/v4/9a/fa/f9/9afaf9fc-6ffc-b384-7a8f-6db16fafba8f/source/100x100bb.jpg" />
+							</a>
+							<a href="app.html?id=601330882">Blip Blup Free</a>
+						</li>
+						<li>
+							<a href="app.html?id=680366065">
+								<img src="http://is3.mzstatic.com/image/thumb/Purple6/v4/e7/eb/54/e7eb5478-9183-73ce-e707-cbdfc3ef3228/source/100x100bb.jpg" />
+							</a>
+							<a href="app.html?id=680366065">DEVICE 6</a>
+						</li>
+						<li>
+							<a href="app.html?id=830544402">
+								<img src="http://is2.mzstatic.com/image/thumb/Purple3/v4/37/20/13/372013be-0178-eb0e-80fc-30673508e0ea/source/100x100bb.jpg" />
+							</a>
+							<a href="app.html?id=830544402">Leo's Fortune</a>
+						</li>
+						<li>
+							<a href="app.html?id=663834265">
+								<img src="http://is5.mzstatic.com/image/thumb/Purple4/v4/2a/e2/cd/2ae2cd4d-99f5-efc6-d752-ab1b26f2882a/source/100x100bb.jpg" />
+							</a>
+							<a href="app.html?id=663834265">Oh Hai</a>
+						</li>
+						<li>
+							<a href="app.html?id=775888026">
+								<img src="http://is5.mzstatic.com/image/thumb/Purple7/v4/19/f8/2e/19f82e8f-3b54-d7ce-3731-6760c75484a9/source/100x100bb.jpg" />
+							</a>
+							<a href="app.html?id=775888026">Shadowmatic</a>
+						</li>
+						<li>
+							<a href="app.html?id=586558668">
+								<img src="http://is3.mzstatic.com/image/thumb/Purple6/v4/7e/c8/24/7ec8247c-6ea2-ce76-deae-b764a9b6f43f/source/100x100bb.jpg" />
+							</a>
+							<a href="app.html?id=586558668">Blip Blup</a>
+						</li>
+						<li>
+							<a href="app.html?id=794960248">
+								<img src="http://is2.mzstatic.com/image/thumb/Purple1/v4/2a/d6/98/2ad69887-7fe3-fd82-5102-ed25488d9212/source/100x100bb.jpg" />
+							</a>
+							<a href="app.html?id=794960248">Tengami</a>
+						</li>
+						<li>
+							<a href="app.html?id=985317990">
+								<img src="http://is3.mzstatic.com/image/thumb/Purple7/v4/26/b6/89/26b6898a-a067-6fd6-4e95-59ff06147836/source/100x100bb.jpg" />
+							</a>
+							<a href="app.html?id=985317990">Gero Time Management Companion</a>
+						</li>
+					</ul>
+					<p class="{STYLES_INSTANCE.reflectionMainStyle.moreAppsListed} js-more-apps-listed">
+						<a target="_blank" href="https://itunes.apple.com/us/developer/ustwo/id297468910?uo=4">See all apps by this developer</a>
+					</p>
+				</aside>
+			</div>
+			<aside class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird} {STYLES_INSTANCE.reflectionMainStyle.asideDefinitionList}">
+				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Details</h2>
+				<dl>
+					<dt>Price</dt>
+					<dd ui:field="formattedPriceDuplicate"></dd>
+					<dt>Category</dt>
+					<dd ui:field="categories"></dd>
+					<dt>Size</dt>
+					<dd ui:field="fileSize"></dd>
+					<dt>Languages</dt>
+					<dd class="js-dd-languages">English</dd>
+					<dt>Stores</dt>
+					<dd></dd>
+					<dt>Rated</dt>
+					<dd ui:field="rated"></dd>
+					<dt>Version</dt>
+					<dd ui:field="version"></dd>
+					<dt>Release Date</dt>
+					<dd ui:field="releaseDate"></dd>
+					<dt>Universal App</dt>
+					<dd ui:field="universal">No</dd>
+					<dt>Game Center</dt>
+					<dd ui:field="gameCenter">No</dd>
+				</dl>
+				<p class="{STYLES_INSTANCE.reflectionMainStyle.appDetailsLink}" ui:field="developersSiteContainer"><a target="_blank" ui:field="developersSite">Developer's site</a></p>
+				<p class="{STYLES_INSTANCE.reflectionMainStyle.appDetailsLink}" ui:field="appStoreLinkContainer"><a target="_blank" ui:field="appStoreLink">View in the App Store</a></p>
+				<p class="{STYLES_INSTANCE.reflectionMainStyle.appDetailsLink}" ui:field="artistStoreLinkContainer"><a target="_blank" ui:field="artistStoreLink">More Apps by this Developer</a></p>
+				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Compatibility</h2>
+				<p class="{STYLES_INSTANCE.reflectionMainStyle.supportedDevices}">Supported Devices: <span ui:field="supportedDevices"></span>
+				</p>
+			</aside>
+		</div>
+	</g:HTMLPanel>
+</ui:UiBinder>

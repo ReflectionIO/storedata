@@ -46,6 +46,7 @@ import com.spacehopperstudios.utility.StringUtils;
 public enum PageType {
 	// navigable
 	AboutPageType("about", false),
+	AppDetailsPage("appdetails", false),
 	BlogAdminPageType("blogadmin", DataTypeHelper.PERMISSION_MANAGE_BLOG_POSTS_CODE),
 	BlogEditPostPageType("blogedit", "BLE", "BLU"),
 	BlogPostsPageType("blog", false),
@@ -212,6 +213,9 @@ public enum PageType {
 			break;
 		case AboutPageType:
 			page = new AboutPage();
+			break;
+		case AppDetailsPage:
+			page = new AppDetails();
 			break;
 		case BlogAdminPageType:
 			page = new PostAdminPage();
