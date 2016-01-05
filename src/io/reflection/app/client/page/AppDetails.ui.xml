@@ -131,22 +131,8 @@
 				</article>
 				<aside class="{STYLES_INSTANCE.reflectionMainStyle.reviewsAndRatings}">								
 					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Average Ratings</h2>
-					<div class="{STYLES_INSTANCE.reflectionMainStyle.formField} {STYLES_INSTANCE.reflectionMainStyle.formFieldSelect} {STYLES_INSTANCE.reflectionMainStyle.countrySelector} {STYLES_INSTANCE.reflectionMainStyle.formFieldSelectFilter} js-country-selector">
-						<div class="{STYLES_INSTANCE.reflectionMainStyle.pageOverlay}"></div>
-						<select class="js-field--select {STYLES_INSTANCE.reflectionMainStyle.reflectionSelectFilter} {STYLES_INSTANCE.reflectionMainStyle.reflectionSelectRight}">
-					    <option value="" disabled="">Filter by Country</option>
-					    <option value="gb" selected="">United Kingdom</option>
-					    <option value="fr">France</option>
-					    <option value="de">Germany</option>
-					    <option value="it">Italy</option>
-					    <option value="ca">Canada</option>
-					    <option value="se">Sweden</option>
-					    <option value="us">USA</option>
-					    <option value="jp">Japan</option>
-					    <option value="pl">Poland</option>
-							<option value="kz">Kazakhstan</option>
-						</select>
-					<div class="{STYLES_INSTANCE.reflectionMainStyle.reflectionSelect} {STYLES_INSTANCE.reflectionMainStyle.reflectionSelectFilter} {STYLES_INSTANCE.reflectionMainStyle.reflectionSelectRight}"><span class="{STYLES_INSTANCE.reflectionMainStyle.selectedValue}">United Kingdom</span><ul><a class="{STYLES_INSTANCE.reflectionMainStyle.closePopup}">K</a><span>Filter by Country</span><div class="{STYLES_INSTANCE.reflectionMainStyle.listContainer}"><li data-selectedtext="" data-value="gb">United Kingdom</li><li data-selectedtext="" data-value="fr">France</li><li data-selectedtext="" data-value="de">Germany</li><li data-selectedtext="" data-value="it">Italy</li><li data-selectedtext="" data-value="ca">Canada</li><li data-selectedtext="" data-value="se">Sweden</li><li data-selectedtext="" data-value="us">USA</li><li data-selectedtext="" data-value="jp">Japan</li><li data-selectedtext="" data-value="pl">Poland</li><li data-selectedtext="" data-value="kz">Kazakhstan</li></div></ul></div></div>
+					
+					<c:Selector ui:field="countrySelector" labelText="Filter by Country" overlay="true" dropdownTitle="Filter by Country" tooltip="Filter by Country" />
 					<div class="{STYLES_INSTANCE.reflectionMainStyle.averageRatingsContainer}">
 						<h3>Current version</h3>
 						<div ui:field="ratingCurrent"></div>
@@ -155,94 +141,17 @@
 						<h3>All versions</h3>
 						<div ui:field="ratingAll"></div>
 					</div>
-					<div style="display: block;" class="{STYLES_INSTANCE.reflectionMainStyle.customerReviews} js-customer-reviews">
-						<ul style="display: block;">
-							<li>
-								<article class="{STYLES_INSTANCE.reflectionMainStyle.customerReview}">
-									<div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsContainer}">
-										<div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsFull}" style="width:100%"></div>
-									</div>
-									<h3 class="{STYLES_INSTANCE.reflectionMainStyle.customerReview__title}">Superb</h3>
-									<p class="{STYLES_INSTANCE.reflectionMainStyle.customerReview__content}">
-										Just found this after reading a review in the Swipe magazine. It's incredible and really holding. This will be something I play slot of over Xmas. Not normally a game fan but this has got me gripped. Definitely worth the payment. Love it.
-									</p>
-								</article>
-							</li>
-							<li>
-								<article class="{STYLES_INSTANCE.reflectionMainStyle.customerReview}">
-									<div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsContainer}">
-										<div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsFull}" style="width:100%"></div>
-									</div>
-									<h3 class="{STYLES_INSTANCE.reflectionMainStyle.customerReview__title}">Can't get enough of it</h3>
-									<p class="{STYLES_INSTANCE.reflectionMainStyle.customerReview__content}">This game is ridiculously amazing. The moment I started playing it I couldn't leave my phone anymore. 5 stars all the way</p>
-								</article>
-							</li>
-							<li>
-								<article class="{STYLES_INSTANCE.reflectionMainStyle.customerReview}">
-									<div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsContainer}">
-										<div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsFull}" style="width:100%"></div>
-									</div>
-									<h3 class="{STYLES_INSTANCE.reflectionMainStyle.customerReview__title}">Awesome!!! Worth every penny</h3>
-									<p class="{STYLES_INSTANCE.reflectionMainStyle.customerReview__content}">I rarely play games and downloaded it for my nephew. It's so beautifully designed and fun to play. I just wish there were more chapters.</p>
-								</article>
-							</li>
-							<div class="more-reviews-container js-more-reviews-container">
-								<li>
-								<article class="{STYLES_INSTANCE.reflectionMainStyle.customerReview}">
-									<div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsContainer}">
-										<div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsFull}" style="width:100%"></div>
-									</div>
-									<h3 class="{STYLES_INSTANCE.reflectionMainStyle.customerReview__title}">No clue why this is raved about</h3>
-										<p class="{STYLES_INSTANCE.reflectionMainStyle.customerReview__content}">Yes it is aesthetically pleasing in some ways but there is zero storyline, just some hipster nonsense about shapes from some ghost lady every so often; 10 levels of child-difficulty play; awkward controls to manipulate the levels; sounds are charming at first but get quite annoying.  So glad I got this for free and only lost time playing this.</p>
-									</article>
-								</li>
-								<li>
-									<article class="{STYLES_INSTANCE.reflectionMainStyle.customerReview}">
-									<div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsContainer}">
-										<div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsFull}" style="width:100%"></div>
-									</div>
-									<h3 class="{STYLES_INSTANCE.reflectionMainStyle.customerReview__title}">Best game ever!!</h3>
-										<p class="{STYLES_INSTANCE.reflectionMainStyle.customerReview__content}">Thank you for making monument valley its a wonderful game. I loved the designs, the characters, colors,  and the music. Every single details was so perfect. It's my favourite game ever! Thank you so much. I enjoyed playing it :)</p>
-									</article>
-								</li>
-								<li>
-									<article class="{STYLES_INSTANCE.reflectionMainStyle.customerReview}">
-									<div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsContainer}">
-										<div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsFull}" style="width:100%"></div>
-									</div>
-									<h3 class="{STYLES_INSTANCE.reflectionMainStyle.customerReview__title}">Good game but</h3>
-										<p class="{STYLES_INSTANCE.reflectionMainStyle.customerReview__content}">I paid £3 for the game and I competed it within an hour! It was a really great game and the graphics were amazing but there were only 10 levels which were fairly easy and if you want more levels your have to pay£1.50 more!!!!!!</p>
-									</article>
-								</li>
-								<li>
-									<article class="{STYLES_INSTANCE.reflectionMainStyle.customerReview}">
-										<div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsContainer}">
-											<div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsFull}" style="width:100%"></div>
-										</div>
-										<h3 class="{STYLES_INSTANCE.reflectionMainStyle.customerReview__title}">awesome game</h3>
-										<p class="{STYLES_INSTANCE.reflectionMainStyle.customerReview__content}">A lovely puzzler with beautiful mechanics and charming graphics. Much greater than the sum of the parts. One of my favourite iPhone games ever!</p>
-									</article>
-								</li>
-								<li>
-									<article class="{STYLES_INSTANCE.reflectionMainStyle.customerReview}">
-									<div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsContainer}">
-										<div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsFull}" style="width:100%"></div>
-									</div>
-									<h3 class="{STYLES_INSTANCE.reflectionMainStyle.customerReview__title}">AMAZING</h3>
-										<p class="{STYLES_INSTANCE.reflectionMainStyle.customerReview__content}">A visually stunning, mind opening game. Amazing</p>
-									</article>
-								</li>
-							</div>
-							<button class="ref-button--function-small">View More</button>
+					<div class="{STYLES_INSTANCE.reflectionMainStyle.customerReviews}" ui:field="reviewsContainer">
+						<ul ui:field="reviewsList">
 						</ul>
 					</div>
 				</aside>
-				<aside style="display: block;" class="{STYLES_INSTANCE.reflectionMainStyle.moreByThisDeveloper} js-more-by-this-developer">
+				<aside style="display: block;" class="{STYLES_INSTANCE.reflectionMainStyle.moreByThisDeveloper}">
 					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Other Apps By This Developer</h2>
 					<ul ui:field="moreAppsList">
 					</ul>
-					<p class="{STYLES_INSTANCE.reflectionMainStyle.moreAppsListed} js-more-apps-listed">
-						<a target="_blank" href="https://itunes.apple.com/us/developer/ustwo/id297468910?uo=4">See all apps by this developer</a>
+					<p class="{STYLES_INSTANCE.reflectionMainStyle.moreAppsListed}" ui:field="moreAppsLink">
+						<a target="_blank">See all apps by this developer</a>
 					</p>
 				</aside>
 			</div>

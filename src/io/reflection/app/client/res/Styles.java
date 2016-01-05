@@ -428,9 +428,6 @@ public interface Styles extends ClientBundle {
 		@ClassName("country-select--popup")
 		String countrySelectPopup();
 
-		@ClassName("country-selector")
-		String countrySelector();
-
 		@ClassName("county-select--container")
 		String countySelectContainer();
 

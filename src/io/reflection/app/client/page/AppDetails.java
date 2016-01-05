@@ -1,6 +1,7 @@
 package io.reflection.app.client.page;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.google.gson.JsonArray;
@@ -9,6 +10,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.AnchorElement;
+import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -18,16 +20,29 @@ import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.UListElement;
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.datepicker.client.CalendarUtil;
 
+import io.reflection.app.client.component.Selector;
+import io.reflection.app.client.controller.FilterController;
+import io.reflection.app.client.controller.ServiceConstants;
+import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.handler.NavigationEventHandler;
+import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.ResponsiveDesignHelper;
+import io.reflection.app.client.helper.TooltipHelper;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.client.res.Styles.ReflectionMainStyles;
 import io.reflection.app.datatypes.shared.Item;
@@ -70,8 +85,11 @@ public class AppDetails extends Page implements NavigationEventHandler {
 	@UiField SpanElement releaseNotesText;
 	@UiField UListElement screenshotsList;
 	@UiField UListElement moreAppsList;
+	@UiField DivElement reviewsContainer;
+	@UiField UListElement reviewsList;
 	@UiField DivElement ratingCurrent;
 	@UiField DivElement ratingAll;
+	@UiField ParagraphElement moreAppsLink;
 	private String iapDescription;
 
 	@UiField InlineHyperlink revenueLink;
@@ -87,6 +105,8 @@ public class AppDetails extends Page implements NavigationEventHandler {
 	@UiField LIElement rankingItem;
 	@UiField LIElement appDetailsItem;
 
+	@UiField Selector countrySelector;
+	
 	private String displayingAppId;
 	private String comingPage;
 	private Item displayingApp;
@@ -96,6 +116,14 @@ public class AppDetails extends Page implements NavigationEventHandler {
 		INSTANCE = this;
 		
 		getAppDetails("553834731");
+		FilterHelper.addCountries(countrySelector, SessionController.get().isAdmin());
+	}
+	
+	@UiHandler({ "countrySelector" })
+	void onFiltersChanged(ChangeEvent event) {
+		 String countryCode = countrySelector.getSelectedValue().toString();
+		INSTANCE.searchReviews("553834731", countryCode);
+		INSTANCE.searchAppForRatingByCountry("553834731", countryCode);
 	}
 	
 	private String htmlForTextWithEmbeddedNewlines(String text) {
@@ -116,6 +144,88 @@ public class AppDetails extends Page implements NavigationEventHandler {
 	    return htmlString.toString();
 	}
 	
+	private DivElement createReviewArticleDomElement(JsonObject review) {
+		DivElement reviewArticle = Document.get().createDivElement(); 
+		reviewArticle.addClassName(style.customerReview());
+		DivElement ratingsContainer = Document.get().createDivElement(); 
+		ratingsContainer.addClassName(style.ratingsContainer());
+		DivElement ratingsFull = Document.get().createDivElement(); 
+		ratingsFull.addClassName(style.ratingsFull());
+		
+		JsonObject reviewRating = review.getAsJsonObject("[im:rating]"); // this doesn't work - needs javascript dot/bracket notation equivalent
+		if(reviewRating != null) {
+			Window.alert(reviewRating.getAsString());
+			//	Float ratingAsPercentage = (reviewRating.get("label").getAsFloat() / 5) * 100;
+			//	Intended output - <div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsFull}" style="width:100%"></div>
+		}		
+		
+		JsonObject reviewTitle = review.getAsJsonObject("title");
+		HeadingElement reviewTitleDomElement = Document.get().createHElement(3);
+		reviewTitleDomElement.addClassName(style.customerReview__title());
+		reviewTitleDomElement.setInnerText(reviewTitle.get("label").getAsString());
+		
+		JsonObject reviewContent = review.getAsJsonObject("content");
+		ParagraphElement reviewParagraphDomElement = Document.get().createPElement();
+		reviewParagraphDomElement.addClassName(style.customerReview__content());
+		if(reviewContent != null) {			
+			reviewParagraphDomElement.setInnerText(reviewContent.get("label").getAsString());
+		}
+		
+		ratingsContainer.appendChild(ratingsFull);
+		reviewArticle.appendChild(ratingsContainer);
+		reviewArticle.appendChild(reviewTitleDomElement);
+		reviewArticle.appendChild(reviewParagraphDomElement);
+		
+		return reviewArticle;
+	}
+	
+	private void populateReviews(JsonArray jarray) {
+		this.reviewsList.removeAllChildren();
+		for(int r = 1; r < jarray.size() && r < 4; r++) { // first item of array is not a review so start at index 1
+			JsonObject review = jarray.get(r).getAsJsonObject();
+			final LIElement listItem = Document.get().createLIElement();			
+			
+			DivElement reviewArticle = createReviewArticleDomElement(review);
+			
+			listItem.appendChild(reviewArticle);
+			this.reviewsList.appendChild(listItem);			
+		}
+		
+		final DivElement moreReviewsContainerDomElement = Document.get().createDivElement();
+		moreReviewsContainerDomElement.addClassName(style.moreReviewsContainer());
+		moreReviewsContainerDomElement.getStyle().setProperty("display", "none");
+		
+		for(int r = 4; r < jarray.size() && r < 11; r++) {	
+			JsonObject review = jarray.get(r).getAsJsonObject();
+			final LIElement listItem = Document.get().createLIElement();
+			
+			DivElement reviewArticle = createReviewArticleDomElement(review);
+			
+			listItem.appendChild(reviewArticle);
+			moreReviewsContainerDomElement.appendChild(listItem);
+		}
+		
+		this.reviewsList.appendChild(moreReviewsContainerDomElement);
+		
+		final ButtonElement viewMoreReviewsButton = Document.get().createButtonElement();
+		viewMoreReviewsButton.addClassName(style.refButtonFunctionSmall());
+		viewMoreReviewsButton.setInnerText("View More"); // Update to be multilingual
+		
+		Event.sinkEvents(viewMoreReviewsButton, Event.ONCLICK);
+		Event.setEventListener(viewMoreReviewsButton, new EventListener() {
+
+			@Override
+			public void onBrowserEvent(Event event) {
+				if (Event.ONCLICK == event.getTypeInt()) {
+					moreReviewsContainerDomElement.getStyle().setProperty("display", "block");
+					viewMoreReviewsButton.removeFromParent();
+				}
+			}
+		});
+		
+		this.reviewsList.appendChild(viewMoreReviewsButton);
+	}
+	
 	private void populateMoreApps(JsonArray jarray) {
 		for(int a = 0; a < jarray.size(); a++) {
 			JsonObject jobject = jarray.get(a).getAsJsonObject();		
@@ -134,9 +244,20 @@ public class AppDetails extends Page implements NavigationEventHandler {
 			listItem.appendChild(aElementTitle);
 			moreAppsList.appendChild(listItem);
 		}
+		
+		if(jarray.size() > 16) {
+			JsonObject firstAppFromMoreAppsList = jarray.get(0).getAsJsonObject();
+			if(firstAppFromMoreAppsList.get("artistViewUrl") != null) {
+				moreAppsLink.getFirstChildElement().setAttribute("href", firstAppFromMoreAppsList.get("artistViewUrl").toString().replace("\"", ""));
+			}
+		} else {
+			moreAppsLink.removeFromParent();
+		}
 	}
 	
 	private void handleAverageRatings(JsonObject data) {
+		ratingCurrent.removeAllChildren();
+		ratingAll.removeAllChildren();
 		DivElement ratingsContainer = Document.get().createDivElement();
 		ratingsContainer.addClassName(style.ratingsContainer());
 		DivElement ratingsContainerAll = Document.get().createDivElement();
@@ -187,6 +308,7 @@ public class AppDetails extends Page implements NavigationEventHandler {
 		if (data.get("trackName") != null) {
 			trackName.setInnerText(data.get("trackName").toString().replace("\"", ""));
 		}
+		
 		if (data.get("artistName") != null) {
 			artistName.setInnerText(data.get("artistName").toString().replace("\"", ""));
 		}
@@ -201,6 +323,7 @@ public class AppDetails extends Page implements NavigationEventHandler {
 		if(Window.getClientWidth() < 720) {
 			imageWidth = 180;
 		}
+		
 		String stringToMatch = "320x320";
 		String firstScreenshotUrl = screenshotsArray.get(0).getAsString();
 		if(firstScreenshotUrl.toLowerCase().contains(stringToMatch)) {
@@ -210,6 +333,7 @@ public class AppDetails extends Page implements NavigationEventHandler {
 				imageWidth = 340;
 			}
 		}
+		
 		this.screenshotsList.getStyle().setProperty("width", screenshotsArray.size() * imageWidth - 20 + "px");
 		if(screenshotsArray != null) {
 			for (int i = 0; i < screenshotsArray.size(); i++) {
@@ -228,6 +352,7 @@ public class AppDetails extends Page implements NavigationEventHandler {
 				listItem.appendChild(imgElement);
 			}
 		}
+		
 		if (data.get("formattedPrice") != null) {
 			formattedPrice.setInnerText(data.get("formattedPrice").toString().replace("\"", ""));
 			formattedPriceDuplicate.setInnerText(data.get("formattedPrice").toString().replace("\"", ""));
@@ -251,6 +376,7 @@ public class AppDetails extends Page implements NavigationEventHandler {
 		if (data.get("contentAdvisoryRating") != null) {
 			rated.setInnerText(data.get("contentAdvisoryRating").toString().replace("\"", ""));
 		}
+		
 		if (data.get("version") != null) {
 			version.setInnerText(data.get("version").toString().replace("\"", ""));
 		}
@@ -268,7 +394,7 @@ public class AppDetails extends Page implements NavigationEventHandler {
 			releaseDate.setInnerText(data.get("releaseDate").toString().replace("\"", ""));
 		}
 		
-		if (data.get("description") != null) {
+		if(data.get("description") != null) {
 			String appDescription = htmlForTextWithEmbeddedNewlines(data.get("description").toString().replace("\"", ""));
   			// appDescription = urlify(appDescription);
 			description.setInnerHTML(appDescription);
@@ -326,6 +452,8 @@ public class AppDetails extends Page implements NavigationEventHandler {
 		} else {
 			whatsNewContainer.removeFromParent();
 		}
+		
+		handleAverageRatings(data);
 	}
 
 	@Override
@@ -336,6 +464,8 @@ public class AppDetails extends Page implements NavigationEventHandler {
 		storeName.setInnerText("View in Appstore");
 
 		ResponsiveDesignHelper.makeTabsResponsive();
+		
+		Window.alert("navigationChanged");
 	}
 
 	private void getAppDetails(String appId) {
@@ -361,6 +491,22 @@ public class AppDetails extends Page implements NavigationEventHandler {
 							+ "&media=software&limit=17&entity=software&attribute=softwareDeveloper&callback=handleMoreAppsSearch"));
 	}-*/;
 	
+	private native void searchReviews(String trackId, String countryCode) /*-{
+	$wnd.$('body').append(
+			$wnd.$("<script>").attr("id", "scriptreviews").attr(
+					"src",
+					"http://itunes.apple.com/" + countryCode + "/rss/customerreviews/id=" + trackId
+							+ "/json?callback=handleReviews"));
+	}-*/;
+	
+	private native void searchAppForRatingByCountry(String trackId, String countryCode) /*-{
+	$wnd.$('#get-app-details').remove();
+	$wnd.$('body').append(
+			$wnd.$("<script>").attr("id", "get-app-details").attr(
+					"src",
+					"https://itunes.apple.com/" + countryCode + "/lookup?id=" + trackId + "&callback=handleAverageRatings"));
+	}-*/;
+	
 	/**
 	 * @param response
 	 */
@@ -371,9 +517,11 @@ public class AppDetails extends Page implements NavigationEventHandler {
 		jobject = jarray.get(0).getAsJsonObject();
 
 		INSTANCE.setAppDetails(jobject);
-		INSTANCE.handleAverageRatings(jobject);
 		if (jobject.get("artistName") != null) {
 			INSTANCE.searchMoreApps(jobject.get("artistName").toString());
+		}
+		if (jobject.get("trackId") != null) {
+			INSTANCE.searchReviews(jobject.get("trackId").toString(), "gb");
 		}
 	}
 	
@@ -385,6 +533,25 @@ public class AppDetails extends Page implements NavigationEventHandler {
 			INSTANCE.populateMoreApps(jarray);
 		}
 	}
+	
+	public static void processReviewsResponse(String response) {
+		JsonElement jelement = new JsonParser().parse(response);
+		JsonObject jobject = jelement.getAsJsonObject();
+		JsonObject jobjectFeed = jobject.getAsJsonObject("feed");
+		JsonArray entries = jobjectFeed.getAsJsonArray("entry");
+		if(entries.size() > 0) {
+			INSTANCE.populateReviews(entries);
+		}
+	}
+	
+	public static void processRatingsResponse(String response) {
+		JsonElement jelement = new JsonParser().parse(response);
+		JsonObject jobject = jelement.getAsJsonObject();
+		JsonArray jarray = jobject.getAsJsonArray("results");
+		jobject = jarray.get(0).getAsJsonObject();
+		
+		INSTANCE.handleAverageRatings(jobject);
+	}
 
 	public static native void exportAppDetailsResponseHandler() /*-{
 		$wnd.processAppSearchResponse = $entry(@io.reflection.app.client.page.AppDetails::processAppSearchResponse(Ljava/lang/String;));
@@ -393,4 +560,12 @@ public class AppDetails extends Page implements NavigationEventHandler {
 	public static native void exportMoreAppDetailsResponseHandler() /*-{
 		$wnd.processMoreAppsSearchResponse = $entry(@io.reflection.app.client.page.AppDetails::processMoreAppsSearchResponse(Ljava/lang/String;));
 	}-*/;
+	
+	public static native void exportReviewsResponseHandler() /*-{
+		$wnd.processReviewsResponse = $entry(@io.reflection.app.client.page.AppDetails::processReviewsResponse(Ljava/lang/String;));
+	}-*/;
+	
+	public static native void exportRatingsResponseHandler() /*-{
+	$wnd.processRatingsResponse = $entry(@io.reflection.app.client.page.AppDetails::processRatingsResponse(Ljava/lang/String;));
+}-*/;
 }
