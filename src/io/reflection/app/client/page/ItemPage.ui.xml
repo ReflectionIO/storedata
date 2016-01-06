@@ -99,7 +99,7 @@
 					</g:InlineHyperlink>
 				</li>
 				<li ui:field="appDetailsItem"
-					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab} {STYLES_INSTANCE.reflectionMainStyle.isDisabled}">
+					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab}">
 					<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
 					<g:InlineHyperlink ui:field="appDetailsLink" targetHistoryToken="#tab-content" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
 						<span>
@@ -110,7 +110,6 @@
 	 M32,21H7v2h25V21z" /></svg>
 							<span ui:field="appDetailsText">
 								App Details
-								<span class="{STYLES_INSTANCE.reflectionMainStyle.textSmall}">coming soon</span>
 							</span>
 						</span>
 					</g:InlineHyperlink>

@@ -100,6 +100,7 @@ import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -792,6 +793,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 					DOWNLOADS_CHART_TYPE, comingPage, previousFilter));
 			rankingLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, displayingAppId,
 					RANKING_CHART_TYPE, comingPage, previousFilter));
+			appDetailsLink.setTargetHistoryToken(PageType.AppDetailsPage.asTargetHistoryToken(displayingAppId, comingPage, previousFilter));
 
 			if (SessionController.get().isAdmin() || MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage)) {
 				setRevenueDownloadTabsEnabled(true);
@@ -839,8 +841,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 			ResponsiveDesignHelper.makeTabsResponsive();
 
-		} else {
-
+		} else {			
 			PageType.RanksPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, OVERALL_LIST_TYPE, FilterController.get().asRankFilterString());
 		}
 	}
@@ -904,7 +905,8 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			revenueItem.getStyle().setCursor(Cursor.POINTER);
 			downloadsItem.removeClassName(style.isDisabled());
 			downloadsItem.getStyle().setCursor(Cursor.POINTER);
-			appDetailsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
+			appDetailsItem.removeClassName(style.isDisabled());
+			appDetailsItem.getStyle().setCursor(Cursor.POINTER);
 		} else {
 			revenueItem.addClassName(style.isDisabled());
 			revenueItem.getStyle().setCursor(Cursor.DEFAULT);
@@ -912,6 +914,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			downloadsItem.addClassName(style.isDisabled());
 			downloadsItem.getStyle().setCursor(Cursor.DEFAULT);
 			downloadsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
+			appDetailsItem.getStyle().setCursor(Cursor.DEFAULT);
 			appDetailsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 			selectedTab = RANKING_CHART_TYPE;
 			refreshTabs();

@@ -1,5 +1,9 @@
 package io.reflection.app.client.page;
 
+import static io.reflection.app.client.controller.FilterController.DOWNLOADS_CHART_TYPE;
+import static io.reflection.app.client.controller.FilterController.RANKING_CHART_TYPE;
+import static io.reflection.app.client.controller.FilterController.REVENUE_CHART_TYPE;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -20,6 +24,8 @@ import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.UListElement;
+import com.google.gwt.dom.client.Style.Cursor;
+import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -34,12 +40,20 @@ import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
 
+import io.reflection.app.api.core.shared.call.event.GetItemRanksEventHandler;
+import io.reflection.app.api.core.shared.call.event.GetItemSalesRanksEventHandler;
+import io.reflection.app.api.core.shared.call.event.GetLinkedAccountItemEventHandler;
+import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.component.Selector;
 import io.reflection.app.client.controller.FilterController;
+import io.reflection.app.client.controller.LinkedAccountController;
+import io.reflection.app.client.controller.NavigationController;
+import io.reflection.app.client.controller.RankController;
 import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.handler.NavigationEventHandler;
+import io.reflection.app.client.handler.TogglePanelEventHandler;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.ResponsiveDesignHelper;
 import io.reflection.app.client.helper.TooltipHelper;
@@ -109,13 +123,12 @@ public class AppDetails extends Page implements NavigationEventHandler {
 	
 	private String displayingAppId;
 	private String comingPage;
+	private String previousFilter;
 	private Item displayingApp;
 
 	public AppDetails() {
 		initWidget(uiBinder.createAndBindUi(this));
 		INSTANCE = this;
-		
-		getAppDetails("553834731");
 		FilterHelper.addCountries(countrySelector, SessionController.get().isAdmin());
 	}
 	
@@ -227,7 +240,8 @@ public class AppDetails extends Page implements NavigationEventHandler {
 	}
 	
 	private void populateMoreApps(JsonArray jarray) {
-		for(int a = 0; a < jarray.size(); a++) {
+		moreAppsList.removeAllChildren();
+		for(int a = 0; a < jarray.size() - 1; a++) {
 			JsonObject jobject = jarray.get(a).getAsJsonObject();		
 			final LIElement listItem = Document.get().createLIElement();
 			this.moreAppsList.appendChild(listItem);
@@ -249,9 +263,10 @@ public class AppDetails extends Page implements NavigationEventHandler {
 			JsonObject firstAppFromMoreAppsList = jarray.get(0).getAsJsonObject();
 			if(firstAppFromMoreAppsList.get("artistViewUrl") != null) {
 				moreAppsLink.getFirstChildElement().setAttribute("href", firstAppFromMoreAppsList.get("artistViewUrl").toString().replace("\"", ""));
+				moreAppsLink.getStyle().setProperty("display", "block");
 			}
 		} else {
-			moreAppsLink.removeFromParent();
+			moreAppsLink.getStyle().setProperty("display", "none");
 		}
 	}
 	
@@ -304,7 +319,10 @@ public class AppDetails extends Page implements NavigationEventHandler {
   	}
 
 	private void setAppDetails(JsonObject data) {
-
+		
+		storeName.setInnerText("View in Appstore");
+		// storeName.setHref...
+		
 		if (data.get("trackName") != null) {
 			trackName.setInnerText(data.get("trackName").toString().replace("\"", ""));
 		}
@@ -334,6 +352,7 @@ public class AppDetails extends Page implements NavigationEventHandler {
 			}
 		}
 		
+		screenshotsList.removeAllChildren();		
 		this.screenshotsList.getStyle().setProperty("width", screenshotsArray.size() * imageWidth - 20 + "px");
 		if(screenshotsArray != null) {
 			for (int i = 0; i < screenshotsArray.size(); i++) {
@@ -455,21 +474,110 @@ public class AppDetails extends Page implements NavigationEventHandler {
 		
 		handleAverageRatings(data);
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
+	 */
+	@Override
+	protected void onAttach() {
+		super.onAttach();
 
+		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.page.Page#onDetach()
+	 */
+	@Override
+	protected void onDetach() {
+		super.onDetach();
+		screenshotsList.removeAllChildren();
+		moreAppsList.removeAllChildren();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
+	 * io.reflection.app.client.controller.NavigationController.Stack)
+	 */
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
-		String newInternalId = current.getAction();
-		getAppDetails(newInternalId);
-		
-		storeName.setInnerText("View in Appstore");
-
-		ResponsiveDesignHelper.makeTabsResponsive();
-		
-		Window.alert("navigationChanged");
+		if (isValidStack(current)) {
+			displayingAppId = current.getAction();
+			comingPage = current.getParameter(0);
+			previousFilter = current.getParameter(1);
+			getAppDetails(displayingAppId);
+			
+			revenueLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, displayingAppId,
+					REVENUE_CHART_TYPE, comingPage, previousFilter));
+			downloadsLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, displayingAppId,
+					DOWNLOADS_CHART_TYPE, comingPage, previousFilter));
+			rankingLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, displayingAppId,
+					RANKING_CHART_TYPE, comingPage, previousFilter));
+			appDetailsLink.setTargetHistoryToken(PageType.AppDetailsPage.asTargetHistoryToken(displayingAppId, comingPage, previousFilter));
+			
+			if (SessionController.get().isAdmin() || MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage)) {
+				setRevenueDownloadTabsEnabled(true);
+			} else {
+				setRevenueDownloadTabsEnabled(false);
+			}
+			
+			if (!SessionController.get().isAdmin() && MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage)) {
+				setRankTabEnabled(false);
+			} else {
+				setRankTabEnabled(true);
+			}
+			
+			ResponsiveDesignHelper.makeTabsResponsive();
+		}
+	}
+	
+	private boolean isValidStack(Stack current) {
+		return (current != null
+				&& PageType.AppDetailsPage.equals(current.getPage())
+				&& current.getAction().matches("[0-9]+"));
 	}
 
 	private void getAppDetails(String appId) {
 		search(appId);
+	}
+	
+	private void setRevenueDownloadTabsEnabled(boolean enable) {
+		if (enable) {
+			revenueItem.removeClassName(style.isDisabled());
+			revenueItem.getStyle().setCursor(Cursor.POINTER);
+			downloadsItem.removeClassName(style.isDisabled());
+			downloadsItem.getStyle().setCursor(Cursor.POINTER);
+			appDetailsItem.removeClassName(style.isDisabled());
+			appDetailsItem.getStyle().setCursor(Cursor.POINTER);
+		} else {
+			revenueItem.addClassName(style.isDisabled());
+			revenueItem.getStyle().setCursor(Cursor.DEFAULT);
+			revenueLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
+			downloadsItem.addClassName(style.isDisabled());
+			downloadsItem.getStyle().setCursor(Cursor.DEFAULT);
+			downloadsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
+			appDetailsItem.getStyle().setCursor(Cursor.DEFAULT);
+			appDetailsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
+		}
+	}
+	
+	private void setRankTabEnabled(boolean enable) {
+		if (enable) {
+			rankingText.setInnerText("Rank");
+			rankingItem.removeClassName(style.isDisabled());
+			rankingItem.getStyle().setCursor(Cursor.POINTER);
+		} else {
+			rankingText.setInnerHTML("Rank <span class=\"text-small\">coming soon</span>");
+			rankingItem.addClassName(style.isDisabled());
+			rankingItem.getStyle().setCursor(Cursor.DEFAULT);
+			rankingLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
+		}
 	}
 
 	/**
