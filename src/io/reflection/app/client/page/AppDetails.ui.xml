@@ -146,7 +146,7 @@
 						</ul>
 					</div>
 				</aside>
-				<aside style="display: block;" class="{STYLES_INSTANCE.reflectionMainStyle.moreByThisDeveloper}">
+				<aside class="{STYLES_INSTANCE.reflectionMainStyle.moreByThisDeveloper}" ui:field="moreAppsListContainer">
 					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Other Apps By This Developer</h2>
 					<ul ui:field="moreAppsList">
 					</ul>

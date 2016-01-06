@@ -1,6 +1,7 @@
 package io.reflection.app.client.page;
 
 import static io.reflection.app.client.controller.FilterController.DOWNLOADS_CHART_TYPE;
+import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
 import static io.reflection.app.client.controller.FilterController.RANKING_CHART_TYPE;
 import static io.reflection.app.client.controller.FilterController.REVENUE_CHART_TYPE;
 
@@ -54,9 +55,13 @@ import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.handler.TogglePanelEventHandler;
+import io.reflection.app.client.helper.AnimationHelper;
 import io.reflection.app.client.helper.FilterHelper;
+import io.reflection.app.client.helper.FormHelper;
+import io.reflection.app.client.helper.FormattingHelper;
 import io.reflection.app.client.helper.ResponsiveDesignHelper;
 import io.reflection.app.client.helper.TooltipHelper;
+import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.client.res.Styles.ReflectionMainStyles;
 import io.reflection.app.datatypes.shared.Item;
@@ -99,6 +104,7 @@ public class AppDetails extends Page implements NavigationEventHandler {
 	@UiField SpanElement releaseNotesText;
 	@UiField UListElement screenshotsList;
 	@UiField UListElement moreAppsList;
+	@UiField Element moreAppsListContainer;
 	@UiField DivElement reviewsContainer;
 	@UiField UListElement reviewsList;
 	@UiField DivElement ratingCurrent;
@@ -125,6 +131,8 @@ public class AppDetails extends Page implements NavigationEventHandler {
 	private String comingPage;
 	private String previousFilter;
 	private Item displayingApp;
+	
+	private String artistId;
 
 	public AppDetails() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -135,8 +143,8 @@ public class AppDetails extends Page implements NavigationEventHandler {
 	@UiHandler({ "countrySelector" })
 	void onFiltersChanged(ChangeEvent event) {
 		 String countryCode = countrySelector.getSelectedValue().toString();
-		INSTANCE.searchReviews("553834731", countryCode);
-		INSTANCE.searchAppForRatingByCountry("553834731", countryCode);
+		INSTANCE.searchReviews(displayingAppId, countryCode);
+		INSTANCE.searchAppForRatingByCountry(displayingAppId, countryCode);
 	}
 	
 	private String htmlForTextWithEmbeddedNewlines(String text) {
@@ -241,14 +249,14 @@ public class AppDetails extends Page implements NavigationEventHandler {
 	
 	private void populateMoreApps(JsonArray jarray) {
 		moreAppsList.removeAllChildren();
-		for(int a = 0; a < jarray.size() - 1; a++) {
+		for(int a = 0; a < jarray.size() && a < 16; a++) {
 			JsonObject jobject = jarray.get(a).getAsJsonObject();		
 			final LIElement listItem = Document.get().createLIElement();
 			this.moreAppsList.appendChild(listItem);
 			
 			AnchorElement aElement = Document.get().createAnchorElement();
 			AnchorElement aElementTitle = Document.get().createAnchorElement();
-			aElement.setHref("#!appdetails/" + String.valueOf(jobject.get("trackId"))); // requires update to add non-static appdetails path
+			aElement.setHref("#!appdetails/" + String.valueOf(jobject.get("trackId")) + "/" + comingPage + "/" + previousFilter); // requires update to add non-static appdetails path
 			ImageElement imgElement = Document.get().createImageElement();
 			imgElement.setSrc(jobject.get("artworkUrl100").toString().replace("\"", ""));
 			aElementTitle.setInnerText(jobject.get("trackName").toString().replace("\"", ""));
@@ -352,7 +360,7 @@ public class AppDetails extends Page implements NavigationEventHandler {
 			}
 		}
 		
-		screenshotsList.removeAllChildren();		
+		screenshotsList.removeAllChildren();	
 		this.screenshotsList.getStyle().setProperty("width", screenshotsArray.size() * imageWidth - 20 + "px");
 		if(screenshotsArray != null) {
 			for (int i = 0; i < screenshotsArray.size(); i++) {
@@ -442,34 +450,39 @@ public class AppDetails extends Page implements NavigationEventHandler {
 		}
 		
 		if(data.get("sellerUrl") != null) {
+			developersSiteContainer.getStyle().setProperty("display", "block");
 			developersSite.setHref(data.get("sellerUrl").toString().replace("\"", ""));
 		} else {
-			developersSiteContainer.removeFromParent();
+			developersSiteContainer.getStyle().setProperty("display", "none");
 		}
 		
 		if(data.get("trackViewUrl") != null) {
+			appStoreLinkContainer.getStyle().setProperty("display", "block");
 			appStoreLink.setHref(data.get("trackViewUrl").toString().replace("\"", ""));
 		} else {
-			appStoreLinkContainer.removeFromParent();
+			appStoreLinkContainer.getStyle().setProperty("display", "none");
 		}
 		
 		if(data.get("artistViewUrl") != null) {
+			artistStoreLinkContainer.getStyle().setProperty("display", "block");
 			artistStoreLink.setHref(data.get("artistViewUrl").toString().replace("\"", ""));
 		} else {
-			artistStoreLinkContainer.removeFromParent();
+			artistStoreLinkContainer.getStyle().setProperty("display", "none");
 		}
 		
 		if(data.get("version") != null) {
+			appVersionContainer.getStyle().setProperty("display", "block");
 			appVersion.setInnerText(data.get("version").toString().replace("\"", ""));
 		} else {
-			appVersionContainer.removeFromParent();
+			appVersionContainer.getStyle().setProperty("display", "none");
 		}
 		
 		if(data.get("releaseNotes") != null) {
+			whatsNewContainer.getStyle().setProperty("display", "block");
 			String notes = htmlForTextWithEmbeddedNewlines(data.get("releaseNotes").toString().replace("\"", ""));
 			releaseNotesText.setInnerHTML(notes);
 		} else {
-			whatsNewContainer.removeFromParent();
+			whatsNewContainer.getStyle().setProperty("display", "none");
 		}
 		
 		handleAverageRatings(data);
@@ -508,6 +521,11 @@ public class AppDetails extends Page implements NavigationEventHandler {
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
 		if (isValidStack(current)) {
+			image.setUrl("");
+			screenshotsList.removeAllChildren();
+			description.setInnerHTML("");
+			AnimationHelper.nativeScrollTop(0, 300, "swing");			
+			updateSelectorsFromFilter();
 			displayingAppId = current.getAction();
 			comingPage = current.getParameter(0);
 			previousFilter = current.getParameter(1);
@@ -532,9 +550,16 @@ public class AppDetails extends Page implements NavigationEventHandler {
 			} else {
 				setRankTabEnabled(true);
 			}
-			
+					
 			ResponsiveDesignHelper.makeTabsResponsive();
+		} else {			
+			PageType.RanksPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, OVERALL_LIST_TYPE, FilterController.get().asRankFilterString());
 		}
+	}
+	
+	private void updateSelectorsFromFilter() {
+		FilterController fc = FilterController.get();
+		countrySelector.setSelectedIndex(FormHelper.getItemIndex(countrySelector, fc.getFilter().getCountryA2Code()));
 	}
 	
 	private boolean isValidStack(Stack current) {
@@ -596,7 +621,7 @@ public class AppDetails extends Page implements NavigationEventHandler {
 			$wnd.$("<script>").attr("id", "scriptsearch").attr(
 					"src",
 					"https://itunes.apple.com/search?term=" + artistName
-							+ "&media=software&limit=17&entity=software&attribute=softwareDeveloper&callback=handleMoreAppsSearch"));
+							+ "&media=software&limit=40&entity=software&attribute=softwareDeveloper&callback=handleMoreAppsSearch"));
 	}-*/;
 	
 	private native void searchReviews(String trackId, String countryCode) /*-{
@@ -625,11 +650,15 @@ public class AppDetails extends Page implements NavigationEventHandler {
 		jobject = jarray.get(0).getAsJsonObject();
 
 		INSTANCE.setAppDetails(jobject);
+		if(jobject.get("artistId") != null) {
+			INSTANCE.artistId = jobject.get("artistId").toString();
+		}
 		if (jobject.get("artistName") != null) {
 			INSTANCE.searchMoreApps(jobject.get("artistName").toString());
 		}
+		
 		if (jobject.get("trackId") != null) {
-			INSTANCE.searchReviews(jobject.get("trackId").toString(), "gb");
+			INSTANCE.searchReviews(jobject.get("trackId").toString(), String.valueOf(INSTANCE.countrySelector.getSelectedValue()));	
 		}
 	}
 	
@@ -637,8 +666,21 @@ public class AppDetails extends Page implements NavigationEventHandler {
 		JsonElement jelement = new JsonParser().parse(response);
 		JsonObject jobject = jelement.getAsJsonObject();
 		JsonArray jarray = jobject.getAsJsonArray("results");
-		if(jarray.size() > 0) {
-			INSTANCE.populateMoreApps(jarray);
+		
+		// make sure results match artistId with current artistId
+		JsonArray filteredArray = new JsonArray();
+		for(int a = 0; a < jarray.size() - 1; a++) {
+			JsonObject thisResult = jarray.get(a).getAsJsonObject();
+			if(thisResult.get("artistId").toString() == INSTANCE.artistId) {
+				filteredArray.add(thisResult);
+			}
+		}
+		
+		if(filteredArray != null && filteredArray.size() > 1) {
+			INSTANCE.moreAppsListContainer.getStyle().setProperty("display", "block");
+			INSTANCE.populateMoreApps(filteredArray);
+		} else {
+			INSTANCE.moreAppsListContainer.getStyle().setProperty("display", "none");
 		}
 	}
 	
@@ -647,7 +689,7 @@ public class AppDetails extends Page implements NavigationEventHandler {
 		JsonObject jobject = jelement.getAsJsonObject();
 		JsonObject jobjectFeed = jobject.getAsJsonObject("feed");
 		JsonArray entries = jobjectFeed.getAsJsonArray("entry");
-		if(entries.size() > 0) {
+		if(entries != null && entries.size() > 0) {
 			INSTANCE.populateReviews(entries);
 		}
 	}

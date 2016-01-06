@@ -614,7 +614,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 		appStoreSelector.setSelectedIndex(FormHelper.getItemIndex(appStoreSelector, fc.getFilter().getStoreA3Code()));
 		countrySelector.setSelectedIndex(FormHelper.getItemIndex(countrySelector, fc.getFilter().getCountryA2Code()));
-
 	}
 
 	@UiHandler("applyFilters")

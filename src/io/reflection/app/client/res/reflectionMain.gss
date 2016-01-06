@@ -4465,6 +4465,9 @@ textarea, .global-header .link-open-search {
   display: none;
 }
 /* line 166, sass/templates/_app.scss */
+.page-app .aside-definition-list dl {
+	margin-bottom: 2.2rem;
+}
 .page-app .aside-definition-list dl span {
   padding-left: 5px;
 }
@@ -5196,11 +5199,6 @@ textarea, .global-header .link-open-search {
     display: -ms-flexbox;
     display: flex;
   }
-}
-
-/* line 652, sass/templates/_app.scss */
-.aside-definition-list dl + .app-details-link {
-  margin-top: 2.2rem;
 }
 
 /* line 655, sass/templates/_app.scss */
@@ -16000,7 +15998,7 @@ form .gwt-DatePicker * {
 /* line 37, sass/components/_highcharts.scss */
 .highcharts-axis-labels,
 .highcharts-grid path {
-  opacity: 0;
+  opacity: 1;
 }
 /* line 40, sass/components/_highcharts.scss */
 .is-animated .highcharts-axis-labels, .is-animated
