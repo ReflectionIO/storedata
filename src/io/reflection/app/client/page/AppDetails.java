@@ -45,6 +45,7 @@ import io.reflection.app.api.core.shared.call.event.GetItemRanksEventHandler;
 import io.reflection.app.api.core.shared.call.event.GetItemSalesRanksEventHandler;
 import io.reflection.app.api.core.shared.call.event.GetLinkedAccountItemEventHandler;
 import io.reflection.app.client.DefaultEventBus;
+import io.reflection.app.client.component.LoadingBar;
 import io.reflection.app.client.component.Selector;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.LinkedAccountController;
@@ -109,8 +110,7 @@ public class AppDetails extends Page implements NavigationEventHandler {
 	@UiField UListElement reviewsList;
 	@UiField DivElement ratingCurrent;
 	@UiField DivElement ratingAll;
-	@UiField ParagraphElement moreAppsLink;
-	private String iapDescription;
+	@UiField ParagraphElement moreAppsLink;	
 
 	@UiField InlineHyperlink revenueLink;
 	@UiField Element premiumIconRevenue;
@@ -127,12 +127,15 @@ public class AppDetails extends Page implements NavigationEventHandler {
 
 	@UiField Selector countrySelector;
 	
+	private String iapDescription;
 	private String displayingAppId;
 	private String comingPage;
 	private String previousFilter;
 	private Item displayingApp;
 	
 	private String artistId;
+	
+	private LoadingBar loadingBar = new LoadingBar(false);
 
 	public AppDetails() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -140,11 +143,96 @@ public class AppDetails extends Page implements NavigationEventHandler {
 		FilterHelper.addCountries(countrySelector, SessionController.get().isAdmin());
 	}
 	
+	@Override
+	protected void onAttach() {
+		super.onAttach();
+
+		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
+	}
+	
+	@Override
+	protected void onDetach() {
+		super.onDetach();
+		screenshotsList.removeAllChildren();
+		moreAppsList.removeAllChildren();
+	}
+
+	@Override
+	public void navigationChanged(Stack previous, Stack current) {
+		if (isValidStack(current)) {
+			displayingAppId = current.getAction();
+			removePageContent();
+			AnimationHelper.nativeScrollTop(0, 300, "swing");			
+			updateSelectorsFromFilter();			
+			comingPage = current.getParameter(0);
+			previousFilter = current.getParameter(1);
+			getAppDetails(displayingAppId);
+			
+			revenueLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, displayingAppId,
+					REVENUE_CHART_TYPE, comingPage, previousFilter));
+			downloadsLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, displayingAppId,
+					DOWNLOADS_CHART_TYPE, comingPage, previousFilter));
+			rankingLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, displayingAppId,
+					RANKING_CHART_TYPE, comingPage, previousFilter));
+			appDetailsLink.setTargetHistoryToken(PageType.AppDetailsPage.asTargetHistoryToken(displayingAppId, comingPage, previousFilter));
+			
+			if (SessionController.get().isAdmin() || MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage)) {
+				setRevenueDownloadTabsEnabled(true);
+			} else {
+				setRevenueDownloadTabsEnabled(false);
+			}
+			
+			if (!SessionController.get().isAdmin() && MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage)) {
+				setRankTabEnabled(false);
+			} else {
+				setRankTabEnabled(true);
+			}
+					
+			ResponsiveDesignHelper.makeTabsResponsive();
+		} else {			
+			PageType.RanksPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, OVERALL_LIST_TYPE, FilterController.get().asRankFilterString());
+		}
+	}
+	
 	@UiHandler({ "countrySelector" })
 	void onFiltersChanged(ChangeEvent event) {
 		 String countryCode = countrySelector.getSelectedValue().toString();
 		INSTANCE.searchReviews(displayingAppId, countryCode);
 		INSTANCE.searchAppForRatingByCountry(displayingAppId, countryCode);
+	}
+	
+	private void removePageContent() {
+		image.setUrl("");
+		trackName.setInnerText("");
+		artistName.setInnerText("");
+		formattedPrice.setInnerText("");
+		viewInStore.getStyle().setProperty("display", "none");
+		screenshotsList.removeAllChildren();
+		description.setInnerHTML("");
+		whatsNewContainer.getStyle().setProperty("display", "none");
+		
+		ratingCurrent.removeAllChildren();
+		ratingAll.removeAllChildren();
+		reviewsList.removeAllChildren();
+		reviewsContainer.getStyle().setProperty("display", "none");
+		
+		moreAppsListContainer.getStyle().setProperty("display", "none");
+		moreAppsList.removeAllChildren();
+		
+		formattedPrice.setInnerText("");
+		formattedPriceDuplicate.setInnerText("");
+		categories.setInnerText("");
+		fileSize.setInnerText("");
+		rated.setInnerText("");
+		version.setInnerText("");
+		releaseDate.setInnerText("");
+		universal.setInnerText("");
+		gameCenter.setInnerText("");
+		
+		developersSiteContainer.getStyle().setProperty("display", "none");
+		appStoreLinkContainer.getStyle().setProperty("display", "none");
+		artistStoreLinkContainer.getStyle().setProperty("display", "none");
+		supportedDevices.setInnerText("");
 	}
 	
 	private String htmlForTextWithEmbeddedNewlines(String text) {
@@ -201,7 +289,7 @@ public class AppDetails extends Page implements NavigationEventHandler {
 	}
 	
 	private void populateReviews(JsonArray jarray) {
-		this.reviewsList.removeAllChildren();
+		reviewsList.removeAllChildren();
 		for(int r = 1; r < jarray.size() && r < 4; r++) { // first item of array is not a review so start at index 1
 			JsonObject review = jarray.get(r).getAsJsonObject();
 			final LIElement listItem = Document.get().createLIElement();			
@@ -212,39 +300,41 @@ public class AppDetails extends Page implements NavigationEventHandler {
 			this.reviewsList.appendChild(listItem);			
 		}
 		
-		final DivElement moreReviewsContainerDomElement = Document.get().createDivElement();
-		moreReviewsContainerDomElement.addClassName(style.moreReviewsContainer());
-		moreReviewsContainerDomElement.getStyle().setProperty("display", "none");
-		
-		for(int r = 4; r < jarray.size() && r < 11; r++) {	
-			JsonObject review = jarray.get(r).getAsJsonObject();
-			final LIElement listItem = Document.get().createLIElement();
+		if(jarray.size() > 3) {
+			final DivElement moreReviewsContainerDomElement = Document.get().createDivElement();
+			moreReviewsContainerDomElement.addClassName(style.moreReviewsContainer());
+			moreReviewsContainerDomElement.getStyle().setProperty("display", "none");
 			
-			DivElement reviewArticle = createReviewArticleDomElement(review);
-			
-			listItem.appendChild(reviewArticle);
-			moreReviewsContainerDomElement.appendChild(listItem);
-		}
-		
-		this.reviewsList.appendChild(moreReviewsContainerDomElement);
-		
-		final ButtonElement viewMoreReviewsButton = Document.get().createButtonElement();
-		viewMoreReviewsButton.addClassName(style.refButtonFunctionSmall());
-		viewMoreReviewsButton.setInnerText("View More"); // Update to be multilingual
-		
-		Event.sinkEvents(viewMoreReviewsButton, Event.ONCLICK);
-		Event.setEventListener(viewMoreReviewsButton, new EventListener() {
-
-			@Override
-			public void onBrowserEvent(Event event) {
-				if (Event.ONCLICK == event.getTypeInt()) {
-					moreReviewsContainerDomElement.getStyle().setProperty("display", "block");
-					viewMoreReviewsButton.removeFromParent();
-				}
+			for(int r = 4; r < jarray.size() && r < 11; r++) {	
+				JsonObject review = jarray.get(r).getAsJsonObject();
+				final LIElement listItem = Document.get().createLIElement();
+				
+				DivElement reviewArticle = createReviewArticleDomElement(review);
+				
+				listItem.appendChild(reviewArticle);
+				moreReviewsContainerDomElement.appendChild(listItem);
 			}
-		});
+			
+			reviewsList.appendChild(moreReviewsContainerDomElement);
+			
+			final ButtonElement viewMoreReviewsButton = Document.get().createButtonElement();
+			viewMoreReviewsButton.addClassName(style.refButtonFunctionSmall());
+			viewMoreReviewsButton.setInnerText("View More"); // Update to be multilingual
+			
+			Event.sinkEvents(viewMoreReviewsButton, Event.ONCLICK);
+			Event.setEventListener(viewMoreReviewsButton, new EventListener() {
+	
+				@Override
+				public void onBrowserEvent(Event event) {
+					if (Event.ONCLICK == event.getTypeInt()) {
+						moreReviewsContainerDomElement.getStyle().setProperty("display", "block");
+						viewMoreReviewsButton.removeFromParent();
+					}
+				}
+			});
 		
-		this.reviewsList.appendChild(viewMoreReviewsButton);
+			reviewsList.appendChild(viewMoreReviewsButton);
+		}
 	}
 	
 	private void populateMoreApps(JsonArray jarray) {
@@ -260,7 +350,7 @@ public class AppDetails extends Page implements NavigationEventHandler {
 			ImageElement imgElement = Document.get().createImageElement();
 			imgElement.setSrc(jobject.get("artworkUrl100").toString().replace("\"", ""));
 			aElementTitle.setInnerText(jobject.get("trackName").toString().replace("\"", ""));
-			aElementTitle.setHref("#!appdetails/" + String.valueOf(jobject.get("trackId"))); // requires update to add non-static appdetails path
+			aElementTitle.setHref("#!appdetails/" + String.valueOf(jobject.get("trackId")) + "/" + comingPage + "/" + previousFilter); // requires update to add non-static appdetails path
 			aElement.appendChild(imgElement);
 			listItem.appendChild(aElement);
 			listItem.appendChild(aElementTitle);
@@ -276,6 +366,26 @@ public class AppDetails extends Page implements NavigationEventHandler {
 		} else {
 			moreAppsLink.getStyle().setProperty("display", "none");
 		}
+	}
+	
+	private void setRatingsToZero() {
+		ratingCurrent.removeAllChildren();
+		ratingAll.removeAllChildren();
+		
+		DivElement ratingsContainer = Document.get().createDivElement();
+		ratingsContainer.addClassName(style.ratingsContainer());
+		DivElement ratingsContainerAll = Document.get().createDivElement();
+		ratingsContainerAll.addClassName(style.ratingsContainer());
+		
+		SpanElement numberOfRatings = Document.get().createSpanElement();
+		SpanElement numberOfRatingsAll = Document.get().createSpanElement();
+		numberOfRatings.setInnerText("No Ratings");
+		ratingCurrent.appendChild(numberOfRatings);
+		ratingCurrent.appendChild(ratingsContainer);
+				
+		numberOfRatingsAll.setInnerText("No Ratings");
+		ratingAll.appendChild(numberOfRatingsAll);
+		ratingAll.appendChild(ratingsContainerAll);
 	}
 	
 	private void handleAverageRatings(JsonObject data) {
@@ -301,10 +411,10 @@ public class AppDetails extends Page implements NavigationEventHandler {
 				ratingCurrent.appendChild(numberOfRatings);
 			}
 			ratingCurrent.appendChild(ratingsContainer);
-		} else {
-			ratingCurrent.appendChild(ratingsContainer);
+		} else {			
 			numberOfRatings.setInnerText("No Ratings"); // update so can be non-static multilingual term
 			ratingCurrent.appendChild(numberOfRatings);
+			ratingCurrent.appendChild(ratingsContainer);
 		}
 		
 		if(data.get("averageUserRating") != null) {
@@ -319,24 +429,29 @@ public class AppDetails extends Page implements NavigationEventHandler {
 				ratingAll.appendChild(numberOfRatingsAll);
 			}
 			ratingAll.appendChild(ratingsContainerAll);
-		} else {
-			ratingAll.appendChild(ratingsContainerAll);
+		} else {			
 			numberOfRatingsAll.setInnerText("No Ratings"); // update so can be non-static multilingual term
 			ratingAll.appendChild(numberOfRatingsAll);
+			ratingAll.appendChild(ratingsContainerAll);
 		}
   	}
 
 	private void setAppDetails(JsonObject data) {
 		
-		storeName.setInnerText("View in Appstore");
-		// storeName.setHref...
+		if(data.get("trackViewUrl") != null) {
+			viewInStore.getStyle().setProperty("display", "block");
+			storeName.setInnerText("View in Appstore");
+			viewInStore.setHref(data.get("trackViewUrl").toString().replace("\"", ""));
+		} else {
+			viewInStore.getStyle().setProperty("display", "none");
+		}
 		
 		if (data.get("trackName") != null) {
 			trackName.setInnerText(data.get("trackName").toString().replace("\"", ""));
 		}
 		
 		if (data.get("artistName") != null) {
-			artistName.setInnerText(data.get("artistName").toString().replace("\"", ""));
+			artistName.setInnerText("By " + data.get("artistName").toString().replace("\"", ""));
 		}
 
 		if (data.get("artworkUrl100") != null) {
@@ -452,22 +567,16 @@ public class AppDetails extends Page implements NavigationEventHandler {
 		if(data.get("sellerUrl") != null) {
 			developersSiteContainer.getStyle().setProperty("display", "block");
 			developersSite.setHref(data.get("sellerUrl").toString().replace("\"", ""));
-		} else {
-			developersSiteContainer.getStyle().setProperty("display", "none");
 		}
 		
 		if(data.get("trackViewUrl") != null) {
 			appStoreLinkContainer.getStyle().setProperty("display", "block");
 			appStoreLink.setHref(data.get("trackViewUrl").toString().replace("\"", ""));
-		} else {
-			appStoreLinkContainer.getStyle().setProperty("display", "none");
 		}
 		
 		if(data.get("artistViewUrl") != null) {
 			artistStoreLinkContainer.getStyle().setProperty("display", "block");
 			artistStoreLink.setHref(data.get("artistViewUrl").toString().replace("\"", ""));
-		} else {
-			artistStoreLinkContainer.getStyle().setProperty("display", "none");
 		}
 		
 		if(data.get("version") != null) {
@@ -481,79 +590,6 @@ public class AppDetails extends Page implements NavigationEventHandler {
 			whatsNewContainer.getStyle().setProperty("display", "block");
 			String notes = htmlForTextWithEmbeddedNewlines(data.get("releaseNotes").toString().replace("\"", ""));
 			releaseNotesText.setInnerHTML(notes);
-		} else {
-			whatsNewContainer.getStyle().setProperty("display", "none");
-		}
-		
-		handleAverageRatings(data);
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
-	 */
-	@Override
-	protected void onAttach() {
-		super.onAttach();
-
-		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.page.Page#onDetach()
-	 */
-	@Override
-	protected void onDetach() {
-		super.onDetach();
-		screenshotsList.removeAllChildren();
-		moreAppsList.removeAllChildren();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
-	 * io.reflection.app.client.controller.NavigationController.Stack)
-	 */
-	@Override
-	public void navigationChanged(Stack previous, Stack current) {
-		if (isValidStack(current)) {
-			image.setUrl("");
-			screenshotsList.removeAllChildren();
-			description.setInnerHTML("");
-			AnimationHelper.nativeScrollTop(0, 300, "swing");			
-			updateSelectorsFromFilter();
-			displayingAppId = current.getAction();
-			comingPage = current.getParameter(0);
-			previousFilter = current.getParameter(1);
-			getAppDetails(displayingAppId);
-			
-			revenueLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, displayingAppId,
-					REVENUE_CHART_TYPE, comingPage, previousFilter));
-			downloadsLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, displayingAppId,
-					DOWNLOADS_CHART_TYPE, comingPage, previousFilter));
-			rankingLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, displayingAppId,
-					RANKING_CHART_TYPE, comingPage, previousFilter));
-			appDetailsLink.setTargetHistoryToken(PageType.AppDetailsPage.asTargetHistoryToken(displayingAppId, comingPage, previousFilter));
-			
-			if (SessionController.get().isAdmin() || MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage)) {
-				setRevenueDownloadTabsEnabled(true);
-			} else {
-				setRevenueDownloadTabsEnabled(false);
-			}
-			
-			if (!SessionController.get().isAdmin() && MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage)) {
-				setRankTabEnabled(false);
-			} else {
-				setRankTabEnabled(true);
-			}
-					
-			ResponsiveDesignHelper.makeTabsResponsive();
-		} else {			
-			PageType.RanksPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, OVERALL_LIST_TYPE, FilterController.get().asRankFilterString());
 		}
 	}
 	
@@ -620,7 +656,7 @@ public class AppDetails extends Page implements NavigationEventHandler {
 	$wnd.$('body').append(
 			$wnd.$("<script>").attr("id", "scriptsearch").attr(
 					"src",
-					"https://itunes.apple.com/search?term=" + artistName
+					"https://itunes.apple.com/gb/search?term=" + artistName
 							+ "&media=software&limit=40&entity=software&attribute=softwareDeveloper&callback=handleMoreAppsSearch"));
 	}-*/;
 	
@@ -645,62 +681,90 @@ public class AppDetails extends Page implements NavigationEventHandler {
 	 */
 	public static void processAppSearchResponse(String response) {
 		JsonElement jelement = new JsonParser().parse(response);
-		JsonObject jobject = jelement.getAsJsonObject();
-		JsonArray jarray = jobject.getAsJsonArray("results");
-		jobject = jarray.get(0).getAsJsonObject();
+		if(jelement != null) {
+			JsonObject jobject = jelement.getAsJsonObject();
+			if(jobject != null) {
+				JsonArray jarray = jobject.getAsJsonArray("results");
+				if(jarray != null && jarray.size() > 0) {
+					jobject = jarray.get(0).getAsJsonObject();
 
-		INSTANCE.setAppDetails(jobject);
-		if(jobject.get("artistId") != null) {
-			INSTANCE.artistId = jobject.get("artistId").toString();
-		}
-		if (jobject.get("artistName") != null) {
-			INSTANCE.searchMoreApps(jobject.get("artistName").toString());
-		}
-		
-		if (jobject.get("trackId") != null) {
-			INSTANCE.searchReviews(jobject.get("trackId").toString(), String.valueOf(INSTANCE.countrySelector.getSelectedValue()));	
+					INSTANCE.setAppDetails(jobject);
+					if(jobject.get("artistId") != null) {
+						INSTANCE.artistId = jobject.get("artistId").toString();
+					}
+					if (jobject.get("artistName") != null) {
+						INSTANCE.searchMoreApps(jobject.get("artistName").toString());
+					}
+					
+					if (jobject.get("trackId") != null) {
+						INSTANCE.searchReviews(jobject.get("trackId").toString(), String.valueOf(INSTANCE.countrySelector.getSelectedValue()));	
+					}
+				}
+			}
 		}
 	}
 	
 	public static void processMoreAppsSearchResponse(String response) {
 		JsonElement jelement = new JsonParser().parse(response);
-		JsonObject jobject = jelement.getAsJsonObject();
-		JsonArray jarray = jobject.getAsJsonArray("results");
-		
-		// make sure results match artistId with current artistId
-		JsonArray filteredArray = new JsonArray();
-		for(int a = 0; a < jarray.size() - 1; a++) {
-			JsonObject thisResult = jarray.get(a).getAsJsonObject();
-			if(thisResult.get("artistId").toString() == INSTANCE.artistId) {
-				filteredArray.add(thisResult);
+		if(jelement != null) {
+			JsonObject jobject = jelement.getAsJsonObject();
+			if(jobject != null) {
+				JsonArray jarray = jobject.getAsJsonArray("results");
+				if(jarray != null && jarray.size() > 0) {
+					// make sure results match artistId with current artistId
+					JsonArray filteredArray = new JsonArray();
+					for(int a = 0; a < jarray.size(); a++) {
+						JsonObject thisResult = jarray.get(a).getAsJsonObject();
+						if(thisResult.get("artistId").toString() == INSTANCE.artistId) {
+							filteredArray.add(thisResult);
+						}
+					}
+					
+					if(filteredArray != null && filteredArray.size() > 0) {
+						INSTANCE.moreAppsListContainer.getStyle().setProperty("display", "block");
+						INSTANCE.populateMoreApps(filteredArray);
+					}
+				}
 			}
-		}
-		
-		if(filteredArray != null && filteredArray.size() > 1) {
-			INSTANCE.moreAppsListContainer.getStyle().setProperty("display", "block");
-			INSTANCE.populateMoreApps(filteredArray);
-		} else {
-			INSTANCE.moreAppsListContainer.getStyle().setProperty("display", "none");
 		}
 	}
 	
 	public static void processReviewsResponse(String response) {
 		JsonElement jelement = new JsonParser().parse(response);
-		JsonObject jobject = jelement.getAsJsonObject();
-		JsonObject jobjectFeed = jobject.getAsJsonObject("feed");
-		JsonArray entries = jobjectFeed.getAsJsonArray("entry");
-		if(entries != null && entries.size() > 0) {
-			INSTANCE.populateReviews(entries);
+		if(jelement != null) {
+			JsonObject jobject = jelement.getAsJsonObject();
+			if(jobject != null) {
+				JsonObject jobjectFeed = jobject.getAsJsonObject("feed");
+				JsonArray entries = jobjectFeed.getAsJsonArray("entry");
+				if(entries != null && entries.size() > 0) {
+					INSTANCE.reviewsContainer.getStyle().setProperty("display", "block");
+					INSTANCE.populateReviews(entries);
+				} else {
+					INSTANCE.reviewsContainer.getStyle().setProperty("display", "none");
+				}
+			} else {
+				INSTANCE.reviewsContainer.getStyle().setProperty("display", "none");
+			}
+		} else {
+			INSTANCE.reviewsContainer.getStyle().setProperty("display", "none");
 		}
 	}
 	
 	public static void processRatingsResponse(String response) {
 		JsonElement jelement = new JsonParser().parse(response);
-		JsonObject jobject = jelement.getAsJsonObject();
-		JsonArray jarray = jobject.getAsJsonArray("results");
-		jobject = jarray.get(0).getAsJsonObject();
-		
-		INSTANCE.handleAverageRatings(jobject);
+		if(jelement != null) {
+			JsonObject jobject = jelement.getAsJsonObject();
+			if(jobject != null) {
+				JsonArray jarray = jobject.getAsJsonArray("results");
+				if(jarray != null && jarray.size() > 0) {
+					jobject = jarray.get(0).getAsJsonObject();
+				
+					INSTANCE.handleAverageRatings(jobject);
+				} else {
+					INSTANCE.setRatingsToZero();
+				}
+			}
+		}
 	}
 
 	public static native void exportAppDetailsResponseHandler() /*-{

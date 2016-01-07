@@ -4,7 +4,7 @@
     <ui:style gss="true" type="io.reflection.app.client.page.LoadingPage.LoadingPageStyle">
     .wrap {
         margin-top: 154px;
-        margin-bottom: 30px;
+        margin-bottom: 160px;
 		text-align: center;
     }
     

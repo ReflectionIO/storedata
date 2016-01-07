@@ -5,35 +5,37 @@
 	<ui:style  gss="true">
 	</ui:style>
 	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.pageApp}">
-		<header class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.pageApp__header}">
-
-			<div class="{STYLES_INSTANCE.reflectionMainStyle.appIconContainer}">
-				<g:Image ui:field="image" styleName="{STYLES_INSTANCE.reflectionMainStyle.appIcon}" />
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer}">
+			<header class="{STYLES_INSTANCE.reflectionMainStyle.pageApp__header}">
+	
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.appIconContainer}">
+					<g:Image ui:field="image" styleName="{STYLES_INSTANCE.reflectionMainStyle.appIcon}" />
+				</div>
+	
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.appDetails}">
+	
+					<h1 ui:field="trackName" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree} {STYLES_INSTANCE.reflectionMainStyle.appTitle}"></h1>
+	
+					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.appCreator}">
+						<span ui:field="artistName"></span>
+					</h2>
+	
+					<span ui:field="formattedPrice" class="{STYLES_INSTANCE.reflectionMainStyle.appPrice}"></span>
+	
+				</div>
+			</header>
+			
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.appUserFunctionsContainer}">
+				<!-- <a ui:field="revealContentStore" href="#" class="{STYLES_INSTANCE.reflectionMainStyle.showHideLink}" data-closed-text="Less..." data-open-text="More...">More...</a> -->
+				<form>
+					<!-- <c:FormSwitch ui:field="followSwitch" label="Follow (10.3k)" /> -->
+	
+					<a target="_blank" ui:field="viewInStore">
+						<span ui:field="storeName">
+						</span>
+					</a>
+				</form>
 			</div>
-
-			<div ui:field="appDetailsPanel" class="{STYLES_INSTANCE.reflectionMainStyle.appDetails}">
-
-				<h1 ui:field="trackName" class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree} {STYLES_INSTANCE.reflectionMainStyle.appTitle}"></h1>
-
-				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.appCreator}">
-					By <span ui:field="artistName"></span>
-				</h2>
-
-				<span ui:field="formattedPrice" class="{STYLES_INSTANCE.reflectionMainStyle.appPrice}"></span>
-
-			</div>
-		</header>
-		
-		<div class="{STYLES_INSTANCE.reflectionMainStyle.appUserFunctionsContainer}">
-			<!-- <a ui:field="revealContentStore" href="#" class="{STYLES_INSTANCE.reflectionMainStyle.showHideLink}" data-closed-text="Less..." data-open-text="More...">More...</a> -->
-			<form>
-				<!-- <c:FormSwitch ui:field="followSwitch" label="Follow (10.3k)" /> -->
-
-				<a target="_blank" ui:field="viewInStore">
-					<span ui:field="storeName">
-					</span>
-				</a>
-			</form>
 		</div>
 
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.tabs}">
@@ -165,7 +167,7 @@
 					<dt>Size</dt>
 					<dd ui:field="fileSize"></dd>
 					<dt>Languages</dt>
-					<dd class="js-dd-languages"></dd>
+					<dd></dd>
 					<dt>Stores</dt>
 					<dd></dd>
 					<dt>Rated</dt>

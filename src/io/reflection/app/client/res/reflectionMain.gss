@@ -4465,6 +4465,9 @@ textarea, .global-header .link-open-search {
   display: none;
 }
 /* line 166, sass/templates/_app.scss */
+.page-app .aside-definition-list {
+	margin-bottom: 4rem;
+}
 .page-app .aside-definition-list dl {
 	margin-bottom: 2.2rem;
 }
@@ -5106,13 +5109,13 @@ textarea, .global-header .link-open-search {
 .app-images {
   width: auto;
   display: block;
-  overflow: scroll;
+  overflow-x: auto;
 }
 
 /* line 600, sass/templates/_app.scss */
 .app-image-list {
   padding-bottom: 20px;
-  overflow: scroll;
+  overflow: hidden;
 }
 /* line 603, sass/templates/_app.scss */
 .app-image-list li {
@@ -12429,10 +12432,6 @@ table.table-data.table-linked-accounts--disabled thead {
     width: 130px;
     font-size: 1.6rem;
   }
-  /* line 33, sass/components/_definition-list.scss */
-  .panel-left-open .aside-definition-list dt {
-    font-size: 1.4rem;
-  }
 }
 @media (min-width: 1150px) {
   /* line 38, sass/components/_definition-list.scss */
@@ -12460,16 +12459,6 @@ table.table-data.table-linked-accounts--disabled thead {
   /* line 43, sass/components/_definition-list.scss */
   .aside-definition-list dd {
     width: calc(100% - 130px);
-    font-size: 1.6rem;
-  }
-  /* line 59, sass/components/_definition-list.scss */
-  .panel-left-open .aside-definition-list dd {
-    font-size: 1.4rem;
-  }
-}
-@media (min-width: 1150px) {
-  /* line 64, sass/components/_definition-list.scss */
-  .panel-left-open .aside-definition-list dd {
     font-size: 1.6rem;
   }
 }
