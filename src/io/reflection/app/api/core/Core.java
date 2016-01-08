@@ -1321,11 +1321,15 @@ public final class Core extends ActionHandler {
 				if (vendors.isEmpty()) throw new Exception("Vendor list is empty");
 
 				// Only Admin can add another Apple ID pointing to an existing linked account
-				if (!isAdmin) { // check if duplicate vendor Id exists and throw exception
-					for (String v : vendors) {
-						if (!DataAccountServiceProvider.provide().getVendorDataAccounts(v, Boolean.FALSE).isEmpty()) // At least 1 active account
-							throw new InputValidationException(ApiError.DuplicateVendorId.getCode(), ApiError.DuplicateVendorId.getMessage(input.username));
+				if (!isAdmin) { // check if ALL vendor Id are active, if so throw exception, otherwise link the one inactive
+					for (String v : new ArrayList<String>(vendors)) {
+						if (!DataAccountServiceProvider.provide().getVendorDataAccounts(v, Boolean.FALSE).isEmpty()) { // Get active account
+							vendors.remove(v);
+						}
 					}
+					if (vendors.isEmpty())
+						throw new InputValidationException(ApiError.DuplicateVendorId.getCode(),
+								ApiError.DuplicateVendorId.getMessage("All vendors for this Apple ID already linked"));
 				}
 
 				// Add a data account for every vendor
