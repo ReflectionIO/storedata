@@ -167,7 +167,7 @@
 					<dt>Size</dt>
 					<dd ui:field="fileSize"></dd>
 					<dt>Languages</dt>
-					<dd></dd>
+					<dd ui:field="languageCodes"></dd>
 					<dt>Stores</dt>
 					<dd></dd>
 					<dt>Rated</dt>

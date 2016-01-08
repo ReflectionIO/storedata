@@ -5,8 +5,9 @@ import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_
 import static io.reflection.app.client.controller.FilterController.RANKING_CHART_TYPE;
 import static io.reflection.app.client.controller.FilterController.REVENUE_CHART_TYPE;
 
+import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import com.google.gson.JsonArray;
@@ -24,45 +25,34 @@ import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.dom.client.SpanElement;
-import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.dom.client.Style.Cursor;
-import com.google.gwt.dom.client.Style.Visibility;
+import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.event.dom.client.ChangeEvent;
-import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.datepicker.client.CalendarUtil;
 
-import io.reflection.app.api.core.shared.call.event.GetItemRanksEventHandler;
-import io.reflection.app.api.core.shared.call.event.GetItemSalesRanksEventHandler;
-import io.reflection.app.api.core.shared.call.event.GetLinkedAccountItemEventHandler;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.component.LoadingBar;
 import io.reflection.app.client.component.Selector;
 import io.reflection.app.client.controller.FilterController;
-import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.NavigationController;
-import io.reflection.app.client.controller.RankController;
-import io.reflection.app.client.controller.ServiceConstants;
-import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.NavigationController.Stack;
+import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.handler.NavigationEventHandler;
-import io.reflection.app.client.handler.TogglePanelEventHandler;
 import io.reflection.app.client.helper.AnimationHelper;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormHelper;
-import io.reflection.app.client.helper.FormattingHelper;
 import io.reflection.app.client.helper.ResponsiveDesignHelper;
-import io.reflection.app.client.helper.TooltipHelper;
-import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.client.res.Styles.ReflectionMainStyles;
 import io.reflection.app.datatypes.shared.Item;
@@ -86,6 +76,7 @@ public class AppDetails extends Page implements NavigationEventHandler {
 	@UiField Element formattedPriceDuplicate;
 	@UiField Element categories;
 	@UiField Element fileSize;
+	@UiField Element languageCodes;
 	@UiField Element rated;
 	@UiField Element version;
 	@UiField Element releaseDate;
@@ -134,9 +125,9 @@ public class AppDetails extends Page implements NavigationEventHandler {
 	private Item displayingApp;
 	
 	private String artistId;
-	
+	private JsonArray languagesArray;
 	private LoadingBar loadingBar = new LoadingBar(false);
-
+	
 	public AppDetails() {
 		initWidget(uiBinder.createAndBindUi(this));
 		INSTANCE = this;
@@ -155,6 +146,7 @@ public class AppDetails extends Page implements NavigationEventHandler {
 		super.onDetach();
 		screenshotsList.removeAllChildren();
 		moreAppsList.removeAllChildren();
+		removeLookupScripts();
 	}
 
 	@Override
@@ -513,7 +505,18 @@ public class AppDetails extends Page implements NavigationEventHandler {
 		if (data.get("fileSizeBytes") != null) {
 			int fileSizeBytes = (int)(data.get("fileSizeBytes").getAsFloat() / 1000000);
 			fileSize.setInnerText(fileSizeBytes + " MB");
-		}		
+		}
+		
+		if (data.get("languageCodesISO2A") != null) {
+			String languageCodesString = "";
+			languagesArray = data.getAsJsonArray("languageCodesISO2A");
+			
+			for(int g = 0; g < languagesArray.size(); g++) {
+				languageCodesString += languagesArray.get(g).getAsString().toLowerCase() + ", ";
+			}
+			languageCodesString = languageCodesString.substring(0, languageCodesString.length() - 2);
+			languageCodes.setInnerText(languageCodesString);
+		}
 		
 		if (data.get("contentAdvisoryRating") != null) {
 			rated.setInnerText(data.get("contentAdvisoryRating").toString().replace("\"", ""));
@@ -524,21 +527,23 @@ public class AppDetails extends Page implements NavigationEventHandler {
 		}
 		
 		if (data.get("releaseDate") != null) {
+//			String myString = DateFormat.getDateInstance().format(data.get("releaseDate").toString().replace("\"", ""));
+//			Window.alert(myString);
 			// Crashes the page, needs fix to format date			
 //			try {
 //				SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 //				Date dateToFormat = dateFormatter.parse(data.get("releaseDate").toString().replace("\"", ""));
-//				String formattedDate = new SimpleDateFormat("dd/MM/yyyy, Ka").format(dateToFormat);
-//				releaseDate.setInnerText(formattedDate.toString());
+////				String formattedDate = new SimpleDateFormat("dd/MM/yyyy, Ka").format(dateToFormat);
+////				releaseDate.setInnerText(formattedDate.toString());
 //			} catch (ParseException e) {
-//				// Log exception
 //			}
 			releaseDate.setInnerText(data.get("releaseDate").toString().replace("\"", ""));
 		}
 		
 		if(data.get("description") != null) {
 			String appDescription = htmlForTextWithEmbeddedNewlines(data.get("description").toString().replace("\"", ""));
-  			// appDescription = urlify(appDescription);
+			String regex = "^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";
+			// appDescription = appDescription.replaceAll(regex, "This was a link");
 			description.setInnerHTML(appDescription);
 		}
 		
@@ -640,38 +645,44 @@ public class AppDetails extends Page implements NavigationEventHandler {
 			rankingLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 		}
 	}
-
-	/**
-	 * @param string
-	 */
+	
+	private native void removeLookupScripts() /*-{
+		$wnd.$('#ref-searchApiLookupGetAppDetails').remove();
+		$wnd.$('#ref-searchApiSearchTermMoreApps').remove();
+		$wnd.$('#ref-customerReviewsRssRequest').remove();
+	}-*/;
+	
 	private native void search(String searchId) /*-{
+		$wnd.$('#ref-searchApiLookupGetAppDetails').remove();
 		$wnd.$('body').append(
-				$wnd.$("<script>").attr("id", "get-app-details").attr(
+				$wnd.$("<script>").attr("id", "ref-searchApiLookupGetAppDetails").attr(
 						"src",
 						"https://itunes.apple.com/gb/lookup?id=" + searchId
 								+ "&callback=handleAppDetailsSearch"));
 	}-*/;
 
 	private native void searchMoreApps(String artistName) /*-{
-	$wnd.$('body').append(
-			$wnd.$("<script>").attr("id", "scriptsearch").attr(
+		$wnd.$('#ref-searchApiSearchTermMoreApps').remove();
+		$wnd.$('body').append(
+			$wnd.$("<script>").attr("id", "ref-searchApiSearchTermMoreApps").attr(
 					"src",
 					"https://itunes.apple.com/gb/search?term=" + artistName
 							+ "&media=software&limit=40&entity=software&attribute=softwareDeveloper&callback=handleMoreAppsSearch"));
 	}-*/;
 	
 	private native void searchReviews(String trackId, String countryCode) /*-{
-	$wnd.$('body').append(
-			$wnd.$("<script>").attr("id", "scriptreviews").attr(
+		$wnd.$('#ref-customerReviewsRssRequest').remove();
+		$wnd.$('body').append(
+			$wnd.$("<script>").attr("id", "ref-customerReviewsRssRequest").attr(
 					"src",
 					"http://itunes.apple.com/" + countryCode + "/rss/customerreviews/id=" + trackId
 							+ "/json?callback=handleReviews"));
 	}-*/;
 	
 	private native void searchAppForRatingByCountry(String trackId, String countryCode) /*-{
-	$wnd.$('#get-app-details').remove();
+	$wnd.$('#ref-searchApiLookupGetAppDetails').remove();
 	$wnd.$('body').append(
-			$wnd.$("<script>").attr("id", "get-app-details").attr(
+			$wnd.$("<script>").attr("id", "ref-searchApiLookupGetAppDetails").attr(
 					"src",
 					"https://itunes.apple.com/" + countryCode + "/lookup?id=" + trackId + "&callback=handleAverageRatings"));
 	}-*/;
@@ -766,6 +777,10 @@ public class AppDetails extends Page implements NavigationEventHandler {
 			}
 		}
 	}
+	
+	public static void processLanguagesResponse(String response) {
+		Window.alert("processLanguagesResponse");
+	}	
 
 	public static native void exportAppDetailsResponseHandler() /*-{
 		$wnd.processAppSearchResponse = $entry(@io.reflection.app.client.page.AppDetails::processAppSearchResponse(Ljava/lang/String;));
@@ -780,6 +795,10 @@ public class AppDetails extends Page implements NavigationEventHandler {
 	}-*/;
 	
 	public static native void exportRatingsResponseHandler() /*-{
-	$wnd.processRatingsResponse = $entry(@io.reflection.app.client.page.AppDetails::processRatingsResponse(Ljava/lang/String;));
-}-*/;
+		$wnd.processRatingsResponse = $entry(@io.reflection.app.client.page.AppDetails::processRatingsResponse(Ljava/lang/String;));
+	}-*/;
+	
+	public static native void exportLanguagesResponseHandler() /*-{
+	 	$wnd.processLanguagesResponse = $entry(@io.reflection.app.client.page.AppDetails::processLanguagesResponse(Ljava/lang/String;));
+	}-*/;
 }
