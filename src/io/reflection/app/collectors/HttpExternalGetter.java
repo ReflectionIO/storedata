@@ -39,7 +39,7 @@ public class HttpExternalGetter {
 		URLFetchService fetcher = URLFetchServiceFactory.getURLFetchService();
 
 		try {
-			HTTPRequest request = new HTTPRequest(url, HTTPMethod.POST);
+			HTTPRequest request = new HTTPRequest(url, method);
 			request.getFetchOptions().setDeadline(Double.valueOf(60.0));
 
 			if (LOG.isLoggable(GaeLevel.TRACE)) {
@@ -67,14 +67,6 @@ public class HttpExternalGetter {
 				}
 			} else {
 				LOG.log(Level.SEVERE, String.format("Http error occured for request to [%s] with code [%d]", url.toString(), responseCode));
-				if (responseCode == 403) {
-					// We have hit Apple's rate limiting. Sleep for a minute to cool down.
-					try {
-						Thread.sleep(60000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
 			}
 		} catch (IOException e) {
 			if (LOG.isLoggable(Level.SEVERE)) {
@@ -111,6 +103,6 @@ public class HttpExternalGetter {
 	}
 
 	public static String getData(String endpoint) {
-		return getData(endpoint, HTTPMethod.POST);
+		return getData(endpoint, HTTPMethod.GET);
 	}
 }
