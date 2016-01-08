@@ -64,41 +64,44 @@ import io.reflection.app.shared.util.PagerHelper;
 
 @SuppressWarnings("serial")
 public class DevUtilServlet extends HttpServlet {
-	private transient static final Logger LOG = Logger.getLogger(DevUtilServlet.class.getName());
+	private transient static final Logger	LOG															= Logger.getLogger(DevUtilServlet.class.getName());
 
-	public static final String PARAM_ACTION = "action";
+	public static final String						PARAM_ACTION										= "action";
 
-	public static final String	PARAM_DATA_ACCOUNT_IDS	= "dataaccountids";
-	public static final String	PARAM_DATA_ACCOUNT_ID		= "dataaccountid";
-	public static final String	PARAM_DATES							= "dates";
-	public static final String	PARAM_DATE_RANGE				= "daterange";
+	public static final String						PARAM_DATA_ACCOUNT_IDS					= "dataaccountids";
+	public static final String						PARAM_DATA_ACCOUNT_ID						= "dataaccountid";
+	public static final String						PARAM_ITEM_IDS									= "itemids";
+	public static final String						PARAM_DATES											= "dates";
+	public static final String						PARAM_DATE_RANGE								= "daterange";
 
-	public static final String	PARAM_COUNTRIES					= "countries";
-	public static final String	PARAM_CATEGORIES				= "categories";
-	public static final String	PARAM_LIST_TYPES				= "types";
-	public static final String	PARAM_PLATFORMS					= "platforms";
-	public static final String	PARAM_TIME							= "time";
-	public static final String	PARAM_GATHER_CONDITIONS	= "conditions";
-	public static final String	PARAM_GATHER_CONDITION	= "condition";
+	public static final String						PARAM_COUNTRIES									= "countries";
+	public static final String						PARAM_CATEGORIES								= "categories";
+	public static final String						PARAM_LIST_TYPES								= "types";
+	public static final String						PARAM_PLATFORMS									= "platforms";
+	public static final String						PARAM_TIME											= "time";
+	public static final String						PARAM_GATHER_CONDITIONS					= "conditions";
+	public static final String						PARAM_GATHER_CONDITION					= "condition";
 
-	public static final String	PARAM_GATHER_CONDITION_MISSING	= "missing";
-	public static final String	PARAM_GATHER_CONDITION_EMPTY		= "empty";
-	public static final String	PARAM_GATHER_CONDITION_ERROR		= "error";
-	public static final String	PARAM_GATHER_CONDITION_INGEST		= "ingest";
-	public static final String	PARAM_GATHER_CONDITION_RETRY		= "retry";				 // synonomous for ingest, error, empty and missing
-	public static final String	PARAM_GATHER_CONDITION_REINGEST	= "reingest";
-	public static final String	PARAM_GATHER_CONDITION_ALL			= "all";
+	public static final String						PARAM_GATHER_CONDITION_MISSING	= "missing";
+	public static final String						PARAM_GATHER_CONDITION_EMPTY		= "empty";
+	public static final String						PARAM_GATHER_CONDITION_ERROR		= "error";
+	public static final String						PARAM_GATHER_CONDITION_INGEST		= "ingest";
+	public static final String						PARAM_GATHER_CONDITION_RETRY		= "retry";
+	public static final String						PARAM_GATHER_CONDITION_REINGEST	= "reingest";
+	public static final String						PARAM_GATHER_CONDITION_REGATHER	= "regather";
+	public static final String						PARAM_GATHER_CONDITION_ALL			= "all";
 
-	public static final String	ACTION_GATHER_SALES	= "sales";
-	public static final String	ACTION_GATHER_RANKS	= "ranks";
-	public static final String	ACTION_INGEST_RANKS	= "rank_ingest";
-	public static final String	ACTION_SUMMARISE		= "summarise";
-	public static final String	ACTION_SPLIT_DATA		= "split";
-	public static final String	ACTION_MODEL				= "model";
+	public static final String						ACTION_GATHER_SALES							= "sales";
+	public static final String						ACTION_GATHER_RANKS							= "ranks";
+	public static final String						ACTION_INGEST_RANKS							= "rank_ingest";
+	public static final String						ACTION_SUMMARISE								= "summarise";
+	public static final String						ACTION_SPLIT_DATA								= "split";
+	public static final String						ACTION_SPLIT_DATA_TOP_200				= "splittop200";
+	public static final String						ACTION_MODEL										= "model";
 
-	public static final String QUEUE_SUMMARISE = "summarise";
+	public static final String						QUEUE_SUMMARISE									= "summarise";
 
-	public static final String URL_SUMMARISE = "/summarise";
+	public static final String						URL_SUMMARISE										= "/summarise";
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -155,6 +158,8 @@ public class DevUtilServlet extends HttpServlet {
 			action = action.toLowerCase();
 		}
 
+		LOG.log(GaeLevel.DEBUG, String.format("Performing action: %s", action));
+
 		String msg = null;
 		switch (action) {
 			case ACTION_GATHER_RANKS:
@@ -172,12 +177,17 @@ public class DevUtilServlet extends HttpServlet {
 			case ACTION_SPLIT_DATA:
 				msg = splitData(req, resp);
 				break;
+			case ACTION_SPLIT_DATA_TOP_200:
+				msg = splitDataTop200(req, resp);
+				break;
 			case ACTION_MODEL:
 				msg = model(req, resp);
 				break;
 			default:
-				msg = String.format("I don't understand this action %s, please try one of the following: %s,%s,%s,%s,%s,%s", action,
-						ACTION_GATHER_RANKS, ACTION_INGEST_RANKS, ACTION_GATHER_SALES, ACTION_SUMMARISE, ACTION_SPLIT_DATA, ACTION_MODEL);
+				msg = String.format("I don't understand this action %s, please try one of the following: %s,%s,%s,%s,%s,%s,%s", action,
+						ACTION_GATHER_RANKS, ACTION_INGEST_RANKS, ACTION_GATHER_SALES, ACTION_SUMMARISE, ACTION_SPLIT_DATA, ACTION_SPLIT_DATA_TOP_200, ACTION_MODEL);
+
+				LOG.log(GaeLevel.DEBUG, msg);
 				break;
 		}
 
@@ -206,7 +216,7 @@ public class DevUtilServlet extends HttpServlet {
 			IFeedFetchService feedFetchService = FeedFetchServiceProvider.provide();
 			List<FeedFetch> feedFetches = null;
 			try {
-				feedFetches = feedFetchService.getDatesFeedFetches(new Date());
+				feedFetches = feedFetchService.getDatesFeedFetches(date);
 			} catch (DataAccessException e) {
 				appendAndReturn(String.format("Could not load rank fetches from DB for date %s. Exception thrown %s", date.toString(), e.getMessage()), builder);
 			}
@@ -299,12 +309,12 @@ public class DevUtilServlet extends HttpServlet {
 		}
 
 		String[] ALL_TYPE_PLATFORM_COMBINATIONS = new String[] {
-				CollectorIOS.TOP_FREE_APPS,
-				CollectorIOS.TOP_PAID_APPS,
-				CollectorIOS.TOP_GROSSING_APPS,
-				CollectorIOS.TOP_FREE_IPAD_APPS,
-				CollectorIOS.TOP_PAID_IPAD_APPS,
-				CollectorIOS.TOP_GROSSING_IPAD_APPS
+																															CollectorIOS.TOP_FREE_APPS,
+																															CollectorIOS.TOP_PAID_APPS,
+																															CollectorIOS.TOP_GROSSING_APPS,
+																															CollectorIOS.TOP_FREE_IPAD_APPS,
+																															CollectorIOS.TOP_PAID_IPAD_APPS,
+																															CollectorIOS.TOP_GROSSING_IPAD_APPS
 		};
 
 		Long overallCategoryId = getOverallCategoryId();
@@ -423,6 +433,7 @@ public class DevUtilServlet extends HttpServlet {
 		boolean gatherError = false;
 		boolean ingest = false;
 		boolean reingest = false;
+		boolean regather = false;
 
 		for (String condition : conditions) {
 			switch (condition.toLowerCase()) {
@@ -444,13 +455,16 @@ public class DevUtilServlet extends HttpServlet {
 				case PARAM_GATHER_CONDITION_REINGEST:
 					reingest = true;
 					break;
+				case PARAM_GATHER_CONDITION_REGATHER:
+					gatherMissing = gatherEmpty = gatherError = ingest = reingest = regather = true;
+					break;
 				case PARAM_GATHER_CONDITION_ALL:
 					gatherMissing = gatherEmpty = gatherError = ingest = reingest = true;
 					break;
 			}
 		}
 
-		if (!(gatherMissing || gatherEmpty || gatherError || ingest || reingest)) {
+		if (!(gatherMissing || gatherEmpty || gatherError || ingest || reingest || regather)) {
 			String msg = "No condition given. Nothing to do. Returning";
 			LOG.log(GaeLevel.DEBUG, msg);
 			return msg;
@@ -458,15 +472,15 @@ public class DevUtilServlet extends HttpServlet {
 
 		StringBuilder webResponse = new StringBuilder();
 
-		String msg = String.format("Gathing for %d accounts. Conditions: missing: %b, empty: %b, error: %b, ingest: %b, reingest: %b", dataAccountIds.size(),
-				gatherMissing, gatherEmpty, gatherError, ingest, reingest);
+		String msg = String.format("Gathing for %d accounts. Conditions: missing: %b, empty: %b, error: %b, ingest: %b, reingest: %b, regather: %b", dataAccountIds.size(),
+				gatherMissing, gatherEmpty, gatherError, ingest, reingest, regather);
 		LOG.log(GaeLevel.DEBUG, msg);
 		webResponse.append(msg).append("\n\n");
 
 		for (Date date : datesToProcess) {
 			for (Long dataAccountId : dataAccountIds) {
-				webResponse.append(gatherForAccountOnDateWithConditions(dataAccountId, date, gatherMissing, gatherEmpty, gatherError, ingest, reingest))
-				.append('\n');
+				webResponse.append(gatherForAccountOnDateWithConditions(dataAccountId, date, gatherMissing, gatherEmpty, gatherError, ingest, reingest, regather))
+						.append('\n');
 			}
 		}
 
@@ -480,14 +494,29 @@ public class DevUtilServlet extends HttpServlet {
 	 * @param gatherEmpty
 	 * @param gatherError
 	 * @param reingest
+	 * @param regather
 	 *
 	 * @return
 	 */
 	private String gatherForAccountOnDateWithConditions(Long dataAccountId, Date date, boolean gatherMissing, boolean gatherEmpty, boolean gatherError,
-			boolean ingest, boolean reingest) {
+			boolean ingest, boolean reingest, boolean regather) {
 		StringBuilder builder = new StringBuilder();
 		try {
+
 			DataAccountFetch dataAccountFetch = DataAccountFetchServiceProvider.provide().getDataAccountFetch(dataAccountId, date);
+
+			if (regather) {
+				if (dataAccountFetch != null && dataAccountFetch.status == DataAccountFetchStatusType.DataAccountFetchStatusTypeIngested) {
+					LOG.log(GaeLevel.DEBUG, appendAndReturn(String.format("The fetch was previously marked as ingested so setting it as an error"), builder));
+					dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeError;
+					DataAccountFetchServiceProvider.provide().updateDataAccountFetch(dataAccountFetch);
+				}
+
+				LOG.log(GaeLevel.DEBUG, appendAndReturn(String.format("Triggering a gather for %d, on %s", dataAccountId, date), builder));
+				DataAccountServiceProvider.provide().triggerSingleDateDataAccountFetch(dataAccountId, date);
+
+				return builder.toString();
+			}
 
 			// MISSING
 			if (dataAccountFetch == null || dataAccountFetch.status == null) {
@@ -665,6 +694,16 @@ public class DevUtilServlet extends HttpServlet {
 			LOG.log(GaeLevel.DEBUG, msg);
 		}
 
+		if (categoryList.size() == 1 && categoryList.get(0).equalsIgnoreCase("all")) {
+			categoryList.clear();
+			for (int i = 1; i < 25; i++) {
+				categoryList.add("" + i);
+			}
+			String msg = "Added all categories to be modelled";
+			webResponse.append(msg).append('\n');
+			LOG.log(GaeLevel.DEBUG, msg);
+		}
+
 		if (countryList.isEmpty()) {
 			String validCountries = System.getProperty("ingest.ios.countries");
 			validCountries = validCountries == null ? "" : validCountries.toLowerCase();
@@ -745,11 +784,66 @@ public class DevUtilServlet extends HttpServlet {
 	}
 
 	/**
+	 * Although this method get the split data for the whole month,
+	 * it only gets it for the items that have been in the top 200 for the dates covered by the dates params.
+	 * Don't call this method with the daterange param as it will queue up items multiple times for the same timeframe
+	 * if they have appeared in top 200 multiple times in that date range.
+	 *
+	 * @param req
+	 * @param resp
+	 * @return
+	 */
+	private String splitDataTop200(HttpServletRequest req, HttpServletResponse resp) {
+		StringBuilder webResponse = new StringBuilder("Splitting data for top 200 sales items\n\n");
+
+		ArrayList<Date> datesToProcess = getDatesToProcess(req);
+		if (datesToProcess.isEmpty()) {
+			String msg = "There are no dates to process. Returning without doing anything.";
+
+			LOG.log(GaeLevel.DEBUG, msg);
+			return msg;
+		}
+
+		ArrayList<String> countryList = getStringParameters(req, PARAM_COUNTRIES);
+		if (countryList.isEmpty()) {
+			String validCountries = System.getProperty("ingest.ios.countries");
+			validCountries = validCountries == null ? "" : validCountries.toLowerCase();
+
+			String msg = "Countries not specified. Including " + validCountries;
+			webResponse.append(msg).append('\n');
+			LOG.log(GaeLevel.DEBUG, msg);
+
+			for (String validCountry : validCountries.split(",")) {
+				String country = validCountry.trim();
+				countryList.add(country);
+			}
+		}
+
+		for (Date date : datesToProcess) {
+			for (String country : countryList) {
+				try {
+					HashMap<Long, ArrayList<Long>> dataAccountIdItemIdsInTop200 = SaleServiceProvider.provide().getItemSalesInTop200(date, country);
+
+					for (Long dataAccountId : dataAccountIdItemIdsInTop200.keySet()) {
+						SplitDataHelper.INSTANCE.enqueueToGatherSplitData(dataAccountId, date, countryList, dataAccountIdItemIdsInTop200.get(dataAccountId));
+					}
+				} catch (DataAccessException e) {
+					LOG.log(Level.WARNING, String.format("Could not get and enqueue the item ids and data account ids for sales on %s for %s", date, country), e);
+				}
+			}
+		}
+
+		return webResponse.toString();
+	}
+
+	/**
 	 * @param req
 	 * @param resp
 	 * @return
 	 */
 	private String splitData(HttpServletRequest req, HttpServletResponse resp) {
+		StringBuilder webResponse = new StringBuilder("Splitting data\n\n");
+
 		ArrayList<Date> datesToProcess = getDatesToProcess(req);
 		if (datesToProcess.isEmpty()) {
 			String msg = "There are no dates to process. Returning without doing anything.";
@@ -778,13 +872,29 @@ public class DevUtilServlet extends HttpServlet {
 			return msg;
 		}
 
-		StringBuilder webResponse = new StringBuilder();
+		ArrayList<String> countryList = getStringParameters(req, PARAM_COUNTRIES);
+		if (countryList.isEmpty()) {
+			String validCountries = System.getProperty("ingest.ios.countries");
+			validCountries = validCountries == null ? "" : validCountries.toLowerCase();
+
+			String msg = "Countries not specified. Including " + validCountries;
+			webResponse.append(msg).append('\n');
+			LOG.log(GaeLevel.DEBUG, msg);
+
+			for (String validCountry : validCountries.split(",")) {
+				String country = validCountry.trim();
+				countryList.add(country);
+			}
+		}
+
+		List<Long> itemIds = getLongParameters(req, PARAM_ITEM_IDS);
+
 		for (Date date : datesToProcess) {
 			for (Long dataAccountId : dataAccountIds) {
 				String msg = String.format("Requesting split data for %d on %s", dataAccountId, date);
 				LOG.log(GaeLevel.DEBUG, msg);
 				webResponse.append(msg).append('\n');
-				SplitDataHelper.INSTANCE.enqueueToGatherSplitData(dataAccountId, date);
+				SplitDataHelper.INSTANCE.enqueueToGatherSplitData(dataAccountId, date, countryList, itemIds);
 			}
 		}
 
