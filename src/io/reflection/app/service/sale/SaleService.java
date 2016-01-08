@@ -1132,7 +1132,7 @@ final class SaleService implements ISaleService {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 		String sqlDate = sdf.format(date);
-		String getDataAccountsWithSalesBetweenDatesQuery = String.format(
+		String getItemSalesInTop200Query = String.format(
 				"select distinct dataaccountid, itemid "
 						+ " from sale_summary "
 						+ " where `date`= '%s' and country='%s' and itemid in "
@@ -1146,7 +1146,7 @@ final class SaleService implements ISaleService {
 
 		try {
 			saleConnection.connect();
-			saleConnection.executeQuery(getDataAccountsWithSalesBetweenDatesQuery);
+			saleConnection.executeQuery(getItemSalesInTop200Query);
 
 			HashMap<Long, ArrayList<Long>> map = new HashMap<Long, ArrayList<Long>>();
 			LOG.log(GaeLevel.DEBUG, String.format("Executed the request. Loading rows..."));
