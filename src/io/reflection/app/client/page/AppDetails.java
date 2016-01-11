@@ -218,8 +218,8 @@ public class AppDetails extends Page implements NavigationEventHandler {
 		rated.setInnerText("");
 		version.setInnerText("");
 		releaseDate.setInnerText("");
-		universal.setInnerText("");
-		gameCenter.setInnerText("");
+		universal.setInnerText("No");
+		gameCenter.setInnerText("No");
 		
 		developersSiteContainer.getStyle().setProperty("display", "none");
 		appStoreLinkContainer.getStyle().setProperty("display", "none");
@@ -253,11 +253,10 @@ public class AppDetails extends Page implements NavigationEventHandler {
 		DivElement ratingsFull = Document.get().createDivElement(); 
 		ratingsFull.addClassName(style.ratingsFull());
 		
-		JsonObject reviewRating = review.getAsJsonObject("[im:rating]"); // this doesn't work - needs javascript dot/bracket notation equivalent
-		if(reviewRating != null) {
-			Window.alert(reviewRating.getAsString());
-			//	Float ratingAsPercentage = (reviewRating.get("label").getAsFloat() / 5) * 100;
-			//	Intended output - <div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsFull}" style="width:100%"></div>
+		JsonObject reviewRating = review.getAsJsonObject("im:rating");
+		if(reviewRating != null) {			
+			Float ratingAsPercentage = (reviewRating.get("label").getAsFloat() / 5) * 100; // could use a JSon Utility Class to safely try and catch the field get
+			ratingsFull.getStyle().setProperty("width", ratingAsPercentage + "%");
 		}		
 		
 		JsonObject reviewTitle = review.getAsJsonObject("title");
