@@ -18785,7 +18785,7 @@ svg.loading-ellipsis .dot-3 {
   position: relative;
   min-height: 18px;
   margin-bottom: 24px;
-  display: none;
+  /* display: none; */
   overflow: auto;
   text-align: left;
 }

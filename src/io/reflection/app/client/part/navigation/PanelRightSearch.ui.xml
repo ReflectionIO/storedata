@@ -18,14 +18,14 @@
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.search__resultsContainer}">
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.search__resultsSection} js-item-results--apps js-custom-scrollbar" data-mcs-theme="minimal-dark">
 					<h2>Apps</h2>
-					<ul>
+					<ul ui:field="appResults">
 					</ul>
 				</div>
 				<div
 					class="{STYLES_INSTANCE.reflectionMainStyle.search__resultsSection} {STYLES_INSTANCE.reflectionMainStyle.search__resultsSectionDevelopers} js-item-results--developers js-custom-scrollbar"
 					data-mcs-theme="minimal-dark">
 					<h2>Developers</h2>
-					<ul>
+					<ul ui:field="developerResults">
 					</ul>
 				</div>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.searchResultsNoneContainer} js-no-results">

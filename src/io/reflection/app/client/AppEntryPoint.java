@@ -14,6 +14,7 @@ import io.reflection.app.client.helper.TooltipHelper;
 import io.reflection.app.client.helper.UserAgentHelper;
 import io.reflection.app.client.mixpanel.MixpanelHelper;
 import io.reflection.app.client.part.BackToTop;
+import io.reflection.app.client.part.navigation.PanelRightSearch;
 import io.reflection.app.client.res.Styles;
 
 import com.google.gwt.dom.client.Document;
@@ -39,6 +40,8 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 		super.onModuleLoad();
 
 		UserAgentHelper.detectBrowser();
+		
+		PanelRightSearch.exportAppSearchResponseHandler();
 
 		// this registers the newly created singleton, so that
 		// fireCurrentHistoryState -> onValueChange -> addPages
