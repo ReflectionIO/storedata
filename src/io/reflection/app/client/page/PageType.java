@@ -7,6 +7,18 @@
 //
 package io.reflection.app.client.page;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.safehtml.shared.SafeUri;
+import com.google.gwt.safehtml.shared.UriUtils;
+import com.google.gwt.user.client.History;
+import com.spacehopperstudios.utility.StringUtils;
+
 import io.reflection.app.client.page.admin.CategoriesPage;
 import io.reflection.app.client.page.admin.DataAccountFetchesPage;
 import io.reflection.app.client.page.admin.DataAccountsPage;
@@ -27,21 +39,9 @@ import io.reflection.app.client.page.test.WidgetTestPage;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.shared.util.DataTypeHelper;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.safehtml.shared.SafeUri;
-import com.google.gwt.safehtml.shared.UriUtils;
-import com.google.gwt.user.client.History;
-import com.spacehopperstudios.utility.StringUtils;
-
 /**
  * @author billy1380
- * 
+ *
  */
 public enum PageType {
 	// navigable
@@ -58,6 +58,7 @@ public enum PageType {
 	ContactPageType("contact", false),
 	DataAccountFetchesPageType("dataaccountfetches", DataTypeHelper.PERMISSION_MANAGE_DATA_ACCOUNT_FETCHES_CODE),
 	DataAccountsPageType("dataaccounts", DataTypeHelper.PERMISSION_MANAGE_DATA_ACCOUNTS_CODE),
+	DeveloperPageType("developer", false),
 	EditEventSubscriptionPageType("editeventsubscription", DataTypeHelper.PERMISSION_MANAGE_EVENT_SUBSCRIPTIONS_CODE),
 	EventsPageType("events", DataTypeHelper.PERMISSION_MANAGE_EVENTS_CODE),
 	EventSubscriptionsPageType("eventsubscriptions", DataTypeHelper.PERMISSION_MANAGE_EVENT_SUBSCRIPTIONS_CODE),
@@ -94,7 +95,7 @@ public enum PageType {
 
 	// Non navigable
 	Error404PageType("pagenotfound"),
-	LoadingPageType("loading"), ;
+	LoadingPageType("loading"),;
 
 	private String value;
 	private static Map<String, PageType> valueLookup = null;
@@ -104,26 +105,26 @@ public enum PageType {
 
 	private PageType(String value, boolean requiresAuthentication) {
 		this.value = value;
-		this.navigable = true;
+		navigable = true;
 		this.requiresAuthentication = requiresAuthentication;
 	}
 
 	private PageType(String value) {
 		this.value = value;
-		this.navigable = false;
-		this.requiresAuthentication = false;
+		navigable = false;
+		requiresAuthentication = false;
 	}
 
 	private PageType(String value, String... requiredPermissionCode) {
 		this.value = value;
-		this.navigable = true;
-		this.requiresAuthentication = true;
+		navigable = true;
+		requiresAuthentication = true;
 
 		if (requiredPermissionCode != null && requiredPermissionCode.length > 0) {
 			requiredPermissions = new HashMap<String, Permission>();
 
 			Permission p;
-			for (String code : requiredPermissionCode) {
+			for (final String code : requiredPermissionCode) {
 				p = new Permission();
 				p.code = code;
 				requiredPermissions.put(code, p);
@@ -131,13 +132,14 @@ public enum PageType {
 		}
 	}
 
+	@Override
 	public String toString() {
 		return value;
 	}
 
 	public String toString(String... params) {
 		String asString;
-		String joinedParams = StringUtils.join(Arrays.asList(params), "/");
+		final String joinedParams = StringUtils.join(Arrays.asList(params), "/");
 
 		if (joinedParams == null || joinedParams.length() == 0) {
 			asString = toString();
@@ -170,7 +172,7 @@ public enum PageType {
 		if (valueLookup == null) {
 			valueLookup = new HashMap<String, PageType>();
 
-			for (PageType currentPageType : PageType.values()) {
+			for (final PageType currentPageType : PageType.values()) {
 				valueLookup.put(currentPageType.value, currentPageType);
 			}
 		}
@@ -239,6 +241,9 @@ public enum PageType {
 			break;
 		case DataAccountFetchesPageType:
 			page = new DataAccountFetchesPage();
+			break;
+		case DeveloperPageType:
+			page = new DeveloperPage();
 			break;
 		case EventsPageType:
 			page = new EventPage();
@@ -369,8 +374,8 @@ public enum PageType {
 	}
 
 	private RuntimeException navigableError() {
-		return new RuntimeException("Cannot show/redirect to page [" + asTargetHistoryToken()
-				+ "] because it is not navigable. Should be added directly to DOM");
+		return new RuntimeException(
+				"Cannot show/redirect to page [" + asTargetHistoryToken() + "] because it is not navigable. Should be added directly to DOM");
 	}
 
 	private static String stripExclamation(String value) {
