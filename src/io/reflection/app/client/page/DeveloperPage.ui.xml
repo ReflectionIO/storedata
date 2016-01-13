@@ -13,9 +13,8 @@
 		<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.grid__row}">
 			<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.tableWrapper}">
 				<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.scrollable}">
-					<cell:CellTable ui:field="appsTable"
+					<cell:CellTable ui:field="developerAppsTable"
 	styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData} {STYLES_INSTANCE.reflectionMainStyle.tableMyApps} {STYLES_INSTANCE.reflectionMainStyle.responsive}" />
-
 				</g:HTMLPanel>
 			</g:HTMLPanel>
 		</g:HTMLPanel>
