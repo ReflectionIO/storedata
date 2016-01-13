@@ -428,9 +428,6 @@ public interface Styles extends ClientBundle {
 		@ClassName("country-select--popup")
 		String countrySelectPopup();
 
-		@ClassName("country-selector")
-		String countrySelector();
-
 		@ClassName("county-select--container")
 		String countySelectContainer();
 
@@ -1254,6 +1251,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("loading-progress")
 		String loadingProgress();
+
+		@ClassName("loading-spinner--search-apps")
+		String loadingSpinnerSearchApps();
 
 		@ClassName("logged-in-section-content")
 		String loggedInSectionContent();
@@ -2371,6 +2371,7 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("window-warning")
 		String windowWarning();
+
 	}
 
 	public static final Styles STYLES_INSTANCE = GWT.create(Styles.class);

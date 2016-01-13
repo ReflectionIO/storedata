@@ -13,22 +13,23 @@
 					<g:TextBox ui:field="inputSearch"></g:TextBox>
 					<label for="search">Search</label>
 					<input type="submit" class="{STYLES_INSTANCE.reflectionMainStyle.refButton} {STYLES_INSTANCE.reflectionMainStyle.searchButtonMobile}" value="a" />
+					<img src="images/loadingSpinner.gif" class="{STYLES_INSTANCE.reflectionMainStyle.loadingSpinnerSearchApps}" ui:field="loadingSpinner" />
 				</div>
 			</form>
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.search__resultsContainer}">
-				<div class="{STYLES_INSTANCE.reflectionMainStyle.search__resultsSection} js-item-results--apps js-custom-scrollbar" data-mcs-theme="minimal-dark">
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.search__resultsSection} js-custom-scrollbar" data-mcs-theme="minimal-dark" ui:field="appResultsContainer">
 					<h2>Apps</h2>
 					<ul ui:field="appResults">
 					</ul>
 				</div>
 				<div
-					class="{STYLES_INSTANCE.reflectionMainStyle.search__resultsSection} {STYLES_INSTANCE.reflectionMainStyle.search__resultsSectionDevelopers} js-item-results--developers js-custom-scrollbar"
-					data-mcs-theme="minimal-dark">
+					class="{STYLES_INSTANCE.reflectionMainStyle.search__resultsSection} {STYLES_INSTANCE.reflectionMainStyle.search__resultsSectionDevelopers} js-custom-scrollbar"
+					data-mcs-theme="minimal-dark" ui:field="developerResultsContainer">
 					<h2>Developers</h2>
 					<ul ui:field="developerResults">
 					</ul>
 				</div>
-				<div class="{STYLES_INSTANCE.reflectionMainStyle.searchResultsNoneContainer} js-no-results">
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.searchResultsNoneContainer}" ui:field="noResultsContainer">
 					<svg version="1.1" class="{STYLES_INSTANCE.reflectionMainStyle.svgUnhappy}" x="0px" y="0px"
 					 viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">
 						<path id="No_Search_Results_2" fill="#3B3735" d="M16,0C7.2,0,0,7.2,0,16s7.2,16,16,16s16-7.2,16-16S24.8,0,16,0z M21,8
