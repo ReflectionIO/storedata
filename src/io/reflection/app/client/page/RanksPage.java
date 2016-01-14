@@ -7,52 +7,7 @@
 //
 package io.reflection.app.client.page;
 
-import static io.reflection.app.client.controller.FilterController.FREE_LIST_TYPE;
-import static io.reflection.app.client.controller.FilterController.GROSSING_LIST_TYPE;
-import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
-import static io.reflection.app.client.controller.FilterController.PAID_LIST_TYPE;
-import static io.reflection.app.client.controller.FilterController.REVENUE_DAILY_DATA_TYPE;
-import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
-import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
-import io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler;
-import io.reflection.app.client.DefaultEventBus;
-import io.reflection.app.client.cell.AppDetailsAndPredictionCell;
-import io.reflection.app.client.cell.LeaderboardDownloadsCell;
-import io.reflection.app.client.cell.LeaderboardRevenueCell;
-import io.reflection.app.client.component.FormDateBox;
-import io.reflection.app.client.component.LoadingBar;
-import io.reflection.app.client.component.LoadingButton;
-import io.reflection.app.client.component.Selector;
-import io.reflection.app.client.component.ToggleRadioButton;
-import io.reflection.app.client.controller.FilterController;
-import io.reflection.app.client.controller.FilterController.Filter;
-import io.reflection.app.client.controller.ItemController;
-import io.reflection.app.client.controller.NavigationController;
-import io.reflection.app.client.controller.NavigationController.Stack;
-import io.reflection.app.client.controller.RankController;
-import io.reflection.app.client.controller.ServiceConstants;
-import io.reflection.app.client.controller.SessionController;
-import io.reflection.app.client.handler.NavigationEventHandler;
-import io.reflection.app.client.helper.AnimationHelper;
-import io.reflection.app.client.helper.ApiCallHelper;
-import io.reflection.app.client.helper.FilterHelper;
-import io.reflection.app.client.helper.FormHelper;
-import io.reflection.app.client.helper.FormattingHelper;
-import io.reflection.app.client.helper.ResponsiveDesignHelper;
-import io.reflection.app.client.helper.TooltipHelper;
-import io.reflection.app.client.mixpanel.MixpanelHelper;
-import io.reflection.app.client.part.BootstrapGwtCellTable;
-import io.reflection.app.client.part.ErrorPanel;
-import io.reflection.app.client.part.LoadingIndicator;
-import io.reflection.app.client.part.NoDataPanel;
-import io.reflection.app.client.part.datatypes.RanksGroup;
-import io.reflection.app.client.popup.AddLinkedAccountPopup;
-import io.reflection.app.client.popup.PremiumPopup;
-import io.reflection.app.client.popup.SignUpPopup;
-import io.reflection.app.client.res.Styles;
-import io.reflection.app.client.res.Styles.ReflectionMainStyles;
-import io.reflection.app.datatypes.shared.Rank;
-import io.reflection.app.shared.util.DataTypeHelper;
+import static io.reflection.app.client.controller.FilterController.*;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -104,6 +59,48 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
 import com.willshex.gson.json.service.shared.StatusType;
 
+import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
+import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
+import io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler;
+import io.reflection.app.client.DefaultEventBus;
+import io.reflection.app.client.cell.AppDetailsAndPredictionCell;
+import io.reflection.app.client.cell.LeaderboardDownloadsCell;
+import io.reflection.app.client.cell.LeaderboardRevenueCell;
+import io.reflection.app.client.component.FormDateBox;
+import io.reflection.app.client.component.LoadingBar;
+import io.reflection.app.client.component.LoadingButton;
+import io.reflection.app.client.component.Selector;
+import io.reflection.app.client.component.ToggleRadioButton;
+import io.reflection.app.client.controller.FilterController;
+import io.reflection.app.client.controller.FilterController.Filter;
+import io.reflection.app.client.controller.ItemController;
+import io.reflection.app.client.controller.NavigationController;
+import io.reflection.app.client.controller.NavigationController.Stack;
+import io.reflection.app.client.controller.RankController;
+import io.reflection.app.client.controller.ServiceConstants;
+import io.reflection.app.client.controller.SessionController;
+import io.reflection.app.client.handler.NavigationEventHandler;
+import io.reflection.app.client.helper.AnimationHelper;
+import io.reflection.app.client.helper.ApiCallHelper;
+import io.reflection.app.client.helper.FilterHelper;
+import io.reflection.app.client.helper.FormHelper;
+import io.reflection.app.client.helper.FormattingHelper;
+import io.reflection.app.client.helper.ResponsiveDesignHelper;
+import io.reflection.app.client.helper.TooltipHelper;
+import io.reflection.app.client.mixpanel.MixpanelHelper;
+import io.reflection.app.client.part.BootstrapGwtCellTable;
+import io.reflection.app.client.part.ErrorPanel;
+import io.reflection.app.client.part.LoadingIndicator;
+import io.reflection.app.client.part.NoDataPanel;
+import io.reflection.app.client.part.datatypes.RanksGroup;
+import io.reflection.app.client.popup.AddLinkedAccountPopup;
+import io.reflection.app.client.popup.PremiumPopup;
+import io.reflection.app.client.popup.SignUpPopup;
+import io.reflection.app.client.res.Styles;
+import io.reflection.app.client.res.Styles.ReflectionMainStyles;
+import io.reflection.app.datatypes.shared.Rank;
+import io.reflection.app.shared.util.DataTypeHelper;
+
 /**
  * @author billy1380
  *
@@ -112,11 +109,12 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 	private static RanksPageUiBinder uiBinder = GWT.create(RanksPageUiBinder.class);
 
-	interface RanksPageUiBinder extends UiBinder<Widget, RanksPage> {}
+	interface RanksPageUiBinder extends UiBinder<Widget, RanksPage> {
+	}
 
-	public static final int SELECTED_TAB_PARAMETER_INDEX = 0;
-	public static final String ALL_TEXT = "Overview";
-	public static final String COMING_FROM_PARAMETER = "leaderboard";
+	public static final int			SELECTED_TAB_PARAMETER_INDEX	= 0;
+	public static final String	ALL_TEXT											= "Overview";
+	public static final String	COMING_FROM_PARAMETER					= "leaderboard";
 
 	interface AllAdminCodeTemplate extends SafeHtmlTemplates {
 		AllAdminCodeTemplate INSTANCE = GWT.create(AllAdminCodeTemplate.class);
@@ -126,83 +124,115 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		SafeHtml code(Long code);
 	}
 
-	@UiField(provided = true) CellTable<RanksGroup> stickyHeaderTable = new CellTable<RanksGroup>(1, BootstrapGwtCellTable.INSTANCE);
-	@UiField(provided = true) CellTable<RanksGroup> leaderboardTable = new CellTable<RanksGroup>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
+	@UiField(provided = true)
+	CellTable<RanksGroup>									stickyHeaderTable									= new CellTable<RanksGroup>(1, BootstrapGwtCellTable.INSTANCE);
+	@UiField(provided = true)
+	CellTable<RanksGroup>									leaderboardTable									= new CellTable<RanksGroup>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 
-	private LoadingIndicator loadingIndicatorAll = AnimationHelper.getLeaderboardAllLoadingIndicator(25);
-	private LoadingIndicator loadingIndicatorFreeList = AnimationHelper.getLeaderboardListLoadingIndicator(25, true);
-	private LoadingIndicator loadingIndicatorPaidGrossingList = AnimationHelper.getLeaderboardListLoadingIndicator(25, false);
+	private LoadingIndicator							loadingIndicatorAll								= AnimationHelper.getLeaderboardAllLoadingIndicator(25);
+	private LoadingIndicator							loadingIndicatorFreeList					= AnimationHelper.getLeaderboardListLoadingIndicator(25, true);
+	private LoadingIndicator							loadingIndicatorPaidGrossingList	= AnimationHelper.getLeaderboardListLoadingIndicator(25, false);
 
-	@UiField(provided = true) ToggleRadioButton toggleListView = new ToggleRadioButton("viewtype", "0 0 20 20");
-	@UiField(provided = true) ToggleRadioButton toggleCompactView = new ToggleRadioButton("viewtype", "0 0 20 20");
-	@UiField LoadingButton downloadLeaderboard;
-	@UiField DivElement dateSelectContainer;
-	@UiField FormDateBox dateBox;
-	@UiField Selector appStoreSelector;
+	@UiField(provided = true)
+	ToggleRadioButton											toggleListView										= new ToggleRadioButton("viewtype", "0 0 20 20");
+	@UiField(provided = true)
+	ToggleRadioButton											toggleCompactView									= new ToggleRadioButton("viewtype", "0 0 20 20");
+	@UiField
+	LoadingButton													downloadLeaderboard;
+	@UiField
+	DivElement														dateSelectContainer;
+	@UiField
+	FormDateBox														dateBox;
+	@UiField
+	Selector															appStoreSelector;
 	// @UiField ListBox mListType;
-	@UiField Selector countrySelector;
-	@UiField Selector categorySelector;
-	@UiField(provided = true) ToggleRadioButton toggleRevenue = new ToggleRadioButton("dailydatatoggle", "0 0 32 32");
-	@UiField(provided = true) ToggleRadioButton toggleDownloads = new ToggleRadioButton("dailydatatoggle", "0 0 32 32");
-	@UiField HTMLPanel dailyDataContainer;
-	@UiField Button applyFilters;
-	@UiField Button resetFilters;
+	@UiField
+	Selector															countrySelector;
+	@UiField
+	Selector															categorySelector;
+	@UiField(provided = true)
+	ToggleRadioButton											toggleRevenue											= new ToggleRadioButton("dailydatatoggle", "0 0 32 32");
+	@UiField(provided = true)
+	ToggleRadioButton											toggleDownloads										= new ToggleRadioButton("dailydatatoggle", "0 0 32 32");
+	@UiField
+	HTMLPanel															dailyDataContainer;
+	@UiField
+	Button																applyFilters;
+	@UiField
+	Button																resetFilters;
 
-	@UiField InlineHyperlink allLink;
-	@UiField SpanElement overviewAllText;
-	@UiField SpanElement paidText;
-	@UiField SpanElement grossingText;
-	@UiField InlineHyperlink freeLink;
-	@UiField InlineHyperlink grossingLink;
-	@UiField InlineHyperlink paidLink;
+	@UiField
+	InlineHyperlink												allLink;
+	@UiField
+	SpanElement														overviewAllText;
+	@UiField
+	SpanElement														paidText;
+	@UiField
+	SpanElement														grossingText;
+	@UiField
+	InlineHyperlink												freeLink;
+	@UiField
+	InlineHyperlink												grossingLink;
+	@UiField
+	InlineHyperlink												paidLink;
 
-	@UiField LIElement allItem;
-	@UiField LIElement freeItem;
-	@UiField LIElement grossingItem;
-	@UiField LIElement paidItem;
+	@UiField
+	LIElement															allItem;
+	@UiField
+	LIElement															freeItem;
+	@UiField
+	LIElement															grossingItem;
+	@UiField
+	LIElement															paidItem;
 
-	@UiField Button viewAllBtn;
-	@UiField SpanElement viewAllSpan;
+	@UiField
+	Button																viewAllBtn;
+	@UiField
+	SpanElement														viewAllSpan;
 	// @UiField InlineHyperlink redirect;
-	@UiField ErrorPanel errorPanel;
-	@UiField NoDataPanel noDataPanel;
+	@UiField
+	ErrorPanel														errorPanel;
+	@UiField
+	NoDataPanel														noDataPanel;
 
-	@UiField Element iframe;
+	@UiField
+	Element																iframe;
 
-	private Column<RanksGroup, SafeHtml> rankColumn;
-	private Column<RanksGroup, Rank> grossingColumn;
-	private Column<RanksGroup, Rank> freeColumn;
-	private Column<RanksGroup, Rank> paidColumn;
-	private Column<RanksGroup, SafeHtml> priceColumn;
-	private Column<RanksGroup, Rank> downloadsColumn;
-	private Column<RanksGroup, Rank> revenueColumn;
-	private Column<RanksGroup, SafeHtml> iapColumn;
+	private Column<RanksGroup, SafeHtml>	rankColumn;
+	private Column<RanksGroup, Rank>			grossingColumn;
+	private Column<RanksGroup, Rank>			freeColumn;
+	private Column<RanksGroup, Rank>			paidColumn;
+	private Column<RanksGroup, SafeHtml>	priceColumn;
+	private Column<RanksGroup, Rank>			downloadsColumn;
+	private Column<RanksGroup, Rank>			revenueColumn;
+	private Column<RanksGroup, SafeHtml>	iapColumn;
 
-	@SuppressWarnings("rawtypes") private Column lastOrderedColumn = rankColumn;
+	@SuppressWarnings("rawtypes")
+	private Column												lastOrderedColumn									= rankColumn;
 
-	private Map<String, LIElement> tabs = new HashMap<String, LIElement>();
+	private Map<String, LIElement>				tabs															= new HashMap<String, LIElement>();
 
-	private SafeHtmlHeader downloadsHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Downloads " + AnimationHelper.getSorterSvg()));
-	private SafeHtmlHeader revenueHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Revenue " + AnimationHelper.getSorterSvg()));
-	private TextHeader rankHeader = new TextHeader("Rank");
-	private TextHeader paidHeader = new TextHeader("App Name");
-	private TextHeader paidHeaderAll = new TextHeader("Paid");
-	private TextHeader freeHeader = new TextHeader("App Name");
-	private TextHeader freeHeaderAll = new TextHeader("Free");
-	private TextHeader grossingHeader = new TextHeader("App Name");
-	private TextHeader grossingHeaderAll = new TextHeader("Grossing");
-	private TextHeader priceHeader = new TextHeader("Price");
-	private SafeHtmlHeader iapHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString(
-			"<span>IAP</span><span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding js-tooltip--info tooltip--info\" data-tooltip=\"In App Purchases\"></span>"));
+	private SafeHtmlHeader								downloadsHeader										= new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Downloads " + AnimationHelper.getSorterSvg()));
+	private SafeHtmlHeader								revenueHeader											= new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Revenue " + AnimationHelper.getSorterSvg()));
+	private TextHeader										rankHeader												= new TextHeader("Rank");
+	private TextHeader										paidHeader												= new TextHeader("App Name");
+	private TextHeader										paidHeaderAll											= new TextHeader("Paid");
+	private TextHeader										freeHeader												= new TextHeader("App Name");
+	private TextHeader										freeHeaderAll											= new TextHeader("Free");
+	private TextHeader										grossingHeader										= new TextHeader("App Name");
+	private TextHeader										grossingHeaderAll									= new TextHeader("Grossing");
+	private TextHeader										priceHeader												= new TextHeader("Price");
+	private SafeHtmlHeader								iapHeader													= new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString(
+																																							"<span>IAP</span><span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding js-tooltip--info tooltip--info\" data-tooltip=\"In App Purchases\"></span>"));
 
-	private String selectedTab = OVERALL_LIST_TYPE;
-	private String previousFilter;
-	private LoadingBar loadingBar = new LoadingBar(false);
-	private ReflectionMainStyles style = Styles.STYLES_INSTANCE.reflectionMainStyle();
-	private SignUpPopup signUpPopup = new SignUpPopup();
-	private PremiumPopup premiumPopup = new PremiumPopup();
-	private AddLinkedAccountPopup addLinkedAccountPopup = new AddLinkedAccountPopup();
-	private boolean isStatusError;
+	private String												selectedTab												= OVERALL_LIST_TYPE;
+	private String												previousFilter;
+	private LoadingBar										loadingBar												= new LoadingBar(false);
+	private ReflectionMainStyles					style															= Styles.STYLES_INSTANCE.reflectionMainStyle();
+	private SignUpPopup										signUpPopup												= new SignUpPopup();
+	private PremiumPopup									premiumPopup											= new PremiumPopup();
+	private AddLinkedAccountPopup					addLinkedAccountPopup							= new AddLinkedAccountPopup();
+	private boolean												isStatusError;
 
 	public RanksPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -219,7 +249,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			@Override
 			public void onShowRange(ShowRangeEvent<Date> event) {
 				FilterHelper.disableOutOfRangeDates(dateBox.getDatePicker(), (SessionController.get().isAdmin() ? null : ApiCallHelper.getUTCDate(2015, 8, 31)),
-						(SessionController.get().isAdmin() ? FilterHelper.getToday() : FilterHelper.getDaysAgo(3)));
+						(SessionController.get().isAdmin() ? FilterHelper.getToday() : FilterHelper.getDaysAgo(FilterHelper.DEFAULT_LEADERBOARD_LAG_DAYS)));
 			}
 		});
 
@@ -334,7 +364,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		ListHandler<RanksGroup> columnSortHandler = new ListHandler<RanksGroup>(RankController.get().getList()) {
 			/*
 			 * (non-Javadoc)
-			 * 
+			 *
 			 * @see com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler#onColumnSort(com.google.gwt.user.cellview.client.ColumnSortEvent)
 			 */
 			@Override
@@ -528,8 +558,8 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 		iapColumn = new Column<RanksGroup, SafeHtml>(new SafeHtmlCell()) {
 
-			private final String IAP_YES_HTML = "<span class=\"" + style.refIconBefore() + " " + style.refIconBeforeCheck() + "\"></span>";
-			private final String IAP_NO_HTML = "<span></span>";
+			private final String	IAP_YES_HTML	= "<span class=\"" + style.refIconBefore() + " " + style.refIconBeforeCheck() + "\"></span>";
+			private final String	IAP_NO_HTML		= "<span></span>";
 
 			@Override
 			public SafeHtml getValue(RanksGroup object) {
@@ -571,7 +601,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		event.preventDefault();
 		applyFilters.addStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().isLoading());
 		if (NavigationController.get().getCurrentPage() == PageType.RanksPageType) {
-			boolean updateData = false;			
+			boolean updateData = false;
 			if (updateData = updateData || !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())) {
 				FilterController.get().setCountry(countrySelector.getSelectedValue());
 			}
@@ -631,7 +661,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		countrySelector.setSelectedIndex(FormHelper.getItemIndex(countrySelector, "gb"));
 		appStoreSelector.setSelectedIndex(FormHelper.getItemIndex(appStoreSelector, "iph"));
 		categorySelector.setSelectedIndex(FormHelper.getItemIndex(categorySelector, "15"));
-		dateBox.setValue(FilterHelper.getDaysAgo(3));
+		dateBox.setValue(FilterHelper.getDaysAgo(FilterHelper.DEFAULT_LEADERBOARD_LAG_DAYS));
 		applyFilters.setEnabled(isStatusError || !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
 				|| !FilterController.get().getFilter().getStoreA3Code().equals(appStoreSelector.getSelectedValue())
 				|| !FilterController.get().getFilter().getCategoryId().toString().equals(categorySelector.getSelectedValue())
@@ -674,110 +704,110 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 				(FREE_LIST_TYPE.equals(selectedTab) || PAID_LIST_TYPE.equals(selectedTab) || GROSSING_LIST_TYPE.equals(selectedTab)));
 
 		switch (selectedTab) {
-		case OVERALL_LIST_TYPE:
-			removeAllColumns();
-			leaderboardTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-			leaderboardTable.setColumnWidth(paidColumn, 30.0, Unit.PCT);
-			leaderboardTable.setColumnWidth(freeColumn, 30.0, Unit.PCT);
-			leaderboardTable.setColumnWidth(grossingColumn, 30.0, Unit.PCT);
-			leaderboardTable.addColumn(rankColumn, rankHeader);
-			leaderboardTable.addColumn(paidColumn, paidHeaderAll);
-			leaderboardTable.addColumn(freeColumn, freeHeaderAll);
-			leaderboardTable.addColumn(grossingColumn, grossingHeaderAll);
-			leaderboardTable.setLoadingIndicator(loadingIndicatorAll);
-			stickyHeaderTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-			stickyHeaderTable.setColumnWidth(paidColumn, 30.0, Unit.PCT);
-			stickyHeaderTable.setColumnWidth(freeColumn, 30.0, Unit.PCT);
-			stickyHeaderTable.setColumnWidth(grossingColumn, 30.0, Unit.PCT);
-			stickyHeaderTable.addColumn(rankColumn, rankHeader);
-			stickyHeaderTable.addColumn(paidColumn, paidHeaderAll);
-			stickyHeaderTable.addColumn(freeColumn, freeHeaderAll);
-			stickyHeaderTable.addColumn(grossingColumn, grossingHeaderAll);
-			break;
-		case PAID_LIST_TYPE:
-			removeAllColumns();
-			leaderboardTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-			leaderboardTable.setColumnWidth(paidColumn, 42.0, Unit.PCT);
-			leaderboardTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
-			leaderboardTable.setColumnWidth(downloadsColumn, 19.0, Unit.PCT);
-			leaderboardTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
-			leaderboardTable.addColumn(rankColumn, rankHeader);
-			leaderboardTable.addColumn(paidColumn, paidHeader);
-			leaderboardTable.addColumn(priceColumn, priceHeader);
-			leaderboardTable.addColumn(downloadsColumn, downloadsHeader);
-			leaderboardTable.addColumn(iapColumn, iapHeader);
-			iapHeader.setHeaderStyleNames(style.columnHiddenMobile());
-			iapColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
-			leaderboardTable.addColumnStyleName(4, style.columnHiddenMobile());
-			leaderboardTable.setLoadingIndicator(loadingIndicatorPaidGrossingList);
-			stickyHeaderTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-			stickyHeaderTable.setColumnWidth(paidColumn, 42.0, Unit.PCT);
-			stickyHeaderTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
-			stickyHeaderTable.setColumnWidth(downloadsColumn, 19.0, Unit.PCT);
-			stickyHeaderTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
-			stickyHeaderTable.addColumn(rankColumn, rankHeader);
-			stickyHeaderTable.addColumn(paidColumn, paidHeader);
-			stickyHeaderTable.addColumn(priceColumn, priceHeader);
-			stickyHeaderTable.addColumn(downloadsColumn, "Downloads");
-			stickyHeaderTable.addColumn(iapColumn, iapHeader);
-			stickyHeaderTable.addColumnStyleName(4, style.columnHiddenMobile());
-			break;
-		case FREE_LIST_TYPE:
-			removeAllColumns();
-			leaderboardTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-			leaderboardTable.setColumnWidth(freeColumn, 42.0, Unit.PCT);
-			leaderboardTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
-			leaderboardTable.setColumnWidth(downloadsColumn, 19.0, Unit.PCT);
-			leaderboardTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
-			leaderboardTable.addColumn(rankColumn, rankHeader);
-			leaderboardTable.addColumn(freeColumn, freeHeader);
-			leaderboardTable.addColumn(priceColumn, priceHeader);
-			leaderboardTable.addColumn(downloadsColumn, downloadsHeader);
-			leaderboardTable.addColumn(iapColumn, iapHeader);
-			priceHeader.setHeaderStyleNames(style.columnHiddenMobile());
-			priceColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
-			leaderboardTable.addColumnStyleName(2, style.columnHiddenMobile());
-			leaderboardTable.setLoadingIndicator(loadingIndicatorFreeList);
-			stickyHeaderTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-			stickyHeaderTable.setColumnWidth(freeColumn, 42.0, Unit.PCT);
-			stickyHeaderTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
-			stickyHeaderTable.setColumnWidth(downloadsColumn, 19.0, Unit.PCT);
-			stickyHeaderTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
-			stickyHeaderTable.addColumn(rankColumn, rankHeader);
-			stickyHeaderTable.addColumn(freeColumn, freeHeader);
-			stickyHeaderTable.addColumn(priceColumn, priceHeader);
-			stickyHeaderTable.addColumn(downloadsColumn, "Downloads");
-			stickyHeaderTable.addColumn(iapColumn, iapHeader);
-			stickyHeaderTable.addColumnStyleName(2, style.columnHiddenMobile());
-			break;
-		case GROSSING_LIST_TYPE:
-			removeAllColumns();
-			leaderboardTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-			leaderboardTable.setColumnWidth(grossingColumn, 42.0, Unit.PCT);
-			leaderboardTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
-			leaderboardTable.setColumnWidth(revenueColumn, 19.0, Unit.PCT);
-			leaderboardTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
-			leaderboardTable.addColumn(rankColumn, rankHeader);
-			leaderboardTable.addColumn(grossingColumn, grossingHeader);
-			leaderboardTable.addColumn(priceColumn, priceHeader);
-			leaderboardTable.addColumn(revenueColumn, revenueHeader);
-			leaderboardTable.addColumn(iapColumn, iapHeader);
-			iapHeader.setHeaderStyleNames(style.columnHiddenMobile());
-			iapColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
-			leaderboardTable.addColumnStyleName(4, style.columnHiddenMobile());
-			leaderboardTable.setLoadingIndicator(loadingIndicatorPaidGrossingList);
-			stickyHeaderTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-			stickyHeaderTable.setColumnWidth(grossingColumn, 42.0, Unit.PCT);
-			stickyHeaderTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
-			stickyHeaderTable.setColumnWidth(revenueColumn, 19.0, Unit.PCT);
-			stickyHeaderTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
-			stickyHeaderTable.addColumn(rankColumn, rankHeader);
-			stickyHeaderTable.addColumn(grossingColumn, grossingHeader);
-			stickyHeaderTable.addColumn(priceColumn, priceHeader);
-			stickyHeaderTable.addColumn(revenueColumn, "Revenue");
-			stickyHeaderTable.addColumn(iapColumn, iapHeader);
-			stickyHeaderTable.addColumnStyleName(4, style.columnHiddenMobile());
-			break;
+			case OVERALL_LIST_TYPE:
+				removeAllColumns();
+				leaderboardTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+				leaderboardTable.setColumnWidth(paidColumn, 30.0, Unit.PCT);
+				leaderboardTable.setColumnWidth(freeColumn, 30.0, Unit.PCT);
+				leaderboardTable.setColumnWidth(grossingColumn, 30.0, Unit.PCT);
+				leaderboardTable.addColumn(rankColumn, rankHeader);
+				leaderboardTable.addColumn(paidColumn, paidHeaderAll);
+				leaderboardTable.addColumn(freeColumn, freeHeaderAll);
+				leaderboardTable.addColumn(grossingColumn, grossingHeaderAll);
+				leaderboardTable.setLoadingIndicator(loadingIndicatorAll);
+				stickyHeaderTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+				stickyHeaderTable.setColumnWidth(paidColumn, 30.0, Unit.PCT);
+				stickyHeaderTable.setColumnWidth(freeColumn, 30.0, Unit.PCT);
+				stickyHeaderTable.setColumnWidth(grossingColumn, 30.0, Unit.PCT);
+				stickyHeaderTable.addColumn(rankColumn, rankHeader);
+				stickyHeaderTable.addColumn(paidColumn, paidHeaderAll);
+				stickyHeaderTable.addColumn(freeColumn, freeHeaderAll);
+				stickyHeaderTable.addColumn(grossingColumn, grossingHeaderAll);
+				break;
+			case PAID_LIST_TYPE:
+				removeAllColumns();
+				leaderboardTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+				leaderboardTable.setColumnWidth(paidColumn, 42.0, Unit.PCT);
+				leaderboardTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
+				leaderboardTable.setColumnWidth(downloadsColumn, 19.0, Unit.PCT);
+				leaderboardTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
+				leaderboardTable.addColumn(rankColumn, rankHeader);
+				leaderboardTable.addColumn(paidColumn, paidHeader);
+				leaderboardTable.addColumn(priceColumn, priceHeader);
+				leaderboardTable.addColumn(downloadsColumn, downloadsHeader);
+				leaderboardTable.addColumn(iapColumn, iapHeader);
+				iapHeader.setHeaderStyleNames(style.columnHiddenMobile());
+				iapColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
+				leaderboardTable.addColumnStyleName(4, style.columnHiddenMobile());
+				leaderboardTable.setLoadingIndicator(loadingIndicatorPaidGrossingList);
+				stickyHeaderTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+				stickyHeaderTable.setColumnWidth(paidColumn, 42.0, Unit.PCT);
+				stickyHeaderTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
+				stickyHeaderTable.setColumnWidth(downloadsColumn, 19.0, Unit.PCT);
+				stickyHeaderTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
+				stickyHeaderTable.addColumn(rankColumn, rankHeader);
+				stickyHeaderTable.addColumn(paidColumn, paidHeader);
+				stickyHeaderTable.addColumn(priceColumn, priceHeader);
+				stickyHeaderTable.addColumn(downloadsColumn, "Downloads");
+				stickyHeaderTable.addColumn(iapColumn, iapHeader);
+				stickyHeaderTable.addColumnStyleName(4, style.columnHiddenMobile());
+				break;
+			case FREE_LIST_TYPE:
+				removeAllColumns();
+				leaderboardTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+				leaderboardTable.setColumnWidth(freeColumn, 42.0, Unit.PCT);
+				leaderboardTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
+				leaderboardTable.setColumnWidth(downloadsColumn, 19.0, Unit.PCT);
+				leaderboardTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
+				leaderboardTable.addColumn(rankColumn, rankHeader);
+				leaderboardTable.addColumn(freeColumn, freeHeader);
+				leaderboardTable.addColumn(priceColumn, priceHeader);
+				leaderboardTable.addColumn(downloadsColumn, downloadsHeader);
+				leaderboardTable.addColumn(iapColumn, iapHeader);
+				priceHeader.setHeaderStyleNames(style.columnHiddenMobile());
+				priceColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
+				leaderboardTable.addColumnStyleName(2, style.columnHiddenMobile());
+				leaderboardTable.setLoadingIndicator(loadingIndicatorFreeList);
+				stickyHeaderTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+				stickyHeaderTable.setColumnWidth(freeColumn, 42.0, Unit.PCT);
+				stickyHeaderTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
+				stickyHeaderTable.setColumnWidth(downloadsColumn, 19.0, Unit.PCT);
+				stickyHeaderTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
+				stickyHeaderTable.addColumn(rankColumn, rankHeader);
+				stickyHeaderTable.addColumn(freeColumn, freeHeader);
+				stickyHeaderTable.addColumn(priceColumn, priceHeader);
+				stickyHeaderTable.addColumn(downloadsColumn, "Downloads");
+				stickyHeaderTable.addColumn(iapColumn, iapHeader);
+				stickyHeaderTable.addColumnStyleName(2, style.columnHiddenMobile());
+				break;
+			case GROSSING_LIST_TYPE:
+				removeAllColumns();
+				leaderboardTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+				leaderboardTable.setColumnWidth(grossingColumn, 42.0, Unit.PCT);
+				leaderboardTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
+				leaderboardTable.setColumnWidth(revenueColumn, 19.0, Unit.PCT);
+				leaderboardTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
+				leaderboardTable.addColumn(rankColumn, rankHeader);
+				leaderboardTable.addColumn(grossingColumn, grossingHeader);
+				leaderboardTable.addColumn(priceColumn, priceHeader);
+				leaderboardTable.addColumn(revenueColumn, revenueHeader);
+				leaderboardTable.addColumn(iapColumn, iapHeader);
+				iapHeader.setHeaderStyleNames(style.columnHiddenMobile());
+				iapColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
+				leaderboardTable.addColumnStyleName(4, style.columnHiddenMobile());
+				leaderboardTable.setLoadingIndicator(loadingIndicatorPaidGrossingList);
+				stickyHeaderTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+				stickyHeaderTable.setColumnWidth(grossingColumn, 42.0, Unit.PCT);
+				stickyHeaderTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
+				stickyHeaderTable.setColumnWidth(revenueColumn, 19.0, Unit.PCT);
+				stickyHeaderTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
+				stickyHeaderTable.addColumn(rankColumn, rankHeader);
+				stickyHeaderTable.addColumn(grossingColumn, grossingHeader);
+				stickyHeaderTable.addColumn(priceColumn, priceHeader);
+				stickyHeaderTable.addColumn(revenueColumn, "Revenue");
+				stickyHeaderTable.addColumn(iapColumn, iapHeader);
+				stickyHeaderTable.addColumnStyleName(4, style.columnHiddenMobile());
+				break;
 		}
 
 		TooltipHelper.updateHelperTooltip();
@@ -855,33 +885,33 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			String listType;
 			if (filter.getStoreA3Code().equals("iph")) {
 				switch (selectedTab) {
-				case (PAID_LIST_TYPE):
-					listType = "toppaidapplications";
-					break;
-				case (FREE_LIST_TYPE):
-					listType = "topfreeapplications";
-					break;
-				case (GROSSING_LIST_TYPE):
-					listType = "topgrossingapplications";
-					break;
-				default:
-					listType = "topallapplications";
-					break;
+					case (PAID_LIST_TYPE):
+						listType = "toppaidapplications";
+						break;
+					case (FREE_LIST_TYPE):
+						listType = "topfreeapplications";
+						break;
+					case (GROSSING_LIST_TYPE):
+						listType = "topgrossingapplications";
+						break;
+					default:
+						listType = "topallapplications";
+						break;
 				}
 			} else {
 				switch (selectedTab) {
-				case (PAID_LIST_TYPE):
-					listType = "toppaidipadapplications";
-					break;
-				case (FREE_LIST_TYPE):
-					listType = "topfreeipadapplications";
-					break;
-				case (GROSSING_LIST_TYPE):
-					listType = "topgrossingipadapplications";
-					break;
-				default:
-					listType = "topallipadapplications";
-					break;
+					case (PAID_LIST_TYPE):
+						listType = "toppaidipadapplications";
+						break;
+					case (FREE_LIST_TYPE):
+						listType = "topfreeipadapplications";
+						break;
+					case (GROSSING_LIST_TYPE):
+						listType = "topgrossingipadapplications";
+						break;
+					default:
+						listType = "topallipadapplications";
+						break;
 				}
 			}
 			String country = filter.getCountryA2Code();
@@ -977,7 +1007,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
 	 * io.reflection.app.client.controller.NavigationController.Stack)
 	 */
@@ -1009,7 +1039,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 				resetFilters.setEnabled(!FilterController.get().getFilter().getCountryA2Code().equals("gb")
 						|| !FilterController.get().getFilter().getStoreA3Code().equals("iph")
 						|| !FilterController.get().getFilter().getCategoryId().toString().equals("15")
-						|| !CalendarUtil.isSameDate(FilterHelper.getDaysAgo(3), new Date(FilterController.get().getFilter().getEndTime().longValue())));
+						|| !CalendarUtil.isSameDate(FilterHelper.getDaysAgo(FilterHelper.DEFAULT_LEADERBOARD_LAG_DAYS), new Date(FilterController.get().getFilter().getEndTime().longValue())));
 			}
 
 			String currentFilter = FilterController.get().asRankFilterString();
@@ -1047,7 +1077,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
 	 */
 	@Override
@@ -1061,7 +1091,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.client.page.Page#onDetach()
 	 */
 	@Override
@@ -1077,7 +1107,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler#getAllTopItemsSuccess(io.reflection.app.api.core.shared.call.
 	 * GetAllTopItemsRequest , io.reflection.app.api.core.shared.call.GetAllTopItemsResponse)
 	 */
@@ -1112,14 +1142,14 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			isStatusError = true;
 			applyFilters.setEnabled(true);
 		}
-		
+
 		applyFilters.removeStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().isLoading());
 		TooltipHelper.updateHelperTooltip();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler#getAllTopItemsFailure(io.reflection.app.api.core.shared.call.
 	 * GetAllTopItemsRequest , java.lang.Throwable)
 	 */
@@ -1131,7 +1161,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		errorPanel.setVisible(true);
 		isStatusError = true;
 		applyFilters.setEnabled(true);
-		
+
 		applyFilters.removeStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().isLoading());
 	}
 }

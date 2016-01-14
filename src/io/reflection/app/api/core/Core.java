@@ -7,10 +7,31 @@
 //
 package io.reflection.app.api.core;
 
-import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPAD_IOS;
-import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS;
-import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_UNIVERSAL_IOS;
-import static io.reflection.app.shared.util.PagerHelper.updatePager;
+import static io.reflection.app.service.sale.ISaleService.*;
+import static io.reflection.app.shared.util.PagerHelper.*;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeComparator;
+import org.joda.time.DateTimeZone;
+import org.joda.time.Days;
+
+import com.willshex.gson.json.service.server.ActionHandler;
+import com.willshex.gson.json.service.server.InputValidationException;
+import com.willshex.gson.json.service.server.ServiceException;
+import com.willshex.gson.json.service.shared.StatusType;
+
 import io.reflection.app.accountdatacollectors.ITunesConnectDownloadHelper;
 import io.reflection.app.api.ValidationHelper;
 import io.reflection.app.api.core.shared.call.ChangePasswordRequest;
@@ -81,6 +102,7 @@ import io.reflection.app.api.exception.AuthenticationException;
 import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.datatypes.shared.Category;
@@ -124,28 +146,6 @@ import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
 import io.reflection.app.shared.util.PagerHelper;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeComparator;
-import org.joda.time.DateTimeZone;
-import org.joda.time.Days;
-
-import com.willshex.gson.json.service.server.ActionHandler;
-import com.willshex.gson.json.service.server.InputValidationException;
-import com.willshex.gson.json.service.server.ServiceException;
-import com.willshex.gson.json.service.shared.StatusType;
-
 public final class Core extends ActionHandler {
 	private static final Logger LOG = Logger.getLogger(Core.class.getName());
 
@@ -174,12 +174,14 @@ public final class Core extends ActionHandler {
 			try {
 				input.store = ValidationHelper.validateStore(input.store, "input");
 				isStore = true;
-			} catch (InputValidationException ex) {}
+			} catch (InputValidationException ex) {
+			}
 
 			try {
 				input.query = ValidationHelper.validateQuery(input.query, "input");
 				isQuery = true;
-			} catch (InputValidationException ex) {}
+			} catch (InputValidationException ex) {
+			}
 
 			List<Country> countries = null;
 
@@ -192,8 +194,9 @@ public final class Core extends ActionHandler {
 				} else {
 					countries = CountryServiceProvider.provide().searchCountries(input.query, input.pager);
 				}
-			} else throw new InputValidationException(ApiError.GetCountriesNeedsStoreOrQuery.getCode(),
-					ApiError.GetCountriesNeedsStoreOrQuery.getMessage("input"));
+			} else
+				throw new InputValidationException(ApiError.GetCountriesNeedsStoreOrQuery.getCode(),
+						ApiError.GetCountriesNeedsStoreOrQuery.getMessage("input"));
 
 			if (countries != null) {
 				output.countries = countries;
@@ -235,12 +238,14 @@ public final class Core extends ActionHandler {
 			try {
 				input.country = ValidationHelper.validateCountry(input.country, "input");
 				isCountry = true;
-			} catch (InputValidationException ex) {}
+			} catch (InputValidationException ex) {
+			}
 
 			try {
 				input.query = ValidationHelper.validateQuery(input.query, "input");
 				isQuery = true;
-			} catch (InputValidationException ex) {}
+			} catch (InputValidationException ex) {
+			}
 
 			List<Store> stores = null;
 
@@ -253,8 +258,9 @@ public final class Core extends ActionHandler {
 				} else {
 					stores = StoreServiceProvider.provide().searchStores(input.query, input.pager);
 				}
-			} else throw new InputValidationException(ApiError.GetStoresNeedsCountryOrQuery.getCode(),
-					ApiError.GetStoresNeedsCountryOrQuery.getMessage("input"));
+			} else
+				throw new InputValidationException(ApiError.GetStoresNeedsCountryOrQuery.getCode(),
+						ApiError.GetStoresNeedsCountryOrQuery.getMessage("input"));
 
 			if (stores != null) {
 				output.stores = stores;
@@ -394,7 +400,7 @@ public final class Core extends ActionHandler {
 			boolean isAdmin = false;
 			boolean isPremium = false;
 			boolean isStandardDeveloper = false;
-			boolean canSeePredictions = (DateTimeComparator.getDateOnlyInstance().compare(input.on, new DateTime().minusDays(3)) == 0);
+			boolean canSeePredictions = (DateTimeComparator.getDateOnlyInstance().compare(input.on, new DateTime().minusDays(FilterHelper.DEFAULT_LEADERBOARD_LAG_DAYS)) == 0);
 			boolean isLoggedIn = false;
 
 			if (input.session != null) {
@@ -797,7 +803,8 @@ public final class Core extends ActionHandler {
 
 					if (output.session != null) {
 						output.session.user = user;
-					} else throw new Exception("Unexpected blank session after creating user session.");
+					} else
+						throw new Exception("Unexpected blank session after creating user session.");
 				} else {
 					output.session = SessionServiceProvider.provide().extendSession(output.session, ISessionService.SESSION_SHORT_DURATION);
 					output.session.user = user;
@@ -953,10 +960,8 @@ public final class Core extends ActionHandler {
 				AppleReporterHelper.getVendors(input.linkedAccount.username, input.linkedAccount.password);
 			} catch (InputValidationException e) {
 
-				if (e.getCode() != 214 && e.getCode() != 215 && e.getCode() != 216) { // invalid credentials
-					throw new InputValidationException(ApiError.InvalidDataAccountCredentials.getCode(),
-							ApiError.InvalidDataAccountCredentials.getMessage(input.linkedAccount.username));
-				}
+				if (e.getCode() != 214 && e.getCode() != 215 && e.getCode() != 216) throw new InputValidationException(ApiError.InvalidDataAccountCredentials.getCode(),
+						ApiError.InvalidDataAccountCredentials.getMessage(input.linkedAccount.username));
 			}
 
 			// TODO IF THE APPLE ID CAN BE UPDATED, CHECK THE VENDOR DUPLICATED AS IT HAPPEN ON LINKING A NEW ACCOUNT
@@ -1025,7 +1030,8 @@ public final class Core extends ActionHandler {
 					UserServiceProvider.provide().revokePermission(input.session.user, hlaPermission);
 				}
 
-			} else throw new InputValidationException(ApiError.DataAccountUserMissmatch.getCode(), ApiError.DataAccountUserMissmatch.getMessage());
+			} else
+				throw new InputValidationException(ApiError.DataAccountUserMissmatch.getCode(), ApiError.DataAccountUserMissmatch.getMessage());
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -1303,12 +1309,10 @@ public final class Core extends ActionHandler {
 
 					if (e.getCode() == 214 || e.getCode() == 215 || e.getCode() == 216) { // Required/wrong account number (but valid credentials)
 						accountNumberRequired = true;
-					} else if (e.getCode() == 108) { // Invalid Apple credentials
-						throw new InputValidationException(ApiError.InvalidDataAccountCredentials.getCode(),
-								ApiError.InvalidDataAccountCredentials.getMessage(input.username));
-					} else { // Generic error
+					} else if (e.getCode() == 108) throw new InputValidationException(ApiError.InvalidDataAccountCredentials.getCode(),
+							ApiError.InvalidDataAccountCredentials.getMessage(input.username));
+					else
 						throw e;
-					}
 				}
 
 				if (accountNumberRequired) {
@@ -1392,9 +1396,8 @@ public final class Core extends ActionHandler {
 					notification.type = NotificationTypeType.NotificationTypeTypeInternal;
 					NotificationServiceProvider.provide().addNotification(notification);
 				}
-			} else {
+			} else
 				throw new Exception();
-			}
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {

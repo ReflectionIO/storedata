@@ -7,6 +7,15 @@
 //
 package io.reflection.app.client.helper;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import com.google.gson.JsonObject;
+import com.google.gwt.user.datepicker.client.CalendarUtil;
+import com.google.gwt.user.datepicker.client.DatePicker;
+import com.willshex.gson.json.shared.Convert;
+
 import io.reflection.app.client.component.DateSelector.PresetDateRange;
 import io.reflection.app.client.component.Selector;
 import io.reflection.app.client.controller.CountryController;
@@ -17,23 +26,15 @@ import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.Forum;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import com.google.gson.JsonObject;
-import com.google.gwt.user.datepicker.client.CalendarUtil;
-import com.google.gwt.user.datepicker.client.DatePicker;
-import com.willshex.gson.json.shared.Convert;
-
 /**
  * @author billy1380
- * 
+ *
  */
 public class FilterHelper {
+	public static final int								DEFAULT_LEADERBOARD_LAG_DAYS	= 9;
 
-	private static List<PresetDateRange> defaultPreset = null;
-	private static List<PresetDateRange> adminPreset = null;
+	private static List<PresetDateRange>	defaultPreset									= null;
+	private static List<PresetDateRange>	adminPreset										= null;
 
 	public static Date getToday() {
 		return new Date();
@@ -85,11 +86,11 @@ public class FilterHelper {
 
 	/**
 	 * Add list of stores to FormFieldSelect
-	 * 
+	 *
 	 * @param list
-	 *            , FormFieldSelect
+	 *          , FormFieldSelect
 	 * @param isAdmin
-	 *            , if false add only iPhone store
+	 *          , if false add only iPhone store
 	 */
 	public static void addStores(Selector list, boolean isAdmin) {
 		list.clear();
@@ -116,11 +117,11 @@ public class FilterHelper {
 
 	/**
 	 * Add list of countries to FormFieldSelect
-	 * 
+	 *
 	 * @param list
-	 *            , FormFieldSelect
+	 *          , FormFieldSelect
 	 * @param isAdmin
-	 *            , if false add only USA
+	 *          , if false add only USA
 	 */
 	public static void addCountries(Selector list, boolean isAdmin) {
 		list.clear();
@@ -146,11 +147,11 @@ public class FilterHelper {
 
 	/**
 	 * Add list of categories to FormFieldSelect
-	 * 
+	 *
 	 * @param list
-	 *            , FormFieldSelect
+	 *          , FormFieldSelect
 	 * @param isAdmin
-	 *            , if false add only All categories
+	 *          , if false add only All categories
 	 */
 	public static void addCategories(Selector list, boolean isAdmin) {
 		list.clear();
@@ -242,7 +243,7 @@ public class FilterHelper {
 
 	/**
 	 * Disable dates between startDate and endDate
-	 * 
+	 *
 	 * @param datePicker
 	 * @param startDate
 	 * @param endDate
@@ -289,7 +290,7 @@ public class FilterHelper {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param datePicker
 	 */
 	public static void disableFutureDates(DatePicker datePicker) {
@@ -359,7 +360,7 @@ public class FilterHelper {
 
 				@Override
 				public DateRange getDateRange() {
-					return FilterHelper.createRange(FilterHelper.getDaysAgo(9), FilterHelper.getDaysAgo(3));
+					return FilterHelper.createRange(FilterHelper.getDaysAgo(9), FilterHelper.getDaysAgo(DEFAULT_LEADERBOARD_LAG_DAYS));
 				}
 			});
 
@@ -372,7 +373,7 @@ public class FilterHelper {
 
 				@Override
 				public DateRange getDateRange() {
-					return FilterHelper.createRange(FilterHelper.getDaysAgo(16), FilterHelper.getDaysAgo(3));
+					return FilterHelper.createRange(FilterHelper.getDaysAgo(16), FilterHelper.getDaysAgo(DEFAULT_LEADERBOARD_LAG_DAYS));
 				}
 			});
 
@@ -385,7 +386,7 @@ public class FilterHelper {
 
 				@Override
 				public DateRange getDateRange() {
-					return FilterHelper.createRange(FilterHelper.getDaysAgo(32), FilterHelper.getDaysAgo(3));
+					return FilterHelper.createRange(FilterHelper.getDaysAgo(32), FilterHelper.getDaysAgo(DEFAULT_LEADERBOARD_LAG_DAYS));
 				}
 			});
 
@@ -398,7 +399,7 @@ public class FilterHelper {
 
 				@Override
 				public DateRange getDateRange() {
-					return FilterHelper.createRange(FilterHelper.getDaysAgo(62), FilterHelper.getDaysAgo(3));
+					return FilterHelper.createRange(FilterHelper.getDaysAgo(62), FilterHelper.getDaysAgo(DEFAULT_LEADERBOARD_LAG_DAYS));
 				}
 			});
 
@@ -413,7 +414,7 @@ public class FilterHelper {
 				public DateRange getDateRange() {
 					Date d = FilterHelper.getMonthsAgo(3);
 					// CalendarUtil.addDaysToDate(d, 1);
-					return FilterHelper.createRange(d, FilterHelper.getDaysAgo(3));
+					return FilterHelper.createRange(d, FilterHelper.getDaysAgo(DEFAULT_LEADERBOARD_LAG_DAYS));
 				}
 			});
 		}
@@ -486,7 +487,7 @@ public class FilterHelper {
 
 	/**
 	 * Use CalendarUtils instead
-	 * 
+	 *
 	 * @param value
 	 * @param date
 	 * @return

@@ -41,6 +41,11 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	</servlet>
 
 	<servlet>
+		<servlet-name>QueueHelper</servlet-name>
+		<servlet-class>io.reflection.app.QueueHelperServlet</servlet-class>
+	</servlet>
+
+	<servlet>
 		<servlet-name>Dev Helper</servlet-name>
 		<servlet-class>io.reflection.app.DevHelperServlet</servlet-class>
 	</servlet>
@@ -136,6 +141,10 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	<servlet-mapping>
 		<servlet-name>Dev_Utility</servlet-name>
 		<url-pattern>/dev/devutil</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>QueueHelper</servlet-name>
+		<url-pattern>/queuehelper</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>Proxy_Servlet</servlet-name>
