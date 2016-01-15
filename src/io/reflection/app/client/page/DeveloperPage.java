@@ -29,7 +29,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 
 import io.reflection.app.client.DefaultEventBus;
-import io.reflection.app.client.cell.MiniAppCell;
+import io.reflection.app.client.cell.MiniDeveloperAppCell;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.ServiceConstants;
@@ -146,7 +146,7 @@ public class DeveloperPage extends Page implements NavigationEventHandler {
 
 		final SafeHtml loaderInline = AnimationHelper.getLoaderInlineSafeHTML();
 
-		columnAppDetails = new Column<ExternalApp, Item>(new MiniAppCell()) {
+		columnAppDetails = new Column<ExternalApp, Item>(new MiniDeveloperAppCell()) {
 			@Override
 			public Item getValue(ExternalApp object) {
 				return object.item;
@@ -245,9 +245,9 @@ public class DeveloperPage extends Page implements NavigationEventHandler {
 		developerAppsTable.setColumnWidth(columnReleaseDate, 15.0, Unit.PCT);
 		developerAppsTable.setColumnWidth(columnCurrentVersionReleaseDate, 15.0, Unit.PCT);
 		developerAppsTable.setColumnWidth(columnPrice, 10.0, Unit.PCT);
-		developerAppsTable.setColumnWidth(columnDownloads, 10.0, Unit.PCT);
-		developerAppsTable.setColumnWidth(columnRevenue, 10.0, Unit.PCT);
-		developerAppsTable.setColumnWidth(columnIap, 10.0, Unit.PCT);
+		developerAppsTable.setColumnWidth(columnDownloads, 12.0, Unit.PCT);
+		developerAppsTable.setColumnWidth(columnRevenue, 12.0, Unit.PCT);
+		developerAppsTable.setColumnWidth(columnIap, 6.0, Unit.PCT);
 	}
 
 	private void populateDeveloperAppsTable(JsonArray jarray) {
@@ -289,6 +289,9 @@ public class DeveloperPage extends Page implements NavigationEventHandler {
 			if (returnedDataItem.get("currentVersionReleaseDate") != null) {
 				appCurrentVersionReleaseDate = FormattingHelper
 						.convertITunesDateToDefaultFormat(returnedDataItem.get("currentVersionReleaseDate").getAsString());
+			}
+			if (returnedDataItem.get("averageUserRating") != null) {
+				appItem.rating = returnedDataItem.get("averageUserRating").getAsFloat();
 			}
 
 			developerApps.add(new ExternalApp(appItem, appReleaseDate, appCurrentVersionReleaseDate, "-", appPrice, "-", "-"));

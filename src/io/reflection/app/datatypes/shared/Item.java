@@ -1,4 +1,4 @@
-//  
+//
 //  Item.java
 //  storedata
 //
@@ -35,37 +35,38 @@ public class Item extends DataType {
 	public String mediumImage;
 	public String largeImage;
 	public String properties;
+	public Float rating = Float.valueOf(0);
 
 	@Override
 	public JsonObject toJson() {
-		JsonObject object = super.toJson();
-		JsonElement jsonExternalId = externalId == null ? JsonNull.INSTANCE : new JsonPrimitive(externalId);
+		final JsonObject object = super.toJson();
+		final JsonElement jsonExternalId = externalId == null ? JsonNull.INSTANCE : new JsonPrimitive(externalId);
 		object.add("externalId", jsonExternalId);
-		JsonElement jsonInternalId = internalId == null ? JsonNull.INSTANCE : new JsonPrimitive(internalId);
+		final JsonElement jsonInternalId = internalId == null ? JsonNull.INSTANCE : new JsonPrimitive(internalId);
 		object.add("internalId", jsonInternalId);
-		JsonElement jsonName = name == null ? JsonNull.INSTANCE : new JsonPrimitive(name);
+		final JsonElement jsonName = name == null ? JsonNull.INSTANCE : new JsonPrimitive(name);
 		object.add("name", jsonName);
-		JsonElement jsonCreatorName = creatorName == null ? JsonNull.INSTANCE : new JsonPrimitive(creatorName);
+		final JsonElement jsonCreatorName = creatorName == null ? JsonNull.INSTANCE : new JsonPrimitive(creatorName);
 		object.add("creatorName", jsonCreatorName);
-		JsonElement jsonPrice = price == null ? JsonNull.INSTANCE : new JsonPrimitive(price);
+		final JsonElement jsonPrice = price == null ? JsonNull.INSTANCE : new JsonPrimitive(price);
 		object.add("price", jsonPrice);
-		JsonElement jsonSource = source == null ? JsonNull.INSTANCE : new JsonPrimitive(source);
+		final JsonElement jsonSource = source == null ? JsonNull.INSTANCE : new JsonPrimitive(source);
 		object.add("source", jsonSource);
-		JsonElement jsonType = type == null ? JsonNull.INSTANCE : new JsonPrimitive(type);
+		final JsonElement jsonType = type == null ? JsonNull.INSTANCE : new JsonPrimitive(type);
 		object.add("type", jsonType);
-		JsonElement jsonAdded = added == null ? JsonNull.INSTANCE : new JsonPrimitive(added.getTime());
+		final JsonElement jsonAdded = added == null ? JsonNull.INSTANCE : new JsonPrimitive(added.getTime());
 		object.add("added", jsonAdded);
-		JsonElement jsonCountry = country == null ? JsonNull.INSTANCE : new JsonPrimitive(country);
+		final JsonElement jsonCountry = country == null ? JsonNull.INSTANCE : new JsonPrimitive(country);
 		object.add("country", jsonCountry);
-		JsonElement jsonCurrency = currency == null ? JsonNull.INSTANCE : new JsonPrimitive(currency);
+		final JsonElement jsonCurrency = currency == null ? JsonNull.INSTANCE : new JsonPrimitive(currency);
 		object.add("currency", jsonCurrency);
-		JsonElement jsonSmallImage = smallImage == null ? JsonNull.INSTANCE : new JsonPrimitive(smallImage);
+		final JsonElement jsonSmallImage = smallImage == null ? JsonNull.INSTANCE : new JsonPrimitive(smallImage);
 		object.add("smallImage", jsonSmallImage);
-		JsonElement jsonMediumImage = mediumImage == null ? JsonNull.INSTANCE : new JsonPrimitive(mediumImage);
+		final JsonElement jsonMediumImage = mediumImage == null ? JsonNull.INSTANCE : new JsonPrimitive(mediumImage);
 		object.add("mediumImage", jsonMediumImage);
-		JsonElement jsonLargeImage = largeImage == null ? JsonNull.INSTANCE : new JsonPrimitive(largeImage);
+		final JsonElement jsonLargeImage = largeImage == null ? JsonNull.INSTANCE : new JsonPrimitive(largeImage);
 		object.add("largeImage", jsonLargeImage);
-		JsonElement jsonProperties = properties == null ? JsonNull.INSTANCE : new JsonPrimitive(properties);
+		final JsonElement jsonProperties = properties == null ? JsonNull.INSTANCE : new JsonPrimitive(properties);
 		object.add("properties", jsonProperties);
 		return object;
 	}
@@ -74,85 +75,85 @@ public class Item extends DataType {
 	public void fromJson(JsonObject jsonObject) {
 		super.fromJson(jsonObject);
 		if (jsonObject.has("externalId")) {
-			JsonElement jsonExternalId = jsonObject.get("externalId");
+			final JsonElement jsonExternalId = jsonObject.get("externalId");
 			if (jsonExternalId != null) {
 				externalId = jsonExternalId.getAsString();
 			}
 		}
 		if (jsonObject.has("internalId")) {
-			JsonElement jsonInternalId = jsonObject.get("internalId");
+			final JsonElement jsonInternalId = jsonObject.get("internalId");
 			if (jsonInternalId != null) {
 				internalId = jsonInternalId.getAsString();
 			}
 		}
 		if (jsonObject.has("name")) {
-			JsonElement jsonName = jsonObject.get("name");
+			final JsonElement jsonName = jsonObject.get("name");
 			if (jsonName != null) {
 				name = jsonName.getAsString();
 			}
 		}
 		if (jsonObject.has("creatorName")) {
-			JsonElement jsonCreatorName = jsonObject.get("creatorName");
+			final JsonElement jsonCreatorName = jsonObject.get("creatorName");
 			if (jsonCreatorName != null) {
 				creatorName = jsonCreatorName.getAsString();
 			}
 		}
 		if (jsonObject.has("price")) {
-			JsonElement jsonPrice = jsonObject.get("price");
+			final JsonElement jsonPrice = jsonObject.get("price");
 			if (jsonPrice != null) {
 				price = Float.valueOf(jsonPrice.getAsFloat());
 			}
 		}
 		if (jsonObject.has("source")) {
-			JsonElement jsonSource = jsonObject.get("source");
+			final JsonElement jsonSource = jsonObject.get("source");
 			if (jsonSource != null) {
 				source = jsonSource.getAsString();
 			}
 		}
 		if (jsonObject.has("type")) {
-			JsonElement jsonType = jsonObject.get("type");
+			final JsonElement jsonType = jsonObject.get("type");
 			if (jsonType != null) {
 				type = jsonType.getAsString();
 			}
 		}
 		if (jsonObject.has("added")) {
-			JsonElement jsonAdded = jsonObject.get("added");
+			final JsonElement jsonAdded = jsonObject.get("added");
 			if (jsonAdded != null) {
 				added = new Date(jsonAdded.getAsLong());
 			}
 		}
 		if (jsonObject.has("country")) {
-			JsonElement jsonCountry = jsonObject.get("country");
+			final JsonElement jsonCountry = jsonObject.get("country");
 			if (jsonCountry != null) {
 				country = jsonCountry.getAsString();
 			}
 		}
 		if (jsonObject.has("currency")) {
-			JsonElement jsonCurrency = jsonObject.get("currency");
+			final JsonElement jsonCurrency = jsonObject.get("currency");
 			if (jsonCurrency != null) {
 				currency = jsonCurrency.getAsString();
 			}
 		}
 		if (jsonObject.has("smallImage")) {
-			JsonElement jsonSmallImage = jsonObject.get("smallImage");
+			final JsonElement jsonSmallImage = jsonObject.get("smallImage");
 			if (jsonSmallImage != null) {
 				smallImage = jsonSmallImage.getAsString();
 			}
 		}
 		if (jsonObject.has("mediumImage")) {
-			JsonElement jsonMediumImage = jsonObject.get("mediumImage");
+			final JsonElement jsonMediumImage = jsonObject.get("mediumImage");
 			if (jsonMediumImage != null) {
 				mediumImage = jsonMediumImage.getAsString();
 			}
 		}
 		if (jsonObject.has("largeImage")) {
-			JsonElement jsonLargeImage = jsonObject.get("largeImage");
+			final JsonElement jsonLargeImage = jsonObject.get("largeImage");
 			if (jsonLargeImage != null) {
 				largeImage = jsonLargeImage.getAsString();
 			}
 		}
 		if (jsonObject.has("properties")) {
-			JsonElement jsonProperties = jsonObject.get("properties");
+			final JsonElement jsonProperties = jsonObject.get("properties");
 			if (jsonProperties != null) {
 				properties = jsonProperties.getAsString();
 			}
@@ -226,6 +227,11 @@ public class Item extends DataType {
 
 	public Item properties(String properties) {
 		this.properties = properties;
+		return this;
+	}
+
+	public Item rating(Float rating) {
+		this.rating = rating;
 		return this;
 	}
 }
