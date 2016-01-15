@@ -16,6 +16,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -73,6 +74,7 @@ public class DeveloperPage extends Page {
 
 	@UiField(provided = true) CellTable<ExternalApp> developerAppsTable = new CellTable<ExternalApp>(ServiceConstants.STEP_VALUE,
 			BootstrapGwtCellTable.INSTANCE);
+	@UiField HeadingElement pageTitleDeveloperName;
 
 	private final SafeHtmlHeader appDetailsHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("App Details " + AnimationHelper.getSorterSvg()));
 	private final SafeHtmlHeader priceHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Price " + AnimationHelper.getSorterSvg()));
@@ -168,7 +170,11 @@ public class DeveloperPage extends Page {
 
 	private void populateDeveloperAppsTable(JsonArray jarray) {
 
-		// Window.alert(String.valueOf(jarray.size()));
+		final String developerNameFromFirstResult = jarray.get(0).getAsJsonObject().get("artistName").getAsString();
+		if (developerNameFromFirstResult != null) {
+			pageTitleDeveloperName.setInnerText(developerNameFromFirstResult);
+		}
+
 		for (final JsonElement jsonElement : jarray) {
 			final JsonObject returnedDataItem = jsonElement.getAsJsonObject();
 			final Item appItem = new Item();
