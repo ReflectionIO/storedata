@@ -24,6 +24,7 @@ import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -31,6 +32,11 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+
+import io.reflection.app.client.controller.FilterController;
+import io.reflection.app.client.controller.NavigationController;
+import io.reflection.app.client.page.MyAppsPage;
+import io.reflection.app.client.page.PageType;
 
 /**
  * @author Stefano Capuzzi
@@ -120,6 +126,7 @@ public class PanelRightSearch extends Composite {
 
 			final JsonObject dataItem = jarray.get(a).getAsJsonObject();
 			final String trackName = dataItem.get("trackName").getAsString();
+			final String trackId = dataItem.get("trackId").getAsString();
 
 			if (trackName != null && outputCounter <= 10) {
 				// check that the results from iTunes API are relevant for the App Name
@@ -138,7 +145,11 @@ public class PanelRightSearch extends Composite {
 				if (isValidAppNameResult) {
 					final LIElement listItem = Document.get().createLIElement();
 					final AnchorElement linkElement = Document.get().createAnchorElement();
-					linkElement.setAttribute("href", "#!appdetails/556164350/leaderboard/");
+					final SafeUri linkToApp = PageType.ItemPageType.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE, trackId,
+							FilterController.DOWNLOADS_CHART_TYPE, MyAppsPage.COMING_FROM_PARAMETER, FilterController.get().getFilter().asItemFilterString());
+					linkElement.setHref(linkToApp);
+
+					linkElement.setAttribute("onClick", "closeRightPanelSearch()");
 
 					final String imageName = dataItem.get("artworkUrl60").getAsString();
 					if (imageName != null) {
@@ -181,7 +192,8 @@ public class PanelRightSearch extends Composite {
 						// output result in the developer list
 						final LIElement listItem = Document.get().createLIElement();
 						final AnchorElement linkElement = Document.get().createAnchorElement();
-						linkElement.setAttribute("href", "#!appdetails/556164350/leaderboard/");
+						linkElement.setAttribute("href", "#!developer/" + artistName);
+						linkElement.setAttribute("onClick", "closeRightPanelSearch()");
 
 						final SpanElement spanElement = Document.get().createSpanElement();
 						spanElement.setInnerText(artistName);
@@ -257,7 +269,15 @@ public class PanelRightSearch extends Composite {
 		}
 	}
 
+	public static void closeRightPanelSearch() {
+		NavigationController.get().getHeader().closePanelRightSearch();
+	}
+
 	public static native void exportAppSearchResponseHandler() /*-{
 		$wnd.processAppSearchResponse = $entry(@io.reflection.app.client.part.navigation.PanelRightSearch::processAppSearchResponse(Ljava/lang/String;));
+	}-*/;
+
+	public static native void exportCloseRightPanelSearch() /*-{
+		$wnd.closeRightPanelSearch = $entry(@io.reflection.app.client.part.navigation.PanelRightSearch::closeRightPanelSearch());
 	}-*/;
 }

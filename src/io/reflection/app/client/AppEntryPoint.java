@@ -43,6 +43,7 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 		UserAgentHelper.detectBrowser();
 
 		PanelRightSearch.exportAppSearchResponseHandler();
+		PanelRightSearch.exportCloseRightPanelSearch();
 		DeveloperPage.exportDeveloperAppsSearchResponseHandler();
 
 		// this registers the newly created singleton, so that
