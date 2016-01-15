@@ -105,7 +105,6 @@ public class AddLinkedAccountPopup extends Composite implements LinkAccountEvent
 	}
 
 	public void setStatusError() {
-		iosMacAddForm.resetForm();
 		iosMacAddForm.setStatusError();
 	}
 
