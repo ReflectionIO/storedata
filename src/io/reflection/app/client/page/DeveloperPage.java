@@ -8,6 +8,9 @@
 package io.reflection.app.client.page;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import com.google.gson.JsonArray;
@@ -18,24 +21,26 @@ import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.cellview.client.ColumnSortEvent;
+import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.SafeHtmlHeader;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.MiniDeveloperAppCell;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
-import io.reflection.app.client.controller.ServiceConstants;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.AnimationHelper;
 import io.reflection.app.client.helper.FormattingHelper;
+import io.reflection.app.client.helper.TooltipHelper;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.client.res.Styles.ReflectionMainStyles;
@@ -53,19 +58,21 @@ public class DeveloperPage extends Page implements NavigationEventHandler {
 
 		public Item item;
 
-		public String releaseDate;
-		public String currentVersionReleaseDate;
+		public String formattedReleaseDate;
+		public Date currentVersionReleaseDate;
+		public String formattedCurrentVersionReleaseDate;
 		public String overallDownloads;
 		public String overallPrice;
 		public String overallRevenue;
 		public String iaps;
 
-		public ExternalApp(Item item, String releaseDate, String currentVersionReleaseDate, String overallDownloads, String overallPrice, String overallRevenue,
-				String iaps) {
+		public ExternalApp(Item item, String formattedReleaseDate, Date currentVersionReleaseDate, String formattedCurrentVersionReleaseDate,
+				String overallDownloads, String overallPrice, String overallRevenue, String iaps) {
 
 			this.item = item;
-			this.releaseDate = releaseDate; // try using item.added when the conversion to Date type is done
+			this.formattedReleaseDate = formattedReleaseDate;
 			this.currentVersionReleaseDate = currentVersionReleaseDate;
+			this.formattedCurrentVersionReleaseDate = formattedCurrentVersionReleaseDate;
 			this.overallDownloads = overallDownloads;
 			this.overallPrice = overallPrice;
 			this.overallRevenue = overallRevenue;
@@ -82,17 +89,17 @@ public class DeveloperPage extends Page implements NavigationEventHandler {
 
 	interface DeveloperPageUiBinder extends UiBinder<Widget, DeveloperPage> {}
 
-	@UiField(provided = true) CellTable<ExternalApp> developerAppsTable = new CellTable<ExternalApp>(ServiceConstants.STEP_VALUE,
-			BootstrapGwtCellTable.INSTANCE);
+	@UiField(provided = true) CellTable<ExternalApp> developerAppsTable = new CellTable<ExternalApp>(200, BootstrapGwtCellTable.INSTANCE);
 	@UiField HeadingElement pageTitleDeveloperName;
+	@UiField HeadingElement numberOfApps;
 
 	private final SafeHtmlHeader appDetailsHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("App Details " + AnimationHelper.getSorterSvg()));
 	private final SafeHtmlHeader releaseDateHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Released " + AnimationHelper.getSorterSvg()));
 	private final SafeHtmlHeader currentVersionReleaseDateHeader = new SafeHtmlHeader(
 			SafeHtmlUtils.fromTrustedString("Last Updated " + AnimationHelper.getSorterSvg()));
 	private final SafeHtmlHeader priceHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Price " + AnimationHelper.getSorterSvg()));
-	private final SafeHtmlHeader downloadsHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Downloads " + AnimationHelper.getSorterSvg()));
-	private final SafeHtmlHeader revenueHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Revenue " + AnimationHelper.getSorterSvg()));
+	private final SafeHtmlHeader downloadsHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Downloads"));
+	private final SafeHtmlHeader revenueHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Revenue"));
 	private final SafeHtmlHeader iapHeader = new SafeHtmlHeader(
 			SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"In App Purchases\">IAP</span>"));
 
@@ -125,6 +132,7 @@ public class DeveloperPage extends Page implements NavigationEventHandler {
 		super.onDetach();
 		// remove content
 		pageTitleDeveloperName.setInnerText("");
+		numberOfApps.setInnerText("");
 	}
 
 	@Override
@@ -142,10 +150,121 @@ public class DeveloperPage extends Page implements NavigationEventHandler {
 		// REVENUE_CHART_TYPE, comingPage, previousFilter));
 	}
 
+	/**
+	 * @param sortAscending
+	 */
+	public void sortByAppDetails(final boolean sortAscending) {
+		Collections.sort(developerApps, new Comparator<ExternalApp>() {
+
+			@Override
+			public int compare(ExternalApp o1, ExternalApp o2) {
+				return (sortAscending ? o1.item.name.compareTo(o2.item.name) : o2.item.name.compareTo(o1.item.name));
+			}
+		});
+	}
+
+	/**
+	 * @param sortAscending
+	 */
+	public void sortByPrice(final boolean sortAscending) {
+		Collections.sort(developerApps, new Comparator<ExternalApp>() {
+
+			@Override
+			public int compare(ExternalApp o1, ExternalApp o2) {
+				int res = 0;
+				if (!o1.overallPrice.equals(o2.overallPrice)) {
+					if (o1.overallPrice.equals("-")) {
+						res = 1;
+					} else if (o2.overallPrice.equals("-")) {
+						res = -1;
+					} else if (o1.overallPrice.equalsIgnoreCase("free")) {
+						res = 1;
+					} else if (o2.overallPrice.equalsIgnoreCase("free")) {
+						res = -1;
+					} else {
+						res = (Float.parseFloat(o1.overallPrice.replaceAll(",|\\.|\\$|€|¥|£", "").trim()) < Float
+								.parseFloat(o2.overallPrice.replaceAll(",|\\.|\\$|€|¥|£", "").trim()) ? 1 : -1);
+					}
+				}
+				return (sortAscending ? res : -res);
+			}
+		});
+	}
+
+	/**
+	 * @param sortAscending
+	 */
+	public void sortByReleaseDate(final boolean sortAscending) {
+		Collections.sort(developerApps, new Comparator<ExternalApp>() {
+
+			@Override
+			public int compare(ExternalApp o1, ExternalApp o2) {
+				return (sortAscending ? o1.item.added.compareTo(o2.item.added) : o2.item.added.compareTo(o1.item.added));
+			}
+		});
+	}
+
+	/**
+	 * @param sortAscending
+	 */
+	public void sortByVersionReleaseDate(final boolean sortAscending) {
+		Collections.sort(developerApps, new Comparator<ExternalApp>() {
+
+			@Override
+			public int compare(ExternalApp o1, ExternalApp o2) {
+				return (sortAscending ? o1.currentVersionReleaseDate.compareTo(o2.currentVersionReleaseDate)
+						: o2.currentVersionReleaseDate.compareTo(o1.currentVersionReleaseDate));
+			}
+		});
+	}
+
 	private void createColumns() {
+
+		final ListHandler<ExternalApp> columnSortHandler = new ListHandler<ExternalApp>(developerApps) {
+			/*
+			 * (non-Javadoc)
+			 *
+			 * @see com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler#onColumnSort(com.google.gwt.user.cellview.client.ColumnSortEvent)
+			 */
+			@Override
+			public void onColumnSort(ColumnSortEvent event) {
+				super.onColumnSort(event);
+				if (!columnAppDetails.isDefaultSortAscending()) {
+					columnAppDetails.setDefaultSortAscending(true);
+				}
+
+				appDetailsHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.mhxte6cIF());
+				priceHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.columnHiddenMobile());
+				releaseDateHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.columnHiddenMobile());
+				currentVersionReleaseDateHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.columnHiddenMobile());
+
+				if (event.getColumn() == columnAppDetails) {
+					sortByAppDetails(event.isSortAscending());
+					appDetailsHeader.setHeaderStyleNames(
+							style.canBeSorted() + " " + (event.isSortAscending() ? style.isAscending() : style.isDescending()) + " " + style.mhxte6cIF());
+				} else if (event.getColumn() == columnPrice) {
+					sortByPrice(event.isSortAscending());
+					priceHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.columnHiddenMobile() + " "
+							+ (event.isSortAscending() ? style.isAscending() : style.isDescending()));
+				} else if (event.getColumn() == columnReleaseDate) {
+					sortByReleaseDate(event.isSortAscending());
+					releaseDateHeader.setHeaderStyleNames(style.canBeSorted() + " " + (event.isSortAscending() ? style.isAscending() : style.isDescending()));
+				} else if (event.getColumn() == columnCurrentVersionReleaseDate) {
+					sortByVersionReleaseDate(event.isSortAscending());
+					currentVersionReleaseDateHeader
+							.setHeaderStyleNames(style.canBeSorted() + " " + (event.isSortAscending() ? style.isAscending() : style.isDescending()));
+				}
+				developerAppsTable.setRowData(0, developerApps);
+
+				TooltipHelper.updateHelperTooltip();
+			}
+		};
+
+		developerAppsTable.addColumnSortHandler(columnSortHandler);
 
 		final SafeHtml loaderInline = AnimationHelper.getLoaderInlineSafeHTML();
 
+		// App Details Column
 		columnAppDetails = new Column<ExternalApp, Item>(new MiniDeveloperAppCell()) {
 			@Override
 			public Item getValue(ExternalApp object) {
@@ -156,34 +275,35 @@ public class DeveloperPage extends Page implements NavigationEventHandler {
 		columnAppDetails.setCellStyleNames(style.mhxte6ciA() + " " + style.mhxte6cID());
 		appDetailsHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.mhxte6cIF());
 		developerAppsTable.addColumn(columnAppDetails, appDetailsHeader);
-		// columnAppDetails.setSortable(true);
+		columnAppDetails.setSortable(true);
 
-		// 2014-04-03T07:00:00Z
+		// Release Date Column
 		columnReleaseDate = new Column<ExternalApp, SafeHtml>(new SafeHtmlCell()) {
 			@Override
 			public SafeHtml getValue(ExternalApp object) {
-				if (object.releaseDate != null) return SafeHtmlUtils.fromSafeConstant(object.releaseDate);
+				if (object.formattedReleaseDate != null) return SafeHtmlUtils.fromSafeConstant(object.formattedReleaseDate);
 				else return loaderInline;
 			}
 		};
-		// columnReleaseDate.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
-		// releaseDateHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.columnHiddenMobile());
+		columnReleaseDate.setCellStyleNames(style.mhxte6ciA());
+		releaseDateHeader.setHeaderStyleNames(style.canBeSorted());
 		developerAppsTable.addColumn(columnReleaseDate, releaseDateHeader);
-		// columnReleaseDate.setSortable(true);
+		columnReleaseDate.setSortable(true);
 
-		// 2014-04-03T07:00:00Z
+		// Current Version Release Date Column
 		columnCurrentVersionReleaseDate = new Column<ExternalApp, SafeHtml>(new SafeHtmlCell()) {
 			@Override
 			public SafeHtml getValue(ExternalApp object) {
-				if (object.currentVersionReleaseDate != null) return SafeHtmlUtils.fromSafeConstant(object.currentVersionReleaseDate);
+				if (object.formattedCurrentVersionReleaseDate != null) return SafeHtmlUtils.fromSafeConstant(object.formattedCurrentVersionReleaseDate);
 				else return loaderInline;
 			}
 		};
-		// columnCurrentVersionReleaseDate.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
-		// currentVersionReleaseDateHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.columnHiddenMobile());
+		columnCurrentVersionReleaseDate.setCellStyleNames(style.mhxte6ciA());
+		currentVersionReleaseDateHeader.setHeaderStyleNames(style.canBeSorted());
 		developerAppsTable.addColumn(columnCurrentVersionReleaseDate, currentVersionReleaseDateHeader);
-		// columnReleaseDate.setSortable(true);
+		columnCurrentVersionReleaseDate.setSortable(true);
 
+		// Price Column
 		columnPrice = new Column<ExternalApp, SafeHtml>(new SafeHtmlCell()) {
 			@Override
 			public SafeHtml getValue(ExternalApp object) {
@@ -191,11 +311,12 @@ public class DeveloperPage extends Page implements NavigationEventHandler {
 				else return loaderInline;
 			}
 		};
-		// columnPrice.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
-		// priceHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.columnHiddenMobile());
+		columnPrice.setCellStyleNames(style.mhxte6ciA());
+		priceHeader.setHeaderStyleNames(style.canBeSorted());
 		developerAppsTable.addColumn(columnPrice, priceHeader);
-		// columnPrice.setSortable(true);
+		columnPrice.setSortable(true);
 
+		// Downloads Column
 		columnDownloads = new Column<ExternalApp, SafeHtml>(new SafeHtmlCell()) {
 			@Override
 			public SafeHtml getValue(ExternalApp object) {
@@ -203,11 +324,11 @@ public class DeveloperPage extends Page implements NavigationEventHandler {
 						"<span class=\"js-tooltip js-tooltip--info tooltip--info js-tooltip--right js-tooltip--right--no-pointer-padding\" data-tooltip=\"Coming Soon\"></span>");
 			}
 		};
-		columnDownloads.setCellStyleNames(style.mhxte6ciA());
-		downloadsHeader.setHeaderStyleNames(style.canBeSorted());
+		columnDownloads.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
+		downloadsHeader.setHeaderStyleNames(style.columnHiddenMobile());
 		developerAppsTable.addColumn(columnDownloads, downloadsHeader);
-		// columnDownloads.setSortable(true);
 
+		// Revenue Column
 		columnRevenue = new Column<ExternalApp, SafeHtml>(new SafeHtmlCell()) {
 			@Override
 			public SafeHtml getValue(ExternalApp object) {
@@ -215,11 +336,11 @@ public class DeveloperPage extends Page implements NavigationEventHandler {
 						"<span class=\"js-tooltip js-tooltip--info tooltip--info js-tooltip--right js-tooltip--right--no-pointer-padding\" data-tooltip=\"Coming Soon\"></span>");
 			}
 		};
-		columnRevenue.setCellStyleNames(style.mhxte6ciA());
-		revenueHeader.setHeaderStyleNames(style.canBeSorted());
+		columnRevenue.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
+		revenueHeader.setHeaderStyleNames(style.columnHiddenMobile());
 		developerAppsTable.addColumn(columnRevenue, revenueHeader);
-		columnRevenue.setSortable(true);
 
+		// IAP Column
 		columnIap = new Column<ExternalApp, SafeHtml>(new SafeHtmlCell()) {
 
 			@Override
@@ -229,8 +350,8 @@ public class DeveloperPage extends Page implements NavigationEventHandler {
 			}
 
 		};
-		// columnIap.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
-		// iapHeader.setHeaderStyleNames(style.columnHiddenMobile());
+		columnIap.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
+		iapHeader.setHeaderStyleNames(style.columnHiddenMobile());
 		developerAppsTable.addColumn(columnIap, iapHeader);
 
 		// developerAppsTable.addColumnStyleName(0, style.appDetailsColumn());
@@ -239,7 +360,7 @@ public class DeveloperPage extends Page implements NavigationEventHandler {
 		// developerAppsTable.addColumnStyleName(3, style.revenueColumn());
 		// developerAppsTable.addColumnStyleName(4, style.iapColumn() + " " + style.columnHiddenMobile());
 
-		// Needs style fix for mobile
+		// Needs style fix for mobile with the above CSS class adding code
 		developerAppsTable.setWidth("100%", true);
 		developerAppsTable.setColumnWidth(columnAppDetails, 30.0, Unit.PCT);
 		developerAppsTable.setColumnWidth(columnReleaseDate, 15.0, Unit.PCT);
@@ -266,8 +387,9 @@ public class DeveloperPage extends Page implements NavigationEventHandler {
 			final JsonObject returnedDataItem = jsonElement.getAsJsonObject();
 			final Item appItem = new Item();
 			String appPrice = "";
-			String appReleaseDate = "";
-			String appCurrentVersionReleaseDate = "";
+			Date appCurrentVersionReleaseDate = new Date();
+			String formattedReleaseDate = "";
+			String appCurrentVersionReleaseDateFormatted = "";
 			if (returnedDataItem.get("artistName") != null) {
 				appItem.creatorName(returnedDataItem.get("artistName").getAsString());
 			}
@@ -283,23 +405,38 @@ public class DeveloperPage extends Page implements NavigationEventHandler {
 			if (returnedDataItem.get("formattedPrice") != null) {
 				appPrice = returnedDataItem.get("formattedPrice").getAsString();
 			}
-			if (returnedDataItem.get("releaseDate") != null) {
-				appReleaseDate = FormattingHelper.convertITunesDateToDefaultFormat(returnedDataItem.get("releaseDate").getAsString());
+			final JsonElement releaseDate = returnedDataItem.get("releaseDate");
+			if (releaseDate != null) {
+				try {
+					formattedReleaseDate = FormattingHelper.convertITunesDateToDefaultFormat(releaseDate.getAsString());
+					final Date parsedDate = DateTimeFormat.getFormat("yyyy-MM-ddTHH:mm:ssZ").parse(releaseDate.getAsString());
+					appItem.added = parsedDate;
+				} catch (final Exception e) {
+					e.printStackTrace();
+				}
 			}
-			if (returnedDataItem.get("currentVersionReleaseDate") != null) {
-				appCurrentVersionReleaseDate = FormattingHelper
-						.convertITunesDateToDefaultFormat(returnedDataItem.get("currentVersionReleaseDate").getAsString());
+			final JsonElement versionReleaseDate = returnedDataItem.get("currentVersionReleaseDate");
+			if (versionReleaseDate != null) {
+				try {
+					appCurrentVersionReleaseDateFormatted = FormattingHelper.convertITunesDateToDefaultFormat(versionReleaseDate.getAsString());
+					final Date parsedDate = DateTimeFormat.getFormat("yyyy-MM-ddTHH:mm:ssZ").parse(versionReleaseDate.getAsString());
+					appCurrentVersionReleaseDate = parsedDate;
+				} catch (final Exception e) {
+					e.printStackTrace();
+				}
 			}
 			if (returnedDataItem.get("averageUserRating") != null) {
 				appItem.rating = returnedDataItem.get("averageUserRating").getAsFloat();
 			}
 
-			developerApps.add(new ExternalApp(appItem, appReleaseDate, appCurrentVersionReleaseDate, "-", appPrice, "-", "-"));
+			developerApps.add(new ExternalApp(appItem, formattedReleaseDate, appCurrentVersionReleaseDate, appCurrentVersionReleaseDateFormatted, "-", appPrice,
+					"-", "-"));
 		}
 
 		appDetailsHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.isAscending() + " " + style.mhxte6cIF());
 		columnAppDetails.setDefaultSortAscending(false);
 
+		numberOfApps.setInnerText(String.valueOf(jarray.size()) + " Apps");
 		developerAppsTable.setRowData(0, developerApps);
 	}
 
@@ -315,7 +452,7 @@ public class DeveloperPage extends Page implements NavigationEventHandler {
 										"src",
 										"https://itunes.apple.com/search?term="
 												+ searchString
-												+ "&media=software&limit=17&callback=handleDeveloperAppsSearchFromHeader"));
+												+ "&media=software&limit=200&callback=handleDeveloperAppsSearchFromHeader"));
 	}-*/;
 
 	public static void processDeveloperAppsSearchResponse(String response) {
@@ -328,8 +465,7 @@ public class DeveloperPage extends Page implements NavigationEventHandler {
 				if (jarray != null && jarray.size() > 0) {
 					final JsonArray filteredArray = new JsonArray();
 					for (int i = 0; i < jarray.size(); i++) {
-						if (jarray.get(i).getAsJsonObject().get("artistName").toString().contains(INSTANCE.developerSearchString)) { // this needs more checking
-																																		// for nulls
+						if (jarray.get(i).getAsJsonObject().get("artistName").toString().contains(INSTANCE.developerSearchString)) {
 							filteredArray.add(jarray.get(i));
 						}
 					}
@@ -339,10 +475,6 @@ public class DeveloperPage extends Page implements NavigationEventHandler {
 					}
 				}
 			}
-		}
-
-		if (!isValidResult) {
-			Window.alert("No results");
 		}
 	}
 
