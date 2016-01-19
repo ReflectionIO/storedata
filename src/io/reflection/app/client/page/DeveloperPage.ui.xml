@@ -5,10 +5,10 @@
 	<ui:style>
 	
 	</ui:style>
-	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.pageMyApps}">
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.pageMyApps} {STYLES_INSTANCE.reflectionMainStyle.pageDeveloperApps}">
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneHalf}">
-			<h1 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree} {STYLES_INSTANCE.reflectionMainStyle.pageTitle}" ui:field="pageTitleDeveloperName"></h1>
-			<h2 ui:field="numberOfApps"></h2>
+			<h1 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree} {STYLES_INSTANCE.reflectionMainStyle.developerPageTitle}" ui:field="pageTitleDeveloperName"></h1>
+			<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour} {STYLES_INSTANCE.reflectionMainStyle.developerNumberOfApps}" ui:field="numberOfApps"></h2>
 		</div>
 		
 		<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.grid__row}">
@@ -19,5 +19,11 @@
 				</g:HTMLPanel>
 			</g:HTMLPanel>
 		</g:HTMLPanel>
+		
+		<div styleName="{STYLES_INSTANCE.reflectionMainStyle.grid__row}">
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneHalf}">
+				<g:Anchor ui:field="appStoreLink" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonLink}">View in App Store</g:Anchor>
+			</div>
+		</div>
 	</g:HTMLPanel>
 </ui:UiBinder>

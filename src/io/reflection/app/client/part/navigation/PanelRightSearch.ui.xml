@@ -12,7 +12,6 @@
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.formField}">
 					<g:TextBox ui:field="inputSearch"></g:TextBox>
 					<label for="search">Search</label>
-					<input type="submit" class="{STYLES_INSTANCE.reflectionMainStyle.refButton} {STYLES_INSTANCE.reflectionMainStyle.searchButtonMobile}" value="a" />
 					<img src="images/loadingSpinner.gif" class="{STYLES_INSTANCE.reflectionMainStyle.loadingSpinnerSearchApps}" ui:field="loadingSpinner" />
 				</div>
 			</form>

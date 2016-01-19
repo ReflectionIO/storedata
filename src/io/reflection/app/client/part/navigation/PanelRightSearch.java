@@ -169,6 +169,7 @@ public class PanelRightSearch extends Composite {
 			}
 
 			final String artistName = dataItem.get("artistName").getAsString();
+			final String artistId = dataItem.get("artistId").getAsString();
 			if (artistName != null && outputDevCounter <= 10) {
 				// check that the results from iTunes API are relevant for the App Name
 				final char[] charArray = searchValue.toCharArray();
@@ -186,13 +187,13 @@ public class PanelRightSearch extends Composite {
 				if (isValidDevNameResult) {
 
 					// add to found array if it doesn't already exist in found array
-					if (!validDeveloperResults.contains(artistName)) {
-						validDeveloperResults.add(artistName);
+					if (!validDeveloperResults.contains(artistId)) {
+						validDeveloperResults.add(artistId);
 
 						// output result in the developer list
 						final LIElement listItem = Document.get().createLIElement();
 						final AnchorElement linkElement = Document.get().createAnchorElement();
-						linkElement.setAttribute("href", "#!developer/" + artistName);
+						linkElement.setAttribute("href", "#!developer/" + artistId);
 						linkElement.setAttribute("onClick", "closeRightPanelSearch()");
 
 						final SpanElement spanElement = Document.get().createSpanElement();
@@ -245,9 +246,13 @@ public class PanelRightSearch extends Composite {
 								.attr("id", "ref-iTunesSearchApps")
 								.attr(
 										"src",
-										"https://itunes.apple.com/search?term="
+										"https://itunes.apple.com/gb/search?term="
 												+ searchString
 												+ "&media=software&limit=20&callback=handleAppSearchFromHeader"));
+
+		// we can be more specific with results
+		// search by app name = https://itunes.apple.com/search?term=candy&entity=software&attribute=allTrackTerm&limit=200
+		// search by developer = https://itunes.apple.com/search?term=dung%20nguyen&entity=allArtist&attribute=softwareDeveloper&limit=200
 	}-*/;
 
 	public static void processAppSearchResponse(String response) {

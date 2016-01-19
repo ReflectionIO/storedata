@@ -12,47 +12,6 @@ import static io.reflection.app.client.controller.FilterController.GROSSING_LIST
 import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
 import static io.reflection.app.client.controller.FilterController.PAID_LIST_TYPE;
 import static io.reflection.app.client.controller.FilterController.REVENUE_DAILY_DATA_TYPE;
-import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
-import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
-import io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler;
-import io.reflection.app.client.DefaultEventBus;
-import io.reflection.app.client.cell.AppDetailsAndPredictionCell;
-import io.reflection.app.client.cell.LeaderboardDownloadsCell;
-import io.reflection.app.client.cell.LeaderboardRevenueCell;
-import io.reflection.app.client.component.FormDateBox;
-import io.reflection.app.client.component.LoadingBar;
-import io.reflection.app.client.component.LoadingButton;
-import io.reflection.app.client.component.Selector;
-import io.reflection.app.client.component.ToggleRadioButton;
-import io.reflection.app.client.controller.FilterController;
-import io.reflection.app.client.controller.FilterController.Filter;
-import io.reflection.app.client.controller.ItemController;
-import io.reflection.app.client.controller.NavigationController;
-import io.reflection.app.client.controller.NavigationController.Stack;
-import io.reflection.app.client.controller.RankController;
-import io.reflection.app.client.controller.ServiceConstants;
-import io.reflection.app.client.controller.SessionController;
-import io.reflection.app.client.handler.NavigationEventHandler;
-import io.reflection.app.client.helper.AnimationHelper;
-import io.reflection.app.client.helper.ApiCallHelper;
-import io.reflection.app.client.helper.FilterHelper;
-import io.reflection.app.client.helper.FormHelper;
-import io.reflection.app.client.helper.FormattingHelper;
-import io.reflection.app.client.helper.ResponsiveDesignHelper;
-import io.reflection.app.client.helper.TooltipHelper;
-import io.reflection.app.client.mixpanel.MixpanelHelper;
-import io.reflection.app.client.part.BootstrapGwtCellTable;
-import io.reflection.app.client.part.ErrorPanel;
-import io.reflection.app.client.part.LoadingIndicator;
-import io.reflection.app.client.part.NoDataPanel;
-import io.reflection.app.client.part.datatypes.RanksGroup;
-import io.reflection.app.client.popup.AddLinkedAccountPopup;
-import io.reflection.app.client.popup.PremiumPopup;
-import io.reflection.app.client.popup.SignUpPopup;
-import io.reflection.app.client.res.Styles;
-import io.reflection.app.client.res.Styles.ReflectionMainStyles;
-import io.reflection.app.datatypes.shared.Rank;
-import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -104,6 +63,48 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
 import com.willshex.gson.json.service.shared.StatusType;
 
+import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
+import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
+import io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler;
+import io.reflection.app.client.DefaultEventBus;
+import io.reflection.app.client.cell.AppDetailsAndPredictionCell;
+import io.reflection.app.client.cell.LeaderboardDownloadsCell;
+import io.reflection.app.client.cell.LeaderboardRevenueCell;
+import io.reflection.app.client.component.FormDateBox;
+import io.reflection.app.client.component.LoadingBar;
+import io.reflection.app.client.component.LoadingButton;
+import io.reflection.app.client.component.Selector;
+import io.reflection.app.client.component.ToggleRadioButton;
+import io.reflection.app.client.controller.FilterController;
+import io.reflection.app.client.controller.FilterController.Filter;
+import io.reflection.app.client.controller.ItemController;
+import io.reflection.app.client.controller.NavigationController;
+import io.reflection.app.client.controller.NavigationController.Stack;
+import io.reflection.app.client.controller.RankController;
+import io.reflection.app.client.controller.ServiceConstants;
+import io.reflection.app.client.controller.SessionController;
+import io.reflection.app.client.handler.NavigationEventHandler;
+import io.reflection.app.client.helper.AnimationHelper;
+import io.reflection.app.client.helper.ApiCallHelper;
+import io.reflection.app.client.helper.FilterHelper;
+import io.reflection.app.client.helper.FormHelper;
+import io.reflection.app.client.helper.FormattingHelper;
+import io.reflection.app.client.helper.ResponsiveDesignHelper;
+import io.reflection.app.client.helper.TooltipHelper;
+import io.reflection.app.client.mixpanel.MixpanelHelper;
+import io.reflection.app.client.part.BootstrapGwtCellTable;
+import io.reflection.app.client.part.ErrorPanel;
+import io.reflection.app.client.part.LoadingIndicator;
+import io.reflection.app.client.part.NoDataPanel;
+import io.reflection.app.client.part.datatypes.RanksGroup;
+import io.reflection.app.client.popup.AddLinkedAccountPopup;
+import io.reflection.app.client.popup.PremiumPopup;
+import io.reflection.app.client.popup.SignUpPopup;
+import io.reflection.app.client.res.Styles;
+import io.reflection.app.client.res.Styles.ReflectionMainStyles;
+import io.reflection.app.datatypes.shared.Rank;
+import io.reflection.app.shared.util.DataTypeHelper;
+
 /**
  * @author billy1380
  *
@@ -129,9 +130,9 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	@UiField(provided = true) CellTable<RanksGroup> stickyHeaderTable = new CellTable<RanksGroup>(1, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true) CellTable<RanksGroup> leaderboardTable = new CellTable<RanksGroup>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 
-	private LoadingIndicator loadingIndicatorAll = AnimationHelper.getLeaderboardAllLoadingIndicator(25);
-	private LoadingIndicator loadingIndicatorFreeList = AnimationHelper.getLeaderboardListLoadingIndicator(25, true);
-	private LoadingIndicator loadingIndicatorPaidGrossingList = AnimationHelper.getLeaderboardListLoadingIndicator(25, false);
+	private final LoadingIndicator loadingIndicatorAll = AnimationHelper.getLeaderboardAllLoadingIndicator(25);
+	private final LoadingIndicator loadingIndicatorFreeList = AnimationHelper.getLeaderboardListLoadingIndicator(25, true);
+	private final LoadingIndicator loadingIndicatorPaidGrossingList = AnimationHelper.getLeaderboardListLoadingIndicator(25, false);
 
 	@UiField(provided = true) ToggleRadioButton toggleListView = new ToggleRadioButton("viewtype", "0 0 20 20");
 	@UiField(provided = true) ToggleRadioButton toggleCompactView = new ToggleRadioButton("viewtype", "0 0 20 20");
@@ -180,28 +181,28 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 	@SuppressWarnings("rawtypes") private Column lastOrderedColumn = rankColumn;
 
-	private Map<String, LIElement> tabs = new HashMap<String, LIElement>();
+	private final Map<String, LIElement> tabs = new HashMap<String, LIElement>();
 
-	private SafeHtmlHeader downloadsHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Downloads " + AnimationHelper.getSorterSvg()));
-	private SafeHtmlHeader revenueHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Revenue " + AnimationHelper.getSorterSvg()));
-	private TextHeader rankHeader = new TextHeader("Rank");
-	private TextHeader paidHeader = new TextHeader("App Name");
-	private TextHeader paidHeaderAll = new TextHeader("Paid");
-	private TextHeader freeHeader = new TextHeader("App Name");
-	private TextHeader freeHeaderAll = new TextHeader("Free");
-	private TextHeader grossingHeader = new TextHeader("App Name");
-	private TextHeader grossingHeaderAll = new TextHeader("Grossing");
-	private TextHeader priceHeader = new TextHeader("Price");
-	private SafeHtmlHeader iapHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString(
+	private final SafeHtmlHeader downloadsHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Downloads " + AnimationHelper.getSorterSvg()));
+	private final SafeHtmlHeader revenueHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Revenue " + AnimationHelper.getSorterSvg()));
+	private final TextHeader rankHeader = new TextHeader("Rank");
+	private final TextHeader paidHeader = new TextHeader("App Name");
+	private final TextHeader paidHeaderAll = new TextHeader("Paid");
+	private final TextHeader freeHeader = new TextHeader("App Name");
+	private final TextHeader freeHeaderAll = new TextHeader("Free");
+	private final TextHeader grossingHeader = new TextHeader("App Name");
+	private final TextHeader grossingHeaderAll = new TextHeader("Grossing");
+	private final TextHeader priceHeader = new TextHeader("Price");
+	private final SafeHtmlHeader iapHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString(
 			"<span>IAP</span><span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding js-tooltip--info tooltip--info\" data-tooltip=\"In App Purchases\"></span>"));
 
 	private String selectedTab = OVERALL_LIST_TYPE;
 	private String previousFilter;
-	private LoadingBar loadingBar = new LoadingBar(false);
-	private ReflectionMainStyles style = Styles.STYLES_INSTANCE.reflectionMainStyle();
-	private SignUpPopup signUpPopup = new SignUpPopup();
-	private PremiumPopup premiumPopup = new PremiumPopup();
-	private AddLinkedAccountPopup addLinkedAccountPopup = new AddLinkedAccountPopup();
+	private final LoadingBar loadingBar = new LoadingBar(false);
+	private final ReflectionMainStyles style = Styles.STYLES_INSTANCE.reflectionMainStyle();
+	private final SignUpPopup signUpPopup = new SignUpPopup();
+	private final PremiumPopup premiumPopup = new PremiumPopup();
+	private final AddLinkedAccountPopup addLinkedAccountPopup = new AddLinkedAccountPopup();
 	private boolean isStatusError;
 
 	public RanksPage() {
@@ -317,7 +318,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 			@Override
 			public void onWindowScroll(ScrollEvent event) {
-				int dataTableTopPosition = leaderboardTable.getElement().getAbsoluteTop()
+				final int dataTableTopPosition = leaderboardTable.getElement().getAbsoluteTop()
 						- NavigationController.get().getHeader().getElement().getClientHeight();
 				if (event.getScrollTop() >= dataTableTopPosition && leaderboardTable.isVisible()) {
 					stickyHeaderTable.getElement().getStyle().setVisibility(Visibility.VISIBLE);
@@ -331,10 +332,10 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	}
 
 	private void createColumns() {
-		ListHandler<RanksGroup> columnSortHandler = new ListHandler<RanksGroup>(RankController.get().getList()) {
+		final ListHandler<RanksGroup> columnSortHandler = new ListHandler<RanksGroup>(RankController.get().getList()) {
 			/*
 			 * (non-Javadoc)
-			 * 
+			 *
 			 * @see com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler#onColumnSort(com.google.gwt.user.cellview.client.ColumnSortEvent)
 			 */
 			@Override
@@ -385,7 +386,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		};
 		rankColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.mhxte6cID());
 
-		AppDetailsAndPredictionCell appDetailsCell = new AppDetailsAndPredictionCell();
+		final AppDetailsAndPredictionCell appDetailsCell = new AppDetailsAndPredictionCell();
 
 		paidColumn = new Column<RanksGroup, Rank>(appDetailsCell) {
 
@@ -464,7 +465,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 			@Override
 			public SafeHtml getValue(RanksGroup object) {
-				Rank rank = rankForListType(object);
+				final Rank rank = rankForListType(object);
 				return (rank.currency != null && rank.price != null)
 						? SafeHtmlUtils.fromSafeConstant(FormattingHelper.asPriceString(rank.currency, rank.price.floatValue()))
 						: SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
@@ -571,7 +572,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		event.preventDefault();
 		applyFilters.addStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().isLoading());
 		if (NavigationController.get().getCurrentPage() == PageType.RanksPageType) {
-			boolean updateData = false;			
+			boolean updateData = false;
 			if (updateData = updateData || !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())) {
 				FilterController.get().setCountry(countrySelector.getSelectedValue());
 			}
@@ -581,9 +582,10 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			if (updateData = updateData || !FilterController.get().getFilter().getCategoryId().toString().equals(categorySelector.getSelectedValue())) {
 				FilterController.get().setCategory(Long.valueOf(categorySelector.getSelectedValue()));
 			}
-			if (updateData = updateData || !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateBox.getValue())) {
+			if (updateData = updateData
+					|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateBox.getValue())) {
 				FilterController.get().setEndDate(dateBox.getValue());
-				Date startDate = new Date(FilterController.get().getFilter().getEndTime());
+				final Date startDate = new Date(FilterController.get().getFilter().getEndTime());
 				CalendarUtil.addDaysToDate(startDate, -30);
 				FilterController.get().getFilter().setStartTime(startDate.getTime());
 			}
@@ -642,10 +644,10 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	 * Update selectors from URL if coming from a page refresh
 	 */
 	private void updateSelectorsFromFilter() {
-		FilterController fc = FilterController.get();
+		final FilterController fc = FilterController.get();
 
-		long endTime = fc.getFilter().getEndTime().longValue();
-		Date endDate = new Date(endTime);
+		final long endTime = fc.getFilter().getEndTime().longValue();
+		final Date endDate = new Date(endTime);
 		dateBox.setValue(endDate, false);
 		if (SessionController.get().isAdmin()) {
 			categorySelector.setSelectedIndex(FormHelper.getItemIndex(categorySelector, fc.getFilter().getCategoryId().toString()));
@@ -655,7 +657,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		appStoreSelector.setSelectedIndex(FormHelper.getItemIndex(appStoreSelector, fc.getFilter().getStoreA3Code()));
 		countrySelector.setSelectedIndex(FormHelper.getItemIndex(countrySelector, fc.getFilter().getCountryA2Code()));
 
-		String dailyDataType = fc.getFilter().getDailyData();
+		final String dailyDataType = fc.getFilter().getDailyData();
 		if (REVENUE_DAILY_DATA_TYPE.equals(dailyDataType)) {
 			toggleRevenue.setValue(true);
 		} else {
@@ -785,7 +787,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	}
 
 	private void removeColumn(Column<RanksGroup, ?> column) {
-		int currentIndex = leaderboardTable.getColumnIndex(column);
+		final int currentIndex = leaderboardTable.getColumnIndex(column);
 		if (currentIndex != -1) {
 			leaderboardTable.removeColumn(column);
 			stickyHeaderTable.removeColumn(column);
@@ -814,11 +816,11 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	}
 
 	private void refreshTabs() {
-		for (String key : tabs.keySet()) {
+		for (final String key : tabs.keySet()) {
 			tabs.get(key).removeClassName(style.isActive());
 		}
 
-		LIElement selected = tabs.get(selectedTab);
+		final LIElement selected = tabs.get(selectedTab);
 
 		if (selected != null) {
 			selected.addClassName(style.isActive());
@@ -851,7 +853,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			Cookies.removeCookie("fileDownloaded");
 			downloadLeaderboard.setStatusLoading("Downloading");
 
-			Filter filter = FilterController.get().getFilter();
+			final Filter filter = FilterController.get().getFilter();
 			String listType;
 			if (filter.getStoreA3Code().equals("iph")) {
 				switch (selectedTab) {
@@ -884,11 +886,12 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 					break;
 				}
 			}
-			String country = filter.getCountryA2Code();
-			String category = filter.getCategoryId().toString();
-			String date = String.valueOf(ApiCallHelper.getUTCDate(FilterController.get().getEndDate()).getTime());
-			String sessionParam = SessionController.get().getSession().toString();
-			String requestParamenters = "listType=" + listType + "&country=" + country + "&category=" + category + "&date=" + date + "&session=" + sessionParam;
+			final String country = filter.getCountryA2Code();
+			final String category = filter.getCategoryId().toString();
+			final String date = String.valueOf(ApiCallHelper.getUTCDate(FilterController.get().getEndDate()).getTime());
+			final String sessionParam = SessionController.get().getSession().toString();
+			final String requestParamenters = "listType=" + listType + "&country=" + country + "&category=" + category + "&date=" + date + "&session="
+					+ sessionParam;
 
 			iframe.setAttribute("src", URL.encode(GWT.getHostPageBaseURL() + "downloadleaderboard?" + requestParamenters));
 
@@ -977,7 +980,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
 	 * io.reflection.app.client.controller.NavigationController.Stack)
 	 */
@@ -1006,13 +1009,15 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 				leaderboardTable.setVisible(true);
 				downloadsHeader.setHeaderStyleNames(style.canBeSorted());
 				revenueHeader.setHeaderStyleNames(style.canBeSorted());
-				resetFilters.setEnabled(!FilterController.get().getFilter().getCountryA2Code().equals("gb")
-						|| !FilterController.get().getFilter().getStoreA3Code().equals("iph")
-						|| !FilterController.get().getFilter().getCategoryId().toString().equals("15")
+				resetFilters
+						.setEnabled(
+								!FilterController.get().getFilter().getCountryA2Code().equals("gb")
+										|| !FilterController.get().getFilter().getStoreA3Code().equals("iph") || !FilterController.get().getFilter()
+												.getCategoryId().toString().equals("15")
 						|| !CalendarUtil.isSameDate(FilterHelper.getDaysAgo(3), new Date(FilterController.get().getFilter().getEndTime().longValue())));
 			}
 
-			String currentFilter = FilterController.get().asRankFilterString();
+			final String currentFilter = FilterController.get().asRankFilterString();
 
 			if (currentFilter != null && currentFilter.length() > 0) {
 				allLink.setTargetHistoryToken(
@@ -1047,7 +1052,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
 	 */
 	@Override
@@ -1061,7 +1066,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.client.page.Page#onDetach()
 	 */
 	@Override
@@ -1077,7 +1082,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler#getAllTopItemsSuccess(io.reflection.app.api.core.shared.call.
 	 * GetAllTopItemsRequest , io.reflection.app.api.core.shared.call.GetAllTopItemsResponse)
 	 */
@@ -1112,14 +1117,14 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			isStatusError = true;
 			applyFilters.setEnabled(true);
 		}
-		
+
 		applyFilters.removeStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().isLoading());
 		TooltipHelper.updateHelperTooltip();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler#getAllTopItemsFailure(io.reflection.app.api.core.shared.call.
 	 * GetAllTopItemsRequest , java.lang.Throwable)
 	 */
@@ -1131,7 +1136,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		errorPanel.setVisible(true);
 		isStatusError = true;
 		applyFilters.setEnabled(true);
-		
+
 		applyFilters.removeStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().isLoading());
 	}
 }

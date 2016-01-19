@@ -20,7 +20,6 @@ import com.google.gson.JsonParser;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.HeadingElement;
-import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
@@ -31,10 +30,12 @@ import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.ColumnSortEvent;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.SafeHtmlHeader;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Widget;
 
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.cell.MiniDeveloperAppCell;
+import io.reflection.app.client.component.LoadingBar;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.handler.NavigationEventHandler;
@@ -85,18 +86,21 @@ public class DeveloperPage extends Page implements NavigationEventHandler {
 
 	private static DeveloperPageUiBinder uiBinder = GWT.create(DeveloperPageUiBinder.class);
 	private final ReflectionMainStyles style = Styles.STYLES_INSTANCE.reflectionMainStyle();
+	private final LoadingBar loadingBar = new LoadingBar(false);
 	private String developerSearchString = "";
+	private final int searchLimit = 200;
 
 	interface DeveloperPageUiBinder extends UiBinder<Widget, DeveloperPage> {}
 
 	@UiField(provided = true) CellTable<ExternalApp> developerAppsTable = new CellTable<ExternalApp>(200, BootstrapGwtCellTable.INSTANCE);
 	@UiField HeadingElement pageTitleDeveloperName;
 	@UiField HeadingElement numberOfApps;
+	@UiField Anchor appStoreLink;
 
 	private final SafeHtmlHeader appDetailsHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("App Details " + AnimationHelper.getSorterSvg()));
 	private final SafeHtmlHeader releaseDateHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Released " + AnimationHelper.getSorterSvg()));
 	private final SafeHtmlHeader currentVersionReleaseDateHeader = new SafeHtmlHeader(
-			SafeHtmlUtils.fromTrustedString("Last Updated " + AnimationHelper.getSorterSvg()));
+			SafeHtmlUtils.fromTrustedString("Updated " + AnimationHelper.getSorterSvg()));
 	private final SafeHtmlHeader priceHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Price " + AnimationHelper.getSorterSvg()));
 	private final SafeHtmlHeader downloadsHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Downloads"));
 	private final SafeHtmlHeader revenueHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Revenue"));
@@ -133,14 +137,18 @@ public class DeveloperPage extends Page implements NavigationEventHandler {
 		// remove content
 		pageTitleDeveloperName.setInnerText("");
 		numberOfApps.setInnerText("");
+		appStoreLink.setVisible(false);
+		loadingBar.reset();
 	}
 
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
 
+		loadingBar.show("Finding apps...");
+
 		developerSearchString = current.getAction();
 		if (developerSearchString != null) {
-			search(developerSearchString);
+			search(developerSearchString, searchLimit);
 		}
 		// removePageContent();
 		// comingPage = current.getParameter(0);
@@ -234,9 +242,9 @@ public class DeveloperPage extends Page implements NavigationEventHandler {
 				}
 
 				appDetailsHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.mhxte6cIF());
-				priceHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.columnHiddenMobile());
-				releaseDateHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.columnHiddenMobile());
-				currentVersionReleaseDateHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.columnHiddenMobile());
+				releaseDateHeader.setHeaderStyleNames(style.canBeSorted());
+				currentVersionReleaseDateHeader.setHeaderStyleNames(style.canBeSorted());
+				priceHeader.setHeaderStyleNames(style.canBeSorted());
 
 				if (event.getColumn() == columnAppDetails) {
 					sortByAppDetails(event.isSortAscending());
@@ -244,8 +252,7 @@ public class DeveloperPage extends Page implements NavigationEventHandler {
 							style.canBeSorted() + " " + (event.isSortAscending() ? style.isAscending() : style.isDescending()) + " " + style.mhxte6cIF());
 				} else if (event.getColumn() == columnPrice) {
 					sortByPrice(event.isSortAscending());
-					priceHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.columnHiddenMobile() + " "
-							+ (event.isSortAscending() ? style.isAscending() : style.isDescending()));
+					priceHeader.setHeaderStyleNames(style.canBeSorted() + " " + (event.isSortAscending() ? style.isAscending() : style.isDescending()));
 				} else if (event.getColumn() == columnReleaseDate) {
 					sortByReleaseDate(event.isSortAscending());
 					releaseDateHeader.setHeaderStyleNames(style.canBeSorted() + " " + (event.isSortAscending() ? style.isAscending() : style.isDescending()));
@@ -354,21 +361,13 @@ public class DeveloperPage extends Page implements NavigationEventHandler {
 		iapHeader.setHeaderStyleNames(style.columnHiddenMobile());
 		developerAppsTable.addColumn(columnIap, iapHeader);
 
-		// developerAppsTable.addColumnStyleName(0, style.appDetailsColumn());
-		// developerAppsTable.addColumnStyleName(1, style.priceColumn() + " " + style.columnHiddenMobile());
-		// developerAppsTable.addColumnStyleName(2, style.downloadsColumn());
-		// developerAppsTable.addColumnStyleName(3, style.revenueColumn());
-		// developerAppsTable.addColumnStyleName(4, style.iapColumn() + " " + style.columnHiddenMobile());
-
-		// Needs style fix for mobile with the above CSS class adding code
-		developerAppsTable.setWidth("100%", true);
-		developerAppsTable.setColumnWidth(columnAppDetails, 30.0, Unit.PCT);
-		developerAppsTable.setColumnWidth(columnReleaseDate, 15.0, Unit.PCT);
-		developerAppsTable.setColumnWidth(columnCurrentVersionReleaseDate, 15.0, Unit.PCT);
-		developerAppsTable.setColumnWidth(columnPrice, 10.0, Unit.PCT);
-		developerAppsTable.setColumnWidth(columnDownloads, 12.0, Unit.PCT);
-		developerAppsTable.setColumnWidth(columnRevenue, 12.0, Unit.PCT);
-		developerAppsTable.setColumnWidth(columnIap, 6.0, Unit.PCT);
+		developerAppsTable.addColumnStyleName(0, style.developerAppDetailsColumn());
+		developerAppsTable.addColumnStyleName(1, style.developerAppReleaseDateColumn());
+		developerAppsTable.addColumnStyleName(2, style.developerAppVersionReleaseDateColumn());
+		developerAppsTable.addColumnStyleName(3, style.developerAppPriceColumn());
+		developerAppsTable.addColumnStyleName(4, style.developerAppDownloadsColumn() + " " + style.columnHiddenMobile());
+		developerAppsTable.addColumnStyleName(5, style.developerAppRevenueColumn() + " " + style.columnHiddenMobile());
+		developerAppsTable.addColumnStyleName(6, style.developerAppIapColumn() + " " + style.columnHiddenMobile());
 	}
 
 	private void populateDeveloperAppsTable(JsonArray jarray) {
@@ -381,6 +380,15 @@ public class DeveloperPage extends Page implements NavigationEventHandler {
 		final String developerNameFromFirstResult = jarray.get(0).getAsJsonObject().get("artistName").getAsString();
 		if (developerNameFromFirstResult != null) {
 			pageTitleDeveloperName.setInnerText(developerNameFromFirstResult);
+		}
+
+		final JsonElement appStoreLinkFromFirstResult = jarray.get(0).getAsJsonObject().get("artistViewUrl");
+		if (appStoreLinkFromFirstResult != null) {
+			appStoreLink.setHref(appStoreLinkFromFirstResult.getAsString());
+			appStoreLink.setTarget("_blank");
+			appStoreLink.setVisible(true);
+		} else {
+			appStoreLink.setVisible(false);
 		}
 
 		for (final JsonElement jsonElement : jarray) {
@@ -436,11 +444,17 @@ public class DeveloperPage extends Page implements NavigationEventHandler {
 		appDetailsHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.isAscending() + " " + style.mhxte6cIF());
 		columnAppDetails.setDefaultSortAscending(false);
 
-		numberOfApps.setInnerText(String.valueOf(jarray.size()) + " Apps");
+		String numberOfAppsOutput = String.valueOf(jarray.size());
+		if (jarray.size() == searchLimit) {
+			numberOfAppsOutput = String.valueOf((searchLimit - 1)) + "+";
+		}
+		numberOfApps.setInnerText("(" + numberOfAppsOutput + " apps in the UK store)");
 		developerAppsTable.setRowData(0, developerApps);
+
+		loadingBar.hide(true);
 	}
 
-	private native void search(String searchString) /*-{
+	private native void search(String searchString, int searchLimit) /*-{
 		$wnd.$('#ref-iTunesSearchDeveloperApps').remove();
 		$wnd
 				.$('body')
@@ -450,9 +464,11 @@ public class DeveloperPage extends Page implements NavigationEventHandler {
 								.attr("id", "ref-iTunesSearchDeveloperApps")
 								.attr(
 										"src",
-										"https://itunes.apple.com/search?term="
+										"https://itunes.apple.com/gb/lookup?id="
 												+ searchString
-												+ "&media=software&limit=200&callback=handleDeveloperAppsSearchFromHeader"));
+												+ "&entity=software&limit="
+												+ searchLimit
+												+ "&callback=handleDeveloperAppsSearch"));
 	}-*/;
 
 	public static void processDeveloperAppsSearchResponse(String response) {
@@ -465,8 +481,12 @@ public class DeveloperPage extends Page implements NavigationEventHandler {
 				if (jarray != null && jarray.size() > 0) {
 					final JsonArray filteredArray = new JsonArray();
 					for (int i = 0; i < jarray.size(); i++) {
-						if (jarray.get(i).getAsJsonObject().get("artistName").toString().contains(INSTANCE.developerSearchString)) {
-							filteredArray.add(jarray.get(i));
+						final JsonElement trackId = jarray.get(i).getAsJsonObject().get("trackId"); // make sure trackId exists (first result doesn't have one)
+						if (trackId != null) {
+							if (jarray.get(i).getAsJsonObject().get("artistId").getAsString() == INSTANCE.developerSearchString) {
+								// for different accounts
+								filteredArray.add(jarray.get(i));
+							}
 						}
 					}
 					if (filteredArray.size() > 0) {
@@ -475,6 +495,11 @@ public class DeveloperPage extends Page implements NavigationEventHandler {
 					}
 				}
 			}
+		}
+
+		if (!isValidResult) {
+			final String errorMessage = "No apps found...";
+			INSTANCE.loadingBar.hide(errorMessage, false);
 		}
 	}
 
