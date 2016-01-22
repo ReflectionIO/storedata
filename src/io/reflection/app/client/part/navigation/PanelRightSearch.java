@@ -50,9 +50,9 @@ public class PanelRightSearch extends Composite {
 	}
 
 	private static PanelRightSearch		INSTANCE	= null;
-	private String						searchValue;
+	private String										searchValue;
 	private final ArrayList<Integer>	invalidKeyCodesForSearch;
-	private Timer						timer;
+	private Timer											timer;
 
 	@UiField
 	DivElement		panelOverlay;
@@ -61,7 +61,7 @@ public class PanelRightSearch extends Composite {
 	@UiField
 	DivElement		developerResultsContainer;
 	@UiField
-	TextBox			inputSearch;
+	TextBox				inputSearch;
 	@UiField
 	UListElement	appResults;
 	@UiField
@@ -69,181 +69,181 @@ public class PanelRightSearch extends Composite {
 	@UiField
 	DivElement		noResultsContainer;
 	@UiField
-	Element			loadingSpinner;
+	Element				loadingSpinner;
 
 	public PanelRightSearch() {
-	initWidget(uiBinder.createAndBindUi(this));
-	INSTANCE = this;
-	inputSearch.getElement().setAttribute("autocomplete", "off");
-	loadingSpinner.getStyle().setProperty("display", "none");
+		initWidget(uiBinder.createAndBindUi(this));
+		INSTANCE = this;
+		inputSearch.getElement().setAttribute("autocomplete", "off");
+		loadingSpinner.getStyle().setProperty("display", "none");
 
-	final int[] invalidCodes = { 0, 17, 18, 27, 37, 38, 39, 40 };
-	// invalidCodes = §±, ctrl, alt, escape, left, up, right, down
-	invalidKeyCodesForSearch = new ArrayList<Integer>();
-	for (int i = 0; i < invalidCodes.length; i++) {
-		invalidKeyCodesForSearch.add(invalidCodes[i]);
-	}
+		final int[] invalidCodes = { 0, 17, 18, 27, 37, 38, 39, 40 };
+		// invalidCodes = §±, ctrl, alt, escape, left, up, right, down
+		invalidKeyCodesForSearch = new ArrayList<Integer>();
+		for (int i = 0; i < invalidCodes.length; i++) {
+			invalidKeyCodesForSearch.add(invalidCodes[i]);
+		}
 	}
 
 	@UiHandler("inputSearch")
 	void onFieldModified(final KeyUpEvent event) {
 
-	final NativeEvent nativeEvent = event.getNativeEvent();
-	// check the keyup event keycode is valid for app/developer search
-	final int keyCharacter = nativeEvent.getKeyCode();
-	if (!invalidKeyCodesForSearch.contains(keyCharacter)) {
+		final NativeEvent nativeEvent = event.getNativeEvent();
+		// check the keyup event keycode is valid for app/developer search
+		final int keyCharacter = nativeEvent.getKeyCode();
+		if (!invalidKeyCodesForSearch.contains(keyCharacter)) {
 
-		searchValue = inputSearch.getValue();
+			searchValue = inputSearch.getValue();
 
-		// create timer after keyup to allow continuous typing without constant
-		// search
-		// this will reduce searches to when a user has finished typing
-		// if timer exists from previous keyup cancel that timer
-		if (timer != null) {
-		timer.cancel();
-		}
-
-		timer = new Timer() {
-		@Override
-		public void run() {
-			if (searchValue.length() > 0) {
-			loadingSpinner.getStyle().setProperty("display", "block");
-			search(searchValue);
-			} else {
-			showNoResults();
+			// create timer after keyup to allow continuous typing without constant
+			// search
+			// this will reduce searches to when a user has finished typing
+			// if timer exists from previous keyup cancel that timer
+			if (timer != null) {
+				timer.cancel();
 			}
-		}
-		};
 
-		timer.schedule(500);
-	}
+			timer = new Timer() {
+				@Override
+				public void run() {
+					if (searchValue.length() > 0) {
+						loadingSpinner.getStyle().setProperty("display", "block");
+						search(searchValue);
+					} else {
+						showNoResults();
+					}
+				}
+			};
+
+			timer.schedule(500);
+		}
 	}
 
 	public DivElement getPanelOverlay() {
-	return panelOverlay;
+		return panelOverlay;
 	}
 
 	private void showResults(JsonArray jarray) {
 
-	appResults.removeAllChildren();
-	developerResults.removeAllChildren();
+		appResults.removeAllChildren();
+		developerResults.removeAllChildren();
 
-	int outputCounter = 0;
-	int outputDevCounter = 0;
-	final ArrayList<String> validDeveloperResults = new ArrayList<String>();
+		int outputCounter = 0;
+		int outputDevCounter = 0;
+		final ArrayList<String> validDeveloperResults = new ArrayList<String>();
 
-	for (int a = 0; a < jarray.size(); a++) {
+		for (int a = 0; a < jarray.size(); a++) {
 
-		final JsonObject dataItem = jarray.get(a).getAsJsonObject();
-		final String trackName = dataItem.get("trackName").getAsString();
-		final String trackId = dataItem.get("trackId").getAsString();
+			final JsonObject dataItem = jarray.get(a).getAsJsonObject();
+			final String trackName = dataItem.get("trackName").getAsString();
+			final String trackId = dataItem.get("trackId").getAsString();
 
-		if (trackName != null && outputCounter <= 10) {
-		// check that the results from iTunes API are relevant for the App Name
-		final char[] charArray = searchValue.toCharArray();
-		boolean isValidAppNameResult = true;
-		for (int c = 0; c < charArray.length; c++) {
-			if (isValidAppNameResult) {
-			// don't include space characters
+			if (trackName != null && outputCounter <= 10) {
+				// check that the results from iTunes API are relevant for the App Name
+				final char[] charArray = searchValue.toCharArray();
+				boolean isValidAppNameResult = true;
+				for (int c = 0; c < charArray.length; c++) {
+					if (isValidAppNameResult) {
+						// don't include space characters
 
-			if (trackName.indexOf(Character.toUpperCase(charArray[c])) == -1 && trackName.indexOf(Character.toLowerCase(charArray[c])) == -1) {
-				isValidAppNameResult = false;
+						if (trackName.indexOf(Character.toUpperCase(charArray[c])) == -1 && trackName.indexOf(Character.toLowerCase(charArray[c])) == -1) {
+							isValidAppNameResult = false;
+						}
+					}
+				}
+
+				if (isValidAppNameResult) {
+					final LIElement listItem = Document.get().createLIElement();
+					final AnchorElement linkElement = Document.get().createAnchorElement();
+					final SafeUri linkToApp = PageType.AppDetailsPage.asHref(trackId, MyAppsPage.COMING_FROM_PARAMETER, FilterController.get().getFilter().asItemFilterString());
+					linkElement.setHref(linkToApp);
+
+					linkElement.setAttribute("onClick", "closeRightPanelSearch()");
+
+					final String imageName = dataItem.get("artworkUrl60").getAsString();
+					if (imageName != null) {
+						final ImageElement imageElement = Document.get().createImageElement();
+						imageElement.setAttribute("src", imageName);
+						linkElement.appendChild(imageElement);
+					}
+
+					final SpanElement spanElement = Document.get().createSpanElement();
+					spanElement.setInnerText(trackName);
+					linkElement.appendChild(spanElement);
+					listItem.appendChild(linkElement);
+					appResults.appendChild(listItem);
+
+					outputCounter++;
+				}
 			}
+
+			final String artistName = dataItem.get("artistName").getAsString();
+			final String artistId = dataItem.get("artistId").getAsString();
+			if (artistName != null && outputDevCounter <= 10) {
+				// check that the results from iTunes API are relevant for the App Name
+				final char[] charArray = searchValue.toCharArray();
+				boolean isValidDevNameResult = true;
+				for (int c = 0; c < charArray.length; c++) {
+					if (isValidDevNameResult) {
+						// check that the artistName contains the searched characters, not
+						// order specific
+						if (artistName.indexOf(Character.toUpperCase(charArray[c])) == -1 && artistName.indexOf(Character.toLowerCase(charArray[c])) == -1) {
+							isValidDevNameResult = false;
+							c = charArray.length;
+						}
+					}
+				}
+
+				if (isValidDevNameResult) {
+
+					// add to found array if it doesn't already exist in found array
+					if (!validDeveloperResults.contains(artistId)) {
+						validDeveloperResults.add(artistId);
+
+						// output result in the developer list
+						final LIElement listItem = Document.get().createLIElement();
+						final AnchorElement linkElement = Document.get().createAnchorElement();
+						linkElement.setAttribute("href", "#!developer/" + artistId);
+						linkElement.setAttribute("onClick", "closeRightPanelSearch()");
+
+						final SpanElement spanElement = Document.get().createSpanElement();
+						spanElement.setInnerText(artistName);
+						linkElement.appendChild(spanElement);
+						listItem.appendChild(linkElement);
+						developerResults.appendChild(listItem);
+
+						outputDevCounter++;
+					}
+				}
 			}
 		}
 
-		if (isValidAppNameResult) {
-			final LIElement listItem = Document.get().createLIElement();
-			final AnchorElement linkElement = Document.get().createAnchorElement();
-			final SafeUri linkToApp = PageType.AppDetailsPage.asHref(trackId, MyAppsPage.COMING_FROM_PARAMETER, FilterController.get().getFilter().asItemFilterString());
-			linkElement.setHref(linkToApp);
+		loadingSpinner.getStyle().setProperty("display", "none");
 
-			linkElement.setAttribute("onClick", "closeRightPanelSearch()");
-
-			final String imageName = dataItem.get("artworkUrl60").getAsString();
-			if (imageName != null) {
-			final ImageElement imageElement = Document.get().createImageElement();
-			imageElement.setAttribute("src", imageName);
-			linkElement.appendChild(imageElement);
-			}
-
-			final SpanElement spanElement = Document.get().createSpanElement();
-			spanElement.setInnerText(trackName);
-			linkElement.appendChild(spanElement);
-			listItem.appendChild(linkElement);
-			appResults.appendChild(listItem);
-
-			outputCounter++;
-		}
+		if (outputCounter == 0) {
+			appResultsContainer.getStyle().setProperty("display", "none");
+		} else {
+			appResultsContainer.getStyle().setProperty("display", "block");
 		}
 
-		final String artistName = dataItem.get("artistName").getAsString();
-		final String artistId = dataItem.get("artistId").getAsString();
-		if (artistName != null && outputDevCounter <= 10) {
-		// check that the results from iTunes API are relevant for the App Name
-		final char[] charArray = searchValue.toCharArray();
-		boolean isValidDevNameResult = true;
-		for (int c = 0; c < charArray.length; c++) {
-			if (isValidDevNameResult) {
-			// check that the artistName contains the searched characters, not
-			// order specific
-			if (artistName.indexOf(Character.toUpperCase(charArray[c])) == -1 && artistName.indexOf(Character.toLowerCase(charArray[c])) == -1) {
-				isValidDevNameResult = false;
-				c = charArray.length;
-			}
-			}
+		if (outputDevCounter == 0) {
+			developerResultsContainer.getStyle().setProperty("display", "none");
+		} else {
+			developerResultsContainer.getStyle().setProperty("display", "block");
 		}
 
-		if (isValidDevNameResult) {
-
-			// add to found array if it doesn't already exist in found array
-			if (!validDeveloperResults.contains(artistId)) {
-			validDeveloperResults.add(artistId);
-
-			// output result in the developer list
-			final LIElement listItem = Document.get().createLIElement();
-			final AnchorElement linkElement = Document.get().createAnchorElement();
-			linkElement.setAttribute("href", "#!developer/" + artistId);
-			linkElement.setAttribute("onClick", "closeRightPanelSearch()");
-
-			final SpanElement spanElement = Document.get().createSpanElement();
-			spanElement.setInnerText(artistName);
-			linkElement.appendChild(spanElement);
-			listItem.appendChild(linkElement);
-			developerResults.appendChild(listItem);
-
-			outputDevCounter++;
-			}
+		if (outputCounter == 0 && outputDevCounter == 0) {
+			noResultsContainer.getStyle().setProperty("display", "block");
+		} else {
+			noResultsContainer.getStyle().setProperty("display", "none");
 		}
-		}
-	}
-
-	loadingSpinner.getStyle().setProperty("display", "none");
-
-	if (outputCounter == 0) {
-		appResultsContainer.getStyle().setProperty("display", "none");
-	} else {
-		appResultsContainer.getStyle().setProperty("display", "block");
-	}
-
-	if (outputDevCounter == 0) {
-		developerResultsContainer.getStyle().setProperty("display", "none");
-	} else {
-		developerResultsContainer.getStyle().setProperty("display", "block");
-	}
-
-	if (outputCounter == 0 && outputDevCounter == 0) {
-		noResultsContainer.getStyle().setProperty("display", "block");
-	} else {
-		noResultsContainer.getStyle().setProperty("display", "none");
-	}
 	}
 
 	private void showNoResults() {
-	appResultsContainer.getStyle().setProperty("display", "none");
-	developerResultsContainer.getStyle().setProperty("display", "none");
-	noResultsContainer.getStyle().setProperty("display", "block");
-	loadingSpinner.getStyle().setProperty("display", "none");
+		appResultsContainer.getStyle().setProperty("display", "none");
+		developerResultsContainer.getStyle().setProperty("display", "none");
+		noResultsContainer.getStyle().setProperty("display", "block");
+		loadingSpinner.getStyle().setProperty("display", "none");
 	}
 
 	private native void search(String searchString) /*-{
@@ -266,26 +266,26 @@ public class PanelRightSearch extends Composite {
 	}-*/;
 
 	public static void processAppSearchResponse(String response) {
-	boolean isValidResult = false;
-	final JsonElement jelement = new JsonParser().parse(response);
-	if (jelement != null) {
-		final JsonObject jobject = jelement.getAsJsonObject();
-		if (jobject != null) {
-		final JsonArray jarray = jobject.getAsJsonArray("results");
-		if (jarray != null && jarray.size() > 0) {
-			INSTANCE.showResults(jarray);
-			isValidResult = true;
+		boolean isValidResult = false;
+		final JsonElement jelement = new JsonParser().parse(response);
+		if (jelement != null) {
+			final JsonObject jobject = jelement.getAsJsonObject();
+			if (jobject != null) {
+				final JsonArray jarray = jobject.getAsJsonArray("results");
+				if (jarray != null && jarray.size() > 0) {
+					INSTANCE.showResults(jarray);
+					isValidResult = true;
+				}
+			}
 		}
-		}
-	}
 
-	if (!isValidResult) {
-		INSTANCE.showNoResults();
-	}
+		if (!isValidResult) {
+			INSTANCE.showNoResults();
+		}
 	}
 
 	public static void closeRightPanelSearch() {
-	NavigationController.get().getHeader().closePanelRightSearch();
+		NavigationController.get().getHeader().closePanelRightSearch();
 	}
 
 	public static native void exportAppSearchResponseHandler() /*-{
