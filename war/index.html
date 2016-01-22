@@ -22,6 +22,7 @@
 	});
 
 	function handleAppDetailsSearch(data) {
+		console.log(data);
 		processAppSearchResponse(JSON.stringify(data));
 	}
 
@@ -37,13 +38,13 @@
 		processRatingsResponse(JSON.stringify(data));
 	}
   
-	  function handleAppSearchFromHeader(data) {
+  	function handleAppSearchFromHeader(data) {
 		processAppSearchResponse(JSON.stringify(data));
-	  }
+  	}
 	  
-	  function handleDeveloperAppsSearch(data) {
+  	function handleDeveloperAppsSearch(data) {
 		processDeveloperAppsSearchResponse(JSON.stringify(data));
-	  }
+  	}
 </script>
 <script type="text/javascript" src="app/app.nocache.js"></script>
 <script src="js/jquery-1.11.1.min.js"></script>
