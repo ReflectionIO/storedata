@@ -7,7 +7,11 @@
 //
 package io.reflection.app.client.page;
 
-import static io.reflection.app.client.controller.FilterController.*;
+import static io.reflection.app.client.controller.FilterController.FREE_LIST_TYPE;
+import static io.reflection.app.client.controller.FilterController.GROSSING_LIST_TYPE;
+import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
+import static io.reflection.app.client.controller.FilterController.PAID_LIST_TYPE;
+import static io.reflection.app.client.controller.FilterController.REVENUE_DAILY_DATA_TYPE;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -125,78 +129,78 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	}
 
 	@UiField(provided = true)
-	CellTable<RanksGroup>									stickyHeaderTable									= new CellTable<RanksGroup>(1, BootstrapGwtCellTable.INSTANCE);
+	CellTable<RanksGroup>	stickyHeaderTable	= new CellTable<RanksGroup>(1, BootstrapGwtCellTable.INSTANCE);
 	@UiField(provided = true)
-	CellTable<RanksGroup>									leaderboardTable									= new CellTable<RanksGroup>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
+	CellTable<RanksGroup>	leaderboardTable	= new CellTable<RanksGroup>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 
-	private LoadingIndicator							loadingIndicatorAll								= AnimationHelper.getLeaderboardAllLoadingIndicator(25);
-	private LoadingIndicator							loadingIndicatorFreeList					= AnimationHelper.getLeaderboardListLoadingIndicator(25, true);
-	private LoadingIndicator							loadingIndicatorPaidGrossingList	= AnimationHelper.getLeaderboardListLoadingIndicator(25, false);
+	private final LoadingIndicator	loadingIndicatorAll								= AnimationHelper.getLeaderboardAllLoadingIndicator(25);
+	private final LoadingIndicator	loadingIndicatorFreeList					= AnimationHelper.getLeaderboardListLoadingIndicator(25, true);
+	private final LoadingIndicator	loadingIndicatorPaidGrossingList	= AnimationHelper.getLeaderboardListLoadingIndicator(25, false);
 
 	@UiField(provided = true)
-	ToggleRadioButton											toggleListView										= new ToggleRadioButton("viewtype", "0 0 20 20");
+	ToggleRadioButton	toggleListView		= new ToggleRadioButton("viewtype", "0 0 20 20");
 	@UiField(provided = true)
-	ToggleRadioButton											toggleCompactView									= new ToggleRadioButton("viewtype", "0 0 20 20");
+	ToggleRadioButton	toggleCompactView	= new ToggleRadioButton("viewtype", "0 0 20 20");
 	@UiField
-	LoadingButton													downloadLeaderboard;
+	LoadingButton			downloadLeaderboard;
 	@UiField
-	DivElement														dateSelectContainer;
+	DivElement				dateSelectContainer;
 	@UiField
-	FormDateBox														dateBox;
+	FormDateBox				dateBox;
 	@UiField
-	Selector															appStoreSelector;
+	Selector					appStoreSelector;
 	// @UiField ListBox mListType;
 	@UiField
-	Selector															countrySelector;
+	Selector					countrySelector;
 	@UiField
-	Selector															categorySelector;
+	Selector					categorySelector;
 	@UiField(provided = true)
-	ToggleRadioButton											toggleRevenue											= new ToggleRadioButton("dailydatatoggle", "0 0 32 32");
+	ToggleRadioButton	toggleRevenue			= new ToggleRadioButton("dailydatatoggle", "0 0 32 32");
 	@UiField(provided = true)
-	ToggleRadioButton											toggleDownloads										= new ToggleRadioButton("dailydatatoggle", "0 0 32 32");
+	ToggleRadioButton	toggleDownloads		= new ToggleRadioButton("dailydatatoggle", "0 0 32 32");
 	@UiField
-	HTMLPanel															dailyDataContainer;
+	HTMLPanel					dailyDataContainer;
 	@UiField
-	Button																applyFilters;
+	Button						applyFilters;
 	@UiField
-	Button																resetFilters;
+	Button						resetFilters;
 
 	@UiField
-	InlineHyperlink												allLink;
+	InlineHyperlink	allLink;
 	@UiField
-	SpanElement														overviewAllText;
+	SpanElement			overviewAllText;
 	@UiField
-	SpanElement														paidText;
+	SpanElement			paidText;
 	@UiField
-	SpanElement														grossingText;
+	SpanElement			grossingText;
 	@UiField
-	InlineHyperlink												freeLink;
+	InlineHyperlink	freeLink;
 	@UiField
-	InlineHyperlink												grossingLink;
+	InlineHyperlink	grossingLink;
 	@UiField
-	InlineHyperlink												paidLink;
+	InlineHyperlink	paidLink;
 
 	@UiField
-	LIElement															allItem;
+	LIElement	allItem;
 	@UiField
-	LIElement															freeItem;
+	LIElement	freeItem;
 	@UiField
-	LIElement															grossingItem;
+	LIElement	grossingItem;
 	@UiField
-	LIElement															paidItem;
+	LIElement	paidItem;
 
 	@UiField
-	Button																viewAllBtn;
+	Button			viewAllBtn;
 	@UiField
-	SpanElement														viewAllSpan;
+	SpanElement	viewAllSpan;
 	// @UiField InlineHyperlink redirect;
 	@UiField
-	ErrorPanel														errorPanel;
+	ErrorPanel	errorPanel;
 	@UiField
-	NoDataPanel														noDataPanel;
+	NoDataPanel	noDataPanel;
 
 	@UiField
-	Element																iframe;
+	Element iframe;
 
 	private Column<RanksGroup, SafeHtml>	rankColumn;
 	private Column<RanksGroup, Rank>			grossingColumn;
@@ -208,31 +212,31 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	private Column<RanksGroup, SafeHtml>	iapColumn;
 
 	@SuppressWarnings("rawtypes")
-	private Column												lastOrderedColumn									= rankColumn;
+	private Column lastOrderedColumn = rankColumn;
 
-	private Map<String, LIElement>				tabs															= new HashMap<String, LIElement>();
+	private final Map<String, LIElement> tabs = new HashMap<String, LIElement>();
 
-	private SafeHtmlHeader								downloadsHeader										= new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Downloads " + AnimationHelper.getSorterSvg()));
-	private SafeHtmlHeader								revenueHeader											= new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Revenue " + AnimationHelper.getSorterSvg()));
-	private TextHeader										rankHeader												= new TextHeader("Rank");
-	private TextHeader										paidHeader												= new TextHeader("App Name");
-	private TextHeader										paidHeaderAll											= new TextHeader("Paid");
-	private TextHeader										freeHeader												= new TextHeader("App Name");
-	private TextHeader										freeHeaderAll											= new TextHeader("Free");
-	private TextHeader										grossingHeader										= new TextHeader("App Name");
-	private TextHeader										grossingHeaderAll									= new TextHeader("Grossing");
-	private TextHeader										priceHeader												= new TextHeader("Price");
-	private SafeHtmlHeader								iapHeader													= new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString(
-																																							"<span>IAP</span><span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding js-tooltip--info tooltip--info\" data-tooltip=\"In App Purchases\"></span>"));
+	private final SafeHtmlHeader	downloadsHeader		= new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Downloads " + AnimationHelper.getSorterSvg()));
+	private final SafeHtmlHeader	revenueHeader			= new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Revenue " + AnimationHelper.getSorterSvg()));
+	private final TextHeader			rankHeader				= new TextHeader("Rank");
+	private final TextHeader			paidHeader				= new TextHeader("App Name");
+	private final TextHeader			paidHeaderAll			= new TextHeader("Paid");
+	private final TextHeader			freeHeader				= new TextHeader("App Name");
+	private final TextHeader			freeHeaderAll			= new TextHeader("Free");
+	private final TextHeader			grossingHeader		= new TextHeader("App Name");
+	private final TextHeader			grossingHeaderAll	= new TextHeader("Grossing");
+	private final TextHeader			priceHeader				= new TextHeader("Price");
+	private final SafeHtmlHeader	iapHeader					= new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString(
+			"<span>IAP</span><span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding js-tooltip--info tooltip--info\" data-tooltip=\"In App Purchases\"></span>"));
 
-	private String												selectedTab												= OVERALL_LIST_TYPE;
-	private String												previousFilter;
-	private LoadingBar										loadingBar												= new LoadingBar(false);
-	private ReflectionMainStyles					style															= Styles.STYLES_INSTANCE.reflectionMainStyle();
-	private SignUpPopup										signUpPopup												= new SignUpPopup();
-	private PremiumPopup									premiumPopup											= new PremiumPopup();
-	private AddLinkedAccountPopup					addLinkedAccountPopup							= new AddLinkedAccountPopup();
-	private boolean												isStatusError;
+	private String											selectedTab						= OVERALL_LIST_TYPE;
+	private String											previousFilter;
+	private final LoadingBar						loadingBar						= new LoadingBar(false);
+	private final ReflectionMainStyles	style									= Styles.STYLES_INSTANCE.reflectionMainStyle();
+	private final SignUpPopup						signUpPopup						= new SignUpPopup();
+	private final PremiumPopup					premiumPopup					= new PremiumPopup();
+	private final AddLinkedAccountPopup	addLinkedAccountPopup	= new AddLinkedAccountPopup();
+	private boolean											isStatusError;
 
 	public RanksPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -257,7 +261,8 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		FilterHelper.addCountries(countrySelector, SessionController.get().isAdmin());
 		FilterHelper.addCategories(categorySelector, SessionController.get().isAdmin());
 
-		// set the overall tab title (this is because it is modified for admins to contain the gather code)
+		// set the overall tab title (this is because it is modified for admins to
+		// contain the gather code)
 		overviewAllText.setInnerText(ALL_TEXT);
 
 		createColumns();
@@ -267,7 +272,8 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		tabs.put(PAID_LIST_TYPE, paidItem);
 		tabs.put(GROSSING_LIST_TYPE, grossingItem);
 
-		// Add click event to LI element so the event is fired when clicking on the whole tab
+		// Add click event to LI element so the event is fired when clicking on the
+		// whole tab
 		Event.sinkEvents(allItem, Event.ONCLICK);
 		Event.sinkEvents(freeItem, Event.ONCLICK);
 		Event.sinkEvents(paidItem, Event.ONCLICK);
@@ -347,7 +353,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 			@Override
 			public void onWindowScroll(ScrollEvent event) {
-				int dataTableTopPosition = leaderboardTable.getElement().getAbsoluteTop()
+				final int dataTableTopPosition = leaderboardTable.getElement().getAbsoluteTop()
 						- NavigationController.get().getHeader().getElement().getClientHeight();
 				if (event.getScrollTop() >= dataTableTopPosition && leaderboardTable.isVisible()) {
 					stickyHeaderTable.getElement().getStyle().setVisibility(Visibility.VISIBLE);
@@ -361,11 +367,12 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	}
 
 	private void createColumns() {
-		ListHandler<RanksGroup> columnSortHandler = new ListHandler<RanksGroup>(RankController.get().getList()) {
+		final ListHandler<RanksGroup> columnSortHandler = new ListHandler<RanksGroup>(RankController.get().getList()) {
 			/*
 			 * (non-Javadoc)
 			 *
-			 * @see com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler#onColumnSort(com.google.gwt.user.cellview.client.ColumnSortEvent)
+			 * @see com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler#
+			 * onColumnSort(com.google.gwt.user.cellview.client.ColumnSortEvent)
 			 */
 			@Override
 			public void onColumnSort(ColumnSortEvent event) {
@@ -415,7 +422,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		};
 		rankColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.mhxte6cID());
 
-		AppDetailsAndPredictionCell appDetailsCell = new AppDetailsAndPredictionCell();
+		final AppDetailsAndPredictionCell appDetailsCell = new AppDetailsAndPredictionCell();
 
 		paidColumn = new Column<RanksGroup, Rank>(appDetailsCell) {
 
@@ -494,7 +501,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 			@Override
 			public SafeHtml getValue(RanksGroup object) {
-				Rank rank = rankForListType(object);
+				final Rank rank = rankForListType(object);
 				return (rank.currency != null && rank.price != null)
 						? SafeHtmlUtils.fromSafeConstant(FormattingHelper.asPriceString(rank.currency, rank.price.floatValue()))
 						: SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
@@ -558,8 +565,8 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 		iapColumn = new Column<RanksGroup, SafeHtml>(new SafeHtmlCell()) {
 
-			private final String	IAP_YES_HTML	= "<span class=\"" + style.refIconBefore() + " " + style.refIconBeforeCheck() + "\"></span>";
-			private final String	IAP_NO_HTML		= "<span></span>";
+			private final String IAP_YES_HTML = "<span class=\"" + style.refIconBefore() + " " + style.refIconBeforeCheck() + "\"></span>";
+			private final String IAP_NO_HTML = "<span></span>";
 
 			@Override
 			public SafeHtml getValue(RanksGroup object) {
@@ -613,7 +620,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			}
 			if (updateData = updateData || !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateBox.getValue())) {
 				FilterController.get().setEndDate(dateBox.getValue());
-				Date startDate = new Date(FilterController.get().getFilter().getEndTime());
+				final Date startDate = new Date(FilterController.get().getFilter().getEndTime());
 				CalendarUtil.addDaysToDate(startDate, -30);
 				FilterController.get().getFilter().setStartTime(startDate.getTime());
 			}
@@ -672,10 +679,10 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	 * Update selectors from URL if coming from a page refresh
 	 */
 	private void updateSelectorsFromFilter() {
-		FilterController fc = FilterController.get();
+		final FilterController fc = FilterController.get();
 
-		long endTime = fc.getFilter().getEndTime().longValue();
-		Date endDate = new Date(endTime);
+		final long endTime = fc.getFilter().getEndTime().longValue();
+		final Date endDate = new Date(endTime);
 		dateBox.setValue(endDate, false);
 		if (SessionController.get().isAdmin()) {
 			categorySelector.setSelectedIndex(FormHelper.getItemIndex(categorySelector, fc.getFilter().getCategoryId().toString()));
@@ -685,7 +692,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		appStoreSelector.setSelectedIndex(FormHelper.getItemIndex(appStoreSelector, fc.getFilter().getStoreA3Code()));
 		countrySelector.setSelectedIndex(FormHelper.getItemIndex(countrySelector, fc.getFilter().getCountryA2Code()));
 
-		String dailyDataType = fc.getFilter().getDailyData();
+		final String dailyDataType = fc.getFilter().getDailyData();
 		if (REVENUE_DAILY_DATA_TYPE.equals(dailyDataType)) {
 			toggleRevenue.setValue(true);
 		} else {
@@ -815,7 +822,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	}
 
 	private void removeColumn(Column<RanksGroup, ?> column) {
-		int currentIndex = leaderboardTable.getColumnIndex(column);
+		final int currentIndex = leaderboardTable.getColumnIndex(column);
 		if (currentIndex != -1) {
 			leaderboardTable.removeColumn(column);
 			stickyHeaderTable.removeColumn(column);
@@ -844,11 +851,11 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	}
 
 	private void refreshTabs() {
-		for (String key : tabs.keySet()) {
+		for (final String key : tabs.keySet()) {
 			tabs.get(key).removeClassName(style.isActive());
 		}
 
-		LIElement selected = tabs.get(selectedTab);
+		final LIElement selected = tabs.get(selectedTab);
 
 		if (selected != null) {
 			selected.addClassName(style.isActive());
@@ -881,7 +888,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			Cookies.removeCookie("fileDownloaded");
 			downloadLeaderboard.setStatusLoading("Downloading");
 
-			Filter filter = FilterController.get().getFilter();
+			final Filter filter = FilterController.get().getFilter();
 			String listType;
 			if (filter.getStoreA3Code().equals("iph")) {
 				switch (selectedTab) {
@@ -914,11 +921,11 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 						break;
 				}
 			}
-			String country = filter.getCountryA2Code();
-			String category = filter.getCategoryId().toString();
-			String date = String.valueOf(ApiCallHelper.getUTCDate(FilterController.get().getEndDate()).getTime());
-			String sessionParam = SessionController.get().getSession().toString();
-			String requestParamenters = "listType=" + listType + "&country=" + country + "&category=" + category + "&date=" + date + "&session=" + sessionParam;
+			final String country = filter.getCountryA2Code();
+			final String category = filter.getCategoryId().toString();
+			final String date = String.valueOf(ApiCallHelper.getUTCDate(FilterController.get().getEndDate()).getTime());
+			final String sessionParam = SessionController.get().getSession().toString();
+			final String requestParamenters = "listType=" + listType + "&country=" + country + "&category=" + category + "&date=" + date + "&session=" + sessionParam;
 
 			iframe.setAttribute("src", URL.encode(GWT.getHostPageBaseURL() + "downloadleaderboard?" + requestParamenters));
 
@@ -939,7 +946,8 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 							downloadLeaderboard.resetStatus();
 						} else if (Cookies.getCookie("fileDownloaded").equals("error")) {
 							downloadLeaderboard.setStatusError();
-							SessionController.get().fetchRoleAndPermissions(); // Refresh credentials
+							SessionController.get().fetchRoleAndPermissions(); // Refresh
+																																	// credentials
 						} else {
 							downloadLeaderboard.resetStatus();
 						}
@@ -952,7 +960,8 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			feedbackTimer.scheduleRepeating(200);
 
 			// iframe.setUrl("");
-			// RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, URL.encode(GWT.getHostPageBaseURL() + "downloadleaderboard"));
+			// RequestBuilder builder = new RequestBuilder(RequestBuilder.POST,
+			// URL.encode(GWT.getHostPageBaseURL() + "downloadleaderboard"));
 			// builder.setHeader("Content-Type", "application/x-www-form-urlencoded");
 			// try {
 			// builder.sendRequest(requestParamenters, new RequestCallback() {
@@ -964,12 +973,14 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			//
 			// @Override
 			// public void onResponseReceived(Request request, Response response) {
-			// if (response.getStatusCode() == Response.SC_FORBIDDEN) { // User doesn't have the required role, probably premium role is expired
+			// if (response.getStatusCode() == Response.SC_FORBIDDEN) { // User
+			// doesn't have the required role, probably premium role is expired
 			// downloadLeaderboard.setStatusError();
 			// // Refresh credentials
 			// SessionController.get().fetchRolesAndPermissions();
 			// } else {
-			// String csvContent = "data:text/csv;charset=utf-8," + URL.encodeQueryString(response.getText());
+			// String csvContent = "data:text/csv;charset=utf-8," +
+			// URL.encodeQueryString(response.getText());
 			// Window.open(csvContent, "_self", "");
 			// downloadLeaderboard.resetStatus();
 			// }
@@ -1008,7 +1019,9 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
+	 * @see
+	 * io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(
+	 * io.reflection.app.client.controller.NavigationController.Stack,
 	 * io.reflection.app.client.controller.NavigationController.Stack)
 	 */
 	@Override
@@ -1042,7 +1055,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 						|| !CalendarUtil.isSameDate(FilterHelper.getDaysAgo(FilterHelper.DEFAULT_LEADERBOARD_LAG_DAYS), new Date(FilterController.get().getFilter().getEndTime().longValue())));
 			}
 
-			String currentFilter = FilterController.get().asRankFilterString();
+			final String currentFilter = FilterController.get().asRankFilterString();
 
 			if (currentFilter != null && currentFilter.length() > 0) {
 				allLink.setTargetHistoryToken(
@@ -1108,8 +1121,11 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler#getAllTopItemsSuccess(io.reflection.app.api.core.shared.call.
-	 * GetAllTopItemsRequest , io.reflection.app.api.core.shared.call.GetAllTopItemsResponse)
+	 * @see
+	 * io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler#
+	 * getAllTopItemsSuccess(io.reflection.app.api.core.shared.call.
+	 * GetAllTopItemsRequest ,
+	 * io.reflection.app.api.core.shared.call.GetAllTopItemsResponse)
 	 */
 	@Override
 	public void getAllTopItemsSuccess(GetAllTopItemsRequest input, GetAllTopItemsResponse output) {
@@ -1150,7 +1166,9 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler#getAllTopItemsFailure(io.reflection.app.api.core.shared.call.
+	 * @see
+	 * io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler#
+	 * getAllTopItemsFailure(io.reflection.app.api.core.shared.call.
 	 * GetAllTopItemsRequest , java.lang.Throwable)
 	 */
 	@Override

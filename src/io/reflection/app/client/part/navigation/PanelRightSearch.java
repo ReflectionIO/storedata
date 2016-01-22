@@ -35,7 +35,6 @@ import com.google.gwt.user.client.ui.Widget;
 
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.controller.NavigationController;
-import io.reflection.app.client.page.MyAppsPage;
 import io.reflection.app.client.page.PageType;
 
 /**
@@ -53,6 +52,8 @@ public class PanelRightSearch extends Composite {
 	private String										searchValue;
 	private final ArrayList<Integer>	invalidKeyCodesForSearch;
 	private Timer											timer;
+
+	public static final String COMING_FROM_RANKS = "leaderboard";
 
 	@UiField
 	DivElement		panelOverlay;
@@ -155,7 +156,7 @@ public class PanelRightSearch extends Composite {
 				if (isValidAppNameResult) {
 					final LIElement listItem = Document.get().createLIElement();
 					final AnchorElement linkElement = Document.get().createAnchorElement();
-					final SafeUri linkToApp = PageType.AppDetailsPage.asHref(trackId, MyAppsPage.COMING_FROM_PARAMETER, FilterController.get().getFilter().asItemFilterString());
+					final SafeUri linkToApp = PageType.AppDetailsPage.asHref(trackId, COMING_FROM_RANKS, FilterController.get().getFilter().asItemFilterString());
 					linkElement.setHref(linkToApp);
 
 					linkElement.setAttribute("onClick", "closeRightPanelSearch()");
@@ -265,7 +266,7 @@ public class PanelRightSearch extends Composite {
 		// search by developer = https://itunes.apple.com/search?term=dung%20nguyen&entity=allArtist&attribute=softwareDeveloper&limit=200
 	}-*/;
 
-	public static void processAppSearchResponse(String response) {
+	public static void processAppSearchResponseFromSearch(String response) {
 		boolean isValidResult = false;
 		final JsonElement jelement = new JsonParser().parse(response);
 		if (jelement != null) {
@@ -289,7 +290,7 @@ public class PanelRightSearch extends Composite {
 	}
 
 	public static native void exportAppSearchResponseHandler() /*-{
-		$wnd.processAppSearchResponse = $entry(@io.reflection.app.client.part.navigation.PanelRightSearch::processAppSearchResponse(Ljava/lang/String;));
+		$wnd.processAppSearchResponseFromSearch = $entry(@io.reflection.app.client.part.navigation.PanelRightSearch::processAppSearchResponseFromSearch(Ljava/lang/String;));
 	}-*/;
 
 	public static native void exportCloseRightPanelSearch() /*-{
