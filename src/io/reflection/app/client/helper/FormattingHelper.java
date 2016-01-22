@@ -7,13 +7,15 @@
 //
 package io.reflection.app.client.helper;
 
-import io.reflection.app.datatypes.shared.EventPriorityType;
-import io.reflection.app.shared.util.DataTypeHelper;
+import java.util.Date;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
+
+import io.reflection.app.datatypes.shared.EventPriorityType;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 /**
  * @author William Shakour (billy1380)
@@ -45,12 +47,12 @@ public class FormattingHelper extends io.reflection.app.shared.util.FormattingHe
 	}
 
 	public static String asMoneyString(String currency, float money) {
-		String numberString = (DataTypeHelper.isZero(money) ? "0" : TWO_DECIMALS_FORMATTER.format((double) money));
+		final String numberString = (DataTypeHelper.isZero(money) ? "0" : TWO_DECIMALS_FORMATTER.format(money));
 		return (currency == null ? "" : getCurrencySymbol(currency)) + numberString;
 	}
 
 	public static String asWholeMoneyString(String currency, float money) {
-		return (currency == null ? "" : getCurrencySymbol(currency)) + WHOLE_NUMBER_FORMATTER.format((double) money);
+		return (currency == null ? "" : getCurrencySymbol(currency)) + WHOLE_NUMBER_FORMATTER.format(money);
 	}
 
 	public static String asPriceRangeString(String currency, float from, float to) {
@@ -59,7 +61,7 @@ public class FormattingHelper extends io.reflection.app.shared.util.FormattingHe
 		if (DataTypeHelper.isZero(Math.abs(from - to))) {
 			priceRangeString = asPriceString(currency, from); // No need to use a price range
 		} else {
-			String fromString = asPriceString(currency, from), toString = asPriceString(currency, to);
+			final String fromString = asPriceString(currency, from), toString = asPriceString(currency, to);
 			priceRangeString = fromString + " - " + toString;
 		}
 
@@ -88,5 +90,23 @@ public class FormattingHelper extends io.reflection.app.shared.util.FormattingHe
 		}
 
 		return icon;
+	}
+
+	/**
+	 * We take in a date in the yyyy-MM-ddTHH:mm:ssZ format and return a date in dd/MM/yyyy format If there is an exception thrown during the conversion, we
+	 * return the original date.
+	 *
+	 * @param iTunesDate
+	 * @return
+	 */
+	public static String convertITunesDateToDefaultFormat(String iTunesDate) {
+		try {
+			final Date parsedDate = DateTimeFormat.getFormat("yyyy-MM-ddTHH:mm:ssZ").parse(iTunesDate);
+			return DateTimeFormat.getFormat("dd/MM/yyyy").format(parsedDate);
+		} catch (final Exception e) {
+			e.printStackTrace();
+		}
+
+		return iTunesDate;
 	}
 }

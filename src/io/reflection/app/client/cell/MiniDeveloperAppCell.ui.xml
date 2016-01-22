@@ -1,0 +1,25 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder">
+
+	<ui:with field="name" type="java.lang.String" />
+	<ui:with field="creatorName" type="java.lang.String" />
+	<ui:with field="smallImage" type="com.google.gwt.safehtml.shared.SafeUri" />
+	<ui:with field="styleName" type="java.lang.String" />
+	<ui:with field="ratingAsPercentage" type="java.lang.String" />
+	<ui:with field="link" type="com.google.gwt.safehtml.shared.SafeUri" />
+
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
+	<ui:style gss="true">
+	
+	</ui:style>
+
+	<div>
+		<img class="{STYLES_INSTANCE.reflectionMainStyle.imgRounded}" src="{smallImage}" onError="this.onerror=null;this.src='/images/placeholder_app_icon_2x.png';" />
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.mhxte6cRA}" style="padding-bottom: 5px;">
+			<a href="{link}">
+				<ui:text from="{name}" />
+			</a>
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsContainer}"><div class="{STYLES_INSTANCE.reflectionMainStyle.ratingsFull}" style="width: {ratingAsPercentage}%;"></div></div>
+		</div>
+	</div>
+</ui:UiBinder>

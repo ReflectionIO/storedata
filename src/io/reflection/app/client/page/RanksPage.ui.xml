@@ -21,7 +21,7 @@
 			<!-- <div class="{STYLES_INSTANCE.reflectionMainStyle.searchFieldNoLabel}"> -->
 			<!-- <input type="text" autocomplete="off" name="search" placeholder="Find an app" /> -->
 			<!-- <input -->
-			<!-- class="{STYLES_INSTANCE.reflectionMainStyle.refButton} {STYLES_INSTANCE.reflectionMainStyle.searchButtonMobile} {STYLES_INSTANCE.reflectionMainStyle.isHighlighted}" -->
+			<!-- class="{STYLES_INSTANCE.reflectionMainStyle.refButton}" -->
 			<!-- type="submit" value="a" /> -->
 			<!-- </div> -->
 			<!-- </form> -->

@@ -8,19 +8,6 @@
 package io.reflection.app.client.cell;
 
 import static io.reflection.app.client.helper.FormattingHelper.WHOLE_NUMBER_FORMATTER;
-import io.reflection.app.client.controller.FilterController;
-import io.reflection.app.client.controller.FilterController.Filter;
-import io.reflection.app.client.controller.ItemController;
-import io.reflection.app.client.controller.NavigationController;
-import io.reflection.app.client.controller.SessionController;
-import io.reflection.app.client.helper.FilterHelper;
-import io.reflection.app.client.helper.FormattingHelper;
-import io.reflection.app.client.page.HomePage;
-import io.reflection.app.client.page.PageType;
-import io.reflection.app.client.page.RanksPage;
-import io.reflection.app.client.res.Styles;
-import io.reflection.app.datatypes.shared.Item;
-import io.reflection.app.datatypes.shared.Rank;
 
 import com.google.gwt.cell.client.AbstractCell;
 import com.google.gwt.cell.client.ValueUpdater;
@@ -40,19 +27,34 @@ import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.uibinder.client.UiRenderer;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
 
+import io.reflection.app.client.controller.FilterController;
+import io.reflection.app.client.controller.FilterController.Filter;
+import io.reflection.app.client.controller.ItemController;
+import io.reflection.app.client.controller.NavigationController;
+import io.reflection.app.client.controller.SessionController;
+import io.reflection.app.client.helper.FilterHelper;
+import io.reflection.app.client.helper.FormattingHelper;
+import io.reflection.app.client.page.HomePage;
+import io.reflection.app.client.page.PageType;
+import io.reflection.app.client.page.RanksPage;
+import io.reflection.app.client.res.Styles;
+import io.reflection.app.datatypes.shared.Item;
+import io.reflection.app.datatypes.shared.Rank;
+
 /**
  * @author billy1380
  *
  */
 public class AppDetailsAndPredictionCell extends AbstractCell<Rank> {
 
-	private SafeHtml noDataQuestionMark = SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip js-tooltip--info tooltip--info js-tooltip--right js-tooltip--right--no-pointer-padding\" data-tooltip=\"No data available\"></span>");
-	private SafeHtml signUpLink = SafeHtmlUtils
-			.fromTrustedString("<a style=\"cursor: pointer\" class=\"sign-up-link js-tooltip js-tooltip--right\" data-tooltip=\"Sign up and link your app store account to see this data\">Sign Up</a>");
-	private SafeHtml linkAccountLink = SafeHtmlUtils
-			.fromTrustedString("<a style=\"cursor: pointer\" class=\"sign-up-link js-tooltip js-tooltip--right\" data-tooltip=\"Link your app store account to see this data\">Link Account</a>");
-	private SafeHtml upgradeLink = SafeHtmlUtils
-			.fromTrustedString("<a style=\"cursor: pointer\" class=\"sign-up-link js-tooltip js-tooltip--right\" data-tooltip=\"Upgrade to Developer Premium to see historical data\">Upgrade</a>");
+	private final SafeHtml noDataQuestionMark = SafeHtmlUtils.fromTrustedString(
+			"<span class=\"js-tooltip js-tooltip--info tooltip--info js-tooltip--right js-tooltip--right--no-pointer-padding\" data-tooltip=\"No data available\"></span>");
+	private final SafeHtml signUpLink = SafeHtmlUtils.fromTrustedString(
+			"<a style=\"cursor: pointer\" class=\"sign-up-link js-tooltip js-tooltip--right\" data-tooltip=\"Sign up and link your app store account to see this data\">Sign Up</a>");
+	private final SafeHtml linkAccountLink = SafeHtmlUtils.fromTrustedString(
+			"<a style=\"cursor: pointer\" class=\"sign-up-link js-tooltip js-tooltip--right\" data-tooltip=\"Link your app store account to see this data\">Link Account</a>");
+	private final SafeHtml upgradeLink = SafeHtmlUtils.fromTrustedString(
+			"<a style=\"cursor: pointer\" class=\"sign-up-link js-tooltip js-tooltip--right\" data-tooltip=\"Upgrade to Developer Premium to see historical data\">Upgrade</a>");
 
 	public AppDetailsAndPredictionCell() {
 		super("click");
@@ -60,15 +62,16 @@ public class AppDetailsAndPredictionCell extends AbstractCell<Rank> {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.google.gwt.cell.client.AbstractCell#onBrowserEvent(com.google.gwt.cell.client.Cell.Context, com.google.gwt.dom.client.Element, java.lang.Object,
 	 * com.google.gwt.dom.client.NativeEvent, com.google.gwt.cell.client.ValueUpdater)
 	 */
 	@Override
-	public void onBrowserEvent(com.google.gwt.cell.client.Cell.Context context, Element parent, Rank value, NativeEvent event, ValueUpdater<Rank> valueUpdater) {
+	public void onBrowserEvent(com.google.gwt.cell.client.Cell.Context context, Element parent, Rank value, NativeEvent event,
+			ValueUpdater<Rank> valueUpdater) {
 		// Handle the click event.
 		if (BrowserEvents.CLICK.equals(event.getType())) {
-			Element clickedElem = Element.as(event.getEventTarget());
+			final Element clickedElem = Element.as(event.getEventTarget());
 			if (clickedElem.getTagName().equalsIgnoreCase("A") && !clickedElem.getAttribute("href").startsWith("#!item/view/")) {
 				valueUpdater.update(value);
 			}
@@ -161,24 +164,28 @@ public class AppDetailsAndPredictionCell extends AbstractCell<Rank> {
 				filter.setListType(FilterController.PAID_LIST_TYPE);
 				displayDailyData = SafeStylesUtils.fromTrustedString("");
 				if (SessionController.get().isAdmin()) {
-					dailyData = (rank.downloads != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore()
-							+ " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
-							WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : noDataQuestionMark);
+					dailyData = (rank.downloads != null ? DailyDataTemplate.INSTANCE.dailyData(
+							Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
+									+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(),
+							"", WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : noDataQuestionMark);
 				} else if (SessionController.get().canSeePredictions()) {
-					dailyData = (rank.downloads != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore()
-							+ " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
-							WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : noDataQuestionMark);
+					dailyData = (rank.downloads != null ? DailyDataTemplate.INSTANCE.dailyData(
+							Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
+									+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(),
+							"", WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : noDataQuestionMark);
 				} else {
 					if (CalendarUtil.isSameDate(FilterHelper.getDaysAgo(FilterHelper.DEFAULT_LEADERBOARD_LAG_DAYS), FilterController.get().getEndDate())
 							|| NavigationController.get().getCurrentPage().equals(PageType.HomePageType)) {
 						if (rank.position.intValue() > 10 && !(SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount())) {
-							dailyData = DailyDataTemplateHtml.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
-									+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
-									SessionController.get().isLoggedIn() ? linkAccountLink : signUpLink);
+							dailyData = DailyDataTemplateHtml.INSTANCE.dailyData(
+									Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
+											+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(),
+									"", SessionController.get().isLoggedIn() ? linkAccountLink : signUpLink);
 						} else {
-							dailyData = (rank.downloads != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle()
-									.refIconBefore() + " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
-									WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : noDataQuestionMark);
+							dailyData = (rank.downloads != null ? DailyDataTemplate.INSTANCE.dailyData(
+									Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
+											+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(),
+									"", WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : noDataQuestionMark);
 						}
 					} else {
 						SafeHtml linkValue = null;
@@ -199,24 +206,28 @@ public class AppDetailsAndPredictionCell extends AbstractCell<Rank> {
 				filter.setListType(FilterController.FREE_LIST_TYPE);
 				displayDailyData = SafeStylesUtils.fromTrustedString("");
 				if (SessionController.get().isAdmin()) {
-					dailyData = (rank.downloads != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore()
-							+ " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
-							WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : noDataQuestionMark);
+					dailyData = (rank.downloads != null ? DailyDataTemplate.INSTANCE.dailyData(
+							Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
+									+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(),
+							"", WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : noDataQuestionMark);
 				} else if (SessionController.get().canSeePredictions()) {
-					dailyData = (rank.downloads != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore()
-							+ " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
-							WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : noDataQuestionMark);
+					dailyData = (rank.downloads != null ? DailyDataTemplate.INSTANCE.dailyData(
+							Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
+									+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(),
+							"", WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : noDataQuestionMark);
 				} else {
 					if (CalendarUtil.isSameDate(FilterHelper.getDaysAgo(FilterHelper.DEFAULT_LEADERBOARD_LAG_DAYS), FilterController.get().getEndDate())
 							|| NavigationController.get().getCurrentPage().equals(PageType.HomePageType)) {
 						if (rank.position.intValue() > 10 && !(SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount())) {
-							dailyData = DailyDataTemplateHtml.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
-									+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
-									SessionController.get().isLoggedIn() ? linkAccountLink : signUpLink);
+							dailyData = DailyDataTemplateHtml.INSTANCE.dailyData(
+									Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
+											+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(),
+									"", SessionController.get().isLoggedIn() ? linkAccountLink : signUpLink);
 						} else {
-							dailyData = (rank.downloads != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle()
-									.refIconBefore() + " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(), "",
-									WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : noDataQuestionMark);
+							dailyData = (rank.downloads != null ? DailyDataTemplate.INSTANCE.dailyData(
+									Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
+											+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeCloud(),
+									"", WHOLE_NUMBER_FORMATTER.format(rank.downloads.doubleValue())) : noDataQuestionMark);
 						}
 					} else {
 						SafeHtml linkValue = null;
@@ -237,25 +248,29 @@ public class AppDetailsAndPredictionCell extends AbstractCell<Rank> {
 				filter.setListType(FilterController.GROSSING_LIST_TYPE);
 				displayDailyData = SafeStylesUtils.fromTrustedString("");
 				if (SessionController.get().isAdmin()) {
-					dailyData = (rank.currency != null && rank.revenue != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE
-							.reflectionMainStyle().refIconBefore() + " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue(), "",
-							FormattingHelper.asWholeMoneyString(rank.currency, rank.revenue.floatValue())) : noDataQuestionMark);
+					dailyData = (rank.currency != null && rank.revenue != null ? DailyDataTemplate.INSTANCE.dailyData(
+							Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
+									+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue(),
+							"", FormattingHelper.asWholeMoneyString(rank.currency, rank.revenue.floatValue())) : noDataQuestionMark);
 				} else if (SessionController.get().canSeePredictions()) {
-					dailyData = (rank.currency != null && rank.revenue != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE
-							.reflectionMainStyle().refIconBefore() + " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue(), "",
-							FormattingHelper.asWholeMoneyString(rank.currency, rank.revenue.floatValue())) : noDataQuestionMark);
+					dailyData = (rank.currency != null && rank.revenue != null ? DailyDataTemplate.INSTANCE.dailyData(
+							Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
+									+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue(),
+							"", FormattingHelper.asWholeMoneyString(rank.currency, rank.revenue.floatValue())) : noDataQuestionMark);
 				} else {
 					if (CalendarUtil.isSameDate(FilterHelper.getDaysAgo(FilterHelper.DEFAULT_LEADERBOARD_LAG_DAYS), FilterController.get().getEndDate())
 							|| NavigationController.get().getCurrentPage().equals(PageType.HomePageType)) {
 						if (rank.grossingPosition.intValue() > 10
 								&& !(SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount())) {
-							dailyData = DailyDataTemplateHtml.INSTANCE.dailyData(Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
-									+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue(), "",
-									SessionController.get().isLoggedIn() ? linkAccountLink : signUpLink);
+							dailyData = DailyDataTemplateHtml.INSTANCE.dailyData(
+									Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
+											+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue(),
+									"", SessionController.get().isLoggedIn() ? linkAccountLink : signUpLink);
 						} else {
-							dailyData = (rank.currency != null && rank.revenue != null ? DailyDataTemplate.INSTANCE.dailyData(Styles.STYLES_INSTANCE
-									.reflectionMainStyle().refIconBefore() + " " + Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue(), "",
-									FormattingHelper.asWholeMoneyString(rank.currency, rank.revenue.floatValue())) : noDataQuestionMark);
+							dailyData = (rank.currency != null && rank.revenue != null ? DailyDataTemplate.INSTANCE.dailyData(
+									Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBefore() + " "
+											+ Styles.STYLES_INSTANCE.reflectionMainStyle().refIconBeforeRevenue(),
+									"", FormattingHelper.asWholeMoneyString(rank.currency, rank.revenue.floatValue())) : noDataQuestionMark);
 						}
 					} else {
 						SafeHtml linkValue = null;
@@ -289,9 +304,10 @@ public class AppDetailsAndPredictionCell extends AbstractCell<Rank> {
 			dailyData = SafeHtmlUtils.fromSafeConstant("");
 		}
 
-		SafeUri link = (SessionController.get().isAdmin() ? PageType.ItemPageType.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE, item.internalId,
-				FilterController.RANKING_CHART_TYPE, RanksPage.COMING_FROM_PARAMETER, filter.asItemFilterString()) : UriUtils.fromSafeConstant("#"));
-		SafeUri smallImage = UriUtils.fromString(item.smallImage);
+		final SafeUri link = (SessionController.get().isAdmin() ? PageType.ItemPageType.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
+				item.internalId, FilterController.RANKING_CHART_TYPE, RanksPage.COMING_FROM_PARAMETER, filter.asItemFilterString())
+				: UriUtils.fromSafeConstant("#"));
+		final SafeUri smallImage = UriUtils.fromString(item.smallImage);
 
 		RENDERER.render(builder, item.name, item.creatorName, smallImage, link, dailyData, displayDailyData.asString(), displayLink, displayLinkText);
 

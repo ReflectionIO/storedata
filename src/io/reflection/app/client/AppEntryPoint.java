@@ -7,19 +7,21 @@
 //
 package io.reflection.app.client;
 
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.gwt.user.client.ui.RootPanel;
+
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.helper.DOMHelper;
 import io.reflection.app.client.helper.ResponsiveDesignHelper;
 import io.reflection.app.client.helper.TooltipHelper;
 import io.reflection.app.client.helper.UserAgentHelper;
 import io.reflection.app.client.mixpanel.MixpanelHelper;
+import io.reflection.app.client.page.DeveloperPage;
 import io.reflection.app.client.part.BackToTop;
+import io.reflection.app.client.part.navigation.PanelRightSearch;
 import io.reflection.app.client.res.Styles;
-
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.RootPanel;
 
 /**
  * @author billy1380
@@ -27,11 +29,11 @@ import com.google.gwt.user.client.ui.RootPanel;
  */
 public class AppEntryPoint extends ErrorHandlingEntryPoint {
 
-	private HTMLPanel lPageContainer = new HTMLPanel("");
+	private final HTMLPanel lPageContainer = new HTMLPanel("");
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.google.gwt.core.client.EntryPoint#onModuleLoad()
 	 */
 	@Override
@@ -39,6 +41,10 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 		super.onModuleLoad();
 
 		UserAgentHelper.detectBrowser();
+
+		PanelRightSearch.exportAppSearchResponseHandler();
+		PanelRightSearch.exportCloseRightPanelSearch();
+		DeveloperPage.exportDeveloperAppsSearchResponseHandler();
 
 		// this registers the newly created singleton, so that
 		// fireCurrentHistoryState -> onValueChange -> addPages

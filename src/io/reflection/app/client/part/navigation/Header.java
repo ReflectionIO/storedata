@@ -84,8 +84,6 @@ public class Header extends Composite implements NavigationEventHandler, Session
 
 		initPanelLeftMenu();
 		initPanelsRight();
-
-		tempSearchContainer.removeFromParent();
 	}
 
 	private void setLoggedIn(boolean loggedIn) {

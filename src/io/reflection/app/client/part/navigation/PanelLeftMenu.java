@@ -97,14 +97,14 @@ public class PanelLeftMenu extends Composite
 	@UiField InlineHyperlink adminSimpleModelRunLink;
 	@UiField InlineHyperlink adminDataAccountFetchesLink;
 	@UiField SpanElement usersCount;
-	
-	private List<LIElement> highlightedItems = new ArrayList<LIElement>();
+
+	private final List<LIElement> highlightedItems = new ArrayList<LIElement>();
 
 	public PanelLeftMenu() {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		myDataItem.removeFromParent();
-		adminItem.removeFromParent();		
+		adminItem.removeFromParent();
 	}
 
 	private void activate(LIElement item) {
@@ -120,13 +120,13 @@ public class PanelLeftMenu extends Composite
 	}
 
 	private void highlight(LIElement... item) {
-		for (LIElement c : highlightedItems) {
+		for (final LIElement c : highlightedItems) {
 			deactivate(c);
 		}
 		highlightedItems.clear();
 
 		if (item != null) {
-			for (LIElement c : item) {
+			for (final LIElement c : item) {
 				activate(c);
 				highlightedItems.add(c);
 			}
@@ -135,7 +135,7 @@ public class PanelLeftMenu extends Composite
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
 	 */
 	@Override
@@ -145,13 +145,13 @@ public class PanelLeftMenu extends Composite
 		DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this);
 		DefaultEventBus.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this);
 		DefaultEventBus.get().addHandlerToSource(UserPowersEventHandler.TYPE, SessionController.get(), this);
-		
-		this.addMouseEvents();
+
+		addMouseEvents();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
 	 * io.reflection.app.client.controller.NavigationController.Stack)
 	 */
@@ -159,7 +159,7 @@ public class PanelLeftMenu extends Composite
 	public void navigationChanged(Stack previous, Stack current) {
 		leaderboardLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, OVERALL_LIST_TYPE,
 				FilterController.get().asRankFilterString()));
-		User user = SessionController.get().getLoggedInUser();
+		final User user = SessionController.get().getLoggedInUser();
 		if (user != null) {
 			myAppsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(),
 					FilterController.get().asMyAppsFilterString()));
@@ -263,7 +263,7 @@ public class PanelLeftMenu extends Composite
 	}
 
 	private void toggleDropDownItem(LIElement liElem) {
-		UListElement ulElem = liElem.getElementsByTagName("ul").getItem(0).cast();
+		final UListElement ulElem = liElem.getElementsByTagName("ul").getItem(0).cast();
 		if (liElem.hasClassName(IS_OPEN)) {
 			ulElem.getStyle().setMarginTop(-(ulElem.getClientHeight()), Unit.PX);
 			liElem.removeClassName(IS_OPEN);
@@ -275,15 +275,15 @@ public class PanelLeftMenu extends Composite
 
 	private void openDropDownItem(LIElement liElem) {
 		if (!liElem.hasClassName(IS_OPEN)) {
-			UListElement ulElem = liElem.getElementsByTagName("ul").getItem(0).cast();
+			final UListElement ulElem = liElem.getElementsByTagName("ul").getItem(0).cast();
 			ulElem.getStyle().setMarginTop(0, Unit.PX);
 			liElem.addClassName(IS_OPEN);
 		}
 	}
-	
+
 	private void openSelectedDropDownItem(LIElement liElem) {
 		if (!liElem.hasClassName(IS_OPEN) && liElem.hasClassName(IS_SELECTED)) {
-			UListElement ulElem = liElem.getElementsByTagName("ul").getItem(0).cast();
+			final UListElement ulElem = liElem.getElementsByTagName("ul").getItem(0).cast();
 			ulElem.getStyle().setMarginTop(0, Unit.PX);
 			liElem.addClassName(IS_OPEN);
 		}
@@ -291,32 +291,14 @@ public class PanelLeftMenu extends Composite
 
 	private void closeDropDownItem(LIElement liElem) {
 		if (liElem.hasClassName(IS_OPEN)) {
-			UListElement ulElem = liElem.getElementsByTagName("ul").getItem(0).cast();
+			final UListElement ulElem = liElem.getElementsByTagName("ul").getItem(0).cast();
 			ulElem.getStyle().setMarginTop(-(ulElem.getClientHeight()), Unit.PX);
 			liElem.removeClassName(IS_OPEN);
 		}
 	}
-	
-	private void addMouseEvents() {		
-		if(DOMHelper.getHtmlElement().hasClassName("no-touch")) { // No Touch Browser
-			this.addMouseOverHandler(new MouseOverHandler() {
 
-				@Override
-				public void onMouseOver(MouseOverEvent event) {
-					openSelectedDropDownItem(myDataItem);
-					openSelectedDropDownItem(adminItem);
-				}
-			});
-			
-			this.addMouseOutHandler(new MouseOutHandler() {
-
-				@Override
-				public void onMouseOut(MouseOutEvent event) {
-					closeDropDownItem(myDataItem);
-					closeDropDownItem(adminItem);
-				}
-			});
-		} else { // Touch Device
+	private void addMouseEvents() {
+		if (DOMHelper.getHtmlElement().hasClassName("touch")) { // Touch Supported Browser
 			openSelectedDropDownItem(myDataItem);
 			openSelectedDropDownItem(adminItem);
 		}
@@ -336,7 +318,7 @@ public class PanelLeftMenu extends Composite
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.client.handler.user.UsersEventHandler#receivedUsers(java.util.List)
 	 */
 	@Override
@@ -344,7 +326,7 @@ public class PanelLeftMenu extends Composite
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.client.handler.user.UsersEventHandler#receivedUsersCount(java.lang.Long)
 	 */
 	@Override
@@ -354,7 +336,7 @@ public class PanelLeftMenu extends Composite
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoggedIn(io.reflection.app.datatypes.shared.User,
 	 * io.reflection.app.api.shared.datatypes.Session)
 	 */
@@ -363,7 +345,7 @@ public class PanelLeftMenu extends Composite
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoggedOut()
 	 */
 	@Override
@@ -378,7 +360,7 @@ public class PanelLeftMenu extends Composite
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.client.handler.user.SessionEventHandler#userLoginFailed(com.willshex.gson.json.service.shared.Error)
 	 */
 	@Override
@@ -388,7 +370,7 @@ public class PanelLeftMenu extends Composite
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.client.handler.user.UserPowersEventHandler#gotUserPowers(io.reflection.app.datatypes.shared.User, java.util.List, java.util.List)
 	 */
 	@Override
@@ -399,12 +381,12 @@ public class PanelLeftMenu extends Composite
 		if (user != null) {
 			if (!itemList.isOrHasChild(myDataItem)) {
 				itemList.insertFirst(myDataItem);
-				UListElement ulElem = myDataItem.getElementsByTagName("ul").getItem(0).cast();
+				final UListElement ulElem = myDataItem.getElementsByTagName("ul").getItem(0).cast();
 				ulElem.getStyle().setMarginTop(-(ulElem.getClientHeight()), Unit.PX);
 			}
 			if (SessionController.get().isAdmin() && !itemList.isOrHasChild(adminItem)) {
 				itemList.appendChild(adminItem);
-				UListElement ulElem = adminItem.getElementsByTagName("ul").getItem(0).cast();
+				final UListElement ulElem = adminItem.getElementsByTagName("ul").getItem(0).cast();
 				ulElem.getStyle().setMarginTop(-(ulElem.getClientHeight()), Unit.PX);
 				UserController.get().fetchUsersCount();
 			} else {
@@ -415,7 +397,7 @@ public class PanelLeftMenu extends Composite
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.client.handler.user.UserPowersEventHandler#getGetUserPowersFailed(com.willshex.gson.json.service.shared.Error)
 	 */
 	@Override
@@ -423,7 +405,9 @@ public class PanelLeftMenu extends Composite
 		adminItem.removeFromParent();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see com.google.gwt.event.dom.client.HasMouseOutHandlers#addMouseOutHandler(com.google.gwt.event.dom.client.MouseOutHandler)
 	 */
 	@Override
@@ -431,7 +415,9 @@ public class PanelLeftMenu extends Composite
 		return addDomHandler(handler, MouseOutEvent.getType());
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 *
 	 * @see com.google.gwt.event.dom.client.HasMouseOverHandlers#addMouseOverHandler(com.google.gwt.event.dom.client.MouseOverHandler)
 	 */
 	@Override

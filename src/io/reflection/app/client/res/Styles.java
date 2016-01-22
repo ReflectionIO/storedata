@@ -16,7 +16,7 @@ import com.google.gwt.resources.client.ImageResource.RepeatStyle;
 
 /**
  * @author billy1380
- * 
+ *
  */
 public interface Styles extends ClientBundle {
 
@@ -428,9 +428,6 @@ public interface Styles extends ClientBundle {
 		@ClassName("country-select--popup")
 		String countrySelectPopup();
 
-		@ClassName("country-selector")
-		String countrySelector();
-
 		@ClassName("county-select--container")
 		String countySelectContainer();
 
@@ -548,6 +545,33 @@ public interface Styles extends ClientBundle {
 		String deleteAccountLink();
 
 		String descending();
+
+		@ClassName("developer-app-details-column")
+		String developerAppDetailsColumn();
+
+		@ClassName("developer-app-downloads-column")
+		String developerAppDownloadsColumn();
+
+		@ClassName("developer-app-iap-column")
+		String developerAppIapColumn();
+
+		@ClassName("developer-app-price-column")
+		String developerAppPriceColumn();
+
+		@ClassName("developer-app-release-date-column")
+		String developerAppReleaseDateColumn();
+
+		@ClassName("developer-app-revenue-column")
+		String developerAppRevenueColumn();
+
+		@ClassName("developer-app-version-release-date-column")
+		String developerAppVersionReleaseDateColumn();
+
+		@ClassName("developer-number-of-apps")
+		String developerNumberOfApps();
+
+		@ClassName("developer-page-title")
+		String developerPageTitle();
 
 		@ClassName("dk-component-row")
 		String dkComponentRow();
@@ -1079,9 +1103,6 @@ public interface Styles extends ClientBundle {
 		@ClassName("is-focused")
 		String isFocused();
 
-		@ClassName("is-highlighted")
-		String isHighlighted();
-
 		@ClassName("is-ie")
 		String isIe();
 
@@ -1255,6 +1276,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("loading-progress")
 		String loadingProgress();
 
+		@ClassName("loading-spinner--search-apps")
+		String loadingSpinnerSearchApps();
+
 		@ClassName("logged-in-section-content")
 		String loggedInSectionContent();
 
@@ -1416,6 +1440,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("page-contact")
 		String pageContact();
+
+		@ClassName("page-developer-apps")
+		String pageDeveloperApps();
 
 		@ClassName("page-faqs")
 		String pageFaqs();
@@ -2019,12 +2046,6 @@ public interface Styles extends ClientBundle {
 		String reviewsAndRatings();
 
 		String scrollable();
-
-		@ClassName("search-button")
-		String searchButton();
-
-		@ClassName("search-button-mobile")
-		String searchButtonMobile();
 
 		@ClassName("search-container")
 		String searchContainer();
