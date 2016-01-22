@@ -168,8 +168,8 @@
 					<dd ui:field="fileSize"></dd>
 					<dt>Languages</dt>
 					<dd ui:field="languageCodes"></dd>
-					<dt>Stores</dt>
-					<dd></dd>
+					<!-- <dt>Stores</dt>
+					<dd></dd> -->
 					<dt>Rated</dt>
 					<dd ui:field="rated"></dd>
 					<dt>Version</dt>

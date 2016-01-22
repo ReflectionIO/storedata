@@ -18,8 +18,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiRenderer;
 
 import io.reflection.app.client.controller.FilterController;
-import io.reflection.app.client.controller.NavigationController;
-import io.reflection.app.client.page.MyAppsPage;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.datatypes.shared.Item;
 
@@ -29,8 +27,10 @@ import io.reflection.app.datatypes.shared.Item;
  */
 public class MiniDeveloperAppCell extends AbstractCell<Item> {
 
-	@UiField AnchorElement activeLink;
-	@UiField SpanElement inactiveLink;
+	@UiField
+	AnchorElement	activeLink;
+	@UiField
+	SpanElement		inactiveLink;
 
 	interface MiniDeveloperAppCellRenderer extends UiRenderer {
 		void render(SafeHtmlBuilder sb, String name, String ratingAsPercentage, SafeUri smallImage, SafeUri link);
@@ -41,8 +41,7 @@ public class MiniDeveloperAppCell extends AbstractCell<Item> {
 	@Override
 	public void render(Context context, Item value, SafeHtmlBuilder builder) {
 
-		final SafeUri link = PageType.ItemPageType.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE, value.internalId,
-				FilterController.DOWNLOADS_CHART_TYPE, MyAppsPage.COMING_FROM_PARAMETER, FilterController.get().getFilter().asItemFilterString());
+		final SafeUri link = PageType.AppDetailsPage.asHref(value.internalId, "leaderboard", FilterController.get().getFilter().asItemFilterString());
 		final SafeUri smallImage = UriUtils.fromString(value.smallImage == null ? "images/placeholder_app_icon_2x.png" : value.smallImage);
 		String ratingAsPercentage = String.valueOf(value.rating);
 		if (value.rating != null && value.rating > 0) {

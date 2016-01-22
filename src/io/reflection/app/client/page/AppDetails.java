@@ -42,6 +42,7 @@ import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.helper.AnimationHelper;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormHelper;
+import io.reflection.app.client.helper.FormattingHelper;
 import io.reflection.app.client.helper.ResponsiveDesignHelper;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.client.res.Styles.ReflectionMainStyles;
@@ -591,23 +592,8 @@ public class AppDetails extends Page implements NavigationEventHandler {
 		}
 
 		if (data.get("releaseDate") != null) {
-			// String myString =
-			// DateFormat.getDateInstance().format(data.get("releaseDate").toString().replace("\"",
-			// ""));
-			// Window.alert(myString);
-			// Crashes the page, needs fix to format date
-			// try {
-			// SimpleDateFormat dateFormatter = new
-			// SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-			// Date dateToFormat =
-			// dateFormatter.parse(data.get("releaseDate").toString().replace("\"",
-			// ""));
-			//// String formattedDate = new SimpleDateFormat("dd/MM/yyyy,
-			// Ka").format(dateToFormat);
-			//// releaseDate.setInnerText(formattedDate.toString());
-			// } catch (ParseException e) {
-			// }
-			releaseDate.setInnerText(data.get("releaseDate").toString().replace("\"", ""));
+			final String dateString = FormattingHelper.convertITunesDateToDefaultFormat(data.get("releaseDate").toString().replace("\"", ""));
+			releaseDate.setInnerText(dateString);
 		}
 
 		if (data.get("description") != null) {
