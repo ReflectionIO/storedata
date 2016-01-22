@@ -59,13 +59,13 @@ public class DeveloperPage extends Page implements NavigationEventHandler {
 
 		public Item item;
 
-		public String formattedReleaseDate;
-		public Date currentVersionReleaseDate;
-		public String formattedCurrentVersionReleaseDate;
-		public String overallDownloads;
-		public String overallPrice;
-		public String overallRevenue;
-		public String iaps;
+		public String	formattedReleaseDate;
+		public Date		currentVersionReleaseDate;
+		public String	formattedCurrentVersionReleaseDate;
+		public String	overallDownloads;
+		public String	overallPrice;
+		public String	overallRevenue;
+		public String	iaps;
 
 		public ExternalApp(Item item, String formattedReleaseDate, Date currentVersionReleaseDate, String formattedCurrentVersionReleaseDate,
 				String overallDownloads, String overallPrice, String overallRevenue, String iaps) {
@@ -81,39 +81,44 @@ public class DeveloperPage extends Page implements NavigationEventHandler {
 		}
 	}
 
-	private static DeveloperPage INSTANCE = null;
-	public List<ExternalApp> developerApps = new ArrayList<ExternalApp>();
+	private static DeveloperPage	INSTANCE			= null;
+	public List<ExternalApp>			developerApps	= new ArrayList<ExternalApp>();
 
-	private static DeveloperPageUiBinder uiBinder = GWT.create(DeveloperPageUiBinder.class);
-	private final ReflectionMainStyles style = Styles.STYLES_INSTANCE.reflectionMainStyle();
-	private final LoadingBar loadingBar = new LoadingBar(false);
-	private String developerSearchString = "";
-	private final int searchLimit = 200;
+	private static DeveloperPageUiBinder	uiBinder							= GWT.create(DeveloperPageUiBinder.class);
+	private final ReflectionMainStyles		style									= Styles.STYLES_INSTANCE.reflectionMainStyle();
+	private final LoadingBar							loadingBar						= new LoadingBar(false);
+	private String												developerSearchString	= "";
+	private final int											searchLimit						= 200;
 
-	interface DeveloperPageUiBinder extends UiBinder<Widget, DeveloperPage> {}
+	interface DeveloperPageUiBinder extends UiBinder<Widget, DeveloperPage> {
+	}
 
-	@UiField(provided = true) CellTable<ExternalApp> developerAppsTable = new CellTable<ExternalApp>(200, BootstrapGwtCellTable.INSTANCE);
-	@UiField HeadingElement pageTitleDeveloperName;
-	@UiField HeadingElement numberOfApps;
-	@UiField Anchor appStoreLink;
+	@UiField(provided = true)
+	CellTable<ExternalApp>	developerAppsTable	= new CellTable<ExternalApp>(200, BootstrapGwtCellTable.INSTANCE);
+	@UiField
+	HeadingElement					pageTitleDeveloperName;
+	@UiField
+	HeadingElement					numberOfApps;
+	@UiField
+	Anchor									appStoreLink;
 
-	private final SafeHtmlHeader appDetailsHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("App Details " + AnimationHelper.getSorterSvg()));
-	private final SafeHtmlHeader releaseDateHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Released " + AnimationHelper.getSorterSvg()));
-	private final SafeHtmlHeader currentVersionReleaseDateHeader = new SafeHtmlHeader(
+	private final SafeHtmlHeader	appDetailsHeader								= new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("App Details " + AnimationHelper.getSorterSvg()));
+	private final SafeHtmlHeader	releaseDateHeader								= new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Released " + AnimationHelper.getSorterSvg()));
+	private final SafeHtmlHeader	currentVersionReleaseDateHeader	= new SafeHtmlHeader(
 			SafeHtmlUtils.fromTrustedString("Updated " + AnimationHelper.getSorterSvg()));
-	private final SafeHtmlHeader priceHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Price " + AnimationHelper.getSorterSvg()));
-	private final SafeHtmlHeader downloadsHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Downloads"));
-	private final SafeHtmlHeader revenueHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Revenue"));
-	private final SafeHtmlHeader iapHeader = new SafeHtmlHeader(
+	private final SafeHtmlHeader	priceHeader											= new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Price " + AnimationHelper.getSorterSvg()));
+	private final SafeHtmlHeader	downloadsHeader									= new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Downloads"));
+	private final SafeHtmlHeader	revenueHeader										= new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Revenue"));
+	private final SafeHtmlHeader	iapHeader												= new SafeHtmlHeader(
 			SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"In App Purchases\">IAP</span>"));
 
-	private Column<ExternalApp, Item> columnAppDetails;
-	private Column<ExternalApp, SafeHtml> columnReleaseDate;
-	private Column<ExternalApp, SafeHtml> columnCurrentVersionReleaseDate;
-	private Column<ExternalApp, SafeHtml> columnPrice;
-	private Column<ExternalApp, SafeHtml> columnDownloads;
-	private Column<ExternalApp, SafeHtml> columnRevenue;
-	private Column<ExternalApp, SafeHtml> columnIap;
+	private Column<ExternalApp, Item>			columnAppDetails;
+	private Column<ExternalApp, SafeHtml>	columnReleaseDate;
+	private Column<ExternalApp, SafeHtml>	columnCurrentVersionReleaseDate;
+	private Column<ExternalApp, SafeHtml>	columnPrice;
+	private Column<ExternalApp, SafeHtml>	columnDownloads;
+	private Column<ExternalApp, SafeHtml>	columnRevenue;
+	private Column<ExternalApp, SafeHtml>	columnIap;
 
 	public DeveloperPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -154,7 +159,8 @@ public class DeveloperPage extends Page implements NavigationEventHandler {
 		// comingPage = current.getParameter(0);
 		// previousFilter = current.getParameter(1);
 
-		// revenueLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, displayingAppId,
+		// revenueLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
+		// displayingAppId,
 		// REVENUE_CHART_TYPE, comingPage, previousFilter));
 	}
 
@@ -232,7 +238,8 @@ public class DeveloperPage extends Page implements NavigationEventHandler {
 			/*
 			 * (non-Javadoc)
 			 *
-			 * @see com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler#onColumnSort(com.google.gwt.user.cellview.client.ColumnSortEvent)
+			 * @see com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler#
+			 * onColumnSort(com.google.gwt.user.cellview.client.ColumnSortEvent)
 			 */
 			@Override
 			public void onColumnSort(ColumnSortEvent event) {
@@ -264,6 +271,7 @@ public class DeveloperPage extends Page implements NavigationEventHandler {
 				developerAppsTable.setRowData(0, developerApps);
 
 				TooltipHelper.updateHelperTooltip();
+				AnimationHelper.nativeScrollTop(0, 0, "swing");
 			}
 		};
 
@@ -289,7 +297,8 @@ public class DeveloperPage extends Page implements NavigationEventHandler {
 			@Override
 			public SafeHtml getValue(ExternalApp object) {
 				if (object.formattedReleaseDate != null) return SafeHtmlUtils.fromSafeConstant(object.formattedReleaseDate);
-				else return loaderInline;
+				else
+					return loaderInline;
 			}
 		};
 		columnReleaseDate.setCellStyleNames(style.mhxte6ciA());
@@ -302,7 +311,8 @@ public class DeveloperPage extends Page implements NavigationEventHandler {
 			@Override
 			public SafeHtml getValue(ExternalApp object) {
 				if (object.formattedCurrentVersionReleaseDate != null) return SafeHtmlUtils.fromSafeConstant(object.formattedCurrentVersionReleaseDate);
-				else return loaderInline;
+				else
+					return loaderInline;
 			}
 		};
 		columnCurrentVersionReleaseDate.setCellStyleNames(style.mhxte6ciA());
@@ -315,7 +325,8 @@ public class DeveloperPage extends Page implements NavigationEventHandler {
 			@Override
 			public SafeHtml getValue(ExternalApp object) {
 				if (object.overallPrice != null) return SafeHtmlUtils.fromSafeConstant(object.overallPrice);
-				else return loaderInline;
+				else
+					return loaderInline;
 			}
 		};
 		columnPrice.setCellStyleNames(style.mhxte6ciA());
@@ -481,7 +492,15 @@ public class DeveloperPage extends Page implements NavigationEventHandler {
 				if (jarray != null && jarray.size() > 0) {
 					final JsonArray filteredArray = new JsonArray();
 					for (int i = 0; i < jarray.size(); i++) {
-						final JsonElement trackId = jarray.get(i).getAsJsonObject().get("trackId"); // make sure trackId exists (first result doesn't have one)
+						final JsonElement trackId = jarray.get(i).getAsJsonObject().get("trackId"); // make
+																																												// sure
+																																												// trackId
+																																												// exists
+																																												// (first
+																																												// result
+																																												// doesn't
+																																												// have
+																																												// one)
 						if (trackId != null) {
 							if (jarray.get(i).getAsJsonObject().get("artistId").getAsString() == INSTANCE.developerSearchString) {
 								// for different accounts
