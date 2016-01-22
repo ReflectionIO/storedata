@@ -19,6 +19,7 @@ import io.reflection.app.client.helper.TooltipHelper;
 import io.reflection.app.client.helper.UserAgentHelper;
 import io.reflection.app.client.mixpanel.MixpanelHelper;
 import io.reflection.app.client.page.DeveloperPage;
+import io.reflection.app.client.page.AppDetails;
 import io.reflection.app.client.part.BackToTop;
 import io.reflection.app.client.part.navigation.PanelRightSearch;
 import io.reflection.app.client.res.Styles;
@@ -39,7 +40,11 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 	@Override
 	public void onModuleLoad() {
 		super.onModuleLoad();
-
+		AppDetails.exportAppDetailsResponseHandler();
+		AppDetails.exportMoreAppDetailsResponseHandler();
+		AppDetails.exportReviewsResponseHandler();
+		AppDetails.exportRatingsResponseHandler();
+		
 		UserAgentHelper.detectBrowser();
 
 		PanelRightSearch.exportAppSearchResponseHandler();
