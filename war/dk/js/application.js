@@ -9,7 +9,10 @@
 	var Page = function() {
 		instance = this;
 		new BrowserDetection();
-		new LeftPanelAndHamburger();
+		setTimeout( function() { 
+			new LeftPanelAndHamburger();
+		}, 500); // only for design kit template because CSS class is-selected is added dynamically
+		// and needs to be in place before the LeftNav will work
 		new FormInteractions();
 		new PanelRightOverlay();
 		new PanelRightMisplacedPassword();
@@ -163,14 +166,16 @@
 		// Collapse all menu items if not open
 		var topLevelNavItems = $('.js-main-nav > ul > li');	
 		topLevelNavItems.each(function(){
-			var totalHeight = 0;
-			$(this).find('li.has-child').each(function(){
+			if(!$(this).hasClass("is-selected")) {
+				var totalHeight = 0;
+				$(this).find('li.has-child').each(function(){
+					var collapsibleList = $(this).children('ul');
+					collapsibleList.css("margin-top", -collapsibleList.height());
+					totalHeight += collapsibleList.height();
+				});
 				var collapsibleList = $(this).children('ul');
 				collapsibleList.css("margin-top", -collapsibleList.height());
-				totalHeight += collapsibleList.height();
-			});
-			var collapsibleList = $(this).children('ul');
-			collapsibleList.css("margin-top", -collapsibleList.height());
+			}
 		});
 
 		$('.js-main-nav > ul > li ul li.js-is-collapsible > a').on("click", function(e){
@@ -230,12 +235,12 @@
 		});
 
 		if($(".no-touch").length > 0 && $(window).width() >= 960) {
-			$(".js-panel-left").on("mouseleave", function(){
-				$('.js-is-collapsible.is-open > a').trigger("click");
-			});
-			$(".js-panel-left").on("mouseenter", function(){
-				$('.js-is-collapsible.is-selected > a').trigger("click");
-			});
+			// $(".js-panel-left").on("mouseleave", function(){
+			// 	$('.js-is-collapsible.is-open > a').trigger("click");
+			// });
+			// $(".js-panel-left").on("mouseenter", function(){
+			// 	$('.js-is-collapsible.is-selected > a').trigger("click");
+			// });
 		}
 
 		// hide panel on content click/tap
