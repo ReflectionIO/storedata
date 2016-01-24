@@ -7,7 +7,6 @@
 //
 package io.reflection.app.helpers;
 
-import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -107,9 +106,8 @@ public class AppleReporterHelper {
 	 * @return
 	 * @throws AppleReporterException
 	 */
-	public static byte[] getReport(String userId, String password, String accountNumber, String vendor, DateType dateType, Date date) throws IOException, AppleReporterException { // TODO
+	public static byte[] getReport(String userId, String password, String accountNumber, String vendor, DateType dateType, Date date) throws AppleReporterException { // TODO
 		date = ApiHelper.removeTime(date);
-		boolean downloaded = false;
 		Properties clientProperties = new Properties();
 		clientProperties.setProperty(ITUNES_USERID_KEY, userId);
 		clientProperties.setProperty(ITUNES_PASSWORD_KEY, password);
@@ -137,41 +135,66 @@ public class AppleReporterHelper {
 		String[] options = new String[] { vendor + ",", "Sales,", "Summary,", dateType + ",", dateFormatted };
 
 		HttpURLConnection con = executeCommand(COMMAND_GET_REPORT, options, clientProperties);
-		if (con.getResponseCode() == 200) {
-			String fileName = con.getHeaderField("filename");
-			if (null != fileName) {
-				byte[] fileContent = IOUtils.toByteArray(con.getInputStream());
 
-				String downloadMessage = con.getHeaderField("downloadMsg");
-				LOG.info("iTunes Reporter download message:\n" + downloadMessage);
+		try {
+			if (con.getResponseCode() == 200 && con.getHeaderField("filename") != null) {
+				String fileName = con.getHeaderField("filename");
+				if (null != fileName) {
+					byte[] fileContent = IOUtils.toByteArray(con.getInputStream());
 
-				return fileContent;
-			} else {
-				if ((null == con.getHeaderField("EXITCODE")) && (null == con.getHeaderField("ERRORMSG"))) // Apple did not respond with a HTTP 200 ok code but didn't return an exitcode or errormsg either.
-																																																	 // Log
-					// the error stream
-					throw new AppleReporterException(con.getResponseCode(), "iTunes returned error message:\n" + IOUtils.toString(con.getErrorStream()));
-				else if (null == con.getHeaderField("ERRORMSG")) throw new AppleReporterException(con.getResponseCode(), "iTunes returned an error message:\n" + IOUtils.toString(con.getErrorStream()));
-				else {
-					Integer exitCode = Integer.valueOf(con.getHeaderField("EXITCODE"));
-					throw new AppleReporterException(exitCode, "iTunes returned an error message:\n" + IOUtils.toString(con.getErrorStream()));
+					String downloadMessage = con.getHeaderField("downloadMsg");
+					LOG.info("iTunes Reporter download message: " + downloadMessage);
+
+					return fileContent;
 				}
 			}
 
+			throw getAppleErrorFromResponce(con);
+		} catch (IOException e) {
+			throw new AppleReporterException(-1, e);
+		}
+	}
+
+	/**
+	 * @param con
+	 * @return
+	 */
+	private static AppleReporterException getAppleErrorFromResponce(HttpURLConnection con) {
+		int responseCode = -1;
+		String errorToLog = null;
+		try {
+			responseCode = con.getResponseCode();
+
+			List<String> errorLines = IOUtils.readLines(con.getErrorStream());
+			Iterator<String> errorMessageLineIterator = errorLines.iterator();
+
+			while (errorMessageLineIterator.hasNext()) {
+				String inputLine = errorMessageLineIterator.next();
+				// Parsing depends by the choose Mode (this is Robot.xml mode)
+				if (inputLine.contains("<Error>")) {
+					String errorCode = errorMessageLineIterator.next();
+					if (errorCode != null && errorCode.contains("<Code>") && errorCode.contains("</Code>")) {
+						errorCode = errorCode.trim().replace("<Code>", "").replace("</Code>", "");
+						String errorMessage = errorMessageLineIterator.next();
+						if (errorMessage != null && errorMessage.contains("<Message>") && errorMessage.contains("</Message>")) {
+							errorMessage = errorMessage.trim().replace("<Message>", "").replace("</Message>", "");
+						}
+						return new AppleReporterException(Integer.parseInt(errorCode), errorMessage);
+					}
+				}
+			}
+
+			errorToLog = Arrays.toString(errorLines.toArray());
+		} catch (IOException io) {
+			return new AppleReporterException(-1, io);
 		}
 
-		// try (BufferedReader in = executeCommand(COMMAND_GET_REPORT, options, clientProperties); ByteArrayOutputStream out = new ByteArrayOutputStream(4096);) {
-		// if (in == null) return null; // there must have been a problem executing the command / connecting to Itunes
-		//
-		// String inputLine;
-		// while ((inputLine = in.readLine()) != null) {
-		//
-		// }
-		// } catch (Exception ex) {
-		// LOG.log(Level.WARNING, "Exception occured while trying to read the report from iTunes", ex);
-		// }
-
-		return null;
+		return new AppleReporterException(-1,
+				String.format("Unknown Apple Itunes Error. Exit code: %s, HTTP response code: %d, Error Msg: , %sErrorStream:\n%s",
+						con.getHeaderField("EXITCODE"),
+						responseCode,
+						con.getHeaderField("ERRORMSG"),
+						errorToLog));
 	}
 
 	public static List<String> getVendors(String userId, String password) throws AppleReporterException, InputValidationException {
@@ -201,17 +224,7 @@ public class AppleReporterHelper {
 		while (lineIterator.hasNext()) {
 			String inputLine = lineIterator.next();
 			// Parsing depends by the choose Mode (this is Robot.xml mode)
-			if (inputLine.contains("<Error>")) {
-				String errorCode = lineIterator.next();
-				if (errorCode != null && errorCode.contains("<Code>") && errorCode.contains("</Code>")) {
-					errorCode = errorCode.trim().replace("<Code>", "").replace("</Code>", "");
-					String errorMessage = lineIterator.next();
-					if (errorMessage != null && errorMessage.contains("<Message>") && errorMessage.contains("</Message>")) {
-						errorMessage = errorMessage.trim().replace("<Message>", "").replace("</Message>", "");
-					}
-					throw new InputValidationException(Integer.parseInt(errorCode), errorMessage);
-				}
-			} else if (inputLine.contains("<Vendor>") && inputLine.contains("</Vendor>")) {
+			if (inputLine.contains("<Vendor>") && inputLine.contains("</Vendor>")) {
 				vendors.add(inputLine.trim().replace("<Vendor>", "").replace("</Vendor>", ""));
 			}
 		}
@@ -266,7 +279,7 @@ public class AppleReporterHelper {
 	 * @param accountNumber
 	 * @return
 	 */
-	public static List<String> getVendorsAndRegions(String userId, String password, String accountNumber) throws AppleReporterException { // TODO
+	public static List<String> getVendorsAndRegions(String userId, String password, String accountNumber) throws AppleReporterException {
 		Properties clientProperties = new Properties();
 		clientProperties.setProperty(ITUNES_USERID_KEY, userId);
 		clientProperties.setProperty(ITUNES_PASSWORD_KEY, password);
@@ -288,14 +301,7 @@ public class AppleReporterHelper {
 			int responseCode = con.getResponseCode();
 			if (responseCode == 200) return IOUtils.readLines(con.getInputStream());
 
-			if ((null == con.getHeaderField("EXITCODE")) && (null == con.getHeaderField("ERRORMSG"))) // Apple did not respond with a HTTP 200 ok code but didn't return an exitcode or errormsg either. Log
-																																																 // the error stream
-				throw new AppleReporterException(con.getResponseCode(), "iTunes returned error message:\n" + IOUtils.toString(con.getErrorStream()));
-			else if (null == con.getHeaderField("ERRORMSG")) throw new AppleReporterException(con.getResponseCode(), "iTunes returned an error message:\n" + IOUtils.toString(con.getErrorStream()));
-			else {
-				Integer exitCode = Integer.valueOf(con.getHeaderField("EXITCODE"));
-				throw new AppleReporterException(exitCode, "iTunes returned an error message:\n" + IOUtils.toString(con.getErrorStream()));
-			}
+			throw getAppleErrorFromResponce(con);
 		} catch (IOException iox) {
 			throw new AppleReporterException(-1, iox);
 		} finally {
@@ -306,12 +312,10 @@ public class AppleReporterHelper {
 	}
 
 	private static HttpURLConnection executeCommand(String command, String[] options, Properties clientProperties) throws AppleReporterException {
-		HttpURLConnection con = null;
-		BufferedReader in = null;
 
 		addCommonProperties(clientProperties);
 
-		con = getConnection(clientProperties, command.substring(0, command.indexOf(".")), "xml");
+		HttpURLConnection con = getConnection(clientProperties, command.substring(0, command.indexOf(".")), "xml");
 		executeCommandOnConnection(command, options, clientProperties, con);
 
 		return con;

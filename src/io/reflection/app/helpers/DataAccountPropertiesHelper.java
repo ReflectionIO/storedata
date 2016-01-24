@@ -134,6 +134,9 @@ public class DataAccountPropertiesHelper {
 		if (jsonProperties == null) return new ArrayList<SimpleEntry<String, String>>(0);
 
 		JsonElement accountsAndVendorIdsElement = jsonProperties.get(ACCOUNTS_AND_VENDOR_IDS);
+
+		if (accountsAndVendorIdsElement == null) return new ArrayList<>(0);
+
 		if (!accountsAndVendorIdsElement.isJsonArray()) return new ArrayList<>(0);
 
 		JsonArray accountsAndVendorIds = accountsAndVendorIdsElement.getAsJsonArray();
@@ -147,5 +150,27 @@ public class DataAccountPropertiesHelper {
 		}
 
 		return vendorIdList;
+	}
+
+	/**
+	 * @return
+	 */
+	public static String clearAccountAndVendorIds(String jsonProperties) {
+		JsonObject jsonObject = clearAccountAndVendorIds(Convert.toJsonObject(jsonProperties));
+		return jsonObject.toString();
+	}
+
+	/**
+	 * @param jsonObject
+	 * @return
+	 */
+	private static JsonObject clearAccountAndVendorIds(JsonObject jsonProperties) {
+		if (jsonProperties == null) return new JsonObject();
+
+		JsonElement accountsAndVendorIdsElement = jsonProperties.get(ACCOUNTS_AND_VENDOR_IDS);
+		if (accountsAndVendorIdsElement != null) {
+			jsonProperties.remove(ACCOUNTS_AND_VENDOR_IDS);
+		}
+		return jsonProperties;
 	}
 }
