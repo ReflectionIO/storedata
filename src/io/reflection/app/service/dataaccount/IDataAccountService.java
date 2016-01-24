@@ -8,15 +8,15 @@
 //
 package io.reflection.app.service.dataaccount;
 
-import io.reflection.app.api.exception.DataAccessException;
-import io.reflection.app.api.shared.datatypes.Pager;
-import io.reflection.app.datatypes.shared.DataAccount;
-
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 import com.spacehopperstudios.service.IService;
+
+import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.datatypes.shared.DataAccount;
 
 public interface IDataAccountService extends IService {
 	/**
@@ -36,7 +36,7 @@ public interface IDataAccountService extends IService {
 	public DataAccount getDataAccount(Long id, Boolean deleted) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param username
 	 * @param vendor
 	 * @return
@@ -129,7 +129,7 @@ public interface IDataAccountService extends IService {
 	public List<DataAccount> getIdsDataAccounts(Collection<Long> ids, Pager pager) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param vendorId
 	 * @return
 	 * @throws DataAccessException
@@ -187,5 +187,11 @@ public interface IDataAccountService extends IService {
 	 * @throws DataAccessException
 	 */
 	public List<DataAccount> getDataAccountForUser(Long userId) throws DataAccessException;
+
+	/**
+	 * @param dataAccount
+	 * @throws DataAccessException
+	 */
+	public void updateDataAccountProperties(DataAccount dataAccount) throws DataAccessException;
 
 }

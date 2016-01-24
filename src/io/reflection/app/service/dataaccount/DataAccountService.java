@@ -8,19 +8,7 @@
 //
 package io.reflection.app.service.dataaccount;
 
-import static com.spacehopperstudios.utility.StringUtils.addslashes;
-import static com.spacehopperstudios.utility.StringUtils.stripslashes;
-import io.reflection.app.api.exception.DataAccessException;
-import io.reflection.app.api.shared.datatypes.Pager;
-import io.reflection.app.api.shared.datatypes.SortDirectionType;
-import io.reflection.app.datatypes.shared.DataAccount;
-import io.reflection.app.datatypes.shared.DataSource;
-import io.reflection.app.logging.GaeLevel;
-import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
-import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
-import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
-import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
-import io.reflection.app.service.ServiceType;
+import static com.spacehopperstudios.utility.StringUtils.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,15 +26,27 @@ import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
 import com.google.appengine.api.taskqueue.TransientFailureException;
 
+import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.datatypes.shared.DataAccount;
+import io.reflection.app.datatypes.shared.DataSource;
+import io.reflection.app.logging.GaeLevel;
+import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
+import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
+import io.reflection.app.repackaged.scphopr.service.database.DatabaseType;
+import io.reflection.app.repackaged.scphopr.service.database.IDatabaseService;
+import io.reflection.app.service.ServiceType;
+
 final class DataAccountService implements IDataAccountService {
 
-	private static final Logger LOG = Logger.getLogger(DataAccountService.class.getName());
+	private static final Logger	LOG					= Logger.getLogger(DataAccountService.class.getName());
 
-	private static final String KEY_PART_1 = "F54E1A22";
-	private static final String KEY_PART_2 = "395D";
-	private static final String KEY_PART_3 = "42B8";
-	private static final String KEY_PART_4 = "9002";
-	private static final String KEY_PART_5 = "61E14A750D98";
+	private static final String	KEY_PART_1	= "F54E1A22";
+	private static final String	KEY_PART_2	= "395D";
+	private static final String	KEY_PART_3	= "42B8";
+	private static final String	KEY_PART_4	= "9002";
+	private static final String	KEY_PART_5	= "61E14A750D98";
 
 	@Override
 	public String getName() {
@@ -55,7 +55,7 @@ final class DataAccountService implements IDataAccountService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getDataAccount(java.lang.Long)
 	 */
 	@Override
@@ -67,7 +67,7 @@ final class DataAccountService implements IDataAccountService {
 	 *
 	 * @param id
 	 * @param deleted
-	 *            If true, retrieve deleted linked accounts as well
+	 *          If true, retrieve deleted linked accounts as well
 	 * @return
 	 * @throws DataAccessException
 	 */
@@ -99,7 +99,7 @@ final class DataAccountService implements IDataAccountService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getDataAccount(java.lang.String, java.lang.Long)
 	 */
 	@Override
@@ -109,7 +109,7 @@ final class DataAccountService implements IDataAccountService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getDataAccount(java.lang.String, java.lang.Long, java.lang.Boolean)
 	 */
 	@Override
@@ -362,7 +362,7 @@ final class DataAccountService implements IDataAccountService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getDataAccounts(io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
@@ -372,7 +372,7 @@ final class DataAccountService implements IDataAccountService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getActiveDataAccounts(io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
@@ -386,7 +386,8 @@ final class DataAccountService implements IDataAccountService {
 		final String getDataAccountsQuery = String
 				.format("SELECT *, convert(aes_decrypt(`password`,UNHEX('%s')), CHAR(1000)) AS `clearpassword` FROM `dataaccount` WHERE %s `deleted`='n' ORDER BY `%s` %s LIMIT %d,%d",
 						key(), includeInactive == null || !includeInactive.booleanValue() ? "`active`='y' AND" : "", pager.sortBy == null ? "id"
-								: stripslashes(pager.sortBy), pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
+								: stripslashes(pager.sortBy),
+						pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
 						pager.start == null ? Pager.DEFAULT_START.longValue() : pager.start.longValue(), pager.count == null ? Pager.DEFAULT_COUNT.longValue()
 								: pager.count.longValue());
 
@@ -414,7 +415,7 @@ final class DataAccountService implements IDataAccountService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getDataAccountsCount()
 	 */
 	@Override
@@ -424,7 +425,7 @@ final class DataAccountService implements IDataAccountService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getActiveDataAccountsCount()
 	 */
 	@Override
@@ -458,7 +459,7 @@ final class DataAccountService implements IDataAccountService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getIdsDataAccounts(java.util.Collection, io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
@@ -505,7 +506,7 @@ final class DataAccountService implements IDataAccountService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getVendorDataAccounts(java.lang.String)
 	 */
 	@Override
@@ -541,7 +542,7 @@ final class DataAccountService implements IDataAccountService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#triggerDataAccountFetch(io.reflection.app.datatypes.shared.DataAccount)
 	 */
 	@Override
@@ -552,7 +553,7 @@ final class DataAccountService implements IDataAccountService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#triggerSingleDateDataAccountFetch(io.reflection.app.datatypes.shared.DataAccount,
 	 * java.util.Date)
 	 */
@@ -563,7 +564,7 @@ final class DataAccountService implements IDataAccountService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#triggerSingleDateDataAccountFetch(io.reflection.app.datatypes.shared.DataAccount,
 	 * java.util.Date)
 	 */
@@ -574,7 +575,7 @@ final class DataAccountService implements IDataAccountService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#triggerMultipleDateDataAccountFetch(io.reflection.app.datatypes.shared.DataAccount,
 	 * java.util.Date, java.lang.Integer)
 	 */
@@ -585,7 +586,7 @@ final class DataAccountService implements IDataAccountService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getActiveDataAccountIDs()
 	 */
 	@Override
@@ -595,7 +596,7 @@ final class DataAccountService implements IDataAccountService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getAllDataAccountIDs()
 	 */
 	@Override
@@ -629,7 +630,7 @@ final class DataAccountService implements IDataAccountService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getDataAccountForUser(java.lang.Long)
 	 */
 	@Override
@@ -660,7 +661,7 @@ final class DataAccountService implements IDataAccountService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.dataaccount.IDataAccountService#getDataAccount(java.lang.String, java.lang.String)
 	 */
 	@Override
@@ -671,7 +672,8 @@ final class DataAccountService implements IDataAccountService {
 		final Connection dataAccountConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
 
 		final String getDataAccountQuery = String
-				.format("SELECT *, convert(aes_decrypt(`password`,UNHEX('%s')), CHAR(1000)) AS `clearpassword` FROM `dataaccount` WHERE `username`='%s' AND `properties` LIKE '%%%s%%' AND `deleted`='n' LIMIT 1",
+				.format(
+						"SELECT *, convert(aes_decrypt(`password`,UNHEX('%s')), CHAR(1000)) AS `clearpassword` FROM `dataaccount` WHERE `username`='%s' AND `properties` LIKE '%%%s%%' AND `deleted`='n' LIMIT 1",
 						key(), username, vendor);
 
 		try {
@@ -689,4 +691,24 @@ final class DataAccountService implements IDataAccountService {
 		return dataAccount;
 	}
 
+	/* (non-Javadoc)
+	 * @see io.reflection.app.service.dataaccount.IDataAccountService#updateDataAccountProperties(io.reflection.app.datatypes.shared.DataAccount)
+	 */
+	@Override
+	public void updateDataAccountProperties(DataAccount dataAccount) throws DataAccessException {
+		final String updateDataAccountPropertiesQuery = String.format(
+				"UPDATE `dataaccount` SET `properties`='%s' WHERE `id`=%d",
+				addslashes(dataAccount.properties), dataAccount.id);
+
+		final Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
+
+		try {
+			dataAccountConnection.connect();
+			dataAccountConnection.executeQuery(updateDataAccountPropertiesQuery);
+		} finally {
+			if (dataAccountConnection != null) {
+				dataAccountConnection.disconnect();
+			}
+		}
+	}
 }
