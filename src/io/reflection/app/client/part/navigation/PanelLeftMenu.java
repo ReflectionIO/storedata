@@ -8,16 +8,9 @@
 package io.reflection.app.client.part.navigation;
 
 import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
-import io.reflection.app.api.core.shared.call.DeleteLinkedAccountRequest;
-import io.reflection.app.api.core.shared.call.DeleteLinkedAccountResponse;
-import io.reflection.app.api.core.shared.call.LinkAccountRequest;
-import io.reflection.app.api.core.shared.call.LinkAccountResponse;
-import io.reflection.app.api.core.shared.call.event.DeleteLinkedAccountEventHandler;
-import io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler;
 import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.controller.FilterController;
-import io.reflection.app.client.controller.LinkedAccountController;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.SessionController;
@@ -31,7 +24,6 @@ import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
-import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,8 +47,7 @@ import com.willshex.gson.json.service.shared.Error;
  * @author Stefano Capuzzi
  *
  */
-public class PanelLeftMenu extends Composite implements UsersEventHandler, NavigationEventHandler, SessionEventHandler, UserPowersEventHandler,
-		LinkAccountEventHandler, DeleteLinkedAccountEventHandler {
+public class PanelLeftMenu extends Composite implements UsersEventHandler, NavigationEventHandler, SessionEventHandler, UserPowersEventHandler {
 
 	private static PanelLeftMenuUiBinder uiBinder = GWT.create(PanelLeftMenuUiBinder.class);
 
@@ -66,10 +57,15 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 	public static final String IS_SELECTED = Styles.STYLES_INSTANCE.reflectionMainStyle().isSelected();
 
 	@UiField UListElement itemList;
-	@UiField LIElement leaderboardItem;
+	@UiField Anchor myDataLink;
+	@UiField LIElement myDataItem;
 	@UiField LIElement myAppsItem;
+	@UiField LIElement linkedAccountsItem;
+	@UiField LIElement leaderboardItem;
+	@UiField LIElement productItem;
+	@UiField LIElement pricingItem;
 	@UiField LIElement blogItem;
-	@UiField LIElement forumItem;
+	// @UiField LIElement forumItem;
 	@UiField LIElement adminItem;
 	@UiField LIElement adminFeedBrowserItem;
 	@UiField LIElement adminSimpleModelRunItem;
@@ -85,69 +81,29 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 	@UiField LIElement adminSendNotificationItem;
 	@UiField LIElement adminBlogItem;
 	@UiField Anchor adminLink;
-	@UiField InlineHyperlink leaderboardLink;
 	@UiField InlineHyperlink myAppsLink;
+	@UiField InlineHyperlink linkedAccountsLink;
+	@UiField InlineHyperlink leaderboardLink;
 	@UiField InlineHyperlink adminFeedBrowserLink;
 	@UiField InlineHyperlink adminSimpleModelRunLink;
 	@UiField InlineHyperlink adminDataAccountFetchesLink;
+	@UiField LIElement productSecondaryItem;
+	@UiField LIElement pricingSecondaryItem;
+	@UiField InlineHyperlink pricingSecondaryLink;
+	@UiField UListElement secondaryFooterList;
 	@UiField SpanElement usersCount;
 
-	private List<LIElement> items;
+	// private List<LIElement> items;
 	private List<LIElement> highlightedItems = new ArrayList<LIElement>();
 
 	public PanelLeftMenu() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		myAppsItem.removeFromParent();
+		myDataItem.removeFromParent();
 		adminItem.removeFromParent();
-		createItemList();
+		productSecondaryItem.removeFromParent();
+		pricingSecondaryItem.removeFromParent();
 
-		forumItem.removeFromParent();
-	}
-
-	private void attachUserLinks(User user) {
-		if (user != null) {
-			if (SessionController.get().isLoggedInUserAdmin() || SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE)) {
-				if (!itemList.isOrHasChild(myAppsItem)) {
-					itemList.insertAfter(myAppsItem, leaderboardItem);
-				}
-			} else {
-				myAppsItem.removeFromParent();
-			}
-			if (SessionController.get().isLoggedInUserAdmin()) {
-				itemList.appendChild(adminItem);
-				UListElement ulAdminElem = adminItem.getElementsByTagName("ul").getItem(0).cast(); // Close admin menu
-				ulAdminElem.getStyle().setMarginTop(-(ulAdminElem.getClientHeight()), Unit.PX);
-				UserController.get().fetchUsersCount();
-			} else {
-				adminItem.removeFromParent();
-			}
-		}
-	}
-
-	private void createItemList() {
-		if (items == null) {
-			items = new ArrayList<LIElement>();
-			items.add(leaderboardItem);
-			items.add(myAppsItem);
-			items.add(blogItem);
-			items.add(forumItem);
-			items.add(adminItem);
-			items.add(adminFeedBrowserItem);
-			items.add(adminSimpleModelRunItem);
-			items.add(adminItemsItem);
-			items.add(adminCategoriesItem);
-			items.add(adminUsersItem);
-			items.add(adminRolesItem);
-			items.add(adminPermissionsItem);
-			items.add(adminDataAccountsItem);
-			items.add(adminDataAccountFetchesItem);
-			items.add(adminEventsItem);
-			items.add(adminEventSubscriptionsItem);
-			items.add(adminEventSubscriptionsItem);
-			items.add(adminSendNotificationItem);
-			items.add(adminBlogItem);
-		}
 	}
 
 	private void activate(LIElement item) {
@@ -188,8 +144,7 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 		DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this);
 		DefaultEventBus.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this);
 		DefaultEventBus.get().addHandlerToSource(UserPowersEventHandler.TYPE, SessionController.get(), this);
-		DefaultEventBus.get().addHandlerToSource(LinkAccountEventHandler.TYPE, LinkedAccountController.get(), this);
-		DefaultEventBus.get().addHandlerToSource(DeleteLinkedAccountEventHandler.TYPE, LinkedAccountController.get(), this);
+
 	}
 
 	/*
@@ -206,6 +161,8 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 		if (user != null) {
 			myAppsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.MyAppsPageType.toString(), user.id.toString(),
 					FilterController.get().asMyAppsFilterString()));
+			linkedAccountsLink
+					.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.LinkedAccountsPageType.toString(), user.id.toString()));
 		}
 		adminFeedBrowserLink.setTargetHistoryToken(PageType.FeedBrowserPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
 				FilterController.get().asFeedFilterString()));
@@ -214,59 +171,90 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 				.asDataAccountFetchFilterString()));
 
 		// Highlight selected items
-		if (PageType.RanksPageType.equals(current.getPage())) {
-			highlight(leaderboardItem);
+		if (PageType.UsersPageType.equals(current.getPage()) && current.getAction() != null && PageType.MyAppsPageType.equals(current.getAction())) {
+			highlight(myDataItem, myAppsItem);
 			closeDropDownItem(adminItem);
-		} else if (PageType.UsersPageType.equals(current.getPage()) && current.getAction() != null && PageType.MyAppsPageType.equals(current.getAction())) {
-			highlight(myAppsItem);
+			openDropDownItem(myDataItem);
+		} else if (PageType.UsersPageType.equals(current.getPage()) && current.getAction() != null
+				&& PageType.LinkedAccountsPageType.equals(current.getAction())) {
+			highlight(myDataItem, linkedAccountsItem);
+			closeDropDownItem(adminItem);
+			openDropDownItem(myDataItem);
+		} else if (PageType.RanksPageType.equals(current.getPage())) {
+			highlight(leaderboardItem);
+			closeDropDownItem(myDataItem);
+			closeDropDownItem(adminItem);
+		} else if (PageType.ProductPageType.equals(current.getPage())) {
+			highlight(productItem);
+			closeDropDownItem(myDataItem);
+			closeDropDownItem(adminItem);
+		} else if (PageType.PricingPageType.equals(current.getPage())) {
+			highlight(pricingItem);
+			closeDropDownItem(myDataItem);
+			closeDropDownItem(adminItem);
 		} else if (PageType.BlogPostsPageType.equals(current.getPage()) || PageType.BlogPostPageType.equals(current.getPage())) {
 			highlight(blogItem);
+			closeDropDownItem(myDataItem);
 			closeDropDownItem(adminItem);
-		} else if (PageType.ForumPageType.equals(current.getPage()) || PageType.ForumThreadPageType.equals(current.getPage())
-				|| PageType.ForumTopicPageType.equals(current.getPage())) {
-			highlight(forumItem);
-			closeDropDownItem(adminItem);
+			// } else if (PageType.ForumPageType.equals(current.getPage()) || PageType.ForumThreadPageType.equals(current.getPage())
+			// || PageType.ForumTopicPageType.equals(current.getPage())) {
+			// highlight(forumItem);
+			// closeDropDownItem(adminItem);
 		} else if (PageType.FeedBrowserPageType.equals(current.getPage())) {
 			highlight(adminItem, adminFeedBrowserItem);
+			closeDropDownItem(myDataItem);
 			openDropDownItem(adminItem);
 		} else if (PageType.SimpleModelRunPageType.equals(current.getPage())) {
 			highlight(adminItem, adminSimpleModelRunItem);
+			closeDropDownItem(myDataItem);
 			openDropDownItem(adminItem);
 		} else if (PageType.ItemsPageType.equals(current.getPage())) {
 			highlight(adminItem, adminItemsItem);
+			closeDropDownItem(myDataItem);
 			openDropDownItem(adminItem);
 		} else if (PageType.CategoriesPageType.equals(current.getPage())) {
 			highlight(adminItem, adminCategoriesItem);
+			closeDropDownItem(myDataItem);
 			openDropDownItem(adminItem);
 		} else if (PageType.UsersPageType.equals(current.getPage()) && current.getAction() == null) {
 			highlight(adminItem, adminUsersItem);
+			closeDropDownItem(myDataItem);
 			openDropDownItem(adminItem);
 		} else if (PageType.RolesPageType.equals(current.getPage())) {
 			highlight(adminItem, adminRolesItem);
+			closeDropDownItem(myDataItem);
 			openDropDownItem(adminItem);
 		} else if (PageType.PermissionsPageType.equals(current.getPage())) {
 			highlight(adminItem, adminPermissionsItem);
+			closeDropDownItem(myDataItem);
 			openDropDownItem(adminItem);
 		} else if (PageType.DataAccountsPageType.equals(current.getPage())) {
 			highlight(adminItem, adminDataAccountsItem);
+			closeDropDownItem(myDataItem);
 			openDropDownItem(adminItem);
 		} else if (PageType.DataAccountFetchesPageType.equals(current.getPage())) {
 			highlight(adminItem, adminDataAccountFetchesItem);
+			closeDropDownItem(myDataItem);
 			openDropDownItem(adminItem);
 		} else if (PageType.EventsPageType.equals(current.getPage())) {
 			highlight(adminItem, adminEventsItem);
+			closeDropDownItem(myDataItem);
 			openDropDownItem(adminItem);
 		} else if (PageType.EventSubscriptionsPageType.equals(current.getPage())) {
 			highlight(adminItem, adminEventSubscriptionsItem);
+			closeDropDownItem(myDataItem);
 			openDropDownItem(adminItem);
 		} else if (PageType.SendNotificationPageType.equals(current.getPage())) {
 			highlight(adminItem, adminSendNotificationItem);
+			closeDropDownItem(myDataItem);
 			openDropDownItem(adminItem);
 		} else if (PageType.BlogAdminPageType.equals(current.getPage()) || PageType.BlogEditPostPageType.equals(current.getPage())) {
 			highlight(adminItem, adminBlogItem);
+			closeDropDownItem(myDataItem);
 			openDropDownItem(adminItem);
 		} else {
 			highlight();
+			closeDropDownItem(myDataItem);
 			closeDropDownItem(adminItem);
 		}
 
@@ -282,10 +270,12 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 			ulElem.getStyle().setMarginTop(0, Unit.PX);
 			liElem.addClassName(IS_OPEN);
 			liElem.addClassName(IS_SELECTED);
-			leaderboardItem.removeClassName(IS_SELECTED);
-			myAppsItem.removeClassName(IS_SELECTED);
-			blogItem.removeClassName(IS_SELECTED);
-			forumItem.removeClassName(IS_SELECTED);
+			// leaderboardItem.removeClassName(IS_SELECTED);
+			// myAppsItem.removeClassName(IS_SELECTED);
+			// productItem.removeClassName(IS_SELECTED);
+			// pricingItem.removeClassName(IS_SELECTED);
+			// blogItem.removeClassName(IS_SELECTED);
+			// forumItem.removeClassName(IS_SELECTED);
 		}
 	}
 
@@ -295,10 +285,12 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 			ulElem.getStyle().setMarginTop(0, Unit.PX);
 			liElem.addClassName(IS_OPEN);
 			// liElem.addClassName(IS_SELECTED);
-			myAppsItem.removeClassName(IS_SELECTED);
-			leaderboardItem.removeClassName(IS_SELECTED);
-			blogItem.removeClassName(IS_SELECTED);
-			forumItem.removeClassName(IS_SELECTED);
+			// myAppsItem.removeClassName(IS_SELECTED);
+			// leaderboardItem.removeClassName(IS_SELECTED);
+			// productItem.removeClassName(IS_SELECTED);
+			// pricingItem.removeClassName(IS_SELECTED);
+			// blogItem.removeClassName(IS_SELECTED);
+			// forumItem.removeClassName(IS_SELECTED);
 		}
 	}
 
@@ -309,6 +301,12 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 			liElem.removeClassName(IS_OPEN);
 			liElem.removeClassName(IS_SELECTED);
 		}
+	}
+
+	@UiHandler("myDataLink")
+	void onMyDataLinkClicked(ClickEvent event) {
+		event.preventDefault();
+		toggleDropDownItem(myDataItem);
 	}
 
 	@UiHandler("adminLink")
@@ -351,8 +349,14 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 	 */
 	@Override
 	public void userLoggedOut() {
-		myAppsItem.removeFromParent();
+		closeDropDownItem(myDataItem);
+		myDataItem.removeFromParent();
+		closeDropDownItem(adminItem);
 		adminItem.removeFromParent();
+		productSecondaryItem.removeFromParent();
+		pricingSecondaryItem.removeFromParent();
+		itemList.insertBefore(productItem, blogItem);
+		itemList.insertBefore(pricingItem, blogItem);
 	}
 
 	/*
@@ -371,8 +375,29 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 	 * @see io.reflection.app.client.handler.user.UserPowersEventHandler#gotUserPowers(io.reflection.app.datatypes.shared.User, java.util.List, java.util.List)
 	 */
 	@Override
-	public void gotUserPowers(User user, List<Role> roles, List<Permission> permissions) {
-		attachUserLinks(user);
+	public void gotUserPowers(User user, List<Role> roles, List<Permission> permissions, Integer daysSinceRoleAssigned) {
+		// Since is attached once, close dropdowns when the panel is created
+		productItem.removeFromParent();
+		pricingItem.removeFromParent();
+		secondaryFooterList.insertFirst(pricingSecondaryItem);
+		secondaryFooterList.insertFirst(productSecondaryItem);
+		if (user != null) {
+			pricingSecondaryLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.ManageSubscriptionPageType.toString(),
+					user.id.toString()));
+			if (!itemList.isOrHasChild(myDataItem)) {
+				itemList.insertFirst(myDataItem);
+				UListElement ulElem = myDataItem.getElementsByTagName("ul").getItem(0).cast();
+				ulElem.getStyle().setMarginTop(-(ulElem.getClientHeight()), Unit.PX);
+			}
+			if (SessionController.get().isAdmin() && !itemList.isOrHasChild(adminItem)) {
+				itemList.appendChild(adminItem);
+				UListElement ulElem = adminItem.getElementsByTagName("ul").getItem(0).cast();
+				ulElem.getStyle().setMarginTop(-(ulElem.getClientHeight()), Unit.PX);
+				UserController.get().fetchUsersCount();
+			} else {
+				adminItem.removeFromParent();
+			}
+		}
 	}
 
 	/*
@@ -384,45 +409,5 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 	public void getGetUserPowersFailed(Error error) {
 		adminItem.removeFromParent();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler#linkAccountSuccess(io.reflection.app.api.core.shared.call.LinkAccountRequest,
-	 * io.reflection.app.api.core.shared.call.LinkAccountResponse)
-	 */
-	@Override
-	public void linkAccountSuccess(LinkAccountRequest input, LinkAccountResponse output) {
-		attachUserLinks(SessionController.get().getLoggedInUser());
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler#linkAccountFailure(io.reflection.app.api.core.shared.call.LinkAccountRequest,
-	 * java.lang.Throwable)
-	 */
-	@Override
-	public void linkAccountFailure(LinkAccountRequest input, Throwable caught) {}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.api.core.shared.call.event.DeleteLinkedAccountEventHandler#deleteLinkedAccountSuccess(io.reflection.app.api.core.shared.call.
-	 * DeleteLinkedAccountRequest, io.reflection.app.api.core.shared.call.DeleteLinkedAccountResponse)
-	 */
-	@Override
-	public void deleteLinkedAccountSuccess(DeleteLinkedAccountRequest input, DeleteLinkedAccountResponse output) {
-		attachUserLinks(SessionController.get().getLoggedInUser());
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.api.core.shared.call.event.DeleteLinkedAccountEventHandler#deleteLinkedAccountFailure(io.reflection.app.api.core.shared.call.
-	 * DeleteLinkedAccountRequest, java.lang.Throwable)
-	 */
-	@Override
-	public void deleteLinkedAccountFailure(DeleteLinkedAccountRequest input, Throwable caught) {}
 
 }

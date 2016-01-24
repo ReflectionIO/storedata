@@ -7,6 +7,17 @@
 //
 package io.reflection.app.client.page;
 
+import io.reflection.app.api.core.shared.call.ForgotPasswordRequest;
+import io.reflection.app.api.core.shared.call.ForgotPasswordResponse;
+import io.reflection.app.api.core.shared.call.event.ForgotPasswordEventHandler;
+import io.reflection.app.api.shared.ApiError;
+import io.reflection.app.client.DefaultEventBus;
+import io.reflection.app.client.controller.SessionController;
+import io.reflection.app.client.mixpanel.MixpanelHelper;
+import io.reflection.app.client.part.login.ForgotPasswordForm;
+import io.reflection.app.client.part.login.LoginForm;
+import io.reflection.app.client.res.Styles;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
@@ -16,22 +27,13 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.willshex.gson.json.service.shared.StatusType;
-
-import io.reflection.app.api.core.shared.call.ForgotPasswordRequest;
-import io.reflection.app.api.core.shared.call.ForgotPasswordResponse;
-import io.reflection.app.api.core.shared.call.event.ForgotPasswordEventHandler;
-import io.reflection.app.api.shared.ApiError;
-import io.reflection.app.client.DefaultEventBus;
-import io.reflection.app.client.controller.SessionController;
-import io.reflection.app.client.helper.FormHelper;
-import io.reflection.app.client.part.login.ForgotPasswordForm;
-import io.reflection.app.client.part.login.LoginForm;
-import io.reflection.app.client.res.Styles;
 
 /**
  * @author billy1380
@@ -43,17 +45,14 @@ public class LoginPage extends Page implements ForgotPasswordEventHandler {
 
 	interface LoginPageUiBinder extends UiBinder<Widget, LoginPage> {}
 
-	@UiField InlineHyperlink register;
-	@UiField InlineHyperlink login;
+	@UiField InlineHyperlink signUpLink;
 	@UiField LoginForm loginForm;
 	@UiField ForgotPasswordForm forgotPasswordForm;
 	@UiField DivElement formSubmittedSuccessPanel;
+	@UiField Anchor backToLogin;
 
 	public LoginPage() {
 		initWidget(uiBinder.createAndBindUi(this));
-
-		login.setTargetHistoryToken(PageType.LoginPageType.asTargetHistoryToken(FormHelper.REQUEST_INVITE_ACTION_NAME));
-		register.setTargetHistoryToken(PageType.RegisterPageType.asTargetHistoryToken(FormHelper.REQUEST_INVITE_ACTION_NAME));
 
 		loginForm.getResetPasswordLink().addClickHandler(new ClickHandler() {
 
@@ -84,6 +83,41 @@ public class LoginPage extends Page implements ForgotPasswordEventHandler {
 
 			}
 		});
+
+		forgotPasswordForm.getBackToLoginLink().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				event.preventDefault();
+				Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().resetPasswordFormIsShowing());
+				loginForm.getElement().getParentElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().tabs__contentIsSubmitted());
+				formSubmittedSuccessPanel.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
+				loginForm.getElement().getParentElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().showResetPasswordForm());
+				loginForm.getElement().removeAttribute("style");
+				forgotPasswordForm.getElement().removeAttribute("style");
+				forgotPasswordForm.resetForm();
+				Document.get().getBody().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().loginFormIsShowing());
+			}
+		});
+	}
+
+	@UiHandler("signUpLink")
+	void onSignUpClicked(ClickEvent event) {
+		MixpanelHelper.trackClicked(MixpanelHelper.Event.GO_TO_SIGNUP_PAGE, "loginPage_tabLoginForm_signup");
+	}
+
+	@UiHandler("backToLogin")
+	void onBackToLoginClicked(ClickEvent event) {
+		event.preventDefault();
+
+		Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().resetPasswordFormIsShowing());
+		loginForm.getElement().getParentElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().tabs__contentIsSubmitted());
+		formSubmittedSuccessPanel.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
+		loginForm.getElement().getParentElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().showResetPasswordForm());
+		loginForm.getElement().removeAttribute("style");
+		forgotPasswordForm.getElement().removeAttribute("style");
+		forgotPasswordForm.resetForm();
+		Document.get().getBody().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().loginFormIsShowing());
 	}
 
 	/*

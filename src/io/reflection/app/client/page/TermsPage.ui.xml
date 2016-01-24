@@ -8,7 +8,7 @@
 		<div
 			class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnTwoThirds} {STYLES_INSTANCE.reflectionMainStyle.blogContentContainer}">
 			<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticleFull}">				
-				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Reflection App Intelligence Service</h2>
+				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Reflection App Market Intelligence Service</h2>
 				<h1>Beta Phase Terms and Conditions</h1> 
 						<ol class="{STYLES_INSTANCE.reflectionMainStyle.contentList}">
 							<li>
@@ -20,7 +20,7 @@
 										The Reflection Service is provided by Reflection.io Limited 
 										(<strong>"Reflection"</strong>, <strong>"we"</strong>, <strong>"us"</strong> and <strong>"our"</strong>), 
 										a company registered in England and Wales, company number 08044310, whose place of business 
-										is at 40-44 Newman Street, London W1T 1QD, United Kingdom
+										is at 40-44 Newman Street, London W1T 1QD, United Kingdom.
 									</li>
 									<li>
 										Please read these Terms and Conditions (<strong>"Terms"</strong>) carefully. 
@@ -53,7 +53,7 @@
 								 <h4 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFive}">"User Account Information"</h4>
 								 <p>Means your user login and password details for access to your data from a specific Source, for example, your App Platform Account user name and password.</p>
 								 <h4 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFive}">"Reflection Service"</h4>
-								 <p>Means service accessible via the web url <a href="http://www.reflection.io">http://www.reflection.io</a> including any pages 
+								 <p>Means service accessible via the web url <a href="http://www.reflection.io" target="_blank">http://www.reflection.io</a> including any pages 
 								 of that website and any other services made available to you by us under these Terms.</p>
 								 <h4 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFive}">"Sources"</h4>
 								 <p>Means online third-party data sources, including websites, 
@@ -77,10 +77,10 @@
 										User Account Information which you own at the time we collect it.
 									</li>
 									<li>
-										Your User Input Data (such as iTunes Sale Reports) informs our App Intelligence 
+										Your User Input Data (such as iTunes Sales Reports) informs our App Intelligence 
 										but remains private to you. We do not share your User Input Data with other users of 
 										the Reflection Service. You can view and analyse your own User Input Data in the 
-										"My Apps" section of the Reflection Service, but this data is not visible to 
+										"My Data" section of the Reflection Service, but this data is not visible to 
 										Reflection Users outside of your organisation.
 									</li>
 									<li>
@@ -90,13 +90,13 @@
 										We retain information you provide us (<strong>except</strong> your User Input Data and User Account Information) for as long as is necessary to comply with our legal obligations or resolve disputes.
 									</li>
 									<li>
-										We use cookies. When you use the Reflection Service, we may collect, process and use information about you which may not personally identify you but which may be helpful for improving the operation of the Site. Such information may be collected through “traffic data” and may entail the use of cookies, IP Addresses or other numeric codes used to identify your device and compile information about your use of the Reflection Service to help us improve it. Some cookies we use are set by third party analytics service (currently Google Analytics and Qbit). You can delete cookies or configure your device to reject them, although this may disable the ability of the Reflection Service to manage individual sessions.
+										We use cookies. When you use the Reflection Service, we may collect, process and use information about you which may not personally identify you but which may be helpful for improving the operation of the Site. Such information may be collected through “traffic data” and may entail the use of cookies, IP Addresses or other numeric codes used to identify your device and compile information about your use of the Reflection Service to help us improve it. Some cookies we use are set by third party analytics service (currently Google Analytics and Mixpanel). You can delete cookies or configure your device to reject them, although this may disable the ability of the Reflection Service to manage individual sessions.
 									</li>
 									<li>
 										We will never sell or share your data with any third parties, or use it in any way that is not necessary for the purpose of compiling and analysing our App Intelligence, without your prior consent.
 									</li>
 									<li>
-										<strong>We take the security of your data very seriously</strong>. The data host we currently use is Google Cloud Platform, whose Terms of Service and Privacy Policy can be read for further information on the data privacy and security measures taken to protect your data. All data hosted on the Google Cloud Platform solution is protected with state of the art SSL encryption.
+										<strong>We take the security of your data very seriously</strong>. The data host we currently use is Google Cloud Platform, whose Terms of Service and Privacy Policy can be read for further information on the data privacy and security measures taken to protect your data.<br/><br/><a href="https://cloud.google.com/security/" target="_blank">https://cloud.google.com/security/</a><br/><br/>Reflection uses SSL encryption for data transfer between your browser and our secure servers within the Google Cloud Infrastructure.
 									</li>
 								</ol>
 							</li>
@@ -214,7 +214,7 @@ interrupted, suspended or otherwise not provided to you (whether for reasons bey
 							<li>
 								<h3>Contacting Us</h3>
 								<p>If you need to contact us, please email us at <a href="mailto:info@reflection.io">info@reflection.io</a> or 
-								write to us at 40 - 44 Newman Street, London W1T 1QD. Please note that we are only responsible 
+								write to us at 40-44 Newman Street, London W1T 1QD. Please note that we are only responsible 
 								for the Reflection Service and do not represent any other user from whom we gather User Input Data.</p>
 							</li>
 							<li>
@@ -243,7 +243,7 @@ interrupted, suspended or otherwise not provided to you (whether for reasons bey
 							</li>
 						</ol>
 				
-				<p><strong>These terms were last updated on 23 May 2014</strong></p>
+				<p><strong>These terms were last updated on 20 October 2015</strong></p>
 			</article>
 		</div>
 	</g:HTMLPanel>

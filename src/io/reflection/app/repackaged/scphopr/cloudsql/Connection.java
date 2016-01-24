@@ -7,9 +7,6 @@
 //
 package io.reflection.app.repackaged.scphopr.cloudsql;
 
-import io.reflection.app.api.exception.DataAccessException;
-import io.reflection.app.logging.GaeLevel;
-
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,39 +17,33 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.google.appengine.api.rdbms.AppEngineDriver;
 import com.google.appengine.api.utils.SystemProperty;
+
+import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.logging.GaeLevel;
 
 public final class Connection {
 
-	public static final String CONNECTION_NATIVE_KEY = "connection.native";
+	private final String				server;
+	private final String				database;
+	private java.sql.Connection	connection;
+	private final String				username;
+	private final String				password;
+	private ResultSet						queryResult;
+	private Statement						statement;
+	private long								affectedRowCount;
+	private long								insertedId;
+	private boolean							isTransactionMode;
+	private final String				encoding	= "utf8mb4";
 
-	private final String server;
-	private final String database;
-	private java.sql.Connection connection;
-	private final String username;
-	private final String password;
-	private ResultSet queryResult;
-	private Statement statement;
-	private long affectedRowCount;
-	private long insertedId;
-	private boolean isTransactionMode;
-	private boolean isNative = false;
-	private final String encoding = "utf8mb4";
-
-	private static final Logger LOG = Logger.getLogger(Connection.class.getName());
-	private static boolean classLoaded = false;
+	private static final Logger	LOG					= Logger.getLogger(Connection.class.getName());
+	private static boolean			classLoaded	= false;
 
 	public Connection(String server, String database, String username, String password) throws DataAccessException {
 		this(server, database, username, password, false);
 	}
 
 	public Connection(String server, String database, String username, String password, boolean transactionMode) throws DataAccessException {
-		final String nativePropertyValue = System.getProperty(CONNECTION_NATIVE_KEY);
-
-		if (nativePropertyValue != null) {
-			isNative = Boolean.parseBoolean(nativePropertyValue);
-		}
 
 		// if (LOG.isLoggable(GaeLevel.DEBUG)) {
 		// LOG.log(GaeLevel.DEBUG, "create connection with server: " + server + ", database: " + database + ", username: " + username
@@ -74,42 +65,37 @@ public final class Connection {
 		this.username = username;
 		this.password = password;
 
+		makeSureDriverClassLoaded();
+	}
+
+	private void makeSureDriverClassLoaded() throws DataAccessException {
 		if (classLoaded) return;
 
 		classLoaded = true;
 
-		if (isNative) {
-			final String databaseDriver = getDatabaseDriverName();
+		final String databaseDriver = getDatabaseDriverName();
 
-			try {
-				Class.forName(databaseDriver).newInstance();
-			} catch (final InstantiationException ex) {
-				LOG.log(Level.SEVERE, "Error registering driver", ex);
+		try {
+			Class.forName(databaseDriver).newInstance();
+		} catch (final InstantiationException ex) {
+			LOG.log(Level.SEVERE, "Error registering driver", ex);
 
-				throw new DataAccessException(ex);
-			} catch (final IllegalAccessException ex) {
-				LOG.log(Level.SEVERE, "Error registering driver", ex);
+			throw new DataAccessException(ex);
+		} catch (final IllegalAccessException ex) {
+			LOG.log(Level.SEVERE, "Error registering driver", ex);
 
-				throw new DataAccessException(ex);
-			} catch (final ClassNotFoundException ex) {
-				LOG.log(Level.SEVERE, "Error registering driver", ex);
+			throw new DataAccessException(ex);
+		} catch (final ClassNotFoundException ex) {
+			LOG.log(Level.SEVERE, "Error registering driver", ex);
 
-				throw new DataAccessException(ex);
-			}
-		} else {
-			try {
-				DriverManager.registerDriver(new AppEngineDriver());
-			} catch (final SQLException ex) {
-				LOG.log(Level.SEVERE, "Error registering driver", ex);
-
-				throw new DataAccessException(ex);
-			}
+			throw new DataAccessException(ex);
 		}
 	}
 
 	private String getDatabaseDriverName() {
 		if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Production) return "com.mysql.jdbc.GoogleDriver";
-		else return "com.mysql.jdbc.Driver";
+		else
+			return "com.mysql.jdbc.Driver";
 	}
 
 	public void connect() throws DataAccessException {
@@ -124,14 +110,12 @@ public final class Connection {
 			// LOG.log(GaeLevel.DEBUG, "DB Connection ------- Really connecting");
 			// }
 
-			if (isNative) {
-				if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Production) {
-					url = "jdbc:google:mysql://" + server + "/" + database;
-				} else {
-					url = "jdbc:mysql://" + server + "/" + database;
-				}
+			makeSureDriverClassLoaded();
+
+			if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Production) {
+				url = "jdbc:google:mysql://" + System.getProperty("cloudsql.name") + "/" + database;
 			} else {
-				url = "jdbc:google:rdbms://" + server + "/" + database;
+				url = "jdbc:mysql://" + server + "/" + database;
 			}
 
 			connection = DriverManager.getConnection(url, username, password);
@@ -365,6 +349,20 @@ public final class Connection {
 		// if (LOG.isLoggable(GaeLevel.DEBUG)) {
 		// LOG.log(GaeLevel.DEBUG, "DB Connection ------- Fake disconnect");
 		// }
+
+		try {
+			if (queryResult != null && !queryResult.isClosed()) {
+				queryResult.close();
+			}
+		} catch (SQLException e) {
+		}
+
+		try {
+			if (statement != null && !statement.isClosed()) {
+				statement.close();
+			}
+		} catch (SQLException e) {
+		}
 
 		queryResult = null;
 		statement = null;

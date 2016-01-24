@@ -9,6 +9,7 @@ package io.reflection.app.client.highcharts;
 
 import io.reflection.app.client.helper.ColorHelper;
 import io.reflection.app.client.helper.JavaScriptObjectHelper;
+import io.reflection.app.client.highcharts.ChartHelper.DashStyle;
 import io.reflection.app.client.highcharts.ChartHelper.LineType;
 import io.reflection.app.client.highcharts.ChartHelper.RankType;
 import io.reflection.app.client.highcharts.ChartHelper.XDataType;
@@ -100,6 +101,7 @@ public abstract class BaseChart extends Composite {
 				rearrangeXAxisLabels();
 			}
 		});
+		ChartHelper.extendHighcharts();
 	}
 
 	public void setXDataType(XDataType xDataType) {
@@ -110,7 +112,8 @@ public abstract class BaseChart extends Composite {
 		NativeChart.nativeAddAxis(chart, options, isX, true, false);
 	}
 
-	public void addSeries(JavaScriptObject data, LineType lineType, String seriesId, String name, String color, YAxisPosition axisId, JavaScriptObject tooltip) {
+	public void addSeries(JavaScriptObject data, LineType lineType, String seriesId, String name, String color, DashStyle dashStyle, YAxisPosition axisId,
+			JavaScriptObject tooltip) {
 		JavaScriptObject series = JavaScriptObject.createObject();
 		JavaScriptObjectHelper.setObjectProperty(series, "data", data); // Add points to draw
 		JavaScriptObjectHelper.setObjectProperty(series, "tooltip", tooltip); // Set custom tooltip options
@@ -118,6 +121,7 @@ public abstract class BaseChart extends Composite {
 		JavaScriptObjectHelper.setStringProperty(series, "id", seriesId); // Unique series id
 		JavaScriptObjectHelper.setStringProperty(series, "name", name);
 		JavaScriptObjectHelper.setStringProperty(series, "color", color);
+		JavaScriptObjectHelper.setStringProperty(series, "dashStyle", dashStyle.toString());
 		JavaScriptObjectHelper.setStringProperty(series, "yAxis", axisId.toString()); // Link series with proper axis
 
 		NativeChart.nativeAddSeries(chart, series, true, false);

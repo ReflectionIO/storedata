@@ -9,6 +9,7 @@
 	<g:HTMLPanel tag="form">
 		<fieldset ui:field="fieldset" class="{STYLES_INSTANCE.reflectionMainStyle.connectAccountContent}" style="visibility: visible; position: relative;">
 			<h2 ui:field="title"></h2>
+			<p ui:field="subtitle" class="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}"></p>
 
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.linkedAccountLoadingState}">
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.hamsterWheel}">
@@ -16,10 +17,10 @@
 				</div>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.animationHamster}">
 				</div>
-				<p>Linking may take up to 5 minutes but most likely less, we’ll send you an email as soon as it's done.</p>
+				<p>Linking may take up to 5 minutes but most likely less, we'll send you an email as soon as it's done.</p>
 			</div>
 
-			<c:TextField ui:field="accountUsername" labelText="Account name" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
+			<c:TextField ui:field="accountUsername" labelText="Account Username" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
 
 			<c:PasswordField ui:field="password" labelText="Account Password" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
 

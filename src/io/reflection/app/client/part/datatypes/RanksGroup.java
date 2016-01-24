@@ -17,4 +17,12 @@ public class RanksGroup {
 	public Rank free;
 	public Rank paid;
 	public Rank grossing;
+
+	public static RanksGroup getPlaceholder() {
+		RanksGroup rg = new RanksGroup();
+		rg.free = new Rank();
+		rg.grossing = new Rank();
+		rg.paid = new Rank();
+		return rg;
+	}
 }

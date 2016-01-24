@@ -8,6 +8,7 @@
 //
 package io.reflection.app.api.core.shared.call;
 
+import io.reflection.app.api.shared.datatypes.Response;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 
@@ -18,11 +19,12 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
-import io.reflection.app.api.shared.datatypes.Response;
+import com.google.gson.JsonPrimitive;
 
 public class GetRolesAndPermissionsResponse extends Response {
 	public List<Role> roles;
 	public List<Permission> permissions;
+	public Integer daysSinceRoleAssigned;
 
 	@Override
 	public JsonObject toJson() {
@@ -45,6 +47,8 @@ public class GetRolesAndPermissionsResponse extends Response {
 			}
 		}
 		object.add("permissions", jsonPermissions);
+		JsonElement jsonDaysSinceRoleAssigned = daysSinceRoleAssigned == null ? JsonNull.INSTANCE : new JsonPrimitive(daysSinceRoleAssigned);
+		object.add("daysSinceRoleAssigned", jsonDaysSinceRoleAssigned);
 		return object;
 	}
 
@@ -78,6 +82,13 @@ public class GetRolesAndPermissionsResponse extends Response {
 				}
 			}
 		}
+
+		if (jsonObject.has("daysSinceRoleAssigned")) {
+			JsonElement jsonDaysSinceRoleAssigned = jsonObject.get("daysSinceRoleAssigned");
+			if (jsonDaysSinceRoleAssigned != null) {
+				daysSinceRoleAssigned = Integer.valueOf(jsonDaysSinceRoleAssigned.getAsInt());
+			}
+		}
 	}
 
 	public GetRolesAndPermissionsResponse roles(List<Role> roles) {
@@ -87,6 +98,11 @@ public class GetRolesAndPermissionsResponse extends Response {
 
 	public GetRolesAndPermissionsResponse permissions(List<Permission> permissions) {
 		this.permissions = permissions;
+		return this;
+	}
+
+	public GetRolesAndPermissionsResponse daysSinceRoleAssigned(Integer daysSinceRoleAssigned) {
+		this.daysSinceRoleAssigned = daysSinceRoleAssigned;
 		return this;
 	}
 }

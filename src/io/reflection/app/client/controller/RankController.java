@@ -142,7 +142,8 @@ public class RankController extends AsyncDataProvider<RanksGroup> implements Ser
 
 		input.country = ApiCallHelper.createCountryForApiCall(FilterController.get().getCountry()); // Get country from filter
 
-		input.listType = FilterController.get().getListTypes().get(0);
+		input.listType = (FilterController.get().getFilter().getStoreA3Code().equals(DataTypeHelper.STORE_IPHONE_A3_CODE) ? "topallapplications"
+				: "topallipadapplications");
 
 		input.on = FilterController.get().getEndDate(); // Get start date from filter
 

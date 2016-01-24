@@ -19,16 +19,18 @@ public interface UserRegisteredEventHandler extends EventHandler {
 
 	public static final GwtEvent.Type<UserRegisteredEventHandler> TYPE = new GwtEvent.Type<UserRegisteredEventHandler>();
 
-	public void userRegistered(String email);
+	public void userRegistered(String email, String password);
 
 	public void userRegistrationFailed(Error error);
 
 	public class UserRegistered extends GwtEvent<UserRegisteredEventHandler> {
 
-		private String mUsername;
+		private String username;
+		private String password;
 
-		public UserRegistered(String username) {
-			mUsername = username;
+		public UserRegistered(String username, String password) {
+			this.username = username;
+			this.password = password;
 		}
 
 		/*
@@ -48,15 +50,15 @@ public interface UserRegisteredEventHandler extends EventHandler {
 		 */
 		@Override
 		protected void dispatch(UserRegisteredEventHandler handler) {
-			handler.userRegistered(mUsername);
+			handler.userRegistered(username, password);
 		}
 	}
 
 	public class UserRegistrationFailed extends GwtEvent<UserRegisteredEventHandler> {
-		private Error mError;
+		private Error error;
 
 		public UserRegistrationFailed(Error error) {
-			mError = error;
+			this.error = error;
 		}
 
 		/*
@@ -76,7 +78,7 @@ public interface UserRegisteredEventHandler extends EventHandler {
 		 */
 		@Override
 		protected void dispatch(UserRegisteredEventHandler handler) {
-			handler.userRegistrationFailed(mError);
+			handler.userRegistrationFailed(error);
 		}
 	}
 }

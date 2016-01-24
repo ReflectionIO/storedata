@@ -5,9 +5,13 @@
 	<title>Reflection, My Apps</title>
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">	
-	<!--[if (gte IE 9)|(IEMobile)|(!IE)]><!-->
+	<!--[if (gt IE 9)|(IEMobile)|(!IE)]><!-->
 		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main.css" />
 	<!--<![endif]-->
+	<!--[if IE 9]>
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="ie9-one.css" />
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="ie9-two.css" />
+	<![endif]-->	
 	<!--[if (lt IE 9)]>
 		<script src="js/vendor/html5shiv.min.js"></script>
 		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main-ie8.css" />
@@ -60,30 +64,33 @@
 				</div>
 				<div class="grid__column grid__column--full-width filters-container filter-container--my-apps">
 					<form class="forms--mid-theme">
-						<div class="calendar-container">
-								<div class="date-select-container">
-									<div class="form-field form-field--date-select form-field--date-select--no-icon">
-										<input type="text" name="date-single" id="date-single" value="01 Jan 2015" />
+
+						<div class="time-period-select-component">
+							<div class="calendar-container">
+									<div class="date-select-container">
+										<div class="form-field form-field--date-select form-field--date-select--no-icon">
+											<input type="text" name="date-single" id="date-single" value="01 Jan 2015" />
+										</div>
 									</div>
-								</div>
-								<div class="date-select-to-indicator"></div>
-								<div class="date-select-container">
-									<div class="form-field form-field--date-select form-field--date-select--no-icon">
-										<input type="text" name="date-single-to" id="date-single-to" value="26 Feb 2015" />
+									<div class="date-select-to-indicator"></div>
+									<div class="date-select-container">
+										<div class="form-field form-field--date-select form-field--date-select--no-icon">
+											<input type="text" name="date-single-to" id="date-single-to" value="26 Feb 2015" />
+										</div>
 									</div>
-								</div>
-						</div>
-						<span class="or-text">or</span>
-						<div class="form-field form-field--select time-period-select form-field--select--filter">
-							<div class="page-overlay"></div>		
-							<select class="js-field--select reflection-select--filter">
-						    <option value="" disabled selected>Time Period</option>
-						    <option value="time1">1 Week</option>
-						    <option value="time2">2 Weeks</option>
-						    <option value="time3">4 Weeks</option>
-						    <option value="time4">6 Weeks</option>
-						    <option value="time5">8 Weeks</option>
-							</select>
+							</div>
+							<span class="or-text">or</span>
+							<div class="form-field form-field--select time-period-select form-field--select--filter">
+								<div class="page-overlay"></div>		
+								<select class="js-field--select reflection-select--filter">
+							    <option value="" disabled selected>Time Period</option>
+							    <option value="time1">1 Week</option>
+							    <option value="time2">2 Weeks</option>
+							    <option value="time3">4 Weeks</option>
+							    <option value="time4">6 Weeks</option>
+							    <option value="time5">8 Weeks</option>
+								</select>
+							</div>
 						</div>
 						
 						<div class="form-field form-field--select store-select form-field--select--filter">

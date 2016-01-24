@@ -23,10 +23,6 @@ import io.reflection.app.client.page.blog.BlogPage;
 import io.reflection.app.client.page.blog.EditPostPage;
 import io.reflection.app.client.page.blog.PostAdminPage;
 import io.reflection.app.client.page.blog.PostPage;
-import io.reflection.app.client.page.forum.AddTopicPage;
-import io.reflection.app.client.page.forum.EditTopicPage;
-import io.reflection.app.client.page.forum.ForumPage;
-import io.reflection.app.client.page.forum.TopicPage;
 import io.reflection.app.client.page.test.WidgetTestPage;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.shared.util.DataTypeHelper;
@@ -77,6 +73,7 @@ public enum PageType {
 	LoginPageType("login", false),
 	LinkedAccountsPageType("linkedaccounts", true),
 	LinkItunesPageType("linkitunes", true),
+	ManageSubscriptionPageType("subscription", true),
 	MyAppsPageType("myapps", true),
 	NotificationsPageType("notifications", true),
 	NotPermittedPageType("notpermitted", false),
@@ -92,7 +89,6 @@ public enum PageType {
 	SearchPageType("search", true),
 	SimpleModelRunPageType("simplemodelrun", DataTypeHelper.PERMISSION_MANAGE_SIMPLE_MODEL_RUN_CODE),
 	TermsPageType("terms", false),
-	// UpgradePageType("upgrade", false),
 	UsersPageType("users", DataTypeHelper.PERMISSION_MANAGE_USERS_CODE),
 	WidgetTestPage("test", false),
 
@@ -256,9 +252,12 @@ public enum PageType {
 		case LoginPageType:
 			page = new LoginPage();
 			break;
-		case PressPageType:
-			page = new PressPage();
+		case ManageSubscriptionPageType:
+			page = new ManageSubscriptionPage();
 			break;
+		// case PressPageType:
+		// page = new PressPage();
+		// break;
 		case PricingPageType:
 			page = new PricingPage();
 			break;
@@ -274,9 +273,6 @@ public enum PageType {
 		case ChangeDetailsPageType:
 			page = new ChangeDetailsPage();
 			break;
-		// case UpgradePageType:
-		// page = new UpgradePage();
-		// break;
 		case ItemPageType:
 			page = new ItemPage();
 			break;
@@ -319,18 +315,18 @@ public enum PageType {
 		case WidgetTestPage:
 			page = new WidgetTestPage();
 			break;
-		case ForumPageType:
-			page = new ForumPage();
-			break;
-		case ForumThreadPageType:
-			page = new TopicPage();
-			break;
-		case ForumTopicPageType:
-			page = new AddTopicPage();
-			break;
-		case ForumEditTopicPageType:
-			page = new EditTopicPage();
-			break;
+		// case ForumPageType:
+		// page = new ForumPage();
+		// break;
+		// case ForumThreadPageType:
+		// page = new TopicPage();
+		// break;
+		// case ForumTopicPageType:
+		// page = new AddTopicPage();
+		// break;
+		// case ForumEditTopicPageType:
+		// page = new EditTopicPage();
+		// break;
 		case NotificationsPageType:
 			page = new NotificationsPage();
 			break;

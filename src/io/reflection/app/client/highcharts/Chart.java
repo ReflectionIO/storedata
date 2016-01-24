@@ -10,6 +10,7 @@ package io.reflection.app.client.highcharts;
 import io.reflection.app.client.controller.FilterController;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.JavaScriptObjectHelper;
+import io.reflection.app.client.highcharts.ChartHelper.DashStyle;
 import io.reflection.app.client.highcharts.ChartHelper.LineType;
 import io.reflection.app.client.highcharts.ChartHelper.RankType;
 import io.reflection.app.client.highcharts.ChartHelper.XDataType;
@@ -48,8 +49,8 @@ public class Chart extends BaseChart {
 		super(xDataType);
 	}
 
-	public void drawSeries(List<Rank> ranks, YAxisPosition yAxisPosition, YDataType yDataType, String seriesId, LineType lineType, String color,
-			boolean isCumulative, boolean hide) {
+	public void drawSeries(List<Rank> ranks, YAxisPosition yAxisPosition, YDataType yDataType, String seriesId, LineType lineType, DashStyle dashStyle,
+			String color, boolean isCumulative, boolean hide) {
 
 		if (ranks != null && ranks.size() > 0) {
 			boolean isOpposite = (yAxisPosition != YAxisPosition.PRIMARY);
@@ -160,7 +161,7 @@ public class Chart extends BaseChart {
 							CalendarUtil.addDaysToDate(progressiveDate, 1);
 						}
 					}
-					addSeries(data, lineType, seriesId, seriesName, color, yAxisPosition, tooltip);
+					addSeries(data, lineType, seriesId, seriesName, color, dashStyle, yAxisPosition, tooltip);
 				}
 				break;
 
@@ -175,7 +176,7 @@ public class Chart extends BaseChart {
 						}
 
 					}
-					addSeries(data, lineType, seriesId, seriesName, color, yAxisPosition, tooltip);
+					addSeries(data, lineType, seriesId, seriesName, color, dashStyle, yAxisPosition, tooltip);
 				}
 				break;
 			}

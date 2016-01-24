@@ -84,7 +84,7 @@ public class ValidationHelper {
 		return accessCode;
 	}
 
-	public static User validateAlphaUser(User user, String parent) throws ServiceException {
+	public static User validateUserWithoutPassword(User user, String parent) throws ServiceException {
 		if (user == null) throw new InputValidationException(ApiError.UserNull.getCode(), ApiError.UserNull.getMessage(parent));
 
 		if (user.forename == null || (user.forename = user.forename.trim()).length() == 0)
@@ -541,9 +541,14 @@ public class ValidationHelper {
 	}
 
 	public static void validateAuthorised(User user, Role... roles) throws ServiceException {
+		boolean isAuthorized = false;
 		for (Role role : roles) {
-			if (!UserServiceProvider.provide().hasRole(user, role)) throw new AuthorisationException(user, roles);
+			if (UserServiceProvider.provide().hasRole(user, role)) {
+				isAuthorized = true;
+				break;
+			}
 		}
+		if (!isAuthorized) throw new AuthorisationException(user, roles);
 	}
 
 	public static void validateAuthorised(User user, Permission... permissions) throws ServiceException {

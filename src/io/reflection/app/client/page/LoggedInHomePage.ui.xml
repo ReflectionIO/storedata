@@ -5,96 +5,61 @@
 	
 	</ui:style>
 	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.pageLoggedInLanding}">
-		<section class="{STYLES_INSTANCE.reflectionMainStyle.loggedInSectionMain}">
-			<div class="{STYLES_INSTANCE.reflectionMainStyle.loggedInSectionMain__columnOne}">
-				<img src="images/logged-in-main-screenshot.jpg" alt="Reflection app screenshot" />
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.pageBanner} {STYLES_INSTANCE.reflectionMainStyle.pageBannerLarger} {STYLES_INSTANCE.reflectionMainStyle.verticalCentreContent}">
+			<div>
+				<h2>Welcome <span ui:field="userName"></span></h2>
+				<p>Keep up to date with what's been happening here at Reflection as we work to expand our intelligence and features</p>
 			</div>
-			<div class="{STYLES_INSTANCE.reflectionMainStyle.loggedInSectionMain__columnTwo}">
-				<h1 class="{STYLES_INSTANCE.reflectionMainStyle.pageTitle}">
-					Welcome
-					<span ui:field="userName"></span>
-				</h1>
-				<p>Our team is hard at work improving accuracy and building features from your feedback. Keep up to date with our progress here.</p>
-			</div>
-			<div class="{STYLES_INSTANCE.reflectionMainStyle.listPartners}">
+		</div>
+		<section class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.loggedInSectionContent} {STYLES_INSTANCE.reflectionMainStyle.pageSection}">
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnTwoThirds}">
 				<ul>
-					<li>
-						<img src="images/Partner_Soundcloud@2x.png" alt="Soundcloud logo" />
-					</li>
-					<li>
-						<img src="images/Partner_Wooga@2x.png" alt="Wooga logo" />
-					</li>
-					<li>
-						<img src="images/BBC_Worldwide@2x.png" alt="BBC Worldwide logo" />
-					</li>
-					<li>
-						<img src="images/Partner_TocaBoca@2x-v2.png" alt="Toca Boca logo" />
-					</li>
-					<li>
-						<img src="images/SwiftKey_Logo@2x.png" alt="SwiftKey logo" />
-					</li>
-					<li>
-						<img src="images/Partner_Miniclip@2x.png" alt="Miniclip logo" />
-					</li>
-					<li>
-						<img src="images/Nordeus_Logo@2x.png" alt="Nordeus logo" />
-					</li>
-					<li>
-						<img src="images/Endemol_Logo@2x.png" alt="Endemol logo" />
-					</li>
-				</ul>
-				<h2>A few of our current partners</h2>
-			</div>
-		</section>
-		<section class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer} {STYLES_INSTANCE.reflectionMainStyle.loggedInSectionContent}">
-			<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnSevenColumns}">
-				<ul>
-					<li class="article-list--article">
-						<article class="site-article">
-							<h2>Welcome Aboard!</h2>
-							<p class="site-article--info">
+					<li class="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}">
+						<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
+							<h2>Welcome To Our Beta!</h2>
+							<p class="{STYLES_INSTANCE.reflectionMainStyle.siteArticleInfo}">
 								<strong>Posted by</strong>
-								<span class="posted-by">Gustaf Leksell, Founder &amp; CEO</span>
-								<span>September 27th 2015</span>
+								<span class="{STYLES_INSTANCE.reflectionMainStyle.postedBy}">Gustaf Leksell, Founder &amp; CEO</span>
+								<span>October 20th 2015</span>
 							</p>
 							<p>
-								Everyone here at Reflection is very excited that you have decided to join us. 
-								Our mission is to help you make smarter, faster decisions by using our accurate market 
-								data and reporting tools that we are building using your feedback.
+								Everyone here at Reflection is excited that you have decided to join our beta. 
+								Our mission is to deliver free &amp; accurate market intelligence and 
+								premium tools to help you make smarter, faster decisions for your apps and business.
 							</p>
 							<img src="images/office-photo.jpg" alt="The Reflection office" class="image-full-width" />
 							<figcaption>
-								The development of new features being undertaken furiously at our London office.
+								Data expansion and development of new features being undertaken furiously at our London office.
 							</figcaption>
 							<p>
-								You'll start to see the rollout of new features and tools as our beta progresses. 
-								Also you can keep track of what country and category will be available next here on the homepage.
+								You'll start to see the rollout of data and features as our beta progresses. 
+								You can also keep track of what country and category intelligence will be available next here on the homepage.
 							</p>
 							<p>
-								As one of our partners, you can help accelerate our progress by spreading the word. 
-								If you know a developer who would be interested in joining us, please introduce them to me at <a href="mailto:gustaf@reflection.io">gustaf@reflection.io</a>.
+								As one of our beta members, you can help accelerate our progress by spreading the word. 
+								If you know a developer who would be interested in joining us, please point them to our platform.
 							</p>
 							<p>
-								Your feedback is essential as it helps us to shape the features that developers actually want. 
-								Please get in touch if you have any feature requests, recommendations or if 
-								you just want to share your thoughts, positive or negative. 
-								We look forward to hearing from you at <a href="mailto:beta@reflection.io">beta@reflection.io</a>
+								Your feedback is essential as it helps us to shape the features that developers actually want. 
+								Please get in touch if you have any feature requests, recommendations 
+								or if you just want to share your thoughts, positive or negative. 
+								We look forward to hearing from you at  <a href="mailto:beta@reflection.io">beta@reflection.io</a>.
 							</p>
 							<p>
-								Finally, please remember that as we are still in beta you may occasionally encounter bugs, 
-								inaccuracies or slow performance as we fine-tune our system.</p>
+								Finally, please remember that as we are still in beta you may occasionally 
+								encounter bugs, inaccuracies or slow performance as we fine-tune our system.</p>
 							<p>Thank you,</p>
 							<p>
 								Gustaf
 							</p>
 						</article>
 					</li>
-					<li class="article-list--article">
-						<article class="site-article">
+					<li class="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}">
+						<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
 							<h2>Creating an iTunes Finance user account</h2>
-							<p class="site-article--info">
+							<p class="{STYLES_INSTANCE.reflectionMainStyle.siteArticleInfo}">
 								<strong>Posted by</strong>
-								<span class="posted-by">Chi Dire Founder &amp; COO</span>
+								<span class="{STYLES_INSTANCE.reflectionMainStyle.postedBy}">Chi Dire Founder &amp; COO</span>
 								<span>Sep 18th 2014</span>
 							</p>
 							<p>When linking your account to our site (or any external website) we recommend you create a new iTunes Connect User that only has the specific
@@ -104,12 +69,12 @@
 							</p>
 						</article>
 					</li>
-					<li class="article-list--article">
-						<article class="site-article">
+					<li class="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}">
+						<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
 							<h2>Finding your Vendor ID on iTunesConnect</h2>
-							<p class="site-article--info">
+							<p class="{STYLES_INSTANCE.reflectionMainStyle.siteArticleInfo}">
 								<strong>Posted by</strong>
-								<span class="posted-by">Chi Dire Founder &amp; COO</span>
+								<span class="{STYLES_INSTANCE.reflectionMainStyle.postedBy}">Chi Dire Founder &amp; COO</span>
 								<span>Aug 21st 2014</span>
 							</p>
 							<p>Your iTunes username and password are what you use to log into iTunesConnect. Your Vendor ID is a little buried on iTunesConnect and the following
@@ -121,89 +86,264 @@
 					</li>
 				</ul>
 			</div>
-			<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFiveColumns}">
-				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingThree}">Beta Roadmap</h2>
-				<p>
-					You can keep tabs on upcoming features in this section and also monitor the expansion of our dataset. 
-					We are constantly working behind the scenes to integrate new data in order to improve accuracy.
-				</p>
-				<p>
-					In our latest update, we are opening up the Game category for the UK, Germany, France and Italy. 
-					We also have split data for iPhone and iPad, 
-					and are currently implementing a new model that accurately predicts numbers for the for top 5 apps.
-				</p> 
-				<p>
-					We're currently working on our new graphs, which will be available in a future update so stay tuned.
-				</p>
-				<p>
-					Remember, as a partner you have free, unlimited access to all of Reflection's features for the duration of the private beta.
-				</p>
-				<p>
-					If you have any questions or suggestions for a feature you need please e-mail us at 
-					<a href="mailto:beta@reflection.io">beta@reflection.io</a>.
-				</p>
-				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Data Roadmap</h2>
-				<div class="{STYLES_INSTANCE.reflectionMainStyle.accordion}">
-					<ul>
-						<c:AccordionSwitch ui:field="accordionSwitchUK" featureComplete="true" titleText="United Kingdom" />
-						<c:AccordionSwitch ui:field="accordionSwitchDE" featureComplete="true" titleText="Germany" />
-						<c:AccordionSwitch ui:field="accordionSwitchFR" featureComplete="true" titleText="France" />
-						<c:AccordionSwitch ui:field="accordionSwitchIT" featureComplete="true" titleText="Italy" />
-						<c:AccordionSwitch ui:field="accordionSwitchUS" titleText="USA" />
-						<c:AccordionSwitch ui:field="accordionSwitchCA" titleText="Canada" />
-						<c:AccordionSwitch ui:field="accordionSwitchES" titleText="Spain" />
-						<c:AccordionSwitch ui:field="accordionSwitchIR" titleText="Ireland" />
-						<c:AccordionSwitch ui:field="accordionSwitchAU" titleText="Australia" />
-						<c:AccordionSwitch ui:field="accordionSwitchNZ" titleText="New Zealand" />
-						<c:AccordionSwitch empty="true" ui:field="accordionSwitchMore" titleText="More countries after launch" />
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird}">
+				<aside class="{STYLES_INSTANCE.reflectionMainStyle.latestSystemStats}">
+					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Latest System Stats</h2>
+					<div>
+						<svg viewBox="0 0 32 32" enable-background="new 0 0 32 32">
+							<g>
+								<path fill="#81879d" d="M3.8,8.1c0.1,0.1,0.2,0,0.3,0.2c0,0.2,0,0.5,0,0.7c-0.2,0.9,0.4,1.8,1.2,1.9
+c0.1,0.5-0.2,0.6,0.3,1.3c0,0.1,0,0.3,0.1,0.4c0.1,0.1,0.3,0.2,0.5,0.3c0.5,0.3,0.4,0.9,0.2,1.4c-0.2,0.5-0.6,0.8-0.8,1.3
+c-0.3,0.8-0.3,1.8,0.3,2.4c0.2,0.3,0.5,0.9,0.8,1c0.3,0.1,0.4,0.3,0.5,0.6c0.1,0.5,0.3,0.8,0.3,1.3c0,0.4-0.2,1.1-0.2,1.5
+c0,0.4,0.2,0.3,0.1,0.5c0,0.2-0.1,0.1-0.2,0.4c-0.1,0.6,0,1.7,0.1,2.1c0.2,1.5,1.1,2.7,2,2.6c0.3-0.7-0.4-1.5-0.1-2.2
+c0.1-0.3,0.3-0.5,0.5-0.7c1-0.8,1.8-1.5,2.4-2.5c0.1-0.1,0.2-0.4,0.3-0.5c0.1-0.1,0.3-0.1,0.5-0.1c0.7-0.1,1.1-0.5,1.4-1.1
+c0.3-0.6,0.3-1.1,0.9-1.7c0.1-0.1,0.2-0.5,0.3-0.6c0.3-0.5-0.1-1.2-0.6-1.5c-0.5-0.3-1-0.4-1.4-0.7c-0.6-0.4-0.6-1-1-1.5
+c-0.4-0.5-1.1-0.9-1.7-1.2c-0.7-0.4-0.7-0.7-1.9-1.2c-0.1-0.1-0.5-0.1-0.6,0c-0.1,0-0.2,0.2-0.4,0.3c-0.4,0.4-1.3,0.2-1.5-0.4
+c-0.1-0.3,0-0.5,0-0.7c0-0.3-0.1-0.7-0.4-0.6c-0.1-0.4,0.6-0.1,0.6-0.7c0.1-0.5-0.3-0.1-0.8-0.4C5.4,9.8,5.4,9,5.6,8.7
+c0.2-0.6,0.3-0.3,0.6-0.5C6.6,7.8,7.4,7.5,8,7.8C8.4,8.1,8.4,9,8.6,9.1S9,9,9,8.8c0-0.2-0.1-0.6,0-0.8c0.1-0.1,0.2-0.2,0.3-0.3
+c1.1-0.8,2.4-1.3,3.7-1.4c0.1,0,0.4,0,0.5-0.1c0.2-0.2,0.1-0.5,0.4-0.5c0.2,0,0.4,0.3,0.7,0.3c0.3,0.1,0.6-0.4,0.6-0.7
+c0-0.3-0.1-0.7,0-1c0.1-0.1,0.1-0.3,0.1-0.4c0-0.1-0.1-0.1-0.2-0.1c-0.2-0.1-0.3-0.5-0.7-0.4c-0.4,0.2-0.7,0.2-1.1,0.4
+c-0.3,0.2-0.5,0.5-1,0.6c-0.2-0.4,0-0.9,0.3-1.2C13.1,3,13.5,3,13.9,3c0.2,0,0.4-0.1,0.6,0c0.1,0,0.3,0.2,0.4,0.2
+c0.3,0.2,0.6,0,0.8-0.3c0.2-0.2,0.4-0.5,0.2-0.8C16,1.9,16.2,2,16.3,2.2c0.1,0.2-0.1,0.4-0.2,0.6c-0.4,1,0.4,2,0.8,1.9
+c0.5-0.1,0.9-1.2,1.5-1.4c0.2-0.1,0.4-0.1,0.5-0.2c0.2-0.2,0.2-0.4,0.3-0.7c0.2-0.4,0.8-0.4,1-0.5c0.3-0.4,0.3-0.8,0.2-1.2
+c-1.5-0.5-3-0.7-4.7-0.7C11.1,0,6.9,2.1,4,5.4c0,0.1,0,0.2,0,0.3C4.1,6.4,3.4,7.5,3.8,8.1"/>
+<path fill="#81879d" d="M31.7,15.9c0-5.2-2.5-9.9-6.4-12.7c-1,0.5-1.4-0.1-1.4,0.3
+c0,0.3,0.1,0.4-0.2,0.4c-0.1,0-0.2,0-0.3,0c-0.7-0.1-0.9,0.5-0.7,1.2c0.2,0.5,0.6,0.8,1.1,1c0.2,0.1,0.6,0.1,0.7,0.3
+c0,0.1-0.1,0.3-0.1,0.3c0.1,0.5-0.1,0.8-0.5,1.1c-0.4,0.3-1.1,0.2-1.4,0.5c-0.3,0.3,0.2,1.2,0.6,1.5c0.4,0.4,1.2,0.3,1.5-0.1
+c0.2-0.3,0-0.6,0.1-0.8c0.6,0.1,0.9,0.3,1.1,0.8c0,0.1,0.2,0.1,0.3,0.1c0.3,0.1,0.4-0.3,0.5-0.1c0,0.2,0.1,0.3,0.2,0.4
+c0.2,0.1,0.2-0.1,0.4,0c0.2,0.1,0.3,0.5,0.6,0.5c0.3,0.1,0.6,0,0.8,0.2c0.1,0.2,0.2,0.4,0.1,0.6c-0.1,0.2-0.9,0.1-1.4-0.1
+c-0.5-0.2-0.6-0.5-1.1-0.8c-0.8-0.4-2.4-0.3-3.6,0c-0.9,0.3-1.1,0.6-1.7,1.3c-0.1,0.1-0.2,0.5-0.3,0.7c-0.1,0.2-0.1,0.4-0.1,0.6
+c-0.2,1-0.7,2.3-0.2,3.1c0.2,0.4,0.6,0.6,1,0.8c0.5,0.4,0.8,0.7,1.3,0.8c0.4,0.1,1,0,1.3,0c0.5,0,1,0.1,1.5,0.4
+c-0.3,0.7-0.4,1.9-0.3,2.3c0,0.3,0.2,0.4,0.2,0.7c0.2,1.1-1.6,1.8-1.2,2.9c0.1,0.2,0.2,0.5,0.2,0.8c0,0.9-0.7,1.3-0.8,2
+c0,0.4,0,0.6,0,1c0,0.2,0,0.4-0.1,0.6c-0.1,0.4-0.1,0.9,0,1.3C28.5,26.9,31.7,21.8,31.7,15.9"/>
+<path fill="#81879d" d="M16,1.5C24,1.5,30.5,8,30.5,16S24,30.5,16,30.5S1.5,24,1.5,16S8,1.5,16,1.5
+ M16,0C7.2,0,0,7.2,0,16s7.2,16,16,16s16-7.2,16-16S24.8,0,16,0"/></g>
+						</svg>
+						<span>4</span>
+						<span>Countries</span>
+					</div>
+					<ul class="{STYLES_INSTANCE.reflectionMainStyle.contentList} {STYLES_INSTANCE.reflectionMainStyle.contentListNoBullets}">
+						<li>United Kingdom</li>							
+						<li>Germany</li>
+						<li>France</li>
+						<li>Italy</li>
 					</ul>
-				</div>
-				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Coming Up</h2>
-				<div class="{STYLES_INSTANCE.reflectionMainStyle.accordion} {STYLES_INSTANCE.reflectionMainStyle.accordionBottomWithDivider}">
-					<ul>
-						<c:AccordionSwitch empty="true" titleText="Top 5 App Prediction for Each List" />
-						<c:AccordionSwitch empty="true" titleText="App Download History" />
-						<c:AccordionSwitch empty="true" titleText="App Revenue History" />
-						<c:AccordionSwitch empty="true" titleText="App Revenue and Download Graph Overlays" />
-						<c:AccordionSwitch empty="true" titleText="Download CSV files for any data" />
-						<c:AccordionSwitch empty="true" titleText="Follow and Track Apps &amp; Developers" />
-						<c:AccordionSwitch empty="true" titleText="Developer Leaderboards" />
-						<c:AccordionSwitch empty="true" titleText="Google Play (Early 2016)" />
-						<c:AccordionSwitch empty="true" titleText="Your feature? More to come..." subtitleText="Let Us Know"
-							subtitleLinkHref="mailto:beta@reflection.io?subject=New feature suggestion" highlighted="true" />
+					<div>
+						<svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve"><path fill="#5A5A68" d="M32,21v-9H15v3.6H7.9V10H17V0H0v10h6.1v7.5h0v10.9H15V32h17v-9H15v3.5H7.9v-9.1H15V21H32z M2,2h13v6H2V2z
+	 M17,25h13v5H17V25z M17,14h13v5H17V14z"/></svg>
+						<span>1</span>
+						<span>Category Supported</span>
+					</div>
+					<ul class="{STYLES_INSTANCE.reflectionMainStyle.contentList} {STYLES_INSTANCE.reflectionMainStyle.contentListNoBullets}">
+						<li>Games</li>
 					</ul>
-				</div>
-				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">We're Hiring</h2>
-				<ul class="{STYLES_INSTANCE.reflectionMainStyle.contentList}">
-					<li>
-						<a href="http://reflection.workable.com/jobs/84956" target="_blank">Java Engineer</a>
-					</li>
-					<li>
-						<a href="http://reflection.workable.com/jobs/93511" target="_blank">Data Analyst</a>
-					</li>
-				</ul>
+				</aside>
+				<aside class="{STYLES_INSTANCE.reflectionMainStyle.featuresAndTools}">
+					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">New Features &amp; Data</h2>
+					<p class="{STYLES_INSTANCE.reflectionMainStyle.featuresKey}"><span class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCheck}">Active</span> <span class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeWrench}">Under Construction</span></p>
+					<ul class="content-list--minor">
+						<li class="{STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCheck}">Download CSV files for any data</li>
+						<li class="{STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCheck}">Intelligence for United Kingdom</li>
+						<li class="{STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCheck}">Intelligence for Germany</li>
+						<li class="{STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCheck}">Intelligence for France</li>
+						<li class="{STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCheck}">Intelligence for Italy</li>
+						<li class="{STYLES_INSTANCE.reflectionMainStyle.refIconBeforeWrench}">Additional Category Intelligence</li>
+						<li class="{STYLES_INSTANCE.reflectionMainStyle.refIconBeforeWrench}">Additional Country Intelligence</li>
+						<li class="{STYLES_INSTANCE.reflectionMainStyle.refIconBeforeWrench}">Advanced Graphs</li>						
+						<li class="{STYLES_INSTANCE.reflectionMainStyle.refIconBeforeWrench}">Google Play (Early 2016)</li>
+						<li class="{STYLES_INSTANCE.reflectionMainStyle.refIconBeforeWrench}">Your feature? More to come...</li>
+					</ul>
+					<g:Button ui:field="suggestFeatureBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaSmallWide}">Suggest a Feature</g:Button>
+				</aside>
+				<aside class="{STYLES_INSTANCE.reflectionMainStyle.newMembers}">
+					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">New Members</h2>
+					<div class="{STYLES_INSTANCE.reflectionMainStyle.membersList}">
+						<ul>
+							<li>
+								<svg version="1.1" x="0px" y="0px" viewBox="0 0 126 52" enable-background="new 0 0 126 52" xml:space="preserve"><g id="Toca_boca"><g><path fill="#DB2901" d="M52.7,35.8c0.3-0.5,0.5-1,0.8-1.5c0.3,0.1,0.7,0.3,1,0.4c2.3,1,4.8,1.6,7.4,1.7c1.5,0.1,3.1,0.1,4.6-0.2
+			c1.8-0.3,3.5-0.7,5.1-1.4c0.5-0.2,1-0.4,1.5-0.6c0.3,0.5,0.5,1,0.8,1.5c-1.8,0.9-3.8,1.6-5.8,2c-1.8,0.4-3.6,0.5-5.5,0.5
+			C59.1,38.2,55.8,37.4,52.7,35.8z"/><path fill="#C7B301" d="M41.8,17.4c0-1,0-2.1,0-3.1c2.3,0,4.5,0,6.8,0c0.9,0,1.8,0,2.7,0c0,1,0,2.1,0,3.1
+			C48.2,17.4,45,17.4,41.8,17.4z"/><path fill="#C7789F" d="M84.7,14.3c0,1,0,2.1,0,3.1c-3.2,0-6.3,0-9.5,0c0-1,0-2.1,0-3.1c1.8,0,3.6,0,5.4,0
+			C82,14.2,83.4,14.3,84.7,14.3z"/><path fill="#019F00" d="M73.6,14.3c0,1,0,2.1,0,3.1c-3.2,0-6.3,0-9.5,0c0-1,0-2.1,0-3.1c1.5,0,2.9,0,4.4,0
+			C70.2,14.2,71.9,14.3,73.6,14.3z"/><path fill="#018BC7" d="M53,17.4c0-1,0-2.1,0-3.1c2.2,0,4.5,0,6.7,0c0.9,0,1.9,0,2.8,0c0,1,0,2.1,0,3.1
+			C59.3,17.4,56.1,17.4,53,17.4z"/><path fill="#010100" d="M73.6,14.3c0.5,0,1.1,0,1.6,0c0,1,0,2.1,0,3.1c0,0.8,0,1.7,0,2.5c0,2.5,1.8,4.5,4.3,4.7
+			c2.3,0.3,4.6-1.3,5.1-3.7c0.2-1.2,0.1-2.4,0.2-3.6c0-1,0-2.1,0-3.1c0.8,0,1.7,0,2.5,0c0,0.7,0.1,1.4,0,2c-0.2,2.1-0.6,4.1-1.3,6.1
+			c-1.5,4.1-3.9,7.5-7.1,10.2c-1.5,1.3-3.1,2.3-4.9,3.2c-0.3-0.5-0.5-1-0.8-1.5c0-0.1-0.1-0.2-0.1-0.3c-3.6-5.5-11.3-6.9-16.6-2.9
+			c-1.2,0.9-2.1,1.9-2.9,3.2c-0.3,0.5-0.5,1-0.8,1.5c-2.2-1.1-4.2-2.5-6-4.2c-3.1-3-5.3-6.6-6.5-10.8c-0.6-2-0.9-4.1-0.9-6.3
+			c0-0.1,0-0.2,0-0.4c0.9,0,1.7,0,2.6,0c0,1,0,2.1,0,3.1c0,1.1-0.1,2.1,0.1,3.1c0.2,2.2,2.1,4,4.4,4.1c2.3,0.1,4.4-1.4,4.9-3.6
+			c0.3-1.2,0.1-2.5,0.1-3.7c0-1,0-2.1,0-3.1c0.5,0,1.1,0,1.6,0c0,1,0,2.1,0,3.1c0,1.1-0.1,2.2,0.1,3.2c0.3,2.2,2.2,3.9,4.4,4
+			c2.3,0.1,4.4-1.4,4.9-3.6c0.3-1.2,0.1-2.4,0.1-3.6c0-1,0-2.1,0-3.1c0.5,0,1.1,0,1.6,0c0,1,0,2.1,0,3.1c0,1-0.1,2.1,0,3.1
+			c0.4,2.8,2.7,4.5,5.5,4.1c1.9-0.3,3.7-2,3.9-3.9c0.1-1.1,0-2.2,0.1-3.2C73.6,16.3,73.6,15.3,73.6,14.3z M46,7.7
+			c-0.3,0.7,0,1.4,0.7,1.7c0.7,0.3,1.4,0,1.8-0.7c0.6-1.2,1.7-1.9,3-1.9c1.4,0,2.4,0.7,3.1,1.9c0.3,0.7,1,0.9,1.7,0.7
+			c0.7-0.3,1-1,0.7-1.7c-0.8-2-3-3.9-5.5-3.8C49.1,3.9,46.9,5.6,46,7.7z M74.5,3.9c-2.3,0.4-3.8,1.7-4.8,3.7
+			c-0.3,0.7-0.1,1.5,0.6,1.8c0.7,0.3,1.4,0,1.8-0.7c0.6-1.2,1.7-1.8,3-1.9c1.4,0,2.5,0.6,3.1,1.9c0.4,0.7,1.1,1,1.8,0.7
+			c0.7-0.3,1-1.1,0.7-1.7c-0.9-2.1-3.1-3.8-5.5-3.8C74.9,3.9,74.7,3.9,74.5,3.9z M68.1,44.2c0.5-0.5,0.7-1.1,0.5-1.7
+			c-0.2-0.6-0.6-0.9-1.2-1c-0.6,0-1.2,0-1.8,0c-0.7,0.1-1.1,0.5-1.1,1.2c0,0.4-0.1,0.7-0.1,1.1c0,1,0,2.1,0.1,3.1
+			c0,0.7,0.5,1.1,1.2,1.1c0.6,0,1.1-0.1,1.6-0.1c1.1-0.2,1.8-0.9,1.8-1.9c0-0.8-0.4-1.3-1.2-1.6C68,44.3,68,44.2,68.1,44.2z
+			 M66.8,45.6c0.1,0.1,0.1,0.4,0.1,0.6c-0.1,0.3-0.4,0.3-0.6,0.3c0-0.3,0-0.6,0-1.1C66.4,45.5,66.7,45.5,66.8,45.6z M66.2,42.8
+			c0.2,0.1,0.4,0.1,0.6,0.2c0.1,0.1,0.1,0.4,0,0.5c-0.1,0.2-0.3,0.2-0.6,0.4C66.2,43.5,66.2,43.2,66.2,42.8z M62.2,46.8
+			c-0.2-0.6-0.3-1.3-0.5-1.9c-0.4-1-0.7-2-1.2-2.9c-0.6-1-1.9-0.9-2.3,0.1c-0.7,1.5-1.1,3-1.4,4.6c-0.1,0.5,0.3,1,0.7,1.1
+			c0.5,0.1,1-0.2,1.1-0.7c0.1-0.2,0.1-0.2,0.3-0.2c0.4,0,0.8,0,1.2,0c0.2,0,0.2,0,0.3,0.2c0.1,0.4,0.5,0.7,1,0.7
+			C61.9,47.9,62.3,47.4,62.2,46.8z M58.9,45.5c0.1-0.5,0.2-1,0.4-1.4c0,0,0,0,0.1,0c0.1,0.5,0.3,1,0.5,1.4
+			C59.5,45.5,59.2,45.5,58.9,45.5z M81.8,47.5c0.1-0.5,0.4-0.5,0.8-0.5c0.2,0,0.5,0,0.7,0c0.2,0,0.3,0,0.4,0.3
+			c0.1,0.5,0.7,0.8,1.2,0.6c0.5-0.1,0.8-0.6,0.7-1.1c-0.3-1.6-0.9-3.2-1.7-4.6c-0.3-0.5-0.7-0.8-1.3-0.8c-0.6,0-1,0.3-1.2,0.9
+			c-0.6,1.4-1.1,2.9-1.4,4.5c-0.1,0.6,0.3,1.2,0.9,1.2C81.3,47.9,81.7,47.8,81.8,47.5z M82.3,45.5c0.1-0.5,0.2-1,0.4-1.4
+			c0,0,0,0,0.1,0c0.1,0.5,0.3,0.9,0.4,1.4C82.9,45.5,82.6,45.5,82.3,45.5z M46,45.8c0.2,1,0.8,1.7,1.8,1.9c1,0.3,1.8,0,2.5-0.8
+			c0.9-1,1.1-2.8,0.5-4c-0.7-1.5-2.4-1.9-3.7-0.8c-0.9,0.7-1.3,1.7-1.3,2.9C45.9,45.2,45.9,45.5,46,45.8z M49,45.3
+			c-0.4,0.4-1,0.3-1.2-0.2c-0.3-0.5-0.2-1.2,0.3-1.5c0.3-0.2,0.5-0.3,0.8-0.1c0.4,0.2,0.5,0.5,0.5,0.9C49.4,44.8,49.3,45.1,49,45.3z
+			 M74.4,43.4c-0.6-2-2.7-2.5-4.2-1c-0.9,1-1.2,2.7-0.7,4c0.7,1.7,2.8,2,4,0.6c0.6-0.7,0.9-1.6,1-2.5C74.5,44.1,74.5,43.7,74.4,43.4
+			z M72.7,44.9c-0.2,0.4-0.6,0.7-1,0.6c-0.4-0.1-0.8-0.6-0.7-1c0-0.2,0.1-0.4,0.2-0.6c0.2-0.4,0.6-0.6,0.9-0.5
+			c0.4,0.1,0.7,0.5,0.7,1.1C72.8,44.6,72.8,44.8,72.7,44.9z M53.1,47.7c1,0.6,2.3,0.3,3-0.5c0.3-0.4,0.3-1.1,0-1.5
+			c-0.3-0.3-0.8-0.3-1.2,0.1c-0.4,0.4-1.1,0.2-1.4-0.3c-0.2-0.4-0.2-0.8-0.1-1.3c0.2-0.9,0.9-1.1,1.7-0.6c0.3,0.3,0.7,0.2,1-0.1
+			c0.3-0.4,0.3-1,0-1.4c-0.6-0.6-1.3-0.8-2.1-0.6c-1.4,0.3-2.4,1.7-2.4,3.6C51.6,46,52,47.1,53.1,47.7z M76.7,47.7
+			c1,0.5,2.2,0.2,2.9-0.6c0.3-0.4,0.3-1.1,0-1.5c-0.3-0.3-0.6-0.3-1.2,0.1c-0.5,0.4-1.2,0.2-1.4-0.3c-0.1-0.3-0.2-0.6-0.2-1
+			c0-0.5,0.2-0.9,0.6-1.1c0.4-0.2,0.8-0.1,1.1,0.2c0.3,0.3,0.7,0.2,1-0.1c0.3-0.4,0.3-1-0.1-1.4c-0.7-0.7-1.7-0.9-2.6-0.5
+			c-1.3,0.6-1.9,1.7-2,3.1C74.9,46.2,75.7,47.3,76.7,47.7z M42.6,44.2c0,0.9-0.1,1.8-0.1,2.6c0,0.6,0.5,1.1,1.1,1.1
+			c0.6,0,1.1-0.5,1.1-1c0-0.5,0-0.9,0-1.4c0-0.6-0.1-1.1-0.1-1.7c0.2,0,0.3,0,0.5,0c0.6,0,1-0.4,1.1-1.1c0.1-0.6-0.3-1.1-0.9-1.2
+			c-1.1-0.1-2.3-0.1-3.4,0.1c-0.5,0.1-0.9,0.7-0.8,1.2c0.1,0.5,0.5,0.9,1,1c0.2,0,0.3,0,0.5,0C42.6,43.9,42.6,44.1,42.6,44.2z"/><path fill="#FD5900" d="M73.1,34.3c-0.5,0.2-1,0.4-1.5,0.6c-1.7,0.7-3.4,1.1-5.1,1.4c-1.5,0.2-3.1,0.3-4.6,0.2
+			c-2.6-0.1-5-0.7-7.4-1.7c-0.3-0.1-0.7-0.3-1-0.4c0.7-1.3,1.7-2.3,2.9-3.2c5.3-4,12.9-2.6,16.6,2.9C73,34.2,73,34.2,73.1,34.3z"/><path fill="#00AFFD" d="M53,17.4c3.2,0,6.3,0,9.5,0c0,1.2,0.1,2.4-0.1,3.6c-0.5,2.2-2.6,3.7-4.9,3.6c-2.2-0.1-4.2-1.8-4.4-4
+			C52.9,19.5,53,18.4,53,17.4z"/><path fill="#05C705" d="M64.1,17.4c3.2,0,6.3,0,9.5,0c0,1.1,0,2.2-0.1,3.2c-0.2,1.9-1.9,3.7-3.9,3.9c-2.8,0.4-5.1-1.3-5.5-4.1
+			C64,19.5,64.1,18.4,64.1,17.4z"/><path fill="#FD95BD" d="M75.2,17.4c3.2,0,6.3,0,9.5,0c0,1.2,0.1,2.4-0.2,3.6c-0.4,2.3-2.7,3.9-5.1,3.7c-2.5-0.3-4.3-2.3-4.3-4.7
+			C75.2,19,75.2,18.2,75.2,17.4z"/><path fill="#FDE000" d="M41.8,17.4c3.2,0,6.3,0,9.5,0c0,1.2,0.2,2.5-0.1,3.7c-0.5,2.2-2.6,3.7-4.9,3.6c-2.3-0.1-4.2-1.9-4.4-4.1
+			C41.8,19.5,41.9,18.4,41.8,17.4z"/></g></g></svg>
+							</li>
+							<li>
+								<svg version="1.1" x="0px" y="0px" viewBox="0 0 126 52" enable-background="new 0 0 126 52" xml:space="preserve"><g><path fill="#6D6E71" d="M53.6,45.3c-0.2-0.1-0.3-0.1-0.5-0.2c-0.8-0.2-1.5,0.4-1.3,1.2c0.1,0.5,0.5,0.9,1,0.9c0.5,0,0.9-0.3,1-0.9
+		c0-0.2,0-0.4,0-0.5c0-0.9,0-1.7,0-2.6c0.2,0,0.3,0,0.4,0c0,0,0.1,0.1,0.1,0.2c0,0.3,0,0.6,0,0.9c0,0.6,0,1.3,0,1.9
+		c0,0.6-0.3,1.1-0.9,1.4c-0.6,0.3-1.1,0.2-1.6-0.1c-0.5-0.4-0.7-1-0.6-1.6c0.1-0.6,0.4-1,1-1.2c0.4-0.1,0.8-0.1,1.1,0.1
+		c0.1,0,0.1,0.1,0.1,0.2C53.6,45,53.6,45.2,53.6,45.3z M99,44.6c-0.2,0-0.3,0-0.4,0.2c-0.1,0.2-0.2,0.4-0.4,0.6
+		c-0.2,0.3-0.4,0.4-0.8,0.2c0-0.8,0-1.7,0-2.5c-0.2,0-0.4,0-0.5,0c0,1.5,0,3,0,4.5c0.2,0,0.3,0,0.5,0c0-0.2,0-0.5,0-0.7
+		c0-0.2,0-0.5,0-0.7c0.1,0,0.2,0,0.4,0c0.7,0,0.8,0.1,0.8,0.8c0,0.2,0,0.4,0,0.6c0.2,0,0.3,0,0.5,0c0-0.3,0-0.6,0-0.8
+		c0-0.6-0.1-0.7-0.6-0.9c0,0,0,0,0,0c0.3-0.4,0.5-0.8,0.8-1.3C99.2,44.6,99.1,44.6,99,44.6z M66,46.2c0-0.9-0.6-1.6-1.5-1.6
+		c-0.8,0-1.6,0.7-1.7,1.5c0,0.9,0.6,1.6,1.6,1.7C65.3,47.8,65.9,47.1,66,46.2z M64.4,47.2c-0.8,0-1-0.6-1-1.1c0-0.6,0.5-1.1,1.1-1
+		c0.6,0,1,0.5,1,1.1C65.4,46.8,65,47.2,64.4,47.2z M70.3,44.6c-0.1,0-0.2,0-0.3,0.1c-0.3,0.1-0.5,0.3-0.5,0.6c0,0.3,0.1,0.6,0.3,0.7
+		c0.2,0.1,0.4,0.2,0.6,0.3c0.3,0.1,0.5,0.2,0.8,0.3c0.2,0.1,0.3,0.2,0.2,0.4c0,0.2-0.2,0.2-0.4,0.2c-0.4,0-0.9,0-1.3,0
+		c-0.1,0-0.2,0-0.2,0c0,0.2,0,0.3,0,0.5c0.6,0,1.1,0,1.7,0c0.4,0,0.7-0.3,0.8-0.6c0.1-0.4-0.1-0.7-0.5-0.9c-0.2-0.1-0.4-0.2-0.6-0.2
+		c-0.2-0.1-0.4-0.1-0.6-0.2c-0.1-0.1-0.3-0.2-0.2-0.3c0-0.2,0.2-0.2,0.3-0.2c0.2,0,0.5,0,0.7,0c0.2,0,0.4,0,0.7,0c0-0.2,0-0.3,0-0.5
+		C71.3,44.6,70.8,44.6,70.3,44.6z M36,44.6c-0.4,0-0.9,0-1.3,0c-0.6,0-0.9,0.4-0.8,0.9c0,0.3,0.2,0.5,0.5,0.6
+		c0.3,0.1,0.6,0.2,0.8,0.3c0.2,0.1,0.3,0.1,0.5,0.2c0.1,0.1,0.1,0.2,0.1,0.3c0,0.1-0.1,0.1-0.2,0.2c0,0-0.1,0-0.1,0
+		c-0.5,0-0.9,0-1.4,0c-0.1,0-0.2,0.1-0.2,0.2c0,0.1,0,0.1,0,0.2c0,0.1,0,0.2,0.2,0.2c0.5,0,1,0,1.5,0c0.4,0,0.7-0.2,0.8-0.6
+		c0.1-0.4-0.1-0.8-0.5-1c-0.2-0.1-0.4-0.2-0.6-0.2c-0.2-0.1-0.4-0.1-0.6-0.2c-0.2-0.1-0.4-0.1-0.3-0.4c0-0.2,0.2-0.2,0.4-0.2
+		c0.1,0,0.2,0,0.3,0c0.3,0,0.7,0,1,0c0-0.2,0-0.3,0-0.5C36.1,44.6,36.1,44.6,36,44.6z M45.3,44.6c-0.1,0-0.2,0-0.2,0.2
+		c0,0.6,0,1.2,0,1.8c0,0.7,0.5,1.1,1.2,1.1c0.7,0,1.2-0.4,1.3-1c0.1-0.5,0-1.1,0-1.6c0-0.1,0-0.3,0-0.4c-0.2,0-0.4,0-0.5,0
+		c0,0.1,0,0.2,0,0.2c0,0.5,0,1,0,1.6c0,0.4-0.3,0.7-0.7,0.8c-0.4,0-0.7-0.2-0.8-0.6c0-0.1,0-0.2,0-0.3c0-0.5,0-1.1,0-1.7
+		C45.5,44.6,45.4,44.6,45.3,44.6z M90.6,44.7c0,0.6,0,1.2,0,1.8c0,0.3,0.1,0.6,0.3,0.8c0.4,0.4,1,0.5,1.5,0.3
+		c0.5-0.2,0.8-0.6,0.8-1.2c0-0.5,0-1,0-1.5c0-0.4,0-0.3-0.4-0.3c-0.1,0-0.2,0.1-0.2,0.2c0,0.3,0,0.5,0,0.8c0,0.3,0,0.7,0,1
+		c-0.1,0.4-0.4,0.7-0.8,0.6c-0.4,0-0.7-0.3-0.7-0.7c0-0.5,0-1,0-1.5C91.1,44.6,91.1,44.6,90.6,44.7C90.6,44.7,90.6,44.7,90.6,44.7z
+		 M41.6,44.6c-0.2,0-0.4,0-0.6,0c-0.5,0-0.5,0-0.5-0.5c0-0.3,0-0.3-0.3-0.3c0,0,0,0-0.1,0C40,43.8,40,43.9,40,44c0,0.9,0,1.8,0,2.8
+		c0,0.5,0.3,0.8,0.7,0.9c0.3,0,0.6,0,0.9,0c0-0.2,0-0.3,0-0.5c0,0,0,0,0,0c-0.2,0-0.4,0-0.7,0c-0.3,0-0.4-0.1-0.4-0.4
+		c0-0.5,0-0.9,0-1.4c0-0.1,0-0.1,0-0.2c0.4,0,0.7,0,1.1,0C41.6,44.9,41.6,44.8,41.6,44.6z M58.6,47.7c0.3,0,0.3,0,0.3-0.3
+		c0-0.9,0-1.7,0-2.6c0-0.2-0.1-0.2-0.3-0.2c-0.2,0-0.3,0-0.3,0.2c0,0.9,0,1.8,0,2.6c0,0.1,0,0.1,0,0.2
+		C58.5,47.7,58.6,47.7,58.6,47.7z M58.6,43.6c-0.2,0-0.3,0.1-0.3,0.3c0,0.2,0.1,0.3,0.3,0.3c0.2,0,0.3-0.1,0.3-0.3
+		C59,43.7,58.8,43.6,58.6,43.6z"/><linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="92.9451" y1="41.4727" x2="92.9451" y2="13.4674"><stop offset="0" style="stop-color:#F48122"/><stop offset="1" style="stop-color:#F4A920"/></linearGradient><path fill="url(#SVGID_1_)" d="M85.4,16l3.5,25.4l11.2-0.5l0.3-27.5L85.4,16z M98.1,38.2c-0.4,0-0.8,0-1.2,0
+		c-0.2,0-0.2-0.1-0.2-0.2c0-1.5,0-3,0-4.5c0-1.4-0.9-2.2-2-2.5c-0.8-0.2-1.5-0.1-2.2,0.2c-0.8,0.4-1.3,1.1-1.4,2.1
+		c-0.1,1.1,0.1,2,0.9,2.8c1,0.9,2.7,1.1,3.8-0.2c0.1-0.1,0.2-0.2,0.3-0.3c0,0.1,0,0.2,0,0.2c0,0.5,0,1.1,0,1.6c0,0.1,0,0.2-0.1,0.2
+		c-0.7,0.5-1.5,0.8-2.3,0.8c-1.1,0-2.1-0.4-2.9-1.2c-1.1-1.1-1.5-2.5-1.4-4c0.1-1.1,0.5-2.1,1.4-2.8c0.8-0.7,1.7-1,2.7-1.1
+		c0.9-0.1,1.7,0,2.6,0.4c1.4,0.6,2.1,1.7,2.3,3.1c0,0.2,0,0.4,0,0.7c0,1.5,0,3,0,4.5C98.3,38.1,98.3,38.2,98.1,38.2z"/><linearGradient id="SVGID_2_" gradientUnits="userSpaceOnUse" x1="80.9662" y1="46.3131" x2="80.9662" y2="10.9608"><stop offset="0" style="stop-color:#F48122"/><stop offset="1" style="stop-color:#F4A920"/></linearGradient><path fill="url(#SVGID_2_)" d="M83.2,11L73,12.2l0.4,34l15.5,0.2L83.2,11z M81.7,38.1c-0.5,0.1-1.1,0.1-1.7,0.1c-0.4,0-0.8,0-1.2,0
+		c-0.8,0-1.5,0-2.3,0c-0.2,0-0.2,0-0.2-0.2c0-0.4,0-0.8,0-1.1c0-0.1,0-0.2,0.2-0.2c1.4,0,2.8,0,4.2,0c0.2,0,0.5,0,0.7-0.1
+		c0.5-0.2,0.6-0.7,0.2-1.1c-0.2-0.2-0.5-0.4-0.7-0.5c-0.7-0.2-1.4-0.4-2.1-0.7c-0.6-0.2-1.2-0.4-1.7-0.8c-0.7-0.5-0.9-1.2-0.8-2.1
+		c0.1-1.1,0.7-1.6,1.9-1.9c0.4-0.1,0.7-0.1,1.1-0.1c1.2,0,2.3,0,3.5,0c0.2,0,0.3,0.1,0.3,0.3c0,0.4,0,0.7,0,1.1c0,0.2,0,0.2-0.2,0.2
+		c-1.3,0-2.6,0-3.8,0c-0.2,0-0.4,0-0.6,0.1c-0.5,0.2-0.6,0.8-0.2,1.1c0.4,0.3,0.9,0.5,1.4,0.6c0.8,0.2,1.6,0.4,2.4,0.8
+		c0.6,0.3,1.2,0.8,1.4,1.5C83.8,36.3,83.3,37.8,81.7,38.1z"/><linearGradient id="SVGID_3_" gradientUnits="userSpaceOnUse" x1="34.8902" y1="40.8774" x2="34.8902" y2="9.8515"><stop offset="0" style="stop-color:#F48122"/><stop offset="1" style="stop-color:#F4A920"/></linearGradient><path fill="url(#SVGID_3_)" d="M26,12.8l6.8,28.1l10.7-0.8l0.2-30.2L26,12.8z M41.7,36.1c-0.8,1.4-2,2.1-3.6,2.3
+		C35.9,38.5,34,37,33.5,35c-0.1-0.4-0.1-0.7-0.1-1.1c0-2.7,0-5.5,0-8.2c0-0.3,0-0.3,0.3-0.3c0.4,0,0.8,0,1.1,0
+		c0.2,0,0.2,0.1,0.2,0.2c0,1.4,0,2.9,0,4.3c0,1.3,0,2.6,0,3.8c0,1,0.4,1.8,1.2,2.4c1.1,0.9,3.1,0.8,4-0.8c0.7-1.3,0.5-2.9-0.5-3.9
+		c-0.6-0.5-1.3-0.7-2.1-0.7c-0.7,0-1.3,0.3-1.8,0.6c-0.1,0-0.1,0.1-0.2,0.1c0,0,0,0-0.1,0c0-0.1,0-0.1,0-0.2c0-0.4,0-0.8,0-1.3
+		c0-0.2,0.1-0.2,0.2-0.3c0.8-0.4,1.6-0.5,2.4-0.5c0.9,0.1,1.8,0.4,2.5,1c0.9,0.8,1.4,1.8,1.5,3C42.4,34.2,42.2,35.2,41.7,36.1z"/><g><linearGradient id="SVGID_4_" gradientUnits="userSpaceOnUse" x1="51.8482" y1="42.4667" x2="51.8482" y2="11.5802"><stop offset="0" style="stop-color:#F48122"/><stop offset="1" style="stop-color:#F4A920"/></linearGradient><path fill="url(#SVGID_4_)" d="M58.5,11.6l-11.7,0.7l-2.4,29.5l15.1,0.7L58.5,11.6z M54,37.9c-1.2,0.6-2.5,0.5-3.7,0.1
+			c-1.7-0.7-2.7-1.9-2.8-3.7c-0.2-1.9,0.6-3.4,2.2-4.4c0.7-0.4,1.5-0.7,2.3-0.7c1.8,0.1,3.2,0.8,4.1,2.4c0.3,0.6,0.5,1.3,0.5,2.1
+			C56.5,35.6,55.8,37.1,54,37.9z"/><linearGradient id="SVGID_5_" gradientUnits="userSpaceOnUse" x1="52.0185" y1="36.7895" x2="52.0185" y2="30.8127"><stop offset="0" style="stop-color:#F48122"/><stop offset="1" style="stop-color:#F4A920"/></linearGradient><path fill="url(#SVGID_5_)" d="M53.9,31.4c-0.6-0.5-1.3-0.7-2-0.6c-0.7,0-1.4,0.3-1.9,0.9c-0.9,1-0.9,2.1-0.5,3.3
+			c0.3,0.8,0.8,1.4,1.6,1.6c0.3,0.1,0.6,0.1,1,0.2c0,0,0,0,0,0c0.1,0,0.1,0,0.2,0c1.3,0,2.2-0.7,2.4-1.9c0.1-0.5,0.1-0.9,0.1-1.4
+			C54.8,32.6,54.5,32,53.9,31.4z"/></g><linearGradient id="SVGID_6_" gradientUnits="userSpaceOnUse" x1="65.9456" y1="43.206" x2="65.9456" y2="4.0165"><stop offset="0" style="stop-color:#F48122"/><stop offset="1" style="stop-color:#F4A920"/></linearGradient><path fill="url(#SVGID_6_)" d="M59.4,9.7l1.8,32l10.8,1.5L72.5,4L59.4,9.7z M69.9,36.6c-0.3,0.9-0.9,1.4-1.8,1.5
+		c-0.5,0.1-1.1,0.1-1.6,0.1c-0.4,0-0.8,0-1.2,0c-0.8,0-1.5,0-2.3,0c-0.2,0-0.2-0.1-0.2-0.2c0-0.4,0-0.8,0-1.1c0-0.1,0-0.2,0.2-0.2
+		c1.4,0,2.8,0,4.2,0c0.2,0,0.5,0,0.7-0.1c0.6-0.1,0.6-0.9,0.3-1.1c-0.2-0.2-0.5-0.4-0.8-0.5c-0.8-0.3-1.5-0.5-2.3-0.7
+		c-0.5-0.2-1-0.4-1.5-0.8c-0.6-0.5-0.7-1.1-0.7-1.8c0-0.2,0.1-0.5,0.1-0.7c0.2-0.7,0.8-1.1,1.5-1.2c0.4-0.1,0.9-0.2,1.3-0.2
+		c1.2,0,2.4,0,3.6,0c0.3,0,0.3,0,0.3,0.3c0,0.3,0,0.7,0,1c0,0.2,0,0.3-0.3,0.3c-1.3,0-2.5,0-3.8,0c-0.2,0-0.4,0-0.5,0.1
+		c-0.3,0.1-0.4,0.3-0.5,0.5c0,0.3,0.1,0.5,0.3,0.6c0.4,0.3,0.9,0.4,1.3,0.6c0.7,0.2,1.5,0.3,2.1,0.7c0.4,0.2,0.7,0.4,1,0.7
+		C70.1,34.8,70.2,35.7,69.9,36.6z"/></g></svg>
+							</li>
+							<li>
+								<svg version="1.1" x="0px" y="0px" viewBox="0 0 126 52" enable-background="new 0 0 126 52" xml:space="preserve"><linearGradient id="Miniclip_1_" gradientUnits="userSpaceOnUse" x1="62.9021" y1="33.6688" x2="62.9021" y2="19.703"><stop offset="4.044350e-03" style="stop-color:#E60211"/><stop offset="0.2888" style="stop-color:#EC250D"/><stop offset="0.9163" style="stop-color:#FC7C02"/><stop offset="1" style="stop-color:#FE8800"/></linearGradient><path fill="url(#Miniclip_1_)" d="M19.8,20l3.2,4.4l3.4-4.4h4.9v13.7h-4.7v-4.4l-3.6,4.4l-3.5-4.3v4.3h-4.7V24h-1.6
+	v-4H19.8L19.8,20z M37.7,33.7v-14H33v14H37.7L37.7,33.7z M112.4,24.5c0,3.8-3.9,4.7-3.9,4.7h-5.4v4.5h-4.8v-14h10.2
+	C108.5,19.7,112.4,20.7,112.4,24.5z M107.6,24.4c0-1.1-0.7-1-0.7-1h-4l0,2.1h4C106.9,25.4,107.6,25.5,107.6,24.4z M81.1,29v-9.3H76
+	V29v4.7h5.2h9.2V29H81.1L81.1,29z M74.3,24.4v-4.5h-7c0,0-6.1,0.8-6.1,6.7c0,5.9,6.1,7.1,6.1,7.1h7v-4.5h-6.6c0,0-1.7-0.4-1.7-2.6
+	c0-2.2,1.6-2.2,1.6-2.2H74.3L74.3,24.4z M39.4,20v13.7h4.4v-7.1c0,0,4.8,0.1,4.8,7.1h4.5V20h-4.4v3.1C48.7,23.1,46.3,20,39.4,20
+	L39.4,20z M59.8,33.7v-14h-4.9v14H59.8L59.8,33.7z M96.7,33.7v-14H92v14H96.7L96.7,33.7z"/></svg>
+							</li>
+							<li>
+								<svg version="1.1" x="0px" y="0px" viewBox="0 0 126 52" enable-background="new 0 0 126 52" xml:space="preserve"><g><path fill="#444444" d="M66.3,21.1L62.8,35c-0.1,0.5-0.4,0.7-0.8,0.7h-2.4c-0.4,0-0.6-0.2-0.7-0.7l-1.6-5.4
+		c-0.2-0.7-0.3-1.4-0.3-1.6c0,0.2-0.2,1.1-0.3,1.7L55,35c-0.1,0.5-0.4,0.7-0.8,0.7h-2.4c-0.4,0-0.6-0.2-0.7-0.7l-3.5-13.9
+		c-0.1-0.4,0-0.7,0.5-0.7h2.5c0.5,0,0.7,0.2,0.8,0.7l1.5,6.3c0.2,0.7,0.3,1.8,0.4,2c0-0.2,0.2-0.5,0.4-1.4l1.6-5
+		c0.1-0.4,0.3-0.7,0.8-0.7h2.3c0.5,0,0.7,0.2,0.8,0.7l1.5,5c0.2,0.8,0.4,1.6,0.4,1.8c0-0.2,0.2-1.4,0.4-2.4l1.6-6.3
+		c0.1-0.4,0.3-0.7,0.8-0.7h2.1C66.3,20.4,66.4,20.7,66.3,21.1z M76.9,27.8v4.6c0,2.1-1.8,3.5-5.1,3.5c-3.4,0-5.1-1.4-5.1-3.5v-4.6
+		c0-2.1,1.8-3.5,5.1-3.5C75.1,24.3,76.9,25.7,76.9,27.8z M73.3,28.1c0-0.7-0.6-1-1.5-1c-0.9,0-1.5,0.2-1.5,1v4c0,0.8,0.6,1,1.5,1
+		c0.9,0,1.5-0.2,1.5-1V28.1z M88.9,27.8v4.6c0,2.1-1.8,3.5-5.1,3.5c-3.4,0-5.1-1.4-5.1-3.5v-4.6c0-2.1,1.7-3.5,5.1-3.5
+		C87.2,24.3,88.9,25.7,88.9,27.8z M85.4,28.1c0-0.7-0.6-1-1.5-1c-0.9,0-1.5,0.2-1.5,1v4c0,0.8,0.6,1,1.5,1c0.9,0,1.5-0.2,1.5-1V28.1
+		z M101,25.1v11.5c0,2.1-1.7,3.5-5.1,3.5h-3.2c-0.5,0-0.7-0.2-0.7-0.7v-1.6c0-0.5,0.2-0.7,0.7-0.7h3.2c0.9,0,1.5-0.2,1.5-1v-1.5
+		c-0.7,0.5-1.7,1.1-3.4,1.1c-2.3,0-3.3-1.3-3.3-3.5v-4.7c0-2.1,1.1-3.5,3.3-3.5c1.8,0,2.8,0.8,3.5,1.3l0-0.4
+		c0.1-0.5,0.2-0.7,0.7-0.7h2.1C100.8,24.5,101,24.7,101,25.1z M97.4,28.3c-0.5-0.3-1.4-0.9-2.2-0.9c-0.9,0-0.9,0.5-0.9,0.9v3.5
+		c0,0.4,0,0.9,0.9,0.9c0.9,0,1.7-0.6,2.2-0.9V28.3z M112.4,27.5v0.2V31v4c0,0.5-0.2,0.7-0.7,0.7h-2.1c-0.5,0-0.6-0.2-0.7-0.7l0-0.3
+		c-0.7,0.5-1.7,1.2-3.1,1.2c-2.3,0-3.3-1.4-3.3-2.9v-1.2c0-1.5,1.3-2.9,3.6-2.9h2.7v-1c0-0.1,0-0.1,0-0.2c0,0,0-0.1,0-0.1
+		c0,0,0-0.1,0-0.1c-0.1-0.4-0.5-0.6-1-0.7c-0.1,0-0.1,0-0.2,0l0,0c-0.1,0-0.1,0-0.2,0h-3.3c-0.5,0-0.7-0.2-0.7-0.7v-1.2
+		c0-0.5,0.2-0.7,0.7-0.7h3.4c0.2,0,0.5,0,0.7,0c1.9,0.1,3.1,0.6,3.7,1.5C112.3,26.2,112.4,26.8,112.4,27.5z M108.9,31.3h-2.1
+		c-0.7,0-0.8,0.4-0.8,0.7v0.5c0,0.5,0.4,0.6,0.8,0.6c0.8,0,1.5-0.5,2.1-0.8V31.3z"/><path fill="#5B009C" d="M34.6,12.2c2.5,0,4.5,2,4.5,4.5c0,2.5-2,4.5-4.5,4.5c-2.5,0-4.5-2-4.5-4.5C30.1,14.2,32.1,12.2,34.6,12.2z
+		 M20,12.2c2.5,0,4.5,2,4.5,4.5c0,2.5-2,4.5-4.5,4.5c-2.5,0-4.5-2-4.5-4.5C15.6,14.2,17.6,12.2,20,12.2z M34.6,40.5
+		c-4,0-4.4-6.7-7.3-6.7c-2.9,0-3.2,6.7-7.3,6.7c-2.4,0-6.7-7.5-6.7-14.5c0-2.3,0.5-4.7,0.8-5.7c1.2,2,3.3,3.4,5.8,3.4
+		c-1.7,2.8-2,6.6,0,11.3c1-0.8,4.2-6.5,7.3-6.5c3,0,6.3,5.7,7.3,6.5c2-4.7,1.7-8.5,0-11.3c2.5,0,4.7-1.4,5.8-3.4
+		c0.3,0.9,0.8,3.4,0.8,5.7C41.2,32.9,37,40.5,34.6,40.5z"/></g></svg>
+							</li>
+							<li>
+								<svg version="1.1" x="0px" y="0px" viewBox="0 0 126 52" enable-background="new 0 0 126 52" xml:space="preserve"><g><path fill="#78A3D5" d="M38.5,16.2c-5.8-0.2-10.6,4.3-10.9,10c-0.2,5.8,4.3,10.6,10,10.9c5.8,0.2,10.6-4.3,10.9-10
+		C48.8,21.3,44.3,16.5,38.5,16.2z M37.8,34c-4-0.2-7.2-3.6-7-7.6c0.2-4,3.6-7.2,7.6-7c4,0.2,7.2,3.5,7,7.6
+		C45.3,31,41.9,34.1,37.8,34z M42,24.8c-0.1,1.3-1.2,2.4-2.5,2.3c-1.3-0.1-2.4-1.2-2.3-2.5c0.1-1.3,1.2-2.4,2.5-2.3
+		C41,22.4,42.1,23.5,42,24.8z"/><path fill="#57585B" d="M75.8,26.7c0,3.7-2.1,6.4-6.1,6.4h-5.8V20.2h5.5C73.3,20.2,75.8,22.1,75.8,26.7z M72.3,26.7
+		c0-3.1-1.7-3.6-3.2-3.6h-1.8v7.2H69C71.3,30.3,72.3,28.8,72.3,26.7z M100.6,20.3h-3.5v8.5c0,1.3-0.7,1.8-2,1.8c-1.3,0-2-0.5-2-1.7
+		v-8.5h-3.5v8.5c0,3.1,2,4.6,5.6,4.6c3,0,5.5-1.4,5.5-4.6V20.3z M112.3,29.1c0-4.6-5.9-3.7-5.9-5.4c0-0.5,0.2-0.9,1-0.9
+		c1.6,0,3.6,0.1,3.6,0.1l0.7-2.8c0,0-1.7-0.1-5.2-0.1c-2.1,0-3.7,1.4-3.7,3.8c0,4.3,5.8,3.7,5.8,5.5c0,0.4-0.2,1.1-1.2,1.1
+		c-2.3,0-3.8-0.8-3.8-0.8l-0.9,2.9c0,0,1.3,0.8,4.8,0.8C110.4,33.3,112.3,31.7,112.3,29.1z M13.7,33.1h3.3v-7.9h0l5.5,7.9h3.3V20.2
+		h-3.3v7.9h0l-5.5-7.9h-3.3V33.1z M87,23.1l0.2-2.8h-9.5v12.9h9.5L87,30.3h-5.9v-2.2h5.1v-2.8h-5.1v-2.1H87z M60.4,29.6
+		c-0.5-1.1-0.8-1.6-1.3-1.9c0.5-0.2,0.8-0.5,1.1-1c0.5-0.7,0.7-1.7,0.7-2.6c0-1.4-0.4-2.3-1.3-3c-0.9-0.6-1.9-0.9-3.2-0.9h-6.2V33
+		h3.5v-4.6h0l0.9,0c0,0,0,0,0,0c0.3,0,1.5,0.1,2.1,1.3c0.6,1.4,1.6,3.4,1.6,3.4H62C62,33,60.9,30.7,60.4,29.6z M53.8,26.2v-3.5h1.4
+		h0.6h0.2c0.5,0,0.7,0.2,1,0.4c0.3,0.3,0.6,0.7,0.6,1.3c0,0.6-0.2,1.2-0.6,1.5c-0.2,0.2-0.5,0.3-1,0.3h-0.2c-0.1,0-0.5,0-0.6,0H53.8
+		z"/></g></svg>
+							</li>
+							<li>
+								<svg version="1.1" x="0px" y="0px" viewBox="0 0 126 52" enable-background="new 0 0 126 52" xml:space="preserve"><path fill="#00507D" d="M60.6,34.1c0.1,0.2,0.2,0.5,0.2,0.9v0.1h-1.7v0c0-0.8,0.3-1.3,0.9-1.3
+	C60.3,33.7,60.5,33.9,60.6,34.1z M42.1,33.7c-0.6,0-0.9,0.5-0.9,1.3v0H43V35c0-0.5,0-0.7-0.2-0.9C42.6,33.9,42.4,33.7,42.1,33.7z
+	 M74.5,33.8c-0.3,0-0.6,0.2-0.8,0.6c-0.1,0.3-0.2,0.8-0.2,1.4c0,0.7,0.1,1.2,0.2,1.5c0.1,0.3,0.5,0.5,0.7,0.5c0.6,0,0.9-0.6,0.9-2.1
+	c0-0.8-0.1-1.4-0.3-1.6C75,33.9,74.7,33.8,74.5,33.8z M68.3,47c-16.2,4.1-31.6-2-34.5-13.7C30.9,21.7,41.7,9,57.9,4.9
+	c16.2-4.1,31.6,2,34.5,13.7C95.3,30.2,84.5,42.9,68.3,47z M61.4,11.3c-1.6,0-2.9,1.3-2.9,2.9c0,1.6,1.3,2.9,2.9,2.9
+	c1.6,0,2.9-1.3,2.9-2.9C64.3,12.6,63,11.3,61.4,11.3z M58.5,28.6c8.1,2,15.6-0.4,16.9-5.4c0.6-2.5-0.4-5.1-2.6-7.4
+	c0.1,0.4,0.1,0.9,0.1,1.3c0,4.9-3.9,8.8-8.7,8.8c-4.8,0-8.7-3.9-8.7-8.8c0-3.1,1.6-5.8,4-7.4c-6.7-0.7-12.3,1.7-13.4,6
+	C44.9,20.8,50.5,26.5,58.5,28.6z M44.5,35.9c0-1.3-0.2-2.1-0.7-2.7c-0.4-0.4-1-0.6-1.6-0.6c-0.7,0-1.3,0.3-1.8,0.8
+	c-0.5,0.6-0.7,1.3-0.7,2.4c0,1.9,1,3.2,2.7,3.2c0.8,0,1.5-0.3,2.1-0.8l-0.6-1c-0.4,0.4-0.9,0.6-1.4,0.6c-0.8,0-1.2-0.5-1.2-1.5v0
+	h3.2C44.5,36.1,44.5,36,44.5,35.9z M50.2,34.3c0-0.4,0-0.6-0.1-0.9c-0.2-0.5-0.7-0.9-1.4-0.9c-0.3,0-0.7,0.1-1,0.3
+	c-0.2,0.1-0.4,0.3-0.6,0.5c0-0.3-0.1-0.5-0.2-0.8L45.5,33c0.1,0.4,0.2,0.9,0.2,1.4v4.4h1.5v-4.3c0.3-0.3,0.7-0.5,1-0.5
+	c0.4,0,0.5,0.2,0.5,0.9v4h1.5V34.3z M56.4,38.8c-0.1-0.2-0.2-0.7-0.2-2.2v-6.3L54.8,30v2.1c0,0.4,0,0.8,0,0.9
+	c-0.3-0.2-0.6-0.3-1-0.3c-1.4,0-2.4,1.3-2.4,3.2c0,1.9,0.9,3.1,2.3,3.1c0.5,0,0.9-0.2,1.3-0.5c0,0.2,0,0.3,0.1,0.4H56.4z M62.3,35.9
+	c0-1.3-0.2-2.1-0.7-2.7c-0.4-0.4-1-0.6-1.6-0.6c-0.7,0-1.3,0.3-1.8,0.8c-0.5,0.6-0.7,1.3-0.7,2.4c0,1.9,1,3.2,2.7,3.2
+	c0.8,0,1.5-0.3,2.1-0.8l-0.6-1c-0.5,0.4-0.9,0.6-1.4,0.6c-0.8,0-1.2-0.5-1.2-1.5v0h3.2C62.3,36.1,62.3,36,62.3,35.9z M70.8,34.5
+	c0-0.8-0.1-1.2-0.4-1.5c-0.3-0.2-0.7-0.4-1.1-0.4c-0.6,0-1.1,0.2-1.6,0.8c-0.1-0.1-0.1-0.2-0.2-0.3c-0.3-0.3-0.7-0.5-1.1-0.5
+	c-0.5,0-1,0.2-1.4,0.6c-0.1-0.3-0.1-0.5-0.2-0.6L63.4,33c0.2,0.3,0.2,0.7,0.2,1.6v4.3H65v-4.5c0.3-0.3,0.7-0.5,1-0.5
+	c0.4,0,0.5,0.2,0.5,0.9v4h1.4v-4.4c0.3-0.3,0.7-0.5,1-0.5c0.4,0,0.5,0.1,0.5,0.9v4h1.4V34.5z M77,35.7c0-1-0.2-1.7-0.6-2.2
+	c-0.5-0.6-1.1-0.9-1.9-0.9c-1.5,0-2.5,1.3-2.5,3.2c0,1.9,1,3.2,2.5,3.2c0.9,0,1.4-0.3,1.9-0.8C76.8,37.5,77,36.8,77,35.7z M81,38.7
+	l-0.2-1c-0.3,0.1-0.4,0.1-0.5,0.1c-0.5,0-0.6-0.2-0.6-1l0-5.3c0-0.9,0-1.2-0.1-1.6l-1.5,0.4c0.1,0.5,0.1,1,0.1,1.8l0,4.9
+	c0,0.6,0,0.7,0.1,0.9c0.2,0.5,0.8,0.9,1.5,0.9C80.2,38.9,80.5,38.9,81,38.7z M53,35.9c0,1.3,0.3,1.7,1,1.7c0.3,0,0.6-0.2,0.7-0.4
+	v-2.9c-0.3-0.3-0.5-0.4-0.8-0.4C53.3,33.9,53,34.5,53,35.9z"/></svg>
+							</li>
+						</ul>
+					</div>
+				</aside>
+				<aside class="{STYLES_INSTANCE.reflectionMainStyle.hiring}">
+					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyle} {STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">We're Hiring</h2>
+					<ul class="{STYLES_INSTANCE.reflectionMainStyle.contentList} {STYLES_INSTANCE.reflectionMainStyle.contentListNoBullets}">
+						<li>
+							<a href="http://reflection.workable.com/jobs/84956" target="_blank">Java Engineer</a>
+						</li>
+						<li>
+							<a href="http://reflection.workable.com/jobs/93511" target="_blank">Data Analyst</a>
+						</li>
+					</ul>
+				</aside>
 			</div>
-		</section>
-		<section class="{STYLES_INSTANCE.reflectionMainStyle.landingSectionContact}">
-			<div class="{STYLES_INSTANCE.reflectionMainStyle.logoContainer}">
-				<img src="images/logo-reflection-footer.png" alt="Reflection logo" class="{STYLES_INSTANCE.reflectionMainStyle.logoReflectionFooter}" />
-			</div>
-			<a href="mailto:info@reflection.io" class="{STYLES_INSTANCE.reflectionMainStyle.landingSectionContact__email}">
-				<span class="icon-mail {STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeMail}">info@reflection.io</span>
-			</a>
-			<a
-				href="https://www.google.co.uk/maps/place/44+Newman+St,+Marylebone,+London+W1T+1QD/@51.5187779,-0.1364135,17z/data=!4m7!1m4!3m3!1s0x48761b2b95192b1b:0xc2fcb9753b8ff12b!2s44+Newman+St,+Marylebone,+London+W1T+1QD!3b1!3m1!1s0x48761b2b95192b1b:0xc2fcb9753b8ff12b"
-				class="{STYLES_INSTANCE.reflectionMainStyle.landingSectionContact__address}" target="_blank">
-				<p class="icon-location {STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeLocation}">
-					<b>
-						40-44 Newman St
-						<br />
-						London
-						<br />
-						W1T 1QD
-					</b>
-				</p>
-			</a>
 		</section>
 	</g:HTMLPanel>
 </ui:UiBinder> 

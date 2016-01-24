@@ -7,8 +7,6 @@
 //
 package io.reflection.app.accountdatacollectors;
 
-import io.reflection.app.logging.GaeLevel;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -34,6 +32,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.willshex.gson.json.shared.Convert;
+
+import io.reflection.app.logging.GaeLevel;
 
 /**
  * @author William Shakour (billy1380)
@@ -215,7 +215,7 @@ public class ITunesConnectDownloadHelper {
 			}
 
 			if (LOG.isLoggable(Level.INFO)) {
-				LOG.warning("File Downloaded Successfully");
+				LOG.info("File Downloaded Successfully");
 			}
 
 			cloudStorageFileName = "/gs/" + fileName.getBucketName() + "/" + fileName.getObjectName();

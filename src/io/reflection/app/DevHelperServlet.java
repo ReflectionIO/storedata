@@ -239,7 +239,8 @@ public class DevHelperServlet extends HttpServlet {
 					// have the ingested status.
 					if (fetch != null) {
 						String countries = System.getProperty("ingest.ios.countries");
-						if (countries != null && !countries.contains(fetch.country)) {
+						countries = countries == null ? null : countries.toLowerCase();
+						if (countries != null && !countries.contains(fetch.country.toLowerCase())) {
 							if (LOG.isLoggable(GaeLevel.DEBUG)) {
 								LOG.log(GaeLevel.DEBUG, String.format("Feed fetch id %d not being modelled as the country is filtered out. Country: %s, category: %s, type: %s", feedFetchId,
 										fetch.country, fetch.category.id, fetch.type));
@@ -268,6 +269,7 @@ public class DevHelperServlet extends HttpServlet {
 				}
 			} else if ("modelmulti".equalsIgnoreCase(action)) {
 				String countries = System.getProperty("ingest.ios.countries");
+				countries = countries == null ? null : countries.toLowerCase();
 
 				try {
 					final String[] feedIdsArray = ids.split(",");
@@ -277,7 +279,7 @@ public class DevHelperServlet extends HttpServlet {
 
 						final FeedFetch fetch = FeedFetchServiceProvider.provide().getFeedFetch(feedFetchId);
 
-						if (countries != null && !countries.contains(fetch.country)) {
+						if (countries != null && !countries.contains(fetch.country.toLowerCase())) {
 							continue;
 						}
 
@@ -311,6 +313,7 @@ public class DevHelperServlet extends HttpServlet {
 				String dateToStr = req.getParameter("to");
 
 				regatherSales(dataAccountId, dateFromStr, dateToStr);
+				success = true;
 			} else if ("splitDataForItem".equalsIgnoreCase(action)) {
 				String dataAccountId = req.getParameter("dataaccountid");
 				String itemid = req.getParameter("itemid");
@@ -841,9 +844,15 @@ public class DevHelperServlet extends HttpServlet {
 			if (dataAccountFetch == null
 					|| (dataAccountFetch.status != DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered
 					&& dataAccountFetch.status != DataAccountFetchStatusType.DataAccountFetchStatusTypeIngested)) {
+
+				LOG.log(GaeLevel.DEBUG, String.format("There is no data account fetch for account id %d on date %s. Requesting collection from iTunes Connect", dataAccount.id, date));
+
 				boolean collected = DataAccountCollectorFactory.getCollectorForSource("itc").collect(dataAccount, date);
 				if (collected) {
 					dataAccountFetch = fetchServiceProvider.getDateDataAccountFetch(dataAccount, date);
+					LOG.log(GaeLevel.DEBUG, String.format("Data collected"));
+				} else {
+					LOG.log(GaeLevel.DEBUG, String.format("Collect method returned false"));
 				}
 			}
 
@@ -852,6 +861,7 @@ public class DevHelperServlet extends HttpServlet {
 				return;
 			}
 
+			LOG.log(GaeLevel.DEBUG, String.format("Reingesting data account fetch id %d", dataAccountFetch.id));
 			reingestDataAccountFetch(dataAccountFetch);
 
 		} catch (ServiceException e) {
@@ -872,16 +882,22 @@ public class DevHelperServlet extends HttpServlet {
 			dataAccountFetch.status = DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered;
 			try {
 				DataAccountFetchServiceProvider.provide().updateDataAccountFetch(dataAccountFetch);
+				LOG.log(GaeLevel.DEBUG, String.format("Fetch status was ingested. Updated fetch status to gathered"));
 			} catch (DataAccessException e) {
 				LOG.log(Level.SEVERE, String.format("Could not update the status of dataaccountfetch: %s", dataAccountFetch), e);
 			}
+		} else {
+			LOG.log(GaeLevel.DEBUG, String.format("Fetch status is not ingested"));
 		}
 
+		LOG.log(GaeLevel.DEBUG, String.format("Deleting sales account %d on %s", dataAccountFetch.linkedAccount.id, dataAccountFetch.date));
 		ISaleService salesService = SaleServiceProvider.provide();
 		salesService.deleteSales(dataAccountFetch.linkedAccount.id, dataAccountFetch.date);
 
 		try {
+			LOG.log(GaeLevel.DEBUG, String.format("Queueing up a data account ingest for fetch id %d", dataAccountFetch.id));
 			DataAccountFetchServiceProvider.provide().triggerDataAccountFetchIngest(dataAccountFetch);
+			LOG.log(GaeLevel.DEBUG, String.format("Queued successfully"));
 		} catch (DataAccessException e) {
 			LOG.log(Level.SEVERE, String.format("Exception occured while trying to reingest dataaccountfetch: %s", dataAccountFetch), e);
 		}

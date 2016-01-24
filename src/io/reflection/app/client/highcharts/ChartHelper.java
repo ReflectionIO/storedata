@@ -186,22 +186,22 @@ public class ChartHelper {
 	public static void setDefaultOptions(BaseChart chart) {
 		chart.getChartOption().setAnimation(false).setBackgroundColor(ColorHelper.getLinearGradientColor(0, 1, 0, 0, "#ffffff", ColorHelper.getPanelGrey()))
 				.setPlotBackgroundColor(ColorHelper.getPanelGrey()).setPlotBorderColor(ColorHelper.getPanelGrey()).setPlotBorderWidth(1)
-				.setSpacing(createMarginsArray(40, 1, 1, 1));
+				.setSpacing(createMarginsArray(40, 1, 10, 1));
 		chart.getPlotOption().setCursor(Cursor.DEFAULT.getCssName()).setMarkerEnabled(false).setMarkerRadius(4).setMarkerHoverRadius(4)
 				.setMarkerHoverRadiusPlus(0).setMarkerHoverLineWidthPlus(0).setMarkerLineWidth(0).setHoverHaloOpacity(0.2).setHoverHaloSize(12)
 				.setHoverLineWidthPlus(0).setMarkerSymbol("circle");
 		chart.getPlotOption()
 				.setFillColor(ColorHelper.getLinearGradientColor(0, 1, 0, 0, PLOT_BACKGROUND_COLOR_BOTTOM, PLOT_BACKGROUND_COLOR_TOP),
-						chart.getPlotOption().getAreaSeriesType()).setLineWidth(3, chart.getPlotOption().getAreaSeriesType());
+						chart.getPlotOption().getAreaSeriesType()).setLineWidth(2, chart.getPlotOption().getAreaSeriesType());
 		chart.getPlotOption().setLineWidth(3, chart.getPlotOption().getLineSeriesType());
 		chart.setColors(ColorHelper.getColorsAsJSArray(ColorHelper.getReflectionPurple()));
 		chart.getCreditsOption().setEnabled(false); // Disable credits text
 		chart.getLegendOption().setEnabled(false); // Disable legend
 		chart.getTitleOption().setText(null); // Disable title
-		chart.getTooltipOption().setUseHTML(true).setShared(true).setShadow(false).setBackgroundColor("#ffffff").setBorderColor("#dedede").setBorderWidth(1)
-				.setBorderRadius(0).setValueDecimals(0).setCrosshairs(getCrosshairStyle()).setDateTimeLabelFormats(getDefaultTooltipDateTimeLabelFormat())
-				.setFormatter(getNativeTooltipFormatter());
-		chart.getXAxis().setId("xAxis").setTickWidth(1).setTickLength(10).setTickColor("#e7e7e7").setLabelsStyle(getXAxisLabelsStyle()).setLabelsY(30)
+		chart.getTooltipOption().setUseHTML(true).setShared(true).setBackgroundColor("transparent").setBorderColor("#dae3ed").setBorderWidth(0)
+				.setFollowPointer(true).setFollowTouchMove(true).setValueDecimals(0).setShadow(getTooltipShadowStyle()).setCrosshairs(getCrosshairStyle())
+				.setDateTimeLabelFormats(getDefaultTooltipDateTimeLabelFormat()).setFormatter(getNativeTooltipFormatter()); // TODO shadow
+		chart.getXAxis().setId("xAxis").setTickWidth(1).setTickLength(10).setTickColor("#e7e7e7").setLabelsStyle(getXAxisLabelsStyle()).setLabelsY(28)
 				.setStartOnTick(true).setEndOnTick(true).setMinPadding(0).setMaxPadding(0).setLineColor("#e5e5e5").setLabelsMaxStaggerLines(1)
 				.setLabelsPadding(30).setLabelsUseHTML(false).setLabelsAlign("center");
 		chart.getPrimaryAxis().setId(YAxisPosition.PRIMARY.toString()).setAllowDecimals(false).setTitleText(null).setOffset(-30).setLabelsY(5)
@@ -308,30 +308,36 @@ public class ChartHelper {
 
 	public static native JavaScriptObject getNativeTooltipFormatter() /*-{
 		return function() {
-			var s = "<span style=\"font-size: 12px; font-weight: bold; color: #81879d; font-family: 'Lato', sans-serif; line-height: 20px;\">"
-					+ $wnd.Highcharts.dateFormat('%e %b %Y', this.x, true)
-					+ "</span>";
+			var s = "";
 			var isRanking = false;
 			$wnd.$
 					.each(
 							this.points,
 							function(i, point) {
-								if (i == 0 && point.series.name == "Ranking") {
-									isRanking = true;
-								}
+								var imgString = "";
 								var currency = '';
 								if (point.series.options.tooltip.valuePrefix != null) {
 									currency = point.series.options.tooltip.valuePrefix;
 								}
-								s += '<br/><span style="color:'
-										+ point.series.color
-										+ '">\u25CF</span> <span style="font-size: 14px; font-weight: regular; color: #363a47; font-family: \'Lato\', sans-serif;">'
+								if (point.series.name == "Ranking") {
+									if (i == 0) {
+										isRanking = true;
+									}
+									imgString = "<img src=images/icon-chart-rank.png alt='Rank icon' class=icon-rank />";
+								} else if (point.series.name == "Downloads") {
+									imgString = "<img src=images/icon-chart-downloads.png alt='Downloads icon' class=icon-downloads />";
+								} else if (point.series.name == "Revenue") {
+									imgString = "<img src=images/icon-chart-revenue.png alt='Revenue icon' class=icon-revenue /> "
+											+ currency;
+								}
+								s += '<div class="custom-tooltip '
 										+ point.series.name
-										+ ': '
-										+ currency
+										+ '" style="background-color: '
+										+ point.series.color
+										+ '">'
+										+ imgString
 										+ $wnd.Highcharts.numberFormat(this.y,
-												0, '.', ',');
-								+"</span>";
+												0, '.', ',') + '</div>';
 							});
 
 			if (isRanking && this.y > 200) {
@@ -385,7 +391,16 @@ public class ChartHelper {
 	public static JavaScriptObject getCrosshairStyle() {
 		HashMap<String, Object> styleValues = new HashMap<String, Object>();
 		styleValues.put("width", 1);
-		styleValues.put("color", "#ff466a");
+		styleValues.put("color", ColorHelper.getLightGrey1());
+		return getJSObjectFromMap(styleValues);
+	}
+
+	public static JavaScriptObject getTooltipShadowStyle() {
+		HashMap<String, Object> styleValues = new HashMap<String, Object>();
+		styleValues.put("color", "rgba(0,0,0,0.24)");
+		styleValues.put("width", "0");
+		styleValues.put("offsetX", "1");
+		styleValues.put("offsetY", "1");
 		return getJSObjectFromMap(styleValues);
 	}
 
@@ -395,5 +410,81 @@ public class ChartHelper {
 		styleValues.put("display", "block");
 		return getJSObjectFromMap(styleValues);
 	}
+
+	public static native void extendHighcharts() /*-{
+		(function(H) {
+			
+			Date.prototype.addHours = function(h){
+		      this.setHours(this.getHours()+h);
+		      return this;
+		    }
+    
+			var customIconRect;
+			H
+					.wrap(
+							H.Tooltip.prototype,
+							'refresh',
+							function(proceed) {
+
+								// Now apply the original function with the original arguments, 
+								// which are sliced off this function's arguments
+								proceed.apply(this, Array.prototype.slice.call(
+										arguments, 1));
+
+								var monthNames = [ "Jan", "Feb", "Mar", "Apr",
+										"May", "Jun", "Jul", "Aug", "Sep",
+										"Oct", "Nov", "Dec" ];
+
+								// remove previuosly rendered x-axis label rect
+								if (customIconRect !== undefined) {
+									customIconRect.destroy();
+								}
+
+								// Add some code after the original function
+								var $axisLabel = $wnd.$(this.chart.container)
+										.find('.highcharts-axis-label'), leftOffset = 29, 
+										axisLabelYPos = $wnd.$("#" + arguments[1][0].series.chart.container.id + "").height() - arguments[1][0].series.xAxis.bottom, 
+									 	axisLabelXPos = arguments[1][0].plotX
+										- leftOffset, timeStampString = arguments[1][0].x
+										+ "", timeStampString = timeStampString
+										.substring(0, 10), xAxisDate = new Date(
+										timeStampString * 1000).addHours(12), formattedDate = xAxisDate
+										.getDate()
+										+ " "
+										+ monthNames[xAxisDate.getMonth()];
+
+								if ($axisLabel.length > 0) {
+									var labelYPos = axisLabelYPos + 28, labelXPos = axisLabelXPos + 5;
+
+									$axisLabel
+											.attr("transform", "translate("
+													+ labelXPos + ","
+													+ labelYPos + ")");
+									$axisLabel.find("text").text(formattedDate);
+
+								} else {
+									this.chart.renderer.label(formattedDate,
+											axisLabelXPos + 5,
+											axisLabelYPos + 28, 'callout', 0,
+											0, false, true, "axis-label").css({
+										color : '#fcfdfd',
+										fontSize : '13px',
+										fontFamily : 'Lato',
+										fontWeight : 600
+									}).attr({
+										zIndex : 100
+									}).add();
+								}
+
+								customIconRect = this.chart.renderer.image(
+										'images/axisLabelBackground.png',
+										axisLabelXPos - 4, axisLabelYPos, 67,
+										34).attr({
+									zIndex : 99
+								}).add();
+
+							});
+		}($wnd.Highcharts));
+	}-*/;
 
 }

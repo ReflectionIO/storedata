@@ -5,9 +5,13 @@
 	<title>Reflection, Pricing</title>
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">	
-	<!--[if (gte IE 9)|(IEMobile)|(!IE)]><!-->
+	<!--[if (gt IE 9)|(IEMobile)|(!IE)]><!-->
 		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main.css" />
 	<!--<![endif]-->
+	<!--[if IE 9]>
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="ie9-one.css" />
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="ie9-two.css" />
+	<![endif]-->	
 	<!--[if (lt IE 9)]>
 		<script src="js/vendor/html5shiv.min.js"></script>
 		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main-ie8.css" />
@@ -48,24 +52,23 @@
 						<div class="grid__column grid__column--one-third">
 							<section class="pricing-option pricing-option--standard">
 								<header class="pricing-option--header">
-									<h2 class="pricing-name">Developer Standard</h2>
+									<h2 class="pricing-name">Developer</h2>
 									<div class="pricing-price-container">
-										<sup class="pricing-sup">&pound;</sup>
-										<span class="pricing-price">0</span>
+										<span class="pricing-price">FREE</span>
 									</div>
-									<span class="per-month">per month</span>
-									<p>Link your app store account and get free access to store data &amp; analytics</p>
+									<span class="package-for">For App Developers</span>
+									<p class="ref-icon-before ref-icon-before--check">App Store Account Required</p>
 								</header>
 								<ul class="pricing-details">
-									<li>Live Daily Top 200 Global Rank, Download &amp; Grossing Data</li>
-									<li>Analytics for Your Own Apps</li>
-									<li>Live Industry News</li>
+									<li><span>Live Daily Top 200 Global Rank, Download &amp; Grossing Data</span></li>
+									<li><span>Analytics for Your Own Apps</span></li>
+									<li><span>Live Industry News</span></li>
 								</ul>
 								<button class="ref-button--full-width pricing-sign-up-button" onclick="location.href='apply.html'">Sign Up for Free Now</button>
 							</section>
 						</div>
 						<div class="grid__column grid__column--one-third">
-							<section class="pricing-option pricing-option--premium">
+							<section class="pricing-option pricing-option--premium pricing-option--with-footer">
 								<header class="pricing-option--header">
 									<h2 class="pricing-name">Developer Premium</h2>
 									<div class="pricing-price-container">
@@ -74,21 +77,26 @@
 										<sup class="pricing-sup">.99</sup>
 									</div>
 									<span class="per-month">per month</span>
-									<p>Additional powerful reporting tools and expanded features</p>
+									<span class="package-for">For App Developers</span>
+									<p class="ref-icon-before ref-icon-before--check">App Store Account Required</p>
 								</header>
 								<ul class="pricing-details">
-									<li>Historic Revenue &amp; Download Data</li>
-									<li>Competitive &amp; Market Benchmarking Tools</li>
-									<li>Store and Market Trends</li>
-									<li>Business Planning Tools</li>
-									<li class="pricing-details-with-info">
+									<li><span>Historic Revenue &amp; Download Data</span></li>
+									<li><span>Competitive &amp; Market Benchmarking Tools</span></li>
+									<li><span>Store and Market Trends</span></li>
+									<li><span>Business Planning Tools</span></li>
+									<li>
+										<span>Marketing Planning Tools</span>
+										<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding whats-this-tooltip-icon-static" data-tooltip="Coming soon"><span>What's this?</span></a>
+									</li>
+									<li class="pricing-detail-coming-soon">
 										<span>Marketing Planning Tools</span>
 										<a href="#" class="js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding whats-this-tooltip-icon-static" data-tooltip="Coming soon"><span>What's this?</span></a>
 									</li>
 								</ul>
 								<span class="trial-label">
-									<svg enable-background="new 0 0 32 32" version="1.1" viewBox="0 0 32 32" x="0px" xml:space="preserve" y="0px"><path d="M9.8,30.2L0.3,13.8L22.4,1L32,6.4v11L9.8,30.2z M3,14.5l7.5,13L30,16.3V7.6l-7.6-4.3L3,14.5z M24.5,14c-1.2,0-2.2-0.6-2.8-1.6c-0.4-0.8-0.5-1.6-0.3-2.5c0.2-0.8,0.8-1.5,1.5-2c0.5-0.3,1.1-0.4,1.6-0.4c1.2,0,2.2,0.6,2.8,1.6 c0.9,1.6,0.4,3.5-1.2,4.4C25.6,13.9,25.1,14,24.5,14z M24.5,9c-0.3,0-0.6,0.1-0.9,0.2c-0.4,0.2-0.7,0.6-0.8,1.1 c-0.1,0.5-0.1,0.9,0.2,1.3c0.5,0.8,1.6,1.1,2.4,0.6c0.8-0.5,1.1-1.6,0.6-2.4C25.7,9.4,25.1,9,24.5,9z" fill="#ff496a" id="Free"></path></svg>
-									Free 1 Month Trial</span>
+									1 Month of Developer Premium for <em>FREE</em>
+								</span>
 							</section>
 							<div class="pricing-access-info">
 								<div class="vertical-centre-content">
@@ -97,20 +105,18 @@
 							</div>
 						</div>
 						<div class="grid__column grid__column--one-third">
-							<section class="pricing-option pricing-option--business">
+							<section class="pricing-option pricing-option--business pricing-option--with-footer">
 								<header class="pricing-option--header">
 									<h2 class="pricing-name">Business</h2>
 									<div class="pricing-price-container">
-										<sup class="pricing-sup">&pound;</sup>
-										<span class="pricing-price">699</span>
-										<sup class="pricing-sup">.99</sup>
+										<span class="pricing-price">COMING SOON</span>
 									</div>
-									<span class="per-month">per month</span>
-									<p>No app store account? No problem. Investors, Advertisers, Marketers</p>
+									<span class="package-for">Investors, Advertisers, Marketers</span>
+									<p class="ref-icon-before ref-icon-before--cancel">No App Store Account Required</p>
 								</header>
 								<ul class="pricing-details">
-									<li>Identify and Act on Market and Consumer Trends</li>
-									<li>Discover Investment Targets and Market Partners</li>
+									<li><span>Identify and Act on Market and Consumer Trends</span></li>
+									<li><span>Discover Investment Targets and Market Partners</span></li>
 								</ul>
 								<button class="ref-button--link pricing-sign-up-button js-demo-popup--register">Register Your Interest</button>
 							</section>
@@ -140,6 +146,11 @@
 							<h2 class="heading-style--heading-four">Lorem ipsum dolor amet consectetur?</h2>
 							<p>Pellentesque ullamcorper dictum dictum. Sed tincidunt ut nulla in pharetra. Curabitur id neque id urna viverra tempus.</p>
 						</section>
+					</div>
+					<div class="grid__row">
+						<footer class="grid__column grid__column--full-width subscriptions-footer-container">
+							<p>More questions or want to chat? <a href="contact.html">Contact us</a></p>
+						</footer>
 					</div>
 				</div>
 			</div>
@@ -229,12 +240,14 @@
 
 			$('.js-demo-popup--register').on("click", function(){				
 				popupRegister.fadeIn(200);
+				$('html').addClass("no-scroll");
 				setTimeout(function(){
 					$('.page-overlay--register .popup-content').addClass("is-showing");
 				}, 100);
 			});
 			$('.page-overlay--register .popup-close, .page-overlay--register .js-close').on("click", function(){
 				popupRegister.fadeOut(100);
+				$('html').removeClass("no-scroll");
 				$('.page-overlay--register .popup-content').removeClass("is-showing");
 			});
 

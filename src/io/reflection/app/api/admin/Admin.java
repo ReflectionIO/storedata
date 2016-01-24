@@ -154,6 +154,13 @@ public final class Admin extends ActionHandler {
 			} else {
 				updatePager(output.pager, output.users, input.pager.totalCount == null ? UserServiceProvider.provide().getUsersCount() : null);
 			}
+			// Get roles
+			for (User user : output.users) {
+				user.roles = UserServiceProvider.provide().getUserRoles(user);
+				if (user.roles != null) {
+					RoleServiceProvider.provide().inflateRoles(user.roles);
+				}
+			}
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -836,11 +843,6 @@ public final class Admin extends ActionHandler {
 
 			ValidationHelper.validateAuthorised(input.session.user, DataTypeHelper.adminRole());
 
-			if (input.allTestUsers) {
-				Role testRole = RoleServiceProvider.provide().getCodeRole(DataTypeHelper.ROLE_TEST_CODE);
-				input.users = UserServiceProvider.provide().getRoleUsers(testRole);
-			}
-
 			if (input.users != null && input.users.size() > 0) {
 
 				List<DataAccount> linkedAccounts = UserServiceProvider.provide().getUsersDataAccounts(input.users, PagerHelper.createInfinitePager());
@@ -893,17 +895,15 @@ public final class Admin extends ActionHandler {
 			input.user = ValidationHelper.validateExistingUser(input.user, "input.user");
 
 			if (input.permissionsOnly != Boolean.TRUE) {
-				output.roles = UserServiceProvider.provide().getRoles(input.user);
+				output.roles = UserServiceProvider.provide().getUserRoles(input.user);
 
 				if (output.roles != null) {
-					if (input.idsOnly == Boolean.FALSE) {
-						RoleServiceProvider.provide().inflateRoles(output.roles);
-					}
+					RoleServiceProvider.provide().inflateRoles(output.roles);
 
 					for (Role role : output.roles) {
 						role.permissions = RoleServiceProvider.provide().getPermissions(role);
 
-						if (role.permissions != null && input.idsOnly == Boolean.FALSE) {
+						if (role.permissions != null) {
 							PermissionServiceProvider.provide().inflatePermissions(role.permissions);
 						}
 					}
@@ -913,7 +913,7 @@ public final class Admin extends ActionHandler {
 			if (input.rolesOnly != Boolean.TRUE) {
 				output.permissions = UserServiceProvider.provide().getPermissions(input.user);
 
-				if (output.permissions != null && input.idsOnly == Boolean.FALSE) {
+				if (output.permissions != null) {
 					PermissionServiceProvider.provide().inflatePermissions(output.permissions);
 				}
 			}

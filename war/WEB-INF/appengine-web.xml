@@ -17,15 +17,19 @@
 		<property name="gather.dataaccount.testaccount.username" value="SPACEHOPPERSTUDIOS" />
 		<property name="gather.dataaccount.testaccount.sourceid" value="1" />
 
-		<property name="gather.ios.topfreeapplications" value="http://itunes.apple.com/%s/rss/topfreeapplications/limit=200/json" />
-		<property name="gather.ios.toppaidapplications" value="http://itunes.apple.com/%s/rss/toppaidapplications/limit=200/json" />
-		<property name="gather.ios.topgrossingapplications" value="http://itunes.apple.com/%s/rss/topgrossingapplications/limit=200/json" />
+		<property name="gather.ios.topfreeapplications" value="https://itunes.apple.com/%s/rss/topfreeapplications/limit=200/json" />
+		<property name="gather.ios.toppaidapplications" value="https://itunes.apple.com/%s/rss/toppaidapplications/limit=200/json" />
+		<property name="gather.ios.topgrossingapplications" value="https://itunes.apple.com/%s/rss/topgrossingapplications/limit=200/json" />
 
-		<property name="gather.ios.topfreeipadapplications" value="http://itunes.apple.com/%s/rss/topfreeipadapplications/limit=200/json" />
-		<property name="gather.ios.toppaidipadapplications" value="http://itunes.apple.com/%s/rss/toppaidipadapplications/limit=200/json" />
-		<property name="gather.ios.topgrossingipadapplications" value="http://itunes.apple.com/%s/rss/topgrossingipadapplications/limit=200/json" />
+		<property name="gather.ios.topfreeipadapplications" value="https://itunes.apple.com/%s/rss/topfreeipadapplications/limit=200/json" />
+		<property name="gather.ios.toppaidipadapplications" value="https://itunes.apple.com/%s/rss/toppaidipadapplications/limit=200/json" />
+		<property name="gather.ios.topgrossingipadapplications" value="https://itunes.apple.com/%s/rss/topgrossingipadapplications/limit=200/json" />
 
-		<property name="gather.ios.category.feed.url" value="http://itunes.apple.com/%s/rss/%s/limit=200/genre=%d/json" />
+		<property name="gather.ios.category.feed.url" value="https://itunes.apple.com/%s/rss/%s/limit=200/genre=%d/json" />
+
+		<property name="devadmin.email" value="mitul@reflection.io" />
+		<property name="devadmin.name" value="Dev Admin" />
+
 
 		<!-- Production -->
  		<property name="gather.ios.countries" value="us,gb,de,fr,cn,jp,it,ae,ag,ai,al,am,ao,ar,at,au,az,bb,be,bf,bg,bh,bj,bm,bn,bo,br,bs,bt,bw,by,bz,ca,cg,ch,cl,co,cr,cv,cy,cz,dk,dm,do,dz,ec,ee,eg,es,fi,fj,fm,gd,gh,gm,gr,gt,gw,gy,hk,hn,hr,hu,id,ie,il,in,is,jm,jo,ke,kg,kh,kn,kr,kw,ky,kz,la,lb,lc,lk,lr,lt,lu,lv,md,mg,mk,ml,mn,mo,mr,ms,mt,mu,mw,mx,my,mz,na,ne,ng,ni,nl,no,np,nz,om,pa,pe,pg,ph,pk,pl,pt,pw,py,qa,ro,ru,sa,sb,sc,se,sg,si,sk,sl,sn,sr,st,sv,sz,tc,td,th,tj,tm,tn,tr,tt,tw,tz,ua,ug,uy,uz,vc,ve,vg,vn,ye,za,zw" />
@@ -37,6 +41,7 @@
 		<property name="account.data.bucket" value="gather/accounts" />
 		<property name="uploaded.images.bucket" value="uploadedimages" />
 
+		<property name="cloudsql.name" value="storedatacollector:reflection-db-v2" />
 		<property name="db.connection.catalogue" value="rio" />
 		<property name="db.connection.server" value="173.194.244.48" />
 		<property name="db.connection.username" value="rio_app_user" />
@@ -88,6 +93,7 @@
 		<property name="account.data.bucket" value="devgather/accounts" />
 		<property name="uploaded.images.bucket" value="devuploadedimages" />
 
+		<property name="cloudsql.name" value="reflection-dev:riodev" />
 		<property name="db.connection.catalogue" value="rio" />
 		<property name="db.connection.server" value="173.194.226.90" />
 		<property name="db.connection.username" value="rio_app_user" />

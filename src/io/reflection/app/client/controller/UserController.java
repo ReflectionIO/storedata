@@ -40,10 +40,15 @@ import io.reflection.app.api.admin.shared.call.event.RevokeRoleEventHandler;
 import io.reflection.app.api.core.client.CoreService;
 import io.reflection.app.api.core.shared.call.GetUserDetailsRequest;
 import io.reflection.app.api.core.shared.call.GetUserDetailsResponse;
+import io.reflection.app.api.core.shared.call.RegisterInterestBusinessRequest;
+import io.reflection.app.api.core.shared.call.RegisterInterestBusinessResponse;
 import io.reflection.app.api.core.shared.call.RegisterUserRequest;
 import io.reflection.app.api.core.shared.call.RegisterUserResponse;
+import io.reflection.app.api.core.shared.call.UpgradeAccountRequest;
+import io.reflection.app.api.core.shared.call.UpgradeAccountResponse;
 import io.reflection.app.api.core.shared.call.event.GetUserDetailsEventHandler;
-import io.reflection.app.api.core.shared.call.event.RegisterUserEventHandler;
+import io.reflection.app.api.core.shared.call.event.RegisterInterestBusinessEventHandler;
+import io.reflection.app.api.core.shared.call.event.UpgradeAccountEventHandler;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.client.DefaultEventBus;
@@ -52,7 +57,7 @@ import io.reflection.app.client.handler.user.UserPasswordChangedEventHandler.Use
 import io.reflection.app.client.handler.user.UserRegisteredEventHandler.UserRegistered;
 import io.reflection.app.client.handler.user.UserRegisteredEventHandler.UserRegistrationFailed;
 import io.reflection.app.client.handler.user.UsersEventHandler.ReceivedCount;
-import io.reflection.app.client.helper.MixPanelApiHelper;
+import io.reflection.app.client.mixpanel.MixpanelHelper;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
@@ -69,7 +74,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle.MultiWordSuggestion;
@@ -342,9 +346,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 			}
 
 			@Override
-			public void onFailure(Throwable caught) {
-				Window.alert("Error");
-			}
+			public void onFailure(Throwable caught) {}
 		});
 	}
 
@@ -378,7 +380,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 		});
 	}
 
-	public void assignUserRoleId(Long userId, String roleCode) {
+	public void assignUserRoleCode(Long userId, String roleCode) {
 		Role role = new Role();
 		role.code = roleCode;
 		assignUserRole(userId, role);
@@ -414,7 +416,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 		});
 	}
 
-	public void assignUserPermissionId(Long userId, String permissionCode) {
+	public void assignUserPermissionCode(Long userId, String permissionCode) {
 		Permission permission = new Permission();
 		permission.code = permissionCode;
 		assignUserPermission(userId, permission);
@@ -452,7 +454,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 
 	}
 
-	public void revokeUserRoleId(Long userId, String roleCode) {
+	public void revokeUserRoleCode(Long userId, String roleCode) {
 		Role role = new Role();
 		role.code = roleCode;
 		revokeUserRole(userId, role);
@@ -574,6 +576,48 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 		});
 	}
 
+	public void registerInterestBusiness(String firstname, String lastname, String company, String email) {
+		CoreService service = ServiceCreator.createCoreService();
+		final RegisterInterestBusinessRequest input = new RegisterInterestBusinessRequest();
+		input.accessCode = ACCESS_CODE;
+		input.user = new User();
+		input.user.forename = firstname;
+		input.user.surname = lastname;
+		input.user.company = company;
+		input.user.username = email;
+
+		final Map<String, Object> params = new HashMap<String, Object>();
+		params.put("username", email);
+		params.put("company", company);
+
+		service.registerInterestBusiness(input, new AsyncCallback<RegisterInterestBusinessResponse>() {
+
+			@Override
+			public void onSuccess(RegisterInterestBusinessResponse output) {
+				if (output.status == StatusType.StatusTypeSuccess) {
+
+				} else {
+					if (output.error != null && output.error.message != null) {
+						// params.put("error", output.error.message);
+					}
+				}
+				DefaultEventBus.get().fireEventFromSource(new RegisterInterestBusinessEventHandler.RegisterInterestBusinessSuccess(input, output),
+						UserController.this);
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				params.put("status", "failure");
+				params.put("error", caught.getMessage());
+
+				DefaultEventBus.get().fireEventFromSource(new RegisterInterestBusinessEventHandler.RegisterInterestBusinessFailure(input, caught),
+						UserController.this);
+			}
+
+		});
+
+	}
+
 	/**
 	 * 
 	 * @param username
@@ -595,21 +639,13 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 		input.user.username = username;
 		input.user.password = password;
 
-		final String email = username;
-
-		final Map<String, Object> params = new HashMap<String, Object>();
-		params.put("username", username);
-		params.put("company", company);
-
-		if (password == null || password.length() == 0) {
-			params.put("requestInvite", Boolean.TRUE);
-		}
+		final String emailValue = username;
+		final String passwordValue = password;
 
 		service.registerUser(input, new AsyncCallback<RegisterUserResponse>() {
 
 			@Override
 			public void onSuccess(RegisterUserResponse output) {
-
 				if (output.status == StatusType.StatusTypeSuccess) {
 					// only refresh the user list if the current user is an admin or has manage user permission
 					if (SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_MANAGE_USERS_CODE)) {
@@ -617,18 +653,16 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 
 						fetchUsers();
 					}
-
-					params.put("status", "success");
-					MixPanelApiHelper.track("registerUser", params);
-
-					DefaultEventBus.get().fireEventFromSource(new UserRegistered(email), UserController.this);
+					MixpanelHelper.trackSignUpSuccess(output.registeredUser);
+					DefaultEventBus.get().fireEventFromSource(new UserRegistered(emailValue, passwordValue), UserController.this);
 				} else {
-					params.put("status", "failure");
+					Map<String, Object> properties = new HashMap<String, Object>();
 					if (output.error != null && output.error.message != null) {
-						params.put("error", output.error.message);
+						properties.put("error_server", output.error.message);
+					} else {
+						properties.put("error_server", "generic error");
 					}
-					MixPanelApiHelper.track("registerUser", params);
-
+					MixpanelHelper.track(MixpanelHelper.Event.SIGNUP_FAILURE, properties);
 					DefaultEventBus.get().fireEventFromSource(new UserRegistrationFailed(output.error), UserController.this);
 				}
 
@@ -637,13 +671,11 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 			@Override
 			public void onFailure(Throwable caught) {
 				Error e = new Error();
-
 				e.code = Integer.valueOf(-1);
 				e.message = caught.getMessage();
-
-				params.put("status", "failure");
-				params.put("error", caught.getMessage());
-				MixPanelApiHelper.track("registerUser", params);
+				Map<String, Object> properties = new HashMap<String, Object>();
+				properties.put("error_server", caught.getMessage());
+				MixpanelHelper.track(MixpanelHelper.Event.SIGNUP_FAILURE, properties);
 
 				DefaultEventBus.get().fireEventFromSource(new UserRegistrationFailed(e), UserController.this);
 			}
@@ -652,72 +684,78 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 
 	/**
 	 * 
-	 * @param username
+	 * @param actionCode
 	 * @param password
-	 * @param forenameFormField
-	 * @param surname
-	 * @param company
 	 */
-	public void registerUser(String actionCode, String password) {
+	// public void registerUser(String actionCode, String password) {
+	// CoreService service = ServiceCreator.createCoreService();
+	//
+	// final Map<String, Object> params = new HashMap<String, Object>();
+	// params.put("actionCode", actionCode);
+	//
+	// final RegisterUserRequest input = new RegisterUserRequest();
+	// input.accessCode = ACCESS_CODE;
+	//
+	// input.user = new User();
+	// input.user.password = password;
+	//
+	// input.actionCode = actionCode;
+	//
+	// service.registerUser(input, new AsyncCallback<RegisterUserResponse>() {
+	//
+	// @Override
+	// public void onSuccess(RegisterUserResponse output) {
+	// if (output != null && output.status == StatusType.StatusTypeSuccess) {
+	// // only refresh the user list if the current user is an admin or has manage user permission
+	// if (SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_MANAGE_USERS_CODE)) {
+	// PagerHelper.moveBackward(pager);
+	//
+	// fetchUsers();
+	// }
+	// } else {
+	// params.put("status", "failure");
+	// if (output.error != null && output.error.message != null) {
+	// params.put("error", output.error.message);
+	// }
+	//
+	// }
+	//
+	// DefaultEventBus.get().fireEventFromSource(new RegisterUserEventHandler.RegisterUserSuccess(input, output), UserController.this);
+	// }
+	//
+	// @Override
+	// public void onFailure(Throwable caught) {
+	// params.put("status", "failure");
+	// params.put("error", caught.getMessage());
+	//
+	// DefaultEventBus.get().fireEvent(new RegisterUserEventHandler.RegisterUserFailure(input, caught));
+	// }
+	// });
+	// }
+
+	public void upgradeAccount(final String roleCode) {
 		CoreService service = ServiceCreator.createCoreService();
-
-		final Map<String, Object> params = new HashMap<String, Object>();
-		params.put("actionCode", actionCode);
-
-		final RegisterUserRequest input = new RegisterUserRequest();
+		final UpgradeAccountRequest input = new UpgradeAccountRequest();
 		input.accessCode = ACCESS_CODE;
+		input.session = SessionController.get().getSessionForApiCall();
+		input.role = DataTypeHelper.createRole(roleCode);
 
-		input.user = new User();
-		input.user.password = password;
-
-		input.actionCode = actionCode;
-
-		service.registerUser(input, new AsyncCallback<RegisterUserResponse>() {
+		service.upgradeAccount(input, new AsyncCallback<UpgradeAccountResponse>() {
 
 			@Override
-			public void onSuccess(RegisterUserResponse output) {
-				if (output != null && output.status == StatusType.StatusTypeSuccess) {
-					// only refresh the user list if the current user is an admin or has manage user permission
-					if (SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_MANAGE_USERS_CODE)) {
-						PagerHelper.moveBackward(pager);
-
-						fetchUsers();
-					}
-
-					params.put("status", "success");
-					MixPanelApiHelper.track("registerUser", params);
-				} else {
-					params.put("status", "failure");
-					if (output.error != null && output.error.message != null) {
-						params.put("error", output.error.message);
-					}
-
-					MixPanelApiHelper.track("registerUser", params);
+			public void onSuccess(UpgradeAccountResponse output) {
+				if (output.status == StatusType.StatusTypeSuccess) {
+					SessionController.get().fetchRoleAndPermissions();
 				}
-
-				DefaultEventBus.get().fireEventFromSource(new RegisterUserEventHandler.RegisterUserSuccess(input, output), UserController.this);
+				DefaultEventBus.get().fireEventFromSource(new UpgradeAccountEventHandler.UpgradeAccountSuccess(input, output), UserController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
-				params.put("status", "failure");
-				params.put("error", caught.getMessage());
-				MixPanelApiHelper.track("registerUser", params);
-
-				DefaultEventBus.get().fireEvent(new RegisterUserEventHandler.RegisterUserFailure(input, caught));
+				DefaultEventBus.get().fireEventFromSource(new UpgradeAccountEventHandler.UpgradeAccountFailure(input, caught), UserController.this);
 			}
 		});
 	}
-
-	// private void addToLookup(List<User> users) {
-	// for (User user : users) {
-	// userLookup.put(user.id, user);
-	// }
-	// }
-
-	// public User getUser(Long id) {
-	// return userLookup.get(id);
-	// }
 
 	/**
 	 * Fetches user details from the server. Details of fetched user (if the call is successful) will be broadcast on the event bus.
@@ -792,17 +830,13 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 	 * 
 	 * @param user
 	 */
-	public void fetchUserRolesAndPermissions(User user) {
+	public void fetchAdminRolesAndPermissions(User user) {
 
 		AdminService service = ServiceCreator.createAdminService();
 
 		final GetRolesAndPermissionsRequest input = new GetRolesAndPermissionsRequest();
 		input.accessCode = ACCESS_CODE;
-
 		input.session = SessionController.get().getSessionForApiCall();
-
-		input.idsOnly = Boolean.FALSE; // Retrieve the whole permission
-
 		input.user = user;
 
 		service.getRolesAndPermissions(input, new AsyncCallback<GetRolesAndPermissionsResponse>() {
@@ -822,7 +856,7 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 		});
 	}
 
-	private void deleteUsers(List<User> users, boolean allTestUsers) {
+	public void deleteUsers(List<User> users) {
 		AdminService service = ServiceCreator.createAdminService();
 
 		final DeleteUsersRequest input = new DeleteUsersRequest();
@@ -831,7 +865,6 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 		input.session = SessionController.get().getSessionForApiCall();
 
 		input.users = users;
-		input.allTestUsers = allTestUsers;
 
 		service.deleteUsers(input, new AsyncCallback<DeleteUsersResponse>() {
 
@@ -853,14 +886,6 @@ public class UserController extends AsyncDataProvider<User> implements ServiceCo
 			}
 
 		});
-	}
-
-	public void deleteTestUsers() {
-		deleteUsers(null, true);
-	}
-
-	public void deleteUsers(List<User> users) {
-		deleteUsers(users, false);
 	}
 
 	/**

@@ -5,9 +5,13 @@
 	<title>Reflection, Careers</title>
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">	
-	<!--[if (gte IE 9)|(IEMobile)|(!IE)]><!-->
+	<!--[if (gt IE 9)|(IEMobile)|(!IE)]><!-->
 		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main.css" />
 	<!--<![endif]-->
+	<!--[if IE 9]>
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="ie9-one.css" />
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="ie9-two.css" />
+	<![endif]-->	
 	<!--[if (lt IE 9)]>
 		<script src="js/vendor/html5shiv.min.js"></script>
 		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main-ie8.css" />
@@ -63,28 +67,32 @@
 							<li>All the espresso you can drink</li>
 						</ul>
 					</article>
-					<aside class="grid__column grid__column--one-third">
-						<h2 class="heading-style--heading-three">Current Openings</h2>
-						<ul class="content-list content-list--no-bullets">
-							<li>
-								<a href="#">Financial Controller</a>
-							</li>
-							<li>
-								<a href="#">Senior Engineer</a>
-							</li>
-							<li>
-								<a href="#">Junior Front-End Developer</a>
-							</li>
-							<li><a href="#">Executive Assistant</a></li>
-							<li><a href="#">HR Manager</a></lI>
-							<li><a href="#">Junior Digital Product Designer</a></li>
-							<li><a href="#">Design Intern</a></li>
-							<li><a href="#">Development Intern</a></li>
-						</ul>
-						<h2 class="heading-style--heading-four">Introduce Yourself</h2>
-						<p class="minor-text">Are you an honest and talented individual that likes to get things done? We’d like to hear from you. Email us with your details and experience and let’s see if we can work together.</p>
-						<p><a href="mailto:careers@reflection.io">careers@reflection.io</a></p>
-					</aside>
+					<div class="grid__column grid__column--one-third">
+						<aside class="current-openings">
+							<h2 class="heading-style--heading-three">Current Openings</h2>
+							<ul class="content-list content-list--no-bullets">
+								<li>
+									<a href="#">Financial Controller</a>
+								</li>
+								<li>
+									<a href="#">Senior Engineer</a>
+								</li>
+								<li>
+									<a href="#">Junior Front-End Developer</a>
+								</li>
+								<li><a href="#">Executive Assistant</a></li>
+								<li><a href="#">HR Manager</a></lI>
+								<li><a href="#">Junior Digital Product Designer</a></li>
+								<li><a href="#">Design Intern</a></li>
+								<li><a href="#">Development Intern</a></li>
+							</ul>
+						</aside>
+						<aside>
+							<h2 class="heading-style--heading-four">Introduce Yourself</h2>
+							<p class="minor-text">Are you an honest and talented individual that likes to get things done? We’d like to hear from you. Email us with your details and experience and let’s see if we can work together.</p>
+							<p><a href="mailto:careers@reflection.io">careers@reflection.io</a></p>
+						</aside>
+					</div>
 				</div>
 			</div>
 		</div>

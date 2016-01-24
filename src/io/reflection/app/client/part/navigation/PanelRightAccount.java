@@ -29,6 +29,7 @@ import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +39,7 @@ import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -79,13 +81,16 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 	@UiField DivElement panelOverlay;
 	@UiField DivElement userDetailsPanel;
 	@UiField Element accountMenu;
+	@UiField DivElement accountDetailsName;
+	@UiField Element premiumImg;
 	@UiField HeadingElement userName;
+	@UiField SpanElement premiumDays;
 	@UiField HeadingElement userCompany;
-	@UiField LIElement linkedAccountsItem;
-	@UiField LIElement accountSettingsItem;
+	@UiField LIElement accountDetailsItem;
+	@UiField LIElement manageSubscriptionItem;
 	@UiField LIElement notificationItem;
-	@UiField InlineHyperlink linkedAccountsLink;
-	@UiField InlineHyperlink accountSettingsLink;
+	@UiField InlineHyperlink accountDetailsLink;
+	@UiField InlineHyperlink manageSubscriptionLink;
 	@UiField InlineHyperlink notificationLink;
 
 	private List<LIElement> items;
@@ -134,6 +139,9 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 			}
 		});
 
+		premiumImg.removeFromParent();
+		premiumDays.removeFromParent();
+
 	}
 
 	public void setLoggedIn(boolean loggedIn) {
@@ -150,6 +158,8 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 				accessPanelContainer.appendChild(accountMenu);
 			}
 		} else {
+			premiumImg.removeFromParent();
+			premiumDays.removeFromParent();
 			userDetailsPanel.removeFromParent();
 			accountMenu.removeFromParent();
 			if (!accessPanelContainer.isOrHasChild(loginForm.getElement())) {
@@ -170,8 +180,8 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 	private void createItemList() {
 		if (items == null) {
 			items = new ArrayList<LIElement>();
-			items.add(linkedAccountsItem);
-			items.add(accountSettingsItem);
+			items.add(accountDetailsItem);
+			items.add(manageSubscriptionItem);
 			items.add(notificationItem);
 		}
 	}
@@ -181,10 +191,10 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 			userName.setInnerText(user.forename + " " + user.surname);
 			userCompany.setInnerText(user.company);
 
-			linkedAccountsLink
-					.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.LinkedAccountsPageType.toString(), user.id.toString()));
-			accountSettingsLink
+			accountDetailsLink
 					.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.ChangeDetailsPageType.toString(), user.id.toString()));
+			manageSubscriptionLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.ManageSubscriptionPageType.toString(),
+					user.id.toString()));
 			notificationLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.NotificationsPageType.toString(), user.id.toString()));
 		}
 	}
@@ -262,11 +272,11 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 	public void navigationChanged(Stack previous, Stack current) {
 
 		// Highlight selected items
-		if (PageType.UsersPageType.equals(current.getPage()) && current.getAction() != null && PageType.LinkedAccountsPageType.equals(current.getAction())) {
-			highlight(linkedAccountsItem);
+		if (PageType.UsersPageType.equals(current.getPage()) && current.getAction() != null && PageType.ChangeDetailsPageType.equals(current.getAction())) {
+			highlight(accountDetailsItem);
 		} else if (PageType.UsersPageType.equals(current.getPage()) && current.getAction() != null
-				&& PageType.ChangeDetailsPageType.equals(current.getAction())) {
-			highlight(accountSettingsItem);
+				&& PageType.ManageSubscriptionPageType.equals(current.getAction())) {
+			highlight(manageSubscriptionItem);
 		} else if (PageType.UsersPageType.equals(current.getPage()) && current.getAction() != null
 				&& PageType.NotificationsPageType.equals(current.getAction())) {
 			highlight(notificationItem);
@@ -282,8 +292,16 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 	 * @see io.reflection.app.client.handler.user.UserPowersEventHandler#gotUserPowers(io.reflection.app.datatypes.shared.User, java.util.List, java.util.List)
 	 */
 	@Override
-	public void gotUserPowers(User user, List<Role> roles, List<Permission> permissions) {
+	public void gotUserPowers(User user, List<Role> roles, List<Permission> permissions, Integer daysSinceRoleAssigned) {
 		attachUserLinks(user);
+		if (DataTypeHelper.ROLE_PREMIUM_CODE.equals(roles.get(0).code)) { // Premium developer
+			accountDetailsName.appendChild(premiumImg);
+			accountDetailsName.appendChild(premiumDays);
+			// premiumDays.setInnerText("Day " + (daysSinceRoleAssigned.intValue() + 1) + " of 30");
+		} else {
+			premiumImg.removeFromParent();
+			premiumDays.removeFromParent();
+		}
 		setLoggedIn(true);
 	}
 

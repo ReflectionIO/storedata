@@ -103,12 +103,13 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 	 * @return
 	 */
 	private List<FeedFetch> filter(List<FeedFetch> stored) {
-		final String countries = System.getProperty("ingest.ios.countries");
+		String countries = System.getProperty("ingest.ios.countries");
+		countries = countries == null ? null : countries.toLowerCase();
 
 		ArrayList<FeedFetch> filtered = new ArrayList<FeedFetch>(stored.size());
 
 		for (FeedFetch fetch : stored) {
-			if (countries != null && countries.contains(fetch.country)) {
+			if (countries != null && countries.contains(fetch.country.toLowerCase())) {
 				filtered.add(fetch);
 			}
 		}
@@ -544,8 +545,13 @@ public class IngestorIOS extends StoreCollector implements Ingestor {
 			buffer.append(id.toString());
 		}
 
-		final String store = DataTypeHelper.IOS_STORE_A3, ids = buffer.toString();
+		String ids = buffer.toString();
 
+		enqueue(queue, ids);
+	}
+
+	public void enqueue(Queue queue, String ids) {
+		final String store = DataTypeHelper.IOS_STORE_A3;
 		try {
 			queue.add(TaskOptions.Builder.withUrl(String.format(ENQUEUE_INGEST_FORMAT, store, ids)).method(Method.GET));
 		} catch (final TransientFailureException ex) {

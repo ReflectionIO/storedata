@@ -203,7 +203,7 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.rank.IRankService#getItemRanks(io.reflection.app.datatypes.Country, java.lang.String, io.reflection.app.datatypes.Item,
 	 * java.util.Date, java.util.Date, io.reflection.app.api.datatypes.Pager)
 	 */
@@ -287,7 +287,7 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.rank.IRankService#getItemHasGrossingRank(io.reflection.app.datatypes.Item)
 	 */
 	@Override
@@ -296,7 +296,7 @@ public class RankService implements IRankService {
 
 		final String getItemHasGrossingRankQuery = String
 				.format("select rank_fetch_id from rank_fetch where rank_fetch_id in ( select rank_fetch_id from rank2 where itemid='%s' ) and type='GROSSING' limit 1",
-				addslashes(item.internalId));
+						addslashes(item.internalId));
 
 		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
@@ -318,7 +318,7 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.rank.IRankService#addRanksBatch(java.util.Collection)
 	 */
 	@Override
@@ -398,7 +398,7 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.rank.IRankService#updateRanksBatch(java.util.Collection)
 	 */
 	@Override
@@ -463,7 +463,7 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.rank.IRankService#getGatherCodeRanks(io.reflection.app.shared.datatypes.Country, io.reflection.app.shared.datatypes.Store,
 	 * io.reflection.app.shared.datatypes.Category java.lang.String, java.lang.Long, io.reflection.app.api.shared.datatypes.Pager, java.lang.Boolean)
 	 */
@@ -474,7 +474,7 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.rank.IRankService#getGatherCodeRanks(io.reflection.app.shared.datatypes.Country, io.reflection.app.shared.datatypes.Store,
 	 * io.reflection.app.shared.datatypes.Category java.lang.String, java.lang.Long, io.reflection.app.api.shared.datatypes.Pager, java.lang.Boolean)
 	 */
@@ -554,7 +554,7 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.rank.IRankService#getRankIds(io.reflection.app.datatypes.shared.Country, io.reflection.app.datatypes.shared.Store,
 	 * io.reflection.app.datatypes.shared.Category, java.util.Date, java.util.Date)
 	 */
@@ -594,7 +594,7 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.rank.IRankService#getRankIds(io.reflection.app.api.shared.datatypes.Pager)
 	 */
 	@Override
@@ -631,7 +631,7 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.rank.IRankService#getSaleSummaryAndRankForItemAndFormType(java.lang.String, io.reflection.app.datatypes.shared.Country,
 	 * io.reflection.app.datatypes.shared.FormType, java.util.Date, java.util.Date)
 	 */
@@ -647,19 +647,14 @@ public class RankService implements IRankService {
 		String platformIOS = form == FormType.FormTypeOther ? "iphone" : "ipad";
 		String sortDirection = pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC";
 
-		/*
-		 * Note that we are not doing a sum of revenue and downloads as those are just repeated for the number of ranks we encounter for the day so we are
-		 * picking the revenue and downloads per date + max position of the app on that date.
-		 */
 
 		final String getRanksQuery = String
-				.format("SELECT  s.date, (%s_app_revenue + %s_iap_revenue) as revenue, %s_downloads as downloads, "
-						+ "    max(IF(rf.type='FREE' or rf.type='PAID', r.position, NULL)) as position, "
-						+ "    max(IF(rf.type='GROSSING', r.position, NULL)) as grossing_position, s.price, s.currency FROM sale_summary s USE INDEX (idx_item_search) "
-						+ "    LEFT JOIN rank_fetch rf USE INDEX (idx_rank_fetch_search_time) ON (s.date=rf.fetch_date and s.country=rf.country and rf.category=%d and rf.platform='%s') "
-						+ "    LEFT JOIN rank2 r ON (r.rank_fetch_id=rf.rank_fetch_id and r.itemid=s.itemid) "
-						+ "		WHERE s.date BETWEEN '%s' AND '%s' AND s.itemid = %s AND s.country = '%s' GROUP BY s.date ORDER BY s.%s %s LIMIT %d, %d",
-						platformIOS, platformIOS, platformIOS, categoryId, platform, dateFormat.format(start), dateFormat.format(end), internalId,
+				.format("SELECT s.date, (%s_app_revenue + %s_iap_revenue) as revenue, %s_downloads as downloads, s.price, s.currency "
+						+ " FROM sale_summary s USE INDEX (idx_item_search) "
+						+ "	WHERE s.date BETWEEN '%s' AND '%s' AND s.itemid = %s AND s.country = '%s' "
+						+ " ORDER BY s.%s %s "
+						+ " LIMIT %d, %d",
+						platformIOS, platformIOS, platformIOS, dateFormat.format(start), dateFormat.format(end), internalId,
 						country.a2Code, pager.sortBy, sortDirection, pager.start, pager.count);
 
 		try {
@@ -677,8 +672,8 @@ public class RankService implements IRankService {
 				rank.source = DataTypeHelper.IOS_STORE_A3;
 				rank.itemId = internalId;
 
-				rank.position = rankConnection.getCurrentRowInteger("position");
-				rank.grossingPosition = rankConnection.getCurrentRowInteger("grossing_position");
+				// rank.position = rankConnection.getCurrentRowInteger("position");
+				// rank.grossingPosition = rankConnection.getCurrentRowInteger("grossing_position");
 
 				rank.downloads = rankConnection.getCurrentRowInteger("downloads");
 
@@ -699,7 +694,7 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.rank.IRankService#getSaleSummaryAndRankForDataAccountAndFormType(java.lang.Long,
 	 * io.reflection.app.datatypes.shared.Country, io.reflection.app.datatypes.shared.FormType, java.util.Date, java.util.Date,
 	 * io.reflection.app.api.shared.datatypes.Pager)
@@ -852,7 +847,7 @@ public class RankService implements IRankService {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.service.rank.IRankService#getOutOfLeaderboardDates(java.util.List, io.reflection.app.datatypes.shared.Country,
 	 * io.reflection.app.datatypes.shared.Category, java.lang.String)
 	 */

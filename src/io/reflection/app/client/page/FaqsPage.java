@@ -9,14 +9,13 @@ package io.reflection.app.client.page;
 
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.helper.AnimationHelper;
+import io.reflection.app.client.helper.DOMHelper;
 import io.reflection.app.client.res.Styles;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -48,6 +47,12 @@ public class FaqsPage extends Page {
 	@UiField Anchor linkFaq6;
 	@UiField Anchor linkFaq7;
 	@UiField Anchor linkFaq8;
+	@UiField Anchor linkFaq9;
+	@UiField Anchor linkFaq10;
+	@UiField Anchor linkFaq11;
+	@UiField Anchor linkFaq12;
+	@UiField Anchor linkFaq13;
+	@UiField Anchor linkFaq14;
 	@UiField Element faqContent1;
 	@UiField Element faqContent2;
 	@UiField Element faqContent3;
@@ -56,6 +61,12 @@ public class FaqsPage extends Page {
 	@UiField Element faqContent6;
 	@UiField Element faqContent7;
 	@UiField Element faqContent8;
+	@UiField Element faqContent9;
+	@UiField Element faqContent10;
+	@UiField Element faqContent11;
+	@UiField Element faqContent12;
+	@UiField Element faqContent13;
+	@UiField Element faqContent14;
 	@UiField Anchor linkBackToTop1;
 	@UiField Anchor linkBackToTop2;
 	@UiField Anchor linkBackToTop3;
@@ -64,6 +75,12 @@ public class FaqsPage extends Page {
 	@UiField Anchor linkBackToTop6;
 	@UiField Anchor linkBackToTop7;
 	@UiField Anchor linkBackToTop8;
+	@UiField Anchor linkBackToTop9;
+	@UiField Anchor linkBackToTop10;
+	@UiField Anchor linkBackToTop11;
+	@UiField Anchor linkBackToTop12;
+	@UiField Anchor linkBackToTop13;
+	@UiField Anchor linkBackToTop14;
 	private final int pageTopBarHeight = NavigationController.get().getHeader().getElement().getClientHeight();
 	private int faqContainerTopPosition;
 	private Map<Anchor, Element> linkFaqToAnchorMap = new HashMap<Anchor, Element>();
@@ -79,12 +96,19 @@ public class FaqsPage extends Page {
 		linkFaqToAnchorMap.put(linkFaq6, faqContent6);
 		linkFaqToAnchorMap.put(linkFaq7, faqContent7);
 		linkFaqToAnchorMap.put(linkFaq8, faqContent8);
+		linkFaqToAnchorMap.put(linkFaq9, faqContent9);
+		linkFaqToAnchorMap.put(linkFaq10, faqContent10);
+		linkFaqToAnchorMap.put(linkFaq11, faqContent11);
+		linkFaqToAnchorMap.put(linkFaq12, faqContent12);
+		linkFaqToAnchorMap.put(linkFaq13, faqContent13);
+		linkFaqToAnchorMap.put(linkFaq14, faqContent14);
 
 		Window.addWindowScrollHandler(new Window.ScrollHandler() {
 
 			@Override
 			public void onWindowScroll(ScrollEvent event) {
-				if (Window.getClientWidth() > 719) {
+				faqContainerTopPosition = faqsTop.getAbsoluteTop() - pageTopBarHeight;
+				if (Window.getClientWidth() > 719 && Window.getClientHeight() > 799 && DOMHelper.getHtmlElement().hasClassName("no-touch")) {
 					if (Window.getScrollTop() >= faqContainerTopPosition) {
 						if (!faqContainer.hasClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().faqsListContainerFixed())) {
 							faqContainer.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().faqsListContainerFixed());
@@ -97,14 +121,6 @@ public class FaqsPage extends Page {
 				}
 			}
 		});
-
-		Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-
-			@Override
-			public void execute() {
-				faqContainerTopPosition = faqContainer.getAbsoluteTop() - pageTopBarHeight;
-			}
-		});
 	}
 
 	/*
@@ -114,11 +130,13 @@ public class FaqsPage extends Page {
 	 */
 	@Override
 	protected void onAttach() {
-
 		super.onAttach();
+
+		faqContainer.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().faqsListContainerFixed());
 	}
 
-	@UiHandler({ "linkFaq1", "linkFaq2", "linkFaq3", "linkFaq4", "linkFaq5", "linkFaq6", "linkFaq7", "linkFaq8" })
+	@UiHandler({ "linkFaq1", "linkFaq2", "linkFaq3", "linkFaq4", "linkFaq5", "linkFaq6", "linkFaq7", "linkFaq8", "linkFaq9", "linkFaq10", "linkFaq11",
+			"linkFaq12", "linkFaq13", "linkFaq14" })
 	void onLinkFaqClicked(ClickEvent event) {
 		event.preventDefault();
 		for (Anchor link : linkFaqToAnchorMap.keySet()) {
@@ -130,7 +148,8 @@ public class FaqsPage extends Page {
 		AnimationHelper.nativeScrollTop(scrollTopOfTheAnchor - pageTopBarHeight - 20, 300, "swing");
 	}
 
-	@UiHandler({ "linkBackToTop1", "linkBackToTop2", "linkBackToTop3", "linkBackToTop4", "linkBackToTop5", "linkBackToTop6", "linkBackToTop7", "linkBackToTop8" })
+	@UiHandler({ "linkBackToTop1", "linkBackToTop2", "linkBackToTop3", "linkBackToTop4", "linkBackToTop5", "linkBackToTop6", "linkBackToTop7",
+			"linkBackToTop8", "linkBackToTop9", "linkBackToTop10", "linkBackToTop11", "linkBackToTop12", "linkBackToTop13", "linkBackToTop14" })
 	void onBackToTopClicked(ClickEvent event) {
 		event.preventDefault();
 		int scrollTopOfTheAnchor = faqsTop.getAbsoluteTop();

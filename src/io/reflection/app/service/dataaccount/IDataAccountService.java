@@ -1,4 +1,4 @@
-//  
+//
 //  IDataAccountService.java
 //  reflection.io
 //
@@ -11,7 +11,6 @@ package io.reflection.app.service.dataaccount;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.DataAccount;
-import io.reflection.app.datatypes.shared.DataSource;
 
 import java.util.Collection;
 import java.util.Date;
@@ -28,7 +27,7 @@ public interface IDataAccountService extends IService {
 	public DataAccount getDataAccount(Long id) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @param deleted
 	 * @return
@@ -37,7 +36,7 @@ public interface IDataAccountService extends IService {
 	public DataAccount getDataAccount(Long id, Boolean deleted) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param username
 	 * @param sourceid
 	 * @return
@@ -46,7 +45,7 @@ public interface IDataAccountService extends IService {
 	public DataAccount getDataAccount(String username, Long sourceid) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param username
 	 * @param sourceid
 	 * @param deleted
@@ -63,16 +62,6 @@ public interface IDataAccountService extends IService {
 	public DataAccount addDataAccount(DataAccount dataAccount) throws DataAccessException;
 
 	/**
-	 * 
-	 * @param dataSource
-	 * @param username
-	 * @param password
-	 * @return
-	 * @throws DataAccessException
-	 */
-	public DataAccount addDataAccount(DataSource dataSource, String username, String password, String properties) throws DataAccessException;
-
-	/**
 	 * @param dataAccount
 	 * @return
 	 * @throws DataAccessException
@@ -80,7 +69,7 @@ public interface IDataAccountService extends IService {
 	public DataAccount updateDataAccount(DataAccount dataAccount) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param dataAccountId
 	 * @return
 	 * @throws DataAccessException
@@ -108,21 +97,21 @@ public interface IDataAccountService extends IService {
 	public List<DataAccount> getActiveDataAccounts(Pager pager) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 * @throws DataAccessException
 	 */
 	public Long getDataAccountsCount() throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 * @throws DataAccessException
 	 */
 	public Long getActiveDataAccountsCount() throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param pager
 	 * @param ids
 	 * @return
@@ -132,6 +121,14 @@ public interface IDataAccountService extends IService {
 
 	/**
 	 * 
+	 * @param vendorId
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<DataAccount> getVendorDataAccounts(String vendorId) throws DataAccessException;
+
+	/**
+	 *
 	 * @param dataAccount
 	 * @throws DataAccessException
 	 */
@@ -139,7 +136,7 @@ public interface IDataAccountService extends IService {
 
 	/**
 	 * Trigger single date data account fetch
-	 * 
+	 *
 	 * @param dataAccount
 	 * @param date
 	 * @throws DataAccessException
@@ -147,8 +144,15 @@ public interface IDataAccountService extends IService {
 	public void triggerSingleDateDataAccountFetch(DataAccount dataAccount, Date date) throws DataAccessException;
 
 	/**
+	 * @param dataAccountId
+	 * @param date
+	 * @throws DataAccessException
+	 */
+	void triggerSingleDateDataAccountFetch(Long dataAccountId, Date date) throws DataAccessException;
+
+	/**
 	 * Trigger Multiple Date Data Account Fetch - dates are sequential and separated by a number of days
-	 * 
+	 *
 	 * @param dataAccount
 	 * @param date
 	 * @param days
@@ -157,11 +161,30 @@ public interface IDataAccountService extends IService {
 	public void triggerMultipleDateDataAccountFetch(DataAccount dataAccount, Date date, Integer days) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param dataAccount
 	 * @param date
 	 * @throws DataAccessException
 	 */
 	public void verifyDataAccount(DataAccount dataAccount, Date date) throws DataAccessException;
+
+	/**
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<Long> getActiveDataAccountIDs() throws DataAccessException;
+
+	/**
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<Long> getAllDataAccountIDs() throws DataAccessException;
+
+	/**
+	 * @param userId
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<DataAccount> getDataAccountForUser(Long userId) throws DataAccessException;
 
 }

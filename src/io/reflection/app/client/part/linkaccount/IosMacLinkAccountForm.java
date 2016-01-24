@@ -13,11 +13,15 @@ import io.reflection.app.client.component.TextField;
 import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.helper.TooltipHelper;
+import io.reflection.app.client.mixpanel.MixpanelHelper;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.linkaccount.LinkedAccountChangeEvent.EVENT_TYPE;
 import io.reflection.app.client.part.linkaccount.LinkedAccountChangeEvent.HasLinkedAccountChangeEventHandlers;
 import io.reflection.app.client.part.linkaccount.LinkedAccountChangeEvent.LinkedAccountChangeEventHandler;
 import io.reflection.app.datatypes.shared.DataAccount;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -25,6 +29,7 @@ import com.google.gson.JsonPrimitive;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.FieldSetElement;
 import com.google.gwt.dom.client.HeadingElement;
+import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
@@ -50,6 +55,7 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	@UiField FieldSetElement fieldset;
 
 	@UiField HeadingElement title;
+	@UiField ParagraphElement subtitle;
 
 	@UiField TextField accountUsername;
 	private String accountUsernameError;
@@ -67,7 +73,7 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	public IosMacLinkAccountForm() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		title.removeFromParent();
+		subtitle.removeFromParent();
 
 		vendorId.setTooltip("Your Vendor ID is an 8 digit number beginning with 8. See this <a target=\"_blank\" href=\""
 				+ PageType.BlogPostPageType.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE, "finding_your_vendor_id_on_itunesconnect").asString()
@@ -92,11 +98,19 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 		linkAccountBtn.setText(text);
 	}
 
+	public void resetButtonStatus() {
+		linkAccountBtn.resetStatus();
+	}
+
 	public void setTitleText(String text) {
-		if (!fieldset.isOrHasChild(title)) {
-			fieldset.insertFirst(title);
-		}
 		title.setInnerText(text);
+	}
+
+	public void setSubtitleText(String text) {
+		if (!fieldset.isOrHasChild(subtitle)) {
+			fieldset.insertAfter(subtitle, title);
+		}
+		subtitle.setInnerText(text);
 	}
 
 	public void setTitleStyleName(String style) {
@@ -282,22 +296,28 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	 */
 	@Override
 	public void setFormErrors() {
+		Map<String, Object> properties = new HashMap<String, Object>();
 		if (accountUsernameError != null) {
 			accountUsername.showNote(accountUsernameError, true);
+			properties.put("error_form_account_name", accountUsernameError);
 		} else {
 			accountUsername.hideNote();
 		}
 		if (passwordError != null) {
 			password.showNote(passwordError, true);
+			properties.put("error_form_password", passwordError);
 		} else {
 			password.hideNote();
 		}
 		if (vendorIdError != null) {
 			vendorId.showNote(vendorIdError, true);
+			properties.put("error_form_vendor", vendorIdError);
 		} else {
 			vendorId.hideNote();
 		}
-
+		if (!properties.isEmpty()) {
+			MixpanelHelper.track(MixpanelHelper.Event.LINK_ACCOUNT_FAILURE, properties);
+		}
 	}
 
 	/*
@@ -358,7 +378,6 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 		password.clear();
 		vendorId.setText("");
 		vendorId.hideNote();
-		linkAccountBtn.resetStatus();
 		setEnabled(true);
 	}
 
@@ -383,7 +402,7 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	protected void onAttach() {
 		super.onAttach();
 
-		TooltipHelper.nativeUpdateWhatsThisTooltip();
+		TooltipHelper.updateWhatsThisTooltip();
 	}
 
 }

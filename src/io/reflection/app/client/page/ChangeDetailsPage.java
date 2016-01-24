@@ -58,10 +58,10 @@ import java.util.List;
 
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.dom.client.SpanElement;
-import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
@@ -100,14 +100,14 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	@UiField(provided = true) CellTable<Permission> permissionsTable = new CellTable<Permission>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
 
 	@UiField LIElement accountSettingsItem;
-	@UiField LIElement linkedAccountsItem;
+	@UiField LIElement manageSubscriptionItem;
 	@UiField LIElement usersItem;
 	@UiField LIElement notificationsItem;
 	@UiField SpanElement usersText;
 	@UiField SpanElement notifText;
 
 	@UiField InlineHyperlink accountSettingsLink;
-	@UiField InlineHyperlink linkedAccountsLink;
+	@UiField InlineHyperlink manageSubscriptionLink;
 	@UiField InlineHyperlink usersLink;
 	@UiField InlineHyperlink notificationsLink;
 
@@ -140,6 +140,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	private String passwordError = null;
 	private String newPasswordError = null;
 
+	@UiField DivElement userCredentialsPanel;
 	// User Roles
 	@UiField TextField addRole;
 	private String addRoleError;
@@ -164,32 +165,32 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		initWidget(uiBinder.createAndBindUi(this));
 
 		User user = SessionController.get().getLoggedInUser();
-
-		if (!SessionController.get().isLoggedInUserAdmin()) {
-			addRolePanel.removeFromParent();
-			addPermissionPanel.removeFromParent();
-			usersText.setInnerHTML("Users <span class=\"text-small\">coming soon</span>");
-			usersItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
-			usersItem.getStyle().setCursor(Cursor.DEFAULT);
-			notifText.setInnerHTML("Notifications <span class=\"text-small\">coming soon</span>");
-			notificationsItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
-			notificationsItem.getStyle().setCursor(Cursor.DEFAULT);
-			usersLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
-			notificationsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
+		usersItem.removeFromParent();
+		notificationsItem.removeFromParent();
+		if (!SessionController.get().isAdmin()) {
+			userCredentialsPanel.removeFromParent();
+			// usersText.setInnerHTML("Users <span class=\"text-small\">coming soon</span>");
+			// usersItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
+			// usersItem.getStyle().setCursor(Cursor.DEFAULT);
+			// notifText.setInnerHTML("Manage Notifications <span class=\"text-small\">coming soon</span>");
+			// notificationsItem.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isDisabled());
+			// notificationsItem.getStyle().setCursor(Cursor.DEFAULT);
+			// usersLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
+			// notificationsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 		} else {
-			if (user != null) {
-				notificationsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.NotificationsPageType.toString(),
-						user.id.toString()));
-			}
+			// if (user != null) {
+			// notificationsLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.NotificationsPageType.toString(),
+			// user.id.toString()));
+			// }
 		}
 
 		if (user != null) {
-			linkedAccountsLink
-					.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.LinkedAccountsPageType.toString(), user.id.toString()));
+			manageSubscriptionLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.ManageSubscriptionPageType.toString(),
+					user.id.toString()));
 		}
 
-		addRoleColumns(SessionController.get().isLoggedInUserAdmin());
-		addPermissionColumns(SessionController.get().isLoggedInUserAdmin());
+		addRoleColumns(SessionController.get().isAdmin());
+		addPermissionColumns(SessionController.get().isAdmin());
 
 		HTMLPanel emptyRowRoles = new HTMLPanel("-");
 		HTMLPanel emptyRowPermissions = new HTMLPanel("-");
@@ -202,9 +203,9 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 
 		// Add click event to LI element so the event is fired when clicking on the whole tab
 		Event.sinkEvents(accountSettingsItem, Event.ONCLICK);
-		Event.sinkEvents(linkedAccountsItem, Event.ONCLICK);
-		Event.sinkEvents(usersItem, Event.ONCLICK);
-		Event.sinkEvents(notificationsItem, Event.ONCLICK);
+		Event.sinkEvents(manageSubscriptionItem, Event.ONCLICK);
+		// Event.sinkEvents(notificationsItem, Event.ONCLICK);
+		// Event.sinkEvents(usersItem, Event.ONCLICK);
 		Event.setEventListener(accountSettingsItem, new EventListener() {
 
 			@Override
@@ -214,33 +215,33 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 				}
 			}
 		});
-		Event.setEventListener(linkedAccountsItem, new EventListener() {
+		Event.setEventListener(manageSubscriptionItem, new EventListener() {
 
 			@Override
 			public void onBrowserEvent(Event event) {
 				if (Event.ONCLICK == event.getTypeInt()) {
-					History.newItem(linkedAccountsLink.getTargetHistoryToken());
+					History.newItem(manageSubscriptionLink.getTargetHistoryToken());
 				}
 			}
 		});
-		Event.setEventListener(usersItem, new EventListener() {
-
-			@Override
-			public void onBrowserEvent(Event event) {
-				if (Event.ONCLICK == event.getTypeInt()) {
-					History.newItem(usersLink.getTargetHistoryToken());
-				}
-			}
-		});
-		Event.setEventListener(notificationsItem, new EventListener() {
-
-			@Override
-			public void onBrowserEvent(Event event) {
-				if (Event.ONCLICK == event.getTypeInt()) {
-					History.newItem(notificationsLink.getTargetHistoryToken());
-				}
-			}
-		});
+		// Event.setEventListener(notificationsItem, new EventListener() {
+		//
+		// @Override
+		// public void onBrowserEvent(Event event) {
+		// if (Event.ONCLICK == event.getTypeInt()) {
+		// History.newItem(notificationsLink.getTargetHistoryToken());
+		// }
+		// }
+		// });
+		// Event.setEventListener(usersItem, new EventListener() {
+		//
+		// @Override
+		// public void onBrowserEvent(Event event) {
+		// if (Event.ONCLICK == event.getTypeInt()) {
+		// History.newItem(usersLink.getTargetHistoryToken());
+		// }
+		// }
+		// });
 	}
 
 	private void addRoleColumns(boolean isAdmin) {
@@ -407,7 +408,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 			clearPasswordErrors();
 			changePasswordBtn.setStatusLoading("Changing password");
 			setChangePasswordFormEnabled(false);
-			if (SessionController.get().isLoggedInUserAdmin()) {
+			if (SessionController.get().isAdmin()) {
 				UserController.get().setPassword(editingUserId, newPassword.getText());
 			} else {
 				SessionController.get().changePassword(password.getText(), newPassword.getText());
@@ -439,7 +440,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 			clearAddRoleErrors();
 			addRoleBtn.setStatusLoading("Adding role ..");
 			userRolesProvider.updateRowCount(0, false);
-			UserController.get().assignUserRoleId(editingUserId, addRole.getText().toUpperCase());
+			UserController.get().assignUserRoleCode(editingUserId, addRole.getText().toUpperCase());
 
 		} else {
 			if (addRoleError != null) {
@@ -459,7 +460,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 			clearAddPermissionErrors();;
 			addPermissionBtn.setStatusLoading("Adding permission ..");
 			userPermissionsProvider.updateRowCount(0, false);
-			UserController.get().assignUserPermissionId(editingUserId, addPermission.getText().toUpperCase());
+			UserController.get().assignUserPermissionCode(editingUserId, addPermission.getText().toUpperCase());
 
 		} else {
 			if (addPermissionError != null) {
@@ -533,7 +534,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	@UiHandler({ "password", "newPassword", "confirmPassword" })
 	void onPasswordFieldsModified(KeyUpEvent event) {
 		if (changePasswordBtn.isStatusDefault()) {
-			if (!SessionController.get().isLoggedInUserAdmin()) {
+			if (!SessionController.get().isAdmin()) {
 				if (!password.getText().isEmpty() && !newPassword.getText().isEmpty() && !confirmPassword.getText().isEmpty()) {
 					changePasswordBtn.setEnabled(true);
 				} else {
@@ -578,7 +579,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 		newPassword.clear();
 		confirmPassword.clear();
 
-		password.setVisible(!SessionController.get().isLoggedInUserAdmin());
+		password.setVisible(!SessionController.get().isAdmin());
 
 		// preloaderPassword.hide();
 
@@ -727,7 +728,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 			validated = validated && true;
 		}
 		// Check password constraints for not admin user
-		if (!SessionController.get().isLoggedInUserAdmin()) {
+		if (!SessionController.get().isAdmin()) {
 			if (passwordText == null || passwordText.length() == 0) {
 				passwordError = FormHelper.ERROR_PASSWORD_LOGIN_EMPTY;
 				changePasswordGeneralErrorNote = FormHelper.ERROR_FORM_EMPTY_FIELDS;
@@ -834,8 +835,8 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 				userRolesProvider.updateRowCount(0, false);
 				userPermissionsProvider.updateRowCount(0, false);
 
-				if (SessionController.get().isLoggedInUserAdmin()) {
-					UserController.get().fetchUserRolesAndPermissions(dummyEditingUser);
+				if (SessionController.get().isAdmin()) {
+					UserController.get().fetchAdminRolesAndPermissions(dummyEditingUser);
 					loadingBar.show("Getting credentials ..");
 				} else {
 					// If non admin, can retrieve only his own powers, so get from SessionController
@@ -857,7 +858,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 				if (currentUser.id.toString().equals(editingUserId.toString())) { // Current user is the same as in the stack parameter
 					editingUser = currentUser;
 					fillDetailsForm(editingUser);
-				} else if (SessionController.get().isLoggedInUserAdmin()) {
+				} else if (SessionController.get().isAdmin()) {
 					UserController.get().fetchUser(editingUserId);
 				} else { // No access to this user
 					userRolesProvider.updateRowCount(0, true);
@@ -875,7 +876,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	private boolean isValidStack(Stack current) {
 		return (current != null && PageType.UsersPageType.equals(current.getPage()) && current.getAction() != null
 				&& PageType.ChangeDetailsPageType.equals(current.getAction()) && current.getParameter(0) != null && (current.getParameter(0).equals(
-				currentUser.id.toString()) || SessionController.get().isLoggedInUserAdmin()));
+				currentUser.id.toString()) || SessionController.get().isAdmin()));
 	}
 
 	/*
@@ -946,7 +947,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 			@Override
 			public void onResetStatus() {
 				changePasswordBtn.setEnabled(false);
-				if (SessionController.get().isLoggedInUserAdmin()) {
+				if (SessionController.get().isAdmin()) {
 					PageType.UsersPageType.show();
 				}
 			}
@@ -991,7 +992,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	 */
 	@Override
 	public void assignRoleSuccess(AssignRoleRequest input, AssignRoleResponse output) {
-		UserController.get().fetchUserRolesAndPermissions(input.user);
+		UserController.get().fetchAdminRolesAndPermissions(input.user);
 		loadingBar.show("Getting credentials ..");
 		if (output.status == StatusType.StatusTypeSuccess) {
 			addRoleBtn.setStatusSuccess("Role added!");
@@ -1008,7 +1009,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	 */
 	@Override
 	public void assignRoleFailure(AssignRoleRequest input, Throwable caught) {
-		UserController.get().fetchUserRolesAndPermissions(input.user);
+		UserController.get().fetchAdminRolesAndPermissions(input.user);
 		loadingBar.show("Getting credentials ..");
 		addRoleBtn.setStatusError();
 	}
@@ -1021,7 +1022,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	 */
 	@Override
 	public void assignPermissionSuccess(AssignPermissionRequest input, AssignPermissionResponse output) {
-		UserController.get().fetchUserRolesAndPermissions(input.user);
+		UserController.get().fetchAdminRolesAndPermissions(input.user);
 		loadingBar.show("Getting credentials ..");
 		if (output.status == StatusType.StatusTypeSuccess) {
 			addPermissionBtn.setStatusSuccess("Permission added!");
@@ -1038,7 +1039,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	 */
 	@Override
 	public void assignPermissionFailure(AssignPermissionRequest input, Throwable caught) {
-		UserController.get().fetchUserRolesAndPermissions(input.user);
+		UserController.get().fetchAdminRolesAndPermissions(input.user);
 		loadingBar.show("Getting credentials ..");
 		addPermissionBtn.setStatusError();
 	}
@@ -1095,7 +1096,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	@Override
 	public void revokePermissionSuccess(RevokePermissionRequest input, RevokePermissionResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			UserController.get().fetchUserRolesAndPermissions(input.user);
+			UserController.get().fetchAdminRolesAndPermissions(input.user);
 			loadingBar.show("Getting credentials ..");
 		} else {
 			List<Permission> currentUserPermissions = SessionController.get().getLoggedInUser().permissions;
@@ -1132,7 +1133,7 @@ public class ChangeDetailsPage extends Page implements NavigationEventHandler, C
 	@Override
 	public void revokeRoleSuccess(RevokeRoleRequest input, RevokeRoleResponse output) {
 		if (output.status == StatusType.StatusTypeSuccess) {
-			UserController.get().fetchUserRolesAndPermissions(input.user);
+			UserController.get().fetchAdminRolesAndPermissions(input.user);
 			loadingBar.show("Getting credentials ..");
 		} else {
 			List<Role> currentUserRoles = SessionController.get().getLoggedInUser().roles;

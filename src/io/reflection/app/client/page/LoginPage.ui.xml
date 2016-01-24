@@ -2,11 +2,13 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p="urn:import:io.reflection.app.client.part"
 	xmlns:l="urn:import:io.reflection.app.client.part.login" xmlns:pp="urn:import:io.reflection.app.client.page.part">
 
+	<ui:import field="io.reflection.app.client.page.PageType.RegisterPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.LoginPageType" />
+
 	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
 
-
 	<ui:style gss="true">
-
+	
 	</ui:style>
 
 	<g:HTMLPanel tag="section"
@@ -30,7 +32,7 @@
 					<footer>
 						<cite>
 							<span>Friedrich Nietzsche</span>
-							Philologist
+							Philosopher
 						</cite>
 					</footer>
 				</blockquote>
@@ -41,15 +43,15 @@
 				<li
 					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneHalf} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab}">
 					<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
-					<g:InlineHyperlink ui:field="register" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
-						<span>Apply now</span>
+					<g:InlineHyperlink ui:field="signUpLink" targetHistoryToken="{RegisterPageType.asTargetHistoryToken}" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
+						<span>Sign Up</span>
 					</g:InlineHyperlink>
 				</li>
 				<li
 					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneHalf} {STYLES_INSTANCE.reflectionMainStyle.tabs__tab} {STYLES_INSTANCE.reflectionMainStyle.isActive}">
 					<div class="{STYLES_INSTANCE.reflectionMainStyle.tabAnimateActive}"></div>
-					<g:InlineHyperlink ui:field="login" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
-						<span>Log In</span>
+					<g:InlineHyperlink targetHistoryToken="{LoginPageType.asTargetHistoryToken}" styleName="{STYLES_INSTANCE.reflectionMainStyle.tabs__link}">
+						<span>Login</span>
 					</g:InlineHyperlink>
 				</li>
 			</ul>
@@ -103,6 +105,10 @@
 									c-0.2-0.3-0.5-0.4-0.8-0.5c-0.3,0-0.7,0-0.9,0.2l-8.6,6.5c-0.6,0.4-0.7,1.2-0.2,1.7l19.4,25.5c0.2,0.3,0.6,0.5,1,0.5c0,0,0,0,0,0
 									c0.4,0,0.7-0.2,0.9-0.4L60.7,9.2C61.2,8.7,61.1,7.9,60.6,7.4z"></path></svg>
 						<p>We've sent the email, click on the link contained therein to reset your password once it arrives</p>
+
+						<p class="{STYLES_INSTANCE.reflectionMainStyle.backLinkText}">
+							<g:Anchor ui:field="backToLogin" styleName="" href="#">Back to Login</g:Anchor>
+						</p>
 					</div>
 
 				</li>
