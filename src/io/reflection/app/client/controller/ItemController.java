@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.http.client.Request;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
@@ -68,6 +69,17 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 
 	// private Pager mLookupPager; // Lookup server calls pager
 	private Pager mSearchPager; // User search calls pager
+
+	private Timer timerFetchLinkedAccountItems = new Timer() {
+
+		@Override
+		public void run() {
+			currentLinkedAccountItems.cancel();
+			currentLinkedAccountItems = null;
+			DefaultEventBus.get().fireEventFromSource(new GetLinkedAccountItemsFailure(new GetLinkedAccountItemsRequest(), new Exception()),
+					ItemController.this);
+		}
+	};
 
 	public static ItemController get() {
 		if (mOne == null) {
@@ -212,6 +224,9 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 	 * Fetch the list of Item related to the linked account currently selected in the filter
 	 */
 	public void fetchLinkedAccountItems() {
+
+		timerFetchLinkedAccountItems.cancel();
+
 		if (currentLinkedAccountItems != null) {
 			currentLinkedAccountItems.cancel();
 			currentLinkedAccountItems = null;
@@ -242,6 +257,8 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 
 			@Override
 			public void onSuccess(GetLinkedAccountItemsResponse output) {
+				timerFetchLinkedAccountItems.cancel();
+
 				currentLinkedAccountItems = null;
 
 				if (output.pager != null) {
@@ -266,10 +283,13 @@ public class ItemController extends AsyncDataProvider<Item> implements ServiceCo
 
 			@Override
 			public void onFailure(Throwable caught) {
+				timerFetchLinkedAccountItems.cancel();
 				currentLinkedAccountItems = null;
 				DefaultEventBus.get().fireEventFromSource(new GetLinkedAccountItemsFailure(input, caught), ItemController.this);
 			}
 		});
+
+		timerFetchLinkedAccountItems.schedule(12000);
 	}
 
 	// /**

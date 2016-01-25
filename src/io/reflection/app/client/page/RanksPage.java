@@ -7,63 +7,23 @@
 //
 package io.reflection.app.client.page;
 
-import static io.reflection.app.client.controller.FilterController.CATEGORY_KEY;
-import static io.reflection.app.client.controller.FilterController.COUNTRY_KEY;
-import static io.reflection.app.client.controller.FilterController.DAILY_DATA_KEY;
-import static io.reflection.app.client.controller.FilterController.DOWNLOADS_DAILY_DATA_TYPE;
-import static io.reflection.app.client.controller.FilterController.END_DATE_KEY;
-import static io.reflection.app.client.controller.FilterController.FREE_LIST_TYPE;
-import static io.reflection.app.client.controller.FilterController.GROSSING_LIST_TYPE;
-import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
-import static io.reflection.app.client.controller.FilterController.PAID_LIST_TYPE;
-import static io.reflection.app.client.controller.FilterController.REVENUE_DAILY_DATA_TYPE;
-import static io.reflection.app.client.controller.FilterController.STORE_KEY;
-import static io.reflection.app.client.helper.FormattingHelper.WHOLE_NUMBER_FORMATTER;
-import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
-import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
-import io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler;
-import io.reflection.app.client.DefaultEventBus;
-import io.reflection.app.client.cell.AppRankCell;
-import io.reflection.app.client.component.FormDateBox;
-import io.reflection.app.client.component.LoadingBar;
-import io.reflection.app.client.component.Selector;
-import io.reflection.app.client.component.ToggleRadioButton;
-import io.reflection.app.client.controller.FilterController;
-import io.reflection.app.client.controller.FilterController.Filter;
-import io.reflection.app.client.controller.ItemController;
-import io.reflection.app.client.controller.NavigationController;
-import io.reflection.app.client.controller.NavigationController.Stack;
-import io.reflection.app.client.controller.RankController;
-import io.reflection.app.client.controller.ServiceConstants;
-import io.reflection.app.client.controller.SessionController;
-import io.reflection.app.client.handler.FilterEventHandler;
-import io.reflection.app.client.handler.NavigationEventHandler;
-import io.reflection.app.client.helper.AnimationHelper;
-import io.reflection.app.client.helper.FilterHelper;
-import io.reflection.app.client.helper.FormHelper;
-import io.reflection.app.client.helper.FormattingHelper;
-import io.reflection.app.client.helper.ResponsiveDesignHelper;
-import io.reflection.app.client.helper.TooltipHelper;
-import io.reflection.app.client.part.BootstrapGwtCellTable;
-import io.reflection.app.client.part.LoadingIndicator;
-import io.reflection.app.client.part.datatypes.RanksGroup;
-import io.reflection.app.client.res.Styles;
-import io.reflection.app.client.res.Styles.ReflectionMainStyles;
-import io.reflection.app.datatypes.shared.Rank;
-import io.reflection.app.shared.util.DataTypeHelper;
+import static io.reflection.app.client.controller.FilterController.*;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.SafeHtmlCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Display;
-import com.google.gwt.dom.client.Style.TextAlign;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ResizeEvent;
@@ -71,7 +31,7 @@ import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.event.logical.shared.ShowRangeEvent;
 import com.google.gwt.event.logical.shared.ShowRangeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
@@ -84,10 +44,14 @@ import com.google.gwt.user.cellview.client.ColumnSortEvent;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.SafeHtmlHeader;
 import com.google.gwt.user.cellview.client.TextHeader;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.Window.ScrollEvent;
+import com.google.gwt.user.client.Window.ScrollHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.InlineHyperlink;
@@ -95,29 +59,62 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
 import com.willshex.gson.json.service.shared.StatusType;
 
+import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
+import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
+import io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler;
+import io.reflection.app.client.DefaultEventBus;
+import io.reflection.app.client.cell.AppDetailsAndPredictionCell;
+import io.reflection.app.client.cell.LeaderboardDownloadsCell;
+import io.reflection.app.client.cell.LeaderboardRevenueCell;
+import io.reflection.app.client.component.FormDateBox;
+import io.reflection.app.client.component.LoadingBar;
+import io.reflection.app.client.component.LoadingButton;
+import io.reflection.app.client.component.Selector;
+import io.reflection.app.client.component.ToggleRadioButton;
+import io.reflection.app.client.controller.FilterController;
+import io.reflection.app.client.controller.FilterController.Filter;
+import io.reflection.app.client.controller.ItemController;
+import io.reflection.app.client.controller.NavigationController;
+import io.reflection.app.client.controller.NavigationController.Stack;
+import io.reflection.app.client.controller.RankController;
+import io.reflection.app.client.controller.ServiceConstants;
+import io.reflection.app.client.controller.SessionController;
+import io.reflection.app.client.handler.NavigationEventHandler;
+import io.reflection.app.client.helper.AnimationHelper;
+import io.reflection.app.client.helper.ApiCallHelper;
+import io.reflection.app.client.helper.FilterHelper;
+import io.reflection.app.client.helper.FormHelper;
+import io.reflection.app.client.helper.FormattingHelper;
+import io.reflection.app.client.helper.ResponsiveDesignHelper;
+import io.reflection.app.client.helper.TooltipHelper;
+import io.reflection.app.client.mixpanel.MixpanelHelper;
+import io.reflection.app.client.part.BootstrapGwtCellTable;
+import io.reflection.app.client.part.ErrorPanel;
+import io.reflection.app.client.part.LoadingIndicator;
+import io.reflection.app.client.part.NoDataPanel;
+import io.reflection.app.client.part.datatypes.RanksGroup;
+import io.reflection.app.client.popup.AddLinkedAccountPopup;
+import io.reflection.app.client.popup.PremiumPopup;
+import io.reflection.app.client.popup.SignUpPopup;
+import io.reflection.app.client.res.Styles;
+import io.reflection.app.client.res.Styles.ReflectionMainStyles;
+import io.reflection.app.datatypes.shared.Rank;
+import io.reflection.app.shared.util.DataTypeHelper;
+
 /**
  * @author billy1380
- * 
+ *
  */
-public class RanksPage extends Page implements FilterEventHandler, // SessionEventHandler, IsAuthorisedEventHandler,
-		NavigationEventHandler, GetAllTopItemsEventHandler {
+public class RanksPage extends Page implements NavigationEventHandler, GetAllTopItemsEventHandler {
 
 	private static RanksPageUiBinder uiBinder = GWT.create(RanksPageUiBinder.class);
 
-	interface RanksPageUiBinder extends UiBinder<Widget, RanksPage> {}
-
-	interface RanksPageStyle extends CssResource {
-
-		String emptyTableContainer();
-
-		String emptyTableHeading();
-
+	interface RanksPageUiBinder extends UiBinder<Widget, RanksPage> {
 	}
 
-	public static final int SELECTED_TAB_PARAMETER_INDEX = 0;
-	public static final int VIEW_ALL_LENGTH_VALUE = Integer.MAX_VALUE;
-	public static final String ALL_TEXT = "Overview / All";
-	public static final String COMING_FROM_PARAMETER = "leaderboard";
+	public static final int			SELECTED_TAB_PARAMETER_INDEX	= 0;
+	public static final String	ALL_TEXT											= "Overview";
+	public static final String	COMING_FROM_PARAMETER					= "leaderboard";
 
 	interface AllAdminCodeTemplate extends SafeHtmlTemplates {
 		AllAdminCodeTemplate INSTANCE = GWT.create(AllAdminCodeTemplate.class);
@@ -127,91 +124,138 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		SafeHtml code(Long code);
 	}
 
-	@UiField(provided = true) CellTable<RanksGroup> leaderboardTable = new CellTable<RanksGroup>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
+	@UiField(provided = true)
+	CellTable<RanksGroup>									stickyHeaderTable									= new CellTable<RanksGroup>(1, BootstrapGwtCellTable.INSTANCE);
+	@UiField(provided = true)
+	CellTable<RanksGroup>									leaderboardTable									= new CellTable<RanksGroup>(ServiceConstants.STEP_VALUE, BootstrapGwtCellTable.INSTANCE);
 
-	private LoadingIndicator loadingIndicatorAll = AnimationHelper.getLeaderboardAllLoadingIndicator(25);
-	private LoadingIndicator loadingIndicatorFreeList = AnimationHelper.getLeaderboardListLoadingIndicator(25, true);
-	private LoadingIndicator loadingIndicatorPaidGrossingList = AnimationHelper.getLeaderboardListLoadingIndicator(25, false);
+	private LoadingIndicator							loadingIndicatorAll								= AnimationHelper.getLeaderboardAllLoadingIndicator(25);
+	private LoadingIndicator							loadingIndicatorFreeList					= AnimationHelper.getLeaderboardListLoadingIndicator(25, true);
+	private LoadingIndicator							loadingIndicatorPaidGrossingList	= AnimationHelper.getLeaderboardListLoadingIndicator(25, false);
 
-	@UiField DivElement dateSelectContainer;
-	@UiField FormDateBox dateBox;
-	Date currentDate = FilterHelper.getToday();
-	@UiField Selector appStoreListBox;
+	@UiField(provided = true)
+	ToggleRadioButton											toggleListView										= new ToggleRadioButton("viewtype", "0 0 20 20");
+	@UiField(provided = true)
+	ToggleRadioButton											toggleCompactView									= new ToggleRadioButton("viewtype", "0 0 20 20");
+	@UiField
+	LoadingButton													downloadLeaderboard;
+	@UiField
+	DivElement														dateSelectContainer;
+	@UiField
+	FormDateBox														dateBox;
+	@UiField
+	Selector															appStoreSelector;
 	// @UiField ListBox mListType;
-	@UiField Selector countryListBox;
-	@UiField Selector categoryListBox;
-	@UiField(provided = true) ToggleRadioButton toggleRevenue = new ToggleRadioButton("dailydatatoggle");
-	@UiField(provided = true) ToggleRadioButton toggleDownloads = new ToggleRadioButton("dailydatatoggle");
-	@UiField HTMLPanel dailyDataContainer;
+	@UiField
+	Selector															countrySelector;
+	@UiField
+	Selector															categorySelector;
+	@UiField(provided = true)
+	ToggleRadioButton											toggleRevenue											= new ToggleRadioButton("dailydatatoggle", "0 0 32 32");
+	@UiField(provided = true)
+	ToggleRadioButton											toggleDownloads										= new ToggleRadioButton("dailydatatoggle", "0 0 32 32");
+	@UiField
+	HTMLPanel															dailyDataContainer;
+	@UiField
+	Button																applyFilters;
+	@UiField
+	Button																resetFilters;
 
-	@UiField InlineHyperlink allLink;
-	@UiField SpanElement overviewAllText;
-	@UiField SpanElement paidText;
-	@UiField SpanElement grossingText;
-	@UiField InlineHyperlink freeLink;
-	@UiField InlineHyperlink grossingLink;
-	@UiField InlineHyperlink paidLink;
+	@UiField
+	InlineHyperlink												allLink;
+	@UiField
+	SpanElement														overviewAllText;
+	@UiField
+	SpanElement														paidText;
+	@UiField
+	SpanElement														grossingText;
+	@UiField
+	InlineHyperlink												freeLink;
+	@UiField
+	InlineHyperlink												grossingLink;
+	@UiField
+	InlineHyperlink												paidLink;
 
-	@UiField LIElement allItem;
-	@UiField LIElement freeItem;
-	@UiField LIElement grossingItem;
-	@UiField LIElement paidItem;
+	@UiField
+	LIElement															allItem;
+	@UiField
+	LIElement															freeItem;
+	@UiField
+	LIElement															grossingItem;
+	@UiField
+	LIElement															paidItem;
 
-	@UiField Button viewAllBtn;
-	@UiField SpanElement viewAllSpan;
-	@UiField InlineHyperlink redirect;
+	@UiField
+	Button																viewAllBtn;
+	@UiField
+	SpanElement														viewAllSpan;
+	// @UiField InlineHyperlink redirect;
+	@UiField
+	ErrorPanel														errorPanel;
+	@UiField
+	NoDataPanel														noDataPanel;
 
-	private Column<RanksGroup, SafeHtml> rankColumn;
-	private Column<RanksGroup, Rank> grossingColumn;
-	private Column<RanksGroup, Rank> freeColumn;
-	private Column<RanksGroup, Rank> paidColumn;
-	private Column<RanksGroup, SafeHtml> priceColumn;
-	private Column<RanksGroup, SafeHtml> downloadsColumn;
-	private Column<RanksGroup, SafeHtml> revenueColumn;
-	private Column<RanksGroup, SafeHtml> iapColumn;
+	@UiField
+	Element																iframe;
 
-	@SuppressWarnings("rawtypes") private Column lastOrderedColumn = rankColumn;
+	private Column<RanksGroup, SafeHtml>	rankColumn;
+	private Column<RanksGroup, Rank>			grossingColumn;
+	private Column<RanksGroup, Rank>			freeColumn;
+	private Column<RanksGroup, Rank>			paidColumn;
+	private Column<RanksGroup, SafeHtml>	priceColumn;
+	private Column<RanksGroup, Rank>			downloadsColumn;
+	private Column<RanksGroup, Rank>			revenueColumn;
+	private Column<RanksGroup, SafeHtml>	iapColumn;
 
-	private Map<String, LIElement> tabs = new HashMap<String, LIElement>();
+	@SuppressWarnings("rawtypes")
+	private Column												lastOrderedColumn									= rankColumn;
 
-	private SafeHtmlHeader downloadsHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Downloads " + AnimationHelper.getSorterSvg()));
-	private SafeHtmlHeader revenueHeader = new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Revenue " + AnimationHelper.getSorterSvg()));
-	private TextHeader rankHeader = new TextHeader("Rank");
-	private TextHeader paidHeader = new TextHeader("Paid");
-	private TextHeader freeHeader = new TextHeader("Free");
-	private TextHeader grossingHeader = new TextHeader("Grossing");
-	private TextHeader priceHeader = new TextHeader("Price");
-	private SafeHtmlHeader iapHeader = new SafeHtmlHeader(
-			SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"In App Purchases\">IAP</span>"));
+	private Map<String, LIElement>				tabs															= new HashMap<String, LIElement>();
 
-	private String selectedTab = OVERALL_LIST_TYPE;
-	private LoadingBar loadingBar = new LoadingBar(false);
-	private ReflectionMainStyles style = Styles.STYLES_INSTANCE.reflectionMainStyle();
+	private SafeHtmlHeader								downloadsHeader										= new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Downloads " + AnimationHelper.getSorterSvg()));
+	private SafeHtmlHeader								revenueHeader											= new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString("Revenue " + AnimationHelper.getSorterSvg()));
+	private TextHeader										rankHeader												= new TextHeader("Rank");
+	private TextHeader										paidHeader												= new TextHeader("App Name");
+	private TextHeader										paidHeaderAll											= new TextHeader("Paid");
+	private TextHeader										freeHeader												= new TextHeader("App Name");
+	private TextHeader										freeHeaderAll											= new TextHeader("Free");
+	private TextHeader										grossingHeader										= new TextHeader("App Name");
+	private TextHeader										grossingHeaderAll									= new TextHeader("Grossing");
+	private TextHeader										priceHeader												= new TextHeader("Price");
+	private SafeHtmlHeader								iapHeader													= new SafeHtmlHeader(SafeHtmlUtils.fromTrustedString(
+																																							"<span>IAP</span><span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding js-tooltip--info tooltip--info\" data-tooltip=\"In App Purchases\"></span>"));
+
+	private String												selectedTab												= OVERALL_LIST_TYPE;
+	private String												previousFilter;
+	private LoadingBar										loadingBar												= new LoadingBar(false);
+	private ReflectionMainStyles					style															= Styles.STYLES_INSTANCE.reflectionMainStyle();
+	private SignUpPopup										signUpPopup												= new SignUpPopup();
+	private PremiumPopup									premiumPopup											= new PremiumPopup();
+	private AddLinkedAccountPopup					addLinkedAccountPopup							= new AddLinkedAccountPopup();
+	private boolean												isStatusError;
 
 	public RanksPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		// if (!SessionController.get().isLoggedInUserAdmin()) {
 		dailyDataContainer.removeFromParent();
-		// }
+		applyFilters.getElement().setAttribute("data-tooltip", "Update results");
 
-		if (!SessionController.get().isLoggedInUserAdmin()) {
-			countryListBox.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
-			appStoreListBox.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
-			categoryListBox.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
+		if (!SessionController.get().isAdmin()) {
+			categorySelector.setTooltip("We're in beta. More categories and countries will be available soon.");
 		}
 
 		dateBox.getDatePicker().addShowRangeHandler(new ShowRangeHandler<Date>() {
 
 			@Override
 			public void onShowRange(ShowRangeEvent<Date> event) {
-				FilterHelper.disableFutureDates(dateBox.getDatePicker());
+				FilterHelper.disableOutOfRangeDates(dateBox.getDatePicker(), (SessionController.get().isAdmin() ? null : ApiCallHelper.getUTCDate(2015, 8, 31)),
+						(SessionController.get().isAdmin() ? FilterHelper.getToday() : FilterHelper.getDaysAgo(FilterHelper.DEFAULT_LEADERBOARD_LAG_DAYS)));
 			}
 		});
 
-		FilterHelper.addStores(appStoreListBox, SessionController.get().isLoggedInUserAdmin());
-		FilterHelper.addCountries(countryListBox, SessionController.get().isLoggedInUserAdmin());
-		FilterHelper.addCategories(categoryListBox, SessionController.get().isLoggedInUserAdmin());
+		FilterHelper.addStores(appStoreSelector, SessionController.get().isAdmin());
+		FilterHelper.addCountries(countrySelector, SessionController.get().isAdmin());
+		FilterHelper.addCategories(categorySelector, SessionController.get().isAdmin());
 
 		// set the overall tab title (this is because it is modified for admins to contain the gather code)
 		overviewAllText.setInnerText(ALL_TEXT);
@@ -265,19 +309,14 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			}
 		});
 
-		HTMLPanel emptyTableWidget = new HTMLPanel("<h6>No ranking data for filter!</h6>");
-		emptyTableWidget.getElement().getStyle().setTextAlign(TextAlign.CENTER);
-		emptyTableWidget.getElement().getStyle().setHeight(100.0, Unit.PX);
-		emptyTableWidget.getElement().getStyle().setPaddingTop(35.0, Unit.PX);
-		leaderboardTable.setEmptyTableWidget(emptyTableWidget);
 		leaderboardTable.setLoadingIndicator(loadingIndicatorAll);
 		leaderboardTable.getTableLoadingSection().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().tableBodyLoading());
 
 		RankController.get().addDataDisplay(leaderboardTable);
+		stickyHeaderTable.setRowData(Arrays.asList(RanksGroup.getPlaceholder()));
 
 		dateSelectContainer.addClassName("js-tooltip");
 		dateSelectContainer.setAttribute("data-tooltip", "Select a date");
-		TooltipHelper.updateHelperTooltip();
 
 		loadingBar.show();
 
@@ -285,24 +324,47 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		Window.addResizeHandler(new ResizeHandler() {
 			@Override
 			public void onResize(ResizeEvent event) {
-				if (event.getWidth() <= 719) {
-					if (tabs.get(OVERALL_LIST_TYPE).hasClassName(style.isActive())) {
-						History.replaceItem(grossingLink.getTargetHistoryToken());
+				if (PageType.RanksPageType == NavigationController.get().getCurrentPage()) {
+					if (event.getWidth() <= 719) {
+						if (tabs.get(OVERALL_LIST_TYPE).hasClassName(style.isActive())) {
+							History.replaceItem(grossingLink.getTargetHistoryToken());
+						}
+						allItem.getStyle().setDisplay(Display.NONE);
+					} else {
+						allItem.getStyle().setDisplay(Display.BLOCK);
 					}
-					allItem.getStyle().setDisplay(Display.NONE);
-				} else {
-					allItem.getStyle().setDisplay(Display.BLOCK);
 				}
 			}
 		});
 
+		updateSelectorsFromFilter();
+		TooltipHelper.updateHelperTooltip();
+		stickyTableHead();
+	}
+
+	private void stickyTableHead() {
+		Window.addWindowScrollHandler(new ScrollHandler() {
+
+			@Override
+			public void onWindowScroll(ScrollEvent event) {
+				int dataTableTopPosition = leaderboardTable.getElement().getAbsoluteTop()
+						- NavigationController.get().getHeader().getElement().getClientHeight();
+				if (event.getScrollTop() >= dataTableTopPosition && leaderboardTable.isVisible()) {
+					stickyHeaderTable.getElement().getStyle().setVisibility(Visibility.VISIBLE);
+					stickyHeaderTable.getElement().getStyle().setOpacity(1);
+				} else {
+					stickyHeaderTable.getElement().getStyle().setVisibility(Visibility.HIDDEN);
+					stickyHeaderTable.getElement().getStyle().setOpacity(0);
+				}
+			}
+		});
 	}
 
 	private void createColumns() {
 		ListHandler<RanksGroup> columnSortHandler = new ListHandler<RanksGroup>(RankController.get().getList()) {
 			/*
 			 * (non-Javadoc)
-			 * 
+			 *
 			 * @see com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler#onColumnSort(com.google.gwt.user.cellview.client.ColumnSortEvent)
 			 */
 			@Override
@@ -346,25 +408,40 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 			@Override
 			public SafeHtml getValue(RanksGroup object) {
-				return (object.free.position != null) ? SafeHtmlUtils.fromTrustedString(object.free.position.toString()) : SafeHtmlUtils
-						.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
+				return (object.free != null && object.free.position != null) ? SafeHtmlUtils.fromTrustedString(object.free.position.toString())
+						: SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
 			}
 
 		};
 		rankColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.mhxte6cID());
 
-		AppRankCell appRankCell = new AppRankCell();
+		AppDetailsAndPredictionCell appDetailsCell = new AppDetailsAndPredictionCell();
 
-		paidColumn = new Column<RanksGroup, Rank>(appRankCell) {
+		paidColumn = new Column<RanksGroup, Rank>(appDetailsCell) {
 
 			@Override
 			public Rank getValue(RanksGroup object) {
 				return object.paid;
 			}
 		};
+		paidColumn.setFieldUpdater(new FieldUpdater<RanksGroup, Rank>() {
+
+			@Override
+			public void update(int index, RanksGroup object, Rank value) {
+				if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
+					premiumPopup.show(true);
+				} else if (SessionController.get().isLoggedIn()) {
+					MixpanelHelper.trackClicked(MixpanelHelper.Event.OPEN_LINK_ACCOUNT_POPUP, "leaderboard_table_paid");
+					addLinkedAccountPopup.show("Link Your Appstore Account",
+							"You need to link your iTunes Connect account to use this feature, it only takes a moment");
+				} else {
+					signUpPopup.show();
+				}
+			}
+		});
 		paidColumn.setCellStyleNames(style.mhxte6ciA());
 
-		freeColumn = new Column<RanksGroup, Rank>(appRankCell) {
+		freeColumn = new Column<RanksGroup, Rank>(appDetailsCell) {
 
 			@Override
 			public Rank getValue(RanksGroup object) {
@@ -372,15 +449,45 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			}
 
 		};
+		freeColumn.setFieldUpdater(new FieldUpdater<RanksGroup, Rank>() {
+
+			@Override
+			public void update(int index, RanksGroup object, Rank value) {
+				if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
+					premiumPopup.show(true);
+				} else if (SessionController.get().isLoggedIn()) {
+					MixpanelHelper.trackClicked(MixpanelHelper.Event.OPEN_LINK_ACCOUNT_POPUP, "leaderboard_table_free");
+					addLinkedAccountPopup.show("Link Your Appstore Account",
+							"You need to link your iTunes Connect account to use this feature, it only takes a moment");
+				} else {
+					signUpPopup.show();
+				}
+			}
+		});
 		freeColumn.setCellStyleNames(style.mhxte6ciA());
 
-		grossingColumn = new Column<RanksGroup, Rank>(appRankCell) {
+		grossingColumn = new Column<RanksGroup, Rank>(appDetailsCell) {
 
 			@Override
 			public Rank getValue(RanksGroup object) {
 				return object.grossing;
 			}
 		};
+		grossingColumn.setFieldUpdater(new FieldUpdater<RanksGroup, Rank>() {
+
+			@Override
+			public void update(int index, RanksGroup object, Rank value) {
+				if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
+					premiumPopup.show(true);
+				} else if (SessionController.get().isLoggedIn()) {
+					MixpanelHelper.trackClicked(MixpanelHelper.Event.OPEN_LINK_ACCOUNT_POPUP, "leaderboard_table_grossing");
+					addLinkedAccountPopup.show("Link Your Appstore Account",
+							"You need to link your iTunes Connect account to use this feature, it only takes a moment");
+				} else {
+					signUpPopup.show();
+				}
+			}
+		});
 		grossingColumn.setCellStyleNames(style.mhxte6ciA());
 
 		priceColumn = new Column<RanksGroup, SafeHtml>(new SafeHtmlCell()) {
@@ -388,51 +495,81 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			@Override
 			public SafeHtml getValue(RanksGroup object) {
 				Rank rank = rankForListType(object);
-				return (rank.currency != null && rank.price != null) ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.asPriceString(rank.currency,
-						rank.price.floatValue())) : SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
+				return (rank.currency != null && rank.price != null)
+						? SafeHtmlUtils.fromSafeConstant(FormattingHelper.asPriceString(rank.currency, rank.price.floatValue()))
+						: SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
 			}
 		};
 		priceColumn.setCellStyleNames(style.mhxte6ciA());
 
-		downloadsColumn = new Column<RanksGroup, SafeHtml>(new SafeHtmlCell()) {
+		downloadsColumn = new Column<RanksGroup, Rank>(new LeaderboardDownloadsCell()) {
 
 			@Override
-			public SafeHtml getValue(RanksGroup object) {
-				Rank rank = rankForListType(object);
-				return (rank.downloads != null) ? SafeHtmlUtils.fromSafeConstant(WHOLE_NUMBER_FORMATTER.format(rank.downloads)) : SafeHtmlUtils
-						.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
+			public Rank getValue(RanksGroup object) {
+				return rankForListType(object);
 			}
 
 		};
+		downloadsColumn.setFieldUpdater(new FieldUpdater<RanksGroup, Rank>() {
+
+			@Override
+			public void update(int index, RanksGroup object, Rank value) {
+				if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
+					premiumPopup.show(true);
+				} else if (SessionController.get().isLoggedIn()) {
+					MixpanelHelper.trackClicked(MixpanelHelper.Event.OPEN_LINK_ACCOUNT_POPUP, "leaderboard_table_downloads_" + selectedTab);
+					addLinkedAccountPopup.show("Link Your Appstore Account",
+							"You need to link your iTunes Connect account to use this feature, it only takes a moment");
+				} else {
+					signUpPopup.show();
+				}
+			}
+		});
 		downloadsColumn.setCellStyleNames(style.mhxte6ciA());
 		downloadsColumn.setSortable(true);
 		downloadsHeader.setHeaderStyleNames(style.canBeSorted());
 
-		revenueColumn = new Column<RanksGroup, SafeHtml>(new SafeHtmlCell()) {
+		revenueColumn = new Column<RanksGroup, Rank>(new LeaderboardRevenueCell()) {
 
 			@Override
-			public SafeHtml getValue(RanksGroup object) {
-				Rank rank = rankForListType(object);
-				return (rank.currency != null && rank.revenue != null) ? SafeHtmlUtils.fromSafeConstant(FormattingHelper.asWholeMoneyString(rank.currency,
-						rank.revenue.floatValue())) : SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>");
+			public Rank getValue(RanksGroup object) {
+				return rankForListType(object);
 			}
 
 		};
+		revenueColumn.setFieldUpdater(new FieldUpdater<RanksGroup, Rank>() {
+
+			@Override
+			public void update(int index, RanksGroup object, Rank value) {
+				if (SessionController.get().isStandardDeveloper() && SessionController.get().hasLinkedAccount()) {
+					premiumPopup.show(true);
+				} else if (SessionController.get().isLoggedIn()) {
+					MixpanelHelper.trackClicked(MixpanelHelper.Event.OPEN_LINK_ACCOUNT_POPUP, "leaderboard_table_revenue_" + selectedTab);
+					addLinkedAccountPopup.show("Link Your Appstore Account",
+							"You need to link your iTunes Connect account to use this feature, it only takes a moment");
+				} else {
+					signUpPopup.show();
+				}
+			}
+		});
 		revenueColumn.setCellStyleNames(style.mhxte6ciA());
 		revenueColumn.setSortable(true);
 		revenueHeader.setHeaderStyleNames(style.canBeSorted());
 
 		iapColumn = new Column<RanksGroup, SafeHtml>(new SafeHtmlCell()) {
 
-			private final String IAP_YES_HTML = "<span class=\"" + style.refIconBefore() + " " + style.refIconBeforeCheck() + "\"></span>";
-			private final String IAP_NO_HTML = "<span></span>";
+			private final String	IAP_YES_HTML	= "<span class=\"" + style.refIconBefore() + " " + style.refIconBeforeCheck() + "\"></span>";
+			private final String	IAP_NO_HTML		= "<span></span>";
 
 			@Override
 			public SafeHtml getValue(RanksGroup object) {
-				return SafeHtmlUtils.fromSafeConstant(DataTypeHelper.itemIapState(ItemController.get().lookupItem(rankForListType(object).itemId),
-						IAP_YES_HTML, IAP_NO_HTML,
-						"<span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding " + style.whatsThisTooltipIconStatic()
-								+ "\" data-tooltip=\"No data available\"></span>"));
+				return SafeHtmlUtils
+						.fromSafeConstant(DataTypeHelper.itemIapState(
+								ItemController.get()
+										.lookupItem(rankForListType(
+												object).itemId),
+								IAP_YES_HTML, IAP_NO_HTML,
+								"<span class=\"js-tooltip js-tooltip--info tooltip--info js-tooltip--right js-tooltip--right--no-pointer-padding\" data-tooltip=\"No data available\"></span>"));
 			}
 
 		};
@@ -459,127 +596,94 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		return rank;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.FilterEventHandler#filterParamChanged(java.lang.String, java.lang.Object, java.lang.Object)
-	 */
-	@Override
-	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
+	@UiHandler("applyFilters")
+	void onApplyFiltersClicked(ClickEvent event) {
+		event.preventDefault();
+		applyFilters.addStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().isLoading());
 		if (NavigationController.get().getCurrentPage() == PageType.RanksPageType) {
-			boolean foundDailyData = false;
-			if (name != null
-					&& (COUNTRY_KEY.equals(name) || STORE_KEY.equals(name) || CATEGORY_KEY.equals(name) || END_DATE_KEY.equals(name) || (foundDailyData = DAILY_DATA_KEY
-							.equals(name)))) {
-
-				if (foundDailyData) {
-					leaderboardTable.redraw();
-				} else {
-					loadingBar.show();
-					RankController.get().reset();
-					RankController.get().fetchTopItems();
-					setViewMoreVisible(false);
-				}
-
+			boolean updateData = false;
+			if (updateData = updateData || !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())) {
+				FilterController.get().setCountry(countrySelector.getSelectedValue());
+			}
+			if (updateData = updateData || !FilterController.get().getFilter().getStoreA3Code().equals(appStoreSelector.getSelectedValue())) {
+				FilterController.get().setStore(appStoreSelector.getSelectedValue());
+			}
+			if (updateData = updateData || !FilterController.get().getFilter().getCategoryId().toString().equals(categorySelector.getSelectedValue())) {
+				FilterController.get().setCategory(Long.valueOf(categorySelector.getSelectedValue()));
+			}
+			if (updateData = updateData || !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateBox.getValue())) {
+				FilterController.get().setEndDate(dateBox.getValue());
+				Date startDate = new Date(FilterController.get().getFilter().getEndTime());
+				CalendarUtil.addDaysToDate(startDate, -30);
+				FilterController.get().getFilter().setStartTime(startDate.getTime());
+			}
+			if (updateData) {
+				applyFilters.setEnabled(false);
 				PageType.RanksPageType.show("view", selectedTab, FilterController.get().asRankFilterString());
+			} else if (isStatusError) {
+				isStatusError = false;
+				errorPanel.setVisible(false);
+				applyFilters.setEnabled(false);
+				updateSelectorsFromFilter();
+				loadingBar.show();
+				RankController.get().reset();
+				RankController.get().fetchTopItems();
+				viewAllBtn.setVisible(false);
+				noDataPanel.setVisible(false);
+				leaderboardTable.setVisible(true);
+				downloadsHeader.setHeaderStyleNames(style.canBeSorted());
+				revenueHeader.setHeaderStyleNames(style.canBeSorted());
+				previousFilter = FilterController.get().asRankFilterString();
 			}
 		}
-		downloadsHeader.setHeaderStyleNames(style.canBeSorted());
-		revenueHeader.setHeaderStyleNames(style.canBeSorted());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.FilterEventHandler#filterParamsChanged(io.reflection.app.client.controller.FilterController.Filter, java.util.Map)
-	 */
-	@Override
-	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {
-		if (NavigationController.get().getCurrentPage() == PageType.RanksPageType) {
-
-			boolean foundDailyData = false;
-
-			if (previousValues.get(COUNTRY_KEY) != null || previousValues.get(STORE_KEY) != null || previousValues.get(CATEGORY_KEY) != null
-					|| previousValues.get(END_DATE_KEY) != null || (foundDailyData = (previousValues.get(DAILY_DATA_KEY) != null))) {
-
-				if (foundDailyData) {
-					leaderboardTable.redraw();
-				} else {
-					loadingBar.show();
-					RankController.get().reset();
-					RankController.get().fetchTopItems();
-					setViewMoreVisible(false);
-				}
-
-				PageType.RanksPageType.show("view", selectedTab, FilterController.get().asRankFilterString());
-			}
-		}
-		downloadsHeader.setHeaderStyleNames(style.canBeSorted());
-		revenueHeader.setHeaderStyleNames(style.canBeSorted());
-	}
-
-	@UiHandler("appStoreListBox")
-	void onAppStoreValueChanged(ChangeEvent event) {
-		FilterController.get().setStore(appStoreListBox.getSelectedValue());
-	}
-
-	// @UiHandler("mListType")
-	// void onListTypeValueChanged(ChangeEvent event) {
-	// FilterController.get().setListType(mListType.getValue(mListType.getSelectedIndex()));
-	// }
-
-	@UiHandler("countryListBox")
-	void onCountryValueChanged(ChangeEvent event) {
-		FilterController.get().setCountry(countryListBox.getSelectedValue());
+	@UiHandler({ "countrySelector", "appStoreSelector", "categorySelector" })
+	void onFiltersChanged(ChangeEvent event) {
+		applyFilters.setEnabled(isStatusError || !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
+				|| !FilterController.get().getFilter().getStoreA3Code().equals(appStoreSelector.getSelectedValue())
+				|| !FilterController.get().getFilter().getCategoryId().toString().equals(categorySelector.getSelectedValue())
+				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateBox.getValue()));
 	}
 
 	@UiHandler("dateBox")
-	void onDateValueChanged(ValueChangeEvent<Date> event) {
-		if (event.getValue().after(FilterHelper.getToday())) { // Restore previously selected date
-			dateBox.setValue(currentDate);
-		} else {
-			currentDate.setTime(dateBox.getValue().getTime());
-			FilterController fc = FilterController.get();
-			fc.start();
-			fc.setEndDate(event.getValue());
-			Date startDate = fc.getEndDate();
-			CalendarUtil.addDaysToDate(startDate, -30);
-			fc.setStartDate(startDate);
-			fc.commit();
-		}
+	void onDateChanged(ValueChangeEvent<Date> event) {
+		applyFilters.setEnabled(isStatusError || !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
+				|| !FilterController.get().getFilter().getStoreA3Code().equals(appStoreSelector.getSelectedValue())
+				|| !FilterController.get().getFilter().getCategoryId().toString().equals(categorySelector.getSelectedValue())
+				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateBox.getValue()));
 	}
 
-	@UiHandler("categoryListBox")
-	void onCategoryListBoxValueChanged(ChangeEvent event) {
-		FilterController.get().setCategory(Long.valueOf(categoryListBox.getSelectedValue()));
+	@UiHandler("resetFilters")
+	void onResetFiltersClicked(ClickEvent event) {
+		event.preventDefault();
+		// TODO will use user preferences
+		countrySelector.setSelectedIndex(FormHelper.getItemIndex(countrySelector, "gb"));
+		appStoreSelector.setSelectedIndex(FormHelper.getItemIndex(appStoreSelector, "iph"));
+		categorySelector.setSelectedIndex(FormHelper.getItemIndex(categorySelector, "15"));
+		dateBox.setValue(FilterHelper.getDaysAgo(FilterHelper.DEFAULT_LEADERBOARD_LAG_DAYS));
+		applyFilters.setEnabled(isStatusError || !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
+				|| !FilterController.get().getFilter().getStoreA3Code().equals(appStoreSelector.getSelectedValue())
+				|| !FilterController.get().getFilter().getCategoryId().toString().equals(categorySelector.getSelectedValue())
+				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateBox.getValue()));
 	}
 
-	@UiHandler("toggleRevenue")
-	void onDailyDataRevenueValueChanged(ValueChangeEvent<Boolean> event) {
-		FilterController.get().setDailyData(REVENUE_DAILY_DATA_TYPE);
-	}
-
-	@UiHandler("toggleDownloads")
-	void onDailyDataDownloadsValueChanged(ValueChangeEvent<Boolean> event) {
-		FilterController.get().setDailyData(DOWNLOADS_DAILY_DATA_TYPE);
-	}
-
-	private void updateFromFilter() {
+	/**
+	 * Update selectors from URL if coming from a page refresh
+	 */
+	private void updateSelectorsFromFilter() {
 		FilterController fc = FilterController.get();
 
 		long endTime = fc.getFilter().getEndTime().longValue();
 		Date endDate = new Date(endTime);
-		dateBox.setValue(endDate);
-		currentDate.setTime(endDate.getTime());
-		if (SessionController.get().isLoggedInUserAdmin()) {
-			appStoreListBox.setSelectedIndex(FormHelper.getItemIndex(appStoreListBox, fc.getFilter().getStoreA3Code()));
-			countryListBox.setSelectedIndex(FormHelper.getItemIndex(countryListBox, fc.getFilter().getCountryA2Code()));
-			categoryListBox.setSelectedIndex(FormHelper.getItemIndex(categoryListBox, fc.getFilter().getCategoryId().toString()));
+		dateBox.setValue(endDate, false);
+		if (SessionController.get().isAdmin()) {
+			categorySelector.setSelectedIndex(FormHelper.getItemIndex(categorySelector, fc.getFilter().getCategoryId().toString()));
 		} else {
-			appStoreListBox.setSelectedIndex(0);
-			countryListBox.setSelectedIndex(0);
-			categoryListBox.setSelectedIndex(0);
+			categorySelector.setSelectedIndex(0);
 		}
+		appStoreSelector.setSelectedIndex(FormHelper.getItemIndex(appStoreSelector, fc.getFilter().getStoreA3Code()));
+		countrySelector.setSelectedIndex(FormHelper.getItemIndex(countrySelector, fc.getFilter().getCountryA2Code()));
 
 		String dailyDataType = fc.getFilter().getDailyData();
 		if (REVENUE_DAILY_DATA_TYPE.equals(dailyDataType)) {
@@ -587,78 +691,123 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		} else {
 			toggleDownloads.setValue(true);
 		}
+
 	}
 
-	private void refreshRanks() {
+	private void appendTableColumns() {
 
 		leaderboardTable.setStyleName(style.tableOverall(), OVERALL_LIST_TYPE.equals(selectedTab));
 		leaderboardTable.setStyleName(style.tableAppGroup(),
 				(FREE_LIST_TYPE.equals(selectedTab) || PAID_LIST_TYPE.equals(selectedTab) || GROSSING_LIST_TYPE.equals(selectedTab)));
+		stickyHeaderTable.setStyleName(style.tableOverall(), OVERALL_LIST_TYPE.equals(selectedTab));
+		stickyHeaderTable.setStyleName(style.tableAppGroup(),
+				(FREE_LIST_TYPE.equals(selectedTab) || PAID_LIST_TYPE.equals(selectedTab) || GROSSING_LIST_TYPE.equals(selectedTab)));
 
 		switch (selectedTab) {
-		case OVERALL_LIST_TYPE:
-			removeAllColumns();
-			leaderboardTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-			leaderboardTable.setColumnWidth(freeColumn, 30.0, Unit.PCT);
-			leaderboardTable.setColumnWidth(paidColumn, 30.0, Unit.PCT);
-			leaderboardTable.setColumnWidth(grossingColumn, 30.0, Unit.PCT);
-			leaderboardTable.addColumn(rankColumn, rankHeader);
-			leaderboardTable.addColumn(freeColumn, freeHeader);
-			leaderboardTable.addColumn(paidColumn, paidHeader);
-			leaderboardTable.addColumn(grossingColumn, grossingHeader);
-			leaderboardTable.setLoadingIndicator(loadingIndicatorAll);
-			break;
-		case FREE_LIST_TYPE:
-			removeAllColumns();
-			leaderboardTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-			leaderboardTable.setColumnWidth(freeColumn, 42.0, Unit.PCT);
-			leaderboardTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
-			leaderboardTable.setColumnWidth(downloadsColumn, 19.0, Unit.PCT);
-			leaderboardTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
-			leaderboardTable.addColumn(rankColumn, rankHeader);
-			leaderboardTable.addColumn(freeColumn, freeHeader);
-			leaderboardTable.addColumn(priceColumn, priceHeader);
-			leaderboardTable.addColumn(downloadsColumn, downloadsHeader);
-			leaderboardTable.addColumn(iapColumn, iapHeader);
-			priceHeader.setHeaderStyleNames(style.columnHiddenMobile());
-			priceColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
-			leaderboardTable.addColumnStyleName(2, style.columnHiddenMobile());
-			leaderboardTable.setLoadingIndicator(loadingIndicatorFreeList);
-			break;
-		case PAID_LIST_TYPE:
-			removeAllColumns();
-			leaderboardTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-			leaderboardTable.setColumnWidth(paidColumn, 42.0, Unit.PCT);
-			leaderboardTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
-			leaderboardTable.setColumnWidth(downloadsColumn, 19.0, Unit.PCT);
-			leaderboardTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
-			leaderboardTable.addColumn(rankColumn, rankHeader);
-			leaderboardTable.addColumn(paidColumn, paidHeader);
-			leaderboardTable.addColumn(priceColumn, priceHeader);
-			leaderboardTable.addColumn(downloadsColumn, downloadsHeader);
-			leaderboardTable.addColumn(iapColumn, iapHeader);
-			iapHeader.setHeaderStyleNames(style.columnHiddenMobile());
-			iapColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
-			leaderboardTable.addColumnStyleName(4, style.columnHiddenMobile());
-			leaderboardTable.setLoadingIndicator(loadingIndicatorPaidGrossingList);
-			break;
-		case GROSSING_LIST_TYPE:
-			removeAllColumns();
-			leaderboardTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
-			leaderboardTable.setColumnWidth(grossingColumn, 42.0, Unit.PCT);
-			leaderboardTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
-			leaderboardTable.setColumnWidth(revenueColumn, 19.0, Unit.PCT);
-			leaderboardTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
-			leaderboardTable.addColumn(rankColumn, rankHeader);
-			leaderboardTable.addColumn(grossingColumn, grossingHeader);
-			leaderboardTable.addColumn(priceColumn, priceHeader);
-			leaderboardTable.addColumn(revenueColumn, revenueHeader);
-			leaderboardTable.addColumn(iapColumn, iapHeader);
-			iapHeader.setHeaderStyleNames(style.columnHiddenMobile());
-			iapColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
-			leaderboardTable.addColumnStyleName(4, style.columnHiddenMobile());
-			leaderboardTable.setLoadingIndicator(loadingIndicatorPaidGrossingList);
-			break;
+			case OVERALL_LIST_TYPE:
+				removeAllColumns();
+				leaderboardTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+				leaderboardTable.setColumnWidth(paidColumn, 30.0, Unit.PCT);
+				leaderboardTable.setColumnWidth(freeColumn, 30.0, Unit.PCT);
+				leaderboardTable.setColumnWidth(grossingColumn, 30.0, Unit.PCT);
+				leaderboardTable.addColumn(rankColumn, rankHeader);
+				leaderboardTable.addColumn(paidColumn, paidHeaderAll);
+				leaderboardTable.addColumn(freeColumn, freeHeaderAll);
+				leaderboardTable.addColumn(grossingColumn, grossingHeaderAll);
+				leaderboardTable.setLoadingIndicator(loadingIndicatorAll);
+				stickyHeaderTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+				stickyHeaderTable.setColumnWidth(paidColumn, 30.0, Unit.PCT);
+				stickyHeaderTable.setColumnWidth(freeColumn, 30.0, Unit.PCT);
+				stickyHeaderTable.setColumnWidth(grossingColumn, 30.0, Unit.PCT);
+				stickyHeaderTable.addColumn(rankColumn, rankHeader);
+				stickyHeaderTable.addColumn(paidColumn, paidHeaderAll);
+				stickyHeaderTable.addColumn(freeColumn, freeHeaderAll);
+				stickyHeaderTable.addColumn(grossingColumn, grossingHeaderAll);
+				break;
+			case PAID_LIST_TYPE:
+				removeAllColumns();
+				leaderboardTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+				leaderboardTable.setColumnWidth(paidColumn, 42.0, Unit.PCT);
+				leaderboardTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
+				leaderboardTable.setColumnWidth(downloadsColumn, 19.0, Unit.PCT);
+				leaderboardTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
+				leaderboardTable.addColumn(rankColumn, rankHeader);
+				leaderboardTable.addColumn(paidColumn, paidHeader);
+				leaderboardTable.addColumn(priceColumn, priceHeader);
+				leaderboardTable.addColumn(downloadsColumn, downloadsHeader);
+				leaderboardTable.addColumn(iapColumn, iapHeader);
+				iapHeader.setHeaderStyleNames(style.columnHiddenMobile());
+				iapColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
+				leaderboardTable.addColumnStyleName(4, style.columnHiddenMobile());
+				leaderboardTable.setLoadingIndicator(loadingIndicatorPaidGrossingList);
+				stickyHeaderTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+				stickyHeaderTable.setColumnWidth(paidColumn, 42.0, Unit.PCT);
+				stickyHeaderTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
+				stickyHeaderTable.setColumnWidth(downloadsColumn, 19.0, Unit.PCT);
+				stickyHeaderTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
+				stickyHeaderTable.addColumn(rankColumn, rankHeader);
+				stickyHeaderTable.addColumn(paidColumn, paidHeader);
+				stickyHeaderTable.addColumn(priceColumn, priceHeader);
+				stickyHeaderTable.addColumn(downloadsColumn, "Downloads");
+				stickyHeaderTable.addColumn(iapColumn, iapHeader);
+				stickyHeaderTable.addColumnStyleName(4, style.columnHiddenMobile());
+				break;
+			case FREE_LIST_TYPE:
+				removeAllColumns();
+				leaderboardTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+				leaderboardTable.setColumnWidth(freeColumn, 42.0, Unit.PCT);
+				leaderboardTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
+				leaderboardTable.setColumnWidth(downloadsColumn, 19.0, Unit.PCT);
+				leaderboardTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
+				leaderboardTable.addColumn(rankColumn, rankHeader);
+				leaderboardTable.addColumn(freeColumn, freeHeader);
+				leaderboardTable.addColumn(priceColumn, priceHeader);
+				leaderboardTable.addColumn(downloadsColumn, downloadsHeader);
+				leaderboardTable.addColumn(iapColumn, iapHeader);
+				priceHeader.setHeaderStyleNames(style.columnHiddenMobile());
+				priceColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
+				leaderboardTable.addColumnStyleName(2, style.columnHiddenMobile());
+				leaderboardTable.setLoadingIndicator(loadingIndicatorFreeList);
+				stickyHeaderTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+				stickyHeaderTable.setColumnWidth(freeColumn, 42.0, Unit.PCT);
+				stickyHeaderTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
+				stickyHeaderTable.setColumnWidth(downloadsColumn, 19.0, Unit.PCT);
+				stickyHeaderTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
+				stickyHeaderTable.addColumn(rankColumn, rankHeader);
+				stickyHeaderTable.addColumn(freeColumn, freeHeader);
+				stickyHeaderTable.addColumn(priceColumn, priceHeader);
+				stickyHeaderTable.addColumn(downloadsColumn, "Downloads");
+				stickyHeaderTable.addColumn(iapColumn, iapHeader);
+				stickyHeaderTable.addColumnStyleName(2, style.columnHiddenMobile());
+				break;
+			case GROSSING_LIST_TYPE:
+				removeAllColumns();
+				leaderboardTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+				leaderboardTable.setColumnWidth(grossingColumn, 42.0, Unit.PCT);
+				leaderboardTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
+				leaderboardTable.setColumnWidth(revenueColumn, 19.0, Unit.PCT);
+				leaderboardTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
+				leaderboardTable.addColumn(rankColumn, rankHeader);
+				leaderboardTable.addColumn(grossingColumn, grossingHeader);
+				leaderboardTable.addColumn(priceColumn, priceHeader);
+				leaderboardTable.addColumn(revenueColumn, revenueHeader);
+				leaderboardTable.addColumn(iapColumn, iapHeader);
+				iapHeader.setHeaderStyleNames(style.columnHiddenMobile());
+				iapColumn.setCellStyleNames(style.mhxte6ciA() + " " + style.columnHiddenMobile());
+				leaderboardTable.addColumnStyleName(4, style.columnHiddenMobile());
+				leaderboardTable.setLoadingIndicator(loadingIndicatorPaidGrossingList);
+				stickyHeaderTable.setColumnWidth(rankColumn, 10.0, Unit.PCT);
+				stickyHeaderTable.setColumnWidth(grossingColumn, 42.0, Unit.PCT);
+				stickyHeaderTable.setColumnWidth(priceColumn, 19.0, Unit.PCT);
+				stickyHeaderTable.setColumnWidth(revenueColumn, 19.0, Unit.PCT);
+				stickyHeaderTable.setColumnWidth(iapColumn, 10.0, Unit.PCT);
+				stickyHeaderTable.addColumn(rankColumn, rankHeader);
+				stickyHeaderTable.addColumn(grossingColumn, grossingHeader);
+				stickyHeaderTable.addColumn(priceColumn, priceHeader);
+				stickyHeaderTable.addColumn(revenueColumn, "Revenue");
+				stickyHeaderTable.addColumn(iapColumn, iapHeader);
+				stickyHeaderTable.addColumnStyleName(4, style.columnHiddenMobile());
+				break;
 		}
 
 		TooltipHelper.updateHelperTooltip();
@@ -667,9 +816,9 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 	private void removeColumn(Column<RanksGroup, ?> column) {
 		int currentIndex = leaderboardTable.getColumnIndex(column);
-
 		if (currentIndex != -1) {
 			leaderboardTable.removeColumn(column);
+			stickyHeaderTable.removeColumn(column);
 		}
 	}
 
@@ -681,11 +830,12 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		iapColumn.setCellStyleNames(style.mhxte6ciA());
 		for (int i = 0; i < leaderboardTable.getColumnCount(); i++) {
 			leaderboardTable.removeColumnStyleName(i, style.columnHiddenMobile());
+			stickyHeaderTable.removeColumnStyleName(i, style.columnHiddenMobile());
 		}
 
 		removeColumn(rankColumn);
-		removeColumn(freeColumn);
 		removeColumn(paidColumn);
+		removeColumn(freeColumn);
 		removeColumn(grossingColumn);
 		removeColumn(priceColumn);
 		removeColumn(revenueColumn);
@@ -711,11 +861,139 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		// RankController.get().sortByRank(selectedTab, false);
 	}
 
+	@UiHandler("toggleListView")
+	void onToggleViewListSelected(ValueChangeEvent<Boolean> event) {
+		getElement().removeClassName(style.compactView());
+		// getElement().removeClassName(style.list);
+	}
+
+	@UiHandler("toggleCompactView")
+	void onToggleViewCompactSelected(ValueChangeEvent<Boolean> event) {
+		// getElement().removeClassName(style.listview);
+		getElement().addClassName(style.compactView());
+	}
+
+	@UiHandler("downloadLeaderboard")
+	void onDownloadLeaderboardClicked(ClickEvent event) {
+		event.preventDefault();
+		if (SessionController.get().canSeePredictions()) {
+
+			Cookies.removeCookie("fileDownloaded");
+			downloadLeaderboard.setStatusLoading("Downloading");
+
+			Filter filter = FilterController.get().getFilter();
+			String listType;
+			if (filter.getStoreA3Code().equals("iph")) {
+				switch (selectedTab) {
+					case (PAID_LIST_TYPE):
+						listType = "toppaidapplications";
+						break;
+					case (FREE_LIST_TYPE):
+						listType = "topfreeapplications";
+						break;
+					case (GROSSING_LIST_TYPE):
+						listType = "topgrossingapplications";
+						break;
+					default:
+						listType = "topallapplications";
+						break;
+				}
+			} else {
+				switch (selectedTab) {
+					case (PAID_LIST_TYPE):
+						listType = "toppaidipadapplications";
+						break;
+					case (FREE_LIST_TYPE):
+						listType = "topfreeipadapplications";
+						break;
+					case (GROSSING_LIST_TYPE):
+						listType = "topgrossingipadapplications";
+						break;
+					default:
+						listType = "topallipadapplications";
+						break;
+				}
+			}
+			String country = filter.getCountryA2Code();
+			String category = filter.getCategoryId().toString();
+			String date = String.valueOf(ApiCallHelper.getUTCDate(FilterController.get().getEndDate()).getTime());
+			String sessionParam = SessionController.get().getSession().toString();
+			String requestParamenters = "listType=" + listType + "&country=" + country + "&category=" + category + "&date=" + date + "&session=" + sessionParam;
+
+			iframe.setAttribute("src", URL.encode(GWT.getHostPageBaseURL() + "downloadleaderboard?" + requestParamenters));
+
+			final Timer feedbackTimer = new Timer() {
+				private long counter = 0; // Timeout
+
+				@Override
+				public void run() {
+					counter += 200L;
+					if (counter > 7000) {
+						downloadLeaderboard.resetStatus();
+						Cookies.removeCookie("fileDownloaded");
+						iframe.removeAttribute("src");
+						cancel();
+					}
+					if (Cookies.getCookie("fileDownloaded") != null) {
+						if (Cookies.getCookie("fileDownloaded").equals("success")) {
+							downloadLeaderboard.resetStatus();
+						} else if (Cookies.getCookie("fileDownloaded").equals("error")) {
+							downloadLeaderboard.setStatusError();
+							SessionController.get().fetchRoleAndPermissions(); // Refresh credentials
+						} else {
+							downloadLeaderboard.resetStatus();
+						}
+						Cookies.removeCookie("fileDownloaded");
+						iframe.removeAttribute("src");
+						cancel();
+					}
+				}
+			};
+			feedbackTimer.scheduleRepeating(200);
+
+			// iframe.setUrl("");
+			// RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, URL.encode(GWT.getHostPageBaseURL() + "downloadleaderboard"));
+			// builder.setHeader("Content-Type", "application/x-www-form-urlencoded");
+			// try {
+			// builder.sendRequest(requestParamenters, new RequestCallback() {
+			//
+			// @Override
+			// public void onError(Request request, Throwable exception) {
+			// downloadLeaderboard.setStatusError();
+			// }
+			//
+			// @Override
+			// public void onResponseReceived(Request request, Response response) {
+			// if (response.getStatusCode() == Response.SC_FORBIDDEN) { // User doesn't have the required role, probably premium role is expired
+			// downloadLeaderboard.setStatusError();
+			// // Refresh credentials
+			// SessionController.get().fetchRolesAndPermissions();
+			// } else {
+			// String csvContent = "data:text/csv;charset=utf-8," + URL.encodeQueryString(response.getText());
+			// Window.open(csvContent, "_self", "");
+			// downloadLeaderboard.resetStatus();
+			// }
+			// }
+			// });
+			// } catch (Exception e) {
+			// downloadLeaderboard.setStatusError();
+			// }
+		} else if (SessionController.get().isLoggedIn() && !SessionController.get().hasLinkedAccount()) {
+			MixpanelHelper.trackClicked(MixpanelHelper.Event.OPEN_LINK_ACCOUNT_POPUP, "leaderboard_downloadCsv");
+			addLinkedAccountPopup.show("Link Your Appstore Account",
+					"You need to link your iTunes Connect account to use this feature, it only takes a moment");
+		} else if (SessionController.get().isLoggedIn()) {
+			premiumPopup.show(true);
+		} else {
+			signUpPopup.show();
+		}
+	}
+
 	@UiHandler("viewAllBtn")
 	void onViewAllButtonClicked(ClickEvent event) {
 		if (((Button) event.getSource()).isEnabled()) {
 			if (leaderboardTable.getVisibleItemCount() == ServiceConstants.STEP_VALUE) {
-				leaderboardTable.setVisibleRange(0, VIEW_ALL_LENGTH_VALUE);
+				leaderboardTable.setVisibleRange(0, Integer.MAX_VALUE);
 				viewAllSpan.setInnerText("View Less Apps");
 
 				TooltipHelper.updateHelperTooltip();
@@ -729,61 +1007,58 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
 	 * io.reflection.app.client.controller.NavigationController.Stack)
 	 */
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
+		// FilterController.get().asRankFilterString() == current.getParameter(1)
 
-		if (PageType.RanksPageType.equals(current.getPage())) {
+		if (PageType.RanksPageType.equals(current.getPage()) && current.getAction() != null
+				&& NavigationController.VIEW_ACTION_PARAMETER_VALUE.equals(current.getAction()) && current.getParameter(1) != null) {
 
 			if (leaderboardTable.getVisibleItemCount() > 0) {
-				setViewMoreVisible(true);
+				viewAllBtn.setVisible(true);
 			}
 
-			boolean hasPermission = SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_FULL_RANK_VIEW_CODE);
-
-			if (hasPermission) {
-				redirect.removeFromParent();
-				viewAllBtn.getParent().getElement().appendChild(viewAllBtn.getElement());
-			} else {
-				viewAllBtn.removeFromParent();
-				redirect.getParent().getElement().appendChild(redirect.getElement());
+			// Check if the filter is changed
+			if (previousFilter == null || !previousFilter.equals(FilterController.get().asRankFilterString())) {
+				previousFilter = FilterController.get().asRankFilterString();
+				updateSelectorsFromFilter();
+				loadingBar.show();
+				RankController.get().reset();
+				RankController.get().fetchTopItems();
+				viewAllBtn.setVisible(false);
+				errorPanel.setVisible(false);
+				isStatusError = false;
+				noDataPanel.setVisible(false);
+				leaderboardTable.setVisible(true);
+				downloadsHeader.setHeaderStyleNames(style.canBeSorted());
+				revenueHeader.setHeaderStyleNames(style.canBeSorted());
+				resetFilters.setEnabled(!FilterController.get().getFilter().getCountryA2Code().equals("gb")
+						|| !FilterController.get().getFilter().getStoreA3Code().equals("iph")
+						|| !FilterController.get().getFilter().getCategoryId().toString().equals("15")
+						|| !CalendarUtil.isSameDate(FilterHelper.getDaysAgo(FilterHelper.DEFAULT_LEADERBOARD_LAG_DAYS), new Date(FilterController.get().getFilter().getEndTime().longValue())));
 			}
 
-			if (current.getAction() == null || !NavigationController.VIEW_ACTION_PARAMETER_VALUE.equals(current.getAction())) {
-				PageType.RanksPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, OVERALL_LIST_TYPE, FilterController.get().asRankFilterString());
-			} else {
-				String currentFilter = FilterController.get().asRankFilterString();
+			String currentFilter = FilterController.get().asRankFilterString();
 
-				if (currentFilter != null && currentFilter.length() > 0) {
-					allLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
-							OVERALL_LIST_TYPE, currentFilter));
-					freeLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
-							FREE_LIST_TYPE, currentFilter));
-					paidLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
-							PAID_LIST_TYPE, currentFilter));
-					grossingLink.setTargetHistoryToken(PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
-							GROSSING_LIST_TYPE, currentFilter));
-				}
-
-				selectedTab = current.getParameter(SELECTED_TAB_PARAMETER_INDEX);
-
-				refreshTabs();
-				refreshRanks();
-
-				// if (SessionController.get().isLoggedInUserAdmin()) {
-				// if (FREE_LIST_TYPE.equals(selectedTab) || PAID_LIST_TYPE.equals(selectedTab) || GROSSING_LIST_TYPE.equals(selectedTab)) {
-				// setDataFilterVisible(false);
-				// } else {
-				// setDataFilterVisible(true);
-				// selectedTab = OVERALL_LIST_TYPE;
-				// }
-				// }
-
-				updateFromFilter();
+			if (currentFilter != null && currentFilter.length() > 0) {
+				allLink.setTargetHistoryToken(
+						PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, OVERALL_LIST_TYPE, currentFilter));
+				freeLink.setTargetHistoryToken(
+						PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, FREE_LIST_TYPE, currentFilter));
+				paidLink.setTargetHistoryToken(
+						PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, PAID_LIST_TYPE, currentFilter));
+				grossingLink.setTargetHistoryToken(
+						PageType.RanksPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, GROSSING_LIST_TYPE, currentFilter));
 			}
+
+			selectedTab = current.getParameter(SELECTED_TAB_PARAMETER_INDEX);
+
+			refreshTabs();
+			appendTableColumns();
 
 			if (Window.getClientWidth() <= 719) {
 				if (tabs.get(OVERALL_LIST_TYPE).hasClassName(style.isActive())) {
@@ -793,63 +1068,30 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 			} else {
 				allItem.getStyle().setDisplay(Display.BLOCK);
 			}
+
+		} else {
+			PageType.RanksPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, OVERALL_LIST_TYPE, FilterController.get().asRankFilterString());
 		}
 
 	}
-
-	// private void setDataFilterVisible(boolean visible) {
-	// if (visible) {
-	// dailyDataContainer.setVisible(true);
-	// } else {
-	// dailyDataContainer.setVisible(false);
-	// }
-	// }
-
-	private void setViewMoreVisible(boolean visible) {
-		if (viewAllBtn.isAttached()) {
-			viewAllBtn.setVisible(visible);
-		}
-		if (redirect.isAttached()) {
-			redirect.setVisible(visible);
-		}
-
-	}
-
-	// private void checkPermissions() {
-	// List<Permission> permissions = new ArrayList<Permission>();
-	//
-	// Permission p = new Permission();
-	// // p.code = "FRV";
-	// p.id = Long.valueOf(1);
-	// permissions.add(p);
-	//
-	// SessionController.get().fetchAuthorisation(null, permissions);
-	//
-	// redirect.setTargetHistoryToken(PageType.UpgradePageType.toString());
-	// }
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
 	 */
 	@Override
 	protected void onAttach() {
 		super.onAttach();
 
-		register(DefaultEventBus.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
-		// register(EventController.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this));
-		// register(EventController.get().addHandlerToSource(IsAuthorisedEventHandler.TYPE, SessionController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(GetAllTopItemsEventHandler.TYPE, RankController.get(), this));
-
-		updateFromFilter();
 
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.client.page.Page#onDetach()
 	 */
 	@Override
@@ -857,22 +1099,25 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 		super.onDetach();
 
 		loadingBar.reset();
+		signUpPopup.hide();
+		premiumPopup.hide();
+		addLinkedAccountPopup.hide();
+		iframe.removeAttribute("src");
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler#getAllTopItemsSuccess(io.reflection.app.api.core.shared.call.GetAllTopItemsRequest
-	 * , io.reflection.app.api.core.shared.call.GetAllTopItemsResponse)
+	 *
+	 * @see io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler#getAllTopItemsSuccess(io.reflection.app.api.core.shared.call.
+	 * GetAllTopItemsRequest , io.reflection.app.api.core.shared.call.GetAllTopItemsResponse)
 	 */
 	@Override
 	public void getAllTopItemsSuccess(GetAllTopItemsRequest input, GetAllTopItemsResponse output) {
 		if (output.status.equals(StatusType.StatusTypeSuccess)) {
 			if (output.freeRanks != null) {
-				setViewMoreVisible(true);
+				viewAllBtn.setVisible(true);
 
-				if (SessionController.get().isLoggedInUserAdmin()) {
+				if (SessionController.get().isAdmin()) {
 					if (output.freeRanks != null && output.freeRanks.size() > 0 && output.freeRanks.get(0).code != null) {
 						overviewAllText.setInnerSafeHtml(AllAdminCodeTemplate.INSTANCE.code(output.freeRanks.get(0).code));
 					} else if (output.paidRanks != null && output.paidRanks.size() > 0 && output.paidRanks.get(0).code != null) {
@@ -883,26 +1128,40 @@ public class RanksPage extends Page implements FilterEventHandler, // SessionEve
 						overviewAllText.setInnerText(ALL_TEXT);
 					}
 				}
-				loadingBar.hide();
 			} else {
-				setViewMoreVisible(false);
+				leaderboardTable.setVisible(false);
+				noDataPanel.setVisible(true);
+				viewAllBtn.setVisible(false);
 			}
+			loadingBar.hide(true);
 		} else {
-			setViewMoreVisible(false);
+			loadingBar.hide(false);
+			viewAllBtn.setVisible(false);
+			leaderboardTable.setVisible(false);
+			errorPanel.setVisible(true);
+			isStatusError = true;
+			applyFilters.setEnabled(true);
 		}
 
+		applyFilters.removeStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().isLoading());
 		TooltipHelper.updateHelperTooltip();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler#getAllTopItemsFailure(io.reflection.app.api.core.shared.call.GetAllTopItemsRequest
-	 * , java.lang.Throwable)
+	 *
+	 * @see io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler#getAllTopItemsFailure(io.reflection.app.api.core.shared.call.
+	 * GetAllTopItemsRequest , java.lang.Throwable)
 	 */
 	@Override
 	public void getAllTopItemsFailure(GetAllTopItemsRequest input, Throwable caught) {
-		setViewMoreVisible(false);
+		loadingBar.hide(false);
+		viewAllBtn.setVisible(false);
+		leaderboardTable.setVisible(false);
+		errorPanel.setVisible(true);
+		isStatusError = true;
+		applyFilters.setEnabled(true);
+
+		applyFilters.removeStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().isLoading());
 	}
 }

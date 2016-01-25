@@ -1,0 +1,104 @@
+img,
+.panel-left,
+.panel-right-container,
+.global-header__actions,
+button,
+form,
+.ref-button--function-large,
+.press-area--featured-list,
+.why-reflection-graphic,
+.page-overlay,
+.page-popup,
+.page-functions,
+table.sticky-table-head,
+.app-user-functions-container,
+.data-bar,
+.account-form-container .tabs-container,
+.account-connect-animation,
+.connect-account-submitted,
+.account-form-container,
+.connect-account-main-content svg,
+.js-tooltip {
+	display: none;
+}
+a {
+	color: #6d69c5;
+	text-decoration: none;
+}
+svg {
+	width: 32px;
+}
+table svg {
+	display: none;
+}
+.tabs,
+.tabs__content-container {
+	margin-bottom: 20px;
+}
+.tabs svg {
+	width: 10px;
+}
+.tabs li,
+.tabs__content-container li,
+.partners-grid-container li,
+.list-partners li,
+.article-list--article,
+.members-list li {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+.tabs__content-container table {
+	margin-bottom: 30px;
+}
+.why-reflection-item svg {
+	width: 60px;
+}
+.partners-grid-container li,
+.list-partners li,
+.members-list li {
+	display: inline-block;
+	margin-right: 30px;
+}
+.partners-grid-container li svg,
+.list-partners svg,
+.list-partners img,
+.members-list li svg {
+	display: inline-block;
+	width: 60px;
+}
+.product-page__quotes__logo-container svg,
+.help-us-help-you svg,
+.page-about-foot-content__svg-container svg,
+.contact__text-content svg {
+	width: 100px;
+}
+.home-wide-container {
+	margin-bottom: 40px;
+}
+.MHXTE6C-ob-a { /* back to top */
+	display: none;
+}
+.highcharts-container,
+.graph-container,
+.graph-container * {
+	overflow: visible;
+}
+.revenue-percentage {
+	padding-left: 30px;
+}
+.latest-system-stats svg {
+	width: 10px;
+}
+.table-data th,
+.table-data td {
+	padding: 3px;
+	text-align: left;
+}
+.table-linked-accounts th,
+.table-linked-accounts td,
+.table-my-apps th,
+.table-my-apps td {
+	padding: 10px;
+	text-align: left;
+}

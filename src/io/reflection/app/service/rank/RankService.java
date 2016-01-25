@@ -144,19 +144,19 @@ public class RankService implements IRankService {
 
 		String updateQuery = "UPDATE rank2 set position=?, itemid=?, price=?, currency=?, revenue_universal=?, downloads_universal=? where id=?";
 
-		//		final String updateRankQuery = String
-		//				.format("UPDATE `rank` SET `position`=%d,`grossingposition`=%d,`itemid`='%s',`type`='%s',`country`='%s',`date`=FROM_UNIXTIME(%d),`source`='%s',`price`=%d,`currency`='%s',`categoryid`=%d,`code2`=%d,`revenue`=%s,`downloads`=%s WHERE `id`=%d;",
-		//						rank.position.longValue(), rank.grossingPosition.longValue(), addslashes(rank.itemId), addslashes(rank.type), addslashes(rank.country),
-		//						rank.date.getTime() / 1000, addslashes(rank.source), (int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency),
-		//						rank.category.id.longValue(), rank.code.longValue(),
-		//						rank.revenue == null || rank.revenue.isInfinite() ? "NULL" : Integer.toString((int) (rank.revenue.floatValue() * 100.0f)),
-		//						rank.downloads == null || rank.downloads.intValue() == Integer.MAX_VALUE ? "NULL" : rank.downloads.intValue(), rank.id.longValue());
+		// final String updateRankQuery = String
+		// .format("UPDATE `rank` SET `position`=%d,`grossingposition`=%d,`itemid`='%s',`type`='%s',`country`='%s',`date`=FROM_UNIXTIME(%d),`source`='%s',`price`=%d,`currency`='%s',`categoryid`=%d,`code2`=%d,`revenue`=%s,`downloads`=%s WHERE `id`=%d;",
+		// rank.position.longValue(), rank.grossingPosition.longValue(), addslashes(rank.itemId), addslashes(rank.type), addslashes(rank.country),
+		// rank.date.getTime() / 1000, addslashes(rank.source), (int) (rank.price.floatValue() * 100.0f), addslashes(rank.currency),
+		// rank.category.id.longValue(), rank.code.longValue(),
+		// rank.revenue == null || rank.revenue.isInfinite() ? "NULL" : Integer.toString((int) (rank.revenue.floatValue() * 100.0f)),
+		// rank.downloads == null || rank.downloads.intValue() == Integer.MAX_VALUE ? "NULL" : rank.downloads.intValue(), rank.id.longValue());
 
 		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
 		try (PreparedStatement pstat = rankConnection.getRealConnection().prepareStatement(updateQuery, Statement.NO_GENERATED_KEYS)) {
 			rankConnection.connect();
-			//			rankConnection.executeQuery(updateRankQuery);
+			// rankConnection.executeQuery(updateRankQuery);
 
 			if (rankConnection.getAffectedRowCount() > 0) {
 				updatedRank = getRank(rank.id);
@@ -209,12 +209,32 @@ public class RankService implements IRankService {
 	 */
 	@Override
 	public List<Rank> getItemRanks(Country country, Category category, String listType, Item item, Date after, Date before, Pager pager)
-			throws DataAccessException {
+			throws DataAccessException, SQLException {
 		final List<Rank> ranks = new ArrayList<Rank>();
 
-		final String selectQuery = "SELECT r.*, rf.group_fetch_code, rf.fetch_date, rf.country, rf.category, rf.type, rf.platform "
-				+ " FROM rank_fetch rf inner join rank2 r on (r.rank_fetch_id = rf.rank_fetch_id and r.itemid=?) WHERE "
-				+ " rf.country=? AND rf.category=? AND rf.type=? AND rf.platform=? AND rf.fetch_date BETWEEN ? AND ? and rf.fetch_time > '21:00'";
+		final String selectQuery = "SELECT  " +
+				"    r.*, " +
+				"    rf.group_fetch_code, " +
+				"    rf.fetch_date, " +
+				"    rf.country, " +
+				"    rf.category, " +
+				"    rf.type, " +
+				"    rf.platform " +
+				"FROM " +
+				"    rank2 r  " +
+				"        INNER JOIN " +
+				"    rank_fetch rf FORCE INDEX (idx_rank_fetch_search_id) ON (rf.rank_fetch_id = r.rank_fetch_id " +
+				"		AND rf.country = ? AND rf.category = ? " +
+				"        AND rf.type = ? " +
+				"        AND rf.platform = ? " +
+				"        AND rf.fetch_date BETWEEN ? AND ? " +
+				"        AND rf.fetch_time > '21:00') " +
+				"WHERE " +
+				"	r.itemid=? " +
+				"ORDER BY rf.fetch_date";
+		// final String selectQuery = "SELECT r.*, rf.group_fetch_code, rf.fetch_date, rf.country, rf.category, rf.type, rf.platform "
+		// + " FROM rank_fetch rf inner join rank2 r on (r.rank_fetch_id = rf.rank_fetch_id and r.itemid=?) WHERE "
+		// + " rf.country=? AND rf.category=? AND rf.type=? AND rf.platform=? AND rf.fetch_date BETWEEN ? AND ? and rf.fetch_time > '21:00'";
 
 		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
@@ -239,13 +259,13 @@ public class RankService implements IRankService {
 			rankConnection.connect();
 
 			int paramCount = 1;
-			pstat.setString(paramCount++, item.internalId);
 			pstat.setString(paramCount++, country.a2Code);
 			pstat.setLong(paramCount++, category.id);
 			pstat.setString(paramCount++, FeedFetchService.getDBTypeForFeedFetchType(listType));
 			pstat.setString(paramCount++, FeedFetchService.getDBPlatformForFeedFetchType(listType));
 			pstat.setDate(paramCount++, afterParam);
 			pstat.setDate(paramCount++, beforeParam);
+			pstat.setString(paramCount++, item.internalId);
 
 			rankConnection.executePreparedStatement(pstat);
 
@@ -255,6 +275,7 @@ public class RankService implements IRankService {
 			}
 		} catch (SQLException e) {
 			LOG.log(Level.SEVERE, "Exception occured while trying to gather code ranks", e);
+			throw e;
 		} finally {
 			if (rankConnection != null) {
 				rankConnection.disconnect();
@@ -273,9 +294,9 @@ public class RankService implements IRankService {
 	public Boolean getItemHasGrossingRank(Item item) throws DataAccessException {
 		Boolean hasGrossingRank = Boolean.FALSE;
 
-		final String getItemHasGrossingRankQuery = String.format(
-				"select rank_fetch_id from rank_fetch where rank_fetch_id in ( select rank_fetch_id from rank2 where itemid='%s' ) and type='GROSSING' limit 1",
-				addslashes(item.internalId));
+		final String getItemHasGrossingRankQuery = String
+				.format("select rank_fetch_id from rank_fetch where rank_fetch_id in ( select rank_fetch_id from rank2 where itemid='%s' ) and type='GROSSING' limit 1",
+						addslashes(item.internalId));
 
 		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
 
@@ -541,8 +562,7 @@ public class RankService implements IRankService {
 	public List<Long> getRankIds(Country country, Store store, Category category, Date start, Date end) throws DataAccessException {
 		final List<Long> rankIds = new ArrayList<Long>();
 
-		final String selectQuery = "SELECT r.id "
-				+ " FROM rank_fetch rf inner join rank2 r on (r.rank_fetch_id = rf.rank_fetch_id) WHERE "
+		final String selectQuery = "SELECT r.id FROM rank_fetch rf inner join rank2 r on (r.rank_fetch_id = rf.rank_fetch_id) WHERE "
 				+ " rf.country=? AND rf.category=? AND rf.fetch_date BETWEEN ? AND ? and rf.fetch_time > '21:00'";
 
 		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
@@ -581,8 +601,7 @@ public class RankService implements IRankService {
 	public List<Long> getRankIds(Pager pager) throws DataAccessException {
 		final List<Long> rankIds = new ArrayList<Long>();
 
-		final String selectQuery = "SELECT r.id "
-				+ " FROM rank_fetch rf inner join rank2 r on (r.rank_fetch_id = rf.rank_fetch_id) WHERE "
+		final String selectQuery = "SELECT r.id FROM rank_fetch rf inner join rank2 r on (r.rank_fetch_id = rf.rank_fetch_id) WHERE "
 				+ " rf.fetch_time > '21:00' limit ?, ?";
 
 		final Connection rankConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRank.toString());
@@ -628,19 +647,14 @@ public class RankService implements IRankService {
 		String platformIOS = form == FormType.FormTypeOther ? "iphone" : "ipad";
 		String sortDirection = pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC";
 
-		/*
-		 * Note that we are not doing a sum of revenue and downloads as those are just repeated for the number of ranks we encounter for the day so we are
-		 * picking the revenue and downloads per date + max position of the app on that date.
-		 */
 
 		final String getRanksQuery = String
-				.format("SELECT  s.date, (%s_app_revenue + %s_iap_revenue) as revenue, %s_downloads as downloads, "
-						+ "    max(IF(rf.type='FREE' or rf.type='PAID', r.position, NULL)) as position, "
-						+ "    max(IF(rf.type='GROSSING', r.position, NULL)) as grossing_position, s.price, s.currency FROM sale_summary s USE INDEX (idx_item_search) "
-						+ "    LEFT JOIN rank_fetch rf USE INDEX (idx_rank_fetch_search_time) ON (s.date=rf.fetch_date and s.country=rf.country and rf.category=%d and rf.platform='%s') "
-						+ "    LEFT JOIN rank2 r ON (r.rank_fetch_id=rf.rank_fetch_id and r.itemid=s.itemid) "
-						+ "		WHERE s.date BETWEEN '%s' AND '%s' AND s.itemid = %s AND s.country = '%s' GROUP BY s.date ORDER BY s.%s %s LIMIT %d, %d",
-						platformIOS, platformIOS, platformIOS, categoryId, platform, dateFormat.format(start), dateFormat.format(end), internalId,
+				.format("SELECT s.date, (%s_app_revenue + %s_iap_revenue) as revenue, %s_downloads as downloads, s.price, s.currency "
+						+ " FROM sale_summary s USE INDEX (idx_item_search) "
+						+ "	WHERE s.date BETWEEN '%s' AND '%s' AND s.itemid = %s AND s.country = '%s' "
+						+ " ORDER BY s.%s %s "
+						+ " LIMIT %d, %d",
+						platformIOS, platformIOS, platformIOS, dateFormat.format(start), dateFormat.format(end), internalId,
 						country.a2Code, pager.sortBy, sortDirection, pager.start, pager.count);
 
 		try {
@@ -658,8 +672,8 @@ public class RankService implements IRankService {
 				rank.source = DataTypeHelper.IOS_STORE_A3;
 				rank.itemId = internalId;
 
-				rank.position = rankConnection.getCurrentRowInteger("position");
-				rank.grossingPosition = rankConnection.getCurrentRowInteger("grossing_position");
+				// rank.position = rankConnection.getCurrentRowInteger("position");
+				// rank.grossingPosition = rankConnection.getCurrentRowInteger("grossing_position");
 
 				rank.downloads = rankConnection.getCurrentRowInteger("downloads");
 

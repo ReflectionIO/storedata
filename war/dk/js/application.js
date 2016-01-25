@@ -173,7 +173,7 @@
 			collapsibleList.css("margin-top", -collapsibleList.height());
 		});
 
-		$('.js-main-nav > ul > li ul li.js-is-collapsible a').on("click", function(e){
+		$('.js-main-nav > ul > li ul li.js-is-collapsible > a').on("click", function(e){
 			e.preventDefault();
 			var collapsibleContainer = $(this).parent('.js-is-collapsible');
 			var collapsibleList = $(this).next('ul');
@@ -187,14 +187,16 @@
 			}
 		});
 
-		window.setTimeout(function() {
-			topLevelNavItems.each(function(){
-				if($(this).hasClass('is-selected')) {
-					$(this).children("a").trigger("click");
-					$(this).find("li.is-selected.js-is-collapsible > a").trigger("click");
-				}
-			});
-		}, 100);
+		if($(".touch").length > 0) {
+			window.setTimeout(function() {
+				topLevelNavItems.each(function(){
+					if($(this).hasClass('is-selected')) {
+						$(this).children("a").trigger("click");
+						$(this).find("li.is-selected.js-is-collapsible > a").trigger("click");
+					}
+				});
+			}, 100);
+		}
 
 		var topLevelNavItems = $('.js-main-nav > ul > li'),
 			siteNavTopLevelItems = $('.js-main-navigation > ul > li'),
@@ -204,13 +206,9 @@
 			$clickedItem = $(this);
 			if(!$(this).hasClass("js-is-collapsible")) {
 				if($clickedItem.parents('.js-main-navigation').length > 0) {
-					siteNavTopLevelItems.removeClass('is-selected');
-					$clickedItem.addClass('is-selected');
 					$('.js-main-navigation > ul > li.js-is-collapsible.is-open > a').trigger("click");
 				} else {
 					if($clickedItem.parents('.js-account-navigation').length > 0) {
-						accountNavTopLevelItems.removeClass('is-selected');
-						$clickedItem.addClass('is-selected');
 						$('.js-account-navigation > ul > li.js-is-collapsible.is-open > a').trigger("click");
 					}
 				}
@@ -224,23 +222,24 @@
 			if(collapsibleContainer.hasClass('is-open')) {
 				collapsibleList.css("margin-top", -collapsibleList.height());
 				collapsibleContainer.removeClass('is-open');
-				collapsibleContainer.removeClass('is-selected');
 			}
 			else {
 				collapsibleList.css("margin-top", 0);
 				collapsibleContainer.addClass('is-open');
-				collapsibleContainer.addClass('is-selected');
-				collapsibleContainer.siblings().removeClass('is-selected');
 			}
 		});
 
-		if($(window).width() <= 960) {
-			$('.js-hamburger-button').removeClass('is-selected');
-			$('body, html').removeClass('panel-left-open');
+		if($(".no-touch").length > 0 && $(window).width() >= 960) {
+			$(".js-panel-left").on("mouseleave", function(){
+				$('.js-is-collapsible.is-open > a').trigger("click");
+			});
+			$(".js-panel-left").on("mouseenter", function(){
+				$('.js-is-collapsible.is-selected > a').trigger("click");
+			});
 		}
 
 		// hide panel on content click/tap
-		if($('html.touch').length && $(window).width() < 940) {
+		if($('html.touch').length) {
 			$('.l-main').on("click", function() {
 				if($('.panel-left-open').length) {
 					$('.js-hamburger-button').trigger("click");
@@ -345,6 +344,18 @@
 			$this.attr('value', 'Email is on the way').addClass('ref-button--success');
 			$('.panel-right').addClass('reset-password-is-submitted').find('.form-submitted-success').addClass('is-showing');
 		});
+
+		$('.panel-right .js-link-to-login').on("click", function(e){
+			e.preventDefault();
+			$('.panel-right').removeClass('show-reset-password-form').removeClass('reset-password-is-submitted').find('.form-submitted-success').removeClass('is-showing')
+			$('.panel-right .form--login').css({"visibility":"visible","position":"relative"});
+			$('.panel-right .form--password-reset').css({"visibility":"hidden","position":"absolute"});
+			$('.panel-right .js-mock-send-reset-password').removeClass('ref-button--success').attr('value', 'Send password reset email');
+			if($('.ie8').length > 0) {
+				$('.panel-right .form--login').css("display","block");
+				$('.panel-right .form--password-reset').css("display","none");
+			}
+		});
 	}
 
 	var AccountContainer = function() {
@@ -438,18 +449,7 @@
 		}
 	};
 
-	SearchContainer.prototype.initSearch = function() {
-		// get mock data from file - this will contain results when implemented so shouldn't need JS regex below
-		var data;
-		$.ajax({
-        url: "js/search-data.json",
-        async: true,
-        dataType: "json",
-        success: function (items){
-          data = items;
-        }
-    });
-		
+	function handleappsearch(data) {
 		var inputValue,
 				$appsContainer = $('.js-item-results--apps'),
 				$devListContainer = $('.js-item-results--developers'),
@@ -457,57 +457,66 @@
 				$appsList = $appsContainer.find('ul'),
 				$devList = $devListContainer.find('ul');
 
+		var searchResultsApps = [],
+				searchResultsDevs = [];
+
+		var inputValueCaseInsensitiveRegEx = new RegExp($('.js-get-items').val(), "i");
+
+		// if found add to result array
+		for(var i = 0; i < data.results.length; i++) {
+			if(data.results[i].trackCensoredName.search(inputValueCaseInsensitiveRegEx) > -1) {
+				searchResultsApps.push(data.results[i]);
+			}
+			// Search Developers
+			// if(data.results[i].creatorName.search(inputValueCaseInsensitiveRegEx) > -1) {
+			// 	searchResultsDevs.push(data.results[i]);
+			// }
+		}
+
+		// show and hide containers for nil results
+		if (searchResultsApps.length == 0) {			
+			$appsContainer.hide();
+		} else {
+			$appsContainer.show();
+			$noResultsContainer.hide();
+		}
+
+		if(searchResultsDevs.length == 0) { 
+			$devListContainer.hide();
+		} else {
+			$devListContainer.show();
+			$noResultsContainer.hide();
+		}
+
+		if(searchResultsApps.length == 0 && searchResultsDevs.length == 0) {
+			$noResultsContainer.show();
+		}
+		
+		// output results to screen
+		$appsList.empty();
+		for(var i = 0; i < searchResultsApps.length; i++) {
+			$appsList.append($('<li>').append($('<a>').attr("href", "app.html?id=" + searchResultsApps[i].trackId).append($('<img>').attr("src", "" + searchResultsApps[i].artworkUrl60 + "")).append($('<span>').text(searchResultsApps[i].trackCensoredName))));
+		}
+
+		$devList.empty();
+		for(var i = 0; i < searchResultsDevs.length; i++) {
+			$devList.append($('<li>').append($('<a>').append($('<span>').text(searchResultsDevs[i].creatorName))));
+		}
+	}
+
+	SearchContainer.prototype.initSearch = function() {
+		
 		// on key up loop through object and search - for implentation, amend to call service to return results in json and display
 		$('.js-get-items').keyup(function(){
-			searchResultsApps = [];
-			searchResultsDevs = [];
-			inputValueCaseInsensitiveRegEx = new RegExp($(this).val(), "i");
+			
+			$('#scriptsearch').remove();
+	    $('body').append($("<script>").attr("id", "scriptsearch").attr("src", "https://itunes.apple.com/search?term=" + $(this).val() + "&media=software&limit=10&callback=handleappsearch"));
 
 			var $searchButtonMobile = $('.panel-right .form-field .search-button-mobile');
 			if($(this).val().length > 0) {
 				$searchButtonMobile.addClass('is-highlighted');
 			} else {
 				$searchButtonMobile.removeClass('is-highlighted');
-			}
-
-			// if found add to result array
-			for(var i = 0; i < data.items.length; i++) {
-				if(data.items[i].name.search(inputValueCaseInsensitiveRegEx) > -1) {
-					searchResultsApps.push(data.items[i]);
-				}
-				if(data.items[i].creatorName.search(inputValueCaseInsensitiveRegEx) > -1) {
-					searchResultsDevs.push(data.items[i]);
-				}
-			}
-
-			// show and hide containers for nil results
-			if (searchResultsApps.length == 0) {			
-				$appsContainer.hide();
-			} else {
-				$appsContainer.show();
-				$noResultsContainer.hide();
-			}
-
-			if(searchResultsDevs.length == 0) { 
-				$devListContainer.hide();
-			} else {
-				$devListContainer.show();
-				$noResultsContainer.hide();
-			}
-
-			if(searchResultsApps.length == 0 && searchResultsDevs.length == 0) {
-				$noResultsContainer.show();
-			}
-			
-			// output results to screen
-			$appsList.empty();
-			for(var i = 0; i < searchResultsApps.length; i++) {
-				$appsList.append($('<li>').append($('<a>').append($('<img>').attr("src", "" + searchResultsApps[i].smallImage + "")).append($('<span>').text(searchResultsApps[i].name))));
-			}
-
-			$devList.empty();
-			for(var i = 0; i < searchResultsDevs.length; i++) {
-				$devList.append($('<li>').append($('<a>').append($('<span>').text(searchResultsDevs[i].creatorName))));
 			}
 		});
 	};
@@ -517,7 +526,7 @@
 		if(!isIE8) {
 			$('.default-tabs-transition .tabs__content-area').css("opacity", 1);
 		}
-
+		
 		$('.js-tab-select').unbind("mouseup");
 		$('.js-tab-select').on("mouseup", function(e){
   		e.preventDefault();
@@ -529,8 +538,8 @@
   		$(contentId).parents('.tabs__content-container').find('.tabs__content--is-showing').removeClass('tabs__content--is-showing');
   		$(contentId).addClass('tabs__content--is-showing');
   		if(!isIE8 && $(contentId).parents('.tabs__content-container').hasClass('default-tabs-transition')) {
-	  		$(contentId + ' *').css("opacity", 0);
-	  		$(contentId + ' *').animate({opacity: 1}, 200);
+	  		$(contentId + ' > div').css("opacity", 0);
+	  		$(contentId + ' > div').animate({opacity: 1}, 200);
 	  	}
   	});
 
@@ -937,7 +946,7 @@
 			optionsList.css('margin-top', -optionsList.height());
 			pInstance.populateSelectedValues(listItems, selectedOptionsContainer);
 
-			if($this.parent('.form-field--select-disabled').length == 0) {
+			if($this.parent('.form-field--select-disabled').length == 0 && $this.parent('.form-field--select-restricted').length == 0) {
 				selectedOptionsContainer.on('click', function() {
 					if($this.hasClass('is-open')) {
 						$this.removeClass('is-open');
@@ -999,6 +1008,9 @@
 							listContainer.append($('<li>').addClass(preSelectedClass).attr('data-value', $this.attr('value')).attr('data-selectedtext', selectedText).text($this.text()));
 						} else {
 							optionsList.append($('<li>').addClass(preSelectedClass).attr('data-value', $this.attr('value')).attr('data-selectedtext', selectedText).text($this.text()));
+						}
+						if($this.attr("selected")) {
+							refSelectDefault.text($this.text());
 						}						
 					}
 					else {
@@ -1012,9 +1024,9 @@
 				var listHeight = optionsList.innerHeight();
 				if(!selectInput.hasClass('reflection-select--filter')) {
 					optionsList.css('margin-top', -listHeight);
-				}				
+				}
 
-				if(selectInput.parent('.form-field--select-disabled').length == 0) {
+				if(selectInput.parent('.form-field--select-disabled').length == 0 && selectInput.parent('.form-field--select-restricted').length == 0) {
 					optionsList.find('li').on('click', function() {
 						if(!$(this).hasClass('pre-selected')) {
 							listItem = $(this);
@@ -1034,7 +1046,11 @@
 							if(selectInput.hasClass('reflection-select--filter')) {
 								$('.reflection-select').removeClass('is-open');
 							}
-							toggleDropDown(refSelectContainer, optionsList, listHeight);
+							if(isFilter) {
+								optionsList.find('.close-popup').trigger("click");
+							} else {
+								toggleDropDown(refSelectContainer, optionsList, listHeight);
+							}							
 						}
 					});
 					
@@ -1117,6 +1133,23 @@
 			}
 		});
 	};
+
+	var BackToTopInlineLink = function($link) {
+		if($link) {
+			$link.on("click", function(){
+				var linkAnchor = $link.attr("href");
+				if(linkAnchor) {
+					var pageTopBarHeight = $('.global-header').innerHeight(),
+							anchorId = $link.attr("href"),
+							scrollTopOfTheAnchor = $(anchorId).offset().top;
+					$('html, body').animate({ scrollTop: scrollTopOfTheAnchor - pageTopBarHeight - 20}, 300, 'swing');
+					
+				} else {
+					$('html, body').animate({ scrollTop: 0 }, 300, 'swing');
+				}
+			});
+		}
+	}
 
 
 	var Accordion = function() {
@@ -1253,39 +1286,54 @@
 	};
 
 	var ToolTip = function() {
-		if($('.no-touch').length) {
-			$('.js-tooltip').each(function(){
-				var $this = $(this);
-				var tooltip;
+		var instance = this;
+		$('.touch body').on("click", function(e){ // remove all tooltips on body touch
+			if($('.tooltip').length) {			
+				$('.tooltip').remove();
+			}
+		});
+
+		$('.js-tooltip').each(function(){
+			var $this = $(this);
+			var tooltip;
+			if($('html.no-touch').length) {
 				$this.on("mouseenter", function(){
-					var tooltipText = $(this).data("tooltip");
-					tooltip = $('<div>').addClass("tooltip").text(tooltipText);			
-					$('body').append(tooltip);
-					var topPosition = $this.offset().top;
-					var leftPosition = $this.offset().left;
-					var tooltipHeight = tooltip.innerHeight();
-					var componentHeight = $this.innerHeight();						
-					tooltip.hide();
-					if($this.hasClass('js-tooltip--right')) {
-						var tooltipWidth = tooltip.innerWidth();
-						var componentWidth = $this.innerWidth();	
-						if($this.hasClass('js-tooltip--right--no-pointer-padding')) {
-							leftPosition = (leftPosition + componentWidth - tooltipWidth) + 10;
-						} else {
-							leftPosition = leftPosition + componentWidth - tooltipWidth;
-						}
-						tooltip.addClass("tooltip-right");
-					}
-					tooltip.css({"top": topPosition - tooltipHeight - 20, "left": leftPosition});				
-					setTimeout(function(){
-						tooltip.fadeIn(200);
-					}, 800);
+					if($this.hasClass("js-tooltip--info")) {
+						tooltip = instance.generateTooltip($this, true);
+					} else {
+						tooltip = instance.generateTooltip($this, false);
+					}					
 				});
 				$this.on("mouseleave", function(){
 					tooltip.remove();
 				});
-			});
-		}
+				$this.on("click", function(e){
+					if($this.attr("href") == "#") {
+						e.preventDefault();
+					}
+					if(!$this.hasClass("js-tooltip--info")) {
+						tooltip.remove();
+					}					
+				});
+			} else if($('html.touch').length) {
+				$this.on("click", function(e){
+					if(!$this.hasClass("form-field--select")) {
+						if($this.attr("href") != undefined) {
+							e.preventDefault();
+						}
+						if($this.hasClass("js-tooltip-generated")) {
+							tooltip.remove();
+							$this.removeClass("js-tooltip-generated");
+						} else {						
+							$this.addClass("js-tooltip-generated");
+							setTimeout(function() { 
+								tooltip = instance.generateTooltip($this, true);
+							}, 50); // delay to avoid all tooltip removal on body touch
+						}	
+					}
+				});
+			}
+		});
 
 		$('.js-whats-this-tooltip').on("click", function(e){
 			e.preventDefault();
@@ -1343,6 +1391,44 @@
 			$('.whats-this-tooltip-popup').remove();
 			$('.js-whats-this-tooltip.is-open').removeClass('is-open');
 		});
+	}
+
+	ToolTip.prototype.generateTooltip = function($tooltipParent, isInstantTooltip) {
+		var $this = $tooltipParent,
+				tooltipText = $tooltipParent.data("tooltip");
+
+		var tooltip = $('<div>').addClass("tooltip").append($('<div>').addClass("tooltip-text").text(tooltipText));
+		if($this.find('.icon-member--standard').length > 0) {
+			tooltip.prepend($('<span>').addClass("tooltip-feature tooltip-feature--standard").text("MEMBER FEATURE"));
+		} else if($this.find('.icon-member--pro').length > 0) {
+			tooltip.prepend($('<span>').addClass("tooltip-feature tooltip-feature--pro").text("PREMIUM FEATURE"));
+		}
+		$('body').append(tooltip);
+		var topPosition = $this.offset().top;
+		var leftPosition = $this.offset().left;
+		var tooltipHeight = tooltip.innerHeight();
+		var componentHeight = $this.innerHeight();						
+		tooltip.hide();
+		if($this.hasClass('js-tooltip--right')) {
+			var tooltipWidth = tooltip.innerWidth();
+			var componentWidth = $this.innerWidth();	
+			if($this.hasClass('js-tooltip--right--no-pointer-padding')) {
+				leftPosition = (leftPosition + componentWidth - tooltipWidth) + 10;
+			} else {
+				leftPosition = leftPosition + componentWidth - tooltipWidth;
+			}
+			tooltip.addClass("tooltip-right");
+		}
+		tooltip.css({"top": topPosition - tooltipHeight - 20, "left": leftPosition});
+		if(isInstantTooltip) {
+			tooltip.show();
+		} else {
+			setTimeout(function(){
+				tooltip.fadeIn(100);
+			}, 700);
+		}
+
+		return tooltip;
 	}
 
 	var LoadingMessageBoxMessages = [{
@@ -1413,6 +1499,170 @@
 			});
 		});
 	}
+
+	var reflectionMap = function() {	
+		var isDraggable = $('html.touch').length == 0;
+		var mapStyles = [{
+	      featureType: "poi",
+	      elementType: "labels",
+	      stylers: [
+          { visibility: "off" }
+	      ]
+	    }];
+	  var zoomValue = 17;
+	  if($(window).innerWidth() < 720) {
+	  	zoomValue = 16;
+	  }
+		this.myLatlng = new google.maps.LatLng(51.518680, -0.136578);
+		this.mapOptions = {
+		  zoom: zoomValue,
+		  zoomControl: true,
+		  center: this.myLatlng,
+		  disableDefaultUI: true,
+		  scrollwheel: false,
+		  streetViewControl: true,
+		  draggable: isDraggable,
+		  styles: mapStyles
+		}
+		this.markerImage = {
+	    url: 'images/map-marker.png',
+	    size: new google.maps.Size(34, 49),
+	    scaledSize: new google.maps.Size(34, 49),
+	    anchor: new google.maps.Point(0, 53)
+	  };
+		this.map = new google.maps.Map(document.getElementById("js-map--contact"), this.mapOptions);	
+
+		var marker = this.marker = new google.maps.Marker({
+	    position: this.myLatlng,
+	    map: this.map,
+	    title: "40-44 Newman Street",
+	    icon: this.markerImage,
+	    // animation: google.maps.Animation.DROP
+		});
+
+		// We get the map's default panorama and set up some defaults.
+	  // Note that we don't yet set it visible.
+	  this.panorama = this.map.getStreetView();
+	  this.panorama.setPosition(new google.maps.LatLng(51.518660, -0.136540));
+	  this.panorama.setPov(/** @type {google.maps.StreetViewPov} */({
+	    heading: 40,
+	    pitch: 0
+	  }));
+
+	  this.toggleStreetView = function() {
+		  var toggle = this.panorama.getVisible();
+			  if (toggle == false) {
+			    this.panorama.setVisible(true);
+			  } else {
+			    this.panorama.setVisible(false);
+			  }
+		}
+
+		return this;
+	}
+
+	var profileListContainer = function($profileListContainer) {
+		var $this = $profileListContainer;
+		$profileListContainer.find('.js-open-profile').on("click", function(){
+			var openProfile = $this.find("li.is-active").addClass("is-closing");
+			setTimeout(function(){
+				openProfile.removeClass("is-active is-closing");
+			}, 200);
+		});
+	}
+
+	var profileList = function($profileContainer) {
+		var $this = $profileContainer;	
+
+		$this.find('.js-open-profile').on("click", function(e){
+			e.preventDefault();
+			if($this.hasClass("is-active")) {
+				$this.addClass("is-closing");
+				setTimeout(function(){
+					$this.removeClass("is-active is-closing");
+				}, 200);
+			} else {
+				setTimeout(function(){
+					$this.addClass("is-active");
+				}, 10);
+			}		
+		});
+		$this.find('.js-close-profile').on("click", function(e){
+			e.preventDefault();
+			$this.addClass("is-closing");
+			setTimeout(function(){
+				$this.removeClass("is-active is-closing");
+			}, 150);
+		});
+	}
+
+	var FAQSet = function($faqContainer) {
+		$faqContainer.removeClass("faqs-list-container--fixed");
+		$faqContainer.find('li a').each(function(){
+			var $thisLink = $(this);
+			$thisLink.on("click", function(e){
+				e.preventDefault();
+				$faqContainer.find('li a').removeClass("is-active");
+				$thisLink.addClass("is-active");
+				var pageTopBarHeight = $('.global-header').innerHeight(),
+						anchorId = $(this).attr("href"),
+						scrollTopOfTheAnchor = $(anchorId).offset().top;
+						$('.article-list--article .is-focus').removeClass("is-focus");
+						$(anchorId).addClass("is-focus");
+				$('html, body').animate({ scrollTop: scrollTopOfTheAnchor - pageTopBarHeight - 20}, 300, 'swing');
+			});
+		});
+		
+		var pageTopBarHeight = $('.global-header').innerHeight();
+		var faqContainerTopPosition = $faqContainer.offset().top - pageTopBarHeight;
+		var $window = $(window);
+
+		if($("body").hasClass("no-touch")) {
+			$window.on("scroll", function(){
+				if($window.innerWidth() > 719 && $window.innerHeight() > 799) {
+
+					if($(window).scrollTop() >= faqContainerTopPosition) {
+						if(!$faqContainer.hasClass("faqs-list-container--fixed")) {
+							$faqContainer.addClass("faqs-list-container--fixed");
+						}
+					} else {					
+						if($faqContainer.hasClass("faqs-list-container--fixed")) {
+							$faqContainer.removeClass("faqs-list-container--fixed");
+						}
+					}
+				}
+			});
+		}		
+	}
+
+	var datePopup = function($dateInput) {
+		$dateInput.on("click", function(){
+			$this = $(this);
+			$this.select();
+			$popup = $dateInput.parents('.date-select-container').siblings('.dateBoxPopup');
+			if($popup.hasClass('is-showing')) {
+				$popup.removeClass('is-showing');
+			}
+			else {
+				$popup.addClass('is-showing');
+			}
+		});
+
+		$('body').on("click", function(e){ // close date popup on click
+			if($(e.target).hasClass("js-apply-date") && !$(e.target).hasClass("datePickerDayIsDisabled") || $(e.target).hasClass("js-selected-date-trigger") || (!$(e.target).parents(".date-select-container").length > 0 && !$(e.target).parents(".dateBoxPopup").length > 0)) {
+				$('.dateBoxPopup').removeClass('is-showing');
+				$('.js-datepicker-range .hidden-calendar-container').css({"bottom": "0", "opacity": 0});
+			}
+		});
+
+		$('.js-datepicker-range .hidden-calendar-container').on("click", function(){
+			$('.js-apply-date').removeAttr("disabled");
+		});
+
+		$('.js-datepicker-range .form-field--date-select').on("click", function(){
+			$('.js-datepicker-range .hidden-calendar-container').animate({"bottom": "-110%", "opacity": 1}, 300);
+		});
+	}
 /* END COMPONENT OBJECTS */
 
 /* PAGE OBJECTS FOR TEMPLATES */
@@ -1428,6 +1678,10 @@
 		new BackToTop();
 		new StickyTableHead();
 		new MockFormSelectMultipleWithSearch();
+		new ToolTip();
+		$('.js-form-field--date-select').each(function(){
+			new datePopup($(this));
+		});
 
 		$('.js-tab-select').on("mouseup", function(e){
 			new StickyTableHead();
@@ -1473,6 +1727,7 @@
 		new TabsToMobileDropDown();
 		new FormFieldSelect();
 		new RevealContent();
+		new ToolTip();
 	}
 
 	var AccountSettingsPage = function() {
@@ -1481,4 +1736,5 @@
 		// Components
 		new Tabs();
 		new TabsToMobileDropDown();
+		new ToolTip();
 	}

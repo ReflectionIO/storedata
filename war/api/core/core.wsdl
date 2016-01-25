@@ -95,6 +95,12 @@
 			<xsd:element name="UpdateNotificationsInput" type="sdc:UpdateNotificationsRequest" />
 			<xsd:element name="UpdateNotificationsOutput" type="sdc:UpdateNotificationsResponse" />
 
+			<xsd:element name="UpgradeAccountInput" type="sdc:UpgradeAccountRequest" />
+			<xsd:element name="UpgradeAccountOutput" type="sdc:UpgradeAccountResponse" />
+			
+			<xsd:element name="RegisterInterestBusinessInput" type="sdc:RegisterInterestBusinessRequest" />
+			<xsd:element name="RegisterInterestBusinessOutput" type="sdc:RegisterInterestBusinessResponse" />
+
 			<xsd:complexType name="GetCountriesRequest">
 				<xsd:complexContent>
 					<xsd:extension base="sd:Request">
@@ -233,7 +239,9 @@
 			</xsd:complexType>
 			<xsd:complexType name="RegisterUserResponse">
 				<xsd:complexContent>
-					<xsd:extension base="sd:Response" />
+					<xsd:extension base="sd:Response">
+						<xsd:element name="registeredUser" type="sd:User" maxOccurs="1" />
+					</xsd:extension>
 				</xsd:complexContent>
 			</xsd:complexType>
 
@@ -351,7 +359,6 @@
 			<xsd:complexType name="GetRolesAndPermissionsRequest">
 				<xsd:complexContent>
 					<xsd:extension base="sd:Request">
-						<xsd:attribute name="idsOnly" type="xsd:boolean" default="true" />
 						<xsd:attribute name="expandRoles" type="xsd:boolean" default="false" />
 						<xsd:attribute name="rolesOnly" type="xsd:boolean" default="false" />
 						<xsd:attribute name="permissionsOnly" type="xsd:boolean" default="false" />
@@ -364,6 +371,7 @@
 						<xsd:sequence>
 							<xsd:element name="roles" type="sd:Role" minOccurs="0" maxOccurs="unbounded" />
 							<xsd:element name="permissions" type="sd:Permission" minOccurs="0" maxOccurs="unbounded" />
+							<xsd:attribute name="daysSinceRoleAssigned" type="xsd:integer" />
 						</xsd:sequence>
 					</xsd:extension>
 				</xsd:complexContent>
@@ -424,7 +432,6 @@
 						</xsd:sequence>
 						<xsd:attribute name="username" type="xsd:string" />
 						<xsd:attribute name="password" type="xsd:string" />
-						<xsd:attribute name="properties" type="xsd:string" />
 					</xsd:extension>
 				</xsd:complexContent>
 			</xsd:complexType>
@@ -433,7 +440,7 @@
 				<xsd:complexContent>
 					<xsd:extension base="sd:Response">
 						<xsd:sequence>
-							<xsd:element name="account" type="sd:DataAccount" />
+							<xsd:element name="linkedAccounts" type="sd:DataAccount" maxOccurs="unbounded" />
 						</xsd:sequence>
 					</xsd:extension>
 				</xsd:complexContent>
@@ -734,6 +741,41 @@
 				</xsd:complexContent>
 			</xsd:complexType>
 
+			<xsd:complexType name="UpgradeAccountRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="role" type="sd:Role" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="UpgradeAccountResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+			
+			<xsd:complexType name="RegisterInterestBusinessRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="user" type="sd:User" maxOccurs="1" />
+						</xsd:sequence>
+						<xsd:attribute name="actionCode" type="xsd:string" use="optional" />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+			<xsd:complexType name="RegisterInterestBusinessResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response" />
+				</xsd:complexContent>
+			</xsd:complexType>
+
 		</xsd:schema>
 	</wsdl:types>
 
@@ -945,6 +987,20 @@
     <wsdl:message name="UpdateNotificationsResponse">
         <wsdl:part name="output" element="sdc:UpdateNotificationsOutput" />
     </wsdl:message>
+
+    <wsdl:message name="UpgradeAccountRequest">
+        <wsdl:part name="input" element="sdc:UpgradeAccountInput" />
+    </wsdl:message>
+    <wsdl:message name="UpgradeAccountResponse">
+        <wsdl:part name="output" element="sdc:UpgradeAccountOutput" />
+    </wsdl:message>
+    
+	<wsdl:message name="RegisterInterestBusinessRequest">
+		<wsdl:part name="input" element="sdc:RegisterInterestBusinessInput" />
+	</wsdl:message>
+	<wsdl:message name="RegisterInterestBusinessResponse">
+		<wsdl:part name="output" element="sdc:RegisterInterestBusinessOutput" />
+	</wsdl:message>
     
 
 	<wsdl:portType name="core">
@@ -1096,6 +1152,16 @@
 		<wsdl:operation name="UpdateNotifications">
 			<wsdl:input message="sdc:UpdateNotificationsRequest" />
 			<wsdl:output message="sdc:UpdateNotificationsResponse" />
+		</wsdl:operation>
+
+		<wsdl:operation name="UpgradeAccount">
+			<wsdl:input message="sdc:UpgradeAccountRequest" />
+			<wsdl:output message="sdc:UpgradeAccountResponse" />
+		</wsdl:operation>
+		
+		<wsdl:operation name="RegisterInterestBusiness">
+			<wsdl:input message="sdc:RegisterInterestBusinessRequest" />
+			<wsdl:output message="sdc:RegisterInterestBusinessResponse" />
 		</wsdl:operation>
 
 	</wsdl:portType>
@@ -1399,6 +1465,26 @@
                 <soap:body use="literal" />
             </wsdl:output>
         </wsdl:operation>
+
+        <wsdl:operation name="UpgradeAccount">
+            <soap:operation soapAction="http://app.reflection.io/core/UpgradeAccount" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+        </wsdl:operation>
+        
+        <wsdl:operation name="RegisterInterestBusiness">
+			<soap:operation soapAction="http://app.reflection.io/core/RegisterInterestBusiness" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
 
 	</wsdl:binding>
 	<wsdl:service name="core">

@@ -20,27 +20,11 @@
 		<div
 			class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth} {STYLES_INSTANCE.reflectionMainStyle.filtersContainer} {STYLES_INSTANCE.reflectionMainStyle.adminFiltersContainer}">
 			<g:InlineHyperlink styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall}" text="Add user" targetHistoryToken="{RegisterPageType.asTargetHistoryToken}" />
-			<g:Button styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall}" text="Delete Test Users" ui:field="deleteTestUsers" />
 		</div>
 		<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__row}">
 			<cv:CellTable ui:field="usersTable" styleName="{STYLES_INSTANCE.reflectionMainStyle.tableData}" />
 			<p:SimplePager ui:field="simplePager" />
 		</div>
-
-
-		<c:PopupDialog ui:field="deleteUserDialog" styleName="{STYLES_INSTANCE.reflectionMainStyle.popupContent} {STYLES_INSTANCE.reflectionMainStyle.popupContentDeleteAccount}">
-			<g:HTMLPanel>
-				<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFive} {STYLES_INSTANCE.reflectionMainStyle.popupContentAccount__heading}">Are you sure you want to delete this user?</h2>
-				<div class="{STYLES_INSTANCE.reflectionMainStyle.buttonsContainer}">
-					<g:Button ui:field="cancelDelete" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFunctionSmall}">No, keep it</g:Button>
-					<c:LoadingButton ui:field="confirmDelete" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaSmall}">Yes, delete user</c:LoadingButton>
-				</div>
-				<g:Anchor ui:field="closeDeleteDialog" href="#" styleName="{STYLES_INSTANCE.reflectionMainStyle.popupClose}">
-					<span class="{STYLES_INSTANCE.reflectionMainStyle.refIconAfter} {STYLES_INSTANCE.reflectionMainStyle.refIconAfterClose}">Close</span>
-				</g:Anchor>
-			</g:HTMLPanel>
-		</c:PopupDialog>
-
 
 	</g:HTMLPanel>
 </ui:UiBinder> 

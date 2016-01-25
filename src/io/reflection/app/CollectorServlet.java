@@ -7,13 +7,6 @@
 //
 package io.reflection.app;
 
-import io.reflection.app.api.exception.DataAccessException;
-import io.reflection.app.collectors.Collector;
-import io.reflection.app.collectors.CollectorFactory;
-import io.reflection.app.ingestors.Ingestor;
-import io.reflection.app.ingestors.IngestorFactory;
-import io.reflection.app.logging.GaeLevel;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
@@ -23,6 +16,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.collectors.Collector;
+import io.reflection.app.collectors.CollectorFactory;
+import io.reflection.app.ingestors.Ingestor;
+import io.reflection.app.ingestors.IngestorFactory;
+import io.reflection.app.logging.GaeLevel;
 
 /**
  * @author William Shakour
@@ -79,21 +79,25 @@ public class CollectorServlet extends HttpServlet {
 			}
 		}
 
-		final List<String> countries = IngestorFactory.getIngestorCountries(store);
-
-		if (countries.contains(country)) {
-			final Ingestor ingestor = IngestorFactory.getIngestorForStore(store);
-
-			if (ingestor != null) {
-				ingestor.enqueue(collected);
-			} else {
-				if (LOG.isLoggable(Level.WARNING)) {
-					LOG.warning("Could not find Ingestor for store [" + store + "]");
-				}
-			}
+		if (collected == null || collected.size() == 0) {
+			LOG.warning("We did not successfully collect this gather.");
 		} else {
-			if (LOG.isLoggable(Level.INFO)) {
-				LOG.info("Country [" + country + "] not in list of countries to ingest.");
+			final List<String> countries = IngestorFactory.getIngestorCountries(store);
+
+			if (countries.contains(country)) {
+				final Ingestor ingestor = IngestorFactory.getIngestorForStore(store);
+
+				if (ingestor != null) {
+					ingestor.enqueue(collected);
+				} else {
+					if (LOG.isLoggable(Level.WARNING)) {
+						LOG.warning("Could not find Ingestor for store [" + store + "]");
+					}
+				}
+			} else {
+				if (LOG.isLoggable(Level.INFO)) {
+					LOG.info("Country [" + country + "] not in list of countries to ingest.");
+				}
 			}
 		}
 

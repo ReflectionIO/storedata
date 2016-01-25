@@ -1,0 +1,31 @@
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 1300 220" enable-background="new 0 0 1003.9 161.9" xml:space="preserve">
+	<defs>
+		<linearGradient y2="100%" x2="0%" y1="0%" x1="0%" id="sample">
+			<stop stop-color="rgba(109,105,197,0.14)" offset="0%"></stop>
+			<stop stop-color="rgba(27,199,159,0.14)" offset="100%"></stop>
+		</linearGradient>
+	</defs>
+	<g style="" class="rchart-graph-line rchart-graph-graphAuto0_1443459240749" transform="translate(0,29)">
+		<g></g>
+		<g></g>
+		<g clip-path="url(#rchartEl-266)">
+			<path class="rchart-graph-stroke" stroke="#6d69c5" stroke-opacity="1" stroke-width="2" fill="none" d="M0.5,96.5 L133.5,48.5 L267.5,143.5 L400.5,119.5 L534.5,72.5 L667.5,119.5 L800.5,48.5 L934.5,24.5 L1067.5,119.5 L1201.5,96.5 L1334.5,119.5" cs="100,100"></path>
+			<path class="rchart-graph-stroke rchart-graph-fill" stroke-opacity="0" stroke-width="1" fill-opacity="1" stroke="#000" fill="#6d69c5" d="M0.5,96.5 L133.5,48.5 L267.5,143.5 L400.5,119.5 L534.5,72.5 L667.5,119.5 L800.5,48.5 L934.5,24.5 L1067.5,119.5 L1201.5,96.5 L1334.5,119.5 L1334.5,191.5 L0.5,191.5 L0.5,96.5 Z" cs="100,100" style="fill: url('#sample') none;"></path>
+		</g>
+	</g>
+	<g style="" class="rchart-graph-line rchart-graph-graphAuto1_1443459240749" transform="translate(0,20)">
+		<g></g>
+		<g></g>
+		<g clip-path="url(#rchartEl-267)">
+			<path class="rchart-graph-stroke" stroke="#1bc79f" stroke-opacity="1" stroke-dasharray="8" stroke-width="2" fill="none" d="M0.5,72.5 L133.5,143.5 L267.5,119.5 L400.5,96.5 L534.5,167.5 L667.5,143.5 L800.5,143.5 L934.5,167.5 L1067.5,72.5 L1201.5,119.5 L1334.5,143.5" cs="100,100"></path>
+		</g>
+</g>
+<g style="" class="rchart-graph-line rchart-graph-graphAuto2_1443459240749" transform="translate(0,20)">
+	<g></g>
+	<g></g>
+	<g clip-path="url(#rchartEl-268)">
+		<path class="rchart-graph-stroke" stroke="#ff496a" stroke-opacity="1" stroke-dasharray="8" stroke-width="2" fill="none" d="M0.5,119.5 L133.5,96.5 L267.5,24.5 L400.5,72.5 L534.5,143.5 L667.5,167.5 L800.5,119.5 L934.5,72.5 L1067.5,143.5 L1201.5,48.5 L1334.5,96.5" cs="100,100"></path>
+	</g>
+</g>
+</svg>

@@ -26,6 +26,7 @@ import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.StoreController;
 import io.reflection.app.client.handler.NavigationEventHandler;
+import io.reflection.app.client.mixpanel.MixpanelHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -234,7 +235,12 @@ public class LoadingPage extends Page implements NavigationEventHandler, LoginEv
 			(new Timer() {
 				@Override
 				public void run() {
-					NavigationController.get().showIntendedPage();
+					if (!SessionController.get().isAdmin() && !SessionController.get().hasLinkedAccount() && !SessionController.get().isSessionRestored()) {
+						MixpanelHelper.track(MixpanelHelper.Event.GO_TO_LINK_ACCOUNT_PROCESS);
+						PageType.LinkItunesPageType.show();
+					} else {
+						NavigationController.get().showIntendedPage();
+					}
 				}
 			}).schedule(600);
 

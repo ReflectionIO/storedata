@@ -73,14 +73,14 @@ public class BlogPage extends Page implements NavigationEventHandler, GetPostsEv
 		initWidget(uiBinder.createAndBindUi(this));
 
 		// TODO remove unused components if not admin
-		if (!SessionController.get().isLoggedInUserAdmin()) {
+		if (!SessionController.get().isAdmin()) {
 			blogCategories.removeFromParent();
 			blogSortBy.removeFromParent();
 			searchPanel.removeFromParent();
 		}
 
-		FilterHelper.addBlogCategories(blogCategories, SessionController.get().isLoggedInUserAdmin());
-		FilterHelper.addBlogSortBy(blogSortBy, SessionController.get().isLoggedInUserAdmin());
+		FilterHelper.addBlogCategories(blogCategories, SessionController.get().isAdmin());
+		FilterHelper.addBlogSortBy(blogSortBy, SessionController.get().isAdmin());
 
 		NodeList<Element> nodes = Document.get().getElementsByTagName("head");
 		if (nodes != null && nodes.getLength() > 0) {
@@ -189,9 +189,9 @@ public class BlogPage extends Page implements NavigationEventHandler, GetPostsEv
 			// } else {
 			// simplePager.setVisible(false);
 			// }
-			loadingBar.hide();
+			loadingBar.hide(true);
 		} else {
-
+			loadingBar.hide(false);
 		}
 	}
 
@@ -203,7 +203,7 @@ public class BlogPage extends Page implements NavigationEventHandler, GetPostsEv
 	 */
 	@Override
 	public void getPostsFailure(GetPostsRequest input, Throwable caught) {
-		// preloader.hide();
+		loadingBar.hide(false);
 	}
 
 	@UiHandler("viewAllBtn")

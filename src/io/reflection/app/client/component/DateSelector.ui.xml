@@ -4,14 +4,14 @@
 	<ui:style gss="true">
 	
 	</ui:style>
-	<g:HTMLPanel addStyleNames="{STYLES_INSTANCE.reflectionMainStyle.dateSelectionFilterContainer}">
-		<div ui:field="calendarContainer" class="{STYLES_INSTANCE.reflectionMainStyle.calendarContainer}">
-			<div class="{STYLES_INSTANCE.reflectionMainStyle.dateSelectContainer}">
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.timePeriodSelectComponent}">
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.calendarContainer}">		
+			<div ui:field="calendarContainer" class="{STYLES_INSTANCE.reflectionMainStyle.dateSelectContainer}">
 				<div
 					class="{STYLES_INSTANCE.reflectionMainStyle.formField} {STYLES_INSTANCE.reflectionMainStyle.formFieldDateSelect} {STYLES_INSTANCE.reflectionMainStyle.formFieldDateSelectNoIcon}">
 					<c:FormDateBox ui:field="dateBoxFrom"></c:FormDateBox>
 				</div>
-			</div>
+			</div>		
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.dateSelectToIndicator}"></div>
 			<div class="{STYLES_INSTANCE.reflectionMainStyle.dateSelectContainer}">
 				<div
@@ -20,12 +20,16 @@
 				</div>
 			</div>
 		</div>
-		<g:Button ui:field="applyDateRange"
-			styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaSmall} {STYLES_INSTANCE.reflectionMainStyle.refreshButton} {STYLES_INSTANCE.reflectionMainStyle.refreshButton}">
-			<span class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeRefresh}">Refresh</span>
-		</g:Button>
+		<!-- <g:Button ui:field="applyDateRange" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonCtaSmall} {STYLES_INSTANCE.reflectionMainStyle.refreshButton}"> -->
+		<!-- <svg class="{STYLES_INSTANCE.reflectionMainStyle.svgRefresh}" version="1.1" x="0px" y="0px" viewBox="0 0 16 16" enable-background="new 0 0 16 16" -->
+		<!-- xml:space="preserve"> -->
+		<!-- <path fill="#FCFDFD" -->
+		<!-- d="M2.1,9h-2H0v5l1.5-1.4C2.9,14.7,5.3,16,8,16c4.1,0,7.4-3.1,7.9-7h-2c-0.5,2.8-2.9,5-5.9,5 -->
+		<!-- c-2.1,0-4-1.1-5-2.7L5.4,9H2.1z M14.6,3.4L16,2v5h-0.1h-2H13h-2l2.1-2.1C12.1,3.2,10.2,2,8,2C5,2,2.6,4.2,2.1,7h-2 -->
+		<!-- C0.6,3.1,3.9,0,8,0C10.7,0,13.1,1.4,14.6,3.4z"></path> -->
+		<!-- </svg> -->
+		<!-- </g:Button> -->
 		<span class="{STYLES_INSTANCE.reflectionMainStyle.orText}">or</span>
-		<c:Selector ui:field="selectFixedRange" overlay="true" labelText="Time Period" styleName="{STYLES_INSTANCE.reflectionMainStyle.timePeriodSelect}" />
-
+		<c:Selector ui:field="selectFixedRange" overlay="true" labelText="Time Period" styleName="{STYLES_INSTANCE.reflectionMainStyle.timePeriodSelect}" />		
 	</g:HTMLPanel>
-</ui:UiBinder> 
+</ui:UiBinder>

@@ -81,6 +81,7 @@ public enum ApiError {
 	DataAccountNoLookup(100044, "Invalid data account lookup, no id provided for DataAccount: {0}"),
 	InvalidDataAccountCredentials(100052, "Invalid data account credentials for DataAccount: {0}"),
 	InvalidDataAccountVendor(100053, "Invalid data account vendor for DataAccount: {0}"),
+	DuplicateVendorId(100054, "Vendor Id already used for Data Account: {0}"),
 
 	CategoryNull(100045, "Invalid value null for Category: {0}"),
 	CategoryNotFound(100046, "Category not found Category: {0}"),
@@ -117,6 +118,8 @@ public enum ApiError {
 	MissingPermissions(100500, "User does not have required permissions"),
 	MissingRoles(100501, "User does not have required role"),
 	MissingRolesAndOrPermissions(100502, "User does not have required roles and/or permissions"),
+
+	PremiumRoleExpired(100503, "The Premium role is expired"),
 
 	DataAccountUserMissmatch(100601, "User does not own data account"),
 

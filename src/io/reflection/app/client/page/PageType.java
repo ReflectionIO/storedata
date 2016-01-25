@@ -23,10 +23,6 @@ import io.reflection.app.client.page.blog.BlogPage;
 import io.reflection.app.client.page.blog.EditPostPage;
 import io.reflection.app.client.page.blog.PostAdminPage;
 import io.reflection.app.client.page.blog.PostPage;
-import io.reflection.app.client.page.forum.AddTopicPage;
-import io.reflection.app.client.page.forum.EditTopicPage;
-import io.reflection.app.client.page.forum.ForumPage;
-import io.reflection.app.client.page.forum.TopicPage;
 import io.reflection.app.client.page.test.WidgetTestPage;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.shared.util.DataTypeHelper;
@@ -49,35 +45,43 @@ import com.spacehopperstudios.utility.StringUtils;
  */
 public enum PageType {
 	// navigable
+	AboutPageType("about", false),
 	BlogAdminPageType("blogadmin", DataTypeHelper.PERMISSION_MANAGE_BLOG_POSTS_CODE),
 	BlogEditPostPageType("blogedit", "BLE", "BLU"),
 	BlogPostsPageType("blog", false),
 	BlogPostPageType("blogpost", false),
 	BlogTagPageType("blogtag", false),
 	CalibrationSummaryPageType("calibrationsummary", DataTypeHelper.PERMISSION_MANAGE_FEED_FETCHES_CODE),
+	CareersPageType("careers", false),
 	CategoriesPageType("categories", DataTypeHelper.PERMISSION_MANAGE_CATEGORIES_CODE),
 	ChangeDetailsPageType("changedetails", true),
+	ContactPageType("contact", false),
 	DataAccountFetchesPageType("dataaccountfetches", DataTypeHelper.PERMISSION_MANAGE_DATA_ACCOUNT_FETCHES_CODE),
 	DataAccountsPageType("dataaccounts", DataTypeHelper.PERMISSION_MANAGE_DATA_ACCOUNTS_CODE),
 	EditEventSubscriptionPageType("editeventsubscription", DataTypeHelper.PERMISSION_MANAGE_EVENT_SUBSCRIPTIONS_CODE),
 	EventsPageType("events", DataTypeHelper.PERMISSION_MANAGE_EVENTS_CODE),
 	EventSubscriptionsPageType("eventsubscriptions", DataTypeHelper.PERMISSION_MANAGE_EVENT_SUBSCRIPTIONS_CODE),
+	FaqsPageType("faqs", false),
 	FeedBrowserPageType("feedbrowser", DataTypeHelper.PERMISSION_MANAGE_FEED_FETCHES_CODE),
 	ForumEditTopicPageType("forumtopicedit", false),
 	ForumPageType("forum", false),
 	ForumThreadPageType("forumthread", false),
 	ForumTopicPageType("forumtopic", false),
 	HomePageType("home", false),
-	ItemPageType("item", true),
+	ItemPageType("item", false),
 	ItemsPageType("items", DataTypeHelper.PERMISSION_MANAGE_ITEMS_CODE),
 	LoginPageType("login", false),
 	LinkedAccountsPageType("linkedaccounts", true),
 	LinkItunesPageType("linkitunes", true),
+	ManageSubscriptionPageType("subscription", true),
 	MyAppsPageType("myapps", true),
 	NotificationsPageType("notifications", true),
 	NotPermittedPageType("notpermitted", false),
 	PermissionsPageType("permissions", DataTypeHelper.PERMISSION_MANAGE_PERMISSIONS_CODE),
-	RanksPageType("ranks", DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE),
+	PressPageType("press", false),
+	PricingPageType("pricing", false),
+	ProductPageType("product", false),
+	RanksPageType("ranks", false),
 	RegisterPageType("register", false),
 	ResetPasswordPageType("resetpassword", false),
 	RolesPageType("roles", DataTypeHelper.PERMISSION_MANAGE_ROLES_CODE),
@@ -85,7 +89,6 @@ public enum PageType {
 	SearchPageType("search", true),
 	SimpleModelRunPageType("simplemodelrun", DataTypeHelper.PERMISSION_MANAGE_SIMPLE_MODEL_RUN_CODE),
 	TermsPageType("terms", false),
-	UpgradePageType("upgrade", true),
 	UsersPageType("users", DataTypeHelper.PERMISSION_MANAGE_USERS_CODE),
 	WidgetTestPage("test", false),
 
@@ -207,68 +210,8 @@ public enum PageType {
 		case SimpleModelRunPageType:
 			page = new SimpleModelRunsPage();
 			break;
-		case DataAccountsPageType:
-			page = new DataAccountsPage();
-			break;
-		case DataAccountFetchesPageType:
-			page = new DataAccountFetchesPage();
-			break;
-		case CategoriesPageType:
-			page = new CategoriesPage();
-			break;
-		case RanksPageType:
-			page = new RanksPage();
-			break;
-		case FeedBrowserPageType:
-			page = new FeedBrowserPage();
-			break;
-		case UsersPageType:
-			page = new UsersPage();
-			break;
-		case LoginPageType:
-			page = new LoginPage();
-			break;
-		case RegisterPageType:
-			page = new RegisterPage();
-			break;
-		case RolesPageType:
-			page = new RolesPage();
-			break;
-		case PermissionsPageType:
-			page = new PermissionsPage();
-			break;
-		case ChangeDetailsPageType:
-			page = new ChangeDetailsPage();
-			break;
-		case UpgradePageType:
-			page = new UpgradePage();
-			break;
-		case LinkedAccountsPageType:
-			page = new LinkedAccountsPage();
-			break;
-		case SearchPageType:
-			page = new SearchPage();
-			break;
-		case ItemPageType:
-			page = new ItemPage();
-			break;
-		case LinkItunesPageType:
-			page = new LinkItunesPage();
-			break;
-		case MyAppsPageType:
-			page = new MyAppsPage();
-			break;
-		case EventsPageType:
-			page = new EventPage();
-			break;
-		case ResetPasswordPageType:
-			page = new ResetPasswordPage();
-			break;
-		case ItemsPageType:
-			page = new ItemsPage();
-			break;
-		case TermsPageType:
-			page = new TermsPage();
+		case AboutPageType:
+			page = new AboutPage();
 			break;
 		case BlogAdminPageType:
 			page = new PostAdminPage();
@@ -282,6 +225,87 @@ public enum PageType {
 		case BlogPostsPageType:
 			page = new BlogPage();
 			break;
+		case CareersPageType:
+			page = new CareersPage();
+			break;
+		case CategoriesPageType:
+			page = new CategoriesPage();
+			break;
+		case ContactPageType:
+			page = new ContactPage();
+			break;
+		case DataAccountsPageType:
+			page = new DataAccountsPage();
+			break;
+		case DataAccountFetchesPageType:
+			page = new DataAccountFetchesPage();
+			break;
+		case EventsPageType:
+			page = new EventPage();
+			break;
+		case FaqsPageType:
+			page = new FaqsPage();
+			break;
+		case FeedBrowserPageType:
+			page = new FeedBrowserPage();
+			break;
+		case LoginPageType:
+			page = new LoginPage();
+			break;
+		case ManageSubscriptionPageType:
+			page = new ManageSubscriptionPage();
+			break;
+		// case PressPageType:
+		// page = new PressPage();
+		// break;
+		case PricingPageType:
+			page = new PricingPage();
+			break;
+		case ProductPageType:
+			page = new ProductPage();
+			break;
+		case RegisterPageType:
+			page = new RegisterPage();
+			break;
+		case RolesPageType:
+			page = new RolesPage();
+			break;
+		case ChangeDetailsPageType:
+			page = new ChangeDetailsPage();
+			break;
+		case ItemPageType:
+			page = new ItemPage();
+			break;
+		case LinkItunesPageType:
+			page = new LinkItunesPage();
+			break;
+		case LinkedAccountsPageType:
+			page = new LinkedAccountsPage();
+			break;
+		case PermissionsPageType:
+			page = new PermissionsPage();
+			break;
+		case RanksPageType:
+			page = new RanksPage();
+			break;
+		case SearchPageType:
+			page = new SearchPage();
+			break;
+		case UsersPageType:
+			page = new UsersPage();
+			break;
+		case MyAppsPageType:
+			page = new MyAppsPage();
+			break;
+		case ResetPasswordPageType:
+			page = new ResetPasswordPage();
+			break;
+		case ItemsPageType:
+			page = new ItemsPage();
+			break;
+		case TermsPageType:
+			page = new TermsPage();
+			break;
 		case LoadingPageType:
 			page = new LoadingPage();
 			break;
@@ -291,18 +315,18 @@ public enum PageType {
 		case WidgetTestPage:
 			page = new WidgetTestPage();
 			break;
-		case ForumPageType:
-			page = new ForumPage();
-			break;
-		case ForumThreadPageType:
-			page = new TopicPage();
-			break;
-		case ForumTopicPageType:
-			page = new AddTopicPage();
-			break;
-		case ForumEditTopicPageType:
-			page = new EditTopicPage();
-			break;
+		// case ForumPageType:
+		// page = new ForumPage();
+		// break;
+		// case ForumThreadPageType:
+		// page = new TopicPage();
+		// break;
+		// case ForumTopicPageType:
+		// page = new AddTopicPage();
+		// break;
+		// case ForumEditTopicPageType:
+		// page = new EditTopicPage();
+		// break;
 		case NotificationsPageType:
 			page = new NotificationsPage();
 			break;

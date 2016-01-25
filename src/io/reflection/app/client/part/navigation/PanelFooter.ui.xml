@@ -1,0 +1,70 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	
+	<ui:import field="io.reflection.app.client.page.PageType.AboutPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.BlogPostsPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.CareersPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.ContactPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.FaqsPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.HomePageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.PressPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.PricingPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.ProductPageType" />
+	<ui:import field="io.reflection.app.client.page.PageType.TermsPageType" />
+
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
+	
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.gridContainer}">
+		<footer class="{STYLES_INSTANCE.reflectionMainStyle.globalFooter}">
+			<ul ui:field="secondaryFooterList" class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird} {STYLES_INSTANCE.reflectionMainStyle.grid__columnPushOne}">
+				<li ui:field="homeItem">
+					<g:InlineHyperlink targetHistoryToken="{HomePageType.asTargetHistoryToken}">Home</g:InlineHyperlink>
+				</li>
+				<li ui:field="leaderboardItem">
+					<g:InlineHyperlink ui:field="leaderboardLink">Leaderboard</g:InlineHyperlink>
+				</li>
+				<li ui:field="productItem">
+					<g:InlineHyperlink targetHistoryToken="{ProductPageType.asTargetHistoryToken}">Product</g:InlineHyperlink>
+				</li>
+				<li ui:field="pricingItem">
+					<g:InlineHyperlink ui:field="pricingSecondaryLink" targetHistoryToken="{PricingPageType.asTargetHistoryToken}">Pricing</g:InlineHyperlink>
+				</li>
+				<li ui:field="blogItem">
+					<g:InlineHyperlink targetHistoryToken="{BlogPostsPageType.asTargetHistoryToken}">Blog</g:InlineHyperlink>
+				</li>
+			</ul>
+			<ul class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird}">
+				<li ui:field="aboutItem">
+					<g:InlineHyperlink targetHistoryToken="{AboutPageType.asTargetHistoryToken}">About Us</g:InlineHyperlink>
+				</li>
+				<li ui:field="contactItem">
+					<g:InlineHyperlink targetHistoryToken="{ContactPageType.asTargetHistoryToken}">Contact Us</g:InlineHyperlink>
+				</li>
+				<li ui:field="careersItem">
+					<g:InlineHyperlink targetHistoryToken="{CareersPageType.asTargetHistoryToken}">Careers</g:InlineHyperlink>
+				</li>
+				<li ui:field="faqsItem">
+					<g:InlineHyperlink targetHistoryToken="{FaqsPageType.asTargetHistoryToken}">FAQs</g:InlineHyperlink>
+				</li>
+				<li ui:field="termsItem">
+					<g:InlineHyperlink targetHistoryToken="{TermsPageType.asTargetHistoryToken}">Terms &amp; Conditions</g:InlineHyperlink>
+				</li>
+			</ul>
+			<ul class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneQuarter}">
+				<li class="{STYLES_INSTANCE.reflectionMainStyle.socialLink}">
+					<a href="https://twitter.com/reflectionio" class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeTwitter}"
+						target="_blank">
+						<span>Twitter</span>
+					</a>
+				</li>
+				<li class="{STYLES_INSTANCE.reflectionMainStyle.socialLink}">
+					<a href="https://www.linkedin.com/company/reflection-io-ltd" class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeLinkedin}"
+						target="_blank">
+						<span>LinkedIn</span>
+					</a>
+				</li>
+			</ul>
+		</footer>
+	</g:HTMLPanel>
+
+</ui:UiBinder> 

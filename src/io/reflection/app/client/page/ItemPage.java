@@ -23,7 +23,6 @@ import io.reflection.app.api.core.shared.call.event.GetLinkedAccountItemEventHan
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.component.DateSelector;
 import io.reflection.app.client.component.FilterSwitch;
-import io.reflection.app.client.component.LoadingBar;
 import io.reflection.app.client.component.Selector;
 import io.reflection.app.client.component.ToggleRadioButton;
 import io.reflection.app.client.controller.FilterController;
@@ -35,10 +34,10 @@ import io.reflection.app.client.controller.NavigationController.Stack;
 import io.reflection.app.client.controller.RankController;
 import io.reflection.app.client.controller.SessionController;
 import io.reflection.app.client.controller.StoreController;
-import io.reflection.app.client.handler.FilterEventHandler;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.handler.TogglePanelEventHandler;
 import io.reflection.app.client.helper.AnimationHelper;
+import io.reflection.app.client.helper.ApiCallHelper;
 import io.reflection.app.client.helper.ColorHelper;
 import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.client.helper.FormHelper;
@@ -46,12 +45,16 @@ import io.reflection.app.client.helper.FormattingHelper;
 import io.reflection.app.client.helper.ResponsiveDesignHelper;
 import io.reflection.app.client.helper.TooltipHelper;
 import io.reflection.app.client.highcharts.Chart;
+import io.reflection.app.client.highcharts.ChartHelper.DashStyle;
 import io.reflection.app.client.highcharts.ChartHelper.LineType;
 import io.reflection.app.client.highcharts.ChartHelper.RankType;
 import io.reflection.app.client.highcharts.ChartHelper.XDataType;
 import io.reflection.app.client.highcharts.ChartHelper.YAxisPosition;
 import io.reflection.app.client.highcharts.ChartHelper.YDataType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
+import io.reflection.app.client.part.ErrorPanel;
+import io.reflection.app.client.part.NoDataPanel;
+import io.reflection.app.client.part.OutOfRankPanel;
 import io.reflection.app.client.part.datatypes.AppRevenue;
 import io.reflection.app.client.part.datatypes.DateRange;
 import io.reflection.app.client.part.navigation.Header.PanelType;
@@ -59,7 +62,6 @@ import io.reflection.app.client.res.Styles;
 import io.reflection.app.client.res.Styles.ReflectionMainStyles;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
-import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
@@ -80,7 +82,9 @@ import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Cursor;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
@@ -95,6 +99,8 @@ import com.google.gwt.user.cellview.client.SafeHtmlHeader;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.EventListener;
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineHyperlink;
@@ -102,7 +108,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
 import com.willshex.gson.json.service.shared.StatusType;
 
-public class ItemPage extends Page implements NavigationEventHandler, GetItemRanksEventHandler, GetItemSalesRanksEventHandler, FilterEventHandler,
+public class ItemPage extends Page implements NavigationEventHandler, GetItemRanksEventHandler, GetItemSalesRanksEventHandler,
 		GetLinkedAccountItemEventHandler, TogglePanelEventHandler {
 
 	private static ItemPageUiBinder uiBinder = GWT.create(ItemPageUiBinder.class);
@@ -118,6 +124,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField Image imageTable;
 	@UiField SpanElement creatorName;
 	@UiField SpanElement storeName;
+	@UiField Button applyFilters;
 	@UiField AnchorElement viewInStore;
 	@UiField SpanElement price;
 	private String iapDescription;
@@ -126,8 +133,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	// @UiField FormSwitch followSwitch;
 	@UiField DateSelector dateSelector;
 	@UiField Element filtersForm;
-	@UiField Selector storeSelector;
-	@UiField Selector storeSelectorDisabled;
+	@UiField Selector appStoreSelector;
 	@UiField Selector countrySelector;
 	@UiField HTMLPanel filtersGroupGraphOptions;
 	@UiField(provided = true) FilterSwitch accuracySwitch = new FilterSwitch(true);
@@ -137,13 +143,13 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@UiField(provided = true) FilterSwitch cumulativeChartSwitch = new FilterSwitch(true);
 	@UiField(provided = true) FilterSwitch oneMMovingAverageSwitch = new FilterSwitch(true);
 	@UiField(provided = true) FilterSwitch overlayAppsSwitch = new FilterSwitch(true);
-	@UiField(provided = true) ToggleRadioButton toggleChartDate = new ToggleRadioButton("charttype");
-	@UiField(provided = true) ToggleRadioButton toggleChartCountry = new ToggleRadioButton("charttype");
+	@UiField(provided = true) ToggleRadioButton toggleChartDate = new ToggleRadioButton("charttype", "0 0 32 32");
+	@UiField(provided = true) ToggleRadioButton toggleChartCountry = new ToggleRadioButton("charttype", "0 0 32 32");
 
 	@UiField InlineHyperlink revenueLink;
-	@UiField SpanElement revenueText;
+	@UiField Element premiumIconRevenue;
 	@UiField InlineHyperlink downloadsLink;
-	@UiField SpanElement downloadsText;
+	@UiField Element premiumIconDownload;
 	@UiField InlineHyperlink rankingLink;
 	@UiField SpanElement rankingText;
 	@UiField InlineHyperlink appDetailsLink;
@@ -169,13 +175,15 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	private Item displayingApp;
 	private Map<String, LIElement> tabs = new HashMap<String, LIElement>();
 	private String selectedTab;
-	private String filterContents;
+	private String previousFilter;
 	private AppRevenue appRevenuePlaceholder = new AppRevenue();
 	private List<AppRevenue> tablePlaceholder = new ArrayList<AppRevenue>();
 	@UiField SpanElement infoDateRange;
 	@UiField SpanElement infoTotalRevenue;
 
+	@UiField DivElement graphContainer;
 	@UiField HTMLPanel chartContainer;
+	@UiField DivElement graphLoadingIndicator;
 	@UiField(provided = true) Chart chartRevenue = new Chart(XDataType.DateXAxisDataType);
 	@UiField(provided = true) Chart chartDownloads = new Chart(XDataType.DateXAxisDataType);
 	@UiField(provided = true) Chart chartRank = new Chart(XDataType.DateXAxisDataType);
@@ -190,15 +198,16 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	private static final String SERIES_ID_DOWNLOAD_CUMULATIVE_SECONDARY = "downloadCumulativeSecondary";
 
 	@UiField AnchorElement revealContentFilter;
-	// @UiField AnchorElement revealContentStore;
 
 	@UiField ButtonElement dnwBtn;
 	@UiField ButtonElement dnwBtnMobile;
 	@UiField DivElement sincePanel;
-	@UiField HTMLPanel appOutOfTop200Panel;
+	@UiField ErrorPanel errorPanel;
+	@UiField NoDataPanel noDataPanel;
+	@UiField OutOfRankPanel appOutOfTop200Panel;
 	@UiField DivElement appDetailsPanel;
 
-	private LoadingBar loadingBar;
+	// private LoadingBar loadingBar;
 
 	@UiField Element tablePanel;
 	@UiField Element togglePanel;
@@ -207,9 +216,12 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	private Column<AppRevenue, SafeHtml> revenueColumn;
 	private Column<AppRevenue, SafeHtml> revenueForPeriodColumn;
 
+	private boolean isStatusError;
+
 	public ItemPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
+		applyFilters.getElement().setAttribute("data-tooltip", "Update results");
 		chartContainer.getElement().getStyle().setPosition(Position.RELATIVE);
 
 		tabs.put(REVENUE_CHART_TYPE, revenueItem);
@@ -219,7 +231,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 		appDetailsItem.getStyle().setCursor(Cursor.DEFAULT);
 
-		if (!SessionController.get().isLoggedInUserAdmin()) {
+		if (!SessionController.get().isAdmin()) {
 			tablePanel.removeFromParent();
 			revenueTable.removeFromParent();
 			// followSwitch.removeFromParent();
@@ -231,7 +243,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			sincePanel.removeFromParent();
 			dnwBtn.removeFromParent();
 			dnwBtnMobile.removeFromParent();
-			countrySelector.setTooltip("This field is currently locked but will soon be editable as we integrate more data");
+			dateSelector.disableBefore(ApiCallHelper.getUTCDate(2015, 8, 31));
 		} else {
 			createColumns();
 			// RankController.get().getItemRevenueDataProvider().addDataDisplay(revenueTable);
@@ -252,13 +264,10 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 		tablePlaceholder.add(appRevenuePlaceholder);
 
-		FilterHelper.addCountries(countrySelector, SessionController.get().isLoggedInUserAdmin());
-		FilterHelper.addStores(storeSelector, true);
-		FilterHelper.addStores(storeSelectorDisabled, false);
-		storeSelector.removeFromParent();
+		FilterHelper.addCountries(countrySelector, SessionController.get().isAdmin());
+		FilterHelper.addStores(appStoreSelector, true);
 
 		dateSelector.addFixedRanges(FilterHelper.getDefaultDateRanges());
-		updateFromFilter();
 
 		// Add click event to LI element so the event is fired when clicking on the whole tab
 		Event.sinkEvents(revenueItem, Event.ONCLICK);
@@ -303,8 +312,12 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		});
 
 		resetAppProperties();
-		loadingBar = new LoadingBar(false);
-		loadingBar.show();
+
+		updateSelectorsFromFilter();
+
+		// loadingBar.show();
+		AnimationHelper.nativeImgErrorPlaceholder(image.getElement());
+		AnimationHelper.nativeImgErrorPlaceholder(imageTable.getElement());
 
 		TooltipHelper.updateHelperTooltip();
 	}
@@ -325,22 +338,23 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		if (item.largeImage != null) {
 			displayingApp.largeImage = item.largeImage;
 		}
-		if (item.currency != null && item.price != null) {
-			displayingApp.currency = item.currency;
-			displayingApp.price = item.price;
-		}
 
 		title.setInnerText(displayingApp.name);
-		creatorName.setInnerText("By " + displayingApp.creatorName);
-		image.setUrl(displayingApp.mediumImage != null ? displayingApp.mediumImage : "");
-		imageTable.setUrl(displayingApp.smallImage != null ? displayingApp.smallImage : "");
-		if (displayingApp.currency != null && displayingApp.price != null) { // Restore the price if showing the previous visible App
-			price.setInnerText(FormattingHelper.asPriceString(displayingApp.currency, displayingApp.price.floatValue()) + iapDescription);
+		creatorName.setInnerText(displayingApp.creatorName != null ? "By " + displayingApp.creatorName : "");
+		if (displayingApp.mediumImage != null) {
+			image.setUrl(displayingApp.mediumImage);
+			image.setVisible(true);
+		} else {
+			image.setVisible(false);
+			image.setUrl("");
 		}
-		Store store = StoreController.get().getStore(displayingApp.source);
-		storeName
-				.setInnerText("View in " + (store == null || store.name == null || store.name.length() == 0 ? displayingApp.source.toUpperCase() : store.name));
-		viewInStore.setHref(StoreController.get().getExternalUri(displayingApp));
+		if (displayingApp.smallImage != null) {
+			imageTable.setUrl(displayingApp.smallImage);
+			imageTable.setVisible(true);
+		} else {
+			imageTable.setVisible(false);
+			imageTable.setUrl("");
+		}
 		iapDescription = DataTypeHelper.itemIapState(displayingApp, " + In App Purchases", "", "");
 	}
 
@@ -349,13 +363,17 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			displayingApp.currency = rank.currency;
 			displayingApp.price = rank.price;
 			price.setInnerText(FormattingHelper.asPriceString(displayingApp.currency, displayingApp.price.floatValue()) + iapDescription);
+		} else {
+			price.setInnerSafeHtml(SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
 		}
 	}
 
 	private void resetAppProperties() {
 		title.setInnerText("");
 		creatorName.setInnerText("");
+		image.setVisible(false);
 		image.setUrl("");
+		imageTable.setVisible(false);
 		imageTable.setUrl("");
 		storeName.setInnerSafeHtml(AnimationHelper.getLoaderInlineSafeHTML());
 		price.setInnerSafeHtml(AnimationHelper.getLoaderInlineSafeHTML());
@@ -364,9 +382,16 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	private void setError() {
 		displayingApp.currency = null;
 		displayingApp.price = null;
-		price.setInnerSafeHtml(SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
+		setAppPriceFromRank(null);
 		infoTotalRevenue.setInnerSafeHtml(SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
 		revenueTable.setRowCount(0, true);
+		// loadingBar.hide(false);
+		chartContainer.setVisible(false);
+		errorPanel.setVisible(true);
+		isStatusError = true;
+		graphLoadingIndicator.removeClassName(style.isLoadingSuccess());
+		graphContainer.removeClassName(style.isLoading());
+		applyFilters.setEnabled(true);
 	}
 
 	private void createColumns() {
@@ -525,31 +550,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		revenueTable.setColumnWidth(revenueForPeriodColumn, 50, Unit.PCT);
 	}
 
-	@UiHandler("storeSelector")
-	void onAppStoreValueChanged(ChangeEvent event) {
-		FilterController.get().setStore(storeSelector.getSelectedValue());
-	}
-
-	@UiHandler("storeSelectorDisabled")
-	void onAppStoreValueChangedDisabled(ChangeEvent event) {
-		FilterController.get().setStore(storeSelectorDisabled.getSelectedValue());
-	}
-
-	@UiHandler("countrySelector")
-	void onCountryValueChanged(ChangeEvent event) {
-		FilterController.get().setCountry(countrySelector.getSelectedValue());
-	}
-
-	@UiHandler("dateSelector")
-	void onDateRangeValueChanged(ValueChangeEvent<DateRange> event) {
-		FilterController fc = FilterController.get();
-
-		fc.start();
-		fc.setEndDate(event.getValue().getTo());
-		fc.setStartDate(event.getValue().getFrom());
-		fc.commit();
-	}
-
 	@UiHandler("accuracySwitch")
 	void onAccuracySwitchValueChanged(ValueChangeEvent<Boolean> event) {
 
@@ -565,7 +565,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		chartDownloads.setSeriesVisible(SERIES_ID_REVENUE_SECONDARY, event.getValue().booleanValue() && !cumulativeChartSwitch.getValue().booleanValue());
 		chartDownloads.setSeriesVisible(SERIES_ID_REVENUE_CUMULATIVE_SECONDARY, event.getValue().booleanValue()
 				&& cumulativeChartSwitch.getValue().booleanValue());
-		chartRank.setSeriesVisible(SERIES_ID_REVENUE_SECONDARY, SessionController.get().isLoggedInUserAdmin() && event.getValue().booleanValue());
+		chartRank.setSeriesVisible(SERIES_ID_REVENUE_SECONDARY, SessionController.get().isAdmin() && event.getValue().booleanValue());
 	}
 
 	@UiHandler("overlayDownloadsSwitch")
@@ -573,7 +573,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		chartRevenue.setSeriesVisible(SERIES_ID_DOWNLOAD_SECONDARY, event.getValue().booleanValue() && !cumulativeChartSwitch.getValue().booleanValue());
 		chartRevenue.setSeriesVisible(SERIES_ID_DOWNLOAD_CUMULATIVE_SECONDARY, event.getValue().booleanValue()
 				&& cumulativeChartSwitch.getValue().booleanValue());
-		chartRank.setSeriesVisible(SERIES_ID_DOWNLOAD_SECONDARY, SessionController.get().isLoggedInUserAdmin() && event.getValue().booleanValue());
+		chartRank.setSeriesVisible(SERIES_ID_DOWNLOAD_SECONDARY, SessionController.get().isAdmin() && event.getValue().booleanValue());
 	}
 
 	@UiHandler("cumulativeChartSwitch")
@@ -600,7 +600,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		setChartGraphsVisible(false);
 	}
 
-	private void updateFromFilter() {
+	private void updateSelectorsFromFilter() {
 		FilterController fc = FilterController.get();
 
 		DateRange dateRange = new DateRange();
@@ -611,10 +611,75 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		infoDateRange.setInnerText(FormattingHelper.DATE_FORMATTER_DD_MMM_YYYY.format(dateRange.getFrom()) + " - "
 				+ FormattingHelper.DATE_FORMATTER_DD_MMM_YYYY.format(dateRange.getTo()));
 
-		storeSelector.setSelectedIndex(FormHelper.getItemIndex(storeSelector, fc.getFilter().getStoreA3Code()));
-		storeSelectorDisabled.setSelectedIndex(FormHelper.getItemIndex(storeSelectorDisabled, fc.getFilter().getStoreA3Code()));
+		appStoreSelector.setSelectedIndex(FormHelper.getItemIndex(appStoreSelector, fc.getFilter().getStoreA3Code()));
 		countrySelector.setSelectedIndex(FormHelper.getItemIndex(countrySelector, fc.getFilter().getCountryA2Code()));
 
+	}
+
+	@UiHandler("applyFilters")
+	void onApplyFiltersClicked(ClickEvent event) {
+		event.preventDefault();
+		if (NavigationController.get().getCurrentPage() == PageType.ItemPageType) {
+			boolean updateData = false;
+			if (updateData = updateData || !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())) {
+				FilterController.get().setCountry(countrySelector.getSelectedValue());
+			}
+			if (updateData = updateData || !FilterController.get().getFilter().getStoreA3Code().equals(appStoreSelector.getSelectedValue())) {
+				FilterController.get().setStore(appStoreSelector.getSelectedValue());
+			}
+			if (updateData = updateData
+					|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateSelector.getDateBoxToValue())
+					|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getStartTime().longValue()), dateSelector.getDateBoxFromValue())) {
+				FilterController.get().getFilter().setEndTime(dateSelector.getDateBoxToValue().getTime());
+				FilterController.get().getFilter().setStartTime(dateSelector.getDateBoxFromValue().getTime());
+				dateSelector.setValue(new DateRange(dateSelector.getDateBoxFromValue(), dateSelector.getDateBoxToValue()), true);
+			}
+			if (updateData) {
+				applyFilters.setEnabled(false);
+				PageType.ItemPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, displayingAppId, selectedTab, comingPage, FilterController.get()
+						.asItemFilterString());
+			} else if (isStatusError) {
+				applyFilters.setEnabled(false);
+				updateSelectorsFromFilter();
+				infoTotalRevenue.setInnerSafeHtml(AnimationHelper.getLoaderInlineSafeHTML());
+				displayingApp.currency = null;
+				displayingApp.price = null;
+				price.setInnerSafeHtml(AnimationHelper.getLoaderInlineSafeHTML());
+				isStatusError = false;
+				errorPanel.setVisible(false);
+				noDataPanel.setVisible(false);
+				chartContainer.setVisible(true);
+				graphContainer.addClassName(style.isLoading());
+				chartRevenue.setLoading(true);
+				chartDownloads.setLoading(true);
+				chartRank.setLoading(true);
+				revenueTable.setLoadingIndicator(AnimationHelper.getAppRevenueLoadingIndicator(CalendarUtil.getDaysBetween(dateSelector.getValue().getFrom(),
+						dateSelector.getValue().getTo()) + 1));
+				revenueTable.setRowCount(0, false);
+				dateHeader.setHeaderStyleNames(style.canBeSorted());
+				revenueHeader.setHeaderStyleNames(style.canBeSorted());
+				revenueForPeriodHeader.setHeaderStyleNames(style.canBeSorted());
+				// loadingBar.show();
+				getChartData();
+				previousFilter = FilterController.get().asItemFilterString();
+			}
+		}
+	}
+
+	@UiHandler({ "countrySelector", "appStoreSelector" })
+	void onFiltersChanged(ChangeEvent event) {
+		applyFilters.setEnabled(isStatusError || !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
+				|| !FilterController.get().getFilter().getStoreA3Code().equals(appStoreSelector.getSelectedValue())
+				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateSelector.getDateBoxToValue())
+				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getStartTime().longValue()), dateSelector.getDateBoxFromValue()));
+	}
+
+	@UiHandler("dateSelector")
+	void onDateSelectorChanged(ValueChangeEvent<DateRange> event) {
+		applyFilters.setEnabled(isStatusError || !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())
+				|| !FilterController.get().getFilter().getStoreA3Code().equals(appStoreSelector.getSelectedValue())
+				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateSelector.getDateBoxToValue())
+				|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getStartTime().longValue()), dateSelector.getDateBoxFromValue()));
 	}
 
 	/*
@@ -628,7 +693,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		// register(EventController.get().addHandlerToSource(SearchForItemEventHandler.TYPE, ItemController.get(), this));
-		register(DefaultEventBus.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(GetItemRanksEventHandler.TYPE, RankController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(GetItemSalesRanksEventHandler.TYPE, RankController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(GetLinkedAccountItemEventHandler.TYPE, LinkedAccountController.get(), this));
@@ -646,7 +710,9 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		super.onDetach();
 
 		resetAppProperties();
-		loadingBar.reset();
+		// loadingBar.reset();
+		premiumIconRevenue.getStyle().setVisibility(Visibility.HIDDEN);
+		premiumIconDownload.getStyle().setVisibility(Visibility.HIDDEN);
 	}
 
 	/*
@@ -661,6 +727,9 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 			comingPage = current.getParameter(2);
 
+			premiumIconRevenue.getStyle().setVisibility(RanksPage.COMING_FROM_PARAMETER.equals(comingPage) ? Visibility.VISIBLE : Visibility.HIDDEN);
+			premiumIconDownload.getStyle().setVisibility(RanksPage.COMING_FROM_PARAMETER.equals(comingPage) ? Visibility.VISIBLE : Visibility.HIDDEN);
+
 			String newInternalId = current.getParameter(0);
 			boolean isNewDataRequired = false;
 
@@ -671,29 +740,35 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				displayingAppId = newInternalId;
 
 				if ((displayingApp = ItemController.get().lookupItem(displayingAppId)) != null) { // App details already retrieved
-					displayingApp.source = StoreController.get().getStore(FilterController.get().getFilter().getStoreA3Code()).a3Code;
 					setAppDetails(displayingApp);
 				} else {
 					// Coming from a refresh page
 					displayingApp = new Item();
 					displayingApp.internalId = displayingAppId;
-					displayingApp.source = StoreController.get().getStore(FilterController.get().getFilter().getStoreA3Code()).a3Code;
 				}
+				displayingApp.source = DataTypeHelper.IOS_STORE_A3;
+
+				storeName.setInnerText("View in Appstore");
+				viewInStore.setHref(StoreController.get().getExternalUri(displayingApp));
+
 			} else {
 				setAppDetails(displayingApp);
 			}
 
+			if (previousFilter == null) {
+				previousFilter = FilterController.get().asRankFilterString();
+			}
+
 			Filter newFilter = FilterController.get().getFilter();
-			String newFilterContents = newFilter.asItemFilterString();
 
-			if (filterContents == null || !filterContents.equals(newFilterContents)) {
-				filterContents = newFilterContents;
-
+			if (!previousFilter.equals(newFilter.asItemFilterString())) {
+				isNewDataRequired = true;
+				updateSelectorsFromFilter();
 				RankType newRankType = RankType.fromString(newFilter.getListType());
 				if (rankType == null || rankType != newRankType) {
 					rankType = newRankType;
 				}
-				isNewDataRequired = true;
+				previousFilter = newFilter.asItemFilterString();
 			}
 
 			switch (newFilter.getListType()) {
@@ -712,27 +787,24 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			}
 
 			revenueLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, displayingAppId,
-					REVENUE_CHART_TYPE, comingPage, filterContents));
+					REVENUE_CHART_TYPE, comingPage, previousFilter));
 			downloadsLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, displayingAppId,
-					DOWNLOADS_CHART_TYPE, comingPage, filterContents));
+					DOWNLOADS_CHART_TYPE, comingPage, previousFilter));
 			rankingLink.setTargetHistoryToken(PageType.ItemPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE, displayingAppId,
-					RANKING_CHART_TYPE, comingPage, filterContents));
+					RANKING_CHART_TYPE, comingPage, previousFilter));
 
-			if (SessionController.get().isLoggedInUserAdmin() || MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage)) {
+			if (SessionController.get().isAdmin() || MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage)) {
 				setRevenueDownloadTabsEnabled(true);
-				storeSelectorDisabled.setVisible(false);
-				if (!filtersForm.isOrHasChild(storeSelector.getElement())) {
-					filtersForm.insertBefore(storeSelector.getElement(), storeSelectorDisabled.getElement());
-				}
 			} else {
 				setRevenueDownloadTabsEnabled(false);
-				if (filtersForm.isOrHasChild(storeSelector.getElement())) {
-					filtersForm.removeChild(storeSelector.getElement());
-				}
-				storeSelectorDisabled.setVisible(true);
 			}
 
-			updateFromFilter();
+			if (!SessionController.get().isAdmin() && MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage)) {
+				setRankTabEnabled(false);
+			} else {
+				setRankTabEnabled(true);
+			}
+
 			String newSelectedTab = current.getParameter(SELECTED_TAB_PARAMETER_INDEX);
 			if (selectedTab == null || !selectedTab.equals(newSelectedTab)) {
 				selectedTab = newSelectedTab;
@@ -740,11 +812,16 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			}
 
 			if (isNewDataRequired) {
+				errorPanel.setVisible(false);
+				isStatusError = false;
 				infoTotalRevenue.setInnerSafeHtml(AnimationHelper.getLoaderInlineSafeHTML());
 				displayingApp.currency = null;
 				displayingApp.price = null;
 				price.setInnerSafeHtml(AnimationHelper.getLoaderInlineSafeHTML());
+				noDataPanel.setVisible(false);
 				appOutOfTop200Panel.setVisible(false);
+				chartContainer.setVisible(true);
+				graphContainer.addClassName(style.isLoading());
 				chartRevenue.setLoading(true);
 				chartDownloads.setLoading(true);
 				chartRank.setLoading(true);
@@ -754,7 +831,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				dateHeader.setHeaderStyleNames(style.canBeSorted());
 				revenueHeader.setHeaderStyleNames(style.canBeSorted());
 				revenueForPeriodHeader.setHeaderStyleNames(style.canBeSorted());
-				loadingBar.show();
+				// loadingBar.show();
 				getChartData();
 			}
 
@@ -776,7 +853,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				overlayRevenuesSwitch.setVisible(false);
 				overlayDownloadsSwitch.setVisible(true);
 				cumulativeChartSwitch.setVisible(true);
-				filtersGroupGraphOptions.setVisible(SessionController.get().isLoggedInUserAdmin() || MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage));
+				filtersGroupGraphOptions.setVisible(SessionController.get().isAdmin() || MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage));
 				chartRevenue.setVisible(true);
 				chartDownloads.setVisible(false);
 				chartRank.setVisible(false);
@@ -785,7 +862,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				overlayDownloadsSwitch.setVisible(false);
 				overlayRevenuesSwitch.setVisible(true);
 				cumulativeChartSwitch.setVisible(true);
-				filtersGroupGraphOptions.setVisible(SessionController.get().isLoggedInUserAdmin() || MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage));
+				filtersGroupGraphOptions.setVisible(SessionController.get().isAdmin() || MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage));
 				chartDownloads.setVisible(true);
 				chartRevenue.setVisible(false);
 				chartRank.setVisible(false);
@@ -794,7 +871,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 				overlayRevenuesSwitch.setVisible(true);
 				overlayDownloadsSwitch.setVisible(true);
 				cumulativeChartSwitch.setVisible(false);
-				filtersGroupGraphOptions.setVisible(SessionController.get().isLoggedInUserAdmin());
+				filtersGroupGraphOptions.setVisible(SessionController.get().isAdmin());
 				chartRank.setVisible(true);
 				chartRevenue.setVisible(false);
 				chartDownloads.setVisible(false);
@@ -804,7 +881,7 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 			chartRevenue.setVisible(false);
 			chartDownloads.setVisible(false);
 			chartRank.setVisible(false);
-			filtersGroupGraphOptions.setVisible(SessionController.get().isLoggedInUserAdmin());
+			filtersGroupGraphOptions.setVisible(SessionController.get().isAdmin());
 			// TODO show map
 		}
 	}
@@ -823,24 +900,35 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 
 	private void setRevenueDownloadTabsEnabled(boolean enable) {
 		if (enable) {
-			revenueText.setInnerText("Revenue");
 			revenueItem.removeClassName(style.isDisabled());
 			revenueItem.getStyle().setCursor(Cursor.POINTER);
-			downloadsText.setInnerText("Downloads");
 			downloadsItem.removeClassName(style.isDisabled());
 			downloadsItem.getStyle().setCursor(Cursor.POINTER);
 			appDetailsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 		} else {
-			revenueText.setInnerHTML("Revenue <span class=\"text-small\">coming soon</span>");
 			revenueItem.addClassName(style.isDisabled());
 			revenueItem.getStyle().setCursor(Cursor.DEFAULT);
 			revenueLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
-			downloadsText.setInnerHTML("Downloads <span class=\"text-small\">coming soon</span>");
 			downloadsItem.addClassName(style.isDisabled());
 			downloadsItem.getStyle().setCursor(Cursor.DEFAULT);
 			downloadsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 			appDetailsLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
 			selectedTab = RANKING_CHART_TYPE;
+			refreshTabs();
+		}
+	}
+
+	private void setRankTabEnabled(boolean enable) {
+		if (enable) {
+			rankingText.setInnerText("Rank");
+			rankingItem.removeClassName(style.isDisabled());
+			rankingItem.getStyle().setCursor(Cursor.POINTER);
+		} else {
+			rankingText.setInnerHTML("Rank <span class=\"text-small\">coming soon</span>");
+			rankingItem.addClassName(style.isDisabled());
+			rankingItem.getStyle().setCursor(Cursor.DEFAULT);
+			rankingLink.setTargetHistoryToken(NavigationController.get().getStack().toString());
+			selectedTab = DOWNLOADS_CHART_TYPE;
 			refreshTabs();
 		}
 	}
@@ -870,90 +958,72 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.FilterEventHandler#filterParamChanged(java.lang.String, java.lang.Object, java.lang.Object)
-	 */
-	@Override
-	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
-		if (NavigationController.get().getCurrentPage() == PageType.ItemPageType) {
-			PageType.ItemPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, displayingAppId, selectedTab, comingPage, FilterController.get()
-					.asItemFilterString());
-		}
-	}
+	private void drawData(final List<Rank> ranks, final List<Date> outOfLeaderboardDates) {
+		graphLoadingIndicator.addClassName(style.isLoadingSuccess());
+		Timer t = new Timer() {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see io.reflection.app.client.handler.FilterEventHandler#filterParamsChanged(io.reflection.app.client.controller.FilterController.Filter, java.util.Map)
-	 */
-	@Override
-	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {
-		if (NavigationController.get().getCurrentPage() == PageType.ItemPageType) {
-			PageType.ItemPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, displayingAppId, selectedTab, comingPage, FilterController.get()
-					.asItemFilterString());
-		}
-	}
-
-	private void drawData(List<Rank> ranks, List<Date> outOfLeaderboardDates) {
-		dateHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.isDescending());
-		revenueTable.getColumnSortList().push(dateColumn);
-		chartRank.setRankingType(rankType);
-		List<Rank> rankingRanksWithOutOfLeaderboardValues = new ArrayList<Rank>(ranks);
-		if (outOfLeaderboardDates != null) {
-			for (Date outOfLeaderboardDate : outOfLeaderboardDates) { // Add placeholder rank object with position > 200
-				for (int i = 0; i < rankingRanksWithOutOfLeaderboardValues.size(); i++) {
-					if (FilterHelper.beforeDate(outOfLeaderboardDate, rankingRanksWithOutOfLeaderboardValues.get(i).date)) {
-						Rank outOfLeaderboardRankPlaceholder = new Rank();
-						outOfLeaderboardRankPlaceholder.date = outOfLeaderboardDate;
-						outOfLeaderboardRankPlaceholder.position = new Integer(300);
-						outOfLeaderboardRankPlaceholder.grossingPosition = new Integer(300);
-						rankingRanksWithOutOfLeaderboardValues.add(i, outOfLeaderboardRankPlaceholder);
-						break;
-					} else if (i + 1 == rankingRanksWithOutOfLeaderboardValues.size()) {
-						Rank outOfLeaderboardRankPlaceholder = new Rank();
-						outOfLeaderboardRankPlaceholder.date = outOfLeaderboardDate;
-						outOfLeaderboardRankPlaceholder.position = new Integer(300);
-						outOfLeaderboardRankPlaceholder.grossingPosition = new Integer(300);
-						rankingRanksWithOutOfLeaderboardValues.add(rankingRanksWithOutOfLeaderboardValues.size(), outOfLeaderboardRankPlaceholder);
-						break;
+			@Override
+			public void run() {
+				graphContainer.removeClassName(style.isLoading());
+				dateHeader.setHeaderStyleNames(style.canBeSorted() + " " + style.isDescending());
+				revenueTable.getColumnSortList().push(dateColumn);
+				chartRank.setRankingType(rankType);
+				List<Rank> rankingRanksWithOutOfLeaderboardValues = new ArrayList<Rank>(ranks);
+				if (outOfLeaderboardDates != null) {
+					for (Date outOfLeaderboardDate : outOfLeaderboardDates) { // Add placeholder rank object with position > 200
+						for (int i = 0; i < rankingRanksWithOutOfLeaderboardValues.size(); i++) {
+							if (FilterHelper.beforeDate(outOfLeaderboardDate, rankingRanksWithOutOfLeaderboardValues.get(i).date)) {
+								Rank outOfLeaderboardRankPlaceholder = new Rank();
+								outOfLeaderboardRankPlaceholder.date = outOfLeaderboardDate;
+								outOfLeaderboardRankPlaceholder.position = new Integer(300);
+								outOfLeaderboardRankPlaceholder.grossingPosition = new Integer(300);
+								rankingRanksWithOutOfLeaderboardValues.add(i, outOfLeaderboardRankPlaceholder);
+								break;
+							} else if (i + 1 == rankingRanksWithOutOfLeaderboardValues.size()) {
+								Rank outOfLeaderboardRankPlaceholder = new Rank();
+								outOfLeaderboardRankPlaceholder.date = outOfLeaderboardDate;
+								outOfLeaderboardRankPlaceholder.position = new Integer(300);
+								outOfLeaderboardRankPlaceholder.grossingPosition = new Integer(300);
+								rankingRanksWithOutOfLeaderboardValues.add(rankingRanksWithOutOfLeaderboardValues.size(), outOfLeaderboardRankPlaceholder);
+								break;
+							}
+						}
 					}
 				}
+				chartRank.drawSeries(rankingRanksWithOutOfLeaderboardValues, YAxisPosition.PRIMARY, YDataType.RankingYAxisDataType, SERIES_ID_RANK,
+						LineType.LINE, DashStyle.SOLID, ColorHelper.getReflectionGreen(), false, false);
+
+				if (MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage) || SessionController.get().isAdmin()) {
+					chartRank.drawSeries(ranks, YAxisPosition.SECONDARY, YDataType.RevenueYAxisDataType, SERIES_ID_REVENUE_SECONDARY, LineType.LINE,
+							DashStyle.DASH, ColorHelper.getReflectionPurple(), false, !overlayRevenuesSwitch.getValue().booleanValue());
+					chartRank.drawSeries(ranks, YAxisPosition.TERTIARY, YDataType.DownloadsYAxisDataType, SERIES_ID_DOWNLOAD_SECONDARY, LineType.LINE,
+							DashStyle.DASH, ColorHelper.getReflectionRed(), false, !overlayDownloadsSwitch.getValue().booleanValue());
+					chartRevenue.drawSeries(ranks, YAxisPosition.PRIMARY, YDataType.RevenueYAxisDataType, SERIES_ID_REVENUE, LineType.AREA, DashStyle.SOLID,
+							ColorHelper.getReflectionPurple(), false, cumulativeChartSwitch.getValue().booleanValue());
+					chartDownloads.drawSeries(ranks, YAxisPosition.PRIMARY, YDataType.DownloadsYAxisDataType, SERIES_ID_DOWNLOAD, LineType.AREA,
+							DashStyle.SOLID, ColorHelper.getReflectionRed(), false, cumulativeChartSwitch.getValue().booleanValue());
+					chartRevenue.drawSeries(ranks, YAxisPosition.PRIMARY, YDataType.RevenueYAxisDataType, SERIES_ID_REVENUE_CUMULATIVE, LineType.AREA,
+							DashStyle.SOLID, ColorHelper.getReflectionPurple(), true, !cumulativeChartSwitch.getValue().booleanValue());
+					chartDownloads.drawSeries(ranks, YAxisPosition.PRIMARY, YDataType.DownloadsYAxisDataType, SERIES_ID_DOWNLOAD_CUMULATIVE, LineType.AREA,
+							DashStyle.SOLID, ColorHelper.getReflectionRed(), true, !cumulativeChartSwitch.getValue().booleanValue());
+					chartRevenue.drawSeries(ranks, YAxisPosition.SECONDARY, YDataType.DownloadsYAxisDataType, SERIES_ID_DOWNLOAD_SECONDARY, LineType.LINE,
+							DashStyle.DASH, ColorHelper.getReflectionRed(), false, cumulativeChartSwitch.getValue().booleanValue()
+									|| !overlayDownloadsSwitch.getValue().booleanValue());
+					chartDownloads.drawSeries(ranks, YAxisPosition.SECONDARY, YDataType.RevenueYAxisDataType, SERIES_ID_REVENUE_SECONDARY, LineType.LINE,
+							DashStyle.DASH, ColorHelper.getReflectionPurple(), false, cumulativeChartSwitch.getValue().booleanValue()
+									|| !overlayRevenuesSwitch.getValue().booleanValue());
+					chartRevenue.drawSeries(ranks, YAxisPosition.SECONDARY, YDataType.DownloadsYAxisDataType, SERIES_ID_DOWNLOAD_CUMULATIVE_SECONDARY,
+							LineType.LINE, DashStyle.DASH, ColorHelper.getReflectionRed(), true, !cumulativeChartSwitch.getValue().booleanValue()
+									|| !overlayDownloadsSwitch.getValue().booleanValue());
+					chartDownloads.drawSeries(ranks, YAxisPosition.SECONDARY, YDataType.RevenueYAxisDataType, SERIES_ID_REVENUE_CUMULATIVE_SECONDARY,
+							LineType.LINE, DashStyle.DASH, ColorHelper.getReflectionPurple(), true, !cumulativeChartSwitch.getValue().booleanValue()
+									|| !overlayRevenuesSwitch.getValue().booleanValue());
+				}
+
+				graphLoadingIndicator.removeClassName(style.isLoadingSuccess());
 			}
-		}
-		chartRank.drawSeries(rankingRanksWithOutOfLeaderboardValues, YAxisPosition.PRIMARY, YDataType.RankingYAxisDataType, SERIES_ID_RANK, LineType.LINE,
-				ColorHelper.getReflectionGreen(), false, false);
-
-		if (MyAppsPage.COMING_FROM_PARAMETER.equals(comingPage) || SessionController.get().isLoggedInUserAdmin()) {
-			chartRank.drawSeries(ranks, YAxisPosition.SECONDARY, YDataType.RevenueYAxisDataType, SERIES_ID_REVENUE_SECONDARY, LineType.LINE,
-					ColorHelper.getReflectionPurple(), false, !overlayRevenuesSwitch.getValue().booleanValue());
-			chartRank.drawSeries(ranks, YAxisPosition.TERTIARY, YDataType.DownloadsYAxisDataType, SERIES_ID_DOWNLOAD_SECONDARY, LineType.LINE,
-					ColorHelper.getReflectionRed(), false, !overlayDownloadsSwitch.getValue().booleanValue());
-			chartRevenue.drawSeries(ranks, YAxisPosition.PRIMARY, YDataType.RevenueYAxisDataType, SERIES_ID_REVENUE, LineType.AREA,
-					ColorHelper.getReflectionPurple(), false, cumulativeChartSwitch.getValue().booleanValue());
-			chartDownloads.drawSeries(ranks, YAxisPosition.PRIMARY, YDataType.DownloadsYAxisDataType, SERIES_ID_DOWNLOAD, LineType.AREA,
-					ColorHelper.getReflectionRed(), false, cumulativeChartSwitch.getValue().booleanValue());
-			chartRevenue.drawSeries(ranks, YAxisPosition.PRIMARY, YDataType.RevenueYAxisDataType, SERIES_ID_REVENUE_CUMULATIVE, LineType.AREA,
-					ColorHelper.getReflectionPurple(), true, !cumulativeChartSwitch.getValue().booleanValue());
-			chartDownloads.drawSeries(ranks, YAxisPosition.PRIMARY, YDataType.DownloadsYAxisDataType, SERIES_ID_DOWNLOAD_CUMULATIVE, LineType.AREA,
-					ColorHelper.getReflectionRed(), true, !cumulativeChartSwitch.getValue().booleanValue());
-			chartRevenue
-					.drawSeries(ranks, YAxisPosition.SECONDARY, YDataType.DownloadsYAxisDataType, SERIES_ID_DOWNLOAD_SECONDARY, LineType.LINE,
-							ColorHelper.getReflectionRed(), false, cumulativeChartSwitch.getValue().booleanValue()
-									|| !overlayDownloadsSwitch.getValue().booleanValue());
-			chartDownloads.drawSeries(ranks, YAxisPosition.SECONDARY, YDataType.RevenueYAxisDataType, SERIES_ID_REVENUE_SECONDARY, LineType.LINE,
-					ColorHelper.getReflectionPurple(), false, cumulativeChartSwitch.getValue().booleanValue()
-							|| !overlayRevenuesSwitch.getValue().booleanValue());
-			chartRevenue
-					.drawSeries(ranks, YAxisPosition.SECONDARY, YDataType.DownloadsYAxisDataType, SERIES_ID_DOWNLOAD_CUMULATIVE_SECONDARY, LineType.LINE,
-							ColorHelper.getReflectionRed(), true, !cumulativeChartSwitch.getValue().booleanValue()
-									|| !overlayDownloadsSwitch.getValue().booleanValue());
-			chartDownloads.drawSeries(ranks, YAxisPosition.SECONDARY, YDataType.RevenueYAxisDataType, SERIES_ID_REVENUE_CUMULATIVE_SECONDARY, LineType.LINE,
-					ColorHelper.getReflectionPurple(), true, !cumulativeChartSwitch.getValue().booleanValue()
-							|| !overlayRevenuesSwitch.getValue().booleanValue());
-		}
-
+		};
+		t.schedule(200);
 	}
 
 	/*
@@ -966,19 +1036,33 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public void getItemRanksSuccess(GetItemRanksRequest input, GetItemRanksResponse output) {
 		if (output != null && output.item != null && output.status == StatusType.StatusTypeSuccess) {
-			if (output.outOfLeaderboardDates != null && output.outOfLeaderboardDates.size() == FilterController.get().getDateRange().getDays()) {
-				appOutOfTop200Panel.setVisible(true);
-				setChartGraphsVisible(false);
-			}
-			if (output.ranks != null && output.ranks.size() > 0) {
+			if (output.ranks != null) { // if == null the list is empty
+
+				if (output.outOfLeaderboardDates != null && output.outOfLeaderboardDates.size() == FilterController.get().getDateRange().getDays()) {
+					chartContainer.setVisible(false);
+					appOutOfTop200Panel.setVisible(true);
+					setChartGraphsVisible(false);
+				}
+
 				setAppDetails(output.item);
-				setAppPriceFromRank(output.ranks.get(0));
+				Rank rankPrice = null;
+				for (Rank r : output.ranks) {
+					if (r.price != null && r.currency != null) {
+						rankPrice = r;
+						break;
+					}
+				}
+				setAppPriceFromRank(rankPrice);
 				drawData(output.ranks, output.outOfLeaderboardDates);
 			} else {
-				setError();
+				setAppPriceFromRank(null);
+				infoTotalRevenue.setInnerSafeHtml(SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
+				revenueTable.setRowCount(0, true);
+				chartContainer.setVisible(false);
+				noDataPanel.setVisible(true);
 			}
 			TooltipHelper.updateHelperTooltip();
-			loadingBar.hide();
+			// loadingBar.hide(true);
 		} else {
 			setError();
 		}
@@ -994,7 +1078,6 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public void getItemRanksFailure(GetItemRanksRequest input, Throwable caught) {
 		setError();
-
 	}
 
 	/*
@@ -1006,15 +1089,26 @@ public class ItemPage extends Page implements NavigationEventHandler, GetItemRan
 	@Override
 	public void getItemSalesRanksSuccess(GetItemSalesRanksRequest input, GetItemSalesRanksResponse output) {
 		if (output != null && output.item != null && output.status == StatusType.StatusTypeSuccess) {
-			if (output.ranks != null && output.ranks.size() > 0) {
+			if (output.ranks != null) {
 				setAppDetails(output.item);
-				setAppPriceFromRank(output.ranks.get(0));
+				Rank rankPrice = null;
+				for (Rank r : output.ranks) {
+					if (r.price != null && r.currency != null) {
+						rankPrice = r;
+						break;
+					}
+				}
+				setAppPriceFromRank(rankPrice);
 				drawData(output.ranks, null);
+				TooltipHelper.updateHelperTooltip();
+				// loadingBar.hide(true);
 			} else {
-				setError();
+				setAppPriceFromRank(null);
+				infoTotalRevenue.setInnerSafeHtml(SafeHtmlUtils.fromTrustedString("<span class=\"js-tooltip\" data-tooltip=\"No data available\">-</span>"));
+				revenueTable.setRowCount(0, true);
+				chartContainer.setVisible(false);
+				noDataPanel.setVisible(true);
 			}
-			TooltipHelper.updateHelperTooltip();
-			loadingBar.hide();
 		} else {
 			setError();
 		}

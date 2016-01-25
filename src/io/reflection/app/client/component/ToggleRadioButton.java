@@ -38,16 +38,19 @@ public class ToggleRadioButton extends Composite implements HasName, HasValue<Bo
 	@UiField(provided = true) SimpleRadioButton radioButton = new SimpleRadioButton("");
 	@UiField LabelElement label;
 	@UiField Element svgPath;
+	@UiField Element svgElem;
 	private final String radioButtonId = HTMLPanel.createUniqueId();
 	private String name;
 
-	public ToggleRadioButton(String name) {
+	public ToggleRadioButton(String name, String viewBox) {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		this.name = name;
 		radioButton.setName(name);
 		radioButton.getElement().setId(radioButtonId);
 		label.setHtmlFor(radioButtonId);
+		svgElem.setAttribute("viewBox", viewBox);
+		svgElem.setAttribute("enable-background", "new " + viewBox);
 
 		this.sinkEvents(Event.ONCLICK);
 		this.addHandler(new ClickHandler() {

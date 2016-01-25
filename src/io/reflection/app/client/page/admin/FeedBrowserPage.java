@@ -27,7 +27,6 @@ import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.BootstrapGwtCellTable;
-import io.reflection.app.client.part.Breadcrumbs;
 import io.reflection.app.client.part.SimplePager;
 import io.reflection.app.client.res.Images;
 import io.reflection.app.client.res.Styles;
@@ -70,8 +69,6 @@ public class FeedBrowserPage extends Page implements FilterEventHandler, Navigat
 	@UiField Selector category;
 	@UiField Selector mListType;
 
-	@UiField Breadcrumbs mBreadcrumbs;
-
 	public FeedBrowserPage() {
 		initWidget(uiBinder.createAndBindUi(this));
 
@@ -107,7 +104,6 @@ public class FeedBrowserPage extends Page implements FilterEventHandler, Navigat
 		FeedFetchController.get().addDataDisplay(mFeeds);
 		mPager.setDisplay(mFeeds);
 
-		refreshBreadcrumbs();
 	}
 
 	/*
@@ -121,15 +117,6 @@ public class FeedBrowserPage extends Page implements FilterEventHandler, Navigat
 
 		register(DefaultEventBus.get().addHandlerToSource(FilterEventHandler.TYPE, FilterController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
-	}
-
-	/**
-	 * 
-	 */
-	private void refreshBreadcrumbs() {
-		mBreadcrumbs.clear();
-		mBreadcrumbs.push(mAppStore.getItemText(mAppStore.getSelectedIndex()), mCountry.getItemText(mCountry.getSelectedIndex()),
-				mListType.getItemText(mListType.getSelectedIndex()), "Feeds");
 	}
 
 	/**
@@ -263,7 +250,6 @@ public class FeedBrowserPage extends Page implements FilterEventHandler, Navigat
 	 */
 	@Override
 	public <T> void filterParamChanged(String name, T currentValue, T previousValue) {
-		refreshBreadcrumbs();
 
 		if (NavigationController.get().getCurrentPage() == PageType.FeedBrowserPageType) {
 			if (name != null && (COUNTRY_KEY.equals(name) || STORE_KEY.equals(name) || CATEGORY_KEY.equals(name) || LIST_TYPE_KEY.equals(name))) {
@@ -283,7 +269,6 @@ public class FeedBrowserPage extends Page implements FilterEventHandler, Navigat
 	 */
 	@Override
 	public void filterParamsChanged(Filter currentFilter, Map<String, ?> previousValues) {
-		refreshBreadcrumbs();
 
 		if (NavigationController.get().getCurrentPage() == PageType.FeedBrowserPageType) {
 			if (previousValues.get(COUNTRY_KEY) != null || previousValues.get(STORE_KEY) != null || previousValues.get(CATEGORY_KEY) != null
@@ -314,7 +299,6 @@ public class FeedBrowserPage extends Page implements FilterEventHandler, Navigat
 			if (current.getAction() == null || !NavigationController.VIEW_ACTION_PARAMETER_VALUE.equals(current.getAction())) {
 				PageType.FeedBrowserPageType.show(NavigationController.VIEW_ACTION_PARAMETER_VALUE, FilterController.get().asFeedFilterString());
 			} else {
-				refreshBreadcrumbs();
 
 				FilterController fc = FilterController.get();
 

@@ -17,6 +17,7 @@ import io.reflection.app.client.handler.TogglePanelEventHandler;
 import io.reflection.app.client.handler.user.SessionEventHandler;
 import io.reflection.app.client.handler.user.UserPowersEventHandler;
 import io.reflection.app.client.helper.DOMHelper;
+import io.reflection.app.client.mixpanel.MixpanelHelper;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.client.res.Styles.ReflectionMainStyles;
@@ -79,7 +80,7 @@ public class Header extends Composite implements NavigationEventHandler, Session
 
 		setLoggedIn(false);
 
-		applyBtn.setTargetHistoryToken(PageType.RegisterPageType.asTargetHistoryToken("requestinvite"));
+		applyBtn.setTargetHistoryToken(PageType.RegisterPageType.asTargetHistoryToken());
 
 		initPanelLeftMenu();
 		initPanelsRight();
@@ -89,7 +90,7 @@ public class Header extends Composite implements NavigationEventHandler, Session
 
 	private void setLoggedIn(boolean loggedIn) {
 		applyBtn.setVisible(!loggedIn);
-		linkLogin.setText(loggedIn ? "My Account" : "Log In");
+		linkLogin.setText(loggedIn ? "Settings" : "Log In");
 	}
 
 	private void initPanelLeftMenu() {
@@ -213,6 +214,8 @@ public class Header extends Composite implements NavigationEventHandler, Session
 	void onApplyClicked(ClickEvent event) {
 		closePanelRightAccount();
 		closePanelRightSearch();
+		MixpanelHelper.trackClicked(MixpanelHelper.Event.GO_TO_SIGNUP_PAGE, "header_button_signup");
+
 	}
 
 	@UiHandler("linkSearch")
@@ -254,8 +257,7 @@ public class Header extends Composite implements NavigationEventHandler, Session
 	@Override
 	public void navigationChanged(Stack previous, Stack current) {
 		PageType currentPage = NavigationController.get().getCurrentPage();
-		if (Window.getClientWidth() > 960 && !panelLeftWasClosed && !PageType.LoadingPageType.equals(currentPage)
-				&& (!PageType.HomePageType.equals(currentPage) || (PageType.HomePageType.equals(currentPage) && SessionController.get().isValidSession()))) {
+		if (Window.getClientWidth() > 960 && !panelLeftWasClosed && !PageType.LoadingPageType.equals(currentPage)) {
 			Document.get().getBody().addClassName(style.panelLeftOpen());
 			hamburgerBtn.getElement().addClassName(style.isSelected());
 		} else {
@@ -266,7 +268,6 @@ public class Header extends Composite implements NavigationEventHandler, Session
 				new TogglePanelEventHandler.ChangedEvent(PanelType.PanelLeftMenuType, !panelLeftWasClosed, isPanelLeftMenuOpen()), this);
 
 		closePanelRightAccount();
-
 	}
 
 	/*
@@ -308,7 +309,7 @@ public class Header extends Composite implements NavigationEventHandler, Session
 	 * @see io.reflection.app.client.handler.user.UserPowersEventHandler#gotUserPowers(io.reflection.app.datatypes.shared.User, java.util.List, java.util.List)
 	 */
 	@Override
-	public void gotUserPowers(User user, List<Role> roles, List<Permission> permissions) {
+	public void gotUserPowers(User user, List<Role> roles, List<Permission> permissions, Integer daysSinceRoleAssigned) {
 		setLoggedIn(true);
 	}
 

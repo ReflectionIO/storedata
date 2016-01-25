@@ -7,11 +7,32 @@
 //
 package io.reflection.app.api.core;
 
-import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPAD_IOS;
-import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_IPHONE_AND_IPOD_TOUCH_IOS;
-import static io.reflection.app.service.sale.ISaleService.FREE_OR_PAID_APP_UNIVERSAL_IOS;
-import static io.reflection.app.shared.util.PagerHelper.updatePager;
-import io.reflection.app.accountdatacollectors.DataAccountCollectorFactory;
+import static io.reflection.app.service.sale.ISaleService.*;
+import static io.reflection.app.shared.util.PagerHelper.*;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeComparator;
+import org.joda.time.DateTimeZone;
+import org.joda.time.Days;
+
+import com.willshex.gson.json.service.server.ActionHandler;
+import com.willshex.gson.json.service.server.InputValidationException;
+import com.willshex.gson.json.service.server.ServiceException;
+import com.willshex.gson.json.service.shared.StatusType;
+
+import io.reflection.app.accountdatacollectors.ITunesConnectDownloadHelper;
 import io.reflection.app.api.ValidationHelper;
 import io.reflection.app.api.core.shared.call.ChangePasswordRequest;
 import io.reflection.app.api.core.shared.call.ChangePasswordResponse;
@@ -65,6 +86,8 @@ import io.reflection.app.api.core.shared.call.LoginRequest;
 import io.reflection.app.api.core.shared.call.LoginResponse;
 import io.reflection.app.api.core.shared.call.LogoutRequest;
 import io.reflection.app.api.core.shared.call.LogoutResponse;
+import io.reflection.app.api.core.shared.call.RegisterInterestBusinessRequest;
+import io.reflection.app.api.core.shared.call.RegisterInterestBusinessResponse;
 import io.reflection.app.api.core.shared.call.RegisterUserRequest;
 import io.reflection.app.api.core.shared.call.RegisterUserResponse;
 import io.reflection.app.api.core.shared.call.SearchForItemRequest;
@@ -73,17 +96,20 @@ import io.reflection.app.api.core.shared.call.UpdateLinkedAccountRequest;
 import io.reflection.app.api.core.shared.call.UpdateLinkedAccountResponse;
 import io.reflection.app.api.core.shared.call.UpdateNotificationsRequest;
 import io.reflection.app.api.core.shared.call.UpdateNotificationsResponse;
+import io.reflection.app.api.core.shared.call.UpgradeAccountRequest;
+import io.reflection.app.api.core.shared.call.UpgradeAccountResponse;
 import io.reflection.app.api.exception.AuthenticationException;
-import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.ApiError;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.client.helper.FilterHelper;
 import io.reflection.app.collectors.Collector;
 import io.reflection.app.collectors.CollectorFactory;
 import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
+import io.reflection.app.datatypes.shared.Event;
 import io.reflection.app.datatypes.shared.EventPriorityType;
 import io.reflection.app.datatypes.shared.FormType;
 import io.reflection.app.datatypes.shared.Notification;
@@ -95,6 +121,7 @@ import io.reflection.app.datatypes.shared.Sale;
 import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.helpers.ApiHelper;
+import io.reflection.app.helpers.AppleReporterHelper;
 import io.reflection.app.helpers.NotificationHelper;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.modellers.Modeller;
@@ -103,7 +130,9 @@ import io.reflection.app.service.category.CategoryServiceProvider;
 import io.reflection.app.service.country.CountryServiceProvider;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.datasource.DataSourceServiceProvider;
+import io.reflection.app.service.event.EventServiceProvider;
 import io.reflection.app.service.item.ItemServiceProvider;
+import io.reflection.app.service.lookupitem.LookupItemService;
 import io.reflection.app.service.notification.NotificationServiceProvider;
 import io.reflection.app.service.permission.PermissionServiceProvider;
 import io.reflection.app.service.rank.RankServiceProvider;
@@ -117,29 +146,8 @@ import io.reflection.app.service.user.UserServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
 import io.reflection.app.shared.util.PagerHelper;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-
-import com.willshex.gson.json.service.server.ActionHandler;
-import com.willshex.gson.json.service.server.InputValidationException;
-import com.willshex.gson.json.service.server.ServiceException;
-import com.willshex.gson.json.service.shared.StatusType;
-
 public final class Core extends ActionHandler {
 	private static final Logger LOG = Logger.getLogger(Core.class.getName());
-
-	private final static int SESSIONLESS_MAX_ITEMS = 10;
-	private final static int PERMISSIONLESS_MAX_ITEMS = 25;
 
 	public GetCountriesResponse getCountries(GetCountriesRequest input) {
 		LOG.finer("Entering getCountries");
@@ -166,12 +174,14 @@ public final class Core extends ActionHandler {
 			try {
 				input.store = ValidationHelper.validateStore(input.store, "input");
 				isStore = true;
-			} catch (InputValidationException ex) {}
+			} catch (InputValidationException ex) {
+			}
 
 			try {
 				input.query = ValidationHelper.validateQuery(input.query, "input");
 				isQuery = true;
-			} catch (InputValidationException ex) {}
+			} catch (InputValidationException ex) {
+			}
 
 			List<Country> countries = null;
 
@@ -184,8 +194,9 @@ public final class Core extends ActionHandler {
 				} else {
 					countries = CountryServiceProvider.provide().searchCountries(input.query, input.pager);
 				}
-			} else throw new InputValidationException(ApiError.GetCountriesNeedsStoreOrQuery.getCode(),
-					ApiError.GetCountriesNeedsStoreOrQuery.getMessage("input"));
+			} else
+				throw new InputValidationException(ApiError.GetCountriesNeedsStoreOrQuery.getCode(),
+						ApiError.GetCountriesNeedsStoreOrQuery.getMessage("input"));
 
 			if (countries != null) {
 				output.countries = countries;
@@ -227,12 +238,14 @@ public final class Core extends ActionHandler {
 			try {
 				input.country = ValidationHelper.validateCountry(input.country, "input");
 				isCountry = true;
-			} catch (InputValidationException ex) {}
+			} catch (InputValidationException ex) {
+			}
 
 			try {
 				input.query = ValidationHelper.validateQuery(input.query, "input");
 				isQuery = true;
-			} catch (InputValidationException ex) {}
+			} catch (InputValidationException ex) {
+			}
 
 			List<Store> stores = null;
 
@@ -245,8 +258,9 @@ public final class Core extends ActionHandler {
 				} else {
 					stores = StoreServiceProvider.provide().searchStores(input.query, input.pager);
 				}
-			} else throw new InputValidationException(ApiError.GetStoresNeedsCountryOrQuery.getCode(),
-					ApiError.GetStoresNeedsCountryOrQuery.getMessage("input"));
+			} else
+				throw new InputValidationException(ApiError.GetStoresNeedsCountryOrQuery.getCode(),
+						ApiError.GetStoresNeedsCountryOrQuery.getMessage("input"));
 
 			if (stores != null) {
 				output.stores = stores;
@@ -304,16 +318,16 @@ public final class Core extends ActionHandler {
 			int secondOfMinute = date.getSecondOfMinute();
 			int millisOfSeconds = date.getMillisOfSecond();
 
-			Date end;
+			// Date end;
 			Date start;
 
 			boolean isPastDate = (secondOfMinute == 0) && (millisOfSeconds == 0);
 
 			if (isPastDate) { // a date in the past
-				end = date.plusHours(24).toDate();
+				// end = date.plusHours(24).toDate();
 				start = date.toDate();
 			} else { // today
-				end = date.minusHours(12).toDate();
+				// end = date.minusHours(12).toDate();
 				start = date.minusHours(24).toDate();
 			}
 
@@ -358,92 +372,92 @@ public final class Core extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
-			boolean loggedIn = false;
-			boolean canSeeFullList = false;
+			if (input.listType == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("String: input.listType"));
 
-			if (input.session != null) {
-				output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+			if (input.on == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("Date: input.on"));
 
-				if (input.session != null) {
-					loggedIn = true;
+			input.store = ValidationHelper.validateStore(input.store, "input");
 
-					List<Role> roles = UserServiceProvider.provide().getRoles(input.session.user);
+			if (input.store == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("Store: input.store"));
 
-					List<Permission> permissions;
+			if (input.category == null) {
+				input.category = CategoryServiceProvider.provide().getAllCategory(input.store);
+			} else {
+				input.category = ValidationHelper.validateCategory(input.category, "input.category");
 
-					for (Role role : roles) {
-						permissions = RoleServiceProvider.provide().getPermissions(role);
-
-						for (Permission permission : permissions) {
-							if (DataTypeHelper.PERMISSION_FULL_RANK_VIEW_CODE.equals(permission.code)) {
-								canSeeFullList = true;
-								break;
-							}
-						}
-
-						if (canSeeFullList) {
-							break;
-						}
-					}
-				}
+				if (!input.store.a3Code.equals(input.category.store))
+					throw new InputValidationException(ApiError.CategoryStoreMismatch.getCode(), ApiError.CategoryStoreMismatch.getMessage("input.category"));
 			}
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
-
 			if (input.pager.sortDirection == null) {
 				input.pager.sortDirection = SortDirectionType.SortDirectionTypeAscending;
 			}
 
-			boolean skip = false;
-			int maxLimit = !loggedIn ? SESSIONLESS_MAX_ITEMS : (!canSeeFullList ? PERMISSIONLESS_MAX_ITEMS : -1);
+			boolean isAdmin = false;
+			boolean isPremium = false;
+			boolean isStandardDeveloper = false;
+			boolean canSeePredictions = (DateTimeComparator.getDateOnlyInstance().compare(input.on, new DateTime().minusDays(FilterHelper.DEFAULT_LEADERBOARD_LAG_DAYS)) == 0);
+			boolean isLoggedIn = false;
 
-			if (!loggedIn || !canSeeFullList) {
-				if (input.pager.start.longValue() > maxLimit) {
-					skip = true;
-				} else if (input.pager.count.longValue() + input.pager.start.longValue() > maxLimit) {
-					input.pager.count = Long.valueOf(maxLimit - input.pager.start.longValue());
+			if (input.session != null) {
+				output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+
+				isLoggedIn = true;
+
+				List<Role> roles = UserServiceProvider.provide().getUserRoles(input.session.user);
+				RoleServiceProvider.provide().inflateRoles(roles);
+				List<Permission> permissions;
+				for (Role role : roles) {
+					if (DataTypeHelper.ROLE_ADMIN_CODE.equals(role.code)) {
+						isAdmin = true;
+						canSeePredictions = true;
+						break;
+					} else if (DataTypeHelper.ROLE_PREMIUM_CODE.equals(role.code)) {
+						isPremium = true;
+					} else if (DataTypeHelper.ROLE_DEVELOPER_CODE.equals(role.code)) {
+						isStandardDeveloper = true;
+					}
+
+					permissions = RoleServiceProvider.provide().getPermissions(role); // Role permissions
+					permissions.addAll(UserServiceProvider.provide().getPermissions(input.session.user)); // Add permissions of the user
+					PermissionServiceProvider.provide().inflatePermissions(permissions);
+					for (Permission permission : permissions) {
+						if (isPremium && DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE.equals(permission.code)) {
+							canSeePredictions = true;
+							break;
+						}
+					}
+
 				}
 			}
 
-			if (!skip) {
-				boolean isAdmin = UserServiceProvider.provide().hasRole(input.session.user, DataTypeHelper.adminRole());
+			// if (!isLoggedIn) { // Force date to 2 days ago if is public call
+			// input.on = new DateTime(DateTimeZone.UTC).minusDays(3).toDate();
+			// }
 
-				if (!isAdmin) {
+			if (!isAdmin) {
+				if (!(Arrays.asList("fr", "de", "gb", "it").contains(input.country.a2Code))) {
 					input.country = new Country();
 					input.country.a2Code = "gb";
-					input.store = new Store();
-					input.store.a3Code = DataTypeHelper.IOS_STORE_A3;
-					input.category = new Category();
-					input.category.id = 15L;
 				}
-				input.country = ValidationHelper.validateCountry(input.country, "input");
+				input.store = new Store();
+				input.store.a3Code = DataTypeHelper.IOS_STORE_A3;
+				input.category = new Category();
+				input.category.id = 15L;
+			}
+			input.country = ValidationHelper.validateCountry(input.country, "input");
 
-				if (input.listType == null)
-					throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("String: input.listType"));
+			Collector collector = CollectorFactory.getCollectorForStore(input.store.a3Code);
 
-				if (input.on == null)
-					throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("Date: input.on"));
+			Set<String> itemIds = new HashSet<String>();
+			List<Rank> ranks = new ArrayList<Rank>();
 
-				input.store = ValidationHelper.validateStore(input.store, "input");
-
-				if (input.store == null)
-					throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("Store: input.store"));
-
-				if (input.category == null) {
-					input.category = CategoryServiceProvider.provide().getAllCategory(input.store);
-				} else {
-					input.category = ValidationHelper.validateCategory(input.category, "input.category");
-
-					if (!input.store.a3Code.equals(input.category.store))
-						throw new InputValidationException(ApiError.CategoryStoreMismatch.getCode(),
-								ApiError.CategoryStoreMismatch.getMessage("input.category"));
-				}
-
-				Set<String> itemIds = new HashSet<String>();
+			if (input.listType.contains("all")) {
 				List<String> listTypes = ApiHelper.getAllListTypes(input.store, input.listType);
-				Collector collector = CollectorFactory.getCollectorForStore(input.store.a3Code);
-
-				List<Rank> ranks;
 				for (String listType : listTypes) {
 					// get all the ranks for the list type (we are using an infinite pager with no sorting to allow us to generate a deletion key during
 					// prediction)
@@ -451,27 +465,75 @@ public final class Core extends ActionHandler {
 
 					for (Rank rank : ranks) {
 						itemIds.add(rank.itemId);
+						int ranking = (collector.isGrossing(listType) ? rank.grossingPosition.intValue() : rank.position.intValue());
+						if (!canSeePredictions || (!isLoggedIn && ranking > 10)) {
+							rank.downloads = null;
+							rank.revenue = null;
+						}
 					}
 
 					if (collector.isFree(listType)) {
 						output.freeRanks = ranks;
 					} else if (collector.isPaid(listType)) {
 						output.paidRanks = ranks;
+						if (!isAdmin && !input.country.a2Code.equals("gb")) {// Remove paid ranks if not UK
+							for (Rank paidRank : output.paidRanks) {
+								paidRank.downloads = null;
+								paidRank.revenue = null;
+							}
+						}
 					} else if (collector.isGrossing(listType)) {
 						output.grossingRanks = ranks;
 					}
 				}
-
-				output.items = ItemServiceProvider.provide().getInternalIdItemBatch(itemIds);
-
-				output.pager = input.pager;
-
-				if (input.pager.totalCount == null && input.pager.boundless != Boolean.TRUE) {
-					input.pager.totalCount = Long.valueOf(output.freeRanks.size());
+			} else if (collector.isFree(input.listType)) {
+				ranks = RankServiceProvider.provide().getRanks(input.country, input.category, input.listType, input.on);
+				for (Rank rank : ranks) {
+					itemIds.add(rank.itemId);
+					if (!canSeePredictions || (!isLoggedIn && rank.position.intValue() > 10)) {
+						rank.downloads = null;
+						rank.revenue = null;
+					}
 				}
+				output.freeRanks = ranks;
 
-				updatePager(output.pager, output.freeRanks, input.pager.totalCount);
+			} else if (collector.isPaid(input.listType)) {
+				ranks = RankServiceProvider.provide().getRanks(input.country, input.category, input.listType, input.on);
+				for (Rank rank : ranks) {
+					itemIds.add(rank.itemId);
+					if (!canSeePredictions || (!isLoggedIn && rank.position.intValue() > 10)) {
+						rank.downloads = null;
+						rank.revenue = null;
+					}
+					if (!isAdmin && !input.country.a2Code.equals("gb")) {// Remove paid ranks if not UK
+						rank.downloads = null;
+						rank.revenue = null;
+					}
+				}
+				output.paidRanks = ranks;
+
+			} else if (collector.isGrossing(input.listType)) {
+				ranks = RankServiceProvider.provide().getRanks(input.country, input.category, input.listType, input.on);
+				for (Rank rank : ranks) {
+					itemIds.add(rank.itemId);
+					if (!canSeePredictions || (!isLoggedIn && rank.grossingPosition.intValue() > 10)) {
+						rank.downloads = null;
+						rank.revenue = null;
+					}
+				}
+				output.grossingRanks = ranks;
 			}
+
+			output.items = ItemServiceProvider.provide().getInternalIdItemBatch(itemIds);
+
+			output.pager = input.pager;
+
+			// if (input.pager.totalCount == null && input.pager.boundless != Boolean.TRUE) {
+			input.pager.totalCount = 200L;
+			// }
+
+			// updatePager(output.pager, output.freeRanks, input.pager.totalCount);
+			// }
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -490,6 +552,15 @@ public final class Core extends ActionHandler {
 				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("GetItemRanksRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			// boolean isLoggedIn = false;
+			boolean isAdmin = false;
+
+			if (input.session != null) {
+				output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+				// isLoggedIn = true;
+				isAdmin = UserServiceProvider.provide().hasRole(input.session.user, DataTypeHelper.adminRole());
+			}
 
 			input.pager = ValidationHelper.validatePager(input.pager, "input");
 
@@ -555,12 +626,21 @@ public final class Core extends ActionHandler {
 			// }
 			// }
 
-			if (output.ranks == null) {
-				output.ranks = RankServiceProvider.provide().getItemRanks(input.country, input.category, input.listType, input.item, input.start, input.end,
-						input.pager);
+			if (input.pager.start.intValue() == 0) {
+				output.item = input.item;
 			}
 
-			// Identify out of leaderboard dates
+			output.ranks = RankServiceProvider.provide().getItemRanks(input.country, input.category, input.listType, input.item, input.start, input.end,
+					input.pager);
+
+			if (!isAdmin) {
+				for (Rank r : output.ranks) {
+					r.downloads = null;
+					r.revenue = null;
+				}
+			}
+
+			// // Identify out of leaderboard dates
 			// List<Date> itemRanksDates = new ArrayList<Date>(); // Dates retrieved from the query
 			// for (Rank r : output.ranks) {
 			// itemRanksDates.add(r.date);
@@ -582,10 +662,6 @@ public final class Core extends ActionHandler {
 			// output.outOfLeaderboardDates = RankServiceProvider.provide().getOutOfLeaderboardDates(missingDates, input.country, input.category,
 			// input.listType);
 			// }
-
-			if (input.pager.start.intValue() == 0) {
-				output.item = input.item;
-			}
 
 			output.pager = input.pager;
 			updatePager(output.pager, output.ranks);
@@ -610,33 +686,66 @@ public final class Core extends ActionHandler {
 
 			boolean isAction = input.actionCode != null;
 
-			if (input.accessCode.equalsIgnoreCase("b72b4e32-1062-4cc7-bc6b-52498ee10f09") || input.user.password == null || input.user.password.length() == 0) {
-				// Alpha user or Request invite
-				input.user = ValidationHelper.validateAlphaUser(input.user, "input.user");
+			if (input.accessCode.equalsIgnoreCase("b72b4e32-1062-4cc7-bc6b-52498ee10f09")) { // Alpha user
+				input.user = ValidationHelper.validateUserWithoutPassword(input.user, "input.user");
 			} else {
-				if (isAction) {
+				if (isAction) { // Update password
 					input.user.password = ValidationHelper.validatePassword(input.user.password, "input.user.password");
-				} else {
+				} else { // Registration
 					input.user = ValidationHelper.validateRegisteringUser(input.user, "input.user");
 				}
 			}
 
-			User user = null;
+			User addedUser = null;
 
 			if (isAction) {
-				user = UserServiceProvider.provide().getActionCodeUser(input.actionCode);
+				addedUser = UserServiceProvider.provide().getActionCodeUser(input.actionCode);
 
-				if (user == null)
+				if (addedUser == null)
 					throw new InputValidationException(ApiError.InvalidActionCode.getCode(), ApiError.InvalidActionCode.getMessage("input.actionCode"));
 
-				UserServiceProvider.provide().updateUserPassword(user, input.user.password, Boolean.FALSE);
+				UserServiceProvider.provide().updateUserPassword(addedUser, input.user.password, Boolean.FALSE);
 
-				LOG.info(String.format("Completed user registeration for user [%s %s] and email [%s] and action code [%s]", user.forename, user.surname,
-						user.username, input.actionCode));
+				LOG.info(String.format("Completed user registeration for user [%s %s] and email [%s] and action code [%s]", addedUser.forename,
+						addedUser.surname, addedUser.username, input.actionCode));
 			} else {
-				user = UserServiceProvider.provide().addUser(input.user);
+				// User that has registered the business interest OR requested to be part of the private beta but never completed the sign up process
+				boolean notRegisteredUser = false;
+				User u = UserServiceProvider.provide().getUsernameUser(input.user.username);
+				if (u != null && u.lastLoggedIn == null) {
+					notRegisteredUser = true;
+					input.user.id = u.id;
+					// Update previously inserted user
+					addedUser = UserServiceProvider.provide().updateUser(input.user);
+					UserServiceProvider.provide().updateUserPassword(addedUser, input.user.password, Boolean.FALSE);
+				}
 
-				LOG.info(String.format("Added user with name [%s %s] and email [%s],", user.forename, user.surname, user.username));
+				if (!notRegisteredUser) {
+					addedUser = UserServiceProvider.provide().addUser(input.user);
+					LOG.info(String.format("Added user with name [%s %s] and email [%s],", addedUser.forename, addedUser.surname, addedUser.username));
+				}
+
+				if (addedUser != null) {
+					output.registeredUser = addedUser;
+					// Add standard developer role
+					Role devRole = ValidationHelper.validateRole(DataTypeHelper.createRole(DataTypeHelper.ROLE_DEVELOPER_CODE), "input.role");
+					UserServiceProvider.provide().assignRole(input.user, devRole);
+					// Notify the registered user
+					Map<String, Object> values = new HashMap<String, Object>();
+					values.put("user", addedUser);
+					Event event = EventServiceProvider.provide().getCodeEvent(DataTypeHelper.REGISTERED_NOW_LINK_EVENT_CODE);
+					if (event != null) {
+						String body = NotificationHelper.inflate(values, event.longBody);
+						Notification notification = (new Notification()).from("hello@reflection.io").user(addedUser).event(event).body(body)
+								.subject(event.subject);
+						Notification added = NotificationServiceProvider.provide().addNotification(notification);
+						if (added.type != NotificationTypeType.NotificationTypeTypeInternal) {
+							notification.type = NotificationTypeType.NotificationTypeTypeInternal;
+							NotificationServiceProvider.provide().addNotification(notification);
+						}
+					}
+				}
+
 			}
 
 			output.status = StatusType.StatusTypeSuccess;
@@ -694,7 +803,8 @@ public final class Core extends ActionHandler {
 
 					if (output.session != null) {
 						output.session.user = user;
-					} else throw new Exception("Unexpected blank session after creating user session.");
+					} else
+						throw new Exception("Unexpected blank session after creating user session.");
 				} else {
 					output.session = SessionServiceProvider.provide().extendSession(output.session, ISessionService.SESSION_SHORT_DURATION);
 					output.session.user = user;
@@ -798,7 +908,9 @@ public final class Core extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			if (input.user.id.longValue() != input.session.user.id.longValue()) throw new ServiceException(-1, "User and session user do not match");
+			if (!UserServiceProvider.provide().hasRole(input.session.user, DataTypeHelper.adminRole())) {
+				if (input.user.id.longValue() != input.session.user.id.longValue()) throw new ServiceException(-1, "User and session user do not match");
+			}
 
 			ValidationHelper.validateExistingUser(input.user, "input.user");
 
@@ -829,19 +941,30 @@ public final class Core extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			String properties = input.linkedAccount.properties;
-			String password = ValidationHelper.validateStringLength(input.linkedAccount.password, "input.linkedAccount.password", 2, 1000);
+			String tempPassword = ValidationHelper.validateStringLength(input.linkedAccount.password, "input.linkedAccount.password", 2, 1000);
+
+			if (tempPassword == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("input.linkedAccount.password"));
 
 			input.linkedAccount = ValidationHelper.validateDataAccount(input.linkedAccount, "input.linkedAccount");
 
 			// DataAccountCollectorFactory.getCollectorForSource(input.linkedAccount.source.a3Code).validateProperties(input.linkedAccount.properties);
 
-			input.linkedAccount.properties = properties;
-			input.linkedAccount.password = password;
-			if (password == null)
-				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("input.linkedAccount.password"));
+			input.linkedAccount.password = tempPassword;
 
-			DataAccount linkedAccount = DataAccountServiceProvider.provide().updateDataAccount(input.linkedAccount);
+			input.linkedAccount.source = new DataSource(); // Add iTunes Connect data source
+			input.linkedAccount.source.a3Code = "itc";
+
+			// Verify linked account with Apple
+			try {
+				AppleReporterHelper.getVendors(input.linkedAccount.username, input.linkedAccount.password);
+			} catch (InputValidationException e) {
+
+				if (e.getCode() != 214 && e.getCode() != 215 && e.getCode() != 216) throw new InputValidationException(ApiError.InvalidDataAccountCredentials.getCode(),
+						ApiError.InvalidDataAccountCredentials.getMessage(input.linkedAccount.username));
+			}
+
+			DataAccount linkedAccount = DataAccountServiceProvider.provide().updateDataAccount(input.linkedAccount, true);
 
 			if (LOG.isLoggable(GaeLevel.DEBUG)) {
 				LOG.fine(String.format("Linked account with id [%d] details updated", linkedAccount.id.longValue()));
@@ -875,34 +998,36 @@ public final class Core extends ActionHandler {
 			boolean isAdmin = UserServiceProvider.provide().hasRole(input.session.user, DataTypeHelper.adminRole());
 
 			if (hasDataAccount || isAdmin) {
-				User user = UserServiceProvider.provide().getDataAccountOwner(input.linkedAccount);
-
-				if (user != null && user.id.longValue() == input.session.user.id.longValue()) {
+				User linkedAccountOwner = UserServiceProvider.provide().getDataAccountOwner(input.linkedAccount);
+				// If the owner, remove all other users from this linked account (except test linked account)
+				if (linkedAccountOwner != null && linkedAccountOwner.id.longValue() == input.session.user.id.longValue()
+						&& input.linkedAccount.id.longValue() != 357) {
 					UserServiceProvider.provide().deleteAllUsersDataAccount(input.linkedAccount);
-
-					if (!UserServiceProvider.provide().hasDataAccounts(user) && !isAdmin) {
-						Permission hlaPermission = PermissionServiceProvider.provide().getCodePermission(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE);
-						UserServiceProvider.provide().revokePermission(user, hlaPermission);
-					}
 
 					// Set linked account as inactive
 					input.linkedAccount.active = DataTypeHelper.INACTIVE_VALUE;
-					DataAccountServiceProvider.provide().updateDataAccount(input.linkedAccount);
+					DataAccountServiceProvider.provide().updateDataAccount(input.linkedAccount, false);
 
 					if (LOG.isLoggable(GaeLevel.DEBUG)) {
 						LOG.finer(String.format("Linked account with id [%d] deleted by owner [%d]", input.linkedAccount.id.longValue(),
 								input.session.user.id.longValue()));
 					}
 				} else {
-					UserServiceProvider.provide().deleteDataAccount(input.session.user, input.linkedAccount);
+					UserServiceProvider.provide().deleteUserDataAccount(input.session.user, input.linkedAccount);
 
 					if (LOG.isLoggable(GaeLevel.DEBUG)) {
 						LOG.finer(String.format("Linked account with id [%d] removed from user account [%d]", input.linkedAccount.id.longValue(),
 								input.session.user.id.longValue()));
 					}
 				}
+				// Revoke HLA permission
+				if (!UserServiceProvider.provide().hasDataAccounts(input.session.user) && !isAdmin) {
+					Permission hlaPermission = PermissionServiceProvider.provide().getCodePermission(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE);
+					UserServiceProvider.provide().revokePermission(input.session.user, hlaPermission);
+				}
 
-			} else throw new InputValidationException(ApiError.DataAccountUserMissmatch.getCode(), ApiError.DataAccountUserMissmatch.getMessage());
+			} else
+				throw new InputValidationException(ApiError.DataAccountUserMissmatch.getCode(), ApiError.DataAccountUserMissmatch.getMessage());
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -967,27 +1092,46 @@ public final class Core extends ActionHandler {
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
 			if (input.permissionsOnly != Boolean.TRUE) {
-				output.roles = UserServiceProvider.provide().getRoles(input.session.user);
+				Date userRoleCreated = null;
+				output.roles = UserServiceProvider.provide().getUserRoles(input.session.user);
 
-				if (output.roles != null) {
-					if (input.idsOnly == Boolean.FALSE) {
-						RoleServiceProvider.provide().inflateRoles(output.roles);
+				if (output.roles == null || output.roles.isEmpty()) {
+					List<Role> expiredRoles = UserServiceProvider.provide().getUserRoles(input.session.user, true);
+					// Premium role just expired
+					if (expiredRoles != null && !expiredRoles.isEmpty() && expiredRoles.get(0).id == 3) { // TODO use code instead
+						UserServiceProvider.provide().assignRole(input.session.user,
+								RoleServiceProvider.provide().getCodeRole(DataTypeHelper.ROLE_DEVELOPER_CODE));
+						// TODO Renew?? Check if already used the trial? (might be based on a date, e.g. if dev userrole created < date, already used the trial)
+					} else {
+						UserServiceProvider.provide().assignRole(input.session.user,
+								RoleServiceProvider.provide().getCodeRole(DataTypeHelper.ROLE_DEVELOPER_CODE));
 					}
+					output.roles = UserServiceProvider.provide().getUserRoles(input.session.user);
+				}
+				userRoleCreated = output.roles.get(0).created;
 
-					for (Role role : output.roles) {
-						role.permissions = RoleServiceProvider.provide().getPermissions(role);
+				RoleServiceProvider.provide().inflateRoles(output.roles); // Convert from UserRole to Role
+				output.roles.get(0).created = userRoleCreated;
 
-						if (role.permissions != null && input.idsOnly == Boolean.FALSE) {
-							PermissionServiceProvider.provide().inflatePermissions(role.permissions);
-						}
+				for (Role role : output.roles) {
+					role.permissions = RoleServiceProvider.provide().getPermissions(role);
+
+					if (role.permissions != null) {
+						PermissionServiceProvider.provide().inflatePermissions(role.permissions);
 					}
+				}
+
+				// Notify the frontend if the last role expired was premium
+				// TODO if renewed throw new ServiceException(ApiError.PremiumRoleExpired.getCode(), ApiError.PremiumRoleExpired.getMessage());
+				if (userRoleCreated != null) {
+					output.daysSinceRoleAssigned = Days.daysBetween(new DateTime(userRoleCreated, DateTimeZone.UTC), DateTime.now(DateTimeZone.UTC)).getDays();
 				}
 			}
 
 			if (input.rolesOnly != Boolean.TRUE) {
 				output.permissions = UserServiceProvider.provide().getPermissions(input.session.user);
 
-				if (output.permissions != null && input.idsOnly == Boolean.FALSE) {
+				if (output.permissions != null) {
 					PermissionServiceProvider.provide().inflatePermissions(output.permissions);
 				}
 			}
@@ -1093,11 +1237,6 @@ public final class Core extends ActionHandler {
 
 			output.pager = input.pager;
 
-			// ItemSaleArchiver archiver = ArchiverFactory.getItemSaleArchiver();
-			// String key = archiver.createItemsKey(input.linkedAccount, form);
-			// List<Item> items = ItemServiceProvider.provide().getInternalIdItemBatch(archiver.getItemsIds(key));
-			//
-			// if (items == null || items.size() == 0) {
 			List<String> freeOrPaidApps = new ArrayList<String>();
 
 			freeOrPaidApps.add(FREE_OR_PAID_APP_UNIVERSAL_IOS);
@@ -1107,19 +1246,10 @@ public final class Core extends ActionHandler {
 				freeOrPaidApps.add(FREE_OR_PAID_APP_IPAD_IOS);
 			}
 
-			output.items = SaleServiceProvider.provide().getDataAccountItems(input.linkedAccount, freeOrPaidApps, input.pager);
+			output.items = LookupItemService.INSTANCE.getDataAccountItems(input.linkedAccount);
 
 			updatePager(output.pager, output.items,
 					input.pager.totalCount == null ? SaleServiceProvider.provide().getDataAccountItemsCount(input.linkedAccount, freeOrPaidApps) : null);
-			// } else {
-			// if (items.size() > (input.pager.start.longValue() + input.pager.count.longValue())) {
-			// output.items = items.subList(input.pager.start.intValue(), input.pager.count.intValue());
-			// } else {
-			// output.items = items;
-			// }
-			//
-			// output.pager.totalCount = Long.valueOf(items.size());
-			// }
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -1153,64 +1283,88 @@ public final class Core extends ActionHandler {
 
 			input.password = ValidationHelper.validateStringLength(input.password, "input.password", 2, 1000);
 
-			DataAccountCollectorFactory.getCollectorForSource(input.source.a3Code).validateProperties(input.properties);
+			boolean isAdmin = UserServiceProvider.provide().hasRole(input.session.user, DataTypeHelper.adminRole());
+			Permission hlaPermission = PermissionServiceProvider.provide().getCodePermission(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE);
+			boolean hasHlaPermission = UserServiceProvider.provide().hasPermission(input.session.user, hlaPermission);
 
-			// If not a test user, check if is a valid Apple linked account
-			Role testRole = RoleServiceProvider.provide().getCodeRole(DataTypeHelper.ROLE_TEST_CODE);
-			if (!UserServiceProvider.provide().hasRole(input.session.user, testRole)) {
-				DataAccount dataAccountToTest = new DataAccount();
+			output.linkedAccounts = new ArrayList<DataAccount>();
+			List<String> vendors = new ArrayList<String>();
 
-				dataAccountToTest.username = input.username;
-				dataAccountToTest.password = input.password;
-				dataAccountToTest.properties = input.properties;
-				dataAccountToTest.source = input.source;
+			if ("THETESTACCOUNT".equals(input.username) && "thegrange".equals(input.password)) { // TODO Redesign custom exceptions
 
+				DataAccount testAccount = DataAccountServiceProvider.provide().getDataAccount(357L);
+				output.linkedAccounts.add(testAccount);
+				UserServiceProvider.provide().addOrRestoreUserDataAccount(input.session.user, testAccount);
+
+			} else { // If not the test linked account, check if is a valid Apple linked account and retrieve the vendors
+
+				boolean accountNumberRequired = false;
 				try {
-					DataAccountServiceProvider.provide().verifyDataAccount(dataAccountToTest, DateTime.now(DateTimeZone.UTC).minusDays(45).toDate());
-				} catch (DataAccessException daEx) {
-					String error = daEx.getCause() == null ? null : daEx.getCause().getMessage();
+					vendors = AppleReporterHelper.getVendors(input.username, input.password);
+				} catch (InputValidationException e) {
 
-					if (error != null) {
+					if (e.getCode() == 214 || e.getCode() == 215 || e.getCode() == 216) { // Required/wrong account number (but valid credentials)
+						accountNumberRequired = true;
+					} else if (e.getCode() == 108) throw new InputValidationException(ApiError.InvalidDataAccountCredentials.getCode(),
+							ApiError.InvalidDataAccountCredentials.getMessage(input.username));
+					else
+						throw e;
+				}
 
-						if (error.equals("Please enter a valid vendor number."))
-							throw new InputValidationException(ApiError.InvalidDataAccountVendor.getCode(),
-									ApiError.InvalidDataAccountVendor.getMessage(dataAccountToTest.properties));
-
-						if (!error.equalsIgnoreCase("Daily reports are available only for past 30 days, please enter a date within past 30 days.")
-								&& !error.equalsIgnoreCase("There is no report available to download, for the selected period")) {
-							LOG.log(Level.WARNING, "There was an unexpected error when trying to link the account. Cause: ", daEx.getCause());
-
-							throw new InputValidationException(ApiError.InvalidDataAccountCredentials.getCode(),
-									ApiError.InvalidDataAccountCredentials.getMessage(dataAccountToTest.username));
-						}
+				if (accountNumberRequired) {
+					Map<String, String> accounts = AppleReporterHelper.getAccounts(input.username, input.password);
+					for (String accountNumber : accounts.values()) { // For every account number, get the vendors
+						vendors.addAll(AppleReporterHelper.getVendors(input.username, input.password, accountNumber));
 					}
 				}
+
+				if (vendors.isEmpty()) throw new Exception("Vendor list is empty");
+
+				// Add a data account for every vendor
+				for (String v : vendors) {
+					DataAccount addedAccount = UserServiceProvider.provide().addDataAccount(input.session.user, input.source, input.username, input.password,
+							ITunesConnectDownloadHelper.createProperties(v));
+					addedAccount.source = input.source;
+					output.linkedAccounts.add(addedAccount);
+				}
+
 			}
 
-			output.account = UserServiceProvider.provide().addDataAccount(input.session.user, input.source, input.username, input.password, input.properties);
-
-			output.account.source = input.source;
-
-			boolean isAdmin = UserServiceProvider.provide().hasRole(input.session.user, DataTypeHelper.adminRole());
-
-			Permission hlaPermission = PermissionServiceProvider.provide().getCodePermission(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE);
-			boolean hasPermission = UserServiceProvider.provide().hasPermission(input.session.user, hlaPermission);
-
-			if (!hasPermission && !isAdmin) {
-				UserServiceProvider.provide().assignPermission(input.session.user, hlaPermission);
-			}
-
-			if (output.account != null) {
+			if (!output.linkedAccounts.isEmpty()) {
 				if (input.session.user == null || input.session.user.forename == null) {
 					input.session.user = UserServiceProvider.provide().getUser(input.session.user.id);
 				}
 
+				if (!hasHlaPermission && !isAdmin) {
+					UserServiceProvider.provide().assignPermission(input.session.user, hlaPermission);
+				}
+
+				// If the first linked account, send an email to the user
+				if (!hasHlaPermission) {
+					Map<String, Object> values = new HashMap<String, Object>();
+					values.put("user", input.session.user);
+					values.put("dataaccount", output.linkedAccounts.get(0));
+
+					Event event = EventServiceProvider.provide().getCodeEvent(DataTypeHelper.CONFIRMATION_ACCOUNT_LINKED_EVENT_CODE);
+					if (event != null) {
+						String body = NotificationHelper.inflate(values, event.longBody);
+						Notification notification = (new Notification()).from("hello@reflection.io").user(input.session.user).event(event).body(body)
+								.subject(event.subject);
+						Notification added = NotificationServiceProvider.provide().addNotification(notification);
+						if (added.type != NotificationTypeType.NotificationTypeTypeInternal) {
+							notification.type = NotificationTypeType.NotificationTypeTypeInternal;
+							NotificationServiceProvider.provide().addNotification(notification);
+						}
+					}
+				}
+
+				// Inform the admin of the linked account
 				User listeningUser = UserServiceProvider.provide().getUsernameUser("chi@reflection.io");
 
 				Map<String, Object> parameters = new HashMap<String, Object>();
 				parameters.put("listener", listeningUser);
 				parameters.put("user", input.session.user);
-				parameters.put("account", output.account);
+				parameters.put("account", output.linkedAccounts.get(0));
 				parameters.put("source", input.source);
 
 				String body = NotificationHelper
@@ -1226,7 +1380,8 @@ public final class Core extends ActionHandler {
 					notification.type = NotificationTypeType.NotificationTypeTypeInternal;
 					NotificationServiceProvider.provide().addNotification(notification);
 				}
-			}
+			} else
+				throw new Exception();
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -1253,7 +1408,7 @@ public final class Core extends ActionHandler {
 
 			// input.permissions = ValidationHelper.validatePermissions(input.permissions, "input.permissions");
 
-			List<Role> roles = UserServiceProvider.provide().getRoles(input.session.user);
+			List<Role> roles = UserServiceProvider.provide().getUserRoles(input.session.user);
 
 			// check the roles
 			if (input.roles != null) {
@@ -1651,21 +1806,53 @@ public final class Core extends ActionHandler {
 
 			if (input.end == null) {
 				input.end = DateTime.now(DateTimeZone.UTC).toDate();
+			} else {
+				input.end = (new DateTime(input.end.getTime(), DateTimeZone.UTC)).toDate();
 			}
 
 			if (input.start == null) {
-				input.start = (new DateTime(input.end.getTime(), DateTimeZone.UTC)).minusDays(30).toDate();
+				input.start = (new DateTime(input.start.getTime(), DateTimeZone.UTC)).minusDays(30).toDate();
+			} else {
+				input.start = (new DateTime(input.start.getTime(), DateTimeZone.UTC)).toDate();
 			}
 
 			FormType form = null;
 			Modeller modeller = ModellerFactory.getModellerForStore(DataTypeHelper.IOS_STORE_A3);
 			form = modeller.getForm(input.listType);
 
+			output.item = input.item;
+
 			output.ranks = RankServiceProvider.provide().getSaleSummaryAndRankForItemAndFormType(input.item.internalId, input.country, input.category.id, form,
 					input.start, input.end, input.pager);
 
-			output.item = input.item;
-			// output.linkedAccount = linkedAccount;
+			// TODO temp solution: show zero downloads and revenues if the dataaccountfetch that day isn't with status ingested
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(input.start);
+			cal.set(Calendar.HOUR_OF_DAY, 0);
+			cal.set(Calendar.MINUTE, 0);
+			cal.set(Calendar.SECOND, 0);
+			cal.set(Calendar.MILLISECOND, 0);
+			DateTime progressiveDate = new DateTime(cal, DateTimeZone.UTC);
+			List<Rank> emptyRange = new ArrayList<Rank>();
+			while (DateTimeComparator.getDateOnlyInstance().compare(progressiveDate, input.end) <= 0) {
+				Rank emptyRank = new Rank();
+				emptyRank.date = new Date(progressiveDate.getMillis());
+				emptyRank.downloads = new Integer(0);
+				emptyRank.revenue = new Float(0);
+				emptyRange.add(emptyRank);
+				progressiveDate = progressiveDate.plusDays(1);
+			}
+			if (!output.ranks.isEmpty()) {
+				for (Rank rank : output.ranks) {
+					for (int i = 0; i < emptyRange.size(); i++) {
+						if (DateTimeComparator.getDateOnlyInstance().compare(rank.date, emptyRange.get(i).date) == 0) {
+							emptyRange.set(i, rank);
+							break;
+						}
+					}
+				}
+			}
+			output.ranks = new ArrayList<Rank>(emptyRange);
 
 			output.pager = input.pager;
 			updatePager(output.pager, output.ranks);
@@ -1689,22 +1876,25 @@ public final class Core extends ActionHandler {
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
-			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+			if (input.session != null) {
 
-			input.item = ValidationHelper.validateItem(input.item, "input.item");
+				output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 
-			DataAccount linkedAccount = SaleServiceProvider.provide().getDataAccount(input.item.internalId);
+				input.item = ValidationHelper.validateItem(input.item, "input.item");
 
-			if (linkedAccount != null) {
-				boolean hasLinkedAccount = UserServiceProvider.provide().hasDataAccount(input.session.user, linkedAccount);
+				DataAccount linkedAccount = SaleServiceProvider.provide().getDataAccount(input.item.internalId);
 
-				if (hasLinkedAccount) {
-					output.item = input.item;
-					output.dataSource = linkedAccount.source;
-					output.linkedAccount = linkedAccount;
+				if (linkedAccount != null) {
+					boolean hasLinkedAccount = UserServiceProvider.provide().hasDataAccount(input.session.user, linkedAccount);
 
-					output.linkedAccount.source = new DataSource();
-					output.linkedAccount.source.id = output.dataSource.id;
+					if (hasLinkedAccount) {
+						output.item = input.item;
+						output.dataSource = linkedAccount.source;
+						output.linkedAccount = linkedAccount;
+
+						output.linkedAccount.source = new DataSource();
+						output.linkedAccount.source.id = output.dataSource.id;
+					}
 				}
 			}
 
@@ -1834,6 +2024,99 @@ public final class Core extends ActionHandler {
 			output.error = convertToErrorAndLog(LOG, e);
 		}
 		LOG.finer("Exiting updateNotifications");
+		return output;
+	}
+
+	public UpgradeAccountResponse upgradeAccount(UpgradeAccountRequest input) {
+		LOG.finer("Entering upgradeAccount");
+		UpgradeAccountResponse output = new UpgradeAccountResponse();
+		try {
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+			input.session.user = UserServiceProvider.provide().getUser(input.session.user.id); // Inflate user
+
+			input.role = ValidationHelper.validateRole(input.role, "input.role");
+
+			Role devRole = RoleServiceProvider.provide().getCodeRole(DataTypeHelper.ROLE_DEVELOPER_CODE);
+
+			if (!UserServiceProvider.provide().hasRole(input.session.user, devRole).booleanValue())
+				throw new InputValidationException(ApiError.RoleNotFound.getCode(), ApiError.RoleNotFound.getMessage("UpgradeAccountRequest: input"));
+
+			UserServiceProvider.provide().revokeRole(input.session.user, devRole);
+
+			// UserServiceProvider.provide().assignExpiringRole(input.session.user, input.role, 30);
+			UserServiceProvider.provide().assignRole(input.session.user, input.role);
+
+			// Notify the upgraded user
+			Map<String, Object> values = new HashMap<String, Object>();
+			values.put("user", input.session.user);
+			Event event = EventServiceProvider.provide().getCodeEvent(DataTypeHelper.UPGRADED_TO_PREMIUM_EVENT_CODE);
+			if (event != null) {
+				String body = NotificationHelper.inflate(values, event.longBody);
+				Notification notification = (new Notification()).from("hello@reflection.io").user(input.session.user).event(event).body(body)
+						.subject(event.subject);
+				Notification added = NotificationServiceProvider.provide().addNotification(notification);
+				if (added.type != NotificationTypeType.NotificationTypeTypeInternal) {
+					notification.type = NotificationTypeType.NotificationTypeTypeInternal;
+					NotificationServiceProvider.provide().addNotification(notification);
+				}
+			}
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting upgradeAccount");
+		return output;
+	}
+
+	public RegisterInterestBusinessResponse registerInterestBusiness(RegisterInterestBusinessRequest input) {
+		LOG.finer("Entering registerInterestBusiness");
+		RegisterInterestBusinessResponse output = new RegisterInterestBusinessResponse();
+		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+						ApiError.InvalidValueNull.getMessage("RegisterInterestBusinessRequest: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
+
+			input.user = ValidationHelper.validateUserWithoutPassword(input.user, "input.user");
+
+			User user = UserServiceProvider.provide().getUsernameUser(input.user.username);
+
+			if (user == null) { // Add a new user
+				user = UserServiceProvider.provide().addUser(input.user);
+				LOG.info(String.format("Added user with name [%s %s] and email [%s],", user.forename, user.surname, user.username));
+			}
+			if (user != null) {
+				Role rbiRole = ValidationHelper.validateRole(DataTypeHelper.createRole(DataTypeHelper.ROLE_REGISTER_BUSINESS_INTEREST), "input.role");
+				if (!UserServiceProvider.provide().hasRole(user, rbiRole, true)) { // User doesn't already have the RBI role
+					// Add register interest business role - already expire so it won't conflict with the developer roles
+					UserServiceProvider.provide().assignExpiringRole(user, rbiRole, 0);
+					// Notify the user
+					Map<String, Object> values = new HashMap<String, Object>();
+					values.put("user", user);
+					Event event = EventServiceProvider.provide().getCodeEvent(DataTypeHelper.REGISTER_BUSINESS_INTEREST_EVENT_CODE);
+					if (event != null) {
+						String body = NotificationHelper.inflate(values, event.longBody);
+						Notification notification = (new Notification()).from("hello@reflection.io").user(user).event(event).body(body).subject(event.subject);
+						Notification added = NotificationServiceProvider.provide().addNotification(notification);
+						if (added.type != NotificationTypeType.NotificationTypeTypeInternal) {
+							notification.type = NotificationTypeType.NotificationTypeTypeInternal;
+							NotificationServiceProvider.provide().addNotification(notification);
+						}
+					}
+				}
+			}
+
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+		LOG.finer("Exiting registerInterestBusiness");
 		return output;
 	}
 }

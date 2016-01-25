@@ -12,13 +12,12 @@ import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.handler.user.SessionEventHandler;
 import io.reflection.app.client.handler.user.UserPowersEventHandler;
-import io.reflection.app.client.helper.MixPanelApiHelper;
-import io.reflection.app.client.mixpanel.MixPanelApi;
 import io.reflection.app.client.page.HomePage;
 import io.reflection.app.client.page.LoggedInHomePage;
 import io.reflection.app.client.page.Page;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.part.navigation.Header;
+import io.reflection.app.client.part.navigation.PanelFooter;
 import io.reflection.app.client.part.navigation.PanelLeftMenu;
 import io.reflection.app.client.part.navigation.PanelRightAccount;
 import io.reflection.app.client.part.navigation.PanelRightSearch;
@@ -26,7 +25,6 @@ import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
-import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,7 +45,7 @@ import com.willshex.gson.json.service.shared.Error;
 
 /**
  * @author billy1380
- * 
+ *
  */
 public class NavigationController implements ValueChangeHandler<String>, SessionEventHandler, UserPowersEventHandler {
 
@@ -64,15 +62,15 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 	private PanelLeftMenu panelLeftMenu = null;
 	private PanelRightAccount panelRightAccount = null;
 	private PanelRightSearch panelRightSearch = null;
+	private PanelFooter panelFooter = null;
 	private HTMLPanel lMain = null;
 
-	private Stack mStack;
+	private Stack stack;
 
 	private String intended = null;
 
 	private boolean loaded = false;
 
-	private HomePage homePage = null;
 	private LoggedInHomePage loggedInHomePage = null;
 
 	public static class Stack {
@@ -234,9 +232,8 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 	}
 
 	private NavigationController() {
-		homePage = new HomePage();
-		pages.put(PageType.HomePageType.toString(), homePage);
-		MixPanelApi.get().init("400e244ec1aab9ad548fe51024506310");
+		pages.put(PageType.HomePageType.toString(), new HomePage());
+
 	}
 
 	/**
@@ -285,7 +282,7 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 	}
 
 	private void addStack(Stack value) {
-		MixPanelApiHelper.trackNavigation(value);
+		// MixpanelHelper.trackNavigation(value);
 
 		String page = value.getPage();
 
@@ -308,34 +305,22 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 
 			boolean doAttach = false;
 
-			if (SessionController.get().isValidSession()) {
-				// If beta user with no linked accounts, always redirect to linkitunes page (show only post because of the 'waths this' link in the form)
-				if (!SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE)
-						&& SessionController.get().loggedInUserIs(DataTypeHelper.ROLE_FIRST_CLOSED_BETA_CODE) && stackPage != PageType.BlogPostPageType
-						&& stackPage != PageType.BlogPostsPageType && stackPage != PageType.BlogEditPostPageType && stackPage != PageType.BlogTagPageType) {
-					stackPage = PageType.LinkItunesPageType;
+			if (SessionController.get().isLoggedIn()) {
+				if (loaded) {
+					if (!stackPage.requiresLogin() || SessionController.get().isAdmin()
+							|| SessionController.get().isAuthorised(stackPage.getRequiredPermissions())) {
+						doAttach = true;
+					} else {
+						if (!PageType.NotPermittedPageType.equals(stack.getPage())) {
+							PageType.NotPermittedPageType.show(value.asParameter(), stack.asPreviousParameter());
+						}
+					}
+				} else {
+					setLastIntendedPage(value);
+					stackPage = PageType.LoadingPageType;
 					value = new Stack(stackPage.toString());
 					doAttach = true;
 					loaded = true;
-					PageType.LinkItunesPageType.show();
-				} else {
-					if (loaded) {
-						if (!stackPage.requiresLogin() || SessionController.get().isLoggedInUserAdmin()
-								|| SessionController.get().isAuthorised(stackPage.getRequiredPermissions())) {
-							doAttach = true;
-
-						} else {
-							if (!PageType.NotPermittedPageType.equals(mStack.getPage())) {
-								PageType.NotPermittedPageType.show(value.asParameter(), mStack.asPreviousParameter());
-							}
-						}
-					} else {
-						setLastIntendedPage(value);
-						stackPage = PageType.LoadingPageType;
-						value = new Stack(stackPage.toString());
-						doAttach = true;
-						loaded = true;
-					}
 				}
 			} else {
 				if (stackPage.requiresLogin()) {
@@ -357,8 +342,8 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 			}
 
 			if (doAttach) {
-				final Stack previous = mStack;
-				mStack = value;
+				final Stack previous = stack;
+				stack = value;
 
 				final PageType currentPage = stackPage;
 
@@ -384,7 +369,7 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 						Scheduler.get().scheduleDeferred(new ScheduledCommand() {
 							@Override
 							public void execute() {
-								DefaultEventBus.get().fireEventFromSource(new NavigationEventHandler.ChangedEvent(previous, mStack), NavigationController.this);
+								DefaultEventBus.get().fireEventFromSource(new NavigationEventHandler.ChangedEvent(previous, stack), NavigationController.this);
 							}
 						});
 					}
@@ -422,17 +407,25 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 		}
 		return panelRightSearch;
 	}
+	
+	public PanelFooter getPanelFooter() {
+		
+		if (panelFooter == null) {
+			panelFooter = new PanelFooter();
+		}
+		return panelFooter;
+	}
 
 	public PageType getCurrentPage() {
 		PageType p = null;
-		if (mStack != null) {
-			p = PageType.fromString(mStack.getPage());
+		if (stack != null) {
+			p = PageType.fromString(stack.getPage());
 		}
 		return p;
 	}
 
 	public Stack getStack() {
-		return mStack;
+		return stack;
 	}
 
 	/*
@@ -458,8 +451,8 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 	}
 
 	public void showNext() {
-		if (mStack.hasNext()) {
-			PageType.fromString(mStack.getNext().getPage()).show(mStack.getNext().toString(1));
+		if (stack.hasNext()) {
+			PageType.fromString(stack.getNext().getPage()).show(stack.getNext().toString(1));
 		} else {
 			if (PageType.HomePageType.equals(NavigationController.get().getCurrentPage())) {
 				History.fireCurrentHistoryState();
@@ -471,15 +464,15 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 	}
 
 	public void showPrevious() {
-		if (mStack.hasPrevious()) {
-			PageType.fromString(mStack.getPrevious().getPage()).show(mStack.getPrevious().toString(1));
+		if (stack.hasPrevious()) {
+			PageType.fromString(stack.getPrevious().getPage()).show(stack.getPrevious().toString(1));
 		} else {
 			PageType.HomePageType.show();
 		}
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void setNotLoaded() {
 		loaded = false;
@@ -507,7 +500,7 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 	 */
 	public void purgeAllPages() {
 		pages.clear();
-		pages.put(PageType.HomePageType.toString(), homePage);
+		pages.put(PageType.HomePageType.toString(), new HomePage());
 	}
 
 	/*
@@ -527,11 +520,11 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 	@Override
 	public void userLoggedOut() {
 		Page currentHomePage = pages.get(PageType.HomePageType);
-		if (currentHomePage instanceof HomePage) { return; }
+		if (currentHomePage instanceof HomePage) return;
 
 		// homePage init in the constructor
 
-		pages.put(PageType.HomePageType.toString(), homePage);
+		pages.put(PageType.HomePageType.toString(), new HomePage());
 
 	}
 
@@ -551,9 +544,9 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 	 * @see io.reflection.app.client.handler.user.UserPowersEventHandler#gotUserPowers(io.reflection.app.datatypes.shared.User, java.util.List, java.util.List)
 	 */
 	@Override
-	public void gotUserPowers(User user, List<Role> roles, List<Permission> permissions) {
+	public void gotUserPowers(User user, List<Role> roles, List<Permission> permissions, Integer daysSinceRoleAssigned) {
 		Page currentHomePage = pages.get(PageType.HomePageType);
-		if (currentHomePage instanceof LoggedInHomePage) { return; }
+		if (currentHomePage instanceof LoggedInHomePage) return;
 
 		if (loggedInHomePage == null) {
 			loggedInHomePage = new LoggedInHomePage();
@@ -574,10 +567,14 @@ public class NavigationController implements ValueChangeHandler<String>, Session
 	}
 
 	/**
-	 * 
+	 *
 	 */
-	public void resetBlogPage() {
+	public void resetSemiPublicPages() {
+		PostController.get().reset();
 		pages.put(PageType.BlogPostsPageType.toString(), null);
+		RankController.get().reset();
+		pages.put(PageType.RanksPageType.toString(), null);
+		ItemController.get().reset();
+		pages.put(PageType.ItemPageType.toString(), null);
 	}
-
 }

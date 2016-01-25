@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="utf-8" />
+	<title>Reflection Design Kit - Graphs</title>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link rel="stylesheet" media="screen, projection" type="text/css" href="designkit.css" />
+	<!--[if (lt IE 9)]>
+		<script src="js/vendor/html5shiv.min.js"></script>
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main-ie8.css" />
+	<![endif]-->
+ 	<!--[if !lt IE 9]><!-->
+		<script src="js/vendor/picturefill.2.3.1.min.js" async></script>
+	<!-- <![endif]-->
+	<link rel="stylesheet" href="js/vendor/jquery.mCustomScrollbar.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
+<script src="js/vendor/snap.svg.js"></script>
+<script>
+  WebFont.load({
+    google: {
+      families: ['Open Sans:400,600,700,400italic,600italic', 'Source Sans Pro:400,600,700', 'Lato:400,700,400italic']
+    }
+  });
+</script> <script src="js/vendor/modernizr.2.8.3.custom.min.js"></script></head>
+<body>
+	<!--[if (lt IE 9)]>
+      <div class="window-warning">
+  			<p>Uh oh... Reflection doesn't work in this browser. &nbsp; &nbsp;<a href="http://outdatedbrowser.com/en" target="_blank">Download a compatible browser</a></p>
+  		</div>
+  <![endif]-->
+  <header id="js-component-import--global-header" class="global-header"></header>
+
+  <div id="js-component-import--panel-left" class="panel-left js-panel-left js-custom-scrollbar" data-mcs-theme="minimal-dark"></div>
+
+	<div class="l-page-container">
+
+		<div id="main" class="l-main" role="main">
+			
+			<div id="js-component-import--design-kit-banner" class="banner banner--component"></div>
+
+			<div class="grid-container dk-components-container">
+				<div class="grid__row dk-component-row" style="position: relative;">
+          <img src="images/chart-watermark.png" class="chart-watermark" />
+					<h2 class="heading-style--heading-four">App, Overlay Other Apps</h2>
+          <div class="graph-container">
+  					<div id="container" style="width:100%; height:500px;" class="highcharts-container"> 
+            </div>
+            <div class="graph-loading-indicator">
+            </div>
+          </div>
+				</div>
+				<div class="grid__row dk-component-row">
+					<h2 class="heading-style--heading-four">App Revenue for selected Country</h2>
+					<div id="container-revenue" style="width:100%; height:500px;"></div>
+				</div>
+				<div class="grid__row dk-component-row">
+					<h2 class="heading-style--heading-four">App Revenue, Revenue Sources</h2>
+					<div id="container-revenue-split" style="width:100%; height:500px;"></div>
+				</div>
+				<div class="grid__row dk-component-row">
+					<h2 class="heading-style--heading-four">App Revenue, overlay downloads</h2>
+					<div class="grid__column grid__column--full-width filters-container filter-container--app">
+						<div class="filters-group-graph-options">
+							<a href="#" class="show-hide-link ref-icon-after ref-icon-after--angle-down">Show / Hide Options</a>
+							<div class="reveal-element">
+								<div class="filter-switch filter-switch--small">
+									<span>Overlay Downloads</span>
+									<div class="can-toggle can-toggle--size-small">
+									  <input id="js-overlay-downloads" type="checkbox">
+									  <label for="js-overlay-downloads">
+									    <div class="can-toggle__switch" data-checked="Y" data-unchecked="N"></div>
+									  </label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="container-revenue-overlay-downloads" style="width:100%; height:500px;"></div>
+				</div>
+        <div class="grid__row dk-component-row">
+          <h2 class="heading-style--heading-four">App Data, Categories and Countries Overlay</h2>
+          <div id="container-countries-categories" style="width:100%; height:500px;"></div>
+        </div>
+			</div>
+      </div></div><div class="grid-container" id="js-component-import--global-footer"></div>
+
+	<div id="js-component-import--account-container" class="panel-right-container js-account-container"></div>
+	<div id="js-component-import--search-container" class="panel-right-container js-search-container"></div>
+	
+ 	<script src="js/vendor/jquery-1.11.1.min.js"></script>
+ 	<script src="js/vendor/jquery-ui.custom.min.js"></script>
+ 	<script src="js/vendor/handlebars-v2.0.0.js"></script>
+ 	<script src="js/templates/templates.js"></script>
+	 
+	<!--[if IE 9]>
+		<script src="js/vendor/jquery.mCustomScrollbar.concat.min.js"></script>
+	<![endif]-->
+
+	<div id="js-appendScriptsContainer"></div>
+
+	<script src="js/designkit-global-templates.js"></script>
+  <script src="js/application.js"></script>
+  <script src="js/designkit-app.js"></script>
+  <script src="js/vendor/highcharts-custom.js"></script>
+  <script>
+
+    function mockGraphLoading() {
+      setTimeout(function(){
+        $('.graph-container').addClass('is-loading');
+        setTimeout(function(){
+          $('.graph-loading-indicator').addClass('is-loading-success');
+          setTimeout(function(){
+            $('.graph-container').removeClass('is-loading');
+          }, 200)
+        }, 4000);
+      }, 200);
+    }
+
+  	function initScripts() {
+      mockGraphLoading();
+
+  		new ChartsPage();
+
+      // Use for extending
+      (function (H) {
+         var localVar,         // local variable
+            Series = H.Series; // shortcut to Highcharts prototype
+      }(Highcharts));
+
+      var customIconRect = [];
+      var customIconImages = [];
+      (function (H) {
+          H.wrap(H.Tooltip.prototype, 'refresh', function (proceed, points) {
+              // When refresh is called, code inside this wrap is executed
+              var thisChart = this.chart;
+
+              points.forEach(function(point, index){
+
+                // remove previuosly rendered elements
+                var customTooltip = $(thisChart.container).find(".highcharts-custom-tooltip-" + index);
+                if(customTooltip) {
+                  customTooltip.remove();
+                }
+
+                // generate tooltip
+                thisChart.renderer.label(point.y, point.plotX + thisChart.plotLeft + 47, point.plotY + thisChart.plotTop, 'callout', point.plotX + thisChart.plotLeft, point.plotY + thisChart.plotTop, false, true, "custom-tooltip-" + index)
+                .css({
+                    color: '#fcfdfd',
+                    fontSize: '15px',
+                    fontFamily: 'Source Sans Pro',
+                    fontWeight: 600
+                })
+                .attr({
+                    fill: point.series.color,
+                    padding: 4,
+                    r: 5,
+                    zIndex: 6
+                })
+                .add();
+
+                // remove previuosly rendered elements
+                if(customIconRect[index] !== undefined) {
+                  customIconRect[index].destroy();
+                }
+                if(customIconImages[index] !== undefined) {
+                  customIconImages[index].destroy();
+                }
+
+                // add svg rect and tooltip icons
+                if(point.series.name == "Revenue" || point.series.name == "Downloads") {
+                  customIconRect[index] = chart.renderer.rect(point.plotX + thisChart.plotLeft + 17, point.plotY + thisChart.plotTop - 18, 32, 28, 2)
+                  .attr({
+                      'stroke-width': 0,
+                      fill: point.series.color,
+                      zIndex: 3
+                  })
+                  .add();
+                }
+                if(point.series.name == "Revenue") {
+                  customIconImages[index] = chart.renderer.image('images/icon-chart-revenue.png', point.plotX + thisChart.plotLeft + 25, point.plotY + thisChart.plotTop - 10, 19, 11)
+                  .attr({
+                    zIndex: 3
+                  })
+                  .add();
+                }
+                if(point.series.name == "Downloads") {
+                  customIconImages[index] = chart.renderer.image('images/icon-chart-downloads.png', point.plotX + thisChart.plotLeft + 25, point.plotY + thisChart.plotTop - 12, 17, 17)
+                  .attr({
+                    zIndex: 3
+                  })
+                  .add();
+                }         
+              });
+          });
+      }(Highcharts));
+
+      Highcharts.setOptions({
+          colors: ['#1bc79f', '#ffb449', '#ff496a', '#6d69c5', '#e98fec', '#64E572', '#FF9655', '#FFF263', '#6AF9C4']
+      });
+
+  		// Generate Demo Chart
+			var chart = new Highcharts.Chart({
+				chart: {
+          renderTo: 'container',
+					marginLeft: 0,
+					marginRight: 0,
+					marginBottom: 45,
+					marginTop: 0,
+					backgroundColor: '#fcfdfd',
+					plotBackgroundColor: '#f1f1f6',
+		   		type: 'area',        
+		   		style: {
+            fontFamily: 'Lato, sans-serif'
+          },
+          events: {
+            // load: function() {
+            //     var countIndex = 0;
+            //     $('#container .highcharts-series path:nth-child(1)').each(function() {
+            //       if (countIndex > -1) { // testing
+            //         $(this).css("opacity", "0.2");
+            //       } else {
+            //         $(this).css("opacity", "0.2");
+            //       }
+            //       countIndex++;
+            //     });
+
+            //     var counter = 0,
+            //         pathCoords = [],
+            //         initialCoordinates = [],
+            //         initialFillCoordinates = [];
+
+            //     $('#container .highcharts-series path:nth-child(2)').each(function(){
+            //         $(this).attr("id", "series" + counter);
+            //         pathCoords.push($(this).attr("d"));
+
+            //         var el = Snap('#series' + counter);
+            //         var numberOfItems = el.node.pathSegList.numberOfItems;
+            //         for(var x=0; x < numberOfItems; x++) {
+            //           initialCoordinates.push({
+            //             pathSegTypeAsLetter: el.node.pathSegList[x].pathSegTypeAsLetter,
+            //             x: el.node.pathSegList[x].x,
+            //             y: el.node.pathSegList[x].y
+            //           })
+            //           el.node.pathSegList[x].y = 454;
+            //         }
+
+            //         var fillSvg = $(this).parent('.highcharts-series').find('path:first-child').attr("id", "seriesfill" + counter);
+            //         var fillEl = Snap("#seriesfill" + counter);
+            //         var numberOfItems = fillEl.node.pathSegList.numberOfItems;
+            //         for(var x=0; x < numberOfItems; x++) {
+            //           initialFillCoordinates.push({
+            //             pathSegTypeAsLetter: fillEl.node.pathSegList[x].pathSegTypeAsLetter,
+            //             x: fillEl.node.pathSegList[x].x,
+            //             y: fillEl.node.pathSegList[x].y
+            //           })
+            //           fillEl.node.pathSegList[x].y = 454;
+            //         }
+
+            //       counter++;
+            //     });
+
+            //     setTimeout(function(){
+            //       var i = 0;
+            //       $('#container .highcharts-series path:nth-child(2)').each(function(){
+                    
+            //         var el = Snap('#series' + i);
+            //         var numberOfItems = el.node.pathSegList.numberOfItems;
+            //         setPoint(0);
+
+            //         function setPoint(pointIndex) {
+            //           var newPath = "";                      
+            //           if(pointIndex < numberOfItems) {
+            //             for(var x=0; x < numberOfItems; x++) {
+            //               if(x <= pointIndex) {
+            //                 newPath += initialCoordinates[x].pathSegTypeAsLetter + " " + initialCoordinates[x].x + " " + initialCoordinates[x].y + " ";
+            //               } else {
+            //                 newPath += initialCoordinates[x].pathSegTypeAsLetter + " " + initialCoordinates[x].x + " 454 ";
+            //               }                        
+            //             }
+                        
+            //             el.animate({ d: newPath }, 90, mina.easein);
+            //             var nextPoint = pointIndex + 1;
+            //             setTimeout(function(){
+            //               setPoint(nextPoint);
+            //             }, 20);
+            //           }
+            //         }
+
+            //         i++;
+            //       });
+
+            //       var f = 0;
+            //       $('#container .highcharts-series path:nth-child(1)').each(function(){
+                    
+            //         var fillEl = Snap('#seriesfill' + f);
+            //         var numberOfItems = fillEl.node.pathSegList.numberOfItems;
+            //         setFillPoint(0);
+
+            //         function setFillPoint(pointIndex) {
+            //           var newPath = "";                      
+            //           if(pointIndex < numberOfItems) {
+            //             for(var x=0; x < numberOfItems; x++) {
+            //               if(x <= pointIndex) {
+            //                 newPath += initialFillCoordinates[x].pathSegTypeAsLetter + " " + initialFillCoordinates[x].x + " " + initialFillCoordinates[x].y + " ";
+            //               } else {
+            //                 newPath += initialFillCoordinates[x].pathSegTypeAsLetter + " " + initialFillCoordinates[x].x + " 454 ";
+            //               }                        
+            //             }
+                        
+            //             fillEl.animate({ d: newPath }, 90, mina.easein);
+            //             var nextPoint = pointIndex + 1;
+            //             setTimeout(function(){
+            //               setFillPoint(nextPoint);
+            //             }, 20);
+            //           }
+            //         }
+
+            //         f++;
+            //       });
+            //     }, 4500);
+
+            // }
+          }
+			  },
+			  legend: {
+			  	enabled: false
+			  },
+			  title: {
+            text: ''
+        },
+        yAxis: [{
+          offset: -30,
+          showFirstLabel: false,
+          showLastLabel: false,
+          gridLineColor: '#e1e5e8',
+          labels: {
+          	align: 'left',
+          	style: {
+          		color: '#81879d',
+          		fontSize: "13px"
+          	}
+          },
+          title: {
+          	text: null
+          }            
+        }, {
+          offset: -30,
+          showFirstLabel: false,
+          showLastLabel: false,
+          gridLineColor: '#e1e5e8',
+          labels: {
+            align: 'right',
+            style: {
+              color: '#ff496a',
+              fontSize: "13px"
+            }
+          },
+          title: {
+            text: null
+          },
+          opposite: true
+        }],
+        xAxis: {
+        	startOnTick: false,
+        	endOnTick: false,
+        	showFirstLabel: false,
+          maxPadding: 0,
+          minPadding: 0,
+          type: 'datetime',
+          dateTimeLabelFormats: {
+              day: '%e %b'
+          },
+          tickmarkPlacement: 'on',
+          tickPixelInterval: 30,
+          tickColor: '#e1e5e8',
+          tickLength: 10,
+          lineColor: '#e1e5e8',
+          lineWidth: 1,            
+          labels: {
+          	align: 'center',
+            x: 0,
+            y: 30,
+            step: 4,
+            style: {
+              color: '#81879d',
+              fontSize: "13px"
+            }
+          }
+        },
+        plotOptions: {
+        	area: {
+            trackByArea: false,
+        		tooltip: {
+        			followPointer: false
+        		},
+        		states: {
+        			hover: {
+        				halo: {
+        					fill: 'rgba(27,199,159,0.18)',
+        					size: 13
+        				},
+        				lineWidthPlus: 1
+        			}
+        		}
+        	},
+          series: {
+            events: {
+              click: function (event) {
+                
+              }              
+            },
+            cursor: 'pointer'
+          }
+      	},
+        series:          
+           [{
+            yAxis: 0,
+            id: 'revenue',
+            name: "Revenue",
+            data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 116.4, 194.1, 95.6, 54.4, 29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 144.0, 176.0, 135.6, 106.4, 129.2, 144.0, 148.5, 116.4],
+            events: {
+              // click: function() {
+              //   var that = this;
+
+              //   for(var i = 0; i < this.chart.series.length; i++) {
+              //     if(i !== that.index) {
+              //       var count = 0;
+              //       var isCurrentlyHighlighted = false;
+              //       $('#container .highcharts-series').each(function(){
+              //         if(count == i) {
+              //           var thisFillPath = $(this).find('path:nth-child(2)');                        
+              //           if(thisFillPath.attr("stroke-width") == 2.1) {
+              //             isCurrentlyHighlighted = true
+              //             that.chart.series[i].update({
+              //               lineWidth: 2
+              //             });                      
+              //             var counterTwo = 0;
+              //             $('#container .highcharts-series').each(function(){
+              //               if(counterTwo == count) {
+              //                 thisFillPath = thisFillPath = $(this).find('path:nth-child(2)');
+              //               }
+              //               counterTwo++;
+              //             });                          
+              //             thisFillPath.css("opacity", "1");
+              //             thisFillPath.animate({ "opacity": 0.2 }, 250);
+              //             thisFillPath.siblings("path").css("opacity", "0.2");
+              //             thisFillPath.siblings("path").animate({ "opacity": 0 }, 250);
+              //           }
+              //         }
+              //         count++;
+              //       });
+              //     }
+              //   };
+
+              //   this.update({
+              //     lineWidth: 2.1
+              //   });
+
+              //   $('#container .highcharts-series path:nth-child(2)').each(function(){
+              //     if($(this).attr("stroke-width") == 2.1) {
+              //       $(this).css("opacity", "1");
+              //       $(this).siblings("path").css("opacity", "0");
+              //       $(this).siblings("path").animate({ "opacity": 0.2 }, 250);
+              //     }
+              //   });
+              // },
+              // mouseOver: function () {
+              //   setTimeout(function(){
+              //     $('#container .highcharts-series path:nth-child(2)').each(function(){
+              //       if($(this).attr("stroke-width") == 3) {
+              //         $(this).css("opacity", 1);
+              //       }
+              //     });
+              //   },10);
+              // },
+              // mouseOut: function () {
+              //   setTimeout(function(){
+              //     $('#container .highcharts-series path:nth-child(2)').each(function(){
+              //       if($(this).attr("stroke-width") == 2) {
+              //         $(this).css("opacity", 0.2);
+              //       }
+              //     });
+              //   },10);
+              // }
+            },
+            pointStart: Date.UTC(2015, 2, 1),
+            pointInterval: 24 * 3600 * 1000, // one day
+            color: '#6d69c5',
+						lineWidth: 2,
+						lineColor: '#6d69c5',
+            fillColor: {
+              linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
+              stops: [
+                [0, 'rgba(109,105,197,0.14)'],
+                [1, 'rgba(27,199,159,0.14)']
+              ]
+            },            
+						marker: {
+          		enabled: false,
+          		states: {
+          			hover: {
+          				enabled: true,
+          				fillColor: '#6d69c5',
+                  lineWidth: 0,
+                  lineWidthPlus: 0,
+                  radius: 4,
+                  radiusPlus: 0,
+          			}
+          		}
+          	}
+          },
+          {
+            yAxis: 1,
+            name: "Downloads",
+            id : 'downloads',
+            data: [19.9, 41.5, 51.4, 57.2, 70.0, 60.0, 62.6, 55.5, 40.4, 45.1, 40.6, 30.4, 12.9, 10.5, 40.4, 50.2, 45.0, 60.0, 70.0, 60.0, 65.6, 80.4, 90.2, 80.0, 75.5, 70.4],
+            pointStart: Date.UTC(2015, 2, 1),
+            pointInterval: 24 * 3600 * 1000, // one day
+            fillOpacity: 0,
+            color: '#ff496a',
+            lineWidth: 2,
+            lineWidthPlus: 0,
+            lineColor: '#ff496a',
+            dashStyle: 'dash',
+            marker: {
+              enabled: false,
+              states: {
+                hover: {
+                  enabled: true,
+                  fillColor: '#ff496a',
+                  lineWidth: 0,
+                  lineWidthPlus: 0,
+                  radius: 4,
+                  radiusPlus: 0,
+                }
+              }
+            }
+          }
+        ],
+        tooltip: {
+        	useHTML: false,
+        	shared: true,
+          // formatter: function() {
+          //   var s = "<h2 style=color:" + this.point.color + ">" + this.y + ' ' + this.series.name + "</h2>", pointIndex = this.series.xData.indexOf(this.x);            
+          //   console.log(this);
+          //   $.each(this.series.chart.series, function () {
+          //       s += '<div class="custom-tooltip"><span style=color:' + this.color + '>' + this.data[pointIndex].y + '</span>: ' +
+          //           this.name + '</div>';
+          //   });
+          //   return s;
+          // },
+        	backgroundColor: '#fcfdfd',
+          borderWidth: 1,
+          borderColor: '#dae3ed',
+			    crosshairs: [{
+            width: 1,
+            color: '#ff496a'
+          }],
+          positioner: function (labelWidth, labelHeight, point) {
+          		//console.log(labelWidth, labelHeight);
+              return { x: point.plotX + 40, y: point.plotY};
+          },
+          shadow: {
+            color: 'rgba(0,0,0,0.24)',
+            width: 7,
+            offsetX: 1,
+            offsetY: 1
+        	}
+        }
+	    });
+		}    
+
+  	window.onready = initScripts();
+  </script>
+</body>

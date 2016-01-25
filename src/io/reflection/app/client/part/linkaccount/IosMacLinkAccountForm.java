@@ -10,21 +10,21 @@ package io.reflection.app.client.part.linkaccount;
 import io.reflection.app.client.component.LoadingButton;
 import io.reflection.app.client.component.PasswordField;
 import io.reflection.app.client.component.TextField;
-import io.reflection.app.client.controller.NavigationController;
 import io.reflection.app.client.helper.FormHelper;
 import io.reflection.app.client.helper.TooltipHelper;
-import io.reflection.app.client.page.PageType;
+import io.reflection.app.client.mixpanel.MixpanelHelper;
 import io.reflection.app.client.part.linkaccount.LinkedAccountChangeEvent.EVENT_TYPE;
 import io.reflection.app.client.part.linkaccount.LinkedAccountChangeEvent.HasLinkedAccountChangeEventHandlers;
 import io.reflection.app.client.part.linkaccount.LinkedAccountChangeEvent.LinkedAccountChangeEventHandler;
 import io.reflection.app.datatypes.shared.DataAccount;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.FieldSetElement;
 import com.google.gwt.dom.client.HeadingElement;
+import com.google.gwt.dom.client.ParagraphElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
@@ -35,7 +35,6 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.Widget;
-import com.willshex.gson.json.shared.Convert;
 
 /**
  * @author billy1380
@@ -50,15 +49,13 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	@UiField FieldSetElement fieldset;
 
 	@UiField HeadingElement title;
+	@UiField ParagraphElement subtitle;
 
 	@UiField TextField accountUsername;
 	private String accountUsernameError;
 
 	@UiField PasswordField password;
 	private String passwordError;
-
-	@UiField TextField vendorId;
-	private String vendorIdError;
 
 	@UiField LoadingButton linkAccountBtn;
 
@@ -67,11 +64,7 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	public IosMacLinkAccountForm() {
 		initWidget(uiBinder.createAndBindUi(this));
 
-		title.removeFromParent();
-
-		vendorId.setTooltip("Your Vendor ID is an 8 digit number beginning with 8. See this <a target=\"_blank\" href=\""
-				+ PageType.BlogPostPageType.asHref(NavigationController.VIEW_ACTION_PARAMETER_VALUE, "finding_your_vendor_id_on_itunesconnect").asString()
-				+ "\">blog post</a> on how to find it in iTunes Connect.");
+		subtitle.removeFromParent();
 	}
 
 	/**
@@ -80,8 +73,6 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	public void setAccount(DataAccount dataAccount) {
 		this.dataAccount = dataAccount;
 		accountUsername.setText(dataAccount.username);
-		JsonObject propertiesJson = Convert.toJsonObject(dataAccount.properties);
-		vendorId.setText(propertiesJson.get("vendors").getAsString());
 	}
 
 	public void showAccountUsername(boolean show) {
@@ -92,11 +83,19 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 		linkAccountBtn.setText(text);
 	}
 
+	public void resetButtonStatus() {
+		linkAccountBtn.resetStatus();
+	}
+
 	public void setTitleText(String text) {
-		if (!fieldset.isOrHasChild(title)) {
-			fieldset.insertFirst(title);
-		}
 		title.setInnerText(text);
+	}
+
+	public void setSubtitleText(String text) {
+		if (!fieldset.isOrHasChild(subtitle)) {
+			fieldset.insertAfter(subtitle, title);
+		}
+		subtitle.setInnerText(text);
 	}
 
 	public void setTitleStyleName(String style) {
@@ -131,11 +130,10 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	 * 
 	 * @param event
 	 */
-	@UiHandler({ "accountUsername", "password", "vendorId" })
+	@UiHandler({ "accountUsername", "password" })
 	void onKeyDown(KeyDownEvent event) {
 		accountUsername.hideNote();
 		password.hideNote();
-		vendorId.hideNote();
 		if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
 			linkAccountBtn.click();
 		}
@@ -146,7 +144,6 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 		dataAccount = new DataAccount();
 		dataAccount.username = accountUsername.getText();
 		dataAccount.password = password.getText();
-		dataAccount.properties = getProperties();
 		if (validate()) {
 			setFormErrors();
 			fireEvent(new LinkedAccountChangeEvent(dataAccount, dataAccount.id == null ? EVENT_TYPE.ADD : EVENT_TYPE.UPDATE));
@@ -166,7 +163,6 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 		// Retrieve fields to validate
 		String username = accountUsername.getText();
 		String pswd = password.getText();
-		String vendor = vendorId.getText();
 
 		// Check fields constraints
 		if (username == null || username.length() < 2) {
@@ -189,17 +185,6 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 			validated = false;
 		} else {
 			passwordError = null;
-			validated = validated && true;
-		}
-
-		if (vendor == null || vendor.length() == 0) {
-			vendorIdError = FormHelper.ERROR_VENDORID_EMPTY;
-			validated = false;
-		} else if (!FormHelper.isValidAppleVendorId(vendor)) {
-			vendorIdError = FormHelper.ERROR_VENDORID_WRONG;
-			validated = false;
-		} else {
-			vendorIdError = null;
 			validated = validated && true;
 		}
 
@@ -249,25 +234,6 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see io.reflection.app.client.part.linkaccount.LinkableAccountFields#getProperties()
-	 */
-	@Override
-	public String getProperties() {
-		JsonObject properties = new JsonObject();
-		JsonArray vendors = new JsonArray();
-
-		JsonPrimitive vendor = new JsonPrimitive(vendorId.getText());
-
-		vendors.add(vendor);
-
-		properties.add("vendors", vendors);
-
-		return Convert.fromJsonObject(properties);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see io.reflection.app.client.part.linkaccount.LinkableAccountFields#getFirstToFocus()
 	 */
 	@Override
@@ -282,22 +248,23 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	 */
 	@Override
 	public void setFormErrors() {
+		Map<String, Object> properties = new HashMap<String, Object>();
 		if (accountUsernameError != null) {
 			accountUsername.showNote(accountUsernameError, true);
+			properties.put("error_form_account_name", accountUsernameError);
 		} else {
 			accountUsername.hideNote();
 		}
 		if (passwordError != null) {
 			password.showNote(passwordError, true);
+			properties.put("error_form_password", passwordError);
 		} else {
 			password.hideNote();
 		}
-		if (vendorIdError != null) {
-			vendorId.showNote(vendorIdError, true);
-		} else {
-			vendorId.hideNote();
-		}
 
+		if (!properties.isEmpty()) {
+			MixpanelHelper.track(MixpanelHelper.Event.LINK_ACCOUNT_FAILURE, properties);
+		}
 	}
 
 	/*
@@ -320,10 +287,6 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 		passwordError = error;
 	}
 
-	public void setVendorError(String error) {
-		vendorIdError = error;
-	}
-
 	public void clearPassword() {
 		password.clear();
 	}
@@ -338,10 +301,8 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 		accountUsername.setEnabled(enabled);
 		accountUsername.setFocus(enabled);
 		password.setEnabled(enabled);
-		vendorId.setEnabled(enabled);
 		if (!enabled) {
 			password.setFocus(false);
-			vendorId.setFocus(false);
 		}
 	}
 
@@ -356,9 +317,6 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 		accountUsername.hideNote();
 		password.hideNote();
 		password.clear();
-		vendorId.setText("");
-		vendorId.hideNote();
-		linkAccountBtn.resetStatus();
 		setEnabled(true);
 	}
 
@@ -383,7 +341,7 @@ public class IosMacLinkAccountForm extends Composite implements LinkableAccountF
 	protected void onAttach() {
 		super.onAttach();
 
-		TooltipHelper.nativeUpdateWhatsThisTooltip();
+		TooltipHelper.updateWhatsThisTooltip();
 	}
 
 }

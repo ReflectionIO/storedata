@@ -29,6 +29,7 @@ import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
+import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,13 +39,16 @@ import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style.Position;
 import com.google.gwt.dom.client.Style.Visibility;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.InlineHyperlink;
 import com.google.gwt.user.client.ui.Widget;
@@ -71,18 +75,22 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 	@UiField LoginForm loginForm;
 	@UiField ForgotPasswordForm forgotPasswordForm;
 	@UiField DivElement formSubmittedSuccessPanel;
+	@UiField Anchor backToLogin;
 
 	@UiField DivElement quotePanel;
 	@UiField DivElement panelOverlay;
 	@UiField DivElement userDetailsPanel;
 	@UiField Element accountMenu;
+	@UiField DivElement accountDetailsName;
+	@UiField Element premiumImg;
 	@UiField HeadingElement userName;
+	@UiField SpanElement premiumDays;
 	@UiField HeadingElement userCompany;
-	@UiField LIElement linkedAccountsItem;
-	@UiField LIElement accountSettingsItem;
+	@UiField LIElement accountDetailsItem;
+	@UiField LIElement manageSubscriptionItem;
 	@UiField LIElement notificationItem;
-	@UiField InlineHyperlink linkedAccountsLink;
-	@UiField InlineHyperlink accountSettingsLink;
+	@UiField InlineHyperlink accountDetailsLink;
+	@UiField InlineHyperlink manageSubscriptionLink;
 	@UiField InlineHyperlink notificationLink;
 
 	private List<LIElement> items;
@@ -104,7 +112,7 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 				event.preventDefault();
 				forgotPasswordForm.setEmail(loginForm.getEmail());
 				panelRight.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().showResetPasswordForm());
-				loginForm.getElement().getParentElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().willShow());
+				panelRight.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().willShow());
 
 				Timer t = new Timer() {
 
@@ -114,13 +122,25 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 						loginForm.getElement().getStyle().setPosition(Position.ABSOLUTE);
 						forgotPasswordForm.getElement().getStyle().setVisibility(Visibility.VISIBLE);
 						forgotPasswordForm.getElement().getStyle().setPosition(Position.RELATIVE);
-						loginForm.getElement().getParentElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().willShow());
+						panelRight.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().willShow());
 					}
 				};
 				t.schedule(150);
 
 			}
 		});
+
+		forgotPasswordForm.getBackToLoginLink().addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				event.preventDefault();
+				resetToLoginStatus();
+			}
+		});
+
+		premiumImg.removeFromParent();
+		premiumDays.removeFromParent();
 
 	}
 
@@ -129,6 +149,7 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 			loginForm.getElement().removeFromParent();
 			forgotPasswordForm.getElement().removeFromParent();
 			formSubmittedSuccessPanel.removeFromParent();
+			resetToLoginStatus();
 			quotePanel.removeFromParent();
 			if (!accessPanelContainer.isOrHasChild(userDetailsPanel)) {
 				accessPanelContainer.appendChild(userDetailsPanel);
@@ -137,6 +158,8 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 				accessPanelContainer.appendChild(accountMenu);
 			}
 		} else {
+			premiumImg.removeFromParent();
+			premiumDays.removeFromParent();
 			userDetailsPanel.removeFromParent();
 			accountMenu.removeFromParent();
 			if (!accessPanelContainer.isOrHasChild(loginForm.getElement())) {
@@ -157,8 +180,8 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 	private void createItemList() {
 		if (items == null) {
 			items = new ArrayList<LIElement>();
-			items.add(linkedAccountsItem);
-			items.add(accountSettingsItem);
+			items.add(accountDetailsItem);
+			items.add(manageSubscriptionItem);
 			items.add(notificationItem);
 		}
 	}
@@ -168,10 +191,10 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 			userName.setInnerText(user.forename + " " + user.surname);
 			userCompany.setInnerText(user.company);
 
-			linkedAccountsLink
-					.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.LinkedAccountsPageType.toString(), user.id.toString()));
-			accountSettingsLink
+			accountDetailsLink
 					.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.ChangeDetailsPageType.toString(), user.id.toString()));
+			manageSubscriptionLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.ManageSubscriptionPageType.toString(),
+					user.id.toString()));
 			notificationLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.NotificationsPageType.toString(), user.id.toString()));
 		}
 	}
@@ -206,6 +229,24 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 		return panelOverlay;
 	}
 
+	private void resetToLoginStatus() {
+		panelRight.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().showResetPasswordForm());
+		panelRight.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().resetPasswordIsSubmitted());
+		formSubmittedSuccessPanel.removeClassName(IS_SHOWING);
+		loginForm.getElement().getStyle().setVisibility(Visibility.VISIBLE);
+		loginForm.getElement().getStyle().setPosition(Position.RELATIVE);
+		forgotPasswordForm.getElement().getStyle().setVisibility(Visibility.HIDDEN);
+		forgotPasswordForm.getElement().getStyle().setPosition(Position.ABSOLUTE);
+		forgotPasswordForm.resetForm();
+	}
+
+	@UiHandler("backToLogin")
+	void onBackToLoginClicked(ClickEvent event) {
+		event.preventDefault();
+
+		resetToLoginStatus();
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -224,22 +265,6 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.google.gwt.user.client.ui.Composite#onDetach()
-	 */
-	@Override
-	protected void onDetach() {
-		super.onDetach();
-
-		loginForm.getElement().getParentElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().tabs__contentIsSubmitted());
-		formSubmittedSuccessPanel.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
-		loginForm.getElement().getParentElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().showResetPasswordForm());
-		loginForm.getElement().removeAttribute("style");
-		forgotPasswordForm.getElement().removeAttribute("style");
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
 	 * io.reflection.app.client.controller.NavigationController.Stack)
 	 */
@@ -247,11 +272,11 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 	public void navigationChanged(Stack previous, Stack current) {
 
 		// Highlight selected items
-		if (PageType.UsersPageType.equals(current.getPage()) && current.getAction() != null && PageType.LinkedAccountsPageType.equals(current.getAction())) {
-			highlight(linkedAccountsItem);
+		if (PageType.UsersPageType.equals(current.getPage()) && current.getAction() != null && PageType.ChangeDetailsPageType.equals(current.getAction())) {
+			highlight(accountDetailsItem);
 		} else if (PageType.UsersPageType.equals(current.getPage()) && current.getAction() != null
-				&& PageType.ChangeDetailsPageType.equals(current.getAction())) {
-			highlight(accountSettingsItem);
+				&& PageType.ManageSubscriptionPageType.equals(current.getAction())) {
+			highlight(manageSubscriptionItem);
 		} else if (PageType.UsersPageType.equals(current.getPage()) && current.getAction() != null
 				&& PageType.NotificationsPageType.equals(current.getAction())) {
 			highlight(notificationItem);
@@ -267,8 +292,16 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 	 * @see io.reflection.app.client.handler.user.UserPowersEventHandler#gotUserPowers(io.reflection.app.datatypes.shared.User, java.util.List, java.util.List)
 	 */
 	@Override
-	public void gotUserPowers(User user, List<Role> roles, List<Permission> permissions) {
+	public void gotUserPowers(User user, List<Role> roles, List<Permission> permissions, Integer daysSinceRoleAssigned) {
 		attachUserLinks(user);
+		if (DataTypeHelper.ROLE_PREMIUM_CODE.equals(roles.get(0).code)) { // Premium developer
+			accountDetailsName.appendChild(premiumImg);
+			accountDetailsName.appendChild(premiumDays);
+			// premiumDays.setInnerText("Day " + (daysSinceRoleAssigned.intValue() + 1) + " of 30");
+		} else {
+			premiumImg.removeFromParent();
+			premiumDays.removeFromParent();
+		}
 		setLoggedIn(true);
 	}
 
@@ -348,14 +381,14 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 				forgotPasswordForm.getElement().getStyle().setVisibility(Visibility.HIDDEN); // TODO add in CSS
 
 				forgotPasswordForm.setStatusSuccess();
-				formSubmittedSuccessPanel.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
-				loginForm.getElement().getParentElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().tabs__contentIsSubmitted());
+				formSubmittedSuccessPanel.addClassName(IS_SHOWING);
+				panelRight.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().resetPasswordIsSubmitted());
 			} else if (output.status == StatusType.StatusTypeFailure && output.error != null && output.error.code == ApiError.UserNotFound.getCode()) {
 				forgotPasswordForm.setStatusError("Invalid email address");
 			} else {
 				forgotPasswordForm.setStatusError();
-				loginForm.getElement().getParentElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().tabs__contentIsSubmitted());
-				formSubmittedSuccessPanel.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
+				formSubmittedSuccessPanel.removeClassName(IS_SHOWING);
+				panelRight.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().resetPasswordIsSubmitted());
 			}
 		}
 	}
@@ -371,8 +404,8 @@ public class PanelRightAccount extends Composite implements NavigationEventHandl
 	public void forgotPasswordFailure(ForgotPasswordRequest input, Throwable caught) {
 		if (forgotPasswordForm.isStatusLoading()) {
 			forgotPasswordForm.setStatusError();
-			loginForm.getElement().getParentElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().tabs__contentIsSubmitted());
-			formSubmittedSuccessPanel.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
+			formSubmittedSuccessPanel.removeClassName(IS_SHOWING);
+			panelRight.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().resetPasswordIsSubmitted());
 		}
 	}
 

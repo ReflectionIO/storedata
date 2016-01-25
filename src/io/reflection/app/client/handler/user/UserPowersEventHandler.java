@@ -24,7 +24,7 @@ import com.willshex.gson.json.service.shared.Error;
 public interface UserPowersEventHandler extends EventHandler {
 	public static final GwtEvent.Type<UserPowersEventHandler> TYPE = new GwtEvent.Type<UserPowersEventHandler>();
 
-	public void gotUserPowers(User user, List<Role> roles, List<Permission> permissions);
+	public void gotUserPowers(User user, List<Role> roles, List<Permission> permissions, Integer daysSinceRoleAssigned);
 
 	public void getGetUserPowersFailed(Error error);
 
@@ -32,11 +32,13 @@ public interface UserPowersEventHandler extends EventHandler {
 		private User mUser = null;
 		private List<Role> mRoles = null;
 		private List<Permission> mPermissions = null;
+		private Integer daysSinceRoleAssigned = null;
 
-		public GotUserPowers(User user, List<Role> roles, List<Permission> permissions) {
+		public GotUserPowers(User user, List<Role> roles, List<Permission> permissions, Integer daysSinceRoleAssigned) {
 			mUser = user;
 			mRoles = roles;
 			mPermissions = permissions;
+			this.daysSinceRoleAssigned = daysSinceRoleAssigned;
 		}
 
 		/*
@@ -56,7 +58,7 @@ public interface UserPowersEventHandler extends EventHandler {
 		 */
 		@Override
 		protected void dispatch(UserPowersEventHandler handler) {
-			handler.gotUserPowers(mUser, mRoles, mPermissions);
+			handler.gotUserPowers(mUser, mRoles, mPermissions, daysSinceRoleAssigned);
 		}
 	}
 

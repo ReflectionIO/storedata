@@ -1,0 +1,18 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
+	<ui:style>
+	
+	</ui:style>
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.pageOverlay}">
+		<g:HTMLPanel ui:field="pagePopup" styleName="{STYLES_INSTANCE.reflectionMainStyle.pagePopup}">
+			<g:HTMLPanel ui:field="popupContent" styleName="{STYLES_INSTANCE.reflectionMainStyle.popupContent}">
+				<!-- popup content here -->
+				<g:Anchor ui:field="closeLink" href="#" styleName="{STYLES_INSTANCE.reflectionMainStyle.popupClose}">
+					<span class="{STYLES_INSTANCE.reflectionMainStyle.refIconAfter} {STYLES_INSTANCE.reflectionMainStyle.refIconAfterClose}">Close</span>
+				</g:Anchor>
+			</g:HTMLPanel>
+		</g:HTMLPanel>
+	</g:HTMLPanel>
+</ui:UiBinder> 

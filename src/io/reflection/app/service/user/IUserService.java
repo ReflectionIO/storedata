@@ -137,9 +137,24 @@ public interface IUserService extends IService {
 	/**
 	 * @param user
 	 * @param role
+	 */
+	public void assignExpiringRole(User user, Role role, int expiringDays) throws DataAccessException;
+
+	/**
+	 * @param user
+	 * @param role
 	 * @return
 	 */
 	public Boolean hasRole(User user, Role role) throws DataAccessException;
+
+	/**
+	 * 
+	 * @param user
+	 * @param role
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public Boolean hasRole(User user, Role role, boolean includeExpired) throws DataAccessException;
 
 	/**
 	 * @param user
@@ -165,7 +180,16 @@ public interface IUserService extends IService {
 	 * @param user
 	 * @return
 	 */
-	public List<Role> getRoles(User user) throws DataAccessException;
+	public List<Role> getUserRoles(User user) throws DataAccessException;
+
+	/**
+	 * 
+	 * @param user
+	 * @param includeExpired
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<Role> getUserRoles(User user, boolean includeExpired) throws DataAccessException;
 
 	/**
 	 * @param user
@@ -307,7 +331,7 @@ public interface IUserService extends IService {
 	 * @param dataAccount
 	 * @throws DataAccessException
 	 */
-	public void deleteDataAccount(User user, DataAccount dataAccount) throws DataAccessException;
+	public void deleteUserDataAccount(User user, DataAccount dataAccount) throws DataAccessException;
 
 	/**
 	 * 

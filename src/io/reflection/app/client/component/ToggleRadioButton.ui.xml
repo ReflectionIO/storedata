@@ -5,9 +5,9 @@
 	
 	</ui:style>
 	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.toggle}">
-		<g:SimpleRadioButton ui:field="radioButton" styleName="" />
+		<g:SimpleRadioButton ui:field="radioButton" />
 		<label ui:field="label">
-			<svg version="1.1" x="0px" y="0px" viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space="preserve">
+			<svg ui:field="svgElem" version="1.1" x="0px" y="0px" xml:space="preserve">
 			<path ui:field="svgPath" />
 			</svg>
 			<img src="images/blank-image.png" alt="" />

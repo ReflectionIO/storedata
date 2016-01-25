@@ -10,6 +10,7 @@ package io.reflection.app.client.highcharts.options;
 import io.reflection.app.client.helper.JavaScriptObjectHelper;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayMixed;
 import com.google.gwt.core.client.JsArrayNumber;
 import com.google.gwt.core.client.JsArrayString;
@@ -297,7 +298,13 @@ public abstract class Axis<T extends Option> extends Option<T> {
 		return setOption("opposite", opposite);
 	}
 
-	// TODO plotBands and plotLines
+	public T setPlotBands(JsArray<JavaScriptObject> plotBands) {
+		return setOption("plotBands", plotBands);
+	}
+
+	public T setPlotLines(JsArray<JavaScriptObject> plotLines) {
+		return setOption("plotLines", plotLines);
+	}
 
 	public T setReversed(boolean reversed) {
 		return setOption("reversed", reversed);

@@ -1,0 +1,78 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+
+	<ui:import field="io.reflection.app.client.page.PageType.AboutPageType" />
+
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
+	<ui:style>
+	
+	</ui:style>
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.pagePress}">
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.pageBanner} {STYLES_INSTANCE.reflectionMainStyle.verticalCentreContent}">
+			<div>
+				<h1>Press Area</h1>
+				<h2>Reflection is the First App Intelligence Provider That is Built by Developers, for Developers</h2>
+			</div>
+		</div>
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.pressAreaFeaturedList}">
+			<ul>
+				<li>
+					<img src="images/placeholder-logo-pg.png" alt="" />
+				</li>
+				<li>
+					<img src="images/placeholder-logo-pg.png" alt="" />
+				</li>
+				<li>
+					<img src="images/placeholder-logo-pg.png" alt="" />
+				</li>
+				<li class="{STYLES_INSTANCE.reflectionMainStyle.listHeadingContainer}">
+					<h2>Featured in</h2>
+				</li>
+				<li>
+					<img src="images/placeholder-logo-pg.png" alt="" />
+				</li>
+				<li>
+					<img src="images/placeholder-logo-pg.png" alt="" />
+				</li>
+				<li>
+					<img src="images/placeholder-logo-pg.png" alt="" />
+				</li>
+			</ul>
+		</div>
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer}">
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__rowContainer} {STYLES_INSTANCE.reflectionMainStyle.grid__columnTwoThirds}">
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.brandAssetsContainer}">
+					<div>
+						<img src="images/img-brand-assets@2x.png" alt="Folder, graph, photo icons" class="{STYLES_INSTANCE.reflectionMainStyle.imgBrandAssets}" />
+						<div class="{STYLES_INSTANCE.reflectionMainStyle.brandAssetsContent}">
+							<h3>Reflection Brand Assets</h3>
+							<p>Logos, founder photos &amp; brand imagery</p>
+							<p>Reflection Brand Assets: Please email <a href="mailto:press@reflection.io">press@reflection.io</a></p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__rowContainer} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird}">
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column}">
+					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Quick Stats</h2>
+					<dl>
+						<dt>Headquarters</dt>
+						<dd>London, UK</dd>
+						<dt>Founders</dt>
+						<dd>
+							Gustaf Leksell,<br />Chi Dire
+						</dd>
+						<dt>Office Address:</dt>
+						<dd>40-44 Newman Street, London, United Kingdom, W1T 1QD</dd>
+					</dl>
+				</div>
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column}">
+					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Get in Touch</h2>
+					<p>
+						<a href="mailto:press@reflection.io">press@reflection.io</a>
+					</p>
+				</div>
+			</div>
+		</div>
+	</g:HTMLPanel>
+</ui:UiBinder> 

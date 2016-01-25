@@ -46,6 +46,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("MHXTE6C-r-a")
 		String mhxte6cRA();
 
+		@ClassName("about-main-content")
+		String aboutMainContent();
+
 		String accordion();
 
 		@ClassName("accordion-bottom-with-divider")
@@ -87,6 +90,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("account-user-details")
 		String accountUserDetails();
 
+		@ClassName("account-user-details--name")
+		String accountUserDetailsName();
+
 		@ClassName("actions-group")
 		String actionsGroup();
 
@@ -100,6 +106,12 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("admin-filters-container")
 		String adminFiltersContainer();
+
+		@ClassName("animated-line")
+		String animatedLine();
+
+		@ClassName("animation-complete")
+		String animationComplete();
 
 		@ClassName("animation-hamster")
 		String animationHamster();
@@ -116,6 +128,12 @@ public interface Styles extends ClientBundle {
 		@ClassName("app-details-column")
 		String appDetailsColumn();
 
+		@ClassName("app-details-content-container")
+		String appDetailsContentContainer();
+
+		@ClassName("app-details-link")
+		String appDetailsLink();
+
 		@ClassName("app-icon")
 		String appIcon();
 
@@ -127,6 +145,18 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("app-icon-small-container")
 		String appIconSmallContainer();
+
+		@ClassName("app-image-list")
+		String appImageList();
+
+		@ClassName("app-images")
+		String appImages();
+
+		@ClassName("app-images-container")
+		String appImagesContainer();
+
+		@ClassName("app-main-details")
+		String appMainDetails();
 
 		@ClassName("app-name")
 		String appName();
@@ -151,8 +181,25 @@ public interface Styles extends ClientBundle {
 
 		String ascending();
 
+		@ClassName("aside-definition-list")
+		String asideDefinitionList();
+
+		@ClassName("average-ratings-container")
+		String averageRatingsContainer();
+
+		@ClassName("back-link-text")
+		String backLinkText();
+
+		@ClassName("back-link-text--form")
+		String backLinkTextForm();
+
+		@ClassName("banner-key-message")
+		String bannerKeyMessage();
+
 		@ClassName("block-error-message")
 		String blockErrorMessage();
+
+		String blockquote();
 
 		@ClassName("blockquote--large")
 		String blockquoteLarge();
@@ -181,12 +228,30 @@ public interface Styles extends ClientBundle {
 		@ClassName("blog-tags")
 		String blogTags();
 
+		@ClassName("brand-assets-container")
+		String brandAssetsContainer();
+
+		@ClassName("brand-assets-content")
+		String brandAssetsContent();
+
 		String breadcrumb();
 
 		@ClassName("breadcrumb-container")
 		String breadcrumbContainer();
 
 		String browserupgrade();
+
+		@ClassName("btn-add-another-country")
+		String btnAddAnotherCountry();
+
+		@ClassName("btn-apply")
+		String btnApply();
+
+		@ClassName("btn-reset-filters")
+		String btnResetFilters();
+
+		@ClassName("button-container")
+		String buttonContainer();
 
 		@ClassName("button-example-code-container")
 		String buttonExampleCodeContainer();
@@ -196,6 +261,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("button-example-container--full-width")
 		String buttonExampleContainerFullWidth();
+
+		@ClassName("button-style")
+		String buttonStyle();
 
 		@ClassName("buttons-container")
 		String buttonsContainer();
@@ -242,6 +310,8 @@ public interface Styles extends ClientBundle {
 		String checkboxLabelVisible();
 
 		String checkboxLabelVisibleDisabled();
+
+		String checklist();
 
 		@ClassName("clear-both")
 		String clearBoth();
@@ -309,6 +379,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("comments-link")
 		String commentsLink();
 
+		@ClassName("compact-view")
+		String compactView();
+
 		@ClassName("component-loading")
 		String componentLoading();
 
@@ -327,6 +400,14 @@ public interface Styles extends ClientBundle {
 		@ClassName("connect-account-submitted")
 		String connectAccountSubmitted();
 
+		String contact__image();
+
+		@ClassName("contact__map-container")
+		String contact__mapContainer();
+
+		@ClassName("contact__text-content")
+		String contact__textContent();
+
 		@ClassName("content-list")
 		String contentList();
 
@@ -344,17 +425,47 @@ public interface Styles extends ClientBundle {
 		@ClassName("country-select")
 		String countrySelect();
 
-		@ClassName("create-password-content")
-		String createPasswordContent();
+		@ClassName("country-select--popup")
+		String countrySelectPopup();
 
-		@ClassName("create-password-form-is-showing")
-		String createPasswordFormIsShowing();
+		@ClassName("country-selector")
+		String countrySelector();
 
-		@ClassName("create-password-main-content")
-		String createPasswordMainContent();
+		@ClassName("county-select--container")
+		String countySelectContainer();
+
+		@ClassName("cta-button")
+		String ctaButton();
+
+		@ClassName("current-openings")
+		String currentOpenings();
+
+		@ClassName("current-subscription-text")
+		String currentSubscriptionText();
+
+		@ClassName("curtain-left")
+		String curtainLeft();
+
+		@ClassName("curtain-right")
+		String curtainRight();
 
 		@ClassName("custom--tablet-one-half")
 		String customTabletOneHalf();
+
+		@ClassName("custom-tooltip")
+		String customTooltip();
+
+		@ClassName("customer-review")
+		String customerReview();
+
+		@ClassName("customer-review__content")
+		String customerReview__content();
+
+		@ClassName("customer-review__title")
+		String customerReview__title();
+
+		@ClassName("customer-reviews")
+		String customerReviews();
 
 		@ClassName("data-bar")
 		String dataBar();
@@ -377,19 +488,33 @@ public interface Styles extends ClientBundle {
 		@ClassName("data-summary-container-synced")
 		String dataSummaryContainerSynced();
 
+		@ClassName("date-month-selector")
+		String dateMonthSelector();
+
+		@ClassName("date-quarter-selector")
+		String dateQuarterSelector();
+
+		@ClassName("date-range-list")
+		String dateRangeList();
+
+		@ClassName("date-range-list__options")
+		String dateRangeList__options();
+
 		@ClassName("date-select-container")
 		String dateSelectContainer();
 
 		@ClassName("date-select-to-indicator")
 		String dateSelectToIndicator();
 
-		@ClassName("date-selection-filter-container")
-		String dateSelectionFilterContainer();
-
 		@ClassName("date-value")
 		String dateValue();
 
+		@ClassName("date-year-selector")
+		String dateYearSelector();
+
 		String dateBoxPopup();
+
+		String datePickerDay();
 
 		String datePickerDayIsDisabled();
 
@@ -413,8 +538,14 @@ public interface Styles extends ClientBundle {
 
 		String datePickerWeekendLabel();
 
+		@ClassName("datebox-popup__content")
+		String dateboxPopup__content();
+
 		@ClassName("default-tabs-transition")
 		String defaultTabsTransition();
+
+		@ClassName("delete-account-link")
+		String deleteAccountLink();
 
 		String descending();
 
@@ -472,14 +603,35 @@ public interface Styles extends ClientBundle {
 		@ClassName("email-success-handle")
 		String emailSuccessHandle();
 
+		@ClassName("event-icon--flag")
+		String eventIconFlag();
+
+		@ClassName("event-icon--launch")
+		String eventIconLaunch();
+
+		@ClassName("faqs-list-container")
+		String faqsListContainer();
+
+		@ClassName("faqs-list-container--fixed")
+		String faqsListContainerFixed();
+
 		@ClassName("feature-complete")
 		String featureComplete();
+
+		@ClassName("features-and-tools")
+		String featuresAndTools();
+
+		@ClassName("features-key")
+		String featuresKey();
 
 		@ClassName("filter-container--app")
 		String filterContainerApp();
 
 		@ClassName("filter-container--my-apps")
 		String filterContainerMyApps();
+
+		@ClassName("filter-group")
+		String filterGroup();
 
 		@ClassName("filter-row-two")
 		String filterRowTwo();
@@ -495,6 +647,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("filter-toggle")
 		String filterToggle();
+
+		@ClassName("filter-toggles")
+		String filterToggles();
 
 		@ClassName("filters-container")
 		String filtersContainer();
@@ -517,6 +672,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("form-field")
 		String formField();
 
+		@ClassName("form-field--alert")
+		String formFieldAlert();
+
 		@ClassName("form-field--checkbox")
 		String formFieldCheckbox();
 
@@ -525,6 +683,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("form-field--checkbox-list--inline")
 		String formFieldCheckboxListInline();
+
+		@ClassName("form-field--country-select")
+		String formFieldCountrySelect();
 
 		@ClassName("form-field--date-select")
 		String formFieldDateSelect();
@@ -549,6 +710,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("form-field--select")
 		String formFieldSelect();
+
+		@ClassName("form-field--select--filter")
+		String formFieldSelectFilter();
 
 		@ClassName("form-field--select-disabled")
 		String formFieldSelectDisabled();
@@ -586,6 +750,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("general-error-message")
 		String generalErrorMessage();
 
+		@ClassName("global-footer")
+		String globalFooter();
+
 		@ClassName("global-header")
 		String globalHeader();
 
@@ -594,6 +761,15 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("graph-container")
 		String graphContainer();
+
+		@ClassName("graph-container--with-events")
+		String graphContainerWithEvents();
+
+		@ClassName("graph-loading-indicator")
+		String graphLoadingIndicator();
+
+		@ClassName("graph-loading-line")
+		String graphLoadingLine();
 
 		@ClassName("grid-container")
 		String gridContainer();
@@ -681,6 +857,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("has-child")
 		String hasChild();
 
+		@ClassName("has-content")
+		String hasContent();
+
 		@ClassName("has-single-option")
 		String hasSingleOption();
 
@@ -711,17 +890,29 @@ public interface Styles extends ClientBundle {
 		@ClassName("heading-style--heading-two")
 		String headingStyleHeadingTwo();
 
+		@ClassName("help-us-help-you")
+		String helpUsHelpYou();
+
+		@ClassName("hidden-calendar-container")
+		String hiddenCalendarContainer();
+
 		@ClassName("hidden-for-mobile")
 		String hiddenForMobile();
 
 		@ClassName("hidden-text")
 		String hiddenText();
 
+		@ClassName("highcharts-axis-label")
+		String highchartsAxisLabel();
+
 		@ClassName("highcharts-axis-labels")
 		String highchartsAxisLabels();
 
 		@ClassName("highcharts-container")
 		String highchartsContainer();
+
+		@ClassName("highcharts-grid")
+		String highchartsGrid();
 
 		@ClassName("highcharts-series")
 		String highchartsSeries();
@@ -735,8 +926,22 @@ public interface Styles extends ClientBundle {
 		@ClassName("highcharts-yaxis-labels")
 		String highchartsYaxisLabels();
 
+		String hiring();
+
 		@ClassName("hiring-title")
 		String hiringTitle();
+
+		@ClassName("home-apply-button")
+		String homeApplyButton();
+
+		@ClassName("home-leaderboard-button-container")
+		String homeLeaderboardButtonContainer();
+
+		@ClassName("home-partners-heading")
+		String homePartnersHeading();
+
+		@ClassName("home-wide-container")
+		String homeWideContainer();
 
 		String hook();
 
@@ -755,6 +960,18 @@ public interface Styles extends ClientBundle {
 		@ClassName("icon-dollar")
 		String iconDollar();
 
+		@ClassName("icon-downloads")
+		String iconDownloads();
+
+		@ClassName("icon-member")
+		String iconMember();
+
+		@ClassName("icon-rank")
+		String iconRank();
+
+		@ClassName("icon-revenue")
+		String iconRevenue();
+
 		String ie10();
 
 		String ie11();
@@ -768,6 +985,15 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("image-full-width")
 		String imageFullWidth();
+
+		@ClassName("image-landscape")
+		String imageLandscape();
+
+		@ClassName("image-portrait")
+		String imagePortrait();
+
+		@ClassName("img-brand-assets")
+		String imgBrandAssets();
 
 		@ClassName("img-reset")
 		String imgReset();
@@ -799,6 +1025,12 @@ public interface Styles extends ClientBundle {
 		@ClassName("is-active")
 		String isActive();
 
+		@ClassName("is-animated")
+		String isAnimated();
+
+		@ClassName("is-animating")
+		String isAnimating();
+
 		@ClassName("is-animating-in")
 		String isAnimatingIn();
 
@@ -823,6 +1055,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("is-complete")
 		String isComplete();
 
+		@ClassName("is-complete--error")
+		String isCompleteError();
+
 		@ClassName("is-current")
 		String isCurrent();
 
@@ -838,6 +1073,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("is-firefox")
 		String isFirefox();
 
+		@ClassName("is-focus")
+		String isFocus();
+
 		@ClassName("is-focused")
 		String isFocused();
 
@@ -849,6 +1087,12 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("is-impressive")
 		String isImpressive();
+
+		@ClassName("is-loading")
+		String isLoading();
+
+		@ClassName("is-loading-success")
+		String isLoadingSuccess();
 
 		@ClassName("is-ok")
 		String isOk();
@@ -886,6 +1130,18 @@ public interface Styles extends ClientBundle {
 		@ClassName("is-strong")
 		String isStrong();
 
+		@ClassName("is-submitted")
+		String isSubmitted();
+
+		@ClassName("is-submitted-success")
+		String isSubmittedSuccess();
+
+		@ClassName("is-transparent")
+		String isTransparent();
+
+		@ClassName("is-transparent-fade")
+		String isTransparentFade();
+
 		@ClassName("js-fade-content")
 		String jsFadeContent();
 
@@ -894,6 +1150,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("js-rotate-content")
 		String jsRotateContent();
+
+		@ClassName("js-tooltip")
+		String jsTooltip();
 
 		@ClassName("l-full-screen-section")
 		String lFullScreenSection();
@@ -919,10 +1178,19 @@ public interface Styles extends ClientBundle {
 		@ClassName("landing-section-contact__tel")
 		String landingSectionContact__tel();
 
+		@ClassName("latest-system-stats")
+		String latestSystemStats();
+
 		String lato();
 
 		@ClassName("lato-bold")
 		String latoBold();
+
+		@ClassName("leaderboard-app-name")
+		String leaderboardAppName();
+
+		@ClassName("link-back-to-top")
+		String linkBackToTop();
 
 		@ClassName("link-log-in")
 		String linkLogIn();
@@ -942,17 +1210,26 @@ public interface Styles extends ClientBundle {
 		@ClassName("linked-account-edit")
 		String linkedAccountEdit();
 
+		@ClassName("linked-account-intro-container")
+		String linkedAccountIntroContainer();
+
 		@ClassName("linked-account-loading-state")
 		String linkedAccountLoadingState();
 
 		@ClassName("linked-account-name")
 		String linkedAccountName();
 
+		@ClassName("linked-account-pending-container")
+		String linkedAccountPendingContainer();
+
 		@ClassName("linked-account-store")
 		String linkedAccountStore();
 
 		@ClassName("list-container")
 		String listContainer();
+
+		@ClassName("list-heading-container")
+		String listHeadingContainer();
 
 		@ClassName("list-item-complete")
 		String listItemComplete();
@@ -969,6 +1246,12 @@ public interface Styles extends ClientBundle {
 		@ClassName("loading-ellipsis-hidden--mobile")
 		String loadingEllipsisHiddenMobile();
 
+		@ClassName("loading-message-box")
+		String loadingMessageBox();
+
+		@ClassName("loading-message-box-container")
+		String loadingMessageBoxContainer();
+
 		@ClassName("loading-progress")
 		String loadingProgress();
 
@@ -977,12 +1260,6 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("logged-in-section-main")
 		String loggedInSectionMain();
-
-		@ClassName("logged-in-section-main__column-one")
-		String loggedInSectionMain__columnOne();
-
-		@ClassName("logged-in-section-main__column-two")
-		String loggedInSectionMain__columnTwo();
 
 		@ClassName("login-content")
 		String loginContent();
@@ -996,17 +1273,11 @@ public interface Styles extends ClientBundle {
 		@ClassName("logo-reflection-footer")
 		String logoReflectionFooter();
 
-		@ClassName("main-footer-links")
-		String mainFooterLinks();
-
 		@ClassName("main-navigation")
 		String mainNavigation();
 
 		@ClassName("main-navigation--account")
 		String mainNavigationAccount();
-
-		@ClassName("main-social-links")
-		String mainSocialLinks();
 
 		@ClassName("maintain-after-submit")
 		String maintainAfterSubmit();
@@ -1014,8 +1285,26 @@ public interface Styles extends ClientBundle {
 		@ClassName("make-comment-button")
 		String makeCommentButton();
 
+		@ClassName("manage-subscription-message")
+		String manageSubscriptionMessage();
+
+		@ClassName("map--contact")
+		String mapContact();
+
+		@ClassName("members-list")
+		String membersList();
+
+		@ClassName("minor-text")
+		String minorText();
+
 		@ClassName("mobile-width")
 		String mobileWidth();
+
+		@ClassName("more-apps-listed")
+		String moreAppsListed();
+
+		@ClassName("more-by-this-developer")
+		String moreByThisDeveloper();
 
 		@ClassName("more-content")
 		String moreContent();
@@ -1023,8 +1312,23 @@ public interface Styles extends ClientBundle {
 		@ClassName("more-link")
 		String moreLink();
 
+		@ClassName("more-reviews-container")
+		String moreReviewsContainer();
+
+		@ClassName("multiple-select__number-selected")
+		String multipleSelect__numberSelected();
+
+		@ClassName("multiple-select__remove-all-selected")
+		String multipleSelect__removeAllSelected();
+
+		@ClassName("new-members")
+		String newMembers();
+
 		@ClassName("no-accordion-content")
 		String noAccordionContent();
+
+		@ClassName("no-border-top")
+		String noBorderTop();
 
 		@ClassName("no-csstransforms3d")
 		String noCsstransforms3d();
@@ -1040,6 +1344,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("no-opacity")
 		String noOpacity();
+
+		@ClassName("no-results-container")
+		String noResultsContainer();
 
 		@ClassName("no-scroll")
 		String noScroll();
@@ -1068,6 +1375,24 @@ public interface Styles extends ClientBundle {
 		@ClassName("p-style--minor")
 		String pStyleMinor();
 
+		@ClassName("package-for")
+		String packageFor();
+
+		@ClassName("page-about")
+		String pageAbout();
+
+		@ClassName("page-about--intro")
+		String pageAboutIntro();
+
+		@ClassName("page-about--title")
+		String pageAboutTitle();
+
+		@ClassName("page-about-foot-content__svg-container")
+		String pageAboutFootContent__svgContainer();
+
+		@ClassName("page-about-foot-content__text")
+		String pageAboutFootContent__text();
+
 		@ClassName("page-admin")
 		String pageAdmin();
 
@@ -1077,8 +1402,23 @@ public interface Styles extends ClientBundle {
 		@ClassName("page-app__header")
 		String pageApp__header();
 
+		@ClassName("page-banner")
+		String pageBanner();
+
+		@ClassName("page-banner--larger")
+		String pageBannerLarger();
+
 		@ClassName("page-blog")
 		String pageBlog();
+
+		@ClassName("page-careers")
+		String pageCareers();
+
+		@ClassName("page-contact")
+		String pageContact();
+
+		@ClassName("page-faqs")
+		String pageFaqs();
 
 		@ClassName("page-functions")
 		String pageFunctions();
@@ -1086,8 +1426,14 @@ public interface Styles extends ClientBundle {
 		@ClassName("page-general-content")
 		String pageGeneralContent();
 
+		@ClassName("page-home")
+		String pageHome();
+
 		@ClassName("page-leaderboard")
 		String pageLeaderboard();
+
+		@ClassName("page-linked-accounts")
+		String pageLinkedAccounts();
 
 		@ClassName("page-loading")
 		String pageLoading();
@@ -1119,8 +1465,29 @@ public interface Styles extends ClientBundle {
 		@ClassName("page-overlay--download")
 		String pageOverlayDownload();
 
+		@ClassName("page-overlay--premium")
+		String pageOverlayPremium();
+
+		@ClassName("page-overlay--register")
+		String pageOverlayRegister();
+
+		@ClassName("page-overlay--standard")
+		String pageOverlayStandard();
+
 		@ClassName("page-popup")
 		String pagePopup();
+
+		@ClassName("page-press")
+		String pagePress();
+
+		@ClassName("page-pricing")
+		String pagePricing();
+
+		@ClassName("page-pricing__head")
+		String pagePricing__head();
+
+		@ClassName("page-product")
+		String pageProduct();
 
 		@ClassName("page-reset-password")
 		String pageResetPassword();
@@ -1157,6 +1524,12 @@ public interface Styles extends ClientBundle {
 		@ClassName("panel-right__overlay")
 		String panelRight__overlay();
 
+		@ClassName("partners-grid")
+		String partnersGrid();
+
+		@ClassName("partners-grid-container")
+		String partnersGridContainer();
+
 		@ClassName("password-strength-description")
 		String passwordStrengthDescription();
 
@@ -1165,6 +1538,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("password-strength-indicator-container")
 		String passwordStrengthIndicatorContainer();
+
+		@ClassName("per-month")
+		String perMonth();
 
 		@ClassName("phablet-width")
 		String phabletWidth();
@@ -1209,6 +1585,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("popup-content--link-account")
 		String popupContentLinkAccount();
 
+		@ClassName("popup-header-image")
+		String popupHeaderImage();
+
 		@ClassName("popup-toast")
 		String popupToast();
 
@@ -1236,8 +1615,140 @@ public interface Styles extends ClientBundle {
 		@ClassName("pre-selected")
 		String preSelected();
 
+		@ClassName("premium-days")
+		String premiumDays();
+
+		@ClassName("premium-icon")
+		String premiumIcon();
+
+		@ClassName("press-area--featured-list")
+		String pressAreaFeaturedList();
+
+		@ClassName("press-table-col--date")
+		String pressTableColDate();
+
+		@ClassName("press-table-col--source")
+		String pressTableColSource();
+
+		@ClassName("press-table-col--title")
+		String pressTableColTitle();
+
 		@ClassName("price-column")
 		String priceColumn();
+
+		@ClassName("pricing-access-info")
+		String pricingAccessInfo();
+
+		@ClassName("pricing-access-info--highlighted")
+		String pricingAccessInfoHighlighted();
+
+		@ClassName("pricing-detail-coming-soon")
+		String pricingDetailComingSoon();
+
+		@ClassName("pricing-details")
+		String pricingDetails();
+
+		@ClassName("pricing-name")
+		String pricingName();
+
+		@ClassName("pricing-option")
+		String pricingOption();
+
+		@ClassName("pricing-option--business")
+		String pricingOptionBusiness();
+
+		@ClassName("pricing-option--current")
+		String pricingOptionCurrent();
+
+		@ClassName("pricing-option--header")
+		String pricingOptionHeader();
+
+		@ClassName("pricing-option--premium")
+		String pricingOptionPremium();
+
+		@ClassName("pricing-option--standard")
+		String pricingOptionStandard();
+
+		@ClassName("pricing-option--with-footer")
+		String pricingOptionWithFooter();
+
+		@ClassName("pricing-options")
+		String pricingOptions();
+
+		@ClassName("pricing-price")
+		String pricingPrice();
+
+		@ClassName("pricing-price-container")
+		String pricingPriceContainer();
+
+		@ClassName("pricing-sign-up-button")
+		String pricingSignUpButton();
+
+		@ClassName("pricing-sup")
+		String pricingSup();
+
+		@ClassName("product-animation-container-leaderboard")
+		String productAnimationContainerLeaderboard();
+
+		@ClassName("product-animation__filters")
+		String productAnimation__filters();
+
+		@ClassName("product-animation__headings-one")
+		String productAnimation__headingsOne();
+
+		@ClassName("product-animation__headings-two")
+		String productAnimation__headingsTwo();
+
+		@ClassName("product-animation__screenshot-one")
+		String productAnimation__screenshotOne();
+
+		@ClassName("product-animation__screenshot-two")
+		String productAnimation__screenshotTwo();
+
+		@ClassName("product-animation__tabs")
+		String productAnimation__tabs();
+
+		@ClassName("product-image-container--right")
+		String productImageContainerRight();
+
+		@ClassName("product-image-gif-graph")
+		String productImageGifGraph();
+
+		@ClassName("product-leaderboard-static")
+		String productLeaderboardStatic();
+
+		@ClassName("product-page__quotes")
+		String productPage__quotes();
+
+		@ClassName("product-page__quotes__logo-container")
+		String productPage__quotes__logoContainer();
+
+		@ClassName("product-section")
+		String productSection();
+
+		@ClassName("product-section--content")
+		String productSectionContent();
+
+		@ClassName("product-section--message")
+		String productSectionMessage();
+
+		@ClassName("product-section--second-section")
+		String productSectionSecondSection();
+
+		@ClassName("product-text-content--left")
+		String productTextContentLeft();
+
+		@ClassName("profile-list")
+		String profileList();
+
+		@ClassName("profile-list__mobile-heading")
+		String profileList__mobileHeading();
+
+		@ClassName("profile-text")
+		String profileText();
+
+		@ClassName("profile-title")
+		String profileTitle();
 
 		String radioButtonLabel();
 
@@ -1249,6 +1760,15 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("rank-column")
 		String rankColumn();
+
+		@ClassName("ratings-container")
+		String ratingsContainer();
+
+		@ClassName("ratings-full")
+		String ratingsFull();
+
+		@ClassName("read-only-date")
+		String readOnlyDate();
 
 		@ClassName("ref-button")
 		String refButton();
@@ -1301,6 +1821,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("ref-button--loading-determinate")
 		String refButtonLoadingDeterminate();
 
+		@ClassName("ref-button--positive")
+		String refButtonPositive();
+
 		@ClassName("ref-button--success")
 		String refButtonSuccess();
 
@@ -1337,6 +1860,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("ref-icon-after--dot")
 		String refIconAfterDot();
 
+		@ClassName("ref-icon-after--info")
+		String refIconAfterInfo();
+
 		@ClassName("ref-icon-after--question")
 		String refIconAfterQuestion();
 
@@ -1366,6 +1892,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("ref-icon-before--cog")
 		String refIconBeforeCog();
+
+		@ClassName("ref-icon-before--dot")
+		String refIconBeforeDot();
 
 		@ClassName("ref-icon-before--facebook")
 		String refIconBeforeFacebook();
@@ -1406,6 +1935,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("ref-icon-before--my-data")
 		String refIconBeforeMyData();
 
+		@ClassName("ref-icon-before--plus")
+		String refIconBeforePlus();
+
 		@ClassName("ref-icon-before--refresh")
 		String refIconBeforeRefresh();
 
@@ -1417,6 +1949,9 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("ref-icon-before--twitter")
 		String refIconBeforeTwitter();
+
+		@ClassName("ref-icon-before--wrench")
+		String refIconBeforeWrench();
 
 		@ClassName("ref-icon-hidden-text")
 		String refIconHiddenText();
@@ -1439,6 +1974,18 @@ public interface Styles extends ClientBundle {
 		@ClassName("refresh-button")
 		String refreshButton();
 
+		@ClassName("register-form-container")
+		String registerFormContainer();
+
+		@ClassName("register-is-second-step")
+		String registerIsSecondStep();
+
+		@ClassName("release-notes-container")
+		String releaseNotesContainer();
+
+		@ClassName("remove-form-field")
+		String removeFormField();
+
 		@ClassName("reset-password-form-is-showing")
 		String resetPasswordFormIsShowing();
 
@@ -1446,6 +1993,9 @@ public interface Styles extends ClientBundle {
 		String resetPasswordIsSubmitted();
 
 		String responsive();
+
+		@ClassName("reveal-content")
+		String revealContent();
 
 		@ClassName("reveal-element")
 		String revealElement();
@@ -1465,7 +2015,13 @@ public interface Styles extends ClientBundle {
 		@ClassName("revenue-value")
 		String revenueValue();
 
+		@ClassName("reviews-and-ratings")
+		String reviewsAndRatings();
+
 		String scrollable();
+
+		@ClassName("search-button")
+		String searchButton();
 
 		@ClassName("search-button-mobile")
 		String searchButtonMobile();
@@ -1499,6 +2055,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("selected-tab")
 		String selectedTab();
 
+		@ClassName("selected-value")
+		String selectedValue();
+
 		@ClassName("sharing-container")
 		String sharingContainer();
 
@@ -1507,6 +2066,12 @@ public interface Styles extends ClientBundle {
 
 		@ClassName("show-reset-password-form")
 		String showResetPasswordForm();
+
+		@ClassName("sign-up-info-content")
+		String signUpInfoContent();
+
+		@ClassName("sign-up-link")
+		String signUpLink();
 
 		@ClassName("single-date-input")
 		String singleDateInput();
@@ -1529,17 +2094,50 @@ public interface Styles extends ClientBundle {
 		@ClassName("site-logo")
 		String siteLogo();
 
+		@ClassName("small-text")
+		String smallText();
+
+		@ClassName("social-link")
+		String socialLink();
+
 		@ClassName("sort-svg")
 		String sortSvg();
+
+		@ClassName("start-trial-confirmation")
+		String startTrialConfirmation();
+
+		@ClassName("start-trial-intro")
+		String startTrialIntro();
+
+		@ClassName("sticky-table-head")
+		String stickyTableHead();
 
 		@ClassName("store-select")
 		String storeSelect();
 
+		@ClassName("subscriptions-footer-container")
+		String subscriptionsFooterContainer();
+
 		@ClassName("success-tick")
 		String successTick();
 
-		@ClassName("svg-create-password")
-		String svgCreatePassword();
+		@ClassName("suggested-results-container")
+		String suggestedResultsContainer();
+
+		@ClassName("supported-devices")
+		String supportedDevices();
+
+		@ClassName("svg-bubble")
+		String svgBubble();
+
+		@ClassName("svg-cog")
+		String svgCog();
+
+		@ClassName("svg-container")
+		String svgContainer();
+
+		@ClassName("svg-refresh")
+		String svgRefresh();
 
 		@ClassName("svg-unhappy")
 		String svgUnhappy();
@@ -1641,6 +2239,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("tabs__content--is-submitted")
 		String tabs__contentIsSubmitted();
 
+		@ClassName("tabs__content-area")
+		String tabs__contentArea();
+
 		@ClassName("tabs__content-container")
 		String tabs__contentContainer();
 
@@ -1666,6 +2267,9 @@ public interface Styles extends ClientBundle {
 		@ClassName("time-period-select")
 		String timePeriodSelect();
 
+		@ClassName("time-period-select-component")
+		String timePeriodSelectComponent();
+
 		String toggle();
 
 		@ClassName("toggle-calendar")
@@ -1679,16 +2283,31 @@ public interface Styles extends ClientBundle {
 
 		String tooltip();
 
+		@ClassName("tooltip--info")
+		String tooltipInfo();
+
+		@ClassName("tooltip-feature")
+		String tooltipFeature();
+
+		@ClassName("tooltip-feature--pro")
+		String tooltipFeaturePro();
+
 		@ClassName("tooltip-right")
 		String tooltipRight();
 
-		@ClassName("top-five-section")
-		String topFiveSection();
+		@ClassName("tooltip-text")
+		String tooltipText();
 
 		@ClassName("total-revenue-title")
 		String totalRevenueTitle();
 
 		String touch();
+
+		@ClassName("trial-label")
+		String trialLabel();
+
+		@ClassName("two-columns")
+		String twoColumns();
 
 		@ClassName("update-linked-accounts-container")
 		String updateLinkedAccountsContainer();
@@ -1720,229 +2339,38 @@ public interface Styles extends ClientBundle {
 		@ClassName("whats-this-tooltip-icon")
 		String whatsThisTooltipIcon();
 
-		@ClassName("whats-this-tooltip-icon-static")
-		String whatsThisTooltipIconStatic();
-
 		@ClassName("whats-this-tooltip-popup")
 		String whatsThisTooltipPopup();
+
+		@ClassName("why-reflection-button-container")
+		String whyReflectionButtonContainer();
+
+		@ClassName("why-reflection-container")
+		String whyReflectionContainer();
+
+		@ClassName("why-reflection-graphic")
+		String whyReflectionGraphic();
+
+		@ClassName("why-reflection-item")
+		String whyReflectionItem();
+
+		@ClassName("why-reflection-item__illustration-container")
+		String whyReflectionItem__illustrationContainer();
+
+		@ClassName("why-reflection-item__illustration-container--help")
+		String whyReflectionItem__illustrationContainerHelp();
+
+		@ClassName("why-reflection-item__illustration-container--price")
+		String whyReflectionItem__illustrationContainerPrice();
+
+		@ClassName("why-reflection-item__illustration-container--use")
+		String whyReflectionItem__illustrationContainerUse();
 
 		@ClassName("will-show")
 		String willShow();
 
 		@ClassName("window-warning")
 		String windowWarning();
-
-	}
-
-	public interface HomePageStyles extends CssResource {
-		@ClassName("actions-container")
-		String actionsContainer();
-
-		@ClassName("blockquote-container")
-		String blockquoteContainer();
-
-		@ClassName("border-radius-point")
-		String borderRadiusPoint();
-
-		String browserupgrade();
-
-		@ClassName("centre-content-container")
-		String centreContentContainer();
-
-		@ClassName("content-list")
-		String contentList();
-
-		@ClassName("gm-style")
-		String gmStyle();
-
-		@ClassName("gm-style-iw")
-		String gmStyleIw();
-
-		String header();
-
-		String header__actions();
-
-		@ClassName("hidden-text")
-		String hiddenText();
-
-		@ClassName("icon-angle-right")
-		String iconAngleRight();
-
-		@ClassName("img-width-landing-column-thin")
-		String imgWidthLandingColumnThin();
-
-		@ClassName("img-width-landing-column-wide")
-		String imgWidthLandingColumnWide();
-
-		@ClassName("is-chrome")
-		String isChrome();
-
-		@ClassName("is-opera")
-		String isOpera();
-
-		@ClassName("l-main")
-		String lMain();
-
-		@ClassName("landing-column-thin")
-		String landingColumnThin();
-
-		@ClassName("landing-column-thin__content")
-		String landingColumnThin__content();
-
-		@ClassName("landing-column-wide")
-		String landingColumnWide();
-
-		@ClassName("landing-column-wide__content")
-		String landingColumnWide__content();
-
-		@ClassName("landing-footer")
-		String landingFooter();
-
-		@ClassName("landing-footer__copyright")
-		String landingFooter__copyright();
-
-		@ClassName("landing-footer__inline-link")
-		String landingFooter__inlineLink();
-
-		@ClassName("landing-footer__social-links")
-		String landingFooter__socialLinks();
-
-		@ClassName("landing-page")
-		String landingPage();
-
-		@ClassName("landing-section-analyse")
-		String landingSectionAnalyse();
-
-		@ClassName("landing-section-analyse__column_two")
-		String landingSectionAnalyse__column_two();
-
-		@ClassName("landing-section-careers")
-		String landingSectionCareers();
-
-		@ClassName("landing-section-contact")
-		String landingSectionContact();
-
-		@ClassName("landing-section-contact__address")
-		String landingSectionContact__address();
-
-		@ClassName("landing-section-contact__email")
-		String landingSectionContact__email();
-
-		@ClassName("landing-section-contact__tel")
-		String landingSectionContact__tel();
-
-		@ClassName("landing-section-insights")
-		String landingSectionInsights();
-
-		@ClassName("landing-section-insights__column_one")
-		String landingSectionInsights__column_one();
-
-		@ClassName("landing-section-main")
-		String landingSectionMain();
-
-		@ClassName("landing-section-main-scroll-effect-container")
-		String landingSectionMainScrollEffectContainer();
-
-		@ClassName("landing-section-main__column-one")
-		String landingSectionMain__columnOne();
-
-		@ClassName("landing-section-main__column-two")
-		String landingSectionMain__columnTwo();
-
-		@ClassName("landing-section-main__content")
-		String landingSectionMain__content();
-
-		@ClassName("landing-section-map")
-		String landingSectionMap();
-
-		@ClassName("landing-section-story")
-		String landingSectionStory();
-
-		@ClassName("link-facebook")
-		String linkFacebook();
-
-		@ClassName("link-leaderboard")
-		String linkLeaderboard();
-
-		@ClassName("link-linkedin")
-		String linkLinkedin();
-
-		@ClassName("link-log-in")
-		String linkLogIn();
-
-		@ClassName("link-to-page-top__text")
-		String linkToPageTop__text();
-
-		@ClassName("link-twitter")
-		String linkTwitter();
-
-		@ClassName("list-partners")
-		String listPartners();
-
-		@ClassName("logo-reflection-footer")
-		String logoReflectionFooter();
-
-		@ClassName("map__info-box")
-		String map__infoBox();
-
-		@ClassName("map__info-box__down-arrow")
-		String map__infoBox__downArrow();
-
-		@ClassName("map__street-view-link")
-		String map__streetViewLink();
-
-		@ClassName("map__text-content")
-		String map__textContent();
-
-		@ClassName("no-flexbox")
-		String noFlexbox();
-
-		@ClassName("no-opacity")
-		String noOpacity();
-
-		@ClassName("no-scroll")
-		String noScroll();
-
-		@ClassName("no-touch")
-		String noTouch();
-
-		@ClassName("panel-left-open")
-		String panelLeftOpen();
-
-		@ClassName("panel-right")
-		String panelRight();
-
-		@ClassName("ref-button")
-		String refButton();
-
-		@ClassName("ref-button-apply")
-		String refButtonApply();
-
-		@ClassName("ref-button-cta-large")
-		String refButtonCtaLarge();
-
-		@ClassName("ref-icon-after")
-		String refIconAfter();
-
-		@ClassName("ref-icon-before")
-		String refIconBefore();
-
-		@ClassName("section-size-shadow-layer")
-		String sectionSizeShadowLayer();
-
-		@ClassName("site-logo")
-		String siteLogo();
-
-		@ClassName("small-text")
-		String smallText();
-
-		String touch();
-
-		@ClassName("vertical-center")
-		String verticalCenter();
-
-		@ClassName("window-height-scroll-effect-container")
-		String windowHeightScrollEffectContainer();
 	}
 
 	public static final Styles STYLES_INSTANCE = GWT.create(Styles.class);
@@ -1950,21 +2378,6 @@ public interface Styles extends ClientBundle {
 	@Source("preloader.gif")
 	@ImageOptions(repeatStyle = RepeatStyle.None)
 	ImageResource cellTableLoading();
-
-	@Source("footersprite.png")
-	@ImageOptions(repeatStyle = RepeatStyle.None)
-	ImageResource footerSprite();
-
-	@Source("unknownsprite.png")
-	@ImageOptions(repeatStyle = RepeatStyle.None)
-	ImageResource unknownSprite();
-
-	@Source("linkedaccountssprite.png")
-	@ImageOptions(repeatStyle = RepeatStyle.None)
-	ImageResource linkedAccountSprite();
-
-	@Source("homepage.gss")
-	HomePageStyles homePageStyle();
 
 	@Source("reflectionMain.gss")
 	ReflectionMainStyles reflectionMainStyle();

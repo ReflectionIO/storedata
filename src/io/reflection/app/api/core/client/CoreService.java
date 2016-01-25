@@ -60,6 +60,8 @@ import io.reflection.app.api.core.shared.call.LoginRequest;
 import io.reflection.app.api.core.shared.call.LoginResponse;
 import io.reflection.app.api.core.shared.call.LogoutRequest;
 import io.reflection.app.api.core.shared.call.LogoutResponse;
+import io.reflection.app.api.core.shared.call.RegisterInterestBusinessRequest;
+import io.reflection.app.api.core.shared.call.RegisterInterestBusinessResponse;
 import io.reflection.app.api.core.shared.call.RegisterUserRequest;
 import io.reflection.app.api.core.shared.call.RegisterUserResponse;
 import io.reflection.app.api.core.shared.call.SearchForItemRequest;
@@ -68,6 +70,8 @@ import io.reflection.app.api.core.shared.call.UpdateLinkedAccountRequest;
 import io.reflection.app.api.core.shared.call.UpdateLinkedAccountResponse;
 import io.reflection.app.api.core.shared.call.UpdateNotificationsRequest;
 import io.reflection.app.api.core.shared.call.UpdateNotificationsResponse;
+import io.reflection.app.api.core.shared.call.UpgradeAccountRequest;
+import io.reflection.app.api.core.shared.call.UpgradeAccountResponse;
 import io.reflection.app.client.helper.ApiCallHelper;
 
 import com.google.gwt.http.client.Request;
@@ -1083,6 +1087,72 @@ public final class CoreService extends JsonService {
 		} catch (RequestException exception) {
 			output.onFailure(exception);
 			onCallFailure(CoreService.this, CoreMethodUpdateNotifications, input, exception);
+		}
+		return handle;
+	}
+
+	public static final String CoreMethodUpgradeAccount = "UpgradeAccount";
+
+	public Request upgradeAccount(final UpgradeAccountRequest input, final AsyncCallback<UpgradeAccountResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(CoreMethodUpgradeAccount, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						UpgradeAccountResponse outputParameter = new UpgradeAccountResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(CoreService.this, CoreMethodUpgradeAccount, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(CoreService.this, CoreMethodUpgradeAccount, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(CoreService.this, CoreMethodUpgradeAccount, input, exception);
+				}
+			});
+			onCallStart(CoreService.this, CoreMethodUpgradeAccount, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(CoreService.this, CoreMethodUpgradeAccount, input, exception);
+		}
+		return handle;
+	}
+
+	public static final String CoreMethodRegisterInterestBusiness = "RegisterInterestBusiness";
+
+	public Request registerInterestBusiness(final RegisterInterestBusinessRequest input, final AsyncCallback<RegisterInterestBusinessResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(CoreMethodRegisterInterestBusiness, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						RegisterInterestBusinessResponse outputParameter = new RegisterInterestBusinessResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(CoreService.this, CoreMethodRegisterInterestBusiness, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(CoreService.this, CoreMethodRegisterInterestBusiness, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(CoreService.this, CoreMethodRegisterInterestBusiness, input, exception);
+				}
+			});
+			onCallStart(CoreService.this, CoreMethodRegisterInterestBusiness, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(CoreService.this, CoreMethodRegisterInterestBusiness, input, exception);
 		}
 		return handle;
 	}

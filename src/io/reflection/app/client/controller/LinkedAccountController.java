@@ -28,11 +28,10 @@ import io.reflection.app.api.core.shared.call.event.UpdateLinkedAccountEventHand
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.client.DefaultEventBus;
+import io.reflection.app.client.mixpanel.MixpanelHelper;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
 import io.reflection.app.datatypes.shared.Item;
-import io.reflection.app.datatypes.shared.Permission;
-import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -139,7 +138,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 	 * @param password
 	 * @param properties
 	 */
-	public void linkAccount(Long sourceId, String username, String password, String properties) {
+	public void linkAccount(Long sourceId, String username, String password) {
 		CoreService service = ServiceCreator.createCoreService();
 
 		final LinkAccountRequest input = new LinkAccountRequest();
@@ -149,7 +148,6 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 
 		input.username = username;
 		input.password = password;
-		input.properties = properties;
 
 		DataSource source = new DataSource();
 		source.id = sourceId;
@@ -169,25 +167,38 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 			@Override
 			public void onSuccess(LinkAccountResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {
-					rows.add(output.account);
-					addLinkedAccountsToLookup(Arrays.asList(output.account));
-					addDataSourceToLookup(Arrays.asList(output.account.source));
-					// pager.totalCount = Long.valueOf(pager.totalCount.longValue() + 1);
-					// Load HLA Permission
-					linkedAccountsCount = rows.size();
-					if (!SessionController.get().loggedInUserHas(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE)) {
-						Permission hlaPermission = DataTypeHelper.createPermission(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE);
-						hlaPermission.code = DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE;
-						SessionController.get().addPermissionToLookup(hlaPermission);
+					if (output.linkedAccounts != null) {
+						for (DataAccount addedAccount : output.linkedAccounts) {
+							if (!getAllLinkedAccountIds().contains(addedAccount.id.toString())) { // Avoid to add duplicated
+								rows.add(addedAccount);
+								addLinkedAccountsToLookup(Arrays.asList(addedAccount));
+								addDataSourceToLookup(Arrays.asList(addedAccount.source));
+								// pager.totalCount = Long.valueOf(pager.totalCount.longValue() + 1);
+							}
+						}
+						linkedAccountsCount = rows.size();
+						updateRowCount(linkedAccountsCount, true);
+						updateRowData(0, rows);
+						SessionController.get().fetchRoleAndPermissions(); // Load HLA Permission
 					}
-					updateRowCount(linkedAccountsCount, true);
-					updateRowData(0, rows);
+					MixpanelHelper.track(MixpanelHelper.Event.LINK_ACCOUNT_SUCCESS);
+				} else {
+					Map<String, Object> properties = new HashMap<String, Object>();
+					if (output.error != null && output.error.message != null) {
+						properties.put("error_server", output.error.message);
+					} else {
+						properties.put("error_server", "generic error");
+					}
+					MixpanelHelper.track(MixpanelHelper.Event.LINK_ACCOUNT_FAILURE, properties);
 				}
 				DefaultEventBus.get().fireEventFromSource(new LinkAccountSuccess(input, output), LinkedAccountController.this);
 			}
 
 			@Override
 			public void onFailure(Throwable caught) {
+				Map<String, Object> properties = new HashMap<String, Object>();
+				properties.put("error_server", caught.getMessage());
+				MixpanelHelper.track(MixpanelHelper.Event.LINK_ACCOUNT_FAILURE, properties);
 				DefaultEventBus.get().fireEventFromSource(new LinkAccountFailure(input, caught), LinkedAccountController.this);
 			}
 		});
@@ -201,7 +212,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 	 * @param password
 	 * @param vendorNumber
 	 */
-	public void updateLinkedAccont(Long linkedAccountId, String password, String properties) {
+	public void updateLinkedAccont(Long linkedAccountId, String username, String password) {
 		CoreService service = ServiceCreator.createCoreService();
 		final UpdateLinkedAccountRequest input = new UpdateLinkedAccountRequest();
 
@@ -210,12 +221,9 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 		input.session = SessionController.get().getSessionForApiCall();
 
 		input.linkedAccount = new DataAccount();
-
 		input.linkedAccount.id = linkedAccountId;
-
+		input.linkedAccount.username = username;
 		input.linkedAccount.password = password;
-
-		input.linkedAccount.properties = properties;
 
 		// input.linkedAccount.source = new DataSource();
 		// input.linkedAccount.source.a3Code = dataSourceLookup.get(dataAccountLookup.get(linkedAccountId.toString()).source.id.toString()).a3Code;
@@ -225,7 +233,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 			@Override
 			public void onSuccess(UpdateLinkedAccountResponse output) {
 				if (output.status == StatusType.StatusTypeSuccess) {
-					updateLinkedAccountLookup(input.linkedAccount.id, input.linkedAccount.password, input.linkedAccount.properties);
+					updateLinkedAccountLookup(input.linkedAccount.id, input.linkedAccount.username, input.linkedAccount.password);
 				}
 
 				DefaultEventBus.get().fireEventFromSource(new UpdateLinkedAccountEventHandler.UpdateLinkedAccountSuccess(input, output),
@@ -266,13 +274,9 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 					// pager.start = Long.valueOf(0);
 					// Delete HLA Permission if there are no more Linked Accounts
 					linkedAccountsCount = rows.size();
-					if (linkedAccountsFetched() && linkedAccountsCount == 0) {
-						Permission hlaPermission = DataTypeHelper.createPermission(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE);
-						hlaPermission.code = DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE;
-						SessionController.get().deletePermissionLookup(hlaPermission);
-					}
 					updateRowCount(linkedAccountsCount, true);
 					updateRowData(0, rows);
+					SessionController.get().fetchRoleAndPermissions();
 				}
 				DefaultEventBus.get().fireEventFromSource(new DeleteLinkedAccountSuccess(input, output), LinkedAccountController.this);
 			}
@@ -374,11 +378,11 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 	 * @param password
 	 * @param properties
 	 */
-	private void updateLinkedAccountLookup(Long linkedAccountId, String password, String properties) {
+	private void updateLinkedAccountLookup(Long linkedAccountId, String username, String password) {
+		myDataAccounts.get(myDataAccounts.indexOf(myDataAccountLookup.get(linkedAccountId.toString()))).username = username;
 		myDataAccounts.get(myDataAccounts.indexOf(myDataAccountLookup.get(linkedAccountId.toString()))).password = password;
-		myDataAccounts.get(myDataAccounts.indexOf(myDataAccountLookup.get(linkedAccountId.toString()))).properties = properties;
+		myDataAccountLookup.get(linkedAccountId.toString()).username = username;
 		myDataAccountLookup.get(linkedAccountId.toString()).password = password;
-		myDataAccountLookup.get(linkedAccountId.toString()).properties = properties;
 	}
 
 	/**
@@ -443,13 +447,10 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 		Item lookupItem = null;
 
 		if (item != null && item.internalId != null) {
-			if (ItemController.get().getUserItem(item.internalId) != null) {
-				lookupItem = ItemController.get().getUserItem(item.internalId);
-			}
-
-			if (lookupItem == null) {
+			if ((lookupItem = ItemController.get().getUserItem(item.internalId)) == null) {
 				fetchLinkedAccountItem(item.internalId);
 			}
+
 		}
 
 		return lookupItem;
@@ -491,5 +492,11 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 						LinkedAccountController.this);
 			}
 		});
+	}
+
+	public List<String> getAllLinkedAccountIds() {
+		List<String> ids = new ArrayList<String>();
+		ids.addAll(myDataAccountLookup.keySet());
+		return ids;
 	}
 }

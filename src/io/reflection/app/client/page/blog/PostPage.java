@@ -88,14 +88,14 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 		initWidget(uiBinder.createAndBindUi(this));
 
 		// TODO remove unused components if not admin
-		if (!SessionController.get().isLoggedInUserAdmin()) {
+		if (!SessionController.get().isAdmin()) {
 			blogCategories.removeFromParent();
 			breadcrumbPanel.removeFromParent();
 			searchPanel.removeFromParent();
 			comments.removeFromParent();
 		}
 
-		FilterHelper.addBlogCategories(blogCategories, SessionController.get().isLoggedInUserAdmin());
+		FilterHelper.addBlogCategories(blogCategories, SessionController.get().isAdmin());
 
 		notPublished.setInnerText("NOT PUBLISHED");
 		notPublished.getStyle().setColor(ColorHelper.getReflectionRed());
@@ -234,7 +234,7 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 
 		facebookShareLink.setHref("#" + NavigationController.get().getStack().toString() + "#f");
 
-		loadingBar.hide();
+		loadingBar.hide(true);
 	}
 
 	private void setLoading(LoadingType value) {
@@ -274,6 +274,7 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 		if (output.status == StatusType.StatusTypeSuccess && output.post != null) {
 			show(output.post);
 		} else {
+			loadingBar.hide(false);
 			PageType.BlogPostsPageType.show();
 		}
 	}
@@ -285,7 +286,9 @@ public class PostPage extends Page implements NavigationEventHandler, GetPostEve
 	 * java.lang.Throwable)
 	 */
 	@Override
-	public void getPostFailure(GetPostRequest input, Throwable caught) {}
+	public void getPostFailure(GetPostRequest input, Throwable caught) {
+		loadingBar.hide(false);
+	}
 
 	/**
 	 * @param postId

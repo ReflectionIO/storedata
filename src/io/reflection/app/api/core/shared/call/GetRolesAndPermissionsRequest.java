@@ -16,7 +16,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 public class GetRolesAndPermissionsRequest extends Request {
-	public Boolean idsOnly;
 	public Boolean expandRoles;
 	public Boolean rolesOnly;
 	public Boolean permissionsOnly;
@@ -24,8 +23,6 @@ public class GetRolesAndPermissionsRequest extends Request {
 	@Override
 	public JsonObject toJson() {
 		JsonObject object = super.toJson();
-		JsonElement jsonIdsOnly = idsOnly == null ? JsonNull.INSTANCE : new JsonPrimitive(idsOnly);
-		object.add("idsOnly", jsonIdsOnly);
 		JsonElement jsonExpandRoles = expandRoles == null ? JsonNull.INSTANCE : new JsonPrimitive(expandRoles);
 		object.add("expandRoles", jsonExpandRoles);
 		JsonElement jsonRolesOnly = rolesOnly == null ? JsonNull.INSTANCE : new JsonPrimitive(rolesOnly);
@@ -38,12 +35,6 @@ public class GetRolesAndPermissionsRequest extends Request {
 	@Override
 	public void fromJson(JsonObject jsonObject) {
 		super.fromJson(jsonObject);
-		if (jsonObject.has("idsOnly")) {
-			JsonElement jsonIdsOnly = jsonObject.get("idsOnly");
-			if (jsonIdsOnly != null) {
-				idsOnly = Boolean.valueOf(jsonIdsOnly.getAsBoolean());
-			}
-		}
 		if (jsonObject.has("expandRoles")) {
 			JsonElement jsonExpandRoles = jsonObject.get("expandRoles");
 			if (jsonExpandRoles != null) {
@@ -62,11 +53,6 @@ public class GetRolesAndPermissionsRequest extends Request {
 				permissionsOnly = Boolean.valueOf(jsonPermissionsOnly.getAsBoolean());
 			}
 		}
-	}
-
-	public GetRolesAndPermissionsRequest idsOnly(Boolean idsOnly) {
-		this.idsOnly = idsOnly;
-		return this;
 	}
 
 	public GetRolesAndPermissionsRequest expandRoles(Boolean expandRoles) {

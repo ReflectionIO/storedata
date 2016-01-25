@@ -212,9 +212,9 @@ public class PostAdminPage extends Page implements GetPostsEventHandler, Navigat
 			} else {
 				simplePager.setVisible(false);
 			}
-			loadingBar.hide();
+			loadingBar.hide(true);
 		} else {
-
+			loadingBar.hide(false);
 		}
 	}
 
@@ -225,7 +225,9 @@ public class PostAdminPage extends Page implements GetPostsEventHandler, Navigat
 	 * java.lang.Throwable)
 	 */
 	@Override
-	public void getPostsFailure(GetPostsRequest input, Throwable caught) {}
+	public void getPostsFailure(GetPostsRequest input, Throwable caught) {
+		loadingBar.hide(false);
+	}
 
 	/*
 	 * (non-Javadoc)

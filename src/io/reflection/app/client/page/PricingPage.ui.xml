@@ -1,0 +1,151 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:import field="io.reflection.app.client.page.PageType.ContactPageType" />
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
+	<ui:style>
+	
+	</ui:style>
+	<g:HTMLPanel styleName="{STYLES_INSTANCE.reflectionMainStyle.pagePricing}">
+		<div class="{STYLES_INSTANCE.reflectionMainStyle.gridContainer}">
+			<div
+				class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth} {STYLES_INSTANCE.reflectionMainStyle.pagePricing__head}">
+				<h1 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingTwo} {STYLES_INSTANCE.reflectionMainStyle.pageTitle}">Pricing Options</h1>
+				<p>
+					More questions or want to chat?
+					<g:InlineHyperlink targetHistoryToken="{ContactPageType.asTargetHistoryToken}">Contact us</g:InlineHyperlink>
+				</p>
+			</div>
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__row} {STYLES_INSTANCE.reflectionMainStyle.pricingOptions}">
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird}">
+					<section class="{STYLES_INSTANCE.reflectionMainStyle.pricingOption} {STYLES_INSTANCE.reflectionMainStyle.pricingOptionStandard}">
+						<header class="{STYLES_INSTANCE.reflectionMainStyle.pricingOptionHeader}">
+							<h2 class="{STYLES_INSTANCE.reflectionMainStyle.pricingName}">Developer</h2>
+							<div class="{STYLES_INSTANCE.reflectionMainStyle.pricingPriceContainer}">
+								<span class="{STYLES_INSTANCE.reflectionMainStyle.pricingPrice}">FREE</span>
+							</div>
+							<span class="{STYLES_INSTANCE.reflectionMainStyle.packageFor}">For App Developers</span>
+							<p class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCheck}">App Store Account Required</p>
+						</header>
+						<ul class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetails}">
+							<li>
+								<span>Daily Top 200 App Revenue, Download and Rank Data</span>
+								<a href="#" class="{STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIcon} js-whats-this-tooltip"
+									data-whatsthis="View the latest revenue and download data for all available stores, countries and categories. More countries and categories will be available as the beta progresses.">
+									<span>What's this?</span>
+								</a>
+							</li>
+							<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
+								<span>More to come..</span>
+								<a href="#" class="{STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIcon} js-whats-this-tooltip" data-whatsthis="We build features with feedback from our developer community. What features would you like to see?">
+									<span>What's this?</span>
+								</a>
+							</li>
+						</ul>
+						<g:Button ui:field="signUpBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth} {STYLES_INSTANCE.reflectionMainStyle.pricingSignUpButton}">Sign Up
+							for Free Now</g:Button>
+					</section>
+				</div>
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird}">
+					<section
+						class="{STYLES_INSTANCE.reflectionMainStyle.pricingOption} {STYLES_INSTANCE.reflectionMainStyle.pricingOptionPremium} {STYLES_INSTANCE.reflectionMainStyle.pricingOptionWithFooter}">
+						<header class="{STYLES_INSTANCE.reflectionMainStyle.pricingOptionHeader}">
+							<h2 class="{STYLES_INSTANCE.reflectionMainStyle.pricingName}">Developer Premium</h2>
+							<div class="{STYLES_INSTANCE.reflectionMainStyle.pricingPriceContainer}">
+								<sup class="{STYLES_INSTANCE.reflectionMainStyle.pricingSup}">$</sup>
+								<span class="{STYLES_INSTANCE.reflectionMainStyle.pricingPrice}">149</span>
+								<sup class="{STYLES_INSTANCE.reflectionMainStyle.pricingSup}">.99</sup>
+							</div>
+							<span class="{STYLES_INSTANCE.reflectionMainStyle.perMonth}">per month</span>
+							<span class="{STYLES_INSTANCE.reflectionMainStyle.packageFor}">For App Developers</span>
+							<p class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCheck}">App Store Account Required</p>
+						</header>
+						<ul class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetails}">
+							<li>
+								<span>Daily Top 200 App Revenue, Download and Rank Data</span>
+							</li>
+							<li>
+								<span>Historic Data</span>
+							</li>
+							<li>
+								<span>Download CSV files</span>
+							</li>
+							<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
+								<span>More to come..</span>
+								<a href="#" ui:field="comingSoon" class="{STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIcon} js-whats-this-tooltip" data-whatsthis="We build features with feedback from our developer community. What features would you like to see?">
+									<span>What's this?</span>
+								</a>
+							</li>
+						</ul>
+						<span class="{STYLES_INSTANCE.reflectionMainStyle.trialLabel}">
+							<em>FREE</em> for the duration of the Beta
+						</span>
+					</section>
+					<div class="{STYLES_INSTANCE.reflectionMainStyle.pricingAccessInfo}">
+						<div class="{STYLES_INSTANCE.reflectionMainStyle.verticalCentreContent}">
+							<p>Get Premium free on us when you sign up with a Developer Standard account</p>
+						</div>
+					</div>
+				</div>
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnOneThird}">
+					<section
+						class="{STYLES_INSTANCE.reflectionMainStyle.pricingOption} {STYLES_INSTANCE.reflectionMainStyle.pricingOptionBusiness} {STYLES_INSTANCE.reflectionMainStyle.pricingOptionWithFooter}">
+						<header class="{STYLES_INSTANCE.reflectionMainStyle.pricingOptionHeader}">
+							<h2 class="{STYLES_INSTANCE.reflectionMainStyle.pricingName}">Business</h2>
+							<div class="{STYLES_INSTANCE.reflectionMainStyle.pricingPriceContainer}">
+								<span class="{STYLES_INSTANCE.reflectionMainStyle.pricingPrice}">COMING SOON</span>
+							</div>
+							<span class="{STYLES_INSTANCE.reflectionMainStyle.packageFor}">Investors, Advertisers, Marketers</span>
+							<p class="{STYLES_INSTANCE.reflectionMainStyle.refIconBefore} {STYLES_INSTANCE.reflectionMainStyle.refIconBeforeCancel}">No App Store Account Required</p>
+						</header>
+						<ul class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetails}">
+							<li>
+								<span>Daily Top 200 App Revenue, Download and Rank Data</span>
+							</li>
+							<li>
+								<span>Historic Data</span>
+							</li>
+							<li>
+								<span>Download CSV files</span>
+							</li>
+							<li class="{STYLES_INSTANCE.reflectionMainStyle.pricingDetailComingSoon}">
+								<span>More to come..</span>
+								<a href="#" class="{STYLES_INSTANCE.reflectionMainStyle.whatsThisTooltipIcon} js-whats-this-tooltip {STYLES_INSTANCE.reflectionMainStyle.positionTooltipLeft}" data-whatsthis="We build features with feedback from our developer community. What features would you like to see?">
+									<span>What's this?</span>
+								</a>
+							</li>
+						</ul>
+						<g:Button ui:field="registerInterest" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonLink} {STYLES_INSTANCE.reflectionMainStyle.pricingSignUpButton}">Register Your Interest</g:Button>
+					</section>
+					<div class="{STYLES_INSTANCE.reflectionMainStyle.pricingAccessInfo}">
+						<div class="{STYLES_INSTANCE.reflectionMainStyle.verticalCentreContent}">
+							<p>Coming soon, register your interest now to get access on a first-come, first-served basis</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.grid__row}">
+				<section
+					class="{STYLES_INSTANCE.reflectionMainStyle.grid__column} {STYLES_INSTANCE.reflectionMainStyle.grid__columnFullWidth} {STYLES_INSTANCE.reflectionMainStyle.twoColumns}">
+					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">How do you use my app store data?</h2>
+					<p>We only use your store data for our statistical forecasting that estimates the market.
+					It will never be shared with anyone. Reflection's growing network of developers helps us 
+						expand our country and platform intelligence while maintaining market-leading revenue and download accuracy.</p>
+					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Which app stores do you support?</h2>
+					<p>We currently support iPhone and iPad. We are planning to add Google Play and other major platforms starting early 2016.</p>
+					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">Which Countries do you support?</h2>
+					<p>Reflection currently offers market data for 4 countries. We will offer intelligence for more countries as we progress during our beta.</p>
+					<p>Countries supported: United Kingdom, Germany, France and Italy</p>
+					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">What Categories do you support?</h2>
+					<p>We only support the Games category as of today. We will add more categories when we are satisfied with the reliability of our accuracy.
+					We will offer intelligence for every category including subcategories as we progress during the beta.</p>
+					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">How far back does your data go?</h2>
+					<p>We provide rank, revenue and download data for iPhone and iPad from September 2015. Our data will go back to 2014 when the beta ends.</p>
+					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">When will the Business Account be available?</h2>
+					<p>We are planning to launch our business account when our beta ends. Register your interest and we'll let you know once it is ready.</p>
+					<h2 class="{STYLES_INSTANCE.reflectionMainStyle.headingStyleHeadingFour}">How accurate is Reflection’s data?</h2>
+					<p>We only make our intelligence available when we know it's reliable and accurate.</p>
+				</section>
+			</div>
+		</div>
+	</g:HTMLPanel>
+</ui:UiBinder> 

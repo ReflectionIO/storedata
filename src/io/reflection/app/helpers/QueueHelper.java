@@ -53,6 +53,7 @@ public class QueueHelper {
 
 			try {
 				queue.add(options);
+				LOG.log(GaeLevel.DEBUG, String.format("Added task to queue %s ", queueName));
 			} catch (TransientFailureException ex) {
 
 				if (LOG.isLoggable(Level.WARNING)) {

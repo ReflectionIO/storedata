@@ -1,4 +1,4 @@
-//  
+//
 //  UserService.java
 //  storedata
 //
@@ -32,7 +32,6 @@ import io.reflection.app.service.ServiceType;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.event.EventServiceProvider;
 import io.reflection.app.service.notification.NotificationServiceProvider;
-import io.reflection.app.service.role.RoleServiceProvider;
 import io.reflection.app.shared.util.DataTypeHelper;
 
 import java.util.ArrayList;
@@ -51,13 +50,9 @@ final class UserService implements IUserService {
 
 	private static final Logger LOG = Logger.getLogger(UserService.class.getName());
 
+	@Override
 	public String getName() {
 		return ServiceType.ServiceTypeUser.toString();
-	}
-
-	private boolean isValidTestUser(User user) {
-		String TEST_EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*\\+test__[0-9]*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-		return (user.username != null) ? user.username.matches(TEST_EMAIL_PATTERN) : false;
 	}
 
 	/*
@@ -79,7 +74,7 @@ final class UserService implements IUserService {
 			userConnection.executeQuery(getUserByIdQuery);
 
 			if (userConnection.fetchNextRow()) {
-				user = this.toUser(userConnection);
+				user = toUser(userConnection);
 			}
 		} finally {
 			if (userConnection != null) {
@@ -102,7 +97,9 @@ final class UserService implements IUserService {
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection userConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
-		String getUserIdsQuery = String.format("SELECT DISTINCT `userid` FROM `userrole` WHERE `roleid` = %d AND `deleted`='n'", role.id.longValue());
+		String getUserIdsQuery = String.format(
+				"SELECT DISTINCT `userid` FROM `userrole` WHERE `roleid` = %d AND `deleted`='n' AND (`expires` > NOW() OR `expires` IS NULL)",
+				role.id.longValue());
 
 		try {
 			userConnection.connect();
@@ -136,11 +133,20 @@ final class UserService implements IUserService {
 		Connection userConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
 		// NOTE: salt is added then the password is sha1-ed
-		String addUserQuery = String.format(
-				"INSERT INTO `user` (`forename`, `surname`, `username`, `password`, `avatar`, `company`) VALUES ('%s', '%s', '%s', '%s', %s, '%s')",
-				addslashes(user.forename), addslashes(user.surname), addslashes(user.username), sha1Hash(SALT + user.password), user.avatar == null ? "'"
-						+ addslashes(StringUtils.md5Hash(user.username.trim().toLowerCase())) + "'" : "'" + addslashes(user.avatar) + "'",
-				addslashes(user.company));
+		String addUserQuery;
+		if (user.password != null) {
+			addUserQuery = String.format(
+					"INSERT INTO `user` (`forename`, `surname`, `username`, `password`, `avatar`, `company`) VALUES ('%s', '%s', '%s', '%s', %s, '%s')",
+					addslashes(user.forename), addslashes(user.surname), addslashes(user.username), sha1Hash(SALT + user.password), user.avatar == null ? "'"
+							+ addslashes(StringUtils.md5Hash(user.username.trim().toLowerCase())) + "'" : "'" + addslashes(user.avatar) + "'",
+					addslashes(user.company));
+		} else {
+			addUserQuery = String
+					.format("INSERT INTO `user` (`forename`, `surname`, `username`, `avatar`, `company`) VALUES ('%s', '%s', '%s', %s, '%s')",
+							addslashes(user.forename), addslashes(user.surname), addslashes(user.username),
+							user.avatar == null ? "'" + addslashes(StringUtils.md5Hash(user.username.trim().toLowerCase())) + "'" : "'"
+									+ addslashes(user.avatar) + "'", addslashes(user.company));
+		}
 		try {
 			userConnection.connect();
 			userConnection.executeQuery(addUserQuery);
@@ -149,27 +155,9 @@ final class UserService implements IUserService {
 				user.id = Long.valueOf(userConnection.getInsertedId());
 				user.password = null;
 
-				addedUser = this.getUser(user.id);
+				addedUser = getUser(user.id);
 				addedUser.password = null;
 
-				if (isValidTestUser(user)) {
-					Role testRole = RoleServiceProvider.provide().getCodeRole(DataTypeHelper.ROLE_TEST_CODE);
-					assignRole(user, testRole);
-				}
-
-				Map<String, Object> values = new HashMap<String, Object>();
-				values.put("user", addedUser);
-
-				Event event = EventServiceProvider.provide().getCodeEvent(DataTypeHelper.THANK_YOU_EVENT_CODE);
-				String body = NotificationHelper.inflate(values, event.longBody);
-
-				Notification notification = (new Notification()).from("hello@reflection.io").user(user).event(event).body(body).subject(event.subject);
-				Notification added = NotificationServiceProvider.provide().addNotification(notification);
-
-				if (added.type != NotificationTypeType.NotificationTypeTypeInternal) {
-					notification.type = NotificationTypeType.NotificationTypeTypeInternal;
-					NotificationServiceProvider.provide().addNotification(notification);
-				}
 			}
 		} finally {
 
@@ -232,7 +220,7 @@ final class UserService implements IUserService {
 			userConnection.executeQuery(searchUsersQuery);
 
 			while (userConnection.fetchNextRow()) {
-				User user = this.toUser(userConnection);
+				User user = toUser(userConnection);
 
 				if (user != null) {
 					users.add(user);
@@ -315,7 +303,7 @@ final class UserService implements IUserService {
 			}
 		}
 
-		updatedUser = this.getUser(user.id);
+		updatedUser = getUser(user.id);
 
 		return updatedUser;
 	}
@@ -394,10 +382,10 @@ final class UserService implements IUserService {
 			userConnection.executeQuery(getUserByUsernameAndPasswordQuery);
 
 			if (userConnection.fetchNextRow()) {
-				user = this.toUser(userConnection);
+				user = toUser(userConnection);
 
 				if (user != null) {
-					this.updateLoginTime(user);
+					updateLoginTime(user);
 				}
 			}
 		} finally {
@@ -457,7 +445,7 @@ final class UserService implements IUserService {
 			userConnection.executeQuery(getUserIdsQuery);
 
 			while (userConnection.fetchNextRow()) {
-				User user = this.toUser(userConnection);
+				User user = toUser(userConnection);
 
 				if (user != null) {
 					users.add(user);
@@ -551,7 +539,7 @@ final class UserService implements IUserService {
 	// }
 
 	/**
-	 * 
+	 *
 	 * @param connction
 	 * @return
 	 */
@@ -593,7 +581,7 @@ final class UserService implements IUserService {
 			userConnection.executeQuery(getUserByUsernameQuery);
 
 			if (userConnection.fetchNextRow()) {
-				user = this.toUser(userConnection);
+				user = toUser(userConnection);
 			}
 		} finally {
 			if (userConnection != null) {
@@ -624,9 +612,6 @@ final class UserService implements IUserService {
 					LOG.info(String.format("Role with roleid [%d] was added to user with userid [%d]", role.id.longValue(), user.id.longValue()));
 				}
 
-				if ("BT1".equals(role.code)) {
-					markForEmailAction(user, "register/complete", DataTypeHelper.SELECTED_USER_EVENT_CODE);
-				}
 			} else {
 				if (LOG.isLoggable(Level.WARNING)) {
 					LOG.warning(String.format("Role with roleid [%d] was NOT added to user with userid [%d]", role.id.longValue(), user.id.longValue()));
@@ -643,14 +628,60 @@ final class UserService implements IUserService {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see io.reflection.app.service.user.IUserService#assignRole(io.reflection.app.datatypes.shared.User, io.reflection.app.datatypes.shared.Role, int)
+	 */
+	@Override
+	public void assignExpiringRole(User user, Role role, int expiringDays) throws DataAccessException {
+		String assignUserRoleQuery = String.format("INSERT INTO `userrole` (`userid`, `roleid`, `expires`) VALUES (%d, %d, DATE_ADD(NOW(),INTERVAL %d DAY))",
+				user.id.longValue(), role.id.longValue(), expiringDays);
+
+		Connection roleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRole.toString());
+
+		try {
+			roleConnection.connect();
+			roleConnection.executeQuery(assignUserRoleQuery);
+
+			if (roleConnection.getAffectedRowCount() > 0) {
+				if (LOG.isLoggable(Level.INFO)) {
+					LOG.info(String.format("Role with roleid [%d] was added to user with userid [%d] expiring in [%d] days", role.id.longValue(),
+							user.id.longValue(), expiringDays));
+				}
+
+			} else {
+				if (LOG.isLoggable(Level.WARNING)) {
+					LOG.warning(String.format("Role with roleid [%d] was NOT added to user with userid [%d]", role.id.longValue(), user.id.longValue()));
+				}
+			}
+		} finally {
+			if (roleConnection != null) {
+				roleConnection.disconnect();
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see io.reflection.app.service.user.IUserService#hasRole(io.reflection.app.shared.datatypes.User, io.reflection.app.shared.datatypes.Role)
 	 */
 	@Override
 	public Boolean hasRole(User user, Role role) throws DataAccessException {
+		return hasRole(user, role, false);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.user.IUserService#hasRole(io.reflection.app.datatypes.shared.User, io.reflection.app.datatypes.shared.Role, boolean)
+	 */
+	@Override
+	public Boolean hasRole(User user, Role role, boolean includeExpired) throws DataAccessException {
 		Boolean hasUserRole = Boolean.FALSE;
 
-		String hasUserRoleQuery = String.format("SELECT `id` FROM `userrole` WHERE `userid`=%d AND `roleid`=%d AND `deleted`='n' LIMIT 1", user.id.longValue(),
-				role.id.longValue());
+		String expiredPart = includeExpired ? "" : " AND (`expires` > NOW() OR `expires` IS NULL)";
+
+		String hasUserRoleQuery = String.format("SELECT `id` FROM `userrole` WHERE `userid`=%d AND `roleid`=%d AND `deleted`='n'" + expiredPart + " LIMIT 1",
+				user.id.longValue(), role.id.longValue());
 
 		Connection roleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeRole.toString());
 
@@ -752,13 +783,25 @@ final class UserService implements IUserService {
 	 * @see io.reflection.app.service.user.IUserService#getRoles(io.reflection.app.shared.datatypes.User)
 	 */
 	@Override
-	public List<Role> getRoles(User user) throws DataAccessException {
+	public List<Role> getUserRoles(User user) throws DataAccessException {
+		return getUserRoles(user, false);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see io.reflection.app.service.user.IUserService#getRoles(io.reflection.app.datatypes.shared.User, boolean)
+	 */
+	@Override
+	public List<Role> getUserRoles(User user, boolean includeExpired) throws DataAccessException {
 		List<Role> roles = new ArrayList<Role>();
 
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection userConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
-		String getRoleIdsQuery = String.format("SELECT DISTINCT `roleid` FROM `userrole` WHERE `userid`=%d AND `deleted`='n'", user.id.longValue());
+		String expiredPart = includeExpired ? "" : " AND (`expires` > NOW() OR `expires` IS NULL) ORDER BY `expires` DESC";
+
+		String getRoleIdsQuery = String.format("SELECT DISTINCT * FROM `userrole` WHERE `userid`=%d AND `deleted`='n'" + expiredPart, user.id.longValue());
 
 		try {
 			userConnection.connect();
@@ -768,6 +811,7 @@ final class UserService implements IUserService {
 				Role role = new Role();
 
 				role.id = userConnection.getCurrentRowLong("roleid");
+				role.created = userConnection.getCurrentRowDateTime("created"); // Get created date of user role
 
 				roles.add(role);
 			}
@@ -823,9 +867,20 @@ final class UserService implements IUserService {
 	 */
 	@Override
 	public DataAccount addDataAccount(User user, DataSource dataSource, String username, String password, String properties) throws DataAccessException {
+
 		DataAccount addedDataAccount = null;
 
-		addedDataAccount = DataAccountServiceProvider.provide().addDataAccount(dataSource, username, password, properties);
+		if ((addedDataAccount = DataAccountServiceProvider.provide().getDataAccount(username, properties)) == null) { // appleId-vendor combo never created
+			DataAccount toAdd = new DataAccount();
+			toAdd.source = dataSource;
+			toAdd.username = username;
+			toAdd.password = password;
+			toAdd.properties = properties;
+			addedDataAccount = DataAccountServiceProvider.provide().addDataAccount(toAdd);
+		} else { // Restore deactivated Data Account
+			addedDataAccount.active = DataTypeHelper.ACTIVE_VALUE;
+			addedDataAccount = DataAccountServiceProvider.provide().updateDataAccount(addedDataAccount, true);
+		}
 
 		if (addedDataAccount != null) {
 			addOrRestoreUserDataAccount(user, addedDataAccount);
@@ -847,9 +902,9 @@ final class UserService implements IUserService {
 	 */
 	@Override
 	public List<DataAccount> getDataAccounts(User user, Pager pager) throws DataAccessException {
-		List<Long> accountIds = getDataAccountsIds(user, pager);
-
-		return accountIds.size() == 0 ? new ArrayList<DataAccount>() : DataAccountServiceProvider.provide().getIdsDataAccounts(accountIds, pager);
+		List<DataAccount> usersAccounts = DataAccountServiceProvider.provide().getDataAccountForUser(user.id);
+		LOG.log(GaeLevel.DEBUG, String.format("%d Data accounts found for user", usersAccounts == null ? 0 : usersAccounts.size()));
+		return usersAccounts;
 	}
 
 	/*
@@ -1182,7 +1237,7 @@ final class UserService implements IUserService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param user
 	 * @param dataAccount
 	 * @param deleted
@@ -1217,11 +1272,12 @@ final class UserService implements IUserService {
 
 	/**
 	 * Return true if the user has at least one active linked account
-	 * 
+	 *
 	 * @param user
 	 * @return
 	 * @throws DataAccessException
 	 */
+	@Override
 	public Boolean hasDataAccounts(User user) throws DataAccessException {
 		Boolean hasDataAccounts = Boolean.FALSE;
 
@@ -1281,7 +1337,7 @@ final class UserService implements IUserService {
 	 * io.reflection.app.datatypes.shared.DataAccount)
 	 */
 	@Override
-	public void deleteDataAccount(User user, DataAccount dataAccount) throws DataAccessException {
+	public void deleteUserDataAccount(User user, DataAccount dataAccount) throws DataAccessException {
 
 		String deleteDataAccountQuery = String.format("UPDATE `userdataaccount` SET `deleted`='y' WHERE `dataaccountid`=%d AND `userid`=%d AND `deleted`='n'",
 				dataAccount.id.longValue(), user.id.longValue());
@@ -1487,8 +1543,8 @@ final class UserService implements IUserService {
 	 */
 	@Override
 	public void revokeRole(User user, Role role) throws DataAccessException {
-		String deleteRoleQuery = String.format("UPDATE `userrole` SET `deleted`='y' WHERE `roleid`=%d AND `userid`=%d AND `deleted`='n'", role.id.longValue(),
-				user.id.longValue());
+		String deleteRoleQuery = String.format("UPDATE `userrole` SET `expires`=NOW() WHERE `roleid`=%d AND `userid`=%d AND `deleted`='n'",
+				role.id.longValue(), user.id.longValue());
 
 		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
@@ -1513,7 +1569,7 @@ final class UserService implements IUserService {
 	 */
 	@Override
 	public void revokeAllRoles(User user) throws DataAccessException {
-		String deleteRoleQuery = String.format("UPDATE `userrole` SET `deleted`='y' WHERE `userid`=%d AND `deleted`='n'", user.id.longValue());
+		String deleteRoleQuery = String.format("UPDATE `userrole` SET `expires`=NOW() WHERE `userid`=%d AND `deleted`='n'", user.id.longValue());
 
 		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
@@ -1555,7 +1611,7 @@ final class UserService implements IUserService {
 
 			Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
-			String deleteRoleQuery = String.format("UPDATE `userrole` SET `deleted`='y' WHERE `userid` IN ('%s') AND `deleted`='n'", commaDelimitedUserIds);
+			String deleteRoleQuery = String.format("UPDATE `userrole` SET `expires`=NOW() WHERE `userid` IN ('%s') AND `deleted`='n'", commaDelimitedUserIds);
 			try {
 				userConnection.connect();
 				userConnection.executeQuery(deleteRoleQuery);
