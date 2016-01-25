@@ -50,31 +50,42 @@ import io.reflection.app.service.sale.SaleServiceProvider;
  */
 public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 
-	private static final Logger LOG = Logger.getLogger(DataAccountIngestorITunesConnect.class.getName());
+	private static final Logger	LOG														= Logger.getLogger(DataAccountIngestorITunesConnect.class.getName());
 
 	@SuppressWarnings("unused")
-	private static final int	PROVIDER_INDEX								= 0;	// seems to always be apple
+	private static final int		PROVIDER_INDEX								= 0;																																																																																																																																																																																																																																								// seems
+																																																																																																																																																																																																																																																																								// to
+																																																																																																																																																																																																																																																																								// always
+																																																																																																																																																																																																																																																																								// be
+																																																																																																																																																																																																																																																																								// apple
 	@SuppressWarnings("unused")
-	private static final int	PROVIDER_COUNTRY_INDEX				= 1;	// seems to always be US
-	private static final int	SKU_INDEX											= 2;
-	private static final int	DEVELOPER_INDEX								= 3;
-	private static final int	TITLE_INDEX										= 4;
-	private static final int	VERSION_INDEX									= 5;
-	private static final int	PRODUCT_TYPE_IDENTIFIER_INDEX	= 6;
-	private static final int	UNITS_INDEX										= 7;
-	private static final int	DEVELOPER_PROCEEDS_INDEX			= 8;
-	private static final int	BEGIN_DATE_INDEX							= 9;
-	private static final int	END_DATE_INDEX								= 10;
-	private static final int	CUSTOMER_CURRENCY_INDEX				= 11;
-	private static final int	COUNTRY_CODE_INDEX						= 12;
-	private static final int	CURRENCY_OF_PROCEEDS_INDEX		= 13;
-	private static final int	APPLE_IDENTIFIER_INDEX				= 14;
-	private static final int	CUSTOMER_PRICE_INDEX					= 15;
-	private static final int	PROMO_CODE_INDEX							= 16;
-	private static final int	PARENT_IDENTIFIER_INDEX				= 17;
-	private static final int	SUBSCRIPTION_INDEX						= 18;
-	private static final int	PERIOD_INDEX									= 19;
-	private static final int	CATEGORY_INDEX								= 20;
+	private static final int		PROVIDER_COUNTRY_INDEX				= 1;																																																																																																																																																																																																																																								// seems
+																																																																																																																																																																																																																																																																								// to
+																																																																																																																																																																																																																																																																								// always
+																																																																																																																																																																																																																																																																								// be
+																																																																																																																																																																																																																																																																								// US
+	private static final int		SKU_INDEX											= 2;
+	private static final int		DEVELOPER_INDEX								= 3;
+	private static final int		TITLE_INDEX										= 4;
+	private static final int		VERSION_INDEX									= 5;
+	private static final int		PRODUCT_TYPE_IDENTIFIER_INDEX	= 6;
+	private static final int		UNITS_INDEX										= 7;
+	private static final int		DEVELOPER_PROCEEDS_INDEX			= 8;
+	private static final int		BEGIN_DATE_INDEX							= 9;
+	private static final int		END_DATE_INDEX								= 10;
+	private static final int		CUSTOMER_CURRENCY_INDEX				= 11;
+	private static final int		COUNTRY_CODE_INDEX						= 12;
+	private static final int		CURRENCY_OF_PROCEEDS_INDEX		= 13;
+	private static final int		APPLE_IDENTIFIER_INDEX				= 14;
+	private static final int		CUSTOMER_PRICE_INDEX					= 15;
+	private static final int		PROMO_CODE_INDEX							= 16;
+	private static final int		PARENT_IDENTIFIER_INDEX				= 17;
+	private static final int		SUBSCRIPTION_INDEX						= 18;
+	private static final int		PERIOD_INDEX									= 19;
+	private static final int		CATEGORY_INDEX								= 20;
+	private static final int		CMB_INDEX											= 21;
+	private static final int		DEVICE_INDEX									= 22;
+	private static final int		SUPPORTED_PLATFORMS_INDEX			= 23;
 
 	/*
 	 * (non-Javadoc)
@@ -86,6 +97,8 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 
 		if (fetch.status == DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered) {
 			try {
+
+				// check if the cloud filename starts with S_D_A and if so use the new conversion method
 				List<Sale> sales = convertFetchToSales(fetch);
 
 				LOG.log(GaeLevel.DEBUG, String.format("Deleted any previous sales for accountid %d on %s to make sure we are not persisting duplicates.", fetch.linkedAccount.id, fetch.date));
@@ -281,6 +294,27 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 			sale.subscription = split[SUBSCRIPTION_INDEX];
 			sale.period = split[PERIOD_INDEX];
 			sale.category = split[CATEGORY_INDEX];
+
+			String device = split[DEVICE_INDEX];
+			if ("1F".equals(sale.typeIdentifier)) {
+				if ("iPad".equals(device)) {
+					sale.typeIdentifier("1T");
+				} else if ("iPhone".equals(device) || "iPod touch".equals(device)) {
+					sale.typeIdentifier("1");
+				}
+			} else if ("3F".equals(sale.typeIdentifier)) {
+				if ("iPad".equals(device)) {
+					sale.typeIdentifier("3T");
+				} else if ("iPhone".equals(device) || "iPod touch".equals(device)) {
+					sale.typeIdentifier("3");
+				}
+			} else if ("7F".equals(sale.typeIdentifier)) {
+				if ("iPad".equals(device)) {
+					sale.typeIdentifier("7T");
+				} else if ("iPhone".equals(device) || "iPod touch".equals(device)) {
+					sale.typeIdentifier("7");
+				}
+			}
 		}
 
 		return sale;
