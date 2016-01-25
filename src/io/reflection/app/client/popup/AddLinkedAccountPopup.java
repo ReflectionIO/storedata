@@ -61,8 +61,7 @@ public class AddLinkedAccountPopup extends Composite implements LinkAccountEvent
 				iosMacAddForm.setEnabled(false);
 				iosMacAddForm.setStatusLoading("Loading");
 				Document.get().getBody().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formSubmittedLoading());
-				LinkedAccountController.get().linkAccount(iosMacAddForm.getAccountSourceId(), iosMacAddForm.getUsername(), iosMacAddForm.getPassword(),
-						iosMacAddForm.getProperties());
+				LinkedAccountController.get().linkAccount(iosMacAddForm.getAccountSourceId(), iosMacAddForm.getUsername(), iosMacAddForm.getPassword());
 			}
 		});
 	}
@@ -106,7 +105,6 @@ public class AddLinkedAccountPopup extends Composite implements LinkAccountEvent
 	}
 
 	public void setStatusError() {
-		iosMacAddForm.resetForm();
 		iosMacAddForm.setStatusError();
 	}
 
@@ -117,16 +115,11 @@ public class AddLinkedAccountPopup extends Composite implements LinkAccountEvent
 		iosMacAddForm.setFormErrors();
 	}
 
-	public void setStatusErrorInvalidVendor() {
-		iosMacAddForm.setStatusError("Invalid vendor ID!");
-		iosMacAddForm.setVendorError("iTunes Connect vendor number entered incorrectly");
-		iosMacAddForm.setFormErrors();
-	}
-
 	public void setStatusErrorDuplicateVendorId() {
 		iosMacAddForm.setStatusError("Account already linked!");
 		iosMacAddForm.setEnabled(true);
-		iosMacAddForm.setVendorError("The vendor ID you entered is already in use");
+		iosMacAddForm.setUsernameError("The vendor ID you entered is already in use");
+		iosMacAddForm.setPasswordError("The vendor ID you entered is already in use");
 		iosMacAddForm.setFormErrors();
 	}
 
@@ -143,8 +136,6 @@ public class AddLinkedAccountPopup extends Composite implements LinkAccountEvent
 		} else if (output.error != null) {
 			if (output.error.code == ApiError.InvalidDataAccountCredentials.getCode()) {
 				setStatusErrorInvalidCredentials();
-			} else if (output.error.code == ApiError.InvalidDataAccountVendor.getCode()) {
-				setStatusErrorInvalidVendor();
 			} else if (output.error.code == ApiError.DuplicateVendorId.getCode()) {
 				setStatusErrorDuplicateVendorId();
 			} else {

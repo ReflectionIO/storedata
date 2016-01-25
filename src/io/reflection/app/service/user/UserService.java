@@ -870,13 +870,17 @@ final class UserService implements IUserService {
 
 		DataAccount addedDataAccount = null;
 
-		DataAccount toAdd = new DataAccount();
-		toAdd.source = dataSource;
-		toAdd.username = username;
-		toAdd.password = password;
-		toAdd.properties = properties;
-
-		addedDataAccount = DataAccountServiceProvider.provide().addDataAccount(toAdd);
+		if ((addedDataAccount = DataAccountServiceProvider.provide().getDataAccount(username, properties)) == null) { // appleId-vendor combo never created
+			DataAccount toAdd = new DataAccount();
+			toAdd.source = dataSource;
+			toAdd.username = username;
+			toAdd.password = password;
+			toAdd.properties = properties;
+			addedDataAccount = DataAccountServiceProvider.provide().addDataAccount(toAdd);
+		} else { // Restore deactivated Data Account
+			addedDataAccount.active = DataTypeHelper.ACTIVE_VALUE;
+			addedDataAccount = DataAccountServiceProvider.provide().updateDataAccount(addedDataAccount, true);
+		}
 
 		if (addedDataAccount != null) {
 			addOrRestoreUserDataAccount(user, addedDataAccount);

@@ -128,6 +128,7 @@ public class HomePage extends Page {
 	private ReflectionMainStyles style = Styles.STYLES_INSTANCE.reflectionMainStyle();
 	private SignUpPopup signUpPopup = new SignUpPopup();
 	private boolean isStatusError;
+	private boolean isSvgAnimated;
 
 	public HomePage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -437,8 +438,7 @@ public class HomePage extends Page {
 			public SafeHtml getValue(RanksGroup object) {
 				return SafeHtmlUtils.fromSafeConstant(DataTypeHelper.itemIapState(ItemController.get().lookupItem(rankForListType(object).itemId),
 						IAP_YES_HTML, IAP_NO_HTML,
-						"<span class=\"js-tooltip js-tooltip--right js-tooltip--right--no-pointer-padding " + style.whatsThisTooltipIconStatic()
-								+ "\" data-tooltip=\"No data available\"></span>"));
+						"<span class=\"js-tooltip js-tooltip--info tooltip--info js-tooltip--right js-tooltip--right--no-pointer-padding\" data-tooltip=\"No data available\"></span>"));
 			}
 		};
 		iapColumn.setCellStyleNames(style.mhxte6ciA());
@@ -548,6 +548,10 @@ public class HomePage extends Page {
 		super.onAttach();
 
 		ResponsiveDesignHelper.makeTabsResponsive();
+		if (!isSvgAnimated) {
+			nativeAnimateSvg();
+			isSvgAnimated = true;
+		}
 
 		if (Window.getClientWidth() <= 719) {
 			if (selectedTab.equals(OVERALL_LIST_TYPE)) {
@@ -702,5 +706,95 @@ public class HomePage extends Page {
 		}
 
 	}
+
+	public static native void nativeAnimateSvg()/*-{
+
+		var paths = [];
+		$wnd
+				.$('.js-rchart-graph-stroke')
+				.each(
+						function() {
+							var initialCoordinates = [];
+							var thisId = $wnd.$(this).attr("id");
+							var el = $wnd.Snap('#' + thisId);
+							var numberOfItems = el.node.pathSegList.numberOfItems;
+							for (var x = 0; x < numberOfItems; x++) {
+								initialCoordinates
+										.push({
+											pathSegTypeAsLetter : el.node.pathSegList[x].pathSegTypeAsLetter,
+											x : el.node.pathSegList[x].x,
+											y : el.node.pathSegList[x].y
+										})
+								el.node.pathSegList[x].y = 220;
+							}
+
+							paths.push(initialCoordinates);
+						});
+
+		var illustrationHasAnimated = false;
+		function animateIllustration() {
+			illustrationHasAnimated = true;
+
+			$wnd
+					.$('.js-rchart-graph-stroke')
+					.each(
+							function() {
+
+								var thisId = $wnd.$(this).attr("id");
+								var el = $wnd.Snap('#' + thisId);
+								var numberOfItems = el.node.pathSegList.numberOfItems;
+								var thisPathIndex = $wnd.$(this).data(
+										"path-index");
+								setPoint(0);
+
+								function setPoint(pointIndex) {
+									var newPath = "";
+									if (pointIndex < numberOfItems) {
+										for (var x = 0; x < numberOfItems; x++) {
+											if (x <= pointIndex) {
+												newPath += paths[thisPathIndex][x].pathSegTypeAsLetter
+														+ " "
+														+ paths[thisPathIndex][x].x
+														+ " "
+														+ paths[thisPathIndex][x].y
+														+ " ";
+											} else {
+												newPath += paths[thisPathIndex][x].pathSegTypeAsLetter
+														+ " "
+														+ paths[thisPathIndex][x].x
+														+ " 220 ";
+											}
+										}
+
+										el.animate({
+											d : newPath
+										}, 400, $wnd.mina.easein);
+										var nextPoint = pointIndex + 1;
+										setTimeout(function() {
+											setPoint(nextPoint);
+										}, 90);
+									}
+								}
+							});
+		}
+		;
+
+		function checkScrollForIllustrationAnimation() {
+			var offsetTop = $wnd.$('.why-reflection-container').offset().top, thisWindow = $wnd
+					.$($wnd);
+			if (thisWindow.scrollTop() > offsetTop
+					- ($wnd.$($wnd).height() / 2.5)) {
+				animateIllustration();
+			}
+		}
+
+		$wnd.$($wnd).on("scroll", function() {
+			if (!illustrationHasAnimated) {
+				checkScrollForIllustrationAnimation();
+			}
+		});
+
+		checkScrollForIllustrationAnimation();
+	}-*/;
 
 }

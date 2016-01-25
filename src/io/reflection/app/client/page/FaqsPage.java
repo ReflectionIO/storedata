@@ -141,9 +141,12 @@ public class FaqsPage extends Page {
 		event.preventDefault();
 		for (Anchor link : linkFaqToAnchorMap.keySet()) {
 			link.getElement().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isActive());
+			Element faqHeading = linkFaqToAnchorMap.get(link);
+			faqHeading.removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isFocus());
 		}
 		Anchor clickedLinkFaq = (Anchor) event.getSource();
 		clickedLinkFaq.getElement().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isActive());
+		linkFaqToAnchorMap.get(clickedLinkFaq).addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isFocus());
 		int scrollTopOfTheAnchor = linkFaqToAnchorMap.get(clickedLinkFaq).getAbsoluteTop();
 		AnimationHelper.nativeScrollTop(scrollTopOfTheAnchor - pageTopBarHeight - 20, 300, "swing");
 	}

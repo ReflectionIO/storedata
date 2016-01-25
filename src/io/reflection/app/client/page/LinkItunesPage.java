@@ -70,8 +70,7 @@ public class LinkItunesPage extends Page implements NavigationEventHandler, Link
 				iosMacForm.setEnabled(false);
 				iosMacForm.setStatusLoading("Loading");
 				Document.get().getBody().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formSubmittedLoading());
-				LinkedAccountController.get().linkAccount(iosMacForm.getAccountSourceId(), iosMacForm.getUsername(), iosMacForm.getPassword(),
-						iosMacForm.getProperties()); // Link account
+				LinkedAccountController.get().linkAccount(iosMacForm.getAccountSourceId(), iosMacForm.getUsername(), iosMacForm.getPassword()); // Link account
 			}
 		});
 
@@ -152,13 +151,10 @@ public class LinkItunesPage extends Page implements NavigationEventHandler, Link
 				iosMacForm.setUsernameError("iTunes Connect username or password entered incorrectly");
 				iosMacForm.setPasswordError("iTunes Connect username or password entered incorrectly");
 				iosMacForm.setFormErrors();
-			} else if (output.error.code.intValue() == ApiError.InvalidDataAccountVendor.getCode()) {
-				iosMacForm.setStatusError("Invalid vendor ID!");
-				iosMacForm.setVendorError("iTunes Connect vendor number entered incorrectly");
-				iosMacForm.setFormErrors();
 			} else if (output.error.code == ApiError.DuplicateVendorId.getCode()) {
 				iosMacForm.setStatusError("Account already linked!");
-				iosMacForm.setVendorError("The vendor ID you entered is already in use");
+				iosMacForm.setUsernameError("The vendor ID you entered is already in use");
+				iosMacForm.setPasswordError("The vendor ID you entered is already in use");
 				iosMacForm.setFormErrors();
 			} else {
 				iosMacForm.setStatusError();

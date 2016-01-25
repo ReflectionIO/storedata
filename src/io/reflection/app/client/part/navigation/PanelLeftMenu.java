@@ -8,6 +8,32 @@
 package io.reflection.app.client.part.navigation;
 
 import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.SpanElement;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.dom.client.UListElement;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.HasMouseOutHandlers;
+import com.google.gwt.event.dom.client.HasMouseOverHandlers;
+import com.google.gwt.event.dom.client.MouseOutEvent;
+import com.google.gwt.event.dom.client.MouseOutHandler;
+import com.google.gwt.event.dom.client.MouseOverEvent;
+import com.google.gwt.event.dom.client.MouseOverHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Anchor;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.InlineHyperlink;
+import com.google.gwt.user.client.ui.Widget;
+import com.willshex.gson.json.service.shared.Error;
+
 import io.reflection.app.api.shared.datatypes.Session;
 import io.reflection.app.client.DefaultEventBus;
 import io.reflection.app.client.controller.FilterController;
@@ -19,35 +45,19 @@ import io.reflection.app.client.handler.NavigationEventHandler;
 import io.reflection.app.client.handler.user.SessionEventHandler;
 import io.reflection.app.client.handler.user.UserPowersEventHandler;
 import io.reflection.app.client.handler.user.UsersEventHandler;
+import io.reflection.app.client.helper.DOMHelper;
 import io.reflection.app.client.page.PageType;
 import io.reflection.app.client.res.Styles;
 import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.LIElement;
-import com.google.gwt.dom.client.SpanElement;
-import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.dom.client.UListElement;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Anchor;
-import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.InlineHyperlink;
-import com.google.gwt.user.client.ui.Widget;
-import com.willshex.gson.json.service.shared.Error;
-
 /**
  * @author Stefano Capuzzi
  *
  */
-public class PanelLeftMenu extends Composite implements UsersEventHandler, NavigationEventHandler, SessionEventHandler, UserPowersEventHandler {
+public class PanelLeftMenu extends Composite
+		implements UsersEventHandler, NavigationEventHandler, SessionEventHandler, UserPowersEventHandler, HasMouseOverHandlers, HasMouseOutHandlers {
 
 	private static PanelLeftMenuUiBinder uiBinder = GWT.create(PanelLeftMenuUiBinder.class);
 
@@ -65,7 +75,6 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 	@UiField LIElement productItem;
 	@UiField LIElement pricingItem;
 	@UiField LIElement blogItem;
-	// @UiField LIElement forumItem;
 	@UiField LIElement adminItem;
 	@UiField LIElement adminFeedBrowserItem;
 	@UiField LIElement adminSimpleModelRunItem;
@@ -87,23 +96,15 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 	@UiField InlineHyperlink adminFeedBrowserLink;
 	@UiField InlineHyperlink adminSimpleModelRunLink;
 	@UiField InlineHyperlink adminDataAccountFetchesLink;
-	@UiField LIElement productSecondaryItem;
-	@UiField LIElement pricingSecondaryItem;
-	@UiField InlineHyperlink pricingSecondaryLink;
-	@UiField UListElement secondaryFooterList;
 	@UiField SpanElement usersCount;
-
-	// private List<LIElement> items;
+	
 	private List<LIElement> highlightedItems = new ArrayList<LIElement>();
 
 	public PanelLeftMenu() {
 		initWidget(uiBinder.createAndBindUi(this));
 
 		myDataItem.removeFromParent();
-		adminItem.removeFromParent();
-		productSecondaryItem.removeFromParent();
-		pricingSecondaryItem.removeFromParent();
-
+		adminItem.removeFromParent();		
 	}
 
 	private void activate(LIElement item) {
@@ -144,7 +145,8 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 		DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this);
 		DefaultEventBus.get().addHandlerToSource(SessionEventHandler.TYPE, SessionController.get(), this);
 		DefaultEventBus.get().addHandlerToSource(UserPowersEventHandler.TYPE, SessionController.get(), this);
-
+		
+		this.addMouseEvents();
 	}
 
 	/*
@@ -167,8 +169,8 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 		adminFeedBrowserLink.setTargetHistoryToken(PageType.FeedBrowserPageType.asTargetHistoryToken(NavigationController.VIEW_ACTION_PARAMETER_VALUE,
 				FilterController.get().asFeedFilterString()));
 		adminSimpleModelRunLink.setTargetHistoryToken(PageType.SimpleModelRunPageType.asTargetHistoryToken(FilterController.get().asFeedFilterString()));
-		adminDataAccountFetchesLink.setTargetHistoryToken(PageType.DataAccountFetchesPageType.asTargetHistoryToken(FilterController.get()
-				.asDataAccountFetchFilterString()));
+		adminDataAccountFetchesLink
+				.setTargetHistoryToken(PageType.DataAccountFetchesPageType.asTargetHistoryToken(FilterController.get().asDataAccountFetchFilterString()));
 
 		// Highlight selected items
 		if (PageType.UsersPageType.equals(current.getPage()) && current.getAction() != null && PageType.MyAppsPageType.equals(current.getAction())) {
@@ -265,17 +267,9 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 		if (liElem.hasClassName(IS_OPEN)) {
 			ulElem.getStyle().setMarginTop(-(ulElem.getClientHeight()), Unit.PX);
 			liElem.removeClassName(IS_OPEN);
-			liElem.removeClassName(IS_SELECTED);
 		} else {
 			ulElem.getStyle().setMarginTop(0, Unit.PX);
 			liElem.addClassName(IS_OPEN);
-			liElem.addClassName(IS_SELECTED);
-			// leaderboardItem.removeClassName(IS_SELECTED);
-			// myAppsItem.removeClassName(IS_SELECTED);
-			// productItem.removeClassName(IS_SELECTED);
-			// pricingItem.removeClassName(IS_SELECTED);
-			// blogItem.removeClassName(IS_SELECTED);
-			// forumItem.removeClassName(IS_SELECTED);
 		}
 	}
 
@@ -284,13 +278,14 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 			UListElement ulElem = liElem.getElementsByTagName("ul").getItem(0).cast();
 			ulElem.getStyle().setMarginTop(0, Unit.PX);
 			liElem.addClassName(IS_OPEN);
-			// liElem.addClassName(IS_SELECTED);
-			// myAppsItem.removeClassName(IS_SELECTED);
-			// leaderboardItem.removeClassName(IS_SELECTED);
-			// productItem.removeClassName(IS_SELECTED);
-			// pricingItem.removeClassName(IS_SELECTED);
-			// blogItem.removeClassName(IS_SELECTED);
-			// forumItem.removeClassName(IS_SELECTED);
+		}
+	}
+	
+	private void openSelectedDropDownItem(LIElement liElem) {
+		if (!liElem.hasClassName(IS_OPEN) && liElem.hasClassName(IS_SELECTED)) {
+			UListElement ulElem = liElem.getElementsByTagName("ul").getItem(0).cast();
+			ulElem.getStyle().setMarginTop(0, Unit.PX);
+			liElem.addClassName(IS_OPEN);
 		}
 	}
 
@@ -299,7 +294,31 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 			UListElement ulElem = liElem.getElementsByTagName("ul").getItem(0).cast();
 			ulElem.getStyle().setMarginTop(-(ulElem.getClientHeight()), Unit.PX);
 			liElem.removeClassName(IS_OPEN);
-			liElem.removeClassName(IS_SELECTED);
+		}
+	}
+	
+	private void addMouseEvents() {		
+		if(DOMHelper.getHtmlElement().hasClassName("no-touch")) { // No Touch Browser
+			this.addMouseOverHandler(new MouseOverHandler() {
+
+				@Override
+				public void onMouseOver(MouseOverEvent event) {
+					openSelectedDropDownItem(myDataItem);
+					openSelectedDropDownItem(adminItem);
+				}
+			});
+			
+			this.addMouseOutHandler(new MouseOutHandler() {
+
+				@Override
+				public void onMouseOut(MouseOutEvent event) {
+					closeDropDownItem(myDataItem);
+					closeDropDownItem(adminItem);
+				}
+			});
+		} else { // Touch Device
+			openSelectedDropDownItem(myDataItem);
+			openSelectedDropDownItem(adminItem);
 		}
 	}
 
@@ -353,8 +372,6 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 		myDataItem.removeFromParent();
 		closeDropDownItem(adminItem);
 		adminItem.removeFromParent();
-		productSecondaryItem.removeFromParent();
-		pricingSecondaryItem.removeFromParent();
 		itemList.insertBefore(productItem, blogItem);
 		itemList.insertBefore(pricingItem, blogItem);
 	}
@@ -379,11 +396,7 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 		// Since is attached once, close dropdowns when the panel is created
 		productItem.removeFromParent();
 		pricingItem.removeFromParent();
-		secondaryFooterList.insertFirst(pricingSecondaryItem);
-		secondaryFooterList.insertFirst(productSecondaryItem);
 		if (user != null) {
-			pricingSecondaryLink.setTargetHistoryToken(PageType.UsersPageType.asTargetHistoryToken(PageType.ManageSubscriptionPageType.toString(),
-					user.id.toString()));
 			if (!itemList.isOrHasChild(myDataItem)) {
 				itemList.insertFirst(myDataItem);
 				UListElement ulElem = myDataItem.getElementsByTagName("ul").getItem(0).cast();
@@ -410,4 +423,19 @@ public class PanelLeftMenu extends Composite implements UsersEventHandler, Navig
 		adminItem.removeFromParent();
 	}
 
+	/* (non-Javadoc)
+	 * @see com.google.gwt.event.dom.client.HasMouseOutHandlers#addMouseOutHandler(com.google.gwt.event.dom.client.MouseOutHandler)
+	 */
+	@Override
+	public HandlerRegistration addMouseOutHandler(MouseOutHandler handler) {
+		return addDomHandler(handler, MouseOutEvent.getType());
+	}
+
+	/* (non-Javadoc)
+	 * @see com.google.gwt.event.dom.client.HasMouseOverHandlers#addMouseOverHandler(com.google.gwt.event.dom.client.MouseOverHandler)
+	 */
+	@Override
+	public HandlerRegistration addMouseOverHandler(MouseOverHandler handler) {
+		return addDomHandler(handler, MouseOverEvent.getType());
+	}
 }

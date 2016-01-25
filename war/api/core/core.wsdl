@@ -432,7 +432,6 @@
 						</xsd:sequence>
 						<xsd:attribute name="username" type="xsd:string" />
 						<xsd:attribute name="password" type="xsd:string" />
-						<xsd:attribute name="properties" type="xsd:string" />
 					</xsd:extension>
 				</xsd:complexContent>
 			</xsd:complexType>
@@ -441,7 +440,7 @@
 				<xsd:complexContent>
 					<xsd:extension base="sd:Response">
 						<xsd:sequence>
-							<xsd:element name="account" type="sd:DataAccount" />
+							<xsd:element name="linkedAccounts" type="sd:DataAccount" maxOccurs="unbounded" />
 						</xsd:sequence>
 					</xsd:extension>
 				</xsd:complexContent>

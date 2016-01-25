@@ -20,7 +20,6 @@ public class LinkAccountRequest extends Request {
 	public DataSource source;
 	public String username;
 	public String password;
-	public String properties;
 
 	@Override
 	public JsonObject toJson() {
@@ -31,8 +30,6 @@ public class LinkAccountRequest extends Request {
 		object.add("username", jsonUsername);
 		JsonElement jsonPassword = password == null ? JsonNull.INSTANCE : new JsonPrimitive(password);
 		object.add("password", jsonPassword);
-		JsonElement jsonProperties = properties == null ? JsonNull.INSTANCE : new JsonPrimitive(properties);
-		object.add("properties", jsonProperties);
 		return object;
 	}
 
@@ -58,12 +55,6 @@ public class LinkAccountRequest extends Request {
 				password = jsonPassword.getAsString();
 			}
 		}
-		if (jsonObject.has("properties")) {
-			JsonElement jsonProperties = jsonObject.get("properties");
-			if (jsonProperties != null) {
-				properties = jsonProperties.getAsString();
-			}
-		}
 	}
 
 	public LinkAccountRequest source(DataSource source) {
@@ -81,8 +72,4 @@ public class LinkAccountRequest extends Request {
 		return this;
 	}
 
-	public LinkAccountRequest properties(String properties) {
-		this.properties = properties;
-		return this;
-	}
 }

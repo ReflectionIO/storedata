@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en" ng-app="reflectionApp">
+<head>
+	<meta charset="utf-8" />
+	<title>Reflection Data - Top 20</title>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link href="css/ukie-online.css" type="text/css" rel="stylesheet" />
+	<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:600,400' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
+	<script src="js/vendor/angular.js"></script>
+	<script>
+		// populate the data table
+		'use strict';
+
+		/* Controllers */
+
+		var reflectionApp = angular.module('reflectionApp', [])
+			.controller('DataController', function() {
+		    var dataList = this;
+		    dataList.info = {'date': '26 Oct - 01 Nov 2015, Week 44', 'title': 'Top 20 Free iPhone Games (UK)'}
+		    dataList.data = [{"LastWeek":1.0,"Rank":1,"Change":0.0,"Name":"Smashy Road: Wanted","Developer":"Remco Kortenoever","icon_url":"http:\/\/is1.mzstatic.com\/image\/thumb\/Purple69\/v4\/5f\/c4\/a8\/5fc4a8cc-dc4e-d027-5908-09f8b002f450\/source\/100x100bb.jpg"},{"LastWeek":3.0,"Rank":2,"Change":1.0,"Name":"Pop the Lock","Developer":"Simple Machine, LLC","icon_url":"http:\/\/is2.mzstatic.com\/image\/thumb\/Purple69\/v4\/ee\/00\/dd\/ee00dd83-7008-86fb-3649-563e0cb093f5\/source\/100x100bb.jpg"},{"LastWeek":6.0,"Rank":3,"Change":3.0,"Name":"Bike Unchained","Developer":"Red Bull","icon_url":"http:\/\/is3.mzstatic.com\/image\/thumb\/Purple69\/v4\/f3\/04\/63\/f304633c-4bfa-b9c6-bec2-cff70f9f42e2\/source\/100x100bb.jpg"},{"LastWeek":2.0,"Rank":4,"Change":-2.0,"Name":"Minions Paradise\u2122","Developer":"Electronic Arts","icon_url":"http:\/\/is1.mzstatic.com\/image\/thumb\/Purple69\/v4\/1d\/8d\/fe\/1d8dfe76-2f32-32ac-eccc-12cec70fd0f2\/source\/100x100bb.jpg"},{"LastWeek":null,"Rank":5,"Change":null,"Name":"rop","Developer":"MildMania","icon_url":"http:\/\/is2.mzstatic.com\/image\/thumb\/Purple5\/v4\/1c\/14\/0c\/1c140cdf-1217-5a5f-a951-16a7a4bf1e97\/source\/100x100bb.jpg"},{"LastWeek":null,"Rank":6,"Change":null,"Name":"Buddyman: Halloween Kick 2","Developer":"Inventain Mobile, UAB","icon_url":"http:\/\/is2.mzstatic.com\/image\/thumb\/Purple69\/v4\/20\/01\/e3\/2001e325-346b-0c09-0e05-477a29b8efa2\/source\/100x100bb.jpg"},{"LastWeek":null,"Rank":7,"Change":null,"Name":"Cooking Fever","Developer":"Nordcurrent","icon_url":"http:\/\/is3.mzstatic.com\/image\/thumb\/Purple3\/v4\/a4\/70\/3b\/a4703b17-d099-8720-422c-3876afdedb80\/source\/100x100bb.jpg"},{"LastWeek":5.0,"Rank":8,"Change":-3.0,"Name":"Need for Speed\u2122 No Limits","Developer":"Electronic Arts","icon_url":"http:\/\/is1.mzstatic.com\/image\/thumb\/Purple6\/v4\/93\/b8\/a0\/93b8a0d2-8224-68a3-594f-ba77f19c6b35\/source\/100x100bb.jpg"},{"LastWeek":14.0,"Rank":9,"Change":5.0,"Name":"Guitar Hero\u00ae Live","Developer":"Activision Publishing, Inc.","icon_url":"http:\/\/is4.mzstatic.com\/image\/thumb\/Purple69\/v4\/d9\/c9\/f2\/d9c9f263-2e72-3656-8970-98aa5a452cb9\/source\/100x100bb.jpg"},{"LastWeek":null,"Rank":10,"Change":null,"Name":"Spooky Speaker","Developer":"AnalogFolk","icon_url":"http:\/\/is5.mzstatic.com\/image\/thumb\/Purple6\/v4\/fb\/93\/8d\/fb938d8e-e99f-8163-afd9-8859adc9a22a\/source\/100x100bb.jpg"},{"LastWeek":null,"Rank":11,"Change":null,"Name":"Frozen Frenzy Mania","Developer":"Storm8 Studios","icon_url":"http:\/\/is5.mzstatic.com\/image\/thumb\/Purple69\/v4\/d1\/45\/35\/d14535a7-dfaf-d664-2ef0-5019ecef3a95\/source\/100x100bb.jpg"},{"LastWeek":17.0,"Rank":12,"Change":5.0,"Name":"Subway Surfers","Developer":"Kiloo","icon_url":"http:\/\/is2.mzstatic.com\/image\/thumb\/Purple69\/v4\/99\/e8\/c3\/99e8c376-82f7-b24a-e659-cd483ab639f6\/source\/100x100bb.jpg"},{"LastWeek":15.0,"Rank":13,"Change":2.0,"Name":"TRIVIAL PURSUIT & Friends","Developer":"Gameloft","icon_url":"http:\/\/is1.mzstatic.com\/image\/thumb\/Purple69\/v4\/7f\/11\/36\/7f1136cb-6cbc-1e19-bab7-13b29dfb7e38\/source\/100x100bb.jpg"},{"LastWeek":10.0,"Rank":14,"Change":-4.0,"Name":"Score! Hero","Developer":"First Touch Games Ltd.","icon_url":"http:\/\/is4.mzstatic.com\/image\/thumb\/Purple6\/v4\/c5\/53\/ee\/c553eeb3-ea46-77af-245b-553444ed13a8\/source\/100x100bb.jpg"},{"LastWeek":null,"Rank":15,"Change":null,"Name":"PAC-MAN 256 - Endless Arcade Maze","Developer":"BANDAI NAMCO Entertainment Europe","icon_url":"http:\/\/is4.mzstatic.com\/image\/thumb\/Purple6\/v4\/d3\/84\/1b\/d3841be1-6f8b-d263-cfd8-fe2bafe7d364\/source\/100x100bb.jpg"},{"LastWeek":4.0,"Rank":16,"Change":-12.0,"Name":"Don't Fall","Developer":"Ketchapp","icon_url":"http:\/\/is3.mzstatic.com\/image\/thumb\/Purple3\/v4\/6d\/c5\/1c\/6dc51cb0-2ae0-3039-f1d1-e7622f8e2c75\/source\/100x100bb.jpg"},{"LastWeek":16.0,"Rank":17,"Change":-1.0,"Name":"Agar.io","Developer":"Miniclip.com","icon_url":"http:\/\/is2.mzstatic.com\/image\/thumb\/Purple7\/v4\/be\/fb\/9b\/befb9bd6-d6cd-0b24-aabd-2564c2e04fa1\/source\/100x100bb.jpg"},{"LastWeek":18.0,"Rank":18,"Change":0.0,"Name":"Episode -- Choose Your Story, feat. Mean Girls: Senior Year","Developer":"Episode Interactive","icon_url":"http:\/\/is3.mzstatic.com\/image\/thumb\/Purple69\/v4\/5b\/d8\/3e\/5bd83e4b-30ee-ead3-41e3-de1055789a05\/source\/100x100bb.jpg"},{"LastWeek":null,"Rank":19,"Change":null,"Name":"Castle Clash: Age of Legends","Developer":"IGG.COM","icon_url":"http:\/\/is4.mzstatic.com\/image\/thumb\/Purple69\/v4\/f4\/37\/12\/f437123c-9f76-fad1-dd79-a0cb39ab5238\/source\/100x100bb.jpg"},{"LastWeek":11.0,"Rank":20,"Change":-9.0,"Name":"Happy Wheels","Developer":"Jim Bonacci","icon_url":"http:\/\/is2.mzstatic.com\/image\/thumb\/Purple3\/v4\/0b\/e8\/27\/0be82765-7fc8-1507-f6f9-e8e9982e1c39\/source\/100x100bb.jpg"}]
+
+		    dataList.getLastWeek = function(x) {
+		    	if(this.data[x].LastWeek != null) {
+		    		return this.data[x].LastWeek;
+		    	} else {
+		    		return "-";
+		    	}
+		    	return null;
+		    }
+
+		    dataList.getLastWeekCSSClass = function(x) {
+		    	if(this.data[x].LastWeek == null) {
+		    		return "null-movement";
+		    	}
+		    	return null;
+		    }
+
+		    dataList.getChangeCSSClass = function(x) {
+		    	if(this.data[x].Change != null && this.data[x].Change != 0.0) {
+		    		if(parseInt(this.data[x].Change, 10) < 0) {
+			    		return "negative-movement";
+			    	} else {
+			    		return "positive-movement";
+			    	}
+		    	} else if(this.data[x].Change == null) {
+		    		return "null-movement";
+		    	}
+		    	return null;
+		    }
+
+		    dataList.getChange = function(x) {
+		    	if(this.data[x].Change != null) {
+		    		var change = parseInt(this.data[x].Change, 10);
+		    		return (change < 0) ? change * -1 : change;
+		    	} else {
+		    		return "-";
+		    	}
+		    	return null;
+		    }
+		  });
+	</script>
+</head>
+<body id="body" ng-controller="DataController as dataList">
+	<header class="reflection-header">
+		<div class="reflection-header__logo-container">
+		<img src="images-ukie/Reflection_UKIE_Logo@2x.png" alt="UKIE logo" class="logo-reflection-ukie" />
+		</div>
+		<div class="reflection-header__heading-container">
+			<div>
+				<div class="heading-container__headings">
+					<h1>{{ dataList.info.title }}</h1>
+					<h2>{{ dataList.info.date }}</h2>
+				</div>
+			</div>
+		</div>
+	</header>
+	<article class="reflection-article">
+		<table class="reflection-table-data">
+			<thead>
+				<tr>
+					<th class="table-data__this-week">Last Period</th>
+					<th class="table-data__this-period">This Period</th>
+					<th class="table-data__change">Change</th>
+					<th class="table-data__app-title">Title</th>
+					<th class="table-data__app-developer">Developer</th> 					
+				</tr>
+			</thead>
+			<colgroup>
+				<col style="width: 11%;">
+				<col style="width: 11%;">
+				<col style="width: 10%;">
+				<col style="width: 37%;">
+				<col style="width: 30%;">
+			</colgroup>
+			<tbody>
+				<tr ng-repeat="dataItem in dataList.data">
+					<td class="table-data__this-week"><span class="{{dataList.getLastWeekCSSClass($index)}}">{{dataList.getLastWeek($index)}}</span></td>
+					<td class="table-data__this-period">
+						{{dataItem.Rank}}
+					</td>
+					<td class="table-data__change"><span class={{dataList.getChangeCSSClass($index)}}>{{dataList.getChange($index)}}</span></td>
+					<td class="table-data__app-title">
+						<img src="{{dataItem.icon_url}}" alt="App logo" />
+						<div class="title-container">
+							<span>{{dataItem.Name}}</span>
+						</div>
+					</td>
+					<td class="table-data__app-developer"><div><span>{{dataItem.Developer}}</span></div></td>
+				</tr>
+			</tbody>
+		</table>
+	</article>
+
+	<script>
+		var is_chrome = navigator.userAgent.indexOf('Chrome') > -1;
+    var is_explorer = navigator.userAgent.indexOf('MSIE') > -1;
+    var is_firefox = navigator.userAgent.indexOf('Firefox') > -1;
+    var is_safari = navigator.userAgent.indexOf("Safari") > -1;
+    var is_opera = navigator.userAgent.toLowerCase().indexOf("op") > -1;
+    if ((is_chrome)&&(is_safari)) {is_safari=false;}
+    if ((is_chrome)&&(is_opera)) {is_chrome=false;}
+
+    if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Chrome') == -1) {
+    	document.getElementById('body').classList.add('is-safari');
+    }
+	</script>
+
+	<script>
+	 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	 (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	 m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	 })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	​
+	 ga('create', 'UA-44507507-2', 'auto');
+	 ga('send', 'pageview');
+	​
+	</script>
+</body>
+</html>

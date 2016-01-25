@@ -24,8 +24,6 @@ public interface LinkableAccountFields {
 
 	String getPassword();
 
-	String getProperties();
-
 	Focusable getFirstToFocus();
 
 	void setFormErrors();

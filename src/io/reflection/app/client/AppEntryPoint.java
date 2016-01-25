@@ -74,6 +74,7 @@ public class AppEntryPoint extends ErrorHandlingEntryPoint {
 		lPageContainer.add(NavigationController.get().getMainPanel());
 		RootPanel.get().add(NavigationController.get().getPanelRightAccount());
 		RootPanel.get().add(NavigationController.get().getPanelRightSearch());
+		RootPanel.get().add(NavigationController.get().getPanelFooter());
 		RootPanel.get().add(new BackToTop());
 		UserAgentHelper.initCustomScrollbars();
 		Document.get().getHead().appendChild(DOMHelper.getJSScriptFromUrl("js/vendor/picturefillFirefox.js"));
