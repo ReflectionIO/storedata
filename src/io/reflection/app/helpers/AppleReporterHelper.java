@@ -417,6 +417,11 @@ public class AppleReporterHelper {
 			this.errorCode = errorCode;
 		}
 
+		public AppleReporterException(int errorCode, String errorMessage, Throwable ex) {
+			super(errorMessage, ex);
+			this.errorCode = errorCode;
+		}
+
 		public AppleReporterException(int errorCode, Throwable ex) {
 			super(ex);
 			this.errorCode = errorCode;
@@ -424,6 +429,65 @@ public class AppleReporterHelper {
 
 		public int getErrorCode() {
 			return errorCode;
+		}
+	}
+
+	public static enum ITunesReporterError {
+		CODE_100(100, "Invalid app or command format."),
+		CODE_101(101, "Invalid command."),
+		CODE_102(102, "Too few or too many parameters specified for the method."),
+		CODE_103(103, "No properties file specified."),
+		CODE_104(104, "Can’t find properties file."),
+		CODE_105(105, "Can’t read properties file."),
+		CODE_106(106, "Properties file doesn’t contain an Apple ID or password."),
+		CODE_107(107, "The Apple ID or password is in the wrong format."),
+		CODE_108(108, "The Apple ID or password is wrong."),
+		CODE_109(109, "Properties file doesn’t contain an endpoint."),
+		CODE_110(110, "Network isn’t available."),
+		CODE_111(111, "Network is available but can’t connect to Sales and Trends or Payments and Financial Reports."),
+		CODE_112(112, "Can’t save file because there isn’t enough space (or you don’t have write access to the current directory)."),
+		CODE_113(113, "Invalid mode. Valid values include: Normal and Robot."),
+		CODE_214(214,
+				"You have access to several providers. Specify the provider ID (account number) in your properties file or on the command line. To see a list of providers, use the command getAccounts."),
+		CODE_215(215, "Invalid provider ID specified on command line. To see a list of providers, use getAccounts."),
+		CODE_216(216, "Invalid provider ID specified in properties file. To see a list of providers, use getAccounts."),
+		CODE_200(200, "Invalid vendor number."),
+		CODE_201(201, "Invalid report type."),
+		CODE_202(202, "Invalid report subtype."),
+		CODE_203(203, "Invalid combination of report type and report subtype."),
+		CODE_204(204, "Invalid date type."),
+		CODE_205(205, "Invalid weekly date."),
+		CODE_206(206, "Invalid combination of report subtype and date type."),
+		CODE_207(207, "Invalid date."),
+		CODE_208(208, "Invalid combination of date type and date."),
+		CODE_209(209, "Report no longer available because it expired."),
+		CODE_210(210, "Report not available because it is not ready yet."),
+		CODE_211(211, "Report not available."),
+		CODE_212(212, "Unexpected error."),
+		CODE_213(213, "Report not available because there were no sales.");
+
+		private final int			errorCode;
+		private final String	errorMessage;
+
+		private ITunesReporterError(int errorCode, String errorMessage) {
+			this.errorCode = errorCode;
+			this.errorMessage = errorMessage;
+		}
+
+		public int getErrorCode() {
+			return errorCode;
+		}
+
+		public String getErrorMessage() {
+			return errorMessage;
+		}
+
+		public static ITunesReporterError getByCode(int code) {
+			try {
+				return valueOf("CODE_" + code);
+			} catch (IllegalArgumentException ex) {
+				return null;
+			}
 		}
 	}
 }
