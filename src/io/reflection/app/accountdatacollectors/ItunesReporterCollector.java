@@ -7,6 +7,7 @@
 //
 package io.reflection.app.accountdatacollectors;
 
+import java.io.IOException;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Date;
 import java.util.List;
@@ -30,7 +31,11 @@ import io.reflection.app.datatypes.shared.DataAccountFetchStatusType;
 import io.reflection.app.helpers.ApiHelper;
 import io.reflection.app.helpers.AppleReporterHelper;
 import io.reflection.app.helpers.AppleReporterHelper.AppleReporterException;
+import io.reflection.app.helpers.AppleReporterHelper.DateType;
+import io.reflection.app.helpers.AppleReporterHelper.ITunesReporterError;
 import io.reflection.app.helpers.DataAccountPropertiesHelper;
+import io.reflection.app.helpers.GoogleCloudClientHelper;
+import io.reflection.app.helpers.SqlQueryHelper;
 import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvider;
 
@@ -48,11 +53,9 @@ public class ItunesReporterCollector implements DataAccountCollector {
 	public boolean collect(DataAccount dataAccount, Date date) throws DataAccessException, ServiceException {
 		date = ApiHelper.removeTime(date);
 
-		final String dateParameter = ITunesConnectDownloadHelper.DATE_FORMATTER.format(date);
-
 		if (LOG.isLoggable(Level.INFO)) {
 			LOG.info(String.format("Getting data from itunes connect for data account [%s] and date [%s]", dataAccount.id == null ? dataAccount.username
-					: dataAccount.id.toString(), dateParameter));
+					: dataAccount.id.toString(), date));
 		}
 
 		DataAccountFetch dataAccountFetch = DataAccountFetchServiceProvider.provide().getDateDataAccountFetch(dataAccount, date);
@@ -64,14 +67,13 @@ public class ItunesReporterCollector implements DataAccountCollector {
 			dataAccountFetch.linkedAccount = dataAccount;
 		}
 
-		boolean success = false;
-
 		if (dataAccountFetch.status != DataAccountFetchStatusType.DataAccountFetchStatusTypeIngested) {
 			String accountId = null;
 			String vendorId = null;
 
 			List<SimpleEntry<String, String>> accountAndVendorIdsFromProperties = DataAccountPropertiesHelper.getAccountAndVendorIdsFromProperties(dataAccount.properties);
 
+			// First we load the account id and vendor id (previously identified) to use to download the report
 			if (accountAndVendorIdsFromProperties != null && accountAndVendorIdsFromProperties.size() > 0) {
 				// we only work with the first entry as the DB should now only store one Vendor ID per data account record
 				SimpleEntry<String, String> firstEntry = accountAndVendorIdsFromProperties.get(0);
@@ -80,6 +82,7 @@ public class ItunesReporterCollector implements DataAccountCollector {
 				vendorId = firstEntry.getValue();
 			}
 
+			// If an ID pair was not already identified and stored, then look up the pair based on the first vendor Id provided
 			if (accountId == null || vendorId == null || accountId.trim().length() == 0 || vendorId.trim().length() == 0) {
 				// if there are account and vendor ids in the properties, it means they are invalid / empty. clear them and get them again from itunes
 				if (accountAndVendorIdsFromProperties != null && accountAndVendorIdsFromProperties.size() > 0) {
@@ -97,15 +100,62 @@ public class ItunesReporterCollector implements DataAccountCollector {
 				}
 			}
 
+			// If we still don't have an account and vendor id pair, fail
 			if (accountId == null || vendorId == null || accountId.trim().length() == 0 || vendorId.trim().length() == 0) {
 				LOG.log(Level.SEVERE, "Can't get a valid set of account id and vendor id for DataAccount id: " + dataAccount.id + " with username: " + dataAccount.username);
 				return false;
 			}
 
 			// do the gather
+			try {
+				byte[] gzippedReportData = AppleReporterHelper.getReport(dataAccount.username, dataAccount.password, accountId, vendorId, DateType.DAILY, date);
+				String fileName = "S_D_A_" + accountId + "_V_" + vendorId + SqlQueryHelper.getSqlDateFormat().format(date) + ".txt.gz";
+
+				try {
+					String gcsPath = GoogleCloudClientHelper.uploadFileToGoogleCloudStorage(System.getProperty(ACCOUNT_DATA_BUCKET_KEY), dataAccount.id.toString() + "/" + fileName, gzippedReportData);
+					dataAccountFetch.status(DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered);
+					dataAccountFetch.data(gcsPath);
+					DataAccountFetchServiceProvider.provide().updateDataAccountFetch(dataAccountFetch);
+
+					// ================== IF ALL GOES WELL, WE EXIT THIS METHOD HERE ========================== //
+					return true;
+				} catch (IOException e) {
+					throw new AppleReporterException(-1, "There was an error uploading the file to Google Cloud Storage", e);
+				}
+			} catch (AppleReporterException e) {
+				ITunesReporterError error = ITunesReporterError.getByCode(e.getErrorCode());
+
+				if (error == null) {
+					LOG.log(Level.WARNING, "Exception occured while trying to get iTunes Report via the Reporter", e);
+					return false;
+				}
+
+				if (error == ITunesReporterError.CODE_213) {
+					// report not available as there were no sales
+					LOG.log(Level.INFO, "There were no sales for data account id: " + dataAccount.id + " with username: " + dataAccount.username + " on " + date);
+
+					dataAccountFetch.status(DataAccountFetchStatusType.DataAccountFetchStatusTypeEmpty);
+					dataAccountFetch.data(e.getErrorCode() + ":" + e.getMessage());
+					DataAccountFetchServiceProvider.provide().updateDataAccountFetch(dataAccountFetch);
+
+					// ================== IF THERE ARE NO SALES AND HENCE AN EMPTY REPORT, WE EXIT THIS METHOD HERE ========================== //
+					return true;
+				}
+
+				if (error == ITunesReporterError.CODE_210) {
+					LOG.log(Level.WARNING, "The report is not ready yet for data account id: " + dataAccount.id + " with username: " + dataAccount.username + " on " + date);
+				} else {
+					LOG.log(Level.WARNING, "The was an exception while trying to get the sales report for data account id: " + dataAccount.id + " with username: " + dataAccount.username + " on " + date);
+				}
+
+				// ================== LOG ALL REASONS OF FAILURE HERE ========================== //
+				dataAccountFetch.status(DataAccountFetchStatusType.DataAccountFetchStatusTypeError);
+				dataAccountFetch.data(e.getErrorCode() + ":" + e.getMessage());
+				DataAccountFetchServiceProvider.provide().updateDataAccountFetch(dataAccountFetch);
+			}
 		}
 
-		return success;
+		return false;
 	}
 
 	/**
