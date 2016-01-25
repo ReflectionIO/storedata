@@ -7,8 +7,6 @@
 //
 package io.reflection.app.accountdatacollectors;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
@@ -16,24 +14,21 @@ import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.google.appengine.tools.cloudstorage.GcsFileOptions;
-import com.google.appengine.tools.cloudstorage.GcsFilename;
-import com.google.appengine.tools.cloudstorage.GcsOutputChannel;
-import com.google.appengine.tools.cloudstorage.GcsService;
-import com.google.appengine.tools.cloudstorage.GcsServiceFactory;
+import org.apache.commons.io.IOUtils;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.willshex.gson.json.shared.Convert;
 
+import io.reflection.app.helpers.GoogleCloudClientHelper;
 import io.reflection.app.logging.GaeLevel;
 
 /**
@@ -42,20 +37,20 @@ import io.reflection.app.logging.GaeLevel;
  */
 public class ITunesConnectDownloadHelper {
 
-	private static final Logger LOG = Logger.getLogger(ITunesConnectDownloadHelper.class.getName());
+	private static final Logger						LOG								= Logger.getLogger(ITunesConnectDownloadHelper.class.getName());
 
-	private static final String USERNAME_KEY = "USERNAME";
-	private static final String PASSWORD_KEY = "PASSWORD";
-	private static final String VENDOR_NUMBER_KEY = "VNDNUMBER";
+	private static final String						USERNAME_KEY			= "USERNAME";
+	private static final String						PASSWORD_KEY			= "PASSWORD";
+	private static final String						VENDOR_NUMBER_KEY	= "VNDNUMBER";
 
-	private static final String TYPE_KEY = "TYPEOFREPORT";
+	private static final String						TYPE_KEY					= "TYPEOFREPORT";
 
-	private static final String DATE_TYPE_KEY = "DATETYPE";
+	private static final String						DATE_TYPE_KEY			= "DATETYPE";
 
-	private static final String REPORT_TYPE_KEY = "REPORTTYPE";
-	private static final String REPORT_DATE_KEY = "REPORTDATE";
+	private static final String						REPORT_TYPE_KEY		= "REPORTTYPE";
+	private static final String						REPORT_DATE_KEY		= "REPORTDATE";
 
-	public static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("yyyyMMdd");
+	public static final SimpleDateFormat	DATE_FORMATTER		= new SimpleDateFormat("yyyyMMdd");
 
 	public static String getITunesSalesFile(String username, String password, String vendorId, String dateParameter, String bucketName, String bucketPath)
 			throws Exception {
@@ -184,58 +179,61 @@ public class ITunesConnectDownloadHelper {
 
 	private static String getFile(String bucketName, String bucketPath, HttpURLConnection paramHttpURLConnection) throws IOException {
 		final String str = paramHttpURLConnection.getHeaderField("filename");
-		int i = 0;
 
-		BufferedInputStream localBufferedInputStream = null;
-		final BufferedOutputStream localBufferedOutputStream = null;
-		GcsOutputChannel writeChannel = null;
+		byte[] content = IOUtils.toByteArray(paramHttpURLConnection.getInputStream());
 
-		String cloudStorageFileName;
+		return GoogleCloudClientHelper.uploadFileToGoogleCloudStorage(bucketName, bucketPath + "/" + str, content);
 
-		try {
-			if (LOG.isLoggable(GaeLevel.DEBUG)) {
-				LOG.log(GaeLevel.DEBUG, "Getting input stream from Itunes connection");
-			}
-			localBufferedInputStream = new BufferedInputStream(paramHttpURLConnection.getInputStream());
+		// int i = 0;
+		// BufferedInputStream localBufferedInputStream = null;
+		// final BufferedOutputStream localBufferedOutputStream = null;
+		// String cloudStorageFileName;
+		// GcsOutputChannel writeChannel = null;
+		// try {
+		// if (LOG.isLoggable(GaeLevel.DEBUG)) {
+		// LOG.log(GaeLevel.DEBUG, "Getting input stream from Itunes connection");
+		// }
+		// localBufferedInputStream = new BufferedInputStream(paramHttpURLConnection.getInputStream());
+		//
+		//
+		// final GcsService fileService = GcsServiceFactory.createGcsService();
+		// final GcsFilename fileName = new GcsFilename(bucketName, bucketPath + "/" + str);
+		//
+		// if (LOG.isLoggable(GaeLevel.DEBUG)) {
+		// LOG.log(GaeLevel.DEBUG, String.format("Writing to bucket: %s and path %s", bucketName, bucketPath + "/" + str));
+		// }
+		//
+		// writeChannel = fileService.createOrReplace(fileName, GcsFileOptions.getDefaultInstance());
+		// final byte[] byteBuffer = new byte[1024];
+		//
+		// while ((i = localBufferedInputStream.read(byteBuffer)) != -1) {
+		// writeChannel.write(ByteBuffer.wrap(byteBuffer, 0, i));
+		// }
+		//
+		// if (LOG.isLoggable(Level.INFO)) {
+		// LOG.info("File Downloaded Successfully");
+		// }
+		//
+		// cloudStorageFileName = "/gs/" + fileName.getBucketName() + "/" + fileName.getObjectName();
+		//
+		// if (LOG.isLoggable(GaeLevel.DEBUG)) {
+		// LOG.log(GaeLevel.DEBUG, String.format("cloudStorageFileName = %s", cloudStorageFileName));
+		// }
+		// } finally {
+		// if (localBufferedInputStream != null) {
+		// localBufferedInputStream.close();
+		// }
+		//
+		// if (localBufferedOutputStream != null) {
+		// localBufferedOutputStream.close();
+		// }
+		//
+		// if (writeChannel != null) {
+		// writeChannel.close();
+		// }
+		// }
 
-			final GcsService fileService = GcsServiceFactory.createGcsService();
-			final GcsFilename fileName = new GcsFilename(bucketName, bucketPath + "/" + str);
-
-			if (LOG.isLoggable(GaeLevel.DEBUG)) {
-				LOG.log(GaeLevel.DEBUG, String.format("Writing to bucket: %s and path %s", bucketName, bucketPath + "/" + str));
-			}
-
-			writeChannel = fileService.createOrReplace(fileName, GcsFileOptions.getDefaultInstance());
-			final byte[] byteBuffer = new byte[1024];
-
-			while ((i = localBufferedInputStream.read(byteBuffer)) != -1) {
-				writeChannel.write(ByteBuffer.wrap(byteBuffer, 0, i));
-			}
-
-			if (LOG.isLoggable(Level.INFO)) {
-				LOG.info("File Downloaded Successfully");
-			}
-
-			cloudStorageFileName = "/gs/" + fileName.getBucketName() + "/" + fileName.getObjectName();
-
-			if (LOG.isLoggable(GaeLevel.DEBUG)) {
-				LOG.log(GaeLevel.DEBUG, String.format("cloudStorageFileName = %s", cloudStorageFileName));
-			}
-		} finally {
-			if (localBufferedInputStream != null) {
-				localBufferedInputStream.close();
-			}
-
-			if (localBufferedOutputStream != null) {
-				localBufferedOutputStream.close();
-			}
-
-			if (writeChannel != null) {
-				writeChannel.close();
-			}
-		}
-
-		return cloudStorageFileName;
+		// return cloudStorageFileName;
 	}
 
 	/**
