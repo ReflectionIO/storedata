@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -117,6 +116,8 @@ public class ItunesReporterCollector implements DataAccountCollector {
 					dataAccountFetch.data(gcsPath);
 					DataAccountFetchServiceProvider.provide().updateDataAccountFetch(dataAccountFetch);
 
+					DataAccountFetchServiceProvider.provide().triggerDataAccountFetchIngest(dataAccountFetch);
+
 					// ================== IF ALL GOES WELL, WE EXIT THIS METHOD HERE ========================== //
 					return true;
 				} catch (IOException e) {
@@ -162,56 +163,22 @@ public class ItunesReporterCollector implements DataAccountCollector {
 	 * @param dataAccount
 	 * @return
 	 */
-	private SimpleEntry<String, String> getAccountAndVendorIdPairForFirstVendorId(DataAccount dataAccount) {
+	public SimpleEntry<String, String> getAccountAndVendorIdPairForFirstVendorId(DataAccount dataAccount) {
 		List<String> vendorIdsFromProperties = DataAccountPropertiesHelper.getVendorIdsFromProperties(dataAccount.properties);
 		if (vendorIdsFromProperties == null || vendorIdsFromProperties.size() == 0) return null;
 
 		String primaryVendorId = vendorIdsFromProperties.get(0);
 
-		String accountId = getAccountIdForVendorId(dataAccount, primaryVendorId);
+		String accountId = null;
+		try {
+			accountId = AppleReporterHelper.getAccountIdForVendorId(dataAccount.username, dataAccount.password, primaryVendorId);
+		} catch (AppleReporterException e) {
+			LOG.log(Level.WARNING, "Could not get the vendor id for account id: " + accountId + " of data account id: " + dataAccount.id + ", username: " + dataAccount.username, e);
+		}
+
 		if (accountId == null) return null;
 
 		return new SimpleEntry<>(accountId, primaryVendorId);
-	}
-
-	/**
-	 * @param dataAccount
-	 * @param primaryVendorId
-	 * @return
-	 */
-	private String getAccountIdForVendorId(DataAccount dataAccount, String primaryVendorId) {
-		Map<String, String> accounts = null;
-		String username = dataAccount.username;
-		String password = dataAccount.password;
-
-		try {
-			accounts = AppleReporterHelper.getAccounts(username, password);
-		} catch (AppleReporterException e) {
-			LOG.log(Level.WARNING, "Could not get accounts for data account id: " + dataAccount.id + ", username: " + username, e);
-		}
-
-		if (accounts == null || accounts.size() == 0) return null;
-
-		for (String name : accounts.keySet()) {
-			String accountId = accounts.get(name);
-
-			try {
-				List<String> vendors = AppleReporterHelper.getVendors(username, password, accountId);
-				if (vendors == null || vendors.size() == 0) {
-					continue;
-				}
-
-				for (String vendorId : vendors) {
-					if (primaryVendorId.equals(vendorId)) return accountId;
-				}
-			} catch (InputValidationException | AppleReporterException e) {
-				LOG.log(Level.WARNING, "Could not get the vendor id for account id: " + accountId + " of data account id: " + dataAccount.id + ", username: " + username, e);
-				continue;
-			}
-		}
-
-		LOG.log(Level.WARNING, "No accounts matching vendor id: " + primaryVendorId + " were found under data account id: " + dataAccount.id + ", username: " + username);
-		return null;
 	}
 
 	/* (non-Javadoc)

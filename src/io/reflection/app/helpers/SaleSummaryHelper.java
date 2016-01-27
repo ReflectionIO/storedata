@@ -28,9 +28,9 @@ import io.reflection.app.service.lookupitem.LookupItemService;
  *
  */
 public class SaleSummaryHelper {
-	private static final Logger LOG = Logger.getLogger(SaleSummaryHelper.class.getName());
+	private static final Logger						LOG				= Logger.getLogger(SaleSummaryHelper.class.getName());
 
-	public static final SaleSummaryHelper INSTANCE = new SaleSummaryHelper();
+	public static final SaleSummaryHelper	INSTANCE	= new SaleSummaryHelper();
 
 	public static enum SALE_SOURCE {
 		DB, INGEST;
@@ -80,6 +80,20 @@ public class SaleSummaryHelper {
 		HashMap<String, Integer> skuByItemMap = lookupService.mapItemsBySku(lookupItemsForAccount);
 
 		// we will store all items->countries->actual_sale_summary in this map of a map
+		HashMap<Integer, HashMap<String, SaleSummary>> summaries = summariseSales(dataaccountid, sales, saleSource, updatedLookupItems, itemByCountryMap, skuByItemMap);
+
+		// Lets update the DB with all the summaries and newly found items
+		// 4.1 upsert all lookup items in
+		upsertLookupItems(updatedLookupItems, dataaccountid, saleConnection);
+
+		// 4.2 upsert all the sales summaries
+		upsertSaleSummaries(summaries, dataaccountid, saleConnection);
+
+		return true;
+	}
+
+	public HashMap<Integer, HashMap<String, SaleSummary>> summariseSales(Long dataaccountid, List<Sale> sales, SALE_SOURCE saleSource, ArrayList<LookupItem> updatedLookupItems,
+			HashMap<Integer, HashMap<String, LookupItem>> itemByCountryMap, HashMap<String, Integer> skuByItemMap) {
 		HashMap<Integer, HashMap<String, SaleSummary>> summaries = new HashMap<Integer, HashMap<String, SaleSummary>>();
 
 		// this will hold all sale items that we don't know the main item for
@@ -118,15 +132,7 @@ public class SaleSummaryHelper {
 			processSummaryForSale(dataaccountid, summaries, sale, mainLookupItemForSummary, updatedLookupItems, saleSource);
 		}
 		LOG.log(GaeLevel.DEBUG, String.format("Finished the second pass of processing sales"));
-
-		// Lets update the DB with all the summaries and newly found items
-		// 4.1 upsert all lookup items in
-		upsertLookupItems(updatedLookupItems, dataaccountid, saleConnection);
-
-		// 4.2 upsert all the sales summaries
-		upsertSaleSummaries(summaries, dataaccountid, saleConnection);
-
-		return true;
+		return summaries;
 	}
 
 	/**
@@ -246,7 +252,6 @@ public class SaleSummaryHelper {
 				lookupItemUpdated(updatedLookupItems, iapLookupItem);
 			}
 
-
 			HashMap<String, LookupItem> lookupItemCountriesMap = itemByCountryMap.get(parentId);
 			if (lookupItemCountriesMap == null) {
 				// TODO if lookupItemCountriesMap may be null (exceptions), so we need to create it and then also the mainlookupitemforsummary
@@ -334,12 +339,13 @@ public class SaleSummaryHelper {
 			currentItem.put(sale.country, currentSummary);
 		}
 
+		int saleRevenue = absUnits * saleCustomerPrice;
 		if (sale.typeIdentifier.startsWith("1") || sale.typeIdentifier.startsWith("7")) {
 			// this is a main item download / purchase / update
 
 			switch (sale.typeIdentifier) {
 				case "1":
-					currentSummary.iphone_app_revenue += absUnits * saleCustomerPrice;
+					currentSummary.iphone_app_revenue += saleRevenue;
 					currentSummary.iphone_downloads += units;
 
 					// NOTE for 1, 1T, 1F (purchases / downloads), we update the titles, currency and prices in case they have been updated.
@@ -347,14 +353,14 @@ public class SaleSummaryHelper {
 
 					break;
 				case "1T":
-					currentSummary.ipad_app_revenue += absUnits * saleCustomerPrice;
+					currentSummary.ipad_app_revenue += saleRevenue;
 					currentSummary.ipad_downloads += units;
 
 					// NOTE for 1, 1T, 1F (purchases / downloads), we update the titles, currency and prices in case they have been updated.
 					updateCurrentSummaryTitlePriceAndCurrency(currentSummary, mainLookupItemForSummary, sale, saleCustomerPrice, updatedLookupItems);
 					break;
 				case "1F":
-					currentSummary.universal_app_revenue += absUnits * saleCustomerPrice;
+					currentSummary.universal_app_revenue += saleRevenue;
 					currentSummary.universal_downloads += units;
 
 					// NOTE for 1, 1T, 1F (purchases / downloads), we update the titles, currency and prices in case they have been updated.
@@ -370,7 +376,6 @@ public class SaleSummaryHelper {
 					currentSummary.universal_updates += units;
 					break;
 			}
-
 
 			boolean lookupItemUpdated = false;
 
@@ -396,11 +401,22 @@ public class SaleSummaryHelper {
 			// this is an IAP
 			switch (sale.typeIdentifier) {
 				case "IA1":
-					currentSummary.iap_revenue += absUnits * saleCustomerPrice;
+					currentSummary.iap_revenue += saleRevenue;
+
+					if (sale.device != null) {
+						if ("iphone".equalsIgnoreCase(sale.device)) {
+							currentSummary.iphone_iap_revenue += saleRevenue;
+						} else if ("ipod touch".equalsIgnoreCase(sale.device)) {
+							currentSummary.iphone_iap_revenue += saleRevenue;
+						} else if ("ipad".equalsIgnoreCase(sale.device)) {
+							currentSummary.ipad_iap_revenue += saleRevenue;
+						}
+					}
+
 					break;
 				case "IA9":
 				case "IAY":
-					currentSummary.subs_revenue += absUnits * saleCustomerPrice;
+					currentSummary.subs_revenue += saleRevenue;
 					currentSummary.paid_subs_count += units;
 					break;
 				case "IAC":
@@ -533,11 +549,11 @@ public class SaleSummaryHelper {
 				for (SaleSummary summary : itemCountryMap.values()) {
 					int paramCount = 1;
 
-					int totalAppRevenue = summary.iphone_app_revenue+summary.ipad_app_revenue+summary.universal_app_revenue;
+					int totalAppRevenue = summary.iphone_app_revenue + summary.ipad_app_revenue + summary.universal_app_revenue;
 					int totalRevenue = totalAppRevenue + summary.iap_revenue;
 
-					int totalDownloads = summary.iphone_downloads+summary.ipad_downloads+summary.universal_downloads;
-					int totalUpdates = summary.iphone_updates+summary.ipad_updates+summary.universal_updates;
+					int totalDownloads = summary.iphone_downloads + summary.ipad_downloads + summary.universal_downloads;
+					int totalUpdates = summary.iphone_updates + summary.ipad_updates + summary.universal_updates;
 
 					int totalDownloadsAndUpdates = totalDownloads + totalUpdates;
 

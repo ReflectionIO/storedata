@@ -33,6 +33,7 @@ import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Sale;
+import io.reflection.app.datatypes.shared.SaleSummary;
 import io.reflection.app.helpers.SaleSummaryHelper;
 import io.reflection.app.helpers.SqlQueryHelper;
 import io.reflection.app.logging.GaeLevel;
@@ -1171,5 +1172,65 @@ final class SaleService implements ISaleService {
 				saleConnection.disconnect();
 			}
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see io.reflection.app.service.sale.ISaleService#getSaleSummary(java.lang.Long, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public SaleSummary getSaleSummary(Long dataAccountId, String itemId, String country, Date date) throws DataAccessException {
+		LOG.log(GaeLevel.DEBUG, String.format("Getting sale summary for dataaccount: %d, item id: %s, in: %s on: %s", dataAccountId, itemId, country, date));
+
+		String getSaleSummaryForItemOnDateQuery = String.format("select * from sale_summary where dataaccountid=%d and itemid='%s' and country='%s' and date='%s'", dataAccountId, itemId, country,
+				SqlQueryHelper.getSqlDateFormat().format(date));
+
+		Connection saleConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeSale.toString());
+
+		try {
+			saleConnection.connect();
+			saleConnection.executeQuery(getSaleSummaryForItemOnDateQuery);
+
+			LOG.log(GaeLevel.DEBUG, String.format("Executed the request..."));
+
+			if (saleConnection.fetchNextRow()) {
+				SaleSummary summary = new SaleSummary();
+
+				summary.dataaccountid = saleConnection.getCurrentRowInteger("dataaccountid");
+				summary.date = saleConnection.getCurrentRowDateTime("date");
+				summary.itemid = saleConnection.getCurrentRowString("itemid");
+				summary.title = saleConnection.getCurrentRowString("title");
+				summary.country = saleConnection.getCurrentRowString("country");
+				summary.currency = saleConnection.getCurrentRowString("currency");
+				summary.price = saleConnection.getCurrentRowInteger("price");
+				summary.iphone_app_revenue = saleConnection.getCurrentRowInteger("iphone_app_revenue");
+				summary.ipad_app_revenue = saleConnection.getCurrentRowInteger("ipad_app_revenue");
+				summary.universal_app_revenue = saleConnection.getCurrentRowInteger("universal_app_revenue");
+				summary.total_app_revenue = saleConnection.getCurrentRowInteger("total_app_revenue");
+				summary.iap_revenue = saleConnection.getCurrentRowInteger("iap_revenue");
+				summary.total_revenue = saleConnection.getCurrentRowInteger("total_revenue");
+				summary.iphone_downloads = saleConnection.getCurrentRowInteger("iphone_downloads");
+				summary.universal_downloads = saleConnection.getCurrentRowInteger("universal_downloads");
+				summary.ipad_downloads = saleConnection.getCurrentRowInteger("ipad_downloads");
+				summary.total_downloads = saleConnection.getCurrentRowInteger("total_downloads");
+				summary.iphone_updates = saleConnection.getCurrentRowInteger("iphone_updates");
+				summary.universal_updates = saleConnection.getCurrentRowInteger("universal_updates");
+				summary.ipad_updates = saleConnection.getCurrentRowInteger("ipad_updates");
+				summary.total_updates = saleConnection.getCurrentRowInteger("total_updates");
+				summary.total_download_and_updates = saleConnection.getCurrentRowInteger("total_download_and_updates");
+				summary.free_subs_count = saleConnection.getCurrentRowInteger("free_subs_count");
+				summary.paid_subs_count = saleConnection.getCurrentRowInteger("paid_subs_count");
+				summary.subs_revenue = saleConnection.getCurrentRowInteger("subs_revenue");
+				summary.iphone_iap_revenue = saleConnection.getCurrentRowInteger("iphone_iap_revenue");
+				summary.ipad_iap_revenue = saleConnection.getCurrentRowInteger("ipad_iap_revenue");
+
+				return summary;
+			}
+		} finally {
+			if (saleConnection != null) {
+				saleConnection.disconnect();
+			}
+		}
+
+		return null;
 	}
 }

@@ -1,4 +1,4 @@
-//  
+//
 //  Sale.java
 //  reflection.io
 //
@@ -16,27 +16,29 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 public class Sale extends DataType {
-	public DataAccount account;
-	public DataAccountFetch fetch;
-	public Item item;
-	public String country;
-	public String sku;
-	public String developer;
-	public String title;
-	public String version;
-	public String typeIdentifier;
-	public Integer units;
-	public Float proceeds;
-	public String currency;
-	public Date begin;
-	public Date end;
-	public String customerCurrency;
-	public Float customerPrice;
-	public String promoCode;
-	public String parentIdentifier;
-	public String subscription;
-	public String period;
-	public String category;
+	public DataAccount			account;
+	public DataAccountFetch	fetch;
+	public Item							item;
+	public String						country;
+	public String						sku;
+	public String						developer;
+	public String						title;
+	public String						version;
+	public String						typeIdentifier;
+	public Integer					units;
+	public Float						proceeds;
+	public String						currency;
+	public Date							begin;
+	public Date							end;
+	public String						customerCurrency;
+	public Float						customerPrice;
+	public String						promoCode;
+	public String						parentIdentifier;
+	public String						subscription;
+	public String						period;
+	public String						category;
+
+	public String						device;
 
 	@Override
 	public JsonObject toJson() {
@@ -83,6 +85,8 @@ public class Sale extends DataType {
 		object.add("period", jsonPeriod);
 		JsonElement jsonCategory = category == null ? JsonNull.INSTANCE : new JsonPrimitive(category);
 		object.add("category", jsonCategory);
+		JsonElement jsonDevice = device == null ? JsonNull.INSTANCE : new JsonPrimitive(device);
+		object.add("device", jsonDevice);
 		return object;
 	}
 
@@ -218,6 +222,12 @@ public class Sale extends DataType {
 				category = jsonCategory.getAsString();
 			}
 		}
+		if (jsonObject.has("device")) {
+			JsonElement jsonDevice = jsonObject.get("device");
+			if (jsonDevice != null) {
+				device = jsonDevice.getAsString();
+			}
+		}
 	}
 
 	public Sale account(DataAccount account) {
@@ -322,6 +332,11 @@ public class Sale extends DataType {
 
 	public Sale category(String category) {
 		this.category = category;
+		return this;
+	}
+
+	public Sale device(String device) {
+		this.device = device;
 		return this;
 	}
 }

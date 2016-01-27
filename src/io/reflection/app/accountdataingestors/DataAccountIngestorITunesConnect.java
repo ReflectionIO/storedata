@@ -53,17 +53,17 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 	private static final Logger	LOG														= Logger.getLogger(DataAccountIngestorITunesConnect.class.getName());
 
 	@SuppressWarnings("unused")
-	private static final int		PROVIDER_INDEX								= 0;																																																																																																																																																																																																																																								// seems
-																																																																																																																																																																																																																																																																								// to
-																																																																																																																																																																																																																																																																								// always
-																																																																																																																																																																																																																																																																								// be
-																																																																																																																																																																																																																																																																								// apple
+	private static final int		PROVIDER_INDEX								= 0;																																																																																																																																																																																																																																																																																																										// seems
+																																																																																																																																																																																																																																																																																																																																										// to
+																																																																																																																																																																																																																																																																																																																																										// always
+																																																																																																																																																																																																																																																																																																																																										// be
+																																																																																																																																																																																																																																																																																																																																										// apple
 	@SuppressWarnings("unused")
-	private static final int		PROVIDER_COUNTRY_INDEX				= 1;																																																																																																																																																																																																																																								// seems
-																																																																																																																																																																																																																																																																								// to
-																																																																																																																																																																																																																																																																								// always
-																																																																																																																																																																																																																																																																								// be
-																																																																																																																																																																																																																																																																								// US
+	private static final int		PROVIDER_COUNTRY_INDEX				= 1;																																																																																																																																																																																																																																																																																																										// seems
+																																																																																																																																																																																																																																																																																																																																										// to
+																																																																																																																																																																																																																																																																																																																																										// always
+																																																																																																																																																																																																																																																																																																																																										// be
+																																																																																																																																																																																																																																																																																																																																										// US
 	private static final int		SKU_INDEX											= 2;
 	private static final int		DEVELOPER_INDEX								= 3;
 	private static final int		TITLE_INDEX										= 4;
@@ -142,7 +142,7 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 	 * @return
 	 * @throws IOException
 	 */
-	private List<Sale> convertFetchToSales(DataAccountFetch fetch) throws IOException {
+	public List<Sale> convertFetchToSales(DataAccountFetch fetch) throws IOException {
 
 		List<Sale> sales = null;
 
@@ -295,26 +295,31 @@ public class DataAccountIngestorITunesConnect implements DataAccountIngestor {
 			sale.period = split[PERIOD_INDEX];
 			sale.category = split[CATEGORY_INDEX];
 
-			String device = split[DEVICE_INDEX];
-			if ("1F".equals(sale.typeIdentifier)) {
-				if ("iPad".equals(device)) {
-					sale.typeIdentifier("1T");
-				} else if ("iPhone".equals(device) || "iPod touch".equals(device)) {
-					sale.typeIdentifier("1");
-				}
-			} else if ("3F".equals(sale.typeIdentifier)) {
-				if ("iPad".equals(device)) {
-					sale.typeIdentifier("3T");
-				} else if ("iPhone".equals(device) || "iPod touch".equals(device)) {
-					sale.typeIdentifier("3");
-				}
-			} else if ("7F".equals(sale.typeIdentifier)) {
-				if ("iPad".equals(device)) {
-					sale.typeIdentifier("7T");
-				} else if ("iPhone".equals(device) || "iPod touch".equals(device)) {
-					sale.typeIdentifier("7");
+			if (split.length > DEVICE_INDEX) {
+				String device = split[DEVICE_INDEX];
+				sale.device = device;
+
+				if ("1F".equals(sale.typeIdentifier)) {
+					if ("iPad".equals(device)) {
+						sale.typeIdentifier("1T");
+					} else if ("iPhone".equals(device) || "iPod touch".equals(device)) {
+						sale.typeIdentifier("1");
+					}
+				} else if ("3F".equals(sale.typeIdentifier)) {
+					if ("iPad".equals(device)) {
+						sale.typeIdentifier("3T");
+					} else if ("iPhone".equals(device) || "iPod touch".equals(device)) {
+						sale.typeIdentifier("3");
+					}
+				} else if ("7F".equals(sale.typeIdentifier)) {
+					if ("iPad".equals(device)) {
+						sale.typeIdentifier("7T");
+					} else if ("iPhone".equals(device) || "iPod touch".equals(device)) {
+						sale.typeIdentifier("7");
+					}
 				}
 			}
+
 		}
 
 		return sale;

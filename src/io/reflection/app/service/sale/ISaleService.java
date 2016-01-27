@@ -26,6 +26,7 @@ import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataAccountFetch;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Sale;
+import io.reflection.app.datatypes.shared.SaleSummary;
 import io.reflection.app.helpers.SaleSummaryHelper.SALE_SOURCE;
 
 public interface ISaleService extends IService {
@@ -306,5 +307,15 @@ public interface ISaleService extends IService {
 	 * @throws DataAccessException
 	 */
 	public HashMap<Long, ArrayList<Long>> getItemSalesInTop200(Date date, String country) throws DataAccessException;
+
+	/**
+	 * @param dataAccountId
+	 * @param itemId
+	 * @param string
+	 * @param date
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public SaleSummary getSaleSummary(Long dataAccountId, String itemId, String country, Date date) throws DataAccessException;
 
 }

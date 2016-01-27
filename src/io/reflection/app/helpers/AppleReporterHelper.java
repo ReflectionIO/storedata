@@ -267,6 +267,31 @@ public class AppleReporterHelper {
 
 	}
 
+	public static String getAccountIdForVendorId(String username, String password, String primaryVendorId) throws AppleReporterException {
+		Map<String, String> accounts = AppleReporterHelper.getAccounts(username, password);
+
+		if (accounts == null || accounts.size() == 0) return null;
+
+		for (String name : accounts.keySet()) {
+			String accountId = accounts.get(name);
+
+			try {
+				List<String> vendors = AppleReporterHelper.getVendors(username, password, accountId);
+				if (vendors == null || vendors.size() == 0) {
+					continue;
+				}
+
+				for (String vendorId : vendors) {
+					if (primaryVendorId.equals(vendorId)) return accountId;
+				}
+			} catch (InputValidationException e) {
+				continue;
+			}
+		}
+
+		return null;
+	}
+
 	public static List<String> getVendorsAndRegions(String userId, String password) throws AppleReporterException {
 		return getVendorsAndRegions(userId, password, null);
 	}

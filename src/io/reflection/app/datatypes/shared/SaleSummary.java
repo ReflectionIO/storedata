@@ -15,31 +15,35 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 public class SaleSummary extends DataType {
-	public Integer dataaccountid;
-	public Date date;
-	public String itemid;
-	public String title;
-	public String country;
-	public String currency;
-	public Integer price;
+	public Integer	dataaccountid;
+	public Date			date;
+	public String		itemid;
+	public String		title;
+	public String		country;
+	public String		currency;
+	public Integer	price;
 	public Integer	iphone_app_revenue					= 0;
 	public Integer	ipad_app_revenue						= 0;
 	public Integer	universal_app_revenue				= 0;
 	public Integer	total_app_revenue						= 0;
 	public Integer	iap_revenue									= 0;
 	public Integer	total_revenue								= 0;
-	public Integer iphone_downloads = 0;
-	public Integer universal_downloads = 0;
-	public Integer ipad_downloads = 0;
-	public Integer total_downloads = 0;
-	public Integer iphone_updates = 0;
-	public Integer universal_updates = 0;
-	public Integer ipad_updates = 0;
-	public Integer total_updates = 0;
-	public Integer total_download_and_updates = 0;
-	public Integer free_subs_count = 0;
-	public Integer paid_subs_count = 0;
-	public Integer subs_revenue = 0;
+	public Integer	iphone_downloads						= 0;
+	public Integer	universal_downloads					= 0;
+	public Integer	ipad_downloads							= 0;
+	public Integer	total_downloads							= 0;
+	public Integer	iphone_updates							= 0;
+	public Integer	universal_updates						= 0;
+	public Integer	ipad_updates								= 0;
+	public Integer	total_updates								= 0;
+	public Integer	total_download_and_updates	= 0;
+	public Integer	free_subs_count							= 0;
+	public Integer	paid_subs_count							= 0;
+	public Integer	subs_revenue								= 0;
+
+	public Integer	iphone_iap_revenue					= 0;
+	public Integer	ipad_iap_revenue						= 0;
+
 	@Override
 	public JsonObject toJson() {
 		JsonObject object = super.toJson();
@@ -93,6 +97,10 @@ public class SaleSummary extends DataType {
 		object.add("paid_subs_count", jsonpaid_subs_count);
 		JsonElement jsonsubs_revenue = subs_revenue == null ? JsonNull.INSTANCE : new JsonPrimitive(subs_revenue);
 		object.add("subs_revenue", jsonsubs_revenue);
+		JsonElement jsoniphone_iap_revenue = iphone_iap_revenue == null ? JsonNull.INSTANCE : new JsonPrimitive(iphone_iap_revenue);
+		object.add("iphone_iap_revenue", jsoniphone_iap_revenue);
+		JsonElement jsonipad_iap_revenue = ipad_iap_revenue == null ? JsonNull.INSTANCE : new JsonPrimitive(ipad_iap_revenue);
+		object.add("ipad_iap_revenue", jsonipad_iap_revenue);
 		return object;
 	}
 
@@ -249,6 +257,18 @@ public class SaleSummary extends DataType {
 				subs_revenue = Integer.valueOf(jsonsubs_revenue.getAsInt());
 			}
 		}
+		if (jsonObject.has("iphone_iap_revenue")) {
+			JsonElement jsoniphone_iap_revenue = jsonObject.get("iphone_iap_revenue");
+			if (jsoniphone_iap_revenue != null) {
+				iphone_iap_revenue = Integer.valueOf(jsoniphone_iap_revenue.getAsInt());
+			}
+		}
+		if (jsonObject.has("ipad_iap_revenue")) {
+			JsonElement jsonipad_iap_revenue = jsonObject.get("ipad_iap_revenue");
+			if (jsonipad_iap_revenue != null) {
+				ipad_iap_revenue = Integer.valueOf(jsonipad_iap_revenue.getAsInt());
+			}
+		}
 	}
 
 	public SaleSummary dataaccountid(int dataaccountid) {
@@ -375,4 +395,15 @@ public class SaleSummary extends DataType {
 		this.subs_revenue = subs_revenue;
 		return this;
 	}
+
+	public SaleSummary iphone_iap_revenue(int iphone_iap_revenue) {
+		this.iphone_iap_revenue = iphone_iap_revenue;
+		return this;
+	}
+
+	public SaleSummary ipad_iap_revenue(int ipad_iap_revenue) {
+		this.ipad_iap_revenue = ipad_iap_revenue;
+		return this;
+	}
+
 }
