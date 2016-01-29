@@ -42,8 +42,8 @@ import io.reflection.app.service.dataaccountfetch.DataAccountFetchServiceProvide
  * @author mamin
  *
  */
-public class ItunesReporterCollector implements DataAccountCollector {
-	private transient static final Logger LOG = Logger.getLogger(ItunesReporterCollector.class.getName());
+public class ITunesReporterCollector implements DataAccountCollector {
+	private transient static final Logger LOG = Logger.getLogger(ITunesReporterCollector.class.getName());
 
 	/* (non-Javadoc)
 	 * @see io.reflection.app.accountdatacollectors.DataAccountCollector#collect(io.reflection.app.datatypes.shared.DataAccount, java.util.Date)

@@ -10,7 +10,7 @@ package io.reflection.app.accountdatacollectors;
 
 /**
  * @author billy1380
- * 
+ *
  */
 public class DataAccountCollectorFactory {
 
@@ -23,7 +23,7 @@ public class DataAccountCollectorFactory {
 
 		if ("itc".equalsIgnoreCase(source.toLowerCase())) {
 			// itunes connect
-			collector = new DataAccountCollectorITunesConnect();
+			collector = new ITunesReporterCollector();
 		} else if ("azn".equals(source.toLowerCase())) {
 			// amazon store
 		} else if ("gpl".equals(source.toLowerCase())) {
