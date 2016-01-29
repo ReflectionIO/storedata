@@ -343,38 +343,88 @@ public class SaleSummaryHelper {
 		if (sale.typeIdentifier.startsWith("1") || sale.typeIdentifier.startsWith("7")) {
 			// this is a main item download / purchase / update
 
-			switch (sale.typeIdentifier) {
-				case "1":
-					currentSummary.iphone_app_revenue += saleRevenue;
-					currentSummary.iphone_downloads += units;
+			if (sale.typeIdentifier.startsWith("1")) {
+				// this is a download of a paid app
+				if (sale.device != null) {
+					switch (sale.device) {
+						case "iPod touch":
+						case "iPhone":
+							currentSummary.iphone_app_revenue += saleRevenue;
+							currentSummary.iphone_downloads += units;
 
-					// NOTE for 1, 1T, 1F (purchases / downloads), we update the titles, currency and prices in case they have been updated.
-					updateCurrentSummaryTitlePriceAndCurrency(currentSummary, mainLookupItemForSummary, sale, saleCustomerPrice, updatedLookupItems);
+							// NOTE for 1, 1T, 1F (purchases / downloads), we update the titles, currency and prices in case they have been updated.
+							updateCurrentSummaryTitlePriceAndCurrency(currentSummary, mainLookupItemForSummary, sale, saleCustomerPrice, updatedLookupItems);
+							break;
+						case "iPad":
+							currentSummary.ipad_app_revenue += saleRevenue;
+							currentSummary.ipad_downloads += units;
 
-					break;
-				case "1T":
-					currentSummary.ipad_app_revenue += saleRevenue;
-					currentSummary.ipad_downloads += units;
+							// NOTE for 1, 1T, 1F (purchases / downloads), we update the titles, currency and prices in case they have been updated.
+							updateCurrentSummaryTitlePriceAndCurrency(currentSummary, mainLookupItemForSummary, sale, saleCustomerPrice, updatedLookupItems);
+							break;
+						default:
+							currentSummary.universal_app_revenue += saleRevenue;
+							currentSummary.universal_downloads += units;
 
-					// NOTE for 1, 1T, 1F (purchases / downloads), we update the titles, currency and prices in case they have been updated.
-					updateCurrentSummaryTitlePriceAndCurrency(currentSummary, mainLookupItemForSummary, sale, saleCustomerPrice, updatedLookupItems);
-					break;
-				case "1F":
-					currentSummary.universal_app_revenue += saleRevenue;
-					currentSummary.universal_downloads += units;
+							// NOTE for 1, 1T, 1F (purchases / downloads), we update the titles, currency and prices in case they have been updated.
+							updateCurrentSummaryTitlePriceAndCurrency(currentSummary, mainLookupItemForSummary, sale, saleCustomerPrice, updatedLookupItems);
+							break;
+					}
+				} else {
+					switch (sale.typeIdentifier) {
+						case "1":
+							currentSummary.iphone_app_revenue += saleRevenue;
+							currentSummary.iphone_downloads += units;
 
-					// NOTE for 1, 1T, 1F (purchases / downloads), we update the titles, currency and prices in case they have been updated.
-					updateCurrentSummaryTitlePriceAndCurrency(currentSummary, mainLookupItemForSummary, sale, saleCustomerPrice, updatedLookupItems);
-					break;
-				case "7":
-					currentSummary.iphone_updates += units;
-					break;
-				case "7T":
-					currentSummary.ipad_updates += units;
-					break;
-				case "7F":
-					currentSummary.universal_updates += units;
-					break;
+							// NOTE for 1, 1T, 1F (purchases / downloads), we update the titles, currency and prices in case they have been updated.
+							updateCurrentSummaryTitlePriceAndCurrency(currentSummary, mainLookupItemForSummary, sale, saleCustomerPrice, updatedLookupItems);
+
+							break;
+						case "1T":
+							currentSummary.ipad_app_revenue += saleRevenue;
+							currentSummary.ipad_downloads += units;
+
+							// NOTE for 1, 1T, 1F (purchases / downloads), we update the titles, currency and prices in case they have been updated.
+							updateCurrentSummaryTitlePriceAndCurrency(currentSummary, mainLookupItemForSummary, sale, saleCustomerPrice, updatedLookupItems);
+							break;
+						case "1F":
+							currentSummary.universal_app_revenue += saleRevenue;
+							currentSummary.universal_downloads += units;
+
+							// NOTE for 1, 1T, 1F (purchases / downloads), we update the titles, currency and prices in case they have been updated.
+							updateCurrentSummaryTitlePriceAndCurrency(currentSummary, mainLookupItemForSummary, sale, saleCustomerPrice, updatedLookupItems);
+							break;
+					}
+				}
+
+			} else if (sale.typeIdentifier.startsWith("7")) {
+				// this is the download of an update of an app
+				if (sale.device != null) {
+					switch (sale.device) {
+						case "iPod touch":
+						case "iPhone":
+							currentSummary.iphone_updates += units;
+							break;
+						case "iPad":
+							currentSummary.ipad_updates += units;
+							break;
+						default:
+							currentSummary.universal_updates += units;
+							break;
+					}
+				} else {
+					switch (sale.typeIdentifier) {
+						case "7":
+							currentSummary.iphone_updates += units;
+							break;
+						case "7T":
+							currentSummary.ipad_updates += units;
+							break;
+						case "7F":
+							currentSummary.universal_updates += units;
+							break;
+					}
+				}
 			}
 
 			boolean lookupItemUpdated = false;
