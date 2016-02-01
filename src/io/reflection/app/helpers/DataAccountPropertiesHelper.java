@@ -42,7 +42,7 @@ public class DataAccountPropertiesHelper {
 	 * @param jsonProperties
 	 */
 	@SuppressWarnings("unchecked")
-	private static JsonObject addAccountIdAndVendorIdToProperties(String accountId, String vendorId, JsonObject jsonProperties) {
+	public static JsonObject addAccountIdAndVendorIdToProperties(String accountId, String vendorId, JsonObject jsonProperties) {
 		if (jsonProperties == null) {
 			jsonProperties = new JsonObject();
 		}
@@ -90,7 +90,7 @@ public class DataAccountPropertiesHelper {
 	 * @param jsonProperties
 	 * @return
 	 */
-	private static List<String> getVendorIdsFromProperties(JsonObject jsonProperties) {
+	public static List<String> getVendorIdsFromProperties(JsonObject jsonProperties) {
 		if (jsonProperties == null) return new ArrayList<>(0);
 
 		JsonElement vendorsElement = jsonProperties.get(VENDORS);
@@ -106,7 +106,7 @@ public class DataAccountPropertiesHelper {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static JsonObject createObjectWithProperties(SimpleEntry<String, String>... properties) {
+	public static JsonObject createObjectWithProperties(SimpleEntry<String, String>... properties) {
 		JsonObject obj = new JsonObject();
 
 		for (SimpleEntry<String, String> entry : properties) {
@@ -130,7 +130,7 @@ public class DataAccountPropertiesHelper {
 	 * @param jsonProperties
 	 * @return
 	 */
-	private static List<SimpleEntry<String, String>> getAccountAndVendorIdsFromProperties(JsonObject jsonProperties) {
+	public static List<SimpleEntry<String, String>> getAccountAndVendorIdsFromProperties(JsonObject jsonProperties) {
 		if (jsonProperties == null) return new ArrayList<SimpleEntry<String, String>>(0);
 
 		JsonElement accountsAndVendorIdsElement = jsonProperties.get(ACCOUNTS_AND_VENDOR_IDS);
@@ -164,7 +164,7 @@ public class DataAccountPropertiesHelper {
 	 * @param jsonObject
 	 * @return
 	 */
-	private static JsonObject clearAccountAndVendorIds(JsonObject jsonProperties) {
+	public static JsonObject clearAccountAndVendorIds(JsonObject jsonProperties) {
 		if (jsonProperties == null) return new JsonObject();
 
 		JsonElement accountsAndVendorIdsElement = jsonProperties.get(ACCOUNTS_AND_VENDOR_IDS);
@@ -172,5 +172,17 @@ public class DataAccountPropertiesHelper {
 			jsonProperties.remove(ACCOUNTS_AND_VENDOR_IDS);
 		}
 		return jsonProperties;
+	}
+
+	/**
+	 * @param properties
+	 * @return
+	 */
+	public static String getPrimaryVendorId(String jsonProperties) {
+		List<String> vendorIdsFromProperties = getVendorIdsFromProperties(jsonProperties);
+
+		if (vendorIdsFromProperties == null || vendorIdsFromProperties.size() == 0) return null;
+
+		return vendorIdsFromProperties.get(0);
 	}
 }

@@ -89,7 +89,7 @@ public class DataAccountPropertiesHelperTest {
 		assertNotNull(result);
 		assertEquals("{}", result);
 
-		result = DataAccountPropertiesHelper.clearAccountAndVendorIds(null);
+		result = DataAccountPropertiesHelper.clearAccountAndVendorIds((String) null);
 		assertNotNull(result);
 		assertEquals("{}", result);
 

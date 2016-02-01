@@ -29,6 +29,8 @@ import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 
 import com.google.appengine.labs.repackaged.org.json.JSONException;
 import com.google.appengine.labs.repackaged.org.json.JSONObject;
@@ -433,6 +435,21 @@ public class AppleReporterHelper {
 		return obj;
 	}
 
+	/**
+	 * @param date
+	 * @return
+	 */
+	public static boolean isDateBeforeItunesReporterStarted(Date date) {
+		return new DateTime(2015, 11, 26, 0, 0).isAfter(new DateTime(date));
+	}
+
+	public static int getDaysSinceITunesReportLaunch() {
+		int days = Days.daysBetween(new DateTime(2015, 11, 26, 0, 0), new DateTime()).getDays();
+
+		// Apple only provides this data for up to a year
+		return days > 365 ? 365 : days;
+	}
+
 	@SuppressWarnings("serial")
 	public static class AppleReporterException extends Exception {
 		private final int errorCode;
@@ -515,4 +532,5 @@ public class AppleReporterHelper {
 			}
 		}
 	}
+
 }

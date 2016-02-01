@@ -23,7 +23,7 @@ public class DataAccountCollectorFactory {
 
 		if ("itc".equalsIgnoreCase(source.toLowerCase())) {
 			// itunes connect
-			collector = new ITunesReporterCollector();
+			collector = ITunesReporterCollector.getInstance();
 		} else if ("azn".equals(source.toLowerCase())) {
 			// amazon store
 		} else if ("gpl".equals(source.toLowerCase())) {

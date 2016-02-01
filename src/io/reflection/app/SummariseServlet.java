@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.helpers.AppleReporterHelper;
 import io.reflection.app.helpers.SplitDataHelper;
 import io.reflection.app.helpers.SqlQueryHelper;
 import io.reflection.app.logging.GaeLevel;
@@ -43,7 +44,7 @@ public class SummariseServlet extends HttpServlet {
 			}
 		}
 
-		try{
+		try {
 			final String dataAccountIdStr = req.getParameter("dataaccountid");
 			final String dateStr = req.getParameter("date");
 
@@ -72,14 +73,15 @@ public class SummariseServlet extends HttpServlet {
 
 				LOG.log(GaeLevel.DEBUG, String.format("Summarisation complete %s. Queuing up this summary for splitting sales data", success ? "successfully" : "without success"));
 
-				if (success) {
+				if (success && AppleReporterHelper.isDateBeforeItunesReporterStarted(date)) {
+					// only split if the sales date if before 26th November 2015. After that date, we are dealing with the reporter data so it is pre-split.
 					SplitDataHelper.INSTANCE.enqueueToGatherSplitData(dataAccountId, date);
 				}
 
 			} catch (NumberFormatException | DataAccessException e) {
 				LOG.log(Level.SEVERE, String.format("Unable to execute summarisation for dataAccountId: %s on %s", dataAccountId, date), e);
 			}
-		}finally{
+		} finally {
 			resp.setHeader("Cache-Control", "no-cache");
 		}
 	}

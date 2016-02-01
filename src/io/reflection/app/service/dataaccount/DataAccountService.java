@@ -31,6 +31,7 @@ import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
+import io.reflection.app.helpers.AppleReporterHelper;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
 import io.reflection.app.repackaged.scphopr.service.database.DatabaseServiceProvider;
@@ -300,7 +301,7 @@ final class DataAccountService implements IDataAccountService {
 		}
 
 		if (updatedDataAccount != null && collect) {
-			enqueue(updatedDataAccount, 30, false);
+			enqueue(updatedDataAccount, AppleReporterHelper.getDaysSinceITunesReportLaunch(), false);
 		}
 
 		return updatedDataAccount;

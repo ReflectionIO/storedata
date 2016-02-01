@@ -10,11 +10,12 @@ package io.reflection.app;
 import static io.reflection.app.objectify.PersistenceService.*;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,7 +32,7 @@ import com.google.appengine.api.taskqueue.TaskOptions.Method;
 import com.google.appengine.api.taskqueue.TransientFailureException;
 import com.googlecode.objectify.cmd.QueryKeys;
 
-import io.reflection.app.accountdatacollectors.ITunesConnectDownloadHelper;
+import io.reflection.app.accountdatacollectors.ITunesReporterCollector;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.apple.ItemPropertyLookupServlet;
@@ -45,6 +46,10 @@ import io.reflection.app.datatypes.shared.FeedFetchStatusType;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Rank;
 import io.reflection.app.helpers.ApiHelper;
+import io.reflection.app.helpers.AppleReporterHelper;
+import io.reflection.app.helpers.AppleReporterHelper.AppleReporterException;
+import io.reflection.app.helpers.AppleReporterHelper.DateType;
+import io.reflection.app.helpers.DataAccountPropertiesHelper;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.modellers.Modeller;
 import io.reflection.app.modellers.ModellerFactory;
@@ -64,12 +69,12 @@ import io.reflection.app.shared.util.PagerHelper;
 @SuppressWarnings("serial")
 public class CronServlet extends HttpServlet {
 
-	private static final Logger LOG = Logger.getLogger(CronServlet.class.getName());
+	private static final Logger	LOG															= Logger.getLogger(CronServlet.class.getName());
 
-	private static final int DELETE_COUNT = 1000;
+	private static final int		DELETE_COUNT										= 1000;
 
-	private static final String TEST_DATA_ACCOUNT_USERNAME_KEY = "gather.dataaccount.testaccount.username";
-	private static final String TEST_DATA_ACCOUNT_SOURCEID_KEY = "gather.dataaccount.testaccount.sourceid";
+	private static final String	TEST_DATA_ACCOUNT_USERNAME_KEY	= "gather.dataaccount.testaccount.username";
+	private static final String	TEST_DATA_ACCOUNT_SOURCEID_KEY	= "gather.dataaccount.testaccount.sourceid";
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -263,28 +268,14 @@ public class CronServlet extends HttpServlet {
 					/*
 					 * Check whether the sales data is available for collection for yesterday (or the day before if we are checking before 5pm)
 					 */
-					HttpURLConnection connection = null;
-
 					try {
-						connection = ITunesConnectDownloadHelper.connectToItunesConnect(ITunesConnectDownloadHelper.getPostData(dataAccountToTest.username,
-								dataAccountToTest.password, ITunesConnectDownloadHelper.getVendorId(dataAccountToTest.properties),
-								ITunesConnectDownloadHelper.DATE_FORMATTER.format(lastSalesFetchDate)));
-					} catch (final Exception e) {
-						if (LOG.isLoggable(Level.WARNING)) {
-							LOG.log(Level.WARNING, "An exception occured while trying to test a sales gather via ITunes Connect.", e);
-						}
-
-						resp.setHeader("Cache-Control", "no-cache");
-						return;
-					}
-
-					final String errorMessage = connection == null ? null : connection.getHeaderField("ERRORMSG");
-
-					// There is no report available to download, for the selected period
-					if (errorMessage != null && errorMessage.startsWith("Daily reports are available only for past 30 days")) {
-						if (LOG.isLoggable(GaeLevel.DEBUG)) {
-							LOG.log(GaeLevel.DEBUG,
-									"Ran a test check to see if sales data is available for a gather. ITunes returned an error stating that the report is not available as yet.");
+						SimpleEntry<String, String> accountAndVendorId = ITunesReporterCollector.getInstance().getPrimaryAccountAndVendorIdsFromProperties(dataAccountToTest);
+						AppleReporterHelper.getReport(dataAccountToTest.username, dataAccountToTest.password, accountAndVendorId.getKey(), accountAndVendorId.getValue(), DateType.DAILY, lastSalesFetchDate);
+					} catch (final AppleReporterException e) {
+						if (e.getErrorCode() == 210 || e.getErrorCode() == 211) {
+							LOG.warning("Sales report are not ready yet for " + lastSalesFetchDate);
+						} else {
+							LOG.log(Level.WARNING, "There was a problem trying to get test for sales report availability for " + lastSalesFetchDate, e);
 						}
 
 						resp.setHeader("Cache-Control", "no-cache");
@@ -295,34 +286,37 @@ public class CronServlet extends HttpServlet {
 						LOG.log(GaeLevel.DEBUG, "We have not collected sales data for this date and it is now available. Firing off all the sales gathers");
 					}
 
-					final Pager pager = new Pager();
-					pager.count = Long.valueOf(100);
+					// get all accounts
+					final Pager pager = PagerHelper.createInfinitePager();
+					final List<DataAccount> dataAccounts = dataAccountService.getActiveDataAccounts(pager);
 
-					// get the total number of accounts there are
-					pager.totalCount = dataAccountService.getDataAccountsCount();
+					HashMap<String, DataAccount> dataAccountsByVendorId = new HashMap<>();
 
-					// get data accounts 100 at a time
-					for (pager.start = Long.valueOf(0); pager.start.longValue() < pager.totalCount.longValue(); pager.start = Long.valueOf(pager.start
-							.longValue() + pager.count.longValue())) {
-						final List<DataAccount> dataAccounts = dataAccountService.getActiveDataAccounts(pager);
-
-						for (final DataAccount dataAccount : dataAccounts) {
-							// if the account has some errors then don't bother otherwise enqueue a message to do a gather for it
-
-							if (DataAccountFetchServiceProvider.provide().isFetchable(dataAccount) == Boolean.TRUE) {
-								dataAccountService.triggerDataAccountFetch(dataAccount);
-
-								// go through all the failed attempts and get them too (failed attempts = less than 30 days old)
-								final List<DataAccountFetch> failedDataAccountFetches = dataAccountFetchService.getFailedDataAccountFetches(dataAccount,
-										PagerHelper.createInfinitePager());
-
-								for (final DataAccountFetch dataAccountFetch : failedDataAccountFetches) {
-									dataAccountService.triggerSingleDateDataAccountFetch(dataAccount, dataAccountFetch.date);
-								}
-							}
+					for (final DataAccount dataAccount : dataAccounts) {
+						String vendorId = DataAccountPropertiesHelper.getPrimaryVendorId(dataAccount.properties);
+						if (vendorId == null) {
+							continue;
 						}
 
+						if (dataAccountsByVendorId.containsKey(vendorId)) {
+							continue;
+						}
+
+						dataAccountsByVendorId.put(vendorId, dataAccount);
 					}
+
+					for (String vendorId : dataAccountsByVendorId.keySet()) {
+						DataAccount dataAccount = dataAccountsByVendorId.get(vendorId);
+						dataAccountService.triggerDataAccountFetch(dataAccount);
+
+						// go through all the failed attempts and get them too (failed attempts = less than 30 days old)
+						final List<DataAccountFetch> failedDataAccountFetches = dataAccountFetchService.getFailedDataAccountFetches(dataAccount, PagerHelper.createInfinitePager());
+
+						for (final DataAccountFetch dataAccountFetch : failedDataAccountFetches) {
+							dataAccountService.triggerSingleDateDataAccountFetch(dataAccount, dataAccountFetch.date);
+						}
+					}
+
 				} catch (final DataAccessException daEx) {
 					throw new RuntimeException(daEx);
 				}
