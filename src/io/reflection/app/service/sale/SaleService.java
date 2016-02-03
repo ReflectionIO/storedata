@@ -10,6 +10,7 @@ package io.reflection.app.service.sale;
 
 import static com.spacehopperstudios.utility.StringUtils.*;
 
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -20,10 +21,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.spacehopperstudios.utility.StringUtils;
 
+import io.reflection.app.accountdatacollectors.DataAccountCollector;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.api.shared.datatypes.SortDirectionType;
@@ -31,10 +34,14 @@ import io.reflection.app.datatypes.shared.Category;
 import io.reflection.app.datatypes.shared.Country;
 import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataAccountFetch;
+import io.reflection.app.datatypes.shared.DataAccountFetchStatusType;
 import io.reflection.app.datatypes.shared.Item;
 import io.reflection.app.datatypes.shared.Sale;
 import io.reflection.app.datatypes.shared.SaleSummary;
+import io.reflection.app.helpers.AppleReporterHelper;
+import io.reflection.app.helpers.GoogleCloudClientHelper;
 import io.reflection.app.helpers.SaleSummaryHelper;
+import io.reflection.app.helpers.SalesReportHelper;
 import io.reflection.app.helpers.SqlQueryHelper;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.repackaged.scphopr.cloudsql.Connection;
@@ -909,10 +916,68 @@ final class SaleService implements ISaleService {
 	 */
 	@Override
 	public boolean summariseSalesForDataAccountOnDate(Long dataAccountId, Date date) throws DataAccessException {
-		ArrayList<Sale> sales = getSalesForDataAccountOnDate(dataAccountId, date);
+		List<Sale> sales = null;
 
-		LOG.log(GaeLevel.DEBUG, String.format("Loaded %s sales for summarisation", sales == null ? "NULL" : sales.size()));
+		if (AppleReporterHelper.isDateBeforeItunesReporterStarted(date)) {
+			sales = getSalesForDataAccountOnDate(dataAccountId, date);
 
+			LOG.log(GaeLevel.DEBUG, String.format("Loaded %s sales from DB for summarisation", sales == null ? "NULL" : sales.size()));
+		} else {
+			DataAccount dataAccount = DataAccountServiceProvider.provide().getDataAccount(dataAccountId);
+			if (dataAccount == null) {
+				LOG.log(Level.WARNING, String.format("Could not load the data account from db for ID: %s", dataAccountId));
+				return false;
+			}
+
+			DataAccountFetch dataAccountFetch = DataAccountFetchServiceProvider.provide().getDataAccountFetch(dataAccountId, date);
+			if (dataAccountFetch == null) {
+				LOG.log(Level.WARNING, String.format("Could not load the data account fetch from db for ID: %s on date %s", dataAccountId, date));
+				return false;
+			}
+
+			if (dataAccountFetch.status != DataAccountFetchStatusType.DataAccountFetchStatusTypeIngested && dataAccountFetch.status != DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered) {
+				LOG.log(Level.WARNING, String.format("Can't summarise uningested / ungathered data account fetch from db for ID: %s on date %s", dataAccountId, date));
+				return false;
+			}
+
+			String path = dataAccountFetch.data;
+			String bucketName = null;
+			String fileName = null;
+
+			String gatherBucketName = System.getProperty(DataAccountCollector.ACCOUNT_DATA_BUCKET_KEY);
+
+			if (path.contains(gatherBucketName)) {
+				bucketName = gatherBucketName;
+			}
+
+			if (path.startsWith("/gs/")) {
+				path = path.replace("/gs/", "");
+			}
+
+			// if (bucketName.contains("/")) {
+			// bucketName = bucketName.substring(0, bucketName.indexOf('/'));
+			// }
+
+			fileName = path.replace(bucketName, "");
+
+			if (fileName.startsWith("/")) {
+				fileName = fileName.substring(1);
+			}
+
+			LOG.log(Level.FINE, String.format("Gather bucket name: %s, Bucket Name: %s, original path: %s and final path: %s", gatherBucketName, bucketName, dataAccountFetch.data, path));
+			byte[] compressedReport;
+			try {
+				// the report is gzipped but we need it compressed.
+				compressedReport = GoogleCloudClientHelper.getFileFromGoogleCloudStorage(bucketName, fileName, false);
+			} catch (IOException e) {
+				LOG.log(Level.WARNING, "Could not fetch the ingested / gathered sales report for summarisation.", e);
+				return false;
+			}
+			sales = SalesReportHelper.convertReportToSales(compressedReport, dataAccount);
+			LOG.log(GaeLevel.DEBUG, String.format("Loaded %s sales from SalesReport for summarisation", sales == null ? "NULL" : sales.size()));
+		}
+
+		// we set the sales source as DB as the sales amounts come in pennies from both the sources.
 		return summariseSales(dataAccountId, sales, SaleSummaryHelper.SALE_SOURCE.DB);
 	}
 
