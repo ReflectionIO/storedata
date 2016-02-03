@@ -45,10 +45,17 @@ public class ItunesReporterCollectorTest {
 	private static final String	VENDORID		= "85037116";
 
 	// for the splits vs report test, you need access to a DB for the lookup items table to be able to summarise sales
-	private static final String	DBPassword	= "rm2332prqq";
+	// Live DB
+	// private static final String DBPassword = "";
+	// private static final String DBUsername = "mamin";
+	// private static final String DB = "rio";
+	// private static final String DBServer = "173.194.244.48";
+
+	// DEV DB
+	private static final String	DBPassword	= "";
 	private static final String	DBUsername	= "mamin";
 	private static final String	DB					= "rio";
-	private static final String	DBServer		= "173.194.244.48";
+	private static final String	DBServer		= "173.194.226.90";
 
 	@Before
 	public void setup() {
@@ -150,7 +157,7 @@ public class ItunesReporterCollectorTest {
 		DataAccount miniclip = new DataAccount();
 		miniclip.id = 264L;
 		miniclip.username = "finance@miniclip.com";
-		miniclip.password = "F1nance123";
+		miniclip.password = "";
 		String miniclipVendorId = "85011246";
 
 		String segaFootballManager2016Id = "997012040";
@@ -158,7 +165,7 @@ public class ItunesReporterCollectorTest {
 		DataAccount sega = new DataAccount();
 		sega.id = 332L;
 		sega.username = "reflections@sega.net";
-		sega.password = "pV3bG3s1ZMKR";
+		sega.password = "";
 		String segaVendorId = "80046332";
 
 		String EightballPoolItemId = "543186831";
@@ -179,14 +186,14 @@ public class ItunesReporterCollectorTest {
 		DataAccount miniclip = new DataAccount();
 		miniclip.id = 264L;
 		miniclip.username = "finance@miniclip.com";
-		miniclip.password = "F1nance123";
+		miniclip.password = "";
 		String miniclipVendorId = "85011246";
 		String EightballPoolItemId = "543186831";
 
 		DataAccount sega = new DataAccount();
 		sega.id = 332L;
 		sega.username = "reflections@sega.net";
-		sega.password = "pV3bG3s1ZMKR";
+		sega.password = "";
 		String segaVendorId = "80046332";
 		String segaFootballManager2016Id = "997012040";
 
@@ -276,11 +283,12 @@ public class ItunesReporterCollectorTest {
 	}
 
 	@Test
+	@Ignore
 	public void compareDbWithReporter() throws FileNotFoundException, DataAccessException, AppleReporterException, IOException {
 		DataAccount dataAccount1 = new DataAccount();
 		dataAccount1.id = 264L;
 		dataAccount1.username = "finance@miniclip.com";
-		dataAccount1.password = "F1nance123";
+		dataAccount1.password = "";
 
 		String vendorId1 = "85011246";
 		String itemId1 = "543186831";
@@ -289,7 +297,7 @@ public class ItunesReporterCollectorTest {
 		DataAccount dataAccount2 = new DataAccount();
 		dataAccount2.id = 332L;
 		dataAccount2.username = "reflections@sega.net";
-		dataAccount2.password = "pV3bG3s1ZMKR";
+		dataAccount2.password = "";
 		String vendorId2 = "80046332";
 		String itemId2 = "997012040";
 		String reportFileName2 = "/tmp/sega_reporter_20160101.csv";
@@ -297,7 +305,7 @@ public class ItunesReporterCollectorTest {
 		DataAccount dataAccount3 = new DataAccount();
 		dataAccount3.id = 391L;
 		dataAccount3.username = "reflection@ninjakiwi.com";
-		dataAccount3.password = "DundeeUnited83";
+		dataAccount3.password = "";
 		String vendorId3 = "85107048";
 		String itemId3 = "563718995";
 		String reportFileName3 = "/tmp/ninjakiwi_reporter_20160101.csv";
@@ -350,4 +358,15 @@ public class ItunesReporterCollectorTest {
 		IOUtils.write(reportBinary, new FileOutputStream(outputFile));
 		System.out.println("Report written to: " + outputFile.getAbsolutePath());
 	}
+	//
+	// @Test
+	// public void test() throws FileNotFoundException, IOException, DataAccessException {
+	// byte[] compressedReport = IOUtils.toByteArray(new FileInputStream("~/temp/accounts-389-S_D_A_308588_V_850371162016-01-08.txt.gz"));
+	//
+	// DataAccount dataAccount = new DataAccount();
+	// dataAccount.id(389L);
+	//
+	// List<Sale> sales = SalesReportHelper.convertReportToSales(compressedReport, dataAccount);
+	// SaleServiceProvider.provide().summariseSales(389L, sales, SALE_SOURCE.DB);
+	// }
 }
