@@ -150,7 +150,12 @@ public class SaleSummaryHelper {
 		Integer itemId = Integer.parseInt(sale.item.internalId);
 		LookupItem mainLookupItemForSummary = null;
 
-		if (sale.typeIdentifier.startsWith("1") || sale.typeIdentifier.startsWith("7")) {
+		// 1 = free / paid app download / purchase
+		// 3 = Redownload
+		// 7 = update
+		// F = Mac app (1 = free/paid, 3 = redownload, 7 = update, I1 = IAP. EG F1, F3, F7, FI1)
+
+		if (sale.typeIdentifier.startsWith("1") || sale.typeIdentifier.startsWith("7") || sale.typeIdentifier.startsWith("3") || sale.typeIdentifier.startsWith("F")) {
 			// this is a main item download / purchase / update
 
 			HashMap<String, LookupItem> lookupItemCountriesMap = itemByCountryMap.get(itemId);
@@ -193,8 +198,14 @@ public class SaleSummaryHelper {
 			}
 
 			// END IF LOOKUP FOR MAIN ITEM
-		} else {
+		} else if (sale.typeIdentifier.startsWith("IA")) {
 			// this is an IAP
+
+			// IA1 = iOS IAP
+			// IA9 = Subscription purchace
+			// IAC = Free subscription
+			// IAY = iOS Autorenewable Subscription
+			// *-M = Mac app (iap or subscription EG IAC-M, IAY-M, IA1-M, IA9-M)
 
 			HashMap<String, LookupItem> iapLookupItemCountriesMap = itemByCountryMap.get(itemId);
 			LookupItem iapLookupItem = null;
@@ -572,7 +583,8 @@ public class SaleSummaryHelper {
 				+ " iphone_downloads, ipad_downloads, universal_downloads, total_downloads, "
 				+ " iphone_updates, ipad_updates, universal_updates, total_updates, "
 				+ " total_download_and_updates, "
-				+ "free_subs_count, paid_subs_count, total_subs_count, subs_revenue) "
+				+ " free_subs_count, paid_subs_count, total_subs_count, subs_revenue, "
+				+ " iphone_iap_revenue, ipad_iap_revenue ) "
 				+ "VALUES("
 				+ "  ?, ?, ?, ?, ?, ?, ?"
 				+ ", ?, ?, ?, ?"
@@ -581,13 +593,15 @@ public class SaleSummaryHelper {
 				+ ", ?, ?, ?, ?"
 				+ ", ?"
 				+ ", ?, ?, ?, ? "
+				+ ", ?, ? "
 				+ ") ON DUPLICATE KEY UPDATE currency=?, price=?, "
 				+ " iphone_app_revenue=?, ipad_app_revenue=?, universal_app_revenue=?, total_app_revenue=?, "
 				+ " iap_revenue=?, total_revenue=?, "
 				+ " iphone_downloads=?, ipad_downloads=?, universal_downloads=?, total_downloads=?, "
 				+ " iphone_updates=?, ipad_updates=?, universal_updates=?, total_updates=?, "
 				+ " total_download_and_updates=?, "
-				+ "free_subs_count=?, paid_subs_count=?, total_subs_count=?, subs_revenue=?";
+				+ " free_subs_count=?, paid_subs_count=?, total_subs_count=?, subs_revenue=?, "
+				+ " iphone_iap_revenue=?, ipad_iap_revenue=?";
 
 		LOG.log(GaeLevel.DEBUG, String.format("Upserting sale summaries"));
 		try {
@@ -636,6 +650,8 @@ public class SaleSummaryHelper {
 					pstat.setObject(paramCount++, summary.paid_subs_count);
 					pstat.setObject(paramCount++, totalSubsCount);
 					pstat.setObject(paramCount++, summary.subs_revenue);
+					pstat.setObject(paramCount++, summary.iphone_iap_revenue);
+					pstat.setObject(paramCount++, summary.ipad_iap_revenue);
 
 					// for update
 					pstat.setObject(paramCount++, summary.currency);
@@ -659,6 +675,8 @@ public class SaleSummaryHelper {
 					pstat.setObject(paramCount++, summary.paid_subs_count);
 					pstat.setObject(paramCount++, totalSubsCount);
 					pstat.setObject(paramCount++, summary.subs_revenue);
+					pstat.setObject(paramCount++, summary.iphone_iap_revenue);
+					pstat.setObject(paramCount++, summary.ipad_iap_revenue);
 
 					pstat.addBatch();
 					totalUpsertCount++;
