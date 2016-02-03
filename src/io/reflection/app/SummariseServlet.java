@@ -31,7 +31,8 @@ public class SummariseServlet extends HttpServlet {
 		boolean isNotQueue = false;
 
 		// bail out if we have not been called by app engine summarise queue
-		if (isNotQueue = appEngineQueue == null || !"summarise".toLowerCase().equals(appEngineQueue.toLowerCase())) {
+		if (isNotQueue = appEngineQueue == null || (!"deferred".toLowerCase().equals(appEngineQueue.toLowerCase())
+				&& !"summarise".toLowerCase().equals(appEngineQueue.toLowerCase()))) {
 			resp.setStatus(401);
 			resp.getOutputStream().print("failure");
 			LOG.warning("Attempt to run script directly, this is not permitted");
@@ -71,9 +72,10 @@ public class SummariseServlet extends HttpServlet {
 
 				boolean success = SaleServiceProvider.provide().summariseSalesForDataAccountOnDate(dataAccountId, date);
 
-				LOG.log(GaeLevel.DEBUG, String.format("Summarisation complete %s. Queuing up this summary for splitting sales data", success ? "successfully" : "without success"));
+				LOG.log(GaeLevel.DEBUG, String.format("Summarisation complete %s.", success ? "successfully" : "without success"));
 
 				if (success && AppleReporterHelper.isDateBeforeItunesReporterStarted(date)) {
+					LOG.log(GaeLevel.DEBUG, "Queuing up this summary for splitting sales data");
 					// only split if the sales date if before 26th November 2015. After that date, we are dealing with the reporter data so it is pre-split.
 					SplitDataHelper.INSTANCE.enqueueToGatherSplitData(dataAccountId, date);
 				}
