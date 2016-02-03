@@ -100,7 +100,10 @@ public class ITunesReporterCollector implements DataAccountCollector {
 				String fileName = "S_D_A_" + accountId + "_V_" + vendorId + SqlQueryHelper.getSqlDateFormat().format(date) + ".txt.gz";
 
 				try {
-					String gcsPath = GoogleCloudClientHelper.uploadFileToGoogleCloudStorage(System.getProperty(ACCOUNT_DATA_BUCKET_KEY), dataAccount.id.toString() + "/" + fileName, gzippedReportData);
+					String bucketName = System.getProperty(ACCOUNT_DATA_BUCKET_KEY);
+					String bucketPath = dataAccount.id.toString() + "/" + fileName;
+
+					String gcsPath = GoogleCloudClientHelper.uploadFileToGoogleCloudStorage(bucketName, bucketPath, gzippedReportData);
 					dataAccountFetch.status(DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered);
 					dataAccountFetch.data(gcsPath);
 					DataAccountFetchServiceProvider.provide().updateDataAccountFetch(dataAccountFetch);
