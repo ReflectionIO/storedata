@@ -31,8 +31,8 @@ import io.reflection.app.datatypes.shared.Sale;
 public class SalesReportHelper {
 	private transient static final Logger	LOG														= Logger.getLogger(SalesReportHelper.class.getName());
 
-	private static final int							PROVIDER_INDEX								= 0;																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																							// seems
-	private static final int							PROVIDER_COUNTRY_INDEX				= 1;																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																							// seems
+	private static final int							PROVIDER_INDEX								= 0;																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																									// seems
+	private static final int							PROVIDER_COUNTRY_INDEX				= 1;																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																									// seems
 	private static final int							SKU_INDEX											= 2;
 	private static final int							DEVELOPER_INDEX								= 3;
 	private static final int							TITLE_INDEX										= 4;
@@ -83,6 +83,10 @@ public class SalesReportHelper {
 			sale.account = dataAccount;
 
 			sale.sku = split[SKU_INDEX];
+			if (sale.sku != null) {
+				sale.sku(sale.sku.trim());
+			}
+
 			sale.developer = split[DEVELOPER_INDEX];
 			sale.title = split[TITLE_INDEX];
 			sale.version = split[VERSION_INDEX];
@@ -122,6 +126,11 @@ public class SalesReportHelper {
 			sale.customerPrice = customerPrice;
 			sale.promoCode = split[PROMO_CODE_INDEX];
 			sale.parentIdentifier = split[PARENT_IDENTIFIER_INDEX];
+
+			if (sale.parentIdentifier != null) {
+				sale.parentIdentifier(sale.parentIdentifier.trim());
+			}
+
 			sale.subscription = split[SUBSCRIPTION_INDEX];
 			sale.period = split[PERIOD_INDEX];
 			sale.category = split[CATEGORY_INDEX];
