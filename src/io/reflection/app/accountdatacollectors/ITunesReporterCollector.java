@@ -106,7 +106,7 @@ public class ITunesReporterCollector implements DataAccountCollector {
 					String gcsPath = GoogleCloudClientHelper.uploadFileToGoogleCloudStorage(bucketName, bucketPath, gzippedReportData);
 					dataAccountFetch.status(DataAccountFetchStatusType.DataAccountFetchStatusTypeGathered);
 					dataAccountFetch.data(gcsPath);
-					DataAccountFetchServiceProvider.provide().updateDataAccountFetch(dataAccountFetch);
+					dataAccountFetch = DataAccountFetchServiceProvider.provide().updateDataAccountFetch(dataAccountFetch);
 
 					DataAccountFetchServiceProvider.provide().triggerDataAccountFetchIngest(dataAccountFetch);
 
@@ -129,7 +129,7 @@ public class ITunesReporterCollector implements DataAccountCollector {
 
 					dataAccountFetch.status(DataAccountFetchStatusType.DataAccountFetchStatusTypeEmpty);
 					dataAccountFetch.data(e.getErrorCode() + ":" + e.getMessage());
-					DataAccountFetchServiceProvider.provide().updateDataAccountFetch(dataAccountFetch);
+					dataAccountFetch = DataAccountFetchServiceProvider.provide().updateDataAccountFetch(dataAccountFetch);
 
 					// ================== IF THERE ARE NO SALES AND HENCE AN EMPTY REPORT, WE EXIT THIS METHOD HERE ========================== //
 					return true;
@@ -169,7 +169,7 @@ public class ITunesReporterCollector implements DataAccountCollector {
 				// ================== LOG ALL REASONS OF FAILURE HERE ========================== //
 				dataAccountFetch.status(DataAccountFetchStatusType.DataAccountFetchStatusTypeError);
 				dataAccountFetch.data(e.getErrorCode() + ":" + e.getMessage());
-				DataAccountFetchServiceProvider.provide().updateDataAccountFetch(dataAccountFetch);
+				dataAccountFetch = DataAccountFetchServiceProvider.provide().updateDataAccountFetch(dataAccountFetch);
 			}
 		}
 

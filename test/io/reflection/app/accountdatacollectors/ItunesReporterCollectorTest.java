@@ -354,10 +354,13 @@ public class ItunesReporterCollectorTest {
 
 	private void writeReportToFile(DataAccount dataAccount, String vendorId, Date date, File outputFile) throws FileNotFoundException, IOException, AppleReporterException {
 		String accountId = AppleReporterHelper.getAccountIdForVendorId(dataAccount.username, dataAccount.password, vendorId);
+
 		byte[] reportBinary = AppleReporterHelper.getReport(dataAccount.username, dataAccount.password, accountId, vendorId, DateType.DAILY, date);
+
 		IOUtils.write(reportBinary, new FileOutputStream(outputFile));
 		System.out.println("Report written to: " + outputFile.getAbsolutePath());
 	}
+
 	//
 	// @Test
 	// public void test() throws FileNotFoundException, IOException, DataAccessException {

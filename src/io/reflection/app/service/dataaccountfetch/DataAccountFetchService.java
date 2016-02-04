@@ -38,10 +38,10 @@ import io.reflection.app.service.ServiceType;
 
 final class DataAccountFetchService implements IDataAccountFetchService {
 
-	private static final Logger LOG = Logger.getLogger(DataAccountFetchService.class.getName());
+	private static final Logger	LOG					= Logger.getLogger(DataAccountFetchService.class.getName());
 
 	// a marker to help deleted rows that are added by developers
-	private static final String DEV_PREFIX = "__dev__";
+	private static final String	DEV_PREFIX	= "__dev__";
 
 	@Override
 	public String getName() {
@@ -105,8 +105,9 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 
 		final String addDataAccountFetchQuery = String.format(
 				"INSERT INTO `dataaccountfetch` (`data`,`date`,`status`,`linkedaccountid`) VALUES ('%s',FROM_UNIXTIME(%d),'%s',%d)", SystemProperty.environment
-				.value() == SystemProperty.Environment.Value.Development ? DEV_PREFIX + addslashes(dataAccountFetch.data)
-				: addslashes(dataAccountFetch.data), dataAccountFetch.date.getTime() / 1000, dataAccountFetch.status.toString(),
+						.value() == SystemProperty.Environment.Value.Development ? DEV_PREFIX + addslashes(dataAccountFetch.data)
+								: addslashes(dataAccountFetch.data),
+				dataAccountFetch.date.getTime() / 1000, dataAccountFetch.status.toString(),
 				dataAccountFetch.linkedAccount.id.longValue());
 
 		final Connection dataAccountFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccountFetch.toString());
@@ -134,6 +135,10 @@ final class DataAccountFetchService implements IDataAccountFetchService {
 
 	@Override
 	public DataAccountFetch updateDataAccountFetch(DataAccountFetch dataAccountFetch) throws DataAccessException {
+		if (dataAccountFetch == null) return null;
+
+		if (dataAccountFetch.id == null) return addDataAccountFetch(dataAccountFetch);
+
 		DataAccountFetch updatedDataAccountFetch = null;
 
 		final String updateDataAccountFetchQuery = String.format(
