@@ -708,7 +708,9 @@ public class HomePage extends Page {
 	}
 
 	public static native void nativeAnimateSvg()/*-{
-
+		
+		$wnd.$("body").append($wnd.$("<script>").attr("src", "js/polyfills/path-data-polyfill.js"));
+		
 		var paths = [];
 		$wnd
 				.$('.js-rchart-graph-stroke')
@@ -717,17 +719,19 @@ public class HomePage extends Page {
 							var initialCoordinates = [];
 							var thisId = $wnd.$(this).attr("id");
 							var el = $wnd.Snap('#' + thisId);
-							var numberOfItems = el.node.pathSegList.numberOfItems;
-							for (var x = 0; x < numberOfItems; x++) {
+							var pathList = el.node.getPathData();
+							var flatPath = "";
+							for (var x = 0; x < pathList.length; x++) {
 								initialCoordinates
 										.push({
-											pathSegTypeAsLetter : el.node.pathSegList[x].pathSegTypeAsLetter,
-											x : el.node.pathSegList[x].x,
-											y : el.node.pathSegList[x].y
+											pathSegTypeAsLetter : pathList[x].type,
+											x : pathList[x].values[0],
+											y : pathList[x].values[1]
 										})
-								el.node.pathSegList[x].y = 220;
+								flatPath += pathList[x].type + " " + pathList[x].values[0] + " 220 ";
 							}
-
+							
+							el.attr("d", flatPath);
 							paths.push(initialCoordinates);
 						});
 
@@ -742,15 +746,15 @@ public class HomePage extends Page {
 
 								var thisId = $wnd.$(this).attr("id");
 								var el = $wnd.Snap('#' + thisId);
-								var numberOfItems = el.node.pathSegList.numberOfItems;
+								var pathList = el.node.getPathData();
 								var thisPathIndex = $wnd.$(this).data(
 										"path-index");
 								setPoint(0);
 
 								function setPoint(pointIndex) {
 									var newPath = "";
-									if (pointIndex < numberOfItems) {
-										for (var x = 0; x < numberOfItems; x++) {
+									if (pointIndex < pathList.length) {
+										for (var x = 0; x < pathList.length; x++) {
 											if (x <= pointIndex) {
 												newPath += paths[thisPathIndex][x].pathSegTypeAsLetter
 														+ " "
