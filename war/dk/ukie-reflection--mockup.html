@@ -63,55 +63,57 @@
 	</script>
 </head>
 <body id="body" ng-controller="DataController as dataList">
-	<header class="reflection-header">
-		<div class="reflection-header__logo-container">
-		<img src="images-ukie/Reflection_UKIE_Logo@2x.png" alt="UKIE logo" class="logo-reflection-ukie" />
-		</div>
-		<div class="reflection-header__heading-container">
-			<div>
-				<div class="heading-container__headings">
-					<h1>{{ dataList.info.title }}</h1>
-					<h2>{{ dataList.info.date }}</h2>
+	<a href="http://www.reflection.io" target="_blank" class="container-link">
+		<header class="reflection-header">
+			<div class="reflection-header__logo-container">
+			<img src="images-ukie/Reflection_UKIE_Logo@2x.png" alt="UKIE logo" class="logo-reflection-ukie" />
+			</div>
+			<div class="reflection-header__heading-container">
+				<div>
+					<div class="heading-container__headings">
+						<h1>{{ dataList.info.title }}</h1>
+						<h2>{{ dataList.info.date }}</h2>
+					</div>
 				</div>
 			</div>
-		</div>
-	</header>
-	<article class="reflection-article">
-		<table class="reflection-table-data">
-			<thead>
-				<tr>
-					<th class="table-data__this-week">Last Period</th>
-					<th class="table-data__this-period">This Period</th>
-					<th class="table-data__change">Change</th>
-					<th class="table-data__app-title">Title</th>
-					<th class="table-data__app-developer">Developer</th> 					
-				</tr>
-			</thead>
-			<colgroup>
-				<col style="width: 11%;">
-				<col style="width: 11%;">
-				<col style="width: 10%;">
-				<col style="width: 37%;">
-				<col style="width: 30%;">
-			</colgroup>
-			<tbody>
-				<tr ng-repeat="dataItem in dataList.data">
-					<td class="table-data__this-week"><span class="{{dataList.getLastWeekCSSClass($index)}}">{{dataList.getLastWeek($index)}}</span></td>
-					<td class="table-data__this-period">
-						{{dataItem.Rank}}
-					</td>
-					<td class="table-data__change"><span class={{dataList.getChangeCSSClass($index)}}>{{dataList.getChange($index)}}</span></td>
-					<td class="table-data__app-title">
-						<img src="{{dataItem.icon_url}}" alt="App logo" />
-						<div class="title-container">
-							<span>{{dataItem.Name}}</span>
-						</div>
-					</td>
-					<td class="table-data__app-developer"><div><span>{{dataItem.Developer}}</span></div></td>
-				</tr>
-			</tbody>
-		</table>
-	</article>
+		</header>
+		<article class="reflection-article">
+			<table class="reflection-table-data">
+				<thead>
+					<tr>
+						<th class="table-data__this-week">Last Period</th>
+						<th class="table-data__this-period">This Period</th>
+						<th class="table-data__change">Change</th>
+						<th class="table-data__app-title">Title</th>
+						<th class="table-data__app-developer">Developer</th> 					
+					</tr>
+				</thead>
+				<colgroup>
+					<col style="width: 11%;">
+					<col style="width: 11%;">
+					<col style="width: 10%;">
+					<col style="width: 37%;">
+					<col style="width: 30%;">
+				</colgroup>
+				<tbody>
+					<tr ng-repeat="dataItem in dataList.data">
+						<td class="table-data__this-week"><span class="{{dataList.getLastWeekCSSClass($index)}}">{{dataList.getLastWeek($index)}}</span></td>
+						<td class="table-data__this-period">
+							{{dataItem.Rank}}
+						</td>
+						<td class="table-data__change"><span class={{dataList.getChangeCSSClass($index)}}>{{dataList.getChange($index)}}</span></td>
+						<td class="table-data__app-title">
+							<img src="{{dataItem.icon_url}}" alt="App logo" />
+							<div class="title-container">
+								<span>{{dataItem.Name}}</span>
+							</div>
+						</td>
+						<td class="table-data__app-developer"><div><span>{{dataItem.Developer}}</span></div></td>
+					</tr>
+				</tbody>
+			</table>
+		</article>
+	</a>
 
 	<script>
 		var is_chrome = navigator.userAgent.indexOf('Chrome') > -1;

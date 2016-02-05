@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="utf-8" />
+	<title>Reflection Design Kit - Data Visualisation, App Release Comparison</title>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link rel="stylesheet" media="screen, projection" type="text/css" href="designkit.css" />
+	<!--[if (lt IE 9)]>
+		<script src="js/vendor/html5shiv.min.js"></script>
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main-ie8.css" />
+	<![endif]-->
+ 	<!--[if !lt IE 9]><!-->
+		<script src="js/vendor/picturefill.2.3.1.min.js" async></script>
+	<!-- <![endif]-->
+	<link rel="stylesheet" href="js/vendor/jquery.mCustomScrollbar.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
+<script src="js/vendor/snap.svg.js"></script>
+<script>
+  WebFont.load({
+    google: {
+      families: ['Open Sans:400,600,700,400italic,600italic', 'Source Sans Pro:400,600,700', 'Lato:400,700,400italic']
+    }
+  });
+</script>
+<link rel="stylesheet" href="http://extra.amcharts.com/support/css3/ameffects.css">
+<style>
+  .amcharts-graph-stroke {
+    stroke-width: 2 !important;
+  }
+  .amcharts-graph-fill {
+    pointer-events: none;    
+  }
+  #container-app-overlay .amcharts-graph-fill,
+  #container-countries-categories .amcharts-graph-fill {
+    fill: url(#sample);
+  }
+  #container-app-overlay .amcharts-graph-bullet,
+  #container-revenue .amcharts-graph-bullet,
+  #container-revenue-split .amcharts-graph-bullet {
+    display: none;
+  }
+  #container-revenue .amcharts-graph-fill {
+    fill: url(#gradientfill);
+  }
+  .amcharts-graph-line {
+    -webkit-animation: am-pulsate-line 1s linear infinite;
+    animation: am-pulsate-line 1s linear infinite;
+  }
+
+  #chartdiv {
+    width : 100%;
+    height  : 700px;
+  } 
+</style>
+ <script src="js/vendor/modernizr.2.8.3.custom.min.js"></script></head>
+<body>
+	<!--[if (lt IE 9)]>
+      <div class="window-warning">
+  			<p>Uh oh... Reflection doesn't work in this browser. &nbsp; &nbsp;<a href="http://outdatedbrowser.com/en" target="_blank">Download a compatible browser</a></p>
+  		</div>
+  <![endif]-->
+  <header id="js-component-import--global-header" class="global-header"></header>
+
+  <div id="js-component-import--panel-left" class="panel-left js-panel-left js-custom-scrollbar" data-mcs-theme="minimal-dark"></div>
+
+	<div class="l-page-container">
+
+		<div id="main" class="l-main" role="main">
+			
+			<div id="js-component-import--design-kit-banner" class="banner banner--component" style="margin-bottom: 20px;"></div>
+      <div class="grid-container">
+        <div id="chartdiv"></div>
+      </div>
+    </div>
+
+	<div id="js-component-import--account-container" class="panel-right-container js-account-container"></div>
+	<div id="js-component-import--search-container" class="panel-right-container js-search-container"></div>
+	
+ 	<script src="js/vendor/jquery-1.11.1.min.js"></script>
+ 	<script src="js/vendor/jquery-ui.custom.min.js"></script>
+ 	<script src="js/vendor/handlebars-v2.0.0.js"></script>
+ 	<script src="js/templates/templates.js"></script>
+
+  <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+  <script src="https://www.amcharts.com/lib/3/serial.js"></script>
+  <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+  <script src="https://www.amcharts.com/lib/3/amstock.js"></script>
+
+
+	 
+	<!--[if IE 9]>
+		<script src="js/vendor/jquery.mCustomScrollbar.concat.min.js"></script>
+	<![endif]-->
+
+	<div id="js-appendScriptsContainer"></div>
+
+	<script src="js/designkit-global-templates.js"></script>
+  <script src="js/application.js"></script>
+  <script src="js/designkit-app.js"></script>
+  <script src="js/json/data-vis-release.js"></script>
+
+  <script>
+      console.log(chartData);
+      new DataVisAppReleasesPage();
+
+      var chart = AmCharts.makeChart( "chartdiv", {
+        type: "stock",
+        "theme": "light",
+        "addClassNames": true,
+        dataSets: [ {
+          title: chartData[4].title,
+          color: "#b0de09",
+          fieldMappings: [ {
+            fromField: "value",
+            toField: "value"
+          }],
+          dataProvider: chartData[4].data,
+          categoryField: "date",
+          // EVENTS
+          // stockEvents: [ {
+          //   date: new Date( 2016, 0, 2 ),
+          //   type: "flag",
+          //   backgroundColor: "#85CDE6",
+          //   graph: "g1",
+          //   text: "App Launch",
+          //   showOnAxis: true,
+          //   description: "App release date"
+          // }],
+        }, {
+          title: chartData[0].title,
+          compared: true,
+          fieldMappings: [ {
+            fromField: "value",
+            toField: "value"
+          }],
+          dataProvider: chartData[0].data,
+          categoryField: "date"
+        }, {
+          title: chartData[1].title,
+          compared: true,
+          fieldMappings: [ {
+            fromField: "value",
+            toField: "value"
+          }],
+          dataProvider: chartData[1].data,
+          categoryField: "date"
+        }, {
+          title: chartData[2].title,
+          compared: true,
+          fieldMappings: [ {
+            fromField: "value",
+            toField: "value"
+          }],
+          dataProvider: chartData[2].data,
+          categoryField: "date"
+        }, {
+          title: chartData[3].title,
+          compared: true,
+          fieldMappings: [ {
+            fromField: "value",
+            toField: "value"
+          }],
+          dataProvider: chartData[3].data,
+          categoryField: "date"
+        }, {
+          title: chartData[5].title,
+          compared: true,
+          fieldMappings: [ {
+            fromField: "value",
+            toField: "value"
+          }],
+          dataProvider: chartData[5].data,
+          categoryField: "date"
+        }, {
+          title: chartData[6].title,
+          compared: true,
+          fieldMappings: [ {
+            fromField: "value",
+            toField: "value"
+          }],
+          dataProvider: chartData[6].data,
+          categoryField: "date"
+        }, {
+          title: chartData[7].title,
+          compared: true,
+          fieldMappings: [ {
+            fromField: "value",
+            toField: "value"
+          }],
+          dataProvider: chartData[7].data,
+          categoryField: "date"
+        }, {
+          title: chartData[8].title,
+          compared: true,
+          fieldMappings: [ {
+            fromField: "value",
+            toField: "value"
+          }],
+          dataProvider: chartData[9].data,
+          categoryField: "date"
+        }, {
+          title: chartData[9].title,
+          compared: true,
+          fieldMappings: [ {
+            fromField: "value",
+            toField: "value"
+          }],
+          dataProvider: chartData[9].data,
+          categoryField: "date"
+        }],
+
+        panels: [ {
+          sequencedAnimation: false,
+          startDuration: .3,
+          startEffect: "easeOutSine",
+          recalculateToPercents: "never",
+          showCategoryAxis : true,
+          title: "Downloads",
+          percentHeight: 70,
+
+          stockGraphs: [ {
+            id: "g1",
+            valueField: "value",
+            comparable: true,
+            compareField : "value",
+            balloonText: "[[title]]:<b>[[value]]</b>",
+            compareGraphBalloonText: "[[title]]:<b>[[value]]</b>",
+            connect: false, // connect missing data points
+            // lineThickness: 2,
+            // stackable: true
+            periodValue: "Close", // can be set to average also
+            // pointPosition: "Start",
+            // precision: 1,
+            // recalculateValue: "Open"
+            showEventsOnComparedGraphs: true
+          }],
+
+          stockLegend: {
+            align: "center",
+            position: "bottom",
+            switchType: "v",
+            useMarkerColorForLabels: true
+          }
+        } ],
+
+        chartScrollbarSettings: {
+          graph: "g1",
+          position: "bottom",
+        },
+
+        chartCursorSettings: {
+          // categoryBalloonFunction: function(v) {
+          //   var thisDate = new Date(v);
+          //   var startDate = new Date("January 01, 2016 12:00:00");
+          //   var millisecondsPerDay = 24 * 60 * 60 * 1000;
+          //   var numberOfDays = Math.ceil((thisDate - startDate) / millisecondsPerDay, 10) + 1;
+          //   if(numberOfDays < 1) {
+          //     numberOfDays = 0
+          //   }
+          //   return numberOfDays;
+          // },
+          valueBalloonsEnabled: true,
+          graphBulletSize: 1,
+          valueLineBalloonEnabled: true,
+          valueLineEnabled: true,
+          valueLineAlpha: 0.5
+        },
+
+        categoryAxesSettings: {
+          markPeriodChange: true,
+          autoGridCount: true,
+          startOnAxis: true,
+          gridPosition: "start",
+          // dateFormats: [{
+          //     period: "DD",
+          //     format: "DD"
+          // }, {
+          //     period: "WW",
+          //     format: "WW"
+          // }, {
+          //     period: "MM",
+          //     format: "MM",
+          // }, {
+          //     period: "YYYY",
+          //     format: ""
+          // }],
+          position: "top",
+          parseDates: true,
+          equalSpacing: true,
+          gridCount: 50
+        },
+
+        periodSelector: {
+          inputFieldsEnabled: false,
+          periods: [ {
+            period: "DD",
+            count: 10,
+            label: "7 days"
+          }, {
+            period: "MM",
+            count: 1,
+            label: "1 month"
+          }, {
+            period: "MM",
+            count: 3,
+            label: "3 months",
+            selected: true
+          }, {
+            period: "MAX",
+            label: "MAX"
+          }, ],
+          position: "top",
+          selectFromStart: true
+        },
+
+        panelsSettings: {
+          usePrefixes: true
+        },
+        "export": {
+          "enabled": true
+        }
+      });
+
+      // =========================
+      // SERIAL CHART WITH ZOOMABLE
+
+      // var chartData = generateChartData();
+      // var chart = AmCharts.makeChart("chartdiv", {
+      //     "type": "serial",
+      //     "theme": "light",
+      //     "marginRight": 80,
+      //     "autoMarginOffset": 20,
+      //     "marginTop": 7,
+      //     "dataProvider": chartData,
+      //     "valueAxes": [{
+      //         "axisAlpha": 0.2,
+      //         "dashLength": 1,
+      //         "position": "left"
+      //     }],
+      //     "mouseWheelZoomEnabled": true,
+      //     "graphs": [{
+      //         "id": "g1",
+      //         "balloonText": "[[value]]",
+      //         "bullet": "round",
+      //         "bulletBorderAlpha": 1,
+      //         "bulletColor": "#ffffff",
+      //         "hideBulletsCount": 50,
+      //         "title": "red line",
+      //         "valueField": "visits",
+      //         "useLineColorForBulletBorder": true,
+      //         "balloon":{
+      //             // "drop":true
+      //         }
+      //     }],
+      //     "chartScrollbar": {
+      //         "autoGridCount": true,
+      //         "graph": "g1",
+      //         "scrollbarHeight": 40
+      //     },
+      //     "chartCursor": {
+      //        // "limitToGraph":"g1"
+      //     },
+      //     "categoryField": "date",
+      //     "categoryAxis": {
+      //         "parseDates": false,
+      //         "axisColor": "#DADADA",
+      //         "dashLength": 1,
+      //         "minorGridEnabled": true
+      //     },
+          // "categoryAxis": {
+          //     "dateFormats": [{
+          //         "period": "DD",
+          //         "format": "DD"
+          //     }, {
+          //         "period": "WW",
+          //         "format": "WW"
+          //     }, {
+          //         "period": "MM",
+          //         "format": "MM"
+          //     }, {
+          //         "period": "YYYY",
+          //         "format": ""
+          //     }],
+          //     "parseDates": true,
+          //     "autoGridCount": false,
+          //     "axisColor": "#555555",
+          //     "gridAlpha": 0,
+          //     "gridCount": 50,
+          //     "minorGridEnabled": true
+          // },
+          
+      //     "export": {
+      //         "enabled": true
+      //     }
+      // });
+
+      // chart.addListener("rendered", zoomChart);
+      // zoomChart();
+
+      // // this method is called when chart is first inited as we listen for "rendered" event
+      // function zoomChart() {
+      //     // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
+      //     chart.zoomToIndexes(chartData.length - 40, chartData.length - 1);
+      // }
+
+
+      // // generate some random data, quite different range
+      // function generateChartData() {
+      //     var chartData = [];
+      //     var firstDate = new Date("January 01, 2016 12:00:00");
+
+      //     for (var i = 0; i < 180; i++) {
+      //         // we create date objects here. In your data, you can have date strings
+      //         // and then set format of your dates using chart.dataDateFormat property,
+      //         // however when possible, use date objects, as this will speed up chart rendering.
+      //         var newDate = new Date(firstDate);
+      //         newDate.setDate(newDate.getDate() + i);
+
+      //         var visits = Math.round(Math.random() * 10000);
+
+      //         chartData.push({
+      //             date: newDate,
+      //             visits: visits
+      //         });
+      //     }
+      //     return chartData;
+      // }
+
+  </script>
+</body>

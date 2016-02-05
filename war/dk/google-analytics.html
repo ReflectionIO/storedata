@@ -1,0 +1,1534 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="utf-8" />
+	<title>Reflection, App with Google Analytics API calls</title>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">	
+	<!--[if (gt IE 9)|(IEMobile)|(!IE)]><!-->
+		<link rel="stylesheet" type="text/css" href="reflection-main.css" />
+	<!--<![endif]-->
+	<!--[if IE 9]>
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="ie9-one.css" />
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="ie9-two.css" />
+	<![endif]-->	
+	<!--[if (lt IE 9)]>
+		<script src="js/vendor/html5shiv.min.js"></script>
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main-ie8.css" />
+	<![endif]-->
+ 	<!--[if !lt IE 9]><!--> 
+		<script src="js/vendor/picturefill.2.3.1.min.js" async></script>
+	<!-- <![endif]-->
+	<link rel="stylesheet" href="js/vendor/jquery.mCustomScrollbar.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
+<script>
+  WebFont.load({
+    google: {
+      families: ['Open Sans:400,600,700,400italic,600italic', 'Source Sans Pro:400,600,700', 'Lato:400,700,400italic']
+    }
+  });
+</script>
+
+<style>
+	.Chartjs {
+	  font-size: .85em;
+	}
+
+	.Chartjs-figure {
+	  height: 250px;
+	}
+
+	.Chartjs-legend {
+	  list-style: none;
+	  margin: 0;
+	  padding: 1em 0 0;
+	  text-align: center;
+	}
+
+	.Chartjs-legend > li {
+	  display: inline-block;
+	  padding: .25em .5em
+	}
+
+	.Chartjs-legend > li > i {
+	  display: inline-block;
+	  height: 1em;
+	  margin-right: .5em;
+	  vertical-align: -.1em;
+	  width: 1em;
+	}
+</style>
+</head>
+<body>
+	<!--[if (lt IE 9)]>
+      <div class="window-warning">
+  			<p>Uh oh... Reflection doesn't work in this browser. &nbsp; &nbsp;<a href="http://outdatedbrowser.com/en" target="_blank">Download a compatible browser</a></p>
+  		</div>
+  <![endif]-->
+
+  <header id="js-component-import--global-header" class="global-header"></header>
+  
+	<div id="js-component-import--panel-left" class="panel-left js-panel-left js-custom-scrollbar" data-mcs-theme="minimal-dark"></div>
+
+	<div class="l-page-container">
+		<div id="main" class="l-main" role="main">
+			<div class="page-app">
+			<div class="grid-container">
+				<header class="page-app__header">
+					<div class="app-icon-container">
+						<img src="images/placeholder-logo-arach.jpg" alt="Arachnophobia app icon" class="app-icon" />
+					</div>
+					<div class="app-details">
+						<h1 class="heading-style--heading-three app-title">Google Analytics Data Callback</h1>
+					</div>
+				</header>
+			</div>
+			<div class="tabs">
+				<ul class="tabs-container default-tabs-transition tabs-to-dropdown">
+					<li class="grid__column grid__column--one-quarter tabs__tab is-disabled">
+						<div class="tab-animate-active"></div>
+						<a data-content="#tab-content-overall" class="tabs__link">
+							<span>
+								<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path d="M19.5,4.7L0,6.9v13.9l13.9,4.9L32,20.2V6.4L19.5,4.7z M30,15.1l-16.1,4.6L2,15.9v-3l11.9,3.4
+	L30,12.2V15.1z M13.9,12L30,8.4v2.8l-16.1,4.2L2,11.9v-3L13.9,12z M27.7,7.9l-13.8,3.1L4.2,8.4l15.3-1.7L27.7,7.9z M13.9,23.6
+	L2,19.4V17l11.9,3.8L30,16.2v2.6L13.9,23.6z"/></svg>
+	 							<span>
+	 								Revenue
+	 								<div class="icon-member icon-member--pro"><img src="images/icon-pro@2x.png" alt="Pro member icon"></div>
+	 							</span>
+	 						</span>
+						</a>
+					</li>
+					<li class="grid__column grid__column--one-quarter tabs__tab is-disabled">
+						<div class="tab-animate-active"></div>
+						<a data-content="#tab-content-free" class="tabs__link">
+							<span>
+								<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path fill-rule=evenodd clip-rule=evenodd d="M32,16.5c0,3.6-2.7,6.5-6.7,6.5v0h-6v-2h6.5
+	c2.5,0,4.5-2,4.5-4.5c0-1.6-0.8-3-2.3-3.9c-1.4-0.8-1.5-0.9-0.9-2.4c0.1-0.3,0.1-0.5,0.1-0.8c0-1.4-1.1-2.5-2.5-2.5
+	c0,0-0.7,0-1.4,0.2c-1.1,0.5-1.3,0-1.8-1.2C20.4,3.6,17.9,2,15.2,2c-3.6,0-6.6,2.7-7,6.3c-0.1,1.4-0.2,1.4-1.7,1.8
+	C4,10.6,2,12.9,2,15.5c0,3,2.3,5.5,5.3,5.5v0h6v2h-6v0c-4,0-7.2-3.4-7.2-7.5c0-3.7,2.7-6.7,6.2-7.4c0.4-4.6,4.4-8.1,9-8.1
+	c3.6,0,6.7,2.1,8.1,5.2C23.8,5.1,24.2,5,24.7,5c2.5,0,4.5,2,4.5,4.5c0,0.5-0.2,1-0.3,1.4C30.8,12,32,14.1,32,16.5z M19,25.8
+	l-1.8,1.8V14.3c0-0.6-0.4-1.1-1-1.1c-0.6,0-1,0.5-1,1.1v13.3l-1.9-1.8c-0.4-0.4-1.2-0.4-1.6,0c-0.4,0.4-0.5,1.1,0,1.6l3.1,3.1
+	c0.4,0.4,0.8,0.5,1.3,0.5c0.5,0,0.9-0.2,1.3-0.5l3.1-3.1c0.4-0.4,0.4-1.1,0-1.6C20.2,25.4,19.5,25.4,19,25.8z"/></svg>
+								<span>
+									Downloads
+								<div class="icon-member icon-member--pro"><img src="images/icon-pro@2x.png" alt="Pro member icon"></div>
+								</span>
+							</span>
+						</a>
+					</li>
+					<li class="grid__column grid__column--one-quarter tabs__tab is-active js-tab-select">
+						<div class="tab-animate-active"></div>
+						<a data-content="#tab-content-rank" class="tabs__link">
+							<span>
+								<span>Google Analytics</span></span>
+						</a>
+					</li>
+					<li class="grid__column grid__column--one-quarter tabs__tab is-disabled">
+						<div class="tab-animate-active"></div>
+						<a data-content="#tab-content-details" class="tabs__link">
+							<span>
+								<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path d="M4,10c0,1.1-0.9,2-2,2s-2-0.9-2-2s0.9-2,2-2S4,8.9,4,10z M32,9H7v2h25V9z M2,14
+	c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S3.1,14,2,14z M32,15H7v2h25V15z M2,20c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S3.1,20,2,20z
+	 M32,21H7v2h25V21z"/></svg>
+								<span>App Details</span></span>
+						</a>
+					</li>
+				</ul>
+			</div>
+				<ul class="tabs__content-container default-tabs-transition tabs-to-dropdown--content">
+					<li id="tab-content-rank" class="tabs__content tabs__content--is-showing">
+
+						<div class="grid__row" style="margin-top: 2rem; margin-bottom: 4rem;">
+							<div class="grid__column grid__column--full-width">
+								<h3>Basic Dashboard</h3>
+								<div id="embed-api-auth-container"></div>
+								<div id="chart-container"></div>
+								<div id="view-selector-container"></div>
+							</div>
+						</div>
+
+						<div class="grid__row" style="margin-top: 2rem; margin-bottom: 4rem;">
+							<div class="grid__column grid__column--one-half">
+								<h3>Interactive Chart, Sessions by Browser, Last 30 Days</h3>
+								<div id="view-selector-container-interactive"></div>
+								<div id="main-chart-container"></div>
+								<div id="breakdown-chart-container"></div>
+							</div>
+							<div class="grid__column grid__column--one-half">
+								<h3>Top Countries by Sessions, Last 30 days</h3>
+								<div id="chart-1-container"></div>
+								<div id="chart-2-container"></div>
+								<div id="view-selector-1-container"></div>
+								<div id="view-selector-2-container"></div>
+							</div>
+						</div>
+
+						<div class="grid__row" style="margin-top: 2rem; margin-bottom: 4rem;">
+							<div class="grid__column grid__column--full-width">
+								<h3>Custom Components (Date Range Selector)</h3>
+								<div id="view-selector-container-components"></div>
+							</div>
+							<div class="grid__column grid__column--one-half">																
+								<div id="data-chart-1-container"></div>
+								<div id="date-range-selector-1-container"></div>
+							</div>
+							<div class="grid__column grid__column--one-half">
+								<div id="data-chart-2-container"></div>
+								<div id="date-range-selector-2-container"></div>
+							</div>
+						</div>
+
+						<div class="grid__row" style="margin-top: 2rem; margin-bottom: 4rem;">
+							<div class="grid__column grid__column--full-width">
+								<h3>Data output on Chart.js</h3>
+								<h4 id="view-name"></h4>
+								<div id="view-selector-container-custom" style="margin-bottom: 2rem;"></div>								
+
+								<div class="Chartjs">
+					        <header class="Titles">
+					          <h4 class="Titles-main">Sessions this week vs last week</h5>
+					        </header>
+					        <figure class="Chartjs-figure" id="chart-1-container-custom">
+					        	<canvas width="984" height="250" style="width: 984px; height: 250px;"></canvas>
+					        </figure>
+					        <ol class="Chartjs-legend" id="legend-1-container-custom"></ol>
+					      </div>
+
+							<div>
+						</div>
+
+						<div class="grid__row" style="margin-top: 2rem; margin-bottom: 4rem;">
+							<div class="grid__column grid__column--full-width">
+								<h3>Data output on Highcharts</h3>
+								<h4 style="margin: 0;">Sessions this week vs last week</h4>
+								<h4 id="active-users-container-custom" style="margin: 0 0 1rem;"></h4>
+							</div>
+							<div class="graph-container graph-container--with-events">
+								<div id="container" style="width:100%; height:500px;" class="highcharts-container">
+				        </div>
+								<div class="graph-loading-indicator">
+				        </div>
+				        <div class="graph-loading-line">
+				        	<div class="animated-line"></div>
+				        </div>
+							</div>
+						</div>
+
+				<div class="grid-container">
+				<section class="data-display-container">
+					<header class="data-display-header">
+						<div class="data-display-header--component total-revenue-title">
+							<div class="app-icon-small-container">
+								<img src="images/placeholder-logo-arach.jpg" alt="Arachnophobia app icon" class="app-icon-small" />
+							</div>
+							<h2 class="heading-style heading-style--heading-four data-heading">Google Analytics Data</h2>
+						</div>
+						<button class="ref-button--function-small ref-button--function-small--with-icon"><span class="ref-icon-before ref-icon-before--cloud">Download</span></button>						
+						<div class="data-display-header--component data-summary-container data-summary-container-synced">
+							<span class="revenue-date-range">All Time</span>
+							<span class="revenue-summary-value">-</span>
+						</div>
+						<div class="data-display-header--component data-summary-container">
+							<span class="revenue-date-range">16 Mar 2014 - 16 Apr 2014</span>
+							<span class="revenue-summary-value">-</span>
+						</div>
+					</header>
+					<table class="table-revenue responsive">
+						<thead>
+							<th class="can-be-sorted is-ascending">Date <svg version=1.1 x=0px y=0px viewBox="0 0 7 10" enable-background="new 0 0 7 10" xml:space=preserve class="sort-svg"><path class=ascending d="M0.4,4.1h6.1c0.1,0,0.2,0,0.3-0.1C7,3.9,7,3.8,7,3.7c0-0.1,0-0.2-0.1-0.3L3.8,0.1
+	C3.7,0,3.6,0,3.5,0C3.4,0,3.3,0,3.2,0.1L0.1,3.3C0,3.4,0,3.5,0,3.7C0,3.8,0,3.9,0.1,4C0.2,4.1,0.3,4.1,0.4,4.1z"/><path class=descending d="M6.6,5.9H0.4c-0.1,0-0.2,0-0.3,0.1C0,6.1,0,6.2,0,6.3c0,0.1,0,0.2,0.1,0.3l3.1,3.2
+	C3.3,10,3.4,10,3.5,10c0.1,0,0.2,0,0.3-0.1l3.1-3.2C7,6.6,7,6.5,7,6.3C7,6.2,7,6.1,6.9,6C6.8,5.9,6.7,5.9,6.6,5.9z"/></svg></th>
+							<th class="can-be-sorted">Revenue <span class="hidden-for-mobile">Generated</span> <svg version=1.1 x=0px y=0px viewBox="0 0 7 10" enable-background="new 0 0 7 10" xml:space=preserve class="sort-svg"><path class=ascending d="M0.4,4.1h6.1c0.1,0,0.2,0,0.3-0.1C7,3.9,7,3.8,7,3.7c0-0.1,0-0.2-0.1-0.3L3.8,0.1
+	C3.7,0,3.6,0,3.5,0C3.4,0,3.3,0,3.2,0.1L0.1,3.3C0,3.4,0,3.5,0,3.7C0,3.8,0,3.9,0.1,4C0.2,4.1,0.3,4.1,0.4,4.1z"/><path class=descending d="M6.6,5.9H0.4c-0.1,0-0.2,0-0.3,0.1C0,6.1,0,6.2,0,6.3c0,0.1,0,0.2,0.1,0.3l3.1,3.2
+	C3.3,10,3.4,10,3.5,10c0.1,0,0.2,0,0.3-0.1l3.1-3.2C7,6.6,7,6.5,7,6.3C7,6.2,7,6.1,6.9,6C6.8,5.9,6.7,5.9,6.6,5.9z"/></svg></th>
+							<th class="can-be-sorted">% <span class="hidden-for-mobile">of</span> Total <span class="hidden-for-mobile">Revenue</span> for Period <svg version=1.1 x=0px y=0px viewBox="0 0 7 10" enable-background="new 0 0 7 10" xml:space=preserve class="sort-svg"><path class=ascending d="M0.4,4.1h6.1c0.1,0,0.2,0,0.3-0.1C7,3.9,7,3.8,7,3.7c0-0.1,0-0.2-0.1-0.3L3.8,0.1
+	C3.7,0,3.6,0,3.5,0C3.4,0,3.3,0,3.2,0.1L0.1,3.3C0,3.4,0,3.5,0,3.7C0,3.8,0,3.9,0.1,4C0.2,4.1,0.3,4.1,0.4,4.1z"/><path class=descending d="M6.6,5.9H0.4c-0.1,0-0.2,0-0.3,0.1C0,6.1,0,6.2,0,6.3c0,0.1,0,0.2,0.1,0.3l3.1,3.2
+	C3.3,10,3.4,10,3.5,10c0.1,0,0.2,0,0.3-0.1l3.1-3.2C7,6.6,7,6.5,7,6.3C7,6.2,7,6.1,6.9,6C6.8,5.9,6.7,5.9,6.6,5.9z"/></svg></th>
+						</thead>
+						<colgroup>
+							<col style="width: 25%">
+							<col style="width: 25%">
+							<col style="width: 50%">
+						</colgroup>
+						<tbody>
+							<tr>
+								<td class="date-value">-</td>
+								<td class="revenue-value">-</td>
+								<td class="revenue-percentage">
+									<span>-</span>
+									<div class="data-bar">
+										<div style="width: 0%"></div>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<button class="ref-button--function-small ref-button--function-small--with-icon download-button--mobile"><span class="ref-icon-before ref-icon-before--cloud">Download</span></button>
+				</section>
+			</div>
+					</li>
+				</ul>
+			</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="grid-container" id="js-component-import--global-footer"></div>
+
+	<div id="js-component-import--account-container" class="panel-right-container js-account-container"></div>
+	<div id="js-component-import--search-container" class="panel-right-container js-search-container"></div>
+
+ 	<script src="js/vendor/jquery-1.11.1.min.js"></script>
+ 	<script src="js/vendor/jquery-ui.custom.min.js"></script>
+ 	<script src="js/vendor/handlebars-v2.0.0.js"></script>
+ 	<script src="js/templates/templates.js"></script>
+ 	<script src="js/vendor/modernizr.2.8.3.custom.min.js"></script>
+	<!--[if IE 9]>
+		<script src="js/vendor/jquery.mCustomScrollbar.concat.min.js"></script>
+	<![endif]-->
+
+	<div id="js-appendScriptsContainer"></div>
+
+	<script src="js/application-global-modules-logged-in.js"></script>
+  <script src="js/application.js"></script>
+  <script src="js/vendor/snap.svg.js"></script>
+  <script src="js/vendor/highcharts-custom.js"></script>
+  <script src="js/language-codes.js"></script>
+  <!-- <script src="js/polyfills/pathseg.js"></script> polyfill for Chrome, old SVG API pathSegList not supported -->
+  <script src="js/polyfills/path-data-polyfill.js"></script> <!-- new SVG API polyfill for getPathData() and setPathData() -->
+
+  <script>
+	(function(w,d,s,g,js,fs){
+	  g=w.gapi||(w.gapi={});g.analytics={q:[],ready:function(f){this.q.push(f);}};
+	  js=d.createElement(s);fs=d.getElementsByTagName(s)[0];
+	  js.src='https://apis.google.com/js/platform.js';
+	  fs.parentNode.insertBefore(js,fs);js.onload=function(){g.load('analytics');};
+	}(window,document,'script'));
+	</script>
+
+	<!-- This demo uses the Chart.js graphing library and Moment.js to do date
+     formatting and manipulation. -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js"></script>
+
+	<!-- Include the DateRangeSelector component script. -->
+	<script src="js/embed-api/date-range-selector.js"></script>
+	<!-- Include the ViewSelector2 component script. -->
+	<script src="js/embed-api/view-selector2.js"></script>
+	<!-- Include the ActiveUsers component script. -->
+	<script src="js/embed-api/active-users.js"></script>
+
+	<script>
+		gapi.analytics.ready(function() {
+
+		  /**
+		   * Authorize the user immediately if the user has already granted access.
+		   * If no access has been created, render an authorize button inside the
+		   * element with the ID "embed-api-auth-container".
+		   */
+		  gapi.analytics.auth.authorize({
+		    container: 'embed-api-auth-container',
+		    clientid: '486144765626-sqhiataeg3ni5hjj668vcbj7vdcnk7md.apps.googleusercontent.com'
+		  });
+
+		  // client secret OBHAv_2IiMzGDfLsTZIXLf5r
+
+
+		  // BASIC DASHBOARD
+		  /**
+		   * Create a new ViewSelector instance to be rendered inside of an
+		   * element with the id "view-selector-container".
+		   */
+		  var viewSelector = new gapi.analytics.ViewSelector({
+		    container: 'view-selector-container'
+		  });
+
+		  // Render the view selector to the page.
+		  viewSelector.execute();
+
+
+		  /**
+		   * Create a new DataChart instance with the given query parameters
+		   * and Google chart options. It will be rendered inside an element
+		   * with the id "chart-container".
+		   */
+		  var dataChart = new gapi.analytics.googleCharts.DataChart({
+		    query: {
+		      metrics: 'ga:sessions',
+		      dimensions: 'ga:date',
+		      'start-date': '120daysAgo',
+		      'end-date': 'yesterday'
+		    },
+		    chart: {
+		      container: 'chart-container',
+		      type: 'LINE',
+		      options: {
+		        width: '100%'
+		      }
+		    }
+		  });
+
+
+		  /**
+		   * Render the dataChart on the page whenever a new view is selected.
+		   */
+		  viewSelector.on('change', function(ids) {
+		    dataChart.set({query: {ids: ids}}).execute();
+		  });
+
+
+		  // ================================================================
+
+		  // TOP COUNTRIES
+
+		  /**
+		   * Create a ViewSelector for the first view to be rendered inside of an
+		   * element with the id "view-selector-1-container".
+		   */
+		  var viewSelector1 = new gapi.analytics.ViewSelector({
+		    container: 'view-selector-1-container'
+		  });
+
+		  // Render selector to the page.
+		  viewSelector1.execute();
+
+		  /**
+		   * Create the first DataChart for top countries over the past 30 days.
+		   * It will be rendered inside an element with the id "chart-1-container".
+		   */
+		  var dataChart1 = new gapi.analytics.googleCharts.DataChart({
+		    query: {
+		      metrics: 'ga:sessions',
+		      dimensions: 'ga:country',
+		      'start-date': '30daysAgo',
+		      'end-date': 'yesterday',
+		      'max-results': 6,
+		      sort: '-ga:sessions'
+		    },
+		    chart: {
+		      container: 'chart-1-container',
+		      type: 'PIE',
+		      options: {
+		        width: '100%',
+		        pieHole: 4/9
+		      }
+		    }
+		  });
+
+		  /**
+		   * Update the first dataChart when the first view selecter is changed.
+		   */
+		  viewSelector1.on('change', function(ids) {
+		    dataChart1.set({query: {ids: ids}}).execute();
+		  });
+
+		  // ================================================================
+
+		  // INTERACTIVE CHART
+
+		  /**
+		   * Create a new ViewSelector instance to be rendered inside of an
+		   * element with the id "view-selector-container-interactive".
+		   */
+		  var viewSelector = new gapi.analytics.ViewSelector({
+		    container: 'view-selector-container-interactive'
+		  });
+
+		  // Render the view selector to the page.
+		  viewSelector.execute();
+
+		  /**
+		   * Create a table chart showing top browsers for users to interact with.
+		   * Clicking on a row in the table will update a second timeline chart with
+		   * data from the selected browser.
+		   */
+		  var mainChart = new gapi.analytics.googleCharts.DataChart({
+		    query: {
+		      'dimensions': 'ga:country',
+		      'metrics': 'ga:sessions',
+		      'start-date': '30daysAgo',
+		      'sort': '-ga:sessions',
+		      'max-results': '6'
+		    },
+		    chart: {
+		      type: 'TABLE',
+		      container: 'main-chart-container',
+		      options: {
+		        width: '100%'
+		      }
+		    }
+		  });
+
+
+		  /**
+		   * Create a timeline chart showing sessions over time for the browser the
+		   * user selected in the main chart.
+		   */
+		  var breakdownChart = new gapi.analytics.googleCharts.DataChart({
+		    query: {
+		      'dimensions': 'ga:date',
+		      'metrics': 'ga:sessions',
+		      'start-date': '30daysAgo',
+		      'end-date': 'yesterday'
+		    },
+		    chart: {
+		      type: 'LINE',
+		      container: 'breakdown-chart-container',
+		      options: {
+		        width: '100%'
+		      }
+		    }
+		  });
+
+
+		  /**
+		   * Store a refernce to the row click listener variable so it can be
+		   * removed later to prevent leaking memory when the chart instance is
+		   * replaced.
+		   */
+		  var mainChartRowClickListener;
+
+
+		  /**
+		   * Update both charts whenever the selected view changes.
+		   */
+		  viewSelector.on('change', function(ids) {
+		    var options = {query: {ids: ids}};
+
+		    // Clean up any event listeners registered on the main chart before
+		    // rendering a new one.
+		    if (mainChartRowClickListener) {
+		      google.visualization.events.removeListener(mainChartRowClickListener);
+		    }
+
+		    mainChart.set(options).execute();
+		    breakdownChart.set(options);
+
+		    // Only render the breakdown chart if a browser filter has been set.
+		    if (breakdownChart.get().query.filters) breakdownChart.execute();
+		  });
+
+
+		  /**
+		   * Each time the main chart is rendered, add an event listener to it so
+		   * that when the user clicks on a row, the line chart is updated with
+		   * the data from the browser in the clicked row.
+		   */
+		  mainChart.on('success', function(response) {
+
+		    var chart = response.chart;
+		    var dataTable = response.dataTable;
+
+		    // Store a reference to this listener so it can be cleaned up later.
+		    mainChartRowClickListener = google.visualization.events
+		        .addListener(chart, 'select', function(event) {
+
+		      // When you unselect a row, the "select" event still fires
+		      // but the selection is empty. Ignore that case.
+		      if (!chart.getSelection().length) return;
+
+		      var row =  chart.getSelection()[0].row;
+		      var browser =  dataTable.getValue(row, 0);
+		      var options = {
+		        query: {
+		          filters: 'ga:country==' + browser
+		        },
+		        chart: {
+		          options: {
+		            title: browser
+		          }
+		        }
+		      };
+
+		      breakdownChart.set(options).execute();
+		    });
+		  });
+
+		  // ================================================================
+
+		  // CUSTOM COMPONENTS
+
+					/**
+		   * Store a set of common DataChart config options since they're shared by
+		   * both of the charts we're about to make.
+		   */
+		  var commonConfig = {
+		    query: {
+		      metrics: 'ga:sessions',
+		      dimensions: 'ga:date'
+		    },
+		    chart: {
+		      type: 'LINE',
+		      options: {
+		        width: '100%'
+		      }
+		    }
+		  };
+
+
+		  /**
+		   * Query params representing the first chart's date range.
+		   */
+		  var dateRange1 = {
+		    'start-date': '14daysAgo',
+		    'end-date': '8daysAgo'
+		  };
+
+
+		  /**
+		   * Query params representing the second chart's date range.
+		   */
+		  var dateRange2 = {
+		    'start-date': '7daysAgo',
+		    'end-date': 'yesterday'
+		  };
+
+
+		  /**
+		   * Create a new ViewSelector2 instance to be rendered inside of an
+		   * element with the id "view-selector-container".
+		   */
+		  var viewSelector2 = new gapi.analytics.ext.ViewSelector2({
+		    container: 'view-selector-container-components',
+		  }).execute();
+
+
+		  /**
+		   * Create a new DateRangeSelector instance to be rendered inside of an
+		   * element with the id "date-range-selector-1-container", set its date range
+		   * and then render it to the page.
+		   */
+		  var dateRangeSelector1 = new gapi.analytics.ext.DateRangeSelector({
+		    container: 'date-range-selector-1-container'
+		  })
+		  .set(dateRange1)
+		  .execute();
+
+
+		  /**
+		   * Create a new DateRangeSelector instance to be rendered inside of an
+		   * element with the id "date-range-selector-2-container", set its date range
+		   * and then render it to the page.
+		   */
+		  var dateRangeSelector2 = new gapi.analytics.ext.DateRangeSelector({
+		    container: 'date-range-selector-2-container'
+		  })
+		  .set(dateRange2)
+		  .execute();
+
+
+		  /**
+		   * Create a new DataChart instance with the given query parameters
+		   * and Google chart options. It will be rendered inside an element
+		   * with the id "data-chart-1-container".
+		   */
+		  var dataChart1Custom = new gapi.analytics.googleCharts.DataChart(commonConfig)
+		      .set({query: dateRange1})
+		      .set({chart: {container: 'data-chart-1-container'}});
+
+
+		  /**
+		   * Create a new DataChart instance with the given query parameters
+		   * and Google chart options. It will be rendered inside an element
+		   * with the id "data-chart-2-container".
+		   */
+		  var dataChart2 = new gapi.analytics.googleCharts.DataChart(commonConfig)
+		      .set({query: dateRange2})
+		      .set({chart: {container: 'data-chart-2-container'}});
+
+
+		  /**
+		   * Register a handler to run whenever the user changes the view.
+		   * The handler will update both dataCharts as well as updating the title
+		   * of the dashboard.
+		   */
+		  viewSelector2.on('viewChange', function(data) {
+		    dataChart1Custom.set({query: {ids: data.ids}}).execute();
+		    dataChart2.set({query: {ids: data.ids}}).execute();
+
+		    var title = document.getElementById('view-name');
+		    title.innerHTML = data.property.name + ' (' + data.view.name + ')';
+		  });
+
+
+		  /**
+		   * Register a handler to run whenever the user changes the date range from
+		   * the first datepicker. The handler will update the first dataChart
+		   * instance as well as change the dashboard subtitle to reflect the range.
+		   */
+		  dateRangeSelector1.on('change', function(data) {
+		    dataChart1Custom.set({query: data}).execute();
+
+		    // Update the "from" dates text.
+		    var datefield = document.getElementById('from-dates');
+		    datefield.innerHTML = data['start-date'] + '&mdash;' + data['end-date'];
+		  });
+
+
+		  /**
+		   * Register a handler to run whenever the user changes the date range from
+		   * the second datepicker. The handler will update the second dataChart
+		   * instance as well as change the dashboard subtitle to reflect the range.
+		   */
+		  dateRangeSelector2.on('change', function(data) {
+		    dataChart2.set({query: data}).execute();
+
+		    // Update the "to" dates text.
+		    var datefield = document.getElementById('to-dates');
+		    datefield.innerHTML = data['start-date'] + '&mdash;' + data['end-date'];
+		  });
+
+			// ================================================================
+
+			// CONNECT WITH THIRD PARTY CHART
+
+		  /**
+		   * Create a new ActiveUsers instance to be rendered inside of an
+		   * element with the id "active-users-container" and poll for changes every
+		   * five seconds.
+		   */
+		  var activeUsers = new gapi.analytics.ext.ActiveUsers({
+		    container: 'active-users-container-custom',
+		    pollingInterval: 5
+		  });
+
+
+		  /**
+		   * Add CSS animation to visually show the when users come and go.
+		   */
+		  activeUsers.once('success', function() {
+		    var element = this.container.firstChild;
+		    var timeout;
+
+		    this.on('change', function(data) {
+		      var element = this.container.firstChild;
+		      var animationClass = data.delta > 0 ? 'is-increasing' : 'is-decreasing';
+		      element.className += (' ' + animationClass);
+
+		      clearTimeout(timeout);
+		      timeout = setTimeout(function() {
+		        element.className =
+		            element.className.replace(/ is-(increasing|decreasing)/g, '');
+		      }, 3000);
+		    });
+		  });
+
+		  /**
+		   * Create a new ViewSelector2 instance to be rendered inside of an
+		   * element with the id "view-selector-container".
+		   */
+		  var viewSelectorCustom = new gapi.analytics.ext.ViewSelector2({
+		    container: 'view-selector-container-custom',
+		  })
+		  .execute();
+
+		  /**
+		   * Update the activeUsers component, the Chartjs charts, and the dashboard
+		   * title whenever the user changes the view.
+		   */
+		  viewSelectorCustom.on('viewChange', function(data) {
+		    var title = document.getElementById('view-name');
+		    title.innerHTML = data.property.name + ' (' + data.view.name + ')';
+
+		    // Start tracking active users for this view.
+		    activeUsers.set(data).execute();
+
+		    // Render all the of charts for this view.
+		    renderWeekOverWeekChart(data.ids);
+		    // renderYearOverYearChart(data.ids);
+		    // renderTopBrowsersChart(data.ids);
+		    // renderTopCountriesChart(data.ids);
+		  });
+
+
+		  /**
+		   * Draw the a chart.js line chart with data from the specified view that
+		   * overlays session data for the current week over session data for the
+		   * previous week.
+		   */
+		  function renderWeekOverWeekChart(ids) {
+		    // Adjust `now` to experiment with different days, for testing only...
+		    var now = moment(); // .subtract(3, 'day');
+
+		    var thisWeek = query({
+		      'ids': ids,
+		      'dimensions': 'ga:date,ga:nthDay',
+		      'metrics': 'ga:sessions',
+		      'start-date': moment(now).subtract(1, 'day').day(0).format('YYYY-MM-DD'),
+		      'end-date': moment(now).format('YYYY-MM-DD')
+		    });
+
+		    var lastWeek = query({
+		      'ids': ids,
+		      'dimensions': 'ga:date,ga:nthDay',
+		      'metrics': 'ga:sessions',
+		      'start-date': moment(now).subtract(1, 'day').day(0).subtract(1, 'week')
+		          .format('YYYY-MM-DD'),
+		      'end-date': moment(now).subtract(1, 'day').day(6).subtract(1, 'week')
+		          .format('YYYY-MM-DD')
+		    });
+
+		    Promise.all([thisWeek, lastWeek]).then(function(results) {
+
+		      var data1 = results[0].rows.map(function(row) { return +row[2]; });
+		      var data2 = results[1].rows.map(function(row) { return +row[2]; });
+		      var labels = results[1].rows.map(function(row) { return +row[0]; });
+
+		      labels = labels.map(function(label) {
+		        return moment(label, 'YYYYMMDD').format('ddd');
+		      });
+
+		      var data = {
+		        labels : labels,
+		        datasets : [
+		          {
+		            label: 'Last Week',
+		            fillColor : 'rgba(220,220,220,0.5)',
+		            strokeColor : 'rgba(220,220,220,1)',
+		            pointColor : 'rgba(220,220,220,1)',
+		            pointStrokeColor : '#fff',
+		            data : data2
+		          },
+		          {
+		            label: 'This Week',
+		            fillColor : 'rgba(151,187,205,0.5)',
+		            strokeColor : 'rgba(151,187,205,1)',
+		            pointColor : 'rgba(151,187,205,1)',
+		            pointStrokeColor : '#fff',
+		            data : data1
+		          }
+		        ]
+		      };
+		      
+		      new Chart(makeCanvas('chart-1-container-custom')).Line(data);
+		      generateLegend('legend-1-container-custom', data.datasets);
+
+
+		      createHighchart(data1, data2);
+		    });
+		  }
+
+
+		  /**
+		   * Draw the a chart.js bar chart with data from the specified view that
+		   * overlays session data for the current year over session data for the
+		   * previous year, grouped by month.
+		   */
+		  function renderYearOverYearChart(ids) {
+
+		    // Adjust `now` to experiment with different days, for testing only...
+		    var now = moment(); // .subtract(3, 'day');
+
+		    var thisYear = query({
+		      'ids': ids,
+		      'dimensions': 'ga:month,ga:nthMonth',
+		      'metrics': 'ga:users',
+		      'start-date': moment(now).date(1).month(0).format('YYYY-MM-DD'),
+		      'end-date': moment(now).format('YYYY-MM-DD')
+		    });
+
+		    var lastYear = query({
+		      'ids': ids,
+		      'dimensions': 'ga:month,ga:nthMonth',
+		      'metrics': 'ga:users',
+		      'start-date': moment(now).subtract(1, 'year').date(1).month(0)
+		          .format('YYYY-MM-DD'),
+		      'end-date': moment(now).date(1).month(0).subtract(1, 'day')
+		          .format('YYYY-MM-DD')
+		    });
+
+		    Promise.all([thisYear, lastYear]).then(function(results) {
+		      var data1 = results[0].rows.map(function(row) { return +row[2]; });
+		      var data2 = results[1].rows.map(function(row) { return +row[2]; });
+		      var labels = ['Jan','Feb','Mar','Apr','May','Jun',
+		                    'Jul','Aug','Sep','Oct','Nov','Dec'];
+
+		      // Ensure the data arrays are at least as long as the labels array.
+		      // Chart.js bar charts don't (yet) accept sparse datasets.
+		      for (var i = 0, len = labels.length; i < len; i++) {
+		        if (data1[i] === undefined) data1[i] = null;
+		        if (data2[i] === undefined) data2[i] = null;
+		      }
+
+		      var data = {
+		        labels : labels,
+		        datasets : [
+		          {
+		            label: 'Last Year',
+		            fillColor : 'rgba(220,220,220,0.5)',
+		            strokeColor : 'rgba(220,220,220,1)',
+		            data : data2
+		          },
+		          {
+		            label: 'This Year',
+		            fillColor : 'rgba(151,187,205,0.5)',
+		            strokeColor : 'rgba(151,187,205,1)',
+		            data : data1
+		          }
+		        ]
+		      };
+
+		      new Chart(makeCanvas('chart-2-container-custom')).Bar(data);
+		      generateLegend('legend-2-container-custom', data.datasets);
+		    })
+		    .catch(function(err) {
+		      console.error(err.stack);
+		    });
+		  }
+
+
+		  /**
+		   * Draw the a chart.js doughnut chart with data from the specified view that
+		   * show the top 5 browsers over the past seven days.
+		   */
+		  function renderTopBrowsersChart(ids) {
+
+		    query({
+		      'ids': ids,
+		      'dimensions': 'ga:browser',
+		      'metrics': 'ga:pageviews',
+		      'sort': '-ga:pageviews',
+		      'max-results': 5
+		    })
+		    .then(function(response) {
+
+		      var data = [];
+		      var colors = ['#4D5360','#949FB1','#D4CCC5','#E2EAE9','#F7464A'];
+
+		      response.rows.forEach(function(row, i) {
+		        data.push({ value: +row[1], color: colors[i], label: row[0] });
+		      });
+
+		      new Chart(makeCanvas('chart-3-container-custom')).Doughnut(data);
+		      generateLegend('legend-3-container-custom', data);
+		    });
+		  }
+
+
+		  /**
+		   * Draw the a chart.js doughnut chart with data from the specified view that
+		   * compares sessions from mobile, desktop, and tablet over the past seven
+		   * days.
+		   */
+		  function renderTopCountriesChart(ids) {
+		    query({
+		      'ids': ids,
+		      'dimensions': 'ga:country',
+		      'metrics': 'ga:sessions',
+		      'sort': '-ga:sessions',
+		      'max-results': 5
+		    })
+		    .then(function(response) {
+
+		      var data = [];
+		      var colors = ['#4D5360','#949FB1','#D4CCC5','#E2EAE9','#F7464A'];
+
+		      response.rows.forEach(function(row, i) {
+		        data.push({
+		          label: row[0],
+		          value: +row[1],
+		          color: colors[i]
+		        });
+		      });
+
+		      new Chart(makeCanvas('chart-4-container-custom')).Doughnut(data);
+		      generateLegend('legend-4-container-custom', data);
+		    });
+		  }
+
+
+		  /**
+		   * Extend the Embed APIs `gapi.analytics.report.Data` component to
+		   * return a promise the is fulfilled with the value returned by the API.
+		   * @param {Object} params The request parameters.
+		   * @return {Promise} A promise.
+		   */
+		  function query(params) {
+		    return new Promise(function(resolve, reject) {
+		      var data = new gapi.analytics.report.Data({query: params});
+		      data.once('success', function(response) { resolve(response); })
+		          .once('error', function(response) { reject(response); })
+		          .execute();
+		    });
+		  }
+
+
+		  /**
+		   * Create a new canvas inside the specified element. Set it to be the width
+		   * and height of its container.
+		   * @param {string} id The id attribute of the element to host the canvas.
+		   * @return {RenderingContext} The 2D canvas context.
+		   */
+		  function makeCanvas(id) {
+		    var container = document.getElementById(id);
+		    var canvas = document.createElement('canvas');
+		    var ctx = canvas.getContext('2d');
+
+		    container.innerHTML = '';
+		    canvas.width = container.offsetWidth;
+		    canvas.height = container.offsetHeight;
+		    container.appendChild(canvas);
+
+		    return ctx;
+		  }
+
+
+		  /**
+		   * Create a visual legend inside the specified element based off of a
+		   * Chart.js dataset.
+		   * @param {string} id The id attribute of the element to host the legend.
+		   * @param {Array.<Object>} items A list of labels and colors for the legend.
+		   */
+		  function generateLegend(id, items) {
+		    var legend = document.getElementById(id);
+		    legend.innerHTML = items.map(function(item) {
+		      var color = item.color || item.fillColor;
+		      var label = item.label;
+		      return '<li><i style="background:' + color + '"></i>' + label + '</li>';
+		    }).join('');
+		  }
+
+
+		  // Set some global Chart.js defaults.
+		  Chart.defaults.global.animationSteps = 60;
+		  Chart.defaults.global.animationEasing = 'easeInOutQuart';
+		  Chart.defaults.global.responsive = true;
+		  Chart.defaults.global.maintainAspectRatio = false;
+		});
+	</script>
+
+
+  <script>
+
+  	Date.prototype.addHours= function(h){
+      this.setHours(this.getHours()+h);
+      return this;
+    }
+
+    function initScripts() {
+  		new AppPage();
+
+	  	// Extending Highcharts
+	    (function (H) {
+
+	      var customIconRect;
+	      H.wrap(H.Tooltip.prototype, 'refresh', function (proceed) {
+
+	        proceed.apply(this, Array.prototype.slice.call(arguments, 1));
+
+	        var monthNames = [
+	          "Jan", "Feb", "Mar",
+	          "Apr", "May", "Jun", "Jul",
+	          "Aug", "Sep", "Oct",
+	          "Nov", "Dec"
+	        ];
+
+	        if(customIconRect !== undefined) {
+	          customIconRect.destroy();
+	        }
+
+	        var $axisLabel = $(this.chart.container).find('.highcharts-axis-label'),
+	            leftOffset = 29,
+	            axisLabelYPos = $("#" + arguments[1][0].series.chart.container.id + "").height() - arguments[1][0].series.xAxis.bottom,
+	            //axisLabelYPos = arguments[1][0].series.chart.containerHeight - arguments[1][0].series.xAxis.bottom,
+	            axisLabelXPos = arguments[1][0].plotX - leftOffset,
+	            timeStampString = arguments[1][0].x + "",
+	            timeStampString = timeStampString.substring(0,10),
+	            xAxisDate = new Date(timeStampString*1000).addHours(12),
+	            formattedDate = xAxisDate.getDate() + " " + monthNames[xAxisDate.getMonth()];
+
+	        if($axisLabel.length > 0) {       
+
+	          var labelYPos = axisLabelYPos + 28,
+	              labelXPos = axisLabelXPos + 5;
+
+	          $axisLabel.attr("transform", "translate(" + labelXPos + "," + labelYPos + ")");
+	          $axisLabel.find("text").text(formattedDate);
+
+	        } else {
+	          this.chart.renderer.label(formattedDate, axisLabelXPos+5, axisLabelYPos + 28, 'callout', 0, 0, false, true, "axis-label")
+	          .css({
+	            color: '#fcfdfd',
+	            fontSize: '13px',
+	            fontFamily: 'Lato',
+	            fontWeight: 600
+	          })
+	          .attr({
+	            zIndex: 100
+	          })
+	          .add();
+	        }
+
+	        customIconRect = this.chart.renderer.image('images/axisLabelBackground.png', axisLabelXPos - 5, axisLabelYPos, 67, 34)
+	        .attr({
+	          zIndex: 99
+	        })
+	        .add();
+
+
+	        // add event labels
+	        	// destroy any existing labels
+	        var thisPlotX = arguments[1][0].plotX,
+	        		eventTooltip;
+
+	        		if(this.chart.eventTooltips) {
+	        			for (var t = 0; t < this.chart.eventTooltips.length; t++) {
+	        				this.chart.eventTooltips[t].destroy();
+	        			}
+	        		}
+	        		this.chart.eventTooltips = [];
+
+	        	// remove existing animating CSS class for icons
+	        $(".event-icon--launch.is-animating").each(function() {
+	        	$(this).attr("class", "animation-complete event-icon--launch");
+	        });
+	        $(".event-icon--flag.is-animating").each(function() {
+	        	$(this).attr("class", "event-icon--flag");
+	        });
+	        
+	      });
+
+				H.wrap(H.Series.prototype, 'hide', function (proceed) {
+
+				  // Before the hide function
+				  var par = $(this.graph.element).parents('.highcharts-series').attr("class", "highcharts-series is-transparent-fade");
+				  var instance = this;
+				  // Now apply the original function with the original arguments, 
+				  // which are sliced off this function's arguments
+				  setTimeout(function() {
+				  	proceed.apply(instance, Array.prototype.slice.call(arguments, 1));
+				  	par.attr("class", "highcharts-series");
+				  }, 200);
+				});
+
+				H.wrap(H.Series.prototype, 'show', function (proceed) {
+
+				  // Before the show function
+				  var graphId = this.graph.element.id;
+				  // Now apply the original function with the original arguments, 
+				  // which are sliced off this function's arguments
+				  proceed.apply(this, Array.prototype.slice.call(arguments, 1));
+
+				  // after show()
+				  var currentPath = this.graph.d;
+				  var par = $(this.graph.element).parents('.highcharts-series').attr("class", "highcharts-series is-transparent");
+				  setTimeout(function() {
+				  	var el = Snap('#' + graphId);
+            var pathList = el.node.getPathData();
+            var flatPath = "";
+            for(var x=0; x < pathList.length; x++) {
+              flatPath += pathList[x].type + " " + pathList[x].values[0] + " 454 ";
+            }
+            el.attr("d", flatPath);
+				  	par.attr("class", "highcharts-series");
+				  	setTimeout(function() {
+				  		el.animate({ d: currentPath }, 800, mina.elastic);
+				  	}, 400);
+
+				  	var elFill = Snap('#' + graphId + 'fill');
+				  	var currentPathFill = $('#' + graphId + 'fill').attr("d");
+            var pathList = elFill.node.getPathData();
+            var flatFillPath = "";
+            for(var x=0; x < pathList.length; x++) {
+              flatFillPath += pathList[x].type + " " + pathList[x].values[0] + " 454 ";
+            }
+            elFill.attr("d", flatFillPath);
+				  	setTimeout(function() {
+				  		elFill.animate({ d: currentPathFill }, 800, mina.elastic);
+				  	}, 400);
+				  }, 100);
+
+				});
+	    }(Highcharts));
+
+	    Highcharts.setOptions({
+	        colors: ['#6d69c5', '#ff496a', '#e98fec', '#ffb449', '#64E572', '#FF9655', '#FFF263', '#6AF9C4']
+	    });
+
+	    setGraphLoading();
+	  }
+
+	  var chart = null; // global chart variable
+	  function setGraphLoading() {
+	  	chart = null;
+	  	$('#container').empty();
+	  	$('.graph-loading-indicator').removeClass('is-loading-success');
+      $('.graph-container').removeClass('is-animated');
+      $('.graph-container .graph-loading-line').show();
+      $('.graph-container').addClass('is-loading');      
+    }
+
+    function createHighchart(data1, data2) {
+
+    	// Generate Demo Chart
+			var chart = new Highcharts.Chart({
+				chart: {
+          renderTo: 'container',
+					marginLeft: 0,
+					marginRight: 0,
+					marginBottom: 45,
+					marginTop: 0,
+					backgroundColor: '#fcfdfd',
+					plotBackgroundColor: '#f1f1f6',
+		   		type: 'area',
+		   		animation: false,
+		   		style: {
+            fontFamily: 'Lato, sans-serif'
+          },
+          events: {
+            load: function() { // ANIMATE LINE IN USING SNAP.JS
+                var countIndex = 0;
+                var graphPointAnimationDelay = 20;
+                $('#container .highcharts-series path:nth-child(1)').each(function() {
+                  if (countIndex > 0) {                  	
+                    $(this).attr("style", "opacity: 0.1");
+                  }
+                  countIndex++;
+                });
+
+                countIndex = 0;
+                $('#container .highcharts-series path:nth-child(2)').each(function() {
+                  if (countIndex > 0) {                  	
+                    $(this).attr("style", "opacity: 0.5");
+                  } else {
+                    $(this).attr("style", "opacity: 1");
+                  }
+                  countIndex++;
+                });
+
+                var counter = 0,
+                    allLines = [],
+                    allFills = [];
+
+                $('#container .highcharts-series path:nth-child(2)').each(function(){
+                    $(this).attr("id", "series" + counter);
+                    var initialCoordinates = [],
+                        initialFillCoordinates = [],
+                        flatPath = "",
+                        flatFillPath = "";
+
+                    var el = Snap('#series' + counter);
+                    var pathList = el.node.getPathData();
+
+                    for(var x=0; x < pathList.length; x++) {
+                      initialCoordinates.push({
+                        pathSegTypeAsLetter: pathList[x].type,
+                        x: pathList[x].values[0],
+                        y: pathList[x].values[1]
+                      });
+                      flatPath += pathList[x].type + " " + pathList[x].values[0] + " 454 ";
+                    }
+
+                    el.attr("d", flatPath);
+
+                    allLines.push(initialCoordinates);
+
+
+                    var fillSvg = $(this).parent('.highcharts-series').find('path:first-child').attr("id", "series" + counter + "fill");
+                    var fillEl = Snap("#series" + counter + "fill");
+                    var pathList = fillEl.node.getPathData();
+                    for(var x=0; x < pathList.length; x++) {
+                      initialFillCoordinates.push({
+                        pathSegTypeAsLetter: pathList[x].type,
+                        x: pathList[x].values[0],
+                        y: pathList[x].values[1]
+                      })
+                      flatFillPath += pathList[x].type + " " + pathList[x].values[0] + " 454 ";
+                    }
+
+                    fillEl.attr("d", flatFillPath);
+
+                    allFills.push(initialFillCoordinates);
+
+                  counter++;
+                });
+                
+                function animateGraph(i, pathType) {
+                  var el, pointsArray;
+                  
+                  if(pathType == "line") {
+                    pointsArray = allLines;
+                    el = Snap('#series' + i);
+                  } else {
+                    pointsArray = allFills;
+                    el = Snap('#series' + i + 'fill');
+                  }
+
+                  var numberOfItems = el.node.getPathData().length;
+
+                  setPoint(0);
+
+                  function setPoint(pointIndex) {
+                    var newPath = "";
+                    if(pointIndex < numberOfItems) {
+                      for(var x = 0; x < numberOfItems; x++) {
+                        if(x <= pointIndex) {
+                          newPath += pointsArray[i][x].pathSegTypeAsLetter + " " + pointsArray[i][x].x + " " + pointsArray[i][x].y + " ";
+                        } else {
+                          newPath += pointsArray[i][x].pathSegTypeAsLetter + " " + pointsArray[i][x].x + " 454 ";
+                        }                        
+                      }
+                      
+                      el.animate({ d: newPath }, 90, mina.easein);
+                      var nextPoint = pointIndex + 1;
+                      setTimeout(function(){
+                        setPoint(nextPoint);
+                      }, graphPointAnimationDelay);
+                    }
+                  }
+                }
+
+                var i = 0;
+                var allGraphLinesLength = $('#container .highcharts-series path:nth-child(2)').length;
+
+                for(var lineIndex=0; lineIndex < allGraphLinesLength; lineIndex++) {
+                  animateGraph(i, "line");
+                  i++;
+                }
+
+                var f = 0;
+                var allGraphFillsLength = $('#container .highcharts-series path:nth-child(1)').length;
+
+                for(var fillIndex=0; fillIndex < allGraphFillsLength; fillIndex++) {
+                  animateGraph(f, "fill");
+                  f++;
+                }
+            }
+          }
+			  },
+			  legend: {
+			  	enabled: false
+			  },
+			  title: {
+            text: ''
+        },
+        yAxis: [{
+          offset: -30,
+          showFirstLabel: false,
+          showLastLabel: false,
+          gridLineColor: '#e1e5e8',
+          labels: {
+          	align: 'left',
+          	style: {
+          		color: '#6d69c5',
+          		fontSize: "13px"
+          	}
+          },
+          title: {
+          	text: null
+          }            
+        }, {
+          offset: -30,
+          showFirstLabel: false,
+          showLastLabel: false,
+          gridLineColor: '#e1e5e8',
+          labels: {
+            align: 'right',
+            style: {
+            	color: '#ff496a',
+              fontSize: "13px"
+            }
+          },
+          title: {
+            text: null
+          },
+          opposite: true
+        }],
+        xAxis: {
+        	startOnTick: false,
+        	endOnTick: false,
+        	showFirstLabel: false,
+          maxPadding: 0,
+          minPadding: 0,
+          type: 'datetime',
+          dateTimeLabelFormats: { // don't display the dummy year
+              day: '%e %b'
+          },
+          title: {
+              text: 'Date'
+          },
+          tickmarkPlacement: 'on',
+          tickPixelInterval: 30,
+          tickColor: '#e1e5e8',
+          tickLength: 10,
+          lineColor: '#e1e5e8',
+          lineWidth: 1,            
+          labels: {
+          	align: 'center',
+            x: 0,
+            y: 28,
+            step: 1,
+            style: {
+              color: '#81879d',
+              fontSize: "13px"
+            }
+          }
+        },
+        plotOptions: {
+        	area: {
+            trackByArea: false,
+        		tooltip: {
+        			followPointer: true
+        		},
+        		states: {
+        			hover: {
+        				halo: {
+        					fill: 'rgba(27,199,159,0.18)',
+        					size: 13
+        				},
+        				lineWidthPlus: 0
+        			}
+        		}        		
+        	},
+          series: {
+            events: {
+              click: function() {
+                var that = this;
+
+                for(var i = 0; i < this.chart.series.length; i++) {
+                  if(i !== that.index) {
+                    var count = 0;
+                    var isCurrentlyHighlighted = false;
+                    $('#container .highcharts-series').each(function(){
+                      if(count == i) {
+                        var thisFillPath = $(this).find('path:nth-child(2)');                        
+                        if(thisFillPath.attr("stroke-width") == 2.1) {
+                          isCurrentlyHighlighted = true
+                          that.chart.series[i].update({
+                            lineWidth: 2
+                          });           
+                          var counterTwo = 0;
+                          $('#container .highcharts-series').each(function(){
+                            if(counterTwo == count) {
+                              thisFillPath = $(this).find('path:nth-child(2)');
+                            }
+                            counterTwo++;
+                          });                          
+                          thisFillPath.css("opacity", "1");
+                          thisFillPath.animate({ "opacity": 0.4 }, 250);
+                          thisFillPath.siblings("path").css("opacity", "1");
+                          thisFillPath.siblings("path").animate({ "opacity": 0.1 }, 250);
+                        }
+                      }
+                      count++;
+                    });
+                  }
+                };
+
+                this.update({
+                  lineWidth: 2.1
+                });
+
+                $('#container .highcharts-series path:nth-child(2)').each(function(){
+                  if($(this).attr("stroke-width") == 2.1) {
+                    $(this).css("opacity", "1");
+                    $(this).siblings("path").css("opacity", "0.1");
+                    $(this).siblings("path").animate({ "opacity": 1 }, 250);
+                  }
+                });
+
+                // read the graph line id's after this.udpate
+                var counter = 0;
+
+                $('#container .highcharts-series path:nth-child(2)').each(function(){
+                  $(this).attr("id", "series" + counter);
+                  $(this).parent('.highcharts-series').find('path:first-child').attr("id", "series" + counter + "fill");
+                  counter++;
+                });
+              },
+            },
+            cursor: 'pointer',
+            animation: false
+          },
+      	},
+        series:
+           [{
+          	yAxis: 0,
+		        name: "Last Week",
+		        id : 'lastweek',
+		        data: data1,
+		        pointStart: Date.UTC(2016, 1, 1),
+            pointInterval: 24 * 3600 * 1000, // one day
+		        fillOpacity: 0.2,
+		        lineWidth: 2,
+		        lineWidthPlus: 0,
+		        marker: {
+		          enabled: true,
+		          states: {
+		            hover: {
+		              enabled: true,
+		              lineWidth: 2,
+		              lineWidthPlus: 0,
+		              radius: 4,
+		              radiusPlus: 0,
+		            }
+		          }
+		     		},
+		     		visible: true,
+          },
+          {
+          	yAxis: 0,
+		        name: "This Week",
+		        id : 'thisweek',
+		        data: data2,
+		        pointStart: Date.UTC(2016, 1, 1),
+            pointInterval: 24 * 3600 * 1000, // one day
+		        fillOpacity: 0.2,
+		        lineWidth: 2,
+		        lineWidthPlus: 0,
+		        marker: {
+		          enabled: true,
+		          states: {
+		            hover: {
+		              enabled: true,
+		              lineWidth: 2,
+		              lineWidthPlus: 0,
+		              radius: 4,
+		              radiusPlus: 0,
+		            }
+		          }
+		     		},
+		     		visible: true,
+          }],
+        tooltip: {
+        	useHTML: true,
+        	shared: true,
+          formatter: function() {
+            var instance = this;
+            var s = "";            
+            $.each(instance.points, function (index, value) {
+                var chartSeries = value.series;
+                var imgString = "";
+                
+               	if(chartSeries.name == "Last Week") {
+                	imgString = "<img src=images/logo-ga-mini.png alt='GA logo' class='tt-icon-chartboost' />Sessions Last Week :";
+                } else if(chartSeries.name == "This Week") {
+                	imgString = "<img src=images/logo-ga-mini.png alt='GA logo' class='tt-icon-chartboost' />Sessions This Week :";
+                }
+                s += '<div class="custom-tooltip ' + chartSeries.name + '" style="background-color: ' + chartSeries.color + '">' + imgString + value.y + '</div>';
+            });
+            return s;
+          },
+        	backgroundColor: 'transparent',
+          borderWidth: 0,
+          borderColor: '#dae3ed',
+			    crosshairs: [{
+            width: 1,
+            color: '#81879d'
+          }],
+          shadow: {
+            color: 'rgba(0,0,0,0.24)',
+            width: 0,
+            offsetX: 1,
+            offsetY: 1
+        	}
+        }
+	    });
+
+		}
+
+
+  	window.onready = initScripts();
+  </script>
+</body>

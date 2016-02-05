@@ -536,5 +536,22 @@ var SubmitButtonWithFeedback = function() {
 		// Components
 		
 	};
+
+// ChartsPage object
+	var DataVisAppReleasesPage = function() {
+		new Page();
+		var dkPageProperties = {
+			bannerImage: "images/banner-icon-grids.png",
+			bannerImageAlt: "Button icon", 
+			sectionTitle: "Charts", 
+			componentTitle: "App Launch Comparison", 
+			intro: "A comparison of app downloads over time from release date",
+			pageUrl: "data-vis-app-releases.html"
+		}
+		new DesignKitPage(dkPageProperties);
+
+		// Components
+		
+	};
 /* END PAGE OBJECTS FOR TEMPLATES */
 
