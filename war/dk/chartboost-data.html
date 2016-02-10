@@ -48,7 +48,7 @@
 						<img src="images/placeholder-logo-arach.jpg" alt="Arachnophobia app icon" class="app-icon" />
 					</div>
 					<div class="app-details">
-						<h1 class="heading-style--heading-three app-title">Chartboost API Data Callback</h1>
+						<h1 class="heading-style--heading-three app-title">Chartboost API Data Callback - Ad Revenue</h1>
 					</div>
 				</header>
 			</div>
@@ -110,6 +110,14 @@
 						<div class="grid__column grid__column--full-width filters-container filter-container--app">
 							<form class="forms--mid-theme">
 								<div class="form-field" style="width: 20%">
+								 <input type="text" name="startDate" id="startDate" value="2016-01-01" autocomplete="off" />
+								 <label for="startDate">Start Date (yyyy-mm-dd)</label>
+								</div>
+								<div class="form-field" style="width: 20%">
+								 <input type="text" name="endDate" id="endDate" value="2016-01-31" autocomplete="off" />
+								 <label for="endDate">End Date (yyyy-mm-dd)</label>
+								</div>
+								<div class="form-field" style="width: 20%">
 								 <input type="text" name="user-id" id="user-id" value="55a25d925b145305467c9d38" autocomplete="off" />
 								 <label for="user-id">User ID</label>
 								</div>
@@ -144,16 +152,13 @@
 							<div class="app-icon-small-container">
 								<img src="images/placeholder-logo-arach.jpg" alt="Arachnophobia app icon" class="app-icon-small" />
 							</div>
-							<h2 class="heading-style heading-style--heading-four data-heading">Chartboost Data</h2>
+							<h2 class="heading-style heading-style--heading-four data-heading">Revenue for period</h2>
 						</div>
 						<button class="ref-button--function-small ref-button--function-small--with-icon"><span class="ref-icon-before ref-icon-before--cloud">Download</span></button>						
-						<div class="data-display-header--component data-summary-container data-summary-container-synced">
-							<span class="revenue-date-range">Since First Synced (1 Feb 2014)</span>
-							<span class="revenue-summary-value">&pound;9,291,005</span>
-						</div>
+						
 						<div class="data-display-header--component data-summary-container">
-							<span class="revenue-date-range">16 Mar 2014 - 16 Apr 2014</span>
-							<span class="revenue-summary-value">&pound;8,428,173</span>
+							<span class="revenue-date-range"></span>
+							<span class="revenue-summary-value"></span>
 						</div>
 					</header>
 					<table class="table-revenue responsive">
@@ -425,49 +430,79 @@
 
     	// User signature and user ID required from Chartboost admin
 			// UNCOMMENT TO USE AJAX CALL TO REAL DATA, NOT NEEDED FOR TESTING
-			var dateMin = "2016-01-01",
-					dateMax = "2016-01-31";
+			var dateMin = $('#startDate').val(),
+					dateMax = $('#endDate').val();
 
 			// Call the Chartboost API
 			$.get( "https://analytics.chartboost.com/v3/metrics/campaign?dateMin=" + dateMin + "&dateMax=" + dateMax + "&userId=" + userId + "&userSignature=" + userSignature, function( data ) {
 					handleChartboost(data);
+					console.log(data);
 			}).fail(function(e) {
 		    alert(e.statusText);
 		  });
 					
     }
 
+    function groupBy(arr, property) {
+		  return arr.reduce(function(memo, x) {
+		  	// console.log(memo);
+		    if (!memo[x[property]]) { memo[x[property]] = []; }
+		    memo[x[property]].push(x);
+		    return memo;
+		  }, {});
+		}
+
     function handleChartboost(data) {
 			if(data.length > 0) {
 				data.reverse();
-				var earningsFromStatic = [];
-				var earningsFromVideo = [];					
-				var staticImpressions = [];
-				var videoImpressions = [];
-				for(var c = 0; c < data.length; c++) {
-						var dateSplit = data[c].dt.split("-");
-						if(data[c].campaign.indexOf("Static Interstitial") > 0) {
-							earningsFromStatic.push([Date.UTC(parseInt(dateSplit[0]), parseInt(dateSplit[1] - 1), parseInt(dateSplit[2])), data[c].moneyEarned]);
-							staticImpressions.push([Date.UTC(parseInt(dateSplit[0]), parseInt(dateSplit[1] - 1), parseInt(dateSplit[2])), data[c].impressionsDelivered]);
-						} else if(data[c].campaign.indexOf("Rewarded Video") > 0) {
-							earningsFromVideo.push([Date.UTC(parseInt(dateSplit[0]), parseInt(dateSplit[1] - 1), parseInt(dateSplit[2])), data[c].moneyEarned]);
-							videoImpressions.push([Date.UTC(parseInt(dateSplit[0]), parseInt(dateSplit[1] - 1), parseInt(dateSplit[2])), data[c].impressionsDelivered]);
-						}
+				var o = groupBy(data, 'campaign'); // array.reduce may not work in some browsers
+				console.log(o);
+
+				var seriesTitles = [];
+				var dataSets = [];
+				var totalRevenue = 0;
+				for (var key in o) {
+			    // skip loop if the property is from prototype
+			    if (!o.hasOwnProperty(key)) continue;
+			    seriesTitles.push(key);
+
+			    var obj = o[key];
+			    for (var prop in obj) {
+			        // skip loop if the property is from prototype
+			        if(!obj.hasOwnProperty(prop)) continue;
+
+			        for(var s = 0; s < seriesTitles.length; s++) {
+			        	if(key == seriesTitles[s]) {
+			        		var dateSplit = obj[prop].dt.split("-");
+			        		if(dataSets[s]) {
+			        			dataSets[s].dataSet.push([Date.UTC(parseInt(dateSplit[0]), parseInt(dateSplit[1] - 1), parseInt(dateSplit[2])), obj[prop].moneyEarned]);
+			        		} else {
+			        			dataSets.push({ dataSet: [[Date.UTC(parseInt(dateSplit[0]), parseInt(dateSplit[1] - 1), parseInt(dateSplit[2])), obj[prop].moneyEarned]]})
+			        		}
+			        		totalRevenue += obj[prop].moneyEarned;
+			        	}
+			        }
+			    }
 				}
 
-				setTimeout(function(){
-          $('.graph-loading-indicator').addClass('is-loading-success');
-          $('.graph-container').addClass('is-animated');
-          setTimeout(function(){
-            $('.graph-container').removeClass('is-loading');            
-            $('.graph-container .graph-loading-line').hide(); // For graph line animation only, not related to graph loading
-            generateChart(staticImpressions, earningsFromStatic, videoImpressions, earningsFromVideo);
-          }, 200)
-        }, 2000);
+				$('.revenue-date-range').text($('#startDate').val() + " - " + $('#endDate').val());
+				$('.revenue-summary-value').text("$" + totalRevenue);
+
+				if(dataSets.length) {
+					setTimeout(function(){
+	          $('.graph-loading-indicator').addClass('is-loading-success');
+	          $('.graph-container').addClass('is-animated');
+	          setTimeout(function(){
+	            $('.graph-container').removeClass('is-loading');            
+	            $('.graph-container .graph-loading-line').hide(); // For graph line animation only, not related to graph loading
+	            generateChart(seriesTitles, dataSets);
+	          }, 200)
+	        }, 2000);
+				}				
 			}
 		}
 
-    function generateChart(staticImpressions, earningsFromStatic, videoImpressions, earningsFromVideo) {
+    function generateChart(seriesTitles, dataSets) {
 
     	// Generate Demo Chart
 			var chart = new Highcharts.Chart({
@@ -789,74 +824,9 @@
         series:
            [{
           	yAxis: 0,
-		        name: "Earnings from Static",
-		        id : 'earningsFromStatic',
-		        data: earningsFromStatic,
-		        fillOpacity: 0,
-		        lineWidth: 0,
-		        lineWidthPlus: 0,
-		        marker: {
-		          enabled: true,
-		          states: {
-		            hover: {
-		              enabled: true,
-		              lineWidth: 0,
-		              lineWidthPlus: 0,
-		              radius: 4,
-		              radiusPlus: 0,
-		            }
-		          }
-		     		},
-		     		visible: true,
-          },
-          {
-          	yAxis: 0,
-		        name: "Earnings from Video",
-		        id : 'earningsFromVideo',
-		        data: earningsFromVideo,
-		        fillOpacity: 0,
-		        lineWidth: 0,
-		        lineWidthPlus: 0,
-		        marker: {
-		          enabled: true,
-		          states: {
-		            hover: {
-		              enabled: true,
-		              lineWidth: 0,
-		              lineWidthPlus: 0,
-		              radius: 4,
-		              radiusPlus: 0,
-		            }
-		          }
-		     		},
-		     		visible: true,
-          },
-          {
-          	yAxis: 1,
-		        name: "Static Interstitial Impressions",
-		        id : 'staticInterstitialImpressions',
-		        data: staticImpressions,
-		        fillOpacity: 0,
-		        lineWidth: 0,
-		        lineWidthPlus: 0,
-		        marker: {
-		          enabled: true,
-		          states: {
-		            hover: {
-		              enabled: true,
-		              lineWidth: 0,
-		              lineWidthPlus: 0,
-		              radius: 4,
-		              radiusPlus: 0,
-		            }
-		          }
-		     		},
-		     		visible: true,
-          }, {
-          	yAxis: 1,
-		        name: "Rewarded Video Impressions",
-		        id : 'rewardedVideoImpressions',
-		        data: videoImpressions,
+		        name: seriesTitles[0],
+		        id : seriesTitles[0],
+		        data: dataSets[0].dataSet,
 		        fillOpacity: 0,
 		        lineWidth: 0,
 		        lineWidthPlus: 0,
@@ -883,21 +853,8 @@
             var s = "";            
             $.each(instance.points, function (index, value) {
                 var chartSeries = value.series;
-                var imgString = "";
+                var imgString = "<img src=images/logo-chartboost-mini.png alt='Chartboost logo' class='tt-icon-chartboost' />" + chartSeries.name + " $";
                 
-                if(chartSeries.name == "Revenue") {
-                  imgString = "<img src=images/icon-chart-revenue.png alt='Revenue icon' class=icon-revenue /> &pound;";
-                } else if (chartSeries.name == "Downloads") {
-                  imgString = "<img src=images/icon-chart-downloads.png alt='Downloads icon' class=icon-downloads />";
-                } else if(chartSeries.name == "Earnings from Static") {
-                	imgString = "<img src=images/logo-chartboost-mini.png alt='Chartboost logo' class='tt-icon-chartboost' />Earnings From Static $";
-                } else if(chartSeries.name == "Earnings from Video") {
-                	imgString = "<img src=images/logo-chartboost-mini.png alt='Chartboost logo' class='tt-icon-chartboost' />Earnings From Video $";
-                } else if(chartSeries.name == "Static Interstitial Impressions") {
-                	imgString = "<img src=images/logo-chartboost-mini.png alt='Chartboost logo' class='tt-icon-chartboost' />Static Interstitial Impressions ";
-                } else if(chartSeries.name == "Rewarded Video Impressions") {
-                	imgString = "<img src=images/logo-chartboost-mini.png alt='Chartboost logo' class='tt-icon-chartboost' />Rewarded Video Impressions ";
-                }
                 s += '<div class="custom-tooltip ' + chartSeries.name + '" style="background-color: ' + chartSeries.color + '">' + imgString + value.y + '</div>';
             });
             return s;
@@ -917,6 +874,33 @@
         	}
         }
 	    });
+
+		  if(dataSets[1]) {
+		  	for(var i = 1; i < dataSets.length; i++) {
+			  	chart.addSeries({
+						yAxis: 0,
+		        name: seriesTitles[i],
+		        id : seriesTitles[i],
+		        data: dataSets[i].dataSet,
+		        fillOpacity: 0,
+		        lineWidth: 0,
+		        lineWidthPlus: 0,
+		        marker: {
+		          enabled: true,
+		          states: {
+		            hover: {
+		              enabled: true,
+		              lineWidth: 0,
+		              lineWidthPlus: 0,
+		              radius: 4,
+		              radiusPlus: 0,
+		            }
+		          }
+		     		},
+		     		visible: true
+		   		});
+			  }
+		  }
 
 		}
 
