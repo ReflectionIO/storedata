@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
@@ -531,6 +532,26 @@ public class AppleReporterHelper {
 				return null;
 			}
 		}
+	}
+
+	/**
+	 * @param username
+	 * @param password
+	 * @return
+	 */
+	public static boolean areCredentialsValid(String username, String password) {
+		try {
+			getVendors(username, password);
+		} catch (AppleReporterException e) {
+			if (e.getErrorCode() == 107 || e.getErrorCode() == 108) return false;
+		} catch (InputValidationException e) {
+			LOG.log(Level.WARNING, "Exception occured while trying to verify iTunes credentials for username: " + username, e);
+		}
+
+		// unless we get an explicit authentication error (107 or 108) we will assume all is well with the credentials.
+		// this is to make sure we don't start making data accounts as having invalid credentials if iTunes has an outage
+		// or does not return a valid result for any other reason
+		return true;
 	}
 
 }

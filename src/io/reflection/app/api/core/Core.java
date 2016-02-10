@@ -10,6 +10,7 @@ package io.reflection.app.api.core;
 import static io.reflection.app.service.sale.ISaleService.*;
 import static io.reflection.app.shared.util.PagerHelper.*;
 
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -32,7 +33,6 @@ import com.willshex.gson.json.service.server.InputValidationException;
 import com.willshex.gson.json.service.server.ServiceException;
 import com.willshex.gson.json.service.shared.StatusType;
 
-import io.reflection.app.accountdatacollectors.ITunesConnectDownloadHelper;
 import io.reflection.app.api.ValidationHelper;
 import io.reflection.app.api.core.shared.call.ChangePasswordRequest;
 import io.reflection.app.api.core.shared.call.ChangePasswordResponse;
@@ -253,8 +253,8 @@ public final class Core extends ActionHandler {
 				} else {
 					stores = StoreServiceProvider.provide().searchStores(input.query, input.pager);
 				}
-			} else throw new InputValidationException(ApiError.GetStoresNeedsCountryOrQuery.getCode(),
-					ApiError.GetStoresNeedsCountryOrQuery.getMessage("input"));
+			} else
+				throw new InputValidationException(ApiError.GetStoresNeedsCountryOrQuery.getCode(), ApiError.GetStoresNeedsCountryOrQuery.getMessage("input"));
 
 			if (stores != null) {
 				output.stores = stores;
@@ -342,9 +342,8 @@ public final class Core extends ActionHandler {
 				output.items = ItemServiceProvider.provide().getInternalIdItemBatch(itemIds);
 
 				output.pager = input.pager;
-				updatePager(output.pager, output.ranks,
-						input.pager.totalCount == null ? RankServiceProvider.provide().getRanksCount(input.country, input.category, input.listType, start)
-								: input.pager.totalCount);
+				updatePager(output.pager, output.ranks, input.pager.totalCount == null
+						? RankServiceProvider.provide().getRanksCount(input.country, input.category, input.listType, start) : input.pager.totalCount);
 			}
 
 			output.status = StatusType.StatusTypeSuccess;
@@ -394,7 +393,8 @@ public final class Core extends ActionHandler {
 			boolean isAdmin = false;
 			boolean isPremium = false;
 			boolean isStandardDeveloper = false;
-			boolean canSeePredictions = (DateTimeComparator.getDateOnlyInstance().compare(input.on, new DateTime().minusDays(FilterHelper.DEFAULT_LEADERBOARD_LAG_DAYS)) == 0);
+			boolean canSeePredictions = (DateTimeComparator.getDateOnlyInstance().compare(input.on,
+					new DateTime().minusDays(FilterHelper.DEFAULT_LEADERBOARD_LAG_DAYS)) == 0);
 			boolean isLoggedIn = false;
 
 			if (input.session != null) {
@@ -868,16 +868,14 @@ public final class Core extends ActionHandler {
 				User sessionUser = UserServiceProvider.provide().getUser(input.session.user.id);
 				user = UserServiceProvider.provide().getLoginUser(sessionUser.username, input.password);
 
-				if (user == null)
-					throw new InputValidationException(ApiError.IncorrectPasswordForChange.getCode(),
-							ApiError.IncorrectPasswordForChange.getMessage("input.password"));
+				if (user == null) throw new InputValidationException(ApiError.IncorrectPasswordForChange.getCode(),
+						ApiError.IncorrectPasswordForChange.getMessage("input.password"));
 			}
 
 			input.newPassword = ValidationHelper.validatePassword(input.newPassword, "input.newPassword");
 
-			if (!isReset && input.newPassword.equals(input.password))
-				throw new InputValidationException(ApiError.InvalidPasswordSameAsCurrent.getCode(),
-						ApiError.InvalidPasswordSameAsCurrent.getMessage("input.newPassword"));
+			if (!isReset && input.newPassword.equals(input.password)) throw new InputValidationException(ApiError.InvalidPasswordSameAsCurrent.getCode(),
+					ApiError.InvalidPasswordSameAsCurrent.getMessage("input.newPassword"));
 
 			UserServiceProvider.provide().updateUserPassword(user, input.newPassword);
 
@@ -894,8 +892,8 @@ public final class Core extends ActionHandler {
 		LOG.finer("Entering changeUserDetails");
 		ChangeUserDetailsResponse output = new ChangeUserDetailsResponse();
 		try {
-			if (input == null)
-				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("ChangeUserDetailsRequest: input"));
+			if (input == null) throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+					ApiError.InvalidValueNull.getMessage("ChangeUserDetailsRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
@@ -926,9 +924,8 @@ public final class Core extends ActionHandler {
 		LOG.finer("Entering updateLinkedAccount");
 		UpdateLinkedAccountResponse output = new UpdateLinkedAccountResponse();
 		try {
-			if (input == null)
-				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
-						ApiError.InvalidValueNull.getMessage("UpdateLinkedAccountRequest: input"));
+			if (input == null) throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+					ApiError.InvalidValueNull.getMessage("UpdateLinkedAccountRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
@@ -953,10 +950,9 @@ public final class Core extends ActionHandler {
 				AppleReporterHelper.getVendors(input.linkedAccount.username, input.linkedAccount.password);
 			} catch (InputValidationException e) {
 
-				if (e.getCode() != 214 && e.getCode() != 215 && e.getCode() != 216) { // invalid credentials
+				if (e.getCode() != 214 && e.getCode() != 215 && e.getCode() != 216)
 					throw new InputValidationException(ApiError.InvalidDataAccountCredentials.getCode(),
 							ApiError.InvalidDataAccountCredentials.getMessage(input.linkedAccount.username));
-				}
 			}
 
 			DataAccount linkedAccount = DataAccountServiceProvider.provide().updateDataAccount(input.linkedAccount, true);
@@ -978,9 +974,8 @@ public final class Core extends ActionHandler {
 		LOG.finer("Entering deleteLinkedAccount");
 		DeleteLinkedAccountResponse output = new DeleteLinkedAccountResponse();
 		try {
-			if (input == null)
-				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
-						ApiError.InvalidValueNull.getMessage("DeleteLinkedAccountRequest: input"));
+			if (input == null) throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+					ApiError.InvalidValueNull.getMessage("DeleteLinkedAccountRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
@@ -993,28 +988,36 @@ public final class Core extends ActionHandler {
 			boolean isAdmin = UserServiceProvider.provide().hasRole(input.session.user, DataTypeHelper.adminRole());
 
 			if (hasDataAccount || isAdmin) {
-				User linkedAccountOwner = UserServiceProvider.provide().getDataAccountOwner(input.linkedAccount);
-				// If the owner, remove all other users from this linked account (except test linked account)
-				if (linkedAccountOwner != null && linkedAccountOwner.id.longValue() == input.session.user.id.longValue()
-						&& input.linkedAccount.id.longValue() != 357) {
-					UserServiceProvider.provide().deleteAllUsersDataAccount(input.linkedAccount);
+				// User linkedAccountOwner = UserServiceProvider.provide().getDataAccountOwner(input.linkedAccount);
+				// // If the owner, remove all other users from this linked account (except test linked account)
+				// if (linkedAccountOwner != null && linkedAccountOwner.id.longValue() == input.session.user.id.longValue()
+				// && input.linkedAccount.id.longValue() != 357) {
+				// UserServiceProvider.provide().deleteAllUsersDataAccount(input.linkedAccount);
+				//
+				// // Set linked account as inactive
+				// input.linkedAccount.active = DataTypeHelper.INACTIVE_VALUE;
+				// DataAccountServiceProvider.provide().updateDataAccount(input.linkedAccount, false);
+				//
+				// if (LOG.isLoggable(GaeLevel.DEBUG)) {
+				// LOG.finer(String.format("Linked account with id [%d] deleted by owner [%d]", input.linkedAccount.id.longValue(),
+				// input.session.user.id.longValue()));
+				// }
+				// } else {
+				// UserServiceProvider.provide().deleteUserDataAccount(input.session.user, input.linkedAccount);
+				//
+				// if (LOG.isLoggable(GaeLevel.DEBUG)) {
+				// LOG.finer(String.format("Linked account with id [%d] removed from user account [%d]", input.linkedAccount.id.longValue(),
+				// input.session.user.id.longValue()));
+				// }
+				// }
 
-					// Set linked account as inactive
-					input.linkedAccount.active = DataTypeHelper.INACTIVE_VALUE;
-					DataAccountServiceProvider.provide().updateDataAccount(input.linkedAccount, false);
+				UserServiceProvider.provide().deleteUserDataAccount(input.session.user, input.linkedAccount);
 
-					if (LOG.isLoggable(GaeLevel.DEBUG)) {
-						LOG.finer(String.format("Linked account with id [%d] deleted by owner [%d]", input.linkedAccount.id.longValue(),
-								input.session.user.id.longValue()));
-					}
-				} else {
-					UserServiceProvider.provide().deleteUserDataAccount(input.session.user, input.linkedAccount);
-
-					if (LOG.isLoggable(GaeLevel.DEBUG)) {
-						LOG.finer(String.format("Linked account with id [%d] removed from user account [%d]", input.linkedAccount.id.longValue(),
-								input.session.user.id.longValue()));
-					}
+				if (LOG.isLoggable(GaeLevel.DEBUG)) {
+					LOG.finer(String.format("Linked account with id [%d] removed from user account [%d]", input.linkedAccount.id.longValue(),
+							input.session.user.id.longValue()));
 				}
+
 				// Revoke HLA permission
 				if (!UserServiceProvider.provide().hasDataAccounts(input.session.user) && !isAdmin) {
 					Permission hlaPermission = PermissionServiceProvider.provide().getCodePermission(DataTypeHelper.PERMISSION_HAS_LINKED_ACCOUNT_CODE);
@@ -1077,9 +1080,8 @@ public final class Core extends ActionHandler {
 		LOG.finer("Entering getRolesAndPermissions");
 		GetRolesAndPermissionsResponse output = new GetRolesAndPermissionsResponse();
 		try {
-			if (input == null)
-				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
-						ApiError.InvalidValueNull.getMessage("GetRolesAndPermissionsResponse: input"));
+			if (input == null) throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+					ApiError.InvalidValueNull.getMessage("GetRolesAndPermissionsResponse: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
@@ -1144,8 +1146,8 @@ public final class Core extends ActionHandler {
 		GetLinkedAccountsResponse output = new GetLinkedAccountsResponse();
 
 		try {
-			if (input == null)
-				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("GetLinkedAccountsRequest: input"));
+			if (input == null) throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+					ApiError.InvalidValueNull.getMessage("GetLinkedAccountsRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
@@ -1200,9 +1202,8 @@ public final class Core extends ActionHandler {
 		LOG.finer("Entering getLinkedAccountItems");
 		GetLinkedAccountItemsResponse output = new GetLinkedAccountItemsResponse();
 		try {
-			if (input == null)
-				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
-						ApiError.InvalidValueNull.getMessage("GetLinkedAccountItemsRequest: input"));
+			if (input == null) throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+					ApiError.InvalidValueNull.getMessage("GetLinkedAccountItemsRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
 
@@ -1282,7 +1283,6 @@ public final class Core extends ActionHandler {
 			boolean hasHlaPermission = UserServiceProvider.provide().hasPermission(input.session.user, hlaPermission);
 
 			output.linkedAccounts = new ArrayList<DataAccount>();
-			List<String> vendors = new ArrayList<String>();
 
 			if ("THETESTACCOUNT".equals(input.username) && "thegrange".equals(input.password)) { // TODO Redesign custom exceptions
 
@@ -1292,38 +1292,78 @@ public final class Core extends ActionHandler {
 
 			} else { // If not the test linked account, check if is a valid Apple linked account and retrieve the vendors
 
-				boolean accountNumberRequired = false;
-				try {
-					vendors = AppleReporterHelper.getVendors(input.username, input.password);
-				} catch (InputValidationException e) {
+				// boolean accountNumberRequired = false;
+				// try {
+				// vendors = AppleReporterHelper.getVendors(input.username, input.password);
+				// } catch (InputValidationException e) {
+				//
+				// if (e.getCode() == 214 || e.getCode() == 215 || e.getCode() == 216) { // Required/wrong account number (but valid credentials)
+				// accountNumberRequired = true;
+				// } else if (e.getCode() == 108) throw new InputValidationException(ApiError.InvalidDataAccountCredentials.getCode(),
+				// ApiError.InvalidDataAccountCredentials.getMessage(input.username));
+				// else
+				// throw e;
+				// }
+				//
+				// if (accountNumberRequired) {
+				// Map<String, String> accounts = AppleReporterHelper.getAccounts(input.username, input.password);
+				// for (String accountNumber : accounts.values()) { // For every account number, get the vendors
+				// vendors.addAll(AppleReporterHelper.getVendors(input.username, input.password, accountNumber));
+				// }
+				// }
 
-					if (e.getCode() == 214 || e.getCode() == 215 || e.getCode() == 216) { // Required/wrong account number (but valid credentials)
-						accountNumberRequired = true;
-					} else if (e.getCode() == 108) { // Invalid Apple credentials
-						throw new InputValidationException(ApiError.InvalidDataAccountCredentials.getCode(),
-								ApiError.InvalidDataAccountCredentials.getMessage(input.username));
-					} else { // Generic error
-						throw e;
+				Map<String, SimpleEntry<String, String>> mapVendorIdByAccountNameAndId = new HashMap<String, SimpleEntry<String, String>>();
+
+				// we use the new get accounts and get vendors methods for all accounts
+				Map<String, String> accounts = AppleReporterHelper.getAccounts(input.username, input.password);
+				for (String accountName : accounts.keySet()) { // For every account number, get the vendors
+					String accountNumber = accounts.get(accountName);
+					List<String> vendors = AppleReporterHelper.getVendors(input.username, input.password, accountNumber);
+					for (String vendorId : vendors) {
+						mapVendorIdByAccountNameAndId.put(vendorId, new SimpleEntry<>(accountName, accountNumber));
 					}
 				}
 
-				if (accountNumberRequired) {
-					Map<String, String> accounts = AppleReporterHelper.getAccounts(input.username, input.password);
-					for (String accountNumber : accounts.values()) { // For every account number, get the vendors
-						vendors.addAll(AppleReporterHelper.getVendors(input.username, input.password, accountNumber));
-					}
-				}
-
-				if (vendors.isEmpty()) throw new Exception("Vendor list is empty");
+				if (mapVendorIdByAccountNameAndId.isEmpty()) throw new Exception("Vendor list is empty");
 
 				// Add a data account for every vendor
-				for (String v : vendors) {
-					DataAccount addedAccount = UserServiceProvider.provide().addDataAccount(input.session.user, input.source, input.username, input.password,
-							ITunesConnectDownloadHelper.createProperties(v));
-					addedAccount.source = input.source;
-					output.linkedAccounts.add(addedAccount);
-				}
+				for (String vendorId : mapVendorIdByAccountNameAndId.keySet()) {
+					DataAccount existingDataAccount = DataAccountServiceProvider.provide().getDataAccount(input.username, vendorId);
 
+					if (existingDataAccount == null) {
+						// Note, a sales data gather is only enqueued if a new data account is created and there are no other active accounts with the same
+						// vendorid.
+						// If an existing one is linked then we don't gather.
+
+						SimpleEntry<String, String> accountNameAndId = mapVendorIdByAccountNameAndId.get(vendorId);
+
+						String developerName = accountNameAndId.getKey();
+						String accountId = accountNameAndId.getValue();
+
+						DataAccount addedAccount = UserServiceProvider.provide().addDataAccount(input.session.user, input.source, input.username,
+								input.password, vendorId, developerName, accountId);
+						addedAccount.source = input.source;
+						output.linkedAccounts.add(addedAccount);
+					} else {
+						User currentUser = UserServiceProvider.provide().getUser(input.session.user.id);
+						UserServiceProvider.provide().addOrRestoreUserDataAccount(currentUser, existingDataAccount);
+
+						if ("n".equals(existingDataAccount.active)) {
+							existingDataAccount.active = "y";
+							DataAccountServiceProvider.provide().updateDataAccount(existingDataAccount, false);
+						}
+
+						// verify the password to the existing data account
+						// and if it does not work, try the new one we just got.
+						// and if that does work, update the existing data account
+						if (!AppleReporterHelper.areCredentialsValid(existingDataAccount.username, existingDataAccount.password)) {
+							if (AppleReporterHelper.areCredentialsValid(input.username, input.password)) {
+								existingDataAccount.password = input.password;
+								DataAccountServiceProvider.provide().updateDataAccount(existingDataAccount, false);
+							}
+						}
+					} // end if existingdataaccount == null
+				} // end for each vendor id
 			}
 
 			if (!output.linkedAccounts.isEmpty()) {
@@ -1363,10 +1403,8 @@ public final class Core extends ActionHandler {
 				parameters.put("account", output.linkedAccounts.get(0));
 				parameters.put("source", input.source);
 
-				String body = NotificationHelper
-						.inflate(
-								parameters,
-								"Hi ${listener.forename},\n\nThis is to let you know that the user [${user.id} - ${user.forename} ${user.surname}] has added the data account [${account.id}] for the data source [${source.name}] and the username ${account.username}.\n\nReflection");
+				String body = NotificationHelper.inflate(parameters,
+						"Hi ${listener.forename},\n\nThis is to let you know that the user [${user.id} - ${user.forename} ${user.surname}] has added the data account [${account.id}] for the data source [${source.name}] and the username ${account.username}.\n\nReflection");
 
 				Notification notification = (new Notification()).from("hello@reflection.io").user(listeningUser).body(body)
 						.priority(EventPriorityType.EventPriorityTypeHigh).subject("A user's has linked thier account account");
@@ -1376,8 +1414,7 @@ public final class Core extends ActionHandler {
 					notification.type = NotificationTypeType.NotificationTypeTypeInternal;
 					NotificationServiceProvider.provide().addNotification(notification);
 				}
-			} else
-				throw new Exception();
+			} else throw new Exception();
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -1579,8 +1616,8 @@ public final class Core extends ActionHandler {
 			output.categories = CategoryServiceProvider.provide().getStoreCategories(input.store, input.pager);
 
 			output.pager = input.pager;
-			updatePager(output.pager, output.categories, input.pager.totalCount == null ? CategoryServiceProvider.provide()
-					.getStoreCategoriesCount(input.store) : null);
+			updatePager(output.pager, output.categories,
+					input.pager.totalCount == null ? CategoryServiceProvider.provide().getStoreCategoriesCount(input.store) : null);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -1866,9 +1903,8 @@ public final class Core extends ActionHandler {
 		LOG.finer("Entering getLinkedAccountItem");
 		GetLinkedAccountItemResponse output = new GetLinkedAccountItemResponse();
 		try {
-			if (input == null)
-				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
-						ApiError.InvalidValueNull.getMessage("GetLinkedAccountItemRequest: input"));
+			if (input == null) throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+					ApiError.InvalidValueNull.getMessage("GetLinkedAccountItemRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 
@@ -1936,9 +1972,9 @@ public final class Core extends ActionHandler {
 				}
 			}
 
-			PagerHelper.updatePager(output.pager = input.pager, output.notifications, input.pager.totalCount == null ? NotificationServiceProvider.provide()
-					.getUserNotificationsCount(input.session.user, NotificationTypeType.NotificationTypeTypeInternal, null, Boolean.FALSE)
-					: input.pager.totalCount);
+			PagerHelper.updatePager(output.pager = input.pager, output.notifications,
+					input.pager.totalCount == null ? NotificationServiceProvider.provide().getUserNotificationsCount(input.session.user,
+							NotificationTypeType.NotificationTypeTypeInternal, null, Boolean.FALSE) : input.pager.totalCount);
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -2072,9 +2108,8 @@ public final class Core extends ActionHandler {
 		LOG.finer("Entering registerInterestBusiness");
 		RegisterInterestBusinessResponse output = new RegisterInterestBusinessResponse();
 		try {
-			if (input == null)
-				throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
-						ApiError.InvalidValueNull.getMessage("RegisterInterestBusinessRequest: input"));
+			if (input == null) throw new InputValidationException(ApiError.InvalidValueNull.getCode(),
+					ApiError.InvalidValueNull.getMessage("RegisterInterestBusinessRequest: input"));
 
 			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input");
 

@@ -78,14 +78,24 @@ public class ITunesReporterCollector implements DataAccountCollector {
 		}
 
 		if (dataAccountFetch.status != DataAccountFetchStatusType.DataAccountFetchStatusTypeIngested) {
-			SimpleEntry<String, String> accountAndVendorId = getPrimaryAccountAndVendorIdsFromProperties(dataAccount);
 
-			String accountId = null;
-			String vendorId = null;
+			String accountId = dataAccount.accountId;
+			String vendorId = dataAccount.vendorId;
 
-			if (accountAndVendorId != null) {
-				accountId = accountAndVendorId.getKey();
-				vendorId = accountAndVendorId.getValue();
+			// If there accountid or vendor id is not set in the data account, get it from the properties or do a lookup
+			if (accountId == null || vendorId == null || accountId.trim().length() == 0 || vendorId.trim().length() == 0) {
+				SimpleEntry<String, String> accountAndVendorId = getPrimaryAccountAndVendorIdsFromProperties(dataAccount);
+
+				if (accountAndVendorId != null) {
+					accountId = accountAndVendorId.getKey();
+					vendorId = accountAndVendorId.getValue();
+
+					// if we were able to get the accountid and vendorid, update the data account
+					if (accountId != null && vendorId != null && accountId.trim().length() > 0 && vendorId.trim().length() > 0) {
+						dataAccount.accountId(accountId).vendorId(vendorId);
+						DataAccountServiceProvider.provide().updateDataAccount(dataAccount, false);
+					}
+				}
 			}
 
 			// If we still don't have an account and vendor id pair, fail

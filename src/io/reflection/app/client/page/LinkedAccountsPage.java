@@ -7,7 +7,42 @@
 //
 package io.reflection.app.client.page;
 
-import static io.reflection.app.client.helper.FormattingHelper.DATE_FORMATTER_DD_MMM_YYYY;
+import static io.reflection.app.client.helper.FormattingHelper.*;
+
+import java.util.List;
+
+import com.google.gson.JsonObject;
+import com.google.gwt.cell.client.FieldUpdater;
+import com.google.gwt.cell.client.SafeHtmlCell;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.builder.shared.TableCellBuilder;
+import com.google.gwt.dom.builder.shared.TableRowBuilder;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.FormElement;
+import com.google.gwt.dom.client.TableRowElement;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.user.cellview.client.Column;
+import com.google.gwt.user.cellview.client.DefaultCellTableBuilder;
+import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
+import com.google.gwt.user.cellview.client.SafeHtmlHeader;
+import com.google.gwt.user.cellview.client.TextColumn;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Widget;
+import com.willshex.gson.json.service.shared.StatusType;
+import com.willshex.gson.json.shared.Convert;
+
 import io.reflection.app.api.core.shared.call.DeleteLinkedAccountRequest;
 import io.reflection.app.api.core.shared.call.DeleteLinkedAccountResponse;
 import io.reflection.app.api.core.shared.call.GetLinkedAccountsRequest;
@@ -45,73 +80,43 @@ import io.reflection.app.client.res.Styles;
 import io.reflection.app.client.res.Styles.ReflectionMainStyles;
 import io.reflection.app.datatypes.shared.DataAccount;
 
-import java.util.List;
-
-import com.google.gson.JsonObject;
-import com.google.gwt.cell.client.FieldUpdater;
-import com.google.gwt.cell.client.SafeHtmlCell;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.dom.builder.shared.TableCellBuilder;
-import com.google.gwt.dom.builder.shared.TableRowBuilder;
-import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.FormElement;
-import com.google.gwt.dom.client.TableRowElement;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.safehtml.shared.SafeHtmlUtils;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.cellview.client.CellTable;
-import com.google.gwt.user.cellview.client.Column;
-import com.google.gwt.user.cellview.client.DefaultCellTableBuilder;
-import com.google.gwt.user.cellview.client.HasKeyboardSelectionPolicy.KeyboardSelectionPolicy;
-import com.google.gwt.user.cellview.client.SafeHtmlHeader;
-import com.google.gwt.user.cellview.client.TextColumn;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.Widget;
-import com.willshex.gson.json.service.shared.StatusType;
-import com.willshex.gson.json.shared.Convert;
-
 /**
  * @author billy1380
- * 
+ *
  */
 public class LinkedAccountsPage extends Page implements NavigationEventHandler, LinkAccountEventHandler, GetLinkedAccountsEventHandler,
 		DeleteLinkedAccountEventHandler, UpdateLinkedAccountEventHandler {
 
-	public static final int ACTION_PARAMETER = 1;
-	public static final int ACTION_PARAMETER_INDEX = 2;
+	public static final int										ACTION_PARAMETER				= 1;
+	public static final int										ACTION_PARAMETER_INDEX	= 2;
 
-	private static LinkedAccountsPageUiBinder uiBinder = GWT.create(LinkedAccountsPageUiBinder.class);
+	private static LinkedAccountsPageUiBinder	uiBinder								= GWT.create(LinkedAccountsPageUiBinder.class);
 
-	interface LinkedAccountsPageUiBinder extends UiBinder<Widget, LinkedAccountsPage> {}
+	interface LinkedAccountsPageUiBinder extends UiBinder<Widget, LinkedAccountsPage> {
+	}
 
-	private static ReflectionMainStyles style = Styles.STYLES_INSTANCE.reflectionMainStyle();
+	private static ReflectionMainStyles		style											= Styles.STYLES_INSTANCE.reflectionMainStyle();
 
-	@UiField(provided = true) CellTable<DataAccount> linkedAccountsTable = new CellTable<DataAccount>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
+	@UiField(provided = true)
+	CellTable<DataAccount>								linkedAccountsTable				= new CellTable<DataAccount>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
 
-	@UiField Element linkedAccountsCount;
+	@UiField
+	Element																linkedAccountsCount;
 
-	private TextColumn<DataAccount> columnAccountName;
-	private Column<DataAccount, SafeHtml> columnStore;
-	private TextColumn<DataAccount> columnDateAdded;
-	private Column<DataAccount, String> columnEdit;
-	private Column<DataAccount, String> columnDelete;
+	private TextColumn<DataAccount>				columnAccountName;
+	private Column<DataAccount, SafeHtml>	columnStore;
+	private TextColumn<DataAccount>				columnDateAdded;
+	private Column<DataAccount, String>		columnEdit;
+	private Column<DataAccount, String>		columnDelete;
 
-	@UiField Button addAnotherLinkedAccountBtn;
+	@UiField
+	Button																addAnotherLinkedAccountBtn;
 
-	private IosMacLinkAccountForm updatingLinkedAccountForm = null;
+	private IosMacLinkAccountForm					updatingLinkedAccountForm	= null;
 
-	private LoadingBar loadingBar = new LoadingBar(false);
-	private AddLinkedAccountPopup addLinkedAccountPopup = new AddLinkedAccountPopup();
-	private DeleteLinkedAccountPopup deleteLinkedAccountPopup = new DeleteLinkedAccountPopup();
+	private LoadingBar										loadingBar								= new LoadingBar(false);
+	private AddLinkedAccountPopup					addLinkedAccountPopup			= new AddLinkedAccountPopup();
+	private DeleteLinkedAccountPopup			deleteLinkedAccountPopup	= new DeleteLinkedAccountPopup();
 
 	public LinkedAccountsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -153,7 +158,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see com.google.gwt.user.cellview.client.DefaultCellTableBuilder#buildRowImpl(java.lang.Object, int)
 		 */
 		@Override
@@ -233,7 +238,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
 	 */
 	@Override
@@ -252,7 +257,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.client.page.Page#onDetach()
 	 */
 	@Override
@@ -273,19 +278,19 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 			@Override
 			public String getValue(DataAccount object) {
 				List<DataAccount> linkedAccounts = LinkedAccountController.get().getAllLinkedAccounts();
-				String item = object.username;
+				String item = object.developerName;
 				if (linkedAccounts != null) {
 					int sameAppleIdInstances = 0;
 					for (DataAccount linkedAccount : linkedAccounts) {
-						if (object.username.equals(linkedAccount.username)) {
+						if (object.developerName.equals(linkedAccount.developerName)) {
 							sameAppleIdInstances++;
 						}
 					}
 					if (sameAppleIdInstances > 1) {
 						JsonObject propertiesJson = Convert.toJsonObject(object.properties);
-						item = object.username + " (" + propertiesJson.get("vendors").getAsString() + ")";
+						item = object.developerName + " (" + propertiesJson.get("vendors").getAsString() + ")";
 					} else {
-						item = object.username;
+						item = object.developerName;
 					}
 				}
 				return item;
@@ -396,7 +401,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
 	 * io.reflection.app.client.controller.NavigationController.Stack)
 	 */
@@ -407,7 +412,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler# linkAccountSuccess (io.reflection.app.api.core.shared.call.LinkAccountRequest,
 	 * io.reflection.app.api.core.shared.call.LinkAccountResponse)
 	 */
@@ -420,16 +425,17 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler# linkAccountFailure (io.reflection.app.api.core.shared.call.LinkAccountRequest,
 	 * java.lang.Throwable)
 	 */
 	@Override
-	public void linkAccountFailure(LinkAccountRequest input, Throwable caught) {}
+	public void linkAccountFailure(LinkAccountRequest input, Throwable caught) {
+	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.api.core.shared.call.event.DeleteLinkedAccountEventHandler#deleteLinkedAccountSuccess(io.reflection.app.api.core.shared.call.
 	 * DeleteLinkedAccountRequest, io.reflection.app.api.core.shared.call.DeleteLinkedAccountResponse)
 	 */
@@ -446,7 +452,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.api.core.shared.call.event.DeleteLinkedAccountEventHandler#deleteLinkedAccountFailure(io.reflection.app.api.core.shared.call.
 	 * DeleteLinkedAccountRequest, java.lang.Throwable)
 	 */
@@ -457,7 +463,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.api.core.shared.call.event.UpdateLinkedAccountEventHandler#updateLinkedAccountSuccess(io.reflection.app.api.core.shared.call.
 	 * UpdateLinkedAccountRequest, io.reflection.app.api.core.shared.call.UpdateLinkedAccountResponse)
 	 */
@@ -491,7 +497,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.api.core.shared.call.event.UpdateLinkedAccountEventHandler#updateLinkedAccountFailure(io.reflection.app.api.core.shared.call.
 	 * UpdateLinkedAccountRequest, java.lang.Throwable)
 	 */
@@ -507,7 +513,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.api.core.shared.call.event.GetLinkedAccountsEventHandler #getLinkedAccountsSuccess(io.reflection.app.api.core.shared.call.
 	 * GetLinkedAccountsRequest, io.reflection.app.api.core.shared.call.GetLinkedAccountsResponse)
 	 */
@@ -524,7 +530,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.api.core.shared.call.event.GetLinkedAccountsEventHandler #getLinkedAccountsFailure(io.reflection.app.api.core.shared.call.
 	 * GetLinkedAccountsRequest, java.lang.Throwable)
 	 */

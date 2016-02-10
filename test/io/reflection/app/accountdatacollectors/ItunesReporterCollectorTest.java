@@ -32,6 +32,7 @@ import io.reflection.app.helpers.AppleReporterHelper.AppleReporterException;
 import io.reflection.app.helpers.AppleReporterHelper.DateType;
 import io.reflection.app.helpers.SaleSummaryHelper;
 import io.reflection.app.helpers.SalesReportHelper;
+import io.reflection.app.service.dataaccount.DataAccountServiceProvider;
 import io.reflection.app.service.lookupitem.LookupItemService;
 import io.reflection.app.service.sale.SaleServiceProvider;
 
@@ -45,16 +46,13 @@ public class ItunesReporterCollectorTest {
 	private static final String	VENDORID		= "85037116";
 
 	// for the splits vs report test, you need access to a DB for the lookup items table to be able to summarise sales
-	// Live DB
-	// private static final String DBPassword = "";
-	// private static final String DBUsername = "mamin";
-	// private static final String DB = "rio";
-	// private static final String DBServer = "173.194.244.48";
-
-	// DEV DB
-	private static final String	DBPassword	= "";
-	private static final String	DBUsername	= "mamin";
+	private static final String	DBPassword	= "sooth28@duns";
+	private static final String	DBUsername	= "rio_app_user";
 	private static final String	DB					= "rio";
+
+	// Live DB
+	// private static final String DBServer = "173.194.244.48";
+	// DEV DB
 	private static final String	DBServer		= "173.194.226.90";
 
 	@Before
@@ -285,27 +283,25 @@ public class ItunesReporterCollectorTest {
 	@Test
 	@Ignore
 	public void compareDbWithReporter() throws FileNotFoundException, DataAccessException, AppleReporterException, IOException {
-		DataAccount dataAccount1 = new DataAccount();
-		dataAccount1.id = 264L;
-		dataAccount1.username = "finance@miniclip.com";
-		dataAccount1.password = "";
-
+		DataAccount dataAccount1 = DataAccountServiceProvider.provide().getDataAccount(264L);
 		String vendorId1 = "85011246";
 		String itemId1 = "543186831";
 		String reportFileName1 = "/tmp/miniclip_reporter_20160101.csv";
 
-		DataAccount dataAccount2 = new DataAccount();
-		dataAccount2.id = 332L;
-		dataAccount2.username = "reflections@sega.net";
-		dataAccount2.password = "";
+		DataAccount dataAccount2 = DataAccountServiceProvider.provide().getDataAccount(332L);
 		String vendorId2 = "80046332";
 		String itemId2 = "997012040";
 		String reportFileName2 = "/tmp/sega_reporter_20160101.csv";
 
-		DataAccount dataAccount3 = new DataAccount();
-		dataAccount3.id = 391L;
-		dataAccount3.username = "reflection@ninjakiwi.com";
-		dataAccount3.password = "";
+		DataAccount dataAccount3 = DataAccountServiceProvider.provide().getDataAccount(391L);
+
+		// 391 on live only
+		// for dev use the details below
+		// DataAccount dataAccount3 = new DataAccount();
+		// dataAccount3.id = 391L;
+		// dataAccount3.username = "reflection@ninjakiwi.com";
+		// dataAccount3.password = "";
+
 		String vendorId3 = "85107048";
 		String itemId3 = "563718995";
 		String reportFileName3 = "/tmp/ninjakiwi_reporter_20160101.csv";
@@ -361,15 +357,18 @@ public class ItunesReporterCollectorTest {
 		System.out.println("Report written to: " + outputFile.getAbsolutePath());
 	}
 
-	//
-	// @Test
-	// public void test() throws FileNotFoundException, IOException, DataAccessException {
-	// byte[] compressedReport = IOUtils.toByteArray(new FileInputStream("~/temp/accounts-389-S_D_A_308588_V_850371162016-01-08.txt.gz"));
-	//
-	// DataAccount dataAccount = new DataAccount();
-	// dataAccount.id(389L);
-	//
-	// List<Sale> sales = SalesReportHelper.convertReportToSales(compressedReport, dataAccount);
-	// SaleServiceProvider.provide().summariseSales(389L, sales, SALE_SOURCE.DB);
-	// }
+	@Test
+	public void test() throws DataAccessException, AppleReporterException, InputValidationException {
+		DataAccount spaceHopper = DataAccountServiceProvider.provide().getDataAccount(388L);
+
+		Map<String, String> accounts = AppleReporterHelper.getAccounts(spaceHopper.username, spaceHopper.password);
+		for (String accountName : accounts.keySet()) {
+			String accountId = accounts.get(accountName);
+			List<String> vendors = AppleReporterHelper.getVendors(spaceHopper.username, spaceHopper.password, accountId);
+
+			for (String vendor : vendors) {
+				System.out.println(String.format("Account: %s, accountId: %s, vendorId: %s", accountName, accountId, vendor));
+			}
+		}
+	}
 }

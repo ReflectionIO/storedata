@@ -7,6 +7,18 @@
 //
 package io.reflection.app.client.controller;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.google.gwt.http.client.Request;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.view.client.AsyncDataProvider;
+import com.google.gwt.view.client.HasData;
+import com.willshex.gson.json.service.shared.StatusType;
+
 import io.reflection.app.api.core.client.CoreService;
 import io.reflection.app.api.core.shared.call.DeleteLinkedAccountRequest;
 import io.reflection.app.api.core.shared.call.DeleteLinkedAccountResponse;
@@ -33,37 +45,25 @@ import io.reflection.app.datatypes.shared.DataAccount;
 import io.reflection.app.datatypes.shared.DataSource;
 import io.reflection.app.datatypes.shared.Item;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.google.gwt.http.client.Request;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.view.client.AsyncDataProvider;
-import com.google.gwt.view.client.HasData;
-import com.willshex.gson.json.service.shared.StatusType;
-
 /**
  * @author billy1380
- * 
+ *
  */
 public class LinkedAccountController extends AsyncDataProvider<DataAccount> implements ServiceConstants {
 
-	private List<DataAccount> myDataAccounts = null;
-	private List<DataSource> myDataSources = null;
-	private Map<String, DataSource> myDataSourceLookup = new HashMap<String, DataSource>();
-	private Map<String, DataAccount> myDataAccountLookup = new HashMap<String, DataAccount>();
+	private List<DataAccount>								myDataAccounts			= null;
+	private List<DataSource>								myDataSources				= null;
+	private Map<String, DataSource>					myDataSourceLookup	= new HashMap<String, DataSource>();
+	private Map<String, DataAccount>				myDataAccountLookup	= new HashMap<String, DataAccount>();
 
-	private int linkedAccountsCount = -1;
-	private boolean linkedAccountsFetched;
+	private int															linkedAccountsCount	= -1;
+	private boolean													linkedAccountsFetched;
 
-	private List<DataAccount> rows = new ArrayList<DataAccount>();
-	private Pager pager = null; // THE LINKED ACCOUNTS PAGE IS LIMITLESS
-	private Request currentLinkedAccountItem;
+	private List<DataAccount>								rows								= new ArrayList<DataAccount>();
+	private Pager														pager								= null;																 // THE LINKED ACCOUNTS PAGE IS LIMITLESS
+	private Request													currentLinkedAccountItem;
 
-	private static LinkedAccountController mOne = null;
+	private static LinkedAccountController	mOne								= null;
 
 	public static LinkedAccountController get() {
 		if (mOne == null) {
@@ -98,7 +98,6 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 						addDataSourceToLookup(output.dataSources);
 						DataAccount myLinkedAccount;
 						for (DataAccount da : output.linkedAccounts) {
-							myLinkedAccount = new DataAccount();
 							myLinkedAccount = da;
 							myLinkedAccount.source = getDataSource(da.source.id);
 							rows.add(myLinkedAccount);
@@ -132,7 +131,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 
 	/**
 	 * Add new linked account
-	 * 
+	 *
 	 * @param sourceId
 	 * @param username
 	 * @param password
@@ -207,7 +206,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 
 	/**
 	 * Change the linked account password and properties - the account user name can't be changed
-	 * 
+	 *
 	 * @param accountUsername
 	 * @param password
 	 * @param vendorNumber
@@ -250,7 +249,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 
 	/**
 	 * Delete the linked account identified by id
-	 * 
+	 *
 	 * @param linkedAccountId
 	 */
 	public void deleteLinkedAccount(DataAccount linkedAccount) {
@@ -290,7 +289,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public long getLinkedAccountsCount() {
@@ -299,7 +298,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 
 	/**
 	 * Get all linked accounts
-	 * 
+	 *
 	 * @return
 	 */
 	public List<DataAccount> getAllLinkedAccounts() {
@@ -308,7 +307,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 
 	/**
 	 * Return true if Linked Accounts already fetched
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean linkedAccountsFetched() {
@@ -317,7 +316,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 
 	/**
 	 * Return true if there is at least 1 linked account
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean hasLinkedAccounts() {
@@ -326,7 +325,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 
 	/**
 	 * Get linked account
-	 * 
+	 *
 	 * @param linkedAccountId
 	 * @return
 	 */
@@ -348,7 +347,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 
 	/**
 	 * Get data source
-	 * 
+	 *
 	 * @param dataSourceId
 	 * @return
 	 */
@@ -358,7 +357,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 
 	/**
 	 * Add linked account into lookup
-	 * 
+	 *
 	 * @param linkedAccounts
 	 */
 	private void addLinkedAccountsToLookup(List<DataAccount> linkedAccounts) {
@@ -373,7 +372,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 
 	/**
 	 * Update linked account from lookup
-	 * 
+	 *
 	 * @param linkedAccountId
 	 * @param password
 	 * @param properties
@@ -387,7 +386,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 
 	/**
 	 * Delete linked account from lookup
-	 * 
+	 *
 	 * @param linkedAccountId
 	 */
 	private void deleteLinkedAccountLookup(Long linkedAccountId) {
@@ -396,7 +395,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 	}
 
 	/**
-	 * 
+	 *
 	 * @param dataSources
 	 */
 	private void addDataSourceToLookup(List<DataSource> dataSources) {
@@ -411,7 +410,7 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.google.gwt.view.client.AbstractDataProvider#onRangeChanged(com.google.gwt.view.client.HasData)
 	 */
 	@Override

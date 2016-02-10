@@ -68,16 +68,16 @@ public class FilterHelper {
 			for (DataAccount linkedAccount : linkedAccounts) {
 				int sameAppleIdInstances = 0;
 				for (DataAccount la : linkedAccounts) {
-					if (la.username.equals(linkedAccount.username)) {
+					if (la.developerName.equals(linkedAccount.developerName)) {
 						sameAppleIdInstances++;
 					}
 				}
 				String item;
 				if (sameAppleIdInstances > 1) {
 					JsonObject propertiesJson = Convert.toJsonObject(linkedAccount.properties);
-					item = linkedAccount.username + " (" + propertiesJson.get("vendors").getAsString() + ")";
+					item = linkedAccount.developerName + " (" + propertiesJson.get("vendors").getAsString() + ")";
 				} else {
-					item = linkedAccount.username;
+					item = linkedAccount.developerName;
 				}
 				list.addItem(item, linkedAccount.id.toString());
 			}

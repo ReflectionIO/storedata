@@ -12,7 +12,6 @@ import static io.reflection.app.objectify.PersistenceService.*;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.AbstractMap.SimpleEntry;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -32,7 +31,6 @@ import com.google.appengine.api.taskqueue.TaskOptions.Method;
 import com.google.appengine.api.taskqueue.TransientFailureException;
 import com.googlecode.objectify.cmd.QueryKeys;
 
-import io.reflection.app.accountdatacollectors.ITunesReporterCollector;
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.apple.ItemPropertyLookupServlet;
@@ -49,7 +47,6 @@ import io.reflection.app.helpers.ApiHelper;
 import io.reflection.app.helpers.AppleReporterHelper;
 import io.reflection.app.helpers.AppleReporterHelper.AppleReporterException;
 import io.reflection.app.helpers.AppleReporterHelper.DateType;
-import io.reflection.app.helpers.DataAccountPropertiesHelper;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.modellers.Modeller;
 import io.reflection.app.modellers.ModellerFactory;
@@ -269,8 +266,7 @@ public class CronServlet extends HttpServlet {
 					 * Check whether the sales data is available for collection for yesterday (or the day before if we are checking before 5pm)
 					 */
 					try {
-						SimpleEntry<String, String> accountAndVendorId = ITunesReporterCollector.getInstance().getPrimaryAccountAndVendorIdsFromProperties(dataAccountToTest);
-						AppleReporterHelper.getReport(dataAccountToTest.username, dataAccountToTest.password, accountAndVendorId.getKey(), accountAndVendorId.getValue(), DateType.DAILY, lastSalesFetchDate);
+						AppleReporterHelper.getReport(dataAccountToTest.username, dataAccountToTest.password, dataAccountToTest.accountId, dataAccountToTest.vendorId, DateType.DAILY, lastSalesFetchDate);
 					} catch (final AppleReporterException e) {
 						if (e.getErrorCode() == 210 || e.getErrorCode() == 211) {
 							LOG.warning("Sales report are not ready yet for " + lastSalesFetchDate);
@@ -293,16 +289,15 @@ public class CronServlet extends HttpServlet {
 					HashMap<String, DataAccount> dataAccountsByVendorId = new HashMap<>();
 
 					for (final DataAccount dataAccount : dataAccounts) {
-						String vendorId = DataAccountPropertiesHelper.getPrimaryVendorId(dataAccount.properties);
-						if (vendorId == null) {
+						if (dataAccount.vendorId == null) {
 							continue;
 						}
 
-						if (dataAccountsByVendorId.containsKey(vendorId)) {
+						if (dataAccountsByVendorId.containsKey(dataAccount.vendorId)) {
 							continue;
 						}
 
-						dataAccountsByVendorId.put(vendorId, dataAccount);
+						dataAccountsByVendorId.put(dataAccount.vendorId, dataAccount);
 					}
 
 					for (String vendorId : dataAccountsByVendorId.keySet()) {

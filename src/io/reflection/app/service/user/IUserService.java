@@ -1,4 +1,4 @@
-//  
+//
 //  IUserService.java
 //  storedata
 //
@@ -8,6 +8,11 @@
 //
 package io.reflection.app.service.user;
 
+import java.util.Collection;
+import java.util.List;
+
+import com.spacehopperstudios.service.IService;
+
 import io.reflection.app.api.exception.DataAccessException;
 import io.reflection.app.api.shared.datatypes.Pager;
 import io.reflection.app.datatypes.shared.DataAccount;
@@ -16,22 +21,17 @@ import io.reflection.app.datatypes.shared.Permission;
 import io.reflection.app.datatypes.shared.Role;
 import io.reflection.app.datatypes.shared.User;
 
-import java.util.Collection;
-import java.util.List;
-
-import com.spacehopperstudios.service.IService;
-
 public interface IUserService extends IService {
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
 	public User getUser(Long id) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param role
 	 * @return
 	 * @throws DataAccessException
@@ -39,14 +39,14 @@ public interface IUserService extends IService {
 	public List<User> getRoleUsers(Role role) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param user
 	 * @return
 	 */
 	public User addUser(User user) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param mask
 	 * @param pager
 	 * @return
@@ -54,21 +54,21 @@ public interface IUserService extends IService {
 	public List<User> searchUsers(String mask, Pager pager) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param mask
 	 * @return
 	 */
 	public Long searchUsersCount(String mask) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param user
 	 * @param newPassword
 	 */
 	public void updateUserPassword(User user, String newPassword) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param user
 	 * @param newPassword
 	 * @param notify
@@ -77,26 +77,26 @@ public interface IUserService extends IService {
 	public void updateUserPassword(User user, String newPassword, Boolean notify) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param user
 	 * @return
 	 */
 	public User updateUser(User user) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param user
 	 */
 	public void deleteUser(User user) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param userIds
 	 */
 	public void deleteUsers(Collection<User> users) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param username
 	 * @param password
 	 * @return
@@ -104,20 +104,20 @@ public interface IUserService extends IService {
 	public User getLoginUser(String username, String password) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param pager
 	 * @return
 	 */
 	public List<User> getUsers(Pager pager) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public Long getUsersCount() throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param user
 	 */
 	public void updateLoginTime(User user) throws DataAccessException;
@@ -148,7 +148,7 @@ public interface IUserService extends IService {
 	public Boolean hasRole(User user, Role role) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param user
 	 * @param role
 	 * @return
@@ -183,7 +183,7 @@ public interface IUserService extends IService {
 	public List<Role> getUserRoles(User user) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param user
 	 * @param includeExpired
 	 * @return
@@ -198,7 +198,7 @@ public interface IUserService extends IService {
 	public List<Permission> getPermissions(User user) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param user
 	 * @param permission
 	 * @throws DataAccessException
@@ -206,35 +206,35 @@ public interface IUserService extends IService {
 	public void revokePermission(User user, Permission permission) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param user
 	 * @throws DataAccessException
 	 */
 	public void revokeAllPermissions(User user) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param userIds
 	 * @throws DataAccessException
 	 */
 	public void revokeUsersAllPermissions(Collection<User> users) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param user
 	 * @throws DataAccessException
 	 */
 	public void revokeRole(User user, Role role) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param user
 	 * @throws DataAccessException
 	 */
 	public void revokeAllRoles(User user) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param users
 	 * @throws DataAccessException
 	 */
@@ -245,10 +245,12 @@ public interface IUserService extends IService {
 	 * @param source
 	 * @param username
 	 * @param password
-	 * @param properties
+	 * @param vendorId
+	 * @param developerName
+	 * @param accountId
 	 * @return
 	 */
-	public DataAccount addDataAccount(User user, DataSource datasource, String username, String password, String properties) throws DataAccessException;
+	public DataAccount addDataAccount(User user, DataSource datasource, String username, String password, String vendorId, String developerName, String accountId) throws DataAccessException;
 
 	/**
 	 * @param pager
@@ -258,7 +260,7 @@ public interface IUserService extends IService {
 	public List<DataAccount> getDataAccounts(User user, Pager pager) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param user
 	 * @param pager
 	 * @return
@@ -267,7 +269,7 @@ public interface IUserService extends IService {
 	public List<Long> getDataAccountsIds(User user, Pager pager) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param users
 	 * @return
 	 * @throws DataAccessException
@@ -275,7 +277,7 @@ public interface IUserService extends IService {
 	public List<DataAccount> getUsersDataAccounts(Collection<User> users, Pager pager) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 * @throws DataAccessException
 	 */
@@ -293,7 +295,7 @@ public interface IUserService extends IService {
 
 	/**
 	 * Marks the user with a reset code and sends an email notification to the user with the assigned action code
-	 * 
+	 *
 	 * @param user
 	 * @throws DataAccessException
 	 */
@@ -301,7 +303,7 @@ public interface IUserService extends IService {
 
 	/**
 	 * Gets the user for a given action code. Current usage include reset code and add to private beta code
-	 * 
+	 *
 	 * @param code
 	 * @return
 	 * @throws DataAccessException
@@ -309,7 +311,7 @@ public interface IUserService extends IService {
 	public User getActionCodeUser(String code) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param user
 	 * @param dataAccount
 	 * @return
@@ -318,7 +320,7 @@ public interface IUserService extends IService {
 	public Boolean hasDataAccount(User user, DataAccount dataAccount) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param user
 	 * @return
 	 * @throws DataAccessException
@@ -326,7 +328,7 @@ public interface IUserService extends IService {
 	public Boolean hasDataAccounts(User user) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param user
 	 * @param dataAccount
 	 * @throws DataAccessException
@@ -334,11 +336,11 @@ public interface IUserService extends IService {
 	public void deleteUserDataAccount(User user, DataAccount dataAccount) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param dataAccount
 	 * @throws DataAccessException
 	 */
-	public void restoreUserDataAccount(DataAccount dataAccount) throws DataAccessException;
+	public void restoreUserDataAccount(User user, DataAccount dataAccount) throws DataAccessException;
 
 	/**
 	 * @param dataAccount
@@ -346,14 +348,14 @@ public interface IUserService extends IService {
 	public void deleteAllUsersDataAccount(DataAccount dataAccount) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param user
 	 * @throws DataAccessException
 	 */
 	public void deleteAllDataAccounts(User user) throws DataAccessException;
 
 	/**
-	 * 
+	 *
 	 * @param user
 	 * @throws DataAccessException
 	 */
@@ -361,7 +363,7 @@ public interface IUserService extends IService {
 
 	/**
 	 * Adds a user to a data account or restores a deleted row if one exist
-	 * 
+	 *
 	 * @param user
 	 * @param dataAccount
 	 * @throws DataAccessException

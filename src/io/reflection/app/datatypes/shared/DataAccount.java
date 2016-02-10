@@ -18,15 +18,18 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 public class DataAccount extends DataType {
-	public DataSource source;
-	public List<Item> items;
-	public User user;
-	public List<DataAccountFetch> fetches;
-	public String username;
-	public String password;
-	public String properties;
+	public DataSource							source;
+	public List<Item>							items;
+	public User										user;
+	public List<DataAccountFetch>	fetches;
+	public String									username;
+	public String									password;
+	public String									properties;
 	public String									developerName;
-	public String active;
+	public String									active;
+
+	public String									accountId;
+	public String									vendorId;
 
 	@Override
 	public JsonObject toJson() {
@@ -63,6 +66,10 @@ public class DataAccount extends DataType {
 		object.add("developerName", jsonDeveloperName);
 		JsonElement jsonActive = active == null ? JsonNull.INSTANCE : new JsonPrimitive(active);
 		object.add("active", jsonActive);
+		JsonElement jsonAccountId = accountId == null ? JsonNull.INSTANCE : new JsonPrimitive(accountId);
+		object.add("accountId", jsonAccountId);
+		JsonElement jsonVendorId = vendorId == null ? JsonNull.INSTANCE : new JsonPrimitive(vendorId);
+		object.add("vendorId", jsonVendorId);
 		return object;
 	}
 
@@ -130,13 +137,25 @@ public class DataAccount extends DataType {
 		if (jsonObject.has("developerName")) {
 			JsonElement jsonDeveloperName = jsonObject.get("developerName");
 			if (jsonDeveloperName != null) {
-				active = jsonDeveloperName.getAsString();
+				developerName = jsonDeveloperName.getAsString();
 			}
 		}
 		if (jsonObject.has("active")) {
 			JsonElement jsonActive = jsonObject.get("active");
 			if (jsonActive != null) {
 				active = jsonActive.getAsString();
+			}
+		}
+		if (jsonObject.has("accountId")) {
+			JsonElement jsonAccountId = jsonObject.get("accountId");
+			if (jsonAccountId != null) {
+				accountId = jsonAccountId.getAsString();
+			}
+		}
+		if (jsonObject.has("vendorId")) {
+			JsonElement jsonVendorId = jsonObject.get("vendorId");
+			if (jsonVendorId != null) {
+				vendorId = jsonVendorId.getAsString();
 			}
 		}
 	}
@@ -173,6 +192,16 @@ public class DataAccount extends DataType {
 
 	public DataAccount active(String active) {
 		this.active = active;
+		return this;
+	}
+
+	public DataAccount accountId(String accountId) {
+		this.accountId = accountId;
+		return this;
+	}
+
+	public DataAccount vendorId(String vendorId) {
+		this.vendorId = vendorId;
 		return this;
 	}
 }
