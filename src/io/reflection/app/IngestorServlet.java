@@ -8,10 +8,6 @@
 //
 package io.reflection.app;
 
-import io.reflection.app.api.exception.DataAccessException;
-import io.reflection.app.ingestors.IngestorFactory;
-import io.reflection.app.logging.GaeLevel;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +18,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import io.reflection.app.api.exception.DataAccessException;
+import io.reflection.app.ingestors.IngestorFactory;
+import io.reflection.app.logging.GaeLevel;
+
 /**
  * @author William Shakour
- * 
+ *
  */
 @SuppressWarnings("serial")
 public class IngestorServlet extends HttpServlet {
@@ -39,7 +39,7 @@ public class IngestorServlet extends HttpServlet {
 		boolean isNotQueue = false;
 
 		// bail out if we have not been called by app engine cron
-		if ((isNotQueue = (appEngineQueue == null || !"ingest".toLowerCase().equals(appEngineQueue.toLowerCase())))) {
+		if ((isNotQueue = (appEngineQueue == null || !("ingest".toLowerCase().equals(appEngineQueue.toLowerCase()) || "deferred".toLowerCase().equals(appEngineQueue.toLowerCase()))))) {
 			resp.setStatus(401);
 			resp.getOutputStream().print("failure");
 			LOG.warning("Attempt to run script directly, this is not permitted");

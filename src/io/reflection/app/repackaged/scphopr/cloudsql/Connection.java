@@ -24,8 +24,6 @@ import io.reflection.app.logging.GaeLevel;
 
 public final class Connection {
 
-	public static final String CONNECTION_NATIVE_KEY = "connection.native";
-
 	private final String				server;
 	private final String				database;
 	private java.sql.Connection	connection;
@@ -36,7 +34,6 @@ public final class Connection {
 	private long								affectedRowCount;
 	private long								insertedId;
 	private boolean							isTransactionMode;
-	private boolean							isNative	= false;
 	private final String				encoding	= "utf8mb4";
 
 	private static final Logger	LOG					= Logger.getLogger(Connection.class.getName());
@@ -47,11 +44,6 @@ public final class Connection {
 	}
 
 	public Connection(String server, String database, String username, String password, boolean transactionMode) throws DataAccessException {
-		final String nativePropertyValue = System.getProperty(CONNECTION_NATIVE_KEY);
-
-		if (nativePropertyValue != null) {
-			isNative = Boolean.parseBoolean(nativePropertyValue);
-		}
 
 		// if (LOG.isLoggable(GaeLevel.DEBUG)) {
 		// LOG.log(GaeLevel.DEBUG, "create connection with server: " + server + ", database: " + database + ", username: " + username
@@ -121,7 +113,7 @@ public final class Connection {
 			makeSureDriverClassLoaded();
 
 			if (SystemProperty.environment.value() == SystemProperty.Environment.Value.Production) {
-				url = "jdbc:google:mysql://" + server + "/" + database;
+				url = "jdbc:google:mysql://" + System.getProperty("cloudsql.name") + "/" + database;
 			} else {
 				url = "jdbc:mysql://" + server + "/" + database;
 			}
