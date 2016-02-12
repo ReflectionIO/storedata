@@ -20647,6 +20647,236 @@ p.browserupgrade {
   margin-bottom: 10px;
 }
 
+/* line 1, sass/templates-designkit/_developer-leaderboard.scss */
+.page-developer-leaderboard {
+  padding-top: 2rem;
+  padding-bottom: 3rem;
+}
+/* line 4, sass/templates-designkit/_developer-leaderboard.scss */
+.page-developer-leaderboard h1.heading-style--heading-three {
+  margin-bottom: 4rem !important;
+}
+/* line 7, sass/templates-designkit/_developer-leaderboard.scss */
+.page-developer-leaderboard .heading-style--heading-five {
+  margin-bottom: 2.5rem !important;
+}
+/* line 10, sass/templates-designkit/_developer-leaderboard.scss */
+.page-developer-leaderboard .heading-style--heading-six {
+  padding-top: 9px;
+  font-weight: 400;
+}
+/* line 14, sass/templates-designkit/_developer-leaderboard.scss */
+.page-developer-leaderboard .perc-heading,
+.page-developer-leaderboard .heading-style--heading-six span {
+  padding-top: 0.1rem;
+  float: right;
+  opacity: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1bc79f;
+  -webkit-transition: opacity 1s;
+          transition: opacity 1s;
+}
+/* line 24, sass/templates-designkit/_developer-leaderboard.scss */
+.page-developer-leaderboard .grid__row,
+.page-developer-leaderboard .grid__row * {
+  overflow: visible;
+}
+/* line 28, sass/templates-designkit/_developer-leaderboard.scss */
+.page-developer-leaderboard .toggle-container {
+  padding-top: 1.7rem;
+  display: inline-block;
+  float: right;
+}
+/* line 33, sass/templates-designkit/_developer-leaderboard.scss */
+.page-developer-leaderboard .grid__column--developer-rank,
+.page-developer-leaderboard .grid__column--developer,
+.page-developer-leaderboard .grid__column--revenue {
+  display: inline-block;
+  float: left;
+}
+/* line 39, sass/templates-designkit/_developer-leaderboard.scss */
+.page-developer-leaderboard .grid__column--developer-rank {
+  width: 8%;
+  padding-top: 1.1rem;
+  font-size: 1.6rem;
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 600;
+}
+/* line 46, sass/templates-designkit/_developer-leaderboard.scss */
+.page-developer-leaderboard .grid__column--developer {
+  width: 47%;
+  padding-right: 5px;
+}
+/* line 50, sass/templates-designkit/_developer-leaderboard.scss */
+.page-developer-leaderboard .grid__column--revenue {
+  width: 45%;
+}
+/* line 53, sass/templates-designkit/_developer-leaderboard.scss */
+.page-developer-leaderboard .grid__column--two-thirds {
+  padding-left: 1% !important;
+}
+/* line 56, sass/templates-designkit/_developer-leaderboard.scss */
+.page-developer-leaderboard .devperc {
+  font-weight: 600;
+}
+
+/* line 60, sass/templates-designkit/_developer-leaderboard.scss */
+.heading-information {
+  padding-top: 0.9rem;
+  display: inline-block;
+}
+/* line 63, sass/templates-designkit/_developer-leaderboard.scss */
+.heading-information span {
+  margin-right: 3rem;
+  font-size: 1.6rem;
+}
+
+/* line 68, sass/templates-designkit/_developer-leaderboard.scss */
+.developer-apps-revenue-container {
+  width: 100%;
+  margin-bottom: 0.9rem;
+  font-size: 0;
+  -webkit-transition: width 1s;
+          transition: width 1s;
+}
+/* line 73, sass/templates-designkit/_developer-leaderboard.scss */
+.developer-apps-revenue-container .developer-app-revenue {
+  position: relative;
+  height: 45px;
+  width: 0;
+  display: inline-block;
+  cursor: pointer;
+  -webkit-transition: background-color 0.3s, width 1s;
+          transition: background-color 0.3s, width 1s;
+}
+/* line 80, sass/templates-designkit/_developer-leaderboard.scss */
+.developer-apps-revenue-container .developer-app-revenue:hover {
+  -webkit-transition: background-color 0.2s;
+          transition: background-color 0.2s;
+}
+/* line 83, sass/templates-designkit/_developer-leaderboard.scss */
+.developer-apps-revenue-container .developer-app-revenue:nth-child(1), .developer-apps-revenue-container .developer-app-revenue:nth-child(n+11) {
+  background-color: #6d69c5;
+}
+/* line 86, sass/templates-designkit/_developer-leaderboard.scss */
+.developer-apps-revenue-container .developer-app-revenue:nth-child(1):hover, .developer-apps-revenue-container .developer-app-revenue:nth-child(n+11):hover {
+  background-color: #5b57be;
+}
+/* line 90, sass/templates-designkit/_developer-leaderboard.scss */
+.developer-apps-revenue-container .developer-app-revenue:nth-child(2), .developer-apps-revenue-container .developer-app-revenue:nth-child(n+12) {
+  background-color: #1bc79f;
+}
+/* line 93, sass/templates-designkit/_developer-leaderboard.scss */
+.developer-apps-revenue-container .developer-app-revenue:nth-child(2):hover, .developer-apps-revenue-container .developer-app-revenue:nth-child(n+12):hover {
+  background-color: #18b18d;
+}
+/* line 97, sass/templates-designkit/_developer-leaderboard.scss */
+.developer-apps-revenue-container .developer-app-revenue:nth-child(3), .developer-apps-revenue-container .developer-app-revenue:nth-child(n+13) {
+  background-color: #ff496a;
+}
+/* line 100, sass/templates-designkit/_developer-leaderboard.scss */
+.developer-apps-revenue-container .developer-app-revenue:nth-child(3):hover, .developer-apps-revenue-container .developer-app-revenue:nth-child(n+13):hover {
+  background-color: #ff1640;
+}
+/* line 104, sass/templates-designkit/_developer-leaderboard.scss */
+.developer-apps-revenue-container .developer-app-revenue:nth-child(4), .developer-apps-revenue-container .developer-app-revenue:nth-child(n+14) {
+  background-color: #ffb449;
+}
+/* line 107, sass/templates-designkit/_developer-leaderboard.scss */
+.developer-apps-revenue-container .developer-app-revenue:nth-child(4):hover, .developer-apps-revenue-container .developer-app-revenue:nth-child(n+14):hover {
+  background-color: #ff9f16;
+}
+/* line 111, sass/templates-designkit/_developer-leaderboard.scss */
+.developer-apps-revenue-container .developer-app-revenue:nth-child(5), .developer-apps-revenue-container .developer-app-revenue:nth-child(n+15) {
+  background-color: #54bee5;
+}
+/* line 114, sass/templates-designkit/_developer-leaderboard.scss */
+.developer-apps-revenue-container .developer-app-revenue:nth-child(5):hover, .developer-apps-revenue-container .developer-app-revenue:nth-child(n+15):hover {
+  background-color: #28adde;
+}
+/* line 118, sass/templates-designkit/_developer-leaderboard.scss */
+.developer-apps-revenue-container .developer-app-revenue:nth-child(6), .developer-apps-revenue-container .developer-app-revenue:nth-child(n+16) {
+  background-color: #db49dd;
+}
+/* line 121, sass/templates-designkit/_developer-leaderboard.scss */
+.developer-apps-revenue-container .developer-app-revenue:nth-child(6):hover, .developer-apps-revenue-container .developer-app-revenue:nth-child(n+16):hover {
+  background-color: #ca26cd;
+}
+/* line 125, sass/templates-designkit/_developer-leaderboard.scss */
+.developer-apps-revenue-container .developer-app-revenue:nth-child(7), .developer-apps-revenue-container .developer-app-revenue:nth-child(n+17) {
+  background-color: #ebea77;
+}
+/* line 128, sass/templates-designkit/_developer-leaderboard.scss */
+.developer-apps-revenue-container .developer-app-revenue:nth-child(7):hover, .developer-apps-revenue-container .developer-app-revenue:nth-child(n+17):hover {
+  background-color: #e4e34b;
+}
+/* line 132, sass/templates-designkit/_developer-leaderboard.scss */
+.developer-apps-revenue-container .developer-app-revenue:nth-child(8), .developer-apps-revenue-container .developer-app-revenue:nth-child(n+18) {
+  background-color: #9db3bb;
+}
+/* line 135, sass/templates-designkit/_developer-leaderboard.scss */
+.developer-apps-revenue-container .developer-app-revenue:nth-child(8):hover, .developer-apps-revenue-container .developer-app-revenue:nth-child(n+18):hover {
+  background-color: #7f9ca6;
+}
+/* line 139, sass/templates-designkit/_developer-leaderboard.scss */
+.developer-apps-revenue-container .developer-app-revenue:nth-child(9), .developer-apps-revenue-container .developer-app-revenue:nth-child(n+19) {
+  background-color: #a18f68;
+}
+/* line 142, sass/templates-designkit/_developer-leaderboard.scss */
+.developer-apps-revenue-container .developer-app-revenue:nth-child(9):hover, .developer-apps-revenue-container .developer-app-revenue:nth-child(n+19):hover {
+  background-color: #847452;
+}
+/* line 146, sass/templates-designkit/_developer-leaderboard.scss */
+.developer-apps-revenue-container .developer-app-revenue:nth-child(10), .developer-apps-revenue-container .developer-app-revenue:nth-child(n+20) {
+  background-color: #82dd73;
+}
+/* line 149, sass/templates-designkit/_developer-leaderboard.scss */
+.developer-apps-revenue-container .developer-app-revenue:nth-child(10):hover, .developer-apps-revenue-container .developer-app-revenue:nth-child(n+20):hover {
+  background-color: #5dd34a;
+}
+
+/* line 155, sass/templates-designkit/_developer-leaderboard.scss */
+.developer-leaderboard__app-details {
+  position: absolute;
+  bottom: 45px;
+  right: 0;
+  width: 200px;
+  padding-top: 15px;
+  padding-left: 10px;
+  padding-right: 10px;
+  display: none;
+  text-align: center;
+  background-color: #363a47;
+}
+/* line 166, sass/templates-designkit/_developer-leaderboard.scss */
+.developer-leaderboard__app-details img {
+  width: 32px;
+  height: 32px;
+  margin: 0 auto;
+  border-radius: 7px;
+}
+/* line 172, sass/templates-designkit/_developer-leaderboard.scss */
+.developer-leaderboard__app-details h2 {
+  margin-bottom: 1px;
+  font-size: 13px;
+  margin-top: 0;
+  text-align: center;
+  color: #fcfdfd;
+}
+/* line 179, sass/templates-designkit/_developer-leaderboard.scss */
+.developer-leaderboard__app-details h3 {
+  margin-bottom: 10px;
+  font-size: 16px;
+  margin-top: 0;
+  text-align: center;
+  color: #fcfdfd;
+}
+/* line 186, sass/templates-designkit/_developer-leaderboard.scss */
+.developer-app-revenue:hover .developer-leaderboard__app-details {
+  display: block;
+}
+
 /* line 2, sass/templates-designkit/_loading-indicators.scss */
 .page-loading-indicators .grid__column--one-half.grid__row-container button {
   margin-bottom: 3rem;
