@@ -194,4 +194,19 @@ public interface IDataAccountService extends IService {
 	 */
 	public void updateDataAccountProperties(DataAccount dataAccount) throws DataAccessException;
 
+	/**
+	 * @param vendorId
+	 * @param includeInactive
+	 * @return
+	 * @throws DataAccessException
+	 */
+	public List<DataAccount> getDataAccountsWithVendorId(String vendorId, boolean includeInactive) throws DataAccessException;
+
+	/**
+	 * @param dataAccount
+	 * @param daysInThePastToCollect
+	 * @param notify
+	 */
+	public void enqueueFetch(DataAccount dataAccount, int daysInThePastToCollect, boolean notify);
+
 }

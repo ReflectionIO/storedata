@@ -1290,28 +1290,7 @@ public final class Core extends ActionHandler {
 				output.linkedAccounts.add(testAccount);
 				UserServiceProvider.provide().addOrRestoreUserDataAccount(input.session.user, testAccount);
 
-			} else { // If not the test linked account, check if is a valid Apple linked account and retrieve the vendors
-
-				// boolean accountNumberRequired = false;
-				// try {
-				// vendors = AppleReporterHelper.getVendors(input.username, input.password);
-				// } catch (InputValidationException e) {
-				//
-				// if (e.getCode() == 214 || e.getCode() == 215 || e.getCode() == 216) { // Required/wrong account number (but valid credentials)
-				// accountNumberRequired = true;
-				// } else if (e.getCode() == 108) throw new InputValidationException(ApiError.InvalidDataAccountCredentials.getCode(),
-				// ApiError.InvalidDataAccountCredentials.getMessage(input.username));
-				// else
-				// throw e;
-				// }
-				//
-				// if (accountNumberRequired) {
-				// Map<String, String> accounts = AppleReporterHelper.getAccounts(input.username, input.password);
-				// for (String accountNumber : accounts.values()) { // For every account number, get the vendors
-				// vendors.addAll(AppleReporterHelper.getVendors(input.username, input.password, accountNumber));
-				// }
-				// }
-
+			} else {
 				Map<String, SimpleEntry<String, String>> mapVendorIdByAccountNameAndId = new HashMap<String, SimpleEntry<String, String>>();
 
 				// we use the new get accounts and get vendors methods for all accounts
@@ -1328,12 +1307,12 @@ public final class Core extends ActionHandler {
 
 				// Add a data account for every vendor
 				for (String vendorId : mapVendorIdByAccountNameAndId.keySet()) {
-					DataAccount existingDataAccount = DataAccountServiceProvider.provide().getDataAccount(input.username, vendorId);
+					List<DataAccount> dataAccountsWithTheSameVendorId = DataAccountServiceProvider.provide().getDataAccountsWithVendorId(vendorId, true);
 
-					if (existingDataAccount == null) {
-						// Note, a sales data gather is only enqueued if a new data account is created and there are no other active accounts with the same
-						// vendorid.
-						// If an existing one is linked then we don't gather.
+					// Note, a sales data gather is only enqueued if a new data account is created and there are no other active accounts with the same
+					// vendorid.
+					// If an existing one is linked then we don't gather.
+					if (dataAccountsWithTheSameVendorId == null || dataAccountsWithTheSameVendorId.size() == 0) {
 
 						SimpleEntry<String, String> accountNameAndId = mapVendorIdByAccountNameAndId.get(vendorId);
 
@@ -1346,23 +1325,53 @@ public final class Core extends ActionHandler {
 						output.linkedAccounts.add(addedAccount);
 					} else {
 						User currentUser = UserServiceProvider.provide().getUser(input.session.user.id);
-						UserServiceProvider.provide().addOrRestoreUserDataAccount(currentUser, existingDataAccount);
 
-						if ("n".equals(existingDataAccount.active)) {
-							existingDataAccount.active = "y";
-							DataAccountServiceProvider.provide().updateDataAccount(existingDataAccount, false);
-						}
+						DataAccount accountWithSameCredentials = null;
+						boolean thereIsAtleastOneActiveAccountForThisVendorId = false;
 
-						// verify the password to the existing data account
-						// and if it does not work, try the new one we just got.
-						// and if that does work, update the existing data account
-						if (!AppleReporterHelper.areCredentialsValid(existingDataAccount.username, existingDataAccount.password)) {
-							if (AppleReporterHelper.areCredentialsValid(input.username, input.password)) {
-								existingDataAccount.password = input.password;
-								DataAccountServiceProvider.provide().updateDataAccount(existingDataAccount, false);
+						for (DataAccount accountWithSameVendorId : dataAccountsWithTheSameVendorId) {
+							if ("y".equalsIgnoreCase(accountWithSameVendorId.active)) {
+								thereIsAtleastOneActiveAccountForThisVendorId = true;
 							}
+
+							if (input.username.equalsIgnoreCase(accountWithSameVendorId.username)) {
+								accountWithSameCredentials = accountWithSameVendorId;
+
+								// as we won't be creating a new account with the same credentials, just activate this one.
+								if ("n".equals(accountWithSameVendorId.active)) {
+									accountWithSameVendorId.active = "y";
+									accountWithSameVendorId = DataAccountServiceProvider.provide().updateDataAccount(accountWithSameVendorId, false);
+								}
+
+								if (!input.password.equals(accountWithSameCredentials.password)) {
+									accountWithSameCredentials.password = input.password;
+									DataAccountServiceProvider.provide().updateDataAccount(accountWithSameCredentials, false);
+								}
+							}
+
+							// link this account to the current user.
+							UserServiceProvider.provide().addOrRestoreUserDataAccount(currentUser, accountWithSameVendorId);
+							output.linkedAccounts.add(accountWithSameVendorId);
 						}
-					} // end if existingdataaccount == null
+
+						if (accountWithSameCredentials == null) {
+							SimpleEntry<String, String> accountNameAndId = mapVendorIdByAccountNameAndId.get(vendorId);
+
+							String developerName = accountNameAndId.getKey();
+							String accountId = accountNameAndId.getValue();
+
+							DataAccount addedAccount = UserServiceProvider.provide().addDataAccount(input.session.user, input.source, input.username,
+									input.password, vendorId, developerName, accountId);
+							addedAccount.source = input.source;
+							output.linkedAccounts.add(addedAccount);
+						}
+
+						if (accountWithSameCredentials != null && !thereIsAtleastOneActiveAccountForThisVendorId) {
+							// we found an account with the same credentails but non that were active so we need to collect for the past
+							DataAccountServiceProvider.provide().enqueueFetch(accountWithSameCredentials, AppleReporterHelper.getDaysSinceITunesReportLaunch(),
+									false);
+						}
+					} // end if dataAccountsWithSameVendorId == null or empty
 				} // end for each vendor id
 			}
 
@@ -1414,7 +1423,7 @@ public final class Core extends ActionHandler {
 					notification.type = NotificationTypeType.NotificationTypeTypeInternal;
 					NotificationServiceProvider.provide().addNotification(notification);
 				}
-			} else throw new Exception();
+			} else throw new Exception("Linked accounts in the output are empty");
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
