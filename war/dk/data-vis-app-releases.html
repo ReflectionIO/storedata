@@ -6,14 +6,6 @@
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<link rel="stylesheet" media="screen, projection" type="text/css" href="designkit.css" />
-	<!--[if (lt IE 9)]>
-		<script src="js/vendor/html5shiv.min.js"></script>
-		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main-ie8.css" />
-	<![endif]-->
- 	<!--[if !lt IE 9]><!-->
-		<script src="js/vendor/picturefill.2.3.1.min.js" async></script>
-	<!-- <![endif]-->
-	<link rel="stylesheet" href="js/vendor/jquery.mCustomScrollbar.css" />
 <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
 <script src="js/vendor/snap.svg.js"></script>
 <script>
@@ -199,11 +191,10 @@
   			<p>Uh oh... Reflection doesn't work in this browser. &nbsp; &nbsp;<a href="http://outdatedbrowser.com/en" target="_blank">Download a compatible browser</a></p>
   		</div>
   <![endif]-->
-  <header id="js-component-import--global-header" class="global-header"></header>
 
 	<div class="l-page-container">
 
-		<div id="main" class="l-main" role="main">
+		<div id="main" class="l-main" role="main" style="padding-top: 0;">
       <div class="page-data-vis-releases">
         <div id="chartdiv"></div>
         <header class="grid__column grid__column--seven-columns vis-heading">
@@ -213,35 +204,17 @@
       </div>
     </div>
 
-	<div id="js-component-import--account-container" class="panel-right-container js-account-container"></div>
-	<div id="js-component-import--search-container" class="panel-right-container js-search-container"></div>
-	
  	<script src="js/vendor/jquery-1.11.1.min.js"></script>
  	<script src="js/vendor/jquery-ui.custom.min.js"></script>
- 	<script src="js/vendor/handlebars-v2.0.0.js"></script>
- 	<script src="js/templates/templates.js"></script>
 
   <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
   <script src="https://www.amcharts.com/lib/3/serial.js"></script>
   <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
   <script src="https://www.amcharts.com/lib/3/amstock.js"></script>
 
-
-	 
-	<!--[if IE 9]>
-		<script src="js/vendor/jquery.mCustomScrollbar.concat.min.js"></script>
-	<![endif]-->
-
-	<div id="js-appendScriptsContainer"></div>
-
-	<script src="js/designkit-global-templates.js"></script>
-  <script src="js/application.js"></script>
-  <script src="js/designkit-app.js"></script>
   <script src="js/data-vis/data-vis-release.js"></script>
 
   <script>
-      console.log(chartData);
-      new DataVisAppReleasesPage();
 
       var chart = AmCharts.makeChart( "chartdiv", {
         type: "stock",

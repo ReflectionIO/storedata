@@ -6,11 +6,7 @@
 	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<link rel="stylesheet" media="screen, projection" type="text/css" href="designkit.css" />
- 	<!--[if !lt IE 9]><!-->
-		<script src="js/vendor/picturefill.2.3.1.min.js" async></script>
-	<!-- <![endif]-->
-	<link rel="stylesheet" href="js/vendor/jquery.mCustomScrollbar.css" />
-<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
 <script>
   WebFont.load({
     google: {
@@ -65,19 +61,19 @@
 				<div class="grid__row grid__row--heading-row">
 					<div class="grid__column grid__row--heading-row__left">
 						<h1 class="heading-style--heading-three">Top Developers by Revenue <span>UK / Games</span></h1>
-						<h2>01 Feb 2016 - 08 Feb 2016</h2>
+						<h2>Week 1, 4th Jan 2016 - 10th Jan 2016</h2>
 					</div>
 					<div class="grid__column grid__row--heading-row__right">
 						<div class="toggle-container">
 							<div class="filter-toggle">
 									<div class="toggle">
-										<input id="toggle--show-breakdown" name="radiogroupname" checked="" type="radio">
+										<input id="toggle--show-breakdown" name="radiogroupname" type="radio">
 										<label for="toggle--show-breakdown">
 											Breakdown by Apps
 										</label>
 									</div>
 									<div class="toggle">
-										<input id="toggle--show-relative" name="radiogroupname" type="radio">
+										<input id="toggle--show-relative" name="radiogroupname" checked="" type="radio">
 										<label for="toggle--show-relative">
 											Relative
 										</label>
@@ -133,27 +129,10 @@
 		</div>
 	</div>
 
-	<div class="grid-container" id="js-component-import--global-footer"></div>
-
-	<div id="js-component-import--account-container" class="panel-right-container js-account-container"></div>
-	<div id="js-component-import--search-container" class="panel-right-container js-search-container"></div>
-
  	<script src="js/vendor/jquery-1.11.1.min.js"></script>
- 	<script src="js/vendor/jquery-ui.custom.min.js"></script>
- 	<script src="js/vendor/handlebars-v2.0.0.js"></script>
- 	<script src="js/templates/templates.js"></script>
-	 
-	<!--[if IE 9]>
-		<script src="js/vendor/jquery.mCustomScrollbar.concat.min.js"></script>
-	<![endif]-->
 
-	<div id="js-appendScriptsContainer"></div>
-
-	<script src="js/application-global-modules-logged-in.js"></script>
-  <script src="js/application.js"></script>  
   <script>
 		$(document).on("ready", function(){
-		  new Page();
 
 		  if($('#toggle--show-relative:checked').length > 0) {
 				togglePercentage();
