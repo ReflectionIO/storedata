@@ -20,6 +20,7 @@
 </script> <script src="js/vendor/modernizr.2.8.3.custom.min.js"></script></head>
 <style>
 	.page-data-vis-reviews-cloud {
+		height: 1000px;
 		padding-top: 3rem;
 	}
 	.filters-row {
@@ -29,10 +30,13 @@
 		margin: 0 auto;
 		float: none;
 	}
+	.tag-cloud li {
+		cursor: pointer;
+	}
 	.tag-cloud-container {
-		position: relative;
-		width: 625px;
-		height: 600px;
+		position: absolute;
+		right: 7%;
+		width: 65%;
 		margin: 3rem auto 6rem;
 		overflow: visible;
 	}
@@ -48,8 +52,16 @@
 		overflow: visible;
 		transition: font-size 1s;
 	}
+	.tag-cloud-container .tag-cloud li.positive-average {
+		color: #1bc79f;
+	}
+	.tag-cloud-container .tag-cloud li.average-average {
+		color: #d07423;
+	}
+	.tag-cloud-container .tag-cloud li.negative-average {
+		color: #ff496a;
+	}
 	.tag-cloud--all li {
-		cursor: pointer;
 		color: #363a47;
 		-webkit-transition: 0.2s color;
 		transition: 0.2s color;
@@ -63,6 +75,7 @@
 		position: absolute;
 		width: 20%;
 		margin-top: 4rem;
+		display: none;
 	}
 	.page-data-vis-reviews-cloud .ratings-container {
 		padding-top: 5px;
@@ -99,6 +112,10 @@
 		height: 4px;
 		transition: width 0.3s;
 	}
+	.rating-percentage--full {
+		width: 100%;
+		background-color: #6d69c5;
+	}
 	.js-five-stars + .rating-percentage-container .rating-percentage {
 		background-color: #1bc79f;
 	}
@@ -113,6 +130,57 @@
 	}
 	.js-one-stars + .rating-percentage-container .rating-percentage {
 		background-color: #ff496a;
+	}
+	.total-ratings-container {
+		max-width: 140px;
+	}
+	.total-ratings-container h2 {
+		display: inline-block;
+		padding-top: 2px;
+	}
+	.total-ratings-container span {
+		margin-right: 7px;
+		float: right;		
+		font-weight: 600;
+	}
+	.app-title {		
+		position: absolute;
+		padding-top: 1.3rem;
+		text-align: left;
+	}
+	.app-selector {
+		position: absolute;
+		right: 20px;
+		top: 90px;
+		padding: 1rem 1.5rem;
+		width: 200px;
+		height: 38px;		
+		float: right;		
+		text-align: right;
+		cursor: pointer;
+		background-color: #f2f2f5;
+	}
+	.app-selector.is-open {
+		height: auto;
+	}
+	.app-selector li,
+	.app-selector li a {
+		display: block;
+		font-family: "Source Sans Pro", sans-serif;
+		font-size: 15px;
+	}
+	.app-selector li:first-child {
+		padding-bottom: 1.5rem;
+	}
+	.app-selector li {
+		color: #363a47;
+	}	
+	.app-selector li a {
+		padding-bottom: 0.5rem;
+		color: #6d69c5;
+	}
+	.app-selector li a:hover {
+		color: #4b46b5;
 	}
 </style>
 <body>
@@ -131,6 +199,18 @@
 			<div class="grid-container page-data-vis-reviews-cloud">
 				<h1 class="heading-style--heading-three">Reviews Tag Cloud</h1>
 				<div class="grid_row filters-row">
+					<div class="app-title">
+						<h2 class="heading-style--heading-four js-app-name">Clash of Clans, Supercell</h2>
+					</div>
+					<div class="app-selector">
+						<ul>
+							<li>Change selected app</li>
+							<li><a href="data-vis-reviews-cloud.html">Clash of Clans</a></li>
+							<li><a href="data-vis-reviews-cloud.html?id=0">Bloons TD 5</a></li>
+							<li><a href="data-vis-reviews-cloud.html?id=1">Twist</a></li>
+							<li><a href="data-vis-reviews-cloud.html?id=2">Spring Ninja</a></li>
+						</ul>
+					</div>
 					<div class="toggle-container">
 						<div class="filter-toggle">
 							<div class="toggle">
@@ -161,7 +241,7 @@
 					</div>
 				</div>
 				<div class="tag-cloud-reviews-container">
-					<h2 class="heading-style--heading-five">Ratings Breakdown per Term</h2>
+					<h2 class="heading-style--heading-five">Ratings Frequency</h2>
 					<ul>
 						<li>
 							<div class="ratings-container"><div class="ratings-full" style="width:100%"></div></div>
@@ -187,6 +267,11 @@
 							<div class="ratings-container"><div class="ratings-full" style="width:20%"></div></div>
 							<span class="rating-number js-one-stars"></span>
 							<div class="rating-percentage-container"><div class="rating-percentage"></div></div>
+						</li>
+						<li class="total-ratings-container">
+							<h2 class="heading-style--heading-six">Total</h2>
+							<span class="rating-number js-all-stars"></span>
+							<div class="rating-percentage-container"><div class="rating-percentage rating-percentage--full"></div></div>
 						</li>
 					</ul>
 				</div>
@@ -223,421 +308,257 @@
 		$(document).on("ready", function(){
 		  new Page();
 
-		  var cloudData = [
-		  	{
-		  		"text": "Harrassment",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Innuendo",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Narcisist",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Martin",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Tribunal",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Seedy",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Ollivere",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Unhinged",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Weatherspoons",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Stalked",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Smarmy",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Opportunist",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Groped",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Obsession",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Creepy",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Deranged",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Unhealthy",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Fascination",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Bullying",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Restraining",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Order",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Chicken",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Steak",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Honest Burger",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Norm-core",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Liam Neeson",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Bed Bugs",
-		  		"freq": "100"
-		  	}
-		  ];
+		  var qs = (function(a) {
+		    if (a == "") return {};
+		    var b = {};
+		    for (var i = 0; i < a.length; ++i)
+		    {
+		        var p=a[i].split('=', 2);
+		        if (p.length == 1)
+		            b[p[0]] = "";
+		        else
+		            b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, " "));
+		    }
+		    return b;
+			})(window.location.search.substr(1).split('&'));
 
-		  var cloudDataPositive = [
-		  	{
-		  		"text": "IKEA",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Meatballs",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Gustaf",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Disruptive",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Contextualise",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Tools",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "App Annie Hatred",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "pH Water",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Organic",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Contextualise",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Democratising",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Burning Man",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Salmon",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Roundabout way",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Leksell",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "ABBA",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Dr Who",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "David Guetta",
-		  		"freq": "100"
-		  	}];
+			if(qs["id"]) {
+				if(qs["id"] == 0) {
+					$('.js-app-name').text("Bloons TD 5, Ninja Kiwi");
+					$("body").append($("<script>").attr("src", "js/data-vis/review-cloud-bloons.js")); // load bloons data
+				} else if(qs["id"] == 1) {
+					$('.js-app-name').text("Twist, Ketchapp");
+					$("body").append($("<script>").attr("src", "js/data-vis/review-cloud-twist.js")); // load twist data
+				} else if(qs["id"] == 2) {
+					$('.js-app-name').text("Spring Ninja, Ketchapp");
+					$("body").append($("<script>").attr("src", "js/data-vis/review-cloud-spring-ninja.js")); // load spring ninja data
+				}
+			} else {
+				$("body").append($("<script>").attr("src", "js/data-vis/review-cloud-coc.js")); // load default
+			}		  
 
-		  var cloudDataAverage = [
-		  	{
-		  		"text": "Python",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Data",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Nicolas",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Superman",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Genius",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Clark Kent",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Marcus Brigstocke",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Small administrator",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Planet Krypton",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Tea boy @NASA",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Petitclerc",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "What's it all a-boot?",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Tim Hortons",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Moose",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Hatred for the USA",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Lumberjack",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Christopher Reeve",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Dancing on ice",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Leksell Luther",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Fifty Shades of Grey",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "IKEA",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Jamie Dornan",
-		  		"freq": "100"
-		  	}];
+		  function shuffle(array) {
+			  var currentIndex = array.length, temporaryValue, randomIndex;
 
-		  var cloudDataNegative = [
-		  	{
-		  		"text": "Mitul",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Amin",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Brompton",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Depressed",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Business Mogul",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Wanted man in India",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Tech Genius",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Outsources to China",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Disillusioned",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Reflective",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Sombre",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Sigh",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Troubled",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Morose",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Pacing",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Phone call",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Defeated",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Demoralised",
-		  		"freq": "100"
-		  	},
-		  	{
-		  		"text": "Property magnate",
-		  		"freq": "100"
-		  	}];
+			  // While there remain elements to shuffle...
+			  while (0 !== currentIndex) {
+
+			    // Pick a remaining element...
+			    randomIndex = Math.floor(Math.random() * currentIndex);
+			    currentIndex -= 1;
+
+			    // And swap it with the current element.
+			    temporaryValue = array[currentIndex];
+			    array[currentIndex] = array[randomIndex];
+			    array[randomIndex] = temporaryValue;
+			  }
+
+			  return array;
+			}
 		
 			var minFontSize = 1,
-					maxFontSize = 5;
+					maxFontSize = 7;
 
-			for(var t = 0; t < cloudData.length; t++) {
-				cloudData[t].freq = Math.floor((Math.random() * 100) + 1);
-				var fontSize = cloudData[t].freq / 100 * Math.floor((Math.random() * maxFontSize) + minFontSize) + 1;
-				cloudData[t].fiveStars = Math.floor((Math.random() * 60) + 1);
-				cloudData[t].fourStars = Math.floor((Math.random() * 60) + 1);
-				cloudData[t].threeStars = Math.floor((Math.random() * 60) + 1);
-				cloudData[t].twoStars = Math.floor((Math.random() * 60) + 1);
-				cloudData[t].oneStars = Math.floor((Math.random() * 60) + 1);
-				var total = cloudData[t].oneStars + cloudData[t].twoStars + cloudData[t].threeStars + cloudData[t].fourStars + cloudData[t].fiveStars;
+			var topResultsArray = [];
+
+			for(var t = 0; t < 100; t++) {
+				topResultsArray.push(cloudData[t]);
+			}
+
+			// shuffle the sorted results
+			shuffle(topResultsArray);
+			var highestFrequency = cloudData[0].freq.freq_overall;
+			var positiveReviewTotals = [],
+				averageReviewTotals = [],
+				negativeReviewTotals = [];
+
+			for(var t = 0; t < topResultsArray.length; t++) {
+				var fontSize = topResultsArray[t].freq.freq_overall / highestFrequency * maxFontSize + 0.5;
+				var total = topResultsArray[t].freq.freq_overall;
+				var cssClass = "negative-average";
+				if(topResultsArray[t].freq.average_rating > 2.5 && topResultsArray[t].freq.average_rating < 3.5) {
+					cssClass = "average-average";
+				} else if(topResultsArray[t].freq.average_rating > 3.5) {
+					cssClass = "positive-average";
+				}
 				$('.tag-cloud--all').append(
-					$("<li>").text(cloudData[t].text)
+					$("<li>").addClass(cssClass)
+										.text(topResultsArray[t].term)
 										.data("font-size", fontSize + "rem")
 										.data("index", t)
 										.data("total", total)
+										.data("average", topResultsArray[t].freq.average_rating)
 										.on("mouseenter", function(){
 											var thisIndex = $(this).data("index");
 											var totalFromTag = $(this).data("total");
 
-											$('.js-five-stars').text(cloudData[thisIndex].fiveStars);
-											$('.js-five-stars').next(".rating-percentage-container").find(".rating-percentage").css("width", cloudData[thisIndex].fiveStars / totalFromTag * 100 + "%");
+											$('.js-five-stars').text(topResultsArray[thisIndex].freq.freq_5stars);
+											$('.js-five-stars').next(".rating-percentage-container").find(".rating-percentage").css("width", topResultsArray[thisIndex].freq.freq_5stars / totalFromTag * 100 + "%");
 
-											$('.js-four-stars').text(cloudData[thisIndex].fourStars);
-											$('.js-four-stars').next(".rating-percentage-container").find(".rating-percentage").css("width", cloudData[thisIndex].fourStars / totalFromTag * 100 + "%");
+											$('.js-four-stars').text(topResultsArray[thisIndex].freq.freq_4stars);
+											$('.js-four-stars').next(".rating-percentage-container").find(".rating-percentage").css("width", topResultsArray[thisIndex].freq.freq_4stars / totalFromTag * 100 + "%");
 											
-											$('.js-three-stars').text(cloudData[thisIndex].threeStars);
-											$('.js-three-stars').next(".rating-percentage-container").find(".rating-percentage").css("width", cloudData[thisIndex].threeStars / totalFromTag * 100 + "%");
+											$('.js-three-stars').text(topResultsArray[thisIndex].freq.freq_3stars);
+											$('.js-three-stars').next(".rating-percentage-container").find(".rating-percentage").css("width", topResultsArray[thisIndex].freq.freq_3stars / totalFromTag * 100 + "%");
 											
-											$('.js-two-stars').text(cloudData[thisIndex].twoStars);
-											$('.js-two-stars').next(".rating-percentage-container").find(".rating-percentage").css("width", cloudData[thisIndex].twoStars / totalFromTag * 100 + "%");
+											$('.js-two-stars').text(topResultsArray[thisIndex].freq.freq_2stars);
+											$('.js-two-stars').next(".rating-percentage-container").find(".rating-percentage").css("width", topResultsArray[thisIndex].freq.freq_2stars / totalFromTag * 100 + "%");
 											
-											$('.js-one-stars').text(cloudData[thisIndex].oneStars);
-											$('.js-one-stars').next(".rating-percentage-container").find(".rating-percentage").css("width", cloudData[thisIndex].oneStars / totalFromTag * 100 + "%");
+											$('.js-one-stars').text(topResultsArray[thisIndex].freq.freq_1stars);
+											$('.js-one-stars').next(".rating-percentage-container").find(".rating-percentage").css("width", topResultsArray[thisIndex].freq.freq_1stars / totalFromTag * 100 + "%");
 											
+											$('.js-all-stars').text(topResultsArray[thisIndex].freq.freq_overall);
+
 											$('.tag-cloud-reviews-container').show();
 										})
 				);
+
+				positiveReviewTotals.push(topResultsArray[t].freq.freq_5stars + topResultsArray[t].freq.freq_4stars);
+				averageReviewTotals.push(topResultsArray[t].freq.freq_3stars);
+				negativeReviewTotals.push(topResultsArray[t].freq.freq_2stars + topResultsArray[t].freq.freq_1stars);
 			}
+
+			positiveReviewTotals.sort(function(a, b){return b-a});
+			averageReviewTotals.sort(function(a, b){return b-a});
+			negativeReviewTotals.sort(function(a, b){return b-a});
+
+			for(var t = 0; t < averageReviewTotals.length; t++) {
+				console.log(averageReviewTotals[t]);
+			}
+
+			var highestPositiveReviewTotal = positiveReviewTotals[0];
+			for(var t = 0; t < topResultsArray.length; t++) {
+				if(topResultsArray[t].freq.freq_5stars > 0 || topResultsArray[t].freq.freq_4stars > 0) { // create cloud for positive reviews
+						var fontSize = (topResultsArray[t].freq.freq_5stars + topResultsArray[t].freq.freq_4stars) / highestPositiveReviewTotal * maxFontSize + 0.5;
+						var total = topResultsArray[t].freq.freq_overall;
+						$('.tag-cloud--positive').append(
+							$("<li>").text(topResultsArray[t].term)
+												.data("font-size", fontSize + "rem")
+												.data("index", t)
+												.data("total", total)
+												.on("mouseenter", function(){
+													var thisIndex = $(this).data("index");
+													var totalFromTag = $(this).data("total");
+
+													$('.js-five-stars').text(topResultsArray[thisIndex].freq.freq_5stars);
+													$('.js-five-stars').next(".rating-percentage-container").find(".rating-percentage").css("width", topResultsArray[thisIndex].freq.freq_5stars / totalFromTag * 100 + "%");
+
+													$('.js-four-stars').text(topResultsArray[thisIndex].freq.freq_4stars);
+													$('.js-four-stars').next(".rating-percentage-container").find(".rating-percentage").css("width", topResultsArray[thisIndex].freq.freq_4stars / totalFromTag * 100 + "%");
+													
+													$('.js-three-stars').text(topResultsArray[thisIndex].freq.freq_3stars);
+													$('.js-three-stars').next(".rating-percentage-container").find(".rating-percentage").css("width", topResultsArray[thisIndex].freq.freq_3stars / totalFromTag * 100 + "%");
+													
+													$('.js-two-stars').text(topResultsArray[thisIndex].freq.freq_2stars);
+													$('.js-two-stars').next(".rating-percentage-container").find(".rating-percentage").css("width", topResultsArray[thisIndex].freq.freq_2stars / totalFromTag * 100 + "%");
+													
+													$('.js-one-stars').text(topResultsArray[thisIndex].freq.freq_1stars);
+													$('.js-one-stars').next(".rating-percentage-container").find(".rating-percentage").css("width", topResultsArray[thisIndex].freq.freq_1stars / totalFromTag * 100 + "%");
+													
+													$('.js-all-stars').text(topResultsArray[thisIndex].freq.freq_overall);
+
+													$('.tag-cloud-reviews-container').show();
+												})
+						);
+				}
+			}
+
+			var highestAverageReviewTotal = averageReviewTotals[0];
+			for(var t = 0; t < topResultsArray.length; t++) {
+				if(topResultsArray[t].freq.freq_3stars > 0) { // create cloud for average reviews
+						var fontSize = (topResultsArray[t].freq.freq_3stars) / highestAverageReviewTotal * maxFontSize + 0.5;
+						var total = topResultsArray[t].freq.freq_overall;
+						$('.tag-cloud--average').append(
+							$("<li>").text(topResultsArray[t].term)
+												.data("font-size", fontSize + "rem")
+												.data("index", t)
+												.data("total", total)
+												.on("mouseenter", function(){
+													var thisIndex = $(this).data("index");
+													var totalFromTag = $(this).data("total");
+
+													$('.js-five-stars').text(topResultsArray[thisIndex].freq.freq_5stars);
+													$('.js-five-stars').next(".rating-percentage-container").find(".rating-percentage").css("width", topResultsArray[thisIndex].freq.freq_5stars / totalFromTag * 100 + "%");
+
+													$('.js-four-stars').text(topResultsArray[thisIndex].freq.freq_4stars);
+													$('.js-four-stars').next(".rating-percentage-container").find(".rating-percentage").css("width", topResultsArray[thisIndex].freq.freq_4stars / totalFromTag * 100 + "%");
+													
+													$('.js-three-stars').text(topResultsArray[thisIndex].freq.freq_3stars);
+													$('.js-three-stars').next(".rating-percentage-container").find(".rating-percentage").css("width", topResultsArray[thisIndex].freq.freq_3stars / totalFromTag * 100 + "%");
+													
+													$('.js-two-stars').text(topResultsArray[thisIndex].freq.freq_2stars);
+													$('.js-two-stars').next(".rating-percentage-container").find(".rating-percentage").css("width", topResultsArray[thisIndex].freq.freq_2stars / totalFromTag * 100 + "%");
+													
+													$('.js-one-stars').text(topResultsArray[thisIndex].freq.freq_1stars);
+													$('.js-one-stars').next(".rating-percentage-container").find(".rating-percentage").css("width", topResultsArray[thisIndex].freq.freq_1stars / totalFromTag * 100 + "%");
+													
+													$('.js-all-stars').text(topResultsArray[thisIndex].freq.freq_overall);
+
+													$('.tag-cloud-reviews-container').show();
+												})
+						);
+				}
+			}
+
+			var highestNegativeReviewTotal = negativeReviewTotals[0];
+			for(var t = 0; t < topResultsArray.length; t++) {
+				if(topResultsArray[t].freq.freq_2stars > 0 || topResultsArray[t].freq.freq_1stars > 0) { // create cloud for negative reviews
+						var fontSize = (topResultsArray[t].freq.freq_2stars + topResultsArray[t].freq.freq_1stars) / highestNegativeReviewTotal * maxFontSize + 0.5;
+						var total = topResultsArray[t].freq.freq_overall;
+						$('.tag-cloud--negative').append(
+							$("<li>").text(topResultsArray[t].term)
+												.data("font-size", fontSize + "rem")
+												.data("index", t)
+												.data("total", total)
+												.on("mouseenter", function(){
+													var thisIndex = $(this).data("index");
+													var totalFromTag = $(this).data("total");
+
+													$('.js-five-stars').text(topResultsArray[thisIndex].freq.freq_5stars);
+													$('.js-five-stars').next(".rating-percentage-container").find(".rating-percentage").css("width", topResultsArray[thisIndex].freq.freq_5stars / totalFromTag * 100 + "%");
+
+													$('.js-four-stars').text(topResultsArray[thisIndex].freq.freq_4stars);
+													$('.js-four-stars').next(".rating-percentage-container").find(".rating-percentage").css("width", topResultsArray[thisIndex].freq.freq_4stars / totalFromTag * 100 + "%");
+													
+													$('.js-three-stars').text(topResultsArray[thisIndex].freq.freq_3stars);
+													$('.js-three-stars').next(".rating-percentage-container").find(".rating-percentage").css("width", topResultsArray[thisIndex].freq.freq_3stars / totalFromTag * 100 + "%");
+													
+													$('.js-two-stars').text(topResultsArray[thisIndex].freq.freq_2stars);
+													$('.js-two-stars').next(".rating-percentage-container").find(".rating-percentage").css("width", topResultsArray[thisIndex].freq.freq_2stars / totalFromTag * 100 + "%");
+													
+													$('.js-one-stars').text(topResultsArray[thisIndex].freq.freq_1stars);
+													$('.js-one-stars').next(".rating-percentage-container").find(".rating-percentage").css("width", topResultsArray[thisIndex].freq.freq_1stars / totalFromTag * 100 + "%");
+													
+													$('.js-all-stars').text(topResultsArray[thisIndex].freq.freq_overall);
+
+													$('.tag-cloud-reviews-container').show();
+												})
+						);
+				}
+			}
+
 
 			$('.tag-cloud--all').on("mouseleave", function(){
 				$('.tag-cloud-reviews-container').hide();
 			});
 
-			for(var t = 0; t < cloudDataPositive.length; t++) {
-				cloudDataPositive[t].freq = Math.floor((Math.random() * 100) + 1);
-				var fontSize = cloudDataPositive[t].freq / 100 * Math.floor((Math.random() * maxFontSize) + minFontSize) + 1;
-				$('.tag-cloud--positive').append($("<li>").text(cloudDataPositive[t].text).data("font-size", fontSize + "rem"));
-			}
+			// for(var t = 0; t < cloudDataPositive.length; t++) {
+			// 	cloudDataPositive[t].freq = Math.floor((Math.random() * 100) + 1);
+			// 	var fontSize = cloudDataPositive[t].freq / 100 * Math.floor((Math.random() * maxFontSize) + minFontSize) + 1;
+			// 	$('.tag-cloud--positive').append($("<li>").text(cloudDataPositive[t].text).data("font-size", fontSize + "rem"));
+			// }
 
-			for(var t = 0; t < cloudDataAverage.length; t++) {
-				cloudDataAverage[t].freq = Math.floor((Math.random() * 100) + 1);
-				var fontSize = cloudDataAverage[t].freq / 100 * Math.floor((Math.random() * maxFontSize) + minFontSize) + 1;
-				$('.tag-cloud--average').append($("<li>").text(cloudDataAverage[t].text).data("font-size", fontSize + "rem"));
-			}
+			// for(var t = 0; t < cloudDataAverage.length; t++) {
+			// 	cloudDataAverage[t].freq = Math.floor((Math.random() * 100) + 1);
+			// 	var fontSize = cloudDataAverage[t].freq / 100 * Math.floor((Math.random() * maxFontSize) + minFontSize) + 1;
+			// 	$('.tag-cloud--average').append($("<li>").text(cloudDataAverage[t].text).data("font-size", fontSize + "rem"));
+			// }
 
-			for(var t = 0; t < cloudDataNegative.length; t++) {
-				cloudDataNegative[t].freq = Math.floor((Math.random() * 100) + 1);
-				var fontSize = cloudDataNegative[t].freq / 100 * Math.floor((Math.random() * maxFontSize) + minFontSize) + 1;
-				$('.tag-cloud--negative').append($("<li>").text(cloudDataNegative[t].text).data("font-size", fontSize + "rem"));
-			}
+			// for(var t = 0; t < cloudDataNegative.length; t++) {
+			// 	cloudDataNegative[t].freq = Math.floor((Math.random() * 100) + 1);
+			// 	var fontSize = cloudDataNegative[t].freq / 100 * Math.floor((Math.random() * maxFontSize) + minFontSize) + 1;
+			// 	$('.tag-cloud--negative').append($("<li>").text(cloudDataNegative[t].text).data("font-size", fontSize + "rem"));
+			// }
 
 			setTimeout(function() {
 				$('.tag-cloud li').each(function(){
@@ -661,6 +582,10 @@
 					$('.tag-cloud').fadeOut();
 					$('.' + cloudToToggle).fadeIn();
 				}
+			});
+
+			$('.app-selector').click(function(){
+				$(this).toggleClass("is-open");
 			});
 		});
   </script>
