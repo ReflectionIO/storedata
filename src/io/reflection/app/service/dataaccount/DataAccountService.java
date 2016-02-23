@@ -43,13 +43,13 @@ import io.reflection.app.service.ServiceType;
 
 final class DataAccountService implements IDataAccountService {
 
-	private static final Logger LOG = Logger.getLogger(DataAccountService.class.getName());
+	private static final Logger	LOG					= Logger.getLogger(DataAccountService.class.getName());
 
-	private static final String KEY_PART_1 = "F54E1A22";
-	private static final String KEY_PART_2 = "395D";
-	private static final String KEY_PART_3 = "42B8";
-	private static final String KEY_PART_4 = "9002";
-	private static final String KEY_PART_5 = "61E14A750D98";
+	private static final String	KEY_PART_1	= "F54E1A22";
+	private static final String	KEY_PART_2	= "395D";
+	private static final String	KEY_PART_3	= "42B8";
+	private static final String	KEY_PART_4	= "9002";
+	private static final String	KEY_PART_5	= "61E14A750D98";
 
 	@Override
 	public String getName() {
@@ -70,7 +70,7 @@ final class DataAccountService implements IDataAccountService {
 	 *
 	 * @param id
 	 * @param deleted
-	 *            If true, retrieve deleted linked accounts as well
+	 *          If true, retrieve deleted linked accounts as well
 	 * @return
 	 * @throws DataAccessException
 	 */
@@ -668,8 +668,12 @@ final class DataAccountService implements IDataAccountService {
 		final List<DataAccount> dataAccounts = new ArrayList<DataAccount>();
 
 		final String getDataAccountsQuery = String.format(
-				"SELECT *, convert(aes_decrypt(`password`,UNHEX('%s')), CHAR(1000)) AS `clearpassword` " + " FROM `dataaccount` " + " WHERE "
-						+ " `deleted`='n' AND " + " `id` in (select distinct dataaccountid from userdataaccount where deleted='n' and userid=%d)",
+				"SELECT *, convert(aes_decrypt(`password`,UNHEX('%s')), CHAR(1000)) AS `clearpassword` "
+						+ " FROM `dataaccount` "
+						+ " WHERE "
+						+ " `deleted`='n' AND "
+						+ " `id` in (select distinct dataaccountid from userdataaccount where deleted='n' and userid=%d)"
+						+ " GROUP BY vendorid ORDER BY id ASC",
 				key(), userId);
 
 		final Connection dataAccountConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeDataAccount.toString());
