@@ -145,6 +145,47 @@ public class CronServlet extends HttpServlet {
 				if (LOG.isLoggable(GaeLevel.DEBUG)) {
 					LOG.log(GaeLevel.DEBUG, "Processing accounts");
 				}
+
+				/*
+				 *  since we can't find the perfect time to do the modelling (as if we actually get the sales at 2pm,
+				 *  we never check for that day again as after 5pm we move to the next day, therefore every 3am
+				 *  model -3 days ago. We pick for the time to be < 5am as it could be 4:01am during BST
+				 */
+
+				if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) < 5) {
+					final Calendar dayToModel = Calendar.getInstance();
+					dayToModel.add(Calendar.DATE, -2);
+
+					try {
+						final List<Long> ingestedFeedFetchIds = FeedFetchServiceProvider.provide().getFeedFetchIdsForDateWithStatus(ApiHelper.removeTime(dayToModel.getTime()),
+								FeedFetchStatusType.FeedFetchStatusTypeIngested);
+
+						if (ingestedFeedFetchIds != null && ingestedFeedFetchIds.size() > 0) {
+							for (final Long feedFetchId : ingestedFeedFetchIds) {
+								final FeedFetch fetch = FeedFetchServiceProvider.provide().getFeedFetch(feedFetchId);
+
+								// this is just a sanity check. we expect that the query for getting the IDs only gave us feed fetches that exist and
+								// have
+								// the ingested status.
+								if (fetch != null && fetch.status == FeedFetchStatusType.FeedFetchStatusTypeIngested) {
+									if (LOG.isLoggable(GaeLevel.DEBUG)) {
+										LOG.log(GaeLevel.DEBUG, String.format(
+												"Enquing feed fetch id %d for modelling. Country: %s, category: %s, type: %s", feedFetchId,
+												fetch.country, fetch.category.id, fetch.type));
+									}
+
+									final Modeller modeller = ModellerFactory.getModellerForStore(DataTypeHelper.IOS_STORE_A3);
+
+									// once the feed fetch status is updated model the list
+									modeller.enqueue(fetch);
+								}
+							}
+						}
+					} catch (DataAccessException e) {
+						LOG.log(Level.WARNING, "Could not model the data from 3 days ago due to this exception: ", e);
+					}
+				}
+
 				try {
 					final IDataAccountFetchService dataAccountFetchService = DataAccountFetchServiceProvider.provide();
 					final IDataAccountService dataAccountService = DataAccountServiceProvider.provide();
