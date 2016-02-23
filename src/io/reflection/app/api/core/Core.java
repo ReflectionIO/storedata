@@ -174,12 +174,14 @@ public final class Core extends ActionHandler {
 			try {
 				input.store = ValidationHelper.validateStore(input.store, "input");
 				isStore = true;
-			} catch (InputValidationException ex) {}
+			} catch (InputValidationException ex) {
+			}
 
 			try {
 				input.query = ValidationHelper.validateQuery(input.query, "input");
 				isQuery = true;
-			} catch (InputValidationException ex) {}
+			} catch (InputValidationException ex) {
+			}
 
 			List<Country> countries = null;
 
@@ -192,8 +194,9 @@ public final class Core extends ActionHandler {
 				} else {
 					countries = CountryServiceProvider.provide().searchCountries(input.query, input.pager);
 				}
-			} else throw new InputValidationException(ApiError.GetCountriesNeedsStoreOrQuery.getCode(),
-					ApiError.GetCountriesNeedsStoreOrQuery.getMessage("input"));
+			} else
+				throw new InputValidationException(ApiError.GetCountriesNeedsStoreOrQuery.getCode(),
+						ApiError.GetCountriesNeedsStoreOrQuery.getMessage("input"));
 
 			if (countries != null) {
 				output.countries = countries;
@@ -235,12 +238,14 @@ public final class Core extends ActionHandler {
 			try {
 				input.country = ValidationHelper.validateCountry(input.country, "input");
 				isCountry = true;
-			} catch (InputValidationException ex) {}
+			} catch (InputValidationException ex) {
+			}
 
 			try {
 				input.query = ValidationHelper.validateQuery(input.query, "input");
 				isQuery = true;
-			} catch (InputValidationException ex) {}
+			} catch (InputValidationException ex) {
+			}
 
 			List<Store> stores = null;
 
@@ -797,7 +802,8 @@ public final class Core extends ActionHandler {
 
 					if (output.session != null) {
 						output.session.user = user;
-					} else throw new Exception("Unexpected blank session after creating user session.");
+					} else
+						throw new Exception("Unexpected blank session after creating user session.");
 				} else {
 					output.session = SessionServiceProvider.provide().extendSession(output.session, ISessionService.SESSION_SHORT_DURATION);
 					output.session.user = user;
@@ -988,34 +994,18 @@ public final class Core extends ActionHandler {
 			boolean isAdmin = UserServiceProvider.provide().hasRole(input.session.user, DataTypeHelper.adminRole());
 
 			if (hasDataAccount || isAdmin) {
-				// User linkedAccountOwner = UserServiceProvider.provide().getDataAccountOwner(input.linkedAccount);
-				// // If the owner, remove all other users from this linked account (except test linked account)
-				// if (linkedAccountOwner != null && linkedAccountOwner.id.longValue() == input.session.user.id.longValue()
-				// && input.linkedAccount.id.longValue() != 357) {
-				// UserServiceProvider.provide().deleteAllUsersDataAccount(input.linkedAccount);
-				//
-				// // Set linked account as inactive
-				// input.linkedAccount.active = DataTypeHelper.INACTIVE_VALUE;
-				// DataAccountServiceProvider.provide().updateDataAccount(input.linkedAccount, false);
-				//
-				// if (LOG.isLoggable(GaeLevel.DEBUG)) {
-				// LOG.finer(String.format("Linked account with id [%d] deleted by owner [%d]", input.linkedAccount.id.longValue(),
-				// input.session.user.id.longValue()));
-				// }
-				// } else {
-				// UserServiceProvider.provide().deleteUserDataAccount(input.session.user, input.linkedAccount);
-				//
-				// if (LOG.isLoggable(GaeLevel.DEBUG)) {
-				// LOG.finer(String.format("Linked account with id [%d] removed from user account [%d]", input.linkedAccount.id.longValue(),
-				// input.session.user.id.longValue()));
-				// }
-				// }
+				DataAccount account = DataAccountServiceProvider.provide().getDataAccount(input.linkedAccount.id);
 
-				UserServiceProvider.provide().deleteUserDataAccount(input.session.user, input.linkedAccount);
+				String vendorId = account.vendorId;
+				List<DataAccount> dataAccountsWithVendorId = DataAccountServiceProvider.provide().getDataAccountsWithVendorId(vendorId, true);
 
-				if (LOG.isLoggable(GaeLevel.DEBUG)) {
-					LOG.finer(String.format("Linked account with id [%d] removed from user account [%d]", input.linkedAccount.id.longValue(),
-							input.session.user.id.longValue()));
+				for (DataAccount accountWithSameVendorId : dataAccountsWithVendorId) {
+					UserServiceProvider.provide().deleteUserDataAccount(input.session.user, accountWithSameVendorId);
+
+					if (LOG.isLoggable(GaeLevel.DEBUG)) {
+						LOG.finer(String.format("Linked account with id [%d] removed from user account [%d]", accountWithSameVendorId.id,
+								input.session.user.id.longValue()));
+					}
 				}
 
 				// Revoke HLA permission
@@ -1024,7 +1014,8 @@ public final class Core extends ActionHandler {
 					UserServiceProvider.provide().revokePermission(input.session.user, hlaPermission);
 				}
 
-			} else throw new InputValidationException(ApiError.DataAccountUserMissmatch.getCode(), ApiError.DataAccountUserMissmatch.getMessage());
+			} else
+				throw new InputValidationException(ApiError.DataAccountUserMissmatch.getCode(), ApiError.DataAccountUserMissmatch.getMessage());
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -1436,7 +1427,8 @@ public final class Core extends ActionHandler {
 					notification.type = NotificationTypeType.NotificationTypeTypeInternal;
 					NotificationServiceProvider.provide().addNotification(notification);
 				}
-			} else throw new Exception("Linked accounts in the output are empty");
+			} else
+				throw new Exception("Linked accounts in the output are empty");
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
