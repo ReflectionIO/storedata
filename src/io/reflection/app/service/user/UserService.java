@@ -46,9 +46,9 @@ import io.reflection.app.shared.util.DataTypeHelper;
 
 final class UserService implements IUserService {
 
-	private static final String	SALT	= "salt.username.magic";
+	private static final String SALT = "salt.username.magic";
 
-	private static final Logger	LOG		= Logger.getLogger(UserService.class.getName());
+	private static final Logger LOG = Logger.getLogger(UserService.class.getName());
 
 	@Override
 	public String getName() {
@@ -135,18 +135,17 @@ final class UserService implements IUserService {
 		// NOTE: salt is added then the password is sha1-ed
 		String addUserQuery;
 		if (user.password != null) {
-			addUserQuery = String.format(
-					"INSERT INTO `user` (`forename`, `surname`, `username`, `password`, `avatar`, `company`) VALUES ('%s', '%s', '%s', '%s', %s, '%s')",
-					addslashes(user.forename), addslashes(user.surname), addslashes(user.username), sha1Hash(SALT + user.password), user.avatar == null ? "'"
-							+ addslashes(StringUtils.md5Hash(user.username.trim().toLowerCase())) + "'" : "'" + addslashes(user.avatar) + "'",
+			addUserQuery = String
+					.format("INSERT INTO `user` (`forename`, `surname`, `username`, `password`, `avatar`, `company`) VALUES ('%s', '%s', '%s', '%s', %s, '%s')",
+							addslashes(user.forename), addslashes(user.surname), addslashes(user.username),
+							sha1Hash(SALT + user.password), user.avatar == null
+									? "'" + addslashes(StringUtils.md5Hash(user.username.trim().toLowerCase())) + "'" : "'" + addslashes(user.avatar) + "'",
 					addslashes(user.company));
 		} else {
-			addUserQuery = String
-					.format("INSERT INTO `user` (`forename`, `surname`, `username`, `avatar`, `company`) VALUES ('%s', '%s', '%s', %s, '%s')",
-							addslashes(user.forename), addslashes(user.surname), addslashes(user.username),
-							user.avatar == null ? "'" + addslashes(StringUtils.md5Hash(user.username.trim().toLowerCase())) + "'" : "'"
-									+ addslashes(user.avatar) + "'",
-							addslashes(user.company));
+			addUserQuery = String.format("INSERT INTO `user` (`forename`, `surname`, `username`, `avatar`, `company`) VALUES ('%s', '%s', '%s', %s, '%s')",
+					addslashes(user.forename), addslashes(user.surname), addslashes(user.username),
+					user.avatar == null ? "'" + addslashes(StringUtils.md5Hash(user.username.trim().toLowerCase())) + "'" : "'" + addslashes(user.avatar) + "'",
+					addslashes(user.company));
 		}
 		try {
 			userConnection.connect();
@@ -182,16 +181,15 @@ final class UserService implements IUserService {
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection userConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
-		String searchUsersQuery = String
-				.format("SELECT * FROM `user` WHERE `deleted`='n' AND (`username` LIKE '%%%1$s%%' OR `forename` LIKE '%%%1$s%%' OR `surname` LIKE '%%%1$s%%' OR `company` LIKE '%%%1$s%%')",
-						mask);
+		String searchUsersQuery = String.format(
+				"SELECT * FROM `user` WHERE `deleted`='n' AND (`username` LIKE '%%%1$s%%' OR `forename` LIKE '%%%1$s%%' OR `surname` LIKE '%%%1$s%%' OR `company` LIKE '%%%1$s%%')",
+				mask);
 
 		if (pager != null) {
 			String sortByQuery = "id";
 
-			if (pager.sortBy != null
-					&& ("username".equals(pager.sortBy) || "forename".equals(pager.sortBy) || "surname".equals(pager.sortBy) || "customerid"
-							.equals(pager.sortBy))) {
+			if (pager.sortBy != null && ("username".equals(pager.sortBy) || "forename".equals(pager.sortBy) || "surname".equals(pager.sortBy)
+					|| "customerid".equals(pager.sortBy))) {
 				sortByQuery = pager.sortBy;
 			}
 
@@ -199,11 +197,11 @@ final class UserService implements IUserService {
 
 			if (pager.sortDirection != null) {
 				switch (pager.sortDirection) {
-					case SortDirectionTypeAscending:
-						sortDirectionQuery = "ASC";
-						break;
-					default:
-						break;
+				case SortDirectionTypeAscending:
+					sortDirectionQuery = "ASC";
+					break;
+				default:
+					break;
 				}
 			}
 
@@ -248,10 +246,9 @@ final class UserService implements IUserService {
 		IDatabaseService databaseService = DatabaseServiceProvider.provide();
 		Connection userConnection = databaseService.getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
-		String searchUsersCountQuery = String
-				.format(
-						"SELECT COUNT(1) AS `usercount` FROM `user`WHERE `deleted`='n' AND (`username` LIKE '%%%1$s%%' OR `forename` LIKE '%%%1$s%%' OR `surname` LIKE '%%%1$s%%' OR `company` LIKE '%%%1$s%%')",
-						addslashes(mask));
+		String searchUsersCountQuery = String.format(
+				"SELECT COUNT(1) AS `usercount` FROM `user`WHERE `deleted`='n' AND (`username` LIKE '%%%1$s%%' OR `forename` LIKE '%%%1$s%%' OR `surname` LIKE '%%%1$s%%' OR `company` LIKE '%%%1$s%%')",
+				addslashes(mask));
 
 		try {
 			userConnection.connect();
@@ -416,9 +413,8 @@ final class UserService implements IUserService {
 		if (pager != null) {
 			String sortByQuery = "id";
 
-			if (pager.sortBy != null
-					&& ("username".equals(pager.sortBy) || "forename".equals(pager.sortBy) || "surname".equals(pager.sortBy) || "customerid"
-							.equals(pager.sortBy))) {
+			if (pager.sortBy != null && ("username".equals(pager.sortBy) || "forename".equals(pager.sortBy) || "surname".equals(pager.sortBy)
+					|| "customerid".equals(pager.sortBy))) {
 				sortByQuery = pager.sortBy;
 			}
 
@@ -426,11 +422,11 @@ final class UserService implements IUserService {
 
 			if (pager.sortDirection != null) {
 				switch (pager.sortDirection) {
-					case SortDirectionTypeAscending:
-						sortDirectionQuery = "ASC";
-						break;
-					default:
-						break;
+				case SortDirectionTypeAscending:
+					sortDirectionQuery = "ASC";
+					break;
+				default:
+					break;
 				}
 			}
 
@@ -868,7 +864,8 @@ final class UserService implements IUserService {
 	 * java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public DataAccount addDataAccount(User user, DataSource dataSource, String username, String password, String vendorId, String developerName, String accountId) throws DataAccessException {
+	public DataAccount addDataAccount(User user, DataSource dataSource, String username, String password, String vendorId, String developerName,
+			String accountId) throws DataAccessException {
 
 		DataAccount addedDataAccount = null;
 
@@ -882,6 +879,8 @@ final class UserService implements IUserService {
 		toAdd.properties = ITunesConnectDownloadHelper.createProperties(vendorId);
 
 		addedDataAccount = DataAccountServiceProvider.provide().addDataAccount(toAdd);
+
+		addOrRestoreUserDataAccount(user, addedDataAccount);
 
 		return addedDataAccount;
 	}
@@ -924,8 +923,8 @@ final class UserService implements IUserService {
 			String getDataAccountIdsQuery = String.format(
 					"SELECT `dataaccountid` FROM `userdataaccount` WHERE `deleted`='n' AND `userid` IN ('%s') ORDER BY `%s` %s LIMIT %d, %d",
 					commaDelimitedUserIds, pager.sortBy == null ? "id" : stripslashes(pager.sortBy),
-					pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC", pager.start == null ? Pager.DEFAULT_START.longValue()
-							: pager.start.longValue(),
+					pager.sortDirection == SortDirectionType.SortDirectionTypeAscending ? "ASC" : "DESC",
+					pager.start == null ? Pager.DEFAULT_START.longValue() : pager.start.longValue(),
 					pager.count == null ? Pager.DEFAULT_COUNT.longValue() : pager.count.longValue());
 
 			Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
@@ -1035,9 +1034,9 @@ final class UserService implements IUserService {
 		}
 
 		if (commaDelimitedDataAccountIds != null && commaDelimitedDataAccountIds.length() != 0) {
-			String getDataAccountOwnerQuery = String
-					.format("SELECT `userid`, `dataaccountid` FROM `userdataaccount` WHERE `dataaccountid` IN ('%s') AND `deleted`='n' GROUP BY `dataaccountid` ORDER BY `id` ASC",
-							commaDelimitedDataAccountIds);
+			String getDataAccountOwnerQuery = String.format(
+					"SELECT `userid`, `dataaccountid` FROM `userdataaccount` WHERE `dataaccountid` IN ('%s') AND `deleted`='n' GROUP BY `dataaccountid` ORDER BY `id` ASC",
+					commaDelimitedDataAccountIds);
 
 			Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
@@ -1233,7 +1232,7 @@ final class UserService implements IUserService {
 	 * @param user
 	 * @param dataAccount
 	 * @param deleted
-	 *          If true, check deleted linked accounts as well
+	 *            If true, check deleted linked accounts as well
 	 * @return
 	 * @throws DataAccessException
 	 */
@@ -1380,8 +1379,8 @@ final class UserService implements IUserService {
 	 */
 	@Override
 	public void deleteAllDataAccounts(User user) throws DataAccessException {
-		String deleteAllDataAccountsQuery = String
-				.format("UPDATE `userdataaccount` SET `deleted`='y' WHERE `userid`=%d AND `deleted`='n'", user.id.longValue());
+		String deleteAllDataAccountsQuery = String.format("UPDATE `userdataaccount` SET `deleted`='y' WHERE `userid`=%d AND `deleted`='n'",
+				user.id.longValue());
 
 		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
@@ -1534,8 +1533,8 @@ final class UserService implements IUserService {
 	 */
 	@Override
 	public void revokeRole(User user, Role role) throws DataAccessException {
-		String deleteRoleQuery = String.format("UPDATE `userrole` SET `expires`=NOW() WHERE `roleid`=%d AND `userid`=%d AND `deleted`='n'",
-				role.id.longValue(), user.id.longValue());
+		String deleteRoleQuery = String.format("UPDATE `userrole` SET `expires`=NOW() WHERE `roleid`=%d AND `userid`=%d AND `deleted`='n'", role.id.longValue(),
+				user.id.longValue());
 
 		Connection userConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeUser.toString());
 
