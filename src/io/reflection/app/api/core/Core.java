@@ -1284,6 +1284,8 @@ public final class Core extends ActionHandler {
 
 			output.linkedAccounts = new ArrayList<DataAccount>();
 
+			ArrayList<String> vendorIdsAddedToResponse = new ArrayList<>();
+
 			if ("THETESTACCOUNT".equals(input.username) && "thegrange".equals(input.password)) { // TODO Redesign custom exceptions
 
 				DataAccount testAccount = DataAccountServiceProvider.provide().getDataAccount(357L);
@@ -1322,7 +1324,11 @@ public final class Core extends ActionHandler {
 						DataAccount addedAccount = UserServiceProvider.provide().addDataAccount(input.session.user, input.source, input.username,
 								input.password, vendorId, developerName, accountId);
 						addedAccount.source = input.source;
-						output.linkedAccounts.add(addedAccount);
+
+						if (!vendorIdsAddedToResponse.contains(vendorId)) {
+							output.linkedAccounts.add(addedAccount);
+							vendorIdsAddedToResponse.add(vendorId);
+						}
 					} else {
 						User currentUser = UserServiceProvider.provide().getUser(input.session.user.id);
 
@@ -1351,7 +1357,10 @@ public final class Core extends ActionHandler {
 
 							// link this account to the current user.
 							UserServiceProvider.provide().addOrRestoreUserDataAccount(currentUser, accountWithSameVendorId);
-							output.linkedAccounts.add(accountWithSameVendorId);
+							if (!vendorIdsAddedToResponse.contains(vendorId)) {
+								output.linkedAccounts.add(accountWithSameVendorId);
+								vendorIdsAddedToResponse.add(vendorId);
+							}
 						}
 
 						if (accountWithSameCredentials == null) {
@@ -1363,7 +1372,11 @@ public final class Core extends ActionHandler {
 							DataAccount addedAccount = UserServiceProvider.provide().addDataAccount(input.session.user, input.source, input.username,
 									input.password, vendorId, developerName, accountId);
 							addedAccount.source = input.source;
-							output.linkedAccounts.add(addedAccount);
+
+							if (!vendorIdsAddedToResponse.contains(vendorId)) {
+								output.linkedAccounts.add(addedAccount);
+								vendorIdsAddedToResponse.add(vendorId);
+							}
 						}
 
 						if (accountWithSameCredentials != null && !thereIsAtleastOneActiveAccountForThisVendorId) {
