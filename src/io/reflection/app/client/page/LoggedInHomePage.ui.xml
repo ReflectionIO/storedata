@@ -16,6 +16,41 @@
 				<ul>
 					<li class="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}">
 						<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
+							<h2>Is free-to-play the only way?</h2>
+							<p class="{STYLES_INSTANCE.reflectionMainStyle.siteArticleInfo}">
+								<strong>Posted by</strong>
+								<span class="{STYLES_INSTANCE.reflectionMainStyle.postedBy}">Gustaf Leksell, Founder &amp; CEO</span>
+								<span>February 16th 2016</span>
+							</p>
+							<p>
+								We've been busy expanding our infrastructure to allow for additional country and category intelligence 
+								as well as historic data and advanced graph solutions. 
+								You can look forward to seeing this become available in the next few months as our beta progresses.
+							</p>
+							<p>
+								We've also partnered with UKIE (UK Interactive Entertainment) to provide the official weekly app charts. You can 
+								<a href="http://www.mcvuk.com/news/read/the-charts-are-back-and-this-time-they-are-digital/0159873" target="_blank">read more about it here</a>.
+							</p>
+							<p>
+								Reflection's research has paved the way for useful articles on apps. If you are interested in paid games specifically check out the article below.
+							</p>
+							<p>
+								Key facts based on our research:
+							</p>
+							<ul class="{STYLES_INSTANCE.reflectionMainStyle.contentList}">
+								<li>The number of paid apps without in-app purchases is actually on the rise - with 2.5% month on month increase in the UK. And 3.7% in the US.</li>
+								<li>In the UK, 14% of games in the Top 200 Grossing UK charts are paid apps, but only 8% in the United States. Know your market.</li>
+							</ul>
+							<p>Find out more at:</p>
+							<p><a href="http://usspeaking.com/the-curious-case-of-monument-valley-is-free-to-play-the-only-way/" target="_blank">http://usspeaking.com/the-curious-case-of-monument-valley-is-free-to-play-the-only-way/</a></p>
+							<p>Thanks,</p>
+							<p>
+								Gustaf
+							</p>
+						</article>
+					</li>
+ 					<li class="{STYLES_INSTANCE.reflectionMainStyle.articleListArticle}">
+						<article class="{STYLES_INSTANCE.reflectionMainStyle.siteArticle}">
 							<h2>Welcome To Our Beta!</h2>
 							<p class="{STYLES_INSTANCE.reflectionMainStyle.siteArticleInfo}">
 								<strong>Posted by</strong>
