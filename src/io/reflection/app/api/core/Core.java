@@ -1370,6 +1370,10 @@ public final class Core extends ActionHandler {
 								output.linkedAccounts.add(addedAccount);
 								vendorIdsAddedToResponse.add(vendorId);
 							}
+
+							if (accountWithUserProvidedCredentials == null) {
+								accountWithUserProvidedCredentials = addedAccount;
+							}
 						}
 
 						if (accountWithSameCredentials != null && !thereIsAtleastOneActiveAccountForThisVendorId) {
@@ -1419,10 +1423,10 @@ public final class Core extends ActionHandler {
 				parameters.put("source", input.source);
 
 				String body = NotificationHelper.inflate(parameters,
-						"Hi ${listener.forename},\n\nThis is to let you know that the user [${user.id} - ${user.forename} ${user.surname}] has added the data account [${account.id}] for the data source [${source.name}] and the username ${account.username} and developer name ${account.developerName}.\n\nReflection");
+						"Hi ${listener.forename},\n\nThis is to let you know that the user [${user.id} - ${user.forename} ${user.surname}] has added the data account [${account.id}] for the data source [${source.name}] and the username [${account.username}] and developer name [${account.developerName}].\n\nReflection");
 
 				Notification notification = (new Notification()).from("hello@reflection.io").user(listeningUser).body(body)
-						.priority(EventPriorityType.EventPriorityTypeHigh).subject("A user's has linked thier account account");
+						.priority(EventPriorityType.EventPriorityTypeHigh).subject("A user has linked their account");
 				Notification added = NotificationServiceProvider.provide().addNotification(notification);
 
 				if (added.type != NotificationTypeType.NotificationTypeTypeInternal) {
