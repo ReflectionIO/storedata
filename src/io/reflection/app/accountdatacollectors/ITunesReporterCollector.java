@@ -60,8 +60,12 @@ public class ITunesReporterCollector implements DataAccountCollector {
 	public boolean collect(DataAccount dataAccount, Date date) throws DataAccessException, ServiceException {
 		date = ApiHelper.removeTime(date);
 
-		// if the date requested is before iTunes Reporter started, then process it via the old iTunes Autoingest data collector.
-		if (AppleReporterHelper.isDateBeforeItunesReporterStarted(date)) return new DataAccountCollectorITunesConnect().collect(dataAccount, date);
+		// // if the date requested is before iTunes Reporter started, then process it via the old iTunes Autoingest data collector.
+		// if (AppleReporterHelper.isDateBeforeItunesReporterStarted(date)) {
+		// LOG.info(String.format("%s is before the iTunes Report was active so using the older collector for it", date));
+		//
+		// return new DataAccountCollectorITunesConnect().collect(dataAccount, date);
+		// }
 
 		if (LOG.isLoggable(Level.INFO)) {
 			LOG.info(String.format("Getting data from itunes connect for data account [%s] and date [%s]", dataAccount.id == null ? dataAccount.username
@@ -129,6 +133,10 @@ public class ITunesReporterCollector implements DataAccountCollector {
 				ITunesReporterError error = ITunesReporterError.getByCode(e.getErrorCode());
 
 				if (error == null) {
+					dataAccountFetch.status(DataAccountFetchStatusType.DataAccountFetchStatusTypeError);
+					dataAccountFetch.data(e.getErrorCode() + ":" + e.getMessage());
+					dataAccountFetch = DataAccountFetchServiceProvider.provide().updateDataAccountFetch(dataAccountFetch);
+
 					LOG.log(Level.WARNING, "Exception occured while trying to get iTunes Report via the Reporter", e);
 					return false;
 				}
@@ -173,6 +181,10 @@ public class ITunesReporterCollector implements DataAccountCollector {
 
 					NotificationHelper.sendEmail("hello@reflection.io (Reflection)", "support@reflection.io", "Reflection", "Disabling account due to invalid credentials", emailBody, false);
 				} else {
+					dataAccountFetch.status(DataAccountFetchStatusType.DataAccountFetchStatusTypeError);
+					dataAccountFetch.data(e.getErrorCode() + ":" + e.getMessage());
+					dataAccountFetch = DataAccountFetchServiceProvider.provide().updateDataAccountFetch(dataAccountFetch);
+
 					LOG.log(Level.WARNING, "The was an exception while trying to get the sales report for data account id: " + dataAccount.id + " with username: " + dataAccount.username + " on " + date);
 				}
 
