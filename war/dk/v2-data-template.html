@@ -1,0 +1,1746 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="utf-8" />
+	<title>Reflection V2, Data Template</title>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<!--[if (gt IE 9)|(IEMobile)|(!IE)]><!-->
+		<link rel="stylesheet" type="text/css" href="reflection-main-v2.css" />
+	<!--<![endif]-->
+	<!--[if IE 9]>
+	<![endif]-->
+	<!--[if (lt IE 9)]>
+		<script src="js/vendor/html5shiv.min.js"></script>
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main-ie8.css" />
+	<![endif]-->
+	<link rel="stylesheet" href="js/vendor/jquery.mCustomScrollbar.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
+<script>
+  WebFont.load({
+    google: {
+      families: ['Source Sans Pro:400,600,700', 'Lato:400,700,400italic']
+    }
+  });
+</script></head>
+<body>
+	<!--[if (lt IE 9)]>
+      <div class="window-warning">
+  			<p>Uh oh... Reflection doesn't work in this browser. &nbsp; &nbsp;<a href="http://outdatedbrowser.com/en" target="_blank">Download a compatible browser</a></p>
+  		</div>
+  <![endif]-->
+
+  <header id="js-component-import--global-header" class="global-header"></header>
+  
+	<div id="js-component-import--panel-left" class="panel-left js-panel-left js-custom-scrollbar" data-mcs-theme="minimal-dark"></div>
+
+	<div class="l-page-container">
+		<div id="main" class="l-main" role="main">
+			<div class="page-data-dashboard">
+				<div class="grid-container">
+					<h1 class="heading-style--heading-two page-title">My Apps</h1>
+					
+					<div class="toggle-container page-header__page-toggle">
+						<div class="filter-toggle filter-toggle--with-text filter-toggle--small">
+							<div class="toggle">
+								<input id="toggle--show-overview" name="overview-country" checked type="radio">
+								<label for="toggle--show-overview">
+									Overview
+								</label>
+							</div>
+							<div class="toggle">
+								<input id="toggle--show-country" name="overview-country" type="radio">
+								<label for="toggle--show-country">
+									By Country
+								</label>
+							</div>
+						</div>
+					</div>
+
+					<span class="page-header__data-info-text">All Actual Data</span>
+					<span class="page-header__data-info-icon ref-icon-after--question whats-this-tooltip-icon js-whats-this-tooltip" data-whatsthis-title="What is Actual Data?" data-whatsthis="In the My Data section revenue and download data displayed are actual values taken from your real sales data. No-one else sees these numbers but you. The Store Data section is instead based on accurate estimates."></span>
+
+					<button href="#" class="ref-button--secondary--small page-header_action-button">Download CSV</button>
+				</div>
+
+				<div class="grid__row overflow-visible">
+					<aside class="primary-filters-container">
+ 						<div class="primary-filter form-field--select">
+							<select class="js-select-box">
+						    <option value="all" selected>All Store Accounts</option>
+						    <option value="ios">iOS</option>
+						    <option value="play">Google Play</option>
+						    <option value="amazon">Amazon App Store</option>
+							</select>
+						</div>
+						<div class="primary-filter form-field--select">
+							<select class="js-select-box">
+						    <option value="jan" selected>01/01/16 - 01/02/16</option>
+						    <option value="feb">01/02/16 - 01/03/16</option>
+						    <option value="mar">01/03/16 - 01/04/16</option>
+						    <option value="apr">01/04/16 - 01/05/16</option>
+							</select>
+						</div>
+						<div class="primary-filter form-field--select">
+							<select class="js-select-box">
+						    <option value="all" selected>All Countries</option>
+						    <option value="uni">United Kingdom</option>
+						    <option value="fra">France</option>
+						    <option value="ger">Germany</option>
+							</select>
+						</div>
+						<div class="primary-filter form-field--select">
+							<select class="js-select-box">
+						    <option value="all" selected>All Categories</option>
+						    <option value="uni">Games</option>
+						    <option value="fra">Lifestyle</option>
+						    <option value="ger">Productivity</option>
+							</select>
+						</div>
+						<div class="primary-filter form-field--select">
+							<select class="js-select-box">
+						    <option value="all" selected>All Devices</option>
+						    <option value="ipa">iPad</option>
+						    <option value="iph">iPhone</option>
+							</select>
+						</div>
+					</aside>
+				</div>
+
+				<aside class="grid-container secondary-filters-container">
+					<div class="secondary-filter form-field--select">
+						<select class="js-select-box">
+					    <option value="allrev" selected>All Revenue</option>
+					    <option value="pairev">Paid Revenue</option>
+					    <option value="iaprev">IAP Revenue</option>
+					    <option value="adrev">Ad Revenue</option>
+					    <option value="subrev">Subscription Revenue</option>
+						</select>
+					</div>
+					<div class="secondary-filter form-field--select">
+						<select class="js-select-box">
+					    <option value="overlayapps" selected>Overlay Apps (0)</option>
+					    <option value="candy">Candy Crush Saga</option>
+					    <option value="clash">Clash of Clans</option>
+					    <option value="soccerstars">Soccer Stars</option>
+					    <option value="eightball">8 Ball Pool</option>
+						</select>
+					</div>
+
+					<div class="form-field--checkbox-list form-field--checkbox-list--inline">
+						<ul>
+							<li>
+								<input type="checkbox" name="checkboxOne" id="checkboxOne">
+								<label for="checkboxOne" class="checkboxLabel">Events</label>
+								<label for="checkboxOne" class="checkboxLabelVisible">Events</label>
+							</li>
+							<li>
+								<input type="checkbox" name="checkboxTwo" id="checkboxTwo">
+								<label for="checkboxTwo" class="checkboxLabel">Revenue Split</label>
+								<label for="checkboxTwo" class="checkboxLabelVisible">Revenue Split</label>
+							</li>
+							<li>
+								<input type="checkbox" name="checkboxThree" id="checkboxThree">
+								<label for="checkboxThree" class="checkboxLabel">Cumulative</label>
+								<label for="checkboxThree" class="checkboxLabelVisible">Cumulative</label>
+							</li>
+						</ul>
+					</div>
+
+					<div class="secondary-filter form-field--select">
+						<select class="js-select-box">
+					    <option value="overlayapps" selected>More (0/3)</option>
+					    <option value="candy">Device Breakdown</option>
+					    <option value="clash">Re-downloads</option>
+					    <option value="soccerstars">Installed Updates</option>
+					    <option value="eightball">Revenue/Download Comparison</option>
+						</select>
+					</div>
+
+					<div class="filter-toggle toggle-container--chart-type">
+						<div class="toggle">
+							<input id="toggle--show-line" name="graphtype" type="radio">
+							<label for="toggle--show-line">
+								<svg x=0px y=0px viewBox="0 0 18 18"enable-background="new 0 0 18 18"xml:space=preserve><path d="M13.7,4.8L9.9,3L6.5,9.2L3.2,7.7L0,12.6V18h18V0.1L13.7,4.8z M16.9,16.9h-2.8h-0.6h-2.8h-0.6H7.3
+	H6.8H3.9H3.4H1.1v-4l2.5-3.8L7,10.7l3.4-6.2L14,6.1l2.9-3.2V16.9z"/></svg>
+							</label>
+						</div>
+						<div class="toggle">
+							<input id="toggle--show-stacked" name="graphtype" checked type="radio">
+							<label for="toggle--show-stacked">
+								<svg x=0px y=0px viewBox="0 0 18 18"enable-background="new 0 0 18 18"xml:space=preserve><path d="M13.7,4.8L9.9,3L6.5,9.2L3.2,7.7L0,12.6V18h18V0.1L13.7,4.8z M3.6,9.1L7,10.7l3.4-6.2L14,6.1l2.9-3.2v4
+	l-3,4.5l-3.2-1.1l-3.7,3.4L3.7,13l-2.6,1.4v-1.5L3.6,9.1z M14.1,16.9h-0.6h-2.8h-0.6H7.3H6.8H3.9H3.4H1.1V15l2.7-1.5l3.3,0.9
+	l3.7-3.4l3.3,1.1l2.8-4.2v9H14.1z"/></svg>
+							</label>
+						</div>
+						<div class="toggle">
+							<input id="toggle--show-bar" name="graphtype" type="radio">
+							<label for="toggle--show-bar">
+								<svg x=0px y=0px viewBox="0 0 18 18"enable-background="new 0 0 18 18"xml:space=preserve><path d="M11.2,0v5.6H5.6v3.9H0V18h18V0H11.2z M6.8,6.8h5.1v10.1H6.8V6.8z M1.1,10.7h5.1v6.2H1.1V10.7z
+	 M16.9,16.9h-4.5V1.1h4.5V16.9z"/></svg>
+							</label>
+						</div>
+					</div>
+
+					<div class="filter-toggle toggle-container--chart-type">
+						<div class="toggle toggle-split-graph">
+							<input id="toggle--show-split-graph" name="splitgraph" checked type="radio">
+							<label for="toggle--show-split-graph" class="js-mock-show-split-chart">
+								<svg x=0px y=0px viewBox="0 0 39 18"enable-background="new 0 0 39 18"xml:space=preserve><g><path class=chart-lines d="M1,14.2l-1-0.6l3.2-4.9l3.5,1.6l3.5-6.4l4,1.8l3.4-3.8l0.9,0.8l-4,4.4l-3.7-1.7l-3.5,6.4
+		l-3.5-1.6L1,14.2z M38.7,10.3l-0.6-1l-3.5,2.2l-3.4-0.5l-3.4-4l-4-1.8l-3.2,3.7l0.9,0.8l2.6-3L27,8l3.6,4.1l4.3,0.6L38.7,10.3z"/><path class=base-lines d="M18.6,17H0v-1.2h18.6V17z M39,15.8H20.4V17H39V15.8z"/></g></svg>
+							</label>
+						</div>
+						<div class="toggle toggle-single-graph">
+							<input id="toggle--show-one-graph" name="splitgraph" type="radio">
+							<label for="toggle--show-one-graph" class="js-mock-show-single-chart">
+								<svg x=0px y=0px viewBox="0 0 32 18"enable-background="new 0 0 32 18"xml:space=preserve><g><polygon class=chart-lines fill=#727686 points="24.9,11.5 18.3,11 14.9,8.7 18.3,5.1 25.1,6.9 32,2.6 31.4,1.6 24.9,5.6 17.9,3.8 
+										13.9,8 12.1,6.9 5.5,5.2 0.1,8.7 0.7,9.7 5.7,6.4 11.6,8 13,8.9 11.7,10.3 5.5,8.7 0,13.5 0.8,14.3 5.8,10 12.1,11.6 14,9.6 
+										17.9,12.1 25.1,12.7 31.9,10.3 31.5,9.2 	"/><polyline class=base-lines fill=#B2B5C0 points="0.1,15.8 0.1,17 31.9,17 31.9,15.8 	"/></g></svg>
+							</label>
+						</div>
+					</div>
+
+				</aside>
+
+				<div class="grid__row">
+					<ul class="tabs-content-list">
+						<li class="is-active" id="split-chart-container">
+							<section class="chart-container chart-container--split">
+								<header class="chart-container__header">
+									<h2 class="chart-heading heading-style--heading-three">Revenue</h2>
+									<dl class="chart-summary">
+										<div class="total-for-period-container">
+											<dd class="total-for-period-title">Total for Period / % Growth</dd>
+											<dt class="total-for-period">$7,501,876 <span class="growth-on-last-period positive-colour"> + 100%</span></dt>
+										</div>
+									</dl>
+								</header>
+								<aside class="custom-chart-key">
+									<div class="form-field--checkbox-list form-field--checkbox-list--inline">
+										<ul>
+											<li class="revenue-key">
+												<input type="checkbox" name="showhiderevenue" id="showhiderevenue" class="js-toggle-total-series" data-chart-index="0" data-series-index="0" checked>
+												<label for="showhiderevenue" class="checkboxLabel">Total</label>
+												<label for="showhiderevenue" class="checkboxLabelVisible">Total</label>
+											</li>
+										</ul>
+									</div>
+								</aside>
+								<div class="chart" id="chart-revenue"></div>
+							</section>
+							<section class="chart-container chart-container--split">
+								<header class="chart-container__header">
+									<h2 class="chart-heading heading-style--heading-three">Downloads</h2>
+									<dl class="chart-summary">
+										<div class="total-for-period-container">
+											<dd class="total-for-period-title">Total for Period / % Growth</dd>
+											<dt class="total-for-period">3,578,160 <span class="growth-on-last-period negative-colour"> - 100%</span></dt>
+										</div>
+									</dl>
+								</header>
+								<aside class="custom-chart-key">
+									<div class="form-field--checkbox-list form-field--checkbox-list--inline">
+										<ul>
+											<li class="downloads-key">
+												<input type="checkbox" name="showhidedownloads" id="showhidedownloads" class="js-toggle-total-series" data-chart-index="1" data-series-index="0" checked>
+												<label for="showhidedownloads" class="checkboxLabel">Total</label>
+												<label for="showhidedownloads" class="checkboxLabelVisible">Total</label>
+											</li>
+										</ul>
+									</div>
+								</aside>
+								<div class="chart" id="chart-downloads"></div>
+							</section>
+						</li>
+						<li id="single-chart-container">
+							<section class="chart-container chart-container--single">
+								<header class="chart-container__header">
+									<dl class="chart-summary">
+										<div class="total-for-period-container">
+											<dd class="total-for-period-title">Revenue for Period / % Growth</dd>
+											<dt class="total-for-period">$7,501,876 <span class="growth-on-last-period positive-colour"> + 100%</span></dt>
+										</div>
+									</dl>
+									<dl class="chart-summary">
+										<div class="total-for-period-container">
+											<dd class="total-for-period-title">Downloads for Period / % Growth</dd>
+											<dt class="total-for-period">3,578,160 <span class="growth-on-last-period positive-colour"> + 100%</span></dt>
+										</div>
+									</dl>
+								</header>
+								<aside class="custom-chart-key">
+									<div class="form-field--checkbox-list form-field--checkbox-list--inline">
+										<ul>
+											<li class="revenue-key">
+												<input type="checkbox" name="showhiderevenuesingle" id="showhiderevenuesingle" class="js-toggle-total-series" data-chart-index="2" data-series-index="0" checked>
+												<label for="showhiderevenuesingle" class="checkboxLabel">Revenue</label>
+												<label for="showhiderevenuesingle" class="checkboxLabelVisible">Revenue</label>
+											</li>
+											<li class="downloads-key">
+												<input type="checkbox" name="showhidedownloadssingle" id="showhidedownloadssingle" class="js-toggle-total-series" data-chart-index="2" data-series-index="1" checked>
+												<label for="showhidedownloadssingle" class="checkboxLabel">Downloads</label>
+												<label for="showhidedownloadssingle" class="checkboxLabelVisible">Downloads</label>
+											</li>
+										</ul>
+									</div>
+								</aside>
+								<div class="chart" id="chart-revenue-downloads"></div>
+							</section>
+						</li>
+					</ul>
+				</div>
+
+				<div class="grid-container">
+
+					<section class="data-table-section grid__column--three-quarters">
+						<header class="data-table-section__header">
+							<h2 class="section-title"><span>Total Apps</span> <span>5</span></h2>
+							<div class="data-table-section__filters">
+								
+								<div class="secondary-filter form-field--search">
+									<input type="text" placeholder="Find App in List" name="findapp" id="findapp" />
+									<label for="findapp" class="ref-icon-after--search"><span>Search</span></label>
+								</div>
+								<div class="secondary-filter form-field--select">
+									<select class="js-select-box">
+								    <option value="all" selected>All IAP Status</option>
+								    <option value="withiap">With IAP</option>
+								    <option value="noiap">No IAP</option>
+									</select>
+								</div>
+								<div class="secondary-filter form-field--select">
+									<select class="js-select-box">
+								    <option value="all" selected>All Prices</option>
+								    <option value="one">Tier 1</option>
+								    <option value="two">Tier 2</option>
+								    <option value="the">Tier 3</option>
+								    <option value="fou">Tier 4</option>
+									</select>
+								</div>
+								<label>Show</label>
+								<div class="secondary-filter form-field--select">
+									<select class="js-select-box">
+								    <option value="nam">Name</option>
+								    <option value="rat">Average Rating</option>
+								    <option value="rel">Release Date</option>
+								    <option value="las">Last Updated</option>
+								    <option value="rev" selected>Revenue Actual</option>
+								    <option value="revgro">Revenue - % Growth</option>
+								    <option value="dow">Downloads - Actual</option>
+								    <option value="dowgro">Downloads - % Growth</option>
+								    <option value="perrev">% of Revenue for Period</option>
+								    <option value="perdow">% of Downloads for Period</option>
+									</select>
+								</div>
+								<label>Sort</label>
+
+							</div>
+						</header>
+						<div class="data-table-section__summary">
+							<div class="form-field--checkbox-list form-field--checkbox-list--inline">
+								<ul>
+									<li>
+										<input type="checkbox" name="checkboxTotals" id="checkboxTotals" checked>
+										<label for="checkboxTotals" class="checkboxLabel">Totals</label>
+										<label for="checkboxTotals" class="checkboxLabelVisible">Totals</label>
+									</li>
+								</ul>
+							</div>
+							<div class="data-table-section__summary__figures">
+								<span class="data-table-section__summary__total-revenue ref-icon-before--revenue">
+									<span>£18,028,173</span>
+								</span>
+								<span class="data-table-section__summary__growth positive-colour">+5%</span>
+								<span class="data-table-section__summary__total-downloads ref-icon-before--download">
+									<span>33,159,002</span>
+								</span>
+								<span class="data-table-section__summary__growth negative-colour">-1%</span>
+								<a href="#" class="data-table-section__summary__more-link">More</a>
+							</div>
+						</div>
+
+						<table class="ref-table ref-table--apps">
+							<thead>
+								<tr>
+									<th><a href="#">Clear</a></th>
+									<th>
+										<span>App Name</span>
+										<svg version="1.1" x="0px" y="0px" viewBox="0 0 7 10" enable-background="new 0 0 7 10" xml:space="preserve" class="sort-svg"><path class="ascending" d="M0.4,4.1h6.1c0.1,0,0.2,0,0.3-0.1C7,3.9,7,3.8,7,3.7c0-0.1,0-0.2-0.1-0.3L3.8,0.1C3.7,0,3.6,0,3.5,0C3.4,0,3.3,0,3.2,0.1L0.1,3.3C0,3.4,0,3.5,0,3.7C0,3.8,0,3.9,0.1,4C0.2,4.1,0.3,4.1,0.4,4.1z"></path><path class="descending" d="M6.6,5.9H0.4c-0.1,0-0.2,0-0.3,0.1C0,6.1,0,6.2,0,6.3c0,0.1,0,0.2,0.1,0.3l3.1,3.2C3.3,10,3.4,10,3.5,10c0.1,0,0.2,0,0.3-0.1l3.1-3.2C7,6.6,7,6.5,7,6.3C7,6.2,7,6.1,6.9,6C6.8,5.9,6.7,5.9,6.6,5.9z"></path></svg> &nbsp;/&nbsp; 
+										<span>Av. Rating</span>
+										<svg version="1.1" x="0px" y="0px" viewBox="0 0 7 10" enable-background="new 0 0 7 10" xml:space="preserve" class="sort-svg"><path class="ascending" d="M0.4,4.1h6.1c0.1,0,0.2,0,0.3-0.1C7,3.9,7,3.8,7,3.7c0-0.1,0-0.2-0.1-0.3L3.8,0.1C3.7,0,3.6,0,3.5,0C3.4,0,3.3,0,3.2,0.1L0.1,3.3C0,3.4,0,3.5,0,3.7C0,3.8,0,3.9,0.1,4C0.2,4.1,0.3,4.1,0.4,4.1z"></path><path class="descending" d="M6.6,5.9H0.4c-0.1,0-0.2,0-0.3,0.1C0,6.1,0,6.2,0,6.3c0,0.1,0,0.2,0.1,0.3l3.1,3.2C3.3,10,3.4,10,3.5,10c0.1,0,0.2,0,0.3-0.1l3.1-3.2C7,6.6,7,6.5,7,6.3C7,6.2,7,6.1,6.9,6C6.8,5.9,6.7,5.9,6.6,5.9z"></path></svg>
+									</th>
+									<th>
+										Released
+										<svg version="1.1" x="0px" y="0px" viewBox="0 0 7 10" enable-background="new 0 0 7 10" xml:space="preserve" class="sort-svg"><path class="ascending" d="M0.4,4.1h6.1c0.1,0,0.2,0,0.3-0.1C7,3.9,7,3.8,7,3.7c0-0.1,0-0.2-0.1-0.3L3.8,0.1C3.7,0,3.6,0,3.5,0C3.4,0,3.3,0,3.2,0.1L0.1,3.3C0,3.4,0,3.5,0,3.7C0,3.8,0,3.9,0.1,4C0.2,4.1,0.3,4.1,0.4,4.1z"></path><path class="descending" d="M6.6,5.9H0.4c-0.1,0-0.2,0-0.3,0.1C0,6.1,0,6.2,0,6.3c0,0.1,0,0.2,0.1,0.3l3.1,3.2C3.3,10,3.4,10,3.5,10c0.1,0,0.2,0,0.3-0.1l3.1-3.2C7,6.6,7,6.5,7,6.3C7,6.2,7,6.1,6.9,6C6.8,5.9,6.7,5.9,6.6,5.9z"></path></svg>
+									</th>
+									<th class="revenue-head-cell">
+										Revenue
+										<svg version="1.1" x="0px" y="0px" viewBox="0 0 7 10" enable-background="new 0 0 7 10" xml:space="preserve" class="sort-svg"><path class="ascending" d="M0.4,4.1h6.1c0.1,0,0.2,0,0.3-0.1C7,3.9,7,3.8,7,3.7c0-0.1,0-0.2-0.1-0.3L3.8,0.1C3.7,0,3.6,0,3.5,0C3.4,0,3.3,0,3.2,0.1L0.1,3.3C0,3.4,0,3.5,0,3.7C0,3.8,0,3.9,0.1,4C0.2,4.1,0.3,4.1,0.4,4.1z"></path><path class="descending" d="M6.6,5.9H0.4c-0.1,0-0.2,0-0.3,0.1C0,6.1,0,6.2,0,6.3c0,0.1,0,0.2,0.1,0.3l3.1,3.2C3.3,10,3.4,10,3.5,10c0.1,0,0.2,0,0.3-0.1l3.1-3.2C7,6.6,7,6.5,7,6.3C7,6.2,7,6.1,6.9,6C6.8,5.9,6.7,5.9,6.6,5.9z"></path></svg>
+									</th>
+									<th class="downloads-head-cell">
+										Downloads
+										<svg version="1.1" x="0px" y="0px" viewBox="0 0 7 10" enable-background="new 0 0 7 10" xml:space="preserve" class="sort-svg"><path class="ascending" d="M0.4,4.1h6.1c0.1,0,0.2,0,0.3-0.1C7,3.9,7,3.8,7,3.7c0-0.1,0-0.2-0.1-0.3L3.8,0.1C3.7,0,3.6,0,3.5,0C3.4,0,3.3,0,3.2,0.1L0.1,3.3C0,3.4,0,3.5,0,3.7C0,3.8,0,3.9,0.1,4C0.2,4.1,0.3,4.1,0.4,4.1z"></path><path class="descending" d="M6.6,5.9H0.4c-0.1,0-0.2,0-0.3,0.1C0,6.1,0,6.2,0,6.3c0,0.1,0,0.2,0.1,0.3l3.1,3.2C3.3,10,3.4,10,3.5,10c0.1,0,0.2,0,0.3-0.1l3.1-3.2C7,6.6,7,6.5,7,6.3C7,6.2,7,6.1,6.9,6C6.8,5.9,6.7,5.9,6.6,5.9z"></path></svg>
+									</th>
+									<th class="total-for-period-head-cell">
+										<span>% of Total for Period</span>
+										<span>
+											Revenue
+											<svg version="1.1" x="0px" y="0px" viewBox="0 0 7 10" enable-background="new 0 0 7 10" xml:space="preserve" class="sort-svg"><path class="ascending" d="M0.4,4.1h6.1c0.1,0,0.2,0,0.3-0.1C7,3.9,7,3.8,7,3.7c0-0.1,0-0.2-0.1-0.3L3.8,0.1C3.7,0,3.6,0,3.5,0C3.4,0,3.3,0,3.2,0.1L0.1,3.3C0,3.4,0,3.5,0,3.7C0,3.8,0,3.9,0.1,4C0.2,4.1,0.3,4.1,0.4,4.1z"></path><path class="descending" d="M6.6,5.9H0.4c-0.1,0-0.2,0-0.3,0.1C0,6.1,0,6.2,0,6.3c0,0.1,0,0.2,0.1,0.3l3.1,3.2C3.3,10,3.4,10,3.5,10c0.1,0,0.2,0,0.3-0.1l3.1-3.2C7,6.6,7,6.5,7,6.3C7,6.2,7,6.1,6.9,6C6.8,5.9,6.7,5.9,6.6,5.9z"></path></svg>
+										</span>
+										<span>
+											Downloads
+											<svg version="1.1" x="0px" y="0px" viewBox="0 0 7 10" enable-background="new 0 0 7 10" xml:space="preserve" class="sort-svg"><path class="ascending" d="M0.4,4.1h6.1c0.1,0,0.2,0,0.3-0.1C7,3.9,7,3.8,7,3.7c0-0.1,0-0.2-0.1-0.3L3.8,0.1C3.7,0,3.6,0,3.5,0C3.4,0,3.3,0,3.2,0.1L0.1,3.3C0,3.4,0,3.5,0,3.7C0,3.8,0,3.9,0.1,4C0.2,4.1,0.3,4.1,0.4,4.1z"></path><path class="descending" d="M6.6,5.9H0.4c-0.1,0-0.2,0-0.3,0.1C0,6.1,0,6.2,0,6.3c0,0.1,0,0.2,0.1,0.3l3.1,3.2C3.3,10,3.4,10,3.5,10c0.1,0,0.2,0,0.3-0.1l3.1-3.2C7,6.6,7,6.5,7,6.3C7,6.2,7,6.1,6.9,6C6.8,5.9,6.7,5.9,6.6,5.9z"></path></svg>
+										</span>
+									</th>
+								</tr>
+							</thead>
+							<colgroup>
+								<col class="column-row-selector" />
+								<col class="column-app-name" />
+								<col class="column-released" />
+								<col class="column-revenue" />
+								<col class="column-downloads" />
+								<col class="column-percentage-of-total" />
+							</colgroup>
+							<tbody>
+								<tr>
+									<td class="app-data-cell-show-hide">
+										<div class="form-field--checkbox-list form-field--checkbox-list--inline form-field--checkbox--hide-label">
+											<ul>
+												<li>
+													<input type="checkbox" name="checkboxShowRow1" id="checkboxShowRow1">
+													<label for="checkboxShowRow1" class="checkboxLabel">Show</label>
+													<label for="checkboxShowRow1" class="checkboxLabelVisible">Show</label>
+												</li>
+											</ul>
+										</div>
+										<span class="data-table__store ref-icon-after--apple"></span>
+									</td>
+									<td class="app-data-cell-app-details">
+										<div class="data-table__app-summary">
+											<img src="images/placeholder-logo-arach.jpg" alt="Arachnophobia" />
+											<div>
+												<h2 class="data-table__app-summary__app-name"><a href="#">8 Ball Pool</a></h2>
+												<div class="ratings-container">
+													<div class="ratings-full" style="width:60%"></div>
+												</div>
+											</div>
+										</div>
+									</td>
+									<td class="app-data-cell-released-date">
+										<span>10/01/12</span>
+									</td>
+									<td>
+										<div class="app-data-revenue">
+											<span>£10,843,002</span>
+											<span class="data-table__growth negative-colour">-3%</span>
+										</div>
+									</td>
+									<td class="app-data-cell-more">
+										<div class="app-data-downloads">
+											<span>16,342,568</span>
+											<span class="data-table__growth positive-colour">+2%</span>
+										</div>
+										<a href="#" class="more-data-link">More</a>
+										<div class="more-app-data">
+											<dl>
+												<div>
+													<dt>Installed Updates</dt>
+													<dd>4,578 <span>+ 15%</span></dd>
+												</div>
+												<div>
+													<dt>Re-downloads</dt>
+													<dd>2,001 <span>- 3%</span></dd>
+												</div>
+											</dl>
+										</div>
+									</td>
+									<td>
+										<div class="data-table__value-bar">
+											<span>60%</span>
+											<div><span style="width: 60%;"></span></div>
+										</div>
+										<div class="data-table__value-bar">
+											<span>49%</span>
+											<div><span style="width: 49%;"></span></div>
+										</div>
+									</td>
+								</tr>
+
+								<tr>
+									<td class="app-data-cell-show-hide">
+										<div class="form-field--checkbox-list form-field--checkbox-list--inline form-field--checkbox--hide-label">
+											<ul>
+												<li>
+													<input type="checkbox" name="checkboxShowRow2" id="checkboxShowRow2">
+													<label for="checkboxShowRow2" class="checkboxLabel">Show</label>
+													<label for="checkboxShowRow2" class="checkboxLabelVisible">Show</label>
+												</li>
+											</ul>
+										</div>
+										<span class="data-table__store ref-icon-after--apple"></span>
+									</td>
+									<td class="app-data-cell-app-details">
+										<div class="data-table__app-summary">
+											<img src="images/placeholder-logo-arach.jpg" alt="Arachnophobia" />
+											<div>
+												<h2 class="data-table__app-summary__app-name"><a href="#">8 Ball Pool</a></h2>
+												<div class="ratings-container">
+													<div class="ratings-full" style="width:60%"></div>
+												</div>
+											</div>
+										</div>
+									</td>
+									<td class="app-data-cell-released-date">
+										<span>10/01/12</span>
+									</td>
+									<td>
+										<div class="app-data-revenue">
+											<span>£11,529,654</span>
+											<span class="data-table__growth negative-colour">-2%</span>
+										</div>
+									</td>
+									<td class="app-data-cell-more">
+										<div class="app-data-downloads">
+											<span>21.002.568</span>
+											<span class="data-table__growth positive-colour">+12%</span>
+										</div>
+										<a href="#" class="more-data-link">More</a>
+										<div class="more-app-data">
+											<dl>
+												<div>
+													<dt>Installed Updates</dt>
+													<dd>4,578 <span>+ 15%</span></dd>
+												</div>
+												<div>
+													<dt>Re-downloads</dt>
+													<dd>2,001 <span>- 3%</span></dd>
+												</div>
+											</dl>
+										</div>
+									</td>
+									<td>
+										<div class="data-table__value-bar">
+											<span>73%</span>
+											<div><span style="width: 73%;"></span></div>
+										</div>
+										<div class="data-table__value-bar">
+											<span>27%</span>
+											<div><span style="width: 27%;"></span></div>
+										</div>
+									</td>
+								</tr>
+
+								<tr>
+									<td class="app-data-cell-show-hide">
+										<div class="form-field--checkbox-list form-field--checkbox-list--inline form-field--checkbox--hide-label">
+											<ul>
+												<li>
+													<input type="checkbox" name="checkboxShowRow3" id="checkboxShowRow3">
+													<label for="checkboxShowRow3" class="checkboxLabel">Show</label>
+													<label for="checkboxShowRow3" class="checkboxLabelVisible">Show</label>
+												</li>
+											</ul>
+										</div>
+										<span class="data-table__store ref-icon-after--play-store"></span>
+									</td>
+									<td class="app-data-cell-app-details">
+										<div class="data-table__app-summary">
+											<img src="images/placeholder-logo-arach.jpg" alt="Arachnophobia" />
+											<div>
+												<h2 class="data-table__app-summary__app-name"><a href="#">8 Ball Pool</a></h2>
+												<div class="ratings-container">
+													<div class="ratings-full" style="width:60%"></div>
+												</div>
+											</div>
+										</div>
+									</td>
+									<td class="app-data-cell-released-date">
+										<span>10/01/12</span>
+									</td>
+									<td>
+										<div class="app-data-revenue">
+											<span>£11,529,654</span>
+											<span class="data-table__growth negative-colour">-2%</span>
+										</div>
+									</td>
+									<td class="app-data-cell-more">
+										<div class="app-data-downloads">
+											<span>21.002.568</span>
+											<span class="data-table__growth positive-colour">+12%</span>
+										</div>
+										<a href="#" class="more-data-link">More</a>
+										<div class="more-app-data">
+											<dl>
+												<div>
+													<dt>Installed Updates</dt>
+													<dd>4,578 <span>+ 15%</span></dd>
+												</div>
+												<div>
+													<dt>Re-downloads</dt>
+													<dd>2,001 <span>- 3%</span></dd>
+												</div>
+											</dl>
+										</div>
+									</td>
+									<td>
+										<div class="data-table__value-bar">
+											<span>73%</span>
+											<div><span style="width: 73%;"></span></div>
+										</div>
+										<div class="data-table__value-bar">
+											<span>27%</span>
+											<div><span style="width: 27%;"></span></div>
+										</div>
+									</td>
+								</tr>
+
+								<tr>
+									<td class="app-data-cell-show-hide">
+										<div class="form-field--checkbox-list form-field--checkbox-list--inline form-field--checkbox--hide-label">
+											<ul>
+												<li>
+													<input type="checkbox" name="checkboxShowRow4" id="checkboxShowRow4">
+													<label for="checkboxShowRow4" class="checkboxLabel">Show</label>
+													<label for="checkboxShowRow4" class="checkboxLabelVisible">Show</label>
+												</li>
+											</ul>
+										</div>
+										<span class="data-table__store ref-icon-after--apple"></span>
+									</td>
+									<td class="app-data-cell-app-details">
+										<div class="data-table__app-summary">
+											<img src="images/placeholder-logo-arach.jpg" alt="Arachnophobia" />
+											<div>
+												<h2 class="data-table__app-summary__app-name"><a href="#">8 Ball Pool</a></h2>
+												<div class="ratings-container">
+													<div class="ratings-full" style="width:60%"></div>
+												</div>
+											</div>
+										</div>
+									</td>
+									<td class="app-data-cell-released-date">
+										<span>10/01/12</span>
+									</td>
+									<td>
+										<div class="app-data-revenue">
+											<span>£11,529,654</span>
+											<span class="data-table__growth negative-colour">-2%</span>
+										</div>
+									</td>
+									<td class="app-data-cell-more">
+										<div class="app-data-downloads">
+											<span>21.002.568</span>
+											<span class="data-table__growth positive-colour">+12%</span>
+										</div>
+										<a href="#" class="more-data-link">More</a>
+										<div class="more-app-data">
+											<dl>
+												<div>
+													<dt>Installed Updates</dt>
+													<dd>4,578 <span>+ 15%</span></dd>
+												</div>
+												<div>
+													<dt>Re-downloads</dt>
+													<dd>2,001 <span>- 3%</span></dd>
+												</div>
+											</dl>
+										</div>
+									</td>
+									<td>
+										<div class="data-table__value-bar">
+											<span>73%</span>
+											<div><span style="width: 73%;"></span></div>
+										</div>
+										<div class="data-table__value-bar">
+											<span>27%</span>
+											<div><span style="width: 27%;"></span></div>
+										</div>
+									</td>
+								</tr>
+
+								<tr>
+									<td class="app-data-cell-show-hide">
+										<div class="form-field--checkbox-list form-field--checkbox-list--inline form-field--checkbox--hide-label">
+											<ul>
+												<li>
+													<input type="checkbox" name="checkboxShowRow5" id="checkboxShowRow5">
+													<label for="checkboxShowRow5" class="checkboxLabel">Show</label>
+													<label for="checkboxShowRow5" class="checkboxLabelVisible">Show</label>
+												</li>
+											</ul>
+										</div>
+										<span class="data-table__store ref-icon-after--apple"></span>
+									</td>
+									<td class="app-data-cell-app-details">
+										<div class="data-table__app-summary">
+											<img src="images/placeholder-logo-arach.jpg" alt="Arachnophobia" />
+											<div>
+												<h2 class="data-table__app-summary__app-name"><a href="#">8 Ball Pool</a></h2>
+												<div class="ratings-container">
+													<div class="ratings-full" style="width:60%"></div>
+												</div>
+											</div>
+										</div>
+									</td>
+									<td class="app-data-cell-released-date">
+										<span>10/01/12</span>
+									</td>
+									<td>
+										<div class="app-data-revenue">
+											<span>£11,529,654</span>
+											<span class="data-table__growth negative-colour">-2%</span>
+										</div>
+									</td>
+									<td class="app-data-cell-more">
+										<div class="app-data-downloads">
+											<span>21.002.568</span>
+											<span class="data-table__growth positive-colour">+12%</span>
+										</div>
+										<a href="#" class="more-data-link">More</a>
+										<div class="more-app-data">
+											<dl>
+												<div>
+													<dt>Installed Updates</dt>
+													<dd>4,578 <span>+ 15%</span></dd>
+												</div>
+												<div>
+													<dt>Re-downloads</dt>
+													<dd>2,001 <span>- 3%</span></dd>
+												</div>
+											</dl>
+										</div>
+									</td>
+									<td>
+										<div class="data-table__value-bar">
+											<span>73%</span>
+											<div><span style="width: 73%;"></span></div>
+										</div>
+										<div class="data-table__value-bar">
+											<span>27%</span>
+											<div><span style="width: 27%;"></span></div>
+										</div>
+									</td>
+								</tr>
+
+								<tr>
+									<td class="app-data-cell-show-hide">
+										<div class="form-field--checkbox-list form-field--checkbox-list--inline form-field--checkbox--hide-label">
+											<ul>
+												<li>
+													<input type="checkbox" name="checkboxShowRow6" id="checkboxShowRow6">
+													<label for="checkboxShowRow6" class="checkboxLabel">Show</label>
+													<label for="checkboxShowRow6" class="checkboxLabelVisible">Show</label>
+												</li>
+											</ul>
+										</div>
+										<span class="data-table__store ref-icon-after--apple"></span>
+									</td>
+									<td class="app-data-cell-app-details">
+										<div class="data-table__app-summary">
+											<img src="images/placeholder-logo-arach.jpg" alt="Arachnophobia" />
+											<div>
+												<h2 class="data-table__app-summary__app-name"><a href="#">8 Ball Pool</a></h2>
+												<div class="ratings-container">
+													<div class="ratings-full" style="width:60%"></div>
+												</div>
+											</div>
+										</div>
+									</td>
+									<td class="app-data-cell-released-date">
+										<span>10/01/12</span>
+									</td>
+									<td>
+										<div class="app-data-revenue">
+											<span>£11,529,654</span>
+											<span class="data-table__growth negative-colour">-2%</span>
+										</div>
+									</td>
+									<td class="app-data-cell-more">
+										<div class="app-data-downloads">
+											<span>21.002.568</span>
+											<span class="data-table__growth positive-colour">+12%</span>
+										</div>
+										<a href="#" class="more-data-link">More</a>
+										<div class="more-app-data">
+											<dl>
+												<div>
+													<dt>Installed Updates</dt>
+													<dd>4,578 <span>+ 15%</span></dd>
+												</div>
+												<div>
+													<dt>Re-downloads</dt>
+													<dd>2,001 <span>- 3%</span></dd>
+												</div>
+											</dl>
+										</div>
+									</td>
+									<td>
+										<div class="data-table__value-bar">
+											<span>73%</span>
+											<div><span style="width: 73%;"></span></div>
+										</div>
+										<div class="data-table__value-bar">
+											<span>27%</span>
+											<div><span style="width: 27%;"></span></div>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</section>
+
+					<aside class="data-aside-bar grid__column--one-quarter">
+						<div class="summary-widget-container">
+							<ul class="tabs-list seconday-tabs js-tabs">
+		 							<li class="grid__column grid__column--one-half is-active">
+		 								<a href="#topApps">Top Apps</a>
+		 							</li>
+		 							<li class="grid__column grid__column--one-half">
+		 								<a href="#bottomApps">Bottom Apps</a>
+		 							</li>
+		 						</ul>
+		 						<ul class="tabs-content-list js-tabs-content-list">
+		 							<li class="is-active summary-widget" id="topApps">
+		 								<div class="toggle-container">
+			 								<div class="filter-toggle filter-toggle--with-text">
+												<div class="toggle">
+													<input id="toggle--show-revenue" name="radiorevdown" checked type="radio">
+													<label for="toggle--show-revenue" class="js-mock-switch-revenue">
+														Popular
+													</label>
+												</div>
+												<div class="toggle">
+													<input id="toggle--show-downloads" name="radiorevdown" type="radio">
+													<label for="toggle--show-downloads" class="js-mock-switch-downloads">
+														Regions
+													</label>
+												</div>
+											</div>
+										</div>
+
+										<div id="topAppsRevenue">
+			 								<h2 class="summary-widget__data-title">Actual Revenue</h2>
+			 								<ul class="summary-widget__data-row">
+			 									<li class="summary-widget__data-item">
+			 										<a href="#">
+			 											<img src="images/placeholder-icon-8ball.png" alt="app icon" />
+			 											<h3 class="summary-widget__data-item__app-name">8 Ball Pool</h3>
+			 										</a>
+			 										<span class="summary-widget__data-item__data">&pound;102,843</span>
+			 									</li>
+			 									<li class="summary-widget__data-item">
+			 										<a href="#">
+			 											<img src="images/placeholder-icon-agario.png" alt="app icon" />
+			 											<h3 class="summary-widget__data-item__app-name">Longer App Name</h3>
+			 										</a>
+			 										<span class="summary-widget__data-item__data">&pound;99,002</span>
+			 									</li>
+			 									<li class="summary-widget__data-item">
+			 										<a href="#">
+			 											<img src="images/placeholder-icon-soccer.png" alt="app icon" />
+			 											<h3 class="summary-widget__data-item__app-name">Soccer Stars</h3>
+			 										</a>
+			 										<span class="summary-widget__data-item__data">&pound;45,781</span>
+			 									</li>
+			 								</ul>
+
+			 								<h2 class="summary-widget__data-title">Revenue % Growth</h2>
+			 								<ul class="summary-widget__data-row">
+			 									<li class="summary-widget__data-item">
+			 										<a href="#">
+			 											<img src="images/placeholder-icon-dino.png" alt="app icon" />
+			 											<h3 class="summary-widget__data-item__app-name">Dino Pets</h3>
+			 										</a>
+			 										<span class="summary-widget__data-item__data positive-color">+28%</span>
+			 									</li>
+			 									<li class="summary-widget__data-item">
+			 										<a href="#">
+			 											<img src="images/placeholder-icon-bowling.png" alt="app icon" />
+			 											<h3 class="summary-widget__data-item__app-name">Bowling King</h3>
+			 										</a>
+			 										<span class="summary-widget__data-item__data positive-color">+14%</span>
+			 									</li>
+			 									<li class="summary-widget__data-item">
+			 										<a href="#">
+			 											<img src="images/placeholder-icon-agario.png" alt="app icon" />
+			 											<h3 class="summary-widget__data-item__app-name">Agar.io</h3>
+			 										</a>
+			 										<span class="summary-widget__data-item__data negative-color">-1%</span>
+			 									</li>
+			 								</ul>
+			 							</div>
+
+			 							<div id="topAppsDownloads">
+			 								<h2 class="summary-widget__data-title">Actual Downloads</h2>
+			 								<ul class="summary-widget__data-row">
+			 									<li class="summary-widget__data-item">
+			 										<a href="#">
+			 											<img src="images/placeholder-icon-8ball.png" alt="app icon" />
+			 											<h3 class="summary-widget__data-item__app-name">8 Ball Pool</h3>
+			 										</a>
+			 										<span class="summary-widget__data-item__data">64,000</span>
+			 									</li>
+			 									<li class="summary-widget__data-item">
+			 										<a href="#">
+			 											<img src="images/placeholder-icon-agario.png" alt="app icon" />
+			 											<h3 class="summary-widget__data-item__app-name">Longer App Name</h3>
+			 										</a>
+			 										<span class="summary-widget__data-item__data">30,000</span>
+			 									</li>
+			 									<li class="summary-widget__data-item">
+			 										<a href="#">
+			 											<img src="images/placeholder-icon-soccer.png" alt="app icon" />
+			 											<h3 class="summary-widget__data-item__app-name">Soccer Stars</h3>
+			 										</a>
+			 										<span class="summary-widget__data-item__data">8,463</span>
+			 									</li>
+			 								</ul>
+
+			 								<h2 class="summary-widget__data-title">Downloads % Growth</h2>
+			 								<ul class="summary-widget__data-row">
+			 									<li class="summary-widget__data-item">
+			 										<a href="#">
+			 											<img src="images/placeholder-icon-dino.png" alt="app icon" />
+			 											<h3 class="summary-widget__data-item__app-name">Dino Pets</h3>
+			 										</a>
+			 										<span class="summary-widget__data-item__data positive-color">+13%</span>
+			 									</li>
+			 									<li class="summary-widget__data-item">
+			 										<a href="#">
+			 											<img src="images/placeholder-icon-bowling.png" alt="app icon" />
+			 											<h3 class="summary-widget__data-item__app-name">Bowling King</h3>
+			 										</a>
+			 										<span class="summary-widget__data-item__data positive-color">+5%</span>
+			 									</li>
+			 									<li class="summary-widget__data-item">
+			 										<a href="#">
+			 											<img src="images/placeholder-icon-agario.png" alt="app icon" />
+			 											<h3 class="summary-widget__data-item__app-name">Agar.io</h3>
+			 										</a>
+			 										<span class="summary-widget__data-item__data negative-color">-4%</span>
+			 									</li>
+			 								</ul>
+			 							</div>
+
+		 							</li>
+		 							<li class="summary-widget" id="bottomApps">
+		 								<div class="toggle-container">
+			 								<div class="filter-toggle filter-toggle--with-text">
+												<div class="toggle">
+													<input id="toggle--show-revenue--bottom" name="radiorevdownbot" checked type="radio">
+													<label for="toggle--show-revenue--bottom">
+														Popular
+													</label>
+												</div>
+												<div class="toggle">
+													<input id="toggle--show-downloads--bottom" name="radiorevdownbot" type="radio">
+													<label for="toggle--show-downloads--bottom">
+														Regions
+													</label>
+												</div>
+											</div>
+										</div>
+		 							</li>
+		 						</ul>
+		 					</div>
+
+		 					<div class="summary-widget-container">
+
+		 						<ul class="tabs-list seconday-tabs js-tabs">
+		 							<li class="grid__column grid__column--one-half is-active">
+		 								<a href="#topCountries">Top Countries</a>
+		 							</li>
+		 							<li class="grid__column grid__column--one-half">
+		 								<a href="#bottomCountries">Bottom Countries</a>
+		 							</li>
+		 						</ul>
+		 						<ul class="tabs-content-list js-tabs-content-list">
+		 							<li class="is-active summary-widget" id="topApps">
+		 								<div class="toggle-container">
+			 								<div class="filter-toggle filter-toggle--with-text">
+												<div class="toggle">
+													<input id="toggle--show-revenue-country" name="radiorevdown-country" checked type="radio">
+													<label for="toggle--show-revenue-country">
+														Popular
+													</label>
+												</div>
+												<div class="toggle">
+													<input id="toggle--show-downloads-country" name="radiorevdown-country" type="radio">
+													<label for="toggle--show-downloads-country">
+														Regions
+													</label>
+												</div>
+											</div>
+										</div>
+
+										<div id="topCountriesRevenue">
+			 								<h2 class="summary-widget__data-title">Actual Revenue</h2>
+			 								<ul class="summary-widget__data-row">
+			 									<li class="summary-widget__data-item">
+			 										<a href="#">
+			 											<img src="images/icon-flag-usa.png" alt="app icon" />
+			 											<h3 class="summary-widget__data-item__app-name">USA</h3>
+			 										</a>
+			 										<span class="summary-widget__data-item__data">&pound;102,843</span>
+			 									</li>
+			 									<li class="summary-widget__data-item">
+			 										<a href="#">
+			 											<img src="images/icon-flag-china.png" alt="app icon" />
+			 											<h3 class="summary-widget__data-item__app-name">China</h3>
+			 										</a>
+			 										<span class="summary-widget__data-item__data">&pound;99,002</span>
+			 									</li>
+			 									<li class="summary-widget__data-item">
+			 										<a href="#">
+			 											<img src="images/icon-flag-gb.png" alt="app icon" />
+			 											<h3 class="summary-widget__data-item__app-name">United Kingdom</h3>
+			 										</a>
+			 										<span class="summary-widget__data-item__data">&pound;45,781</span>
+			 									</li>
+			 								</ul>
+
+			 								<h2 class="summary-widget__data-title">Revenue % Growth</h2>
+			 								<ul class="summary-widget__data-row">
+			 									<li class="summary-widget__data-item">
+			 										<a href="#">
+			 											<img src="images/icon-flag-fra.png" alt="app icon" />
+			 											<h3 class="summary-widget__data-item__app-name">France</h3>
+			 										</a>
+			 										<span class="summary-widget__data-item__data positive-color">+28%</span>
+			 									</li>
+			 									<li class="summary-widget__data-item">
+			 										<a href="#">
+			 											<img src="images/icon-flag-ita.png" alt="app icon" />
+			 											<h3 class="summary-widget__data-item__app-name">Italy</h3>
+			 										</a>
+			 										<span class="summary-widget__data-item__data positive-color">+14%</span>
+			 									</li>
+			 									<li class="summary-widget__data-item">
+			 										<a href="#">
+			 											<img src="images/icon-flag-ger.png" alt="app icon" />
+			 											<h3 class="summary-widget__data-item__app-name">Germany</h3>
+			 										</a>
+			 										<span class="summary-widget__data-item__data negative-color">-1%</span>
+			 									</li>
+			 								</ul>
+			 							</div>
+		 							</li>
+		 						</ul>
+		 					</div>
+					</aside>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="grid-container" id="js-component-import--global-footer"></div>
+
+	<div id="js-component-import--account-container" class="panel-right-container js-account-container"></div>
+	<div id="js-component-import--search-container" class="panel-right-container js-search-container"></div>
+
+ 	<script src="js/vendor/jquery-1.11.1.min.js"></script>
+ 	<script src="js/vendor/handlebars-v2.0.0.js"></script> <!-- static templates only -->
+ 	<script src="js-v2/templates/templates.js"></script> <!-- static templates only -->
+ 	<script src="js/vendor/modernizr.2.8.3.custom.min.js"></script>
+
+	<!--[if IE 9]>
+		<script src="js/vendor/jquery.mCustomScrollbar.concat.min.js"></script>
+	<![endif]-->
+
+	<div id="js-appendScriptsContainer"></div>
+
+	<script src="js-v2/app-include-templates.js"></script> <!-- static templates only -->
+  <script src="js-v2/application.js"></script>
+
+  <script src="js/vendor/highcharts-custom.js"></script>
+  <script>
+  	// Utility function
+		Date.prototype.addHours= function(h){
+      this.setHours(this.getHours()+h);
+      return this;
+    }
+
+  	function initScripts() {
+  		new Page();
+  		new PrimaryFilters();
+  		new FormInteractions();
+  		$('.js-select-box').each(function() {
+  			new FormFieldSelect($(this));
+  		});
+  		$('.js-tabs').each(function() {
+  			new Tabs($(this));
+  		});
+
+  		// Mock function for template
+  		$('#topAppsDownloads').hide();
+  		$('.js-mock-switch-revenue').on("click", function(){
+  			$('#topAppsDownloads').hide();
+  			$('#topAppsRevenue').show();
+  		});
+  		$('.js-mock-switch-downloads').on("click", function(){
+  			$('#topAppsDownloads').show();
+  			$('#topAppsRevenue').hide();
+  		});
+
+  		$('.js-whats-this-tooltip').each(function(){
+  			new WhatsThisPopup($(this));
+  		});
+
+			$('.js-mock-show-split-chart').on("click", function(){
+  			$('#split-chart-container').addClass("is-active");
+  			$('#single-chart-container').removeClass("is-active");
+  		});
+  		$('.js-mock-show-single-chart').on("click", function(){
+  			$('#split-chart-container').removeClass("is-active");
+  			$('#single-chart-container').addClass("is-active");
+  			if(pageCharts.length < 3) {
+  				generateChart('chart-revenue-downloads', "downloads", true);
+  			}
+  		});
+
+  		// HIGHCHARTS
+  		var monthNames = [
+        "Jan", "Feb", "Mar",
+        "Apr", "May", "Jun", "Jul",
+        "Aug", "Sep", "Oct",
+        "Nov", "Dec"
+      ];
+
+      var hasBeenSet = false,
+      		lastPoint;
+
+	    (function (H) {
+
+	      var customIconRect;
+	      H.wrap(H.Tooltip.prototype, 'refresh', function (proceed) {
+
+	        proceed.apply(this, Array.prototype.slice.call(arguments, 1));
+
+	        if(this.chart.customIconRect !== undefined) {
+	          this.chart.customIconRect.destroy();
+	        }
+
+	        var $axisLabel = $(this.chart.container).find('.highcharts-axis-label'),
+	            leftOffset = 29,
+	            axisLabelYPos = $("#" + arguments[1][0].series.chart.container.id + "").height() - arguments[1][0].series.xAxis.bottom,
+	            //axisLabelYPos = arguments[1][0].series.chart.containerHeight - arguments[1][0].series.xAxis.bottom,
+	            axisLabelXPos = arguments[1][0].plotX - leftOffset,
+	            timeStampString = arguments[1][0].x + "",
+	            timeStampString = timeStampString.substring(0,10),
+	            xAxisDate = new Date(timeStampString*1000).addHours(12),
+	            formattedDate = xAxisDate.getDate() + " " + monthNames[xAxisDate.getMonth()];
+
+	        if($axisLabel.length > 0) {       
+
+	          var labelYPos = axisLabelYPos + 18,
+	              labelXPos = axisLabelXPos + 7;
+
+	          $axisLabel.attr("transform", "translate(" + labelXPos + "," + labelYPos + ")");
+	          $axisLabel.find("text").text(formattedDate);
+
+	        } else {
+	          this.chart.renderer.label(formattedDate, axisLabelXPos+7, axisLabelYPos + 18, 'callout', 0, 0, false, true, "axis-label")
+	          .css({
+	            color: '#fcfdfd',
+	            fontSize: '12px',
+	            fontFamily: 'Source Sans Pro',
+	            fontWeight: 600
+	          })
+	          .attr({
+	            zIndex: 100
+	          })
+	          .add();
+	        }
+
+	        this.chart.customIconRect = this.chart.renderer.image('images/axis-label-background.png', axisLabelXPos, axisLabelYPos + 4, 54, 20)
+	        .attr({
+	          zIndex: 99
+	        })
+	        .add();
+
+
+	        // MIRROR A SPLIT GRAPH HOVER
+	        if(pageCharts.length > 1) {
+	        	if(arguments[1][0].series.name == 'revenue') {
+	        		chartIndexToHover = 1;
+	        	} else if(arguments[1][0].series.name == 'downloads') {
+	        		chartIndexToHover = 0;
+	        	}
+	        	var pointIndex = arguments[1][0].index;
+	        	if(!hasBeenSet) {
+	        		hasBeenSet = true;
+	        		if(lastPoint) {
+	        			pageCharts[chartIndexToHover].series[0].data[lastPoint].setState();
+            		pageCharts[chartIndexToHover].tooltip.hide();	        			
+	        		}
+	        		lastPoint = pointIndex;
+							pageCharts[chartIndexToHover].series[0].data[pointIndex].setState('hover');
+	        		pageCharts[chartIndexToHover].tooltip.refresh([pageCharts[chartIndexToHover].series[0].points[pointIndex]]);
+		        		
+		        	setTimeout(function(){
+		        		hasBeenSet = false;
+		        	}, 10);
+		        }
+	        }
+
+
+	        // EVENTS
+	        	// destroy any existing labels
+	        var thisPlotX = arguments[1][0].plotX,
+	        		eventTooltip;
+
+	        		if(this.chart.eventTooltips) {
+	        			for (var t = 0; t < this.chart.eventTooltips.length; t++) {
+	        				this.chart.eventTooltips[t].destroy();
+	        			}
+	        		}
+	        		this.chart.eventTooltips = [];
+
+	        	// remove existing animating CSS class for icons
+	        $(".event-icon--launch.is-animating").each(function() {
+	        	$(this).attr("class", "animation-complete event-icon--launch");
+	        });
+	        $(".event-icon--flag.is-animating").each(function() {
+	        	$(this).attr("class", "event-icon--flag");
+	        });
+	        
+	        // create tooltip on event hover
+        	var eventsCounter = 0,
+	        			previousEventPlotX;
+	        			window.animatingFlags = false;
+
+	        if(this.chart.events) {
+	        	for (var e = 0; e < this.chart.events.length; e++) {
+			      	if(this.chart.events[e].plotX == thisPlotX) {
+			      		// check if previous event plotX = this plotX to calculate label spacing
+			      		if(previousEventPlotX) {
+			      			if(previousEventPlotX == this.chart.events[e].plotX) {
+			      				eventsCounter++;
+			      			} else {
+			      				eventsCounter = 0;
+			      			}
+			      		}
+			      		previousEventPlotX = this.chart.events[e].plotX;
+
+			      		var labelTopSpace = axisLabelYPos + 41 + (eventsCounter * 35);
+			      		var eventIcon = this.chart.events[e].icon.element;
+			        	eventTooltip = this.chart.renderer.label($(eventIcon).data("tooltip"), this.chart.series[0].data[$(eventIcon).data("datapoint")].plotX - 28, labelTopSpace, 'callout')
+			            .css({
+			                color: $(eventIcon).data("tooltipcolour")
+			            })
+			            .attr({
+			                fill: $(eventIcon).data("tooltipfill"),
+			                padding: 7,
+			                r: 5,
+			                zIndex: 6
+			            })
+			            .addClass("event-label")
+			            .add();
+
+			         	this.chart.eventTooltips.push(eventTooltip);
+
+			         	// add event icon animate CSS class - NOT COMPLETE
+			         	var currentCSSClass = $(this.chart.events[e].icon.element).attr("class");
+		      			$(this.chart.events[e].icon.element).attr("class", "is-animating " + currentCSSClass);
+		      			if(currentCSSClass.indexOf("event-icon--flag") > -1) {
+		      				this.chart.events[e].flag = null;
+		      				this.chart.events[e].flag = Snap(this.chart.events[e].icon.element);
+			      			var thisFlag = this.chart.events[e].flag;
+			      			window.animatingFlags = true;
+			      			animateSquash = function(flagToAnimate) {
+		      					flagToAnimate.animate({width: 15}, 100, function(){
+		      						flagToAnimate.animate({width: 18}, 100, function() {
+		      							if(window.animatingFlags) {
+		      								animateSquash(flagToAnimate);
+		      							}      							
+		      						});
+		      					});
+			      			}
+			      			animateSquash(Snap(this.chart.events[e].icon.element));
+		      			}
+			        }
+			      }
+	        }
+	      });
+
+				H.wrap(H.Series.prototype, 'hide', function (proceed) {
+
+				  // Before the hide function
+				  var par = $(this.graph.element).parents('.highcharts-series').attr("class", "highcharts-series is-transparent-fade");
+				  var instance = this;
+				  // Now apply the original function with the original arguments, 
+				  // which are sliced off this function's arguments
+				  setTimeout(function() {
+				  	proceed.apply(instance, Array.prototype.slice.call(arguments, 1));
+				  	par.attr("class", "highcharts-series");
+				  }, 200);
+				});
+
+				H.wrap(H.Series.prototype, 'show', function (proceed) {
+
+				  // Before the show function
+				  var graphId = this.graph.element.id;
+				  // Now apply the original function with the original arguments, 
+				  // which are sliced off this function's arguments
+				  proceed.apply(this, Array.prototype.slice.call(arguments, 1));
+
+				  // after show()
+				  // var currentPath = this.graph.d;
+				  // var par = $(this.graph.element).parents('.highcharts-series').attr("class", "highcharts-series is-transparent");
+				  // setTimeout(function() {
+				  // 	var el = Snap('#' + graphId);
+      //       var pathList = el.node.getPathData();
+      //       var flatPath = "";
+      //       for(var x=0; x < pathList.length; x++) {
+      //         flatPath += pathList[x].type + " " + pathList[x].values[0] + " 454 ";
+      //       }
+      //       el.attr("d", flatPath);
+				  // 	par.attr("class", "highcharts-series");
+				  // 	setTimeout(function() {
+				  // 		el.animate({ d: currentPath }, 800, mina.elastic);
+				  // 	}, 400);
+
+				  // 	var elFill = Snap('#' + graphId + 'fill');
+				  // 	var currentPathFill = $('#' + graphId + 'fill').attr("d");
+      //       var pathList = elFill.node.getPathData();
+      //       var flatFillPath = "";
+      //       for(var x=0; x < pathList.length; x++) {
+      //         flatFillPath += pathList[x].type + " " + pathList[x].values[0] + " 454 ";
+      //       }
+      //       elFill.attr("d", flatFillPath);
+				  // 	setTimeout(function() {
+				  // 		elFill.animate({ d: currentPathFill }, 800, mina.elastic);
+				  // 	}, 400);
+				  // }, 100);
+
+				});
+	    }(Highcharts));
+
+	    Highcharts.setOptions({
+	        colors: ['#f5c943', '#6d69c5', '#a5c1d8', '#0fa1be', '#e18293']
+	    });
+
+
+	    pageCharts = [];
+
+	    function generateChart(containerId, dataType, isMergedChart) {
+
+	    	var seriesColour,
+	    			seriesGradient,
+	    			seriesData = [
+	    				[29.9, 31.5, 61.4, 77.2, 80.0, 90.0, 100.6, 90.5, 80.4, 75.1, 70.6, 60.4, 40.9, 30.5, 20.4, 10.2, 65.0, 80.0, 90.0, 100.0, 75.6, 100.4, 110.2, 120.0, 105.5, 90.4, 80.0, 70.0, 60.0, 50.0],
+							[1000, 945, 874, 890, 990, 1030, 1100, 1150, 1180, 2100, 1900, 1800, 1765, 1546, 1647, 1787, 1545, 1322, 1211, 1106, 1154, 1043, 988, 777, 890, 850, 830, 801, 767, 654]
+	    			],
+	    			seriesArray = [],
+	    			yAxesSettings; // Mock only
+
+	    	if(isMergedChart) { // Mock only
+	    		yAxesSettings = [{
+	          offset: -27,
+	          showFirstLabel: false,
+	          showLastLabel: true,
+	          gridLineWidth: 0,
+	          labels: {
+	          	align: 'left',
+	          	style: {
+	          		color: '#81879d',
+	          		fontSize: "12px"
+	          	}
+	          },
+	          title: {
+	          	text: null
+	          }            
+	        },
+	        {
+	          offset: -25,
+	          showFirstLabel: false,
+	          showLastLabel: true,
+	          gridLineWidth: 0,
+	          opposite: true,
+	          labels: {
+	          	align: 'right',
+	          	style: {
+	          		color: '#6d69c5',
+	          		fontSize: "12px"
+	          	}
+	          },
+	          title: {
+	          	text: null
+	          }            
+	        }];
+
+	    		seriesArray = [{
+	           	yAxis: 0,
+	            name: "revenue",
+	            id : "revenue",
+	            color: "#f5c943",
+	            data: seriesData[0],
+	            pointStart: Date.UTC(2016, 0, 1),
+	            pointInterval: 24 * 3600 * 1000, // one day
+	            lineColor: seriesColour,
+	            lineWidth: 3.1,
+	            lineWidthPlus: 0,
+	            fillOpacity: 1,
+	            fillColor: {
+	              linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
+	              stops: [[0, 'rgba(237,214,18,0.35)'],[1, 'rgba(247,235,131,0.35)']]
+	            },
+	            marker: {
+	              enabled: false,
+	              states: {
+	                hover: {
+	                  enabled: true,
+	                  lineWidth: 0,
+	                  lineWidthPlus: 0,
+	                  radius: 4,
+	                  radiusPlus: 0,
+	                }
+	              }
+	            }
+	          },
+	          {
+	           	yAxis: 1,
+	            name: "downloads",
+	            id : "downloads",
+	            color: "#6d69c5",
+	            data: seriesData[1],
+	            pointStart: Date.UTC(2016, 0, 1),
+	            pointInterval: 24 * 3600 * 1000, // one day
+	            lineColor: seriesColour,
+	            lineWidth: 3,
+	            lineWidthPlus: 0,	            
+	            // fillColor: {
+	            //   linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
+	            //   stops: [[0, 'rgba(156,153,227,0.35)'],[1, 'rgba(196,211,225,0.35)']]
+	            // },
+	            fillOpacity: 0,
+	            marker: {
+	              enabled: false,
+	              states: {
+	                hover: {
+	                  enabled: true,
+	                  lineWidth: 0,
+	                  lineWidthPlus: 0,
+	                  radius: 4,
+	                  radiusPlus: 0,
+	                }
+	              }
+	            }
+	          }
+	        ];
+	    	} else {
+	    		yAxesSettings = [{
+	          offset: -27,
+	          showFirstLabel: false,
+	          showLastLabel: true,
+	          gridLineWidth: 0,
+	          labels: {
+	          	align: 'left',
+	          	style: {
+	          		color: '#81879d',
+	          		fontSize: "12px"
+	          	}
+	          },
+	          title: {
+	          	text: null
+	          }            
+	        }];
+
+	    		seriesArray = [{
+	           	yAxis: 0,
+	            name: dataType,
+	            id : dataType,
+	            color: (dataType == 'revenue') ? "#f5c943" : "#6d69c5",
+	            data: (dataType == 'revenue') ? seriesData[0] : seriesData[1],
+	            pointStart: Date.UTC(2016, 0, 1),
+	            pointInterval: 24 * 3600 * 1000, // one day
+	            lineColor: seriesColour,
+	            lineWidth: 3.1,
+	            lineWidthPlus: 0,
+	            fillOpacity: 1,
+	            fillColor: {
+	              linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
+	              stops: (dataType == 'revenue') ? [[0, 'rgba(237,214,18,0.35)'],[1, 'rgba(247,235,131,0.35)']] : [[0, 'rgba(156,153,227,0.35)'],[1, 'rgba(196,211,225,0.35)']]
+	            },
+	            marker: {
+	              enabled: false,
+	              states: {
+	                hover: {
+	                  enabled: true,
+	                  lineWidth: 0,
+	                  lineWidthPlus: 0,
+	                  radius: 4,
+	                  radiusPlus: 0,
+	                }
+	              }
+	            }
+	          }
+	        ];
+				}
+
+	    	// Generate Demo Chart
+				var chart = new Highcharts.Chart({
+					chart: {
+	          renderTo: containerId,
+						marginLeft: 0,
+						marginRight: 0,
+						marginBottom: 24,
+						marginTop: 0,
+						spacing: [0,0,0,0],
+						height: 285,
+						backgroundColor: '#fcfdfd',
+						plotBackgroundColor: '#f2f2f5',
+			   		type: 'area',
+			   		animation: false,
+			   		style: {
+	            fontFamily: 'Source Sans Pro'
+	          }
+				  },
+				  legend: {
+				  	enabled: false
+				  },
+				  title: {
+	            text: ''
+	        },
+	        yAxis: yAxesSettings,
+	        xAxis: {
+	        	startOnTick: false,
+	        	endOnTick: false,
+	        	showFirstLabel: false,
+	          maxPadding: 0,
+	          minPadding: 0,
+	          type: 'datetime',
+	          dateTimeLabelFormats: {
+	              day: '%e %b'
+	          },
+	          tickmarkPlacement: 'on',
+	          tickPixelInterval: 30,
+	          tickLength: 0,     
+	          labels: {
+	          	align: 'center',
+	            x: 0,
+	            y: 18,
+	            step: 4,
+	            style: {
+	              color: '#81879d',
+	              fontSize: "12px"
+	            }
+	          }
+	        },
+	        plotOptions: {
+	        	area: {
+	            trackByArea: false,
+	        		tooltip: {
+	        			followPointer: true
+	        		},
+	        		states: {
+	        			hover: {
+	        				halo: {
+	        					size: 0
+	        				},
+	        				lineWidthPlus: 0
+	        			}
+	        		}        		
+	        	},
+	          series: {
+	            events: {
+	              click: function() {
+	                var that = this;
+
+	                for(var i = 0; i < this.chart.series.length; i++) {
+	                  if(i !== that.index) {
+	                    var count = 0;
+	                    var isCurrentlyHighlighted = false;
+	                    $('#container .highcharts-series').each(function(){
+	                      if(count == i) {
+	                        var thisFillPath = $(this).find('path:nth-child(2)');                        
+	                        if(thisFillPath.attr("stroke-width") == 3.1) {
+	                          isCurrentlyHighlighted = true
+	                          that.chart.series[i].update({
+	                            lineWidth: 3
+	                          });           
+	                          var counterTwo = 0;
+	                          $('#container .highcharts-series').each(function(){
+	                            if(counterTwo == count) {
+	                              thisFillPath = $(this).find('path:nth-child(2)');
+	                            }
+	                            counterTwo++;
+	                          });                          
+	                          thisFillPath.css("opacity", "1");
+	                          thisFillPath.animate({ "opacity": 0.4 }, 250);
+	                          thisFillPath.siblings("path").css("opacity", "1");
+	                          thisFillPath.siblings("path").animate({ "opacity": 0.1 }, 250);
+	                        }
+	                      }
+	                      count++;
+	                    });
+	                  }
+	                };
+
+	                this.update({
+	                  lineWidth: 3.1
+	                });
+
+	                $('#container .highcharts-series path:nth-child(2)').each(function(){
+	                  if($(this).attr("stroke-width") == 3.1) {
+	                    $(this).css("opacity", "1");
+	                    $(this).siblings("path").css("opacity", "0.1");
+	                    $(this).siblings("path").animate({ "opacity": 1 }, 250);
+	                  }
+	                });
+
+	                // read the graph line id's after this.udpate
+	                var counter = 0;
+
+	                $('#container .highcharts-series path:nth-child(2)').each(function(){
+	                  $(this).attr("id", "series" + counter);
+	                  $(this).parent('.highcharts-series').find('path:first-child').attr("id", "series" + counter + "fill");
+	                  counter++;
+	                });
+	              },
+	              // mouseOver: function () {
+	              //   setTimeout(function(){
+	              //     $('#container .highcharts-series path:nth-child(2)').each(function(){
+	              //       if($(this).attr("stroke-width") == 3) {
+	              //         $(this).css("opacity", 1);
+	              //       }
+	              //     });
+	              //   },10);
+	              // },
+	              // mouseOut: function () {
+	              //   setTimeout(function(){
+	              //     $('#container .highcharts-series path:nth-child(2)').each(function(){
+	              //       if($(this).attr("stroke-width") == 2) {
+	              //         $(this).css("opacity", 0.5);
+	              //       }
+	              //     });
+	              //   },10);
+	              // }
+	            },
+	            cursor: 'pointer',
+	            animation: false
+	          },
+	      	},
+	        series: seriesArray,
+	        tooltip: {
+	        	useHTML: true,
+	        	shared: true,
+	          formatter: function() {
+	            var instance = this;
+	            var s = "";            
+	            $.each(instance.points, function (index, value) {
+	                var chartSeries = value.series;
+	                var imgString = "";
+	                
+	                if(chartSeries.name == "revenue") {
+	                  imgString = "<img src=images/icon-chart-tooltip-revenue.png alt='Revenue icon' class=icon-revenue /> &pound;";
+	                } else if (chartSeries.name == "downloads") {
+	                  imgString = "<img src=images/icon-chart-tooltip-downloads.png alt='Downloads icon' class=icon-downloads />";
+	                }
+	                s += '<div class="custom-tooltip ' + chartSeries.name + '" style="background-color: ' + chartSeries.color + '">' + imgString + value.y + '</div>';
+	            });
+	            return s;
+	          },
+	        	backgroundColor: 'transparent',
+	          borderWidth: 0,
+	          borderColor: '#dae3ed',
+				    crosshairs: [{
+	            width: 0,
+	            color: '#9ea7c4'
+	          }],
+	          shadow: {
+	            color: 'rgba(0,0,0,0.24)',
+	            width: 0,
+	            offsetX: 1,
+	            offsetY: 1
+	        	},
+	        	snap: 25
+	        }
+		    });
+
+				// Hide/show series
+				$('.js-toggle-total-series').change(function(){
+					var $this = $(this);
+					var chartIndex = $this.data("chart-index");
+					var seriesIndex = $this.data("series-index");
+					if($(this).is(":checked")) {
+						pageCharts[chartIndex].series[seriesIndex].show();
+					} else {
+						// if($('#series1').attr("stroke-width") == 3.1) {
+						// 	handleHideGraphLine()
+						// }
+						setTimeout(function(){
+							pageCharts[chartIndex].series[seriesIndex].hide();
+						}, 200);
+					}
+				});
+
+				function handleHideGraphLine() {
+					for(var i = 0; i < chart.series.length; i++) {
+	          if(i !== 0) {
+	            var count = 0;
+	            var isCurrentlyHighlighted = false;
+	            $('#container .highcharts-series').each(function(){
+	              if(count == i) {
+	                var thisFillPath = $(this).find('path:nth-child(2)');                        
+	                if(thisFillPath.attr("stroke-width") == 3.1) {
+	                  isCurrentlyHighlighted = true
+	                  chart.series[i].update({
+	                    lineWidth: 3
+	                  });           
+	                  var counterTwo = 0;
+	                  $('#container .highcharts-series').each(function(){
+	                    if(counterTwo == count) {
+	                      thisFillPath = $(this).find('path:nth-child(2)');
+	                    }
+	                    counterTwo++;
+	                  });                          
+	                  thisFillPath.css("opacity", "1");
+	                  thisFillPath.animate({ "opacity": 0.4 }, 250);
+	                  thisFillPath.siblings("path").css("opacity", "1");
+	                  thisFillPath.siblings("path").animate({ "opacity": 0.1 }, 250);
+	                }
+	              }
+	              count++;
+	            });
+	          }
+	        };
+
+	        chart.series[0].update({
+	          lineWidth: 3.1
+	        });
+
+	        $('#container .highcharts-series path:nth-child(2)').each(function(){
+	          if($(this).attr("stroke-width") == 3.1) {
+	            $(this).css("opacity", "1");
+	            $(this).siblings("path").css("opacity", "0.1");
+	            $(this).siblings("path").animate({ "opacity": 1 }, 250);
+	          }
+	        });
+
+	        // read the graph line id's after this.udpate
+	        var counter = 0;
+
+	        $('#container .highcharts-series path:nth-child(2)').each(function(){
+	          $(this).attr("id", "series" + counter);
+	          $(this).parent('.highcharts-series').find('path:first-child').attr("id", "series" + counter + "fill");
+	          counter++;
+	        });
+	      }
+
+	      pageCharts.push(chart);
+			}
+
+			setTimeout(function() {				
+				generateChart('chart-revenue', "revenue", false);
+				generateChart('chart-downloads', "downloads", false);
+				$('.chart-container').addClass('is-animated');
+			}, 500);
+
+  	}
+
+  	window.onready = initScripts();
+  </script>
+</body>
