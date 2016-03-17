@@ -86,30 +86,30 @@ public class ITunesReporterCollector implements DataAccountCollector {
 			String accountId = dataAccount.accountId;
 			String vendorId = dataAccount.vendorId;
 
-			// If there accountid or vendor id is not set in the data account, get it from the properties or do a lookup
-			if (accountId == null || vendorId == null || accountId.trim().length() == 0 || vendorId.trim().length() == 0) {
-				SimpleEntry<String, String> accountAndVendorId = getPrimaryAccountAndVendorIdsFromProperties(dataAccount);
+			try {
+				// If there accountid or vendor id is not set in the data account, get it from the properties or do a lookup
+				if (accountId == null || vendorId == null || accountId.trim().length() == 0 || vendorId.trim().length() == 0) {
+					SimpleEntry<String, String> accountAndVendorId = getPrimaryAccountAndVendorIdsFromProperties(dataAccount);
 
-				if (accountAndVendorId != null) {
-					accountId = accountAndVendorId.getKey();
-					vendorId = accountAndVendorId.getValue();
+					if (accountAndVendorId != null) {
+						accountId = accountAndVendorId.getKey();
+						vendorId = accountAndVendorId.getValue();
 
-					// if we were able to get the accountid and vendorid, update the data account
-					if (accountId != null && vendorId != null && accountId.trim().length() > 0 && vendorId.trim().length() > 0) {
-						dataAccount.accountId(accountId).vendorId(vendorId);
-						DataAccountServiceProvider.provide().updateDataAccount(dataAccount, false);
+						// if we were able to get the accountid and vendorid, update the data account
+						if (accountId != null && vendorId != null && accountId.trim().length() > 0 && vendorId.trim().length() > 0) {
+							dataAccount.accountId(accountId).vendorId(vendorId);
+							DataAccountServiceProvider.provide().updateDataAccount(dataAccount, false);
+						}
 					}
 				}
-			}
 
-			// If we still don't have an account and vendor id pair, fail
-			if (accountId == null || vendorId == null || accountId.trim().length() == 0 || vendorId.trim().length() == 0) {
-				LOG.log(Level.SEVERE, "Can't get a valid set of account id and vendor id for DataAccount id: " + dataAccount.id + " with username: " + dataAccount.username);
-				return false;
-			}
+				// If we still don't have an account and vendor id pair, fail
+				if (accountId == null || vendorId == null || accountId.trim().length() == 0 || vendorId.trim().length() == 0) {
+					LOG.log(Level.SEVERE, "Can't get a valid set of account id and vendor id for DataAccount id: " + dataAccount.id + " with username: " + dataAccount.username);
+					return false;
+				}
 
-			// do the gather
-			try {
+				// do the gather
 				byte[] gzippedReportData = AppleReporterHelper.getReport(dataAccount.username, dataAccount.password, accountId, vendorId, DateType.DAILY, date);
 				String fileName = "S_D_A_" + accountId + "_V_" + vendorId + SqlQueryHelper.getSqlDateFormat().format(date) + ".txt.gz";
 
@@ -155,7 +155,7 @@ public class ITunesReporterCollector implements DataAccountCollector {
 
 				if (error == ITunesReporterError.CODE_210) {
 					LOG.log(Level.WARNING, "The report is not ready yet for data account id: " + dataAccount.id + " with username: " + dataAccount.username + " on " + date);
-				} else if (error == ITunesReporterError.CODE_107 || error == ITunesReporterError.CODE_108) {
+				} else if (error == ITunesReporterError.CODE_107 || error == ITunesReporterError.CODE_108 || error == ITunesReporterError.CODE_217) {
 					dataAccount.active = "n";
 					DataAccountServiceProvider.provide().updateDataAccount(dataAccount, false);
 
@@ -173,7 +173,8 @@ public class ITunesReporterCollector implements DataAccountCollector {
 						DataAccountServiceProvider.provide().triggerDataAccountFetch(replacementAccount);
 					}
 
-					String emailBody = "Username / password is incorrect for data account id: " + dataAccount.id + " with username: " + dataAccount.username + " on " + date +
+					String emailBody = (error.getErrorCode() == 217 ? "User does not have access to iTunes Sales Reports" : "Username / password is incorrect") + " for data account id: " + dataAccount.id
+							+ " with username: " + dataAccount.username + " on " + date +
 							".\nDisabling fetching from this account. Replacement account queued to fetch sales data - id: " + replacementAccount == null ? "None"
 									: (replacementAccount.id + " with username: " + replacementAccount.username);
 
