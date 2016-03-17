@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.text.DateFormat;
@@ -42,6 +43,10 @@ import com.willshex.gson.json.service.server.InputValidationException;
  *
  */
 public class AppleReporterHelper {
+	/**
+	 *
+	 */
+	private static final int							REPORT_DOWNLOAD_RETRY_COUNT			= 3;
 	private static final String						ITUNES_ACCOUNT_KEY							= "Account";
 	private static final String						ITUNES_PASSWORD_KEY							= "Password";
 	private static final String						ITUNES_USERID_KEY								= "UserId";
@@ -60,6 +65,11 @@ public class AppleReporterHelper {
 	public static final String						COMMAND_GET_ACCOUNTS						= "Sales.getAccounts";
 	public static final String						COMMAND_GET_REPORT							= "Sales.getReport";
 	public static final String						COMMAND_GET_VENDORS_AND_REGIONS	= "Finance.getVendorsAndRegions";
+
+	private static final int							APPLE_CONNECTION_READ_TIMEOUT		= 2 * 60 * 1000;																																																																																																																																																																																																																																																																																																									 // Connection
+																																																																																																																																																																																																																																																																																																																																																					 // timeout
+																																																																																																																																																																																																																																																																																																																																																					 // in
+																																																																																																																																																																																																																																																																																																																																																					 // milliseconds
 
 	public enum DateType {
 		/**
@@ -109,7 +119,7 @@ public class AppleReporterHelper {
 	 * @return
 	 * @throws AppleReporterException
 	 */
-	public static byte[] getReport(String userId, String password, String accountNumber, String vendor, DateType dateType, Date date) throws AppleReporterException { // TODO
+	public static byte[] getReport(String userId, String password, String accountNumber, String vendor, DateType dateType, Date date) throws AppleReporterException {
 		date = ApiHelper.removeTime(date);
 		Properties clientProperties = new Properties();
 		clientProperties.setProperty(ITUNES_USERID_KEY, userId);
@@ -137,25 +147,39 @@ public class AppleReporterHelper {
 
 		String[] options = new String[] { vendor + ",", "Sales,", "Summary,", dateType + ",", dateFormatted };
 
-		HttpURLConnection con = executeCommand(COMMAND_GET_REPORT, options, clientProperties);
+		int retryCount = 0;
 
-		try {
-			if (con.getResponseCode() == 200 && con.getHeaderField("filename") != null) {
-				String fileName = con.getHeaderField("filename");
-				if (null != fileName) {
-					byte[] fileContent = IOUtils.toByteArray(con.getInputStream());
+		while (retryCount++ < REPORT_DOWNLOAD_RETRY_COUNT) {
+			HttpURLConnection con = executeCommand(COMMAND_GET_REPORT, options, clientProperties);
 
-					String downloadMessage = con.getHeaderField("downloadMsg");
-					LOG.info("iTunes Reporter download message: " + downloadMessage);
+			try {
+				if (con.getResponseCode() == 200 && con.getHeaderField("filename") != null) {
+					String fileName = con.getHeaderField("filename");
+					if (null != fileName) {
+						byte[] fileContent = IOUtils.toByteArray(con.getInputStream());
 
-					return fileContent;
+						String downloadMessage = con.getHeaderField("downloadMsg");
+						LOG.info("iTunes Reporter download message: " + downloadMessage);
+
+						return fileContent;
+					}
 				}
+
+				throw getAppleErrorFromResponce(con);
+			} catch (IOException e) {
+				if (e instanceof SocketTimeoutException) {
+					LOG.warning("Socket Timeout Exception on try: " + retryCount + 1);
+				} else
+					throw new AppleReporterException(-1, e);
 			}
 
-			throw getAppleErrorFromResponce(con);
-		} catch (IOException e) {
-			throw new AppleReporterException(-1, e);
+			try {
+				Thread.sleep(10000);
+			} catch (InterruptedException e) {
+			}
 		}
+
+		throw new AppleReporterException(-1, "Could not get report after retrying " + REPORT_DOWNLOAD_RETRY_COUNT + " tries.");
 	}
 
 	/**
@@ -417,6 +441,7 @@ public class AppleReporterHelper {
 		try {
 			url = getWebserviceURLConnection(clientProperties, appName, outputStyle);
 			uc = (HttpURLConnection) url.openConnection();
+			uc.setReadTimeout(APPLE_CONNECTION_READ_TIMEOUT);
 		} catch (Exception ex) {
 			throw new AppleReporterException(-1, ex);
 		}
