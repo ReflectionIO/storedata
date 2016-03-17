@@ -456,17 +456,17 @@ public class AppleReporterHelper {
 		private final int errorCode;
 
 		public AppleReporterException(int errorCode, String errorMessage) {
-			super(errorMessage);
+			super(errorCode + ": " + errorMessage);
 			this.errorCode = errorCode;
 		}
 
 		public AppleReporterException(int errorCode, String errorMessage, Throwable ex) {
-			super(errorMessage, ex);
+			super(errorCode + ": " + errorMessage, ex);
 			this.errorCode = errorCode;
 		}
 
 		public AppleReporterException(int errorCode, Throwable ex) {
-			super(ex);
+			super("Error code: " + errorCode, ex);
 			this.errorCode = errorCode;
 		}
 
@@ -507,7 +507,7 @@ public class AppleReporterHelper {
 		CODE_210(210, "Report not available because it is not ready yet."),
 		CODE_211(211, "Report not available."),
 		CODE_212(212, "Unexpected error."),
-		CODE_213(213, "Report not available because there were no sales.");
+		CODE_213(213, "There were no sales for the date specified.");
 
 		private final int			errorCode;
 		private final String	errorMessage;

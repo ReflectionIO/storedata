@@ -357,6 +357,7 @@ public class ItunesReporterCollectorTest {
 		System.out.println("Report written to: " + outputFile.getAbsolutePath());
 	}
 
+	@Ignore
 	@Test
 	public void test() throws DataAccessException, AppleReporterException, InputValidationException {
 		DataAccount spaceHopper = DataAccountServiceProvider.provide().getDataAccount(388L);
@@ -369,6 +370,20 @@ public class ItunesReporterCollectorTest {
 			for (String vendor : vendors) {
 				System.out.println(String.format("Account: %s, accountId: %s, vendorId: %s", accountName, accountId, vendor));
 			}
+		}
+	}
+
+	@Test
+	public void testSpaceHoppersSalesGatherWithNoSalesOnTheDay() throws DataAccessException {
+		DataAccount dataAccount = DataAccountServiceProvider.provide().getDataAccount(1L);
+
+		Calendar cal = Calendar.getInstance();
+		cal.set(2016, 02, 17);
+
+		try {
+			AppleReporterHelper.getReport(dataAccount.username, dataAccount.password, dataAccount.accountId, dataAccount.vendorId, DateType.DAILY, cal.getTime());
+		} catch (AppleReporterException e) {
+			assertEquals("Error code should be 213: There were no sales for the date specified.", 213, e.getErrorCode());
 		}
 	}
 }

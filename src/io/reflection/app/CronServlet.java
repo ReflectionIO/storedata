@@ -309,14 +309,17 @@ public class CronServlet extends HttpServlet {
 					try {
 						AppleReporterHelper.getReport(dataAccountToTest.username, dataAccountToTest.password, dataAccountToTest.accountId, dataAccountToTest.vendorId, DateType.DAILY, lastSalesFetchDate);
 					} catch (final AppleReporterException e) {
-						if (e.getErrorCode() == 210 || e.getErrorCode() == 211) {
-							LOG.warning("Sales report are not ready yet for " + lastSalesFetchDate);
-						} else {
-							LOG.log(Level.WARNING, "There was a problem trying to get test for sales report availability for " + lastSalesFetchDate, e);
-						}
+						if (e.getErrorCode() != 213) {
+							// 213 = there are no sales for this account, which means the sales are ready
+							if (e.getErrorCode() == 210 || e.getErrorCode() == 211) {
+								LOG.warning("Sales report are not ready yet for " + lastSalesFetchDate);
+							} else {
+								LOG.log(Level.WARNING, "There was a problem trying to get test for sales report availability for " + lastSalesFetchDate, e);
+							}
 
-						resp.setHeader("Cache-Control", "no-cache");
-						return;
+							resp.setHeader("Cache-Control", "no-cache");
+							return;
+						}
 					}
 
 					if (LOG.isLoggable(GaeLevel.DEBUG)) {
