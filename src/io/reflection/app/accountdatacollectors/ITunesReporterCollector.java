@@ -203,8 +203,9 @@ public class ITunesReporterCollector implements DataAccountCollector {
 	 * @param dataAccount
 	 * @return
 	 * @throws DataAccessException
+	 * @throws AppleReporterException
 	 */
-	public SimpleEntry<String, String> getPrimaryAccountAndVendorIdsFromProperties(DataAccount dataAccount) throws DataAccessException {
+	public SimpleEntry<String, String> getPrimaryAccountAndVendorIdsFromProperties(DataAccount dataAccount) throws DataAccessException, AppleReporterException {
 		String accountId = null;
 		String vendorId = null;
 
@@ -268,19 +269,13 @@ public class ITunesReporterCollector implements DataAccountCollector {
 	/**
 	 * @param dataAccount
 	 * @return
+	 * @throws AppleReporterException
 	 */
-	public SimpleEntry<String, String> getAccountAndVendorIdPairForFirstVendorId(DataAccount dataAccount) {
+	public SimpleEntry<String, String> getAccountAndVendorIdPairForFirstVendorId(DataAccount dataAccount) throws AppleReporterException {
 		String primaryVendorId = DataAccountPropertiesHelper.getPrimaryVendorId(dataAccount.properties);
 		if (primaryVendorId == null) return null;
 
-		String accountId = null;
-		try {
-			accountId = AppleReporterHelper.getAccountIdForVendorId(dataAccount.username, dataAccount.password, primaryVendorId);
-		} catch (AppleReporterException e) {
-			LOG.log(Level.WARNING, "Could not get the vendor id for account id: " + accountId + " of data account id: " + dataAccount.id + ", username: " + dataAccount.username, e);
-		}
-
-		if (accountId == null) return null;
+		String accountId = AppleReporterHelper.getAccountIdForVendorId(dataAccount.username, dataAccount.password, primaryVendorId);
 
 		return new SimpleEntry<>(accountId, primaryVendorId);
 	}
