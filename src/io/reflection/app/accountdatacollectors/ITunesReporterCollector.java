@@ -105,8 +105,9 @@ public class ITunesReporterCollector implements DataAccountCollector {
 
 				// If we still don't have an account and vendor id pair, fail
 				if (accountId == null || vendorId == null || accountId.trim().length() == 0 || vendorId.trim().length() == 0) {
-					LOG.log(Level.SEVERE, "Can't get a valid set of account id and vendor id for DataAccount id: " + dataAccount.id + " with username: " + dataAccount.username);
-					return false;
+					String msg = "Can't get a valid set of account id and vendor id for DataAccount id: " + dataAccount.id + " with username: " + dataAccount.username;
+					LOG.log(Level.SEVERE, msg);
+					throw new AppleReporterException(108, msg);
 				}
 
 				// do the gather
@@ -173,10 +174,12 @@ public class ITunesReporterCollector implements DataAccountCollector {
 						DataAccountServiceProvider.provide().triggerDataAccountFetch(replacementAccount);
 					}
 
-					String emailBody = (error.getErrorCode() == 217 ? "User does not have access to iTunes Sales Reports" : "Username / password is incorrect") + " for data account id: " + dataAccount.id
-							+ " with username: " + dataAccount.username + " on " + date +
-							".\nDisabling fetching from this account. Replacement account queued to fetch sales data - id: " + replacementAccount == null ? "None"
-									: (replacementAccount.id + " with username: " + replacementAccount.username);
+					String replacementAccountLogMessage = replacementAccount == null ? "There is no replacement account for this vendor id."
+							: String.format("Replacement data account id: %s with username %s", replacementAccount.id, replacementAccount.username);
+
+					String errorTypeLogMessage = error.getErrorCode() == 217 ? "User does not have access to iTunes Sales Reports" : "Username / password is incorrect";
+
+					String emailBody = String.format("%s for data account id: %s with username %s on %s.%s", errorTypeLogMessage, dataAccount.id, dataAccount.username, date, replacementAccountLogMessage);
 
 					LOG.log(Level.WARNING, emailBody);
 
