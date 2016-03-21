@@ -97,4 +97,21 @@ public class DataAccountPropertiesHelperTest {
 		assertNotNull(result);
 		assertEquals("{\"vendors\":[\"85037116\"]}", result);
 	}
+
+	@Test
+	public void malformedPropertiesTest() {
+		String properties = "{\"vendors\":[\"85046823\"],\"accountsAndVendorIds\":[{\"accountId\":null,\"vendorId\":\"85046823\"}]}";
+
+		List<SimpleEntry<String, String>> accountAndVendorIdsFromProperties = DataAccountPropertiesHelper.getAccountAndVendorIdsFromProperties(properties);
+		assertNotNull(accountAndVendorIdsFromProperties);
+		assertTrue(accountAndVendorIdsFromProperties.size() == 0);
+
+		String clearedProperties = DataAccountPropertiesHelper.clearAccountAndVendorIds(properties);
+		assertNotNull(clearedProperties);
+		assertEquals("{\"vendors\":[\"85046823\"]}", clearedProperties);
+
+		String newProperties = DataAccountPropertiesHelper.addAccountIdAndVendorIdToProperties("NEWACCOUNTID", "NEWVENDORID", clearedProperties);
+		assertNotNull(newProperties);
+		assertEquals("{\"vendors\":[\"85046823\"],\"accountsAndVendorIds\":[{\"accountId\":\"NEWACCOUNTID\",\"vendorId\":\"NEWVENDORID\"}]}", newProperties);
+	}
 }
