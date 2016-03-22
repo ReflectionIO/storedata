@@ -1,0 +1,4221 @@
+/* line 5, ../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.1/stylesheets/compass/reset/_utilities.scss */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+
+/* line 22, ../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.1/stylesheets/compass/reset/_utilities.scss */
+html {
+  line-height: 1;
+}
+
+/* line 24, ../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.1/stylesheets/compass/reset/_utilities.scss */
+ol, ul {
+  list-style: none;
+}
+
+/* line 26, ../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.1/stylesheets/compass/reset/_utilities.scss */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* line 28, ../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.1/stylesheets/compass/reset/_utilities.scss */
+caption, th, td {
+  text-align: left;
+  font-weight: normal;
+  vertical-align: middle;
+}
+
+/* line 30, ../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.1/stylesheets/compass/reset/_utilities.scss */
+q, blockquote {
+  quotes: none;
+}
+/* line 103, ../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.1/stylesheets/compass/reset/_utilities.scss */
+q:before, q:after, blockquote:before, blockquote:after {
+  content: "";
+  content: none;
+}
+
+/* line 32, ../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.1/stylesheets/compass/reset/_utilities.scss */
+a img {
+  border: none;
+}
+
+/* line 116, ../../../../../../Library/Ruby/Gems/2.0.0/gems/compass-core-1.0.1/stylesheets/compass/reset/_utilities.scss */
+article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {
+  display: block;
+}
+
+/* Typography */
+/*  Mixins as placeholders - so that they appear inline with the style selectors
+/   These are used where groups of styles need to be called but shouldn't be output to the main stylesheet
+*/
+/* Global */
+/* line 24, sass/ui/_colours.scss */
+.positive-colour {
+  color: #1bc79f;
+}
+
+/* line 27, sass/ui/_colours.scss */
+.negative-colour {
+  color: #ff496a;
+}
+
+/* Base */
+/* Layout */
+/* line 7, sass/helpers/_placeholders.scss */
+address, article, aside, blockquote, center, dir, div, dd, details, dl, dt, fieldset, figcaption, figure, form, footer, frameset, h1, h2, h3, h4, h5, h6, hr, header, hgroup, isindex, main, menu, nav, noframes, noscript, ol, p, pre, section, summary, ul,
+li {
+  width: auto;
+  overflow: hidden;
+}
+
+/* line 11, sass/helpers/_placeholders.scss */
+.vertical-centre-content, .tabs-list li a {
+  height: 100%;
+}
+/* line 13, sass/helpers/_placeholders.scss */
+.vertical-centre-content:before, .tabs-list li a:before {
+  content: '';
+  display: inline-block;
+  width: 0;
+  height: 100%;
+  vertical-align: middle;
+  margin-right: -0.35em
+  /* Adjusts for spacing */
+}
+/* line 21, sass/helpers/_placeholders.scss */
+.vertical-centre-content > *, .tabs-list li a > * {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* Typography */
+/* line 28, sass/helpers/_placeholders.scss */
+h1, h2, h3, h4, h5, h6, p, li, a, blockquote, time, span, cite, html, body, .ref-button, .ref-button--primary--small, .ref-button--primary--medium, .ref-button--primary--large, .ref-button--secondary--small, .ref-button--secondary--medium, .ref-button--secondary--large, input[type="text"],
+input[type="email"],
+input[type="search"],
+input[type="password"],
+textarea, .global-header .link-log-in,
+.global-header .link-open-search {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* UI */
+/* Base */
+/* line 13, sass/layout/_layout.scss */
+.l-page-container {
+  position: relative;
+  width: 100%;
+  z-index: 0;
+  overflow: visible;
+  -webkit-transition: -webkit-filter 0.18s, filter 0.18s;
+          transition: filter 0.18s;
+}
+/* line 19, sass/layout/_layout.scss */
+.touch .no-scroll .l-page-container {
+  overflow: hidden;
+  height: 100vh;
+}
+/* line 23, sass/layout/_layout.scss */
+.account-access-page .l-page-container {
+  min-height: 100vh;
+}
+/* line 26, sass/layout/_layout.scss */
+.l-page-container.is-blurred-heavy {
+  -webkit-filter: blur(0.8px);
+          filter: blur(0.8px);
+  -webkit-transition: -webkit-filter 0.5s, filter 0.5s;
+          transition: filter 0.5s;
+}
+/* line 29, sass/layout/_layout.scss */
+.ie8 .l-page-container.is-blurred-heavy, .ie9 .l-page-container.is-blurred-heavy {
+  -webkit-filter: none;
+          filter: none;
+}
+
+/* line 34, sass/layout/_layout.scss */
+.l-main {
+  width: 100%;
+  padding-top: 42px;
+  display: inline-block;
+  float: right;
+  overflow: visible;
+  vertical-align: top;
+  -webkit-transition: width 0.15s ease-in;
+          transition: width 0.15s ease-in;
+}
+@media (min-width: 480px) {
+  /* line 34, sass/layout/_layout.scss */
+  .l-main {
+    padding-top: 62px;
+  }
+}
+/* line 45, sass/layout/_layout.scss */
+.panel-left-open .l-main {
+  width: 100%;
+  overflow: visible;
+}
+@media (min-width: 960px) {
+  /* line 49, sass/layout/_layout.scss */
+  .no-touch .l-main, .no-touch .panel-left-open .l-main {
+    width: calc(100% - 60px);
+    -webkit-transition: width 0.15s ease-out;
+            transition: width 0.15s ease-out;
+  }
+}
+
+/* line 57, sass/layout/_layout.scss */
+.l-full-screen-section {
+  height: calc(100vh - 42px);
+  background-color: #6d69c5;
+}
+@media (min-width: 480px) {
+  /* line 57, sass/layout/_layout.scss */
+  .l-full-screen-section {
+    height: calc(100vh - 62px);
+  }
+}
+
+/* line 64, sass/layout/_layout.scss */
+.components-row-with-border {
+  padding-bottom: 2rem;
+  margin-bottom: 4rem;
+  border-bottom: 1px solid #e1e5e8;
+}
+
+/* line 69, sass/layout/_layout.scss */
+.article-list--article {
+  padding-bottom: 2.5rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #e1e1e1;
+}
+/* line 73, sass/layout/_layout.scss */
+.article-list--article:last-child {
+  border-bottom: 0;
+}
+@media (min-width: 720px) {
+  /* line 69, sass/layout/_layout.scss */
+  .article-list--article {
+    padding-bottom: 2.5rem;
+  }
+}
+
+/* line 80, sass/layout/_layout.scss */
+.page-section {
+  width: 100%;
+  margin-bottom: 3rem;
+}
+/* line 83, sass/layout/_layout.scss */
+.page-section > .grid__column {
+  padding-bottom: 4rem;
+}
+/* line 86, sass/layout/_layout.scss */
+.page-section.page-section--with-border {
+  border-bottom: 1px solid #e1e5e8;
+}
+/* line 89, sass/layout/_layout.scss */
+.page-section:first-child {
+  margin-top: 3rem;
+}
+
+@font-face {
+  font-family: "reflection-icons-1";
+  src: url("fonts/fontastic/reflection-icons-1.eot");
+  src: url("fonts/fontastic/reflection-icons-1.eot?#iefix") format("embedded-opentype"), url("fonts/fontastic/reflection-icons-1.woff") format("woff"), url("fonts/fontastic/reflection-icons-1.ttf") format("truetype"), url("fonts/fontastic/reflection-icons-1.svg#reflection-icons") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+/* line 16, sass/ui-v2/_typography.scss */
+.ref-icon-before:before, .ref-icon-before--search:before,
+.ref-icon-before--revenue:before,
+.ref-icon-before--download:before,
+.ref-icon-before--apple:before,
+.ref-icon-before--play-store:before, .ref-icon-after:after, .ref-icon-after--search:after,
+.ref-icon-after--question:after,
+.whats-this-tooltip-icon:after,
+.ref-icon-after--angle-down:after,
+.ref-icon-after--info:after,
+.tooltip--info:after,
+.ref-icon-after--apple:after,
+.ref-icon-after--play-store:after {
+  vertical-align: top;
+  speak: none;
+  font-family: "reflection-icons-1";
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* line 28, sass/ui-v2/_typography.scss */
+[class^="reficon-"], [class*=" reficon-"] {
+  height: 18px;
+  width: 18px;
+  display: inline-block;
+  fill: currentColor;
+}
+
+/* line 49, sass/ui-v2/_typography.scss */
+.ref-icon-before--search:before,
+.ref-icon-after--search:after {
+  content: "a";
+}
+
+/* line 53, sass/ui-v2/_typography.scss */
+.ref-icon-after--question:after, .whats-this-tooltip-icon:after {
+  content: "F";
+}
+
+/* line 56, sass/ui-v2/_typography.scss */
+.ref-icon-before--revenue:before {
+  content: "M";
+}
+
+/* line 59, sass/ui-v2/_typography.scss */
+.ref-icon-before--download:before {
+  content: "f";
+}
+
+/* line 62, sass/ui-v2/_typography.scss */
+.ref-icon-after--angle-down:after {
+  content: "j";
+}
+
+/* line 65, sass/ui-v2/_typography.scss */
+.ref-icon-after--info:after, .tooltip--info:after {
+  content: "J";
+}
+
+/* line 68, sass/ui-v2/_typography.scss */
+.ref-icon-before--apple:before,
+.ref-icon-after--apple:after {
+  content: "W";
+}
+
+/* line 72, sass/ui-v2/_typography.scss */
+.ref-icon-before--play-store:before,
+.ref-icon-after--play-store:after {
+  content: "V";
+}
+
+/* line 79, sass/ui-v2/_typography.scss */
+h1:last-child, h2:last-child, h3:last-child, h4:last-child, h5:last-child, h6:last-child, p:last-child, li:last-child, a:last-child, blockquote:last-child, time:last-child, span:last-child, cite:last-child {
+  margin-bottom: 0;
+}
+
+/* line 83, sass/ui-v2/_typography.scss */
+h1, h2, h3, h4, h5, h6, .heading-style, h1, .heading-style--heading-one, h2, .heading-style--heading-two, h3, .heading-style--heading-three, h4, .heading-style--heading-four, h5, .heading-style--heading-five, h6, .heading-style--heading-six {
+  font-family: "Source Sans Pro", sans-serif;
+  font-weight: 600;
+  overflow: visible;
+  line-height: 1;
+  color: #29292c;
+}
+/* line 89, sass/ui-v2/_typography.scss */
+h1:first-child, h2:first-child, h3:first-child, h4:first-child, h5:first-child, h6:first-child, .heading-style:first-child, h1:first-child, .heading-style--heading-one:first-child, h2:first-child, .heading-style--heading-two:first-child, h3:first-child, .heading-style--heading-three:first-child, h4:first-child, .heading-style--heading-four:first-child, h5:first-child, .heading-style--heading-five:first-child, h6:first-child, .heading-style--heading-six:first-child {
+  margin-top: 0;
+}
+
+/* line 93, sass/ui-v2/_typography.scss */
+h1 + h2, h1 + h3, h1 + h4, h1 + h5, h1 + h6,
+h2 + h3, h2 + h4, h2 + h5, h2 + h6,
+h3 + h4, h3 + h5, h3 + h6,
+h4 + h5, h4 + h6,
+h5 + h6,
+.heading-style--heading-one + .heading-style--heading-two,
+.heading-style--heading-one + .heading-style--heading-three,
+.heading-style--heading-one + .heading-style--heading-four,
+.heading-style--heading-one + .heading-style--heading-five,
+.heading-style--heading-one + .heading-style--heading-six,
+.heading-style--heading-two + .heading-style--heading-three,
+.heading-style--heading-two + .heading-style--heading-four,
+.heading-style--heading-two + .heading-style--heading-five,
+.heading-style--heading-two + .heading-style--heading-six,
+.heading-style--heading-three + .heading-style--heading-four,
+.heading-style--heading-three + .heading-style--heading-five,
+.heading-style--heading-three + .heading-style--heading-six,
+.heading-style--heading-four + .heading-style--heading-five,
+.heading-style--heading-four + .heading-style--heading-six,
+.heading-style--heading-five + .heading-style--heading-six,
+h1 + .heading-style--heading-two,
+h1 + .heading-style--heading-three,
+h1 + .heading-style--heading-four,
+h1 + .heading-style--heading-five,
+h1 + .heading-style--heading-six,
+h2 + .heading-style--heading-three,
+h2 + .heading-style--heading-four,
+h2 + .heading-style--heading-five,
+h2 + .heading-style--heading-six,
+h3 + .heading-style--heading-four,
+h3 + .heading-style--heading-five,
+h3 + .heading-style--heading-six,
+h4 + .heading-style--heading-five,
+h4 + .heading-style--heading-six,
+h5 + .heading-style--heading-six,
+.heading-style--heading-one + h2,
+.heading-style--heading-one + h3,
+.heading-style--heading-one + h4,
+.heading-style--heading-one + h5,
+.heading-style--heading-one + h6,
+.heading-style--heading-two + h3,
+.heading-style--heading-two + h4,
+.heading-style--heading-two + h5,
+.heading-style--heading-two + h6,
+.heading-style--heading-three + h4,
+.heading-style--heading-three + h5,
+.heading-style--heading-three + h6,
+.heading-style--heading-four + h5,
+.heading-style--heading-four + h6,
+.heading-style--heading-five + h6 {
+  margin-top: 0;
+}
+
+/* line 146, sass/ui-v2/_typography.scss */
+h1, .heading-style--heading-one {
+  margin-top: 3rem;
+  margin-bottom: 2.5rem;
+  font-size: 3.4rem;
+  line-height: 1.29411764705882em;
+}
+
+/* line 153, sass/ui-v2/_typography.scss */
+h2, .heading-style--heading-two {
+  margin-top: 3rem;
+  margin-bottom: 2.4rem;
+  font-size: 2.8rem;
+  line-height: 1.35714285714286em;
+}
+
+/* line 160, sass/ui-v2/_typography.scss */
+h3, .heading-style--heading-three {
+  margin-top: 3rem;
+  margin-bottom: 2.2rem;
+  font-size: 2.4rem;
+  line-height: 1.41666666666667em;
+}
+
+/* line 167, sass/ui-v2/_typography.scss */
+h4, .heading-style--heading-four {
+  margin-top: 3rem;
+  margin-bottom: 2.2rem;
+  font-size: 2.2rem;
+  line-height: 1.36363636363636em;
+}
+
+/* line 174, sass/ui-v2/_typography.scss */
+h5, .heading-style--heading-five {
+  margin-top: 3rem;
+  margin-bottom: 2.1rem;
+  font-size: 2rem;
+  line-height: 1.4em;
+}
+
+/* line 181, sass/ui-v2/_typography.scss */
+h6, .heading-style--heading-six {
+  margin-top: 3rem;
+  margin-bottom: 2.1rem;
+  font-size: 1.8rem;
+  line-height: 1.375em;
+}
+
+/* line 188, sass/ui-v2/_typography.scss */
+p {
+  max-width: 650px;
+  margin-bottom: 1.2em;
+  font-size: 1.6rem;
+  line-height: 1.625em;
+  color: #5b5b68;
+}
+@media (min-width: 1280px) {
+  /* line 188, sass/ui-v2/_typography.scss */
+  p {
+    max-width: 680px;
+  }
+}
+@media (min-width: 1600px) {
+  /* line 188, sass/ui-v2/_typography.scss */
+  p {
+    max-width: 850px;
+  }
+}
+/* line 200, sass/ui-v2/_typography.scss */
+p.p-style--minor {
+  font-size: 1.4rem;
+  line-height: 1.71428571428571em;
+}
+/* line 204, sass/ui-v2/_typography.scss */
+p.p-style--feature {
+  font-size: 1.8rem;
+  line-height: 1.44444444444444em;
+}
+/* line 208, sass/ui-v2/_typography.scss */
+p a {
+  text-decoration: none;
+  color: #6d69c5;
+}
+/* line 212, sass/ui-v2/_typography.scss */
+.no-touch p a:hover {
+  color: #4b46b5;
+}
+/* line 215, sass/ui-v2/_typography.scss */
+.no-touch p a:active {
+  position: relative;
+  top: 2px;
+}
+/* line 221, sass/ui-v2/_typography.scss */
+p strong {
+  color: #29292c;
+  font-weight: 700;
+}
+
+/* line 1, sass/base/_reset-v2.scss */
+* {
+  text-decoration: none;
+}
+
+/* Global base styles */
+/* line 5, sass/base/_reset-v2.scss */
+html, body {
+  position: relative;
+  overflow-x: hidden;
+  font-family: "Lato", sans-serif;
+  font-size: 10px;
+  line-height: 1.5rem;
+  color: #29292c;
+  background-color: #fcfdfd;
+}
+@media (min-width: 1600px) {
+  /* line 5, sass/base/_reset-v2.scss */
+  html, body {
+    font-size: 11px;
+  }
+}
+@media (min-width: 1600px) {
+  /* line 5, sass/base/_reset-v2.scss */
+  html, body {
+    font-size: 12px;
+  }
+}
+
+/* line 22, sass/base/_reset-v2.scss */
+html.no-scroll,
+body.no-scroll {
+  overflow: hidden;
+}
+
+/* line 26, sass/base/_reset-v2.scss */
+address, article, aside, blockquote, center, dir, div, dd, details, dl, dt, fieldset, figcaption, figure, form, footer, frameset, h1, h2, h3, h4, h5, h6, hr, header, hgroup, isindex, main, menu, nav, noframes, noscript, ol, p, pre, section, summary, ul,
+li {
+  box-sizing: border-box;
+}
+
+/* line 31, sass/base/_reset-v2.scss */
+a {
+  outline: none;
+  -webkit-transition: border-color 0.2s, background-color 0.2s, color 0.2s;
+          transition: border-color 0.2s, background-color 0.2s, color 0.2s;
+}
+/* line 34, sass/base/_reset-v2.scss */
+a:hover {
+  -webkit-transition: border-color 0.3s, background-color 0.3s, color 0.3s;
+          transition: border-color 0.3s, background-color 0.3s, color 0.3s;
+}
+
+/* line 38, sass/base/_reset-v2.scss */
+.touch * {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* line 41, sass/base/_reset-v2.scss */
+input::-ms-clear {
+  display: none;
+}
+
+/* line 13, sass/layout-v2/_layout.scss */
+.l-page-container {
+  position: relative;
+  width: 100%;
+  z-index: 0;
+  overflow: visible;
+  -webkit-transition: -webkit-filter 0.18s, filter 0.18s;
+          transition: filter 0.18s;
+}
+/* line 19, sass/layout-v2/_layout.scss */
+.touch .no-scroll .l-page-container {
+  overflow: hidden;
+  height: 100vh;
+}
+/* line 23, sass/layout-v2/_layout.scss */
+.account-access-page .l-page-container {
+  min-height: 100vh;
+}
+/* line 26, sass/layout-v2/_layout.scss */
+.l-page-container.is-blurred-heavy {
+  -webkit-filter: blur(0.8px);
+          filter: blur(0.8px);
+  -webkit-transition: -webkit-filter 0.5s, filter 0.5s;
+          transition: filter 0.5s;
+}
+/* line 29, sass/layout-v2/_layout.scss */
+.ie8 .l-page-container.is-blurred-heavy, .ie9 .l-page-container.is-blurred-heavy {
+  -webkit-filter: none;
+          filter: none;
+}
+
+/* line 34, sass/layout-v2/_layout.scss */
+.l-main {
+  width: 100%;
+  padding-top: 42px;
+  display: inline-block;
+  float: right;
+  overflow: visible;
+  vertical-align: top;
+  -webkit-transition: width 0.15s ease-in;
+          transition: width 0.15s ease-in;
+}
+@media (min-width: 480px) {
+  /* line 34, sass/layout-v2/_layout.scss */
+  .l-main {
+    padding-top: 50px;
+  }
+}
+/* line 45, sass/layout-v2/_layout.scss */
+.panel-left-open .l-main {
+  width: 100%;
+  overflow: visible;
+}
+@media (min-width: 960px) {
+  /* line 49, sass/layout-v2/_layout.scss */
+  .no-touch .l-main, .no-touch .panel-left-open .l-main {
+    width: calc(100% - 61px);
+    -webkit-transition: width 0.15s ease-out;
+            transition: width 0.15s ease-out;
+  }
+}
+
+/* line 57, sass/layout-v2/_layout.scss */
+.l-full-screen-section {
+  height: calc(100vh - 42px);
+  background-color: #6d69c5;
+}
+@media (min-width: 480px) {
+  /* line 57, sass/layout-v2/_layout.scss */
+  .l-full-screen-section {
+    height: calc(100vh - 50px);
+  }
+}
+
+/* line 64, sass/layout-v2/_layout.scss */
+.components-row-with-border {
+  padding-bottom: 2rem;
+  margin-bottom: 4rem;
+  border-bottom: 1px solid #e1e5e8;
+}
+
+/* line 69, sass/layout-v2/_layout.scss */
+.article-list--article {
+  padding-bottom: 2.5rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #e1e1e1;
+}
+/* line 73, sass/layout-v2/_layout.scss */
+.article-list--article:last-child {
+  border-bottom: 0;
+}
+@media (min-width: 720px) {
+  /* line 69, sass/layout-v2/_layout.scss */
+  .article-list--article {
+    padding-bottom: 2.5rem;
+  }
+}
+
+/* line 80, sass/layout-v2/_layout.scss */
+.page-section {
+  width: 100%;
+  margin-bottom: 3rem;
+}
+/* line 83, sass/layout-v2/_layout.scss */
+.page-section > .grid__column {
+  padding-bottom: 4rem;
+}
+/* line 86, sass/layout-v2/_layout.scss */
+.page-section.page-section--with-border {
+  border-bottom: 1px solid #e1e5e8;
+}
+/* line 89, sass/layout-v2/_layout.scss */
+.page-section:first-child {
+  margin-top: 3rem;
+}
+
+/* Grid variables */
+/* responsive layout */
+/* Compass Grid Background variables */
+/* line 61, sass/layout/_grid.scss */
+.grid-container {
+  width: 100%;
+  padding-left: 10px;
+  padding-right: 10px;
+  box-sizing: border-box;
+}
+@media (min-width: 480px) {
+  /* line 61, sass/layout/_grid.scss */
+  .grid-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+@media (min-width: 720px) {
+  /* line 61, sass/layout/_grid.scss */
+  .grid-container {
+    padding-left: 22px;
+    padding-right: 22px;
+  }
+}
+
+/* line 76, sass/layout/_grid.scss */
+.grid__column {
+  display: inline-block;
+  box-sizing: border-box;
+}
+
+/* line 81, sass/layout/_grid.scss */
+.grid__column--one-twelfth {
+  display: inline;
+  float: left;
+  width: 8.33333%;
+  padding: 0 2%;
+}
+@media (min-width: 720px) {
+  /* line 81, sass/layout/_grid.scss */
+  .grid__column--one-twelfth {
+    width: 8.33333%;
+    padding: 0 2%;
+  }
+}
+@media (min-width: 720px) {
+  /* line 81, sass/layout/_grid.scss */
+  .grid__column--one-twelfth {
+    display: inline;
+    float: left;
+    width: 8.33333%;
+    padding: 0 2%;
+  }
+}
+@media (min-width: 720px) and (min-width: 720px) {
+  /* line 81, sass/layout/_grid.scss */
+  .grid__column--one-twelfth {
+    width: 8.33333%;
+    padding: 0 2%;
+  }
+}
+
+/* line 88, sass/layout/_grid.scss */
+.grid__column--one-sixth {
+  display: inline;
+  float: left;
+  width: 100%;
+  padding: 0 2%;
+}
+@media (min-width: 720px) {
+  /* line 88, sass/layout/_grid.scss */
+  .grid__column--one-sixth {
+    width: 100%;
+    padding: 0 2%;
+  }
+}
+@media (min-width: 720px) {
+  /* line 88, sass/layout/_grid.scss */
+  .grid__column--one-sixth {
+    display: inline;
+    float: left;
+    width: 16.66667%;
+    padding: 0 2%;
+  }
+}
+@media (min-width: 720px) and (min-width: 720px) {
+  /* line 88, sass/layout/_grid.scss */
+  .grid__column--one-sixth {
+    width: 16.66667%;
+    padding: 0 2%;
+  }
+}
+
+/* line 95, sass/layout/_grid.scss */
+.grid__column--one-quarter {
+  display: inline;
+  float: left;
+  width: 100%;
+  padding: 0 2%;
+}
+@media (min-width: 720px) {
+  /* line 95, sass/layout/_grid.scss */
+  .grid__column--one-quarter {
+    width: 100%;
+    padding: 0 2%;
+  }
+}
+@media (min-width: 720px) {
+  /* line 95, sass/layout/_grid.scss */
+  .grid__column--one-quarter {
+    display: inline;
+    float: left;
+    width: 25%;
+    padding: 0 2%;
+  }
+}
+@media (min-width: 720px) and (min-width: 720px) {
+  /* line 95, sass/layout/_grid.scss */
+  .grid__column--one-quarter {
+    width: 25%;
+    padding: 0 2%;
+  }
+}
+
+/* line 102, sass/layout/_grid.scss */
+.grid__column--one-third {
+  display: inline;
+  float: left;
+  width: 100%;
+  padding: 0 2%;
+}
+@media (min-width: 720px) {
+  /* line 102, sass/layout/_grid.scss */
+  .grid__column--one-third {
+    width: 100%;
+    padding: 0 2%;
+  }
+}
+@media (min-width: 720px) {
+  /* line 102, sass/layout/_grid.scss */
+  .grid__column--one-third {
+    display: inline;
+    float: left;
+    width: 33.33333%;
+    padding: 0 2%;
+  }
+}
+@media (min-width: 720px) and (min-width: 720px) {
+  /* line 102, sass/layout/_grid.scss */
+  .grid__column--one-third {
+    width: 33.33333%;
+    padding: 0 2%;
+  }
+}
+
+/* line 109, sass/layout/_grid.scss */
+.grid__column--five-columns {
+  display: inline;
+  float: left;
+  width: 100%;
+  padding: 0 2%;
+}
+@media (min-width: 720px) {
+  /* line 109, sass/layout/_grid.scss */
+  .grid__column--five-columns {
+    width: 100%;
+    padding: 0 2%;
+  }
+}
+@media (min-width: 720px) {
+  /* line 109, sass/layout/_grid.scss */
+  .grid__column--five-columns {
+    display: inline;
+    float: left;
+    width: 41.66667%;
+    padding: 0 2%;
+  }
+}
+@media (min-width: 720px) and (min-width: 720px) {
+  /* line 109, sass/layout/_grid.scss */
+  .grid__column--five-columns {
+    width: 41.66667%;
+    padding: 0 2%;
+  }
+}
+
+/* line 116, sass/layout/_grid.scss */
+.grid__column--one-half {
+  display: inline;
+  float: left;
+  width: 100%;
+  padding: 0 2%;
+}
+@media (min-width: 720px) {
+  /* line 116, sass/layout/_grid.scss */
+  .grid__column--one-half {
+    width: 100%;
+    padding: 0 2%;
+  }
+}
+@media (min-width: 720px) {
+  /* line 116, sass/layout/_grid.scss */
+  .grid__column--one-half {
+    display: inline;
+    float: left;
+    width: 50%;
+    padding: 0 2%;
+  }
+}
+@media (min-width: 720px) and (min-width: 720px) {
+  /* line 116, sass/layout/_grid.scss */
+  .grid__column--one-half {
+    width: 50%;
+    padding: 0 2%;
+  }
+}
+
+/* line 123, sass/layout/_grid.scss */
+.grid__column--seven-columns {
+  display: inline;
+  float: left;
+  width: 100%;
+  padding: 0 2%;
+}
+@media (min-width: 720px) {
+  /* line 123, sass/layout/_grid.scss */
+  .grid__column--seven-columns {
+    width: 100%;
+    padding: 0 2%;
+  }
+}
+@media (min-width: 720px) {
+  /* line 123, sass/layout/_grid.scss */
+  .grid__column--seven-columns {
+    display: inline;
+    float: left;
+    width: 58.33333%;
+    padding: 0 2%;
+  }
+}
+@media (min-width: 720px) and (min-width: 720px) {
+  /* line 123, sass/layout/_grid.scss */
+  .grid__column--seven-columns {
+    width: 58.33333%;
+    padding: 0 2%;
+  }
+}
+
+/* line 130, sass/layout/_grid.scss */
+.grid__column--two-thirds {
+  display: inline;
+  float: left;
+  width: 100%;
+  padding: 0 2%;
+}
+@media (min-width: 720px) {
+  /* line 130, sass/layout/_grid.scss */
+  .grid__column--two-thirds {
+    width: 100%;
+    padding: 0 2%;
+  }
+}
+@media (min-width: 720px) {
+  /* line 130, sass/layout/_grid.scss */
+  .grid__column--two-thirds {
+    display: inline;
+    float: left;
+    width: 66.66667%;
+    padding: 0 2%;
+  }
+}
+@media (min-width: 720px) and (min-width: 720px) {
+  /* line 130, sass/layout/_grid.scss */
+  .grid__column--two-thirds {
+    width: 66.66667%;
+    padding: 0 2%;
+  }
+}
+
+/* line 137, sass/layout/_grid.scss */
+.grid__column--three-quarters {
+  display: inline;
+  float: left;
+  width: 100%;
+  padding: 0 2%;
+}
+@media (min-width: 720px) {
+  /* line 137, sass/layout/_grid.scss */
+  .grid__column--three-quarters {
+    width: 100%;
+    padding: 0 2%;
+  }
+}
+@media (min-width: 720px) {
+  /* line 137, sass/layout/_grid.scss */
+  .grid__column--three-quarters {
+    display: inline;
+    float: left;
+    width: 75%;
+    padding: 0 2%;
+  }
+}
+@media (min-width: 720px) and (min-width: 720px) {
+  /* line 137, sass/layout/_grid.scss */
+  .grid__column--three-quarters {
+    width: 75%;
+    padding: 0 2%;
+  }
+}
+
+/* line 144, sass/layout/_grid.scss */
+.grid__column--full-width {
+  display: inline;
+  float: left;
+  width: 100%;
+  padding: 0 2%;
+}
+@media (min-width: 720px) {
+  /* line 144, sass/layout/_grid.scss */
+  .grid__column--full-width {
+    width: 100%;
+    padding: 0 2%;
+  }
+}
+
+/* line 148, sass/layout/_grid.scss */
+.grid__row-container {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* line 153, sass/layout/_grid.scss */
+.grid__row {
+  display: block;
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+}
+/* line 24, sass/layout/_grid.scss */
+.grid__row:before, .grid__row:after {
+  content: "";
+  display: table;
+}
+/* line 29, sass/layout/_grid.scss */
+.grid__row:after {
+  clear: both;
+}
+
+@media (min-width: 720px) {
+  /* line 157, sass/layout/_grid.scss */
+  .grid__column--push-one {
+    margin-left: 8.33333%;
+  }
+}
+
+@media (min-width: 720px) {
+  /* line 162, sass/layout/_grid.scss */
+  .grid__column--push-two {
+    margin-left: 16.66667%;
+  }
+}
+
+/* line 167, sass/layout/_grid.scss */
+.grid__column--right {
+  float: right;
+}
+
+/* Global */
+/* line 24, sass/ui/_colours.scss */
+.positive-colour {
+  color: #1bc79f;
+}
+
+/* line 27, sass/ui/_colours.scss */
+.negative-colour {
+  color: #ff496a;
+}
+
+/* line 1, sass/ui/_icons.scss */
+.ref-icon-before, .ref-icon-before--search,
+.ref-icon-before--revenue,
+.ref-icon-before--download,
+.ref-icon-before--apple,
+.ref-icon-before--play-store, .ref-icon-after, .ref-icon-after--search,
+.ref-icon-after--question,
+.whats-this-tooltip-icon,
+.ref-icon-after--angle-down,
+.ref-icon-after--info,
+.tooltip--info,
+.ref-icon-after--apple,
+.ref-icon-after--play-store {
+  padding: 0;
+  line-height: 1;
+  text-decoration: none;
+}
+
+/* Reflection Icons */
+/* line 10, sass/ui/_icons.scss */
+.ref-icon-before:before, .ref-icon-before--search:before,
+.ref-icon-before--revenue:before,
+.ref-icon-before--download:before,
+.ref-icon-before--apple:before,
+.ref-icon-before--play-store:before {
+  font-size: 22px;
+  position: relative;
+}
+
+/* line 18, sass/ui/_icons.scss */
+.ref-icon-after:after, .ref-icon-after--search:after,
+.ref-icon-after--question:after,
+.whats-this-tooltip-icon:after,
+.ref-icon-after--angle-down:after,
+.ref-icon-after--info:after,
+.tooltip--info:after,
+.ref-icon-after--apple:after,
+.ref-icon-after--play-store:after {
+  font-size: 22px;
+  position: relative;
+}
+
+/* line 24, sass/ui/_icons.scss */
+.ref-icon-hidden-text {
+  font-size: 0;
+}
+
+/* line 27, sass/ui/_icons.scss */
+.sort-svg {
+  width: 7px;
+  height: 12px;
+  margin-left: 5px;
+  display: inline-block;
+  vertical-align: middle;
+}
+/* line 33, sass/ui/_icons.scss */
+.sort-svg path {
+  fill: #c4c7d0;
+  -webkit-transition: fill 0.1s;
+          transition: fill 0.1s;
+}
+/* line 38, sass/ui/_icons.scss */
+.is-descending .sort-svg .descending {
+  fill: #6d69c5;
+}
+/* line 43, sass/ui/_icons.scss */
+.is-ascending .sort-svg .ascending {
+  fill: #6d69c5;
+}
+
+/* line 1, sass/helpers/_helpers.scss */
+.no-scroll {
+  overflow: hidden;
+}
+
+/* line 4, sass/helpers/_helpers.scss */
+.hidden-text {
+  display: inline-block;
+  text-align: left;
+  text-indent: -999em;
+}
+
+/* line 9, sass/helpers/_helpers.scss */
+.centre-content-container {
+  width: 100%;
+  text-align: center;
+}
+
+@media (min-width: 720px) {
+  /* line 17, sass/helpers/_helpers.scss */
+  .vertical-centre-above-phablet {
+    height: 100%;
+  }
+  /* line 11, sass/helpers/_mixins.scss */
+  .vertical-centre-above-phablet:before {
+    content: '';
+    display: inline-block;
+    width: 0;
+    height: 100%;
+    vertical-align: middle;
+    margin-right: -0.35em
+    /* Adjusts for spacing */
+  }
+  /* line 19, sass/helpers/_mixins.scss */
+  .vertical-centre-above-phablet > * {
+    display: inline-block;
+    vertical-align: middle;
+  }
+}
+/* line 21, sass/helpers/_helpers.scss */
+.horizontal-centre-content {
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* line 25, sass/helpers/_helpers.scss */
+.overflow-visible {
+  position: relative;
+  overflow: visible;
+}
+
+/* line 29, sass/helpers/_helpers.scss */
+.clear-both {
+  clear: both;
+}
+
+/* line 32, sass/helpers/_helpers.scss */
+.centred-element {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media screen and (max-width: 719px) {
+  /* line 36, sass/helpers/_helpers.scss */
+  .hidden-for-mobile {
+    display: none;
+  }
+}
+
+/* line 41, sass/helpers/_helpers.scss */
+.no-border-top {
+  border-top: 0;
+}
+
+/* line 44, sass/helpers/_helpers.scss */
+.text-link, .ref-table th a, .ref-table--apps .app-data-cell-more .more-data-link, .data-table__app-summary__app-name a, .data-table-section__summary__figures .data-table-section__summary__more-link {
+  color: #6d69c5;
+}
+/* line 46, sass/helpers/_helpers.scss */
+.text-link:hover, .ref-table th a:hover, .ref-table--apps .app-data-cell-more .more-data-link:hover, .data-table__app-summary__app-name a:hover, .data-table-section__summary__figures .data-table-section__summary__more-link:hover {
+  color: #4b46b5;
+}
+
+/* Typography */
+/*  Mixins as placeholders - so that they appear inline with the style selectors
+/   These are used where groups of styles need to be called but shouldn't be output to the main stylesheet
+*/
+/* Typography */
+/*  Mixins as placeholders - so that they appear inline with the style selectors
+/   These are used where groups of styles need to be called but shouldn't be output to the main stylesheet
+*/
+/* Global */
+/* line 24, sass/ui/_colours.scss */
+.positive-colour {
+  color: #1bc79f;
+}
+
+/* line 27, sass/ui/_colours.scss */
+.negative-colour {
+  color: #ff496a;
+}
+
+/* Base */
+/* Layout */
+/* line 7, sass/helpers/_placeholders.scss */
+address, article, aside, blockquote, center, dir, div, dd, details, dl, dt, fieldset, figcaption, figure, form, footer, frameset, h1, h2, h3, h4, h5, h6, hr, header, hgroup, isindex, main, menu, nav, noframes, noscript, ol, p, pre, section, summary, ul,
+li {
+  width: auto;
+  overflow: hidden;
+}
+
+/* line 11, sass/helpers/_placeholders.scss */
+.vertical-centre-content, .tabs-list li a {
+  height: 100%;
+}
+/* line 13, sass/helpers/_placeholders.scss */
+.vertical-centre-content:before, .tabs-list li a:before {
+  content: '';
+  display: inline-block;
+  width: 0;
+  height: 100%;
+  vertical-align: middle;
+  margin-right: -0.35em
+  /* Adjusts for spacing */
+}
+/* line 21, sass/helpers/_placeholders.scss */
+.vertical-centre-content > *, .tabs-list li a > * {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* Typography */
+/* line 28, sass/helpers/_placeholders.scss */
+h1, h2, h3, h4, h5, h6, p, li, a, blockquote, time, span, cite, html, body, .ref-button, .ref-button--primary--small, .ref-button--primary--medium, .ref-button--primary--large, .ref-button--secondary--small, .ref-button--secondary--medium, .ref-button--secondary--large, input[type="text"],
+input[type="email"],
+input[type="search"],
+input[type="password"],
+textarea, .global-header .link-log-in,
+.global-header .link-open-search {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* UI */
+/* Components */
+/* line 1, sass/components/_hamburger.scss */
+.hamburger {
+  display: inline-block;
+  border-right: 1px solid #1e2027;
+  background-color: #282b36;
+}
+
+/* line 6, sass/components/_hamburger.scss */
+.hamburger__button {
+  position: relative;
+  top: 0;
+  width: 50px;
+  height: 42px;
+  display: block;
+  border: none;
+  background-color: #363a47;
+  outline: none;
+  cursor: pointer;
+  pointer-events: auto;
+  -webkit-transition: top 0.3s, background-color 0.2s;
+          transition: top 0.3s, background-color 0.2s;
+}
+@media (min-width: 480px) {
+  /* line 6, sass/components/_hamburger.scss */
+  .hamburger__button {
+    width: 58px;
+    height: 62px;
+  }
+}
+@media (min-width: 720px) {
+  /* line 6, sass/components/_hamburger.scss */
+  .hamburger__button {
+    width: 78px;
+  }
+}
+/* line 25, sass/components/_hamburger.scss */
+.hamburger__button:before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50px;
+  padding: 0;
+  font-size: 18px;
+  line-height: 42px;
+  color: #6f7589;
+  text-align: center;
+  box-sizing: border-box;
+  -webkit-transition: color 0.2s;
+          transition: color 0.2s;
+}
+@media (min-width: 480px) {
+  /* line 25, sass/components/_hamburger.scss */
+  .hamburger__button:before {
+    width: 58px;
+    height: 62px;
+    line-height: 62px;
+  }
+}
+@media (min-width: 720px) {
+  /* line 25, sass/components/_hamburger.scss */
+  .hamburger__button:before {
+    width: 78px;
+  }
+}
+/* line 47, sass/components/_hamburger.scss */
+.no-touch .hamburger__button:hover {
+  background-color: #323643;
+  -webkit-transition: background-color 0.3s, color 0.3s;
+          transition: background-color 0.3s, color 0.3s;
+}
+/* line 50, sass/components/_hamburger.scss */
+.no-touch .hamburger__button:hover:before {
+  color: #83899c;
+  -webkit-transition: background-color 0.3s, color 0.3s;
+          transition: background-color 0.3s, color 0.3s;
+}
+/* line 55, sass/components/_hamburger.scss */
+.no-touch .hamburger__button:active {
+  top: 2px;
+  background-color: #323643;
+  -webkit-transition: background-color 0.3s;
+          transition: background-color 0.3s;
+}
+/* line 59, sass/components/_hamburger.scss */
+.no-touch .hamburger__button:active:before {
+  color: #83899c;
+}
+/* line 65, sass/components/_hamburger.scss */
+.hamburger__button.is-selected:before {
+  color: #fcfdfd;
+  -webkit-transition: color 0.3s;
+          transition: color 0.3s;
+}
+
+@media (min-width: 960px) {
+  /* line 73, sass/components/_hamburger.scss */
+  .no-touch .hamburger {
+    display: none;
+  }
+}
+@media (min-width: 480px) {
+  /* line 1, sass/components-v2/_hamburger.scss */
+  .hamburger__button {
+    height: 50px;
+  }
+  /* line 4, sass/components-v2/_hamburger.scss */
+  .hamburger__button:before {
+    height: 50px;
+    line-height: 50px;
+  }
+}
+
+/* line 1, sass/components/_logo.scss */
+.img-site-logo {
+  display: none;
+}
+@media (min-width: 720px) {
+  /* line 1, sass/components/_logo.scss */
+  .img-site-logo {
+    display: inline-block;
+  }
+}
+
+/* line 7, sass/components/_logo.scss */
+.img-site-logo--mobile {
+  display: inline-block;
+}
+@media (min-width: 720px) {
+  /* line 7, sass/components/_logo.scss */
+  .img-site-logo--mobile {
+    display: none;
+  }
+}
+
+/* line 1, sass/components/_ratings.scss */
+.ratings-container,
+.ratings-full {
+  height: 15px;
+  background-size: 105px 15px;
+  background-repeat: no-repeat;
+}
+
+/* line 7, sass/components/_ratings.scss */
+.ratings-container {
+  position: relative;
+  width: 105px;
+  margin-bottom: 4px;
+  margin-top: 5px;
+  background-image: url(images/rating-stars-grey@2x.png);
+}
+
+/* line 14, sass/components/_ratings.scss */
+.ratings-full {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  background-image: url(images/rating-stars-blue@2x.png);
+}
+
+/* line 1, sass/components-v2/_button.scss */
+[role="button"],
+input[type="submit"],
+input[type="reset"],
+input[type="button"],
+button {
+  box-sizing: content-box;
+}
+
+/* line 10, sass/components-v2/_button.scss */
+input[type="submit"],
+input[type="reset"],
+input[type="button"],
+button {
+  background: none;
+  border: 0;
+  line-height: normal;
+  overflow: visible;
+  padding: 0;
+  -webkit-appearance: button;
+  /* for input */
+  -webkit-user-select: none;
+  /* for button */
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* line 24, sass/components-v2/_button.scss */
+input::-moz-focus-inner,
+button::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+
+/* line 29, sass/components-v2/_button.scss */
+.ref-button, .ref-button--primary--small, .ref-button--primary--medium, .ref-button--primary--large, .ref-button--secondary--small, .ref-button--secondary--medium, .ref-button--secondary--large {
+  display: inline-block;
+  vertical-align: top;
+  font-weight: 600;
+  font-family: "Source Sans Pro", sans-serif;
+  line-height: 1.1;
+  text-shadow: none !important;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+  cursor: pointer;
+  -webkit-transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+          transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+/* line 42, sass/components-v2/_button.scss */
+.no-touch .ref-button:hover, .no-touch .ref-button--primary--small:hover, .no-touch .ref-button--primary--medium:hover, .no-touch .ref-button--primary--large:hover, .no-touch .ref-button--secondary--small:hover, .no-touch .ref-button--secondary--medium:hover, .no-touch .ref-button--secondary--large:hover {
+  -webkit-transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+          transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+/* line 45, sass/components-v2/_button.scss */
+.no-touch .ref-button:active, .no-touch .ref-button--primary--small:active, .no-touch .ref-button--primary--medium:active, .no-touch .ref-button--primary--large:active, .no-touch .ref-button--secondary--small:active, .no-touch .ref-button--secondary--medium:active, .no-touch .ref-button--secondary--large:active {
+  -webkit-transition: border 0s;
+          transition: border 0s;
+}
+
+/* line 50, sass/components-v2/_button.scss */
+.ref-button--primary, .ref-button--primary--small, .ref-button--primary--medium, .ref-button--primary--large {
+  color: #fcfdfd;
+  border: none;
+  border-radius: 0.35714285714285715em;
+  background-color: #ff496a;
+}
+/* line 56, sass/components-v2/_button.scss */
+.no-touch .ref-button--primary:hover, .no-touch .ref-button--primary--small:hover, .no-touch .ref-button--primary--medium:hover, .no-touch .ref-button--primary--large:hover {
+  background-color: #e73e5c;
+}
+/* line 59, sass/components-v2/_button.scss */
+.no-touch .ref-button--primary:active, .no-touch .ref-button--primary--small:active, .no-touch .ref-button--primary--medium:active, .no-touch .ref-button--primary--large:active {
+  border-top: 2px solid #96283c;
+}
+
+/* line 64, sass/components-v2/_button.scss */
+.ref-button--primary--small {
+  padding: 1rem 1.5rem 1.2rem 1.5rem;
+  font-size: 1.4rem;
+  letter-spacing: -0.01rem;
+}
+/* line 71, sass/components-v2/_button.scss */
+.no-touch .ref-button--primary--small:active {
+  padding-top: calc(1rem - 1px);
+  padding-bottom: calc(1.2rem - 1px);
+}
+
+/* line 77, sass/components-v2/_button.scss */
+.ref-button--primary--medium {
+  padding: 1.3rem 1.7rem 1.3rem 1.5rem;
+  font-size: 1.5rem;
+  letter-spacing: -0.01rem;
+}
+/* line 84, sass/components-v2/_button.scss */
+.no-touch .ref-button--primary--medium:active {
+  padding-top: calc(1.3rem - 1px);
+  padding-bottom: calc(1.3rem - 1px);
+}
+
+/* line 90, sass/components-v2/_button.scss */
+.ref-button--primary--large {
+  padding: 1.7rem 2rem 1.6rem 1.9rem;
+  font-size: 1.6rem;
+  letter-spacing: -0.01rem;
+}
+/* line 97, sass/components-v2/_button.scss */
+.no-touch .ref-button--primary--large:active {
+  padding-top: calc(1.7rem - 1px);
+  padding-bottom: calc(1.6rem - 1px);
+}
+
+/* line 104, sass/components-v2/_button.scss */
+.ref-button--secondary, .ref-button--secondary--small, .ref-button--secondary--medium, .ref-button--secondary--large {
+  color: #6d69c5;
+  border: 1px solid #c4c7d0;
+  border-radius: 0.35714285714285715em;
+  background-color: #f5f9f9;
+}
+/* line 110, sass/components-v2/_button.scss */
+.no-touch .ref-button--secondary:hover, .no-touch .ref-button--secondary--small:hover, .no-touch .ref-button--secondary--medium:hover, .no-touch .ref-button--secondary--large:hover {
+  background-color: #ebf2f2;
+}
+/* line 113, sass/components-v2/_button.scss */
+.no-touch .ref-button--secondary:active, .no-touch .ref-button--secondary--small:active, .no-touch .ref-button--secondary--medium:active, .no-touch .ref-button--secondary--large:active {
+  border-top: 2px solid #c8cece;
+}
+
+/* line 118, sass/components-v2/_button.scss */
+.ref-button--secondary--small {
+  padding: calc(1rem - 1px) 1.4rem calc(1.2rem - 1px) 1.39rem;
+  font-size: 1.4rem;
+  letter-spacing: -0.01rem;
+}
+/* line 125, sass/components-v2/_button.scss */
+.no-touch .ref-button--secondary--small:active {
+  padding-bottom: calc(1.2rem - 2px);
+}
+
+/* line 130, sass/components-v2/_button.scss */
+.ref-button--secondary--medium {
+  padding: calc(1.3rem - 1px) 1.5rem calc(1.3rem - 1px) 1.39rem;
+  font-size: 1.5rem;
+  letter-spacing: -0.01rem;
+}
+/* line 137, sass/components-v2/_button.scss */
+.no-touch .ref-button--secondary--medium:active {
+  padding-bottom: calc(1.3rem - 2px);
+}
+
+/* line 142, sass/components-v2/_button.scss */
+.ref-button--secondary--large {
+  padding: calc(1.6rem - 1px) 2rem calc(1.7rem - 1px) 2rem;
+  font-size: 1.6rem;
+  letter-spacing: -0.01rem;
+}
+/* line 149, sass/components-v2/_button.scss */
+.no-touch .ref-button--secondary--large:active {
+  padding-bottom: calc(1.7rem - 2px);
+}
+
+/* line 1, sass/components-v2/_filters.scss */
+.primary-filters-container {
+  width: 100%;
+  display: table;
+  table-layout: fixed;
+  overflow: visible;
+  font-size: 0;
+}
+/* line 7, sass/components-v2/_filters.scss */
+.primary-filters-container .primary-filter {
+  width: 20%;
+  max-width: 100%;
+  display: table-cell;
+  color: #29292c;
+  border-top: 1px solid #c4c7d0;
+  border-right: 1px solid #c4c7d0;
+  border-bottom: 1px solid #c4c7d0;
+}
+/* line 15, sass/components-v2/_filters.scss */
+.primary-filters-container .primary-filter:last-child {
+  border-right: 0;
+}
+/* line 18, sass/components-v2/_filters.scss */
+.primary-filters-container .primary-filter .form-field--select__box {
+  padding: 10px 22px 14px;
+  display: block;
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #fcfdfd;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* line 26, sass/components-v2/_filters.scss */
+.primary-filters-container .primary-filter .form-field--select__box:after {
+  position: absolute;
+  right: 18px;
+  top: 9px;
+  color: #9fa1d5;
+  font-size: 20px;
+  letter-spacing: -0.01rem;
+}
+/* line 34, sass/components-v2/_filters.scss */
+.primary-filters-container .primary-filter .form-field--select__box:hover {
+  background-color: #f2f2f5;
+}
+/* line 38, sass/components-v2/_filters.scss */
+.primary-filters-container .primary-filter.is-open {
+  border-top: 1px solid #5551a4;
+  border-right: 1px solid #5551a4;
+  border-bottom: 1px solid #5551a4;
+}
+/* line 42, sass/components-v2/_filters.scss */
+.primary-filters-container .primary-filter.is-open .form-field--select__box {
+  padding-top: 11px;
+  padding-left: 21px;
+  padding-bottom: 12px;
+  border-top: 1px solid #524f94;
+  border-left: 1px solid #5551a4;
+  color: #fcfdfd;
+  background-color: #6d69c5;
+}
+/* line 50, sass/components-v2/_filters.scss */
+.primary-filters-container .primary-filter.is-open .form-field--select__box:after {
+  top: 12px;
+  -webkit-transform: rotate(180deg);
+      -ms-transform: rotate(180deg);
+          transform: rotate(180deg);
+}
+
+/* line 58, sass/components-v2/_filters.scss */
+.secondary-filter {
+  width: auto;
+  max-width: 100%;
+}
+/* line 61, sass/components-v2/_filters.scss */
+.secondary-filter .form-field--select__box {
+  min-width: 85px;
+  padding: 10px 42px 10px 15px;
+  display: block;
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: 14px;
+  color: #29292c;
+  border: 1px solid #c4c7d0;
+  border-radius: 3px;
+  background-color: #f2f7f7;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* line 72, sass/components-v2/_filters.scss */
+.secondary-filter .form-field--select__box:after {
+  position: absolute;
+  right: 12px;
+  top: 8px;
+  color: #9fa1d5;
+  font-size: 20px;
+  letter-spacing: -0.01rem;
+}
+/* line 80, sass/components-v2/_filters.scss */
+.secondary-filter .form-field--select__box:hover {
+  background-color: #f2f2f5;
+}
+/* line 85, sass/components-v2/_filters.scss */
+.secondary-filter.is-open .form-field--select__box {
+  padding-bottom: 9px;
+  border: 1px solid #5551a4;
+  border-top: 2px solid #524f94;
+  color: #fcfdfd;
+  background-color: #6d69c5;
+}
+/* line 91, sass/components-v2/_filters.scss */
+.secondary-filter.is-open .form-field--select__box:after {
+  top: 10px;
+  right: 11px;
+  color: #c4c7d0;
+  -webkit-transform: rotate(180deg);
+      -ms-transform: rotate(180deg);
+          transform: rotate(180deg);
+}
+/* line 99, sass/components-v2/_filters.scss */
+.secondary-filter .form-field--select__dropdown {
+  padding-top: 14px;
+  border-radius: 4px;
+}
+/* line 102, sass/components-v2/_filters.scss */
+.secondary-filter .form-field--select__dropdown li {
+  margin-bottom: 5px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+/* line 109, sass/components-v2/_filters.scss */
+.form-field--search {
+  width: 176px;
+  padding: 8px 13px 8px 15px;
+  display: inline-block;
+  border: 1px solid #c4c7d0;
+  border-radius: 3px;
+  background-color: #f2f7f7;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* line 117, sass/components-v2/_filters.scss */
+.form-field--search input {
+  width: calc(100% - 25px);
+  display: inline-block;
+  float: left;
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: 14px;
+  color: #29292c;
+}
+/* line 125, sass/components-v2/_filters.scss */
+.form-field--search input::-webkit-input-placeholder,
+.form-field--search input:-moz-placeholder,
+.form-field--search input::-moz-placeholder,
+.form-field--search input:-ms-input-placeholder {
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: 14px;
+  color: #81879d;
+}
+/* line 133, sass/components-v2/_filters.scss */
+.form-field--search.secondary-filter {
+  cursor: default;
+}
+/* line 136, sass/components-v2/_filters.scss */
+.form-field--search span {
+  position: absolute;
+  top: 0;
+  left: -999rem;
+}
+/* line 141, sass/components-v2/_filters.scss */
+.form-field--search .ref-icon-after--search {
+  display: inline-block;
+  float: right;
+}
+/* line 144, sass/components-v2/_filters.scss */
+.form-field--search .ref-icon-after--search:after {
+  width: 14px;
+  font-size: 18px;
+  color: #81879d;
+}
+
+/* line 151, sass/components-v2/_filters.scss */
+.form-filter {
+  width: auto;
+  max-width: 100%;
+}
+/* line 154, sass/components-v2/_filters.scss */
+.form-filter .form-field--select__box {
+  min-width: 101px;
+  padding: 23px 50px 11px 19px;
+  display: block;
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: 16px;
+  color: #29292c;
+  border: 1px solid #c4c7d0;
+  border-radius: 4px;
+  background-color: #f2f7f7;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* line 166, sass/components-v2/_filters.scss */
+.form-filter .form-field--select__box:after {
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  color: #9fa1d5;
+  font-size: 20px;
+  letter-spacing: -0.01rem;
+}
+/* line 176, sass/components-v2/_filters.scss */
+.form-filter.nothing-selected .form-field--select__box {
+  padding: 23px 50px 27px 19px;
+}
+/* line 181, sass/components-v2/_filters.scss */
+.form-filter.is-open .form-field--select__box {
+  border-radius: 4px 4px 0 0;
+}
+/* line 183, sass/components-v2/_filters.scss */
+.form-filter.is-open .form-field--select__box:after {
+  top: 16px;
+  right: 16px;
+  -webkit-transform: rotate(180deg);
+      -ms-transform: rotate(180deg);
+          transform: rotate(180deg);
+}
+/* line 190, sass/components-v2/_filters.scss */
+.form-filter .form-field--select__dropdown {
+  max-height: 329px;
+  width: 100%;
+  min-width: 100% !important;
+  margin-top: -1px;
+  padding: 3px 10px 18px 25px;
+  overflow: auto;
+  border-top: 0;
+  border-radius: 0 0 4px 4px;
+  background-color: #f2f7f7;
+}
+/* line 200, sass/components-v2/_filters.scss */
+.form-filter .form-field--select__dropdown li {
+  margin-bottom: 6px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+/* line 208, sass/components-v2/_filters.scss */
+.secondary-filter--medium .form-field--select__box {
+  padding: 11px 50px 14px 15px;
+  font-size: 15px;
+}
+/* line 211, sass/components-v2/_filters.scss */
+.secondary-filter--medium .form-field--select__box:after {
+  top: 11px;
+}
+/* line 216, sass/components-v2/_filters.scss */
+.secondary-filter--medium.is-open .form-field--select__box {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+/* line 219, sass/components-v2/_filters.scss */
+.secondary-filter--medium.is-open .form-field--select__box:after {
+  top: 13px;
+}
+/* line 225, sass/components-v2/_filters.scss */
+.secondary-filter--medium .form-field--select__dropdown li {
+  margin-bottom: 6px;
+  font-size: 15px;
+}
+
+/* line 232, sass/components-v2/_filters.scss */
+.secondary-filter--large .form-field--select__box {
+  min-width: 132px;
+  padding: 14px 50px 18px 15px;
+  font-size: 16px;
+}
+/* line 236, sass/components-v2/_filters.scss */
+.secondary-filter--large .form-field--select__box:after {
+  top: 15px;
+}
+/* line 241, sass/components-v2/_filters.scss */
+.secondary-filter--large.is-open .form-field--select__box {
+  padding-top: 15px;
+  padding-bottom: 16px;
+}
+/* line 244, sass/components-v2/_filters.scss */
+.secondary-filter--large.is-open .form-field--select__box:after {
+  top: 17px;
+}
+/* line 249, sass/components-v2/_filters.scss */
+.secondary-filter--large .form-field--select__dropdown {
+  padding-left: 23px;
+}
+/* line 251, sass/components-v2/_filters.scss */
+.secondary-filter--large .form-field--select__dropdown li {
+  margin-bottom: 6px;
+  font-size: 15px;
+}
+
+/* line 257, sass/components-v2/_filters.scss */
+.primary-filter,
+.secondary-filter {
+  display: inline-block;
+  overflow: visible;
+  vertical-align: top;
+  line-height: 1;
+  cursor: pointer;
+}
+/* line 265, sass/components-v2/_filters.scss */
+.primary-filter .form-field--select__box:after,
+.secondary-filter .form-field--select__box:after {
+  color: #81879d;
+}
+
+/* line 270, sass/components-v2/_filters.scss */
+.secondary-filters-container {
+  padding-top: 1.4rem;
+  padding-bottom: 0.6rem;
+  overflow: visible;
+  float: left;
+  font-size: 0;
+  background-color: #f1f5f7;
+}
+/* line 277, sass/components-v2/_filters.scss */
+.secondary-filters-container .form-field--select__box {
+  background-color: #fcfdfd;
+}
+/* line 279, sass/components-v2/_filters.scss */
+.secondary-filters-container .form-field--select__box:hover {
+  background-color: #f2f2f5;
+}
+/* line 284, sass/components-v2/_filters.scss */
+.secondary-filters-container .secondary-filter.is-open .form-field--select__box:hover {
+  background-color: #6d69c5;
+}
+
+/* line 289, sass/components-v2/_filters.scss */
+.secondary-filter-label {
+  padding-top: 1.1rem;
+  padding-right: 5px;
+  display: inline-block;
+  vertical-align: top;
+  font-size: 1.4rem;
+  color: #727686;
+}
+
+/* line 1, sass/components-v2/_form.scss */
+input[type="text"],
+input[type="email"],
+input[type="search"],
+input[type="password"],
+textarea {
+  margin: 0;
+  padding: 0;
+  line-height: 1.2;
+  border: 0;
+  border-radius: 0;
+  background-color: transparent;
+  outline: none;
+  box-shadow: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+/* line 18, sass/components-v2/_form.scss */
+.form-filter {
+  margin-bottom: 2rem;
+}
+/* line 20, sass/components-v2/_form.scss */
+.reflection-form .form-filter {
+  margin-top: -1px;
+  margin-bottom: 0;
+  border-radius: 0;
+}
+/* line 24, sass/components-v2/_form.scss */
+.reflection-form .form-filter:first-child {
+  margin-top: 0;
+}
+/* line 26, sass/components-v2/_form.scss */
+.reflection-form .form-filter:first-child .form-field--select__box {
+  border-radius: 4px 4px 0 0;
+}
+/* line 31, sass/components-v2/_form.scss */
+.reflection-form .form-filter:last-child .form-field--select__box {
+  border-radius: 0 0 4px 4px;
+}
+/* line 35, sass/components-v2/_form.scss */
+.reflection-form .form-filter:last-child.is-open .form-field--select__box {
+  border-radius: 0;
+}
+/* line 41, sass/components-v2/_form.scss */
+.form-filter label {
+  position: absolute;
+  left: 20px;
+  top: 7px;
+  display: block;
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: 12px;
+  color: #494490;
+  pointer-events: none;
+}
+/* line 52, sass/components-v2/_form.scss */
+.form-filter.nothing-selected label {
+  top: 16px;
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: 16px;
+  color: #727686;
+  font-weight: 400;
+}
+/* line 61, sass/components-v2/_form.scss */
+.form-filter.form-field--with-error label {
+  top: 25px;
+}
+/* line 64, sass/components-v2/_form.scss */
+.form-filter.form-field--with-error .form-field--select__box {
+  border-color: #f89f59;
+  background-color: #fdf5ee;
+  z-index: 10;
+}
+/* line 69, sass/components-v2/_form.scss */
+.form-filter.form-field--with-error .form-field-error-text {
+  position: absolute;
+  top: 7px;
+  left: 20px;
+  display: block;
+}
+/* line 75, sass/components-v2/_form.scss */
+.form-filter.form-field--with-error .form-field--select__dropdown {
+  border-color: #f89f59;
+  background-color: #fdf5ee;
+}
+
+/* line 82, sass/components-v2/_form.scss */
+.reflection-form .form-field + .form-filter .form-field--select__box {
+  border-radius: 0;
+}
+
+/* line 86, sass/components-v2/_form.scss */
+.form-field {
+  position: relative;
+  width: 100%;
+  padding: 6px 18px 29px;
+  margin-bottom: 2rem;
+  z-index: 1;
+  border: 1px solid #c4c7d0;
+  border-radius: 4px;
+  background-color: #f5f9f9;
+}
+/* line 95, sass/components-v2/_form.scss */
+.reflection-form .form-field {
+  margin-top: -1px;
+  margin-bottom: 0;
+  border-radius: 0;
+}
+/* line 99, sass/components-v2/_form.scss */
+.reflection-form .form-field:first-child {
+  margin-top: 0;
+  border-radius: 4px 4px 0 0;
+}
+/* line 103, sass/components-v2/_form.scss */
+.reflection-form .form-field:last-child {
+  border-radius: 0 0 4px 4px;
+}
+/* line 107, sass/components-v2/_form.scss */
+.form-field.form-field--with-error {
+  padding-bottom: 33px;
+  border-color: #f89f59;
+  background-color: #fdf5ee;
+  z-index: 10;
+}
+/* line 113, sass/components-v2/_form.scss */
+.no-touch .form-field {
+  -webkit-transition: padding 0.06s;
+          transition: padding 0.06s;
+}
+/* line 116, sass/components-v2/_form.scss */
+.form-field label {
+  display: block;
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: 12px;
+  color: #494490;
+}
+/* line 121, sass/components-v2/_form.scss */
+.no-touch .form-field label {
+  -webkit-transition: font-size 0.06s;
+          transition: font-size 0.06s;
+}
+/* line 125, sass/components-v2/_form.scss */
+.form-field input:focus + label,
+.form-field textarea:focus + label {
+  color: #494490;
+}
+/* line 129, sass/components-v2/_form.scss */
+.form-field input, .form-field textarea {
+  display: block;
+  color: #5b5b68;
+}
+/* line 133, sass/components-v2/_form.scss */
+.form-field input[type="text"],
+.form-field input[type="email"],
+.form-field input[type="search"],
+.form-field input[type="password"],
+.form-field textarea {
+  position: absolute;
+  bottom: 9px;
+  width: calc(100% - 28px);
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: 16px;
+  color: #29292c;
+}
+/* line 144, sass/components-v2/_form.scss */
+.no-touch .form-field input[type="text"], .no-touch
+.form-field input[type="email"], .no-touch
+.form-field input[type="search"], .no-touch
+.form-field input[type="password"], .no-touch
+.form-field textarea {
+  -webkit-transition: bottom 0.06s;
+          transition: bottom 0.06s;
+}
+/* line 148, sass/components-v2/_form.scss */
+.form-field textarea {
+  position: relative;
+  width: 100%;
+  height: 123px;
+  padding: 5px 0;
+  resize: none;
+}
+/* line 155, sass/components-v2/_form.scss */
+.form-field input:-webkit-autofill {
+  color: #29292c;
+  -webkit-box-shadow: 0 0 0px 1000px #f5f9f9 inset;
+  -webkit-text-fill-color: #29292c;
+  background-color: #f5f9f9;
+}
+/* line 161, sass/components-v2/_form.scss */
+.form-field.is-closed {
+  padding: 15px 18px 20px;
+}
+/* line 163, sass/components-v2/_form.scss */
+.no-touch .form-field.is-closed {
+  -webkit-transition: padding 0.06s;
+          transition: padding 0.06s;
+}
+/* line 166, sass/components-v2/_form.scss */
+.form-field.is-closed label {
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: 16px;
+  color: #727686;
+  font-weight: 400;
+}
+/* line 171, sass/components-v2/_form.scss */
+.no-touch .form-field.is-closed label {
+  -webkit-transition: font-size 0.06s;
+          transition: font-size 0.06s;
+}
+/* line 175, sass/components-v2/_form.scss */
+.form-field.is-closed input, .form-field.is-closed textarea {
+  bottom: 6px;
+}
+/* line 177, sass/components-v2/_form.scss */
+.no-touch .form-field.is-closed input, .no-touch .form-field.is-closed textarea {
+  -webkit-transition: bottom 0.06s;
+          transition: bottom 0.06s;
+}
+
+/* line 183, sass/components-v2/_form.scss */
+.form-field-error-text {
+  color: #d07423;
+  font-size: 14px;
+  font-family: "Source Sans Pro", sans-serif;
+}
+
+/* line 188, sass/components-v2/_form.scss */
+.form-field--select {
+  position: relative;
+}
+
+/* line 191, sass/components-v2/_form.scss */
+.form-field--select select,
+.form-field--select__dropdown {
+  display: none;
+}
+
+/* line 195, sass/components-v2/_form.scss */
+.form-field--select__dropdown {
+  position: absolute;
+  margin-top: 5px;
+  padding: 15px 30px 18px 24px;
+  z-index: 2001;
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: 15px;
+  border: 1px solid #c4c7d0;
+  border-radius: 4px;
+  background-color: #fcfdfd;
+}
+/* line 205, sass/components-v2/_form.scss */
+.form-field--select__dropdown li {
+  margin-bottom: 6px;
+  color: #6d69c5;
+  line-height: 1.5;
+}
+/* line 209, sass/components-v2/_form.scss */
+.form-field--select__dropdown li:hover {
+  color: #4b46b5;
+}
+/* line 212, sass/components-v2/_form.scss */
+.form-field--select__dropdown li.is-selected {
+  color: #c4c7d0;
+}
+/* line 214, sass/components-v2/_form.scss */
+.form-field--select__dropdown li.is-selected:hover {
+  color: #c4c7d0;
+}
+/* line 219, sass/components-v2/_form.scss */
+.form-filter .form-field--select__dropdown {
+  position: relative;
+  display: none;
+}
+
+/* line 224, sass/components-v2/_form.scss */
+.form-field--select select {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* line 231, sass/components-v2/_form.scss */
+.form-field--checkbox-list,
+.form-field--radio-list {
+  position: relative;
+  width: 100%;
+}
+/* line 233, sass/components-v2/_form.scss */
+.form-field--checkbox-list *,
+.form-field--radio-list * {
+  overflow: visible;
+}
+/* line 238, sass/components-v2/_form.scss */
+.form-field--checkbox-list li,
+.form-field--radio-list li {
+  position: relative;
+  margin-bottom: 0.5rem;
+  padding: 0;
+  font-size: 0;
+}
+/* line 244, sass/components-v2/_form.scss */
+.form-field--checkbox-list input[type=checkbox],
+.form-field--checkbox-list input[type=radio],
+.form-field--radio-list input[type=checkbox],
+.form-field--radio-list input[type=radio] {
+  position: absolute;
+  left: -10000px;
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+}
+/* line 252, sass/components-v2/_form.scss */
+.form-field--checkbox-list label,
+.form-field--radio-list label {
+  padding-top: -1px;
+  padding-bottom: 0;
+  display: inline-block;
+  font-weight: 400;
+}
+
+/* line 259, sass/components-v2/_form.scss */
+.form-field--checkbox-list--inline,
+.form-field--radio-list--inline {
+  width: auto;
+  display: inline-block;
+}
+/* line 263, sass/components-v2/_form.scss */
+.form-field--checkbox-list--inline li,
+.form-field--radio-list--inline li {
+  margin-right: 2rem;
+  margin-bottom: 0;
+  display: inline-block;
+}
+
+/* line 270, sass/components-v2/_form.scss */
+.form-field--checkbox--hide-label .checkboxLabelVisible {
+  text-align: left;
+  text-indent: -999em;
+}
+
+/* line 275, sass/components-v2/_form.scss */
+.checkboxLabel,
+.radioButtonLabel {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  display: inline-block;
+  font-size: 0px;
+  font-weight: 400;
+  cursor: pointer;
+  box-sizing: border-box;
+  line-height: 1;
+  text-decoration: none;
+  background-color: #dde0e2;
+  overflow: visible;
+}
+/* line 292, sass/components-v2/_form.scss */
+.checkboxLabel:hover,
+.radioButtonLabel:hover {
+  background-color: #c4c7d0;
+  -webkit-transition: background-color 0.3s;
+          transition: background-color 0.3s;
+}
+/* line 296, sass/components-v2/_form.scss */
+.checkboxLabel:active,
+.radioButtonLabel:active {
+  border-top: 2px solid #9d9fa6;
+}
+
+/* line 300, sass/components-v2/_form.scss */
+.radioButtonLabel {
+  border-radius: 9px;
+}
+
+/* line 303, sass/components-v2/_form.scss */
+.checkboxLabel {
+  border-radius: 3px;
+}
+/* line 305, sass/components-v2/_form.scss */
+.checkboxLabel:after {
+  position: absolute;
+  top: 3px;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  content: "R";
+  speak: none;
+  font-family: "reflection-icons-1";
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 10px;
+  color: #c4c7d0;
+  text-align: center;
+  opacity: 0;
+  -webkit-transition: color 0.2s;
+          transition: color 0.2s;
+}
+/* line 326, sass/components-v2/_form.scss */
+.no-opacity .checkboxLabel:after {
+  display: none;
+}
+
+/* line 332, sass/components-v2/_form.scss */
+.form-field--checkbox-list--medium li {
+  margin-bottom: 0.7rem;
+}
+/* line 335, sass/components-v2/_form.scss */
+.form-field--checkbox-list--medium .checkboxLabel {
+  width: 18px;
+  height: 18px;
+}
+/* line 338, sass/components-v2/_form.scss */
+.form-field--checkbox-list--medium .checkboxLabel:after {
+  top: 4px;
+  width: 18px;
+  height: 18px;
+  font-size: 11px;
+}
+/* line 345, sass/components-v2/_form.scss */
+.form-field--checkbox-list--medium .checkboxLabelVisible {
+  padding-left: calc(18px + 1.2rem);
+  font-size: 1.5rem;
+}
+
+/* line 351, sass/components-v2/_form.scss */
+.form-field--checkbox-list--large li {
+  margin-bottom: 0.9rem;
+}
+/* line 354, sass/components-v2/_form.scss */
+.form-field--checkbox-list--large .checkboxLabel {
+  width: 20px;
+  height: 20px;
+}
+/* line 357, sass/components-v2/_form.scss */
+.form-field--checkbox-list--large .checkboxLabel:after {
+  top: 4px;
+  width: 19px;
+  height: 20px;
+  font-size: 12.6px;
+}
+/* line 364, sass/components-v2/_form.scss */
+.form-field--checkbox-list--large .checkboxLabelVisible {
+  padding-left: calc(20px + 1.5rem);
+  font-size: 1.6rem;
+}
+
+/* line 369, sass/components-v2/_form.scss */
+input[type="checkbox"]:disabled + .checkboxLabel,
+input[type="radio"]:disabled + .radioButtonLabel {
+  background-color: #f7f7f9;
+  overflow: visible;
+}
+
+/* line 374, sass/components-v2/_form.scss */
+input[type="checkbox"]:disabled + .checkboxLabel:active,
+input[type="radio"]:disabled + .radioButtonLabel:active,
+input[type="checkbox"]:disabled:checked + .checkboxLabel:active,
+input[type="radio"]:disabled:checked + .radioButtonLabel:active {
+  border-top: 0;
+}
+
+/* line 380, sass/components-v2/_form.scss */
+input[type="checkbox"]:checked:disabled + .checkboxLabel,
+input[type="radio"]:checked:disabled + .radioButtonLabel {
+  opacity: 0.5;
+}
+
+/* line 384, sass/components-v2/_form.scss */
+input[type="checkbox"]:checked + .checkboxLabel,
+input[type="radio"]:checked + .radioButtonLabel {
+  background-color: #1bc79f;
+}
+/* line 387, sass/components-v2/_form.scss */
+input[type="checkbox"]:checked + .checkboxLabel:after,
+input[type="radio"]:checked + .radioButtonLabel:after {
+  opacity: 1;
+  color: #fcfdfd;
+  -webkit-transition: opacity 0.3s;
+          transition: opacity 0.3s;
+}
+/* line 391, sass/components-v2/_form.scss */
+.no-opacity input[type="checkbox"]:checked + .checkboxLabel:after, .no-opacity
+input[type="radio"]:checked + .radioButtonLabel:after {
+  display: block;
+}
+
+/* line 396, sass/components-v2/_form.scss */
+input[type="checkbox"]:checked + .checkboxLabel {
+  -webkit-transition: background-color 0.3s;
+          transition: background-color 0.3s;
+}
+
+/* line 399, sass/components-v2/_form.scss */
+.checkboxLabelVisible,
+.radioButtonLabelVisible {
+  padding-left: calc(16px + 1rem);
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: 1.4rem;
+  color: #363a47;
+  text-align: left;
+  cursor: pointer;
+}
+
+/* line 408, sass/components-v2/_form.scss */
+input[type="checkbox"]:disabled + label + .checkboxLabelVisible,
+input[type="radio"]:disabled + label + .radioButtonLabelVisible {
+  color: #c4c7d0;
+}
+
+/* line 414, sass/components-v2/_form.scss */
+.password-strength-indicator-container {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  font-size: 1.25rem;
+}
+/* line 419, sass/components-v2/_form.scss */
+.is-closed .password-strength-indicator-container {
+  display: none;
+}
+
+/* line 423, sass/components-v2/_form.scss */
+.password-strength-indicator,
+.password-strength-description {
+  display: inline-block;
+  float: left;
+  vertical-align: top;
+}
+
+/* line 429, sass/components-v2/_form.scss */
+.password-strength-indicator {
+  position: relative;
+  width: 97px;
+  height: 6px;
+  margin-top: 6px;
+  margin-left: 8px;
+  border-radius: 3px;
+  background-color: #e1e5e8;
+}
+/* line 437, sass/components-v2/_form.scss */
+.password-strength-indicator span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: inline-block;
+  width: 0;
+  height: 6px;
+  background-color: #6d69c5;
+  -webkit-transition: background-color 0.3s ease-out, width 0.3s ease-out;
+          transition: background-color 0.3s ease-out, width 0.3s ease-out;
+}
+/* line 446, sass/components-v2/_form.scss */
+.password-strength-indicator span.is-pathetic {
+  width: 25%;
+  background-color: #d5855e;
+}
+/* line 450, sass/components-v2/_form.scss */
+.password-strength-indicator span.is-ok {
+  width: 50%;
+  background-color: #e7b94b;
+}
+/* line 454, sass/components-v2/_form.scss */
+.password-strength-indicator span.is-strong {
+  width: 75%;
+  background-color: #d0eb53;
+}
+/* line 458, sass/components-v2/_form.scss */
+.password-strength-indicator span.is-impressive {
+  width: 100%;
+  background-color: #68d656;
+}
+
+/* line 464, sass/components-v2/_form.scss */
+.password-strength-description {
+  font-size: 1.24rem;
+  color: #81879d;
+}
+
+/* line 3, sass/components-v2/_global-header.scss */
+.global-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 42px;
+  display: block;
+  float: left;
+  z-index: 1000;
+  overflow: hidden;
+  font-size: 0;
+  background-color: #363a47;
+}
+@media (min-width: 480px) {
+  /* line 3, sass/components-v2/_global-header.scss */
+  .global-header {
+    height: 50px;
+  }
+}
+/* line 19, sass/components-v2/_global-header.scss */
+.global-header .site-logo {
+  width: 58px;
+  margin-top: 8px;
+  margin-left: 16px;
+  display: inline-block;
+  vertical-align: top;
+}
+@media (min-width: 480px) {
+  /* line 19, sass/components-v2/_global-header.scss */
+  .global-header .site-logo {
+    margin-top: 10px;
+  }
+}
+@media (min-width: 720px) {
+  /* line 19, sass/components-v2/_global-header.scss */
+  .global-header .site-logo {
+    width: 105px;
+    margin-top: 13px;
+    margin-left: 22px;
+    display: inline-block;
+  }
+}
+/* line 34, sass/components-v2/_global-header.scss */
+.global-header .site-logo img {
+  width: 100%;
+}
+/* line 38, sass/components-v2/_global-header.scss */
+.global-header .ref-button--cta-small {
+  display: none;
+}
+@media (min-width: 720px) {
+  /* line 38, sass/components-v2/_global-header.scss */
+  .global-header .ref-button--cta-small {
+    margin-top: 7px;
+    margin-right: 26px;
+    display: inline-block;
+    float: right;
+    vertical-align: top;
+    font-size: 14px;
+  }
+}
+/* line 49, sass/components-v2/_global-header.scss */
+.global-header .link-log-in-container,
+.global-header .search-link-container {
+  height: 42px;
+  padding: 0;
+  margin: 0;
+  display: inline-block;
+  float: right;
+  vertical-align: top;
+  border-left: 1px solid #1e2027;
+}
+@media (min-width: 480px) {
+  /* line 49, sass/components-v2/_global-header.scss */
+  .global-header .link-log-in-container,
+  .global-header .search-link-container {
+    height: 50px;
+  }
+}
+/* line 62, sass/components-v2/_global-header.scss */
+.global-header .link-log-in,
+.global-header .link-open-search {
+  position: relative;
+  height: 42px;
+  display: block;
+  box-sizing: border-box;
+  vertical-align: top;
+  text-align: center;
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.1;
+  color: #81879d;
+  border: none;
+  background-color: #363a47;
+  outline: none;
+}
+/* line 80, sass/components-v2/_global-header.scss */
+.no-touch .global-header .link-log-in:hover, .no-touch .global-header .link-log-in:active, .no-touch
+.global-header .link-open-search:hover, .no-touch
+.global-header .link-open-search:active {
+  color: #fcfdfd;
+  background: #323643;
+}
+/* line 84, sass/components-v2/_global-header.scss */
+.no-touch .global-header .link-log-in:active, .no-touch
+.global-header .link-open-search:active {
+  top: 2px;
+}
+/* line 88, sass/components-v2/_global-header.scss */
+.global-header .link-log-in.is-selected,
+.global-header .link-open-search.is-selected {
+  color: #fcfdfd;
+}
+@media (min-width: 480px) {
+  /* line 62, sass/components-v2/_global-header.scss */
+  .global-header .link-log-in,
+  .global-header .link-open-search {
+    height: 50px;
+  }
+}
+/* line 95, sass/components-v2/_global-header.scss */
+.global-header .link-log-in {
+  padding: 16px 15px 0 14px;
+}
+/* line 98, sass/components-v2/_global-header.scss */
+.global-header .link-open-search {
+  padding: 16px 56px 0 19px;
+}
+/* line 100, sass/components-v2/_global-header.scss */
+.global-header .link-open-search:after {
+  position: absolute;
+  top: -1px;
+  right: 20px;
+  font-size: 18px;
+  line-height: 42px;
+  color: #81879d;
+  -webkit-transition: color 0.2s;
+          transition: color 0.2s;
+}
+@media (min-width: 480px) {
+  /* line 100, sass/components-v2/_global-header.scss */
+  .global-header .link-open-search:after {
+    line-height: 50px;
+  }
+}
+
+/* line 114, sass/components-v2/_global-header.scss */
+.global-header__actions {
+  display: inline-block;
+  float: right;
+  overflow: hidden;
+}
+
+@media (min-width: 480px) {
+  /* line 1, sass/components-v2/_hamburger.scss */
+  .hamburger__button {
+    height: 50px;
+  }
+  /* line 4, sass/components-v2/_hamburger.scss */
+  .hamburger__button:before {
+    height: 50px;
+    line-height: 50px;
+  }
+}
+
+/* line 1, sass/components-v2/_highcharts.scss */
+.highcharts-container,
+.highcharts-container > svg,
+.highcharts-container > .highcharts-tooltip,
+.highcharts-axis-labels.highcharts-xaxis-labels,
+.highcharts-axis-labels.highcharts-yaxis-labels,
+.highcharts-axis-labels {
+  overflow: visible !important;
+}
+
+/* line 9, sass/components-v2/_highcharts.scss */
+.highcharts-series {
+  opacity: 1;
+  -webkit-transition: opacity 0.3s;
+          transition: opacity 0.3s;
+}
+/* line 12, sass/components-v2/_highcharts.scss */
+.highcharts-series stroke {
+  cursor: pointer;
+}
+/* line 15, sass/components-v2/_highcharts.scss */
+.highcharts-series.is-transparent {
+  opacity: 0;
+  -webkit-transition: opacity 0s;
+          transition: opacity 0s;
+}
+/* line 19, sass/components-v2/_highcharts.scss */
+.highcharts-series.is-transparent-fade {
+  opacity: 0;
+  -webkit-transition: opacity 0.2s;
+          transition: opacity 0.2s;
+}
+
+/* line 25, sass/components-v2/_highcharts.scss */
+.highcharts-series.selected-series path {
+  stroke-opacity: 1;
+}
+
+/* line 29, sass/components-v2/_highcharts.scss */
+.highcharts-series path:nth-child(1) {
+  pointer-events: none;
+}
+
+/* line 32, sass/components-v2/_highcharts.scss */
+.chart-watermark {
+  position: absolute;
+  right: 26px;
+  bottom: 68px;
+  width: 100px;
+  height: 16px;
+  z-index: 100;
+}
+
+/* line 40, sass/components-v2/_highcharts.scss */
+.highcharts-axis-labels,
+.highcharts-grid path {
+  opacity: 0;
+}
+/* line 43, sass/components-v2/_highcharts.scss */
+.is-animated .highcharts-axis-labels, .is-animated
+.highcharts-grid path {
+  opacity: 1;
+  -webkit-transition: opacity 1s;
+          transition: opacity 1s;
+}
+
+/* line 48, sass/components-v2/_highcharts.scss */
+.highcharts-axis path {
+  stroke: #c4c7d0;
+}
+
+/* line 51, sass/components-v2/_highcharts.scss */
+.custom-tooltip {
+  position: relative;
+  padding: 3px 10px 5px 33px;
+  margin-bottom: 2px;
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fcfdfd;
+  border-radius: 3px;
+  opacity: 0.9;
+}
+/* line 61, sass/components-v2/_highcharts.scss */
+.custom-tooltip img {
+  position: absolute;
+  top: 5px;
+  left: 7px;
+}
+/* line 66, sass/components-v2/_highcharts.scss */
+.custom-tooltip .icon-revenue {
+  top: 8px;
+  width: 16px;
+  height: 11px;
+}
+/* line 71, sass/components-v2/_highcharts.scss */
+.custom-tooltip .icon-downloads {
+  width: 16px;
+  height: 15px;
+}
+/* line 75, sass/components-v2/_highcharts.scss */
+.custom-tooltip .icon-rank {
+  top: 8px;
+  width: 17px;
+  height: 13px;
+}
+
+/* line 82, sass/components-v2/_highcharts.scss */
+.highcharts-axis-label:after {
+  content: ' ';
+  position: absolute;
+  top: -10px;
+  left: calc(50% - 10px);
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid #81879d;
+}
+
+@-webkit-keyframes launch {
+  0% {
+    -webkit-transform: translateY(0px);
+            transform: translateY(0px);
+  }
+  100% {
+    -webkit-transform: translateY(-420px);
+            transform: translateY(-420px);
+  }
+}
+
+@keyframes launch {
+  0% {
+    -webkit-transform: translateY(0px);
+            transform: translateY(0px);
+  }
+  100% {
+    -webkit-transform: translateY(-420px);
+            transform: translateY(-420px);
+  }
+}
+@-webkit-keyframes launch-hover {
+  0% {
+    -webkit-transform: translateY(-420px) translateX(0px);
+            transform: translateY(-420px) translateX(0px);
+  }
+  25% {
+    -webkit-transform: translateY(-420px) translateX(1px);
+            transform: translateY(-420px) translateX(1px);
+  }
+  50% {
+    -webkit-transform: translateY(-420px) translateX(0px);
+            transform: translateY(-420px) translateX(0px);
+  }
+  75% {
+    -webkit-transform: translateY(-420px) translateX(-1px);
+            transform: translateY(-420px) translateX(-1px);
+  }
+  100% {
+    -webkit-transform: translateY(-420px) translateX(0px);
+            transform: translateY(-420px) translateX(0px);
+  }
+}
+@keyframes launch-hover {
+  0% {
+    -webkit-transform: translateY(-420px) translateX(0px);
+            transform: translateY(-420px) translateX(0px);
+  }
+  25% {
+    -webkit-transform: translateY(-420px) translateX(1px);
+            transform: translateY(-420px) translateX(1px);
+  }
+  50% {
+    -webkit-transform: translateY(-420px) translateX(0px);
+            transform: translateY(-420px) translateX(0px);
+  }
+  75% {
+    -webkit-transform: translateY(-420px) translateX(-1px);
+            transform: translateY(-420px) translateX(-1px);
+  }
+  100% {
+    -webkit-transform: translateY(-420px) translateX(0px);
+            transform: translateY(-420px) translateX(0px);
+  }
+}
+/* line 107, sass/components-v2/_highcharts.scss */
+.event-icon--launch {
+  -webkit-animation: vibrate 0.2s 6, launch 0.8s 1.2s ease-in forwards;
+          animation: vibrate 0.2s 6, launch 0.8s 1.2s ease-in forwards;
+}
+/* line 109, sass/components-v2/_highcharts.scss */
+.event-icon--launch.animation-complete {
+  -webkit-animation: none;
+          animation: none;
+  -webkit-transform: translateY(-420px);
+      -ms-transform: translateY(-420px);
+          transform: translateY(-420px);
+}
+/* line 113, sass/components-v2/_highcharts.scss */
+.event-icon--launch.is-animating {
+  -webkit-animation: launch-hover 0.2s infinite forwards;
+          animation: launch-hover 0.2s infinite forwards;
+}
+
+/* line 117, sass/components-v2/_highcharts.scss */
+.event-icon--flag {
+  -webkit-transform: translateY(0);
+      -ms-transform: translateY(0);
+          transform: translateY(0);
+  -webkit-transition: -webkit-transform 1.9s ease-in;
+          transition: transform 1.9s ease-in;
+}
+/* line 120, sass/components-v2/_highcharts.scss */
+.event-icon--flag .is-animating {
+  width: 5px;
+}
+
+/* line 125, sass/components-v2/_highcharts.scss */
+.custom-chart-key .checkboxLabelVisible {
+  padding-left: calc(14px + 1rem);
+  font-size: 1.5rem;
+}
+/* line 129, sass/components-v2/_highcharts.scss */
+.custom-chart-key li {
+  margin-right: 1.5rem;
+}
+/* line 133, sass/components-v2/_highcharts.scss */
+.custom-chart-key li.revenue-key input[type="checkbox"]:checked + .checkboxLabel {
+  background-color: #f5c943;
+}
+/* line 138, sass/components-v2/_highcharts.scss */
+.custom-chart-key li.downloads-key input[type="checkbox"]:checked + .checkboxLabel {
+  background-color: #6d69c5;
+}
+
+/* line 1, sass/components-v2/_page-overlay.scss */
+.page-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  min-height: 100%;
+  /* @alternate */
+  min-height: 100vh;
+  display: none;
+  text-align: center;
+  background: rgba(41, 41, 43, 0.5);
+  z-index: 2000;
+}
+/* line 14, sass/components-v2/_page-overlay.scss */
+.is-open .page-overlay {
+  display: block;
+}
+
+/* line 1, sass/components-v2/_panel-left.scss */
+.panel-left {
+  position: fixed;
+  top: 0;
+  width: 200px;
+  height: 100vh;
+  padding-top: 42px;
+  left: -200px;
+  display: inline-block;
+  z-index: 10;
+  float: left;
+  overflow: auto;
+  font-size: 10px;
+  vertical-align: top;
+  background-color: #29292c;
+  -webkit-transition: left 0.15s ease-in, -webkit-transform 0.15s ease-in, -webkit-filter 0.27s, left 0.15s ease-in, -webkit-transform 0.15s ease-in, filter 0.27s;
+          transition: left 0.15s ease-in, transform 0.15s ease-in, filter 0.27s;
+}
+@media (min-width: 480px) {
+  /* line 1, sass/components-v2/_panel-left.scss */
+  .panel-left {
+    padding-top: 50px;
+  }
+}
+/* line 19, sass/components-v2/_panel-left.scss */
+.panel-left.is-blurred-heavy {
+  -webkit-filter: blur(0.8px);
+          filter: blur(0.8px);
+  -webkit-transition: -webkit-filter 0.5s, filter 0.5s;
+          transition: filter 0.5s;
+}
+/* line 22, sass/components-v2/_panel-left.scss */
+.ie8 .panel-left.is-blurred-heavy, .ie9 .panel-left.is-blurred-heavy {
+  -webkit-filter: none;
+          filter: none;
+}
+/* line 26, sass/components-v2/_panel-left.scss */
+.panel-left-open .panel-left {
+  left: 0px;
+  -webkit-transition: left 0.15s ease-out;
+          transition: left 0.15s ease-out;
+}
+/* line 30, sass/components-v2/_panel-left.scss */
+.panel-left .touch.is-chrome {
+  min-height: 768px;
+  height: calc(100vh + 100px);
+}
+
+/* line 35, sass/components-v2/_panel-left.scss */
+#mCSB_1_scrollbar_vertical {
+  z-index: 100;
+}
+
+@media (min-width: 960px) {
+  /* line 40, sass/components-v2/_panel-left.scss */
+  .no-touch .panel-left {
+    left: 0;
+    width: 61px;
+    overflow: hidden;
+    -webkit-transition: width 0.1s;
+            transition: width 0.1s;
+  }
+  /* line 45, sass/components-v2/_panel-left.scss */
+  .no-touch .panel-left:hover {
+    width: 200px;
+    -webkit-transition: width 0.2s;
+            transition: width 0.2s;
+  }
+}
+
+/* line 2, sass/components-v2/_popups.scss */
+.tooltip {
+  position: absolute;
+  max-width: 185px;
+  display: inline-block;
+  overflow: visible;
+  z-index: 1000;
+  border-radius: 3px;
+  background-color: #81879d;
+}
+/* line 10, sass/components-v2/_popups.scss */
+.tooltip:after {
+  content: ' ';
+  position: absolute;
+  bottom: -11px;
+  left: 50%;
+  width: 0;
+  height: 0;
+  margin-left: -7px;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 11px solid #81879d;
+}
+/* line 23, sass/components-v2/_popups.scss */
+.tooltip.tooltip-right:after {
+  left: calc(100% - 20px);
+}
+/* line 28, sass/components-v2/_popups.scss */
+.tooltip.tooltip-left:after {
+  left: 20px;
+}
+/* line 32, sass/components-v2/_popups.scss */
+.tooltip .tooltip-text {
+  padding: 8px 10px 10px;
+  display: block;
+  font-family: "Lato", sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #fcfdfd;
+  text-align: center;
+}
+
+/* line 43, sass/components-v2/_popups.scss */
+.tooltip--info {
+  display: inline-block;
+  vertical-align: middle;
+  cursor: pointer;
+}
+/* line 49, sass/components-v2/_popups.scss */
+.tooltip--info:after {
+  position: relative;
+  top: 2px;
+  font-size: 18px;
+  color: #c4c7d0;
+  -webkit-transition: color 0.2s;
+          transition: color 0.2s;
+}
+/* line 56, sass/components-v2/_popups.scss */
+.tooltip--info span {
+  width: 0;
+  display: inline-block;
+  text-align: left;
+  text-indent: -999em;
+}
+
+/* line 63, sass/components-v2/_popups.scss */
+.whats-this-tooltip-popup {
+  -webkit-perspective: 1300px;
+  perspective: 1300px;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  position: absolute;
+  z-index: 20000;
+  overflow: visible;
+}
+
+/* line 72, sass/components-v2/_popups.scss */
+.whats-this-tooltip-icon {
+  display: inline-block;
+  vertical-align: middle;
+  cursor: pointer;
+}
+/* line 79, sass/components-v2/_popups.scss */
+.whats-this-tooltip-icon.is-open:after {
+  color: #6d69c5;
+}
+/* line 83, sass/components-v2/_popups.scss */
+.whats-this-tooltip-icon:after {
+  position: relative;
+  top: 2px;
+  font-size: 16px;
+  color: #c4c7d0;
+  -webkit-transition: color 0.2s;
+          transition: color 0.2s;
+}
+/* line 91, sass/components-v2/_popups.scss */
+.whats-this-tooltip-icon:hover:after {
+  color: #6d69c5;
+  -webkit-transition: color 0.2s;
+          transition: color 0.2s;
+}
+/* line 96, sass/components-v2/_popups.scss */
+.whats-this-tooltip-icon span {
+  width: 0;
+  display: inline-block;
+  text-align: left;
+  text-indent: -999em;
+}
+
+/* line 103, sass/components-v2/_popups.scss */
+.whats-this-tooltip {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 265px;
+  padding: 21px 20px 27px 25px;
+  display: inline-block;
+  overflow: visible;
+  color: #e1e5e8;
+  border-radius: 3px;
+  background-color: #81879d;
+  -ms-transform: rotateX(86deg);
+  -webkit-transform: rotateX(86deg);
+  transform: rotateX(86deg);
+  -ms-transform-origin: center top;
+  -webkit-transform-origin: center top;
+  transform-origin: center top;
+}
+/* line 120, sass/components-v2/_popups.scss */
+.whats-this-tooltip.is-open {
+  -ms-transform-origin: center top;
+  -webkit-transform-origin: center top;
+  transform-origin: center top;
+  -ms-transform: rotateX(0deg);
+  -webkit-transform: rotateX(0deg);
+  transform: rotateX(0deg);
+  -webkit-transition: -webkit-transform 0.18s ease-out;
+          transition: transform 0.18s ease-out;
+}
+/* line 129, sass/components-v2/_popups.scss */
+.whats-this-tooltip:after {
+  content: ' ';
+  position: absolute;
+  top: -13px;
+  left: calc(50% - 12px);
+  width: 0;
+  height: 0;
+  border-left: 11px solid transparent;
+  border-right: 11px solid transparent;
+  border-bottom: 15px solid #81879d;
+}
+/* line 140, sass/components-v2/_popups.scss */
+.whats-this-tooltip.position-tooltip-left {
+  -ms-transform-origin: right center;
+  -webkit-transform-origin: right center;
+  transform-origin: right center;
+  -ms-transform: rotateX(0deg) rotateY(-96deg);
+  -webkit-transform: rotateX(0deg) rotateY(-96deg);
+  transform: rotateX(0deg) rotateY(-96deg);
+}
+/* line 147, sass/components-v2/_popups.scss */
+.whats-this-tooltip.position-tooltip-left.is-open {
+  -ms-transform-origin: right center;
+  -webkit-transform-origin: right center;
+  transform-origin: right center;
+  -ms-transform: rotateX(0deg) rotateY(0deg);
+  -webkit-transform: rotateX(0deg) rotateY(0deg);
+  transform: rotateX(0deg) rotateY(0deg);
+  -webkit-transition: -webkit-transform 0.18s ease-out;
+          transition: transform 0.18s ease-out;
+}
+/* line 156, sass/components-v2/_popups.scss */
+.whats-this-tooltip.position-tooltip-left:after {
+  top: calc(50% - 10px);
+  right: -24px;
+  left: auto;
+  border-left: 15px solid #81879d;
+  border-top: 11px solid transparent;
+  border-bottom: 11px solid transparent;
+}
+/* line 165, sass/components-v2/_popups.scss */
+.whats-this-tooltip.position-tooltip-right {
+  -ms-transform-origin: left center;
+  -webkit-transform-origin: left center;
+  transform-origin: left center;
+  -ms-transform: rotateX(0deg) rotateY(96deg);
+  -webkit-transform: rotateX(0deg) rotateY(96deg);
+  transform: rotateX(0deg) rotateY(96deg);
+}
+/* line 172, sass/components-v2/_popups.scss */
+.whats-this-tooltip.position-tooltip-right.is-open {
+  -ms-transform-origin: left center;
+  -webkit-transform-origin: left center;
+  transform-origin: left center;
+  -ms-transform: rotateX(0deg) rotateY(0deg);
+  -webkit-transform: rotateX(0deg) rotateY(0deg);
+  transform: rotateX(0deg) rotateY(0deg);
+  -webkit-transition: -webkit-transform 0.18s ease-out;
+          transition: transform 0.18s ease-out;
+}
+/* line 181, sass/components-v2/_popups.scss */
+.whats-this-tooltip.position-tooltip-right:after {
+  top: calc(50% - 10px);
+  left: -24px;
+  border-right: 15px solid #81879d;
+  border-top: 11px solid transparent;
+  border-bottom: 11px solid transparent;
+}
+/* line 189, sass/components-v2/_popups.scss */
+.whats-this-tooltip.position-tooltip-top {
+  -ms-transform-origin: center bottom;
+  -webkit-transform-origin: center bottom;
+  transform-origin: center bottom;
+  -ms-transform: rotateX(-86deg);
+  -webkit-transform: rotateX(-86deg);
+  transform: rotateX(-86deg);
+}
+/* line 196, sass/components-v2/_popups.scss */
+.whats-this-tooltip.position-tooltip-top.is-open {
+  -ms-transform-origin: center bottom;
+  -webkit-transform-origin: center bottom;
+  transform-origin: center bottom;
+  -ms-transform: rotateX(0deg);
+  -webkit-transform: rotateX(0deg);
+  transform: rotateX(0deg);
+  -webkit-transition: -webkit-transform 0.18s ease-out;
+          transition: transform 0.18s ease-out;
+}
+/* line 205, sass/components-v2/_popups.scss */
+.whats-this-tooltip.position-tooltip-top:after {
+  top: auto;
+  bottom: -13px;
+  border-left: 11px solid transparent;
+  border-right: 11px solid transparent;
+  border-top: 15px solid #81879d;
+  border-bottom: 0;
+}
+/* line 214, sass/components-v2/_popups.scss */
+.whats-this-tooltip h2 {
+  max-width: 200px;
+  margin-bottom: 9px;
+  font-size: 16px;
+  color: #fcfdfd;
+}
+/* line 220, sass/components-v2/_popups.scss */
+.whats-this-tooltip p {
+  font-size: 13px;
+  line-height: 1.69;
+  color: #f2f2f5;
+}
+/* line 224, sass/components-v2/_popups.scss */
+.whats-this-tooltip p a {
+  font-weight: 700;
+  color: #fff;
+}
+/* line 227, sass/components-v2/_popups.scss */
+.whats-this-tooltip p a:hover {
+  color: #e6e6e6;
+}
+
+/* line 1, sass/components-v2/_summary-widget.scss */
+.summary-widget-container {
+  margin-bottom: 2rem;
+}
+
+/* line 4, sass/components-v2/_summary-widget.scss */
+.summary-widget {
+  padding: 1rem 0.7rem 1.3rem;
+  background-color: #f2f2f5;
+}
+/* line 7, sass/components-v2/_summary-widget.scss */
+.summary-widget .toggle-container {
+  width: 100%;
+  padding: 0 1.3rem 0.8rem;
+}
+/* line 10, sass/components-v2/_summary-widget.scss */
+.summary-widget .toggle-container .filter-toggle {
+  width: 100%;
+}
+/* line 13, sass/components-v2/_summary-widget.scss */
+.summary-widget .toggle-container .toggle {
+  width: 50%;
+}
+/* line 15, sass/components-v2/_summary-widget.scss */
+.summary-widget .toggle-container .toggle label {
+  width: 100%;
+}
+
+/* line 21, sass/components-v2/_summary-widget.scss */
+.summary-widget__data-title {
+  margin: 0;
+  padding: 0 1.3rem 1rem;
+  font-size: 1.4rem;
+  font-weight: 400;
+  font-family: "Source Sans Pro", sans-serif;
+  color: #81879d;
+}
+
+/* line 29, sass/components-v2/_summary-widget.scss */
+.summary-widget__data-row {
+  width: 100%;
+  font-size: 0;
+}
+
+/* line 33, sass/components-v2/_summary-widget.scss */
+.summary-widget__data-item {
+  width: 33%;
+  padding: 0 3px 0.9rem;
+  display: inline-block;
+  vertical-align: top;
+  list-style: none;
+  text-align: center;
+}
+/* line 40, sass/components-v2/_summary-widget.scss */
+.summary-widget__data-item a {
+  width: 100%;
+  display: block;
+  text-align: center;
+}
+/* line 44, sass/components-v2/_summary-widget.scss */
+.summary-widget__data-item a img {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  border-radius: 7px;
+}
+
+/* line 52, sass/components-v2/_summary-widget.scss */
+.summary-widget__data-item__app-name {
+  margin-top: -3px;
+  margin-bottom: 4px !important;
+  font-family: "Lato", sans-serif;
+  font-size: 1.39rem;
+  font-weight: 700;
+  color: #6d69c5;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-transition: color 0.2s;
+          transition: color 0.2s;
+}
+/* line 61, sass/components-v2/_summary-widget.scss */
+a:hover .summary-widget__data-item__app-name {
+  color: #4b46b5;
+  -webkit-transition: color 0.3s;
+          transition: color 0.3s;
+}
+
+/* line 66, sass/components-v2/_summary-widget.scss */
+.summary-widget__data-item__data {
+  font-family: "Lato", sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #363a47;
+}
+/* line 71, sass/components-v2/_summary-widget.scss */
+.summary-widget__data-item__data.positive-color {
+  color: #12a76a;
+}
+/* line 74, sass/components-v2/_summary-widget.scss */
+.summary-widget__data-item__data.negative-color {
+  color: #ff496a;
+}
+
+/* line 3, sass/components-v2/_tables.scss */
+.ref-table {
+  width: 100%;
+  font-size: 1.3rem;
+  color: #29292c;
+}
+/* line 7, sass/components-v2/_tables.scss */
+.ref-table th {
+  padding-top: 1.2rem;
+  padding-bottom: 1.1rem;
+  vertical-align: top;
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: 1.4rem;
+  color: #363a47;
+}
+/* line 14, sass/components-v2/_tables.scss */
+.ref-table th a {
+  font-weight: 600;
+}
+/* line 18, sass/components-v2/_tables.scss */
+.ref-table th:first-child {
+  padding-left: 1.5rem;
+}
+/* line 23, sass/components-v2/_tables.scss */
+.ref-table tbody tr:nth-child(odd) {
+  background-color: #f2f2f5;
+}
+/* line 26, sass/components-v2/_tables.scss */
+.ref-table tbody tr td {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+/* line 32, sass/components-v2/_tables.scss */
+.ref-table--apps {
+  margin-bottom: 4rem;
+}
+/* line 34, sass/components-v2/_tables.scss */
+.ref-table--apps tr {
+  border-bottom: 1px solid #fcfdfd;
+}
+/* line 37, sass/components-v2/_tables.scss */
+.ref-table--apps .column-row-selector {
+  width: 8.9%;
+}
+/* line 40, sass/components-v2/_tables.scss */
+.ref-table--apps .column-app-name {
+  width: 27.2%;
+}
+/* line 43, sass/components-v2/_tables.scss */
+.ref-table--apps .column-released {
+  width: 10.9%;
+}
+/* line 46, sass/components-v2/_tables.scss */
+.ref-table--apps .column-revenue {
+  width: 11.7%;
+}
+/* line 49, sass/components-v2/_tables.scss */
+.ref-table--apps .column-downloads {
+  width: 18%;
+}
+/* line 52, sass/components-v2/_tables.scss */
+.ref-table--apps .column-percentage-of-total {
+  width: 23.3%;
+}
+/* line 55, sass/components-v2/_tables.scss */
+.ref-table--apps .revenue-head-cell {
+  padding-left: 3px;
+}
+/* line 58, sass/components-v2/_tables.scss */
+.ref-table--apps .revenue-head-cell,
+.ref-table--apps .downloads-head-cell {
+  font-size: 1.5rem;
+}
+/* line 63, sass/components-v2/_tables.scss */
+.ref-table--apps .total-for-period-head-cell span {
+  display: inline-block;
+}
+/* line 66, sass/components-v2/_tables.scss */
+.ref-table--apps .total-for-period-head-cell span:first-child {
+  margin-bottom: 0.4rem;
+  display: block;
+  font-size: 1.4rem;
+}
+/* line 71, sass/components-v2/_tables.scss */
+.ref-table--apps .total-for-period-head-cell span:nth-child(2) {
+  color: #ee9063;
+  font-size: 1.3rem;
+}
+/* line 75, sass/components-v2/_tables.scss */
+.ref-table--apps .total-for-period-head-cell span:nth-child(3) {
+  margin-left: 1.5rem;
+  color: #6d69c5;
+  font-size: 1.3rem;
+}
+/* line 81, sass/components-v2/_tables.scss */
+.ref-table--apps .app-data-cell-show-hide {
+  padding-left: 1.5rem;
+}
+/* line 83, sass/components-v2/_tables.scss */
+.ref-table--apps .app-data-cell-show-hide .form-field--checkbox-list {
+  width: 17px;
+  margin-right: 9px;
+  padding-top: 3px;
+  vertical-align: top;
+}
+/* line 90, sass/components-v2/_tables.scss */
+.ref-table--apps .data-table__store {
+  display: inline-block;
+  vertical-align: top;
+}
+/* line 93, sass/components-v2/_tables.scss */
+.ref-table--apps .data-table__store:after {
+  font-size: 20px;
+  color: #81879d;
+}
+/* line 97, sass/components-v2/_tables.scss */
+.ref-table--apps .data-table__store.ref-icon-after--play-store {
+  padding-top: 1px;
+  padding-left: 1px;
+}
+/* line 100, sass/components-v2/_tables.scss */
+.ref-table--apps .data-table__store.ref-icon-after--play-store:after {
+  font-size: 18px;
+}
+/* line 105, sass/components-v2/_tables.scss */
+.ref-table--apps .app-data-cell-app-details {
+  padding-top: 7px;
+  padding-bottom: 5px;
+}
+/* line 109, sass/components-v2/_tables.scss */
+.ref-table--apps .app-data-cell-released-date {
+  padding-top: 1.1rem;
+  vertical-align: top;
+}
+/* line 113, sass/components-v2/_tables.scss */
+.ref-table--apps .app-data-revenue,
+.ref-table--apps .app-data-downloads {
+  text-align: right;
+}
+/* line 117, sass/components-v2/_tables.scss */
+.ref-table--apps .app-data-revenue {
+  width: calc(100% - 3rem);
+}
+/* line 120, sass/components-v2/_tables.scss */
+.ref-table--apps .app-data-downloads {
+  width: 54.14013%;
+  display: inline-block;
+  vertical-align: top;
+}
+/* line 125, sass/components-v2/_tables.scss */
+.ref-table--apps .data-table__growth {
+  margin-top: 0.4rem;
+  display: block;
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+/* line 131, sass/components-v2/_tables.scss */
+.ref-table--apps .more-app-data {
+  position: absolute;
+  top: 0;
+  right: 8rem;
+  width: 150px;
+  padding: 7px;
+  display: none;
+  z-index: 10;
+  text-align: center;
+  background-color: #f2f2f5;
+  border-radius: 5px;
+}
+/* line 142, sass/components-v2/_tables.scss */
+.ref-table--apps .more-app-data dt, .ref-table--apps .more-app-data dd {
+  display: block;
+}
+/* line 145, sass/components-v2/_tables.scss */
+.ref-table--apps .more-app-data dd {
+  margin-bottom: 0.5rem;
+}
+/* line 149, sass/components-v2/_tables.scss */
+.ref-table--apps .app-data-cell-more {
+  position: relative;
+}
+/* line 151, sass/components-v2/_tables.scss */
+.ref-table--apps .app-data-cell-more .more-data-link {
+  margin-left: 10%;
+  vertical-align: top;
+  font-size: 1.2rem;
+}
+/* line 157, sass/components-v2/_tables.scss */
+.ref-table--apps .app-data-cell-more .more-data-link:hover + .more-app-data {
+  display: inline-block;
+}
+/* line 162, sass/components-v2/_tables.scss */
+.ref-table--apps .data-table__value-bar > span {
+  width: 35px;
+  display: inline-block;
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #6d69c5;
+  text-align: center;
+}
+/* line 170, sass/components-v2/_tables.scss */
+.ref-table--apps .data-table__value-bar div {
+  width: calc(100% - 53px);
+  height: 10px;
+  display: inline-block;
+  background-color: #e6e6eb;
+}
+/* line 176, sass/components-v2/_tables.scss */
+.ref-table--apps .data-table__value-bar div span {
+  height: 10px;
+  display: block;
+  background-color: #6d69c5;
+}
+/* line 181, sass/components-v2/_tables.scss */
+.ref-table--apps .data-table__value-bar:first-child {
+  margin-bottom: 4px;
+}
+/* line 183, sass/components-v2/_tables.scss */
+.ref-table--apps .data-table__value-bar:first-child > span {
+  color: #ee9063;
+}
+/* line 186, sass/components-v2/_tables.scss */
+.ref-table--apps .data-table__value-bar:first-child div span {
+  background-color: #f5c943;
+}
+/* line 191, sass/components-v2/_tables.scss */
+.ref-table--apps .ratings-container,
+.ref-table--apps .ratings-full {
+  background-size: 65px 10px;
+}
+
+/* line 196, sass/components-v2/_tables.scss */
+.ref-table--apps,
+.ref-table--apps * {
+  overflow: visible;
+}
+
+/* line 201, sass/components-v2/_tables.scss */
+.data-table__app-summary img {
+  width: 42px;
+  display: inline-block;
+  border-radius: 9px;
+}
+/* line 206, sass/components-v2/_tables.scss */
+.data-table__app-summary > div {
+  width: calc(100% - 55px);
+  display: inline-block;
+  vertical-align: top;
+  float: right;
+  text-align: left;
+}
+
+/* line 214, sass/components-v2/_tables.scss */
+.data-table__app-summary__app-name {
+  margin: 0;
+  padding-top: 1px;
+  padding-bottom: 2px;
+  font-family: "Lato", sans-serif;
+  font-size: 1.39rem;
+}
+/* line 220, sass/components-v2/_tables.scss */
+.data-table__app-summary__app-name a {
+  padding-bottom: 0.5rem;
+}
+
+/* line 1, sass/components-v2/_tabs.scss */
+.tabs-list,
+.tabs-content-list {
+  width: 100%;
+}
+/* line 4, sass/components-v2/_tabs.scss */
+.tabs-list li,
+.tabs-content-list li {
+  list-style: none;
+}
+
+/* line 9, sass/components-v2/_tabs.scss */
+.tabs-content-list > li {
+  display: none;
+}
+/* line 11, sass/components-v2/_tabs.scss */
+.tabs-content-list > li.is-active {
+  display: block;
+}
+
+/* line 17, sass/components-v2/_tabs.scss */
+.tabs-list li {
+  padding-left: 0;
+  padding-right: 0;
+  display: inline-block;
+  font-size: 0;
+}
+/* line 22, sass/components-v2/_tabs.scss */
+.tabs-list li a {
+  width: 100%;
+  height: 100%;
+  display: block;
+  letter-spacing: -0.02rem;
+}
+
+/* line 32, sass/components-v2/_tabs.scss */
+.seconday-tabs li {
+  height: 4.6rem;
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: 1.6rem;
+  text-align: center;
+  background-color: #f2f2f5;
+}
+/* line 38, sass/components-v2/_tabs.scss */
+.seconday-tabs li a {
+  padding-top: 1px;
+  color: #727686;
+}
+/* line 41, sass/components-v2/_tabs.scss */
+.seconday-tabs li a:hover {
+  color: #363a47;
+}
+/* line 45, sass/components-v2/_tabs.scss */
+.seconday-tabs li.is-active {
+  font-weight: 600;
+  border-top: 2px solid #6d69c5;
+}
+/* line 48, sass/components-v2/_tabs.scss */
+.seconday-tabs li.is-active a {
+  padding-top: 0;
+  color: #6d69c5;
+}
+/* line 51, sass/components-v2/_tabs.scss */
+.seconday-tabs li.is-active a:hover {
+  color: #6d69c5;
+}
+
+/* line 1, sass/components-v2/_toggle.scss */
+.toggle-container {
+  display: inline-block;
+  vertical-align: top;
+}
+
+/* line 5, sass/components-v2/_toggle.scss */
+.filter-toggle {
+  display: inline-block;
+  float: left;
+  vertical-align: top;
+  font-size: 0;
+}
+/* line 10, sass/components-v2/_toggle.scss */
+.filter-toggle .toggle {
+  display: inline-block;
+  text-align: center;
+}
+/* line 14, sass/components-v2/_toggle.scss */
+.filter-toggle .toggle:first-child label {
+  border-radius: 4px 0 0 4px;
+}
+/* line 19, sass/components-v2/_toggle.scss */
+.filter-toggle .toggle:last-child label {
+  border-right: 1px solid #c4c7d0;
+  border-radius: 0 4px 4px 0;
+}
+/* line 25, sass/components-v2/_toggle.scss */
+.filter-toggle label {
+  position: relative;
+  padding: 8px 10px;
+  box-sizing: border-box;
+  display: inline-block;
+  z-index: 1;
+  vertical-align: top;
+  text-align: center;
+  border-top: 1px solid #c4c7d0;
+  border-bottom: 1px solid #c4c7d0;
+  border-left: 1px solid #c4c7d0;
+  background-color: #f2f7f7;
+  cursor: pointer;
+}
+/* line 38, sass/components-v2/_toggle.scss */
+.filter-toggle label svg {
+  width: 18px;
+  height: 18px;
+  float: left;
+}
+/* line 42, sass/components-v2/_toggle.scss */
+.filter-toggle label svg path, .filter-toggle label svg polygon {
+  fill: #727686;
+}
+/* line 46, sass/components-v2/_toggle.scss */
+.filter-toggle label:hover {
+  color: #5a5a68;
+  background-color: #e1e5e8;
+}
+/* line 51, sass/components-v2/_toggle.scss */
+.filter-toggle input {
+  position: absolute;
+  z-index: -1;
+}
+/* line 56, sass/components-v2/_toggle.scss */
+.filter-toggle input:checked ~ label {
+  position: relative;
+  color: #fcfdfd;
+  border-color: #5551a4;
+  background-color: #6d69c5;
+}
+/* line 62, sass/components-v2/_toggle.scss */
+.filter-toggle input:checked ~ label svg path, .filter-toggle input:checked ~ label svg polygon {
+  fill: #fcfdfd;
+}
+/* line 66, sass/components-v2/_toggle.scss */
+.filter-toggle input:checked ~ label:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  box-sizing: border-box;
+  border-right: 1px solid #5551a4;
+}
+
+/* line 81, sass/components-v2/_toggle.scss */
+.filter-toggle.filter-toggle--with-text label {
+  padding: 0.7rem 1rem 0.8rem 0.9rem;
+  width: auto;
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: 1.3rem;
+  color: #5b5b68;
+}
+/* line 89, sass/components-v2/_toggle.scss */
+.filter-toggle.filter-toggle--with-text.filter-toggle--small label {
+  padding: 0.9rem 1.6rem 1rem 1.6rem;
+  font-size: 1.4rem;
+}
+/* line 95, sass/components-v2/_toggle.scss */
+.filter-toggle.filter-toggle--with-text.filter-toggle--medium label {
+  padding: 1.1rem 1.5rem 1.4rem 1.5rem;
+  font-size: 1.5rem;
+}
+/* line 101, sass/components-v2/_toggle.scss */
+.filter-toggle.filter-toggle--with-text.filter-toggle--large label {
+  padding: 1.1rem 1.5rem 1.4rem 1.5rem;
+  font-size: 1.6rem;
+}
+
+/* line 110, sass/components-v2/_toggle.scss */
+.toggle-split-graph svg .chart-lines,
+.toggle-single-graph svg .chart-lines {
+  fill: #727686;
+}
+/* line 113, sass/components-v2/_toggle.scss */
+.toggle-split-graph svg .base-lines,
+.toggle-single-graph svg .base-lines {
+  fill: #b2b5c0;
+}
+/* line 119, sass/components-v2/_toggle.scss */
+.toggle-split-graph input:checked ~ label svg .chart-lines,
+.toggle-single-graph input:checked ~ label svg .chart-lines {
+  fill: #fcfdfd;
+}
+/* line 122, sass/components-v2/_toggle.scss */
+.toggle-split-graph input:checked ~ label svg .base-lines,
+.toggle-single-graph input:checked ~ label svg .base-lines {
+  fill: #bfbdee;
+}
+
+/* line 129, sass/components-v2/_toggle.scss */
+.toggle-split-graph label svg {
+  width: 39px;
+  height: 18px;
+}
+
+/* line 135, sass/components-v2/_toggle.scss */
+.toggle-single-graph label svg {
+  width: 32px;
+  height: 18px;
+}
+
+/* Templates */
+/* line 1, sass/templates-v2/_data-dashboard.scss */
+.page-data-dashboard {
+  padding-top: 2.3rem;
+}
+/* line 3, sass/templates-v2/_data-dashboard.scss */
+.page-data-dashboard .page-title {
+  margin-left: -2px;
+  margin-right: 3.9rem;
+  padding-top: 0.1rem;
+  margin-bottom: 3rem;
+  display: inline-block;
+  vertical-align: top;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+/* line 13, sass/templates-v2/_data-dashboard.scss */
+.page-data-dashboard .page-header__page-toggle {
+  margin-right: 2rem;
+}
+/* line 16, sass/templates-v2/_data-dashboard.scss */
+.page-data-dashboard .page-header__data-info-text {
+  padding-top: 15px;
+  padding-right: 5px;
+  display: inline-block;
+  vertical-align: top;
+  font-family: "Lato", sans-serif;
+  font-size: 1.2rem;
+  color: #5a5a68;
+}
+/* line 25, sass/templates-v2/_data-dashboard.scss */
+.page-data-dashboard .page-header__data-info-icon {
+  vertical-align: top;
+  padding-top: 12px;
+}
+/* line 29, sass/templates-v2/_data-dashboard.scss */
+.page-data-dashboard .page-header_action-button {
+  float: right;
+}
+/* line 34, sass/templates-v2/_data-dashboard.scss */
+.page-data-dashboard .secondary-filters-container .secondary-filter .form-field--select__box {
+  min-width: auto;
+}
+/* line 37, sass/templates-v2/_data-dashboard.scss */
+.page-data-dashboard .secondary-filters-container .secondary-filter:nth-child(1), .page-data-dashboard .secondary-filters-container .secondary-filter:nth-child(2) {
+  margin-right: 1rem;
+}
+/* line 40, sass/templates-v2/_data-dashboard.scss */
+.page-data-dashboard .secondary-filters-container .secondary-filter:nth-child(1) .form-field--select__box, .page-data-dashboard .secondary-filters-container .secondary-filter:nth-child(2) .form-field--select__box {
+  min-width: 94px;
+}
+/* line 45, sass/templates-v2/_data-dashboard.scss */
+.page-data-dashboard .secondary-filters-container .form-field--checkbox-list {
+  margin-left: 1rem;
+  padding-top: 0.9rem;
+}
+/* line 50, sass/templates-v2/_data-dashboard.scss */
+.page-data-dashboard .toggle-container--chart-type {
+  margin-left: 1rem;
+  float: right;
+}
+/* line 54, sass/templates-v2/_data-dashboard.scss */
+.page-data-dashboard .chart-container {
+  position: relative;
+  width: 100%;
+  height: 393px;
+  padding-top: 12px;
+  margin-bottom: 1.8rem;
+  display: inline-block;
+  float: left;
+  background-color: #f2f2f5;
+  border-top: 1px solid #e1e5e8;
+}
+/* line 64, sass/templates-v2/_data-dashboard.scss */
+.page-data-dashboard .chart-container.chart-container--split {
+  width: 50%;
+}
+/* line 67, sass/templates-v2/_data-dashboard.scss */
+.page-data-dashboard .chart-container.chart-container--single {
+  padding-top: 18px;
+}
+/* line 71, sass/templates-v2/_data-dashboard.scss */
+.page-data-dashboard .chart-container:first-child {
+  border-right: 1px solid #e1e5e8;
+}
+/* line 74, sass/templates-v2/_data-dashboard.scss */
+.page-data-dashboard .chart-container__header {
+  position: relative;
+  padding-left: 20px;
+  padding-right: 20px;
+  overflow: visible;
+}
+/* line 80, sass/templates-v2/_data-dashboard.scss */
+.page-data-dashboard .chart-heading {
+  margin: 0;
+  display: inline-block;
+}
+/* line 84, sass/templates-v2/_data-dashboard.scss */
+.page-data-dashboard .chart-summary {
+  display: inline-block;
+  vertical-align: top;
+}
+/* line 88, sass/templates-v2/_data-dashboard.scss */
+.page-data-dashboard .total-for-period-container {
+  display: inline-block;
+  vertical-align: top;
+}
+/* line 92, sass/templates-v2/_data-dashboard.scss */
+.page-data-dashboard .total-for-period-title {
+  display: inline-block;
+  vertical-align: bottom;
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: 1.4rem;
+  color: #363a47;
+}
+/* line 99, sass/templates-v2/_data-dashboard.scss */
+.page-data-dashboard .total-for-period,
+.page-data-dashboard .growth-on-last-period {
+  vertical-align: bottom;
+  font-family: "Lato", sans-serif;
+  line-height: 1.1;
+}
+/* line 105, sass/templates-v2/_data-dashboard.scss */
+.page-data-dashboard .total-for-period {
+  display: inline-block;
+  font-size: 2rem;
+}
+/* line 109, sass/templates-v2/_data-dashboard.scss */
+.page-data-dashboard .growth-on-last-period {
+  display: inline-block;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+/* line 114, sass/templates-v2/_data-dashboard.scss */
+.page-data-dashboard .growth-on-last-period-container {
+  display: inline-block;
+  vertical-align: top;
+}
+/* line 118, sass/templates-v2/_data-dashboard.scss */
+.page-data-dashboard .growth-on-last-period {
+  font-weight: 700;
+}
+/* line 121, sass/templates-v2/_data-dashboard.scss */
+.page-data-dashboard .growth-on-last-period-title {
+  position: relative;
+  padding-right: 25px;
+  overflow: visible;
+}
+/* line 125, sass/templates-v2/_data-dashboard.scss */
+.page-data-dashboard .growth-on-last-period-title:after {
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-size: 18px;
+  color: #c4c7d0;
+}
+/* line 134, sass/templates-v2/_data-dashboard.scss */
+.page-data-dashboard .chart-container--split .chart-summary {
+  position: absolute;
+  top: 5px;
+  right: 0%;
+}
+/* line 139, sass/templates-v2/_data-dashboard.scss */
+.page-data-dashboard .chart-container--split .total-for-period-container {
+  padding-right: 22px;
+}
+/* line 142, sass/templates-v2/_data-dashboard.scss */
+.page-data-dashboard .chart-container--split .total-for-period-title {
+  padding-right: 1rem;
+}
+/* line 145, sass/templates-v2/_data-dashboard.scss */
+.page-data-dashboard .chart-container--split .growth-on-last-period {
+  padding-left: 0.5rem;
+  padding-bottom: 1px;
+}
+/* line 151, sass/templates-v2/_data-dashboard.scss */
+.page-data-dashboard .chart-container--single .chart-summary {
+  position: relative;
+  margin-right: 42px;
+}
+/* line 155, sass/templates-v2/_data-dashboard.scss */
+.page-data-dashboard .chart-container--single .total-for-period-container {
+  vertical-align: top;
+}
+/* line 158, sass/templates-v2/_data-dashboard.scss */
+.page-data-dashboard .chart-container--single .total-for-period-title {
+  padding-right: 10px;
+  vertical-align: top;
+}
+/* line 162, sass/templates-v2/_data-dashboard.scss */
+.page-data-dashboard .chart-container--single .total-for-period {
+  margin-top: -2px;
+  vertical-align: top;
+}
+/* line 166, sass/templates-v2/_data-dashboard.scss */
+.page-data-dashboard .chart-container--single .growth-on-last-period {
+  padding-left: 5px;
+}
+/* line 169, sass/templates-v2/_data-dashboard.scss */
+.page-data-dashboard .chart-container--single .chart {
+  margin-top: 69px;
+}
+/* line 173, sass/templates-v2/_data-dashboard.scss */
+.page-data-dashboard .chart {
+  height: 285px;
+  width: 100%;
+  margin-top: 61px;
+  overflow: visible;
+}
+/* line 179, sass/templates-v2/_data-dashboard.scss */
+.page-data-dashboard .custom-chart-key {
+  position: absolute;
+  top: 58px;
+  left: 22px;
+}
+
+/* line 185, sass/templates-v2/_data-dashboard.scss */
+.data-table-section {
+  padding: 0 2% 0 0;
+}
+/* line 187, sass/templates-v2/_data-dashboard.scss */
+.data-table-section .section-title {
+  width: 70px;
+  margin: 0;
+  line-height: 1.2;
+  display: inline-block;
+}
+/* line 192, sass/templates-v2/_data-dashboard.scss */
+.data-table-section .section-title span {
+  display: block;
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: 1.4rem;
+  color: #363a47;
+}
+/* line 198, sass/templates-v2/_data-dashboard.scss */
+.data-table-section .section-title span:first-child {
+  margin-bottom: 2px;
+}
+/* line 201, sass/templates-v2/_data-dashboard.scss */
+.data-table-section .section-title span:last-child {
+  font-family: "Lato", sans-serif;
+  font-size: 2rem;
+}
+
+/* line 207, sass/templates-v2/_data-dashboard.scss */
+.data-table-section__header {
+  padding-bottom: 1.3rem;
+  overflow: visible;
+  border-bottom: 1px solid #e1e5e8;
+}
+
+/* line 212, sass/templates-v2/_data-dashboard.scss */
+.data-table-section__filters {
+  padding-top: 3px;
+  display: inline-block;
+  float: right;
+  overflow: visible;
+  font-size: 0;
+}
+/* line 218, sass/templates-v2/_data-dashboard.scss */
+.data-table-section__filters .secondary-filter {
+  margin-right: 1rem;
+  float: right;
+}
+/* line 221, sass/templates-v2/_data-dashboard.scss */
+.data-table-section__filters .secondary-filter:first-child {
+  margin-right: 0;
+  margin-left: 1rem;
+}
+/* line 226, sass/templates-v2/_data-dashboard.scss */
+.data-table-section__filters .secondary-filter:last-of-type .form-field--select__box {
+  min-width: 95px;
+}
+/* line 231, sass/templates-v2/_data-dashboard.scss */
+.data-table-section__filters > label {
+  margin-left: 0.9rem;
+  padding-top: 12px;
+  padding-right: 0.8rem;
+  display: inline-block;
+  float: right;
+  vertical-align: top;
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: 1.4rem;
+  color: #727686;
+}
+
+/* line 243, sass/templates-v2/_data-dashboard.scss */
+.data-aside-bar {
+  padding: 0;
+  margin-top: 2px;
+}
+
+/* line 247, sass/templates-v2/_data-dashboard.scss */
+.data-table-section__summary {
+  padding-top: 1rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid #e1e5e8;
+}
+/* line 251, sass/templates-v2/_data-dashboard.scss */
+.data-table-section__summary .form-field--checkbox-list {
+  padding: 4px 0 0 15px;
+}
+/* line 254, sass/templates-v2/_data-dashboard.scss */
+.data-table-section__summary .checkboxLabelVisible {
+  padding-left: calc(21px + 1rem);
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #363a47;
+}
+
+/* line 261, sass/templates-v2/_data-dashboard.scss */
+.data-table-section__summary__figures {
+  display: inline-block;
+  float: right;
+}
+/* line 264, sass/templates-v2/_data-dashboard.scss */
+.data-table-section__summary__figures span, .data-table-section__summary__figures a {
+  display: inline-block;
+  vertical-align: top;
+}
+/* line 268, sass/templates-v2/_data-dashboard.scss */
+.data-table-section__summary__figures .data-table-section__summary__total-revenue,
+.data-table-section__summary__figures .data-table-section__summary__total-downloads {
+  padding: 0 7px 0 8px;
+  font-size: 1.4rem;
+  color: #363a47;
+}
+/* line 273, sass/templates-v2/_data-dashboard.scss */
+.data-table-section__summary__figures .data-table-section__summary__total-revenue span,
+.data-table-section__summary__figures .data-table-section__summary__total-downloads span {
+  padding-top: 0.5rem;
+}
+/* line 277, sass/templates-v2/_data-dashboard.scss */
+.data-table-section__summary__figures .data-table-section__summary__total-downloads {
+  padding-left: 17px;
+}
+/* line 280, sass/templates-v2/_data-dashboard.scss */
+.data-table-section__summary__figures .data-table-section__summary__total-revenue:before,
+.data-table-section__summary__figures .data-table-section__summary__total-downloads:before {
+  padding-right: 0.6rem;
+  font-size: 2.4rem;
+  color: #727686;
+}
+/* line 286, sass/templates-v2/_data-dashboard.scss */
+.data-table-section__summary__figures .data-table-section__summary__growth {
+  padding: 0.4rem 1.7rem 0 0;
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+/* line 291, sass/templates-v2/_data-dashboard.scss */
+.data-table-section__summary__figures .data-table-section__summary__more-link {
+  padding: 0.4rem 1.6rem 0 0;
+  font-size: 1.2rem;
+}
+
+/* Browser fixes */
+/* No files to import found in ../support/* */
+/* line 45, sass/base/_base-v2.scss */
+p.browserupgrade {
+  width: 100%;
+  padding: 20px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* Print styles */

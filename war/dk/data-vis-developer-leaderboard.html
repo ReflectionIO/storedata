@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en" class="no-js" ng-app="reflectionApp">
+<head>
+	<meta charset="utf-8" />
+	<title>Reflection Design Kit - Buttons</title>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link rel="stylesheet" media="screen, projection" type="text/css" href="designkit.css" />
+	<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
+<script>
+  WebFont.load({
+    google: {
+      families: ['Open Sans:400,600,700,400italic,600italic', 'Source Sans Pro:400,600,700', 'Lato:400,700,400italic']
+    }
+  });
+</script> <script src="js/vendor/modernizr.2.8.3.custom.min.js"></script></head>
+<script src="js/data-vis/developer-leaderboard-grossing.js"></script>
+<script src="js/vendor/angular.js"></script>
+<script>
+	// populate the data table
+		'use strict';
+
+		/* Controllers */
+
+		var reflectionApp = angular.module('reflectionApp', [])
+			.controller('DataController', function() {
+				var dataList = this;
+				dataList.dataListGrossing = dataLeaderboardGrossing; // from js/data-vis/developer-leaderboard-grossing.js
+				dataList.dataListGrossingTotal = 0;
+
+				for(var i = 0; i < dataList.dataListGrossing.length; i++) {
+					dataList.dataListGrossingTotal += dataList.dataListGrossing[i].total;
+				}
+
+				dataList.getAppPercentage = function(listIndex, appIndex) {
+		    	var totalOfAllDeveloperApps = dataList.dataListGrossing[listIndex].total;
+		    	var thisAppRevenue = dataList.dataListGrossing[listIndex].app_totals[appIndex];
+		    	return thisAppRevenue/totalOfAllDeveloperApps * 100;
+		    }
+
+		    dataList.getDeveloperPercentage = function(listIndex) {
+	    		var totalOfAllDeveloperApps = dataList.dataListGrossing[listIndex].total;
+	    		return (totalOfAllDeveloperApps/dataList.dataListGrossingTotal * 100);
+		    }
+			});
+</script>
+<body>
+	<!--[if (lt IE 9)]>
+      <div class="window-warning">
+  			<p>Uh oh... Reflection doesn't work in this browser. &nbsp; &nbsp;<a href="http://outdatedbrowser.com/en" target="_blank">Download a compatible browser</a></p>
+  		</div>
+  <![endif]-->
+  <header id="js-component-import--global-header" class="global-header"></header>
+  
+	<div id="js-component-import--panel-left" class="panel-left js-panel-left js-custom-scrollbar" data-mcs-theme="minimal-dark"></div>
+
+	<div class="l-page-container">
+		<div id="main" class="l-main" role="main">
+
+			<div class="grid-container page-developer-leaderboard" ng-controller="DataController as dataList">
+				<div class="grid__row grid__row--heading-row">
+					<div class="grid__column grid__row--heading-row__left">
+						<h1 class="heading-style--heading-three">Top Developers by Revenue <span>UK / Games</span></h1>
+						<h2>Week 1, 4th Jan 2016 - 10th Jan 2016</h2>
+					</div>
+					<div class="grid__column grid__row--heading-row__right">
+						<div class="toggle-container">
+							<div class="filter-toggle">
+									<div class="toggle">
+										<input id="toggle--show-breakdown" name="radiogroupname" type="radio">
+										<label for="toggle--show-breakdown">
+											Breakdown by Apps
+										</label>
+									</div>
+									<div class="toggle">
+										<input id="toggle--show-relative" name="radiogroupname" checked="" type="radio">
+										<label for="toggle--show-relative">
+											Relative
+										</label>
+									</div>
+								</div>
+						</div>
+						<div class="total-container">
+							<h2 class="heading-style--heading-five">Total Revenue for Period: <span>{{dataList.dataListGrossingTotal/100 | currency:"£":0}}</span></h2>
+						</div>
+					</div>
+				</div>
+
+				<div class="grid__row row-headings">
+					<div class="developer-rank-container">
+						<h2 class="heading-style--heading-six">Rank</h2></div>
+					<div class="developer-container">
+						<h2 class="heading-style--heading-six">Developer</h2>
+					</div>
+					<div class="revenue-container">
+						<h2 class="heading-style--heading-six">Revenue</h2>
+					</div>
+					<div class="app-breakdown-container">
+						<h2 class="heading-style--heading-six">% of Total for Period</h2>
+					</div>
+				</div>
+
+				<div class="grid__row data-row" ng-repeat="dataItem in dataList.dataListGrossing">
+					<div class="developer-rank-container">
+						<h2 class="heading-style--heading-six">{{$index + 1}}</h2>
+					</div>
+					<div class="developer-container">
+						<h2 class="heading-style--heading-six">{{dataItem.Developer}}</h2>
+					</div>
+					<div class="revenue-container">
+						<h2 class="heading-style--heading-six">{{dataItem.total/100 | currency:"£":0}}</h2>
+					</div>
+					<div class="app-breakdown-container">
+						<div class="developer-apps-revenue-container" data-relativepercentage='{{dataList.getDeveloperPercentage($index) | number : 5}}'>
+							<div class="percentage-container"><h2 class="heading-style--heading-six">{{dataList.getDeveloperPercentage($index) | number : 1}}</h2></div>
+							<div class="app-breakdown">
+								<div class="developer-app-revenue" ng-repeat="appItem in dataItem.app_names" style='width:{{dataList.getAppPercentage($parent.$index, $index)}}%'>
+									<div class="developer-leaderboard__app-details">
+										<img src='{{dataItem.icon_url[$index]}}' alt='{{appItem}}} logo' />
+										<h2>{{appItem}}</h2>
+										<h3>{{dataItem.app_totals[$index]/100 | currency:"£":0}}</h3>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+		</div>
+	</div>
+
+ 	<script src="js/vendor/jquery-1.11.1.min.js"></script>
+
+  <script>
+		$(document).on("ready", function(){
+
+		  if($('#toggle--show-relative:checked').length > 0) {
+				togglePercentage();
+			}
+
+		  $('#toggle--show-relative').change(function(){
+		  	togglePercentage();
+			});
+
+			$('#toggle--show-breakdown').change(function(){
+		  	togglePercentage();
+			});
+
+			function togglePercentage() {
+				var firstPercentage = 0;
+				$('.developer-apps-revenue-container').each(function() {
+					if($('#toggle--show-relative:checked').length > 0) {
+						if(firstPercentage == 0) {
+							firstPercentage = $(this).data("relativepercentage");
+							$(this).css("width", "100%");
+						} else {
+							var relativeWidth = $(this).data("relativepercentage") / firstPercentage * 100;
+							$(this).css("width", relativeWidth + "%");
+						}
+					} else {
+						$(this).css("width", "100%");
+					}
+				});
+
+				if($('#toggle--show-relative:checked').length > 0) {
+					$('.heading-style--heading-six span, .perc-heading').css("opacity", 1);
+				} else {
+					$('.heading-style--heading-six span, .perc-heading').css("opacity", 0);
+				}
+			}
+		});
+  </script>
+</body>

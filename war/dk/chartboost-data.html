@@ -1,0 +1,910 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="utf-8" />
+	<title>Reflection, App with Chartboost API calls</title>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">	
+	<!--[if (gt IE 9)|(IEMobile)|(!IE)]><!-->
+		<link rel="stylesheet" type="text/css" href="reflection-main.css" />
+	<!--<![endif]-->
+	<!--[if IE 9]>
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="ie9-one.css" />
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="ie9-two.css" />
+	<![endif]-->	
+	<!--[if (lt IE 9)]>
+		<script src="js/vendor/html5shiv.min.js"></script>
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main-ie8.css" />
+	<![endif]-->
+ 	<!--[if !lt IE 9]><!--> 
+		<script src="js/vendor/picturefill.2.3.1.min.js" async></script>
+	<!-- <![endif]-->
+	<link rel="stylesheet" href="js/vendor/jquery.mCustomScrollbar.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
+<script>
+  WebFont.load({
+    google: {
+      families: ['Open Sans:400,600,700,400italic,600italic', 'Source Sans Pro:400,600,700', 'Lato:400,700,400italic']
+    }
+  });
+</script></head>
+<body>
+	<!--[if (lt IE 9)]>
+      <div class="window-warning">
+  			<p>Uh oh... Reflection doesn't work in this browser. &nbsp; &nbsp;<a href="http://outdatedbrowser.com/en" target="_blank">Download a compatible browser</a></p>
+  		</div>
+  <![endif]-->
+
+  <header id="js-component-import--global-header" class="global-header"></header>
+  
+	<div id="js-component-import--panel-left" class="panel-left js-panel-left js-custom-scrollbar" data-mcs-theme="minimal-dark"></div>
+
+	<div class="l-page-container">
+		<div id="main" class="l-main" role="main">
+			<div class="page-app">
+			<div class="grid-container">
+				<header class="page-app__header">
+					<div class="app-icon-container">
+						<img src="images/placeholder-logo-arach.jpg" alt="Arachnophobia app icon" class="app-icon" />
+					</div>
+					<div class="app-details">
+						<h1 class="heading-style--heading-three app-title">Chartboost API Data Callback - Ad Revenue</h1>
+					</div>
+				</header>
+			</div>
+			<div class="tabs">
+				<ul class="tabs-container default-tabs-transition tabs-to-dropdown">
+					<li class="grid__column grid__column--one-quarter tabs__tab is-disabled">
+						<div class="tab-animate-active"></div>
+						<a data-content="#tab-content-overall" class="tabs__link">
+							<span>
+								<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path d="M19.5,4.7L0,6.9v13.9l13.9,4.9L32,20.2V6.4L19.5,4.7z M30,15.1l-16.1,4.6L2,15.9v-3l11.9,3.4
+	L30,12.2V15.1z M13.9,12L30,8.4v2.8l-16.1,4.2L2,11.9v-3L13.9,12z M27.7,7.9l-13.8,3.1L4.2,8.4l15.3-1.7L27.7,7.9z M13.9,23.6
+	L2,19.4V17l11.9,3.8L30,16.2v2.6L13.9,23.6z"/></svg>
+	 							<span>
+	 								Revenue
+	 								<div class="icon-member icon-member--pro"><img src="images/icon-pro@2x.png" alt="Pro member icon"></div>
+	 							</span>
+	 						</span>
+						</a>
+					</li>
+					<li class="grid__column grid__column--one-quarter tabs__tab is-disabled">
+						<div class="tab-animate-active"></div>
+						<a data-content="#tab-content-free" class="tabs__link">
+							<span>
+								<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path fill-rule=evenodd clip-rule=evenodd d="M32,16.5c0,3.6-2.7,6.5-6.7,6.5v0h-6v-2h6.5
+	c2.5,0,4.5-2,4.5-4.5c0-1.6-0.8-3-2.3-3.9c-1.4-0.8-1.5-0.9-0.9-2.4c0.1-0.3,0.1-0.5,0.1-0.8c0-1.4-1.1-2.5-2.5-2.5
+	c0,0-0.7,0-1.4,0.2c-1.1,0.5-1.3,0-1.8-1.2C20.4,3.6,17.9,2,15.2,2c-3.6,0-6.6,2.7-7,6.3c-0.1,1.4-0.2,1.4-1.7,1.8
+	C4,10.6,2,12.9,2,15.5c0,3,2.3,5.5,5.3,5.5v0h6v2h-6v0c-4,0-7.2-3.4-7.2-7.5c0-3.7,2.7-6.7,6.2-7.4c0.4-4.6,4.4-8.1,9-8.1
+	c3.6,0,6.7,2.1,8.1,5.2C23.8,5.1,24.2,5,24.7,5c2.5,0,4.5,2,4.5,4.5c0,0.5-0.2,1-0.3,1.4C30.8,12,32,14.1,32,16.5z M19,25.8
+	l-1.8,1.8V14.3c0-0.6-0.4-1.1-1-1.1c-0.6,0-1,0.5-1,1.1v13.3l-1.9-1.8c-0.4-0.4-1.2-0.4-1.6,0c-0.4,0.4-0.5,1.1,0,1.6l3.1,3.1
+	c0.4,0.4,0.8,0.5,1.3,0.5c0.5,0,0.9-0.2,1.3-0.5l3.1-3.1c0.4-0.4,0.4-1.1,0-1.6C20.2,25.4,19.5,25.4,19,25.8z"/></svg>
+								<span>
+									Downloads
+								<div class="icon-member icon-member--pro"><img src="images/icon-pro@2x.png" alt="Pro member icon"></div>
+								</span>
+							</span>
+						</a>
+					</li>
+					<li class="grid__column grid__column--one-quarter tabs__tab is-active js-tab-select">
+						<div class="tab-animate-active"></div>
+						<a data-content="#tab-content-rank" class="tabs__link">
+							<span>
+								<span>Chartboost</span></span>
+						</a>
+					</li>
+					<li class="grid__column grid__column--one-quarter tabs__tab is-disabled">
+						<div class="tab-animate-active"></div>
+						<a data-content="#tab-content-details" class="tabs__link">
+							<span>
+								<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path d="M4,10c0,1.1-0.9,2-2,2s-2-0.9-2-2s0.9-2,2-2S4,8.9,4,10z M32,9H7v2h25V9z M2,14
+	c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S3.1,14,2,14z M32,15H7v2h25V15z M2,20c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S3.1,20,2,20z
+	 M32,21H7v2h25V21z"/></svg>
+								<span>App Details</span></span>
+						</a>
+					</li>
+				</ul>
+			</div>
+				<ul class="tabs__content-container default-tabs-transition tabs-to-dropdown--content">
+					<li id="tab-content-rank" class="tabs__content tabs__content--is-showing">
+						<div class="grid__column grid__column--full-width filters-container filter-container--app">
+							<form class="forms--mid-theme">
+								<div class="form-field" style="width: 20%">
+								 <input type="text" name="startDate" id="startDate" value="2016-01-01" autocomplete="off" />
+								 <label for="startDate">Start Date (yyyy-mm-dd)</label>
+								</div>
+								<div class="form-field" style="width: 20%">
+								 <input type="text" name="endDate" id="endDate" value="2016-01-31" autocomplete="off" />
+								 <label for="endDate">End Date (yyyy-mm-dd)</label>
+								</div>
+								<div class="form-field" style="width: 20%">
+								 <input type="text" name="user-id" id="user-id" value="55a25d925b145305467c9d38" autocomplete="off" />
+								 <label for="user-id">User ID</label>
+								</div>
+								<div class="form-field" style="width: 30%">
+								 <input type="text" name="user-signature" id="user-signature" value="697c8286cec615a5380da255fb68089cbdb0dc04" autocomplete="off" />
+								 <label for="user-signature">User Signature</label>
+								</div>								
+								<button class="ref-button--cta-small refresh-button js-refresh">
+									<svg class="svg-refresh" version="1.1" x="0px" y="0px" viewBox="0 0 16 16" enable-background="new 0 0 16 16" xml:space="preserve">
+										<path fill="#FCFDFD" d="M2.1,9h-2H0v5l1.5-1.4C2.9,14.7,5.3,16,8,16c4.1,0,7.4-3.1,7.9-7h-2c-0.5,2.8-2.9,5-5.9,5
+			c-2.1,0-4-1.1-5-2.7L5.4,9H2.1z M14.6,3.4L16,2v5h-0.1h-2H13h-2l2.1-2.1C12.1,3.2,10.2,2,8,2C5,2,2.6,4.2,2.1,7h-2
+			C0.6,3.1,3.9,0,8,0C10.7,0,13.1,1.4,14.6,3.4z"/>
+									</svg>
+								</button>
+							</form>
+						</div>
+
+						<div class="graph-container graph-container--with-events">
+							<div id="container" style="width:100%; height:500px;" class="highcharts-container">
+			        </div>
+							<div class="graph-loading-indicator">
+			        </div>
+			        <div class="graph-loading-line">
+			        	<div class="animated-line"></div>
+			        </div>
+						</div>
+
+				<div class="grid-container">
+				<section class="data-display-container">
+					<header class="data-display-header">
+						<div class="data-display-header--component total-revenue-title">
+							<div class="app-icon-small-container">
+								<img src="images/placeholder-logo-arach.jpg" alt="Arachnophobia app icon" class="app-icon-small" />
+							</div>
+							<h2 class="heading-style heading-style--heading-four data-heading">Revenue for period</h2>
+						</div>
+						<button class="ref-button--function-small ref-button--function-small--with-icon"><span class="ref-icon-before ref-icon-before--cloud">Download</span></button>						
+						
+						<div class="data-display-header--component data-summary-container">
+							<span class="revenue-date-range"></span>
+							<span class="revenue-summary-value"></span>
+						</div>
+					</header>
+					<table class="table-revenue responsive">
+						<thead>
+							<th class="can-be-sorted is-ascending">Date <svg version=1.1 x=0px y=0px viewBox="0 0 7 10" enable-background="new 0 0 7 10" xml:space=preserve class="sort-svg"><path class=ascending d="M0.4,4.1h6.1c0.1,0,0.2,0,0.3-0.1C7,3.9,7,3.8,7,3.7c0-0.1,0-0.2-0.1-0.3L3.8,0.1
+	C3.7,0,3.6,0,3.5,0C3.4,0,3.3,0,3.2,0.1L0.1,3.3C0,3.4,0,3.5,0,3.7C0,3.8,0,3.9,0.1,4C0.2,4.1,0.3,4.1,0.4,4.1z"/><path class=descending d="M6.6,5.9H0.4c-0.1,0-0.2,0-0.3,0.1C0,6.1,0,6.2,0,6.3c0,0.1,0,0.2,0.1,0.3l3.1,3.2
+	C3.3,10,3.4,10,3.5,10c0.1,0,0.2,0,0.3-0.1l3.1-3.2C7,6.6,7,6.5,7,6.3C7,6.2,7,6.1,6.9,6C6.8,5.9,6.7,5.9,6.6,5.9z"/></svg></th>
+							<th class="can-be-sorted">Revenue <span class="hidden-for-mobile">Generated</span> <svg version=1.1 x=0px y=0px viewBox="0 0 7 10" enable-background="new 0 0 7 10" xml:space=preserve class="sort-svg"><path class=ascending d="M0.4,4.1h6.1c0.1,0,0.2,0,0.3-0.1C7,3.9,7,3.8,7,3.7c0-0.1,0-0.2-0.1-0.3L3.8,0.1
+	C3.7,0,3.6,0,3.5,0C3.4,0,3.3,0,3.2,0.1L0.1,3.3C0,3.4,0,3.5,0,3.7C0,3.8,0,3.9,0.1,4C0.2,4.1,0.3,4.1,0.4,4.1z"/><path class=descending d="M6.6,5.9H0.4c-0.1,0-0.2,0-0.3,0.1C0,6.1,0,6.2,0,6.3c0,0.1,0,0.2,0.1,0.3l3.1,3.2
+	C3.3,10,3.4,10,3.5,10c0.1,0,0.2,0,0.3-0.1l3.1-3.2C7,6.6,7,6.5,7,6.3C7,6.2,7,6.1,6.9,6C6.8,5.9,6.7,5.9,6.6,5.9z"/></svg></th>
+							<th class="can-be-sorted">% <span class="hidden-for-mobile">of</span> Total <span class="hidden-for-mobile">Revenue</span> for Period <svg version=1.1 x=0px y=0px viewBox="0 0 7 10" enable-background="new 0 0 7 10" xml:space=preserve class="sort-svg"><path class=ascending d="M0.4,4.1h6.1c0.1,0,0.2,0,0.3-0.1C7,3.9,7,3.8,7,3.7c0-0.1,0-0.2-0.1-0.3L3.8,0.1
+	C3.7,0,3.6,0,3.5,0C3.4,0,3.3,0,3.2,0.1L0.1,3.3C0,3.4,0,3.5,0,3.7C0,3.8,0,3.9,0.1,4C0.2,4.1,0.3,4.1,0.4,4.1z"/><path class=descending d="M6.6,5.9H0.4c-0.1,0-0.2,0-0.3,0.1C0,6.1,0,6.2,0,6.3c0,0.1,0,0.2,0.1,0.3l3.1,3.2
+	C3.3,10,3.4,10,3.5,10c0.1,0,0.2,0,0.3-0.1l3.1-3.2C7,6.6,7,6.5,7,6.3C7,6.2,7,6.1,6.9,6C6.8,5.9,6.7,5.9,6.6,5.9z"/></svg></th>
+						</thead>
+						<colgroup>
+							<col style="width: 25%">
+							<col style="width: 25%">
+							<col style="width: 50%">
+						</colgroup>
+						<tbody>
+							<tr>
+								<td class="date-value">-</td>
+								<td class="revenue-value">-</td>
+								<td class="revenue-percentage">
+									<span>-</span>
+									<div class="data-bar">
+										<div style="width: 0%"></div>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<button class="ref-button--function-small ref-button--function-small--with-icon download-button--mobile"><span class="ref-icon-before ref-icon-before--cloud">Download</span></button>
+				</section>
+			</div>
+					</li>
+				</ul>
+			</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="grid-container" id="js-component-import--global-footer"></div>
+
+	<div id="js-component-import--account-container" class="panel-right-container js-account-container"></div>
+	<div id="js-component-import--search-container" class="panel-right-container js-search-container"></div>
+
+ 	<script src="js/vendor/jquery-1.11.1.min.js"></script>
+ 	<script src="js/vendor/jquery-ui.custom.min.js"></script>
+ 	<script src="js/vendor/handlebars-v2.0.0.js"></script>
+ 	<script src="js/templates/templates.js"></script>
+ 	<script src="js/vendor/modernizr.2.8.3.custom.min.js"></script>
+	<!--[if IE 9]>
+		<script src="js/vendor/jquery.mCustomScrollbar.concat.min.js"></script>
+	<![endif]-->
+
+	<div id="js-appendScriptsContainer"></div>
+
+	<script src="js/application-global-modules-logged-in.js"></script>
+  <script src="js/application.js"></script>
+  <script src="js/vendor/snap.svg.js"></script>
+  <script src="js/vendor/highcharts-custom.js"></script>
+  <script src="js/language-codes.js"></script>
+  <!-- <script src="js/polyfills/pathseg.js"></script> polyfill for Chrome, old SVG API pathSegList not supported -->
+  <script src="js/polyfills/path-data-polyfill.js"></script> <!-- new SVG API polyfill for getPathData() and setPathData() -->
+
+  <script>
+
+  	Date.prototype.addHours= function(h){
+      this.setHours(this.getHours()+h);
+      return this;
+    }
+
+    function initScripts() {
+  		new AppPage();
+
+  		// Mock JS
+  		$('.can-be-sorted').on("click", function() {
+  			var $this = $(this), siblingSortCells = $this.siblings('.can-be-sorted');
+  			if($this.hasClass('is-descending')) {
+  				$this.toggleClass('is-descending is-ascending');
+  			}
+  			else if($this.hasClass('is-ascending')) {
+  					$this.removeClass('is-ascending');
+  			}
+  			else {
+  				$this.addClass('is-descending');
+  			}
+  			siblingSortCells.removeClass('is-ascending is-descending');
+  		});
+
+  		$('.date-select-container input').on("focus", function(){
+  			$('.refresh-button').removeAttr("disabled");
+  		});
+
+	  	// Extending Highcharts
+	    (function (H) {
+
+	      var customIconRect;
+	      H.wrap(H.Tooltip.prototype, 'refresh', function (proceed) {
+
+	        proceed.apply(this, Array.prototype.slice.call(arguments, 1));
+
+	        var monthNames = [
+	          "Jan", "Feb", "Mar",
+	          "Apr", "May", "Jun", "Jul",
+	          "Aug", "Sep", "Oct",
+	          "Nov", "Dec"
+	        ];
+
+	        if(customIconRect !== undefined) {
+	          customIconRect.destroy();
+	        }
+
+	        var $axisLabel = $(this.chart.container).find('.highcharts-axis-label'),
+	            leftOffset = 29,
+	            axisLabelYPos = $("#" + arguments[1][0].series.chart.container.id + "").height() - arguments[1][0].series.xAxis.bottom,
+	            //axisLabelYPos = arguments[1][0].series.chart.containerHeight - arguments[1][0].series.xAxis.bottom,
+	            axisLabelXPos = arguments[1][0].plotX - leftOffset,
+	            timeStampString = arguments[1][0].x + "",
+	            timeStampString = timeStampString.substring(0,10),
+	            xAxisDate = new Date(timeStampString*1000).addHours(12),
+	            formattedDate = xAxisDate.getDate() + " " + monthNames[xAxisDate.getMonth()];
+
+	        if($axisLabel.length > 0) {       
+
+	          var labelYPos = axisLabelYPos + 28,
+	              labelXPos = axisLabelXPos + 5;
+
+	          $axisLabel.attr("transform", "translate(" + labelXPos + "," + labelYPos + ")");
+	          $axisLabel.find("text").text(formattedDate);
+
+	        } else {
+	          this.chart.renderer.label(formattedDate, axisLabelXPos+5, axisLabelYPos + 28, 'callout', 0, 0, false, true, "axis-label")
+	          .css({
+	            color: '#fcfdfd',
+	            fontSize: '13px',
+	            fontFamily: 'Lato',
+	            fontWeight: 600
+	          })
+	          .attr({
+	            zIndex: 100
+	          })
+	          .add();
+	        }
+
+	        customIconRect = this.chart.renderer.image('images/axisLabelBackground.png', axisLabelXPos - 5, axisLabelYPos, 67, 34)
+	        .attr({
+	          zIndex: 99
+	        })
+	        .add();
+
+
+	        // add event labels
+	        	// destroy any existing labels
+	        var thisPlotX = arguments[1][0].plotX,
+	        		eventTooltip;
+
+	        		if(this.chart.eventTooltips) {
+	        			for (var t = 0; t < this.chart.eventTooltips.length; t++) {
+	        				this.chart.eventTooltips[t].destroy();
+	        			}
+	        		}
+	        		this.chart.eventTooltips = [];
+
+	        	// remove existing animating CSS class for icons
+	        $(".event-icon--launch.is-animating").each(function() {
+	        	$(this).attr("class", "animation-complete event-icon--launch");
+	        });
+	        $(".event-icon--flag.is-animating").each(function() {
+	        	$(this).attr("class", "event-icon--flag");
+	        });
+	        
+	      });
+
+				H.wrap(H.Series.prototype, 'hide', function (proceed) {
+
+				  // Before the hide function
+				  var par = $(this.graph.element).parents('.highcharts-series').attr("class", "highcharts-series is-transparent-fade");
+				  var instance = this;
+				  // Now apply the original function with the original arguments, 
+				  // which are sliced off this function's arguments
+				  setTimeout(function() {
+				  	proceed.apply(instance, Array.prototype.slice.call(arguments, 1));
+				  	par.attr("class", "highcharts-series");
+				  }, 200);
+				});
+
+				H.wrap(H.Series.prototype, 'show', function (proceed) {
+
+				  // Before the show function
+				  var graphId = this.graph.element.id;
+				  // Now apply the original function with the original arguments, 
+				  // which are sliced off this function's arguments
+				  proceed.apply(this, Array.prototype.slice.call(arguments, 1));
+
+				  // after show()
+				  var currentPath = this.graph.d;
+				  var par = $(this.graph.element).parents('.highcharts-series').attr("class", "highcharts-series is-transparent");
+				  setTimeout(function() {
+				  	var el = Snap('#' + graphId);
+            var pathList = el.node.getPathData();
+            var flatPath = "";
+            for(var x=0; x < pathList.length; x++) {
+              flatPath += pathList[x].type + " " + pathList[x].values[0] + " 454 ";
+            }
+            el.attr("d", flatPath);
+				  	par.attr("class", "highcharts-series");
+				  	setTimeout(function() {
+				  		el.animate({ d: currentPath }, 800, mina.elastic);
+				  	}, 400);
+
+				  	var elFill = Snap('#' + graphId + 'fill');
+				  	var currentPathFill = $('#' + graphId + 'fill').attr("d");
+            var pathList = elFill.node.getPathData();
+            var flatFillPath = "";
+            for(var x=0; x < pathList.length; x++) {
+              flatFillPath += pathList[x].type + " " + pathList[x].values[0] + " 454 ";
+            }
+            elFill.attr("d", flatFillPath);
+				  	setTimeout(function() {
+				  		elFill.animate({ d: currentPathFill }, 800, mina.elastic);
+				  	}, 400);
+				  }, 100);
+
+				});
+	    }(Highcharts));
+
+	    Highcharts.setOptions({
+	        colors: ['#6d69c5', '#ff496a', '#e98fec', '#ffb449', '#64E572', '#FF9655', '#FFF263', '#6AF9C4']
+	    });
+
+	    setGraphLoading();
+	    loadDefaultGraph();
+	  }
+
+	  var chart = null; // global chart variable
+	  function setGraphLoading() {
+	  	chart = null;
+	  	$('#container').empty();
+	  	$('.graph-loading-indicator').removeClass('is-loading-success');
+      $('.graph-container').removeClass('is-animated');
+      $('.graph-container .graph-loading-line').show();
+      $('.graph-container').addClass('is-loading');      
+    }
+
+    function loadDefaultGraph() {
+    	setTimeout(function(){
+        var userSignature = "697c8286cec615a5380da255fb68089cbdb0dc04",
+						userId = "55a25d925b145305467c9d38";
+						// Use Mock Data for testing
+						// MOCK DATA
+						var data = [{"installRateReceived":0.0,"adTypeId":"1","dt":"2016-01-29","campaignSubType":"user_acquisition","role":"publisher","ctrReceived":0.0,"campaign":"Arachnophobia Static Interstitial","impressionsDelivered":2,"cpcvSpent":0.0,"impressionsReceived":0,"creative":"","installReceived":0,"ecpmSpent":0.0,"moneySpent":0.0,"clicksDelivered":2,"campaignTarget":"","ecpmEarned":0.0,"videoCompletedDelivered":0,"clicksReceived":0,"videoCompletedReceived":0,"campaignId":"55f934110d60253e4443868f","moneyEarned":0.0,"cpcvEarned":0.0,"campaignType":"network","installDelivered":0,"installRateDelivered":0.0,"ctrDelivered":1.0},{"installRateReceived":0.0,"adTypeId":"1","dt":"2016-01-28","campaignSubType":"user_acquisition","role":"publisher","ctrReceived":0.0,"campaign":"Arachnophobia Static Interstitial","impressionsDelivered":1,"cpcvSpent":0.0,"impressionsReceived":0,"creative":"","installReceived":0,"ecpmSpent":0.0,"moneySpent":0.0,"clicksDelivered":0,"campaignTarget":"","ecpmEarned":0.0,"videoCompletedDelivered":0,"clicksReceived":0,"videoCompletedReceived":0,"campaignId":"55f934110d60253e4443868f","moneyEarned":0.0,"cpcvEarned":0.0,"campaignType":"network","installDelivered":0,"installRateDelivered":0.0,"ctrDelivered":0.0},{"installRateReceived":0.0,"adTypeId":"1","dt":"2016-01-26","campaignSubType":"user_acquisition","role":"publisher","ctrReceived":0.0,"campaign":"Arachnophobia Static Interstitial","impressionsDelivered":14,"cpcvSpent":0.0,"impressionsReceived":0,"creative":"","installReceived":0,"ecpmSpent":0.0,"moneySpent":0.0,"clicksDelivered":2,"campaignTarget":"","ecpmEarned":0.0,"videoCompletedDelivered":0,"clicksReceived":0,"videoCompletedReceived":0,"campaignId":"55f934110d60253e4443868f","moneyEarned":0.0,"cpcvEarned":0.0,"campaignType":"network","installDelivered":0,"installRateDelivered":0.0,"ctrDelivered":0.1428571492433548},{"installRateReceived":0.0,"adTypeId":"1","dt":"2016-01-24","campaignSubType":"user_acquisition","role":"publisher","ctrReceived":0.0,"campaign":"Arachnophobia Static Interstitial","impressionsDelivered":1,"cpcvSpent":0.0,"impressionsReceived":0,"creative":"","installReceived":0,"ecpmSpent":0.0,"moneySpent":0.0,"clicksDelivered":0,"campaignTarget":"","ecpmEarned":0.0,"videoCompletedDelivered":0,"clicksReceived":0,"videoCompletedReceived":0,"campaignId":"55f934110d60253e4443868f","moneyEarned":0.0,"cpcvEarned":0.0,"campaignType":"network","installDelivered":0,"installRateDelivered":0.0,"ctrDelivered":0.0},{"installRateReceived":0.0,"adTypeId":"1","dt":"2016-01-22","campaignSubType":"user_acquisition","role":"publisher","ctrReceived":0.0,"campaign":"Arachnophobia Static Interstitial","impressionsDelivered":1,"cpcvSpent":0.0,"impressionsReceived":0,"creative":"","installReceived":0,"ecpmSpent":0.0,"moneySpent":0.0,"clicksDelivered":0,"campaignTarget":"","ecpmEarned":0.0,"videoCompletedDelivered":0,"clicksReceived":0,"videoCompletedReceived":0,"campaignId":"55f934110d60253e4443868f","moneyEarned":0.0,"cpcvEarned":0.0,"campaignType":"network","installDelivered":0,"installRateDelivered":0.0,"ctrDelivered":0.0},{"installRateReceived":0.0,"adTypeId":"4","dt":"2016-01-20","campaignSubType":"user_acquisition","role":"publisher","ctrReceived":0.0,"campaign":"Arachnophobia Rewarded Video","impressionsDelivered":2,"cpcvSpent":0.0,"impressionsReceived":0,"creative":"","installReceived":0,"ecpmSpent":0.0,"moneySpent":0.0,"clicksDelivered":1,"campaignTarget":"","ecpmEarned":7.0,"videoCompletedDelivered":1,"clicksReceived":0,"videoCompletedReceived":0,"campaignId":"55f9324e0d60253e336fe6cc","moneyEarned":0.014000000432133675,"cpcvEarned":14.0,"campaignType":"network","installDelivered":0,"installRateDelivered":0.0,"ctrDelivered":0.5},{"installRateReceived":0.0,"adTypeId":"1","dt":"2016-01-16","campaignSubType":"user_acquisition","role":"publisher","ctrReceived":0.0,"campaign":"Arachnophobia Static Interstitial","impressionsDelivered":1,"cpcvSpent":0.0,"impressionsReceived":0,"creative":"","installReceived":0,"ecpmSpent":0.0,"moneySpent":0.0,"clicksDelivered":1,"campaignTarget":"","ecpmEarned":0.0,"videoCompletedDelivered":0,"clicksReceived":0,"videoCompletedReceived":0,"campaignId":"55f934110d60253e4443868f","moneyEarned":0.0,"cpcvEarned":0.0,"campaignType":"network","installDelivered":0,"installRateDelivered":0.0,"ctrDelivered":1.0},{"installRateReceived":0.0,"adTypeId":"1","dt":"2016-01-15","campaignSubType":"user_acquisition","role":"publisher","ctrReceived":0.0,"campaign":"Arachnophobia Static Interstitial","impressionsDelivered":2,"cpcvSpent":0.0,"impressionsReceived":0,"creative":"","installReceived":0,"ecpmSpent":0.0,"moneySpent":0.0,"clicksDelivered":1,"campaignTarget":"","ecpmEarned":0.0,"videoCompletedDelivered":0,"clicksReceived":0,"videoCompletedReceived":0,"campaignId":"55f934110d60253e4443868f","moneyEarned":0.0,"cpcvEarned":0.0,"campaignType":"network","installDelivered":0,"installRateDelivered":0.0,"ctrDelivered":0.5},{"installRateReceived":0.0,"adTypeId":"4","dt":"2016-01-14","campaignSubType":"user_acquisition","role":"publisher","ctrReceived":0.0,"campaign":"Arachnophobia Rewarded Video","impressionsDelivered":1,"cpcvSpent":0.0,"impressionsReceived":0,"creative":"","installReceived":0,"ecpmSpent":0.0,"moneySpent":0.0,"clicksDelivered":0,"campaignTarget":"","ecpmEarned":7.0,"videoCompletedDelivered":1,"clicksReceived":0,"videoCompletedReceived":0,"campaignId":"55f9324e0d60253e336fe6cc","moneyEarned":0.007000000216066837,"cpcvEarned":7.0,"campaignType":"network","installDelivered":0,"installRateDelivered":0.0,"ctrDelivered":0.0},{"installRateReceived":0.0,"adTypeId":"1","dt":"2016-01-14","campaignSubType":"user_acquisition","role":"publisher","ctrReceived":0.0,"campaign":"Arachnophobia Static Interstitial","impressionsDelivered":2,"cpcvSpent":0.0,"impressionsReceived":0,"creative":"","installReceived":0,"ecpmSpent":0.0,"moneySpent":0.0,"clicksDelivered":1,"campaignTarget":"","ecpmEarned":0.0,"videoCompletedDelivered":0,"clicksReceived":0,"videoCompletedReceived":0,"campaignId":"55f934110d60253e4443868f","moneyEarned":0.0,"cpcvEarned":0.0,"campaignType":"network","installDelivered":0,"installRateDelivered":0.0,"ctrDelivered":0.5},{"installRateReceived":0.0,"adTypeId":"4","dt":"2016-01-13","campaignSubType":"user_acquisition","role":"publisher","ctrReceived":0.0,"campaign":"Arachnophobia Rewarded Video","impressionsDelivered":0,"cpcvSpent":0.0,"impressionsReceived":0,"creative":"","installReceived":0,"ecpmSpent":0.0,"moneySpent":0.0,"clicksDelivered":0,"campaignTarget":"","ecpmEarned":0.0,"videoCompletedDelivered":0,"clicksReceived":0,"videoCompletedReceived":0,"campaignId":"55f9324e0d60253e336fe6cc","moneyEarned":0.0,"cpcvEarned":0.0,"campaignType":"network","installDelivered":1,"installRateDelivered":0.0,"ctrDelivered":0.0},{"installRateReceived":0.0,"adTypeId":"4","dt":"2016-01-11","campaignSubType":"user_acquisition","role":"publisher","ctrReceived":0.0,"campaign":"Arachnophobia Rewarded Video","impressionsDelivered":6,"cpcvSpent":0.0,"impressionsReceived":0,"creative":"","installReceived":0,"ecpmSpent":0.0,"moneySpent":0.0,"clicksDelivered":1,"campaignTarget":"","ecpmEarned":9.625,"videoCompletedDelivered":5,"clicksReceived":0,"videoCompletedReceived":0,"campaignId":"55f9324e0d60253e336fe6cc","moneyEarned":0.057750001549720764,"cpcvEarned":11.550000190734863,"campaignType":"network","installDelivered":0,"installRateDelivered":0.0,"ctrDelivered":0.1666666716337204},{"installRateReceived":0.0,"adTypeId":"1","dt":"2016-01-11","campaignSubType":"user_acquisition","role":"publisher","ctrReceived":0.0,"campaign":"Arachnophobia Static Interstitial","impressionsDelivered":5,"cpcvSpent":0.0,"impressionsReceived":0,"creative":"","installReceived":0,"ecpmSpent":0.0,"moneySpent":0.0,"clicksDelivered":3,"campaignTarget":"","ecpmEarned":0.0,"videoCompletedDelivered":0,"clicksReceived":0,"videoCompletedReceived":0,"campaignId":"55f934110d60253e4443868f","moneyEarned":0.0,"cpcvEarned":0.0,"campaignType":"network","installDelivered":0,"installRateDelivered":0.0,"ctrDelivered":0.6000000238418579},{"installRateReceived":0.0,"adTypeId":"1","dt":"2016-01-10","campaignSubType":"user_acquisition","role":"publisher","ctrReceived":0.0,"campaign":"Arachnophobia Static Interstitial","impressionsDelivered":1,"cpcvSpent":0.0,"impressionsReceived":0,"creative":"","installReceived":0,"ecpmSpent":0.0,"moneySpent":0.0,"clicksDelivered":0,"campaignTarget":"","ecpmEarned":0.0,"videoCompletedDelivered":0,"clicksReceived":0,"videoCompletedReceived":0,"campaignId":"55f934110d60253e4443868f","moneyEarned":0.0,"cpcvEarned":0.0,"campaignType":"network","installDelivered":0,"installRateDelivered":0.0,"ctrDelivered":0.0},{"installRateReceived":0.0,"adTypeId":"4","dt":"2016-01-09","campaignSubType":"user_acquisition","role":"publisher","ctrReceived":0.0,"campaign":"Arachnophobia Rewarded Video","impressionsDelivered":5,"cpcvSpent":0.0,"impressionsReceived":0,"creative":"","installReceived":0,"ecpmSpent":0.0,"moneySpent":0.0,"clicksDelivered":0,"campaignTarget":"","ecpmEarned":7.699999809265137,"videoCompletedDelivered":5,"clicksReceived":0,"videoCompletedReceived":0,"campaignId":"55f9324e0d60253e336fe6cc","moneyEarned":0.03849999979138374,"cpcvEarned":7.699999809265137,"campaignType":"network","installDelivered":0,"installRateDelivered":0.0,"ctrDelivered":0.0},{"installRateReceived":0.0,"adTypeId":"1","dt":"2016-01-09","campaignSubType":"user_acquisition","role":"publisher","ctrReceived":0.0,"campaign":"Arachnophobia Static Interstitial","impressionsDelivered":3,"cpcvSpent":0.0,"impressionsReceived":0,"creative":"","installReceived":0,"ecpmSpent":0.0,"moneySpent":0.0,"clicksDelivered":0,"campaignTarget":"","ecpmEarned":0.0,"videoCompletedDelivered":0,"clicksReceived":0,"videoCompletedReceived":0,"campaignId":"55f934110d60253e4443868f","moneyEarned":0.0,"cpcvEarned":0.0,"campaignType":"network","installDelivered":0,"installRateDelivered":0.0,"ctrDelivered":0.0},{"installRateReceived":0.0,"adTypeId":"4","dt":"2016-01-08","campaignSubType":"user_acquisition","role":"publisher","ctrReceived":0.0,"campaign":"Arachnophobia Rewarded Video","impressionsDelivered":12,"cpcvSpent":0.0,"impressionsReceived":0,"creative":"","installReceived":0,"ecpmSpent":0.0,"moneySpent":0.0,"clicksDelivered":0,"campaignTarget":"","ecpmEarned":8.458333969116211,"videoCompletedDelivered":12,"clicksReceived":0,"videoCompletedReceived":0,"campaignId":"55f9324e0d60253e336fe6cc","moneyEarned":0.101500004529953,"cpcvEarned":8.458333969116211,"campaignType":"network","installDelivered":0,"installRateDelivered":0.0,"ctrDelivered":0.0},{"installRateReceived":0.0,"adTypeId":"1","dt":"2016-01-08","campaignSubType":"user_acquisition","role":"publisher","ctrReceived":0.0,"campaign":"Arachnophobia Static Interstitial","impressionsDelivered":4,"cpcvSpent":0.0,"impressionsReceived":0,"creative":"","installReceived":0,"ecpmSpent":0.0,"moneySpent":0.0,"clicksDelivered":0,"campaignTarget":"","ecpmEarned":0.0,"videoCompletedDelivered":0,"clicksReceived":0,"videoCompletedReceived":0,"campaignId":"55f934110d60253e4443868f","moneyEarned":0.0,"cpcvEarned":0.0,"campaignType":"network","installDelivered":0,"installRateDelivered":0.0,"ctrDelivered":0.0},{"installRateReceived":0.0,"adTypeId":"1","dt":"2016-01-04","campaignSubType":"user_acquisition","role":"publisher","ctrReceived":0.0,"campaign":"Arachnophobia Static Interstitial","impressionsDelivered":4,"cpcvSpent":0.0,"impressionsReceived":0,"creative":"","installReceived":0,"ecpmSpent":0.0,"moneySpent":0.0,"clicksDelivered":1,"campaignTarget":"","ecpmEarned":0.0,"videoCompletedDelivered":0,"clicksReceived":0,"videoCompletedReceived":0,"campaignId":"55f934110d60253e4443868f","moneyEarned":0.0,"cpcvEarned":0.0,"campaignType":"network","installDelivered":0,"installRateDelivered":0.0,"ctrDelivered":0.25},{"installRateReceived":0.0,"adTypeId":"1","dt":"2016-01-02","campaignSubType":"user_acquisition","role":"publisher","ctrReceived":0.0,"campaign":"Arachnophobia Static Interstitial","impressionsDelivered":1,"cpcvSpent":0.0,"impressionsReceived":0,"creative":"","installReceived":0,"ecpmSpent":0.0,"moneySpent":0.0,"clicksDelivered":0,"campaignTarget":"","ecpmEarned":0.0,"videoCompletedDelivered":0,"clicksReceived":0,"videoCompletedReceived":0,"campaignId":"55f934110d60253e4443868f","moneyEarned":0.0,"cpcvEarned":0.0,"campaignType":"network","installDelivered":0,"installRateDelivered":0.0,"ctrDelivered":0.0},{"installRateReceived":0.0,"adTypeId":"1","dt":"2016-01-01","campaignSubType":"user_acquisition","role":"publisher","ctrReceived":0.0,"campaign":"Arachnophobia Static Interstitial","impressionsDelivered":2,"cpcvSpent":0.0,"impressionsReceived":0,"creative":"","installReceived":0,"ecpmSpent":0.0,"moneySpent":0.0,"clicksDelivered":0,"campaignTarget":"","ecpmEarned":0.0,"videoCompletedDelivered":0,"clicksReceived":0,"videoCompletedReceived":0,"campaignId":"55f934110d60253e4443868f","moneyEarned":0.0,"cpcvEarned":0.0,"campaignType":"network","installDelivered":0,"installRateDelivered":0.0,"ctrDelivered":0.0}];
+
+        			handleChartboost(data);
+        			// callChartboostAPI(userId, userSignature); // USE THIS IF YOU WANT TO CALL THE API
+      }, 200);    	
+    }
+
+    $('.js-refresh').on("click", function(e) {
+			e.preventDefault();
+			setGraphLoading();
+			var userId = $('#user-id').val();
+			var userSignature = $('#user-signature').val();
+    	callChartboostAPI(userId, userSignature);
+    });
+
+    function callChartboostAPI(userId, userSignature) {
+
+    	// User signature and user ID required from Chartboost admin
+			// UNCOMMENT TO USE AJAX CALL TO REAL DATA, NOT NEEDED FOR TESTING
+			var dateMin = $('#startDate').val(),
+					dateMax = $('#endDate').val();
+
+			// Call the Chartboost API
+			$.get( "https://analytics.chartboost.com/v3/metrics/campaign?dateMin=" + dateMin + "&dateMax=" + dateMax + "&userId=" + userId + "&userSignature=" + userSignature, function( data ) {
+					handleChartboost(data);
+					console.log(data);
+			}).fail(function(e) {
+		    alert(e.statusText);
+		  });
+					
+    }
+
+    function groupBy(arr, property) {
+		  return arr.reduce(function(memo, x) {
+		  	// console.log(memo);
+		    if (!memo[x[property]]) { memo[x[property]] = []; }
+		    memo[x[property]].push(x);
+		    return memo;
+		  }, {});
+		}
+
+    function handleChartboost(data) {
+			if(data.length > 0) {
+				data.reverse();
+				var o = groupBy(data, 'campaign'); // array.reduce may not work in some browsers
+				console.log(o);
+
+				var seriesTitles = [];
+				var dataSets = [];
+				var totalRevenue = 0;
+				for (var key in o) {
+			    // skip loop if the property is from prototype
+			    if (!o.hasOwnProperty(key)) continue;
+			    seriesTitles.push(key);
+
+			    var obj = o[key];
+			    for (var prop in obj) {
+			        // skip loop if the property is from prototype
+			        if(!obj.hasOwnProperty(prop)) continue;
+
+			        for(var s = 0; s < seriesTitles.length; s++) {
+			        	if(key == seriesTitles[s]) {
+			        		var dateSplit = obj[prop].dt.split("-");
+			        		if(dataSets[s]) {
+			        			dataSets[s].dataSet.push([Date.UTC(parseInt(dateSplit[0]), parseInt(dateSplit[1] - 1), parseInt(dateSplit[2])), obj[prop].moneyEarned]);
+			        		} else {
+			        			dataSets.push({ dataSet: [[Date.UTC(parseInt(dateSplit[0]), parseInt(dateSplit[1] - 1), parseInt(dateSplit[2])), obj[prop].moneyEarned]]})
+			        		}
+			        		totalRevenue += obj[prop].moneyEarned;
+			        	}
+			        }
+			    }
+				}
+
+				$('.revenue-date-range').text($('#startDate').val() + " - " + $('#endDate').val());
+				$('.revenue-summary-value').text("$" + totalRevenue);
+
+				if(dataSets.length) {
+					setTimeout(function(){
+	          $('.graph-loading-indicator').addClass('is-loading-success');
+	          $('.graph-container').addClass('is-animated');
+	          setTimeout(function(){
+	            $('.graph-container').removeClass('is-loading');            
+	            $('.graph-container .graph-loading-line').hide(); // For graph line animation only, not related to graph loading
+	            generateChart(seriesTitles, dataSets);
+	          }, 200)
+	        }, 2000);
+				}				
+			}
+		}
+
+    function generateChart(seriesTitles, dataSets) {
+
+    	// Generate Demo Chart
+			var chart = new Highcharts.Chart({
+				chart: {
+          renderTo: 'container',
+					marginLeft: 0,
+					marginRight: 0,
+					marginBottom: 45,
+					marginTop: 0,
+					backgroundColor: '#fcfdfd',
+					plotBackgroundColor: '#f1f1f6',
+		   		type: 'area',
+		   		animation: false,
+		   		style: {
+            fontFamily: 'Lato, sans-serif'
+          },
+          events: {
+            load: function() { // ANIMATE LINE IN USING SNAP.JS
+                var countIndex = 0;
+                var graphPointAnimationDelay = 20;
+                $('#container .highcharts-series path:nth-child(1)').each(function() {
+                  if (countIndex > 0) {                  	
+                    $(this).attr("style", "opacity: 0.1");
+                  }
+                  countIndex++;
+                });
+
+                countIndex = 0;
+                $('#container .highcharts-series path:nth-child(2)').each(function() {
+                  if (countIndex > 0) {                  	
+                    $(this).attr("style", "opacity: 0.5");
+                  } else {
+                    $(this).attr("style", "opacity: 1");
+                  }
+                  countIndex++;
+                });
+
+                var counter = 0,
+                    allLines = [],
+                    allFills = [];
+
+                $('#container .highcharts-series path:nth-child(2)').each(function(){
+                    $(this).attr("id", "series" + counter);
+                    var initialCoordinates = [],
+                        initialFillCoordinates = [],
+                        flatPath = "",
+                        flatFillPath = "";
+
+                    var el = Snap('#series' + counter);
+                    var pathList = el.node.getPathData();
+
+                    for(var x=0; x < pathList.length; x++) {
+                      initialCoordinates.push({
+                        pathSegTypeAsLetter: pathList[x].type,
+                        x: pathList[x].values[0],
+                        y: pathList[x].values[1]
+                      });
+                      flatPath += pathList[x].type + " " + pathList[x].values[0] + " 454 ";
+                    }
+
+                    el.attr("d", flatPath);
+
+                    allLines.push(initialCoordinates);
+
+
+                    var fillSvg = $(this).parent('.highcharts-series').find('path:first-child').attr("id", "series" + counter + "fill");
+                    var fillEl = Snap("#series" + counter + "fill");
+                    var pathList = fillEl.node.getPathData();
+                    for(var x=0; x < pathList.length; x++) {
+                      initialFillCoordinates.push({
+                        pathSegTypeAsLetter: pathList[x].type,
+                        x: pathList[x].values[0],
+                        y: pathList[x].values[1]
+                      })
+                      flatFillPath += pathList[x].type + " " + pathList[x].values[0] + " 454 ";
+                    }
+
+                    fillEl.attr("d", flatFillPath);
+
+                    allFills.push(initialFillCoordinates);
+
+                  counter++;
+                });
+                
+                function animateGraph(i, pathType) {
+                  var el, pointsArray;
+                  
+                  if(pathType == "line") {
+                    pointsArray = allLines;
+                    el = Snap('#series' + i);
+                  } else {
+                    pointsArray = allFills;
+                    el = Snap('#series' + i + 'fill');
+                  }
+
+                  var numberOfItems = el.node.getPathData().length;
+
+                  setPoint(0);
+
+                  function setPoint(pointIndex) {
+                    var newPath = "";
+                    if(pointIndex < numberOfItems) {
+                      for(var x = 0; x < numberOfItems; x++) {
+                        if(x <= pointIndex) {
+                          newPath += pointsArray[i][x].pathSegTypeAsLetter + " " + pointsArray[i][x].x + " " + pointsArray[i][x].y + " ";
+                        } else {
+                          newPath += pointsArray[i][x].pathSegTypeAsLetter + " " + pointsArray[i][x].x + " 454 ";
+                        }                        
+                      }
+                      
+                      el.animate({ d: newPath }, 90, mina.easein);
+                      var nextPoint = pointIndex + 1;
+                      setTimeout(function(){
+                        setPoint(nextPoint);
+                      }, graphPointAnimationDelay);
+                    }
+                  }
+                }
+
+                var i = 0;
+                var allGraphLinesLength = $('#container .highcharts-series path:nth-child(2)').length;
+
+                for(var lineIndex=0; lineIndex < allGraphLinesLength; lineIndex++) {
+                  animateGraph(i, "line");
+                  i++;
+                }
+
+                var f = 0;
+                var allGraphFillsLength = $('#container .highcharts-series path:nth-child(1)').length;
+
+                for(var fillIndex=0; fillIndex < allGraphFillsLength; fillIndex++) {
+                  animateGraph(f, "fill");
+                  f++;
+                }
+            }
+          }
+			  },
+			  legend: {
+			  	enabled: false
+			  },
+			  title: {
+            text: ''
+        },
+        yAxis: [{
+          offset: -30,
+          showFirstLabel: false,
+          showLastLabel: false,
+          gridLineColor: '#e1e5e8',
+          labels: {
+          	align: 'left',
+          	style: {
+          		color: '#6d69c5',
+          		fontSize: "13px"
+          	}
+          },
+          title: {
+          	text: null
+          }            
+        }, {
+          offset: -30,
+          showFirstLabel: false,
+          showLastLabel: false,
+          gridLineColor: '#e1e5e8',
+          labels: {
+            align: 'right',
+            style: {
+            	color: '#ff496a',
+              fontSize: "13px"
+            }
+          },
+          title: {
+            text: null
+          },
+          opposite: true
+        },
+        {
+          offset: -80,
+          showFirstLabel: false,
+          showLastLabel: false,
+          gridLineColor: '#e1e5e8',
+          labels: {
+            align: 'right',
+            style: {
+            	color: '#e98fec',
+              fontSize: "13px"
+            }
+          },
+          title: {
+            text: null
+          },
+          opposite: true
+        }],
+        xAxis: {
+        	startOnTick: false,
+        	endOnTick: false,
+        	showFirstLabel: false,
+          maxPadding: 0,
+          minPadding: 0,
+          type: 'datetime',
+          dateTimeLabelFormats: { // don't display the dummy year
+              month: '%e. %b',
+              year: '%b'
+          },
+          title: {
+              text: 'Date'
+          },
+          tickmarkPlacement: 'on',
+          tickPixelInterval: 30,
+          tickColor: '#e1e5e8',
+          tickLength: 10,
+          lineColor: '#e1e5e8',
+          lineWidth: 1,            
+          labels: {
+          	align: 'center',
+            x: 0,
+            y: 28,
+            step: 4,
+            style: {
+              color: '#81879d',
+              fontSize: "13px"
+            }
+          }
+        },
+        plotOptions: {
+        	area: {
+            trackByArea: false,
+        		tooltip: {
+        			followPointer: true
+        		},
+        		states: {
+        			hover: {
+        				halo: {
+        					fill: 'rgba(27,199,159,0.18)',
+        					size: 13
+        				},
+        				lineWidthPlus: 0
+        			}
+        		}        		
+        	},
+          series: {
+            events: {
+              click: function() {
+                var that = this;
+
+                for(var i = 0; i < this.chart.series.length; i++) {
+                  if(i !== that.index) {
+                    var count = 0;
+                    var isCurrentlyHighlighted = false;
+                    $('#container .highcharts-series').each(function(){
+                      if(count == i) {
+                        var thisFillPath = $(this).find('path:nth-child(2)');                        
+                        if(thisFillPath.attr("stroke-width") == 2.1) {
+                          isCurrentlyHighlighted = true
+                          that.chart.series[i].update({
+                            lineWidth: 2
+                          });           
+                          var counterTwo = 0;
+                          $('#container .highcharts-series').each(function(){
+                            if(counterTwo == count) {
+                              thisFillPath = $(this).find('path:nth-child(2)');
+                            }
+                            counterTwo++;
+                          });                          
+                          thisFillPath.css("opacity", "1");
+                          thisFillPath.animate({ "opacity": 0.4 }, 250);
+                          thisFillPath.siblings("path").css("opacity", "1");
+                          thisFillPath.siblings("path").animate({ "opacity": 0.1 }, 250);
+                        }
+                      }
+                      count++;
+                    });
+                  }
+                };
+
+                this.update({
+                  lineWidth: 2.1
+                });
+
+                $('#container .highcharts-series path:nth-child(2)').each(function(){
+                  if($(this).attr("stroke-width") == 2.1) {
+                    $(this).css("opacity", "1");
+                    $(this).siblings("path").css("opacity", "0.1");
+                    $(this).siblings("path").animate({ "opacity": 1 }, 250);
+                  }
+                });
+
+                // read the graph line id's after this.udpate
+                var counter = 0;
+
+                $('#container .highcharts-series path:nth-child(2)').each(function(){
+                  $(this).attr("id", "series" + counter);
+                  $(this).parent('.highcharts-series').find('path:first-child').attr("id", "series" + counter + "fill");
+                  counter++;
+                });
+              },
+              // mouseOver: function () {
+              //   setTimeout(function(){
+              //     $('#container .highcharts-series path:nth-child(2)').each(function(){
+              //       if($(this).attr("stroke-width") == 3) {
+              //         $(this).css("opacity", 1);
+              //       }
+              //     });
+              //   },10);
+              // },
+              // mouseOut: function () {
+              //   setTimeout(function(){
+              //     $('#container .highcharts-series path:nth-child(2)').each(function(){
+              //       if($(this).attr("stroke-width") == 2) {
+              //         $(this).css("opacity", 0.5);
+              //       }
+              //     });
+              //   },10);
+              // }
+            },
+            cursor: 'pointer',
+            animation: false
+          },
+      	},
+        series:
+           [{
+          	yAxis: 0,
+		        name: seriesTitles[0],
+		        id : seriesTitles[0],
+		        data: dataSets[0].dataSet,
+		        fillOpacity: 0,
+		        lineWidth: 0,
+		        lineWidthPlus: 0,
+		        marker: {
+		          enabled: true,
+		          states: {
+		            hover: {
+		              enabled: true,
+		              lineWidth: 0,
+		              lineWidthPlus: 0,
+		              radius: 4,
+		              radiusPlus: 0,
+		            }
+		          }
+		     		},
+		     		visible: true,
+          }
+        ],
+        tooltip: {
+        	useHTML: true,
+        	shared: true,
+          formatter: function() {
+            var instance = this;
+            var s = "";            
+            $.each(instance.points, function (index, value) {
+                var chartSeries = value.series;
+                var imgString = "<img src=images/logo-chartboost-mini.png alt='Chartboost logo' class='tt-icon-chartboost' />" + chartSeries.name + " $";
+                
+                s += '<div class="custom-tooltip ' + chartSeries.name + '" style="background-color: ' + chartSeries.color + '">' + imgString + value.y + '</div>';
+            });
+            return s;
+          },
+        	backgroundColor: 'transparent',
+          borderWidth: 0,
+          borderColor: '#dae3ed',
+			    crosshairs: [{
+            width: 1,
+            color: '#81879d'
+          }],
+          shadow: {
+            color: 'rgba(0,0,0,0.24)',
+            width: 0,
+            offsetX: 1,
+            offsetY: 1
+        	}
+        }
+	    });
+
+		  if(dataSets[1]) {
+		  	for(var i = 1; i < dataSets.length; i++) {
+			  	chart.addSeries({
+						yAxis: 0,
+		        name: seriesTitles[i],
+		        id : seriesTitles[i],
+		        data: dataSets[i].dataSet,
+		        fillOpacity: 0,
+		        lineWidth: 0,
+		        lineWidthPlus: 0,
+		        marker: {
+		          enabled: true,
+		          states: {
+		            hover: {
+		              enabled: true,
+		              lineWidth: 0,
+		              lineWidthPlus: 0,
+		              radius: 4,
+		              radiusPlus: 0,
+		            }
+		          }
+		     		},
+		     		visible: true
+		   		});
+			  }
+		  }
+
+		}
+
+
+  	window.onready = initScripts();
+  </script>
+</body>

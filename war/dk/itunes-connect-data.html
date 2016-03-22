@@ -1,0 +1,887 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="utf-8" />
+	<title>Reflection, App with Google Analytics API calls</title>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">	
+	<!--[if (gt IE 9)|(IEMobile)|(!IE)]><!-->
+		<link rel="stylesheet" type="text/css" href="reflection-main.css" />
+	<!--<![endif]-->
+	<!--[if IE 9]>
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="ie9-one.css" />
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="ie9-two.css" />
+	<![endif]-->	
+	<!--[if (lt IE 9)]>
+		<script src="js/vendor/html5shiv.min.js"></script>
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main-ie8.css" />
+	<![endif]-->
+ 	<!--[if !lt IE 9]><!--> 
+		<script src="js/vendor/picturefill.2.3.1.min.js" async></script>
+	<!-- <![endif]-->
+	<link rel="stylesheet" href="js/vendor/jquery.mCustomScrollbar.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js"></script>
+<script>
+  WebFont.load({
+    google: {
+      families: ['Open Sans:400,600,700,400italic,600italic', 'Source Sans Pro:400,600,700', 'Lato:400,700,400italic']
+    }
+  });
+</script>
+</head>
+<body>
+	<!--[if (lt IE 9)]>
+      <div class="window-warning">
+  			<p>Uh oh... Reflection doesn't work in this browser. &nbsp; &nbsp;<a href="http://outdatedbrowser.com/en" target="_blank">Download a compatible browser</a></p>
+  		</div>
+  <![endif]-->
+
+  <header id="js-component-import--global-header" class="global-header"></header>
+  
+	<div id="js-component-import--panel-left" class="panel-left js-panel-left js-custom-scrollbar" data-mcs-theme="minimal-dark"></div>
+
+	<div class="l-page-container">
+		<div id="main" class="l-main" role="main">
+			<div class="page-app">
+			<div class="grid-container">
+				<header class="page-app__header">
+					<div class="app-icon-container">
+						<img src="images/placeholder-logo-arach.jpg" alt="Arachnophobia app icon" class="app-icon" />
+					</div>
+					<div class="app-details">
+						<h1 class="heading-style--heading-three app-title">iTunes Connect - Import a CSV file:</h1>
+						<form style="display: inline-block; margin-top: 8px; vertical-align: top;">
+							<input type="file" class="js-file-upload" style="font-size: 12px; font-family: 'Source Sans Pro', sans-serif;" />
+						</form>
+					</div>					
+				</header>
+				<button class="ref-button--cta-small js-show-example-data" style="display:inline-block; float: right;">No file? Show example data</button>
+			</div>
+			<div class="tabs">
+				<ul class="tabs-container default-tabs-transition tabs-to-dropdown">
+					<li class="grid__column grid__column--one-quarter tabs__tab is-disabled">
+						<div class="tab-animate-active"></div>
+						<a data-content="#tab-content-overall" class="tabs__link">
+							<span>
+								<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path d="M19.5,4.7L0,6.9v13.9l13.9,4.9L32,20.2V6.4L19.5,4.7z M30,15.1l-16.1,4.6L2,15.9v-3l11.9,3.4
+	L30,12.2V15.1z M13.9,12L30,8.4v2.8l-16.1,4.2L2,11.9v-3L13.9,12z M27.7,7.9l-13.8,3.1L4.2,8.4l15.3-1.7L27.7,7.9z M13.9,23.6
+	L2,19.4V17l11.9,3.8L30,16.2v2.6L13.9,23.6z"/></svg>
+	 							<span>
+	 								Revenue
+	 								<div class="icon-member icon-member--pro"><img src="images/icon-pro@2x.png" alt="Pro member icon"></div>
+	 							</span>
+	 						</span>
+						</a>
+					</li>
+					<li class="grid__column grid__column--one-quarter tabs__tab is-disabled">
+						<div class="tab-animate-active"></div>
+						<a data-content="#tab-content-free" class="tabs__link">
+							<span>
+								<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path fill-rule=evenodd clip-rule=evenodd d="M32,16.5c0,3.6-2.7,6.5-6.7,6.5v0h-6v-2h6.5
+	c2.5,0,4.5-2,4.5-4.5c0-1.6-0.8-3-2.3-3.9c-1.4-0.8-1.5-0.9-0.9-2.4c0.1-0.3,0.1-0.5,0.1-0.8c0-1.4-1.1-2.5-2.5-2.5
+	c0,0-0.7,0-1.4,0.2c-1.1,0.5-1.3,0-1.8-1.2C20.4,3.6,17.9,2,15.2,2c-3.6,0-6.6,2.7-7,6.3c-0.1,1.4-0.2,1.4-1.7,1.8
+	C4,10.6,2,12.9,2,15.5c0,3,2.3,5.5,5.3,5.5v0h6v2h-6v0c-4,0-7.2-3.4-7.2-7.5c0-3.7,2.7-6.7,6.2-7.4c0.4-4.6,4.4-8.1,9-8.1
+	c3.6,0,6.7,2.1,8.1,5.2C23.8,5.1,24.2,5,24.7,5c2.5,0,4.5,2,4.5,4.5c0,0.5-0.2,1-0.3,1.4C30.8,12,32,14.1,32,16.5z M19,25.8
+	l-1.8,1.8V14.3c0-0.6-0.4-1.1-1-1.1c-0.6,0-1,0.5-1,1.1v13.3l-1.9-1.8c-0.4-0.4-1.2-0.4-1.6,0c-0.4,0.4-0.5,1.1,0,1.6l3.1,3.1
+	c0.4,0.4,0.8,0.5,1.3,0.5c0.5,0,0.9-0.2,1.3-0.5l3.1-3.1c0.4-0.4,0.4-1.1,0-1.6C20.2,25.4,19.5,25.4,19,25.8z"/></svg>
+								<span>
+									Downloads
+								<div class="icon-member icon-member--pro"><img src="images/icon-pro@2x.png" alt="Pro member icon"></div>
+								</span>
+							</span>
+						</a>
+					</li>
+					<li class="grid__column grid__column--one-quarter tabs__tab is-active js-tab-select">
+						<div class="tab-animate-active"></div>
+						<a data-content="#tab-content-rank" class="tabs__link">
+							<span>
+								<span>iTunes Connect</span></span>
+						</a>
+					</li>
+					<li class="grid__column grid__column--one-quarter tabs__tab is-disabled">
+						<div class="tab-animate-active"></div>
+						<a data-content="#tab-content-details" class="tabs__link">
+							<span>
+								<svg version=1.1 x=0px y=0px viewBox="0 0 32 32" enable-background="new 0 0 32 32" xml:space=preserve><path d="M4,10c0,1.1-0.9,2-2,2s-2-0.9-2-2s0.9-2,2-2S4,8.9,4,10z M32,9H7v2h25V9z M2,14
+	c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S3.1,14,2,14z M32,15H7v2h25V15z M2,20c-1.1,0-2,0.9-2,2s0.9,2,2,2s2-0.9,2-2S3.1,20,2,20z
+	 M32,21H7v2h25V21z"/></svg>
+								<span>App Details</span></span>
+						</a>
+					</li>
+				</ul>
+			</div>
+				<ul class="tabs__content-container default-tabs-transition tabs-to-dropdown--content">
+					<li id="tab-content-rank" class="tabs__content tabs__content--is-showing">
+
+						<div class="grid__row">
+							<div class="grid__column grid__column--full-width filters-container filter-container--app">
+								<form class="forms--mid-theme">
+									<div class="filters-group-graph-options">
+										<div class="filter-switch filter-switch--small">									
+											<div class="can-toggle can-toggle--size-small">
+											  <input id="checkbox--overlay-rank" type="checkbox">
+											  <label for="checkbox--overlay-rank">
+											    <div class="can-toggle__switch" data-checked="Y" data-unchecked="N"></div>
+											  </label>
+											</div>
+											<span>Overlay Rank</span>
+										</div>
+									</div>
+								</form>
+							</div>
+							<div class="graph-container graph-container--with-events">
+								<div id="container" style="width:100%; height:500px;" class="highcharts-container">
+				        </div>
+								<div class="graph-loading-indicator">
+				        </div>
+				        <div class="graph-loading-line">
+				        	<div class="animated-line"></div>
+				        </div>
+							</div>
+						</div>
+
+						<div class="grid-container">
+							<section class="data-display-container">
+								<header class="data-display-header">
+									<div class="data-display-header--component total-revenue-title">
+										<div class="app-icon-small-container">
+											<img src="images/placeholder-logo-arach.jpg" alt="Arachnophobia app icon" class="app-icon-small" />
+										</div>
+										<h2 class="heading-style heading-style--heading-four data-heading">Google Analytics Data</h2>
+									</div>
+									<button class="ref-button--function-small ref-button--function-small--with-icon"><span class="ref-icon-before ref-icon-before--cloud">Download</span></button>						
+									<div class="data-display-header--component data-summary-container data-summary-container-synced">
+										<span class="revenue-date-range">All Time</span>
+										<span class="revenue-summary-value">-</span>
+									</div>
+									<div class="data-display-header--component data-summary-container">
+										<span class="revenue-date-range">16 Mar 2014 - 16 Apr 2014</span>
+										<span class="revenue-summary-value">-</span>
+									</div>
+								</header>
+								<table class="table-revenue responsive">
+									<thead>
+										<th class="can-be-sorted is-ascending">Date <svg version=1.1 x=0px y=0px viewBox="0 0 7 10" enable-background="new 0 0 7 10" xml:space=preserve class="sort-svg"><path class=ascending d="M0.4,4.1h6.1c0.1,0,0.2,0,0.3-0.1C7,3.9,7,3.8,7,3.7c0-0.1,0-0.2-0.1-0.3L3.8,0.1
+				C3.7,0,3.6,0,3.5,0C3.4,0,3.3,0,3.2,0.1L0.1,3.3C0,3.4,0,3.5,0,3.7C0,3.8,0,3.9,0.1,4C0.2,4.1,0.3,4.1,0.4,4.1z"/><path class=descending d="M6.6,5.9H0.4c-0.1,0-0.2,0-0.3,0.1C0,6.1,0,6.2,0,6.3c0,0.1,0,0.2,0.1,0.3l3.1,3.2
+				C3.3,10,3.4,10,3.5,10c0.1,0,0.2,0,0.3-0.1l3.1-3.2C7,6.6,7,6.5,7,6.3C7,6.2,7,6.1,6.9,6C6.8,5.9,6.7,5.9,6.6,5.9z"/></svg></th>
+										<th class="can-be-sorted">Revenue <span class="hidden-for-mobile">Generated</span> <svg version=1.1 x=0px y=0px viewBox="0 0 7 10" enable-background="new 0 0 7 10" xml:space=preserve class="sort-svg"><path class=ascending d="M0.4,4.1h6.1c0.1,0,0.2,0,0.3-0.1C7,3.9,7,3.8,7,3.7c0-0.1,0-0.2-0.1-0.3L3.8,0.1
+				C3.7,0,3.6,0,3.5,0C3.4,0,3.3,0,3.2,0.1L0.1,3.3C0,3.4,0,3.5,0,3.7C0,3.8,0,3.9,0.1,4C0.2,4.1,0.3,4.1,0.4,4.1z"/><path class=descending d="M6.6,5.9H0.4c-0.1,0-0.2,0-0.3,0.1C0,6.1,0,6.2,0,6.3c0,0.1,0,0.2,0.1,0.3l3.1,3.2
+				C3.3,10,3.4,10,3.5,10c0.1,0,0.2,0,0.3-0.1l3.1-3.2C7,6.6,7,6.5,7,6.3C7,6.2,7,6.1,6.9,6C6.8,5.9,6.7,5.9,6.6,5.9z"/></svg></th>
+										<th class="can-be-sorted">% <span class="hidden-for-mobile">of</span> Total <span class="hidden-for-mobile">Revenue</span> for Period <svg version=1.1 x=0px y=0px viewBox="0 0 7 10" enable-background="new 0 0 7 10" xml:space=preserve class="sort-svg"><path class=ascending d="M0.4,4.1h6.1c0.1,0,0.2,0,0.3-0.1C7,3.9,7,3.8,7,3.7c0-0.1,0-0.2-0.1-0.3L3.8,0.1
+				C3.7,0,3.6,0,3.5,0C3.4,0,3.3,0,3.2,0.1L0.1,3.3C0,3.4,0,3.5,0,3.7C0,3.8,0,3.9,0.1,4C0.2,4.1,0.3,4.1,0.4,4.1z"/><path class=descending d="M6.6,5.9H0.4c-0.1,0-0.2,0-0.3,0.1C0,6.1,0,6.2,0,6.3c0,0.1,0,0.2,0.1,0.3l3.1,3.2
+				C3.3,10,3.4,10,3.5,10c0.1,0,0.2,0,0.3-0.1l3.1-3.2C7,6.6,7,6.5,7,6.3C7,6.2,7,6.1,6.9,6C6.8,5.9,6.7,5.9,6.6,5.9z"/></svg></th>
+									</thead>
+									<colgroup>
+										<col style="width: 25%">
+										<col style="width: 25%">
+										<col style="width: 50%">
+									</colgroup>
+									<tbody>
+										<tr>
+											<td class="date-value">-</td>
+											<td class="revenue-value">-</td>
+											<td class="revenue-percentage">
+												<span>-</span>
+												<div class="data-bar">
+													<div style="width: 0%"></div>
+												</div>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+								<button class="ref-button--function-small ref-button--function-small--with-icon download-button--mobile"><span class="ref-icon-before ref-icon-before--cloud">Download</span></button>
+							</section>
+						</div>
+					</li>
+				</ul>
+			</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="grid-container" id="js-component-import--global-footer"></div>
+
+	<div id="js-component-import--account-container" class="panel-right-container js-account-container"></div>
+	<div id="js-component-import--search-container" class="panel-right-container js-search-container"></div>
+
+ 	<script src="js/vendor/jquery-1.11.1.min.js"></script>
+ 	<script src="js/vendor/jquery-ui.custom.min.js"></script>
+ 	<script src="js/vendor/handlebars-v2.0.0.js"></script>
+ 	<script src="js/templates/templates.js"></script>
+ 	<script src="js/vendor/modernizr.2.8.3.custom.min.js"></script>
+	<!--[if IE 9]>
+		<script src="js/vendor/jquery.mCustomScrollbar.concat.min.js"></script>
+	<![endif]-->
+
+	<div id="js-appendScriptsContainer"></div>
+
+	<script src="js/application-global-modules-logged-in.js"></script>
+  <script src="js/application.js"></script>
+  <script src="js/vendor/snap.svg.js"></script>
+  <script src="js/vendor/highcharts-custom.js"></script>
+  <script src="js/language-codes.js"></script>
+  <!-- <script src="js/polyfills/pathseg.js"></script> polyfill for Chrome, old SVG API pathSegList not supported -->
+  <script src="js/polyfills/path-data-polyfill.js"></script> <!-- new SVG API polyfill for getPathData() and setPathData() -->
+
+  <script>
+
+  	Date.prototype.addHours= function(h){
+      this.setHours(this.getHours()+h);
+      return this;
+    }
+
+    function initScripts() {
+  		new AppPage();
+
+	  	// Extending Highcharts
+	    (function (H) {
+
+	      var customIconRect;
+	      H.wrap(H.Tooltip.prototype, 'refresh', function (proceed) {
+
+	        proceed.apply(this, Array.prototype.slice.call(arguments, 1));
+
+	        var monthNames = [
+	          "Jan", "Feb", "Mar",
+	          "Apr", "May", "Jun", "Jul",
+	          "Aug", "Sep", "Oct",
+	          "Nov", "Dec"
+	        ];
+
+	        if(customIconRect !== undefined) {
+	          customIconRect.destroy();
+	        }
+
+	        var $axisLabel = $(this.chart.container).find('.highcharts-axis-label'),
+	            leftOffset = 29,
+	            axisLabelYPos = $("#" + arguments[1][0].series.chart.container.id + "").height() - arguments[1][0].series.xAxis.bottom,
+	            //axisLabelYPos = arguments[1][0].series.chart.containerHeight - arguments[1][0].series.xAxis.bottom,
+	            axisLabelXPos = arguments[1][0].plotX - leftOffset,
+	            timeStampString = arguments[1][0].x + "",
+	            timeStampString = timeStampString.substring(0,10),
+	            xAxisDate = new Date(timeStampString*1000).addHours(12),
+	            formattedDate = xAxisDate.getDate() + " " + monthNames[xAxisDate.getMonth()];
+
+	        if($axisLabel.length > 0) {       
+
+	          var labelYPos = axisLabelYPos + 28,
+	              labelXPos = axisLabelXPos + 5;
+
+	          $axisLabel.attr("transform", "translate(" + labelXPos + "," + labelYPos + ")");
+	          $axisLabel.find("text").text(formattedDate);
+
+	        } else {
+	          this.chart.renderer.label(formattedDate, axisLabelXPos+5, axisLabelYPos + 28, 'callout', 0, 0, false, true, "axis-label")
+	          .css({
+	            color: '#fcfdfd',
+	            fontSize: '13px',
+	            fontFamily: 'Lato',
+	            fontWeight: 600
+	          })
+	          .attr({
+	            zIndex: 100
+	          })
+	          .add();
+	        }
+
+	        customIconRect = this.chart.renderer.image('images/axisLabelBackground.png', axisLabelXPos - 5, axisLabelYPos, 67, 34)
+	        .attr({
+	          zIndex: 99
+	        })
+	        .add();
+	        
+	      });
+
+				H.wrap(H.Series.prototype, 'hide', function (proceed) {
+
+				  // Before the hide function
+				  var par = $(this.graph.element).parents('.highcharts-series').attr("class", "highcharts-series is-transparent-fade");
+				  var instance = this;
+				  // Now apply the original function with the original arguments, 
+				  // which are sliced off this function's arguments
+				  setTimeout(function() {
+				  	proceed.apply(instance, Array.prototype.slice.call(arguments, 1));
+				  	par.attr("class", "highcharts-series");
+				  }, 200);
+				});
+
+				H.wrap(H.Series.prototype, 'show', function (proceed) {
+
+				  // Before the show function
+				  var graphId = this.graph.element.id;
+				  // Now apply the original function with the original arguments, 
+				  // which are sliced off this function's arguments
+				  proceed.apply(this, Array.prototype.slice.call(arguments, 1));
+
+				  // after show()
+				  var currentPath = this.graph.d;
+				  var par = $(this.graph.element).parents('.highcharts-series').attr("class", "highcharts-series is-transparent");
+				  setTimeout(function() {
+				  	var el = Snap('#' + graphId);
+            var pathList = el.node.getPathData();
+            var flatPath = "";
+            for(var x=0; x < pathList.length; x++) {
+              flatPath += pathList[x].type + " " + pathList[x].values[0] + " 454 ";
+            }
+            el.attr("d", flatPath);
+				  	par.attr("class", "highcharts-series");
+				  	setTimeout(function() {
+				  		el.animate({ d: currentPath }, 800, mina.elastic);
+				  	}, 400);
+
+				  	var elFill = Snap('#' + graphId + 'fill');
+				  	var currentPathFill = $('#' + graphId + 'fill').attr("d");
+            var pathList = elFill.node.getPathData();
+            var flatFillPath = "";
+            for(var x=0; x < pathList.length; x++) {
+              flatFillPath += pathList[x].type + " " + pathList[x].values[0] + " 454 ";
+            }
+            elFill.attr("d", flatFillPath);
+				  	setTimeout(function() {
+				  		elFill.animate({ d: currentPathFill }, 800, mina.elastic);
+				  	}, 400);
+				  }, 100);
+
+				});
+	    }(Highcharts));
+
+	    Highcharts.setOptions({
+	        colors: ['#6d69c5', '#ff496a', '#e98fec', '#ffb449', '#64E572', '#FF9655', '#FFF263', '#6AF9C4']
+	    });	    
+
+			$('.js-file-upload').change( function(event) {
+					setGraphLoading();
+			    var tmppath = URL.createObjectURL(event.target.files[0]);
+			    $.ajax({
+			        type: "GET",
+			        url: tmppath,
+			        dataType: "text",
+			        success: function(data) { processData(data); }
+			     });
+			});
+
+			$('.js-show-example-data').click( function(event) {
+			    event.preventDefault();
+			    setGraphLoading();
+			    $.ajax({
+			        type: "GET",
+			        url: "files/itunesconnect-test.txt",
+			        dataType: "text",
+			        success: function(data) { processData(data); }
+			     });
+			});
+
+			function processData(allText) {
+					var originalData = allText;
+					var allTextLines = allText.split(/\r\n|\n/);
+					var dataSplit = [];
+					var dataObject = {};
+					var hasReachedHeadingsInArray = false;
+					var reachedDataRow = 0;
+					var seriesArray = [];
+					var dataRowCount = 0;
+					dataObject.firstValidDataSet = 0;
+
+					for(var l = 0; l < allTextLines.length; l++) {
+						var lineToArray;
+						lineToArray = allTextLines[l].split(",");
+						if(lineToArray[0] && lineToArray[0] == "Date") {
+							hasReachedHeadingsInArray = true;
+							dataObject.dataHeadings = lineToArray;
+
+							for(var x = 0; x < lineToArray.length; x++) {
+								seriesArray.push({
+									name: lineToArray[x],
+									seriesData: []
+								});
+							}
+						}
+
+						if(!hasReachedHeadingsInArray) {
+
+							if(allTextLines[l].indexOf("Name,") > -1) {
+								lineToArray = allTextLines[l].split("\"");
+								dataObject.appTitle = lineToArray[1];
+							} else if(allTextLines[l].indexOf("Start Date,") > -1) {
+								lineToArray = allTextLines[l].split(",");
+								var dateSplit = lineToArray[1].split("/");
+								dataObject.startDate = Date.UTC("20" + dateSplit[2], dateSplit[0] - 1, dateSplit[1]);
+							} else if(allTextLines[l].indexOf("End Date,") > -1) {
+								lineToArray = allTextLines[l].split(",");
+								var dateSplit = lineToArray[1].split("/");
+								dataObject.endDate = Date.UTC("20" + dateSplit[2], dateSplit[0] - 1, dateSplit[1]);
+							} else {
+								lineToArray = allTextLines[l].split(",");
+							}
+
+						} else {
+
+							if(reachedDataRow > 0) {
+								dataRowCount++;
+								for(var x = 0; x < lineToArray.length; x++) {
+									var dataValue = lineToArray[x];
+									if(dataValue == "-") {
+										dataValue = 0;
+										seriesArray[x].validDataSet = false;
+									} else { // valid data
+										seriesArray[x].validDataSet = true;
+										if(x > 0 && dataObject.firstValidDataSet == 0) { // 0 is the Date series so ignore x == 0
+											dataObject.firstValidDataSet = x;
+										}
+									}
+									seriesArray[x].seriesData.push(parseInt(dataValue));
+								}
+							} else {
+								reachedDataRow++;
+							}
+
+						}
+
+						dataSplit.push(lineToArray);
+					}
+					
+					dataObject.numberOfItems = dataRowCount;
+					dataObject.seriesData = seriesArray;
+					
+			    console.log(dataObject.firstValidDataSet);
+			    // console.log(dataObject);
+
+			    if(dataObject.seriesData.length && dataObject.seriesData.length > 1) {
+			    	setTimeout(function(){
+	          $('.graph-loading-indicator').addClass('is-loading-success');
+		          $('.graph-container').addClass('is-animated');
+		          setTimeout(function(){
+		            $('.graph-container').removeClass('is-loading');            
+		            $('.graph-container .graph-loading-line').hide(); // For graph line animation only, not related to graph loading
+		            createHighchart(dataObject);
+		          }, 200)
+		        }, 2000);
+			    }
+			}
+	  }
+
+	  var chart = null; // global chart variable
+	  function setGraphLoading() {
+	  	chart = null;
+	  	$('#container').empty();
+	  	$('.graph-loading-indicator').removeClass('is-loading-success');
+      $('.graph-container').removeClass('is-animated');
+      $('.graph-container .graph-loading-line').show();
+      $('.graph-container').addClass('is-loading');      
+    }
+
+    function createHighchart(dataObject) {
+
+    	var mockRankData = [];
+    	if(dataObject.numberOfItems > 0) {
+    		for( var d = 0; d < dataObject.numberOfItems; d++) {
+    			mockRankData.push(Math.floor((Math.random() * 200) + 1));
+    		}
+    	}
+    	console.log(mockRankData);
+
+    	// Generate Demo Chart
+			var chart = new Highcharts.Chart({
+				chart: {
+          renderTo: 'container',
+					marginLeft: 0,
+					marginRight: 0,
+					marginBottom: 45,
+					marginTop: 0,
+					backgroundColor: '#fcfdfd',
+					plotBackgroundColor: '#f1f1f6',
+		   		type: 'area',
+		   		animation: false,
+		   		style: {
+            fontFamily: 'Lato, sans-serif'
+          },
+          events: {
+            load: function() { // ANIMATE LINE IN USING SNAP.JS
+                var countIndex = 0;
+                var graphPointAnimationDelay = 20;
+                $('#container .highcharts-series path:nth-child(1)').each(function() {
+                  if (countIndex > 0) {                  	
+                    $(this).attr("style", "opacity: 0.1");
+                  }
+                  countIndex++;
+                });
+
+                countIndex = 0;
+                $('#container .highcharts-series path:nth-child(2)').each(function() {
+                  if (countIndex > 0) {                  	
+                    $(this).attr("style", "opacity: 0.5");
+                  } else {
+                    $(this).attr("style", "opacity: 1");
+                  }
+                  countIndex++;
+                });
+
+                var counter = 0,
+                    allLines = [],
+                    allFills = [];
+
+                $('#container .highcharts-series path:nth-child(2)').each(function(){
+                    $(this).attr("id", "series" + counter);
+                    var initialCoordinates = [],
+                        initialFillCoordinates = [],
+                        flatPath = "",
+                        flatFillPath = "";
+
+                    var el = Snap('#series' + counter);
+                    var pathList = el.node.getPathData();
+
+                    for(var x=0; x < pathList.length; x++) {
+                      initialCoordinates.push({
+                        pathSegTypeAsLetter: pathList[x].type,
+                        x: pathList[x].values[0],
+                        y: pathList[x].values[1]
+                      });
+                      flatPath += pathList[x].type + " " + pathList[x].values[0] + " 454 ";
+                    }
+
+                    el.attr("d", flatPath);
+
+                    allLines.push(initialCoordinates);
+
+
+                    var fillSvg = $(this).parent('.highcharts-series').find('path:first-child').attr("id", "series" + counter + "fill");
+                    var fillEl = Snap("#series" + counter + "fill");
+                    var pathList = fillEl.node.getPathData();
+                    for(var x=0; x < pathList.length; x++) {
+                      initialFillCoordinates.push({
+                        pathSegTypeAsLetter: pathList[x].type,
+                        x: pathList[x].values[0],
+                        y: pathList[x].values[1]
+                      })
+                      flatFillPath += pathList[x].type + " " + pathList[x].values[0] + " 454 ";
+                    }
+
+                    fillEl.attr("d", flatFillPath);
+
+                    allFills.push(initialFillCoordinates);
+
+                  counter++;
+                });
+                
+                function animateGraph(i, pathType) {
+                  var el, pointsArray;
+                  
+                  if(pathType == "line") {
+                    pointsArray = allLines;
+                    el = Snap('#series' + i);
+                  } else {
+                    pointsArray = allFills;
+                    el = Snap('#series' + i + 'fill');
+                  }
+
+                  var numberOfItems = el.node.getPathData().length;
+
+                  setPoint(0);
+
+                  function setPoint(pointIndex) {
+                    var newPath = "";
+                    if(pointIndex < numberOfItems) {
+                      for(var x = 0; x < numberOfItems; x++) {
+                        if(x <= pointIndex) {
+                          newPath += pointsArray[i][x].pathSegTypeAsLetter + " " + pointsArray[i][x].x + " " + pointsArray[i][x].y + " ";
+                        } else {
+                          newPath += pointsArray[i][x].pathSegTypeAsLetter + " " + pointsArray[i][x].x + " 454 ";
+                        }                        
+                      }
+                      
+                      el.animate({ d: newPath }, 90, mina.easein);
+                      var nextPoint = pointIndex + 1;
+                      setTimeout(function(){
+                        setPoint(nextPoint);
+                      }, graphPointAnimationDelay);
+                    }
+                  }
+                }
+
+                var i = 0;
+                var allGraphLinesLength = $('#container .highcharts-series path:nth-child(2)').length;
+
+                for(var lineIndex=0; lineIndex < allGraphLinesLength; lineIndex++) {
+                  animateGraph(i, "line");
+                  i++;
+                }
+
+                var f = 0;
+                var allGraphFillsLength = $('#container .highcharts-series path:nth-child(1)').length;
+
+                for(var fillIndex=0; fillIndex < allGraphFillsLength; fillIndex++) {
+                  animateGraph(f, "fill");
+                  f++;
+                }
+            }
+          }
+			  },
+			  legend: {
+			  	enabled: false
+			  },
+			  title: {
+            text: ''
+        },
+        yAxis: [{
+        	reversed: true,
+          offset: -30,
+          showFirstLabel: false,
+          showLastLabel: false,
+          gridLineColor: '#e1e5e8',
+          labels: {
+            align: 'right',
+            style: {
+            	color: '#1bc79f',              
+              fontSize: "13px"
+            }
+          },
+          title: {
+            text: null
+          },
+          opposite: true
+        }, {
+          offset: -30,
+          showFirstLabel: false,
+          showLastLabel: false,
+          gridLineColor: '#e1e5e8',
+          labels: {
+          	align: 'left',
+          	style: {
+          		color: '#363a47',
+          		fontSize: "13px"
+          	}
+          },
+          title: {
+          	text: null
+          }            
+        }],
+        xAxis: {
+        	startOnTick: false,
+        	endOnTick: false,
+        	showFirstLabel: false,
+          maxPadding: 0,
+          minPadding: 0,
+          type: 'datetime',
+          dateTimeLabelFormats: { // don't display the dummy year
+              day: '%e %b'
+          },
+          title: {
+              text: 'Date'
+          },
+          tickmarkPlacement: 'on',
+          tickPixelInterval: 30,
+          tickColor: '#e1e5e8',
+          tickLength: 10,
+          lineColor: '#e1e5e8',
+          lineWidth: 1,            
+          labels: {
+          	align: 'center',
+            x: 0,
+            y: 28,
+            step: 4,
+            style: {
+              color: '#81879d',
+              fontSize: "13px"
+            }
+          }
+        },
+        plotOptions: {
+        	area: {
+            trackByArea: false,
+        		tooltip: {
+        			followPointer: true
+        		},
+        		states: {
+        			hover: {
+        				halo: {
+        					fill: 'rgba(27,199,159,0.18)',
+        					size: 13
+        				},
+        				lineWidthPlus: 0
+        			}
+        		}        		
+        	},
+          series: {
+            events: {
+              click: function() {
+                var that = this;
+
+                for(var i = 0; i < this.chart.series.length; i++) {
+                  if(i !== that.index) {
+                    var count = 0;
+                    var isCurrentlyHighlighted = false;
+                    $('#container .highcharts-series').each(function(){
+                      if(count == i) {
+                        var thisFillPath = $(this).find('path:nth-child(2)');                        
+                        if(thisFillPath.attr("stroke-width") == 2.1) {
+                          isCurrentlyHighlighted = true
+                          that.chart.series[i].update({
+                            lineWidth: 2
+                          });           
+                          var counterTwo = 0;
+                          $('#container .highcharts-series').each(function(){
+                            if(counterTwo == count) {
+                              thisFillPath = $(this).find('path:nth-child(2)');
+                            }
+                            counterTwo++;
+                          });                          
+                          thisFillPath.css("opacity", "1");
+                          thisFillPath.animate({ "opacity": 0.4 }, 250);
+                          thisFillPath.siblings("path").css("opacity", "1");
+                          thisFillPath.siblings("path").animate({ "opacity": 0.1 }, 250);
+                        }
+                      }
+                      count++;
+                    });
+                  }
+                };
+
+                this.update({
+                  lineWidth: 2.1
+                });
+
+                $('#container .highcharts-series path:nth-child(2)').each(function(){
+                  if($(this).attr("stroke-width") == 2.1) {
+                    $(this).css("opacity", "1");
+                    $(this).siblings("path").css("opacity", "0.1");
+                    $(this).siblings("path").animate({ "opacity": 1 }, 250);
+                  }
+                });
+
+                // read the graph line id's after this.udpate
+                var counter = 0;
+
+                $('#container .highcharts-series path:nth-child(2)').each(function(){
+                  $(this).attr("id", "series" + counter);
+                  $(this).parent('.highcharts-series').find('path:first-child').attr("id", "series" + counter + "fill");
+                  counter++;
+                });
+              },
+            },
+            cursor: 'pointer',
+            animation: false
+          },
+      	},
+        series:
+           [{
+          	yAxis: 0,
+		        name: "Rank",
+		        id : "rank",
+		        data: mockRankData,
+		        pointStart: dataObject.startDate,
+            pointInterval: 24 * 3600 * 1000, // one day
+		        fillOpacity: 0,
+		        lineWidth: 2,
+		        lineWidthPlus: 0,
+		        color: "#1bc79f",
+		        marker: {
+		          enabled: false,
+		          states: {
+		            hover: {
+		              enabled: true,
+		              lineWidth: 2,
+		              lineWidthPlus: 0,
+		              radius: 4,
+		              radiusPlus: 0,
+		            }
+		          }
+		     		},
+		     		visible: ($('#checkbox--overlay-rank:checked').length > 0),
+          }, {
+          	yAxis: 1,
+		        name: dataObject.seriesData[dataObject.firstValidDataSet].name,
+		        id : dataObject.seriesData[dataObject.firstValidDataSet].name,
+		        data: dataObject.seriesData[dataObject.firstValidDataSet].seriesData,
+		        pointStart: dataObject.startDate,
+            pointInterval: 24 * 3600 * 1000, // one day
+		        fillOpacity: 0,
+		        lineWidth: 2,
+		        lineWidthPlus: 0,		        
+		        marker: {
+		          enabled: false,
+		          states: {
+		            hover: {
+		              enabled: true,
+		              lineWidth: 2,
+		              lineWidthPlus: 0,
+		              radius: 4,
+		              radiusPlus: 0,
+		            }
+		          }
+		     		}
+          }],
+        tooltip: {
+        	useHTML: true,
+        	shared: true,
+          formatter: function() {
+            var instance = this;
+            var s = "";            
+            $.each(instance.points, function (index, value) {
+                var chartSeries = value.series;
+                s += '<div class="custom-tooltip ' + chartSeries.name + '" style="background-color: ' + chartSeries.color + '"><img src="images/logo-apple-mini.png" alt="Apple logo" style="width: 18px; height: 18px; top: 5px;" />' + chartSeries.name + " " + value.y + '</div>';
+            });
+            return s;
+          },
+        	backgroundColor: 'transparent',
+          borderWidth: 0,
+          borderColor: '#dae3ed',
+			    crosshairs: [{
+            width: 1,
+            color: '#81879d'
+          }],
+          shadow: {
+            color: 'rgba(0,0,0,0.24)',
+            width: 0,
+            offsetX: 1,
+            offsetY: 1
+        	}
+        }
+	    });
+	
+			if(dataObject.seriesData[dataObject.firstValidDataSet+1]) {
+				for(var s = dataObject.firstValidDataSet+1; s < dataObject.seriesData.length; s++) { // might want to limit number of graph lines here
+					if(dataObject.seriesData[s].validDataSet) {
+						chart.addSeries({
+							yAxis: 1,
+		          name: dataObject.dataHeadings[s],
+			        id : dataObject.dataHeadings[s],
+			        data: dataObject.seriesData[s].seriesData,
+			        pointStart: dataObject.startDate,
+		          pointInterval: 24 * 3600 * 1000,
+		          fillOpacity: 0,
+			        lineWidth: 2,
+			        lineWidthPlus: 0,
+			        marker: {
+			          enabled: false,
+			          states: {
+			            hover: {
+			              enabled: true,
+			              lineWidth: 2,
+			              lineWidthPlus: 0,
+			              radius: 4,
+			              radiusPlus: 0,
+			            }
+			          }
+			     		}
+		     		});
+					}
+				}				
+			}
+
+			// Overlay Revenue
+			$('#checkbox--overlay-rank').unbind("change");
+			$('#checkbox--overlay-rank').change(function(){
+				if($(this).is(":checked")) {
+					chart.series[0].show();
+				} else {
+					setTimeout(function(){
+						chart.series[0].hide();
+					}, 200);
+				}
+			});
+		}
+
+
+  	window.onready = initScripts();
+  </script>
+</body>

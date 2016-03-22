@@ -1,0 +1,896 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+	<meta charset="utf-8" />
+	<title>Reflection V2, Data Template</title>
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<!--[if (gt IE 9)|(IEMobile)|(!IE)]><!-->
+		<link rel="stylesheet" type="text/css" href="design-kit-v2.css" />
+	<!--<![endif]-->
+	<!--[if IE 9]>
+	<![endif]-->
+	<!--[if (lt IE 9)]>
+		<script src="js/vendor/html5shiv.min.js"></script>
+		<link rel="stylesheet" media="screen, projection" type="text/css" href="reflection-main-ie8.css" />
+	<![endif]-->
+	<link rel="stylesheet" href="js/vendor/jquery.mCustomScrollbar.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
+<script>
+  WebFont.load({
+    google: {
+      families: ['Source Sans Pro:400,600,700', 'Lato:400,700,400italic']
+    }
+  });
+</script></head>
+<body>
+	<!--[if (lt IE 9)]>
+      <div class="window-warning">
+  			<p>Uh oh... Reflection doesn't work in this browser. &nbsp; &nbsp;<a href="http://outdatedbrowser.com/en" target="_blank">Download a compatible browser</a></p>
+  		</div>
+  <![endif]-->
+
+  <header id="js-component-import--global-header" class="global-header"></header>
+  
+	<div id="js-component-import--panel-left" class="panel-left js-panel-left js-custom-scrollbar" data-mcs-theme="minimal-dark"></div>
+
+	<div class="l-page-container">
+	 	<div id="main" class="l-main" role="main">
+		 		<div class="page-base">
+		 			<div class="grid-container components-row">
+		 				<div class="grid__column--full-width">
+		 					<h1 class="heading-style--heading-three dk-components-heading">Components</h1>
+		 				</div>
+		 				<div class="grid__column--full-width buttons-row">
+		 					<h2 class="heading-style--heading-four">Buttons</h2>
+		 					<button class="ref-button--primary--small">
+		 						Link App Store Account
+		 					</button>
+		 					<a href="#" class="ref-button--primary--small">
+		 						Link App Store Account
+		 					</a>
+		 					<button class="ref-button--secondary--small">
+		 						Link App Store Account
+		 					</button>
+		 					<a href="#" class="ref-button--secondary--small">
+		 						Link App Store Account
+		 					</a>
+		 				</div>
+
+		 				<div class="grid__column--full-width buttons-row">
+		 					<button class="ref-button--primary--medium">
+		 						Link App Store Account
+		 					</button>
+		 					<a href="#" class="ref-button--primary--medium">
+		 						Link App Store Account
+		 					</a>
+		 					<button class="ref-button--secondary--medium">
+		 						Link App Store Account
+		 					</button>
+		 					<a href="#" class="ref-button--secondary--medium">
+		 						Link App Store Account
+		 					</a>
+		 				</div>
+
+		 				<div class="grid__column--full-width buttons-row">
+		 					<button class="ref-button--primary--large">
+		 						Link App Store Account
+		 					</button>
+		 					<a href="#" class="ref-button--primary--large">
+		 						Link App Store Account
+		 					</a>
+		 					<button class="ref-button--secondary--large">
+		 						Link App Store Account
+		 					</button>
+		 					<a href="#" class="ref-button--secondary--large">
+		 						Link App Store Account
+		 					</a>
+		 				</div>
+		 			</div>
+
+		 			<div class="grid-container">
+		 				<div class="grid__column--full-width">
+	 						<h2 class="heading-style--heading-four dk-components-heading">Primary Filters</h2>
+	 					</div>
+	 				</div>
+	 				<div class="grid__row components-row">
+	 					<aside class="primary-filters-container">
+	 						<div class="primary-filter form-field--select">
+								<select class="js-select-box">
+							    <option value="all" selected>All Store Accounts</option>
+							    <option value="ios">iOS</option>
+							    <option value="play">Google Play</option>
+							    <option value="amazon">Amazon App Store</option>
+								</select>
+							</div>
+							<div class="primary-filter form-field--select">
+								<select class="js-select-box">
+							    <option value="jan" selected>01/01/16 - 01/02/16</option>
+							    <option value="feb">01/02/16 - 01/03/16</option>
+							    <option value="mar">01/03/16 - 01/04/16</option>
+							    <option value="apr">01/04/16 - 01/05/16</option>
+								</select>
+							</div>
+							<div class="primary-filter form-field--select">
+								<select class="js-select-box">
+							    <option value="all" selected>All Countries</option>
+							    <option value="uni">United Kingdom</option>
+							    <option value="fra">France</option>
+							    <option value="ger">Germany</option>
+								</select>
+							</div>
+							<div class="primary-filter form-field--select">
+								<select class="js-select-box">
+							    <option value="all" selected>All Categories</option>
+							    <option value="uni">Games</option>
+							    <option value="fra">Lifestyle</option>
+							    <option value="ger">Productivity</option>
+								</select>
+							</div>
+							<div class="primary-filter form-field--select">
+								<select class="js-select-box">
+							    <option value="all" selected>All Devices</option>
+							    <option value="ipa">iPad</option>
+							    <option value="iph">iPhone</option>
+								</select>
+							</div>
+						</aside>
+	 				</div>
+
+	 				<div class="grid-container components-row">
+		 				<div class="grid__column grid__column--full-width">
+	 						<h2 class="heading-style--heading-four dk-components-heading">Secondary Filters</h2>
+	 						
+	 						<div class="secondary-filter form-field--select">
+								<select class="js-select-box">
+							    <option value="all" selected>All Prices</option>
+							    <option value="one">Tier 1</option>
+							    <option value="two">Tier 2</option>
+							    <option value="the">Tier 3</option>
+							    <option value="fou">Tier 4</option>
+								</select>
+							</div>
+
+							<div class="secondary-filter secondary-filter--medium form-field--select">
+								<select class="js-select-box">
+							    <option value="all" selected>All Stores</option>
+							    <option value="ios">iOS</option>
+							    <option value="goo">Google</option>
+							    <option value="ama">Amazon App Store</option>
+								</select>
+							</div>
+
+							<div class="secondary-filter secondary-filter--large form-field--select">
+								<select class="js-select-box">
+							    <option value="all" selected>All Stores</option>
+							    <option value="ios">iOS</option>
+							    <option value="goo">Google</option>
+							    <option value="ama">Amazon App Store</option>
+								</select>
+							</div>
+
+							<div class="secondary-filter form-field--search">
+								<input type="text" placeholder="Find App in List" name="findapp" id="findapp" />
+								<label for="findapp" class="ref-icon-after--search"><span>Search</span></label>
+							</div>
+
+	 					</div>
+	 				</div>
+
+	 				<div class="grid-container components-row">
+		 				<div class="grid__column--full-width">
+	 						<h2 class="heading-style--heading-four dk-components-heading">Form Fields</h2>
+	 					</div>
+
+	 					<div class="grid__column grid__column--one-third">
+		 					<form>
+		 						<div class="form-field">						
+									<input type="email" name="email" id="emailtest" autocomplete="off" />
+									<label for="emailtest">User Name</label>
+								</div>
+
+								<div class="form-filter form-field--select">
+									<select class="js-select-box" id="countryselect">
+								    <option value="">Please Select</option>
+								    <option value="alb">Albania</option>
+								    <option value="aus">Austria</option>
+								    <option value="ast">Australia</option>
+								    <option value="bel">Belgium</option>
+								    <option value="bra">Brazil</option>
+								    <option value="can">Canada</option>
+								    <option value="che">Czech Republic</option>
+								    <option value="cro">Croatia</option>
+								    <option value="den">Denmark</option>
+								    <option value="est">Estonia</option>
+								    <option value="fin">Finland</option>
+								    <option value="ger">Germany</option>
+								    <option value="hun">Hungary</option>
+								    <option value="ice">Iceland</option>
+								    <option value="jam">Jamaica</option>
+								    <option value="kaz">Kazachstan</option>
+								    <option value="lit">Lithuania</option>
+								    <option value="lux">Luxemberg</option>
+								    <option value="nig">Nigeria</option>
+									</select>
+									<label for="countryselect">Country</label>
+								</div>
+							</form>
+						</div>
+	 				</div>
+
+	 				<div class="grid-container components-row">
+		 				<div class="grid__column--full-width">
+	 						<h2 class="heading-style--heading-four dk-components-heading">Form Fields</h2>
+	 					</div>
+
+	 					<div class="grid__column grid__column--one-third">
+		 					<form class="reflection-form">
+			 					<div class="form-field form-field--with-error">						
+									<input type="email" name="username" id="username" autocomplete="off" value="Johnathan Barnes" />
+									<label for="username">User Name</label>
+									<span class="form-field-error-text">Error message lorem ipsum dolor amet</span>
+								</div>
+								<div class="form-field">
+									<input type="password" name="passwordtest" id="passwordtest" autocomplete="off" class="js-mock-password-entry" />
+									<label for="passwordtest">
+										Password
+										<div class="password-strength-indicator-container">
+											<span class="password-strength-description">Strength</span>
+											<div class="password-strength-indicator"><span></span></div>
+										</div>
+									</label>
+								</div>
+								<div class="form-field">						
+									<input type="text" name="companytext" id="companytext" autocomplete="off" />
+									<label for="companytext">Company Name</label>
+								</div>
+								<div class="form-field form-field--with-error">				
+									<input type="text" name="errorfield" id="errorfield" autocomplete="off" value="Example" />
+									<label for="errorfield">Input with error</label>
+									<span class="form-field-error-text">Error message lorem ipsum dolor amet</span>
+								</div>
+							</form>
+						</div>
+
+		 				<div class="grid__column grid__column--one-third">
+		 					<form class="reflection-form">
+			 					<div class="form-field">						
+									<input type="email" name="username" id="username" autocomplete="off" value="Johnathan Barnes" />
+									<label for="username">User Name</label>
+								</div>
+								<div class="form-field">
+									<input type="password" name="passwordtest" id="passwordtest" autocomplete="off" value="password" />
+									<label for="passwordtest">
+										Password
+										<div class="password-strength-indicator-container">
+											<span class="password-strength-description">Ok</span>
+											<div class="password-strength-indicator"><span class="is-ok"></span></div>
+										</div>
+									</label>
+								</div>
+								<div class="form-filter form-field--select">
+									<select class="js-select-box" id="countryselect">
+								    <option value="">Please Select</option>
+								    <option value="alb">Albania</option>
+								    <option value="aus">Austria</option>
+								    <option value="ast">Australia</option>
+								    <option value="bel">Belgium</option>
+								    <option value="bra">Brazil</option>
+								    <option value="can">Canada</option>
+								    <option value="che">Czech Republic</option>
+								    <option value="cro">Croatia</option>
+								    <option value="den">Denmark</option>
+								    <option value="est">Estonia</option>
+								    <option value="fin">Finland</option>
+								    <option value="ger">Germany</option>
+								    <option value="hun">Hungary</option>
+								    <option value="ice">Iceland</option>
+								    <option value="jam">Jamaica</option>
+								    <option value="kaz">Kazachstan</option>
+								    <option value="lit">Lithuania</option>
+								    <option value="lux">Luxemberg</option>
+								    <option value="nig">Nigeria</option>
+									</select>
+									<label for="countryselect">Country</label>
+								</div>
+								<div class="form-filter form-field--select form-field--with-error">
+									<select class="js-select-box" id="countryselect">
+								    <option value="">Please Select</option>
+								    <option value="alb">Albania</option>
+								    <option value="aus">Austria</option>
+								    <option value="ast">Australia</option>
+								    <option value="bel">Belgium</option>
+								    <option value="bra">Brazil</option>
+								    <option value="can">Canada</option>
+								    <option value="che">Czech Republic</option>
+								    <option value="cro">Croatia</option>
+								    <option value="den">Denmark</option>
+								    <option value="est">Estonia</option>
+								    <option value="fin">Finland</option>
+								    <option value="ger">Germany</option>
+								    <option value="hun">Hungary</option>
+								    <option value="ice">Iceland</option>
+								    <option value="jam">Jamaica</option>
+								    <option value="kaz">Kazachstan</option>
+								    <option value="lit">Lithuania</option>
+								    <option value="lux">Luxemberg</option>
+								    <option value="nig">Nigeria</option>
+									</select>
+									<label for="countryselect">Country</label>
+									<span class="form-field-error-text">This field is required</span>
+								</div>
+							</form>
+						</div>
+	 				</div>
+
+	 				<div class="grid-container components-row">
+		 				<div class="grid__column--full-width">
+	 						<h2 class="heading-style--heading-four dk-components-heading">Radio Selectors</h2>
+	 					</div>
+	 					<div class="grid__column--full-width">
+	 						<h3 class="heading-style--heading-six" style="margin-top: 1rem; margin-bottom: 1rem;">Extra Small</h3>
+	 						<div class="toggle-container">	 							
+								<div class="filter-toggle filter-toggle--with-text">
+									<div class="toggle">
+										<input id="toggle--show-popxs" name="radioxsmall" checked type="radio">
+										<label for="toggle--show-popxs">
+											Popular
+										</label>
+									</div>
+									<div class="toggle">
+										<input id="toggle--show-regxs" name="radioxsmall" type="radio">
+										<label for="toggle--show-regxs">
+											Regions
+										</label>
+									</div>
+									<div class="toggle">
+										<input id="toggle--show-countryxs" name="radioxsmall" type="radio">
+										<label for="toggle--show-countryxs">
+											Countries
+										</label>
+									</div>
+									<div class="toggle">
+										<input id="toggle--show-mygroupsxs" name="radioxsmall" type="radio">
+										<label for="toggle--show-mygroupsxs">
+											My Groups
+										</label>
+									</div>
+								</div>
+							</div>
+
+						</div>
+						<div class="grid__column--full-width">
+							<h3 class="heading-style--heading-six" style="margin-top: 1rem; margin-bottom: 1rem;">Small</h3>
+							<div class="toggle-container">
+								<div class="filter-toggle filter-toggle--with-text filter-toggle--small">
+									<div class="toggle">
+										<input id="toggle--show-popsm" name="radiosmall" checked type="radio">
+										<label for="toggle--show-popsm">
+											Popular
+										</label>
+									</div>
+									<div class="toggle">
+										<input id="toggle--show-regsm" name="radiosmall" type="radio">
+										<label for="toggle--show-regsm">
+											Regions
+										</label>
+									</div>
+									<div class="toggle">
+										<input id="toggle--show-countrysm" name="radiosmall" type="radio">
+										<label for="toggle--show-countrysm">
+											Countries
+										</label>
+									</div>
+									<div class="toggle">
+										<input id="toggle--show-mygroupssm" name="radiosmall" type="radio">
+										<label for="toggle--show-mygroupssm">
+											My Groups
+										</label>
+									</div>
+								</div>
+							</div>
+
+	 					</div>
+
+	 					<div class="grid__column--full-width">
+							<h3 class="heading-style--heading-six" style="margin-top: 1rem; margin-bottom: 1rem;">Medium</h3>
+							<div class="toggle-container">
+								<div class="filter-toggle filter-toggle--with-text filter-toggle--medium">
+									<div class="toggle">
+										<input id="toggle--show-popme" name="radiomedium" checked type="radio">
+										<label for="toggle--show-popme">
+											Popular
+										</label>
+									</div>
+									<div class="toggle">
+										<input id="toggle--show-regme" name="radiomedium" type="radio">
+										<label for="toggle--show-regme">
+											Regions
+										</label>
+									</div>
+									<div class="toggle">
+										<input id="toggle--show-countryme" name="radiomedium" type="radio">
+										<label for="toggle--show-countryme">
+											Countries
+										</label>
+									</div>
+									<div class="toggle">
+										<input id="toggle--show-mygroupsme" name="radiomedium" type="radio">
+										<label for="toggle--show-mygroupsme">
+											My Groups
+										</label>
+									</div>
+								</div>
+							</div>
+
+	 					</div>
+
+	 					<div class="grid__column--full-width">
+							<h3 class="heading-style--heading-six" style="margin-top: 1rem; margin-bottom: 1rem;">Large</h3>
+							<div class="toggle-container">
+								<div class="filter-toggle filter-toggle--with-text filter-toggle--large">
+									<div class="toggle">
+										<input id="toggle--show-popla" name="radiolarge" checked type="radio">
+										<label for="toggle--show-popla">
+											Popular
+										</label>
+									</div>
+									<div class="toggle">
+										<input id="toggle--show-regla" name="radiolarge" type="radio">
+										<label for="toggle--show-regla">
+											Regions
+										</label>
+									</div>
+									<div class="toggle">
+										<input id="toggle--show-countryla" name="radiolarge" type="radio">
+										<label for="toggle--show-countryla">
+											Countries
+										</label>
+									</div>
+									<div class="toggle">
+										<input id="toggle--show-mygroupsla" name="radiolarge" type="radio">
+										<label for="toggle--show-mygroupsla">
+											My Groups
+										</label>
+									</div>
+								</div>
+							</div>
+
+	 					</div>
+	 				</div>
+
+	 				<div class="grid-container components-row">
+		 				<div class="grid__column--full-width">
+	 						<h2 class="heading-style--heading-four dk-components-heading">Check Boxes</h2>
+	 					</div>
+	 					<div class="grid__column--one-quarter">
+							<h3 class="heading-style--heading-six">Disabled</h3>
+							<div class="form-field--checkbox-list">
+								<ul>
+									<li>
+										<input type="checkbox" name="checkboxOneDisabled" id="checkboxOneDisabled" disabled />
+										<label for="checkboxOneDisabled" class="checkboxLabel checkboxLabelDisabled">Check box option disabled</label>
+										<label for="checkboxOneDisabled" class="checkboxLabelVisible checkboxLabelVisibleDisabled">Check box option disabled</label>
+									</li>
+									<li>
+										<input type="checkbox" name="checkboxOneDisabled" id="checkboxOneDisabled" disabled checked />
+										<label for="checkboxOneDisabled" class="checkboxLabel checkboxLabelDisabled">Check box option disabled</label>
+										<label for="checkboxOneDisabled" class="checkboxLabelVisible checkboxLabelVisibleDisabled">Check box option disabled</label>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div class="grid__column--one-quarter">
+							<h3 class="heading-style--heading-six">Small</h3>
+							<div class="form-field--checkbox-list">
+								<ul>
+									<li>
+										<input type="checkbox" name="checkboxOne" id="checkboxOne" checked/>
+										<label for="checkboxOne" class="checkboxLabel">Apps Total</label>
+										<label for="checkboxOne" class="checkboxLabelVisible">Apps Total</label>
+									</li>
+									<li>
+										<input type="checkbox" name="checkboxTwo" id="checkboxTwo" />
+										<label for="checkboxTwo" class="checkboxLabel">Apps Total</label>
+										<label for="checkboxTwo" class="checkboxLabelVisible">Apps Total</label>
+									</li>
+									<li>
+										<input type="checkbox" name="checkboxThree" id="checkboxThree" />
+										<label for="checkboxThree" class="checkboxLabel">Apps Total</label>
+										<label for="checkboxThree" class="checkboxLabelVisible">Apps Total</label>
+									</li>
+								</ul>
+							</div>
+	 					</div>
+	 					<div class="grid__column--one-quarter">
+							<h3 class="heading-style--heading-six">Medium</h3>
+							<div class="form-field--checkbox-list form-field--checkbox-list--medium">
+								<ul>
+									<li>
+										<input type="checkbox" name="checkboxOneMed" id="checkboxOneMed" checked/>
+										<label for="checkboxOneMed" class="checkboxLabel">Apps Total</label>
+										<label for="checkboxOneMed" class="checkboxLabelVisible">Apps Total</label>
+									</li>
+									<li>
+										<input type="checkbox" name="checkboxTwoMed" id="checkboxTwoMed" />
+										<label for="checkboxTwoMed" class="checkboxLabel">Apps Total</label>
+										<label for="checkboxTwoMed" class="checkboxLabelVisible">Apps Total</label>
+									</li>
+									<li>
+										<input type="checkbox" name="checkboxThreeMed" id="checkboxThreeMed" />
+										<label for="checkboxThreeMed" class="checkboxLabel">Apps Total</label>
+										<label for="checkboxThreeMed" class="checkboxLabelVisible">Apps Total</label>
+									</li>
+								</ul>
+							</div>
+	 					</div>
+	 					<div class="grid__column--one-quarter">
+							<h3 class="heading-style--heading-six">Large</h3>
+							<div class="form-field--checkbox-list form-field--checkbox-list--large">
+								<ul>
+									<li>
+										<input type="checkbox" name="checkboxOneLar" id="checkboxOneLar" checked/>
+										<label for="checkboxOneLar" class="checkboxLabel">Apps Total</label>
+										<label for="checkboxOneLar" class="checkboxLabelVisible">Apps Total</label>
+									</li>
+									<li>
+										<input type="checkbox" name="checkboxTwoLar" id="checkboxTwoLar" />
+										<label for="checkboxTwoLar" class="checkboxLabel">Apps Total</label>
+										<label for="checkboxTwoLar" class="checkboxLabelVisible">Apps Total</label>
+									</li>
+									<li>
+										<input type="checkbox" name="checkboxThreeLar" id="checkboxThreeLar" />
+										<label for="checkboxThreeLar" class="checkboxLabel">Apps Total</label>
+										<label for="checkboxThreeLar" class="checkboxLabelVisible">Apps Total</label>
+									</li>
+								</ul>
+							</div>
+	 					</div>
+
+	 					<div class="grid__column--full-width">
+							<h3 class="heading-style--heading-six">Inline</h3>
+							<div class="form-field--checkbox-list form-field--checkbox-list--inline form-field--checkbox-list--medium">
+								<ul>
+									<li>
+										<input type="checkbox" name="checkboxOneInl" id="checkboxOneInl" checked/>
+										<label for="checkboxOneInl" class="checkboxLabel">Apps Total</label>
+										<label for="checkboxOneInl" class="checkboxLabelVisible">Apps Total</label>
+									</li>
+									<li>
+										<input type="checkbox" name="checkboxTwoInl" id="checkboxTwoInl" />
+										<label for="checkboxTwoInl" class="checkboxLabel">Apps Total</label>
+										<label for="checkboxTwoInl" class="checkboxLabelVisible">Apps Total</label>
+									</li>
+									<li>
+										<input type="checkbox" name="checkboxThreeInl" id="checkboxThreeInl" />
+										<label for="checkboxThreeInl" class="checkboxLabel">Apps Total</label>
+										<label for="checkboxThreeInl" class="checkboxLabelVisible">Apps Total</label>
+									</li>
+								</ul>
+							</div>
+	 					</div>
+	 				</div>
+
+	 				<div class="grid-container components-row">
+		 				<div class="grid__column--full-width">
+	 						<h2 class="heading-style--heading-four dk-components-heading">Column Sort Arrows</h2>
+	 					</div>
+
+	 					<div class="grid__column--one-half">
+	 						<table class="ref-table">
+	 							<thead>
+	 								<tr>
+	 									<th class="can-be-sorted">
+	 										Unsorted
+	 										<svg version="1.1" x="0px" y="0px" viewBox="0 0 7 10" enable-background="new 0 0 7 10" xml:space="preserve" class="sort-svg"><path class="ascending" d="M0.4,4.1h6.1c0.1,0,0.2,0,0.3-0.1C7,3.9,7,3.8,7,3.7c0-0.1,0-0.2-0.1-0.3L3.8,0.1C3.7,0,3.6,0,3.5,0C3.4,0,3.3,0,3.2,0.1L0.1,3.3C0,3.4,0,3.5,0,3.7C0,3.8,0,3.9,0.1,4C0.2,4.1,0.3,4.1,0.4,4.1z"></path><path class="descending" d="M6.6,5.9H0.4c-0.1,0-0.2,0-0.3,0.1C0,6.1,0,6.2,0,6.3c0,0.1,0,0.2,0.1,0.3l3.1,3.2C3.3,10,3.4,10,3.5,10c0.1,0,0.2,0,0.3-0.1l3.1-3.2C7,6.6,7,6.5,7,6.3C7,6.2,7,6.1,6.9,6C6.8,5.9,6.7,5.9,6.6,5.9z"></path></svg>
+	 									</th>
+	 									<th class="can-be-sorted is-ascending">
+	 										Ascending
+	 										<svg version="1.1" x="0px" y="0px" viewBox="0 0 7 10" enable-background="new 0 0 7 10" xml:space="preserve" class="sort-svg"><path class="ascending" d="M0.4,4.1h6.1c0.1,0,0.2,0,0.3-0.1C7,3.9,7,3.8,7,3.7c0-0.1,0-0.2-0.1-0.3L3.8,0.1C3.7,0,3.6,0,3.5,0C3.4,0,3.3,0,3.2,0.1L0.1,3.3C0,3.4,0,3.5,0,3.7C0,3.8,0,3.9,0.1,4C0.2,4.1,0.3,4.1,0.4,4.1z"></path><path class="descending" d="M6.6,5.9H0.4c-0.1,0-0.2,0-0.3,0.1C0,6.1,0,6.2,0,6.3c0,0.1,0,0.2,0.1,0.3l3.1,3.2C3.3,10,3.4,10,3.5,10c0.1,0,0.2,0,0.3-0.1l3.1-3.2C7,6.6,7,6.5,7,6.3C7,6.2,7,6.1,6.9,6C6.8,5.9,6.7,5.9,6.6,5.9z"></path></svg>
+	 									</th>
+	 									<th class="can-be-sorted is-descending">
+	 										Descending
+	 										<svg version="1.1" x="0px" y="0px" viewBox="0 0 7 10" enable-background="new 0 0 7 10" xml:space="preserve" class="sort-svg"><path class="ascending" d="M0.4,4.1h6.1c0.1,0,0.2,0,0.3-0.1C7,3.9,7,3.8,7,3.7c0-0.1,0-0.2-0.1-0.3L3.8,0.1C3.7,0,3.6,0,3.5,0C3.4,0,3.3,0,3.2,0.1L0.1,3.3C0,3.4,0,3.5,0,3.7C0,3.8,0,3.9,0.1,4C0.2,4.1,0.3,4.1,0.4,4.1z"></path><path class="descending" d="M6.6,5.9H0.4c-0.1,0-0.2,0-0.3,0.1C0,6.1,0,6.2,0,6.3c0,0.1,0,0.2,0.1,0.3l3.1,3.2C3.3,10,3.4,10,3.5,10c0.1,0,0.2,0,0.3-0.1l3.1-3.2C7,6.6,7,6.5,7,6.3C7,6.2,7,6.1,6.9,6C6.8,5.9,6.7,5.9,6.6,5.9z"></path></svg>
+	 									</th>
+	 								</tr>
+	 							</thead>
+	 						</table>
+	 					</div>
+	 				</div>
+
+	 				<div class="grid-container components-row">
+		 				<div class="grid__column--full-width">
+	 						<h2 class="heading-style--heading-four dk-components-heading">Secondary Tabs</h2>
+	 					</div>
+
+	 					<div class="grid__column--one-third">
+	 						<ul class="tabs-list seconday-tabs js-tabs">
+	 							<li class="grid__column grid__column--one-half is-active">
+	 								<a href="#topApps">Top Apps</a>
+	 							</li>
+	 							<li class="grid__column grid__column--one-half">
+	 								<a href="#bottomApps">Bottom Apps</a>
+	 							</li>
+	 						</ul>
+	 						<ul class="tabs-content-list js-tabs-content-list">
+	 							<li class="is-active summary-widget" id="topApps">
+	 								<div class="toggle-container">
+		 								<div class="filter-toggle filter-toggle--with-text">
+											<div class="toggle">
+												<input id="toggle--show-revenue" name="radiorevdown" checked type="radio">
+												<label for="toggle--show-revenue" class="js-mock-switch-revenue">
+													Popular
+												</label>
+											</div>
+											<div class="toggle">
+												<input id="toggle--show-downloads" name="radiorevdown" type="radio">
+												<label for="toggle--show-downloads" class="js-mock-switch-downloads">
+													Regions
+												</label>
+											</div>
+										</div>
+									</div>
+
+									<div id="topAppsRevenue">
+		 								<h2 class="summary-widget__data-title">Actual Revenue</h2>
+		 								<ul class="summary-widget__data-row">
+		 									<li class="summary-widget__data-item">
+		 										<a href="#">
+		 											<img src="images/placeholder-icon-8ball.png" alt="app icon" />
+		 											<h3 class="summary-widget__data-item__app-name">8 Ball Pool</h3>
+		 										</a>
+		 										<span class="summary-widget__data-item__data">&pound;102,843</span>
+		 									</li>
+		 									<li class="summary-widget__data-item">
+		 										<a href="#">
+		 											<img src="images/placeholder-icon-agario.png" alt="app icon" />
+		 											<h3 class="summary-widget__data-item__app-name">Longer App Name</h3>
+		 										</a>
+		 										<span class="summary-widget__data-item__data">&pound;99,002</span>
+		 									</li>
+		 									<li class="summary-widget__data-item">
+		 										<a href="#">
+		 											<img src="images/placeholder-icon-soccer.png" alt="app icon" />
+		 											<h3 class="summary-widget__data-item__app-name">Soccer Stars</h3>
+		 										</a>
+		 										<span class="summary-widget__data-item__data">&pound;45,781</span>
+		 									</li>
+		 								</ul>
+
+		 								<h2 class="summary-widget__data-title">Revenue % Growth</h2>
+		 								<ul class="summary-widget__data-row">
+		 									<li class="summary-widget__data-item">
+		 										<a href="#">
+		 											<img src="images/placeholder-icon-dino.png" alt="app icon" />
+		 											<h3 class="summary-widget__data-item__app-name">Dino Pets</h3>
+		 										</a>
+		 										<span class="summary-widget__data-item__data positive-color">+28%</span>
+		 									</li>
+		 									<li class="summary-widget__data-item">
+		 										<a href="#">
+		 											<img src="images/placeholder-icon-bowling.png" alt="app icon" />
+		 											<h3 class="summary-widget__data-item__app-name">Bowling King</h3>
+		 										</a>
+		 										<span class="summary-widget__data-item__data positive-color">+14%</span>
+		 									</li>
+		 									<li class="summary-widget__data-item">
+		 										<a href="#">
+		 											<img src="images/placeholder-icon-agario.png" alt="app icon" />
+		 											<h3 class="summary-widget__data-item__app-name">Agar.io</h3>
+		 										</a>
+		 										<span class="summary-widget__data-item__data negative-color">-1%</span>
+		 									</li>
+		 								</ul>
+		 							</div>
+
+		 							<div id="topAppsDownloads">
+		 								<h2 class="summary-widget__data-title">Actual Downloads</h2>
+		 								<ul class="summary-widget__data-row">
+		 									<li class="summary-widget__data-item">
+		 										<a href="#">
+		 											<img src="images/placeholder-icon-8ball.png" alt="app icon" />
+		 											<h3 class="summary-widget__data-item__app-name">8 Ball Pool</h3>
+		 										</a>
+		 										<span class="summary-widget__data-item__data">64,000</span>
+		 									</li>
+		 									<li class="summary-widget__data-item">
+		 										<a href="#">
+		 											<img src="images/placeholder-icon-agario.png" alt="app icon" />
+		 											<h3 class="summary-widget__data-item__app-name">Longer App Name</h3>
+		 										</a>
+		 										<span class="summary-widget__data-item__data">30,000</span>
+		 									</li>
+		 									<li class="summary-widget__data-item">
+		 										<a href="#">
+		 											<img src="images/placeholder-icon-soccer.png" alt="app icon" />
+		 											<h3 class="summary-widget__data-item__app-name">Soccer Stars</h3>
+		 										</a>
+		 										<span class="summary-widget__data-item__data">8,463</span>
+		 									</li>
+		 								</ul>
+
+		 								<h2 class="summary-widget__data-title">Downloads % Growth</h2>
+		 								<ul class="summary-widget__data-row">
+		 									<li class="summary-widget__data-item">
+		 										<a href="#">
+		 											<img src="images/placeholder-icon-dino.png" alt="app icon" />
+		 											<h3 class="summary-widget__data-item__app-name">Dino Pets</h3>
+		 										</a>
+		 										<span class="summary-widget__data-item__data positive-color">+13%</span>
+		 									</li>
+		 									<li class="summary-widget__data-item">
+		 										<a href="#">
+		 											<img src="images/placeholder-icon-bowling.png" alt="app icon" />
+		 											<h3 class="summary-widget__data-item__app-name">Bowling King</h3>
+		 										</a>
+		 										<span class="summary-widget__data-item__data positive-color">+5%</span>
+		 									</li>
+		 									<li class="summary-widget__data-item">
+		 										<a href="#">
+		 											<img src="images/placeholder-icon-agario.png" alt="app icon" />
+		 											<h3 class="summary-widget__data-item__app-name">Agar.io</h3>
+		 										</a>
+		 										<span class="summary-widget__data-item__data negative-color">-4%</span>
+		 									</li>
+		 								</ul>
+		 							</div>
+
+	 							</li>
+	 							<li class="summary-widget" id="bottomApps">
+	 								<div class="toggle-container">
+		 								<div class="filter-toggle filter-toggle--with-text">
+											<div class="toggle">
+												<input id="toggle--show-revenue--bottom" name="radiorevdownbot" checked type="radio">
+												<label for="toggle--show-revenue--bottom">
+													Popular
+												</label>
+											</div>
+											<div class="toggle">
+												<input id="toggle--show-downloads--bottom" name="radiorevdownbot" type="radio">
+												<label for="toggle--show-downloads--bottom">
+													Regions
+												</label>
+											</div>
+										</div>
+									</div>
+	 							</li>
+	 						</ul>
+	 					</div>
+	 				</div>
+
+	 				<div class="grid-container components-row">
+		 				<div class="grid__column--full-width">
+	 						<h2 class="heading-style--heading-four dk-components-heading">Tooltips</h2>
+	 					</div>
+
+	 					<div class="grid__column--one-third">
+	 						<div class="secondary-filter secondary-filter--medium form-field--select js-tooltip" data-tooltip="All app store accounts that you’ve linked with Reflection">
+								<select class="js-select-box">
+							    <option value="all" selected>Tooltip Centred</option>
+							    <option value="ios">iOS</option>
+							    <option value="goo">Google</option>
+							    <option value="ama">Amazon App Store</option>
+								</select>
+							</div>
+	 					</div>
+	 					<div class="grid__column--one-third">
+	 						<div class="secondary-filter secondary-filter--medium form-field--select js-tooltip js-tooltip--left" data-tooltip="All app store accounts that you’ve linked with Reflection">
+								<select class="js-select-box">
+							    <option value="all" selected>Tooltip Left</option>
+							    <option value="ios">iOS</option>
+							    <option value="goo">Google</option>
+							    <option value="ama">Amazon App Store</option>
+								</select>
+							</div>
+	 					</div>
+	 					<div class="grid__column--one-third">
+	 						<div class="secondary-filter secondary-filter--medium form-field--select js-tooltip js-tooltip--right" data-tooltip="All app store accounts that you’ve linked with Reflection">
+								<select class="js-select-box">
+							    <option value="all" selected>Tooltip Right</option>
+							    <option value="ios">iOS</option>
+							    <option value="goo">Google</option>
+							    <option value="ama">Amazon App Store</option>
+								</select>
+							</div>
+	 					</div>
+	 				</div>
+
+	 				<div class="grid-container components-row">
+	 					<div class="grid__column--one-third">
+	 						<span style="font-size: 14px; vertical-align: top; padding-top: 3px; padding-bottom: 4px; display: inline-block; margin-right: 7px;">Instant Hover, Centred</span> <a href="#" class="js-tooltip js-tooltip--instant tooltip--info" data-tooltip="No data available"><span>Information</span></a>
+	 					</div>
+	 					<div class="grid__column--one-third">
+	 						<span style="font-size: 14px; vertical-align: top; padding-top: 3px; padding-bottom: 4px; display: inline-block; margin-right: 7px;">Instant Hover, Left</span> <a href="#" class="js-tooltip js-tooltip--instant js-tooltip--left tooltip--info js-tooltip--precise-pointer" data-tooltip="No data available"><span>Information</span></a>
+	 					</div>
+	 					<div class="grid__column--one-third">
+	 						<span style="font-size: 14px; vertical-align: top; padding-top: 3px; padding-bottom: 4px; display: inline-block; margin-right: 7px;">Instant Hover, Right</span> <a href="#" class="js-tooltip js-tooltip--instant js-tooltip--right tooltip--info js-tooltip--precise-pointer" data-tooltip="No data available"><span>Information</span></a>
+	 					</div>
+	 				</div>
+
+	 				<div class="grid-container components-row">
+	 					<div class="grid__column--one-quarter">
+	 						<span style="font-size: 14px; vertical-align: top; padding-top: 3px; padding-bottom: 4px; display: inline-block; margin-right: 7px;">What's This, Right</span> <a href="#" class="whats-this-tooltip-icon js-whats-this-tooltip position-tooltip-right" data-whatsthis-title="What is Actual Data?" data-whatsthis="Revenue and download data displayed are actual values taken from your real sales data. No-one else sees these numbers but you."><span>What's this?</span></a>
+	 					</div>
+	 					<div class="grid__column--one-quarter">
+	 						<span style="font-size: 14px; vertical-align: top; padding-top: 3px; padding-bottom: 4px; display: inline-block; margin-right: 7px;">What's This, Bottom</span> <a href="#" class="whats-this-tooltip-icon js-whats-this-tooltip" data-whatsthis-title="What is Actual Data?" data-whatsthis="Revenue and download data displayed are actual values taken from your real sales data. No-one else sees these numbers but you."><span>What's this?</span></a>
+	 					</div>
+	 					<div class="grid__column--one-quarter">
+	 						<span style="font-size: 14px; vertical-align: top; padding-top: 3px; padding-bottom: 4px; display: inline-block; margin-right: 7px;">What's This, Top</span> <a href="#" class="whats-this-tooltip-icon whats-this-tooltip--dark js-whats-this-tooltip position-tooltip-top" data-whatsthis="As this is your own app you can view your actual sales data rather than the estimated data that everyone else sees."><span>What's this?</span></a>
+	 					</div>
+	 					<div class="grid__column--one-quarter">
+	 						<span style="font-size: 14px; vertical-align: top; padding-top: 3px; padding-bottom: 4px; display: inline-block; margin-right: 7px;">What's This, Left</span> <a href="#" class="whats-this-tooltip-icon js-whats-this-tooltip position-tooltip-left" data-whatsthis="As this is your own app you can view your actual <a href=#>link content</a> than the estimated data that everyone else sees."><span>What's this?</span></a>
+	 					</div>
+	 				</div>
+
+	 				<div class="grid-container components-row">
+		 				<div class="grid__column--full-width">
+	 						<h2 class="heading-style--heading-four dk-components-heading">Paragraph</h2>
+	 					</div>
+
+	 					<div class="grid__column--one-third">
+	 						<p class="p-style--feature">Feature body copy 18px, line-height 26px is larger and used sparingly for example main intro copy lorem ipsum bolded text lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor</p>
+	 					</div>
+	 					<div class="grid__column--one-third">
+	 						<p>Main body copy 16px, line-height 26px (if container width over 600px) 24px (if container width under 600px) <strong>bolded text</strong> lorem ipsum dolor sit amet, consectetur <a href="#">link text</a> elit. Nullam varius nulla pellentesque bibendum semper. Pellentesque ullamcorper dictum.</p>
+	 					</div>
+	 					<div class="grid__column--one-third">
+	 						<p class="p-style--minor">Minor body copy 14px, line height 24px (if container width over 400px) 22px (if container width under 400px) - lorem ipsum dolor sit amet, <strong>bolded text</strong> adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute</p>
+	 					</div>
+	 				</div>
+
+	 				<div class="grid-container components-row">
+		 				<div class="grid__column--full-width">
+	 						<h2 class="heading-style--heading-four dk-components-heading">Paragraph</h2>
+	 					</div>
+
+	 					<div class="grid__column--one-half">
+	 						<h1>H1 34px Line Height 44px</h1>
+	 						<h2>H2 28px Line Height 38px</h2>
+	 						<h3>H3 24px Line Height 34px</h3>
+	 						<h4>H4 22px Line Height 30px</h4>
+	 						<h5>H5 20px Line Height 28px</h5>
+	 						<h6>H6 18px Line Height 24px</h6>
+	 					</div>
+	 				</div>
+
+		 		</div>
+		</div>
+	</div>
+
+<script src="js/vendor/jquery-1.11.1.min.js"></script>
+<script src="js/vendor/modernizr.2.8.3.custom.min.js"></script>
+<script src="js-v2/application.js"></script>
+<script>
+  	function initScripts() {
+  		new PrimaryFilters();
+  		new FormInteractions();
+  		$('.js-select-box').each(function() {
+  			new FormFieldSelect($(this));
+  		});
+  		$('.js-tabs').each(function() {
+  			new Tabs($(this));
+  		});
+
+  		// Mock function for template
+  		$('#topAppsDownloads').hide();
+  		$('.js-mock-switch-revenue').on("click", function(){
+  			$('#topAppsDownloads').hide();
+  			$('#topAppsRevenue').show();
+  		});
+  		$('.js-mock-switch-downloads').on("click", function(){
+  			$('#topAppsDownloads').show();
+  			$('#topAppsRevenue').hide();
+  		});
+
+  		new TooltipsBase();
+  		$('.js-tooltip').each(function(){
+  			new ToolTip($(this));
+  		});
+  		$('.js-whats-this-tooltip').each(function(){
+  			new WhatsThisPopup($(this));
+  		});
+  	}
+
+  	window.onready = initScripts();
+  </script>
+</body>
