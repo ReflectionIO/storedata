@@ -183,7 +183,7 @@ public class ITunesReporterCollector implements DataAccountCollector {
 
 					LOG.log(Level.WARNING, emailBody);
 
-					NotificationHelper.sendEmail("hello@reflection.io (Reflection)", "support@reflection.io", "Reflection", "Disabling account due to invalid credentials", emailBody, false);
+					NotificationHelper.sendEmail("hello@reflection.io (Reflection)", "disabledaccounts@reflection.io", "Reflection", "Disabling account due to invalid credentials", emailBody, false);
 				} else {
 					dataAccountFetch.status(DataAccountFetchStatusType.DataAccountFetchStatusTypeError);
 					dataAccountFetch.data(e.getErrorCode() + ":" + e.getMessage());
