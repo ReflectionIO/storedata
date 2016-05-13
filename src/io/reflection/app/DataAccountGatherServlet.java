@@ -97,6 +97,11 @@ public class DataAccountGatherServlet extends ContextAwareServlet {
 				return;
 			}
 
+			if (account.active != null && account.active.equalsIgnoreCase("n")) {
+				LOG.log(Level.INFO, String.format("Data account [%d, %s] is not active. Will not gather for this account", accountIdParameter, account.username));
+				return;
+			}
+
 			Date date;
 			if (dateParameter != null) {
 				date = new Date(Long.parseLong(dateParameter));
