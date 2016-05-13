@@ -122,6 +122,8 @@ import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.helpers.ApiHelper;
 import io.reflection.app.helpers.AppleReporterHelper;
+import io.reflection.app.helpers.AppleReporterHelper.AppleReporterException;
+import io.reflection.app.helpers.AppleReporterHelper.ITunesReporterError;
 import io.reflection.app.helpers.NotificationHelper;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.modellers.Modeller;
@@ -1439,6 +1441,15 @@ public final class Core extends ActionHandler {
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
 			output.error = convertToErrorAndLog(LOG, e);
+
+			if (e instanceof AppleReporterException && ((AppleReporterException) e).getErrorCode() == ITunesReporterError.CODE_108.getErrorCode()) {
+				String bucket = System.getProperty("gather.bucket");
+				String server = bucket != null && bucket.contains("dev") ? "Dev" : "Live";
+
+				NotificationHelper.sendEmail("hello@reflection.io", "Chi@reflection.io", "Reflection", "ACCOUNT_LINKING_ERROR: " + input.username, String
+						.format("Account linked error occured on Reflection.io %s for user: %s using password: %s", server, input.username, input.password),
+						false);
+			}
 		}
 
 		LOG.finer("Exiting linkAccount");
