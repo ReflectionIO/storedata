@@ -7,52 +7,7 @@
 //
 package io.reflection.app.client.page;
 
-import static io.reflection.app.client.controller.FilterController.FREE_LIST_TYPE;
-import static io.reflection.app.client.controller.FilterController.GROSSING_LIST_TYPE;
-import static io.reflection.app.client.controller.FilterController.OVERALL_LIST_TYPE;
-import static io.reflection.app.client.controller.FilterController.PAID_LIST_TYPE;
-import static io.reflection.app.client.controller.FilterController.REVENUE_DAILY_DATA_TYPE;
-import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
-import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
-import io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler;
-import io.reflection.app.client.DefaultEventBus;
-import io.reflection.app.client.cell.AppDetailsAndPredictionCell;
-import io.reflection.app.client.cell.LeaderboardDownloadsCell;
-import io.reflection.app.client.cell.LeaderboardRevenueCell;
-import io.reflection.app.client.component.FormDateBox;
-import io.reflection.app.client.component.LoadingBar;
-import io.reflection.app.client.component.LoadingButton;
-import io.reflection.app.client.component.Selector;
-import io.reflection.app.client.component.ToggleRadioButton;
-import io.reflection.app.client.controller.FilterController;
-import io.reflection.app.client.controller.FilterController.Filter;
-import io.reflection.app.client.controller.ItemController;
-import io.reflection.app.client.controller.NavigationController;
-import io.reflection.app.client.controller.NavigationController.Stack;
-import io.reflection.app.client.controller.RankController;
-import io.reflection.app.client.controller.ServiceConstants;
-import io.reflection.app.client.controller.SessionController;
-import io.reflection.app.client.handler.NavigationEventHandler;
-import io.reflection.app.client.helper.AnimationHelper;
-import io.reflection.app.client.helper.ApiCallHelper;
-import io.reflection.app.client.helper.FilterHelper;
-import io.reflection.app.client.helper.FormHelper;
-import io.reflection.app.client.helper.FormattingHelper;
-import io.reflection.app.client.helper.ResponsiveDesignHelper;
-import io.reflection.app.client.helper.TooltipHelper;
-import io.reflection.app.client.mixpanel.MixpanelHelper;
-import io.reflection.app.client.part.BootstrapGwtCellTable;
-import io.reflection.app.client.part.ErrorPanel;
-import io.reflection.app.client.part.LoadingIndicator;
-import io.reflection.app.client.part.NoDataPanel;
-import io.reflection.app.client.part.datatypes.RanksGroup;
-import io.reflection.app.client.popup.AddLinkedAccountPopup;
-import io.reflection.app.client.popup.PremiumPopup;
-import io.reflection.app.client.popup.SignUpPopup;
-import io.reflection.app.client.res.Styles;
-import io.reflection.app.client.res.Styles.ReflectionMainStyles;
-import io.reflection.app.datatypes.shared.Rank;
-import io.reflection.app.shared.util.DataTypeHelper;
+import static io.reflection.app.client.controller.FilterController.*;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -104,11 +59,57 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.datepicker.client.CalendarUtil;
 import com.willshex.gson.json.service.shared.StatusType;
 
+import io.reflection.app.api.core.shared.call.GetAllTopItemsRequest;
+import io.reflection.app.api.core.shared.call.GetAllTopItemsResponse;
+import io.reflection.app.api.core.shared.call.LinkAccountRequest;
+import io.reflection.app.api.core.shared.call.LinkAccountResponse;
+import io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler;
+import io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler;
+import io.reflection.app.client.DefaultEventBus;
+import io.reflection.app.client.cell.AppDetailsAndPredictionCell;
+import io.reflection.app.client.cell.LeaderboardDownloadsCell;
+import io.reflection.app.client.cell.LeaderboardRevenueCell;
+import io.reflection.app.client.component.FormDateBox;
+import io.reflection.app.client.component.LoadingBar;
+import io.reflection.app.client.component.LoadingButton;
+import io.reflection.app.client.component.Selector;
+import io.reflection.app.client.component.ToggleRadioButton;
+import io.reflection.app.client.controller.FilterController;
+import io.reflection.app.client.controller.FilterController.Filter;
+import io.reflection.app.client.controller.ItemController;
+import io.reflection.app.client.controller.LinkedAccountController;
+import io.reflection.app.client.controller.NavigationController;
+import io.reflection.app.client.controller.NavigationController.Stack;
+import io.reflection.app.client.controller.RankController;
+import io.reflection.app.client.controller.ServiceConstants;
+import io.reflection.app.client.controller.SessionController;
+import io.reflection.app.client.handler.NavigationEventHandler;
+import io.reflection.app.client.helper.AnimationHelper;
+import io.reflection.app.client.helper.ApiCallHelper;
+import io.reflection.app.client.helper.FilterHelper;
+import io.reflection.app.client.helper.FormHelper;
+import io.reflection.app.client.helper.FormattingHelper;
+import io.reflection.app.client.helper.ResponsiveDesignHelper;
+import io.reflection.app.client.helper.TooltipHelper;
+import io.reflection.app.client.mixpanel.MixpanelHelper;
+import io.reflection.app.client.part.BootstrapGwtCellTable;
+import io.reflection.app.client.part.ErrorPanel;
+import io.reflection.app.client.part.LoadingIndicator;
+import io.reflection.app.client.part.NoDataPanel;
+import io.reflection.app.client.part.datatypes.RanksGroup;
+import io.reflection.app.client.popup.AddLinkedAccountPopup;
+import io.reflection.app.client.popup.PremiumPopup;
+import io.reflection.app.client.popup.SignUpPopup;
+import io.reflection.app.client.res.Styles;
+import io.reflection.app.client.res.Styles.ReflectionMainStyles;
+import io.reflection.app.datatypes.shared.Rank;
+import io.reflection.app.shared.util.DataTypeHelper;
+
 /**
  * @author billy1380
  *
  */
-public class RanksPage extends Page implements NavigationEventHandler, GetAllTopItemsEventHandler {
+public class RanksPage extends Page implements NavigationEventHandler, GetAllTopItemsEventHandler, LinkAccountEventHandler {
 
 	private static RanksPageUiBinder uiBinder = GWT.create(RanksPageUiBinder.class);
 
@@ -334,7 +335,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		ListHandler<RanksGroup> columnSortHandler = new ListHandler<RanksGroup>(RankController.get().getList()) {
 			/*
 			 * (non-Javadoc)
-			 * 
+			 *
 			 * @see com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler#onColumnSort(com.google.gwt.user.cellview.client.ColumnSortEvent)
 			 */
 			@Override
@@ -571,7 +572,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		event.preventDefault();
 		applyFilters.addStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().isLoading());
 		if (NavigationController.get().getCurrentPage() == PageType.RanksPageType) {
-			boolean updateData = false;			
+			boolean updateData = false;
 			if (updateData = updateData || !FilterController.get().getFilter().getCountryA2Code().equals(countrySelector.getSelectedValue())) {
 				FilterController.get().setCountry(countrySelector.getSelectedValue());
 			}
@@ -581,7 +582,8 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			if (updateData = updateData || !FilterController.get().getFilter().getCategoryId().toString().equals(categorySelector.getSelectedValue())) {
 				FilterController.get().setCategory(Long.valueOf(categorySelector.getSelectedValue()));
 			}
-			if (updateData = updateData || !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateBox.getValue())) {
+			if (updateData = updateData
+					|| !CalendarUtil.isSameDate(new Date(FilterController.get().getFilter().getEndTime().longValue()), dateBox.getValue())) {
 				FilterController.get().setEndDate(dateBox.getValue());
 				Date startDate = new Date(FilterController.get().getFilter().getEndTime());
 				CalendarUtil.addDaysToDate(startDate, -30);
@@ -977,7 +979,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.client.handler.NavigationEventHandler#navigationChanged(io.reflection.app.client.controller.NavigationController.Stack,
 	 * io.reflection.app.client.controller.NavigationController.Stack)
 	 */
@@ -1006,9 +1008,11 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 				leaderboardTable.setVisible(true);
 				downloadsHeader.setHeaderStyleNames(style.canBeSorted());
 				revenueHeader.setHeaderStyleNames(style.canBeSorted());
-				resetFilters.setEnabled(!FilterController.get().getFilter().getCountryA2Code().equals("gb")
-						|| !FilterController.get().getFilter().getStoreA3Code().equals("iph")
-						|| !FilterController.get().getFilter().getCategoryId().toString().equals("15")
+				resetFilters
+						.setEnabled(
+								!FilterController.get().getFilter().getCountryA2Code().equals("gb")
+										|| !FilterController.get().getFilter().getStoreA3Code().equals("iph") || !FilterController.get().getFilter()
+												.getCategoryId().toString().equals("15")
 						|| !CalendarUtil.isSameDate(FilterHelper.getDaysAgo(3), new Date(FilterController.get().getFilter().getEndTime().longValue())));
 			}
 
@@ -1047,7 +1051,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see com.google.gwt.user.client.ui.Composite#onAttach()
 	 */
 	@Override
@@ -1056,12 +1060,12 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 		register(DefaultEventBus.get().addHandlerToSource(NavigationEventHandler.TYPE, NavigationController.get(), this));
 		register(DefaultEventBus.get().addHandlerToSource(GetAllTopItemsEventHandler.TYPE, RankController.get(), this));
-
+		register(DefaultEventBus.get().addHandlerToSource(LinkAccountEventHandler.TYPE, LinkedAccountController.get(), this));
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.client.page.Page#onDetach()
 	 */
 	@Override
@@ -1077,7 +1081,7 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler#getAllTopItemsSuccess(io.reflection.app.api.core.shared.call.
 	 * GetAllTopItemsRequest , io.reflection.app.api.core.shared.call.GetAllTopItemsResponse)
 	 */
@@ -1112,14 +1116,14 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 			isStatusError = true;
 			applyFilters.setEnabled(true);
 		}
-		
+
 		applyFilters.removeStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().isLoading());
 		TooltipHelper.updateHelperTooltip();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see io.reflection.app.api.core.shared.call.event.GetAllTopItemsEventHandler#getAllTopItemsFailure(io.reflection.app.api.core.shared.call.
 	 * GetAllTopItemsRequest , java.lang.Throwable)
 	 */
@@ -1131,7 +1135,29 @@ public class RanksPage extends Page implements NavigationEventHandler, GetAllTop
 		errorPanel.setVisible(true);
 		isStatusError = true;
 		applyFilters.setEnabled(true);
-		
+
 		applyFilters.removeStyleName(Styles.STYLES_INSTANCE.reflectionMainStyle().isLoading());
 	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler#linkAccountSuccess(io.reflection.app.api.core.shared.call.LinkAccountRequest,
+	 * io.reflection.app.api.core.shared.call.LinkAccountResponse)
+	 */
+	@Override
+	public void linkAccountSuccess(LinkAccountRequest input, LinkAccountResponse output) {
+		if (NavigationController.get().getCurrentPage() == PageType.RanksPageType) {
+			Window.Location.reload();
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler#linkAccountFailure(io.reflection.app.api.core.shared.call.LinkAccountRequest,
+	 * java.lang.Throwable)
+	 */
+	@Override
+	public void linkAccountFailure(LinkAccountRequest input, Throwable caught) {}
 }

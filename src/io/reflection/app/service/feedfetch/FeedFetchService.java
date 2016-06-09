@@ -386,8 +386,9 @@ public class FeedFetchService implements IFeedFetchService {
 
 		final Connection feedFetchConnection = DatabaseServiceProvider.provide().getNamedConnection(DatabaseType.DatabaseTypeFeedFetch.toString());
 
-		try (PreparedStatement pstat = feedFetchConnection.getRealConnection().prepareStatement(selectQuery, ResultSet.TYPE_FORWARD_ONLY,
-				ResultSet.CONCUR_READ_ONLY)) {
+		feedFetchConnection.connect();
+
+		try (PreparedStatement pstat = feedFetchConnection.getRealConnection().prepareStatement(selectQuery, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)) {
 			feedFetchConnection.connect();
 
 			pstat.setDate(1, new java.sql.Date(fetchForDate.getTime()));

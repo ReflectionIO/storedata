@@ -122,6 +122,8 @@ import io.reflection.app.datatypes.shared.Store;
 import io.reflection.app.datatypes.shared.User;
 import io.reflection.app.helpers.ApiHelper;
 import io.reflection.app.helpers.AppleReporterHelper;
+import io.reflection.app.helpers.AppleReporterHelper.AppleReporterException;
+import io.reflection.app.helpers.AppleReporterHelper.ITunesReporterError;
 import io.reflection.app.helpers.NotificationHelper;
 import io.reflection.app.logging.GaeLevel;
 import io.reflection.app.modellers.Modeller;
@@ -174,14 +176,12 @@ public final class Core extends ActionHandler {
 			try {
 				input.store = ValidationHelper.validateStore(input.store, "input");
 				isStore = true;
-			} catch (InputValidationException ex) {
-			}
+			} catch (InputValidationException ex) {}
 
 			try {
 				input.query = ValidationHelper.validateQuery(input.query, "input");
 				isQuery = true;
-			} catch (InputValidationException ex) {
-			}
+			} catch (InputValidationException ex) {}
 
 			List<Country> countries = null;
 
@@ -194,9 +194,8 @@ public final class Core extends ActionHandler {
 				} else {
 					countries = CountryServiceProvider.provide().searchCountries(input.query, input.pager);
 				}
-			} else
-				throw new InputValidationException(ApiError.GetCountriesNeedsStoreOrQuery.getCode(),
-						ApiError.GetCountriesNeedsStoreOrQuery.getMessage("input"));
+			} else throw new InputValidationException(ApiError.GetCountriesNeedsStoreOrQuery.getCode(),
+					ApiError.GetCountriesNeedsStoreOrQuery.getMessage("input"));
 
 			if (countries != null) {
 				output.countries = countries;
@@ -238,14 +237,12 @@ public final class Core extends ActionHandler {
 			try {
 				input.country = ValidationHelper.validateCountry(input.country, "input");
 				isCountry = true;
-			} catch (InputValidationException ex) {
-			}
+			} catch (InputValidationException ex) {}
 
 			try {
 				input.query = ValidationHelper.validateQuery(input.query, "input");
 				isQuery = true;
-			} catch (InputValidationException ex) {
-			}
+			} catch (InputValidationException ex) {}
 
 			List<Store> stores = null;
 
@@ -802,8 +799,7 @@ public final class Core extends ActionHandler {
 
 					if (output.session != null) {
 						output.session.user = user;
-					} else
-						throw new Exception("Unexpected blank session after creating user session.");
+					} else throw new Exception("Unexpected blank session after creating user session.");
 				} else {
 					output.session = SessionServiceProvider.provide().extendSession(output.session, ISessionService.SESSION_SHORT_DURATION);
 					output.session.user = user;
@@ -1014,8 +1010,7 @@ public final class Core extends ActionHandler {
 					UserServiceProvider.provide().revokePermission(input.session.user, hlaPermission);
 				}
 
-			} else
-				throw new InputValidationException(ApiError.DataAccountUserMissmatch.getCode(), ApiError.DataAccountUserMissmatch.getMessage());
+			} else throw new InputValidationException(ApiError.DataAccountUserMissmatch.getCode(), ApiError.DataAccountUserMissmatch.getMessage());
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
@@ -1275,6 +1270,9 @@ public final class Core extends ActionHandler {
 
 			output.linkedAccounts = new ArrayList<DataAccount>();
 
+			// we are going to hold one of the accounts (created or linked) here for notification purposes.
+			DataAccount accountWithUserProvidedCredentials = null;
+
 			ArrayList<String> vendorIdsAddedToResponse = new ArrayList<>();
 
 			if ("THETESTACCOUNT".equals(input.username) && "thegrange".equals(input.password)) { // TODO Redesign custom exceptions
@@ -1316,6 +1314,8 @@ public final class Core extends ActionHandler {
 								input.password, vendorId, developerName, accountId);
 						addedAccount.source = input.source;
 
+						accountWithUserProvidedCredentials = addedAccount;
+
 						if (!vendorIdsAddedToResponse.contains(vendorId)) {
 							output.linkedAccounts.add(addedAccount);
 							vendorIdsAddedToResponse.add(vendorId);
@@ -1344,6 +1344,10 @@ public final class Core extends ActionHandler {
 									accountWithSameCredentials.password = input.password;
 									DataAccountServiceProvider.provide().updateDataAccount(accountWithSameCredentials, false);
 								}
+
+								if (accountWithUserProvidedCredentials == null) {
+									accountWithUserProvidedCredentials = accountWithSameCredentials;
+								}
 							}
 
 							// link this account to the current user.
@@ -1367,6 +1371,10 @@ public final class Core extends ActionHandler {
 							if (!vendorIdsAddedToResponse.contains(vendorId)) {
 								output.linkedAccounts.add(addedAccount);
 								vendorIdsAddedToResponse.add(vendorId);
+							}
+
+							if (accountWithUserProvidedCredentials == null) {
+								accountWithUserProvidedCredentials = addedAccount;
 							}
 						}
 
@@ -1413,27 +1421,35 @@ public final class Core extends ActionHandler {
 				Map<String, Object> parameters = new HashMap<String, Object>();
 				parameters.put("listener", listeningUser);
 				parameters.put("user", input.session.user);
-				parameters.put("account", output.linkedAccounts.get(0));
+				parameters.put("account", accountWithUserProvidedCredentials);
 				parameters.put("source", input.source);
 
 				String body = NotificationHelper.inflate(parameters,
-						"Hi ${listener.forename},\n\nThis is to let you know that the user [${user.id} - ${user.forename} ${user.surname}] has added the data account [${account.id}] for the data source [${source.name}] and the username ${account.username}.\n\nReflection");
+						"Hi ${listener.forename},\n\nThis is to let you know that the user [${user.id} - ${user.forename} ${user.surname}] has added the data account [${account.id}] for the data source [${source.name}] and the username [${account.username}] and developer name [${account.developerName}].\n\nReflection");
 
 				Notification notification = (new Notification()).from("hello@reflection.io").user(listeningUser).body(body)
-						.priority(EventPriorityType.EventPriorityTypeHigh).subject("A user's has linked thier account account");
+						.priority(EventPriorityType.EventPriorityTypeHigh).subject("A user has linked their account");
 				Notification added = NotificationServiceProvider.provide().addNotification(notification);
 
 				if (added.type != NotificationTypeType.NotificationTypeTypeInternal) {
 					notification.type = NotificationTypeType.NotificationTypeTypeInternal;
 					NotificationServiceProvider.provide().addNotification(notification);
 				}
-			} else
-				throw new Exception("Linked accounts in the output are empty");
+			} else throw new Exception("Linked accounts in the output are empty");
 
 			output.status = StatusType.StatusTypeSuccess;
 		} catch (Exception e) {
 			output.status = StatusType.StatusTypeFailure;
 			output.error = convertToErrorAndLog(LOG, e);
+
+			if (e instanceof AppleReporterException && ((AppleReporterException) e).getErrorCode() == ITunesReporterError.CODE_108.getErrorCode()) {
+				String bucket = System.getProperty("gather.bucket");
+				String server = bucket != null && bucket.contains("dev") ? "Dev" : "Live";
+
+				NotificationHelper.sendEmail("hello@reflection.io", "Chi@reflection.io", "Reflection", "ACCOUNT_LINKING_ERROR: " + input.username, String
+						.format("Account linked error occured on Reflection.io %s for user: %s using password: %s", server, input.username, input.password),
+						false);
+			}
 		}
 
 		LOG.finer("Exiting linkAccount");

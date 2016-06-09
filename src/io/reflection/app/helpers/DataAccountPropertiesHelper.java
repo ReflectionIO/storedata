@@ -9,6 +9,7 @@ package io.reflection.app.helpers;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.google.gson.JsonArray;
@@ -47,7 +48,12 @@ public class DataAccountPropertiesHelper {
 			jsonProperties = new JsonObject();
 		}
 
-		JsonArray accountAndVendorIds = jsonProperties.getAsJsonArray(ACCOUNTS_AND_VENDOR_IDS);
+		JsonArray accountAndVendorIds = null;
+		try {
+			accountAndVendorIds = jsonProperties.getAsJsonArray(ACCOUNTS_AND_VENDOR_IDS);
+		} catch (Exception e) {
+		}
+
 		if (accountAndVendorIds == null) {
 			accountAndVendorIds = new JsonArray();
 			jsonProperties.add(ACCOUNTS_AND_VENDOR_IDS, accountAndVendorIds);
@@ -55,9 +61,28 @@ public class DataAccountPropertiesHelper {
 
 		boolean combinationAlreadyExists = false;
 		for (int i = 0; i < accountAndVendorIds.size(); i++) {
-			JsonObject obj = accountAndVendorIds.get(i).getAsJsonObject();
-			String objAccountId = obj.getAsJsonPrimitive(ACCOUNT_ID).getAsString();
-			String objVendorId = obj.getAsJsonPrimitive(VENDOR_ID).getAsString();
+			JsonObject obj = null;
+			try {
+				obj = accountAndVendorIds.get(i).getAsJsonObject();
+			} catch (Exception e) {
+			}
+
+			if (obj == null) {
+				continue;
+			}
+
+			String objAccountId = null;
+			String objVendorId = null;
+
+			try {
+				objAccountId = obj.getAsJsonPrimitive(ACCOUNT_ID).getAsString();
+				objVendorId = obj.getAsJsonPrimitive(VENDOR_ID).getAsString();
+			} catch (Exception e) {
+			}
+
+			if (objAccountId == null || objVendorId == null) {
+				continue;
+			}
 
 			if (accountId.equals(objAccountId) && vendorId.equals(objVendorId)) {
 				combinationAlreadyExists = true;
@@ -96,10 +121,19 @@ public class DataAccountPropertiesHelper {
 		JsonElement vendorsElement = jsonProperties.get(VENDORS);
 		if (!vendorsElement.isJsonArray()) return new ArrayList<>(0);
 
-		JsonArray vendors = vendorsElement.getAsJsonArray();
+		JsonArray vendors = null;
+		try {
+			vendors = vendorsElement.getAsJsonArray();
+		} catch (Exception e) {
+			return Collections.emptyList();
+		}
+
 		ArrayList<String> vendorIdList = new ArrayList<>(vendors.size());
 		for (int i = 0; i < vendors.size(); i++) {
-			vendorIdList.add(vendors.get(i).getAsString());
+			try {
+				vendorIdList.add(vendors.get(i).getAsString());
+			} catch (Exception e) {
+			}
 		}
 
 		return vendorIdList;
@@ -131,7 +165,7 @@ public class DataAccountPropertiesHelper {
 	 * @return
 	 */
 	public static List<SimpleEntry<String, String>> getAccountAndVendorIdsFromProperties(JsonObject jsonProperties) {
-		if (jsonProperties == null) return new ArrayList<SimpleEntry<String, String>>(0);
+		if (jsonProperties == null) return Collections.emptyList();
 
 		JsonElement accountsAndVendorIdsElement = jsonProperties.get(ACCOUNTS_AND_VENDOR_IDS);
 
@@ -139,14 +173,25 @@ public class DataAccountPropertiesHelper {
 
 		if (!accountsAndVendorIdsElement.isJsonArray()) return new ArrayList<>(0);
 
-		JsonArray accountsAndVendorIds = accountsAndVendorIdsElement.getAsJsonArray();
+		JsonArray accountsAndVendorIds = null;
+		try {
+			accountsAndVendorIds = accountsAndVendorIdsElement.getAsJsonArray();
+		} catch (Exception e) {
+			return Collections.emptyList();
+		}
+
 		ArrayList<SimpleEntry<String, String>> vendorIdList = new ArrayList<>(accountsAndVendorIds.size());
 		for (int i = 0; i < accountsAndVendorIds.size(); i++) {
-			JsonObject pair = accountsAndVendorIds.get(i).getAsJsonObject();
-			String accountId = pair.get(ACCOUNT_ID).getAsString();
-			String vendorId = pair.get(VENDOR_ID).getAsString();
+			try {
+				JsonObject pair = accountsAndVendorIds.get(i).getAsJsonObject();
 
-			vendorIdList.add(new SimpleEntry<>(accountId, vendorId));
+				String accountId = pair.get(ACCOUNT_ID).getAsString();
+				String vendorId = pair.get(VENDOR_ID).getAsString();
+
+				vendorIdList.add(new SimpleEntry<>(accountId, vendorId));
+			} catch (Exception e) {
+				// sometimes these values are not null but are stored as JSONNull and getting them as strings causes an exception to be thrown.
+			}
 		}
 
 		return vendorIdList;

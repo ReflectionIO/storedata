@@ -60,8 +60,12 @@ public class ITunesReporterCollector implements DataAccountCollector {
 	public boolean collect(DataAccount dataAccount, Date date) throws DataAccessException, ServiceException {
 		date = ApiHelper.removeTime(date);
 
-		// if the date requested is before iTunes Reporter started, then process it via the old iTunes Autoingest data collector.
-		if (AppleReporterHelper.isDateBeforeItunesReporterStarted(date)) return new DataAccountCollectorITunesConnect().collect(dataAccount, date);
+		// // if the date requested is before iTunes Reporter started, then process it via the old iTunes Autoingest data collector.
+		// if (AppleReporterHelper.isDateBeforeItunesReporterStarted(date)) {
+		// LOG.info(String.format("%s is before the iTunes Report was active so using the older collector for it", date));
+		//
+		// return new DataAccountCollectorITunesConnect().collect(dataAccount, date);
+		// }
 
 		if (LOG.isLoggable(Level.INFO)) {
 			LOG.info(String.format("Getting data from itunes connect for data account [%s] and date [%s]", dataAccount.id == null ? dataAccount.username
@@ -82,30 +86,31 @@ public class ITunesReporterCollector implements DataAccountCollector {
 			String accountId = dataAccount.accountId;
 			String vendorId = dataAccount.vendorId;
 
-			// If there accountid or vendor id is not set in the data account, get it from the properties or do a lookup
-			if (accountId == null || vendorId == null || accountId.trim().length() == 0 || vendorId.trim().length() == 0) {
-				SimpleEntry<String, String> accountAndVendorId = getPrimaryAccountAndVendorIdsFromProperties(dataAccount);
+			try {
+				// If there accountid or vendor id is not set in the data account, get it from the properties or do a lookup
+				if (accountId == null || vendorId == null || accountId.trim().length() == 0 || vendorId.trim().length() == 0) {
+					SimpleEntry<String, String> accountAndVendorId = getPrimaryAccountAndVendorIdsFromProperties(dataAccount);
 
-				if (accountAndVendorId != null) {
-					accountId = accountAndVendorId.getKey();
-					vendorId = accountAndVendorId.getValue();
+					if (accountAndVendorId != null) {
+						accountId = accountAndVendorId.getKey();
+						vendorId = accountAndVendorId.getValue();
 
-					// if we were able to get the accountid and vendorid, update the data account
-					if (accountId != null && vendorId != null && accountId.trim().length() > 0 && vendorId.trim().length() > 0) {
-						dataAccount.accountId(accountId).vendorId(vendorId);
-						DataAccountServiceProvider.provide().updateDataAccount(dataAccount, false);
+						// if we were able to get the accountid and vendorid, update the data account
+						if (accountId != null && vendorId != null && accountId.trim().length() > 0 && vendorId.trim().length() > 0) {
+							dataAccount.accountId(accountId).vendorId(vendorId);
+							DataAccountServiceProvider.provide().updateDataAccount(dataAccount, false);
+						}
 					}
 				}
-			}
 
-			// If we still don't have an account and vendor id pair, fail
-			if (accountId == null || vendorId == null || accountId.trim().length() == 0 || vendorId.trim().length() == 0) {
-				LOG.log(Level.SEVERE, "Can't get a valid set of account id and vendor id for DataAccount id: " + dataAccount.id + " with username: " + dataAccount.username);
-				return false;
-			}
+				// If we still don't have an account and vendor id pair, fail
+				if (accountId == null || vendorId == null || accountId.trim().length() == 0 || vendorId.trim().length() == 0) {
+					String msg = "Can't get a valid set of account id and vendor id for DataAccount id: " + dataAccount.id + " with username: " + dataAccount.username;
+					LOG.log(Level.SEVERE, msg);
+					throw new AppleReporterException(108, msg);
+				}
 
-			// do the gather
-			try {
+				// do the gather
 				byte[] gzippedReportData = AppleReporterHelper.getReport(dataAccount.username, dataAccount.password, accountId, vendorId, DateType.DAILY, date);
 				String fileName = "S_D_A_" + accountId + "_V_" + vendorId + SqlQueryHelper.getSqlDateFormat().format(date) + ".txt.gz";
 
@@ -129,6 +134,10 @@ public class ITunesReporterCollector implements DataAccountCollector {
 				ITunesReporterError error = ITunesReporterError.getByCode(e.getErrorCode());
 
 				if (error == null) {
+					dataAccountFetch.status(DataAccountFetchStatusType.DataAccountFetchStatusTypeError);
+					dataAccountFetch.data(e.getErrorCode() + ":" + e.getMessage());
+					dataAccountFetch = DataAccountFetchServiceProvider.provide().updateDataAccountFetch(dataAccountFetch);
+
 					LOG.log(Level.WARNING, "Exception occured while trying to get iTunes Report via the Reporter", e);
 					return false;
 				}
@@ -147,7 +156,7 @@ public class ITunesReporterCollector implements DataAccountCollector {
 
 				if (error == ITunesReporterError.CODE_210) {
 					LOG.log(Level.WARNING, "The report is not ready yet for data account id: " + dataAccount.id + " with username: " + dataAccount.username + " on " + date);
-				} else if (error == ITunesReporterError.CODE_107 || error == ITunesReporterError.CODE_108) {
+				} else if (error == ITunesReporterError.CODE_107 || error == ITunesReporterError.CODE_108 || error == ITunesReporterError.CODE_217) {
 					dataAccount.active = "n";
 					DataAccountServiceProvider.provide().updateDataAccount(dataAccount, false);
 
@@ -165,14 +174,21 @@ public class ITunesReporterCollector implements DataAccountCollector {
 						DataAccountServiceProvider.provide().triggerDataAccountFetch(replacementAccount);
 					}
 
-					String emailBody = "Username / password is incorrect for data account id: " + dataAccount.id + " with username: " + dataAccount.username + " on " + date +
-							".\nDisabling fetching from this account. Replacement account queued to fetch sales data - id: " + replacementAccount == null ? "None"
-									: (replacementAccount.id + " with username: " + replacementAccount.username);
+					String replacementAccountLogMessage = replacementAccount == null ? "There is no replacement account for this vendor id."
+							: String.format("Replacement data account id: %s with username %s", replacementAccount.id, replacementAccount.username);
+
+					String errorTypeLogMessage = error.getErrorCode() == 217 ? "User does not have access to iTunes Sales Reports" : "Username / password is incorrect";
+
+					String emailBody = String.format("%s for data account id: %s with username %s on %s.%s", errorTypeLogMessage, dataAccount.id, dataAccount.username, date, replacementAccountLogMessage);
 
 					LOG.log(Level.WARNING, emailBody);
 
-					NotificationHelper.sendEmail("hello@reflection.io (Reflection)", "support@reflection.io", "Reflection", "Disabling account due to invalid credentials", emailBody, false);
+					NotificationHelper.sendEmail("hello@reflection.io (Reflection)", "disabledaccounts@reflection.io", "Reflection", "Disabling account due to invalid credentials", emailBody, false);
 				} else {
+					dataAccountFetch.status(DataAccountFetchStatusType.DataAccountFetchStatusTypeError);
+					dataAccountFetch.data(e.getErrorCode() + ":" + e.getMessage());
+					dataAccountFetch = DataAccountFetchServiceProvider.provide().updateDataAccountFetch(dataAccountFetch);
+
 					LOG.log(Level.WARNING, "The was an exception while trying to get the sales report for data account id: " + dataAccount.id + " with username: " + dataAccount.username + " on " + date);
 				}
 
@@ -190,8 +206,9 @@ public class ITunesReporterCollector implements DataAccountCollector {
 	 * @param dataAccount
 	 * @return
 	 * @throws DataAccessException
+	 * @throws AppleReporterException
 	 */
-	public SimpleEntry<String, String> getPrimaryAccountAndVendorIdsFromProperties(DataAccount dataAccount) throws DataAccessException {
+	public SimpleEntry<String, String> getPrimaryAccountAndVendorIdsFromProperties(DataAccount dataAccount) throws DataAccessException, AppleReporterException {
 		String accountId = null;
 		String vendorId = null;
 
@@ -255,19 +272,13 @@ public class ITunesReporterCollector implements DataAccountCollector {
 	/**
 	 * @param dataAccount
 	 * @return
+	 * @throws AppleReporterException
 	 */
-	public SimpleEntry<String, String> getAccountAndVendorIdPairForFirstVendorId(DataAccount dataAccount) {
+	public SimpleEntry<String, String> getAccountAndVendorIdPairForFirstVendorId(DataAccount dataAccount) throws AppleReporterException {
 		String primaryVendorId = DataAccountPropertiesHelper.getPrimaryVendorId(dataAccount.properties);
 		if (primaryVendorId == null) return null;
 
-		String accountId = null;
-		try {
-			accountId = AppleReporterHelper.getAccountIdForVendorId(dataAccount.username, dataAccount.password, primaryVendorId);
-		} catch (AppleReporterException e) {
-			LOG.log(Level.WARNING, "Could not get the vendor id for account id: " + accountId + " of data account id: " + dataAccount.id + ", username: " + dataAccount.username, e);
-		}
-
-		if (accountId == null) return null;
+		String accountId = AppleReporterHelper.getAccountIdForVendorId(dataAccount.username, dataAccount.password, primaryVendorId);
 
 		return new SimpleEntry<>(accountId, primaryVendorId);
 	}

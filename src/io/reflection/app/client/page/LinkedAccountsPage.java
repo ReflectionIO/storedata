@@ -87,36 +87,32 @@ import io.reflection.app.datatypes.shared.DataAccount;
 public class LinkedAccountsPage extends Page implements NavigationEventHandler, LinkAccountEventHandler, GetLinkedAccountsEventHandler,
 		DeleteLinkedAccountEventHandler, UpdateLinkedAccountEventHandler {
 
-	public static final int										ACTION_PARAMETER				= 1;
-	public static final int										ACTION_PARAMETER_INDEX	= 2;
+	public static final int ACTION_PARAMETER = 1;
+	public static final int ACTION_PARAMETER_INDEX = 2;
 
-	private static LinkedAccountsPageUiBinder	uiBinder								= GWT.create(LinkedAccountsPageUiBinder.class);
+	private static LinkedAccountsPageUiBinder uiBinder = GWT.create(LinkedAccountsPageUiBinder.class);
 
-	interface LinkedAccountsPageUiBinder extends UiBinder<Widget, LinkedAccountsPage> {
-	}
+	interface LinkedAccountsPageUiBinder extends UiBinder<Widget, LinkedAccountsPage> {}
 
-	private static ReflectionMainStyles		style											= Styles.STYLES_INSTANCE.reflectionMainStyle();
+	private static ReflectionMainStyles style = Styles.STYLES_INSTANCE.reflectionMainStyle();
 
-	@UiField(provided = true)
-	CellTable<DataAccount>								linkedAccountsTable				= new CellTable<DataAccount>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
+	@UiField(provided = true) CellTable<DataAccount> linkedAccountsTable = new CellTable<DataAccount>(Integer.MAX_VALUE, BootstrapGwtCellTable.INSTANCE);
 
-	@UiField
-	Element																linkedAccountsCount;
+	@UiField Element linkedAccountsCount;
 
-	private TextColumn<DataAccount>				columnAccountName;
-	private Column<DataAccount, SafeHtml>	columnStore;
-	private TextColumn<DataAccount>				columnDateAdded;
-	private Column<DataAccount, String>		columnEdit;
-	private Column<DataAccount, String>		columnDelete;
+	private TextColumn<DataAccount> columnAccountName;
+	private Column<DataAccount, SafeHtml> columnStore;
+	private TextColumn<DataAccount> columnDateAdded;
+	private Column<DataAccount, String> columnEdit;
+	private Column<DataAccount, String> columnDelete;
 
-	@UiField
-	Button																addAnotherLinkedAccountBtn;
+	@UiField Button addAnotherLinkedAccountBtn;
 
-	private IosMacLinkAccountForm					updatingLinkedAccountForm	= null;
+	private IosMacLinkAccountForm updatingLinkedAccountForm = null;
 
-	private LoadingBar										loadingBar								= new LoadingBar(false);
-	private AddLinkedAccountPopup					addLinkedAccountPopup			= new AddLinkedAccountPopup();
-	private DeleteLinkedAccountPopup			deleteLinkedAccountPopup	= new DeleteLinkedAccountPopup();
+	private LoadingBar loadingBar = new LoadingBar(false);
+	private AddLinkedAccountPopup addLinkedAccountPopup = new AddLinkedAccountPopup();
+	private DeleteLinkedAccountPopup deleteLinkedAccountPopup = new DeleteLinkedAccountPopup();
 
 	public LinkedAccountsPage() {
 		initWidget(uiBinder.createAndBindUi(this));
@@ -304,8 +300,11 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 
 			@Override
 			public SafeHtml getValue(DataAccount object) {
-				return (object.source != null) ? SafeHtmlUtils.fromSafeConstant("<span class=\"" + style.refIconBefore() + " " + style.refIconBeforeApple()
-						+ "\">" + object.source.name + "</span>") : SafeHtmlUtils.fromSafeConstant("-");
+				String sourceName = object.source.name != null ? object.source.name : "iTunes Connect";
+				return (object.source != null)
+						? SafeHtmlUtils
+								.fromSafeConstant("<span class=\"" + style.refIconBefore() + " " + style.refIconBeforeApple() + "\">" + sourceName + "</span>")
+						: SafeHtmlUtils.fromSafeConstant("-");
 			}
 
 		};
@@ -346,8 +345,9 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 				AnimationHelper.nativeSlideToggle(formElem, 200);
 				AnimationHelper.nativeSlideToggle(formElem.getFirstChildElement().getElementsByTagName("h2").getItem(0), 200);
 				DOMHelper.toggleClassName(rowElem.getFirstChildElement(), style.isOpen());
-				DOMHelper.toggleClassName(linkedAccountsTable.getRowElement(index).getCells().getItem(3).getFirstChildElement().getElementsByTagName("a")
-						.getItem(0), style.isPressed());
+				DOMHelper.toggleClassName(
+						linkedAccountsTable.getRowElement(index).getCells().getItem(3).getFirstChildElement().getElementsByTagName("a").getItem(0),
+						style.isPressed());
 			}
 		});
 
@@ -430,8 +430,7 @@ public class LinkedAccountsPage extends Page implements NavigationEventHandler, 
 	 * java.lang.Throwable)
 	 */
 	@Override
-	public void linkAccountFailure(LinkAccountRequest input, Throwable caught) {
-	}
+	public void linkAccountFailure(LinkAccountRequest input, Throwable caught) {}
 
 	/*
 	 * (non-Javadoc)

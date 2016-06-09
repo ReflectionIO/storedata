@@ -31,7 +31,7 @@
 			<plugin>
 				<groupId>com.google.appengine</groupId>
 				<artifactId>appengine-maven-plugin</artifactId>
-				<version>1.9.31</version>
+				<version>1.9.32</version>
 			</plugin>
 		</plugins>
 		<directory>war/WEB-INF/</directory>
@@ -40,7 +40,7 @@
 		<dependency>
 			<groupId>com.google.appengine</groupId>
 			<artifactId>appengine-api-1.0-sdk</artifactId>
-			<version>1.9.31</version>
+			<version>1.9.32</version>
 		</dependency>
 		<dependency>
 			<groupId>com.googlecode.objectify</groupId>
