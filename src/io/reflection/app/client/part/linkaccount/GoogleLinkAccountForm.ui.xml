@@ -1,0 +1,32 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:c="urn:import:io.reflection.app.client.component">
+
+	<ui:import field="io.reflection.app.client.res.Styles.STYLES_INSTANCE" />
+
+	<ui:style gss="true">
+	
+	</ui:style>
+	<g:HTMLPanel tag="form">
+		<fieldset ui:field="fieldset" class="{STYLES_INSTANCE.reflectionMainStyle.connectAccountContent}" style="visibility: visible; position: relative;">
+			<h2 ui:field="title"></h2>
+			<p ui:field="subtitle" class="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}"></p>
+
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.linkedAccountLoadingState}">
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.hamsterWheel}">
+					<img src="images/hamster-wheel.png" alt="hamster wheel" />
+				</div>
+				<div class="{STYLES_INSTANCE.reflectionMainStyle.animationHamster}">
+				</div>
+				<p>Linking may take up to 5 minutes but most likely less, we'll send you an email as soon as it's done.</p>
+			</div>
+
+			<c:TextField ui:field="accountUsername" labelText="Account Username" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
+
+			<c:PasswordField ui:field="password" labelText="Account Password" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
+
+			<c:LoadingButton ui:field="linkAccountBtn" styleName="{STYLES_INSTANCE.reflectionMainStyle.refButtonFullWidth} {STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}"
+				text="Link this Account" />
+
+		</fieldset>
+	</g:HTMLPanel>
+</ui:UiBinder> 

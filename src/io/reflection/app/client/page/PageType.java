@@ -73,6 +73,7 @@ public enum PageType {
 	LoginPageType("login", false),
 	LinkedAccountsPageType("linkedaccounts", true),
 	LinkItunesPageType("linkitunes", true),
+	LinkGoogleAccountPageType("linkgoogleaccount", true),
 	ManageSubscriptionPageType("subscription", true),
 	MyAppsPageType("myapps", true),
 	NotificationsPageType("notifications", true),
@@ -278,6 +279,9 @@ public enum PageType {
 			break;
 		case LinkItunesPageType:
 			page = new LinkItunesPage();
+			break;
+		case LinkGoogleAccountPageType:
+			page = new LinkGoogleAccountPage();
 			break;
 		case LinkedAccountsPageType:
 			page = new LinkedAccountsPage();

@@ -56,6 +56,8 @@ import io.reflection.app.api.core.shared.call.IsAuthorisedRequest;
 import io.reflection.app.api.core.shared.call.IsAuthorisedResponse;
 import io.reflection.app.api.core.shared.call.LinkAccountRequest;
 import io.reflection.app.api.core.shared.call.LinkAccountResponse;
+import io.reflection.app.api.core.shared.call.LinkGoogleAccountRequest;
+import io.reflection.app.api.core.shared.call.LinkGoogleAccountResponse;
 import io.reflection.app.api.core.shared.call.LoginRequest;
 import io.reflection.app.api.core.shared.call.LoginResponse;
 import io.reflection.app.api.core.shared.call.LogoutRequest;
@@ -650,6 +652,41 @@ public final class CoreService extends JsonService {
 		return handle;
 	}
 
+	public static final String CoreMethodLinkGoogleAccount = "LinkGoogleAccount";
+
+	public Request linkGoogleAccount(final LinkGoogleAccountRequest input, final AsyncCallback<LinkGoogleAccountResponse> output) {
+		Request handle = null;
+		try {
+			handle = sendRequest(CoreMethodLinkGoogleAccount, input, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request request, Response response) {
+					try {
+						LinkGoogleAccountResponse outputParameter = new LinkGoogleAccountResponse();
+						parseResponse(response, outputParameter);
+						output.onSuccess(outputParameter);
+						onCallSuccess(CoreService.this, CoreMethodLinkGoogleAccount, input, outputParameter);
+					} catch (JSONException | HttpException exception) {
+						output.onFailure(exception);
+						onCallFailure(CoreService.this, CoreMethodLinkGoogleAccount, input, exception);
+					}
+				}
+
+				@Override
+				public void onError(Request request, Throwable exception) {
+					output.onFailure(exception);
+					onCallFailure(CoreService.this, CoreMethodLinkGoogleAccount, input, exception);
+				}
+			});
+			onCallStart(CoreService.this, CoreMethodLinkGoogleAccount, input, handle);
+		} catch (RequestException exception) {
+			output.onFailure(exception);
+			onCallFailure(CoreService.this, CoreMethodLinkGoogleAccount, input, exception);
+		}
+		return handle;
+	}
+
+
+	
 	public static final String CoreMethodIsAuthorised = "IsAuthorised";
 
 	public Request isAuthorised(final IsAuthorisedRequest input, final AsyncCallback<IsAuthorisedResponse> output) {

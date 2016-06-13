@@ -31,6 +31,7 @@ import io.reflection.app.api.core.shared.call.GetTopItemsRequest;
 import io.reflection.app.api.core.shared.call.GetUserDetailsRequest;
 import io.reflection.app.api.core.shared.call.IsAuthorisedRequest;
 import io.reflection.app.api.core.shared.call.LinkAccountRequest;
+import io.reflection.app.api.core.shared.call.LinkGoogleAccountRequest;
 import io.reflection.app.api.core.shared.call.LoginRequest;
 import io.reflection.app.api.core.shared.call.LogoutRequest;
 import io.reflection.app.api.core.shared.call.RegisterInterestBusinessRequest;
@@ -118,6 +119,10 @@ public final class CoreJsonServlet extends JsonServlet {
 			LinkAccountRequest input = new LinkAccountRequest();
 			input.fromJson(request);
 			output = service.linkAccount(input).toString();
+		} else if ("LinkGoogleAccount".equals(action)) {
+			LinkGoogleAccountRequest input = new LinkGoogleAccountRequest();
+			input.fromJson(request);
+			output = service.linkGoogleAccount(input).toString();
 		} else if ("IsAuthorised".equals(action)) {
 			IsAuthorisedRequest input = new IsAuthorisedRequest();
 			input.fromJson(request);

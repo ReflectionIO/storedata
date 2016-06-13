@@ -7,6 +7,36 @@
 //
 package io.reflection.app.client.controller;
 
+import io.reflection.app.api.core.client.CoreService;
+import io.reflection.app.api.core.shared.call.DeleteLinkedAccountRequest;
+import io.reflection.app.api.core.shared.call.DeleteLinkedAccountResponse;
+import io.reflection.app.api.core.shared.call.GetLinkedAccountItemRequest;
+import io.reflection.app.api.core.shared.call.GetLinkedAccountItemResponse;
+import io.reflection.app.api.core.shared.call.GetLinkedAccountsRequest;
+import io.reflection.app.api.core.shared.call.GetLinkedAccountsResponse;
+import io.reflection.app.api.core.shared.call.LinkAccountRequest;
+import io.reflection.app.api.core.shared.call.LinkAccountResponse;
+import io.reflection.app.api.core.shared.call.LinkGoogleAccountRequest;
+import io.reflection.app.api.core.shared.call.LinkGoogleAccountResponse;
+import io.reflection.app.api.core.shared.call.UpdateLinkedAccountRequest;
+import io.reflection.app.api.core.shared.call.UpdateLinkedAccountResponse;
+import io.reflection.app.api.core.shared.call.event.DeleteLinkedAccountEventHandler.DeleteLinkedAccountFailure;
+import io.reflection.app.api.core.shared.call.event.DeleteLinkedAccountEventHandler.DeleteLinkedAccountSuccess;
+import io.reflection.app.api.core.shared.call.event.GetLinkedAccountItemEventHandler;
+import io.reflection.app.api.core.shared.call.event.GetLinkedAccountsEventHandler;
+import io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler.LinkAccountFailure;
+import io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler.LinkAccountSuccess;
+import io.reflection.app.api.core.shared.call.event.LinkGoogleAccountEventHandler.LinkGoogleAccountFailure;
+import io.reflection.app.api.core.shared.call.event.LinkGoogleAccountEventHandler.LinkGoogleAccountSuccess;
+import io.reflection.app.api.core.shared.call.event.UpdateLinkedAccountEventHandler;
+import io.reflection.app.api.shared.datatypes.Pager;
+import io.reflection.app.api.shared.datatypes.SortDirectionType;
+import io.reflection.app.client.DefaultEventBus;
+import io.reflection.app.client.mixpanel.MixpanelHelper;
+import io.reflection.app.datatypes.shared.DataAccount;
+import io.reflection.app.datatypes.shared.DataSource;
+import io.reflection.app.datatypes.shared.Item;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -18,32 +48,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.HasData;
 import com.willshex.gson.json.service.shared.StatusType;
-
-import io.reflection.app.api.core.client.CoreService;
-import io.reflection.app.api.core.shared.call.DeleteLinkedAccountRequest;
-import io.reflection.app.api.core.shared.call.DeleteLinkedAccountResponse;
-import io.reflection.app.api.core.shared.call.GetLinkedAccountItemRequest;
-import io.reflection.app.api.core.shared.call.GetLinkedAccountItemResponse;
-import io.reflection.app.api.core.shared.call.GetLinkedAccountsRequest;
-import io.reflection.app.api.core.shared.call.GetLinkedAccountsResponse;
-import io.reflection.app.api.core.shared.call.LinkAccountRequest;
-import io.reflection.app.api.core.shared.call.LinkAccountResponse;
-import io.reflection.app.api.core.shared.call.UpdateLinkedAccountRequest;
-import io.reflection.app.api.core.shared.call.UpdateLinkedAccountResponse;
-import io.reflection.app.api.core.shared.call.event.DeleteLinkedAccountEventHandler.DeleteLinkedAccountFailure;
-import io.reflection.app.api.core.shared.call.event.DeleteLinkedAccountEventHandler.DeleteLinkedAccountSuccess;
-import io.reflection.app.api.core.shared.call.event.GetLinkedAccountItemEventHandler;
-import io.reflection.app.api.core.shared.call.event.GetLinkedAccountsEventHandler;
-import io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler.LinkAccountFailure;
-import io.reflection.app.api.core.shared.call.event.LinkAccountEventHandler.LinkAccountSuccess;
-import io.reflection.app.api.core.shared.call.event.UpdateLinkedAccountEventHandler;
-import io.reflection.app.api.shared.datatypes.Pager;
-import io.reflection.app.api.shared.datatypes.SortDirectionType;
-import io.reflection.app.client.DefaultEventBus;
-import io.reflection.app.client.mixpanel.MixpanelHelper;
-import io.reflection.app.datatypes.shared.DataAccount;
-import io.reflection.app.datatypes.shared.DataSource;
-import io.reflection.app.datatypes.shared.Item;
 
 /**
  * @author billy1380
@@ -204,6 +208,74 @@ public class LinkedAccountController extends AsyncDataProvider<DataAccount> impl
 
 	}
 
+	public void linkGoogleAccount(Long sourceId, String username, String password) {
+		CoreService service = ServiceCreator.createCoreService();
+
+		final LinkGoogleAccountRequest input = new LinkGoogleAccountRequest();
+		input.accessCode = ACCESS_CODE;
+
+		input.session = SessionController.get().getSessionForApiCall();
+
+		input.username = username;
+		input.password = password;
+
+		DataSource source = new DataSource();
+		source.id = sourceId;
+
+		input.source = source;
+
+		if (pager == null) { // Link account after request invite registration
+			pager = new Pager();
+			pager.count = Long.valueOf(Integer.MAX_VALUE);
+			pager.start = Long.valueOf(0);
+			pager.sortDirection = SortDirectionType.SortDirectionTypeDescending;
+			pager.totalCount = Long.valueOf(0);
+		}
+
+		service.linkGoogleAccount(input, new AsyncCallback<LinkGoogleAccountResponse>() {
+
+			@Override
+			public void onSuccess(LinkGoogleAccountResponse output) {
+				if (output.status == StatusType.StatusTypeSuccess) {
+//					if (output.linkedAccounts != null) {
+//						for (DataAccount addedAccount : output.linkedAccounts) {
+//							if (!getAllLinkedAccountIds().contains(addedAccount.id.toString())) { // Avoid to add duplicated
+//								rows.add(addedAccount);
+//								addLinkedAccountsToLookup(Arrays.asList(addedAccount));
+//								addDataSourceToLookup(Arrays.asList(addedAccount.source));
+//								// pager.totalCount = Long.valueOf(pager.totalCount.longValue() + 1);
+//							}
+//						}
+//						linkedAccountsCount = rows.size();
+//						updateRowCount(linkedAccountsCount, true);
+//						updateRowData(0, rows);
+//						SessionController.get().fetchRoleAndPermissions(); // Load HLA Permission
+//					}
+					MixpanelHelper.track(MixpanelHelper.Event.LINK_ACCOUNT_SUCCESS);
+				} else {
+					Map<String, Object> properties = new HashMap<String, Object>();
+					if (output.error != null && output.error.message != null) {
+						properties.put("error_server", output.error.message);
+					} else {
+						properties.put("error_server", "generic error");
+					}
+					MixpanelHelper.track(MixpanelHelper.Event.LINK_ACCOUNT_FAILURE, properties);
+				}
+				DefaultEventBus.get().fireEventFromSource(new LinkGoogleAccountSuccess(input, output), LinkedAccountController.this);
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				Map<String, Object> properties = new HashMap<String, Object>();
+				properties.put("error_server", caught.getMessage());
+				MixpanelHelper.track(MixpanelHelper.Event.LINK_ACCOUNT_FAILURE, properties);
+				DefaultEventBus.get().fireEventFromSource(new LinkGoogleAccountFailure(input, caught), LinkedAccountController.this);
+			}
+		});
+
+	}
+
+	
 	/**
 	 * Change the linked account password and properties - the account user name can't be changed
 	 *
