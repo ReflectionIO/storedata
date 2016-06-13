@@ -55,6 +55,9 @@
 
 			<xsd:element name="LinkAccountInput" type="sdc:LinkAccountRequest" />
 			<xsd:element name="LinkAccountOutput" type="sdc:LinkAccountResponse" />
+			
+			<xsd:element name="LinkGoogleAccountInput" type="sdc:LinkGoogleAccountRequest" />
+			<xsd:element name="LinkGoogleAccountOutput" type="sdc:LinkGoogleAccountResponse" />
 
 			<xsd:element name="IsAuthorisedInput" type="sdc:IsAuthorisedRequest" />
 			<xsd:element name="IsAuthorisedOutput" type="sdc:IsAuthorisedResponse" />
@@ -437,6 +440,28 @@
 			</xsd:complexType>
 
 			<xsd:complexType name="LinkAccountResponse">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Response">
+						<xsd:sequence>
+							<xsd:element name="linkedAccounts" type="sd:DataAccount" maxOccurs="unbounded" />
+						</xsd:sequence>
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+			
+			<xsd:complexType name="LinkGoogleAccountRequest">
+				<xsd:complexContent>
+					<xsd:extension base="sd:Request">
+						<xsd:sequence>
+							<xsd:element name="source" type="sd:DataSource" />
+						</xsd:sequence>
+						<xsd:attribute name="username" type="xsd:string" />
+						<xsd:attribute name="password" type="xsd:string" />
+					</xsd:extension>
+				</xsd:complexContent>
+			</xsd:complexType>
+
+			<xsd:complexType name="LinkGoogleAccountResponse">
 				<xsd:complexContent>
 					<xsd:extension base="sd:Response">
 						<xsd:sequence>
@@ -897,6 +922,13 @@
 		<wsdl:part name="output" element="sdc:LinkAccountOutput" />
 	</wsdl:message>
 
+	<wsdl:message name="LinkGoogleAccountRequest">
+		<wsdl:part name="input" element="sdc:LinkGoogleAccountInput" />
+	</wsdl:message>
+	<wsdl:message name="LinkGoogleAccountResponse">
+		<wsdl:part name="output" element="sdc:LinkGoogleAccountOutput" />
+	</wsdl:message>
+
 	<wsdl:message name="IsAuthorisedRequest">
 		<wsdl:part name="input" element="sdc:IsAuthorisedInput" />
 	</wsdl:message>
@@ -1087,6 +1119,11 @@
 		<wsdl:operation name="LinkAccount">
 			<wsdl:input message="sdc:LinkAccountRequest" />
 			<wsdl:output message="sdc:LinkAccountResponse" />
+		</wsdl:operation>
+
+		<wsdl:operation name="LinkGoogleAccount">
+			<wsdl:input message="sdc:LinkGoogleAccountRequest" />
+			<wsdl:output message="sdc:LinkGoogleAccountResponse" />
 		</wsdl:operation>
 
 		<wsdl:operation name="IsAuthorised">
@@ -1328,6 +1365,16 @@
 
 		<wsdl:operation name="LinkAccount">
 			<soap:operation soapAction="http://app.reflection.io/core/LinkAccount" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+		
+		<wsdl:operation name="LinkGoogleAccount">
+			<soap:operation soapAction="http://app.reflection.io/core/LinkGoogleAccount" />
 			<wsdl:input>
 				<soap:body use="literal" />
 			</wsdl:input>

@@ -82,6 +82,8 @@ import io.reflection.app.api.core.shared.call.IsAuthorisedRequest;
 import io.reflection.app.api.core.shared.call.IsAuthorisedResponse;
 import io.reflection.app.api.core.shared.call.LinkAccountRequest;
 import io.reflection.app.api.core.shared.call.LinkAccountResponse;
+import io.reflection.app.api.core.shared.call.LinkGoogleAccountRequest;
+import io.reflection.app.api.core.shared.call.LinkGoogleAccountResponse;
 import io.reflection.app.api.core.shared.call.LoginRequest;
 import io.reflection.app.api.core.shared.call.LoginResponse;
 import io.reflection.app.api.core.shared.call.LogoutRequest;
@@ -1455,6 +1457,31 @@ public final class Core extends ActionHandler {
 		LOG.finer("Exiting linkAccount");
 		return output;
 	}
+	
+	public LinkGoogleAccountResponse linkGoogleAccount(LinkGoogleAccountRequest input) {
+		LOG.finer("Entering linkGoogleAccount");
+		LinkGoogleAccountResponse output = new LinkGoogleAccountResponse();
+		try {
+			if (input == null)
+				throw new InputValidationException(ApiError.InvalidValueNull.getCode(), ApiError.InvalidValueNull.getMessage("LinkGoogleAccountResponse: input"));
+
+			input.accessCode = ValidationHelper.validateAccessCode(input.accessCode, "input.accessCode");
+
+			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
+			
+			// TODO SEND EMAIL TO CHI
+			
+			output.status = StatusType.StatusTypeSuccess;
+		} catch (Exception e) {
+			output.status = StatusType.StatusTypeFailure;
+			output.error = convertToErrorAndLog(LOG, e);
+		}
+			
+		LOG.finer("Exiting linkGoogleAccount");
+		return output;
+	}
+	
+		
 
 	public IsAuthorisedResponse isAuthorised(IsAuthorisedRequest input) {
 		LOG.finer("Entering isAuthorised");
