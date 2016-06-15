@@ -11,13 +11,13 @@
 			<h2 ui:field="title"></h2>
 			<p ui:field="subtitle" class="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}"></p>
 
-			<div class="{STYLES_INSTANCE.reflectionMainStyle.linkedAccountLoadingState}">
+			<div class="{STYLES_INSTANCE.reflectionMainStyle.linkedAccountLoadingState}" style="width:100%">
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.hamsterWheel}">
 					<img src="images/hamster-wheel.png" alt="hamster wheel" />
 				</div>
 				<div class="{STYLES_INSTANCE.reflectionMainStyle.animationHamster}">
 				</div>
-				<p>Linking may take up to 5 minutes but most likely less, we'll send you an email as soon as it's done.</p>
+				<p>Submitting your details</p>
 			</div>
 
 			<c:TextField ui:field="accountUsername" labelText="Account Username" styleName="{STYLES_INSTANCE.reflectionMainStyle.jsRotateContent}" />
