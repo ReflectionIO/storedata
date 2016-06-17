@@ -62,7 +62,7 @@ public class LinkGoogleAccountPage extends Page implements NavigationEventHandle
 			@Override
 			public void onChange(DataAccount dataAccount, EVENT_TYPE eventType) {
 				googleForm.setEnabled(false);
-				googleForm.setStatusLoading("Loading");
+				googleForm.setStatusLoading("Submitting");
 				Document.get().getBody().addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formSubmittedLoading());
 				LinkedAccountController.get().linkGoogleAccount(googleForm.getAccountSourceId(), googleForm.getUsername(), googleForm.getPassword()); // Link
 																																						// google
@@ -136,7 +136,7 @@ public class LinkGoogleAccountPage extends Page implements NavigationEventHandle
 			accountConnectAnimation.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().plugsConnected());
 			panelSuccess.addClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().isShowing());
 		} else if (output.error != null) {
-			googleForm.setStatusError();
+			googleForm.setStatusError("Oops, something went wrong, please try again");
 			googleForm.setEnabled(true);
 		}
 	}
@@ -150,7 +150,8 @@ public class LinkGoogleAccountPage extends Page implements NavigationEventHandle
 	@Override
 	public void linkGoogleAccountFailure(LinkGoogleAccountRequest input, Throwable caught) {
 		Document.get().getBody().removeClassName(Styles.STYLES_INSTANCE.reflectionMainStyle().formSubmittedLoading());
-		googleForm.setStatusError();
+		googleForm.setStatusError("Oops, something went wrong, please try again");
+		googleForm.setEnabled(true);
 	}
 
 	@UiHandler("linkAnotherAccount")

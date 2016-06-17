@@ -1469,6 +1469,8 @@ public final class Core extends ActionHandler {
 
 			output.session = input.session = ValidationHelper.validateAndExtendSession(input.session, "input.session");
 			
+			Thread.sleep(3000); // Simulate there is something going on ..
+
 			// TODO SEND EMAIL TO CHI
 			
 			output.status = StatusType.StatusTypeSuccess;

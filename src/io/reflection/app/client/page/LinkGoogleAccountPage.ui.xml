@@ -106,13 +106,13 @@
 					styleName="{STYLES_INSTANCE.reflectionMainStyle.formsMidTheme}" />
 
 				<div ui:field="panelSuccess" class="{STYLES_INSTANCE.reflectionMainStyle.formSubmittedSuccess}">
-					<svg version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 61 54" enable-background="new 0 0 61 54" xml:space="preserve" class="success-tick">
+					<svg style="top:7.8rem;" version="1.1" id="Layer_1" x="0px" y="0px" viewBox="0 0 61 54" enable-background="new 0 0 61 54" xml:space="preserve" class="success-tick">
 									<path fill="#1BC79F"
 						d="M60.6,7.4l-8.1-7.1C52.2,0.1,51.9,0,51.6,0c-0.3,0-0.6,0.2-0.9,0.4L21.3,33.8L10.9,20
 									c-0.2-0.3-0.5-0.4-0.8-0.5c-0.3,0-0.7,0-0.9,0.2l-8.6,6.5c-0.6,0.4-0.7,1.2-0.2,1.7l19.4,25.5c0.2,0.3,0.6,0.5,1,0.5c0,0,0,0,0,0
 									c0.4,0,0.7-0.2,0.9-0.4L60.7,9.2C61.2,8.7,61.1,7.9,60.6,7.4z"></path>
 								</svg>
-					<h2>Account Linked!</h2>
+					<h2 style="font-weight:300;margin-top:15.4rem;font-size:1.4rem;">We’ve received your account details, thank you very much for your help</h2>
 					<p>
 						<g:Anchor href="#" ui:field="linkAnotherAccount">Link Another Account</g:Anchor>
 						<g:InlineHyperlink ui:field="continueToLoggedInHome">Continue</g:InlineHyperlink>
